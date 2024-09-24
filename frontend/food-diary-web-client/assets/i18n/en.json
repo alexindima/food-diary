@@ -1,0 +1,83 @@
+{
+    "HEADER": {
+        "HOME": "Home",
+        "DIARY": "Diary",
+        "RECIPES": "Recipes",
+        "PROGRESS": "Progress",
+        "PROFILE": "Profile",
+        "COMMUNITY": "Community",
+        "SETTINGS": "Settings"
+    },
+    "FOOTER": {
+        "CONTACTS": {
+            "TITLE": "Contacts",
+            "EMAIL": "Email: support@example.com",
+            "PHONE": "Phone: +1 (123) 456-7890"
+        },
+        "NAVIGATION": {
+            "TITLE": "Navigation",
+            "HOME": "Home",
+            "DIARY": "Diary",
+            "RECIPES": "Recipes",
+            "COMMUNITY": "Community"
+        },
+        "FOLLOW_US": {
+            "TITLE": "Follow Us",
+            "FACEBOOK": "Facebook",
+            "INSTAGRAM": "Instagram",
+            "LINKEDIN": "LinkedIn",
+            "TELEGRAM": "Telegram",
+            "VK": "VK",
+            "YOUTUBE": "YouTube"
+        },
+        "BOTTOM": {
+            "COPYRIGHT": "© 2024 Food Diary. All rights reserved.",
+            "PRIVACY_POLICY": "Privacy Policy",
+            "TERMS_OF_USE": "Terms of Use"
+        }
+    },
+    "HERO": {
+        "WELCOME": "Welcome to Food Diary!",
+        "DESCRIPTION": "Track your diet and achieve goals with our app!",
+        "LOGIN": "Login",
+        "REGISTER": "Register"
+    },
+    "FEATURES": {
+        "TITLE": "Features",
+        "CALORIE_TRACKING": {
+            "TITLE": "Calorie Tracking",
+            "DESCRIPTION": "Record and analyze your calorie intake to reach your nutrition goals."
+        },
+        "MEAL_PLANNING": {
+            "TITLE": "Meal Planning",
+            "DESCRIPTION": "Create personalized meal plans and track their progress every day."
+        },
+        "PROGRESS_ANALYTICS": {
+            "TITLE": "Progress Analytics",
+            "DESCRIPTION": "Monitor your progress with visual charts and reports."
+        },
+        "COMMUNITY_SUPPORT": {
+            "TITLE": "Community Support",
+            "DESCRIPTION": "Join the user community and share your achievements and recipes."
+        },
+        "BUTTON_MORE": "Learn More"
+    },
+    "AUTH":{
+        "LOGIN": {
+            "TITLE": "Login",
+            "EMAIL": "Email",
+            "PASSWORD": "Password",
+            "REMEMBER_ME": "Remember me",
+            "FORGOT_PASSWORD": "Forgot password?",
+            "LOGIN": "Login"
+        },
+        "REGISTER": {
+            "TITLE": "Register",
+            "EMAIL": "Email",
+            "PASSWORD": "Password",
+            "CONFIRM_PASSWORD": "Confirm password",
+            "AGREE_TO_TERMS": "I agree to the <a href='{{termsUrl}}'>Terms of Use</a> and <a href='{{privacyUrl}}'>Privacy Policy</a>",
+            "REGISTER": "Register"
+        }
+    }
+}

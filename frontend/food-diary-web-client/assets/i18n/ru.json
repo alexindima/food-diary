@@ -1,0 +1,83 @@
+{
+    "HEADER": {
+        "HOME": "Главная",
+        "DIARY": "Дневник",
+        "RECIPES": "Рецепты",
+        "PROGRESS": "Прогресс",
+        "PROFILE": "Профиль",
+        "COMMUNITY": "Сообщество",
+        "SETTINGS": "Настройки"
+    },
+    "FOOTER": {
+        "CONTACTS": {
+            "TITLE": "Контакты",
+            "EMAIL": "Email: support@example.com",
+            "PHONE": "Телефон: +1 (123) 456-7890"
+        },
+        "NAVIGATION": {
+            "TITLE": "Навигация",
+            "HOME": "Главная",
+            "DIARY": "Дневник",
+            "RECIPES": "Рецепты",
+            "COMMUNITY": "Сообщество"
+        },
+        "FOLLOW_US": {
+            "TITLE": "Следите за нами",
+            "FACEBOOK": "Facebook",
+            "INSTAGRAM": "Instagram",
+            "LINKEDIN": "LinkedIn",
+            "TELEGRAM": "Telegram",
+            "VK": "VK",
+            "YOUTUBE": "YouTube"
+        },
+        "BOTTOM": {
+            "COPYRIGHT": "© 2024 Дневник Питания. Все права защищены.",
+            "PRIVACY_POLICY": "Политика конфиденциальности",
+            "TERMS_OF_USE": "Условия использования"
+        }
+    },
+    "HERO": {
+        "WELCOME": "Добро пожаловать в Дневник Питания!",
+        "DESCRIPTION": "Следите за своим питанием и достигайте целей с нашим приложением!",
+        "LOGIN": "Вход",
+        "REGISTER": "Регистрация"
+    },
+    "FEATURES": {
+        "TITLE": "Особенности",
+        "CALORIE_TRACKING": {
+            "TITLE": "Отслеживание калорий",
+            "DESCRIPTION": "Записывайте и анализируйте потребляемые калории, чтобы достичь своих целей по питанию."
+        },
+        "MEAL_PLANNING": {
+            "TITLE": "Планирование питания",
+            "DESCRIPTION": "Создавайте персональные планы питания и следите за их выполнением каждый день."
+        },
+        "PROGRESS_ANALYTICS": {
+            "TITLE": "Аналитика прогресса",
+            "DESCRIPTION": "Отслеживайте свой прогресс с помощью наглядных графиков и отчетов."
+        },
+        "COMMUNITY_SUPPORT": {
+            "TITLE": "Поддержка сообщества",
+            "DESCRIPTION": "Присоединяйтесь к сообществу пользователей и делитесь своими успехами и рецептами."
+        },
+        "BUTTON_MORE": "Узнать больше"
+    },
+    "AUTH":{
+        "LOGIN": {
+            "TITLE": "Вход",
+            "EMAIL": "Email",
+            "PASSWORD": "Пароль",
+            "REMEMBER_ME": "Запомнить меня",
+            "FORGOT_PASSWORD": "Забыли пароль?",
+            "LOGIN": "Войти"
+        },
+        "REGISTER": {
+            "TITLE": "Регистрация",
+            "EMAIL": "Email",
+            "PASSWORD": "Пароль",
+            "CONFIRM_PASSWORD": "Подтвердите пароль",
+            "AGREE_TO_TERMS": "Я соглашаюсь с <a href='{{termsUrl}}'>Условиями использования</a> и <a href='{{privacyUrl}}'>Политикой конфиденциальности</a>",
+            "REGISTER": "Зарегистрироваться"
+        }
+    }
+}

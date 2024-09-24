@@ -1,0 +1,25 @@
+<section class="features">
+    <h2 class="section-title">{{ 'FEATURES.TITLE' | translate }}</h2>
+    <div class="features-grid">
+        <div *ngFor="let feature of features" tuiCardLarge tuiSurface="elevated" class="feature-item">
+            <header tuiHeader>
+                <h2 tuiTitle>{{ 'FEATURES.' + feature.key + '.TITLE' | translate }}</h2>
+            </header>
+
+            <section>
+                <img
+                    src="assets/images/features/{{ feature.icon }}"
+                    [alt]="'FEATURES.' + feature.key + '.TITLE' | translate"
+                    class="feature-icon"
+                />
+                <p>{{ 'FEATURES.' + feature.key + '.DESCRIPTION' | translate }}</p>
+            </section>
+
+            <footer>
+                <button appearance="secondary" size="m" tuiButton type="button">
+                    {{ 'FEATURES.BUTTON_MORE' | translate }}
+                </button>
+            </footer>
+        </div>
+    </div>
+</section>

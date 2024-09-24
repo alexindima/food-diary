@@ -1,0 +1,19 @@
+<div class="hero">
+    <div class="hero__content">
+        <h1 class="hero__title">{{ 'HERO.WELCOME' | translate }}</h1>
+        <p class="hero__description">{{ 'HERO.DESCRIPTION' | translate }}</p>
+        <div class="hero__actions">
+            <div class="hero__button-container">
+                <button tuiButton class="primary" size="l" (click)="goToLogin()">{{ 'HERO.LOGIN' | translate }}</button>
+                <button tuiButton class="secondary" size="l" (click)="goToRegister()">{{ 'HERO.REGISTER' | translate }}</button>
+            </div>
+        </div>
+    </div>
+    <div class="hero__background">
+        <tui-carousel [(index)]="currentSlide" [duration]="5000">
+            @for(slide of slides; track slide) {
+                <img *tuiItem alt="" draggable="false" src="assets/images/hero/{{ slide }}" class="hero__slide" />
+            }
+        </tui-carousel>
+    </div>
+</div>

@@ -1,0 +1,27 @@
+<div class="header">
+    <div class="tabs-container">
+        <tui-tabs [(activeItemIndex)]="activeItemIndex">
+            <button tuiTab (click)="onTabClick(1)">
+                {{ 'HEADER.HOME' | translate }}
+            </button>
+            <button tuiTab (click)="onTabClick(2)">
+                {{ 'HEADER.DIARY' | translate }}
+            </button>
+            <button tuiTab (click)="onTabClick(3)">
+                {{ 'HEADER.RECIPES' | translate }}
+            </button>
+            <button tuiTab (click)="onTabClick(4)">
+                {{ 'HEADER.PROGRESS' | translate }}
+            </button>
+            <button tuiTab (click)="onTabClick(5)">
+                {{ 'HEADER.PROFILE' | translate }}
+            </button>
+            <button tuiTab (click)="onTabClick(6)">
+                {{ 'HEADER.COMMUNITY' | translate }}
+            </button>
+            <button tuiTab (click)="onTabClick(7)">
+                {{ 'HEADER.SETTINGS' | translate }}
+            </button>
+        </tui-tabs>
+    </div>
+</div>
