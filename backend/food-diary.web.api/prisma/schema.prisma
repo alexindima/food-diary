@@ -5,28 +5,96 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
+    provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
 }
 
 model User {
-  id           Int       @id @default(autoincrement())
-  username     String    @unique
-  email        String    @unique
-  password     String
-  firstName    String?
-  lastName     String?
-  birthDate    DateTime?
-  gender       String? // Возможно, лучше сделать enum для значений
-  weight       Float?
-  height       Float?
-  goal         String? // Можно использовать enum: 'LOSE_WEIGHT', 'MAINTAIN_WEIGHT', 'GAIN_WEIGHT'
-  profileImage String?
-  isActive     Boolean   @default(true)
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
+    id           Int       @id @default(autoincrement())
+    email        String    @unique
+    password     String
+    username     String?
+    firstName    String?
+    lastName     String?
+    birthDate    DateTime?
+    gender       String?
+    weight       Float?
+    height       Float?
+    profileImage String?
+    isActive     Boolean   @default(true)
+    createdAt    DateTime  @default(now())
+    updatedAt    DateTime  @updatedAt
+
+    goals        Goal[]
+    consumptions Consumption[]
+}
+
+model Food {
+    id                 Int      @id @default(autoincrement())
+    name               String
+    category           String?
+    caloriesPer100     Float
+    proteinsPer100     Float
+    fatsPer100         Float
+    carbsPer100        Float
+    defaultServing     Float
+    defaultServingUnit Unit
+    createdAt          DateTime @default(now())
+    updatedAt          DateTime @updatedAt
+
+    Consumption Consumption[]
+}
+
+model Consumption {
+    id        Int      @id @default(autoincrement())
+    userId    Int
+    foodId    Int
+    amount    Float
+    date      DateTime @default(now())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    user User @relation(fields: [userId], references: [id])
+    food Food @relation(fields: [foodId], references: [id])
+}
+
+model Goal {
+    id           Int       @id @default(autoincrement())
+    userId       Int
+    caloriesGoal Float?
+    proteinsGoal Float?
+    fatsGoal     Float?
+    carbsGoal    Float?
+    startDate    DateTime
+    endDate      DateTime?
+    isActive     Boolean   @default(true)
+    createdAt    DateTime  @default(now())
+    updatedAt    DateTime  @updatedAt
+
+    User User @relation(fields: [userId], references: [id])
+
+    @@unique([userId, isActive], name: "unique_active_goal_per_user")
+}
+
+// model Statistic {
+//   id            Int      @id @default(autoincrement())
+//   userId        Int
+//   date          DateTime
+//   totalCalories Float
+//   totalProteins Float
+//   totalFats     Float
+//   totalCarbs    Float
+//   createdAt     DateTime @default(now())
+//
+//   user User @relation(fields: [userId], references: [id])
+// }
+
+enum Unit {
+    G
+    ML
+    PCS
 }
