@@ -19,10 +19,10 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
 
@@ -119,9 +119,8 @@ jobs:
           echo "===================================="
           ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no root@${{ env.SERVER_IP }} << EOF
           pm2 delete fooddiary-backend || true
-          pm2 start "${{ env.BACKEND_DEPLOY_DIR }}/dist/src/main.js" --name fooddiary-backend
-          pm2 logs fooddiary-backend --lines 10
-          EOF      
+          NODE_ENV=production pm2 start "${{ env.BACKEND_DEPLOY_DIR }}/dist/src/main.js" --name fooddiary-backend
+          EOF   
 
       - name: Confirm deployment completion
         run: |
