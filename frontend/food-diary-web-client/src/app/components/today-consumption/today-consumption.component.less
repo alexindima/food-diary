@@ -1,0 +1,165 @@
+:host {
+    display: block;
+    position: relative;
+    width: 100%;
+    min-height: 80vh;
+    box-sizing: border-box;
+    overflow: hidden;
+
+    --tui-chart-categorical-00: #4a90e2;
+    --tui-chart-categorical-01: #50e3c2;
+    --tui-chart-categorical-02: #f5a623;
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-image: url('../../../../assets/images/background.webp');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        opacity: 0.1;
+        z-index: -1;
+    }
+}
+
+.today-consumption {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 24px;
+
+    &__title {
+        text-align: center;
+        font-size: 1.8em;
+        font-weight: bold;
+        margin-top: 0;
+        margin-bottom: 24px;
+        color: #333;
+    }
+
+    &__card {
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-direction: column;
+        padding: 24px;
+        gap: 16px;
+    }
+
+    &__content {
+        display: flex;
+        gap: 24px;
+
+        @media (max-width: 768px) {
+            flex-direction: column;
+        }
+    }
+
+    &__left {
+        flex: 1.5;
+
+        @media (max-width: 768px) {
+            width: 100%;
+        }
+    }
+
+    &__right {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+
+        @media (max-width: 768px) {
+            width: 100%;
+            align-items: center;
+        }
+    }
+
+    &__header {
+        margin-bottom: 16px;
+    }
+
+    &__subtitle {
+        font-size: 1.5em;
+        font-weight: bold;
+        color: #007bff;
+    }
+
+    &__calories {
+        font-size: 1.2em;
+        font-weight: bold;
+        color: #333;
+    }
+
+    &__body {
+        margin-top: 16px;
+    }
+
+    &__nutrients {
+        background-color: rgba(0, 0, 0, 0.05);
+        border-radius: 8px;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+
+        &-container {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+
+            @media (max-width: 480px) {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+
+        &-list {
+            flex: 1;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            font-size: 0.9em;
+            color: #333;
+
+            @media (max-width: 480px) {
+                margin-bottom: 16px;
+            }
+        }
+
+        &-chart {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            @media (max-width: 480px) {
+                justify-content: center;
+            }
+        }
+    }
+
+    &__button {
+        width: 100%;
+        justify-content: center;
+
+        &--primary {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        &--outline {
+            background-color: transparent;
+            color: #007bff;
+            border: 1px solid #007bff;
+        }
+    }
+}

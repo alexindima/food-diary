@@ -1,0 +1,195 @@
+<div class="food-manage">
+    <h2 class="food-manage__title">
+        @if (food()) {
+            {{ 'FOOD_MANAGE.EDIT_TITLE' | translate }}
+        } @else {
+            {{ 'FOOD_MANAGE.ADD_TITLE' | translate }}
+        }
+    </h2>
+    <form class="food-manage__form" [formGroup]="foodForm" (ngSubmit)="onSubmit()">
+        <div class="food-manage__field food-manage__field--name">
+            <tui-textfield type="text">
+                <label tuiLabel>{{ 'FOOD_MANAGE.NAME' | translate }}*</label>
+                <input
+                    formControlName="name"
+                    tuiTextfield
+                    tuiTextfieldSize="m"
+                    placeholder="{{ 'FOOD_MANAGE.NAME_PLACEHOLDER' | translate }}"
+                />
+            </tui-textfield>
+            <tui-error
+                formControlName="name"
+                [error]="[] | tuiFieldError | async"
+            ></tui-error>
+        </div>
+        <div class="food-manage__field food-manage__field--barcode">
+            <tui-textfield type="text">
+                <label tuiLabel>{{ 'FOOD_MANAGE.BARCODE' | translate }}</label>
+                <input
+                    formControlName="barcode"
+                    tuiTextfield
+                    placeholder="{{ 'FOOD_MANAGE.BARCODE_PLACEHOLDER' | translate }}"
+                />
+            </tui-textfield>
+            <tui-error
+                formControlName="barcode"
+                [error]="[] | tuiFieldError | async"
+            ></tui-error>
+        </div>
+        <div class="food-manage__field food-manage__field--category">
+            <tui-textfield type="text">
+                <label tuiLabel>{{ 'FOOD_MANAGE.CATEGORY' | translate }}</label>
+                <input
+                    formControlName="category"
+                    tuiTextfield
+                    placeholder="{{ 'FOOD_MANAGE.CATEGORY_PLACEHOLDER' | translate }}"
+                />
+            </tui-textfield>
+            <tui-error
+                formControlName="category"
+                [error]="[] | tuiFieldError | async"
+            ></tui-error>
+        </div>
+        <div class="food-manage__serving">
+            <div class="food-manage__serving-part food-manage__serving-part--amount">
+                <tui-input-number
+                    formControlName="defaultServing"
+                >
+                    {{ 'FOOD_MANAGE.DEFAULT_SERVING' | translate }}*
+                    <input
+                        placeholder="{{ 'FOOD_MANAGE.DEFAULT_SERVING_PLACEHOLDER' | translate }}"
+                        tuiTextfieldLegacy
+                    />
+                </tui-input-number>
+                <tui-error
+                    formControlName="defaultServing"
+                    [error]="[] | tuiFieldError | async"
+                ></tui-error>
+            </div>
+            <div class="food-manage__serving-part food-manage__serving-part--unit">
+                <tui-select
+                    formControlName="defaultServingUnit"
+                    [tuiTextfieldLabelOutside]="true"
+                    [stringify]="stringifyUnits"
+                >
+                    {{ 'FOOD_MANAGE.DEFAULT_SERVING_UNIT' | translate }}*
+                    <input
+                        placeholder="{{ 'FOOD_MANAGE.DEFAULT_SERVING_UNIT_PLACEHOLDER' | translate }}"
+                        tuiTextfieldLegacy
+                    />
+                    <ng-template tuiDataList>
+                        <tui-data-list>
+                            @for (unit of units; track unit;) {
+                                <button
+                                    tuiOption
+                                    [value]="unit"
+                                >
+                                    {{ ('FOOD_MANAGE.DEFAULT_SERVING_UNITS.' + Unit[unit]) | translate }}
+                                </button>
+                            }
+                        </tui-data-list>
+                    </ng-template>
+                </tui-select>
+                <tui-error
+                    formControlName="defaultServingUnit"
+                    [error]="[] | tuiFieldError | async"
+                ></tui-error>
+            </div>
+        </div>
+        <div class="food-manage__field food-manage__field--calories">
+            <tui-input-number
+                formControlName="caloriesPer100"
+            >
+                {{ 'FOOD_MANAGE.CALORIES' | translate }}*
+                <input
+                    placeholder="{{ 'FOOD_MANAGE.CALORIES_PLACEHOLDER' | translate }}"
+                    tuiTextfieldLegacy
+                />
+            </tui-input-number>
+            <tui-error
+                formControlName="caloriesPer100"
+                [error]="[] | tuiFieldError | async"
+            ></tui-error>
+        </div>
+        <div class="food-manage__field food-manage__field--proteins">
+            <tui-input-number
+                formControlName="proteinsPer100"
+            >
+                {{ 'FOOD_MANAGE.PROTEINS' | translate }}*
+                <input
+                    placeholder="{{ 'FOOD_MANAGE.PROTEINS_PLACEHOLDER' | translate }}"
+                    tuiTextfieldLegacy
+                />
+            </tui-input-number>
+            <tui-error
+                formControlName="proteinsPer100"
+                [error]="[] | tuiFieldError | async"
+            ></tui-error>
+        </div>
+        <div class="food-manage__field food-manage__field--fats">
+            <tui-input-number
+                formControlName="fatsPer100"
+            >
+                {{ 'FOOD_MANAGE.FATS' | translate }}*
+                <input
+                    placeholder="{{ 'FOOD_MANAGE.FATS_PLACEHOLDER' | translate }}"
+                    tuiTextfieldLegacy
+                />
+            </tui-input-number>
+            <tui-error
+                formControlName="fatsPer100"
+                [error]="[] | tuiFieldError | async"
+            ></tui-error>
+        </div>
+        <div class="food-manage__field food-manage__field--carbs">
+            <tui-input-number
+                formControlName="carbsPer100"
+            >
+                {{ 'FOOD_MANAGE.CARBS' | translate }}*
+                <input
+                    placeholder="{{ 'FOOD_MANAGE.CARBS_PLACEHOLDER' | translate }}"
+                    tuiTextfieldLegacy
+                />
+            </tui-input-number>
+            <tui-error
+                formControlName="carbsPer100"
+                [error]="[] | tuiFieldError | async"
+            ></tui-error>
+        </div>
+        <div class="food-manage__actions">
+            <button
+                class="food-manage__action-button"
+                tuiButton
+                appearance="primary"
+                type="submit"
+            >
+                @if (food()) {
+                    {{ 'FOOD_MANAGE.SAVE_BUTTON' | translate }}
+                } @else {
+                    {{ 'FOOD_MANAGE.ADD_BUTTON' | translate }}
+                }
+            </button>
+            <tui-error [error]="globalError()"></tui-error>
+        </div>
+    </form>
+</div>
+
+<ng-template #confirmDialog let-observer>
+    <div class="food-manage__dialog">
+        <p class="food-manage__dialog-title">
+            @if (food()) {
+                {{ 'FOOD_DETAIL.EDIT_SUCCESS' | translate }}
+            } @else {
+                {{ 'FOOD_DETAIL.CREATE_SUCCESS' | translate }}
+            }
+        </p>
+        <div class="food-manage__dialog-buttons">
+            <button tuiButton size="m" (click)="observer.next('Home'); observer.complete()">
+                {{ 'FOOD_DETAIL.GO_TO_HOME_BUTTON' | translate }}
+            </button>
+            <button tuiButton size="m" (click)="observer.next('FoodList'); observer.complete()">
+                {{ 'FOOD_DETAIL.GO_TO_FOOD_LIST_BUTTON' | translate }}
+            </button>
+        </div>
+    </div>
+</ng-template>

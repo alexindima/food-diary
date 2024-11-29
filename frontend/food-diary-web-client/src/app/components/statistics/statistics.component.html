@@ -1,0 +1,159 @@
+<div class="statistics">
+    <h2 class="statistics__title">{{ 'STATISTICS.TITLE' | translate }}</h2>
+
+    <div class="statistics__range">
+        <form class="statistics__form" [formGroup]="rangeForm">
+            <div class="statistics__range-modes"
+                 tuiGroup
+                 [orientation]="isMobile() ? 'vertical' : 'horizontal'"
+                 [collapsed]="true"
+            >
+                <label class="statistics__range-label" tuiBlock="s">
+                    <input
+                        class="statistics__range-input"
+                        formControlName="range"
+                        tuiBlock
+                        type="radio"
+                        value="Week"
+                    />
+                    {{ 'STATISTICS.LABELS.WEEK' | translate }}
+                </label>
+                <label class="statistics__range-label" tuiBlock="s">
+                    <input
+                        class="statistics__range-input"
+                        formControlName="range"
+                        tuiBlock
+                        type="radio"
+                        value="Month"
+                    />
+                    {{ 'STATISTICS.LABELS.MONTH' | translate }}
+                </label>
+                <label class="statistics__range-label" tuiBlock="s">
+                    <input
+                        class="statistics__range-input"
+                        formControlName="range"
+                        tuiBlock
+                        type="radio"
+                        value="Year"
+                    />
+                    {{ 'STATISTICS.LABELS.YEAR' | translate }}
+                </label>
+                <label class="statistics__range-label" tuiBlock="s">
+                    <input
+                        class="statistics__range-input"
+                        formControlName="range"
+                        tuiBlock
+                        type="radio"
+                        value="Custom"
+                    />
+                    {{ 'STATISTICS.LABELS.CUSTOM' | translate }}
+                </label>
+            </div>
+            @if (rangeForm.controls.range.value === 'Custom') {
+                <tui-input-date-range
+                    class="statistics__input-range"
+                    formControlName="inputRange"
+                    [maxLength]="maxLength"
+                >
+                    {{ 'STATISTICS.RANGE' | translate }}
+                </tui-input-date-range>
+            }
+        </form>
+    </div>
+
+    @if (isLoading()) {
+        <tui-loader class="statistics__loader"></tui-loader>
+    } @else {
+        <div class="statistics__calories">
+            <h3 class="statistics__calories-title">
+                {{ 'STATISTICS.CALORIES_TITLE' | translate }}
+            </h3>
+            @if (labels$ | async) {
+                <tui-axes
+                    class="statistics__axes"
+                    [axisXLabels]="(labels$ | async)!"
+                    [horizontalLines]="4"
+                    [verticalLines]="(labels$ | async)!.length - 1"
+                >
+                    <tui-line-days-chart
+                        class="statistics__calories-chart"
+                        [height]="caloriesChartData?.maxValue ?? 0"
+                        [value]="caloriesChartData?.data ?? []"
+                        [xStringify]="xStringify$ | async"
+                        [yStringify]="yStringify"
+                    />
+                </tui-axes>
+            }
+        </div>
+        <div class="statistics__nutrients">
+            <h3 class="statistics__nutrients-title">
+                {{ 'STATISTICS.NUTRIENTS_TITLE' | translate }}
+            </h3>
+            <p class="statistics__legend">
+                @for (chart of nutrientsDaysChartData?.chartData; track chart) {
+                    <span class="statistics__legend-item">
+                        <small class="statistics__legend-name">
+                            {{ 'STATISTICS.NUTRIENTS.' + chart.type.toUpperCase() | translate }}
+                        </small>
+                    </span>
+                }
+            </p>
+            <div class="statistics__nutrients-charts">
+                <div class="statistics__nutrients-days-chart">
+                    @if (labels$ | async) {
+                        <tui-axes
+                            class="statistics__axes"
+                            [axisXLabels]="(labels$ | async)!"
+                            [horizontalLines]="4"
+                            [tuiLineChartHint]="hint"
+                            [verticalLines]="(labels$ | async)!.length - 1"
+                        >
+                            @for (chart of nutrientsDaysChartData?.chartData; track chart) {
+                                <tui-line-days-chart
+                                    class="statistics__nutrients-chart"
+                                    [height]="nutrientsDaysChartData?.maxValue ?? 0"
+                                    [value]="chart.data"
+                                ></tui-line-days-chart>
+                            }
+                        </tui-axes>
+                    }
+                    <ng-template
+                        #hint
+                        let-data
+                    >
+                        <div class="statistics__hint tui-space_bottom-2">
+                            <strong>{{ getDate(data[0][0], range.from) }}</strong>
+                        </div>
+                        <div>
+                            @for (point of data; track point) {
+                                <div class="statistics__hint-item">
+                                    <span class="statistics__hint-value">{{ point[1].toFixed(0) }} {{ 'STATISTICS.GRAMS' | translate }}</span>
+                                </div>
+                            }
+                        </div>
+                    </ng-template>
+                </div>
+                @if (nutrientsPieChartData) {
+                    <div class="statistics__nutrients-ring-chart">
+                        <tui-pie-chart
+                            class="statistics__pie-chart"
+                            size="l"
+                            [tuiHintContent]="content"
+                            [value]="nutrientsPieChartData.values"
+                        />
+
+                        <ng-template
+                            #content
+                            let-index
+                        >
+                            <div>{{ nutrientsPieChartData.labels[index] }}</div>
+                            <span>
+                                {{ nutrientsPieChartData.values[index] | number: '1.0-2' }} {{ 'STATISTICS.GRAMS' | translate }}
+                            </span>
+                        </ng-template>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+</div>

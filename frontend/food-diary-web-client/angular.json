@@ -17,7 +17,10 @@
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
                     "options": {
-                        "outputPath": "dist/food-diary-web-client",
+                        "outputPath": {
+                            "base": "dist",
+                            "browser": ""
+                        },
                         "index": "src/index.html",
                         "browser": "src/main.ts",
                         "polyfills": ["zone.js"],
@@ -28,16 +31,6 @@
                                 "glob": "**/*",
                                 "input": "assets",
                                 "output": "/assets"
-                            },
-                            {
-                                "glob": "**/*",
-                                "input": "node_modules/@taiga-ui/icons/src",
-                                "output": "assets/taiga-ui/icons"
-                            },
-                            {
-                                "glob": "**/*",
-                                "input": "node_modules/@taiga-ui/icons/src",
-                                "output": "assets/taiga-ui/icons"
                             },
                             {
                                 "glob": "**/*",
@@ -55,11 +48,17 @@
                     },
                     "configurations": {
                         "production": {
+                            "fileReplacements": [
+                                {
+                                    "replace": "src/environments/environment.ts",
+                                    "with": "src/environments/environment.prod.ts"
+                                }
+                            ],
                             "budgets": [
                                 {
                                     "type": "initial",
-                                    "maximumWarning": "500kB",
-                                    "maximumError": "1MB"
+                                    "maximumWarning": "1.2MB",
+                                    "maximumError": "1.5MB"
                                 },
                                 {
                                     "type": "anyComponentStyle",
@@ -70,11 +69,29 @@
                             "outputHashing": "all"
                         },
                         "development": {
+                            "fileReplacements": [
+                                {
+                                    "replace": "src/environments/environment.ts",
+                                    "with": "src/environments/environment.ts"
+                                }
+                            ],
                             "optimization": false,
                             "extractLicenses": false,
                             "sourceMap": true
+                        },
+                        "staging": {
+                            "fileReplacements": [
+                                {
+                                    "replace": "src/environments/environment.ts",
+                                    "with": "src/environments/environment.staging.ts"
+                                }
+                            ],
+                            "outputHashing": "all",
+                            "optimization": true,
+                            "sourceMap": false
                         }
                     },
+
                     "defaultConfiguration": "production"
                 },
                 "serve": {

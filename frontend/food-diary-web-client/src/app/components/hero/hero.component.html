@@ -4,15 +4,25 @@
         <p class="hero__description">{{ 'HERO.DESCRIPTION' | translate }}</p>
         <div class="hero__actions">
             <div class="hero__button-container">
-                <button tuiButton class="primary" size="l" (click)="goToLogin()">{{ 'HERO.LOGIN' | translate }}</button>
-                <button tuiButton class="secondary" size="l" (click)="goToRegister()">{{ 'HERO.REGISTER' | translate }}</button>
+                <button tuiButton class="action-button action-button--primary" size="l" (click)="goToLogin()">{{ 'HERO.LOGIN' | translate }}</button>
+                <button tuiButton class="action-button action-button--secondary" size="l" (click)="goToRegister()">{{ 'HERO.REGISTER' | translate }}</button>
             </div>
         </div>
     </div>
     <div class="hero__background">
         <tui-carousel [(index)]="currentSlide" [duration]="5000">
             @for(slide of slides; track slide) {
-                <img *tuiItem alt="" draggable="false" src="assets/images/hero/{{ slide }}" class="hero__slide" />
+                <picture *tuiItem>
+                    <source srcset="assets/images/hero/{{ slide }}-1024.webp" media="(max-width: 1024px)" type="image/webp" />
+                    <source srcset="assets/images/hero/{{ slide }}-768.webp" media="(max-width: 768px)" type="image/webp" />
+                    <source srcset="assets/images/hero/{{ slide }}-480.webp" media="(max-width: 480px)" type="image/webp" />
+                    <img
+                        src="assets/images/hero/{{ slide }}.webp"
+                        alt="{{ 'HERO.SLIDE_ALT' | translate:{index: slides.indexOf(slide)} }}"
+                        draggable="false"
+                        class="hero__slide"
+                    />
+                </picture>
             }
         </tui-carousel>
     </div>

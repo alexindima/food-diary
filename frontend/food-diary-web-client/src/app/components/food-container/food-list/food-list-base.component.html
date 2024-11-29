@@ -1,0 +1,76 @@
+<div class="food-list" #container>
+    <h2 class="food-list__title">{{ getTitle() }}</h2>
+
+    <div class="food-list__actions">
+        <search tuiSearch class="food-list__search">
+            <form class="food-list__search-form" [formGroup]="searchForm">
+                <fieldset tuiTextfieldSize="m">
+                    <tui-textfield iconStart="@tui.search">
+                        <input
+                            formControlName="search"
+                            [placeholder]="'FOOD_LIST.SEARCH_PLACEHOLDER' | translate"
+                            tuiTextfield
+                            class="food-list__search-input"
+                        />
+                    </tui-textfield>
+                </fieldset>
+            </form>
+        </search>
+        <button
+            tuiButton
+            iconStart="@tui.plus"
+            size="m"
+            (click)="goToFoodAdd()"
+            class="food-list__add-button"
+        >
+            {{ 'FOOD_LIST.ADD_FOOD_BUTTON' | translate }}
+        </button>
+    </div>
+
+    @if (foodData.isLoading()) {
+        <tui-loader class="food-list__loader"></tui-loader>
+    } @else {
+        @if (foodData.items().length > 0) {
+            @for (food of foodData.items(); track food) {
+                <div
+                    class="food-card"
+                    (click)="openFoodDetails(food)"
+                >
+                    <div class="food-card__header">
+                        <span class="food-card__name">{{ food.name }}</span>
+                        @if (food.barcode) {
+                            <span class="food-card__barcode">
+                                {{ 'FOOD_LIST.BARCODE' | translate }}: {{ food.barcode }}
+                            </span>
+                        }
+                    </div>
+                    <div class="food-card__info">
+                        <span class="food-card__calories">
+                            {{ 'FOOD_LIST.CALORIES' | translate }}: {{ food.caloriesPer100 }}
+                        </span>
+                        <span class="food-card__macros">
+                            {{ 'FOOD_LIST.PROTEINS' | translate }}: {{ food.proteinsPer100 }}g |
+                            {{ 'FOOD_LIST.FATS' | translate }}: {{ food.fatsPer100 }}g |
+                            {{ 'FOOD_LIST.CARBS' | translate }}: {{ food.carbsPer100 }}g
+                        </span>
+                    </div>
+                </div>
+            }
+        } @else {
+            <div class="food-list__no-results">
+                <span class="food-list__no-results-icon">🔍</span>
+                {{ 'FOOD_LIST.NO_PRODUCTS_FOUND' | translate }}
+            </div>
+        }
+    }
+
+    @if (foodData.totalPages > 1) {
+        <tui-pagination
+            [length]="foodData.totalPages"
+            [(index)]="currentPageIndex"
+            (indexChange)="onPageChange($event)"
+            class="food-list__pagination"
+        >
+        </tui-pagination>
+    }
+</div>

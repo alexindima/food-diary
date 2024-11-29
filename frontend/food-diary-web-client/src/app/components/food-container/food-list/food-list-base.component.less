@@ -1,0 +1,136 @@
+.food-list {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 16px;
+    box-sizing: border-box;
+    font-size: 14px;
+
+    &__title {
+        font-size: 1.8em;
+        font-weight: bold;
+        color: #333;
+        text-align: center;
+        margin: 0 0 20px;
+    }
+
+    &__actions {
+        display: flex;
+        align-items: center;
+        gap: 36px;
+        margin-bottom: 20px;
+
+        @media (max-width: 480px) {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+    }
+
+    &__search {
+        width: 100%;
+    }
+
+    &__search-form {
+        flex-grow: 1;
+    }
+
+    &__search-input {
+        width: 100%;
+    }
+
+    &__add-button {
+        white-space: nowrap;
+    }
+
+    &__loader {
+        display: block;
+        margin: 20px auto;
+    }
+
+    &__no-results {
+        font-size: 1.2em;
+        font-weight: bold;
+        color: #757575;
+        text-align: center;
+        margin-top: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+
+        &-icon {
+            font-size: 2em;
+            color: #ff6b6b;
+        }
+    }
+
+    &__pagination {
+        margin-top: 20px;
+    }
+}
+
+.food-card {
+    cursor: pointer;
+    padding: 16px;
+    margin-bottom: 16px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    background-color: rgba(255, 255, 255, 0.9);
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+
+    &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    &__header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+
+        @media (max-width: 480px) {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 8px;
+        }
+    }
+
+    &__name {
+        font-size: 1.5em;
+        font-weight: bold;
+        color: #333;
+    }
+
+    &__barcode {
+        font-size: 0.9em;
+        color: #757575;
+    }
+
+    &__info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        @media (max-width: 480px) {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 8px;
+        }
+    }
+
+    &__calories {
+        font-size: 1.2em;
+        font-weight: bold;
+        color: #333;
+    }
+
+    &__macros {
+        font-size: 0.9em;
+        color: #757575;
+    }
+}

@@ -1,103 +1,191 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TuiBlock, TuiCheckbox, TuiTab, TuiTabsHorizontal } from '@taiga-ui/kit';
-import {
-    FormBuilder,
-    FormGroup,
-    FormsModule,
-    ReactiveFormsModule,
-    Validators
-} from '@angular/forms';
-import { NgIf } from '@angular/common';
-import {
-    TuiButton, TuiLabel, TuiTextfieldComponent, TuiTextfieldDirective,
-} from '@taiga-ui/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, FactoryProvider, inject, signal } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '../../services/auth.service';
+import { ErrorCode } from '../../types/api-response.data';
+import { TUI_VALIDATION_ERRORS, TuiCheckbox, TuiFieldErrorPipe, TuiTab, TuiTabsHorizontal } from '@taiga-ui/kit';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TuiButton, TuiError, TuiLabel, TuiTextfieldComponent, TuiTextfieldDirective } from '@taiga-ui/core';
+import { AsyncPipe } from '@angular/common';
+import { matchFieldValidator } from '../../validators/match-field.validator';
+import { NavigationService } from '../../services/navigation.service';
+import { FormGroupControls } from '../../types/common.data';
+import { LoginRequest, RegisterRequest } from '../../types/auth.data';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+
+export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
+    provide: TUI_VALIDATION_ERRORS,
+    useFactory: (translate: TranslateService): ValidationErrors => ({
+        required: () => translate.instant('FORM_ERRORS.REQUIRED'),
+        userExists: () => translate.instant('FORM_ERRORS.USER_EXISTS'),
+        email: () => translate.instant('FORM_ERRORS.EMAIL'),
+        matchField: () => translate.instant('FORM_ERRORS.PASSWORD.MATCH'),
+        minlength: ({ requiredLength }) =>
+            translate.instant('FORM_ERRORS.PASSWORD.MIN_LENGTH', {
+                requiredLength,
+            }),
+    }),
+    deps: [TranslateService],
+};
 
 @Component({
     selector: 'app-auth',
     standalone: true,
+    templateUrl: './auth.component.html',
+    styleUrls: ['./auth.component.less'],
+    providers: [VALIDATION_ERRORS_PROVIDER],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        ReactiveFormsModule,
-        TuiTab,
-        FormsModule,
         TuiTabsHorizontal,
-        NgIf,
-        TuiButton,
+        TranslateModule,
+        ReactiveFormsModule,
         TuiTextfieldComponent,
+        TuiTab,
         TuiLabel,
         TuiTextfieldDirective,
-        TuiBlock,
         TuiCheckbox,
-        TranslateModule
+        TuiButton,
+        TuiError,
+        TuiFieldErrorPipe,
+        AsyncPipe,
     ],
-    templateUrl: './auth.component.html',
-    styleUrl: './auth.component.less',
-    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AuthComponent {
+    private readonly route = inject(ActivatedRoute);
+    private readonly router = inject(Router);
+    private readonly navigationService = inject(NavigationService);
+    private readonly authService = inject(AuthService);
+    private readonly translateService = inject(TranslateService);
+    private readonly destroyRef = inject(DestroyRef);
+
     public activeItemIndex = 0;
 
-    public loginForm: FormGroup;
-    public registerForm: FormGroup;
+    public loginForm: FormGroup<LoginFormGroup>;
+    public registerForm: FormGroup<RegisterFormGroup>;
+    public globalError = signal<string | null>(null);
 
-    public constructor(
-        private readonly route: ActivatedRoute,
-        private readonly fb: FormBuilder,
-        private readonly router: Router,
-        private readonly authService: AuthService
-    ) {
+    private readonly returnUrl: string | null = null;
+
+    public constructor() {
+        this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || null;
+
         const mode = this.route.snapshot.params['mode'];
-        if (mode === 'login') {
-            this.activeItemIndex = 0;
-        }
-        if (mode === 'register') {
-            this.activeItemIndex = 1;
-        }
+        this.activeItemIndex = mode === 'register' ? 1 : 0;
 
-        this.loginForm = this.fb.group({
-            email: ['', [Validators.required, Validators.email]],
-            password: ['', Validators.required],
-            rememberMe: [false]
+        this.loginForm = new FormGroup<LoginFormGroup>({
+            email: new FormControl<string>('', { nonNullable: true, validators: [Validators.required, Validators.email] }),
+            password: new FormControl<string>('', { nonNullable: true, validators: [Validators.required, Validators.minLength(6)] }),
+            rememberMe: new FormControl<boolean>(false, { nonNullable: true }),
         });
 
-        this.registerForm = this.fb.group({
-            email: ['', [Validators.required, Validators.email]],
-            password: ['', Validators.required],
-            confirmPassword: ['', Validators.required],
-            agreeTerms: [false, Validators.requiredTrue]
+        this.registerForm = new FormGroup<RegisterFormGroup>({
+            email: new FormControl<string>('', { nonNullable: true, validators: [Validators.required, Validators.email] }),
+            password: new FormControl<string>('', { nonNullable: true, validators: [Validators.required, Validators.minLength(6)] }),
+            confirmPassword: new FormControl<string>('', {
+                nonNullable: true,
+                validators: [Validators.required, matchFieldValidator('password')],
+            }),
+            agreeTerms: new FormControl<boolean>(false, { nonNullable: true, validators: Validators.requiredTrue }),
+        });
+
+        this.loginForm.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.clearGlobalError());
+        this.registerForm.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.clearGlobalError());
+
+        this.registerForm.controls.password.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            this.registerForm.controls.confirmPassword.updateValueAndValidity();
         });
     }
 
-    public onTabChange(index: number): void {
+    public async onTabChange(index: number): Promise<void> {
+        this.loginForm.reset();
+        this.registerForm.reset();
         const mode = index === 0 ? 'login' : 'register';
-        this.router.navigate(['/auth', mode]);
+        await this.router.navigate(['/auth', mode]);
     }
 
-    public onLoginSubmit(): void {
-        if (this.loginForm.valid) {
-            this.authService.login(this.loginForm.value).subscribe({
-                next: (response) => {
-                    console.log('Login successful:', response);
-                },
-                error: (error) => {
-                    console.error('Login failed:', error);
+    public async onLoginSubmit(): Promise<void> {
+        if (!this.loginForm.valid) {
+            return;
+        }
+
+        const loginRequest = new LoginRequest(this.loginForm.value);
+
+        this.authService.login(loginRequest).subscribe({
+            next: response => {
+                if (response.status === 'success') {
+                    this.navigationService.navigateToReturnUrl(this.returnUrl);
+                } else if (response.status === 'error') {
+                    this.handleLoginError(response.error);
                 }
-            });
+            },
+        });
+    }
+
+    public async onRegisterSubmit(): Promise<void> {
+        if (!this.registerForm.valid) {
+            return;
+        }
+
+        const registerRequest = new RegisterRequest(this.registerForm.value);
+
+        this.authService.register(registerRequest).subscribe({
+            next: response => {
+                if (response.status === 'success' && response.data) {
+                    this.navigationService.navigateToReturnUrl(this.returnUrl);
+                } else if (response.status === 'error') {
+                    this.handleRegisterError(response.error);
+                }
+            },
+        });
+    }
+
+    private handleLoginError(error?: ErrorCode): void {
+        if (error === ErrorCode.INVALID_CREDENTIALS) {
+            this.setGlobalError('FORM_ERRORS.INVALID_CREDENTIALS');
+        } else {
+            this.setGlobalError('FORM_ERRORS.UNKNOWN');
         }
     }
 
-    public onRegisterSubmit(): void {
-        if (this.registerForm.valid) {
-            this.authService.register(this.registerForm.value).subscribe({
-                next: (response) => {
-                    console.log('Registration successful:', response);
-                },
-                error: (error) => {
-                    console.error('Registration failed:', error);
-                }
-            });
+    private handleRegisterError(error?: ErrorCode): void {
+        if (error === ErrorCode.USER_EXISTS) {
+            const emailField = this.registerForm.controls.email;
+            emailField?.updateValueAndValidity();
+            emailField?.setErrors({ userExists: true });
+        } else {
+            this.setGlobalError('FORM_ERRORS.UNKNOWN');
         }
+    }
+
+    private setGlobalError(errorKey: string): void {
+        this.globalError.set(this.translateService.instant(errorKey));
+    }
+
+    private clearGlobalError(): void {
+        this.globalError.set(null);
     }
 }
+
+interface ValidationErrors {
+    required: () => string;
+    userExists: () => string;
+    email: () => string;
+    matchField: () => string;
+    minlength: (_params: { requiredLength: string }) => string;
+}
+
+interface LoginFormValues {
+    email: string;
+    password: string;
+    rememberMe: boolean;
+}
+
+interface RegisterFormValues {
+    email: string;
+    password: string;
+    confirmPassword: string;
+    agreeTerms: boolean;
+}
+
+type LoginFormGroup = FormGroupControls<LoginFormValues>;
+type RegisterFormGroup = FormGroupControls<RegisterFormValues>;

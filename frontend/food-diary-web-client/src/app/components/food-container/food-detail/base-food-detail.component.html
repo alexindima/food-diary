@@ -1,0 +1,42 @@
+<div class="modal">
+    <h2 class="modal__title">{{ food.name }}</h2>
+    <hr class="modal__divider" />
+    <div class="modal__body">
+        @if (food.barcode) {
+            <p class="modal__text">
+                <span class="modal__property-name">{{ 'FOOD_DETAIL.BARCODE' | translate }}</span>
+                {{ food.barcode }}
+            </p>
+        }
+        @if (food.category) {
+            <p class="modal__text">
+                <span class="modal__property-name">{{ 'FOOD_DETAIL.CATEGORY' | translate }}</span>
+                {{ food.category }}
+            </p>
+        }
+        <p class="modal__text">
+            <span class="modal__property-name">{{ 'FOOD_DETAIL.CALORIES_PER_100G' | translate }}</span>
+            {{ food.caloriesPer100 }}
+        </p>
+        <p class="modal__text">
+            <span class="modal__property-name">{{ 'FOOD_DETAIL.PROTEINS_PER_100G' | translate }}</span>
+            {{ food.proteinsPer100 }} {{ 'FOOD_DETAIL.GRAMS' | translate }}
+        </p>
+        <p class="modal__text">
+            <span class="modal__property-name">{{ 'FOOD_DETAIL.FATS_PER_100G' | translate }}</span>
+            {{ food.fatsPer100 }} {{ 'FOOD_DETAIL.GRAMS' | translate }}
+        </p>
+        <p class="modal__text">
+            <span class="modal__property-name">{{ 'FOOD_DETAIL.CARBS_PER_100G' | translate }}</span>
+            {{ food.carbsPer100 }} {{ 'FOOD_DETAIL.GRAMS' | translate }}
+        </p>
+        <p class="modal__text">
+            <span class="modal__property-name">{{ 'FOOD_DETAIL.DEFAULT_SERVING' | translate }}</span>
+            {{ food.defaultServing }} {{ 'FOOD_DETAIL.DEFAULT_SERVING_UNIT.' + food.defaultServingUnit | translate }}
+        </p>
+    </div>
+    <hr class="modal__divider" />
+    <div class="modal__footer">
+        <ng-content select="[footer]"></ng-content>
+    </div>
+</div>

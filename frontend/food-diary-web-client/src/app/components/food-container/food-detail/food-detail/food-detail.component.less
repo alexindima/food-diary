@@ -1,0 +1,51 @@
+.modal__footer {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+
+    &-action-wrapper {
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+        gap: 10px;
+    }
+
+    &-warning-message {
+        margin: 0;
+        color: #6c757d;
+        font-size: 0.9em;
+        font-style: italic;
+        text-align: center;
+    }
+
+}
+
+.action-wrapper__button {
+    flex: 1;
+    font-size: 1em;
+    padding: 10px 0;
+}
+
+
+
+.dialog {
+    padding: 20px;
+    text-align: center;
+
+    &__title {
+        &--bold {
+            font-weight: bold;
+        }
+    }
+
+    &__buttons {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 20px;
+    }
+
+    &__button {
+        flex: 1;
+    }
+}

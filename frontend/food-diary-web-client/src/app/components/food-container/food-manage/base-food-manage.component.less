@@ -1,0 +1,90 @@
+:host {
+    display: block;
+    position: relative;
+    width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-image: url('../../../../../assets/images/background.webp');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        opacity: 0.05;
+        z-index: -1;
+    }
+}
+
+.food-manage {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 16px;
+    box-sizing: border-box;
+
+    &__title {
+        font-size: 1.8em;
+        font-weight: bold;
+        color: #333;
+        text-align: center;
+        margin: 0 0 20px;
+    }
+
+    &__form {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    &__field {
+        display: flex;
+        flex-direction: column;
+    }
+
+    &__serving {
+        display: flex;
+        gap: 16px;
+
+        &-part {
+            flex: 1;
+        }
+
+        @media (max-width: 480px) {
+            flex-direction: column;
+            gap: 8px;
+            margin: 12px 0;
+        }
+    }
+
+    &__actions {
+        margin-top: 20px;
+
+        .food-manage__action-button {
+            width: 100%;
+        }
+    }
+
+    &__dialog {
+        padding: 20px;
+        text-align: center;
+
+        &-title {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #333;
+            margin: 0 0 20px;
+        }
+
+        &-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+    }
+}

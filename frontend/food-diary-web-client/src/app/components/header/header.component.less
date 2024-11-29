@@ -2,18 +2,49 @@
     position: relative;
     z-index: 1;
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     align-items: center;
     border-bottom: 1px solid var(--tui-border-normal);
     padding-left: 20px;
-}
 
-.tabs-container {
-    display: flex;
-    align-items: center;
-    padding: 0 16px;
+    &__logo {
+        display: flex;
+        align-items: center;
+
+        a {
+            text-decoration: none;
+        }
+
+        &-img {
+            height: 40px;
+            object-fit: contain;
+        }
+    }
+
+    &__tabs-container {
+        display: flex;
+        align-items: center;
+        padding: 0 16px;
+    }
+
+    &__tabs {
+        @media (max-width: 768px) {
+            display: none;
+        }
+    }
 }
 
 tui-tabs::before {
     block-size: 4px;
 }
+
+.mobile-menu-button {
+    display: none;
+    height: 56px;
+
+    @media (max-width: 768px) {
+        display: flex;
+        align-items: center;
+    }
+}
+

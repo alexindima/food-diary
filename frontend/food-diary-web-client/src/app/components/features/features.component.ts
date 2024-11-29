@@ -1,32 +1,31 @@
 import { Component } from '@angular/core';
-import { NgForOf } from '@angular/common';
-import { TuiButton, TuiSurface, TuiTitle } from '@taiga-ui/core';
-import { TuiCardLarge, TuiHeader } from '@taiga-ui/layout';
+import { TuiButton, TuiSurface } from '@taiga-ui/core';
+import { TuiCardLarge } from '@taiga-ui/layout';
 import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-features',
     standalone: true,
-    imports: [NgForOf, TuiButton, TuiCardLarge, TuiSurface, TuiHeader, TuiTitle, TranslateModule],
+    imports: [TuiButton, TuiCardLarge, TuiSurface, TranslateModule],
     templateUrl: './features.component.html',
     styleUrl: './features.component.less',
 })
 export class FeaturesComponent {
-    features: Feature[] = [
+    public features: Feature[] = [
         {
-            icon: 'tracking.png',
+            icon: 'tracking.webp',
             key: 'CALORIE_TRACKING',
         },
         {
-            icon: 'planning.png',
+            icon: 'planning.webp',
             key: 'MEAL_PLANNING',
         },
         {
-            icon: 'analytics.png',
+            icon: 'analytics.webp',
             key: 'PROGRESS_ANALYTICS',
         },
         {
-            icon: 'support.png',
+            icon: 'support.webp',
             key: 'COMMUNITY_SUPPORT',
         },
     ];

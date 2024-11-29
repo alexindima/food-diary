@@ -1,12 +1,32 @@
 {
+    "FORM_ERRORS": {
+        "REQUIRED": "Это поле обязательно для заполнения",
+        "USER_EXISTS": "Пользователь с таким email уже существует",
+        "EMAIL": "Неправильный email",
+        "INVALID_CREDENTIALS": "Неверный логин или пароль",
+        "AT_LEAST_ONE_MACRONUTRIENT_MUST_BE_SET": "Значение жиров, белков или углеводов должно быть больше 0.",
+        "NON_EMPTY_ARRAY": "Необходимо добавить хотя бы один элемент",
+        "PASSWORD": {
+            "MIN_LENGTH": "Пароль должен содержать не менее 6 символов",
+            "MATCH": "Пароли должны совпадать"
+        },
+        "CONSUMPTION": {
+            "INVALID_MIN_AMOUNT": "Значение должно быть больше 0"
+        },
+        "INVALID_MIN_AMOUNT_MUST_BE_MORE_ZERO": "Значение должно быть больше 0",
+        "UNKNOWN": "Неизвестная ошибка"
+    },
     "HEADER": {
         "HOME": "Главная",
-        "DIARY": "Дневник",
-        "RECIPES": "Рецепты",
-        "PROGRESS": "Прогресс",
-        "PROFILE": "Профиль",
-        "COMMUNITY": "Сообщество",
-        "SETTINGS": "Настройки"
+        "LOGIN": "Вход",
+        "REGISTER": "Регистрация",
+        "FOOD": "Еда",
+        "CONSUMPTION": "Потребление",
+        "STATISTICS": "Статистика",
+        "USER": "Пользователь",
+        "PROFILE_EDIT": "Редактировать профиль",
+        "LOGOUT": "Выход",
+        "MENU": "Меню"
     },
     "FOOTER": {
         "CONTACTS": {
@@ -27,7 +47,7 @@
             "INSTAGRAM": "Instagram",
             "LINKEDIN": "LinkedIn",
             "TELEGRAM": "Telegram",
-            "VK": "VK",
+            "VK": "ВКонтакте",
             "YOUTUBE": "YouTube"
         },
         "BOTTOM": {
@@ -62,7 +82,7 @@
         },
         "BUTTON_MORE": "Узнать больше"
     },
-    "AUTH":{
+    "AUTH": {
         "LOGIN": {
             "TITLE": "Вход",
             "EMAIL": "Email",
@@ -79,5 +99,178 @@
             "AGREE_TO_TERMS": "Я соглашаюсь с <a href='{{termsUrl}}'>Условиями использования</a> и <a href='{{privacyUrl}}'>Политикой конфиденциальности</a>",
             "REGISTER": "Зарегистрироваться"
         }
+    },
+    "FOOD_LIST": {
+        "TITLE": "Список продуктов",
+        "SEARCH_TITLE": "Поиск:",
+        "SEARCH_PLACEHOLDER": "Введите название или штрихкод",
+        "SEARCH_BUTTON": "Поиск",
+        "ADD_FOOD_BUTTON": "Добавить еду",
+        "NO_PRODUCTS_FOUND": "Продукты не найдены",
+        "CALORIES": "Калории",
+        "BARCODE": "Штрихкод",
+        "PROTEINS": "Белки",
+        "FATS": "Жиры",
+        "CARBS": "Углеводы"
+    },
+    "FOOD_DETAIL": {
+        "BARCODE": "Штрихкод:",
+        "CATEGORY": "Категория:",
+        "CALORIES_PER_100G": "Калорий на 100 г:",
+        "PROTEINS_PER_100G": "Белков на 100 г:",
+        "FATS_PER_100G": "Жиров на 100 г:",
+        "CARBS_PER_100G": "Углеводов на 100 г:",
+        "GRAMS": "грамм",
+        "DEFAULT_SERVING": "Стандартная порция:",
+        "DEFAULT_SERVING_UNIT": {
+            "G": "граммы",
+            "ML": "миллилитры",
+            "PCS": "штуки"
+        },
+        "USAGE_COUNT": "Количество использований:",
+        "EDIT_BUTTON": "Редактировать",
+        "DELETE_BUTTON": "Удалить",
+        "WARNING_MESSAGE": "Этот продукт уже используется, редактирование или удаление невозможно.",
+        "CONFIRM_DELETE_TITLE": "Вы уверены, что хотите удалить",
+        "CONFIRM_BUTTON": "Подтвердить",
+        "CANCEL_BUTTON": "Отмена",
+        "SERVING": "Порция",
+        "ADD_TO_CONSUMPTION": "Добавить к потреблению",
+        "CREATE_SUCCESS": "Продукт успешно создан!",
+        "EDIT_SUCCESS": "Продукт успешно отредактирован!",
+        "GO_TO_HOME_BUTTON": "На главную",
+        "GO_TO_FOOD_LIST_BUTTON": "К списку продуктов"
+    },
+    "FOOD_MANAGE": {
+        "ADD_TITLE": "Добавить новый продукт",
+        "EDIT_TITLE": "Редактировать продукт",
+        "NAME": "Название",
+        "NAME_PLACEHOLDER": "Введите название продукта",
+        "BARCODE": "Штрихкод",
+        "BARCODE_PLACEHOLDER": "Введите штрихкод",
+        "CATEGORY": "Категория",
+        "CATEGORY_PLACEHOLDER": "Введите категорию",
+        "CALORIES": "Калорий на 100 г",
+        "CALORIES_PLACEHOLDER": "Введите количество калорий",
+        "PROTEINS": "Белков на 100 г",
+        "PROTEINS_PLACEHOLDER": "Введите количество белков",
+        "FATS": "Жиров на 100 г",
+        "FATS_PLACEHOLDER": "Введите количество жиров",
+        "CARBS": "Углеводов на 100 г",
+        "CARBS_PLACEHOLDER": "Введите количество углеводов",
+        "DEFAULT_SERVING": "Стандартная порция",
+        "DEFAULT_SERVING_PLACEHOLDER": "Введите стандартный размер порции",
+        "DEFAULT_SERVING_UNIT": "Единица измерения порции",
+        "DEFAULT_SERVING_UNIT_PLACEHOLDER": "Выберите единицу измерения",
+        "DEFAULT_SERVING_UNITS": {
+            "G": "граммы",
+            "ML": "миллилитры",
+            "PCS": "штуки"
+        },
+        "SAVE_BUTTON": "Сохранить изменения",
+        "ADD_BUTTON": "Добавить продукт",
+        "CANCEL_BUTTON": "Отмена"
+    },
+    "CONSUMPTION_LIST": {
+        "TITLE": "Список потребления",
+        "ADD_CONSUMPTION_BUTTON": "Добавить потребление",
+        "NO_CONSUMPTIONS_FOUND": "Потребление не найдено",
+        "DATE": "Дата",
+        "ITEM_COUNT": "Количество продуктов",
+        "CHOOSE_DATES": "Выберите даты",
+        "DATE_PLACEHOLDER": "От - До",
+        "TOTAL_CALORIES": "Всего калорий",
+        "TOTAL_PROTEINS": "Всего белков",
+        "TOTAL_FATS": "Всего жиров",
+        "TOTAL_CARBS": "Всего углеводов"
+    },
+    "CONSUMPTION_DETAIL": {
+        "TITLE": "Детали потребления",
+        "DATE": "Дата",
+        "COMMENT": "Комментарий:",
+        "ITEMS_COUNT": "Количество продуктов:",
+        "ITEMS_LIST": "Продукты:",
+        "TOTAL_CALORIES": "Всего калорий:",
+        "TOTAL_PROTEINS": "Всего белков:",
+        "TOTAL_FATS": "Всего жиров:",
+        "TOTAL_CARBS": "Всего углеводов:",
+        "EDIT_BUTTON": "Редактировать",
+        "DELETE_BUTTON": "Удалить",
+        "CONFIRM_DELETE_TITLE": "Вы уверены, что хотите удалить запись за",
+        "CANCEL_BUTTON": "Отмена",
+        "CONFIRM_BUTTON": "Подтвердить"
+    },
+    "CONSUMPTION_MANAGE": {
+        "EDIT_TITLE": "Редактировать потребление",
+        "ADD_TITLE": "Добавить потребление",
+        "COMMENT": "Комментарий",
+        "COMMENT_PLACEHOLDER": "Введите комментарий",
+        "SAVE_BUTTON": "Сохранить",
+        "ADD_BUTTON": "Добавить",
+        "EDIT_SUCCESS": "Потребление успешно обновлено!",
+        "CREATE_SUCCESS": "Потребление успешно создано!",
+        "GO_TO_HOME_BUTTON": "На главную",
+        "GO_TO_CONSUMPTION_LIST_BUTTON": "К списку потребления",
+        "CHOOSE_DATE_TIME": "Выберите дату и время",
+        "NO_FOOD_ADDED": "Продукты не добавлены",
+        "ADD_FOOD": "Добавить продукт"
+    },
+    "STATISTICS": {
+        "TITLE": "Статистика",
+        "CALORIES_TITLE": "Обзор калорий",
+        "NUTRIENTS_TITLE": "Обзор нутриентов",
+        "NUTRIENTS": {
+            "PROTEINS": "Белки",
+            "FATS": "Жиры",
+            "CARBS": "Углеводы"
+        },
+        "LABELS": {
+            "WEEK": "Неделя",
+            "MONTH": "Месяц",
+            "YEAR": "Год",
+            "CUSTOM": "Пользовательский"
+        },
+        "KKAL": "ккал",
+        "GRAMS": "грамм",
+        "RANGE": "Диапазон"
+    },
+    "USER_MANAGE": {
+        "EDIT_TITLE": "Редактировать информацию пользователя",
+        "EMAIL": "Email",
+        "NEW_PASSWORD": "Новый пароль",
+        "CONFIRM_PASSWORD": "Подтвердите пароль",
+        "USERNAME": "Имя пользователя",
+        "FIRST_NAME": "Имя",
+        "LAST_NAME": "Фамилия",
+        "BIRTH_DATE": "Дата рождения",
+        "GENDER": "Пол",
+        "SELECT_GENDER": "Выберите пол",
+        "GENDER_OPTIONS": {
+            "M": "Мужской",
+            "F": "Женский",
+            "O": "Другое"
+        },
+        "WEIGHT": "Вес",
+        "HEIGHT": "Рост",
+        "SAVE_BUTTON": "Сохранить",
+        "UPDATE_SUCCESS": "Информация пользователя успешно обновлена!",
+        "GO_TO_HOME_BUTTON": "На главную"
+    },
+    "TODAY_CONSUMPTION": {
+        "TITLE": "Потребление за сегодня",
+        "TOTAL_CONSUMPTION": "Общее потребление",
+        "NUTRIENTS": "Нутриенты",
+        "ADD_CONSUMPTION": "Добавить потребление",
+        "ADD_FOOD": "Добавить продукт",
+        "MANAGE_CONSUMPTIONS": "Управлять потреблением",
+        "MANAGE_FOODS": "Управлять продуктами",
+        "VIEW_STATISTICS": "Посмотреть статистику"
+    },
+    "NOT_FOUND": {
+        "TITLE": "404 - Страница не найдена",
+        "DESCRIPTION": "Извините, страница, которую вы ищете, не существует.",
+        "GO_HOME": "На главную",
+        "VIEW_FOODS": "Посмотреть продукты"
     }
 }
+

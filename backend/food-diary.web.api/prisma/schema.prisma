@@ -17,6 +17,7 @@ model User {
     id           Int       @id @default(autoincrement())
     email        String    @unique
     password     String
+    refreshToken String?
     username     String?
     firstName    String?
     lastName     String?
@@ -29,12 +30,13 @@ model User {
     createdAt    DateTime  @default(now())
     updatedAt    DateTime  @updatedAt
 
-    goals        Goal[]
     consumptions Consumption[]
+    Food         Food[]
 }
 
 model Food {
     id                 Int      @id @default(autoincrement())
+    barcode            String?
     name               String
     category           String?
     caloriesPer100     Float
@@ -43,55 +45,39 @@ model Food {
     carbsPer100        Float
     defaultServing     Float
     defaultServingUnit Unit
+    usageCount         Int      @default(0)
     createdAt          DateTime @default(now())
     updatedAt          DateTime @updatedAt
 
-    Consumption Consumption[]
+    consumptionItems ConsumptionItem[]
+
+    userId Int
+    user   User @relation(fields: [userId], references: [id])
 }
 
 model Consumption {
     id        Int      @id @default(autoincrement())
     userId    Int
-    foodId    Int
-    amount    Float
     date      DateTime @default(now())
+    comment   String?
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    user User @relation(fields: [userId], references: [id])
-    food Food @relation(fields: [foodId], references: [id])
+    user  User              @relation(fields: [userId], references: [id])
+    items ConsumptionItem[]
 }
 
-model Goal {
-    id           Int       @id @default(autoincrement())
-    userId       Int
-    caloriesGoal Float?
-    proteinsGoal Float?
-    fatsGoal     Float?
-    carbsGoal    Float?
-    startDate    DateTime
-    endDate      DateTime?
-    isActive     Boolean   @default(true)
-    createdAt    DateTime  @default(now())
-    updatedAt    DateTime  @updatedAt
+model ConsumptionItem {
+    id            Int      @id @default(autoincrement())
+    consumptionId Int
+    foodId        Int
+    amount        Float
+    createdAt     DateTime @default(now())
+    updatedAt     DateTime @updatedAt
 
-    User User @relation(fields: [userId], references: [id])
-
-    @@unique([userId, isActive], name: "unique_active_goal_per_user")
+    consumption Consumption @relation(fields: [consumptionId], references: [id])
+    food        Food        @relation(fields: [foodId], references: [id])
 }
-
-// model Statistic {
-//   id            Int      @id @default(autoincrement())
-//   userId        Int
-//   date          DateTime
-//   totalCalories Float
-//   totalProteins Float
-//   totalFats     Float
-//   totalCarbs    Float
-//   createdAt     DateTime @default(now())
-//
-//   user User @relation(fields: [userId], references: [id])
-// }
 
 enum Unit {
     G

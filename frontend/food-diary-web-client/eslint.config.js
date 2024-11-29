@@ -23,7 +23,6 @@ export default [
         },
         rules: {
             ...eslintConfigPrettier.rules,
-            'no-unused-vars': 'error',
             'object-shorthand': ['error', 'always'],
             curly: ['error', 'all'],
             'no-redeclare': 'error',
@@ -54,6 +53,18 @@ export default [
                 {
                     assertionStyle: 'as',
                     objectLiteralTypeAssertions: 'never',
+                },
+            ],
+            '@typescript-eslint/no-unused-vars': [
+                'error',
+                {
+                    vars: 'all',
+                    args: 'after-used',
+                    ignoreRestSiblings: true,
+                    argsIgnorePattern: '^_',
+                    varsIgnorePattern: '^_',
+                    caughtErrors: 'none',
+                    destructuredArrayIgnorePattern: '^_',
                 },
             ],
         },

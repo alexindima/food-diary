@@ -1,0 +1,33 @@
+<app-base-food-detail>
+    <div footer class="modal__footer">
+        <form [formGroup]="consumptionForm" (ngSubmit)="onAdd()" class="modal__footer-form">
+            <div class="modal__footer-email-wrapper">
+                <tui-input-number
+                    formControlName="serving"
+                >
+                    {{ 'FOOD_DETAIL.SERVING' | translate }} ({{ 'FOOD_DETAIL.DEFAULT_SERVING_UNIT.' + food.defaultServingUnit | translate }})
+                    <input
+                        placeholder="0"
+                        tuiTextfieldLegacy
+                    />
+                </tui-input-number>
+                <tui-error
+                    formControlName="serving"
+                    [error]="[] | tuiFieldError | async"
+                ></tui-error>
+            </div>
+            <div class="modal__footer-button-wrapper">
+                <button
+                    class="modal__footer-action-button"
+                    type="submit"
+                    tuiButton
+                    appearance="primary"
+                    [disabled]="consumptionForm.invalid"
+                >
+                    {{ 'FOOD_DETAIL.ADD_TO_CONSUMPTION' | translate }}
+                </button>
+            </div>
+        </form>
+    </div>
+</app-base-food-detail>
+

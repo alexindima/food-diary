@@ -1,64 +1,107 @@
-<div class="form-container">
-    <div class="tabs-container">
+<div class="auth">
+    <div class="auth__tabs">
         <tui-tabs
             [(activeItemIndex)]="activeItemIndex"
             (activeItemIndexChange)="onTabChange($event)"
         >
-            <button tuiTab>{{ 'AUTH.LOGIN.TITLE' | translate }}</button>
-            <button tuiTab>{{ 'AUTH.REGISTER.TITLE' | translate }}</button>
+            <button tuiTab class="auth__tab">{{ 'AUTH.LOGIN.TITLE' | translate }}</button>
+            <button tuiTab class="auth__tab">{{ 'AUTH.REGISTER.TITLE' | translate }}</button>
         </tui-tabs>
     </div>
-    @if(activeItemIndex === 0) {
-        <form [formGroup]="loginForm" (ngSubmit)="onLoginSubmit()" class="form-content">
-            <tui-textfield type="email">
-                <label tuiLabel>{{ 'AUTH.LOGIN.EMAIL' | translate }}</label>
-                <input formControlName="email" tuiTextfield />
-            </tui-textfield>
-            <tui-textfield type="password">
-                <label tuiLabel>{{ 'AUTH.LOGIN.PASSWORD' | translate }}</label>
-                <input formControlName="password" tuiTextfield />
-            </tui-textfield>
-            <label tuiBlock class="checkbox_wrapper">
+    @if (activeItemIndex === 0) {
+        <form [formGroup]="loginForm" (ngSubmit)="onLoginSubmit()" class="auth__form">
+            <div class="auth__field auth__field--email">
+                <tui-textfield type="email">
+                    <label tuiLabel>{{ 'AUTH.LOGIN.EMAIL' | translate }}</label>
+                    <input formControlName="email" tuiTextfield />
+                </tui-textfield>
+                <tui-error
+                    formControlName="email"
+                    [error]="[] | tuiFieldError | async"
+                ></tui-error>
+            </div>
+            <div class="auth__field auth__field--password">
+                <tui-textfield type="password">
+                    <label tuiLabel>{{ 'AUTH.LOGIN.PASSWORD' | translate }}</label>
+                    <input formControlName="password" tuiTextfield />
+                </tui-textfield>
+                <tui-error
+                    formControlName="password"
+                    [error]="[] | tuiFieldError | async"
+                ></tui-error>
+            </div>
+            <label class="auth__checkbox">
                 <input formControlName="rememberMe" tuiCheckbox type="checkbox" />
-                <div class="checkbox_text">{{ 'AUTH.LOGIN.REMEMBER_ME' | translate }}</div>
+                <div class="auth__checkbox-label">{{ 'AUTH.LOGIN.REMEMBER_ME' | translate }}</div>
             </label>
-            <button tuiButton type="submit" appearance="primary" [disabled]="loginForm.invalid">
-                {{ 'AUTH.LOGIN.LOGIN' | translate }}
-            </button>
-            <button tuiButton type="button" size="s" appearance="link">
-                {{ 'AUTH.LOGIN.FORGOT_PASSWORD' | translate }}
-            </button>
+            <div class="auth__actions">
+                <button
+                    class="auth__button"
+                    type="submit"
+                    tuiButton
+                    appearance="primary"
+                    [disabled]="loginForm.invalid"
+                >
+                    {{ 'AUTH.LOGIN.LOGIN' | translate }}
+                </button>
+                <tui-error [error]="globalError()"></tui-error>
+            </div>
         </form>
     } @else {
-        <form [formGroup]="registerForm" (ngSubmit)="onRegisterSubmit()" class="form-content">
-            <tui-textfield type="email">
-                <label tuiLabel>{{ 'AUTH.REGISTER.EMAIL' | translate }}</label>
-                <input formControlName="email" tuiTextfield />
-            </tui-textfield>
-            <tui-textfield type="password">
-                <label tuiLabel>{{ 'AUTH.REGISTER.PASSWORD' | translate }}</label>
-                <input formControlName="password" tuiTextfield />
-            </tui-textfield>
-            <tui-textfield type="password">
-                <label tuiLabel>{{ 'AUTH.REGISTER.CONFIRM_PASSWORD' | translate }}</label>
-                <input formControlName="confirmPassword" tuiTextfield />
-            </tui-textfield>
-            <label tuiBlock class="checkbox_wrapper">
+        <form [formGroup]="registerForm" (ngSubmit)="onRegisterSubmit()" class="auth__form">
+            <div class="auth__field auth__field--email">
+                <tui-textfield type="email">
+                    <label tuiLabel>{{ 'AUTH.REGISTER.EMAIL' | translate }}</label>
+                    <input formControlName="email" tuiTextfield />
+                </tui-textfield>
+                <tui-error
+                    formControlName="email"
+                    [error]="[] | tuiFieldError | async"
+                ></tui-error>
+            </div>
+            <div class="auth__field auth__field--password">
+                <tui-textfield type="password">
+                    <label tuiLabel>{{ 'AUTH.REGISTER.PASSWORD' | translate }}</label>
+                    <input formControlName="password" tuiTextfield />
+                </tui-textfield>
+                <tui-error
+                    formControlName="password"
+                    [error]="[] | tuiFieldError | async"
+                ></tui-error>
+            </div>
+            <div class="auth__field auth__field--confirm-password">
+                <tui-textfield type="password">
+                    <label tuiLabel>{{ 'AUTH.REGISTER.CONFIRM_PASSWORD' | translate }}</label>
+                    <input formControlName="confirmPassword" tuiTextfield />
+                </tui-textfield>
+                <tui-error
+                    formControlName="confirmPassword"
+                    [error]="[] | tuiFieldError | async"
+                ></tui-error>
+            </div>
+            <label class="auth__checkbox">
                 <input
                     formControlName="agreeTerms"
                     tuiCheckbox
                     type="checkbox"
-                    size="s"
                 />
                 <div
-                    class="checkbox_text"
+                    class="auth__checkbox-label"
                     [innerHTML]="'AUTH.REGISTER.AGREE_TO_TERMS' | translate: { termsUrl: '/terms', privacyUrl: '/privacy'}"
-                >
-                </div>
+                ></div>
             </label>
-            <button tuiButton type="submit" appearance="primary" [disabled]="registerForm.invalid">
-                {{ 'AUTH.REGISTER.REGISTER' | translate }}
-            </button>
+            <div class="auth__actions">
+                <button
+                    class="auth__button"
+                    type="submit"
+                    tuiButton
+                    appearance="primary"
+                    [disabled]="registerForm.invalid"
+                >
+                    {{ 'AUTH.REGISTER.REGISTER' | translate }}
+                </button>
+                <tui-error [error]="globalError()"></tui-error>
+            </div>
         </form>
     }
 </div>

@@ -1,16 +1,30 @@
-.t-root-content {
+.t-root {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
 
-    > * {
+    &__header,
+    &__content,
+    &__footer {
+        flex-shrink: 0;
+    }
+
+    &__content {
         flex-grow: 1;
     }
 
-    app-header,
-    router-outlet,
-    app-footer {
-        flex-grow: 0;
-        flex-shrink: 0;
+    &__footer {
+        display: block;
     }
+}
+
+@media (max-width: 480px) {
+    .t-root__footer {
+        display: none;
+    }
+}
+
+tui-dialog[data-appearance='without-border-radius'] {
+    border: none;
+    border-radius: 0;
 }

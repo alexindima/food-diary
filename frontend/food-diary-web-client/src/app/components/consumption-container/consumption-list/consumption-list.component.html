@@ -1,0 +1,67 @@
+<div class="consumption-list" #container>
+    <h2 class="consumption-list__title">{{ 'CONSUMPTION_LIST.TITLE' | translate }}</h2>
+
+    <div class="consumption-list__actions">
+        <div class="consumption-list__search">
+            <form [formGroup]="searchForm" class="consumption-list__date-range-form">
+                <tui-input-date-range formControlName="dateRange" tuiTextfieldSize="m">
+                    {{ 'CONSUMPTION_LIST.CHOOSE_DATES' | translate }}
+                    <input
+                        placeholder="{{ 'CONSUMPTION_LIST.DATE_PLACEHOLDER' | translate }}"
+                        tuiTextfieldLegacy
+                    />
+                </tui-input-date-range>
+            </form>
+        </div>
+        <button class="consumption-list__add-button" tuiButton iconStart="@tui.plus" size="m" (click)="goToConsumptionAdd()">
+            {{ 'CONSUMPTION_LIST.ADD_CONSUMPTION_BUTTON' | translate }}
+        </button>
+    </div>
+
+    @if (consumptionData.isLoading()) {
+        <tui-loader class="consumption-list__loader"></tui-loader>
+    } @else {
+        @if (consumptionData.items().length === 0) {
+            <div class="consumption-list__no-results">
+                <span class="consumption-list__no-results-icon">🔍</span>
+                {{ 'CONSUMPTION_LIST.NO_CONSUMPTIONS_FOUND' | translate }}
+            </div>
+        }
+
+        @for (consumption of consumptionData.items(); track consumption) {
+            <div
+                class="consumption-card"
+                (click)="openConsumptionDetails(consumption)"
+            >
+                <div class="consumption-card__header">
+                    <span class="consumption-card__date">
+                        {{ 'CONSUMPTION_LIST.DATE' | translate }}: {{ consumption.date | date:'dd.MM.yyyy' }} - {{ consumption.date | date:'HH:mm' }}
+                    </span>
+                    <span class="consumption-card__item-count">{{ 'CONSUMPTION_LIST.ITEM_COUNT' | translate }}: {{ consumption.items.length }}</span>
+                </div>
+                @if (consumption.comment) {
+                    <span class="consumption-card__comment">
+                        {{ consumption.comment }}
+                    </span>
+                }
+                <div class="consumption-card__details">
+                    <span class="consumption-card__calories">{{ 'CONSUMPTION_LIST.TOTAL_CALORIES' | translate }}: {{ getTotalCalories(consumption.items) | number: '1.0-2' }} kcal</span>
+                    <div class="consumption-card__macros">
+                        {{ 'CONSUMPTION_LIST.TOTAL_PROTEINS' | translate }}: {{ getTotalProteins(consumption.items) | number: '1.0-2' }}g |
+                        {{ 'CONSUMPTION_LIST.TOTAL_FATS' | translate }}: {{ getTotalFats(consumption.items) | number: '1.0-2' }}g |
+                        {{ 'CONSUMPTION_LIST.TOTAL_CARBS' | translate }}: {{ getTotalCarbs(consumption.items) | number: '1.0-2' }}g
+                    </div>
+                </div>
+            </div>
+        }
+    }
+
+    @if (consumptionData.totalPages > 1) {
+        <tui-pagination
+            class="consumption-list__pagination"
+            [length]="consumptionData.totalPages"
+            [(index)]="currentPageIndex"
+            (indexChange)="onPageChange($event)">
+        </tui-pagination>
+    }
+</div>

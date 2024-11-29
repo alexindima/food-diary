@@ -1,27 +1,86 @@
 <div class="header">
-    <div class="tabs-container">
-        <tui-tabs [(activeItemIndex)]="activeItemIndex">
-            <button tuiTab (click)="onTabClick(1)">
+    <div class="header__logo">
+        <a [routerLink]="'/'">
+            <img src="assets/images/header/logo.webp" alt="Logo" class="header__logo-img" />
+        </a>
+    </div>
+    <div class="header__tabs-container">
+        <tui-tabs class="header__tabs" [(activeItemIndex)]="activeItemIndex">
+            <button tuiTab [routerLink]="'/'" routerLinkActive="active-tab" [routerLinkActiveOptions]="{ exact: true }">
                 {{ 'HEADER.HOME' | translate }}
             </button>
-            <button tuiTab (click)="onTabClick(2)">
-                {{ 'HEADER.DIARY' | translate }}
-            </button>
-            <button tuiTab (click)="onTabClick(3)">
-                {{ 'HEADER.RECIPES' | translate }}
-            </button>
-            <button tuiTab (click)="onTabClick(4)">
-                {{ 'HEADER.PROGRESS' | translate }}
-            </button>
-            <button tuiTab (click)="onTabClick(5)">
-                {{ 'HEADER.PROFILE' | translate }}
-            </button>
-            <button tuiTab (click)="onTabClick(6)">
-                {{ 'HEADER.COMMUNITY' | translate }}
-            </button>
-            <button tuiTab (click)="onTabClick(7)">
-                {{ 'HEADER.SETTINGS' | translate }}
-            </button>
+            @if (isAuthenticated()) {
+                <button tuiTab [routerLink]="'/foods'" routerLinkActive="active-tab">
+                    {{ 'HEADER.FOOD' | translate }}
+                </button>
+                <button tuiTab [routerLink]="'/consumptions'" routerLinkActive="active-tab">
+                    {{ 'HEADER.CONSUMPTION' | translate }}
+                </button>
+                <button tuiTab [routerLink]="'/statistics'" routerLinkActive="active-tab">
+                    {{ 'HEADER.STATISTICS' | translate }}
+                </button>
+                <button
+                    tuiChevron
+                    tuiDropdownOpen
+                    tuiTab
+                    type="button"
+                    routerLinkActive="active-tab"
+                    [tuiDropdown]="dropdown"
+                    (click)="stop($event)"
+                >
+                    {{ 'HEADER.USER' | translate }}
+                </button>
+            } @else {
+                <button tuiTab [routerLink]="'/auth'" routerLinkActive="active-tab">
+                    {{ 'HEADER.LOGIN' | translate }}
+                </button>
+            }
         </tui-tabs>
+
+        <button tuiTab tuiChevron tuiDropdownOpen class="mobile-menu-button" [tuiDropdown]="mobileDropdown">
+            {{ 'HEADER.MENU' | translate }}
+        </button>
     </div>
 </div>
+
+<ng-template #dropdown let-close>
+    <tui-data-list>
+        <button tuiOption type="button" (click)="goToProfile(); close()">
+            {{ 'HEADER.PROFILE_EDIT' | translate }}
+        </button>
+        <button tuiOption type="button" (click)="logout(); close()">
+            {{ 'HEADER.LOGOUT' | translate }}
+        </button>
+    </tui-data-list>
+</ng-template>
+
+<ng-template #mobileDropdown let-close>
+    <tui-data-list>
+        <button tuiOption [routerLink]="'/'" (click)="close()">
+            {{ 'HEADER.HOME' | translate }}
+        </button>
+        @if (isAuthenticated()) {
+            <button tuiOption [routerLink]="'/foods'" (click)="close()">
+                {{ 'HEADER.FOOD' | translate }}
+            </button>
+            <button tuiOption [routerLink]="'/consumptions'" (click)="close()">
+                {{ 'HEADER.CONSUMPTION' | translate }}
+            </button>
+            <button tuiOption [routerLink]="'/statistics'" (click)="close()">
+                {{ 'HEADER.STATISTICS' | translate }}
+            </button>
+            <hr />
+            <button tuiOption (click)="goToProfile(); close()">
+                {{ 'HEADER.PROFILE_EDIT' | translate }}
+            </button>
+            <button tuiOption (click)="logout(); close()">
+                {{ 'HEADER.LOGOUT' | translate }}
+            </button>
+        } @else {
+            <hr />
+            <button tuiOption [routerLink]="'/auth'" (click)="close()">
+                {{ 'HEADER.LOGIN' | translate }}
+            </button>
+        }
+    </tui-data-list>
+</ng-template>

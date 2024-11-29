@@ -1,2 +1,7 @@
-<app-hero></app-hero>
-<app-features></app-features>
+@if (isAuthenticated()) {
+    <app-today-consumption></app-today-consumption>
+
+} @else {
+    <app-hero></app-hero>
+    <app-features></app-features>
+}

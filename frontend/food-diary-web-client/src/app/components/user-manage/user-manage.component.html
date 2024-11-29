@@ -1,0 +1,116 @@
+<div class="user-manage">
+    <h2 class="user-manage__title">{{ 'USER_MANAGE.EDIT_TITLE' | translate }}</h2>
+    <form class="user-manage__form" [formGroup]="userForm" (ngSubmit)="onSubmit()">
+        <div class="user-manage__field">
+            <tui-textfield>
+                <label class="user-manage__label" tuiLabel>{{ 'USER_MANAGE.EMAIL' | translate }}</label>
+                <input class="user-manage__input" formControlName="email" tuiTextfield type="email" [readOnly]="true" />
+            </tui-textfield>
+        </div>
+        <div class="user-manage__field user-manage__field--password">
+            <tui-textfield type="password">
+                <label class="user-manage__label" tuiLabel>{{ 'USER_MANAGE.NEW_PASSWORD' | translate }}</label>
+                <input class="user-manage__input" formControlName="password" tuiTextfield />
+            </tui-textfield>
+            <tui-error
+                formControlName="password"
+                [error]="[] | tuiFieldError | async"
+            ></tui-error>
+        </div>
+        <div class="user-manage__field user-manage__field--password">
+            <tui-textfield type="password">
+                <label class="user-manage__label" tuiLabel>{{ 'USER_MANAGE.CONFIRM_PASSWORD' | translate }}</label>
+                <input class="user-manage__input" formControlName="confirmPassword" tuiTextfield />
+            </tui-textfield>
+            <tui-error
+                formControlName="confirmPassword"
+                [error]="[] | tuiFieldError | async"
+            ></tui-error>
+        </div>
+        <div class="user-manage__field">
+            <tui-textfield>
+                <label class="user-manage__label" tuiLabel>{{ 'USER_MANAGE.USERNAME' | translate }}</label>
+                <input class="user-manage__input" formControlName="username" tuiTextfield />
+            </tui-textfield>
+        </div>
+        <div class="user-manage__field">
+            <tui-textfield>
+                <label class="user-manage__label" tuiLabel>{{ 'USER_MANAGE.FIRST_NAME' | translate }}</label>
+                <input class="user-manage__input" formControlName="firstName" tuiTextfield />
+            </tui-textfield>
+        </div>
+        <div class="user-manage__field">
+            <tui-textfield>
+                <label class="user-manage__label" tuiLabel>{{ 'USER_MANAGE.LAST_NAME' | translate }}</label>
+                <input class="user-manage__input" formControlName="lastName" tuiTextfield />
+            </tui-textfield>
+        </div>
+        <div class="user-manage__field">
+            <tui-input-date
+                class="user-manage__input"
+                [tuiTextfieldCleaner]="true"
+                formControlName="birthDate"
+            >
+                {{ 'USER_MANAGE.BIRTH_DATE' | translate }}
+            </tui-input-date>
+        </div>
+        <div class="user-manage__field">
+            <tui-select
+                class="user-manage__select"
+                formControlName="gender"
+                [stringify]="stringifyGender"
+                [tuiTextfieldCleaner]="true"
+            >
+                {{ 'USER_MANAGE.GENDER' | translate }}
+                <input
+                    class="user-manage__input"
+                    placeholder="{{ 'USER_MANAGE.SELECT_GENDER' | translate }}"
+                    tuiTextfieldLegacy
+                />
+                <ng-template tuiDataList>
+                    <tui-data-list>
+                        @for (gender of genders; track gender) {
+                            <button tuiOption [value]="gender">
+                                {{ ('USER_MANAGE.GENDER_OPTIONS.' + gender) | translate }}
+                            </button>
+                        }
+                    </tui-data-list>
+                </ng-template>
+            </tui-select>
+        </div>
+        <div class="user-manage__field">
+            <tui-textfield>
+                <label class="user-manage__label" tuiLabel>{{ 'USER_MANAGE.WEIGHT' | translate }}</label>
+                <input class="user-manage__input" formControlName="weight" tuiTextfield type="number" />
+            </tui-textfield>
+        </div>
+        <div class="user-manage__field">
+            <tui-textfield>
+                <label class="user-manage__label" tuiLabel>{{ 'USER_MANAGE.HEIGHT' | translate }}</label>
+                <input class="user-manage__input" formControlName="height" tuiTextfield type="number" />
+            </tui-textfield>
+        </div>
+        <div class="user-manage__actions">
+            <button class="user-manage__button user-manage__button--submit" tuiButton appearance="primary" type="submit">
+                {{ 'USER_MANAGE.SAVE_BUTTON' | translate }}
+            </button>
+        </div>
+        <tui-error class="user-manage__error" [error]="globalError()"></tui-error>
+    </form>
+</div>
+
+<ng-template #successDialog let-observer>
+    <div class="user-manage__dialog">
+        <p class="user-manage__dialog-title">{{ 'USER_MANAGE.UPDATE_SUCCESS' | translate }}</p>
+        <div class="user-manage__dialog-actions">
+            <button
+                class="user-manage__dialog-button"
+                tuiButton
+                size="m"
+                (click)="observer.next(true); observer.complete()"
+            >
+                {{ 'USER_MANAGE.GO_TO_HOME_BUTTON' | translate }}
+            </button>
+        </div>
+    </div>
+</ng-template>

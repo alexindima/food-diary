@@ -1,0 +1,94 @@
+<div class="consumption-manage">
+    <h2 class="consumption-manage__title">
+        @if (consumption()) {
+            {{ 'CONSUMPTION_MANAGE.EDIT_TITLE' | translate }}
+        } @else {
+            {{ 'CONSUMPTION_MANAGE.ADD_TITLE' | translate }}
+        }
+    </h2>
+    <form class="consumption-manage__form" [formGroup]="consumptionForm" (ngSubmit)="onSubmit()">
+        <div class="consumption-manage__date">
+            <tui-input-date-time
+                formControlName="date"
+            >
+                Choose date and time
+            </tui-input-date-time>
+            <tui-error
+                formControlName="date"
+                [error]="[] | tuiFieldError | async"
+            ></tui-error>
+        </div>
+        <div class="consumption-manage__consumption">
+            <div class="consumption-manage__select">
+                <tui-multi-select
+                    class="consumption-manage__multi-select"
+                    formControlName="consumedFood"
+                    [tuiTextfieldLabelOutside]="true"
+                    [stringify]="stringifyConsumptionItem"
+                    [editable]="false"
+                    (click)="onMultiSelectClick()"
+                >
+                    {{ 'CONSUMPTION_MANAGE.NO_FOOD_ADDED' | translate }}
+                </tui-multi-select>
+                <button
+                    class="consumption-manage__add-button"
+                    tuiButton
+                    iconStart="@tui.plus"
+                    appearance="primary"
+                    type="button"
+                    (click)="openConsumptionList()"
+                >
+                    {{ 'CONSUMPTION_MANAGE.ADD_FOOD' | translate }}
+                </button>
+            </div>
+            <tui-error
+                formControlName="consumedFood"
+                [error]="[] | tuiFieldError | async"
+            ></tui-error>
+        </div>
+        <div class="consumption-manage__comment">
+            <tui-textfield type="text">
+                <label tuiLabel>{{ 'CONSUMPTION_MANAGE.COMMENT' | translate }}</label>
+                <input
+                    formControlName="comment"
+                    tuiTextfield
+                    placeholder="{{ 'CONSUMPTION_MANAGE.COMMENT_PLACEHOLDER' | translate }}"
+                />
+            </tui-textfield>
+            <tui-error
+                formControlName="comment"
+                [error]="[] | tuiFieldError | async"
+            ></tui-error>
+        </div>
+        <div class="consumption-manage__actions">
+            <button class="consumption-manage__submit-button" tuiButton appearance="primary" type="submit">
+                @if (consumption()) {
+                    {{ 'CONSUMPTION_MANAGE.SAVE_BUTTON' | translate }}
+                } @else {
+                    {{ 'CONSUMPTION_MANAGE.ADD_BUTTON' | translate }}
+                }
+            </button>
+            <tui-error [error]="globalError()"></tui-error>
+        </div>
+    </form>
+</div>
+
+<ng-template #confirmDialog let-observer>
+    <div class="dialog">
+        <p class="dialog__title">
+            @if (consumption()) {
+                {{ 'CONSUMPTION_MANAGE.EDIT_SUCCESS' | translate }}
+            } @else {
+                {{ 'CONSUMPTION_MANAGE.CREATE_SUCCESS' | translate }}
+            }
+        </p>
+        <div class="dialog__buttons">
+            <button tuiButton size="m" (click)="observer.next('Home'); observer.complete()">
+                {{ 'CONSUMPTION_MANAGE.GO_TO_HOME_BUTTON' | translate }}
+            </button>
+            <button tuiButton size="m" (click)="observer.next('ConsumptionList'); observer.complete()">
+                {{ 'CONSUMPTION_MANAGE.GO_TO_CONSUMPTION_LIST_BUTTON' | translate }}
+            </button>
+        </div>
+    </div>
+</ng-template>

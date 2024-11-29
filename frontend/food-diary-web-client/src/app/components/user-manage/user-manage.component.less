@@ -1,0 +1,105 @@
+:host {
+    display: block;
+    position: relative;
+    width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-image: url('../../../../assets/images/background.webp');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        opacity: 0.05;
+        z-index: -1;
+    }
+}
+
+.user-manage {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 16px;
+    box-sizing: border-box;
+
+    &__title {
+        font-size: 1.8em;
+        font-weight: bold;
+        color: #333;
+        text-align: center;
+        margin: 0 0 20px;
+    }
+
+    &__form {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    &__field {
+        display: flex;
+        flex-direction: column;
+
+        &--password {
+            position: relative;
+        }
+    }
+
+    &__input {
+        width: 100%;
+    }
+
+    &__select {
+        width: 100%;
+    }
+
+    &__actions {
+        display: flex;
+        justify-content: center;
+    }
+
+    &__button {
+        width: 100%;
+        text-align: center;
+
+        &--submit {
+            background-color: #007bff;
+            color: #fff;
+        }
+    }
+
+    &__error {
+        color: red;
+        font-size: 0.9em;
+        text-align: center;
+    }
+
+    &__dialog {
+        padding: 20px;
+        text-align: center;
+
+        &-title {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #333;
+            margin: 0 0 54px;
+        }
+
+        &-actions {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 24px;
+        }
+
+        &-button {
+            width: 100%;
+        }
+    }
+}

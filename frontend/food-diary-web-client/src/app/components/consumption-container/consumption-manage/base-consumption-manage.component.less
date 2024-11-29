@@ -1,0 +1,112 @@
+:host {
+    display: block;
+    position: relative;
+    width: 100%;
+    height: 80vh;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+:host::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('../../../../../assets/images/background.webp');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    opacity: 0.05;
+    z-index: -1;
+}
+
+.consumption-manage {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 16px;
+    box-sizing: border-box;
+}
+
+.consumption-manage__title {
+    font-size: 1.8em;
+    font-weight: bold;
+    color: #333;
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+.consumption-manage__form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.consumption-manage__date,
+.consumption-manage__consumption,
+.consumption-manage__comment {
+    display: flex;
+    flex-direction: column;
+}
+
+.consumption-manage__select {
+    display: flex;
+    gap: 16px;
+
+    @media (max-width: 480px) {
+        flex-direction: column;
+        gap: 8px;
+        margin: 12px 0;
+    }
+}
+
+.consumption-manage__multi-select {
+    width: 100%;
+    flex: 1;
+}
+
+.consumption-manage__add-button {
+    height: auto;
+    width: auto;
+
+    @media (max-width: 480px) {
+        height: 56px;
+    }
+}
+
+.consumption-manage__actions {
+    margin-top: 20px;
+}
+
+.consumption-manage__submit-button {
+    width: 100%;
+}
+
+.dialog {
+    padding: 20px;
+    text-align: center;
+}
+
+.dialog__title {
+    font-size: 1.8em;
+    font-weight: bold;
+    color: #333;
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 54px;
+}
+
+.dialog__buttons {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 24px;
+    margin-top: 20px;
+}
+
+.dialog__buttons button {
+    width: 100%;
+}

@@ -1,0 +1,273 @@
+2024-11-21T20:05:34.971Z [INFO]: Starting Nest application...
+2024-11-21T20:05:34.997Z [INFO]: AppModule dependencies initialized
+2024-11-21T20:05:35.000Z [INFO]: PrismaModule dependencies initialized
+2024-11-21T20:05:35.004Z [INFO]: JwtModule dependencies initialized
+2024-11-21T20:05:35.005Z [INFO]: ConfigHostModule dependencies initialized
+2024-11-21T20:05:35.007Z [INFO]: ConsumptionModule dependencies initialized
+2024-11-21T20:05:35.007Z [INFO]: LogsModule dependencies initialized
+2024-11-21T20:05:35.008Z [INFO]: StatisticsModule dependencies initialized
+2024-11-21T20:05:35.008Z [INFO]: UserModule dependencies initialized
+2024-11-21T20:05:35.009Z [INFO]: ConfigModule dependencies initialized
+2024-11-21T20:05:35.009Z [INFO]: ConfigModule dependencies initialized
+2024-11-21T20:05:35.010Z [INFO]: JwtModule dependencies initialized
+2024-11-21T20:05:35.011Z [INFO]: FoodModule dependencies initialized
+2024-11-21T20:05:35.011Z [INFO]: AuthModule dependencies initialized
+2024-11-21T20:05:35.034Z [INFO]: AuthController {/api/auth}:
+2024-11-21T20:05:35.036Z [INFO]: Mapped {/api/auth/register, POST} route
+2024-11-21T20:05:35.037Z [INFO]: Mapped {/api/auth/login, POST} route
+2024-11-21T20:05:35.037Z [INFO]: Mapped {/api/auth/refresh, POST} route
+2024-11-21T20:05:35.037Z [INFO]: ConsumptionController {/api/consumptions}:
+2024-11-21T20:05:35.038Z [INFO]: Mapped {/api/consumptions, GET} route
+2024-11-21T20:05:35.038Z [INFO]: Mapped {/api/consumptions/:id, GET} route
+2024-11-21T20:05:35.039Z [INFO]: Mapped {/api/consumptions, POST} route
+2024-11-21T20:05:35.039Z [INFO]: Mapped {/api/consumptions/:id, PATCH} route
+2024-11-21T20:05:35.039Z [INFO]: Mapped {/api/consumptions/:id, DELETE} route
+2024-11-21T20:05:35.040Z [INFO]: FoodController {/api/foods}:
+2024-11-21T20:05:35.040Z [INFO]: Mapped {/api/foods, GET} route
+2024-11-21T20:05:35.041Z [INFO]: Mapped {/api/foods/:id, GET} route
+2024-11-21T20:05:35.041Z [INFO]: Mapped {/api/foods, POST} route
+2024-11-21T20:05:35.041Z [INFO]: Mapped {/api/foods/:id, PATCH} route
+2024-11-21T20:05:35.042Z [INFO]: Mapped {/api/foods/:id, DELETE} route
+2024-11-21T20:05:35.042Z [INFO]: LogsController {/api/logs}:
+2024-11-21T20:05:35.042Z [INFO]: Mapped {/api/logs, POST} route
+2024-11-21T20:05:35.043Z [INFO]: StatisticsController {/api/statistics}:
+2024-11-21T20:05:35.043Z [INFO]: Mapped {/api/statistics, GET} route
+2024-11-21T20:05:35.043Z [INFO]: UsersController {/api/users}:
+2024-11-21T20:05:35.043Z [INFO]: Mapped {/api/users/info, GET} route
+2024-11-21T20:05:35.044Z [INFO]: Mapped {/api/users, POST} route
+2024-11-21T20:05:35.044Z [INFO]: Mapped {/api/users, PATCH} route
+2024-11-21T20:05:35.172Z [INFO]: Nest application successfully started
+2024-11-21T20:05:43.373Z [INFO]: Starting Nest application...
+2024-11-21T20:05:43.406Z [INFO]: AppModule dependencies initialized
+2024-11-21T20:05:43.409Z [INFO]: PrismaModule dependencies initialized
+2024-11-21T20:05:43.419Z [INFO]: JwtModule dependencies initialized
+2024-11-21T20:05:43.421Z [INFO]: ConfigHostModule dependencies initialized
+2024-11-21T20:05:43.423Z [INFO]: ConsumptionModule dependencies initialized
+2024-11-21T20:05:43.424Z [INFO]: LogsModule dependencies initialized
+2024-11-21T20:05:43.424Z [INFO]: StatisticsModule dependencies initialized
+2024-11-21T20:05:43.425Z [INFO]: UserModule dependencies initialized
+2024-11-21T20:05:43.425Z [INFO]: ConfigModule dependencies initialized
+2024-11-21T20:05:43.426Z [INFO]: ConfigModule dependencies initialized
+2024-11-21T20:05:43.428Z [INFO]: JwtModule dependencies initialized
+2024-11-21T20:05:43.428Z [INFO]: FoodModule dependencies initialized
+2024-11-21T20:05:43.429Z [INFO]: AuthModule dependencies initialized
+2024-11-21T20:05:43.478Z [INFO]: AuthController {/api/auth}:
+2024-11-21T20:05:43.480Z [INFO]: Mapped {/api/auth/register, POST} route
+2024-11-21T20:05:43.481Z [INFO]: Mapped {/api/auth/login, POST} route
+2024-11-21T20:05:43.482Z [INFO]: Mapped {/api/auth/refresh, POST} route
+2024-11-21T20:05:43.482Z [INFO]: ConsumptionController {/api/consumptions}:
+2024-11-21T20:05:43.484Z [INFO]: Mapped {/api/consumptions, GET} route
+2024-11-21T20:05:43.485Z [INFO]: Mapped {/api/consumptions/:id, GET} route
+2024-11-21T20:05:43.487Z [INFO]: Mapped {/api/consumptions, POST} route
+2024-11-21T20:05:43.487Z [INFO]: Mapped {/api/consumptions/:id, PATCH} route
+2024-11-21T20:05:43.488Z [INFO]: Mapped {/api/consumptions/:id, DELETE} route
+2024-11-21T20:05:43.489Z [INFO]: FoodController {/api/foods}:
+2024-11-21T20:05:43.490Z [INFO]: Mapped {/api/foods, GET} route
+2024-11-21T20:05:43.491Z [INFO]: Mapped {/api/foods/:id, GET} route
+2024-11-21T20:05:43.493Z [INFO]: Mapped {/api/foods, POST} route
+2024-11-21T20:05:43.494Z [INFO]: Mapped {/api/foods/:id, PATCH} route
+2024-11-21T20:05:43.496Z [INFO]: Mapped {/api/foods/:id, DELETE} route
+2024-11-21T20:05:43.496Z [INFO]: LogsController {/api/logs}:
+2024-11-21T20:05:43.497Z [INFO]: Mapped {/api/logs, POST} route
+2024-11-21T20:05:43.498Z [INFO]: StatisticsController {/api/statistics}:
+2024-11-21T20:05:43.499Z [INFO]: Mapped {/api/statistics, GET} route
+2024-11-21T20:05:43.500Z [INFO]: UsersController {/api/users}:
+2024-11-21T20:05:43.501Z [INFO]: Mapped {/api/users/info, GET} route
+2024-11-21T20:05:43.501Z [INFO]: Mapped {/api/users, POST} route
+2024-11-21T20:05:43.503Z [INFO]: Mapped {/api/users, PATCH} route
+2024-11-21T20:05:44.808Z [INFO]: Nest application successfully started
+2024-11-21T21:07:16.802Z [INFO]: Starting Nest application...
+2024-11-21T21:07:16.829Z [INFO]: AppModule dependencies initialized
+2024-11-21T21:07:16.831Z [INFO]: PrismaModule dependencies initialized
+2024-11-21T21:07:16.836Z [INFO]: JwtModule dependencies initialized
+2024-11-21T21:07:16.838Z [INFO]: ConfigHostModule dependencies initialized
+2024-11-21T21:07:16.839Z [INFO]: ConsumptionModule dependencies initialized
+2024-11-21T21:07:16.840Z [INFO]: LogsModule dependencies initialized
+2024-11-21T21:07:16.840Z [INFO]: StatisticsModule dependencies initialized
+2024-11-21T21:07:16.840Z [INFO]: UserModule dependencies initialized
+2024-11-21T21:07:16.841Z [INFO]: ConfigModule dependencies initialized
+2024-11-21T21:07:16.841Z [INFO]: ConfigModule dependencies initialized
+2024-11-21T21:07:16.846Z [INFO]: JwtModule dependencies initialized
+2024-11-21T21:07:16.846Z [INFO]: FoodModule dependencies initialized
+2024-11-21T21:07:16.847Z [INFO]: AuthModule dependencies initialized
+2024-11-21T21:07:16.871Z [INFO]: AuthController {/api/auth}:
+2024-11-21T21:07:16.873Z [INFO]: Mapped {/api/auth/register, POST} route
+2024-11-21T21:07:16.874Z [INFO]: Mapped {/api/auth/login, POST} route
+2024-11-21T21:07:16.874Z [INFO]: Mapped {/api/auth/refresh, POST} route
+2024-11-21T21:07:16.875Z [INFO]: ConsumptionController {/api/consumptions}:
+2024-11-21T21:07:16.875Z [INFO]: Mapped {/api/consumptions, GET} route
+2024-11-21T21:07:16.876Z [INFO]: Mapped {/api/consumptions/:id, GET} route
+2024-11-21T21:07:16.876Z [INFO]: Mapped {/api/consumptions, POST} route
+2024-11-21T21:07:16.877Z [INFO]: Mapped {/api/consumptions/:id, PATCH} route
+2024-11-21T21:07:16.877Z [INFO]: Mapped {/api/consumptions/:id, DELETE} route
+2024-11-21T21:07:16.877Z [INFO]: FoodController {/api/foods}:
+2024-11-21T21:07:16.878Z [INFO]: Mapped {/api/foods, GET} route
+2024-11-21T21:07:16.878Z [INFO]: Mapped {/api/foods/:id, GET} route
+2024-11-21T21:07:16.879Z [INFO]: Mapped {/api/foods, POST} route
+2024-11-21T21:07:16.879Z [INFO]: Mapped {/api/foods/:id, PATCH} route
+2024-11-21T21:07:16.879Z [INFO]: Mapped {/api/foods/:id, DELETE} route
+2024-11-21T21:07:16.880Z [INFO]: LogsController {/api/logs}:
+2024-11-21T21:07:16.880Z [INFO]: Mapped {/api/logs, POST} route
+2024-11-21T21:07:16.880Z [INFO]: StatisticsController {/api/statistics}:
+2024-11-21T21:07:16.881Z [INFO]: Mapped {/api/statistics, GET} route
+2024-11-21T21:07:16.881Z [INFO]: UsersController {/api/users}:
+2024-11-21T21:07:16.881Z [INFO]: Mapped {/api/users/info, GET} route
+2024-11-21T21:07:16.881Z [INFO]: Mapped {/api/users, POST} route
+2024-11-21T21:07:16.882Z [INFO]: Mapped {/api/users, PATCH} route
+2024-11-21T21:07:17.021Z [INFO]: Nest application successfully started
+2024-11-21T21:07:25.528Z [INFO]: Starting Nest application...
+2024-11-21T21:07:25.555Z [INFO]: AppModule dependencies initialized
+2024-11-21T21:07:25.557Z [INFO]: PrismaModule dependencies initialized
+2024-11-21T21:07:25.562Z [INFO]: JwtModule dependencies initialized
+2024-11-21T21:07:25.564Z [INFO]: ConfigHostModule dependencies initialized
+2024-11-21T21:07:25.565Z [INFO]: ConsumptionModule dependencies initialized
+2024-11-21T21:07:25.566Z [INFO]: LogsModule dependencies initialized
+2024-11-21T21:07:25.566Z [INFO]: StatisticsModule dependencies initialized
+2024-11-21T21:07:25.566Z [INFO]: UserModule dependencies initialized
+2024-11-21T21:07:25.567Z [INFO]: ConfigModule dependencies initialized
+2024-11-21T21:07:25.567Z [INFO]: ConfigModule dependencies initialized
+2024-11-21T21:07:25.569Z [INFO]: JwtModule dependencies initialized
+2024-11-21T21:07:25.569Z [INFO]: FoodModule dependencies initialized
+2024-11-21T21:07:25.573Z [INFO]: AuthModule dependencies initialized
+2024-11-21T21:07:25.597Z [INFO]: AuthController {/api/auth}:
+2024-11-21T21:07:25.598Z [INFO]: Mapped {/api/auth/register, POST} route
+2024-11-21T21:07:25.599Z [INFO]: Mapped {/api/auth/login, POST} route
+2024-11-21T21:07:25.600Z [INFO]: Mapped {/api/auth/refresh, POST} route
+2024-11-21T21:07:25.600Z [INFO]: ConsumptionController {/api/consumptions}:
+2024-11-21T21:07:25.600Z [INFO]: Mapped {/api/consumptions, GET} route
+2024-11-21T21:07:25.601Z [INFO]: Mapped {/api/consumptions/:id, GET} route
+2024-11-21T21:07:25.601Z [INFO]: Mapped {/api/consumptions, POST} route
+2024-11-21T21:07:25.601Z [INFO]: Mapped {/api/consumptions/:id, PATCH} route
+2024-11-21T21:07:25.602Z [INFO]: Mapped {/api/consumptions/:id, DELETE} route
+2024-11-21T21:07:25.602Z [INFO]: FoodController {/api/foods}:
+2024-11-21T21:07:25.603Z [INFO]: Mapped {/api/foods, GET} route
+2024-11-21T21:07:25.603Z [INFO]: Mapped {/api/foods/:id, GET} route
+2024-11-21T21:07:25.604Z [INFO]: Mapped {/api/foods, POST} route
+2024-11-21T21:07:25.604Z [INFO]: Mapped {/api/foods/:id, PATCH} route
+2024-11-21T21:07:25.604Z [INFO]: Mapped {/api/foods/:id, DELETE} route
+2024-11-21T21:07:25.605Z [INFO]: LogsController {/api/logs}:
+2024-11-21T21:07:25.605Z [INFO]: Mapped {/api/logs, POST} route
+2024-11-21T21:07:25.606Z [INFO]: StatisticsController {/api/statistics}:
+2024-11-21T21:07:25.606Z [INFO]: Mapped {/api/statistics, GET} route
+2024-11-21T21:07:25.606Z [INFO]: UsersController {/api/users}:
+2024-11-21T21:07:25.607Z [INFO]: Mapped {/api/users/info, GET} route
+2024-11-21T21:07:25.607Z [INFO]: Mapped {/api/users, POST} route
+2024-11-21T21:07:25.608Z [INFO]: Mapped {/api/users, PATCH} route
+2024-11-21T21:07:25.748Z [INFO]: Nest application successfully started
+2024-11-21T22:08:45.741Z [INFO]: Starting Nest application...
+2024-11-21T22:08:45.768Z [INFO]: AppModule dependencies initialized
+2024-11-21T22:08:45.770Z [INFO]: PrismaModule dependencies initialized
+2024-11-21T22:08:45.775Z [INFO]: JwtModule dependencies initialized
+2024-11-21T22:08:45.776Z [INFO]: ConfigHostModule dependencies initialized
+2024-11-21T22:08:45.778Z [INFO]: ConsumptionModule dependencies initialized
+2024-11-21T22:08:45.778Z [INFO]: LogsModule dependencies initialized
+2024-11-21T22:08:45.779Z [INFO]: StatisticsModule dependencies initialized
+2024-11-21T22:08:45.779Z [INFO]: UserModule dependencies initialized
+2024-11-21T22:08:45.780Z [INFO]: ConfigModule dependencies initialized
+2024-11-21T22:08:45.780Z [INFO]: ConfigModule dependencies initialized
+2024-11-21T22:08:45.781Z [INFO]: JwtModule dependencies initialized
+2024-11-21T22:08:45.782Z [INFO]: FoodModule dependencies initialized
+2024-11-21T22:08:45.782Z [INFO]: AuthModule dependencies initialized
+2024-11-21T22:08:45.808Z [INFO]: AuthController {/api/auth}:
+2024-11-21T22:08:45.809Z [INFO]: Mapped {/api/auth/register, POST} route
+2024-11-21T22:08:45.810Z [INFO]: Mapped {/api/auth/login, POST} route
+2024-11-21T22:08:45.811Z [INFO]: Mapped {/api/auth/refresh, POST} route
+2024-11-21T22:08:45.811Z [INFO]: ConsumptionController {/api/consumptions}:
+2024-11-21T22:08:45.812Z [INFO]: Mapped {/api/consumptions, GET} route
+2024-11-21T22:08:45.812Z [INFO]: Mapped {/api/consumptions/:id, GET} route
+2024-11-21T22:08:45.812Z [INFO]: Mapped {/api/consumptions, POST} route
+2024-11-21T22:08:45.813Z [INFO]: Mapped {/api/consumptions/:id, PATCH} route
+2024-11-21T22:08:45.813Z [INFO]: Mapped {/api/consumptions/:id, DELETE} route
+2024-11-21T22:08:45.814Z [INFO]: FoodController {/api/foods}:
+2024-11-21T22:08:45.814Z [INFO]: Mapped {/api/foods, GET} route
+2024-11-21T22:08:45.815Z [INFO]: Mapped {/api/foods/:id, GET} route
+2024-11-21T22:08:45.815Z [INFO]: Mapped {/api/foods, POST} route
+2024-11-21T22:08:45.816Z [INFO]: Mapped {/api/foods/:id, PATCH} route
+2024-11-21T22:08:45.816Z [INFO]: Mapped {/api/foods/:id, DELETE} route
+2024-11-21T22:08:45.816Z [INFO]: LogsController {/api/logs}:
+2024-11-21T22:08:45.817Z [INFO]: Mapped {/api/logs, POST} route
+2024-11-21T22:08:45.817Z [INFO]: StatisticsController {/api/statistics}:
+2024-11-21T22:08:45.817Z [INFO]: Mapped {/api/statistics, GET} route
+2024-11-21T22:08:45.817Z [INFO]: UsersController {/api/users}:
+2024-11-21T22:08:45.818Z [INFO]: Mapped {/api/users/info, GET} route
+2024-11-21T22:08:45.818Z [INFO]: Mapped {/api/users, POST} route
+2024-11-21T22:08:45.818Z [INFO]: Mapped {/api/users, PATCH} route
+2024-11-21T22:08:45.943Z [INFO]: Nest application successfully started
+2024-11-21T22:08:54.123Z [INFO]: Starting Nest application...
+2024-11-21T22:08:54.151Z [INFO]: AppModule dependencies initialized
+2024-11-21T22:08:54.154Z [INFO]: PrismaModule dependencies initialized
+2024-11-21T22:08:54.159Z [INFO]: JwtModule dependencies initialized
+2024-11-21T22:08:54.160Z [INFO]: ConfigHostModule dependencies initialized
+2024-11-21T22:08:54.162Z [INFO]: ConsumptionModule dependencies initialized
+2024-11-21T22:08:54.162Z [INFO]: LogsModule dependencies initialized
+2024-11-21T22:08:54.163Z [INFO]: StatisticsModule dependencies initialized
+2024-11-21T22:08:54.163Z [INFO]: UserModule dependencies initialized
+2024-11-21T22:08:54.164Z [INFO]: ConfigModule dependencies initialized
+2024-11-21T22:08:54.164Z [INFO]: ConfigModule dependencies initialized
+2024-11-21T22:08:54.166Z [INFO]: JwtModule dependencies initialized
+2024-11-21T22:08:54.166Z [INFO]: FoodModule dependencies initialized
+2024-11-21T22:08:54.167Z [INFO]: AuthModule dependencies initialized
+2024-11-21T22:08:54.189Z [INFO]: AuthController {/api/auth}:
+2024-11-21T22:08:54.191Z [INFO]: Mapped {/api/auth/register, POST} route
+2024-11-21T22:08:54.192Z [INFO]: Mapped {/api/auth/login, POST} route
+2024-11-21T22:08:54.192Z [INFO]: Mapped {/api/auth/refresh, POST} route
+2024-11-21T22:08:54.193Z [INFO]: ConsumptionController {/api/consumptions}:
+2024-11-21T22:08:54.193Z [INFO]: Mapped {/api/consumptions, GET} route
+2024-11-21T22:08:54.193Z [INFO]: Mapped {/api/consumptions/:id, GET} route
+2024-11-21T22:08:54.194Z [INFO]: Mapped {/api/consumptions, POST} route
+2024-11-21T22:08:54.194Z [INFO]: Mapped {/api/consumptions/:id, PATCH} route
+2024-11-21T22:08:54.195Z [INFO]: Mapped {/api/consumptions/:id, DELETE} route
+2024-11-21T22:08:54.195Z [INFO]: FoodController {/api/foods}:
+2024-11-21T22:08:54.196Z [INFO]: Mapped {/api/foods, GET} route
+2024-11-21T22:08:54.196Z [INFO]: Mapped {/api/foods/:id, GET} route
+2024-11-21T22:08:54.197Z [INFO]: Mapped {/api/foods, POST} route
+2024-11-21T22:08:54.198Z [INFO]: Mapped {/api/foods/:id, PATCH} route
+2024-11-21T22:08:54.198Z [INFO]: Mapped {/api/foods/:id, DELETE} route
+2024-11-21T22:08:54.198Z [INFO]: LogsController {/api/logs}:
+2024-11-21T22:08:54.199Z [INFO]: Mapped {/api/logs, POST} route
+2024-11-21T22:08:54.199Z [INFO]: StatisticsController {/api/statistics}:
+2024-11-21T22:08:54.200Z [INFO]: Mapped {/api/statistics, GET} route
+2024-11-21T22:08:54.200Z [INFO]: UsersController {/api/users}:
+2024-11-21T22:08:54.200Z [INFO]: Mapped {/api/users/info, GET} route
+2024-11-21T22:08:54.201Z [INFO]: Mapped {/api/users, POST} route
+2024-11-21T22:08:54.201Z [INFO]: Mapped {/api/users, PATCH} route
+2024-11-21T22:08:54.332Z [INFO]: Nest application successfully started
+2024-11-22T06:09:15.268Z [INFO]: Starting Nest application...
+2024-11-22T06:09:15.300Z [INFO]: AppModule dependencies initialized
+2024-11-22T06:09:15.304Z [INFO]: PrismaModule dependencies initialized
+2024-11-22T06:09:15.309Z [INFO]: JwtModule dependencies initialized
+2024-11-22T06:09:15.311Z [INFO]: ConfigHostModule dependencies initialized
+2024-11-22T06:09:15.313Z [INFO]: ConsumptionModule dependencies initialized
+2024-11-22T06:09:15.313Z [INFO]: LogsModule dependencies initialized
+2024-11-22T06:09:15.314Z [INFO]: StatisticsModule dependencies initialized
+2024-11-22T06:09:15.314Z [INFO]: UserModule dependencies initialized
+2024-11-22T06:09:15.314Z [INFO]: ConfigModule dependencies initialized
+2024-11-22T06:09:15.315Z [INFO]: ConfigModule dependencies initialized
+2024-11-22T06:09:15.316Z [INFO]: JwtModule dependencies initialized
+2024-11-22T06:09:15.317Z [INFO]: FoodModule dependencies initialized
+2024-11-22T06:09:15.317Z [INFO]: AuthModule dependencies initialized
+2024-11-22T06:09:15.343Z [INFO]: AuthController {/api/auth}:
+2024-11-22T06:09:15.345Z [INFO]: Mapped {/api/auth/register, POST} route
+2024-11-22T06:09:15.345Z [INFO]: Mapped {/api/auth/login, POST} route
+2024-11-22T06:09:15.346Z [INFO]: Mapped {/api/auth/refresh, POST} route
+2024-11-22T06:09:15.346Z [INFO]: ConsumptionController {/api/consumptions}:
+2024-11-22T06:09:15.347Z [INFO]: Mapped {/api/consumptions, GET} route
+2024-11-22T06:09:15.347Z [INFO]: Mapped {/api/consumptions/:id, GET} route
+2024-11-22T06:09:15.347Z [INFO]: Mapped {/api/consumptions, POST} route
+2024-11-22T06:09:15.348Z [INFO]: Mapped {/api/consumptions/:id, PATCH} route
+2024-11-22T06:09:15.348Z [INFO]: Mapped {/api/consumptions/:id, DELETE} route
+2024-11-22T06:09:15.349Z [INFO]: FoodController {/api/foods}:
+2024-11-22T06:09:15.350Z [INFO]: Mapped {/api/foods, GET} route
+2024-11-22T06:09:15.350Z [INFO]: Mapped {/api/foods/:id, GET} route
+2024-11-22T06:09:15.351Z [INFO]: Mapped {/api/foods, POST} route
+2024-11-22T06:09:15.351Z [INFO]: Mapped {/api/foods/:id, PATCH} route
+2024-11-22T06:09:15.351Z [INFO]: Mapped {/api/foods/:id, DELETE} route
+2024-11-22T06:09:15.352Z [INFO]: LogsController {/api/logs}:
+2024-11-22T06:09:15.352Z [INFO]: Mapped {/api/logs, POST} route
+2024-11-22T06:09:15.353Z [INFO]: StatisticsController {/api/statistics}:
+2024-11-22T06:09:15.353Z [INFO]: Mapped {/api/statistics, GET} route
+2024-11-22T06:09:15.354Z [INFO]: UsersController {/api/users}:
+2024-11-22T06:09:15.354Z [INFO]: Mapped {/api/users/info, GET} route
+2024-11-22T06:09:15.355Z [INFO]: Mapped {/api/users, POST} route
+2024-11-22T06:09:15.355Z [INFO]: Mapped {/api/users, PATCH} route
+2024-11-22T06:09:15.520Z [INFO]: Nest application successfully started

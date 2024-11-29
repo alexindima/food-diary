@@ -1,25 +1,27 @@
 <section class="features">
-    <h2 class="section-title">{{ 'FEATURES.TITLE' | translate }}</h2>
-    <div class="features-grid">
-        <div *ngFor="let feature of features" tuiCardLarge tuiSurface="elevated" class="feature-item">
-            <header tuiHeader>
-                <h2 tuiTitle>{{ 'FEATURES.' + feature.key + '.TITLE' | translate }}</h2>
-            </header>
+    <h2 class="features__title">{{ 'FEATURES.TITLE' | translate }}</h2>
+    <div class="features__grid">
+        @for (feature of features; track feature) {
+            <div tuiCardLarge tuiSurface="info" class="features__item">
+                <header class="features__item-header">
+                    <h2 class="features__item-title">{{ 'FEATURES.' + feature.key + '.TITLE' | translate }}</h2>
+                </header>
 
-            <section>
-                <img
-                    src="assets/images/features/{{ feature.icon }}"
-                    [alt]="'FEATURES.' + feature.key + '.TITLE' | translate"
-                    class="feature-icon"
-                />
-                <p>{{ 'FEATURES.' + feature.key + '.DESCRIPTION' | translate }}</p>
-            </section>
+                <section class="features__item-content">
+                    <img
+                        src="assets/images/features/{{ feature.icon }}"
+                        [alt]="'FEATURES.' + feature.key + '.TITLE' | translate"
+                        class="features__item-icon"
+                    />
+                    <p class="features__item-description">{{ 'FEATURES.' + feature.key + '.DESCRIPTION' | translate }}</p>
+                </section>
 
-            <footer>
-                <button appearance="secondary" size="m" tuiButton type="button">
-                    {{ 'FEATURES.BUTTON_MORE' | translate }}
-                </button>
-            </footer>
-        </div>
+                <footer class="features__item-footer">
+                    <button class="features__item-button" appearance="secondary" size="m" tuiButton type="button">
+                        {{ 'FEATURES.BUTTON_MORE' | translate }}
+                    </button>
+                </footer>
+            </div>
+        }
     </div>
 </section>

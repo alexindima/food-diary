@@ -1,0 +1,272 @@
+{
+    "FORM_ERRORS": {
+        "REQUIRED": "This field is required",
+        "USER_EXISTS": "User with this email already exists",
+        "EMAIL": "Incorrect email",
+        "INVALID_CREDENTIALS": "Invalid login or password",
+        "AT_LEAST_ONE_MACRONUTRIENT_MUST_BE_SET": "At least one of the values for fats, proteins, or carbs must be greater than 0.",
+        "NON_EMPTY_ARRAY": "At least one item must be added",
+        "PASSWORD": {
+            "MIN_LENGTH": "Password must be at least 6 characters",
+            "MATCH": "Passwords must be the same"
+        },
+        "CONSUMPTION": {
+            "INVALID_MIN_AMOUNT": "Значение должно быть больше 0"
+        },
+        "INVALID_MIN_AMOUNT_MUST_BE_MORE_ZERO": "Значение должно быть больше 0",
+        "UNKNOWN": "Unknown error"
+    },
+    "HEADER": {
+        "HOME": "Home",
+        "LOGIN": "Login",
+        "REGISTER": "Register",
+        "FOOD": "Food",
+        "CONSUMPTION": "Consumption",
+        "STATISTICS": "Statistics",
+        "PROFILE_EDIT": "Profile Edit",
+        "LOGOUT": "Logout"
+    },
+    "FOOTER": {
+        "CONTACTS": {
+            "TITLE": "Контакты",
+            "EMAIL": "Email: support@example.com",
+            "PHONE": "Телефон: +1 (123) 456-7890"
+        },
+        "NAVIGATION": {
+            "TITLE": "Навигация",
+            "HOME": "Главная",
+            "DIARY": "Дневник",
+            "RECIPES": "Рецепты",
+            "COMMUNITY": "Сообщество"
+        },
+        "FOLLOW_US": {
+            "TITLE": "Следите за нами",
+            "FACEBOOK": "Facebook",
+            "INSTAGRAM": "Instagram",
+            "LINKEDIN": "LinkedIn",
+            "TELEGRAM": "Telegram",
+            "VK": "VK",
+            "YOUTUBE": "YouTube"
+        },
+        "BOTTOM": {
+            "COPYRIGHT": "© 2024 Дневник Питания. Все права защищены.",
+            "PRIVACY_POLICY": "Политика конфиденциальности",
+            "TERMS_OF_USE": "Условия использования"
+        }
+    },
+    "HERO": {
+        "WELCOME": "Добро пожаловать в Дневник Питания!",
+        "DESCRIPTION": "Следите за своим питанием и достигайте целей с нашим приложением!",
+        "LOGIN": "Вход",
+        "REGISTER": "Регистрация"
+    },
+    "FEATURES": {
+        "TITLE": "Особенности",
+        "CALORIE_TRACKING": {
+            "TITLE": "Отслеживание калорий",
+            "DESCRIPTION": "Записывайте и анализируйте потребляемые калории, чтобы достичь своих целей по питанию."
+        },
+        "MEAL_PLANNING": {
+            "TITLE": "Планирование питания",
+            "DESCRIPTION": "Создавайте персональные планы питания и следите за их выполнением каждый день."
+        },
+        "PROGRESS_ANALYTICS": {
+            "TITLE": "Аналитика прогресса",
+            "DESCRIPTION": "Отслеживайте свой прогресс с помощью наглядных графиков и отчетов."
+        },
+        "COMMUNITY_SUPPORT": {
+            "TITLE": "Поддержка сообщества",
+            "DESCRIPTION": "Присоединяйтесь к сообществу пользователей и делитесь своими успехами и рецептами."
+        },
+        "BUTTON_MORE": "Узнать больше"
+    },
+    "AUTH":{
+        "LOGIN": {
+            "TITLE": "Вход",
+            "EMAIL": "Email",
+            "PASSWORD": "Пароль",
+            "REMEMBER_ME": "Запомнить меня",
+            "FORGOT_PASSWORD": "Забыли пароль?",
+            "LOGIN": "Войти"
+        },
+        "REGISTER": {
+            "TITLE": "Регистрация",
+            "EMAIL": "Email",
+            "PASSWORD": "Пароль",
+            "CONFIRM_PASSWORD": "Подтвердите пароль",
+            "AGREE_TO_TERMS": "Я соглашаюсь с <a href='{{termsUrl}}'>Условиями использования</a> и <a href='{{privacyUrl}}'>Политикой конфиденциальности</a>",
+            "REGISTER": "Зарегистрироваться"
+        }
+    },
+    "FOOD_LIST": {
+        "TITLE": "Список продуктов",
+        "SEARCH_TITLE": "Ищем:",
+        "SEARCH_PLACEHOLDER": "Search by name or barcode",
+        "SEARCH_BUTTON": "Search",
+        "ADD_FOOD_BUTTON": "Add food",
+        "NO_PRODUCTS_FOUND": "No products found",
+        "CALORIES": "Calories",
+        "BARCODE": "Barcode",
+        "PROTEINS": "Proteins",
+        "FATS": "Fats",
+        "CARBS": "Carbs"
+    },
+    "FOOD_DETAIL": {
+        "BARCODE": "Barcode:",
+        "CATEGORY": "Category:",
+        "CALORIES_PER_100G": "Calories per 100g:",
+        "PROTEINS_PER_100G": "Proteins per 100g:",
+        "FATS_PER_100G": "Fats per 100g:",
+        "CARBS_PER_100G": "Carbs per 100g:",
+        "DEFAULT_SERVING": "Default Serving:",
+        "DEFAULT_SERVING_UNIT": {
+            "G": "grams",
+            "ML": "milliliters",
+            "PCS": "pieces"
+        },
+        "USAGE_COUNT": "Usage Count:",
+        "EDIT_BUTTON": "Edit",
+        "DELETE_BUTTON": "Delete",
+        "WARNING_MESSAGE": "This food item is already in use, deletion or editing is not possible.",
+        "CONFIRM_DELETE_TITLE": "Are you sure you want to delete",
+        "CONFIRM_BUTTON": "Confirm",
+        "CANCEL_BUTTON": "Cancel",
+        "SERVING": "Serving",
+        "ADD_TO_CONSUMPTION": "Add to consumption",
+        "CREATE_SUCCESS": "Food created successful!",
+        "EDIT_SUCCESS": "Food edited successful!",
+        "GO_TO_HOME_BUTTON": "Go to Home",
+        "GO_TO_FOOD_LIST_BUTTON": "Go to Food List"
+    },
+    "FOOD_MANAGE": {
+        "ADD_TITLE": "Add New Food",
+        "EDIT_TITLE": "Edit Food",
+        "NAME": "Name",
+        "NAME_PLACEHOLDER": "Enter food name",
+        "BARCODE": "Barcode",
+        "BARCODE_PLACEHOLDER": "Enter barcode",
+        "CATEGORY": "Category",
+        "CATEGORY_PLACEHOLDER": "Enter category",
+        "CALORIES": "Calories per 100g",
+        "CALORIES_PLACEHOLDER": "Enter calories",
+        "PROTEINS": "Proteins per 100g",
+        "PROTEINS_PLACEHOLDER": "Enter proteins",
+        "FATS": "Fats per 100g",
+        "FATS_PLACEHOLDER": "Enter fats",
+        "CARBS": "Carbs per 100g",
+        "CARBS_PLACEHOLDER": "Enter carbs",
+        "DEFAULT_SERVING": "Default Serving",
+        "DEFAULT_SERVING_PLACEHOLDER": "Enter default serving",
+        "DEFAULT_SERVING_UNIT": "Serving Unit",
+        "DEFAULT_SERVING_UNIT_PLACEHOLDER": "Select serving unit",
+        "DEFAULT_SERVING_UNITS": {
+            "G": "grams",
+            "ML": "milliliters",
+            "PCS": "pieces"
+        },
+        "SAVE_BUTTON": "Save Changes",
+        "ADD_BUTTON": "Add Food",
+        "CANCEL_BUTTON": "Cancel"
+    },
+    "CONSUMPTION_LIST": {
+        "TITLE": "Consumption List",
+        "ADD_CONSUMPTION_BUTTON": "Add Consumption",
+        "NO_CONSUMPTIONS_FOUND": "No consumptions found",
+        "DATE": "Date",
+        "ITEM_COUNT": "Item count",
+        "CHOOSE_DATES": "Choose dates",
+        "DATE_PLACEHOLDER": "From - To",
+        "TOTAL_CALORIES": "Total Calories",
+        "TOTAL_PROTEINS": "Total Proteins",
+        "TOTAL_FATS": "Total Fats",
+        "TOTAL_CARBS": "Total Carbs"
+    },
+    "CONSUMPTION_DETAIL": {
+        "TITLE": "Consumption Details",
+        "DATE": "Date",
+        "COMMENT": "Comment:",
+        "ITEMS_COUNT": "Foods Count:",
+        "ITEMS_LIST": "Foods:",
+        "TOTAL_CALORIES": "Total Calories:",
+        "TOTAL_PROTEINS": "Total Proteins:",
+        "TOTAL_FATS": "Total Fats:",
+        "TOTAL_CARBS": "Total Carbohydrates:",
+        "EDIT_BUTTON": "Edit",
+        "DELETE_BUTTON": "Delete",
+        "CONFIRM_DELETE_TITLE": "Are you sure you want to delete the record from",
+        "CANCEL_BUTTON": "Cancel",
+        "CONFIRM_BUTTON": "Confirm"
+    },
+    "CONSUMPTION_MANAGE": {
+        "EDIT_TITLE": "Edit Consumption",
+        "ADD_TITLE": "Add Consumption",
+        "COMMENT": "Comment",
+        "COMMENT_PLACEHOLDER": "Enter a comment",
+        "SAVE_BUTTON": "Save",
+        "ADD_BUTTON": "Add",
+        "EDIT_SUCCESS": "Consumption successfully updated!",
+        "CREATE_SUCCESS": "Consumption successfully created!",
+        "GO_TO_HOME_BUTTON": "Go to Home",
+        "GO_TO_CONSUMPTION_LIST_BUTTON": "Go to Consumptions List",
+        "CHOOSE_DATE_TIME": "Choose date and time",
+        "NO_FOOD_ADDED": "No food added",
+        "ADD_FOOD": "Add food"
+    },
+    "STATISTICS": {
+        "TITLE": "Statistics",
+        "CALORIES_TITLE": "Calories Overview",
+        "NUTRIENTS_TITLE": "Nutrients Overview",
+        "NUTRIENTS": {
+            "PROTEINS": "Proteins",
+            "FATS": "Fats",
+            "CARBS": "Carbs"
+        },
+        "LABELS": {
+            "WEEK": "Week",
+            "MONTH": "Month",
+            "YEAR": "Year",
+            "CUSTOM": "Custom"
+        },
+        "KKAL": "ккал",
+        "GRAMS": "grams",
+        "RANGE": "Range"
+    },
+    "USER_MANAGE": {
+        "EDIT_TITLE": "Edit User Information",
+        "EMAIL": "Email",
+        "NEW_PASSWORD": "New Password",
+        "CONFIRM_PASSWORD": "Confirm Password",
+        "USERNAME": "Username",
+        "FIRST_NAME": "First Name",
+        "LAST_NAME": "Last Name",
+        "BIRTH_DATE": "Birth Date",
+        "GENDER": "Gender",
+        "SELECT_GENDER": "Select Gender",
+        "GENDER_OPTIONS": {
+            "M": "Male",
+            "F": "Female",
+            "O": "Other"
+        },
+        "WEIGHT": "Weight",
+        "HEIGHT": "Height",
+        "SAVE_BUTTON": "Save",
+        "UPDATE_SUCCESS": "User information updated successfully!",
+        "GO_TO_HOME_BUTTON": "Go to Home"
+    },
+    "TODAY_CONSUMPTION": {
+        "TITLE": "Потребление за сегодня",
+        "TOTAL_CONSUMPTION": "Общее потребление",
+        "NUTRIENTS": "Нутриенты",
+        "ADD_CONSUMPTION": "Добавить потребление",
+        "ADD_FOOD": "Добавить еду",
+        "MANAGE_CONSUMPTIONS": "Управлять потреблением",
+        "MANAGE_FOODS": "Управлять едой",
+        "VIEW_STATISTICS": "Посмотреть статистику"
+    },
+    "NOT_FOUND": {
+        "TITLE": "404 - Page Not Found",
+        "DESCRIPTION": "Sorry, the page you are looking for does not exist.",
+        "GO_HOME": "Go to Homepage",
+        "VIEW_FOODS": "View Foods"
+    }
+}

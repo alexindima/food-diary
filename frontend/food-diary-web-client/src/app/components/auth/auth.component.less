@@ -1,10 +1,30 @@
-.tabs-container {
-    padding: 0 20px;
-    background-color: #f5f5f5;
-    border-bottom: 1px solid #e0e0e0;
+:host {
+    display: block;
+    position: relative;
+    width: 100%;
+    min-height: 80vh;
+    padding: 20px;
+    box-sizing: border-box;
+    overflow: hidden;
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-image: url('../../../../assets/images/background.webp');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        opacity: 0.05;
+        z-index: -1;
+    }
 }
 
-.form-container {
+.auth {
     max-width: 400px;
     margin: 20px auto;
     border: 1px solid #e0e0e0;
@@ -13,21 +33,40 @@
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     overflow: hidden;
 
-    .form-tabs {
-        background-color: #f5f5f5;
-        border-bottom: 1px solid #e0e0e0;
-        margin-bottom: 0;
+    @media (max-width: 480px) {
+        max-width: inherit;
     }
 
-    .form-content {
+    &__tabs {
+        padding: 0 20px;
+        background-color: #f5f5f5;
+        border-bottom: 1px solid #e0e0e0;
+    }
+
+    &__form {
         display: flex;
         flex-direction: column;
         gap: 1rem;
         padding: 20px;
     }
 
-    .checkbox_wrapper {
-        font-size: 1em;
+    &__checkbox {
+        display: flex;
         align-items: center;
+        gap: 8px;
+
+        &-label {
+            font-size: 1em;
+        }
+    }
+
+    &__actions {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    &__button {
+        width: 100%;
     }
 }
