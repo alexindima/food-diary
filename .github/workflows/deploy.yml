@@ -6,54 +6,65 @@ on:
       - master
 
 env:
-  NODE_VERSION: 22
-  SERVER_IP: 193.109.69.58
-  FRONTEND_DIR: frontend/food-diary-web-client
-  BACKEND_DIR: backend/food-diary.web.api
-  FRONTEND_DEPLOY_DIR: /var/www/fooddiary.club
-  BACKEND_DEPLOY_DIR: /var/www/fooddiary-backend
+  NODE_VERSION: 22              # Версия Node.js
+  SERVER_IP: 193.109.69.58      # IP-адрес сервера
+  FRONTEND_DIR: frontend/food-diary-web-client  # Путь к фронтенду
+  BACKEND_DIR: backend/food-diary.web.api       # Путь к бэкенду
+  FRONTEND_DEPLOY_DIR: /var/www/fooddiary.club  # Папка для фронтенда на сервере
+  BACKEND_DEPLOY_DIR: /var/www/fooddiary-backend # Папка для бэкенда на сервере
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
+      # 1. Клонирование кода
       - name: Checkout code
         uses: actions/checkout@v3
 
+      # 2. Установка Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: ${{ env.NODE_VERSION }}
 
+      # 3. Сборка фронтенда
       - name: Build Angular frontend
         run: |
           cd ${{ env.FRONTEND_DIR }}
           npm install
           npm run build --prod
 
+      # 4. Сборка бэкенда
       - name: Build NestJS backend
         run: |
           cd ${{ env.BACKEND_DIR }}
           npm install
           npm run build
 
+      # 5. Деплой на сервер
       - name: Deploy to server
         env:
           SSH_KEY: ${{ secrets.SSH_KEY }}
         run: |
+          # Создаём директорию для SSH-ключей
+          mkdir -p ~/.ssh
           echo "${SSH_KEY}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
 
+          # Удаляем старые файлы на сервере
           ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no root@${{ env.SERVER_IP }} << 'EOF'
           rm -rf ${{ env.FRONTEND_DEPLOY_DIR }}/*
           rm -rf ${{ env.BACKEND_DEPLOY_DIR }}/*
           EOF
 
+          # Копируем фронтенд на сервер
           scp -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -r ${{ env.FRONTEND_DIR }}/dist/* root@${{ env.SERVER_IP }}:${{ env.FRONTEND_DEPLOY_DIR }}/
 
+          # Копируем бэкенд на сервер
           scp -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -r ${{ env.BACKEND_DIR }}/dist/* root@${{ env.SERVER_IP }}:${{ env.BACKEND_DEPLOY_DIR }}/
 
+          # Перезапускаем бэкенд через PM2
           ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no root@${{ env.SERVER_IP }} << 'EOF'
           pm2 restart fooddiary-backend || pm2 start ${{ env.BACKEND_DEPLOY_DIR }}/main.js --name fooddiary-backend
           EOF
