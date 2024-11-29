@@ -120,7 +120,7 @@ jobs:
           ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no root@${{ env.SERVER_IP }} << EOF
           pm2 delete fooddiary-backend || true
           NODE_ENV=production pm2 start "${{ env.BACKEND_DEPLOY_DIR }}/dist/src/main.js" --name fooddiary-backend
-          EOF   
+          EOF
 
       - name: Confirm deployment completion
         run: |
