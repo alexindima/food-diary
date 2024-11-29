@@ -5,6 +5,10 @@ on:
     branches:
       - master
 
+env:
+  NODE_VERSION: 22
+  SERVER_IP: 193.109.69.58
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -16,7 +20,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: lts
+          node-version: ${{ env.NODE_VERSION }}
 
       - name: Build Angular frontend
         run: |
@@ -34,12 +38,12 @@ jobs:
         env:
           SSH_KEY: ${{ secrets.SSH_KEY }}
         run: |
-          ssh -i "${SSH_KEY}" -o StrictHostKeyChecking=no root@193.109.69.58 << 'EOF'
+          ssh -i "${SSH_KEY}" -o StrictHostKeyChecking=no root@${{ env.SERVER_IP }} << 'EOF'
           rm -rf /var/www/fooddiary.club/*
-          scp -r frontend/food-diary-web-client/dist/* root@193.109.69.58:/var/www/fooddiary.club/
+          scp -r frontend/food-diary-web-client/dist/* root@${{ env.SERVER_IP }}:/var/www/fooddiary.club/
           
           rm -rf /var/www/fooddiary-backend/*
-          scp -r backend/food-diary.web.api/dist/* root@193.109.69.58:/var/www/fooddiary-backend/
+          scp -r backend/food-diary.web.api/dist/* root@${{ env.SERVER_IP }}:/var/www/fooddiary-backend/
           
           pm2 restart fooddiary-backend || pm2 start /var/www/fooddiary-backend/main.js --name fooddiary-backend
           EOF
