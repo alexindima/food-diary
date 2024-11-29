@@ -103,11 +103,12 @@ jobs:
           echo "STEP 7: Restarting backend with PM2"
           echo "===================================="
           ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no root@${{ env.SERVER_IP }} << 'EOF'
+          BACKEND_DIR="${{ env.BACKEND_DEPLOY_DIR }}"
+          MAIN_FILE="\$BACKEND_DIR/src/main.js"
           pm2 delete fooddiary-backend || true
-          pm2 start src/main.js --name fooddiary-backend
+          pm2 start "\$MAIN_FILE" --name fooddiary-backend
           pm2 logs fooddiary-backend --lines 10
           EOF
-      
       
 
       - name: Confirm deployment completion
