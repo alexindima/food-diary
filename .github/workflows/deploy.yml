@@ -79,7 +79,8 @@ jobs:
           START_TIME=$(date +%s)
           NUM_FILES=$(find ${{ env.FRONTEND_DIR }}/dist -type f | wc -l)
           echo "$NUM_FILES files to upload."
-          rsync -az --info=progress2 --human-readable -e "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no" ${{ env.FRONTEND_DIR }}/dist/ root@${{ env.SERVER_IP }}:${{ env.FRONTEND_DEPLOY_DIR }}/
+          rsync -az --human-readable --info=progress2 -e "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no" \
+            ${{ env.FRONTEND_DIR }}/dist/ root@${{ env.SERVER_IP }}:${{ env.FRONTEND_DEPLOY_DIR }}/ | stdbuf -oL awk 'NR % 20 == 0 {print $0}'
           END_TIME=$(date +%s)
           echo "Frontend files uploaded in $(($END_TIME - $START_TIME)) seconds."
 
@@ -104,11 +105,12 @@ jobs:
             pm2 restart fooddiary-backend
           else
             echo "Starting a new PM2 process for backend..."
-            pm2 start main.js --name fooddiary-backend
+            pm2 start main.js --name fooddiary-backend --interpreter node
           fi
           pm2 logs fooddiary-backend --lines 10
           EOF
     
+      
 
       - name: Confirm deployment completion
         run: |
