@@ -46,7 +46,7 @@ jobs:
           npm run build
           echo "Backend build completed."
 
-      - name: Deploy to server
+      - name: Setting up SSH
         env:
           SSH_KEY: ${{ secrets.SSH_KEY }}
         run: |
@@ -58,6 +58,8 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           echo "SSH setup completed."
 
+      - name: Creating directories on the server
+        run: |
           echo "===================================="
           echo "STEP 4: Creating directories on the server"
           echo "===================================="
@@ -69,12 +71,20 @@ jobs:
           echo "Directories created and cleaned."
           EOF
 
-          echo "===================================="
+      - name: Uploading frontend files
+        run: |
+          echo "========================================"
           echo "STEP 5: Uploading frontend files"
-          echo "===================================="
-          scp -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -r ${{ env.FRONTEND_DIR }}/dist/* root@${{ env.SERVER_IP }}:${{ env.FRONTEND_DEPLOY_DIR }}/
-          echo "Frontend files uploaded."
+          echo "========================================"
+          START_TIME=$(date +%s)
+          NUM_FILES=$(find ${{ env.FRONTEND_DIR }}/dist -type f | wc -l)
+          echo "$NUM_FILES files to upload."
+          rsync -avz --progress -e "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no" ${{ env.FRONTEND_DIR }}/dist/ root@${{ env.SERVER_IP }}:${{ env.FRONTEND_DEPLOY_DIR }}/
+          END_TIME=$(date +%s)
+          echo "Frontend files uploaded in $(($END_TIME - $START_TIME)) seconds."
 
+      - name: Uploading backend files
+        run: |
           echo "===================================="
           echo "STEP 6: Uploading backend files"
           echo "===================================="
@@ -87,10 +97,14 @@ jobs:
           echo "STEP 7: Restarting backend with PM2"
           echo "===================================="
           ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no root@${{ env.SERVER_IP }} << EOF
-          pm2 restart fooddiary-backend || pm2 start npm --name fooddiary-backend -- start:prod -- --env=.env.production
-          pm2 save
-          echo "PM2 restart or start completed."
-          EOF
+          pm2 list | grep fooddiary-backend
+          if [ $? -eq 0 ]; then
+          pm2 restart fooddiary-backend
+          else
+          pm2 start ${{ env.BACKEND_DEPLOY_DIR }}/main.js --name fooddiary-backend
+          fi
+          pm2 logs fooddiary-backend --lines 10
+          echo "Backend process handled by PM2."
 
       - name: Confirm deployment completion
         run: |
