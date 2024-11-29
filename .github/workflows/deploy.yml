@@ -42,28 +42,24 @@ jobs:
         env:
           SSH_KEY: ${{ secrets.SSH_KEY }}
         run: |
+          # Настраиваем SSH-доступ
           mkdir -p ~/.ssh
           echo "${SSH_KEY}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
 
-          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no root@${{ env.SERVER_IP }} << 'EOF'
-          if [ ! -d "${{ env.FRONTEND_DEPLOY_DIR }}" ]; then
-              mkdir -p "${{ env.FRONTEND_DEPLOY_DIR }}"
-          else
-              rm -rf "${{ env.FRONTEND_DEPLOY_DIR }}/*"
-          fi
-
-          if [ ! -d "${{ env.BACKEND_DEPLOY_DIR }}" ]; then
-              mkdir -p "${{ env.BACKEND_DEPLOY_DIR }}"
-          else
-              rm -rf "${{ env.BACKEND_DEPLOY_DIR }}/*"
-          fi
+          # Создаем директории и очищаем их
+          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no root@${{ env.SERVER_IP }} << EOF
+          mkdir -p "${{ env.FRONTEND_DEPLOY_DIR }}"
+          mkdir -p "${{ env.BACKEND_DEPLOY_DIR }}"
+          rm -rf "${{ env.FRONTEND_DEPLOY_DIR }}/*"
+          rm -rf "${{ env.BACKEND_DEPLOY_DIR }}/*"
           EOF
 
+          # Копируем файлы на сервер
           scp -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -r ${{ env.FRONTEND_DIR }}/dist/* root@${{ env.SERVER_IP }}:${{ env.FRONTEND_DEPLOY_DIR }}/
-
           scp -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -r ${{ env.BACKEND_DIR }}/dist/* root@${{ env.SERVER_IP }}:${{ env.BACKEND_DEPLOY_DIR }}/
 
-          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no root@${{ env.SERVER_IP }} << 'EOF'
+          # Запускаем PM2
+          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no root@${{ env.SERVER_IP }} << EOF
           pm2 restart fooddiary-backend || pm2 start ${{ env.BACKEND_DEPLOY_DIR }}/main.js --name fooddiary-backend
           EOF
