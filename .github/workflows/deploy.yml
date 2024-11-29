@@ -1,0 +1,45 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: lts
+
+      - name: Build Angular frontend
+        run: |
+          cd frontend/food-diary-web-client
+          npm install
+          npm run build --prod
+
+      - name: Build NestJS backend
+        run: |
+          cd backend/food-diary.web.api
+          npm install
+          npm run build
+
+      - name: Deploy to server
+        env:
+          SSH_KEY: ${{ secrets.SSH_KEY }}
+        run: |
+          ssh -i "${SSH_KEY}" -o StrictHostKeyChecking=no root@193.109.69.58 << 'EOF'
+          rm -rf /var/www/fooddiary.club/*
+          scp -r frontend/food-diary-web-client/dist/* root@193.109.69.58:/var/www/fooddiary.club/
+          
+          rm -rf /var/www/fooddiary-backend/*
+          scp -r backend/food-diary.web.api/dist/* root@193.109.69.58:/var/www/fooddiary-backend/
+          
+          pm2 restart fooddiary-backend || pm2 start /var/www/fooddiary-backend/main.js --name fooddiary-backend
+          EOF
