@@ -79,7 +79,7 @@ jobs:
           START_TIME=$(date +%s)
           NUM_FILES=$(find ${{ env.FRONTEND_DIR }}/dist -type f | wc -l)
           echo "$NUM_FILES files to upload."
-          rsync -avz --progress -e "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no" ${{ env.FRONTEND_DIR }}/dist/ root@${{ env.SERVER_IP }}:${{ env.FRONTEND_DEPLOY_DIR }}/
+          rsync -az --info=progress2 --human-readable -e "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no" ${{ env.FRONTEND_DIR }}/dist/ root@${{ env.SERVER_IP }}:${{ env.FRONTEND_DEPLOY_DIR }}/
           END_TIME=$(date +%s)
           echo "Frontend files uploaded in $(($END_TIME - $START_TIME)) seconds."
 
@@ -96,15 +96,19 @@ jobs:
           echo "===================================="
           echo "STEP 7: Restarting backend with PM2"
           echo "===================================="
-          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no root@${{ env.SERVER_IP }} << EOF
+          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no root@${{ env.SERVER_IP }} << 'EOF'
+          cd "${{ env.BACKEND_DEPLOY_DIR }}"
           pm2 list | grep fooddiary-backend
           if [ $? -eq 0 ]; then
-          pm2 restart fooddiary-backend
+            echo "Restarting existing PM2 process for backend..."
+            pm2 restart fooddiary-backend
           else
-          pm2 start ${{ env.BACKEND_DEPLOY_DIR }}/main.js --name fooddiary-backend
+            echo "Starting a new PM2 process for backend..."
+            pm2 start main.js --name fooddiary-backend
           fi
           pm2 logs fooddiary-backend --lines 10
-          echo "Backend process handled by PM2."
+          EOF
+    
 
       - name: Confirm deployment completion
         run: |
