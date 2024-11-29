@@ -103,16 +103,11 @@ jobs:
           echo "STEP 7: Restarting backend with PM2"
           echo "===================================="
           ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no root@${{ env.SERVER_IP }} << 'EOF'
-          pm2 list | grep fooddiary-backend
-          if [ $? -eq 0 ]; then
-            echo "Restarting existing PM2 process for backend..."
-            pm2 restart fooddiary-backend --update-env
-          else
-            echo "Starting a new PM2 process for backend..."
-            pm2 start src/main.js --name fooddiary-backend
-          fi
+          pm2 delete fooddiary-backend || true
+          pm2 start src/main.js --name fooddiary-backend
           pm2 logs fooddiary-backend --lines 10
           EOF
+      
       
 
       - name: Confirm deployment completion
