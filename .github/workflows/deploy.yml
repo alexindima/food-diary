@@ -28,38 +28,53 @@ jobs:
 
       - name: Build Angular frontend
         run: |
+          echo "Building Angular frontend..."
           cd ${{ env.FRONTEND_DIR }}
           npm install
-          npm run build --prod
+          npm run build:prod
+          echo "Frontend build completed."
 
       - name: Build NestJS backend
         run: |
+          echo "Building NestJS backend..."
           cd ${{ env.BACKEND_DIR }}
           npm install
           npm run build
+          echo "Backend build completed."
 
       - name: Deploy to server
         env:
           SSH_KEY: ${{ secrets.SSH_KEY }}
         run: |
-          # Настраиваем SSH-доступ
+          echo "Setting up SSH..."
           mkdir -p ~/.ssh
           echo "${SSH_KEY}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
+          echo "SSH setup completed."
 
-          # Создаем директории и очищаем их
+          echo "Creating directories on the server..."
           ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no root@${{ env.SERVER_IP }} << EOF
           mkdir -p "${{ env.FRONTEND_DEPLOY_DIR }}"
           mkdir -p "${{ env.BACKEND_DEPLOY_DIR }}"
           rm -rf "${{ env.FRONTEND_DEPLOY_DIR }}/*"
           rm -rf "${{ env.BACKEND_DEPLOY_DIR }}/*"
+          echo "Directories created and cleaned."
           EOF
 
-          # Копируем файлы на сервер
+          echo "Uploading frontend files..."
           scp -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -r ${{ env.FRONTEND_DIR }}/dist/* root@${{ env.SERVER_IP }}:${{ env.FRONTEND_DEPLOY_DIR }}/
-          scp -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -r ${{ env.BACKEND_DIR }}/dist/* root@${{ env.SERVER_IP }}:${{ env.BACKEND_DEPLOY_DIR }}/
+          echo "Frontend files uploaded."
 
-          # Запускаем PM2
+          echo "Uploading backend files..."
+          scp -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -r ${{ env.BACKEND_DIR }}/dist/* root@${{ env.SERVER_IP }}:${{ env.BACKEND_DEPLOY_DIR }}/
+          echo "Backend files uploaded."
+
+          echo "Restarting backend with PM2..."
           ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no root@${{ env.SERVER_IP }} << EOF
           pm2 restart fooddiary-backend || pm2 start ${{ env.BACKEND_DEPLOY_DIR }}/main.js --name fooddiary-backend
+          echo "PM2 restart or start completed."
           EOF
+
+      - name: Confirm deployment completion
+        run: |
+          echo "Deployment completed successfully."

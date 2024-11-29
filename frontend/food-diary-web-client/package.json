@@ -6,7 +6,6 @@
         "ng": "ng",
         "build": "ng build",
         "build:prod": "ng build --configuration=production",
-        "build:pages": "ng build --configuration production --base-href /Students/d.alexin/Homeworks/course-work/food-diary/",
         "build:staging": "ng build --configuration=staging",
         "start": "ng serve",
         "start:prod": "ng serve --configuration=production",
