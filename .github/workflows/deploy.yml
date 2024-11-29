@@ -46,6 +46,14 @@ jobs:
           npm run build
           echo "Backend build completed."
 
+      - name: Debug backend build output
+        run: |
+          echo "===================================="
+          echo "DEBUG: Checking dist folder content"
+          echo "===================================="
+          cd ${{ env.BACKEND_DIR }}
+          ls -la dist
+
       - name: Setting up SSH
         env:
           SSH_KEY: ${{ secrets.SSH_KEY }}
