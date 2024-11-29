@@ -8,6 +8,10 @@ on:
 env:
   NODE_VERSION: 22
   SERVER_IP: 193.109.69.58
+  FRONTEND_DIR: frontend/food-diary-web-client
+  BACKEND_DIR: backend/food-diary.web.api
+  FRONTEND_DEPLOY_DIR: /var/www/fooddiary.club
+  BACKEND_DEPLOY_DIR: /var/www/fooddiary-backend
 
 jobs:
   deploy:
@@ -24,13 +28,13 @@ jobs:
 
       - name: Build Angular frontend
         run: |
-          cd frontend/food-diary-web-client
+          cd ${{ env.FRONTEND_DIR }}
           npm install
           npm run build --prod
 
       - name: Build NestJS backend
         run: |
-          cd backend/food-diary.web.api
+          cd ${{ env.BACKEND_DIR }}
           npm install
           npm run build
 
@@ -38,12 +42,18 @@ jobs:
         env:
           SSH_KEY: ${{ secrets.SSH_KEY }}
         run: |
-          ssh -i "${SSH_KEY}" -o StrictHostKeyChecking=no root@${{ env.SERVER_IP }} << 'EOF'
-          rm -rf /var/www/fooddiary.club/*
-          scp -r frontend/food-diary-web-client/dist/* root@${{ env.SERVER_IP }}:/var/www/fooddiary.club/
-          
-          rm -rf /var/www/fooddiary-backend/*
-          scp -r backend/food-diary.web.api/dist/* root@${{ env.SERVER_IP }}:/var/www/fooddiary-backend/
-          
-          pm2 restart fooddiary-backend || pm2 start /var/www/fooddiary-backend/main.js --name fooddiary-backend
+          echo "${SSH_KEY}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+
+          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no root@${{ env.SERVER_IP }} << 'EOF'
+          rm -rf ${{ env.FRONTEND_DEPLOY_DIR }}/*
+          rm -rf ${{ env.BACKEND_DEPLOY_DIR }}/*
+          EOF
+
+          scp -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -r ${{ env.FRONTEND_DIR }}/dist/* root@${{ env.SERVER_IP }}:${{ env.FRONTEND_DEPLOY_DIR }}/
+
+          scp -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -r ${{ env.BACKEND_DIR }}/dist/* root@${{ env.SERVER_IP }}:${{ env.BACKEND_DEPLOY_DIR }}/
+
+          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no root@${{ env.SERVER_IP }} << 'EOF'
+          pm2 restart fooddiary-backend || pm2 start ${{ env.BACKEND_DEPLOY_DIR }}/main.js --name fooddiary-backend
           EOF
