@@ -5,13 +5,17 @@ import { ExceptionsFilter } from './filters/exceptions.filter';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { GlobalLogger } from './common/logger.service';
 import { config as loadEnv } from 'dotenv';
+import { join } from 'path';
+import appRootPath from 'app-root-path';
 
 async function bootstrap() {
-    const envFile = `.env.${process.env.NODE_ENV || 'development'}`;
+    const envFile = join(
+        appRootPath.path,
+        `.env.${process.env.NODE_ENV || 'development'}`,
+    );
     loadEnv({ path: envFile });
     console.log(`Loaded environment variables from ${envFile}`);
     console.log('Environment Variables:', process.env);
-
 
     const app = await NestFactory.create(AppModule, {
         logger: new GlobalLogger(),
@@ -32,7 +36,7 @@ async function bootstrap() {
         .build();
 
     const document = SwaggerModule.createDocument(app, config);
-    SwaggerModule.setup('api/swagger', app, document);
+    SwaggerModule.setup('swagger', app, document);
 
     app.setGlobalPrefix('api');
     const port = process.env.PORT || 3000;
