@@ -1,12 +1,14 @@
 import { AppConfig } from '../app/types/app.data';
 
+const serverUrl = 'https://fooddiary.club';
+
 export const environment: AppConfig = {
     apiUrls: {
-        auth: 'http://fooddiary.club/api/auth',
-        foods: 'http://fooddiary.club/api/foods',
-        consumptions: 'http://fooddiary.club/api/consumptions',
-        statistics: 'http://fooddiary.club/api/statistics',
-        users: 'http://fooddiary.club/api/users',
-        logs: 'http://fooddiary.club/api/logs',
+        auth: `${serverUrl}/api/auth`,
+        foods: `${serverUrl}/api/foods`,
+        consumptions: `${serverUrl}/api/consumptions`,
+        statistics: `${serverUrl}/api/statistics`,
+        users: `${serverUrl}/api/users`,
+        logs: `${serverUrl}/api/logs`,
     },
 };

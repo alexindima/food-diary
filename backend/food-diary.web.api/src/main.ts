@@ -6,8 +6,10 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { GlobalLogger } from './common/logger.service';
 import { config as loadEnv } from 'dotenv';
 import { join } from 'path';
+import * as fs from 'fs';
 
 async function bootstrap() {
+    const logger = new GlobalLogger();
     const projectRoot = join(__dirname, '..', '..');
     const envFile = join(
         projectRoot,
@@ -15,11 +17,27 @@ async function bootstrap() {
     );
 
     loadEnv({ path: envFile });
-    console.log(`Loaded environment variables from ${envFile}`);
-    console.log('Environment Variables:', process.env);
+    logger.log(`Loaded environment variables from ${envFile}`);
+    logger.log(`Environment Variables: ${process.env}`);
+
+    let httpsOptions = null;
+    if (process.env.SSL_KEY_PATH && process.env.SSL_CERT_PATH) {
+        try {
+            httpsOptions = {
+                key: fs.readFileSync(process.env.SSL_KEY_PATH),
+                cert: fs.readFileSync(process.env.SSL_CERT_PATH),
+            };
+            logger.log('HTTPS options successfully loaded.');
+        } catch (error) {
+            logger.error('Error loading HTTPS options:', error.message);
+        }
+    } else {
+        logger.log('SSL environment variables not set. Starting in HTTP mode.');
+    }
 
     const app = await NestFactory.create(AppModule, {
         logger: new GlobalLogger(),
+        ...(httpsOptions ? { httpsOptions } : {}),
     });
 
     app.enableCors({
@@ -42,7 +60,9 @@ async function bootstrap() {
     app.setGlobalPrefix('api');
     const port = process.env.PORT || 3000;
     await app.listen(port, () => {
-        console.log(`Application is running on: http://localhost:${port}`);
+        logger.log(
+            `Application is running on: ${httpsOptions ? 'https' : 'http'}://localhost:${port}`,
+        );
     });
 }
 bootstrap();
