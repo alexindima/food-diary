@@ -17,6 +17,8 @@ async function bootstrap() {
     );
 
     loadEnv({ path: envFile });
+    console.log(`Loaded environment variables from ${envFile}`);
+    console.log(`Environment Variables: ${process.env}`);
     logger.log(`Loaded environment variables from ${envFile}`);
     logger.log(`Environment Variables: ${process.env}`);
 
@@ -27,11 +29,16 @@ async function bootstrap() {
                 key: fs.readFileSync(process.env.SSL_KEY_PATH),
                 cert: fs.readFileSync(process.env.SSL_CERT_PATH),
             };
+            console.log('HTTPS options successfully loaded.');
             logger.log('HTTPS options successfully loaded.');
         } catch (error) {
+            console.error('Error loading HTTPS options:', error.message);
             logger.error('Error loading HTTPS options:', error.message);
         }
     } else {
+        console.log(
+            'SSL environment variables not set. Starting in HTTP mode.',
+        );
         logger.log('SSL environment variables not set. Starting in HTTP mode.');
     }
 
@@ -60,6 +67,9 @@ async function bootstrap() {
     app.setGlobalPrefix('api');
     const port = process.env.PORT || 3000;
     await app.listen(port, () => {
+        console.log(
+            `Application is running on: ${httpsOptions ? 'https' : 'http'}://localhost:${port}`,
+        );
         logger.log(
             `Application is running on: ${httpsOptions ? 'https' : 'http'}://localhost:${port}`,
         );
