@@ -6,13 +6,14 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { GlobalLogger } from './common/logger.service';
 import { config as loadEnv } from 'dotenv';
 import { join } from 'path';
-import appRootPath from 'app-root-path';
 
 async function bootstrap() {
+    const projectRoot = join(__dirname, '..', '..');
     const envFile = join(
-        appRootPath.path,
+        projectRoot,
         `.env.${process.env.NODE_ENV || 'development'}`,
     );
+
     loadEnv({ path: envFile });
     console.log(`Loaded environment variables from ${envFile}`);
     console.log('Environment Variables:', process.env);
