@@ -64,10 +64,10 @@ jobs:
           echo "STEP 4: Creating directories on the server"
           echo "===================================="
           ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no root@${{ env.SERVER_IP }} << EOF
+          rm -rf "${{ env.FRONTEND_DEPLOY_DIR }}"
+          rm -rf "${{ env.BACKEND_DEPLOY_DIR }}"
           mkdir -p "${{ env.FRONTEND_DEPLOY_DIR }}"
           mkdir -p "${{ env.BACKEND_DEPLOY_DIR }}"
-          rm -rf "${{ env.FRONTEND_DEPLOY_DIR }}/*"
-          rm -rf "${{ env.BACKEND_DEPLOY_DIR }}/*"
           chmod -R 755 "${{ env.FRONTEND_DEPLOY_DIR }}"
           chmod -R 755 "${{ env.BACKEND_DEPLOY_DIR }}"
           chown -R www-data:www-data "${{ env.FRONTEND_DEPLOY_DIR }}"

@@ -8,10 +8,9 @@ import { NavigationService } from '../../services/navigation.service';
 
 @Component({
     selector: 'app-today-consumption',
-    standalone: true,
     imports: [TranslatePipe, DecimalPipe, TuiButton, TuiPieChart, TuiHintOptionsDirective],
     templateUrl: './today-consumption.component.html',
-    styleUrl: './today-consumption.component.less',
+    styleUrl: './today-consumption.component.less'
 })
 export class TodayConsumptionComponent implements OnInit {
     private readonly statisticsService = inject(StatisticsService);

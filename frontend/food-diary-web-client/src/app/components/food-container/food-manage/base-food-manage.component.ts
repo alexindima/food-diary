@@ -45,7 +45,6 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
 
 @Component({
     selector: 'app-base-food-manage',
-    standalone: true,
     templateUrl: './base-food-manage.component.html',
     styleUrls: ['./base-food-manage.component.less'],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -63,7 +62,7 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
         TuiTextfieldComponent,
         TuiTextfieldDirective,
         TuiInputNumberModule,
-    ],
+    ]
 })
 export class BaseFoodManageComponent implements OnInit {
     protected readonly foodService = inject(FoodService);

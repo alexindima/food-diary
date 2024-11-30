@@ -14,7 +14,6 @@ import { FormGroupControls } from '../../../types/common.data';
 
 @Component({
     selector: 'app-food-list-base',
-    standalone: true,
     templateUrl: './food-list-base.component.html',
     styleUrls: ['./food-list-base.component.less'],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -28,7 +27,7 @@ import { FormGroupControls } from '../../../types/common.data';
         TuiTextfieldDirective,
         TuiButton,
         TranslatePipe,
-    ],
+    ]
 })
 export class FoodListBaseComponent implements OnInit {
     private readonly translateService = inject(TranslateService);

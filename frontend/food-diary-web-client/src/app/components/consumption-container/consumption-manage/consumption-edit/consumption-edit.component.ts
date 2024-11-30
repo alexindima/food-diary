@@ -3,10 +3,9 @@ import { BaseConsumptionManageComponent } from '../base-consumption-manage.compo
 
 @Component({
     selector: 'app-consumption-edit',
-    standalone: true,
     templateUrl: './consumption-edit.component.html',
     styleUrls: ['./consumption-edit.component.less', '../base-consumption-manage.component.less'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [BaseConsumptionManageComponent],
+    imports: [BaseConsumptionManageComponent]
 })
 export class ConsumptionEditComponent extends BaseConsumptionManageComponent {}

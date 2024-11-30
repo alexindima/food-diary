@@ -6,10 +6,9 @@ import { NavigationService } from '../../services/navigation.service';
 
 @Component({
     selector: 'app-hero',
-    standalone: true,
     imports: [TuiButton, TuiCarousel, TranslateModule],
     templateUrl: './hero.component.html',
-    styleUrl: './hero.component.less',
+    styleUrl: './hero.component.less'
 })
 export class HeroComponent {
     protected currentSlide: number = 0;

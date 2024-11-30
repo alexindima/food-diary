@@ -6,11 +6,10 @@ import { FooterComponent } from './footer/footer.component';
 
 @Component({
     selector: 'app-root',
-    standalone: true,
     imports: [RouterOutlet, TuiRoot, HeaderComponent, TuiRoot, TuiRoot, FooterComponent],
     templateUrl: './app.component.html',
     styleUrl: './app.component.less',
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class AppComponent {
     public title = 'food-diary-web-client';

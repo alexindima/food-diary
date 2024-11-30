@@ -7,11 +7,10 @@ import { DatePipe, DecimalPipe } from '@angular/common';
 
 @Component({
     selector: 'app-consumption-detail',
-    standalone: true,
     templateUrl: './consumption-detail.component.html',
     styleUrls: ['./consumption-detail.component.less'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [TranslatePipe, DatePipe, TuiButton, DecimalPipe],
+    imports: [TranslatePipe, DatePipe, TuiButton, DecimalPipe]
 })
 export class ConsumptionDetailComponent {
     public readonly context = injectContext<TuiDialogContext<ConsumptionDetailActionResult, Consumption>>();

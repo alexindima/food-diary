@@ -5,9 +5,8 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-not-found',
-    standalone: true,
     imports: [RouterLink, TuiButton, TranslatePipe],
     templateUrl: './not-found.component.html',
-    styleUrl: './not-found.component.less',
+    styleUrl: './not-found.component.less'
 })
 export class NotFoundComponent {}

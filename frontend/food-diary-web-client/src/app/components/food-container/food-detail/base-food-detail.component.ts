@@ -6,11 +6,10 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-base-food-detail',
-    standalone: true,
     templateUrl: './base-food-detail.component.html',
     styleUrls: ['./base-food-detail.component.less'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [TranslatePipe],
+    imports: [TranslatePipe]
 })
 export class BaseFoodDetailComponent<T> {
     public readonly context = injectContext<TuiDialogContext<T, Food>>();

@@ -1,6 +1,12 @@
 import { NG_EVENT_PLUGINS } from '@taiga-ui/event-plugins';
 import { provideAnimations } from '@angular/platform-browser/animations';
-import { APP_INITIALIZER, ApplicationConfig, ErrorHandler, importProvidersFrom, provideZoneChangeDetection } from '@angular/core';
+import {
+    ApplicationConfig,
+    ErrorHandler,
+    importProvidersFrom, inject,
+    provideAppInitializer,
+    provideZoneChangeDetection, isDevMode
+} from '@angular/core';
 import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { routes } from './app.routes';
 import { HTTP_INTERCEPTORS, HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
@@ -11,14 +17,7 @@ import { AuthService } from './services/auth.service';
 import { AuthInterceptor } from './interceptor/auth.interceptor';
 import { GlobalErrorHandler } from './services/error-handler.service';
 import { LoggingApiService } from './services/logging-api.service';
-
-export function initializeLocalization(localizationService: LocalizationService) {
-    return (): void => localizationService.initializeLocalization();
-}
-
-export function initializeAuthFactory(authService: AuthService) {
-    return (): void => authService.initializeAuth();
-}
+import { provideServiceWorker } from '@angular/service-worker';
 
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -31,22 +30,19 @@ export const appConfig: ApplicationConfig = {
             useClass: GlobalErrorHandler,
         },
         {
-            provide: APP_INITIALIZER,
-            useFactory: initializeLocalization,
-            deps: [LocalizationService],
-            multi: true,
-        },
-        {
-            provide: APP_INITIALIZER,
-            useFactory: initializeAuthFactory,
-            deps: [AuthService],
-            multi: true,
-        },
-        {
             provide: HTTP_INTERCEPTORS,
             useClass: AuthInterceptor,
             multi: true,
         },
+        provideAppInitializer(() => {
+            const localizationService = inject(LocalizationService);
+            localizationService.initializeLocalization();
+        }),
+
+        provideAppInitializer(() => {
+            const authService = inject(AuthService);
+            authService.initializeAuth();
+        }),
         provideAnimations(),
         provideZoneChangeDetection({ eventCoalescing: true }),
         provideRouter(routes, withComponentInputBinding()),
@@ -61,8 +57,12 @@ export const appConfig: ApplicationConfig = {
                 },
             }),
         ),
-        LocalizationService,
         TranslateService,
+        LocalizationService,
         LoggingApiService,
+        provideServiceWorker('ngsw-worker.js', {
+            enabled: !isDevMode(),
+            registrationStrategy: 'registerWhenStable:30000'
+          }),
     ],
 };

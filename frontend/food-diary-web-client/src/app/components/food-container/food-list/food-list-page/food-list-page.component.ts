@@ -11,7 +11,6 @@ import { TuiTextfieldControllerModule } from '@taiga-ui/legacy';
 
 @Component({
     selector: 'app-food-list-page',
-    standalone: true,
     templateUrl: '../food-list-base.component.html',
     styleUrls: ['./food-list-page.component.less', '../food-list-base.component.less'],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -25,7 +24,7 @@ import { TuiTextfieldControllerModule } from '@taiga-ui/legacy';
         TuiTextfieldComponent,
         TuiTextfieldControllerModule,
         TuiTextfieldDirective,
-    ],
+    ]
 })
 export class FoodListPageComponent extends FoodListBaseComponent implements OnInit {
     private readonly dialog = tuiDialog(FoodDetailComponent, {

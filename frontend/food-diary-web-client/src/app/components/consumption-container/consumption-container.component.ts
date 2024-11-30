@@ -3,9 +3,8 @@ import { RouterOutlet } from '@angular/router';
 
 @Component({
     selector: 'app-consumption-container',
-    standalone: true,
     templateUrl: './consumption-container.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [RouterOutlet],
+    imports: [RouterOutlet]
 })
 export class ConsumptionContainerComponent {}

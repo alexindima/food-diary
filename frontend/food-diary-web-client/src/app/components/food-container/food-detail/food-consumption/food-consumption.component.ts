@@ -23,7 +23,6 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
 
 @Component({
     selector: 'app-food-consumption',
-    standalone: true,
     templateUrl: './food-consumption.component.html',
     styleUrls: ['./food-consumption.component.less', '../base-food-detail.component.less'],
     providers: [VALIDATION_ERRORS_PROVIDER],
@@ -37,7 +36,7 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
         TuiError,
         TuiFieldErrorPipe,
         TuiInputNumberModule,
-    ],
+    ]
 })
 export class FoodConsumptionComponent extends BaseFoodDetailComponent<SimpleConsumption> {
     public consumptionForm: FormGroup<ConsumptionFormGroup>;

@@ -14,7 +14,6 @@ import { FormGroupControls } from '../../types/common.data';
 
 @Component({
     selector: 'app-statistics',
-    standalone: true,
     imports: [
         TuiAxes,
         TuiLineDaysChart,
@@ -33,7 +32,7 @@ import { FormGroupControls } from '../../types/common.data';
     ],
     templateUrl: './statistics.component.html',
     styleUrls: ['./statistics.component.less'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class StatisticsComponent implements OnInit {
     protected readonly maxLength: TuiDayLike = { year: 1 };

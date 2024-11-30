@@ -45,7 +45,6 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
 
 @Component({
     selector: 'app-base-consumption-manage',
-    standalone: true,
     templateUrl: './base-consumption-manage.component.html',
     styleUrls: ['./base-consumption-manage.component.less'],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -65,7 +64,7 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
         TuiInputNumberModule,
         TuiMultiSelectModule,
         TuiInputDateTimeModule,
-    ],
+    ]
 })
 export class BaseConsumptionManageComponent implements OnInit {
     protected readonly consumptionService = inject(ConsumptionService);

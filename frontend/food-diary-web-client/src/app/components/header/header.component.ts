@@ -10,7 +10,6 @@ import { AuthService } from '../../services/auth.service';
 
 @Component({
     selector: 'app-header',
-    standalone: true,
     imports: [
         TuiTabsHorizontal,
         TuiTab,
@@ -23,7 +22,7 @@ import { AuthService } from '../../services/auth.service';
         TuiOption,
     ],
     templateUrl: './header.component.html',
-    styleUrls: ['./header.component.less'],
+    styleUrls: ['./header.component.less']
 })
 export class HeaderComponent implements OnInit {
     private readonly router = inject(Router);

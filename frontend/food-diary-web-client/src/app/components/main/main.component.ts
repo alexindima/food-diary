@@ -6,10 +6,9 @@ import { AuthService } from '../../services/auth.service';
 
 @Component({
     selector: 'app-main',
-    standalone: true,
     imports: [HeroComponent, FeaturesComponent, TodayConsumptionComponent],
     templateUrl: './main.component.html',
-    styleUrls: ['./main.component.less'],
+    styleUrls: ['./main.component.less']
 })
 export class MainComponent {
     private readonly authService = inject(AuthService);

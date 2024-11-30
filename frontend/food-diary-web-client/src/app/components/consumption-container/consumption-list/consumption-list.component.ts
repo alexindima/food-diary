@@ -17,7 +17,6 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
     selector: 'app-consumption-list',
-    standalone: true,
     templateUrl: './consumption-list.component.html',
     styleUrls: ['./consumption-list.component.less'],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -31,7 +30,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
         TuiTextfieldControllerModule,
         DatePipe,
         DecimalPipe,
-    ],
+    ]
 })
 export class ConsumptionListComponent implements OnInit {
     private readonly consumptionService = inject(ConsumptionService);

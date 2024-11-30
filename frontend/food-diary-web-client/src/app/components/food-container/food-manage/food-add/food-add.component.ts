@@ -3,10 +3,9 @@ import { BaseFoodManageComponent } from '../base-food-manage.component';
 
 @Component({
     selector: 'app-consumption-add',
-    standalone: true,
     templateUrl: './food-add.component.html',
     styleUrls: ['./food-add.component.less', '../base-food-manage.component.less'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [BaseFoodManageComponent],
+    imports: [BaseFoodManageComponent]
 })
 export class FoodAddComponent extends BaseFoodManageComponent {}

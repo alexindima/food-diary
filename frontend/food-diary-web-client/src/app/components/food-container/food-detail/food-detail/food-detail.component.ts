@@ -5,11 +5,10 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-food-detail',
-    standalone: true,
     templateUrl: './food-detail.component.html',
     styleUrls: ['./food-detail.component.less', '../base-food-detail.component.less'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [TuiButton, BaseFoodDetailComponent, TranslatePipe],
+    imports: [TuiButton, BaseFoodDetailComponent, TranslatePipe]
 })
 export class FoodDetailComponent extends BaseFoodDetailComponent<FoodDetailActionResult> {
     private readonly dialogService = inject(TuiDialogService);

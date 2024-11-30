@@ -13,7 +13,6 @@ import { SimpleConsumption } from '../../../../types/consumption.data';
 
 @Component({
     selector: 'app-food-list-dialog',
-    standalone: true,
     templateUrl: '../food-list-base.component.html',
     styleUrls: ['./food-list-dialog.component.less', '../food-list-base.component.less'],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -27,7 +26,7 @@ import { SimpleConsumption } from '../../../../types/consumption.data';
         TuiTextfieldComponent,
         TuiTextfieldControllerModule,
         TuiTextfieldDirective,
-    ],
+    ]
 })
 export class FoodListDialogComponent extends FoodListBaseComponent implements OnInit {
     public readonly context = injectContext<TuiDialogContext<SimpleConsumption, null>>();

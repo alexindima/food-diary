@@ -5,10 +5,9 @@ import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-features',
-    standalone: true,
     imports: [TuiButton, TuiCardLarge, TuiSurface, TranslateModule],
     templateUrl: './features.component.html',
-    styleUrl: './features.component.less',
+    styleUrl: './features.component.less'
 })
 export class FeaturesComponent {
     public features: Feature[] = [

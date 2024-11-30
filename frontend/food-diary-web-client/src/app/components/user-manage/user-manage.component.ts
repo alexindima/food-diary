@@ -49,7 +49,6 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
 
 @Component({
     selector: 'app-user-manage',
-    standalone: true,
     imports: [
         TuiTextfieldComponent,
         ReactiveFormsModule,
@@ -67,7 +66,7 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     templateUrl: './user-manage.component.html',
     styleUrl: './user-manage.component.less',
     providers: [VALIDATION_ERRORS_PROVIDER],
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UserManageComponent implements OnInit {
     private readonly userService = inject(UserService);
