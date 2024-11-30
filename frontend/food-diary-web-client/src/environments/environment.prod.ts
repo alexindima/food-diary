@@ -2,11 +2,11 @@ import { AppConfig } from '../app/types/app.data';
 
 export const environment: AppConfig = {
     apiUrls: {
-        auth: 'http://localhost:3000/api/auth',
-        foods: 'http://localhost:3000/api/foods',
-        consumptions: 'http://localhost:3000/api/consumptions',
-        statistics: 'http://localhost:3000/api/statistics',
-        users: 'http://localhost:3000/api/users',
-        logs: 'http://localhost:3000/api/logs',
+        auth: 'http://fooddiary.club/api/auth',
+        foods: 'http://fooddiary.club/api/foods',
+        consumptions: 'http://fooddiary.club/api/consumptions',
+        statistics: 'http://fooddiary.club/api/statistics',
+        users: 'http://fooddiary.club/api/users',
+        logs: 'http://fooddiary.club/api/logs',
     },
 };

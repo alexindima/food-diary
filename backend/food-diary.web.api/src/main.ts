@@ -23,7 +23,7 @@ async function bootstrap() {
     });
 
     app.enableCors({
-        origin: 'http://fooddiary.club',
+        origin: '*',
         methods: '*',
         credentials: true,
     });
