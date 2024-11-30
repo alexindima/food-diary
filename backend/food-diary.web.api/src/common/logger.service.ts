@@ -1,5 +1,5 @@
 import * as winston from 'winston';
-import 'winston-daily-rotate-file'; // Импортируем ротацию файлов
+import 'winston-daily-rotate-file';
 import { Injectable, LoggerService } from '@nestjs/common';
 
 @Injectable()

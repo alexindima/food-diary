@@ -68,7 +68,11 @@ jobs:
           mkdir -p "${{ env.BACKEND_DEPLOY_DIR }}"
           rm -rf "${{ env.FRONTEND_DEPLOY_DIR }}/*"
           rm -rf "${{ env.BACKEND_DEPLOY_DIR }}/*"
-          echo "Directories created and cleaned."
+          chmod -R 755 "${{ env.FRONTEND_DEPLOY_DIR }}"
+          chmod -R 755 "${{ env.BACKEND_DEPLOY_DIR }}"
+          chown -R www-data:www-data "${{ env.FRONTEND_DEPLOY_DIR }}"
+          chown -R www-data:www-data "${{ env.BACKEND_DEPLOY_DIR }}"
+          echo "Directories created, cleaned, and permissions set."
           EOF
 
       - name: Uploading frontend files
