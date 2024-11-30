@@ -10,6 +10,8 @@ async function bootstrap() {
     const envFile = `.env.${process.env.NODE_ENV || 'development'}`;
     loadEnv({ path: envFile });
     console.log(`Loaded environment variables from ${envFile}`);
+    console.log('Environment Variables:', process.env);
+
 
     const app = await NestFactory.create(AppModule, {
         logger: new GlobalLogger(),
