@@ -15,23 +15,23 @@
             </p>
         }
         <p class="modal__text">
-            <span class="modal__property-name">{{ 'FOOD_DETAIL.CALORIES_PER_100G' | translate }}</span>
-            {{ food.caloriesPer100 }}
+            <span class="modal__property-name">{{ 'FOOD_DETAIL.CALORIES_PER_BASE' | translate }}</span>
+            {{ food.caloriesPerBase }}
         </p>
         <p class="modal__text">
-            <span class="modal__property-name">{{ 'FOOD_DETAIL.PROTEINS_PER_100G' | translate }}</span>
-            {{ food.proteinsPer100 }} {{ 'FOOD_DETAIL.GRAMS' | translate }}
+            <span class="modal__property-name">{{ 'FOOD_DETAIL.PROTEINS_PER_BASE' | translate }}</span>
+            {{ food.proteinsPerBase }} {{ 'FOOD_DETAIL.GRAMS' | translate }}
         </p>
         <p class="modal__text">
-            <span class="modal__property-name">{{ 'FOOD_DETAIL.FATS_PER_100G' | translate }}</span>
-            {{ food.fatsPer100 }} {{ 'FOOD_DETAIL.GRAMS' | translate }}
+            <span class="modal__property-name">{{ 'FOOD_DETAIL.FATS_PER_BASE' | translate }}</span>
+            {{ food.fatsPerBase }} {{ 'FOOD_DETAIL.GRAMS' | translate }}
         </p>
         <p class="modal__text">
-            <span class="modal__property-name">{{ 'FOOD_DETAIL.CARBS_PER_100G' | translate }}</span>
-            {{ food.carbsPer100 }} {{ 'FOOD_DETAIL.GRAMS' | translate }}
+            <span class="modal__property-name">{{ 'FOOD_DETAIL.CARBS_PER_BASE' | translate }}</span>
+            {{ food.carbsPerBase }} {{ 'FOOD_DETAIL.GRAMS' | translate }}
         </p>
         <p class="modal__text">
-            <span class="modal__property-name">{{ 'FOOD_DETAIL.DEFAULT_SERVING' | translate }}</span>
+            <span class="modal__property-name">{{ 'FOOD_DETAIL.BASE_AMOUNT' | translate }}</span>
             {{ food.defaultServing }} {{ 'FOOD_DETAIL.DEFAULT_SERVING_UNIT.' + food.defaultServingUnit | translate }}
         </p>
     </div>

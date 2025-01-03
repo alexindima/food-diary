@@ -32,27 +32,30 @@ model User {
 
     consumptions Consumption[]
     Food         Food[]
+    Recipe       Recipe[]
 }
 
 model Food {
-    id                 Int      @id @default(autoincrement())
-    barcode            String?
-    name               String
-    category           String?
-    caloriesPer100     Float
-    proteinsPer100     Float
-    fatsPer100         Float
-    carbsPer100        Float
-    defaultServing     Float
-    defaultServingUnit Unit
-    usageCount         Int      @default(0)
-    createdAt          DateTime @default(now())
-    updatedAt          DateTime @updatedAt
+    id              Int        @id @default(autoincrement())
+    barcode         String?
+    name            String
+    category        String?
+    baseUnit        Unit // Базовая единица измерения для продукта
+    baseAmount      Float // Количество базовой единицы (например, 100 для грамм или мл)
+    caloriesPerBase Float // Калорийность для базовой единицы
+    proteinsPerBase Float // Белки для базовой единицы
+    fatsPerBase     Float // Жиры для базовой единицы
+    carbsPerBase    Float // Углеводы для базовой единицы
+    usageCount      Int        @default(0)
+    visibility      Visibility @default(PUBLIC)
+    createdAt       DateTime   @default(now())
+    updatedAt       DateTime   @updatedAt
 
     consumptionItems ConsumptionItem[]
 
-    userId Int
-    user   User @relation(fields: [userId], references: [id])
+    userId     Int
+    user       User         @relation(fields: [userId], references: [id])
+    RecipeItem RecipeItem[]
 }
 
 model Consumption {
@@ -79,8 +82,73 @@ model ConsumptionItem {
     food        Food        @relation(fields: [foodId], references: [id])
 }
 
+model Recipe {
+    id            Int      @id @default(autoincrement())
+    name          String
+    description   String? // Краткое описание блюда
+    category      String? // Категория рецепта (например, "Завтрак", "Обед")
+    imageUrl      String? // Изображение готового блюда
+    prepTime      Int? // Время подготовки (в минутах)
+    cookTime      Int? // Время готовки (в минутах)
+    servings      Int // Количество порций
+    totalCalories Float? // Общие калории для рецепта
+    totalProteins Float? // Общие белки
+    totalFats     Float? // Общие жиры
+    totalCarbs    Float? // Общие углеводы
+    createdAt     DateTime @default(now())
+    updatedAt     DateTime @updatedAt
+
+    userId Int
+    user   User         @relation(fields: [userId], references: [id])
+    items  RecipeItem[] // Ингредиенты рецепта
+    steps  RecipeStep[] // Шаги приготовления
+}
+
+model RecipeItem {
+    id        Int      @id @default(autoincrement())
+    recipeId  Int
+    foodId    Int
+    amount    Float // Количество ингредиента
+    unit      Unit // Единица измерения (G, ML, PCS)
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    recipe   Recipe           @relation(fields: [recipeId], references: [id])
+    food     Food             @relation(fields: [foodId], references: [id])
+    StepItem RecipeStepItem[]
+}
+
+model RecipeStep {
+    id          Int      @id @default(autoincrement())
+    recipeId    Int
+    stepNumber  Int // Номер шага
+    description String // Описание шага
+    imageUrl    String? // Изображение для шага (опционально)
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+
+    recipe    Recipe           @relation(fields: [recipeId], references: [id])
+    stepItems RecipeStepItem[] // Ингредиенты для данного шага
+}
+
+model RecipeStepItem {
+    id           Int      @id @default(autoincrement())
+    stepId       Int
+    recipeItemId Int // Ссылка на общий ингредиент рецепта
+    createdAt    DateTime @default(now())
+    updatedAt    DateTime @updatedAt
+
+    step       RecipeStep @relation(fields: [stepId], references: [id])
+    recipeItem RecipeItem @relation(fields: [recipeItemId], references: [id])
+}
+
 enum Unit {
     G
     ML
     PCS
+}
+
+enum Visibility {
+    PUBLIC // Продукт виден всем
+    PRIVATE // Продукт виден только создателю
 }

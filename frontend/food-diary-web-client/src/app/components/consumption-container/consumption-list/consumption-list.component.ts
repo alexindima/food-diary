@@ -44,19 +44,19 @@ export class ConsumptionListComponent implements OnInit {
     @ViewChild('container') private container!: ElementRef<HTMLElement>;
 
     public getTotalCalories(items: ConsumptionItem[]): number {
-        return items.reduce((total, item) => total + (item.food?.caloriesPer100 ?? 0) * (item.amount / 100), 0);
+        return items.reduce((total, item) => total + (item.food?.caloriesPerBase ?? 0) * (item.amount / 100), 0);
     }
 
     public getTotalProteins(items: ConsumptionItem[]): number {
-        return items.reduce((total, item) => total + (item.food?.proteinsPer100 ?? 0) * (item.amount / 100), 0);
+        return items.reduce((total, item) => total + (item.food?.proteinsPerBase ?? 0) * (item.amount / 100), 0);
     }
 
     public getTotalFats(items: ConsumptionItem[]): number {
-        return items.reduce((total, item) => total + (item.food?.fatsPer100 ?? 0) * (item.amount / 100), 0);
+        return items.reduce((total, item) => total + (item.food?.fatsPerBase ?? 0) * (item.amount / 100), 0);
     }
 
     public getTotalCarbs(items: ConsumptionItem[]): number {
-        return items.reduce((total, item) => total + (item.food?.carbsPer100 ?? 0) * (item.amount / 100), 0);
+        return items.reduce((total, item) => total + (item.food?.carbsPerBase ?? 0) * (item.amount / 100), 0);
     }
 
     public constructor() {

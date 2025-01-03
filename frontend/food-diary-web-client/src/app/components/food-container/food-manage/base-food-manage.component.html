@@ -53,7 +53,7 @@
         <div class="food-manage__serving">
             <div class="food-manage__serving-part food-manage__serving-part--amount">
                 <tui-input-number
-                    formControlName="defaultServing"
+                    formControlName="baseAmount"
                 >
                     {{ 'FOOD_MANAGE.DEFAULT_SERVING' | translate }}*
                     <input
@@ -62,13 +62,13 @@
                     />
                 </tui-input-number>
                 <tui-error
-                    formControlName="defaultServing"
+                    formControlName="baseAmount"
                     [error]="[] | tuiFieldError | async"
                 ></tui-error>
             </div>
             <div class="food-manage__serving-part food-manage__serving-part--unit">
                 <tui-select
-                    formControlName="defaultServingUnit"
+                    formControlName="baseUnit"
                     [tuiTextfieldLabelOutside]="true"
                     [stringify]="stringifyUnits"
                 >
@@ -91,14 +91,14 @@
                     </ng-template>
                 </tui-select>
                 <tui-error
-                    formControlName="defaultServingUnit"
+                    formControlName="baseUnit"
                     [error]="[] | tuiFieldError | async"
                 ></tui-error>
             </div>
         </div>
         <div class="food-manage__field food-manage__field--calories">
             <tui-input-number
-                formControlName="caloriesPer100"
+                formControlName="caloriesPerBase"
             >
                 {{ 'FOOD_MANAGE.CALORIES' | translate }}*
                 <input
@@ -107,13 +107,13 @@
                 />
             </tui-input-number>
             <tui-error
-                formControlName="caloriesPer100"
+                formControlName="caloriesPerBase"
                 [error]="[] | tuiFieldError | async"
             ></tui-error>
         </div>
         <div class="food-manage__field food-manage__field--proteins">
             <tui-input-number
-                formControlName="proteinsPer100"
+                formControlName="proteinsPerBase"
             >
                 {{ 'FOOD_MANAGE.PROTEINS' | translate }}*
                 <input
@@ -122,13 +122,13 @@
                 />
             </tui-input-number>
             <tui-error
-                formControlName="proteinsPer100"
+                formControlName="proteinsPerBase"
                 [error]="[] | tuiFieldError | async"
             ></tui-error>
         </div>
         <div class="food-manage__field food-manage__field--fats">
             <tui-input-number
-                formControlName="fatsPer100"
+                formControlName="fatsPerBase"
             >
                 {{ 'FOOD_MANAGE.FATS' | translate }}*
                 <input
@@ -137,13 +137,13 @@
                 />
             </tui-input-number>
             <tui-error
-                formControlName="fatsPer100"
+                formControlName="fatsPerBase"
                 [error]="[] | tuiFieldError | async"
             ></tui-error>
         </div>
         <div class="food-manage__field food-manage__field--carbs">
             <tui-input-number
-                formControlName="carbsPer100"
+                formControlName="carbsPerBase"
             >
                 {{ 'FOOD_MANAGE.CARBS' | translate }}*
                 <input
@@ -152,7 +152,7 @@
                 />
             </tui-input-number>
             <tui-error
-                formControlName="carbsPer100"
+                formControlName="carbsPerBase"
                 [error]="[] | tuiFieldError | async"
             ></tui-error>
         </div>

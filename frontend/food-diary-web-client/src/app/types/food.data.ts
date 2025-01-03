@@ -4,10 +4,10 @@ export interface Food {
     id: number;
     name: string;
     category?: string;
-    caloriesPer100: number;
-    proteinsPer100: number;
-    fatsPer100: number;
-    carbsPer100: number;
+    caloriesPerBase: number;
+    proteinsPerBase: number;
+    fatsPerBase: number;
+    carbsPerBase: number;
     barcode?: string | null;
     createdAt?: string;
     updatedAt?: string;
@@ -19,13 +19,13 @@ export interface Food {
 export class FoodManageDto {
     public name: string;
     public category?: string;
-    public caloriesPer100: number;
-    public proteinsPer100: number;
-    public fatsPer100: number;
-    public carbsPer100: number;
+    public caloriesPerBase: number;
+    public proteinsPerBase: number;
+    public fatsPerBase: number;
+    public carbsPerBase: number;
     public barcode?: string | null;
-    public defaultServing: number;
-    public defaultServingUnit: Unit;
+    public baseAmount: number;
+    public baseUnit: Unit;
 
     public constructor(formValue: Partial<FoodFormValues>) {
         if (!formValue.name) {
@@ -34,13 +34,13 @@ export class FoodManageDto {
 
         this.name = formValue.name;
         this.category = formValue.category || undefined;
-        this.caloriesPer100 = formValue.caloriesPer100 || 0;
-        this.proteinsPer100 = formValue.proteinsPer100 || 0;
-        this.fatsPer100 = formValue.fatsPer100 || 0;
-        this.carbsPer100 = formValue.carbsPer100 || 0;
+        this.caloriesPerBase = formValue.caloriesPerBase || 0;
+        this.proteinsPerBase = formValue.proteinsPerBase || 0;
+        this.fatsPerBase = formValue.fatsPerBase || 0;
+        this.carbsPerBase = formValue.carbsPerBase || 0;
         this.barcode = formValue.barcode || null;
-        this.defaultServing = formValue.defaultServing || 0;
-        this.defaultServingUnit = formValue.defaultServingUnit || Unit.G;
+        this.baseAmount = formValue.baseAmount || 0;
+        this.baseUnit = formValue.baseUnit || Unit.G;
     }
 }
 

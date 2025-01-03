@@ -47,13 +47,13 @@ export class StatisticsService {
                         consumption.items.forEach((item) => {
                             const { food, amount } = item;
                             totals.totalCalories +=
-                                (food.caloriesPer100 * amount) / 100;
+                                (food.caloriesPerBase * amount) / 100;
                             totals.totalProteins +=
-                                (food.proteinsPer100 * amount) / 100;
+                                (food.proteinsPerBase * amount) / 100;
                             totals.totalFats +=
-                                (food.fatsPer100 * amount) / 100;
+                                (food.fatsPerBase * amount) / 100;
                             totals.totalCarbs +=
-                                (food.carbsPer100 * amount) / 100;
+                                (food.carbsPerBase * amount) / 100;
                         });
                         return totals;
                     },

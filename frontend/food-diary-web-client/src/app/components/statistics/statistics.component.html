@@ -68,29 +68,38 @@
             <h3 class="statistics__calories-title">
                 {{ 'STATISTICS.CALORIES_TITLE' | translate }}
             </h3>
-            @if (labels$ | async) {
-                <tui-axes
-                    class="statistics__axes"
-                    [axisXLabels]="(labels$ | async)!"
-                    [horizontalLines]="4"
-                    [verticalLines]="(labels$ | async)!.length - 1"
-                >
+            <tui-axes
+                class="statistics__axes"
+                [axisXLabels]="labels()"
+                [horizontalLines]="4"
+                [verticalLines]="labels().length - 1"
+            >
+                @if ((caloriesChartData()?.data?.length ?? 0) > 90) {
                     <tui-line-days-chart
                         class="statistics__calories-chart"
-                        [height]="caloriesChartData?.maxValue ?? 0"
-                        [value]="caloriesChartData?.data ?? []"
-                        [xStringify]="xStringify$ | async"
+                        [height]="caloriesChartData()?.maxValue ?? 0"
+                        [value]="caloriesChartData()?.data ?? [] | tuiFilter: filter : range"
+                        [xStringify]="xStringify()"
                         [yStringify]="yStringify"
                     />
-                </tui-axes>
-            }
+                } @else {
+                    <tui-line-chart
+                        class="statistics__calories-chart"
+                        [height]="caloriesChartData()?.maxValue ?? 0"
+                        [value]="caloriesChartData()?.data ?? [] | tuiFilter: filter : range | tuiMapper: toNumbers : range"
+                        [width]="getWidth(range)"
+                        [yStringify]="yStringify"
+                    />
+                }
+            </tui-axes>
+
         </div>
         <div class="statistics__nutrients">
             <h3 class="statistics__nutrients-title">
                 {{ 'STATISTICS.NUTRIENTS_TITLE' | translate }}
             </h3>
             <p class="statistics__legend">
-                @for (chart of nutrientsDaysChartData?.chartData; track chart) {
+                @for (chart of nutrientsDaysChartData()?.chartData; track chart) {
                     <span class="statistics__legend-item">
                         <small class="statistics__legend-name">
                             {{ 'STATISTICS.NUTRIENTS.' + chart.type.toUpperCase() | translate }}
@@ -100,23 +109,30 @@
             </p>
             <div class="statistics__nutrients-charts">
                 <div class="statistics__nutrients-days-chart">
-                    @if (labels$ | async) {
-                        <tui-axes
-                            class="statistics__axes"
-                            [axisXLabels]="(labels$ | async)!"
-                            [horizontalLines]="4"
-                            [tuiLineChartHint]="hint"
-                            [verticalLines]="(labels$ | async)!.length - 1"
-                        >
-                            @for (chart of nutrientsDaysChartData?.chartData; track chart) {
+                    <tui-axes
+                        class="statistics__axes"
+                        [axisXLabels]="labels()"
+                        [horizontalLines]="4"
+                        [tuiLineChartHint]="hint"
+                        [verticalLines]="labels().length - 1"
+                    >
+                        @for (chart of nutrientsDaysChartData()?.chartData; track chart) {
+                            @if ((nutrientsDaysChartData()?.chartData?.length ?? 0) > 90) {
                                 <tui-line-days-chart
                                     class="statistics__nutrients-chart"
-                                    [height]="nutrientsDaysChartData?.maxValue ?? 0"
+                                    [height]="nutrientsDaysChartData()?.maxValue ?? 0"
                                     [value]="chart.data"
-                                ></tui-line-days-chart>
+                                />
+                            } @else {
+                                <tui-line-chart
+                                    class="statistics__nutrients-chart"
+                                    [height]="nutrientsDaysChartData()?.maxValue ?? 0"
+                                    [value]="chart.data | tuiFilter: filter : range | tuiMapper: toNumbers : range"
+                                    [width]="getWidth(range)"
+                                />
                             }
-                        </tui-axes>
-                    }
+                        }
+                    </tui-axes>
                     <ng-template
                         #hint
                         let-data
@@ -133,22 +149,22 @@
                         </div>
                     </ng-template>
                 </div>
-                @if (nutrientsPieChartData) {
+                @if (nutrientsPieChartData()) {
                     <div class="statistics__nutrients-ring-chart">
                         <tui-pie-chart
                             class="statistics__pie-chart"
                             size="l"
                             [tuiHintContent]="content"
-                            [value]="nutrientsPieChartData.values"
+                            [value]="nutrientsPieChartData()?.values ?? []"
                         />
 
                         <ng-template
                             #content
                             let-index
                         >
-                            <div>{{ nutrientsPieChartData.labels[index] }}</div>
+                            <div>{{ nutrientsPieChartData()?.labels?.[index] }}</div>
                             <span>
-                                {{ nutrientsPieChartData.values[index] | number: '1.0-2' }} {{ 'STATISTICS.GRAMS' | translate }}
+                                {{ nutrientsPieChartData()?.values?.[index] | number: '1.0-2' }} {{ 'STATISTICS.GRAMS' | translate }}
                             </span>
                         </ng-template>
                     </div>

@@ -20,19 +20,19 @@ export class ConsumptionDetailComponent {
     public consumption: Consumption;
 
     public get totalCalories(): number {
-        return this.consumption.items.reduce((sum, item) => sum + ((item.food?.caloriesPer100 ?? 0) * item.amount) / 100, 0);
+        return this.consumption.items.reduce((sum, item) => sum + ((item.food?.caloriesPerBase ?? 0) * item.amount) / 100, 0);
     }
 
     public get totalProteins(): number {
-        return this.consumption.items.reduce((sum, item) => sum + ((item.food?.proteinsPer100 ?? 0) * item.amount) / 100, 0);
+        return this.consumption.items.reduce((sum, item) => sum + ((item.food?.proteinsPerBase ?? 0) * item.amount) / 100, 0);
     }
 
     public get totalFats(): number {
-        return this.consumption.items.reduce((sum, item) => sum + ((item.food?.fatsPer100 ?? 0) * item.amount) / 100, 0);
+        return this.consumption.items.reduce((sum, item) => sum + ((item.food?.fatsPerBase ?? 0) * item.amount) / 100, 0);
     }
 
     public get totalCarbs(): number {
-        return this.consumption.items.reduce((sum, item) => sum + ((item.food?.carbsPer100 ?? 0) * item.amount) / 100, 0);
+        return this.consumption.items.reduce((sum, item) => sum + ((item.food?.carbsPerBase ?? 0) * item.amount) / 100, 0);
     }
 
     public constructor() {

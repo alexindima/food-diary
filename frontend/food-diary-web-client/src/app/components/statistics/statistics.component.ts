@@ -1,11 +1,33 @@
-import { ChangeDetectionStrategy, Component, HostListener, inject, OnInit, signal } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    HostListener,
+    inject,
+    OnInit,
+    signal
+} from '@angular/core';
 import { AggregatedStatistics, CaloriesChartData, NutrientsChartData, PieChartData, StatisticsMapper } from '../../types/statistics.data';
 import { StatisticsService } from '../../services/statistics.service';
-import { AsyncPipe, DecimalPipe } from '@angular/common';
-import { TUI_MONTHS, TuiGroup, TuiHintOptionsDirective, TuiLoader } from '@taiga-ui/core';
-import { TuiAxes, TuiLineDaysChart, TuiLineDaysChartHint, TuiPieChart } from '@taiga-ui/addon-charts';
-import { TuiDay, TuiDayLike, TuiDayRange, TuiMonth, tuiPure, TuiStringHandler } from '@taiga-ui/cdk';
-import { map, Observable, of } from 'rxjs';
+import { DecimalPipe } from '@angular/common';
+import { TUI_MONTHS, TuiGroup, TuiHintOptionsDirective, TuiLoader, TuiPoint } from '@taiga-ui/core';
+import {
+    TuiAxes,
+    TuiLineChart,
+    TuiLineDaysChart,
+    TuiLineDaysChartHint,
+    TuiPieChart
+} from '@taiga-ui/addon-charts';
+import {
+    TuiDay,
+    TuiDayLike,
+    TuiDayRange, TuiFilterPipe, TuiMapper, TuiMapperPipe,
+    TuiMatcher,
+    TuiMonth,
+    tuiPure,
+    TuiStringHandler
+} from '@taiga-ui/cdk';
+import { map, Observable } from 'rxjs';
 import { TuiInputDateRangeModule } from '@taiga-ui/legacy';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -18,7 +40,6 @@ import { FormGroupControls } from '../../types/common.data';
         TuiAxes,
         TuiLineDaysChart,
         TuiLineDaysChartHint,
-        AsyncPipe,
         TuiInputDateRangeModule,
         FormsModule,
         TuiLoader,
@@ -29,6 +50,9 @@ import { FormGroupControls } from '../../types/common.data';
         TuiGroup,
         ReactiveFormsModule,
         TuiBlock,
+        TuiFilterPipe,
+        TuiLineChart,
+        TuiMapperPipe,
     ],
     templateUrl: './statistics.component.html',
     styleUrls: ['./statistics.component.less'],
@@ -45,11 +69,11 @@ export class StatisticsComponent implements OnInit {
     public isLoading = signal<boolean>(false);
     public isMobile = signal<boolean>(false);
 
-    public caloriesChartData: CaloriesChartData | null = null;
-    public nutrientsDaysChartData: NutrientsChartData | null = null;
-    public nutrientsPieChartData: PieChartData | null = null;
-    public data = new TuiDayRange(TuiDay.currentLocal().append({ month: -1 }), TuiDay.currentLocal());
-    public labels$: Observable<readonly string[]> = this.labels(this.data);
+    public caloriesChartData = signal<CaloriesChartData | null>(null);
+    public nutrientsDaysChartData = signal<NutrientsChartData | null>(null);
+    public nutrientsPieChartData = signal<PieChartData | null>(null);
+    public data = signal(new TuiDayRange(TuiDay.currentLocal().append({ month: -1 }), TuiDay.currentLocal()));
+    private readonly monthsArray = signal<string[]>([]);
 
     protected readonly rangeForm: FormGroup<StatisticsFormData> = new FormGroup({
         range: new FormControl<RangeMode>(this.defaultRange, { nonNullable: true }),
@@ -59,13 +83,26 @@ export class StatisticsComponent implements OnInit {
         ),
     });
 
-    protected readonly xStringify$: Observable<TuiStringHandler<TuiDay>> = this.months$.pipe(
-        map(
-            months =>
-                ({ month, day }) =>
-                    `${months[month]}, ${day}`,
-        ),
-    );
+    @tuiPure
+    protected getWidth({from, to}: TuiDayRange): number {
+        return TuiDay.lengthBetween(from, to);
+    }
+
+    protected readonly filter: TuiMatcher<[readonly [TuiDay, number], TuiDayRange]> = (
+        [day],
+        {from, to},
+    ) => day.daySameOrAfter(from) && day.daySameOrBefore(to);
+
+    protected readonly toNumbers: TuiMapper<
+        [ReadonlyArray<readonly [TuiDay, number]>, TuiDayRange],
+        readonly TuiPoint[]
+    > = (days, {from}) =>
+        days.map(([day, value]) => [TuiDay.lengthBetween(from, day), value]);
+
+    protected readonly xStringify = computed<TuiStringHandler<TuiDay>>(() => {
+        const months = this.monthsArray();
+        return ({ month, day }): string => `${months[month]}, ${day}`;
+    });
 
     protected readonly yStringify: TuiStringHandler<number> = y => `${Number(y.toFixed(2))} ${this.translateService.instant('kkal')}`;
 
@@ -76,6 +113,11 @@ export class StatisticsComponent implements OnInit {
 
     public constructor() {
         this.updateDateRange(this.defaultRange);
+
+        this.months$.subscribe(months => {
+            const monthsArray = Object.values(months);
+            this.monthsArray.set(monthsArray);
+        });
     }
 
     public ngOnInit(): void {
@@ -89,7 +131,7 @@ export class StatisticsComponent implements OnInit {
 
         this.rangeForm.controls.inputRange.valueChanges.subscribe(inputRange => {
             if (this.rangeForm.controls.range.value === 'Custom' && inputRange) {
-                this.data = inputRange;
+                this.data.set(inputRange);
                 this.updateCharts();
             }
         });
@@ -114,17 +156,16 @@ export class StatisticsComponent implements OnInit {
 
         this.statisticsService
             .getAggregatedStatistics({
-                dateFrom: this.data.from.toLocalNativeDate(),
-                dateTo: this.data.to.toLocalNativeDate(),
+                dateFrom: this.data().from.toLocalNativeDate(),
+                dateTo: this.data().to.toLocalNativeDate(),
             })
             .subscribe({
                 next: response => {
                     if (response.status === 'success') {
                         const stats: AggregatedStatistics[] = response.data!;
-                        this.caloriesChartData = StatisticsMapper.mapCaloriesToChartData(stats);
-                        this.nutrientsDaysChartData = StatisticsMapper.mapNutrientsToDaysChartData(stats);
-                        this.nutrientsPieChartData = StatisticsMapper.mapNutrientsToPieChartData(stats);
-                        this.labels$ = this.labels(this.data);
+                        this.caloriesChartData.set(StatisticsMapper.mapCaloriesToChartData(stats));
+                        this.nutrientsDaysChartData.set(StatisticsMapper.mapNutrientsToDaysChartData(stats));
+                        this.nutrientsPieChartData.set(StatisticsMapper.mapNutrientsToPieChartData(stats));
                     }
                     this.isLoading.set(false);
                 },
@@ -135,58 +176,49 @@ export class StatisticsComponent implements OnInit {
     }
 
     protected get range(): TuiDayRange {
-        return this.computeRange(this.data);
+        return this.computeRange(this.data());
     }
 
     @tuiPure
     protected getDate(day: TuiDay | number, date: TuiDay): string {
         const actualDay = day instanceof TuiDay ? day : date.append({ day });
-        const xStringify = this.xStringify$;
 
-        let formattedDate = '';
-        xStringify
-            .subscribe(handler => {
-                formattedDate = handler(actualDay);
-            })
-            .unsubscribe();
+        const xStringify = this.xStringify();
 
-        return formattedDate;
+        return xStringify(actualDay);
     }
 
-    @tuiPure
-    protected labels({ from, to }: TuiDayRange): Observable<readonly string[]> {
+    public labels = computed(() => {
+        const months = this.monthsArray();
+
+        const { from, to } = this.data();
         const length = TuiDay.lengthBetween(from, to);
 
+        let result: string[];
+
         if (length > 90) {
-            return this.months$.pipe(
-                map(months => [
-                    ...Array.from(
-                        { length: TuiMonth.lengthBetween(from, to) + 1 },
-                        (_, i) => months[from.append({ month: i }).month] ?? '',
-                    ),
-                    '',
-                ]),
+            result = Array.from(
+                { length: TuiMonth.lengthBetween(from, to) + 1 },
+                (_, i) => months[from.append({ month: i }).month] ?? '',
             );
+        } else {
+            const range = Array.from({ length }, (_, day) => from.append({ day }));
+            const mondays = onlyMondays(range);
+            const days = range.map(String);
+
+            if (length > 60) {
+                result = [...even(mondays), ''];
+            } else if (length > 14) {
+                result = [...mondays, ''];
+            } else if (length > 7) {
+                result = [...even(days), ''];
+            } else {
+                result = [...days, ''];
+            }
         }
 
-        const range = Array.from({ length }, (_, day) => from.append({ day }));
-        const mondays = onlyMondays(range);
-        const days = range.map(String);
-
-        if (length > 60) {
-            return of([...even(mondays), '']);
-        }
-
-        if (length > 14) {
-            return of([...mondays, '']);
-        }
-
-        if (length > 7) {
-            return of([...even(days), '']);
-        }
-
-        return of([...days, '']);
-    }
+        return result;
+    });
 
     @tuiPure
     private computeRange(range: TuiDayRange): TuiDayRange {
@@ -217,18 +249,18 @@ export class StatisticsComponent implements OnInit {
         const now = TuiDay.currentLocal();
         switch (range) {
             case 'Week':
-                this.data = new TuiDayRange(now.append({ day: -7 }), now);
+                this.data.set(new TuiDayRange(now.append({ day: -7 }), now));
                 break;
             case 'Month':
-                this.data = new TuiDayRange(now.append({ month: -1 }), now);
+                this.data.set(new TuiDayRange(now.append({ month: -1 }), now));
                 break;
             case 'Year':
-                this.data = new TuiDayRange(now.append({ year: -1 }), now);
+                this.data.set( new TuiDayRange(now.append({ year: -1 }), now));
                 break;
             case 'Custom':
                 const inputRange = this.rangeForm.controls.inputRange.value;
                 if (inputRange) {
-                    this.data = new TuiDayRange(inputRange.from, inputRange.to);
+                    this.data.set(new TuiDayRange(inputRange.from, inputRange.to));
                 }
                 break;
             default:

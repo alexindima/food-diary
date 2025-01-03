@@ -84,12 +84,12 @@ export class BaseFoodManageComponent implements OnInit {
             name: new FormControl('', { nonNullable: true, validators: Validators.required }),
             barcode: new FormControl(null),
             category: new FormControl(null),
-            caloriesPer100: new FormControl(0, { nonNullable: true, validators: [Validators.required, Validators.min(0.001)] }),
-            proteinsPer100: new FormControl(0, { nonNullable: true, validators: Validators.required }),
-            fatsPer100: new FormControl(0, { nonNullable: true, validators: Validators.required }),
-            carbsPer100: new FormControl(0, { nonNullable: true, validators: Validators.required }),
-            defaultServing: new FormControl(100, { nonNullable: true, validators: [Validators.required, Validators.min(0.001)] }),
-            defaultServingUnit: new FormControl(Unit.G, { nonNullable: true, validators: Validators.required }),
+            caloriesPerBase: new FormControl(0, { nonNullable: true, validators: [Validators.required, Validators.min(0.001)] }),
+            proteinsPerBase: new FormControl(0, { nonNullable: true, validators: Validators.required }),
+            fatsPerBase: new FormControl(0, { nonNullable: true, validators: Validators.required }),
+            carbsPerBase: new FormControl(0, { nonNullable: true, validators: Validators.required }),
+            baseAmount: new FormControl(100, { nonNullable: true, validators: [Validators.required, Validators.min(0.001)] }),
+            baseUnit: new FormControl(Unit.G, { nonNullable: true, validators: Validators.required }),
         });
 
         this.foodForm.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.clearGlobalError());
@@ -122,8 +122,8 @@ export class BaseFoodManageComponent implements OnInit {
     }
 
     private isMacronutrientsValid(): boolean {
-        const { proteinsPer100, fatsPer100, carbsPer100 } = this.foodForm.value;
-        return (proteinsPer100 ?? 0) + (fatsPer100 ?? 0) + (carbsPer100 ?? 0) > 0;
+        const { proteinsPerBase, fatsPerBase, carbsPerBase } = this.foodForm.value;
+        return (proteinsPerBase ?? 0) + (fatsPerBase ?? 0) + (carbsPerBase ?? 0) > 0;
     }
 
     protected populateForm(food: Food): void {
@@ -191,12 +191,12 @@ export interface FoodFormValues {
     name: string;
     barcode: string | null;
     category: string | null;
-    caloriesPer100: number;
-    proteinsPer100: number;
-    fatsPer100: number;
-    carbsPer100: number;
-    defaultServing: number;
-    defaultServingUnit: Unit;
+    caloriesPerBase: number;
+    proteinsPerBase: number;
+    fatsPerBase: number;
+    carbsPerBase: number;
+    baseAmount: number;
+    baseUnit: Unit;
 }
 
 export type FoodFormData = FormGroupControls<FoodFormValues>;

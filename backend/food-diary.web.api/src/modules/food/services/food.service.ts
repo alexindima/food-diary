@@ -65,7 +65,7 @@ export class FoodService {
             throw new FoodInUseException();
         }
 
-        if (data.proteinsPer100 + data.carbsPer100 + data.fatsPer100 === 0) {
+        if (data.proteinsPerBase + data.carbsPerBase + data.fatsPerBase === 0) {
             throw new ValidationError();
         }
 
