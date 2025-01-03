@@ -18,6 +18,7 @@ import { AuthInterceptor } from './interceptor/auth.interceptor';
 import { GlobalErrorHandler } from './services/error-handler.service';
 import { LoggingApiService } from './services/logging-api.service';
 import { provideServiceWorker } from '@angular/service-worker';
+import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -38,7 +39,6 @@ export const appConfig: ApplicationConfig = {
             const localizationService = inject(LocalizationService);
             localizationService.initializeLocalization();
         }),
-
         provideAppInitializer(() => {
             const authService = inject(AuthService);
             authService.initializeAuth();
@@ -57,12 +57,13 @@ export const appConfig: ApplicationConfig = {
                 },
             }),
         ),
-        TranslateService,
-        LocalizationService,
-        LoggingApiService,
+        provideCharts(withDefaultRegisterables()),
         provideServiceWorker('ngsw-worker.js', {
             enabled: !isDevMode(),
             registrationStrategy: 'registerWhenStable:30000'
-          }),
+        }),
+        TranslateService,
+        LocalizationService,
+        LoggingApiService,
     ],
 };

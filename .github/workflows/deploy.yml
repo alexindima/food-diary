@@ -28,9 +28,6 @@ jobs:
 
       - name: Build Angular frontend
         run: |
-          echo "===================================="
-          echo "STEP 1: Building Angular frontend"
-          echo "===================================="
           cd ${{ env.FRONTEND_DIR }}
           npm install
           npm run build:prod
@@ -38,9 +35,6 @@ jobs:
 
       - name: Build NestJS backend
         run: |
-          echo "===================================="
-          echo "STEP 2: Building NestJS backend"
-          echo "===================================="
           cd ${{ env.BACKEND_DIR }}
           npm install
           npm run build
@@ -50,9 +44,6 @@ jobs:
         env:
           SSH_KEY: ${{ secrets.SSH_KEY }}
         run: |
-          echo "===================================="
-          echo "STEP 3: Setting up SSH"
-          echo "===================================="
           mkdir -p ~/.ssh
           echo "${SSH_KEY}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
@@ -60,9 +51,6 @@ jobs:
 
       - name: Creating directories on the server
         run: |
-          echo "===================================="
-          echo "STEP 4: Creating directories on the server"
-          echo "===================================="
           ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no root@${{ env.SERVER_IP }} << EOF
           rm -rf "${{ env.FRONTEND_DEPLOY_DIR }}"
           rm -rf "${{ env.BACKEND_DEPLOY_DIR }}"
@@ -77,9 +65,6 @@ jobs:
 
       - name: Uploading frontend files
         run: |
-          echo "========================================"
-          echo "STEP 5: Uploading frontend files"
-          echo "========================================"
           START_TIME=$(date +%s)
           NUM_FILES=$(find ${{ env.FRONTEND_DIR }}/dist -type f | wc -l)
           echo "$NUM_FILES files to upload."
@@ -90,17 +75,11 @@ jobs:
 
       - name: Uploading backend files
         run: |
-          echo "===================================="
-          echo "STEP 6: Uploading backend files"
-          echo "===================================="
           rsync -az --quiet --human-readable --exclude=node_modules --exclude=dist -e "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no" \
             ${{ env.BACKEND_DIR }}/ root@${{ env.SERVER_IP }}:${{ env.BACKEND_DEPLOY_DIR }}/
 
       - name: Install backend dependencies on server
         run: |
-          echo "===================================="
-          echo "STEP 6.1: Installing backend dependencies on server"
-          echo "===================================="
           ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no root@${{ env.SERVER_IP }} << EOF
           cd "${{ env.BACKEND_DEPLOY_DIR }}"
           npm install --production
@@ -108,9 +87,6 @@ jobs:
 
       - name: Build backend on server
         run: |
-          echo "===================================="
-          echo "STEP 6.2: Building backend on server"
-          echo "===================================="
           ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no root@${{ env.SERVER_IP }} << EOF
           cd "${{ env.BACKEND_DEPLOY_DIR }}"
           npm run build
@@ -118,9 +94,6 @@ jobs:
 
       - name: Restarting backend with PM2
         run: |
-          echo "===================================="
-          echo "STEP 7: Restarting backend with PM2"
-          echo "===================================="
           ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no root@${{ env.SERVER_IP }} << EOF
           pm2 delete fooddiary-backend || true
           NODE_ENV=production pm2 start "${{ env.BACKEND_DEPLOY_DIR }}/dist/src/main.js" --name fooddiary-backend

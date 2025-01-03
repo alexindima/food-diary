@@ -9,10 +9,6 @@
     box-sizing: border-box;
     overflow: hidden;
 
-    --tui-chart-categorical-00: #4A90E2;
-    --tui-chart-categorical-01: #50E3C2;
-    --tui-chart-categorical-02: #F5A623;
-
     &::before {
         content: '';
         position: absolute;
@@ -30,20 +26,8 @@
     }
 }
 
-.nutrients-chart-color() {
-    color: #4A90E2;
-
-    &:first-child {
-        color: #50E3C2;
-    }
-
-    &:last-child {
-        color: #F5A623;
-    }
-}
-
 .statistics {
-    max-width: 800px;
+    max-width: 1000px;
     margin: 0 auto;
     padding: 16px;
     box-sizing: border-box;
@@ -82,89 +66,53 @@
         margin-top: 20px;
     }
 
-    &__legend {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-        &-item {
-            display: flex;
-            align-items: center;
-            margin: 0 12px;
-            .nutrients-chart-color();
-
-            &::before {
-                content: '';
-                display: block;
-                width: 16px;
-                height: 2px;
-                background-color: currentColor;
-                margin-right: 8px;
-            }
-        }
-
-        &-name {
-            color: var(--tui-text-primary);
-        }
-    }
-
-    &__line-chart {
-        max-width: 100%;
-    }
-
     &__axes {
-        block-size: 12.5rem;
-    }
-
-    &__calories-chart {
-        .fullsize();
-        color: #D0021B;
-        max-width: 100%;
+        display: block;
+        block-size: 32rem;
     }
 
     &__nutrients-charts {
         display: flex;
-        gap: 36px;
+        flex-direction: column;
+        gap: 18px;
+    }
+
+    &__addon-nutrients-charts {
+        display: flex;
+        justify-content: space-around;
 
         @media (max-width: 600px) {
             flex-direction: column;
-            gap: 16px;
+            align-items: center;
+            gap: 0;
         }
-    }
-
-    &__nutrients-days-chart {
-        flex: 1;
     }
 
     &__nutrients-chart {
         margin: 0 auto;
-        .fullsize();
-        .nutrients-chart-color();
     }
 
     &__pie-chart {
-        margin: 0 auto;
-        .nutrients-chart-color();
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        block-size: 16rem;
+        inline-size: 16rem;
     }
 
-    &__hint {
-        &-item {
-            .nutrients-chart-color();
+    &__radar-chart {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        block-size: 16rem;
+        inline-size: 16rem;
+    }
 
-            display: flex;
-            align-items: center;
-            margin: 0 0.75rem;
-
-            &::before {
-                content: '';
-                border-bottom: 0.125rem solid;
-                inline-size: 1rem;
-                margin-right: 0.5rem;
-            }
-        }
-
-        &-value {
-            color: #fff;
-        }
+    &__bar-chart {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        block-size: 16rem;
+        inline-size: 16rem;
     }
 }

@@ -15,87 +15,64 @@ export interface GetStatisticsDto {
     quantizationDays?: number;
 }
 
-export interface ChartData {
-    type: ChartDataType;
-    data: ReadonlyArray<[TuiDay, number]>;
+export interface MappedStatistics {
+    date: TuiDay[];
+    calories: number[];
+    nutrientsStatistic: NutrientsStatistics;
+    aggregatedNutrients: AggregatedNutrients;
 }
 
-export interface CaloriesChartData extends ChartData {
-    maxValue: number;
+export interface NutrientsStatistics {
+    proteins: number[];
+    fats: number[];
+    carbs: number[];
 }
 
-export interface NutrientsChartData {
-    chartData: ChartData[];
-    maxValue: number;
-}
-
-export interface PieChartData {
-    values: number[];
-    labels: ChartDataType[];
+export interface AggregatedNutrients {
+    proteins: number;
+    fats: number;
+    carbs: number;
 }
 
 export class StatisticsMapper {
-    public static mapNutrientsToDaysChartData(statistics: AggregatedStatistics[]): NutrientsChartData {
-        const proteins: Array<[TuiDay, number]> = [];
-        const fats: Array<[TuiDay, number]> = [];
-        const carbs: Array<[TuiDay, number]> = [];
-
-        statistics.forEach(stat => {
-            const day = TuiDay.fromLocalNativeDate(new Date(stat.dateFrom));
-            proteins.push([day, stat.averageProteins]);
-            fats.push([day, stat.averageFats]);
-            carbs.push([day, stat.averageCarbs]);
-        });
-
-        const maxValue = Math.max(
-            ...proteins.map(([, value]) => value),
-            ...fats.map(([, value]) => value),
-            ...carbs.map(([, value]) => value),
-        );
-
-        return {
-            chartData: [
-                { type: 'Proteins', data: proteins },
-                { type: 'Fats', data: fats },
-                { type: 'Carbs', data: carbs },
-            ],
-            maxValue,
-        };
-    }
-
-    public static mapCaloriesToChartData(statistics: AggregatedStatistics[]): CaloriesChartData {
-        const calories: Array<[TuiDay, number]> = [];
-
-        statistics.forEach(stat => {
-            const day = TuiDay.fromLocalNativeDate(new Date(stat.dateFrom));
-            calories.push([day, stat.totalCalories]);
-        });
-
-        const maxValue = Math.max(...calories.map(([, value]) => value));
-
-        return {
-            type: 'Calories',
-            data: calories,
-            maxValue,
-        };
-    }
-
-    public static mapNutrientsToPieChartData(statistics: AggregatedStatistics[]): PieChartData {
+    public static mapStatistics(statistics: AggregatedStatistics[]): MappedStatistics {
+        const dates: TuiDay[] = [];
+        const calories: number[] = [];
+        const proteins: number[] = [];
+        const fats: number[] = [];
+        const carbs: number[] = [];
         let totalProteins = 0;
         let totalFats = 0;
         let totalCarbs = 0;
 
         statistics.forEach(stat => {
+            const day = TuiDay.fromLocalNativeDate(new Date(stat.dateFrom));
+            dates.push(day);
+
+            calories.push(stat.totalCalories);
+
+            proteins.push(stat.averageProteins);
+            fats.push(stat.averageFats);
+            carbs.push(stat.averageCarbs);
+
             totalProteins += stat.averageProteins;
             totalFats += stat.averageFats;
             totalCarbs += stat.averageCarbs;
         });
 
         return {
-            values: [totalProteins, totalFats, totalCarbs],
-            labels: ['Proteins', 'Fats', 'Carbs'],
+            date: dates,
+            calories,
+            nutrientsStatistic: {
+                proteins,
+                fats,
+                carbs,
+            },
+            aggregatedNutrients: {
+                proteins: totalProteins,
+                fats: totalFats,
+                carbs: totalCarbs,
+            },
         };
     }
 }
-
-export type ChartDataType = 'Calories' | 'Proteins' | 'Fats' | 'Carbs';

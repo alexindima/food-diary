@@ -7,52 +7,40 @@ import {
     OnInit,
     signal
 } from '@angular/core';
-import { AggregatedStatistics, CaloriesChartData, NutrientsChartData, PieChartData, StatisticsMapper } from '../../types/statistics.data';
+import { MappedStatistics, StatisticsMapper } from '../../types/statistics.data';
 import { StatisticsService } from '../../services/statistics.service';
-import { DecimalPipe } from '@angular/common';
-import { TUI_MONTHS, TuiGroup, TuiHintOptionsDirective, TuiLoader, TuiPoint } from '@taiga-ui/core';
-import {
-    TuiAxes,
-    TuiLineChart,
-    TuiLineDaysChart,
-    TuiLineDaysChartHint,
-    TuiPieChart
-} from '@taiga-ui/addon-charts';
-import {
-    TuiDay,
-    TuiDayLike,
-    TuiDayRange, TuiFilterPipe, TuiMapper, TuiMapperPipe,
-    TuiMatcher,
-    TuiMonth,
-    tuiPure,
-    TuiStringHandler
-} from '@taiga-ui/cdk';
-import { map, Observable } from 'rxjs';
+import { TUI_MONTHS, TuiGroup, TuiLoader } from '@taiga-ui/core';
+import { TuiDay, TuiDayLike, TuiDayRange } from '@taiga-ui/cdk';
+import { finalize, map, Observable } from 'rxjs';
 import { TuiInputDateRangeModule } from '@taiga-ui/legacy';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { TuiBlock } from '@taiga-ui/kit';
 import { FormGroupControls } from '../../types/common.data';
+import { BaseChartDirective } from 'ng2-charts';
+import { ChartData, ChartOptions } from 'chart.js';
+import { toSignal } from '@angular/core/rxjs-interop';
+
+const CHART_COLORS = {
+    proteins: '#36A2EB',
+    fats: '#FFCE56',
+    carbs: '#4BC0C0',
+    calories: '#FF6384',
+    radarBackground: 'rgba(54, 162, 235, 0.2)',
+    radarBorder: 'rgba(54, 162, 235, 1)',
+};
 
 @Component({
     selector: 'app-statistics',
     imports: [
-        TuiAxes,
-        TuiLineDaysChart,
-        TuiLineDaysChartHint,
         TuiInputDateRangeModule,
         FormsModule,
         TuiLoader,
-        TuiPieChart,
-        TuiHintOptionsDirective,
         TranslatePipe,
-        DecimalPipe,
         TuiGroup,
         ReactiveFormsModule,
         TuiBlock,
-        TuiFilterPipe,
-        TuiLineChart,
-        TuiMapperPipe,
+        BaseChartDirective,
     ],
     templateUrl: './statistics.component.html',
     styleUrls: ['./statistics.component.less'],
@@ -64,16 +52,16 @@ export class StatisticsComponent implements OnInit {
 
     private readonly statisticsService = inject(StatisticsService);
     private readonly translateService = inject(TranslateService);
-    private readonly months$ = inject(TUI_MONTHS);
+    private readonly months$: Observable<string[]> = inject(TUI_MONTHS).pipe(
+        map(months => Object.values(months))
+    );
 
     public isLoading = signal<boolean>(false);
     public isMobile = signal<boolean>(false);
-
-    public caloriesChartData = signal<CaloriesChartData | null>(null);
-    public nutrientsDaysChartData = signal<NutrientsChartData | null>(null);
-    public nutrientsPieChartData = signal<PieChartData | null>(null);
+    public months = toSignal(this.months$, { initialValue: [] });
     public data = signal(new TuiDayRange(TuiDay.currentLocal().append({ month: -1 }), TuiDay.currentLocal()));
-    private readonly monthsArray = signal<string[]>([]);
+    public chartStatisticsData = signal<MappedStatistics | null>(null);
+    public computedRange = computed(() => this.computeRange(this.data()));
 
     protected readonly rangeForm: FormGroup<StatisticsFormData> = new FormGroup({
         range: new FormControl<RangeMode>(this.defaultRange, { nonNullable: true }),
@@ -83,45 +71,9 @@ export class StatisticsComponent implements OnInit {
         ),
     });
 
-    @tuiPure
-    protected getWidth({from, to}: TuiDayRange): number {
-        return TuiDay.lengthBetween(from, to);
-    }
-
-    protected readonly filter: TuiMatcher<[readonly [TuiDay, number], TuiDayRange]> = (
-        [day],
-        {from, to},
-    ) => day.daySameOrAfter(from) && day.daySameOrBefore(to);
-
-    protected readonly toNumbers: TuiMapper<
-        [ReadonlyArray<readonly [TuiDay, number]>, TuiDayRange],
-        readonly TuiPoint[]
-    > = (days, {from}) =>
-        days.map(([day, value]) => [TuiDay.lengthBetween(from, day), value]);
-
-    protected readonly xStringify = computed<TuiStringHandler<TuiDay>>(() => {
-        const months = this.monthsArray();
-        return ({ month, day }): string => `${months[month]}, ${day}`;
-    });
-
-    protected readonly yStringify: TuiStringHandler<number> = y => `${Number(y.toFixed(2))} ${this.translateService.instant('kkal')}`;
-
-    @HostListener('window:resize', [])
-    public onResize(): void {
-        this.checkScreenWidth();
-    }
-
-    public constructor() {
-        this.updateDateRange(this.defaultRange);
-
-        this.months$.subscribe(months => {
-            const monthsArray = Object.values(months);
-            this.monthsArray.set(monthsArray);
-        });
-    }
-
     public ngOnInit(): void {
         this.checkScreenWidth();
+        this.updateDateRange(this.defaultRange);
 
         this.rangeForm.controls.range.valueChanges.subscribe(range => {
             if (range) {
@@ -137,18 +89,13 @@ export class StatisticsComponent implements OnInit {
         });
     }
 
-    private checkScreenWidth(): void {
-        this.isMobile.set(window.innerWidth <= 600);
+    @HostListener('window:resize', [])
+    public onResize(): void {
+        this.checkScreenWidth();
     }
 
-    @tuiPure
-    protected computeLabels$({ from, to }: TuiDayRange): Observable<ReadonlyArray<string | null>> {
-        return this.months$.pipe(
-            map(months => [
-                ...Array.from({ length: TuiMonth.lengthBetween(from, to) + 1 }, (_, i) => months[from.append({ month: i }).month] ?? ''),
-                null,
-            ]),
-        );
+    private checkScreenWidth(): void {
+        this.isMobile.set(window.innerWidth <= 600);
     }
 
     private updateCharts(): void {
@@ -159,90 +106,15 @@ export class StatisticsComponent implements OnInit {
                 dateFrom: this.data().from.toLocalNativeDate(),
                 dateTo: this.data().to.toLocalNativeDate(),
             })
+            .pipe(finalize(() => this.isLoading.set(false)))
             .subscribe({
                 next: response => {
                     if (response.status === 'success') {
-                        const stats: AggregatedStatistics[] = response.data!;
-                        this.caloriesChartData.set(StatisticsMapper.mapCaloriesToChartData(stats));
-                        this.nutrientsDaysChartData.set(StatisticsMapper.mapNutrientsToDaysChartData(stats));
-                        this.nutrientsPieChartData.set(StatisticsMapper.mapNutrientsToPieChartData(stats));
+                        const mappedData = StatisticsMapper.mapStatistics(response.data!);
+                        this.chartStatisticsData.set(mappedData);
                     }
-                    this.isLoading.set(false);
-                },
-                error: () => {
-                    this.isLoading.set(false);
-                },
+                }
             });
-    }
-
-    protected get range(): TuiDayRange {
-        return this.computeRange(this.data());
-    }
-
-    @tuiPure
-    protected getDate(day: TuiDay | number, date: TuiDay): string {
-        const actualDay = day instanceof TuiDay ? day : date.append({ day });
-
-        const xStringify = this.xStringify();
-
-        return xStringify(actualDay);
-    }
-
-    public labels = computed(() => {
-        const months = this.monthsArray();
-
-        const { from, to } = this.data();
-        const length = TuiDay.lengthBetween(from, to);
-
-        let result: string[];
-
-        if (length > 90) {
-            result = Array.from(
-                { length: TuiMonth.lengthBetween(from, to) + 1 },
-                (_, i) => months[from.append({ month: i }).month] ?? '',
-            );
-        } else {
-            const range = Array.from({ length }, (_, day) => from.append({ day }));
-            const mondays = onlyMondays(range);
-            const days = range.map(String);
-
-            if (length > 60) {
-                result = [...even(mondays), ''];
-            } else if (length > 14) {
-                result = [...mondays, ''];
-            } else if (length > 7) {
-                result = [...even(days), ''];
-            } else {
-                result = [...days, ''];
-            }
-        }
-
-        return result;
-    });
-
-    @tuiPure
-    private computeRange(range: TuiDayRange): TuiDayRange {
-        const { from, to } = range;
-        const length = TuiDay.lengthBetween(from, to);
-        const dayOfWeekFrom = from.dayOfWeek();
-        const dayOfWeekTo = to.dayOfWeek();
-        const mondayFrom = dayOfWeekFrom ? from.append({ day: 7 - dayOfWeekFrom }) : from;
-        const mondayTo = dayOfWeekTo ? to.append({ day: 7 - dayOfWeekTo }) : to;
-        const mondaysLength = TuiDay.lengthBetween(mondayFrom, mondayTo);
-
-        if (length > 90) {
-            return range;
-        }
-
-        if (length > 60) {
-            return new TuiDayRange(mondayFrom, mondayTo.append({ day: mondaysLength % 14 }));
-        }
-
-        if (length > 14) {
-            return new TuiDayRange(mondayFrom, mondayTo);
-        }
-
-        return new TuiDayRange(from, to.append({ day: length % 2 }));
     }
 
     private updateDateRange(range: RangeMode): void {
@@ -269,14 +141,205 @@ export class StatisticsComponent implements OnInit {
 
         this.updateCharts();
     }
-}
 
-function onlyMondays(range: readonly TuiDay[]): readonly string[] {
-    return range.filter(day => !day.dayOfWeek()).map(String);
-}
+    public caloriesLineChartOptions: ChartOptions<'line'> = {
+        responsive: true,
+        plugins: {
+            tooltip: {
+                callbacks: {
+                    afterLabel: () => this.getTooltipPostfix('STATISTICS.KKAL'),
+                }
+            }
+        },
+        scales: {
+            y: {
+                min: 0
+            }
+        }
+    };
 
-function even<T>(array: readonly T[]): readonly T[] {
-    return array.filter((_, i) => !(i % 2));
+    public baseNutrientsChartOptions = {
+        responsive: true,
+        plugins: {
+            tooltip: {
+                callbacks: {
+                    'afterLabel': (): string => this.getTooltipPostfix('STATISTICS.GRAMS'),
+                }
+            }
+        }
+    };
+
+    public nutrientsLineChartOptions: ChartOptions<'line'> = {
+        ...this.baseNutrientsChartOptions,
+        scales: {
+            y: {
+                min: 0
+            }
+        }
+    };
+
+    public pieChartOptions: ChartOptions<'pie'> = {
+        ...this.baseNutrientsChartOptions
+    };
+
+    public barChartOptions: ChartOptions<'bar'> = {
+        ...this.baseNutrientsChartOptions
+    }
+
+    public radarChartOptions: ChartOptions<'radar'> = {
+        ...this.baseNutrientsChartOptions
+    }
+
+    public caloriesLineChartData = computed<ChartData<'line', number[], string>>(() => {
+        const stats = this.chartStatisticsData();
+        return {
+            labels: stats?.date.map(date => this.getDate(date, this.computedRange().from)) || [],
+            datasets: [
+                {
+                    data: stats?.calories || [],
+                    fill: false,
+                    tension: 0.5,
+                    borderColor: CHART_COLORS.calories,
+                }
+            ],
+        };
+    });
+
+    public nutrientsLineChartData = computed<ChartData<'line', number[], string>>(() => {
+        const stats = this.chartStatisticsData();
+        return {
+            labels: stats?.date.map(date => this.getDate(date, this.computedRange().from)) || [],
+            datasets: [
+                {
+                    data: stats?.nutrientsStatistic.proteins || [],
+                    label: this.translateService.instant('STATISTICS.NUTRIENTS.PROTEINS'),
+                    borderColor: CHART_COLORS.proteins,
+                    backgroundColor: CHART_COLORS.proteins,
+                    fill: false,
+                    tension: 0.5,
+                },
+                {
+                    data: stats?.nutrientsStatistic.fats || [],
+                    label: this.translateService.instant('STATISTICS.NUTRIENTS.FATS'),
+                    borderColor: CHART_COLORS.fats,
+                    backgroundColor: CHART_COLORS.fats,
+                    fill: false,
+                    tension: 0.5,
+                },
+                {
+                    data: stats?.nutrientsStatistic.carbs || [],
+                    label: this.translateService.instant('STATISTICS.NUTRIENTS.CARBS'),
+                    borderColor: CHART_COLORS.carbs,
+                    backgroundColor: CHART_COLORS.carbs,
+                    fill: false,
+                    tension: 0.5,
+                },
+            ],
+        };
+    });
+
+    public nutrientsPieChartData = computed(() => {
+        const aggregatedNutrients = this.chartStatisticsData()?.aggregatedNutrients;
+
+        return {
+            labels: [
+                this.translateService.instant('STATISTICS.NUTRIENTS.PROTEINS'),
+                this.translateService.instant('STATISTICS.NUTRIENTS.FATS'),
+                this.translateService.instant('STATISTICS.NUTRIENTS.CARBS'),
+            ],
+            datasets: [
+                {
+                    data: [
+                        aggregatedNutrients?.proteins,
+                        aggregatedNutrients?.fats,
+                        aggregatedNutrients?.carbs,
+                    ],
+                    backgroundColor: [CHART_COLORS.proteins, CHART_COLORS.fats, CHART_COLORS.carbs],
+                },
+            ],
+        };
+    });
+
+    public nutrientsComparisonChartData = computed(() => {
+        const aggregatedNutrients = this.chartStatisticsData()?.aggregatedNutrients;
+
+        return {
+            labels: [
+                this.translateService.instant('STATISTICS.NUTRIENTS.PROTEINS'),
+                this.translateService.instant('STATISTICS.NUTRIENTS.FATS'),
+                this.translateService.instant('STATISTICS.NUTRIENTS.CARBS'),
+            ],
+            datasets: [
+                {
+                    data: [
+                        aggregatedNutrients?.proteins,
+                        aggregatedNutrients?.fats,
+                        aggregatedNutrients?.carbs,
+                    ],
+                    backgroundColor: [CHART_COLORS.proteins, CHART_COLORS.fats, CHART_COLORS.carbs],
+                },
+            ],
+        };
+    });
+
+    public nutrientsRadarChartData = computed(() => {
+        const aggregatedNutrients = this.chartStatisticsData()?.aggregatedNutrients;
+
+        return {
+            labels: [
+                this.translateService.instant('STATISTICS.NUTRIENTS.PROTEINS'),
+                this.translateService.instant('STATISTICS.NUTRIENTS.FATS'),
+                this.translateService.instant('STATISTICS.NUTRIENTS.CARBS'),
+            ],
+            datasets: [
+                {
+                    data: [
+                        aggregatedNutrients?.proteins,
+                        aggregatedNutrients?.fats,
+                        aggregatedNutrients?.carbs,
+                    ],
+                    backgroundColor: CHART_COLORS.radarBackground,
+                    borderColor: CHART_COLORS.radarBorder,
+                    borderWidth: 2,
+                },
+            ],
+        };
+    });
+
+    private getDate(day: TuiDay | number, date: TuiDay): string {
+        const actualDay = day instanceof TuiDay ? day : date.append({ day });
+        const months = this.months();
+
+        return `${months[actualDay.month]}, ${actualDay.day}`;
+    }
+
+    private computeRange(range: TuiDayRange): TuiDayRange {
+        const { from, to } = range;
+        const length = TuiDay.lengthBetween(from, to);
+        const dayOfWeekFrom = from.dayOfWeek();
+        const dayOfWeekTo = to.dayOfWeek();
+        const mondayFrom = dayOfWeekFrom ? from.append({ day: 7 - dayOfWeekFrom }) : from;
+        const mondayTo = dayOfWeekTo ? to.append({ day: 7 - dayOfWeekTo }) : to;
+        const mondaysLength = TuiDay.lengthBetween(mondayFrom, mondayTo);
+
+        if (length > 90) {
+            return range;
+        }
+
+        if (length > 60) {
+            return new TuiDayRange(mondayFrom, mondayTo.append({ day: mondaysLength % 14 }));
+        }
+
+        if (length > 14) {
+            return new TuiDayRange(mondayFrom, mondayTo);
+        }
+
+        return new TuiDayRange(from, to.append({ day: length % 2 }));
+    }
+
+    private getTooltipPostfix(key: string): string {
+        return this.translateService.instant(key);
+    }
 }
 
 export type RangeMode = 'Week' | 'Month' | 'Year' | 'Custom';
