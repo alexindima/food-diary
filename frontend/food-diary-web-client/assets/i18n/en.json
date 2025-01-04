@@ -271,5 +271,10 @@
         "DESCRIPTION": "Sorry, the page you are looking for does not exist.",
         "GO_HOME": "Go to Homepage",
         "VIEW_FOODS": "View Foods"
+    },
+    "NUTRIENTS": {
+        "PROTEINS": "Proteins",
+        "FATS": "Fats",
+        "CARBS": "Carbs"
     }
 }

@@ -7,7 +7,7 @@
                 <div class="today-consumption__header">
                     <h3 class="today-consumption__subtitle">{{ 'TODAY_CONSUMPTION.TOTAL_CONSUMPTION' | translate }}</h3>
                     <p class="today-consumption__calories">
-                        {{ todayCalories | number: '1.0-2' }} {{ 'STATISTICS.KKAL' | translate }}
+                        {{ todayCalories() | number: '1.0-2' }} {{ 'STATISTICS.KKAL' | translate }}
                     </p>
                 </div>
                 <div class="today-consumption__body">
@@ -16,33 +16,25 @@
                         <div class="today-consumption__nutrients-container">
                             <ul class="today-consumption__nutrients-list">
                                 <li class="today-consumption__nutrients-item">
-                                    {{ nutrientChartData.labels[0] }}: {{ nutrientChartData.values[0] | number: '1.0-2' }}
+                                    {{ 'NUTRIENTS.PROTEINS' | translate }}: {{ nutrientChartData().proteins | number: '1.0-2' }}
                                     {{ 'STATISTICS.GRAMS' | translate }}
                                 </li>
                                 <li class="today-consumption__nutrients-item">
-                                    {{ nutrientChartData.labels[1] }}: {{ nutrientChartData.values[1] | number: '1.0-2' }}
+                                    {{ 'NUTRIENTS.FATS' | translate }}: {{ nutrientChartData().fats | number: '1.0-2' }}
                                     {{ 'STATISTICS.GRAMS' | translate }}
                                 </li>
                                 <li class="today-consumption__nutrients-item">
-                                    {{ nutrientChartData.labels[2] }}: {{ nutrientChartData.values[2] | number: '1.0-2' }}
+                                    {{ 'NUTRIENTS.CARBS' | translate }}: {{ nutrientChartData().carbs | number: '1.0-2' }}
                                     {{ 'STATISTICS.GRAMS' | translate }}
                                 </li>
                             </ul>
                             <div class="today-consumption__nutrients-chart">
-                                <tui-pie-chart
-                                    [value]="nutrientChartData.values"
-                                    size="l"
-                                    [tuiHintContent]="hintContent"
-                                ></tui-pie-chart>
-                                <ng-template
-                                    #hintContent
-                                    let-index
-                                >
-                                    <div>
-                                        <strong>{{ nutrientChartData.labels[index] }}</strong>:
-                                        {{ nutrientChartData.values[index] | number: '1.0-2' }} {{ 'STATISTICS.GRAMS' | translate }}
-                                    </div>
-                                </ng-template>
+                                <canvas
+                                    baseChart
+                                    [data]="pieChartData()"
+                                    [options]="pieChartOptions"
+                                    [type]="'pie'"
+                                ></canvas>
                             </div>
                         </div>
                     </div>

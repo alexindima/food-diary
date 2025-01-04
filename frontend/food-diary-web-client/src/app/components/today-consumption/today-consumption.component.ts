@@ -1,24 +1,37 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    inject,
+    OnInit,
+    signal
+} from '@angular/core';
 import { StatisticsService } from '../../services/statistics.service';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { TuiButton, TuiHintOptionsDirective } from '@taiga-ui/core';
+import { TuiButton } from '@taiga-ui/core';
 import { DecimalPipe } from '@angular/common';
-import { TuiPieChart } from '@taiga-ui/addon-charts';
 import { NavigationService } from '../../services/navigation.service';
+import { ChartData, ChartOptions } from 'chart.js';
+import { BaseChartDirective } from 'ng2-charts';
 
 @Component({
     selector: 'app-today-consumption',
-    imports: [TranslatePipe, DecimalPipe, TuiButton, TuiPieChart, TuiHintOptionsDirective],
+    imports: [TranslatePipe, DecimalPipe, TuiButton, BaseChartDirective],
     templateUrl: './today-consumption.component.html',
-    styleUrl: './today-consumption.component.less'
+    styleUrl: './today-consumption.component.less',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TodayConsumptionComponent implements OnInit {
     private readonly statisticsService = inject(StatisticsService);
     private readonly translateService = inject(TranslateService);
     private readonly navigationService = inject(NavigationService);
 
-    public todayCalories: number | null = null;
-    public nutrientChartData = { values: [0, 0, 0], labels: [] as string[] };
+    public todayCalories = signal<number>(0);
+    public nutrientChartData = signal<NutrientChartData>({
+        proteins: 0,
+        fats: 0,
+        carbs: 0,
+    });
     public isLoading = signal<boolean>(false);
 
     public ngOnInit(): void {
@@ -37,16 +50,14 @@ export class TodayConsumptionComponent implements OnInit {
                 next: response => {
                     if (response.status === 'success') {
                         const stats = response.data![0];
-                        this.todayCalories = stats?.totalCalories ?? 0;
+                        this.todayCalories.set(stats.totalCalories);
 
-                        this.nutrientChartData = {
-                            values: [stats?.averageProteins ?? 0, stats?.averageFats ?? 0, stats?.averageCarbs ?? 0],
-                            labels: [
-                                this.translateService.instant('STATISTICS.NUTRIENTS.PROTEINS'),
-                                this.translateService.instant('STATISTICS.NUTRIENTS.FATS'),
-                                this.translateService.instant('STATISTICS.NUTRIENTS.CARBS'),
-                            ],
-                        };
+                        this.nutrientChartData.set({
+                            proteins: stats?.averageProteins,
+                            fats: stats?.averageFats,
+                            carbs: stats?.averageCarbs,
+                        });
+
                     }
                     this.isLoading.set(false);
                 },
@@ -55,6 +66,39 @@ export class TodayConsumptionComponent implements OnInit {
                 },
             });
     }
+
+    public pieChartData = computed<ChartData<'pie', number[], string>>(() => ({
+        labels: [
+            this.translateService.instant('STATISTICS.NUTRIENTS.PROTEINS'),
+            this.translateService.instant('STATISTICS.NUTRIENTS.FATS'),
+            this.translateService.instant('STATISTICS.NUTRIENTS.CARBS'),
+        ],
+        datasets: [
+            {
+                data: [
+                    this.nutrientChartData().proteins,
+                    this.nutrientChartData().fats,
+                    this.nutrientChartData().carbs,
+                ],
+                backgroundColor: ['#36A2EB', '#FFCE56', '#4BC0C0'],
+            },
+        ],
+    }));
+
+    public pieChartOptions: ChartOptions<'pie'> = {
+        responsive: true,
+        plugins: {
+            tooltip: {
+                callbacks: {
+                    label: (context) => {
+                        const label = context.label || '';
+                        const value = context.raw || 0;
+                        return `${label}: ${value} ${this.translateService.instant('STATISTICS.GRAMS')}`;
+                    },
+                },
+            },
+        },
+    };
 
     public async addConsumption(): Promise<void> {
         await this.navigationService.navigateToConsumptionAdd();
@@ -75,4 +119,10 @@ export class TodayConsumptionComponent implements OnInit {
     public async goToStatistics(): Promise<void> {
         await this.navigationService.navigateToStatistics();
     }
+}
+
+interface NutrientChartData {
+    proteins: number;
+    fats: number;
+    carbs: number;
 }
