@@ -34,7 +34,7 @@
             @for (food of foodData.items(); track food) {
                 <div
                     class="food-card"
-                    (click)="openFoodDetails(food)"
+                    (click)="onFoodClick(food)"
                 >
                     <div class="food-card__header">
                         <span class="food-card__name">{{ food.name }}</span>

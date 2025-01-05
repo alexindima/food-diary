@@ -1,16 +1,24 @@
 import { ChangeDetectionStrategy, Component, inject, TemplateRef, ViewChild } from '@angular/core';
+import { Food } from '../../../types/food.data';
 import { TuiButton, TuiDialogContext, TuiDialogService } from '@taiga-ui/core';
-import { BaseFoodDetailComponent } from '../base-food-detail.component';
+import { injectContext } from '@taiga-ui/polymorpheus';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-food-detail',
     templateUrl: './food-detail.component.html',
-    styleUrls: ['./food-detail.component.less', '../base-food-detail.component.less'],
+    styleUrls: ['./food-detail.component.less'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [TuiButton, BaseFoodDetailComponent, TranslatePipe]
+    imports: [TranslatePipe, TuiButton]
 })
-export class FoodDetailComponent extends BaseFoodDetailComponent<FoodDetailActionResult> {
+export class FoodDetailComponent {
+    public readonly context = injectContext<TuiDialogContext<FoodDetailActionResult, Food>>();
+
+    public food: Food;
+
+    public constructor() {
+        this.food = this.context.data;
+    }
     private readonly dialogService = inject(TuiDialogService);
 
     @ViewChild('confirmDialog') private confirmDialog!: TemplateRef<TuiDialogContext<boolean, void>>;

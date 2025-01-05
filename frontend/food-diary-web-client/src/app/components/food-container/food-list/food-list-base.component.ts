@@ -100,7 +100,7 @@ export class FoodListBaseComponent implements OnInit {
         this.container.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
-    protected openFoodDetails(_food: Food): void {}
+    protected onFoodClick(_food: Food): void {}
 }
 
 interface FoodSearchFormValues {

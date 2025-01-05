@@ -117,11 +117,9 @@
                         <p class="calories-highlight">
                             {{ 'CONSUMPTION_MANAGE.CALORIES' | translate }}:
                                 <span>
-                            {{ totalCalories() | number: '1.0-2' }} {{ 'CONSUMPTION_MANAGE.KKAL' | translate }}
-                        </span>
+                                {{ totalCalories() | number: '1.0-2' }} {{ 'CONSUMPTION_MANAGE.KKAL' | translate }}
+                            </span>
                         </p>
-
-                        <!-- Нутриенты -->
                         <ul class="nutrient-list">
                             <li>
                                 <span class="nutrient-color" [style.background-color]="CHART_COLORS.proteins"></span>

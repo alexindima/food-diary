@@ -37,6 +37,24 @@
     </div>
     <hr class="modal__divider" />
     <div class="modal__footer">
-        <ng-content select="[footer]"></ng-content>
+        <div class="modal__footer">
+            <div class="modal__footer-action-wrapper action-wrapper">
+                <button class="action-wrapper__button" tuiButton size="m" (click)="onEdit()" [disabled]="isActionDisabled">{{ 'FOOD_DETAIL.EDIT_BUTTON' | translate }}</button>
+                <button class="action-wrapper__button" tuiButton size="m" appearance="accent" (click)="onDelete()" [disabled]="isActionDisabled">{{ 'FOOD_DETAIL.DELETE_BUTTON' | translate }}</button>
+            </div>
+            @if (isActionDisabled) {
+                <p class="modal__footer-warning-message">{{ 'FOOD_DETAIL.WARNING_MESSAGE' | translate }}</p>
+            }
+        </div>
     </div>
 </div>
+
+<ng-template #confirmDialog let-observer>
+    <div class="dialog">
+        <p>{{ 'FOOD_DETAIL.CONFIRM_DELETE_TITLE' | translate }} <span class="dialog__title--bold">{{ food.name }}</span>?</p>
+        <div class="dialog__buttons">
+            <button class="dialog__button" tuiButton size="m" (click)="observer.complete()">{{ 'FOOD_DETAIL.CANCEL_BUTTON' | translate }}</button>
+            <button class="dialog__button" tuiButton size="m" appearance="accent" (click)="observer.next(true); observer.complete()">{{ 'FOOD_DETAIL.CONFIRM_BUTTON' | translate }}</button>
+        </div>
+    </div>
+</ng-template>
