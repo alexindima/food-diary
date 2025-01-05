@@ -102,6 +102,68 @@
     }
 }
 
+.consumption-manage__summary-wrapper {
+    display: flex;
+    justify-content: space-between;
+}
+
+.consumption-manage__summary {
+    .consumption-manage__charts {
+        display: flex;
+        gap: 16px;
+    }
+
+    .consumption-manage__chart {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        canvas {
+            max-width: 200px;
+            max-height: 200px;
+        }
+    }
+
+    .consumption-manage__nutrients-list {
+        list-style: none;
+        padding: 0;
+
+        li {
+            margin-bottom: 5px;
+            font-size: 1rem;
+        }
+    }
+
+    .calories-highlight {
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 28px;
+        color: #ff6384;
+        margin-bottom: 1rem;
+    }
+
+    .nutrient-list {
+        list-style: none;
+        padding: 0;
+
+        li {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+
+            .nutrient-color {
+                width: 32px;
+                height: 16px;
+                margin-right: 0.5rem;
+                border-radius: 3px;
+                display: inline-block;
+            }
+        }
+    }
+
+}
+
 .consumption-manage__actions {
     margin-top: 20px;
 }

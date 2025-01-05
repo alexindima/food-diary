@@ -13,6 +13,7 @@ import { DecimalPipe } from '@angular/common';
 import { NavigationService } from '../../services/navigation.service';
 import { ChartData, ChartOptions } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
+import { NutrientChartData } from '../../types/charts.data';
 
 @Component({
     selector: 'app-today-consumption',
@@ -92,8 +93,10 @@ export class TodayConsumptionComponent implements OnInit {
                 callbacks: {
                     label: (context) => {
                         const label = context.label || '';
-                        const value = context.raw || 0;
-                        return `${label}: ${value} ${this.translateService.instant('STATISTICS.GRAMS')}`;
+                        const value = Number(context.raw) || 0;
+                        const formattedValue = parseFloat(value.toFixed(2));
+
+                        return `${label}: ${formattedValue} ${this.translateService.instant('STATISTICS.GRAMS')}`;
                     },
                 },
             },
@@ -119,10 +122,4 @@ export class TodayConsumptionComponent implements OnInit {
     public async goToStatistics(): Promise<void> {
         await this.navigationService.navigateToStatistics();
     }
-}
-
-interface NutrientChartData {
-    proteins: number;
-    fats: number;
-    carbs: number;
 }

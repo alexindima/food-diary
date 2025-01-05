@@ -18,17 +18,9 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { TuiBlock } from '@taiga-ui/kit';
 import { FormGroupControls } from '../../types/common.data';
 import { BaseChartDirective } from 'ng2-charts';
-import { ChartData, ChartOptions } from 'chart.js';
+import { ChartData, ChartOptions, ChartTypeRegistry, TooltipItem } from 'chart.js';
 import { toSignal } from '@angular/core/rxjs-interop';
-
-const CHART_COLORS = {
-    proteins: '#36A2EB',
-    fats: '#FFCE56',
-    carbs: '#4BC0C0',
-    calories: '#FF6384',
-    radarBackground: 'rgba(54, 162, 235, 0.2)',
-    radarBorder: 'rgba(54, 162, 235, 1)',
-};
+import { CHART_COLORS } from '../../constants/chart-colors';
 
 @Component({
     selector: 'app-statistics',
@@ -47,7 +39,7 @@ const CHART_COLORS = {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class StatisticsComponent implements OnInit {
-    protected readonly maxLength: TuiDayLike = { year: 1 };
+    protected readonly maxLength: TuiDayLike = {year: 1};
     private readonly defaultRange: RangeMode = 'Month';
 
     private readonly statisticsService = inject(StatisticsService);
@@ -58,16 +50,16 @@ export class StatisticsComponent implements OnInit {
 
     public isLoading = signal<boolean>(false);
     public isMobile = signal<boolean>(false);
-    public months = toSignal(this.months$, { initialValue: [] });
-    public data = signal(new TuiDayRange(TuiDay.currentLocal().append({ month: -1 }), TuiDay.currentLocal()));
+    public months = toSignal(this.months$, {initialValue: []});
+    public data = signal(new TuiDayRange(TuiDay.currentLocal().append({month: -1}), TuiDay.currentLocal()));
     public chartStatisticsData = signal<MappedStatistics | null>(null);
     public computedRange = computed(() => this.computeRange(this.data()));
 
     protected readonly rangeForm: FormGroup<StatisticsFormData> = new FormGroup({
-        range: new FormControl<RangeMode>(this.defaultRange, { nonNullable: true }),
+        range: new FormControl<RangeMode>(this.defaultRange, {nonNullable: true}),
         inputRange: new FormControl<TuiDayRange | null>(
-            new TuiDayRange(TuiDay.currentLocal().append({ month: -1 }), TuiDay.currentLocal()),
-            { nonNullable: false },
+            new TuiDayRange(TuiDay.currentLocal().append({month: -1}), TuiDay.currentLocal()),
+            {nonNullable: false},
         ),
     });
 
@@ -121,13 +113,13 @@ export class StatisticsComponent implements OnInit {
         const now = TuiDay.currentLocal();
         switch (range) {
             case 'Week':
-                this.data.set(new TuiDayRange(now.append({ day: -7 }), now));
+                this.data.set(new TuiDayRange(now.append({day: -7}), now));
                 break;
             case 'Month':
-                this.data.set(new TuiDayRange(now.append({ month: -1 }), now));
+                this.data.set(new TuiDayRange(now.append({month: -1}), now));
                 break;
             case 'Year':
-                this.data.set( new TuiDayRange(now.append({ year: -1 }), now));
+                this.data.set(new TuiDayRange(now.append({year: -1}), now));
                 break;
             case 'Custom':
                 const inputRange = this.rangeForm.controls.inputRange.value;
@@ -147,7 +139,7 @@ export class StatisticsComponent implements OnInit {
         plugins: {
             tooltip: {
                 callbacks: {
-                    afterLabel: () => this.getTooltipPostfix('STATISTICS.KKAL'),
+                    label: (context) => this.getFormattedTooltip(context, 'STATISTICS.KKAL'),
                 }
             }
         },
@@ -163,7 +155,7 @@ export class StatisticsComponent implements OnInit {
         plugins: {
             tooltip: {
                 callbacks: {
-                    'afterLabel': (): string => this.getTooltipPostfix('STATISTICS.GRAMS'),
+                    label: (context: TooltipItem<any>): string => this.getFormattedTooltip(context, 'STATISTICS.GRAMS'),
                 }
             }
         }
@@ -243,9 +235,9 @@ export class StatisticsComponent implements OnInit {
 
         return {
             labels: [
-                this.translateService.instant('STATISTICS.NUTRIENTS.PROTEINS'),
-                this.translateService.instant('STATISTICS.NUTRIENTS.FATS'),
-                this.translateService.instant('STATISTICS.NUTRIENTS.CARBS'),
+                this.translateService.instant('NUTRIENTS.PROTEINS'),
+                this.translateService.instant('NUTRIENTS.FATS'),
+                this.translateService.instant('NUTRIENTS.CARBS'),
             ],
             datasets: [
                 {
@@ -254,20 +246,24 @@ export class StatisticsComponent implements OnInit {
                         aggregatedNutrients?.fats,
                         aggregatedNutrients?.carbs,
                     ],
-                    backgroundColor: [CHART_COLORS.proteins, CHART_COLORS.fats, CHART_COLORS.carbs],
+                    backgroundColor: [
+                        CHART_COLORS.proteins,
+                        CHART_COLORS.fats,
+                        CHART_COLORS.carbs
+                    ],
                 },
             ],
         };
     });
 
-    public nutrientsComparisonChartData = computed(() => {
+    public nutrientsBarChartData = computed(() => {
         const aggregatedNutrients = this.chartStatisticsData()?.aggregatedNutrients;
 
         return {
             labels: [
-                this.translateService.instant('STATISTICS.NUTRIENTS.PROTEINS'),
-                this.translateService.instant('STATISTICS.NUTRIENTS.FATS'),
-                this.translateService.instant('STATISTICS.NUTRIENTS.CARBS'),
+                this.translateService.instant('NUTRIENTS.PROTEINS'),
+                this.translateService.instant('NUTRIENTS.FATS'),
+                this.translateService.instant('NUTRIENTS.CARBS'),
             ],
             datasets: [
                 {
@@ -276,7 +272,11 @@ export class StatisticsComponent implements OnInit {
                         aggregatedNutrients?.fats,
                         aggregatedNutrients?.carbs,
                     ],
-                    backgroundColor: [CHART_COLORS.proteins, CHART_COLORS.fats, CHART_COLORS.carbs],
+                    backgroundColor: [
+                        CHART_COLORS.proteins,
+                        CHART_COLORS.fats,
+                        CHART_COLORS.carbs
+                    ],
                 },
             ],
         };
@@ -287,9 +287,9 @@ export class StatisticsComponent implements OnInit {
 
         return {
             labels: [
-                this.translateService.instant('STATISTICS.NUTRIENTS.PROTEINS'),
-                this.translateService.instant('STATISTICS.NUTRIENTS.FATS'),
-                this.translateService.instant('STATISTICS.NUTRIENTS.CARBS'),
+                this.translateService.instant('NUTRIENTS.PROTEINS'),
+                this.translateService.instant('NUTRIENTS.FATS'),
+                this.translateService.instant('NUTRIENTS.CARBS'),
             ],
             datasets: [
                 {
@@ -307,19 +307,19 @@ export class StatisticsComponent implements OnInit {
     });
 
     private getDate(day: TuiDay | number, date: TuiDay): string {
-        const actualDay = day instanceof TuiDay ? day : date.append({ day });
+        const actualDay = day instanceof TuiDay ? day : date.append({day});
         const months = this.months();
 
         return `${months[actualDay.month]}, ${actualDay.day}`;
     }
 
     private computeRange(range: TuiDayRange): TuiDayRange {
-        const { from, to } = range;
+        const {from, to} = range;
         const length = TuiDay.lengthBetween(from, to);
         const dayOfWeekFrom = from.dayOfWeek();
         const dayOfWeekTo = to.dayOfWeek();
-        const mondayFrom = dayOfWeekFrom ? from.append({ day: 7 - dayOfWeekFrom }) : from;
-        const mondayTo = dayOfWeekTo ? to.append({ day: 7 - dayOfWeekTo }) : to;
+        const mondayFrom = dayOfWeekFrom ? from.append({day: 7 - dayOfWeekFrom}) : from;
+        const mondayTo = dayOfWeekTo ? to.append({day: 7 - dayOfWeekTo}) : to;
         const mondaysLength = TuiDay.lengthBetween(mondayFrom, mondayTo);
 
         if (length > 90) {
@@ -327,18 +327,22 @@ export class StatisticsComponent implements OnInit {
         }
 
         if (length > 60) {
-            return new TuiDayRange(mondayFrom, mondayTo.append({ day: mondaysLength % 14 }));
+            return new TuiDayRange(mondayFrom, mondayTo.append({day: mondaysLength % 14}));
         }
 
         if (length > 14) {
             return new TuiDayRange(mondayFrom, mondayTo);
         }
 
-        return new TuiDayRange(from, to.append({ day: length % 2 }));
+        return new TuiDayRange(from, to.append({day: length % 2}));
     }
 
-    private getTooltipPostfix(key: string): string {
-        return this.translateService.instant(key);
+    private getFormattedTooltip<T extends keyof ChartTypeRegistry>(context: TooltipItem<T>, key: string): string {
+        const label = context.label || '';
+        const value = Number(context.raw) || 0;
+        const formattedValue = parseFloat(value.toFixed(2));
+
+        return `${label}: ${formattedValue} ${this.translateService.instant(key)}`;
     }
 }
 

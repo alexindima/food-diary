@@ -1,6 +1,8 @@
 import {
     ChangeDetectionStrategy,
     Component,
+    computed,
+    DestroyRef,
     FactoryProvider,
     inject,
     input,
@@ -22,7 +24,7 @@ import {
 } from '@taiga-ui/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { TUI_VALIDATION_ERRORS, TuiFieldErrorPipe } from '@taiga-ui/kit';
-import { AsyncPipe } from '@angular/common';
+import { AsyncPipe, DecimalPipe } from '@angular/common';
 import {
     TuiInputDateTimeModule,
     TuiInputNumberModule,
@@ -46,6 +48,10 @@ import { Food } from '../../../types/food.data';
 import { TuiUtils } from '../../../utils/tui.utils';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { nonEmptyArrayValidator } from '../../../validators/non-empty-array.validator';
+import { ChartData, ChartOptions, ChartTypeRegistry, TooltipItem } from 'chart.js';
+import { BaseChartDirective } from 'ng2-charts';
+import { NutrientChartData } from '../../../types/charts.data';
+import { CHART_COLORS } from '../../../constants/chart-colors';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: TUI_VALIDATION_ERRORS,
@@ -81,13 +87,23 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
         TuiInputNumberModule,
         TuiMultiSelectModule,
         TuiInputDateTimeModule,
+        DecimalPipe,
+        BaseChartDirective,
     ]
 })
 export class BaseConsumptionManageComponent implements OnInit {
-    protected readonly consumptionService = inject(ConsumptionService);
-    protected readonly translateService = inject(TranslateService);
-    protected readonly navigationService = inject(NavigationService);
+    private readonly consumptionService = inject(ConsumptionService);
+    private readonly translateService = inject(TranslateService);
+    private readonly navigationService = inject(NavigationService);
     private readonly dialogService = inject(TuiDialogService);
+    private readonly destroyRef = inject(DestroyRef);
+
+    public readonly CHART_COLORS = {
+        proteins: CHART_COLORS.proteins,
+        fats: CHART_COLORS.fats,
+        carbs: CHART_COLORS.carbs,
+        calories: CHART_COLORS.calories,
+    };
 
     private readonly dialog = tuiDialog(FoodListDialogComponent, {
         size: 'page',
@@ -95,10 +111,81 @@ export class BaseConsumptionManageComponent implements OnInit {
         appearance: 'without-border-radius',
     });
 
+    public baseNutrientsChartOptions = {
+        responsive: false,
+        plugins: {
+            tooltip: {
+                callbacks: {
+                    label: (context: TooltipItem<any>): string => this.getFormattedTooltip(context),
+                }
+            }
+        }
+    };
+
+    public pieChartOptions: ChartOptions<'pie'> = {
+        ...this.baseNutrientsChartOptions
+    };
+
+    public barChartOptions: ChartOptions<'bar'> = {
+        ...this.baseNutrientsChartOptions
+    }
+
     @ViewChild('confirmDialog') private confirmDialog!: TemplateRef<TuiDialogContext<RedirectAction, void>>;
 
     public consumption = input<Consumption | null>();
+    public totalCalories = signal<number>(0);
+    public nutrientChartData = signal<NutrientChartData>({
+        proteins: 0,
+        fats: 0,
+        carbs: 0,
+    });
     public globalError = signal<string | null>(null);
+    public nutrientsPieChartData = computed<ChartData<'pie', number[], string>>(() => ({
+        labels: [
+            this.translateService.instant('NUTRIENTS.PROTEINS'),
+            this.translateService.instant('NUTRIENTS.FATS'),
+            this.translateService.instant('NUTRIENTS.CARBS'),
+        ],
+        datasets: [
+            {
+                data: [
+                    this.nutrientChartData().proteins,
+                    this.nutrientChartData().fats,
+                    this.nutrientChartData().carbs,
+                ],
+                backgroundColor: [
+                    CHART_COLORS.proteins,
+                    CHART_COLORS.fats,
+                    CHART_COLORS.carbs
+                ],
+            },
+        ],
+    }));
+
+    public nutrientsBarChartData = computed(() => {
+        return {
+            labels: [
+                this.translateService.instant('NUTRIENTS.PROTEINS'),
+                this.translateService.instant('NUTRIENTS.FATS'),
+                this.translateService.instant('NUTRIENTS.CARBS'),
+            ],
+            datasets: [
+                {
+                    data: [
+                        this.nutrientChartData().proteins,
+                        this.nutrientChartData().fats,
+                        this.nutrientChartData().carbs,
+                    ],
+                    backgroundColor: [
+                        CHART_COLORS.proteins,
+                        CHART_COLORS.fats,
+                        CHART_COLORS.carbs
+                    ],
+                },
+            ],
+        };
+    });
+
     public consumptionForm: FormGroup<ConsumptionFormData>;
     public selectedIndex: number = 0;
 
@@ -112,18 +199,19 @@ export class BaseConsumptionManageComponent implements OnInit {
             ),
             comment: new FormControl<string | null>(null),
         });
-
-        this.consumptionForm.valueChanges
-            .pipe(takeUntilDestroyed())
-            .subscribe(
-            () => this.clearGlobalError());
     }
 
     public ngOnInit(): void {
         const consumption = this.consumption();
         if (consumption) {
             this.populateForm(consumption);
+            this.updateSummary();
         }
+
+        this.consumptionForm.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            this.updateSummary();
+            this.clearGlobalError();
+        });
     }
 
     public get consumedFood(): FormArray<FormGroup<ConsumptionItemFormData>> {
@@ -220,7 +308,34 @@ export class BaseConsumptionManageComponent implements OnInit {
         });
     }
 
-    protected async addConsumption(consumptionData: ConsumptionManageDto): Promise<void> {
+    private updateSummary(): void {
+        const totals = this.consumedFood.controls.reduce(
+            (totals, group) => {
+                const food = group.value.food as Food | null;
+                const quantity = group.value.quantity || 0;
+
+                if (food) {
+                    const multiplier = quantity / food.baseAmount;
+                    totals.calories += food.caloriesPerBase * multiplier;
+                    totals.proteins += food.proteinsPerBase * multiplier;
+                    totals.fats += food.fatsPerBase * multiplier;
+                    totals.carbs += food.carbsPerBase * multiplier;
+                }
+
+                return totals;
+            },
+            { calories: 0, proteins: 0, fats: 0, carbs: 0 }
+        );
+
+        this.totalCalories.set(totals.calories)
+        this.nutrientChartData.set({
+            proteins: totals.proteins,
+            fats: totals.fats,
+            carbs: totals.carbs,
+        })
+    }
+
+    private async addConsumption(consumptionData: ConsumptionManageDto): Promise<void> {
         this.consumptionService.create(consumptionData).subscribe({
             next: response => this.handleSubmitResponse(response),
         });
@@ -289,6 +404,14 @@ export class BaseConsumptionManageComponent implements OnInit {
             quantity: new FormControl<number | null>(quantity, [Validators.required, Validators.min(0.01)]),
         });
     }
+
+    private getFormattedTooltip<T extends keyof ChartTypeRegistry>(context: TooltipItem<T>): string {
+        const label = context.label || '';
+        const value = Number(context.raw) || 0;
+        const formattedValue = parseFloat(value.toFixed(2));
+
+        return `${label}: ${formattedValue} ${this.translateService.instant('STATISTICS.GRAMS')}`;
+    }
 }
 
 interface ValidationErrors {
@@ -297,19 +420,19 @@ interface ValidationErrors {
     min: (_params: { min: string }) => string;
 }
 
-export type RedirectAction = 'Home' | 'ConsumptionList';
+type RedirectAction = 'Home' | 'ConsumptionList';
 
-export type ConsumptionFormValues = {
+type ConsumptionFormValues = {
     date: [TuiDay, TuiTime];
     consumedFood: ConsumptionItemFormValues[];
     comment: string | null;
 };
 
-export type ConsumptionItemFormValues ={
+type ConsumptionItemFormValues ={
     food: Food | null;
     quantity: number | null;
 };
 
-export type ConsumptionFormData = FormGroupControls<ConsumptionFormValues>;
+type ConsumptionFormData = FormGroupControls<ConsumptionFormValues>;
 
-export type ConsumptionItemFormData = FormGroupControls<ConsumptionItemFormValues>;
+type ConsumptionItemFormData = FormGroupControls<ConsumptionItemFormValues>;

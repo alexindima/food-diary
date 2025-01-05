@@ -203,6 +203,8 @@
     "CONSUMPTION_MANAGE": {
         "EDIT_TITLE": "Редактировать потребление",
         "ADD_TITLE": "Добавить потребление",
+        "CHOOSE_DATE": "Дата и время",
+        "FOODS": "Продукты",
         "ADD_FOOD_ROW": {
             "FOOD": "Продукт",
             "FOOD_PLACEHOLDER": "Выберите продукт",
@@ -211,6 +213,9 @@
         },
         "COMMENT": "Комментарий",
         "COMMENT_PLACEHOLDER": "Введите комментарий",
+        "SUMMARY": "Сводка",
+        "CALORIES": "Калории",
+        "KKAL": "ккал",
         "SAVE_BUTTON": "Сохранить",
         "ADD_BUTTON": "Добавить",
         "EDIT_SUCCESS": "Потребление успешно обновлено!",
@@ -287,6 +292,11 @@
         "G": "граммы",
         "ML": "миллилитры",
         "PCS": "штуки"
+    },
+    "FOOD_AMOUNT_UNITS_SHORT": {
+        "G": "г",
+        "ML": "мл",
+        "PCS": "шт"
     }
 }
 

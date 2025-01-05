@@ -203,6 +203,8 @@
     "CONSUMPTION_MANAGE": {
         "EDIT_TITLE": "Edit Consumption",
         "ADD_TITLE": "Add Consumption",
+        "CHOOSE_DATE": "Date and time",
+        "FOODS": "Foods",
         "ADD_FOOD_ROW": {
             "FOOD": "Food",
             "FOOD_PLACEHOLDER": "Choose a food",
@@ -211,6 +213,9 @@
         },
         "COMMENT": "Comment",
         "COMMENT_PLACEHOLDER": "Enter a comment",
+        "SUMMARY": "Summary",
+        "CALORIES": "Calories",
+        "KKAL": "kcal",
         "SAVE_BUTTON": "Save",
         "ADD_BUTTON": "Add",
         "EDIT_SUCCESS": "Consumption successfully updated!",
@@ -287,5 +292,10 @@
         "G": "grams",
         "ML": "milliliters",
         "PCS": "pieces"
+    },
+    "FOOD_AMOUNT_UNITS_SHORT": {
+        "G": "g",
+        "ML": "ml",
+        "PCS": "pcs"
     }
 }

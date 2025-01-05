@@ -12,7 +12,7 @@
             <tui-input-date-time
                 formControlName="date"
             >
-                Choose date and time
+                {{ 'CONSUMPTION_MANAGE.CHOOSE_DATE' | translate }}
             </tui-input-date-time>
             <tui-error
                 formControlName="date"
@@ -22,7 +22,7 @@
         <div class="consumption-manage__consumption">
             <div class="custom-group">
                 <div class="custom-group__header">
-                    Продукты
+                    {{ 'CONSUMPTION_MANAGE.FOODS' | translate }}
                 </div>
                 <div class="consumption-manage__select">
                     <div class="consumption-manage__select-rows" formArrayName="consumedFood">
@@ -107,6 +107,69 @@
                 [error]="[] | tuiFieldError | async"
             ></tui-error>
         </div>
+        <div class="consumption-manage__summary">
+            <div class="custom-group">
+                <div class="custom-group__header">
+                    {{ 'CONSUMPTION_MANAGE.SUMMARY' | translate }}
+                </div>
+                <div class="consumption-manage__summary-wrapper">
+                    <div class="consumption-manage__summary">
+                        <p class="calories-highlight">
+                            {{ 'CONSUMPTION_MANAGE.CALORIES' | translate }}:
+                                <span>
+                            {{ totalCalories() | number: '1.0-2' }} {{ 'CONSUMPTION_MANAGE.KKAL' | translate }}
+                        </span>
+                        </p>
+
+                        <!-- Нутриенты -->
+                        <ul class="nutrient-list">
+                            <li>
+                                <span class="nutrient-color" [style.background-color]="CHART_COLORS.proteins"></span>
+                                {{ 'NUTRIENTS.PROTEINS' | translate }}:
+                                {{ nutrientChartData().proteins | number: '1.0-2' }}
+                                {{ 'FOOD_AMOUNT_UNITS_SHORT.G' | translate }}
+                            </li>
+                            <li>
+                                <span class="nutrient-color" [style.background-color]="CHART_COLORS.fats"></span>
+                                {{ 'NUTRIENTS.FATS' | translate }}:
+                                {{ nutrientChartData().fats | number: '1.0-2' }}
+                                {{ 'FOOD_AMOUNT_UNITS_SHORT.G' | translate }}
+                            </li>
+                            <li>
+                                <span class="nutrient-color" [style.background-color]="CHART_COLORS.carbs"></span>
+                                {{ 'NUTRIENTS.CARBS' | translate }}:
+                                {{ nutrientChartData().carbs | number: '1.0-2' }}
+                                {{ 'FOOD_AMOUNT_UNITS_SHORT.G' | translate }}
+                            </li>
+                        </ul>
+                    </div>
+                    @if ((nutrientChartData().proteins + nutrientChartData().fats + nutrientChartData().carbs) > 0) {
+                        <div class="consumption-manage__charts">
+                            <div class="consumption-manage__chart">
+                                <canvas
+                                    baseChart
+                                    [data]="nutrientsPieChartData()"
+                                    [options]="pieChartOptions"
+                                    [type]="'pie'"
+                                    [legend]="false"
+                                ></canvas>
+                            </div>
+                            <div class="consumption-manage__chart">
+                                <canvas
+                                    baseChart
+                                    style="height: 100%"
+                                    [data]="nutrientsBarChartData()"
+                                    [options]="barChartOptions"
+                                    [type]="'bar'"
+                                    [legend]="false"
+                                ></canvas>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
         <div class="consumption-manage__actions">
             <button class="consumption-manage__submit-button" tuiButton appearance="primary" type="submit">
                 @if (consumption()) {
