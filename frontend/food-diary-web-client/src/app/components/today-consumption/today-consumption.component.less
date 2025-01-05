@@ -28,6 +28,9 @@
 }
 
 .today-consumption {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
     max-width: 1000px;
     margin: 0 auto;
     padding: 24px;
@@ -53,6 +56,7 @@
 
     &__content {
         display: flex;
+        flex-direction: column;
         gap: 24px;
 
         @media (max-width: 768px) {
@@ -60,25 +64,17 @@
         }
     }
 
-    &__left {
-        flex: 1.5;
-
-        @media (max-width: 768px) {
-            width: 100%;
-        }
+    &__secondary-actions {
+        display: flex;
+        gap: 16px;
     }
 
-    &__right {
-        flex: 1;
+    &__left, &__right {
         display: flex;
         flex-direction: column;
         align-items: flex-start;
         gap: 16px;
-
-        @media (max-width: 768px) {
-            width: 100%;
-            align-items: center;
-        }
+        flex: 1;
     }
 
     &__header {
@@ -167,6 +163,12 @@
             background-color: transparent;
             color: #007bff;
             border: 1px solid #007bff;
+        }
+
+        &--info {
+            background-color: #fd7e14;
+            color: #ffffff;
+            border: 1px solid #e06b0a;
         }
     }
 }

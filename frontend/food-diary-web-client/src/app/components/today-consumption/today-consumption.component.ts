@@ -1,30 +1,24 @@
-import {
-    ChangeDetectionStrategy,
-    Component,
-    computed,
-    inject,
-    OnInit,
-    signal
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
 import { StatisticsService } from '../../services/statistics.service';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { TuiButton } from '@taiga-ui/core';
-import { DecimalPipe } from '@angular/common';
 import { NavigationService } from '../../services/navigation.service';
-import { ChartData, ChartOptions } from 'chart.js';
-import { BaseChartDirective } from 'ng2-charts';
 import { NutrientChartData } from '../../types/charts.data';
+import { NutrientsSummaryComponent } from '../shared/nutrients-summary/nutrients-summary.component';
 
 @Component({
     selector: 'app-today-consumption',
-    imports: [TranslatePipe, DecimalPipe, TuiButton, BaseChartDirective],
+    imports: [
+        TranslatePipe,
+        TuiButton,
+        NutrientsSummaryComponent
+    ],
     templateUrl: './today-consumption.component.html',
     styleUrl: './today-consumption.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TodayConsumptionComponent implements OnInit {
     private readonly statisticsService = inject(StatisticsService);
-    private readonly translateService = inject(TranslateService);
     private readonly navigationService = inject(NavigationService);
 
     public todayCalories = signal<number>(0);
@@ -58,7 +52,6 @@ export class TodayConsumptionComponent implements OnInit {
                             fats: stats?.averageFats,
                             carbs: stats?.averageCarbs,
                         });
-
                     }
                     this.isLoading.set(false);
                 },
@@ -67,41 +60,6 @@ export class TodayConsumptionComponent implements OnInit {
                 },
             });
     }
-
-    public pieChartData = computed<ChartData<'pie', number[], string>>(() => ({
-        labels: [
-            this.translateService.instant('STATISTICS.NUTRIENTS.PROTEINS'),
-            this.translateService.instant('STATISTICS.NUTRIENTS.FATS'),
-            this.translateService.instant('STATISTICS.NUTRIENTS.CARBS'),
-        ],
-        datasets: [
-            {
-                data: [
-                    this.nutrientChartData().proteins,
-                    this.nutrientChartData().fats,
-                    this.nutrientChartData().carbs,
-                ],
-                backgroundColor: ['#36A2EB', '#FFCE56', '#4BC0C0'],
-            },
-        ],
-    }));
-
-    public pieChartOptions: ChartOptions<'pie'> = {
-        responsive: true,
-        plugins: {
-            tooltip: {
-                callbacks: {
-                    label: (context) => {
-                        const label = context.label || '';
-                        const value = Number(context.raw) || 0;
-                        const formattedValue = parseFloat(value.toFixed(2));
-
-                        return `${label}: ${formattedValue} ${this.translateService.instant('STATISTICS.GRAMS')}`;
-                    },
-                },
-            },
-        },
-    };
 
     public async addConsumption(): Promise<void> {
         await this.navigationService.navigateToConsumptionAdd();

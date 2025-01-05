@@ -1,62 +1,56 @@
 <div class="today-consumption">
     <h2 class="today-consumption__title">{{ 'TODAY_CONSUMPTION.TITLE' | translate }}</h2>
-
+    <app-nutrients-summary
+        [calories]="todayCalories()"
+        [nutrientChartData]="nutrientChartData()"
+    ></app-nutrients-summary>
     <div class="today-consumption__card">
         <div class="today-consumption__content">
-            <div class="today-consumption__left">
-                <div class="today-consumption__header">
-                    <h3 class="today-consumption__subtitle">{{ 'TODAY_CONSUMPTION.TOTAL_CONSUMPTION' | translate }}</h3>
-                    <p class="today-consumption__calories">
-                        {{ todayCalories() | number: '1.0-2' }} {{ 'STATISTICS.KKAL' | translate }}
-                    </p>
+            <button
+                class="today-consumption__button today-consumption__button--primary"
+                tuiButton
+                size="xl"
+                (click)="addConsumption()"
+            >
+                {{ 'TODAY_CONSUMPTION.ADD_CONSUMPTION' | translate }}
+            </button>
+            <div class="today-consumption__secondary-actions">
+                <div class="today-consumption__right">
+                    <button
+                        class="today-consumption__button today-consumption__button--outline"
+                        tuiButton
+                        size="m"
+                        (click)="addFood()"
+                    >
+                        {{ 'TODAY_CONSUMPTION.ADD_FOOD' | translate }}
+                    </button>
+                    <button
+                        class="today-consumption__button today-consumption__button--outline"
+                        tuiButton
+                        size="m"
+                        (click)="manageFoods()"
+                    >
+                        {{ 'TODAY_CONSUMPTION.MANAGE_FOODS' | translate }}
+                    </button>
                 </div>
-                <div class="today-consumption__body">
-                    <div class="today-consumption__nutrients">
-                        <label class="today-consumption__nutrients-label">{{ 'TODAY_CONSUMPTION.NUTRIENTS' | translate }}</label>
-                        <div class="today-consumption__nutrients-container">
-                            <ul class="today-consumption__nutrients-list">
-                                <li class="today-consumption__nutrients-item">
-                                    {{ 'NUTRIENTS.PROTEINS' | translate }}: {{ nutrientChartData().proteins | number: '1.0-2' }}
-                                    {{ 'STATISTICS.GRAMS' | translate }}
-                                </li>
-                                <li class="today-consumption__nutrients-item">
-                                    {{ 'NUTRIENTS.FATS' | translate }}: {{ nutrientChartData().fats | number: '1.0-2' }}
-                                    {{ 'STATISTICS.GRAMS' | translate }}
-                                </li>
-                                <li class="today-consumption__nutrients-item">
-                                    {{ 'NUTRIENTS.CARBS' | translate }}: {{ nutrientChartData().carbs | number: '1.0-2' }}
-                                    {{ 'STATISTICS.GRAMS' | translate }}
-                                </li>
-                            </ul>
-                            <div class="today-consumption__nutrients-chart">
-                                <canvas
-                                    baseChart
-                                    [data]="pieChartData()"
-                                    [options]="pieChartOptions"
-                                    [type]="'pie'"
-                                ></canvas>
-                            </div>
-                        </div>
-                    </div>
+                <div class="today-consumption__left">
+                    <button
+                        class="today-consumption__button today-consumption__button--outline"
+                        tuiButton
+                        size="m"
+                        (click)="manageConsumptions()"
+                    >
+                        {{ 'TODAY_CONSUMPTION.MANAGE_CONSUMPTIONS' | translate }}
+                    </button>
+                    <button
+                        class="today-consumption__button today-consumption__button--info"
+                        tuiButton
+                        size="m"
+                        (click)="goToStatistics()"
+                    >
+                        {{ 'TODAY_CONSUMPTION.VIEW_STATISTICS' | translate }}
+                    </button>
                 </div>
-            </div>
-
-            <div class="today-consumption__right">
-                <button class="today-consumption__button today-consumption__button--primary" tuiButton size="m" (click)="addConsumption()">
-                    {{ 'TODAY_CONSUMPTION.ADD_CONSUMPTION' | translate }}
-                </button>
-                <button class="today-consumption__button today-consumption__button--outline" tuiButton size="m" (click)="addFood()">
-                    {{ 'TODAY_CONSUMPTION.ADD_FOOD' | translate }}
-                </button>
-                <button class="today-consumption__button today-consumption__button--outline" tuiButton size="m" (click)="manageConsumptions()">
-                    {{ 'TODAY_CONSUMPTION.MANAGE_CONSUMPTIONS' | translate }}
-                </button>
-                <button class="today-consumption__button today-consumption__button--outline" tuiButton size="m" (click)="manageFoods()">
-                    {{ 'TODAY_CONSUMPTION.MANAGE_FOODS' | translate }}
-                </button>
-                <button class="today-consumption__button today-consumption__button--outline" tuiButton size="m" (click)="goToStatistics()">
-                    {{ 'TODAY_CONSUMPTION.VIEW_STATISTICS' | translate }}
-                </button>
             </div>
         </div>
     </div>
