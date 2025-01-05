@@ -203,6 +203,12 @@
     "CONSUMPTION_MANAGE": {
         "EDIT_TITLE": "Редактировать потребление",
         "ADD_TITLE": "Добавить потребление",
+        "ADD_FOOD_ROW": {
+            "FOOD": "Продукт",
+            "FOOD_PLACEHOLDER": "Выберите продукт",
+            "QUANTITY": "Количество",
+            "QUANTITY_PLACEHOLDER": "Введите количество"
+        },
         "COMMENT": "Комментарий",
         "COMMENT_PLACEHOLDER": "Введите комментарий",
         "SAVE_BUTTON": "Сохранить",
@@ -276,6 +282,11 @@
         "PROTEINS": "Белки",
         "FATS": "Жиры",
         "CARBS": "Углеводы"
+    },
+    "FOOD_AMOUNT_UNITS": {
+        "G": "граммы",
+        "ML": "миллилитры",
+        "PCS": "штуки"
     }
 }
 

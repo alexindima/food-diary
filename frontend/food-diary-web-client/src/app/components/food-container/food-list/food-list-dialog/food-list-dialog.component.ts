@@ -9,7 +9,6 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { TuiPagination } from '@taiga-ui/kit';
 import { TuiSearchComponent } from '@taiga-ui/layout';
 import { TuiTextfieldControllerModule } from '@taiga-ui/legacy';
-import { SimpleConsumption } from '../../../../types/consumption.data';
 
 @Component({
     selector: 'app-food-list-dialog',
@@ -29,7 +28,7 @@ import { SimpleConsumption } from '../../../../types/consumption.data';
     ]
 })
 export class FoodListDialogComponent extends FoodListBaseComponent implements OnInit {
-    public readonly context = injectContext<TuiDialogContext<SimpleConsumption, null>>();
+    public readonly context = injectContext<TuiDialogContext<Food, null>>();
 
     private readonly dialog = tuiDialog(FoodConsumptionComponent, {
         dismissible: true,

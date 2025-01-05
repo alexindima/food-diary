@@ -1,5 +1,15 @@
-import { ChangeDetectionStrategy, Component, FactoryProvider, inject, input, OnInit, signal, TemplateRef, ViewChild } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    FactoryProvider,
+    inject,
+    input,
+    OnInit,
+    signal,
+    TemplateRef,
+    ViewChild
+} from '@angular/core';
+import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
     TuiButton,
     tuiDialog,
@@ -22,12 +32,19 @@ import {
 } from '@taiga-ui/legacy';
 import { ApiResponse, ErrorCode } from '../../../types/api-response.data';
 import { NavigationService } from '../../../services/navigation.service';
-import { FoodListDialogComponent } from '../../food-container/food-list/food-list-dialog/food-list-dialog.component';
+import {
+    FoodListDialogComponent
+} from '../../food-container/food-list/food-list-dialog/food-list-dialog.component';
 import { TuiDay, TuiTime } from '@taiga-ui/cdk';
-import { Consumption, ConsumptionManageDto, SimpleConsumption } from '../../../types/consumption.data';
+import {
+    Consumption,
+    ConsumptionManageDto,
+} from '../../../types/consumption.data';
 import { ConsumptionService } from '../../../services/consumption.service';
-import { TuiUtils } from '../../../utils/tui.utils';
 import { FormGroupControls } from '../../../types/common.data';
+import { Food } from '../../../types/food.data';
+import { TuiUtils } from '../../../utils/tui.utils';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { nonEmptyArrayValidator } from '../../../validators/non-empty-array.validator';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
@@ -81,18 +98,25 @@ export class BaseConsumptionManageComponent implements OnInit {
     @ViewChild('confirmDialog') private confirmDialog!: TemplateRef<TuiDialogContext<RedirectAction, void>>;
 
     public consumption = input<Consumption | null>();
-
     public globalError = signal<string | null>(null);
     public consumptionForm: FormGroup<ConsumptionFormData>;
+    public selectedIndex: number = 0;
 
     public constructor() {
         this.consumptionForm = new FormGroup<ConsumptionFormData>({
-            date: new FormControl<[TuiDay, TuiTime]>([TuiDay.currentLocal(), TuiTime.currentLocal()], { nonNullable: true }),
-            consumedFood: new FormControl<SimpleConsumption[]>([], { nonNullable: true, validators: [nonEmptyArrayValidator()] }),
+            date: new FormControl<[TuiDay, TuiTime]>(
+                [TuiDay.currentLocal(), TuiTime.currentLocal()], { nonNullable: true }
+            ),
+            consumedFood: new FormArray<FormGroup<ConsumptionItemFormData>>(
+                [this.createConsumedFoodItem()], nonEmptyArrayValidator()
+            ),
             comment: new FormControl<string | null>(null),
         });
 
-        this.consumptionForm.valueChanges.subscribe(() => this.clearGlobalError());
+        this.consumptionForm.valueChanges
+            .pipe(takeUntilDestroyed())
+            .subscribe(
+            () => this.clearGlobalError());
     }
 
     public ngOnInit(): void {
@@ -102,40 +126,47 @@ export class BaseConsumptionManageComponent implements OnInit {
         }
     }
 
-    protected populateForm(consumption: Consumption): void {
-        const date = new Date(consumption.date);
-        const tuiDay = TuiDay.fromLocalNativeDate(date);
-        const tuiTime = TuiTime.fromLocalNativeDate(date);
-
-        const consumedFood = consumption.items.map(item => SimpleConsumption.mapFrom(item));
-
-        this.consumptionForm.setValue({
-            date: [tuiDay, tuiTime],
-            consumedFood,
-            comment: consumption.comment || null,
-        });
+    public get consumedFood(): FormArray<FormGroup<ConsumptionItemFormData>> {
+        return this.consumptionForm.controls.consumedFood;
     }
 
-    public stringifyConsumptionItem(item: SimpleConsumption): string {
-        return `${item.name}`;
+    public getFoodName(index: number): string {
+        const foodControl = this.consumedFood.at(index).controls.food;
+        return foodControl?.value?.name || '';
     }
 
-    public async openConsumptionList(): Promise<void> {
+    public getFoodUnit(index: number): string | null {
+        const unit = this.consumedFood.at(index).controls.food?.value?.baseUnit;
+        return unit
+            ? `, ${this.translateService.instant('FOOD_AMOUNT_UNITS.' + unit.toUpperCase())}`
+            : null;
+    }
+
+    public isFoodInvalid(index: number): boolean {
+        const foodControl = this.consumedFood.at(index).controls.food;
+        return !!foodControl && foodControl.invalid && foodControl.touched;
+    }
+
+    public addFoodItem(): void {
+        this.consumedFood.push(this.createConsumedFoodItem());
+    }
+
+    public removeFoodItem(index: number): void {
+        this.consumedFood.removeAt(index);
+    }
+
+    public async onFoodSelectClick(index: number): Promise<void> {
+        this.selectedIndex = index;
         this.dialog(null).subscribe({
-            next: data => {
-                this.addConsumedFood(data);
+            next: food => {
+                const consumedFoodGroup = this.consumedFood.at(this.selectedIndex);
+                consumedFoodGroup.patchValue({ food });
             },
         });
     }
 
-    public addConsumedFood(food: SimpleConsumption): void {
-        const consumedFoodControl = this.consumptionForm.controls.consumedFood;
-        const currentValues = consumedFoodControl.value;
-        consumedFoodControl?.setValue([...currentValues, food]);
-    }
-
     public onSubmit(): void {
-        this.consumptionForm.markAllAsTouched();
+        this.markFormGroupTouched(this.consumptionForm);
 
         if (this.consumptionForm.valid) {
             const tuiDateTime = this.consumptionForm.controls.date.value;
@@ -145,12 +176,48 @@ export class BaseConsumptionManageComponent implements OnInit {
             const consumptionData: ConsumptionManageDto = {
                 date: TuiUtils.combineTuiDayAndTuiTime(tuiDateTime[0], tuiDateTime[1]),
                 comment: comment ?? undefined,
-                items: consumedFood.map(simpleConsumption => SimpleConsumption.mapTo(simpleConsumption)),
+                items: consumedFood
+                    .filter(foodItem => foodItem.food && foodItem.quantity !== null)
+                    .map(foodItem => ({
+                        foodId: foodItem.food!.id,
+                        amount: Number(foodItem.quantity),
+                    })),
             };
 
             const consumption = this.consumption();
-            consumption ? this.updateConsumption(consumption.id, consumptionData) : this.addConsumption(consumptionData);
+            consumption
+                ? this.updateConsumption(consumption.id, consumptionData)
+                : this.addConsumption(consumptionData);
         }
+    }
+
+    private markFormGroupTouched(formGroup: FormGroup | FormArray): void {
+        Object.values(formGroup.controls).forEach(control => {
+            if (control instanceof FormGroup || control instanceof FormArray) {
+                this.markFormGroupTouched(control);
+            } else {
+                control.markAllAsTouched();
+                control.updateValueAndValidity();
+            }
+        });
+    }
+
+    private populateForm(consumption: Consumption): void {
+        const date = new Date(consumption.date);
+        const tuiDay = TuiDay.fromLocalNativeDate(date);
+        const tuiTime = TuiTime.fromLocalNativeDate(date);
+
+        this.consumptionForm.patchValue({
+            date: [tuiDay, tuiTime],
+            comment: consumption.comment || null,
+        });
+
+        const consumedFoodArray = this.consumedFood;
+        consumedFoodArray.clear();
+
+        consumption.items.forEach((item) => {
+            consumedFoodArray.push(this.createConsumedFoodItem(item.food, item.amount));
+        });
     }
 
     protected async addConsumption(consumptionData: ConsumptionManageDto): Promise<void> {
@@ -159,7 +226,7 @@ export class BaseConsumptionManageComponent implements OnInit {
         });
     }
 
-    protected async updateConsumption(id: number, consumptionData: ConsumptionManageDto): Promise<void> {
+    private async updateConsumption(id: number, consumptionData: ConsumptionManageDto): Promise<void> {
         const requestData = {
             date: consumptionData.date,
             comment: consumptionData.comment,
@@ -193,13 +260,6 @@ export class BaseConsumptionManageComponent implements OnInit {
         }
     }
 
-    public async onMultiSelectClick(): Promise<void> {
-        const consumedFoodControl = this.consumptionForm.controls.consumedFood;
-        if (consumedFoodControl.value.length === 0) {
-            await this.openConsumptionList();
-        }
-    }
-
     private setGlobalError(errorKey: string): void {
         this.globalError.set(this.translateService.instant(errorKey));
     }
@@ -208,7 +268,7 @@ export class BaseConsumptionManageComponent implements OnInit {
         this.globalError.set(null);
     }
 
-    protected async showConfirmDialog(): Promise<void> {
+    private async showConfirmDialog(): Promise<void> {
         this.dialogService
             .open(this.confirmDialog, {
                 dismissible: true,
@@ -222,6 +282,13 @@ export class BaseConsumptionManageComponent implements OnInit {
                 }
             });
     }
+
+    private createConsumedFoodItem(food: Food | null = null, quantity: number | null = null): FormGroup<ConsumptionItemFormData> {
+        return new FormGroup<ConsumptionItemFormData>({
+            food: new FormControl<Food | null>(food, Validators.required),
+            quantity: new FormControl<number | null>(quantity, [Validators.required, Validators.min(0.01)]),
+        });
+    }
 }
 
 interface ValidationErrors {
@@ -232,10 +299,17 @@ interface ValidationErrors {
 
 export type RedirectAction = 'Home' | 'ConsumptionList';
 
-interface ConsumptionFormValues {
+export type ConsumptionFormValues = {
     date: [TuiDay, TuiTime];
-    consumedFood: SimpleConsumption[];
+    consumedFood: ConsumptionItemFormValues[];
     comment: string | null;
-}
+};
+
+export type ConsumptionItemFormValues ={
+    food: Food | null;
+    quantity: number | null;
+};
 
 export type ConsumptionFormData = FormGroupControls<ConsumptionFormValues>;
+
+export type ConsumptionItemFormData = FormGroupControls<ConsumptionItemFormValues>;

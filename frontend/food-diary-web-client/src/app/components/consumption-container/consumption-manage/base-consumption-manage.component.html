@@ -6,6 +6,7 @@
             {{ 'CONSUMPTION_MANAGE.ADD_TITLE' | translate }}
         }
     </h2>
+
     <form class="consumption-manage__form" [formGroup]="consumptionForm" (ngSubmit)="onSubmit()">
         <div class="consumption-manage__date">
             <tui-input-date-time
@@ -19,27 +20,73 @@
             ></tui-error>
         </div>
         <div class="consumption-manage__consumption">
-            <div class="consumption-manage__select">
-                <tui-multi-select
-                    class="consumption-manage__multi-select"
-                    formControlName="consumedFood"
-                    [tuiTextfieldLabelOutside]="true"
-                    [stringify]="stringifyConsumptionItem"
-                    [editable]="false"
-                    (click)="onMultiSelectClick()"
-                >
-                    {{ 'CONSUMPTION_MANAGE.NO_FOOD_ADDED' | translate }}
-                </tui-multi-select>
-                <button
-                    class="consumption-manage__add-button"
-                    tuiButton
-                    iconStart="@tui.plus"
-                    appearance="primary"
-                    type="button"
-                    (click)="openConsumptionList()"
-                >
-                    {{ 'CONSUMPTION_MANAGE.ADD_FOOD' | translate }}
-                </button>
+            <div class="custom-group">
+                <div class="custom-group__header">
+                    Продукты
+                </div>
+                <div class="consumption-manage__select">
+                    <div class="consumption-manage__select-rows" formArrayName="consumedFood">
+                        @for (foodItem of consumedFood.controls; track foodItem; let i = $index; let first = $first) {
+                            <div class="consumption-manage__select-row" [formGroupName]="i">
+                                <div class="consumption-manage__product-name">
+                                    <tui-textfield type="text">
+                                        <label tuiLabel>{{ 'CONSUMPTION_MANAGE.ADD_FOOD_ROW.FOOD' | translate }}</label>
+                                        <input
+                                            tuiTextfield
+                                            placeholder="{{ 'CONSUMPTION_MANAGE.ADD_FOOD_ROW.FOOD_PLACEHOLDER' | translate }}"
+                                            [readOnly]="true"
+                                            [value]="getFoodName(i)"
+                                            [invalid]="isFoodInvalid(i)"
+                                            (click)="onFoodSelectClick(i)"
+                                        />
+                                    </tui-textfield>
+                                    <tui-error
+                                        formControlName="food"
+                                        [error]="[] | tuiFieldError | async"
+                                    ></tui-error>
+                                </div>
+                                <div class="consumption-manage__product-quantity">
+                                    <tui-input-number
+                                        type="text"
+                                        formControlName="quantity"
+                                    >
+                                        <label tuiLabel>{{ 'CONSUMPTION_MANAGE.ADD_FOOD_ROW.QUANTITY' | translate }}{{ getFoodUnit(i) }}</label>
+                                        <input
+                                            tuiTextfieldLegacy
+                                            placeholder="0"
+                                        />
+                                    </tui-input-number>
+                                    <tui-error
+                                        formControlName="quantity"
+                                        [error]="[] | tuiFieldError | async"
+                                    ></tui-error>
+                                </div>
+                                <button
+                                    type="button"
+                                    class="consumption-manage__product-delete modal__button modal__button--accent"
+                                    appearance="accent"
+                                    tuiButton
+                                    size="l"
+                                    [disabled]="first"
+                                    (click)="removeFoodItem(i)"
+                                >
+                                    {{ 'CONSUMPTION_DETAIL.DELETE_BUTTON' | translate }}
+                                </button>
+                            </div>
+                        }
+                    </div>
+                    <button
+                        type="button"
+                        class="consumption-manage__add-button"
+                        tuiButton
+                        size="m"
+                        iconStart="@tui.plus"
+                        appearance="primary"
+                        (click)="addFoodItem()"
+                    >
+                        {{ 'CONSUMPTION_MANAGE.ADD_FOOD' | translate }}
+                    </button>
+                </div>
             </div>
             <tui-error
                 formControlName="consumedFood"

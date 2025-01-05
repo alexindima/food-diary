@@ -203,6 +203,12 @@
     "CONSUMPTION_MANAGE": {
         "EDIT_TITLE": "Edit Consumption",
         "ADD_TITLE": "Add Consumption",
+        "ADD_FOOD_ROW": {
+            "FOOD": "Food",
+            "FOOD_PLACEHOLDER": "Choose a food",
+            "QUANTITY": "Quantity",
+            "QUANTITY_PLACEHOLDER": "Enter quantity"
+        },
         "COMMENT": "Comment",
         "COMMENT_PLACEHOLDER": "Enter a comment",
         "SAVE_BUTTON": "Save",
@@ -276,5 +282,10 @@
         "PROTEINS": "Proteins",
         "FATS": "Fats",
         "CARBS": "Carbs"
+    },
+    "FOOD_AMOUNT_UNITS": {
+        "G": "grams",
+        "ML": "milliliters",
+        "PCS": "pieces"
     }
 }

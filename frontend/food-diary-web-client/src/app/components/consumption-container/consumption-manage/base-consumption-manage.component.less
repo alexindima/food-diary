@@ -2,7 +2,7 @@
     display: block;
     position: relative;
     width: 100%;
-    height: 80vh;
+    min-height: 80vh;
     box-sizing: border-box;
     overflow: hidden;
 }
@@ -47,20 +47,46 @@
 
 .consumption-manage__date,
 .consumption-manage__consumption,
+.consumption-manage__product-name,
 .consumption-manage__comment {
     display: flex;
     flex-direction: column;
 }
 
+.consumption-manage__product-name {
+    flex: 1;
+}
+
+.consumption-manage__product-quantity {
+    flex: 0 0 25%;
+}
+
+.consumption-manage__product-delete {
+    flex: 0 0 auto;
+    white-space: nowrap;
+}
+
 .consumption-manage__select {
     display: flex;
+    flex-direction: column;
     gap: 16px;
 
-    @media (max-width: 480px) {
+    /*@media (max-width: 480px) {
         flex-direction: column;
         gap: 8px;
         margin: 12px 0;
-    }
+    }*/
+}
+
+.consumption-manage__select-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.consumption-manage__select-row {
+    display: flex;
+    gap: 16px;
 }
 
 .consumption-manage__multi-select {
@@ -69,7 +95,6 @@
 }
 
 .consumption-manage__add-button {
-    height: auto;
     width: auto;
 
     @media (max-width: 480px) {
@@ -109,4 +134,25 @@
 
 .dialog__buttons button {
     width: 100%;
+}
+
+.custom-group {
+    margin-top: 10px;
+    border: 2px solid #d9d9d9;
+    border-radius: 8px;
+    padding: 20px;
+    position: relative;
+}
+
+.custom-group__header {
+    position: absolute;
+    top: -11px;
+    left: 15px;
+    background: white;
+    border: 2px solid #d9d9d9;
+    border-radius: 4px;
+    padding: 0 10px;
+    font-weight: bold;
+    font-size: 10px;
+    line-height: 20px;
 }

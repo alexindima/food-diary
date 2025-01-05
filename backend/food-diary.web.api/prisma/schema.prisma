@@ -40,12 +40,12 @@ model Food {
     barcode         String?
     name            String
     category        String?
-    baseUnit        Unit // Базовая единица измерения для продукта
-    baseAmount      Float // Количество базовой единицы (например, 100 для грамм или мл)
-    caloriesPerBase Float // Калорийность для базовой единицы
-    proteinsPerBase Float // Белки для базовой единицы
-    fatsPerBase     Float // Жиры для базовой единицы
-    carbsPerBase    Float // Углеводы для базовой единицы
+    baseUnit        Unit
+    baseAmount      Float
+    caloriesPerBase Float
+    proteinsPerBase Float
+    fatsPerBase     Float
+    carbsPerBase    Float
     usageCount      Int        @default(0)
     visibility      Visibility @default(PUBLIC)
     createdAt       DateTime   @default(now())

@@ -6,8 +6,8 @@ import { TUI_VALIDATION_ERRORS, TuiFieldErrorPipe } from '@taiga-ui/kit';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AsyncPipe } from '@angular/common';
 import { TuiInputNumberModule } from '@taiga-ui/legacy';
-import { SimpleConsumption } from '../../../../types/consumption.data';
 import { FormGroupControls } from '../../../../types/common.data';
+import { Food } from '../../../../types/food.data';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: TUI_VALIDATION_ERRORS,
@@ -38,7 +38,7 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
         TuiInputNumberModule,
     ]
 })
-export class FoodConsumptionComponent extends BaseFoodDetailComponent<SimpleConsumption> {
+export class FoodConsumptionComponent extends BaseFoodDetailComponent<Food> {
     public consumptionForm: FormGroup<ConsumptionFormGroup>;
 
     public constructor() {
@@ -54,8 +54,7 @@ export class FoodConsumptionComponent extends BaseFoodDetailComponent<SimpleCons
             return;
         }
 
-        const result = new SimpleConsumption(this.food.id, this.food.name, this.consumptionForm.controls.serving.value);
-        this.context.completeWith(result);
+        this.context.completeWith(this.food);
     }
 }
 

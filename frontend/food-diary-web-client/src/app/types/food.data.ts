@@ -11,8 +11,8 @@ export interface Food {
     barcode?: string | null;
     createdAt?: string;
     updatedAt?: string;
-    defaultServing: number;
-    defaultServingUnit: Unit;
+    baseAmount: number;
+    baseUnit: Unit;
     usageCount: number;
 }
 

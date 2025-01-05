@@ -1,0 +1,77 @@
+<!--
+<h1>Добавить Рецепт</h1>
+<form [formGroup]="recipeForm" (ngSubmit)="onSubmit()">
+    &lt;!&ndash; Основная информация &ndash;&gt;
+    <div>
+        <label for="name">Название рецепта</label>
+        <input id="name" formControlName="name" type="text" required />
+
+        <label for="description">Описание</label>
+        <textarea id="description" formControlName="description"></textarea>
+
+        <label for="category">Категория</label>
+        <input id="category" formControlName="category" type="text" />
+
+        <label for="imageUrl">Ссылка на изображение</label>
+        <input id="imageUrl" formControlName="imageUrl" type="text" />
+
+        <label for="prepTime">Время подготовки (мин.)</label>
+        <input id="prepTime" formControlName="prepTime" type="number" required />
+
+        <label for="cookTime">Время готовки (мин.)</label>
+        <input id="cookTime" formControlName="cookTime" type="number" required />
+
+        <label for="servings">Количество порций</label>
+        <input id="servings" formControlName="servings" type="number" required />
+    </div>
+
+    &lt;!&ndash; Ингредиенты &ndash;&gt;
+    <div>
+        <h3>Ингредиенты</h3>
+        <div formArrayName="ingredients">
+            <div
+                *ngFor="let ingredient of ingredients.controls; let i = index"
+                [formGroupName]="i"
+            >
+                <label for="foodName">Ингредиент</label>
+                <input id="foodName" formControlName="foodName" type="text" required />
+
+                <label for="amount">Количество</label>
+                <input id="amount" formControlName="amount" type="number" required />
+
+                <label for="unit">Единица</label>
+                <select id="unit" formControlName="unit">
+                    <option value="G">грамм</option>
+                    <option value="ML">мл</option>
+                    <option value="PCS">шт</option>
+                </select>
+
+                <button type="button" (click)="removeIngredient(i)">Удалить</button>
+            </div>
+            <button type="button" (click)="addIngredient()">Добавить ингредиент</button>
+        </div>
+    </div>
+
+    &lt;!&ndash; Шаги &ndash;&gt;
+    <div>
+        <h3>Шаги приготовления</h3>
+        <div formArrayName="steps">
+            <div
+                *ngFor="let step of steps.controls; let i = index"
+                [formGroupName]="i"
+            >
+                <label for="description">Описание шага {{ i + 1 }}</label>
+                <textarea id="description" formControlName="description"></textarea>
+
+                <label for="imageUrl">Ссылка на изображение</label>
+                <input id="imageUrl" formControlName="imageUrl" type="text" />
+
+                <button type="button" (click)="removeStep(i)">Удалить</button>
+            </div>
+            <button type="button" (click)="addStep()">Добавить шаг</button>
+        </div>
+    </div>
+
+    <button type="submit" [disabled]="!recipeForm.valid">Сохранить рецепт</button>
+</form>
+-->

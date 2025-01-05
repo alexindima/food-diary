@@ -16,6 +16,8 @@ import { UserManageComponent } from './components/user-manage/user-manage.compon
 import { loggedInGuard } from './guards/logged-in.guard';
 import { authGuard } from './guards/auth.guard';
 import { NotFoundComponent } from './components/not-found/not-found.component';
+import { RecipeContainerComponent } from './components/recipe-container/recipe-container.component';
+import { RecipeAddComponent } from './components/recipe-container/recipe-manage/recipe-add/recipe-add.component';
 
 export const routes: Routes = [
     { path: '', component: MainComponent },
@@ -55,6 +57,21 @@ export const routes: Routes = [
                 component: ConsumptionEditComponent,
                 resolve: { consumption: consumptionResolver },
             },
+        ],
+    },
+    {
+        path: 'recipes',
+        component: RecipeContainerComponent,
+        canActivate: [authGuard],
+        children: [
+            //{ path: '', component: RecipeListComponent },
+            { path: 'add', component: RecipeAddComponent },
+            /*{
+                path: ':id/edit',
+                component: RecipeEditComponent,
+                resolve: { recipe: recipeResolver },
+            },*/
+            //{ path: ':id', component: RecipeDetailComponent },
         ],
     },
     {
