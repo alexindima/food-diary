@@ -74,7 +74,7 @@ export class NutrientsSummaryComponent {
     }
 
     public baseNutrientsChartOptions = {
-        responsive: false,
+        responsive: true,
         plugins: {
             tooltip: {
                 callbacks: {

@@ -36,6 +36,7 @@
                 <div class="chart">
                     <canvas
                         baseChart
+                        style="width: 192px; height: 192px"
                         [data]="nutrientsPieChartData"
                         [options]="pieChartOptions"
                         [type]="'pie'"
@@ -45,7 +46,7 @@
                 <div class="chart">
                     <canvas
                         baseChart
-                        style="height: 100%"
+                        style="width: 192px; height: 192px"
                         [data]="nutrientsBarChartData"
                         [options]="barChartOptions"
                         [type]="'bar'"
