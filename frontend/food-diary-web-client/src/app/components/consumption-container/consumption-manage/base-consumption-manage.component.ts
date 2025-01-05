@@ -254,12 +254,22 @@ export class BaseConsumptionManageComponent implements OnInit {
             { calories: 0, proteins: 0, fats: 0, carbs: 0 }
         );
 
-        this.totalCalories.set(totals.calories)
-        this.nutrientChartData.set({
-            proteins: totals.proteins,
-            fats: totals.fats,
-            carbs: totals.carbs,
-        })
+        if (this.totalCalories() !== totals.calories) {
+            this.totalCalories.set(totals.calories);
+        }
+
+        const currentNutrientData = this.nutrientChartData();
+        if (
+            currentNutrientData.proteins !== totals.proteins ||
+            currentNutrientData.fats !== totals.fats ||
+            currentNutrientData.carbs !== totals.carbs
+        ) {
+            this.nutrientChartData.set({
+                proteins: totals.proteins,
+                fats: totals.fats,
+                carbs: totals.carbs,
+            });
+        }
     }
 
     private async addConsumption(consumptionData: ConsumptionManageDto): Promise<void> {

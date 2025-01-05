@@ -159,6 +159,10 @@
                 </div>
             </div>
         </div>
+        <app-nutrients-summary
+            [calories]="calories()"
+            [nutrientChartData]="nutrientChartData()"
+        ></app-nutrients-summary>
 
         <div class="food-manage__actions">
             <button

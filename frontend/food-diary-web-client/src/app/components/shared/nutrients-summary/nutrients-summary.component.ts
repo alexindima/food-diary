@@ -22,7 +22,7 @@ export class NutrientsSummaryComponent {
 
     private readonly translateService = inject(TranslateService);
 
-    public totalCalories = input.required<number>();
+    public calories = input.required<number>();
     public nutrientChartData = input.required<NutrientChartData>();
 
     public get nutrientsPieChartData(): ChartData<'pie', number[], string> {

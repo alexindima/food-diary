@@ -30,6 +30,10 @@ import { FoodService } from '../../../services/food.service';
 import { NavigationService } from '../../../services/navigation.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormGroupControls } from '../../../types/common.data';
+import { NutrientChartData } from '../../../types/charts.data';
+import {
+    NutrientsSummaryComponent
+} from '../../shared/nutrients-summary/nutrients-summary.component';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: TUI_VALIDATION_ERRORS,
@@ -62,6 +66,7 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
         TuiTextfieldComponent,
         TuiTextfieldDirective,
         TuiInputNumberModule,
+        NutrientsSummaryComponent,
     ]
 })
 export class BaseFoodManageComponent implements OnInit {
@@ -75,6 +80,12 @@ export class BaseFoodManageComponent implements OnInit {
 
     public food = input<Food | null>();
     public globalError = signal<string | null>(null);
+    public calories = signal<number>(0);
+    public nutrientChartData = signal<NutrientChartData>({
+        proteins: 0,
+        fats: 0,
+        carbs: 0,
+    });
 
     public foodForm: FormGroup<FoodFormData>;
     public units = Object.values(Unit) as Unit[];
@@ -91,15 +102,20 @@ export class BaseFoodManageComponent implements OnInit {
             fatsPerBase: new FormControl(null, Validators.required),
             carbsPerBase: new FormControl(null, Validators.required),
         });
-
-        this.foodForm.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.clearGlobalError());
     }
 
     public ngOnInit(): void {
         const food = this.food();
         if (food) {
             this.populateForm(food);
+            this.updateSummary();
         }
+
+        this.foodForm.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            this.clearGlobalError();
+            this.updateSummary();
+        });
+
     }
 
     public stringifyUnits = (unit: Unit): string => {
@@ -129,22 +145,48 @@ export class BaseFoodManageComponent implements OnInit {
         return `${baseAmount} ${unitLabel}`;
     }
 
+    private updateSummary(): void {
+        const caloriesPerBase = this.foodForm.controls.caloriesPerBase.value ?? 0;
+        const proteinsPerBase = this.foodForm.controls.proteinsPerBase.value ?? 0;
+        const fatsPerBase = this.foodForm.controls.fatsPerBase.value ?? 0;
+        const carbsPerBase = this.foodForm.controls.carbsPerBase.value ?? 0;
+
+        const newTotalCalories = caloriesPerBase;
+        const newNutrientChartData = {
+            proteins: proteinsPerBase,
+            fats: fatsPerBase,
+            carbs: carbsPerBase,
+        };
+
+        if (this.calories() !== newTotalCalories) {
+            this.calories.set(newTotalCalories);
+        }
+
+        if (
+            this.nutrientChartData().proteins !== newNutrientChartData.proteins ||
+            this.nutrientChartData().fats !== newNutrientChartData.fats ||
+            this.nutrientChartData().carbs !== newNutrientChartData.carbs
+        ) {
+            this.nutrientChartData.set(newNutrientChartData);
+        }
+    }
+
     private isMacronutrientsValid(): boolean {
         const { proteinsPerBase, fatsPerBase, carbsPerBase } = this.foodForm.value;
         return (proteinsPerBase ?? 0) + (fatsPerBase ?? 0) + (carbsPerBase ?? 0) > 0;
     }
 
-    protected populateForm(food: Food): void {
+    private populateForm(food: Food): void {
         this.foodForm.patchValue(food);
     }
 
-    protected async addFood(foodData: FoodManageDto): Promise<void> {
+    private async addFood(foodData: FoodManageDto): Promise<void> {
         this.foodService.create(foodData).subscribe({
             next: response => this.handleSubmitResponse(response),
         });
     }
 
-    protected async updateFood(id: number, foodData: FoodManageDto): Promise<void> {
+    private async updateFood(id: number, foodData: FoodManageDto): Promise<void> {
         this.foodService.update(id, foodData).subscribe({
             next: response => this.handleSubmitResponse(response),
         });
@@ -177,7 +219,7 @@ export class BaseFoodManageComponent implements OnInit {
         this.globalError.set(null);
     }
 
-    protected async showConfirmDialog(): Promise<void> {
+    private async showConfirmDialog(): Promise<void> {
         this.dialogService
             .open(this.confirmDialog, {
                 dismissible: true,
