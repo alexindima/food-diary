@@ -74,7 +74,7 @@
                 >
                     {{ 'FOOD_MANAGE.DEFAULT_SERVING_UNIT' | translate }}*
                     <input
-                        placeholder="{{ 'FOOD_MANAGE.DEFAULT_SERVING_UNIT_PLACEHOLDER' | translate }}"
+                        placeholder="0"
                         tuiTextfieldLegacy
                     />
                     <ng-template tuiDataList>
@@ -84,7 +84,7 @@
                                     tuiOption
                                     [value]="unit"
                                 >
-                                    {{ ('FOOD_MANAGE.DEFAULT_SERVING_UNITS.' + Unit[unit]) | translate }}
+                                    {{ ('FOOD_AMOUNT_UNITS.' + Unit[unit]) | translate }}
                                 </button>
                             }
                         </tui-data-list>
@@ -96,66 +96,70 @@
                 ></tui-error>
             </div>
         </div>
-        <div class="food-manage__field food-manage__field--calories">
-            <tui-input-number
-                formControlName="caloriesPerBase"
-            >
-                {{ 'FOOD_MANAGE.CALORIES' | translate }}*
-                <input
-                    placeholder="{{ 'FOOD_MANAGE.CALORIES_PLACEHOLDER' | translate }}"
-                    tuiTextfieldLegacy
-                />
-            </tui-input-number>
-            <tui-error
-                formControlName="caloriesPerBase"
-                [error]="[] | tuiFieldError | async"
-            ></tui-error>
+        <div class="custom-group">
+            <div class="custom-group__header">
+                {{ 'FOOD_MANAGE.NUTRITION_VALUE' | translate }}
+            </div>
+            <div class="food-manage__nutrients-group">
+                <div class="food-manage__field">
+                    <tui-input-number
+                        formControlName="caloriesPerBase"
+                    >
+                        {{ 'FOOD_MANAGE.CALORIES' | translate }} {{ getDynamicNutrientPlaceholder }}*
+                        <input
+                            placeholder="0"
+                            tuiTextfieldLegacy
+                        />
+                    </tui-input-number>
+                    <tui-error
+                        formControlName="caloriesPerBase"
+                        [error]="[] | tuiFieldError | async"
+                    ></tui-error>
+                </div>
+                <div class="food-manage__macronutrients">
+                    <div class="food-manage__macronutrient">
+                        <tui-input-number formControlName="proteinsPerBase">
+                            {{ 'FOOD_MANAGE.PROTEINS' | translate }} {{ getDynamicNutrientPlaceholder }}*
+                            <input
+                                placeholder="0"
+                                tuiTextfieldLegacy
+                            />
+                        </tui-input-number>
+                        <tui-error
+                            formControlName="proteinsPerBase"
+                            [error]="[] | tuiFieldError | async"
+                        ></tui-error>
+                    </div>
+                    <div class="food-manage__macronutrient">
+                        <tui-input-number formControlName="fatsPerBase">
+                            {{ 'FOOD_MANAGE.FATS' | translate }} {{ getDynamicNutrientPlaceholder }}*
+                            <input
+                                placeholder="0"
+                                tuiTextfieldLegacy
+                            />
+                        </tui-input-number>
+                        <tui-error
+                            formControlName="fatsPerBase"
+                            [error]="[] | tuiFieldError | async"
+                        ></tui-error>
+                    </div>
+                    <div class="food-manage__macronutrient">
+                        <tui-input-number formControlName="carbsPerBase">
+                            {{ 'FOOD_MANAGE.CARBS' | translate }} {{ getDynamicNutrientPlaceholder }}*
+                            <input
+                                placeholder="0"
+                                tuiTextfieldLegacy
+                            />
+                        </tui-input-number>
+                        <tui-error
+                            formControlName="carbsPerBase"
+                            [error]="[] | tuiFieldError | async"
+                        ></tui-error>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="food-manage__field food-manage__field--proteins">
-            <tui-input-number
-                formControlName="proteinsPerBase"
-            >
-                {{ 'FOOD_MANAGE.PROTEINS' | translate }}*
-                <input
-                    placeholder="{{ 'FOOD_MANAGE.PROTEINS_PLACEHOLDER' | translate }}"
-                    tuiTextfieldLegacy
-                />
-            </tui-input-number>
-            <tui-error
-                formControlName="proteinsPerBase"
-                [error]="[] | tuiFieldError | async"
-            ></tui-error>
-        </div>
-        <div class="food-manage__field food-manage__field--fats">
-            <tui-input-number
-                formControlName="fatsPerBase"
-            >
-                {{ 'FOOD_MANAGE.FATS' | translate }}*
-                <input
-                    placeholder="{{ 'FOOD_MANAGE.FATS_PLACEHOLDER' | translate }}"
-                    tuiTextfieldLegacy
-                />
-            </tui-input-number>
-            <tui-error
-                formControlName="fatsPerBase"
-                [error]="[] | tuiFieldError | async"
-            ></tui-error>
-        </div>
-        <div class="food-manage__field food-manage__field--carbs">
-            <tui-input-number
-                formControlName="carbsPerBase"
-            >
-                {{ 'FOOD_MANAGE.CARBS' | translate }}*
-                <input
-                    placeholder="{{ 'FOOD_MANAGE.CARBS_PLACEHOLDER' | translate }}"
-                    tuiTextfieldLegacy
-                />
-            </tui-input-number>
-            <tui-error
-                formControlName="carbsPerBase"
-                [error]="[] | tuiFieldError | async"
-            ></tui-error>
-        </div>
+
         <div class="food-manage__actions">
             <button
                 class="food-manage__action-button"

@@ -39,7 +39,7 @@ export class FoodManageDto {
         this.fatsPerBase = formValue.fatsPerBase || 0;
         this.carbsPerBase = formValue.carbsPerBase || 0;
         this.barcode = formValue.barcode || null;
-        this.baseAmount = formValue.baseAmount || 0;
+        this.baseAmount = formValue.baseAmount || 100;
         this.baseUnit = formValue.baseUnit || Unit.G;
     }
 }

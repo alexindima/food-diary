@@ -63,8 +63,6 @@
     }
 
     &__actions {
-        margin-top: 20px;
-
         .food-manage__action-button {
             width: 100%;
         }
@@ -87,4 +85,42 @@
             gap: 24px;
         }
     }
+}
+
+.food-manage__nutrients-group {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.food-manage__macronutrients {
+    display: flex;
+    gap: 16px;
+}
+
+.food-manage__macronutrient {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.custom-group {
+    margin-top: 10px;
+    border: 2px solid #d9d9d9;
+    border-radius: 8px;
+    padding: 20px;
+    position: relative;
+}
+
+.custom-group__header {
+    position: absolute;
+    top: -11px;
+    left: 15px;
+    background: white;
+    border: 2px solid #d9d9d9;
+    border-radius: 4px;
+    padding: 0 10px;
+    font-weight: bold;
+    font-size: 10px;
+    line-height: 20px;
 }

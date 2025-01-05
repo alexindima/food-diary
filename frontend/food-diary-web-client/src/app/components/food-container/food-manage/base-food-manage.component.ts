@@ -74,8 +74,8 @@ export class BaseFoodManageComponent implements OnInit {
     @ViewChild('confirmDialog') private confirmDialog!: TemplateRef<TuiDialogContext<RedirectAction, void>>;
 
     public food = input<Food | null>();
-
     public globalError = signal<string | null>(null);
+
     public foodForm: FormGroup<FoodFormData>;
     public units = Object.values(Unit) as Unit[];
 
@@ -84,12 +84,12 @@ export class BaseFoodManageComponent implements OnInit {
             name: new FormControl('', { nonNullable: true, validators: Validators.required }),
             barcode: new FormControl(null),
             category: new FormControl(null),
-            caloriesPerBase: new FormControl(0, { nonNullable: true, validators: [Validators.required, Validators.min(0.001)] }),
-            proteinsPerBase: new FormControl(0, { nonNullable: true, validators: Validators.required }),
-            fatsPerBase: new FormControl(0, { nonNullable: true, validators: Validators.required }),
-            carbsPerBase: new FormControl(0, { nonNullable: true, validators: Validators.required }),
             baseAmount: new FormControl(100, { nonNullable: true, validators: [Validators.required, Validators.min(0.001)] }),
             baseUnit: new FormControl(Unit.G, { nonNullable: true, validators: Validators.required }),
+            caloriesPerBase: new FormControl(null, [Validators.required, Validators.min(0.001)]),
+            proteinsPerBase: new FormControl(null, Validators.required),
+            fatsPerBase: new FormControl(null, Validators.required),
+            carbsPerBase: new FormControl(null, Validators.required),
         });
 
         this.foodForm.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.clearGlobalError());
@@ -119,6 +119,14 @@ export class BaseFoodManageComponent implements OnInit {
             const food = this.food();
             food ? this.updateFood(food.id, foodData) : this.addFood(foodData);
         }
+    }
+
+    public get getDynamicNutrientPlaceholder(): string {
+        const baseAmount = this.foodForm.controls.baseAmount.value ?? 0;
+        const baseUnit = this.foodForm.controls.baseUnit.value;
+
+        const unitLabel = this.translateService.instant(`FOOD_AMOUNT_UNITS_SHORT.${baseUnit}`);
+        return `${baseAmount} ${unitLabel}`;
     }
 
     private isMacronutrientsValid(): boolean {
@@ -191,19 +199,19 @@ export interface FoodFormValues {
     name: string;
     barcode: string | null;
     category: string | null;
-    caloriesPerBase: number;
-    proteinsPerBase: number;
-    fatsPerBase: number;
-    carbsPerBase: number;
     baseAmount: number;
     baseUnit: Unit;
+    caloriesPerBase: number | null;
+    proteinsPerBase: number | null;
+    fatsPerBase: number | null;
+    carbsPerBase: number | null;
 }
 
-export type FoodFormData = FormGroupControls<FoodFormValues>;
+type FoodFormData = FormGroupControls<FoodFormValues>;
 
 interface ValidationErrors {
     required: () => string;
     min: (_params: { min: string }) => string;
 }
 
-export type RedirectAction = 'Home' | 'FoodList';
+type RedirectAction = 'Home' | 'FoodList';

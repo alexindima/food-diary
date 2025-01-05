@@ -150,16 +150,11 @@
         "BARCODE_PLACEHOLDER": "Enter barcode",
         "CATEGORY": "Category",
         "CATEGORY_PLACEHOLDER": "Enter category",
-        "CALORIES": "Calories per 100g",
-        "CALORIES_PLACEHOLDER": "Enter calories",
-        "PROTEINS": "Proteins per 100g",
-        "PROTEINS_PLACEHOLDER": "Enter proteins",
-        "FATS": "Fats per 100g",
-        "FATS_PLACEHOLDER": "Enter fats",
-        "CARBS": "Carbs per 100g",
-        "CARBS_PLACEHOLDER": "Enter carbs",
+        "CALORIES": "Calories per",
+        "PROTEINS": "Proteins per",
+        "FATS": "Fats per",
+        "CARBS": "Carbs per",
         "DEFAULT_SERVING": "Default Serving",
-        "DEFAULT_SERVING_PLACEHOLDER": "Enter default serving",
         "DEFAULT_SERVING_UNIT": "Serving Unit",
         "DEFAULT_SERVING_UNIT_PLACEHOLDER": "Select serving unit",
         "DEFAULT_SERVING_UNITS": {
@@ -167,6 +162,7 @@
             "ML": "milliliters",
             "PCS": "pieces"
         },
+        "NUTRITION_VALUE": "Nutrition value",
         "SAVE_BUTTON": "Save Changes",
         "ADD_BUTTON": "Add Food",
         "CANCEL_BUTTON": "Cancel"

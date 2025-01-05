@@ -150,16 +150,11 @@
         "BARCODE_PLACEHOLDER": "Введите штрихкод",
         "CATEGORY": "Категория",
         "CATEGORY_PLACEHOLDER": "Введите категорию",
-        "CALORIES": "Калорий на 100 г",
-        "CALORIES_PLACEHOLDER": "Введите количество калорий",
-        "PROTEINS": "Белков на 100 г",
-        "PROTEINS_PLACEHOLDER": "Введите количество белков",
-        "FATS": "Жиров на 100 г",
-        "FATS_PLACEHOLDER": "Введите количество жиров",
-        "CARBS": "Углеводов на 100 г",
-        "CARBS_PLACEHOLDER": "Введите количество углеводов",
+        "CALORIES": "Калорий на",
+        "PROTEINS": "Белков на",
+        "FATS": "Жиров на",
+        "CARBS": "Углеводов на",
         "DEFAULT_SERVING": "Стандартная порция",
-        "DEFAULT_SERVING_PLACEHOLDER": "Введите стандартный размер порции",
         "DEFAULT_SERVING_UNIT": "Единица измерения порции",
         "DEFAULT_SERVING_UNIT_PLACEHOLDER": "Выберите единицу измерения",
         "DEFAULT_SERVING_UNITS": {
@@ -167,6 +162,7 @@
             "ML": "миллилитры",
             "PCS": "штуки"
         },
+        "NUTRITION_VALUE": "Пищевая ценность",
         "SAVE_BUTTON": "Сохранить изменения",
         "ADD_BUTTON": "Добавить продукт",
         "CANCEL_BUTTON": "Отмена"
