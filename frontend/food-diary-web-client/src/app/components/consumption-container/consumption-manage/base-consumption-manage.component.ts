@@ -1,7 +1,6 @@
 import {
     ChangeDetectionStrategy,
     Component,
-    computed,
     DestroyRef,
     FactoryProvider,
     inject,
@@ -24,7 +23,7 @@ import {
 } from '@taiga-ui/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { TUI_VALIDATION_ERRORS, TuiFieldErrorPipe } from '@taiga-ui/kit';
-import { AsyncPipe, DecimalPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import {
     TuiInputDateTimeModule,
     TuiInputNumberModule,
@@ -48,10 +47,10 @@ import { Food } from '../../../types/food.data';
 import { TuiUtils } from '../../../utils/tui.utils';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { nonEmptyArrayValidator } from '../../../validators/non-empty-array.validator';
-import { ChartData, ChartOptions, ChartTypeRegistry, TooltipItem } from 'chart.js';
-import { BaseChartDirective } from 'ng2-charts';
 import { NutrientChartData } from '../../../types/charts.data';
-import { CHART_COLORS } from '../../../constants/chart-colors';
+import {
+    NutrientsSummaryComponent
+} from '../../shared/nutrients-summary/nutrients-summary.component';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: TUI_VALIDATION_ERRORS,
@@ -87,8 +86,7 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
         TuiInputNumberModule,
         TuiMultiSelectModule,
         TuiInputDateTimeModule,
-        DecimalPipe,
-        BaseChartDirective,
+        NutrientsSummaryComponent,
     ]
 })
 export class BaseConsumptionManageComponent implements OnInit {
@@ -98,37 +96,11 @@ export class BaseConsumptionManageComponent implements OnInit {
     private readonly dialogService = inject(TuiDialogService);
     private readonly destroyRef = inject(DestroyRef);
 
-    public readonly CHART_COLORS = {
-        proteins: CHART_COLORS.proteins,
-        fats: CHART_COLORS.fats,
-        carbs: CHART_COLORS.carbs,
-        calories: CHART_COLORS.calories,
-    };
-
     private readonly dialog = tuiDialog(FoodListDialogComponent, {
         size: 'page',
         dismissible: true,
         appearance: 'without-border-radius',
     });
-
-    public baseNutrientsChartOptions = {
-        responsive: false,
-        plugins: {
-            tooltip: {
-                callbacks: {
-                    label: (context: TooltipItem<any>): string => this.getFormattedTooltip(context),
-                }
-            }
-        }
-    };
-
-    public pieChartOptions: ChartOptions<'pie'> = {
-        ...this.baseNutrientsChartOptions
-    };
-
-    public barChartOptions: ChartOptions<'bar'> = {
-        ...this.baseNutrientsChartOptions
-    }
 
     @ViewChild('confirmDialog') private confirmDialog!: TemplateRef<TuiDialogContext<RedirectAction, void>>;
 
@@ -140,51 +112,6 @@ export class BaseConsumptionManageComponent implements OnInit {
         carbs: 0,
     });
     public globalError = signal<string | null>(null);
-    public nutrientsPieChartData = computed<ChartData<'pie', number[], string>>(() => ({
-        labels: [
-            this.translateService.instant('NUTRIENTS.PROTEINS'),
-            this.translateService.instant('NUTRIENTS.FATS'),
-            this.translateService.instant('NUTRIENTS.CARBS'),
-        ],
-        datasets: [
-            {
-                data: [
-                    this.nutrientChartData().proteins,
-                    this.nutrientChartData().fats,
-                    this.nutrientChartData().carbs,
-                ],
-                backgroundColor: [
-                    CHART_COLORS.proteins,
-                    CHART_COLORS.fats,
-                    CHART_COLORS.carbs
-                ],
-            },
-        ],
-    }));
-
-    public nutrientsBarChartData = computed(() => {
-        return {
-            labels: [
-                this.translateService.instant('NUTRIENTS.PROTEINS'),
-                this.translateService.instant('NUTRIENTS.FATS'),
-                this.translateService.instant('NUTRIENTS.CARBS'),
-            ],
-            datasets: [
-                {
-                    data: [
-                        this.nutrientChartData().proteins,
-                        this.nutrientChartData().fats,
-                        this.nutrientChartData().carbs,
-                    ],
-                    backgroundColor: [
-                        CHART_COLORS.proteins,
-                        CHART_COLORS.fats,
-                        CHART_COLORS.carbs
-                    ],
-                },
-            ],
-        };
-    });
 
     public consumptionForm: FormGroup<ConsumptionFormData>;
     public selectedIndex: number = 0;
@@ -403,14 +330,6 @@ export class BaseConsumptionManageComponent implements OnInit {
             food: new FormControl<Food | null>(food, Validators.required),
             quantity: new FormControl<number | null>(quantity, [Validators.required, Validators.min(0.01)]),
         });
-    }
-
-    private getFormattedTooltip<T extends keyof ChartTypeRegistry>(context: TooltipItem<T>): string {
-        const label = context.label || '';
-        const value = Number(context.raw) || 0;
-        const formattedValue = parseFloat(value.toFixed(2));
-
-        return `${label}: ${formattedValue} ${this.translateService.instant('STATISTICS.GRAMS')}`;
     }
 }
 

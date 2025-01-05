@@ -209,9 +209,6 @@
         },
         "COMMENT": "Comment",
         "COMMENT_PLACEHOLDER": "Enter a comment",
-        "SUMMARY": "Summary",
-        "CALORIES": "Calories",
-        "KKAL": "kcal",
         "SAVE_BUTTON": "Save",
         "ADD_BUTTON": "Add",
         "EDIT_SUCCESS": "Consumption successfully updated!",
@@ -272,6 +269,13 @@
         "MANAGE_CONSUMPTIONS": "Manage Consumptions",
         "MANAGE_FOODS": "Manage Foods",
         "VIEW_STATISTICS": "View Statistics"
+    },
+    "SHARED": {
+        "NUTRIENTS_SUMMARY": {
+            "SUMMARY": "Summary",
+            "CALORIES": "Calories",
+            "KKAL": "kcal"
+        }
     },
     "NOT_FOUND": {
         "TITLE": "404 - Page Not Found",

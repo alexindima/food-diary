@@ -209,9 +209,6 @@
         },
         "COMMENT": "Комментарий",
         "COMMENT_PLACEHOLDER": "Введите комментарий",
-        "SUMMARY": "Сводка",
-        "CALORIES": "Калории",
-        "KKAL": "ккал",
         "SAVE_BUTTON": "Сохранить",
         "ADD_BUTTON": "Добавить",
         "EDIT_SUCCESS": "Потребление успешно обновлено!",
@@ -272,6 +269,13 @@
         "MANAGE_CONSUMPTIONS": "Управлять потреблением",
         "MANAGE_FOODS": "Управлять продуктами",
         "VIEW_STATISTICS": "Посмотреть статистику"
+    },
+    "SHARED": {
+        "NUTRIENTS_SUMMARY": {
+            "SUMMARY": "Сводка",
+            "CALORIES": "Калории",
+            "KKAL": "ккал"
+        }
     },
     "NOT_FOUND": {
         "TITLE": "404 - Страница не найдена",

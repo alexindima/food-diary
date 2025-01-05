@@ -1,0 +1,58 @@
+<div class="custom-group">
+    <div class="custom-group__header">
+        {{ 'SHARED.NUTRIENTS_SUMMARY.SUMMARY' | translate }}
+    </div>
+    <div class="summary-wrapper">
+        <div class="summary">
+            <p class="calories-highlight">
+                {{ 'SHARED.NUTRIENTS_SUMMARY.CALORIES' | translate }}:
+                <span>
+                    {{ totalCalories() | number: '1.0-2' }} {{ 'SHARED.NUTRIENTS_SUMMARY.KKAL' | translate }}
+                </span>
+            </p>
+            <ul class="nutrient-list">
+                <li>
+                    <span class="nutrient-color" [style.background-color]="CHART_COLORS.proteins"></span>
+                    {{ 'NUTRIENTS.PROTEINS' | translate }}:
+                    {{ nutrientChartData().proteins | number: '1.0-2' }}
+                    {{ 'FOOD_AMOUNT_UNITS_SHORT.G' | translate }}
+                </li>
+                <li>
+                    <span class="nutrient-color" [style.background-color]="CHART_COLORS.fats"></span>
+                    {{ 'NUTRIENTS.FATS' | translate }}:
+                    {{ nutrientChartData().fats | number: '1.0-2' }}
+                    {{ 'FOOD_AMOUNT_UNITS_SHORT.G' | translate }}
+                </li>
+                <li>
+                    <span class="nutrient-color" [style.background-color]="CHART_COLORS.carbs"></span>
+                    {{ 'NUTRIENTS.CARBS' | translate }}:
+                    {{ nutrientChartData().carbs | number: '1.0-2' }}
+                    {{ 'FOOD_AMOUNT_UNITS_SHORT.G' | translate }}
+                </li>
+            </ul>
+        </div>
+        @if ((nutrientChartData().proteins + nutrientChartData().fats + nutrientChartData().carbs) > 0) {
+            <div class="charts">
+                <div class="chart">
+                    <canvas
+                        baseChart
+                        [data]="nutrientsPieChartData"
+                        [options]="pieChartOptions"
+                        [type]="'pie'"
+                        [legend]="false"
+                    ></canvas>
+                </div>
+                <div class="chart">
+                    <canvas
+                        baseChart
+                        style="height: 100%"
+                        [data]="nutrientsBarChartData"
+                        [options]="barChartOptions"
+                        [type]="'bar'"
+                        [legend]="false"
+                    ></canvas>
+                </div>
+            </div>
+        }
+    </div>
+</div>
