@@ -22,30 +22,29 @@
 .summary-wrapper {
     display: flex;
     justify-content: space-between;
+
+    &.charts-below-info {
+        flex-direction: column;
+    }
 }
 
-.charts {
+.charts-wrapper {
     display: flex;
-    gap: 16px;
+
+    &.column-layout {
+        flex-direction: column;
+        align-items: center;
+    }
 }
 
 .chart {
     display: flex;
     justify-content: center;
     align-items: center;
-    block-size: 12rem;
-    inline-size: 12rem;
-
-    canvas {
-        max-width: 192px;
-        max-height: 192px;
-    }
 }
 
 .calories-highlight {
-    font-size: 1.5rem;
     font-weight: bold;
-    line-height: 28px;
     color: #ff6384;
     margin-bottom: 1rem;
 }
@@ -54,15 +53,12 @@
     list-style: none;
     padding: 0;
 
-    li {
+    .nutrient {
         display: flex;
         align-items: center;
         margin-bottom: 0.5rem;
-        font-size: 1rem;
 
         .nutrient-color {
-            width: 32px;
-            height: 16px;
             margin-right: 0.5rem;
             border-radius: 3px;
             display: inline-block;
