@@ -37,6 +37,7 @@
     }
 
     &__background {
+        --tui-carousel-padding: 0;
         position: absolute;
         top: 0;
         left: 0;
@@ -49,11 +50,14 @@
     }
 
     .hero__slide {
-        margin: -20px;
-        min-width: 100%;
+        width: 100%;
         height: 100%;
         object-fit: cover;
         transition: opacity 1s;
+
+        @media (max-width: 480px) {
+            width: initial;
+        }
     }
 
     @media (max-width: 480px) {

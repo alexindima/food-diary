@@ -1,13 +1,23 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FoodListBaseComponent } from '../food-list-base.component';
-import { TuiButton, TuiDialogContext, TuiLoader, TuiTextfieldComponent, TuiTextfieldDirective } from '@taiga-ui/core';
+import {
+    TuiButton,
+    tuiDialog,
+    TuiDialogContext,
+    TuiLoader,
+    TuiTextfieldComponent,
+    TuiTextfieldDirective
+} from '@taiga-ui/core';
 import { Food } from '../../../../types/food.data';
 import { injectContext } from '@taiga-ui/polymorpheus';
 import { TranslatePipe } from '@ngx-translate/core';
 import { TuiPagination } from '@taiga-ui/kit';
 import { TuiSearchComponent } from '@taiga-ui/layout';
 import { TuiTextfieldControllerModule } from '@taiga-ui/legacy';
+import {
+    FoodAddDialogComponent
+} from '../../food-manage/food-add-dialog/food-add-dialog.component';
 
 @Component({
     selector: 'app-food-list-dialog',
@@ -26,8 +36,21 @@ import { TuiTextfieldControllerModule } from '@taiga-ui/legacy';
         TuiTextfieldDirective,
     ]
 })
-export class FoodListDialogComponent extends FoodListBaseComponent implements OnInit {
+export class FoodListDialogComponent extends FoodListBaseComponent {
     public readonly context = injectContext<TuiDialogContext<Food, null>>();
+
+    private readonly addFoodDialog = tuiDialog(FoodAddDialogComponent, {
+        dismissible: true,
+        appearance: 'without-border-radius',
+    });
+
+    public override async onAddFoodClick(): Promise<void> {
+        this.addFoodDialog(null).subscribe({
+            next: (food) => {
+                this.context.completeWith(food);
+            },
+        });
+    }
 
     protected override async onFoodClick(food: Food): Promise<void> {
         this.context.completeWith(food);

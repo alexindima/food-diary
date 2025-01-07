@@ -50,9 +50,7 @@ export class NutrientsSummaryComponent implements OnInit {
     }
 
     public ngOnInit(): void {
-        console.log(this.config)
         this.mergedConfig = this.mergeConfig(this.config);
-        console.log(this.mergedConfig)
         this.updateLayout(window.innerWidth);
     }
 

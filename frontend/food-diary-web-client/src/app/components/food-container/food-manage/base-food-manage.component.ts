@@ -32,9 +32,10 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormGroupControls } from '../../../types/common.data';
 import { NutrientChartData } from '../../../types/charts.data';
 import {
-    NutrientsSummaryComponent
+    NutrientsSummaryComponent, NutrientsSummaryConfig
 } from '../../shared/nutrients-summary/nutrients-summary.component';
 import { CustomGroupComponent } from '../../shared/custom-group/custom-group.component';
+import { firstValueFrom } from 'rxjs';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: TUI_VALIDATION_ERRORS,
@@ -80,6 +81,8 @@ export class BaseFoodManageComponent implements OnInit {
 
     @ViewChild('confirmDialog') private confirmDialog!: TemplateRef<TuiDialogContext<RedirectAction, void>>;
 
+    protected nutrientSummaryConfig: NutrientsSummaryConfig = {};
+
     public food = input<Food | null>();
     public globalError = signal<string | null>(null);
     public calories = signal<number>(0);
@@ -89,6 +92,7 @@ export class BaseFoodManageComponent implements OnInit {
         carbs: 0,
     });
 
+    protected skipConfirmDialog = false;
     public foodForm: FormGroup<FoodFormData>;
     public units = Object.values(Unit) as Unit[];
 
@@ -124,19 +128,24 @@ export class BaseFoodManageComponent implements OnInit {
         return this.translateService.instant(`FOOD_MANAGE.DEFAULT_SERVING_UNITS.${Unit[unit]}`);
     };
 
-    public onSubmit(): void {
+    public async onSubmit(): Promise<Food | null> {
         this.foodForm.markAllAsTouched();
 
         if (!this.isMacronutrientsValid()) {
             this.setGlobalError('FORM_ERRORS.AT_LEAST_ONE_MACRONUTRIENT_MUST_BE_SET');
-            return;
+            return null;
         }
 
         if (this.foodForm.valid) {
             const foodData = new FoodManageDto(this.foodForm.value);
             const food = this.food();
-            food ? this.updateFood(food.id, foodData) : this.addFood(foodData);
+
+            return food
+                ? await this.updateFood(food.id, foodData)
+                : await this.addFood(foodData);
         }
+
+        return null;
     }
 
     public get getDynamicNutrientPlaceholder(): string {
@@ -182,27 +191,29 @@ export class BaseFoodManageComponent implements OnInit {
         this.foodForm.patchValue(food);
     }
 
-    private async addFood(foodData: FoodManageDto): Promise<void> {
-        this.foodService.create(foodData).subscribe({
-            next: response => this.handleSubmitResponse(response),
-        });
+    private async addFood(foodData: FoodManageDto): Promise<Food | null> {
+        const response = await firstValueFrom(this.foodService.create(foodData));
+        return this.handleSubmitResponse(response);
     }
 
-    private async updateFood(id: number, foodData: FoodManageDto): Promise<void> {
-        this.foodService.update(id, foodData).subscribe({
-            next: response => this.handleSubmitResponse(response),
-        });
+    private async updateFood(id: number, foodData: FoodManageDto): Promise<Food | null> {
+        const response = await firstValueFrom(this.foodService.update(id, foodData));
+        return this.handleSubmitResponse(response);
     }
 
-    private async handleSubmitResponse(response: ApiResponse<Food | null>): Promise<void> {
+    private async handleSubmitResponse(response: ApiResponse<Food | null>): Promise<Food | null> {
         if (response.status === 'success') {
             if (!this.food()) {
                 this.foodForm.reset();
             }
-            await this.showConfirmDialog();
+            if (!this.skipConfirmDialog) {
+                await this.showConfirmDialog();
+            }
         } else if (response.status === 'error') {
             this.handleSubmitError(response.error);
         }
+
+        return response.data ? response.data : null;
     }
 
     private handleSubmitError(error?: ErrorCode): void {

@@ -92,7 +92,7 @@ export class FoodListBaseComponent implements OnInit {
             : this.translateService.instant('FOOD_LIST.TITLE');
     }
 
-    public async goToFoodAdd(): Promise<void> {
+    public async onAddFoodClick(): Promise<void> {
         await this.navigationService.navigateToFoodAdd();
     }
 
