@@ -1,7 +1,6 @@
-<div class="custom-group">
-    <div class="custom-group__header">
-        {{ 'SHARED.NUTRIENTS_SUMMARY.SUMMARY' | translate }}
-    </div>
+<custom-group
+    [title]="'SHARED.NUTRIENTS_SUMMARY.SUMMARY' | translate"
+>
     <div
         class="summary-wrapper"
         [class.charts-below-info]="areChartsBelowInfo"
@@ -96,4 +95,4 @@
             </div>
         }
     </div>
-</div>
+</custom-group>

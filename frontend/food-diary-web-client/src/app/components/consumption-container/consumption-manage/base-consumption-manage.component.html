@@ -20,10 +20,9 @@
             ></tui-error>
         </div>
         <div class="consumption-manage__consumption">
-            <div class="custom-group">
-                <div class="custom-group__header">
-                    {{ 'CONSUMPTION_MANAGE.FOODS' | translate }}
-                </div>
+            <custom-group
+                [title]="'CONSUMPTION_MANAGE.FOODS' | translate"
+            >
                 <div class="consumption-manage__select">
                     <div class="consumption-manage__select-rows" formArrayName="consumedFood">
                         @for (foodItem of consumedFood.controls; track foodItem; let i = $index; let first = $first) {
@@ -87,7 +86,7 @@
                         {{ 'CONSUMPTION_MANAGE.ADD_FOOD' | translate }}
                     </button>
                 </div>
-            </div>
+            </custom-group>
             <tui-error
                 formControlName="consumedFood"
                 [error]="[] | tuiFieldError | async"

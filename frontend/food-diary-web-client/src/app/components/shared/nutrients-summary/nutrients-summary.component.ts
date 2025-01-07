@@ -14,6 +14,7 @@ import { ChartData, ChartOptions, ChartTypeRegistry, TooltipItem } from 'chart.j
 import { CHART_COLORS } from '../../../constants/chart-colors';
 import { NutrientChartData } from '../../../types/charts.data';
 import { RecursivePartial } from '../../../types/common.data';
+import { CustomGroupComponent } from '../custom-group/custom-group.component';
 
 @Component({
     selector: 'app-nutrients-summary',
@@ -22,6 +23,7 @@ import { RecursivePartial } from '../../../types/common.data';
         DecimalPipe,
         TranslatePipe,
         NgStyle,
+        CustomGroupComponent,
     ],
     templateUrl: './nutrients-summary.component.html',
     styleUrl: './nutrients-summary.component.less',

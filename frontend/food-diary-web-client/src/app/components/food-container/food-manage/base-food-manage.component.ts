@@ -34,6 +34,7 @@ import { NutrientChartData } from '../../../types/charts.data';
 import {
     NutrientsSummaryComponent
 } from '../../shared/nutrients-summary/nutrients-summary.component';
+import { CustomGroupComponent } from '../../shared/custom-group/custom-group.component';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: TUI_VALIDATION_ERRORS,
@@ -67,6 +68,7 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
         TuiTextfieldDirective,
         TuiInputNumberModule,
         NutrientsSummaryComponent,
+        CustomGroupComponent,
     ]
 })
 export class BaseFoodManageComponent implements OnInit {

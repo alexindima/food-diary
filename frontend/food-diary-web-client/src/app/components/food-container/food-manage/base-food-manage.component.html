@@ -96,10 +96,9 @@
                 ></tui-error>
             </div>
         </div>
-        <div class="custom-group">
-            <div class="custom-group__header">
-                {{ 'FOOD_MANAGE.NUTRITION_VALUE' | translate }}
-            </div>
+        <custom-group
+            [title]="'FOOD_MANAGE.NUTRITION_VALUE' | translate"
+        >
             <div class="food-manage__nutrients-group">
                 <div class="food-manage__field">
                     <tui-input-number
@@ -158,7 +157,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </custom-group>
         <app-nutrients-summary
             [calories]="calories()"
             [nutrientChartData]="nutrientChartData()"
