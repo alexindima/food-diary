@@ -1,0 +1,24 @@
+<div class="scanner-popup">
+    <p class="scanner-popup__description">{{ 'BARCODE_SCANNER.TITLE' | translate }}</p>
+    <div class="scanner-popup__scanner-wrapper">
+        <zxing-scanner
+            [formats]="allowedScannerFormats"
+            (camerasFound)="onCamerasFound($event)"
+            (scanSuccess)="onScanSuccess($event)"
+        ></zxing-scanner>
+        @if (!isCameraReady()) {
+            <div class="scanner-popup__loader-overlay">
+                @if (isCameraError()) {
+                    <p class="scanner-popup__loader-error">
+                        {{ 'BARCODE_SCANNER.CAMERA_ERROR' | translate }}
+                    </p>
+                } @else {
+                    <tui-loader></tui-loader>
+                    <p class="scanner-popup__loader-info">
+                        {{ 'BARCODE_SCANNER.CAMERA_INITIALIZING' | translate }}
+                    </p>
+                }
+            </div>
+        }
+    </div>
+</div>

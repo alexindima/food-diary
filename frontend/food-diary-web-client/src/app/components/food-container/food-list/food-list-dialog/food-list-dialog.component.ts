@@ -5,6 +5,7 @@ import {
     TuiButton,
     tuiDialog,
     TuiDialogContext,
+    TuiIcon,
     TuiLoader,
     TuiTextfieldComponent,
     TuiTextfieldDirective
@@ -34,6 +35,7 @@ import {
         TuiTextfieldComponent,
         TuiTextfieldControllerModule,
         TuiTextfieldDirective,
+        TuiIcon,
     ]
 })
 export class FoodListDialogComponent extends FoodListBaseComponent {

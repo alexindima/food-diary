@@ -284,5 +284,10 @@
         "G": "g",
         "ML": "ml",
         "PCS": "pcs"
+    },
+    "BARCODE_SCANNER": {
+        "TITLE": "Scan the barcode",
+        "CAMERA_INITIALIZING": "Initializing camera, please wait...",
+        "CAMERA_ERROR": "Camera initialization failed. Please check your camera settings."
     }
 }

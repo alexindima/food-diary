@@ -1,7 +1,13 @@
 import { ChangeDetectionStrategy, Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
 import { TuiPagination } from '@taiga-ui/kit';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { TuiButton, TuiLoader, TuiTextfieldComponent, TuiTextfieldDirective } from '@taiga-ui/core';
+import {
+    TuiButton,
+    tuiDialog, TuiIcon,
+    TuiLoader,
+    TuiTextfieldComponent,
+    TuiTextfieldDirective
+} from '@taiga-ui/core';
 import { TuiSearchComponent } from '@taiga-ui/layout';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FoodService } from '../../../services/food.service';
@@ -11,6 +17,7 @@ import { Food, FoodFilters } from '../../../types/food.data';
 import { catchError, debounceTime, map, Observable, of, switchMap } from 'rxjs';
 import { TuiTextfieldControllerModule } from '@taiga-ui/legacy';
 import { FormGroupControls } from '../../../types/common.data';
+import { BarcodeScannerComponent } from '../../shared/barcode-scanner/barcode-scanner.component';
 
 @Component({
     selector: 'app-food-list-base',
@@ -27,6 +34,7 @@ import { FormGroupControls } from '../../../types/common.data';
         TuiTextfieldDirective,
         TuiButton,
         TranslatePipe,
+        TuiIcon,
     ]
 })
 export class FoodListBaseComponent implements OnInit {
@@ -35,6 +43,11 @@ export class FoodListBaseComponent implements OnInit {
     protected readonly navigationService = inject(NavigationService);
 
     @ViewChild('container') private container!: ElementRef<HTMLElement>;
+
+    private readonly barcodeDialog = tuiDialog(BarcodeScannerComponent, {
+        dismissible: true,
+        appearance: 'without-border-radius',
+    });
 
     public searchForm: FormGroup<FoodSearchFormGroup>;
     public foodData: PagedData<Food> = new PagedData<Food>();
@@ -57,6 +70,32 @@ export class FoodListBaseComponent implements OnInit {
             .subscribe();
     }
 
+    public onPageChange(pageIndex: number): void {
+        this.scrollToTop();
+
+        this.currentPageIndex = pageIndex;
+        this.loadFoods(this.currentPageIndex + 1, 10, this.searchForm.controls.search.value).subscribe();
+    }
+
+    public getTitle(): string {
+        const searchValue = this.searchForm.controls.search.value;
+        return searchValue
+            ? `${this.translateService.instant('FOOD_LIST.TITLE')} (${this.translateService.instant('FOOD_LIST.SEARCH_TITLE')} ${this.searchForm.get('search')?.value})`
+            : this.translateService.instant('FOOD_LIST.TITLE');
+    }
+
+    public async onAddFoodClick(): Promise<void> {
+        await this.navigationService.navigateToFoodAdd();
+    }
+
+    public openBarcodeScanner(): void {
+        this.barcodeDialog(null).subscribe({
+            next: (barcode) => {
+                this.searchForm.controls.search.setValue(barcode);
+            },
+        });
+    }
+
     protected loadFoods(page: number, limit: number, search: string | null): Observable<void> {
         this.foodData.setLoading(true);
         const filters = new FoodFilters(search);
@@ -76,24 +115,6 @@ export class FoodListBaseComponent implements OnInit {
                 return of();
             }),
         );
-    }
-
-    public onPageChange(pageIndex: number): void {
-        this.scrollToTop();
-
-        this.currentPageIndex = pageIndex;
-        this.loadFoods(this.currentPageIndex + 1, 10, this.searchForm.controls.search.value).subscribe();
-    }
-
-    public getTitle(): string {
-        const searchValue = this.searchForm.controls.search.value;
-        return searchValue
-            ? `${this.translateService.instant('FOOD_LIST.TITLE')} (${this.translateService.instant('FOOD_LIST.SEARCH_TITLE')} ${this.searchForm.get('search')?.value})`
-            : this.translateService.instant('FOOD_LIST.TITLE');
-    }
-
-    public async onAddFoodClick(): Promise<void> {
-        await this.navigationService.navigateToFoodAdd();
     }
 
     protected scrollToTop(): void {

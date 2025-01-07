@@ -1,7 +1,14 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FoodListBaseComponent } from '../food-list-base.component';
-import { TuiButton, tuiDialog, TuiLoader, TuiTextfieldComponent, TuiTextfieldDirective } from '@taiga-ui/core';
+import {
+    TuiButton,
+    tuiDialog,
+    TuiIcon,
+    TuiLoader,
+    TuiTextfieldComponent,
+    TuiTextfieldDirective
+} from '@taiga-ui/core';
 import { Food } from '../../../../types/food.data';
 import { TranslatePipe } from '@ngx-translate/core';
 import { TuiPagination } from '@taiga-ui/kit';
@@ -24,6 +31,7 @@ import { FoodDetailComponent } from '../../food-detail/food-detail.component';
         TuiTextfieldComponent,
         TuiTextfieldControllerModule,
         TuiTextfieldDirective,
+        TuiIcon,
     ]
 })
 export class FoodListPageComponent extends FoodListBaseComponent implements OnInit {
