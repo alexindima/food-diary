@@ -5,6 +5,7 @@ import {
     TuiButton,
     TuiDialogContext,
     TuiError,
+    TuiIcon,
     TuiLabel,
     TuiTextfieldComponent, TuiTextfieldDirective
 } from '@taiga-ui/core';
@@ -22,6 +23,7 @@ import {
     NutrientsSummaryComponent
 } from '../../../shared/nutrients-summary/nutrients-summary.component';
 import { CustomGroupComponent } from '../../../shared/custom-group/custom-group.component';
+import { ZXingScannerModule } from '@zxing/ngx-scanner';
 
 @Component({
     selector: 'app-food-add-dialog',
@@ -43,6 +45,8 @@ import { CustomGroupComponent } from '../../../shared/custom-group/custom-group.
         TuiInputNumberModule,
         NutrientsSummaryComponent,
         CustomGroupComponent,
+        ZXingScannerModule,
+        TuiIcon,
     ]
 })
 export class FoodAddDialogComponent extends BaseFoodManageComponent {

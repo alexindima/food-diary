@@ -30,11 +30,21 @@
                     tuiTextfield
                     placeholder="{{ 'FOOD_MANAGE.BARCODE_PLACEHOLDER' | translate }}"
                 />
+                <tui-icon
+                    icon="@tui.barcode"
+                    (click)="toggleScanner()"
+                />
             </tui-textfield>
             <tui-error
                 formControlName="barcode"
                 [error]="[] | tuiFieldError | async"
             ></tui-error>
+            @if (scannerActive) {
+                <zxing-scanner
+                    [formats]="allowedScannerFormats"
+                    (scanSuccess)="onScanSuccess($event)"
+                ></zxing-scanner>
+            }
         </div>
         <div class="food-manage__field food-manage__field--category">
             <tui-textfield type="text">

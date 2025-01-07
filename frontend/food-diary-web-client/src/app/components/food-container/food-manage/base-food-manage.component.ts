@@ -17,6 +17,7 @@ import {
     TuiDialogContext,
     TuiDialogService,
     TuiError,
+    TuiIcon,
     TuiLabel,
     TuiTextfieldComponent,
     TuiTextfieldDirective,
@@ -36,6 +37,8 @@ import {
 } from '../../shared/nutrients-summary/nutrients-summary.component';
 import { CustomGroupComponent } from '../../shared/custom-group/custom-group.component';
 import { firstValueFrom } from 'rxjs';
+import { ZXingScannerModule } from '@zxing/ngx-scanner';
+import { BarcodeFormat } from '@zxing/library';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: TUI_VALIDATION_ERRORS,
@@ -70,6 +73,8 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
         TuiInputNumberModule,
         NutrientsSummaryComponent,
         CustomGroupComponent,
+        ZXingScannerModule,
+        TuiIcon,
     ]
 })
 export class BaseFoodManageComponent implements OnInit {
@@ -95,6 +100,27 @@ export class BaseFoodManageComponent implements OnInit {
     protected skipConfirmDialog = false;
     public foodForm: FormGroup<FoodFormData>;
     public units = Object.values(Unit) as Unit[];
+
+    public scannerActive = false;
+    public allowedScannerFormats = [
+        BarcodeFormat.AZTEC,
+        BarcodeFormat.CODABAR,
+        BarcodeFormat.CODE_39,
+        BarcodeFormat.CODE_93,
+        BarcodeFormat.CODE_128,
+        BarcodeFormat.DATA_MATRIX,
+        BarcodeFormat.EAN_8,
+        BarcodeFormat.EAN_13,
+        BarcodeFormat.ITF,
+        BarcodeFormat.MAXICODE,
+        BarcodeFormat.PDF_417,
+        BarcodeFormat.QR_CODE,
+        BarcodeFormat.RSS_14,
+        BarcodeFormat.RSS_EXPANDED,
+        BarcodeFormat.UPC_A,
+        BarcodeFormat.UPC_E,
+        BarcodeFormat.UPC_EAN_EXTENSION
+    ];
 
     public constructor() {
         this.foodForm = new FormGroup<FoodFormData>({
@@ -127,6 +153,15 @@ export class BaseFoodManageComponent implements OnInit {
     public stringifyUnits = (unit: Unit): string => {
         return this.translateService.instant(`FOOD_MANAGE.DEFAULT_SERVING_UNITS.${Unit[unit]}`);
     };
+
+    public toggleScanner(): void {
+        this.scannerActive = !this.scannerActive;
+    }
+
+    public onScanSuccess(barcode: string): void {
+        this.foodForm.controls.barcode.setValue(barcode);
+        this.scannerActive = false;
+    }
 
     public async onSubmit(): Promise<Food | null> {
         this.foodForm.markAllAsTouched();
