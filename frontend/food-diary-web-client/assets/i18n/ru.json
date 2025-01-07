@@ -182,10 +182,7 @@
     },
     "CONSUMPTION_DETAIL": {
         "TITLE": "Детали потребления",
-        "DATE": "Дата",
-        "COMMENT": "Комментарий:",
-        "ITEMS_COUNT": "Количество продуктов:",
-        "ITEMS_LIST": "Продукты:",
+        "ITEMS_LIST": "Продукты ({{count}} шт):",
         "TOTAL_CALORIES": "Всего калорий:",
         "TOTAL_PROTEINS": "Всего белков:",
         "TOTAL_FATS": "Всего жиров:",

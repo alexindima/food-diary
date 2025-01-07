@@ -1,42 +1,69 @@
-import { ChangeDetectionStrategy, Component, inject, TemplateRef, ViewChild } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    inject,
+    TemplateRef,
+    ViewChild
+} from '@angular/core';
 import { TuiButton, TuiDialogContext, TuiDialogService } from '@taiga-ui/core';
 import { injectContext } from '@taiga-ui/polymorpheus';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Consumption } from '../../../types/consumption.data';
-import { DatePipe, DecimalPipe } from '@angular/common';
+import { DatePipe } from '@angular/common';
+import {
+    NutrientsSummaryComponent, NutrientsSummaryConfig
+} from '../../shared/nutrients-summary/nutrients-summary.component';
+import { NutrientChartData } from '../../../types/charts.data';
 
 @Component({
     selector: 'app-consumption-detail',
     templateUrl: './consumption-detail.component.html',
     styleUrls: ['./consumption-detail.component.less'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [TranslatePipe, DatePipe, TuiButton, DecimalPipe]
+    imports: [TranslatePipe, DatePipe, TuiButton, NutrientsSummaryComponent]
 })
 export class ConsumptionDetailComponent {
     public readonly context = injectContext<TuiDialogContext<ConsumptionDetailActionResult, Consumption>>();
     private readonly dialogService = inject(TuiDialogService);
 
     @ViewChild('confirmDialog') private confirmDialog!: TemplateRef<TuiDialogContext<boolean, void>>;
-    public consumption: Consumption;
 
-    public get totalCalories(): number {
-        return this.consumption.items.reduce((sum, item) => sum + ((item.food?.caloriesPerBase ?? 0) * item.amount) / 100, 0);
-    }
+    public readonly consumption: Consumption;
+    public readonly nutrientSummaryConfig: NutrientsSummaryConfig = {
+        styles: {
+            common: {
+                infoBreakpoints: {
+                    columnLayout: 680
+                }
+            },
+            charts: {
+                chartBlockSize: 160,
+                breakpoints: {
+                    columnLayout: 680
+                }
+            },
+            info: {
+                lineStyles: {
+                    calories: {
+                        fontSize: 16
+                    }
+                }
+            }
+        }
+    };
 
-    public get totalProteins(): number {
-        return this.consumption.items.reduce((sum, item) => sum + ((item.food?.proteinsPerBase ?? 0) * item.amount) / 100, 0);
-    }
-
-    public get totalFats(): number {
-        return this.consumption.items.reduce((sum, item) => sum + ((item.food?.fatsPerBase ?? 0) * item.amount) / 100, 0);
-    }
-
-    public get totalCarbs(): number {
-        return this.consumption.items.reduce((sum, item) => sum + ((item.food?.carbsPerBase ?? 0) * item.amount) / 100, 0);
-    }
+    public calories: number;
+    public nutrientChartData: NutrientChartData;
 
     public constructor() {
         this.consumption = this.context.data;
+
+        this.calories = this.calculateNutrientTotal('caloriesPerBase');
+        this.nutrientChartData = {
+            proteins: this.calculateNutrientTotal('proteinsPerBase'),
+            fats: this.calculateNutrientTotal('fatsPerBase'),
+            carbs: this.calculateNutrientTotal('carbsPerBase'),
+        };
     }
     public onEdit(): void {
         const editResult = new ConsumptionDetailActionResult(this.consumption.id, 'Edit');
@@ -47,7 +74,7 @@ export class ConsumptionDetailComponent {
         this.showConfirmDialog();
     }
 
-    protected showConfirmDialog(): void {
+    private showConfirmDialog(): void {
         this.dialogService
             .open(this.confirmDialog, {
                 dismissible: true,
@@ -60,13 +87,20 @@ export class ConsumptionDetailComponent {
                 }
             });
     }
+
+    private calculateNutrientTotal(nutrientKey: NutrientType): number {
+        return this.consumption.items.reduce((sum, item) =>
+            sum + ((item.food?.[nutrientKey] ?? 0) * item.amount) / 100, 0);
+    }
 }
 
-export class ConsumptionDetailActionResult {
+class ConsumptionDetailActionResult {
     public constructor(
         public id: number,
         public action: ConsumptionDetailAction,
     ) {}
 }
 
-export type ConsumptionDetailAction = 'Edit' | 'Delete';
+type ConsumptionDetailAction = 'Edit' | 'Delete';
+
+type NutrientType = 'caloriesPerBase' | 'proteinsPerBase' | 'fatsPerBase' | 'carbsPerBase';

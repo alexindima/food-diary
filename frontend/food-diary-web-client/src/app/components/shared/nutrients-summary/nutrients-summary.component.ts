@@ -13,6 +13,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ChartData, ChartOptions, ChartTypeRegistry, TooltipItem } from 'chart.js';
 import { CHART_COLORS } from '../../../constants/chart-colors';
 import { NutrientChartData } from '../../../types/charts.data';
+import { RecursivePartial } from '../../../types/common.data';
 
 @Component({
     selector: 'app-nutrients-summary',
@@ -34,43 +35,8 @@ export class NutrientsSummaryComponent implements OnInit {
     public calories = input.required<number>();
     public nutrientChartData = input.required<NutrientChartData>();
 
-    @Input() public config: NutrientsSummaryConfig = {
-        styles: {
-            common: {
-                infoBreakpoints: {
-                    columnLayout: 600,
-                    chartBlockSize: 256,
-                    gap: 12
-                },
-                gap: 16
-            },
-            charts: {
-                chartBlockSize: 192,
-                gap: 16,
-                breakpoints: {
-                    columnLayout: 768,
-                    chartBlockSize: 192,
-                    gap: 12,
-                },
-            },
-            info: {
-                lineStyles: {
-                    calories: {
-                        fontSize: 24,
-                        lineHeight: 28,
-                    },
-                    nutrients: {
-                        fontSize: 16,
-                        lineHeight: 20,
-                    },
-                },
-            },
-        },
-        content: {
-            hideBarChart: false,
-            hidePieChart: false,
-        },
-    };
+    @Input() public config: NutrientsSummaryConfig = {};
+    public mergedConfig!: NutrientsSummaryConfigInternal;
 
     public isColumnLayout = false;
     public areChartsBelowInfo = false;
@@ -82,25 +48,27 @@ export class NutrientsSummaryComponent implements OnInit {
     }
 
     public ngOnInit(): void {
-
+        console.log(this.config)
+        this.mergedConfig = this.mergeConfig(this.config);
+        console.log(this.mergedConfig)
         this.updateLayout(window.innerWidth);
     }
 
     private updateLayout(screenWidth: number): void {
-        this.isColumnLayout = screenWidth <= this.config.styles.charts.breakpoints.columnLayout;
-        this.areChartsBelowInfo = screenWidth <= this.config.styles.common.infoBreakpoints.columnLayout;
+        this.isColumnLayout = screenWidth <= this.mergedConfig.styles.charts.breakpoints.columnLayout;
+        this.areChartsBelowInfo = screenWidth <= this.mergedConfig.styles.common.infoBreakpoints.columnLayout;
     }
 
     public get summaryWrapperStyles(): object {
         const gapValue = this.isColumnLayout
-            ? this.config.styles.common.infoBreakpoints.gap
-            : this.config.styles.common.gap;
+            ? this.mergedConfig.styles.common.infoBreakpoints.gap
+            : this.mergedConfig.styles.common.gap;
 
         return { gap: `${gapValue}px`};
     }
 
     public get calorieStyles(): object {
-        const { fontSize, lineHeight } = this.config.styles.info.lineStyles.calories;
+        const { fontSize, lineHeight } = this.mergedConfig.styles.info.lineStyles.calories;
         return {
             fontSize: `${fontSize}px`,
             lineHeight: `${lineHeight}px`,
@@ -108,7 +76,7 @@ export class NutrientsSummaryComponent implements OnInit {
     }
 
     public get nutrientStyles(): object {
-        const { fontSize, lineHeight } = this.config.styles.info.lineStyles.nutrients;
+        const { fontSize, lineHeight } = this.mergedConfig.styles.info.lineStyles.nutrients;
         return {
             fontSize: `${fontSize}px`,
             lineHeight: `${lineHeight}px`,
@@ -116,7 +84,7 @@ export class NutrientsSummaryComponent implements OnInit {
     }
 
     public get nutrientColorStyles(): object {
-        const fontSize = this.config.styles.info.lineStyles.nutrients.fontSize;
+        const fontSize = this.mergedConfig.styles.info.lineStyles.nutrients.fontSize;
         return {
             height: `${fontSize}px`,
             width: `${fontSize * 2}px`,
@@ -125,8 +93,8 @@ export class NutrientsSummaryComponent implements OnInit {
 
     public get chartsWrapperStyles(): object {
         const gapValue = this.isColumnLayout
-            ? this.config.styles.charts.breakpoints.gap
-            : this.config.styles.charts.gap;
+            ? this.mergedConfig.styles.charts.breakpoints.gap
+            : this.mergedConfig.styles.charts.gap;
 
         return {
             gap: `${gapValue}px`,
@@ -135,10 +103,10 @@ export class NutrientsSummaryComponent implements OnInit {
 
     public get chartsBlockSize(): number {
         return this.areChartsBelowInfo
-            ? this.config.styles.common.infoBreakpoints.chartBlockSize
+            ? this.mergedConfig.styles.common.infoBreakpoints.chartBlockSize
             : this.isColumnLayout
-                ? this.config.styles.charts.breakpoints.chartBlockSize
-                : this.config.styles.charts.chartBlockSize;
+                ? this.mergedConfig.styles.charts.breakpoints.chartBlockSize
+                : this.mergedConfig.styles.charts.chartBlockSize;
     }
 
     public get chartStyles(): object {
@@ -152,6 +120,53 @@ export class NutrientsSummaryComponent implements OnInit {
         return {
             maxWidth: `${this.chartsBlockSize}px`,
             maxHeight: `${this.chartsBlockSize}px`,
+        };
+    }
+
+    private mergeConfig(userConfig: Partial<NutrientsSummaryConfig>): NutrientsSummaryConfigInternal {
+        return {
+            ...DEFAULT_CONFIG,
+            ...userConfig,
+            styles: {
+                ...DEFAULT_CONFIG.styles,
+                ...userConfig.styles,
+                common: {
+                    ...DEFAULT_CONFIG.styles.common,
+                    ...userConfig.styles?.common,
+                    infoBreakpoints: {
+                        ...DEFAULT_CONFIG.styles.common.infoBreakpoints,
+                        ...userConfig.styles?.common?.infoBreakpoints,
+                    },
+                },
+                charts: {
+                    ...DEFAULT_CONFIG.styles.charts,
+                    ...userConfig.styles?.charts,
+                    breakpoints: {
+                        ...DEFAULT_CONFIG.styles.charts.breakpoints,
+                        ...userConfig.styles?.charts?.breakpoints,
+                    },
+                },
+                info: {
+                    ...DEFAULT_CONFIG.styles.info,
+                    ...userConfig.styles?.info,
+                    lineStyles: {
+                        ...DEFAULT_CONFIG.styles.info.lineStyles,
+                        ...userConfig.styles?.info?.lineStyles,
+                        calories: {
+                            ...DEFAULT_CONFIG.styles.info.lineStyles.calories,
+                            ...userConfig.styles?.info?.lineStyles?.calories,
+                        },
+                        nutrients: {
+                            ...DEFAULT_CONFIG.styles.info.lineStyles.nutrients,
+                            ...userConfig.styles?.info?.lineStyles?.nutrients,
+                        },
+                    },
+                },
+            },
+            content: {
+                ...DEFAULT_CONFIG.content,
+                ...userConfig.content,
+            },
         };
     }
 
@@ -231,7 +246,7 @@ export class NutrientsSummaryComponent implements OnInit {
     }
 }
 
-export interface NutrientsSummaryConfig {
+interface NutrientsSummaryConfigInternal {
     styles: {
         common: {
             gap: 16,
@@ -268,3 +283,43 @@ export interface NutrientsSummaryConfig {
         hidePieChart: boolean;
     };
 }
+
+export type NutrientsSummaryConfig = RecursivePartial<NutrientsSummaryConfigInternal>;
+
+const DEFAULT_CONFIG: NutrientsSummaryConfigInternal = {
+    styles: {
+        common: {
+            gap: 16,
+            infoBreakpoints: {
+                columnLayout: 600,
+                chartBlockSize: 256,
+                gap: 12,
+            },
+        },
+        charts: {
+            chartBlockSize: 192,
+            gap: 16,
+            breakpoints: {
+                columnLayout: 768,
+                chartBlockSize: 192,
+                gap: 12,
+            },
+        },
+        info: {
+            lineStyles: {
+                calories: {
+                    fontSize: 20,
+                    lineHeight: 28,
+                },
+                nutrients: {
+                    fontSize: 16,
+                    lineHeight: 20,
+                },
+            },
+        },
+    },
+    content: {
+        hideBarChart: false,
+        hidePieChart: false,
+    },
+};

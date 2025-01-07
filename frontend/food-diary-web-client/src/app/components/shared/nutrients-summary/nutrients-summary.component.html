@@ -59,13 +59,13 @@
                 </li>
             </ul>
         </div>
-        @if ((!config.content.hideBarChart || !config.content.hidePieChart) && (this.nutrientChartData().proteins + this.nutrientChartData().fats + this.nutrientChartData().carbs) > 0) {
+        @if ((!mergedConfig.content.hideBarChart || !mergedConfig.content.hidePieChart) && (this.nutrientChartData().proteins + this.nutrientChartData().fats + this.nutrientChartData().carbs) > 0) {
             <div
                 class="charts-wrapper"
                 [ngStyle]="chartsWrapperStyles"
                 [class.column-layout]="isColumnLayout"
             >
-                @if (!config.content.hidePieChart) {
+                @if (!mergedConfig.content.hidePieChart) {
                     <div class="chart" [ngStyle]="chartStyles">
                         <canvas
                             baseChart
@@ -79,7 +79,7 @@
                         ></canvas>
                     </div>
                 }
-                @if (!config.content.hideBarChart) {
+                @if (!mergedConfig.content.hideBarChart) {
                     <div class="chart" [ngStyle]="chartStyles">
                         <canvas
                             baseChart

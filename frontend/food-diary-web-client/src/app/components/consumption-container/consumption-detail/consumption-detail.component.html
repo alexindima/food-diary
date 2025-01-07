@@ -1,45 +1,25 @@
 <div class="modal">
-    <h2 class="modal__title">{{ 'CONSUMPTION_DETAIL.TITLE' | translate }}</h2>
+    <h2 class="modal__title">{{ 'CONSUMPTION_DETAIL.TITLE' | translate }} {{ consumption.date | date:'dd.MM.yyyy' }} - {{ consumption.date | date:'HH:mm' }}</h2>
     <hr class="modal__divider" />
     <div class="modal__body">
-        <p class="modal__text">
-            <span class="modal__property-name">{{ 'CONSUMPTION_DETAIL.DATE' | translate }}</span>
-            {{ consumption.date | date:'dd.MM.yyyy' }} - {{ consumption.date | date:'HH:mm' }}
-        </p>
-        @if (consumption.comment) {
-            <p class="modal__text">
-                <span class="modal__property-name">{{ 'CONSUMPTION_DETAIL.COMMENT' | translate }}</span>
-                {{ consumption.comment }}
-            </p>
-        }
-        <p class="modal__text">
-            <span class="modal__property-name">{{ 'CONSUMPTION_DETAIL.ITEMS_COUNT' | translate }}</span>
-            {{ consumption.items.length }}
-        </p>
-        <p class="modal__text">
-            <span class="modal__property-name">{{ 'CONSUMPTION_DETAIL.ITEMS_LIST' | translate }}</span>
-            @for (item of consumption.items; track item) {
-                <span>{{ item.food.name }}</span>@if($index < consumption.items.length - 1) {<span>,&nbsp;</span>}
+        <div class="modal__info">
+            @if (consumption.comment) {
+                <p class="modal__comment">{{ consumption.comment }} </p>
             }
-        </p>
-        <p class="modal__text">
-            <span class="modal__property-name">{{ 'CONSUMPTION_DETAIL.TOTAL_CALORIES' | translate }}</span>
-            {{ totalCalories | number: '1.0-2' }}
-        </p>
-        <p class="modal__text">
-            <span class="modal__property-name">{{ 'CONSUMPTION_DETAIL.TOTAL_PROTEINS' | translate }}</span>
-            {{ totalProteins | number: '1.0-2' }}g
-        </p>
-        <p class="modal__text">
-            <span class="modal__property-name">{{ 'CONSUMPTION_DETAIL.TOTAL_FATS' | translate }}</span>
-            {{ totalFats | number: '1.0-2' }}g
-        </p>
-        <p class="modal__text">
-            <span class="modal__property-name">{{ 'CONSUMPTION_DETAIL.TOTAL_CARBS' | translate }}</span>
-            {{ totalCarbs | number: '1.0-2' }}g
-        </p>
+            <p class="modal__text">
+                <span class="modal__property-name">{{ 'CONSUMPTION_DETAIL.ITEMS_LIST' | translate:{ count: consumption.items.length } }}
+                    @for (item of consumption.items; track item) {
+                        <span class="modal__property-text">{{ item.food.name }}</span>@if($index < consumption.items.length - 1) { <span>,&nbsp;</span> }
+                    }
+                </span>
+            </p>
+        </div>
+        <app-nutrients-summary
+            [calories]="calories"
+            [nutrientChartData]="nutrientChartData"
+            [config]="nutrientSummaryConfig"
+        ></app-nutrients-summary>
     </div>
-    <hr class="modal__divider" />
     <div class="modal__footer">
         <div class="modal__actions">
             <button class="modal__button"  appearance="primary" tuiButton size="m" (click)="onEdit()">

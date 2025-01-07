@@ -182,10 +182,7 @@
     },
     "CONSUMPTION_DETAIL": {
         "TITLE": "Consumption Details",
-        "DATE": "Date",
-        "COMMENT": "Comment:",
-        "ITEMS_COUNT": "Foods Count:",
-        "ITEMS_LIST": "Foods:",
+        "ITEMS_LIST": "Foods ({{count}} pcs):",
         "TOTAL_CALORIES": "Total Calories:",
         "TOTAL_PROTEINS": "Total Proteins:",
         "TOTAL_FATS": "Total Fats:",
