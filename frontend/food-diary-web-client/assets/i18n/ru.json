@@ -116,17 +116,7 @@
     "FOOD_DETAIL": {
         "BARCODE": "Штрихкод:",
         "CATEGORY": "Категория:",
-        "CALORIES_PER_BASE": "Калорий на 100 г:",
-        "PROTEINS_PER_BASE": "Белков на 100 г:",
-        "FATS_PER_BASE": "Жиров на 100 г:",
-        "CARBS_PER_BASE": "Углеводов на 100 г:",
-        "GRAMS": "грамм",
-        "DEFAULT_SERVING": "Стандартная порция:",
-        "DEFAULT_SERVING_UNIT": {
-            "G": "граммы",
-            "ML": "миллилитры",
-            "PCS": "штуки"
-        },
+        "BASE_AMOUNT": "Стандартная порция:",
         "USAGE_COUNT": "Количество использований:",
         "EDIT_BUTTON": "Редактировать",
         "DELETE_BUTTON": "Удалить",

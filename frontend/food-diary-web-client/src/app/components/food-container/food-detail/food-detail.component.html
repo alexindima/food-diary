@@ -1,51 +1,38 @@
 <div class="modal">
-    <h2 class="modal__title">{{ food.name }}</h2>
+    <h2 class="modal__title">
+        {{ food.name }}
+        @if (food.barcode) {
+            [{{ food.barcode }}]
+        }
+    </h2>
     <hr class="modal__divider" />
     <div class="modal__body">
-        @if (food.barcode) {
-            <p class="modal__text">
-                <span class="modal__property-name">{{ 'FOOD_DETAIL.BARCODE' | translate }}</span>
-                {{ food.barcode }}
-            </p>
-        }
-        @if (food.category) {
-            <p class="modal__text">
-                <span class="modal__property-name">{{ 'FOOD_DETAIL.CATEGORY' | translate }}</span>
-                {{ food.category }}
-            </p>
-        }
-        <p class="modal__text">
-            <span class="modal__property-name">{{ 'FOOD_DETAIL.CALORIES_PER_BASE' | translate }}</span>
-            {{ food.caloriesPerBase }}
-        </p>
-        <p class="modal__text">
-            <span class="modal__property-name">{{ 'FOOD_DETAIL.PROTEINS_PER_BASE' | translate }}</span>
-            {{ food.proteinsPerBase }} {{ 'FOOD_DETAIL.GRAMS' | translate }}
-        </p>
-        <p class="modal__text">
-            <span class="modal__property-name">{{ 'FOOD_DETAIL.FATS_PER_BASE' | translate }}</span>
-            {{ food.fatsPerBase }} {{ 'FOOD_DETAIL.GRAMS' | translate }}
-        </p>
-        <p class="modal__text">
-            <span class="modal__property-name">{{ 'FOOD_DETAIL.CARBS_PER_BASE' | translate }}</span>
-            {{ food.carbsPerBase }} {{ 'FOOD_DETAIL.GRAMS' | translate }}
-        </p>
-        <p class="modal__text">
-            <span class="modal__property-name">{{ 'FOOD_DETAIL.BASE_AMOUNT' | translate }}</span>
-            {{ food.baseAmount }} {{ 'FOOD_DETAIL.DEFAULT_SERVING_UNIT.' + food.baseUnit | translate }}
-        </p>
-    </div>
-    <hr class="modal__divider" />
-    <div class="modal__footer">
-        <div class="modal__footer">
-            <div class="modal__footer-action-wrapper action-wrapper">
-                <button class="action-wrapper__button" tuiButton size="m" (click)="onEdit()" [disabled]="isActionDisabled">{{ 'FOOD_DETAIL.EDIT_BUTTON' | translate }}</button>
-                <button class="action-wrapper__button" tuiButton size="m" appearance="accent" (click)="onDelete()" [disabled]="isActionDisabled">{{ 'FOOD_DETAIL.DELETE_BUTTON' | translate }}</button>
-            </div>
-            @if (isActionDisabled) {
-                <p class="modal__footer-warning-message">{{ 'FOOD_DETAIL.WARNING_MESSAGE' | translate }}</p>
+        <div class="modal__info">
+            @if (food.category) {
+                <p class="modal__text">
+                    <span class="modal__property-name">{{ 'FOOD_DETAIL.CATEGORY' | translate }}</span>
+                    {{ food.category }}
+                </p>
             }
+            <p class="modal__text">
+                <span class="modal__property-name">{{ 'FOOD_DETAIL.BASE_AMOUNT' | translate }}</span>
+                {{ food.baseAmount }} {{ 'FOOD_AMOUNT_UNITS_SHORT.' + food.baseUnit | translate }}
+            </p>
         </div>
+        <app-nutrients-summary
+            [calories]="calories"
+            [nutrientChartData]="nutrientChartData"
+            [config]="nutrientSummaryConfig"
+        ></app-nutrients-summary>
+    </div>
+    <div class="modal__footer">
+        <div class="modal__footer-action-wrapper action-wrapper">
+            <button class="action-wrapper__button" tuiButton size="m" (click)="onEdit()" [disabled]="isActionDisabled">{{ 'FOOD_DETAIL.EDIT_BUTTON' | translate }}</button>
+            <button class="action-wrapper__button" tuiButton size="m" appearance="accent" (click)="onDelete()" [disabled]="isActionDisabled">{{ 'FOOD_DETAIL.DELETE_BUTTON' | translate }}</button>
+        </div>
+        @if (isActionDisabled) {
+            <p class="modal__footer-warning-message">{{ 'FOOD_DETAIL.WARNING_MESSAGE' | translate }}</p>
+        }
     </div>
 </div>
 

@@ -116,17 +116,7 @@
     "FOOD_DETAIL": {
         "BARCODE": "Barcode:",
         "CATEGORY": "Category:",
-        "CALORIES_PER_BASE": "Calories per 100g:",
-        "PROTEINS_PER_BASE": "Proteins per 100g:",
-        "FATS_PER_BASE": "Fats per 100g:",
-        "CARBS_PER_BASE": "Carbs per 100g:",
-        "GRAMS": "grams",
-        "DEFAULT_SERVING": "Default Serving:",
-        "DEFAULT_SERVING_UNIT": {
-            "G": "grams",
-            "ML": "milliliters",
-            "PCS": "pieces"
-        },
+        "BASE_AMOUNT": "Default Serving:",
         "USAGE_COUNT": "Usage Count:",
         "EDIT_BUTTON": "Edit",
         "DELETE_BUTTON": "Delete",
