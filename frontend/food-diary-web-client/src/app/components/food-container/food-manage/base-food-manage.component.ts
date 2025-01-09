@@ -54,7 +54,7 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
 };
 
 @Component({
-    selector: 'app-base-food-manage',
+    selector: 'fd-base-food-manage',
     templateUrl: './base-food-manage.component.html',
     styleUrls: ['./base-food-manage.component.less'],
     changeDetection: ChangeDetectionStrategy.OnPush,

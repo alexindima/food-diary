@@ -23,7 +23,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { CHART_COLORS } from '../../constants/chart-colors';
 
 @Component({
-    selector: 'app-statistics',
+    selector: 'fd-statistics',
     imports: [
         TuiInputDateRangeModule,
         FormsModule,

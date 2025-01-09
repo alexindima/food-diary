@@ -67,6 +67,10 @@
     &__secondary-actions {
         display: flex;
         gap: 16px;
+
+        @media (max-width: 768px) {
+            flex-direction: column;
+        }
     }
 
     &__left, &__right {

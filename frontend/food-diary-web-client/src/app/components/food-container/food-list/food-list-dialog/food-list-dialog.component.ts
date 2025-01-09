@@ -21,7 +21,7 @@ import {
 } from '../../food-manage/food-add-dialog/food-add-dialog.component';
 
 @Component({
-    selector: 'app-food-list-dialog',
+    selector: 'fd-food-list-dialog',
     templateUrl: '../food-list-base.component.html',
     styleUrls: ['./food-list-dialog.component.less', '../food-list-base.component.less'],
     changeDetection: ChangeDetectionStrategy.OnPush,

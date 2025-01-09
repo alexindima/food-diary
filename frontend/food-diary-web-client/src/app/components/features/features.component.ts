@@ -4,7 +4,7 @@ import { TuiCardLarge } from '@taiga-ui/layout';
 import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
-    selector: 'app-features',
+    selector: 'fd-features',
     imports: [TuiButton, TuiCardLarge, TuiSurface, TranslateModule],
     templateUrl: './features.component.html',
     styleUrl: './features.component.less'

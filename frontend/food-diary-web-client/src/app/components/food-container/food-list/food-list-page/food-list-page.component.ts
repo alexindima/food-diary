@@ -17,7 +17,7 @@ import { TuiTextfieldControllerModule } from '@taiga-ui/legacy';
 import { FoodDetailComponent } from '../../food-detail/food-detail.component';
 
 @Component({
-    selector: 'app-food-list-page',
+    selector: 'fd-food-list-page',
     templateUrl: '../food-list-base.component.html',
     styleUrls: ['./food-list-page.component.less', '../food-list-base.component.less'],
     changeDetection: ChangeDetectionStrategy.OnPush,

@@ -1,7 +1,7 @@
 import { Component, input } from '@angular/core';
 
 @Component({
-  selector: 'custom-group',
+  selector: 'fd-custom-group',
   imports: [],
   templateUrl: './custom-group.component.html',
   styleUrl: './custom-group.component.less'

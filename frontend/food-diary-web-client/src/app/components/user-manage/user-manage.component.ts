@@ -48,7 +48,7 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
 };
 
 @Component({
-    selector: 'app-user-manage',
+    selector: 'fd-user-manage',
     imports: [
         TuiTextfieldComponent,
         ReactiveFormsModule,

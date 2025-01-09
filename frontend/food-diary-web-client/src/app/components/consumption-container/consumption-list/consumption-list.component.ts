@@ -16,7 +16,7 @@ import { FormGroupControls } from '../../../types/common.data';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
-    selector: 'app-consumption-list',
+    selector: 'fd-consumption-list',
     templateUrl: './consumption-list.component.html',
     styleUrls: ['./consumption-list.component.less'],
     changeDetection: ChangeDetectionStrategy.OnPush,

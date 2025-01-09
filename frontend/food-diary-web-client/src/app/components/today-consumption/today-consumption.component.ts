@@ -7,7 +7,7 @@ import { NutrientChartData } from '../../types/charts.data';
 import { NutrientsSummaryComponent } from '../shared/nutrients-summary/nutrients-summary.component';
 
 @Component({
-    selector: 'app-today-consumption',
+    selector: 'fd-today-consumption',
     imports: [
         TranslatePipe,
         TuiButton,

@@ -26,7 +26,7 @@ import { CustomGroupComponent } from '../../../shared/custom-group/custom-group.
 import { ZXingScannerModule } from '@zxing/ngx-scanner';
 
 @Component({
-    selector: 'app-food-add-dialog',
+    selector: 'fd-food-add-dialog',
     templateUrl: '../base-food-manage.component.html',
     styleUrls: ['./food-add-dialog.component.less', '../base-food-manage.component.less'],
     changeDetection: ChangeDetectionStrategy.OnPush,

@@ -5,7 +5,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { NavigationService } from '../../services/navigation.service';
 
 @Component({
-    selector: 'app-hero',
+    selector: 'fd-hero',
     imports: [TuiButton, TuiCarousel, TranslateModule],
     templateUrl: './hero.component.html',
     styleUrl: './hero.component.less'

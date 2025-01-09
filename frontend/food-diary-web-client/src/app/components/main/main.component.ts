@@ -5,7 +5,7 @@ import { TodayConsumptionComponent } from '../today-consumption/today-consumptio
 import { AuthService } from '../../services/auth.service';
 
 @Component({
-    selector: 'app-main',
+    selector: 'fd-main',
     imports: [HeroComponent, FeaturesComponent, TodayConsumptionComponent],
     templateUrl: './main.component.html',
     styleUrls: ['./main.component.less']

@@ -4,7 +4,7 @@ import { TuiButton } from '@taiga-ui/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
-    selector: 'app-not-found',
+    selector: 'fd-not-found',
     imports: [RouterLink, TuiButton, TranslatePipe],
     templateUrl: './not-found.component.html',
     styleUrl: './not-found.component.less'

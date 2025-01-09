@@ -20,7 +20,7 @@ import { FormGroupControls } from '../../../types/common.data';
 import { BarcodeScannerComponent } from '../../shared/barcode-scanner/barcode-scanner.component';
 
 @Component({
-    selector: 'app-food-list-base',
+    selector: 'fd-food-list-base',
     templateUrl: './food-list-base.component.html',
     styleUrls: ['./food-list-base.component.less'],
     changeDetection: ChangeDetectionStrategy.OnPush,

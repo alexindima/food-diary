@@ -67,7 +67,7 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
 };
 
 @Component({
-    selector: 'app-base-consumption-manage',
+    selector: 'fd-base-consumption-manage',
     templateUrl: './base-consumption-manage.component.html',
     styleUrls: ['./base-consumption-manage.component.less'],
     changeDetection: ChangeDetectionStrategy.OnPush,

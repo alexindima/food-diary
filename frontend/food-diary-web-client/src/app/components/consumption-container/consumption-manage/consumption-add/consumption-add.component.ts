@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { BaseConsumptionManageComponent } from '../base-consumption-manage.component';
 
 @Component({
-    selector: 'app-consumption-add',
+    selector: 'fd-consumption-add',
     templateUrl: './consumption-add.component.html',
     styleUrls: ['./consumption-add.component.less', '../base-consumption-manage.component.less'],
     changeDetection: ChangeDetectionStrategy.OnPush,

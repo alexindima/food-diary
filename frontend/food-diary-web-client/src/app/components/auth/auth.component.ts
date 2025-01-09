@@ -29,7 +29,7 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
 };
 
 @Component({
-    selector: 'app-auth',
+    selector: 'fd-auth',
     templateUrl: './auth.component.html',
     styleUrls: ['./auth.component.less'],
     providers: [VALIDATION_ERRORS_PROVIDER],

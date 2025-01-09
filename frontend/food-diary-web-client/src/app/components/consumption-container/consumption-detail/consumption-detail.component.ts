@@ -16,7 +16,7 @@ import {
 import { NutrientChartData } from '../../../types/charts.data';
 
 @Component({
-    selector: 'app-consumption-detail',
+    selector: 'fd-consumption-detail',
     templateUrl: './consumption-detail.component.html',
     styleUrls: ['./consumption-detail.component.less'],
     changeDetection: ChangeDetectionStrategy.OnPush,

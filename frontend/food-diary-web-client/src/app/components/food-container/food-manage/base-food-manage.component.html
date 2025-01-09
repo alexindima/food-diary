@@ -100,7 +100,7 @@
                 ></tui-error>
             </div>
         </div>
-        <custom-group
+        <fd-custom-group
             [title]="'FOOD_MANAGE.NUTRITION_VALUE' | translate"
         >
             <div class="food-manage__nutrients-group">
@@ -161,12 +161,12 @@
                     </div>
                 </div>
             </div>
-        </custom-group>
-        <app-nutrients-summary
+        </fd-custom-group>
+        <fd-nutrients-summary
             [calories]="calories()"
             [nutrientChartData]="nutrientChartData()"
             [config]="nutrientSummaryConfig"
-        ></app-nutrients-summary>
+        ></fd-nutrients-summary>
 
         <div class="food-manage__actions">
             <button

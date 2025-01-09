@@ -9,7 +9,7 @@ import { filter } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
-    selector: 'app-header',
+    selector: 'fd-header',
     imports: [
         TuiTabsHorizontal,
         TuiTab,

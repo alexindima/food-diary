@@ -17,7 +17,7 @@ import { RecursivePartial } from '../../../types/common.data';
 import { CustomGroupComponent } from '../custom-group/custom-group.component';
 
 @Component({
-    selector: 'app-nutrients-summary',
+    selector: 'fd-nutrients-summary',
     imports: [
         BaseChartDirective,
         DecimalPipe,

@@ -96,6 +96,10 @@
 .food-manage__macronutrients {
     display: flex;
     gap: 16px;
+
+    @media (max-width: 768px) {
+        flex-direction: column;
+    }
 }
 
 .food-manage__macronutrient {

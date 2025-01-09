@@ -57,8 +57,14 @@
     flex: 1;
 }
 
-.consumption-manage__product-quantity {
+.consumption-manage__product-quantity-wrapper {
+    display: flex;
     flex: 0 0 25%;
+    gap: 16px;
+}
+
+.consumption-manage__product-quantity {
+    width: 100%;
 }
 
 .consumption-manage__product-delete {
@@ -82,11 +88,19 @@
     display: flex;
     flex-direction: column;
     gap: 16px;
+
+    @media (max-width: 768px) {
+        gap: 32px;
+    }
 }
 
 .consumption-manage__select-row {
     display: flex;
     gap: 16px;
+
+    @media (max-width: 768px) {
+        flex-direction: column;
+    }
 }
 
 .consumption-manage__multi-select {

@@ -5,7 +5,7 @@ import { FormGroupControls } from '../../../types/common.data';
 import { NgForOf } from "@angular/common";
 
 @Component({
-    selector: 'app-recipe-manage',
+    selector: 'fd-recipe-manage',
     imports: [
         ReactiveFormsModule,
     ],

@@ -1,9 +1,9 @@
 <div class="today-consumption">
     <h2 class="today-consumption__title">{{ 'TODAY_CONSUMPTION.TITLE' | translate }}</h2>
-    <app-nutrients-summary
+    <fd-nutrients-summary
         [calories]="todayCalories()"
         [nutrientChartData]="nutrientChartData()"
-    ></app-nutrients-summary>
+    ></fd-nutrients-summary>
     <div class="today-consumption__card">
         <div class="today-consumption__content">
             <button

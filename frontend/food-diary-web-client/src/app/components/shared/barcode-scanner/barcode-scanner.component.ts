@@ -6,7 +6,7 @@ import { TuiDialogContext, TuiLoader } from '@taiga-ui/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
-    selector: 'app-barcode-scanner',
+    selector: 'fd-barcode-scanner',
     imports: [
         ZXingScannerModule,
         TranslatePipe,

@@ -20,7 +20,7 @@
             ></tui-error>
         </div>
         <div class="consumption-manage__consumption">
-            <custom-group
+            <fd-custom-group
                 [title]="'CONSUMPTION_MANAGE.FOODS' | translate"
             >
                 <div class="consumption-manage__select">
@@ -44,33 +44,34 @@
                                         [error]="[] | tuiFieldError | async"
                                     ></tui-error>
                                 </div>
-                                <div class="consumption-manage__product-quantity">
-                                    <tui-input-number
-                                        type="text"
-                                        formControlName="quantity"
-                                    >
-                                        <label tuiLabel>{{ 'CONSUMPTION_MANAGE.ADD_FOOD_ROW.QUANTITY' | translate }}{{ getFoodUnit(i) }}</label>
-                                        <input
-                                            tuiTextfieldLegacy
-                                            placeholder="0"
-                                        />
-                                    </tui-input-number>
-                                    <tui-error
-                                        formControlName="quantity"
-                                        [error]="[] | tuiFieldError | async"
-                                    ></tui-error>
+                                <div class="consumption-manage__product-quantity-wrapper">
+                                    <div class="consumption-manage__product-quantity">
+                                        <tui-input-number
+                                            type="text"
+                                            formControlName="quantity"
+                                        >
+                                            <label tuiLabel>{{ 'CONSUMPTION_MANAGE.ADD_FOOD_ROW.QUANTITY' | translate }}{{ getFoodUnit(i) }}</label>
+                                            <input
+                                                tuiTextfieldLegacy
+                                                placeholder="0"
+                                            />
+                                        </tui-input-number>
+                                        <tui-error
+                                            formControlName="quantity"
+                                            [error]="[] | tuiFieldError | async"
+                                        ></tui-error>
+                                    </div>
+                                    <button
+                                        type="button"
+                                        class="consumption-manage__product-delete modal__button modal__button--accent"
+                                        appearance="accent"
+                                        tuiButton
+                                        size="l"
+                                        iconStart="@tui.trash-2"
+                                        [disabled]="first"
+                                        (click)="removeFoodItem(i)"
+                                    ></button>
                                 </div>
-                                <button
-                                    type="button"
-                                    class="consumption-manage__product-delete modal__button modal__button--accent"
-                                    appearance="accent"
-                                    tuiButton
-                                    size="l"
-                                    [disabled]="first"
-                                    (click)="removeFoodItem(i)"
-                                >
-                                    {{ 'CONSUMPTION_DETAIL.DELETE_BUTTON' | translate }}
-                                </button>
                             </div>
                         }
                     </div>
@@ -86,7 +87,7 @@
                         {{ 'CONSUMPTION_MANAGE.ADD_FOOD' | translate }}
                     </button>
                 </div>
-            </custom-group>
+            </fd-custom-group>
             <tui-error
                 formControlName="consumedFood"
                 [error]="[] | tuiFieldError | async"
@@ -106,10 +107,10 @@
                 [error]="[] | tuiFieldError | async"
             ></tui-error>
         </div>
-        <app-nutrients-summary
+        <fd-nutrients-summary
             [calories]="totalCalories()"
             [nutrientChartData]="nutrientChartData()"
-        ></app-nutrients-summary>
+        ></fd-nutrients-summary>
 
         <div class="consumption-manage__actions">
             <button class="consumption-manage__submit-button" tuiButton appearance="primary" type="submit">

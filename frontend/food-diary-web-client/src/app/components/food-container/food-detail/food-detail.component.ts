@@ -10,7 +10,7 @@ import {
 import { NutrientChartData } from '../../../types/charts.data';
 
 @Component({
-    selector: 'app-food-detail',
+    selector: 'fd-food-detail',
     templateUrl: './food-detail.component.html',
     styleUrls: ['./food-detail.component.less'],
     changeDetection: ChangeDetectionStrategy.OnPush,
