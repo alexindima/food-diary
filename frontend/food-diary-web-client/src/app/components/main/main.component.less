@@ -1,11 +1,19 @@
+@import 'mixins';
+@import 'variables';
+
 :host {
+    .host-style('/assets/images/background.webp');
+
     display: flex;
     flex-direction: column;
-    flex: 1;
+
+    --tui-chart-categorical-00: @color-proteins;
+    --tui-chart-categorical-01: @color-fats;
+    --tui-chart-categorical-02: @color-carbs;
 }
 
 .main {
-    padding: 1rem;
+    padding: @gap-m;
     max-width: 1200px;
     margin: 0 auto;
 }

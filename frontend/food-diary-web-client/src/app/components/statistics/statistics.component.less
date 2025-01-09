@@ -1,48 +1,27 @@
-@import '@taiga-ui/core/styles/taiga-ui-local.less';
+@import 'mixins';
+@import 'variables';
 
 :host {
-    flex: 1;
-    display: block;
-    position: relative;
-    width: 100%;
-    padding: 20px;
-    box-sizing: border-box;
-    overflow: hidden;
-
-    &::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-image: url('../../../../assets/images/background.webp');
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-        background-attachment: fixed;
-        opacity: 0.05;
-        z-index: -1;
-    }
+    .host-style('/assets/images/background.webp');
 }
 
 .statistics {
     max-width: 1000px;
     margin: 0 auto;
-    padding: 16px;
+    padding: @gap-m;
     box-sizing: border-box;
 
     &__title {
         font-size: 1.8em;
         font-weight: bold;
-        color: #333;
+        color: @color-text-main;
         text-align: center;
         margin-top: 0;
         margin-bottom: 20px;
     }
 
     &__range {
-        margin-bottom: 16px;
+        margin-bottom: @gap-m;
 
         &-label {
             display: flex;
@@ -53,7 +32,7 @@
     &__form {
         display: flex;
         flex-direction: column;
-        gap: 8px;
+        gap: @gap-xs;
     }
 
     &__loader {

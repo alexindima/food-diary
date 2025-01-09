@@ -1,37 +1,13 @@
-:host {
-    flex: 1;
-    display: block;
-    position: relative;
-    width: 100%;
-    box-sizing: border-box;
-    overflow: hidden;
-
-    &::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-image: url('../../../../assets/images/background.webp');
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-        background-attachment: fixed;
-        opacity: 0.05;
-        z-index: -1;
-    }
-}
+@import 'variables';
 
 .features {
     padding-bottom: 40px;
-    background-color: #f9f9f9;
     text-align: center;
 
     &__title {
         font-size: 28px;
-        margin-bottom: 20px;
-        color: #333;
+        margin-bottom: @gap-l;
+        color: @color-text-main;
     }
 
     &__grid {
@@ -42,9 +18,9 @@
     }
 
     &__item {
-        --t-gap: 0.5rem;
+        --t-gap: @gap-xs;
         max-width: 320px;
-        padding: 20px;
+        padding: @gap-l;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
@@ -59,11 +35,11 @@
 
         &-icon {
             width: 100%;
-            margin-bottom: 16px;
+            margin-bottom: @gap-m;
         }
 
         &-description {
-            font-size: 16px;
+            font-size: @font-size-main;
             color: #777;
             margin: 0;
         }
@@ -73,12 +49,12 @@
         }
 
         &-button {
-            font-size: 16px;
-            padding: 10px 20px;
-            color: #fff;
+            font-size: @font-size-main;
+            padding: @gap-s @gap-l;
+            color: @color-background;
             background-color: #007bff;
             border: none;
-            border-radius: 5px;
+            border-radius: @border-radius-s;
             cursor: pointer;
 
             &:hover {
@@ -87,10 +63,10 @@
         }
     }
 
-    @media (max-width: 480px) {
+    @media @media-mobile {
         &__grid {
             flex-direction: column;
-            gap: 16px;
+            gap: @gap-m;
         }
 
         &__item {

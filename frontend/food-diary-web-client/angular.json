@@ -49,7 +49,12 @@
                             "node_modules/@taiga-ui/styles/taiga-ui-global.less",
                             "src/styles.less"
                         ],
-                        "scripts": []
+                        "scripts": [],
+                        "stylePreprocessorOptions": {
+                            "includePaths": [
+                                "src/styles"
+                            ]
+                        }
                     },
                     "configurations": {
                         "production": {

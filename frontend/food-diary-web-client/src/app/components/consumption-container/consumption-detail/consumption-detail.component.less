@@ -1,10 +1,12 @@
+@import 'variables';
+
 .modal {
-    background-color: #fff;
+    background-color: @color-background;
 }
 
 .modal__divider {
     border: none;
-    border-top: 1px solid #ddd;
+    border-top: 1px solid @color-border;
 }
 
 .modal__title {
@@ -27,20 +29,20 @@
     margin: 0;
     font-style: italic;
     font-weight: bold;
-    color: #808080;
+    color: @color-text-additional;
 }
 
 .modal__text {
-    font-size: 1em;
-    color: #333;
-    margin: 8px 0;
+    font-size: @font-size-main;
+    color: @color-text-main;
+    margin: @gap-xs 0;
     display: flex;
     align-items: baseline;
 }
 
 .modal__property-name {
     font-weight: 600;
-    margin-right: 5px;
+    margin-right: @gap-xxs;
 }
 
 .modal__property-text {
@@ -48,18 +50,18 @@
 }
 
 .modal__footer {
-    margin-top: 20px;
+    margin-top: @gap-l;
 }
 
 .modal__actions {
     display: flex;
     justify-content: space-between;
-    gap: 10px;
+    gap: @gap-s;
 }
 
 .modal__button {
     flex: 1;
-    font-size: 1em;
+    font-size: @font-size-main;
 
     &--accent {
         flex: 0 0 auto;
@@ -68,11 +70,11 @@
 
 .dialog {
     text-align: center;
-    padding: 20px;
+    padding: @gap-l;
 }
 
 .dialog__content {
-    margin-bottom: 20px;
+    margin-bottom: @gap-l;
 }
 
 .dialog__highlight {
@@ -82,7 +84,7 @@
 .dialog__buttons {
     display: flex;
     justify-content: center;
-    gap: 10px;
+    gap: @gap-s;
 }
 
 .dialog__button {

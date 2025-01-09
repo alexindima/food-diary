@@ -15,6 +15,7 @@ import { TuiPagination } from '@taiga-ui/kit';
 import { TuiSearchComponent } from '@taiga-ui/layout';
 import { TuiTextfieldControllerModule } from '@taiga-ui/legacy';
 import { FoodDetailComponent } from '../../food-detail/food-detail.component';
+import { CardComponent } from '../../../shared/card/card.component';
 
 @Component({
     selector: 'fd-food-list-page',
@@ -32,6 +33,7 @@ import { FoodDetailComponent } from '../../food-detail/food-detail.component';
         TuiTextfieldControllerModule,
         TuiTextfieldDirective,
         TuiIcon,
+        CardComponent,
     ]
 })
 export class FoodListPageComponent extends FoodListBaseComponent implements OnInit {

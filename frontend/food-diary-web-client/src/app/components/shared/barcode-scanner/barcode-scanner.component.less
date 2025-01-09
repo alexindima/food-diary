@@ -1,3 +1,5 @@
+@import 'variables';
+
 .scanner-popup__scanner-wrapper {
     position: relative;
     width: 100%;
@@ -6,7 +8,7 @@
 }
 
 .scanner-popup__description {
-    font-size: 20px;
+    font-size: @gap-l;
 }
 
 .scanner-popup__loader-overlay {
@@ -24,8 +26,8 @@
 }
 
 .scanner-popup__loader-overlay p {
-    margin-top: 10px;
-    font-size: 16px;
+    margin-top: @gap-xs;
+    font-size: @font-size-main;
 }
 
 .scanner-popup__loader-error {

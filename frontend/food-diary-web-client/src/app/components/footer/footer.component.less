@@ -1,3 +1,5 @@
+@import 'variables';
+
 .footer {
     background-color: #333;
     color: #ddd;
@@ -21,24 +23,24 @@
     &__section {
         flex: 1;
         min-width: 200px;
-        padding: 0 16px;
+        padding: 0 @gap-m;
     }
 
     &__title {
-        margin-bottom: 10px;
-        font-size: 16px;
+        margin-bottom: @gap-s;
+        font-size: @font-size-main;
         font-weight: bold;
-        color: #fff;
+        color: @color-background;
     }
 
     &__text {
-        margin: 5px 0;
+        margin: @gap-xxs 0;
     }
 
     &__social-icons {
         display: flex;
         justify-content: center;
-        gap: 16px;
+        gap: @gap-m;
     }
 
     &__social-link {
@@ -57,7 +59,7 @@
         color: #bbb;
 
         &-text {
-            margin-bottom: 5px;
+            margin-bottom: @gap-xxs;
         }
 
         &-link {

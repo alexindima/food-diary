@@ -1,5 +1,7 @@
+@import 'variables';
+
 .modal {
-    background-color: #fff;
+    background-color: @color-background;
 }
 
 .modal__divider {
@@ -10,37 +12,37 @@
 .modal__title {
     font-size: 1.8em;
     font-weight: bold;
-    margin-bottom: 20px;
+    margin-bottom: @gap-l;
     text-align: center;
 }
 
 .modal__info {
-    margin-bottom: 1rem;
+    margin-bottom: @gap-m;
 }
 
 .modal__text {
-    font-size: 1em;
-    color: #333;
-    margin: 8px 0;
+    font-size: @font-size-main;
+    color: @color-text-main;
+    margin: @gap-xs 0;
     display: flex;
     align-items: baseline;
 }
 
 .modal__property-name {
     font-weight: 600;
-    margin-right: 5px;
+    margin-right: @gap-xxs;
 }
 
 .modal__footer {
     display: flex;
     flex-direction: column;
-    margin-top: 20px;
+    margin-top: @gap-l;
 
     &-action-wrapper {
         display: flex;
         width: 100%;
         justify-content: space-between;
-        gap: 10px;
+        gap: @gap-s;
     }
 
     &-warning-message {
@@ -54,7 +56,7 @@
 
 .action-wrapper__button {
     flex: 1;
-    font-size: 1em;
+    font-size: @font-size-main;
 
     &--accent {
         flex: 0 0 auto;
@@ -62,7 +64,7 @@
 }
 
 .dialog {
-    padding: 20px;
+    padding: @gap-l;
     text-align: center;
 
     &__title {
@@ -74,7 +76,7 @@
     &__buttons {
         display: flex;
         justify-content: center;
-        gap: 10px;
+        gap: @gap-s;
     }
 
     &__button {

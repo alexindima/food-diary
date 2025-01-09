@@ -1,69 +1,50 @@
-:host {
-    flex: 1;
-    display: block;
-    position: relative;
-    width: 100%;
-    padding: 20px;
-    box-sizing: border-box;
-    overflow: hidden;
+@import 'mixins';
+@import 'variables';
 
-    &::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-image: url('../../../../assets/images/background.webp');
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-        background-attachment: fixed;
-        opacity: 0.05;
-        z-index: -1;
-    }
+:host {
+    .host-style('/assets/images/background.webp');
 }
 
 .auth {
     max-width: 400px;
-    margin: 20px auto;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    background-color: #fff;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin: @gap-l auto;
+    border: 1px solid @color-border;
+    border-radius: @border-radius-m;
+    background-color: @color-background;
+    box-shadow: 0 2px 10px @color-box-shadow;
     overflow: hidden;
 
-    @media (max-width: 480px) {
+    @media @media-mobile {
         max-width: inherit;
     }
 
     &__tabs {
-        padding: 0 20px;
-        background-color: #f5f5f5;
-        border-bottom: 1px solid #e0e0e0;
+        padding: 0 @gap-l;
+        background-color: @color-tabs-bg;
+        border-bottom: 1px solid @color-border;
     }
 
     &__form {
         display: flex;
         flex-direction: column;
-        gap: 1rem;
-        padding: 20px;
+        gap: @gap-m;
+        padding: @gap-l;
     }
 
     &__checkbox {
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: @gap-xs;
 
         &-label {
-            font-size: 1em;
+            font-size: @font-size-main;
         }
     }
 
     &__actions {
         display: flex;
         flex-direction: column;
-        gap: 1rem;
+        gap: @gap-m;
     }
 
     &__button {

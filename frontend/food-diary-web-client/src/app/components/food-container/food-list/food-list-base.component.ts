@@ -18,6 +18,7 @@ import { catchError, debounceTime, map, Observable, of, switchMap } from 'rxjs';
 import { TuiTextfieldControllerModule } from '@taiga-ui/legacy';
 import { FormGroupControls } from '../../../types/common.data';
 import { BarcodeScannerComponent } from '../../shared/barcode-scanner/barcode-scanner.component';
+import { CardComponent } from '../../shared/card/card.component';
 
 @Component({
     selector: 'fd-food-list-base',
@@ -35,6 +36,7 @@ import { BarcodeScannerComponent } from '../../shared/barcode-scanner/barcode-sc
         TuiButton,
         TranslatePipe,
         TuiIcon,
+        CardComponent,
     ]
 })
 export class FoodListBaseComponent implements OnInit {

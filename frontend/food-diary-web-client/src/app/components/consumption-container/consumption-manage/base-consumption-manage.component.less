@@ -1,48 +1,25 @@
-:host {
-    flex: 1;
-    display: block;
-    position: relative;
-    width: 100%;
-    box-sizing: border-box;
-    overflow: hidden;
-}
-
-:host::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-image: url('../../../../../assets/images/background.webp');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    opacity: 0.05;
-    z-index: -1;
-}
+@import 'variables';
 
 .consumption-manage {
     max-width: 1000px;
     margin: 0 auto;
-    padding: 16px;
+    padding: @gap-m;
     box-sizing: border-box;
 }
 
 .consumption-manage__title {
     font-size: 1.8em;
     font-weight: bold;
-    color: #333;
+    color: @color-text-main;
     text-align: center;
     margin-top: 0;
-    margin-bottom: 20px;
+    margin-bottom: @gap-l;
 }
 
 .consumption-manage__form {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: @gap-m;
 }
 
 .consumption-manage__date,
@@ -60,7 +37,7 @@
 .consumption-manage__product-quantity-wrapper {
     display: flex;
     flex: 0 0 25%;
-    gap: 16px;
+    gap: @gap-m;
 }
 
 .consumption-manage__product-quantity {
@@ -75,30 +52,24 @@
 .consumption-manage__select {
     display: flex;
     flex-direction: column;
-    gap: 16px;
-
-    /*@media (max-width: 480px) {
-        flex-direction: column;
-        gap: 8px;
-        margin: 12px 0;
-    }*/
+    gap: @gap-m;
 }
 
 .consumption-manage__select-rows {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: @gap-m;
 
-    @media (max-width: 768px) {
-        gap: 32px;
+    @media @media-tablet {
+        gap: @gap-xxl;
     }
 }
 
 .consumption-manage__select-row {
     display: flex;
-    gap: 16px;
+    gap: @gap-m;
 
-    @media (max-width: 768px) {
+    @media @media-tablet {
         flex-direction: column;
     }
 }
@@ -111,7 +82,7 @@
 .consumption-manage__add-button {
     width: auto;
 
-    @media (max-width: 480px) {
+    @media @media-mobile {
         height: 56px;
     }
 }
@@ -121,14 +92,14 @@
 }
 
 .dialog {
-    padding: 20px;
+    padding: @gap-l;
     text-align: center;
 }
 
 .dialog__title {
     font-size: 1.8em;
     font-weight: bold;
-    color: #333;
+    color: @color-text-main;
     text-align: center;
     margin-top: 0;
     margin-bottom: 54px;
@@ -138,8 +109,8 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: 24px;
-    margin-top: 20px;
+    gap: @gap-xl;
+    margin-top: @gap-l;
 }
 
 .dialog__buttons button {

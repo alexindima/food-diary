@@ -1,74 +1,47 @@
-:host {
-    flex: 1;
-    display: block;
-    position: relative;
-    width: 100%;
-    box-sizing: border-box;
-    overflow: hidden;
-
-    --tui-chart-categorical-00: #4a90e2;
-    --tui-chart-categorical-01: #50e3c2;
-    --tui-chart-categorical-02: #f5a623;
-
-    &::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-image: url('../../../../assets/images/background.webp');
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-        background-attachment: fixed;
-        opacity: 0.05;
-        z-index: -1;
-    }
-}
+@import 'variables';
 
 .today-consumption {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: @gap-m;
     max-width: 1000px;
     margin: 0 auto;
-    padding: 24px;
+    padding: @gap-xl;
 
     &__title {
         text-align: center;
         font-size: 1.8em;
         font-weight: bold;
         margin-top: 0;
-        margin-bottom: 24px;
-        color: #333;
+        margin-bottom: @gap-xl;
+        color: @color-text-main;
     }
 
     &__card {
-        background-color: #fff;
-        border-radius: 8px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        background-color: @color-background;
+        border-radius: @border-radius-m;
+        box-shadow: 0 4px 8px @color-box-shadow;
         display: flex;
         flex-direction: column;
-        padding: 24px;
-        gap: 16px;
+        padding: @gap-xl;
+        gap: @gap-m;
     }
 
     &__content {
         display: flex;
         flex-direction: column;
-        gap: 24px;
+        gap: @gap-xl;
 
-        @media (max-width: 768px) {
+        @media @media-tablet {
             flex-direction: column;
         }
     }
 
     &__secondary-actions {
         display: flex;
-        gap: 16px;
+        gap: @gap-m;
 
-        @media (max-width: 768px) {
+        @media @media-tablet {
             flex-direction: column;
         }
     }
@@ -77,12 +50,12 @@
         display: flex;
         flex-direction: column;
         align-items: flex-start;
-        gap: 16px;
+        gap: @gap-m;
         flex: 1;
     }
 
     &__header {
-        margin-bottom: 16px;
+        margin-bottom: @gap-m;
     }
 
     &__subtitle {
@@ -94,29 +67,29 @@
     &__calories {
         font-size: 1.2em;
         font-weight: bold;
-        color: #333;
+        color: @color-text-main;
     }
 
     &__body {
-        margin-top: 16px;
+        margin-top: @gap-m;
     }
 
     &__nutrients {
         background-color: rgba(0, 0, 0, 0.05);
-        border-radius: 8px;
+        border-radius: @border-radius-m;
         box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-        padding: 16px;
+        padding: @gap-m;
         display: flex;
         flex-direction: column;
-        gap: 16px;
+        gap: @gap-m;
 
         &-container {
             display: flex;
             align-items: center;
-            gap: 16px;
+            gap: @gap-m;
             flex-wrap: wrap;
 
-            @media (max-width: 480px) {
+            @media @media-mobile {
                 flex-direction: column;
                 align-items: stretch;
             }
@@ -128,10 +101,10 @@
             padding: 0;
             margin: 0;
             font-size: 0.9em;
-            color: #333;
+            color: @color-text-main;
 
-            @media (max-width: 480px) {
-                margin-bottom: 16px;
+            @media @media-mobile {
+                margin-bottom: @gap-m;
             }
         }
 
@@ -143,7 +116,7 @@
             justify-content: center;
             align-items: center;
 
-            @media (max-width: 480px) {
+            @media @media-mobile {
                 justify-content: center;
             }
 
@@ -160,7 +133,7 @@
 
         &--primary {
             background-color: #007bff;
-            color: #fff;
+            color: @color-background;
         }
 
         &--outline {
@@ -171,7 +144,7 @@
 
         &--info {
             background-color: #fd7e14;
-            color: #ffffff;
+            color: @color-background;
             border: 1px solid #e06b0a;
         }
     }

@@ -19,6 +19,7 @@ import { TuiTextfieldControllerModule } from '@taiga-ui/legacy';
 import {
     FoodAddDialogComponent
 } from '../../food-manage/food-add-dialog/food-add-dialog.component';
+import { CardComponent } from '../../../shared/card/card.component';
 
 @Component({
     selector: 'fd-food-list-dialog',
@@ -36,6 +37,7 @@ import {
         TuiTextfieldControllerModule,
         TuiTextfieldDirective,
         TuiIcon,
+        CardComponent,
     ]
 })
 export class FoodListDialogComponent extends FoodListBaseComponent {

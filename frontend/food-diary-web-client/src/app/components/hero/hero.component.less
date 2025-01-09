@@ -1,3 +1,5 @@
+@import 'variables';
+
 .hero {
     position: relative;
     min-height: 600px;
@@ -10,20 +12,20 @@
     &__content {
         position: relative;
         z-index: 2;
-        padding: 20px;
+        padding: @gap-l;
         background: rgba(0, 0, 0, 0.5);
-        border-radius: 8px;
+        border-radius: @border-radius-m;
     }
 
     &__title {
         font-size: 2.5rem;
         line-height: 36px;
-        margin-bottom: 0.5rem;
+        margin-bottom: @gap-xs;
     }
 
     &__description {
         font-size: 1.25rem;
-        margin-bottom: 1.5rem;
+        margin-bottom: @gap-xl;
     }
 
     &__actions {
@@ -33,7 +35,7 @@
 
     &__button-container {
         display: flex;
-        gap: 1rem;
+        gap: @gap-m;
     }
 
     &__background {
@@ -55,20 +57,20 @@
         object-fit: cover;
         transition: opacity 1s;
 
-        @media (max-width: 480px) {
+        @media @media-mobile {
             width: initial;
         }
     }
 
-    @media (max-width: 480px) {
+    @media @media-mobile {
         min-height: 400px;
     }
 }
 
 .action-button {
-    padding: 0.75rem 1.5rem;
-    font-size: 1rem;
-    border-radius: 8px;
+    padding: @gap-s @gap-xl;
+    font-size: @font-size-main;
+    border-radius: @border-radius-m;
     cursor: pointer;
     border: none;
     transition:

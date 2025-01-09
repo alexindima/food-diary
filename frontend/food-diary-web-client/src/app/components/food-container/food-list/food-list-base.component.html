@@ -36,29 +36,28 @@
     } @else {
         @if (foodData.items().length > 0) {
             @for (food of foodData.items(); track food) {
-                <div
-                    class="food-card"
-                    (click)="onFoodClick(food)"
-                >
-                    <div class="food-card__header">
-                        <span class="food-card__name">{{ food.name }}</span>
-                        @if (food.barcode) {
-                            <span class="food-card__barcode">
+                <fd-card (click)="onFoodClick(food)">
+                    <div class="food-card">
+                        <div class="food-card__header">
+                            <span class="food-card__name">{{ food.name }}</span>
+                            @if (food.barcode) {
+                                <span class="food-card__barcode">
                                 {{ 'FOOD_LIST.BARCODE' | translate }}: {{ food.barcode }}
                             </span>
-                        }
-                    </div>
-                    <div class="food-card__info">
+                            }
+                        </div>
+                        <div class="food-card__info">
                         <span class="food-card__calories">
                             {{ 'FOOD_LIST.CALORIES' | translate }}: {{ food.caloriesPerBase }}
                         </span>
-                        <span class="food-card__macros">
+                            <span class="food-card__macros">
                             {{ 'FOOD_LIST.PROTEINS' | translate }}: {{ food.proteinsPerBase }}g |
-                            {{ 'FOOD_LIST.FATS' | translate }}: {{ food.fatsPerBase }}g |
-                            {{ 'FOOD_LIST.CARBS' | translate }}: {{ food.carbsPerBase }}g
+                                {{ 'FOOD_LIST.FATS' | translate }}: {{ food.fatsPerBase }}g |
+                                {{ 'FOOD_LIST.CARBS' | translate }}: {{ food.carbsPerBase }}g
                         </span>
+                        </div>
                     </div>
-                </div>
+                </fd-card>
             }
         } @else {
             <div class="food-list__no-results">

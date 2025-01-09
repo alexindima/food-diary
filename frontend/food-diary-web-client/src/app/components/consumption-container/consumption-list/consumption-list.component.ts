@@ -14,6 +14,7 @@ import { NavigationService } from '../../../services/navigation.service';
 import { ConsumptionDetailComponent } from '../consumption-detail/consumption-detail.component';
 import { FormGroupControls } from '../../../types/common.data';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { CardComponent } from '../../shared/card/card.component';
 
 @Component({
     selector: 'fd-consumption-list',
@@ -30,6 +31,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
         TuiTextfieldControllerModule,
         DatePipe,
         DecimalPipe,
+        CardComponent,
     ]
 })
 export class ConsumptionListComponent implements OnInit {
