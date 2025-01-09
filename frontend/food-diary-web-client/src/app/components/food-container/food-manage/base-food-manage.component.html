@@ -169,18 +169,27 @@
         ></fd-nutrients-summary>
 
         <div class="food-manage__actions">
-            <button
-                class="food-manage__action-button"
-                tuiButton
-                appearance="primary"
-                type="submit"
-            >
-                @if (food()) {
+            @if (food()) {
+                <button
+                    type="submit"
+                    class="food-manage__action-button"
+                    tuiButton
+                    appearance="primary"
+                    iconStart="@tui.save"
+                >
                     {{ 'FOOD_MANAGE.SAVE_BUTTON' | translate }}
-                } @else {
+                </button>
+            } @else {
+                <button
+                    type="submit"
+                    class="food-manage__action-button"
+                    tuiButton
+                    appearance="primary"
+                    iconStart="@tui.plus"
+                >
                     {{ 'FOOD_MANAGE.ADD_BUTTON' | translate }}
-                }
-            </button>
+                </button>
+            }
             <tui-error [error]="globalError()"></tui-error>
         </div>
     </form>

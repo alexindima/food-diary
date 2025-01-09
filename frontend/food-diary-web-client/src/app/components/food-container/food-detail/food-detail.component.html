@@ -27,8 +27,25 @@
     </div>
     <div class="modal__footer">
         <div class="modal__footer-action-wrapper action-wrapper">
-            <button class="action-wrapper__button" tuiButton size="m" (click)="onEdit()" [disabled]="isActionDisabled">{{ 'FOOD_DETAIL.EDIT_BUTTON' | translate }}</button>
-            <button class="action-wrapper__button" tuiButton size="m" appearance="accent" (click)="onDelete()" [disabled]="isActionDisabled">{{ 'FOOD_DETAIL.DELETE_BUTTON' | translate }}</button>
+            <button
+                class="action-wrapper__button"
+                tuiButton
+                size="m"
+                iconStart="@tui.pen-line"
+                [disabled]="isActionDisabled"
+                (click)="onEdit()"
+            >
+                {{ 'FOOD_DETAIL.EDIT_BUTTON' | translate }}
+            </button>
+            <button
+                class="action-wrapper__button action-wrapper__button--accent"
+                tuiButton
+                size="m"
+                appearance="accent"
+                iconStart="@tui.trash-2"
+                [disabled]="isActionDisabled"
+                (click)="onDelete()"
+            ></button>
         </div>
         @if (isActionDisabled) {
             <p class="modal__footer-warning-message">{{ 'FOOD_DETAIL.WARNING_MESSAGE' | translate }}</p>

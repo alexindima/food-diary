@@ -10,6 +10,7 @@
                 class="today-consumption__button today-consumption__button--primary"
                 tuiButton
                 size="xl"
+                iconStart="@tui.plus"
                 (click)="addConsumption()"
             >
                 {{ 'TODAY_CONSUMPTION.ADD_CONSUMPTION' | translate }}
@@ -20,6 +21,7 @@
                         class="today-consumption__button today-consumption__button--outline"
                         tuiButton
                         size="m"
+                        iconStart="@tui.plus"
                         (click)="addFood()"
                     >
                         {{ 'TODAY_CONSUMPTION.ADD_FOOD' | translate }}
@@ -28,6 +30,7 @@
                         class="today-consumption__button today-consumption__button--outline"
                         tuiButton
                         size="m"
+                        iconStart="@tui.list-plus"
                         (click)="manageFoods()"
                     >
                         {{ 'TODAY_CONSUMPTION.MANAGE_FOODS' | translate }}
@@ -38,6 +41,7 @@
                         class="today-consumption__button today-consumption__button--outline"
                         tuiButton
                         size="m"
+                        iconStart="@tui.list-plus"
                         (click)="manageConsumptions()"
                     >
                         {{ 'TODAY_CONSUMPTION.MANAGE_CONSUMPTIONS' | translate }}
@@ -46,6 +50,7 @@
                         class="today-consumption__button today-consumption__button--info"
                         tuiButton
                         size="m"
+                        iconStart="@tui.chart-no-axes-combined"
                         (click)="goToStatistics()"
                     >
                         {{ 'TODAY_CONSUMPTION.VIEW_STATISTICS' | translate }}

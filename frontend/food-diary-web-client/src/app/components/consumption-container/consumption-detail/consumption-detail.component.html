@@ -22,12 +22,24 @@
     </div>
     <div class="modal__footer">
         <div class="modal__actions">
-            <button class="modal__button"  appearance="primary" tuiButton size="m" (click)="onEdit()">
+            <button
+                class="modal__button"
+                appearance="primary"
+                tuiButton
+                size="m"
+                iconStart="@tui.pen-line"
+                (click)="onEdit()"
+            >
                 {{ 'CONSUMPTION_DETAIL.EDIT_BUTTON' | translate }}
             </button>
-            <button class="modal__button modal__button--accent" appearance="accent" tuiButton size="m" (click)="onDelete()">
-                {{ 'CONSUMPTION_DETAIL.DELETE_BUTTON' | translate }}
-            </button>
+            <button
+                class="modal__button modal__button--accent"
+                appearance="accent"
+                tuiButton
+                size="m"
+                iconStart="@tui.trash-2"
+                (click)="onDelete()"
+            ></button>
         </div>
     </div>
 </div>
@@ -39,10 +51,22 @@
             <span class="dialog__highlight">{{ consumption.date | date }}</span>?
         </p>
         <div class="dialog__buttons">
-            <button class="dialog__button" appearance="primary" tuiButton size="m" (click)="observer.complete()">
+            <button class="dialog__button"
+                    appearance="primary"
+                    tuiButton
+                    size="m"
+                    (click)="observer.complete()"
+            >
                 {{ 'CONSUMPTION_DETAIL.CANCEL_BUTTON' | translate }}
             </button>
-            <button class="dialog__button dialog__button--accent" appearance="accent" tuiButton size="m" (click)="observer.next(true); observer.complete()">
+            <button
+                class="dialog__button dialog__button--accent"
+                appearance="accent"
+                tuiButton
+                size="m"
+                (click)="observer.next(true);
+                 observer.complete()"
+            >
                 {{ 'CONSUMPTION_DETAIL.CONFIRM_BUTTON' | translate }}
             </button>
         </div>

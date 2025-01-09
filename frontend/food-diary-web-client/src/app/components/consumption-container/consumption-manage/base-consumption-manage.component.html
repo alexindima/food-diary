@@ -113,13 +113,27 @@
         ></fd-nutrients-summary>
 
         <div class="consumption-manage__actions">
-            <button class="consumption-manage__submit-button" tuiButton appearance="primary" type="submit">
-                @if (consumption()) {
+            @if (consumption()) {
+                <button
+                    type="submit"
+                    class="consumption-manage__submit-button"
+                    tuiButton
+                    appearance="primary"
+                    iconStart="@tui.save"
+                >
                     {{ 'CONSUMPTION_MANAGE.SAVE_BUTTON' | translate }}
-                } @else {
+                </button>
+            } @else {
+                <button
+                    type="submit"
+                    class="consumption-manage__submit-button"
+                    tuiButton
+                    appearance="primary"
+                    iconStart="@tui.plus"
+                >
                     {{ 'CONSUMPTION_MANAGE.ADD_BUTTON' | translate }}
-                }
-            </button>
+                </button>
+            }
             <tui-error [error]="globalError()"></tui-error>
         </div>
     </form>
