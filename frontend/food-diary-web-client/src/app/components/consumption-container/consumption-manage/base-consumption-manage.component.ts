@@ -52,6 +52,7 @@ import {
     NutrientsSummaryComponent
 } from '../../shared/nutrients-summary/nutrients-summary.component';
 import { CustomGroupComponent } from '../../shared/custom-group/custom-group.component';
+import { ValidationErrors } from '../../../types/validation-error.data';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: TUI_VALIDATION_ERRORS,
@@ -98,7 +99,7 @@ export class BaseConsumptionManageComponent implements OnInit {
     private readonly dialogService = inject(TuiDialogService);
     private readonly destroyRef = inject(DestroyRef);
 
-    private readonly dialog = tuiDialog(FoodListDialogComponent, {
+    private readonly foodListDialog = tuiDialog(FoodListDialogComponent, {
         size: 'page',
         dismissible: true,
         appearance: 'without-border-radius',
@@ -174,7 +175,7 @@ export class BaseConsumptionManageComponent implements OnInit {
 
     public async onFoodSelectClick(index: number): Promise<void> {
         this.selectedIndex = index;
-        this.dialog(null).subscribe({
+        this.foodListDialog(null).subscribe({
             next: food => {
                 const consumedFoodGroup = this.consumedFood.at(this.selectedIndex);
                 consumedFoodGroup.patchValue({ food });
@@ -343,12 +344,6 @@ export class BaseConsumptionManageComponent implements OnInit {
             quantity: new FormControl<number | null>(quantity, [Validators.required, Validators.min(0.01)]),
         });
     }
-}
-
-interface ValidationErrors {
-    required: () => string;
-    nonEmptyArray: () => string;
-    min: (_params: { min: string }) => string;
 }
 
 type RedirectAction = 'Home' | 'ConsumptionList';

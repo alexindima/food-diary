@@ -31,6 +31,7 @@ import { AsyncPipe } from '@angular/common';
 import { TUI_VALIDATION_ERRORS, TuiFieldErrorPipe } from '@taiga-ui/kit';
 import { matchFieldValidator } from '../../validators/match-field.validator';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ValidationErrors } from '../../types/validation-error.data';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: TUI_VALIDATION_ERRORS,
@@ -188,11 +189,3 @@ export interface UserFormValues {
 }
 
 export type UserFormData = FormGroupControls<UserFormValues>;
-
-interface ValidationErrors {
-    required: () => string;
-    userExists: () => string;
-    email: () => string;
-    matchField: () => string;
-    minlength: (_params: { requiredLength: string }) => string;
-}

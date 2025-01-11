@@ -9,34 +9,72 @@
 
     <form class="recipe-manage__form" [formGroup]="recipeForm" (ngSubmit)="onSubmit()">
         <div class="recipe-manage__details">
-            <tui-textfield>
-                <label tuiLabel>{{ 'RECIPE_MANAGE.NAME' | translate }}</label>
-                <input
-                    tuiTextfield
+            <div class="recipe-manage__name">
+                <tui-textfield>
+                    <label tuiLabel>{{ 'RECIPE_MANAGE.NAME' | translate }}</label>
+                    <input
+                        tuiTextfield
+                        formControlName="name"
+                        placeholder="{{ 'RECIPE_MANAGE.NAME_PLACEHOLDER' | translate }}"
+                    />
+                </tui-textfield>
+                <tui-error
                     formControlName="name"
-                    placeholder="{{ 'RECIPE_MANAGE.NAME_PLACEHOLDER' | translate }}"
-                />
-            </tui-textfield>
+                    [error]="[] | tuiFieldError | async"
+                ></tui-error>
+            </div>
 
-            <tui-textarea formControlName="description">
-                {{ 'RECIPE_MANAGE.DESCRIPTION' | translate }}
-                <textarea
-                    tuiTextfieldLegacy
-                    placeholder="{{ 'RECIPE_MANAGE.DESCRIPTION_PLACEHOLDER' | translate }}"
-                ></textarea>
-            </tui-textarea>
+            <div class="recipe-manage__description">
+                <tui-textarea formControlName="description">
+                    <textarea
+                        tuiTextfieldLegacy
+                        placeholder="{{ 'RECIPE_MANAGE.DESCRIPTION_PLACEHOLDER' | translate }}"
+                    ></textarea>
+                    {{ 'RECIPE_MANAGE.DESCRIPTION' | translate }}
+                </tui-textarea>
+            </div>
 
-            <tui-input-number
-                formControlName="prepTime"
-            >{{ 'RECIPE_MANAGE.PREP_TIME' | translate }}</tui-input-number>
+            <div class="recipe-manage__prepTime">
+                <tui-input-number formControlName="prepTime">
+                    <input
+                        placeholder="0"
+                        tuiTextfieldLegacy
+                    />
+                    {{ 'RECIPE_MANAGE.PREP_TIME' | translate }}
+                </tui-input-number>
+                <tui-error
+                    formControlName="prepTime"
+                    [error]="[] | tuiFieldError | async"
+                ></tui-error>
+            </div>
 
-            <tui-input-number
-                formControlName="cookTime"
-            >{{ 'RECIPE_MANAGE.COOK_TIME' | translate }}</tui-input-number>
+            <div class="recipe-manage__cookTime">
+                <tui-input-number formControlName="cookTime">
+                    {{ 'RECIPE_MANAGE.COOK_TIME' | translate }}
+                    <input
+                        placeholder="0"
+                        tuiTextfieldLegacy
+                    />
+                </tui-input-number>
+                <tui-error
+                    formControlName="cookTime"
+                    [error]="[] | tuiFieldError | async"
+                ></tui-error>
+            </div>
 
-            <tui-input-number
-                formControlName="servings"
-            >{{ 'RECIPE_MANAGE.SERVINGS' | translate }}</tui-input-number>
+            <div class="recipe-manage__servings">
+                <tui-input-number formControlName="servings">
+                    {{ 'RECIPE_MANAGE.SERVINGS' | translate }}
+                    <input
+                        placeholder="0"
+                        tuiTextfieldLegacy
+                    />
+                </tui-input-number>
+                <tui-error
+                    formControlName="servings"
+                    [error]="[] | tuiFieldError | async"
+                ></tui-error>
+            </div>
         </div>
 
         <div class="recipe-manage__steps-wrapper">
@@ -48,14 +86,20 @@
                         (buttonClick)="removeStep(stepIndex)"
                     >
                         <div  class="recipe-manage__step">
-                            <tui-textarea formControlName="description">
-                                {{ 'RECIPE_MANAGE.STEP_DESCRIPTION' | translate }}
-                                <textarea
-                                    maxlength="97"
-                                    placeholder="{{ 'RECIPE_MANAGE.STEP_DESCRIPTION_PLACEHOLDER' | translate }}"
-                                    tuiTextfieldLegacy
-                                ></textarea>
-                            </tui-textarea>
+                            <div class="recipe-manage__step-description">
+                                <tui-textarea formControlName="description">
+                                    {{ 'RECIPE_MANAGE.STEP_DESCRIPTION' | translate }}
+                                    <textarea
+                                        maxlength="1000"
+                                        placeholder="{{ 'RECIPE_MANAGE.STEP_DESCRIPTION_PLACEHOLDER' | translate }}"
+                                        tuiTextfieldLegacy
+                                    ></textarea>
+                                </tui-textarea>
+                                <tui-error
+                                    formControlName="description"
+                                    [error]="[] | tuiFieldError | async"
+                                ></tui-error>
+                            </div>
                             <fd-custom-group [title]="'RECIPE_MANAGE.INGREDIENTS' | translate">
                                 <div class="recipe-manage__ingredients-wrapper">
                                     <div class="recipe-manage__ingredients" formArrayName="ingredients">
@@ -67,19 +111,31 @@
                                                         tuiTextfield
                                                         placeholder="{{ 'RECIPE_MANAGE.INGREDIENT_NAME_PLACEHOLDER' | translate }}"
                                                         formControlName="food"
-                                                        readonly
+                                                        [readOnly]="true"
+                                                        [value]="getFoodName(stepIndex, ingredientIndex)"
+                                                        [class.invalid]="isFoodInvalid(stepIndex, ingredientIndex)"
+                                                        (click)="onFoodSelectClick(stepIndex, ingredientIndex)"
                                                     />
                                                 </tui-textfield>
-
                                                 <tui-error
                                                     formControlName="food"
                                                     [error]="[] | tuiFieldError | async"
                                                 ></tui-error>
                                             </div>
                                             <div class="recipe-manage__ingredient-quantity-wrapper">
-                                                <tui-input-number
-                                                    formControlName="amount"
-                                                >{{ 'RECIPE_MANAGE.AMOUNT' | translate }}</tui-input-number>
+                                                <div class="recipe-manage__ingredient-quantity">
+                                                    <tui-input-number formControlName="amount">
+                                                        <label tuiLabel>{{ 'CONSUMPTION_MANAGE.ADD_FOOD_ROW.QUANTITY' | translate }}{{ getFoodUnit(stepIndex, ingredientIndex) }}</label>
+                                                        <input
+                                                            placeholder="0"
+                                                            tuiTextfieldLegacy
+                                                        />
+                                                    </tui-input-number>
+                                                    <tui-error
+                                                        formControlName="amount"
+                                                        [error]="[] | tuiFieldError | async"
+                                                    ></tui-error>
+                                                </div>
 
                                                 <button
                                                     type="button"
@@ -91,7 +147,6 @@
                                                     (click)="removeIngredientFromStep(stepIndex, ingredientIndex)"
                                                 ></button>
                                             </div>
-
                                         </div>
                                     </div>
                                     <button
@@ -104,7 +159,6 @@
                                         {{ 'RECIPE_MANAGE.ADD_INGREDIENT' | translate }}
                                     </button>
                                 </div>
-
                             </fd-custom-group>
                         </div>
                     </fd-custom-group>
@@ -120,6 +174,11 @@
                 {{ 'RECIPE_MANAGE.ADD_STEP' | translate }}
             </button>
         </div>
+
+        <fd-nutrients-summary
+            [calories]="totalCalories()"
+            [nutrientChartData]="nutrientChartData()"
+        ></fd-nutrients-summary>
 
         <button
             type="submit"

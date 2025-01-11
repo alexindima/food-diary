@@ -40,6 +40,7 @@ import { CustomGroupComponent } from '../../shared/custom-group/custom-group.com
 import { firstValueFrom } from 'rxjs';
 import { ZXingScannerModule } from '@zxing/ngx-scanner';
 import { BarcodeScannerComponent } from '../../shared/barcode-scanner/barcode-scanner.component';
+import { ValidationErrors } from '../../../types/validation-error.data';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: TUI_VALIDATION_ERRORS,
@@ -281,10 +282,5 @@ export interface FoodFormValues {
 }
 
 type FoodFormData = FormGroupControls<FoodFormValues>;
-
-interface ValidationErrors {
-    required: () => string;
-    min: (_params: { min: string }) => string;
-}
 
 type RedirectAction = 'Home' | 'FoodList';

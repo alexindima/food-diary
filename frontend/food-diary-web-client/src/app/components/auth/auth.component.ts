@@ -12,6 +12,7 @@ import { NavigationService } from '../../services/navigation.service';
 import { FormGroupControls } from '../../types/common.data';
 import { LoginRequest, RegisterRequest } from '../../types/auth.data';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ValidationErrors } from '../../types/validation-error.data';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: TUI_VALIDATION_ERRORS,
@@ -163,14 +164,6 @@ export class AuthComponent {
     private clearGlobalError(): void {
         this.globalError.set(null);
     }
-}
-
-interface ValidationErrors {
-    required: () => string;
-    userExists: () => string;
-    email: () => string;
-    matchField: () => string;
-    minlength: (_params: { requiredLength: string }) => string;
 }
 
 interface LoginFormValues {
