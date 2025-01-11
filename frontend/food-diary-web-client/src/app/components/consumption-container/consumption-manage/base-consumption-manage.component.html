@@ -28,7 +28,7 @@
                         @for (foodItem of consumedFood.controls; track foodItem; let i = $index; let first = $first) {
                             <div class="consumption-manage__select-row" [formGroupName]="i">
                                 <div class="consumption-manage__product-name">
-                                    <tui-textfield type="text">
+                                    <tui-textfield type="text" class="consumption-manage__product-name-control">
                                         <label tuiLabel>{{ 'CONSUMPTION_MANAGE.ADD_FOOD_ROW.FOOD' | translate }}</label>
                                         <input
                                             tuiTextfield

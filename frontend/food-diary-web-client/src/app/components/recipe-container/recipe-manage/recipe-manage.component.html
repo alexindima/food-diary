@@ -105,7 +105,7 @@
                                     <div class="recipe-manage__ingredients" formArrayName="ingredients">
                                         <div class="recipe-manage__ingredient" *ngFor="let ingredient of getStepIngredients(stepIndex).controls; let ingredientIndex = index; let first = first" [formGroupName]="ingredientIndex">
                                             <div class="recipe-manage__ingredient-name">
-                                                <tui-textfield>
+                                                <tui-textfield class="recipe-manage__ingredient-name-control">
                                                     <label tuiLabel>{{ 'RECIPE_MANAGE.INGREDIENT_NAME' | translate }}</label>
                                                     <input
                                                         tuiTextfield

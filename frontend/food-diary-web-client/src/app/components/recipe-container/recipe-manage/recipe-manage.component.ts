@@ -160,10 +160,8 @@ export class RecipeManageComponent implements OnInit {
     }
 
     public isFoodInvalid(stepIndex: number, ingredientIndex: number): boolean {
-        console.log(stepIndex, ingredientIndex);
         const ingredientsArray = this.getStepIngredients(stepIndex);
         const foodControl = ingredientsArray.at(ingredientIndex).controls.food;
-        console.log(!!foodControl, foodControl.invalid, foodControl.touched)
         return !!foodControl && foodControl.invalid && foodControl.touched;
     }
 
