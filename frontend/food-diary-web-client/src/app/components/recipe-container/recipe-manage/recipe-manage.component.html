@@ -1,77 +1,133 @@
-<!--
-<h1>Добавить Рецепт</h1>
-<form [formGroup]="recipeForm" (ngSubmit)="onSubmit()">
-    &lt;!&ndash; Основная информация &ndash;&gt;
-    <div>
-        <label for="name">Название рецепта</label>
-        <input id="name" formControlName="name" type="text" required />
+<div class="recipe-manage">
+    <h2 class="recipe-manage__title">
+        @if (recipe()) {
+            {{ 'RECIPE_MANAGE.EDIT_TITLE' | translate }}
+        } @else {
+            {{ 'RECIPE_MANAGE.ADD_TITLE' | translate }}
+        }
+    </h2>
 
-        <label for="description">Описание</label>
-        <textarea id="description" formControlName="description"></textarea>
+    <form class="recipe-manage__form" [formGroup]="recipeForm" (ngSubmit)="onSubmit()">
+        <div class="recipe-manage__details">
+            <tui-textfield>
+                <label tuiLabel>{{ 'RECIPE_MANAGE.NAME' | translate }}</label>
+                <input
+                    tuiTextfield
+                    formControlName="name"
+                    placeholder="{{ 'RECIPE_MANAGE.NAME_PLACEHOLDER' | translate }}"
+                />
+            </tui-textfield>
 
-        <label for="category">Категория</label>
-        <input id="category" formControlName="category" type="text" />
+            <tui-textarea formControlName="description">
+                {{ 'RECIPE_MANAGE.DESCRIPTION' | translate }}
+                <textarea
+                    tuiTextfieldLegacy
+                    placeholder="{{ 'RECIPE_MANAGE.DESCRIPTION_PLACEHOLDER' | translate }}"
+                ></textarea>
+            </tui-textarea>
 
-        <label for="imageUrl">Ссылка на изображение</label>
-        <input id="imageUrl" formControlName="imageUrl" type="text" />
+            <tui-input-number
+                formControlName="prepTime"
+            >{{ 'RECIPE_MANAGE.PREP_TIME' | translate }}</tui-input-number>
 
-        <label for="prepTime">Время подготовки (мин.)</label>
-        <input id="prepTime" formControlName="prepTime" type="number" required />
+            <tui-input-number
+                formControlName="cookTime"
+            >{{ 'RECIPE_MANAGE.COOK_TIME' | translate }}</tui-input-number>
 
-        <label for="cookTime">Время готовки (мин.)</label>
-        <input id="cookTime" formControlName="cookTime" type="number" required />
-
-        <label for="servings">Количество порций</label>
-        <input id="servings" formControlName="servings" type="number" required />
-    </div>
-
-    &lt;!&ndash; Ингредиенты &ndash;&gt;
-    <div>
-        <h3>Ингредиенты</h3>
-        <div formArrayName="ingredients">
-            <div
-                *ngFor="let ingredient of ingredients.controls; let i = index"
-                [formGroupName]="i"
-            >
-                <label for="foodName">Ингредиент</label>
-                <input id="foodName" formControlName="foodName" type="text" required />
-
-                <label for="amount">Количество</label>
-                <input id="amount" formControlName="amount" type="number" required />
-
-                <label for="unit">Единица</label>
-                <select id="unit" formControlName="unit">
-                    <option value="G">грамм</option>
-                    <option value="ML">мл</option>
-                    <option value="PCS">шт</option>
-                </select>
-
-                <button type="button" (click)="removeIngredient(i)">Удалить</button>
-            </div>
-            <button type="button" (click)="addIngredient()">Добавить ингредиент</button>
+            <tui-input-number
+                formControlName="servings"
+            >{{ 'RECIPE_MANAGE.SERVINGS' | translate }}</tui-input-number>
         </div>
-    </div>
 
-    &lt;!&ndash; Шаги &ndash;&gt;
-    <div>
-        <h3>Шаги приготовления</h3>
-        <div formArrayName="steps">
-            <div
-                *ngFor="let step of steps.controls; let i = index"
-                [formGroupName]="i"
-            >
-                <label for="description">Описание шага {{ i + 1 }}</label>
-                <textarea id="description" formControlName="description"></textarea>
+        <div class="recipe-manage__steps-wrapper">
+            <div class="recipe-manage__steps" formArrayName="steps">
+                <div *ngFor="let step of steps.controls; let stepIndex = index; let first = first" [formGroupName]="stepIndex">
+                    <fd-custom-group
+                        [title]="'RECIPE_MANAGE.STEPS' | translate : {index: stepIndex}"
+                        [showButton]="!first"
+                        (buttonClick)="removeStep(stepIndex)"
+                    >
+                        <div  class="recipe-manage__step">
+                            <tui-textarea formControlName="description">
+                                {{ 'RECIPE_MANAGE.STEP_DESCRIPTION' | translate }}
+                                <textarea
+                                    maxlength="97"
+                                    placeholder="{{ 'RECIPE_MANAGE.STEP_DESCRIPTION_PLACEHOLDER' | translate }}"
+                                    tuiTextfieldLegacy
+                                ></textarea>
+                            </tui-textarea>
+                            <fd-custom-group [title]="'RECIPE_MANAGE.INGREDIENTS' | translate">
+                                <div class="recipe-manage__ingredients-wrapper">
+                                    <div class="recipe-manage__ingredients" formArrayName="ingredients">
+                                        <div class="recipe-manage__ingredient" *ngFor="let ingredient of getStepIngredients(stepIndex).controls; let ingredientIndex = index; let first = first" [formGroupName]="ingredientIndex">
+                                            <div class="recipe-manage__ingredient-name">
+                                                <tui-textfield>
+                                                    <label tuiLabel>{{ 'RECIPE_MANAGE.INGREDIENT_NAME' | translate }}</label>
+                                                    <input
+                                                        tuiTextfield
+                                                        placeholder="{{ 'RECIPE_MANAGE.INGREDIENT_NAME_PLACEHOLDER' | translate }}"
+                                                        formControlName="food"
+                                                        readonly
+                                                    />
+                                                </tui-textfield>
 
-                <label for="imageUrl">Ссылка на изображение</label>
-                <input id="imageUrl" formControlName="imageUrl" type="text" />
+                                                <tui-error
+                                                    formControlName="food"
+                                                    [error]="[] | tuiFieldError | async"
+                                                ></tui-error>
+                                            </div>
+                                            <div class="recipe-manage__ingredient-quantity-wrapper">
+                                                <tui-input-number
+                                                    formControlName="amount"
+                                                >{{ 'RECIPE_MANAGE.AMOUNT' | translate }}</tui-input-number>
 
-                <button type="button" (click)="removeStep(i)">Удалить</button>
+                                                <button
+                                                    type="button"
+                                                    appearance="accent"
+                                                    tuiButton
+                                                    size="l"
+                                                    iconStart="@tui.trash-2"
+                                                    [disabled]="first"
+                                                    (click)="removeIngredientFromStep(stepIndex, ingredientIndex)"
+                                                ></button>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <button
+                                        type="button"
+                                        tuiButton
+                                        size="m"
+                                        iconStart="@tui.plus"
+                                        (click)="addIngredientToStep(stepIndex)"
+                                    >
+                                        {{ 'RECIPE_MANAGE.ADD_INGREDIENT' | translate }}
+                                    </button>
+                                </div>
+
+                            </fd-custom-group>
+                        </div>
+                    </fd-custom-group>
+                </div>
             </div>
-            <button type="button" (click)="addStep()">Добавить шаг</button>
+            <button
+                type="button"
+                tuiButton
+                size="m"
+                iconStart="@tui.plus"
+                (click)="addStep()"
+            >
+                {{ 'RECIPE_MANAGE.ADD_STEP' | translate }}
+            </button>
         </div>
-    </div>
 
-    <button type="submit" [disabled]="!recipeForm.valid">Сохранить рецепт</button>
-</form>
--->
+        <button
+            type="submit"
+            tuiButton
+            appearance="primary"
+            iconStart="@tui.plus"
+        >
+            {{ recipe() ? 'RECIPE_MANAGE.SAVE_BUTTON' : 'RECIPE_MANAGE.ADD_BUTTON' | translate }}
+        </button>
+    </form>
+</div>

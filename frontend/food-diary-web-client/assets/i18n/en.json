@@ -257,6 +257,28 @@
         "MANAGE_FOODS": "Manage Foods",
         "VIEW_STATISTICS": "View Statistics"
     },
+    "RECIPE_MANAGE": {
+        "EDIT_TITLE": "Edit Recipe",
+        "ADD_TITLE": "Add New Recipe",
+        "NAME": "Name",
+        "NAME_PLACEHOLDER": "Enter recipe name",
+        "DESCRIPTION": "Description",
+        "DESCRIPTION_PLACEHOLDER": "Enter recipe description",
+        "PREP_TIME": "Preparation Time (minutes)",
+        "COOK_TIME": "Cooking Time (minutes)",
+        "SERVINGS": "Servings",
+        "STEPS": "Step {{ index }}",
+        "STEP_DESCRIPTION": "Step Description",
+        "STEP_DESCRIPTION_PLACEHOLDER": "Enter step description",
+        "INGREDIENTS": "Ingredients",
+        "INGREDIENT_NAME": "Ingredient Name",
+        "INGREDIENT_NAME_PLACEHOLDER": "Select an ingredient",
+        "AMOUNT": "Amount",
+        "ADD_INGREDIENT": "Add Ingredient",
+        "ADD_STEP": "Add Step",
+        "SAVE_BUTTON": "Save Recipe",
+        "ADD_BUTTON": "Add Recipe"
+    },
     "SHARED": {
         "NUTRIENTS_SUMMARY": {
             "SUMMARY": "Summary",

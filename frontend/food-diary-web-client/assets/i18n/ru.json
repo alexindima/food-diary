@@ -257,6 +257,28 @@
         "MANAGE_FOODS": "Управлять продуктами",
         "VIEW_STATISTICS": "Посмотреть статистику"
     },
+    "RECIPE_MANAGE": {
+        "EDIT_TITLE": "Редактировать рецепт",
+        "ADD_TITLE": "Добавить новый рецепт",
+        "NAME": "Название",
+        "NAME_PLACEHOLDER": "Введите название рецепта",
+        "DESCRIPTION": "Описание",
+        "DESCRIPTION_PLACEHOLDER": "Введите описание рецепта",
+        "PREP_TIME": "Время подготовки (минуты)",
+        "COOK_TIME": "Время готовки (минуты)",
+        "SERVINGS": "Порции",
+        "STEPS": "Шаг {{ index }}",
+        "STEP_DESCRIPTION": "Описание шага",
+        "STEP_DESCRIPTION_PLACEHOLDER": "Введите описание шага",
+        "INGREDIENTS": "Ингредиенты",
+        "INGREDIENT_NAME": "Название ингредиента",
+        "INGREDIENT_NAME_PLACEHOLDER": "Выберите ингредиент",
+        "AMOUNT": "Количество",
+        "ADD_INGREDIENT": "Добавить ингредиент",
+        "ADD_STEP": "Добавить шаг",
+        "SAVE_BUTTON": "Сохранить рецепт",
+        "ADD_BUTTON": "Добавить рецепт"
+    },
     "SHARED": {
         "NUTRIENTS_SUMMARY": {
             "SUMMARY": "Сводка",

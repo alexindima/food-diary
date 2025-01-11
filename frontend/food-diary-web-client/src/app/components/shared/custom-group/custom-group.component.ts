@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 
 @Component({
   selector: 'fd-custom-group',
@@ -8,4 +8,11 @@ import { Component, input } from '@angular/core';
 })
 export class CustomGroupComponent {
     public title = input.required<string>()
+    public showButton = input<boolean>(false);
+
+    public buttonClick = output<void>();
+
+    public onButtonClick(): void {
+        this.buttonClick.emit();
+    }
 }

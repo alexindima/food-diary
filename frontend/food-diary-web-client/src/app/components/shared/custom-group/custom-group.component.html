@@ -1,6 +1,9 @@
 <div class="custom-group">
-    <div class="custom-group__header">
-        {{ title() }}
+    <div class="custom-group__title">
+        <span>{{ title() }}</span>
     </div>
+    @if (showButton()) {
+        <div class="custom-group__button" (click)="onButtonClick()">X</div>
+    }
     <ng-content></ng-content>
 </div>
