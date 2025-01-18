@@ -5,13 +5,23 @@ import { TuiButton } from '@taiga-ui/core';
 import { NavigationService } from '../../services/navigation.service';
 import { NutrientChartData } from '../../types/charts.data';
 import { NutrientsSummaryComponent } from '../shared/nutrients-summary/nutrients-summary.component';
+import {
+    DynamicProgressBarComponent
+} from '../shared/dynamic-progress-bar/dynamic-progress-bar.component';
+import { CustomGroupComponent } from '../shared/custom-group/custom-group.component';
+import { UserService } from '../../services/user.service';
+import { Observable } from 'rxjs';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
     selector: 'fd-today-consumption',
     imports: [
         TranslatePipe,
         TuiButton,
-        NutrientsSummaryComponent
+        NutrientsSummaryComponent,
+        DynamicProgressBarComponent,
+        CustomGroupComponent,
+        AsyncPipe
     ],
     templateUrl: './today-consumption.component.html',
     styleUrl: './today-consumption.component.less',
@@ -20,7 +30,9 @@ import { NutrientsSummaryComponent } from '../shared/nutrients-summary/nutrients
 export class TodayConsumptionComponent implements OnInit {
     private readonly statisticsService = inject(StatisticsService);
     private readonly navigationService = inject(NavigationService);
+    private readonly userService = inject(UserService);
 
+    public test = signal(500);
     public todayCalories = signal<number>(0);
     public nutrientChartData = signal<NutrientChartData>({
         proteins: 0,
@@ -28,6 +40,8 @@ export class TodayConsumptionComponent implements OnInit {
         carbs: 0,
     });
     public isLoading = signal<boolean>(false);
+
+    public userCalories: Observable<number | null> = this.userService.getUserCalories();
 
     public ngOnInit(): void {
         this.fetchTodayData();

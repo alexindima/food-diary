@@ -1,5 +1,16 @@
 <div class="today-consumption">
     <h2 class="today-consumption__title">{{ 'TODAY_CONSUMPTION.TITLE' | translate }}</h2>
+    @if (true) {
+        <fd-custom-group
+            [title]="'today calories'"
+        >
+            <fd-dynamic-progress-bar
+                [current]="todayCalories()"
+                [max]="(userCalories | async) ?? 1500"
+                [unit]="'kkal'"
+            ></fd-dynamic-progress-bar>
+        </fd-custom-group>
+    }
     <fd-nutrients-summary
         [calories]="todayCalories()"
         [nutrientChartData]="nutrientChartData()"

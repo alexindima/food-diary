@@ -1,0 +1,60 @@
+.dynamic-progress-bar-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.dynamic-progress-bar {
+    position: relative;
+    width: 100%;
+    background-color: #e0e0e0;
+    border-radius: 10px;
+    overflow: hidden;
+    height: 25px;
+    margin: 20px 0;
+}
+
+.dynamic-progress-bar-line {
+    height: 100%;
+    text-align: center;
+    color: white;
+    line-height: 25px;
+    font-weight: bold;
+    transition: background-color 0.3s ease, width 0.3s ease;
+}
+
+.dynamic-progress-bar-title {
+    position: absolute;
+    transform: translateX(-50%);
+    top: -1px;
+    transition: left 0.3s ease, width 0.3s ease;
+
+    &.text-black {
+        color: #000;
+    }
+
+    &.text-white {
+        color: #fff;
+    }
+}
+
+.dynamic-progress-bar-overflow-line {
+    position: absolute;
+    top: -5px;
+    bottom: -5px;
+    width: 2px;
+    background-color: black;
+    transform: translateX(-50%);
+    transition: left 0.3s ease, width 0.3s ease;
+}
+
+.dynamic-progress-bar-overflow-text {
+    position: absolute;
+    bottom: -25px;
+    text-align: center;
+    transform: translateX(-100%);
+    width: max-content;
+    color: black;
+    font-size: 12px;
+    font-weight: bold;
+    transition: left 0.3s ease, width 0.3s ease;
+}

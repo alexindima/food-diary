@@ -10,6 +10,7 @@ export interface User {
     gender?: string;
     weight?: number;
     height?: number;
+    calories?: number;
     profileImage?: string;
     isActive: boolean;
 }

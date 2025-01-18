@@ -1,0 +1,29 @@
+<div class="dynamic-progress-bar-wrapper">
+    <div class="dynamic-progress-bar">
+        <div
+            class="dynamic-progress-bar-line"
+            [ngStyle]="{ width: progressBarWidth(), backgroundColor: barColor() }"
+        >
+            <div
+                class="dynamic-progress-bar-title"
+                [ngClass]="textColorClass()"
+                [ngStyle]="{ left: textPosition() }"
+            >
+                {{ current() }} {{ unit() }} ({{ progress() }}%)
+            </div>
+        </div>
+    </div>
+
+    @if (progress() > 100) {
+        <div
+            class="dynamic-progress-bar-overflow-line"
+            [ngStyle]="{ left: maxPosition() + '%' }"
+        ></div>
+        <div
+            class="dynamic-progress-bar-overflow-text"
+            [ngStyle]="{ left: maxPosition() + '%' }"
+        >
+            {{ max() }} {{ unit() }}
+        </div>
+    }
+</div>
