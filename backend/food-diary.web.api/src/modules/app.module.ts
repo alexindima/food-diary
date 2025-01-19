@@ -6,6 +6,7 @@ import { FoodModule } from './food/food.module';
 import { ConsumptionModule } from './consumption/consumption.module';
 import { StatisticsModule } from './statistics/statistics.module';
 import { LogsModule } from './logs/logs.module';
+import { RecipeModule } from "./recipe/recipe.module";
 
 @Module({
     imports: [
@@ -16,6 +17,7 @@ import { LogsModule } from './logs/logs.module';
         ConsumptionModule,
         FoodModule,
         LogsModule,
+        RecipeModule,
         StatisticsModule,
         UserModule,
     ],

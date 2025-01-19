@@ -53,9 +53,9 @@ model Food {
 
     consumptionItems ConsumptionItem[]
 
-    userId     Int
-    user       User         @relation(fields: [userId], references: [id])
-    RecipeItem RecipeItem[]
+    userId           Int
+    user             User               @relation(fields: [userId], references: [id])
+    RecipeIngredient RecipeIngredient[]
 }
 
 model Consumption {
@@ -84,7 +84,7 @@ model ConsumptionItem {
 
 model Recipe {
     id            Int      @id @default(autoincrement())
-    name          String
+    name          String // Название рецепта
     description   String? // Краткое описание блюда
     category      String? // Категория рецепта (например, "Завтрак", "Обед")
     imageUrl      String? // Изображение готового блюда
@@ -100,22 +100,7 @@ model Recipe {
 
     userId Int
     user   User         @relation(fields: [userId], references: [id])
-    items  RecipeItem[] // Ингредиенты рецепта
     steps  RecipeStep[] // Шаги приготовления
-}
-
-model RecipeItem {
-    id        Int      @id @default(autoincrement())
-    recipeId  Int
-    foodId    Int
-    amount    Float // Количество ингредиента
-    unit      Unit // Единица измерения (G, ML, PCS)
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-
-    recipe   Recipe           @relation(fields: [recipeId], references: [id])
-    food     Food             @relation(fields: [foodId], references: [id])
-    StepItem RecipeStepItem[]
 }
 
 model RecipeStep {
@@ -127,19 +112,20 @@ model RecipeStep {
     createdAt   DateTime @default(now())
     updatedAt   DateTime @updatedAt
 
-    recipe    Recipe           @relation(fields: [recipeId], references: [id])
-    stepItems RecipeStepItem[] // Ингредиенты для данного шага
+    recipe      Recipe             @relation(fields: [recipeId], references: [id])
+    ingredients RecipeIngredient[] // Ингредиенты шага
 }
 
-model RecipeStepItem {
-    id           Int      @id @default(autoincrement())
-    stepId       Int
-    recipeItemId Int // Ссылка на общий ингредиент рецепта
-    createdAt    DateTime @default(now())
-    updatedAt    DateTime @updatedAt
+model RecipeIngredient {
+    id        Int      @id @default(autoincrement())
+    stepId    Int
+    foodId    Int // Ссылка на продукт
+    amount    Float // Количество продукта
+    createdAt DateTime @default(now())
+    updatedAt DateTime @default(now())
 
-    step       RecipeStep @relation(fields: [stepId], references: [id])
-    recipeItem RecipeItem @relation(fields: [recipeItemId], references: [id])
+    step RecipeStep @relation(fields: [stepId], references: [id])
+    food Food       @relation(fields: [foodId], references: [id])
 }
 
 enum Unit {

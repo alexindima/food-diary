@@ -9,6 +9,7 @@ export const environment: AppConfig = {
         consumptions: `${serverUrl}/api/consumptions`,
         statistics: `${serverUrl}/api/statistics`,
         users: `${serverUrl}/api/users`,
+        recipes: `${serverUrl}/api/recipes`,
         logs: `${serverUrl}/api/logs`,
     },
 };

@@ -27,11 +27,14 @@ import {
     FoodListDialogComponent
 } from '../../food-container/food-list/food-list-dialog/food-list-dialog.component';
 import { NutrientChartData } from '../../../types/charts.data';
-import { ErrorCode } from '../../../types/api-response.data';
+import { ApiResponse, ErrorCode } from '../../../types/api-response.data';
 import {
     NutrientsSummaryComponent
 } from '../../shared/nutrients-summary/nutrients-summary.component';
 import { ValidationErrors } from '../../../types/validation-error.data';
+import { Recipe, RecipeDto } from '../../../types/recipe.data';
+import { RecipeService } from "../../../services/recipe.service";
+import { Consumption } from "../../../types/consumption.data";
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: TUI_VALIDATION_ERRORS,
@@ -71,6 +74,7 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RecipeManageComponent implements OnInit {
+    private readonly recipeService = inject(RecipeService);
     private readonly translateService = inject(TranslateService);
 
     public recipe = input<boolean>();
@@ -94,20 +98,15 @@ export class RecipeManageComponent implements OnInit {
 
     public constructor() {
         this.recipeForm = new FormGroup<RecipeFormData>({
-            name: new FormControl<string>('', {nonNullable: true, validators: [Validators.required]}),
+            name: new FormControl<string>('', { nonNullable: true, validators: [Validators.required] }),
             description: new FormControl('', [Validators.maxLength(1000)]),
             prepTime: new FormControl(null, [Validators.required, Validators.min(1)]),
             cookTime: new FormControl(null, [Validators.required, Validators.min(1)]),
-            servings: new FormControl(1, {nonNullable: true, validators: [Validators.required, Validators.min(1)]}),
+            servings: new FormControl(1, { nonNullable: true, validators: [Validators.required, Validators.min(1)] }),
             steps: new FormArray<FormGroup<FormGroupControls<StepFormValues>>>([], nonEmptyArrayValidator()),
         });
 
         this.addStep();
-
-        this.recipeForm.valueChanges.subscribe(form => {
-                console.log(form);
-            }
-        )
     }
 
     public ngOnInit(): void {
@@ -124,13 +123,13 @@ export class RecipeManageComponent implements OnInit {
     public addStep(): void {
         this.steps.push(
             new FormGroup<StepFormData>({
-                description: new FormControl('', [Validators.required]),
+                description: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
                 ingredients: new FormArray<FormGroup<FormGroupControls<IngredientFormValues>>>([
                     new FormGroup<IngredientFormData>({
                         food: new FormControl<Food | null>(null, Validators.required),
                         amount: new FormControl(null, [Validators.required, Validators.min(0.01)]),
-                    }, nonEmptyArrayValidator()),
-                ]),
+                    }),
+                ], nonEmptyArrayValidator()),
             })
         );
     }
@@ -227,10 +226,29 @@ export class RecipeManageComponent implements OnInit {
         this.markFormGroupTouched(this.recipeForm);
 
         if (this.recipeForm.valid) {
-            const recipeData = this.recipeForm.value;
-            console.log('Recipe Data:', recipeData);
-        } else {
-            this.recipeForm.markAllAsTouched();
+            const recipeData = this.prepareRecipeDto();
+            const recipe = this.recipe();
+            this.addRecipe(recipeData);
+            /*recipe
+                ? this.updateRecipe(recipeData.id, recipeData)
+                : this.addRecipe(recipeData);*/
+        }
+    }
+
+    private async addRecipe(recipeData: RecipeDto): Promise<void> {
+        this.recipeService.create(recipeData).subscribe({
+            next: response => this.handleSubmitResponse(response),
+        });
+    }
+
+    private async handleSubmitResponse(response: ApiResponse<RecipeDto | null>): Promise<void> {
+        if (response.status === 'success') {
+            if (!this.recipe()) {
+                this.recipeForm.reset();
+            }
+            //await this.showConfirmDialog();
+        } else if (response.status === 'error') {
+            this.handleSubmitError(response.error);
         }
     }
 
@@ -264,6 +282,41 @@ export class RecipeManageComponent implements OnInit {
     private clearGlobalError(): void {
         this.globalError.set(null);
     }
+
+    private prepareRecipeDto(): RecipeDto {
+        const formValue = this.recipeForm.value as RecipeFormValues;
+
+        return {
+            name: formValue.name,
+            description: formValue.description || undefined,
+            prepTime: formValue.prepTime ?? 0,
+            cookTime: formValue.cookTime ?? 0,
+            servings: formValue.servings,
+            steps: formValue.steps.map(step => ({
+                description: step.description,
+                ingredients: step.ingredients.map(ingredient => ({
+                    foodId: ingredient.food?.id ?? 0,
+                    amount: ingredient.amount ?? 0,
+                })),
+            })),
+        };
+
+        /*return {
+            name: formValue.name.value,
+            description: formValue.description.value || undefined,
+            prepTime: formValue.prepTime.value ?? 0,
+            cookTime: formValue.cookTime.value ?? 0,
+            servings: formValue.servings.value ?? 0,
+            steps: formValue.steps.value.map(step => ({
+                description: step.description!,
+                ingredients: step.ingredients?.map(ingredient => ({
+                    foodId: ingredient.food!.id,
+                    amount: ingredient.amount!,
+                } as RecipeIngredientDto)),
+            } as RecipeStepDto)),
+        };*/
+    }
+
 }
 
 interface RecipeFormValues {
@@ -276,7 +329,7 @@ interface RecipeFormValues {
 }
 
 interface StepFormValues {
-    description: string | null;
+    description: string;
     ingredients: IngredientFormValues[];
 }
 

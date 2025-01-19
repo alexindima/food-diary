@@ -8,5 +8,6 @@ export interface AppConfigApiUrls {
     consumptions: string;
     statistics: string;
     users: string;
+    recipes: string;
     logs: string;
 }
