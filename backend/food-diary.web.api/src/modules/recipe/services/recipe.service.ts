@@ -4,7 +4,6 @@ import { Prisma, Recipe } from '@prisma/client';
 import { PageOf } from 'src/interfaces/page-of.interface';
 import { CreateRecipeDto } from '../dto/create-recipe.dto';
 import { RecipeQueryParams } from '../interfaces/recipe-query-params';
-import { UpdateRecipeDto } from '../dto/update-recipe.dto';
 
 @Injectable()
 export class RecipeService {

@@ -35,6 +35,8 @@ import { ValidationErrors } from '../../../types/validation-error.data';
 import { Recipe, RecipeDto } from '../../../types/recipe.data';
 import { RecipeService } from "../../../services/recipe.service";
 import { Consumption } from "../../../types/consumption.data";
+import { DropZoneDirective } from "../../../directives/drop-zone.directive";
+import { DraggableDirective } from "../../../directives/draggable.directive";
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: TUI_VALIDATION_ERRORS,
@@ -67,6 +69,8 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
         TuiError,
         TuiFieldErrorPipe,
         NutrientsSummaryComponent,
+        DropZoneDirective,
+        DraggableDirective,
     ],
     templateUrl: './recipe-manage.component.html',
     styleUrl: './recipe-manage.component.less',

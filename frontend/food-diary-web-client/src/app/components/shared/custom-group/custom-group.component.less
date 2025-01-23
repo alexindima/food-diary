@@ -1,11 +1,16 @@
 @import 'variables';
 
+.custom-group-wrapper {
+    padding-top: @gap-xs;
+    font-family: "Open Sans", sans-serif;
+}
+
 .custom-group {
-    margin-top: @gap-xs;
     border: 2px solid #d9d9d9;
     border-radius: @border-radius-m;
     padding: @gap-l;
     position: relative;
+    background-color: var(--custom-group-background, transparent);
 }
 
 .custom-group__title {
