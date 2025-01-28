@@ -8,6 +8,8 @@ import {
     TemplateRef,
     ViewContainerRef
 } from '@angular/core';
+import { DragDropService } from '../services/drag-drop.service';
+import { DropZoneDirective } from './drop-zone.directive';
 
 @Directive({
   selector: '[fdDraggable]'
@@ -16,16 +18,18 @@ export class DraggableDirective implements AfterViewInit {
     private readonly elementRef = inject(ElementRef);
     private readonly viewContainerRef = inject(ViewContainerRef);
     private readonly renderer = inject(Renderer2);
+    private readonly dragDropService = inject(DragDropService);
 
     @Input() public fdDraggablePlaceholder?: TemplateRef<any>;
     @Input() public fdDraggableDragView?: TemplateRef<any>;
+    @Input() public fdDraggableAxis: FdDraggableAxis = 'XY';
+    @Input() public fdDraggableBoundary: HTMLElement | null = null;
 
     private isDragging = false;
     private offsetX = 0;
     private offsetY = 0;
 
     private originalParent?: HTMLElement;
-    private dragPlaceholder: HTMLElement | null = null;
     private dragView: HTMLElement | null = null;
 
     public ngAfterViewInit(): void {
@@ -43,6 +47,12 @@ export class DraggableDirective implements AfterViewInit {
     private onMouseDown(event: MouseEvent): void {
         this.isDragging = true;
 
+        const dropZone = this.findDropZone();
+        if (!dropZone) {
+            console.error('Drop zone not found!');
+            return;
+        }
+
         this.originalParent = this.elementRef.nativeElement.parentNode;
 
         const rect = this.elementRef.nativeElement.getBoundingClientRect();
@@ -55,7 +65,10 @@ export class DraggableDirective implements AfterViewInit {
         const initialWidth = rect.width;
         const initialHeight = rect.height;
 
-        this.createPlaceholder(initialWidth, initialHeight);
+        this.dragDropService.setActiveDropZone(dropZone);
+        const placeholder = this.createPlaceholder(initialWidth, initialHeight);
+        dropZone.startDragging(this.elementRef, placeholder)
+
         this.createView(initialWidth, initialHeight, initialLeft, initialTop);
 
         document.addEventListener('mousemove', this.onMouseMove);
@@ -84,11 +97,6 @@ export class DraggableDirective implements AfterViewInit {
             this.dragView = null;
         }
 
-        if (this.dragPlaceholder && this.originalParent) {
-            this.renderer.removeChild(this.originalParent, this.dragPlaceholder);
-            this.dragPlaceholder = null;
-        }
-
         if (this.originalParent) {
             this.renderer.appendChild(this.originalParent, this.elementRef.nativeElement);
         }
@@ -99,17 +107,48 @@ export class DraggableDirective implements AfterViewInit {
         this.renderer.setStyle(this.elementRef.nativeElement, 'left', '');
         this.renderer.setStyle(this.elementRef.nativeElement, 'top', '');
 
+        this.dragDropService.getActiveDropZone()?.stopDragging();
+
         document.removeEventListener('mousemove', this.onMouseMove);
         document.removeEventListener('mouseup', this.onMouseUp);
     };
 
     private moveAt(pageX: number, pageY: number): void {
         const target = this.dragView || this.elementRef.nativeElement;
-        this.renderer.setStyle(target, 'left', `${pageX - this.offsetX}px`);
-        this.renderer.setStyle(target, 'top', `${pageY - this.offsetY}px`);
+
+        const targetRect = target.getBoundingClientRect();
+
+        let newLeft = pageX - this.offsetX;
+        let newTop = pageY - this.offsetY;
+
+        if (this.fdDraggableBoundary) {
+            const boundaryRect = this.fdDraggableBoundary.getBoundingClientRect();
+
+            const boundaryLeft = boundaryRect.left + window.scrollX;
+            const boundaryTop = boundaryRect.top + window.scrollY;
+            const boundaryRight = boundaryRect.right + window.scrollX;
+            const boundaryBottom = boundaryRect.bottom + window.scrollY;
+
+            if (this.fdDraggableAxis === 'X' || this.fdDraggableAxis === 'XY') {
+                newLeft = Math.max(boundaryLeft, Math.min(newLeft, boundaryRight - targetRect.width));
+            }
+
+            if (this.fdDraggableAxis === 'Y' || this.fdDraggableAxis === 'XY') {
+                newTop = Math.max(boundaryTop, Math.min(newTop, boundaryBottom - targetRect.height));
+            }
+        }
+
+        if (this.fdDraggableAxis === 'X' || this.fdDraggableAxis === 'XY') {
+            this.renderer.setStyle(target, 'left', `${newLeft}px`);
+        }
+        if (this.fdDraggableAxis === 'Y' || this.fdDraggableAxis === 'XY') {
+            this.renderer.setStyle(target, 'top', `${newTop}px`);
+        }
+
+        this.dragDropService.getActiveDropZone()?.update(pageX, pageY);
     }
 
-    private createPlaceholder(width: number, height: number): void {
+    private createPlaceholder(width: number, height: number): HTMLElement {
         const wrapper = document.createElement('div');
         this.renderer.addClass(wrapper, 'drag-placeholder');
         this.renderer.setStyle(wrapper, 'width', `${width}px`);
@@ -130,12 +169,7 @@ export class DraggableDirective implements AfterViewInit {
             this.renderer.setStyle(wrapper, 'boxSizing', 'border-box');
         }
 
-        this.renderer.insertBefore(
-            this.originalParent,
-            wrapper,
-            this.elementRef.nativeElement
-        );
-        this.dragPlaceholder = wrapper;
+        return wrapper;
     }
 
     private createView(width: number, height: number, left: number, top: number): void {
@@ -165,4 +199,21 @@ export class DraggableDirective implements AfterViewInit {
         this.renderer.appendChild(document.body, wrapper);
         this.dragView = wrapper;
     }
+
+    private findDropZone(): DropZoneDirective | null {
+        const dropZones = this.dragDropService.getDropZones();
+        const elemBounding = (this.elementRef.nativeElement as HTMLElement).getBoundingClientRect();
+
+        return dropZones.find((zone) => {
+            const rect = zone.elementRef.nativeElement.getBoundingClientRect();
+            return (
+                elemBounding.left >= rect.left &&
+                elemBounding.right <= rect.right &&
+                elemBounding.top >= rect.top &&
+                elemBounding.bottom <= rect.bottom
+            );
+        }) || null;
+    }
 }
+
+export type FdDraggableAxis = 'X' | 'Y' | 'XY';

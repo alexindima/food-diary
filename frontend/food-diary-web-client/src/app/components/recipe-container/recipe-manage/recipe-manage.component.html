@@ -48,7 +48,7 @@
                 ></tui-error>
             </div>
 
-            <div class="recipe-manage__cookTime">
+            <div class="recipe-manage__cookTime" fdDropZone>
                 <tui-input-number formControlName="cookTime">
                     {{ 'RECIPE_MANAGE.COOK_TIME' | translate }}
                     <input
@@ -77,8 +77,8 @@
             </div>
         </div>
 
-        <div class="recipe-manage__steps-wrapper" fdDropZone [dropZoneData]="steps.controls">
-            <div class="recipe-manage__steps" formArrayName="steps">
+        <div class="recipe-manage__steps-wrapper">
+            <div class="recipe-manage__steps" #dragBoundary fdDropZone  formArrayName="steps">
                 <div *ngFor="let step of steps.controls; let stepIndex = index; let first = first" [formGroupName]="stepIndex">
                     <fd-custom-group
                         fdDraggable
@@ -86,6 +86,8 @@
                         [showButton]="!first"
                         [fdDraggableDragView]="customDragView"
                         [fdDraggablePlaceholder]="customDragPlaceholder"
+                        [fdDraggableAxis]="'Y'"
+                        [fdDraggableBoundary]="dragBoundary"
                         (buttonClick)="removeStep(stepIndex)"
                     >
                         <div  class="recipe-manage__step">
