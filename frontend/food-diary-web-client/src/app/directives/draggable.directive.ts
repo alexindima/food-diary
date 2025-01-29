@@ -28,6 +28,9 @@ export class DraggableDirective implements AfterViewInit {
     private isDragging = false;
     private offsetX = 0;
     private offsetY = 0;
+    private animationFrameId: number | null = null;
+    private lastMouseX = 0;
+    private lastMouseY = 0;
 
     private originalParent?: HTMLElement;
     private dragView: HTMLElement | null = null;
@@ -67,9 +70,9 @@ export class DraggableDirective implements AfterViewInit {
 
         this.dragDropService.setActiveDropZone(dropZone);
         const placeholder = this.createPlaceholder(initialWidth, initialHeight);
-        dropZone.startDragging(this.elementRef, placeholder)
+        const dragView = this.createView(initialWidth, initialHeight, initialLeft, initialTop);
 
-        this.createView(initialWidth, initialHeight, initialLeft, initialTop);
+        dropZone.startDragging(this.elementRef, dragView, placeholder)
 
         document.addEventListener('mousemove', this.onMouseMove);
         document.addEventListener('mouseup', this.onMouseUp);
@@ -78,11 +81,15 @@ export class DraggableDirective implements AfterViewInit {
     }
 
     private onMouseMove = (event: MouseEvent): void => {
-        if (!this.isDragging) {
-            return;
-        }
+        this.lastMouseX = event.pageX;
+        this.lastMouseY = event.pageY;
 
-        this.moveAt(event.pageX, event.pageY);
+        if (!this.animationFrameId) {
+            this.animationFrameId = requestAnimationFrame(() => {
+                this.moveAt(this.lastMouseX, this.lastMouseY);
+                this.animationFrameId = null;
+            });
+        }
     };
 
     private onMouseUp = (): void => {
@@ -172,7 +179,7 @@ export class DraggableDirective implements AfterViewInit {
         return wrapper;
     }
 
-    private createView(width: number, height: number, left: number, top: number): void {
+    private createView(width: number, height: number, left: number, top: number): HTMLElement {
         const wrapper = this.renderer.createElement('div');
         this.renderer.addClass(wrapper, 'drag-view');
         this.renderer.setStyle(wrapper, 'cursor', 'move');
@@ -198,22 +205,27 @@ export class DraggableDirective implements AfterViewInit {
 
         this.renderer.appendChild(document.body, wrapper);
         this.dragView = wrapper;
+
+        return wrapper;
     }
 
     private findDropZone(): DropZoneDirective | null {
-        const dropZones = this.dragDropService.getDropZones();
-        const elemBounding = (this.elementRef.nativeElement as HTMLElement).getBoundingClientRect();
+        const dropZoneElement = this.elementRef.nativeElement.closest('[fdDropZone]');
 
-        return dropZones.find((zone) => {
-            const rect = zone.elementRef.nativeElement.getBoundingClientRect();
-            return (
-                elemBounding.left >= rect.left &&
-                elemBounding.right <= rect.right &&
-                elemBounding.top >= rect.top &&
-                elemBounding.bottom <= rect.bottom
+        if (dropZoneElement) {
+            // Найти зарегистрированную дроп-зону по элементу
+            const dropZone = this.dragDropService.getDropZones().find(
+                (zone) => zone.elementRef.nativeElement === dropZoneElement
             );
-        }) || null;
+
+            if (dropZone) {
+                return dropZone;
+            }
+        }
+
+        return null; // Если дроп-зона не найдена
     }
+
 }
 
 export type FdDraggableAxis = 'X' | 'Y' | 'XY';

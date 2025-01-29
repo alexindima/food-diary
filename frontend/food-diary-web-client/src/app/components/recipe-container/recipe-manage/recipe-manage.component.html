@@ -79,15 +79,17 @@
 
         <div class="recipe-manage__steps-wrapper">
             <div class="recipe-manage__steps" #dragBoundary fdDropZone  formArrayName="steps">
-                <div *ngFor="let step of steps.controls; let stepIndex = index; let first = first" [formGroupName]="stepIndex">
+                <div *ngFor="let step of steps.controls; let stepIndex = index; let first = first" [formGroupName]="stepIndex"
+                     fdDraggable
+                     [fdDraggableDragView]="customDragView"
+                     [fdDraggablePlaceholder]="customDragPlaceholder"
+                     [fdDraggableAxis]="'Y'"
+                     [fdDraggableBoundary]="dragBoundary"
+                >
                     <fd-custom-group
-                        fdDraggable
                         [title]="'RECIPE_MANAGE.STEPS' | translate : {index: stepIndex}"
                         [showButton]="!first"
-                        [fdDraggableDragView]="customDragView"
-                        [fdDraggablePlaceholder]="customDragPlaceholder"
-                        [fdDraggableAxis]="'Y'"
-                        [fdDraggableBoundary]="dragBoundary"
+
                         (buttonClick)="removeStep(stepIndex)"
                     >
                         <div  class="recipe-manage__step">
