@@ -78,7 +78,7 @@
         </div>
 
         <div class="recipe-manage__steps-wrapper">
-            <div class="recipe-manage__steps" #dragBoundary fdDropZone  formArrayName="steps">
+            <div class="recipe-manage__steps" #dragBoundary fdDropZone formArrayName="steps">
                 <div *ngFor="let step of steps.controls; let stepIndex = index; let first = first" [formGroupName]="stepIndex"
                      fdDraggable
                      [fdDraggableDragView]="customDragView"

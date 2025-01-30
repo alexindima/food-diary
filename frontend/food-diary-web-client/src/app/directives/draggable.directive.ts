@@ -3,7 +3,9 @@ import {
     Directive,
     ElementRef,
     inject,
-    Input,
+    input,
+    OnInit,
+    output,
     Renderer2,
     TemplateRef,
     ViewContainerRef
@@ -14,26 +16,41 @@ import { DropZoneDirective } from './drop-zone.directive';
 @Directive({
   selector: '[fdDraggable]'
 })
-export class DraggableDirective implements AfterViewInit {
+export class DraggableDirective implements OnInit, AfterViewInit {
     private readonly elementRef = inject(ElementRef);
     private readonly viewContainerRef = inject(ViewContainerRef);
     private readonly renderer = inject(Renderer2);
     private readonly dragDropService = inject(DragDropService);
 
-    @Input() public fdDraggablePlaceholder?: TemplateRef<any>;
-    @Input() public fdDraggableDragView?: TemplateRef<any>;
-    @Input() public fdDraggableAxis: FdDraggableAxis = 'XY';
-    @Input() public fdDraggableBoundary: HTMLElement | null = null;
+    private readonly onMouseMoveHandler;
+    private readonly onMouseUpHandler;
 
+    public fdDraggablePlaceholder = input<TemplateRef<any> | null>(null);
+    public fdDraggableDragView = input<TemplateRef<any> | null>(null);
+    public fdDraggableAxis = input<FdDraggableAxis>('XY');
+    public fdDraggableBoundary = input<HTMLElement | null>(null);
+    public fdDragStarted = output<void>();
+    public fdDrop = output<DragDropEvent>();
+
+    private dragView: HTMLElement | null = null;
+    private dropZone: DropZoneDirective | null = null;
+    private originalParent: HTMLElement | null = null;
+    private originalIndex: number = 0;
+    private animationFrameId: number | null = null;
     private isDragging = false;
     private offsetX = 0;
     private offsetY = 0;
-    private animationFrameId: number | null = null;
     private lastMouseX = 0;
     private lastMouseY = 0;
 
-    private originalParent?: HTMLElement;
-    private dragView: HTMLElement | null = null;
+    public constructor() {
+        this.onMouseMoveHandler = this.onMouseMove.bind(this);
+        this.onMouseUpHandler = this.onMouseUp.bind(this);
+    }
+
+    public ngOnInit(): void {
+        this.dropZone = this.dragDropService.findDropZone(this.elementRef);
+    }
 
     public ngAfterViewInit(): void {
         const dragHandleElement = this.elementRef.nativeElement.querySelector('[fdDragHandle]')
@@ -49,14 +66,13 @@ export class DraggableDirective implements AfterViewInit {
 
     private onMouseDown(event: MouseEvent): void {
         this.isDragging = true;
+        this.fdDragStarted.emit();
 
-        const dropZone = this.findDropZone();
-        if (!dropZone) {
-            console.error('Drop zone not found!');
-            return;
+        this.originalParent = this.elementRef.nativeElement.parentElement;
+        if (this.originalParent) {
+            const children = Array.from(this.originalParent.children);
+            this.originalIndex = children.indexOf(this.elementRef.nativeElement);
         }
-
-        this.originalParent = this.elementRef.nativeElement.parentNode;
 
         const rect = this.elementRef.nativeElement.getBoundingClientRect();
         const initialLeft = rect.left + window.scrollX;
@@ -68,19 +84,17 @@ export class DraggableDirective implements AfterViewInit {
         const initialWidth = rect.width;
         const initialHeight = rect.height;
 
-        this.dragDropService.setActiveDropZone(dropZone);
         const placeholder = this.createPlaceholder(initialWidth, initialHeight);
         const dragView = this.createView(initialWidth, initialHeight, initialLeft, initialTop);
 
-        dropZone.startDragging(this.elementRef, dragView, placeholder)
-
-        document.addEventListener('mousemove', this.onMouseMove);
-        document.addEventListener('mouseup', this.onMouseUp);
-
+        this.dropZone?.startDragging(this.elementRef, dragView, placeholder)
         this.moveAt(event.pageX, event.pageY);
+
+        document.addEventListener('mousemove', this.onMouseMoveHandler);
+        document.addEventListener('mouseup', this.onMouseUpHandler);
     }
 
-    private onMouseMove = (event: MouseEvent): void => {
+    private onMouseMove(event: MouseEvent): void {
         this.lastMouseX = event.pageX;
         this.lastMouseY = event.pageY;
 
@@ -92,7 +106,7 @@ export class DraggableDirective implements AfterViewInit {
         }
     };
 
-    private onMouseUp = (): void => {
+    private onMouseUp(): void {
         if (!this.isDragging) {
             return;
         }
@@ -114,45 +128,48 @@ export class DraggableDirective implements AfterViewInit {
         this.renderer.setStyle(this.elementRef.nativeElement, 'left', '');
         this.renderer.setStyle(this.elementRef.nativeElement, 'top', '');
 
-        this.dragDropService.getActiveDropZone()?.stopDragging();
+        const placeholder = this.originalParent?.querySelector<HTMLElement>('.drag-placeholder');
+        if (!this.originalParent || !placeholder) {
+            return;
+        }
 
-        document.removeEventListener('mousemove', this.onMouseMove);
-        document.removeEventListener('mouseup', this.onMouseUp);
+        const newIndex = Array.from(this.originalParent.children).indexOf(placeholder);
+        if (newIndex !== this.originalIndex) {
+            console.log('emit', this.originalIndex, newIndex);
+            this.fdDrop.emit({
+                previousIndex: this.originalIndex,
+                currentIndex: newIndex }
+            );
+        }
+
+        this.dropZone?.stopDragging();
+        this.originalIndex = 0;
+
+        document.removeEventListener('mousemove', this.onMouseMoveHandler);
+        document.removeEventListener('mouseup', this.onMouseUpHandler);
     };
 
     private moveAt(pageX: number, pageY: number): void {
         const target = this.dragView || this.elementRef.nativeElement;
 
-        const targetRect = target.getBoundingClientRect();
-
         let newLeft = pageX - this.offsetX;
         let newTop = pageY - this.offsetY;
 
-        if (this.fdDraggableBoundary) {
-            const boundaryRect = this.fdDraggableBoundary.getBoundingClientRect();
-
-            const boundaryLeft = boundaryRect.left + window.scrollX;
-            const boundaryTop = boundaryRect.top + window.scrollY;
-            const boundaryRight = boundaryRect.right + window.scrollX;
-            const boundaryBottom = boundaryRect.bottom + window.scrollY;
-
-            if (this.fdDraggableAxis === 'X' || this.fdDraggableAxis === 'XY') {
-                newLeft = Math.max(boundaryLeft, Math.min(newLeft, boundaryRight - targetRect.width));
-            }
-
-            if (this.fdDraggableAxis === 'Y' || this.fdDraggableAxis === 'XY') {
-                newTop = Math.max(boundaryTop, Math.min(newTop, boundaryBottom - targetRect.height));
-            }
+        const boundary = this.fdDraggableBoundary();
+        if (boundary) {
+            const boundaryRect = boundary.getBoundingClientRect();
+            newLeft = Math.max(boundaryRect.left + window.scrollX, Math.min(newLeft, boundaryRect.right + window.scrollX - target.clientWidth));
+            newTop = Math.max(boundaryRect.top + window.scrollY, Math.min(newTop, boundaryRect.bottom + window.scrollY - target.clientHeight));
         }
 
-        if (this.fdDraggableAxis === 'X' || this.fdDraggableAxis === 'XY') {
+        if (this.fdDraggableAxis() === 'X' || this.fdDraggableAxis() === 'XY') {
             this.renderer.setStyle(target, 'left', `${newLeft}px`);
         }
-        if (this.fdDraggableAxis === 'Y' || this.fdDraggableAxis === 'XY') {
+        if (this.fdDraggableAxis() === 'Y' || this.fdDraggableAxis() === 'XY') {
             this.renderer.setStyle(target, 'top', `${newTop}px`);
         }
 
-        this.dragDropService.getActiveDropZone()?.update(pageX, pageY);
+        this.dropZone?.update();
     }
 
     private createPlaceholder(width: number, height: number): HTMLElement {
@@ -160,8 +177,9 @@ export class DraggableDirective implements AfterViewInit {
         this.renderer.addClass(wrapper, 'drag-placeholder');
         this.renderer.setStyle(wrapper, 'width', `${width}px`);
 
-        if (this.fdDraggablePlaceholder) {
-            const view = this.viewContainerRef.createEmbeddedView(this.fdDraggablePlaceholder);
+        const customPlaceholder = this.fdDraggablePlaceholder();
+        if (customPlaceholder) {
+            const view = this.viewContainerRef.createEmbeddedView(customPlaceholder);
 
             view.rootNodes.forEach((node) => {
                 if (node instanceof HTMLElement) {
@@ -189,8 +207,9 @@ export class DraggableDirective implements AfterViewInit {
         this.renderer.setStyle(wrapper, 'top', `${top}px`);
         this.renderer.setStyle(wrapper, 'zIndex', '1000');
 
-        if (this.fdDraggableDragView) {
-            const view = this.viewContainerRef.createEmbeddedView(this.fdDraggableDragView);
+        const customDragView = this.fdDraggableDragView();
+        if (customDragView) {
+            const view = this.viewContainerRef.createEmbeddedView(customDragView);
             view.rootNodes.forEach((node) => {
                 if (node instanceof HTMLElement) {
                     this.renderer.appendChild(wrapper, node);
@@ -208,24 +227,11 @@ export class DraggableDirective implements AfterViewInit {
 
         return wrapper;
     }
-
-    private findDropZone(): DropZoneDirective | null {
-        const dropZoneElement = this.elementRef.nativeElement.closest('[fdDropZone]');
-
-        if (dropZoneElement) {
-            // Найти зарегистрированную дроп-зону по элементу
-            const dropZone = this.dragDropService.getDropZones().find(
-                (zone) => zone.elementRef.nativeElement === dropZoneElement
-            );
-
-            if (dropZone) {
-                return dropZone;
-            }
-        }
-
-        return null; // Если дроп-зона не найдена
-    }
-
 }
 
 export type FdDraggableAxis = 'X' | 'Y' | 'XY';
+
+export interface DragDropEvent {
+    previousIndex: number;
+    currentIndex: number;
+}

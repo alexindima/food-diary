@@ -1,33 +1,29 @@
-import { Injectable } from '@angular/core';
+import { ElementRef, Injectable } from '@angular/core';
 import { DropZoneDirective } from '../directives/drop-zone.directive';
 
-@Injectable({ providedIn: 'root' })
+@Injectable({
+    providedIn: 'root'
+})
 export class DragDropService {
-    private dropZones: DropZoneDirective[] = [];
-    private activeDropZone: DropZoneDirective | null = null;
+    public dropZones = new Set<DropZoneDirective>();
 
     public registerDropZone(zone: DropZoneDirective): void {
-        if (this.dropZones.includes(zone)) {
-            console.warn('Drop zone is already registered:', zone);
-            return;
-        }
-
-        this.dropZones.push(zone);
+        this.dropZones.add(zone);
     }
 
     public unregisterDropZone(zone: DropZoneDirective): void {
-        this.dropZones = this.dropZones.filter((z) => z !== zone);
+        this.dropZones.delete(zone);
     }
 
-    public getDropZones(): DropZoneDirective[] {
-        return this.dropZones;
-    }
+    public findDropZone(element: ElementRef): DropZoneDirective {
+        for (const zone of this.dropZones) {
+            if (zone.elementRef.nativeElement.contains(element.nativeElement)) {
+                return zone;
+            }
+        }
 
-    public setActiveDropZone(zone: DropZoneDirective | null): void {
-        this.activeDropZone = zone;
-    }
-
-    public getActiveDropZone(): DropZoneDirective | null {
-        return this.activeDropZone;
+        throw new Error(
+            'Drop zone not found! Make sure every element with [fdDraggable] is inside an element with [fdDropZone].'
+        );
     }
 }
