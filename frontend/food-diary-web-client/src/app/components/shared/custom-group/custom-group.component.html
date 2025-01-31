@@ -1,11 +1,23 @@
 <div class="custom-group-wrapper">
     <div class="custom-group">
-        <div class="custom-group__title" fdDragHandle>
+        <div
+            class="custom-group__title"
+            fdDragHandle
+            [ngStyle]="{ left: titleLeftOffset()}"
+        >
             <span>{{ title() }}</span>
+
         </div>
+        @if (isAccordion()) {
+            <button class="custom-group__toggle" (click)="toggleAccordion()">
+                {{ isOpen() ? '-' : '+' }}
+            </button>
+        }
         @if (showButton()) {
             <div class="custom-group__button" (click)="onButtonClick()">X</div>
         }
-        <ng-content></ng-content>
+        @if (!forceCollapse() && (isOpen() || !isAccordion())) {
+            <ng-content></ng-content>
+        }
     </div>
 </div>

@@ -111,7 +111,19 @@ export class RecipeManageComponent implements OnInit {
         });
 
         this.addStep();
+
+        setTimeout(() => {
+            this.forceCollapse.set(true);
+            console.log('setTimeout true')
+        }, 2000)
+
+        setTimeout(() => {
+            this.forceCollapse.set(false);
+            console.log('setTimeout false')
+        }, 5000)
     }
+
+    public forceCollapse = signal(false);
 
     public ngOnInit(): void {
         const recipeData = this.getRecipeData();

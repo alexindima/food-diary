@@ -89,7 +89,8 @@
                     <fd-custom-group
                         [title]="'RECIPE_MANAGE.STEPS' | translate : {index: stepIndex}"
                         [showButton]="!first"
-
+                        [isAccordion]="true"
+                        [forceCollapse]="forceCollapse()"
                         (buttonClick)="removeStep(stepIndex)"
                     >
                         <div  class="recipe-manage__step">
@@ -166,6 +167,8 @@
                                         {{ 'RECIPE_MANAGE.ADD_INGREDIENT' | translate }}
                                     </button>
                                 </div>
+                            </fd-custom-group>
+                            <fd-custom-group [title]="'test'">
                             </fd-custom-group>
                         </div>
                     </fd-custom-group>
