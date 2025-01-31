@@ -13,8 +13,8 @@
                 {{ isOpen() ? '-' : '+' }}
             </button>
         }
-        @if (showButton()) {
-            <div class="custom-group__button" (click)="onButtonClick()">X</div>
+        @if (showCloseButton()) {
+            <div class="custom-group__button" (click)="onCloseButtonClick()">X</div>
         }
         @if (!forceCollapse() && (isOpen() || !isAccordion())) {
             <ng-content></ng-content>

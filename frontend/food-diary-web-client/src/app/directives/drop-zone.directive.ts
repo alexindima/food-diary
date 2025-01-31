@@ -8,6 +8,9 @@ import {
 } from '@angular/core';
 import { DragDropService } from '../services/drag-drop.service';
 
+/**
+ * A directive that defines a drop zone area for draggable elements.
+ */
 @Directive({
     selector: '[fdDropZone]',
 })

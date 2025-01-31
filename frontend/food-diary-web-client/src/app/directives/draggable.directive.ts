@@ -13,6 +13,9 @@ import {
 import { DragDropService } from '../services/drag-drop.service';
 import { DropZoneDirective } from './drop-zone.directive';
 
+/**
+ * A directive that enables draggable behavior on an element.
+ */
 @Directive({
   selector: '[fdDraggable]'
 })
@@ -25,11 +28,35 @@ export class DraggableDirective implements OnInit, AfterViewInit {
     private readonly onMouseMoveHandler;
     private readonly onMouseUpHandler;
 
+    /**
+     * Custom template for the placeholder element.
+     */
     public fdDraggablePlaceholder = input<TemplateRef<any> | null>(null);
+
+    /**
+     * Custom template for the drag view element.
+     */
     public fdDraggableDragView = input<TemplateRef<any> | null>(null);
+
+    /**
+     * Defines the axis along which the element can be dragged.
+     * Allowed values: 'X', 'Y', 'XY'.
+     */
     public fdDraggableAxis = input<FdDraggableAxis>('XY');
+
+    /**
+     * Element that defines the boundary within which the element can be dragged.
+     */
     public fdDraggableBoundary = input<HTMLElement | null>(null);
+
+    /**
+     * Event emitted when dragging starts.
+     */
     public fdDragStarted = output<void>();
+
+    /**
+     * Event emitted when the draggable element is dropped.
+     */
     public fdDrop = output<DragDropEvent>();
 
     private dragView: HTMLElement | null = null;

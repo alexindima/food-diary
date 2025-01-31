@@ -88,10 +88,10 @@
                 >
                     <fd-custom-group
                         [title]="'RECIPE_MANAGE.STEPS' | translate : {index: stepIndex}"
-                        [showButton]="!first"
+                        [showCloseButton]="!first"
                         [isAccordion]="true"
                         [forceCollapse]="forceCollapse()"
-                        (buttonClick)="removeStep(stepIndex)"
+                        (closeButtonClick)="removeStep(stepIndex)"
                     >
                         <div  class="recipe-manage__step">
                             <div class="recipe-manage__step-description">

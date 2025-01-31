@@ -15,20 +15,41 @@ import { NgStyle } from '@angular/common';
   styleUrl: './custom-group.component.less'
 })
 export class CustomGroupComponent {
-    public title = input.required<string>()
-    public showButton = input<boolean>(false);
+    /**
+     * The title of the component.
+     * This is a required parameter.
+     */
+    public title = input.required<string>();
+
+    /**
+     * Flag to display the close button.
+     * Default is false.
+     */
+    public showCloseButton = input<boolean>(false);
+
+    /**
+     * Flag indicating whether the component should behave as an accordion.
+     * When true, a toggle button for collapsing/expanding is displayed.
+     */
     public isAccordion = input<boolean>(false);
+
+    /**
+     * Flag to force collapse the component.
+     */
     public forceCollapse = input<boolean>();
+
+    /**
+     * Event emitted when the close button is clicked.
+     */
+    public closeButtonClick = output<void>();
 
     public isOpen = signal<boolean>(true);
     public titleLeftOffset = computed<string>(() => {
         return this.isAccordion() ? '36px' : '15px';
-    })
+    });
 
-    public buttonClick = output<void>();
-
-    public onButtonClick(): void {
-        this.buttonClick.emit();
+    public onCloseButtonClick(): void {
+        this.closeButtonClick.emit();
     }
 
     public toggleAccordion(): void {
