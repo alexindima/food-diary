@@ -1,0 +1,14 @@
+namespace FoodDiary.Contracts.Users;
+
+public record UpdateUserRequest(
+    string? Username,
+    string? Password,
+    string? FirstName,
+    string? LastName,
+    DateTime? BirthDate,
+    string? Gender,
+    double? Weight,
+    double? Height,
+    string? ProfileImage,
+    bool? IsActive
+);
