@@ -6,8 +6,7 @@ namespace FoodDiary.Domain.Entities;
 /// <summary>
 /// Пользователь системы - корень агрегата
 /// </summary>
-public class User : AggregateRoot<UserId>
-{
+public sealed class User : AggregateRoot<UserId> {
     public string Email { get; private set; } = string.Empty;
     public string Password { get; private set; } = string.Empty;
     public string? RefreshToken { get; private set; }
@@ -22,18 +21,17 @@ public class User : AggregateRoot<UserId>
     public bool IsActive { get; private set; } = true;
 
     // Navigation properties
-    public virtual ICollection<Meal> Meals { get; private set; } = new List<Meal>();
-    public virtual ICollection<Product> Products { get; private set; } = new List<Product>();
-    public virtual ICollection<Recipe> Recipes { get; private set; } = new List<Recipe>();
+    public ICollection<Meal> Meals { get; private set; } = new List<Meal>();
+    public ICollection<Product> Products { get; private set; } = new List<Product>();
+    public ICollection<Recipe> Recipes { get; private set; } = new List<Recipe>();
 
     // Конструктор для EF Core
-    private User() { }
+    private User() {
+    }
 
     // Factory method для создания нового пользователя
-    public static User Create(string email, string hashedPassword)
-    {
-        var user = new User
-        {
+    public static User Create(string email, string hashedPassword) {
+        var user = new User {
             Id = UserId.New(),
             Email = email,
             Password = hashedPassword
@@ -42,9 +40,13 @@ public class User : AggregateRoot<UserId>
         return user;
     }
 
-    public void UpdateRefreshToken(string? refreshToken)
-    {
+    public void UpdateRefreshToken(string? refreshToken) {
         RefreshToken = refreshToken;
+        SetModified();
+    }
+
+    public void UpdatePassword(string hashedPassword) {
+        Password = hashedPassword;
         SetModified();
     }
 
@@ -56,8 +58,7 @@ public class User : AggregateRoot<UserId>
         string? gender = null,
         double? weight = null,
         double? height = null,
-        string? profileImage = null)
-    {
+        string? profileImage = null) {
         if (username is not null) Username = username;
         if (firstName is not null) FirstName = firstName;
         if (lastName is not null) LastName = lastName;
@@ -70,14 +71,12 @@ public class User : AggregateRoot<UserId>
         SetModified();
     }
 
-    public void Deactivate()
-    {
+    public void Deactivate() {
         IsActive = false;
         SetModified();
     }
 
-    public void Activate()
-    {
+    public void Activate() {
         IsActive = true;
         SetModified();
     }
