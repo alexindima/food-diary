@@ -20,7 +20,7 @@
         "HOME": "Home",
         "LOGIN": "Login",
         "REGISTER": "Register",
-        "FOOD": "Food",
+        "PRODUCTS": "Products",
         "CONSUMPTION": "Consumption",
         "STATISTICS": "Statistics",
         "USER": "User",
@@ -100,21 +100,22 @@
             "REGISTER": "Register"
         }
     },
-    "FOOD_LIST": {
-        "TITLE": "Food List",
+    "PRODUCT_LIST": {
+        "TITLE": "Product List",
         "SEARCH_TITLE": "Searching:",
         "SEARCH_PLACEHOLDER": "Search by name or barcode",
         "SEARCH_BUTTON": "Search",
-        "ADD_FOOD_BUTTON": "Add food",
+        "ADD_PRODUCT_BUTTON": "Add product",
         "ONLY_MY_PRODUCTS": "Show only my products",
         "NO_PRODUCTS_FOUND": "No products found",
         "CALORIES": "Calories",
         "BARCODE": "Barcode",
         "PROTEINS": "Proteins",
         "FATS": "Fats",
-        "CARBS": "Carbs"
+        "CARBS": "Carbs",
+        "DELETE_ERROR": "Unable to delete the product. Please try again."
     },
-    "FOOD_DETAIL": {
+    "PRODUCT_DETAIL": {
         "BARCODE": "Barcode:",
         "CATEGORY": "Category:",
         "BASE_AMOUNT": "Default Serving:",
@@ -128,16 +129,16 @@
         "CANCEL_BUTTON": "Cancel",
         "SERVING": "Serving",
         "ADD_TO_CONSUMPTION": "Add to consumption",
-        "CREATE_SUCCESS": "Food created successfully!",
-        "EDIT_SUCCESS": "Food edited successfully!",
+        "CREATE_SUCCESS": "Product created successfully!",
+        "EDIT_SUCCESS": "Product edited successfully!",
         "GO_TO_HOME_BUTTON": "Go to Home",
-        "GO_TO_FOOD_LIST_BUTTON": "Go to Food List"
+        "GO_TO_PRODUCT_LIST_BUTTON": "Go to Product List"
     },
-    "FOOD_MANAGE": {
-        "ADD_TITLE": "Add New Food",
-        "EDIT_TITLE": "Edit Food",
+    "PRODUCT_MANAGE": {
+        "ADD_TITLE": "Add New Product",
+        "EDIT_TITLE": "Edit Product",
         "NAME": "Name",
-        "NAME_PLACEHOLDER": "Enter food name",
+        "NAME_PLACEHOLDER": "Enter product name",
         "BARCODE": "Barcode",
         "BARCODE_PLACEHOLDER": "Enter barcode",
         "CATEGORY": "Category",
@@ -164,7 +165,7 @@
         },
         "NUTRITION_VALUE": "Nutrition value",
         "SAVE_BUTTON": "Save Changes",
-        "ADD_BUTTON": "Add Food",
+        "ADD_BUTTON": "Add Product",
         "CANCEL_BUTTON": "Cancel"
     },
     "CONSUMPTION_LIST": {
@@ -182,7 +183,7 @@
     },
     "CONSUMPTION_DETAIL": {
         "TITLE": "Consumption Details",
-        "ITEMS_LIST": "Foods ({{count}} pcs):",
+        "ITEMS_LIST": "Products ({{count}} pcs):",
         "TOTAL_CALORIES": "Total Calories:",
         "TOTAL_PROTEINS": "Total Proteins:",
         "TOTAL_FATS": "Total Fats:",
@@ -197,10 +198,10 @@
         "EDIT_TITLE": "Edit Consumption",
         "ADD_TITLE": "Add Consumption",
         "CHOOSE_DATE": "Date and time",
-        "FOODS": "Foods",
-        "ADD_FOOD_ROW": {
-            "FOOD": "Food",
-            "FOOD_PLACEHOLDER": "Choose a food",
+        "PRODUCTS": "Products",
+        "ADD_PRODUCT_ROW": {
+            "PRODUCT": "Product",
+            "PRODUCT_PLACEHOLDER": "Choose a product",
             "QUANTITY": "Quantity",
             "QUANTITY_PLACEHOLDER": "Enter quantity"
         },
@@ -213,8 +214,8 @@
         "GO_TO_HOME_BUTTON": "Go to Home",
         "GO_TO_CONSUMPTION_LIST_BUTTON": "Go to Consumptions List",
         "CHOOSE_DATE_TIME": "Choose date and time",
-        "NO_FOOD_ADDED": "No food added",
-        "ADD_FOOD": "Add food"
+        "NO_PRODUCTS_ADDED": "No products added",
+        "ADD_PRODUCT": "Add product"
     },
     "STATISTICS": {
         "TITLE": "Statistics",
@@ -262,9 +263,9 @@
         "TOTAL_CONSUMPTION": "Total Consumption",
         "NUTRIENTS": "Nutrients",
         "ADD_CONSUMPTION": "Add Consumption",
-        "ADD_FOOD": "Add Food",
+        "ADD_PRODUCT": "Add Product",
         "MANAGE_CONSUMPTIONS": "Manage Consumptions",
-        "MANAGE_FOODS": "Manage Foods",
+        "MANAGE_PRODUCTS": "Manage Products",
         "VIEW_STATISTICS": "View Statistics"
     },
     "RECIPE_MANAGE": {
@@ -300,19 +301,19 @@
         "TITLE": "404 - Page Not Found",
         "DESCRIPTION": "Sorry, the page you are looking for does not exist.",
         "GO_HOME": "Go to Homepage",
-        "VIEW_FOODS": "View Foods"
+        "VIEW_PRODUCTS": "View Products"
     },
     "NUTRIENTS": {
         "PROTEINS": "Proteins",
         "FATS": "Fats",
         "CARBS": "Carbs"
     },
-    "FOOD_AMOUNT_UNITS": {
+    "PRODUCT_AMOUNT_UNITS": {
         "G": "grams",
         "ML": "milliliters",
         "PCS": "pieces"
     },
-    "FOOD_AMOUNT_UNITS_SHORT": {
+    "PRODUCT_AMOUNT_UNITS_SHORT": {
         "G": "g",
         "ML": "ml",
         "PCS": "pcs"

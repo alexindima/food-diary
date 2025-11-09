@@ -142,11 +142,11 @@ export class BaseProductManageComponent implements OnInit {
     }
 
     public stringifyUnits = (unit: MeasurementUnit): string => {
-        return this.translateService.instant(`FOOD_MANAGE.DEFAULT_SERVING_UNITS.${MeasurementUnit[unit]}`);
+        return this.translateService.instant(`PRODUCT_MANAGE.DEFAULT_SERVING_UNITS.${MeasurementUnit[unit]}`);
     };
 
     public stringifyVisibility = (visibility: ProductVisibility): string => {
-        return this.translateService.instant(`FOOD_MANAGE.VISIBILITY_OPTIONS.${visibility.toUpperCase()}`);
+        return this.translateService.instant(`PRODUCT_MANAGE.VISIBILITY_OPTIONS.${visibility.toUpperCase()}`);
     };
 
     public readonly Unit = MeasurementUnit;
@@ -199,7 +199,7 @@ export class BaseProductManageComponent implements OnInit {
         const baseAmount = this.productForm.controls.baseAmount.value ?? 0;
         const baseUnit = this.productForm.controls.baseUnit.value;
 
-        const unitLabel = this.translateService.instant(`FOOD_AMOUNT_UNITS_SHORT.${baseUnit}`);
+        const unitLabel = this.translateService.instant(`PRODUCT_AMOUNT_UNITS_SHORT.${baseUnit}`);
         return `${baseAmount} ${unitLabel}`;
     }
 
@@ -320,3 +320,5 @@ export interface ProductFormValues {
 type ProductFormData = FormGroupControls<ProductFormValues>;
 
 type RedirectAction = 'Home' | 'ProductList';
+
+

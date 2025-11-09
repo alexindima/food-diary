@@ -156,7 +156,7 @@ export class BaseConsumptionManageComponent implements OnInit {
     public getProductUnit(index: number): string | null {
         const unit = this.consumedProduct.at(index).controls.food?.value?.baseUnit;
         return unit
-            ? `, ${this.translateService.instant('FOOD_AMOUNT_UNITS.' + unit.toUpperCase())}`
+            ? `, ${this.translateService.instant('PRODUCT_AMOUNT_UNITS.' + unit.toUpperCase())}`
             : null;
     }
 
@@ -358,5 +358,6 @@ type ConsumptionItemFormValues ={
 type ConsumptionFormData = FormGroupControls<ConsumptionFormValues>;
 
 type ConsumptionItemFormData = FormGroupControls<ConsumptionItemFormValues>;
+
 
 

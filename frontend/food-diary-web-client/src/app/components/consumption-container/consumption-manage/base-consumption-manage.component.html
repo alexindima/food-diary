@@ -20,8 +20,8 @@
             ></tui-error>
         </div>
         <div class="consumption-manage__consumption">
-            <fd-custom-group
-                [title]="'CONSUMPTION_MANAGE.FOODS' | translate"
+        <fd-custom-group
+            [title]="'CONSUMPTION_MANAGE.PRODUCTS' | translate"
             >
                 <div class="consumption-manage__select">
                     <div class="consumption-manage__select-rows" formArrayName="consumedProduct">
@@ -29,10 +29,10 @@
                             <div class="consumption-manage__select-row" [formGroupName]="i">
                                 <div class="consumption-manage__product-name">
                                     <tui-textfield type="text" class="consumption-manage__product-name-control">
-                                        <label tuiLabel>{{ 'CONSUMPTION_MANAGE.ADD_FOOD_ROW.FOOD' | translate }}</label>
+                                        <label tuiLabel>{{ 'CONSUMPTION_MANAGE.ADD_PRODUCT_ROW.PRODUCT' | translate }}</label>
                                         <input
                                             tuiTextfield
-                                            placeholder="{{ 'CONSUMPTION_MANAGE.ADD_FOOD_ROW.FOOD_PLACEHOLDER' | translate }}"
+                                            placeholder="{{ 'CONSUMPTION_MANAGE.ADD_PRODUCT_ROW.PRODUCT_PLACEHOLDER' | translate }}"
                                             [readOnly]="true"
                                             [value]="getProductName(i)"
                                             [invalid]="isProductInvalid(i)"
@@ -47,7 +47,7 @@
                                 <div class="consumption-manage__product-quantity-wrapper">
                                     <div class="consumption-manage__product-quantity">
                                         <tui-input-number formControlName="quantity">
-                                            <label tuiLabel>{{ 'CONSUMPTION_MANAGE.ADD_FOOD_ROW.QUANTITY' | translate }}{{ getProductUnit(i) }}</label>
+                                            <label tuiLabel>{{ 'CONSUMPTION_MANAGE.ADD_PRODUCT_ROW.QUANTITY' | translate }}{{ getProductUnit(i) }}</label>
                                             <input
                                                 tuiTextfieldLegacy
                                                 placeholder="0"
@@ -81,7 +81,7 @@
                         appearance="primary"
                         (click)="addProductItem()"
                     >
-                        {{ 'CONSUMPTION_MANAGE.ADD_FOOD' | translate }}
+                        {{ 'CONSUMPTION_MANAGE.ADD_PRODUCT' | translate }}
                     </button>
                 </div>
             </fd-custom-group>

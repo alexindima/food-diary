@@ -24,7 +24,7 @@ public class ProductRepository : IProductRepository
         return product;
     }
 
-    public async Task<(IReadOnlyList<Product> Items, int TotalItems)> GetPagedAsync(
+    public async Task<(IReadOnlyList<(Product Product, int UsageCount)> Items, int TotalItems)> GetPagedAsync(
         UserId userId,
         bool includePublic,
         int page,
@@ -37,8 +37,6 @@ public class ProductRepository : IProductRepository
 
         IQueryable<Product> query = _context.Products
             .AsNoTracking()
-            .Include(p => p.MealItems)
-            .Include(p => p.RecipeIngredients)
             .Where(includePublic
                 ? p => p.UserId == userId || p.Visibility == Visibility.PUBLIC
                 : p => p.UserId == userId);
@@ -53,16 +51,22 @@ public class ProductRepository : IProductRepository
                 (p.Barcode != null && p.Barcode.ToLower().Contains(normalizedSearch)));
         }
 
-        query = query.OrderByDescending(p => p.CreatedOnUtc);
-
-        var totalItems = await query.CountAsync(cancellationToken);
+        var orderedQuery = query.OrderByDescending(p => p.CreatedOnUtc);
+        var totalItems = await orderedQuery.CountAsync(cancellationToken);
         var skip = (pageNumber - 1) * pageSize;
-        var items = await query
+        var items = await orderedQuery
             .Skip(skip)
             .Take(pageSize)
+            .Select(p => new
+            {
+                Product = p,
+                UsageCount = p.MealItems.Count + p.RecipeIngredients.Count
+            })
             .ToListAsync(cancellationToken);
 
-        return (items, totalItems);
+        return (items
+            .Select(x => (x.Product, x.UsageCount))
+            .ToList(), totalItems);
     }
 
     public async Task<Product?> GetByIdAsync(

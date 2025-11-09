@@ -9,7 +9,7 @@ namespace FoodDiary.Application.Common.Interfaces.Persistence;
 public interface IProductRepository
 {
     Task<Product> AddAsync(Product product);
-    Task<(IReadOnlyList<Product> Items, int TotalItems)> GetPagedAsync(
+    Task<(IReadOnlyList<(Product Product, int UsageCount)> Items, int TotalItems)> GetPagedAsync(
         UserId userId,
         bool includePublic,
         int page,

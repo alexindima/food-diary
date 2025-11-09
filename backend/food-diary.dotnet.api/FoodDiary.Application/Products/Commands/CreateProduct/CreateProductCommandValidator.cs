@@ -15,10 +15,10 @@ public class CreateProductCommandValidator : AbstractValidator<CreateProductComm
             .Cascade(CascadeMode.Stop)
             .NotNull()
             .WithErrorCode("Authentication.InvalidToken")
-            .WithMessage("Не удалось определить пользователя")
+            .WithMessage("Unable to identify user")
             .Must(userId => userId is not null && userId.Value != UserId.Empty)
             .WithErrorCode("Authentication.InvalidToken")
-            .WithMessage("Не удалось определить пользователя")
+            .WithMessage("Unable to identify user")
             .MustAsync(UserExists)
             .WithErrorCode("Validation.NotFound")
             .WithMessage("User not found");
@@ -34,7 +34,7 @@ public class CreateProductCommandValidator : AbstractValidator<CreateProductComm
             .WithMessage("BaseUnit is required")
             .Must(BeValidUnit)
             .WithErrorCode("Validation.Invalid")
-            .WithMessage("Неверная единица измерения");
+            .WithMessage("Invalid measurement unit");
 
         RuleFor(x => x.Visibility)
             .NotEmpty()
@@ -42,7 +42,7 @@ public class CreateProductCommandValidator : AbstractValidator<CreateProductComm
             .WithMessage("Visibility is required")
             .Must(BeValidVisibility)
             .WithErrorCode("Validation.Invalid")
-            .WithMessage("Неверный уровень видимости");
+            .WithMessage("Invalid visibility level");
 
         RuleFor(x => x.BaseAmount)
             .GreaterThan(0)

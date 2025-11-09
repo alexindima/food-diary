@@ -20,7 +20,7 @@
         "HOME": "Главная",
         "LOGIN": "Вход",
         "REGISTER": "Регистрация",
-        "FOOD": "Еда",
+        "PRODUCTS": "Продукты",
         "CONSUMPTION": "Потребление",
         "STATISTICS": "Статистика",
         "USER": "Пользователь",
@@ -100,21 +100,22 @@
             "REGISTER": "Зарегистрироваться"
         }
     },
-    "FOOD_LIST": {
+    "PRODUCT_LIST": {
         "TITLE": "Список продуктов",
         "SEARCH_TITLE": "Поиск:",
         "SEARCH_PLACEHOLDER": "Введите название или штрихкод",
         "SEARCH_BUTTON": "Поиск",
-        "ADD_FOOD_BUTTON": "Добавить еду",
+        "ADD_PRODUCT_BUTTON": "Добавить продукт",
         "ONLY_MY_PRODUCTS": "Показывать только мои продукты",
         "NO_PRODUCTS_FOUND": "Продукты не найдены",
         "CALORIES": "Калории",
         "BARCODE": "Штрихкод",
         "PROTEINS": "Белки",
         "FATS": "Жиры",
-        "CARBS": "Углеводы"
+        "CARBS": "Углеводы",
+        "DELETE_ERROR": "Не удалось удалить продукт. Попробуйте ещё раз."
     },
-    "FOOD_DETAIL": {
+    "PRODUCT_DETAIL": {
         "BARCODE": "Штрихкод:",
         "CATEGORY": "Категория:",
         "BASE_AMOUNT": "Стандартная порция:",
@@ -131,9 +132,9 @@
         "CREATE_SUCCESS": "Продукт успешно создан!",
         "EDIT_SUCCESS": "Продукт успешно отредактирован!",
         "GO_TO_HOME_BUTTON": "На главную",
-        "GO_TO_FOOD_LIST_BUTTON": "К списку продуктов"
+        "GO_TO_PRODUCT_LIST_BUTTON": "К списку продуктов"
     },
-    "FOOD_MANAGE": {
+    "PRODUCT_MANAGE": {
         "ADD_TITLE": "Добавить новый продукт",
         "EDIT_TITLE": "Редактировать продукт",
         "NAME": "Название",
@@ -197,10 +198,10 @@
         "EDIT_TITLE": "Редактировать потребление",
         "ADD_TITLE": "Добавить потребление",
         "CHOOSE_DATE": "Дата и время",
-        "FOODS": "Продукты",
-        "ADD_FOOD_ROW": {
-            "FOOD": "Продукт",
-            "FOOD_PLACEHOLDER": "Выберите продукт",
+        "PRODUCTS": "Продукты",
+        "ADD_PRODUCT_ROW": {
+            "PRODUCT": "Продукт",
+            "PRODUCT_PLACEHOLDER": "Выберите продукт",
             "QUANTITY": "Количество",
             "QUANTITY_PLACEHOLDER": "Введите количество"
         },
@@ -213,8 +214,8 @@
         "GO_TO_HOME_BUTTON": "На главную",
         "GO_TO_CONSUMPTION_LIST_BUTTON": "К списку потребления",
         "CHOOSE_DATE_TIME": "Выберите дату и время",
-        "NO_FOOD_ADDED": "Продукты не добавлены",
-        "ADD_FOOD": "Добавить продукт"
+        "NO_PRODUCTS_ADDED": "Продукты не добавлены",
+        "ADD_PRODUCT": "Добавить продукт"
     },
     "STATISTICS": {
         "TITLE": "Статистика",
@@ -262,9 +263,9 @@
         "TOTAL_CONSUMPTION": "Общее потребление",
         "NUTRIENTS": "Нутриенты",
         "ADD_CONSUMPTION": "Добавить потребление",
-        "ADD_FOOD": "Добавить продукт",
+        "ADD_PRODUCT": "Добавить продукт",
         "MANAGE_CONSUMPTIONS": "Управлять потреблением",
-        "MANAGE_FOODS": "Управлять продуктами",
+        "MANAGE_PRODUCTS": "Управлять продуктами",
         "VIEW_STATISTICS": "Посмотреть статистику"
     },
     "RECIPE_MANAGE": {
@@ -300,19 +301,19 @@
         "TITLE": "404 - Страница не найдена",
         "DESCRIPTION": "Извините, страница, которую вы ищете, не существует.",
         "GO_HOME": "На главную",
-        "VIEW_FOODS": "Посмотреть продукты"
+        "VIEW_PRODUCTS": "Посмотреть продукты"
     },
     "NUTRIENTS": {
         "PROTEINS": "Белки",
         "FATS": "Жиры",
         "CARBS": "Углеводы"
     },
-    "FOOD_AMOUNT_UNITS": {
+    "PRODUCT_AMOUNT_UNITS": {
         "G": "граммы",
         "ML": "миллилитры",
         "PCS": "штуки"
     },
-    "FOOD_AMOUNT_UNITS_SHORT": {
+    "PRODUCT_AMOUNT_UNITS_SHORT": {
         "G": "г",
         "ML": "мл",
         "PCS": "шт"

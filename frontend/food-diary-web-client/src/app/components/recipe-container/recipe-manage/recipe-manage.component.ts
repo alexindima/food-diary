@@ -170,7 +170,7 @@ export class RecipeManageComponent implements OnInit {
         const foodControl = ingredientsArray.at(ingredientIndex).controls.food;
         const unit = foodControl.value?.baseUnit;
         return unit
-            ? `, ${this.translateService.instant('FOOD_AMOUNT_UNITS.' + unit.toUpperCase())}`
+            ? `, ${this.translateService.instant('PRODUCT_AMOUNT_UNITS.' + unit.toUpperCase())}`
             : null;
     }
 
@@ -351,5 +351,6 @@ interface IngredientFormValues {
 type RecipeFormData = FormGroupControls<RecipeFormValues>;
 type StepFormData = FormGroupControls<StepFormValues>;
 type IngredientFormData = FormGroupControls<IngredientFormValues>;
+
 
 

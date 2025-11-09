@@ -64,8 +64,8 @@ export class ProductDetailComponent {
         }
 
         return this.product.isOwnedByCurrentUser
-            ? 'FOOD_DETAIL.WARNING_MESSAGE'
-            : 'FOOD_DETAIL.WARNING_NOT_OWNER';
+            ? 'PRODUCT_DETAIL.WARNING_MESSAGE'
+            : 'PRODUCT_DETAIL.WARNING_NOT_OWNER';
     }
 
     public constructor() {

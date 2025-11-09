@@ -9,7 +9,7 @@ import {
     TuiTextfieldDirective
 } from '@taiga-ui/core';
 import { TuiSearchComponent } from '@taiga-ui/layout';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { ProductService } from '../../../services/product.service';
 import { NavigationService } from '../../../services/navigation.service';
 import { PagedData } from '../../../types/paged-data.data';
@@ -41,7 +41,6 @@ import { CardComponent } from '../../shared/card/card.component';
     ],
 })
 export class ProductListBaseComponent implements OnInit {
-    private readonly translateService = inject(TranslateService);
     protected readonly productService = inject(ProductService);
     protected readonly navigationService = inject(NavigationService);
     protected readonly pageSize = 10;
@@ -87,13 +86,6 @@ export class ProductListBaseComponent implements OnInit {
 
         this.currentPageIndex = pageIndex;
         this.loadProducts(this.currentPageIndex + 1, this.pageSize, this.searchForm.controls.search.value).subscribe();
-    }
-
-    public getTitle(): string {
-        const searchValue = this.searchForm.controls.search.value;
-        return searchValue
-            ? `${this.translateService.instant('FOOD_LIST.TITLE')} (${this.translateService.instant('FOOD_LIST.SEARCH_TITLE')} ${this.searchForm.get('search')?.value})`
-            : this.translateService.instant('FOOD_LIST.TITLE');
     }
 
     public async onAddProductClick(): Promise<void> {

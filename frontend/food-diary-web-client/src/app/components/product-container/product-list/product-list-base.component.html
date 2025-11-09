@@ -1,5 +1,10 @@
 <div class="product-list" #container>
-    <h2 class="product-list__title">{{ getTitle() }}</h2>
+    <h2 class="product-list__title">
+        {{ 'PRODUCT_LIST.TITLE' | translate }}
+        @if (searchForm.controls.search.value) {
+            ({{ 'PRODUCT_LIST.SEARCH_TITLE' | translate }} {{ searchForm.controls.search.value }})
+        }
+    </h2>
 
     <div class="product-list__actions">
         <search tuiSearch class="product-list__search">
@@ -8,7 +13,7 @@
                     <tui-textfield iconStart="@tui.search">
                         <input
                             formControlName="search"
-                            [placeholder]="'FOOD_LIST.SEARCH_PLACEHOLDER' | translate"
+                            [placeholder]="'PRODUCT_LIST.SEARCH_PLACEHOLDER' | translate"
                             tuiTextfield
                             class="product-list__search-input"
                         />
@@ -27,7 +32,7 @@
                 [formControl]="searchForm.controls.onlyMine"
             />
             <span class="product-list__toggle-label">
-                {{ 'FOOD_LIST.ONLY_MY_PRODUCTS' | translate }}
+                {{ 'PRODUCT_LIST.ONLY_MY_PRODUCTS' | translate }}
             </span>
         </label>
         <button
@@ -37,7 +42,7 @@
             (click)="onAddProductClick()"
             class="product-list__add-button"
         >
-            {{ 'FOOD_LIST.ADD_FOOD_BUTTON' | translate }}
+            {{ 'PRODUCT_LIST.ADD_PRODUCT_BUTTON' | translate }}
         </button>
     </div>
 
@@ -52,18 +57,18 @@
                             <span class="product-card__name">{{ product.name }}</span>
                             @if (product.barcode) {
                                 <span class="product-card__barcode">
-                                {{ 'FOOD_LIST.BARCODE' | translate }}: {{ product.barcode }}
+                                {{ 'PRODUCT_LIST.BARCODE' | translate }}: {{ product.barcode }}
                             </span>
                             }
                         </div>
                         <div class="product-card__info">
                         <span class="product-card__calories">
-                            {{ 'FOOD_LIST.CALORIES' | translate }}: {{ product.caloriesPerBase }}
+                            {{ 'PRODUCT_LIST.CALORIES' | translate }}: {{ product.caloriesPerBase }}
                         </span>
                             <span class="product-card__macros">
-                            {{ 'FOOD_LIST.PROTEINS' | translate }}: {{ product.proteinsPerBase }}g |
-                                {{ 'FOOD_LIST.FATS' | translate }}: {{ product.fatsPerBase }}g |
-                                {{ 'FOOD_LIST.CARBS' | translate }}: {{ product.carbsPerBase }}g
+                            {{ 'PRODUCT_LIST.PROTEINS' | translate }}: {{ product.proteinsPerBase }}g |
+                                {{ 'PRODUCT_LIST.FATS' | translate }}: {{ product.fatsPerBase }}g |
+                                {{ 'PRODUCT_LIST.CARBS' | translate }}: {{ product.carbsPerBase }}g
                         </span>
                         </div>
                     </div>
@@ -71,8 +76,11 @@
             }
         } @else {
             <div class="product-list__no-results">
-                <span class="product-list__no-results-icon">🔍</span>
-                {{ 'FOOD_LIST.NO_PRODUCTS_FOUND' | translate }}
+                <tui-icon
+                    class="product-list__no-results-icon"
+                    icon="@tui.search-remove"
+                ></tui-icon>
+                {{ 'PRODUCT_LIST.NO_PRODUCTS_FOUND' | translate }}
             </div>
         }
     }

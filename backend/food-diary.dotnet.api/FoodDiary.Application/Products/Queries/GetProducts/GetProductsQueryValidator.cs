@@ -9,10 +9,10 @@ public class GetProductsQueryValidator : AbstractValidator<GetProductsQuery> {
             .Cascade(CascadeMode.Stop)
             .NotNull()
             .WithErrorCode("Authentication.InvalidToken")
-            .WithMessage("Не удалось определить пользователя")
+            .WithMessage("Unable to identify user")
             .Must(userId => userId is not null && userId.Value != UserId.Empty)
             .WithErrorCode("Authentication.InvalidToken")
-            .WithMessage("Не удалось определить пользователя");
+            .WithMessage("Unable to identify user");
 
         RuleFor(x => x.Page)
             .GreaterThan(0)

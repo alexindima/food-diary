@@ -24,10 +24,10 @@ public class GetProductsQueryHandler(IProductRepository productRepository)
             query.Search,
             cancellationToken);
 
-        var productsWithUsage = items.Select(product => new {
-            Product = product,
-            UsageCount = product.MealItems.Count + product.RecipeIngredients.Count,
-            IsOwner = product.UserId == userId
+        var productsWithUsage = items.Select(item => new {
+            item.Product,
+            item.UsageCount,
+            IsOwner = item.Product.UserId == userId
         }).ToList();
 
         var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);

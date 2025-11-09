@@ -15,6 +15,7 @@ export class LocalizationService {
     }
 
     public getServingUnitName(unit: MeasurementUnit): string {
-        return this.translateService.instant(`FOOD_MANAGE.DEFAULT_SERVING_UNITS.${unit}`);
+        return this.translateService.instant(`PRODUCT_MANAGE.DEFAULT_SERVING_UNITS.${unit}`);
     }
 }
+

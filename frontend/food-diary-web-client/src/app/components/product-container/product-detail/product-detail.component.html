@@ -10,13 +10,13 @@
         <div class="modal__info">
             @if (product.category) {
                 <p class="modal__text">
-                    <span class="modal__property-name">{{ 'FOOD_DETAIL.CATEGORY' | translate }}</span>
+                    <span class="modal__property-name">{{ 'PRODUCT_DETAIL.CATEGORY' | translate }}</span>
                     {{ product.category }}
                 </p>
             }
             <p class="modal__text">
-                <span class="modal__property-name">{{ 'FOOD_DETAIL.BASE_AMOUNT' | translate }}</span>
-                {{ product.baseAmount }} {{ 'FOOD_AMOUNT_UNITS_SHORT.' + product.baseUnit | translate }}
+                <span class="modal__property-name">{{ 'PRODUCT_DETAIL.BASE_AMOUNT' | translate }}</span>
+                {{ product.baseAmount }} {{ 'PRODUCT_AMOUNT_UNITS_SHORT.' + product.baseUnit | translate }}
             </p>
         </div>
         <fd-nutrients-summary
@@ -35,7 +35,7 @@
                 [disabled]="isEditDisabled"
                 (click)="onEdit()"
             >
-                {{ 'FOOD_DETAIL.EDIT_BUTTON' | translate }}
+                {{ 'PRODUCT_DETAIL.EDIT_BUTTON' | translate }}
             </button>
             <button
                 class="action-wrapper__button action-wrapper__button--accent"
@@ -55,10 +55,10 @@
 
 <ng-template #confirmDialog let-observer>
     <div class="dialog">
-        <p>{{ 'FOOD_DETAIL.CONFIRM_DELETE_TITLE' | translate }} <span class="dialog__title--bold">{{ product.name }}</span>?</p>
+        <p>{{ 'PRODUCT_DETAIL.CONFIRM_DELETE_TITLE' | translate }} <span class="dialog__title--bold">{{ product.name }}</span>?</p>
         <div class="dialog__buttons">
-            <button class="dialog__button" tuiButton size="m" (click)="observer.complete()">{{ 'FOOD_DETAIL.CANCEL_BUTTON' | translate }}</button>
-            <button class="dialog__button" tuiButton size="m" appearance="accent" (click)="observer.next(true); observer.complete()">{{ 'FOOD_DETAIL.CONFIRM_BUTTON' | translate }}</button>
+            <button class="dialog__button" tuiButton size="m" (click)="observer.complete()">{{ 'PRODUCT_DETAIL.CANCEL_BUTTON' | translate }}</button>
+            <button class="dialog__button" tuiButton size="m" appearance="accent" (click)="observer.next(true); observer.complete()">{{ 'PRODUCT_DETAIL.CONFIRM_BUTTON' | translate }}</button>
         </div>
     </div>
 </ng-template>

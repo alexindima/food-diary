@@ -11,7 +11,7 @@
             </button>
             @if (isAuthenticated()) {
                 <button tuiTab [routerLink]="'/products'" routerLinkActive="active-tab">
-                    {{ 'HEADER.FOOD' | translate }}
+                    {{ 'HEADER.PRODUCTS' | translate }}
                 </button>
                 <button tuiTab [routerLink]="'/consumptions'" routerLinkActive="active-tab">
                     {{ 'HEADER.CONSUMPTION' | translate }}
@@ -61,7 +61,7 @@
         </button>
         @if (isAuthenticated()) {
             <button tuiOption [routerLink]="'/products'" (click)="close()">
-                {{ 'HEADER.FOOD' | translate }}
+                {{ 'HEADER.PRODUCTS' | translate }}
             </button>
             <button tuiOption [routerLink]="'/consumptions'" (click)="close()">
                 {{ 'HEADER.CONSUMPTION' | translate }}

@@ -12,16 +12,15 @@ public class UpdateProductCommandValidator : AbstractValidator<UpdateProductComm
 
     public UpdateProductCommandValidator(IProductRepository productRepository) {
         _productRepository = productRepository;
-        _productRepository = productRepository;
 
         RuleFor(x => x.UserId)
             .Cascade(CascadeMode.Stop)
             .NotNull()
             .WithErrorCode("Authentication.InvalidToken")
-            .WithMessage("Не удалось определить пользователя")
+            .WithMessage("Unable to identify user")
             .Must(userId => userId is not null && userId.Value != UserId.Empty)
             .WithErrorCode("Authentication.InvalidToken")
-            .WithMessage("Не удалось определить пользователя");
+            .WithMessage("Unable to identify user");
 
         RuleFor(x => x.ProductId)
             .Must(id => id != ProductId.Empty)
@@ -67,13 +66,13 @@ public class UpdateProductCommandValidator : AbstractValidator<UpdateProductComm
         RuleFor(x => x.BaseUnit)
             .Must(BeValidUnit)
             .WithErrorCode("Validation.Invalid")
-            .WithMessage("Неверная единица измерения")
+            .WithMessage("Invalid measurement unit")
             .When(x => !string.IsNullOrWhiteSpace(x.BaseUnit));
 
         RuleFor(x => x.Visibility)
             .Must(BeValidVisibility)
             .WithErrorCode("Validation.Invalid")
-            .WithMessage("Неверный уровень видимости")
+            .WithMessage("Invalid visibility level")
             .When(x => !string.IsNullOrWhiteSpace(x.Visibility));
 
         RuleFor(x => x)
@@ -90,14 +89,18 @@ public class UpdateProductCommandValidator : AbstractValidator<UpdateProductComm
         UpdateProductCommand command,
         ValidationContext<UpdateProductCommand> context,
         CancellationToken cancellationToken) {
-        if (!context.RootContextData.TryGetValue(ProductContextKey, out var cached) ||
-            cached is not Domain.Entities.Product product) {
+        context.RootContextData.TryGetValue(ProductContextKey, out var cached);
+        var product = cached as Domain.Entities.Product;
+
+        if (product is null) {
             if (command.UserId is null || command.UserId.Value == UserId.Empty) {
                 return;
             }
 
             product = await _productRepository.GetByIdAsync(command.ProductId, command.UserId.Value, includePublic: false, cancellationToken: cancellationToken);
-            context.RootContextData[ProductContextKey] = product!;
+            if (product is not null) {
+                context.RootContextData[ProductContextKey] = product;
+            }
         }
 
         if (product is null) {
@@ -110,7 +113,7 @@ public class UpdateProductCommandValidator : AbstractValidator<UpdateProductComm
         var usageCount = product.MealItems.Count + product.RecipeIngredients.Count;
         if (usageCount > 0) {
             context.AddFailure(new ValidationFailure(nameof(command.ProductId),
-                "Продукт используется в рецептах или потреблениях и не может быть изменён") {
+                "Product is already used in consumptions or recipes and cannot be updated") {
                 ErrorCode = "Validation.Invalid"
             });
         }
