@@ -29,6 +29,10 @@ public static class Errors
             "User.NotFound",
             $"User with ID {id} was not found.");
 
+        public static Error InvalidPassword => new(
+            "User.InvalidPassword",
+            "The current password is incorrect.");
+
         public static Error NotFound() => new(
             "User.NotFound",
             "User was not found.");

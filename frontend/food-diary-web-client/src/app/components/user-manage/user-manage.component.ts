@@ -12,6 +12,7 @@ import {
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
+    TuiAlertService,
     TuiButton,
     TuiDialogContext,
     TuiDialogService,
@@ -22,7 +23,8 @@ import {
 } from '@taiga-ui/core';
 import { FormGroupControls } from '../../types/common.data';
 import { UserService } from '../../services/user.service';
-import { Gender, UpdateUserDto } from '../../types/user.data';
+import { ChangePasswordRequest, Gender, UpdateUserDto } from '../../types/user.data';
+import { CustomGroupComponent } from '../shared/custom-group/custom-group.component';
 import { NavigationService } from '../../services/navigation.service';
 import { TuiDay } from '@taiga-ui/cdk';
 import { TuiInputDateModule, TuiSelectModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
@@ -31,6 +33,7 @@ import { TUI_VALIDATION_ERRORS, TuiFieldErrorPipe } from '@taiga-ui/kit';
 import { matchFieldValidator } from '../../validators/match-field.validator';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ValidationErrors } from '../../types/validation-error.data';
+import { Observer, Subscription } from 'rxjs';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: TUI_VALIDATION_ERRORS,
@@ -62,6 +65,7 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
         TuiSelectModule,
         TuiFieldErrorPipe,
         AsyncPipe,
+        CustomGroupComponent,
     ],
     templateUrl: './user-manage.component.html',
     styleUrl: './user-manage.component.less',
@@ -74,19 +78,24 @@ export class UserManageComponent implements OnInit {
     private readonly dialogService = inject(TuiDialogService);
     private readonly navigationService = inject(NavigationService);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly alertService = inject(TuiAlertService);
+    private changePasswordDialogSubscription: Subscription | null = null;
 
     @ViewChild('successDialog') private successDialog!: TemplateRef<TuiDialogContext<boolean>>;
+    @ViewChild('changePasswordDialog') private changePasswordDialog!: TemplateRef<TuiDialogContext<void>>;
+    @ViewChild('passwordSuccessDialog') private passwordSuccessDialog!: TemplateRef<TuiDialogContext<void>>;
 
     public genders = Object.values(Gender);
 
     public userForm: FormGroup<UserFormData>;
     public globalError = signal<string | null>(null);
+    public changePasswordForm: FormGroup<ChangePasswordFormData>;
+    public passwordError = signal<string | null>(null);
+    public isPasswordSubmitting = signal<boolean>(false);
 
     public constructor() {
         this.userForm = new FormGroup<UserFormData>({
             email: new FormControl<string | null>({ value: '', disabled: true }),
-            password: new FormControl<string | null>(null, Validators.minLength(6)),
-            confirmPassword: new FormControl<string | null>(null, matchFieldValidator('password')),
             username: new FormControl<string | null>(null),
             firstName: new FormControl<string | null>(null),
             lastName: new FormControl<string | null>(null),
@@ -96,13 +105,19 @@ export class UserManageComponent implements OnInit {
             height: new FormControl<number | null>(null),
             profileImage: new FormControl<string | null>(null),
         });
+
+        this.changePasswordForm = new FormGroup<ChangePasswordFormData>({
+            currentPassword: new FormControl<string | null>(null, [Validators.required]),
+            newPassword: new FormControl<string | null>(null, [Validators.required, Validators.minLength(6)]),
+            confirmPassword: new FormControl<string | null>(null, [
+                Validators.required,
+                matchFieldValidator('newPassword'),
+            ]),
+        });
     }
 
     public ngOnInit(): void {
         this.userForm.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.clearGlobalError());
-        this.userForm.controls.password.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-            this.userForm.controls.confirmPassword.updateValueAndValidity();
-        });
 
         this.loadUserData();
     }
@@ -149,6 +164,65 @@ export class UserManageComponent implements OnInit {
         }
     }
 
+    public openChangePasswordDialog(): void {
+        this.changePasswordForm.reset();
+        this.passwordError.set(null);
+        this.isPasswordSubmitting.set(false);
+
+        this.changePasswordDialogSubscription?.unsubscribe();
+        this.changePasswordDialogSubscription = this.dialogService
+            .open(this.changePasswordDialog, {
+                dismissible: true,
+                appearance: 'without-border-radius',
+            })
+            .subscribe();
+    }
+
+    public onChangePasswordSubmit(observer: Observer<void>): void {
+        this.changePasswordForm.markAllAsTouched();
+        if (this.changePasswordForm.invalid || this.isPasswordSubmitting()) {
+            return;
+        }
+
+        const formValue = this.changePasswordForm.value;
+        const payload: ChangePasswordRequest = {
+            currentPassword: formValue.currentPassword ?? '',
+            newPassword: formValue.newPassword ?? '',
+        };
+
+        this.isPasswordSubmitting.set(true);
+        this.userService.changePassword(payload).subscribe({
+            next: success => {
+                this.isPasswordSubmitting.set(false);
+                if (success) {
+                    this.closeChangePasswordDialog(observer);
+                    this.dialogService
+                        .open(this.passwordSuccessDialog, {
+                            dismissible: true,
+                            appearance: 'without-border-radius',
+                        })
+                        .subscribe();
+                } else {
+                    this.passwordError.set(this.translateService.instant('USER_MANAGE.CHANGE_PASSWORD_ERROR'));
+                }
+            },
+            error: () => {
+                this.isPasswordSubmitting.set(false);
+                this.passwordError.set(this.translateService.instant('USER_MANAGE.CHANGE_PASSWORD_ERROR'));
+            },
+        });
+    }
+
+    public onChangePasswordCancel(observer: Observer<void>): void {
+        this.closeChangePasswordDialog(observer);
+    }
+
+    private closeChangePasswordDialog(observer: Observer<void>): void {
+        observer.complete();
+        this.changePasswordDialogSubscription?.unsubscribe();
+        this.changePasswordDialogSubscription = null;
+    }
+
     public stringifyGender = (gender: Gender): string => {
         return this.translateService.instant(`USER_MANAGE.GENDER_OPTIONS.${gender}`);
     };
@@ -177,8 +251,6 @@ export class UserManageComponent implements OnInit {
 
 export interface UserFormValues {
     username: string | null;
-    password: string | null;
-    confirmPassword: string | null;
     firstName: string | null;
     lastName: string | null;
     email: string | null;
@@ -190,3 +262,11 @@ export interface UserFormValues {
 }
 
 export type UserFormData = FormGroupControls<UserFormValues>;
+
+interface ChangePasswordFormValues {
+    currentPassword: string | null;
+    newPassword: string | null;
+    confirmPassword: string | null;
+}
+
+type ChangePasswordFormData = FormGroupControls<ChangePasswordFormValues>;

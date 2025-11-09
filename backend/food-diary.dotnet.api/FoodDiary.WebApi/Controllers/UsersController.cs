@@ -1,5 +1,6 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using FoodDiary.Application.Users.Commands.ChangePassword;
 using FoodDiary.Application.Users.Commands.UpdateUser;
 using FoodDiary.Application.Users.Mappings;
 using FoodDiary.Application.Users.Queries.GetUserById;
@@ -22,6 +23,14 @@ public class UsersController(ISender mediator) : AuthorizedController(mediator)
 
     [HttpPatch("info")]
     public async Task<IActionResult> UpdateCurrentUser([FromBody] UpdateUserRequest request)
+    {
+        var command = request.ToCommand(CurrentUserId);
+        var result = await Mediator.Send(command);
+        return result.ToActionResult();
+    }
+
+    [HttpPatch("password")]
+    public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequest request)
     {
         var command = request.ToCommand(CurrentUserId);
         var result = await Mediator.Send(command);

@@ -34,6 +34,30 @@
         }
     }
 
+    &__row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: @gap-m;
+
+        &--credentials {
+            align-items: flex-end;
+        }
+    }
+
+    &__group {
+        margin-bottom: @gap-m;
+    }
+
+    &__field--email {
+        flex: 1 1 auto;
+    }
+
+    &__field--actions-inline {
+        display: flex;
+        justify-content: flex-end;
+        flex: 0 0 auto;
+    }
+
     &__input {
         width: 100%;
     }
@@ -50,10 +74,15 @@
     &__button {
         width: 100%;
         text-align: center;
-
         &--submit {
             background-color: #007bff;
             color: @color-background;
+        }
+
+        &--inline {
+            width: auto;
+            min-width: 200px;
+            white-space: nowrap;
         }
     }
 
@@ -66,6 +95,8 @@
     &__dialog {
         padding: @gap-l;
         text-align: center;
+        display: flex;
+        flex-direction: column;
 
         &-title {
             font-size: 1.8em;
@@ -79,10 +110,40 @@
             flex-direction: column;
             justify-content: center;
             gap: @gap-xl;
+
+            &--inline {
+                flex-direction: row;
+                justify-content: flex-end;
+                gap: @gap-m;
+                flex-wrap: wrap;
+
+                .user-manage__dialog-button {
+                    flex: 1 1 0;
+                    width: auto;
+                    min-width: 160px;
+                }
+            }
         }
 
         &-button {
             width: 100%;
+        }
+
+        &-fields {
+            display: flex;
+            flex-direction: column;
+            gap: @gap-m;
+            margin-bottom: @gap-m;
+        }
+    }
+
+    &__grid {
+        display: grid;
+        gap: @gap-m;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+
+        &--two {
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
         }
     }
 }

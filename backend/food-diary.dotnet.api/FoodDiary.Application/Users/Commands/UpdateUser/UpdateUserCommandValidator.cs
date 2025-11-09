@@ -14,13 +14,6 @@ public class UpdateUserCommandValidator : AbstractValidator<UpdateUserCommand> {
             .WithErrorCode("Authentication.InvalidToken")
             .WithMessage("Unable to identify user");
 
-        When(x => x.Password != null, () => {
-            RuleFor(x => x.Password)
-                .MinimumLength(6)
-                .WithErrorCode("Validation.Invalid")
-                .WithMessage("Password must be at least 6 characters");
-        });
-
         When(x => x.Weight.HasValue, () => {
             RuleFor(x => x.Weight)
                 .GreaterThan(0)

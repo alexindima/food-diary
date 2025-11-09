@@ -8,7 +8,6 @@ namespace FoodDiary.Application.Users.Commands.UpdateUser;
 public record UpdateUserCommand(
     UserId? UserId,
     string? Username,
-    string? Password,
     string? FirstName,
     string? LastName,
     DateTime? BirthDate,

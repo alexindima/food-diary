@@ -17,7 +17,6 @@ export interface User {
 
 export class UpdateUserDto {
     public email?: string;
-    public password?: string;
     public username?: string;
     public firstName?: string;
     public lastName?: string;
@@ -30,7 +29,6 @@ export class UpdateUserDto {
 
     public constructor(formValues: Partial<UserFormValues>) {
         this.email = formValues.email || undefined;
-        this.password = formValues.password || undefined;
         this.username = formValues.username || undefined;
         this.firstName = formValues.firstName || undefined;
         this.lastName = formValues.lastName || undefined;
@@ -41,6 +39,11 @@ export class UpdateUserDto {
         this.profileImage = formValues.profileImage || undefined;
         this.isActive = true;
     }
+}
+
+export interface ChangePasswordRequest {
+    currentPassword: string;
+    newPassword: string;
 }
 
 export enum Gender {

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ApiService } from './api.service';
 import { environment } from '../../environments/environment';
 import { catchError, map, Observable, of } from 'rxjs';
-import { UpdateUserDto, User } from '../types/user.data';
+import { ChangePasswordRequest, UpdateUserDto, User } from '../types/user.data';
 
 @Injectable({
     providedIn: 'root',
@@ -28,6 +28,16 @@ export class UserService extends ApiService {
             catchError(error => {
                 console.error('Update user error', error);
                 return of(null);
+            }),
+        );
+    }
+
+    public changePassword(request: ChangePasswordRequest): Observable<boolean> {
+        return this.patch<void>('password', request).pipe(
+            map(() => true),
+            catchError(error => {
+                console.error('Change password error', error);
+                return of(false);
             }),
         );
     }
