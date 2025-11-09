@@ -6,7 +6,7 @@ namespace FoodDiary.Application.Users.Mappings;
 
 public static class UserCommandMappings
 {
-    public static UpdateUserCommand ToCommand(this UpdateUserRequest request, UserId userId)
+    public static UpdateUserCommand ToCommand(this UpdateUserRequest request, UserId? userId)
     {
         return new UpdateUserCommand(
             userId,

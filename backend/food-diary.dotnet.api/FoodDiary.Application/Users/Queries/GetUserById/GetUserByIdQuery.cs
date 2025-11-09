@@ -6,5 +6,5 @@ using FoodDiary.Domain.ValueObjects;
 namespace FoodDiary.Application.Users.Queries.GetUserById;
 
 public record GetUserByIdQuery(
-    UserId UserId
+    UserId? UserId
 ) : IQuery<Result<UserResponse>>;

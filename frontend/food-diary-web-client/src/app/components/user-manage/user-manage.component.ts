@@ -21,7 +21,6 @@ import {
     TuiTextfieldDirective,
 } from '@taiga-ui/core';
 import { FormGroupControls } from '../../types/common.data';
-import { ApiResponse } from '../../types/api-response.data';
 import { UserService } from '../../services/user.service';
 import { Gender, UpdateUserDto } from '../../types/user.data';
 import { NavigationService } from '../../services/navigation.service';
@@ -110,18 +109,20 @@ export class UserManageComponent implements OnInit {
 
     private loadUserData(): void {
         this.userService.getInfo().subscribe({
-            next: response => {
-                if (response.status === 'success' && response.data) {
+            next: user => {
+                if (user) {
                     const userData = {
-                        ...response.data,
-                        gender: response.data.gender as Gender | null,
-                        birthDate: response.data.birthDate ? TuiDay.fromLocalNativeDate(new Date(response.data.birthDate)) : null,
+                        ...user,
+                        gender: user.gender as Gender | null,
+                        birthDate: user.birthDate ? TuiDay.fromLocalNativeDate(new Date(user.birthDate)) : null,
                     };
                     this.userForm.patchValue(userData);
+                } else {
+                    this.setGlobalError('USER_MANAGE.LOAD_ERROR');
                 }
             },
             error: () => {
-                this.globalError = this.translateService.instant('USER_MANAGE.LOAD_ERROR');
+                this.setGlobalError('USER_MANAGE.LOAD_ERROR');
             },
         });
     }
@@ -134,8 +135,8 @@ export class UserManageComponent implements OnInit {
             const updateData = new UpdateUserDto(formData);
 
             this.userService.update(updateData).subscribe({
-                next: (response: ApiResponse<UpdateUserDto | null>) => {
-                    if (response.status === 'success') {
+                next: user => {
+                    if (user) {
                         this.showSuccessDialog();
                     } else {
                         this.setGlobalError('USER_MANAGE.UPDATE_ERROR');

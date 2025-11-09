@@ -8,35 +8,26 @@ namespace FoodDiary.WebApi.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class AuthController(ISender mediator) : ControllerBase
-{
+public class AuthController(ISender mediator) : BaseApiController(mediator) {
     [HttpPost("register")]
-    public async Task<IActionResult> Register(RegisterRequest request)
-    {
+    public async Task<IActionResult> Register(RegisterRequest request) {
         var command = request.ToCommand();
-        var result = await mediator.Send(command);
+        var result = await Mediator.Send(command);
         return result.ToActionResult();
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> Login(LoginRequest request)
-    {
+    public async Task<IActionResult> Login(LoginRequest request) {
         var command = request.ToCommand();
-        var result = await mediator.Send(command);
+        var result = await Mediator.Send(command);
         return result.ToActionResult();
     }
 
     [HttpPost("refresh")]
-    public async Task<IActionResult> Refresh(RefreshTokenRequest request)
-    {
+    public async Task<IActionResult> Refresh(RefreshTokenRequest request) {
         var command = request.ToCommand();
-        var result = await mediator.Send(command);
+        var result = await Mediator.Send(command);
 
-        if (result.IsSuccess)
-        {
-            return Ok(new { accessToken = result.Value });
-        }
-
-        return result.ToActionResult();
+        return result.IsSuccess ? Ok(new { accessToken = result.Value }) : result.ToActionResult();
     }
 }

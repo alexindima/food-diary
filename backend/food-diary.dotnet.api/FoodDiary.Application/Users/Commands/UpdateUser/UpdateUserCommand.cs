@@ -6,7 +6,7 @@ using FoodDiary.Domain.ValueObjects;
 namespace FoodDiary.Application.Users.Commands.UpdateUser;
 
 public record UpdateUserCommand(
-    UserId UserId,
+    UserId? UserId,
     string? Username,
     string? Password,
     string? FirstName,

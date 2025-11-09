@@ -7,20 +7,11 @@ using FoodDiary.Contracts.Users;
 
 namespace FoodDiary.Application.Users.Commands.UpdateUser;
 
-public class UpdateUserCommandHandler : ICommandHandler<UpdateUserCommand, Result<UserResponse>>
-{
-    private readonly IUserRepository _userRepository;
-
-    public UpdateUserCommandHandler(IUserRepository userRepository)
-    {
-        _userRepository = userRepository;
-    }
-
-    public async Task<Result<UserResponse>> Handle(UpdateUserCommand command, CancellationToken cancellationToken)
-    {
-        var user = await _userRepository.GetByIdAsync(command.UserId);
-        if (user == null)
-        {
+public class UpdateUserCommandHandler(IUserRepository userRepository)
+    : ICommandHandler<UpdateUserCommand, Result<UserResponse>> {
+    public async Task<Result<UserResponse>> Handle(UpdateUserCommand command, CancellationToken cancellationToken) {
+        var user = await userRepository.GetByIdAsync(command.UserId!.Value);
+        if (user is null) {
             return Result.Failure<UserResponse>(User.NotFound(command.UserId.Value));
         }
 
@@ -35,8 +26,7 @@ public class UpdateUserCommandHandler : ICommandHandler<UpdateUserCommand, Resul
             profileImage: command.ProfileImage
         );
 
-        if (command.IsActive.HasValue)
-        {
+        if (command.IsActive.HasValue) {
             if (command.IsActive.Value)
                 user.Activate();
             else
@@ -49,7 +39,7 @@ public class UpdateUserCommandHandler : ICommandHandler<UpdateUserCommand, Resul
         //     user.UpdatePassword(_passwordHasher.Hash(command.Password));
         // }
 
-        await _userRepository.UpdateAsync(user);
+        await userRepository.UpdateAsync(user);
 
         return Result.Success(user.ToResponse());
     }
