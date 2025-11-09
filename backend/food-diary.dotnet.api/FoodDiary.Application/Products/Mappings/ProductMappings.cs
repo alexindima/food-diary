@@ -1,4 +1,5 @@
 using FoodDiary.Application.Products.Commands.CreateProduct;
+using FoodDiary.Application.Products.Commands.UpdateProduct;
 using FoodDiary.Contracts.Products;
 using FoodDiary.Domain.Entities;
 using FoodDiary.Domain.ValueObjects;
@@ -13,7 +14,7 @@ public static class ProductMappings
     /// <summary>
     /// Маппинг Product -> ProductResponse (с UsageCount)
     /// </summary>
-    public static ProductResponse ToResponse(this Product product, int usageCount = 0)
+    public static ProductResponse ToResponse(this Product product, int usageCount = 0, bool isOwnedByCurrentUser = false)
     {
         return new ProductResponse(
             product.Id.Value,
@@ -32,17 +33,18 @@ public static class ProductMappings
             product.FiberPerBase,
             usageCount,
             product.Visibility.ToString(),
-            product.CreatedOnUtc
+            product.CreatedOnUtc,
+            isOwnedByCurrentUser
         );
     }
 
     /// <summary>
     /// Маппинг CreateProductRequest -> CreateProductCommand
     /// </summary>
-    public static CreateProductCommand ToCommand(this CreateProductRequest request, Guid userIdValue)
+    public static CreateProductCommand ToCommand(this CreateProductRequest request, Guid? userIdValue)
     {
         return new CreateProductCommand(
-            new UserId(userIdValue),
+            userIdValue.HasValue ? new UserId(userIdValue.Value) : null,
             request.Barcode,
             request.Name,
             request.Brand,
@@ -58,5 +60,26 @@ public static class ProductMappings
             request.FiberPerBase,
             request.Visibility
         );
+    }
+
+    public static UpdateProductCommand ToCommand(this UpdateProductRequest request, Guid? userIdValue, Guid productId)
+    {
+        return new UpdateProductCommand(
+            userIdValue.HasValue ? new UserId(userIdValue.Value) : null,
+            new ProductId(productId),
+            request.Barcode,
+            request.Name,
+            request.Brand,
+            request.Category,
+            request.Description,
+            request.ImageUrl,
+            request.BaseUnit,
+            request.BaseAmount,
+            request.CaloriesPerBase,
+            request.ProteinsPerBase,
+            request.FatsPerBase,
+            request.CarbsPerBase,
+            request.FiberPerBase,
+            request.Visibility);
     }
 }

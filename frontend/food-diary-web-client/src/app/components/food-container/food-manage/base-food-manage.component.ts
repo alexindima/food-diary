@@ -107,6 +107,7 @@ export class BaseFoodManageComponent implements OnInit {
     protected skipConfirmDialog = false;
     public productForm: FormGroup<ProductFormData>;
     public units = Object.values(MeasurementUnit) as MeasurementUnit[];
+    public visibilityOptions = Object.values(ProductVisibility) as ProductVisibility[];
     public constructor() {
         this.productForm = new FormGroup<ProductFormData>({
             name: new FormControl('', { nonNullable: true, validators: Validators.required }),
@@ -144,7 +145,12 @@ export class BaseFoodManageComponent implements OnInit {
         return this.translateService.instant(`FOOD_MANAGE.DEFAULT_SERVING_UNITS.${MeasurementUnit[unit]}`);
     };
 
+    public stringifyVisibility = (visibility: ProductVisibility): string => {
+        return this.translateService.instant(`FOOD_MANAGE.VISIBILITY_OPTIONS.${visibility.toUpperCase()}`);
+    };
+
     public readonly Unit = MeasurementUnit;
+    public readonly Visibility = ProductVisibility;
 
     public openBarcodeScanner(): void {
         this.barcodeDialog(null).subscribe({

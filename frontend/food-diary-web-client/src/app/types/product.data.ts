@@ -16,6 +16,7 @@ export interface Product {
     usageCount: number;
     visibility: ProductVisibility;
     createdAt: Date;
+    isOwnedByCurrentUser: boolean;
 }
 
 export interface CreateProductRequest {

@@ -26,6 +26,7 @@ public class ProductRepository : IProductRepository
 
     public async Task<(IReadOnlyList<Product> Items, int TotalItems)> GetPagedAsync(
         UserId userId,
+        bool includePublic,
         int page,
         int limit,
         string? search,
@@ -38,7 +39,9 @@ public class ProductRepository : IProductRepository
             .AsNoTracking()
             .Include(p => p.MealItems)
             .Include(p => p.RecipeIngredients)
-            .Where(p => p.UserId == userId || p.Visibility == Visibility.PUBLIC);
+            .Where(includePublic
+                ? p => p.UserId == userId || p.Visibility == Visibility.PUBLIC
+                : p => p.UserId == userId);
 
         if (!string.IsNullOrWhiteSpace(search))
         {
@@ -62,9 +65,20 @@ public class ProductRepository : IProductRepository
         return (items, totalItems);
     }
 
-    public async Task<Product?> GetByIdAsync(ProductId id, UserId userId) =>
+    public async Task<Product?> GetByIdAsync(
+        ProductId id,
+        UserId userId,
+        bool includePublic = true,
+        CancellationToken cancellationToken = default) =>
         await _context.Products
-            .FirstOrDefaultAsync(p => p.Id == id && (p.UserId == userId || p.Visibility == Visibility.PUBLIC));
+            .AsNoTracking()
+            .Include(p => p.MealItems)
+            .Include(p => p.RecipeIngredients)
+            .FirstOrDefaultAsync(
+                p => p.Id == id && (includePublic
+                    ? p.UserId == userId || p.Visibility == Visibility.PUBLIC
+                    : p.UserId == userId),
+                cancellationToken);
 
     public async Task UpdateAsync(Product product)
     {

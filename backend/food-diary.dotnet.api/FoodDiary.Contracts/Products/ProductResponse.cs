@@ -17,5 +17,6 @@ public record ProductResponse(
     double FiberPerBase,
     int UsageCount,
     string Visibility,
-    DateTime CreatedAt
+    DateTime CreatedAt,
+    bool IsOwnedByCurrentUser
 );

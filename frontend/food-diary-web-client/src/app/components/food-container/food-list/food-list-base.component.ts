@@ -14,7 +14,7 @@ import { ProductService } from '../../../services/product.service';
 import { NavigationService } from '../../../services/navigation.service';
 import { PagedData } from '../../../types/paged-data.data';
 import { Product, ProductFilters } from '../../../types/product.data';
-import { catchError, debounceTime, finalize, map, Observable, of, switchMap, tap } from 'rxjs';
+import { catchError, debounceTime, distinctUntilChanged, finalize, map, Observable, of, switchMap, tap } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { TuiTextfieldControllerModule } from '@taiga-ui/legacy';
 import { FormGroupControls } from '../../../types/common.data';
@@ -60,6 +60,7 @@ export class FoodListBaseComponent implements OnInit {
     public constructor() {
         this.searchForm = new FormGroup<ProductSearchFormGroup>({
             search: new FormControl<string | null>(null),
+            onlyMine: new FormControl<boolean>(false, { nonNullable: true }),
         });
     }
 
@@ -70,6 +71,13 @@ export class FoodListBaseComponent implements OnInit {
             .pipe(
                 debounceTime(300),
                 switchMap(value => this.loadProducts(1, this.pageSize, value)),
+            )
+            .subscribe();
+
+        this.searchForm.controls.onlyMine.valueChanges
+            .pipe(
+                distinctUntilChanged(),
+                switchMap(() => this.loadProducts(1, this.pageSize, this.searchForm.controls.search.value)),
             )
             .subscribe();
     }
@@ -103,7 +111,8 @@ export class FoodListBaseComponent implements OnInit {
     protected loadProducts(page: number, limit: number, search: string | null): Observable<void> {
         this.productData.setLoading(true);
         const filters = new ProductFilters(search);
-        return this.productService.query(page, limit, filters).pipe(
+        const includePublic = !this.searchForm.controls.onlyMine.value;
+        return this.productService.query(page, limit, filters, includePublic).pipe(
             tap(pageData => {
                 this.productData.setData(pageData);
                 this.currentPageIndex = pageData.page - 1;
@@ -127,6 +136,7 @@ export class FoodListBaseComponent implements OnInit {
 
 interface ProductSearchFormValues {
     search: string | null;
+    onlyMine: boolean;
 }
 
 type ProductSearchFormGroup = FormGroupControls<ProductSearchFormValues>;

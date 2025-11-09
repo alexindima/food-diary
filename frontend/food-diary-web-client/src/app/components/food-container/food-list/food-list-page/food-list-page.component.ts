@@ -48,6 +48,9 @@ export class FoodListPageComponent extends FoodListBaseComponent implements OnIn
                 if (data.action === 'Edit') {
                     this.navigationService.navigateToFoodEdit(data.id);
                 } else if (data.action === 'Delete') {
+                    if (!product.isOwnedByCurrentUser) {
+                        return;
+                    }
                     this.productService.deleteById(data.id).subscribe({
                         next: () => {
                             this.scrollToTop();

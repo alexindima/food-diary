@@ -20,6 +20,16 @@
                 </fieldset>
             </form>
         </search>
+        <label class="food-list__toggle">
+            <input
+                type="checkbox"
+                class="food-list__toggle-input"
+                [formControl]="searchForm.controls.onlyMine"
+            />
+            <span class="food-list__toggle-label">
+                {{ 'FOOD_LIST.ONLY_MY_PRODUCTS' | translate }}
+            </span>
+        </label>
         <button
             tuiButton
             iconStart="@tui.plus"

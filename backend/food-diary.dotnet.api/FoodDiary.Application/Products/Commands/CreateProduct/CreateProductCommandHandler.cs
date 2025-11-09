@@ -8,32 +8,15 @@ using FoodDiary.Domain.Enums;
 
 namespace FoodDiary.Application.Products.Commands.CreateProduct;
 
-public class CreateProductCommandHandler : ICommandHandler<CreateProductCommand, Result<ProductResponse>>
-{
-    private readonly IProductRepository _productRepository;
-
-    public CreateProductCommandHandler(IProductRepository productRepository)
-    {
-        _productRepository = productRepository;
-    }
-
-    public async Task<Result<ProductResponse>> Handle(CreateProductCommand command, CancellationToken cancellationToken)
-    {
-        // Валидация выполняется автоматически через ValidationBehavior
-        if (!Enum.TryParse(command.BaseUnit, ignoreCase: true, out Domain.Enums.MeasurementUnit baseUnit))
-        {
-            return Result.Failure<ProductResponse>(
-                Errors.Validation.Invalid("BaseUnit", "Неверная единица измерения"));
-        }
-
-        if (!Enum.TryParse(command.Visibility, ignoreCase: true, out Visibility visibility))
-        {
-            return Result.Failure<ProductResponse>(
-                Errors.Validation.Invalid("Visibility", "Неверный уровень видимости"));
-        }
+public class CreateProductCommandHandler(IProductRepository productRepository)
+    : ICommandHandler<CreateProductCommand, Result<ProductResponse>> {
+    public async Task<Result<ProductResponse>>
+        Handle(CreateProductCommand command, CancellationToken cancellationToken) {
+        var baseUnit = Enum.Parse<MeasurementUnit>(command.BaseUnit, true);
+        var visibility = Enum.Parse<Visibility>(command.Visibility, true);
 
         var product = Product.Create(
-            userId: command.UserId,
+            userId: command.UserId!.Value,
             name: command.Name,
             baseUnit: baseUnit,
             baseAmount: command.BaseAmount,
@@ -50,8 +33,8 @@ public class CreateProductCommandHandler : ICommandHandler<CreateProductCommand,
             visibility: visibility
         );
 
-        product = await _productRepository.AddAsync(product);
+        product = await productRepository.AddAsync(product);
 
-        return Result.Success(product.ToResponse());
+        return Result.Success(product.ToResponse(isOwnedByCurrentUser: true));
     }
 }

@@ -32,7 +32,7 @@
                 tuiButton
                 size="m"
                 iconStart="@tui.pen-line"
-                [disabled]="isActionDisabled"
+                [disabled]="isEditDisabled"
                 (click)="onEdit()"
             >
                 {{ 'FOOD_DETAIL.EDIT_BUTTON' | translate }}
@@ -43,12 +43,12 @@
                 size="m"
                 appearance="accent"
                 iconStart="@tui.trash-2"
-                [disabled]="isActionDisabled"
+                [disabled]="isDeleteDisabled"
                 (click)="onDelete()"
             ></button>
         </div>
-        @if (isActionDisabled) {
-            <p class="modal__footer-warning-message">{{ 'FOOD_DETAIL.WARNING_MESSAGE' | translate }}</p>
+        @if (warningMessage) {
+            <p class="modal__footer-warning-message">{{ warningMessage | translate }}</p>
         }
     </div>
 </div>

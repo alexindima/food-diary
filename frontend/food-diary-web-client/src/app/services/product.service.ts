@@ -12,8 +12,8 @@ import { PageOf } from '../types/page-of.data';
 export class ProductService extends ApiService {
     protected readonly baseUrl = environment.apiUrls.products;
 
-    public query(page: number, limit: number, filters?: ProductFilters): Observable<PageOf<Product>> {
-        const params: Record<string, string | number> = { page, limit };
+    public query(page: number, limit: number, filters?: ProductFilters, includePublic = true): Observable<PageOf<Product>> {
+        const params: Record<string, string | number | boolean> = { page, limit, includePublic };
         const search = filters?.search?.trim();
         if (search) {
             params['search'] = search;

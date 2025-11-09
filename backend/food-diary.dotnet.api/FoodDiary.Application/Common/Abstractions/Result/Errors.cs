@@ -1,19 +1,22 @@
+using System;
+
 namespace FoodDiary.Application.Common.Abstractions.Result;
 
-/// <summary>
-/// Содержит стандартные типы ошибок
-/// </summary>
 public static class Errors
 {
     public static class Product
     {
-        public static Error NotFound(int id) => new(
+        public static Error NotFound(Guid id) => new(
             "Product.NotFound",
-            $"Продукт с ID {id} не найден");
+            $"Product with ID {id} was not found.");
+
+        public static Error NotAccessible(Guid id) => new(
+            "Product.NotAccessible",
+            $"Product with ID {id} does not belong to the current user or was not found.");
 
         public static Error AlreadyExists(string barcode) => new(
             "Product.AlreadyExists",
-            $"Продукт с баркодом {barcode} уже существует");
+            $"Product with barcode {barcode} already exists.");
 
         public static Error InvalidData(string message) => new(
             "Product.InvalidData",
@@ -24,40 +27,40 @@ public static class Errors
     {
         public static Error NotFound(Guid id) => new(
             "User.NotFound",
-            $"Пользователь с ID {id} не найден");
+            $"User with ID {id} was not found.");
 
         public static Error NotFound() => new(
             "User.NotFound",
-            "Пользователь не найден");
+            "User was not found.");
 
         public static Error InvalidCredentials => new(
             "User.InvalidCredentials",
-            "Неверный email или пароль");
+            "Invalid email or password.");
 
         public static Error EmailAlreadyExists => new(
             "User.EmailAlreadyExists",
-            "Пользователь с таким email уже существует");
+            "A user with this email already exists.");
     }
 
     public static class Authentication
     {
         public static Error InvalidCredentials => new(
             "Authentication.InvalidCredentials",
-            "Неверный email или пароль");
+            "Invalid email or password.");
 
         public static Error InvalidToken => new(
             "Authentication.InvalidToken",
-            "Недействительный токен");
+            "Invalid authorization token.");
     }
 
     public static class Validation
     {
         public static Error Required(string field) => new(
             "Validation.Required",
-            $"Поле {field} обязательно для заполнения");
+            $"Field {field} is required.");
 
         public static Error Invalid(string field, string reason) => new(
             "Validation.Invalid",
-            $"Поле {field} невалидно: {reason}");
+            $"Field {field} is invalid: {reason}");
     }
 }

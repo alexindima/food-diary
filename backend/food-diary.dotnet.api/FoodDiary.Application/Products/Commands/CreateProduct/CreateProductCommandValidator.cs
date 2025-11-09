@@ -5,18 +5,20 @@ using FoodDiary.Domain.ValueObjects;
 
 namespace FoodDiary.Application.Products.Commands.CreateProduct;
 
-public class CreateProductCommandValidator : AbstractValidator<CreateProductCommand>
-{
+public class CreateProductCommandValidator : AbstractValidator<CreateProductCommand> {
     private readonly IUserRepository _userRepository;
 
-    public CreateProductCommandValidator(IUserRepository userRepository)
-    {
+    public CreateProductCommandValidator(IUserRepository userRepository) {
         _userRepository = userRepository;
 
         RuleFor(x => x.UserId)
-            .NotEmpty()
-            .WithErrorCode("Validation.Required")
-            .WithMessage("UserId is required")
+            .Cascade(CascadeMode.Stop)
+            .NotNull()
+            .WithErrorCode("Authentication.InvalidToken")
+            .WithMessage("Не удалось определить пользователя")
+            .Must(userId => userId is not null && userId.Value != UserId.Empty)
+            .WithErrorCode("Authentication.InvalidToken")
+            .WithMessage("Не удалось определить пользователя")
             .MustAsync(UserExists)
             .WithErrorCode("Validation.NotFound")
             .WithMessage("User not found");
@@ -73,19 +75,20 @@ public class CreateProductCommandValidator : AbstractValidator<CreateProductComm
             .WithMessage("FiberPerBase must be non-negative");
     }
 
-    private bool BeValidUnit(string unit)
-    {
+    private static bool BeValidUnit(string unit) {
         return Enum.TryParse(unit, ignoreCase: true, out MeasurementUnit _);
     }
 
-    private bool BeValidVisibility(string visibility)
-    {
+    private static bool BeValidVisibility(string visibility) {
         return Enum.TryParse(visibility, ignoreCase: true, out Visibility _);
     }
 
-    private async Task<bool> UserExists(UserId userId, CancellationToken cancellationToken)
-    {
-        var user = await _userRepository.GetByIdAsync(userId);
+    private async Task<bool> UserExists(UserId? userId, CancellationToken cancellationToken) {
+        if (userId is null) {
+            return false;
+        }
+
+        var user = await _userRepository.GetByIdAsync(userId.Value);
         return user is not null;
     }
 }

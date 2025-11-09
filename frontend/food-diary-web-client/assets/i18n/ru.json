@@ -106,6 +106,7 @@
         "SEARCH_PLACEHOLDER": "Введите название или штрихкод",
         "SEARCH_BUTTON": "Поиск",
         "ADD_FOOD_BUTTON": "Добавить еду",
+        "ONLY_MY_PRODUCTS": "Показывать только мои продукты",
         "NO_PRODUCTS_FOUND": "Продукты не найдены",
         "CALORIES": "Калории",
         "BARCODE": "Штрихкод",
@@ -121,6 +122,7 @@
         "EDIT_BUTTON": "Редактировать",
         "DELETE_BUTTON": "Удалить",
         "WARNING_MESSAGE": "Этот продукт уже используется, редактирование или удаление невозможно.",
+        "WARNING_NOT_OWNER": "Этот продукт создан другим пользователем, редактирование или удаление невозможно.",
         "CONFIRM_DELETE_TITLE": "Вы уверены, что хотите удалить",
         "CONFIRM_BUTTON": "Подтвердить",
         "CANCEL_BUTTON": "Отмена",
@@ -156,7 +158,14 @@
         "NUTRITION_VALUE": "Пищевая ценность",
         "SAVE_BUTTON": "Сохранить изменения",
         "ADD_BUTTON": "Добавить продукт",
-        "CANCEL_BUTTON": "Отмена"
+        "CANCEL_BUTTON": "Отмена",
+        "VISIBILITY": "Видимость",
+        "VISIBILITY_GROUP_TITLE": "Видимость",
+        "VISIBILITY_PLACEHOLDER": "Видимость",
+        "VISIBILITY_OPTIONS": {
+            "PRIVATE": "Только я",
+            "PUBLIC": "Все пользователи"
+        }
     },
     "CONSUMPTION_LIST": {
         "TITLE": "Список потребления",

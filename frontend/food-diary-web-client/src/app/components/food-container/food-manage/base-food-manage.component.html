@@ -175,6 +175,34 @@
                 </div>
             </div>
         </fd-custom-group>
+        <fd-custom-group [title]="'FOOD_MANAGE.VISIBILITY_GROUP_TITLE' | translate">
+            <div class="food-manage__field food-manage__field--visibility">
+                <tui-select
+                    formControlName="visibility"
+                    [tuiTextfieldLabelOutside]="true"
+                    [stringify]="stringifyVisibility"
+                >
+                    {{ 'FOOD_MANAGE.VISIBILITY' | translate }}*
+                    <input
+                        placeholder="{{ 'FOOD_MANAGE.VISIBILITY_PLACEHOLDER' | translate }}"
+                        tuiTextfieldLegacy
+                    />
+                    <ng-template tuiDataList>
+                        <tui-data-list>
+                            @for (option of visibilityOptions; track option;) {
+                                <button tuiOption [value]="option">
+                                    {{ ('FOOD_MANAGE.VISIBILITY_OPTIONS.' + option.toUpperCase()) | translate }}
+                                </button>
+                            }
+                        </tui-data-list>
+                    </ng-template>
+                </tui-select>
+                <tui-error
+                    formControlName="visibility"
+                    [error]="[] | tuiFieldError | async"
+                ></tui-error>
+            </div>
+        </fd-custom-group>
         <fd-nutrients-summary
             [calories]="calories()"
             [nutrientChartData]="nutrientChartData()"

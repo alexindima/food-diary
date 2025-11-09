@@ -41,7 +41,7 @@ export const routes: Routes = [
             {
                 path: ':id/edit',
                 component: FoodEditComponent,
-                resolve: { food: foodResolver },
+                resolve: { product: foodResolver },
             },
         ],
     },

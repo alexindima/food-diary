@@ -20,6 +20,7 @@
         align-items: center;
         gap: @gap-xxl;
         margin-bottom: @gap-l;
+        flex-wrap: wrap;
 
         @media @media-tablet {
             flex-direction: column;
@@ -43,6 +44,19 @@
 
     &__add-button {
         white-space: nowrap;
+    }
+
+    &__toggle {
+        display: flex;
+        align-items: center;
+        gap: @gap-s;
+        white-space: nowrap;
+        color: @color-text-main;
+
+        &-input {
+            width: 1rem;
+            height: 1rem;
+        }
     }
 
     &__loader {

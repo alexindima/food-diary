@@ -50,8 +50,22 @@ export class FoodDetailComponent {
 
     @ViewChild('confirmDialog') private confirmDialog!: TemplateRef<TuiDialogContext<boolean, void>>;
 
-    public get isActionDisabled(): boolean {
-        return this.product.usageCount > 0;
+    public get isDeleteDisabled(): boolean {
+        return !this.product.isOwnedByCurrentUser || this.product.usageCount > 0;
+    }
+
+    public get isEditDisabled(): boolean {
+        return !this.product.isOwnedByCurrentUser || this.product.usageCount > 0;
+    }
+
+    public get warningMessage(): string | null {
+        if (!this.isDeleteDisabled && !this.isEditDisabled) {
+            return null;
+        }
+
+        return this.product.isOwnedByCurrentUser
+            ? 'FOOD_DETAIL.WARNING_MESSAGE'
+            : 'FOOD_DETAIL.WARNING_NOT_OWNER';
     }
 
     public constructor() {
@@ -66,11 +80,17 @@ export class FoodDetailComponent {
     }
 
     public onEdit(): void {
+        if (this.isEditDisabled) {
+            return;
+        }
         const editResult = new FoodDetailActionResult(this.product.id, 'Edit');
         this.context.completeWith(editResult);
     }
 
     public onDelete(): void {
+        if (this.isDeleteDisabled) {
+            return;
+        }
         this.showConfirmDialog();
     }
 

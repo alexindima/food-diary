@@ -6,5 +6,5 @@ using FoodDiary.Domain.ValueObjects;
 
 namespace FoodDiary.Application.Products.Queries.GetProducts;
 
-public record GetProductsQuery(UserId UserId, int Page, int Limit, string? Search)
+public record GetProductsQuery(UserId? UserId, int Page, int Limit, string? Search, bool IncludePublic)
     : IQuery<Result<PagedResponse<ProductResponse>>>;

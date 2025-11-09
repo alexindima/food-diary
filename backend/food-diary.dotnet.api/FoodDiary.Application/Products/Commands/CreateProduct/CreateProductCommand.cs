@@ -6,7 +6,7 @@ using FoodDiary.Domain.ValueObjects;
 namespace FoodDiary.Application.Products.Commands.CreateProduct;
 
 public record CreateProductCommand(
-    UserId UserId,
+    UserId? UserId,
     string? Barcode,
     string Name,
     string? Brand,

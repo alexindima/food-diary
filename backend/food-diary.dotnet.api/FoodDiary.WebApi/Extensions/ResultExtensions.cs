@@ -17,6 +17,11 @@ public static class ResultExtensions
 
         return result.Error.Code switch
         {
+            var code when code.Contains("Authentication.InvalidToken") => new UnauthorizedObjectResult(new
+            {
+                error = result.Error.Code,
+                message = result.Error.Message
+            }),
             var code when code.Contains("NotFound") => new NotFoundObjectResult(new
             {
                 error = result.Error.Code,
