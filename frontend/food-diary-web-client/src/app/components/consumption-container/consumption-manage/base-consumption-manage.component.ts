@@ -33,8 +33,8 @@ import {
 } from '@taiga-ui/legacy';
 import { NavigationService } from '../../../services/navigation.service';
 import {
-    FoodListDialogComponent
-} from '../../food-container/food-list/food-list-dialog/food-list-dialog.component';
+    ProductListDialogComponent
+} from '../../product-container/product-list/product-list-dialog/product-list-dialog.component';
 import { TuiDay, TuiTime } from '@taiga-ui/cdk';
 import {
     Consumption,
@@ -99,7 +99,7 @@ export class BaseConsumptionManageComponent implements OnInit {
     private readonly dialogService = inject(TuiDialogService);
     private readonly destroyRef = inject(DestroyRef);
 
-    private readonly foodListDialog = tuiDialog(FoodListDialogComponent, {
+    private readonly productListDialog = tuiDialog(ProductListDialogComponent, {
         size: 'page',
         dismissible: true,
         appearance: 'without-border-radius',
@@ -175,7 +175,7 @@ export class BaseConsumptionManageComponent implements OnInit {
 
     public async onProductSelectClick(index: number): Promise<void> {
         this.selectedIndex = index;
-        this.foodListDialog(null).subscribe({
+        this.productListDialog(null).subscribe({
             next: food => {
                 const consumedProductGroup = this.consumedProduct.at(this.selectedIndex);
                 consumedProductGroup.patchValue({ food });
@@ -358,3 +358,5 @@ type ConsumptionItemFormValues ={
 type ConsumptionFormData = FormGroupControls<ConsumptionFormValues>;
 
 type ConsumptionItemFormData = FormGroupControls<ConsumptionItemFormValues>;
+
+

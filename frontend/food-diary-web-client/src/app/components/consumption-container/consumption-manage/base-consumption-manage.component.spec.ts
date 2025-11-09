@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { BaseConsumptionManageComponent } from './base-consumption-manage.component';
 
-describe('BaseFoodManageComponent', () => {
+describe('BaseConsumptionManageComponent', () => {
     let component: BaseConsumptionManageComponent;
     let fixture: ComponentFixture<BaseConsumptionManageComponent>;
 

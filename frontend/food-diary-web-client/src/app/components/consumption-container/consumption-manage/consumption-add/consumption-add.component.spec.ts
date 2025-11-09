@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ConsumptionAddComponent } from './consumption-add.component';
 
-describe('FoodAddComponent', () => {
+describe('ConsumptionAddComponent', () => {
     let component: ConsumptionAddComponent;
     let fixture: ComponentFixture<ConsumptionAddComponent>;
 

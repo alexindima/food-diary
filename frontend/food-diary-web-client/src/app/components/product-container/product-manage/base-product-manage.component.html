@@ -1,0 +1,259 @@
+<div class="product-manage">
+    <h2 class="product-manage__title">
+        @if (product()) {
+            {{ 'FOOD_MANAGE.EDIT_TITLE' | translate }}
+        } @else {
+            {{ 'FOOD_MANAGE.ADD_TITLE' | translate }}
+        }
+    </h2>
+    <form class="product-manage__form" [formGroup]="productForm" (ngSubmit)="onSubmit()">
+        <div class="product-manage__field product-manage__field--name">
+            <tui-textfield type="text">
+                <label tuiLabel>{{ 'FOOD_MANAGE.NAME' | translate }}*</label>
+                <input
+                    formControlName="name"
+                    tuiTextfield
+                    tuiTextfieldSize="m"
+                    placeholder="{{ 'FOOD_MANAGE.NAME_PLACEHOLDER' | translate }}"
+                />
+            </tui-textfield>
+            <tui-error
+                formControlName="name"
+                [error]="[] | tuiFieldError | async"
+            ></tui-error>
+        </div>
+        <div class="product-manage__field product-manage__field--barcode">
+            <tui-textfield type="text">
+                <label tuiLabel>{{ 'FOOD_MANAGE.BARCODE' | translate }}</label>
+                <input
+                    formControlName="barcode"
+                    tuiTextfield
+                    placeholder="{{ 'FOOD_MANAGE.BARCODE_PLACEHOLDER' | translate }}"
+                />
+                <tui-icon
+                    icon="@tui.barcode"
+                    (click)="openBarcodeScanner()"
+                />
+            </tui-textfield>
+            <tui-error
+                formControlName="barcode"
+                [error]="[] | tuiFieldError | async"
+            ></tui-error>
+        </div>
+        <div class="product-manage__field product-manage__field--category">
+            <tui-textfield type="text">
+                <label tuiLabel>{{ 'FOOD_MANAGE.CATEGORY' | translate }}</label>
+                <input
+                    formControlName="category"
+                    tuiTextfield
+                    placeholder="{{ 'FOOD_MANAGE.CATEGORY_PLACEHOLDER' | translate }}"
+                />
+            </tui-textfield>
+            <tui-error
+                formControlName="category"
+                [error]="[] | tuiFieldError | async"
+            ></tui-error>
+        </div>
+        <div class="product-manage__serving">
+            <div class="product-manage__serving-part product-manage__serving-part--amount">
+                <tui-input-number
+                    formControlName="baseAmount"
+                >
+                    {{ 'FOOD_MANAGE.DEFAULT_SERVING' | translate }}*
+                    <input
+                        placeholder="{{ 'FOOD_MANAGE.DEFAULT_SERVING_PLACEHOLDER' | translate }}"
+                        tuiTextfieldLegacy
+                    />
+                </tui-input-number>
+                <tui-error
+                    formControlName="baseAmount"
+                    [error]="[] | tuiFieldError | async"
+                ></tui-error>
+            </div>
+            <div class="product-manage__serving-part product-manage__serving-part--unit">
+                <tui-select
+                    formControlName="baseUnit"
+                    [tuiTextfieldLabelOutside]="true"
+                    [stringify]="stringifyUnits"
+                >
+                    {{ 'FOOD_MANAGE.DEFAULT_SERVING_UNIT' | translate }}*
+                    <input
+                        placeholder="0"
+                        tuiTextfieldLegacy
+                    />
+                    <ng-template tuiDataList>
+                        <tui-data-list>
+                            @for (unit of units; track unit;) {
+                                <button
+                                    tuiOption
+                                    [value]="unit"
+                                >
+                                    {{ ('FOOD_AMOUNT_UNITS.' + Unit[unit]) | translate }}
+                                </button>
+                            }
+                        </tui-data-list>
+                    </ng-template>
+                </tui-select>
+                <tui-error
+                    formControlName="baseUnit"
+                    [error]="[] | tuiFieldError | async"
+                ></tui-error>
+            </div>
+        </div>
+        <fd-custom-group
+            [title]="'FOOD_MANAGE.NUTRITION_VALUE' | translate"
+        >
+            <div class="product-manage__nutrients-group">
+                <div class="product-manage__field">
+                    <tui-input-number
+                        formControlName="caloriesPerBase"
+                    >
+                        {{ 'FOOD_MANAGE.CALORIES' | translate }} {{ getDynamicNutrientPlaceholder }}*
+                        <input
+                            placeholder="0"
+                            tuiTextfieldLegacy
+                        />
+                    </tui-input-number>
+                    <tui-error
+                        formControlName="caloriesPerBase"
+                        [error]="[] | tuiFieldError | async"
+                    ></tui-error>
+                </div>
+                <div class="product-manage__macronutrients">
+                    <div class="product-manage__macronutrient">
+                        <tui-input-number formControlName="proteinsPerBase">
+                            {{ 'FOOD_MANAGE.PROTEINS' | translate }} {{ getDynamicNutrientPlaceholder }}*
+                            <input
+                                placeholder="0"
+                                tuiTextfieldLegacy
+                            />
+                        </tui-input-number>
+                        <tui-error
+                            formControlName="proteinsPerBase"
+                            [error]="[] | tuiFieldError | async"
+                        ></tui-error>
+                    </div>
+                    <div class="product-manage__macronutrient">
+                        <tui-input-number formControlName="fatsPerBase">
+                            {{ 'FOOD_MANAGE.FATS' | translate }} {{ getDynamicNutrientPlaceholder }}*
+                            <input
+                                placeholder="0"
+                                tuiTextfieldLegacy
+                            />
+                        </tui-input-number>
+                        <tui-error
+                            formControlName="fatsPerBase"
+                            [error]="[] | tuiFieldError | async"
+                        ></tui-error>
+                    </div>
+                    <div class="product-manage__macronutrient">
+                        <tui-input-number formControlName="carbsPerBase">
+                            {{ 'FOOD_MANAGE.CARBS' | translate }} {{ getDynamicNutrientPlaceholder }}*
+                            <input
+                                placeholder="0"
+                                tuiTextfieldLegacy
+                            />
+                        </tui-input-number>
+                        <tui-error
+                            formControlName="carbsPerBase"
+                            [error]="[] | tuiFieldError | async"
+                        ></tui-error>
+                    </div>
+                    <div class="product-manage__macronutrient">
+                        <tui-input-number formControlName="fiberPerBase">
+                            {{ 'FOOD_MANAGE.FIBER' | translate }} {{ getDynamicNutrientPlaceholder }}*
+                            <input
+                                placeholder="0"
+                                tuiTextfieldLegacy
+                            />
+                        </tui-input-number>
+                        <tui-error
+                            formControlName="fiberPerBase"
+                            [error]="[] | tuiFieldError | async"
+                        ></tui-error>
+                    </div>
+                </div>
+            </div>
+        </fd-custom-group>
+        <fd-custom-group [title]="'FOOD_MANAGE.VISIBILITY_GROUP_TITLE' | translate">
+            <div class="product-manage__field product-manage__field--visibility">
+                <tui-select
+                    formControlName="visibility"
+                    [tuiTextfieldLabelOutside]="true"
+                    [stringify]="stringifyVisibility"
+                >
+                    {{ 'FOOD_MANAGE.VISIBILITY' | translate }}*
+                    <input
+                        placeholder="{{ 'FOOD_MANAGE.VISIBILITY_PLACEHOLDER' | translate }}"
+                        tuiTextfieldLegacy
+                    />
+                    <ng-template tuiDataList>
+                        <tui-data-list>
+                            @for (option of visibilityOptions; track option;) {
+                                <button tuiOption [value]="option">
+                                    {{ ('FOOD_MANAGE.VISIBILITY_OPTIONS.' + option.toUpperCase()) | translate }}
+                                </button>
+                            }
+                        </tui-data-list>
+                    </ng-template>
+                </tui-select>
+                <tui-error
+                    formControlName="visibility"
+                    [error]="[] | tuiFieldError | async"
+                ></tui-error>
+            </div>
+        </fd-custom-group>
+        <fd-nutrients-summary
+            [calories]="calories()"
+            [nutrientChartData]="nutrientChartData()"
+            [config]="nutrientSummaryConfig"
+        ></fd-nutrients-summary>
+
+        <div class="product-manage__actions">
+            @if (product()) {
+                <button
+                    type="submit"
+                    class="product-manage__action-button"
+                    tuiButton
+                    appearance="primary"
+                    iconStart="@tui.save"
+                >
+                    {{ 'FOOD_MANAGE.SAVE_BUTTON' | translate }}
+                </button>
+            } @else {
+                <button
+                    type="submit"
+                    class="product-manage__action-button"
+                    tuiButton
+                    appearance="primary"
+                    iconStart="@tui.plus"
+                >
+                    {{ 'FOOD_MANAGE.ADD_BUTTON' | translate }}
+                </button>
+            }
+            <tui-error [error]="globalError()"></tui-error>
+        </div>
+    </form>
+</div>
+
+<ng-template #confirmDialog let-observer>
+    <div class="product-manage__dialog">
+        <p class="product-manage__dialog-title">
+            @if (product()) {
+                {{ 'FOOD_DETAIL.EDIT_SUCCESS' | translate }}
+            } @else {
+                {{ 'FOOD_DETAIL.CREATE_SUCCESS' | translate }}
+            }
+        </p>
+        <div class="product-manage__dialog-buttons">
+            <button tuiButton size="m" (click)="observer.next('Home'); observer.complete()">
+                {{ 'FOOD_DETAIL.GO_TO_HOME_BUTTON' | translate }}
+            </button>
+            <button tuiButton size="m" (click)="observer.next('ProductList'); observer.complete()">
+                {{ 'FOOD_DETAIL.GO_TO_FOOD_LIST_BUTTON' | translate }}
+            </button>
+        </div>
+    </div>
+</ng-template>
+
+

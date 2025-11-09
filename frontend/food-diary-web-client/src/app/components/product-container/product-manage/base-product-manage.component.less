@@ -1,0 +1,88 @@
+@import 'variables';
+
+.product-manage {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: @gap-m;
+    box-sizing: border-box;
+
+    &__title {
+        font-size: 1.8em;
+        font-weight: bold;
+        color: @color-text-main;
+        text-align: center;
+        margin: 0 0 @gap-l;
+    }
+
+    &__form {
+        display: flex;
+        flex-direction: column;
+        gap: @gap-m;
+    }
+
+    &__field {
+        display: flex;
+        flex-direction: column;
+    }
+
+    &__serving {
+        display: flex;
+        gap: @gap-m;
+
+        &-part {
+            flex: 1;
+        }
+
+        @media @media-mobile {
+            flex-direction: column;
+            gap: @gap-xs;
+            margin: @gap-s 0;
+        }
+    }
+
+    &__actions {
+        .product-manage__action-button {
+            width: 100%;
+        }
+    }
+
+    &__dialog {
+        padding: @gap-l;
+        text-align: center;
+
+        &-title {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: @color-text-main;
+            margin: 0 0 @gap-l;
+        }
+
+        &-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: @gap-xl;
+        }
+    }
+}
+
+.product-manage__nutrients-group {
+    display: flex;
+    flex-direction: column;
+    gap: @gap-m;
+}
+
+.product-manage__macronutrients {
+    display: flex;
+    gap: @gap-m;
+
+    @media @media-tablet {
+        flex-direction: column;
+    }
+}
+
+.product-manage__macronutrient {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+

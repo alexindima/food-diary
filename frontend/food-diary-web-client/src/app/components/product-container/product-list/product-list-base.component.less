@@ -1,0 +1,141 @@
+@import 'variables';
+
+.product-list {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: @gap-m;
+    box-sizing: border-box;
+    font-size: 14px;
+
+    &__title {
+        font-size: 1.8em;
+        font-weight: bold;
+        color: @color-text-main;
+        text-align: center;
+        margin: 0 0 @gap-l;
+    }
+
+    &__actions {
+        display: flex;
+        align-items: center;
+        gap: @gap-xxl;
+        margin-bottom: @gap-l;
+        flex-wrap: wrap;
+
+        @media @media-tablet {
+            flex-direction: column;
+            align-items: stretch;
+            gap: @gap-m;
+            margin-bottom: @gap-m;
+        }
+    }
+
+    &__search {
+        width: 100%;
+    }
+
+    &__search-form {
+        flex-grow: 1;
+    }
+
+    &__search-input {
+        width: 100%;
+    }
+
+    &__add-button {
+        white-space: nowrap;
+    }
+
+    &__toggle {
+        display: flex;
+        align-items: center;
+        gap: @gap-s;
+        white-space: nowrap;
+        color: @color-text-main;
+
+        &-input {
+            width: 1rem;
+            height: 1rem;
+        }
+    }
+
+    &__loader {
+        display: block;
+        margin: @gap-l auto;
+    }
+
+    &__no-results {
+        font-size: 1.2em;
+        font-weight: bold;
+        color: @color-text-additional;
+        text-align: center;
+        margin-top: @gap-l;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: @gap-xs;
+
+        &-icon {
+            font-size: 2em;
+            color: @color-no-results;
+        }
+    }
+
+    &__pagination {
+        margin-top: @gap-l;
+    }
+}
+
+.product-card {
+    padding: @gap-m;
+    display: flex;
+    flex-direction: column;
+
+    &__header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: @gap-xs;
+
+        @media @media-mobile {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: @gap-xs;
+        }
+    }
+
+    &__name {
+        font-size: 1.5em;
+        font-weight: bold;
+        color: @color-text-main;
+    }
+
+    &__barcode {
+        font-size: 0.9em;
+        color: @color-text-additional;
+    }
+
+    &__info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        @media @media-mobile {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: @gap-xs;
+        }
+    }
+
+    &__calories {
+        font-size: 1.2em;
+        font-weight: bold;
+        color: @color-text-main;
+    }
+
+    &__macros {
+        font-size: 0.9em;
+        color: @color-text-additional;
+    }
+}
+

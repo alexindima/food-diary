@@ -1,0 +1,90 @@
+<div class="product-list" #container>
+    <h2 class="product-list__title">{{ getTitle() }}</h2>
+
+    <div class="product-list__actions">
+        <search tuiSearch class="product-list__search">
+            <form class="product-list__search-form" [formGroup]="searchForm">
+                <fieldset tuiTextfieldSize="m">
+                    <tui-textfield iconStart="@tui.search">
+                        <input
+                            formControlName="search"
+                            [placeholder]="'FOOD_LIST.SEARCH_PLACEHOLDER' | translate"
+                            tuiTextfield
+                            class="product-list__search-input"
+                        />
+                        <tui-icon
+                            icon="@tui.barcode"
+                            (click)="openBarcodeScanner()"
+                        />
+                    </tui-textfield>
+                </fieldset>
+            </form>
+        </search>
+        <label class="product-list__toggle">
+            <input
+                type="checkbox"
+                class="product-list__toggle-input"
+                [formControl]="searchForm.controls.onlyMine"
+            />
+            <span class="product-list__toggle-label">
+                {{ 'FOOD_LIST.ONLY_MY_PRODUCTS' | translate }}
+            </span>
+        </label>
+        <button
+            tuiButton
+            iconStart="@tui.plus"
+            size="m"
+            (click)="onAddProductClick()"
+            class="product-list__add-button"
+        >
+            {{ 'FOOD_LIST.ADD_FOOD_BUTTON' | translate }}
+        </button>
+    </div>
+
+    @if (productData.isLoading()) {
+        <tui-loader class="product-list__loader"></tui-loader>
+    } @else {
+        @if (productData.items().length > 0) {
+            @for (product of productData.items(); track product) {
+                <fd-card (click)="onProductClick(product)">
+                    <div class="product-card">
+                        <div class="product-card__header">
+                            <span class="product-card__name">{{ product.name }}</span>
+                            @if (product.barcode) {
+                                <span class="product-card__barcode">
+                                {{ 'FOOD_LIST.BARCODE' | translate }}: {{ product.barcode }}
+                            </span>
+                            }
+                        </div>
+                        <div class="product-card__info">
+                        <span class="product-card__calories">
+                            {{ 'FOOD_LIST.CALORIES' | translate }}: {{ product.caloriesPerBase }}
+                        </span>
+                            <span class="product-card__macros">
+                            {{ 'FOOD_LIST.PROTEINS' | translate }}: {{ product.proteinsPerBase }}g |
+                                {{ 'FOOD_LIST.FATS' | translate }}: {{ product.fatsPerBase }}g |
+                                {{ 'FOOD_LIST.CARBS' | translate }}: {{ product.carbsPerBase }}g
+                        </span>
+                        </div>
+                    </div>
+                </fd-card>
+            }
+        } @else {
+            <div class="product-list__no-results">
+                <span class="product-list__no-results-icon">🔍</span>
+                {{ 'FOOD_LIST.NO_PRODUCTS_FOUND' | translate }}
+            </div>
+        }
+    }
+
+    @if (productData.totalPages > 1) {
+        <tui-pagination
+            [length]="productData.totalPages"
+            [(index)]="currentPageIndex"
+            (indexChange)="onPageChange($event)"
+            class="product-list__pagination"
+        >
+        </tui-pagination>
+    }
+</div>
+

@@ -21,15 +21,15 @@ export class NavigationService {
         await this.router.navigateByUrl(returnUrl || '/');
     }
 
-    public async navigateToFoodList(): Promise<void> {
+    public async navigateToProductList(): Promise<void> {
         await this.router.navigate(['/products']);
     }
 
-    public async navigateToFoodAdd(): Promise<void> {
+    public async navigateToProductAdd(): Promise<void> {
         await this.router.navigate(['/products/add']);
     }
 
-    public async navigateToFoodEdit(id: string): Promise<void> {
+    public async navigateToProductEdit(id: string): Promise<void> {
         await this.router.navigate([`/products/${id}/edit`]);
     }
 

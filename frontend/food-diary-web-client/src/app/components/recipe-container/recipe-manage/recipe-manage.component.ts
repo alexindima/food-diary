@@ -24,8 +24,8 @@ import { AsyncPipe, NgForOf } from '@angular/common';
 import { TUI_VALIDATION_ERRORS, TuiFieldErrorPipe } from '@taiga-ui/kit';
 import { nonEmptyArrayValidator } from '../../../validators/non-empty-array.validator';
 import {
-    FoodListDialogComponent
-} from '../../food-container/food-list/food-list-dialog/food-list-dialog.component';
+    ProductListDialogComponent
+} from '../../product-container/product-list/product-list-dialog/product-list-dialog.component';
 import { NutrientChartData } from '../../../types/charts.data';
 import { HttpErrorResponse } from '@angular/common/http';
 import {
@@ -94,7 +94,7 @@ export class RecipeManageComponent implements OnInit {
     public selectedStepIndex: number = 0;
     public selectedIngredientIndex: number = 0;
 
-    private readonly foodListDialog = tuiDialog(FoodListDialogComponent, {
+    private readonly productListDialog = tuiDialog(ProductListDialogComponent, {
         size: 'page',
         dismissible: true,
         appearance: 'without-border-radius',
@@ -183,7 +183,7 @@ export class RecipeManageComponent implements OnInit {
     public async onProductSelectClick(stepIndex: number, ingredientIndex: number): Promise<void> {
         this.selectedStepIndex = stepIndex;
         this.selectedIngredientIndex = ingredientIndex;
-        this.foodListDialog(null).subscribe({
+        this.productListDialog(null).subscribe({
             next: food => {
                 const ingredientsArray = this.getStepIngredients(stepIndex);
                 const foodGroup = ingredientsArray.at(ingredientIndex);
@@ -351,3 +351,5 @@ interface IngredientFormValues {
 type RecipeFormData = FormGroupControls<RecipeFormValues>;
 type StepFormData = FormGroupControls<StepFormValues>;
 type IngredientFormData = FormGroupControls<IngredientFormValues>;
+
+

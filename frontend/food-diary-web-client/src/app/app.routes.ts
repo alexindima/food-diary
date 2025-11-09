@@ -1,11 +1,11 @@
 import { Routes } from '@angular/router';
 import { AuthComponent } from './components/auth/auth.component';
 import { MainComponent } from './components/main/main.component';
-import { FoodContainerComponent } from './components/food-container/food-container.component';
-import { FoodListPageComponent } from './components/food-container/food-list/food-list-page/food-list-page.component';
-import { FoodAddComponent } from './components/food-container/food-manage/food-add/food-add.component';
-import { FoodEditComponent } from './components/food-container/food-manage/food-edit/food-edit.component';
-import { foodResolver } from './resolvers/food.resolver';
+import { ProductContainerComponent } from './components/product-container/product-container.component';
+import { ProductListPageComponent } from './components/product-container/product-list/product-list-page/product-list-page.component';
+import { ProductAddComponent } from './components/product-container/product-manage/product-add/product-add.component';
+import { ProductEditComponent } from './components/product-container/product-manage/product-edit/product-edit.component';
+import { productResolver } from './resolvers/product.resolver';
 import { ConsumptionContainerComponent } from './components/consumption-container/consumption-container.component';
 import { ConsumptionListComponent } from './components/consumption-container/consumption-list/consumption-list.component';
 import { ConsumptionAddComponent } from './components/consumption-container/consumption-manage/consumption-add/consumption-add.component';
@@ -33,15 +33,15 @@ export const routes: Routes = [
     },
     {
         path: 'products',
-        component: FoodContainerComponent,
+        component: ProductContainerComponent,
         canActivate: [authGuard],
         children: [
-            { path: '', component: FoodListPageComponent },
-            { path: 'add', component: FoodAddComponent },
+            { path: '', component: ProductListPageComponent },
+            { path: 'add', component: ProductAddComponent },
             {
                 path: ':id/edit',
-                component: FoodEditComponent,
-                resolve: { product: foodResolver },
+                component: ProductEditComponent,
+                resolve: { product: productResolver },
             },
         ],
     },

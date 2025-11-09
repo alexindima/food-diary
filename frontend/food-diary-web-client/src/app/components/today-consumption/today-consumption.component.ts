@@ -79,16 +79,16 @@ export class TodayConsumptionComponent implements OnInit {
         await this.navigationService.navigateToConsumptionAdd();
     }
 
-    public async addFood(): Promise<void> {
-        await this.navigationService.navigateToFoodAdd();
+    public async addProduct(): Promise<void> {
+        await this.navigationService.navigateToProductAdd();
     }
 
     public async manageConsumptions(): Promise<void> {
         await this.navigationService.navigateToConsumptionList();
     }
 
-    public async manageFoods(): Promise<void> {
-        await this.navigationService.navigateToFoodList();
+    public async manageProducts(): Promise<void> {
+        await this.navigationService.navigateToProductList();
     }
 
     public async goToStatistics(): Promise<void> {
