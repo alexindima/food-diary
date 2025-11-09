@@ -1,6 +1,9 @@
+using System;
+
 namespace FoodDiary.Contracts.Users;
 
 public record UserResponse(
+    Guid Id,
     string Email,
     string? Username,
     string? FirstName,

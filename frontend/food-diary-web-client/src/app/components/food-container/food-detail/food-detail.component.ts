@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, TemplateRef, ViewChild } from '@angular/core';
-import { Food } from '../../../types/food.data';
+import { Product } from '../../../types/product.data';
 import { TuiButton, TuiDialogContext, TuiDialogService } from '@taiga-ui/core';
 import { injectContext } from '@taiga-ui/polymorpheus';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -17,10 +17,10 @@ import { NutrientChartData } from '../../../types/charts.data';
     imports: [TranslatePipe, TuiButton, NutrientsSummaryComponent]
 })
 export class FoodDetailComponent {
-    public readonly context = injectContext<TuiDialogContext<FoodDetailActionResult, Food>>();
+    public readonly context = injectContext<TuiDialogContext<FoodDetailActionResult, Product>>();
     private readonly dialogService = inject(TuiDialogService);
 
-    public food: Food;
+    public product: Product;
 
     public readonly nutrientSummaryConfig: NutrientsSummaryConfig = {
         styles: {
@@ -51,22 +51,22 @@ export class FoodDetailComponent {
     @ViewChild('confirmDialog') private confirmDialog!: TemplateRef<TuiDialogContext<boolean, void>>;
 
     public get isActionDisabled(): boolean {
-        return this.food.usageCount > 0;
+        return this.product.usageCount > 0;
     }
 
     public constructor() {
-        this.food = this.context.data;
+        this.product = this.context.data;
 
-        this.calories = this.food.caloriesPerBase;
+        this.calories = this.product.caloriesPerBase;
         this.nutrientChartData = {
-            proteins: this.food.proteinsPerBase,
-            fats: this.food.fatsPerBase,
-            carbs: this.food.carbsPerBase,
+            proteins: this.product.proteinsPerBase,
+            fats: this.product.fatsPerBase,
+            carbs: this.product.carbsPerBase,
         };
     }
 
     public onEdit(): void {
-        const editResult = new FoodDetailActionResult(this.food.id, 'Edit');
+        const editResult = new FoodDetailActionResult(this.product.id, 'Edit');
         this.context.completeWith(editResult);
     }
 
@@ -82,7 +82,7 @@ export class FoodDetailComponent {
             })
             .subscribe(confirm => {
                 if (confirm) {
-                    const deleteResult = new FoodDetailActionResult(this.food.id, 'Delete');
+                    const deleteResult = new FoodDetailActionResult(this.product.id, 'Delete');
                     this.context.completeWith(deleteResult);
                 }
             });
@@ -91,7 +91,7 @@ export class FoodDetailComponent {
 
 class FoodDetailActionResult {
     public constructor(
-        public id: number,
+        public id: string,
         public action: FoodDetailAction,
     ) {}
 }

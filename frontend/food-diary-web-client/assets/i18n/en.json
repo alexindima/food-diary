@@ -144,6 +144,7 @@
         "PROTEINS": "Proteins per",
         "FATS": "Fats per",
         "CARBS": "Carbs per",
+        "FIBER": "Fiber per",
         "DEFAULT_SERVING": "Default Serving",
         "DEFAULT_SERVING_UNIT": "Serving Unit",
         "DEFAULT_SERVING_UNIT_PLACEHOLDER": "Select serving unit",

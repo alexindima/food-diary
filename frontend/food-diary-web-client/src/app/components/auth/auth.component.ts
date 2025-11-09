@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, DestroyRef, FactoryProvider, inject
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-import { ErrorCode } from '../../types/api-response.data';
 import { TUI_VALIDATION_ERRORS, TuiCheckbox, TuiFieldErrorPipe, TuiTab, TuiTabsHorizontal } from '@taiga-ui/kit';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TuiButton, TuiError, TuiLabel, TuiTextfieldComponent, TuiTextfieldDirective } from '@taiga-ui/core';
@@ -13,6 +12,7 @@ import { FormGroupControls } from '../../types/common.data';
 import { LoginRequest, RegisterRequest } from '../../types/auth.data';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ValidationErrors } from '../../types/validation-error.data';
+import { HttpErrorResponse } from '@angular/common/http';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: TUI_VALIDATION_ERRORS,
@@ -111,12 +111,11 @@ export class AuthComponent {
         const loginRequest = new LoginRequest(this.loginForm.value);
 
         this.authService.login(loginRequest).subscribe({
-            next: response => {
-                if (response.status === 'success') {
-                    this.navigationService.navigateToReturnUrl(this.returnUrl);
-                } else if (response.status === 'error') {
-                    this.handleLoginError(response.error);
-                }
+            next: () => {
+                this.navigationService.navigateToReturnUrl(this.returnUrl);
+            },
+            error: (error: HttpErrorResponse) => {
+                this.handleLoginError(error.error?.error);
             },
         });
     }
@@ -129,26 +128,25 @@ export class AuthComponent {
         const registerRequest = new RegisterRequest(this.registerForm.value);
 
         this.authService.register(registerRequest).subscribe({
-            next: response => {
-                if (response.status === 'success' && response.data) {
-                    this.navigationService.navigateToReturnUrl(this.returnUrl);
-                } else if (response.status === 'error') {
-                    this.handleRegisterError(response.error);
-                }
+            next: () => {
+                this.navigationService.navigateToReturnUrl(this.returnUrl);
+            },
+            error: (error: HttpErrorResponse) => {
+                this.handleRegisterError(error.error?.error);
             },
         });
     }
 
-    private handleLoginError(error?: ErrorCode): void {
-        if (error === ErrorCode.INVALID_CREDENTIALS) {
+    private handleLoginError(errorCode?: string): void {
+        if (errorCode === 'User.InvalidCredentials' || errorCode === 'Authentication.InvalidCredentials') {
             this.setGlobalError('FORM_ERRORS.INVALID_CREDENTIALS');
         } else {
             this.setGlobalError('FORM_ERRORS.UNKNOWN');
         }
     }
 
-    private handleRegisterError(error?: ErrorCode): void {
-        if (error === ErrorCode.USER_EXISTS) {
+    private handleRegisterError(errorCode?: string): void {
+        if (errorCode === 'User.EmailAlreadyExists') {
             const emailField = this.registerForm.controls.email;
             emailField?.updateValueAndValidity();
             emailField?.setErrors({ userExists: true });

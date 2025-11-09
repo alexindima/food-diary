@@ -34,9 +34,9 @@ export class RecipeService extends ApiService {
         );
     }
 
-    public create(data: RecipeDto): Observable<ApiResponse<RecipeDto | null>> {
-        return this.post<ApiResponse<RecipeDto>>('', data).pipe(
-            catchError(error => of(ApiResponse.error(error.error?.error, null)))
+    public create(data: RecipeDto): Observable<RecipeDto | null> {
+        return this.post<RecipeDto>('', data).pipe(
+            catchError(() => of(null))
         );
     }
 

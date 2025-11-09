@@ -31,7 +31,6 @@ import {
     TuiSelectModule,
     TuiTextfieldControllerModule,
 } from '@taiga-ui/legacy';
-import { ApiResponse, ErrorCode } from '../../../types/api-response.data';
 import { NavigationService } from '../../../services/navigation.service';
 import {
     FoodListDialogComponent
@@ -43,7 +42,8 @@ import {
 } from '../../../types/consumption.data';
 import { ConsumptionService } from '../../../services/consumption.service';
 import { FormGroupControls } from '../../../types/common.data';
-import { Food } from '../../../types/food.data';
+import { Product } from '../../../types/product.data';
+import { HttpErrorResponse } from '@angular/common/http';
 import { TuiUtils } from '../../../utils/tui.utils';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { nonEmptyArrayValidator } from '../../../validators/non-empty-array.validator';
@@ -124,8 +124,8 @@ export class BaseConsumptionManageComponent implements OnInit {
             date: new FormControl<[TuiDay, TuiTime]>(
                 [TuiDay.currentLocal(), TuiTime.currentLocal()], { nonNullable: true }
             ),
-            consumedFood: new FormArray<FormGroup<ConsumptionItemFormData>>(
-                [this.createConsumedFoodItem()], nonEmptyArrayValidator()
+            consumedProduct: new FormArray<FormGroup<ConsumptionItemFormData>>(
+                [this.createConsumedProductItem()], nonEmptyArrayValidator()
             ),
             comment: new FormControl<string | null>(null),
         });
@@ -144,41 +144,41 @@ export class BaseConsumptionManageComponent implements OnInit {
         });
     }
 
-    public get consumedFood(): FormArray<FormGroup<ConsumptionItemFormData>> {
-        return this.consumptionForm.controls.consumedFood;
+    public get consumedProduct(): FormArray<FormGroup<ConsumptionItemFormData>> {
+        return this.consumptionForm.controls.consumedProduct;
     }
 
-    public getFoodName(index: number): string {
-        const foodControl = this.consumedFood.at(index).controls.food;
+    public getProductName(index: number): string {
+        const foodControl = this.consumedProduct.at(index).controls.food;
         return foodControl?.value?.name || '';
     }
 
-    public getFoodUnit(index: number): string | null {
-        const unit = this.consumedFood.at(index).controls.food?.value?.baseUnit;
+    public getProductUnit(index: number): string | null {
+        const unit = this.consumedProduct.at(index).controls.food?.value?.baseUnit;
         return unit
             ? `, ${this.translateService.instant('FOOD_AMOUNT_UNITS.' + unit.toUpperCase())}`
             : null;
     }
 
-    public isFoodInvalid(index: number): boolean {
-        const foodControl = this.consumedFood.at(index).controls.food;
+    public isProductInvalid(index: number): boolean {
+        const foodControl = this.consumedProduct.at(index).controls.food;
         return !!foodControl && foodControl.invalid && foodControl.touched;
     }
 
-    public addFoodItem(): void {
-        this.consumedFood.push(this.createConsumedFoodItem());
+    public addProductItem(): void {
+        this.consumedProduct.push(this.createConsumedProductItem());
     }
 
-    public removeFoodItem(index: number): void {
-        this.consumedFood.removeAt(index);
+    public removeProductItem(index: number): void {
+        this.consumedProduct.removeAt(index);
     }
 
-    public async onFoodSelectClick(index: number): Promise<void> {
+    public async onProductSelectClick(index: number): Promise<void> {
         this.selectedIndex = index;
         this.foodListDialog(null).subscribe({
             next: food => {
-                const consumedFoodGroup = this.consumedFood.at(this.selectedIndex);
-                consumedFoodGroup.patchValue({ food });
+                const consumedProductGroup = this.consumedProduct.at(this.selectedIndex);
+                consumedProductGroup.patchValue({ food });
             },
         });
     }
@@ -189,12 +189,12 @@ export class BaseConsumptionManageComponent implements OnInit {
         if (this.consumptionForm.valid) {
             const tuiDateTime = this.consumptionForm.controls.date.value;
             const comment = this.consumptionForm.controls.comment.value;
-            const consumedFood = this.consumptionForm.controls.consumedFood.value;
+            const consumedProduct = this.consumptionForm.controls.consumedProduct.value;
 
             const consumptionData: ConsumptionManageDto = {
                 date: TuiUtils.combineTuiDayAndTuiTime(tuiDateTime[0], tuiDateTime[1]),
                 comment: comment ?? undefined,
-                items: consumedFood
+                items: consumedProduct
                     .filter(foodItem => foodItem.food && foodItem.quantity !== null)
                     .map(foodItem => ({
                         foodId: foodItem.food!.id,
@@ -230,18 +230,18 @@ export class BaseConsumptionManageComponent implements OnInit {
             comment: consumption.comment || null,
         });
 
-        const consumedFoodArray = this.consumedFood;
-        consumedFoodArray.clear();
+        const consumedProductArray = this.consumedProduct;
+        consumedProductArray.clear();
 
         consumption.items.forEach((item) => {
-            consumedFoodArray.push(this.createConsumedFoodItem(item.food, item.amount));
+            consumedProductArray.push(this.createConsumedProductItem(item.food, item.amount));
         });
     }
 
     private updateSummary(): void {
-        const totals = this.consumedFood.controls.reduce(
+        const totals = this.consumedProduct.controls.reduce(
             (totals, group) => {
-                const food = group.value.food as Food | null;
+                const food = group.value.food as Product | null;
                 const quantity = group.value.quantity || 0;
 
                 if (food) {
@@ -296,23 +296,19 @@ export class BaseConsumptionManageComponent implements OnInit {
         });
     }
 
-    private async handleSubmitResponse(response: ApiResponse<Consumption | null>): Promise<void> {
-        if (response.status === 'success') {
+    private async handleSubmitResponse(response: Consumption | null): Promise<void> {
+        if (response) {
             if (!this.consumption()) {
                 this.consumptionForm.reset();
             }
             await this.showConfirmDialog();
-        } else if (response.status === 'error') {
-            this.handleSubmitError(response.error);
+        } else {
+            this.handleSubmitError();
         }
     }
 
-    private handleSubmitError(error?: ErrorCode): void {
-        if (error === ErrorCode.INVALID_CREDENTIALS) {
-            this.setGlobalError('FORM_ERRORS.INVALID_CREDENTIALS');
-        } else {
-            this.setGlobalError('FORM_ERRORS.UNKNOWN');
-        }
+    private handleSubmitError(error?: HttpErrorResponse): void {
+        this.setGlobalError('FORM_ERRORS.UNKNOWN');
     }
 
     private setGlobalError(errorKey: string): void {
@@ -338,9 +334,9 @@ export class BaseConsumptionManageComponent implements OnInit {
             });
     }
 
-    private createConsumedFoodItem(food: Food | null = null, quantity: number | null = null): FormGroup<ConsumptionItemFormData> {
+    private createConsumedProductItem(food: Product | null = null, quantity: number | null = null): FormGroup<ConsumptionItemFormData> {
         return new FormGroup<ConsumptionItemFormData>({
-            food: new FormControl<Food | null>(food, Validators.required),
+            food: new FormControl<Product | null>(food, Validators.required),
             quantity: new FormControl<number | null>(quantity, [Validators.required, Validators.min(0.01)]),
         });
     }
@@ -350,12 +346,12 @@ type RedirectAction = 'Home' | 'ConsumptionList';
 
 type ConsumptionFormValues = {
     date: [TuiDay, TuiTime];
-    consumedFood: ConsumptionItemFormValues[];
+    consumedProduct: ConsumptionItemFormValues[];
     comment: string | null;
 };
 
 type ConsumptionItemFormValues ={
-    food: Food | null;
+    food: Product | null;
     quantity: number | null;
 };
 

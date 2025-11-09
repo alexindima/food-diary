@@ -1,18 +1,18 @@
 import { UserFormValues } from '../components/user-manage/user-manage.component';
 
 export interface User {
+    id: string; // User ID (Guid)
     email: string;
-    password?: string;
-    username: string;
+    username?: string;
     firstName?: string;
     lastName?: string;
     birthDate?: Date;
     gender?: string;
     weight?: number;
     height?: number;
-    calories?: number;
     profileImage?: string;
     isActive: boolean;
+    calories?: number; // Local field, not from backend
 }
 
 export class UpdateUserDto {

@@ -24,36 +24,36 @@
             tuiButton
             iconStart="@tui.plus"
             size="m"
-            (click)="onAddFoodClick()"
+            (click)="onAddProductClick()"
             class="food-list__add-button"
         >
             {{ 'FOOD_LIST.ADD_FOOD_BUTTON' | translate }}
         </button>
     </div>
 
-    @if (foodData.isLoading()) {
+    @if (productData.isLoading()) {
         <tui-loader class="food-list__loader"></tui-loader>
     } @else {
-        @if (foodData.items().length > 0) {
-            @for (food of foodData.items(); track food) {
-                <fd-card (click)="onFoodClick(food)">
+        @if (productData.items().length > 0) {
+            @for (product of productData.items(); track product) {
+                <fd-card (click)="onProductClick(product)">
                     <div class="food-card">
                         <div class="food-card__header">
-                            <span class="food-card__name">{{ food.name }}</span>
-                            @if (food.barcode) {
+                            <span class="food-card__name">{{ product.name }}</span>
+                            @if (product.barcode) {
                                 <span class="food-card__barcode">
-                                {{ 'FOOD_LIST.BARCODE' | translate }}: {{ food.barcode }}
+                                {{ 'FOOD_LIST.BARCODE' | translate }}: {{ product.barcode }}
                             </span>
                             }
                         </div>
                         <div class="food-card__info">
                         <span class="food-card__calories">
-                            {{ 'FOOD_LIST.CALORIES' | translate }}: {{ food.caloriesPerBase }}
+                            {{ 'FOOD_LIST.CALORIES' | translate }}: {{ product.caloriesPerBase }}
                         </span>
                             <span class="food-card__macros">
-                            {{ 'FOOD_LIST.PROTEINS' | translate }}: {{ food.proteinsPerBase }}g |
-                                {{ 'FOOD_LIST.FATS' | translate }}: {{ food.fatsPerBase }}g |
-                                {{ 'FOOD_LIST.CARBS' | translate }}: {{ food.carbsPerBase }}g
+                            {{ 'FOOD_LIST.PROTEINS' | translate }}: {{ product.proteinsPerBase }}g |
+                                {{ 'FOOD_LIST.FATS' | translate }}: {{ product.fatsPerBase }}g |
+                                {{ 'FOOD_LIST.CARBS' | translate }}: {{ product.carbsPerBase }}g
                         </span>
                         </div>
                     </div>
@@ -67,9 +67,9 @@
         }
     }
 
-    @if (foodData.totalPages > 1) {
+    @if (productData.totalPages > 1) {
         <tui-pagination
-            [length]="foodData.totalPages"
+            [length]="productData.totalPages"
             [(index)]="currentPageIndex"
             (indexChange)="onPageChange($event)"
             class="food-list__pagination"

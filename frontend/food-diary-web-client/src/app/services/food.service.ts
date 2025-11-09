@@ -10,7 +10,7 @@ import { PageOf } from '../types/page-of.data';
     providedIn: 'root',
 })
 export class FoodService extends ApiService {
-    protected readonly baseUrl = environment.apiUrls.foods;
+    protected readonly baseUrl = environment.apiUrls.products;
 
     public query(page: number, limit: number, filters: FoodFilters): Observable<ApiResponse<PageOf<Food>>> {
         const params = { page, limit, ...filters };

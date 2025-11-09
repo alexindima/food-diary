@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { Unit } from '../types/food.data';
+import { MeasurementUnit } from '../types/product.data';
 
 @Injectable()
 export class LocalizationService {
@@ -14,7 +14,7 @@ export class LocalizationService {
         this.translateService.use(browserLang?.match(/en|ru/) ? browserLang : 'en');
     }
 
-    public getServingUnitName(unit: Unit): string {
+    public getServingUnitName(unit: MeasurementUnit): string {
         return this.translateService.instant(`FOOD_MANAGE.DEFAULT_SERVING_UNITS.${unit}`);
     }
 }

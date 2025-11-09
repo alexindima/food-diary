@@ -4,7 +4,7 @@ export interface AppConfig {
 
 export interface AppConfigApiUrls {
     auth: string;
-    foods: string;
+    products: string;
     consumptions: string;
     statistics: string;
     users: string;

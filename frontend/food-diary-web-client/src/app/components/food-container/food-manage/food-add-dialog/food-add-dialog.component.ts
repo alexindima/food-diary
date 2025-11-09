@@ -9,7 +9,7 @@ import {
     TuiLabel,
     TuiTextfieldComponent, TuiTextfieldDirective
 } from '@taiga-ui/core';
-import { Food } from '../../../../types/food.data';
+import { Product } from '../../../../types/product.data';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import { TuiFieldErrorPipe } from '@taiga-ui/kit';
@@ -50,7 +50,7 @@ import { ZXingScannerModule } from '@zxing/ngx-scanner';
     ]
 })
 export class FoodAddDialogComponent extends BaseFoodManageComponent {
-    public readonly context = injectContext<TuiDialogContext<Food, null>>();
+    public readonly context = injectContext<TuiDialogContext<Product, null>>();
 
     public constructor() {
         super();
@@ -80,12 +80,12 @@ export class FoodAddDialogComponent extends BaseFoodManageComponent {
         };
     }
 
-    public override async onSubmit(): Promise<Food | null> {
-        const food = await super.onSubmit();
-        if (food) {
-            this.context.completeWith(food);
+    public override async onSubmit(): Promise<Product | null> {
+        const product = await super.onSubmit();
+        if (product) {
+            this.context.completeWith(product);
         }
 
-        return food;
+        return product;
     }
 }

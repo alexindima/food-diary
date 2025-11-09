@@ -10,11 +10,12 @@ import {
 } from '@taiga-ui/core';
 import { TuiSearchComponent } from '@taiga-ui/layout';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { FoodService } from '../../../services/food.service';
+import { ProductService } from '../../../services/product.service';
 import { NavigationService } from '../../../services/navigation.service';
 import { PagedData } from '../../../types/paged-data.data';
-import { Food, FoodFilters } from '../../../types/food.data';
-import { catchError, debounceTime, map, Observable, of, switchMap } from 'rxjs';
+import { Product, ProductFilters } from '../../../types/product.data';
+import { catchError, debounceTime, finalize, map, Observable, of, switchMap, tap } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
 import { TuiTextfieldControllerModule } from '@taiga-ui/legacy';
 import { FormGroupControls } from '../../../types/common.data';
 import { BarcodeScannerComponent } from '../../shared/barcode-scanner/barcode-scanner.component';
@@ -41,8 +42,9 @@ import { CardComponent } from '../../shared/card/card.component';
 })
 export class FoodListBaseComponent implements OnInit {
     private readonly translateService = inject(TranslateService);
-    protected readonly foodService = inject(FoodService);
+    protected readonly productService = inject(ProductService);
     protected readonly navigationService = inject(NavigationService);
+    protected readonly pageSize = 10;
 
     @ViewChild('container') private container!: ElementRef<HTMLElement>;
 
@@ -51,23 +53,23 @@ export class FoodListBaseComponent implements OnInit {
         appearance: 'without-border-radius',
     });
 
-    public searchForm: FormGroup<FoodSearchFormGroup>;
-    public foodData: PagedData<Food> = new PagedData<Food>();
+    public searchForm: FormGroup<ProductSearchFormGroup>;
+    public productData: PagedData<Product> = new PagedData<Product>();
     public currentPageIndex = 0;
 
     public constructor() {
-        this.searchForm = new FormGroup<FoodSearchFormGroup>({
+        this.searchForm = new FormGroup<ProductSearchFormGroup>({
             search: new FormControl<string | null>(null),
         });
     }
 
     public ngOnInit(): void {
-        this.loadFoods(1, 10, this.searchForm.controls.search.value).subscribe();
+        this.loadProducts(1, this.pageSize, this.searchForm.controls.search.value).subscribe();
 
         this.searchForm.controls.search.valueChanges
             .pipe(
                 debounceTime(300),
-                switchMap(value => this.loadFoods(1, 10, value)),
+                switchMap(value => this.loadProducts(1, this.pageSize, value)),
             )
             .subscribe();
     }
@@ -76,7 +78,7 @@ export class FoodListBaseComponent implements OnInit {
         this.scrollToTop();
 
         this.currentPageIndex = pageIndex;
-        this.loadFoods(this.currentPageIndex + 1, 10, this.searchForm.controls.search.value).subscribe();
+        this.loadProducts(this.currentPageIndex + 1, this.pageSize, this.searchForm.controls.search.value).subscribe();
     }
 
     public getTitle(): string {
@@ -86,7 +88,7 @@ export class FoodListBaseComponent implements OnInit {
             : this.translateService.instant('FOOD_LIST.TITLE');
     }
 
-    public async onAddFoodClick(): Promise<void> {
+    public async onAddProductClick(): Promise<void> {
         await this.navigationService.navigateToFoodAdd();
     }
 
@@ -98,24 +100,21 @@ export class FoodListBaseComponent implements OnInit {
         });
     }
 
-    protected loadFoods(page: number, limit: number, search: string | null): Observable<void> {
-        this.foodData.setLoading(true);
-        const filters = new FoodFilters(search);
-        return this.foodService.query(page, limit, filters).pipe(
-            map(response => {
-                if (response.status === 'success' && response.data) {
-                    this.foodData.setData(response.data);
-                    this.currentPageIndex = page - 1;
-                } else {
-                    this.foodData.clearData();
-                }
-                this.foodData.setLoading(false);
+    protected loadProducts(page: number, limit: number, search: string | null): Observable<void> {
+        this.productData.setLoading(true);
+        const filters = new ProductFilters(search);
+        return this.productService.query(page, limit, filters).pipe(
+            tap(pageData => {
+                this.productData.setData(pageData);
+                this.currentPageIndex = pageData.page - 1;
             }),
-            catchError(() => {
-                this.foodData.clearData();
-                this.foodData.setLoading(false);
-                return of();
+            map(() => void 0),
+            catchError((error: HttpErrorResponse) => {
+                console.error('Error loading products:', error);
+                this.productData.clearData();
+                return of(void 0);
             }),
+            finalize(() => this.productData.setLoading(false)),
         );
     }
 
@@ -123,11 +122,11 @@ export class FoodListBaseComponent implements OnInit {
         this.container.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
-    protected onFoodClick(_food: Food): void {}
+    protected onProductClick(_product: Product): void {}
 }
 
-interface FoodSearchFormValues {
+interface ProductSearchFormValues {
     search: string | null;
 }
 
-type FoodSearchFormGroup = FormGroupControls<FoodSearchFormValues>;
+type ProductSearchFormGroup = FormGroupControls<ProductSearchFormValues>;

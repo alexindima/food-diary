@@ -120,9 +120,9 @@
                                                         placeholder="{{ 'RECIPE_MANAGE.INGREDIENT_NAME_PLACEHOLDER' | translate }}"
                                                         formControlName="food"
                                                         [readOnly]="true"
-                                                        [value]="getFoodName(stepIndex, ingredientIndex)"
-                                                        [class.invalid]="isFoodInvalid(stepIndex, ingredientIndex)"
-                                                        (click)="onFoodSelectClick(stepIndex, ingredientIndex)"
+                                                        [value]="getProductName(stepIndex, ingredientIndex)"
+                                                        [class.invalid]="isProductInvalid(stepIndex, ingredientIndex)"
+                                                        (click)="onProductSelectClick(stepIndex, ingredientIndex)"
                                                     />
                                                 </tui-textfield>
                                                 <tui-error
@@ -133,7 +133,7 @@
                                             <div class="recipe-manage__ingredient-quantity-wrapper">
                                                 <div class="recipe-manage__ingredient-quantity">
                                                     <tui-input-number formControlName="amount">
-                                                        <label tuiLabel>{{ 'CONSUMPTION_MANAGE.ADD_FOOD_ROW.QUANTITY' | translate }}{{ getFoodUnit(stepIndex, ingredientIndex) }}</label>
+                                                        <label tuiLabel>{{ 'CONSUMPTION_MANAGE.ADD_FOOD_ROW.QUANTITY' | translate }}{{ getProductUnit(stepIndex, ingredientIndex) }}</label>
                                                         <input
                                                             placeholder="0"
                                                             tuiTextfieldLegacy

@@ -1,56 +1,42 @@
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using FoodDiary.Application.Services;
+using FoodDiary.Application.Authentication.Mappings;
 using FoodDiary.Contracts.Authentication;
+using FoodDiary.WebApi.Extensions;
 
 namespace FoodDiary.WebApi.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class AuthController : ControllerBase
+public class AuthController(ISender mediator) : ControllerBase
 {
-    private readonly AuthenticationService _authService;
-
-    public AuthController(AuthenticationService authService) => _authService = authService;
-
     [HttpPost("register")]
     public async Task<IActionResult> Register(RegisterRequest request)
     {
-        try
-        {
-            var result = await _authService.RegisterAsync(request.Email, request.Password);
-            return Ok(result);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(new { message = ex.Message });
-        }
+        var command = request.ToCommand();
+        var result = await mediator.Send(command);
+        return result.ToActionResult();
     }
 
     [HttpPost("login")]
     public async Task<IActionResult> Login(LoginRequest request)
     {
-        try
-        {
-            var result = await _authService.LoginAsync(request.Email, request.Password);
-            return Ok(result);
-        }
-        catch (Exception ex)
-        {
-            return Unauthorized(new { message = ex.Message });
-        }
+        var command = request.ToCommand();
+        var result = await mediator.Send(command);
+        return result.ToActionResult();
     }
 
     [HttpPost("refresh")]
     public async Task<IActionResult> Refresh(RefreshTokenRequest request)
     {
-        try
+        var command = request.ToCommand();
+        var result = await mediator.Send(command);
+
+        if (result.IsSuccess)
         {
-            var accessToken = await _authService.RefreshTokenAsync(request.RefreshToken);
-            return Ok(new { accessToken });
+            return Ok(new { accessToken = result.Value });
         }
-        catch (Exception ex)
-        {
-            return Unauthorized(new { message = ex.Message });
-        }
+
+        return result.ToActionResult();
     }
 }

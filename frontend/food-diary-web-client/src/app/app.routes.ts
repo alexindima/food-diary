@@ -32,7 +32,7 @@ export const routes: Routes = [
         canActivate: [loggedInGuard],
     },
     {
-        path: 'foods',
+        path: 'products',
         component: FoodContainerComponent,
         canActivate: [authGuard],
         children: [

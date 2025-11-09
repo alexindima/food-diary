@@ -32,13 +32,13 @@ export class ConsumptionService extends ApiService {
         return this.get<ApiResponse<Consumption>>(`${id}`).pipe(catchError(error => of(ApiResponse.error(error.error?.error, null))));
     }
 
-    public create(data: ConsumptionManageDto): Observable<ApiResponse<Consumption | null>> {
-        return this.post<ApiResponse<Consumption>>('', data).pipe(catchError(error => of(ApiResponse.error(error.error?.error, null))));
+    public create(data: ConsumptionManageDto): Observable<Consumption | null> {
+        return this.post<Consumption>('', data).pipe(catchError(() => of(null)));
     }
 
-    public update(id: number, data: Partial<ConsumptionManageDto>): Observable<ApiResponse<Consumption | null>> {
-        return this.patch<ApiResponse<Consumption>>(`${id}`, data).pipe(
-            catchError(error => of(ApiResponse.error(error.error?.error, null))),
+    public update(id: number, data: Partial<ConsumptionManageDto>): Observable<Consumption | null> {
+        return this.patch<Consumption>(`${id}`, data).pipe(
+            catchError(() => of(null)),
         );
     }
 

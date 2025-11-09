@@ -19,7 +19,7 @@ import {
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { TuiInputNumberModule, TuiSelectModule, TuiTextareaModule } from '@taiga-ui/legacy';
 import { CustomGroupComponent } from '../../shared/custom-group/custom-group.component';
-import { Food } from '../../../types/food.data';
+import { Product } from '../../../types/product.data';
 import { AsyncPipe, NgForOf } from '@angular/common';
 import { TUI_VALIDATION_ERRORS, TuiFieldErrorPipe } from '@taiga-ui/kit';
 import { nonEmptyArrayValidator } from '../../../validators/non-empty-array.validator';
@@ -27,7 +27,7 @@ import {
     FoodListDialogComponent
 } from '../../food-container/food-list/food-list-dialog/food-list-dialog.component';
 import { NutrientChartData } from '../../../types/charts.data';
-import { ApiResponse, ErrorCode } from '../../../types/api-response.data';
+import { HttpErrorResponse } from '@angular/common/http';
 import {
     NutrientsSummaryComponent
 } from '../../shared/nutrients-summary/nutrients-summary.component';
@@ -142,7 +142,7 @@ export class RecipeManageComponent implements OnInit {
                 description: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
                 ingredients: new FormArray<FormGroup<FormGroupControls<IngredientFormValues>>>([
                     new FormGroup<IngredientFormData>({
-                        food: new FormControl<Food | null>(null, Validators.required),
+                        food: new FormControl<Product | null>(null, Validators.required),
                         amount: new FormControl(null, [Validators.required, Validators.min(0.01)]),
                     }),
                 ], nonEmptyArrayValidator()),
@@ -159,13 +159,13 @@ export class RecipeManageComponent implements OnInit {
         return step.controls.ingredients;
     }
 
-    public getFoodName(stepIndex: number, ingredientIndex: number): string {
+    public getProductName(stepIndex: number, ingredientIndex: number): string {
         const ingredientsArray = this.getStepIngredients(stepIndex);
         const foodControl = ingredientsArray.at(ingredientIndex).controls.food;
         return foodControl?.value?.name || '';
     }
 
-    public getFoodUnit(stepIndex: number, ingredientIndex: number): string | null {
+    public getProductUnit(stepIndex: number, ingredientIndex: number): string | null {
         const ingredientsArray = this.getStepIngredients(stepIndex);
         const foodControl = ingredientsArray.at(ingredientIndex).controls.food;
         const unit = foodControl.value?.baseUnit;
@@ -174,13 +174,13 @@ export class RecipeManageComponent implements OnInit {
             : null;
     }
 
-    public isFoodInvalid(stepIndex: number, ingredientIndex: number): boolean {
+    public isProductInvalid(stepIndex: number, ingredientIndex: number): boolean {
         const ingredientsArray = this.getStepIngredients(stepIndex);
         const foodControl = ingredientsArray.at(ingredientIndex).controls.food;
         return !!foodControl && foodControl.invalid && foodControl.touched;
     }
 
-    public async onFoodSelectClick(stepIndex: number, ingredientIndex: number): Promise<void> {
+    public async onProductSelectClick(stepIndex: number, ingredientIndex: number): Promise<void> {
         this.selectedStepIndex = stepIndex;
         this.selectedIngredientIndex = ingredientIndex;
         this.foodListDialog(null).subscribe({
@@ -257,14 +257,12 @@ export class RecipeManageComponent implements OnInit {
         });
     }
 
-    private async handleSubmitResponse(response: ApiResponse<RecipeDto | null>): Promise<void> {
-        if (response.status === 'success') {
+    private async handleSubmitResponse(response: RecipeDto | null): Promise<void> {
+        if (response) {
             if (!this.recipe()) {
                 this.recipeForm.reset();
             }
             //await this.showConfirmDialog();
-        } else if (response.status === 'error') {
-            this.handleSubmitError(response.error);
         }
     }
 
@@ -283,12 +281,8 @@ export class RecipeManageComponent implements OnInit {
         });
     }
 
-    private handleSubmitError(error?: ErrorCode): void {
-        if (error === ErrorCode.INVALID_CREDENTIALS) {
-            this.setGlobalError('FORM_ERRORS.INVALID_CREDENTIALS');
-        } else {
-            this.setGlobalError('FORM_ERRORS.UNKNOWN');
-        }
+    private handleSubmitError(error?: HttpErrorResponse): void {
+        this.setGlobalError('FORM_ERRORS.UNKNOWN');
     }
 
     private setGlobalError(errorKey: string): void {
@@ -311,7 +305,7 @@ export class RecipeManageComponent implements OnInit {
             steps: formValue.steps.map(step => ({
                 description: step.description,
                 ingredients: step.ingredients.map(ingredient => ({
-                    foodId: ingredient.food?.id ?? 0,
+                    foodId: ingredient.food?.id ?? '',
                     amount: ingredient.amount ?? 0,
                 })),
             })),
@@ -350,7 +344,7 @@ interface StepFormValues {
 }
 
 interface IngredientFormValues {
-    food: Food | null;
+    food: Product | null;
     amount: number | null;
 }
 

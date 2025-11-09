@@ -1,5 +1,4 @@
 using Microsoft.Extensions.DependencyInjection;
-using FoodDiary.Application.Services;
 using FoodDiary.Application.Common.Behaviors;
 using FluentValidation;
 using System.Reflection;
@@ -22,10 +21,6 @@ public static class DependencyInjection
 
         // FluentValidation - регистрируем все валидаторы из сборки
         services.AddValidatorsFromAssembly(assembly);
-
-        // Старые сервисы (можно будет удалить после полного перехода на CQRS)
-        services.AddScoped<AuthenticationService>();
-        services.AddScoped<UserService>();
 
         return services;
     }

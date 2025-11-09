@@ -1,24 +1,21 @@
 import { ResolveFn } from '@angular/router';
-import { Food } from '../types/food.data';
+import { Product } from '../types/product.data';
 import { inject } from '@angular/core';
-import { FoodService } from '../services/food.service';
-import { catchError, map, of } from 'rxjs';
+import { ProductService } from '../services/product.service';
+import { catchError, of } from 'rxjs';
 import { NavigationService } from '../services/navigation.service';
 
-export const foodResolver: ResolveFn<Food | null> = route => {
-    const foodService = inject(FoodService);
+export const foodResolver: ResolveFn<Product | null> = route => {
+    const productService = inject(ProductService);
     const navigationService = inject(NavigationService);
 
-    const foodId = route.paramMap.get('id')!;
+    const productId = route.paramMap.get('id');
+    if (!productId) {
+        navigationService.navigateToFoodList();
+        return of(null);
+    }
 
-    return foodService.getById(+foodId).pipe(
-        map(response => {
-            if (response.status === 'success' && response.data) {
-                return response.data;
-            }
-            navigationService.navigateToFoodList();
-            return null;
-        }),
+    return productService.getById(productId).pipe(
         catchError(() => {
             navigationService.navigateToFoodList();
             return of(null);

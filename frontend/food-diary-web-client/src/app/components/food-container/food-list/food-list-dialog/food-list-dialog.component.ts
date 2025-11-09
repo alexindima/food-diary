@@ -10,7 +10,7 @@ import {
     TuiTextfieldComponent,
     TuiTextfieldDirective
 } from '@taiga-ui/core';
-import { Food } from '../../../../types/food.data';
+import { Product } from '../../../../types/product.data';
 import { injectContext } from '@taiga-ui/polymorpheus';
 import { TranslatePipe } from '@ngx-translate/core';
 import { TuiPagination } from '@taiga-ui/kit';
@@ -41,22 +41,22 @@ import { CardComponent } from '../../../shared/card/card.component';
     ]
 })
 export class FoodListDialogComponent extends FoodListBaseComponent {
-    public readonly context = injectContext<TuiDialogContext<Food, null>>();
+    public readonly context = injectContext<TuiDialogContext<Product, null>>();
 
-    private readonly addFoodDialog = tuiDialog(FoodAddDialogComponent, {
+    private readonly addProductDialog = tuiDialog(FoodAddDialogComponent, {
         dismissible: true,
         appearance: 'without-border-radius',
     });
 
-    public override async onAddFoodClick(): Promise<void> {
-        this.addFoodDialog(null).subscribe({
-            next: (food) => {
-                this.context.completeWith(food);
+    public override async onAddProductClick(): Promise<void> {
+        this.addProductDialog(null).subscribe({
+            next: (product) => {
+                this.context.completeWith(product);
             },
         });
     }
 
-    protected override async onFoodClick(food: Food): Promise<void> {
-        this.context.completeWith(food);
+    protected override async onProductClick(product: Product): Promise<void> {
+        this.context.completeWith(product);
     }
 }

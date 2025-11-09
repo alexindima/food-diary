@@ -1,10 +1,10 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { catchError, Observable, of, tap } from 'rxjs';
+import { catchError, Observable, of, tap, throwError } from 'rxjs';
 import { AuthResponse, LoginRequest, RegisterRequest } from '../types/auth.data';
 import { environment } from '../../environments/environment';
 import { ApiService } from './api.service';
-import { ApiResponse } from '../types/api-response.data';
 import { NavigationService } from './navigation.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Injectable({
     providedIn: 'root',
@@ -14,39 +14,48 @@ export class AuthService extends ApiService {
     protected readonly baseUrl = environment.apiUrls.auth;
 
     private authTokenSignal = signal<string | null>(this.getToken());
+    private userSignal = signal<string | null>(this.loadUserId());
 
     public readonly isAuthenticated = computed(() => this.authTokenSignal() !== null);
 
     public initializeAuth(): void {
         const token = this.getToken();
-        if (token) {
-            this.authTokenSignal.set(token);
+        if (!token) {
+            this.clearUserId();
+            return;
+        }
+
+        this.authTokenSignal.set(token);
+        if (!this.userSignal()) {
+            const resolvedUserId = this.extractUserIdFromToken(token);
+            if (resolvedUserId) {
+                this.setUserId(resolvedUserId);
+                this.userSignal.set(resolvedUserId);
+            }
         }
     }
 
-    public login(data: LoginRequest): Observable<ApiResponse<AuthResponse | null>> {
+    public login(data: LoginRequest): Observable<AuthResponse> {
         const loginData = { ...data, rememberMe: undefined };
-        return this.post<ApiResponse<AuthResponse>>('login', loginData).pipe(
+        return this.post<AuthResponse>('login', loginData).pipe(
             tap(response => {
-                if (response.status === 'success' && response.data) {
-                    this.onLogin(response.data, data.rememberMe || false);
-                }
+                this.onLogin(response, data.rememberMe || false);
             }),
-            catchError(error => {
-                return of(ApiResponse.error(error.error?.error, null));
+            catchError((error: HttpErrorResponse) => {
+                console.error('Login error', error);
+                return throwError(() => error);
             }),
         );
     }
 
-    public register(data: RegisterRequest): Observable<ApiResponse<AuthResponse | null>> {
-        return this.post<ApiResponse<AuthResponse>>('register', data).pipe(
+    public register(data: RegisterRequest): Observable<AuthResponse> {
+        return this.post<AuthResponse>('register', data).pipe(
             tap(response => {
-                if (response.status === 'success' && response.data) {
-                    this.onLogin(response.data, false);
-                }
+                this.onLogin(response, false);
             }),
-            catchError(error => {
-                return of(ApiResponse.error(error.error?.error, null));
+            catchError((error: HttpErrorResponse) => {
+                console.error('Register error', error);
+                return throwError(() => error);
             }),
         );
     }
@@ -75,7 +84,9 @@ export class AuthService extends ApiService {
 
     public async onLogout(): Promise<void> {
         this.authTokenSignal.set(null);
+        this.userSignal.set(null);
         this.clearToken();
+        this.clearUserId();
         await this.navigationService.navigateToHome();
     }
 
@@ -83,6 +94,16 @@ export class AuthService extends ApiService {
         this.setToken(authResponse.accessToken, rememberMe);
         this.setRefreshToken(authResponse.refreshToken);
         this.authTokenSignal.set(authResponse.accessToken);
+
+        const userId = authResponse.user?.id ?? this.extractUserIdFromToken(authResponse.accessToken);
+        if (userId) {
+            this.setUserId(userId);
+            this.userSignal.set(userId);
+        } else {
+            console.warn('Auth response did not include user ID');
+            this.clearUserId();
+            this.userSignal.set(null);
+        }
     }
 
     public getToken(): string | null {
@@ -118,5 +139,57 @@ export class AuthService extends ApiService {
 
     private getRefreshToken(): string | null {
         return localStorage.getItem('refreshToken');
+    }
+
+    public getUserId(): string | null {
+        return this.userSignal();
+    }
+
+    private setUserId(userId: string | null): void {
+        if (userId) {
+            localStorage.setItem('userId', userId);
+        } else {
+            localStorage.removeItem('userId');
+        }
+    }
+
+    private loadUserId(): string | null {
+        const storedId = localStorage.getItem('userId');
+        if (!storedId || storedId === 'undefined') {
+            return null;
+        }
+        return storedId;
+    }
+
+    private clearUserId(): void {
+        localStorage.removeItem('userId');
+        sessionStorage.removeItem('userId');
+    }
+
+    private extractUserIdFromToken(token: string | null): string | null {
+        if (!token) {
+            return null;
+        }
+
+        const [, payloadSegment] = token.split('.');
+        if (!payloadSegment) {
+            return null;
+        }
+
+        try {
+            const normalized = payloadSegment.replace(/-/g, '+').replace(/_/g, '/');
+            const padLength = (4 - (normalized.length % 4 || 4)) % 4;
+            const padded = normalized.padEnd(normalized.length + padLength, '=');
+            const decoded = atob(padded);
+            const payload = JSON.parse(decoded);
+            return (
+                payload['nameid'] ||
+                payload['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'] ||
+                payload['sub'] ||
+                null
+            );
+        } catch {
+            return null;
+        }
     }
 }

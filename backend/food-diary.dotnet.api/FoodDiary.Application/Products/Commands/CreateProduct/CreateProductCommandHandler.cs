@@ -20,8 +20,17 @@ public class CreateProductCommandHandler : ICommandHandler<CreateProductCommand,
     public async Task<Result<ProductResponse>> Handle(CreateProductCommand command, CancellationToken cancellationToken)
     {
         // Валидация выполняется автоматически через ValidationBehavior
-        var baseUnit = Enum.Parse<Domain.Enums.MeasurementUnit>(command.BaseUnit);
-        var visibility = Enum.Parse<Visibility>(command.Visibility);
+        if (!Enum.TryParse(command.BaseUnit, ignoreCase: true, out Domain.Enums.MeasurementUnit baseUnit))
+        {
+            return Result.Failure<ProductResponse>(
+                Errors.Validation.Invalid("BaseUnit", "Неверная единица измерения"));
+        }
+
+        if (!Enum.TryParse(command.Visibility, ignoreCase: true, out Visibility visibility))
+        {
+            return Result.Failure<ProductResponse>(
+                Errors.Validation.Invalid("Visibility", "Неверный уровень видимости"));
+        }
 
         var product = Product.Create(
             userId: command.UserId,

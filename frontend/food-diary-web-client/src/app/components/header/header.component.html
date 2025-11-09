@@ -10,7 +10,7 @@
                 {{ 'HEADER.HOME' | translate }}
             </button>
             @if (isAuthenticated()) {
-                <button tuiTab [routerLink]="'/foods'" routerLinkActive="active-tab">
+                <button tuiTab [routerLink]="'/products'" routerLinkActive="active-tab">
                     {{ 'HEADER.FOOD' | translate }}
                 </button>
                 <button tuiTab [routerLink]="'/consumptions'" routerLinkActive="active-tab">
@@ -60,7 +60,7 @@
             {{ 'HEADER.HOME' | translate }}
         </button>
         @if (isAuthenticated()) {
-            <button tuiOption [routerLink]="'/foods'" (click)="close()">
+            <button tuiOption [routerLink]="'/products'" (click)="close()">
                 {{ 'HEADER.FOOD' | translate }}
             </button>
             <button tuiOption [routerLink]="'/consumptions'" (click)="close()">

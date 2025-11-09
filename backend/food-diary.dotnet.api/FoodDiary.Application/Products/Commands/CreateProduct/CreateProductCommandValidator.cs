@@ -75,12 +75,12 @@ public class CreateProductCommandValidator : AbstractValidator<CreateProductComm
 
     private bool BeValidUnit(string unit)
     {
-        return Enum.TryParse<MeasurementUnit>(unit, out _);
+        return Enum.TryParse(unit, ignoreCase: true, out MeasurementUnit _);
     }
 
     private bool BeValidVisibility(string visibility)
     {
-        return Enum.TryParse<Visibility>(visibility, out _);
+        return Enum.TryParse(visibility, ignoreCase: true, out Visibility _);
     }
 
     private async Task<bool> UserExists(UserId userId, CancellationToken cancellationToken)

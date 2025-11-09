@@ -10,7 +10,7 @@ import {
     TemplateRef,
     ViewChild,
 } from '@angular/core';
-import { Food, FoodManageDto, Unit } from '../../../types/food.data';
+import { Product, CreateProductRequest, MeasurementUnit, ProductVisibility } from '../../../types/product.data';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
     TuiButton,
@@ -27,9 +27,9 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { TUI_VALIDATION_ERRORS, TuiFieldErrorPipe } from '@taiga-ui/kit';
 import { AsyncPipe } from '@angular/common';
 import { TuiInputNumberModule, TuiSelectModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
-import { ApiResponse, ErrorCode } from '../../../types/api-response.data';
-import { FoodService } from '../../../services/food.service';
+import { ProductService } from '../../../services/product.service';
 import { NavigationService } from '../../../services/navigation.service';
+import { HttpErrorResponse } from '@angular/common/http';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormGroupControls } from '../../../types/common.data';
 import { NutrientChartData } from '../../../types/charts.data';
@@ -80,7 +80,7 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     ]
 })
 export class BaseFoodManageComponent implements OnInit {
-    protected readonly foodService = inject(FoodService);
+    protected readonly productService = inject(ProductService);
     protected readonly translateService = inject(TranslateService);
     protected readonly navigationService = inject(NavigationService);
     private readonly dialogService = inject(TuiDialogService);
@@ -90,7 +90,7 @@ export class BaseFoodManageComponent implements OnInit {
 
     protected nutrientSummaryConfig: NutrientsSummaryConfig = {};
 
-    public food = input<Food | null>();
+    public product = input<Product | null>();
     public globalError = signal<string | null>(null);
     public calories = signal<number>(0);
     public nutrientChartData = signal<NutrientChartData>({
@@ -105,81 +105,103 @@ export class BaseFoodManageComponent implements OnInit {
     });
 
     protected skipConfirmDialog = false;
-    public foodForm: FormGroup<FoodFormData>;
-    public units = Object.values(Unit) as Unit[];
+    public productForm: FormGroup<ProductFormData>;
+    public units = Object.values(MeasurementUnit) as MeasurementUnit[];
     public constructor() {
-        this.foodForm = new FormGroup<FoodFormData>({
+        this.productForm = new FormGroup<ProductFormData>({
             name: new FormControl('', { nonNullable: true, validators: Validators.required }),
             barcode: new FormControl(null),
+            brand: new FormControl(null),
             category: new FormControl(null),
+            description: new FormControl(null),
+            imageUrl: new FormControl(null),
             baseAmount: new FormControl(100, { nonNullable: true, validators: [Validators.required, Validators.min(0.001)] }),
-            baseUnit: new FormControl(Unit.G, { nonNullable: true, validators: Validators.required }),
+            baseUnit: new FormControl(MeasurementUnit.G, { nonNullable: true, validators: Validators.required }),
             caloriesPerBase: new FormControl(null, [Validators.required, Validators.min(0.001)]),
             proteinsPerBase: new FormControl(null, Validators.required),
             fatsPerBase: new FormControl(null, Validators.required),
             carbsPerBase: new FormControl(null, Validators.required),
+            fiberPerBase: new FormControl(null, Validators.required),
+            visibility: new FormControl(ProductVisibility.Private, { nonNullable: true, validators: Validators.required }),
         });
     }
 
     public ngOnInit(): void {
-        const food = this.food();
-        if (food) {
-            this.populateForm(food);
+        const product = this.product();
+        if (product) {
+            this.populateForm(product);
             this.updateSummary();
         }
 
-        this.foodForm.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+        this.productForm.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.clearGlobalError();
             this.updateSummary();
         });
 
     }
 
-    public stringifyUnits = (unit: Unit): string => {
-        return this.translateService.instant(`FOOD_MANAGE.DEFAULT_SERVING_UNITS.${Unit[unit]}`);
+    public stringifyUnits = (unit: MeasurementUnit): string => {
+        return this.translateService.instant(`FOOD_MANAGE.DEFAULT_SERVING_UNITS.${MeasurementUnit[unit]}`);
     };
+
+    public readonly Unit = MeasurementUnit;
 
     public openBarcodeScanner(): void {
         this.barcodeDialog(null).subscribe({
             next: (barcode) => {
-                this.foodForm.controls.barcode.setValue(barcode);
+                this.productForm.controls.barcode.setValue(barcode);
             },
         });
     }
 
-    public async onSubmit(): Promise<Food | null> {
-        this.foodForm.markAllAsTouched();
+    public async onSubmit(): Promise<Product | null> {
+        this.productForm.markAllAsTouched();
 
         if (!this.isMacronutrientsValid()) {
             this.setGlobalError('FORM_ERRORS.AT_LEAST_ONE_MACRONUTRIENT_MUST_BE_SET');
             return null;
         }
 
-        if (this.foodForm.valid) {
-            const foodData = new FoodManageDto(this.foodForm.value);
-            const food = this.food();
+        if (this.productForm.valid) {
+            const productData: CreateProductRequest = {
+                name: this.productForm.value.name!,
+                barcode: this.productForm.value.barcode || null,
+                brand: this.productForm.value.brand || null,
+                category: this.productForm.value.category || null,
+                description: this.productForm.value.description || null,
+                imageUrl: this.productForm.value.imageUrl || null,
+                baseAmount: this.productForm.value.baseAmount!,
+                baseUnit: this.productForm.value.baseUnit!,
+                caloriesPerBase: this.productForm.value.caloriesPerBase!,
+                proteinsPerBase: this.productForm.value.proteinsPerBase!,
+                fatsPerBase: this.productForm.value.fatsPerBase!,
+                carbsPerBase: this.productForm.value.carbsPerBase!,
+                fiberPerBase: this.productForm.value.fiberPerBase!,
+                visibility: this.productForm.value.visibility!,
+            };
+            const product = this.product();
 
-            return food
-                ? await this.updateFood(food.id, foodData)
-                : await this.addFood(foodData);
+            return product
+                ? await this.updateProduct(product.id, productData)
+                : await this.addProduct(productData);
         }
 
         return null;
     }
 
     public get getDynamicNutrientPlaceholder(): string {
-        const baseAmount = this.foodForm.controls.baseAmount.value ?? 0;
-        const baseUnit = this.foodForm.controls.baseUnit.value;
+        const baseAmount = this.productForm.controls.baseAmount.value ?? 0;
+        const baseUnit = this.productForm.controls.baseUnit.value;
 
         const unitLabel = this.translateService.instant(`FOOD_AMOUNT_UNITS_SHORT.${baseUnit}`);
         return `${baseAmount} ${unitLabel}`;
     }
 
     private updateSummary(): void {
-        const caloriesPerBase = this.foodForm.controls.caloriesPerBase.value ?? 0;
-        const proteinsPerBase = this.foodForm.controls.proteinsPerBase.value ?? 0;
-        const fatsPerBase = this.foodForm.controls.fatsPerBase.value ?? 0;
-        const carbsPerBase = this.foodForm.controls.carbsPerBase.value ?? 0;
+        const caloriesPerBase = this.productForm.controls.caloriesPerBase.value ?? 0;
+        const proteinsPerBase = this.productForm.controls.proteinsPerBase.value ?? 0;
+        const fatsPerBase = this.productForm.controls.fatsPerBase.value ?? 0;
+        const carbsPerBase = this.productForm.controls.carbsPerBase.value ?? 0;
 
         const newTotalCalories = caloriesPerBase;
         const newNutrientChartData = {
@@ -202,42 +224,45 @@ export class BaseFoodManageComponent implements OnInit {
     }
 
     private isMacronutrientsValid(): boolean {
-        const { proteinsPerBase, fatsPerBase, carbsPerBase } = this.foodForm.value;
+        const { proteinsPerBase, fatsPerBase, carbsPerBase } = this.productForm.value;
         return (proteinsPerBase ?? 0) + (fatsPerBase ?? 0) + (carbsPerBase ?? 0) > 0;
     }
 
-    private populateForm(food: Food): void {
-        this.foodForm.patchValue(food);
+    private populateForm(product: Product): void {
+        this.productForm.patchValue(product);
     }
 
-    private async addFood(foodData: FoodManageDto): Promise<Food | null> {
-        const response = await firstValueFrom(this.foodService.create(foodData));
-        return this.handleSubmitResponse(response);
-    }
-
-    private async updateFood(id: number, foodData: FoodManageDto): Promise<Food | null> {
-        const response = await firstValueFrom(this.foodService.update(id, foodData));
-        return this.handleSubmitResponse(response);
-    }
-
-    private async handleSubmitResponse(response: ApiResponse<Food | null>): Promise<Food | null> {
-        if (response.status === 'success') {
-            if (!this.food()) {
-                this.foodForm.reset();
-            }
+    private async addProduct(productData: CreateProductRequest): Promise<Product | null> {
+        try {
+            const product = await firstValueFrom(this.productService.create(productData));
             if (!this.skipConfirmDialog) {
                 await this.showConfirmDialog();
             }
-        } else if (response.status === 'error') {
-            this.handleSubmitError(response.error);
+            return product;
+        } catch (error) {
+            this.handleSubmitError(error as HttpErrorResponse);
+            return null;
         }
-
-        return response.data ? response.data : null;
     }
 
-    private handleSubmitError(error?: ErrorCode): void {
-        if (error === ErrorCode.INVALID_CREDENTIALS) {
-            this.setGlobalError('FORM_ERRORS.INVALID_CREDENTIALS');
+    private async updateProduct(id: string, productData: Partial<CreateProductRequest>): Promise<Product | null> {
+        try {
+            const product = await firstValueFrom(this.productService.update(id, productData));
+            if (!this.skipConfirmDialog) {
+                await this.showConfirmDialog();
+            }
+            return product;
+        } catch (error) {
+            this.handleSubmitError(error as HttpErrorResponse);
+            return null;
+        }
+    }
+
+    private handleSubmitError(error: HttpErrorResponse): void {
+        if (error.status === 401) {
+            this.setGlobalError('FORM_ERRORS.UNAUTHORIZED');
+        } else if (error.status === 400) {
+            this.setGlobalError('FORM_ERRORS.INVALID_DATA');
         } else {
             this.setGlobalError('FORM_ERRORS.UNKNOWN');
         }
@@ -266,21 +291,26 @@ export class BaseFoodManageComponent implements OnInit {
             });
     }
 
-    protected readonly Unit = Unit;
+    protected readonly MeasurementUnit = MeasurementUnit;
 }
 
-export interface FoodFormValues {
+export interface ProductFormValues {
     name: string;
     barcode: string | null;
+    brand: string | null;
     category: string | null;
+    description: string | null;
+    imageUrl: string | null;
     baseAmount: number;
-    baseUnit: Unit;
+    baseUnit: MeasurementUnit;
     caloriesPerBase: number | null;
     proteinsPerBase: number | null;
     fatsPerBase: number | null;
     carbsPerBase: number | null;
+    fiberPerBase: number | null;
+    visibility: ProductVisibility;
 }
 
-type FoodFormData = FormGroupControls<FoodFormValues>;
+type ProductFormData = FormGroupControls<ProductFormValues>;
 
 type RedirectAction = 'Home' | 'FoodList';

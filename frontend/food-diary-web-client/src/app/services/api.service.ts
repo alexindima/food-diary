@@ -13,20 +13,24 @@ export abstract class ApiService {
         return this.http.get<T>(`${this.baseUrl}/${endpoint}`, { params: httpParams, headers });
     }
 
-    protected post<T>(endpoint: string, body: any, headers?: HttpHeaders): Observable<T> {
-        return this.http.post<T>(`${this.baseUrl}/${endpoint}`, body, { headers });
+    protected post<T>(endpoint: string, body: any, headers?: HttpHeaders, params?: HttpRequestParams): Observable<T> {
+        const httpParams = this.buildHttpParams(params);
+        return this.http.post<T>(`${this.baseUrl}/${endpoint}`, body, { headers, params: httpParams });
     }
 
-    protected put<T>(endpoint: string, body: any, headers?: HttpHeaders): Observable<T> {
-        return this.http.put<T>(`${this.baseUrl}/${endpoint}`, body, { headers });
+    protected put<T>(endpoint: string, body: any, headers?: HttpHeaders, params?: HttpRequestParams): Observable<T> {
+        const httpParams = this.buildHttpParams(params);
+        return this.http.put<T>(`${this.baseUrl}/${endpoint}`, body, { headers, params: httpParams });
     }
 
-    protected patch<T>(endpoint: string, body: any, headers?: HttpHeaders): Observable<T> {
-        return this.http.patch<T>(`${this.baseUrl}/${endpoint}`, body, { headers });
+    protected patch<T>(endpoint: string, body: any, headers?: HttpHeaders, params?: HttpRequestParams): Observable<T> {
+        const httpParams = this.buildHttpParams(params);
+        return this.http.patch<T>(`${this.baseUrl}/${endpoint}`, body, { headers, params: httpParams });
     }
 
-    protected delete<T>(endpoint: string, headers?: HttpHeaders): Observable<T> {
-        return this.http.delete<T>(`${this.baseUrl}/${endpoint}`, { headers });
+    protected delete<T>(endpoint: string, headers?: HttpHeaders, params?: HttpRequestParams): Observable<T> {
+        const httpParams = this.buildHttpParams(params);
+        return this.http.delete<T>(`${this.baseUrl}/${endpoint}`, { headers, params: httpParams });
     }
 
     private buildHttpParams(params?: HttpRequestParams): HttpParams | undefined {

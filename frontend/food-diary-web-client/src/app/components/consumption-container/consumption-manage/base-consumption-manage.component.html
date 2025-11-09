@@ -24,8 +24,8 @@
                 [title]="'CONSUMPTION_MANAGE.FOODS' | translate"
             >
                 <div class="consumption-manage__select">
-                    <div class="consumption-manage__select-rows" formArrayName="consumedFood">
-                        @for (foodItem of consumedFood.controls; track foodItem; let i = $index; let first = $first) {
+                    <div class="consumption-manage__select-rows" formArrayName="consumedProduct">
+                        @for (foodItem of consumedProduct.controls; track foodItem; let i = $index; let first = $first) {
                             <div class="consumption-manage__select-row" [formGroupName]="i">
                                 <div class="consumption-manage__product-name">
                                     <tui-textfield type="text" class="consumption-manage__product-name-control">
@@ -34,9 +34,9 @@
                                             tuiTextfield
                                             placeholder="{{ 'CONSUMPTION_MANAGE.ADD_FOOD_ROW.FOOD_PLACEHOLDER' | translate }}"
                                             [readOnly]="true"
-                                            [value]="getFoodName(i)"
-                                            [invalid]="isFoodInvalid(i)"
-                                            (click)="onFoodSelectClick(i)"
+                                            [value]="getProductName(i)"
+                                            [invalid]="isProductInvalid(i)"
+                                            (click)="onProductSelectClick(i)"
                                         />
                                     </tui-textfield>
                                     <tui-error
@@ -47,7 +47,7 @@
                                 <div class="consumption-manage__product-quantity-wrapper">
                                     <div class="consumption-manage__product-quantity">
                                         <tui-input-number formControlName="quantity">
-                                            <label tuiLabel>{{ 'CONSUMPTION_MANAGE.ADD_FOOD_ROW.QUANTITY' | translate }}{{ getFoodUnit(i) }}</label>
+                                            <label tuiLabel>{{ 'CONSUMPTION_MANAGE.ADD_FOOD_ROW.QUANTITY' | translate }}{{ getProductUnit(i) }}</label>
                                             <input
                                                 tuiTextfieldLegacy
                                                 placeholder="0"
@@ -66,7 +66,7 @@
                                         size="l"
                                         iconStart="@tui.trash-2"
                                         [disabled]="first"
-                                        (click)="removeFoodItem(i)"
+                                        (click)="removeProductItem(i)"
                                     ></button>
                                 </div>
                             </div>
@@ -79,14 +79,14 @@
                         size="m"
                         iconStart="@tui.plus"
                         appearance="primary"
-                        (click)="addFoodItem()"
+                        (click)="addProductItem()"
                     >
                         {{ 'CONSUMPTION_MANAGE.ADD_FOOD' | translate }}
                     </button>
                 </div>
             </fd-custom-group>
             <tui-error
-                formControlName="consumedFood"
+                formControlName="consumedProduct"
                 [error]="[] | tuiFieldError | async"
             ></tui-error>
         </div>

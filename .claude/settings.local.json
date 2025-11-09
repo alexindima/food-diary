@@ -22,7 +22,10 @@
       "Bash(timeout /t 4 /nobreak)",
       "Bash(Select-String -Pattern \"error\" -Context 0,1)",
       "Bash(timeout //T 2 //NOBREAK)",
-      "Bash(dir:*)"
+      "Bash(dir:*)",
+      "Bash(npm run build:*)",
+      "Bash(netstat:*)",
+      "Bash(findstr:*)"
     ],
     "deny": [],
     "ask": []

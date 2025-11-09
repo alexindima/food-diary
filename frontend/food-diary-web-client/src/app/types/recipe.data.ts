@@ -1,5 +1,5 @@
 import { NutrientChartData } from "./charts.data";
-import { Food } from "./food.data";
+import { Product } from "./product.data";
 
 export interface Recipe {
     id?: number; // ID рецепта (опционально, если рецепт еще не сохранен)
@@ -19,7 +19,7 @@ export interface RecipeStep {
 }
 
 export interface RecipeIngredient {
-    food: Food | null; // Продукт, выбранный из списка
+    food: Product | null; // Продукт, выбранный из списка
     amount: number | null; // Количество продукта
 }
 
@@ -38,6 +38,6 @@ export interface RecipeStepDto {
 }
 
 export interface RecipeIngredientDto {
-    foodId: number; // ID продукта
+    foodId: string; // ID продукта (Guid)
     amount: number; // Количество продукта
 }

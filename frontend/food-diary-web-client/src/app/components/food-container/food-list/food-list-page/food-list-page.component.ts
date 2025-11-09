@@ -9,7 +9,7 @@ import {
     TuiTextfieldComponent,
     TuiTextfieldDirective
 } from '@taiga-ui/core';
-import { Food } from '../../../../types/food.data';
+import { Product } from '../../../../types/product.data';
 import { TranslatePipe } from '@ngx-translate/core';
 import { TuiPagination } from '@taiga-ui/kit';
 import { TuiSearchComponent } from '@taiga-ui/layout';
@@ -42,16 +42,20 @@ export class FoodListPageComponent extends FoodListBaseComponent implements OnIn
         appearance: 'without-border-radius',
     });
 
-    protected override async onFoodClick(food: Food): Promise<void> {
-        this.dialog(food).subscribe({
+    protected override async onProductClick(product: Product): Promise<void> {
+        this.dialog(product).subscribe({
             next: data => {
                 if (data.action === 'Edit') {
                     this.navigationService.navigateToFoodEdit(data.id);
                 } else if (data.action === 'Delete') {
-                    this.foodService.deleteById(data.id).subscribe({
+                    this.productService.deleteById(data.id).subscribe({
                         next: () => {
                             this.scrollToTop();
-                            this.loadFoods(this.currentPageIndex + 1, 10, this.searchForm.controls.search.value).subscribe();
+                            this.loadProducts(
+                                this.currentPageIndex + 1,
+                                this.pageSize,
+                                this.searchForm.controls.search.value,
+                            ).subscribe();
                         },
                     });
                 }

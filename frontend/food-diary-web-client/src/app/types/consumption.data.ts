@@ -1,4 +1,4 @@
-import { Food } from './food.data';
+import { Product } from './product.data';
 
 export interface Consumption {
     id: number;
@@ -15,7 +15,7 @@ export interface ConsumptionItem {
     consumptionId: number;
     foodId: number;
     amount: number;
-    food: Food;
+    food: Product;
 }
 
 export interface ConsumptionFilters {
@@ -30,6 +30,6 @@ export interface ConsumptionManageDto {
 }
 
 export interface ConsumptionItemManageDto {
-    foodId: number;
+    foodId: string; // Product ID (Guid)
     amount: number;
 }

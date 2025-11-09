@@ -5,7 +5,7 @@ const serverUrl = 'http://localhost:3000';
 export const environment: AppConfig = {
     apiUrls: {
         auth: `${serverUrl}/api/auth`,
-        foods: `${serverUrl}/api/foods`,
+        products: `${serverUrl}/api/products`,
         consumptions: `${serverUrl}/api/consumptions`,
         statistics: `${serverUrl}/api/statistics`,
         users: `${serverUrl}/api/users`,

@@ -22,9 +22,13 @@ public static class Errors
 
     public static class User
     {
-        public static Error NotFound(int id) => new(
+        public static Error NotFound(Guid id) => new(
             "User.NotFound",
             $"Пользователь с ID {id} не найден");
+
+        public static Error NotFound() => new(
+            "User.NotFound",
+            "Пользователь не найден");
 
         public static Error InvalidCredentials => new(
             "User.InvalidCredentials",
@@ -33,6 +37,17 @@ public static class Errors
         public static Error EmailAlreadyExists => new(
             "User.EmailAlreadyExists",
             "Пользователь с таким email уже существует");
+    }
+
+    public static class Authentication
+    {
+        public static Error InvalidCredentials => new(
+            "Authentication.InvalidCredentials",
+            "Неверный email или пароль");
+
+        public static Error InvalidToken => new(
+            "Authentication.InvalidToken",
+            "Недействительный токен");
     }
 
     public static class Validation

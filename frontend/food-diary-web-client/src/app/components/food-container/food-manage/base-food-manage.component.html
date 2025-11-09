@@ -1,12 +1,12 @@
 <div class="food-manage">
     <h2 class="food-manage__title">
-        @if (food()) {
+        @if (product()) {
             {{ 'FOOD_MANAGE.EDIT_TITLE' | translate }}
         } @else {
             {{ 'FOOD_MANAGE.ADD_TITLE' | translate }}
         }
     </h2>
-    <form class="food-manage__form" [formGroup]="foodForm" (ngSubmit)="onSubmit()">
+    <form class="food-manage__form" [formGroup]="productForm" (ngSubmit)="onSubmit()">
         <div class="food-manage__field food-manage__field--name">
             <tui-textfield type="text">
                 <label tuiLabel>{{ 'FOOD_MANAGE.NAME' | translate }}*</label>
@@ -159,6 +159,19 @@
                             [error]="[] | tuiFieldError | async"
                         ></tui-error>
                     </div>
+                    <div class="food-manage__macronutrient">
+                        <tui-input-number formControlName="fiberPerBase">
+                            {{ 'FOOD_MANAGE.FIBER' | translate }} {{ getDynamicNutrientPlaceholder }}*
+                            <input
+                                placeholder="0"
+                                tuiTextfieldLegacy
+                            />
+                        </tui-input-number>
+                        <tui-error
+                            formControlName="fiberPerBase"
+                            [error]="[] | tuiFieldError | async"
+                        ></tui-error>
+                    </div>
                 </div>
             </div>
         </fd-custom-group>
@@ -169,7 +182,7 @@
         ></fd-nutrients-summary>
 
         <div class="food-manage__actions">
-            @if (food()) {
+            @if (product()) {
                 <button
                     type="submit"
                     class="food-manage__action-button"
@@ -198,7 +211,7 @@
 <ng-template #confirmDialog let-observer>
     <div class="food-manage__dialog">
         <p class="food-manage__dialog-title">
-            @if (food()) {
+            @if (product()) {
                 {{ 'FOOD_DETAIL.EDIT_SUCCESS' | translate }}
             } @else {
                 {{ 'FOOD_DETAIL.CREATE_SUCCESS' | translate }}

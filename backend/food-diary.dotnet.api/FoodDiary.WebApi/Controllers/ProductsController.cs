@@ -1,4 +1,6 @@
+using System;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using FoodDiary.Application.Products.Commands.CreateProduct;
 using FoodDiary.Application.Products.Mappings;
@@ -11,17 +13,33 @@ namespace FoodDiary.WebApi.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class ProductsController(ISender mediator) : ControllerBase {
+[Authorize]
+public class ProductsController(ISender mediator) : ControllerBase
+{
     /// <summary>
     /// Получить все продукты (CQRS Query)
     /// </summary>
     [HttpGet]
-    public async Task<IActionResult> GetAll([FromQuery] string userId)
+    public async Task<IActionResult> GetAll(
+        [FromQuery] int page = 1,
+        [FromQuery] int limit = 10,
+        [FromQuery] string? search = null)
     {
-        if (!Guid.TryParse(userId, out var userGuid))
-            return BadRequest("Invalid userId format");
+        var userId = User.GetUserId();
+        if (userId is null)
+        {
+            return Unauthorized(new
+            {
+                error = "Authentication.InvalidToken",
+                message = "Не удалось определить пользователя"
+            });
+        }
 
-        var query = new GetProductsQuery(new UserId(userGuid));
+        var sanitizedPage = Math.Max(page, 1);
+        var sanitizedLimit = Math.Clamp(limit, 1, 100);
+        var sanitizedSearch = string.IsNullOrWhiteSpace(search) ? null : search.Trim();
+
+        var query = new GetProductsQuery(userId.Value, sanitizedPage, sanitizedLimit, sanitizedSearch);
         var result = await mediator.Send(query);
         return result.ToActionResult();
     }
@@ -30,16 +48,20 @@ public class ProductsController(ISender mediator) : ControllerBase {
     /// Создать новый продукт (CQRS Command)
     /// </summary>
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] CreateProductRequest request, [FromQuery] string userId)
+    public async Task<IActionResult> Create([FromBody] CreateProductRequest request)
     {
-        if (!Guid.TryParse(userId, out var userGuid))
-            return BadRequest("Invalid userId format");
+        var userId = User.GetUserId();
+        if (userId is null)
+        {
+            return Unauthorized(new
+            {
+                error = "Authentication.InvalidToken",
+                message = "Не удалось определить пользователя"
+            });
+        }
 
-        var command = request.ToCommand(userGuid);
+        var command = request.ToCommand(userId.Value);
         var result = await mediator.Send(command);
         return result.ToActionResult();
     }
-
-    // TODO: Добавить GetById, Update, Delete команды/запросы
-    // TODO: Добавить [Authorize] и извлекать userId из JWT claims
 }

@@ -1,3 +1,8 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Domain.Entities;
@@ -19,13 +24,43 @@ public class ProductRepository : IProductRepository
         return product;
     }
 
-    public async Task<IEnumerable<Product>> GetAllAsync(UserId userId) =>
-        await _context.Products
+    public async Task<(IReadOnlyList<Product> Items, int TotalItems)> GetPagedAsync(
+        UserId userId,
+        int page,
+        int limit,
+        string? search,
+        CancellationToken cancellationToken = default)
+    {
+        var pageNumber = Math.Max(page, 1);
+        var pageSize = Math.Max(limit, 1);
+
+        IQueryable<Product> query = _context.Products
+            .AsNoTracking()
             .Include(p => p.MealItems)
             .Include(p => p.RecipeIngredients)
-            .Where(p => p.UserId == userId || p.Visibility == Visibility.PUBLIC)
-            .OrderByDescending(p => p.CreatedOnUtc)
-            .ToListAsync();
+            .Where(p => p.UserId == userId || p.Visibility == Visibility.PUBLIC);
+
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            var normalizedSearch = search.Trim().ToLower();
+            query = query.Where(p =>
+                p.Name.ToLower().Contains(normalizedSearch) ||
+                (p.Brand != null && p.Brand.ToLower().Contains(normalizedSearch)) ||
+                (p.Category != null && p.Category.ToLower().Contains(normalizedSearch)) ||
+                (p.Barcode != null && p.Barcode.ToLower().Contains(normalizedSearch)));
+        }
+
+        query = query.OrderByDescending(p => p.CreatedOnUtc);
+
+        var totalItems = await query.CountAsync(cancellationToken);
+        var skip = (pageNumber - 1) * pageSize;
+        var items = await query
+            .Skip(skip)
+            .Take(pageSize)
+            .ToListAsync(cancellationToken);
+
+        return (items, totalItems);
+    }
 
     public async Task<Product?> GetByIdAsync(ProductId id, UserId userId) =>
         await _context.Products

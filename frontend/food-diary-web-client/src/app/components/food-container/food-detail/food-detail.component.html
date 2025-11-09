@@ -1,22 +1,22 @@
 <div class="modal">
     <h2 class="modal__title">
-        {{ food.name }}
-        @if (food.barcode) {
-            [{{ food.barcode }}]
+        {{ product.name }}
+        @if (product.barcode) {
+            [{{ product.barcode }}]
         }
     </h2>
     <hr class="modal__divider" />
     <div class="modal__body">
         <div class="modal__info">
-            @if (food.category) {
+            @if (product.category) {
                 <p class="modal__text">
                     <span class="modal__property-name">{{ 'FOOD_DETAIL.CATEGORY' | translate }}</span>
-                    {{ food.category }}
+                    {{ product.category }}
                 </p>
             }
             <p class="modal__text">
                 <span class="modal__property-name">{{ 'FOOD_DETAIL.BASE_AMOUNT' | translate }}</span>
-                {{ food.baseAmount }} {{ 'FOOD_AMOUNT_UNITS_SHORT.' + food.baseUnit | translate }}
+                {{ product.baseAmount }} {{ 'FOOD_AMOUNT_UNITS_SHORT.' + product.baseUnit | translate }}
             </p>
         </div>
         <fd-nutrients-summary
@@ -55,7 +55,7 @@
 
 <ng-template #confirmDialog let-observer>
     <div class="dialog">
-        <p>{{ 'FOOD_DETAIL.CONFIRM_DELETE_TITLE' | translate }} <span class="dialog__title--bold">{{ food.name }}</span>?</p>
+        <p>{{ 'FOOD_DETAIL.CONFIRM_DELETE_TITLE' | translate }} <span class="dialog__title--bold">{{ product.name }}</span>?</p>
         <div class="dialog__buttons">
             <button class="dialog__button" tuiButton size="m" (click)="observer.complete()">{{ 'FOOD_DETAIL.CANCEL_BUTTON' | translate }}</button>
             <button class="dialog__button" tuiButton size="m" appearance="accent" (click)="observer.next(true); observer.complete()">{{ 'FOOD_DETAIL.CONFIRM_BUTTON' | translate }}</button>
