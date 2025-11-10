@@ -1,4 +1,5 @@
 using FoodDiary.Domain.Common;
+using FoodDiary.Domain.ValueObjects;
 
 namespace FoodDiary.Domain.Entities;
 
@@ -6,37 +7,65 @@ namespace FoodDiary.Domain.Entities;
 /// Шаг рецепта - часть агрегата Recipe
 /// НЕ является корнем агрегата
 /// </summary>
-public class RecipeStep : Entity<int>
-{
-    public int RecipeId { get; private set; }
+public sealed class RecipeStep : Entity<RecipeStepId> {
+    public RecipeId RecipeId { get; private set; }
     public int StepNumber { get; private set; }
     public string Instruction { get; private set; } = string.Empty;
     public string? ImageUrl { get; private set; }
 
+    private readonly List<RecipeIngredient> _ingredients = new();
+    public IReadOnlyCollection<RecipeIngredient> Ingredients => _ingredients.AsReadOnly();
+
     // Navigation properties
-    public virtual Recipe Recipe { get; private set; } = null!;
+    public Recipe Recipe { get; private set; } = null!;
 
     // Конструктор для EF Core
-    private RecipeStep() { }
+    private RecipeStep() {
+    }
 
     // Factory method (вызывается из Recipe агрегата)
-    internal static RecipeStep Create(int recipeId, int stepNumber, string instruction, string? imageUrl = null)
-    {
-        var step = new RecipeStep
-        {
+    internal static RecipeStep Create(RecipeId recipeId, int stepNumber, string instruction, string? imageUrl = null) {
+        if (string.IsNullOrWhiteSpace(instruction)) {
+            throw new ArgumentException("Instruction is required", nameof(instruction));
+        }
+
+        var step = new RecipeStep {
+            Id = RecipeStepId.New(),
             RecipeId = recipeId,
             StepNumber = stepNumber,
-            Instruction = instruction,
+            Instruction = instruction.Trim(),
             ImageUrl = imageUrl
         };
         step.SetCreated();
         return step;
     }
 
-    public void Update(string instruction, string? imageUrl = null)
-    {
-        Instruction = instruction;
+    public void Update(string instruction, string? imageUrl = null) {
+        if (string.IsNullOrWhiteSpace(instruction)) {
+            throw new ArgumentException("Instruction is required", nameof(instruction));
+        }
+
+        Instruction = instruction.Trim();
         ImageUrl = imageUrl;
+        SetModified();
+    }
+
+    public RecipeIngredient AddProductIngredient(ProductId productId, double amount) {
+        var ingredient = RecipeIngredient.CreateWithProduct(Id, productId, amount);
+        _ingredients.Add(ingredient);
+        SetModified();
+        return ingredient;
+    }
+
+    public RecipeIngredient AddNestedRecipeIngredient(RecipeId nestedRecipeId, double servings) {
+        var ingredient = RecipeIngredient.CreateWithRecipe(Id, nestedRecipeId, servings);
+        _ingredients.Add(ingredient);
+        SetModified();
+        return ingredient;
+    }
+
+    public void RemoveIngredient(RecipeIngredient ingredient) {
+        _ingredients.Remove(ingredient);
         SetModified();
     }
 }

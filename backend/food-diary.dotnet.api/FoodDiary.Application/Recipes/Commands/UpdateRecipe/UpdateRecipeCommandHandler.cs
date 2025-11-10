@@ -1,0 +1,97 @@
+using System;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using FoodDiary.Application.Common.Abstractions.Messaging;
+using FoodDiary.Application.Common.Abstractions.Result;
+using FoodDiary.Application.Common.Interfaces.Persistence;
+using FoodDiary.Application.Recipes.Commands.Common;
+using FoodDiary.Application.Recipes.Mappings;
+using FoodDiary.Contracts.Recipes;
+using FoodDiary.Domain.Enums;
+using FoodDiary.Domain.ValueObjects;
+
+namespace FoodDiary.Application.Recipes.Commands.UpdateRecipe;
+
+public class UpdateRecipeCommandHandler(IRecipeRepository recipeRepository)
+    : ICommandHandler<UpdateRecipeCommand, Result<RecipeResponse>>
+{
+    public async Task<Result<RecipeResponse>> Handle(UpdateRecipeCommand command, CancellationToken cancellationToken)
+    {
+        var userId = command.UserId!.Value;
+
+        var recipe = await recipeRepository.GetByIdAsync(
+            command.RecipeId,
+            userId,
+            includePublic: false,
+            includeSteps: true,
+            asTracking: true,
+            cancellationToken: cancellationToken);
+
+        if (recipe is null)
+        {
+            return Result.Failure<RecipeResponse>(Errors.Recipe.NotAccessible(command.RecipeId.Value));
+        }
+
+        var usageCount = recipe.MealItems.Count + recipe.NestedRecipeUsages.Count;
+        if (usageCount > 0)
+        {
+            return Result.Failure<RecipeResponse>(
+                Errors.Validation.Invalid("RecipeId", "Recipe is already used and cannot be modified"));
+        }
+
+        Visibility? visibility = null;
+        if (!string.IsNullOrWhiteSpace(command.Visibility))
+        {
+            visibility = Enum.Parse<Visibility>(command.Visibility, true);
+        }
+
+        recipe.Update(
+            name: command.Name,
+            description: command.Description,
+            category: command.Category,
+            imageUrl: command.ImageUrl,
+            prepTime: command.PrepTime,
+            cookTime: command.CookTime,
+            servings: command.Servings,
+            visibility: visibility);
+
+        recipe.ClearSteps();
+        var steps = command.Steps ?? Array.Empty<Application.Recipes.Commands.Common.RecipeStepInput>();
+        var orderedSteps = steps
+            .Select((step, index) => new { Step = step, Order = step.Order > 0 ? step.Order : index + 1 })
+            .OrderBy(x => x.Order);
+
+        foreach (var entry in orderedSteps)
+        {
+            var step = recipe.AddStep(entry.Order, entry.Step.Description, entry.Step.ImageUrl);
+            foreach (var ingredient in entry.Step.Ingredients)
+            {
+                if (ingredient.ProductId.HasValue)
+                {
+                    step.AddProductIngredient(new ProductId(ingredient.ProductId.Value), ingredient.Amount);
+                }
+                else if (ingredient.NestedRecipeId.HasValue)
+                {
+                    step.AddNestedRecipeIngredient(new RecipeId(ingredient.NestedRecipeId.Value), ingredient.Amount);
+                }
+            }
+        }
+
+        await recipeRepository.UpdateAsync(recipe);
+
+        var updated = await recipeRepository.GetByIdAsync(
+            recipe.Id,
+            userId,
+            includePublic: false,
+            includeSteps: true,
+            cancellationToken: cancellationToken);
+
+        if (updated is null)
+        {
+            return Result.Failure<RecipeResponse>(Errors.Recipe.InvalidData("Failed to load updated recipe."));
+        }
+
+        return Result.Success(updated.ToResponse(updated.MealItems.Count + updated.NestedRecipeUsages.Count, true));
+    }
+}

@@ -73,20 +73,6 @@ public readonly record struct MealItemId(Guid Value) : IEntityId<Guid>
 }
 
 /// <summary>
-/// Строготипизированный идентификатор ингредиента рецепта
-/// </summary>
-public readonly record struct RecipeIngredientId(Guid Value) : IEntityId<Guid>
-{
-    public static RecipeIngredientId New() => new(Guid.NewGuid());
-    public static RecipeIngredientId Empty => new(Guid.Empty);
-
-    public static implicit operator Guid(RecipeIngredientId id) => id.Value;
-    public static explicit operator RecipeIngredientId(Guid value) => new(value);
-
-    public override string ToString() => Value.ToString();
-}
-
-/// <summary>
 /// Строготипизированный идентификатор шага рецепта
 /// </summary>
 public readonly record struct RecipeStepId(Guid Value) : IEntityId<Guid>
@@ -96,6 +82,20 @@ public readonly record struct RecipeStepId(Guid Value) : IEntityId<Guid>
 
     public static implicit operator Guid(RecipeStepId id) => id.Value;
     public static explicit operator RecipeStepId(Guid value) => new(value);
+
+    public override string ToString() => Value.ToString();
+}
+
+/// <summary>
+/// Строготипизированный идентификатор ингредиента рецепта
+/// </summary>
+public readonly record struct RecipeIngredientId(Guid Value) : IEntityId<Guid>
+{
+    public static RecipeIngredientId New() => new(Guid.NewGuid());
+    public static RecipeIngredientId Empty => new(Guid.Empty);
+
+    public static implicit operator Guid(RecipeIngredientId id) => id.Value;
+    public static explicit operator RecipeIngredientId(Guid value) => new(value);
 
     public override string ToString() => Value.ToString();
 }

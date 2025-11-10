@@ -52,4 +52,3 @@ public class UpdateProductCommandHandler(IProductRepository productRepository)
         return Result.Success(product.ToResponse(usageCount, true));
     }
 }
-

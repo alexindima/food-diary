@@ -2,7 +2,6 @@ using Microsoft.EntityFrameworkCore;
 using FoodDiary.Domain.Entities;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
-using FoodDiary.Infrastructure.Persistence.Converters;
 
 namespace FoodDiary.Infrastructure.Persistence;
 
@@ -63,11 +62,24 @@ public class FoodDiaryDbContext : DbContext
         // Recipe configuration
         modelBuilder.Entity<Recipe>(entity =>
         {
+            entity.Property(e => e.Id).HasConversion(
+                id => id.Value,
+                value => new RecipeId(value));
+
             entity.Property(e => e.UserId).HasConversion(
                 id => id.Value,
                 value => new UserId(value));
 
+            entity.Property(e => e.Visibility).HasDefaultValue(Visibility.PUBLIC);
+
+            entity.Ignore(e => e.UsageCount);
+
             entity.HasOne(e => e.User).WithMany(u => u.Recipes).HasForeignKey(e => e.UserId);
+
+            entity.HasMany(e => e.MealItems)
+                .WithOne(mi => mi.Recipe)
+                .HasForeignKey(mi => mi.RecipeId)
+                .IsRequired(false);
         });
 
         // MealItem configuration - XOR constraint: ProductId OR RecipeId
@@ -76,6 +88,10 @@ public class FoodDiaryDbContext : DbContext
             entity.Property(e => e.ProductId).HasConversion(
                 id => id.HasValue ? id.Value.Value : (Guid?)null,
                 value => value.HasValue ? new ProductId(value.Value) : null);
+
+            entity.Property(e => e.RecipeId).HasConversion(
+                id => id.HasValue ? id.Value.Value : (Guid?)null,
+                value => value.HasValue ? new RecipeId(value.Value) : null);
 
             entity.HasOne(e => e.Meal)
                 .WithMany(m => m.Items)
@@ -87,23 +103,52 @@ public class FoodDiaryDbContext : DbContext
                 .IsRequired(false);
 
             entity.HasOne(e => e.Recipe)
-                .WithMany()
+                .WithMany(r => r.MealItems)
                 .HasForeignKey(e => e.RecipeId)
                 .IsRequired(false);
 
             // XOR check constraint будет в миграции: CHECK ((ProductId IS NULL) <> (RecipeId IS NULL))
         });
 
-        // RecipeIngredient configuration - XOR constraint: ProductId OR NestedRecipeId
+        // RecipeStep configuration
+        modelBuilder.Entity<RecipeStep>(entity =>
+        {
+            entity.Property(e => e.Id).HasConversion(
+                id => id.Value,
+                value => new RecipeStepId(value));
+
+            entity.Property(e => e.RecipeId).HasConversion(
+                id => id.Value,
+                value => new RecipeId(value));
+
+            entity.HasOne(e => e.Recipe)
+                .WithMany(r => r.Steps)
+                .HasForeignKey(e => e.RecipeId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
         modelBuilder.Entity<RecipeIngredient>(entity =>
         {
+            entity.Property(e => e.Id).HasConversion(
+                id => id.Value,
+                value => new RecipeIngredientId(value));
+
             entity.Property(e => e.ProductId).HasConversion(
                 id => id.HasValue ? id.Value.Value : (Guid?)null,
                 value => value.HasValue ? new ProductId(value.Value) : null);
 
-            entity.HasOne(e => e.Recipe)
-                .WithMany(r => r.Ingredients)
-                .HasForeignKey(e => e.RecipeId);
+            entity.Property(e => e.RecipeStepId).HasConversion(
+                id => id.Value,
+                value => new RecipeStepId(value));
+
+            entity.Property(e => e.NestedRecipeId).HasConversion(
+                id => id.HasValue ? id.Value.Value : (Guid?)null,
+                value => value.HasValue ? new RecipeId(value.Value) : null);
+
+            entity.HasOne(e => e.RecipeStep)
+                .WithMany(s => s.Ingredients)
+                .HasForeignKey(e => e.RecipeStepId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             entity.HasOne(e => e.Product)
                 .WithMany(p => p.RecipeIngredients)
@@ -111,20 +156,10 @@ public class FoodDiaryDbContext : DbContext
                 .IsRequired(false);
 
             entity.HasOne(e => e.NestedRecipe)
-                .WithMany()
+                .WithMany(r => r.NestedRecipeUsages)
                 .HasForeignKey(e => e.NestedRecipeId)
                 .IsRequired(false)
                 .OnDelete(DeleteBehavior.Restrict);
-
-            // XOR check constraint будет в миграции: CHECK ((ProductId IS NULL) <> (NestedRecipeId IS NULL))
-        });
-
-        // RecipeStep configuration
-        modelBuilder.Entity<RecipeStep>(entity =>
-        {
-            entity.HasOne(e => e.Recipe)
-                .WithMany(r => r.Steps)
-                .HasForeignKey(e => e.RecipeId);
         });
     }
 }

@@ -78,8 +78,8 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.Property<Guid?>("ProductId")
                         .HasColumnType("uuid");
 
-                    b.Property<int?>("RecipeId")
-                        .HasColumnType("integer");
+                    b.Property<Guid?>("RecipeId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -160,11 +160,8 @@ namespace FoodDiary.Infrastructure.Migrations
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.Recipe", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Category")
                         .HasColumnType("text");
@@ -209,6 +206,11 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 
+                    b.Property<int>("Visibility")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(0);
+
                     b.HasKey("Id");
 
                     b.HasIndex("UserId");
@@ -218,11 +220,8 @@ namespace FoodDiary.Infrastructure.Migrations
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.RecipeIngredient", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
 
                     b.Property<double>("Amount")
                         .HasColumnType("double precision");
@@ -233,14 +232,14 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.Property<DateTime?>("ModifiedOnUtc")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int?>("NestedRecipeId")
-                        .HasColumnType("integer");
+                    b.Property<Guid?>("NestedRecipeId")
+                        .HasColumnType("uuid");
 
                     b.Property<Guid?>("ProductId")
                         .HasColumnType("uuid");
 
-                    b.Property<int>("RecipeId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("RecipeStepId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -248,18 +247,15 @@ namespace FoodDiary.Infrastructure.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.HasIndex("RecipeId");
+                    b.HasIndex("RecipeStepId");
 
                     b.ToTable("RecipeIngredients");
                 });
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.RecipeStep", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedOnUtc")
                         .HasColumnType("timestamp with time zone");
@@ -274,8 +270,8 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.Property<DateTime?>("ModifiedOnUtc")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("RecipeId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("RecipeId")
+                        .HasColumnType("uuid");
 
                     b.Property<int>("StepNumber")
                         .HasColumnType("integer");
@@ -370,7 +366,7 @@ namespace FoodDiary.Infrastructure.Migrations
                         .HasForeignKey("ProductId");
 
                     b.HasOne("FoodDiary.Domain.Entities.Recipe", "Recipe")
-                        .WithMany()
+                        .WithMany("MealItems")
                         .HasForeignKey("RecipeId");
 
                     b.Navigation("Meal");
@@ -405,7 +401,7 @@ namespace FoodDiary.Infrastructure.Migrations
             modelBuilder.Entity("FoodDiary.Domain.Entities.RecipeIngredient", b =>
                 {
                     b.HasOne("FoodDiary.Domain.Entities.Recipe", "NestedRecipe")
-                        .WithMany()
+                        .WithMany("NestedRecipeUsages")
                         .HasForeignKey("NestedRecipeId")
                         .OnDelete(DeleteBehavior.Restrict);
 
@@ -413,9 +409,9 @@ namespace FoodDiary.Infrastructure.Migrations
                         .WithMany("RecipeIngredients")
                         .HasForeignKey("ProductId");
 
-                    b.HasOne("FoodDiary.Domain.Entities.Recipe", "Recipe")
+                    b.HasOne("FoodDiary.Domain.Entities.RecipeStep", "RecipeStep")
                         .WithMany("Ingredients")
-                        .HasForeignKey("RecipeId")
+                        .HasForeignKey("RecipeStepId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -423,7 +419,7 @@ namespace FoodDiary.Infrastructure.Migrations
 
                     b.Navigation("Product");
 
-                    b.Navigation("Recipe");
+                    b.Navigation("RecipeStep");
                 });
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.RecipeStep", b =>
@@ -451,9 +447,16 @@ namespace FoodDiary.Infrastructure.Migrations
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.Recipe", b =>
                 {
-                    b.Navigation("Ingredients");
+                    b.Navigation("MealItems");
+
+                    b.Navigation("NestedRecipeUsages");
 
                     b.Navigation("Steps");
+                });
+
+            modelBuilder.Entity("FoodDiary.Domain.Entities.RecipeStep", b =>
+                {
+                    b.Navigation("Ingredients");
                 });
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.User", b =>

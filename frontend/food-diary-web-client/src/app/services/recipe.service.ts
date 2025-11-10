@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
-import { catchError, Observable, of } from 'rxjs';
-import { ApiResponse } from '../types/api-response.data';
+import { catchError, Observable, throwError } from 'rxjs';
 import { PageOf } from '../types/page-of.data';
-import { RecipeDto } from '../types/recipe.data';
+import { Recipe, RecipeDto, RecipeFilters } from '../types/recipe.data';
 import { ApiService } from './api.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Injectable({
     providedIn: 'root',
@@ -12,43 +12,60 @@ import { ApiService } from './api.service';
 export class RecipeService extends ApiService {
     protected readonly baseUrl = environment.apiUrls.recipes;
 
-    public query(page: number, limit: number, filters: Record<string, any> = {}): Observable<ApiResponse<PageOf<RecipeDto>>> {
-        const params = { page, limit, ...filters };
-        return this.get<ApiResponse<PageOf<RecipeDto>>>('', params).pipe(
-            catchError(error => {
-                const emptyPage: PageOf<RecipeDto> = {
-                    data: [],
-                    page,
-                    limit,
-                    totalPages: 0,
-                    totalItems: 0,
-                };
-                return of(ApiResponse.error(error.error?.error, emptyPage));
+    public query(page: number, limit: number, filters?: RecipeFilters, includePublic = true): Observable<PageOf<Recipe>> {
+        const params: Record<string, string | number | boolean> = {
+            page,
+            limit,
+            includePublic,
+        };
+
+        const search = filters?.search?.trim();
+        if (search) {
+            params['search'] = search;
+        }
+
+        return this.get<PageOf<Recipe>>('', params).pipe(
+            catchError((error: HttpErrorResponse) => {
+                console.error('Query recipes error', error);
+                return throwError(() => error);
             }),
         );
     }
 
-    public getById(id: number): Observable<ApiResponse<RecipeDto | null>> {
-        return this.get<ApiResponse<RecipeDto>>(`${id}`).pipe(
-            catchError(error => of(ApiResponse.error(error.error?.error, null)))
+    public getById(id: string, includePublic = true): Observable<Recipe> {
+        const params = { includePublic };
+        return this.get<Recipe>(`${id}`, params).pipe(
+            catchError((error: HttpErrorResponse) => {
+                console.error('Get recipe error', error);
+                return throwError(() => error);
+            }),
         );
     }
 
-    public create(data: RecipeDto): Observable<RecipeDto | null> {
-        return this.post<RecipeDto>('', data).pipe(
-            catchError(() => of(null))
+    public create(data: RecipeDto): Observable<Recipe> {
+        return this.post<Recipe>('', data).pipe(
+            catchError((error: HttpErrorResponse) => {
+                console.error('Create recipe error', error);
+                return throwError(() => error);
+            }),
         );
     }
 
-    public update(id: number, data: Partial<RecipeDto>): Observable<ApiResponse<RecipeDto | null>> {
-        return this.patch<ApiResponse<RecipeDto>>(`${id}`, data).pipe(
-            catchError(error => of(ApiResponse.error(error.error?.error, null)))
+    public update(id: string, data: RecipeDto): Observable<Recipe> {
+        return this.patch<Recipe>(`${id}`, data).pipe(
+            catchError((error: HttpErrorResponse) => {
+                console.error('Update recipe error', error);
+                return throwError(() => error);
+            }),
         );
     }
 
-    public deleteById(id: number): Observable<ApiResponse<null>> {
-        return this.delete<ApiResponse<null>>(`${id}`).pipe(
-            catchError(error => of(ApiResponse.error(error.error?.error, null)))
+    public deleteById(id: string): Observable<void> {
+        return this.delete<void>(`${id}`).pipe(
+            catchError((error: HttpErrorResponse) => {
+                console.error('Delete recipe error', error);
+                return throwError(() => error);
+            }),
         );
     }
 }

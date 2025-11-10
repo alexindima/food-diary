@@ -1,0 +1,140 @@
+<div class="recipe-list" #container>
+    <h2 class="recipe-list__title">
+        {{ 'RECIPE_LIST.TITLE' | translate }}
+        @if (searchForm.controls.search.value) {
+            ({{ 'RECIPE_LIST.SEARCH_TITLE' | translate }} {{ searchForm.controls.search.value }})
+        }
+    </h2>
+
+    <div class="recipe-list__actions">
+        <search tuiSearch class="recipe-list__search">
+            <form class="recipe-list__search-form" [formGroup]="searchForm">
+                <fieldset tuiTextfieldSize="m">
+                    <tui-textfield iconStart="@tui.search">
+                        <input
+                            formControlName="search"
+                            [placeholder]="'RECIPE_LIST.SEARCH_PLACEHOLDER' | translate"
+                            tuiTextfield
+                            class="recipe-list__search-input"
+                        />
+                    </tui-textfield>
+                </fieldset>
+            </form>
+        </search>
+
+        <label class="recipe-list__toggle">
+            <input
+                type="checkbox"
+                class="recipe-list__toggle-input"
+                [formControl]="searchForm.controls.onlyMine"
+            />
+            <span class="recipe-list__toggle-label">
+                {{ 'RECIPE_LIST.ONLY_MY_RECIPES' | translate }}
+            </span>
+        </label>
+
+        <button
+            tuiButton
+            iconStart="@tui.plus"
+            size="m"
+            (click)="onAddRecipeClick()"
+            class="recipe-list__add-button"
+        >
+            {{ 'RECIPE_LIST.ADD_RECIPE_BUTTON' | translate }}
+        </button>
+    </div>
+
+    @if (recipeData.isLoading()) {
+        <tui-loader class="recipe-list__loader"></tui-loader>
+    } @else {
+        @if (recipeData.items().length > 0) {
+            <div class="recipe-list__items">
+                @for (recipe of recipeData.items(); track recipe.id) {
+                    <fd-card class="recipe-card">
+                        <div class="recipe-card__header">
+                            <div>
+                                <div class="recipe-card__name">
+                                    {{ recipe.name }}
+                                    @if (recipe.visibility === 'Private') {
+                                        <span class="recipe-card__visibility recipe-card__visibility--private">
+                                            {{ getVisibilityTranslation(recipe.visibility) }}
+                                        </span>
+                                    } @else {
+                                        <span class="recipe-card__visibility recipe-card__visibility--public">
+                                            {{ getVisibilityTranslation(recipe.visibility) }}
+                                        </span>
+                                    }
+                                </div>
+                                @if (recipe.category) {
+                                    <div class="recipe-card__category">
+                                        {{ recipe.category }}
+                                    </div>
+                                }
+                            </div>
+                            <div class="recipe-card__meta">
+                                <span>
+                                    {{ 'RECIPE_LIST.SERVINGS' | translate }}: {{ recipe.servings }}
+                                </span>
+                                <span>
+                                    {{ 'RECIPE_LIST.TOTAL_CALORIES' | translate }}: {{ recipe.totalCalories ?? '—' }}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="recipe-card__body">
+                            <p class="recipe-card__description">
+                                {{ recipe.description || ('RECIPE_LIST.NO_DESCRIPTION' | translate) }}
+                            </p>
+                            <div class="recipe-card__stats">
+                                <span>
+                                    {{ 'RECIPE_LIST.USAGE_COUNT' | translate }}: {{ recipe.usageCount }}
+                                </span>
+                                <span>
+                                    {{ 'RECIPE_LIST.STEPS_COUNT' | translate }}: {{ recipe.steps.length }}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="recipe-card__actions">
+                            <button
+                                tuiButton
+                                size="s"
+                                appearance="secondary"
+                                iconStart="@tui.edit"
+                                (click)="onEditRecipe(recipe)"
+                                [disabled]="!recipe.isOwnedByCurrentUser"
+                            >
+                                {{ 'RECIPE_LIST.EDIT' | translate }}
+                            </button>
+                            <button
+                                tuiButton
+                                size="s"
+                                appearance="danger"
+                                iconStart="@tui.trash-2"
+                                (click)="onDeleteRecipe(recipe)"
+                                [disabled]="!recipe.isOwnedByCurrentUser || recipe.usageCount > 0"
+                            >
+                                {{ 'RECIPE_LIST.DELETE' | translate }}
+                            </button>
+                        </div>
+                    </fd-card>
+                }
+            </div>
+        } @else {
+            <div class="recipe-list__no-results">
+                <tui-icon
+                    class="recipe-list__no-results-icon"
+                    icon="@tui.search-remove"
+                ></tui-icon>
+                {{ 'RECIPE_LIST.NO_RECIPES_FOUND' | translate }}
+            </div>
+        }
+    }
+
+    @if (recipeData.totalPages > 1) {
+        <tui-pagination
+            [length]="recipeData.totalPages"
+            [(index)]="currentPageIndex"
+            (indexChange)="onPageChange($event)"
+            class="recipe-list__pagination"
+        ></tui-pagination>
+    }
+</div>

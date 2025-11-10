@@ -16,7 +16,6 @@ export interface User {
 }
 
 export class UpdateUserDto {
-    public email?: string;
     public username?: string;
     public firstName?: string;
     public lastName?: string;
@@ -28,18 +27,22 @@ export class UpdateUserDto {
     public isActive?: boolean;
 
     public constructor(formValues: Partial<UserFormValues>) {
-        this.email = formValues.email || undefined;
-        this.username = formValues.username || undefined;
-        this.firstName = formValues.firstName || undefined;
-        this.lastName = formValues.lastName || undefined;
+        this.username = normalizeString(formValues.username);
+        this.firstName = normalizeString(formValues.firstName);
+        this.lastName = normalizeString(formValues.lastName);
         this.birthDate = formValues.birthDate ? formValues.birthDate.toUtcNativeDate() : undefined;
-        this.gender = formValues.gender || undefined;
-        this.weight = formValues.weight || undefined;
-        this.height = formValues.height || undefined;
-        this.profileImage = formValues.profileImage || undefined;
+        this.gender = normalizeString(formValues.gender);
+        this.weight = formValues.weight ?? undefined;
+        this.height = formValues.height ?? undefined;
+        this.profileImage = normalizeString(formValues.profileImage);
         this.isActive = true;
     }
 }
+
+const normalizeString = (value: string | null | undefined): string | undefined => {
+    const trimmed = value?.trim();
+    return trimmed ? trimmed : undefined;
+};
 
 export interface ChangePasswordRequest {
     currentPassword: string;

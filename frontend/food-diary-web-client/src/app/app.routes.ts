@@ -18,6 +18,9 @@ import { authGuard } from './guards/auth.guard';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { RecipeContainerComponent } from './components/recipe-container/recipe-container.component';
 import { RecipeAddComponent } from './components/recipe-container/recipe-manage/recipe-add/recipe-add.component';
+import { RecipeListComponent } from './components/recipe-container/recipe-list/recipe-list.component';
+import { RecipeEditComponent } from './components/recipe-container/recipe-manage/recipe-edit/recipe-edit.component';
+import { recipeResolver } from './resolvers/recipe.resolver';
 
 export const routes: Routes = [
     { path: '', component: MainComponent },
@@ -64,14 +67,13 @@ export const routes: Routes = [
         component: RecipeContainerComponent,
         canActivate: [authGuard],
         children: [
-            //{ path: '', component: RecipeListComponent },
+            { path: '', component: RecipeListComponent },
             { path: 'add', component: RecipeAddComponent },
-            /*{
+            {
                 path: ':id/edit',
                 component: RecipeEditComponent,
                 resolve: { recipe: recipeResolver },
-            },*/
-            //{ path: ':id', component: RecipeDetailComponent },
+            },
         ],
     },
     {

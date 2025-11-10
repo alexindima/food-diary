@@ -1,14 +1,14 @@
 using FoodDiary.Domain.Common;
+using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
 
 namespace FoodDiary.Domain.Entities;
 
 /// <summary>
 /// Рецепт - корень агрегата
-/// Управляет коллекцией RecipeSteps и RecipeIngredients
+/// Управляет коллекцией RecipeSteps
 /// </summary>
-public class Recipe : AggregateRoot<int>
-{
+public sealed class Recipe : AggregateRoot<RecipeId> {
     public string Name { get; private set; } = string.Empty;
     public string? Description { get; private set; }
     public string? Category { get; private set; }
@@ -20,19 +20,22 @@ public class Recipe : AggregateRoot<int>
     public double? TotalProteins { get; private set; }
     public double? TotalFats { get; private set; }
     public double? TotalCarbs { get; private set; }
+    public Visibility Visibility { get; private set; } = Visibility.PUBLIC;
+    public int UsageCount { get; private set; }
 
     // Foreign keys
     public UserId UserId { get; private set; }
 
     // Navigation properties
-    public virtual User User { get; private set; } = null!;
+    public User User { get; private set; } = null!;
     private readonly List<RecipeStep> _steps = new();
-    public virtual IReadOnlyCollection<RecipeStep> Steps => _steps.AsReadOnly();
-    private readonly List<RecipeIngredient> _ingredients = new();
-    public virtual IReadOnlyCollection<RecipeIngredient> Ingredients => _ingredients.AsReadOnly();
+    public IReadOnlyCollection<RecipeStep> Steps => _steps.AsReadOnly();
+    public ICollection<MealItem> MealItems { get; private set; } = new List<MealItem>();
+    public ICollection<RecipeIngredient> NestedRecipeUsages { get; private set; } = new List<RecipeIngredient>();
 
     // Конструктор для EF Core
-    private Recipe() { }
+    private Recipe() {
+    }
 
     // Factory method для создания рецепта
     public static Recipe Create(
@@ -43,10 +46,10 @@ public class Recipe : AggregateRoot<int>
         string? category = null,
         string? imageUrl = null,
         int? prepTime = null,
-        int? cookTime = null)
-    {
-        var recipe = new Recipe
-        {
+        int? cookTime = null,
+        Visibility visibility = Visibility.PUBLIC) {
+        var recipe = new Recipe {
+            Id = RecipeId.New(),
             UserId = userId,
             Name = name,
             Servings = servings,
@@ -54,7 +57,8 @@ public class Recipe : AggregateRoot<int>
             Category = category,
             ImageUrl = imageUrl,
             PrepTime = prepTime,
-            CookTime = cookTime
+            CookTime = cookTime,
+            Visibility = visibility
         };
         recipe.SetCreated();
         return recipe;
@@ -67,8 +71,8 @@ public class Recipe : AggregateRoot<int>
         string? imageUrl = null,
         int? prepTime = null,
         int? cookTime = null,
-        int? servings = null)
-    {
+        int? servings = null,
+        Visibility? visibility = null) {
         if (name is not null) Name = name;
         if (description is not null) Description = description;
         if (category is not null) Category = category;
@@ -76,20 +80,24 @@ public class Recipe : AggregateRoot<int>
         if (prepTime.HasValue) PrepTime = prepTime;
         if (cookTime.HasValue) CookTime = cookTime;
         if (servings.HasValue) Servings = servings.Value;
+        if (visibility.HasValue) Visibility = visibility.Value;
 
         SetModified();
     }
 
-    public RecipeStep AddStep(int stepNumber, string instruction)
-    {
-        var step = RecipeStep.Create(Id, stepNumber, instruction);
+    public RecipeStep AddStep(int stepNumber, string instruction, string? imageUrl = null) {
+        var step = RecipeStep.Create(Id, stepNumber, instruction, imageUrl);
         _steps.Add(step);
         SetModified();
         return step;
     }
 
-    public void RemoveStep(RecipeStep step)
-    {
+    public void ClearSteps() {
+        _steps.Clear();
+        SetModified();
+    }
+
+    public void RemoveStep(RecipeStep step) {
         _steps.Remove(step);
         SetModified();
     }
@@ -97,34 +105,7 @@ public class Recipe : AggregateRoot<int>
     /// <summary>
     /// Добавить продукт в ингредиенты рецепта
     /// </summary>
-    public RecipeIngredient AddProduct(ProductId productId, double amount)
-    {
-        var ingredient = RecipeIngredient.CreateWithProduct(Id, productId, amount);
-        _ingredients.Add(ingredient);
-        SetModified();
-        return ingredient;
-    }
-
-    /// <summary>
-    /// Добавить другой рецепт (блюдо) в ингредиенты рецепта
-    /// Например, добавить "соус" в рецепт "пасты"
-    /// </summary>
-    public RecipeIngredient AddNestedRecipe(int nestedRecipeId, double servings)
-    {
-        var ingredient = RecipeIngredient.CreateWithRecipe(Id, nestedRecipeId, servings);
-        _ingredients.Add(ingredient);
-        SetModified();
-        return ingredient;
-    }
-
-    public void RemoveIngredient(RecipeIngredient ingredient)
-    {
-        _ingredients.Remove(ingredient);
-        SetModified();
-    }
-
-    public void UpdateNutrition(double? totalCalories, double? totalProteins, double? totalFats, double? totalCarbs)
-    {
+    public void UpdateNutrition(double? totalCalories, double? totalProteins, double? totalFats, double? totalCarbs) {
         TotalCalories = totalCalories;
         TotalProteins = totalProteins;
         TotalFats = totalFats;

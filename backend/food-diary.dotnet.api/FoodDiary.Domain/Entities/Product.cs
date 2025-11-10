@@ -8,8 +8,7 @@ namespace FoodDiary.Domain.Entities;
 /// Базовый продукт питания - корень агрегата
 /// Представляет простой продукт (например, с штрихкодом из магазина)
 /// </summary>
-public class Product : AggregateRoot<ProductId>
-{
+public sealed class Product : AggregateRoot<ProductId> {
     public string? Barcode { get; private set; }
     public string Name { get; private set; } = string.Empty;
     public string? Brand { get; private set; }
@@ -35,12 +34,13 @@ public class Product : AggregateRoot<ProductId>
     public UserId UserId { get; private set; }
 
     // Navigation properties
-    public virtual User User { get; private set; } = null!;
-    public virtual ICollection<MealItem> MealItems { get; private set; } = new List<MealItem>();
-    public virtual ICollection<RecipeIngredient> RecipeIngredients { get; private set; } = new List<RecipeIngredient>();
+    public User User { get; private set; } = null!;
+    public ICollection<MealItem> MealItems { get; private set; } = new List<MealItem>();
+    public ICollection<RecipeIngredient> RecipeIngredients { get; private set; } = new List<RecipeIngredient>();
 
     // Конструктор для EF Core
-    private Product() { }
+    private Product() {
+    }
 
     // Factory method для создания продукта
     public static Product Create(
@@ -58,10 +58,8 @@ public class Product : AggregateRoot<ProductId>
         string? category = null,
         string? description = null,
         string? imageUrl = null,
-        Visibility visibility = Visibility.PUBLIC)
-    {
-        var product = new Product
-        {
+        Visibility visibility = Visibility.PUBLIC) {
+        var product = new Product {
             Id = ProductId.New(),
             UserId = userId,
             Name = name,
@@ -97,8 +95,7 @@ public class Product : AggregateRoot<ProductId>
         string? category = null,
         string? description = null,
         string? imageUrl = null,
-        Visibility? visibility = null)
-    {
+        Visibility? visibility = null) {
         if (name is not null) Name = name;
         if (baseUnit.HasValue) BaseUnit = baseUnit.Value;
         if (baseAmount.HasValue) BaseAmount = baseAmount.Value;

@@ -2,6 +2,7 @@ import {
     ChangeDetectionStrategy,
     Component,
     FactoryProvider,
+    effect,
     inject,
     input,
     OnInit,
@@ -10,16 +11,18 @@ import {
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormGroupControls } from '../../../types/common.data';
 import {
-    TuiButton, tuiDialog,
+    TuiButton,
+    tuiDialog,
     TuiError,
+    TuiIcon,
     TuiLabel,
     TuiTextfieldComponent,
     TuiTextfieldDirective
 } from '@taiga-ui/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { TuiInputNumberModule, TuiSelectModule, TuiTextareaModule } from '@taiga-ui/legacy';
+import { TuiInputNumberModule, TuiSelectModule, TuiTextareaModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
 import { CustomGroupComponent } from '../../shared/custom-group/custom-group.component';
-import { Product } from '../../../types/product.data';
+import { MeasurementUnit, Product, ProductVisibility } from '../../../types/product.data';
 import { AsyncPipe, NgForOf } from '@angular/common';
 import { TUI_VALIDATION_ERRORS, TuiFieldErrorPipe } from '@taiga-ui/kit';
 import { nonEmptyArrayValidator } from '../../../validators/non-empty-array.validator';
@@ -32,11 +35,12 @@ import {
     NutrientsSummaryComponent
 } from '../../shared/nutrients-summary/nutrients-summary.component';
 import { ValidationErrors } from '../../../types/validation-error.data';
-import { Recipe, RecipeDto } from '../../../types/recipe.data';
-import { RecipeService } from "../../../services/recipe.service";
-import { Consumption } from "../../../types/consumption.data";
-import { DropZoneDirective } from "../../../directives/drop-zone.directive";
-import { DraggableDirective } from "../../../directives/draggable.directive";
+import { Recipe, RecipeDto, RecipeVisibility, RecipeIngredient } from '../../../types/recipe.data';
+import { RecipeService } from '../../../services/recipe.service';
+import { DropZoneDirective } from '../../../directives/drop-zone.directive';
+import { DraggableDirective } from '../../../directives/draggable.directive';
+import { NavigationService } from '../../../services/navigation.service';
+import { finalize } from 'rxjs';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: TUI_VALIDATION_ERRORS,
@@ -59,11 +63,13 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
         TranslatePipe,
         TuiLabel,
         TuiTextfieldDirective,
+        TuiTextfieldControllerModule,
         TuiTextareaModule,
         TuiSelectModule,
         TuiInputNumberModule,
         CustomGroupComponent,
         TuiButton,
+        TuiIcon,
         NgForOf,
         AsyncPipe,
         TuiError,
@@ -80,8 +86,9 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
 export class RecipeManageComponent implements OnInit {
     private readonly recipeService = inject(RecipeService);
     private readonly translateService = inject(TranslateService);
+    private readonly navigationService = inject(NavigationService);
 
-    public recipe = input<boolean>();
+    public recipe = input<Recipe | null>(null);
     public totalCalories = signal<number>(0);
     public nutrientChartData = signal<NutrientChartData>({
         proteins: 0,
@@ -89,10 +96,14 @@ export class RecipeManageComponent implements OnInit {
         carbs: 0,
     });
     public globalError = signal<string | null>(null);
+    public isSubmitting = signal<boolean>(false);
 
     public recipeForm: FormGroup<RecipeFormData>;
     public selectedStepIndex: number = 0;
     public selectedIngredientIndex: number = 0;
+    public visibilityOptions = Object.values(RecipeVisibility);
+    public stringifyVisibility = (value: RecipeVisibility | null): string =>
+        value ? this.translateService.instant(`RECIPE_VISIBILITY.${value}`) : '';
 
     private readonly productListDialog = tuiDialog(ProductListDialogComponent, {
         size: 'page',
@@ -104,50 +115,34 @@ export class RecipeManageComponent implements OnInit {
         this.recipeForm = new FormGroup<RecipeFormData>({
             name: new FormControl<string>('', { nonNullable: true, validators: [Validators.required] }),
             description: new FormControl('', [Validators.maxLength(1000)]),
-            prepTime: new FormControl(null, [Validators.required, Validators.min(1)]),
-            cookTime: new FormControl(null, [Validators.required, Validators.min(1)]),
+            category: new FormControl<string | null>(null),
+            imageUrl: new FormControl<string | null>(null),
+            prepTime: new FormControl<number | null>(null, [Validators.required, Validators.min(1)]),
+            cookTime: new FormControl<number | null>(null, [Validators.required, Validators.min(1)]),
             servings: new FormControl(1, { nonNullable: true, validators: [Validators.required, Validators.min(1)] }),
+            visibility: new FormControl<RecipeVisibility>(RecipeVisibility.Private, { nonNullable: true }),
             steps: new FormArray<FormGroup<FormGroupControls<StepFormValues>>>([], nonEmptyArrayValidator()),
         });
 
         this.addStep();
-
-        setTimeout(() => {
-            this.forceCollapse.set(true);
-            console.log('setTimeout true')
-        }, 2000)
-
-        setTimeout(() => {
-            this.forceCollapse.set(false);
-            console.log('setTimeout false')
-        }, 5000)
+        effect(() => {
+            const recipe = this.recipe();
+            if (recipe) {
+                this.populateForm(recipe);
+            }
+        });
     }
 
     public forceCollapse = signal(false);
 
-    public ngOnInit(): void {
-        const recipeData = this.getRecipeData();
-        if (recipeData) {
-            this.populateForm(recipeData);
-        }
-    }
+    public ngOnInit(): void {}
 
     public get steps(): FormArray<FormGroup<FormGroupControls<StepFormValues>>> {
         return this.recipeForm.controls.steps;
     }
 
     public addStep(): void {
-        this.steps.push(
-            new FormGroup<StepFormData>({
-                description: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
-                ingredients: new FormArray<FormGroup<FormGroupControls<IngredientFormValues>>>([
-                    new FormGroup<IngredientFormData>({
-                        food: new FormControl<Product | null>(null, Validators.required),
-                        amount: new FormControl(null, [Validators.required, Validators.min(0.01)]),
-                    }),
-                ], nonEmptyArrayValidator()),
-            })
-        );
+        this.steps.push(this.createStepGroup());
     }
 
     public removeStep(index: number): void {
@@ -162,7 +157,7 @@ export class RecipeManageComponent implements OnInit {
     public getProductName(stepIndex: number, ingredientIndex: number): string {
         const ingredientsArray = this.getStepIngredients(stepIndex);
         const foodControl = ingredientsArray.at(ingredientIndex).controls.food;
-        return foodControl?.value?.name || '';
+        return foodControl?.value?.name || this.translateService.instant('RECIPE_MANAGE.SELECT_INGREDIENT');
     }
 
     public getProductUnit(stepIndex: number, ingredientIndex: number): string | null {
@@ -196,12 +191,7 @@ export class RecipeManageComponent implements OnInit {
         const step = this.steps.at(stepIndex);
         const ingredients = step.controls.ingredients;
 
-        ingredients.push(
-            new FormGroup<IngredientFormData>({
-                food: new FormControl(null, [Validators.required]),
-                amount: new FormControl(null, [Validators.required, Validators.min(0.01)]),
-            })
-        );
+        ingredients.push(this.createIngredientGroup());
     }
 
     public removeIngredientFromStep(stepIndex: number, ingredientIndex: number): void {
@@ -210,64 +200,157 @@ export class RecipeManageComponent implements OnInit {
         ingredients.removeAt(ingredientIndex);
     }
 
-    private populateForm(recipeData: any): void {
+    private populateForm(recipeData: Recipe): void {
         this.recipeForm.patchValue({
             name: recipeData.name,
-            description: recipeData.description,
-            prepTime: recipeData.prepTime,
-            cookTime: recipeData.cookTime,
+            description: recipeData.description ?? '',
+            category: recipeData.category ?? null,
+            imageUrl: recipeData.imageUrl ?? null,
+            prepTime: recipeData.prepTime ?? null,
+            cookTime: recipeData.cookTime ?? null,
             servings: recipeData.servings,
+            visibility: recipeData.visibility,
         });
 
-        recipeData.steps.forEach((step: any) => {
-            const stepGroup = new FormGroup<StepFormData>({
-                description: new FormControl(step.description, [Validators.required]),
-                ingredients: new FormArray<FormGroup<FormGroupControls<IngredientFormValues>>>([]),
-            });
+        this.resetSteps();
 
-            step.ingredients.forEach((ingredient: IngredientFormValues) => {
-                (stepGroup.controls.ingredients).push(
-                    new FormGroup<IngredientFormData>({
-                        food: new FormControl(ingredient.food, [Validators.required]),
-                        amount: new FormControl(ingredient.amount, [Validators.required, Validators.min(0.01)]),
-                    })
-                );
-            });
+        if (recipeData.steps.length === 0) {
+            this.addStep();
+            return;
+        }
 
-            this.steps.push(stepGroup);
+        recipeData.steps.forEach(step => {
+            const stepValue: StepFormValues = {
+                description: step.instruction,
+                ingredients: step.ingredients
+                    .map(ingredient => this.mapIngredientToFormValue(ingredient))
+                    .filter(Boolean) as IngredientFormValues[],
+            };
+            this.steps.push(this.createStepGroup(stepValue));
         });
+    }
+
+    private resetSteps(): void {
+        while (this.steps.length > 0) {
+            this.steps.removeAt(0);
+        }
+    }
+
+    private createStepGroup(step?: StepFormValues): FormGroup<StepFormData> {
+        const ingredientValues = step?.ingredients?.length
+            ? step.ingredients
+            : [{ food: null, amount: null }];
+
+        return new FormGroup<StepFormData>({
+            description: new FormControl(step?.description ?? '', {
+                nonNullable: true,
+                validators: [Validators.required],
+            }),
+            ingredients: new FormArray<FormGroup<IngredientFormData>>(
+                ingredientValues.map(ingredient => this.createIngredientGroup(ingredient.food, ingredient.amount)),
+                nonEmptyArrayValidator(),
+            ),
+        });
+    }
+
+    private createIngredientGroup(food: Product | null = null, amount: number | null = null): FormGroup<IngredientFormData> {
+        return new FormGroup<IngredientFormData>({
+            food: new FormControl(food, [Validators.required]),
+            amount: new FormControl(amount, [Validators.required, Validators.min(0.01)]),
+        });
+    }
+
+    private mapIngredientToFormValue(ingredient: RecipeIngredient): IngredientFormValues | null {
+        const product = this.buildIngredientProduct(ingredient);
+        if (!product) {
+            return null;
+        }
+
+        return {
+            food: product,
+            amount: ingredient.amount,
+        };
+    }
+
+    private buildIngredientProduct(ingredient: RecipeIngredient): Product | null {
+        if (!ingredient.productId) {
+            return null;
+        }
+
+        const rawUnit = ingredient.productBaseUnit as MeasurementUnit | string | undefined;
+        const unit = Object.values(MeasurementUnit).includes(rawUnit as MeasurementUnit)
+            ? (rawUnit as MeasurementUnit)
+            : MeasurementUnit.G;
+
+        const product: Product = {
+            id: ingredient.productId,
+            name: ingredient.productName ?? this.translateService.instant('RECIPE_MANAGE.UNKNOWN_PRODUCT'),
+            baseUnit: unit,
+            barcode: null,
+            brand: null,
+            category: null,
+            description: null,
+            imageUrl: null,
+            baseAmount: 100,
+            caloriesPerBase: 0,
+            proteinsPerBase: 0,
+            fatsPerBase: 0,
+            carbsPerBase: 0,
+            fiberPerBase: 0,
+            usageCount: 0,
+            visibility: ProductVisibility.Private,
+            createdAt: new Date(),
+            isOwnedByCurrentUser: true,
+        };
+
+        return product;
     }
 
     public onSubmit(): void {
         this.markFormGroupTouched(this.recipeForm);
 
-        if (this.recipeForm.valid) {
-            const recipeData = this.prepareRecipeDto();
-            const recipe = this.recipe();
+        if (!this.recipeForm.valid) {
+            this.setGlobalError('FORM_ERRORS.UNKNOWN');
+            return;
+        }
+
+        const recipeData = this.prepareRecipeDto();
+        const existingRecipe = this.recipe();
+
+        this.clearGlobalError();
+
+        if (existingRecipe) {
+            this.updateRecipe(existingRecipe.id, recipeData);
+        } else {
             this.addRecipe(recipeData);
-            /*recipe
-                ? this.updateRecipe(recipeData.id, recipeData)
-                : this.addRecipe(recipeData);*/
         }
     }
 
-    private async addRecipe(recipeData: RecipeDto): Promise<void> {
-        this.recipeService.create(recipeData).subscribe({
-            next: response => this.handleSubmitResponse(response),
-        });
+    private addRecipe(recipeData: RecipeDto): void {
+        this.isSubmitting.set(true);
+        this.recipeService
+            .create(recipeData)
+            .pipe(finalize(() => this.isSubmitting.set(false)))
+            .subscribe({
+                next: recipe => this.handleSubmitResponse(recipe),
+                error: error => this.handleSubmitError(error),
+            });
     }
 
-    private async handleSubmitResponse(response: RecipeDto | null): Promise<void> {
-        if (response) {
-            if (!this.recipe()) {
-                this.recipeForm.reset();
-            }
-            //await this.showConfirmDialog();
-        }
+    private updateRecipe(id: string, recipeData: RecipeDto): void {
+        this.isSubmitting.set(true);
+        this.recipeService
+            .update(id, recipeData)
+            .pipe(finalize(() => this.isSubmitting.set(false)))
+            .subscribe({
+                next: recipe => this.handleSubmitResponse(recipe),
+                error: error => this.handleSubmitError(error),
+            });
     }
 
-    private getRecipeData(): any {
-        return null;
+    private async handleSubmitResponse(_response: Recipe): Promise<void> {
+        this.clearGlobalError();
+        await this.navigationService.navigateToRecipeList();
     }
 
     private markFormGroupTouched(formGroup: FormGroup | FormArray): void {
@@ -282,11 +365,12 @@ export class RecipeManageComponent implements OnInit {
     }
 
     private handleSubmitError(error?: HttpErrorResponse): void {
-        this.setGlobalError('FORM_ERRORS.UNKNOWN');
+        const message = error?.error?.message ?? this.translateService.instant('FORM_ERRORS.UNKNOWN');
+        this.setGlobalError(message, false);
     }
 
-    private setGlobalError(errorKey: string): void {
-        this.globalError.set(this.translateService.instant(errorKey));
+    private setGlobalError(message: string, translate: boolean = true): void {
+        this.globalError.set(translate ? this.translateService.instant(message) : message);
     }
 
     private clearGlobalError(): void {
@@ -296,35 +380,33 @@ export class RecipeManageComponent implements OnInit {
     private prepareRecipeDto(): RecipeDto {
         const formValue = this.recipeForm.value as RecipeFormValues;
 
+        const steps = formValue.steps
+            .map(step => {
+                const ingredients = step.ingredients
+                    .filter(ingredient => !!ingredient.food)
+                    .map(ingredient => ({
+                        productId: ingredient.food!.id,
+                        amount: ingredient.amount ?? 0,
+                    }));
+
+                return {
+                    description: step.description,
+                    ingredients,
+                };
+            })
+            .filter(step => step.ingredients.length > 0);
+
         return {
             name: formValue.name,
-            description: formValue.description || undefined,
+            description: formValue.description || null,
+            category: formValue.category || null,
+            imageUrl: formValue.imageUrl || null,
             prepTime: formValue.prepTime ?? 0,
             cookTime: formValue.cookTime ?? 0,
             servings: formValue.servings,
-            steps: formValue.steps.map(step => ({
-                description: step.description,
-                ingredients: step.ingredients.map(ingredient => ({
-                    foodId: ingredient.food?.id ?? '',
-                    amount: ingredient.amount ?? 0,
-                })),
-            })),
+            visibility: formValue.visibility ?? RecipeVisibility.Private,
+            steps,
         };
-
-        /*return {
-            name: formValue.name.value,
-            description: formValue.description.value || undefined,
-            prepTime: formValue.prepTime.value ?? 0,
-            cookTime: formValue.cookTime.value ?? 0,
-            servings: formValue.servings.value ?? 0,
-            steps: formValue.steps.value.map(step => ({
-                description: step.description!,
-                ingredients: step.ingredients?.map(ingredient => ({
-                    foodId: ingredient.food!.id,
-                    amount: ingredient.amount!,
-                } as RecipeIngredientDto)),
-            } as RecipeStepDto)),
-        };*/
     }
 
 }
@@ -332,9 +414,12 @@ export class RecipeManageComponent implements OnInit {
 interface RecipeFormValues {
     name: string;
     description: string | null;
+    category: string | null;
+    imageUrl: string | null;
     prepTime: number | null;
     cookTime: number | null;
     servings: number;
+    visibility: RecipeVisibility;
     steps: StepFormValues[];
 }
 

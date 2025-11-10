@@ -45,6 +45,18 @@ export class NavigationService {
         await this.router.navigate([`/consumptions/${id}/edit`]);
     }
 
+    public async navigateToRecipeList(): Promise<void> {
+        await this.router.navigate(['/recipes']);
+    }
+
+    public async navigateToRecipeAdd(): Promise<void> {
+        await this.router.navigate(['/recipes/add']);
+    }
+
+    public async navigateToRecipeEdit(id: string): Promise<void> {
+        await this.router.navigate([`/recipes/${id}/edit`]);
+    }
+
     public async navigateToStatistics(): Promise<void> {
         await this.router.navigate(['/statistics']);
     }

@@ -12,8 +12,8 @@
     box-sizing: border-box;
 
     &__details {
-        display: flex;
-        flex-direction: column;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
         gap: @gap-m;
     }
 
@@ -97,6 +97,24 @@
         flex-direction: column;
     }
 
+    &__error {
+        padding: @gap-s;
+        border-radius: @border-radius-m;
+        background: #fdecee;
+        color: #b3261e;
+        font-weight: 500;
+    }
+
+    &__inline-group {
+        display: flex;
+        flex-direction: column;
+        gap: @gap-xs;
+    }
+
+    &__visibility {
+        max-width: 320px;
+    }
+
     &__serving {
         display: flex;
         gap: @gap-m;
@@ -113,9 +131,9 @@
     }
 
     &__actions {
-        .food-manage__action-button {
-            width: 100%;
-        }
+        display: flex;
+        justify-content: flex-end;
+        margin-top: @gap-m;
     }
 
     &__dialog {

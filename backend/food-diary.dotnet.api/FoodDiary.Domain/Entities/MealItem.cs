@@ -14,7 +14,7 @@ public class MealItem : Entity<int>
 
     // XOR: либо ProductId, либо RecipeId
     public ProductId? ProductId { get; private set; }
-    public int? RecipeId { get; private set; }
+    public RecipeId? RecipeId { get; private set; }
 
     public double Amount { get; private set; }
 
@@ -43,7 +43,7 @@ public class MealItem : Entity<int>
     }
 
     // Factory method для добавления рецепта (блюда)
-    internal static MealItem CreateWithRecipe(int mealId, int recipeId, double servings)
+    internal static MealItem CreateWithRecipe(int mealId, RecipeId recipeId, double servings)
     {
         ValidateAmount(servings);
 

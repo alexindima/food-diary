@@ -186,8 +186,8 @@ export class UserManageComponent implements OnInit {
 
         const formValue = this.changePasswordForm.value;
         const payload: ChangePasswordRequest = {
-            currentPassword: formValue.currentPassword ?? '',
-            newPassword: formValue.newPassword ?? '',
+            currentPassword: formValue.currentPassword?.trim() ?? '',
+            newPassword: formValue.newPassword?.trim() ?? '',
         };
 
         this.isPasswordSubmitting.set(true);

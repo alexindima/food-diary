@@ -8,21 +8,19 @@ namespace FoodDiary.Domain.Entities;
 /// Прием пищи - корень агрегата
 /// Управляет коллекцией MealItems (продуктов и блюд)
 /// </summary>
-public class Meal : AggregateRoot<int>
-{
+public sealed class Meal : AggregateRoot<int> {
     public UserId UserId { get; private set; }
     public DateTime Date { get; private set; } = DateTime.UtcNow;
     public MealType? MealType { get; private set; }
     public string? Comment { get; private set; }
 
     // Navigation properties
-    public virtual User User { get; private set; } = null!;
+    public User User { get; private set; } = null!;
     private readonly List<MealItem> _items = new();
-    public virtual IReadOnlyCollection<MealItem> Items => _items.AsReadOnly();
+    public IReadOnlyCollection<MealItem> Items => _items.AsReadOnly();
 
     // Конструктор для EF Core
-    private Meal()
-    {
+    private Meal() {
         _items = new List<MealItem>();
     }
 
@@ -31,10 +29,8 @@ public class Meal : AggregateRoot<int>
         UserId userId,
         DateTime date,
         MealType? mealType = null,
-        string? comment = null)
-    {
-        var meal = new Meal
-        {
+        string? comment = null) {
+        var meal = new Meal {
             UserId = userId,
             Date = date,
             MealType = mealType,
@@ -44,20 +40,17 @@ public class Meal : AggregateRoot<int>
         return meal;
     }
 
-    public void UpdateComment(string? comment)
-    {
+    public void UpdateComment(string? comment) {
         Comment = comment;
         SetModified();
     }
 
-    public void UpdateDate(DateTime date)
-    {
+    public void UpdateDate(DateTime date) {
         Date = date;
         SetModified();
     }
 
-    public void UpdateMealType(MealType? mealType)
-    {
+    public void UpdateMealType(MealType? mealType) {
         MealType = mealType;
         SetModified();
     }
@@ -65,8 +58,7 @@ public class Meal : AggregateRoot<int>
     /// <summary>
     /// Добавить продукт в прием пищи
     /// </summary>
-    public MealItem AddProduct(ProductId productId, double amount)
-    {
+    public MealItem AddProduct(ProductId productId, double amount) {
         var item = MealItem.CreateWithProduct(Id, productId, amount);
         _items.Add(item);
         SetModified();
@@ -76,16 +68,14 @@ public class Meal : AggregateRoot<int>
     /// <summary>
     /// Добавить блюдо (рецепт) в прием пищи
     /// </summary>
-    public MealItem AddRecipe(int recipeId, double servings)
-    {
+    public MealItem AddRecipe(RecipeId recipeId, double servings) {
         var item = MealItem.CreateWithRecipe(Id, recipeId, servings);
         _items.Add(item);
         SetModified();
         return item;
     }
 
-    public void RemoveItem(MealItem item)
-    {
+    public void RemoveItem(MealItem item) {
         _items.Remove(item);
         SetModified();
     }

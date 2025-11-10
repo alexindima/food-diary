@@ -23,6 +23,21 @@ public static class Errors
             message);
     }
 
+    public static class Recipe
+    {
+        public static Error NotFound(Guid id) => new(
+            "Recipe.NotFound",
+            $"Recipe with ID {id} was not found.");
+
+        public static Error NotAccessible(Guid id) => new(
+            "Recipe.NotAccessible",
+            $"Recipe with ID {id} does not belong to the current user or was not found.");
+
+        public static Error InvalidData(string message) => new(
+            "Recipe.InvalidData",
+            message);
+    }
+
     public static class User
     {
         public static Error NotFound(Guid id) => new(

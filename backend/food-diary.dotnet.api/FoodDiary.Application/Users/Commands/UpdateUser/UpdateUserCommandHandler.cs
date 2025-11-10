@@ -16,14 +16,14 @@ public class UpdateUserCommandHandler(IUserRepository userRepository)
         }
 
         user.UpdateProfile(
-            username: command.Username,
-            firstName: command.FirstName,
-            lastName: command.LastName,
+            username: Normalize(command.Username),
+            firstName: Normalize(command.FirstName),
+            lastName: Normalize(command.LastName),
             birthDate: command.BirthDate,
-            gender: command.Gender,
+            gender: Normalize(command.Gender),
             weight: command.Weight,
             height: command.Height,
-            profileImage: command.ProfileImage
+            profileImage: Normalize(command.ProfileImage)
         );
 
         if (command.IsActive.HasValue) {
@@ -33,14 +33,11 @@ public class UpdateUserCommandHandler(IUserRepository userRepository)
                 user.Deactivate();
         }
 
-        // TODO: Добавить метод для изменения пароля в User entity
-        // if (command.Password != null)
-        // {
-        //     user.UpdatePassword(_passwordHasher.Hash(command.Password));
-        // }
-
         await userRepository.UpdateAsync(user);
 
         return Result.Success(user.ToResponse());
     }
+
+    private static string? Normalize(string? value) =>
+        string.IsNullOrWhiteSpace(value) ? null : value.Trim();
 }
