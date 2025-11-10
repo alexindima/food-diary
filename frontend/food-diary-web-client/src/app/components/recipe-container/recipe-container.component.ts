@@ -3,12 +3,9 @@ import { RouterOutlet } from '@angular/router';
 
 @Component({
     selector: 'fd-recipe-container',
-    imports: [
-        RouterOutlet
-    ],
     templateUrl: './recipe-container.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    styleUrls: ['./recipe-container.component.less'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [RouterOutlet],
 })
-export class RecipeContainerComponent {
-
-}
+export class RecipeContainerComponent {}

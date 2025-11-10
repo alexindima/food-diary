@@ -63,7 +63,7 @@ export class AuthService extends ApiService {
     public refreshToken(): Observable<AuthResponse | null> {
         const refreshToken = this.getRefreshToken();
         if (!refreshToken) {
-            this.onLogout();
+            void this.onLogout(true);
             return of(null);
         }
 
@@ -71,22 +71,28 @@ export class AuthService extends ApiService {
             tap(response => {
                 if (response) {
                     this.setToken(response.accessToken);
+                    this.setRefreshToken(response.refreshToken);
                     this.authTokenSignal.set(response.accessToken);
                 }
             }),
             catchError(error => {
                 console.error('refreshToken error', error);
-                this.onLogout();
+                void this.onLogout(true);
                 return of(null);
             }),
         );
     }
 
-    public async onLogout(): Promise<void> {
+    public async onLogout(redirectToAuth = false): Promise<void> {
         this.authTokenSignal.set(null);
         this.userSignal.set(null);
         this.clearToken();
         this.clearUserId();
+        this.clearRefreshToken();
+        if (redirectToAuth) {
+            await this.navigationService.navigateToAuth('login');
+            return;
+        }
         await this.navigationService.navigateToHome();
     }
 
@@ -139,6 +145,10 @@ export class AuthService extends ApiService {
 
     private getRefreshToken(): string | null {
         return localStorage.getItem('refreshToken');
+    }
+
+    private clearRefreshToken(): void {
+        localStorage.removeItem('refreshToken');
     }
 
     public getUserId(): string | null {

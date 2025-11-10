@@ -50,13 +50,17 @@
         @if (recipeData.items().length > 0) {
             <div class="recipe-list__items">
                 @for (recipe of recipeData.items(); track recipe.id) {
-                    <fd-card
-                        class="recipe-card"
-                        (click)="onRecipeClick(recipe)"
-                    >
-                        <div class="recipe-card__header">
-                            <div class="recipe-card__info">
-                                <div class="recipe-card__name">{{ recipe.name }}</div>
+                    <fd-card (click)="onRecipeClick(recipe)">
+                        <div class="recipe-card">
+                            <div class="recipe-card__header">
+                                <div class="recipe-card__title">
+                                    <span class="recipe-card__name">{{ recipe.name }}</span>
+                                    @if (recipe.category) {
+                                        <span class="recipe-card__category">
+                                            {{ recipe.category }}
+                                        </span>
+                                    }
+                                </div>
                                 <div class="recipe-card__badges">
                                     @if (recipe.isOwnedByCurrentUser) {
                                         <fd-badge
@@ -71,22 +75,15 @@
                                         [icon]="recipe.isOwnedByCurrentUser ? '@tui.user-check' : '@tui.users'"
                                     ></fd-badge>
                                 </div>
-                                @if (recipe.category) {
-                                    <div class="recipe-card__category">
-                                        {{ recipe.category }}
-                                    </div>
-                                }
                             </div>
-                            <div class="recipe-card__meta">
-                                <span>
+                            <div class="recipe-card__info">
+                                <span class="recipe-card__servings">
                                     {{ 'RECIPE_LIST.SERVINGS' | translate }}: {{ recipe.servings }}
                                 </span>
-                                <span>
-                                    {{ 'RECIPE_LIST.TOTAL_CALORIES' | translate }}: {{ recipe.totalCalories ?? '—' }}
+                                <span class="recipe-card__calories">
+                                    {{ 'RECIPE_LIST.TOTAL_CALORIES' | translate }}: {{ recipe.totalCalories ?? '-' }}
                                 </span>
                             </div>
-                        </div>
-                        <div class="recipe-card__body">
                             <p class="recipe-card__description">
                                 {{ recipe.description || ('RECIPE_LIST.NO_DESCRIPTION' | translate) }}
                             </p>

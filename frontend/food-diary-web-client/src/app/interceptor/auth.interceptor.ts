@@ -19,7 +19,11 @@ export class AuthInterceptor implements HttpInterceptor {
 
         return next.handle(request).pipe(
             catchError((error: HttpErrorResponse) => {
-                if (error.status === 401 && this.isTokenExpiredError(error)) {
+                if (error.status !== 401 || this.isAuthRequest(req.url)) {
+                    return throwError(() => error);
+                }
+
+                if (this.isTokenExpiredError(error)) {
                     return this.authService.refreshToken().pipe(
                         switchMap(newAuthResponse => {
                             if (newAuthResponse) {
@@ -28,11 +32,13 @@ export class AuthInterceptor implements HttpInterceptor {
                                 });
                                 return next.handle(newRequest);
                             }
+                            void this.authService.onLogout(true);
                             return throwError(() => error);
                         }),
                     );
                 }
 
+                void this.authService.onLogout(true);
                 return throwError(() => error);
             }),
         );
@@ -40,5 +46,9 @@ export class AuthInterceptor implements HttpInterceptor {
 
     private isTokenExpiredError(error: HttpErrorResponse): boolean {
         return error.error?.data?.message === 'Token has expired';
+    }
+
+    private isAuthRequest(url: string): boolean {
+        return url.toLowerCase().includes('/auth/');
     }
 }
