@@ -52,9 +52,16 @@ export class ProductListPageComponent extends ProductListBaseComponent implement
     protected override async onProductClick(product: Product): Promise<void> {
         this.dialog(product).subscribe({
             next: data => {
-                if (data.action === 'Edit') {
-                    this.navigationService.navigateToProductEdit(data.id);
-                } else if (data.action === 'Delete') {
+                if (!data) {
+                    return;
+                }
+
+                if (data.action === 'Edit' || data.action === 'Duplicate') {
+                    void this.navigationService.navigateToProductEdit(data.id);
+                    return;
+                }
+
+                if (data.action === 'Delete') {
                     if (!product.isOwnedByCurrentUser || this.isDeleteInProgress) {
                         return;
                     }

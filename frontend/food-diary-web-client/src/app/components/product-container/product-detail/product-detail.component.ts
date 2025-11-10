@@ -8,6 +8,7 @@ import {
     NutrientsSummaryConfig
 } from '../../shared/nutrients-summary/nutrients-summary.component';
 import { NutrientChartData } from '../../../types/charts.data';
+import { ProductService } from '../../../services/product.service';
 
 @Component({
     selector: 'fd-product-detail',
@@ -19,6 +20,7 @@ import { NutrientChartData } from '../../../types/charts.data';
 export class ProductDetailComponent {
     public readonly context = injectContext<TuiDialogContext<ProductDetailActionResult, Product>>();
     private readonly dialogService = inject(TuiDialogService);
+    private readonly productService = inject(ProductService);
 
     public product: Product;
 
@@ -49,6 +51,7 @@ export class ProductDetailComponent {
     public nutrientChartData: NutrientChartData;
 
     @ViewChild('confirmDialog') private confirmDialog!: TemplateRef<TuiDialogContext<boolean, void>>;
+    public isDuplicateInProgress = false;
 
     public get isDeleteDisabled(): boolean {
         return !this.product.isOwnedByCurrentUser || this.product.usageCount > 0;
@@ -56,6 +59,10 @@ export class ProductDetailComponent {
 
     public get isEditDisabled(): boolean {
         return !this.product.isOwnedByCurrentUser || this.product.usageCount > 0;
+    }
+
+    public get canModify(): boolean {
+        return !this.isEditDisabled;
     }
 
     public get warningMessage(): string | null {
@@ -95,6 +102,22 @@ export class ProductDetailComponent {
         this.showConfirmDialog();
     }
 
+    public onDuplicate(): void {
+        if (this.isDuplicateInProgress) {
+            return;
+        }
+
+        this.isDuplicateInProgress = true;
+        this.productService.duplicate(this.product.id).subscribe({
+            next: duplicated => {
+                this.context.completeWith(new ProductDetailActionResult(duplicated.id, 'Duplicate'));
+            },
+            error: () => {
+                this.isDuplicateInProgress = false;
+            },
+        });
+    }
+
     protected showConfirmDialog(): void {
         this.dialogService
             .open(this.confirmDialog, {
@@ -117,4 +140,4 @@ class ProductDetailActionResult {
     ) {}
 }
 
-type ProductDetailAction = 'Edit' | 'Delete';
+type ProductDetailAction = 'Edit' | 'Delete' | 'Duplicate';

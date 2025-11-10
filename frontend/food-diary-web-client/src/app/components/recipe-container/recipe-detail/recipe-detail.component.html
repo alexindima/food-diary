@@ -24,6 +24,8 @@
         [calories]="calories"
         [nutrientChartData]="nutrientChartData"
         [config]="nutrientSummaryConfig"
+        [fiberValue]="recipe.totalFiber ?? null"
+        fiberUnitKey="PRODUCT_AMOUNT_UNITS_SHORT.G"
     ></fd-nutrients-summary>
 
     <div class="recipe-detail__steps">
@@ -51,25 +53,37 @@
     </div>
 
     <div class="recipe-detail__actions">
-        <button
-            tuiButton
-            size="m"
-            iconStart="@tui.pen-line"
-            [disabled]="isEditDisabled"
-            (click)="onEdit()"
-        >
-            {{ 'RECIPE_DETAIL.EDIT_BUTTON' | translate }}
-        </button>
-        <button
-            tuiButton
-            size="m"
-            appearance="accent"
-            iconStart="@tui.trash-2"
-            [disabled]="isDeleteDisabled"
-            (click)="onDelete()"
-        >
-            {{ 'RECIPE_DETAIL.DELETE_BUTTON' | translate }}
-        </button>
+        @if (canModify) {
+            <button
+                tuiButton
+                size="m"
+                iconStart="@tui.pen-line"
+                (click)="onEdit()"
+            >
+                {{ 'RECIPE_DETAIL.EDIT_BUTTON' | translate }}
+            </button>
+            <button
+                tuiButton
+                size="m"
+                appearance="accent"
+                iconStart="@tui.trash-2"
+                [disabled]="isDeleteDisabled"
+                (click)="onDelete()"
+            >
+                {{ 'RECIPE_DETAIL.DELETE_BUTTON' | translate }}
+            </button>
+        } @else {
+            <button
+                tuiButton
+                size="m"
+                appearance="secondary"
+                iconStart="@tui.copy"
+                [disabled]="isDuplicateInProgress"
+                (click)="onDuplicate()"
+            >
+                {{ 'RECIPE_DETAIL.DUPLICATE_BUTTON' | translate }}
+            </button>
+        }
     </div>
 
     @if (warningMessage) {

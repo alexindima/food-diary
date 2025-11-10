@@ -2,18 +2,16 @@
 
 .modal {
     background-color: @color-background;
-}
-
-.modal__divider {
-    border: none;
-    border-top: 1px solid #ddd;
+    display: flex;
+    flex-direction: column;
+    gap: @gap-xs;
 }
 
 .modal__title {
     font-size: 1.8em;
     font-weight: bold;
-    margin-bottom: @gap-l;
-    text-align: center;
+    margin: 0;
+    text-align: left;
 }
 
 .modal__info {
@@ -36,7 +34,7 @@
 .modal__footer {
     display: flex;
     flex-direction: column;
-    margin-top: @gap-l;
+    margin-top: @gap-xxs;
 
     &-action-wrapper {
         display: flex;

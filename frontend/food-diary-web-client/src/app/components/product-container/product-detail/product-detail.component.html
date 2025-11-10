@@ -5,7 +5,6 @@
             [{{ product.barcode }}]
         }
     </h2>
-    <hr class="modal__divider" />
     <div class="modal__body">
         <div class="modal__info">
             @if (product.category) {
@@ -23,29 +22,43 @@
             [calories]="calories"
             [nutrientChartData]="nutrientChartData"
             [config]="nutrientSummaryConfig"
+            [fiberValue]="product.fiberPerBase"
+            [fiberUnitKey]="'PRODUCT_AMOUNT_UNITS_SHORT.' + product.baseUnit"
         ></fd-nutrients-summary>
     </div>
     <div class="modal__footer">
         <div class="modal__footer-action-wrapper action-wrapper">
-            <button
-                class="action-wrapper__button"
-                tuiButton
-                size="m"
-                iconStart="@tui.pen-line"
-                [disabled]="isEditDisabled"
-                (click)="onEdit()"
-            >
-                {{ 'PRODUCT_DETAIL.EDIT_BUTTON' | translate }}
-            </button>
-            <button
-                class="action-wrapper__button action-wrapper__button--accent"
-                tuiButton
-                size="m"
-                appearance="accent"
-                iconStart="@tui.trash-2"
-                [disabled]="isDeleteDisabled"
-                (click)="onDelete()"
-            ></button>
+            @if (canModify) {
+                <button
+                    class="action-wrapper__button"
+                    tuiButton
+                    size="m"
+                    iconStart="@tui.pen-line"
+                    (click)="onEdit()"
+                >
+                    {{ 'PRODUCT_DETAIL.EDIT_BUTTON' | translate }}
+                </button>
+                <button
+                    class="action-wrapper__button action-wrapper__button--accent"
+                    tuiButton
+                    size="m"
+                    appearance="accent"
+                    iconStart="@tui.trash-2"
+                    (click)="onDelete()"
+                ></button>
+            } @else {
+                <button
+                    class="action-wrapper__button"
+                    tuiButton
+                    size="m"
+                    appearance="secondary"
+                    iconStart="@tui.copy"
+                    [disabled]="isDuplicateInProgress"
+                    (click)="onDuplicate()"
+                >
+                    {{ 'PRODUCT_DETAIL.DUPLICATE_BUTTON' | translate }}
+                </button>
+            }
         </div>
         @if (warningMessage) {
             <p class="modal__footer-warning-message">{{ warningMessage | translate }}</p>

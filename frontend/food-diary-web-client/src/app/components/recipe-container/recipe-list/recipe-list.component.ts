@@ -172,7 +172,13 @@ export class RecipeListComponent implements OnInit {
 
     private handleDialogResult(result: RecipeDetailActionResult, recipe: Recipe): void {
         if (result.action === 'Edit') {
-            this.onEditRecipe(recipe);
+            void this.onEditRecipe(recipe);
+            return;
+        }
+
+        if (result.action === 'Duplicate') {
+            void this.navigationService.navigateToRecipeEdit(result.id);
+            return;
         }
 
         if (result.action === 'Delete') {

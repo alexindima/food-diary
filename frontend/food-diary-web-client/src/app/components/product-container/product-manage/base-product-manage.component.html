@@ -207,6 +207,12 @@
             [calories]="calories()"
             [nutrientChartData]="nutrientChartData()"
             [config]="nutrientSummaryConfig"
+            [fiberValue]="productForm.controls.fiberPerBase.value ?? 0"
+            [fiberUnitKey]="
+                productForm.controls.baseUnit.value
+                    ? 'PRODUCT_AMOUNT_UNITS_SHORT.' + productForm.controls.baseUnit.value
+                    : 'PRODUCT_AMOUNT_UNITS_SHORT.G'
+            "
         ></fd-nutrients-summary>
 
         <div class="product-manage__actions">

@@ -2,6 +2,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using FoodDiary.Application.Products.Mappings;
 using FoodDiary.Application.Products.Commands.DeleteProduct;
+using FoodDiary.Application.Products.Commands.DuplicateProduct;
 using FoodDiary.Application.Products.Queries.GetProductById;
 using FoodDiary.Application.Products.Queries.GetProducts;
 using FoodDiary.Contracts.Products;
@@ -53,6 +54,14 @@ public class ProductsController(ISender mediator) : AuthorizedController(mediato
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> Delete(Guid id) {
         var command = new DeleteProductCommand(CurrentUserId, new ProductId(id));
+        var result = await Mediator.Send(command);
+        return result.ToActionResult();
+    }
+
+    [HttpPost("{id:guid}/duplicate")]
+    public async Task<IActionResult> Duplicate(Guid id)
+    {
+        var command = new DuplicateProductCommand(CurrentUserId, new ProductId(id));
         var result = await Mediator.Send(command);
         return result.ToActionResult();
     }

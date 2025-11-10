@@ -62,4 +62,13 @@ export class ProductService extends ApiService {
             }),
         );
     }
+
+    public duplicate(id: string): Observable<Product> {
+        return this.post<Product>(`${id}/duplicate`, {}).pipe(
+            catchError((error: HttpErrorResponse) => {
+                console.error('Duplicate product error', error);
+                return throwError(() => error);
+            }),
+        );
+    }
 }

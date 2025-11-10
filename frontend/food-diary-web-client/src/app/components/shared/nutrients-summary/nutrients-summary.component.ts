@@ -36,6 +36,8 @@ export class NutrientsSummaryComponent implements OnInit {
 
     public calories = input.required<number>();
     public nutrientChartData = input.required<NutrientChartData>();
+    public fiberValue = input<number | null>(null);
+    public fiberUnitKey = input<string>('PRODUCT_AMOUNT_UNITS_SHORT.G');
 
     @Input() public config: NutrientsSummaryConfig = {};
     public mergedConfig!: NutrientsSummaryConfigInternal;

@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using FoodDiary.Application.Recipes.Commands.CreateRecipe;
 using FoodDiary.Application.Recipes.Commands.DeleteRecipe;
 using FoodDiary.Application.Recipes.Commands.UpdateRecipe;
+using FoodDiary.Application.Recipes.Commands.DuplicateRecipe;
 using FoodDiary.Application.Recipes.Mappings;
 using FoodDiary.Application.Recipes.Queries.GetRecipeById;
 using FoodDiary.Application.Recipes.Queries.GetRecipes;
@@ -58,6 +59,14 @@ public class RecipesController(ISender mediator) : AuthorizedController(mediator
     public async Task<IActionResult> Delete(Guid id)
     {
         var command = new DeleteRecipeCommand(CurrentUserId, new RecipeId(id));
+        var result = await Mediator.Send(command);
+        return result.ToActionResult();
+    }
+
+    [HttpPost("{id:guid}/duplicate")]
+    public async Task<IActionResult> Duplicate(Guid id)
+    {
+        var command = new DuplicateRecipeCommand(CurrentUserId, new RecipeId(id));
         var result = await Mediator.Send(command);
         return result.ToActionResult();
     }

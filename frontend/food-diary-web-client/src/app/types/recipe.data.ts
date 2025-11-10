@@ -23,6 +23,7 @@ export interface Recipe {
     totalProteins?: number | null;
     totalFats?: number | null;
     totalCarbs?: number | null;
+    totalFiber?: number | null;
     steps: RecipeStep[];
     nutrientChartData?: NutrientChartData;
 }

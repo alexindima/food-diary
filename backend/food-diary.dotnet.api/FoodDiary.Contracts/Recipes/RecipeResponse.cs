@@ -16,6 +16,7 @@ public record RecipeResponse(
     double? TotalProteins,
     double? TotalFats,
     double? TotalCarbs,
+    double? TotalFiber,
     string Visibility,
     int UsageCount,
     DateTime CreatedAt,

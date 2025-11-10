@@ -196,6 +196,7 @@
         "UNKNOWN_INGREDIENT": "Ingredient",
         "EDIT_BUTTON": "Edit",
         "DELETE_BUTTON": "Delete",
+        "DUPLICATE_BUTTON": "Duplicate & edit",
         "WARNING_IN_USE": "Recipe is used in meals and cannot be removed.",
         "WARNING_NOT_OWNER": "Only the author can edit or delete this recipe.",
         "CONFIRM_DELETE": "Delete recipe",
@@ -209,6 +210,7 @@
         "USAGE_COUNT": "Usage Count:",
         "EDIT_BUTTON": "Edit",
         "DELETE_BUTTON": "Delete",
+        "DUPLICATE_BUTTON": "Duplicate & edit",
         "WARNING_MESSAGE": "This product is already used and cannot be modified.",
         "WARNING_NOT_OWNER": "You can only modify or delete products that you created.",
         "CONFIRM_DELETE_TITLE": "Are you sure you want to delete",
@@ -393,7 +395,8 @@
         "NUTRIENTS_SUMMARY": {
             "SUMMARY": "Summary",
             "CALORIES": "Calories",
-            "KKAL": "kcal"
+            "KKAL": "kcal",
+            "FIBER": "Fiber"
         }
     },
     "NOT_FOUND": {

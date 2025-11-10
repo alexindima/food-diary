@@ -68,4 +68,13 @@ export class RecipeService extends ApiService {
             }),
         );
     }
+
+    public duplicate(id: string): Observable<Recipe> {
+        return this.post<Recipe>(`${id}/duplicate`, {}).pipe(
+            catchError((error: HttpErrorResponse) => {
+                console.error('Duplicate recipe error', error);
+                return throwError(() => error);
+            }),
+        );
+    }
 }

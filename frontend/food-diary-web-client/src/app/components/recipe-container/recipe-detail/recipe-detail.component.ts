@@ -8,6 +8,7 @@ import {
     NutrientsSummaryConfig
 } from '../../shared/nutrients-summary/nutrients-summary.component';
 import { NutrientChartData } from '../../../types/charts.data';
+import { RecipeService } from '../../../services/recipe.service';
 
 @Component({
     selector: 'fd-recipe-detail',
@@ -19,6 +20,7 @@ import { NutrientChartData } from '../../../types/charts.data';
 export class RecipeDetailComponent {
     public readonly context = injectContext<TuiDialogContext<RecipeDetailActionResult, Recipe>>();
     private readonly dialogService = inject(TuiDialogService);
+    private readonly recipeService = inject(RecipeService);
 
     public readonly recipe: Recipe = this.context.data;
     public readonly calories: number = this.recipe.totalCalories ?? 0;
@@ -37,6 +39,7 @@ export class RecipeDetailComponent {
     };
 
     @ViewChild('confirmDialog') private confirmDialog!: TemplateRef<TuiDialogContext<boolean, void>>;
+    public isDuplicateInProgress = false;
 
     public get visibilityKey(): string {
         return `RECIPE_VISIBILITY.${this.recipe.visibility}`;
@@ -47,7 +50,11 @@ export class RecipeDetailComponent {
     }
 
     public get isEditDisabled(): boolean {
-        return !this.recipe.isOwnedByCurrentUser;
+        return !this.recipe.isOwnedByCurrentUser || this.recipe.usageCount > 0;
+    }
+
+    public get canModify(): boolean {
+        return !this.isEditDisabled;
     }
 
     public get warningMessage(): string | null {
@@ -76,6 +83,22 @@ export class RecipeDetailComponent {
         this.showConfirmDialog();
     }
 
+    public onDuplicate(): void {
+        if (this.isDuplicateInProgress) {
+            return;
+        }
+
+        this.isDuplicateInProgress = true;
+        this.recipeService.duplicate(this.recipe.id).subscribe({
+            next: duplicated => {
+                this.context.completeWith(new RecipeDetailActionResult(duplicated.id, 'Duplicate'));
+            },
+            error: () => {
+                this.isDuplicateInProgress = false;
+            },
+        });
+    }
+
     private showConfirmDialog(): void {
         this.dialogService
             .open(this.confirmDialog, {
@@ -90,7 +113,7 @@ export class RecipeDetailComponent {
     }
 }
 
-export type RecipeDetailAction = 'Edit' | 'Delete';
+export type RecipeDetailAction = 'Edit' | 'Delete' | 'Duplicate';
 
 export class RecipeDetailActionResult {
     public constructor(
