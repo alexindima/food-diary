@@ -1,0 +1,91 @@
+:host {
+    display: block;
+    width: 100%;
+}
+
+.recipe-detail {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-m, 1rem);
+    max-width: 720px;
+
+    &__title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin: 0;
+    }
+
+    &__meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--gap-s, 0.75rem);
+        color: var(--tui-text-02);
+        font-size: 0.9rem;
+    }
+
+    &__description {
+        margin: 0;
+        color: var(--tui-text-01);
+        line-height: 1.4;
+    }
+
+    &__steps-title {
+        margin: 0;
+        font-size: 1.1rem;
+        font-weight: 600;
+    }
+
+    &__steps-list {
+        margin: 0;
+        padding-left: 1.2rem;
+        display: flex;
+        flex-direction: column;
+        gap: var(--gap-s, 0.75rem);
+    }
+
+    &__step {
+        display: flex;
+        flex-direction: column;
+        gap: var(--gap-xs, 0.5rem);
+    }
+
+    &__step-instruction {
+        margin: 0;
+        font-weight: 600;
+    }
+
+    &__ingredients {
+        margin: 0;
+        padding-left: 1rem;
+        color: var(--tui-text-02);
+        font-size: 0.9rem;
+    }
+
+    &__actions {
+        display: flex;
+        gap: var(--gap-s, 0.75rem);
+        justify-content: flex-end;
+    }
+
+    &__warning {
+        margin: 0;
+        color: #b3261e;
+        font-weight: 500;
+    }
+
+    &__confirm {
+        display: flex;
+        flex-direction: column;
+        gap: var(--gap-m, 1rem);
+    }
+
+    &__confirm-name {
+        font-weight: 600;
+    }
+
+    &__confirm-buttons {
+        display: flex;
+        gap: var(--gap-s, 0.75rem);
+        justify-content: flex-end;
+    }
+}

@@ -21,6 +21,7 @@
         "LOGIN": "Вход",
         "REGISTER": "Регистрация",
         "PRODUCTS": "Продукты",
+        "RECIPES": "Рецепты",
         "CONSUMPTION": "Потребление",
         "STATISTICS": "Статистика",
         "USER": "Пользователь",
@@ -115,6 +116,16 @@
         "CARBS": "Углеводы",
         "DELETE_ERROR": "Не удалось удалить продукт. Попробуйте ещё раз."
     },
+    "PRODUCT_VISIBILITY": {
+        "Public": "Публичный",
+        "Private": "Приватный",
+        "PUBLIC": "Публичный",
+        "PRIVATE": "Приватный"
+    },
+    "PRODUCT_BADGE": {
+        "MY": "Мой продукт",
+        "SHARED": "Общий продукт"
+    },
     "RECIPE_LIST": {
         "TITLE": "Список рецептов",
         "SEARCH_TITLE": "Поиск:",
@@ -131,9 +142,15 @@
         "DELETE": "Удалить",
         "DELETE_ERROR": "Не удалось удалить рецепт. Попробуйте ещё раз."
     },
+    "RECIPE_BADGE": {
+        "MY": "Мой рецепт",
+        "SHARED": "Общий рецепт"
+    },
     "RECIPE_VISIBILITY": {
         "Public": "Публичный",
-        "Private": "Приватный"
+        "Private": "Приватный",
+        "PUBLIC": "Публичный",
+        "PRIVATE": "Приватный"
     },
     "RECIPE_MANAGE": {
         "ADD_TITLE": "Добавление рецепта",
@@ -167,6 +184,23 @@
         "DRAGGING_PLACEHOLDER": "Новая позиция",
         "SAVE_BUTTON": "Сохранить",
         "ADD_BUTTON": "Создать рецепт"
+    },
+    "RECIPE_DETAIL": {
+        "CATEGORY": "Категория",
+        "SERVINGS": "Порции",
+        "PREP_TIME": "Подготовка",
+        "COOK_TIME": "Готовка",
+        "MIN": "мин",
+        "USAGE_COUNT": "Использований",
+        "STEPS_TITLE": "Шаги ({{count}})",
+        "UNKNOWN_INGREDIENT": "Ингредиент",
+        "EDIT_BUTTON": "Редактировать",
+        "DELETE_BUTTON": "Удалить",
+        "WARNING_IN_USE": "Рецепт уже используется и не может быть удалён.",
+        "WARNING_NOT_OWNER": "Редактировать и удалять рецепт может только его автор.",
+        "CONFIRM_DELETE": "Удалить рецепт",
+        "CANCEL_BUTTON": "Отмена",
+        "CONFIRM_BUTTON": "Удалить"
     },
     "PRODUCT_DETAIL": {
         "BARCODE": "Штрихкод:",

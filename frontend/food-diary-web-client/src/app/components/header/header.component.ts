@@ -41,7 +41,7 @@ export class HeaderComponent implements OnInit {
             )
             .subscribe(() => {
                 if (this.router.url.startsWith('/profile')) {
-                    this.activeItemIndex = 4;
+                    this.activeItemIndex = 5;
                 }
             });
     }

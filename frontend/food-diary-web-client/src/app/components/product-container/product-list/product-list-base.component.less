@@ -17,21 +17,14 @@
 
     &__actions {
         display: flex;
-        align-items: center;
-        gap: @gap-xxl;
-        margin-bottom: @gap-l;
         flex-wrap: wrap;
-
-        @media @media-tablet {
-            flex-direction: column;
-            align-items: stretch;
-            gap: @gap-m;
-            margin-bottom: @gap-m;
-        }
+        gap: @gap-s;
+        align-items: center;
+        margin-bottom: @gap-m;
     }
 
     &__search {
-        width: 100%;
+        flex: 1 1 280px;
     }
 
     &__search-form {
@@ -43,7 +36,7 @@
     }
 
     &__add-button {
-        white-space: nowrap;
+        margin-left: auto;
     }
 
     &__toggle {
@@ -94,13 +87,13 @@
     &__header {
         display: flex;
         justify-content: space-between;
-        align-items: center;
+        flex-wrap: wrap;
+        gap: @gap-xs;
         margin-bottom: @gap-xs;
 
         @media @media-mobile {
             flex-direction: column;
             align-items: flex-start;
-            gap: @gap-xs;
         }
     }
 
@@ -113,6 +106,13 @@
     &__barcode {
         font-size: 0.9em;
         color: @color-text-additional;
+    }
+
+    &__badges {
+        display: flex;
+        gap: 0.35rem;
+        flex-wrap: wrap;
+        align-items: center;
     }
 
     &__info {

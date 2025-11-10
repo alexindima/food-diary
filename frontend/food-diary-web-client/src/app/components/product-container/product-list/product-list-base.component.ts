@@ -20,6 +20,7 @@ import { TuiTextfieldControllerModule } from '@taiga-ui/legacy';
 import { FormGroupControls } from '../../../types/common.data';
 import { BarcodeScannerComponent } from '../../shared/barcode-scanner/barcode-scanner.component';
 import { CardComponent } from '../../shared/card/card.component';
+import { BadgeComponent } from '../../shared/badge/badge.component';
 
 @Component({
     selector: 'fd-product-list-base',
@@ -38,6 +39,7 @@ import { CardComponent } from '../../shared/card/card.component';
         TranslatePipe,
         TuiIcon,
         CardComponent,
+        BadgeComponent,
     ],
 })
 export class ProductListBaseComponent implements OnInit {

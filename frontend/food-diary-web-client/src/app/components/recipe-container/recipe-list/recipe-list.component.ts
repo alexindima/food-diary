@@ -5,7 +5,7 @@ import { RecipeService } from '../../../services/recipe.service';
 import { NavigationService } from '../../../services/navigation.service';
 import { PagedData } from '../../../types/paged-data.data';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { TuiButton, TuiIcon, TuiLoader, TuiTextfieldComponent, TuiTextfieldDirective } from '@taiga-ui/core';
+import { TuiButton, TuiIcon, TuiLoader, TuiTextfieldComponent, TuiTextfieldDirective, tuiDialog } from '@taiga-ui/core';
 import { TuiPagination } from '@taiga-ui/kit';
 import { TuiSearchComponent } from '@taiga-ui/layout';
 import { TuiTextfieldControllerModule } from '@taiga-ui/legacy';
@@ -14,6 +14,8 @@ import { catchError, debounceTime, finalize, map, Observable, of, switchMap, tap
 import { HttpErrorResponse } from '@angular/common/http';
 import { FormGroupControls } from '../../../types/common.data';
 import { TuiAlertService } from '@taiga-ui/core';
+import { RecipeDetailComponent, RecipeDetailActionResult } from '../recipe-detail/recipe-detail.component';
+import { BadgeComponent } from '../../shared/badge/badge.component';
 
 @Component({
     selector: 'fd-recipe-list',
@@ -32,6 +34,7 @@ import { TuiAlertService } from '@taiga-ui/core';
         TuiButton,
         TuiIcon,
         CardComponent,
+        BadgeComponent,
     ],
 })
 export class RecipeListComponent implements OnInit {
@@ -47,6 +50,11 @@ export class RecipeListComponent implements OnInit {
     public currentPageIndex = 0;
     public searchForm: FormGroup<RecipeSearchFormGroup>;
     public isDeleting = false;
+
+    private readonly detailDialog = tuiDialog(RecipeDetailComponent, {
+        dismissible: true,
+        appearance: 'without-border-radius',
+    });
 
     public constructor() {
         this.searchForm = new FormGroup<RecipeSearchFormGroup>({
@@ -74,6 +82,17 @@ export class RecipeListComponent implements OnInit {
 
     public async onAddRecipeClick(): Promise<void> {
         await this.navigationService.navigateToRecipeAdd();
+    }
+
+    public onRecipeClick(recipe: Recipe): void {
+        this.detailDialog(recipe).subscribe({
+            next: result => {
+                if (!result) {
+                    return;
+                }
+                this.handleDialogResult(result, recipe);
+            },
+        });
     }
 
     public onPageChange(pageIndex: number): void {
@@ -149,6 +168,16 @@ export class RecipeListComponent implements OnInit {
 
     private scrollToTop(): void {
         this.container?.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    private handleDialogResult(result: RecipeDetailActionResult, recipe: Recipe): void {
+        if (result.action === 'Edit') {
+            this.onEditRecipe(recipe);
+        }
+
+        if (result.action === 'Delete') {
+            this.onDeleteRecipe(recipe);
+        }
     }
 }
 

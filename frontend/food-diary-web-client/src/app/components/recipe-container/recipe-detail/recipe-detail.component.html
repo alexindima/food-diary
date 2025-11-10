@@ -1,0 +1,95 @@
+<div class="recipe-detail">
+    <h2 class="recipe-detail__title">
+        {{ recipe.name }}
+    </h2>
+
+    <div class="recipe-detail__meta">
+        @if (recipe.category) {
+            <span>{{ 'RECIPE_DETAIL.CATEGORY' | translate }}: {{ recipe.category }}</span>
+        }
+        <span>{{ 'RECIPE_DETAIL.SERVINGS' | translate }}: {{ recipe.servings }}</span>
+        <span>{{ 'RECIPE_DETAIL.PREP_TIME' | translate }}: {{ recipe.prepTime ?? '—' }} {{ 'RECIPE_DETAIL.MIN' | translate }}</span>
+        <span>{{ 'RECIPE_DETAIL.COOK_TIME' | translate }}: {{ recipe.cookTime ?? '—' }} {{ 'RECIPE_DETAIL.MIN' | translate }}</span>
+        <span>{{ 'RECIPE_DETAIL.USAGE_COUNT' | translate }}: {{ recipe.usageCount }}</span>
+    </div>
+
+    @if (recipe.description) {
+        <p class="recipe-detail__description">
+            {{ recipe.description }}
+        </p>
+    }
+
+    <fd-nutrients-summary
+        class="recipe-detail__summary"
+        [calories]="calories"
+        [nutrientChartData]="nutrientChartData"
+        [config]="nutrientSummaryConfig"
+    ></fd-nutrients-summary>
+
+    <div class="recipe-detail__steps">
+        <h3 class="recipe-detail__steps-title">
+            {{ 'RECIPE_DETAIL.STEPS_TITLE' | translate:{ count: recipe.steps.length } }}
+        </h3>
+        <ol class="recipe-detail__steps-list">
+            @for (step of recipe.steps; track step.id) {
+                <li class="recipe-detail__step">
+                    <p class="recipe-detail__step-instruction">{{ step.instruction }}</p>
+                    <ul class="recipe-detail__ingredients">
+                        @for (ingredient of step.ingredients; track ingredient.id) {
+                            <li>
+                                {{ ingredient.productName || ingredient.nestedRecipeName || ('RECIPE_DETAIL.UNKNOWN_INGREDIENT' | translate) }}
+                                — {{ ingredient.amount }}
+                                @if (ingredient.productBaseUnit) {
+                                    {{ 'PRODUCT_AMOUNT_UNITS_SHORT.' + ingredient.productBaseUnit | translate }}
+                                }
+                            </li>
+                        }
+                    </ul>
+                </li>
+            }
+        </ol>
+    </div>
+
+    <div class="recipe-detail__actions">
+        <button
+            tuiButton
+            size="m"
+            iconStart="@tui.pen-line"
+            [disabled]="isEditDisabled"
+            (click)="onEdit()"
+        >
+            {{ 'RECIPE_DETAIL.EDIT_BUTTON' | translate }}
+        </button>
+        <button
+            tuiButton
+            size="m"
+            appearance="accent"
+            iconStart="@tui.trash-2"
+            [disabled]="isDeleteDisabled"
+            (click)="onDelete()"
+        >
+            {{ 'RECIPE_DETAIL.DELETE_BUTTON' | translate }}
+        </button>
+    </div>
+
+    @if (warningMessage) {
+        <p class="recipe-detail__warning">{{ warningMessage | translate }}</p>
+    }
+</div>
+
+<ng-template #confirmDialog let-observer>
+    <div class="recipe-detail__confirm">
+        <p>
+            {{ 'RECIPE_DETAIL.CONFIRM_DELETE' | translate }}
+            <span class="recipe-detail__confirm-name">{{ recipe.name }}</span>?
+        </p>
+        <div class="recipe-detail__confirm-buttons">
+            <button tuiButton size="m" (click)="observer.complete()">
+                {{ 'RECIPE_DETAIL.CANCEL_BUTTON' | translate }}
+            </button>
+            <button tuiButton size="m" appearance="accent" (click)="observer.next(true); observer.complete()">
+                {{ 'RECIPE_DETAIL.CONFIRM_BUTTON' | translate }}
+            </button>
+        </div>
+    </div>
+</ng-template>

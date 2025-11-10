@@ -21,6 +21,7 @@
         "LOGIN": "Login",
         "REGISTER": "Register",
         "PRODUCTS": "Products",
+        "RECIPES": "Recipes",
         "CONSUMPTION": "Consumption",
         "STATISTICS": "Statistics",
         "USER": "User",
@@ -115,6 +116,16 @@
         "CARBS": "Carbs",
         "DELETE_ERROR": "Unable to delete the product. Please try again."
     },
+    "PRODUCT_VISIBILITY": {
+        "Public": "Public",
+        "Private": "Private",
+        "PUBLIC": "Public",
+        "PRIVATE": "Private"
+    },
+    "PRODUCT_BADGE": {
+        "MY": "My product",
+        "SHARED": "Shared product"
+    },
     "RECIPE_LIST": {
         "TITLE": "Recipe List",
         "SEARCH_TITLE": "Searching:",
@@ -131,9 +142,15 @@
         "DELETE": "Delete",
         "DELETE_ERROR": "Unable to delete the recipe. Please try again."
     },
+    "RECIPE_BADGE": {
+        "MY": "My recipe",
+        "SHARED": "Shared recipe"
+    },
     "RECIPE_VISIBILITY": {
         "Public": "Public",
-        "Private": "Private"
+        "Private": "Private",
+        "PUBLIC": "Public",
+        "PRIVATE": "Private"
     },
     "RECIPE_MANAGE": {
         "ADD_TITLE": "Add Recipe",
@@ -167,6 +184,23 @@
         "DRAGGING_PLACEHOLDER": "Drop position",
         "SAVE_BUTTON": "Save changes",
         "ADD_BUTTON": "Create recipe"
+    },
+    "RECIPE_DETAIL": {
+        "CATEGORY": "Category",
+        "SERVINGS": "Servings",
+        "PREP_TIME": "Prep time",
+        "COOK_TIME": "Cook time",
+        "MIN": "min",
+        "USAGE_COUNT": "Usage count",
+        "STEPS_TITLE": "Steps ({{count}})",
+        "UNKNOWN_INGREDIENT": "Ingredient",
+        "EDIT_BUTTON": "Edit",
+        "DELETE_BUTTON": "Delete",
+        "WARNING_IN_USE": "Recipe is used in meals and cannot be removed.",
+        "WARNING_NOT_OWNER": "Only the author can edit or delete this recipe.",
+        "CONFIRM_DELETE": "Delete recipe",
+        "CANCEL_BUTTON": "Cancel",
+        "CONFIRM_BUTTON": "Delete"
     },
     "PRODUCT_DETAIL": {
         "BARCODE": "Barcode:",

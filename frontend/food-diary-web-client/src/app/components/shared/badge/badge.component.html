@@ -1,0 +1,6 @@
+<span class="badge" [ngClass]="'badge--' + variant">
+    @if (icon) {
+        <tui-icon class="badge__icon" [icon]="icon"></tui-icon>
+    }
+    {{ label }}
+</span>

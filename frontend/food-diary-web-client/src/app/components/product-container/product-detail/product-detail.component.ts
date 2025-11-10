@@ -68,6 +68,7 @@ export class ProductDetailComponent {
             : 'PRODUCT_DETAIL.WARNING_NOT_OWNER';
     }
 
+
     public constructor() {
         this.product = this.context.data;
 

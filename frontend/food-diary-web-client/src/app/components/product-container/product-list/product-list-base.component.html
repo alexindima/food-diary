@@ -54,12 +54,28 @@
                 <fd-card (click)="onProductClick(product)">
                     <div class="product-card">
                         <div class="product-card__header">
-                            <span class="product-card__name">{{ product.name }}</span>
-                            @if (product.barcode) {
-                                <span class="product-card__barcode">
-                                {{ 'PRODUCT_LIST.BARCODE' | translate }}: {{ product.barcode }}
-                            </span>
-                            }
+                            <div>
+                                <span class="product-card__name">{{ product.name }}</span>
+                                @if (product.barcode) {
+                                    <span class="product-card__barcode">
+                                        {{ 'PRODUCT_LIST.BARCODE' | translate }}: {{ product.barcode }}
+                                    </span>
+                                }
+                            </div>
+                            <div class="product-card__badges">
+                                @if (product.isOwnedByCurrentUser) {
+                                    <fd-badge
+                                        [label]="('PRODUCT_VISIBILITY.' + product.visibility) | translate"
+                                        [variant]="product.visibility === 'Private' ? 'warning' : 'success'"
+                                        [icon]="product.visibility === 'Private' ? '@tui.lock' : '@tui.globe'"
+                                    ></fd-badge>
+                                }
+                                <fd-badge
+                                    [label]="product.isOwnedByCurrentUser ? ('PRODUCT_BADGE.MY' | translate) : ('PRODUCT_BADGE.SHARED' | translate)"
+                                    [variant]="product.isOwnedByCurrentUser ? 'primary' : 'neutral'"
+                                    [icon]="product.isOwnedByCurrentUser ? '@tui.user-check' : '@tui.users'"
+                                ></fd-badge>
+                            </div>
                         </div>
                         <div class="product-card__info">
                         <span class="product-card__calories">
