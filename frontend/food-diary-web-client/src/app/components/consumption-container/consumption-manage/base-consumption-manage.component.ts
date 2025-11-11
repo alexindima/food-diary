@@ -35,14 +35,18 @@ import { NavigationService } from '../../../services/navigation.service';
 import {
     ProductListDialogComponent
 } from '../../product-container/product-list/product-list-dialog/product-list-dialog.component';
+import { RecipeSelectDialogComponent } from '../../recipe-container/recipe-select-dialog/recipe-select-dialog.component';
 import { TuiDay, TuiTime } from '@taiga-ui/cdk';
 import {
     Consumption,
+    ConsumptionItemManageDto,
     ConsumptionManageDto,
+    ConsumptionSourceType,
 } from '../../../types/consumption.data';
 import { ConsumptionService } from '../../../services/consumption.service';
 import { FormGroupControls } from '../../../types/common.data';
 import { Product } from '../../../types/product.data';
+import { Recipe } from '../../../types/recipe.data';
 import { HttpErrorResponse } from '@angular/common/http';
 import { TuiUtils } from '../../../utils/tui.utils';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -105,10 +109,17 @@ export class BaseConsumptionManageComponent implements OnInit {
         appearance: 'without-border-radius',
     });
 
+    private readonly recipeSelectDialog = tuiDialog(RecipeSelectDialogComponent, {
+        size: 'page',
+        dismissible: true,
+        appearance: 'without-border-radius',
+    });
+
     @ViewChild('confirmDialog') private confirmDialog!: TemplateRef<TuiDialogContext<RedirectAction, void>>;
 
     public consumption = input<Consumption | null>();
     public totalCalories = signal<number>(0);
+    public totalFiber = signal<number>(0);
     public nutrientChartData = signal<NutrientChartData>({
         proteins: 0,
         fats: 0,
@@ -117,15 +128,16 @@ export class BaseConsumptionManageComponent implements OnInit {
     public globalError = signal<string | null>(null);
 
     public consumptionForm: FormGroup<ConsumptionFormData>;
-    public selectedIndex: number = 0;
+    public sourceTypeOptions = Object.values(ConsumptionSourceType);
 
     public constructor() {
         this.consumptionForm = new FormGroup<ConsumptionFormData>({
             date: new FormControl<[TuiDay, TuiTime]>(
                 [TuiDay.currentLocal(), TuiTime.currentLocal()], { nonNullable: true }
             ),
-            consumedProduct: new FormArray<FormGroup<ConsumptionItemFormData>>(
-                [this.createConsumedProductItem()], nonEmptyArrayValidator()
+            items: new FormArray<FormGroup<ConsumptionItemFormData>>(
+                [this.createConsumptionItem()],
+                nonEmptyArrayValidator()
             ),
             comment: new FormControl<string | null>(null),
         });
@@ -144,41 +156,113 @@ export class BaseConsumptionManageComponent implements OnInit {
         });
     }
 
-    public get consumedProduct(): FormArray<FormGroup<ConsumptionItemFormData>> {
-        return this.consumptionForm.controls.consumedProduct;
+    public get items(): FormArray<FormGroup<ConsumptionItemFormData>> {
+        return this.consumptionForm.controls.items;
+    }
+
+    public stringifySourceType = (value: ConsumptionSourceType | null): string =>
+        value ? this.translateService.instant(`CONSUMPTION_MANAGE.ITEM_TYPE_OPTIONS.${value}`) : '';
+
+    public isProductItem(index: number): boolean {
+        return this.items.at(index).controls.sourceType.value === ConsumptionSourceType.Product;
+    }
+
+    public isRecipeItem(index: number): boolean {
+        return this.items.at(index).controls.sourceType.value === ConsumptionSourceType.Recipe;
     }
 
     public getProductName(index: number): string {
-        const foodControl = this.consumedProduct.at(index).controls.food;
-        return foodControl?.value?.name || '';
+        const control = this.items.at(index).controls.product;
+        return control.value?.name || '';
     }
 
-    public getProductUnit(index: number): string | null {
-        const unit = this.consumedProduct.at(index).controls.food?.value?.baseUnit;
-        return unit
-            ? `, ${this.translateService.instant('PRODUCT_AMOUNT_UNITS.' + unit.toUpperCase())}`
-            : null;
+    public getRecipeName(index: number): string {
+        const control = this.items.at(index).controls.recipe;
+        return control.value?.name || '';
+    }
+
+    public getAmountUnitLabel(index: number): string | null {
+        if (this.isProductItem(index)) {
+            const unit = this.items.at(index).controls.product.value?.baseUnit;
+            return unit ? this.translateService.instant('PRODUCT_AMOUNT_UNITS.' + unit.toUpperCase()) : null;
+        }
+
+        if (this.isRecipeItem(index)) {
+            return this.translateService.instant('CONSUMPTION_MANAGE.SERVINGS_UNIT');
+        }
+
+        return null;
     }
 
     public isProductInvalid(index: number): boolean {
-        const foodControl = this.consumedProduct.at(index).controls.food;
-        return !!foodControl && foodControl.invalid && foodControl.touched;
+        if (!this.isProductItem(index)) {
+            return false;
+        }
+        const control = this.items.at(index).controls.product;
+        return control.invalid && control.touched;
+    }
+
+    public isRecipeInvalid(index: number): boolean {
+        if (!this.isRecipeItem(index)) {
+            return false;
+        }
+        const control = this.items.at(index).controls.recipe;
+        return control.invalid && control.touched;
     }
 
     public addProductItem(): void {
-        this.consumedProduct.push(this.createConsumedProductItem());
+        this.addItem(ConsumptionSourceType.Product);
     }
 
-    public removeProductItem(index: number): void {
-        this.consumedProduct.removeAt(index);
+    public addRecipeItem(): void {
+        this.addItem(ConsumptionSourceType.Recipe);
     }
 
-    public async onProductSelectClick(index: number): Promise<void> {
-        this.selectedIndex = index;
+    public addItem(type: ConsumptionSourceType): void {
+        this.items.push(this.createConsumptionItem(null, null, null, type));
+    }
+
+    public removeItem(index: number): void {
+        this.items.removeAt(index);
+    }
+
+    public onItemTypeChange(index: number, event: unknown): void {
+        const type = event as ConsumptionSourceType | null;
+        if (!type) {
+            return;
+        }
+        const group = this.items.at(index);
+        this.configureItemType(group, type, true);
+    }
+
+    public onProductSelectClick(index: number): void {
         this.productListDialog(null).subscribe({
             next: food => {
-                const consumedProductGroup = this.consumedProduct.at(this.selectedIndex);
-                consumedProductGroup.patchValue({ food });
+                if (!food) {
+                    return;
+                }
+                const group = this.items.at(index);
+                group.patchValue({
+                    product: food,
+                    recipe: null,
+                });
+                this.configureItemType(group, ConsumptionSourceType.Product);
+            },
+        });
+    }
+
+    public onRecipeSelectClick(index: number): void {
+        this.recipeSelectDialog(null).subscribe({
+            next: recipe => {
+                if (!recipe) {
+                    return;
+                }
+                const group = this.items.at(index);
+                group.patchValue({
+                    recipe,
+                    product: null,
+                });
+                this.configureItemType(group, ConsumptionSourceType.Recipe);
             },
         });
     }
@@ -186,27 +270,46 @@ export class BaseConsumptionManageComponent implements OnInit {
     public onSubmit(): void {
         this.markFormGroupTouched(this.consumptionForm);
 
-        if (this.consumptionForm.valid) {
-            const tuiDateTime = this.consumptionForm.controls.date.value;
-            const comment = this.consumptionForm.controls.comment.value;
-            const consumedProduct = this.consumptionForm.controls.consumedProduct.value;
-
-            const consumptionData: ConsumptionManageDto = {
-                date: TuiUtils.combineTuiDayAndTuiTime(tuiDateTime[0], tuiDateTime[1]),
-                comment: comment ?? undefined,
-                items: consumedProduct
-                    .filter(foodItem => foodItem.food && foodItem.quantity !== null)
-                    .map(foodItem => ({
-                        foodId: foodItem.food!.id,
-                        amount: Number(foodItem.quantity),
-                    })),
-            };
-
-            const consumption = this.consumption();
-            consumption
-                ? this.updateConsumption(consumption.id, consumptionData)
-                : this.addConsumption(consumptionData);
+        if (this.consumptionForm.invalid) {
+            this.setGlobalError('FORM_ERRORS.UNKNOWN');
+            return;
         }
+
+        const tuiDateTime = this.consumptionForm.controls.date.value;
+        const comment = this.consumptionForm.controls.comment.value;
+        const formItems = this.consumptionForm.controls.items.value;
+
+        const mappedItems: ConsumptionItemManageDto[] = [];
+
+        formItems.forEach(item => {
+            if (item.sourceType === ConsumptionSourceType.Product && item.product) {
+                mappedItems.push({
+                    productId: item.product.id,
+                    recipeId: null,
+                    amount: Number(item.amount),
+                });
+                return;
+            }
+
+            if (item.sourceType === ConsumptionSourceType.Recipe && item.recipe) {
+                mappedItems.push({
+                    recipeId: item.recipe.id,
+                    productId: null,
+                    amount: Number(item.amount),
+                });
+            }
+        });
+
+        const consumptionData: ConsumptionManageDto = {
+            date: TuiUtils.combineTuiDayAndTuiTime(tuiDateTime[0], tuiDateTime[1]),
+            comment: comment ?? undefined,
+            items: mappedItems,
+        };
+
+        const consumption = this.consumption();
+        consumption
+            ? this.updateConsumption(consumption.id, consumptionData)
+            : this.addConsumption(consumptionData);
     }
 
     private markFormGroupTouched(formGroup: FormGroup | FormArray): void {
@@ -218,6 +321,8 @@ export class BaseConsumptionManageComponent implements OnInit {
                 control.updateValueAndValidity();
             }
         });
+
+        formGroup.markAllAsTouched();
     }
 
     private populateForm(consumption: Consumption): void {
@@ -230,35 +335,72 @@ export class BaseConsumptionManageComponent implements OnInit {
             comment: consumption.comment || null,
         });
 
-        const consumedProductArray = this.consumedProduct;
-        consumedProductArray.clear();
+        const itemsArray = this.items;
+        itemsArray.clear();
 
-        consumption.items.forEach((item) => {
-            consumedProductArray.push(this.createConsumedProductItem(item.food, item.amount));
+        if (consumption.items.length === 0) {
+            itemsArray.push(this.createConsumptionItem());
+            return;
+        }
+
+        consumption.items.forEach(item => {
+            const sourceType = item.sourceType ?? (item.recipe ? ConsumptionSourceType.Recipe : ConsumptionSourceType.Product);
+            itemsArray.push(this.createConsumptionItem(
+                sourceType === ConsumptionSourceType.Product ? item.product ?? null : null,
+                sourceType === ConsumptionSourceType.Recipe ? item.recipe ?? null : null,
+                item.amount,
+                sourceType,
+            ));
         });
     }
 
     private updateSummary(): void {
-        const totals = this.consumedProduct.controls.reduce(
+        const totals = this.items.controls.reduce(
             (totals, group) => {
-                const food = group.value.food as Product | null;
-                const quantity = group.value.quantity || 0;
+                const sourceType = group.controls.sourceType.value;
+                const amount = group.controls.amount.value || 0;
 
-                if (food) {
-                    const multiplier = quantity / food.baseAmount;
+                if (sourceType === ConsumptionSourceType.Product) {
+                    const food = group.controls.product.value as Product | null;
+                    if (!food || food.baseAmount <= 0) {
+                        return totals;
+                    }
+                    const multiplier = amount / food.baseAmount;
                     totals.calories += food.caloriesPerBase * multiplier;
                     totals.proteins += food.proteinsPerBase * multiplier;
                     totals.fats += food.fatsPerBase * multiplier;
                     totals.carbs += food.carbsPerBase * multiplier;
+                    totals.fiber += (food.fiberPerBase ?? 0) * multiplier;
+                    return totals;
+                }
+
+                const recipe = group.controls.recipe.value as Recipe | null;
+                if (recipe && recipe.servings && recipe.servings > 0) {
+                    const servings = recipe.servings <= 0 ? 1 : recipe.servings;
+                    const caloriesPerServing = (recipe.totalCalories ?? 0) / servings;
+                    const proteinsPerServing = (recipe.totalProteins ?? 0) / servings;
+                    const fatsPerServing = (recipe.totalFats ?? 0) / servings;
+                    const carbsPerServing = (recipe.totalCarbs ?? 0) / servings;
+                    const fiberPerServing = (recipe.totalFiber ?? 0) / servings;
+
+                    totals.calories += caloriesPerServing * amount;
+                    totals.proteins += proteinsPerServing * amount;
+                    totals.fats += fatsPerServing * amount;
+                    totals.carbs += carbsPerServing * amount;
+                    totals.fiber += fiberPerServing * amount;
                 }
 
                 return totals;
             },
-            { calories: 0, proteins: 0, fats: 0, carbs: 0 }
+            { calories: 0, proteins: 0, fats: 0, carbs: 0, fiber: 0 }
         );
 
         if (this.totalCalories() !== totals.calories) {
             this.totalCalories.set(totals.calories);
+        }
+
+        if (this.totalFiber() !== totals.fiber) {
+            this.totalFiber.set(totals.fiber);
         }
 
         const currentNutrientData = this.nutrientChartData();
@@ -278,21 +420,14 @@ export class BaseConsumptionManageComponent implements OnInit {
     private async addConsumption(consumptionData: ConsumptionManageDto): Promise<void> {
         this.consumptionService.create(consumptionData).subscribe({
             next: response => this.handleSubmitResponse(response),
+            error: error => this.handleSubmitError(error),
         });
     }
 
     private async updateConsumption(id: number, consumptionData: ConsumptionManageDto): Promise<void> {
-        const requestData = {
-            date: consumptionData.date,
-            comment: consumptionData.comment,
-            items: consumptionData.items.map(item => ({
-                foodId: item.foodId,
-                amount: item.amount,
-            })),
-        };
-
-        this.consumptionService.update(id, requestData).subscribe({
+        this.consumptionService.update(id, consumptionData).subscribe({
             next: response => this.handleSubmitResponse(response),
+            error: error => this.handleSubmitError(error),
         });
     }
 
@@ -300,6 +435,8 @@ export class BaseConsumptionManageComponent implements OnInit {
         if (response) {
             if (!this.consumption()) {
                 this.consumptionForm.reset();
+                this.items.clear();
+                this.items.push(this.createConsumptionItem());
             }
             await this.showConfirmDialog();
         } else {
@@ -334,11 +471,51 @@ export class BaseConsumptionManageComponent implements OnInit {
             });
     }
 
-    private createConsumedProductItem(food: Product | null = null, quantity: number | null = null): FormGroup<ConsumptionItemFormData> {
-        return new FormGroup<ConsumptionItemFormData>({
-            food: new FormControl<Product | null>(food, Validators.required),
-            quantity: new FormControl<number | null>(quantity, [Validators.required, Validators.min(0.01)]),
+    private configureItemType(
+        group: FormGroup<ConsumptionItemFormData>,
+        type: ConsumptionSourceType,
+        clearSelection: boolean = false,
+    ): void {
+        group.controls.sourceType.setValue(type);
+
+        if (type === ConsumptionSourceType.Product) {
+            group.controls.product.setValidators([Validators.required]);
+            group.controls.recipe.clearValidators();
+            if (clearSelection) {
+                group.controls.recipe.setValue(null);
+            }
+        } else {
+            group.controls.recipe.setValidators([Validators.required]);
+            group.controls.product.clearValidators();
+            if (clearSelection) {
+                group.controls.product.setValue(null);
+            }
+        }
+
+        group.controls.product.updateValueAndValidity();
+        group.controls.recipe.updateValueAndValidity();
+
+        if (clearSelection) {
+            group.controls.amount.setValue(null);
+            group.controls.amount.markAsUntouched();
+        }
+    }
+
+    private createConsumptionItem(
+        product: Product | null = null,
+        recipe: Recipe | null = null,
+        amount: number | null = null,
+        sourceType: ConsumptionSourceType = ConsumptionSourceType.Product,
+    ): FormGroup<ConsumptionItemFormData> {
+        const group = new FormGroup<ConsumptionItemFormData>({
+        sourceType: new FormControl<ConsumptionSourceType>(sourceType, { nonNullable: true }),
+        product: new FormControl<Product | null>(product),
+        recipe: new FormControl<Recipe | null>(recipe),
+        amount: new FormControl<number | null>(amount, [Validators.required, Validators.min(0.01)]),
         });
+
+        this.configureItemType(group, sourceType);
+        return group;
     }
 }
 
@@ -346,13 +523,15 @@ type RedirectAction = 'Home' | 'ConsumptionList';
 
 type ConsumptionFormValues = {
     date: [TuiDay, TuiTime];
-    consumedProduct: ConsumptionItemFormValues[];
+    items: ConsumptionItemFormValues[];
     comment: string | null;
 };
 
-type ConsumptionItemFormValues ={
-    food: Product | null;
-    quantity: number | null;
+type ConsumptionItemFormValues = {
+    sourceType: ConsumptionSourceType;
+    product: Product | null;
+    recipe: Recipe | null;
+    amount: number | null;
 };
 
 type ConsumptionFormData = FormGroupControls<ConsumptionFormValues>;

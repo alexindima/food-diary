@@ -1,0 +1,107 @@
+<div class="recipe-select" #container>
+    <h2 class="recipe-select__title">{{ 'RECIPE_SELECT_DIALOG.TITLE' | translate }}</h2>
+
+    <div class="recipe-select__actions">
+        <search tuiSearch class="recipe-select__search">
+            <form class="recipe-select__search-form" [formGroup]="searchForm">
+                <fieldset tuiTextfieldSize="m">
+                    <tui-textfield iconStart="@tui.search">
+                        <input
+                            formControlName="search"
+                            [placeholder]="'RECIPE_SELECT_DIALOG.SEARCH_PLACEHOLDER' | translate"
+                            tuiTextfield
+                            class="recipe-select__search-input"
+                        />
+                    </tui-textfield>
+                </fieldset>
+            </form>
+        </search>
+        <label class="recipe-select__toggle">
+            <input
+                type="checkbox"
+                class="recipe-select__toggle-input"
+                [formControl]="searchForm.controls.onlyMine"
+            />
+            <span class="recipe-select__toggle-label">
+                {{ 'RECIPE_SELECT_DIALOG.ONLY_MY_RECIPES' | translate }}
+            </span>
+        </label>
+        <button
+            tuiButton
+            iconStart="@tui.plus"
+            size="m"
+            appearance="primary"
+            (click)="onCreateRecipeClick()"
+        >
+            {{ 'RECIPE_SELECT_DIALOG.ADD_RECIPE_BUTTON' | translate }}
+        </button>
+    </div>
+
+    @if (recipeData.isLoading()) {
+        <tui-loader class="recipe-select__loader"></tui-loader>
+    } @else {
+        @if (recipeData.items().length > 0) {
+            <div class="recipe-select__list">
+                @for (recipe of recipeData.items(); track recipe.id) {
+                    <fd-card class="recipe-select__card" (click)="onRecipeClick(recipe)">
+                        <div class="recipe-card">
+                            <div class="recipe-card__header">
+                                <div>
+                                    <span class="recipe-card__name">{{ recipe.name }}</span>
+                                    @if (recipe.category) {
+                                        <span class="recipe-card__category">{{ recipe.category }}</span>
+                                    }
+                                </div>
+                                <div class="recipe-card__badges">
+                                    <fd-badge
+                                        [label]="('RECIPE_VISIBILITY.' + recipe.visibility) | translate"
+                                        [variant]="recipe.visibility === 'Private' ? 'warning' : 'success'"
+                                        [icon]="recipe.visibility === 'Private' ? '@tui.lock' : '@tui.globe'"
+                                    ></fd-badge>
+                                    <fd-badge
+                                        [label]="recipe.isOwnedByCurrentUser ? ('RECIPE_SELECT_DIALOG.MY_RECIPE_BADGE' | translate) : ('RECIPE_SELECT_DIALOG.SHARED_RECIPE_BADGE' | translate)"
+                                        [variant]="recipe.isOwnedByCurrentUser ? 'primary' : 'neutral'"
+                                        [icon]="recipe.isOwnedByCurrentUser ? '@tui.user-check' : '@tui.users'"
+                                    ></fd-badge>
+                                </div>
+                            </div>
+                            <div class="recipe-card__info">
+                                <span>
+                                    {{ 'RECIPE_SELECT_DIALOG.SERVINGS' | translate }}:
+                                    {{ recipe.servings }}
+                                </span>
+                                <span>
+                                    {{ 'RECIPE_SELECT_DIALOG.TOTAL_CALORIES' | translate }}:
+                                    {{ (recipe.totalCalories ?? 0) | number:'1.0-2' }}
+                                    {{ 'SHARED.NUTRIENTS_SUMMARY.KKAL' | translate }}
+                                </span>
+                            </div>
+                            <div class="recipe-card__macros">
+                                {{ 'NUTRIENTS.PROTEINS' | translate }}:
+                                {{ (recipe.totalProteins ?? 0) | number:'1.0-2' }} {{ 'PRODUCT_AMOUNT_UNITS_SHORT.G' | translate }} |
+                                {{ 'NUTRIENTS.FATS' | translate }}:
+                                {{ (recipe.totalFats ?? 0) | number:'1.0-2' }} {{ 'PRODUCT_AMOUNT_UNITS_SHORT.G' | translate }} |
+                                {{ 'NUTRIENTS.CARBS' | translate }}:
+                                {{ (recipe.totalCarbs ?? 0) | number:'1.0-2' }} {{ 'PRODUCT_AMOUNT_UNITS_SHORT.G' | translate }}
+                            </div>
+                        </div>
+                    </fd-card>
+                }
+            </div>
+        } @else {
+            <div class="recipe-select__no-results">
+                <tui-icon class="recipe-select__no-results-icon" icon="@tui.search-remove"></tui-icon>
+                {{ 'RECIPE_SELECT_DIALOG.NO_RECIPES_FOUND' | translate }}
+            </div>
+        }
+    }
+
+    @if (recipeData.totalPages > 1) {
+        <tui-pagination
+            class="recipe-select__pagination"
+            [length]="recipeData.totalPages"
+            [(index)]="currentPageIndex"
+            (indexChange)="onPageChange($event)"
+        ></tui-pagination>
+    }
+</div>

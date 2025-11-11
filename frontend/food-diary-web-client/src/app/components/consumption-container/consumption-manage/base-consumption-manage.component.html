@@ -20,74 +20,124 @@
             ></tui-error>
         </div>
         <div class="consumption-manage__consumption">
-        <fd-custom-group
-            [title]="'CONSUMPTION_MANAGE.PRODUCTS' | translate"
+            <fd-custom-group
+                [title]="'CONSUMPTION_MANAGE.ITEMS_GROUP_TITLE' | translate"
             >
-                <div class="consumption-manage__select">
-                    <div class="consumption-manage__select-rows" formArrayName="consumedProduct">
-                        @for (foodItem of consumedProduct.controls; track foodItem; let i = $index; let first = $first) {
-                            <div class="consumption-manage__select-row" [formGroupName]="i">
-                                <div class="consumption-manage__product-name">
-                                    <tui-textfield type="text" class="consumption-manage__product-name-control">
-                                        <label tuiLabel>{{ 'CONSUMPTION_MANAGE.ADD_PRODUCT_ROW.PRODUCT' | translate }}</label>
-                                        <input
-                                            tuiTextfield
-                                            placeholder="{{ 'CONSUMPTION_MANAGE.ADD_PRODUCT_ROW.PRODUCT_PLACEHOLDER' | translate }}"
-                                            [readOnly]="true"
-                                            [value]="getProductName(i)"
-                                            [invalid]="isProductInvalid(i)"
-                                            (click)="onProductSelectClick(i)"
-                                        />
-                                    </tui-textfield>
-                                    <tui-error
-                                        formControlName="food"
-                                        [error]="[] | tuiFieldError | async"
-                                    ></tui-error>
-                                </div>
-                                <div class="consumption-manage__product-quantity-wrapper">
-                                    <div class="consumption-manage__product-quantity">
-                                        <tui-input-number formControlName="quantity">
-                                            <label tuiLabel>{{ 'CONSUMPTION_MANAGE.ADD_PRODUCT_ROW.QUANTITY' | translate }}{{ getProductUnit(i) }}</label>
+                <div class="consumption-manage__items" formArrayName="items">
+                    @for (item of items.controls; track item; let i = $index; let first = $first) {
+                        <div class="consumption-manage__item" [formGroupName]="i">
+                            <div class="consumption-manage__item-header">
+                                <tui-select
+                                    class="consumption-manage__item-type"
+                                    formControlName="sourceType"
+                                    [stringify]="stringifySourceType"
+                                    (tuiValueChange)="onItemTypeChange(i, $event)"
+                                    [tuiTextfieldLabelOutside]="true"
+                                >
+                                    {{ 'CONSUMPTION_MANAGE.ITEM_TYPE_LABEL' | translate }}
+                                    <ng-template tuiDataList>
+                                        @for (option of sourceTypeOptions; track option) {
+                                            <button tuiOption [value]="option">
+                                                {{ ('CONSUMPTION_MANAGE.ITEM_TYPE_OPTIONS.' + option) | translate }}
+                                            </button>
+                                        }
+                                    </ng-template>
+                                </tui-select>
+                                <button
+                                    type="button"
+                                    class="consumption-manage__remove-item"
+                                    appearance="accent"
+                                    tuiButton
+                                    size="l"
+                                    iconStart="@tui.trash-2"
+                                    [disabled]="first"
+                                    (click)="removeItem(i)"
+                                ></button>
+                            </div>
+                            <div class="consumption-manage__item-body">
+                                @if (isProductItem(i)) {
+                                    <div class="consumption-manage__field">
+                                        <tui-textfield type="text">
+                                            <label tuiLabel>{{ 'CONSUMPTION_MANAGE.ADD_PRODUCT_ROW.PRODUCT' | translate }}</label>
                                             <input
-                                                tuiTextfieldLegacy
-                                                placeholder="0"
+                                                tuiTextfield
+                                                placeholder="{{ 'CONSUMPTION_MANAGE.ADD_PRODUCT_ROW.PRODUCT_PLACEHOLDER' | translate }}"
+                                                [readOnly]="true"
+                                                [value]="getProductName(i)"
+                                                [invalid]="isProductInvalid(i)"
+                                                (click)="onProductSelectClick(i)"
                                             />
-                                        </tui-input-number>
+                                        </tui-textfield>
                                         <tui-error
-                                            formControlName="quantity"
+                                            formControlName="product"
                                             [error]="[] | tuiFieldError | async"
                                         ></tui-error>
                                     </div>
-                                    <button
-                                        type="button"
-                                        class="consumption-manage__product-delete modal__button modal__button--accent"
-                                        appearance="accent"
-                                        tuiButton
-                                        size="l"
-                                        iconStart="@tui.trash-2"
-                                        [disabled]="first"
-                                        (click)="removeProductItem(i)"
-                                    ></button>
+                                } @else {
+                                    <div class="consumption-manage__field">
+                                        <tui-textfield type="text">
+                                            <label tuiLabel>{{ 'CONSUMPTION_MANAGE.ADD_RECIPE_ROW.RECIPE' | translate }}</label>
+                                            <input
+                                                tuiTextfield
+                                                placeholder="{{ 'CONSUMPTION_MANAGE.ADD_RECIPE_ROW.RECIPE_PLACEHOLDER' | translate }}"
+                                                [readOnly]="true"
+                                                [value]="getRecipeName(i)"
+                                                [invalid]="isRecipeInvalid(i)"
+                                                (click)="onRecipeSelectClick(i)"
+                                            />
+                                        </tui-textfield>
+                                        <tui-error
+                                            formControlName="recipe"
+                                            [error]="[] | tuiFieldError | async"
+                                        ></tui-error>
+                                    </div>
+                                }
+                                <div class="consumption-manage__field consumption-manage__field--amount">
+                                    <tui-input-number formControlName="amount">
+                                        <label tuiLabel>
+                                            {{ 'CONSUMPTION_MANAGE.ADD_ITEM_ROW.AMOUNT' | translate }}
+                                            @if (getAmountUnitLabel(i)) {
+                                                <span class="consumption-manage__amount-unit">
+                                                    ({{ getAmountUnitLabel(i) }})
+                                                </span>
+                                            }
+                                        </label>
+                                        <input tuiTextfieldLegacy placeholder="0" />
+                                    </tui-input-number>
+                                    <tui-error
+                                        formControlName="amount"
+                                        [error]="[] | tuiFieldError | async"
+                                    ></tui-error>
                                 </div>
                             </div>
-                        }
-                    </div>
+                        </div>
+                    }
+                </div>
+                <div class="consumption-manage__item-buttons">
                     <button
                         type="button"
-                        class="consumption-manage__add-button"
                         tuiButton
                         size="m"
-                        iconStart="@tui.plus"
                         appearance="primary"
+                        iconStart="@tui.plus"
                         (click)="addProductItem()"
                     >
                         {{ 'CONSUMPTION_MANAGE.ADD_PRODUCT' | translate }}
                     </button>
-                </div>
+                    <button
+                        type="button"
+                        tuiButton
+                        size="m"
+                        appearance="secondary"
+                        iconStart="@tui.plus"
+                        (click)="addRecipeItem()"
+                    >
+                        {{ 'CONSUMPTION_MANAGE.ADD_RECIPE' | translate }}
+                    </button>
+        </div>
             </fd-custom-group>
             <tui-error
-                formControlName="consumedProduct"
-                [error]="[] | tuiFieldError | async"
+                [error]="items.invalid && items.touched ? ('FORM_ERRORS.NON_EMPTY_ARRAY' | translate) : null"
             ></tui-error>
         </div>
         <div class="consumption-manage__comment">
@@ -107,6 +157,7 @@
         <fd-nutrients-summary
             [calories]="totalCalories()"
             [nutrientChartData]="nutrientChartData()"
+            [fiberValue]="totalFiber()"
         ></fd-nutrients-summary>
 
         <div class="consumption-manage__actions">

@@ -4,7 +4,7 @@ import { catchError, debounceTime, map, Observable, of, startWith, switchMap } f
 import { TuiPagination } from '@taiga-ui/kit';
 import { TuiButton, tuiDialog, TuiLoader } from '@taiga-ui/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { Consumption, ConsumptionFilters, ConsumptionItem } from '../../../types/consumption.data';
+import { Consumption, ConsumptionFilters } from '../../../types/consumption.data';
 import { ConsumptionService } from '../../../services/consumption.service';
 import { TuiInputDateRangeModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
 import { DatePipe, DecimalPipe } from '@angular/common';
@@ -45,22 +45,6 @@ export class ConsumptionListComponent implements OnInit {
 
     @ViewChild('container') private container!: ElementRef<HTMLElement>;
 
-    public getTotalCalories(items: ConsumptionItem[]): number {
-        return items.reduce((total, item) => total + (item.food?.caloriesPerBase ?? 0) * (item.amount / 100), 0);
-    }
-
-    public getTotalProteins(items: ConsumptionItem[]): number {
-        return items.reduce((total, item) => total + (item.food?.proteinsPerBase ?? 0) * (item.amount / 100), 0);
-    }
-
-    public getTotalFats(items: ConsumptionItem[]): number {
-        return items.reduce((total, item) => total + (item.food?.fatsPerBase ?? 0) * (item.amount / 100), 0);
-    }
-
-    public getTotalCarbs(items: ConsumptionItem[]): number {
-        return items.reduce((total, item) => total + (item.food?.carbsPerBase ?? 0) * (item.amount / 100), 0);
-    }
-
     public constructor() {
         this.searchForm = new FormGroup<SearchFormGroup>({
             dateRange: new FormControl<TuiDayRange | null>(null),
@@ -93,13 +77,9 @@ export class ConsumptionListComponent implements OnInit {
         };
 
         return this.consumptionService.query(page, 10, filters).pipe(
-            map(response => {
-                if (response.status === 'success' && response.data) {
-                    this.consumptionData.setData(response.data);
-                    this.currentPageIndex = page - 1;
-                } else {
-                    this.consumptionData.clearData();
-                }
+            map(pageData => {
+                this.consumptionData.setData(pageData);
+                this.currentPageIndex = pageData.page - 1;
                 this.consumptionData.setLoading(false);
             }),
             catchError(() => {

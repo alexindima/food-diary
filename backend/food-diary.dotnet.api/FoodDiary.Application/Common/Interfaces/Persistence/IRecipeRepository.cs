@@ -25,6 +25,11 @@ public interface IRecipeRepository
         bool includeSteps = false,
         bool asTracking = false,
         CancellationToken cancellationToken = default);
+    Task<IReadOnlyDictionary<RecipeId, Recipe>> GetByIdsAsync(
+        IEnumerable<RecipeId> ids,
+        UserId userId,
+        bool includePublic = true,
+        CancellationToken cancellationToken = default);
 
     Task UpdateAsync(Recipe recipe);
 

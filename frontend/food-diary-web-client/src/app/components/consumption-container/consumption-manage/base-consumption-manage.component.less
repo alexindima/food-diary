@@ -24,71 +24,78 @@
 
 .consumption-manage__date,
 .consumption-manage__consumption,
-.consumption-manage__product-name,
 .consumption-manage__comment {
     display: flex;
     flex-direction: column;
 }
 
-.consumption-manage__product-name {
-    flex: 1;
-}
-
-.consumption-manage__product-name-control {
-    background: white;
-}
-
-.consumption-manage__product-quantity-wrapper {
-    display: flex;
-    flex: 0 0 25%;
-    gap: @gap-m;
-}
-
-.consumption-manage__product-quantity {
-    width: 100%;
-}
-
-.consumption-manage__product-delete {
-    flex: 0 0 auto;
-    white-space: nowrap;
-}
-
-.consumption-manage__select {
+.consumption-manage__items {
     display: flex;
     flex-direction: column;
     gap: @gap-m;
 }
 
-.consumption-manage__select-rows {
+.consumption-manage__item {
     display: flex;
     flex-direction: column;
     gap: @gap-m;
-
-    @media @media-tablet {
-        gap: @gap-xxl;
-    }
+    padding: @gap-m;
+    border-radius: 12px;
+    border: 1px solid @color-border;
+    background: @color-background;
 }
 
-.consumption-manage__select-row {
+.consumption-manage__item-header {
     display: flex;
     gap: @gap-m;
+    align-items: flex-start;
 
     @media @media-tablet {
         flex-direction: column;
     }
 }
 
-.consumption-manage__multi-select {
-    width: 100%;
+.consumption-manage__item-type {
     flex: 1;
 }
 
-.consumption-manage__add-button {
-    width: auto;
+.consumption-manage__remove-item {
+    flex-shrink: 0;
+}
 
-    @media @media-mobile {
-        height: 56px;
+.consumption-manage__item-body {
+    display: flex;
+    gap: @gap-m;
+    align-items: flex-start;
+    flex-wrap: wrap;
+
+    @media @media-tablet {
+        flex-direction: column;
     }
+}
+
+.consumption-manage__field {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: @gap-xs;
+}
+
+.consumption-manage__field--amount {
+    min-width: 200px;
+}
+
+.consumption-manage__amount-unit {
+    font-weight: normal;
+    color: @color-text-additional;
+}
+
+.consumption-manage__item-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: @gap-s;
+    margin-top: @gap-m;
 }
 
 .consumption-manage__submit-button {

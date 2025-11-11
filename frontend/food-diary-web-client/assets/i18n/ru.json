@@ -253,7 +253,8 @@
         "ADD_CONSUMPTION_BUTTON": "Добавить потребление",
         "NO_CONSUMPTIONS_FOUND": "Потребление не найдено",
         "DATE": "Дата",
-        "ITEM_COUNT": "Количество продуктов",
+        "ITEM_COUNT": "Количество позиций",
+        "MEAL_TYPE": "Тип приема пищи",
         "CHOOSE_DATES": "Выберите даты",
         "DATE_PLACEHOLDER": "От - До",
         "TOTAL_CALORIES": "Всего калорий",
@@ -263,28 +264,51 @@
     },
     "CONSUMPTION_DETAIL": {
         "TITLE": "Детали потребления",
-        "ITEMS_LIST": "Продукты ({{count}} шт):",
+        "ITEMS_LIST": "Позиции ({{count}} шт):",
+        "MEAL_TYPE": "Тип приема пищи",
         "TOTAL_CALORIES": "Всего калорий:",
         "TOTAL_PROTEINS": "Всего белков:",
         "TOTAL_FATS": "Всего жиров:",
         "TOTAL_CARBS": "Всего углеводов:",
+        "SERVINGS": "порции",
         "EDIT_BUTTON": "Редактировать",
         "DELETE_BUTTON": "Удалить",
         "CONFIRM_DELETE_TITLE": "Вы уверены, что хотите удалить запись за",
         "CANCEL_BUTTON": "Отмена",
         "CONFIRM_BUTTON": "Подтвердить"
     },
+    "MEAL_TYPES": {
+        "BREAKFAST": "Завтрак",
+        "LUNCH": "Обед",
+        "DINNER": "Ужин",
+        "SNACK": "Перекус",
+        "OTHER": "Другое"
+    },
     "CONSUMPTION_MANAGE": {
         "EDIT_TITLE": "Редактировать потребление",
         "ADD_TITLE": "Добавить потребление",
         "CHOOSE_DATE": "Дата и время",
-        "PRODUCTS": "Продукты",
+        "ITEMS_GROUP_TITLE": "Что было в приеме пищи",
+        "ITEM_TYPE_LABEL": "Тип записи",
+        "ITEM_TYPE_OPTIONS": {
+            "Product": "Продукт",
+            "Recipe": "Рецепт"
+        },
         "ADD_PRODUCT_ROW": {
             "PRODUCT": "Продукт",
             "PRODUCT_PLACEHOLDER": "Выберите продукт",
             "QUANTITY": "Количество",
             "QUANTITY_PLACEHOLDER": "Введите количество"
         },
+        "ADD_RECIPE_ROW": {
+            "RECIPE": "Рецепт",
+            "RECIPE_PLACEHOLDER": "Выберите рецепт"
+        },
+        "ADD_ITEM_ROW": {
+            "AMOUNT": "Количество"
+        },
+        "SERVINGS_UNIT": "порции",
+        "ADD_RECIPE": "Добавить рецепт",
         "COMMENT": "Комментарий",
         "COMMENT_PLACEHOLDER": "Введите комментарий",
         "SAVE_BUTTON": "Сохранить",
@@ -296,6 +320,17 @@
         "CHOOSE_DATE_TIME": "Выберите дату и время",
         "NO_PRODUCTS_ADDED": "Продукты не добавлены",
         "ADD_PRODUCT": "Добавить продукт"
+    },
+    "RECIPE_SELECT_DIALOG": {
+        "TITLE": "Выберите рецепт",
+        "SEARCH_PLACEHOLDER": "Введите название рецепта",
+        "ONLY_MY_RECIPES": "Только мои рецепты",
+        "ADD_RECIPE_BUTTON": "Создать рецепт",
+        "NO_RECIPES_FOUND": "Рецепты не найдены",
+        "SERVINGS": "Порций",
+        "TOTAL_CALORIES": "Калорий",
+        "MY_RECIPE_BADGE": "Мой",
+        "SHARED_RECIPE_BADGE": "Общий"
     },
     "STATISTICS": {
         "TITLE": "Статистика",

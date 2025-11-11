@@ -139,4 +139,25 @@ public class RecipeRepository : IRecipeRepository
 
         await _context.SaveChangesAsync(cancellationToken);
     }
+
+    public async Task<IReadOnlyDictionary<RecipeId, Recipe>> GetByIdsAsync(
+        IEnumerable<RecipeId> ids,
+        UserId userId,
+        bool includePublic = true,
+        CancellationToken cancellationToken = default)
+    {
+        var recipeIds = ids.Distinct().ToList();
+        if (recipeIds.Count == 0)
+        {
+            return new Dictionary<RecipeId, Recipe>();
+        }
+
+        IQueryable<Recipe> query = _context.Recipes.AsNoTracking();
+        query = query.Where(r => recipeIds.Contains(r.Id) && (includePublic
+            ? r.UserId == userId || r.Visibility == Visibility.PUBLIC
+            : r.UserId == userId));
+
+        var recipes = await query.ToListAsync(cancellationToken);
+        return recipes.ToDictionary(r => r.Id);
+    }
 }

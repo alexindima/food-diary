@@ -6,17 +6,40 @@
             @if (consumption.comment) {
                 <p class="modal__comment">{{ consumption.comment }} </p>
             }
-            <p class="modal__text">
-                <span class="modal__property-name">{{ 'CONSUMPTION_DETAIL.ITEMS_LIST' | translate:{ count: consumption.items.length } }}
+            @if (consumption.mealType) {
+                <p class="modal__text modal__text--muted">
+                    {{ 'CONSUMPTION_DETAIL.MEAL_TYPE' | translate }}:
+                    {{ ('MEAL_TYPES.' + consumption.mealType) | translate }}
+                </p>
+            }
+            <div class="modal__items">
+                <p class="modal__text modal__text--muted">
+                    {{ 'CONSUMPTION_DETAIL.ITEMS_LIST' | translate:{ count: consumption.items.length } }}
+                </p>
+                <ul class="modal__item-list">
                     @for (item of consumption.items; track item) {
-                        <span class="modal__property-text">{{ item.food.name }}</span>@if($index < consumption.items.length - 1) { <span>,&nbsp;</span> }
+                        <li class="modal__item">
+                            <span class="modal__item-name">{{ item.product?.name || item.recipe?.name }}</span>
+                            @if (item.product) {
+                                <span class="modal__item-meta">
+                                    {{ item.amount | number:'1.0-2' }}
+                                    {{ ('PRODUCT_AMOUNT_UNITS_SHORT.' + item.product.baseUnit) | translate }}
+                                </span>
+                            } @else if (item.recipe) {
+                                <span class="modal__item-meta">
+                                    {{ item.amount | number:'1.0-2' }}
+                                    {{ 'CONSUMPTION_DETAIL.SERVINGS' | translate }}
+                                </span>
+                            }
+                        </li>
                     }
-                </span>
-            </p>
+                </ul>
+            </div>
         </div>
         <fd-nutrients-summary
             [calories]="calories"
             [nutrientChartData]="nutrientChartData"
+            [fiberValue]="consumption.totalFiber"
             [config]="nutrientSummaryConfig"
         ></fd-nutrients-summary>
     </div>

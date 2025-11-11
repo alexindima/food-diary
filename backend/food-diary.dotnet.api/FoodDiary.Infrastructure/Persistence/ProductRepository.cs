@@ -84,6 +84,27 @@ public class ProductRepository : IProductRepository
                     : p.UserId == userId),
                 cancellationToken);
 
+    public async Task<IReadOnlyDictionary<ProductId, Product>> GetByIdsAsync(
+        IEnumerable<ProductId> ids,
+        UserId userId,
+        bool includePublic = true,
+        CancellationToken cancellationToken = default)
+    {
+        var productIds = ids.Distinct().ToList();
+        if (productIds.Count == 0)
+        {
+            return new Dictionary<ProductId, Product>();
+        }
+
+        IQueryable<Product> query = _context.Products.AsNoTracking();
+        query = query.Where(p => productIds.Contains(p.Id) && (includePublic
+            ? p.UserId == userId || p.Visibility == Visibility.PUBLIC
+            : p.UserId == userId));
+
+        var products = await query.ToListAsync(cancellationToken);
+        return products.ToDictionary(p => p.Id);
+    }
+
     public async Task UpdateAsync(Product product)
     {
         _context.Products.Update(product);

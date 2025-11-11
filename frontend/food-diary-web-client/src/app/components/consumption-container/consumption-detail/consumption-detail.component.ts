@@ -9,7 +9,7 @@ import { TuiButton, TuiDialogContext, TuiDialogService } from '@taiga-ui/core';
 import { injectContext } from '@taiga-ui/polymorpheus';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Consumption } from '../../../types/consumption.data';
-import { DatePipe } from '@angular/common';
+import { DatePipe, DecimalPipe } from '@angular/common';
 import {
     NutrientsSummaryComponent, NutrientsSummaryConfig
 } from '../../shared/nutrients-summary/nutrients-summary.component';
@@ -20,7 +20,7 @@ import { NutrientChartData } from '../../../types/charts.data';
     templateUrl: './consumption-detail.component.html',
     styleUrls: ['./consumption-detail.component.less'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [TranslatePipe, DatePipe, TuiButton, NutrientsSummaryComponent]
+    imports: [TranslatePipe, DatePipe, DecimalPipe, TuiButton, NutrientsSummaryComponent]
 })
 export class ConsumptionDetailComponent {
     public readonly context = injectContext<TuiDialogContext<ConsumptionDetailActionResult, Consumption>>();
@@ -58,11 +58,11 @@ export class ConsumptionDetailComponent {
     public constructor() {
         this.consumption = this.context.data;
 
-        this.calories = this.calculateNutrientTotal('caloriesPerBase');
+        this.calories = this.consumption.totalCalories ?? 0;
         this.nutrientChartData = {
-            proteins: this.calculateNutrientTotal('proteinsPerBase'),
-            fats: this.calculateNutrientTotal('fatsPerBase'),
-            carbs: this.calculateNutrientTotal('carbsPerBase'),
+            proteins: this.consumption.totalProteins ?? 0,
+            fats: this.consumption.totalFats ?? 0,
+            carbs: this.consumption.totalCarbs ?? 0,
         };
     }
     public onEdit(): void {
@@ -88,10 +88,6 @@ export class ConsumptionDetailComponent {
             });
     }
 
-    private calculateNutrientTotal(nutrientKey: NutrientType): number {
-        return this.consumption.items.reduce((sum, item) =>
-            sum + ((item.food?.[nutrientKey] ?? 0) * item.amount) / 100, 0);
-    }
 }
 
 class ConsumptionDetailActionResult {

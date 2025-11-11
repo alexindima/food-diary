@@ -38,6 +38,17 @@ public static class Errors
             message);
     }
 
+    public static class Consumption
+    {
+        public static Error NotFound(int id) => new(
+            "Consumption.NotFound",
+            $"Consumption with ID {id} was not found.");
+
+        public static Error InvalidData(string message) => new(
+            "Consumption.InvalidData",
+            message);
+    }
+
     public static class User
     {
         public static Error NotFound(Guid id) => new(

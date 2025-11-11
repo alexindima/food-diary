@@ -273,6 +273,7 @@
         "NO_CONSUMPTIONS_FOUND": "No consumptions found",
         "DATE": "Date",
         "ITEM_COUNT": "Item count",
+        "MEAL_TYPE": "Meal type",
         "CHOOSE_DATES": "Choose dates",
         "DATE_PLACEHOLDER": "From - To",
         "TOTAL_CALORIES": "Total Calories",
@@ -282,28 +283,51 @@
     },
     "CONSUMPTION_DETAIL": {
         "TITLE": "Consumption Details",
-        "ITEMS_LIST": "Products ({{count}} pcs):",
+        "ITEMS_LIST": "Items ({{count}} pcs):",
+        "MEAL_TYPE": "Meal type",
         "TOTAL_CALORIES": "Total Calories:",
         "TOTAL_PROTEINS": "Total Proteins:",
         "TOTAL_FATS": "Total Fats:",
         "TOTAL_CARBS": "Total Carbohydrates:",
+        "SERVINGS": "servings",
         "EDIT_BUTTON": "Edit",
         "DELETE_BUTTON": "Delete",
         "CONFIRM_DELETE_TITLE": "Are you sure you want to delete the record from",
         "CANCEL_BUTTON": "Cancel",
         "CONFIRM_BUTTON": "Confirm"
     },
+    "MEAL_TYPES": {
+        "BREAKFAST": "Breakfast",
+        "LUNCH": "Lunch",
+        "DINNER": "Dinner",
+        "SNACK": "Snack",
+        "OTHER": "Other"
+    },
     "CONSUMPTION_MANAGE": {
         "EDIT_TITLE": "Edit Consumption",
         "ADD_TITLE": "Add Consumption",
         "CHOOSE_DATE": "Date and time",
-        "PRODUCTS": "Products",
+        "ITEMS_GROUP_TITLE": "Items",
+        "ITEM_TYPE_LABEL": "Entry type",
+        "ITEM_TYPE_OPTIONS": {
+            "Product": "Product",
+            "Recipe": "Recipe"
+        },
         "ADD_PRODUCT_ROW": {
             "PRODUCT": "Product",
             "PRODUCT_PLACEHOLDER": "Choose a product",
             "QUANTITY": "Quantity",
             "QUANTITY_PLACEHOLDER": "Enter quantity"
         },
+        "ADD_RECIPE_ROW": {
+            "RECIPE": "Recipe",
+            "RECIPE_PLACEHOLDER": "Choose a recipe"
+        },
+        "ADD_ITEM_ROW": {
+            "AMOUNT": "Amount"
+        },
+        "SERVINGS_UNIT": "servings",
+        "ADD_RECIPE": "Add recipe",
         "COMMENT": "Comment",
         "COMMENT_PLACEHOLDER": "Enter a comment",
         "SAVE_BUTTON": "Save",
@@ -315,6 +339,17 @@
         "CHOOSE_DATE_TIME": "Choose date and time",
         "NO_PRODUCTS_ADDED": "No products added",
         "ADD_PRODUCT": "Add product"
+    },
+    "RECIPE_SELECT_DIALOG": {
+        "TITLE": "Choose a recipe",
+        "SEARCH_PLACEHOLDER": "Type recipe name",
+        "ONLY_MY_RECIPES": "Only my recipes",
+        "ADD_RECIPE_BUTTON": "Create recipe",
+        "NO_RECIPES_FOUND": "No recipes found",
+        "SERVINGS": "Servings",
+        "TOTAL_CALORIES": "Calories",
+        "MY_RECIPE_BADGE": "Mine",
+        "SHARED_RECIPE_BADGE": "Shared"
     },
     "STATISTICS": {
         "TITLE": "Statistics",

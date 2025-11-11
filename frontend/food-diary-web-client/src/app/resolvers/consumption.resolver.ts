@@ -12,15 +12,15 @@ export const consumptionResolver: ResolveFn<Consumption | null> = route => {
     const consumptionId = route.paramMap.get('id')!;
 
     return foodService.getById(+consumptionId).pipe(
-        map(response => {
-            if (response.status === 'success' && response.data) {
-                return response.data;
+        map(consumption => {
+            if (consumption) {
+                return consumption;
             }
-            navigationService.navigateToConsumptionList();
+            void navigationService.navigateToConsumptionList();
             return null;
         }),
         catchError(() => {
-            navigationService.navigateToConsumptionList();
+            void navigationService.navigateToConsumptionList();
             return of(null);
         }),
     );
