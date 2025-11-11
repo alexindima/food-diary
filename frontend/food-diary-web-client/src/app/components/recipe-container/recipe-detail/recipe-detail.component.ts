@@ -67,6 +67,76 @@ export class RecipeDetailComponent {
             : 'RECIPE_DETAIL.WARNING_NOT_OWNER';
     }
 
+    public get fiberValueComputed(): number {
+        if (this.recipe.totalFiber !== null && this.recipe.totalFiber !== undefined) {
+            return this.recipe.totalFiber;
+        }
+
+        const computed = this.computeFiberFromSteps();
+        return computed ?? 0;
+    }
+
+    public getIngredientCount(): number {
+        if (!this.recipe?.steps?.length) {
+            return 0;
+        }
+
+        return this.recipe.steps.reduce(
+            (total, step) => total + (step.ingredients?.length ?? 0),
+            0,
+        );
+    }
+
+    public getTotalPreparationTime(): number | null {
+        const hasPrep = this.recipe.prepTime !== null && this.recipe.prepTime !== undefined;
+        const hasCook = this.recipe.cookTime !== null && this.recipe.cookTime !== undefined;
+
+        if (!hasPrep && !hasCook) {
+            return null;
+        }
+
+        const prep = this.recipe.prepTime ?? 0;
+        const cook = this.recipe.cookTime ?? 0;
+        const total = prep + cook;
+
+        if (hasPrep && hasCook) {
+            return total;
+        }
+
+        return hasPrep ? prep : cook;
+    }
+
+    private computeFiberFromSteps(): number | null {
+        if (!this.recipe.steps?.length) {
+            return null;
+        }
+
+        let totalFiber = 0;
+        let hasFiber = false;
+
+        for (const step of this.recipe.steps) {
+            for (const ingredient of step.ingredients) {
+                const fiberPerBase = ingredient.productFiberPerBase;
+                const baseAmount = ingredient.productBaseAmount;
+                if (
+                    fiberPerBase === null ||
+                    fiberPerBase === undefined ||
+                    baseAmount === null ||
+                    baseAmount === undefined ||
+                    baseAmount === 0
+                ) {
+                    continue;
+                }
+
+                const multiplier = ingredient.amount / baseAmount;
+                totalFiber += fiberPerBase * multiplier;
+                hasFiber = true;
+            }
+        }
+
+        return hasFiber ? Math.round(totalFiber * 100) / 100 : null;
+    }
+
     public onEdit(): void {
         if (this.isEditDisabled) {
             return;

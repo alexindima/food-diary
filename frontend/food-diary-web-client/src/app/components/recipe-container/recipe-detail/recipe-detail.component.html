@@ -1,94 +1,72 @@
-<div class="recipe-detail">
-    <h2 class="recipe-detail__title">
+<div class="modal">
+    <h2 class="modal__title">
         {{ recipe.name }}
     </h2>
 
-    <div class="recipe-detail__meta">
-        @if (recipe.category) {
-            <span>{{ 'RECIPE_DETAIL.CATEGORY' | translate }}: {{ recipe.category }}</span>
-        }
-        <span>{{ 'RECIPE_DETAIL.SERVINGS' | translate }}: {{ recipe.servings }}</span>
-        <span>{{ 'RECIPE_DETAIL.PREP_TIME' | translate }}: {{ recipe.prepTime ?? '—' }} {{ 'RECIPE_DETAIL.MIN' | translate }}</span>
-        <span>{{ 'RECIPE_DETAIL.COOK_TIME' | translate }}: {{ recipe.cookTime ?? '—' }} {{ 'RECIPE_DETAIL.MIN' | translate }}</span>
-        <span>{{ 'RECIPE_DETAIL.USAGE_COUNT' | translate }}: {{ recipe.usageCount }}</span>
+    <div class="modal__body">
+        <div class="modal__info">
+            <p class="modal__text">
+                <span class="modal__property-name">{{ 'RECIPE_DETAIL.PREP_TIME' | translate }}:</span>
+                @if (getTotalPreparationTime() !== null) {
+                    {{ getTotalPreparationTime() }} {{ 'RECIPE_DETAIL.MIN' | translate }}
+                } @else {
+                    —
+                }
+            </p>
+            <p class="modal__text">
+                <span class="modal__property-name">{{ 'RECIPE_DETAIL.INGREDIENTS_COUNT' | translate }}:</span>
+                {{ getIngredientCount() }}
+            </p>
+        </div>
+
+        <fd-nutrients-summary
+            [calories]="calories"
+            [nutrientChartData]="nutrientChartData"
+            [config]="nutrientSummaryConfig"
+            [fiberValue]="fiberValueComputed"
+            fiberUnitKey="PRODUCT_AMOUNT_UNITS_SHORT.G"
+        ></fd-nutrients-summary>
     </div>
 
-    @if (recipe.description) {
-        <p class="recipe-detail__description">
-            {{ recipe.description }}
-        </p>
-    }
-
-    <fd-nutrients-summary
-        class="recipe-detail__summary"
-        [calories]="calories"
-        [nutrientChartData]="nutrientChartData"
-        [config]="nutrientSummaryConfig"
-        [fiberValue]="recipe.totalFiber ?? null"
-        fiberUnitKey="PRODUCT_AMOUNT_UNITS_SHORT.G"
-    ></fd-nutrients-summary>
-
-    <div class="recipe-detail__steps">
-        <h3 class="recipe-detail__steps-title">
-            {{ 'RECIPE_DETAIL.STEPS_TITLE' | translate:{ count: recipe.steps.length } }}
-        </h3>
-        <ol class="recipe-detail__steps-list">
-            @for (step of recipe.steps; track step.id) {
-                <li class="recipe-detail__step">
-                    <p class="recipe-detail__step-instruction">{{ step.instruction }}</p>
-                    <ul class="recipe-detail__ingredients">
-                        @for (ingredient of step.ingredients; track ingredient.id) {
-                            <li>
-                                {{ ingredient.productName || ingredient.nestedRecipeName || ('RECIPE_DETAIL.UNKNOWN_INGREDIENT' | translate) }}
-                                — {{ ingredient.amount }}
-                                @if (ingredient.productBaseUnit) {
-                                    {{ 'PRODUCT_AMOUNT_UNITS_SHORT.' + ingredient.productBaseUnit | translate }}
-                                }
-                            </li>
-                        }
-                    </ul>
-                </li>
+    <div class="modal__footer">
+        <div class="modal__footer-action-wrapper action-wrapper">
+            @if (canModify) {
+                <button
+                    class="action-wrapper__button"
+                    tuiButton
+                    size="m"
+                    iconStart="@tui.pen-line"
+                    (click)="onEdit()"
+                >
+                    {{ 'RECIPE_DETAIL.EDIT_BUTTON' | translate }}
+                </button>
+                <button
+                    class="action-wrapper__button action-wrapper__button--accent"
+                    tuiButton
+                    size="m"
+                    appearance="accent"
+                    iconStart="@tui.trash-2"
+                    [disabled]="isDeleteDisabled"
+                    (click)="onDelete()"
+                ></button>
+            } @else {
+                <button
+                    class="action-wrapper__button"
+                    tuiButton
+                    size="m"
+                    appearance="secondary"
+                    iconStart="@tui.copy"
+                    [disabled]="isDuplicateInProgress"
+                    (click)="onDuplicate()"
+                >
+                    {{ 'RECIPE_DETAIL.DUPLICATE_BUTTON' | translate }}
+                </button>
             }
-        </ol>
-    </div>
-
-    <div class="recipe-detail__actions">
-        @if (canModify) {
-            <button
-                tuiButton
-                size="m"
-                iconStart="@tui.pen-line"
-                (click)="onEdit()"
-            >
-                {{ 'RECIPE_DETAIL.EDIT_BUTTON' | translate }}
-            </button>
-            <button
-                tuiButton
-                size="m"
-                appearance="accent"
-                iconStart="@tui.trash-2"
-                [disabled]="isDeleteDisabled"
-                (click)="onDelete()"
-            >
-                {{ 'RECIPE_DETAIL.DELETE_BUTTON' | translate }}
-            </button>
-        } @else {
-            <button
-                tuiButton
-                size="m"
-                appearance="secondary"
-                iconStart="@tui.copy"
-                [disabled]="isDuplicateInProgress"
-                (click)="onDuplicate()"
-            >
-                {{ 'RECIPE_DETAIL.DUPLICATE_BUTTON' | translate }}
-            </button>
+        </div>
+        @if (warningMessage) {
+            <p class="modal__footer-warning-message">{{ warningMessage | translate }}</p>
         }
     </div>
-
-    @if (warningMessage) {
-        <p class="recipe-detail__warning">{{ warningMessage | translate }}</p>
-    }
 </div>
 
 <ng-template #confirmDialog let-observer>

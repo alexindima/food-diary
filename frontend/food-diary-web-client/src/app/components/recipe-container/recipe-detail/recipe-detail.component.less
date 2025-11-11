@@ -1,91 +1,89 @@
+@import 'variables';
+
 :host {
     display: block;
     width: 100%;
 }
 
-.recipe-detail {
+.modal {
+    background-color: @color-background;
     display: flex;
     flex-direction: column;
-    gap: var(--gap-m, 1rem);
-    max-width: 720px;
+    gap: @gap-xs;
+}
 
-    &__title {
-        font-size: 1.5rem;
-        font-weight: 600;
-        margin: 0;
-    }
+.modal__title {
+    font-size: 1.8em;
+    font-weight: bold;
+    margin: 0;
+    text-align: left;
+}
 
-    &__meta {
+.modal__body {
+    display: flex;
+    flex-direction: column;
+    gap: @gap-s;
+}
+
+.modal__info {
+    margin-bottom: @gap-xxs;
+}
+
+.modal__text {
+    font-size: @font-size-main;
+    color: @color-text-main;
+    margin: @gap-xs 0;
+    display: flex;
+    align-items: baseline;
+}
+
+.modal__property-name {
+    font-weight: 600;
+    margin-right: @gap-xxs;
+}
+
+.modal__footer {
+    display: flex;
+    flex-direction: column;
+    margin-top: @gap-xs;
+
+    &-action-wrapper {
         display: flex;
-        flex-wrap: wrap;
-        gap: var(--gap-s, 0.75rem);
-        color: var(--tui-text-02);
-        font-size: 0.9rem;
+        width: 100%;
+        justify-content: space-between;
+        gap: @gap-s;
     }
 
-    &__description {
+    &-warning-message {
         margin: 0;
-        color: var(--tui-text-01);
-        line-height: 1.4;
+        color: @color-text-additional;
+        font-size: 0.9em;
+        font-style: italic;
+        text-align: center;
     }
+}
 
-    &__steps-title {
-        margin: 0;
-        font-size: 1.1rem;
-        font-weight: 600;
+.action-wrapper__button {
+    flex: 1;
+    font-size: @font-size-main;
+
+    &--accent {
+        flex: 0 0 auto;
     }
+}
 
-    &__steps-list {
-        margin: 0;
-        padding-left: 1.2rem;
-        display: flex;
-        flex-direction: column;
-        gap: var(--gap-s, 0.75rem);
-    }
+.recipe-detail__confirm {
+    display: flex;
+    flex-direction: column;
+    gap: @gap-m;
 
-    &__step {
-        display: flex;
-        flex-direction: column;
-        gap: var(--gap-xs, 0.5rem);
-    }
-
-    &__step-instruction {
-        margin: 0;
-        font-weight: 600;
-    }
-
-    &__ingredients {
-        margin: 0;
-        padding-left: 1rem;
-        color: var(--tui-text-02);
-        font-size: 0.9rem;
-    }
-
-    &__actions {
-        display: flex;
-        gap: var(--gap-s, 0.75rem);
-        justify-content: flex-end;
-    }
-
-    &__warning {
-        margin: 0;
-        color: #b3261e;
-        font-weight: 500;
-    }
-
-    &__confirm {
-        display: flex;
-        flex-direction: column;
-        gap: var(--gap-m, 1rem);
-    }
-
-    &__confirm-name {
+    &-name {
         font-weight: 600;
     }
 
-    &__confirm-buttons {
+    &-buttons {
         display: flex;
-        gap: var(--gap-s, 0.75rem);
+        gap: @gap-s;
         justify-content: flex-end;
     }
 }

@@ -91,6 +91,7 @@ export class RecipeManageComponent implements OnInit {
 
     public recipe = input<Recipe | null>(null);
     public totalCalories = signal<number>(0);
+    public totalFiber = signal<number>(0);
     public nutrientChartData = signal<NutrientChartData>({
         proteins: 0,
         fats: 0,
@@ -441,7 +442,7 @@ export class RecipeManageComponent implements OnInit {
 
     private updateNutrientSummary(recipeData: Recipe | null): void {
         if (!recipeData) {
-            this.setNutrientSummary(0, 0, 0, 0);
+            this.setNutrientSummary(0, 0, 0, 0, 0);
             return;
         }
 
@@ -450,13 +451,14 @@ export class RecipeManageComponent implements OnInit {
             recipeData.totalProteins ?? this.nutrientChartData().proteins,
             recipeData.totalFats ?? this.nutrientChartData().fats,
             recipeData.totalCarbs ?? this.nutrientChartData().carbs,
+            recipeData.totalFiber ?? this.totalFiber(),
         );
     }
 
     private recalculateNutrientsFromForm(): void {
         const stepsArray = this.recipeForm.controls.steps;
         if (!stepsArray || stepsArray.length === 0) {
-            this.setNutrientSummary(0, 0, 0, 0);
+            this.setNutrientSummary(0, 0, 0, 0, 0);
             return;
         }
 
@@ -464,6 +466,7 @@ export class RecipeManageComponent implements OnInit {
         let totalProteins = 0;
         let totalFats = 0;
         let totalCarbs = 0;
+        let totalFiber = 0;
 
         stepsArray.controls.forEach(stepGroup => {
             const ingredients = stepGroup.controls.ingredients;
@@ -482,6 +485,7 @@ export class RecipeManageComponent implements OnInit {
                 totalProteins += (food.proteinsPerBase ?? 0) * multiplier;
                 totalFats += (food.fatsPerBase ?? 0) * multiplier;
                 totalCarbs += (food.carbsPerBase ?? 0) * multiplier;
+                totalFiber += (food.fiberPerBase ?? 0) * multiplier;
             });
         });
 
@@ -490,11 +494,13 @@ export class RecipeManageComponent implements OnInit {
             this.roundNutrient(totalProteins),
             this.roundNutrient(totalFats),
             this.roundNutrient(totalCarbs),
+            this.roundNutrient(totalFiber),
         );
     }
 
-    private setNutrientSummary(calories: number, proteins: number, fats: number, carbs: number): void {
+    private setNutrientSummary(calories: number, proteins: number, fats: number, carbs: number, fiber: number): void {
         this.totalCalories.set(this.roundNutrient(calories));
+        this.totalFiber.set(this.roundNutrient(fiber));
         this.nutrientChartData.set({
             proteins: this.roundNutrient(proteins),
             fats: this.roundNutrient(fats),

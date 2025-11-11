@@ -212,10 +212,12 @@
             </button>
         </div>
 
-        <fd-nutrients-summary
-            [calories]="totalCalories()"
-            [nutrientChartData]="nutrientChartData()"
-        ></fd-nutrients-summary>
+    <fd-nutrients-summary
+        [calories]="totalCalories()"
+        [nutrientChartData]="nutrientChartData()"
+        [fiberValue]="totalFiber()"
+        fiberUnitKey="PRODUCT_AMOUNT_UNITS_SHORT.G"
+    ></fd-nutrients-summary>
 
         <fd-custom-group [title]="'RECIPE_MANAGE.VISIBILITY_GROUP_TITLE' | translate">
             <div class="recipe-manage__visibility">

@@ -39,6 +39,10 @@ public class RecipeRepository : IRecipeRepository
             .AsNoTracking()
             .Include(r => r.Steps)
                 .ThenInclude(s => s.Ingredients)
+                    .ThenInclude(i => i.Product)
+            .Include(r => r.Steps)
+                .ThenInclude(s => s.Ingredients)
+                    .ThenInclude(i => i.NestedRecipe)
             .Where(includePublic
                 ? r => r.UserId == userId || r.Visibility == Visibility.PUBLIC
                 : r => r.UserId == userId);
