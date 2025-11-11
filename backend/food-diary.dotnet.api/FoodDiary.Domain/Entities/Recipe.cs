@@ -20,6 +20,13 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
     public double? TotalProteins { get; private set; }
     public double? TotalFats { get; private set; }
     public double? TotalCarbs { get; private set; }
+    public double? TotalFiber { get; private set; }
+    public bool IsNutritionAutoCalculated { get; private set; } = true;
+    public double? ManualCalories { get; private set; }
+    public double? ManualProteins { get; private set; }
+    public double? ManualFats { get; private set; }
+    public double? ManualCarbs { get; private set; }
+    public double? ManualFiber { get; private set; }
     public Visibility Visibility { get; private set; } = Visibility.PUBLIC;
     public int UsageCount { get; private set; }
 
@@ -102,14 +109,52 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
         SetModified();
     }
 
-    /// <summary>
-    /// Добавить продукт в ингредиенты рецепта
-    /// </summary>
-    public void UpdateNutrition(double? totalCalories, double? totalProteins, double? totalFats, double? totalCarbs) {
-        TotalCalories = totalCalories;
-        TotalProteins = totalProteins;
-        TotalFats = totalFats;
-        TotalCarbs = totalCarbs;
+    public void EnableAutoNutrition() {
+        if (IsNutritionAutoCalculated && ManualCalories is null && ManualProteins is null &&
+            ManualFats is null && ManualCarbs is null && ManualFiber is null) {
+            return;
+        }
+
+        IsNutritionAutoCalculated = true;
+        ManualCalories = ManualProteins = ManualFats = ManualCarbs = ManualFiber = null;
+        SetModified();
+    }
+
+    public void SetManualNutrition(
+        double? calories,
+        double? proteins,
+        double? fats,
+        double? carbs,
+        double? fiber) {
+        IsNutritionAutoCalculated = false;
+        ManualCalories = calories;
+        ManualProteins = proteins;
+        ManualFats = fats;
+        ManualCarbs = carbs;
+        ManualFiber = fiber;
+        TotalCalories = calories;
+        TotalProteins = proteins;
+        TotalFats = fats;
+        TotalCarbs = carbs;
+        TotalFiber = fiber;
+        SetModified();
+    }
+
+    public void ApplyComputedNutrition(
+        double? calories,
+        double? proteins,
+        double? fats,
+        double? carbs,
+        double? fiber) {
+        if (!IsNutritionAutoCalculated) {
+            return;
+        }
+
+        TotalCalories = calories;
+        TotalProteins = proteins;
+        TotalFats = fats;
+        TotalCarbs = carbs;
+        TotalFiber = fiber;
         SetModified();
     }
 }

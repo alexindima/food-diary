@@ -39,6 +39,20 @@ public class DuplicateRecipeCommandHandler(IRecipeRepository recipeRepository)
 
         AddStepsFromOriginal(duplicate, original);
 
+        if (original.IsNutritionAutoCalculated)
+        {
+            duplicate.EnableAutoNutrition();
+        }
+        else
+        {
+            duplicate.SetManualNutrition(
+                original.ManualCalories ?? original.TotalCalories,
+                original.ManualProteins ?? original.TotalProteins,
+                original.ManualFats ?? original.TotalFats,
+                original.ManualCarbs ?? original.TotalCarbs,
+                original.ManualFiber ?? original.TotalFiber);
+        }
+
         await recipeRepository.AddAsync(duplicate);
 
         var created = await recipeRepository.GetByIdAsync(

@@ -79,6 +79,20 @@ public class UpdateRecipeCommandHandler(IRecipeRepository recipeRepository)
             }
         }
 
+        if (command.CalculateNutritionAutomatically)
+        {
+            recipe.EnableAutoNutrition();
+        }
+        else
+        {
+            recipe.SetManualNutrition(
+                command.ManualCalories ?? 0,
+                command.ManualProteins ?? 0,
+                command.ManualFats ?? 0,
+                command.ManualCarbs ?? 0,
+                command.ManualFiber ?? 0);
+        }
+
         await recipeRepository.UpdateAsync(recipe);
 
         var updated = await recipeRepository.GetByIdAsync(

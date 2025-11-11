@@ -17,4 +17,10 @@ public record CreateRecipeCommand(
     int? CookTime,
     int Servings,
     string Visibility,
+    bool CalculateNutritionAutomatically,
+    double? ManualCalories,
+    double? ManualProteins,
+    double? ManualFats,
+    double? ManualCarbs,
+    double? ManualFiber,
     IReadOnlyList<RecipeStepInput> Steps) : ICommand<Result<RecipeResponse>>;

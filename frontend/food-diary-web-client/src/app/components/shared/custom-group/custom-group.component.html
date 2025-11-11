@@ -9,15 +9,21 @@
 
         </div>
         @if (isAccordion()) {
-            <button class="custom-group__toggle" (click)="toggleAccordion()">
+            <button type="button" class="custom-group__toggle" (click)="toggleAccordion()">
                 {{ isOpen() ? '-' : '+' }}
             </button>
         }
         @if (showCloseButton()) {
             <div class="custom-group__button" (click)="onCloseButtonClick()">X</div>
         }
-        @if (!forceCollapse() && (isOpen() || !isAccordion())) {
-            <ng-content></ng-content>
+        @if (!forceCollapse()) {
+            @if (isOpen() || !isAccordion()) {
+                <ng-content></ng-content>
+            } @else if (collapsedHint()) {
+                <div class="custom-group__hint">
+                    {{ collapsedHint() }}
+                </div>
+            }
         }
     </div>
 </div>

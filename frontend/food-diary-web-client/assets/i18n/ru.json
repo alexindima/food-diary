@@ -161,21 +161,28 @@
         "NAME": "Название",
         "NAME_PLACEHOLDER": "Введите название рецепта",
         "DESCRIPTION": "Описание",
-        "DESCRIPTION_PLACEHOLDER": "Коротко опишите блюдо",
+        "DESCRIPTION_PLACEHOLDER": "Кратко опишите блюдо",
         "CATEGORY": "Категория",
-        "CATEGORY_PLACEHOLDER": "Например: Завтрак, Десерт",
+        "CATEGORY_PLACEHOLDER": "например: Завтрак, Десерт",
         "IMAGE_URL": "Ссылка на изображение",
         "IMAGE_URL_PLACEHOLDER": "https://...",
-        "PREP_TIME": "Время приготовления (мин)",
-        "COOK_TIME": "Время готовки (мин)",
+        "PREP_TIME": "Время подготовки (мин)",
+        "COOK_TIME": "Время приготовления (мин)",
         "SERVINGS": "Количество порций",
+        "STEPS": "Шаг {{index}}",
         "STEP_TITLE": "Шаг {{index}}",
         "STEP_DESCRIPTION": "Описание шага",
         "STEP_DESCRIPTION_PLACEHOLDER": "Опишите, что нужно сделать",
         "INGREDIENTS": "Ингредиенты",
+        "INGREDIENT_NAME": "Название ингредиента",
+        "INGREDIENT_NAME_PLACEHOLDER": "Выберите ингредиент",
         "INGREDIENT_AMOUNT": "Количество",
+        "AMOUNT": "Количество",
         "ADD_STEP": "Добавить шаг",
         "ADD_INGREDIENT": "Добавить ингредиент",
+        "NUTRITION_GROUP_TITLE": "Пищевая ценность",
+        "AUTO_NUTRITION_LABEL": "Рассчитывать автоматически",
+        "MANUAL_NUTRITION_HINT": "Введённые значения перекроют автоматический расчёт.",
         "VISIBILITY_GROUP_TITLE": "Видимость",
         "VISIBILITY": "Видимость",
         "VISIBILITY_PLACEHOLDER": "Выберите видимость",
@@ -183,28 +190,9 @@
         "UNKNOWN_PRODUCT": "Продукт",
         "DRAGGING_STEP": "Перемещение шага",
         "DRAGGING_HINT": "Отпустите, чтобы изменить порядок",
-        "DRAGGING_PLACEHOLDER": "Новая позиция",
-        "SAVE_BUTTON": "Сохранить",
+        "DRAGGING_PLACEHOLDER": "Позиция вставки",
+        "SAVE_BUTTON": "Сохранить изменения",
         "ADD_BUTTON": "Создать рецепт"
-    },
-    "RECIPE_DETAIL": {
-        "CATEGORY": "Категория",
-        "SERVINGS": "Порции",
-        "PREP_TIME": "Время приготовления",
-        "COOK_TIME": "Готовка",
-        "MIN": "мин",
-        "INGREDIENTS_COUNT": "Количество ингредиентов",
-        "USAGE_COUNT": "Использований",
-        "STEPS_TITLE": "Шаги ({{count}})",
-        "UNKNOWN_INGREDIENT": "Ингредиент",
-        "EDIT_BUTTON": "Редактировать",
-        "DELETE_BUTTON": "Удалить",
-        "DUPLICATE_BUTTON": "Скопировать и редактировать",
-        "WARNING_IN_USE": "Рецепт уже используется и не может быть удалён.",
-        "WARNING_NOT_OWNER": "Редактировать и удалять рецепт может только его автор.",
-        "CONFIRM_DELETE": "Удалить рецепт",
-        "CANCEL_BUTTON": "Отмена",
-        "CONFIRM_BUTTON": "Удалить"
     },
     "PRODUCT_DETAIL": {
         "BARCODE": "Штрихкод:",
@@ -372,28 +360,6 @@
         "MANAGE_PRODUCTS": "Управлять продуктами",
         "VIEW_STATISTICS": "Посмотреть статистику"
     },
-    "RECIPE_MANAGE": {
-        "EDIT_TITLE": "Редактировать рецепт",
-        "ADD_TITLE": "Добавить новый рецепт",
-        "NAME": "Название",
-        "NAME_PLACEHOLDER": "Введите название рецепта",
-        "DESCRIPTION": "Описание",
-        "DESCRIPTION_PLACEHOLDER": "Введите описание рецепта",
-        "PREP_TIME": "Время подготовки (минуты)",
-        "COOK_TIME": "Время готовки (минуты)",
-        "SERVINGS": "Порции",
-        "STEPS": "Шаг {{ index }}",
-        "STEP_DESCRIPTION": "Описание шага",
-        "STEP_DESCRIPTION_PLACEHOLDER": "Введите описание шага",
-        "INGREDIENTS": "Ингредиенты",
-        "INGREDIENT_NAME": "Название ингредиента",
-        "INGREDIENT_NAME_PLACEHOLDER": "Выберите ингредиент",
-        "AMOUNT": "Количество",
-        "ADD_INGREDIENT": "Добавить ингредиент",
-        "ADD_STEP": "Добавить шаг",
-        "SAVE_BUTTON": "Сохранить рецепт",
-        "ADD_BUTTON": "Добавить рецепт"
-    },
     "SHARED": {
         "NUTRIENTS_SUMMARY": {
             "SUMMARY": "Сводка",
@@ -429,4 +395,7 @@
         "CAMERA_ERROR": "Ошибка инициализации камеры. Проверьте настройки камеры."
     }
 }
+
+
+
 

@@ -40,7 +40,7 @@ public static class RecipeMappings
                     .ToList()))
             .ToList();
 
-        var nutrition = RecipeNutritionCalculator.Calculate(recipe);
+        var nutrition = BuildNutrition(recipe);
 
         return new RecipeResponse(
             recipe.Id.Value,
@@ -56,6 +56,12 @@ public static class RecipeMappings
             nutrition.TotalFats,
             nutrition.TotalCarbs,
             nutrition.TotalFiber,
+            recipe.IsNutritionAutoCalculated,
+            recipe.ManualCalories,
+            recipe.ManualProteins,
+            recipe.ManualFats,
+            recipe.ManualCarbs,
+            recipe.ManualFiber,
             recipe.Visibility.ToString(),
             usageCount,
             recipe.CreatedOnUtc,
@@ -75,6 +81,12 @@ public static class RecipeMappings
             request.CookTime,
             request.Servings,
             request.Visibility,
+            request.CalculateNutritionAutomatically,
+            request.ManualCalories,
+            request.ManualProteins,
+            request.ManualFats,
+            request.ManualCarbs,
+            request.ManualFiber,
             MapSteps(request.Steps));
     }
 
@@ -91,6 +103,12 @@ public static class RecipeMappings
             request.CookTime,
             request.Servings,
             request.Visibility,
+            request.CalculateNutritionAutomatically,
+            request.ManualCalories,
+            request.ManualProteins,
+            request.ManualFats,
+            request.ManualCarbs,
+            request.ManualFiber,
             request.Steps is null ? null : MapSteps(request.Steps));
     }
 
@@ -108,4 +126,18 @@ public static class RecipeMappings
                     .ToList()))
         .ToList();
 
+    private static RecipeNutritionSummary BuildNutrition(Recipe recipe)
+    {
+        if (!recipe.IsNutritionAutoCalculated)
+        {
+            return new RecipeNutritionSummary(
+                recipe.ManualCalories ?? recipe.TotalCalories,
+                recipe.ManualProteins ?? recipe.TotalProteins,
+                recipe.ManualFats ?? recipe.TotalFats,
+                recipe.ManualCarbs ?? recipe.TotalCarbs,
+                recipe.ManualFiber ?? recipe.TotalFiber);
+        }
+
+        return RecipeNutritionCalculator.Calculate(recipe);
+    }
 }

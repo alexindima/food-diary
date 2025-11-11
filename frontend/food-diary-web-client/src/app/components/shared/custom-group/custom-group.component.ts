@@ -20,6 +20,7 @@ export class CustomGroupComponent {
      * This is a required parameter.
      */
     public title = input.required<string>();
+    public collapsedHint = input<string>();
 
     /**
      * Flag to display the close button.

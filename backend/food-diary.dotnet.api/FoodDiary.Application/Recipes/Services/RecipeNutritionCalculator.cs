@@ -65,7 +65,7 @@ public static class RecipeNutritionCalculator
             recipe.TotalProteins,
             recipe.TotalFats,
             recipe.TotalCarbs,
-            null);
+            recipe.TotalFiber);
 }
 
 public sealed record RecipeNutritionSummary(

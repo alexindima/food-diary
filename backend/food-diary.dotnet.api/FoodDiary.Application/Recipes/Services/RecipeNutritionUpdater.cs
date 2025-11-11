@@ -15,13 +15,18 @@ public static class RecipeNutritionUpdater
         IRecipeRepository repository,
         CancellationToken cancellationToken = default)
     {
+        if (!recipe.IsNutritionAutoCalculated)
+        {
+            return;
+        }
+
         var summary = RecipeNutritionCalculator.Calculate(recipe);
         if (!NeedsUpdate(recipe, summary))
         {
             return;
         }
 
-        recipe.UpdateNutrition(summary.TotalCalories, summary.TotalProteins, summary.TotalFats, summary.TotalCarbs);
+        recipe.ApplyComputedNutrition(summary.TotalCalories, summary.TotalProteins, summary.TotalFats, summary.TotalCarbs, summary.TotalFiber);
         await repository.UpdateNutritionAsync(recipe, cancellationToken);
     }
 
@@ -29,7 +34,8 @@ public static class RecipeNutritionUpdater
         !AreClose(recipe.TotalCalories, summary.TotalCalories)
         || !AreClose(recipe.TotalProteins, summary.TotalProteins)
         || !AreClose(recipe.TotalFats, summary.TotalFats)
-        || !AreClose(recipe.TotalCarbs, summary.TotalCarbs);
+        || !AreClose(recipe.TotalCarbs, summary.TotalCarbs)
+        || !AreClose(recipe.TotalFiber, summary.TotalFiber);
 
     private static bool AreClose(double? left, double? right)
     {

@@ -72,6 +72,10 @@ export class RecipeDetailComponent {
             return this.recipe.totalFiber;
         }
 
+        if (this.recipe.manualFiber !== null && this.recipe.manualFiber !== undefined) {
+            return this.recipe.manualFiber;
+        }
+
         const computed = this.computeFiberFromSteps();
         return computed ?? 0;
     }

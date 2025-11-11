@@ -124,12 +124,29 @@ export class RecipeManageComponent implements OnInit {
             cookTime: new FormControl<number | null>(null, [Validators.required, Validators.min(1)]),
             servings: new FormControl(1, { nonNullable: true, validators: [Validators.required, Validators.min(1)] }),
             visibility: new FormControl<RecipeVisibility>(RecipeVisibility.Private, { nonNullable: true }),
+            calculateNutritionAutomatically: new FormControl<boolean>(true, { nonNullable: true }),
+            manualCalories: new FormControl<number | null>(null, [Validators.min(0)]),
+            manualProteins: new FormControl<number | null>(null, [Validators.min(0)]),
+            manualFats: new FormControl<number | null>(null, [Validators.min(0)]),
+            manualCarbs: new FormControl<number | null>(null, [Validators.min(0)]),
+            manualFiber: new FormControl<number | null>(null, [Validators.min(0)]),
             steps: new FormArray<FormGroup<FormGroupControls<StepFormValues>>>([], nonEmptyArrayValidator()),
         });
 
         this.addStep();
         this.setupFormValueChangeTracking();
         this.recalculateNutrientsFromForm();
+        this.recipeForm.controls.calculateNutritionAutomatically.valueChanges
+            .pipe(takeUntilDestroyed())
+            .subscribe(isAuto => {
+                if (!this.isFormReady) {
+                    return;
+                }
+                if (!isAuto) {
+                    this.populateManualNutritionFromCurrentSummary();
+                }
+                this.updateSummaryFromForm();
+            });
         effect(() => {
             const recipe = this.recipe();
             if (recipe) {
@@ -138,6 +155,14 @@ export class RecipeManageComponent implements OnInit {
                 this.updateNutrientSummary(null);
             }
         });
+    }
+    public getStepCollapsedHint(stepIndex: number): string | null {
+        const descriptionControl = this.steps.at(stepIndex)?.controls.description;
+        const text = descriptionControl?.value?.trim();
+        if (!text) {
+            return null;
+        }
+        return text.length > 80 ? `${text.slice(0, 77)}...` : text;
     }
 
     public forceCollapse = signal(false);
@@ -172,8 +197,14 @@ export class RecipeManageComponent implements OnInit {
         const foodControl = ingredientsArray.at(ingredientIndex).controls.food;
         const unit = foodControl.value?.baseUnit;
         return unit
-            ? `, ${this.translateService.instant('PRODUCT_AMOUNT_UNITS.' + unit.toUpperCase())}`
+            ? this.translateService.instant('PRODUCT_AMOUNT_UNITS.' + unit.toUpperCase())
             : null;
+    }
+
+    public getIngredientAmountLabel(stepIndex: number, ingredientIndex: number): string {
+        const baseLabel = this.translateService.instant('RECIPE_MANAGE.INGREDIENT_AMOUNT');
+        const unit = this.getProductUnit(stepIndex, ingredientIndex);
+        return unit ? `${baseLabel} (${unit})` : baseLabel;
     }
 
     public isProductInvalid(stepIndex: number, ingredientIndex: number): boolean {
@@ -218,6 +249,12 @@ export class RecipeManageComponent implements OnInit {
             cookTime: recipeData.cookTime ?? null,
             servings: recipeData.servings,
             visibility: recipeData.visibility,
+            calculateNutritionAutomatically: recipeData.isNutritionAutoCalculated,
+            manualCalories: recipeData.manualCalories ?? recipeData.totalCalories ?? null,
+            manualProteins: recipeData.manualProteins ?? recipeData.totalProteins ?? null,
+            manualFats: recipeData.manualFats ?? recipeData.totalFats ?? null,
+            manualCarbs: recipeData.manualCarbs ?? recipeData.totalCarbs ?? null,
+            manualFiber: recipeData.manualFiber ?? recipeData.totalFiber ?? null,
         });
 
         this.resetSteps();
@@ -246,6 +283,8 @@ export class RecipeManageComponent implements OnInit {
             recipeData.totalCarbs == null
         ) {
             this.recalculateNutrientsFromForm();
+        } else {
+            this.updateSummaryFromForm();
         }
     }
 
@@ -425,6 +464,12 @@ export class RecipeManageComponent implements OnInit {
             cookTime: formValue.cookTime ?? 0,
             servings: formValue.servings,
             visibility: formValue.visibility ?? RecipeVisibility.Private,
+            calculateNutritionAutomatically: formValue.calculateNutritionAutomatically,
+            manualCalories: formValue.calculateNutritionAutomatically ? null : (formValue.manualCalories ?? 0),
+            manualProteins: formValue.calculateNutritionAutomatically ? null : (formValue.manualProteins ?? 0),
+            manualFats: formValue.calculateNutritionAutomatically ? null : (formValue.manualFats ?? 0),
+            manualCarbs: formValue.calculateNutritionAutomatically ? null : (formValue.manualCarbs ?? 0),
+            manualFiber: formValue.calculateNutritionAutomatically ? null : (formValue.manualFiber ?? 0),
             steps,
         };
     }
@@ -436,7 +481,7 @@ export class RecipeManageComponent implements OnInit {
                 if (!this.isFormReady) {
                     return;
                 }
-                this.recalculateNutrientsFromForm();
+                this.updateSummaryFromForm();
             });
     }
 
@@ -453,6 +498,31 @@ export class RecipeManageComponent implements OnInit {
             recipeData.totalCarbs ?? this.nutrientChartData().carbs,
             recipeData.totalFiber ?? this.totalFiber(),
         );
+    }
+
+    private updateSummaryFromForm(): void {
+        if (this.recipeForm.controls.calculateNutritionAutomatically.value) {
+            this.recalculateNutrientsFromForm();
+            return;
+        }
+
+        this.setNutrientSummary(
+            this.recipeForm.controls.manualCalories.value ?? 0,
+            this.recipeForm.controls.manualProteins.value ?? 0,
+            this.recipeForm.controls.manualFats.value ?? 0,
+            this.recipeForm.controls.manualCarbs.value ?? 0,
+            this.recipeForm.controls.manualFiber.value ?? 0,
+        );
+    }
+
+    private populateManualNutritionFromCurrentSummary(): void {
+        this.recipeForm.patchValue({
+            manualCalories: this.totalCalories(),
+            manualProteins: this.nutrientChartData().proteins,
+            manualFats: this.nutrientChartData().fats,
+            manualCarbs: this.nutrientChartData().carbs,
+            manualFiber: this.totalFiber(),
+        }, { emitEvent: false });
     }
 
     private recalculateNutrientsFromForm(): void {
@@ -522,6 +592,12 @@ interface RecipeFormValues {
     cookTime: number | null;
     servings: number;
     visibility: RecipeVisibility;
+    calculateNutritionAutomatically: boolean;
+    manualCalories: number | null;
+    manualProteins: number | null;
+    manualFats: number | null;
+    manualCarbs: number | null;
+    manualFiber: number | null;
     steps: StepFormValues[];
 }
 

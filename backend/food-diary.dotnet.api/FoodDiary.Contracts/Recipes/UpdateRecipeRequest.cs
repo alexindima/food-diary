@@ -11,4 +11,10 @@ public record UpdateRecipeRequest(
     int? CookTime,
     int? Servings,
     string? Visibility,
+    bool CalculateNutritionAutomatically,
+    double? ManualCalories,
+    double? ManualProteins,
+    double? ManualFats,
+    double? ManualCarbs,
+    double? ManualFiber,
     IReadOnlyList<RecipeStepRequest>? Steps);

@@ -24,6 +24,12 @@ export interface Recipe {
     totalFats?: number | null;
     totalCarbs?: number | null;
     totalFiber?: number | null;
+    isNutritionAutoCalculated: boolean;
+    manualCalories?: number | null;
+    manualProteins?: number | null;
+    manualFats?: number | null;
+    manualCarbs?: number | null;
+    manualFiber?: number | null;
     steps: RecipeStep[];
     nutrientChartData?: NutrientChartData;
 }
@@ -65,6 +71,12 @@ export interface RecipeDto {
     cookTime: number;
     servings: number;
     visibility: RecipeVisibility;
+    calculateNutritionAutomatically: boolean;
+    manualCalories?: number | null;
+    manualProteins?: number | null;
+    manualFats?: number | null;
+    manualCarbs?: number | null;
+    manualFiber?: number | null;
     steps: RecipeStepDto[];
 }
 

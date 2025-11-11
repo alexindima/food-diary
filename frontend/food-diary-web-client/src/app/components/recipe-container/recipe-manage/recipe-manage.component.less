@@ -153,4 +153,35 @@
             gap: @gap-xl;
         }
     }
+
+    &__nutrition-mode {
+        display: flex;
+        flex-direction: column;
+        gap: @gap-s;
+    }
+
+    &__nutrition-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-weight: 600;
+
+        input[type='checkbox'] {
+            width: 2.5rem;
+            height: 1.4rem;
+        }
+    }
+
+    &__manual-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: @gap-s;
+    }
+
+    &__nutrition-hint {
+        margin: 0;
+        font-size: 0.9em;
+        color: @color-text-additional;
+        font-style: italic;
+    }
 }

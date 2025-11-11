@@ -3,6 +3,7 @@ using System;
 using FoodDiary.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FoodDiary.Infrastructure.Migrations
 {
     [DbContext(typeof(FoodDiaryDbContext))]
-    partial class FoodDiaryDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251111000000_AddRecipeCustomNutrition")]
+    partial class AddRecipeCustomNutrition
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -127,12 +130,6 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.Property<double>("FatsPerBase")
                         .HasColumnType("double precision");
 
-                    b.Property<double>("FiberPerBase")
-                        .HasColumnType("double precision");
-
-                    b.Property<string>("ImageUrl")
-                        .HasColumnType("text");
-
                     b.Property<DateTime?>("ModifiedOnUtc")
                         .HasColumnType("timestamp with time zone");
 
@@ -169,11 +166,6 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.Property<int?>("CookTime")
                         .HasColumnType("integer");
 
-                    b.Property<bool>("IsNutritionAutoCalculated")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(true);
-
                     b.Property<DateTime>("CreatedOnUtc")
                         .HasColumnType("timestamp with time zone");
 
@@ -182,6 +174,11 @@ namespace FoodDiary.Infrastructure.Migrations
 
                     b.Property<string>("ImageUrl")
                         .HasColumnType("text");
+
+                    b.Property<bool>("IsNutritionAutoCalculated")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true);
 
                     b.Property<double?>("ManualCalories")
                         .HasColumnType("double precision");
@@ -286,12 +283,12 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.Property<string>("ImageUrl")
                         .HasColumnType("text");
 
+                    b.Property<DateTime?>("ModifiedOnUtc")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("Instruction")
                         .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<DateTime?>("ModifiedOnUtc")
-                        .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid>("RecipeId")
                         .HasColumnType("uuid");
@@ -304,65 +301,6 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.HasIndex("RecipeId");
 
                     b.ToTable("RecipeSteps");
-                });
-
-            modelBuilder.Entity("FoodDiary.Domain.Entities.User", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime?>("BirthDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime>("CreatedOnUtc")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("FirstName")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Gender")
-                        .HasColumnType("text");
-
-                    b.Property<double?>("Height")
-                        .HasColumnType("double precision");
-
-                    b.Property<bool>("IsActive")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(true);
-
-                    b.Property<string>("LastName")
-                        .HasColumnType("text");
-
-                    b.Property<DateTime?>("ModifiedOnUtc")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("ProfileImage")
-                        .HasColumnType("text");
-
-                    b.Property<string>("RefreshToken")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Username")
-                        .HasColumnType("text");
-
-                    b.Property<double?>("Weight")
-                        .HasColumnType("double precision");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Email")
-                        .IsUnique();
-
-                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.Meal", b =>
@@ -475,11 +413,6 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.Navigation("NestedRecipeUsages");
 
                     b.Navigation("Steps");
-                });
-
-            modelBuilder.Entity("FoodDiary.Domain.Entities.RecipeStep", b =>
-                {
-                    b.Navigation("Ingredients");
                 });
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.User", b =>

@@ -115,6 +115,7 @@
                         [showCloseButton]="!first"
                         [isAccordion]="true"
                         [forceCollapse]="forceCollapse()"
+                        [collapsedHint]="getStepCollapsedHint(stepIndex) ?? undefined"
                         (closeButtonClick)="removeStep(stepIndex)"
                     >
                         <div class="recipe-manage__step">
@@ -141,13 +142,14 @@
                                         [formGroupName]="ingredientIndex"
                                     >
                                         <div class="recipe-manage__ingredient-name">
+                                            <input type="hidden" formControlName="food" />
                                             <tui-textfield>
-                                                <label tuiLabel>{{ getProductName(stepIndex, ingredientIndex) }}</label>
+                                                <label tuiLabel>{{ 'RECIPE_MANAGE.INGREDIENT_NAME' | translate }}</label>
                                                 <input
                                                     tuiTextfield
                                                     class="recipe-manage__ingredient-name-control"
                                                     readonly
-                                                    formControlName="food"
+                                                    [value]="getProductName(stepIndex, ingredientIndex)"
                                                     (click)="onProductSelectClick(stepIndex, ingredientIndex)"
                                                 />
                                                 <tui-icon
@@ -163,10 +165,7 @@
                                         <div class="recipe-manage__ingredient-quantity-wrapper">
                                             <div class="recipe-manage__ingredient-quantity">
                                                 <tui-input-number formControlName="amount">
-                                                    <label tuiLabel>
-                                                        {{ 'RECIPE_MANAGE.INGREDIENT_AMOUNT' | translate }}
-                                                        {{ getProductUnit(stepIndex, ingredientIndex) }}
-                                                    </label>
+                                                    {{ getIngredientAmountLabel(stepIndex, ingredientIndex) }}
                                                     <input tuiTextfieldLegacy placeholder="0" />
                                                 </tui-input-number>
                                                 <tui-error

@@ -72,6 +72,31 @@ public class UpdateRecipeCommandValidator : AbstractValidator<UpdateRecipeComman
 
         RuleFor(x => x)
             .CustomAsync(EnsureRecipeEditableAsync);
+
+        RuleFor(x => x)
+            .Must(cmd => cmd.CalculateNutritionAutomatically || HasManualNutrition(cmd))
+            .WithErrorCode("Validation.Invalid")
+            .WithMessage("Manual nutrition values are required when automatic calculation is disabled.");
+
+        RuleFor(x => x.ManualCalories)
+            .GreaterThanOrEqualTo(0)
+            .When(x => !x.CalculateNutritionAutomatically);
+
+        RuleFor(x => x.ManualProteins)
+            .GreaterThanOrEqualTo(0)
+            .When(x => !x.CalculateNutritionAutomatically);
+
+        RuleFor(x => x.ManualFats)
+            .GreaterThanOrEqualTo(0)
+            .When(x => !x.CalculateNutritionAutomatically);
+
+        RuleFor(x => x.ManualCarbs)
+            .GreaterThanOrEqualTo(0)
+            .When(x => !x.CalculateNutritionAutomatically);
+
+        RuleFor(x => x.ManualFiber)
+            .GreaterThanOrEqualTo(0)
+            .When(x => !x.CalculateNutritionAutomatically);
     }
 
     private async Task EnsureRecipeEditableAsync(
@@ -135,4 +160,11 @@ public class UpdateRecipeCommandValidator : AbstractValidator<UpdateRecipeComman
 
     private static bool BeValidVisibility(string? visibility) =>
         visibility != null && Enum.TryParse(visibility, ignoreCase: true, out Visibility _);
+
+    private static bool HasManualNutrition(UpdateRecipeCommand command) =>
+        command.ManualCalories.HasValue
+        && command.ManualProteins.HasValue
+        && command.ManualFats.HasValue
+        && command.ManualCarbs.HasValue
+        && command.ManualFiber.HasValue;
 }
