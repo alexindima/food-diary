@@ -185,6 +185,21 @@ export class RecipeListComponent implements OnInit {
             this.onDeleteRecipe(recipe);
         }
     }
+
+    public getIngredientCount(recipe: Recipe): number {
+        if (!recipe?.steps?.length) {
+            return 0;
+        }
+
+        return recipe.steps.reduce((total, step) => total + (step.ingredients?.length ?? 0), 0);
+    }
+
+    public getPrepTime(recipe: Recipe): number | null {
+        const prep = recipe.prepTime ?? 0;
+        const cook = recipe.cookTime ?? 0;
+        const total = prep + cook;
+        return total > 0 ? total : null;
+    }
 }
 
 interface RecipeSearchFormValues {

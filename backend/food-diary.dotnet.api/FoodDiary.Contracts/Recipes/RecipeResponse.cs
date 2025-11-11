@@ -36,5 +36,11 @@ public record RecipeIngredientResponse(
     Guid? ProductId,
     string? ProductName,
     string? ProductBaseUnit,
+    double? ProductBaseAmount,
+    double? ProductCaloriesPerBase,
+    double? ProductProteinsPerBase,
+    double? ProductFatsPerBase,
+    double? ProductCarbsPerBase,
+    double? ProductFiberPerBase,
     Guid? NestedRecipeId,
     string? NestedRecipeName);

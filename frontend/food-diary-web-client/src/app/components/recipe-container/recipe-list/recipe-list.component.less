@@ -108,21 +108,10 @@
         }
     }
 
-    &__title {
-        display: flex;
-        flex-direction: column;
-        gap: @gap-xxs;
-    }
-
     &__name {
         font-size: 1.5em;
         font-weight: bold;
         color: @color-text-main;
-    }
-
-    &__category {
-        font-size: 0.9em;
-        color: @color-text-additional;
     }
 
     &__badges {
@@ -132,42 +121,52 @@
         align-items: center;
     }
 
-    &__info {
+    &__metrics {
         display: flex;
         justify-content: space-between;
         align-items: center;
+        gap: @gap-xs;
 
         @media @media-mobile {
             flex-direction: column;
             align-items: flex-start;
-            gap: @gap-xs;
         }
     }
 
-    &__servings,
     &__calories {
-        font-size: 1.1em;
+        font-size: 1.2em;
         font-weight: bold;
         color: @color-text-main;
     }
 
-    &__description {
-        margin: 0;
-        font-size: 0.95em;
-        color: @color-text-main;
-    }
-
-    &__stats {
+    &__meta {
         display: flex;
         justify-content: space-between;
         align-items: center;
+        gap: @gap-xs;
+        flex-wrap: wrap;
         font-size: 0.9em;
         color: @color-text-additional;
 
         @media @media-mobile {
             flex-direction: column;
             align-items: flex-start;
-            gap: @gap-xs;
         }
     }
+
+    &__prep-time,
+    &__ingredients {
+        font-weight: normal;
+    }
+
+    &__macros {
+        font-size: 0.9em;
+        color: @color-text-additional;
+        text-align: right;
+
+        @media @media-mobile {
+            text-align: left;
+        }
+    }
+
 }

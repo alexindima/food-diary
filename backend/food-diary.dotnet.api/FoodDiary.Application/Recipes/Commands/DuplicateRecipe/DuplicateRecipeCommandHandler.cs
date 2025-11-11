@@ -5,6 +5,7 @@ using FoodDiary.Application.Recipes.Mappings;
 using FoodDiary.Contracts.Recipes;
 using FoodDiary.Domain.Entities;
 using FoodDiary.Domain.Enums;
+using FoodDiary.Application.Recipes.Services;
 
 namespace FoodDiary.Application.Recipes.Commands.DuplicateRecipe;
 
@@ -45,12 +46,15 @@ public class DuplicateRecipeCommandHandler(IRecipeRepository recipeRepository)
             command.UserId.Value,
             includePublic: false,
             includeSteps: true,
+            asTracking: true,
             cancellationToken: cancellationToken);
 
         if (created is null)
         {
             return Result.Failure<RecipeResponse>(Errors.Recipe.InvalidData("Failed to load duplicated recipe."));
         }
+
+        await RecipeNutritionUpdater.EnsureNutritionAsync(created, recipeRepository, cancellationToken);
 
         return Result.Success(created.ToResponse(0, true));
     }

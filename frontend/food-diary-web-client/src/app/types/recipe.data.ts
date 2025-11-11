@@ -42,6 +42,12 @@ export interface RecipeIngredient {
     productId?: string | null;
     productName?: string | null;
     productBaseUnit?: MeasurementUnit | string | null;
+    productBaseAmount?: number | null;
+    productCaloriesPerBase?: number | null;
+    productProteinsPerBase?: number | null;
+    productFatsPerBase?: number | null;
+    productCarbsPerBase?: number | null;
+    productFiberPerBase?: number | null;
     nestedRecipeId?: string | null;
     nestedRecipeName?: string | null;
 }

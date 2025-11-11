@@ -35,7 +35,10 @@ public class RecipeRepository : IRecipeRepository
         var pageNumber = Math.Max(page, 1);
         var pageSize = Math.Max(limit, 1);
 
-        IQueryable<Recipe> query = _context.Recipes.AsNoTracking()
+        IQueryable<Recipe> query = _context.Recipes
+            .AsNoTracking()
+            .Include(r => r.Steps)
+                .ThenInclude(s => s.Ingredients)
             .Where(includePublic
                 ? r => r.UserId == userId || r.Visibility == Visibility.PUBLIC
                 : r => r.UserId == userId);
@@ -113,5 +116,22 @@ public class RecipeRepository : IRecipeRepository
     {
         _context.Recipes.Remove(recipe);
         await _context.SaveChangesAsync();
+    }
+
+    public async Task UpdateNutritionAsync(Recipe recipe, CancellationToken cancellationToken = default)
+    {
+        var entry = _context.Entry(recipe);
+        if (entry.State == EntityState.Detached)
+        {
+            _context.Attach(recipe);
+            entry = _context.Entry(recipe);
+        }
+
+        entry.Property(r => r.TotalCalories).IsModified = true;
+        entry.Property(r => r.TotalProteins).IsModified = true;
+        entry.Property(r => r.TotalFats).IsModified = true;
+        entry.Property(r => r.TotalCarbs).IsModified = true;
+
+        await _context.SaveChangesAsync(cancellationToken);
     }
 }

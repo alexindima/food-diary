@@ -1,5 +1,5 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { catchError, Observable, of, tap, throwError } from 'rxjs';
+import { catchError, map, Observable, of, tap, throwError } from 'rxjs';
 import { AuthResponse, LoginRequest, RegisterRequest } from '../types/auth.data';
 import { environment } from '../../environments/environment';
 import { ApiService } from './api.service';
@@ -60,20 +60,21 @@ export class AuthService extends ApiService {
         );
     }
 
-    public refreshToken(): Observable<AuthResponse | null> {
+    public refreshToken(): Observable<string | null> {
         const refreshToken = this.getRefreshToken();
         if (!refreshToken) {
             void this.onLogout(true);
             return of(null);
         }
 
-        return this.post<AuthResponse>('refresh', { refreshToken }).pipe(
-            tap(response => {
-                if (response) {
-                    this.setToken(response.accessToken);
-                    this.setRefreshToken(response.refreshToken);
-                    this.authTokenSignal.set(response.accessToken);
+        return this.post<{ accessToken: string }>('refresh', { refreshToken }).pipe(
+            map(response => {
+                const accessToken = response?.accessToken ?? null;
+                if (accessToken) {
+                    this.setToken(accessToken);
+                    this.authTokenSignal.set(accessToken);
                 }
+                return accessToken;
             }),
             catchError(error => {
                 console.error('refreshToken error', error);
@@ -139,12 +140,21 @@ export class AuthService extends ApiService {
         sessionStorage.removeItem('authToken');
     }
 
-    private setRefreshToken(token: string): void {
+    private setRefreshToken(token: string | null | undefined): void {
+        if (!token) {
+            this.clearRefreshToken();
+            return;
+        }
         localStorage.setItem('refreshToken', token);
     }
 
     private getRefreshToken(): string | null {
-        return localStorage.getItem('refreshToken');
+        const token = localStorage.getItem('refreshToken');
+        if (!token || token === 'undefined' || token === 'null') {
+            this.clearRefreshToken();
+            return null;
+        }
+        return token;
     }
 
     private clearRefreshToken(): void {

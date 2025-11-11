@@ -10,6 +10,7 @@ using FoodDiary.Application.Recipes.Mappings;
 using FoodDiary.Contracts.Recipes;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Application.Recipes.Services;
 
 namespace FoodDiary.Application.Recipes.Commands.UpdateRecipe;
 
@@ -85,12 +86,15 @@ public class UpdateRecipeCommandHandler(IRecipeRepository recipeRepository)
             userId,
             includePublic: false,
             includeSteps: true,
+            asTracking: true,
             cancellationToken: cancellationToken);
 
         if (updated is null)
         {
             return Result.Failure<RecipeResponse>(Errors.Recipe.InvalidData("Failed to load updated recipe."));
         }
+
+        await RecipeNutritionUpdater.EnsureNutritionAsync(updated, recipeRepository, cancellationToken);
 
         return Result.Success(updated.ToResponse(updated.MealItems.Count + updated.NestedRecipeUsages.Count, true));
     }

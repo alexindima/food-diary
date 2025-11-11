@@ -55,11 +55,6 @@
                             <div class="recipe-card__header">
                                 <div class="recipe-card__title">
                                     <span class="recipe-card__name">{{ recipe.name }}</span>
-                                    @if (recipe.category) {
-                                        <span class="recipe-card__category">
-                                            {{ recipe.category }}
-                                        </span>
-                                    }
                                 </div>
                                 <div class="recipe-card__badges">
                                     @if (recipe.isOwnedByCurrentUser) {
@@ -76,23 +71,27 @@
                                     ></fd-badge>
                                 </div>
                             </div>
-                            <div class="recipe-card__info">
-                                <span class="recipe-card__servings">
-                                    {{ 'RECIPE_LIST.SERVINGS' | translate }}: {{ recipe.servings }}
-                                </span>
+                            <div class="recipe-card__metrics">
                                 <span class="recipe-card__calories">
                                     {{ 'RECIPE_LIST.TOTAL_CALORIES' | translate }}: {{ recipe.totalCalories ?? '-' }}
                                 </span>
-                            </div>
-                            <p class="recipe-card__description">
-                                {{ recipe.description || ('RECIPE_LIST.NO_DESCRIPTION' | translate) }}
-                            </p>
-                            <div class="recipe-card__stats">
-                                <span>
-                                    {{ 'RECIPE_LIST.USAGE_COUNT' | translate }}: {{ recipe.usageCount }}
+                                <span class="recipe-card__macros">
+                                    {{ 'PRODUCT_LIST.PROTEINS' | translate }}: {{ recipe.totalProteins ?? '-' }}g |
+                                    {{ 'PRODUCT_LIST.FATS' | translate }}: {{ recipe.totalFats ?? '-' }}g |
+                                    {{ 'PRODUCT_LIST.CARBS' | translate }}: {{ recipe.totalCarbs ?? '-' }}g
                                 </span>
-                                <span>
-                                    {{ 'RECIPE_LIST.STEPS_COUNT' | translate }}: {{ recipe.steps.length }}
+                            </div>
+                            <div class="recipe-card__meta">
+                                <span class="recipe-card__prep-time">
+                                    {{ 'RECIPE_LIST.PREP_TIME' | translate }}:
+                                    @if (getPrepTime(recipe) !== null) {
+                                        {{ getPrepTime(recipe) }} {{ 'RECIPE_DETAIL.MIN' | translate }}
+                                    } @else {
+                                        -
+                                    }
+                                </span>
+                                <span class="recipe-card__ingredients">
+                                    {{ 'RECIPE_LIST.INGREDIENTS_COUNT' | translate }}: {{ getIngredientCount(recipe) }}
                                 </span>
                             </div>
                         </div>

@@ -41,6 +41,7 @@ import { DropZoneDirective } from '../../../directives/drop-zone.directive';
 import { DraggableDirective } from '../../../directives/draggable.directive';
 import { NavigationService } from '../../../services/navigation.service';
 import { finalize } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: TUI_VALIDATION_ERRORS,
@@ -110,6 +111,7 @@ export class RecipeManageComponent implements OnInit {
         dismissible: true,
         appearance: 'without-border-radius',
     });
+    private isFormReady = true;
 
     public constructor() {
         this.recipeForm = new FormGroup<RecipeFormData>({
@@ -125,10 +127,14 @@ export class RecipeManageComponent implements OnInit {
         });
 
         this.addStep();
+        this.setupFormValueChangeTracking();
+        this.recalculateNutrientsFromForm();
         effect(() => {
             const recipe = this.recipe();
             if (recipe) {
                 this.populateForm(recipe);
+            } else {
+                this.updateNutrientSummary(null);
             }
         });
     }
@@ -201,6 +207,7 @@ export class RecipeManageComponent implements OnInit {
     }
 
     private populateForm(recipeData: Recipe): void {
+        this.isFormReady = false;
         this.recipeForm.patchValue({
             name: recipeData.name,
             description: recipeData.description ?? '',
@@ -228,6 +235,17 @@ export class RecipeManageComponent implements OnInit {
             };
             this.steps.push(this.createStepGroup(stepValue));
         });
+
+        this.updateNutrientSummary(recipeData);
+        this.isFormReady = true;
+        if (
+            recipeData.totalCalories == null &&
+            recipeData.totalProteins == null &&
+            recipeData.totalFats == null &&
+            recipeData.totalCarbs == null
+        ) {
+            this.recalculateNutrientsFromForm();
+        }
     }
 
     private resetSteps(): void {
@@ -282,6 +300,7 @@ export class RecipeManageComponent implements OnInit {
             ? (rawUnit as MeasurementUnit)
             : MeasurementUnit.G;
 
+        const baseAmount = ingredient.productBaseAmount ?? 100;
         const product: Product = {
             id: ingredient.productId,
             name: ingredient.productName ?? this.translateService.instant('RECIPE_MANAGE.UNKNOWN_PRODUCT'),
@@ -291,12 +310,12 @@ export class RecipeManageComponent implements OnInit {
             category: null,
             description: null,
             imageUrl: null,
-            baseAmount: 100,
-            caloriesPerBase: 0,
-            proteinsPerBase: 0,
-            fatsPerBase: 0,
-            carbsPerBase: 0,
-            fiberPerBase: 0,
+            baseAmount,
+            caloriesPerBase: ingredient.productCaloriesPerBase ?? 0,
+            proteinsPerBase: ingredient.productProteinsPerBase ?? 0,
+            fatsPerBase: ingredient.productFatsPerBase ?? 0,
+            carbsPerBase: ingredient.productCarbsPerBase ?? 0,
+            fiberPerBase: ingredient.productFiberPerBase ?? 0,
             usageCount: 0,
             visibility: ProductVisibility.Private,
             createdAt: new Date(),
@@ -409,6 +428,83 @@ export class RecipeManageComponent implements OnInit {
         };
     }
 
+    private setupFormValueChangeTracking(): void {
+        this.recipeForm.valueChanges
+            .pipe(takeUntilDestroyed())
+            .subscribe(() => {
+                if (!this.isFormReady) {
+                    return;
+                }
+                this.recalculateNutrientsFromForm();
+            });
+    }
+
+    private updateNutrientSummary(recipeData: Recipe | null): void {
+        if (!recipeData) {
+            this.setNutrientSummary(0, 0, 0, 0);
+            return;
+        }
+
+        this.setNutrientSummary(
+            recipeData.totalCalories ?? this.totalCalories(),
+            recipeData.totalProteins ?? this.nutrientChartData().proteins,
+            recipeData.totalFats ?? this.nutrientChartData().fats,
+            recipeData.totalCarbs ?? this.nutrientChartData().carbs,
+        );
+    }
+
+    private recalculateNutrientsFromForm(): void {
+        const stepsArray = this.recipeForm.controls.steps;
+        if (!stepsArray || stepsArray.length === 0) {
+            this.setNutrientSummary(0, 0, 0, 0);
+            return;
+        }
+
+        let totalCalories = 0;
+        let totalProteins = 0;
+        let totalFats = 0;
+        let totalCarbs = 0;
+
+        stepsArray.controls.forEach(stepGroup => {
+            const ingredients = stepGroup.controls.ingredients;
+            ingredients.controls.forEach(ingredientGroup => {
+                const food = ingredientGroup.controls.food.value;
+                const amount = ingredientGroup.controls.amount.value;
+
+                if (!food || !amount || amount <= 0) {
+                    return;
+                }
+
+                const baseAmount = food.baseAmount || 1;
+                const multiplier = amount / baseAmount;
+
+                totalCalories += (food.caloriesPerBase ?? 0) * multiplier;
+                totalProteins += (food.proteinsPerBase ?? 0) * multiplier;
+                totalFats += (food.fatsPerBase ?? 0) * multiplier;
+                totalCarbs += (food.carbsPerBase ?? 0) * multiplier;
+            });
+        });
+
+        this.setNutrientSummary(
+            this.roundNutrient(totalCalories),
+            this.roundNutrient(totalProteins),
+            this.roundNutrient(totalFats),
+            this.roundNutrient(totalCarbs),
+        );
+    }
+
+    private setNutrientSummary(calories: number, proteins: number, fats: number, carbs: number): void {
+        this.totalCalories.set(this.roundNutrient(calories));
+        this.nutrientChartData.set({
+            proteins: this.roundNutrient(proteins),
+            fats: this.roundNutrient(fats),
+            carbs: this.roundNutrient(carbs),
+        });
+    }
+
+    private roundNutrient(value: number): number {
+        return Math.round(value * 100) / 100;
+    }
 }
 
 interface RecipeFormValues {

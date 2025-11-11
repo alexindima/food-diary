@@ -23,29 +23,25 @@ export class AuthInterceptor implements HttpInterceptor {
                     return throwError(() => error);
                 }
 
-                if (this.isTokenExpiredError(error)) {
-                    return this.authService.refreshToken().pipe(
-                        switchMap(newAuthResponse => {
-                            if (newAuthResponse) {
-                                const newRequest = req.clone({
-                                    headers: req.headers.set('Authorization', `Bearer ${newAuthResponse.accessToken}`),
-                                });
-                                return next.handle(newRequest);
-                            }
-                            void this.authService.onLogout(true);
-                            return throwError(() => error);
-                        }),
-                    );
-                }
+                return this.authService.refreshToken().pipe(
+                    switchMap(accessToken => {
+                        if (accessToken) {
+                            const newRequest = req.clone({
+                                headers: req.headers.set('Authorization', `Bearer ${accessToken}`),
+                            });
+                            return next.handle(newRequest);
+                        }
 
-                void this.authService.onLogout(true);
-                return throwError(() => error);
+                        void this.authService.onLogout(true);
+                        return throwError(() => error);
+                    }),
+                    catchError(refreshError => {
+                        void this.authService.onLogout(true);
+                        return throwError(() => refreshError);
+                    }),
+                );
             }),
         );
-    }
-
-    private isTokenExpiredError(error: HttpErrorResponse): boolean {
-        return error.error?.data?.message === 'Token has expired';
     }
 
     private isAuthRequest(url: string): boolean {

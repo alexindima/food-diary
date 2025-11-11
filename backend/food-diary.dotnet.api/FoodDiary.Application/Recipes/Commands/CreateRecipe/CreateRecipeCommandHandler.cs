@@ -10,6 +10,7 @@ using FoodDiary.Contracts.Recipes;
 using FoodDiary.Domain.Entities;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Application.Recipes.Services;
 
 namespace FoodDiary.Application.Recipes.Commands.CreateRecipe;
 
@@ -41,12 +42,15 @@ public class CreateRecipeCommandHandler(IRecipeRepository recipeRepository)
             userId,
             includePublic: false,
             includeSteps: true,
+            asTracking: true,
             cancellationToken: cancellationToken);
 
         if (created is null)
         {
             return Result.Failure<RecipeResponse>(Errors.Recipe.InvalidData("Failed to load created recipe."));
         }
+
+        await RecipeNutritionUpdater.EnsureNutritionAsync(created, recipeRepository, cancellationToken);
 
         return Result.Success(created.ToResponse(0, true));
     }
