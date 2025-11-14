@@ -42,6 +42,8 @@
                             "node_modules/@taiga-ui/core/styles/taiga-ui-theme.less",
                             "node_modules/@taiga-ui/core/styles/taiga-ui-fonts.less",
                             "node_modules/@taiga-ui/styles/taiga-ui-global.less",
+                            "src/styles/design-tokens.global.scss",
+                            "src/styles/material-theme.scss",
                             "src/styles.less"
                         ],
                         "scripts": [],
@@ -128,7 +130,14 @@
                                 "output": "/assets"
                             }
                         ],
-                        "styles": ["src/styles.less"],
+                        "styles": [
+                            "node_modules/@taiga-ui/core/styles/taiga-ui-theme.less",
+                            "node_modules/@taiga-ui/core/styles/taiga-ui-fonts.less",
+                            "node_modules/@taiga-ui/styles/taiga-ui-global.less",
+                            "src/styles/design-tokens.global.scss",
+                            "src/styles/material-theme.scss",
+                            "src/styles.less"
+                        ],
                         "scripts": []
                     }
                 }

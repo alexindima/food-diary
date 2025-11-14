@@ -41,6 +41,7 @@ import { firstValueFrom } from 'rxjs';
 import { ZXingScannerModule } from '@zxing/ngx-scanner';
 import { BarcodeScannerComponent } from '../../shared/barcode-scanner/barcode-scanner.component';
 import { ValidationErrors } from '../../../types/validation-error.data';
+import { FdUiInputComponent } from '../../../ui-kit/input/fd-ui-input.component';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: TUI_VALIDATION_ERRORS,
@@ -77,6 +78,7 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
         CustomGroupComponent,
         ZXingScannerModule,
         TuiIcon,
+        FdUiInputComponent,
     ],
 })
 export class BaseProductManageComponent implements OnInit {
@@ -201,6 +203,32 @@ export class BaseProductManageComponent implements OnInit {
 
         const unitLabel = this.translateService.instant(`PRODUCT_AMOUNT_UNITS_SHORT.${baseUnit}`);
         return `${baseAmount} ${unitLabel}`;
+    }
+
+    public getControlError(controlName: keyof ProductFormData): string | null {
+        const control = this.productForm.controls[controlName];
+
+        if (!control || (!control.touched && !control.dirty)) {
+            return null;
+        }
+
+        const errors = control.errors;
+
+        if (!errors) {
+            return null;
+        }
+
+        if (errors['required']) {
+            return this.translateService.instant('FORM_ERRORS.REQUIRED');
+        }
+
+        if (errors['min']) {
+            return this.translateService.instant('FORM_ERRORS.INVALID_MIN_AMOUNT_MUST_BE_MORE_ZERO', {
+                min: errors['min'].min,
+            });
+        }
+
+        return null;
     }
 
     private updateSummary(): void {

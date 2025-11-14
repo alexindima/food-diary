@@ -8,19 +8,13 @@
     </h2>
     <form class="product-manage__form" [formGroup]="productForm" (ngSubmit)="onSubmit()">
         <div class="product-manage__field product-manage__field--name">
-            <tui-textfield type="text">
-                <label tuiLabel>{{ 'PRODUCT_MANAGE.NAME' | translate }}*</label>
-                <input
-                    formControlName="name"
-                    tuiTextfield
-                    tuiTextfieldSize="m"
-                    placeholder="{{ 'PRODUCT_MANAGE.NAME_PLACEHOLDER' | translate }}"
-                />
-            </tui-textfield>
-            <tui-error
+            <fd-ui-input
                 formControlName="name"
-                [error]="[] | tuiFieldError | async"
-            ></tui-error>
+                [label]="('PRODUCT_MANAGE.NAME' | translate) + '*'"
+                [placeholder]="'PRODUCT_MANAGE.NAME_PLACEHOLDER' | translate"
+                [required]="true"
+                [error]="getControlError('name')"
+            ></fd-ui-input>
         </div>
         <div class="product-manage__field product-manage__field--barcode">
             <tui-textfield type="text">

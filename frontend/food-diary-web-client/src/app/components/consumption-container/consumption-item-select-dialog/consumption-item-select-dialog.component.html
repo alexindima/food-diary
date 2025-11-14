@@ -1,0 +1,34 @@
+<div class="consumption-item-select">
+    <div class="consumption-item-select__header">
+        <h2 class="consumption-item-select__title">
+            {{ 'CONSUMPTION_MANAGE.ITEM_SELECT_DIALOG.TITLE' | translate }}
+        </h2>
+        <tui-tabs
+            class="consumption-item-select__tabs"
+            [(activeItemIndex)]="activeTabIndex"
+            (activeItemIndexChange)="onTabChange($event)"
+        >
+            <button tuiTab>
+                {{ 'CONSUMPTION_MANAGE.ITEM_SELECT_DIALOG.PRODUCTS_TAB' | translate }}
+            </button>
+            <button tuiTab>
+                {{ 'CONSUMPTION_MANAGE.ITEM_SELECT_DIALOG.RECIPES_TAB' | translate }}
+            </button>
+        </tui-tabs>
+    </div>
+
+    <div class="consumption-item-select__content">
+        @if (activeTabIndex === 0) {
+            <fd-product-list-dialog
+                [embedded]="true"
+                (productSelected)="onProductSelected($event)"
+            ></fd-product-list-dialog>
+        } @else {
+            <fd-recipe-select-dialog
+                [embedded]="true"
+                (recipeSelected)="onRecipeSelected($event)"
+                (createRecipeRequested)="onCreateRecipeRequested()"
+            ></fd-recipe-select-dialog>
+        }
+    </div>
+</div>

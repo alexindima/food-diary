@@ -1,0 +1,45 @@
+<mat-form-field
+    [appearance]="appearance"
+    [floatLabel]="floatLabel"
+    class="fd-ui-input"
+    [class.fd-ui-input--focused]="isFocused"
+    [class.fd-ui-input--has-error]="!!error"
+>
+    <mat-label *ngIf="label">{{ label }}</mat-label>
+
+    <mat-icon *ngIf="prefixIcon" matPrefix>{{ prefixIcon }}</mat-icon>
+
+    <input
+        matInput
+        [id]="id"
+        [type]="type"
+        [value]="internalValue"
+        [required]="required"
+        [readonly]="readonly"
+        [disabled]="disabled"
+        [attr.placeholder]="placeholder ?? null"
+        [attr.maxLength]="maxLength ?? null"
+        [attr.autocomplete]="autocomplete"
+        (focus)="handleFocus()"
+        (blur)="handleBlur()"
+        (input)="handleInput($any($event.target).value)"
+    />
+
+    <button
+        *ngIf="clearable && internalValue"
+        matSuffix
+        mat-icon-button
+        type="button"
+        class="fd-ui-input__clear"
+        (click)="clearValue()"
+        [disabled]="disabled"
+    >
+        <mat-icon>close</mat-icon>
+    </button>
+
+    <mat-icon *ngIf="suffixIcon" matSuffix>{{ suffixIcon }}</mat-icon>
+
+    <mat-hint *ngIf="hint && !error">{{ hint }}</mat-hint>
+    <mat-error *ngIf="error">{{ error }}</mat-error>
+</mat-form-field>
+

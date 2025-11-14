@@ -1,0 +1,113 @@
+@use 'sass:map';
+
+$fd-color-tokens: (
+    primary: #667c89,
+    accent: #f5a623,
+    success: #50e3c2,
+    info: #4a90e2,
+    warn: #ff6b6b,
+    surface: #ffffff,
+    surface-muted: #f5f5f5,
+    text: #333333,
+    text-muted: #757575,
+    border: #e0e0e0,
+    shadow: rgba(15, 23, 42, 0.08),
+);
+
+$fd-radius-tokens: (
+    xs: 4px,
+    sm: 6px,
+    md: 8px,
+    lg: 12px,
+    pill: 999px,
+);
+
+$fd-spacing-tokens: (
+    xxs: 4px,
+    xs: 8px,
+    sm: 12px,
+    md: 16px,
+    lg: 24px,
+    xl: 32px,
+    xxl: 40px,
+);
+
+$fd-typography-tokens: (
+    font-family: '"Inter", "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif',
+    font-weight-regular: 400,
+    font-weight-medium: 500,
+    font-weight-bold: 600,
+    font-size-base: 1rem,
+    line-height-base: 1.5,
+);
+
+$fd-elevation-tokens: (
+    xs: 0 1px 2px rgba(24, 39, 75, 0.08),
+    sm: 0 2px 6px rgba(24, 39, 75, 0.12),
+    md: 0 4px 12px rgba(24, 39, 75, 0.15),
+);
+
+$fd-design-tokens: (
+    colors: $fd-color-tokens,
+    radius: $fd-radius-tokens,
+    spacing: $fd-spacing-tokens,
+    typography: $fd-typography-tokens,
+    elevation: $fd-elevation-tokens,
+);
+
+@function fd-token($group, $name) {
+    $group-map: map.get($fd-design-tokens, $group);
+
+    @if $group-map == null {
+        @error 'Unknown design token group: #{$group}';
+    }
+
+    $value: map.get($group-map, $name);
+
+    @if $value == null {
+        @error 'Unknown design token "#{$name}" in group "#{$group}"';
+    }
+
+    @return $value;
+}
+
+@mixin fd-emit-css-variables($selector: ':root') {
+    #{$selector} {
+        --fd-color-primary: #{fd-token(colors, primary)};
+        --fd-color-accent: #{fd-token(colors, accent)};
+        --fd-color-success: #{fd-token(colors, success)};
+        --fd-color-info: #{fd-token(colors, info)};
+        --fd-color-warn: #{fd-token(colors, warn)};
+        --fd-color-surface: #{fd-token(colors, surface)};
+        --fd-color-surface-muted: #{fd-token(colors, surface-muted)};
+        --fd-color-text: #{fd-token(colors, text)};
+        --fd-color-text-muted: #{fd-token(colors, text-muted)};
+        --fd-color-border: #{fd-token(colors, border)};
+        --fd-color-shadow: #{fd-token(colors, shadow)};
+
+        --fd-radius-xs: #{fd-token(radius, xs)};
+        --fd-radius-sm: #{fd-token(radius, sm)};
+        --fd-radius-md: #{fd-token(radius, md)};
+        --fd-radius-lg: #{fd-token(radius, lg)};
+        --fd-radius-pill: #{fd-token(radius, pill)};
+
+        --fd-spacing-xxs: #{fd-token(spacing, xxs)};
+        --fd-spacing-xs: #{fd-token(spacing, xs)};
+        --fd-spacing-sm: #{fd-token(spacing, sm)};
+        --fd-spacing-md: #{fd-token(spacing, md)};
+        --fd-spacing-lg: #{fd-token(spacing, lg)};
+        --fd-spacing-xl: #{fd-token(spacing, xl)};
+        --fd-spacing-xxl: #{fd-token(spacing, xxl)};
+
+        --fd-font-family-base: #{fd-token(typography, font-family)};
+        --fd-font-size-base: #{fd-token(typography, font-size-base)};
+        --fd-line-height-base: #{fd-token(typography, line-height-base)};
+        --fd-font-weight-regular: #{fd-token(typography, font-weight-regular)};
+        --fd-font-weight-medium: #{fd-token(typography, font-weight-medium)};
+        --fd-font-weight-bold: #{fd-token(typography, font-weight-bold)};
+
+        --fd-shadow-xs: #{fd-token(elevation, xs)};
+        --fd-shadow-sm: #{fd-token(elevation, sm)};
+        --fd-shadow-md: #{fd-token(elevation, md)};
+    }
+}

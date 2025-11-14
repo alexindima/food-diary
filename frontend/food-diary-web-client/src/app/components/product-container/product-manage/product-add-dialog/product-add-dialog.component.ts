@@ -24,6 +24,7 @@ import {
 } from '../../../shared/nutrients-summary/nutrients-summary.component';
 import { CustomGroupComponent } from '../../../shared/custom-group/custom-group.component';
 import { ZXingScannerModule } from '@zxing/ngx-scanner';
+import { FdUiInputComponent } from '../../../../ui-kit/input/fd-ui-input.component';
 
 @Component({
     selector: 'fd-product-add-dialog',
@@ -47,6 +48,7 @@ import { ZXingScannerModule } from '@zxing/ngx-scanner';
         CustomGroupComponent,
         ZXingScannerModule,
         TuiIcon,
+        FdUiInputComponent,
     ]
 })
 export class ProductAddDialogComponent extends BaseProductManageComponent {

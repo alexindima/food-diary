@@ -1,0 +1,4 @@
+@use './design-tokens';
+
+@include design-tokens.fd-emit-css-variables();
+
