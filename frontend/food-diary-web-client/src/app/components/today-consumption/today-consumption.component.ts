@@ -34,6 +34,7 @@ export class TodayConsumptionComponent implements OnInit {
 
     public test = signal(500);
     public todayCalories = signal<number>(0);
+    public todayFiber = signal<number | null>(null);
     public nutrientChartData = signal<NutrientChartData>({
         proteins: 0,
         fats: 0,
@@ -54,19 +55,19 @@ export class TodayConsumptionComponent implements OnInit {
             .getAggregatedStatistics({
                 dateFrom: today,
                 dateTo: today,
+                quantizationDays: 1,
             })
             .subscribe({
-                next: response => {
-                    if (response.status === 'success') {
-                        const stats = response.data![0];
-                        this.todayCalories.set(stats.totalCalories);
+                next: data => {
+                    const stats = data?.[0];
+                    this.todayCalories.set(stats?.totalCalories ?? 0);
 
-                        this.nutrientChartData.set({
-                            proteins: stats?.averageProteins,
-                            fats: stats?.averageFats,
-                            carbs: stats?.averageCarbs,
-                        });
-                    }
+                    this.nutrientChartData.set({
+                        proteins: stats?.averageProteins ?? 0,
+                        fats: stats?.averageFats ?? 0,
+                        carbs: stats?.averageCarbs ?? 0,
+                    });
+                    this.todayFiber.set(stats?.averageFiber ?? null);
                     this.isLoading.set(false);
                 },
                 error: () => {

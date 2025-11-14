@@ -106,4 +106,18 @@ public class MealRepository : IMealRepository
 
         return (items, totalItems);
     }
+
+    public async Task<IReadOnlyList<Meal>> GetByPeriodAsync(
+        UserId userId,
+        DateTime dateFrom,
+        DateTime dateTo,
+        CancellationToken cancellationToken = default)
+    {
+        return await _context.Meals
+            .AsNoTracking()
+            .Where(m => m.UserId == userId && m.Date >= dateFrom && m.Date <= dateTo)
+            .OrderBy(m => m.Date)
+            .ThenBy(m => m.CreatedOnUtc)
+            .ToListAsync(cancellationToken);
+    }
 }

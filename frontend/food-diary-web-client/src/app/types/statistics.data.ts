@@ -7,6 +7,7 @@ export interface AggregatedStatistics {
     averageProteins: number;
     averageFats: number;
     averageCarbs: number;
+    averageFiber: number;
 }
 
 export interface GetStatisticsDto {
@@ -26,12 +27,14 @@ export interface NutrientsStatistics {
     proteins: number[];
     fats: number[];
     carbs: number[];
+    fiber: number[];
 }
 
 export interface AggregatedNutrients {
     proteins: number;
     fats: number;
     carbs: number;
+    fiber: number;
 }
 
 export class StatisticsMapper {
@@ -41,9 +44,11 @@ export class StatisticsMapper {
         const proteins: number[] = [];
         const fats: number[] = [];
         const carbs: number[] = [];
+        const fiber: number[] = [];
         let totalProteins = 0;
         let totalFats = 0;
         let totalCarbs = 0;
+        let totalFiber = 0;
 
         statistics.forEach(stat => {
             const day = TuiDay.fromLocalNativeDate(new Date(stat.dateFrom));
@@ -54,10 +59,12 @@ export class StatisticsMapper {
             proteins.push(stat.averageProteins);
             fats.push(stat.averageFats);
             carbs.push(stat.averageCarbs);
+            fiber.push(stat.averageFiber);
 
             totalProteins += stat.averageProteins;
             totalFats += stat.averageFats;
             totalCarbs += stat.averageCarbs;
+            totalFiber += stat.averageFiber;
         });
 
         return {
@@ -67,11 +74,13 @@ export class StatisticsMapper {
                 proteins,
                 fats,
                 carbs,
+                fiber,
             },
             aggregatedNutrients: {
                 proteins: totalProteins,
                 fats: totalFats,
                 carbs: totalCarbs,
+                fiber: totalFiber,
             },
         };
     }

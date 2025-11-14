@@ -29,4 +29,10 @@ public interface IMealRepository
         DateTime? dateFrom,
         DateTime? dateTo,
         CancellationToken cancellationToken = default);
+
+    Task<IReadOnlyList<Meal>> GetByPeriodAsync(
+        UserId userId,
+        DateTime dateFrom,
+        DateTime dateTo,
+        CancellationToken cancellationToken = default);
 }

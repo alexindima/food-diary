@@ -92,20 +92,21 @@ export class StatisticsComponent implements OnInit {
 
     private updateCharts(): void {
         this.isLoading.set(true);
+        const range = this.data();
+        const quantizationDays = this.getQuantizationDays(range);
 
         this.statisticsService
             .getAggregatedStatistics({
-                dateFrom: this.data().from.toLocalNativeDate(),
-                dateTo: this.data().to.toLocalNativeDate(),
+                dateFrom: range.from.toLocalNativeDate(),
+                dateTo: range.to.toLocalNativeDate(),
+                quantizationDays,
             })
             .pipe(finalize(() => this.isLoading.set(false)))
             .subscribe({
-                next: response => {
-                    if (response.status === 'success') {
-                        const mappedData = StatisticsMapper.mapStatistics(response.data!);
-                        this.chartStatisticsData.set(mappedData);
-                    }
-                }
+                next: data => {
+                    const mappedData = StatisticsMapper.mapStatistics(data ?? []);
+                    this.chartStatisticsData.set(mappedData);
+                },
             });
     }
 
@@ -226,6 +227,15 @@ export class StatisticsComponent implements OnInit {
                     fill: false,
                     tension: 0.5,
                 },
+                {
+                    data: stats?.nutrientsStatistic.fiber || [],
+                    label: this.translateService.instant('STATISTICS.NUTRIENTS.FIBER'),
+                    borderColor: CHART_COLORS.fiber,
+                    backgroundColor: CHART_COLORS.fiber,
+                    fill: false,
+                    tension: 0.5,
+                    borderDash: [5, 5],
+                },
             ],
         };
     });
@@ -305,6 +315,36 @@ export class StatisticsComponent implements OnInit {
             ],
         };
     });
+
+    private getQuantizationDays(range: TuiDayRange): number {
+        const totalDays = TuiDay.lengthBetween(range.from, range.to) + 1;
+
+        if (totalDays > 180) {
+            return 30;
+        }
+
+        if (totalDays > 120) {
+            return 21;
+        }
+
+        if (totalDays > 90) {
+            return 14;
+        }
+
+        if (totalDays > 60) {
+            return 7;
+        }
+
+        if (totalDays > 30) {
+            return 3;
+        }
+
+        if (totalDays > 14) {
+            return 2;
+        }
+
+        return 1;
+    }
 
     private getDate(day: TuiDay | number, date: TuiDay): string {
         const actualDay = day instanceof TuiDay ? day : date.append({day});
