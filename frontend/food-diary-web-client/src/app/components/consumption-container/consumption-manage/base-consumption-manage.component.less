@@ -23,6 +23,7 @@
 }
 
 .consumption-manage__date,
+.consumption-manage__meal-type,
 .consumption-manage__consumption,
 .consumption-manage__comment {
     display: flex;
@@ -39,38 +40,17 @@
     display: flex;
     flex-direction: column;
     gap: @gap-m;
-    padding: @gap-m;
-    border-radius: 12px;
-    border: 1px solid @color-border;
-    background: @color-background;
-}
-
-.consumption-manage__item-header {
-    display: flex;
-    gap: @gap-m;
-    align-items: flex-start;
-
-    @media @media-tablet {
-        flex-direction: column;
-    }
-}
-
-.consumption-manage__item-type {
-    flex: 1;
-}
-
-.consumption-manage__remove-item {
-    flex-shrink: 0;
 }
 
 .consumption-manage__item-body {
     display: flex;
     gap: @gap-m;
-    align-items: flex-start;
+    align-items: flex-end;
     flex-wrap: wrap;
 
     @media @media-tablet {
         flex-direction: column;
+        align-items: stretch;
     }
 }
 
@@ -83,6 +63,10 @@
 
 .consumption-manage__field--amount {
     min-width: 200px;
+}
+
+.consumption-manage__remove-item {
+    align-self: flex-end;
 }
 
 .consumption-manage__amount-unit {

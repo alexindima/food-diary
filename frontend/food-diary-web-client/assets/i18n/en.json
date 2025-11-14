@@ -307,6 +307,8 @@
         "EDIT_TITLE": "Edit Consumption",
         "ADD_TITLE": "Add Consumption",
         "CHOOSE_DATE": "Date and time",
+        "MEAL_TYPE_LABEL": "Meal type",
+        "MEAL_TYPE_PLACEHOLDER": "Select meal type",
         "ITEMS_GROUP_TITLE": "Items",
         "ITEM_TYPE_LABEL": "Entry type",
         "ITEM_TYPE_OPTIONS": {
@@ -338,7 +340,18 @@
         "GO_TO_CONSUMPTION_LIST_BUTTON": "Go to Consumptions List",
         "CHOOSE_DATE_TIME": "Choose date and time",
         "NO_PRODUCTS_ADDED": "No products added",
-        "ADD_PRODUCT": "Add product"
+        "ADD_PRODUCT": "Add product",
+        "ITEM_SELECT_DIALOG": {
+            "TITLE": "Select what to add",
+            "PRODUCTS_TAB": "Products",
+            "RECIPES_TAB": "Recipes"
+        },
+        "ADD_ITEM": "Add product or recipe",
+        "AMOUNT_PLACEHOLDER_PRODUCT": "Enter amount",
+        "AMOUNT_PLACEHOLDER_RECIPE": "Enter weight (g)",
+        "ITEM_SOURCE_LABEL": "Product or recipe",
+        "ITEM_SOURCE_PLACEHOLDER": "Select product or recipe",
+        "ITEM_SOURCE_ERROR": "Please choose a product or recipe"
     },
     "RECIPE_SELECT_DIALOG": {
         "TITLE": "Choose a recipe",

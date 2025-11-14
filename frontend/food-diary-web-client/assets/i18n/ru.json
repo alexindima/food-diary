@@ -319,7 +319,20 @@
         "GO_TO_CONSUMPTION_LIST_BUTTON": "К списку потребления",
         "CHOOSE_DATE_TIME": "Выберите дату и время",
         "NO_PRODUCTS_ADDED": "Продукты не добавлены",
-        "ADD_PRODUCT": "Добавить продукт"
+        "ADD_PRODUCT": "Добавить продукт",
+        "MEAL_TYPE_LABEL": "Тип потребления",
+        "MEAL_TYPE_PLACEHOLDER": "Выберите тип потребления",
+        "ITEM_SELECT_DIALOG": {
+            "TITLE": "Что добавить к приёму пищи",
+            "PRODUCTS_TAB": "Продукты",
+            "RECIPES_TAB": "Рецепты"
+        },
+        "ADD_ITEM": "Добавить продукт или рецепт",
+        "AMOUNT_PLACEHOLDER_PRODUCT": "Введите количество",
+        "AMOUNT_PLACEHOLDER_RECIPE": "Введите вес (г)",
+        "ITEM_SOURCE_LABEL": "Продукт или рецепт",
+        "ITEM_SOURCE_PLACEHOLDER": "Выберите продукт или рецепт",
+        "ITEM_SOURCE_ERROR": "Выберите продукт или рецепт"
     },
     "RECIPE_SELECT_DIALOG": {
         "TITLE": "Выберите рецепт",

@@ -1,4 +1,17 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    DestroyRef,
+    ElementRef,
+    EventEmitter,
+    Inject,
+    Input,
+    OnInit,
+    Optional,
+    Output,
+    ViewChild,
+    inject,
+} from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { DecimalPipe } from '@angular/common';
 import {
@@ -15,7 +28,7 @@ import { TuiTextfieldControllerModule } from '@taiga-ui/legacy';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Recipe, RecipeFilters } from '../../../types/recipe.data';
 import { RecipeService } from '../../../services/recipe.service';
-import { injectContext } from '@taiga-ui/polymorpheus';
+import { POLYMORPHEUS_CONTEXT } from '@taiga-ui/polymorpheus';
 import { catchError, debounceTime, distinctUntilChanged, finalize, map, Observable, of, switchMap, tap } from 'rxjs';
 import { NavigationService } from '../../../services/navigation.service';
 import { PagedData } from '../../../types/paged-data.data';
@@ -51,20 +64,24 @@ export class RecipeSelectDialogComponent implements OnInit {
     private readonly navigationService = inject(NavigationService);
     private readonly destroyRef = inject(DestroyRef);
 
-    public readonly context = injectContext<TuiDialogContext<Recipe | null, null>>();
+    @Input() public embedded: boolean = false;
+    @Output() public recipeSelected = new EventEmitter<Recipe>();
+    @Output() public createRecipeRequested = new EventEmitter<void>();
 
-    public searchForm: FormGroup<RecipeSearchFormGroup>;
+    public readonly searchForm = new FormGroup<RecipeSearchFormGroup>({
+        search: new FormControl<string | null>(null),
+        onlyMine: new FormControl<boolean>(false, { nonNullable: true }),
+    });
+
+    public constructor(
+        @Optional() @Inject(POLYMORPHEUS_CONTEXT)
+        private readonly context: TuiDialogContext<Recipe | null, null> | null,
+    ) {}
     public recipeData: PagedData<Recipe> = new PagedData<Recipe>();
     public currentPageIndex = 0;
 
     @ViewChild('container') private container!: ElementRef<HTMLElement>;
 
-    public constructor() {
-        this.searchForm = new FormGroup<RecipeSearchFormGroup>({
-            search: new FormControl<string | null>(null),
-            onlyMine: new FormControl<boolean>(false, { nonNullable: true }),
-        });
-    }
 
     public ngOnInit(): void {
         this.loadRecipes(1).subscribe();
@@ -114,12 +131,24 @@ export class RecipeSelectDialogComponent implements OnInit {
     }
 
     public onRecipeClick(recipe: Recipe): void {
-        this.context.completeWith(recipe);
+        this.handleSelection(recipe);
     }
 
     public async onCreateRecipeClick(): Promise<void> {
-        this.context.completeWith(null);
+        if (!this.embedded && this.context) {
+            this.context.completeWith(null);
+        } else {
+            this.createRecipeRequested.emit();
+        }
         await this.navigationService.navigateToRecipeAdd();
+    }
+
+    private handleSelection(recipe: Recipe): void {
+        if (!this.embedded && this.context) {
+            this.context.completeWith(recipe);
+        } else {
+            this.recipeSelected.emit(recipe);
+        }
     }
 
     private scrollToTop(): void {

@@ -33,15 +33,14 @@
                 <div class="consumption-card">
                     <div class="consumption-card__header">
                     <span class="consumption-card__date">
-                        {{ 'CONSUMPTION_LIST.DATE' | translate }}: {{ consumption.date | date:'dd.MM.yyyy' }} - {{ consumption.date | date:'HH:mm' }}
+                        @if (consumption.mealType) {
+                            {{ ('MEAL_TYPES.' + consumption.mealType) | translate }}
+                        } @else {
+                            {{ 'CONSUMPTION_LIST.DATE' | translate }}
+                        }
+                        : {{ consumption.date | date:'dd.MM.yyyy' }} - {{ consumption.date | date:'HH:mm' }}
                     </span>
                         <span class="consumption-card__item-count">{{ 'CONSUMPTION_LIST.ITEM_COUNT' | translate }}: {{ consumption.items.length }}</span>
-                        @if (consumption.mealType) {
-                            <span class="consumption-card__meal-type">
-                                {{ 'CONSUMPTION_LIST.MEAL_TYPE' | translate }}:
-                                {{ ('MEAL_TYPES.' + consumption.mealType) | translate }}
-                            </span>
-                        }
                     </div>
                     @if (consumption.comment) {
                         <span class="consumption-card__comment">

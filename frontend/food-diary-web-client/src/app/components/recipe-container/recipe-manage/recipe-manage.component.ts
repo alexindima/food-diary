@@ -2,6 +2,7 @@ import {
     ChangeDetectionStrategy,
     Component,
     FactoryProvider,
+    Injector,
     effect,
     inject,
     input,
@@ -12,13 +13,14 @@ import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } fr
 import { FormGroupControls } from '../../../types/common.data';
 import {
     TuiButton,
-    tuiDialog,
+    TuiDialogService,
     TuiError,
     TuiIcon,
     TuiLabel,
     TuiTextfieldComponent,
     TuiTextfieldDirective
 } from '@taiga-ui/core';
+import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { TuiInputNumberModule, TuiSelectModule, TuiTextareaModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
 import { CustomGroupComponent } from '../../shared/custom-group/custom-group.component';
@@ -88,6 +90,7 @@ export class RecipeManageComponent implements OnInit {
     private readonly recipeService = inject(RecipeService);
     private readonly translateService = inject(TranslateService);
     private readonly navigationService = inject(NavigationService);
+    private readonly injector = inject(Injector);
 
     public recipe = input<Recipe | null>(null);
     public totalCalories = signal<number>(0);
@@ -107,11 +110,7 @@ export class RecipeManageComponent implements OnInit {
     public stringifyVisibility = (value: RecipeVisibility | null): string =>
         value ? this.translateService.instant(`RECIPE_VISIBILITY.${value}`) : '';
 
-    private readonly productListDialog = tuiDialog(ProductListDialogComponent, {
-        size: 'page',
-        dismissible: true,
-        appearance: 'without-border-radius',
-    });
+    private readonly dialogService = inject(TuiDialogService);
     private isFormReady = true;
 
     public constructor() {
@@ -216,13 +215,25 @@ export class RecipeManageComponent implements OnInit {
     public async onProductSelectClick(stepIndex: number, ingredientIndex: number): Promise<void> {
         this.selectedStepIndex = stepIndex;
         this.selectedIngredientIndex = ingredientIndex;
-        this.productListDialog(null).subscribe({
-            next: food => {
-                const ingredientsArray = this.getStepIngredients(stepIndex);
-                const foodGroup = ingredientsArray.at(ingredientIndex);
-                foodGroup.patchValue({ food });
-            },
-        });
+        this.dialogService
+            .open<Product | null>(
+                new PolymorpheusComponent(ProductListDialogComponent, this.injector),
+                {
+                    size: 'page',
+                    dismissible: true,
+                    appearance: 'without-border-radius',
+                },
+            )
+            .subscribe({
+                next: food => {
+                    if (!food) {
+                        return;
+                    }
+                    const ingredientsArray = this.getStepIngredients(stepIndex);
+                    const foodGroup = ingredientsArray.at(ingredientIndex);
+                    foodGroup.patchValue({ food });
+                },
+            });
     }
 
     public addIngredientToStep(stepIndex: number): void {

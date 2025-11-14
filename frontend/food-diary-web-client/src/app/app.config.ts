@@ -26,10 +26,10 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
 
 export const appConfig: ApplicationConfig = {
     providers: [
-        {
+        /*{
             provide: ErrorHandler,
             useClass: GlobalErrorHandler,
-        },
+        },*/
         {
             provide: HTTP_INTERCEPTORS,
             useClass: AuthInterceptor,
