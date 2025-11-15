@@ -14,6 +14,7 @@ public sealed class Meal : AggregateRoot<int> {
     public DateTime Date { get; private set; } = DateTime.UtcNow;
     public MealType? MealType { get; private set; }
     public string? Comment { get; private set; }
+    public string? ImageUrl { get; private set; }
     public double TotalCalories { get; private set; }
     public double TotalProteins { get; private set; }
     public double TotalFats { get; private set; }
@@ -35,12 +36,14 @@ public sealed class Meal : AggregateRoot<int> {
         UserId userId,
         DateTime date,
         MealType? mealType = null,
-        string? comment = null) {
+        string? comment = null,
+        string? imageUrl = null) {
         var meal = new Meal {
             UserId = userId,
             Date = date,
             MealType = mealType,
-            Comment = comment
+            Comment = comment,
+            ImageUrl = imageUrl
         };
         meal.SetCreated();
         return meal;

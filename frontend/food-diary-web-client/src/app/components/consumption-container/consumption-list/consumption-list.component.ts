@@ -13,8 +13,9 @@ import { ConsumptionDetailComponent } from '../consumption-detail/consumption-de
 import { FormGroupControls } from '../../../types/common.data';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FdUiButtonComponent } from '../../../ui-kit/button/fd-ui-button.component';
-import { FdUiCardComponent } from '../../../ui-kit/card/fd-ui-card.component';
 import { FdUiDateInputComponent, FdUiDateRangeValue } from '../../../ui-kit/date-input/fd-ui-date-input.component';
+import { FdUiEntityCardComponent } from '../../../ui-kit/entity-card/fd-ui-entity-card.component';
+import { BadgeComponent } from '../../shared/badge/badge.component';
 
 @Component({
     selector: 'fd-consumption-list',
@@ -29,8 +30,9 @@ import { FdUiDateInputComponent, FdUiDateRangeValue } from '../../../ui-kit/date
         DatePipe,
         DecimalPipe,
         FdUiButtonComponent,
-        FdUiCardComponent,
         FdUiDateInputComponent,
+        FdUiEntityCardComponent,
+        BadgeComponent,
     ]
 })
 export class ConsumptionListComponent implements OnInit {

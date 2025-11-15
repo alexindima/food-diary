@@ -6,6 +6,7 @@ export interface Consumption {
     date: string;
     mealType?: string | null;
     comment?: string | null;
+    imageUrl?: string | null;
     totalCalories: number;
     totalProteins: number;
     totalFats: number;
@@ -28,6 +29,7 @@ export interface ConsumptionResponseDto {
     date: string;
     mealType?: string | null;
     comment?: string | null;
+    imageUrl?: string | null;
     totalCalories: number;
     totalProteins: number;
     totalFats: number;

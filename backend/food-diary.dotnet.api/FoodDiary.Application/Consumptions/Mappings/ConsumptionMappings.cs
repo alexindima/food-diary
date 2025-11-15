@@ -41,6 +41,7 @@ public static class ConsumptionMappings
             meal.Date,
             meal.MealType?.ToString(),
             meal.Comment,
+            meal.ImageUrl,
             meal.TotalCalories,
             meal.TotalProteins,
             meal.TotalFats,

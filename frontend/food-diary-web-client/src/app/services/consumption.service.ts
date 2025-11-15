@@ -74,6 +74,7 @@ export class ConsumptionService extends ApiService {
             date: response.date,
             mealType: response.mealType,
             comment: response.comment,
+            imageUrl: response.imageUrl ?? '',
             totalCalories: response.totalCalories,
             totalProteins: response.totalProteins,
             totalFats: response.totalFats,

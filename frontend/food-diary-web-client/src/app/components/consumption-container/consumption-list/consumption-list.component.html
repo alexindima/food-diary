@@ -33,40 +33,51 @@
         }
 
         @for (consumption of consumptionData.items(); track consumption) {
-            <div
-                class="consumption-card-wrapper"
+            <fd-ui-entity-card
+                class="consumption-card fd-ui-entity-card--hoverable"
+                appearance="info"
                 (click)="openConsumptionDetails(consumption)"
+                [imageUrl]="consumption.imageUrl || undefined"
             >
-                <fd-ui-card appearance="general">
-                    <div class="consumption-card">
-                        <div class="consumption-card__header">
-                    <span class="consumption-card__date">
-                        @if (consumption.mealType) {
-                            {{ ('MEAL_TYPES.' + consumption.mealType) | translate }}
-                        } @else {
-                            {{ 'CONSUMPTION_LIST.DATE' | translate }}
-                        }
-                        : {{ consumption.date | date:'dd.MM.yyyy' }} - {{ consumption.date | date:'HH:mm' }}
-                    </span>
-                        <span class="consumption-card__item-count">{{ 'CONSUMPTION_LIST.ITEM_COUNT' | translate }}: {{ consumption.items.length }}</span>
-                    </div>
-                    @if (consumption.comment) {
-                        <span class="consumption-card__comment">
-                        {{ consumption.comment }}
-                    </span>
-                    }
-                    <div class="consumption-card__details">
-                        <span class="consumption-card__calories">{{ 'CONSUMPTION_LIST.TOTAL_CALORIES' | translate }}: {{ consumption.totalCalories | number: '1.0-2' }} kcal</span>
-                        <div class="consumption-card__macros">
-                            {{ 'CONSUMPTION_LIST.TOTAL_PROTEINS' | translate }}: {{ consumption.totalProteins | number: '1.0-2' }}g |
-                            {{ 'CONSUMPTION_LIST.TOTAL_FATS' | translate }}: {{ consumption.totalFats | number: '1.0-2' }}g |
-                            {{ 'CONSUMPTION_LIST.TOTAL_CARBS' | translate }}: {{ consumption.totalCarbs | number: '1.0-2' }}g
+                <div class="product-card consumption-card__content">
+                    <div class="product-card__header">
+                        <div class="product-card__title">
+                            <span class="product-card__name">
+                                @if (consumption.mealType) {
+                                    {{ ('MEAL_TYPES.' + consumption.mealType) | translate }}
+                                } @else {
+                                    {{ 'CONSUMPTION_LIST.DATE' | translate }}
+                                }
+                            </span>
                         </div>
+                        <span class="product-card__barcode">
+                            {{ consumption.date | date:'dd.MM.yyyy' }} · {{ consumption.date | date:'HH:mm' }}
+                        </span>
                     </div>
+                    <div class="product-card__stats">
+                        <span class="product-card__calories">
+                            {{ 'CONSUMPTION_LIST.TOTAL_CALORIES' | translate }}:
+                            {{ consumption.totalCalories | number: '1.0-2' }}
+                            {{ 'PRODUCT_LIST.KCAL' | translate }}
+                        </span>
+                        <span class="product-card__macros">
+                            {{ 'PRODUCT_LIST.PROTEINS' | translate }}: {{ consumption.totalProteins | number: '1.0-2' }}g ·
+                            {{ 'PRODUCT_LIST.FATS' | translate }}: {{ consumption.totalFats | number: '1.0-2' }}g ·
+                            {{ 'PRODUCT_LIST.CARBS' | translate }}: {{ consumption.totalCarbs | number: '1.0-2' }}g
+                        </span>
                     </div>
-                </fd-ui-card>
-            </div>
-
+                    <div class="consumption-card__meta">
+                        <span class="consumption-card__count">
+                            {{ 'CONSUMPTION_LIST.ITEM_COUNT' | translate }}: {{ consumption.items.length }}
+                        </span>
+                        @if (consumption.comment) {
+                            <span class="consumption-card__comment">
+                                {{ consumption.comment }}
+                            </span>
+                        }
+                    </div>
+                </div>
+            </fd-ui-entity-card>
         }
     }
 

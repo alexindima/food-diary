@@ -8,6 +8,7 @@ public record ConsumptionResponse(
     DateTime Date,
     string? MealType,
     string? Comment,
+    string? ImageUrl,
     double TotalCalories,
     double TotalProteins,
     double TotalFats,
