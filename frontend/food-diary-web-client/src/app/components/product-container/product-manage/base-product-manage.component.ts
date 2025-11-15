@@ -11,7 +11,7 @@ import {
     TemplateRef,
     ViewChild,
 } from '@angular/core';
-import { Product, CreateProductRequest, MeasurementUnit, ProductVisibility } from '../../../types/product.data';
+import { Product, CreateProductRequest, MeasurementUnit, ProductVisibility, ProductType } from '../../../types/product.data';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
     tuiDialog,
@@ -42,6 +42,7 @@ import { FdUiRadioGroupComponent, FdUiRadioOption } from '../../../ui-kit/radio/
 import { FdUiSelectComponent, FdUiSelectOption } from '../../../ui-kit/select/fd-ui-select.component';
 import { FdUiTextareaComponent } from '../../../ui-kit/textarea/fd-ui-textarea.component';
 import { FdUiButtonComponent } from '../../../ui-kit/button/fd-ui-button.component';
+import { normalizeProductType as normalizeProductTypeValue } from '../../../utils/product-type.utils';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: TUI_VALIDATION_ERRORS,
@@ -109,6 +110,8 @@ export class BaseProductManageComponent implements OnInit {
     public productForm: FormGroup<ProductFormData>;
     public units = Object.values(MeasurementUnit) as MeasurementUnit[];
     public unitOptions: FdUiSelectOption<MeasurementUnit>[] = [];
+    public productTypes = Object.values(ProductType) as ProductType[];
+    public productTypeSelectOptions: FdUiSelectOption<ProductType>[] = [];
     public visibilityOptions = Object.values(ProductVisibility) as ProductVisibility[];
     public visibilityRadioOptions: FdUiRadioOption<ProductVisibility>[] = [];
     public constructor() {
@@ -116,7 +119,7 @@ export class BaseProductManageComponent implements OnInit {
             name: new FormControl('', { nonNullable: true, validators: Validators.required }),
             barcode: new FormControl(null),
             brand: new FormControl(null),
-            category: new FormControl(null),
+            productType: new FormControl<ProductType>(ProductType.Unknown, { nonNullable: true }),
             description: new FormControl(null),
             comment: new FormControl(null),
             imageUrl: new FormControl(null),
@@ -131,9 +134,11 @@ export class BaseProductManageComponent implements OnInit {
         });
 
         this.buildUnitOptions();
+        this.buildProductTypeOptions();
         this.buildVisibilityOptions();
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.buildUnitOptions();
+            this.buildProductTypeOptions();
             this.buildVisibilityOptions();
         });
 
@@ -220,7 +225,8 @@ export class BaseProductManageComponent implements OnInit {
                 name: this.productForm.value.name!,
                 barcode: this.productForm.value.barcode || null,
                 brand: this.productForm.value.brand || null,
-                category: this.productForm.value.category || null,
+                productType: this.productForm.value.productType || ProductType.Unknown,
+                category: this.productForm.value.productType || null,
                 description: this.productForm.value.description || null,
                 comment: this.productForm.value.comment || null,
                 imageUrl: this.productForm.value.imageUrl || null,
@@ -310,9 +316,24 @@ export class BaseProductManageComponent implements OnInit {
 
     private populateForm(product: Product): void {
         const normalizedVisibility = this.normalizeVisibility(product.visibility);
+        const normalizedProductType =
+            normalizeProductTypeValue(product.productType ?? product.category ?? null) ?? ProductType.Unknown;
+
         this.productForm.patchValue({
-            ...product,
+            name: product.name,
+            barcode: product.barcode ?? null,
+            brand: product.brand ?? null,
+            productType: normalizedProductType,
+            description: product.description ?? null,
             comment: product.comment ?? null,
+            imageUrl: product.imageUrl ?? null,
+            baseAmount: product.baseAmount,
+            baseUnit: product.baseUnit,
+            caloriesPerBase: product.caloriesPerBase,
+            proteinsPerBase: product.proteinsPerBase,
+            fatsPerBase: product.fatsPerBase,
+            carbsPerBase: product.carbsPerBase,
+            fiberPerBase: product.fiberPerBase,
             visibility: normalizedVisibility,
         });
     }
@@ -375,6 +396,13 @@ export class BaseProductManageComponent implements OnInit {
         }));
     }
 
+    private buildProductTypeOptions(): void {
+        this.productTypeSelectOptions = this.productTypes.map(type => ({
+            value: type,
+            label: this.translateService.instant(`PRODUCT_MANAGE.PRODUCT_TYPE_OPTIONS.${type.toUpperCase()}`),
+        }));
+    }
+
     private normalizeVisibility(value: ProductVisibility | null | string | undefined): ProductVisibility {
         if (typeof value !== 'string') {
             return ProductVisibility.Private;
@@ -396,17 +424,19 @@ export class BaseProductManageComponent implements OnInit {
                 } else if (redirectAction === 'ProductList') {
                     this.navigationService.navigateToProductList();
                 }
-            });
+        });
     }
 
     protected readonly MeasurementUnit = MeasurementUnit;
+    protected readonly ProductType = ProductType;
+
 }
 
 export interface ProductFormValues {
     name: string;
     barcode: string | null;
     brand: string | null;
-    category: string | null;
+    productType: ProductType;
     description: string | null;
     comment: string | null;
     imageUrl: string | null;

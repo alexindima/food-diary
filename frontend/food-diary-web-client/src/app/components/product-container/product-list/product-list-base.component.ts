@@ -19,6 +19,7 @@ import { FdUiEntityCardComponent } from '../../../ui-kit/entity-card/fd-ui-entit
 import { FdUiInputComponent } from '../../../ui-kit/input/fd-ui-input.component';
 import { FdUiButtonComponent } from '../../../ui-kit/button/fd-ui-button.component';
 import { FdUiCheckboxComponent } from '../../../ui-kit/checkbox/fd-ui-checkbox.component';
+import { buildProductTypeTranslationKey } from '../../../utils/product-type.utils';
 
 @Component({
     selector: 'fd-product-list-base',
@@ -127,6 +128,10 @@ export class ProductListBaseComponent implements OnInit {
     }
 
     protected onProductClick(_product: Product): void {}
+
+    protected getProductTypeTranslationKey(product: Product): string {
+        return buildProductTypeTranslationKey(product.productType ?? product.category ?? null);
+    }
 }
 
 interface ProductSearchFormValues {

@@ -1,4 +1,4 @@
-import { Product, MeasurementUnit, ProductVisibility } from './product.data';
+import { Product, MeasurementUnit, ProductType, ProductVisibility } from './product.data';
 import { Recipe, RecipeVisibility } from './recipe.data';
 
 export interface Consumption {
@@ -87,6 +87,7 @@ export interface ConsumptionItemManageDto {
 export const createEmptyProductSnapshot = (): Product => ({
     id: '',
     name: '',
+    productType: ProductType.Unknown,
     baseUnit: MeasurementUnit.G,
     baseAmount: 1,
     caloriesPerBase: 0,

@@ -16,6 +16,7 @@ public sealed class Product : AggregateRoot<ProductId> {
     public string? Description { get; private set; }
     public string? Comment { get; private set; }
     public string? ImageUrl { get; private set; }
+    public ProductType ProductType { get; private set; } = ProductType.Unknown;
     public MeasurementUnit BaseUnit { get; private set; }
     public double BaseAmount { get; private set; }
     public double CaloriesPerBase { get; private set; }
@@ -56,6 +57,7 @@ public sealed class Product : AggregateRoot<ProductId> {
         double fiberPerBase,
         string? barcode = null,
         string? brand = null,
+        ProductType productType = ProductType.Unknown,
         string? category = null,
         string? description = null,
         string? comment = null,
@@ -74,6 +76,7 @@ public sealed class Product : AggregateRoot<ProductId> {
             FiberPerBase = fiberPerBase,
             Barcode = barcode,
             Brand = brand,
+            ProductType = productType,
             Category = category,
             Description = description,
             Comment = comment,
@@ -96,6 +99,7 @@ public sealed class Product : AggregateRoot<ProductId> {
         string? barcode = null,
         string? brand = null,
         string? category = null,
+        ProductType? productType = null,
         string? description = null,
         string? comment = null,
         string? imageUrl = null,
@@ -110,6 +114,7 @@ public sealed class Product : AggregateRoot<ProductId> {
         if (fiberPerBase.HasValue) FiberPerBase = fiberPerBase.Value;
         if (barcode is not null) Barcode = barcode;
         if (brand is not null) Brand = brand;
+        if (productType.HasValue) ProductType = productType.Value;
         if (category is not null) Category = category;
         if (description is not null) Description = description;
         if (comment is not null) Comment = comment;

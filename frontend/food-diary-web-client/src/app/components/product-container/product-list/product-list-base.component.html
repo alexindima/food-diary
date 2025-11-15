@@ -82,8 +82,8 @@
                             </span>
                         </div>
                         <div class="product-card__serving">
-                            {{ 'PRODUCT_LIST.SERVING_UNIT' | translate }}:
-                            {{ ('PRODUCT_MANAGE.DEFAULT_SERVING_UNITS.' + product.baseUnit) | translate }}
+                            {{ 'PRODUCT_MANAGE.PRODUCT_TYPE' | translate }}:
+                            {{ getProductTypeTranslationKey(product) | translate }}
                         </div>
                     </div>
                 </fd-ui-entity-card>

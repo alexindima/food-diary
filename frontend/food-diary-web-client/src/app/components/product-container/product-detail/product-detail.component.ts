@@ -9,6 +9,7 @@ import {
 } from '../../shared/nutrients-summary/nutrients-summary.component';
 import { NutrientChartData } from '../../../types/charts.data';
 import { ProductService } from '../../../services/product.service';
+import { buildProductTypeTranslationKey } from '../../../utils/product-type.utils';
 
 @Component({
     selector: 'fd-product-detail',
@@ -23,6 +24,7 @@ export class ProductDetailComponent {
     private readonly productService = inject(ProductService);
 
     public product: Product;
+    public readonly productTypeKey: string;
 
     public readonly nutrientSummaryConfig: NutrientsSummaryConfig = {
         styles: {
@@ -71,6 +73,7 @@ export class ProductDetailComponent {
 
     public constructor() {
         this.product = this.context.data;
+        this.productTypeKey = buildProductTypeTranslationKey(this.product.productType ?? this.product.category ?? null);
 
         this.calories = this.product.caloriesPerBase;
         this.nutrientChartData = {
@@ -124,6 +127,7 @@ export class ProductDetailComponent {
                 }
             });
     }
+
 }
 
 class ProductDetailActionResult {

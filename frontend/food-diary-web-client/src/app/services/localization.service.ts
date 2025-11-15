@@ -11,11 +11,29 @@ export class LocalizationService {
         this.translateService.setDefaultLang('en');
 
         const browserLang = this.translateService.getBrowserLang();
-        this.translateService.use(browserLang?.match(/en|ru/) ? browserLang : 'en');
+        const normalizedLang = this.normalizeLanguage(browserLang);
+
+        this.translateService.use(normalizedLang);
     }
 
     public getServingUnitName(unit: MeasurementUnit): string {
         return this.translateService.instant(`PRODUCT_MANAGE.DEFAULT_SERVING_UNITS.${unit}`);
     }
-}
 
+    private normalizeLanguage(lang?: string | null): string {
+        if (!lang) {
+            return 'en';
+        }
+
+        const lower = lang.toLowerCase();
+        if (lower.startsWith('ru')) {
+            return 'ru';
+        }
+
+        if (lower.startsWith('en')) {
+            return 'en';
+        }
+
+        return 'en';
+    }
+}

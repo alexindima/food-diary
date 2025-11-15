@@ -30,6 +30,13 @@ public class UpdateProductCommandHandler(IProductRepository productRepository)
             newVisibility = Enum.Parse<Visibility>(command.Visibility, true);
         }
 
+        ProductType? newProductType = null;
+        if (!string.IsNullOrWhiteSpace(command.ProductType) &&
+            Enum.TryParse<ProductType>(command.ProductType, true, out var parsedProductType))
+        {
+            newProductType = parsedProductType;
+        }
+
         product.Update(
             name: command.Name,
             baseUnit: newUnit,
@@ -41,6 +48,7 @@ public class UpdateProductCommandHandler(IProductRepository productRepository)
             fiberPerBase: command.FiberPerBase,
             barcode: command.Barcode,
             brand: command.Brand,
+            productType: newProductType,
             category: command.Category,
             description: command.Description,
             comment: command.Comment,

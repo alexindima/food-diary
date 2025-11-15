@@ -14,6 +14,9 @@ public class CreateProductCommandHandler(IProductRepository productRepository)
         Handle(CreateProductCommand command, CancellationToken cancellationToken) {
         var baseUnit = Enum.Parse<MeasurementUnit>(command.BaseUnit, true);
         var visibility = Enum.Parse<Visibility>(command.Visibility, true);
+        var productType = Enum.TryParse<ProductType>(command.ProductType, true, out var parsedType)
+            ? parsedType
+            : ProductType.Unknown;
 
         var product = Product.Create(
             userId: command.UserId!.Value,
@@ -27,6 +30,7 @@ public class CreateProductCommandHandler(IProductRepository productRepository)
             fiberPerBase: command.FiberPerBase,
             barcode: command.Barcode,
             brand: command.Brand,
+            productType: productType,
             category: command.Category,
             description: command.Description,
             comment: command.Comment,

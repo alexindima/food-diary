@@ -4,6 +4,7 @@ public record CreateProductRequest(
     string? Barcode,
     string Name,
     string? Brand,
+    string ProductType,
     string? Category,
     string? Description,
     string? Comment,

@@ -7,12 +7,10 @@
     </h2>
     <div class="modal__body">
         <div class="modal__info">
-            @if (product.category) {
-                <p class="modal__text">
-                    <span class="modal__property-name">{{ 'PRODUCT_DETAIL.CATEGORY' | translate }}</span>
-                    {{ product.category }}
-                </p>
-            }
+        <p class="modal__text">
+            <span class="modal__property-name">{{ 'PRODUCT_DETAIL.PRODUCT_TYPE' | translate }}</span>
+            {{ productTypeKey | translate }}
+        </p>
             <p class="modal__text">
                 <span class="modal__property-name">{{ 'PRODUCT_DETAIL.BASE_AMOUNT' | translate }}</span>
                 {{ product.baseAmount }} {{ 'PRODUCT_AMOUNT_UNITS_SHORT.' + product.baseUnit | translate }}

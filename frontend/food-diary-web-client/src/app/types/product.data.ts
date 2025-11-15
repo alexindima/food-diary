@@ -3,6 +3,7 @@ export interface Product {
     barcode?: string | null;
     name: string;
     brand?: string | null;
+    productType?: ProductType | null;
     category?: string | null;
     description?: string | null;
     comment?: string | null;
@@ -24,6 +25,7 @@ export interface CreateProductRequest {
     barcode?: string | null;
     name: string;
     brand?: string | null;
+    productType: ProductType;
     category?: string | null;
     description?: string | null;
     comment?: string | null;
@@ -57,4 +59,18 @@ export enum MeasurementUnit {
 export enum ProductVisibility {
     Private = 'Private',
     Public = 'Public',
+}
+
+export enum ProductType {
+    Unknown = 'Unknown',
+    Meat = 'Meat',
+    Fruit = 'Fruit',
+    Vegetable = 'Vegetable',
+    Cheese = 'Cheese',
+    Dairy = 'Dairy',
+    Seafood = 'Seafood',
+    Grain = 'Grain',
+    Beverage = 'Beverage',
+    Dessert = 'Dessert',
+    Other = 'Other',
 }

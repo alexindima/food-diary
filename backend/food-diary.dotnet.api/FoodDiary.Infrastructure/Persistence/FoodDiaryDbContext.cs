@@ -42,6 +42,7 @@ public class FoodDiaryDbContext : DbContext
                 value => new UserId(value));
 
             entity.Property(e => e.Visibility).HasDefaultValue(Visibility.PUBLIC);
+            entity.Property(e => e.ProductType).HasDefaultValue(ProductType.Unknown);
 
             // UsageCount - не хранится в БД, вычисляется динамически в запросах
             entity.Ignore(e => e.UsageCount);

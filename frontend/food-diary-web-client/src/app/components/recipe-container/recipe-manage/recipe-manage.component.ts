@@ -24,7 +24,7 @@ import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { TuiInputNumberModule, TuiSelectModule, TuiTextareaModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
 import { CustomGroupComponent } from '../../shared/custom-group/custom-group.component';
-import { MeasurementUnit, Product, ProductVisibility } from '../../../types/product.data';
+import { MeasurementUnit, Product, ProductVisibility, ProductType } from '../../../types/product.data';
 import { AsyncPipe, NgForOf } from '@angular/common';
 import { TUI_VALIDATION_ERRORS, TuiFieldErrorPipe } from '@taiga-ui/kit';
 import { nonEmptyArrayValidator } from '../../../validators/non-empty-array.validator';
@@ -356,6 +356,7 @@ export class RecipeManageComponent implements OnInit {
             id: ingredient.productId,
             name: ingredient.productName ?? this.translateService.instant('RECIPE_MANAGE.UNKNOWN_PRODUCT'),
             baseUnit: unit,
+            productType: ProductType.Unknown,
             barcode: null,
             brand: null,
             category: null,

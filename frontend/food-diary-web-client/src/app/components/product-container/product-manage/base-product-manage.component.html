@@ -46,11 +46,14 @@
                             ></fd-ui-input>
                         </div>
                         <div class="product-manage__field">
-                            <fd-ui-input
-                                formControlName="category"
-                                [label]="'PRODUCT_MANAGE.CATEGORY' | translate"
-                                [placeholder]="'PRODUCT_MANAGE.CATEGORY_PLACEHOLDER' | translate"
-                            ></fd-ui-input>
+                            <fd-ui-select
+                                formControlName="productType"
+                                [label]="('PRODUCT_MANAGE.PRODUCT_TYPE' | translate) + '*'"
+                                [placeholder]="'PRODUCT_MANAGE.PRODUCT_TYPE_PLACEHOLDER' | translate"
+                                [options]="productTypeSelectOptions"
+                                [required]="true"
+                                [error]="getControlError('productType')"
+                            ></fd-ui-select>
                         </div>
                         <div class="product-manage__field product-manage__field--full">
                             <fd-ui-textarea

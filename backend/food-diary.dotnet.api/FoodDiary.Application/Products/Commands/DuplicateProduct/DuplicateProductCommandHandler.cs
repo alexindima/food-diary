@@ -36,6 +36,7 @@ public class DuplicateProductCommandHandler(IProductRepository productRepository
             original.FiberPerBase,
             original.Barcode,
             original.Brand,
+            original.ProductType,
             original.Category,
             original.Description,
             original.Comment,
