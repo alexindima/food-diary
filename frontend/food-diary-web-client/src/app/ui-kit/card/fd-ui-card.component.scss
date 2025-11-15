@@ -1,13 +1,16 @@
 :host {
     display: block;
+    --fd-ui-card-border-color: var(--fd-color-border, rgba(15, 23, 42, 0.08));
+    --fd-ui-card-title-color: var(--fd-color-text-muted, #6b7280);
+    --fd-ui-card-meta-color: var(--fd-color-text-muted, #6b7280);
 }
 
 .fd-ui-card {
-    border: 1px solid var(--fd-color-border);
+    border: 1px solid var(--fd-ui-card-border-color);
     border-radius: var(--fd-radius-lg);
     background-color: var(--fd-color-surface);
     box-shadow: var(--fd-shadow-sm);
-    padding: var(--fd-spacing-sm) var(--fd-spacing-lg) var(--fd-spacing-lg);
+    padding: var(--fd-spacing-sm) var(--fd-spacing-lg);
     display: flex;
     flex-direction: column;
     gap: var(--fd-spacing-md);
@@ -19,11 +22,19 @@
 
     &__header {
         display: flex;
-        align-items: center;
+        align-items: flex-start;
         justify-content: space-between;
         gap: var(--fd-spacing-sm);
         flex-wrap: wrap;
         margin-bottom: calc(var(--fd-spacing-sm) * -0.25);
+        width: 100%;
+    }
+
+    &__title-row {
+        display: flex;
+        align-items: center;
+        gap: var(--fd-spacing-sm);
+        flex: 1;
     }
 
     &__title {
@@ -32,7 +43,15 @@
         letter-spacing: 0.08em;
         text-transform: uppercase;
         font-weight: 600;
-        color: var(--fd-color-text-muted);
+        color: var(--fd-ui-card-title-color);
+    }
+
+    &__meta {
+        margin-left: auto;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--fd-ui-card-meta-color);
+        white-space: nowrap;
     }
 
     &__actions {
@@ -46,3 +65,26 @@
     }
 }
 
+.fd-ui-card--appearance-product {
+    --fd-ui-card-border-color: rgba(46, 144, 250, 0.25);
+    --fd-ui-card-title-color: var(--fd-color-text, #111827);
+    --fd-ui-card-meta-color: var(--fd-color-text-muted, #6b7280);
+    .fd-ui-card__title {
+        font-size: 1.2rem;
+    }
+}
+
+.fd-ui-card--appearance-recipe {
+    --fd-ui-card-border-color: rgba(16, 185, 129, 0.25);
+    --fd-ui-card-title-color: var(--fd-color-text, #111827);
+    --fd-ui-card-meta-color: var(--fd-color-text-muted, #6b7280);
+    .fd-ui-card__title {
+        font-size: 1.2rem;
+    }
+}
+
+.fd-ui-card--appearance-info {
+    --fd-ui-card-border-color: rgba(148, 163, 184, 0.4);
+    --fd-ui-card-title-color: var(--fd-color-text, #111827);
+    --fd-ui-card-meta-color: var(--fd-color-text-muted, #64748b);
+}

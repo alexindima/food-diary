@@ -9,13 +9,14 @@ import { TuiButton, TuiIcon, TuiLoader, TuiTextfieldComponent, TuiTextfieldDirec
 import { TuiPagination } from '@taiga-ui/kit';
 import { TuiSearchComponent } from '@taiga-ui/layout';
 import { TuiTextfieldControllerModule } from '@taiga-ui/legacy';
-import { CardComponent } from '../../shared/card/card.component';
 import { catchError, debounceTime, finalize, map, Observable, of, switchMap, tap } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FormGroupControls } from '../../../types/common.data';
 import { TuiAlertService } from '@taiga-ui/core';
 import { RecipeDetailComponent, RecipeDetailActionResult } from '../recipe-detail/recipe-detail.component';
 import { BadgeComponent } from '../../shared/badge/badge.component';
+import { FdUiEntityCardComponent } from '../../../ui-kit/entity-card/fd-ui-entity-card.component';
+import { FdUiEntityCardHeaderDirective } from '../../../ui-kit/entity-card/fd-ui-entity-card-header.directive';
 
 @Component({
     selector: 'fd-recipe-list',
@@ -33,8 +34,9 @@ import { BadgeComponent } from '../../shared/badge/badge.component';
         TuiTextfieldDirective,
         TuiButton,
         TuiIcon,
-        CardComponent,
         BadgeComponent,
+        FdUiEntityCardComponent,
+        FdUiEntityCardHeaderDirective,
     ],
 })
 export class RecipeListComponent implements OnInit {
@@ -199,6 +201,10 @@ export class RecipeListComponent implements OnInit {
         const cook = recipe.cookTime ?? 0;
         const total = prep + cook;
         return total > 0 ? total : null;
+    }
+
+    public isPrivateVisibility(visibility: RecipeVisibility | string | null | undefined): boolean {
+        return visibility?.toString().toUpperCase() === 'PRIVATE';
     }
 }
 

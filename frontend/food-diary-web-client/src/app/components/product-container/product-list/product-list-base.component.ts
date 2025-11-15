@@ -19,8 +19,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { TuiTextfieldControllerModule } from '@taiga-ui/legacy';
 import { FormGroupControls } from '../../../types/common.data';
 import { BarcodeScannerComponent } from '../../shared/barcode-scanner/barcode-scanner.component';
-import { CardComponent } from '../../shared/card/card.component';
 import { BadgeComponent } from '../../shared/badge/badge.component';
+import { FdUiEntityCardComponent } from '../../../ui-kit/entity-card/fd-ui-entity-card.component';
 
 @Component({
     selector: 'fd-product-list-base',
@@ -38,8 +38,8 @@ import { BadgeComponent } from '../../shared/badge/badge.component';
         TuiButton,
         TranslatePipe,
         TuiIcon,
-        CardComponent,
         BadgeComponent,
+        FdUiEntityCardComponent,
     ],
 })
 export class ProductListBaseComponent implements OnInit {
@@ -63,6 +63,10 @@ export class ProductListBaseComponent implements OnInit {
             search: new FormControl<string | null>(null),
             onlyMine: new FormControl<boolean>(false, { nonNullable: true }),
         });
+    }
+
+    protected isPrivateVisibility(visibility: Product['visibility']): boolean {
+        return visibility?.toString().toUpperCase() === 'PRIVATE';
     }
 
     public ngOnInit(): void {

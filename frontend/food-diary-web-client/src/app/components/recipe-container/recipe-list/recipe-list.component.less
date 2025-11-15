@@ -91,28 +91,9 @@
 }
 
 .recipe-card {
-    padding: @gap-m;
+    padding: 0;
     display: flex;
     flex-direction: column;
-
-    &__header {
-        display: flex;
-        justify-content: space-between;
-        flex-wrap: wrap;
-        gap: @gap-xs;
-        margin-bottom: @gap-xs;
-
-        @media @media-mobile {
-            flex-direction: column;
-            align-items: flex-start;
-        }
-    }
-
-    &__name {
-        font-size: 1.5em;
-        font-weight: bold;
-        color: @color-text-main;
-    }
 
     &__badges {
         display: flex;

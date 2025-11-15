@@ -34,8 +34,9 @@ import { NavigationService } from '../../../services/navigation.service';
 import { PagedData } from '../../../types/paged-data.data';
 import { FormGroupControls } from '../../../types/common.data';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { CardComponent } from '../../shared/card/card.component';
 import { BadgeComponent } from '../../shared/badge/badge.component';
+import { FdUiEntityCardComponent } from '../../../ui-kit/entity-card/fd-ui-entity-card.component';
+import { FdUiEntityCardHeaderDirective } from '../../../ui-kit/entity-card/fd-ui-entity-card-header.directive';
 
 @Component({
     selector: 'fd-recipe-select-dialog',
@@ -55,8 +56,9 @@ import { BadgeComponent } from '../../shared/badge/badge.component';
         TuiTextfieldDirective,
         TuiTextfieldControllerModule,
         TuiIcon,
-        CardComponent,
         BadgeComponent,
+        FdUiEntityCardComponent,
+        FdUiEntityCardHeaderDirective,
     ],
 })
 export class RecipeSelectDialogComponent implements OnInit {
@@ -153,6 +155,10 @@ export class RecipeSelectDialogComponent implements OnInit {
 
     private scrollToTop(): void {
         this.container.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    public isPrivateVisibility(visibility: Recipe['visibility']): boolean {
+        return visibility?.toString().toUpperCase() === 'PRIVATE';
     }
 }
 

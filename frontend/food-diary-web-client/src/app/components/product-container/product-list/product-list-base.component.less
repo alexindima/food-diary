@@ -77,30 +77,40 @@
     &__pagination {
         margin-top: @gap-l;
     }
+
+    fd-ui-entity-card {
+        display: block;
+        margin-bottom: 12px;
+    }
 }
 
 .product-card {
-    padding: @gap-m;
+    padding: 0;
     display: flex;
     flex-direction: column;
+    gap: @gap-xs;
 
     &__header {
         display: flex;
+        align-items: center;
+        gap: @gap-s;
         justify-content: space-between;
-        flex-wrap: wrap;
-        gap: @gap-xs;
-        margin-bottom: @gap-xs;
+    }
 
-        @media @media-mobile {
-            flex-direction: column;
-            align-items: flex-start;
-        }
+    &__title {
+        display: flex;
+        gap: @gap-xs;
+        font-size: 1.5em;
+        font-weight: 700;
+        line-height: 1.5rem;
+        color: @color-text-main;
+        min-width: 0;
     }
 
     &__name {
-        font-size: 1.5em;
-        font-weight: bold;
-        color: @color-text-main;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 
     &__barcode {
@@ -108,17 +118,11 @@
         color: @color-text-additional;
     }
 
-    &__badges {
-        display: flex;
-        gap: 0.35rem;
-        flex-wrap: wrap;
-        align-items: center;
-    }
-
-    &__info {
+    &__stats {
         display: flex;
         justify-content: space-between;
-        align-items: center;
+        align-items: flex-start;
+        gap: @gap-m;
 
         @media @media-mobile {
             flex-direction: column;
@@ -129,13 +133,26 @@
 
     &__calories {
         font-size: 1.2em;
-        font-weight: bold;
+        font-weight: 500;
         color: @color-text-main;
     }
 
     &__macros {
-        font-size: 0.9em;
+        font-size: 0.95em;
         color: @color-text-additional;
+        text-align: right;
+
+        @media @media-mobile {
+            text-align: left;
+        }
+    }
+
+    &__badges {
+        display: flex;
+        gap: 0.35rem;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: flex-end;
     }
 }
 

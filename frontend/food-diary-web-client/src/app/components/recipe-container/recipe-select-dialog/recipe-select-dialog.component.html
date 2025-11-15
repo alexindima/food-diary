@@ -43,28 +43,29 @@
         @if (recipeData.items().length > 0) {
             <div class="recipe-select__list">
                 @for (recipe of recipeData.items(); track recipe.id) {
-                    <fd-card class="recipe-select__card" (click)="onRecipeClick(recipe)">
-                        <div class="recipe-card">
-                            <div class="recipe-card__header">
-                                <div>
-                                    <span class="recipe-card__name">{{ recipe.name }}</span>
-                                    @if (recipe.category) {
-                                        <span class="recipe-card__category">{{ recipe.category }}</span>
-                                    }
-                                </div>
-                                <div class="recipe-card__badges">
-                                    <fd-badge
-                                        [label]="('RECIPE_VISIBILITY.' + recipe.visibility) | translate"
-                                        [variant]="recipe.visibility === 'Private' ? 'warning' : 'success'"
-                                        [icon]="recipe.visibility === 'Private' ? '@tui.lock' : '@tui.globe'"
-                                    ></fd-badge>
-                                    <fd-badge
-                                        [label]="recipe.isOwnedByCurrentUser ? ('RECIPE_SELECT_DIALOG.MY_RECIPE_BADGE' | translate) : ('RECIPE_SELECT_DIALOG.SHARED_RECIPE_BADGE' | translate)"
-                                        [variant]="recipe.isOwnedByCurrentUser ? 'primary' : 'neutral'"
-                                        [icon]="recipe.isOwnedByCurrentUser ? '@tui.user-check' : '@tui.users'"
-                                    ></fd-badge>
-                                </div>
+                    <fd-ui-entity-card
+                        class="recipe-select__card"
+                        (click)="onRecipeClick(recipe)"
+                        appearance="recipe"
+                        [title]="recipe.name"
+                        [meta]="recipe.category || undefined"
+                        [imageUrl]="recipe.imageUrl"
+                    >
+                        <ng-container fdUiEntityCardHeader>
+                            <div class="recipe-card__badges">
+                                <fd-badge
+                                    [label]="('RECIPE_VISIBILITY.' + recipe.visibility) | translate"
+                                    [variant]="isPrivateVisibility(recipe.visibility) ? 'warning' : 'success'"
+                                    [icon]="isPrivateVisibility(recipe.visibility) ? 'lock' : 'public'"
+                                ></fd-badge>
+                                <fd-badge
+                                    [label]="recipe.isOwnedByCurrentUser ? ('RECIPE_SELECT_DIALOG.MY_RECIPE_BADGE' | translate) : ('RECIPE_SELECT_DIALOG.SHARED_RECIPE_BADGE' | translate)"
+                                    [variant]="recipe.isOwnedByCurrentUser ? 'primary' : 'neutral'"
+                                    [icon]="recipe.isOwnedByCurrentUser ? 'restaurant' : 'groups'"
+                                ></fd-badge>
                             </div>
+                        </ng-container>
+                        <div class="recipe-card">
                             <div class="recipe-card__info">
                                 <span>
                                     {{ 'RECIPE_SELECT_DIALOG.SERVINGS' | translate }}:
@@ -85,7 +86,7 @@
                                 {{ (recipe.totalCarbs ?? 0) | number:'1.0-2' }} {{ 'PRODUCT_AMOUNT_UNITS_SHORT.G' | translate }}
                             </div>
                         </div>
-                    </fd-card>
+                    </fd-ui-entity-card>
                 }
             </div>
         } @else {

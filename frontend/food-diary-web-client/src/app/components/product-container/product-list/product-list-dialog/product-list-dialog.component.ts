@@ -17,8 +17,8 @@ import { TuiPagination } from '@taiga-ui/kit';
 import { TuiSearchComponent } from '@taiga-ui/layout';
 import { TuiTextfieldControllerModule } from '@taiga-ui/legacy';
 import { ProductAddDialogComponent } from '../../product-manage/product-add-dialog/product-add-dialog.component';
-import { CardComponent } from '../../../shared/card/card.component';
 import { BadgeComponent } from '../../../shared/badge/badge.component';
+import { FdUiEntityCardComponent } from '../../../../ui-kit/entity-card/fd-ui-entity-card.component';
 
 @Component({
     selector: 'fd-product-list-dialog',
@@ -37,8 +37,8 @@ import { BadgeComponent } from '../../../shared/badge/badge.component';
         TuiTextfieldControllerModule,
         TuiTextfieldDirective,
         TuiIcon,
-        CardComponent,
         BadgeComponent,
+        FdUiEntityCardComponent,
     ]
 })
 export class ProductListDialogComponent extends ProductListBaseComponent {

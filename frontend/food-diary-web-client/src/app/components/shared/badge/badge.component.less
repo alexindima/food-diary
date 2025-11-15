@@ -1,40 +1,59 @@
-.badge {
+:host {
+    display: inline-flex;
+}
+
+.fd-badge {
     display: inline-flex;
     align-items: center;
-    gap: 0.35rem;
-    padding: 0.2rem 0.65rem;
-    border-radius: 999px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.02em;
+    gap: 0.25rem;
+    padding: 0.15rem 0.55rem;
+    border-radius: var(--fd-radius-pill, 999px);
+    font-size: 0.78rem;
+    font-weight: 500;
+    line-height: 1.4;
+    text-transform: none;
+    letter-spacing: 0;
+    background-color: var(--fd-badge-bg, rgba(15, 23, 42, 0.04));
+    color: var(--fd-badge-fg, #0f172a);
+    border: 1px solid var(--fd-badge-border, rgba(15, 23, 42, 0.07));
 
     &__icon {
-        font-size: 0.85rem;
+        font-size: 1rem;
+        width: 1rem;
+        height: 1rem;
     }
 
-    &--primary {
-        background: #e5edff;
-        color: #1939b7;
+    &__label {
+        white-space: nowrap;
     }
 
-    &--success {
-        background: #e8f8f0;
-        color: #0f6a3c;
+    &.fd-badge--primary {
+        --fd-badge-bg: rgba(59, 130, 246, 0.14);
+        --fd-badge-border: rgba(59, 130, 246, 0.25);
+        --fd-badge-fg: #1d4ed8;
     }
 
-    &--warning {
-        background: #fff4e5;
-        color: #b15c00;
+    &.fd-badge--success {
+        --fd-badge-bg: rgba(16, 185, 129, 0.12);
+        --fd-badge-border: rgba(16, 185, 129, 0.25);
+        --fd-badge-fg: #047857;
     }
 
-    &--danger {
-        background: #fdeaea;
-        color: #b3261e;
+    &.fd-badge--warning {
+        --fd-badge-bg: rgba(251, 146, 60, 0.18);
+        --fd-badge-border: rgba(251, 146, 60, 0.28);
+        --fd-badge-fg: #c2410c;
     }
 
-    &--neutral {
-        background: #eceff4;
-        color: #374151;
+    &.fd-badge--danger {
+        --fd-badge-bg: rgba(239, 68, 68, 0.16);
+        --fd-badge-border: rgba(239, 68, 68, 0.28);
+        --fd-badge-fg: #b91c1c;
+    }
+
+    &.fd-badge--neutral {
+        --fd-badge-bg: rgba(148, 163, 184, 0.2);
+        --fd-badge-border: rgba(148, 163, 184, 0.35);
+        --fd-badge-fg: #475569;
     }
 }

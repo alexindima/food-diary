@@ -1,6 +1,12 @@
-<div class="fd-ui-card" [class.fd-ui-card--subtle]="subtle">
-    <header class="fd-ui-card__header" *ngIf="title || headerActions">
-        <p class="fd-ui-card__title" *ngIf="title">{{ title }}</p>
+<div
+    class="fd-ui-card"
+    [ngClass]="[subtle ? 'fd-ui-card--subtle' : '', appearanceClass]"
+>
+    <header class="fd-ui-card__header" *ngIf="title || meta || headerActions">
+        <div class="fd-ui-card__title-row" *ngIf="title || meta">
+            <p class="fd-ui-card__title" *ngIf="title">{{ title }}</p>
+            <span class="fd-ui-card__meta" *ngIf="meta">{{ meta }}</span>
+        </div>
         <div class="fd-ui-card__actions" *ngIf="headerActions">
             <ng-content select="[fdUiCardActions]"></ng-content>
         </div>
@@ -10,4 +16,3 @@
         <ng-content></ng-content>
     </div>
 </div>
-

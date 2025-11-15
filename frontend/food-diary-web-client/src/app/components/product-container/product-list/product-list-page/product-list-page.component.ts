@@ -16,8 +16,8 @@ import { TuiPagination } from '@taiga-ui/kit';
 import { TuiSearchComponent } from '@taiga-ui/layout';
 import { TuiTextfieldControllerModule } from '@taiga-ui/legacy';
 import { ProductDetailComponent } from '../../product-detail/product-detail.component';
-import { CardComponent } from '../../../shared/card/card.component';
 import { BadgeComponent } from '../../../shared/badge/badge.component';
+import { FdUiEntityCardComponent } from '../../../../ui-kit/entity-card/fd-ui-entity-card.component';
 import { finalize } from 'rxjs';
 
 @Component({
@@ -36,8 +36,8 @@ import { finalize } from 'rxjs';
         TuiTextfieldControllerModule,
         TuiTextfieldDirective,
         TuiIcon,
-        CardComponent,
         BadgeComponent,
+        FdUiEntityCardComponent,
     ]
 })
 export class ProductListPageComponent extends ProductListBaseComponent implements OnInit {

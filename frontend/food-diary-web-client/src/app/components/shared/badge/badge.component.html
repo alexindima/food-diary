@@ -1,6 +1,6 @@
-<span class="badge" [ngClass]="'badge--' + variant">
+<span class="fd-badge" [ngClass]="variantClass">
     @if (icon) {
-        <tui-icon class="badge__icon" [icon]="icon"></tui-icon>
+        <mat-icon class="fd-badge__icon" aria-hidden="true">{{ icon }}</mat-icon>
     }
-    {{ label }}
+    <span class="fd-badge__label">{{ label }}</span>
 </span>

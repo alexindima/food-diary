@@ -50,27 +50,30 @@
         @if (recipeData.items().length > 0) {
             <div class="recipe-list__items">
                 @for (recipe of recipeData.items(); track recipe.id) {
-                    <fd-card (click)="onRecipeClick(recipe)">
-                        <div class="recipe-card">
-                            <div class="recipe-card__header">
-                                <div class="recipe-card__title">
-                                    <span class="recipe-card__name">{{ recipe.name }}</span>
-                                </div>
-                                <div class="recipe-card__badges">
-                                    @if (recipe.isOwnedByCurrentUser) {
-                                        <fd-badge
-                                            [label]="getVisibilityTranslation(recipe.visibility)"
-                                            [variant]="recipe.visibility === 'Private' ? 'warning' : 'success'"
-                                            [icon]="recipe.visibility === 'Private' ? '@tui.lock' : '@tui.globe'"
-                                        ></fd-badge>
-                                    }
+                    <fd-ui-entity-card
+                        appearance="recipe"
+                        (click)="onRecipeClick(recipe)"
+                        [title]="recipe.name"
+                        [meta]="recipe.category || undefined"
+                        [imageUrl]="recipe.imageUrl"
+                    >
+                        <ng-container fdUiEntityCardHeader>
+                            <div class="recipe-card__badges">
+                                @if (recipe.isOwnedByCurrentUser) {
                                     <fd-badge
-                                        [label]="recipe.isOwnedByCurrentUser ? ('RECIPE_BADGE.MY' | translate) : ('RECIPE_BADGE.SHARED' | translate)"
-                                        [variant]="recipe.isOwnedByCurrentUser ? 'primary' : 'neutral'"
-                                        [icon]="recipe.isOwnedByCurrentUser ? '@tui.user-check' : '@tui.users'"
+                                        [label]="getVisibilityTranslation(recipe.visibility)"
+                                        [variant]="isPrivateVisibility(recipe.visibility) ? 'warning' : 'success'"
+                                        [icon]="isPrivateVisibility(recipe.visibility) ? 'lock' : 'public'"
                                     ></fd-badge>
-                                </div>
+                                }
+                                <fd-badge
+                                    [label]="recipe.isOwnedByCurrentUser ? ('RECIPE_BADGE.MY' | translate) : ('RECIPE_BADGE.SHARED' | translate)"
+                                    [variant]="recipe.isOwnedByCurrentUser ? 'primary' : 'neutral'"
+                                    [icon]="recipe.isOwnedByCurrentUser ? 'restaurant' : 'groups'"
+                                ></fd-badge>
                             </div>
+                        </ng-container>
+                        <div class="recipe-card">
                             <div class="recipe-card__metrics">
                                 <span class="recipe-card__calories">
                                     {{ 'RECIPE_LIST.TOTAL_CALORIES' | translate }}: {{ recipe.totalCalories ?? '-' }}
@@ -95,7 +98,7 @@
                                 </span>
                             </div>
                         </div>
-                    </fd-card>
+                    </fd-ui-entity-card>
                 }
             </div>
         } @else {
