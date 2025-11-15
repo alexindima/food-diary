@@ -14,6 +14,7 @@ public sealed class Product : AggregateRoot<ProductId> {
     public string? Brand { get; private set; }
     public string? Category { get; private set; }
     public string? Description { get; private set; }
+    public string? Comment { get; private set; }
     public string? ImageUrl { get; private set; }
     public MeasurementUnit BaseUnit { get; private set; }
     public double BaseAmount { get; private set; }
@@ -57,6 +58,7 @@ public sealed class Product : AggregateRoot<ProductId> {
         string? brand = null,
         string? category = null,
         string? description = null,
+        string? comment = null,
         string? imageUrl = null,
         Visibility visibility = Visibility.PUBLIC) {
         var product = new Product {
@@ -74,6 +76,7 @@ public sealed class Product : AggregateRoot<ProductId> {
             Brand = brand,
             Category = category,
             Description = description,
+            Comment = comment,
             ImageUrl = imageUrl,
             Visibility = visibility
         };
@@ -94,6 +97,7 @@ public sealed class Product : AggregateRoot<ProductId> {
         string? brand = null,
         string? category = null,
         string? description = null,
+        string? comment = null,
         string? imageUrl = null,
         Visibility? visibility = null) {
         if (name is not null) Name = name;
@@ -108,6 +112,7 @@ public sealed class Product : AggregateRoot<ProductId> {
         if (brand is not null) Brand = brand;
         if (category is not null) Category = category;
         if (description is not null) Description = description;
+        if (comment is not null) Comment = comment;
         if (imageUrl is not null) ImageUrl = imageUrl;
         if (visibility.HasValue) Visibility = visibility.Value;
 

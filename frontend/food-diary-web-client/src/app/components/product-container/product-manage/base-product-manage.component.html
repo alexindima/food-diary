@@ -53,6 +53,14 @@
                                 [placeholder]="'PRODUCT_MANAGE.CATEGORY_PLACEHOLDER' | translate"
                             ></fd-ui-input>
                         </div>
+                        <div class="product-manage__field product-manage__field--full">
+                            <fd-ui-textarea
+                                formControlName="comment"
+                                [label]="'PRODUCT_MANAGE.COMMENT' | translate"
+                                [placeholder]="'PRODUCT_MANAGE.COMMENT_PLACEHOLDER' | translate"
+                                [rows]="4"
+                            ></fd-ui-textarea>
+                        </div>
                         <div class="product-manage__serving-row product-manage__field--full">
                             <div class="product-manage__serving-part">
                                 <fd-ui-input
@@ -64,35 +72,15 @@
                                     [error]="getControlError('baseAmount')"
                                 ></fd-ui-input>
                             </div>
-                            <div class="product-manage__serving-part">
-                                <tui-select
-                                    formControlName="baseUnit"
-                                    [tuiTextfieldLabelOutside]="true"
-                                    [stringify]="stringifyUnits"
-                                >
-                                    {{ 'PRODUCT_MANAGE.DEFAULT_SERVING_UNIT' | translate }}*
-                                    <input
-                                        placeholder="0"
-                                        tuiTextfieldLegacy
-                                    />
-                                    <ng-template tuiDataList>
-                                        <tui-data-list>
-                                            @for (unit of units; track unit;) {
-                                                <button
-                                                    tuiOption
-                                                    [value]="unit"
-                                                >
-                                                    {{ ('PRODUCT_AMOUNT_UNITS.' + Unit[unit]) | translate }}
-                                                </button>
-                                            }
-                                        </tui-data-list>
-                                    </ng-template>
-                                </tui-select>
-                                <tui-error
-                                    formControlName="baseUnit"
-                                    [error]="[] | tuiFieldError | async"
-                                ></tui-error>
-                            </div>
+                        <div class="product-manage__serving-part">
+                            <fd-ui-select
+                                formControlName="baseUnit"
+                                [label]="('PRODUCT_MANAGE.DEFAULT_SERVING_UNIT' | translate) + '*'"
+                                [options]="unitOptions"
+                                [required]="true"
+                                [error]="getControlError('baseUnit')"
+                            ></fd-ui-select>
+                        </div>
                         </div>
                     </div>
                 </fd-ui-card>

@@ -1,0 +1,23 @@
+:host {
+    display: block;
+}
+
+.fd-ui-textarea {
+    width: 100%;
+
+    .mat-mdc-text-field-wrapper {
+        border-radius: var(--fd-radius-md, 8px);
+        background-color: var(--fd-color-surface, #fff);
+    }
+
+    .mat-mdc-form-field-subscript-wrapper {
+        font-size: 0.75rem;
+        line-height: 1.2;
+    }
+}
+
+.mat-mdc-input-element {
+    font: inherit;
+    line-height: 1.5;
+}
+

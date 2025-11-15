@@ -38,6 +38,7 @@ public class DuplicateProductCommandHandler(IProductRepository productRepository
             original.Brand,
             original.Category,
             original.Description,
+            original.Comment,
             original.ImageUrl,
             original.Visibility);
 

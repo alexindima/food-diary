@@ -4,3 +4,5 @@ export * from './fd-ui-kit.module';
 export * from './card/fd-ui-card.component';
 export * from './card/fd-ui-card-actions.directive';
 export * from './radio/fd-ui-radio-group.component';
+export * from './select/fd-ui-select.component';
+export * from './textarea/fd-ui-textarea.component';

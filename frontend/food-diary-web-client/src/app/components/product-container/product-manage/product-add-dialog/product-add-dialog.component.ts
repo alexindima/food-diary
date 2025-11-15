@@ -9,8 +9,7 @@ import {
 import { Product } from '../../../../types/product.data';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
-import { TuiFieldErrorPipe } from '@taiga-ui/kit';
-import { AsyncPipe, DecimalPipe } from '@angular/common';
+import { DecimalPipe } from '@angular/common';
 import {
     TuiInputNumberModule,
     TuiSelectModule,
@@ -23,6 +22,8 @@ import { ZXingScannerModule } from '@zxing/ngx-scanner';
 import { FdUiInputComponent } from '../../../../ui-kit/input/fd-ui-input.component';
 import { FdUiCardComponent } from '../../../../ui-kit/card/fd-ui-card.component';
 import { FdUiRadioGroupComponent } from '../../../../ui-kit/radio/fd-ui-radio-group.component';
+import { FdUiSelectComponent } from '../../../../ui-kit/select/fd-ui-select.component';
+import { FdUiTextareaComponent } from '../../../../ui-kit/textarea/fd-ui-textarea.component';
 
 @Component({
     selector: 'fd-product-add-dialog',
@@ -33,8 +34,6 @@ import { FdUiRadioGroupComponent } from '../../../../ui-kit/radio/fd-ui-radio-gr
         ReactiveFormsModule,
         TranslatePipe,
         TuiError,
-        TuiFieldErrorPipe,
-        AsyncPipe,
         DecimalPipe,
         TuiButton,
         TuiSelectModule,
@@ -45,6 +44,8 @@ import { FdUiRadioGroupComponent } from '../../../../ui-kit/radio/fd-ui-radio-gr
         FdUiInputComponent,
         FdUiCardComponent,
         FdUiRadioGroupComponent,
+        FdUiSelectComponent,
+        FdUiTextareaComponent,
     ]
 })
 export class ProductAddDialogComponent extends BaseProductManageComponent {

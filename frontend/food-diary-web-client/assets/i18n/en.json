@@ -242,6 +242,8 @@
         "BARCODE_PLACEHOLDER": "Enter barcode",
         "CATEGORY": "Category",
         "CATEGORY_PLACEHOLDER": "Enter category",
+        "COMMENT": "Comment",
+        "COMMENT_PLACEHOLDER": "Add any notes for this product",
         "SCAN_BARCODE": "Scan barcode",
         "CALORIES": "Calories per",
         "PROTEINS": "Proteins per",

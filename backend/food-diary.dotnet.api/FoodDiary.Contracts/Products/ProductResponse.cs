@@ -7,6 +7,7 @@ public record ProductResponse(
     string? Brand,
     string? Category,
     string? Description,
+    string? Comment,
     string? ImageUrl,
     string BaseUnit,
     double BaseAmount,

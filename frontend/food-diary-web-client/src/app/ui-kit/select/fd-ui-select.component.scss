@@ -1,0 +1,22 @@
+:host {
+    display: block;
+}
+
+.fd-ui-select {
+    width: 100%;
+
+    .mat-mdc-form-field-subscript-wrapper {
+        font-size: 0.75rem;
+        line-height: 1.2;
+    }
+}
+
+.fd-ui-select__option-label {
+    display: block;
+}
+
+.fd-ui-select__option-hint {
+    display: block;
+    color: var(--fd-color-text-muted, rgba(0, 0, 0, 0.6));
+}
+

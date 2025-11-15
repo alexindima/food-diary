@@ -1,0 +1,21 @@
+<mat-form-field class="fd-ui-select" appearance="outline">
+    <mat-label *ngIf="label">
+        {{ label }}<span *ngIf="required" aria-hidden="true">*</span>
+    </mat-label>
+
+    <mat-select
+        [disabled]="disabled"
+        [value]="internalValue"
+        [placeholder]="placeholder ?? ''"
+        (selectionChange)="handleSelectionChange($event)"
+        (blur)="onTouchedHandler()"
+    >
+        <mat-option *ngFor="let option of options" [value]="option.value">
+            <span class="fd-ui-select__option-label">{{ option.label }}</span>
+            <small class="fd-ui-select__option-hint" *ngIf="option.hint">{{ option.hint }}</small>
+        </mat-option>
+    </mat-select>
+
+    <mat-hint *ngIf="hint && !error">{{ hint }}</mat-hint>
+    <mat-error *ngIf="error">{{ error }}</mat-error>
+</mat-form-field>

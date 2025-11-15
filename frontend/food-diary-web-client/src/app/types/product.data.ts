@@ -5,6 +5,7 @@ export interface Product {
     brand?: string | null;
     category?: string | null;
     description?: string | null;
+    comment?: string | null;
     imageUrl?: string | null;
     baseUnit: MeasurementUnit;
     baseAmount: number;
@@ -25,6 +26,7 @@ export interface CreateProductRequest {
     brand?: string | null;
     category?: string | null;
     description?: string | null;
+    comment?: string | null;
     imageUrl?: string | null;
     baseUnit: MeasurementUnit;
     baseAmount: number;

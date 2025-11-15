@@ -71,6 +71,7 @@ public class FoodDiaryDbContext : DbContext
                 value => new UserId(value));
 
             entity.Property(e => e.Visibility).HasDefaultValue(Visibility.PUBLIC);
+            entity.Property(e => e.IsNutritionAutoCalculated).HasDefaultValue(true);
 
             entity.Ignore(e => e.UsageCount);
 

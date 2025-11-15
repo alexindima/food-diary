@@ -21,8 +21,8 @@ import {
     TuiError,
 } from '@taiga-ui/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { TUI_VALIDATION_ERRORS, TuiFieldErrorPipe } from '@taiga-ui/kit';
-import { AsyncPipe, DecimalPipe } from '@angular/common';
+import { TUI_VALIDATION_ERRORS } from '@taiga-ui/kit';
+import { DecimalPipe } from '@angular/common';
 import { TuiInputNumberModule, TuiSelectModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
 import { ProductService } from '../../../services/product.service';
 import { NavigationService } from '../../../services/navigation.service';
@@ -40,6 +40,8 @@ import { ValidationErrors } from '../../../types/validation-error.data';
 import { FdUiInputComponent } from '../../../ui-kit/input/fd-ui-input.component';
 import { FdUiCardComponent } from '../../../ui-kit/card/fd-ui-card.component';
 import { FdUiRadioGroupComponent, FdUiRadioOption } from '../../../ui-kit/radio/fd-ui-radio-group.component';
+import { FdUiSelectComponent, FdUiSelectOption } from '../../../ui-kit/select/fd-ui-select.component';
+import { FdUiTextareaComponent } from '../../../ui-kit/textarea/fd-ui-textarea.component';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: TUI_VALIDATION_ERRORS,
@@ -64,8 +66,6 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
         TranslatePipe,
         DecimalPipe,
         TuiError,
-        TuiFieldErrorPipe,
-        AsyncPipe,
         TuiButton,
         TuiSelectModule,
         TuiTextfieldControllerModule,
@@ -75,6 +75,8 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
         FdUiInputComponent,
         FdUiCardComponent,
         FdUiRadioGroupComponent,
+        FdUiSelectComponent,
+        FdUiTextareaComponent,
     ],
 })
 export class BaseProductManageComponent implements OnInit {
@@ -106,6 +108,7 @@ export class BaseProductManageComponent implements OnInit {
     protected skipConfirmDialog = false;
     public productForm: FormGroup<ProductFormData>;
     public units = Object.values(MeasurementUnit) as MeasurementUnit[];
+    public unitOptions: FdUiSelectOption<MeasurementUnit>[] = [];
     public visibilityOptions = Object.values(ProductVisibility) as ProductVisibility[];
     public visibilityRadioOptions: FdUiRadioOption<ProductVisibility>[] = [];
     public constructor() {
@@ -115,6 +118,7 @@ export class BaseProductManageComponent implements OnInit {
             brand: new FormControl(null),
             category: new FormControl(null),
             description: new FormControl(null),
+            comment: new FormControl(null),
             imageUrl: new FormControl(null),
             baseAmount: new FormControl(100, { nonNullable: true, validators: [Validators.required, Validators.min(0.001)] }),
             baseUnit: new FormControl(MeasurementUnit.G, { nonNullable: true, validators: Validators.required }),
@@ -126,8 +130,10 @@ export class BaseProductManageComponent implements OnInit {
             visibility: new FormControl(ProductVisibility.Private, { nonNullable: true, validators: Validators.required }),
         });
 
+        this.buildUnitOptions();
         this.buildVisibilityOptions();
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            this.buildUnitOptions();
             this.buildVisibilityOptions();
         });
 
@@ -216,6 +222,7 @@ export class BaseProductManageComponent implements OnInit {
                 brand: this.productForm.value.brand || null,
                 category: this.productForm.value.category || null,
                 description: this.productForm.value.description || null,
+                comment: this.productForm.value.comment || null,
                 imageUrl: this.productForm.value.imageUrl || null,
                 baseAmount: this.productForm.value.baseAmount!,
                 baseUnit: this.productForm.value.baseUnit!,
@@ -305,6 +312,7 @@ export class BaseProductManageComponent implements OnInit {
         const normalizedVisibility = this.normalizeVisibility(product.visibility);
         this.productForm.patchValue({
             ...product,
+            comment: product.comment ?? null,
             visibility: normalizedVisibility,
         });
     }
@@ -360,6 +368,13 @@ export class BaseProductManageComponent implements OnInit {
         }));
     }
 
+    private buildUnitOptions(): void {
+        this.unitOptions = this.units.map(unit => ({
+            value: unit,
+            label: this.translateService.instant(`PRODUCT_AMOUNT_UNITS.${MeasurementUnit[unit]}`),
+        }));
+    }
+
     private normalizeVisibility(value: ProductVisibility | null | string | undefined): ProductVisibility {
         if (typeof value !== 'string') {
             return ProductVisibility.Private;
@@ -393,6 +408,7 @@ export interface ProductFormValues {
     brand: string | null;
     category: string | null;
     description: string | null;
+    comment: string | null;
     imageUrl: string | null;
     baseAmount: number;
     baseUnit: MeasurementUnit;

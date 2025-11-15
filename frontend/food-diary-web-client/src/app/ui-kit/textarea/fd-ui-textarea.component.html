@@ -1,0 +1,22 @@
+<mat-form-field class="fd-ui-textarea" appearance="outline">
+    <mat-label *ngIf="label">
+        {{ label }}<span *ngIf="required" aria-hidden="true">*</span>
+    </mat-label>
+
+    <textarea
+        matInput
+        [id]="id"
+        [rows]="rows"
+        [value]="internalValue"
+        [placeholder]="placeholder ?? ''"
+        [required]="required"
+        [readonly]="readonly"
+        [disabled]="disabled"
+        [attr.maxlength]="maxlength ?? null"
+        (input)="handleInput($any($event.target).value)"
+        (blur)="handleBlur()"
+    ></textarea>
+
+    <mat-hint *ngIf="hint && !error">{{ hint }}</mat-hint>
+    <mat-error *ngIf="error">{{ error }}</mat-error>
+</mat-form-field>

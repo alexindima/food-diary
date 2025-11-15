@@ -43,6 +43,7 @@ public class UpdateProductCommandHandler(IProductRepository productRepository)
             brand: command.Brand,
             category: command.Category,
             description: command.Description,
+            comment: command.Comment,
             imageUrl: command.ImageUrl,
             visibility: newVisibility);
 

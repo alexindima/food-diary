@@ -223,6 +223,8 @@
         "BARCODE_PLACEHOLDER": "Введите штрихкод",
         "CATEGORY": "Категория",
         "CATEGORY_PLACEHOLDER": "Введите категорию",
+        "COMMENT": "Комментарий",
+        "COMMENT_PLACEHOLDER": "Добавьте заметку о продукте",
         "SCAN_BARCODE": "Сканировать штрихкод",
         "CALORIES": "Калорий на",
         "PROTEINS": "Белков на",
