@@ -20,6 +20,12 @@ public sealed class Meal : AggregateRoot<int> {
     public double TotalFats { get; private set; }
     public double TotalCarbs { get; private set; }
     public double TotalFiber { get; private set; }
+    public bool IsNutritionAutoCalculated { get; private set; } = true;
+    public double? ManualCalories { get; private set; }
+    public double? ManualProteins { get; private set; }
+    public double? ManualFats { get; private set; }
+    public double? ManualCarbs { get; private set; }
+    public double? ManualFiber { get; private set; }
 
     // Navigation properties
     public User User { get; private set; } = null!;
@@ -99,12 +105,35 @@ public sealed class Meal : AggregateRoot<int> {
         double totalProteins,
         double totalFats,
         double totalCarbs,
-        double totalFiber) {
+        double totalFiber,
+        bool isAutoCalculated,
+        double? manualCalories = null,
+        double? manualProteins = null,
+        double? manualFats = null,
+        double? manualCarbs = null,
+        double? manualFiber = null) {
         TotalCalories = Math.Round(totalCalories, 2);
         TotalProteins = Math.Round(totalProteins, 2);
         TotalFats = Math.Round(totalFats, 2);
         TotalCarbs = Math.Round(totalCarbs, 2);
         TotalFiber = Math.Round(totalFiber, 2);
+
+        IsNutritionAutoCalculated = isAutoCalculated;
+
+        if (isAutoCalculated) {
+            ManualCalories = null;
+            ManualProteins = null;
+            ManualFats = null;
+            ManualCarbs = null;
+            ManualFiber = null;
+        } else {
+            ManualCalories = manualCalories.HasValue ? Math.Round(manualCalories.Value, 2) : TotalCalories;
+            ManualProteins = manualProteins.HasValue ? Math.Round(manualProteins.Value, 2) : TotalProteins;
+            ManualFats = manualFats.HasValue ? Math.Round(manualFats.Value, 2) : TotalFats;
+            ManualCarbs = manualCarbs.HasValue ? Math.Round(manualCarbs.Value, 2) : TotalCarbs;
+            ManualFiber = manualFiber.HasValue ? Math.Round(manualFiber.Value, 2) : TotalFiber;
+        }
+
         SetModified();
     }
 }

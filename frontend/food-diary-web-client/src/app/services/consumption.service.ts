@@ -80,6 +80,12 @@ export class ConsumptionService extends ApiService {
             totalFats: response.totalFats,
             totalCarbs: response.totalCarbs,
             totalFiber: response.totalFiber,
+            isNutritionAutoCalculated: response.isNutritionAutoCalculated ?? true,
+            manualCalories: response.manualCalories ?? null,
+            manualProteins: response.manualProteins ?? null,
+            manualFats: response.manualFats ?? null,
+            manualCarbs: response.manualCarbs ?? null,
+            manualFiber: response.manualFiber ?? null,
             items: response.items.map(item => this.mapConsumptionItem(item)),
         };
     }

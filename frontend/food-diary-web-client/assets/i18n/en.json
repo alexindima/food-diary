@@ -393,11 +393,24 @@
             "RECIPES_TAB": "Recipes"
         },
         "ADD_ITEM": "Add product or recipe",
+        "ADD_ITEM_FROM_PHOTO": "Add automatically via photo",
+        "ITEM_CARD_PLACEHOLDER": "Entry #{{index}}",
+        "ITEM_CARD_META": {
+            "PRODUCT": "Product",
+            "RECIPE": "Recipe"
+        },
         "AMOUNT_PLACEHOLDER_PRODUCT": "Enter amount",
         "AMOUNT_PLACEHOLDER_RECIPE": "Enter weight (g)",
         "ITEM_SOURCE_LABEL": "Product or recipe",
         "ITEM_SOURCE_PLACEHOLDER": "Select product or recipe",
-        "ITEM_SOURCE_ERROR": "Please choose a product or recipe"
+        "ITEM_SOURCE_ERROR": "Please choose a product or recipe",
+        "MANUAL_NUTRITION_TITLE": "Adjust nutritional values",
+        "MANUAL_NUTRITION_AUTO": "Calculate automatically",
+        "MANUAL_CALORIES": "Calories",
+        "MANUAL_PROTEINS": "Proteins",
+        "MANUAL_FATS": "Fats",
+        "MANUAL_CARBS": "Carbs",
+        "MANUAL_FIBER": "Fiber"
     },
     "RECIPE_SELECT_DIALOG": {
         "TITLE": "Choose a recipe",

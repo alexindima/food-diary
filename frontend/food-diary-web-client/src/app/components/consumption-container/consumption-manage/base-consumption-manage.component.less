@@ -100,10 +100,45 @@
         }
     }
 
+    &__manual-card {
+        gap: @gap-m;
+    }
+
+    &__manual-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: @gap-m;
+
+        @media @media-mobile {
+            grid-template-columns: 1fr;
+        }
+    }
+
     &__footer {
         display: flex;
         flex-direction: column;
         gap: @gap-xs;
+    }
+
+    &__items-section {
+        display: flex;
+        flex-direction: column;
+        gap: @gap-m;
+    }
+
+    &__items-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: @gap-m;
+        flex-wrap: wrap;
+    }
+
+    &__section-title {
+        margin: 0;
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: @color-text-main;
     }
 
     &__footer-actions {
@@ -143,23 +178,39 @@
     display: flex;
     flex-direction: column;
     gap: @gap-m;
-    padding: @gap-m;
-    border: 1px solid fade(@color-border, 40%);
-    border-radius: @border-radius-m;
 }
 
-.consumption-item__header {
+.consumption-item-card__header {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: @gap-m;
-    flex-wrap: wrap;
+    margin-bottom: @gap-s;
 }
 
-.consumption-item__title {
-    margin: 0;
+.consumption-item-card__title-wrapper {
+    display: flex;
+    align-items: center;
+    gap: @gap-s;
+    flex: 1;
+    min-width: 0;
+}
+
+.consumption-item-card__title {
     font-weight: 600;
+    font-size: 1rem;
     color: @color-text-main;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.consumption-item-card__meta {
+    font-size: 0.85rem;
+    color: @color-text-additional;
+    padding: 0 @gap-s;
+    border-radius: @border-radius-m;
+    background-color: fade(@color-text-additional, 10%);
 }
 
 .consumption-item__fields {
@@ -168,16 +219,25 @@
     gap: @gap-m;
 }
 
+.consumption-item__row {
+    display: flex;
+    gap: @gap-m;
+    align-items: flex-start;
+    flex-wrap: wrap;
+}
+
 .consumption-item__field {
     display: flex;
     flex-direction: column;
     gap: @gap-xs;
-}
 
-.consumption-item__label {
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: @color-text-additional;
+    &--source {
+        flex: 2 1 240px;
+    }
+
+    &--amount {
+        flex: 1 1 160px;
+    }
 }
 
 .consumption-item__selector {
@@ -219,6 +279,8 @@
 .consumption-item__actions {
     display: flex;
     justify-content: flex-end;
+    gap: @gap-s;
+    flex-wrap: wrap;
 }
 
 .consumption-item__error {

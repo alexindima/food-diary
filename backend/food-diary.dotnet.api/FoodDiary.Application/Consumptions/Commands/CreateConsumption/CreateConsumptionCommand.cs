@@ -13,4 +13,10 @@ public record CreateConsumptionCommand(
     DateTime Date,
     string? MealType,
     string? Comment,
-    IReadOnlyList<ConsumptionItemInput> Items) : ICommand<Result<ConsumptionResponse>>;
+    IReadOnlyList<ConsumptionItemInput> Items,
+    bool IsNutritionAutoCalculated,
+    double? ManualCalories,
+    double? ManualProteins,
+    double? ManualFats,
+    double? ManualCarbs,
+    double? ManualFiber) : ICommand<Result<ConsumptionResponse>>;

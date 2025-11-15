@@ -58,6 +58,7 @@ public class FoodDiaryDbContext : DbContext
                 value => new UserId(value));
 
             entity.HasOne(e => e.User).WithMany(u => u.Meals).HasForeignKey(e => e.UserId);
+            entity.Property(e => e.IsNutritionAutoCalculated).HasDefaultValue(true);
         });
 
         // Recipe configuration

@@ -359,11 +359,24 @@
             "RECIPES_TAB": "Рецепты"
         },
         "ADD_ITEM": "Добавить продукт или рецепт",
+        "ADD_ITEM_FROM_PHOTO": "Добавить по фото автоматически",
+        "ITEM_CARD_PLACEHOLDER": "Позиция №{{index}}",
+        "ITEM_CARD_META": {
+            "PRODUCT": "Продукт",
+            "RECIPE": "Рецепт"
+        },
         "AMOUNT_PLACEHOLDER_PRODUCT": "Введите количество",
         "AMOUNT_PLACEHOLDER_RECIPE": "Введите вес (г)",
         "ITEM_SOURCE_LABEL": "Продукт или рецепт",
         "ITEM_SOURCE_PLACEHOLDER": "Выберите продукт или рецепт",
-        "ITEM_SOURCE_ERROR": "Выберите продукт или рецепт"
+        "ITEM_SOURCE_ERROR": "Выберите продукт или рецепт",
+        "MANUAL_NUTRITION_TITLE": "Корректировка калорийности",
+        "MANUAL_NUTRITION_AUTO": "Рассчитывать автоматически",
+        "MANUAL_CALORIES": "Калории",
+        "MANUAL_PROTEINS": "Белки",
+        "MANUAL_FATS": "Жиры",
+        "MANUAL_CARBS": "Углеводы",
+        "MANUAL_FIBER": "Клетчатка"
     },
     "RECIPE_SELECT_DIALOG": {
         "TITLE": "Выберите рецепт",

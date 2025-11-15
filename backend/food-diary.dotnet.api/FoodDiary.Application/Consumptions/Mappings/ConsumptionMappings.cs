@@ -47,6 +47,12 @@ public static class ConsumptionMappings
             meal.TotalFats,
             meal.TotalCarbs,
             meal.TotalFiber,
+            meal.IsNutritionAutoCalculated,
+            meal.ManualCalories,
+            meal.ManualProteins,
+            meal.ManualFats,
+            meal.ManualCarbs,
+            meal.ManualFiber,
             items);
     }
 

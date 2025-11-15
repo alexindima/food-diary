@@ -20,6 +20,7 @@ export class FdUiButtonComponent {
     @Input() public icon?: string;
     @Input() public disabled = false;
     @Input() public fullWidth = false;
+    @Input() public ariaLabel?: string;
 
     public get classes(): string[] {
         return [

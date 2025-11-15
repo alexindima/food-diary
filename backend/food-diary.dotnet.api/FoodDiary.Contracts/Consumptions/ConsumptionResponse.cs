@@ -14,6 +14,12 @@ public record ConsumptionResponse(
     double TotalFats,
     double TotalCarbs,
     double TotalFiber,
+    bool IsNutritionAutoCalculated,
+    double? ManualCalories,
+    double? ManualProteins,
+    double? ManualFats,
+    double? ManualCarbs,
+    double? ManualFiber,
     IReadOnlyList<ConsumptionItemResponse> Items);
 
 public record ConsumptionItemResponse(

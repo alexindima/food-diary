@@ -15,7 +15,13 @@ public static class ConsumptionRequestMappings
             request.Date,
             request.MealType,
             request.Comment,
-            request.Items.Select(ToInput).ToList());
+            request.Items.Select(ToInput).ToList(),
+            request.IsNutritionAutoCalculated,
+            request.ManualCalories,
+            request.ManualProteins,
+            request.ManualFats,
+            request.ManualCarbs,
+            request.ManualFiber);
 
     public static UpdateConsumptionCommand ToCommand(this UpdateConsumptionRequest request, Guid? userId, int consumptionId) =>
         new(
@@ -24,7 +30,13 @@ public static class ConsumptionRequestMappings
             request.Date,
             request.MealType,
             request.Comment,
-            request.Items.Select(ToInput).ToList());
+            request.Items.Select(ToInput).ToList(),
+            request.IsNutritionAutoCalculated,
+            request.ManualCalories,
+            request.ManualProteins,
+            request.ManualFats,
+            request.ManualCarbs,
+            request.ManualFiber);
 
     private static ConsumptionItemInput ToInput(ConsumptionItemRequest request) =>
         new(request.ProductId, request.RecipeId, request.Amount);

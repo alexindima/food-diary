@@ -88,3 +88,15 @@
     --fd-ui-card-title-color: var(--fd-color-text, #111827);
     --fd-ui-card-meta-color: var(--fd-color-text-muted, #64748b);
 }
+
+.fd-ui-card--appearance-entry {
+    --fd-ui-card-border-color: rgba(15, 23, 42, 0.08);
+    --fd-ui-card-title-color: var(--fd-color-text, #111827);
+    --fd-ui-card-meta-color: var(--fd-color-text-muted, #6b7280);
+
+    .fd-ui-card__title {
+        font-size: 0.95rem;
+        letter-spacing: normal;
+        text-transform: none;
+    }
+}

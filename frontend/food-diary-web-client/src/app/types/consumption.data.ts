@@ -12,6 +12,12 @@ export interface Consumption {
     totalFats: number;
     totalCarbs: number;
     totalFiber: number;
+    isNutritionAutoCalculated: boolean;
+    manualCalories?: number | null;
+    manualProteins?: number | null;
+    manualFats?: number | null;
+    manualCarbs?: number | null;
+    manualFiber?: number | null;
     items: ConsumptionItem[];
 }
 
@@ -35,6 +41,12 @@ export interface ConsumptionResponseDto {
     totalFats: number;
     totalCarbs: number;
     totalFiber: number;
+    isNutritionAutoCalculated: boolean;
+    manualCalories?: number | null;
+    manualProteins?: number | null;
+    manualFats?: number | null;
+    manualCarbs?: number | null;
+    manualFiber?: number | null;
     items: ConsumptionItemResponseDto[];
 }
 
@@ -76,6 +88,12 @@ export interface ConsumptionManageDto {
     mealType?: string | null;
     comment?: string;
     items: ConsumptionItemManageDto[];
+    isNutritionAutoCalculated: boolean;
+    manualCalories?: number | null;
+    manualProteins?: number | null;
+    manualFats?: number | null;
+    manualCarbs?: number | null;
+    manualFiber?: number | null;
 }
 
 export interface ConsumptionItemManageDto {

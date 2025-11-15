@@ -60,18 +60,50 @@ public class CreateConsumptionCommandHandler(
             }
         }
 
-        var nutritionResult = await CalculateNutritionAsync(meal, command.UserId.Value, cancellationToken);
-        if (nutritionResult.IsFailure)
+        if (command.IsNutritionAutoCalculated)
         {
-            return Result.Failure<ConsumptionResponse>(nutritionResult.Error);
-        }
+            var nutritionResult = await CalculateNutritionAsync(meal, command.UserId.Value, cancellationToken);
+            if (nutritionResult.IsFailure)
+            {
+                return Result.Failure<ConsumptionResponse>(nutritionResult.Error);
+            }
 
-        meal.ApplyNutrition(
-            nutritionResult.Value.Calories,
-            nutritionResult.Value.Proteins,
-            nutritionResult.Value.Fats,
-            nutritionResult.Value.Carbs,
-            nutritionResult.Value.Fiber);
+            meal.ApplyNutrition(
+                nutritionResult.Value.Calories,
+                nutritionResult.Value.Proteins,
+                nutritionResult.Value.Fats,
+                nutritionResult.Value.Carbs,
+                nutritionResult.Value.Fiber,
+                isAutoCalculated: true);
+        }
+        else
+        {
+            var manualNutritionResult = ManualNutritionValidator.Validate(
+                command.ManualCalories,
+                command.ManualProteins,
+                command.ManualFats,
+                command.ManualCarbs,
+                command.ManualFiber);
+
+            if (manualNutritionResult.IsFailure)
+            {
+                return Result.Failure<ConsumptionResponse>(manualNutritionResult.Error);
+            }
+
+            var manual = manualNutritionResult.Value;
+            meal.ApplyNutrition(
+                manual.Calories,
+                manual.Proteins,
+                manual.Fats,
+                manual.Carbs,
+                manual.Fiber,
+                isAutoCalculated: false,
+                manual.Calories,
+                manual.Proteins,
+                manual.Fats,
+                manual.Carbs,
+                manual.Fiber);
+        }
 
         await mealRepository.AddAsync(meal, cancellationToken);
 

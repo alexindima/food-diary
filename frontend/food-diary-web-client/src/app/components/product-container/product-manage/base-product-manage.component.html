@@ -55,14 +55,6 @@
                                 [error]="getControlError('productType')"
                             ></fd-ui-select>
                         </div>
-                        <div class="product-manage__field product-manage__field--full">
-                            <fd-ui-textarea
-                                formControlName="comment"
-                                [label]="'PRODUCT_MANAGE.COMMENT' | translate"
-                                [placeholder]="'PRODUCT_MANAGE.COMMENT_PLACEHOLDER' | translate"
-                                [rows]="4"
-                            ></fd-ui-textarea>
-                        </div>
                         <div class="product-manage__serving-row product-manage__field--full">
                             <div class="product-manage__serving-part">
                                 <fd-ui-input
@@ -83,6 +75,14 @@
                                 [error]="getControlError('baseUnit')"
                             ></fd-ui-select>
                         </div>
+                        </div>
+                        <div class="product-manage__field product-manage__field--full">
+                            <fd-ui-textarea
+                                formControlName="comment"
+                                [label]="'PRODUCT_MANAGE.COMMENT' | translate"
+                                [placeholder]="'PRODUCT_MANAGE.COMMENT_PLACEHOLDER' | translate"
+                                [rows]="4"
+                            ></fd-ui-textarea>
                         </div>
                     </div>
                 </fd-ui-card>

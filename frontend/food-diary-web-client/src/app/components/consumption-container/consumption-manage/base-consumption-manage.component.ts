@@ -53,6 +53,7 @@ import { FdUiInputComponent } from '../../../ui-kit/input/fd-ui-input.component'
 import { FdUiSelectComponent, FdUiSelectOption } from '../../../ui-kit/select/fd-ui-select.component';
 import { FdUiTextareaComponent } from '../../../ui-kit/textarea/fd-ui-textarea.component';
 import { FdUiButtonComponent } from '../../../ui-kit/button/fd-ui-button.component';
+import { FdUiCheckboxComponent } from '../../../ui-kit/checkbox/fd-ui-checkbox.component';
 import { MatIconModule } from '@angular/material/icon';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
@@ -85,6 +86,7 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
         FdUiSelectComponent,
         FdUiTextareaComponent,
         FdUiButtonComponent,
+        FdUiCheckboxComponent,
         MatIconModule,
     ]
 })
@@ -126,12 +128,29 @@ export class BaseConsumptionManageComponent implements OnInit {
                 nonEmptyArrayValidator()
             ),
             comment: new FormControl<string | null>(null),
+            isNutritionAutoCalculated: new FormControl<boolean>(true, { nonNullable: true }),
+            manualCalories: new FormControl<number | null>(null),
+            manualProteins: new FormControl<number | null>(null),
+            manualFats: new FormControl<number | null>(null),
+            manualCarbs: new FormControl<number | null>(null),
+            manualFiber: new FormControl<number | null>(null),
         });
 
         this.buildMealTypeOptions();
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.buildMealTypeOptions();
         });
+
+        this.updateManualNutritionValidators(true);
+        this.consumptionForm.controls.isNutritionAutoCalculated.valueChanges
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(isAuto => {
+                this.updateManualNutritionValidators(isAuto);
+                if (!isAuto) {
+                    this.populateManualNutritionFromCurrentSummary();
+                }
+                this.updateSummary();
+            });
     }
 
     public ngOnInit(): void {
@@ -211,6 +230,10 @@ export class BaseConsumptionManageComponent implements OnInit {
         queueMicrotask(() => this.onItemSourceClick(newIndex));
     }
 
+    public onAddConsumptionFromPhoto(): void {
+        // Placeholder for future AI-powered photo recognition flow
+    }
+
     public removeItem(index: number): void {
         this.items.removeAt(index);
     }
@@ -226,6 +249,25 @@ export class BaseConsumptionManageComponent implements OnInit {
             return this.getRecipeName(index);
         }
         return this.getProductName(index);
+    }
+
+    public getItemCardTitle(index: number): string {
+        return this.translateService.instant('CONSUMPTION_MANAGE.ITEM_CARD_PLACEHOLDER', {
+            index: index + 1,
+        });
+    }
+
+    public getItemCardMeta(index: number): string | null {
+        const group = this.items.at(index);
+        if (group.controls.product.value) {
+            return this.translateService.instant('CONSUMPTION_MANAGE.ITEM_CARD_META.PRODUCT');
+        }
+
+        if (group.controls.recipe.value) {
+            return this.translateService.instant('CONSUMPTION_MANAGE.ITEM_CARD_META.RECIPE');
+        }
+
+        return null;
     }
 
     public getAmountPlaceholder(index: number): string {
@@ -330,11 +372,20 @@ export class BaseConsumptionManageComponent implements OnInit {
             }
         });
 
+        const isNutritionAutoCalculated = this.consumptionForm.controls.isNutritionAutoCalculated.value;
+        const manualTotals = this.getManualNutritionTotals();
+
         const consumptionData: ConsumptionManageDto = {
             date: consumptionDate,
             mealType: mealType ?? undefined,
             comment: comment ?? undefined,
             items: mappedItems,
+            isNutritionAutoCalculated,
+            manualCalories: isNutritionAutoCalculated ? undefined : manualTotals.calories,
+            manualProteins: isNutritionAutoCalculated ? undefined : manualTotals.proteins,
+            manualFats: isNutritionAutoCalculated ? undefined : manualTotals.fats,
+            manualCarbs: isNutritionAutoCalculated ? undefined : manualTotals.carbs,
+            manualFiber: isNutritionAutoCalculated ? undefined : manualTotals.fiber,
         };
 
         const consumption = this.consumption();
@@ -361,6 +412,12 @@ export class BaseConsumptionManageComponent implements OnInit {
             date: this.getDateInputValue(new Date(consumption.date)),
             mealType: consumption.mealType ?? null,
             comment: consumption.comment || null,
+            isNutritionAutoCalculated: consumption.isNutritionAutoCalculated,
+            manualCalories: consumption.manualCalories ?? consumption.totalCalories,
+            manualProteins: consumption.manualProteins ?? consumption.totalProteins,
+            manualFats: consumption.manualFats ?? consumption.totalFats,
+            manualCarbs: consumption.manualCarbs ?? consumption.totalCarbs,
+            manualFiber: consumption.manualFiber ?? consumption.totalFiber,
         });
 
         const itemsArray = this.items;
@@ -393,7 +450,14 @@ export class BaseConsumptionManageComponent implements OnInit {
     }
 
     private updateSummary(): void {
-        const totals = this.items.controls.reduce(
+        const autoTotals = this.calculateAutoNutritionTotals();
+        const isAuto = this.consumptionForm.controls.isNutritionAutoCalculated.value;
+        const summaryTotals = isAuto ? autoTotals : this.getManualNutritionTotals();
+        this.applySummary(summaryTotals);
+    }
+
+    private calculateAutoNutritionTotals(): NutritionTotals {
+        return this.items.controls.reduce(
             (totals, group) => {
                 const sourceType = group.controls.sourceType.value;
                 const amount = group.controls.amount.value || 0;
@@ -433,7 +497,19 @@ export class BaseConsumptionManageComponent implements OnInit {
             },
             { calories: 0, proteins: 0, fats: 0, carbs: 0, fiber: 0 }
         );
+    }
 
+    private getManualNutritionTotals(): NutritionTotals {
+        return {
+            calories: this.consumptionForm.controls.manualCalories.value ?? 0,
+            proteins: this.consumptionForm.controls.manualProteins.value ?? 0,
+            fats: this.consumptionForm.controls.manualFats.value ?? 0,
+            carbs: this.consumptionForm.controls.manualCarbs.value ?? 0,
+            fiber: this.consumptionForm.controls.manualFiber.value ?? 0,
+        };
+    }
+
+    private applySummary(totals: NutritionTotals): void {
         if (this.totalCalories() !== totals.calories) {
             this.totalCalories.set(totals.calories);
         }
@@ -456,6 +532,34 @@ export class BaseConsumptionManageComponent implements OnInit {
         }
     }
 
+    private populateManualNutritionFromCurrentSummary(): void {
+        this.consumptionForm.patchValue({
+            manualCalories: this.totalCalories(),
+            manualProteins: this.nutrientChartData().proteins,
+            manualFats: this.nutrientChartData().fats,
+            manualCarbs: this.nutrientChartData().carbs,
+            manualFiber: this.totalFiber(),
+        }, { emitEvent: false });
+    }
+
+    private updateManualNutritionValidators(isAuto: boolean): void {
+        const validators = isAuto ? [] : [Validators.required, Validators.min(0)];
+        this.getManualNutritionControls().forEach(control => {
+            control.setValidators(validators);
+            control.updateValueAndValidity({ emitEvent: false });
+        });
+    }
+
+    private getManualNutritionControls(): Array<FormControl<number | null>> {
+        return [
+            this.consumptionForm.controls.manualCalories,
+            this.consumptionForm.controls.manualProteins,
+            this.consumptionForm.controls.manualFats,
+            this.consumptionForm.controls.manualCarbs,
+            this.consumptionForm.controls.manualFiber,
+        ];
+    }
+
     private async addConsumption(consumptionData: ConsumptionManageDto): Promise<void> {
         this.consumptionService.create(consumptionData).subscribe({
             next: response => this.handleSubmitResponse(response),
@@ -472,15 +576,21 @@ export class BaseConsumptionManageComponent implements OnInit {
 
     private async handleSubmitResponse(response: Consumption | null): Promise<void> {
         if (response) {
-            if (!this.consumption()) {
-                this.consumptionForm.reset({
-                    date: this.getDateInputValue(new Date()),
-                    mealType: null,
-                    comment: null,
-                });
-                this.items.clear();
-                this.items.push(this.createConsumptionItem());
-            }
+                if (!this.consumption()) {
+                    this.consumptionForm.reset({
+                        date: this.getDateInputValue(new Date()),
+                        mealType: null,
+                        comment: null,
+                        isNutritionAutoCalculated: true,
+                        manualCalories: null,
+                        manualProteins: null,
+                        manualFats: null,
+                        manualCarbs: null,
+                        manualFiber: null,
+                    });
+                    this.items.clear();
+                    this.items.push(this.createConsumptionItem());
+                }
             await this.showConfirmDialog();
         } else {
             this.handleSubmitError();
@@ -728,6 +838,12 @@ type ConsumptionFormValues = {
     mealType: string | null;
     items: ConsumptionItemFormValues[];
     comment: string | null;
+    isNutritionAutoCalculated: boolean;
+    manualCalories: number | null;
+    manualProteins: number | null;
+    manualFats: number | null;
+    manualCarbs: number | null;
+    manualFiber: number | null;
 };
 
 type ConsumptionItemFormValues = {
@@ -740,6 +856,14 @@ type ConsumptionItemFormValues = {
 type ConsumptionFormData = FormGroupControls<ConsumptionFormValues>;
 
 type ConsumptionItemFormData = FormGroupControls<ConsumptionItemFormValues>;
+
+type NutritionTotals = {
+    calories: number;
+    proteins: number;
+    fats: number;
+    carbs: number;
+    fiber: number;
+};
 
 
 
