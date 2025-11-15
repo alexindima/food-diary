@@ -1,113 +1,244 @@
 @import 'variables';
 
 .consumption-manage {
-    max-width: 1000px;
+    max-width: 1100px;
     margin: 0 auto;
-    padding: @gap-m;
+    padding: @gap-xl;
     box-sizing: border-box;
-}
-
-.consumption-manage__title {
-    font-size: 1.8em;
-    font-weight: bold;
-    color: @color-text-main;
-    text-align: center;
-    margin-top: 0;
-    margin-bottom: @gap-l;
-}
-
-.consumption-manage__form {
     display: flex;
     flex-direction: column;
-    gap: @gap-m;
-}
+    gap: @gap-l;
 
-.consumption-manage__date,
-.consumption-manage__meal-type,
-.consumption-manage__consumption,
-.consumption-manage__comment {
-    display: flex;
-    flex-direction: column;
-}
+    &__header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: @gap-m;
+    }
 
-.consumption-manage__items {
-    display: flex;
-    flex-direction: column;
-    gap: @gap-m;
-}
+    &__title {
+        margin: 0;
+        font-size: 2rem;
+        font-weight: 600;
+        color: @color-text-main;
+    }
 
-.consumption-manage__item {
-    display: flex;
-    flex-direction: column;
-    gap: @gap-m;
-}
-
-.consumption-manage__item-body {
-    display: flex;
-    gap: @gap-m;
-    align-items: flex-end;
-    flex-wrap: wrap;
-
-    @media @media-tablet {
+    &__form {
+        display: flex;
         flex-direction: column;
-        align-items: stretch;
+        gap: @gap-l;
+    }
+
+    &__grid {
+        display: grid;
+        grid-template-columns: minmax(0, 7fr) minmax(0, 3fr);
+        gap: @gap-l;
+        align-items: flex-start;
+
+        @media @media-tablet {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    &__column {
+        display: flex;
+        flex-direction: column;
+        gap: @gap-l;
+    }
+
+    &__card {
+        display: flex;
+        flex-direction: column;
+        gap: @gap-m;
+
+        &--sticky {
+            position: sticky;
+            top: @gap-xl;
+        }
+    }
+
+    &__basic-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: @gap-m;
+
+        @media @media-mobile {
+            grid-template-columns: 1fr;
+        }
+
+        &--dates {
+            grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+
+            @media @media-tablet {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            @media @media-mobile {
+                grid-template-columns: 1fr;
+            }
+        }
+    }
+
+    &__field {
+        display: flex;
+        flex-direction: column;
+        gap: @gap-xs;
+
+        &--full {
+            grid-column: 1 / -1;
+        }
+    }
+
+    &__summary-calories {
+        margin: 0;
+        font-size: 0.95rem;
+        color: @color-text-main;
+
+        strong {
+            font-weight: 600;
+        }
+    }
+
+    &__footer {
+        display: flex;
+        flex-direction: column;
+        gap: @gap-xs;
+    }
+
+    &__footer-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: @gap-m;
+        flex-wrap: wrap;
+    }
+
+    &__action-button {
+        min-width: 220px;
+    }
+
+    &__footer-error {
+        text-align: right;
+    }
+
+    @media @media-mobile {
+        &__action-button {
+            width: 100%;
+        }
+
+        &__footer-actions {
+            flex-direction: column;
+            align-items: stretch;
+        }
     }
 }
 
-.consumption-manage__field {
-    flex: 1;
+.consumption-items {
+    display: flex;
+    flex-direction: column;
+    gap: @gap-m;
+}
+
+.consumption-item {
+    display: flex;
+    flex-direction: column;
+    gap: @gap-m;
+    padding: @gap-m;
+    border: 1px solid fade(@color-border, 40%);
+    border-radius: @border-radius-m;
+}
+
+.consumption-item__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: @gap-m;
+    flex-wrap: wrap;
+}
+
+.consumption-item__title {
+    margin: 0;
+    font-weight: 600;
+    color: @color-text-main;
+}
+
+.consumption-item__fields {
+    display: flex;
+    flex-direction: column;
+    gap: @gap-m;
+}
+
+.consumption-item__field {
     display: flex;
     flex-direction: column;
     gap: @gap-xs;
 }
 
-.consumption-manage__field--amount {
-    min-width: 200px;
-}
-
-.consumption-manage__remove-item {
-    align-self: flex-end;
-}
-
-.consumption-manage__amount-unit {
-    font-weight: normal;
+.consumption-item__label {
+    font-size: 0.85rem;
+    font-weight: 600;
     color: @color-text-additional;
 }
 
-.consumption-manage__item-buttons {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-end;
-    gap: @gap-s;
-    margin-top: @gap-m;
-}
-
-.consumption-manage__submit-button {
+.consumption-item__selector {
     width: 100%;
+    border: 1px solid fade(@color-border, 50%);
+    border-radius: @border-radius-m;
+    padding: @gap-s @gap-m;
+    background-color: @color-background;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: @gap-s;
+    cursor: pointer;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+    &:hover {
+        border-color: @color-text-main;
+        box-shadow: 0 4px 18px fade(@color-text-main, 12%);
+    }
+
+    &--invalid {
+        border-color: @color-no-results;
+    }
+
+    mat-icon {
+        color: @color-text-additional;
+    }
 }
 
-.dialog {
+.consumption-item__selector-value {
+    flex: 1;
+    text-align: left;
+    color: @color-text-main;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.consumption-item__actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.consumption-item__error {
+    margin-top: @gap-s;
+}
+
+.consumption-manage__dialog {
     padding: @gap-l;
     text-align: center;
-}
 
-.dialog__title {
-    font-size: 1.8em;
-    font-weight: bold;
-    color: @color-text-main;
-    text-align: center;
-    margin-top: 0;
-    margin-bottom: 54px;
-}
+    &-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: @color-text-main;
+        margin: 0 0 @gap-l;
+    }
 
-.dialog__buttons {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: @gap-xl;
-    margin-top: @gap-l;
-}
-
-.dialog__buttons button {
-    width: 100%;
+    &-buttons {
+        display: flex;
+        flex-direction: column;
+        gap: @gap-m;
+    }
 }

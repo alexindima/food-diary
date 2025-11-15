@@ -318,6 +318,10 @@
     "CONSUMPTION_MANAGE": {
         "EDIT_TITLE": "Edit Consumption",
         "ADD_TITLE": "Add Consumption",
+        "GENERAL_GROUP_TITLE": "General information",
+        "SUMMARY_TITLE": "Summary",
+        "TOTAL_CALORIES": "Total calories",
+        "REMOVE_ITEM": "Remove item",
         "CHOOSE_DATE": "Date and time",
         "MEAL_TYPE_LABEL": "Meal type",
         "MEAL_TYPE_PLACEHOLDER": "Select meal type",

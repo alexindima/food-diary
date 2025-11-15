@@ -319,6 +319,10 @@
         "ADD_ITEM_ROW": {
             "AMOUNT": "Количество"
         },
+        "GENERAL_GROUP_TITLE": "Основное",
+        "SUMMARY_TITLE": "Сводка",
+        "TOTAL_CALORIES": "Калорий",
+        "REMOVE_ITEM": "Удалить позицию",
         "SERVINGS_UNIT": "порции",
         "ADD_RECIPE": "Добавить рецепт",
         "COMMENT": "Комментарий",

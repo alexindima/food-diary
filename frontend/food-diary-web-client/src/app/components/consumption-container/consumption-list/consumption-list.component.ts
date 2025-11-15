@@ -15,7 +15,6 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FdUiButtonComponent } from '../../../ui-kit/button/fd-ui-button.component';
 import { FdUiDateInputComponent, FdUiDateRangeValue } from '../../../ui-kit/date-input/fd-ui-date-input.component';
 import { FdUiEntityCardComponent } from '../../../ui-kit/entity-card/fd-ui-entity-card.component';
-import { BadgeComponent } from '../../shared/badge/badge.component';
 
 @Component({
     selector: 'fd-consumption-list',
@@ -32,7 +31,6 @@ import { BadgeComponent } from '../../shared/badge/badge.component';
         FdUiButtonComponent,
         FdUiDateInputComponent,
         FdUiEntityCardComponent,
-        BadgeComponent,
     ]
 })
 export class ConsumptionListComponent implements OnInit {

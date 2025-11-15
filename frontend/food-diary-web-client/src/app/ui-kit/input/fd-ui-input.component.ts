@@ -36,7 +36,7 @@ export class FdUiInputComponent implements ControlValueAccessor {
     @Input() public id = `fd-ui-input-${uniqueId++}`;
     @Input() public label?: string;
     @Input() public placeholder?: string;
-    @Input() public type: 'text' | 'number' | 'password' | 'email' | 'tel' = 'text';
+    @Input() public type: 'text' | 'number' | 'password' | 'email' | 'tel' | 'date' | 'datetime-local' | 'time' = 'text';
     @Input() public hint?: string;
     @Input() public error?: string | null;
     @Input() public prefixIcon?: string;
@@ -50,6 +50,7 @@ export class FdUiInputComponent implements ControlValueAccessor {
     @Input() public maxLength?: number;
     @Input() public suffixButtonIcon?: string;
     @Input() public suffixButtonAriaLabel?: string;
+    @Input() public step?: string | number;
 
     @Output() public cleared = new EventEmitter<void>();
     @Output() public suffixButtonClicked = new EventEmitter<void>();

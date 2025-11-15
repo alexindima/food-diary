@@ -1,186 +1,190 @@
 <div class="consumption-manage">
-    <h2 class="consumption-manage__title">
-        @if (consumption()) {
-            {{ 'CONSUMPTION_MANAGE.EDIT_TITLE' | translate }}
-        } @else {
-            {{ 'CONSUMPTION_MANAGE.ADD_TITLE' | translate }}
-        }
-    </h2>
+    <div class="consumption-manage__header">
+        <h2 class="consumption-manage__title">
+            @if (consumption()) {
+                {{ 'CONSUMPTION_MANAGE.EDIT_TITLE' | translate }}
+            } @else {
+                {{ 'CONSUMPTION_MANAGE.ADD_TITLE' | translate }}
+            }
+        </h2>
+    </div>
 
     <form class="consumption-manage__form" [formGroup]="consumptionForm" (ngSubmit)="onSubmit()">
-        <div class="consumption-manage__date">
-            <tui-input-date-time
-                formControlName="date"
-            >
-                {{ 'CONSUMPTION_MANAGE.CHOOSE_DATE' | translate }}
-            </tui-input-date-time>
-            <tui-error
-                formControlName="date"
-                [error]="[] | tuiFieldError | async"
-            ></tui-error>
-        </div>
-        <div class="consumption-manage__meal-type">
-            <tui-select
-                formControlName="mealType"
-                [stringify]="stringifyMealType"
-                [tuiTextfieldLabelOutside]="true"
-            >
-                {{ 'CONSUMPTION_MANAGE.MEAL_TYPE_LABEL' | translate }}
-                <input
-                    tuiTextfieldLegacy
-                    placeholder="{{ 'CONSUMPTION_MANAGE.MEAL_TYPE_PLACEHOLDER' | translate }}"
-                />
-                <ng-template tuiDataList>
-                    <tui-data-list>
-                        @for (option of mealTypeOptions; track option) {
-                            <button tuiOption [value]="option">
-                                {{ ('MEAL_TYPES.' + option) | translate }}
-                            </button>
-                        }
-                    </tui-data-list>
-                </ng-template>
-            </tui-select>
-            <tui-error
-                formControlName="mealType"
-                [error]="[] | tuiFieldError | async"
-            ></tui-error>
-        </div>
-        <div class="consumption-manage__consumption">
-            <fd-custom-group
-                [title]="'CONSUMPTION_MANAGE.ITEMS_GROUP_TITLE' | translate"
-            >
-                <div class="consumption-manage__items" formArrayName="items">
-                    @for (item of items.controls; track item; let i = $index; let first = $first) {
-                        <div class="consumption-manage__item" [formGroupName]="i">
-                            <div class="consumption-manage__item-body">
-                                <div class="consumption-manage__field">
-                                    <tui-textfield type="text">
-                                        <label tuiLabel>{{ 'CONSUMPTION_MANAGE.ITEM_SOURCE_LABEL' | translate }}</label>
-                                        <input
-                                            tuiTextfield
-                                            [attr.placeholder]="('CONSUMPTION_MANAGE.ITEM_SOURCE_PLACEHOLDER' | translate)"
-                                            [readOnly]="true"
-                                            [value]="getItemSourceName(i)"
-                                            [invalid]="isItemSourceInvalid(i)"
-                                            (click)="onItemSourceClick(i)"
-                                        />
-                                    </tui-textfield>
-                                    <tui-error [error]="getItemSourceError(i)"></tui-error>
-                                </div>
-                                <div class="consumption-manage__field consumption-manage__field--amount">
-                                    <tui-input-number formControlName="amount">
-                                        <label tuiLabel>
-                                            {{ 'CONSUMPTION_MANAGE.ADD_ITEM_ROW.AMOUNT' | translate }}
-                                            @if (getAmountUnitLabel(i)) {
-                                                <span class="consumption-manage__amount-unit">
-                                                    ({{ getAmountUnitLabel(i) }})
-                                                </span>
-                                            }
-                                        </label>
-                                        <input
-                                            tuiTextfieldLegacy
-                                            [attr.placeholder]="(getAmountPlaceholder(i) | translate)"
-                                        />
-                                    </tui-input-number>
-                                    <tui-error
-                                        formControlName="amount"
-                                        [error]="[] | tuiFieldError | async"
-                                    ></tui-error>
-                                </div>
-                                <button
-                                    type="button"
-                                    class="consumption-manage__remove-item"
-                                    appearance="accent"
-                                    tuiButton
-                                    size="l"
-                                    iconStart="@tui.trash-2"
-                                    [disabled]="first"
-                                    (click)="removeItem(i)"
-                                ></button>
-                            </div>
+        <div class="consumption-manage__grid">
+            <div class="consumption-manage__column consumption-manage__column--primary">
+                <fd-ui-card class="consumption-manage__card" [title]="'CONSUMPTION_MANAGE.GENERAL_GROUP_TITLE' | translate">
+                    <div class="consumption-manage__basic-grid consumption-manage__basic-grid--dates">
+                        <div class="consumption-manage__field">
+                            <fd-ui-input
+                                formControlName="date"
+                                type="datetime-local"
+                                [label]="('CONSUMPTION_MANAGE.CHOOSE_DATE' | translate) + '*'"
+                                [required]="true"
+                                [error]="getControlError('date')"
+                            ></fd-ui-input>
                         </div>
-                    }
-                </div>
-                <div class="consumption-manage__item-buttons">
-                    <button
-                        type="button"
-                        tuiButton
-                        size="m"
-                        appearance="primary"
-                        iconStart="@tui.plus"
-                        (click)="addConsumptionItem()"
-                    >
-                        {{ 'CONSUMPTION_MANAGE.ADD_ITEM' | translate }}
-                    </button>
-        </div>
-            </fd-custom-group>
-            <tui-error
-                [error]="items.invalid && items.touched ? ('FORM_ERRORS.NON_EMPTY_ARRAY' | translate) : null"
-            ></tui-error>
-        </div>
-        <div class="consumption-manage__comment">
-            <tui-textfield type="text">
-                <label tuiLabel>{{ 'CONSUMPTION_MANAGE.COMMENT' | translate }}</label>
-                <input
-                    formControlName="comment"
-                    tuiTextfield
-                    placeholder="{{ 'CONSUMPTION_MANAGE.COMMENT_PLACEHOLDER' | translate }}"
-                />
-            </tui-textfield>
-            <tui-error
-                formControlName="comment"
-                [error]="[] | tuiFieldError | async"
-            ></tui-error>
-        </div>
-        <fd-nutrients-summary
-            [calories]="totalCalories()"
-            [nutrientChartData]="nutrientChartData()"
-            [fiberValue]="totalFiber()"
-        ></fd-nutrients-summary>
+                        <div class="consumption-manage__field">
+                            <fd-ui-select
+                                formControlName="mealType"
+                                [label]="'CONSUMPTION_MANAGE.MEAL_TYPE_LABEL' | translate"
+                                [placeholder]="'CONSUMPTION_MANAGE.MEAL_TYPE_PLACEHOLDER' | translate"
+                                [options]="mealTypeSelectOptions"
+                                [error]="getControlError('mealType')"
+                            ></fd-ui-select>
+                        </div>
+                        <div class="consumption-manage__field consumption-manage__field--full">
+                            <fd-ui-textarea
+                                formControlName="comment"
+                                [label]="'CONSUMPTION_MANAGE.COMMENT' | translate"
+                                [placeholder]="'CONSUMPTION_MANAGE.COMMENT_PLACEHOLDER' | translate"
+                                [rows]="3"
+                            ></fd-ui-textarea>
+                        </div>
+                    </div>
+                </fd-ui-card>
 
-        <div class="consumption-manage__actions">
-            @if (consumption()) {
-                <button
-                    type="submit"
-                    class="consumption-manage__submit-button"
-                    tuiButton
-                    appearance="primary"
-                    iconStart="@tui.save"
+                <fd-ui-card class="consumption-manage__card" [title]="'CONSUMPTION_MANAGE.ITEMS_GROUP_TITLE' | translate">
+                    <div class="consumption-items" formArrayName="items">
+                        @for (item of items.controls; track item; let i = $index; let first = $first) {
+                            <div class="consumption-item" [formGroupName]="i">
+                                <div class="consumption-item__header">
+                                    <span class="consumption-item__title">
+                                        {{ 'CONSUMPTION_MANAGE.ITEM_TYPE_LABEL' | translate }} #{{ i + 1 }}
+                                    </span>
+                                    <fd-ui-button
+                                        type="button"
+                                        variant="danger"
+                                        fill="text"
+                                        icon="delete"
+                                        [disabled]="first"
+                                        (click)="removeItem(i)"
+                                    >
+                                        {{ 'CONSUMPTION_MANAGE.REMOVE_ITEM' | translate }}
+                                    </fd-ui-button>
+                                </div>
+                                <div class="consumption-item__fields">
+                                    <div class="consumption-item__field consumption-item__field--source">
+                                        <label class="consumption-item__label">
+                                            {{ 'CONSUMPTION_MANAGE.ITEM_SOURCE_LABEL' | translate }}
+                                        </label>
+                                        <button
+                                            type="button"
+                                            class="consumption-item__selector"
+                                            [class.consumption-item__selector--invalid]="isItemSourceInvalid(i)"
+                                            (click)="onItemSourceClick(i)"
+                                        >
+                                            <span class="consumption-item__selector-value">
+                                                {{
+                                                    getItemSourceName(i)
+                                                        || ('CONSUMPTION_MANAGE.ITEM_SOURCE_PLACEHOLDER' | translate)
+                                                }}
+                                            </span>
+                                            <mat-icon>search</mat-icon>
+                                        </button>
+                                        <tui-error [error]="getItemSourceError(i)"></tui-error>
+                                    </div>
+                                    <div class="consumption-item__field consumption-item__field--amount">
+                                        <fd-ui-input
+                                            formControlName="amount"
+                                            type="number"
+                                            [step]="0.01"
+                                            [label]="('CONSUMPTION_MANAGE.ADD_ITEM_ROW.AMOUNT' | translate) + '*'"
+                                            [placeholder]="(getAmountPlaceholder(i) | translate)"
+                                            [hint]="getAmountUnitLabel(i) || undefined"
+                                            [required]="true"
+                                            [error]="getAmountControlError(i)"
+                                            [readonly]="!items.at(i).controls.product.value && !items.at(i).controls.recipe.value"
+                                        ></fd-ui-input>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    <div class="consumption-item__actions">
+                        <fd-ui-button
+                            type="button"
+                            icon="add"
+                            (click)="addConsumptionItem()"
+                        >
+                            {{ 'CONSUMPTION_MANAGE.ADD_ITEM' | translate }}
+                        </fd-ui-button>
+                    </div>
+                    <tui-error
+                        class="consumption-item__error"
+                        [error]="items.invalid && items.touched ? ('FORM_ERRORS.NON_EMPTY_ARRAY' | translate) : null"
+                    ></tui-error>
+                </fd-ui-card>
+            </div>
+
+            <div class="consumption-manage__column consumption-manage__column--secondary">
+                <fd-ui-card
+                    class="consumption-manage__card consumption-manage__card--sticky"
+                    [title]="'CONSUMPTION_MANAGE.SUMMARY_TITLE' | translate"
                 >
-                    {{ 'CONSUMPTION_MANAGE.SAVE_BUTTON' | translate }}
-                </button>
-            } @else {
-                <button
-                    type="submit"
-                    class="consumption-manage__submit-button"
-                    tuiButton
-                    appearance="primary"
-                    iconStart="@tui.plus"
+                    <p class="consumption-manage__summary-calories">
+                        {{ 'CONSUMPTION_MANAGE.TOTAL_CALORIES' | translate }}:
+                        <strong>{{ totalCalories() | number:'1.0-2' }} {{ 'PRODUCT_LIST.KCAL' | translate }}</strong>
+                    </p>
+                    <fd-nutrients-summary
+                        [bare]="true"
+                        [calories]="totalCalories()"
+                        [nutrientChartData]="nutrientChartData()"
+                        [fiberValue]="totalFiber()"
+                    ></fd-nutrients-summary>
+                </fd-ui-card>
+            </div>
+        </div>
+
+        <div class="consumption-manage__footer">
+            <div class="consumption-manage__footer-actions">
+                <fd-ui-button
+                    type="button"
+                    fill="outline"
+                    variant="primary"
+                    icon="arrow_back"
+                    (click)="onCancel()"
                 >
-                    {{ 'CONSUMPTION_MANAGE.ADD_BUTTON' | translate }}
-                </button>
-            }
-            <tui-error [error]="globalError()"></tui-error>
+                    {{ 'PRODUCT_MANAGE.CANCEL_BUTTON' | translate }}
+                </fd-ui-button>
+                @if (consumption()) {
+                    <fd-ui-button
+                        type="submit"
+                        class="consumption-manage__action-button"
+                        icon="save"
+                    >
+                        {{ 'CONSUMPTION_MANAGE.SAVE_BUTTON' | translate }}
+                    </fd-ui-button>
+                } @else {
+                    <fd-ui-button
+                        type="submit"
+                        class="consumption-manage__action-button"
+                        icon="add"
+                    >
+                        {{ 'CONSUMPTION_MANAGE.ADD_BUTTON' | translate }}
+                    </fd-ui-button>
+                }
+            </div>
+            <tui-error class="consumption-manage__footer-error" [error]="globalError()"></tui-error>
         </div>
     </form>
 </div>
 
 <ng-template #confirmDialog let-observer>
-    <div class="dialog">
-        <p class="dialog__title">
+    <div class="consumption-manage__dialog">
+        <p class="consumption-manage__dialog-title">
             @if (consumption()) {
                 {{ 'CONSUMPTION_MANAGE.EDIT_SUCCESS' | translate }}
             } @else {
                 {{ 'CONSUMPTION_MANAGE.CREATE_SUCCESS' | translate }}
             }
         </p>
-        <div class="dialog__buttons">
-            <button tuiButton size="m" (click)="observer.next('Home'); observer.complete()">
+        <div class="consumption-manage__dialog-buttons">
+            <fd-ui-button fill="text" (click)="observer.next('Home'); observer.complete()">
                 {{ 'CONSUMPTION_MANAGE.GO_TO_HOME_BUTTON' | translate }}
-            </button>
-            <button tuiButton size="m" (click)="observer.next('ConsumptionList'); observer.complete()">
+            </fd-ui-button>
+            <fd-ui-button fill="text" (click)="observer.next('ConsumptionList'); observer.complete()">
                 {{ 'CONSUMPTION_MANAGE.GO_TO_CONSUMPTION_LIST_BUTTON' | translate }}
-            </button>
+            </fd-ui-button>
         </div>
     </div>
 </ng-template>
