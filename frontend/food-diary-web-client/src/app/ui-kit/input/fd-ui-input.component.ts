@@ -48,8 +48,11 @@ export class FdUiInputComponent implements ControlValueAccessor {
     @Input() public required = false;
     @Input() public readonly = false;
     @Input() public maxLength?: number;
+    @Input() public suffixButtonIcon?: string;
+    @Input() public suffixButtonAriaLabel?: string;
 
     @Output() public cleared = new EventEmitter<void>();
+    @Output() public suffixButtonClicked = new EventEmitter<void>();
 
     protected isFocused = false;
     protected internalValue = '';
@@ -100,5 +103,12 @@ export class FdUiInputComponent implements ControlValueAccessor {
         this.handleInput('');
         this.cleared.emit();
     }
-}
 
+    protected triggerSuffixButton(): void {
+        if (this.disabled || !this.suffixButtonIcon) {
+            return;
+        }
+
+        this.suffixButtonClicked.emit();
+    }
+}

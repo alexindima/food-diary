@@ -41,13 +41,6 @@ export class ConsumptionDetailComponent {
                 breakpoints: {
                     columnLayout: 680
                 }
-            },
-            info: {
-                lineStyles: {
-                    calories: {
-                        fontSize: 16
-                    }
-                }
             }
         }
     };

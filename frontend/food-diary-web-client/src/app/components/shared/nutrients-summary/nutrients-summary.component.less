@@ -2,15 +2,16 @@
 
 .summary-wrapper {
     display: flex;
-    justify-content: space-between;
-
-    &.charts-below-info {
-        flex-direction: column;
-    }
+    flex-direction: column;
+    gap: @gap-m;
 }
 
 .charts-wrapper {
     display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    width: 100%;
+    gap: @gap-m;
 
     &.column-layout {
         flex-direction: column;
@@ -24,26 +25,24 @@
     align-items: center;
 }
 
-.calories-highlight {
-    font-weight: bold;
-    color: @color-calories;
-    margin-top: 0;
-    margin-bottom: @gap-xs;
-}
-
 .fiber-highlight {
-    margin: -@gap-xxs 0 @gap-xs;
+    margin: 0 0 @gap-m;
     color: @color-text-main;
+    font-weight: 600;
 }
 
 .nutrient-list {
     list-style: none;
     padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: @gap-xs;
 
     .nutrient {
-        display: flex;
-        align-items: center;
-        margin-bottom: @gap-xs;
+    display: flex;
+    align-items: center;
+    color: @color-text-main;
 
         .nutrient-color {
             margin-right: @gap-xs;

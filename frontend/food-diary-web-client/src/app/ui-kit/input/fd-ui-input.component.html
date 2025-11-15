@@ -37,9 +37,21 @@
         <mat-icon>close</mat-icon>
     </button>
 
+    <button
+        *ngIf="suffixButtonIcon"
+        matSuffix
+        mat-icon-button
+        type="button"
+        class="fd-ui-input__suffix-button"
+        [attr.aria-label]="suffixButtonAriaLabel || suffixButtonIcon"
+        (click)="triggerSuffixButton()"
+        [disabled]="disabled"
+    >
+        <mat-icon>{{ suffixButtonIcon }}</mat-icon>
+    </button>
+
     <mat-icon *ngIf="suffixIcon" matSuffix>{{ suffixIcon }}</mat-icon>
 
     <mat-hint *ngIf="hint && !error">{{ hint }}</mat-hint>
     <mat-error *ngIf="error">{{ error }}</mat-error>
 </mat-form-field>
-

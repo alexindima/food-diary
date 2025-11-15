@@ -36,13 +36,6 @@ export class ProductDetailComponent {
                 breakpoints: {
                     columnLayout: 680
                 }
-            },
-            info: {
-                lineStyles: {
-                    calories: {
-                        fontSize: 16
-                    }
-                }
             }
         }
     };

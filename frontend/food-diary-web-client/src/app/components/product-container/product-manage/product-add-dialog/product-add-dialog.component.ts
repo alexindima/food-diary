@@ -5,15 +5,12 @@ import {
     TuiButton,
     TuiDialogContext,
     TuiError,
-    TuiIcon,
-    TuiLabel,
-    TuiTextfieldComponent, TuiTextfieldDirective
 } from '@taiga-ui/core';
 import { Product } from '../../../../types/product.data';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import { TuiFieldErrorPipe } from '@taiga-ui/kit';
-import { AsyncPipe } from '@angular/common';
+import { AsyncPipe, DecimalPipe } from '@angular/common';
 import {
     TuiInputNumberModule,
     TuiSelectModule,
@@ -22,9 +19,10 @@ import {
 import {
     NutrientsSummaryComponent
 } from '../../../shared/nutrients-summary/nutrients-summary.component';
-import { CustomGroupComponent } from '../../../shared/custom-group/custom-group.component';
 import { ZXingScannerModule } from '@zxing/ngx-scanner';
 import { FdUiInputComponent } from '../../../../ui-kit/input/fd-ui-input.component';
+import { FdUiCardComponent } from '../../../../ui-kit/card/fd-ui-card.component';
+import { FdUiRadioGroupComponent } from '../../../../ui-kit/radio/fd-ui-radio-group.component';
 
 @Component({
     selector: 'fd-product-add-dialog',
@@ -34,21 +32,19 @@ import { FdUiInputComponent } from '../../../../ui-kit/input/fd-ui-input.compone
     imports: [
         ReactiveFormsModule,
         TranslatePipe,
-        TuiLabel,
         TuiError,
         TuiFieldErrorPipe,
         AsyncPipe,
+        DecimalPipe,
         TuiButton,
         TuiSelectModule,
         TuiTextfieldControllerModule,
-        TuiTextfieldComponent,
-        TuiTextfieldDirective,
         TuiInputNumberModule,
         NutrientsSummaryComponent,
-        CustomGroupComponent,
         ZXingScannerModule,
-        TuiIcon,
         FdUiInputComponent,
+        FdUiCardComponent,
+        FdUiRadioGroupComponent,
     ]
 })
 export class ProductAddDialogComponent extends BaseProductManageComponent {
@@ -70,13 +66,6 @@ export class ProductAddDialogComponent extends BaseProductManageComponent {
                     breakpoints: {
                         columnLayout: 680
                     }
-                },
-                info: {
-                    lineStyles: {
-                        calories: {
-                            fontSize: 16
-                        }
-                    }
                 }
             }
         };
@@ -89,5 +78,9 @@ export class ProductAddDialogComponent extends BaseProductManageComponent {
         }
 
         return product;
+    }
+
+    public override async onCancel(): Promise<void> {
+        this.context.completeWith(this.context.data as Product);
     }
 }

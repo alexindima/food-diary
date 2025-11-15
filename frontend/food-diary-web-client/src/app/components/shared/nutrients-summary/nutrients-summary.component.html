@@ -1,21 +1,19 @@
-<fd-custom-group
-    [title]="'SHARED.NUTRIENTS_SUMMARY.SUMMARY' | translate"
->
+@if (bare()) {
+    <ng-container *ngTemplateOutlet="summaryContent"></ng-container>
+} @else {
+    <fd-custom-group
+        [title]="'SHARED.NUTRIENTS_SUMMARY.SUMMARY' | translate"
+    >
+        <ng-container *ngTemplateOutlet="summaryContent"></ng-container>
+    </fd-custom-group>
+}
+
+<ng-template #summaryContent>
     <div
         class="summary-wrapper"
-        [class.charts-below-info]="areChartsBelowInfo"
         [ngStyle]="summaryWrapperStyles"
     >
         <div class="summary">
-            <p
-                class="calories-highlight"
-                [ngStyle]="calorieStyles"
-            >
-                {{ 'SHARED.NUTRIENTS_SUMMARY.CALORIES' | translate }}:
-                <span>
-                    {{ calories() | number: '1.0-2' }} {{ 'SHARED.NUTRIENTS_SUMMARY.KKAL' | translate }}
-                </span>
-            </p>
             @if (fiberValue() !== null) {
                 <p
                     class="fiber-highlight"
@@ -69,42 +67,25 @@
                 </li>
             </ul>
         </div>
-        @if ((!mergedConfig.content.hideBarChart || !mergedConfig.content.hidePieChart) && (this.nutrientChartData().proteins + this.nutrientChartData().fats + this.nutrientChartData().carbs) > 0) {
+        @if (!mergedConfig.content.hidePieChart && (this.nutrientChartData().proteins + this.nutrientChartData().fats + this.nutrientChartData().carbs) > 0) {
             <div
                 class="charts-wrapper"
                 [ngStyle]="chartsWrapperStyles"
                 [class.column-layout]="isColumnLayout"
             >
-                @if (!mergedConfig.content.hidePieChart) {
-                    <div class="chart" [ngStyle]="chartStyles">
-                        <canvas
-                            baseChart
-                            [style.width.px]="chartsBlockSize"
-                            [style.height.px]="chartsBlockSize"
-                            [ngStyle]="chartCanvasStyles"
-                            [data]="nutrientsPieChartData"
-                            [options]="pieChartOptions"
-                            [type]="'pie'"
-                            [legend]="false"
-                        ></canvas>
-                    </div>
-                }
-                @if (!mergedConfig.content.hideBarChart) {
-                    <div class="chart" [ngStyle]="chartStyles">
-                        <canvas
-                            baseChart
-                            [style.width.px]="chartsBlockSize"
-                            [style.height.px]="chartsBlockSize"
-                            [ngStyle]="chartCanvasStyles"
-                            [data]="nutrientsBarChartData"
-                            [options]="barChartOptions"
-                            [type]="'bar'"
-                            [legend]="false"
-                        ></canvas>
-                    </div>
-                }
+                <div class="chart" [ngStyle]="chartStyles">
+                    <canvas
+                        baseChart
+                        [style.width.px]="chartsBlockSize"
+                        [style.height.px]="chartsBlockSize"
+                        [ngStyle]="chartCanvasStyles"
+                        [data]="nutrientsPieChartData"
+                        [options]="pieChartOptions"
+                        [type]="'pie'"
+                        [legend]="false"
+                    ></canvas>
+                </div>
             </div>
         }
     </div>
-</fd-custom-group>
-
+</ng-template>

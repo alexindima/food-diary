@@ -34,4 +34,14 @@
 
 .mat-mdc-input-element {
     font: inherit;
+
+    &[type='number'] {
+        -moz-appearance: textfield;
+
+        &::-webkit-outer-spin-button,
+        &::-webkit-inner-spin-button {
+            margin: 0;
+            -webkit-appearance: none;
+        }
+    }
 }

@@ -1,48 +1,185 @@
 @import 'variables';
 
 .product-manage {
-    max-width: 1000px;
+    max-width: 1100px;
     margin: 0 auto;
-    padding: @gap-m;
+    padding: @gap-xl;
     box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: @gap-l;
+
+    &__header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: @gap-m;
+    }
 
     &__title {
-        font-size: 1.8em;
-        font-weight: bold;
+        margin: 0;
+        font-size: 2rem;
+        font-weight: 600;
         color: @color-text-main;
-        text-align: center;
-        margin: 0 0 @gap-l;
+        text-align: left;
+    }
+
+    &__delete-button {
+        border-color: @color-no-results;
+        color: @color-no-results;
+
+        &:hover:not([disabled]) {
+            background-color: fade(@color-no-results, 10%);
+        }
+
+        &:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
     }
 
     &__form {
         display: flex;
         flex-direction: column;
+        gap: @gap-l;
+    }
+
+    &__grid {
+        display: grid;
+        grid-template-columns: minmax(0, 7fr) minmax(0, 3fr);
+        gap: @gap-l;
+        align-items: flex-start;
+
+        @media @media-tablet {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    &__column {
+        display: flex;
+        flex-direction: column;
+        gap: @gap-l;
+    }
+
+    &__card {
+        display: flex;
+        flex-direction: column;
         gap: @gap-m;
+
+        &--sticky {
+            position: sticky;
+            top: @gap-xl;
+        }
+    }
+
+    &__summary-calories {
+        margin: 0;
+        font-size: 0.9rem;
+        color: @color-text-main;
+
+        strong {
+            font-size: 1.1rem;
+        }
+    }
+
+    &__basic-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: @gap-m;
+
+        @media @media-mobile {
+            grid-template-columns: 1fr;
+        }
     }
 
     &__field {
         display: flex;
         flex-direction: column;
+        gap: @gap-xs;
+
+        &--full {
+            grid-column: 1 / -1;
+        }
     }
 
-    &__serving {
+    &__serving-row {
         display: flex;
+        flex-wrap: wrap;
+        gap: @gap-m;
+    }
+
+    &__serving-part {
+        flex: 1;
+        min-width: 200px;
+        display: flex;
+        flex-direction: column;
+        gap: @gap-xs;
+    }
+
+    &__nutrients-row {
+        display: flex;
+        flex-wrap: wrap;
         gap: @gap-m;
 
-        &-part {
-            flex: 1;
+        &--two .product-manage__nutrient {
+            flex: 1 1 200px;
         }
 
-        @media @media-mobile {
-            flex-direction: column;
-            gap: @gap-xs;
-            margin: @gap-s 0;
+        &--three .product-manage__nutrient {
+            flex: 1 1 180px;
         }
     }
 
-    &__actions {
-        .product-manage__action-button {
+    &__nutrient {
+        display: flex;
+        flex-direction: column;
+        gap: @gap-xs;
+        flex: 1 1 180px;
+    }
+
+    &__footer {
+        position: sticky;
+        bottom: 0;
+        background: fade(@color-background, 95%);
+        backdrop-filter: blur(6px);
+        padding: @gap-m;
+        border-radius: @border-radius-m @border-radius-m 0 0;
+        box-shadow: 0 -4px 12px fade(@color-box-shadow, 30%);
+        display: flex;
+        flex-direction: column;
+        gap: @gap-xs;
+        z-index: 5;
+    }
+
+    &__footer-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: @gap-m;
+        flex-wrap: wrap;
+    }
+
+    &__action-button {
+        min-width: 220px;
+    }
+
+    &__footer-error {
+        width: 100%;
+        text-align: right;
+    }
+
+    @media @media-mobile {
+        &__header {
+            align-items: flex-start;
+        }
+
+        &__action-button {
             width: 100%;
+        }
+
+        &__footer-actions {
+            flex-direction: column;
+            align-items: stretch;
         }
     }
 
@@ -51,7 +188,7 @@
         text-align: center;
 
         &-title {
-            font-size: 1.8em;
+            font-size: 1.5rem;
             font-weight: bold;
             color: @color-text-main;
             margin: 0 0 @gap-l;
@@ -63,26 +200,5 @@
             gap: @gap-xl;
         }
     }
-}
-
-.product-manage__nutrients-group {
-    display: flex;
-    flex-direction: column;
-    gap: @gap-m;
-}
-
-.product-manage__macronutrients {
-    display: flex;
-    gap: @gap-m;
-
-    @media @media-tablet {
-        flex-direction: column;
-    }
-}
-
-.product-manage__macronutrient {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
 }
 

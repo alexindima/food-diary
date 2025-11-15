@@ -3,6 +3,7 @@ import {
     Component,
     DestroyRef,
     FactoryProvider,
+    effect,
     inject,
     input,
     OnInit,
@@ -18,14 +19,10 @@ import {
     TuiDialogContext,
     TuiDialogService,
     TuiError,
-    TuiIcon,
-    TuiLabel,
-    TuiTextfieldComponent,
-    TuiTextfieldDirective,
 } from '@taiga-ui/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { TUI_VALIDATION_ERRORS, TuiFieldErrorPipe } from '@taiga-ui/kit';
-import { AsyncPipe } from '@angular/common';
+import { AsyncPipe, DecimalPipe } from '@angular/common';
 import { TuiInputNumberModule, TuiSelectModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
 import { ProductService } from '../../../services/product.service';
 import { NavigationService } from '../../../services/navigation.service';
@@ -36,12 +33,13 @@ import { NutrientChartData } from '../../../types/charts.data';
 import {
     NutrientsSummaryComponent, NutrientsSummaryConfig
 } from '../../shared/nutrients-summary/nutrients-summary.component';
-import { CustomGroupComponent } from '../../shared/custom-group/custom-group.component';
 import { firstValueFrom } from 'rxjs';
 import { ZXingScannerModule } from '@zxing/ngx-scanner';
 import { BarcodeScannerComponent } from '../../shared/barcode-scanner/barcode-scanner.component';
 import { ValidationErrors } from '../../../types/validation-error.data';
 import { FdUiInputComponent } from '../../../ui-kit/input/fd-ui-input.component';
+import { FdUiCardComponent } from '../../../ui-kit/card/fd-ui-card.component';
+import { FdUiRadioGroupComponent, FdUiRadioOption } from '../../../ui-kit/radio/fd-ui-radio-group.component';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: TUI_VALIDATION_ERRORS,
@@ -64,21 +62,19 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     imports: [
         ReactiveFormsModule,
         TranslatePipe,
-        TuiLabel,
+        DecimalPipe,
         TuiError,
         TuiFieldErrorPipe,
         AsyncPipe,
         TuiButton,
         TuiSelectModule,
         TuiTextfieldControllerModule,
-        TuiTextfieldComponent,
-        TuiTextfieldDirective,
         TuiInputNumberModule,
         NutrientsSummaryComponent,
-        CustomGroupComponent,
         ZXingScannerModule,
-        TuiIcon,
         FdUiInputComponent,
+        FdUiCardComponent,
+        FdUiRadioGroupComponent,
     ],
 })
 export class BaseProductManageComponent implements OnInit {
@@ -100,6 +96,7 @@ export class BaseProductManageComponent implements OnInit {
         fats: 0,
         carbs: 0,
     });
+    public readonly isDeleting = signal(false);
 
     private readonly barcodeDialog = tuiDialog(BarcodeScannerComponent, {
         dismissible: true,
@@ -110,6 +107,7 @@ export class BaseProductManageComponent implements OnInit {
     public productForm: FormGroup<ProductFormData>;
     public units = Object.values(MeasurementUnit) as MeasurementUnit[];
     public visibilityOptions = Object.values(ProductVisibility) as ProductVisibility[];
+    public visibilityRadioOptions: FdUiRadioOption<ProductVisibility>[] = [];
     public constructor() {
         this.productForm = new FormGroup<ProductFormData>({
             name: new FormControl('', { nonNullable: true, validators: Validators.required }),
@@ -127,15 +125,22 @@ export class BaseProductManageComponent implements OnInit {
             fiberPerBase: new FormControl(null, Validators.required),
             visibility: new FormControl(ProductVisibility.Private, { nonNullable: true, validators: Validators.required }),
         });
+
+        this.buildVisibilityOptions();
+        this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            this.buildVisibilityOptions();
+        });
+
+        effect(() => {
+            const currentProduct = this.product();
+            if (currentProduct) {
+                this.populateForm(currentProduct);
+                this.updateSummary();
+            }
+        });
     }
 
     public ngOnInit(): void {
-        const product = this.product();
-        if (product) {
-            this.populateForm(product);
-            this.updateSummary();
-        }
-
         this.productForm.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.clearGlobalError();
             this.updateSummary();
@@ -154,12 +159,46 @@ export class BaseProductManageComponent implements OnInit {
     public readonly Unit = MeasurementUnit;
     public readonly Visibility = ProductVisibility;
 
+    public get canShowDeleteButton(): boolean {
+        const currentProduct = this.product();
+        return !!currentProduct && currentProduct.isOwnedByCurrentUser;
+    }
+
     public openBarcodeScanner(): void {
         this.barcodeDialog(null).subscribe({
             next: (barcode) => {
                 this.productForm.controls.barcode.setValue(barcode);
             },
         });
+    }
+
+    public async onCancel(): Promise<void> {
+        await this.navigationService.navigateToProductList();
+    }
+
+    public async onDeleteProduct(): Promise<void> {
+        const currentProduct = this.product();
+
+        if (!currentProduct || !currentProduct.isOwnedByCurrentUser || this.isDeleting()) {
+            return;
+        }
+
+        const confirmationMessage = this.translateService.instant('PRODUCT_MANAGE.DELETE_CONFIRM');
+
+        if (!window.confirm(confirmationMessage)) {
+            return;
+        }
+
+        this.isDeleting.set(true);
+        this.clearGlobalError();
+
+        try {
+            await firstValueFrom(this.productService.deleteById(currentProduct.id));
+            await this.navigationService.navigateToProductList();
+        } catch (error) {
+            this.isDeleting.set(false);
+            this.setGlobalError('PRODUCT_MANAGE.DELETE_ERROR');
+        }
     }
 
     public async onSubmit(): Promise<Product | null> {
@@ -263,7 +302,11 @@ export class BaseProductManageComponent implements OnInit {
     }
 
     private populateForm(product: Product): void {
-        this.productForm.patchValue(product);
+        const normalizedVisibility = this.normalizeVisibility(product.visibility);
+        this.productForm.patchValue({
+            ...product,
+            visibility: normalizedVisibility,
+        });
     }
 
     private async addProduct(productData: CreateProductRequest): Promise<Product | null> {
@@ -308,6 +351,22 @@ export class BaseProductManageComponent implements OnInit {
 
     private clearGlobalError(): void {
         this.globalError.set(null);
+    }
+
+    private buildVisibilityOptions(): void {
+        this.visibilityRadioOptions = this.visibilityOptions.map(option => ({
+            value: option,
+            label: this.translateService.instant(`PRODUCT_MANAGE.VISIBILITY_OPTIONS.${option.toUpperCase()}`),
+        }));
+    }
+
+    private normalizeVisibility(value: ProductVisibility | null | string | undefined): ProductVisibility {
+        if (typeof value !== 'string') {
+            return ProductVisibility.Private;
+        }
+
+        const upper = value.toUpperCase();
+        return upper === ProductVisibility.Public.toUpperCase() ? ProductVisibility.Public : ProductVisibility.Private;
     }
 
     private async showConfirmDialog(): Promise<void> {

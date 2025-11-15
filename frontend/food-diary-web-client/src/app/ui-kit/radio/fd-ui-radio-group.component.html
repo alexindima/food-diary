@@ -1,0 +1,28 @@
+<div class="fd-ui-radio-group" [class.fd-ui-radio-group--horizontal]="orientation === 'horizontal'">
+    <label class="fd-ui-radio-group__label" *ngIf="label">
+        {{ label }}<span *ngIf="required" aria-hidden="true">*</span>
+    </label>
+
+    <mat-radio-group
+        class="fd-ui-radio-group__control"
+        [formControl]="control"
+        [disabled]="disabled"
+        (blur)="handleBlur()"
+    >
+        <mat-radio-button
+            class="fd-ui-radio"
+            *ngFor="let option of options; trackBy: trackByValue"
+            [value]="option.value"
+        >
+            <span class="fd-ui-radio__text">
+                {{ option.label }}
+                <small class="fd-ui-radio__description" *ngIf="option.description">
+                    {{ option.description }}
+                </small>
+            </span>
+        </mat-radio-button>
+    </mat-radio-group>
+
+    <p class="fd-ui-radio-group__hint" *ngIf="hint && !error">{{ hint }}</p>
+    <p class="fd-ui-radio-group__error" *ngIf="error">{{ error }}</p>
+</div>

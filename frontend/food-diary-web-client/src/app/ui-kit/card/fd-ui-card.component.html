@@ -1,0 +1,13 @@
+<div class="fd-ui-card" [class.fd-ui-card--subtle]="subtle">
+    <header class="fd-ui-card__header" *ngIf="title || headerActions">
+        <p class="fd-ui-card__title" *ngIf="title">{{ title }}</p>
+        <div class="fd-ui-card__actions" *ngIf="headerActions">
+            <ng-content select="[fdUiCardActions]"></ng-content>
+        </div>
+    </header>
+
+    <div class="fd-ui-card__content">
+        <ng-content></ng-content>
+    </div>
+</div>
+

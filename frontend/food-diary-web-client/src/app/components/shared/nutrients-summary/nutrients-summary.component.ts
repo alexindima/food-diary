@@ -8,7 +8,7 @@ import {
     OnInit
 } from '@angular/core';
 import { BaseChartDirective } from 'ng2-charts';
-import { DecimalPipe, NgStyle } from '@angular/common';
+import { DecimalPipe, NgStyle, NgTemplateOutlet } from '@angular/common';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ChartData, ChartOptions, ChartTypeRegistry, TooltipItem } from 'chart.js';
 import { CHART_COLORS } from '../../../constants/chart-colors';
@@ -24,6 +24,7 @@ import { CustomGroupComponent } from '../custom-group/custom-group.component';
         TranslatePipe,
         NgStyle,
         CustomGroupComponent,
+        NgTemplateOutlet,
     ],
     templateUrl: './nutrients-summary.component.html',
     styleUrl: './nutrients-summary.component.less',
@@ -38,6 +39,7 @@ export class NutrientsSummaryComponent implements OnInit {
     public nutrientChartData = input.required<NutrientChartData>();
     public fiberValue = input<number | null>(null);
     public fiberUnitKey = input<string>('PRODUCT_AMOUNT_UNITS_SHORT.G');
+    public bare = input<boolean>(false);
 
     @Input() public config: NutrientsSummaryConfig = {};
     public mergedConfig!: NutrientsSummaryConfigInternal;
@@ -67,14 +69,6 @@ export class NutrientsSummaryComponent implements OnInit {
             : this.mergedConfig.styles.common.gap;
 
         return { gap: `${gapValue}px`};
-    }
-
-    public get calorieStyles(): object {
-        const { fontSize, lineHeight } = this.mergedConfig.styles.info.lineStyles.calories;
-        return {
-            fontSize: `${fontSize}px`,
-            lineHeight: `${lineHeight}px`,
-        };
     }
 
     public get nutrientStyles(): object {
@@ -152,12 +146,6 @@ export class NutrientsSummaryComponent implements OnInit {
                     ...DEFAULT_CONFIG.styles.info,
                     ...userConfig.styles?.info,
                     lineStyles: {
-                        ...DEFAULT_CONFIG.styles.info.lineStyles,
-                        ...userConfig.styles?.info?.lineStyles,
-                        calories: {
-                            ...DEFAULT_CONFIG.styles.info.lineStyles.calories,
-                            ...userConfig.styles?.info?.lineStyles?.calories,
-                        },
                         nutrients: {
                             ...DEFAULT_CONFIG.styles.info.lineStyles.nutrients,
                             ...userConfig.styles?.info?.lineStyles?.nutrients,
@@ -269,10 +257,6 @@ interface NutrientsSummaryConfigInternal {
         },
         info: {
             lineStyles: {
-                calories: {
-                    fontSize: number;
-                    lineHeight: number;
-                };
                 nutrients: {
                     fontSize: number;
                     lineHeight: number;
@@ -281,7 +265,6 @@ interface NutrientsSummaryConfigInternal {
         };
     };
     content: {
-        hideBarChart: boolean;
         hidePieChart: boolean;
     };
 }
@@ -309,10 +292,6 @@ const DEFAULT_CONFIG: NutrientsSummaryConfigInternal = {
         },
         info: {
             lineStyles: {
-                calories: {
-                    fontSize: 20,
-                    lineHeight: 28,
-                },
                 nutrients: {
                     fontSize: 16,
                     lineHeight: 20,
@@ -321,7 +300,6 @@ const DEFAULT_CONFIG: NutrientsSummaryConfigInternal = {
         },
     },
     content: {
-        hideBarChart: false,
         hidePieChart: false,
     },
 };
