@@ -1,0 +1,37 @@
+:host {
+    display: block;
+}
+
+.fd-ui-date-input {
+    width: 100%;
+
+    &:not(.fd-ui-date-input--disabled) {
+        --mdc-outlined-text-field-focus-outline-color: var(--fd-color-primary);
+    }
+
+    &.fd-ui-date-input--disabled {
+        opacity: 0.7;
+    }
+
+    .mat-mdc-form-field-subscript-wrapper {
+        font-size: 0.75rem;
+        line-height: 1.2;
+    }
+
+    .mat-mdc-input-element {
+        font: inherit;
+    }
+
+    .mat-date-range-input-inner {
+        font: inherit;
+    }
+
+    .mat-mdc-form-field-flex {
+        align-items: center;
+    }
+}
+
+.mat-mdc-text-field-wrapper {
+    border-radius: var(--fd-radius-md);
+    background-color: var(--fd-color-surface);
+}

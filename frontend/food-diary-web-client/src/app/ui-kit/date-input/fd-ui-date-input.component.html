@@ -1,0 +1,47 @@
+<ng-container *ngIf="mode === 'range'; else singleMode">
+    <mat-form-field appearance="outline" class="fd-ui-date-input" [class.fd-ui-date-input--disabled]="isDisabled">
+        <mat-label *ngIf="label">{{ label }}</mat-label>
+
+        <mat-date-range-input
+            [formGroup]="rangeGroup"
+            [rangePicker]="rangePicker"
+            [min]="min"
+            [max]="max"
+        >
+            <input
+                matStartDate
+                formControlName="start"
+                [placeholder]="resolvedStartPlaceholder"
+                [disabled]="isDisabled"
+                (blur)="handleBlur()"
+            />
+            <input
+                matEndDate
+                formControlName="end"
+                [placeholder]="resolvedEndPlaceholder"
+                [disabled]="isDisabled"
+                (blur)="handleBlur()"
+            />
+        </mat-date-range-input>
+        <mat-datepicker-toggle matSuffix [for]="rangePicker"></mat-datepicker-toggle>
+    </mat-form-field>
+    <mat-date-range-picker #rangePicker (closed)="rangeGroup.markAsTouched()"></mat-date-range-picker>
+</ng-container>
+
+<ng-template #singleMode>
+    <mat-form-field appearance="outline" class="fd-ui-date-input" [class.fd-ui-date-input--disabled]="isDisabled">
+        <mat-label *ngIf="label">{{ label }}</mat-label>
+        <input
+            matInput
+            [matDatepicker]="singlePicker"
+            [formControl]="singleControl"
+            [placeholder]="resolvedPlaceholder"
+            [min]="min"
+            [max]="max"
+            [disabled]="isDisabled"
+            (blur)="handleBlur()"
+        />
+        <mat-datepicker-toggle matSuffix [for]="singlePicker"></mat-datepicker-toggle>
+    </mat-form-field>
+    <mat-datepicker #singlePicker (closed)="singleControl.markAsTouched()"></mat-datepicker>
+</ng-template>

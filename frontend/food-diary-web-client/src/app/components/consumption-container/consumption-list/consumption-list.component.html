@@ -2,20 +2,24 @@
     <h2 class="consumption-list__title">{{ 'CONSUMPTION_LIST.TITLE' | translate }}</h2>
 
     <div class="consumption-list__actions">
-        <div class="consumption-list__search">
+        <div class="consumption-list__search-group">
             <form [formGroup]="searchForm" class="consumption-list__date-range-form">
-                <tui-input-date-range formControlName="dateRange" tuiTextfieldSize="m">
-                    {{ 'CONSUMPTION_LIST.CHOOSE_DATES' | translate }}
-                    <input
-                        placeholder="{{ 'CONSUMPTION_LIST.DATE_PLACEHOLDER' | translate }}"
-                        tuiTextfieldLegacy
-                    />
-                </tui-input-date-range>
+                <fd-ui-date-input
+                    formControlName="dateRange"
+                    mode="range"
+                    class="consumption-list__date-input"
+                    [label]="'CONSUMPTION_LIST.CHOOSE_DATES' | translate"
+                    [placeholder]="'CONSUMPTION_LIST.DATE_PLACEHOLDER' | translate"
+                ></fd-ui-date-input>
             </form>
         </div>
-        <button class="consumption-list__add-button" tuiButton iconStart="@tui.plus" size="m" (click)="goToConsumptionAdd()">
+        <fd-ui-button
+            class="consumption-list__add-button"
+            icon="add"
+            (click)="goToConsumptionAdd()"
+        >
             {{ 'CONSUMPTION_LIST.ADD_CONSUMPTION_BUTTON' | translate }}
-        </button>
+        </fd-ui-button>
     </div>
 
     @if (consumptionData.isLoading()) {
@@ -29,9 +33,13 @@
         }
 
         @for (consumption of consumptionData.items(); track consumption) {
-            <fd-card (click)="openConsumptionDetails(consumption)">
-                <div class="consumption-card">
-                    <div class="consumption-card__header">
+            <div
+                class="consumption-card-wrapper"
+                (click)="openConsumptionDetails(consumption)"
+            >
+                <fd-ui-card appearance="general">
+                    <div class="consumption-card">
+                        <div class="consumption-card__header">
                     <span class="consumption-card__date">
                         @if (consumption.mealType) {
                             {{ ('MEAL_TYPES.' + consumption.mealType) | translate }}
@@ -55,8 +63,9 @@
                             {{ 'CONSUMPTION_LIST.TOTAL_CARBS' | translate }}: {{ consumption.totalCarbs | number: '1.0-2' }}g
                         </div>
                     </div>
-                </div>
-            </fd-card>
+                    </div>
+                </fd-ui-card>
+            </div>
 
         }
     }

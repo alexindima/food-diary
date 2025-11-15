@@ -5,10 +5,8 @@ import { RecipeService } from '../../../services/recipe.service';
 import { NavigationService } from '../../../services/navigation.service';
 import { PagedData } from '../../../types/paged-data.data';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { TuiButton, TuiIcon, TuiLoader, TuiTextfieldComponent, TuiTextfieldDirective, tuiDialog } from '@taiga-ui/core';
+import { TuiIcon, TuiLoader, tuiDialog } from '@taiga-ui/core';
 import { TuiPagination } from '@taiga-ui/kit';
-import { TuiSearchComponent } from '@taiga-ui/layout';
-import { TuiTextfieldControllerModule } from '@taiga-ui/legacy';
 import { catchError, debounceTime, finalize, map, Observable, of, switchMap, tap } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FormGroupControls } from '../../../types/common.data';
@@ -16,7 +14,9 @@ import { TuiAlertService } from '@taiga-ui/core';
 import { RecipeDetailComponent, RecipeDetailActionResult } from '../recipe-detail/recipe-detail.component';
 import { BadgeComponent } from '../../shared/badge/badge.component';
 import { FdUiEntityCardComponent } from '../../../ui-kit/entity-card/fd-ui-entity-card.component';
-import { FdUiEntityCardHeaderDirective } from '../../../ui-kit/entity-card/fd-ui-entity-card-header.directive';
+import { FdUiInputComponent } from '../../../ui-kit/input/fd-ui-input.component';
+import { FdUiCheckboxComponent } from '../../../ui-kit/checkbox/fd-ui-checkbox.component';
+import { FdUiButtonComponent } from '../../../ui-kit/button/fd-ui-button.component';
 
 @Component({
     selector: 'fd-recipe-list',
@@ -28,15 +28,12 @@ import { FdUiEntityCardHeaderDirective } from '../../../ui-kit/entity-card/fd-ui
         TranslatePipe,
         TuiLoader,
         TuiPagination,
-        TuiSearchComponent,
-        TuiTextfieldComponent,
-        TuiTextfieldControllerModule,
-        TuiTextfieldDirective,
-        TuiButton,
         TuiIcon,
         BadgeComponent,
         FdUiEntityCardComponent,
-        FdUiEntityCardHeaderDirective,
+        FdUiInputComponent,
+        FdUiCheckboxComponent,
+        FdUiButtonComponent,
     ],
 })
 export class RecipeListComponent implements OnInit {

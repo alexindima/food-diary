@@ -114,6 +114,9 @@
         "PROTEINS": "Proteins",
         "FATS": "Fats",
         "CARBS": "Carbs",
+        "DEFAULT_SERVING": "Default serving",
+        "SERVING_UNIT": "Serving unit",
+        "KCAL": "kcal",
         "DELETE_ERROR": "Unable to delete the product. Please try again."
     },
     "PRODUCT_VISIBILITY": {

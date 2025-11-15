@@ -6,13 +6,11 @@
 }
 
 .consumption-list {
-    display: block;
-    position: relative;
     max-width: 1000px;
-    margin: @gap-l auto;
-    box-sizing: border-box;
-    overflow: hidden;
+    margin: 0 auto;
     padding: @gap-m;
+    box-sizing: border-box;
+    font-size: 14px;
 
     &__title {
         font-size: 1.8em;
@@ -24,27 +22,36 @@
 
     &__actions {
         display: flex;
+        flex-wrap: wrap;
+        gap: @gap-s;
         align-items: center;
-        gap: @gap-xxl;
-        margin-bottom: @gap-l;
-
-        @media @media-mobile {
-            flex-direction: column;
-            align-items: stretch;
-            gap: @gap-m;
-            margin-bottom: @gap-m;
-        }
+        margin-bottom: @gap-m;
     }
 
-    &__search {
+    &__search-group {
+        display: flex;
+        align-items: center;
+        flex: 1 1 320px;
+        gap: @gap-s;
+        min-width: 0;
+    }
+
+    &__date-range-form {
+        flex-grow: 1;
+        max-width: 400px;
+    }
+
+    &__date-input {
         width: 100%;
     }
 
     &__add-button {
+        margin-left: auto;
         white-space: nowrap;
     }
 
     &__loader {
+        display: block;
         margin: @gap-l auto;
     }
 
@@ -71,7 +78,7 @@
 }
 
 .consumption-card {
-    padding: @gap-m;
+    padding: 0;
     display: flex;
     flex-direction: column;
 
@@ -135,5 +142,16 @@
         flex-direction: column;
         align-items: flex-start;
         gap: @gap-xs;
+    }
+}
+
+.consumption-card-wrapper {
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    margin-bottom: 12px;
+
+    &:hover {
+        transform: translateY(-4px) scale(1.01);
+        box-shadow: 0 10px 25px rgba(15, 23, 42, 0.12);
     }
 }

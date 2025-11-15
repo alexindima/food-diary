@@ -73,12 +73,17 @@
                         <div class="product-card__stats">
                             <span class="product-card__calories">
                                 {{ 'PRODUCT_LIST.CALORIES' | translate }}: {{ product.caloriesPerBase }}
+                                {{ 'PRODUCT_LIST.KCAL' | translate }}
                             </span>
                             <span class="product-card__macros">
                                 {{ 'PRODUCT_LIST.PROTEINS' | translate }}: {{ product.proteinsPerBase }}g ·
                                 {{ 'PRODUCT_LIST.FATS' | translate }}: {{ product.fatsPerBase }}g ·
                                 {{ 'PRODUCT_LIST.CARBS' | translate }}: {{ product.carbsPerBase }}g
                             </span>
+                        </div>
+                        <div class="product-card__serving">
+                            {{ 'PRODUCT_LIST.SERVING_UNIT' | translate }}:
+                            {{ ('PRODUCT_MANAGE.DEFAULT_SERVING_UNITS.' + product.baseUnit) | translate }}
                         </div>
                     </div>
                 </fd-ui-entity-card>

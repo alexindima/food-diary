@@ -2,19 +2,19 @@ import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, inject, OnI
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { catchError, debounceTime, map, Observable, of, startWith, switchMap } from 'rxjs';
 import { TuiPagination } from '@taiga-ui/kit';
-import { TuiButton, tuiDialog, TuiLoader } from '@taiga-ui/core';
+import { tuiDialog, TuiLoader } from '@taiga-ui/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Consumption, ConsumptionFilters } from '../../../types/consumption.data';
 import { ConsumptionService } from '../../../services/consumption.service';
-import { TuiInputDateRangeModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
 import { DatePipe, DecimalPipe } from '@angular/common';
 import { PagedData } from '../../../types/paged-data.data';
-import { TuiDayRange } from '@taiga-ui/cdk';
 import { NavigationService } from '../../../services/navigation.service';
 import { ConsumptionDetailComponent } from '../consumption-detail/consumption-detail.component';
 import { FormGroupControls } from '../../../types/common.data';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { CardComponent } from '../../shared/card/card.component';
+import { FdUiButtonComponent } from '../../../ui-kit/button/fd-ui-button.component';
+import { FdUiCardComponent } from '../../../ui-kit/card/fd-ui-card.component';
+import { FdUiDateInputComponent, FdUiDateRangeValue } from '../../../ui-kit/date-input/fd-ui-date-input.component';
 
 @Component({
     selector: 'fd-consumption-list',
@@ -25,13 +25,12 @@ import { CardComponent } from '../../shared/card/card.component';
         TuiPagination,
         ReactiveFormsModule,
         TuiLoader,
-        TuiButton,
         TranslatePipe,
-        TuiInputDateRangeModule,
-        TuiTextfieldControllerModule,
         DatePipe,
         DecimalPipe,
-        CardComponent,
+        FdUiButtonComponent,
+        FdUiCardComponent,
+        FdUiDateInputComponent,
     ]
 })
 export class ConsumptionListComponent implements OnInit {
@@ -47,7 +46,7 @@ export class ConsumptionListComponent implements OnInit {
 
     public constructor() {
         this.searchForm = new FormGroup<SearchFormGroup>({
-            dateRange: new FormControl<TuiDayRange | null>(null),
+            dateRange: new FormControl<FdUiDateRangeValue | null>(null),
         });
     }
 
@@ -69,11 +68,11 @@ export class ConsumptionListComponent implements OnInit {
 
     public loadConsumptions(page: number): Observable<void> {
         this.consumptionData.setLoading(true);
-        const dateRange = this.searchForm.controls.dateRange.value as TuiDayRange | null;
+        const dateRange = this.searchForm.controls.dateRange.value;
 
         const filters: ConsumptionFilters = {
-            dateFrom: dateRange?.from?.toUtcNativeDate().toISOString(),
-            dateTo: dateRange?.to?.toUtcNativeDate().toISOString(),
+            dateFrom: this.toIsoDate(dateRange?.start ?? null),
+            dateTo: this.toIsoDate(dateRange?.end ?? null),
         };
 
         return this.consumptionService.query(page, 10, filters).pipe(
@@ -121,10 +120,19 @@ export class ConsumptionListComponent implements OnInit {
     protected scrollToTop(): void {
         this.container.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
+
+    private toIsoDate(date: Date | null | undefined): string | undefined {
+        if (!date) {
+            return undefined;
+        }
+
+        const normalized = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+        return normalized.toISOString();
+    }
 }
 
 interface SearchFormValues {
-    dateRange: TuiDayRange | null;
+    dateRange: FdUiDateRangeValue | null;
 }
 
 type SearchFormGroup = FormGroupControls<SearchFormValues>;

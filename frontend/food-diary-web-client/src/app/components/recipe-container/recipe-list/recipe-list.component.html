@@ -7,41 +7,31 @@
     </h2>
 
     <div class="recipe-list__actions">
-        <search tuiSearch class="recipe-list__search">
+        <div class="recipe-list__search-group">
             <form class="recipe-list__search-form" [formGroup]="searchForm">
-                <fieldset tuiTextfieldSize="m">
-                    <tui-textfield iconStart="@tui.search">
-                        <input
-                            formControlName="search"
-                            [placeholder]="'RECIPE_LIST.SEARCH_PLACEHOLDER' | translate"
-                            tuiTextfield
-                            class="recipe-list__search-input"
-                        />
-                    </tui-textfield>
-                </fieldset>
+                <fd-ui-input
+                    class="recipe-list__search-input"
+                    formControlName="search"
+                    prefixIcon="search"
+                    [clearable]="true"
+                    [placeholder]="'RECIPE_LIST.SEARCH_PLACEHOLDER' | translate"
+                    (cleared)="searchForm.controls.search.setValue('')"
+                ></fd-ui-input>
             </form>
-        </search>
-
-        <label class="recipe-list__toggle">
-            <input
-                type="checkbox"
-                class="recipe-list__toggle-input"
+            <fd-ui-checkbox
+                class="recipe-list__toggle"
+                [label]="'RECIPE_LIST.ONLY_MY_RECIPES' | translate"
                 [formControl]="searchForm.controls.onlyMine"
-            />
-            <span class="recipe-list__toggle-label">
-                {{ 'RECIPE_LIST.ONLY_MY_RECIPES' | translate }}
-            </span>
-        </label>
+            ></fd-ui-checkbox>
+        </div>
 
-        <button
-            tuiButton
-            iconStart="@tui.plus"
-            size="m"
-            (click)="onAddRecipeClick()"
+        <fd-ui-button
             class="recipe-list__add-button"
+            icon="add"
+            (click)="onAddRecipeClick()"
         >
             {{ 'RECIPE_LIST.ADD_RECIPE_BUTTON' | translate }}
-        </button>
+        </fd-ui-button>
     </div>
 
     @if (recipeData.isLoading()) {
@@ -54,34 +44,36 @@
                         class="fd-ui-entity-card--hoverable"
                         appearance="recipe"
                         (click)="onRecipeClick(recipe)"
-                        [title]="recipe.name"
-                        [meta]="recipe.category || undefined"
                         [imageUrl]="recipe.imageUrl"
                     >
-                        <ng-container fdUiEntityCardHeader>
-                            <div class="recipe-card__badges">
-                                @if (recipe.isOwnedByCurrentUser) {
+                        <div class="recipe-card product-card">
+                            <div class="product-card__header">
+                                <div class="product-card__title">
+                                    <span class="product-card__name">{{ recipe.name }}</span>
+                                </div>
+                                <div class="product-card__badges">
+                                    @if (recipe.isOwnedByCurrentUser) {
+                                        <fd-badge
+                                            [label]="getVisibilityTranslation(recipe.visibility)"
+                                            [variant]="isPrivateVisibility(recipe.visibility) ? 'warning' : 'success'"
+                                            [icon]="isPrivateVisibility(recipe.visibility) ? 'lock' : 'public'"
+                                        ></fd-badge>
+                                    }
                                     <fd-badge
-                                        [label]="getVisibilityTranslation(recipe.visibility)"
-                                        [variant]="isPrivateVisibility(recipe.visibility) ? 'warning' : 'success'"
-                                        [icon]="isPrivateVisibility(recipe.visibility) ? 'lock' : 'public'"
+                                        [label]="recipe.isOwnedByCurrentUser ? ('RECIPE_BADGE.MY' | translate) : ('RECIPE_BADGE.SHARED' | translate)"
+                                        [variant]="recipe.isOwnedByCurrentUser ? 'primary' : 'neutral'"
+                                        [icon]="recipe.isOwnedByCurrentUser ? 'person' : 'groups'"
                                     ></fd-badge>
-                                }
-                                <fd-badge
-                                    [label]="recipe.isOwnedByCurrentUser ? ('RECIPE_BADGE.MY' | translate) : ('RECIPE_BADGE.SHARED' | translate)"
-                                    [variant]="recipe.isOwnedByCurrentUser ? 'primary' : 'neutral'"
-                                    [icon]="recipe.isOwnedByCurrentUser ? 'restaurant' : 'groups'"
-                                ></fd-badge>
+                                </div>
                             </div>
-                        </ng-container>
-                        <div class="recipe-card">
-                            <div class="recipe-card__metrics">
-                                <span class="recipe-card__calories">
-                                    {{ 'RECIPE_LIST.TOTAL_CALORIES' | translate }}: {{ recipe.totalCalories ?? '-' }}
+                            <div class="product-card__stats">
+                                <span class="product-card__calories">
+                                    {{ 'PRODUCT_LIST.CALORIES' | translate }}: {{ recipe.totalCalories ?? '-' }}
+                                    {{ 'PRODUCT_LIST.KCAL' | translate }}
                                 </span>
-                                <span class="recipe-card__macros">
-                                    {{ 'PRODUCT_LIST.PROTEINS' | translate }}: {{ recipe.totalProteins ?? '-' }}g |
-                                    {{ 'PRODUCT_LIST.FATS' | translate }}: {{ recipe.totalFats ?? '-' }}g |
+                                <span class="product-card__macros">
+                                    {{ 'PRODUCT_LIST.PROTEINS' | translate }}: {{ recipe.totalProteins ?? '-' }}g ·
+                                    {{ 'PRODUCT_LIST.FATS' | translate }}: {{ recipe.totalFats ?? '-' }}g ·
                                     {{ 'PRODUCT_LIST.CARBS' | translate }}: {{ recipe.totalCarbs ?? '-' }}g
                                 </span>
                             </div>

@@ -114,6 +114,9 @@
         "PROTEINS": "Белки",
         "FATS": "Жиры",
         "CARBS": "Углеводы",
+        "DEFAULT_SERVING": "Стандартная порция",
+        "SERVING_UNIT": "Единица измерения",
+        "KCAL": "ККал",
         "DELETE_ERROR": "Не удалось удалить продукт. Попробуйте ещё раз."
     },
     "PRODUCT_VISIBILITY": {
