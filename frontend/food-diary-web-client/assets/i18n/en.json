@@ -115,6 +115,7 @@
         "FATS": "Fats",
         "CARBS": "Carbs",
         "DEFAULT_SERVING": "Product type",
+        "GRAMS": "g",
         "KCAL": "kcal",
         "DELETE_ERROR": "Unable to delete the product. Please try again."
     },
@@ -494,6 +495,51 @@
         "MANAGE_CONSUMPTIONS": "Manage Consumptions",
         "MANAGE_PRODUCTS": "Manage Products",
         "VIEW_STATISTICS": "View Statistics"
+    },
+    "DASHBOARD": {
+        "SUBTITLE": "Daily overview",
+        "TITLE": "Consumption for today",
+        "PROGRESS_TITLE": "Daily progress",
+        "CONSUMED_TODAY": "Consumed today",
+        "GOAL_LABEL": "Daily goal",
+        "REMAINING_LABEL": "Remaining",
+        "MACRO_TITLE": "Macro summary",
+        "MOTIVATION_TITLE": "Stay motivated",
+        "MEALS_SUBTITLE": "Meal log",
+        "MEALS_TITLE": "Today's meals",
+        "MEALS_EMPTY": "No consumptions logged for this date yet.",
+        "MEALS_VIEW_ALL": "Open consumptions",
+        "MEAL_FALLBACK": "Meal",
+        "QUICK_ACTIONS_TITLE": "Quick actions",
+        "LOADING": "Loading dashboard...",
+        "WEIGHT_TITLE": "Weight trend",
+        "WEIGHT_META": "Last entry",
+        "WEIGHT_CHANGE": "{{ value }} kg since last log",
+        "KG": "kg",
+        "ACTIVITY_TITLE": "Daily activity",
+        "ACTIVITY_META": "From Google Fit soon",
+        "CALORIES_BURNED": "Calories burned",
+        "STEPS": "Steps",
+        "ACTIONS": {
+            "ADD_CONSUMPTION_TITLE": "Add consumption",
+            "ADD_CONSUMPTION_DESCRIPTION": "Log a meal in a few taps.",
+            "ADD_CONSUMPTION_BUTTON": "Add consumption",
+            "ADD_PRODUCT_TITLE": "Create product",
+            "ADD_PRODUCT_DESCRIPTION": "Save frequently used foods.",
+            "ADD_PRODUCT_BUTTON": "Add product",
+            "ADD_RECIPE_TITLE": "Create recipe",
+            "ADD_RECIPE_DESCRIPTION": "Group ingredients into dishes.",
+            "ADD_RECIPE_BUTTON": "Add recipe",
+            "STATISTICS_TITLE": "Statistics",
+            "STATISTICS_DESCRIPTION": "See detailed trends.",
+            "STATISTICS_BUTTON": "Open statistics"
+        },
+        "MOTIVATION": {
+            "EARLY": "You have logged only {{ percent }}% of your goal — keep it up!",
+            "MID": "Great progress! You're already at {{ percent }}% of the plan.",
+            "NEARLY": "Almost there. Finish strong to hit {{ percent }}%.",
+            "ABOVE": "You've passed the target for today. Nice work!"
+        }
     },
     "SHARED": {
         "NUTRIENTS_SUMMARY": {

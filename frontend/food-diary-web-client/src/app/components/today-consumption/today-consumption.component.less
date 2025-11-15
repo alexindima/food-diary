@@ -1,151 +1,365 @@
 @import 'variables';
 
-.today-consumption {
+@color-text-secondary: @color-text-additional;
+@color-primary: #2563eb;
+
+.dashboard {
     display: flex;
     flex-direction: column;
-    gap: @gap-m;
-    max-width: 1000px;
+    gap: 32px;
+    max-width: 1200px;
     margin: 0 auto;
-    padding: @gap-xl;
+    padding: 32px 24px 64px;
+
+    &__header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 16px;
+    }
+
+    &__title-block {
+        flex: 1;
+        min-width: 200px;
+    }
+
+    &__eyebrow {
+        margin: 0 0 4px;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        font-size: 0.75rem;
+        color: @color-text-secondary;
+        font-weight: 600;
+    }
 
     &__title {
-        text-align: center;
-        font-size: 1.8em;
-        font-weight: bold;
-        margin-top: 0;
-        margin-bottom: @gap-xl;
+        margin: 0;
+        font-size: 2.25rem;
+        font-weight: 700;
         color: @color-text-main;
+    }
+
+    &__header-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        justify-content: flex-end;
+    }
+
+    &__date-field {
+        opacity: 0;
+        height: 0;
+        width: 0;
+        margin: 0;
+        padding: 0;
+        pointer-events: none;
+        position: absolute;
+    }
+
+    &__grid {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+    }
+
+    &__key-metrics {
+        display: grid;
+        gap: 24px;
+        grid-template-columns: minmax(320px, 2fr) minmax(280px, 1fr);
+        align-items: stretch;
+    }
+
+    &__insights {
+        display: grid;
+        gap: 24px;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     }
 
     &__card {
-        background-color: @color-background;
-        border-radius: @border-radius-m;
-        box-shadow: 0 4px 8px @color-box-shadow;
+        height: 100%;
         display: flex;
         flex-direction: column;
-        padding: @gap-xl;
-        gap: @gap-m;
-    }
 
-    &__content {
-        display: flex;
-        flex-direction: column;
-        gap: @gap-xl;
-
-        @media @media-tablet {
-            flex-direction: column;
+        > .fd-ui-card {
+            height: 100%;
         }
     }
 
-    &__secondary-actions {
-        display: flex;
-        gap: @gap-m;
+    &__key-metrics fd-ui-card.dashboard__card {
+        height: 100%;
+    }
 
-        @media @media-tablet {
-            flex-direction: column;
+    @media @media-tablet {
+        &__key-metrics {
+            grid-template-columns: 1fr;
+        }
+
+        &__activity-grid {
+            grid-template-columns: 1fr;
         }
     }
 
-    &__left, &__right {
+    &__progress {
         display: flex;
         flex-direction: column;
-        align-items: flex-start;
-        gap: @gap-m;
-        flex: 1;
+        gap: 16px;
     }
 
-    &__header {
-        margin-bottom: @gap-m;
+    &__progress-headline {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
     }
 
-    &__subtitle {
-        font-size: 1.5em;
-        font-weight: bold;
-        color: #007bff;
+    &__progress-label {
+        font-size: 0.9rem;
+        color: @color-text-secondary;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
     }
 
-    &__calories {
-        font-size: 1.2em;
-        font-weight: bold;
+    &__progress-value {
+        font-size: 2rem;
+        font-weight: 700;
         color: @color-text-main;
     }
 
-    &__body {
-        margin-top: @gap-m;
+    &__progress-percent {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: @color-primary;
     }
 
-    &__nutrients {
-        background-color: rgba(0, 0, 0, 0.05);
-        border-radius: @border-radius-m;
-        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-        padding: @gap-m;
+    &__progress-meta {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 16px;
+    }
+
+    &__meta-label {
+        display: block;
+        font-size: 0.85rem;
+        color: @color-text-secondary;
+        margin-bottom: 4px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+    }
+
+    &__macros {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 16px;
+    }
+
+    &__macro {
+        padding: 12px;
+        border-radius: 12px;
+        background: rgba(148, 163, 184, 0.12);
         display: flex;
         flex-direction: column;
-        gap: @gap-m;
-
-        &-container {
-            display: flex;
-            align-items: center;
-            gap: @gap-m;
-            flex-wrap: wrap;
-
-            @media @media-mobile {
-                flex-direction: column;
-                align-items: stretch;
-            }
-        }
-
-        &-list {
-            flex: 1;
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            font-size: 0.9em;
-            color: @color-text-main;
-
-            @media @media-mobile {
-                margin-bottom: @gap-m;
-            }
-        }
-
-        &-chart {
-            flex: 1;
-            display: flex;
-            max-height: 300px;
-            max-width: 300px;
-            justify-content: center;
-            align-items: center;
-
-            @media @media-mobile {
-                justify-content: center;
-            }
-
-            canvas {
-                max-height: 300px;
-                max-width: 300px;
-            }
-        }
+        gap: 4px;
     }
 
-    &__button {
-        width: 100%;
+    &__macro-label {
+        font-size: 0.9rem;
+        color: @color-text-secondary;
+    }
+
+    &__macro-value {
+        font-size: 1.2rem;
+        color: @color-text-main;
+    }
+
+    &__motivation-copy {
+        margin: 0;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: @color-text-main;
+    }
+
+    &__weight-summary {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    &__weight-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: @color-text-main;
+    }
+
+    &__weight-trend {
+        font-size: 0.95rem;
+        color: @color-text-secondary;
+    }
+
+    &__activity-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+    }
+
+    &__activity-label {
+        margin: 0 0 4px;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: @color-text-secondary;
+    }
+
+    &__activity-value {
+        margin: 0;
+        font-size: 1.4rem;
+        font-weight: 600;
+        color: @color-text-main;
+    }
+
+    &__section-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    &__section-title {
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: @color-text-main;
+    }
+
+    &__meals {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    &__loader,
+    &__empty {
+        border: 1px dashed rgba(15, 23, 42, 0.2);
+        border-radius: 16px;
+        padding: 24px;
+        text-align: center;
+        color: @color-text-secondary;
+        font-size: 0.95rem;
+    }
+
+    &__meal-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    &__meal-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        justify-content: space-between;
+        align-items: flex-start;
+    }
+
+    &__meal-name {
+        margin: 0;
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: @color-text-main;
+    }
+
+    &__meal-time {
+        font-size: 0.9rem;
+        color: @color-text-secondary;
+        font-weight: 500;
+    }
+
+    &__meal-calories {
+        display: block;
+        font-size: 0.95rem;
+        color: @color-primary;
+        font-weight: 600;
+    }
+
+    &__meal-macros {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        font-size: 0.9rem;
+        color: @color-text-secondary;
+        justify-content: flex-end;
+    }
+
+    &__meal-footer {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        font-size: 0.9rem;
+        color: @color-text-secondary;
+    }
+
+    &__meal-comment {
+        color: @color-text-main;
+    }
+
+    &__quick-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    &__quick-actions-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 16px;
+    }
+
+    &__quick-card {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    &__quick-card-content {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+    }
+
+    &__quick-card-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        background: rgba(37, 99, 235, 0.12);
+        color: @color-primary;
+        display: inline-flex;
+        align-items: center;
         justify-content: center;
+        font-size: 1.4rem;
+    }
 
-        &--primary {
-            background-color: #007bff;
-            color: @color-background;
+    &__quick-card-title {
+        margin: 0 0 2px;
+        font-size: 1rem;
+        font-weight: 600;
+    }
+
+    &__quick-card-description {
+        font-size: 0.85rem;
+        color: @color-text-secondary;
+    }
+
+    @media @media-mobile {
+        padding: 24px 16px 48px;
+
+        &__progress-headline {
+            flex-direction: column;
+            align-items: flex-start;
         }
 
-        &--outline {
-            background-color: transparent;
-            color: #007bff;
-            border: 1px solid #007bff;
-        }
-
-        &--info {
-            background-color: #fd7e14;
-            color: @color-background;
-            border: 1px solid #e06b0a;
+        &__progress-percent {
+            font-size: 1.8rem;
         }
     }
 }

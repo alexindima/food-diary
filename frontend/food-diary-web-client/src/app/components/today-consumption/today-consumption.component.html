@@ -1,74 +1,221 @@
-<div class="today-consumption">
-    <h2 class="today-consumption__title">{{ 'TODAY_CONSUMPTION.TITLE' | translate }}</h2>
-    @if (true) {
-        <fd-custom-group
-            [title]="'today calories'"
-        >
-            <fd-dynamic-progress-bar
-                [current]="todayCalories()"
-                [max]="(userCalories | async) ?? 1500"
-                [unit]="'kkal'"
-            ></fd-dynamic-progress-bar>
-        </fd-custom-group>
-    }
-    <fd-nutrients-summary
-        [calories]="todayCalories()"
-        [nutrientChartData]="nutrientChartData()"
-        [fiberValue]="todayFiber()"
-    ></fd-nutrients-summary>
-    <div class="today-consumption__card">
-        <div class="today-consumption__content">
-            <button
-                class="today-consumption__button today-consumption__button--primary"
-                tuiButton
-                size="xl"
-                iconStart="@tui.plus"
+<div class="dashboard">
+    <header class="dashboard__header">
+        <div class="dashboard__title-block">
+            <h1 class="dashboard__title">{{ 'DASHBOARD.TITLE' | translate }}</h1>
+        </div>
+        <div class="dashboard__header-actions">
+            <fd-ui-button
+                class="dashboard__date-button"
+                variant="secondary"
+                fill="outline"
+                icon="calendar_today"
+                (click)="openDatePicker()"
+            >
+                {{ selectedDate() | date:'d MMMM y' }}
+            </fd-ui-button>
+            <fd-ui-button
+                class="dashboard__primary-action"
+                icon="add"
                 (click)="addConsumption()"
             >
-                {{ 'TODAY_CONSUMPTION.ADD_CONSUMPTION' | translate }}
-            </button>
-            <div class="today-consumption__secondary-actions">
-                <div class="today-consumption__right">
-                    <button
-                        class="today-consumption__button today-consumption__button--outline"
-                        tuiButton
-                        size="m"
-                        iconStart="@tui.plus"
-                        (click)="addProduct()"
-                    >
-                        {{ 'TODAY_CONSUMPTION.ADD_PRODUCT' | translate }}
-                    </button>
-                    <button
-                        class="today-consumption__button today-consumption__button--outline"
-                        tuiButton
-                        size="m"
-                        iconStart="@tui.list-plus"
-                        (click)="manageProducts()"
-                    >
-                        {{ 'TODAY_CONSUMPTION.MANAGE_PRODUCTS' | translate }}
-                    </button>
-                </div>
-                <div class="today-consumption__left">
-                    <button
-                        class="today-consumption__button today-consumption__button--outline"
-                        tuiButton
-                        size="m"
-                        iconStart="@tui.list-plus"
-                        (click)="manageConsumptions()"
-                    >
-                        {{ 'TODAY_CONSUMPTION.MANAGE_CONSUMPTIONS' | translate }}
-                    </button>
-                    <button
-                        class="today-consumption__button today-consumption__button--info"
-                        tuiButton
-                        size="m"
-                        iconStart="@tui.chart-no-axes-combined"
-                        (click)="goToStatistics()"
-                    >
-                        {{ 'TODAY_CONSUMPTION.VIEW_STATISTICS' | translate }}
-                    </button>
-                </div>
-            </div>
+                {{ 'DASHBOARD.ACTIONS.ADD_CONSUMPTION_BUTTON' | translate }}
+            </fd-ui-button>
         </div>
-    </div>
+        <mat-form-field class="dashboard__date-field" appearance="outline">
+            <input
+                matInput
+                [matDatepicker]="headerDatePicker"
+                [value]="selectedDate()"
+                (dateChange)="handleDateChange($event)"
+            />
+        </mat-form-field>
+        <mat-datepicker #headerDatePicker></mat-datepicker>
+    </header>
+
+    <section class="dashboard__grid">
+        <div class="dashboard__key-metrics">
+            <fd-ui-card
+                class="dashboard__card dashboard__card--progress"
+                [title]="'DASHBOARD.PROGRESS_TITLE' | translate"
+                [meta]="(selectedDate() | date:'d MMMM y') || ''"
+            >
+                <div class="dashboard__progress">
+                    <div class="dashboard__progress-headline">
+                        <div>
+                            <span class="dashboard__progress-label">{{ 'DASHBOARD.CONSUMED_TODAY' | translate }}</span>
+                            <strong class="dashboard__progress-value">
+                                {{ todayCalories() | number:'1.0-0' }} {{ 'PRODUCT_LIST.KCAL' | translate }}
+                            </strong>
+                        </div>
+                        <span class="dashboard__progress-percent">{{ progressPercent() }}%</span>
+                    </div>
+                    <fd-dynamic-progress-bar
+                        [current]="todayCalories()"
+                        [max]="dailyGoal()"
+                        [unit]="'PRODUCT_LIST.KCAL' | translate"
+                    ></fd-dynamic-progress-bar>
+                    <div class="dashboard__progress-meta">
+                        <div>
+                            <span class="dashboard__meta-label">{{ 'DASHBOARD.GOAL_LABEL' | translate }}</span>
+                            <strong>{{ dailyGoal() | number:'1.0-0' }} {{ 'PRODUCT_LIST.KCAL' | translate }}</strong>
+                        </div>
+                        <div>
+                            <span class="dashboard__meta-label">{{ 'DASHBOARD.REMAINING_LABEL' | translate }}</span>
+                            <strong>{{ remainingCalories() | number:'1.0-0' }} {{ 'PRODUCT_LIST.KCAL' | translate }}</strong>
+                        </div>
+                    </div>
+                </div>
+            </fd-ui-card>
+
+            <fd-ui-card
+                class="dashboard__card dashboard__card--macros"
+                [title]="'DASHBOARD.MACRO_TITLE' | translate"
+            >
+                <div class="dashboard__macros">
+                    @for (macro of macroSummary(); track macro.labelKey) {
+                        <div class="dashboard__macro">
+                            <span class="dashboard__macro-label">{{ macro.labelKey | translate }}</span>
+                            <strong class="dashboard__macro-value">
+                                {{ macro.value | number:'1.0-1' }} {{ 'PRODUCT_LIST.GRAMS' | translate }}
+                            </strong>
+                        </div>
+                    }
+                </div>
+            </fd-ui-card>
+        </div>
+
+        <div class="dashboard__insights">
+            <fd-ui-card
+                class="dashboard__card dashboard__card--motivation"
+                [title]="'DASHBOARD.MOTIVATION_TITLE' | translate"
+            >
+                <p class="dashboard__motivation-copy">
+                    {{ motivationKey() | translate:{ percent: progressPercent() } }}
+                </p>
+            </fd-ui-card>
+            <fd-ui-card
+                class="dashboard__card dashboard__card--weight"
+                [title]="'DASHBOARD.WEIGHT_TITLE' | translate"
+                [meta]="'DASHBOARD.WEIGHT_META' | translate"
+            >
+                <div class="dashboard__weight-summary">
+                    <strong class="dashboard__weight-value">78.3 {{ 'DASHBOARD.KG' | translate }}</strong>
+                    <span class="dashboard__weight-trend">
+                        ↘ {{ 'DASHBOARD.WEIGHT_CHANGE' | translate:{ value: '-0.2' } }}
+                    </span>
+                </div>
+            </fd-ui-card>
+            <fd-ui-card
+                class="dashboard__card dashboard__card--activity"
+                [title]="'DASHBOARD.ACTIVITY_TITLE' | translate"
+                [meta]="'DASHBOARD.ACTIVITY_META' | translate"
+            >
+                <div class="dashboard__activity-grid">
+                    <div>
+                        <p class="dashboard__activity-label">{{ 'DASHBOARD.CALORIES_BURNED' | translate }}</p>
+                        <strong class="dashboard__activity-value">215 {{ 'PRODUCT_LIST.KCAL' | translate }}</strong>
+                    </div>
+                    <div>
+                        <p class="dashboard__activity-label">{{ 'DASHBOARD.STEPS' | translate }}</p>
+                        <strong class="dashboard__activity-value">5 420</strong>
+                    </div>
+                </div>
+            </fd-ui-card>
+        </div>
+    </section>
+
+    <section class="dashboard__meals">
+        <div class="dashboard__section-header">
+            <div>
+                <h2 class="dashboard__section-title">{{ 'DASHBOARD.MEALS_TITLE' | translate }}</h2>
+            </div>
+            <fd-ui-button
+                variant="primary"
+                fill="text"
+                icon="open_in_new"
+                (click)="manageConsumptions()"
+            >
+                {{ 'DASHBOARD.MEALS_VIEW_ALL' | translate }}
+            </fd-ui-button>
+        </div>
+
+        @if (isMealsLoading()) {
+            <div class="dashboard__loader">{{ 'DASHBOARD.LOADING' | translate }}</div>
+        } @else {
+            @if (meals().length === 0) {
+                <div class="dashboard__empty">
+                    {{ 'DASHBOARD.MEALS_EMPTY' | translate }}
+                </div>
+            } @else {
+                <div class="dashboard__meal-list">
+                    @for (meal of meals(); track meal.id) {
+                        <fd-ui-entity-card
+                            class="dashboard__meal-card fd-ui-entity-card--hoverable"
+                            appearance="info"
+                            [imageUrl]="meal.imageUrl || undefined"
+                            (click)="openConsumption(meal)"
+                        >
+                            <div class="dashboard__meal-row">
+                                <div>
+                                    <p class="dashboard__meal-name">
+                                        @if (meal.mealType) {
+                                            {{ ('MEAL_TYPES.' + meal.mealType) | translate }}
+                                        } @else {
+                                            {{ 'DASHBOARD.MEAL_FALLBACK' | translate }}
+                                        }
+                                        <span class="dashboard__meal-time">
+                                            · {{ meal.date | date:'HH:mm' }}
+                                        </span>
+                                    </p>
+                                    <span class="dashboard__meal-calories">
+                                        {{ meal.totalCalories | number:'1.0-0' }} {{ 'PRODUCT_LIST.KCAL' | translate }}
+                                    </span>
+                                </div>
+                                <div class="dashboard__meal-macros">
+                                    <span>{{ 'PRODUCT_LIST.PROTEINS' | translate }}: {{ meal.totalProteins | number:'1.0-1' }} g</span>
+                                    <span>{{ 'PRODUCT_LIST.FATS' | translate }}: {{ meal.totalFats | number:'1.0-1' }} g</span>
+                                    <span>{{ 'PRODUCT_LIST.CARBS' | translate }}: {{ meal.totalCarbs | number:'1.0-1' }} g</span>
+                                </div>
+                            </div>
+                            <div class="dashboard__meal-footer">
+                                <span>{{ 'CONSUMPTION_LIST.ITEM_COUNT' | translate }}: {{ meal.items.length }}</span>
+                                @if (meal.comment) {
+                                    <span class="dashboard__meal-comment">{{ meal.comment }}</span>
+                                }
+                            </div>
+                        </fd-ui-entity-card>
+                    }
+                </div>
+            }
+        }
+    </section>
+
+    <section class="dashboard__quick-actions">
+        <h2 class="dashboard__section-title">{{ 'DASHBOARD.QUICK_ACTIONS_TITLE' | translate }}</h2>
+        <div class="dashboard__quick-actions-grid">
+            @for (action of quickActions; track action.buttonKey) {
+                <fd-ui-card class="dashboard__quick-card" [subtle]="true">
+                    <div class="dashboard__quick-card-content">
+                        <div class="dashboard__quick-card-icon">
+                            <mat-icon>{{ action.icon }}</mat-icon>
+                        </div>
+                        <div>
+                            <p class="dashboard__quick-card-title">{{ action.titleKey | translate }}</p>
+                            <span class="dashboard__quick-card-description">
+                                {{ action.descriptionKey | translate }}
+                            </span>
+                        </div>
+                    </div>
+                    <fd-ui-button
+                        [variant]="action.variant"
+                        [fill]="action.fill"
+                        [fullWidth]="true"
+                        (click)="action.action()"
+                    >
+                        {{ action.buttonKey | translate }}
+                    </fd-ui-button>
+                </fd-ui-card>
+            }
+        </div>
+    </section>
 </div>

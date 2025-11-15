@@ -115,6 +115,7 @@
         "FATS": "Жиры",
         "CARBS": "Углеводы",
         "DEFAULT_SERVING": "Тип продукта",
+        "GRAMS": "г",
         "KCAL": "ККал",
         "DELETE_ERROR": "Не удалось удалить продукт. Попробуйте ещё раз."
     },
@@ -459,6 +460,51 @@
         "MANAGE_CONSUMPTIONS": "Управлять потреблением",
         "MANAGE_PRODUCTS": "Управлять продуктами",
         "VIEW_STATISTICS": "Посмотреть статистику"
+    },
+    "DASHBOARD": {
+        "SUBTITLE": "Личный обзор",
+        "TITLE": "Потребление за сегодня",
+        "PROGRESS_TITLE": "Прогресс за день",
+        "CONSUMED_TODAY": "Уже съедено",
+        "GOAL_LABEL": "Цель дня",
+        "REMAINING_LABEL": "Осталось",
+        "MACRO_TITLE": "Баланс нутриентов",
+        "MOTIVATION_TITLE": "Мотивация",
+        "MEALS_SUBTITLE": "Журнал приёмов",
+        "MEALS_TITLE": "Сегодняшние приёмы пищи",
+        "MEALS_EMPTY": "За выбранную дату пока нет записей.",
+        "MEALS_VIEW_ALL": "Открыть все приёмы",
+        "MEAL_FALLBACK": "Приём пищи",
+        "QUICK_ACTIONS_TITLE": "Быстрые действия",
+        "LOADING": "Загружаем данные...",
+        "WEIGHT_TITLE": "Динамика веса",
+        "WEIGHT_META": "Последняя запись",
+        "WEIGHT_CHANGE": "{{ value }} кг с прошлой записи",
+        "KG": "кг",
+        "ACTIVITY_TITLE": "Активность за день",
+        "ACTIVITY_META": "Скоро из Google Fit",
+        "CALORIES_BURNED": "Сожжено",
+        "STEPS": "Шаги",
+        "ACTIONS": {
+            "ADD_CONSUMPTION_TITLE": "Добавить приём пищи",
+            "ADD_CONSUMPTION_DESCRIPTION": "Зафиксируйте очередной приём еды.",
+            "ADD_CONSUMPTION_BUTTON": "Добавить приём",
+            "ADD_PRODUCT_TITLE": "Создать продукт",
+            "ADD_PRODUCT_DESCRIPTION": "Сохраните продукт для быстрого доступа.",
+            "ADD_PRODUCT_BUTTON": "Добавить продукт",
+            "ADD_RECIPE_TITLE": "Создать рецепт",
+            "ADD_RECIPE_DESCRIPTION": "Соберите блюдо из ингредиентов.",
+            "ADD_RECIPE_BUTTON": "Добавить рецепт",
+            "STATISTICS_TITLE": "Статистика",
+            "STATISTICS_DESCRIPTION": "Детальные графики и тенденции.",
+            "STATISTICS_BUTTON": "Открыть статистику"
+        },
+        "MOTIVATION": {
+            "EARLY": "Вы прошли всего {{ percent }}% цели — отличный старт!",
+            "MID": "Отличный темп! Уже {{ percent }}% плана выполнено.",
+            "NEARLY": "Почти финиш — осталось чуть-чуть до {{ percent }}%.",
+            "ABOVE": "Вы превысили дневную цель. Классная работа!"
+        }
     },
     "SHARED": {
         "NUTRIENTS_SUMMARY": {
