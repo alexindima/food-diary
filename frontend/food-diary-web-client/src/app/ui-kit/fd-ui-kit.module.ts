@@ -7,6 +7,7 @@ import { FdUiTextareaComponent } from './textarea/fd-ui-textarea.component';
 import { FdUiEntityCardComponent } from './entity-card/fd-ui-entity-card.component';
 import { FdUiEntityCardHeaderDirective } from './entity-card/fd-ui-entity-card-header.directive';
 import { FdUiButtonComponent } from './button/fd-ui-button.component';
+import { FdUiCheckboxComponent } from './checkbox/fd-ui-checkbox.component';
 
 const FD_UI_COMPONENTS = [
     FdUiInputComponent,
@@ -17,6 +18,7 @@ const FD_UI_COMPONENTS = [
     FdUiEntityCardComponent,
     FdUiEntityCardHeaderDirective,
     FdUiButtonComponent,
+    FdUiCheckboxComponent,
 ];
 
 @NgModule({

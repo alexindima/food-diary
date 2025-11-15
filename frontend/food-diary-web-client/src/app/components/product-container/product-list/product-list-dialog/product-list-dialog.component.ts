@@ -16,6 +16,7 @@ import { BadgeComponent } from '../../../shared/badge/badge.component';
 import { FdUiEntityCardComponent } from '../../../../ui-kit/entity-card/fd-ui-entity-card.component';
 import { FdUiInputComponent } from '../../../../ui-kit/input/fd-ui-input.component';
 import { FdUiButtonComponent } from '../../../../ui-kit/button/fd-ui-button.component';
+import { FdUiCheckboxComponent } from '../../../../ui-kit/checkbox/fd-ui-checkbox.component';
 
 @Component({
     selector: 'fd-product-list-dialog',
@@ -33,6 +34,7 @@ import { FdUiButtonComponent } from '../../../../ui-kit/button/fd-ui-button.comp
         FdUiEntityCardComponent,
         FdUiInputComponent,
         FdUiButtonComponent,
+        FdUiCheckboxComponent,
     ]
 })
 export class ProductListDialogComponent extends ProductListBaseComponent {

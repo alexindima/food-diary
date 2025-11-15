@@ -15,6 +15,7 @@ import { BadgeComponent } from '../../../shared/badge/badge.component';
 import { FdUiEntityCardComponent } from '../../../../ui-kit/entity-card/fd-ui-entity-card.component';
 import { FdUiInputComponent } from '../../../../ui-kit/input/fd-ui-input.component';
 import { FdUiButtonComponent } from '../../../../ui-kit/button/fd-ui-button.component';
+import { FdUiCheckboxComponent } from '../../../../ui-kit/checkbox/fd-ui-checkbox.component';
 import { finalize } from 'rxjs';
 
 @Component({
@@ -32,6 +33,7 @@ import { finalize } from 'rxjs';
         FdUiEntityCardComponent,
         FdUiInputComponent,
         FdUiButtonComponent,
+        FdUiCheckboxComponent,
     ]
 })
 export class ProductListPageComponent extends ProductListBaseComponent implements OnInit {

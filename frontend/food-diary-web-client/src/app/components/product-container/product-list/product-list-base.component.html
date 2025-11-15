@@ -7,29 +7,26 @@
     </h2>
 
     <div class="product-list__actions">
-        <form class="product-list__search-form" [formGroup]="searchForm">
-            <fd-ui-input
-                class="product-list__search-input"
-                formControlName="search"
-                prefixIcon="search"
-                [clearable]="true"
-                [placeholder]="'PRODUCT_LIST.SEARCH_PLACEHOLDER' | translate"
-                suffixButtonIcon="qr_code_scanner"
-                [suffixButtonAriaLabel]="'PRODUCT_LIST.SCAN_BARCODE' | translate"
-                (cleared)="searchForm.controls.search.setValue('')"
-                (suffixButtonClicked)="openBarcodeScanner()"
-            ></fd-ui-input>
-        </form>
-        <label class="product-list__toggle">
-            <input
-                type="checkbox"
-                class="product-list__toggle-input"
+        <div class="product-list__search-group">
+            <form class="product-list__search-form" [formGroup]="searchForm">
+                <fd-ui-input
+                    class="product-list__search-input"
+                    formControlName="search"
+                    prefixIcon="search"
+                    [clearable]="true"
+                    [placeholder]="'PRODUCT_LIST.SEARCH_PLACEHOLDER' | translate"
+                    suffixButtonIcon="qr_code_scanner"
+                    [suffixButtonAriaLabel]="'PRODUCT_LIST.SCAN_BARCODE' | translate"
+                    (cleared)="searchForm.controls.search.setValue('')"
+                    (suffixButtonClicked)="openBarcodeScanner()"
+                ></fd-ui-input>
+            </form>
+            <fd-ui-checkbox
+                class="product-list__toggle"
+                [label]="'PRODUCT_LIST.ONLY_MY_PRODUCTS' | translate"
                 [formControl]="searchForm.controls.onlyMine"
-            />
-            <span class="product-list__toggle-label">
-                {{ 'PRODUCT_LIST.ONLY_MY_PRODUCTS' | translate }}
-            </span>
-        </label>
+            ></fd-ui-checkbox>
+        </div>
         <fd-ui-button
             class="product-list__add-button"
             icon="add"

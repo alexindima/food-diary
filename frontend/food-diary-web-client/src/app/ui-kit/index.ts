@@ -9,3 +9,4 @@ export * from './textarea/fd-ui-textarea.component';
 export * from './entity-card/fd-ui-entity-card.component';
 export * from './entity-card/fd-ui-entity-card-header.directive';
 export * from './button/fd-ui-button.component';
+export * from './checkbox/fd-ui-checkbox.component';

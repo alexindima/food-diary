@@ -1,0 +1,24 @@
+:host {
+    display: inline-flex;
+}
+
+.fd-ui-checkbox {
+    display: inline-flex;
+    flex-direction: column;
+    font-size: 0.95rem;
+
+    ::ng-deep .mdc-checkbox .mdc-checkbox__background {
+        border-radius: 4px;
+    }
+
+    ::ng-deep .mdc-form-field > label {
+        font-weight: 500;
+        color: var(--fd-color-text, #111827);
+    }
+
+    &__hint {
+        margin-left: 36px;
+        font-size: 0.8rem;
+        color: var(--fd-color-text-muted, #6b7280);
+    }
+}

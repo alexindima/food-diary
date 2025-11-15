@@ -18,9 +18,11 @@ import { BadgeComponent } from '../../shared/badge/badge.component';
 import { FdUiEntityCardComponent } from '../../../ui-kit/entity-card/fd-ui-entity-card.component';
 import { FdUiInputComponent } from '../../../ui-kit/input/fd-ui-input.component';
 import { FdUiButtonComponent } from '../../../ui-kit/button/fd-ui-button.component';
+import { FdUiCheckboxComponent } from '../../../ui-kit/checkbox/fd-ui-checkbox.component';
 
 @Component({
     selector: 'fd-product-list-base',
+    standalone: true,
     templateUrl: './product-list-base.component.html',
     styleUrls: ['./product-list-base.component.less'],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -34,6 +36,7 @@ import { FdUiButtonComponent } from '../../../ui-kit/button/fd-ui-button.compone
         FdUiEntityCardComponent,
         FdUiInputComponent,
         FdUiButtonComponent,
+        FdUiCheckboxComponent,
     ],
 })
 export class ProductListBaseComponent implements OnInit {
