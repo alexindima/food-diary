@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { BaseProductManageComponent } from '../base-product-manage.component';
 import { injectContext } from '@taiga-ui/polymorpheus';
 import {
-    TuiButton,
     TuiDialogContext,
     TuiError,
 } from '@taiga-ui/core';
@@ -24,6 +23,7 @@ import { FdUiCardComponent } from '../../../../ui-kit/card/fd-ui-card.component'
 import { FdUiRadioGroupComponent } from '../../../../ui-kit/radio/fd-ui-radio-group.component';
 import { FdUiSelectComponent } from '../../../../ui-kit/select/fd-ui-select.component';
 import { FdUiTextareaComponent } from '../../../../ui-kit/textarea/fd-ui-textarea.component';
+import { FdUiButtonComponent } from '../../../../ui-kit/button/fd-ui-button.component';
 
 @Component({
     selector: 'fd-product-add-dialog',
@@ -35,7 +35,6 @@ import { FdUiTextareaComponent } from '../../../../ui-kit/textarea/fd-ui-textare
         TranslatePipe,
         TuiError,
         DecimalPipe,
-        TuiButton,
         TuiSelectModule,
         TuiTextfieldControllerModule,
         TuiInputNumberModule,
@@ -46,6 +45,7 @@ import { FdUiTextareaComponent } from '../../../../ui-kit/textarea/fd-ui-textare
         FdUiRadioGroupComponent,
         FdUiSelectComponent,
         FdUiTextareaComponent,
+        FdUiButtonComponent,
     ]
 })
 export class ProductAddDialogComponent extends BaseProductManageComponent {

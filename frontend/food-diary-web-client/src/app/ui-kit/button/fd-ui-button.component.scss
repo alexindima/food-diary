@@ -1,0 +1,98 @@
+:host {
+    display: inline-flex;
+}
+
+.fd-ui-button {
+    border-radius: var(--fd-radius-md, 8px);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-transform: none;
+    padding: 0 1.25rem;
+    min-height: 40px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border: 1px solid transparent;
+    appearance: none;
+    border-width: 1px;
+    background-color: var(--fd-button-solid-bg, var(--fd-color-primary, #2563eb));
+    color: var(--fd-button-solid-fg, #ffffff);
+    line-height: 1;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease,
+        color 0.15s ease, border-color 0.15s ease;
+
+    &:hover:not(:disabled) {
+        box-shadow: 0 8px 20px rgba(15, 23, 42, 0.15);
+        transform: translateY(-1px);
+    }
+
+    &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+    }
+
+    &--full-width {
+        width: 100%;
+        justify-content: center;
+    }
+
+    &__icon {
+        font-size: 1.1rem;
+        line-height: 1;
+        display: inline-flex;
+        align-items: center;
+    }
+
+    &--solid {
+        background-color: var(--fd-button-solid-bg, var(--fd-color-primary, #2563eb));
+        color: var(--fd-button-solid-fg, #ffffff);
+        border-color: transparent;
+    }
+
+    &--outline {
+        background-color: #ffffff;
+        color: var(--fd-button-outline-fg, var(--fd-color-primary, #2563eb));
+        border-color: currentColor;
+        box-shadow: none;
+    }
+
+    &--text {
+        background-color: transparent;
+        color: var(--fd-button-text-fg, var(--fd-color-primary, #2563eb));
+        border-color: transparent;
+        box-shadow: none;
+        padding: 0 0.75rem;
+    }
+
+    &--primary.fd-ui-button--solid {
+        background-color: var(--fd-color-primary, #2563eb);
+        color: #ffffff;
+    }
+
+    &--primary.fd-ui-button--outline,
+    &--primary.fd-ui-button--text {
+        color: var(--fd-color-primary, #2563eb);
+    }
+
+    &--secondary.fd-ui-button--solid {
+        background-color: rgba(15, 23, 42, 0.08);
+        color: var(--fd-color-text, #111827);
+    }
+
+    &--secondary.fd-ui-button--outline,
+    &--secondary.fd-ui-button--text {
+        color: var(--fd-color-text, #111827);
+    }
+
+    &--danger.fd-ui-button--solid {
+        background-color: #dc2626;
+        color: #ffffff;
+    }
+
+    &--danger.fd-ui-button--outline,
+    &--danger.fd-ui-button--text {
+        color: #dc2626;
+    }
+}

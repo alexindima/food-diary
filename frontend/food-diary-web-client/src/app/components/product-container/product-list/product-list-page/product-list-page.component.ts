@@ -2,22 +2,19 @@ import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/cor
 import { ReactiveFormsModule } from '@angular/forms';
 import { ProductListBaseComponent } from '../product-list-base.component';
 import {
-    TuiButton,
     tuiDialog,
     TuiAlertService,
     TuiIcon,
     TuiLoader,
-    TuiTextfieldComponent,
-    TuiTextfieldDirective
 } from '@taiga-ui/core';
 import { Product } from '../../../../types/product.data';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { TuiPagination } from '@taiga-ui/kit';
-import { TuiSearchComponent } from '@taiga-ui/layout';
-import { TuiTextfieldControllerModule } from '@taiga-ui/legacy';
 import { ProductDetailComponent } from '../../product-detail/product-detail.component';
 import { BadgeComponent } from '../../../shared/badge/badge.component';
 import { FdUiEntityCardComponent } from '../../../../ui-kit/entity-card/fd-ui-entity-card.component';
+import { FdUiInputComponent } from '../../../../ui-kit/input/fd-ui-input.component';
+import { FdUiButtonComponent } from '../../../../ui-kit/button/fd-ui-button.component';
 import { finalize } from 'rxjs';
 
 @Component({
@@ -28,16 +25,13 @@ import { finalize } from 'rxjs';
     imports: [
         ReactiveFormsModule,
         TranslatePipe,
-        TuiButton,
         TuiLoader,
         TuiPagination,
-        TuiSearchComponent,
-        TuiTextfieldComponent,
-        TuiTextfieldControllerModule,
-        TuiTextfieldDirective,
         TuiIcon,
         BadgeComponent,
         FdUiEntityCardComponent,
+        FdUiInputComponent,
+        FdUiButtonComponent,
     ]
 })
 export class ProductListPageComponent extends ProductListBaseComponent implements OnInit {

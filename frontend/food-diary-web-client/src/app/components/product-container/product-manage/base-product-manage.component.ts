@@ -14,7 +14,6 @@ import {
 import { Product, CreateProductRequest, MeasurementUnit, ProductVisibility } from '../../../types/product.data';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
-    TuiButton,
     tuiDialog,
     TuiDialogContext,
     TuiDialogService,
@@ -42,6 +41,7 @@ import { FdUiCardComponent } from '../../../ui-kit/card/fd-ui-card.component';
 import { FdUiRadioGroupComponent, FdUiRadioOption } from '../../../ui-kit/radio/fd-ui-radio-group.component';
 import { FdUiSelectComponent, FdUiSelectOption } from '../../../ui-kit/select/fd-ui-select.component';
 import { FdUiTextareaComponent } from '../../../ui-kit/textarea/fd-ui-textarea.component';
+import { FdUiButtonComponent } from '../../../ui-kit/button/fd-ui-button.component';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: TUI_VALIDATION_ERRORS,
@@ -66,7 +66,6 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
         TranslatePipe,
         DecimalPipe,
         TuiError,
-        TuiButton,
         TuiSelectModule,
         TuiTextfieldControllerModule,
         TuiInputNumberModule,
@@ -77,6 +76,7 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
         FdUiRadioGroupComponent,
         FdUiSelectComponent,
         FdUiTextareaComponent,
+        FdUiButtonComponent,
     ],
 })
 export class BaseProductManageComponent implements OnInit {

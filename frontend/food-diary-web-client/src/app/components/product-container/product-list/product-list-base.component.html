@@ -7,24 +7,19 @@
     </h2>
 
     <div class="product-list__actions">
-        <search tuiSearch class="product-list__search">
-            <form class="product-list__search-form" [formGroup]="searchForm">
-                <fieldset tuiTextfieldSize="m">
-                    <tui-textfield iconStart="@tui.search">
-                        <input
-                            formControlName="search"
-                            [placeholder]="'PRODUCT_LIST.SEARCH_PLACEHOLDER' | translate"
-                            tuiTextfield
-                            class="product-list__search-input"
-                        />
-                        <tui-icon
-                            icon="@tui.barcode"
-                            (click)="openBarcodeScanner()"
-                        />
-                    </tui-textfield>
-                </fieldset>
-            </form>
-        </search>
+        <form class="product-list__search-form" [formGroup]="searchForm">
+            <fd-ui-input
+                class="product-list__search-input"
+                formControlName="search"
+                prefixIcon="search"
+                [clearable]="true"
+                [placeholder]="'PRODUCT_LIST.SEARCH_PLACEHOLDER' | translate"
+                suffixButtonIcon="qr_code_scanner"
+                [suffixButtonAriaLabel]="'PRODUCT_LIST.SCAN_BARCODE' | translate"
+                (cleared)="searchForm.controls.search.setValue('')"
+                (suffixButtonClicked)="openBarcodeScanner()"
+            ></fd-ui-input>
+        </form>
         <label class="product-list__toggle">
             <input
                 type="checkbox"
@@ -35,15 +30,13 @@
                 {{ 'PRODUCT_LIST.ONLY_MY_PRODUCTS' | translate }}
             </span>
         </label>
-        <button
-            tuiButton
-            iconStart="@tui.plus"
-            size="m"
-            (click)="onAddProductClick()"
+        <fd-ui-button
             class="product-list__add-button"
+            icon="add"
+            (click)="onAddProductClick()"
         >
             {{ 'PRODUCT_LIST.ADD_PRODUCT_BUTTON' | translate }}
-        </button>
+        </fd-ui-button>
     </div>
 
     @if (productData.isLoading()) {
@@ -52,7 +45,7 @@
         @if (productData.items().length > 0) {
             @for (product of productData.items(); track product) {
                 <fd-ui-entity-card
-                    class="product-card"
+                    class="product-card fd-ui-entity-card--hoverable"
                     appearance="product"
                     (click)="onProductClick(product)"
                     [imageUrl]="product.imageUrl"

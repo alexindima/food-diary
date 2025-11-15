@@ -8,17 +8,16 @@
             }
         </h2>
         @if (canShowDeleteButton) {
-            <button
+            <fd-ui-button
                 type="button"
                 class="product-manage__delete-button"
-                tuiButton
-                appearance="outline"
-                iconStart="@tui.trash"
+                variant="danger"
+                icon="delete"
                 [disabled]="isDeleting()"
                 (click)="onDeleteProduct()"
             >
                 {{ 'PRODUCT_MANAGE.DELETE_BUTTON' | translate }}
-            </button>
+            </fd-ui-button>
         }
     </div>
 
@@ -179,35 +178,31 @@
 
         <div class="product-manage__footer">
             <div class="product-manage__footer-actions">
-                <button
+                <fd-ui-button
                     type="button"
-                    tuiButton
-                    appearance="outline"
-                    iconStart="@tui.arrow-left"
+                    fill="outline"
+                    variant="primary"
+                    icon="arrow_back"
                     (click)="onCancel()"
                 >
                     {{ 'PRODUCT_MANAGE.CANCEL_BUTTON' | translate }}
-                </button>
+                </fd-ui-button>
                 @if (product()) {
-                    <button
+                    <fd-ui-button
                         type="submit"
                         class="product-manage__action-button"
-                        tuiButton
-                        appearance="primary"
-                        iconStart="@tui.save"
+                        icon="save"
                     >
                         {{ 'PRODUCT_MANAGE.SAVE_BUTTON' | translate }}
-                    </button>
+                    </fd-ui-button>
                 } @else {
-                    <button
+                    <fd-ui-button
                         type="submit"
                         class="product-manage__action-button"
-                        tuiButton
-                        appearance="primary"
-                        iconStart="@tui.plus"
+                        icon="add"
                     >
                         {{ 'PRODUCT_MANAGE.ADD_BUTTON' | translate }}
-                    </button>
+                    </fd-ui-button>
                 }
             </div>
             <tui-error class="product-manage__footer-error" [error]="globalError()"></tui-error>
@@ -225,12 +220,12 @@
             }
         </p>
         <div class="product-manage__dialog-buttons">
-            <button tuiButton size="m" (click)="observer.next('Home'); observer.complete()">
+            <fd-ui-button fill="text" (click)="observer.next('Home'); observer.complete()">
                 {{ 'PRODUCT_DETAIL.GO_TO_HOME_BUTTON' | translate }}
-            </button>
-            <button tuiButton size="m" (click)="observer.next('ProductList'); observer.complete()">
+            </fd-ui-button>
+            <fd-ui-button fill="text" (click)="observer.next('ProductList'); observer.complete()">
                 {{ 'PRODUCT_DETAIL.GO_TO_PRODUCT_LIST_BUTTON' | translate }}
-            </button>
+            </fd-ui-button>
         </div>
     </div>
 </ng-template>

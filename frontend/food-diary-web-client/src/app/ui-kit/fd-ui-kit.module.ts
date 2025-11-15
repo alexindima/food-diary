@@ -6,6 +6,7 @@ import { FdUiSelectComponent } from './select/fd-ui-select.component';
 import { FdUiTextareaComponent } from './textarea/fd-ui-textarea.component';
 import { FdUiEntityCardComponent } from './entity-card/fd-ui-entity-card.component';
 import { FdUiEntityCardHeaderDirective } from './entity-card/fd-ui-entity-card-header.directive';
+import { FdUiButtonComponent } from './button/fd-ui-button.component';
 
 const FD_UI_COMPONENTS = [
     FdUiInputComponent,
@@ -15,6 +16,7 @@ const FD_UI_COMPONENTS = [
     FdUiTextareaComponent,
     FdUiEntityCardComponent,
     FdUiEntityCardHeaderDirective,
+    FdUiButtonComponent,
 ];
 
 @NgModule({

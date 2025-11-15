@@ -2,13 +2,9 @@ import { ChangeDetectionStrategy, Component, ElementRef, inject, OnInit, ViewChi
 import { TuiPagination } from '@taiga-ui/kit';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import {
-    TuiButton,
     tuiDialog, TuiIcon,
     TuiLoader,
-    TuiTextfieldComponent,
-    TuiTextfieldDirective
 } from '@taiga-ui/core';
-import { TuiSearchComponent } from '@taiga-ui/layout';
 import { TranslatePipe } from '@ngx-translate/core';
 import { ProductService } from '../../../services/product.service';
 import { NavigationService } from '../../../services/navigation.service';
@@ -16,11 +12,12 @@ import { PagedData } from '../../../types/paged-data.data';
 import { Product, ProductFilters } from '../../../types/product.data';
 import { catchError, debounceTime, distinctUntilChanged, finalize, map, Observable, of, switchMap, tap } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
-import { TuiTextfieldControllerModule } from '@taiga-ui/legacy';
 import { FormGroupControls } from '../../../types/common.data';
 import { BarcodeScannerComponent } from '../../shared/barcode-scanner/barcode-scanner.component';
 import { BadgeComponent } from '../../shared/badge/badge.component';
 import { FdUiEntityCardComponent } from '../../../ui-kit/entity-card/fd-ui-entity-card.component';
+import { FdUiInputComponent } from '../../../ui-kit/input/fd-ui-input.component';
+import { FdUiButtonComponent } from '../../../ui-kit/button/fd-ui-button.component';
 
 @Component({
     selector: 'fd-product-list-base',
@@ -31,15 +28,12 @@ import { FdUiEntityCardComponent } from '../../../ui-kit/entity-card/fd-ui-entit
         TuiPagination,
         ReactiveFormsModule,
         TuiLoader,
-        TuiSearchComponent,
-        TuiTextfieldControllerModule,
-        TuiTextfieldComponent,
-        TuiTextfieldDirective,
-        TuiButton,
         TranslatePipe,
         TuiIcon,
         BadgeComponent,
         FdUiEntityCardComponent,
+        FdUiInputComponent,
+        FdUiButtonComponent,
     ],
 })
 export class ProductListBaseComponent implements OnInit {

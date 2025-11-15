@@ -2,23 +2,20 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Inject, Input, Option
 import { ReactiveFormsModule } from '@angular/forms';
 import { ProductListBaseComponent } from '../product-list-base.component';
 import {
-    TuiButton,
     tuiDialog,
     TuiDialogContext,
     TuiIcon,
     TuiLoader,
-    TuiTextfieldComponent,
-    TuiTextfieldDirective
 } from '@taiga-ui/core';
 import { Product } from '../../../../types/product.data';
 import { POLYMORPHEUS_CONTEXT } from '@taiga-ui/polymorpheus';
 import { TranslatePipe } from '@ngx-translate/core';
 import { TuiPagination } from '@taiga-ui/kit';
-import { TuiSearchComponent } from '@taiga-ui/layout';
-import { TuiTextfieldControllerModule } from '@taiga-ui/legacy';
 import { ProductAddDialogComponent } from '../../product-manage/product-add-dialog/product-add-dialog.component';
 import { BadgeComponent } from '../../../shared/badge/badge.component';
 import { FdUiEntityCardComponent } from '../../../../ui-kit/entity-card/fd-ui-entity-card.component';
+import { FdUiInputComponent } from '../../../../ui-kit/input/fd-ui-input.component';
+import { FdUiButtonComponent } from '../../../../ui-kit/button/fd-ui-button.component';
 
 @Component({
     selector: 'fd-product-list-dialog',
@@ -29,16 +26,13 @@ import { FdUiEntityCardComponent } from '../../../../ui-kit/entity-card/fd-ui-en
     imports: [
         ReactiveFormsModule,
         TranslatePipe,
-        TuiButton,
         TuiLoader,
         TuiPagination,
-        TuiSearchComponent,
-        TuiTextfieldComponent,
-        TuiTextfieldControllerModule,
-        TuiTextfieldDirective,
         TuiIcon,
         BadgeComponent,
         FdUiEntityCardComponent,
+        FdUiInputComponent,
+        FdUiButtonComponent,
     ]
 })
 export class ProductListDialogComponent extends ProductListBaseComponent {

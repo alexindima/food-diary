@@ -51,6 +51,7 @@
             <div class="recipe-list__items">
                 @for (recipe of recipeData.items(); track recipe.id) {
                     <fd-ui-entity-card
+                        class="fd-ui-entity-card--hoverable"
                         appearance="recipe"
                         (click)="onRecipeClick(recipe)"
                         [title]="recipe.name"
