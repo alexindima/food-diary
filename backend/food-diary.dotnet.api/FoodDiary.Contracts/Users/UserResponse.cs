@@ -11,6 +11,7 @@ public record UserResponse(
     DateTime? BirthDate,
     string? Gender,
     double? Weight,
+    double? DesiredWeight,
     double? Height,
     string? ProfileImage,
     bool IsActive

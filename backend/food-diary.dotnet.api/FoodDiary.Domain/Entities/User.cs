@@ -16,6 +16,7 @@ public sealed class User : AggregateRoot<UserId> {
     public DateTime? BirthDate { get; private set; }
     public string? Gender { get; private set; }
     public double? Weight { get; private set; }
+    public double? DesiredWeight { get; private set; }
     public double? Height { get; private set; }
     public string? ProfileImage { get; private set; }
     public bool IsActive { get; private set; } = true;
@@ -24,6 +25,7 @@ public sealed class User : AggregateRoot<UserId> {
     public ICollection<Meal> Meals { get; private set; } = new List<Meal>();
     public ICollection<Product> Products { get; private set; } = new List<Product>();
     public ICollection<Recipe> Recipes { get; private set; } = new List<Recipe>();
+    public ICollection<WeightEntry> WeightEntries { get; private set; } = new List<WeightEntry>();
 
     // Конструктор для EF Core
     private User() {
@@ -68,6 +70,12 @@ public sealed class User : AggregateRoot<UserId> {
         if (height.HasValue) Height = height;
         if (profileImage is not null) ProfileImage = profileImage;
 
+        SetModified();
+    }
+
+    public void UpdateDesiredWeight(double? desiredWeight)
+    {
+        DesiredWeight = desiredWeight;
         SetModified();
     }
 

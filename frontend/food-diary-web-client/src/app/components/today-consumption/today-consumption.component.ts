@@ -9,7 +9,7 @@ import {
     inject,
     signal,
 } from '@angular/core';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { StatisticsService } from '../../services/statistics.service';
 import { NavigationService } from '../../services/navigation.service';
 import { UserService } from '../../services/user.service';
@@ -26,6 +26,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
+import { WeightEntriesService } from '../../services/weight-entries.service';
+import { WeightEntry } from '../../types/weight-entry.data';
 
 interface DashboardQuickAction {
     icon: string;
@@ -62,6 +64,8 @@ export class TodayConsumptionComponent implements OnInit {
     private readonly navigationService = inject(NavigationService);
     private readonly userService = inject(UserService);
     private readonly consumptionService = inject(ConsumptionService);
+    private readonly weightEntriesService = inject(WeightEntriesService);
+    private readonly translateService = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
 
     @ViewChild('headerDatePicker') private headerDatePicker?: MatDatepicker<Date>;
@@ -78,6 +82,11 @@ export class TodayConsumptionComponent implements OnInit {
     public isStatsLoading = signal<boolean>(false);
     public isMealsLoading = signal<boolean>(false);
     public dailyGoal = signal<number>(2000);
+    public latestWeightEntry = signal<WeightEntry | null>(null);
+    public previousWeightEntry = signal<WeightEntry | null>(null);
+    public isWeightLoading = signal<boolean>(false);
+    public desiredWeight = signal<number | null>(null);
+    public isDesiredWeightLoading = signal<boolean>(false);
 
     public readonly macroSummary = computed(() => ([
         {
@@ -135,6 +144,35 @@ export class TodayConsumptionComponent implements OnInit {
         return 'DASHBOARD.MOTIVATION.ABOVE';
     });
 
+    public readonly weightMetaText = computed(() => {
+        if (this.isDesiredWeightLoading()) {
+            return this.translateService.instant('WEIGHT_HISTORY.LOADING');
+        }
+
+        const desired = this.desiredWeight();
+        if (desired !== null && desired !== undefined) {
+            return this.translateService.instant('DASHBOARD.WEIGHT_GOAL', { value: desired });
+        }
+
+        return this.translateService.instant('DASHBOARD.WEIGHT_META_EMPTY');
+    });
+
+    public readonly weightTrendLabel = computed(() => {
+        const latest = this.latestWeightEntry();
+        const previous = this.previousWeightEntry();
+        if (!latest || !previous) {
+            return this.translateService.instant('WEIGHT_HISTORY.NO_PREVIOUS');
+        }
+
+        const diff = latest.weight - previous.weight;
+        if (Math.abs(diff) < 0.01) {
+            return this.translateService.instant('WEIGHT_HISTORY.NO_CHANGE');
+        }
+
+        const direction = diff > 0 ? '↗' : '↘';
+        return `${direction} ${Math.abs(diff).toFixed(1)} ${this.translateService.instant('DASHBOARD.KG')}`;
+    });
+
     public quickActions: DashboardQuickAction[] = [
         {
             icon: 'restaurant',
@@ -181,6 +219,7 @@ export class TodayConsumptionComponent implements OnInit {
             .subscribe(goal => this.dailyGoal.set(goal ?? 2000));
 
         this.fetchDashboardData();
+        this.fetchWeightSummary();
     }
 
     public openDatePicker(): void {
@@ -200,6 +239,10 @@ export class TodayConsumptionComponent implements OnInit {
         }
     }
 
+    public async openWeightHistory(): Promise<void> {
+        await this.navigationService.navigateToWeightHistory();
+    }
+
     public openConsumption(consumption: Consumption): void {
         void this.navigationService.navigateToConsumptionEdit(consumption.id);
     }
@@ -208,6 +251,41 @@ export class TodayConsumptionComponent implements OnInit {
         const targetDate = this.selectedDate();
         this.fetchTodayData(targetDate);
         this.fetchMeals(targetDate);
+    }
+
+    private fetchWeightSummary(): void {
+        this.isWeightLoading.set(true);
+        this.weightEntriesService
+            .getEntries({ limit: 2, sort: 'desc' })
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe({
+                next: entries => {
+                    const [latest, previous] = entries;
+                    this.latestWeightEntry.set(latest ?? null);
+                    this.previousWeightEntry.set(previous ?? null);
+                    this.isWeightLoading.set(false);
+                },
+                error: () => {
+                    this.isWeightLoading.set(false);
+                },
+            });
+        this.fetchDesiredWeight();
+    }
+
+    private fetchDesiredWeight(): void {
+        this.isDesiredWeightLoading.set(true);
+        this.userService
+            .getDesiredWeight()
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe({
+                next: value => {
+                    this.desiredWeight.set(value);
+                    this.isDesiredWeightLoading.set(false);
+                },
+                error: () => {
+                    this.isDesiredWeightLoading.set(false);
+                },
+            });
     }
 
     private fetchTodayData(date: Date): void {

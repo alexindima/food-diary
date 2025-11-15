@@ -9,6 +9,7 @@ export interface User {
     birthDate?: Date;
     gender?: string;
     weight?: number;
+    desiredWeight?: number;
     height?: number;
     profileImage?: string;
     isActive: boolean;
@@ -47,6 +48,10 @@ const normalizeString = (value: string | null | undefined): string | undefined =
 export interface ChangePasswordRequest {
     currentPassword: string;
     newPassword: string;
+}
+
+export interface DesiredWeightResponse {
+    desiredWeight: number | null;
 }
 
 export enum Gender {

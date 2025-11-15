@@ -84,6 +84,19 @@
         > .fd-ui-card {
             height: 100%;
         }
+
+        &--clickable {
+            cursor: pointer;
+
+            > .fd-ui-card {
+                transition: box-shadow 0.2s ease, transform 0.2s ease;
+
+                &:hover {
+                    box-shadow: 0 12px 24px rgba(15, 23, 42, 0.15);
+                    transform: translateY(-2px);
+                }
+            }
+        }
     }
 
     &__key-metrics fd-ui-card.dashboard__card {
@@ -194,6 +207,11 @@
     &__weight-trend {
         font-size: 0.95rem;
         color: @color-text-secondary;
+    }
+
+    &__weight-loading {
+        color: @color-text-secondary;
+        font-size: 0.9rem;
     }
 
     &__activity-grid {

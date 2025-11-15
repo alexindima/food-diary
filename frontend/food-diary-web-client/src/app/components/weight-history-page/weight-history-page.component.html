@@ -1,0 +1,152 @@
+<div class="weight-history-page">
+    <header class="weight-history-page__header">
+        <div>
+            <p class="weight-history-page__eyebrow">{{ 'WEIGHT_HISTORY.SUBTITLE' | translate }}</p>
+            <h1 class="weight-history-page__title">{{ 'WEIGHT_HISTORY.TITLE' | translate }}</h1>
+        </div>
+        <fd-ui-button fill="text" icon="arrow_back" (click)="navigateBack()">
+            {{ 'WEIGHT_HISTORY.BACK' | translate }}
+        </fd-ui-button>
+    </header>
+
+    <div class="weight-history-page__grid">
+        <fd-ui-card class="weight-history-page__card weight-history-page__card--goal" [title]="'WEIGHT_HISTORY.GOAL_CARD_TITLE' | translate">
+            <div class="weight-history-page__goal-body">
+                <p class="weight-history-page__goal-current">
+                    @if (desiredWeight() !== null) {
+                        {{ 'WEIGHT_HISTORY.CURRENT_GOAL' | translate:{ value: desiredWeight() } }}
+                    } @else {
+                        {{ 'WEIGHT_HISTORY.GOAL_NOT_SET' | translate }}
+                    }
+                </p>
+                <fd-ui-input
+                    class="weight-history-page__goal-input"
+                    type="number"
+                    [step]="0.1"
+                    [placeholder]="'WEIGHT_HISTORY.GOAL_PLACEHOLDER' | translate"
+                    [suffixIcon]="desiredWeightControl.value ? 'backspace' : undefined"
+                    (suffixButtonClicked)="desiredWeightControl.setValue('')"
+                    [formControl]="desiredWeightControl"
+                ></fd-ui-input>
+                <div class="weight-history-page__goal-actions">
+                    <fd-ui-button
+                        type="button"
+                        (click)="saveDesiredWeight()"
+                        [disabled]="isDesiredWeightSaving()"
+                    >
+                        {{ 'WEIGHT_HISTORY.SAVE_GOAL' | translate }}
+                    </fd-ui-button>
+                </div>
+            </div>
+        </fd-ui-card>
+
+        <fd-ui-card class="weight-history-page__card weight-history-page__card--chart" [title]="'WEIGHT_HISTORY.CHART_TITLE' | translate">
+            @if (entries().length > 0) {
+                <canvas
+                    baseChart
+                    [data]="chartData()"
+                    [options]="chartOptions"
+                    chartType="line"
+                ></canvas>
+            } @else {
+                <p class="weight-history-page__empty-chart">
+                    {{ 'WEIGHT_HISTORY.NO_DATA_FOR_CHART' | translate }}
+                </p>
+            }
+        </fd-ui-card>
+    </div>
+
+    <div class="weight-history-page__content">
+        <fd-ui-card class="weight-history-page__card weight-history-page__card--form" [title]="'WEIGHT_HISTORY.ADD_ENTRY_TITLE' | translate">
+            <form class="weight-history-page__form" [formGroup]="form" (ngSubmit)="submit()">
+                <fd-ui-date-input
+                    class="weight-history-page__form-control"
+                    formControlName="date"
+                    mode="single"
+                    [label]="'WEIGHT_HISTORY.DATE_LABEL' | translate"
+                    [placeholder]="'WEIGHT_HISTORY.DATE_PLACEHOLDER' | translate"
+                ></fd-ui-date-input>
+
+                <fd-ui-input
+                    class="weight-history-page__form-control"
+                    formControlName="weight"
+                    type="number"
+                    [step]="0.1"
+                    [label]="'WEIGHT_HISTORY.WEIGHT_LABEL' | translate"
+                    [placeholder]="'WEIGHT_HISTORY.WEIGHT_PLACEHOLDER' | translate"
+                ></fd-ui-input>
+
+                <div class="weight-history-page__form-actions">
+                    <fd-ui-button
+                        [disabled]="isSaving()"
+                        type="submit"
+                    >
+                        @if (isEditing()) {
+                            {{ 'WEIGHT_HISTORY.UPDATE' | translate }}
+                        } @else {
+                            {{ 'WEIGHT_HISTORY.ADD' | translate }}
+                        }
+                    </fd-ui-button>
+                    @if (isEditing()) {
+                        <fd-ui-button
+                            type="button"
+                            variant="secondary"
+                            fill="text"
+                            (click)="cancelEdit()"
+                        >
+                            {{ 'WEIGHT_HISTORY.CANCEL_EDIT' | translate }}
+                        </fd-ui-button>
+                    }
+                </div>
+            </form>
+        </fd-ui-card>
+
+        <fd-ui-card class="weight-history-page__card weight-history-page__card--entries" [title]="'WEIGHT_HISTORY.HISTORY_TITLE' | translate">
+            @if (isLoading()) {
+                <div class="weight-history-page__loader">
+                    {{ 'WEIGHT_HISTORY.LOADING' | translate }}
+                </div>
+            } @else {
+                @if (entriesDescending().length === 0) {
+                    <div class="weight-history-page__empty">
+                        {{ 'WEIGHT_HISTORY.NO_ENTRIES' | translate }}
+                    </div>
+                } @else {
+                    <div class="weight-history-page__entries">
+                        @for (entry of entriesDescending(); track entry.id) {
+                            <div class="weight-history-page__entry">
+                                <div class="weight-history-page__entry-date">
+                                    {{ entry.date | date:'dd.MM.yyyy' }}
+                                </div>
+                                <div class="weight-history-page__entry-weight">
+                                    {{ entry.weight | number: '1.0-2' }}
+                                    {{ 'DASHBOARD.KG' | translate }}
+                                </div>
+                                <div class="weight-history-page__entry-actions">
+                                    <fd-ui-button
+                                        type="button"
+                                        fill="text"
+                                        variant="secondary"
+                                        icon="edit"
+                                        (click)="startEdit(entry)"
+                                    >
+                                        {{ 'WEIGHT_HISTORY.EDIT' | translate }}
+                                    </fd-ui-button>
+                                    <fd-ui-button
+                                        type="button"
+                                        fill="text"
+                                        variant="danger"
+                                        icon="delete"
+                                        (click)="deleteEntry(entry)"
+                                    >
+                                        {{ 'WEIGHT_HISTORY.DELETE' | translate }}
+                                    </fd-ui-button>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+            }
+        </fd-ui-card>
+    </div>
+</div>

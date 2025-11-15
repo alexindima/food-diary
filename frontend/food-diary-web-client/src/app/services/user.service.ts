@@ -2,7 +2,12 @@ import { Injectable } from '@angular/core';
 import { ApiService } from './api.service';
 import { environment } from '../../environments/environment';
 import { catchError, map, Observable, of } from 'rxjs';
-import { ChangePasswordRequest, UpdateUserDto, User } from '../types/user.data';
+import {
+    ChangePasswordRequest,
+    DesiredWeightResponse,
+    UpdateUserDto,
+    User,
+} from '../types/user.data';
 
 @Injectable({
     providedIn: 'root',
@@ -38,6 +43,28 @@ export class UserService extends ApiService {
             catchError(error => {
                 console.error('Change password error', error);
                 return of(false);
+            }),
+        );
+    }
+
+    public getDesiredWeight(): Observable<number | null> {
+        return this.get<DesiredWeightResponse>('desired-weight').pipe(
+            map(response => response.desiredWeight ?? null),
+            catchError(error => {
+                console.error('Get desired weight error', error);
+                return of(null);
+            }),
+        );
+    }
+
+    public updateDesiredWeight(value: number | null): Observable<number | null> {
+        return this.put<DesiredWeightResponse>('desired-weight', {
+            desiredWeight: value,
+        }).pipe(
+            map(response => response.desiredWeight ?? null),
+            catchError(error => {
+                console.error('Update desired weight error', error);
+                throw error;
             }),
         );
     }

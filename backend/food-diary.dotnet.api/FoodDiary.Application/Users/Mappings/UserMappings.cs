@@ -16,6 +16,7 @@ public static class UserMappings
             user.BirthDate,
             user.Gender,
             user.Weight,
+            user.DesiredWeight,
             user.Height,
             user.ProfileImage,
             user.IsActive

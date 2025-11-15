@@ -94,15 +94,31 @@
                 </p>
             </fd-ui-card>
             <fd-ui-card
-                class="dashboard__card dashboard__card--weight"
+                class="dashboard__card dashboard__card--weight dashboard__card--clickable"
+                role="button"
+                tabindex="0"
+                (click)="openWeightHistory()"
                 [title]="'DASHBOARD.WEIGHT_TITLE' | translate"
-                [meta]="'DASHBOARD.WEIGHT_META' | translate"
+                [meta]="weightMetaText()"
             >
                 <div class="dashboard__weight-summary">
-                    <strong class="dashboard__weight-value">78.3 {{ 'DASHBOARD.KG' | translate }}</strong>
-                    <span class="dashboard__weight-trend">
-                        ↘ {{ 'DASHBOARD.WEIGHT_CHANGE' | translate:{ value: '-0.2' } }}
-                    </span>
+                    @if (isWeightLoading()) {
+                        <span class="dashboard__weight-loading">
+                            {{ 'WEIGHT_HISTORY.LOADING' | translate }}
+                        </span>
+                    } @else {
+                        <strong class="dashboard__weight-value">
+                            @if (latestWeightEntry()) {
+                                {{ latestWeightEntry()?.weight | number:'1.0-1' }}
+                                {{ 'DASHBOARD.KG' | translate }}
+                            } @else {
+                                {{ 'WEIGHT_HISTORY.NO_DATA' | translate }}
+                            }
+                        </strong>
+                        <span class="dashboard__weight-trend">
+                            {{ weightTrendLabel() }}
+                        </span>
+                    }
                 </div>
             </fd-ui-card>
             <fd-ui-card

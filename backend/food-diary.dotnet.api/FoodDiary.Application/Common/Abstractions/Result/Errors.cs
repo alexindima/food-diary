@@ -93,4 +93,15 @@ public static class Errors
             "Validation.Invalid",
             $"Field {field} is invalid: {reason}");
     }
+
+    public static class WeightEntry
+    {
+        public static Error NotFound(Guid id) => new(
+            "WeightEntry.NotFound",
+            $"Weight entry with ID {id} was not found.");
+
+        public static Error AlreadyExists(DateTime date) => new(
+            "WeightEntry.AlreadyExists",
+            $"Weight entry for {date:yyyy-MM-dd} already exists.");
+    }
 }

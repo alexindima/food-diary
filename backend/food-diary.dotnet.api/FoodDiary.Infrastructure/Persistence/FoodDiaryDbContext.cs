@@ -16,6 +16,7 @@ public class FoodDiaryDbContext : DbContext
     public DbSet<Recipe> Recipes => Set<Recipe>();
     public DbSet<RecipeStep> RecipeSteps => Set<RecipeStep>();
     public DbSet<RecipeIngredient> RecipeIngredients => Set<RecipeIngredient>();
+    public DbSet<WeightEntry> WeightEntries => Set<WeightEntry>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -28,6 +29,11 @@ public class FoodDiaryDbContext : DbContext
 
             entity.HasIndex(e => e.Email).IsUnique();
             entity.Property(e => e.IsActive).HasDefaultValue(true);
+
+            entity.HasMany(e => e.WeightEntries)
+                .WithOne(w => w.User)
+                .HasForeignKey(w => w.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
         });
 
         // Product configuration
@@ -163,6 +169,27 @@ public class FoodDiaryDbContext : DbContext
                 .HasForeignKey(e => e.NestedRecipeId)
                 .IsRequired(false)
                 .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        modelBuilder.Entity<WeightEntry>(entity =>
+        {
+            entity.Property(e => e.Id).HasConversion(
+                id => id.Value,
+                value => new WeightEntryId(value));
+
+            entity.Property(e => e.UserId).HasConversion(
+                id => id.Value,
+                value => new UserId(value));
+
+            entity.Property(e => e.Date)
+                .HasColumnType("date");
+
+            entity.HasIndex(e => new { e.UserId, e.Date }).IsUnique();
+
+            entity.HasOne(e => e.User)
+                .WithMany(u => u.WeightEntries)
+                .HasForeignKey(e => e.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
         });
     }
 }

@@ -363,6 +363,9 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedOnUtc")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<double?>("DesiredWeight")
+                        .HasColumnType("double precision");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("text");
@@ -409,6 +412,34 @@ namespace FoodDiary.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("FoodDiary.Domain.Entities.WeightEntry", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedOnUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("date");
+
+                    b.Property<DateTime?>("ModifiedOnUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<double>("Weight")
+                        .HasColumnType("double precision");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId", "Date")
+                        .IsUnique();
+
+                    b.ToTable("WeightEntries");
                 });
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.Meal", b =>
@@ -502,6 +533,17 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.Navigation("Recipe");
                 });
 
+            modelBuilder.Entity("FoodDiary.Domain.Entities.WeightEntry", b =>
+                {
+                    b.HasOne("FoodDiary.Domain.Entities.User", "User")
+                        .WithMany("WeightEntries")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("FoodDiary.Domain.Entities.Meal", b =>
                 {
                     b.Navigation("Items");
@@ -535,6 +577,8 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.Navigation("Products");
 
                     b.Navigation("Recipes");
+
+                    b.Navigation("WeightEntries");
                 });
 #pragma warning restore 612, 618
         }

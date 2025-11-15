@@ -21,6 +21,7 @@ import { RecipeAddComponent } from './components/recipe-container/recipe-manage/
 import { RecipeListComponent } from './components/recipe-container/recipe-list/recipe-list.component';
 import { RecipeEditComponent } from './components/recipe-container/recipe-manage/recipe-edit/recipe-edit.component';
 import { recipeResolver } from './resolvers/recipe.resolver';
+import { WeightHistoryPageComponent } from './components/weight-history-page/weight-history-page.component';
 
 export const routes: Routes = [
     { path: '', component: MainComponent },
@@ -84,6 +85,11 @@ export const routes: Routes = [
     {
         path: 'profile',
         component: UserManageComponent,
+        canActivate: [authGuard],
+    },
+    {
+        path: 'weight-history',
+        component: WeightHistoryPageComponent,
         canActivate: [authGuard],
     },
     { path: '**', component: NotFoundComponent },
