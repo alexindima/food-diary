@@ -20,7 +20,6 @@ import {
 import { ZXingScannerModule } from '@zxing/ngx-scanner';
 import { FdUiInputComponent } from '../../../../ui-kit/input/fd-ui-input.component';
 import { FdUiCardComponent } from '../../../../ui-kit/card/fd-ui-card.component';
-import { FdUiRadioGroupComponent } from '../../../../ui-kit/radio/fd-ui-radio-group.component';
 import { FdUiSelectComponent } from '../../../../ui-kit/select/fd-ui-select.component';
 import { FdUiTextareaComponent } from '../../../../ui-kit/textarea/fd-ui-textarea.component';
 import { FdUiButtonComponent } from '../../../../ui-kit/button/fd-ui-button.component';
@@ -42,7 +41,6 @@ import { FdUiButtonComponent } from '../../../../ui-kit/button/fd-ui-button.comp
         ZXingScannerModule,
         FdUiInputComponent,
         FdUiCardComponent,
-        FdUiRadioGroupComponent,
         FdUiSelectComponent,
         FdUiTextareaComponent,
         FdUiButtonComponent,

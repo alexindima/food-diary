@@ -154,6 +154,9 @@
                         [label]="'CONSUMPTION_MANAGE.MANUAL_NUTRITION_AUTO' | translate"
                     ></fd-ui-checkbox>
                     @if (!consumptionForm.controls.isNutritionAutoCalculated.value) {
+                        <p class="consumption-manage__nutrition-hint">
+                            {{ 'CONSUMPTION_MANAGE.MANUAL_NUTRITION_HINT' | translate }}
+                        </p>
                         <div class="consumption-manage__manual-grid">
                             <fd-ui-input
                                 formControlName="manualCalories"

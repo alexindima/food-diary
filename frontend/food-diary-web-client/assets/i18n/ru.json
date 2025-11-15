@@ -151,10 +151,10 @@
         "SHARED": "Общий рецепт"
     },
     "RECIPE_VISIBILITY": {
-        "Public": "Публичный",
-        "Private": "Приватный",
-        "PUBLIC": "Публичный",
-        "PRIVATE": "Приватный"
+        "Public": "Для всех",
+        "Private": "Только я",
+        "PUBLIC": "Для всех",
+        "PRIVATE": "Только я"
     },
     "RECIPE_MANAGE": {
         "ADD_TITLE": "Добавление рецепта",
@@ -182,9 +182,16 @@
         "AMOUNT": "Количество",
         "ADD_STEP": "Добавить шаг",
         "ADD_INGREDIENT": "Добавить ингредиент",
+        "MANUAL_NUTRITION_TITLE": "Корректировка калорийности",
         "NUTRITION_GROUP_TITLE": "Пищевая ценность",
         "AUTO_NUTRITION_LABEL": "Рассчитывать автоматически",
         "MANUAL_NUTRITION_HINT": "Введённые значения перекроют автоматический расчёт.",
+        "MANUAL_CALORIES": "Калории",
+        "MANUAL_PROTEINS": "Белки",
+        "MANUAL_FATS": "Жиры",
+        "MANUAL_CARBS": "Углеводы",
+        "MANUAL_FIBER": "Клетчатка",
+        "REMOVE_STEP": "Удалить шаг",
         "VISIBILITY_GROUP_TITLE": "Видимость",
         "VISIBILITY": "Видимость",
         "VISIBILITY_PLACEHOLDER": "Выберите видимость",
@@ -372,6 +379,7 @@
         "ITEM_SOURCE_ERROR": "Выберите продукт или рецепт",
         "MANUAL_NUTRITION_TITLE": "Корректировка калорийности",
         "MANUAL_NUTRITION_AUTO": "Рассчитывать автоматически",
+        "MANUAL_NUTRITION_HINT": "Введённые значения перекроют автоматический расчёт.",
         "MANUAL_CALORIES": "Калории",
         "MANUAL_PROTEINS": "Белки",
         "MANUAL_FATS": "Жиры",

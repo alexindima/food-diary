@@ -67,9 +67,17 @@
         flex-direction: column;
         gap: @gap-m;
 
-        &--sticky {
-            position: sticky;
-            top: @gap-xl;
+    }
+
+    &__sticky-stack {
+        position: sticky;
+        top: @gap-xl;
+        display: flex;
+        flex-direction: column;
+        gap: @gap-l;
+
+        @media @media-mobile {
+            position: static;
         }
     }
 

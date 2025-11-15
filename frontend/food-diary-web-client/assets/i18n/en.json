@@ -151,10 +151,10 @@
         "SHARED": "Shared recipe"
     },
     "RECIPE_VISIBILITY": {
-        "Public": "Public",
-        "Private": "Private",
-        "PUBLIC": "Public",
-        "PRIVATE": "Private"
+        "Public": "Shared with everyone",
+        "Private": "Only me",
+        "PUBLIC": "Shared with everyone",
+        "PRIVATE": "Only me"
     },
     "RECIPE_MANAGE": {
         "ADD_TITLE": "Add Recipe",
@@ -182,9 +182,16 @@
         "AMOUNT": "Amount",
         "ADD_STEP": "Add step",
         "ADD_INGREDIENT": "Add ingredient",
+        "MANUAL_NUTRITION_TITLE": "Adjust nutritional values",
         "NUTRITION_GROUP_TITLE": "Nutrition",
         "AUTO_NUTRITION_LABEL": "Calculate automatically",
         "MANUAL_NUTRITION_HINT": "Custom values will override automatic calculations.",
+        "MANUAL_CALORIES": "Calories",
+        "MANUAL_PROTEINS": "Proteins",
+        "MANUAL_FATS": "Fats",
+        "MANUAL_CARBS": "Carbs",
+        "MANUAL_FIBER": "Fiber",
+        "REMOVE_STEP": "Remove step",
         "VISIBILITY_GROUP_TITLE": "Visibility",
         "VISIBILITY": "Visibility",
         "VISIBILITY_PLACEHOLDER": "Select visibility",
@@ -406,6 +413,7 @@
         "ITEM_SOURCE_ERROR": "Please choose a product or recipe",
         "MANUAL_NUTRITION_TITLE": "Adjust nutritional values",
         "MANUAL_NUTRITION_AUTO": "Calculate automatically",
+        "MANUAL_NUTRITION_HINT": "Custom values override automatic calculations.",
         "MANUAL_CALORIES": "Calories",
         "MANUAL_PROTEINS": "Proteins",
         "MANUAL_FATS": "Fats",

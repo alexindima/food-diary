@@ -1,7 +1,6 @@
 import {
     ChangeDetectionStrategy,
     Component,
-    FactoryProvider,
     Injector,
     effect,
     inject,
@@ -9,24 +8,12 @@ import {
     OnInit,
     signal
 } from '@angular/core';
-import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormGroupControls } from '../../../types/common.data';
-import {
-    TuiButton,
-    TuiDialogService,
-    TuiError,
-    TuiIcon,
-    TuiLabel,
-    TuiTextfieldComponent,
-    TuiTextfieldDirective
-} from '@taiga-ui/core';
+import { TuiDialogService } from '@taiga-ui/core';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { TuiInputNumberModule, TuiSelectModule, TuiTextareaModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
-import { CustomGroupComponent } from '../../shared/custom-group/custom-group.component';
 import { MeasurementUnit, Product, ProductVisibility, ProductType } from '../../../types/product.data';
-import { AsyncPipe, NgForOf } from '@angular/common';
-import { TUI_VALIDATION_ERRORS, TuiFieldErrorPipe } from '@taiga-ui/kit';
 import { nonEmptyArrayValidator } from '../../../validators/non-empty-array.validator';
 import {
     ProductListDialogComponent
@@ -36,7 +23,6 @@ import { HttpErrorResponse } from '@angular/common/http';
 import {
     NutrientsSummaryComponent
 } from '../../shared/nutrients-summary/nutrients-summary.component';
-import { ValidationErrors } from '../../../types/validation-error.data';
 import { Recipe, RecipeDto, RecipeVisibility, RecipeIngredient } from '../../../types/recipe.data';
 import { RecipeService } from '../../../services/recipe.service';
 import { DropZoneDirective } from '../../../directives/drop-zone.directive';
@@ -44,46 +30,32 @@ import { DraggableDirective } from '../../../directives/draggable.directive';
 import { NavigationService } from '../../../services/navigation.service';
 import { finalize } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-
-export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
-    provide: TUI_VALIDATION_ERRORS,
-    useFactory: (translate: TranslateService): ValidationErrors => ({
-        required: () => translate.instant('FORM_ERRORS.REQUIRED'),
-        nonEmptyArray: () => translate.instant('FORM_ERRORS.NON_EMPTY_ARRAY'),
-        min: ({ min }) =>
-            translate.instant('FORM_ERRORS.INVALID_MIN_AMOUNT_MUST_BE_MORE_ZERO', {
-                min,
-            }),
-    }),
-    deps: [TranslateService],
-};
+import { FdUiCardComponent } from '../../../ui-kit/card/fd-ui-card.component';
+import { FdUiInputComponent } from '../../../ui-kit/input/fd-ui-input.component';
+import { FdUiTextareaComponent } from '../../../ui-kit/textarea/fd-ui-textarea.component';
+import { FdUiButtonComponent } from '../../../ui-kit/button/fd-ui-button.component';
+import { FdUiSelectComponent, FdUiSelectOption } from '../../../ui-kit/select/fd-ui-select.component';
+import { FdUiCheckboxComponent } from '../../../ui-kit/checkbox/fd-ui-checkbox.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'fd-recipe-manage',
     imports: [
+        CommonModule,
         ReactiveFormsModule,
-        TuiTextfieldComponent,
         TranslatePipe,
-        TuiLabel,
-        TuiTextfieldDirective,
-        TuiTextfieldControllerModule,
-        TuiTextareaModule,
-        TuiSelectModule,
-        TuiInputNumberModule,
-        CustomGroupComponent,
-        TuiButton,
-        TuiIcon,
-        NgForOf,
-        AsyncPipe,
-        TuiError,
-        TuiFieldErrorPipe,
         NutrientsSummaryComponent,
         DropZoneDirective,
         DraggableDirective,
+        FdUiCardComponent,
+        FdUiInputComponent,
+        FdUiTextareaComponent,
+        FdUiButtonComponent,
+        FdUiSelectComponent,
+        FdUiCheckboxComponent,
     ],
     templateUrl: './recipe-manage.component.html',
-    styleUrl: './recipe-manage.component.less',
-    providers: [VALIDATION_ERRORS_PROVIDER],
+    styleUrls: ['./recipe-manage.component.less'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RecipeManageComponent implements OnInit {
@@ -107,8 +79,7 @@ export class RecipeManageComponent implements OnInit {
     public selectedStepIndex: number = 0;
     public selectedIngredientIndex: number = 0;
     public visibilityOptions = Object.values(RecipeVisibility);
-    public stringifyVisibility = (value: RecipeVisibility | null): string =>
-        value ? this.translateService.instant(`RECIPE_VISIBILITY.${value}`) : '';
+    public visibilitySelectOptions: FdUiSelectOption<RecipeVisibility>[] = [];
 
     private readonly dialogService = inject(TuiDialogService);
     private isFormReady = true;
@@ -122,7 +93,7 @@ export class RecipeManageComponent implements OnInit {
             prepTime: new FormControl<number | null>(null, [Validators.required, Validators.min(1)]),
             cookTime: new FormControl<number | null>(null, [Validators.required, Validators.min(1)]),
             servings: new FormControl(1, { nonNullable: true, validators: [Validators.required, Validators.min(1)] }),
-            visibility: new FormControl<RecipeVisibility>(RecipeVisibility.Private, { nonNullable: true }),
+            visibility: new FormControl<RecipeVisibility>(RecipeVisibility.Public, { nonNullable: true }),
             calculateNutritionAutomatically: new FormControl<boolean>(true, { nonNullable: true }),
             manualCalories: new FormControl<number | null>(null, [Validators.min(0)]),
             manualProteins: new FormControl<number | null>(null, [Validators.min(0)]),
@@ -132,9 +103,16 @@ export class RecipeManageComponent implements OnInit {
             steps: new FormArray<FormGroup<FormGroupControls<StepFormValues>>>([], nonEmptyArrayValidator()),
         });
 
+        this.buildVisibilityOptions();
+        this.translateService.onLangChange
+            .pipe(takeUntilDestroyed())
+            .subscribe(() => this.buildVisibilityOptions());
+
         this.addStep();
         this.setupFormValueChangeTracking();
         this.recalculateNutrientsFromForm();
+        this.updateManualNutritionValidators(this.recipeForm.controls.calculateNutritionAutomatically.value);
+
         this.recipeForm.controls.calculateNutritionAutomatically.valueChanges
             .pipe(takeUntilDestroyed())
             .subscribe(isAuto => {
@@ -144,6 +122,7 @@ export class RecipeManageComponent implements OnInit {
                 if (!isAuto) {
                     this.populateManualNutritionFromCurrentSummary();
                 }
+                 this.updateManualNutritionValidators(isAuto);
                 this.updateSummaryFromForm();
             });
         effect(() => {
@@ -163,8 +142,6 @@ export class RecipeManageComponent implements OnInit {
         }
         return text.length > 80 ? `${text.slice(0, 77)}...` : text;
     }
-
-    public forceCollapse = signal(false);
 
     public ngOnInit(): void {}
 
@@ -206,10 +183,22 @@ export class RecipeManageComponent implements OnInit {
         return unit ? `${baseLabel} (${unit})` : baseLabel;
     }
 
-    public isProductInvalid(stepIndex: number, ingredientIndex: number): boolean {
-        const ingredientsArray = this.getStepIngredients(stepIndex);
-        const foodControl = ingredientsArray.at(ingredientIndex).controls.food;
-        return !!foodControl && foodControl.invalid && foodControl.touched;
+    public getFieldError(controlName: keyof RecipeFormData): string | null {
+        return this.resolveControlError(this.recipeForm.controls[controlName]);
+    }
+
+    public getStepDescriptionError(stepIndex: number): string | null {
+        const step = this.steps.at(stepIndex);
+        return this.resolveControlError(step.controls.description);
+    }
+
+    public getIngredientControlError(
+        stepIndex: number,
+        ingredientIndex: number,
+        controlName: 'food' | 'amount',
+    ): string | null {
+        const ingredient = this.getStepIngredients(stepIndex).at(ingredientIndex);
+        return this.resolveControlError(ingredient.controls[controlName]);
     }
 
     public async onProductSelectClick(stepIndex: number, ingredientIndex: number): Promise<void> {
@@ -231,7 +220,7 @@ export class RecipeManageComponent implements OnInit {
                     }
                     const ingredientsArray = this.getStepIngredients(stepIndex);
                     const foodGroup = ingredientsArray.at(ingredientIndex);
-                    foodGroup.patchValue({ food });
+                    foodGroup.patchValue({ food, foodName: food.name });
                 },
             });
     }
@@ -259,7 +248,7 @@ export class RecipeManageComponent implements OnInit {
             prepTime: recipeData.prepTime ?? null,
             cookTime: recipeData.cookTime ?? null,
             servings: recipeData.servings,
-            visibility: recipeData.visibility,
+            visibility: this.normalizeVisibility(recipeData.visibility),
             calculateNutritionAutomatically: recipeData.isNutritionAutoCalculated,
             manualCalories: recipeData.manualCalories ?? recipeData.totalCalories ?? null,
             manualProteins: recipeData.manualProteins ?? recipeData.totalProteins ?? null,
@@ -326,6 +315,7 @@ export class RecipeManageComponent implements OnInit {
         return new FormGroup<IngredientFormData>({
             food: new FormControl(food, [Validators.required]),
             amount: new FormControl(amount, [Validators.required, Validators.min(0.01)]),
+            foodName: new FormControl<string | null>(food?.name ?? null),
         });
     }
 
@@ -338,6 +328,7 @@ export class RecipeManageComponent implements OnInit {
         return {
             food: product,
             amount: ingredient.amount,
+            foodName: product.name,
         };
     }
 
@@ -417,6 +408,10 @@ export class RecipeManageComponent implements OnInit {
                 next: recipe => this.handleSubmitResponse(recipe),
                 error: error => this.handleSubmitError(error),
             });
+    }
+
+    public async onCancel(): Promise<void> {
+        await this.navigationService.navigateToRecipeList();
     }
 
     private async handleSubmitResponse(_response: Recipe): Promise<void> {
@@ -537,6 +532,36 @@ export class RecipeManageComponent implements OnInit {
         }, { emitEvent: false });
     }
 
+    private resolveControlError(control: AbstractControl | null): string | null {
+        if (!control) {
+            return null;
+        }
+
+        if (!control.touched && !control.dirty) {
+            return null;
+        }
+
+        const errors = control.errors;
+        if (!errors) {
+            return null;
+        }
+
+        if (errors['required']) {
+            return this.translateService.instant('FORM_ERRORS.REQUIRED');
+        }
+
+        if (errors['min']) {
+            const min = errors['min'].min ?? 0;
+            return this.translateService.instant('FORM_ERRORS.INVALID_MIN_AMOUNT_MUST_BE_MORE_ZERO', { min });
+        }
+
+        if (errors['nonEmptyArray']) {
+            return this.translateService.instant('FORM_ERRORS.NON_EMPTY_ARRAY');
+        }
+
+        return this.translateService.instant('FORM_ERRORS.UNKNOWN');
+    }
+
     private recalculateNutrientsFromForm(): void {
         const stepsArray = this.recipeForm.controls.steps;
         if (!stepsArray || stepsArray.length === 0) {
@@ -593,6 +618,42 @@ export class RecipeManageComponent implements OnInit {
     private roundNutrient(value: number): number {
         return Math.round(value * 100) / 100;
     }
+
+    private updateManualNutritionValidators(isAuto: boolean): void {
+        const validators = isAuto ? [] : [Validators.required, Validators.min(0)];
+        this.getManualNutritionControls().forEach(control => {
+            control.setValidators(validators);
+            control.updateValueAndValidity({ emitEvent: false });
+        });
+    }
+
+    private getManualNutritionControls(): Array<FormControl<number | null>> {
+        return [
+            this.recipeForm.controls.manualCalories,
+            this.recipeForm.controls.manualProteins,
+            this.recipeForm.controls.manualFats,
+            this.recipeForm.controls.manualCarbs,
+            this.recipeForm.controls.manualFiber,
+        ];
+    }
+
+    private buildVisibilityOptions(): void {
+        this.visibilitySelectOptions = this.visibilityOptions.map(option => ({
+            value: option,
+            label: this.translateService.instant(`RECIPE_VISIBILITY.${option}`),
+        }));
+    }
+
+    private normalizeVisibility(value?: RecipeVisibility | string | null): RecipeVisibility {
+        if (!value) {
+            return RecipeVisibility.Public;
+        }
+
+        const upper = value.toString().toUpperCase();
+        return upper === RecipeVisibility.Private.toUpperCase()
+            ? RecipeVisibility.Private
+            : RecipeVisibility.Public;
+    }
 }
 
 interface RecipeFormValues {
@@ -621,6 +682,7 @@ interface StepFormValues {
 interface IngredientFormValues {
     food: Product | null;
     amount: number | null;
+    foodName: string | null;
 }
 
 type RecipeFormData = FormGroupControls<RecipeFormValues>;

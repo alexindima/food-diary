@@ -1,11 +1,13 @@
 <div class="recipe-manage">
-    <h2 class="recipe-manage__title">
-        @if (recipe()) {
-            {{ 'RECIPE_MANAGE.EDIT_TITLE' | translate }}
-        } @else {
-            {{ 'RECIPE_MANAGE.ADD_TITLE' | translate }}
-        }
-    </h2>
+    <div class="recipe-manage__header">
+        <h2 class="recipe-manage__title">
+            @if (recipe()) {
+                {{ 'RECIPE_MANAGE.EDIT_TITLE' | translate }}
+            } @else {
+                {{ 'RECIPE_MANAGE.ADD_TITLE' | translate }}
+            }
+        </h2>
+    </div>
 
     <form class="recipe-manage__form" [formGroup]="recipeForm" (ngSubmit)="onSubmit()">
         @if (globalError()) {
@@ -14,263 +16,295 @@
             </div>
         }
 
-        <fd-custom-group [title]="'RECIPE_MANAGE.GENERAL_GROUP_TITLE' | translate">
-            <div class="recipe-manage__details">
-                <div class="recipe-manage__field">
-                    <tui-textfield>
-                        <label tuiLabel>{{ 'RECIPE_MANAGE.NAME' | translate }}</label>
-                        <input
-                            tuiTextfield
+        <div class="recipe-manage__grid">
+            <div class="recipe-manage__column recipe-manage__column--primary">
+                <fd-ui-card class="recipe-manage__card" [title]="'RECIPE_MANAGE.GENERAL_GROUP_TITLE' | translate">
+                    <div class="recipe-manage__basic-grid">
+                        <fd-ui-input
+                            class="recipe-manage__field--full"
                             formControlName="name"
+                            [label]="('RECIPE_MANAGE.NAME' | translate) + '*'"
                             [placeholder]="'RECIPE_MANAGE.NAME_PLACEHOLDER' | translate"
-                        />
-                    </tui-textfield>
-                    <tui-error
-                        formControlName="name"
-                        [error]="[] | tuiFieldError | async"
-                    ></tui-error>
-                </div>
+                            [required]="true"
+                            [error]="getFieldError('name')"
+                        ></fd-ui-input>
 
-                <div class="recipe-manage__field">
-                    <tui-textarea formControlName="description">
-                        {{ 'RECIPE_MANAGE.DESCRIPTION' | translate }}
-                        <textarea
-                            tuiTextfieldLegacy
-                            [placeholder]="'RECIPE_MANAGE.DESCRIPTION_PLACEHOLDER' | translate"
-                            maxlength="1000"
-                        ></textarea>
-                    </tui-textarea>
-                </div>
-
-                <div class="recipe-manage__field">
-                    <tui-textfield>
-                        <label tuiLabel>{{ 'RECIPE_MANAGE.CATEGORY' | translate }}</label>
-                        <input
-                            tuiTextfield
+                        <fd-ui-input
                             formControlName="category"
+                            [label]="'RECIPE_MANAGE.CATEGORY' | translate"
                             [placeholder]="'RECIPE_MANAGE.CATEGORY_PLACEHOLDER' | translate"
-                        />
-                    </tui-textfield>
-                </div>
+                        ></fd-ui-input>
 
-                <div class="recipe-manage__field">
-                    <tui-textfield>
-                        <label tuiLabel>{{ 'RECIPE_MANAGE.IMAGE_URL' | translate }}</label>
-                        <input
-                            tuiTextfield
+                        <fd-ui-input
                             formControlName="imageUrl"
+                            [label]="'RECIPE_MANAGE.IMAGE_URL' | translate"
                             [placeholder]="'RECIPE_MANAGE.IMAGE_URL_PLACEHOLDER' | translate"
-                        />
-                    </tui-textfield>
-                </div>
+                        ></fd-ui-input>
 
-                <div class="recipe-manage__inline-group">
-                    <tui-input-number formControlName="prepTime">
-                        {{ 'RECIPE_MANAGE.PREP_TIME' | translate }}
-                        <input placeholder="0" tuiTextfieldLegacy />
-                    </tui-input-number>
-                    <tui-error
-                        formControlName="prepTime"
-                        [error]="[] | tuiFieldError | async"
-                    ></tui-error>
-                </div>
+                        <fd-ui-input
+                            formControlName="prepTime"
+                            type="number"
+                            [step]="1"
+                            [label]="('RECIPE_MANAGE.PREP_TIME' | translate) + '*'"
+                            [required]="true"
+                            [error]="getFieldError('prepTime')"
+                        ></fd-ui-input>
 
-                <div class="recipe-manage__inline-group">
-                    <tui-input-number formControlName="cookTime">
-                        {{ 'RECIPE_MANAGE.COOK_TIME' | translate }}
-                        <input placeholder="0" tuiTextfieldLegacy />
-                    </tui-input-number>
-                    <tui-error
-                        formControlName="cookTime"
-                        [error]="[] | tuiFieldError | async"
-                    ></tui-error>
-                </div>
+                        <fd-ui-input
+                            formControlName="cookTime"
+                            type="number"
+                            [step]="1"
+                            [label]="('RECIPE_MANAGE.COOK_TIME' | translate) + '*'"
+                            [required]="true"
+                            [error]="getFieldError('cookTime')"
+                        ></fd-ui-input>
 
-                <div class="recipe-manage__inline-group">
-                    <tui-input-number formControlName="servings">
-                        {{ 'RECIPE_MANAGE.SERVINGS' | translate }}
-                        <input placeholder="0" tuiTextfieldLegacy />
-                    </tui-input-number>
-                    <tui-error
-                        formControlName="servings"
-                        [error]="[] | tuiFieldError | async"
-                    ></tui-error>
-                </div>
-            </div>
-        </fd-custom-group>
+                        <fd-ui-input
+                            formControlName="servings"
+                            type="number"
+                            [step]="1"
+                            [label]="('RECIPE_MANAGE.SERVINGS' | translate) + '*'"
+                            [required]="true"
+                            [error]="getFieldError('servings')"
+                        ></fd-ui-input>
 
-        <div class="recipe-manage__steps-wrapper" formArrayName="steps">
-            <div class="recipe-manage__steps" #dragBoundary fdDropZone>
-                <div
-                    *ngFor="let step of steps.controls; let stepIndex = index; let first = first"
-                    [formGroupName]="stepIndex"
-                    fdDraggable
-                    [fdDraggableDragView]="customDragView"
-                    [fdDraggablePlaceholder]="customDragPlaceholder"
-                    [fdDraggableAxis]="'Y'"
-                    [fdDraggableBoundary]="dragBoundary"
-                >
-                    <fd-custom-group
-                        [title]="'RECIPE_MANAGE.STEP_TITLE' | translate : { index: stepIndex + 1 }"
-                        [showCloseButton]="!first"
-                        [isAccordion]="true"
-                        [forceCollapse]="forceCollapse()"
-                        [collapsedHint]="getStepCollapsedHint(stepIndex) ?? undefined"
-                        (closeButtonClick)="removeStep(stepIndex)"
-                    >
-                        <div class="recipe-manage__step">
-                            <div class="recipe-manage__field">
-                                <tui-textarea formControlName="description">
-                                    {{ 'RECIPE_MANAGE.STEP_DESCRIPTION' | translate }}
-                                    <textarea
-                                        tuiTextfieldLegacy
-                                        maxlength="1000"
-                                        [placeholder]="'RECIPE_MANAGE.STEP_DESCRIPTION_PLACEHOLDER' | translate"
-                                    ></textarea>
-                                </tui-textarea>
-                                <tui-error
-                                    formControlName="description"
-                                    [error]="[] | tuiFieldError | async"
-                                ></tui-error>
-                            </div>
+                        <fd-ui-textarea
+                            class="recipe-manage__field--full"
+                            formControlName="description"
+                            [label]="'RECIPE_MANAGE.DESCRIPTION' | translate"
+                            [placeholder]="'RECIPE_MANAGE.DESCRIPTION_PLACEHOLDER' | translate"
+                            [rows]="4"
+                            [maxlength]="1000"
+                            [error]="getFieldError('description')"
+                        ></fd-ui-textarea>
+                    </div>
+                </fd-ui-card>
 
-                            <fd-custom-group [title]="'RECIPE_MANAGE.INGREDIENTS' | translate">
-                                <div class="recipe-manage__ingredients" formArrayName="ingredients">
-                                    <div
-                                        class="recipe-manage__ingredient"
-                                        *ngFor="let ingredient of getStepIngredients(stepIndex).controls; let ingredientIndex = index; let first = first"
-                                        [formGroupName]="ingredientIndex"
-                                    >
-                                        <div class="recipe-manage__ingredient-name">
-                                            <input type="hidden" formControlName="food" />
-                                            <tui-textfield>
-                                                <label tuiLabel>{{ 'RECIPE_MANAGE.INGREDIENT_NAME' | translate }}</label>
-                                                <input
-                                                    tuiTextfield
-                                                    class="recipe-manage__ingredient-name-control"
-                                                    readonly
-                                                    [value]="getProductName(stepIndex, ingredientIndex)"
-                                                    (click)="onProductSelectClick(stepIndex, ingredientIndex)"
-                                                />
-                                                <tui-icon
-                                                    icon="@tui.search"
-                                                    (click)="onProductSelectClick(stepIndex, ingredientIndex)"
-                                                ></tui-icon>
-                                            </tui-textfield>
-                                            <tui-error
-                                                formControlName="food"
-                                                [error]="[] | tuiFieldError | async"
-                                            ></tui-error>
-                                        </div>
-                                        <div class="recipe-manage__ingredient-quantity-wrapper">
-                                            <div class="recipe-manage__ingredient-quantity">
-                                                <tui-input-number formControlName="amount">
-                                                    {{ getIngredientAmountLabel(stepIndex, ingredientIndex) }}
-                                                    <input tuiTextfieldLegacy placeholder="0" />
-                                                </tui-input-number>
-                                                <tui-error
-                                                    formControlName="amount"
-                                                    [error]="[] | tuiFieldError | async"
-                                                ></tui-error>
-                                            </div>
-                                            <button
-                                                type="button"
-                                                tuiButton
-                                                appearance="secondary"
-                                                size="s"
-                                                iconStart="@tui.trash-2"
-                                                [disabled]="first"
-                                                (click)="removeIngredientFromStep(stepIndex, ingredientIndex)"
-                                            ></button>
-                                        </div>
+                <section class="recipe-manage__steps-section" formArrayName="steps">
+                    <div class="recipe-manage__steps" #dragBoundary fdDropZone>
+                        @for (step of steps.controls; track step; let index = $index; let first = $first) {
+                            <div
+                                class="recipe-step"
+                                [formGroupName]="index"
+                                fdDraggable
+                                [fdDraggableDragView]="customDragView"
+                                [fdDraggablePlaceholder]="customDragPlaceholder"
+                                [fdDraggableAxis]="'Y'"
+                                [fdDraggableBoundary]="dragBoundary"
+                            >
+                                <fd-ui-card
+                                    class="recipe-step-card"
+                                    [subtle]="true"
+                                >
+                                    <div class="recipe-step-card__header" fdDragHandle>
+                                        <span class="recipe-step-card__title">
+                                            {{ 'RECIPE_MANAGE.STEP_TITLE' | translate : { index: index + 1 } }}
+                                        </span>
+                                        <fd-ui-button
+                                            type="button"
+                                            variant="danger"
+                                            fill="text"
+                                            icon="delete"
+                                            [disabled]="first"
+                                            (click)="removeStep(index)"
+                                        >
+                                            {{ 'RECIPE_MANAGE.REMOVE_STEP' | translate }}
+                                        </fd-ui-button>
                                     </div>
 
-                                    <button
-                                        type="button"
-                                        tuiButton
-                                        size="s"
-                                        iconStart="@tui.plus"
-                                        (click)="addIngredientToStep(stepIndex)"
-                                    >
-                                        {{ 'RECIPE_MANAGE.ADD_INGREDIENT' | translate }}
-                                    </button>
-                                </div>
-                            </fd-custom-group>
-                        </div>
-                    </fd-custom-group>
+                                    <fd-ui-textarea
+                                        formControlName="description"
+                                        [rows]="3"
+                                        [label]="'RECIPE_MANAGE.STEP_DESCRIPTION' | translate"
+                                        [placeholder]="'RECIPE_MANAGE.STEP_DESCRIPTION_PLACEHOLDER' | translate"
+                                        [error]="getStepDescriptionError(index)"
+                                    ></fd-ui-textarea>
+
+                                    <div class="recipe-step-card__ingredients" formArrayName="ingredients">
+                                        @for (ingredient of getStepIngredients(index).controls; track ingredient; let ingredientIndex = $index; let firstIngredient = $first) {
+                                            <div class="recipe-ingredient" [formGroupName]="ingredientIndex">
+                                                <input type="hidden" formControlName="food" />
+                                                <fd-ui-input
+                                                    class="recipe-ingredient__name"
+                                                    formControlName="foodName"
+                                                    [label]="'RECIPE_MANAGE.INGREDIENT_NAME' | translate"
+                                                    [placeholder]="'RECIPE_MANAGE.INGREDIENT_NAME_PLACEHOLDER' | translate"
+                                                    [readonly]="true"
+                                                    suffixButtonIcon="search"
+                                                    [suffixButtonAriaLabel]="'RECIPE_MANAGE.SELECT_INGREDIENT' | translate"
+                                                    (suffixButtonClicked)="onProductSelectClick(index, ingredientIndex)"
+                                                    (click)="onProductSelectClick(index, ingredientIndex)"
+                                                    [error]="getIngredientControlError(index, ingredientIndex, 'food')"
+                                                ></fd-ui-input>
+
+                                                <div class="recipe-ingredient__amount">
+                                                    <fd-ui-input
+                                                        formControlName="amount"
+                                                        type="number"
+                                                        [step]="0.01"
+                                                        [label]="getIngredientAmountLabel(index, ingredientIndex)"
+                                                        [error]="getIngredientControlError(index, ingredientIndex, 'amount')"
+                                                    ></fd-ui-input>
+                                                    <fd-ui-button
+                                                        type="button"
+                                                        variant="danger"
+                                                        fill="text"
+                                                        icon="delete"
+                                                        [disabled]="firstIngredient"
+                                                        (click)="removeIngredientFromStep(index, ingredientIndex)"
+                                                    ></fd-ui-button>
+                                                </div>
+                                            </div>
+                                        }
+
+                                        <fd-ui-button
+                                            type="button"
+                                            icon="add"
+                                            variant="primary"
+                                            fill="outline"
+                                            (click)="addIngredientToStep(index)"
+                                        >
+                                            {{ 'RECIPE_MANAGE.ADD_INGREDIENT' | translate }}
+                                        </fd-ui-button>
+                                    </div>
+                                </fd-ui-card>
+                            </div>
+                        }
+                    </div>
+                    <fd-ui-button
+                        type="button"
+                        icon="add"
+                        variant="primary"
+                        (click)="addStep()"
+                    >
+                        {{ 'RECIPE_MANAGE.ADD_STEP' | translate }}
+                    </fd-ui-button>
+                    <div class="recipe-manage__array-error" *ngIf="steps.invalid && steps.touched">
+                        {{ 'FORM_ERRORS.NON_EMPTY_ARRAY' | translate }}
+                    </div>
+                </section>
+            </div>
+
+            <div class="recipe-manage__column recipe-manage__column--secondary">
+                <div class="recipe-manage__sticky-stack">
+                    <fd-ui-card
+                        class="recipe-manage__card"
+                        [title]="'RECIPE_MANAGE.MANUAL_NUTRITION_TITLE' | translate"
+                    >
+                        <fd-ui-checkbox
+                            formControlName="calculateNutritionAutomatically"
+                            [label]="'RECIPE_MANAGE.AUTO_NUTRITION_LABEL' | translate"
+                        ></fd-ui-checkbox>
+
+                        @if (!recipeForm.controls.calculateNutritionAutomatically.value) {
+                            <p class="recipe-manage__nutrition-hint">
+                                {{ 'RECIPE_MANAGE.MANUAL_NUTRITION_HINT' | translate }}
+                            </p>
+                            <div class="recipe-manage__manual-grid">
+                                <fd-ui-input
+                                    formControlName="manualCalories"
+                                    type="number"
+                                    [label]="('RECIPE_MANAGE.MANUAL_CALORIES' | translate) + '*'"
+                                    [required]="true"
+                                    [error]="getFieldError('manualCalories')"
+                                ></fd-ui-input>
+                                <fd-ui-input
+                                    formControlName="manualFiber"
+                                    type="number"
+                                    [label]="('RECIPE_MANAGE.MANUAL_FIBER' | translate) + '*'"
+                                    [required]="true"
+                                    [error]="getFieldError('manualFiber')"
+                                ></fd-ui-input>
+                                <fd-ui-input
+                                    formControlName="manualProteins"
+                                    type="number"
+                                    [label]="('RECIPE_MANAGE.MANUAL_PROTEINS' | translate) + '*'"
+                                    [required]="true"
+                                    [error]="getFieldError('manualProteins')"
+                                ></fd-ui-input>
+                                <fd-ui-input
+                                    formControlName="manualFats"
+                                    type="number"
+                                    [label]="('RECIPE_MANAGE.MANUAL_FATS' | translate) + '*'"
+                                    [required]="true"
+                                    [error]="getFieldError('manualFats')"
+                                ></fd-ui-input>
+                                <fd-ui-input
+                                    formControlName="manualCarbs"
+                                    type="number"
+                                    [label]="('RECIPE_MANAGE.MANUAL_CARBS' | translate) + '*'"
+                                    [required]="true"
+                                    [error]="getFieldError('manualCarbs')"
+                                ></fd-ui-input>
+                            </div>
+                        }
+                    </fd-ui-card>
+
+                    <fd-ui-card
+                        class="recipe-manage__card"
+                        [title]="'RECIPE_MANAGE.VISIBILITY_GROUP_TITLE' | translate"
+                    >
+                        <fd-ui-select
+                            formControlName="visibility"
+                            [label]="('RECIPE_MANAGE.VISIBILITY' | translate) + '*'"
+                            [required]="true"
+                            [options]="visibilitySelectOptions"
+                            [error]="getFieldError('visibility')"
+                        ></fd-ui-select>
+                    </fd-ui-card>
+
+                    <fd-ui-card
+                        class="recipe-manage__card"
+                        [title]="'RECIPE_MANAGE.NUTRITION_GROUP_TITLE' | translate"
+                    >
+                        <p class="recipe-manage__summary-calories">
+                            {{ 'RECIPE_MANAGE.MANUAL_CALORIES' | translate }}:
+                            <strong>{{ totalCalories() | number:'1.0-2' }} {{ 'PRODUCT_LIST.KCAL' | translate }}</strong>
+                        </p>
+                        <fd-nutrients-summary
+                            [bare]="true"
+                            [calories]="totalCalories()"
+                            [nutrientChartData]="nutrientChartData()"
+                            [fiberValue]="totalFiber()"
+                            fiberUnitKey="PRODUCT_AMOUNT_UNITS_SHORT.G"
+                        ></fd-nutrients-summary>
+                    </fd-ui-card>
                 </div>
             </div>
-            <button
-                type="button"
-                tuiButton
-                size="m"
-                iconStart="@tui.plus"
-                (click)="addStep()"
-            >
-                {{ 'RECIPE_MANAGE.ADD_STEP' | translate }}
-            </button>
         </div>
 
-    <fd-nutrients-summary
-        [calories]="totalCalories()"
-        [nutrientChartData]="nutrientChartData()"
-        [fiberValue]="totalFiber()"
-        fiberUnitKey="PRODUCT_AMOUNT_UNITS_SHORT.G"
-    ></fd-nutrients-summary>
-
-        <fd-custom-group [title]="'RECIPE_MANAGE.VISIBILITY_GROUP_TITLE' | translate">
-            <div class="recipe-manage__visibility">
-                <tui-select
-                    formControlName="visibility"
-                    [stringify]="stringifyVisibility"
-                    [tuiTextfieldLabelOutside]="true"
+        <div class="recipe-manage__footer">
+            <div class="recipe-manage__footer-actions">
+                <fd-ui-button
+                    type="button"
+                    variant="secondary"
+                    fill="outline"
+                    icon="arrow_back"
+                    (click)="onCancel()"
                 >
-                    {{ 'RECIPE_MANAGE.VISIBILITY' | translate }}
-                    <input
-                        placeholder="{{ 'RECIPE_MANAGE.VISIBILITY_PLACEHOLDER' | translate }}"
-                        tuiTextfieldLegacy
-                    />
-                    <ng-template tuiDataList>
-                        <tui-data-list>
-                            @for (option of visibilityOptions; track option) {
-                                <button tuiOption [value]="option">
-                                    {{ ('RECIPE_VISIBILITY.' + option) | translate }}
-                                </button>
-                            }
-                        </tui-data-list>
-                    </ng-template>
-                </tui-select>
+                    {{ 'PRODUCT_MANAGE.CANCEL_BUTTON' | translate }}
+                </fd-ui-button>
+                <fd-ui-button
+                    type="submit"
+                    class="recipe-manage__action-button"
+                    icon="save"
+                    [disabled]="recipeForm.invalid || isSubmitting()"
+                >
+                    {{ recipe() ? ('RECIPE_MANAGE.SAVE_BUTTON' | translate) : ('RECIPE_MANAGE.ADD_BUTTON' | translate) }}
+                </fd-ui-button>
             </div>
-        </fd-custom-group>
-
-        <div class="recipe-manage__actions">
-            <button
-                type="submit"
-                tuiButton
-                appearance="primary"
-                iconStart="@tui.save"
-                [disabled]="recipeForm.invalid || isSubmitting()"
-            >
-                {{ recipe() ? 'RECIPE_MANAGE.SAVE_BUTTON' : 'RECIPE_MANAGE.ADD_BUTTON' | translate }}
-            </button>
         </div>
     </form>
 </div>
 
 <ng-template #customDragView>
-    <fd-custom-group
-        [title]="'RECIPE_MANAGE.DRAGGING_STEP' | translate"
-        style="--custom-group-background: #f0f0f0;"
-    >
+    <fd-ui-card class="recipe-manage__drag-card" [subtle]="true">
         {{ 'RECIPE_MANAGE.DRAGGING_HINT' | translate }}
-    </fd-custom-group>
+    </fd-ui-card>
 </ng-template>
 
 <ng-template #customDragPlaceholder>
-    <fd-custom-group
-        [title]="'RECIPE_MANAGE.DRAGGING_PLACEHOLDER' | translate"
-        style="--custom-group-background: #f0f0f0;"
-    >
+    <div class="recipe-manage__drag-placeholder">
         {{ 'RECIPE_MANAGE.DRAGGING_PLACEHOLDER' | translate }}
-    </fd-custom-group>
+    </div>
 </ng-template>

@@ -38,7 +38,6 @@ import { BarcodeScannerComponent } from '../../shared/barcode-scanner/barcode-sc
 import { ValidationErrors } from '../../../types/validation-error.data';
 import { FdUiInputComponent } from '../../../ui-kit/input/fd-ui-input.component';
 import { FdUiCardComponent } from '../../../ui-kit/card/fd-ui-card.component';
-import { FdUiRadioGroupComponent, FdUiRadioOption } from '../../../ui-kit/radio/fd-ui-radio-group.component';
 import { FdUiSelectComponent, FdUiSelectOption } from '../../../ui-kit/select/fd-ui-select.component';
 import { FdUiTextareaComponent } from '../../../ui-kit/textarea/fd-ui-textarea.component';
 import { FdUiButtonComponent } from '../../../ui-kit/button/fd-ui-button.component';
@@ -74,7 +73,6 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
         ZXingScannerModule,
         FdUiInputComponent,
         FdUiCardComponent,
-        FdUiRadioGroupComponent,
         FdUiSelectComponent,
         FdUiTextareaComponent,
         FdUiButtonComponent,
@@ -113,7 +111,7 @@ export class BaseProductManageComponent implements OnInit {
     public productTypes = Object.values(ProductType) as ProductType[];
     public productTypeSelectOptions: FdUiSelectOption<ProductType>[] = [];
     public visibilityOptions = Object.values(ProductVisibility) as ProductVisibility[];
-    public visibilityRadioOptions: FdUiRadioOption<ProductVisibility>[] = [];
+    public visibilitySelectOptions: FdUiSelectOption<ProductVisibility>[] = [];
     public constructor() {
         this.productForm = new FormGroup<ProductFormData>({
             name: new FormControl('', { nonNullable: true, validators: Validators.required }),
@@ -383,7 +381,7 @@ export class BaseProductManageComponent implements OnInit {
     }
 
     private buildVisibilityOptions(): void {
-        this.visibilityRadioOptions = this.visibilityOptions.map(option => ({
+        this.visibilitySelectOptions = this.visibilityOptions.map(option => ({
             value: option,
             label: this.translateService.instant(`PRODUCT_MANAGE.VISIBILITY_OPTIONS.${option.toUpperCase()}`),
         }));

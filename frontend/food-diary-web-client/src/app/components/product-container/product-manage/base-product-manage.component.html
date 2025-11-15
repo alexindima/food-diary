@@ -147,35 +147,39 @@
             </div>
 
             <div class="product-manage__column product-manage__column--secondary">
-                <fd-ui-card class="product-manage__card" [title]="'PRODUCT_MANAGE.VISIBILITY_GROUP_TITLE' | translate">
-                    <fd-ui-radio-group
-                        formControlName="visibility"
-                        [options]="visibilityRadioOptions"
-                        [error]="getControlError('visibility')"
-                    ></fd-ui-radio-group>
-                </fd-ui-card>
+                <div class="product-manage__sticky-stack">
+                    <fd-ui-card class="product-manage__card" [title]="'PRODUCT_MANAGE.VISIBILITY_GROUP_TITLE' | translate">
+                        <fd-ui-select
+                            formControlName="visibility"
+                            [label]="('PRODUCT_MANAGE.VISIBILITY' | translate) + '*'"
+                            [required]="true"
+                            [options]="visibilitySelectOptions"
+                            [error]="getControlError('visibility')"
+                        ></fd-ui-select>
+                    </fd-ui-card>
 
-                <fd-ui-card
-                    class="product-manage__card product-manage__card--sticky"
-                    [title]="'PRODUCT_MANAGE.SUMMARY_TITLE' | translate"
-                >
-                    <p class="product-manage__summary-calories">
-                        {{ 'PRODUCT_MANAGE.SUMMARY_CALORIES_LABEL' | translate }}:
-                        <strong>{{ calories() | number:'1.0-0' }} {{ 'STATISTICS.KKAL' | translate }}</strong>
-                    </p>
-                    <fd-nutrients-summary
-                        [bare]="true"
-                        [calories]="calories()"
-                        [nutrientChartData]="nutrientChartData()"
-                        [config]="nutrientSummaryConfig"
-                        [fiberValue]="productForm.controls.fiberPerBase.value ?? 0"
-                        [fiberUnitKey]="
-                            productForm.controls.baseUnit.value
-                                ? 'PRODUCT_AMOUNT_UNITS_SHORT.' + productForm.controls.baseUnit.value
-                                : 'PRODUCT_AMOUNT_UNITS_SHORT.G'
-                        "
-                    ></fd-nutrients-summary>
-                </fd-ui-card>
+                    <fd-ui-card
+                        class="product-manage__card"
+                        [title]="'PRODUCT_MANAGE.SUMMARY_TITLE' | translate"
+                    >
+                        <p class="product-manage__summary-calories">
+                            {{ 'PRODUCT_MANAGE.SUMMARY_CALORIES_LABEL' | translate }}:
+                            <strong>{{ calories() | number:'1.0-0' }} {{ 'STATISTICS.KKAL' | translate }}</strong>
+                        </p>
+                        <fd-nutrients-summary
+                            [bare]="true"
+                            [calories]="calories()"
+                            [nutrientChartData]="nutrientChartData()"
+                            [config]="nutrientSummaryConfig"
+                            [fiberValue]="productForm.controls.fiberPerBase.value ?? 0"
+                            [fiberUnitKey]="
+                                productForm.controls.baseUnit.value
+                                    ? 'PRODUCT_AMOUNT_UNITS_SHORT.' + productForm.controls.baseUnit.value
+                                    : 'PRODUCT_AMOUNT_UNITS_SHORT.G'
+                            "
+                        ></fd-nutrients-summary>
+                    </fd-ui-card>
+                </div>
             </div>
         </div>
 

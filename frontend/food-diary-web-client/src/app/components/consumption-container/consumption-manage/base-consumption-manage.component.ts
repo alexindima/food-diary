@@ -453,7 +453,13 @@ export class BaseConsumptionManageComponent implements OnInit {
         const autoTotals = this.calculateAutoNutritionTotals();
         const isAuto = this.consumptionForm.controls.isNutritionAutoCalculated.value;
         const summaryTotals = isAuto ? autoTotals : this.getManualNutritionTotals();
-        this.applySummary(summaryTotals);
+        this.applySummary({
+            calories: this.roundNutrient(summaryTotals.calories),
+            proteins: this.roundNutrient(summaryTotals.proteins),
+            fats: this.roundNutrient(summaryTotals.fats),
+            carbs: this.roundNutrient(summaryTotals.carbs),
+            fiber: this.roundNutrient(summaryTotals.fiber),
+        });
     }
 
     private calculateAutoNutritionTotals(): NutritionTotals {
@@ -533,12 +539,13 @@ export class BaseConsumptionManageComponent implements OnInit {
     }
 
     private populateManualNutritionFromCurrentSummary(): void {
+        const totals = this.calculateAutoNutritionTotals();
         this.consumptionForm.patchValue({
-            manualCalories: this.totalCalories(),
-            manualProteins: this.nutrientChartData().proteins,
-            manualFats: this.nutrientChartData().fats,
-            manualCarbs: this.nutrientChartData().carbs,
-            manualFiber: this.totalFiber(),
+            manualCalories: this.roundNutrient(totals.calories),
+            manualProteins: this.roundNutrient(totals.proteins),
+            manualFats: this.roundNutrient(totals.fats),
+            manualCarbs: this.roundNutrient(totals.carbs),
+            manualFiber: this.roundNutrient(totals.fiber),
         }, { emitEvent: false });
     }
 
@@ -736,6 +743,10 @@ export class BaseConsumptionManageComponent implements OnInit {
 
     private padNumber(value: number): string {
         return value.toString().padStart(2, '0');
+    }
+
+    private roundNutrient(value: number): number {
+        return Math.round(value * 100) / 100;
     }
 
     private loadRecipeServingWeight(recipe: Recipe | null): Observable<number | null> {
