@@ -252,55 +252,108 @@
         display: flex;
         flex-direction: column;
         gap: 12px;
+
+        fd-ui-entity-card {
+            display: block;
+        }
+
+        .product-card {
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: @gap-xxs;
+
+            &__header {
+                display: flex;
+                align-items: baseline;
+                gap: @gap-s;
+                justify-content: space-between;
+            }
+
+            &__title {
+                display: flex;
+                gap: @gap-xs;
+                font-size: 1.5em;
+                font-weight: 700;
+                line-height: 1.5rem;
+                color: @color-text-main;
+                min-width: 0;
+            }
+
+            &__name {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+            &__barcode {
+                font-size: 1.05em;
+                color: @color-text-main;
+                font-weight: 600;
+                white-space: nowrap;
+            }
+
+            &__stats {
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-start;
+                gap: @gap-m;
+
+                @media @media-mobile {
+                    flex-direction: column;
+                    align-items: flex-start;
+                    gap: @gap-xs;
+                }
+            }
+
+            &__calories {
+                font-size: 1.2em;
+                font-weight: 500;
+                color: @color-text-main;
+            }
+
+            &__macros {
+                font-size: 0.95em;
+                color: @color-text-additional;
+                text-align: right;
+
+                @media @media-mobile {
+                    text-align: left;
+                }
+            }
+        }
     }
 
-    &__meal-row {
+    .consumption-card__meta {
+        font-size: 0.9em;
+        color: @color-text-additional;
         display: flex;
-        flex-wrap: wrap;
-        gap: 12px;
         justify-content: space-between;
-        align-items: flex-start;
-    }
+        align-items: center;
+        min-height: 1rem;
 
-    &__meal-name {
-        margin: 0;
-        font-size: 1.2rem;
-        font-weight: 600;
-        color: @color-text-main;
-    }
+        @media @media-mobile {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: @gap-xs;
+        }
 
-    &__meal-time {
-        font-size: 0.9rem;
-        color: @color-text-secondary;
-        font-weight: 500;
-    }
+        & > * {
+            flex: none;
+        }
 
-    &__meal-calories {
-        display: block;
-        font-size: 0.95rem;
-        color: @color-primary;
-        font-weight: 600;
-    }
+        & .consumption-card__comment {
+            font-style: italic;
+            text-align: right;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
 
-    &__meal-macros {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 12px;
-        font-size: 0.9rem;
-        color: @color-text-secondary;
-        justify-content: flex-end;
-    }
-
-    &__meal-footer {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        font-size: 0.9rem;
-        color: @color-text-secondary;
-    }
-
-    &__meal-comment {
-        color: @color-text-main;
+            @media @media-mobile {
+                text-align: left;
+                white-space: normal;
+            }
+        }
     }
 
     &__quick-actions {
