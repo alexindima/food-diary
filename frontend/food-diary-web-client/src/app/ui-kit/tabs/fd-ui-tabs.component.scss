@@ -1,0 +1,28 @@
+:host {
+    display: block;
+    width: 100%;
+}
+
+.fd-ui-tabs {
+    width: 100%;
+    --fd-tabs-color: #0f172a;
+
+    .mdc-tab__text-label {
+        font-weight: 600;
+        color: var(--fd-tabs-color);
+        opacity: 0.6;
+    }
+
+    .mdc-tab--active .mdc-tab__text-label {
+        opacity: 1;
+        color: #2563eb;
+    }
+
+    .mat-mdc-tab-group.mat-primary .mat-mdc-tab .mdc-tab-indicator__content--underline {
+        border-top-width: 3px;
+    }
+
+    .mat-mdc-tab-group {
+        width: 100%;
+    }
+}

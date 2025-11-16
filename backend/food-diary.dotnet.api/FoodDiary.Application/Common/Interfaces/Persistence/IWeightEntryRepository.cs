@@ -33,4 +33,10 @@ public interface IWeightEntryRepository
         int? limit,
         bool descending,
         CancellationToken cancellationToken = default);
+
+    Task<IReadOnlyList<WeightEntry>> GetByPeriodAsync(
+        UserId userId,
+        DateTime dateFrom,
+        DateTime dateTo,
+        CancellationToken cancellationToken = default);
 }

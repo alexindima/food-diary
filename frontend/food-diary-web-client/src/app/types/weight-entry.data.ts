@@ -18,3 +18,15 @@ export interface WeightEntryFilters {
     limit?: number;
     sort?: 'asc' | 'desc';
 }
+
+export interface WeightEntrySummaryPoint {
+    dateFrom: string;
+    dateTo: string;
+    averageWeight: number;
+}
+
+export interface WeightEntrySummaryFilters {
+    dateFrom: string;
+    dateTo: string;
+    quantizationDays: number;
+}

@@ -40,7 +40,7 @@ export class HeaderComponent implements OnInit {
                 filter(event => event instanceof NavigationEnd),
             )
             .subscribe(() => {
-                if (this.router.url.startsWith('/profile')) {
+                if (this.router.url.startsWith('/profile') || this.router.url.startsWith('/weight-history')) {
                     this.activeItemIndex = 5;
                 }
             });
@@ -48,6 +48,10 @@ export class HeaderComponent implements OnInit {
 
     protected async goToProfile(): Promise<void> {
         await this.navigationService.navigateToProfile();
+    }
+
+    protected async goToWeightHistory(): Promise<void> {
+        await this.navigationService.navigateToWeightHistory();
     }
 
     protected stop(event: Event): void {

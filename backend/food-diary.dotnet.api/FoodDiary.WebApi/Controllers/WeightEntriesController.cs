@@ -6,6 +6,7 @@ using FoodDiary.Application.WeightEntries.Commands.UpdateWeightEntry;
 using FoodDiary.Application.WeightEntries.Mappings;
 using FoodDiary.Application.WeightEntries.Queries.GetLatestWeightEntry;
 using FoodDiary.Application.WeightEntries.Queries.GetWeightEntries;
+using FoodDiary.Application.WeightEntries.Queries.GetWeightSummaries;
 using FoodDiary.Contracts.WeightEntries;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.WebApi.Extensions;
@@ -33,6 +34,17 @@ public class WeightEntriesController(ISender mediator) : AuthorizedController(me
     public async Task<IActionResult> GetLatest()
     {
         var query = new GetLatestWeightEntryQuery(CurrentUserId);
+        var result = await Mediator.Send(query);
+        return result.ToActionResult();
+    }
+
+    [HttpGet("summary")]
+    public async Task<IActionResult> GetSummary(
+        [FromQuery] DateTime dateFrom,
+        [FromQuery] DateTime dateTo,
+        [FromQuery] int quantizationDays = 1)
+    {
+        var query = new GetWeightSummariesQuery(CurrentUserId, dateFrom, dateTo, quantizationDays);
         var result = await Mediator.Send(query);
         return result.ToActionResult();
     }

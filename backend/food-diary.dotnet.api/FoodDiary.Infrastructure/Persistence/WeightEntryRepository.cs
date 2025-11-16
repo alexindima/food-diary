@@ -98,4 +98,21 @@ public class WeightEntryRepository : IWeightEntryRepository
 
         return await query.ToListAsync(cancellationToken);
     }
+
+    public async Task<IReadOnlyList<WeightEntry>> GetByPeriodAsync(
+        UserId userId,
+        DateTime dateFrom,
+        DateTime dateTo,
+        CancellationToken cancellationToken = default)
+    {
+        var from = DateTime.SpecifyKind(dateFrom, DateTimeKind.Utc);
+        var to = DateTime.SpecifyKind(dateTo, DateTimeKind.Utc);
+
+        return await _context.WeightEntries
+            .AsNoTracking()
+            .Where(entry => entry.UserId == userId && entry.Date >= from && entry.Date <= to)
+            .OrderBy(entry => entry.Date)
+            .ThenBy(entry => entry.CreatedOnUtc)
+            .ToListAsync(cancellationToken);
+    }
 }

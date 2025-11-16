@@ -8,18 +8,10 @@
 
     &__header {
         display: flex;
-        justify-content: space-between;
-        align-items: center;
+        justify-content: flex-start;
+        align-items: flex-start;
         gap: 16px;
         flex-wrap: wrap;
-    }
-
-    &__eyebrow {
-        margin: 0;
-        text-transform: uppercase;
-        letter-spacing: 0.15em;
-        font-size: 0.75rem;
-        color: #94a3b8;
     }
 
     &__title {
@@ -27,12 +19,6 @@
         font-size: 2rem;
         font-weight: 700;
         color: #0f172a;
-    }
-
-    &__grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-        gap: 16px;
     }
 
     &__card {
@@ -45,12 +31,6 @@
         gap: 12px;
     }
 
-    &__goal-current {
-        margin: 0;
-        font-size: 1rem;
-        color: #475569;
-    }
-
     &__goal-input {
         width: 100%;
     }
@@ -61,29 +41,83 @@
     }
 
     &__card--chart {
-        min-height: 280px;
+        min-height: 320px;
         display: flex;
-        align-items: center;
-        justify-content: center;
+        flex-direction: column;
+        gap: 16px;
     }
 
     &__empty-chart {
         margin: 0;
         color: #94a3b8;
         font-size: 0.95rem;
+        text-align: center;
+    }
+
+    &__chart-canvas {
+        width: 100%;
+        min-height: 260px;
+    }
+
+    &__chart-toolbar {
+        display: flex;
+        justify-content: flex-start;
+        gap: 12px;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    &__tabs {
+        flex: none;
+    }
+
+    &__custom-range {
+        margin-top: 8px;
+    }
+
+    &__custom-range-input {
+        width: 320px;
+        max-width: 100%;
     }
 
     &__content {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        grid-template-columns: minmax(0, 2fr) minmax(240px, 1fr);
         gap: 16px;
+
+        @media (max-width: 900px) {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    &__content--form {
+        grid-template-columns: minmax(0, 7fr) minmax(240px, 3fr);
+
+        @media (max-width: 900px) {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    &__content--full {
+        grid-template-columns: minmax(0, 1fr);
     }
 
     &__form {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    &__form-row {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
         gap: 12px;
         align-items: end;
+
+        @media (max-width: 600px) {
+            grid-template-columns: 1fr;
+            align-items: stretch;
+        }
     }
 
     &__form-actions {

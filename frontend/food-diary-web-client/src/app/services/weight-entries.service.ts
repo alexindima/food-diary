@@ -8,6 +8,8 @@ import {
     UpdateWeightEntryPayload,
     WeightEntry,
     WeightEntryFilters,
+    WeightEntrySummaryFilters,
+    WeightEntrySummaryPoint,
 } from '../types/weight-entry.data';
 
 @Injectable({
@@ -72,6 +74,21 @@ export class WeightEntriesService extends ApiService {
             catchError((error: HttpErrorResponse) => {
                 console.error('Delete weight entry error', error);
                 throw error;
+            }),
+        );
+    }
+
+    public getSummary(filters: WeightEntrySummaryFilters): Observable<WeightEntrySummaryPoint[]> {
+        const params: Record<string, string | number> = {
+            dateFrom: filters.dateFrom,
+            dateTo: filters.dateTo,
+            quantizationDays: filters.quantizationDays,
+        };
+
+        return this.get<WeightEntrySummaryPoint[]>('summary', params).pipe(
+            catchError((error: HttpErrorResponse) => {
+                console.error('Weight summary fetch error', error);
+                return of([]);
             }),
         );
     }

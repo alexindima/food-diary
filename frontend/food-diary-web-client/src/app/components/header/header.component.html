@@ -51,6 +51,9 @@
         <button tuiOption type="button" (click)="goToProfile(); close()">
             {{ 'HEADER.PROFILE_EDIT' | translate }}
         </button>
+        <button tuiOption type="button" (click)="goToWeightHistory(); close()">
+            {{ 'HEADER.WEIGHT_HISTORY' | translate }}
+        </button>
         <button tuiOption type="button" (click)="logout(); close()">
             {{ 'HEADER.LOGOUT' | translate }}
         </button>
@@ -78,6 +81,9 @@
             <hr />
             <button tuiOption (click)="goToProfile(); close()">
                 {{ 'HEADER.PROFILE_EDIT' | translate }}
+            </button>
+            <button tuiOption (click)="goToWeightHistory(); close()">
+                {{ 'HEADER.WEIGHT_HISTORY' | translate }}
             </button>
             <button tuiOption (click)="logout(); close()">
                 {{ 'HEADER.LOGOUT' | translate }}
