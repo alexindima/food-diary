@@ -25,65 +25,43 @@
         gap: @gap-m;
     }
 
-    &__field {
+    &__card {
         display: flex;
         flex-direction: column;
-
-        &--password {
-            position: relative;
-        }
-    }
-
-    &__row {
-        display: flex;
-        flex-wrap: wrap;
         gap: @gap-m;
+    }
 
-        &--credentials {
-            align-items: flex-end;
+    &__card-content {
+        display: grid;
+        gap: @gap-m;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+
+        &--account {
+            grid-template-columns: minmax(0, 3fr) auto;
+            align-items: end;
+
+            @media @media-tablet {
+                grid-template-columns: 1fr;
+            }
         }
-    }
 
-    &__group {
-        margin-bottom: @gap-m;
-    }
+        &--personal {
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        }
 
-    &__field--email {
-        flex: 1 1 auto;
-    }
+        &--body {
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        }
 
-    &__field--actions-inline {
-        display: flex;
-        justify-content: flex-end;
-        flex: 0 0 auto;
-    }
-
-    &__input {
-        width: 100%;
-    }
-
-    &__select {
-        width: 100%;
+        &--nutrition {
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        }
     }
 
     &__actions {
         display: flex;
         justify-content: center;
-    }
-
-    &__button {
-        width: 100%;
-        text-align: center;
-        &--submit {
-            background-color: #007bff;
-            color: @color-background;
-        }
-
-        &--inline {
-            width: auto;
-            min-width: 200px;
-            white-space: nowrap;
-        }
+        margin-top: @gap-m;
     }
 
     &__error {
@@ -137,13 +115,9 @@
         }
     }
 
-    &__grid {
-        display: grid;
-        gap: @gap-m;
-        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-
-        &--two {
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-        }
+    &__danger {
+        display: flex;
+        justify-content: center;
+        margin-top: @gap-s;
     }
 }

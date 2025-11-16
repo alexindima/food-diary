@@ -38,6 +38,7 @@ export class FdUiSelectComponent<T = unknown> implements ControlValueAccessor {
     @Input() public error?: string | null;
     @Input() public required = false;
     @Input() public options: FdUiSelectOption<T>[] = [];
+    @Input() public floatLabel: 'auto' | 'always' = 'auto';
 
     protected disabled = false;
     protected internalValue: T | null = null;

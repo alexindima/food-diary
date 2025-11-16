@@ -1,111 +1,144 @@
 <div class="user-manage">
     <h2 class="user-manage__title">{{ 'USER_MANAGE.EDIT_TITLE' | translate }}</h2>
     <form class="user-manage__form" [formGroup]="userForm" (ngSubmit)="onSubmit()">
-        <fd-custom-group class="user-manage__group" [title]="'USER_MANAGE.ACCOUNT_SECTION' | translate">
-            <div class="user-manage__row user-manage__row--credentials">
-                <div class="user-manage__field user-manage__field--email">
-                    <tui-textfield>
-                        <label class="user-manage__label" tuiLabel>{{ 'USER_MANAGE.EMAIL' | translate }}</label>
-                        <input class="user-manage__input" formControlName="email" tuiTextfield type="email" [readOnly]="true" />
-                    </tui-textfield>
-                </div>
-                <div class="user-manage__field user-manage__field--actions-inline">
-                    <button
-                        type="button"
-                        class="user-manage__button user-manage__button--inline"
-                        tuiButton
-                        appearance="secondary"
-                        iconStart="@tui.lock"
-                        (click)="openChangePasswordDialog()"
-                    >
-                        {{ 'USER_MANAGE.CHANGE_PASSWORD' | translate }}
-                    </button>
-                </div>
+        <fd-ui-card class="user-manage__card" [title]="'USER_MANAGE.ACCOUNT_SECTION' | translate">
+            <div class="user-manage__card-content user-manage__card-content--account">
+                <fd-ui-input
+                    formControlName="email"
+                    type="email"
+                    [label]="'USER_MANAGE.EMAIL' | translate"
+                    [placeholder]="'USER_MANAGE.EMAIL' | translate"
+                    floatLabel="always"
+                ></fd-ui-input>
+                <fd-ui-button
+                    type="button"
+                    fill="outline"
+                    variant="primary"
+                    icon="lock"
+                    (click)="openChangePasswordDialog()"
+                >
+                    {{ 'USER_MANAGE.CHANGE_PASSWORD' | translate }}
+                </fd-ui-button>
             </div>
-        </fd-custom-group>
+        </fd-ui-card>
 
-        <fd-custom-group class="user-manage__group" [title]="'USER_MANAGE.PERSONAL_SECTION' | translate">
-            <div class="user-manage__grid">
-                <div class="user-manage__field">
-                    <tui-textfield>
-                        <label class="user-manage__label" tuiLabel>{{ 'USER_MANAGE.USERNAME' | translate }}</label>
-                        <input class="user-manage__input" formControlName="username" tuiTextfield />
-                    </tui-textfield>
-                </div>
-                <div class="user-manage__field">
-                    <tui-textfield>
-                        <label class="user-manage__label" tuiLabel>{{ 'USER_MANAGE.FIRST_NAME' | translate }}</label>
-                        <input class="user-manage__input" formControlName="firstName" tuiTextfield />
-                    </tui-textfield>
-                </div>
-                <div class="user-manage__field">
-                    <tui-textfield>
-                        <label class="user-manage__label" tuiLabel>{{ 'USER_MANAGE.LAST_NAME' | translate }}</label>
-                        <input class="user-manage__input" formControlName="lastName" tuiTextfield />
-                    </tui-textfield>
-                </div>
-                <div class="user-manage__field">
-                    <tui-input-date
-                        class="user-manage__input"
-                        [tuiTextfieldCleaner]="true"
-                        formControlName="birthDate"
-                    >
-                        {{ 'USER_MANAGE.BIRTH_DATE' | translate }}
-                    </tui-input-date>
-                </div>
-                <div class="user-manage__field">
-                    <tui-select
-                        class="user-manage__select"
-                        formControlName="gender"
-                        [stringify]="stringifyGender"
-                        [tuiTextfieldCleaner]="true"
-                    >
-                        {{ 'USER_MANAGE.GENDER' | translate }}
-                        <input
-                            class="user-manage__input"
-                            placeholder="{{ 'USER_MANAGE.SELECT_GENDER' | translate }}"
-                            tuiTextfieldLegacy
-                        />
-                        <ng-template tuiDataList>
-                            <tui-data-list>
-                                @for (gender of genders; track gender) {
-                                    <button tuiOption [value]="gender">
-                                        {{ ('USER_MANAGE.GENDER_OPTIONS.' + gender) | translate }}
-                                    </button>
-                                }
-                            </tui-data-list>
-                        </ng-template>
-                    </tui-select>
-                </div>
+        <fd-ui-card class="user-manage__card" [title]="'USER_MANAGE.PERSONAL_SECTION' | translate">
+            <div class="user-manage__card-content user-manage__card-content--personal">
+                <fd-ui-input
+                    formControlName="username"
+                    [label]="'USER_MANAGE.USERNAME' | translate"
+                    [placeholder]="'USER_MANAGE.USERNAME' | translate"
+                    floatLabel="always"
+                ></fd-ui-input>
+                <fd-ui-input
+                    formControlName="firstName"
+                    [label]="'USER_MANAGE.FIRST_NAME' | translate"
+                    [placeholder]="'USER_MANAGE.FIRST_NAME' | translate"
+                    floatLabel="always"
+                ></fd-ui-input>
+                <fd-ui-input
+                    formControlName="lastName"
+                    [label]="'USER_MANAGE.LAST_NAME' | translate"
+                    [placeholder]="'USER_MANAGE.LAST_NAME' | translate"
+                    floatLabel="always"
+                ></fd-ui-input>
+                <fd-ui-date-input
+                    formControlName="birthDate"
+                    mode="single"
+                    [label]="'USER_MANAGE.BIRTH_DATE' | translate"
+                    [placeholder]="'USER_MANAGE.BIRTH_DATE' | translate"
+                    floatLabel="always"
+                ></fd-ui-date-input>
+                <fd-ui-select
+                    formControlName="gender"
+                    [label]="'USER_MANAGE.GENDER' | translate"
+                    [placeholder]="'USER_MANAGE.SELECT_GENDER' | translate"
+                    [options]="genderOptions"
+                    floatLabel="always"
+                ></fd-ui-select>
             </div>
-        </fd-custom-group>
+        </fd-ui-card>
 
-        <fd-custom-group class="user-manage__group" [title]="'USER_MANAGE.BODY_SECTION' | translate">
-            <div class="user-manage__grid user-manage__grid--two">
-                <div class="user-manage__field">
-                    <tui-textfield>
-                        <label class="user-manage__label" tuiLabel>{{ 'USER_MANAGE.WEIGHT' | translate }}</label>
-                        <input class="user-manage__input" formControlName="weight" tuiTextfield type="number" />
-                    </tui-textfield>
-                </div>
-                <div class="user-manage__field">
-                    <tui-textfield>
-                        <label class="user-manage__label" tuiLabel>{{ 'USER_MANAGE.HEIGHT' | translate }}</label>
-                        <input class="user-manage__input" formControlName="height" tuiTextfield type="number" />
-                    </tui-textfield>
-                </div>
+        <fd-ui-card class="user-manage__card" [title]="'USER_MANAGE.BODY_SECTION' | translate">
+            <div class="user-manage__card-content user-manage__card-content--body">
+                <fd-ui-input
+                    formControlName="height"
+                    type="number"
+                    [label]="'USER_MANAGE.HEIGHT' | translate"
+                    [placeholder]="'USER_MANAGE.HEIGHT' | translate"
+                    floatLabel="always"
+                ></fd-ui-input>
+                <fd-ui-select
+                    formControlName="activityLevel"
+                    [label]="'USER_MANAGE.ACTIVITY_LEVEL' | translate"
+                    [placeholder]="'USER_MANAGE.SELECT_ACTIVITY_LEVEL' | translate"
+                    [options]="activityLevelOptions"
+                    floatLabel="always"
+                ></fd-ui-select>
             </div>
-        </fd-custom-group>
+        </fd-ui-card>
+
+        <fd-ui-card class="user-manage__card" [title]="'USER_MANAGE.NUTRITION_SECTION' | translate">
+            <div class="user-manage__card-content user-manage__card-content--nutrition">
+                <fd-ui-input
+                    formControlName="dailyCalorieTarget"
+                    type="number"
+                    [label]="'USER_MANAGE.DAILY_CALORIES' | translate"
+                    [placeholder]="'USER_MANAGE.DAILY_CALORIES' | translate"
+                    floatLabel="always"
+                ></fd-ui-input>
+                <fd-ui-input
+                    formControlName="proteinTarget"
+                    type="number"
+                    [label]="'USER_MANAGE.PROTEIN_TARGET' | translate"
+                    [placeholder]="'USER_MANAGE.PROTEIN_TARGET' | translate"
+                    floatLabel="always"
+                ></fd-ui-input>
+                <fd-ui-input
+                    formControlName="fatTarget"
+                    type="number"
+                    [label]="'USER_MANAGE.FAT_TARGET' | translate"
+                    [placeholder]="'USER_MANAGE.FAT_TARGET' | translate"
+                    floatLabel="always"
+                ></fd-ui-input>
+                <fd-ui-input
+                    formControlName="carbTarget"
+                    type="number"
+                    [label]="'USER_MANAGE.CARB_TARGET' | translate"
+                    [placeholder]="'USER_MANAGE.CARB_TARGET' | translate"
+                    floatLabel="always"
+                ></fd-ui-input>
+                <fd-ui-input
+                    formControlName="stepGoal"
+                    type="number"
+                    [label]="'USER_MANAGE.STEP_GOAL' | translate"
+                    [placeholder]="'USER_MANAGE.STEP_GOAL' | translate"
+                    floatLabel="always"
+                ></fd-ui-input>
+                <fd-ui-input
+                    formControlName="waterGoal"
+                    type="number"
+                    [label]="'USER_MANAGE.WATER_GOAL' | translate"
+                    [placeholder]="'USER_MANAGE.WATER_GOAL' | translate"
+                    floatLabel="always"
+                ></fd-ui-input>
+            </div>
+        </fd-ui-card>
         <div class="user-manage__actions">
-            <button
-                type="submit"
-                class="user-manage__button user-manage__button--submit"
-                tuiButton
-                appearance="primary"
-                iconStart="@tui.save"
-            >
+            <fd-ui-button type="submit" icon="save">
                 {{ 'USER_MANAGE.SAVE_BUTTON' | translate }}
-            </button>
+            </fd-ui-button>
+        </div>
+        <div class="user-manage__danger">
+            <fd-ui-button
+                type="button"
+                variant="danger"
+                fill="outline"
+                icon="delete"
+                (click)="onDeleteAccount()"
+            >
+                {{ 'USER_MANAGE.DELETE_ACCOUNT_BUTTON' | translate }}
+            </fd-ui-button>
         </div>
         <tui-error class="user-manage__error" [error]="globalError()"></tui-error>
     </form>
@@ -132,30 +165,36 @@
         <p class="user-manage__dialog-title">{{ 'USER_MANAGE.CHANGE_PASSWORD' | translate }}</p>
         <div class="user-manage__dialog-fields">
             <div class="user-manage__field">
-                <tui-textfield type="password">
-                    <label class="user-manage__label" tuiLabel>{{ 'USER_MANAGE.CURRENT_PASSWORD' | translate }}</label>
-                    <input class="user-manage__input" formControlName="currentPassword" tuiTextfield />
-                </tui-textfield>
+                <fd-ui-input
+                    type="password"
+                    formControlName="currentPassword"
+                    [label]="'USER_MANAGE.CURRENT_PASSWORD' | translate"
+                    floatLabel="always"
+                ></fd-ui-input>
                 <tui-error
                     formControlName="currentPassword"
                     [error]="[] | tuiFieldError | async"
                 ></tui-error>
             </div>
             <div class="user-manage__field">
-                <tui-textfield type="password">
-                    <label class="user-manage__label" tuiLabel>{{ 'USER_MANAGE.NEW_PASSWORD' | translate }}</label>
-                    <input class="user-manage__input" formControlName="newPassword" tuiTextfield />
-                </tui-textfield>
+                <fd-ui-input
+                    type="password"
+                    formControlName="newPassword"
+                    [label]="'USER_MANAGE.NEW_PASSWORD' | translate"
+                    floatLabel="always"
+                ></fd-ui-input>
                 <tui-error
                     formControlName="newPassword"
                     [error]="[] | tuiFieldError | async"
                 ></tui-error>
             </div>
             <div class="user-manage__field">
-                <tui-textfield type="password">
-                    <label class="user-manage__label" tuiLabel>{{ 'USER_MANAGE.CONFIRM_NEW_PASSWORD' | translate }}</label>
-                    <input class="user-manage__input" formControlName="confirmPassword" tuiTextfield />
-                </tui-textfield>
+                <fd-ui-input
+                    type="password"
+                    formControlName="confirmPassword"
+                    [label]="'USER_MANAGE.CONFIRM_NEW_PASSWORD' | translate"
+                    floatLabel="always"
+                ></fd-ui-input>
                 <tui-error
                     formControlName="confirmPassword"
                     [error]="[] | tuiFieldError | async"
@@ -164,24 +203,22 @@
         </div>
         <tui-error class="user-manage__error" [error]="passwordError()"></tui-error>
         <div class="user-manage__dialog-actions user-manage__dialog-actions--inline">
-            <button
-                class="user-manage__dialog-button"
-                tuiButton
+            <fd-ui-button
                 type="button"
+                fill="outline"
+                variant="primary"
                 (click)="onChangePasswordCancel(observer)"
-                appearance="secondary"
             >
                 {{ 'USER_MANAGE.CHANGE_PASSWORD_CANCEL' | translate }}
-            </button>
-            <button
-                class="user-manage__dialog-button"
-                tuiButton
+            </fd-ui-button>
+            <fd-ui-button
                 appearance="primary"
                 type="submit"
                 [disabled]="isPasswordSubmitting()"
+                icon="save"
             >
                 {{ 'USER_MANAGE.CHANGE_PASSWORD_SAVE' | translate }}
-            </button>
+            </fd-ui-button>
         </div>
     </form>
 </ng-template>
@@ -190,14 +227,9 @@
     <div class="user-manage__dialog">
         <p class="user-manage__dialog-title">{{ 'USER_MANAGE.CHANGE_PASSWORD_SUCCESS' | translate }}</p>
         <div class="user-manage__dialog-actions">
-            <button
-                class="user-manage__dialog-button"
-                tuiButton
-                appearance="primary"
-                (click)="observer.complete()"
-            >
+            <fd-ui-button icon="check" (click)="observer.complete()">
                 {{ 'USER_MANAGE.CHANGE_PASSWORD_OK' | translate }}
-            </button>
+            </fd-ui-button>
         </div>
     </div>
 </ng-template>

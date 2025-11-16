@@ -13,27 +13,26 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
     TuiAlertService,
-    TuiButton,
     TuiDialogContext,
     TuiDialogService,
     TuiError,
-    TuiLabel,
-    TuiTextfieldComponent,
-    TuiTextfieldDirective,
 } from '@taiga-ui/core';
 import { FormGroupControls } from '../../types/common.data';
 import { UserService } from '../../services/user.service';
-import { ChangePasswordRequest, Gender, UpdateUserDto } from '../../types/user.data';
-import { CustomGroupComponent } from '../shared/custom-group/custom-group.component';
+import { ActivityLevelOption, ChangePasswordRequest, Gender, UpdateUserDto } from '../../types/user.data';
 import { NavigationService } from '../../services/navigation.service';
 import { TuiDay } from '@taiga-ui/cdk';
-import { TuiInputDateModule, TuiSelectModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
 import { AsyncPipe } from '@angular/common';
 import { TUI_VALIDATION_ERRORS, TuiFieldErrorPipe } from '@taiga-ui/kit';
 import { matchFieldValidator } from '../../validators/match-field.validator';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ValidationErrors } from '../../types/validation-error.data';
 import { Observer, Subscription } from 'rxjs';
+import { FdUiCardComponent } from '../../ui-kit/card/fd-ui-card.component';
+import { FdUiInputComponent } from '../../ui-kit/input/fd-ui-input.component';
+import { FdUiSelectComponent, FdUiSelectOption } from '../../ui-kit/select/fd-ui-select.component';
+import { FdUiDateInputComponent } from '../../ui-kit/date-input/fd-ui-date-input.component';
+import { FdUiButtonComponent } from '../../ui-kit/button/fd-ui-button.component';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: TUI_VALIDATION_ERRORS,
@@ -53,19 +52,16 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
 @Component({
     selector: 'fd-user-manage',
     imports: [
-        TuiTextfieldComponent,
         ReactiveFormsModule,
         TranslatePipe,
-        TuiLabel,
-        TuiTextfieldDirective,
         TuiError,
-        TuiButton,
-        TuiInputDateModule,
-        TuiTextfieldControllerModule,
-        TuiSelectModule,
         TuiFieldErrorPipe,
         AsyncPipe,
-        CustomGroupComponent,
+        FdUiCardComponent,
+        FdUiInputComponent,
+        FdUiSelectComponent,
+        FdUiDateInputComponent,
+        FdUiButtonComponent,
     ],
     templateUrl: './user-manage.component.html',
     styleUrl: './user-manage.component.less',
@@ -86,6 +82,9 @@ export class UserManageComponent implements OnInit {
     @ViewChild('passwordSuccessDialog') private passwordSuccessDialog!: TemplateRef<TuiDialogContext<void>>;
 
     public genders = Object.values(Gender);
+    public activityLevels: ActivityLevelOption[] = ['MINIMAL', 'LIGHT', 'MODERATE', 'HIGH', 'EXTREME'];
+    public genderOptions: FdUiSelectOption<Gender | null>[] = [];
+    public activityLevelOptions: FdUiSelectOption<ActivityLevelOption | null>[] = [];
 
     public userForm: FormGroup<UserFormData>;
     public globalError = signal<string | null>(null);
@@ -101,8 +100,14 @@ export class UserManageComponent implements OnInit {
             lastName: new FormControl<string | null>(null),
             birthDate: new FormControl<TuiDay | null>(null),
             gender: new FormControl<Gender | null>(null),
-            weight: new FormControl<number | null>(null),
             height: new FormControl<number | null>(null),
+            activityLevel: new FormControl<ActivityLevelOption | null>(null),
+            dailyCalorieTarget: new FormControl<number | null>(null),
+            proteinTarget: new FormControl<number | null>(null),
+            fatTarget: new FormControl<number | null>(null),
+            carbTarget: new FormControl<number | null>(null),
+            stepGoal: new FormControl<number | null>(null),
+            waterGoal: new FormControl<number | null>(null),
             profileImage: new FormControl<string | null>(null),
         });
 
@@ -114,6 +119,11 @@ export class UserManageComponent implements OnInit {
                 matchFieldValidator('newPassword'),
             ]),
         });
+
+        this.buildSelectOptions();
+        this.translateService.onLangChange
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => this.buildSelectOptions());
     }
 
     public ngOnInit(): void {
@@ -130,6 +140,15 @@ export class UserManageComponent implements OnInit {
                         ...user,
                         gender: user.gender as Gender | null,
                         birthDate: user.birthDate ? TuiDay.fromLocalNativeDate(new Date(user.birthDate)) : null,
+                        activityLevel: user.activityLevel
+                            ? (user.activityLevel.toUpperCase() as ActivityLevelOption)
+                            : null,
+                        dailyCalorieTarget: user.dailyCalorieTarget ?? null,
+                        proteinTarget: user.proteinTarget ?? null,
+                        fatTarget: user.fatTarget ?? null,
+                        carbTarget: user.carbTarget ?? null,
+                        stepGoal: user.stepGoal ?? null,
+                        waterGoal: user.waterGoal ?? null,
                     };
                     this.userForm.patchValue(userData);
                 } else {
@@ -223,9 +242,11 @@ export class UserManageComponent implements OnInit {
         this.changePasswordDialogSubscription = null;
     }
 
-    public stringifyGender = (gender: Gender): string => {
-        return this.translateService.instant(`USER_MANAGE.GENDER_OPTIONS.${gender}`);
-    };
+    public onDeleteAccount(): void {
+        this.alertService
+            .open(this.translateService.instant('USER_MANAGE.DELETE_ACCOUNT_INFO'))
+            .subscribe();
+    }
 
     protected async showSuccessDialog(): Promise<void> {
         this.dialogService
@@ -247,6 +268,18 @@ export class UserManageComponent implements OnInit {
     private clearGlobalError(): void {
         this.globalError.set(null);
     }
+
+    private buildSelectOptions(): void {
+        this.genderOptions = this.genders.map(gender => ({
+            label: this.translateService.instant(`USER_MANAGE.GENDER_OPTIONS.${gender}`),
+            value: gender,
+        }));
+
+        this.activityLevelOptions = this.activityLevels.map(level => ({
+            label: this.translateService.instant(`USER_MANAGE.ACTIVITY_LEVEL_OPTIONS.${level}`),
+            value: level,
+        }));
+    }
 }
 
 export interface UserFormValues {
@@ -256,8 +289,14 @@ export interface UserFormValues {
     email: string | null;
     birthDate: TuiDay | null;
     gender: Gender | null;
-    weight: number | null;
     height: number | null;
+    activityLevel: ActivityLevelOption | null;
+    dailyCalorieTarget: number | null;
+    proteinTarget: number | null;
+    fatTarget: number | null;
+    carbTarget: number | null;
+    stepGoal: number | null;
+    waterGoal: number | null;
     profileImage: string | null;
 }
 

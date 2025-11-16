@@ -1,4 +1,5 @@
 using FoodDiary.Domain.Common;
+using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
 
 namespace FoodDiary.Domain.Entities;
@@ -18,6 +19,13 @@ public sealed class User : AggregateRoot<UserId> {
     public double? Weight { get; private set; }
     public double? DesiredWeight { get; private set; }
     public double? Height { get; private set; }
+    public ActivityLevel ActivityLevel { get; private set; } = ActivityLevel.Moderate;
+    public double? DailyCalorieTarget { get; private set; }
+    public double? ProteinTarget { get; private set; }
+    public double? FatTarget { get; private set; }
+    public double? CarbTarget { get; private set; }
+    public int? StepGoal { get; private set; }
+    public double? WaterGoal { get; private set; }
     public string? ProfileImage { get; private set; }
     public bool IsActive { get; private set; } = true;
 
@@ -60,6 +68,13 @@ public sealed class User : AggregateRoot<UserId> {
         string? gender = null,
         double? weight = null,
         double? height = null,
+        ActivityLevel? activityLevel = null,
+        double? dailyCalorieTarget = null,
+        double? proteinTarget = null,
+        double? fatTarget = null,
+        double? carbTarget = null,
+        int? stepGoal = null,
+        double? waterGoal = null,
         string? profileImage = null) {
         if (username is not null) Username = username;
         if (firstName is not null) FirstName = firstName;
@@ -68,6 +83,13 @@ public sealed class User : AggregateRoot<UserId> {
         if (gender is not null) Gender = gender;
         if (weight.HasValue) Weight = weight;
         if (height.HasValue) Height = height;
+        if (activityLevel.HasValue) ActivityLevel = activityLevel.Value;
+        if (dailyCalorieTarget.HasValue) DailyCalorieTarget = dailyCalorieTarget;
+        if (proteinTarget.HasValue) ProteinTarget = proteinTarget;
+        if (fatTarget.HasValue) FatTarget = fatTarget;
+        if (carbTarget.HasValue) CarbTarget = carbTarget;
+        if (stepGoal.HasValue) StepGoal = stepGoal;
+        if (waterGoal.HasValue) WaterGoal = waterGoal;
         if (profileImage is not null) ProfileImage = profileImage;
 
         SetModified();

@@ -18,6 +18,13 @@ public static class UserCommandMappings
             request.Gender,
             request.Weight,
             request.Height,
+            request.ActivityLevel,
+            request.DailyCalorieTarget,
+            request.ProteinTarget,
+            request.FatTarget,
+            request.CarbTarget,
+            request.StepGoal,
+            request.WaterGoal,
             request.ProfileImage,
             request.IsActive
         );

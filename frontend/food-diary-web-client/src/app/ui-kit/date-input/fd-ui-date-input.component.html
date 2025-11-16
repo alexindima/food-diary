@@ -1,5 +1,10 @@
 <ng-container *ngIf="mode === 'range'; else singleMode">
-    <mat-form-field appearance="outline" class="fd-ui-date-input" [class.fd-ui-date-input--disabled]="isDisabled">
+    <mat-form-field
+        appearance="outline"
+        class="fd-ui-date-input"
+        [class.fd-ui-date-input--disabled]="isDisabled"
+        [floatLabel]="floatLabel"
+    >
         <mat-label *ngIf="label">{{ label }}</mat-label>
 
         <mat-date-range-input
@@ -12,14 +17,12 @@
                 matStartDate
                 formControlName="start"
                 [placeholder]="resolvedStartPlaceholder"
-                [disabled]="isDisabled"
                 (blur)="handleBlur()"
             />
             <input
                 matEndDate
                 formControlName="end"
                 [placeholder]="resolvedEndPlaceholder"
-                [disabled]="isDisabled"
                 (blur)="handleBlur()"
             />
         </mat-date-range-input>
@@ -29,7 +32,12 @@
 </ng-container>
 
 <ng-template #singleMode>
-    <mat-form-field appearance="outline" class="fd-ui-date-input" [class.fd-ui-date-input--disabled]="isDisabled">
+    <mat-form-field
+        appearance="outline"
+        class="fd-ui-date-input"
+        [class.fd-ui-date-input--disabled]="isDisabled"
+        [floatLabel]="floatLabel"
+    >
         <mat-label *ngIf="label">{{ label }}</mat-label>
         <input
             matInput
@@ -38,7 +46,6 @@
             [placeholder]="resolvedPlaceholder"
             [min]="min"
             [max]="max"
-            [disabled]="isDisabled"
             (blur)="handleBlur()"
         />
         <mat-datepicker-toggle matSuffix [for]="singlePicker"></mat-datepicker-toggle>

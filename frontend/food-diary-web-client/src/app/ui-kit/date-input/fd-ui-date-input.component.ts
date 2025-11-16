@@ -58,6 +58,7 @@ export class FdUiDateInputComponent implements ControlValueAccessor {
     @Input() public mode: 'single' | 'range' = 'single';
     @Input() public min?: Date;
     @Input() public max?: Date;
+    @Input() public floatLabel: 'auto' | 'always' = 'auto';
 
     protected readonly singleControl = new FormControl<Date | null>(null);
     protected readonly rangeGroup = new FormGroup({

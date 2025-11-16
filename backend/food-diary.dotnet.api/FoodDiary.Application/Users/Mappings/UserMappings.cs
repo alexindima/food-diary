@@ -18,6 +18,13 @@ public static class UserMappings
             user.Weight,
             user.DesiredWeight,
             user.Height,
+            user.ActivityLevel.ToString(),
+            user.DailyCalorieTarget,
+            user.ProteinTarget,
+            user.FatTarget,
+            user.CarbTarget,
+            user.StepGoal,
+            user.WaterGoal,
             user.ProfileImage,
             user.IsActive
         );

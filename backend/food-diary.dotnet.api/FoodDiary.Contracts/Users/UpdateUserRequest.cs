@@ -8,6 +8,13 @@ public record UpdateUserRequest(
     string? Gender,
     double? Weight,
     double? Height,
+    string? ActivityLevel,
+    double? DailyCalorieTarget,
+    double? ProteinTarget,
+    double? FatTarget,
+    double? CarbTarget,
+    int? StepGoal,
+    double? WaterGoal,
     string? ProfileImage,
     bool? IsActive
 );

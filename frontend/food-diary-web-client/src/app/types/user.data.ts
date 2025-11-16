@@ -1,5 +1,7 @@
 import { UserFormValues } from '../components/user-manage/user-manage.component';
 
+export type ActivityLevelOption = 'MINIMAL' | 'LIGHT' | 'MODERATE' | 'HIGH' | 'EXTREME';
+
 export interface User {
     id: string; // User ID (Guid)
     email: string;
@@ -11,6 +13,13 @@ export interface User {
     weight?: number;
     desiredWeight?: number;
     height?: number;
+    activityLevel?: ActivityLevelOption;
+    dailyCalorieTarget?: number;
+    proteinTarget?: number;
+    fatTarget?: number;
+    carbTarget?: number;
+    stepGoal?: number;
+    waterGoal?: number;
     profileImage?: string;
     isActive: boolean;
     calories?: number; // Local field, not from backend
@@ -22,8 +31,14 @@ export class UpdateUserDto {
     public lastName?: string;
     public birthDate?: Date;
     public gender?: string;
-    public weight?: number;
     public height?: number;
+    public activityLevel?: string;
+    public dailyCalorieTarget?: number;
+    public proteinTarget?: number;
+    public fatTarget?: number;
+    public carbTarget?: number;
+    public stepGoal?: number;
+    public waterGoal?: number;
     public profileImage?: string;
     public isActive?: boolean;
 
@@ -33,8 +48,14 @@ export class UpdateUserDto {
         this.lastName = normalizeString(formValues.lastName);
         this.birthDate = formValues.birthDate ? formValues.birthDate.toUtcNativeDate() : undefined;
         this.gender = normalizeString(formValues.gender);
-        this.weight = formValues.weight ?? undefined;
-        this.height = formValues.height ?? undefined;
+        this.height = normalizeNumber(formValues.height);
+        this.activityLevel = normalizeActivityLevel(formValues.activityLevel);
+        this.dailyCalorieTarget = normalizeNumber(formValues.dailyCalorieTarget);
+        this.proteinTarget = normalizeNumber(formValues.proteinTarget);
+        this.fatTarget = normalizeNumber(formValues.fatTarget);
+        this.carbTarget = normalizeNumber(formValues.carbTarget);
+        this.stepGoal = normalizeInteger(formValues.stepGoal);
+        this.waterGoal = normalizeNumber(formValues.waterGoal);
         this.profileImage = normalizeString(formValues.profileImage);
         this.isActive = true;
     }
@@ -43,6 +64,23 @@ export class UpdateUserDto {
 const normalizeString = (value: string | null | undefined): string | undefined => {
     const trimmed = value?.trim();
     return trimmed ? trimmed : undefined;
+};
+
+const normalizeNumber = (value: number | null | undefined): number | undefined =>
+    value === null || value === undefined || Number.isNaN(Number(value)) ? undefined : Number(value);
+
+const normalizeInteger = (value: number | null | undefined): number | undefined => {
+    const normalized = normalizeNumber(value);
+    return normalized === undefined ? undefined : Math.round(normalized);
+};
+
+const normalizeActivityLevel = (value: ActivityLevelOption | null | undefined): string | undefined => {
+    if (!value) {
+        return undefined;
+    }
+
+    const lower = value.toLowerCase();
+    return lower.charAt(0).toUpperCase() + lower.slice(1);
 };
 
 export interface ChangePasswordRequest {

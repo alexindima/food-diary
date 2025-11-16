@@ -29,6 +29,9 @@ public class FoodDiaryDbContext : DbContext
 
             entity.HasIndex(e => e.Email).IsUnique();
             entity.Property(e => e.IsActive).HasDefaultValue(true);
+            entity.Property(e => e.ActivityLevel)
+                .HasConversion<string>()
+                .HasDefaultValue(ActivityLevel.Moderate);
 
             entity.HasMany(e => e.WeightEntries)
                 .WithOne(w => w.User)

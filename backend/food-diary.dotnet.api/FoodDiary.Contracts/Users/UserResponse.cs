@@ -13,6 +13,13 @@ public record UserResponse(
     double? Weight,
     double? DesiredWeight,
     double? Height,
+    string ActivityLevel,
+    double? DailyCalorieTarget,
+    double? ProteinTarget,
+    double? FatTarget,
+    double? CarbTarget,
+    int? StepGoal,
+    double? WaterGoal,
     string? ProfileImage,
     bool IsActive
 );
