@@ -52,6 +52,17 @@ public class UpdateConsumptionCommandHandler(
         meal.UpdateDate(command.Date);
         meal.UpdateMealType(mealTypeResult.Value);
         meal.UpdateComment(command.Comment);
+
+        var satietyValidation = SatietyLevelValidator.Validate(
+            command.PreMealSatietyLevel,
+            command.PostMealSatietyLevel);
+
+        if (satietyValidation.IsFailure)
+        {
+            return Result.Failure<ConsumptionResponse>(satietyValidation.Error);
+        }
+
+        meal.UpdateSatietyLevels(command.PreMealSatietyLevel, command.PostMealSatietyLevel);
         meal.ClearItems();
 
         foreach (var item in command.Items)

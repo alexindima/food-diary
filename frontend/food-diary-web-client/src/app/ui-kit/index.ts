@@ -12,3 +12,4 @@ export * from './button/fd-ui-button.component';
 export * from './checkbox/fd-ui-checkbox.component';
 export * from './date-input/fd-ui-date-input.component';
 export * from './tabs/fd-ui-tabs.component';
+export * from './satiety-scale/fd-ui-satiety-scale.component';

@@ -13,7 +13,9 @@ public record CreateConsumptionRequest(
     double? ManualProteins = null,
     double? ManualFats = null,
     double? ManualCarbs = null,
-    double? ManualFiber = null);
+    double? ManualFiber = null,
+    int PreMealSatietyLevel = 0,
+    int PostMealSatietyLevel = 0);
 
 public record UpdateConsumptionRequest(
     DateTime Date,
@@ -25,7 +27,9 @@ public record UpdateConsumptionRequest(
     double? ManualProteins = null,
     double? ManualFats = null,
     double? ManualCarbs = null,
-    double? ManualFiber = null);
+    double? ManualFiber = null,
+    int PreMealSatietyLevel = 0,
+    int PostMealSatietyLevel = 0);
 
 public record ConsumptionItemRequest(
     Guid? ProductId,

@@ -21,7 +21,9 @@ public static class ConsumptionRequestMappings
             request.ManualProteins,
             request.ManualFats,
             request.ManualCarbs,
-            request.ManualFiber);
+            request.ManualFiber,
+            request.PreMealSatietyLevel,
+            request.PostMealSatietyLevel);
 
     public static UpdateConsumptionCommand ToCommand(this UpdateConsumptionRequest request, Guid? userId, int consumptionId) =>
         new(
@@ -36,7 +38,9 @@ public static class ConsumptionRequestMappings
             request.ManualProteins,
             request.ManualFats,
             request.ManualCarbs,
-            request.ManualFiber);
+            request.ManualFiber,
+            request.PreMealSatietyLevel,
+            request.PostMealSatietyLevel);
 
     private static ConsumptionItemInput ToInput(ConsumptionItemRequest request) =>
         new(request.ProductId, request.RecipeId, request.Amount);

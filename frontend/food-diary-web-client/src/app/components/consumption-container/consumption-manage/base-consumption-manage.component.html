@@ -43,6 +43,75 @@
                     </div>
                 </fd-ui-card>
 
+                <fd-ui-card
+                    class="consumption-manage__card"
+                    [title]="'CONSUMPTION_MANAGE.SATIETY_SECTION_TITLE' | translate"
+                >
+                    <p class="consumption-manage__satiety-note">
+                        {{ 'CONSUMPTION_MANAGE.SATIETY_SECTION_HINT' | translate }}
+                    </p>
+                    <div class="consumption-manage__satiety-grid">
+                        <div class="consumption-manage__satiety-field">
+                            <p class="consumption-manage__satiety-picker-label">
+                                {{ 'CONSUMPTION_MANAGE.HUNGER_BEFORE_LABEL' | translate }}
+                            </p>
+                            @let beforeMeta = getSatietyLevelMeta(consumptionForm.controls.preMealSatietyLevel.value);
+                            <button
+                                type="button"
+                                class="consumption-manage__satiety-card"
+                                (click)="openSatietyDialog('preMealSatietyLevel')"
+                                [style.--satiety-gradient]="beforeMeta.gradient"
+                            >
+                                <div class="consumption-manage__satiety-card-indicator">
+                                    {{
+                                        (consumptionForm.controls.preMealSatietyLevel.value ?? 0) > 0
+                                            ? consumptionForm.controls.preMealSatietyLevel.value
+                                            : '?'
+                                    }}
+                                </div>
+                                <div class="consumption-manage__satiety-card-text">
+                                    <span class="consumption-manage__satiety-card-title">
+                                        {{ beforeMeta.label }}
+                                    </span>
+                                    <span class="consumption-manage__satiety-card-description">
+                                        {{ beforeMeta.description }}
+                                    </span>
+                                </div>
+                                <mat-icon>tune</mat-icon>
+                            </button>
+                        </div>
+                        <div class="consumption-manage__satiety-field">
+                            <p class="consumption-manage__satiety-picker-label">
+                                {{ 'CONSUMPTION_MANAGE.HUNGER_AFTER_LABEL' | translate }}
+                            </p>
+                            @let afterMeta = getSatietyLevelMeta(consumptionForm.controls.postMealSatietyLevel.value);
+                            <button
+                                type="button"
+                                class="consumption-manage__satiety-card"
+                                (click)="openSatietyDialog('postMealSatietyLevel')"
+                                [style.--satiety-gradient]="afterMeta.gradient"
+                            >
+                                <div class="consumption-manage__satiety-card-indicator">
+                                    {{
+                                        (consumptionForm.controls.postMealSatietyLevel.value ?? 0) > 0
+                                            ? consumptionForm.controls.postMealSatietyLevel.value
+                                            : '?'
+                                    }}
+                                </div>
+                                <div class="consumption-manage__satiety-card-text">
+                                    <span class="consumption-manage__satiety-card-title">
+                                        {{ afterMeta.label }}
+                                    </span>
+                                    <span class="consumption-manage__satiety-card-description">
+                                        {{ afterMeta.description }}
+                                    </span>
+                                </div>
+                                <mat-icon>tune</mat-icon>
+                            </button>
+                        </div>
+                    </div>
+                </fd-ui-card>
+
                 <section class="consumption-manage__items-section">
                     <div class="consumption-manage__items-header">
                         <h3 class="consumption-manage__section-title">

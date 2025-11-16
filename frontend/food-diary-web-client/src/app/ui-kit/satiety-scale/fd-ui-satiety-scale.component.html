@@ -1,0 +1,51 @@
+<div
+    class="satiety-scale"
+    [class.satiety-scale--grid]="layout === 'grid'"
+    [class.satiety-scale--vertical]="layout === 'vertical'"
+>
+    @if (label) {
+        <label class="satiety-scale__label">
+            {{ label }}
+            @if (required) {
+                <span class="satiety-scale__required">*</span>
+            }
+        </label>
+    }
+    @if (hint) {
+        <p class="satiety-scale__hint">
+            {{ hint }}
+        </p>
+    }
+
+    <div class="satiety-scale__list" role="radiogroup" [attr.aria-disabled]="disabled">
+        @for (level of levels; track level.value) {
+            <button
+                type="button"
+                class="satiety-scale__option"
+                [class.satiety-scale__option--selected]="isSelected(level.value)"
+                [disabled]="disabled"
+                (click)="selectLevel(level.value)"
+                (blur)="handleBlur()"
+                [style.--satiety-scale-gradient]="level.gradient"
+                [attr.aria-checked]="isSelected(level.value)"
+                role="radio"
+            >
+                <div class="satiety-scale__indicator">
+                    <span class="satiety-scale__number">{{ level.value === 0 ? '?' : level.value }}</span>
+                </div>
+                <div class="satiety-scale__text">
+                    <div class="satiety-scale__title">
+                        {{ level.titleKey | translate }}
+                    </div>
+                    <div class="satiety-scale__description">
+                        {{ level.descriptionKey | translate }}
+                    </div>
+                </div>
+            </button>
+        }
+    </div>
+
+    @if (error) {
+        <div class="satiety-scale__error">{{ error }}</div>
+    }
+</div>

@@ -18,6 +18,8 @@ export interface Consumption {
     manualFats?: number | null;
     manualCarbs?: number | null;
     manualFiber?: number | null;
+    preMealSatietyLevel?: number | null;
+    postMealSatietyLevel?: number | null;
     items: ConsumptionItem[];
 }
 
@@ -47,6 +49,8 @@ export interface ConsumptionResponseDto {
     manualFats?: number | null;
     manualCarbs?: number | null;
     manualFiber?: number | null;
+    preMealSatietyLevel?: number | null;
+    postMealSatietyLevel?: number | null;
     items: ConsumptionItemResponseDto[];
 }
 
@@ -94,6 +98,8 @@ export interface ConsumptionManageDto {
     manualFats?: number | null;
     manualCarbs?: number | null;
     manualFiber?: number | null;
+    preMealSatietyLevel?: number | null;
+    postMealSatietyLevel?: number | null;
 }
 
 export interface ConsumptionItemManageDto {

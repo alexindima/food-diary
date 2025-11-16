@@ -53,6 +53,8 @@ public static class ConsumptionMappings
             meal.ManualFats,
             meal.ManualCarbs,
             meal.ManualFiber,
+            meal.PreMealSatietyLevel,
+            meal.PostMealSatietyLevel,
             items);
     }
 

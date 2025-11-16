@@ -26,6 +26,8 @@ public sealed class Meal : AggregateRoot<int> {
     public double? ManualFats { get; private set; }
     public double? ManualCarbs { get; private set; }
     public double? ManualFiber { get; private set; }
+    public int PreMealSatietyLevel { get; private set; }
+    public int PostMealSatietyLevel { get; private set; }
 
     // Navigation properties
     public User User { get; private set; } = null!;
@@ -43,13 +45,17 @@ public sealed class Meal : AggregateRoot<int> {
         DateTime date,
         MealType? mealType = null,
         string? comment = null,
-        string? imageUrl = null) {
+        string? imageUrl = null,
+        int preMealSatietyLevel = 0,
+        int postMealSatietyLevel = 0) {
         var meal = new Meal {
             UserId = userId,
             Date = date,
             MealType = mealType,
             Comment = comment,
-            ImageUrl = imageUrl
+            ImageUrl = imageUrl,
+            PreMealSatietyLevel = NormalizeSatietyLevel(preMealSatietyLevel),
+            PostMealSatietyLevel = NormalizeSatietyLevel(postMealSatietyLevel)
         };
         meal.SetCreated();
         return meal;
@@ -136,4 +142,20 @@ public sealed class Meal : AggregateRoot<int> {
 
         SetModified();
     }
+
+    public void UpdateSatietyLevels(int? preMealLevel, int? postMealLevel) {
+        var normalizedPre = NormalizeSatietyLevel(preMealLevel ?? 0);
+        var normalizedPost = NormalizeSatietyLevel(postMealLevel ?? 0);
+
+        if (PreMealSatietyLevel == normalizedPre && PostMealSatietyLevel == normalizedPost) {
+            return;
+        }
+
+        PreMealSatietyLevel = normalizedPre;
+            PostMealSatietyLevel = normalizedPost;
+        SetModified();
+    }
+
+    private static int NormalizeSatietyLevel(int level) =>
+        level is >= 0 and <= 9 ? level : 0;
 }

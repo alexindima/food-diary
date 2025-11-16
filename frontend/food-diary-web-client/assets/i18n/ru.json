@@ -386,7 +386,64 @@
         "MANUAL_PROTEINS": "Белки",
         "MANUAL_FATS": "Жиры",
         "MANUAL_CARBS": "Углеводы",
-        "MANUAL_FIBER": "Клетчатка"
+        "MANUAL_FIBER": "Клетчатка",
+        "SATIETY_SECTION_TITLE": "Уровни голода и сытости",
+        "SATIETY_SECTION_HINT": "Отметьте ощущения до и после приёма пищи, чтобы отслеживать осознанность.",
+        "HUNGER_BEFORE_LABEL": "Уровень голода перед приёмом",
+        "HUNGER_AFTER_LABEL": "Уровень сытости после приёма",
+        "SATIETY_HINT": "Нажмите на карточку, чтобы выбрать один из девяти уровней.",
+        "SATIETY_PICKER_BUTTON": "→ Выбрать уровень",
+        "SATIETY_NOT_SELECTED": "❗ Не выбран",
+        "SATIETY_DIALOG_HINT": "Осознанное питание",
+        "SATIETY_DIALOG_SUBHINT": "Нажмите на плитку, чтобы сразу выбрать уровень.",
+        "SATIETY_DIALOG_CANCEL": "Отменить",
+        "SATIETY_DIALOG_APPLY": "Подтвердить",
+        "HUNGER_BEFORE_DIALOG_TITLE": "Уровень голода перед приёмом",
+        "HUNGER_AFTER_DIALOG_TITLE": "Уровень сытости после приёма",
+        "SATIETY_PLACEHOLDER_TITLE": "Пока не выбран",
+        "SATIETY_PLACEHOLDER_DESCRIPTION": "Нажмите, чтобы выбрать уровень."
+    },
+    "HUNGER_SCALE": {
+        "LEVEL_0": {
+            "TITLE": "Не фиксировалось",
+            "DESCRIPTION": "Используйте, если ощущение не записано."
+        },
+        "LEVEL_1": {
+            "TITLE": "Умираю с голода",
+            "DESCRIPTION": "Головокружение, слабость."
+        },
+        "LEVEL_2": {
+            "TITLE": "Сильно голодна",
+            "DESCRIPTION": "Готовность съесть что угодно."
+        },
+        "LEVEL_3": {
+            "TITLE": "Голодна",
+            "DESCRIPTION": "Урчит живот, концентрация снижена."
+        },
+        "LEVEL_4": {
+            "TITLE": "Слегка голодна",
+            "DESCRIPTION": "Пустой живот, мысли о еде."
+        },
+        "LEVEL_5": {
+            "TITLE": "Ни голодна, ни сыта",
+            "DESCRIPTION": "Комфортное состояние."
+        },
+        "LEVEL_6": {
+            "TITLE": "Скорее сыт",
+            "DESCRIPTION": "Первые признаки насыщения."
+        },
+        "LEVEL_7": {
+            "TITLE": "Сыт",
+            "DESCRIPTION": "Комфортное ощущение наполненности желудка."
+        },
+        "LEVEL_8": {
+            "TITLE": "Переел",
+            "DESCRIPTION": "Ощущение тяжести и давления одежды."
+        },
+        "LEVEL_9": {
+            "TITLE": "Сильно переел",
+            "DESCRIPTION": "Болезненные ощущения раздутости и, возможно, тошноты."
+        }
     },
     "RECIPE_SELECT_DIALOG": {
         "TITLE": "Выберите рецепт",

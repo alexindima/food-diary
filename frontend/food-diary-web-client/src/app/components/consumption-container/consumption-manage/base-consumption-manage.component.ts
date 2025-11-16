@@ -55,6 +55,12 @@ import { FdUiTextareaComponent } from '../../../ui-kit/textarea/fd-ui-textarea.c
 import { FdUiButtonComponent } from '../../../ui-kit/button/fd-ui-button.component';
 import { FdUiCheckboxComponent } from '../../../ui-kit/checkbox/fd-ui-checkbox.component';
 import { MatIconModule } from '@angular/material/icon';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import {
+    SatietyLevelDialogComponent,
+    SatietyLevelDialogData,
+} from '../satiety-level-dialog/satiety-level-dialog.component';
+import { DEFAULT_SATIETY_LEVELS } from '../../../ui-kit/satiety-scale/fd-ui-satiety-scale.component';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: TUI_VALIDATION_ERRORS,
@@ -88,6 +94,7 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
         FdUiButtonComponent,
         FdUiCheckboxComponent,
         MatIconModule,
+        MatDialogModule,
     ]
 })
 export class BaseConsumptionManageComponent implements OnInit {
@@ -98,6 +105,7 @@ export class BaseConsumptionManageComponent implements OnInit {
     private readonly destroyRef = inject(DestroyRef);
     private readonly injector = inject(Injector);
     private readonly recipeService = inject(RecipeService);
+    private readonly matDialog = inject(MatDialog);
     private readonly recipeServingWeightCache = new Map<string, number | null>();
 
     @ViewChild('confirmDialog') private confirmDialog!: TemplateRef<TuiDialogContext<RedirectAction, void>>;
@@ -134,6 +142,8 @@ export class BaseConsumptionManageComponent implements OnInit {
             manualFats: new FormControl<number | null>(null),
             manualCarbs: new FormControl<number | null>(null),
             manualFiber: new FormControl<number | null>(null),
+            preMealSatietyLevel: new FormControl<number | null>(null),
+            postMealSatietyLevel: new FormControl<number | null>(null),
         });
 
         this.buildMealTypeOptions();
@@ -294,6 +304,67 @@ export class BaseConsumptionManageComponent implements OnInit {
             : null;
     }
 
+    public getSatietyLevelLabel(value: number | null): string {
+        if (!value) {
+            return this.translateService.instant('CONSUMPTION_MANAGE.SATIETY_NOT_SELECTED');
+        }
+        const title = this.translateService.instant(`HUNGER_SCALE.LEVEL_${value}.TITLE`);
+        return `${value} — ${title}`;
+    }
+
+    public getSatietyLevelMeta(value: number | null): { label: string; description: string; gradient: string } {
+        if (!value) {
+            return {
+                label: this.translateService.instant('CONSUMPTION_MANAGE.SATIETY_PLACEHOLDER_TITLE'),
+                description: this.translateService.instant('CONSUMPTION_MANAGE.SATIETY_PLACEHOLDER_DESCRIPTION'),
+                gradient: 'linear-gradient(135deg, #e2e8f0, #cbd5f5)',
+            };
+        }
+
+        const config = DEFAULT_SATIETY_LEVELS.find(level => level.value === value);
+        return {
+            label: `${value} — ${this.translateService.instant(config?.titleKey ?? '')}`,
+            description: this.translateService.instant(config?.descriptionKey ?? ''),
+            gradient: config?.gradient ?? 'linear-gradient(135deg, #e2e8f0, #cbd5f5)',
+        };
+    }
+
+    public openSatietyDialog(controlName: 'preMealSatietyLevel' | 'postMealSatietyLevel'): void {
+        const control = this.consumptionForm.controls[controlName];
+        if (!control) {
+            return;
+        }
+
+        const titleKey =
+            controlName === 'preMealSatietyLevel'
+                ? 'CONSUMPTION_MANAGE.HUNGER_BEFORE_DIALOG_TITLE'
+                : 'CONSUMPTION_MANAGE.HUNGER_AFTER_DIALOG_TITLE';
+
+        const dialogRef = this.matDialog.open<SatietyLevelDialogComponent, SatietyLevelDialogData, number>(
+            SatietyLevelDialogComponent,
+            {
+                width: '720px',
+                maxWidth: '96vw',
+                data: {
+                    titleKey,
+                    subtitleKey: 'CONSUMPTION_MANAGE.SATIETY_DIALOG_HINT',
+                    value: control.value ?? null,
+                },
+            },
+        );
+
+        dialogRef
+            .afterClosed()
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(value => {
+                if (typeof value === 'number') {
+                    control.setValue(value);
+                    control.markAsDirty();
+                    control.markAsTouched();
+                }
+            });
+    }
+
     private openItemSelectDialog(index: number, initialTab: 'Product' | 'Recipe'): void {
         this.dialogService
             .open<ConsumptionItemSelection | null>(
@@ -374,6 +445,8 @@ export class BaseConsumptionManageComponent implements OnInit {
 
         const isNutritionAutoCalculated = this.consumptionForm.controls.isNutritionAutoCalculated.value;
         const manualTotals = this.getManualNutritionTotals();
+        const preMealSatietyLevel = this.consumptionForm.controls.preMealSatietyLevel.value;
+        const postMealSatietyLevel = this.consumptionForm.controls.postMealSatietyLevel.value;
 
         const consumptionData: ConsumptionManageDto = {
             date: consumptionDate,
@@ -386,6 +459,8 @@ export class BaseConsumptionManageComponent implements OnInit {
             manualFats: isNutritionAutoCalculated ? undefined : manualTotals.fats,
             manualCarbs: isNutritionAutoCalculated ? undefined : manualTotals.carbs,
             manualFiber: isNutritionAutoCalculated ? undefined : manualTotals.fiber,
+            preMealSatietyLevel: preMealSatietyLevel ?? undefined,
+            postMealSatietyLevel: postMealSatietyLevel ?? undefined,
         };
 
         const consumption = this.consumption();
@@ -418,6 +493,8 @@ export class BaseConsumptionManageComponent implements OnInit {
             manualFats: consumption.manualFats ?? consumption.totalFats,
             manualCarbs: consumption.manualCarbs ?? consumption.totalCarbs,
             manualFiber: consumption.manualFiber ?? consumption.totalFiber,
+            preMealSatietyLevel: consumption.preMealSatietyLevel ?? null,
+            postMealSatietyLevel: consumption.postMealSatietyLevel ?? null,
         });
 
         const itemsArray = this.items;
@@ -855,6 +932,8 @@ type ConsumptionFormValues = {
     manualFats: number | null;
     manualCarbs: number | null;
     manualFiber: number | null;
+    preMealSatietyLevel: number | null;
+    postMealSatietyLevel: number | null;
 };
 
 type ConsumptionItemFormValues = {

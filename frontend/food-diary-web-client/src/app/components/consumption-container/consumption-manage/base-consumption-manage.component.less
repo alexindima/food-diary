@@ -126,6 +126,102 @@
         gap: @gap-m;
     }
 
+    &__satiety-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: @gap-m;
+    }
+
+    &__satiety-note {
+        margin: 0 0 @gap-m;
+        font-size: 0.9rem;
+        color: @color-text-additional;
+    }
+
+    &__satiety-field {
+        display: flex;
+        flex-direction: column;
+        gap: @gap-xs;
+    }
+
+    &__satiety-picker-label {
+        margin: 0;
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: @color-text-main;
+    }
+
+    &__satiety-card {
+        --satiety-gradient: linear-gradient(135deg, #cbd5f5, #94a3b8);
+        border: none;
+        border-radius: @border-radius-l;
+        padding: @gap-m;
+        display: flex;
+        align-items: center;
+        gap: @gap-m;
+        text-align: left;
+        cursor: pointer;
+        background: rgba(15, 23, 42, 0.02);
+        box-shadow: 0 8px 20px fade(@color-text-main, 8%);
+        position: relative;
+        overflow: hidden;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+        &::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--satiety-gradient);
+            opacity: 0.15;
+            pointer-events: none;
+        }
+
+        &:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 26px fade(@color-text-main, 14%);
+        }
+
+        mat-icon {
+            color: @color-text-main;
+            position: relative;
+            z-index: 1;
+        }
+    }
+
+    &__satiety-card-indicator {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.8);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: @color-text-main;
+        position: relative;
+        z-index: 1;
+    }
+
+    &__satiety-card-text {
+        display: flex;
+        flex-direction: column;
+        gap: @gap-xxs;
+        position: relative;
+        z-index: 1;
+        flex: 1;
+    }
+
+    &__satiety-card-title {
+        font-weight: 600;
+        color: @color-text-main;
+    }
+
+    &__satiety-card-description {
+        font-size: 0.9rem;
+        color: @color-text-additional;
+    }
+
     &__items-header {
         display: flex;
         align-items: center;

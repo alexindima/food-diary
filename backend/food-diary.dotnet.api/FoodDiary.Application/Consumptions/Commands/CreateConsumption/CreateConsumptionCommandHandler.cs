@@ -42,6 +42,17 @@ public class CreateConsumptionCommandHandler(
 
         var meal = Meal.Create(command.UserId.Value, command.Date, mealTypeResult.Value, command.Comment);
 
+        var satietyValidation = SatietyLevelValidator.Validate(
+            command.PreMealSatietyLevel,
+            command.PostMealSatietyLevel);
+
+        if (satietyValidation.IsFailure)
+        {
+            return Result.Failure<ConsumptionResponse>(satietyValidation.Error);
+        }
+
+        meal.UpdateSatietyLevels(command.PreMealSatietyLevel, command.PostMealSatietyLevel);
+
         foreach (var item in command.Items)
         {
             var validation = ConsumptionItemValidator.Validate(item);

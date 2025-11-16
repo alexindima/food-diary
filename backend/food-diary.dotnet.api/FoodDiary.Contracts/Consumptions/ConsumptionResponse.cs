@@ -20,6 +20,8 @@ public record ConsumptionResponse(
     double? ManualFats,
     double? ManualCarbs,
     double? ManualFiber,
+    int PreMealSatietyLevel,
+    int PostMealSatietyLevel,
     IReadOnlyList<ConsumptionItemResponse> Items);
 
 public record ConsumptionItemResponse(

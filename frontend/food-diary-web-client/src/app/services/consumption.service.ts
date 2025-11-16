@@ -86,6 +86,8 @@ export class ConsumptionService extends ApiService {
             manualFats: response.manualFats ?? null,
             manualCarbs: response.manualCarbs ?? null,
             manualFiber: response.manualFiber ?? null,
+            preMealSatietyLevel: response.preMealSatietyLevel ?? 0,
+            postMealSatietyLevel: response.postMealSatietyLevel ?? 0,
             items: response.items.map(item => this.mapConsumptionItem(item)),
         };
     }

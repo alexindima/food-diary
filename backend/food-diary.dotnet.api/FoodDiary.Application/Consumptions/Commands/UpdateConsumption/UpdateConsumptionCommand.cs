@@ -20,4 +20,6 @@ public record UpdateConsumptionCommand(
     double? ManualProteins,
     double? ManualFats,
     double? ManualCarbs,
-    double? ManualFiber) : ICommand<Result<ConsumptionResponse>>;
+    double? ManualFiber,
+    int PreMealSatietyLevel,
+    int PostMealSatietyLevel) : ICommand<Result<ConsumptionResponse>>;
