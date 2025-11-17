@@ -6,4 +6,5 @@ export const CHART_COLORS = {
     calories: '#FF6384',
     radarBackground: 'rgba(54, 162, 235, 0.2)',
     radarBorder: 'rgba(54, 162, 235, 1)',
+    primaryLine: '#2563eb',
 };

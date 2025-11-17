@@ -1,131 +1,173 @@
 <div class="statistics">
-    <h2 class="statistics__title">{{ 'STATISTICS.TITLE' | translate }}</h2>
-    <div class="statistics__range">
-        <form class="statistics__form" [formGroup]="rangeForm">
-            <div class="statistics__range-modes"
-                 tuiGroup
-                 [orientation]="isMobile() ? 'vertical' : 'horizontal'"
-                 [collapsed]="true"
-            >
-                <label class="statistics__range-label" tuiBlock="s">
-                    <input
-                        class="statistics__range-input"
-                        formControlName="range"
-                        tuiBlock
-                        type="radio"
-                        value="Week"
-                    />
-                    {{ 'STATISTICS.LABELS.WEEK' | translate }}
-                </label>
-                <label class="statistics__range-label" tuiBlock="s">
-                    <input
-                        class="statistics__range-input"
-                        formControlName="range"
-                        tuiBlock
-                        type="radio"
-                        value="Month"
-                    />
-                    {{ 'STATISTICS.LABELS.MONTH' | translate }}
-                </label>
-                <label class="statistics__range-label" tuiBlock="s">
-                    <input
-                        class="statistics__range-input"
-                        formControlName="range"
-                        tuiBlock
-                        type="radio"
-                        value="Year"
-                    />
-                    {{ 'STATISTICS.LABELS.YEAR' | translate }}
-                </label>
-                <label class="statistics__range-label" tuiBlock="s">
-                    <input
-                        class="statistics__range-input"
-                        formControlName="range"
-                        tuiBlock
-                        type="radio"
-                        value="Custom"
-                    />
-                    {{ 'STATISTICS.LABELS.CUSTOM' | translate }}
-                </label>
-            </div>
-            @if (rangeForm.controls.range.value === 'Custom') {
-                <tui-input-date-range
-                    class="statistics__input-range"
-                    formControlName="inputRange"
-                    [maxLength]="maxLength"
-                >
-                    {{ 'STATISTICS.RANGE' | translate }}
-                </tui-input-date-range>
+    <header class="statistics__header">
+        <div>
+            <p class="statistics__eyebrow">{{ 'STATISTICS.SUBTITLE' | translate }}</p>
+            <h1 class="statistics__title">{{ 'STATISTICS.TITLE' | translate }}</h1>
+        </div>
+        <div class="statistics__range-controls">
+            <fd-ui-tabs
+                class="statistics__tabs statistics__tabs--range"
+                [tabs]="rangeTabs"
+                [selectedValue]="selectedRange()"
+                (selectedValueChange)="changeRange($event)"
+            ></fd-ui-tabs>
+            @if (selectedRange() === 'custom') {
+                <fd-ui-date-input
+                    class="statistics__custom-range"
+                    mode="range"
+                    [placeholder]="'STATISTICS.CUSTOM_RANGE_PLACEHOLDER' | translate"
+                    [formControl]="customRangeControl"
+                ></fd-ui-date-input>
             }
-        </form>
-    </div>
+        </div>
+    </header>
 
     @if (isLoading()) {
-        <tui-loader class="statistics__loader"></tui-loader>
+        <div class="statistics__loader">{{ 'STATISTICS.LOADING' | translate }}</div>
     } @else {
-        <div class="statistics__calories">
-            <h3 class="statistics__calories-title">
-                {{ 'STATISTICS.CALORIES_TITLE' | translate }}
-            </h3>
-            <div class="statistics__axes">
-                <canvas
-                    baseChart
-                    style="width: 100%; height: 100%;"
-                    [type]="'line'"
-                    [data]="caloriesLineChartData()"
-                    [options]="caloriesLineChartOptions"
-                    [legend]="false"
-                ></canvas>
-            </div>
-        </div>
-        <div class="statistics__nutrients">
-            <h3 class="statistics__nutrients-title">
-                {{ 'STATISTICS.NUTRIENTS_TITLE' | translate }}
-            </h3>
-            <div class="statistics__nutrients-charts">
-                <div class="statistics__axes">
-                    <canvas
-                        baseChart
-                        style="width: 100%; height: 100%;"
-                        [type]="'line'"
-                        [data]="nutrientsLineChartData()"
-                        [options]="nutrientsLineChartOptions"
-                        [legend]="true"
-                    ></canvas>
-                </div>
-                <div class="statistics__addon-nutrients-charts">
-                    <div class="statistics__pie-chart">
-                        <canvas
-                            baseChart
-                            style="width: 100%; height: 100%;"
-                            [type]="'pie'"
-                            [data]="nutrientsPieChartData()"
-                            [options]="pieChartOptions"
-                            [legend]="false"
-                        ></canvas>
+        <fd-ui-card class="statistics__card statistics__card--summary" [title]="'STATISTICS.SUMMARY_TITLE' | translate">
+            @if (summaryMetrics(); as summary) {
+                <div class="statistics__summary">
+                    <div class="statistics__summary-row statistics__summary-row--top">
+                        <div class="statistics__summary-total">
+                            <span class="statistics__summary-label">{{ 'STATISTICS.TOTAL_CALORIES' | translate }}</span>
+                            <strong class="statistics__summary-value">
+                                {{ summary.totalCalories | number: '1.0-0' }}
+                                {{ 'PRODUCT_LIST.KCAL' | translate }}
+                            </strong>
+                            <div class="statistics__summary-trend">
+                                <canvas
+                                    baseChart
+                                    [type]="'line'"
+                                    [data]="summarySparklineData()"
+                                    [options]="summarySparklineOptions"
+                                ></canvas>
+                            </div>
+                        </div>
+                        <div class="statistics__summary-average">
+                            <span class="statistics__summary-label">{{ 'STATISTICS.AVERAGE_CALORIES' | translate }}</span>
+                            <strong class="statistics__summary-value">
+                                {{ summary.averageCalories | number: '1.0-0' }}
+                                {{ 'PRODUCT_LIST.KCAL' | translate }}
+                            </strong>
+                        </div>
                     </div>
-                    <div class="statistics__radar-chart">
-                        <canvas
-                            baseChart
-                            style="width: 100%; height: 100%;"
-                            [type]="'radar'"
-                            [data]="nutrientsRadarChartData()"
-                            [options]="radarChartOptions"
-                            [legend]="false"
-                        ></canvas>
-                    </div>
-                    <div class="statistics__bar-chart">
-                        <canvas
-                            baseChart
-                            style="width: 100%; height: 100%;"
-                            [type]="'bar'"
-                            [data]="nutrientsBarChartData()"
-                            [options]="barChartOptions"
-                            [legend]="false"
-                        ></canvas>
+                    <div class="statistics__summary-row statistics__summary-row--macros">
+                        @for (macro of summary.macros; track macro.labelKey) {
+                            <div class="statistics__macro-card" [style.--macro-color]="macro.color">
+                                <span class="statistics__summary-label">{{ macro.labelKey | translate }}</span>
+                                <strong class="statistics__summary-value">
+                                    {{ macro.value | number: '1.0-1' }} {{ 'PRODUCT_LIST.GRAMS' | translate }}
+                                </strong>
+                            </div>
+                        }
                     </div>
                 </div>
-            </div>
-        </div>
+            } @else {
+                <p class="statistics__empty">{{ 'STATISTICS.NO_DATA' | translate }}</p>
+            }
+        </fd-ui-card>
+
+        <fd-ui-card class="statistics__card statistics__card--charts" [title]="'STATISTICS.NUTRITION_CHARTS_TITLE' | translate">
+            <fd-ui-tabs
+                class="statistics__tabs"
+                [tabs]="nutritionTabs"
+                [selectedValue]="selectedNutritionTab()"
+                (selectedValueChange)="changeNutritionTab($event)"
+            ></fd-ui-tabs>
+
+            @if (!hasStatisticsData()) {
+                <p class="statistics__empty">{{ 'STATISTICS.NO_DATA' | translate }}</p>
+            } @else {
+                @switch (selectedNutritionTab()) {
+                    @case ('calories') {
+                        <div class="statistics__chart-area">
+                            <canvas
+                                baseChart
+                                [type]="'line'"
+                                [data]="caloriesLineChartData()"
+                                [options]="caloriesLineChartOptions"
+                                [legend]="false"
+                            ></canvas>
+                        </div>
+                    }
+                    @case ('macros') {
+                        <div class="statistics__chart-area">
+                            <canvas
+                                baseChart
+                                [type]="'line'"
+                                [data]="nutrientsLineChartData()"
+                                [options]="nutrientsLineChartOptions"
+                            ></canvas>
+                        </div>
+                    }
+                    @case ('distribution') {
+                        <div class="statistics__distribution-grid">
+                            <div class="statistics__chart-card">
+                                <h4>{{ 'STATISTICS.NUTRITION_DISTRIBUTION.PIE' | translate }}</h4>
+                                <canvas
+                                    baseChart
+                                    [type]="'pie'"
+                                    [data]="nutrientsPieChartData()"
+                                    [options]="pieChartOptions"
+                                    [legend]="false"
+                                ></canvas>
+                            </div>
+                            <div class="statistics__chart-card">
+                                <h4>{{ 'STATISTICS.NUTRITION_DISTRIBUTION.RADAR' | translate }}</h4>
+                                <canvas
+                                    baseChart
+                                    [type]="'radar'"
+                                    [data]="nutrientsRadarChartData()"
+                                    [options]="radarChartOptions"
+                                    [legend]="false"
+                                ></canvas>
+                            </div>
+                            <div class="statistics__chart-card">
+                                <h4>{{ 'STATISTICS.NUTRITION_DISTRIBUTION.BAR' | translate }}</h4>
+                                <canvas
+                                    baseChart
+                                    [type]="'bar'"
+                                    [data]="nutrientsBarChartData()"
+                                    [options]="barChartOptions"
+                                    [legend]="false"
+                                ></canvas>
+                            </div>
+                        </div>
+                    }
+                }
+            }
+        </fd-ui-card>
+
+        <fd-ui-card class="statistics__card statistics__card--body" [title]="'STATISTICS.BODY_CHARTS_TITLE' | translate">
+            <fd-ui-tabs
+                class="statistics__tabs"
+                [tabs]="bodyTabs"
+                [selectedValue]="selectedBodyTab()"
+                (selectedValueChange)="changeBodyTab($event)"
+            ></fd-ui-tabs>
+
+            @if (isBodyLoading()) {
+                <div class="statistics__loader">{{ 'STATISTICS.LOADING' | translate }}</div>
+            } @else {
+                @if (bodyChartData(); as bodyData) {
+                    @if (hasBodyData()) {
+                        <div class="statistics__chart-area">
+                            <canvas
+                                baseChart
+                                [type]="'line'"
+                                [data]="bodyData"
+                                [options]="bodyChartOptions"
+                                [legend]="false"
+                            ></canvas>
+                        </div>
+                    } @else {
+                        <p class="statistics__empty">{{ 'STATISTICS.BODY_NO_DATA' | translate }}</p>
+                    }
+                } @else {
+                    <p class="statistics__empty">{{ 'STATISTICS.BODY_NO_DATA' | translate }}</p>
+                }
+            }
+        </fd-ui-card>
     }
 </div>

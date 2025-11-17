@@ -492,23 +492,38 @@
     },
     "STATISTICS": {
         "TITLE": "Statistics",
-        "CALORIES_TITLE": "Calories Overview",
-        "NUTRIENTS_TITLE": "Nutrients Overview",
-        "NUTRIENTS": {
-            "PROTEINS": "Proteins",
-            "FATS": "Fats",
-            "CARBS": "Carbs",
-            "FIBER": "Fiber"
+        "SUBTITLE": "Trends overview",
+        "SUMMARY_TITLE": "Daily overview",
+        "TOTAL_CALORIES": "Total calories",
+        "AVERAGE_CALORIES": "Average per day",
+        "NUTRITION_CHARTS_TITLE": "Nutrition charts",
+        "NUTRITION_TABS": {
+            "CALORIES": "Calories",
+            "MACROS": "Macros",
+            "DISTRIBUTION": "Distribution"
         },
-        "LABELS": {
+        "NUTRITION_DISTRIBUTION": {
+            "PIE": "Macro split",
+            "RADAR": "Balance radar",
+            "BAR": "Totals"
+        },
+        "BODY_CHARTS_TITLE": "Body metrics",
+        "BODY_TABS": {
+            "WEIGHT": "Weight",
+            "BMI": "BMI",
+            "WAIST": "Waist",
+            "WHTR": "WHtR"
+        },
+        "BODY_NO_DATA": "Not enough measurements for this chart yet.",
+        "RANGES": {
             "WEEK": "Week",
             "MONTH": "Month",
             "YEAR": "Year",
             "CUSTOM": "Custom"
         },
-        "KKAL": "kcal",
-        "GRAMS": "grams",
-        "RANGE": "Range"
+        "CUSTOM_RANGE_PLACEHOLDER": "Select dates",
+        "NO_DATA": "Add more entries to see data for this period.",
+        "LOADING": "Loading statistics..."
     },
     "USER_MANAGE": {
         "EDIT_TITLE": "Edit User Information",

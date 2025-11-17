@@ -473,88 +473,38 @@
     },
     "STATISTICS": {
         "TITLE": "Статистика",
-        "CALORIES_TITLE": "Обзор калорий",
-        "NUTRIENTS_TITLE": "Обзор нутриентов",
-        "NUTRIENTS": {
-            "PROTEINS": "Белки",
-            "FATS": "Жиры",
-            "CARBS": "Углеводы"
+        "SUBTITLE": "Общий прогресс",
+        "SUMMARY_TITLE": "Сводка за период",
+        "TOTAL_CALORIES": "Всего калорий",
+        "AVERAGE_CALORIES": "Среднее в день",
+        "NUTRITION_CHARTS_TITLE": "Графики питания",
+        "NUTRITION_TABS": {
+            "CALORIES": "Калории",
+            "MACROS": "Нутриенты",
+            "DISTRIBUTION": "Соотношение"
         },
-        "LABELS": {
+        "NUTRITION_DISTRIBUTION": {
+            "PIE": "Распределение",
+            "RADAR": "Баланс",
+            "BAR": "Суммарно"
+        },
+        "BODY_CHARTS_TITLE": "Графики тела",
+        "BODY_TABS": {
+            "WEIGHT": "Вес",
+            "BMI": "ИМТ",
+            "WAIST": "Талия",
+            "WHTR": "WHtR"
+        },
+        "BODY_NO_DATA": "Недостаточно измерений для этого графика.",
+        "RANGES": {
             "WEEK": "Неделя",
             "MONTH": "Месяц",
             "YEAR": "Год",
-            "CUSTOM": "Пользовательский"
+            "CUSTOM": "Диапазон"
         },
-        "KKAL": "ккал",
-        "GRAMS": "грамм",
-        "RANGE": "Диапазон"
-    },
-    "USER_MANAGE": {
-        "EDIT_TITLE": "Редактировать информацию пользователя",
-        "EMAIL": "Email",
-        "EMAIL_PLACEHOLDER": "user@example.com",
-        "NEW_PASSWORD": "Новый пароль",
-        "NEW_PASSWORD_PLACEHOLDER": "Введите новый пароль",
-        "CONFIRM_NEW_PASSWORD": "Подтвердите новый пароль",
-        "CONFIRM_NEW_PASSWORD_PLACEHOLDER": "Повторите новый пароль",
-        "CURRENT_PASSWORD": "Текущий пароль",
-        "CURRENT_PASSWORD_PLACEHOLDER": "Введите текущий пароль",
-        "CHANGE_PASSWORD": "Изменить пароль",
-        "CHANGE_PASSWORD_SAVE": "Сохранить",
-        "CHANGE_PASSWORD_CANCEL": "Отмена",
-        "CHANGE_PASSWORD_SUCCESS": "Пароль успешно изменён!",
-        "CHANGE_PASSWORD_ERROR": "Не удалось изменить пароль. Проверьте текущий пароль.",
-        "CHANGE_PASSWORD_OK": "Понятно",
-        "USERNAME": "Имя пользователя",
-        "USERNAME_PLACEHOLDER": "Введите имя пользователя",
-        "FIRST_NAME": "Имя",
-        "FIRST_NAME_PLACEHOLDER": "Введите имя",
-        "LAST_NAME": "Фамилия",
-        "LAST_NAME_PLACEHOLDER": "Введите фамилию",
-        "BIRTH_DATE": "Дата рождения",
-        "BIRTH_DATE_PLACEHOLDER": "Выберите дату рождения",
-        "GENDER": "Пол",
-        "SELECT_GENDER": "Выберите пол",
-        "GENDER_OPTIONS": {
-            "M": "Мужской",
-            "F": "Женский",
-            "O": "Другое"
-        },
-        "ACCOUNT_SECTION": "Учетные данные",
-        "PERSONAL_SECTION": "Личная информация",
-        "BODY_SECTION": "Параметры тела",
-        "HEIGHT": "Рост",
-        "HEIGHT_PLACEHOLDER": "Укажите рост (см)",
-        "ACTIVITY_LEVEL": "Уровень активности",
-        "SELECT_ACTIVITY_LEVEL": "Выберите уровень активности",
-        "ACTIVITY_LEVEL_OPTIONS": {
-            "MINIMAL": "Минимальная (сидячая)",
-            "LIGHT": "Лёгкая активность",
-            "MODERATE": "Средняя активность",
-            "HIGH": "Высокая активность",
-            "EXTREME": "Экстремальная активность"
-        },
-        "NUTRITION_SECTION": "Цели питания",
-        "DAILY_CALORIES": "Дневная норма калорий (ккал)",
-        "DAILY_CALORIES_PLACEHOLDER": "Укажите дневную норму калорий",
-        "PROTEIN_TARGET": "Белков в день (г)",
-        "PROTEIN_TARGET_PLACEHOLDER": "Укажите цель по белкам",
-        "FAT_TARGET": "Жиров в день (г)",
-        "FAT_TARGET_PLACEHOLDER": "Укажите цель по жирам",
-        "CARB_TARGET": "Углеводов в день (г)",
-        "CARB_TARGET_PLACEHOLDER": "Укажите цель по углеводам",
-        "STEP_GOAL": "Цель по шагам (в день)",
-        "STEP_GOAL_PLACEHOLDER": "Укажите цель по шагам",
-        "WATER_GOAL": "Цель по воде (мл/день)",
-        "WATER_GOAL_PLACEHOLDER": "Укажите цель по воде",
-        "DELETE_ACCOUNT_BUTTON": "Удалить аккаунт",
-        "DELETE_ACCOUNT_INFO": "Удаление аккаунта скоро будет доступно.",
-        "SAVE_BUTTON": "Сохранить",
-        "LOAD_ERROR": "Не удалось загрузить информацию о пользователе.",
-        "UPDATE_ERROR": "Не удалось обновить профиль.",
-        "UPDATE_SUCCESS": "Информация пользователя успешно обновлена!",
-        "GO_TO_HOME_BUTTON": "На главную"
+        "CUSTOM_RANGE_PLACEHOLDER": "Выберите даты",
+        "NO_DATA": "Недостаточно данных для выбранного периода.",
+        "LOADING": "Загружаем статистику..."
     },
     "TODAY_CONSUMPTION": {
         "TITLE": "Потребление за сегодня",
@@ -751,8 +701,10 @@
         },
         "WHT_CURRENT": "Текущий WHtR",
         "WHT_NO_DATA": "Добавьте рост в профиле и хотя бы одно измерение талии.",
-        "NO_PREVIOUS": "Пока недостаточно данных",
-        "NO_CHANGE": "Изменений нет",
+        "NO_PREVIOUS": "Пока недостаточно данных",
+
+        "NO_CHANGE": "Изменений нет",
+
         "WHT_STATUS": {
             "UNDER": "Ниже оптимума",
             "NORMAL": "Здоровый диапазон",
