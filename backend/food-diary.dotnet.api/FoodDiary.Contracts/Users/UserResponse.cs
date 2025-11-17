@@ -12,6 +12,7 @@ public record UserResponse(
     string? Gender,
     double? Weight,
     double? DesiredWeight,
+    double? DesiredWaist,
     double? Height,
     string ActivityLevel,
     double? DailyCalorieTarget,

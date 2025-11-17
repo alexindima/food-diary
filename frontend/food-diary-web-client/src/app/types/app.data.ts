@@ -11,4 +11,5 @@ export interface AppConfigApiUrls {
     recipes: string;
     logs: string;
     weights: string;
+    waists: string;
 }

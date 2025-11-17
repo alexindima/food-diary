@@ -4,6 +4,7 @@ import { environment } from '../../environments/environment';
 import { catchError, map, Observable, of } from 'rxjs';
 import {
     ChangePasswordRequest,
+    DesiredWaistResponse,
     DesiredWeightResponse,
     UpdateUserDto,
     User,
@@ -64,6 +65,28 @@ export class UserService extends ApiService {
             map(response => response.desiredWeight ?? null),
             catchError(error => {
                 console.error('Update desired weight error', error);
+                throw error;
+            }),
+        );
+    }
+
+    public getDesiredWaist(): Observable<number | null> {
+        return this.get<DesiredWaistResponse>('desired-waist').pipe(
+            map(response => response.desiredWaist ?? null),
+            catchError(error => {
+                console.error('Get desired waist error', error);
+                return of(null);
+            }),
+        );
+    }
+
+    public updateDesiredWaist(value: number | null): Observable<number | null> {
+        return this.put<DesiredWaistResponse>('desired-waist', {
+            desiredWaist: value,
+        }).pipe(
+            map(response => response.desiredWaist ?? null),
+            catchError(error => {
+                console.error('Update desired waist error', error);
                 throw error;
             }),
         );

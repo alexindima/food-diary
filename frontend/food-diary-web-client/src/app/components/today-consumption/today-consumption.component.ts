@@ -28,6 +28,8 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
 import { WeightEntriesService } from '../../services/weight-entries.service';
 import { WeightEntry } from '../../types/weight-entry.data';
+import { WaistEntriesService } from '../../services/waist-entries.service';
+import { WaistEntry } from '../../types/waist-entry.data';
 
 interface DashboardQuickAction {
     icon: string;
@@ -65,6 +67,7 @@ export class TodayConsumptionComponent implements OnInit {
     private readonly userService = inject(UserService);
     private readonly consumptionService = inject(ConsumptionService);
     private readonly weightEntriesService = inject(WeightEntriesService);
+    private readonly waistEntriesService = inject(WaistEntriesService);
     private readonly translateService = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
 
@@ -87,6 +90,11 @@ export class TodayConsumptionComponent implements OnInit {
     public isWeightLoading = signal<boolean>(false);
     public desiredWeight = signal<number | null>(null);
     public isDesiredWeightLoading = signal<boolean>(false);
+    public latestWaistEntry = signal<WaistEntry | null>(null);
+    public previousWaistEntry = signal<WaistEntry | null>(null);
+    public isWaistLoading = signal<boolean>(false);
+    public desiredWaist = signal<number | null>(null);
+    public isDesiredWaistLoading = signal<boolean>(false);
 
     public readonly macroSummary = computed(() => ([
         {
@@ -169,8 +177,37 @@ export class TodayConsumptionComponent implements OnInit {
             return this.translateService.instant('WEIGHT_HISTORY.NO_CHANGE');
         }
 
-        const direction = diff > 0 ? '↗' : '↘';
+        const direction = diff > 0 ? '↑' : '↓';
         return `${direction} ${Math.abs(diff).toFixed(1)} ${this.translateService.instant('DASHBOARD.KG')}`;
+    });
+
+    public readonly waistMetaText = computed(() => {
+        if (this.isDesiredWaistLoading()) {
+            return this.translateService.instant('WAIST_HISTORY.LOADING');
+        }
+
+        const desired = this.desiredWaist();
+        if (desired !== null && desired !== undefined) {
+            return this.translateService.instant('DASHBOARD.WAIST_GOAL', { value: desired });
+        }
+
+        return this.translateService.instant('DASHBOARD.WAIST_META_EMPTY');
+    });
+
+    public readonly waistTrendLabel = computed(() => {
+        const latest = this.latestWaistEntry();
+        const previous = this.previousWaistEntry();
+        if (!latest || !previous) {
+            return this.translateService.instant('WAIST_HISTORY.NO_PREVIOUS');
+        }
+
+        const diff = latest.circumference - previous.circumference;
+        if (Math.abs(diff) < 0.01) {
+            return this.translateService.instant('WAIST_HISTORY.NO_CHANGE');
+        }
+
+        const direction = diff > 0 ? '↑' : '↓';
+        return `${direction} ${Math.abs(diff).toFixed(1)} ${this.translateService.instant('DASHBOARD.CM')}`;
     });
 
     public quickActions: DashboardQuickAction[] = [
@@ -220,6 +257,7 @@ export class TodayConsumptionComponent implements OnInit {
 
         this.fetchDashboardData();
         this.fetchWeightSummary();
+        this.fetchWaistSummary();
     }
 
     public openDatePicker(): void {
@@ -241,6 +279,10 @@ export class TodayConsumptionComponent implements OnInit {
 
     public async openWeightHistory(): Promise<void> {
         await this.navigationService.navigateToWeightHistory();
+    }
+
+    public async openWaistHistory(): Promise<void> {
+        await this.navigationService.navigateToWaistHistory();
     }
 
     public openConsumption(consumption: Consumption): void {
@@ -284,6 +326,41 @@ export class TodayConsumptionComponent implements OnInit {
                 },
                 error: () => {
                     this.isDesiredWeightLoading.set(false);
+                },
+            });
+    }
+
+    private fetchWaistSummary(): void {
+        this.isWaistLoading.set(true);
+        this.waistEntriesService
+            .getEntries({ limit: 2, sort: 'desc' })
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe({
+                next: entries => {
+                    const [latest, previous] = entries;
+                    this.latestWaistEntry.set(latest ?? null);
+                    this.previousWaistEntry.set(previous ?? null);
+                    this.isWaistLoading.set(false);
+                },
+                error: () => {
+                    this.isWaistLoading.set(false);
+                },
+            });
+        this.fetchDesiredWaist();
+    }
+
+    private fetchDesiredWaist(): void {
+        this.isDesiredWaistLoading.set(true);
+        this.userService
+            .getDesiredWaist()
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe({
+                next: value => {
+                    this.desiredWaist.set(value);
+                    this.isDesiredWaistLoading.set(false);
+                },
+                error: () => {
+                    this.isDesiredWaistLoading.set(false);
                 },
             });
     }

@@ -18,6 +18,7 @@ public sealed class User : AggregateRoot<UserId> {
     public string? Gender { get; private set; }
     public double? Weight { get; private set; }
     public double? DesiredWeight { get; private set; }
+    public double? DesiredWaist { get; private set; }
     public double? Height { get; private set; }
     public ActivityLevel ActivityLevel { get; private set; } = ActivityLevel.Moderate;
     public double? DailyCalorieTarget { get; private set; }
@@ -34,6 +35,7 @@ public sealed class User : AggregateRoot<UserId> {
     public ICollection<Product> Products { get; private set; } = new List<Product>();
     public ICollection<Recipe> Recipes { get; private set; } = new List<Recipe>();
     public ICollection<WeightEntry> WeightEntries { get; private set; } = new List<WeightEntry>();
+    public ICollection<WaistEntry> WaistEntries { get; private set; } = new List<WaistEntry>();
 
     // Конструктор для EF Core
     private User() {
@@ -67,6 +69,7 @@ public sealed class User : AggregateRoot<UserId> {
         DateTime? birthDate = null,
         string? gender = null,
         double? weight = null,
+        double? circumference = null,
         double? height = null,
         ActivityLevel? activityLevel = null,
         double? dailyCalorieTarget = null,
@@ -82,6 +85,7 @@ public sealed class User : AggregateRoot<UserId> {
         if (birthDate.HasValue) BirthDate = birthDate;
         if (gender is not null) Gender = gender;
         if (weight.HasValue) Weight = weight;
+        if (circumference.HasValue) DesiredWaist = circumference;
         if (height.HasValue) Height = height;
         if (activityLevel.HasValue) ActivityLevel = activityLevel.Value;
         if (dailyCalorieTarget.HasValue) DailyCalorieTarget = dailyCalorieTarget;
@@ -98,6 +102,12 @@ public sealed class User : AggregateRoot<UserId> {
     public void UpdateDesiredWeight(double? desiredWeight)
     {
         DesiredWeight = desiredWeight;
+        SetModified();
+    }
+
+    public void UpdateDesiredWaist(double? desiredWaist)
+    {
+        DesiredWaist = desiredWaist;
         SetModified();
     }
 

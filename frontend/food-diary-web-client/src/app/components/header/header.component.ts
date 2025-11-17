@@ -54,6 +54,10 @@ export class HeaderComponent implements OnInit {
         await this.navigationService.navigateToWeightHistory();
     }
 
+    protected async goToWaistHistory(): Promise<void> {
+        await this.navigationService.navigateToWaistHistory();
+    }
+
     protected stop(event: Event): void {
         event.stopPropagation();
     }

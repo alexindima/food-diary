@@ -12,5 +12,6 @@ export const environment: AppConfig = {
         recipes: `${serverUrl}/api/recipes`,
         logs: `${serverUrl}/api/logs`,
         weights: `${serverUrl}/api/weight-entries`,
+        waists: `${serverUrl}/api/waist-entries`,
     },
 };

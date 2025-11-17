@@ -12,6 +12,7 @@ export interface User {
     gender?: string;
     weight?: number;
     desiredWeight?: number;
+    desiredWaist?: number;
     height?: number;
     activityLevel?: ActivityLevelOption;
     dailyCalorieTarget?: number;
@@ -90,6 +91,10 @@ export interface ChangePasswordRequest {
 
 export interface DesiredWeightResponse {
     desiredWeight: number | null;
+}
+
+export interface DesiredWaistResponse {
+    desiredWaist: number | null;
 }
 
 export enum Gender {

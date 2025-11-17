@@ -104,4 +104,15 @@ public static class Errors
             "WeightEntry.AlreadyExists",
             $"Weight entry for {date:yyyy-MM-dd} already exists.");
     }
+
+    public static class WaistEntry
+    {
+        public static Error NotFound(Guid id) => new(
+            "WaistEntry.NotFound",
+            $"Waist entry with ID {id} was not found.");
+
+        public static Error AlreadyExists(DateTime date) => new(
+            "WaistEntry.AlreadyExists",
+            $"Waist entry for {date:yyyy-MM-dd} already exists.");
+    }
 }

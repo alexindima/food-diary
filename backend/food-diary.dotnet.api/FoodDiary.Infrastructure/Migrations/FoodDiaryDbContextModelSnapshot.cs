@@ -381,6 +381,9 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.Property<double?>("DailyCalorieTarget")
                         .HasColumnType("double precision");
 
+                    b.Property<double?>("DesiredWaist")
+                        .HasColumnType("double precision");
+
                     b.Property<double?>("DesiredWeight")
                         .HasColumnType("double precision");
 
@@ -442,6 +445,34 @@ namespace FoodDiary.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("FoodDiary.Domain.Entities.WaistEntry", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<double>("Circumference")
+                        .HasColumnType("double precision");
+
+                    b.Property<DateTime>("CreatedOnUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("date");
+
+                    b.Property<DateTime?>("ModifiedOnUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId", "Date")
+                        .IsUnique();
+
+                    b.ToTable("WaistEntries");
                 });
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.WeightEntry", b =>
@@ -563,6 +594,17 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.Navigation("Recipe");
                 });
 
+            modelBuilder.Entity("FoodDiary.Domain.Entities.WaistEntry", b =>
+                {
+                    b.HasOne("FoodDiary.Domain.Entities.User", "User")
+                        .WithMany("WaistEntries")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("FoodDiary.Domain.Entities.WeightEntry", b =>
                 {
                     b.HasOne("FoodDiary.Domain.Entities.User", "User")
@@ -607,6 +649,8 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.Navigation("Products");
 
                     b.Navigation("Recipes");
+
+                    b.Navigation("WaistEntries");
 
                     b.Navigation("WeightEntries");
                 });

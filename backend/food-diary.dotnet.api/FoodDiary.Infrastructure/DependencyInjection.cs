@@ -22,6 +22,7 @@ public static class DependencyInjection
         services.AddScoped<IRecipeRepository, RecipeRepository>();
         services.AddScoped<IMealRepository, MealRepository>();
         services.AddScoped<IWeightEntryRepository, WeightEntryRepository>();
+        services.AddScoped<IWaistEntryRepository, WaistEntryRepository>();
         services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
         services.AddSingleton<IPasswordHasher, PasswordHasher>();
 

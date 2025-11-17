@@ -5,7 +5,9 @@ using FoodDiary.Application.Users.Queries.GetUserById;
 using FoodDiary.Contracts.Users;
 using FoodDiary.WebApi.Extensions;
 using FoodDiary.Application.Users.Commands.UpdateDesiredWeight;
+using FoodDiary.Application.Users.Commands.UpdateDesiredWaist;
 using FoodDiary.Application.Users.Queries.GetDesiredWeight;
+using FoodDiary.Application.Users.Queries.GetDesiredWaist;
 
 namespace FoodDiary.WebApi.Controllers;
 
@@ -45,6 +47,22 @@ public class UsersController(ISender mediator) : AuthorizedController(mediator) 
     public async Task<IActionResult> UpdateDesiredWeight([FromBody] UpdateDesiredWeightRequest request)
     {
         var command = new UpdateDesiredWeightCommand(CurrentUserId, request.DesiredWeight);
+        var result = await Mediator.Send(command);
+        return result.ToActionResult();
+    }
+
+    [HttpGet("desired-waist")]
+    public async Task<IActionResult> GetDesiredWaist()
+    {
+        var query = new GetDesiredWaistQuery(CurrentUserId);
+        var result = await Mediator.Send(query);
+        return result.ToActionResult();
+    }
+
+    [HttpPut("desired-waist")]
+    public async Task<IActionResult> UpdateDesiredWaist([FromBody] UpdateDesiredWaistRequest request)
+    {
+        var command = new UpdateDesiredWaistCommand(CurrentUserId, request.DesiredWaist);
         var result = await Mediator.Send(command);
         return result.ToActionResult();
     }

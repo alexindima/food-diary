@@ -17,6 +17,7 @@ public static class UserMappings
             user.Gender,
             user.Weight,
             user.DesiredWeight,
+            user.DesiredWaist,
             user.Height,
             user.ActivityLevel.ToString(),
             user.DailyCalorieTarget,

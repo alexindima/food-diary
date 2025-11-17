@@ -84,15 +84,16 @@
             </fd-ui-card>
         </div>
 
+        <fd-ui-card
+            class="dashboard__card dashboard__card--motivation dashboard__card--motivation-wide"
+            [title]="'DASHBOARD.MOTIVATION_TITLE' | translate"
+        >
+            <p class="dashboard__motivation-copy">
+                {{ motivationKey() | translate:{ percent: progressPercent() } }}
+            </p>
+        </fd-ui-card>
+
         <div class="dashboard__insights">
-            <fd-ui-card
-                class="dashboard__card dashboard__card--motivation"
-                [title]="'DASHBOARD.MOTIVATION_TITLE' | translate"
-            >
-                <p class="dashboard__motivation-copy">
-                    {{ motivationKey() | translate:{ percent: progressPercent() } }}
-                </p>
-            </fd-ui-card>
             <fd-ui-card
                 class="dashboard__card dashboard__card--weight dashboard__card--clickable"
                 role="button"
@@ -117,6 +118,34 @@
                         </strong>
                         <span class="dashboard__weight-trend">
                             {{ weightTrendLabel() }}
+                        </span>
+                    }
+                </div>
+            </fd-ui-card>
+            <fd-ui-card
+                class="dashboard__card dashboard__card--waist dashboard__card--clickable"
+                role="button"
+                tabindex="0"
+                (click)="openWaistHistory()"
+                [title]="'DASHBOARD.WAIST_TITLE' | translate"
+                [meta]="waistMetaText()"
+            >
+                <div class="dashboard__weight-summary">
+                    @if (isWaistLoading()) {
+                        <span class="dashboard__weight-loading">
+                            {{ 'WAIST_HISTORY.LOADING' | translate }}
+                        </span>
+                    } @else {
+                        <strong class="dashboard__weight-value">
+                            @if (latestWaistEntry()) {
+                                {{ latestWaistEntry()?.circumference | number:'1.0-1' }}
+                                {{ 'DASHBOARD.CM' | translate }}
+                            } @else {
+                                {{ 'WAIST_HISTORY.NO_DATA' | translate }}
+                            }
+                        </strong>
+                        <span class="dashboard__weight-trend">
+                            {{ waistTrendLabel() }}
                         </span>
                     }
                 </div>
