@@ -49,6 +49,9 @@ export class WeightHistoryPageComponent implements OnInit {
     private readonly translate = inject(TranslateService);
     private readonly fb = inject(FormBuilder);
 
+    private readonly userHeightCm = signal<number | null>(null);
+    private readonly bmiScaleMax = 40;
+
     private readonly defaultRange: WeightHistoryRange = 'month';
     public readonly selectedRange = signal<WeightHistoryRange>(this.defaultRange);
 
@@ -131,6 +134,80 @@ export class WeightHistoryPageComponent implements OnInit {
         { value: 'year', labelKey: 'WEIGHT_HISTORY.RANGE_YEAR' },
         { value: 'custom', labelKey: 'WEIGHT_HISTORY.RANGE_CUSTOM' },
     ];
+    public readonly bmiSegments: BmiSegment[] = [
+        { labelKey: 'WEIGHT_HISTORY.BMI_SEGMENTS.UNDER', from: 0, to: 18.5, class: 'weight-history-page__bmi-segment--under' },
+        { labelKey: 'WEIGHT_HISTORY.BMI_SEGMENTS.NORMAL', from: 18.5, to: 25, class: 'weight-history-page__bmi-segment--normal' },
+        { labelKey: 'WEIGHT_HISTORY.BMI_SEGMENTS.OVER', from: 25, to: 30, class: 'weight-history-page__bmi-segment--over' },
+        { labelKey: 'WEIGHT_HISTORY.BMI_SEGMENTS.OBESE', from: 30, to: this.bmiScaleMax, class: 'weight-history-page__bmi-segment--obese' },
+    ];
+
+    public readonly latestWeight = computed<number | null>(() => {
+        const entries = this.entriesDescending();
+        if (entries.length > 0) {
+            return entries[0].weight;
+        }
+        return null;
+    });
+
+    public readonly bmiValue = computed<number | null>(() => {
+        const heightCm = this.userHeightCm();
+        const latest = this.latestWeight();
+        if (!heightCm || !latest) {
+            return null;
+        }
+        const heightMeters = heightCm / 100;
+        if (!heightMeters) {
+            return null;
+        }
+        const bmi = latest / (heightMeters * heightMeters);
+        return Math.round(bmi * 10) / 10;
+    });
+
+    private readonly bmiPointerPaddingPercent = 1;
+
+    public readonly bmiPointerPosition = computed(() => {
+        const bmi = this.bmiValue();
+        if (bmi === null) {
+            return '0%';
+        }
+        const rawPercent = (bmi / this.bmiScaleMax) * 100;
+        const percent = Math.max(this.bmiPointerPaddingPercent, Math.min(100 - this.bmiPointerPaddingPercent, rawPercent));
+        return `${percent}%`;
+    });
+
+    public readonly bmiStatusInfo = computed<BmiStatusInfo | null>(() => {
+        const bmi = this.bmiValue();
+        if (bmi === null) {
+            return null;
+        }
+
+        if (bmi < 18.5) {
+            return {
+                labelKey: 'WEIGHT_HISTORY.BMI_STATUS.UNDERWEIGHT',
+                descriptionKey: 'WEIGHT_HISTORY.BMI_STATUS_DESC.UNDERWEIGHT',
+                class: 'weight-history-page__bmi-status--under',
+            };
+        }
+        if (bmi < 25) {
+            return {
+                labelKey: 'WEIGHT_HISTORY.BMI_STATUS.NORMAL',
+                descriptionKey: 'WEIGHT_HISTORY.BMI_STATUS_DESC.NORMAL',
+                class: 'weight-history-page__bmi-status--normal',
+            };
+        }
+        if (bmi < 30) {
+            return {
+                labelKey: 'WEIGHT_HISTORY.BMI_STATUS.OVER',
+                descriptionKey: 'WEIGHT_HISTORY.BMI_STATUS_DESC.OVER',
+                class: 'weight-history-page__bmi-status--over',
+            };
+        }
+        return {
+            labelKey: 'WEIGHT_HISTORY.BMI_STATUS.OBESE',
+            descriptionKey: 'WEIGHT_HISTORY.BMI_STATUS_DESC.OBESE',
+            class: 'weight-history-page__bmi-status--obese',
+        };
+    });
 
     public ngOnInit(): void {
         this.customRangeControl.valueChanges
@@ -143,6 +220,7 @@ export class WeightHistoryPageComponent implements OnInit {
 
         this.loadEntries();
         this.loadDesiredWeight();
+        this.loadUserProfile();
     }
 
     public navigateBack(): void {
@@ -316,6 +394,20 @@ export class WeightHistoryPageComponent implements OnInit {
             });
     }
 
+    private loadUserProfile(): void {
+        this.userService
+            .getInfo()
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(user => {
+                this.userHeightCm.set(user?.height ?? null);
+            });
+    }
+
+    public getBmiSegmentWidth(segment: BmiSegment): string {
+        const width = ((segment.to - segment.from) / this.bmiScaleMax) * 100;
+        return `${width}%`;
+    }
+
     private loadSummary(filters: WeightEntrySummaryFilters): void {
         this.isSummaryLoading.set(true);
         this.weightEntriesService
@@ -438,6 +530,19 @@ export class WeightHistoryPageComponent implements OnInit {
 const MS_IN_DAY = 24 * 60 * 60 * 1000;
 
 type WeightHistoryRange = 'week' | 'month' | 'year' | 'custom';
+
+interface BmiSegment {
+    labelKey: string;
+    from: number;
+    to: number;
+    class: string;
+}
+
+interface BmiStatusInfo {
+    labelKey: string;
+    descriptionKey: string;
+    class: string;
+}
 
 function isWeightHistoryRange(value: string): value is WeightHistoryRange {
     return value === 'week' || value === 'month' || value === 'year' || value === 'custom';

@@ -1,3 +1,6 @@
+@import 'mixins';
+@import 'variables';
+
 .weight-history-page {
     display: flex;
     flex-direction: column;
@@ -78,6 +81,142 @@
     &__custom-range-input {
         width: 320px;
         max-width: 100%;
+    }
+
+    &__card--bmi {
+        display: flex;
+        flex-direction: column;
+        gap: @gap-s;
+    }
+
+    &__bmi-note {
+        margin: 0 0 (@gap-xs);
+        font-size: 0.9rem;
+        color: @color-text-additional;
+    }
+
+    &__bmi-scale {
+        position: relative;
+        margin-top: @gap-xs;
+    }
+
+    &__bmi-segments {
+        display: flex;
+        height: 18px;
+        border-radius: 999px;
+        overflow: hidden;
+    }
+
+    &__bmi-segment {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.7rem;
+        color: #0f172a;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+    }
+
+    &__bmi-segment--under {
+        background: linear-gradient(90deg, #bfdbfe, #93c5fd);
+        color: #1d4ed8;
+    }
+
+    &__bmi-segment--normal {
+        background: linear-gradient(90deg, #bbf7d0, #4ade80);
+        color: #065f46;
+    }
+
+    &__bmi-segment--over {
+        background: linear-gradient(90deg, #fde68a, #fbbf24);
+        color: #92400e;
+    }
+
+    &__bmi-segment--obese {
+        background: linear-gradient(90deg, #fecaca, #f87171);
+        color: #7f1d1d;
+    }
+
+    &__bmi-pointer {
+        position: absolute;
+        top: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2px;
+    }
+
+    &__bmi-pointer-dot {
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        border: 2px solid #0f172a;
+        background-color: #fff;
+        box-shadow: 0 3px 8px rgba(15, 23, 42, 0.25);
+        transform: translateY(-50%);
+    }
+
+    &__bmi-pointer span {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: #0f172a;
+        transform: translateY(-6px);
+    }
+
+    &__bmi-top {
+        display: flex;
+        flex-direction: column;
+        gap: @gap-xs;
+    }
+
+    &__bmi-bottom {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    &__bmi-footer {
+        margin-top: @gap-s;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: @gap-xs;
+    }
+
+    &__bmi-status {
+        font-weight: 600;
+        padding: 2px 10px;
+        border-radius: 999px;
+        font-size: 0.85rem;
+    }
+
+    &__bmi-status--under {
+        background-color: #dbeafe;
+        color: #1d4ed8;
+    }
+
+    &__bmi-status--normal {
+        background-color: #dcfce7;
+        color: #047857;
+    }
+
+    &__bmi-status--over {
+        background-color: #fef3c7;
+        color: #92400e;
+    }
+
+    &__bmi-status--obese {
+        background-color: #fee2e2;
+        color: #b91c1c;
+    }
+
+    &__bmi-description {
+        margin: 0;
+        color: @color-text-additional;
+        font-size: 0.9rem;
     }
 
     &__content {

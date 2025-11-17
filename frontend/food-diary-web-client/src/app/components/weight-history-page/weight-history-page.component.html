@@ -44,6 +44,54 @@
         }
     </fd-ui-card>
 
+    <fd-ui-card class="weight-history-page__card weight-history-page__card--bmi" [title]="'WEIGHT_HISTORY.BMI_CARD_TITLE' | translate">
+        @if (bmiValue() !== null) {
+            @if (bmiStatusInfo(); as bmiInfo) {
+                <div class="weight-history-page__bmi-top">
+                    <p class="weight-history-page__bmi-note">
+                        {{ 'WEIGHT_HISTORY.BMI_NOTE' | translate }}
+                    </p>
+                    <div class="weight-history-page__bmi-scale">
+                        <div class="weight-history-page__bmi-segments">
+                            @for (segment of bmiSegments; track segment.labelKey) {
+                                <div
+                                    class="weight-history-page__bmi-segment"
+                                    [ngClass]="segment.class"
+                                    [style.width]="getBmiSegmentWidth(segment)"
+                                >
+                                    <span>{{ segment.labelKey | translate }}</span>
+                                </div>
+                            }
+                        </div>
+                        <div class="weight-history-page__bmi-pointer" [style.left]="bmiPointerPosition()">
+                            <div class="weight-history-page__bmi-pointer-dot"></div>
+                            <span>{{ bmiValue() }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="weight-history-page__bmi-bottom">
+                    <div class="weight-history-page__bmi-footer">
+                        <div class="weight-history-page__bmi-value">
+                            {{ 'WEIGHT_HISTORY.BMI_CURRENT' | translate }}:
+                            <strong>{{ bmiValue() }}</strong>
+                        </div>
+                        <div class="weight-history-page__bmi-status" [ngClass]="bmiInfo.class">
+                            {{ bmiInfo.labelKey | translate }}
+                        </div>
+                    </div>
+                    <p class="weight-history-page__bmi-description">
+                        {{ bmiInfo.descriptionKey | translate }}
+                    </p>
+                </div>
+            }
+        } @else {
+            <p class="weight-history-page__empty">
+                {{ 'WEIGHT_HISTORY.BMI_NO_DATA' | translate }}
+            </p>
+        }
+    </fd-ui-card>
+
     <div class="weight-history-page__content weight-history-page__content--form">
         <fd-ui-card class="weight-history-page__card weight-history-page__card--form" [title]="'WEIGHT_HISTORY.ADD_ENTRY_TITLE' | translate">
             <form class="weight-history-page__form" [formGroup]="form" (ngSubmit)="submit()">
