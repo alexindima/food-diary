@@ -488,6 +488,11 @@
             "RADAR": "Баланс",
             "BAR": "Суммарно"
         },
+        "AVERAGE_CARD": {
+            "CONSUMPTION": "Потребление",
+            "STEPS": "Шаги",
+            "BURNED": "Сожжено"
+        },
         "BODY_CHARTS_TITLE": "Графики тела",
         "BODY_TABS": {
             "WEIGHT": "Вес",

@@ -507,6 +507,11 @@
             "RADAR": "Balance radar",
             "BAR": "Totals"
         },
+        "AVERAGE_CARD": {
+            "CONSUMPTION": "Intake",
+            "STEPS": "Steps",
+            "BURNED": "Burned"
+        },
         "BODY_CHARTS_TITLE": "Body metrics",
         "BODY_TABS": {
             "WEIGHT": "Weight",

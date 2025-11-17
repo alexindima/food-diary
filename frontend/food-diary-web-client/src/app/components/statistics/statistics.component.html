@@ -45,11 +45,35 @@
                             </div>
                         </div>
                         <div class="statistics__summary-average">
-                            <span class="statistics__summary-label">{{ 'STATISTICS.AVERAGE_CALORIES' | translate }}</span>
-                            <strong class="statistics__summary-value">
-                                {{ summary.averageCalories | number: '1.0-0' }}
-                                {{ 'PRODUCT_LIST.KCAL' | translate }}
-                            </strong>
+                            <div class="statistics__summary-average-main">
+                                <span class="statistics__summary-label">{{ 'STATISTICS.AVERAGE_CALORIES' | translate }}</span>
+                                <strong class="statistics__summary-value">
+                                    {{ summary.averageCard.consumption | number: '1.0-0' }}
+                                    {{ 'PRODUCT_LIST.KCAL' | translate }}
+                                </strong>
+                                <span class="statistics__summary-note">
+                                    {{ 'STATISTICS.AVERAGE_CARD.CONSUMPTION' | translate }}
+                                </span>
+                            </div>
+                            <div class="statistics__summary-average-details">
+                                <div class="statistics__summary-average-item">
+                                    <strong class="statistics__summary-value">
+                                        {{ summary.averageCard.steps | number: '1.0-0' }}
+                                    </strong>
+                                    <span class="statistics__summary-note">
+                                        {{ 'STATISTICS.AVERAGE_CARD.STEPS' | translate }}
+                                    </span>
+                                </div>
+                                <div class="statistics__summary-average-item">
+                                    <strong class="statistics__summary-value">
+                                        {{ summary.averageCard.burned | number: '1.0-0' }}
+                                        {{ 'PRODUCT_LIST.KCAL' | translate }}
+                                    </strong>
+                                    <span class="statistics__summary-note">
+                                        {{ 'STATISTICS.AVERAGE_CARD.BURNED' | translate }}
+                                    </span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="statistics__summary-row statistics__summary-row--macros">

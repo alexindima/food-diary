@@ -108,6 +108,11 @@ export class StatisticsComponent implements OnInit {
         return {
             totalCalories,
             averageCalories,
+            averageCard: {
+                consumption: averageCalories,
+                steps: 6420,
+                burned: 215,
+            },
             macros: [
                 {
                     labelKey: 'PRODUCT_LIST.PROTEINS',
@@ -151,6 +156,9 @@ export class StatisticsComponent implements OnInit {
                     borderWidth: 2,
                     fill: false,
                     spanGaps: true,
+                    pointBackgroundColor: '#ffffff',
+                    pointBorderColor: CHART_COLORS.primaryLine,
+                    pointBorderWidth: 2,
                 },
             ],
         };
@@ -171,6 +179,10 @@ export class StatisticsComponent implements OnInit {
                     tension: 0.3,
                     fill: false,
                     spanGaps: true,
+                    pointBackgroundColor: '#ffffff',
+                    pointBorderColor: CHART_COLORS.proteins,
+                    pointBorderWidth: 2,
+                    pointRadius: 4,
                 },
                 {
                     data: nutrients?.fats ?? [],
@@ -180,6 +192,10 @@ export class StatisticsComponent implements OnInit {
                     tension: 0.3,
                     fill: false,
                     spanGaps: true,
+                    pointBackgroundColor: '#ffffff',
+                    pointBorderColor: CHART_COLORS.fats,
+                    pointBorderWidth: 2,
+                    pointRadius: 4,
                 },
                 {
                     data: nutrients?.carbs ?? [],
@@ -189,6 +205,10 @@ export class StatisticsComponent implements OnInit {
                     tension: 0.3,
                     fill: false,
                     spanGaps: true,
+                    pointBackgroundColor: '#ffffff',
+                    pointBorderColor: CHART_COLORS.carbs,
+                    pointBorderWidth: 2,
+                    pointRadius: 4,
                 },
             ],
         };
@@ -664,10 +684,13 @@ export class StatisticsComponent implements OnInit {
                     borderColor: CHART_COLORS.primaryLine,
                     backgroundColor: 'transparent',
                     tension: 0.3,
-                    pointRadius: 3,
+                    pointRadius: 4,
                     borderWidth: 2,
                     spanGaps: true,
                     fill: false,
+                    pointBackgroundColor: '#ffffff',
+                    pointBorderColor: CHART_COLORS.primaryLine,
+                    pointBorderWidth: 2,
                 },
             ],
         };

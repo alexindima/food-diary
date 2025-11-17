@@ -112,6 +112,32 @@
         overflow: hidden;
     }
 
+    &__summary-average {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    &__summary-average-main {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    &__summary-average-details {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 12px;
+    }
+
+    &__summary-average-item {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        padding-top: 8px;
+        border-top: 1px solid #e2e8f0;
+    }
+
     &__summary-trend {
         height: 80px;
         margin-top: auto;
@@ -150,6 +176,13 @@
         font-size: 1.4rem;
         font-weight: 700;
         color: @color-text-main;
+    }
+
+    &__summary-note {
+        font-size: 0.75rem;
+        color: #94a3b8;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
     }
 
     &__chart-area {
