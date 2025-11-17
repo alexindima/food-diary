@@ -88,7 +88,9 @@
         "LOGIN": {
             "TITLE": "Вход",
             "EMAIL": "Email",
+            "EMAIL_PLACEHOLDER": "user@example.com",
             "PASSWORD": "Пароль",
+            "PASSWORD_PLACEHOLDER": "Введите пароль",
             "REMEMBER_ME": "Запомнить меня",
             "FORGOT_PASSWORD": "Забыли пароль?",
             "LOGIN": "Войти"
@@ -96,10 +98,22 @@
         "REGISTER": {
             "TITLE": "Регистрация",
             "EMAIL": "Email",
+            "EMAIL_PLACEHOLDER": "user@example.com",
             "PASSWORD": "Пароль",
+            "PASSWORD_PLACEHOLDER": "Придумайте надежный пароль",
             "CONFIRM_PASSWORD": "Подтвердите пароль",
+            "CONFIRM_PASSWORD_PLACEHOLDER": "Повторите пароль",
             "AGREE_TO_TERMS": "Я соглашаюсь с <a href='{{termsUrl}}'>Условиями использования</a> и <a href='{{privacyUrl}}'>Политикой конфиденциальности</a>",
             "REGISTER": "Зарегистрироваться"
+        },
+        "INFO": {
+            "TITLE": "Зачем нужна регистрация?",
+            "LEAD": "Личный аккаунт сохраняет ваш дневник питания и цели, чтобы прогресс не терялся и всегда был под рукой.",
+            "HIGHLIGHTS": {
+                "SYNC": "Синхронизируйте приемы пищи, статистику и цели между всеми устройствами.",
+                "INSIGHTS": "Получайте персональные отчеты и отслеживайте динамику за недели и месяцы.",
+                "LIBRARY": "Сохраняйте любимые продукты и рецепты, чтобы добавлять их в пару касаний."
+            }
         }
     },
     "PRODUCT_LIST": {
@@ -478,9 +492,13 @@
     "USER_MANAGE": {
         "EDIT_TITLE": "Редактировать информацию пользователя",
         "EMAIL": "Email",
+        "EMAIL_PLACEHOLDER": "user@example.com",
         "NEW_PASSWORD": "Новый пароль",
+        "NEW_PASSWORD_PLACEHOLDER": "Введите новый пароль",
         "CONFIRM_NEW_PASSWORD": "Подтвердите новый пароль",
+        "CONFIRM_NEW_PASSWORD_PLACEHOLDER": "Повторите новый пароль",
         "CURRENT_PASSWORD": "Текущий пароль",
+        "CURRENT_PASSWORD_PLACEHOLDER": "Введите текущий пароль",
         "CHANGE_PASSWORD": "Изменить пароль",
         "CHANGE_PASSWORD_SAVE": "Сохранить",
         "CHANGE_PASSWORD_CANCEL": "Отмена",
@@ -488,9 +506,13 @@
         "CHANGE_PASSWORD_ERROR": "Не удалось изменить пароль. Проверьте текущий пароль.",
         "CHANGE_PASSWORD_OK": "Понятно",
         "USERNAME": "Имя пользователя",
+        "USERNAME_PLACEHOLDER": "Введите имя пользователя",
         "FIRST_NAME": "Имя",
+        "FIRST_NAME_PLACEHOLDER": "Введите имя",
         "LAST_NAME": "Фамилия",
+        "LAST_NAME_PLACEHOLDER": "Введите фамилию",
         "BIRTH_DATE": "Дата рождения",
+        "BIRTH_DATE_PLACEHOLDER": "Выберите дату рождения",
         "GENDER": "Пол",
         "SELECT_GENDER": "Выберите пол",
         "GENDER_OPTIONS": {
@@ -502,6 +524,7 @@
         "PERSONAL_SECTION": "Личная информация",
         "BODY_SECTION": "Параметры тела",
         "HEIGHT": "Рост",
+        "HEIGHT_PLACEHOLDER": "Укажите рост (см)",
         "ACTIVITY_LEVEL": "Уровень активности",
         "SELECT_ACTIVITY_LEVEL": "Выберите уровень активности",
         "ACTIVITY_LEVEL_OPTIONS": {
@@ -513,11 +536,17 @@
         },
         "NUTRITION_SECTION": "Цели питания",
         "DAILY_CALORIES": "Дневная норма калорий (ккал)",
+        "DAILY_CALORIES_PLACEHOLDER": "Укажите дневную норму калорий",
         "PROTEIN_TARGET": "Белков в день (г)",
+        "PROTEIN_TARGET_PLACEHOLDER": "Укажите цель по белкам",
         "FAT_TARGET": "Жиров в день (г)",
+        "FAT_TARGET_PLACEHOLDER": "Укажите цель по жирам",
         "CARB_TARGET": "Углеводов в день (г)",
+        "CARB_TARGET_PLACEHOLDER": "Укажите цель по углеводам",
         "STEP_GOAL": "Цель по шагам (в день)",
+        "STEP_GOAL_PLACEHOLDER": "Укажите цель по шагам",
         "WATER_GOAL": "Цель по воде (мл/день)",
+        "WATER_GOAL_PLACEHOLDER": "Укажите цель по воде",
         "DELETE_ACCOUNT_BUTTON": "Удалить аккаунт",
         "DELETE_ACCOUNT_INFO": "Удаление аккаунта скоро будет доступно.",
         "SAVE_BUTTON": "Сохранить",
@@ -652,8 +681,3 @@
         "CAMERA_ERROR": "Ошибка инициализации камеры. Проверьте настройки камеры."
     }
 }
-
-
-
-
-

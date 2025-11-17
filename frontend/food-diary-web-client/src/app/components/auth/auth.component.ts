@@ -2,9 +2,8 @@ import { ChangeDetectionStrategy, Component, DestroyRef, FactoryProvider, inject
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-import { TUI_VALIDATION_ERRORS, TuiCheckbox, TuiFieldErrorPipe, TuiTab, TuiTabsHorizontal } from '@taiga-ui/kit';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { TuiButton, TuiError, TuiLabel, TuiTextfieldComponent, TuiTextfieldDirective } from '@taiga-ui/core';
+import { TuiError } from '@taiga-ui/core';
 import { AsyncPipe } from '@angular/common';
 import { matchFieldValidator } from '../../validators/match-field.validator';
 import { NavigationService } from '../../services/navigation.service';
@@ -13,6 +12,12 @@ import { LoginRequest, RegisterRequest } from '../../types/auth.data';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ValidationErrors } from '../../types/validation-error.data';
 import { HttpErrorResponse } from '@angular/common/http';
+import { FdUiTabsComponent, FdUiTab } from '../../ui-kit/tabs/fd-ui-tabs.component';
+import { FdUiInputComponent } from '../../ui-kit/input/fd-ui-input.component';
+import { FdUiButtonComponent } from '../../ui-kit/button/fd-ui-button.component';
+import { FdUiCheckboxComponent } from '../../ui-kit/checkbox/fd-ui-checkbox.component';
+import { FdUiCardComponent } from '../../ui-kit/card/fd-ui-card.component';
+import { TUI_VALIDATION_ERRORS, TuiFieldErrorPipe } from '@taiga-ui/kit';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: TUI_VALIDATION_ERRORS,
@@ -36,18 +41,16 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     providers: [VALIDATION_ERRORS_PROVIDER],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        TuiTabsHorizontal,
         TranslateModule,
         ReactiveFormsModule,
-        TuiTextfieldComponent,
-        TuiTab,
-        TuiLabel,
-        TuiTextfieldDirective,
-        TuiCheckbox,
-        TuiButton,
         TuiError,
         TuiFieldErrorPipe,
         AsyncPipe,
+        FdUiTabsComponent,
+        FdUiInputComponent,
+        FdUiButtonComponent,
+        FdUiCheckboxComponent,
+        FdUiCardComponent,
     ]
 })
 export class AuthComponent {
@@ -58,19 +61,28 @@ export class AuthComponent {
     private readonly translateService = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
 
-    public activeItemIndex = 0;
+    public authTabs: FdUiTab[] = [
+        { value: 'login', labelKey: 'AUTH.LOGIN.TITLE' },
+        { value: 'register', labelKey: 'AUTH.REGISTER.TITLE' },
+    ];
+    public authMode: 'login' | 'register' = 'login';
 
     public loginForm: FormGroup<LoginFormGroup>;
     public registerForm: FormGroup<RegisterFormGroup>;
     public globalError = signal<string | null>(null);
+    public authBenefits: string[] = [
+        'AUTH.INFO.HIGHLIGHTS.SYNC',
+        'AUTH.INFO.HIGHLIGHTS.INSIGHTS',
+        'AUTH.INFO.HIGHLIGHTS.LIBRARY',
+    ];
 
     private readonly returnUrl: string | null = null;
 
     public constructor() {
         this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || null;
 
-        const mode = this.route.snapshot.params['mode'];
-        this.activeItemIndex = mode === 'register' ? 1 : 0;
+        const mode = this.route.snapshot.params['mode'] === 'register' ? 'register' : 'login';
+        this.authMode = mode;
 
         this.loginForm = new FormGroup<LoginFormGroup>({
             email: new FormControl<string>('', { nonNullable: true, validators: [Validators.required, Validators.email] }),
@@ -96,10 +108,27 @@ export class AuthComponent {
         });
     }
 
-    public async onTabChange(index: number): Promise<void> {
-        this.loginForm.reset();
-        this.registerForm.reset();
-        const mode = index === 0 ? 'login' : 'register';
+    public handleTabChange(value: string): void {
+        const mode: 'login' | 'register' = value === 'register' ? 'register' : 'login';
+        void this.onTabChange(mode);
+    }
+
+    public async onTabChange(mode: 'login' | 'register'): Promise<void> {
+        if (this.authMode === mode) {
+            return;
+        }
+        this.authMode = mode;
+        this.loginForm.reset({
+            email: '',
+            password: '',
+            rememberMe: false,
+        });
+        this.registerForm.reset({
+            email: '',
+            password: '',
+            confirmPassword: '',
+            agreeTerms: false,
+        });
         await this.router.navigate(['/auth', mode]);
     }
 

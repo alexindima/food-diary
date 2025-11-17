@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import {
     ChangeDetectionStrategy,
+    ChangeDetectorRef,
     Component,
     EventEmitter,
     forwardRef,
@@ -62,8 +63,11 @@ export class FdUiInputComponent implements ControlValueAccessor {
     private onChange: (value: string) => void = () => undefined;
     private onTouched: () => void = () => undefined;
 
+    public constructor(private readonly cdr: ChangeDetectorRef) {}
+
     public writeValue(value: string | null): void {
         this.internalValue = value ?? '';
+        this.cdr.markForCheck();
     }
 
     public registerOnChange(fn: (value: string) => void): void {
@@ -76,6 +80,7 @@ export class FdUiInputComponent implements ControlValueAccessor {
 
     public setDisabledState(isDisabled: boolean): void {
         this.disabled = isDisabled;
+        this.cdr.markForCheck();
     }
 
     protected handleInput(value: string): void {

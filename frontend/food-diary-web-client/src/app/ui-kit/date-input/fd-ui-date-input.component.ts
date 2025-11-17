@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import {
     ChangeDetectionStrategy,
+    ChangeDetectorRef,
     Component,
     forwardRef,
     Input,
@@ -71,7 +72,7 @@ export class FdUiDateInputComponent implements ControlValueAccessor {
     private onChange: (value: FdUiDateInputValue) => void = () => undefined;
     private onTouched: () => void = () => undefined;
 
-    public constructor() {
+    public constructor(private readonly cdr: ChangeDetectorRef) {
         this.singleControl.valueChanges
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(value => {
@@ -100,6 +101,7 @@ export class FdUiDateInputComponent implements ControlValueAccessor {
             const coerced = this.toDateValue(value);
             this.singleControl.setValue(coerced, { emitEvent: false });
         }
+        this.cdr.markForCheck();
     }
 
     public registerOnChange(fn: (value: FdUiDateInputValue) => void): void {
@@ -119,6 +121,7 @@ export class FdUiDateInputComponent implements ControlValueAccessor {
             this.singleControl.enable({ emitEvent: false });
             this.rangeGroup.enable({ emitEvent: false });
         }
+        this.cdr.markForCheck();
     }
 
     protected handleBlur(): void {

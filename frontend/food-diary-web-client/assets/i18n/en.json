@@ -88,7 +88,9 @@
         "LOGIN": {
             "TITLE": "Login",
             "EMAIL": "Email",
+            "EMAIL_PLACEHOLDER": "user@example.com",
             "PASSWORD": "Password",
+            "PASSWORD_PLACEHOLDER": "Enter your password",
             "REMEMBER_ME": "Remember me",
             "FORGOT_PASSWORD": "Forgot password?",
             "LOGIN": "Login"
@@ -96,10 +98,22 @@
         "REGISTER": {
             "TITLE": "Register",
             "EMAIL": "Email",
+            "EMAIL_PLACEHOLDER": "user@example.com",
             "PASSWORD": "Password",
+            "PASSWORD_PLACEHOLDER": "Choose a secure password",
             "CONFIRM_PASSWORD": "Confirm password",
+            "CONFIRM_PASSWORD_PLACEHOLDER": "Repeat the password",
             "AGREE_TO_TERMS": "I agree to the <a href='{{termsUrl}}'>Terms of Use</a> and <a href='{{privacyUrl}}'>Privacy Policy</a>",
             "REGISTER": "Register"
+        },
+        "INFO": {
+            "TITLE": "Why create an account?",
+            "LEAD": "Signing in keeps your food diary synchronized, secure, and insightful wherever you go.",
+            "HIGHLIGHTS": {
+                "SYNC": "Sync meals, body stats, and goals across all of your devices in real time.",
+                "INSIGHTS": "Unlock personalized analytics and see how your habits change week over week.",
+                "LIBRARY": "Store favorite products, recipes, and daily targets so logging stays effortless."
+            }
         }
     },
     "PRODUCT_LIST": {
@@ -513,9 +527,13 @@
     "USER_MANAGE": {
         "EDIT_TITLE": "Edit User Information",
         "EMAIL": "Email",
+        "EMAIL_PLACEHOLDER": "user@example.com",
         "NEW_PASSWORD": "New Password",
+        "NEW_PASSWORD_PLACEHOLDER": "Enter a new password",
         "CONFIRM_NEW_PASSWORD": "Confirm New Password",
+        "CONFIRM_NEW_PASSWORD_PLACEHOLDER": "Repeat the new password",
         "CURRENT_PASSWORD": "Current Password",
+        "CURRENT_PASSWORD_PLACEHOLDER": "Enter your current password",
         "CHANGE_PASSWORD": "Change Password",
         "CHANGE_PASSWORD_SAVE": "Save",
         "CHANGE_PASSWORD_CANCEL": "Cancel",
@@ -523,9 +541,13 @@
         "CHANGE_PASSWORD_ERROR": "Failed to change password. Please check the current password.",
         "CHANGE_PASSWORD_OK": "Got it",
         "USERNAME": "Username",
+        "USERNAME_PLACEHOLDER": "Enter your username",
         "FIRST_NAME": "First Name",
+        "FIRST_NAME_PLACEHOLDER": "Enter your first name",
         "LAST_NAME": "Last Name",
+        "LAST_NAME_PLACEHOLDER": "Enter your last name",
         "BIRTH_DATE": "Birth Date",
+        "BIRTH_DATE_PLACEHOLDER": "Select your birth date",
         "GENDER": "Gender",
         "SELECT_GENDER": "Select Gender",
         "GENDER_OPTIONS": {
@@ -537,6 +559,7 @@
         "PERSONAL_SECTION": "Personal Information",
         "BODY_SECTION": "Body Metrics",
         "HEIGHT": "Height",
+        "HEIGHT_PLACEHOLDER": "Enter your height (cm)",
         "ACTIVITY_LEVEL": "Activity level",
         "SELECT_ACTIVITY_LEVEL": "Select activity level",
         "ACTIVITY_LEVEL_OPTIONS": {
@@ -548,11 +571,17 @@
         },
         "NUTRITION_SECTION": "Nutrition goals",
         "DAILY_CALORIES": "Daily calorie target (kcal)",
+        "DAILY_CALORIES_PLACEHOLDER": "Set your calorie target",
         "PROTEIN_TARGET": "Protein target (g)",
+        "PROTEIN_TARGET_PLACEHOLDER": "Set your protein goal",
         "FAT_TARGET": "Fat target (g)",
+        "FAT_TARGET_PLACEHOLDER": "Set your fat goal",
         "CARB_TARGET": "Carb target (g)",
+        "CARB_TARGET_PLACEHOLDER": "Set your carb goal",
         "STEP_GOAL": "Step goal (per day)",
+        "STEP_GOAL_PLACEHOLDER": "Set your daily steps goal",
         "WATER_GOAL": "Water goal (ml/day)",
+        "WATER_GOAL_PLACEHOLDER": "Set your daily water target",
         "DELETE_ACCOUNT_BUTTON": "Delete account",
         "DELETE_ACCOUNT_INFO": "Account deletion will be available soon.",
         "SAVE_BUTTON": "Save",
