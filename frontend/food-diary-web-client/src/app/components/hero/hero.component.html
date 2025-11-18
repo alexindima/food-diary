@@ -4,8 +4,23 @@
         <p class="hero__description">{{ 'HERO.DESCRIPTION' | translate }}</p>
         <div class="hero__actions">
             <div class="hero__button-container">
-                <button tuiButton class="action-button action-button--primary" size="l" (click)="goToLogin()">{{ 'HERO.LOGIN' | translate }}</button>
-                <button tuiButton class="action-button action-button--secondary" size="l" (click)="goToRegister()">{{ 'HERO.REGISTER' | translate }}</button>
+                <fd-ui-button
+                    class="action-button action-button--primary"
+                    size="lg"
+                    variant="primary"
+                    (click)="goToLogin()"
+                >
+                    {{ 'HERO.LOGIN' | translate }}
+                </fd-ui-button>
+                <fd-ui-button
+                    class="action-button action-button--secondary"
+                    size="lg"
+                    variant="secondary"
+                    fill="outline"
+                    (click)="goToRegister()"
+                >
+                    {{ 'HERO.REGISTER' | translate }}
+                </fd-ui-button>
             </div>
         </div>
     </div>

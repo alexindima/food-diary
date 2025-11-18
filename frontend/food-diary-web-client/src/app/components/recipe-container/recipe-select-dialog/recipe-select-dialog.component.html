@@ -26,15 +26,14 @@
                 {{ 'RECIPE_SELECT_DIALOG.ONLY_MY_RECIPES' | translate }}
             </span>
         </label>
-        <button
-            tuiButton
-            iconStart="@tui.plus"
-            size="m"
-            appearance="primary"
+        <fd-ui-button
+            icon="add"
+            size="md"
+            variant="primary"
             (click)="onCreateRecipeClick()"
         >
             {{ 'RECIPE_SELECT_DIALOG.ADD_RECIPE_BUTTON' | translate }}
-        </button>
+        </fd-ui-button>
     </div>
 
     @if (recipeData.isLoading()) {

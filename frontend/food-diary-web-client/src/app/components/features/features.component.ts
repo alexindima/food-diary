@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
-import { TuiButton, TuiSurface } from '@taiga-ui/core';
+import { TuiSurface } from '@taiga-ui/core';
 import { TuiCardLarge } from '@taiga-ui/layout';
 import { TranslateModule } from '@ngx-translate/core';
+import { FdUiButtonComponent } from '../../ui-kit/button/fd-ui-button.component';
 
 @Component({
     selector: 'fd-features',
-    imports: [TuiButton, TuiCardLarge, TuiSurface, TranslateModule],
+    imports: [FdUiButtonComponent, TuiCardLarge, TuiSurface, TranslateModule],
     templateUrl: './features.component.html',
     styleUrl: './features.component.less'
 })

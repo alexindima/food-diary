@@ -1,12 +1,12 @@
 import { Component, inject } from '@angular/core';
-import { TuiButton } from '@taiga-ui/core';
 import { TuiCarousel } from '@taiga-ui/kit';
 import { TranslateModule } from '@ngx-translate/core';
 import { NavigationService } from '../../services/navigation.service';
+import { FdUiButtonComponent } from '../../ui-kit/button/fd-ui-button.component';
 
 @Component({
     selector: 'fd-hero',
-    imports: [TuiButton, TuiCarousel, TranslateModule],
+    imports: [FdUiButtonComponent, TuiCarousel, TranslateModule],
     templateUrl: './hero.component.html',
     styleUrl: './hero.component.less'
 })

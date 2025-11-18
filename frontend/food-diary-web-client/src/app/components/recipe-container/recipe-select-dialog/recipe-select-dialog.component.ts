@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { DecimalPipe } from '@angular/common';
-import { TuiButton, TuiIcon, TuiLoader, TuiTextfieldComponent, TuiTextfieldDirective } from '@taiga-ui/core';
+import { TuiIcon, TuiLoader, TuiTextfieldComponent, TuiTextfieldDirective } from '@taiga-ui/core';
 import { TuiPagination } from '@taiga-ui/kit';
 import { TuiSearchComponent } from '@taiga-ui/layout';
 import { TuiTextfieldControllerModule } from '@taiga-ui/legacy';
@@ -28,6 +28,7 @@ import { BadgeComponent } from '../../shared/badge/badge.component';
 import { FdUiEntityCardComponent } from '../../../ui-kit/entity-card/fd-ui-entity-card.component';
 import { FdUiEntityCardHeaderDirective } from '../../../ui-kit/entity-card/fd-ui-entity-card-header.directive';
 import { MatDialogRef } from '@angular/material/dialog';
+import { FdUiButtonComponent } from '../../../ui-kit/button/fd-ui-button.component';
 
 @Component({
     selector: 'fd-recipe-select-dialog',
@@ -39,7 +40,6 @@ import { MatDialogRef } from '@angular/material/dialog';
         ReactiveFormsModule,
         DecimalPipe,
         TranslatePipe,
-        TuiButton,
         TuiLoader,
         TuiPagination,
         TuiSearchComponent,
@@ -50,6 +50,7 @@ import { MatDialogRef } from '@angular/material/dialog';
         BadgeComponent,
         FdUiEntityCardComponent,
         FdUiEntityCardHeaderDirective,
+        FdUiButtonComponent,
     ],
 })
 export class RecipeSelectDialogComponent implements OnInit {
