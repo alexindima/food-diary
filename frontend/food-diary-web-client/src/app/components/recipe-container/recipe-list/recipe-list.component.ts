@@ -11,7 +11,6 @@ import { FdUiPaginationComponent } from '../../../ui-kit/pagination/fd-ui-pagina
 import { catchError, debounceTime, finalize, map, Observable, of, switchMap, tap } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FormGroupControls } from '../../../types/common.data';
-import { TuiAlertService } from '@taiga-ui/core';
 import { RecipeDetailComponent, RecipeDetailActionResult } from '../recipe-detail/recipe-detail.component';
 import { BadgeComponent } from '../../shared/badge/badge.component';
 import { FdUiEntityCardComponent } from '../../../ui-kit/entity-card/fd-ui-entity-card.component';
@@ -19,6 +18,7 @@ import { FdUiInputComponent } from '../../../ui-kit/input/fd-ui-input.component'
 import { FdUiCheckboxComponent } from '../../../ui-kit/checkbox/fd-ui-checkbox.component';
 import { FdUiButtonComponent } from '../../../ui-kit/button/fd-ui-button.component';
 import { FdUiDialogService } from '../../../ui-kit/dialog/fd-ui-dialog.service';
+import { FdUiToastService } from '../../../ui-kit/toast/fd-ui-toast.service';
 
 @Component({
     selector: 'fd-recipe-list',
@@ -41,9 +41,9 @@ import { FdUiDialogService } from '../../../ui-kit/dialog/fd-ui-dialog.service';
 export class RecipeListComponent implements OnInit {
     private readonly recipeService = inject(RecipeService);
     private readonly navigationService = inject(NavigationService);
-    private readonly alertService = inject(TuiAlertService);
     private readonly translateService = inject(TranslateService);
     private readonly fdDialogService = inject(FdUiDialogService);
+    private readonly toastService = inject(FdUiToastService);
 
     @ViewChild('container') private container!: ElementRef<HTMLElement>;
 
@@ -129,12 +129,10 @@ export class RecipeListComponent implements OnInit {
                 error: error => {
                     console.error('Delete recipe error', error);
                     this.recipeData.setLoading(false);
-                    this.alertService
-                        .open(
-                            this.translateService.instant('RECIPE_LIST.DELETE_ERROR'),
-                            { appearance: 'negative' },
-                        )
-                        .subscribe();
+                    this.toastService.open(
+                        this.translateService.instant('RECIPE_LIST.DELETE_ERROR'),
+                        { appearance: 'negative' },
+                    );
                 },
             });
     }

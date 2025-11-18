@@ -18,7 +18,6 @@
     }
 
     &__item {
-        --t-gap: @gap-xs;
         max-width: 320px;
         padding: @gap-l;
         display: flex;
@@ -26,6 +25,18 @@
         justify-content: space-between;
         align-items: center;
         box-sizing: border-box;
+        background: white;
+        border-radius: @border-radius-m;
+        box-shadow: 0 10px 30px rgba(15, 23, 42, 0.12);
+        border: 1px solid rgba(15, 23, 42, 0.05);
+        transition:
+            transform 0.2s ease,
+            box-shadow 0.2s ease;
+
+        &:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 16px 30px rgba(15, 23, 42, 0.18);
+        }
 
         &-title {
             font-size: 22px;

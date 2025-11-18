@@ -13,8 +13,9 @@
         position: relative;
         z-index: 2;
         padding: @gap-l;
-        background: rgba(0, 0, 0, 0.5);
+        background: rgba(0, 0, 0, 0.55);
         border-radius: @border-radius-m;
+        max-width: 560px;
     }
 
     &__title {
@@ -36,34 +37,72 @@
     &__button-container {
         display: flex;
         gap: @gap-m;
+        flex-wrap: wrap;
     }
 
-    &__background {
-        --tui-carousel-padding: 0;
+    &__slider {
         position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
+        inset: 0;
         overflow: hidden;
         z-index: 1;
-        display: flex;
-        transition: transform 0.5s ease-in-out;
     }
 
-    .hero__slide {
+    &__slides {
+        position: relative;
         width: 100%;
         height: 100%;
-        object-fit: cover;
-        transition: opacity 1s;
+    }
 
-        @media @media-mobile {
-            width: initial;
+    &__slide {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        transition: opacity 0.8s ease;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        &--active {
+            opacity: 1;
+        }
+    }
+
+    &__dots {
+        position: absolute;
+        bottom: @gap-l;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: @gap-xs;
+    }
+
+    &__dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        border: none;
+        background-color: rgba(255, 255, 255, 0.4);
+        cursor: pointer;
+        transition: background-color 0.2s ease, transform 0.2s ease;
+
+        &--active {
+            background-color: white;
+            transform: scale(1.1);
         }
     }
 
     @media @media-mobile {
-        min-height: 400px;
+        min-height: 420px;
+
+        &__content {
+            margin: 0 @gap-s;
+            padding: @gap-m;
+        }
     }
 }
 

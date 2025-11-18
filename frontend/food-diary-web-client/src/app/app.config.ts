@@ -1,4 +1,3 @@
-import { NG_EVENT_PLUGINS } from '@taiga-ui/event-plugins';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import {
     ApplicationConfig,
@@ -19,6 +18,7 @@ import { GlobalErrorHandler } from './services/error-handler.service';
 import { LoggingApiService } from './services/logging-api.service';
 import { provideServiceWorker } from '@angular/service-worker';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -46,7 +46,6 @@ export const appConfig: ApplicationConfig = {
         provideAnimations(),
         provideZoneChangeDetection({ eventCoalescing: true }),
         provideRouter(routes, withComponentInputBinding()),
-        NG_EVENT_PLUGINS,
         provideHttpClient(withInterceptorsFromDi()),
         importProvidersFrom(
             TranslateModule.forRoot({
@@ -56,6 +55,7 @@ export const appConfig: ApplicationConfig = {
                     deps: [HttpClient],
                 },
             }),
+            MatSnackBarModule,
         ),
         provideCharts(withDefaultRegisterables()),
         provideServiceWorker('ngsw-worker.js', {

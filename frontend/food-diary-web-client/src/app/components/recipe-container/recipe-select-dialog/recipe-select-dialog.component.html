@@ -2,20 +2,16 @@
     <h2 class="recipe-select__title">{{ 'RECIPE_SELECT_DIALOG.TITLE' | translate }}</h2>
 
     <div class="recipe-select__actions">
-        <search tuiSearch class="recipe-select__search">
-            <form class="recipe-select__search-form" [formGroup]="searchForm">
-                <fieldset tuiTextfieldSize="m">
-                    <tui-textfield iconStart="@tui.search">
-                        <input
-                            formControlName="search"
-                            [placeholder]="'RECIPE_SELECT_DIALOG.SEARCH_PLACEHOLDER' | translate"
-                            tuiTextfield
-                            class="recipe-select__search-input"
-                        />
-                    </tui-textfield>
-                </fieldset>
-            </form>
-        </search>
+        <form class="recipe-select__search-form" [formGroup]="searchForm">
+            <fd-ui-input
+                formControlName="search"
+                prefixIcon="search"
+                [clearable]="true"
+                [placeholder]="'RECIPE_SELECT_DIALOG.SEARCH_PLACEHOLDER' | translate"
+                (cleared)="searchForm.controls.search.setValue('')"
+                floatLabel="always"
+            ></fd-ui-input>
+        </form>
         <label class="recipe-select__toggle">
             <input
                 type="checkbox"

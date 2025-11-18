@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ProductListBaseComponent } from '../product-list-base.component';
-import { TuiAlertService } from '@taiga-ui/core';
 import { Product } from '../../../../types/product.data';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
@@ -17,6 +16,7 @@ import { finalize } from 'rxjs';
 import { FdUiLoaderComponent } from '../../../../ui-kit/loader/fd-ui-loader.component';
 import { FdUiPaginationComponent } from '../../../../ui-kit/pagination/fd-ui-pagination.component';
 import { MatIconModule } from '@angular/material/icon';
+import { FdUiToastService } from '../../../../ui-kit/toast/fd-ui-toast.service';
 
 @Component({
     selector: 'fd-product-list-page',
@@ -37,8 +37,8 @@ import { MatIconModule } from '@angular/material/icon';
     ]
 })
 export class ProductListPageComponent extends ProductListBaseComponent implements OnInit {
-    private readonly alertService = inject(TuiAlertService);
     private readonly translateService = inject(TranslateService);
+    private readonly toastService = inject(FdUiToastService);
     private isDeleteInProgress = false;
 
     protected override async onProductClick(product: Product): Promise<void> {
@@ -79,12 +79,10 @@ export class ProductListPageComponent extends ProductListBaseComponent implement
                             error: error => {
                                 console.error('Delete product error', error);
                                 this.productData.setLoading(false);
-                                this.alertService
-                                    .open(
-                                        this.translateService.instant('PRODUCT_LIST.DELETE_ERROR'),
-                                        { appearance: 'negative' },
-                                    )
-                                    .subscribe();
+                                this.toastService.open(
+                                    this.translateService.instant('PRODUCT_LIST.DELETE_ERROR'),
+                                    { appearance: 'negative' },
+                                );
                             },
                         });
                 }

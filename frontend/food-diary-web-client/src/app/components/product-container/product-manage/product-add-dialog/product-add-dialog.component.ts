@@ -5,11 +5,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import { DecimalPipe } from '@angular/common';
 import {
-    TuiInputNumberModule,
-    TuiSelectModule,
-    TuiTextfieldControllerModule
-} from '@taiga-ui/legacy';
-import {
     NutrientsSummaryComponent
 } from '../../../shared/nutrients-summary/nutrients-summary.component';
 import { ZXingScannerModule } from '@zxing/ngx-scanner';
@@ -30,9 +25,6 @@ import { FdUiFormErrorComponent } from '../../../../ui-kit/form-error/fd-ui-form
         ReactiveFormsModule,
         TranslatePipe,
         DecimalPipe,
-        TuiSelectModule,
-        TuiTextfieldControllerModule,
-        TuiInputNumberModule,
         NutrientsSummaryComponent,
         ZXingScannerModule,
         FdUiInputComponent,

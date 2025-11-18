@@ -24,21 +24,32 @@
             </div>
         </div>
     </div>
-    <div class="hero__background">
-        <tui-carousel [(index)]="currentSlide" [duration]="5000">
-            @for(slide of slides; track slide) {
-                <picture *tuiItem>
+    <div class="hero__slider">
+        <div class="hero__slides">
+            @for (slide of slides; track slide; let i = $index) {
+                <picture class="hero__slide" [class.hero__slide--active]="currentSlide === i">
                     <source srcset="assets/images/hero/{{ slide }}-1024.webp" media="(max-width: 1024px)" type="image/webp" />
                     <source srcset="assets/images/hero/{{ slide }}-768.webp" media="(max-width: 768px)" type="image/webp" />
                     <source srcset="assets/images/hero/{{ slide }}-480.webp" media="(max-width: 480px)" type="image/webp" />
                     <img
                         src="assets/images/hero/{{ slide }}.webp"
-                        alt="{{ 'HERO.SLIDE_ALT' | translate:{index: slides.indexOf(slide)} }}"
+                        alt="{{ 'HERO.SLIDE_ALT' | translate:{index: i} }}"
                         draggable="false"
-                        class="hero__slide"
+                        loading="lazy"
                     />
                 </picture>
             }
-        </tui-carousel>
+        </div>
+        <div class="hero__dots">
+            @for (slide of slides; track slide; let i = $index) {
+                <button
+                    type="button"
+                    class="hero__dot"
+                    [class.hero__dot--active]="currentSlide === i"
+                    (click)="goToSlide(i)"
+                    [attr.aria-label]="'HERO.SLIDE_ALT' | translate:{index: i}"
+                ></button>
+            }
+        </div>
     </div>
 </div>

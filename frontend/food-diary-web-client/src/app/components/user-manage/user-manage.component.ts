@@ -9,12 +9,10 @@ import {
 } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { TuiAlertService } from '@taiga-ui/core';
 import { FormGroupControls } from '../../types/common.data';
 import { UserService } from '../../services/user.service';
 import { ActivityLevelOption, Gender, UpdateUserDto } from '../../types/user.data';
 import { NavigationService } from '../../services/navigation.service';
-import { TuiDay } from '@taiga-ui/cdk';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FdUiCardComponent } from '../../ui-kit/card/fd-ui-card.component';
 import { FdUiInputComponent } from '../../ui-kit/input/fd-ui-input.component';
@@ -26,6 +24,7 @@ import { FdUiFormErrorComponent, FD_VALIDATION_ERRORS, FdValidationErrors } from
 import { ChangePasswordDialogComponent } from './dialogs/change-password-dialog/change-password-dialog.component';
 import { PasswordSuccessDialogComponent } from './dialogs/password-success-dialog/password-success-dialog.component';
 import { UpdateSuccessDialogComponent } from './dialogs/update-success-dialog/update-success-dialog.component';
+import { FdUiToastService } from '../../ui-kit/toast/fd-ui-toast.service';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: FD_VALIDATION_ERRORS,
@@ -62,7 +61,7 @@ export class UserManageComponent implements OnInit {
     private readonly fdDialogService = inject(FdUiDialogService);
     private readonly navigationService = inject(NavigationService);
     private readonly destroyRef = inject(DestroyRef);
-    private readonly alertService = inject(TuiAlertService);
+    private readonly toastService = inject(FdUiToastService);
 
     public genders = Object.values(Gender);
     public activityLevels: ActivityLevelOption[] = ['MINIMAL', 'LIGHT', 'MODERATE', 'HIGH', 'EXTREME'];
@@ -78,7 +77,7 @@ export class UserManageComponent implements OnInit {
             username: new FormControl<string | null>(null),
             firstName: new FormControl<string | null>(null),
             lastName: new FormControl<string | null>(null),
-            birthDate: new FormControl<TuiDay | null>(null),
+            birthDate: new FormControl<Date | null>(null),
             gender: new FormControl<Gender | null>(null),
             height: new FormControl<number | null>(null),
             activityLevel: new FormControl<ActivityLevelOption | null>(null),
@@ -110,7 +109,7 @@ export class UserManageComponent implements OnInit {
                     const userData = {
                         ...user,
                         gender: user.gender as Gender | null,
-                        birthDate: user.birthDate ? TuiDay.fromLocalNativeDate(new Date(user.birthDate)) : null,
+                        birthDate: user.birthDate ? new Date(user.birthDate) : null,
                         activityLevel: user.activityLevel
                             ? (user.activityLevel.toUpperCase() as ActivityLevelOption)
                             : null,
@@ -172,9 +171,10 @@ export class UserManageComponent implements OnInit {
     }
 
     public onDeleteAccount(): void {
-        this.alertService
-            .open(this.translateService.instant('USER_MANAGE.DELETE_ACCOUNT_INFO'))
-            .subscribe();
+        this.toastService.open(this.translateService.instant('USER_MANAGE.DELETE_ACCOUNT_INFO'), {
+            appearance: 'warning',
+            duration: 6000,
+        });
     }
 
     protected showSuccessDialog(): void {
@@ -216,7 +216,7 @@ export interface UserFormValues {
     firstName: string | null;
     lastName: string | null;
     email: string | null;
-    birthDate: TuiDay | null;
+    birthDate: Date | null;
     gender: Gender | null;
     height: number | null;
     activityLevel: ActivityLevelOption | null;

@@ -47,7 +47,7 @@ export class UpdateUserDto {
         this.username = normalizeString(formValues.username);
         this.firstName = normalizeString(formValues.firstName);
         this.lastName = normalizeString(formValues.lastName);
-        this.birthDate = formValues.birthDate ? formValues.birthDate.toUtcNativeDate() : undefined;
+        this.birthDate = normalizeDate(formValues.birthDate);
         this.gender = normalizeString(formValues.gender);
         this.height = normalizeNumber(formValues.height);
         this.activityLevel = normalizeActivityLevel(formValues.activityLevel);
@@ -65,6 +65,19 @@ export class UpdateUserDto {
 const normalizeString = (value: string | null | undefined): string | undefined => {
     const trimmed = value?.trim();
     return trimmed ? trimmed : undefined;
+};
+
+const normalizeDate = (value: Date | null | undefined): Date | undefined => {
+    if (!value) {
+        return undefined;
+    }
+
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) {
+        return undefined;
+    }
+
+    return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
 };
 
 const normalizeNumber = (value: number | null | undefined): number | undefined =>

@@ -14,8 +14,6 @@ import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration, ChartOptions, ChartTypeRegistry, TooltipItem } from 'chart.js';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { map, finalize, Observable, forkJoin } from 'rxjs';
-import { TUI_MONTHS } from '@taiga-ui/core';
-import { TuiDay } from '@taiga-ui/cdk';
 
 import { FdUiTabsComponent, FdUiTab } from '../../ui-kit/tabs/fd-ui-tabs.component';
 import { FdUiCardComponent } from '../../ui-kit/card/fd-ui-card.component';
@@ -61,9 +59,7 @@ export class StatisticsComponent implements OnInit {
     private readonly userService = inject(UserService);
     private readonly translateService = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
-    private readonly months$: Observable<string[]> = inject(TUI_MONTHS).pipe(map(months => Object.values(months)));
-
-    public readonly months = toSignal(this.months$, { initialValue: [] });
+    private dateLabelFormatterCache: { locale: string; formatter: Intl.DateTimeFormat } | null = null;
     public readonly rangeTabs: FdUiTab[] = [
         { value: 'week', labelKey: 'STATISTICS.RANGES.WEEK' },
         { value: 'month', labelKey: 'STATISTICS.RANGES.MONTH' },
@@ -646,9 +642,24 @@ export class StatisticsComponent implements OnInit {
         return 1;
     }
 
-    private formatDateLabel(day: TuiDay): string {
-        const months = this.months();
-        return `${months[day.month]}, ${day.day}`;
+    private formatDateLabel(date: Date): string {
+        return this.getDateLabelFormatter().format(date);
+    }
+
+    private getDateLabelFormatter(): Intl.DateTimeFormat {
+        const locale = this.getCurrentLocale();
+        if (!this.dateLabelFormatterCache || this.dateLabelFormatterCache.locale !== locale) {
+            this.dateLabelFormatterCache = {
+                locale,
+                formatter: new Intl.DateTimeFormat(locale, { month: 'short', day: 'numeric' }),
+            };
+        }
+
+        return this.dateLabelFormatterCache.formatter;
+    }
+
+    private getCurrentLocale(): string {
+        return this.translateService.currentLang || this.translateService.defaultLang || 'en-US';
     }
 
     private createBodyChartDataset<T extends { dateFrom: string }>(
@@ -698,7 +709,7 @@ export class StatisticsComponent implements OnInit {
 
     private formatSummaryLabel(dateString: string): string {
         const date = new Date(dateString);
-        return date.toLocaleDateString();
+        return date.toLocaleDateString(this.getCurrentLocale());
     }
 
     private normalizeStartOfDay(date: Date): Date {

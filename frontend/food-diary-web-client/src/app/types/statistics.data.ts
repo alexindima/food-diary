@@ -1,5 +1,3 @@
-import { TuiDay } from '@taiga-ui/cdk';
-
 export interface AggregatedStatistics {
     dateFrom: Date;
     dateTo: Date;
@@ -17,7 +15,7 @@ export interface GetStatisticsDto {
 }
 
 export interface MappedStatistics {
-    date: TuiDay[];
+    date: Date[];
     calories: number[];
     nutrientsStatistic: NutrientsStatistics;
     aggregatedNutrients: AggregatedNutrients;
@@ -39,7 +37,7 @@ export interface AggregatedNutrients {
 
 export class StatisticsMapper {
     public static mapStatistics(statistics: AggregatedStatistics[]): MappedStatistics {
-        const dates: TuiDay[] = [];
+        const dates: Date[] = [];
         const calories: number[] = [];
         const proteins: number[] = [];
         const fats: number[] = [];
@@ -51,8 +49,7 @@ export class StatisticsMapper {
         let totalFiber = 0;
 
         statistics.forEach(stat => {
-            const day = TuiDay.fromLocalNativeDate(new Date(stat.dateFrom));
-            dates.push(day);
+            dates.push(new Date(stat.dateFrom));
 
             calories.push(stat.totalCalories);
 
