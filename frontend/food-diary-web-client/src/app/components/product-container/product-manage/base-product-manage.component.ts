@@ -11,9 +11,7 @@ import {
 } from '@angular/core';
 import { Product, CreateProductRequest, MeasurementUnit, ProductVisibility, ProductType } from '../../../types/product.data';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { TuiError } from '@taiga-ui/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { TUI_VALIDATION_ERRORS } from '@taiga-ui/kit';
 import { DecimalPipe } from '@angular/common';
 import { TuiInputNumberModule, TuiSelectModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
 import { ProductService } from '../../../services/product.service';
@@ -28,7 +26,7 @@ import {
 import { firstValueFrom } from 'rxjs';
 import { ZXingScannerModule } from '@zxing/ngx-scanner';
 import { BarcodeScannerComponent } from '../../shared/barcode-scanner/barcode-scanner.component';
-import { ValidationErrors } from '../../../types/validation-error.data';
+import { FdUiFormErrorComponent, FD_VALIDATION_ERRORS, FdValidationErrors } from '../../../ui-kit/form-error/fd-ui-form-error.component';
 import { FdUiInputComponent } from '../../../ui-kit/input/fd-ui-input.component';
 import { FdUiCardComponent } from '../../../ui-kit/card/fd-ui-card.component';
 import { FdUiSelectComponent, FdUiSelectOption } from '../../../ui-kit/select/fd-ui-select.component';
@@ -42,15 +40,14 @@ import {
 } from './product-save-success-dialog.component';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
-    provide: TUI_VALIDATION_ERRORS,
-    useFactory: (translate: TranslateService): ValidationErrors => ({
-        required: () => translate.instant('FORM_ERRORS.REQUIRED'),
-        min: ({ min }) =>
-            translate.instant('FORM_ERRORS.INVALID_MIN_AMOUNT_MUST_BE_MORE_ZERO', {
-                min,
-            }),
+    provide: FD_VALIDATION_ERRORS,
+    useFactory: (): FdValidationErrors => ({
+        required: () => 'FORM_ERRORS.REQUIRED',
+        min: (error?: unknown) => ({
+            key: 'FORM_ERRORS.INVALID_MIN_AMOUNT_MUST_BE_MORE_ZERO',
+            params: { min: (error as { min?: number } | undefined)?.min },
+        }),
     }),
-    deps: [TranslateService],
 };
 
 @Component({
@@ -63,7 +60,6 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
         ReactiveFormsModule,
         TranslatePipe,
         DecimalPipe,
-        TuiError,
         TuiSelectModule,
         TuiTextfieldControllerModule,
         TuiInputNumberModule,
@@ -74,6 +70,7 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
         FdUiSelectComponent,
         FdUiTextareaComponent,
         FdUiButtonComponent,
+        FdUiFormErrorComponent,
     ],
 })
 export class BaseProductManageComponent implements OnInit {

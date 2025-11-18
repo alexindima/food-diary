@@ -19,10 +19,7 @@
                             [placeholder]="'AUTH.LOGIN.EMAIL_PLACEHOLDER' | translate"
                             autocomplete="email"
                         ></fd-ui-input>
-                        <tui-error
-                            formControlName="email"
-                            [error]="[] | tuiFieldError | async"
-                        ></tui-error>
+                        <fd-ui-form-error [control]="loginForm.controls.email"></fd-ui-form-error>
                     </div>
 
                     <div class="auth__field">
@@ -33,10 +30,7 @@
                             [placeholder]="'AUTH.LOGIN.PASSWORD_PLACEHOLDER' | translate"
                             autocomplete="current-password"
                         ></fd-ui-input>
-                        <tui-error
-                            formControlName="password"
-                            [error]="[] | tuiFieldError | async"
-                        ></tui-error>
+                        <fd-ui-form-error [control]="loginForm.controls.password"></fd-ui-form-error>
                     </div>
 
                     <fd-ui-checkbox
@@ -53,7 +47,7 @@
                         >
                             {{ 'AUTH.LOGIN.LOGIN' | translate }}
                         </fd-ui-button>
-                        <tui-error [error]="globalError()"></tui-error>
+                        <fd-ui-form-error [error]="globalError()"></fd-ui-form-error>
                     </div>
                 </form>
             } @else {
@@ -66,10 +60,7 @@
                             [placeholder]="'AUTH.REGISTER.EMAIL_PLACEHOLDER' | translate"
                             autocomplete="email"
                         ></fd-ui-input>
-                        <tui-error
-                            formControlName="email"
-                            [error]="[] | tuiFieldError | async"
-                        ></tui-error>
+                        <fd-ui-form-error [control]="registerForm.controls.email"></fd-ui-form-error>
                     </div>
                     <div class="auth__field">
                         <fd-ui-input
@@ -79,10 +70,7 @@
                             [placeholder]="'AUTH.REGISTER.PASSWORD_PLACEHOLDER' | translate"
                             autocomplete="new-password"
                         ></fd-ui-input>
-                        <tui-error
-                            formControlName="password"
-                            [error]="[] | tuiFieldError | async"
-                        ></tui-error>
+                        <fd-ui-form-error [control]="registerForm.controls.password"></fd-ui-form-error>
                     </div>
                     <div class="auth__field">
                         <fd-ui-input
@@ -92,10 +80,7 @@
                             [placeholder]="'AUTH.REGISTER.CONFIRM_PASSWORD_PLACEHOLDER' | translate"
                             autocomplete="new-password"
                         ></fd-ui-input>
-                        <tui-error
-                            formControlName="confirmPassword"
-                            [error]="[] | tuiFieldError | async"
-                        ></tui-error>
+                        <fd-ui-form-error [control]="registerForm.controls.confirmPassword"></fd-ui-form-error>
                     </div>
 
                     <div class="auth__checkbox-row">
@@ -118,7 +103,7 @@
                         >
                             {{ 'AUTH.REGISTER.REGISTER' | translate }}
                         </fd-ui-button>
-                        <tui-error [error]="globalError()"></tui-error>
+                        <fd-ui-form-error [error]="globalError()"></fd-ui-form-error>
                     </div>
                 </form>
             }

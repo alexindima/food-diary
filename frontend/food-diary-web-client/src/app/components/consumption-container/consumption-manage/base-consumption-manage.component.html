@@ -185,7 +185,7 @@
                                                     </span>
                                                     <mat-icon>search</mat-icon>
                                                 </button>
-                                                <tui-error [error]="getItemSourceError(i)"></tui-error>
+                                                <fd-ui-form-error [error]="getItemSourceError(i)"></fd-ui-form-error>
                                             </div>
                                             <div class="consumption-item__field consumption-item__field--amount">
                                                 <fd-ui-input
@@ -206,10 +206,10 @@
                             </fd-ui-card>
                         }
                     </div>
-                    <tui-error
+                    <fd-ui-form-error
                         class="consumption-item__error"
                         [error]="items.invalid && items.touched ? ('FORM_ERRORS.NON_EMPTY_ARRAY' | translate) : null"
-                    ></tui-error>
+                    ></fd-ui-form-error>
                 </section>
             </div>
 
@@ -312,7 +312,7 @@
                     </fd-ui-button>
                 }
             </div>
-            <tui-error class="consumption-manage__footer-error" [error]="globalError()"></tui-error>
+            <fd-ui-form-error class="consumption-manage__footer-error" [error]="globalError()"></fd-ui-form-error>
         </div>
     </form>
 </div>

@@ -23,3 +23,4 @@ export * from './menu/fd-ui-menu-item.component';
 export * from './menu/fd-ui-menu-divider.component';
 export * from './loader/fd-ui-loader.component';
 export * from './pagination/fd-ui-pagination.component';
+export * from './form-error/fd-ui-form-error.component';

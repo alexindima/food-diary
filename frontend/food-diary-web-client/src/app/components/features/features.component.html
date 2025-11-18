@@ -2,7 +2,7 @@
     <h2 class="features__title">{{ 'FEATURES.TITLE' | translate }}</h2>
     <div class="features__grid">
         @for (feature of features; track feature) {
-            <div tuiCardLarge tuiSurface="info" class="features__item">
+            <div class="features__item">
                 <header class="features__item-header">
                     <h2 class="features__item-title">{{ 'FEATURES.' + feature.key + '.TITLE' | translate }}</h2>
                 </header>

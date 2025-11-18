@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { BaseProductManageComponent } from '../base-product-manage.component';
-import { TuiError } from '@taiga-ui/core';
 import { Product } from '../../../../types/product.data';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -20,6 +19,7 @@ import { FdUiSelectComponent } from '../../../../ui-kit/select/fd-ui-select.comp
 import { FdUiTextareaComponent } from '../../../../ui-kit/textarea/fd-ui-textarea.component';
 import { FdUiButtonComponent } from '../../../../ui-kit/button/fd-ui-button.component';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { FdUiFormErrorComponent } from '../../../../ui-kit/form-error/fd-ui-form-error.component';
 
 @Component({
     selector: 'fd-product-add-dialog',
@@ -29,7 +29,6 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
     imports: [
         ReactiveFormsModule,
         TranslatePipe,
-        TuiError,
         DecimalPipe,
         TuiSelectModule,
         TuiTextfieldControllerModule,
@@ -41,6 +40,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
         FdUiSelectComponent,
         FdUiTextareaComponent,
         FdUiButtonComponent,
+        FdUiFormErrorComponent,
     ]
 })
 export class ProductAddDialogComponent extends BaseProductManageComponent {

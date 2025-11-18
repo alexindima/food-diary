@@ -9,9 +9,7 @@ import {
     signal,
 } from '@angular/core';
 import { AbstractControl, FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { TuiError } from '@taiga-ui/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { TUI_VALIDATION_ERRORS } from '@taiga-ui/kit';
 import { DecimalPipe } from '@angular/common';
 import { NavigationService } from '../../../services/navigation.service';
 import { RecipeService } from '../../../services/recipe.service';
@@ -37,7 +35,7 @@ import { NutrientChartData } from '../../../types/charts.data';
 import {
     NutrientsSummaryComponent
 } from '../../shared/nutrients-summary/nutrients-summary.component';
-import { ValidationErrors } from '../../../types/validation-error.data';
+import { FdUiFormErrorComponent, FD_VALIDATION_ERRORS, FdValidationErrors } from '../../../ui-kit/form-error/fd-ui-form-error.component';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { FdUiCardComponent } from '../../../ui-kit/card/fd-ui-card.component';
@@ -60,16 +58,15 @@ import {
 } from './success-dialog/consumption-manage-success-dialog.component';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
-    provide: TUI_VALIDATION_ERRORS,
-    useFactory: (translate: TranslateService): ValidationErrors => ({
-        required: () => translate.instant('FORM_ERRORS.REQUIRED'),
-        nonEmptyArray: () => translate.instant('FORM_ERRORS.NON_EMPTY_ARRAY'),
-        min: ({ min }) =>
-            translate.instant('FORM_ERRORS.INVALID_MIN_AMOUNT_MUST_BE_MORE_ZERO', {
-                min,
-            }),
+    provide: FD_VALIDATION_ERRORS,
+    useFactory: (): FdValidationErrors => ({
+        required: () => 'FORM_ERRORS.REQUIRED',
+        nonEmptyArray: () => 'FORM_ERRORS.NON_EMPTY_ARRAY',
+        min: (error?: unknown) => ({
+            key: 'FORM_ERRORS.INVALID_MIN_AMOUNT_MUST_BE_MORE_ZERO',
+            params: { min: (error as { min?: number } | undefined)?.min },
+        }),
     }),
-    deps: [TranslateService],
 };
 
 @Component({
@@ -81,7 +78,6 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     imports: [
         ReactiveFormsModule,
         TranslatePipe,
-        TuiError,
         DecimalPipe,
         NutrientsSummaryComponent,
         FdUiCardComponent,
@@ -91,6 +87,7 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
         FdUiButtonComponent,
         FdUiCheckboxComponent,
         MatIconModule,
+        FdUiFormErrorComponent,
     ]
 })
 export class BaseConsumptionManageComponent implements OnInit {

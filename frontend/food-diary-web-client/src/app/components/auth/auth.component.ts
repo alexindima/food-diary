@@ -3,35 +3,32 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { TuiError } from '@taiga-ui/core';
-import { AsyncPipe } from '@angular/common';
 import { matchFieldValidator } from '../../validators/match-field.validator';
 import { NavigationService } from '../../services/navigation.service';
 import { FormGroupControls } from '../../types/common.data';
 import { LoginRequest, RegisterRequest } from '../../types/auth.data';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ValidationErrors } from '../../types/validation-error.data';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FdUiTabsComponent, FdUiTab } from '../../ui-kit/tabs/fd-ui-tabs.component';
 import { FdUiInputComponent } from '../../ui-kit/input/fd-ui-input.component';
 import { FdUiButtonComponent } from '../../ui-kit/button/fd-ui-button.component';
 import { FdUiCheckboxComponent } from '../../ui-kit/checkbox/fd-ui-checkbox.component';
 import { FdUiCardComponent } from '../../ui-kit/card/fd-ui-card.component';
-import { TUI_VALIDATION_ERRORS, TuiFieldErrorPipe } from '@taiga-ui/kit';
+import { FdUiFormErrorComponent, FD_VALIDATION_ERRORS, FdValidationErrors } from '../../ui-kit/form-error/fd-ui-form-error.component';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
-    provide: TUI_VALIDATION_ERRORS,
-    useFactory: (translate: TranslateService): ValidationErrors => ({
-        required: () => translate.instant('FORM_ERRORS.REQUIRED'),
-        userExists: () => translate.instant('FORM_ERRORS.USER_EXISTS'),
-        email: () => translate.instant('FORM_ERRORS.EMAIL'),
-        matchField: () => translate.instant('FORM_ERRORS.PASSWORD.MATCH'),
-        minlength: ({ requiredLength }) =>
-            translate.instant('FORM_ERRORS.PASSWORD.MIN_LENGTH', {
-                requiredLength,
-            }),
+    provide: FD_VALIDATION_ERRORS,
+    useFactory: (): FdValidationErrors => ({
+        required: () => 'FORM_ERRORS.REQUIRED',
+        requiredTrue: () => 'FORM_ERRORS.REQUIRED',
+        email: () => 'FORM_ERRORS.EMAIL',
+        matchField: () => 'FORM_ERRORS.PASSWORD.MATCH',
+        minlength: (error?: unknown) => ({
+            key: 'FORM_ERRORS.PASSWORD.MIN_LENGTH',
+            params: { requiredLength: (error as { requiredLength?: number } | undefined)?.requiredLength },
+        }),
+        userExists: () => 'FORM_ERRORS.USER_EXISTS',
     }),
-    deps: [TranslateService],
 };
 
 @Component({
@@ -43,14 +40,12 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     imports: [
         TranslateModule,
         ReactiveFormsModule,
-        TuiError,
-        TuiFieldErrorPipe,
-        AsyncPipe,
         FdUiTabsComponent,
         FdUiInputComponent,
         FdUiButtonComponent,
         FdUiCheckboxComponent,
         FdUiCardComponent,
+        FdUiFormErrorComponent,
     ]
 })
 export class AuthComponent {

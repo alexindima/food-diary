@@ -9,38 +9,34 @@ import {
 } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { TuiAlertService, TuiError } from '@taiga-ui/core';
+import { TuiAlertService } from '@taiga-ui/core';
 import { FormGroupControls } from '../../types/common.data';
 import { UserService } from '../../services/user.service';
 import { ActivityLevelOption, Gender, UpdateUserDto } from '../../types/user.data';
 import { NavigationService } from '../../services/navigation.service';
 import { TuiDay } from '@taiga-ui/cdk';
-import { TUI_VALIDATION_ERRORS } from '@taiga-ui/kit';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ValidationErrors } from '../../types/validation-error.data';
 import { FdUiCardComponent } from '../../ui-kit/card/fd-ui-card.component';
 import { FdUiInputComponent } from '../../ui-kit/input/fd-ui-input.component';
 import { FdUiSelectComponent, FdUiSelectOption } from '../../ui-kit/select/fd-ui-select.component';
 import { FdUiDateInputComponent } from '../../ui-kit/date-input/fd-ui-date-input.component';
 import { FdUiButtonComponent } from '../../ui-kit/button/fd-ui-button.component';
 import { FdUiDialogService } from '../../ui-kit/dialog/fd-ui-dialog.service';
+import { FdUiFormErrorComponent, FD_VALIDATION_ERRORS, FdValidationErrors } from '../../ui-kit/form-error/fd-ui-form-error.component';
 import { ChangePasswordDialogComponent } from './dialogs/change-password-dialog/change-password-dialog.component';
 import { PasswordSuccessDialogComponent } from './dialogs/password-success-dialog/password-success-dialog.component';
 import { UpdateSuccessDialogComponent } from './dialogs/update-success-dialog/update-success-dialog.component';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
-    provide: TUI_VALIDATION_ERRORS,
-    useFactory: (translate: TranslateService): ValidationErrors => ({
-        required: () => translate.instant('FORM_ERRORS.REQUIRED'),
-        userExists: () => translate.instant('FORM_ERRORS.USER_EXISTS'),
-        email: () => translate.instant('FORM_ERRORS.EMAIL'),
-        matchField: () => translate.instant('FORM_ERRORS.PASSWORD.MATCH'),
-        minlength: ({ requiredLength }) =>
-            translate.instant('FORM_ERRORS.PASSWORD.MIN_LENGTH', {
-                requiredLength,
-            }),
+    provide: FD_VALIDATION_ERRORS,
+    useFactory: (): FdValidationErrors => ({
+        required: () => 'FORM_ERRORS.REQUIRED',
+        email: () => 'FORM_ERRORS.EMAIL',
+        minlength: (error?: unknown) => ({
+            key: 'FORM_ERRORS.PASSWORD.MIN_LENGTH',
+            params: { requiredLength: (error as { requiredLength?: number } | undefined)?.requiredLength },
+        }),
     }),
-    deps: [TranslateService],
 };
 
 @Component({
@@ -48,12 +44,12 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     imports: [
         ReactiveFormsModule,
         TranslatePipe,
-        TuiError,
         FdUiCardComponent,
         FdUiInputComponent,
         FdUiSelectComponent,
         FdUiDateInputComponent,
         FdUiButtonComponent,
+        FdUiFormErrorComponent,
     ],
     templateUrl: './user-manage.component.html',
     styleUrl: './user-manage.component.less',
