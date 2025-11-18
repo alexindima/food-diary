@@ -1,32 +1,34 @@
-<div class="modal">
-    <h2 class="modal__title">{{ 'CONSUMPTION_DETAIL.TITLE' | translate }} {{ consumption.date | date:'dd.MM.yyyy' }} - {{ consumption.date | date:'HH:mm' }}</h2>
-    <hr class="modal__divider" />
-    <div class="modal__body">
-        <div class="modal__info">
+<fd-ui-dialog
+    [title]="'CONSUMPTION_DETAIL.TITLE' | translate"
+    [subtitle]="(consumption.date | date:'dd.MM.yyyy, HH:mm') || undefined"
+    size="lg"
+>
+    <div class="consumption-detail">
+        <div class="consumption-detail__info">
             @if (consumption.comment) {
-                <p class="modal__comment">{{ consumption.comment }} </p>
+                <p class="consumption-detail__comment">{{ consumption.comment }}</p>
             }
             @if (consumption.mealType) {
-                <p class="modal__text modal__text--muted">
+                <p class="consumption-detail__text consumption-detail__text--muted">
                     {{ 'CONSUMPTION_DETAIL.MEAL_TYPE' | translate }}:
                     {{ ('MEAL_TYPES.' + consumption.mealType) | translate }}
                 </p>
             }
-            <div class="modal__items">
-                <p class="modal__text modal__text--muted">
+            <div class="consumption-detail__items">
+                <p class="consumption-detail__text consumption-detail__text--muted">
                     {{ 'CONSUMPTION_DETAIL.ITEMS_LIST' | translate:{ count: consumption.items.length } }}
                 </p>
-                <ul class="modal__item-list">
+                <ul class="consumption-detail__item-list">
                     @for (item of consumption.items; track item) {
-                        <li class="modal__item">
-                            <span class="modal__item-name">{{ item.product?.name || item.recipe?.name }}</span>
+                        <li class="consumption-detail__item">
+                            <span class="consumption-detail__item-name">{{ item.product?.name || item.recipe?.name }}</span>
                             @if (item.product) {
-                                <span class="modal__item-meta">
+                                <span class="consumption-detail__item-meta">
                                     {{ item.amount | number:'1.0-2' }}
                                     {{ ('PRODUCT_AMOUNT_UNITS_SHORT.' + item.product.baseUnit) | translate }}
                                 </span>
                             } @else if (item.recipe) {
-                                <span class="modal__item-meta">
+                                <span class="consumption-detail__item-meta">
                                     {{ item.amount | number:'1.0-2' }}
                                     {{ 'CONSUMPTION_DETAIL.SERVINGS' | translate }}
                                 </span>
@@ -43,55 +45,13 @@
             [config]="nutrientSummaryConfig"
         ></fd-nutrients-summary>
     </div>
-    <div class="modal__footer">
-        <div class="modal__actions">
-            <button
-                class="modal__button"
-                appearance="primary"
-                tuiButton
-                size="m"
-                iconStart="@tui.pen-line"
-                (click)="onEdit()"
-            >
-                {{ 'CONSUMPTION_DETAIL.EDIT_BUTTON' | translate }}
-            </button>
-            <button
-                class="modal__button modal__button--accent"
-                appearance="accent"
-                tuiButton
-                size="m"
-                iconStart="@tui.trash-2"
-                (click)="onDelete()"
-            ></button>
-        </div>
-    </div>
-</div>
 
-<ng-template #confirmDialog let-observer>
-    <div class="dialog">
-        <p class="dialog__content">
-            {{ 'CONSUMPTION_DETAIL.CONFIRM_DELETE_TITLE' | translate }}
-            <span class="dialog__highlight">{{ consumption.date | date }}</span>?
-        </p>
-        <div class="dialog__buttons">
-            <button class="dialog__button"
-                    appearance="primary"
-                    tuiButton
-                    size="m"
-                    (click)="observer.complete()"
-            >
-                {{ 'CONSUMPTION_DETAIL.CANCEL_BUTTON' | translate }}
-            </button>
-            <button
-                class="dialog__button dialog__button--accent"
-                appearance="accent"
-                tuiButton
-                size="m"
-                (click)="observer.next(true);
-                 observer.complete()"
-            >
-                {{ 'CONSUMPTION_DETAIL.CONFIRM_BUTTON' | translate }}
-            </button>
-        </div>
+    <div fdUiDialogFooter class="consumption-detail__footer">
+        <fd-ui-button size="sm" variant="secondary" fill="text" icon="edit" (click)="onEdit()">
+            {{ 'CONSUMPTION_DETAIL.EDIT_BUTTON' | translate }}
+        </fd-ui-button>
+        <fd-ui-button size="sm" variant="danger" icon="delete" (click)="onDelete()">
+            {{ 'CONSUMPTION_DETAIL.DELETE_BUTTON' | translate }}
+        </fd-ui-button>
     </div>
-</ng-template>
+</fd-ui-dialog>

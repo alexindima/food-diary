@@ -1,7 +1,6 @@
 import {
     ChangeDetectionStrategy,
     Component,
-    Injector,
     effect,
     inject,
     input,
@@ -10,8 +9,6 @@ import {
 } from '@angular/core';
 import { AbstractControl, FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormGroupControls } from '../../../types/common.data';
-import { TuiDialogService } from '@taiga-ui/core';
-import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { MeasurementUnit, Product, ProductVisibility, ProductType } from '../../../types/product.data';
 import { nonEmptyArrayValidator } from '../../../validators/non-empty-array.validator';
@@ -37,6 +34,7 @@ import { FdUiButtonComponent } from '../../../ui-kit/button/fd-ui-button.compone
 import { FdUiSelectComponent, FdUiSelectOption } from '../../../ui-kit/select/fd-ui-select.component';
 import { FdUiCheckboxComponent } from '../../../ui-kit/checkbox/fd-ui-checkbox.component';
 import { CommonModule } from '@angular/common';
+import { FdUiDialogService } from '../../../ui-kit/dialog/fd-ui-dialog.service';
 
 @Component({
     selector: 'fd-recipe-manage',
@@ -62,7 +60,6 @@ export class RecipeManageComponent implements OnInit {
     private readonly recipeService = inject(RecipeService);
     private readonly translateService = inject(TranslateService);
     private readonly navigationService = inject(NavigationService);
-    private readonly injector = inject(Injector);
 
     public recipe = input<Recipe | null>(null);
     public totalCalories = signal<number>(0);
@@ -81,7 +78,7 @@ export class RecipeManageComponent implements OnInit {
     public visibilityOptions = Object.values(RecipeVisibility);
     public visibilitySelectOptions: FdUiSelectOption<RecipeVisibility>[] = [];
 
-    private readonly dialogService = inject(TuiDialogService);
+    private readonly fdDialogService = inject(FdUiDialogService);
     private isFormReady = true;
 
     public constructor() {
@@ -204,24 +201,18 @@ export class RecipeManageComponent implements OnInit {
     public async onProductSelectClick(stepIndex: number, ingredientIndex: number): Promise<void> {
         this.selectedStepIndex = stepIndex;
         this.selectedIngredientIndex = ingredientIndex;
-        this.dialogService
-            .open<Product | null>(
-                new PolymorpheusComponent(ProductListDialogComponent, this.injector),
-                {
-                    size: 'page',
-                    dismissible: true,
-                    appearance: 'without-border-radius',
-                },
-            )
-            .subscribe({
-                next: food => {
-                    if (!food) {
-                        return;
-                    }
-                    const ingredientsArray = this.getStepIngredients(stepIndex);
-                    const foodGroup = ingredientsArray.at(ingredientIndex);
-                    foodGroup.patchValue({ food, foodName: food.name });
-                },
+        this.fdDialogService
+            .open<ProductListDialogComponent, Product | null, Product | null>(ProductListDialogComponent, {
+                size: 'lg',
+            })
+            .afterClosed()
+            .subscribe(food => {
+                if (!food) {
+                    return;
+                }
+                const ingredientsArray = this.getStepIngredients(stepIndex);
+                const foodGroup = ingredientsArray.at(ingredientIndex);
+                foodGroup.patchValue({ food, foodName: food.name });
             });
     }
 

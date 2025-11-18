@@ -1,9 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import {
+    booleanAttribute,
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    input,
+} from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
-
-type FdUiButtonVariant = 'primary' | 'secondary' | 'danger';
-type FdUiButtonFill = 'solid' | 'outline' | 'text';
 
 @Component({
     selector: 'fd-ui-button',
@@ -14,20 +17,42 @@ type FdUiButtonFill = 'solid' | 'outline' | 'text';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FdUiButtonComponent {
-    @Input() public type: 'button' | 'submit' | 'reset' = 'button';
-    @Input() public variant: FdUiButtonVariant = 'primary';
-    @Input() public fill: FdUiButtonFill = 'solid';
-    @Input() public icon?: string;
-    @Input() public disabled = false;
-    @Input() public fullWidth = false;
-    @Input() public ariaLabel?: string;
+    public readonly type = input<FdUiButtonType>('button');
+    public readonly variant = input<FdUiButtonVariant>('primary');
+    public readonly fill = input<FdUiButtonFill>('solid');
+    public readonly size = input<FdUiButtonSize>('md');
+    public readonly icon = input<string | undefined>(undefined);
+    public readonly disabled = input(false, { transform: booleanAttribute });
+    public readonly fullWidth = input(false, { transform: booleanAttribute });
+    public readonly ariaLabel = input<string | undefined>(undefined);
 
-    public get classes(): string[] {
-        return [
+    private readonly normalizedFill = computed<FdUiButtonFill>(() => {
+        const variant = this.variant();
+        const fill = this.fill();
+
+        if (variant === 'ghost') {
+            return 'text';
+        }
+
+        if (variant === 'outline') {
+            return 'outline';
+        }
+
+        return fill === 'ghost' ? 'text' : fill;
+    });
+
+    public readonly classes = computed(() =>
+        [
             'fd-ui-button',
-            `fd-ui-button--${this.variant}`,
-            `fd-ui-button--${this.fill}`,
-            this.fullWidth ? 'fd-ui-button--full-width' : '',
-        ].filter(Boolean);
-    }
+            `fd-ui-button--${this.variant()}`,
+            `fd-ui-button--${this.normalizedFill()}`,
+            `fd-ui-button--size-${this.size()}`,
+            this.fullWidth() ? 'fd-ui-button--full-width' : '',
+        ].filter((className): className is string => Boolean(className)),
+    );
 }
+
+export type FdUiButtonType = 'button' | 'submit' | 'reset';
+export type FdUiButtonVariant = 'primary' | 'secondary' | 'danger' | 'ghost' | 'outline';
+export type FdUiButtonFill = 'solid' | 'outline' | 'text' | 'ghost';
+export type FdUiButtonSize = 'sm' | 'md' | 'lg';

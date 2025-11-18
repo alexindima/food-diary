@@ -1,0 +1,96 @@
+:host {
+    display: block;
+    color: var(--fd-color-gray-900, #111827);
+}
+
+.fd-ui-dialog {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.fd-ui-dialog__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    border-bottom: 1px solid var(--fd-color-dialog-border, rgba(17, 24, 39, 0.08));
+    padding-bottom: 1rem;
+}
+
+.fd-ui-dialog__heading {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+}
+
+.fd-ui-dialog__title {
+    margin: 0;
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: inherit;
+}
+
+.fd-ui-dialog__subtitle {
+    margin: 0;
+    font-size: 0.95rem;
+    color: var(--fd-color-gray-600, #4B5563);
+}
+
+.fd-ui-dialog__close-button {
+    border: none;
+    background: var(--fd-color-dialog-surface-muted, #F8FAFF);
+    border-radius: 999px;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--fd-color-gray-500, #6B7280);
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease;
+
+    &:hover {
+        background: var(--fd-color-primary-50, #EEF2FF);
+        color: var(--fd-color-primary-500, #4A6CF7);
+    }
+}
+
+.fd-ui-dialog__body {
+    color: inherit;
+    max-height: calc(80vh - 6rem);
+    overflow-y: auto;
+}
+
+.fd-ui-dialog__footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    border-top: 1px solid var(--fd-color-dialog-border, rgba(17, 24, 39, 0.08));
+    padding-top: 1rem;
+}
+
+.fd-ui-dialog-panel {
+    background: var(--fd-color-dialog-surface, #FFFFFF);
+    border-radius: 1rem;
+    box-shadow: 0 20px 60px rgba(15, 23, 42, 0.14);
+    border: 1px solid var(--fd-color-dialog-border, rgba(17, 24, 39, 0.08));
+    padding: 1.5rem;
+    box-sizing: border-box;
+    width: min(calc(100vw - 2rem), 520px);
+}
+
+.fd-ui-dialog-panel--sm {
+    width: min(calc(100vw - 2rem), 360px);
+}
+
+.fd-ui-dialog-panel--lg {
+    width: min(calc(100vw - 2rem), 720px);
+    padding: 2rem;
+}
+
+.fd-ui-dialog-backdrop {
+    background: var(--fd-color-dialog-overlay, rgba(15, 23, 42, 0.6));
+    backdrop-filter: blur(4px);
+}

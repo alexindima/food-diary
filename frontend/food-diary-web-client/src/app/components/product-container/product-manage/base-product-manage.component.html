@@ -217,26 +217,6 @@
     </form>
 </div>
 
-<ng-template #confirmDialog let-observer>
-    <div class="product-manage__dialog">
-        <p class="product-manage__dialog-title">
-            @if (product()) {
-                {{ 'PRODUCT_DETAIL.EDIT_SUCCESS' | translate }}
-            } @else {
-                {{ 'PRODUCT_DETAIL.CREATE_SUCCESS' | translate }}
-            }
-        </p>
-        <div class="product-manage__dialog-buttons">
-            <fd-ui-button fill="text" (click)="observer.next('Home'); observer.complete()">
-                {{ 'PRODUCT_DETAIL.GO_TO_HOME_BUTTON' | translate }}
-            </fd-ui-button>
-            <fd-ui-button fill="text" (click)="observer.next('ProductList'); observer.complete()">
-                {{ 'PRODUCT_DETAIL.GO_TO_PRODUCT_LIST_BUTTON' | translate }}
-            </fd-ui-button>
-        </div>
-    </div>
-</ng-template>
-
 
 
 

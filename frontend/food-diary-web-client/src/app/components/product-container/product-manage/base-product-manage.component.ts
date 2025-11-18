@@ -8,17 +8,10 @@ import {
     input,
     OnInit,
     signal,
-    TemplateRef,
-    ViewChild,
 } from '@angular/core';
 import { Product, CreateProductRequest, MeasurementUnit, ProductVisibility, ProductType } from '../../../types/product.data';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import {
-    tuiDialog,
-    TuiDialogContext,
-    TuiDialogService,
-    TuiError,
-} from '@taiga-ui/core';
+import { TuiError } from '@taiga-ui/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { TUI_VALIDATION_ERRORS } from '@taiga-ui/kit';
 import { DecimalPipe } from '@angular/common';
@@ -42,6 +35,11 @@ import { FdUiSelectComponent, FdUiSelectOption } from '../../../ui-kit/select/fd
 import { FdUiTextareaComponent } from '../../../ui-kit/textarea/fd-ui-textarea.component';
 import { FdUiButtonComponent } from '../../../ui-kit/button/fd-ui-button.component';
 import { normalizeProductType as normalizeProductTypeValue } from '../../../utils/product-type.utils';
+import { FdUiDialogService } from '../../../ui-kit/dialog/fd-ui-dialog.service';
+import {
+    ProductSaveSuccessDialogComponent,
+    ProductSaveSuccessDialogData,
+} from './product-save-success-dialog.component';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: TUI_VALIDATION_ERRORS,
@@ -82,10 +80,8 @@ export class BaseProductManageComponent implements OnInit {
     protected readonly productService = inject(ProductService);
     protected readonly translateService = inject(TranslateService);
     protected readonly navigationService = inject(NavigationService);
-    private readonly dialogService = inject(TuiDialogService);
+    protected readonly fdDialogService = inject(FdUiDialogService);
     private readonly destroyRef = inject(DestroyRef);
-
-    @ViewChild('confirmDialog') private confirmDialog!: TemplateRef<TuiDialogContext<RedirectAction, void>>;
 
     protected nutrientSummaryConfig: NutrientsSummaryConfig = {};
 
@@ -98,11 +94,6 @@ export class BaseProductManageComponent implements OnInit {
         carbs: 0,
     });
     public readonly isDeleting = signal(false);
-
-    private readonly barcodeDialog = tuiDialog(BarcodeScannerComponent, {
-        dismissible: true,
-        appearance: 'without-border-radius',
-    });
 
     protected skipConfirmDialog = false;
     public productForm: FormGroup<ProductFormData>;
@@ -174,11 +165,14 @@ export class BaseProductManageComponent implements OnInit {
     }
 
     public openBarcodeScanner(): void {
-        this.barcodeDialog(null).subscribe({
-            next: (barcode) => {
-                this.productForm.controls.barcode.setValue(barcode);
-            },
-        });
+        this.fdDialogService
+            .open<BarcodeScannerComponent, null, string | null>(BarcodeScannerComponent, { size: 'lg' })
+            .afterClosed()
+            .subscribe(barcode => {
+                if (barcode) {
+                    this.productForm.controls.barcode.setValue(barcode);
+                }
+            });
     }
 
     public async onCancel(): Promise<void> {
@@ -410,19 +404,24 @@ export class BaseProductManageComponent implements OnInit {
         return upper === ProductVisibility.Public.toUpperCase() ? ProductVisibility.Public : ProductVisibility.Private;
     }
 
-    private async showConfirmDialog(): Promise<void> {
-        this.dialogService
-            .open(this.confirmDialog, {
-                dismissible: true,
-                appearance: 'without-border-radius',
-            })
+    private showConfirmDialog(): void {
+        const data: ProductSaveSuccessDialogData = {
+            isEdit: Boolean(this.product()),
+        };
+
+        this.fdDialogService
+            .open<ProductSaveSuccessDialogComponent, ProductSaveSuccessDialogData, RedirectAction>(
+                ProductSaveSuccessDialogComponent,
+                { size: 'sm', data },
+            )
+            .afterClosed()
             .subscribe(redirectAction => {
                 if (redirectAction === 'Home') {
                     this.navigationService.navigateToHome();
                 } else if (redirectAction === 'ProductList') {
                     this.navigationService.navigateToProductList();
                 }
-        });
+            });
     }
 
     protected readonly MeasurementUnit = MeasurementUnit;
@@ -450,6 +449,6 @@ export interface ProductFormValues {
 
 type ProductFormData = FormGroupControls<ProductFormValues>;
 
-type RedirectAction = 'Home' | 'ProductList';
+export type RedirectAction = 'Home' | 'ProductList';
 
 

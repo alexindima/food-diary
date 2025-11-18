@@ -1,0 +1,317 @@
+/* Food Diary color tokens */
+$fd-color-primary-50:  #EEF2FF;
+$fd-color-primary-100: #E0EAFF;
+$fd-color-primary-200: #C2D4FF;
+$fd-color-primary-300: #9BB8FF;
+$fd-color-primary-400: #7094FF;
+$fd-color-primary-500: #4A6CF7;
+$fd-color-primary-600: #3451D6;
+$fd-color-primary-700: #2439B0;
+$fd-color-primary-800: #1B2A80;
+$fd-color-primary-900: #121C54;
+
+$fd-color-secondary-50:  #F3EEFF;
+$fd-color-secondary-100: #E6DDFF;
+$fd-color-secondary-200: #CFC1FF;
+$fd-color-secondary-300: #B49EFF;
+$fd-color-secondary-400: #977AFF;
+$fd-color-secondary-500: #7B61FF;
+$fd-color-secondary-600: #644CDB;
+$fd-color-secondary-700: #4C39B7;
+$fd-color-secondary-800: #362787;
+$fd-color-secondary-900: #241856;
+
+$fd-color-gray-50:  #F9FAFB;
+$fd-color-gray-100: #F3F4F6;
+$fd-color-gray-200: #E5E7EB;
+$fd-color-gray-300: #D1D5DB;
+$fd-color-gray-400: #9CA3AF;
+$fd-color-gray-500: #6B7280;
+$fd-color-gray-600: #4B5563;
+$fd-color-gray-700: #374151;
+$fd-color-gray-800: #1F2933;
+$fd-color-gray-900: #111827;
+
+$fd-color-success: #4BB543;
+$fd-color-warning: #FFCC00;
+$fd-color-danger:  #FF3B3B;
+$fd-color-info:    #2F80ED;
+
+$fd-color-bg-page:  #F5F7FB;
+$fd-color-bg-card:  #FFFFFF;
+$fd-color-bg-muted: #F0F4FA;
+
+$fd-color-chart-calories: #F2994A;
+$fd-color-chart-proteins: #2D9CDB;
+$fd-color-chart-fats:     #F2C94C;
+$fd-color-chart-carbs:    #27AE60;
+$fd-color-chart-fiber:    #9B51E0;
+
+$fd-color-dialog-surface:       #FFFFFF;
+$fd-color-dialog-surface-muted: #F8FAFF;
+$fd-color-dialog-border:        rgba(17, 24, 39, 0.08);
+$fd-color-dialog-overlay:       rgba(15, 23, 42, 0.6);
+
+/* Button tokens derived from the palette */
+$fd-button-tokens: (
+  primary: (
+    background: (
+      default: $fd-color-primary-500,
+      hover: $fd-color-primary-600,
+      active: $fd-color-primary-700,
+      disabled: $fd-color-primary-300
+    ),
+    border: (
+      default: transparent,
+      hover: transparent,
+      active: transparent,
+      disabled: transparent
+    ),
+    text: (
+      default: #FFFFFF,
+      disabled: #FFFFFFA0
+    )
+  ),
+  outline: (
+    background: (
+      default: transparent,
+      hover: $fd-color-primary-50,
+      active: $fd-color-primary-100,
+      disabled: transparent
+    ),
+    border: (
+      default: $fd-color-primary-500,
+      hover: $fd-color-primary-600,
+      active: $fd-color-primary-600,
+      disabled: $fd-color-gray-300
+    ),
+    text: (
+      default: $fd-color-primary-500,
+      disabled: $fd-color-gray-400
+    )
+  ),
+  ghost: (
+    background: (
+      default: transparent,
+      hover: $fd-color-primary-50,
+      active: $fd-color-primary-100,
+      disabled: transparent
+    ),
+    border: (
+      default: transparent,
+      hover: transparent,
+      active: transparent,
+      disabled: transparent
+    ),
+    text: (
+      default: $fd-color-primary-500,
+      disabled: $fd-color-gray-400
+    )
+  ),
+  secondary: (
+    background: (
+      default: #FFFFFF,
+      hover: $fd-color-gray-100,
+      active: $fd-color-gray-200,
+      disabled: $fd-color-gray-200
+    ),
+    border: (
+      default: $fd-color-gray-300,
+      hover: $fd-color-gray-400,
+      active: $fd-color-gray-400,
+      disabled: $fd-color-gray-200
+    ),
+    text: (
+      default: $fd-color-gray-900,
+      disabled: $fd-color-gray-500
+    )
+  ),
+  secondary-text: (
+    background: (
+      default: transparent,
+      hover: $fd-color-gray-100,
+      active: $fd-color-gray-200,
+      disabled: transparent
+    ),
+    border: (
+      default: transparent,
+      hover: transparent,
+      active: transparent,
+      disabled: transparent
+    ),
+    text: (
+      default: $fd-color-gray-900,
+      disabled: $fd-color-gray-500
+    )
+  ),
+  danger: (
+    background: (
+      default: $fd-color-danger,
+      hover: #E03535,
+      active: #C42F2F,
+      disabled: #FFB3B3
+    ),
+    border: (
+      default: transparent,
+      hover: transparent,
+      active: transparent,
+      disabled: transparent
+    ),
+    text: (
+      default: #FFFFFF,
+      disabled: #FFFFFFA0
+    )
+  ),
+  danger-ghost: (
+    background: (
+      default: transparent,
+      hover: rgba($fd-color-danger, 0.08),
+      active: rgba($fd-color-danger, 0.16),
+      disabled: rgba($fd-color-danger, 0.04)
+    ),
+    border: (
+      default: transparent,
+      hover: transparent,
+      active: transparent,
+      disabled: transparent
+    ),
+    text: (
+      default: $fd-color-danger,
+      disabled: #FFB3B3
+    )
+  )
+);
+
+/* CSS custom properties for runtime theming */
+:root {
+  --fd-color-primary-50:  #EEF2FF;
+  --fd-color-primary-100: #E0EAFF;
+  --fd-color-primary-200: #C2D4FF;
+  --fd-color-primary-300: #9BB8FF;
+  --fd-color-primary-400: #7094FF;
+  --fd-color-primary-500: #4A6CF7;
+  --fd-color-primary-600: #3451D6;
+  --fd-color-primary-700: #2439B0;
+  --fd-color-primary-800: #1B2A80;
+  --fd-color-primary-900: #121C54;
+
+  --fd-color-secondary-50:  #F3EEFF;
+  --fd-color-secondary-100: #E6DDFF;
+  --fd-color-secondary-200: #CFC1FF;
+  --fd-color-secondary-300: #B49EFF;
+  --fd-color-secondary-400: #977AFF;
+  --fd-color-secondary-500: #7B61FF;
+  --fd-color-secondary-600: #644CDB;
+  --fd-color-secondary-700: #4C39B7;
+  --fd-color-secondary-800: #362787;
+  --fd-color-secondary-900: #241856;
+
+  --fd-color-gray-50:  #F9FAFB;
+  --fd-color-gray-100: #F3F4F6;
+  --fd-color-gray-200: #E5E7EB;
+  --fd-color-gray-300: #D1D5DB;
+  --fd-color-gray-400: #9CA3AF;
+  --fd-color-gray-500: #6B7280;
+  --fd-color-gray-600: #4B5563;
+  --fd-color-gray-700: #374151;
+  --fd-color-gray-800: #1F2933;
+  --fd-color-gray-900: #111827;
+
+  --fd-color-success: #4BB543;
+  --fd-color-warning: #FFCC00;
+  --fd-color-danger:  #FF3B3B;
+  --fd-color-info:    #2F80ED;
+
+  --fd-color-bg-page:  #F5F7FB;
+  --fd-color-bg-card:  #FFFFFF;
+  --fd-color-bg-muted: #F0F4FA;
+
+  --fd-color-chart-calories: #F2994A;
+  --fd-color-chart-proteins: #2D9CDB;
+  --fd-color-chart-fats:     #F2C94C;
+  --fd-color-chart-carbs:    #27AE60;
+  --fd-color-chart-fiber:    #9B51E0;
+  --fd-color-dialog-surface:       #FFFFFF;
+  --fd-color-dialog-surface-muted: #F8FAFF;
+  --fd-color-dialog-border:        rgba(17, 24, 39, 0.08);
+  --fd-color-dialog-overlay:       rgba(15, 23, 42, 0.6);
+
+  /* Button design tokens */
+  @each $variant, $tokens in $fd-button-tokens {
+    @each $token-type, $states in $tokens {
+      @each $state, $value in $states {
+        --fd-button-#{$variant}-#{$token-type}-#{$state}: #{$value};
+      }
+    }
+  }
+}
+
+/* SCSS maps for programmatic usage */
+$fd-colors-primary: (
+  50:  $fd-color-primary-50,
+  100: $fd-color-primary-100,
+  200: $fd-color-primary-200,
+  300: $fd-color-primary-300,
+  400: $fd-color-primary-400,
+  500: $fd-color-primary-500,
+  600: $fd-color-primary-600,
+  700: $fd-color-primary-700,
+  800: $fd-color-primary-800,
+  900: $fd-color-primary-900
+);
+
+$fd-colors-secondary: (
+  50:  $fd-color-secondary-50,
+  100: $fd-color-secondary-100,
+  200: $fd-color-secondary-200,
+  300: $fd-color-secondary-300,
+  400: $fd-color-secondary-400,
+  500: $fd-color-secondary-500,
+  600: $fd-color-secondary-600,
+  700: $fd-color-secondary-700,
+  800: $fd-color-secondary-800,
+  900: $fd-color-secondary-900
+);
+
+$fd-colors-gray: (
+  50:  $fd-color-gray-50,
+  100: $fd-color-gray-100,
+  200: $fd-color-gray-200,
+  300: $fd-color-gray-300,
+  400: $fd-color-gray-400,
+  500: $fd-color-gray-500,
+  600: $fd-color-gray-600,
+  700: $fd-color-gray-700,
+  800: $fd-color-gray-800,
+  900: $fd-color-gray-900
+);
+
+$fd-colors-semantic: (
+  success: $fd-color-success,
+  warning: $fd-color-warning,
+  danger:  $fd-color-danger,
+  info:    $fd-color-info
+);
+
+$fd-colors-chart: (
+  calories: $fd-color-chart-calories,
+  proteins: $fd-color-chart-proteins,
+  fats:     $fd-color-chart-fats,
+  carbs:    $fd-color-chart-carbs,
+  fiber:    $fd-color-chart-fiber
+);
+
+$fd-colors-dialog: (
+  surface:       $fd-color-dialog-surface,
+  surface-muted: $fd-color-dialog-surface-muted,
+  border:        $fd-color-dialog-border,
+  overlay:       $fd-color-dialog-overlay
+);
+
+$fd-button-styles: $fd-button-tokens;
+
+/* Usage:
+ * 1) Angular global styles: @use 'src/app/ui-kit/colors';
+ * 2) Component CSS variables: color: var(--fd-color-primary-500);
+ * 3) Component SCSS variables: background-color: $fd-color-bg-card;
+ */

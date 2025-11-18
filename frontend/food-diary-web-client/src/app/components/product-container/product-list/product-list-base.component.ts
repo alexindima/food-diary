@@ -1,10 +1,7 @@
 import { ChangeDetectionStrategy, Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
 import { TuiPagination } from '@taiga-ui/kit';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import {
-    tuiDialog, TuiIcon,
-    TuiLoader,
-} from '@taiga-ui/core';
+import { TuiIcon, TuiLoader } from '@taiga-ui/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { ProductService } from '../../../services/product.service';
 import { NavigationService } from '../../../services/navigation.service';
@@ -20,6 +17,7 @@ import { FdUiInputComponent } from '../../../ui-kit/input/fd-ui-input.component'
 import { FdUiButtonComponent } from '../../../ui-kit/button/fd-ui-button.component';
 import { FdUiCheckboxComponent } from '../../../ui-kit/checkbox/fd-ui-checkbox.component';
 import { buildProductTypeTranslationKey } from '../../../utils/product-type.utils';
+import { FdUiDialogService } from '../../../ui-kit/dialog/fd-ui-dialog.service';
 
 @Component({
     selector: 'fd-product-list-base',
@@ -44,13 +42,9 @@ export class ProductListBaseComponent implements OnInit {
     protected readonly productService = inject(ProductService);
     protected readonly navigationService = inject(NavigationService);
     protected readonly pageSize = 10;
+    protected readonly fdDialogService = inject(FdUiDialogService);
 
     @ViewChild('container') private container!: ElementRef<HTMLElement>;
-
-    private readonly barcodeDialog = tuiDialog(BarcodeScannerComponent, {
-        dismissible: true,
-        appearance: 'without-border-radius',
-    });
 
     public searchForm: FormGroup<ProductSearchFormGroup>;
     public productData: PagedData<Product> = new PagedData<Product>();
@@ -97,11 +91,16 @@ export class ProductListBaseComponent implements OnInit {
     }
 
     public openBarcodeScanner(): void {
-        this.barcodeDialog(null).subscribe({
-            next: (barcode) => {
-                this.searchForm.controls.search.setValue(barcode);
-            },
-        });
+        this.fdDialogService
+            .open<BarcodeScannerComponent, null, string | null>(BarcodeScannerComponent, {
+                size: 'lg',
+            })
+            .afterClosed()
+            .subscribe(barcode => {
+                if (barcode) {
+                    this.searchForm.controls.search.setValue(barcode);
+                }
+            });
     }
 
     protected loadProducts(page: number, limit: number, search: string | null): Observable<void> {

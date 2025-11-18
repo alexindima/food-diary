@@ -1,0 +1,25 @@
+<div class="fd-ui-dialog" [ngClass]="['fd-ui-dialog--size-' + size()]">
+    <header class="fd-ui-dialog__header" *ngIf="showHeader()">
+        <div class="fd-ui-dialog__heading">
+            <h2 class="fd-ui-dialog__title" *ngIf="title() as titleValue">{{ titleValue }}</h2>
+            <p class="fd-ui-dialog__subtitle" *ngIf="subtitle() as subtitleValue">{{ subtitleValue }}</p>
+        </div>
+        <button
+            *ngIf="dismissible()"
+            type="button"
+            class="fd-ui-dialog__close-button"
+            (click)="close()"
+            aria-label="Close dialog"
+        >
+            <mat-icon>close</mat-icon>
+        </button>
+    </header>
+
+    <section class="fd-ui-dialog__body">
+        <ng-content></ng-content>
+    </section>
+
+    <footer class="fd-ui-dialog__footer" *ngIf="hasFooter">
+        <ng-content select="[fdUiDialogFooter]"></ng-content>
+    </footer>
+</div>

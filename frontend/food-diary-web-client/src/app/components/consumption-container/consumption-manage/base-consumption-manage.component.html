@@ -317,22 +317,3 @@
     </form>
 </div>
 
-<ng-template #confirmDialog let-observer>
-    <div class="consumption-manage__dialog">
-        <p class="consumption-manage__dialog-title">
-            @if (consumption()) {
-                {{ 'CONSUMPTION_MANAGE.EDIT_SUCCESS' | translate }}
-            } @else {
-                {{ 'CONSUMPTION_MANAGE.CREATE_SUCCESS' | translate }}
-            }
-        </p>
-        <div class="consumption-manage__dialog-buttons">
-            <fd-ui-button fill="text" (click)="observer.next('Home'); observer.complete()">
-                {{ 'CONSUMPTION_MANAGE.GO_TO_HOME_BUTTON' | translate }}
-            </fd-ui-button>
-            <fd-ui-button fill="text" (click)="observer.next('ConsumptionList'); observer.complete()">
-                {{ 'CONSUMPTION_MANAGE.GO_TO_CONSUMPTION_LIST_BUTTON' | translate }}
-            </fd-ui-button>
-        </div>
-    </div>
-</ng-template>

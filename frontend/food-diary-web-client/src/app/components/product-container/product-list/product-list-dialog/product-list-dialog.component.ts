@@ -1,14 +1,8 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Inject, Input, Optional, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Optional, Output, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ProductListBaseComponent } from '../product-list-base.component';
-import {
-    tuiDialog,
-    TuiDialogContext,
-    TuiIcon,
-    TuiLoader,
-} from '@taiga-ui/core';
+import { TuiIcon, TuiLoader } from '@taiga-ui/core';
 import { Product } from '../../../../types/product.data';
-import { POLYMORPHEUS_CONTEXT } from '@taiga-ui/polymorpheus';
 import { TranslatePipe } from '@ngx-translate/core';
 import { TuiPagination } from '@taiga-ui/kit';
 import { ProductAddDialogComponent } from '../../product-manage/product-add-dialog/product-add-dialog.component';
@@ -17,6 +11,7 @@ import { FdUiEntityCardComponent } from '../../../../ui-kit/entity-card/fd-ui-en
 import { FdUiInputComponent } from '../../../../ui-kit/input/fd-ui-input.component';
 import { FdUiButtonComponent } from '../../../../ui-kit/button/fd-ui-button.component';
 import { FdUiCheckboxComponent } from '../../../../ui-kit/checkbox/fd-ui-checkbox.component';
+import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
     selector: 'fd-product-list-dialog',
@@ -41,25 +36,20 @@ export class ProductListDialogComponent extends ProductListBaseComponent {
     @Input() public embedded: boolean = false;
     @Output() public productSelected = new EventEmitter<Product>();
 
-    public constructor(
-        @Optional() @Inject(POLYMORPHEUS_CONTEXT) private readonly context: TuiDialogContext<Product, null> | null,
-    ) {
-        super();
-    }
-
-    private readonly addProductDialog = tuiDialog(ProductAddDialogComponent, {
-        dismissible: true,
-        appearance: 'without-border-radius',
+    private readonly dialogRef = inject(MatDialogRef<ProductListDialogComponent, Product | null>, {
+        optional: true,
     });
-
     public override async onAddProductClick(): Promise<void> {
-        this.addProductDialog(null).subscribe({
-            next: (product) => {
+        this.fdDialogService
+            .open<ProductAddDialogComponent, Product | null, Product | null>(ProductAddDialogComponent, {
+                size: 'lg',
+            })
+            .afterClosed()
+            .subscribe(product => {
                 if (product) {
                     this.handleSelection(product);
                 }
-            },
-        });
+            });
     }
 
     protected override async onProductClick(product: Product): Promise<void> {
@@ -67,8 +57,8 @@ export class ProductListDialogComponent extends ProductListBaseComponent {
     }
 
     private handleSelection(product: Product): void {
-        if (!this.embedded && this.context) {
-            this.context.completeWith(product);
+        if (!this.embedded && this.dialogRef) {
+            this.dialogRef.close(product);
         } else {
             this.productSelected.emit(product);
         }

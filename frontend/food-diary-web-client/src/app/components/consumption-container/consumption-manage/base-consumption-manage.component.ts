@@ -3,22 +3,14 @@ import {
     Component,
     DestroyRef,
     FactoryProvider,
-    Injector,
     inject,
     input,
     OnInit,
     signal,
-    TemplateRef,
-    ViewChild
 } from '@angular/core';
 import { AbstractControl, FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import {
-    TuiDialogContext,
-    TuiDialogService,
-    TuiError,
-} from '@taiga-ui/core';
+import { TuiError } from '@taiga-ui/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { TUI_VALIDATION_ERRORS } from '@taiga-ui/kit';
 import { DecimalPipe } from '@angular/common';
 import { NavigationService } from '../../../services/navigation.service';
@@ -55,12 +47,17 @@ import { FdUiTextareaComponent } from '../../../ui-kit/textarea/fd-ui-textarea.c
 import { FdUiButtonComponent } from '../../../ui-kit/button/fd-ui-button.component';
 import { FdUiCheckboxComponent } from '../../../ui-kit/checkbox/fd-ui-checkbox.component';
 import { MatIconModule } from '@angular/material/icon';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import {
     SatietyLevelDialogComponent,
     SatietyLevelDialogData,
 } from '../satiety-level-dialog/satiety-level-dialog.component';
 import { DEFAULT_SATIETY_LEVELS } from '../../../ui-kit/satiety-scale/fd-ui-satiety-scale.component';
+import { FdUiDialogService } from '../../../ui-kit/dialog/fd-ui-dialog.service';
+import {
+    ConsumptionManageRedirectAction,
+    ConsumptionManageSuccessDialogComponent,
+    ConsumptionManageSuccessDialogData,
+} from './success-dialog/consumption-manage-success-dialog.component';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: TUI_VALIDATION_ERRORS,
@@ -94,21 +91,16 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
         FdUiButtonComponent,
         FdUiCheckboxComponent,
         MatIconModule,
-        MatDialogModule,
     ]
 })
 export class BaseConsumptionManageComponent implements OnInit {
     private readonly consumptionService = inject(ConsumptionService);
     private readonly translateService = inject(TranslateService);
     private readonly navigationService = inject(NavigationService);
-    private readonly dialogService = inject(TuiDialogService);
     private readonly destroyRef = inject(DestroyRef);
-    private readonly injector = inject(Injector);
     private readonly recipeService = inject(RecipeService);
-    private readonly matDialog = inject(MatDialog);
+    private readonly fdDialogService = inject(FdUiDialogService);
     private readonly recipeServingWeightCache = new Map<string, number | null>();
-
-    @ViewChild('confirmDialog') private confirmDialog!: TemplateRef<TuiDialogContext<RedirectAction, void>>;
 
     public consumption = input<Consumption | null>();
     public totalCalories = signal<number>(0);
@@ -340,11 +332,10 @@ export class BaseConsumptionManageComponent implements OnInit {
                 ? 'CONSUMPTION_MANAGE.HUNGER_BEFORE_DIALOG_TITLE'
                 : 'CONSUMPTION_MANAGE.HUNGER_AFTER_DIALOG_TITLE';
 
-        const dialogRef = this.matDialog.open<SatietyLevelDialogComponent, SatietyLevelDialogData, number>(
+        const dialogRef = this.fdDialogService.open<SatietyLevelDialogComponent, SatietyLevelDialogData, number>(
             SatietyLevelDialogComponent,
             {
-                width: '720px',
-                maxWidth: '96vw',
+                size: 'lg',
                 data: {
                     titleKey,
                     subtitleKey: 'CONSUMPTION_MANAGE.SATIETY_DIALOG_HINT',
@@ -366,18 +357,16 @@ export class BaseConsumptionManageComponent implements OnInit {
     }
 
     private openItemSelectDialog(index: number, initialTab: 'Product' | 'Recipe'): void {
-        this.dialogService
-            .open<ConsumptionItemSelection | null>(
-                new PolymorpheusComponent(ConsumptionItemSelectDialogComponent, this.injector),
+        this.fdDialogService
+            .open<ConsumptionItemSelectDialogComponent, ConsumptionItemSelectDialogData, ConsumptionItemSelection | null>(
+                ConsumptionItemSelectDialogComponent,
                 {
-                    size: 'page',
-                    dismissible: true,
-                    appearance: 'without-border-radius',
-                    data: { initialTab } as ConsumptionItemSelectDialogData,
+                    size: 'lg',
+                    data: { initialTab },
                 },
             )
-            .subscribe({
-            next: selection => {
+            .afterClosed()
+            .subscribe(selection => {
                 if (!selection) {
                     return;
                 }
@@ -400,8 +389,7 @@ export class BaseConsumptionManageComponent implements OnInit {
                     product: null,
                 });
                 this.configureItemType(group, ConsumptionSourceType.Recipe);
-            },
-        });
+            });
     }
 
     public onSubmit(): void {
@@ -693,12 +681,19 @@ export class BaseConsumptionManageComponent implements OnInit {
         this.globalError.set(null);
     }
 
-    private async showConfirmDialog(): Promise<void> {
-        this.dialogService
-            .open(this.confirmDialog, {
-                dismissible: true,
-                appearance: 'without-border-radius',
+    private showConfirmDialog(): void {
+        this.fdDialogService
+            .open<
+                ConsumptionManageSuccessDialogComponent,
+                ConsumptionManageSuccessDialogData,
+                ConsumptionManageRedirectAction
+            >(ConsumptionManageSuccessDialogComponent, {
+                size: 'sm',
+                data: {
+                    isEdit: Boolean(this.consumption()),
+                },
             })
+            .afterClosed()
             .subscribe(redirectAction => {
                 if (redirectAction === 'Home') {
                     this.navigationService.navigateToHome();
@@ -918,8 +913,6 @@ export class BaseConsumptionManageComponent implements OnInit {
         return this.translateService.instant('FORM_ERRORS.UNKNOWN');
     }
 }
-
-type RedirectAction = 'Home' | 'ConsumptionList';
 
 type ConsumptionFormValues = {
     date: string;

@@ -13,3 +13,7 @@ export * from './checkbox/fd-ui-checkbox.component';
 export * from './date-input/fd-ui-date-input.component';
 export * from './tabs/fd-ui-tabs.component';
 export * from './satiety-scale/fd-ui-satiety-scale.component';
+export * from './dialog/fd-ui-dialog.component';
+export * from './dialog/fd-ui-dialog-footer.directive';
+export * from './dialog/fd-ui-dialog.service';
+export * from './dialog/fd-ui-confirm-dialog.component';

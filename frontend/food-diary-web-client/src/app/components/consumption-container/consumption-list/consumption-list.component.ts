@@ -2,19 +2,23 @@ import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, inject, OnI
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { catchError, debounceTime, map, Observable, of, startWith, switchMap } from 'rxjs';
 import { TuiPagination } from '@taiga-ui/kit';
-import { tuiDialog, TuiLoader } from '@taiga-ui/core';
+import { TuiLoader } from '@taiga-ui/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Consumption, ConsumptionFilters } from '../../../types/consumption.data';
 import { ConsumptionService } from '../../../services/consumption.service';
 import { DatePipe, DecimalPipe } from '@angular/common';
 import { PagedData } from '../../../types/paged-data.data';
 import { NavigationService } from '../../../services/navigation.service';
-import { ConsumptionDetailComponent } from '../consumption-detail/consumption-detail.component';
+import {
+    ConsumptionDetailComponent,
+    ConsumptionDetailActionResult,
+} from '../consumption-detail/consumption-detail.component';
 import { FormGroupControls } from '../../../types/common.data';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FdUiButtonComponent } from '../../../ui-kit/button/fd-ui-button.component';
 import { FdUiDateInputComponent, FdUiDateRangeValue } from '../../../ui-kit/date-input/fd-ui-date-input.component';
 import { FdUiEntityCardComponent } from '../../../ui-kit/entity-card/fd-ui-entity-card.component';
+import { FdUiDialogService } from '../../../ui-kit/dialog/fd-ui-dialog.service';
 
 @Component({
     selector: 'fd-consumption-list',
@@ -37,6 +41,7 @@ export class ConsumptionListComponent implements OnInit {
     private readonly consumptionService = inject(ConsumptionService);
     private readonly navigationService = inject(NavigationService);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly fdDialogService = inject(FdUiDialogService);
 
     public searchForm: FormGroup<SearchFormGroup>;
     public consumptionData: PagedData<Consumption> = new PagedData<Consumption>();
@@ -60,11 +65,6 @@ export class ConsumptionListComponent implements OnInit {
             )
             .subscribe();
     }
-
-    private readonly dialog = tuiDialog(ConsumptionDetailComponent, {
-        dismissible: true,
-        appearance: 'without-border-radius',
-    });
 
     public loadConsumptions(page: number): Observable<void> {
         this.consumptionData.setLoading(true);
@@ -97,8 +97,17 @@ export class ConsumptionListComponent implements OnInit {
     }
 
     public async openConsumptionDetails(consumption: Consumption): Promise<void> {
-        this.dialog(consumption).subscribe({
-            next: data => {
+        this.fdDialogService
+            .open<ConsumptionDetailComponent, Consumption, ConsumptionDetailActionResult>(ConsumptionDetailComponent, {
+                size: 'lg',
+                data: consumption,
+            })
+            .afterClosed()
+            .subscribe(data => {
+                if (!data) {
+                    return;
+                }
+
                 if (data.action === 'Edit') {
                     this.navigationService.navigateToConsumptionEdit(data.id);
                 } else if (data.action === 'Delete') {
@@ -109,8 +118,7 @@ export class ConsumptionListComponent implements OnInit {
                         },
                     });
                 }
-            },
-        });
+            });
     }
 
     public async goToConsumptionAdd(): Promise<void> {

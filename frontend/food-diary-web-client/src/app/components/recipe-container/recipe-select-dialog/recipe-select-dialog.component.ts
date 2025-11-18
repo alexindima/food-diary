@@ -4,31 +4,21 @@ import {
     DestroyRef,
     ElementRef,
     EventEmitter,
-    Inject,
     Input,
     OnInit,
-    Optional,
     Output,
     ViewChild,
     inject,
 } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { DecimalPipe } from '@angular/common';
-import {
-    TuiButton,
-    TuiDialogContext,
-    TuiIcon,
-    TuiLoader,
-    TuiTextfieldComponent,
-    TuiTextfieldDirective
-} from '@taiga-ui/core';
+import { TuiButton, TuiIcon, TuiLoader, TuiTextfieldComponent, TuiTextfieldDirective } from '@taiga-ui/core';
 import { TuiPagination } from '@taiga-ui/kit';
 import { TuiSearchComponent } from '@taiga-ui/layout';
 import { TuiTextfieldControllerModule } from '@taiga-ui/legacy';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Recipe, RecipeFilters } from '../../../types/recipe.data';
 import { RecipeService } from '../../../services/recipe.service';
-import { POLYMORPHEUS_CONTEXT } from '@taiga-ui/polymorpheus';
 import { catchError, debounceTime, distinctUntilChanged, finalize, map, Observable, of, switchMap, tap } from 'rxjs';
 import { NavigationService } from '../../../services/navigation.service';
 import { PagedData } from '../../../types/paged-data.data';
@@ -37,6 +27,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { BadgeComponent } from '../../shared/badge/badge.component';
 import { FdUiEntityCardComponent } from '../../../ui-kit/entity-card/fd-ui-entity-card.component';
 import { FdUiEntityCardHeaderDirective } from '../../../ui-kit/entity-card/fd-ui-entity-card-header.directive';
+import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
     selector: 'fd-recipe-select-dialog',
@@ -65,6 +56,9 @@ export class RecipeSelectDialogComponent implements OnInit {
     private readonly recipeService = inject(RecipeService);
     private readonly navigationService = inject(NavigationService);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly dialogRef = inject(MatDialogRef<RecipeSelectDialogComponent, Recipe | null>, {
+        optional: true,
+    });
 
     @Input() public embedded: boolean = false;
     @Output() public recipeSelected = new EventEmitter<Recipe>();
@@ -75,10 +69,7 @@ export class RecipeSelectDialogComponent implements OnInit {
         onlyMine: new FormControl<boolean>(false, { nonNullable: true }),
     });
 
-    public constructor(
-        @Optional() @Inject(POLYMORPHEUS_CONTEXT)
-        private readonly context: TuiDialogContext<Recipe | null, null> | null,
-    ) {}
+    public constructor() {}
     public recipeData: PagedData<Recipe> = new PagedData<Recipe>();
     public currentPageIndex = 0;
 
@@ -137,8 +128,8 @@ export class RecipeSelectDialogComponent implements OnInit {
     }
 
     public async onCreateRecipeClick(): Promise<void> {
-        if (!this.embedded && this.context) {
-            this.context.completeWith(null);
+        if (!this.embedded && this.dialogRef) {
+            this.dialogRef.close(null);
         } else {
             this.createRecipeRequested.emit();
         }
@@ -146,8 +137,8 @@ export class RecipeSelectDialogComponent implements OnInit {
     }
 
     private handleSelection(recipe: Recipe): void {
-        if (!this.embedded && this.context) {
-            this.context.completeWith(recipe);
+        if (!this.embedded && this.dialogRef) {
+            this.dialogRef.close(recipe);
         } else {
             this.recipeSelected.emit(recipe);
         }

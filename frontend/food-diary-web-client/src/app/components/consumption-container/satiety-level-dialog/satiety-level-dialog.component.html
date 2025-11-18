@@ -1,33 +1,22 @@
-<div class="satiety-dialog">
-    <header class="satiety-dialog__header">
-        <div>
-            <p class="satiety-dialog__eyebrow">{{ 'CONSUMPTION_MANAGE.SATIETY_DIALOG_HINT' | translate }}</p>
-            <h2 class="satiety-dialog__title">{{ data.titleKey | translate }}</h2>
-            @if (data.subtitleKey) {
-                <p class="satiety-dialog__subtitle">{{ data.subtitleKey | translate }}</p>
-            }
-        </div>
-        <button mat-dialog-close class="satiety-dialog__close">
-            <mat-icon>close</mat-icon>
-        </button>
-    </header>
+<fd-ui-dialog
+    [title]="data.titleKey | translate"
+    [subtitle]="data.subtitleKey ? (data.subtitleKey | translate) : undefined"
+    size="lg"
+>
+    <fd-ui-satiety-scale
+        layout="grid"
+        [label]="getSelectionLabel()"
+        [hint]="'CONSUMPTION_MANAGE.SATIETY_DIALOG_SUBHINT' | translate"
+        [ngModel]="selectedValue()"
+        (ngModelChange)="onValueSelected($event)"
+    ></fd-ui-satiety-scale>
 
-    <div class="satiety-dialog__content">
-        <fd-ui-satiety-scale
-            layout="grid"
-            [label]="getSelectionLabel()"
-            [hint]="'CONSUMPTION_MANAGE.SATIETY_DIALOG_SUBHINT' | translate"
-            [ngModel]="selectedValue()"
-            (ngModelChange)="onValueSelected($event)"
-        ></fd-ui-satiety-scale>
-    </div>
-
-    <div class="satiety-dialog__actions">
-        <fd-ui-button variant="secondary" fill="text" (click)="close()">
+    <div fdUiDialogFooter>
+        <fd-ui-button variant="secondary" fill="text" size="sm" (click)="close()">
             {{ 'CONSUMPTION_MANAGE.SATIETY_DIALOG_CANCEL' | translate }}
         </fd-ui-button>
-        <fd-ui-button (click)="closeWithValue()" [disabled]="selectedValue() === null">
+        <fd-ui-button size="sm" (click)="closeWithValue()" [disabled]="selectedValue() === null">
             {{ 'CONSUMPTION_MANAGE.SATIETY_DIALOG_APPLY' | translate }}
         </fd-ui-button>
     </div>
-</div>
+</fd-ui-dialog>

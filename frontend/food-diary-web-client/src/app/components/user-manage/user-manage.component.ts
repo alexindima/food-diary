@@ -6,33 +6,27 @@ import {
     inject,
     OnInit,
     signal,
-    TemplateRef,
-    ViewChild,
 } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import {
-    TuiAlertService,
-    TuiDialogContext,
-    TuiDialogService,
-    TuiError,
-} from '@taiga-ui/core';
+import { TuiAlertService, TuiError } from '@taiga-ui/core';
 import { FormGroupControls } from '../../types/common.data';
 import { UserService } from '../../services/user.service';
-import { ActivityLevelOption, ChangePasswordRequest, Gender, UpdateUserDto } from '../../types/user.data';
+import { ActivityLevelOption, Gender, UpdateUserDto } from '../../types/user.data';
 import { NavigationService } from '../../services/navigation.service';
 import { TuiDay } from '@taiga-ui/cdk';
-import { AsyncPipe } from '@angular/common';
-import { TUI_VALIDATION_ERRORS, TuiFieldErrorPipe } from '@taiga-ui/kit';
-import { matchFieldValidator } from '../../validators/match-field.validator';
+import { TUI_VALIDATION_ERRORS } from '@taiga-ui/kit';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ValidationErrors } from '../../types/validation-error.data';
-import { Observer, Subscription } from 'rxjs';
 import { FdUiCardComponent } from '../../ui-kit/card/fd-ui-card.component';
 import { FdUiInputComponent } from '../../ui-kit/input/fd-ui-input.component';
 import { FdUiSelectComponent, FdUiSelectOption } from '../../ui-kit/select/fd-ui-select.component';
 import { FdUiDateInputComponent } from '../../ui-kit/date-input/fd-ui-date-input.component';
 import { FdUiButtonComponent } from '../../ui-kit/button/fd-ui-button.component';
+import { FdUiDialogService } from '../../ui-kit/dialog/fd-ui-dialog.service';
+import { ChangePasswordDialogComponent } from './dialogs/change-password-dialog/change-password-dialog.component';
+import { PasswordSuccessDialogComponent } from './dialogs/password-success-dialog/password-success-dialog.component';
+import { UpdateSuccessDialogComponent } from './dialogs/update-success-dialog/update-success-dialog.component';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: TUI_VALIDATION_ERRORS,
@@ -55,8 +49,6 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
         ReactiveFormsModule,
         TranslatePipe,
         TuiError,
-        TuiFieldErrorPipe,
-        AsyncPipe,
         FdUiCardComponent,
         FdUiInputComponent,
         FdUiSelectComponent,
@@ -71,15 +63,10 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
 export class UserManageComponent implements OnInit {
     private readonly userService = inject(UserService);
     private readonly translateService = inject(TranslateService);
-    private readonly dialogService = inject(TuiDialogService);
+    private readonly fdDialogService = inject(FdUiDialogService);
     private readonly navigationService = inject(NavigationService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly alertService = inject(TuiAlertService);
-    private changePasswordDialogSubscription: Subscription | null = null;
-
-    @ViewChild('successDialog') private successDialog!: TemplateRef<TuiDialogContext<boolean>>;
-    @ViewChild('changePasswordDialog') private changePasswordDialog!: TemplateRef<TuiDialogContext<void>>;
-    @ViewChild('passwordSuccessDialog') private passwordSuccessDialog!: TemplateRef<TuiDialogContext<void>>;
 
     public genders = Object.values(Gender);
     public activityLevels: ActivityLevelOption[] = ['MINIMAL', 'LIGHT', 'MODERATE', 'HIGH', 'EXTREME'];
@@ -88,9 +75,6 @@ export class UserManageComponent implements OnInit {
 
     public userForm: FormGroup<UserFormData>;
     public globalError = signal<string | null>(null);
-    public changePasswordForm: FormGroup<ChangePasswordFormData>;
-    public passwordError = signal<string | null>(null);
-    public isPasswordSubmitting = signal<boolean>(false);
 
     public constructor() {
         this.userForm = new FormGroup<UserFormData>({
@@ -109,15 +93,6 @@ export class UserManageComponent implements OnInit {
             stepGoal: new FormControl<number | null>(null),
             waterGoal: new FormControl<number | null>(null),
             profileImage: new FormControl<string | null>(null),
-        });
-
-        this.changePasswordForm = new FormGroup<ChangePasswordFormData>({
-            currentPassword: new FormControl<string | null>(null, [Validators.required]),
-            newPassword: new FormControl<string | null>(null, [Validators.required, Validators.minLength(6)]),
-            confirmPassword: new FormControl<string | null>(null, [
-                Validators.required,
-                matchFieldValidator('newPassword'),
-            ]),
         });
 
         this.buildSelectOptions();
@@ -184,62 +159,20 @@ export class UserManageComponent implements OnInit {
     }
 
     public openChangePasswordDialog(): void {
-        this.changePasswordForm.reset();
-        this.passwordError.set(null);
-        this.isPasswordSubmitting.set(false);
-
-        this.changePasswordDialogSubscription?.unsubscribe();
-        this.changePasswordDialogSubscription = this.dialogService
-            .open(this.changePasswordDialog, {
-                dismissible: true,
-                appearance: 'without-border-radius',
+        this.fdDialogService
+            .open(ChangePasswordDialogComponent, {
+                size: 'sm',
             })
-            .subscribe();
-    }
-
-    public onChangePasswordSubmit(observer: Observer<void>): void {
-        this.changePasswordForm.markAllAsTouched();
-        if (this.changePasswordForm.invalid || this.isPasswordSubmitting()) {
-            return;
-        }
-
-        const formValue = this.changePasswordForm.value;
-        const payload: ChangePasswordRequest = {
-            currentPassword: formValue.currentPassword?.trim() ?? '',
-            newPassword: formValue.newPassword?.trim() ?? '',
-        };
-
-        this.isPasswordSubmitting.set(true);
-        this.userService.changePassword(payload).subscribe({
-            next: success => {
-                this.isPasswordSubmitting.set(false);
+            .afterClosed()
+            .subscribe(success => {
                 if (success) {
-                    this.closeChangePasswordDialog(observer);
-                    this.dialogService
-                        .open(this.passwordSuccessDialog, {
-                            dismissible: true,
-                            appearance: 'without-border-radius',
-                        })
-                        .subscribe();
-                } else {
-                    this.passwordError.set(this.translateService.instant('USER_MANAGE.CHANGE_PASSWORD_ERROR'));
+                    this.openPasswordSuccessDialog();
                 }
-            },
-            error: () => {
-                this.isPasswordSubmitting.set(false);
-                this.passwordError.set(this.translateService.instant('USER_MANAGE.CHANGE_PASSWORD_ERROR'));
-            },
-        });
+            });
     }
 
-    public onChangePasswordCancel(observer: Observer<void>): void {
-        this.closeChangePasswordDialog(observer);
-    }
-
-    private closeChangePasswordDialog(observer: Observer<void>): void {
-        observer.complete();
-        this.changePasswordDialogSubscription?.unsubscribe();
-        this.changePasswordDialogSubscription = null;
+    private openPasswordSuccessDialog(): void {
+        this.fdDialogService.open(PasswordSuccessDialogComponent, { size: 'sm' }).afterClosed().subscribe();
     }
 
     public onDeleteAccount(): void {
@@ -248,12 +181,12 @@ export class UserManageComponent implements OnInit {
             .subscribe();
     }
 
-    protected async showSuccessDialog(): Promise<void> {
-        this.dialogService
-            .open(this.successDialog, {
-                dismissible: true,
-                appearance: 'without-border-radius',
+    protected showSuccessDialog(): void {
+        this.fdDialogService
+            .open(UpdateSuccessDialogComponent, {
+                size: 'sm',
             })
+            .afterClosed()
             .subscribe(goToHome => {
                 if (goToHome) {
                     this.navigationService.navigateToHome();
@@ -301,11 +234,3 @@ export interface UserFormValues {
 }
 
 export type UserFormData = FormGroupControls<UserFormValues>;
-
-interface ChangePasswordFormValues {
-    currentPassword: string | null;
-    newPassword: string | null;
-    confirmPassword: string | null;
-}
-
-type ChangePasswordFormData = FormGroupControls<ChangePasswordFormValues>;

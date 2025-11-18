@@ -1,23 +1,28 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { BarcodeFormat } from '@zxing/library';
 import { ZXingScannerModule } from '@zxing/ngx-scanner';
-import { injectContext } from '@taiga-ui/polymorpheus';
-import { TuiDialogContext, TuiLoader } from '@taiga-ui/core';
+import { TuiLoader } from '@taiga-ui/core';
 import { TranslatePipe } from '@ngx-translate/core';
+import { MatDialogRef } from '@angular/material/dialog';
+import { FdUiDialogComponent } from '../../../ui-kit/dialog/fd-ui-dialog.component';
+import { FdUiButtonComponent } from '../../../ui-kit/button/fd-ui-button.component';
 
 @Component({
     selector: 'fd-barcode-scanner',
+    standalone: true,
     imports: [
         ZXingScannerModule,
         TranslatePipe,
-        TuiLoader
+        TuiLoader,
+        FdUiDialogComponent,
+        FdUiButtonComponent,
     ],
     templateUrl: './barcode-scanner.component.html',
     styleUrl: './barcode-scanner.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BarcodeScannerComponent {
-    public readonly context = injectContext<TuiDialogContext<string, null>>();
+    private readonly dialogRef = inject(MatDialogRef<BarcodeScannerComponent, string | null>);
 
     public allowedScannerFormats = [
         BarcodeFormat.AZTEC,
@@ -51,6 +56,10 @@ export class BarcodeScannerComponent {
     }
 
     public onScanSuccess(barcode: string): void {
-        this.context.completeWith(barcode);
+        this.dialogRef.close(barcode);
+    }
+
+    public close(): void {
+        this.dialogRef.close(null);
     }
 }

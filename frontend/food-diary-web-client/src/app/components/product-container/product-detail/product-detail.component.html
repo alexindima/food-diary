@@ -1,19 +1,18 @@
-<div class="modal">
-    <h2 class="modal__title">
-        {{ product.name }}
-        @if (product.barcode) {
-            [{{ product.barcode }}]
-        }
-    </h2>
-    <div class="modal__body">
-        <div class="modal__info">
-        <p class="modal__text">
-            <span class="modal__property-name">{{ 'PRODUCT_DETAIL.PRODUCT_TYPE' | translate }}</span>
-            {{ productTypeKey | translate }}
-        </p>
-            <p class="modal__text">
-                <span class="modal__property-name">{{ 'PRODUCT_DETAIL.BASE_AMOUNT' | translate }}</span>
-                {{ product.baseAmount }} {{ 'PRODUCT_AMOUNT_UNITS_SHORT.' + product.baseUnit | translate }}
+<fd-ui-dialog
+    [title]="product.name"
+    [subtitle]="product.barcode ? '[' + product.barcode + ']' : undefined"
+    size="lg"
+>
+    <div class="product-detail">
+        <div class="product-detail__info">
+            <p class="product-detail__text">
+                <span class="product-detail__label">{{ 'PRODUCT_DETAIL.PRODUCT_TYPE' | translate }}</span>
+                {{ productTypeKey | translate }}
+            </p>
+            <p class="product-detail__text">
+                <span class="product-detail__label">{{ 'PRODUCT_DETAIL.BASE_AMOUNT' | translate }}</span>
+                {{ product.baseAmount }}
+                {{ ('PRODUCT_AMOUNT_UNITS_SHORT.' + product.baseUnit) | translate }}
             </p>
         </div>
         <fd-nutrients-summary
@@ -24,52 +23,30 @@
             [fiberUnitKey]="'PRODUCT_AMOUNT_UNITS_SHORT.' + product.baseUnit"
         ></fd-nutrients-summary>
     </div>
-    <div class="modal__footer">
-        <div class="modal__footer-action-wrapper action-wrapper">
-            @if (canModify) {
-                <button
-                    class="action-wrapper__button"
-                    tuiButton
-                    size="m"
-                    iconStart="@tui.pen-line"
-                    (click)="onEdit()"
-                >
-                    {{ 'PRODUCT_DETAIL.EDIT_BUTTON' | translate }}
-                </button>
-                <button
-                    class="action-wrapper__button action-wrapper__button--accent"
-                    tuiButton
-                    size="m"
-                    appearance="accent"
-                    iconStart="@tui.trash-2"
-                    (click)="onDelete()"
-                ></button>
-            } @else {
-                <button
-                    class="action-wrapper__button"
-                    tuiButton
-                    size="m"
-                    appearance="secondary"
-                    iconStart="@tui.copy"
-                    [disabled]="isDuplicateInProgress"
-                    (click)="onDuplicate()"
-                >
-                    {{ 'PRODUCT_DETAIL.DUPLICATE_BUTTON' | translate }}
-                </button>
-            }
-        </div>
-        @if (warningMessage) {
-            <p class="modal__footer-warning-message">{{ warningMessage | translate }}</p>
+
+    <div fdUiDialogFooter class="product-detail__footer">
+        @if (canModify) {
+            <fd-ui-button size="sm" variant="secondary" icon="edit" (click)="onEdit()">
+                {{ 'PRODUCT_DETAIL.EDIT_BUTTON' | translate }}
+            </fd-ui-button>
+            <fd-ui-button size="sm" variant="danger" icon="delete" (click)="onDelete()">
+                {{ 'PRODUCT_DETAIL.DELETE_BUTTON' | translate }}
+            </fd-ui-button>
+        } @else {
+            <fd-ui-button
+                size="sm"
+                variant="secondary"
+                fill="outline"
+                icon="content_copy"
+                [disabled]="isDuplicateInProgress"
+                (click)="onDuplicate()"
+            >
+                {{ 'PRODUCT_DETAIL.DUPLICATE_BUTTON' | translate }}
+            </fd-ui-button>
         }
     </div>
-</div>
 
-<ng-template #confirmDialog let-observer>
-    <div class="dialog">
-        <p>{{ 'PRODUCT_DETAIL.CONFIRM_DELETE_TITLE' | translate }} <span class="dialog__title--bold">{{ product.name }}</span>?</p>
-        <div class="dialog__buttons">
-            <button class="dialog__button" tuiButton size="m" (click)="observer.complete()">{{ 'PRODUCT_DETAIL.CANCEL_BUTTON' | translate }}</button>
-            <button class="dialog__button" tuiButton size="m" appearance="accent" (click)="observer.next(true); observer.complete()">{{ 'PRODUCT_DETAIL.CONFIRM_BUTTON' | translate }}</button>
-        </div>
-    </div>
-</ng-template>
+    @if (warningMessage) {
+        <p class="product-detail__warning">{{ warningMessage | translate }}</p>
+    }
+</fd-ui-dialog>

@@ -1,34 +1,45 @@
-import { ChangeDetectionStrategy, Component, TemplateRef, ViewChild, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, inject } from '@angular/core';
 import { Recipe, RecipeVisibility } from '../../../types/recipe.data';
-import { TuiButton, TuiDialogContext, TuiDialogService } from '@taiga-ui/core';
-import { injectContext } from '@taiga-ui/polymorpheus';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
     NutrientsSummaryComponent,
-    NutrientsSummaryConfig
+    NutrientsSummaryConfig,
 } from '../../shared/nutrients-summary/nutrients-summary.component';
 import { NutrientChartData } from '../../../types/charts.data';
 import { RecipeService } from '../../../services/recipe.service';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { FdUiDialogComponent } from '../../../ui-kit/dialog/fd-ui-dialog.component';
+import { FdUiDialogFooterDirective } from '../../../ui-kit/dialog/fd-ui-dialog-footer.directive';
+import { FdUiButtonComponent } from '../../../ui-kit/button/fd-ui-button.component';
+import { FdUiDialogService } from '../../../ui-kit/dialog/fd-ui-dialog.service';
+import {
+    FdUiConfirmDialogComponent,
+    FdUiConfirmDialogData,
+} from '../../../ui-kit/dialog/fd-ui-confirm-dialog.component';
 
 @Component({
     selector: 'fd-recipe-detail',
+    standalone: true,
     templateUrl: './recipe-detail.component.html',
     styleUrls: ['./recipe-detail.component.less'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [TranslatePipe, TuiButton, NutrientsSummaryComponent],
+    imports: [
+        TranslatePipe,
+        NutrientsSummaryComponent,
+        FdUiDialogComponent,
+        FdUiDialogFooterDirective,
+        FdUiButtonComponent,
+    ],
 })
 export class RecipeDetailComponent {
-    public readonly context = injectContext<TuiDialogContext<RecipeDetailActionResult, Recipe>>();
-    private readonly dialogService = inject(TuiDialogService);
+    private readonly dialogRef = inject(MatDialogRef<RecipeDetailComponent, RecipeDetailActionResult>);
+    private readonly fdDialogService = inject(FdUiDialogService);
     private readonly recipeService = inject(RecipeService);
+    private readonly translateService = inject(TranslateService);
 
-    public readonly recipe: Recipe = this.context.data;
-    public readonly calories: number = this.recipe.totalCalories ?? 0;
-    public readonly nutrientChartData: NutrientChartData = {
-        proteins: this.recipe.totalProteins ?? 0,
-        fats: this.recipe.totalFats ?? 0,
-        carbs: this.recipe.totalCarbs ?? 0,
-    };
+    public readonly recipe: Recipe;
+    public readonly calories: number;
+    public readonly nutrientChartData: NutrientChartData;
 
     public readonly nutrientSummaryConfig: NutrientsSummaryConfig = {
         styles: {
@@ -38,8 +49,19 @@ export class RecipeDetailComponent {
         },
     };
 
-    @ViewChild('confirmDialog') private confirmDialog!: TemplateRef<TuiDialogContext<boolean, void>>;
     public isDuplicateInProgress = false;
+
+    public constructor(
+        @Inject(MAT_DIALOG_DATA) data: Recipe,
+    ) {
+        this.recipe = data;
+        this.calories = this.recipe.totalCalories ?? 0;
+        this.nutrientChartData = {
+            proteins: this.recipe.totalProteins ?? 0,
+            fats: this.recipe.totalFats ?? 0,
+            carbs: this.recipe.totalCarbs ?? 0,
+        };
+    }
 
     public get visibilityKey(): string {
         return `RECIPE_VISIBILITY.${this.recipe.visibility}`;
@@ -85,10 +107,7 @@ export class RecipeDetailComponent {
             return 0;
         }
 
-        return this.recipe.steps.reduce(
-            (total, step) => total + (step.ingredients?.length ?? 0),
-            0,
-        );
+        return this.recipe.steps.reduce((total, step) => total + (step.ingredients?.length ?? 0), 0);
     }
 
     public getTotalPreparationTime(): number | null {
@@ -146,7 +165,7 @@ export class RecipeDetailComponent {
             return;
         }
 
-        this.context.completeWith(new RecipeDetailActionResult(this.recipe.id, 'Edit'));
+        this.dialogRef.close(new RecipeDetailActionResult(this.recipe.id, 'Edit'));
     }
 
     public onDelete(): void {
@@ -165,7 +184,7 @@ export class RecipeDetailComponent {
         this.isDuplicateInProgress = true;
         this.recipeService.duplicate(this.recipe.id).subscribe({
             next: duplicated => {
-                this.context.completeWith(new RecipeDetailActionResult(duplicated.id, 'Duplicate'));
+                this.dialogRef.close(new RecipeDetailActionResult(duplicated.id, 'Duplicate'));
             },
             error: () => {
                 this.isDuplicateInProgress = false;
@@ -174,14 +193,23 @@ export class RecipeDetailComponent {
     }
 
     private showConfirmDialog(): void {
-        this.dialogService
-            .open(this.confirmDialog, {
-                dismissible: true,
-                appearance: 'without-border-radius',
+        const data: FdUiConfirmDialogData = {
+            title: this.translateService.instant('RECIPE_DETAIL.CONFIRM_DELETE'),
+            message: this.recipe.name,
+            confirmLabel: this.translateService.instant('RECIPE_DETAIL.CONFIRM_BUTTON'),
+            cancelLabel: this.translateService.instant('RECIPE_DETAIL.CANCEL_BUTTON'),
+            danger: true,
+        };
+
+        this.fdDialogService
+            .open(FdUiConfirmDialogComponent, {
+                size: 'sm',
+                data,
             })
+            .afterClosed()
             .subscribe(confirm => {
                 if (confirm) {
-                    this.context.completeWith(new RecipeDetailActionResult(this.recipe.id, 'Delete'));
+                    this.dialogRef.close(new RecipeDetailActionResult(this.recipe.id, 'Delete'));
                 }
             });
     }

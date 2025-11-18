@@ -1,27 +1,35 @@
-import { ChangeDetectionStrategy, Component, inject, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, inject } from '@angular/core';
 import { Product } from '../../../types/product.data';
-import { TuiButton, TuiDialogContext, TuiDialogService } from '@taiga-ui/core';
-import { injectContext } from '@taiga-ui/polymorpheus';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
     NutrientsSummaryComponent,
-    NutrientsSummaryConfig
+    NutrientsSummaryConfig,
 } from '../../shared/nutrients-summary/nutrients-summary.component';
 import { NutrientChartData } from '../../../types/charts.data';
 import { ProductService } from '../../../services/product.service';
 import { buildProductTypeTranslationKey } from '../../../utils/product-type.utils';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { FdUiDialogComponent } from '../../../ui-kit/dialog/fd-ui-dialog.component';
+import { FdUiButtonComponent } from '../../../ui-kit/button/fd-ui-button.component';
+import { FdUiDialogService } from '../../../ui-kit/dialog/fd-ui-dialog.service';
+import {
+    FdUiConfirmDialogComponent,
+    FdUiConfirmDialogData,
+} from '../../../ui-kit/dialog/fd-ui-confirm-dialog.component';
 
 @Component({
     selector: 'fd-product-detail',
+    standalone: true,
     templateUrl: './product-detail.component.html',
     styleUrls: ['./product-detail.component.less'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [TranslatePipe, TuiButton, NutrientsSummaryComponent],
+    imports: [TranslatePipe, NutrientsSummaryComponent, FdUiDialogComponent, FdUiButtonComponent],
 })
 export class ProductDetailComponent {
-    public readonly context = injectContext<TuiDialogContext<ProductDetailActionResult, Product>>();
-    private readonly dialogService = inject(TuiDialogService);
     private readonly productService = inject(ProductService);
+    private readonly dialogRef = inject(MatDialogRef<ProductDetailComponent>);
+    private readonly fdDialogService = inject(FdUiDialogService);
+    private readonly translate = inject(TranslateService);
 
     public product: Product;
     public readonly productTypeKey: string;
@@ -30,22 +38,20 @@ export class ProductDetailComponent {
         styles: {
             common: {
                 infoBreakpoints: {
-                    columnLayout: 680
-                }
+                    columnLayout: 680,
+                },
             },
             charts: {
                 chartBlockSize: 160,
                 breakpoints: {
-                    columnLayout: 680
-                }
-            }
-        }
+                    columnLayout: 680,
+                },
+            },
+        },
     };
 
     public calories: number;
     public nutrientChartData: NutrientChartData;
-
-    @ViewChild('confirmDialog') private confirmDialog!: TemplateRef<TuiDialogContext<boolean, void>>;
     public isDuplicateInProgress = false;
 
     public get isDeleteDisabled(): boolean {
@@ -70,9 +76,8 @@ export class ProductDetailComponent {
             : 'PRODUCT_DETAIL.WARNING_NOT_OWNER';
     }
 
-
-    public constructor() {
-        this.product = this.context.data;
+    public constructor(@Inject(MAT_DIALOG_DATA) data: Product) {
+        this.product = data;
         this.productTypeKey = buildProductTypeTranslationKey(this.product.productType ?? this.product.category ?? null);
 
         this.calories = this.product.caloriesPerBase;
@@ -88,14 +93,30 @@ export class ProductDetailComponent {
             return;
         }
         const editResult = new ProductDetailActionResult(this.product.id, 'Edit');
-        this.context.completeWith(editResult);
+        this.dialogRef.close(editResult);
     }
 
     public onDelete(): void {
         if (this.isDeleteDisabled) {
             return;
         }
-        this.showConfirmDialog();
+        const data: FdUiConfirmDialogData = {
+            title: this.translate.instant('PRODUCT_DETAIL.CONFIRM_DELETE_TITLE'),
+            message: this.product.name,
+            confirmLabel: this.translate.instant('PRODUCT_DETAIL.CONFIRM_BUTTON'),
+            cancelLabel: this.translate.instant('PRODUCT_DETAIL.CANCEL_BUTTON'),
+            danger: true,
+        };
+
+        this.fdDialogService
+            .open(FdUiConfirmDialogComponent, { data, size: 'sm' })
+            .afterClosed()
+            .subscribe(confirm => {
+                if (confirm) {
+                    const deleteResult = new ProductDetailActionResult(this.product.id, 'Delete');
+                    this.dialogRef.close(deleteResult);
+                }
+            });
     }
 
     public onDuplicate(): void {
@@ -106,35 +127,20 @@ export class ProductDetailComponent {
         this.isDuplicateInProgress = true;
         this.productService.duplicate(this.product.id).subscribe({
             next: duplicated => {
-                this.context.completeWith(new ProductDetailActionResult(duplicated.id, 'Duplicate'));
+                this.dialogRef.close(new ProductDetailActionResult(duplicated.id, 'Duplicate'));
             },
             error: () => {
                 this.isDuplicateInProgress = false;
             },
         });
     }
-
-    protected showConfirmDialog(): void {
-        this.dialogService
-            .open(this.confirmDialog, {
-                dismissible: true,
-                appearance: 'without-border-radius',
-            })
-            .subscribe(confirm => {
-                if (confirm) {
-                    const deleteResult = new ProductDetailActionResult(this.product.id, 'Delete');
-                    this.context.completeWith(deleteResult);
-                }
-            });
-    }
-
 }
 
-class ProductDetailActionResult {
+export class ProductDetailActionResult {
     public constructor(
         public id: string,
         public action: ProductDetailAction,
     ) {}
 }
 
-type ProductDetailAction = 'Edit' | 'Delete' | 'Duplicate';
+export type ProductDetailAction = 'Edit' | 'Delete' | 'Duplicate';

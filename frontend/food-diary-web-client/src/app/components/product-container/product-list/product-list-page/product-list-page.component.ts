@@ -1,16 +1,14 @@
 import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ProductListBaseComponent } from '../product-list-base.component';
-import {
-    tuiDialog,
-    TuiAlertService,
-    TuiIcon,
-    TuiLoader,
-} from '@taiga-ui/core';
+import { TuiAlertService, TuiIcon, TuiLoader } from '@taiga-ui/core';
 import { Product } from '../../../../types/product.data';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { TuiPagination } from '@taiga-ui/kit';
-import { ProductDetailComponent } from '../../product-detail/product-detail.component';
+import {
+    ProductDetailComponent,
+    ProductDetailActionResult,
+} from '../../product-detail/product-detail.component';
 import { BadgeComponent } from '../../../shared/badge/badge.component';
 import { FdUiEntityCardComponent } from '../../../../ui-kit/entity-card/fd-ui-entity-card.component';
 import { FdUiInputComponent } from '../../../../ui-kit/input/fd-ui-input.component';
@@ -37,17 +35,18 @@ import { finalize } from 'rxjs';
     ]
 })
 export class ProductListPageComponent extends ProductListBaseComponent implements OnInit {
-    private readonly dialog = tuiDialog(ProductDetailComponent, {
-        dismissible: true,
-        appearance: 'without-border-radius',
-    });
     private readonly alertService = inject(TuiAlertService);
     private readonly translateService = inject(TranslateService);
     private isDeleteInProgress = false;
 
     protected override async onProductClick(product: Product): Promise<void> {
-        this.dialog(product).subscribe({
-            next: data => {
+        this.fdDialogService
+            .open<ProductDetailComponent, Product, ProductDetailActionResult>(ProductDetailComponent, {
+                size: 'lg',
+                data: product,
+            })
+            .afterClosed()
+            .subscribe(data => {
                 if (!data) {
                     return;
                 }
@@ -63,12 +62,9 @@ export class ProductListPageComponent extends ProductListBaseComponent implement
                     }
                     this.isDeleteInProgress = true;
                     this.productData.setLoading(true);
-                    this.productService.deleteById(data.id)
-                        .pipe(
-                            finalize(() => {
-                                this.isDeleteInProgress = false;
-                            }),
-                        )
+                    this.productService
+                        .deleteById(data.id)
+                        .pipe(finalize(() => (this.isDeleteInProgress = false)))
                         .subscribe({
                             next: () => {
                                 this.scrollToTop();
@@ -90,7 +86,6 @@ export class ProductListPageComponent extends ProductListBaseComponent implement
                             },
                         });
                 }
-            },
-        });
+            });
     }
 }

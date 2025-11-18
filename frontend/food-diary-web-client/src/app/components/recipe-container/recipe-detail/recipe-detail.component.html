@@ -1,20 +1,16 @@
-<div class="modal">
-    <h2 class="modal__title">
-        {{ recipe.name }}
-    </h2>
-
-    <div class="modal__body">
-        <div class="modal__info">
-            <p class="modal__text">
-                <span class="modal__property-name">{{ 'RECIPE_DETAIL.PREP_TIME' | translate }}:</span>
+<fd-ui-dialog [title]="recipe.name" size="lg" class="recipe-detail">
+    <div class="recipe-detail__body">
+        <div class="recipe-detail__info">
+            <p class="recipe-detail__text">
+                <span class="recipe-detail__property-name">{{ 'RECIPE_DETAIL.PREP_TIME' | translate }}:</span>
                 @if (getTotalPreparationTime() !== null) {
                     {{ getTotalPreparationTime() }} {{ 'RECIPE_DETAIL.MIN' | translate }}
                 } @else {
-                    —
+                    -
                 }
             </p>
-            <p class="modal__text">
-                <span class="modal__property-name">{{ 'RECIPE_DETAIL.INGREDIENTS_COUNT' | translate }}:</span>
+            <p class="recipe-detail__text">
+                <span class="recipe-detail__property-name">{{ 'RECIPE_DETAIL.INGREDIENTS_COUNT' | translate }}:</span>
                 {{ getIngredientCount() }}
             </p>
         </div>
@@ -28,60 +24,29 @@
         ></fd-nutrients-summary>
     </div>
 
-    <div class="modal__footer">
-        <div class="modal__footer-action-wrapper action-wrapper">
+    <div fdUiDialogFooter class="recipe-detail__footer">
+        <div class="recipe-detail__actions">
             @if (canModify) {
-                <button
-                    class="action-wrapper__button"
-                    tuiButton
-                    size="m"
-                    iconStart="@tui.pen-line"
-                    (click)="onEdit()"
-                >
+                <fd-ui-button icon="edit" (click)="onEdit()">
                     {{ 'RECIPE_DETAIL.EDIT_BUTTON' | translate }}
-                </button>
-                <button
-                    class="action-wrapper__button action-wrapper__button--accent"
-                    tuiButton
-                    size="m"
-                    appearance="accent"
-                    iconStart="@tui.trash-2"
+                </fd-ui-button>
+                <fd-ui-button
+                    variant="danger"
+                    icon="delete"
                     [disabled]="isDeleteDisabled"
                     (click)="onDelete()"
-                ></button>
-            } @else {
-                <button
-                    class="action-wrapper__button"
-                    tuiButton
-                    size="m"
-                    appearance="secondary"
-                    iconStart="@tui.copy"
-                    [disabled]="isDuplicateInProgress"
-                    (click)="onDuplicate()"
                 >
+                    {{ 'RECIPE_DETAIL.DELETE_BUTTON' | translate }}
+                </fd-ui-button>
+            } @else {
+                <fd-ui-button icon="copy" [disabled]="isDuplicateInProgress" (click)="onDuplicate()">
                     {{ 'RECIPE_DETAIL.DUPLICATE_BUTTON' | translate }}
-                </button>
+                </fd-ui-button>
             }
         </div>
+
         @if (warningMessage) {
-            <p class="modal__footer-warning-message">{{ warningMessage | translate }}</p>
+            <p class="recipe-detail__warning">{{ warningMessage | translate }}</p>
         }
     </div>
-</div>
-
-<ng-template #confirmDialog let-observer>
-    <div class="recipe-detail__confirm">
-        <p>
-            {{ 'RECIPE_DETAIL.CONFIRM_DELETE' | translate }}
-            <span class="recipe-detail__confirm-name">{{ recipe.name }}</span>?
-        </p>
-        <div class="recipe-detail__confirm-buttons">
-            <button tuiButton size="m" (click)="observer.complete()">
-                {{ 'RECIPE_DETAIL.CANCEL_BUTTON' | translate }}
-            </button>
-            <button tuiButton size="m" appearance="accent" (click)="observer.next(true); observer.complete()">
-                {{ 'RECIPE_DETAIL.CONFIRM_BUTTON' | translate }}
-            </button>
-        </div>
-    </div>
-</ng-template>
+</fd-ui-dialog>

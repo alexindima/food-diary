@@ -11,6 +11,9 @@ import { FdUiCheckboxComponent } from './checkbox/fd-ui-checkbox.component';
 import { FdUiDateInputComponent } from './date-input/fd-ui-date-input.component';
 import { FdUiTabsComponent } from './tabs/fd-ui-tabs.component';
 import { FdUiSatietyScaleComponent } from './satiety-scale/fd-ui-satiety-scale.component';
+import { FdUiDialogComponent } from './dialog/fd-ui-dialog.component';
+import { FdUiDialogFooterDirective } from './dialog/fd-ui-dialog-footer.directive';
+import { FdUiConfirmDialogComponent } from './dialog/fd-ui-confirm-dialog.component';
 
 const FD_UI_COMPONENTS = [
     FdUiInputComponent,
@@ -25,6 +28,9 @@ const FD_UI_COMPONENTS = [
     FdUiDateInputComponent,
     FdUiTabsComponent,
     FdUiSatietyScaleComponent,
+    FdUiDialogComponent,
+    FdUiDialogFooterDirective,
+    FdUiConfirmDialogComponent,
 ];
 
 @NgModule({

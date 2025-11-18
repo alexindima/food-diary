@@ -3,34 +3,61 @@
 }
 
 .fd-ui-button {
+    --fd-button-height: 40px;
+    --fd-button-padding-x: 0.75rem;
+    --fd-button-text-padding-x: 0.375rem;
+
+    appearance: none;
+    background-color: var(--fd-button-background-default, #4A6CF7);
+    border: 1px solid var(--fd-button-border-default, transparent);
     border-radius: var(--fd-radius-md, 8px);
-    font-weight: 600;
-    letter-spacing: 0.02em;
-    text-transform: none;
-    padding: 0 1.25rem;
-    min-height: 40px;
+    color: var(--fd-button-text-default, #FFFFFF);
+    cursor: pointer;
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
-    border: 1px solid transparent;
-    appearance: none;
-    border-width: 1px;
-    background-color: var(--fd-button-solid-bg, var(--fd-color-primary, #2563eb));
-    color: var(--fd-button-solid-fg, #ffffff);
+    justify-content: center;
+    letter-spacing: 0.02em;
     line-height: 1;
-    transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease,
-        color 0.15s ease, border-color 0.15s ease;
+    font-weight: 600;
+    min-height: var(--fd-button-height, 40px);
+    padding: 0 var(--fd-button-padding-x, 1rem);
+    text-transform: none;
+    transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease,
+        box-shadow 0.15s ease, transform 0.15s ease;
 
     &:hover:not(:disabled) {
+        background-color: var(
+            --fd-button-background-hover,
+            var(--fd-button-background-default, #4A6CF7)
+        );
+        border-color: var(--fd-button-border-hover, var(--fd-button-border-default, transparent));
+        color: var(--fd-button-text-hover, var(--fd-button-text-default, #FFFFFF));
         box-shadow: 0 8px 20px rgba(15, 23, 42, 0.15);
         transform: translateY(-1px);
     }
 
-    &:disabled {
-        opacity: 0.6;
-        cursor: not-allowed;
-        transform: none;
+    &:active:not(:disabled) {
+        background-color: var(
+            --fd-button-background-active,
+            var(--fd-button-background-hover, #4A6CF7)
+        );
+        border-color: var(--fd-button-border-active, var(--fd-button-border-hover, transparent));
+        color: var(--fd-button-text-active, var(--fd-button-text-hover, var(--fd-button-text-default, #FFFFFF)));
         box-shadow: none;
+        transform: translateY(0);
+    }
+
+    &:disabled {
+        background-color: var(
+            --fd-button-background-disabled,
+            var(--fd-button-background-default, #4A6CF7)
+        );
+        border-color: var(--fd-button-border-disabled, var(--fd-button-border-default, transparent));
+        color: var(--fd-button-text-disabled, var(--fd-button-text-default, #FFFFFF));
+        box-shadow: none;
+        cursor: not-allowed;
+        opacity: 1;
+        transform: none;
     }
 
     &--full-width {
@@ -45,54 +72,137 @@
         align-items: center;
     }
 
-    &--solid {
-        background-color: var(--fd-button-solid-bg, var(--fd-color-primary, #2563eb));
-        color: var(--fd-button-solid-fg, #ffffff);
-        border-color: transparent;
-    }
-
-    &--outline {
-        background-color: #ffffff;
-        color: var(--fd-button-outline-fg, var(--fd-color-primary, #2563eb));
-        border-color: currentColor;
+    &--outline,
+    &--text {
         box-shadow: none;
+
+        &:hover:not(:disabled),
+        &:active:not(:disabled) {
+            box-shadow: none;
+        }
     }
 
     &--text {
-        background-color: transparent;
-        color: var(--fd-button-text-fg, var(--fd-color-primary, #2563eb));
-        border-color: transparent;
-        box-shadow: none;
-        padding: 0 0.75rem;
+        padding: 0 var(--fd-button-text-padding-x, 0.5rem);
+        min-height: var(--fd-button-height, 40px);
     }
+}
 
-    &--primary.fd-ui-button--solid {
-        background-color: var(--fd-color-primary, #2563eb);
-        color: #ffffff;
-    }
+/* Primary solid */
+.fd-ui-button--primary.fd-ui-button--solid {
+    --fd-button-background-default: var(--fd-button-primary-background-default, #4A6CF7);
+    --fd-button-background-hover: var(--fd-button-primary-background-hover, #3451D6);
+    --fd-button-background-active: var(--fd-button-primary-background-active, #2439B0);
+    --fd-button-background-disabled: var(--fd-button-primary-background-disabled, #9BB8FF);
+    --fd-button-border-default: var(--fd-button-primary-border-default, transparent);
+    --fd-button-border-hover: var(--fd-button-primary-border-hover, transparent);
+    --fd-button-border-active: var(--fd-button-primary-border-active, transparent);
+    --fd-button-border-disabled: var(--fd-button-primary-border-disabled, transparent);
+    --fd-button-text-default: var(--fd-button-primary-text-default, #FFFFFF);
+    --fd-button-text-disabled: var(--fd-button-primary-text-disabled, #FFFFFFA0);
+}
 
-    &--primary.fd-ui-button--outline,
-    &--primary.fd-ui-button--text {
-        color: var(--fd-color-primary, #2563eb);
-    }
+/* Primary outline */
+.fd-ui-button--primary.fd-ui-button--outline,
+.fd-ui-button--outline {
+    --fd-button-background-default: var(--fd-button-outline-background-default, transparent);
+    --fd-button-background-hover: var(--fd-button-outline-background-hover, #EEF2FF);
+    --fd-button-background-active: var(--fd-button-outline-background-active, #E0EAFF);
+    --fd-button-background-disabled: var(--fd-button-outline-background-disabled, transparent);
+    --fd-button-border-default: var(--fd-button-outline-border-default, #4A6CF7);
+    --fd-button-border-hover: var(--fd-button-outline-border-hover, #3451D6);
+    --fd-button-border-active: var(--fd-button-outline-border-active, #3451D6);
+    --fd-button-border-disabled: var(--fd-button-outline-border-disabled, #D1D5DB);
+    --fd-button-text-default: var(--fd-button-outline-text-default, #4A6CF7);
+    --fd-button-text-disabled: var(--fd-button-outline-text-disabled, #9CA3AF);
+}
 
-    &--secondary.fd-ui-button--solid {
-        background-color: rgba(15, 23, 42, 0.08);
-        color: var(--fd-color-text, #111827);
-    }
+/* Primary text / ghost */
+.fd-ui-button--primary.fd-ui-button--text,
+.fd-ui-button--ghost {
+    --fd-button-background-default: var(--fd-button-ghost-background-default, transparent);
+    --fd-button-background-hover: var(--fd-button-ghost-background-hover, #EEF2FF);
+    --fd-button-background-active: var(--fd-button-ghost-background-active, #E0EAFF);
+    --fd-button-background-disabled: var(--fd-button-ghost-background-disabled, transparent);
+    --fd-button-border-default: var(--fd-button-ghost-border-default, transparent);
+    --fd-button-border-hover: var(--fd-button-ghost-border-hover, transparent);
+    --fd-button-border-active: var(--fd-button-ghost-border-active, transparent);
+    --fd-button-border-disabled: var(--fd-button-ghost-border-disabled, transparent);
+    --fd-button-text-default: var(--fd-button-ghost-text-default, #4A6CF7);
+    --fd-button-text-disabled: var(--fd-button-ghost-text-disabled, #9CA3AF);
+}
 
-    &--secondary.fd-ui-button--outline,
-    &--secondary.fd-ui-button--text {
-        color: var(--fd-color-text, #111827);
-    }
+/* Secondary buttons (solid + outline) */
+.fd-ui-button--secondary:not(.fd-ui-button--text) {
+    --fd-button-background-default: var(--fd-button-secondary-background-default, #FFFFFF);
+    --fd-button-background-hover: var(--fd-button-secondary-background-hover, #F3F4F6);
+    --fd-button-background-active: var(--fd-button-secondary-background-active, #E5E7EB);
+    --fd-button-background-disabled: var(--fd-button-secondary-background-disabled, #E5E7EB);
+    --fd-button-border-default: var(--fd-button-secondary-border-default, #D1D5DB);
+    --fd-button-border-hover: var(--fd-button-secondary-border-hover, #9CA3AF);
+    --fd-button-border-active: var(--fd-button-secondary-border-active, #9CA3AF);
+    --fd-button-border-disabled: var(--fd-button-secondary-border-disabled, #E5E7EB);
+    --fd-button-text-default: var(--fd-button-secondary-text-default, #111827);
+    --fd-button-text-disabled: var(--fd-button-secondary-text-disabled, #6B7280);
+}
 
-    &--danger.fd-ui-button--solid {
-        background-color: #dc2626;
-        color: #ffffff;
-    }
+/* Secondary text */
+.fd-ui-button--secondary.fd-ui-button--text {
+    --fd-button-background-default: var(--fd-button-secondary-text-background-default, transparent);
+    --fd-button-background-hover: var(--fd-button-secondary-text-background-hover, #F3F4F6);
+    --fd-button-background-active: var(--fd-button-secondary-text-background-active, #E5E7EB);
+    --fd-button-background-disabled: var(--fd-button-secondary-text-background-disabled, transparent);
+    --fd-button-border-default: var(--fd-button-secondary-text-border-default, transparent);
+    --fd-button-border-hover: var(--fd-button-secondary-text-border-hover, transparent);
+    --fd-button-border-active: var(--fd-button-secondary-text-border-active, transparent);
+    --fd-button-border-disabled: var(--fd-button-secondary-text-border-disabled, transparent);
+    --fd-button-text-default: var(--fd-button-secondary-text-text-default, #111827);
+    --fd-button-text-disabled: var(--fd-button-secondary-text-text-disabled, #6B7280);
+}
 
-    &--danger.fd-ui-button--outline,
-    &--danger.fd-ui-button--text {
-        color: #dc2626;
-    }
+/* Danger solid */
+.fd-ui-button--danger:not(.fd-ui-button--text) {
+    --fd-button-background-default: var(--fd-button-danger-background-default, #FF3B3B);
+    --fd-button-background-hover: var(--fd-button-danger-background-hover, #E03535);
+    --fd-button-background-active: var(--fd-button-danger-background-active, #C42F2F);
+    --fd-button-background-disabled: var(--fd-button-danger-background-disabled, #FFB3B3);
+    --fd-button-border-default: var(--fd-button-danger-border-default, transparent);
+    --fd-button-border-hover: var(--fd-button-danger-border-hover, transparent);
+    --fd-button-border-active: var(--fd-button-danger-border-active, transparent);
+    --fd-button-border-disabled: var(--fd-button-danger-border-disabled, transparent);
+    --fd-button-text-default: var(--fd-button-danger-text-default, #FFFFFF);
+    --fd-button-text-disabled: var(--fd-button-danger-text-disabled, #FFFFFFA0);
+}
+
+/* Danger text */
+.fd-ui-button--danger.fd-ui-button--text {
+    --fd-button-background-default: var(--fd-button-danger-ghost-background-default, transparent);
+    --fd-button-background-hover: var(--fd-button-danger-ghost-background-hover, rgba(255, 59, 59, 0.08));
+    --fd-button-background-active: var(--fd-button-danger-ghost-background-active, rgba(255, 59, 59, 0.16));
+    --fd-button-background-disabled: var(--fd-button-danger-ghost-background-disabled, rgba(255, 59, 59, 0.04));
+    --fd-button-border-default: var(--fd-button-danger-ghost-border-default, transparent);
+    --fd-button-border-hover: var(--fd-button-danger-ghost-border-hover, transparent);
+    --fd-button-border-active: var(--fd-button-danger-ghost-border-active, transparent);
+    --fd-button-border-disabled: var(--fd-button-danger-ghost-border-disabled, transparent);
+    --fd-button-text-default: var(--fd-button-danger-ghost-text-default, #FF3B3B);
+    --fd-button-text-disabled: var(--fd-button-danger-ghost-text-disabled, #FFB3B3);
+}
+
+/* Size modifiers */
+.fd-ui-button--size-sm {
+    --fd-button-height: 32px;
+    --fd-button-padding-x: 0.5rem;
+    --fd-button-text-padding-x: 0.25rem;
+}
+
+.fd-ui-button--size-md {
+    --fd-button-height: 40px;
+    --fd-button-padding-x: 0.75rem;
+    --fd-button-text-padding-x: 0.375rem;
+}
+
+.fd-ui-button--size-lg {
+    --fd-button-height: 48px;
+    --fd-button-padding-x: 1rem;
+    --fd-button-text-padding-x: 0.5rem;
 }

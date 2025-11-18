@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, Component, Inject, signal } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FdUiSatietyScaleComponent } from '../../../ui-kit/satiety-scale/fd-ui-satiety-scale.component';
 import { FdUiButtonComponent } from '../../../ui-kit/button/fd-ui-button.component';
-import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
+import { FdUiDialogComponent } from '../../../ui-kit/dialog/fd-ui-dialog.component';
+import { FdUiDialogFooterDirective } from '../../../ui-kit/dialog/fd-ui-dialog-footer.directive';
 
 export interface SatietyLevelDialogData {
     titleKey: string;
@@ -17,8 +18,15 @@ export interface SatietyLevelDialogData {
     selector: 'fd-satiety-level-dialog',
     standalone: true,
     templateUrl: './satiety-level-dialog.component.html',
-    styleUrls: ['./satiety-level-dialog.component.less'],
-    imports: [CommonModule, FormsModule, MatDialogModule, MatIconModule, TranslateModule, FdUiSatietyScaleComponent, FdUiButtonComponent],
+    imports: [
+        CommonModule,
+        FormsModule,
+        TranslateModule,
+        FdUiSatietyScaleComponent,
+        FdUiButtonComponent,
+        FdUiDialogComponent,
+        FdUiDialogFooterDirective,
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SatietyLevelDialogComponent {

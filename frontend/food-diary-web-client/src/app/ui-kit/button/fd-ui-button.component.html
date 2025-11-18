@@ -1,10 +1,10 @@
 <button
-    [attr.type]="type"
-    [disabled]="disabled"
-    [ngClass]="classes"
-    [attr.aria-label]="ariaLabel || null"
+    [attr.type]="type()"
+    [disabled]="disabled()"
+    [ngClass]="classes()"
+    [attr.aria-label]="ariaLabel() || null"
 >
-    <mat-icon *ngIf="icon" class="fd-ui-button__icon" aria-hidden="true">{{ icon }}</mat-icon>
+    <mat-icon *ngIf="icon()" class="fd-ui-button__icon" aria-hidden="true">{{ icon() }}</mat-icon>
     <span class="fd-ui-button__label">
         <ng-content></ng-content>
     </span>

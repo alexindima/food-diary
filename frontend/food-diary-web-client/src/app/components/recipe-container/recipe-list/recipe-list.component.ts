@@ -5,7 +5,7 @@ import { RecipeService } from '../../../services/recipe.service';
 import { NavigationService } from '../../../services/navigation.service';
 import { PagedData } from '../../../types/paged-data.data';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { TuiIcon, TuiLoader, tuiDialog } from '@taiga-ui/core';
+import { TuiIcon, TuiLoader } from '@taiga-ui/core';
 import { TuiPagination } from '@taiga-ui/kit';
 import { catchError, debounceTime, finalize, map, Observable, of, switchMap, tap } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -17,6 +17,7 @@ import { FdUiEntityCardComponent } from '../../../ui-kit/entity-card/fd-ui-entit
 import { FdUiInputComponent } from '../../../ui-kit/input/fd-ui-input.component';
 import { FdUiCheckboxComponent } from '../../../ui-kit/checkbox/fd-ui-checkbox.component';
 import { FdUiButtonComponent } from '../../../ui-kit/button/fd-ui-button.component';
+import { FdUiDialogService } from '../../../ui-kit/dialog/fd-ui-dialog.service';
 
 @Component({
     selector: 'fd-recipe-list',
@@ -41,6 +42,7 @@ export class RecipeListComponent implements OnInit {
     private readonly navigationService = inject(NavigationService);
     private readonly alertService = inject(TuiAlertService);
     private readonly translateService = inject(TranslateService);
+    private readonly fdDialogService = inject(FdUiDialogService);
 
     @ViewChild('container') private container!: ElementRef<HTMLElement>;
 
@@ -49,11 +51,6 @@ export class RecipeListComponent implements OnInit {
     public currentPageIndex = 0;
     public searchForm: FormGroup<RecipeSearchFormGroup>;
     public isDeleting = false;
-
-    private readonly detailDialog = tuiDialog(RecipeDetailComponent, {
-        dismissible: true,
-        appearance: 'without-border-radius',
-    });
 
     public constructor() {
         this.searchForm = new FormGroup<RecipeSearchFormGroup>({
@@ -84,14 +81,18 @@ export class RecipeListComponent implements OnInit {
     }
 
     public onRecipeClick(recipe: Recipe): void {
-        this.detailDialog(recipe).subscribe({
-            next: result => {
+        this.fdDialogService
+            .open<RecipeDetailComponent, Recipe, RecipeDetailActionResult>(RecipeDetailComponent, {
+                size: 'lg',
+                data: recipe,
+            })
+            .afterClosed()
+            .subscribe(result => {
                 if (!result) {
                     return;
                 }
                 this.handleDialogResult(result, recipe);
-            },
-        });
+            });
     }
 
     public onPageChange(pageIndex: number): void {
