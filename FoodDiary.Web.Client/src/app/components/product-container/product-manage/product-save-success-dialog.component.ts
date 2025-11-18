@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { FdUiDialogComponent } from '../../../ui-kit/dialog/fd-ui-dialog.component';
-import { FdUiButtonComponent } from '../../../ui-kit/button/fd-ui-button.component';
+import { FD_UI_DIALOG_DATA, FdUiDialogRef } from 'fd-ui-kit/material';
+import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog.component';
+import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { TranslatePipe } from '@ngx-translate/core';
 import { RedirectAction } from './base-product-manage.component';
 
@@ -35,8 +35,8 @@ export interface ProductSaveSuccessDialogData {
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductSaveSuccessDialogComponent {
-    private readonly dialogRef = inject(MatDialogRef<ProductSaveSuccessDialogComponent, RedirectAction>);
-    private readonly data = inject(MAT_DIALOG_DATA) as ProductSaveSuccessDialogData;
+    private readonly dialogRef = inject(FdUiDialogRef<ProductSaveSuccessDialogComponent, RedirectAction>);
+    private readonly data = inject(FD_UI_DIALOG_DATA) as ProductSaveSuccessDialogData;
 
     public get titleKey(): string {
         return this.data.isEdit ? 'PRODUCT_DETAIL.EDIT_SUCCESS' : 'PRODUCT_DETAIL.CREATE_SUCCESS';

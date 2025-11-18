@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
-import { FdUiButtonComponent } from '../../ui-kit/button/fd-ui-button.component';
+import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { CommonModule } from '@angular/common';
 
 @Component({

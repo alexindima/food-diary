@@ -8,13 +8,13 @@ import {
     NutrientsSummaryComponent
 } from '../../../shared/nutrients-summary/nutrients-summary.component';
 import { ZXingScannerModule } from '@zxing/ngx-scanner';
-import { FdUiInputComponent } from '../../../../ui-kit/input/fd-ui-input.component';
-import { FdUiCardComponent } from '../../../../ui-kit/card/fd-ui-card.component';
-import { FdUiSelectComponent } from '../../../../ui-kit/select/fd-ui-select.component';
-import { FdUiTextareaComponent } from '../../../../ui-kit/textarea/fd-ui-textarea.component';
-import { FdUiButtonComponent } from '../../../../ui-kit/button/fd-ui-button.component';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { FdUiFormErrorComponent } from '../../../../ui-kit/form-error/fd-ui-form-error.component';
+import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
+import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
+import { FdUiSelectComponent } from 'fd-ui-kit/select/fd-ui-select.component';
+import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea.component';
+import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
+import { FD_UI_DIALOG_DATA, FdUiDialogRef } from 'fd-ui-kit/material';
+import { FdUiFormErrorComponent } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
 
 @Component({
     selector: 'fd-product-add-dialog',
@@ -36,8 +36,8 @@ import { FdUiFormErrorComponent } from '../../../../ui-kit/form-error/fd-ui-form
     ]
 })
 export class ProductAddDialogComponent extends BaseProductManageComponent {
-    private readonly dialogRef = inject(MatDialogRef<ProductAddDialogComponent, Product | null>);
-    private readonly initialProduct = inject(MAT_DIALOG_DATA, { optional: true }) as Product | null;
+    private readonly dialogRef = inject(FdUiDialogRef<ProductAddDialogComponent, Product | null>);
+    private readonly initialProduct = inject(FD_UI_DIALOG_DATA, { optional: true }) as Product | null;
 
     public constructor() {
         super();

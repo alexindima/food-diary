@@ -13,11 +13,11 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration } from 'chart.js';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FdUiTabsComponent, FdUiTab } from '../../ui-kit/tabs/fd-ui-tabs.component';
-import { FdUiCardComponent } from '../../ui-kit/card/fd-ui-card.component';
-import { FdUiButtonComponent } from '../../ui-kit/button/fd-ui-button.component';
-import { FdUiDateInputComponent } from '../../ui-kit/date-input/fd-ui-date-input.component';
-import { FdUiInputComponent } from '../../ui-kit/input/fd-ui-input.component';
+import { FdUiTabsComponent, FdUiTab } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
+import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
+import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
+import { FdUiDateInputComponent } from 'fd-ui-kit/date-input/fd-ui-date-input.component';
+import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { WaistEntriesService } from '../../services/waist-entries.service';
 import { NavigationService } from '../../services/navigation.service';
 import {

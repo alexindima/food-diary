@@ -7,15 +7,15 @@ import {
 } from '../../shared/nutrients-summary/nutrients-summary.component';
 import { NutrientChartData } from '../../../types/charts.data';
 import { RecipeService } from '../../../services/recipe.service';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { FdUiDialogComponent } from '../../../ui-kit/dialog/fd-ui-dialog.component';
-import { FdUiDialogFooterDirective } from '../../../ui-kit/dialog/fd-ui-dialog-footer.directive';
-import { FdUiButtonComponent } from '../../../ui-kit/button/fd-ui-button.component';
-import { FdUiDialogService } from '../../../ui-kit/dialog/fd-ui-dialog.service';
+import { FD_UI_DIALOG_DATA, FdUiDialogRef } from 'fd-ui-kit/material';
+import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog.component';
+import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
+import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
+import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import {
     FdUiConfirmDialogComponent,
     FdUiConfirmDialogData,
-} from '../../../ui-kit/dialog/fd-ui-confirm-dialog.component';
+} from 'fd-ui-kit/dialog/fd-ui-confirm-dialog.component';
 
 @Component({
     selector: 'fd-recipe-detail',
@@ -32,7 +32,7 @@ import {
     ],
 })
 export class RecipeDetailComponent {
-    private readonly dialogRef = inject(MatDialogRef<RecipeDetailComponent, RecipeDetailActionResult>);
+    private readonly dialogRef = inject(FdUiDialogRef<RecipeDetailComponent, RecipeDetailActionResult>);
     private readonly fdDialogService = inject(FdUiDialogService);
     private readonly recipeService = inject(RecipeService);
     private readonly translateService = inject(TranslateService);
@@ -52,7 +52,7 @@ export class RecipeDetailComponent {
     public isDuplicateInProgress = false;
 
     public constructor(
-        @Inject(MAT_DIALOG_DATA) data: Recipe,
+        @Inject(FD_UI_DIALOG_DATA) data: Recipe,
     ) {
         this.recipe = data;
         this.calories = this.recipe.totalCalories ?? 0;

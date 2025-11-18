@@ -14,17 +14,17 @@ import { UserService } from '../../services/user.service';
 import { ActivityLevelOption, Gender, UpdateUserDto } from '../../types/user.data';
 import { NavigationService } from '../../services/navigation.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FdUiCardComponent } from '../../ui-kit/card/fd-ui-card.component';
-import { FdUiInputComponent } from '../../ui-kit/input/fd-ui-input.component';
-import { FdUiSelectComponent, FdUiSelectOption } from '../../ui-kit/select/fd-ui-select.component';
-import { FdUiDateInputComponent } from '../../ui-kit/date-input/fd-ui-date-input.component';
-import { FdUiButtonComponent } from '../../ui-kit/button/fd-ui-button.component';
-import { FdUiDialogService } from '../../ui-kit/dialog/fd-ui-dialog.service';
-import { FdUiFormErrorComponent, FD_VALIDATION_ERRORS, FdValidationErrors } from '../../ui-kit/form-error/fd-ui-form-error.component';
+import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
+import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
+import { FdUiSelectComponent, FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
+import { FdUiDateInputComponent } from 'fd-ui-kit/date-input/fd-ui-date-input.component';
+import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
+import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { FdUiFormErrorComponent, FD_VALIDATION_ERRORS, FdValidationErrors } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
 import { ChangePasswordDialogComponent } from './dialogs/change-password-dialog/change-password-dialog.component';
 import { PasswordSuccessDialogComponent } from './dialogs/password-success-dialog/password-success-dialog.component';
 import { UpdateSuccessDialogComponent } from './dialogs/update-success-dialog/update-success-dialog.component';
-import { FdUiToastService } from '../../ui-kit/toast/fd-ui-toast.service';
+import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: FD_VALIDATION_ERRORS,

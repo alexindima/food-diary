@@ -2,10 +2,10 @@ import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/cor
 import { BarcodeFormat } from '@zxing/library';
 import { ZXingScannerModule } from '@zxing/ngx-scanner';
 import { TranslatePipe } from '@ngx-translate/core';
-import { MatDialogRef } from '@angular/material/dialog';
-import { FdUiDialogComponent } from '../../../ui-kit/dialog/fd-ui-dialog.component';
-import { FdUiButtonComponent } from '../../../ui-kit/button/fd-ui-button.component';
-import { FdUiLoaderComponent } from '../../../ui-kit/loader/fd-ui-loader.component';
+import { FdUiDialogRef } from 'fd-ui-kit/material';
+import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog.component';
+import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
+import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
 
 @Component({
     selector: 'fd-barcode-scanner',
@@ -22,7 +22,7 @@ import { FdUiLoaderComponent } from '../../../ui-kit/loader/fd-ui-loader.compone
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BarcodeScannerComponent {
-    private readonly dialogRef = inject(MatDialogRef<BarcodeScannerComponent, string | null>);
+    private readonly dialogRef = inject(FdUiDialogRef<BarcodeScannerComponent, string | null>);
 
     public allowedScannerFormats = [
         BarcodeFormat.AZTEC,

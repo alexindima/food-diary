@@ -45,6 +45,7 @@
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^20.3.10",
+    "@angular/build": "^20.3.5",
     "@angular/cli": "^20.3.10",
     "@angular/compiler-cli": "^20.3.12",
     "@types/jasmine": "~5.1.13",
@@ -63,6 +64,7 @@
     "less": "^4.4.2",
     "less-loader": "^12.3.0",
     "ng-morph": "^4.8.4",
+    "ng-packagr": "^20.3.0",
     "prettier": "^3.6.2",
     "stylelint": "^16.25.0",
     "stylelint-config-clean-order": "^7.0.0",

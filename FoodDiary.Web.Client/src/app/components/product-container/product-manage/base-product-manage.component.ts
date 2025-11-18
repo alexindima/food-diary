@@ -25,14 +25,14 @@ import {
 import { firstValueFrom } from 'rxjs';
 import { ZXingScannerModule } from '@zxing/ngx-scanner';
 import { BarcodeScannerComponent } from '../../shared/barcode-scanner/barcode-scanner.component';
-import { FdUiFormErrorComponent, FD_VALIDATION_ERRORS, FdValidationErrors } from '../../../ui-kit/form-error/fd-ui-form-error.component';
-import { FdUiInputComponent } from '../../../ui-kit/input/fd-ui-input.component';
-import { FdUiCardComponent } from '../../../ui-kit/card/fd-ui-card.component';
-import { FdUiSelectComponent, FdUiSelectOption } from '../../../ui-kit/select/fd-ui-select.component';
-import { FdUiTextareaComponent } from '../../../ui-kit/textarea/fd-ui-textarea.component';
-import { FdUiButtonComponent } from '../../../ui-kit/button/fd-ui-button.component';
+import { FdUiFormErrorComponent, FD_VALIDATION_ERRORS, FdValidationErrors } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
+import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
+import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
+import { FdUiSelectComponent, FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
+import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea.component';
+import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { normalizeProductType as normalizeProductTypeValue } from '../../../utils/product-type.utils';
-import { FdUiDialogService } from '../../../ui-kit/dialog/fd-ui-dialog.service';
+import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import {
     ProductSaveSuccessDialogComponent,
     ProductSaveSuccessDialogData,

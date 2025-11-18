@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators, AbstractControl } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
+import { FdUiDialogRef } from 'fd-ui-kit/material';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { FdUiDialogComponent } from '../../../../ui-kit/dialog/fd-ui-dialog.component';
-import { FdUiDialogFooterDirective } from '../../../../ui-kit/dialog/fd-ui-dialog-footer.directive';
-import { FdUiInputComponent } from '../../../../ui-kit/input/fd-ui-input.component';
-import { FdUiButtonComponent } from '../../../../ui-kit/button/fd-ui-button.component';
+import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog.component';
+import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
+import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
+import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FormGroupControls } from '../../../../types/common.data';
 import { ChangePasswordRequest } from '../../../../types/user.data';
 import { UserService } from '../../../../services/user.service';
@@ -29,7 +29,7 @@ import { matchFieldValidator } from '../../../../validators/match-field.validato
     ],
 })
 export class ChangePasswordDialogComponent {
-    private readonly dialogRef = inject(MatDialogRef<ChangePasswordDialogComponent, boolean>);
+    private readonly dialogRef = inject(FdUiDialogRef<ChangePasswordDialogComponent, boolean>);
     private readonly userService = inject(UserService);
     private readonly translateService = inject(TranslateService);
 

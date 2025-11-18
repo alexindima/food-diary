@@ -8,14 +8,14 @@ import {
 import { NutrientChartData } from '../../../types/charts.data';
 import { ProductService } from '../../../services/product.service';
 import { buildProductTypeTranslationKey } from '../../../utils/product-type.utils';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { FdUiDialogComponent } from '../../../ui-kit/dialog/fd-ui-dialog.component';
-import { FdUiButtonComponent } from '../../../ui-kit/button/fd-ui-button.component';
-import { FdUiDialogService } from '../../../ui-kit/dialog/fd-ui-dialog.service';
+import { FD_UI_DIALOG_DATA, FdUiDialogRef } from 'fd-ui-kit/material';
+import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog.component';
+import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
+import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import {
     FdUiConfirmDialogComponent,
     FdUiConfirmDialogData,
-} from '../../../ui-kit/dialog/fd-ui-confirm-dialog.component';
+} from 'fd-ui-kit/dialog/fd-ui-confirm-dialog.component';
 
 @Component({
     selector: 'fd-product-detail',
@@ -27,7 +27,7 @@ import {
 })
 export class ProductDetailComponent {
     private readonly productService = inject(ProductService);
-    private readonly dialogRef = inject(MatDialogRef<ProductDetailComponent>);
+    private readonly dialogRef = inject(FdUiDialogRef<ProductDetailComponent>);
     private readonly fdDialogService = inject(FdUiDialogService);
     private readonly translate = inject(TranslateService);
 
@@ -76,7 +76,7 @@ export class ProductDetailComponent {
             : 'PRODUCT_DETAIL.WARNING_NOT_OWNER';
     }
 
-    public constructor(@Inject(MAT_DIALOG_DATA) data: Product) {
+    public constructor(@Inject(FD_UI_DIALOG_DATA) data: Product) {
         this.product = data;
         this.productTypeKey = buildProductTypeTranslationKey(this.product.productType ?? this.product.category ?? null);
 

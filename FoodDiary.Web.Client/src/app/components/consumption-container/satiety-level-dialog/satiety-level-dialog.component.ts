@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, Inject, signal } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { FD_UI_DIALOG_DATA, FdUiDialogRef } from 'fd-ui-kit/material';
 import { CommonModule } from '@angular/common';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { FdUiSatietyScaleComponent } from '../../../ui-kit/satiety-scale/fd-ui-satiety-scale.component';
-import { FdUiButtonComponent } from '../../../ui-kit/button/fd-ui-button.component';
+import { FdUiSatietyScaleComponent } from 'fd-ui-kit/satiety-scale/fd-ui-satiety-scale.component';
+import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FormsModule } from '@angular/forms';
-import { FdUiDialogComponent } from '../../../ui-kit/dialog/fd-ui-dialog.component';
-import { FdUiDialogFooterDirective } from '../../../ui-kit/dialog/fd-ui-dialog-footer.directive';
+import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog.component';
+import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
 
 export interface SatietyLevelDialogData {
     titleKey: string;
@@ -33,8 +33,8 @@ export class SatietyLevelDialogComponent {
     public selectedValue = signal<number | null>(null);
 
     public constructor(
-        @Inject(MAT_DIALOG_DATA) public readonly data: SatietyLevelDialogData,
-        private readonly dialogRef: MatDialogRef<SatietyLevelDialogComponent>,
+        @Inject(FD_UI_DIALOG_DATA) public readonly data: SatietyLevelDialogData,
+        private readonly dialogRef: FdUiDialogRef<SatietyLevelDialogComponent>,
         private readonly translateService: TranslateService,
     ) {
         this.selectedValue.set(this.data.value ?? null);

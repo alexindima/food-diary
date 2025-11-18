@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { NavigationService } from '../../services/navigation.service';
-import { FdUiButtonComponent } from '../../ui-kit/button/fd-ui-button.component';
+import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 
 @Component({
     selector: 'fd-hero',

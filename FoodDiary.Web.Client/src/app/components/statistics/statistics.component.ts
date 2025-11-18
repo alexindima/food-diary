@@ -15,9 +15,9 @@ import { ChartConfiguration, ChartOptions, ChartTypeRegistry, TooltipItem } from
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { map, finalize, Observable, forkJoin } from 'rxjs';
 
-import { FdUiTabsComponent, FdUiTab } from '../../ui-kit/tabs/fd-ui-tabs.component';
-import { FdUiCardComponent } from '../../ui-kit/card/fd-ui-card.component';
-import { FdUiDateInputComponent } from '../../ui-kit/date-input/fd-ui-date-input.component';
+import { FdUiTabsComponent, FdUiTab } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
+import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
+import { FdUiDateInputComponent } from 'fd-ui-kit/date-input/fd-ui-date-input.component';
 import { StatisticsService } from '../../services/statistics.service';
 import { MappedStatistics, StatisticsMapper } from '../../types/statistics.data';
 import { CHART_COLORS } from '../../constants/chart-colors';

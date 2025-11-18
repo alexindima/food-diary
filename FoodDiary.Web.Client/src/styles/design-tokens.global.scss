@@ -1,4 +1,4 @@
-@use '../app/ui-kit/colors';
+@use 'colors';
 @use './design-tokens';
 
 @include design-tokens.fd-emit-css-variables();

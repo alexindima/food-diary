@@ -10,15 +10,15 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { FormGroupControls } from '../../../types/common.data';
 import { BarcodeScannerComponent } from '../../shared/barcode-scanner/barcode-scanner.component';
 import { BadgeComponent } from '../../shared/badge/badge.component';
-import { FdUiEntityCardComponent } from '../../../ui-kit/entity-card/fd-ui-entity-card.component';
-import { FdUiInputComponent } from '../../../ui-kit/input/fd-ui-input.component';
-import { FdUiButtonComponent } from '../../../ui-kit/button/fd-ui-button.component';
-import { FdUiCheckboxComponent } from '../../../ui-kit/checkbox/fd-ui-checkbox.component';
-import { FdUiLoaderComponent } from '../../../ui-kit/loader/fd-ui-loader.component';
-import { FdUiPaginationComponent } from '../../../ui-kit/pagination/fd-ui-pagination.component';
+import { FdUiEntityCardComponent } from 'fd-ui-kit/entity-card/fd-ui-entity-card.component';
+import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
+import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
+import { FdUiCheckboxComponent } from 'fd-ui-kit/checkbox/fd-ui-checkbox.component';
+import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
+import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.component';
 import { buildProductTypeTranslationKey } from '../../../utils/product-type.utils';
-import { FdUiDialogService } from '../../../ui-kit/dialog/fd-ui-dialog.service';
-import { MatIconModule } from '@angular/material/icon';
+import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { FdUiIconModule } from 'fd-ui-kit/material';
 
 @Component({
     selector: 'fd-product-list-base',
@@ -36,7 +36,7 @@ import { MatIconModule } from '@angular/material/icon';
         FdUiCheckboxComponent,
         FdUiLoaderComponent,
         FdUiPaginationComponent,
-        MatIconModule,
+        FdUiIconModule,
     ],
 })
 export class ProductListBaseComponent implements OnInit {

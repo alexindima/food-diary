@@ -6,13 +6,13 @@ import { NavigationService } from '../../services/navigation.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { filter } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
-import { MatIconModule } from '@angular/material/icon';
+import { FdUiIconModule } from 'fd-ui-kit/material';
 import {
     FdUiMenuComponent,
     FdUiMenuTriggerDirective,
     FdUiMenuItemComponent,
     FdUiMenuDividerComponent,
-} from '../../ui-kit/menu';
+} from 'fd-ui-kit/menu';
 
 @Component({
     selector: 'fd-header',
@@ -20,7 +20,7 @@ import {
         CommonModule,
         TranslateModule,
         RouterModule,
-        MatIconModule,
+        FdUiIconModule,
         FdUiMenuComponent,
         FdUiMenuTriggerDirective,
         FdUiMenuItemComponent,

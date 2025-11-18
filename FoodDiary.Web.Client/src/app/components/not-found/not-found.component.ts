@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
-import { FdUiButtonComponent } from '../../ui-kit/button/fd-ui-button.component';
+import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 
 @Component({
     selector: 'fd-not-found',

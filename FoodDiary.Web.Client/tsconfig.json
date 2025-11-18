@@ -6,6 +6,13 @@
         "outDir": "./dist/out-tsc",
         "strict": true,
         "noImplicitOverride": true,
+        "paths": {
+            "fd-ui-kit": [
+                "./dist/fd-ui-kit",
+                "./projects/fd-ui-kit/src/public-api"
+            ],
+            "fd-ui-kit/*": ["./projects/fd-ui-kit/src/lib/*"]
+        },
         "noPropertyAccessFromIndexSignature": true,
         "noImplicitReturns": true,
         "noFallthroughCasesInSwitch": true,
@@ -27,5 +34,13 @@
         "strictInjectionParameters": true,
         "strictInputAccessModifiers": true,
         "strictTemplates": true
-    }
+    },
+    "references": [
+      {
+        "path": "./projects/fd-ui-kit/tsconfig.lib.json"
+      },
+      {
+        "path": "./projects/fd-ui-kit/tsconfig.spec.json"
+      }
+    ]
 }

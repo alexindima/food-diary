@@ -4,9 +4,9 @@ import { Product } from '../../../types/product.data';
 import { Recipe } from '../../../types/recipe.data';
 import { ProductListDialogComponent } from '../../product-container/product-list/product-list-dialog/product-list-dialog.component';
 import { RecipeSelectDialogComponent } from '../../recipe-container/recipe-select-dialog/recipe-select-dialog.component';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { FD_UI_DIALOG_DATA, FdUiDialogRef } from 'fd-ui-kit/material';
 import { Inject, Optional } from '@angular/core';
-import { FdUiTabsComponent, FdUiTab } from '../../../ui-kit/tabs/fd-ui-tabs.component';
+import { FdUiTabsComponent, FdUiTab } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
 
 export type ConsumptionItemSelection =
     | { type: 'Product'; product: Product }
@@ -41,13 +41,13 @@ export class ConsumptionItemSelectDialogComponent implements OnInit {
     ];
     public activeTab: 'Product' | 'Recipe' = 'Product';
     private readonly dialogRef = inject(
-        MatDialogRef<ConsumptionItemSelectDialogComponent, ConsumptionItemSelection | null>,
+        FdUiDialogRef<ConsumptionItemSelectDialogComponent, ConsumptionItemSelection | null>,
         { optional: true },
     );
 
     public constructor(
         @Optional()
-        @Inject(MAT_DIALOG_DATA)
+        @Inject(FD_UI_DIALOG_DATA)
         private readonly dialogData: ConsumptionItemSelectDialogData | null,
     ) {}
 

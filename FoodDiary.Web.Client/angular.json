@@ -41,7 +41,8 @@
                         "scripts": [],
                         "stylePreprocessorOptions": {
                             "includePaths": [
-                                "src/styles"
+                                "src/styles",
+                                "projects/fd-ui-kit/src/lib"
                             ]
                         }
                     },
@@ -115,6 +116,12 @@
                         "polyfills": ["zone.js", "zone.js/testing"],
                         "tsConfig": "tsconfig.spec.json",
                         "inlineStyleLanguage": "scss",
+                        "stylePreprocessorOptions": {
+                            "includePaths": [
+                                "src/styles",
+                                "projects/fd-ui-kit/src/lib"
+                            ]
+                        },
                         "assets": [
                             {
                                 "glob": "**/*",
@@ -131,6 +138,36 @@
                     }
                 }
             }
+        },
+        "fd-ui-kit": {
+          "projectType": "library",
+          "root": "projects/fd-ui-kit",
+          "sourceRoot": "projects/fd-ui-kit/src",
+          "prefix": "fd",
+          "architect": {
+            "build": {
+              "builder": "@angular/build:ng-packagr",
+              "configurations": {
+                "production": {
+                  "tsConfig": "projects/fd-ui-kit/tsconfig.lib.prod.json"
+                },
+                "development": {
+                  "tsConfig": "projects/fd-ui-kit/tsconfig.lib.json"
+                }
+              },
+              "defaultConfiguration": "production"
+            },
+            "test": {
+              "builder": "@angular/build:karma",
+              "options": {
+                "tsConfig": "projects/fd-ui-kit/tsconfig.spec.json",
+                "polyfills": [
+                  "zone.js",
+                  "zone.js/testing"
+                ]
+              }
+            }
+          }
         }
     },
     "schematics": {

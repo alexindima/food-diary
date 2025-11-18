@@ -5,20 +5,20 @@ import { RecipeService } from '../../../services/recipe.service';
 import { NavigationService } from '../../../services/navigation.service';
 import { PagedData } from '../../../types/paged-data.data';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { MatIconModule } from '@angular/material/icon';
-import { FdUiLoaderComponent } from '../../../ui-kit/loader/fd-ui-loader.component';
-import { FdUiPaginationComponent } from '../../../ui-kit/pagination/fd-ui-pagination.component';
+import { FdUiIconModule } from 'fd-ui-kit/material';
+import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
+import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.component';
 import { catchError, debounceTime, finalize, map, Observable, of, switchMap, tap } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FormGroupControls } from '../../../types/common.data';
 import { RecipeDetailComponent, RecipeDetailActionResult } from '../recipe-detail/recipe-detail.component';
 import { BadgeComponent } from '../../shared/badge/badge.component';
-import { FdUiEntityCardComponent } from '../../../ui-kit/entity-card/fd-ui-entity-card.component';
-import { FdUiInputComponent } from '../../../ui-kit/input/fd-ui-input.component';
-import { FdUiCheckboxComponent } from '../../../ui-kit/checkbox/fd-ui-checkbox.component';
-import { FdUiButtonComponent } from '../../../ui-kit/button/fd-ui-button.component';
-import { FdUiDialogService } from '../../../ui-kit/dialog/fd-ui-dialog.service';
-import { FdUiToastService } from '../../../ui-kit/toast/fd-ui-toast.service';
+import { FdUiEntityCardComponent } from 'fd-ui-kit/entity-card/fd-ui-entity-card.component';
+import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
+import { FdUiCheckboxComponent } from 'fd-ui-kit/checkbox/fd-ui-checkbox.component';
+import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
+import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 
 @Component({
     selector: 'fd-recipe-list',
@@ -35,7 +35,7 @@ import { FdUiToastService } from '../../../ui-kit/toast/fd-ui-toast.service';
         FdUiButtonComponent,
         FdUiLoaderComponent,
         FdUiPaginationComponent,
-        MatIconModule,
+        FdUiIconModule,
     ],
 })
 export class RecipeListComponent implements OnInit {

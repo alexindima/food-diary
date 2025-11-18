@@ -35,22 +35,22 @@ import { NutrientChartData } from '../../../types/charts.data';
 import {
     NutrientsSummaryComponent
 } from '../../shared/nutrients-summary/nutrients-summary.component';
-import { FdUiFormErrorComponent, FD_VALIDATION_ERRORS, FdValidationErrors } from '../../../ui-kit/form-error/fd-ui-form-error.component';
+import { FdUiFormErrorComponent, FD_VALIDATION_ERRORS, FdValidationErrors } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { FdUiCardComponent } from '../../../ui-kit/card/fd-ui-card.component';
-import { FdUiInputComponent } from '../../../ui-kit/input/fd-ui-input.component';
-import { FdUiSelectComponent, FdUiSelectOption } from '../../../ui-kit/select/fd-ui-select.component';
-import { FdUiTextareaComponent } from '../../../ui-kit/textarea/fd-ui-textarea.component';
-import { FdUiButtonComponent } from '../../../ui-kit/button/fd-ui-button.component';
-import { FdUiCheckboxComponent } from '../../../ui-kit/checkbox/fd-ui-checkbox.component';
-import { MatIconModule } from '@angular/material/icon';
+import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
+import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
+import { FdUiSelectComponent, FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
+import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea.component';
+import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
+import { FdUiCheckboxComponent } from 'fd-ui-kit/checkbox/fd-ui-checkbox.component';
+import { FdUiIconModule } from 'fd-ui-kit/material';
 import {
     SatietyLevelDialogComponent,
     SatietyLevelDialogData,
 } from '../satiety-level-dialog/satiety-level-dialog.component';
-import { DEFAULT_SATIETY_LEVELS } from '../../../ui-kit/satiety-scale/fd-ui-satiety-scale.component';
-import { FdUiDialogService } from '../../../ui-kit/dialog/fd-ui-dialog.service';
+import { DEFAULT_SATIETY_LEVELS } from 'fd-ui-kit/satiety-scale/fd-ui-satiety-scale.component';
+import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import {
     ConsumptionManageRedirectAction,
     ConsumptionManageSuccessDialogComponent,
@@ -86,7 +86,7 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
         FdUiTextareaComponent,
         FdUiButtonComponent,
         FdUiCheckboxComponent,
-        MatIconModule,
+        FdUiIconModule,
         FdUiFormErrorComponent,
     ]
 })

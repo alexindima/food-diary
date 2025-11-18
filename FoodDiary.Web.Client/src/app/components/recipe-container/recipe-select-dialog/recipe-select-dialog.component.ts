@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { DecimalPipe } from '@angular/common';
-import { MatIconModule } from '@angular/material/icon';
+import { FdUiIconModule } from 'fd-ui-kit/material';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Recipe, RecipeFilters } from '../../../types/recipe.data';
 import { RecipeService } from '../../../services/recipe.service';
@@ -22,13 +22,13 @@ import { PagedData } from '../../../types/paged-data.data';
 import { FormGroupControls } from '../../../types/common.data';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { BadgeComponent } from '../../shared/badge/badge.component';
-import { FdUiEntityCardComponent } from '../../../ui-kit/entity-card/fd-ui-entity-card.component';
-import { FdUiEntityCardHeaderDirective } from '../../../ui-kit/entity-card/fd-ui-entity-card-header.directive';
-import { MatDialogRef } from '@angular/material/dialog';
-import { FdUiButtonComponent } from '../../../ui-kit/button/fd-ui-button.component';
-import { FdUiLoaderComponent } from '../../../ui-kit/loader/fd-ui-loader.component';
-import { FdUiPaginationComponent } from '../../../ui-kit/pagination/fd-ui-pagination.component';
-import { FdUiInputComponent } from '../../../ui-kit/input/fd-ui-input.component';
+import { FdUiEntityCardComponent } from 'fd-ui-kit/entity-card/fd-ui-entity-card.component';
+import { FdUiEntityCardHeaderDirective } from 'fd-ui-kit/entity-card/fd-ui-entity-card-header.directive';
+import { FdUiDialogRef } from 'fd-ui-kit/material';
+import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
+import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
+import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.component';
+import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 
 @Component({
     selector: 'fd-recipe-select-dialog',
@@ -46,7 +46,7 @@ import { FdUiInputComponent } from '../../../ui-kit/input/fd-ui-input.component'
         FdUiButtonComponent,
         FdUiLoaderComponent,
         FdUiPaginationComponent,
-        MatIconModule,
+        FdUiIconModule,
         FdUiInputComponent,
     ],
 })
@@ -54,7 +54,7 @@ export class RecipeSelectDialogComponent implements OnInit {
     private readonly recipeService = inject(RecipeService);
     private readonly navigationService = inject(NavigationService);
     private readonly destroyRef = inject(DestroyRef);
-    private readonly dialogRef = inject(MatDialogRef<RecipeSelectDialogComponent, Recipe | null>, {
+    private readonly dialogRef = inject(FdUiDialogRef<RecipeSelectDialogComponent, Recipe | null>, {
         optional: true,
     });
 

@@ -13,13 +13,13 @@ import {
 } from '../consumption-detail/consumption-detail.component';
 import { FormGroupControls } from '../../../types/common.data';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FdUiButtonComponent } from '../../../ui-kit/button/fd-ui-button.component';
-import { FdUiDateInputComponent, FdUiDateRangeValue } from '../../../ui-kit/date-input/fd-ui-date-input.component';
-import { FdUiEntityCardComponent } from '../../../ui-kit/entity-card/fd-ui-entity-card.component';
-import { FdUiDialogService } from '../../../ui-kit/dialog/fd-ui-dialog.service';
-import { FdUiLoaderComponent } from '../../../ui-kit/loader/fd-ui-loader.component';
-import { FdUiPaginationComponent } from '../../../ui-kit/pagination/fd-ui-pagination.component';
-import { MatIconModule } from '@angular/material/icon';
+import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
+import { FdUiDateInputComponent, FdUiDateRangeValue } from 'fd-ui-kit/date-input/fd-ui-date-input.component';
+import { FdUiEntityCardComponent } from 'fd-ui-kit/entity-card/fd-ui-entity-card.component';
+import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
+import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.component';
+import { FdUiIconModule } from 'fd-ui-kit/material';
 
 @Component({
     selector: 'fd-consumption-list',
@@ -36,7 +36,7 @@ import { MatIconModule } from '@angular/material/icon';
         FdUiEntityCardComponent,
         FdUiLoaderComponent,
         FdUiPaginationComponent,
-        MatIconModule,
+        FdUiIconModule,
     ]
 })
 export class ConsumptionListComponent implements OnInit {

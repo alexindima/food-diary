@@ -27,14 +27,14 @@ import { DraggableDirective } from '../../../directives/draggable.directive';
 import { NavigationService } from '../../../services/navigation.service';
 import { finalize } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FdUiCardComponent } from '../../../ui-kit/card/fd-ui-card.component';
-import { FdUiInputComponent } from '../../../ui-kit/input/fd-ui-input.component';
-import { FdUiTextareaComponent } from '../../../ui-kit/textarea/fd-ui-textarea.component';
-import { FdUiButtonComponent } from '../../../ui-kit/button/fd-ui-button.component';
-import { FdUiSelectComponent, FdUiSelectOption } from '../../../ui-kit/select/fd-ui-select.component';
-import { FdUiCheckboxComponent } from '../../../ui-kit/checkbox/fd-ui-checkbox.component';
+import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
+import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
+import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea.component';
+import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
+import { FdUiSelectComponent, FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
+import { FdUiCheckboxComponent } from 'fd-ui-kit/checkbox/fd-ui-checkbox.component';
 import { CommonModule } from '@angular/common';
-import { FdUiDialogService } from '../../../ui-kit/dialog/fd-ui-dialog.service';
+import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 
 @Component({
     selector: 'fd-recipe-manage',

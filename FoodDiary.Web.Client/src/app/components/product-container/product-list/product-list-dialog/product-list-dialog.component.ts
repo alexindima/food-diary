@@ -5,14 +5,14 @@ import { Product } from '../../../../types/product.data';
 import { TranslatePipe } from '@ngx-translate/core';
 import { ProductAddDialogComponent } from '../../product-manage/product-add-dialog/product-add-dialog.component';
 import { BadgeComponent } from '../../../shared/badge/badge.component';
-import { FdUiEntityCardComponent } from '../../../../ui-kit/entity-card/fd-ui-entity-card.component';
-import { FdUiInputComponent } from '../../../../ui-kit/input/fd-ui-input.component';
-import { FdUiButtonComponent } from '../../../../ui-kit/button/fd-ui-button.component';
-import { FdUiCheckboxComponent } from '../../../../ui-kit/checkbox/fd-ui-checkbox.component';
-import { FdUiLoaderComponent } from '../../../../ui-kit/loader/fd-ui-loader.component';
-import { FdUiPaginationComponent } from '../../../../ui-kit/pagination/fd-ui-pagination.component';
-import { MatDialogRef } from '@angular/material/dialog';
-import { MatIconModule } from '@angular/material/icon';
+import { FdUiEntityCardComponent } from 'fd-ui-kit/entity-card/fd-ui-entity-card.component';
+import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
+import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
+import { FdUiCheckboxComponent } from 'fd-ui-kit/checkbox/fd-ui-checkbox.component';
+import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
+import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.component';
+import { FdUiDialogRef } from 'fd-ui-kit/material';
+import { FdUiIconModule } from 'fd-ui-kit/material';
 
 @Component({
     selector: 'fd-product-list-dialog',
@@ -30,14 +30,14 @@ import { MatIconModule } from '@angular/material/icon';
         FdUiCheckboxComponent,
         FdUiLoaderComponent,
         FdUiPaginationComponent,
-        MatIconModule,
+        FdUiIconModule,
     ]
 })
 export class ProductListDialogComponent extends ProductListBaseComponent {
     @Input() public embedded: boolean = false;
     @Output() public productSelected = new EventEmitter<Product>();
 
-    private readonly dialogRef = inject(MatDialogRef<ProductListDialogComponent, Product | null>, {
+    private readonly dialogRef = inject(FdUiDialogRef<ProductListDialogComponent, Product | null>, {
         optional: true,
     });
     public override async onAddProductClick(): Promise<void> {

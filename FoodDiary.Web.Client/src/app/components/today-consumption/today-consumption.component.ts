@@ -15,17 +15,17 @@ import { NavigationService } from '../../services/navigation.service';
 import { UserService } from '../../services/user.service';
 import { NutrientChartData } from '../../types/charts.data';
 import { DynamicProgressBarComponent } from '../shared/dynamic-progress-bar/dynamic-progress-bar.component';
-import { FdUiCardComponent } from '../../ui-kit/card/fd-ui-card.component';
-import { FdUiButtonComponent } from '../../ui-kit/button/fd-ui-button.component';
-import { FdUiEntityCardComponent } from '../../ui-kit/entity-card/fd-ui-entity-card.component';
+import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
+import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
+import { FdUiEntityCardComponent } from 'fd-ui-kit/entity-card/fd-ui-entity-card.component';
 import { Consumption, ConsumptionFilters } from '../../types/consumption.data';
 import { ConsumptionService } from '../../services/consumption.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { MatDatepicker, MatDatepickerInputEvent, MatDatepickerModule } from '@angular/material/datepicker';
-import { MatInputModule } from '@angular/material/input';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatNativeDateModule } from '@angular/material/core';
-import { MatIconModule } from '@angular/material/icon';
+import { FdUiDatepicker, FdUiDatepickerInputEvent, FdUiDatepickerModule } from 'fd-ui-kit/material';
+import { FdUiInputFieldModule } from 'fd-ui-kit/material';
+import { FdUiFormFieldModule } from 'fd-ui-kit/material';
+import { FdUiNativeDateModule } from 'fd-ui-kit/material';
+import { FdUiIconModule } from 'fd-ui-kit/material';
 import { WeightEntriesService } from '../../services/weight-entries.service';
 import { WeightEntry } from '../../types/weight-entry.data';
 import { WaistEntriesService } from '../../services/waist-entries.service';
@@ -51,11 +51,11 @@ interface DashboardQuickAction {
         FdUiCardComponent,
         FdUiButtonComponent,
         FdUiEntityCardComponent,
-        MatDatepickerModule,
-        MatInputModule,
-        MatFormFieldModule,
-        MatNativeDateModule,
-        MatIconModule,
+        FdUiDatepickerModule,
+        FdUiInputFieldModule,
+        FdUiFormFieldModule,
+        FdUiNativeDateModule,
+        FdUiIconModule,
     ],
     templateUrl: './today-consumption.component.html',
     styleUrl: './today-consumption.component.less',
@@ -71,7 +71,7 @@ export class TodayConsumptionComponent implements OnInit {
     private readonly translateService = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
 
-    @ViewChild('headerDatePicker') private headerDatePicker?: MatDatepicker<Date>;
+    @ViewChild('headerDatePicker') private headerDatePicker?: FdUiDatepicker<Date>;
 
     public selectedDate = signal<Date>(this.normalizeDate(new Date()));
     public todayCalories = signal<number>(0);
@@ -264,7 +264,7 @@ export class TodayConsumptionComponent implements OnInit {
         this.headerDatePicker?.open();
     }
 
-    public handleDateChange(event: MatDatepickerInputEvent<Date>): void {
+    public handleDateChange(event: FdUiDatepickerInputEvent<Date>): void {
         if (!event.value) {
             return;
         }

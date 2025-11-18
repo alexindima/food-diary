@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { FD_UI_DIALOG_DATA, FdUiDialogRef } from 'fd-ui-kit/material';
 import { TranslateModule } from '@ngx-translate/core';
-import { FdUiDialogComponent } from '../../../../ui-kit/dialog/fd-ui-dialog.component';
-import { FdUiDialogFooterDirective } from '../../../../ui-kit/dialog/fd-ui-dialog-footer.directive';
-import { FdUiButtonComponent } from '../../../../ui-kit/button/fd-ui-button.component';
+import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog.component';
+import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
+import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 
 export interface ConsumptionManageSuccessDialogData {
     isEdit: boolean;
@@ -35,8 +35,8 @@ export type ConsumptionManageRedirectAction = 'Home' | 'ConsumptionList';
 })
 export class ConsumptionManageSuccessDialogComponent {
     public constructor(
-        @Inject(MAT_DIALOG_DATA) public readonly data: ConsumptionManageSuccessDialogData,
-        private readonly dialogRef: MatDialogRef<ConsumptionManageSuccessDialogComponent, ConsumptionManageRedirectAction>,
+        @Inject(FD_UI_DIALOG_DATA) public readonly data: ConsumptionManageSuccessDialogData,
+        private readonly dialogRef: FdUiDialogRef<ConsumptionManageSuccessDialogComponent, ConsumptionManageRedirectAction>,
     ) {}
 
     public close(action: ConsumptionManageRedirectAction): void {
