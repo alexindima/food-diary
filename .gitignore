@@ -1,6 +1,52 @@
-/frontend/food-diary-web-client/node_modules/
+/FoodDiary.Web.Client/node_modules/
+/FoodDiary.Web.Client/node_modules_old/
+/FoodDiary.Web.Client/.angular/
+/FoodDiary.Web.Client/dist/
 /backend/food-diary.web.api/node_modules/
-/frontend/food-diary-web-client/.angular/
 /backend/food-diary.web.api/dist/
-/frontend/food-diary-web-client/dist/
 /backend/food-diary.web.api/logs/
+
+# .NET / Visual Studio
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+[Ww][Ii][Nn]32/
+bin/
+obj/
+[Ll]og/
+[Ll]ogs/
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.rsuser
+*.sln.iml
+
+# IDE configs
+.idea/
+.vscode/
+
+# Packages
+*.nupkg
+**/[Pp]ackages/*
+!**/[Pp]ackages/build/
+
+# Tests / coverage
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+
+# Publish profiles and env files
+*.pubxml
+*.azurePubxml
+appsettings.*.json
+!appsettings.json
+!appsettings.Development.json
+.env*
+
+# OS junk
+.DS_Store
+Thumbs.db

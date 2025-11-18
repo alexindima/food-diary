@@ -21,7 +21,7 @@ FoodDiary/
 │   ├── Persistence/
 │   ├── Authentication/
 │   └── Services/
-└── FoodDiary.WebApi/          # API презентационный слой
+└── FoodDiary.Web.Api/         # API презентационный слой
     └── Controllers/
 ```
 
@@ -30,23 +30,23 @@ FoodDiary/
 1. **Domain** - независимый от всех, чистый бизнес-слой
 2. **Application** - use cases, зависит только от Domain
 3. **Infrastructure** - реализации (БД, JWT), зависит от Application
-4. **WebApi** - точка входа, зависит от всех
+4. **Web.Api** - точка входа, зависит от всех
 
 ## 🚀 Запуск
 
 ```bash
-# Перейти в папку WebApi
-cd FoodDiary.WebApi
+# Перейти в папку Web.Api
+cd FoodDiary.Web.Api
 
 # Настроить БД в appsettings.json
 
 # Применить миграции (из корня solution)
 cd ..
-dotnet ef migrations add InitialCreate --project FoodDiary.Infrastructure --startup-project FoodDiary.WebApi
-dotnet ef database update --project FoodDiary.Infrastructure --startup-project FoodDiary.WebApi
+dotnet ef migrations add InitialCreate --project FoodDiary.Infrastructure --startup-project FoodDiary.Web.Api
+dotnet ef database update --project FoodDiary.Infrastructure --startup-project FoodDiary.Web.Api
 
 # Запустить API
-cd FoodDiary.WebApi
+cd FoodDiary.Web.Api
 dotnet run
 ```
 
@@ -86,7 +86,7 @@ API доступно на:
 - **Authentication**: JwtTokenGenerator
 - **Services**: PasswordHasher (BCrypt)
 
-### WebApi Layer
+### Web.Api Layer
 - **Controllers**: AuthController, UsersController, FoodController
 - **DI Configuration**: Program.cs
 - JWT + Swagger конфигурация

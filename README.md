@@ -17,3 +17,12 @@
 - **Frontend:** Angular + Taiga UI + Charts.js
 - **Backend:** NestJS + Prisma
 - **База данных:** PostgreSQL
+
+---
+
+## 📁 Структура репозитория
+
+- `FoodDiary.Web.Client/` — Angular SPA (ранее `frontend/food-diary-web-client`)
+- `FoodDiary.*` — .NET 9 solution (Domain, Application, Infrastructure, Web.Api и т.д.) теперь лежит в корне репозитория
+- `backend/food-diary.web.api/` — текущий NestJS backend
+- `.github/workflows/` — CI/CD сценарии (автодеплой сейчас отключён и запускается вручную)

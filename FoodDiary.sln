@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoodDiary.Application", "Fo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoodDiary.Infrastructure", "FoodDiary.Infrastructure\FoodDiary.Infrastructure.csproj", "{78785AA5-A267-4ABB-9E07-79FB6722421D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoodDiary.WebApi", "FoodDiary.WebApi\FoodDiary.WebApi.csproj", "{3EB28365-D2AE-43A4-94DD-0CF6123F6D69}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoodDiary.Web.Api", "FoodDiary.Web.Api\FoodDiary.Web.Api.csproj", "{3EB28365-D2AE-43A4-94DD-0CF6123F6D69}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoodDiary.Contracts", "FoodDiary.Contracts\FoodDiary.Contracts.csproj", "{0F353380-75BA-4352-A37B-D418BAEE5180}"
 EndProject

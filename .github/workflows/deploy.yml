@@ -1,14 +1,13 @@
 name: Deploy
 
 on:
-  push:
-    branches:
-      - master
+  # Temporarily disabled automatic runs; trigger manually when ready.
+  workflow_dispatch:
 
 env:
   NODE_VERSION: 22
   SERVER_IP: 193.109.69.58
-  FRONTEND_DIR: frontend/food-diary-web-client
+  FRONTEND_DIR: FoodDiary.Web.Client
   BACKEND_DIR: backend/food-diary.web.api
   FRONTEND_DEPLOY_DIR: /var/www/fooddiary.club
   BACKEND_DEPLOY_DIR: /var/www/fooddiary-backend
