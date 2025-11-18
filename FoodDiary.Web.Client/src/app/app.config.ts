@@ -18,7 +18,7 @@ import { GlobalErrorHandler } from './services/error-handler.service';
 import { LoggingApiService } from './services/logging-api.service';
 import { provideServiceWorker } from '@angular/service-worker';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { FdUiSnackBarModule } from 'fd-ui-kit/material';
 
 export const appConfig: ApplicationConfig = {
     providers: [
@@ -45,7 +45,7 @@ export const appConfig: ApplicationConfig = {
         provideHttpClient(withInterceptorsFromDi()),
         importProvidersFrom(
             TranslateModule.forRoot(),
-            MatSnackBarModule,
+            FdUiSnackBarModule,
         ),
         provideTranslateHttpLoader({
             prefix: './assets/i18n/',

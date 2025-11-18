@@ -1,13 +1,13 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { NgClass } from '@angular/common';
-import { MatIconModule } from '@angular/material/icon';
+import { FdUiIconModule } from 'fd-ui-kit/material';
 
 type BadgeVariant = 'primary' | 'success' | 'warning' | 'danger' | 'neutral';
 
 @Component({
     selector: 'fd-badge',
     standalone: true,
-    imports: [MatIconModule, NgClass],
+    imports: [FdUiIconModule, NgClass],
     templateUrl: './badge.component.html',
     styleUrls: ['./badge.component.less'],
     changeDetection: ChangeDetectionStrategy.OnPush,

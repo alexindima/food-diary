@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatDialogRef } from '@angular/material/dialog';
+import { FdUiDialogRef } from 'fd-ui-kit/material';
 import { ProductListDialogComponent } from './product-list-dialog.component';
 
 describe('ProductListDialogComponent', () => {
@@ -11,7 +11,7 @@ describe('ProductListDialogComponent', () => {
             imports: [ProductListDialogComponent],
             providers: [
                 {
-                    provide: MatDialogRef,
+                    provide: FdUiDialogRef,
                     useValue: null,
                 },
             ],

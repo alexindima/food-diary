@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { FD_UI_DIALOG_DATA, FdUiDialogRef } from 'fd-ui-kit/material';
 import { ProductDetailComponent } from './product-detail.component';
 
 describe('ProductDetailComponent', () => {
@@ -11,7 +11,7 @@ describe('ProductDetailComponent', () => {
             imports: [ProductDetailComponent],
             providers: [
                 {
-                    provide: MAT_DIALOG_DATA,
+                    provide: FD_UI_DIALOG_DATA,
                     useValue: {
                         id: '1',
                         name: 'Test product',
@@ -26,8 +26,8 @@ describe('ProductDetailComponent', () => {
                     },
                 },
                 {
-                    provide: MatDialogRef,
-                    useValue: jasmine.createSpyObj('MatDialogRef', ['close']),
+                    provide: FdUiDialogRef,
+                    useValue: jasmine.createSpyObj('FdUiDialogRef', ['close']),
                 },
             ],
         }).compileComponents();
