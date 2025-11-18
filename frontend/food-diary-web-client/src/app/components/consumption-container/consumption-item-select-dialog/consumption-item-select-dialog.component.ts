@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, inject } from '@angular/core';
-import { TuiTabs } from '@taiga-ui/kit';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Product } from '../../../types/product.data';
 import { Recipe } from '../../../types/recipe.data';
@@ -7,6 +6,7 @@ import { ProductListDialogComponent } from '../../product-container/product-list
 import { RecipeSelectDialogComponent } from '../../recipe-container/recipe-select-dialog/recipe-select-dialog.component';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Inject, Optional } from '@angular/core';
+import { FdUiTabsComponent, FdUiTab } from '../../../ui-kit/tabs/fd-ui-tabs.component';
 
 export type ConsumptionItemSelection =
     | { type: 'Product'; product: Product }
@@ -22,14 +22,24 @@ export type ConsumptionItemSelectDialogData = {
     templateUrl: './consumption-item-select-dialog.component.html',
     styleUrls: ['./consumption-item-select-dialog.component.less'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [TuiTabs, TranslatePipe, ProductListDialogComponent, RecipeSelectDialogComponent],
+    imports: [FdUiTabsComponent, TranslatePipe, ProductListDialogComponent, RecipeSelectDialogComponent],
 })
 export class ConsumptionItemSelectDialogComponent implements OnInit {
     @Input() public embedded: boolean = false;
     @Output() public productSelected = new EventEmitter<Product>();
     @Output() public recipeSelected = new EventEmitter<Recipe>();
     @Output() public createRecipeRequested = new EventEmitter<void>();
-    public activeTabIndex = 0;
+    public readonly tabs: FdUiTab[] = [
+        {
+            value: 'Product',
+            labelKey: 'CONSUMPTION_MANAGE.ITEM_SELECT_DIALOG.PRODUCTS_TAB',
+        },
+        {
+            value: 'Recipe',
+            labelKey: 'CONSUMPTION_MANAGE.ITEM_SELECT_DIALOG.RECIPES_TAB',
+        },
+    ];
+    public activeTab: 'Product' | 'Recipe' = 'Product';
     private readonly dialogRef = inject(
         MatDialogRef<ConsumptionItemSelectDialogComponent, ConsumptionItemSelection | null>,
         { optional: true },
@@ -43,12 +53,8 @@ export class ConsumptionItemSelectDialogComponent implements OnInit {
 
     public ngOnInit(): void {
         if (!this.embedded && this.dialogData?.initialTab === 'Recipe') {
-            this.activeTabIndex = 1;
+            this.activeTab = 'Recipe';
         }
-    }
-
-    public onTabChange(index: number): void {
-        this.activeTabIndex = index;
     }
 
     public onProductSelected(product: Product): void {

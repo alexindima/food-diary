@@ -3,22 +3,15 @@
         <h2 class="consumption-item-select__title">
             {{ 'CONSUMPTION_MANAGE.ITEM_SELECT_DIALOG.TITLE' | translate }}
         </h2>
-        <tui-tabs
+        <fd-ui-tabs
             class="consumption-item-select__tabs"
-            [(activeItemIndex)]="activeTabIndex"
-            (activeItemIndexChange)="onTabChange($event)"
-        >
-            <button tuiTab>
-                {{ 'CONSUMPTION_MANAGE.ITEM_SELECT_DIALOG.PRODUCTS_TAB' | translate }}
-            </button>
-            <button tuiTab>
-                {{ 'CONSUMPTION_MANAGE.ITEM_SELECT_DIALOG.RECIPES_TAB' | translate }}
-            </button>
-        </tui-tabs>
+            [tabs]="tabs"
+            [(selectedValue)]="activeTab"
+        ></fd-ui-tabs>
     </div>
 
     <div class="consumption-item-select__content">
-        @if (activeTabIndex === 0) {
+        @if (activeTab === 'Product') {
             <fd-product-list-dialog
                 [embedded]="true"
                 (productSelected)="onProductSelected($event)"

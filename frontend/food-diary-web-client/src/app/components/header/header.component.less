@@ -34,6 +34,44 @@
     }
 
     &__tabs {
+        display: flex;
+        gap: @gap-s;
+
+        .header__tab {
+            border: none;
+            background: transparent;
+            padding: @gap-xs @gap-s;
+            font: inherit;
+            color: @color-text-main;
+            text-decoration: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            border-bottom: 2px solid transparent;
+            transition: color 0.2s ease, border-color 0.2s ease;
+
+            &.active-tab {
+                color: @color-primary;
+                border-color: @color-primary;
+            }
+
+            &:hover {
+                color: @color-primary;
+            }
+        }
+
+        @media @media-tablet {
+            display: none;
+        }
+    }
+
+    &__tab--dropdown {
+        mat-icon {
+            font-size: 18px;
+            vertical-align: middle;
+        }
+
         @media @media-tablet {
             display: none;
         }
@@ -47,6 +85,12 @@ tui-tabs::before {
 .mobile-menu-button {
     display: none;
     height: 56px;
+    border: none;
+    background: transparent;
+    color: @color-text-main;
+    font: inherit;
+    cursor: pointer;
+    gap: 4px;
 
     @media @media-tablet {
         display: flex;

@@ -5,100 +5,106 @@
         </a>
     </div>
     <div class="header__tabs-container">
-        <tui-tabs class="header__tabs" [(activeItemIndex)]="activeItemIndex">
-            <button tuiTab [routerLink]="'/'" routerLinkActive="active-tab" [routerLinkActiveOptions]="{ exact: true }">
+        <nav class="header__tabs">
+            <a
+                class="header__tab"
+                routerLink="/"
+                routerLinkActive="active-tab"
+                [routerLinkActiveOptions]="{ exact: true }"
+            >
                 {{ 'HEADER.HOME' | translate }}
-            </button>
+            </a>
             @if (isAuthenticated()) {
-                <button tuiTab [routerLink]="'/products'" routerLinkActive="active-tab">
+                <a class="header__tab" routerLink="/products" routerLinkActive="active-tab">
                     {{ 'HEADER.PRODUCTS' | translate }}
-                </button>
-                <button tuiTab [routerLink]="'/recipes'" routerLinkActive="active-tab">
+                </a>
+                <a class="header__tab" routerLink="/recipes" routerLinkActive="active-tab">
                     {{ 'HEADER.RECIPES' | translate }}
-                </button>
-                <button tuiTab [routerLink]="'/consumptions'" routerLinkActive="active-tab">
+                </a>
+                <a class="header__tab" routerLink="/consumptions" routerLinkActive="active-tab">
                     {{ 'HEADER.CONSUMPTION' | translate }}
-                </button>
-                <button tuiTab [routerLink]="'/statistics'" routerLinkActive="active-tab">
+                </a>
+                <a class="header__tab" routerLink="/statistics" routerLinkActive="active-tab">
                     {{ 'HEADER.STATISTICS' | translate }}
-                </button>
+                </a>
                 <button
-                    tuiChevron
-                    tuiDropdownOpen
-                    tuiTab
+                    class="header__tab header__tab--dropdown"
+                    [class.active-tab]="userSectionActive"
                     type="button"
-                    routerLinkActive="active-tab"
-                    [tuiDropdown]="dropdown"
-                    (click)="stop($event)"
+                    fdUiMenuTrigger
+                    [fdUiMenuTriggerFor]="userMenu.matMenu"
                 >
                     {{ 'HEADER.USER' | translate }}
+                    <mat-icon>expand_more</mat-icon>
                 </button>
             } @else {
-                <button tuiTab [routerLink]="'/auth'" routerLinkActive="active-tab">
+                <a class="header__tab" routerLink="/auth" routerLinkActive="active-tab">
                     {{ 'HEADER.LOGIN' | translate }}
-                </button>
+                </a>
             }
-        </tui-tabs>
+        </nav>
 
-        <button tuiTab tuiChevron tuiDropdownOpen class="mobile-menu-button" [tuiDropdown]="mobileDropdown">
+        <button
+            class="mobile-menu-button"
+            type="button"
+            fdUiMenuTrigger
+            [fdUiMenuTriggerFor]="mobileMenu.matMenu"
+        >
+            <mat-icon>menu</mat-icon>
             {{ 'HEADER.MENU' | translate }}
         </button>
     </div>
 </div>
 
-<ng-template #dropdown let-close>
-    <tui-data-list>
-        <button tuiOption type="button" (click)="goToProfile(); close()">
-            {{ 'HEADER.PROFILE_EDIT' | translate }}
-        </button>
-        <button tuiOption type="button" (click)="goToWeightHistory(); close()">
-            {{ 'HEADER.WEIGHT_HISTORY' | translate }}
-        </button>
-        <button tuiOption type="button" (click)="goToWaistHistory(); close()">
-            {{ 'HEADER.WAIST_HISTORY' | translate }}
-        </button>
-        <button tuiOption type="button" (click)="logout(); close()">
-            {{ 'HEADER.LOGOUT' | translate }}
-        </button>
-    </tui-data-list>
-</ng-template>
+<fd-ui-menu #userMenu="fdUiMenu">
+    <fd-ui-menu-item (itemClick)="goToProfile()">
+        {{ 'HEADER.PROFILE_EDIT' | translate }}
+    </fd-ui-menu-item>
+    <fd-ui-menu-item (itemClick)="goToWeightHistory()">
+        {{ 'HEADER.WEIGHT_HISTORY' | translate }}
+    </fd-ui-menu-item>
+    <fd-ui-menu-item (itemClick)="goToWaistHistory()">
+        {{ 'HEADER.WAIST_HISTORY' | translate }}
+    </fd-ui-menu-item>
+    <fd-ui-menu-item (itemClick)="logout()">
+        {{ 'HEADER.LOGOUT' | translate }}
+    </fd-ui-menu-item>
+</fd-ui-menu>
 
-<ng-template #mobileDropdown let-close>
-    <tui-data-list>
-        <button tuiOption [routerLink]="'/'" (click)="close()">
-            {{ 'HEADER.HOME' | translate }}
-        </button>
-        @if (isAuthenticated()) {
-            <button tuiOption [routerLink]="'/products'" (click)="close()">
-                {{ 'HEADER.PRODUCTS' | translate }}
-            </button>
-            <button tuiOption [routerLink]="'/recipes'" (click)="close()">
-                {{ 'HEADER.RECIPES' | translate }}
-            </button>
-            <button tuiOption [routerLink]="'/consumptions'" (click)="close()">
-                {{ 'HEADER.CONSUMPTION' | translate }}
-            </button>
-            <button tuiOption [routerLink]="'/statistics'" (click)="close()">
-                {{ 'HEADER.STATISTICS' | translate }}
-            </button>
-            <hr />
-            <button tuiOption (click)="goToProfile(); close()">
-                {{ 'HEADER.PROFILE_EDIT' | translate }}
-            </button>
-            <button tuiOption (click)="goToWeightHistory(); close()">
-                {{ 'HEADER.WEIGHT_HISTORY' | translate }}
-            </button>
-            <button tuiOption (click)="goToWaistHistory(); close()">
-                {{ 'HEADER.WAIST_HISTORY' | translate }}
-            </button>
-            <button tuiOption (click)="logout(); close()">
-                {{ 'HEADER.LOGOUT' | translate }}
-            </button>
-        } @else {
-            <hr />
-            <button tuiOption [routerLink]="'/auth'" (click)="close()">
-                {{ 'HEADER.LOGIN' | translate }}
-            </button>
-        }
-    </tui-data-list>
-</ng-template>
+<fd-ui-menu #mobileMenu="fdUiMenu">
+    <fd-ui-menu-item routerLink="/">
+        {{ 'HEADER.HOME' | translate }}
+    </fd-ui-menu-item>
+    @if (isAuthenticated()) {
+        <fd-ui-menu-item routerLink="/products">
+            {{ 'HEADER.PRODUCTS' | translate }}
+        </fd-ui-menu-item>
+        <fd-ui-menu-item routerLink="/recipes">
+            {{ 'HEADER.RECIPES' | translate }}
+        </fd-ui-menu-item>
+        <fd-ui-menu-item routerLink="/consumptions">
+            {{ 'HEADER.CONSUMPTION' | translate }}
+        </fd-ui-menu-item>
+        <fd-ui-menu-item routerLink="/statistics">
+            {{ 'HEADER.STATISTICS' | translate }}
+        </fd-ui-menu-item>
+        <fd-ui-menu-divider></fd-ui-menu-divider>
+        <fd-ui-menu-item (itemClick)="goToProfile()">
+            {{ 'HEADER.PROFILE_EDIT' | translate }}
+        </fd-ui-menu-item>
+        <fd-ui-menu-item (itemClick)="goToWeightHistory()">
+            {{ 'HEADER.WEIGHT_HISTORY' | translate }}
+        </fd-ui-menu-item>
+        <fd-ui-menu-item (itemClick)="goToWaistHistory()">
+            {{ 'HEADER.WAIST_HISTORY' | translate }}
+        </fd-ui-menu-item>
+        <fd-ui-menu-item (itemClick)="logout()">
+            {{ 'HEADER.LOGOUT' | translate }}
+        </fd-ui-menu-item>
+    } @else {
+        <fd-ui-menu-divider></fd-ui-menu-divider>
+        <fd-ui-menu-item routerLink="/auth">
+            {{ 'HEADER.LOGIN' | translate }}
+        </fd-ui-menu-item>
+    }
+</fd-ui-menu>

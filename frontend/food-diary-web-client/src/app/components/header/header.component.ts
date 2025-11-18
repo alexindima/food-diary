@@ -1,25 +1,30 @@
+import { CommonModule } from '@angular/common';
 import { Component, DestroyRef, inject, OnInit } from '@angular/core';
-import { TuiChevron, TuiTab, TuiTabsHorizontal } from '@taiga-ui/kit';
 import { TranslateModule } from '@ngx-translate/core';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
-import { TuiDataListComponent, TuiDropdownDirective, TuiDropdownOpen, TuiOption } from '@taiga-ui/core';
 import { NavigationService } from '../../services/navigation.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { filter } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
+import { MatIconModule } from '@angular/material/icon';
+import {
+    FdUiMenuComponent,
+    FdUiMenuTriggerDirective,
+    FdUiMenuItemComponent,
+    FdUiMenuDividerComponent,
+} from '../../ui-kit/menu';
 
 @Component({
     selector: 'fd-header',
     imports: [
-        TuiTabsHorizontal,
-        TuiTab,
+        CommonModule,
         TranslateModule,
         RouterModule,
-        TuiChevron,
-        TuiDropdownOpen,
-        TuiDropdownDirective,
-        TuiDataListComponent,
-        TuiOption,
+        MatIconModule,
+        FdUiMenuComponent,
+        FdUiMenuTriggerDirective,
+        FdUiMenuItemComponent,
+        FdUiMenuDividerComponent,
     ],
     templateUrl: './header.component.html',
     styleUrls: ['./header.component.less']
@@ -32,7 +37,7 @@ export class HeaderComponent implements OnInit {
 
     public isAuthenticated = this.authService.isAuthenticated;
 
-    protected activeItemIndex = 0;
+    protected userSectionActive = false;
     public ngOnInit(): void {
         this.router.events
             .pipe(
@@ -40,9 +45,7 @@ export class HeaderComponent implements OnInit {
                 filter(event => event instanceof NavigationEnd),
             )
             .subscribe(() => {
-                if (this.router.url.startsWith('/profile') || this.router.url.startsWith('/weight-history')) {
-                    this.activeItemIndex = 5;
-                }
+                this.userSectionActive = this.isUserSectionRoute(this.router.url);
             });
     }
 
@@ -58,11 +61,15 @@ export class HeaderComponent implements OnInit {
         await this.navigationService.navigateToWaistHistory();
     }
 
-    protected stop(event: Event): void {
-        event.stopPropagation();
-    }
-
     protected async logout(): Promise<void> {
         await this.authService.onLogout();
+    }
+
+    private isUserSectionRoute(url: string): boolean {
+        return (
+            url.startsWith('/profile') ||
+            url.startsWith('/weight-history') ||
+            url.startsWith('/waist-history')
+        );
     }
 }
