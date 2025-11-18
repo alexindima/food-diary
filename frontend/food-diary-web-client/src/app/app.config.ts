@@ -8,9 +8,9 @@ import {
 } from '@angular/core';
 import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { routes } from './app.routes';
-import { HTTP_INTERCEPTORS, HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import { TranslateLoader, TranslateModule, TranslateService } from '@ngx-translate/core';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import { LocalizationService } from './services/localization.service';
 import { AuthService } from './services/auth.service';
 import { AuthInterceptor } from './interceptor/auth.interceptor';
@@ -19,10 +19,6 @@ import { LoggingApiService } from './services/logging-api.service';
 import { provideServiceWorker } from '@angular/service-worker';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-
-export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
-    return new TranslateHttpLoader(http, './assets/i18n/', '.json');
-}
 
 export const appConfig: ApplicationConfig = {
     providers: [
@@ -48,15 +44,13 @@ export const appConfig: ApplicationConfig = {
         provideRouter(routes, withComponentInputBinding()),
         provideHttpClient(withInterceptorsFromDi()),
         importProvidersFrom(
-            TranslateModule.forRoot({
-                loader: {
-                    provide: TranslateLoader,
-                    useFactory: HttpLoaderFactory,
-                    deps: [HttpClient],
-                },
-            }),
+            TranslateModule.forRoot(),
             MatSnackBarModule,
         ),
+        provideTranslateHttpLoader({
+            prefix: './assets/i18n/',
+            suffix: '.json',
+        }),
         provideCharts(withDefaultRegisterables()),
         provideServiceWorker('ngsw-worker.js', {
             enabled: !isDevMode(),
