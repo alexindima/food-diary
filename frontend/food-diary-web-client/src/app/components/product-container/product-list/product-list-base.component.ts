@@ -1,7 +1,5 @@
 import { ChangeDetectionStrategy, Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
-import { TuiPagination } from '@taiga-ui/kit';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { TuiIcon, TuiLoader } from '@taiga-ui/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { ProductService } from '../../../services/product.service';
 import { NavigationService } from '../../../services/navigation.service';
@@ -16,8 +14,11 @@ import { FdUiEntityCardComponent } from '../../../ui-kit/entity-card/fd-ui-entit
 import { FdUiInputComponent } from '../../../ui-kit/input/fd-ui-input.component';
 import { FdUiButtonComponent } from '../../../ui-kit/button/fd-ui-button.component';
 import { FdUiCheckboxComponent } from '../../../ui-kit/checkbox/fd-ui-checkbox.component';
+import { FdUiLoaderComponent } from '../../../ui-kit/loader/fd-ui-loader.component';
+import { FdUiPaginationComponent } from '../../../ui-kit/pagination/fd-ui-pagination.component';
 import { buildProductTypeTranslationKey } from '../../../utils/product-type.utils';
 import { FdUiDialogService } from '../../../ui-kit/dialog/fd-ui-dialog.service';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
     selector: 'fd-product-list-base',
@@ -26,16 +27,16 @@ import { FdUiDialogService } from '../../../ui-kit/dialog/fd-ui-dialog.service';
     styleUrls: ['./product-list-base.component.less'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        TuiPagination,
         ReactiveFormsModule,
-        TuiLoader,
         TranslatePipe,
-        TuiIcon,
         BadgeComponent,
         FdUiEntityCardComponent,
         FdUiInputComponent,
         FdUiButtonComponent,
         FdUiCheckboxComponent,
+        FdUiLoaderComponent,
+        FdUiPaginationComponent,
+        MatIconModule,
     ],
 })
 export class ProductListBaseComponent implements OnInit {

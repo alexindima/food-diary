@@ -37,7 +37,7 @@
     </div>
 
     @if (recipeData.isLoading()) {
-        <tui-loader class="recipe-select__loader"></tui-loader>
+        <fd-ui-loader class="recipe-select__loader"></fd-ui-loader>
     } @else {
         @if (recipeData.items().length > 0) {
             <div class="recipe-select__list">
@@ -90,18 +90,19 @@
             </div>
         } @else {
             <div class="recipe-select__no-results">
-                <tui-icon class="recipe-select__no-results-icon" icon="@tui.search-remove"></tui-icon>
+                <mat-icon class="recipe-select__no-results-icon">search_off</mat-icon>
                 {{ 'RECIPE_SELECT_DIALOG.NO_RECIPES_FOUND' | translate }}
             </div>
         }
     }
 
     @if (recipeData.totalPages > 1) {
-        <tui-pagination
+        <fd-ui-pagination
             class="recipe-select__pagination"
-            [length]="recipeData.totalPages"
-            [(index)]="currentPageIndex"
-            (indexChange)="onPageChange($event)"
-        ></tui-pagination>
+            [length]="recipeData.totalItems"
+            [pageSize]="10"
+            [pageIndex]="currentPageIndex"
+            (pageIndexChange)="onPageChange($event)"
+        ></fd-ui-pagination>
     }
 </div>

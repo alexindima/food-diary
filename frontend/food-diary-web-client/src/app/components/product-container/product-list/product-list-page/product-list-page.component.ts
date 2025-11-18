@@ -1,10 +1,9 @@
 import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ProductListBaseComponent } from '../product-list-base.component';
-import { TuiAlertService, TuiIcon, TuiLoader } from '@taiga-ui/core';
+import { TuiAlertService } from '@taiga-ui/core';
 import { Product } from '../../../../types/product.data';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { TuiPagination } from '@taiga-ui/kit';
 import {
     ProductDetailComponent,
     ProductDetailActionResult,
@@ -15,6 +14,9 @@ import { FdUiInputComponent } from '../../../../ui-kit/input/fd-ui-input.compone
 import { FdUiButtonComponent } from '../../../../ui-kit/button/fd-ui-button.component';
 import { FdUiCheckboxComponent } from '../../../../ui-kit/checkbox/fd-ui-checkbox.component';
 import { finalize } from 'rxjs';
+import { FdUiLoaderComponent } from '../../../../ui-kit/loader/fd-ui-loader.component';
+import { FdUiPaginationComponent } from '../../../../ui-kit/pagination/fd-ui-pagination.component';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
     selector: 'fd-product-list-page',
@@ -24,14 +26,14 @@ import { finalize } from 'rxjs';
     imports: [
         ReactiveFormsModule,
         TranslatePipe,
-        TuiLoader,
-        TuiPagination,
-        TuiIcon,
         BadgeComponent,
         FdUiEntityCardComponent,
         FdUiInputComponent,
         FdUiButtonComponent,
         FdUiCheckboxComponent,
+        FdUiLoaderComponent,
+        FdUiPaginationComponent,
+        MatIconModule,
     ]
 })
 export class ProductListPageComponent extends ProductListBaseComponent implements OnInit {

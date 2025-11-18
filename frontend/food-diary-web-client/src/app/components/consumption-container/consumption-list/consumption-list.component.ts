@@ -1,8 +1,6 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { catchError, debounceTime, map, Observable, of, startWith, switchMap } from 'rxjs';
-import { TuiPagination } from '@taiga-ui/kit';
-import { TuiLoader } from '@taiga-ui/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Consumption, ConsumptionFilters } from '../../../types/consumption.data';
 import { ConsumptionService } from '../../../services/consumption.service';
@@ -19,6 +17,9 @@ import { FdUiButtonComponent } from '../../../ui-kit/button/fd-ui-button.compone
 import { FdUiDateInputComponent, FdUiDateRangeValue } from '../../../ui-kit/date-input/fd-ui-date-input.component';
 import { FdUiEntityCardComponent } from '../../../ui-kit/entity-card/fd-ui-entity-card.component';
 import { FdUiDialogService } from '../../../ui-kit/dialog/fd-ui-dialog.service';
+import { FdUiLoaderComponent } from '../../../ui-kit/loader/fd-ui-loader.component';
+import { FdUiPaginationComponent } from '../../../ui-kit/pagination/fd-ui-pagination.component';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
     selector: 'fd-consumption-list',
@@ -26,15 +27,16 @@ import { FdUiDialogService } from '../../../ui-kit/dialog/fd-ui-dialog.service';
     styleUrls: ['./consumption-list.component.less'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        TuiPagination,
         ReactiveFormsModule,
-        TuiLoader,
         TranslatePipe,
         DatePipe,
         DecimalPipe,
         FdUiButtonComponent,
         FdUiDateInputComponent,
         FdUiEntityCardComponent,
+        FdUiLoaderComponent,
+        FdUiPaginationComponent,
+        MatIconModule,
     ]
 })
 export class ConsumptionListComponent implements OnInit {

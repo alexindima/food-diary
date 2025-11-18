@@ -21,3 +21,5 @@ export * from './menu/fd-ui-menu.component';
 export * from './menu/fd-ui-menu-trigger.directive';
 export * from './menu/fd-ui-menu-item.component';
 export * from './menu/fd-ui-menu-divider.component';
+export * from './loader/fd-ui-loader.component';
+export * from './pagination/fd-ui-pagination.component';

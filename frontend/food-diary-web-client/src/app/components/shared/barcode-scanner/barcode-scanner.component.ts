@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { BarcodeFormat } from '@zxing/library';
 import { ZXingScannerModule } from '@zxing/ngx-scanner';
-import { TuiLoader } from '@taiga-ui/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { FdUiDialogComponent } from '../../../ui-kit/dialog/fd-ui-dialog.component';
 import { FdUiButtonComponent } from '../../../ui-kit/button/fd-ui-button.component';
+import { FdUiLoaderComponent } from '../../../ui-kit/loader/fd-ui-loader.component';
 
 @Component({
     selector: 'fd-barcode-scanner',
@@ -13,9 +13,9 @@ import { FdUiButtonComponent } from '../../../ui-kit/button/fd-ui-button.compone
     imports: [
         ZXingScannerModule,
         TranslatePipe,
-        TuiLoader,
         FdUiDialogComponent,
         FdUiButtonComponent,
+        FdUiLoaderComponent,
     ],
     templateUrl: './barcode-scanner.component.html',
     styleUrl: './barcode-scanner.component.less',

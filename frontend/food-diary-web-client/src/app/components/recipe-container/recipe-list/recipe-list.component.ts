@@ -5,8 +5,9 @@ import { RecipeService } from '../../../services/recipe.service';
 import { NavigationService } from '../../../services/navigation.service';
 import { PagedData } from '../../../types/paged-data.data';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { TuiIcon, TuiLoader } from '@taiga-ui/core';
-import { TuiPagination } from '@taiga-ui/kit';
+import { MatIconModule } from '@angular/material/icon';
+import { FdUiLoaderComponent } from '../../../ui-kit/loader/fd-ui-loader.component';
+import { FdUiPaginationComponent } from '../../../ui-kit/pagination/fd-ui-pagination.component';
 import { catchError, debounceTime, finalize, map, Observable, of, switchMap, tap } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FormGroupControls } from '../../../types/common.data';
@@ -27,14 +28,14 @@ import { FdUiDialogService } from '../../../ui-kit/dialog/fd-ui-dialog.service';
     imports: [
         ReactiveFormsModule,
         TranslatePipe,
-        TuiLoader,
-        TuiPagination,
-        TuiIcon,
         BadgeComponent,
         FdUiEntityCardComponent,
         FdUiInputComponent,
         FdUiCheckboxComponent,
         FdUiButtonComponent,
+        FdUiLoaderComponent,
+        FdUiPaginationComponent,
+        MatIconModule,
     ],
 })
 export class RecipeListComponent implements OnInit {

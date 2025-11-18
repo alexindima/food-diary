@@ -37,7 +37,7 @@
     </div>
 
     @if (productData.isLoading()) {
-        <tui-loader class="product-list__loader"></tui-loader>
+        <fd-ui-loader class="product-list__loader"></fd-ui-loader>
     } @else {
         @if (productData.items().length > 0) {
             @for (product of productData.items(); track product) {
@@ -90,22 +90,19 @@
             }
         } @else {
             <div class="product-list__no-results">
-                <tui-icon
-                    class="product-list__no-results-icon"
-                    icon="@tui.search-remove"
-                ></tui-icon>
+                <mat-icon class="product-list__no-results-icon">search_off</mat-icon>
                 {{ 'PRODUCT_LIST.NO_PRODUCTS_FOUND' | translate }}
             </div>
         }
     }
 
     @if (productData.totalPages > 1) {
-        <tui-pagination
-            [length]="productData.totalPages"
-            [(index)]="currentPageIndex"
-            (indexChange)="onPageChange($event)"
+        <fd-ui-pagination
             class="product-list__pagination"
-        >
-        </tui-pagination>
+            [length]="productData.totalItems"
+            [pageSize]="pageSize"
+            [pageIndex]="currentPageIndex"
+            (pageIndexChange)="onPageChange($event)"
+        ></fd-ui-pagination>
     }
 </div>

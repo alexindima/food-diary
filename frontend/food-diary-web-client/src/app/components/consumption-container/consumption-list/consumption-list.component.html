@@ -23,11 +23,11 @@
     </div>
 
     @if (consumptionData.isLoading()) {
-        <tui-loader class="consumption-list__loader"></tui-loader>
+        <fd-ui-loader class="consumption-list__loader"></fd-ui-loader>
     } @else {
         @if (consumptionData.items().length === 0) {
             <div class="consumption-list__no-results">
-                <span class="consumption-list__no-results-icon">🔍</span>
+                <mat-icon class="consumption-list__no-results-icon">search_off</mat-icon>
                 {{ 'CONSUMPTION_LIST.NO_CONSUMPTIONS_FOUND' | translate }}
             </div>
         }
@@ -82,11 +82,12 @@
     }
 
     @if (consumptionData.totalPages > 1) {
-        <tui-pagination
+        <fd-ui-pagination
             class="consumption-list__pagination"
-            [length]="consumptionData.totalPages"
-            [(index)]="currentPageIndex"
-            (indexChange)="onPageChange($event)">
-        </tui-pagination>
+            [length]="consumptionData.totalItems"
+            [pageSize]="10"
+            [pageIndex]="currentPageIndex"
+            (pageIndexChange)="onPageChange($event)"
+        ></fd-ui-pagination>
     }
 </div>
