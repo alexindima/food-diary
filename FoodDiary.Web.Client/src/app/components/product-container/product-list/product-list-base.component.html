@@ -1,13 +1,13 @@
 <div class="product-list" #container>
-    <h2 class="product-list__title">
-        {{ 'PRODUCT_LIST.TITLE' | translate }}
-        @if (searchForm.controls.search.value) {
-            ({{ 'PRODUCT_LIST.SEARCH_TITLE' | translate }} {{ searchForm.controls.search.value }})
-        }
-    </h2>
+    <div class="product-list__header">
+        <h2 class="product-list__title">
+            {{ 'PRODUCT_LIST.TITLE' | translate }}
+            @if (searchForm.controls.search.value) {
+                ({{ 'PRODUCT_LIST.SEARCH_TITLE' | translate }} {{ searchForm.controls.search.value }})
+            }
+        </h2>
 
-    <div class="product-list__actions">
-        <div class="product-list__search-group">
+        <div class="product-list__actions">
             <form class="product-list__search-form" [formGroup]="searchForm">
                 <fd-ui-input
                     class="product-list__search-input"
@@ -21,19 +21,28 @@
                     (suffixButtonClicked)="openBarcodeScanner()"
                 ></fd-ui-input>
             </form>
-            <fd-ui-checkbox
-                class="product-list__toggle"
-                [label]="'PRODUCT_LIST.ONLY_MY_PRODUCTS' | translate"
-                [formControl]="searchForm.controls.onlyMine"
-            ></fd-ui-checkbox>
+
+            <fd-ui-button
+                class="product-list__filter-button"
+                [variant]="searchForm.controls.onlyMine.value ? 'primary' : 'ghost'"
+                fill="text"
+                [icon]="searchForm.controls.onlyMine.value ? 'person' : 'groups'"
+                [ariaLabel]="
+                    searchForm.controls.onlyMine.value
+                        ? ('PRODUCT_LIST.SHOW_ALL_PRODUCTS' | translate)
+                        : ('PRODUCT_LIST.ONLY_MY_PRODUCTS' | translate)
+                "
+                (click)="toggleOnlyMine()"
+            ></fd-ui-button>
+
+            <fd-ui-button
+                class="product-list__add-button"
+                icon="add"
+                (click)="onAddProductClick()"
+            >
+                {{ 'PRODUCT_LIST.ADD_PRODUCT_BUTTON' | translate }}
+            </fd-ui-button>
         </div>
-        <fd-ui-button
-            class="product-list__add-button"
-            icon="add"
-            (click)="onAddProductClick()"
-        >
-            {{ 'PRODUCT_LIST.ADD_PRODUCT_BUTTON' | translate }}
-        </fd-ui-button>
     </div>
 
     @if (productData.isLoading()) {

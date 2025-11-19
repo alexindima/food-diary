@@ -15,7 +15,6 @@ import { RecipeDetailComponent, RecipeDetailActionResult } from '../recipe-detai
 import { BadgeComponent } from '../../shared/badge/badge.component';
 import { FdUiEntityCardComponent } from 'fd-ui-kit/entity-card/fd-ui-entity-card.component';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
-import { FdUiCheckboxComponent } from 'fd-ui-kit/checkbox/fd-ui-checkbox.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
@@ -31,7 +30,6 @@ import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
         BadgeComponent,
         FdUiEntityCardComponent,
         FdUiInputComponent,
-        FdUiCheckboxComponent,
         FdUiButtonComponent,
         FdUiLoaderComponent,
         FdUiPaginationComponent,
@@ -202,6 +200,11 @@ export class RecipeListComponent implements OnInit {
 
     public isPrivateVisibility(visibility: RecipeVisibility | string | null | undefined): boolean {
         return visibility?.toString().toUpperCase() === 'PRIVATE';
+    }
+
+    public toggleOnlyMine(): void {
+        const control = this.searchForm.controls.onlyMine;
+        control.setValue(!control.value);
     }
 }
 

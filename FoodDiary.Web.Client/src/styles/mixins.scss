@@ -5,5 +5,5 @@
     width: 100%;
     box-sizing: border-box;
     min-height: 100%;
-    background-color: #f5f6fa;
+    background-color: var(--fd-layout-page-background, #f5f6fa);
 }

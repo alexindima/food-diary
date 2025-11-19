@@ -13,7 +13,6 @@ import { BadgeComponent } from '../../shared/badge/badge.component';
 import { FdUiEntityCardComponent } from 'fd-ui-kit/entity-card/fd-ui-entity-card.component';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
-import { FdUiCheckboxComponent } from 'fd-ui-kit/checkbox/fd-ui-checkbox.component';
 import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.component';
 import { buildProductTypeTranslationKey } from '../../../utils/product-type.utils';
@@ -33,7 +32,6 @@ import { FdUiIconModule } from 'fd-ui-kit/material';
         FdUiEntityCardComponent,
         FdUiInputComponent,
         FdUiButtonComponent,
-        FdUiCheckboxComponent,
         FdUiLoaderComponent,
         FdUiPaginationComponent,
         FdUiIconModule,
@@ -102,6 +100,11 @@ export class ProductListBaseComponent implements OnInit {
                     this.searchForm.controls.search.setValue(barcode);
                 }
             });
+    }
+
+    public toggleOnlyMine(): void {
+        const control = this.searchForm.controls.onlyMine;
+        control.setValue(!control.value);
     }
 
     protected loadProducts(page: number, limit: number, search: string | null): Observable<void> {
