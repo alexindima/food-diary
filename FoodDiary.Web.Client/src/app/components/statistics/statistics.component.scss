@@ -11,21 +11,22 @@
     flex-direction: column;
     gap: 24px;
     margin: 0 auto;
-    padding: 32px 24px 64px;
+    padding: 0;
 
     &__header {
         display: flex;
         flex-direction: column;
-        gap: 12px;
+        align-items: flex-start;
+        gap: 8px;
+        margin-bottom: 8px;
     }
 
-    &__eyebrow {
-        margin: 0;
-        text-transform: uppercase;
-        letter-spacing: 0.12em;
-        font-size: 0.75rem;
-        color: $color-text-additional;
-        font-weight: 600;
+    &__title-block {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        width: 100%;
+        min-width: 220px;
     }
 
     &__title {
@@ -35,10 +36,19 @@
         color: $color-text-main;
     }
 
+    &__header-actions {
+        display: flex;
+        width: 100%;
+        justify-content: flex-start;
+        align-items: center;
+        min-width: 260px;
+    }
+
     &__range-controls {
         display: flex;
         flex-wrap: wrap;
         align-items: center;
+        justify-content: flex-start;
         gap: 12px;
     }
 
@@ -231,5 +241,9 @@
 
     @media #{$media-mobile} {
         padding: 24px 16px 48px;
+
+        &__header {
+            align-items: flex-start;
+        }
     }
 }

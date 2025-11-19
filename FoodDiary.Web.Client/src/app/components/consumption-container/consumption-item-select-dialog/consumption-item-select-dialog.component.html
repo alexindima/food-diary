@@ -3,10 +3,12 @@
         <h2 class="consumption-item-select__title">
             {{ 'CONSUMPTION_MANAGE.ITEM_SELECT_DIALOG.TITLE' | translate }}
         </h2>
-        <fd-ui-tabs class="consumption-item-select__tabs"
-            [tabs]="tabs"
-            [(selectedValue)]="activeTab"
-         />
+        <div class="consumption-item-select__actions">
+            <fd-ui-tabs class="consumption-item-select__tabs"
+                [tabs]="tabs"
+                [(selectedValue)]="activeTab"
+             />
+        </div>
     </div>
 
     <div class="consumption-item-select__content">

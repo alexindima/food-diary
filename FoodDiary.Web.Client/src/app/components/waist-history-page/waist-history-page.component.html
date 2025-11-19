@@ -1,25 +1,23 @@
 <div class="waist-history-page">
     <header class="waist-history-page__header">
         <h1 class="waist-history-page__title">{{ 'WAIST_HISTORY.TITLE' | translate }}</h1>
-    </header>
-
-    <fd-ui-card class="waist-history-page__card waist-history-page__card--chart" [title]="'WAIST_HISTORY.CHART_TITLE' | translate">
-        <div class="waist-history-page__chart-toolbar">
+        <div class="waist-history-page__header-actions">
             <fd-ui-tabs class="waist-history-page__tabs"
                 [tabs]="rangeTabs"
                 [selectedValue]="selectedRange()"
                 (selectedValueChange)="changeRange($event)"
              />
-        </div>
-        @if (selectedRange() === 'custom') {
-            <div class="waist-history-page__custom-range">
+            @if (selectedRange() === 'custom') {
                 <fd-ui-date-range-input class="waist-history-page__custom-range-input"
                     [startPlaceholder]="'WAIST_HISTORY.CUSTOM_RANGE_PLACEHOLDER' | translate"
                     [endPlaceholder]="'WAIST_HISTORY.CUSTOM_RANGE_PLACEHOLDER' | translate"
                     [formControl]="customRangeControl"
                  />
-            </div>
-        }
+            }
+        </div>
+    </header>
+
+    <fd-ui-card class="waist-history-page__card waist-history-page__card--chart" [title]="'WAIST_HISTORY.CHART_TITLE' | translate">
         @if (isSummaryLoading()) {
             <div class="waist-history-page__loader">
                 {{ 'WAIST_HISTORY.LOADING' | translate }}

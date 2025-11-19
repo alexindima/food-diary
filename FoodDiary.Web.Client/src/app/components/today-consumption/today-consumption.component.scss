@@ -12,7 +12,7 @@ $color-primary: #2563eb;
 
     &__header {
         display: flex;
-        align-items: flex-start;
+        align-items: center;
         justify-content: space-between;
         flex-wrap: wrap;
         gap: 16px;
@@ -113,6 +113,10 @@ $color-primary: #2563eb;
 
         &__activity-grid {
             grid-template-columns: 1fr;
+        }
+
+        &__header {
+            align-items: flex-start;
         }
     }
 

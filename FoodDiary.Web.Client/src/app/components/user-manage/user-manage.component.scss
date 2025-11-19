@@ -10,12 +10,22 @@
     padding: $gap-m;
     box-sizing: border-box;
 
+    &__header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: $gap-m;
+        margin-bottom: $gap-m;
+        flex-wrap: wrap;
+    }
+
     &__title {
         font-size: 1.8em;
         font-weight: bold;
         color: $color-text-main;
-        text-align: center;
-        margin: 0 0 $gap-l;
+        text-align: left;
+        margin: 0;
+        flex: 1 1 auto;
     }
 
     &__form {

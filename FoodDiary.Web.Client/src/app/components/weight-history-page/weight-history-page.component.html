@@ -1,25 +1,23 @@
 <div class="weight-history-page">
     <header class="weight-history-page__header">
         <h1 class="weight-history-page__title">{{ 'WEIGHT_HISTORY.TITLE' | translate }}</h1>
-    </header>
-
-    <fd-ui-card class="weight-history-page__card weight-history-page__card--chart" [title]="'WEIGHT_HISTORY.CHART_TITLE' | translate">
-        <div class="weight-history-page__chart-toolbar">
+        <div class="weight-history-page__header-actions">
             <fd-ui-tabs class="weight-history-page__tabs"
                 [tabs]="rangeTabs"
                 [selectedValue]="selectedRange()"
                 (selectedValueChange)="changeRange($event)"
              />
-        </div>
-        @if (selectedRange() === 'custom') {
-            <div class="weight-history-page__custom-range">
+            @if (selectedRange() === 'custom') {
                 <fd-ui-date-range-input class="weight-history-page__custom-range-input"
                     [startPlaceholder]="'WEIGHT_HISTORY.CUSTOM_RANGE_PLACEHOLDER' | translate"
                     [endPlaceholder]="'WEIGHT_HISTORY.CUSTOM_RANGE_PLACEHOLDER' | translate"
                     [formControl]="customRangeControl"
                  />
-            </div>
-        }
+            }
+        </div>
+    </header>
+
+    <fd-ui-card class="weight-history-page__card weight-history-page__card--chart" [title]="'WEIGHT_HISTORY.CHART_TITLE' | translate">
         @if (isSummaryLoading()) {
             <div class="weight-history-page__loader">
                 {{ 'WEIGHT_HISTORY.LOADING' | translate }}
