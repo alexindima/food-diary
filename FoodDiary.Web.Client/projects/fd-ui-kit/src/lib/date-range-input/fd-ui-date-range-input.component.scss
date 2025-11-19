@@ -29,20 +29,21 @@
         --fd-date-range-input-height: 48px;
     }
 
-    ::ng-deep .mat-mdc-text-field-wrapper {
+    .mat-mdc-text-field-wrapper {
         min-height: var(--fd-date-range-input-height) !important;
         height: var(--fd-date-range-input-height) !important;
         border-radius: var(--fd-radius-md);
         background-color: var(--fd-color-surface);
     }
 
-    ::ng-deep .mat-mdc-form-field-flex {
+    .mat-mdc-form-field-flex {
         min-height: var(--fd-date-range-input-height) !important;
         height: var(--fd-date-range-input-height) !important;
         align-items: center;
     }
 
-    ::ng-deep .mat-mdc-form-field-infix {
+    .mat-mdc-form-field-infix {
+        height: calc(var(--fd-date-range-input-height) - 14px) !important;
         min-height: calc(var(--fd-date-range-input-height) - 14px) !important;
         padding-top: 6px;
         padding-bottom: 6px;
@@ -61,12 +62,14 @@
         display: flex !important;
         align-items: center !important;
         width: 100%;
-        height: 100%;
-    }
-
-    ::ng-deep .mat-date-range-input-inner > input {
         min-height: calc(var(--fd-date-range-input-height) - 14px) !important;
         height: calc(var(--fd-date-range-input-height) - 14px) !important;
+    }
+
+    ::ng-deep input.mat-date-range-input-inner {
+        min-height: calc(var(--fd-date-range-input-height) - 14px) !important;
+        height: calc(var(--fd-date-range-input-height) - 14px) !important;
+        line-height: calc(var(--fd-date-range-input-height) - 14px) !important;
         padding-top: 0 !important;
         padding-bottom: 0 !important;
     }
@@ -94,7 +97,7 @@
     }
 
     &--no-subscript {
-        ::ng-deep .mat-mdc-form-field-subscript-wrapper {
+        .mat-mdc-form-field-subscript-wrapper {
             min-height: 0;
             height: 0;
             margin-top: 0;

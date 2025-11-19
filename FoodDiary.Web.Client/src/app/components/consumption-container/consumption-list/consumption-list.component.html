@@ -1,25 +1,28 @@
 <div class="consumption-list" #container>
-    <h2 class="consumption-list__title">{{ 'CONSUMPTION_LIST.TITLE' | translate }}</h2>
+    <div class="consumption-list__header">
+        <h2 class="consumption-list__title">{{ 'CONSUMPTION_LIST.TITLE' | translate }}</h2>
 
-    <div class="consumption-list__actions">
-        <div class="consumption-list__search-group">
-            <form [formGroup]="searchForm" class="consumption-list__date-range-form">
-                <fd-ui-date-range-input
-                    formControlName="dateRange"
-                    class="consumption-list__date-input"
-                    [label]="'CONSUMPTION_LIST.CHOOSE_DATES' | translate"
-                    [startPlaceholder]="'CONSUMPTION_LIST.DATE_PLACEHOLDER' | translate"
-                    [endPlaceholder]="'CONSUMPTION_LIST.DATE_PLACEHOLDER' | translate"
-                ></fd-ui-date-range-input>
-            </form>
+        <div class="consumption-list__actions">
+            <div class="consumption-list__search-group">
+                <form [formGroup]="searchForm" class="consumption-list__date-range-form">
+                    <fd-ui-date-range-input
+                        formControlName="dateRange"
+                        class="consumption-list__date-input"
+                        [label]="'CONSUMPTION_LIST.CHOOSE_DATES' | translate"
+                        [startPlaceholder]="'CONSUMPTION_LIST.DATE_PLACEHOLDER' | translate"
+                        [endPlaceholder]="'CONSUMPTION_LIST.DATE_PLACEHOLDER' | translate"
+                        [hideSubscript]="true"
+                    ></fd-ui-date-range-input>
+                </form>
+            </div>
+            <fd-ui-button
+                class="consumption-list__add-button"
+                icon="add"
+                (click)="goToConsumptionAdd()"
+            >
+                {{ 'CONSUMPTION_LIST.ADD_CONSUMPTION_BUTTON' | translate }}
+            </fd-ui-button>
         </div>
-        <fd-ui-button
-            class="consumption-list__add-button"
-            icon="add"
-            (click)="goToConsumptionAdd()"
-        >
-            {{ 'CONSUMPTION_LIST.ADD_CONSUMPTION_BUTTON' | translate }}
-        </fd-ui-button>
     </div>
 
     @if (consumptionData.isLoading()) {
