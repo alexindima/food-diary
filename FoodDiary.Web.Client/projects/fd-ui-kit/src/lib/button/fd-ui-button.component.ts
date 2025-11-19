@@ -22,6 +22,7 @@ export class FdUiButtonComponent {
     public readonly fill = input<FdUiButtonFill>('solid');
     public readonly size = input<FdUiButtonSize>('md');
     public readonly icon = input<string | undefined>(undefined);
+    public readonly iconSize = input<FdUiButtonIconSize>('md');
     public readonly disabled = input(false, { transform: booleanAttribute });
     public readonly fullWidth = input(false, { transform: booleanAttribute });
     public readonly ariaLabel = input<string | undefined>(undefined);
@@ -47,12 +48,14 @@ export class FdUiButtonComponent {
             `fd-ui-button--${this.variant()}`,
             `fd-ui-button--${this.normalizedFill()}`,
             `fd-ui-button--size-${this.size()}`,
+            `fd-ui-button--icon-${this.iconSize()}`,
             this.fullWidth() ? 'fd-ui-button--full-width' : '',
         ].filter((className): className is string => Boolean(className)),
     );
 }
 
 export type FdUiButtonType = 'button' | 'submit' | 'reset';
-export type FdUiButtonVariant = 'primary' | 'secondary' | 'danger' | 'ghost' | 'outline';
+export type FdUiButtonVariant = 'primary' | 'secondary' | 'danger' | 'info' | 'ghost' | 'outline';
 export type FdUiButtonFill = 'solid' | 'outline' | 'text' | 'ghost';
 export type FdUiButtonSize = 'sm' | 'md' | 'lg';
+export type FdUiButtonIconSize = 'sm' | 'md' | 'lg' | 'xl';

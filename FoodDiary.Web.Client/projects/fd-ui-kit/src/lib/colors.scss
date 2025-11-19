@@ -56,9 +56,9 @@ $fd-color-dialog-overlay:       rgba(15, 23, 42, 0.6);
 $fd-button-tokens: (
   primary: (
     background: (
-      default: $fd-color-primary-500,
-      hover: $fd-color-primary-600,
-      active: $fd-color-primary-700,
+      default: $fd-color-primary-700,
+      hover: $fd-color-primary-800,
+      active: $fd-color-primary-900,
       disabled: $fd-color-primary-300
     ),
     border: (
@@ -178,6 +178,42 @@ $fd-button-tokens: (
     text: (
       default: $fd-color-danger,
       disabled: #FFB3B3
+    )
+  ),
+  info: (
+    background: (
+      default: #E0ECFF,
+      hover: #D0E0FF,
+      active: #C0D4FF,
+      disabled: rgba(208, 224, 255, 0.6)
+    ),
+    border: (
+      default: transparent,
+      hover: transparent,
+      active: transparent,
+      disabled: transparent
+    ),
+    text: (
+      default: $fd-color-info,
+      disabled: rgba(48, 107, 192, 0.45)
+    )
+  ),
+  info-text: (
+    background: (
+      default: transparent,
+      hover: rgba(74, 144, 226, 0.12),
+      active: rgba(74, 144, 226, 0.2),
+      disabled: transparent
+    ),
+    border: (
+      default: transparent,
+      hover: transparent,
+      active: transparent,
+      disabled: transparent
+    ),
+    text: (
+      default: $fd-color-info,
+      disabled: rgba(48, 107, 192, 0.45)
     )
   )
 );

@@ -8,10 +8,10 @@
     --fd-button-text-padding-x: 0.375rem;
 
     appearance: none;
-    background-color: var(--fd-button-background-default, #4A6CF7);
-    border: 1px solid var(--fd-button-border-default, transparent);
+    background-color: var(--fd-button-background-default);
+    border: 1px solid var(--fd-button-border-default);
     border-radius: var(--fd-radius-md, 8px);
-    color: var(--fd-button-text-default, #FFFFFF);
+    color: var(--fd-button-text-default);
     cursor: pointer;
     display: inline-flex;
     align-items: center;
@@ -28,10 +28,10 @@
     &:hover:not(:disabled) {
         background-color: var(
             --fd-button-background-hover,
-            var(--fd-button-background-default, #4A6CF7)
+            var(--fd-button-background-default)
         );
-        border-color: var(--fd-button-border-hover, var(--fd-button-border-default, transparent));
-        color: var(--fd-button-text-hover, var(--fd-button-text-default, #FFFFFF));
+        border-color: var(--fd-button-border-hover, var(--fd-button-border-default));
+        color: var(--fd-button-text-hover, var(--fd-button-text-default));
         box-shadow: 0 8px 20px rgba(15, 23, 42, 0.15);
         transform: translateY(-1px);
     }
@@ -39,10 +39,10 @@
     &:active:not(:disabled) {
         background-color: var(
             --fd-button-background-active,
-            var(--fd-button-background-hover, #4A6CF7)
+            var(--fd-button-background-hover)
         );
-        border-color: var(--fd-button-border-active, var(--fd-button-border-hover, transparent));
-        color: var(--fd-button-text-active, var(--fd-button-text-hover, var(--fd-button-text-default, #FFFFFF)));
+        border-color: var(--fd-button-border-active, var(--fd-button-border-hover));
+        color: var(--fd-button-text-active, var(--fd-button-text-hover, var(--fd-button-text-default)));
         box-shadow: none;
         transform: translateY(0);
     }
@@ -50,10 +50,10 @@
     &:disabled {
         background-color: var(
             --fd-button-background-disabled,
-            var(--fd-button-background-default, #4A6CF7)
+            var(--fd-button-background-default)
         );
-        border-color: var(--fd-button-border-disabled, var(--fd-button-border-default, transparent));
-        color: var(--fd-button-text-disabled, var(--fd-button-text-default, #FFFFFF));
+        border-color: var(--fd-button-border-disabled, var(--fd-button-border-default));
+        color: var(--fd-button-text-disabled, var(--fd-button-text-default));
         box-shadow: none;
         cursor: not-allowed;
         opacity: 1;
@@ -66,10 +66,10 @@
     }
 
     &__icon {
-        font-size: 1.1rem;
         line-height: 1;
         display: inline-flex;
         align-items: center;
+        justify-content: center;
     }
 
     &--outline,
@@ -90,102 +90,130 @@
 
 /* Primary solid */
 .fd-ui-button--primary.fd-ui-button--solid {
-    --fd-button-background-default: var(--fd-button-primary-background-default, #4A6CF7);
-    --fd-button-background-hover: var(--fd-button-primary-background-hover, #3451D6);
-    --fd-button-background-active: var(--fd-button-primary-background-active, #2439B0);
-    --fd-button-background-disabled: var(--fd-button-primary-background-disabled, #9BB8FF);
-    --fd-button-border-default: var(--fd-button-primary-border-default, transparent);
-    --fd-button-border-hover: var(--fd-button-primary-border-hover, transparent);
-    --fd-button-border-active: var(--fd-button-primary-border-active, transparent);
-    --fd-button-border-disabled: var(--fd-button-primary-border-disabled, transparent);
-    --fd-button-text-default: var(--fd-button-primary-text-default, #FFFFFF);
-    --fd-button-text-disabled: var(--fd-button-primary-text-disabled, #FFFFFFA0);
+    --fd-button-background-default: var(--fd-button-primary-background-default);
+    --fd-button-background-hover: var(--fd-button-primary-background-hover);
+    --fd-button-background-active: var(--fd-button-primary-background-active);
+    --fd-button-background-disabled: var(--fd-button-primary-background-disabled);
+    --fd-button-border-default: var(--fd-button-primary-border-default);
+    --fd-button-border-hover: var(--fd-button-primary-border-hover);
+    --fd-button-border-active: var(--fd-button-primary-border-active);
+    --fd-button-border-disabled: var(--fd-button-primary-border-disabled);
+    --fd-button-text-default: var(--fd-button-primary-text-default);
+    --fd-button-text-disabled: var(--fd-button-primary-text-disabled);
 }
 
 /* Primary outline */
 .fd-ui-button--primary.fd-ui-button--outline,
 .fd-ui-button--outline {
-    --fd-button-background-default: var(--fd-button-outline-background-default, transparent);
-    --fd-button-background-hover: var(--fd-button-outline-background-hover, #EEF2FF);
-    --fd-button-background-active: var(--fd-button-outline-background-active, #E0EAFF);
-    --fd-button-background-disabled: var(--fd-button-outline-background-disabled, transparent);
-    --fd-button-border-default: var(--fd-button-outline-border-default, #4A6CF7);
-    --fd-button-border-hover: var(--fd-button-outline-border-hover, #3451D6);
-    --fd-button-border-active: var(--fd-button-outline-border-active, #3451D6);
-    --fd-button-border-disabled: var(--fd-button-outline-border-disabled, #D1D5DB);
-    --fd-button-text-default: var(--fd-button-outline-text-default, #4A6CF7);
-    --fd-button-text-disabled: var(--fd-button-outline-text-disabled, #9CA3AF);
+    --fd-button-background-default: var(--fd-button-outline-background-default);
+    --fd-button-background-hover: var(--fd-button-outline-background-hover);
+    --fd-button-background-active: var(--fd-button-outline-background-active);
+    --fd-button-background-disabled: var(--fd-button-outline-background-disabled);
+    --fd-button-border-default: var(--fd-button-outline-border-default);
+    --fd-button-border-hover: var(--fd-button-outline-border-hover);
+    --fd-button-border-active: var(--fd-button-outline-border-active);
+    --fd-button-border-disabled: var(--fd-button-outline-border-disabled);
+    --fd-button-text-default: var(--fd-button-outline-text-default);
+    --fd-button-text-disabled: var(--fd-button-outline-text-disabled);
 }
 
 /* Primary text / ghost */
 .fd-ui-button--primary.fd-ui-button--text,
 .fd-ui-button--ghost {
-    --fd-button-background-default: var(--fd-button-ghost-background-default, transparent);
-    --fd-button-background-hover: var(--fd-button-ghost-background-hover, #EEF2FF);
-    --fd-button-background-active: var(--fd-button-ghost-background-active, #E0EAFF);
-    --fd-button-background-disabled: var(--fd-button-ghost-background-disabled, transparent);
-    --fd-button-border-default: var(--fd-button-ghost-border-default, transparent);
-    --fd-button-border-hover: var(--fd-button-ghost-border-hover, transparent);
-    --fd-button-border-active: var(--fd-button-ghost-border-active, transparent);
-    --fd-button-border-disabled: var(--fd-button-ghost-border-disabled, transparent);
-    --fd-button-text-default: var(--fd-button-ghost-text-default, #4A6CF7);
-    --fd-button-text-disabled: var(--fd-button-ghost-text-disabled, #9CA3AF);
+    --fd-button-background-default: var(--fd-button-ghost-background-default);
+    --fd-button-background-hover: var(--fd-button-ghost-background-hover);
+    --fd-button-background-active: var(--fd-button-ghost-background-active);
+    --fd-button-background-disabled: var(--fd-button-ghost-background-disabled);
+    --fd-button-border-default: var(--fd-button-ghost-border-default);
+    --fd-button-border-hover: var(--fd-button-ghost-border-hover);
+    --fd-button-border-active: var(--fd-button-ghost-border-active);
+    --fd-button-border-disabled: var(--fd-button-ghost-border-disabled);
+    --fd-button-text-default: var(--fd-button-ghost-text-default);
+    --fd-button-text-disabled: var(--fd-button-ghost-text-disabled);
 }
 
 /* Secondary buttons (solid + outline) */
 .fd-ui-button--secondary:not(.fd-ui-button--text) {
-    --fd-button-background-default: var(--fd-button-secondary-background-default, #FFFFFF);
-    --fd-button-background-hover: var(--fd-button-secondary-background-hover, #F3F4F6);
-    --fd-button-background-active: var(--fd-button-secondary-background-active, #E5E7EB);
-    --fd-button-background-disabled: var(--fd-button-secondary-background-disabled, #E5E7EB);
-    --fd-button-border-default: var(--fd-button-secondary-border-default, #D1D5DB);
-    --fd-button-border-hover: var(--fd-button-secondary-border-hover, #9CA3AF);
-    --fd-button-border-active: var(--fd-button-secondary-border-active, #9CA3AF);
-    --fd-button-border-disabled: var(--fd-button-secondary-border-disabled, #E5E7EB);
-    --fd-button-text-default: var(--fd-button-secondary-text-default, #111827);
-    --fd-button-text-disabled: var(--fd-button-secondary-text-disabled, #6B7280);
+    --fd-button-background-default: var(--fd-button-secondary-background-default);
+    --fd-button-background-hover: var(--fd-button-secondary-background-hover);
+    --fd-button-background-active: var(--fd-button-secondary-background-active);
+    --fd-button-background-disabled: var(--fd-button-secondary-background-disabled);
+    --fd-button-border-default: var(--fd-button-secondary-border-default);
+    --fd-button-border-hover: var(--fd-button-secondary-border-hover);
+    --fd-button-border-active: var(--fd-button-secondary-border-active);
+    --fd-button-border-disabled: var(--fd-button-secondary-border-disabled);
+    --fd-button-text-default: var(--fd-button-secondary-text-default);
+    --fd-button-text-disabled: var(--fd-button-secondary-text-disabled);
 }
 
 /* Secondary text */
 .fd-ui-button--secondary.fd-ui-button--text {
-    --fd-button-background-default: var(--fd-button-secondary-text-background-default, transparent);
-    --fd-button-background-hover: var(--fd-button-secondary-text-background-hover, #F3F4F6);
-    --fd-button-background-active: var(--fd-button-secondary-text-background-active, #E5E7EB);
-    --fd-button-background-disabled: var(--fd-button-secondary-text-background-disabled, transparent);
-    --fd-button-border-default: var(--fd-button-secondary-text-border-default, transparent);
-    --fd-button-border-hover: var(--fd-button-secondary-text-border-hover, transparent);
-    --fd-button-border-active: var(--fd-button-secondary-text-border-active, transparent);
-    --fd-button-border-disabled: var(--fd-button-secondary-text-border-disabled, transparent);
-    --fd-button-text-default: var(--fd-button-secondary-text-text-default, #111827);
-    --fd-button-text-disabled: var(--fd-button-secondary-text-text-disabled, #6B7280);
+    --fd-button-background-default: var(--fd-button-secondary-text-background-default);
+    --fd-button-background-hover: var(--fd-button-secondary-text-background-hover);
+    --fd-button-background-active: var(--fd-button-secondary-text-background-active);
+    --fd-button-background-disabled: var(--fd-button-secondary-text-background-disabled);
+    --fd-button-border-default: var(--fd-button-secondary-text-border-default);
+    --fd-button-border-hover: var(--fd-button-secondary-text-border-hover);
+    --fd-button-border-active: var(--fd-button-secondary-text-border-active);
+    --fd-button-border-disabled: var(--fd-button-secondary-text-border-disabled);
+    --fd-button-text-default: var(--fd-button-secondary-text-text-default);
+    --fd-button-text-disabled: var(--fd-button-secondary-text-text-disabled);
+}
+
+/* Info solid */
+.fd-ui-button--info:not(.fd-ui-button--text) {
+    --fd-button-background-default: var(--fd-button-info-background-default);
+    --fd-button-background-hover: var(--fd-button-info-background-hover);
+    --fd-button-background-active: var(--fd-button-info-background-active);
+    --fd-button-background-disabled: var(--fd-button-info-background-disabled);
+    --fd-button-border-default: var(--fd-button-info-border-default);
+    --fd-button-border-hover: var(--fd-button-info-border-hover);
+    --fd-button-border-active: var(--fd-button-info-border-active);
+    --fd-button-border-disabled: var(--fd-button-info-border-disabled);
+    --fd-button-text-default: var(--fd-button-info-text-default);
+    --fd-button-text-disabled: var(--fd-button-info-text-disabled);
+}
+
+/* Info text */
+.fd-ui-button--info.fd-ui-button--text {
+    --fd-button-background-default: var(--fd-button-info-text-background-default);
+    --fd-button-background-hover: var(--fd-button-info-text-background-hover);
+    --fd-button-background-active: var(--fd-button-info-text-background-active);
+    --fd-button-background-disabled: var(--fd-button-info-text-background-disabled);
+    --fd-button-border-default: var(--fd-button-info-text-border-default);
+    --fd-button-border-hover: var(--fd-button-info-text-border-hover);
+    --fd-button-border-active: var(--fd-button-info-text-border-active);
+    --fd-button-border-disabled: var(--fd-button-info-text-border-disabled);
+    --fd-button-text-default: var(--fd-button-info-text-text-default);
+    --fd-button-text-disabled: var(--fd-button-info-text-text-disabled);
 }
 
 /* Danger solid */
 .fd-ui-button--danger:not(.fd-ui-button--text) {
-    --fd-button-background-default: var(--fd-button-danger-background-default, #FF3B3B);
-    --fd-button-background-hover: var(--fd-button-danger-background-hover, #E03535);
-    --fd-button-background-active: var(--fd-button-danger-background-active, #C42F2F);
-    --fd-button-background-disabled: var(--fd-button-danger-background-disabled, #FFB3B3);
-    --fd-button-border-default: var(--fd-button-danger-border-default, transparent);
-    --fd-button-border-hover: var(--fd-button-danger-border-hover, transparent);
-    --fd-button-border-active: var(--fd-button-danger-border-active, transparent);
-    --fd-button-border-disabled: var(--fd-button-danger-border-disabled, transparent);
-    --fd-button-text-default: var(--fd-button-danger-text-default, #FFFFFF);
-    --fd-button-text-disabled: var(--fd-button-danger-text-disabled, #FFFFFFA0);
+    --fd-button-background-default: var(--fd-button-danger-background-default);
+    --fd-button-background-hover: var(--fd-button-danger-background-hover);
+    --fd-button-background-active: var(--fd-button-danger-background-active);
+    --fd-button-background-disabled: var(--fd-button-danger-background-disabled);
+    --fd-button-border-default: var(--fd-button-danger-border-default);
+    --fd-button-border-hover: var(--fd-button-danger-border-hover);
+    --fd-button-border-active: var(--fd-button-danger-border-active);
+    --fd-button-border-disabled: var(--fd-button-danger-border-disabled);
+    --fd-button-text-default: var(--fd-button-danger-text-default);
+    --fd-button-text-disabled: var(--fd-button-danger-text-disabled);
 }
 
 /* Danger text */
 .fd-ui-button--danger.fd-ui-button--text {
-    --fd-button-background-default: var(--fd-button-danger-ghost-background-default, transparent);
-    --fd-button-background-hover: var(--fd-button-danger-ghost-background-hover, rgba(255, 59, 59, 0.08));
-    --fd-button-background-active: var(--fd-button-danger-ghost-background-active, rgba(255, 59, 59, 0.16));
-    --fd-button-background-disabled: var(--fd-button-danger-ghost-background-disabled, rgba(255, 59, 59, 0.04));
-    --fd-button-border-default: var(--fd-button-danger-ghost-border-default, transparent);
-    --fd-button-border-hover: var(--fd-button-danger-ghost-border-hover, transparent);
-    --fd-button-border-active: var(--fd-button-danger-ghost-border-active, transparent);
-    --fd-button-border-disabled: var(--fd-button-danger-ghost-border-disabled, transparent);
-    --fd-button-text-default: var(--fd-button-danger-ghost-text-default, #FF3B3B);
-    --fd-button-text-disabled: var(--fd-button-danger-ghost-text-disabled, #FFB3B3);
+    --fd-button-background-default: var(--fd-button-danger-ghost-background-default);
+    --fd-button-background-hover: var(--fd-button-danger-ghost-background-hover);
+    --fd-button-background-active: var(--fd-button-danger-ghost-background-active);
+    --fd-button-background-disabled: var(--fd-button-danger-ghost-background-disabled);
+    --fd-button-border-default: var(--fd-button-danger-ghost-border-default);
+    --fd-button-border-hover: var(--fd-button-danger-ghost-border-hover);
+    --fd-button-border-active: var(--fd-button-danger-ghost-border-active);
+    --fd-button-border-disabled: var(--fd-button-danger-ghost-border-disabled);
+    --fd-button-text-default: var(--fd-button-danger-ghost-text-default);
+    --fd-button-text-disabled: var(--fd-button-danger-ghost-text-disabled);
 }
 
 /* Size modifiers */
@@ -205,4 +233,20 @@
     --fd-button-height: 48px;
     --fd-button-padding-x: 1rem;
     --fd-button-text-padding-x: 0.5rem;
+}
+
+.fd-ui-button--icon-sm {
+    --fd-button-icon-size: 1rem;
+}
+
+.fd-ui-button--icon-md {
+    --fd-button-icon-size: 1.1rem;
+}
+
+.fd-ui-button--icon-lg {
+    --fd-button-icon-size: 1.3rem;
+}
+
+.fd-ui-button--icon-xl {
+    --fd-button-icon-size: 1.6rem;
 }

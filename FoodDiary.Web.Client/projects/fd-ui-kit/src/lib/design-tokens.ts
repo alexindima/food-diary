@@ -74,7 +74,7 @@ const LAYOUT_PAGE = {
 } as const;
 
 const LAYOUT_HEADER = {
-    height: '72px',
+    height: '56px',
     background: COLOR_PRIMARY['800'],
     textColor: '#FFFFFF',
     shadow: '0 12px 34px rgba(15, 23, 42, 0.12)',

@@ -22,7 +22,7 @@
         "REGISTER": "Регистрация",
         "PRODUCTS": "Продукты",
         "RECIPES": "Рецепты",
-        "CONSUMPTION": "Потребление",
+        "CONSUMPTION": "Прием пищи",
         "STATISTICS": "Статистика",
         "USER": "Пользователь",
         "PROFILE_EDIT": "Редактировать профиль",
@@ -150,7 +150,7 @@
         "TITLE": "Список рецептов",
         "SEARCH_TITLE": "Поиск:",
         "SEARCH_PLACEHOLDER": "Поиск по названию",
-        "ADD_RECIPE_BUTTON": "Добавить рецепт",
+        "ADD_RECIPE_BUTTON": "Добавить",
         "ONLY_MY_RECIPES": "Только мои рецепты",
         "SHOW_ALL_RECIPES": "Показать все рецепты",
         "NO_RECIPES_FOUND": "Рецепты не найдены",
@@ -237,7 +237,7 @@
         "CONFIRM_BUTTON": "Подтвердить",
         "CANCEL_BUTTON": "Отмена",
         "SERVING": "Порция",
-        "ADD_TO_CONSUMPTION": "Добавить к потреблению",
+        "ADD_TO_CONSUMPTION": "Добавить к приему пищи",
         "CREATE_SUCCESS": "Продукт успешно создан!",
         "EDIT_SUCCESS": "Продукт успешно отредактирован!",
         "GO_TO_HOME_BUTTON": "На главную",
@@ -302,9 +302,9 @@
         }
     },
     "CONSUMPTION_LIST": {
-        "TITLE": "Список потребления",
-        "ADD_CONSUMPTION_BUTTON": "Добавить потребление",
-        "NO_CONSUMPTIONS_FOUND": "Потребление не найдено",
+        "TITLE": "Список приемов пищи",
+        "ADD_CONSUMPTION_BUTTON": "Добавить",
+        "NO_CONSUMPTIONS_FOUND": "прием пищи не найден",
         "DATE": "Дата",
         "ITEM_COUNT": "Количество позиций",
         "MEAL_TYPE": "Тип приема пищи",
@@ -316,7 +316,7 @@
         "TOTAL_CARBS": "Всего углеводов"
     },
     "CONSUMPTION_DETAIL": {
-        "TITLE": "Детали потребления",
+        "TITLE": "Детали приема пищи",
         "ITEMS_LIST": "Позиции ({{count}} шт):",
         "MEAL_TYPE": "Тип приема пищи",
         "TOTAL_CALORIES": "Всего калорий:",
@@ -338,8 +338,8 @@
         "OTHER": "Другое"
     },
     "CONSUMPTION_MANAGE": {
-        "EDIT_TITLE": "Редактировать потребление",
-        "ADD_TITLE": "Добавить потребление",
+        "EDIT_TITLE": "Редактировать прием пищи",
+        "ADD_TITLE": "Добавить прием пищи",
         "CHOOSE_DATE": "Дата и время",
         "ITEMS_GROUP_TITLE": "Что было в приеме пищи",
         "ITEM_TYPE_LABEL": "Тип записи",
@@ -370,15 +370,15 @@
         "COMMENT_PLACEHOLDER": "Введите комментарий",
         "SAVE_BUTTON": "Сохранить",
         "ADD_BUTTON": "Добавить",
-        "EDIT_SUCCESS": "Потребление успешно обновлено!",
-        "CREATE_SUCCESS": "Потребление успешно создано!",
+        "EDIT_SUCCESS": "Прием пищи успешно обновлен!",
+        "CREATE_SUCCESS": "Прием пищи успешно создан!",
         "GO_TO_HOME_BUTTON": "На главную",
-        "GO_TO_CONSUMPTION_LIST_BUTTON": "К списку потребления",
+        "GO_TO_CONSUMPTION_LIST_BUTTON": "К списку приемф пищи",
         "CHOOSE_DATE_TIME": "Выберите дату и время",
         "NO_PRODUCTS_ADDED": "Продукты не добавлены",
         "ADD_PRODUCT": "Добавить продукт",
-        "MEAL_TYPE_LABEL": "Тип потребления",
-        "MEAL_TYPE_PLACEHOLDER": "Выберите тип потребления",
+        "MEAL_TYPE_LABEL": "Тип приема пищи",
+        "MEAL_TYPE_PLACEHOLDER": "Выберите тип приема пищи",
         "ITEM_SELECT_DIALOG": {
             "TITLE": "Что добавить к приёму пищи",
             "PRODUCTS_TAB": "Продукты",
@@ -491,7 +491,7 @@
             "BAR": "Суммарно"
         },
         "AVERAGE_CARD": {
-            "CONSUMPTION": "Потребление",
+            "CONSUMPTION": "Прием пищи",
             "STEPS": "Шаги",
             "BURNED": "Сожжено"
         },
@@ -514,10 +514,10 @@
         "LOADING": "Загружаем статистику..."
     },
     "TODAY_CONSUMPTION": {
-        "TITLE": "Потребление за сегодня",
+        "TITLE": "Приемы пищи за сегодня",
         "TOTAL_CONSUMPTION": "Общее потребление",
         "NUTRIENTS": "Нутриенты",
-        "ADD_CONSUMPTION": "Добавить потребление",
+        "ADD_CONSUMPTION": "Добавить прием пищи",
         "ADD_PRODUCT": "Добавить продукт",
         "MANAGE_CONSUMPTIONS": "Управлять потреблением",
         "MANAGE_PRODUCTS": "Управлять продуктами",

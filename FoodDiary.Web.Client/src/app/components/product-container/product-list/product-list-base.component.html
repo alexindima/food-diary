@@ -23,8 +23,9 @@
 
             <fd-ui-button
                 class="product-list__filter-button"
-                [variant]="searchForm.controls.onlyMine.value ? 'primary' : 'ghost'"
-                fill="text"
+                variant="info"
+                [fill]="'solid'"
+                [iconSize]="'xl'"
                 [icon]="searchForm.controls.onlyMine.value ? 'person' : 'groups'"
                 [ariaLabel]="
                     searchForm.controls.onlyMine.value
