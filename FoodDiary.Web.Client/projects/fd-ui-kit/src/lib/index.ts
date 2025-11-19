@@ -26,3 +26,4 @@ export * from './loader/fd-ui-loader.component';
 export * from './pagination/fd-ui-pagination.component';
 export * from './form-error/fd-ui-form-error.component';
 export * from './material';
+export * from './types/field-size.type';

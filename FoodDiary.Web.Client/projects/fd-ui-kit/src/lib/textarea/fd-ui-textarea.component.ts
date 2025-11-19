@@ -8,6 +8,7 @@ import {
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { FdUiFieldSize } from '../types/field-size.type';
 
 let uniqueId = 0;
 
@@ -36,6 +37,7 @@ export class FdUiTextareaComponent implements ControlValueAccessor {
     @Input() public rows = 4;
     @Input() public maxlength?: number;
     @Input() public readonly = false;
+    @Input() public size: FdUiFieldSize = 'md';
 
     protected disabled = false;
     protected internalValue = '';
@@ -70,5 +72,9 @@ export class FdUiTextareaComponent implements ControlValueAccessor {
 
     protected handleBlur(): void {
         this.onTouched();
+    }
+
+    protected get sizeClass(): string {
+        return `fd-ui-textarea--size-${this.size}`;
     }
 }

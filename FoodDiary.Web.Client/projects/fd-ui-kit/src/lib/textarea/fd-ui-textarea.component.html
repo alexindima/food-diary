@@ -1,4 +1,8 @@
-<mat-form-field class="fd-ui-textarea" appearance="outline">
+<mat-form-field
+    class="fd-ui-textarea"
+    appearance="outline"
+    [ngClass]="sizeClass"
+>
     <mat-label *ngIf="label">
         {{ label }}<span *ngIf="required" aria-hidden="true">*</span>
     </mat-label>

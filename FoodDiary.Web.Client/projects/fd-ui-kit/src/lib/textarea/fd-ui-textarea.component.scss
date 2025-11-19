@@ -4,20 +4,47 @@
 
 .fd-ui-textarea {
     width: 100%;
+    --fd-textarea-label-height: 40px;
+    --mdc-outlined-text-field-container-height: var(--fd-textarea-label-height);
+    --mat-form-field-container-height: var(--fd-textarea-label-height);
+
+    &--size-sm {
+        --fd-textarea-label-height: 32px;
+    }
+
+    &--size-md {
+        --fd-textarea-label-height: 40px;
+    }
+
+    &--size-lg {
+        --fd-textarea-label-height: 48px;
+    }
 
     .mat-mdc-text-field-wrapper {
+        min-height: var(--fd-textarea-label-height);
         border-radius: var(--fd-radius-md, 8px);
         background-color: var(--fd-color-surface, #fff);
+    }
+
+    .mat-mdc-form-field-flex {
+        min-height: var(--fd-textarea-label-height);
+        align-items: flex-start;
+    }
+
+    .mat-mdc-form-field-infix {
+        padding-top: 8px;
+        padding-bottom: 8px;
     }
 
     .mat-mdc-form-field-subscript-wrapper {
         font-size: 0.75rem;
         line-height: 1.2;
+        margin-top: 4px;
     }
 }
 
 .mat-mdc-input-element {
     font: inherit;
     line-height: 1.5;
+    resize: vertical;
 }
-

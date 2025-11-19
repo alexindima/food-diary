@@ -25,4 +25,7 @@ $fd-theme: mat.define-theme((
     @include mat.all-component-themes($fd-theme);
     @include mat.typography-hierarchy($fd-theme);
     @include mat.system-level-colors($fd-theme);
+
+    --mdc-outlined-text-field-container-height: 40px;
+    --mat-form-field-container-height: 40px;
 }

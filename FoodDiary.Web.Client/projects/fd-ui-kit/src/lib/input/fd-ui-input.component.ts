@@ -14,6 +14,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldAppearance, MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { FdUiFieldSize } from '../types/field-size.type';
 
 let uniqueId = 0;
 
@@ -52,6 +53,7 @@ export class FdUiInputComponent implements ControlValueAccessor {
     @Input() public suffixButtonIcon?: string;
     @Input() public suffixButtonAriaLabel?: string;
     @Input() public step?: string | number;
+    @Input() public size: FdUiFieldSize = 'md';
 
     @Output() public cleared = new EventEmitter<void>();
     @Output() public suffixButtonClicked = new EventEmitter<void>();
@@ -64,6 +66,10 @@ export class FdUiInputComponent implements ControlValueAccessor {
     private onTouched: () => void = () => undefined;
 
     public constructor(private readonly cdr: ChangeDetectorRef) {}
+
+    protected get sizeClass(): string {
+        return `fd-ui-input--size-${this.size}`;
+    }
 
     public writeValue(value: string | null): void {
         this.internalValue = value ?? '';

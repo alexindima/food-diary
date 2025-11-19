@@ -4,6 +4,9 @@
 
 .fd-ui-date-input {
     width: 100%;
+    --fd-date-input-height: 40px;
+    --mdc-outlined-text-field-container-height: var(--fd-date-input-height);
+    --mat-form-field-container-height: var(--fd-date-input-height);
 
     &:not(.fd-ui-date-input--disabled) {
         --mdc-outlined-text-field-focus-outline-color: var(--fd-color-primary);
@@ -13,9 +16,27 @@
         opacity: 0.7;
     }
 
+    &--size-sm {
+        --fd-date-input-height: 32px;
+    }
+
+    &--size-md {
+        --fd-date-input-height: 40px;
+    }
+
+    &--size-lg {
+        --fd-date-input-height: 48px;
+    }
+
     .mat-mdc-form-field-subscript-wrapper {
         font-size: 0.75rem;
         line-height: 1.2;
+        margin-top: 4px;
+    }
+    .mat-mdc-text-field-wrapper {
+        min-height: var(--fd-date-input-height);
+        border-radius: var(--fd-radius-md);
+        background-color: var(--fd-color-surface);
     }
 
     .mat-mdc-input-element {
@@ -25,13 +46,4 @@
     .mat-date-range-input-inner {
         font: inherit;
     }
-
-    .mat-mdc-form-field-flex {
-        align-items: center;
-    }
-}
-
-.mat-mdc-text-field-wrapper {
-    border-radius: var(--fd-radius-md);
-    background-color: var(--fd-color-surface);
 }

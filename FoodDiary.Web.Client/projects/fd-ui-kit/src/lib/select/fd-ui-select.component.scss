@@ -4,10 +4,47 @@
 
 .fd-ui-select {
     width: 100%;
+    --fd-select-height: 40px;
+    --mdc-outlined-text-field-container-height: var(--fd-select-height);
+    --mat-form-field-container-height: var(--fd-select-height);
+
+    .mat-mdc-text-field-wrapper {
+        min-height: var(--fd-select-height);
+        border-radius: var(--fd-radius-md);
+        background-color: var(--fd-color-surface);
+    }
+
+    .mat-mdc-form-field-flex {
+        min-height: var(--fd-select-height);
+        align-items: center;
+    }
+
+    .mat-mdc-form-field-infix {
+        min-height: calc(var(--fd-select-height) - 14px);
+        padding-top: 6px;
+        padding-bottom: 6px;
+    }
+
+    .mat-mdc-select-trigger {
+        min-height: calc(var(--fd-select-height) - 14px);
+    }
 
     .mat-mdc-form-field-subscript-wrapper {
         font-size: 0.75rem;
         line-height: 1.2;
+        margin-top: 4px;
+    }
+
+    &--size-sm {
+        --fd-select-height: 32px;
+    }
+
+    &--size-md {
+        --fd-select-height: 40px;
+    }
+
+    &--size-lg {
+        --fd-select-height: 48px;
     }
 }
 
@@ -19,4 +56,3 @@
     display: block;
     color: var(--fd-color-text-muted, rgba(0, 0, 0, 0.6));
 }
-

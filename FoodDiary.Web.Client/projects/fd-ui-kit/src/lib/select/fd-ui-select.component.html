@@ -1,4 +1,9 @@
-<mat-form-field class="fd-ui-select" appearance="outline" [floatLabel]="floatLabel">
+<mat-form-field
+    class="fd-ui-select"
+    appearance="outline"
+    [floatLabel]="floatLabel"
+    [ngClass]="sizeClass"
+>
     <mat-label *ngIf="label">
         {{ label }}<span *ngIf="required" aria-hidden="true">*</span>
     </mat-label>

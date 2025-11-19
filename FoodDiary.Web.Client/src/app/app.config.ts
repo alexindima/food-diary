@@ -33,7 +33,7 @@ export const appConfig: ApplicationConfig = {
         },
         provideAppInitializer(() => {
             const localizationService = inject(LocalizationService);
-            localizationService.initializeLocalization();
+            return localizationService.initializeLocalization();
         }),
         provideAppInitializer(() => {
             const authService = inject(AuthService);

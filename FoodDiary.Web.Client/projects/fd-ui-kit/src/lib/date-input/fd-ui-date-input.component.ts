@@ -20,6 +20,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { FdUiFieldSize } from '../types/field-size.type';
 
 export interface FdUiDateRangeValue {
     start: Date | null;
@@ -60,6 +61,7 @@ export class FdUiDateInputComponent implements ControlValueAccessor {
     @Input() public min?: Date;
     @Input() public max?: Date;
     @Input() public floatLabel: 'auto' | 'always' = 'auto';
+    @Input() public size: FdUiFieldSize = 'md';
 
     protected readonly singleControl = new FormControl<Date | null>(null);
     protected readonly rangeGroup = new FormGroup({
@@ -138,6 +140,10 @@ export class FdUiDateInputComponent implements ControlValueAccessor {
 
     protected get resolvedPlaceholder(): string {
         return this.placeholder ?? '';
+    }
+
+    protected get sizeClass(): string {
+        return `fd-ui-date-input--size-${this.size}`;
     }
 
     private toDateValue(value: FdUiDateInputValue): Date | null {

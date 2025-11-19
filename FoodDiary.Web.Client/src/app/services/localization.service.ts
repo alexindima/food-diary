@@ -1,19 +1,20 @@
 import { inject, Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { firstValueFrom } from 'rxjs';
 import { MeasurementUnit } from '../types/product.data';
 
 @Injectable()
 export class LocalizationService {
     private readonly translateService = inject(TranslateService);
 
-    public initializeLocalization(): void {
+    public initializeLocalization(): Promise<void> {
         this.translateService.addLangs(['en', 'ru']);
         this.translateService.setDefaultLang('en');
 
         const browserLang = this.translateService.getBrowserLang();
         const normalizedLang = this.normalizeLanguage(browserLang);
 
-        this.translateService.use(normalizedLang);
+        return firstValueFrom(this.translateService.use(normalizedLang)).then(() => void 0);
     }
 
     public getServingUnitName(unit: MeasurementUnit): string {

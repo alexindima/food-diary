@@ -4,6 +4,7 @@
         class="fd-ui-date-input"
         [class.fd-ui-date-input--disabled]="isDisabled"
         [floatLabel]="floatLabel"
+        [ngClass]="sizeClass"
     >
         <mat-label *ngIf="label">{{ label }}</mat-label>
 
@@ -37,6 +38,7 @@
         class="fd-ui-date-input"
         [class.fd-ui-date-input--disabled]="isDisabled"
         [floatLabel]="floatLabel"
+        [ngClass]="sizeClass"
     >
         <mat-label *ngIf="label">{{ label }}</mat-label>
         <input

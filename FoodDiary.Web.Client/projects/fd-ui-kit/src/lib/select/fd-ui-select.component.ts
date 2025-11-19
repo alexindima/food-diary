@@ -9,6 +9,7 @@ import {
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectChange, MatSelectModule } from '@angular/material/select';
+import { FdUiFieldSize } from '../types/field-size.type';
 
 export interface FdUiSelectOption<T = unknown> {
     label: string;
@@ -39,6 +40,7 @@ export class FdUiSelectComponent<T = unknown> implements ControlValueAccessor {
     @Input() public required = false;
     @Input() public options: FdUiSelectOption<T>[] = [];
     @Input() public floatLabel: 'auto' | 'always' = 'auto';
+    @Input() public size: FdUiFieldSize = 'md';
 
     protected disabled = false;
     protected internalValue: T | null = null;
@@ -48,6 +50,10 @@ export class FdUiSelectComponent<T = unknown> implements ControlValueAccessor {
     private onTouched: () => void = () => undefined;
 
     public constructor(private readonly cdr: ChangeDetectorRef) {}
+
+    protected get sizeClass(): string {
+        return `fd-ui-select--size-${this.size}`;
+    }
 
     public writeValue(value: T | null): void {
         this.internalValue = value;
