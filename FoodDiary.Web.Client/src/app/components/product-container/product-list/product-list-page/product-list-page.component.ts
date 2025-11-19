@@ -11,7 +11,6 @@ import { BadgeComponent } from '../../../shared/badge/badge.component';
 import { FdUiEntityCardComponent } from 'fd-ui-kit/entity-card/fd-ui-entity-card.component';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
-import { FdUiCheckboxComponent } from 'fd-ui-kit/checkbox/fd-ui-checkbox.component';
 import { finalize } from 'rxjs';
 import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.component';
@@ -30,7 +29,6 @@ import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
         FdUiEntityCardComponent,
         FdUiInputComponent,
         FdUiButtonComponent,
-        FdUiCheckboxComponent,
         FdUiLoaderComponent,
         FdUiPaginationComponent,
         FdUiIconModule,
