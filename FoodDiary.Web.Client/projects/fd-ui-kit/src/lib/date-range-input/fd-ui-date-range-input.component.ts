@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
 import {
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    forwardRef,
-    Input,
-    ViewEncapsulation,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  forwardRef,
+  ViewEncapsulation,
+  input
 } from '@angular/core';
 import {
     ControlValueAccessor,
@@ -51,14 +51,16 @@ export interface FdUiDateRangeValue {
     ],
 })
 export class FdUiDateRangeInputComponent implements ControlValueAccessor {
-    @Input() public label?: string;
-    @Input() public startPlaceholder = '';
-    @Input() public endPlaceholder = '';
-    @Input() public min?: Date;
-    @Input() public max?: Date;
-    @Input() public floatLabel: 'auto' | 'always' = 'auto';
-    @Input() public size: FdUiFieldSize = 'md';
-    @Input() public hideSubscript = false;
+    private readonly cdr = inject(ChangeDetectorRef);
+
+    public readonly label = input<string>();
+    public readonly startPlaceholder = input('');
+    public readonly endPlaceholder = input('');
+    public readonly min = input<Date>();
+    public readonly max = input<Date>();
+    public readonly floatLabel = input<'auto' | 'always'>('auto');
+    public readonly size = input<FdUiFieldSize>('md');
+    public readonly hideSubscript = input(false);
 
     protected readonly rangeGroup = new FormGroup({
         start: new FormControl<Date | null>(null),
@@ -70,7 +72,7 @@ export class FdUiDateRangeInputComponent implements ControlValueAccessor {
     private onChange: (value: FdUiDateRangeValue) => void = () => undefined;
     private onTouched: () => void = () => undefined;
 
-    public constructor(private readonly cdr: ChangeDetectorRef) {
+    public constructor() {
         this.rangeGroup.valueChanges
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(value => {
@@ -110,7 +112,7 @@ export class FdUiDateRangeInputComponent implements ControlValueAccessor {
     }
 
     protected get sizeClass(): string {
-        return `fd-ui-date-range-input--size-${this.size}`;
+        return `fd-ui-date-range-input--size-${this.size()}`;
     }
 
     private toRangeValue(value: FdUiDateRangeValue | null): FdUiDateRangeValue {

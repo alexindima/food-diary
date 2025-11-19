@@ -1,5 +1,5 @@
 import { CommonModule, DatePipe, DecimalPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Inject, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FD_UI_DIALOG_DATA, FdUiDialogRef } from 'fd-ui-kit/material';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { Consumption } from '../../../types/consumption.data';
@@ -59,7 +59,9 @@ export class ConsumptionDetailComponent {
     public readonly calories: number;
     public readonly nutrientChartData: NutrientChartData;
 
-    public constructor(@Inject(FD_UI_DIALOG_DATA) data: Consumption) {
+    public constructor() {
+        const data = inject<Consumption>(FD_UI_DIALOG_DATA);
+
         this.consumption = data;
         this.calories = this.consumption.totalCalories ?? 0;
         this.nutrientChartData = {

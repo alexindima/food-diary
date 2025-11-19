@@ -1,11 +1,10 @@
 import {
-    ChangeDetectionStrategy,
-    Component,
-    HostListener,
-    inject,
-    Input,
-    input,
-    OnInit
+  ChangeDetectionStrategy,
+  Component,
+  HostListener,
+  inject,
+  input,
+  OnInit
 } from '@angular/core';
 import { BaseChartDirective } from 'ng2-charts';
 import { DecimalPipe, NgStyle, NgTemplateOutlet } from '@angular/common';
@@ -41,7 +40,7 @@ export class NutrientsSummaryComponent implements OnInit {
     public fiberUnitKey = input<string>('PRODUCT_AMOUNT_UNITS_SHORT.G');
     public bare = input<boolean>(false);
 
-    @Input() public config: NutrientsSummaryConfig = {};
+    public readonly config = input<NutrientsSummaryConfig>({});
     public mergedConfig!: NutrientsSummaryConfigInternal;
 
     public isColumnLayout = false;
@@ -54,7 +53,7 @@ export class NutrientsSummaryComponent implements OnInit {
     }
 
     public ngOnInit(): void {
-        this.mergedConfig = this.mergeConfig(this.config);
+        this.mergedConfig = this.mergeConfig(this.config());
         this.updateLayout(window.innerWidth);
     }
 

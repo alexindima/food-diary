@@ -3,13 +3,12 @@
     <form class="user-manage__form" [formGroup]="userForm" (ngSubmit)="onSubmit()">
         <fd-ui-card class="user-manage__card" [title]="'USER_MANAGE.ACCOUNT_SECTION' | translate">
             <div class="user-manage__card-content user-manage__card-content--account">
-                <fd-ui-input
-                    formControlName="email"
+                <fd-ui-input formControlName="email"
                     type="email"
                     [label]="'USER_MANAGE.EMAIL' | translate"
                     [placeholder]="'USER_MANAGE.EMAIL_PLACEHOLDER' | translate"
                     floatLabel="always"
-                ></fd-ui-input>
+                 />
                 <fd-ui-button
                     type="button"
                     fill="outline"
@@ -24,103 +23,90 @@
 
         <fd-ui-card class="user-manage__card" [title]="'USER_MANAGE.PERSONAL_SECTION' | translate">
             <div class="user-manage__card-content user-manage__card-content--personal">
-                <fd-ui-input
-                    formControlName="username"
+                <fd-ui-input formControlName="username"
                     [label]="'USER_MANAGE.USERNAME' | translate"
                     [placeholder]="'USER_MANAGE.USERNAME_PLACEHOLDER' | translate"
                     floatLabel="always"
-                ></fd-ui-input>
-                <fd-ui-input
-                    formControlName="firstName"
+                 />
+                <fd-ui-input formControlName="firstName"
                     [label]="'USER_MANAGE.FIRST_NAME' | translate"
                     [placeholder]="'USER_MANAGE.FIRST_NAME_PLACEHOLDER' | translate"
                     floatLabel="always"
-                ></fd-ui-input>
-                <fd-ui-input
-                    formControlName="lastName"
+                 />
+                <fd-ui-input formControlName="lastName"
                     [label]="'USER_MANAGE.LAST_NAME' | translate"
                     [placeholder]="'USER_MANAGE.LAST_NAME_PLACEHOLDER' | translate"
                     floatLabel="always"
-                ></fd-ui-input>
-                <fd-ui-date-input
-                    formControlName="birthDate"
+                 />
+                <fd-ui-date-input formControlName="birthDate"
                     [label]="'USER_MANAGE.BIRTH_DATE' | translate"
                     [placeholder]="'USER_MANAGE.BIRTH_DATE_PLACEHOLDER' | translate"
                     floatLabel="always"
-                ></fd-ui-date-input>
-                <fd-ui-select
-                    formControlName="gender"
+                 />
+                <fd-ui-select formControlName="gender"
                     [label]="'USER_MANAGE.GENDER' | translate"
                     [placeholder]="'USER_MANAGE.SELECT_GENDER' | translate"
                     [options]="genderOptions"
                     floatLabel="always"
-                ></fd-ui-select>
+                 />
             </div>
         </fd-ui-card>
 
         <fd-ui-card class="user-manage__card" [title]="'USER_MANAGE.BODY_SECTION' | translate">
             <div class="user-manage__card-content user-manage__card-content--body">
-                <fd-ui-input
-                    formControlName="height"
+                <fd-ui-input formControlName="height"
                     type="number"
                     [label]="'USER_MANAGE.HEIGHT' | translate"
                     [placeholder]="'USER_MANAGE.HEIGHT_PLACEHOLDER' | translate"
                     floatLabel="always"
-                ></fd-ui-input>
-                <fd-ui-select
-                    formControlName="activityLevel"
+                 />
+                <fd-ui-select formControlName="activityLevel"
                     [label]="'USER_MANAGE.ACTIVITY_LEVEL' | translate"
                     [placeholder]="'USER_MANAGE.SELECT_ACTIVITY_LEVEL' | translate"
                     [options]="activityLevelOptions"
                     floatLabel="always"
-                ></fd-ui-select>
+                 />
             </div>
         </fd-ui-card>
 
         <fd-ui-card class="user-manage__card" [title]="'USER_MANAGE.NUTRITION_SECTION' | translate">
             <div class="user-manage__card-content user-manage__card-content--nutrition">
-                <fd-ui-input
-                    formControlName="dailyCalorieTarget"
+                <fd-ui-input formControlName="dailyCalorieTarget"
                     type="number"
                     [label]="'USER_MANAGE.DAILY_CALORIES' | translate"
                     [placeholder]="'USER_MANAGE.DAILY_CALORIES_PLACEHOLDER' | translate"
                     floatLabel="always"
-                ></fd-ui-input>
-                <fd-ui-input
-                    formControlName="proteinTarget"
+                 />
+                <fd-ui-input formControlName="proteinTarget"
                     type="number"
                     [label]="'USER_MANAGE.PROTEIN_TARGET' | translate"
                     [placeholder]="'USER_MANAGE.PROTEIN_TARGET_PLACEHOLDER' | translate"
                     floatLabel="always"
-                ></fd-ui-input>
-                <fd-ui-input
-                    formControlName="fatTarget"
+                 />
+                <fd-ui-input formControlName="fatTarget"
                     type="number"
                     [label]="'USER_MANAGE.FAT_TARGET' | translate"
                     [placeholder]="'USER_MANAGE.FAT_TARGET_PLACEHOLDER' | translate"
                     floatLabel="always"
-                ></fd-ui-input>
-                <fd-ui-input
-                    formControlName="carbTarget"
+                 />
+                <fd-ui-input formControlName="carbTarget"
                     type="number"
                     [label]="'USER_MANAGE.CARB_TARGET' | translate"
                     [placeholder]="'USER_MANAGE.CARB_TARGET_PLACEHOLDER' | translate"
                     floatLabel="always"
-                ></fd-ui-input>
-                <fd-ui-input
-                    formControlName="stepGoal"
+                 />
+                <fd-ui-input formControlName="stepGoal"
                     type="number"
                     [label]="'USER_MANAGE.STEP_GOAL' | translate"
                     [placeholder]="'USER_MANAGE.STEP_GOAL_PLACEHOLDER' | translate"
                     floatLabel="always"
-                ></fd-ui-input>
-                <fd-ui-input
-                    formControlName="waterGoal"
+                 />
+                <fd-ui-input formControlName="waterGoal"
                     type="number"
                     [label]="'USER_MANAGE.WATER_GOAL' | translate"
                     [placeholder]="'USER_MANAGE.WATER_GOAL_PLACEHOLDER' | translate"
                     floatLabel="always"
-                ></fd-ui-input>
+                 />
             </div>
         </fd-ui-card>
         <div class="user-manage__actions">
@@ -139,6 +125,6 @@
                 {{ 'USER_MANAGE.DELETE_ACCOUNT_BUTTON' | translate }}
             </fd-ui-button>
         </div>
-        <fd-ui-form-error class="user-manage__error" [error]="globalError()"></fd-ui-form-error>
+        <fd-ui-form-error class="user-manage__error" [error]="globalError()" />
     </form>
 </div>

@@ -1,13 +1,13 @@
 import { CommonModule } from '@angular/common';
 import {
-    ChangeDetectionStrategy,
-    Component,
-    DestroyRef,
-    OnInit,
-    ViewChild,
-    computed,
-    inject,
-    signal,
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  OnInit,
+  computed,
+  inject,
+  signal,
+  viewChild
 } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { StatisticsService } from '../../services/statistics.service';
@@ -71,7 +71,7 @@ export class TodayConsumptionComponent implements OnInit {
     private readonly translateService = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
 
-    @ViewChild('headerDatePicker') private headerDatePicker?: FdUiDatepicker<Date>;
+    private readonly headerDatePicker = viewChild<FdUiDatepicker<Date>>('headerDatePicker');
 
     public selectedDate = signal<Date>(this.normalizeDate(new Date()));
     public todayCalories = signal<number>(0);
@@ -261,7 +261,7 @@ export class TodayConsumptionComponent implements OnInit {
     }
 
     public openDatePicker(): void {
-        this.headerDatePicker?.open();
+        this.headerDatePicker()?.open();
     }
 
     public handleDateChange(event: FdUiDatepickerInputEvent<Date>): void {

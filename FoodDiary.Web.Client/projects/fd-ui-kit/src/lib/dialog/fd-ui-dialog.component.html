@@ -1,25 +1,34 @@
 <div class="fd-ui-dialog" [ngClass]="['fd-ui-dialog--size-' + size()]">
-    <header class="fd-ui-dialog__header" *ngIf="showHeader()">
-        <div class="fd-ui-dialog__heading">
-            <h2 class="fd-ui-dialog__title" *ngIf="title() as titleValue">{{ titleValue }}</h2>
-            <p class="fd-ui-dialog__subtitle" *ngIf="subtitle() as subtitleValue">{{ subtitleValue }}</p>
-        </div>
+  @if (showHeader()) {
+    <header class="fd-ui-dialog__header">
+      <div class="fd-ui-dialog__heading">
+        @if (title(); as titleValue) {
+          <h2 class="fd-ui-dialog__title">{{ titleValue }}</h2>
+        }
+        @if (subtitle(); as subtitleValue) {
+          <p class="fd-ui-dialog__subtitle">{{ subtitleValue }}</p>
+        }
+      </div>
+      @if (dismissible()) {
         <button
-            *ngIf="dismissible()"
-            type="button"
-            class="fd-ui-dialog__close-button"
-            (click)="close()"
-            aria-label="Close dialog"
-        >
-            <mat-icon>close</mat-icon>
+          type="button"
+          class="fd-ui-dialog__close-button"
+          (click)="close()"
+          aria-label="Close dialog"
+          >
+          <mat-icon>close</mat-icon>
         </button>
+      }
     </header>
+  }
 
-    <section class="fd-ui-dialog__body">
-        <ng-content></ng-content>
-    </section>
+  <section class="fd-ui-dialog__body">
+    <ng-content />
+  </section>
 
-    <footer class="fd-ui-dialog__footer" *ngIf="hasFooter">
-        <ng-content select="[fdUiDialogFooter]"></ng-content>
+  @if (hasFooter) {
+    <footer class="fd-ui-dialog__footer">
+      <ng-content select="[fdUiDialogFooter]" />
     </footer>
+  }
 </div>

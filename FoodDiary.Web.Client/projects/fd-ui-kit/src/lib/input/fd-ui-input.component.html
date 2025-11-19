@@ -1,59 +1,71 @@
 <mat-form-field
-    [appearance]="appearance"
-    [floatLabel]="floatLabel"
-    class="fd-ui-input"
-    [ngClass]="[sizeClass, hideSubscript ? 'fd-ui-input--no-subscript' : '']"
-    [class.fd-ui-input--focused]="isFocused"
-    [class.fd-ui-input--has-error]="!!error"
->
-    <mat-label *ngIf="label">{{ label }}</mat-label>
+  [appearance]="appearance()"
+  [floatLabel]="floatLabel()"
+  class="fd-ui-input"
+  [ngClass]="[sizeClass, hideSubscript() ? 'fd-ui-input--no-subscript' : '']"
+  [class.fd-ui-input--focused]="isFocused"
+  [class.fd-ui-input--has-error]="!!error()"
+  >
+  @if (label()) {
+    <mat-label>{{ label() }}</mat-label>
+  }
 
-    <mat-icon *ngIf="prefixIcon" matPrefix>{{ prefixIcon }}</mat-icon>
+  @if (prefixIcon()) {
+    <mat-icon matPrefix>{{ prefixIcon() }}</mat-icon>
+  }
 
-    <input
-        matInput
-        [id]="id"
-        [type]="type"
-        [value]="internalValue"
-        [required]="required"
-        [readonly]="readonly"
-        [disabled]="disabled"
-        [attr.placeholder]="placeholder ?? null"
-        [attr.maxLength]="maxLength ?? null"
-        [attr.step]="step ?? null"
-        [attr.autocomplete]="autocomplete"
-        (focus)="handleFocus()"
-        (blur)="handleBlur()"
-        (input)="handleInput($any($event.target).value)"
+  <input
+    matInput
+    [id]="id()"
+    [type]="type()"
+    [value]="internalValue"
+    [required]="required()"
+    [readonly]="readonly()"
+    [disabled]="disabled"
+    [attr.placeholder]="placeholder() ?? null"
+    [attr.maxLength]="maxLength() ?? null"
+    [attr.step]="step() ?? null"
+    [attr.autocomplete]="autocomplete()"
+    (focus)="handleFocus()"
+    (blur)="handleBlur()"
+    (input)="handleInput($any($event.target).value)"
     />
 
+  @if (clearable() && internalValue) {
     <button
-        *ngIf="clearable && internalValue"
-        matSuffix
-        mat-icon-button
-        type="button"
-        class="fd-ui-input__clear"
-        (click)="clearValue()"
-        [disabled]="disabled"
-    >
-        <mat-icon>close</mat-icon>
+      matSuffix
+      mat-icon-button
+      type="button"
+      class="fd-ui-input__clear"
+      (click)="clearValue()"
+      [disabled]="disabled"
+      >
+      <mat-icon>close</mat-icon>
     </button>
+  }
 
+  @if (suffixButtonIcon()) {
     <button
-        *ngIf="suffixButtonIcon"
-        matSuffix
-        mat-icon-button
-        type="button"
-        class="fd-ui-input__suffix-button"
-        [attr.aria-label]="suffixButtonAriaLabel || suffixButtonIcon"
-        (click)="triggerSuffixButton()"
-        [disabled]="disabled"
-    >
-        <mat-icon>{{ suffixButtonIcon }}</mat-icon>
+      matSuffix
+      mat-icon-button
+      type="button"
+      class="fd-ui-input__suffix-button"
+      [attr.aria-label]="suffixButtonAriaLabel() || suffixButtonIcon()"
+      (click)="triggerSuffixButton()"
+      [disabled]="disabled"
+      >
+      <mat-icon>{{ suffixButtonIcon() }}</mat-icon>
     </button>
+  }
 
-    <mat-icon *ngIf="suffixIcon" matSuffix>{{ suffixIcon }}</mat-icon>
+  @if (suffixIcon()) {
+    <mat-icon matSuffix>{{ suffixIcon() }}</mat-icon>
+  }
 
-    <mat-hint *ngIf="hint && !error">{{ hint }}</mat-hint>
-    <mat-error *ngIf="error">{{ error }}</mat-error>
+  @if (hint() && !error()) {
+    <mat-hint>{{ hint() }}</mat-hint>
+  }
+  @if (error()) {
+    <mat-error>{{ error() }}</mat-error>
+  }
 </mat-form-field>

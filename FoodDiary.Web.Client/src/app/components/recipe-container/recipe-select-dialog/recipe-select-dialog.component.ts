@@ -1,14 +1,13 @@
 import {
-    ChangeDetectionStrategy,
-    Component,
-    DestroyRef,
-    ElementRef,
-    EventEmitter,
-    Input,
-    OnInit,
-    Output,
-    ViewChild,
-    inject,
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  ElementRef,
+  OnInit,
+  inject,
+  input,
+  output,
+  viewChild
 } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { DecimalPipe } from '@angular/common';
@@ -58,9 +57,9 @@ export class RecipeSelectDialogComponent implements OnInit {
         optional: true,
     });
 
-    @Input() public embedded: boolean = false;
-    @Output() public recipeSelected = new EventEmitter<Recipe>();
-    @Output() public createRecipeRequested = new EventEmitter<void>();
+    public readonly embedded = input<boolean>(false);
+    public readonly recipeSelected = output<Recipe>();
+    public readonly createRecipeRequested = output<void>();
 
     public readonly searchForm = new FormGroup<RecipeSearchFormGroup>({
         search: new FormControl<string | null>(null),
@@ -71,7 +70,7 @@ export class RecipeSelectDialogComponent implements OnInit {
     public recipeData: PagedData<Recipe> = new PagedData<Recipe>();
     public currentPageIndex = 0;
 
-    @ViewChild('container') private container!: ElementRef<HTMLElement>;
+    private readonly container = viewChild.required<ElementRef<HTMLElement>>('container');
 
 
     public ngOnInit(): void {
@@ -126,16 +125,17 @@ export class RecipeSelectDialogComponent implements OnInit {
     }
 
     public async onCreateRecipeClick(): Promise<void> {
-        if (!this.embedded && this.dialogRef) {
+        if (!this.embedded() && this.dialogRef) {
             this.dialogRef.close(null);
         } else {
+            // TODO: The 'emit' function requires a mandatory void argument
             this.createRecipeRequested.emit();
         }
         await this.navigationService.navigateToRecipeAdd();
     }
 
     private handleSelection(recipe: Recipe): void {
-        if (!this.embedded && this.dialogRef) {
+        if (!this.embedded() && this.dialogRef) {
             this.dialogRef.close(recipe);
         } else {
             this.recipeSelected.emit(recipe);
@@ -143,7 +143,7 @@ export class RecipeSelectDialogComponent implements OnInit {
     }
 
     private scrollToTop(): void {
-        this.container.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        this.container().nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
     public isPrivateVisibility(visibility: Recipe['visibility']): boolean {

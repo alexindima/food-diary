@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Inject, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Recipe, RecipeVisibility } from '../../../types/recipe.data';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
@@ -51,9 +51,9 @@ export class RecipeDetailComponent {
 
     public isDuplicateInProgress = false;
 
-    public constructor(
-        @Inject(FD_UI_DIALOG_DATA) data: Recipe,
-    ) {
+    public constructor() {
+        const data = inject<Recipe>(FD_UI_DIALOG_DATA);
+
         this.recipe = data;
         this.calories = this.recipe.totalCalories ?? 0;
         this.nutrientChartData = {

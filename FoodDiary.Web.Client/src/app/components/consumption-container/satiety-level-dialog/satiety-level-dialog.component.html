@@ -3,13 +3,12 @@
     [subtitle]="data.subtitleKey ? (data.subtitleKey | translate) : undefined"
     size="lg"
 >
-    <fd-ui-satiety-scale
-        layout="grid"
+    <fd-ui-satiety-scale layout="grid"
         [label]="getSelectionLabel()"
         [hint]="'CONSUMPTION_MANAGE.SATIETY_DIALOG_SUBHINT' | translate"
         [ngModel]="selectedValue()"
         (ngModelChange)="onValueSelected($event)"
-    ></fd-ui-satiety-scale>
+     />
 
     <div fdUiDialogFooter>
         <fd-ui-button variant="secondary" fill="text" size="sm" (click)="close()">

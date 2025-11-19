@@ -15,13 +15,12 @@
                 {{ ('PRODUCT_AMOUNT_UNITS_SHORT.' + product.baseUnit) | translate }}
             </p>
         </div>
-        <fd-nutrients-summary
-            [calories]="calories"
+        <fd-nutrients-summary [calories]="calories"
             [nutrientChartData]="nutrientChartData"
             [config]="nutrientSummaryConfig"
             [fiberValue]="product.fiberPerBase"
             [fiberUnitKey]="'PRODUCT_AMOUNT_UNITS_SHORT.' + product.baseUnit"
-        ></fd-nutrients-summary>
+         />
     </div>
 
     <div fdUiDialogFooter class="product-detail__footer">

@@ -5,14 +5,13 @@
         <div class="consumption-list__actions">
             <div class="consumption-list__search-group">
                 <form [formGroup]="searchForm" class="consumption-list__date-range-form">
-                    <fd-ui-date-range-input
-                        formControlName="dateRange"
+                    <fd-ui-date-range-input formControlName="dateRange"
                         class="consumption-list__date-input"
                         [label]="'CONSUMPTION_LIST.CHOOSE_DATES' | translate"
                         [startPlaceholder]="'CONSUMPTION_LIST.DATE_PLACEHOLDER' | translate"
                         [endPlaceholder]="'CONSUMPTION_LIST.DATE_PLACEHOLDER' | translate"
                         [hideSubscript]="true"
-                    ></fd-ui-date-range-input>
+                     />
                 </form>
             </div>
             <fd-ui-button
@@ -26,7 +25,7 @@
     </div>
 
     @if (consumptionData.isLoading()) {
-        <fd-ui-loader class="consumption-list__loader"></fd-ui-loader>
+        <fd-ui-loader class="consumption-list__loader" />
     } @else {
         @if (consumptionData.items().length === 0) {
             <div class="consumption-list__no-results">
@@ -85,12 +84,11 @@
     }
 
     @if (consumptionData.totalPages > 1) {
-        <fd-ui-pagination
-            class="consumption-list__pagination"
+        <fd-ui-pagination class="consumption-list__pagination"
             [length]="consumptionData.totalItems"
             [pageSize]="10"
             [pageIndex]="currentPageIndex"
             (pageIndexChange)="onPageChange($event)"
-        ></fd-ui-pagination>
+         />
     }
 </div>

@@ -1,10 +1,10 @@
-import { Directive, TemplateRef } from '@angular/core';
+import { Directive, TemplateRef, inject } from '@angular/core';
 
 @Directive({
     selector: '[fdUiEntityCardHeader]',
     standalone: true,
 })
 export class FdUiEntityCardHeaderDirective {
-    public constructor(public readonly templateRef: TemplateRef<unknown>) {}
+    readonly templateRef = inject<TemplateRef<unknown>>(TemplateRef);
 }
 

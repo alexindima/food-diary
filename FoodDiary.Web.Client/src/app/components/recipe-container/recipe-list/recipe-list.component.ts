@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, inject, OnInit, viewChild } from '@angular/core';
 import { ReactiveFormsModule, FormControl, FormGroup } from '@angular/forms';
 import { Recipe, RecipeFilters, RecipeVisibility } from '../../../types/recipe.data';
 import { RecipeService } from '../../../services/recipe.service';
@@ -43,7 +43,7 @@ export class RecipeListComponent implements OnInit {
     private readonly fdDialogService = inject(FdUiDialogService);
     private readonly toastService = inject(FdUiToastService);
 
-    @ViewChild('container') private container!: ElementRef<HTMLElement>;
+    private readonly container = viewChild.required<ElementRef<HTMLElement>>('container');
 
     public readonly pageSize = 10;
     public recipeData: PagedData<Recipe> = new PagedData<Recipe>();
@@ -164,7 +164,7 @@ export class RecipeListComponent implements OnInit {
     }
 
     private scrollToTop(): void {
-        this.container?.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        this.container()?.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
     private handleDialogResult(result: RecipeDetailActionResult, recipe: Recipe): void {

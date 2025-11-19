@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, Inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal, inject } from '@angular/core';
 import { FD_UI_DIALOG_DATA, FdUiDialogRef } from 'fd-ui-kit/material';
-import { CommonModule } from '@angular/common';
+
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FdUiSatietyScaleComponent } from 'fd-ui-kit/satiety-scale/fd-ui-satiety-scale.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
@@ -19,24 +19,23 @@ export interface SatietyLevelDialogData {
     standalone: true,
     templateUrl: './satiety-level-dialog.component.html',
     imports: [
-        CommonModule,
-        FormsModule,
-        TranslateModule,
-        FdUiSatietyScaleComponent,
-        FdUiButtonComponent,
-        FdUiDialogComponent,
-        FdUiDialogFooterDirective,
-    ],
+    FormsModule,
+    TranslateModule,
+    FdUiSatietyScaleComponent,
+    FdUiButtonComponent,
+    FdUiDialogComponent,
+    FdUiDialogFooterDirective
+],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SatietyLevelDialogComponent {
+    readonly data = inject<SatietyLevelDialogData>(FD_UI_DIALOG_DATA);
+    private readonly dialogRef = inject<FdUiDialogRef<SatietyLevelDialogComponent>>(FdUiDialogRef);
+    private readonly translateService = inject(TranslateService);
+
     public selectedValue = signal<number | null>(null);
 
-    public constructor(
-        @Inject(FD_UI_DIALOG_DATA) public readonly data: SatietyLevelDialogData,
-        private readonly dialogRef: FdUiDialogRef<SatietyLevelDialogComponent>,
-        private readonly translateService: TranslateService,
-    ) {
+    public constructor() {
         this.selectedValue.set(this.data.value ?? null);
     }
 

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, inject, OnInit, viewChild } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import { ProductService } from '../../../services/product.service';
@@ -43,7 +43,7 @@ export class ProductListBaseComponent implements OnInit {
     protected readonly pageSize = 10;
     protected readonly fdDialogService = inject(FdUiDialogService);
 
-    @ViewChild('container') private container!: ElementRef<HTMLElement>;
+    private readonly container = viewChild.required<ElementRef<HTMLElement>>('container');
 
     public searchForm: FormGroup<ProductSearchFormGroup>;
     public productData: PagedData<Product> = new PagedData<Product>();
@@ -127,7 +127,7 @@ export class ProductListBaseComponent implements OnInit {
     }
 
     protected scrollToTop(): void {
-        this.container.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        this.container().nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
     protected onProductClick(_product: Product): void {}

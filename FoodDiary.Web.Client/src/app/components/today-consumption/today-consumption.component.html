@@ -29,7 +29,7 @@
                 (dateChange)="handleDateChange($event)"
             />
         </mat-form-field>
-        <mat-datepicker #headerDatePicker></mat-datepicker>
+        <mat-datepicker #headerDatePicker />
     </header>
 
     <section class="dashboard__grid">
@@ -49,11 +49,10 @@
                         </div>
                         <span class="dashboard__progress-percent">{{ progressPercent() }}%</span>
                     </div>
-                    <fd-dynamic-progress-bar
-                        [current]="todayCalories()"
+                    <fd-dynamic-progress-bar [current]="todayCalories()"
                         [max]="dailyGoal()"
                         [unit]="'PRODUCT_LIST.KCAL' | translate"
-                    ></fd-dynamic-progress-bar>
+                     />
                     <div class="dashboard__progress-meta">
                         <div>
                             <span class="dashboard__meta-label">{{ 'DASHBOARD.GOAL_LABEL' | translate }}</span>

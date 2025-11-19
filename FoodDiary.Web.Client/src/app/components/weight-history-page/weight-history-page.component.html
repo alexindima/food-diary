@@ -5,21 +5,19 @@
 
     <fd-ui-card class="weight-history-page__card weight-history-page__card--chart" [title]="'WEIGHT_HISTORY.CHART_TITLE' | translate">
         <div class="weight-history-page__chart-toolbar">
-            <fd-ui-tabs
-                class="weight-history-page__tabs"
+            <fd-ui-tabs class="weight-history-page__tabs"
                 [tabs]="rangeTabs"
                 [selectedValue]="selectedRange()"
                 (selectedValueChange)="changeRange($event)"
-            ></fd-ui-tabs>
+             />
         </div>
         @if (selectedRange() === 'custom') {
             <div class="weight-history-page__custom-range">
-                <fd-ui-date-range-input
-                    class="weight-history-page__custom-range-input"
+                <fd-ui-date-range-input class="weight-history-page__custom-range-input"
                     [startPlaceholder]="'WEIGHT_HISTORY.CUSTOM_RANGE_PLACEHOLDER' | translate"
                     [endPlaceholder]="'WEIGHT_HISTORY.CUSTOM_RANGE_PLACEHOLDER' | translate"
                     [formControl]="customRangeControl"
-                ></fd-ui-date-range-input>
+                 />
             </div>
         }
         @if (isSummaryLoading()) {
@@ -96,21 +94,19 @@
         <fd-ui-card class="weight-history-page__card weight-history-page__card--form" [title]="'WEIGHT_HISTORY.ADD_ENTRY_TITLE' | translate">
             <form class="weight-history-page__form" [formGroup]="form" (ngSubmit)="submit()">
                 <div class="weight-history-page__form-row">
-                    <fd-ui-date-input
-                        class="weight-history-page__form-control"
+                    <fd-ui-date-input class="weight-history-page__form-control"
                         formControlName="date"
                         [label]="'WEIGHT_HISTORY.DATE_LABEL' | translate"
                         [placeholder]="'WEIGHT_HISTORY.DATE_PLACEHOLDER' | translate"
-                    ></fd-ui-date-input>
+                     />
 
-                    <fd-ui-input
-                        class="weight-history-page__form-control"
+                    <fd-ui-input class="weight-history-page__form-control"
                         formControlName="weight"
                         type="number"
                         [step]="0.1"
                         [label]="'WEIGHT_HISTORY.WEIGHT_LABEL' | translate"
                         [placeholder]="'WEIGHT_HISTORY.WEIGHT_PLACEHOLDER' | translate"
-                    ></fd-ui-input>
+                     />
                 </div>
 
                 <div class="weight-history-page__form-actions">
@@ -140,15 +136,14 @@
 
         <fd-ui-card class="weight-history-page__card weight-history-page__card--goal" [title]="'WEIGHT_HISTORY.GOAL_CARD_TITLE' | translate">
             <div class="weight-history-page__goal-body">
-                <fd-ui-input
-                    class="weight-history-page__goal-input"
+                <fd-ui-input class="weight-history-page__goal-input"
                     type="number"
                     [step]="0.1"
                     [placeholder]="'WEIGHT_HISTORY.GOAL_PLACEHOLDER' | translate"
                     [suffixIcon]="desiredWeightControl.value ? 'backspace' : undefined"
                     (suffixButtonClicked)="desiredWeightControl.setValue('')"
                     [formControl]="desiredWeightControl"
-                ></fd-ui-input>
+                 />
                 <div class="weight-history-page__goal-actions">
                     <fd-ui-button
                         type="button"

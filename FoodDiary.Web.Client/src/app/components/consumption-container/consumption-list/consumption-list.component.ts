@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, inject, OnInit, viewChild } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { catchError, debounceTime, map, Observable, of, startWith, switchMap } from 'rxjs';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -49,7 +49,7 @@ export class ConsumptionListComponent implements OnInit {
     public consumptionData: PagedData<Consumption> = new PagedData<Consumption>();
     public currentPageIndex = 0;
 
-    @ViewChild('container') private container!: ElementRef<HTMLElement>;
+    private readonly container = viewChild.required<ElementRef<HTMLElement>>('container');
 
     public constructor() {
         this.searchForm = new FormGroup<SearchFormGroup>({
@@ -128,7 +128,7 @@ export class ConsumptionListComponent implements OnInit {
     }
 
     protected scrollToTop(): void {
-        this.container.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        this.container().nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
     private toIsoDate(date: Date | null | undefined): string | undefined {

@@ -3,25 +3,22 @@
         <h2 class="consumption-item-select__title">
             {{ 'CONSUMPTION_MANAGE.ITEM_SELECT_DIALOG.TITLE' | translate }}
         </h2>
-        <fd-ui-tabs
-            class="consumption-item-select__tabs"
+        <fd-ui-tabs class="consumption-item-select__tabs"
             [tabs]="tabs"
             [(selectedValue)]="activeTab"
-        ></fd-ui-tabs>
+         />
     </div>
 
     <div class="consumption-item-select__content">
         @if (activeTab === 'Product') {
-            <fd-product-list-dialog
-                [embedded]="true"
+            <fd-product-list-dialog [embedded]="true"
                 (productSelected)="onProductSelected($event)"
-            ></fd-product-list-dialog>
+             />
         } @else {
-            <fd-recipe-select-dialog
-                [embedded]="true"
+            <fd-recipe-select-dialog [embedded]="true"
                 (recipeSelected)="onRecipeSelected($event)"
                 (createRecipeRequested)="onCreateRecipeRequested()"
-            ></fd-recipe-select-dialog>
+             />
         }
     </div>
 </div>

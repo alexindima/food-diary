@@ -1,33 +1,33 @@
-import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+
+import { Component, input, output } from '@angular/core';
 import { MatMenuModule } from '@angular/material/menu';
 import { RouterModule } from '@angular/router';
 
 @Component({
     selector: 'fd-ui-menu-item',
     standalone: true,
-    imports: [CommonModule, MatMenuModule, RouterModule],
+    imports: [MatMenuModule, RouterModule],
     template: `
         <button
             mat-menu-item
-            [type]="type"
-            [routerLink]="routerLink"
-            [queryParams]="queryParams"
-            [fragment]="fragment"
-            [disabled]="disabled"
+            [type]="type()"
+            [routerLink]="routerLink()"
+            [queryParams]="queryParams()"
+            [fragment]="fragment()"
+            [disabled]="disabled()"
             (click)="onClick($event)"
         >
-            <ng-content></ng-content>
+            <ng-content />
         </button>
     `,
 })
 export class FdUiMenuItemComponent {
-    @Input() public type: 'button' | 'submit' | 'reset' = 'button';
-    @Input() public routerLink?: string | any[] | null;
-    @Input() public queryParams?: Record<string, unknown>;
-    @Input() public fragment?: string;
-    @Input() public disabled = false;
-    @Output() public itemClick = new EventEmitter<Event>();
+    public readonly type = input<'button' | 'submit' | 'reset'>('button');
+    public readonly routerLink = input<string | any[] | null>();
+    public readonly queryParams = input<Record<string, unknown>>();
+    public readonly fragment = input<string>();
+    public readonly disabled = input(false);
+    public readonly itemClick = output<Event>();
 
     public onClick(event: Event): void {
         this.itemClick.emit(event);

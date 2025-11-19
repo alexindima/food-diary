@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { TranslateModule } from '@ngx-translate/core';
@@ -16,7 +16,7 @@ export interface FdUiConfirmDialogData {
 @Component({
     selector: 'fd-ui-confirm-dialog',
     standalone: true,
-    imports: [CommonModule, TranslateModule, FdUiDialogComponent, FdUiButtonComponent],
+    imports: [TranslateModule, FdUiDialogComponent, FdUiButtonComponent],
     template: `
         <fd-ui-dialog [title]="data.title" size="sm" [dismissible]="false">
             <p class="fd-ui-confirm-dialog__message">{{ data.message }}</p>

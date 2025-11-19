@@ -1,11 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    forwardRef,
-    Input,
-} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, inject, input } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectChange, MatSelectModule } from '@angular/material/select';
@@ -33,15 +27,17 @@ export interface FdUiSelectOption<T = unknown> {
     ],
 })
 export class FdUiSelectComponent<T = unknown> implements ControlValueAccessor {
-    @Input() public label?: string;
-    @Input() public placeholder?: string;
-    @Input() public hint?: string;
-    @Input() public error?: string | null;
-    @Input() public required = false;
-    @Input() public options: FdUiSelectOption<T>[] = [];
-    @Input() public floatLabel: 'auto' | 'always' = 'auto';
-    @Input() public size: FdUiFieldSize = 'md';
-    @Input() public hideSubscript = false;
+    private readonly cdr = inject(ChangeDetectorRef);
+
+    public readonly label = input<string>();
+    public readonly placeholder = input<string>();
+    public readonly hint = input<string>();
+    public readonly error = input<string | null>();
+    public readonly required = input(false);
+    public readonly options = input<FdUiSelectOption<T>[]>([]);
+    public readonly floatLabel = input<'auto' | 'always'>('auto');
+    public readonly size = input<FdUiFieldSize>('md');
+    public readonly hideSubscript = input(false);
 
     protected disabled = false;
     protected internalValue: T | null = null;
@@ -50,10 +46,8 @@ export class FdUiSelectComponent<T = unknown> implements ControlValueAccessor {
     private onChange: (value: T | null) => void = () => undefined;
     private onTouched: () => void = () => undefined;
 
-    public constructor(private readonly cdr: ChangeDetectorRef) {}
-
     protected get sizeClass(): string {
-        return `fd-ui-select--size-${this.size}`;
+        return `fd-ui-select--size-${this.size()}`;
     }
 
     public writeValue(value: T | null): void {

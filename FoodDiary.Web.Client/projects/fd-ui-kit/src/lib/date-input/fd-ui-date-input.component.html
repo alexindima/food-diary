@@ -1,20 +1,22 @@
 <mat-form-field
-    appearance="outline"
-    class="fd-ui-date-input"
-    [class.fd-ui-date-input--disabled]="isDisabled"
-    [floatLabel]="floatLabel"
-    [ngClass]="[sizeClass, hideSubscript ? 'fd-ui-date-input--no-subscript' : '']"
->
-    <mat-label *ngIf="label">{{ label }}</mat-label>
-    <input
-        matInput
-        [matDatepicker]="datePicker"
-        [formControl]="dateControl"
-        [placeholder]="placeholder"
-        [min]="min"
-        [max]="max"
-        (blur)="handleBlur()"
+  appearance="outline"
+  class="fd-ui-date-input"
+  [class.fd-ui-date-input--disabled]="isDisabled"
+  [floatLabel]="floatLabel()"
+  [ngClass]="[sizeClass, hideSubscript() ? 'fd-ui-date-input--no-subscript' : '']"
+  >
+  @if (label()) {
+    <mat-label>{{ label() }}</mat-label>
+  }
+  <input
+    matInput
+    [matDatepicker]="datePicker"
+    [formControl]="dateControl"
+    [placeholder]="placeholder()"
+    [min]="min()"
+    [max]="max()"
+    (blur)="handleBlur()"
     />
-    <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
+  <mat-datepicker-toggle matSuffix [for]="datePicker" />
 </mat-form-field>
-<mat-datepicker #datePicker (closed)="dateControl.markAsTouched()"></mat-datepicker>
+<mat-datepicker #datePicker (closed)="dateControl.markAsTouched()" />

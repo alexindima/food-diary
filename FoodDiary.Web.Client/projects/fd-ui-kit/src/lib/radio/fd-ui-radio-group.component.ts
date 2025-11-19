@@ -1,11 +1,5 @@
-import { CommonModule } from '@angular/common';
-import {
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    forwardRef,
-    Input,
-} from '@angular/core';
+
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, inject, input } from '@angular/core';
 import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 import { MatRadioModule } from '@angular/material/radio';
 
@@ -18,7 +12,7 @@ export interface FdUiRadioOption<T = unknown> {
 @Component({
     selector: 'fd-ui-radio-group',
     standalone: true,
-    imports: [CommonModule, ReactiveFormsModule, MatRadioModule],
+    imports: [ReactiveFormsModule, MatRadioModule],
     templateUrl: './fd-ui-radio-group.component.html',
     styleUrls: ['./fd-ui-radio-group.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -31,12 +25,14 @@ export interface FdUiRadioOption<T = unknown> {
     ],
 })
 export class FdUiRadioGroupComponent<T = unknown> implements ControlValueAccessor {
-    @Input() public label?: string;
-    @Input() public hint?: string;
-    @Input() public error?: string | null;
-    @Input() public required = false;
-    @Input() public orientation: 'vertical' | 'horizontal' = 'vertical';
-    @Input() public options: FdUiRadioOption<T>[] = [];
+    private readonly cdr = inject(ChangeDetectorRef);
+
+    public readonly label = input<string>();
+    public readonly hint = input<string>();
+    public readonly error = input<string | null>();
+    public readonly required = input(false);
+    public readonly orientation = input<'vertical' | 'horizontal'>('vertical');
+    public readonly options = input<FdUiRadioOption<T>[]>([]);
 
     protected disabled = false;
     protected internalValue: T | null = null;
@@ -45,7 +41,7 @@ export class FdUiRadioGroupComponent<T = unknown> implements ControlValueAccesso
     private onChange: (value: T | null) => void = () => undefined;
     private onTouched: () => void = () => undefined;
 
-    public constructor(private readonly cdr: ChangeDetectorRef) {
+    public constructor() {
         this.control.valueChanges.subscribe(value => {
             this.internalValue = value;
             this.onChange(this.internalValue);

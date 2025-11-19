@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators, AbstractControl } from '@angular/forms';
 import { FdUiDialogRef } from 'fd-ui-kit/material';
@@ -19,14 +19,13 @@ import { matchFieldValidator } from '../../../../validators/match-field.validato
     styleUrls: ['./change-password-dialog.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        CommonModule,
-        ReactiveFormsModule,
-        TranslateModule,
-        FdUiDialogComponent,
-        FdUiDialogFooterDirective,
-        FdUiInputComponent,
-        FdUiButtonComponent,
-    ],
+    ReactiveFormsModule,
+    TranslateModule,
+    FdUiDialogComponent,
+    FdUiDialogFooterDirective,
+    FdUiInputComponent,
+    FdUiButtonComponent
+],
 })
 export class ChangePasswordDialogComponent {
     private readonly dialogRef = inject(FdUiDialogRef<ChangePasswordDialogComponent, boolean>);

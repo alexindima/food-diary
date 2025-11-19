@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
 import {
-    ChangeDetectionStrategy,
-    Component,
-    forwardRef,
-    Input,
+  ChangeDetectionStrategy,
+  Component,
+  forwardRef,
+  input
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -28,16 +28,16 @@ let uniqueId = 0;
     ],
 })
 export class FdUiTextareaComponent implements ControlValueAccessor {
-    @Input() public id = `fd-ui-textarea-${uniqueId++}`;
-    @Input() public label?: string;
-    @Input() public placeholder: string | null = null;
-    @Input() public hint?: string;
-    @Input() public error?: string | null;
-    @Input() public required = false;
-    @Input() public rows = 4;
-    @Input() public maxlength?: number;
-    @Input() public readonly = false;
-    @Input() public size: FdUiFieldSize = 'md';
+    public readonly id = input(`fd-ui-textarea-${uniqueId++}`);
+    public readonly label = input<string>();
+    public readonly placeholder = input<string | null>(null);
+    public readonly hint = input<string>();
+    public readonly error = input<string | null>();
+    public readonly required = input(false);
+    public readonly rows = input(4);
+    public readonly maxlength = input<number>();
+    public readonly readonly = input(false);
+    public readonly size = input<FdUiFieldSize>('md');
 
     protected disabled = false;
     protected internalValue = '';
@@ -75,6 +75,6 @@ export class FdUiTextareaComponent implements ControlValueAccessor {
     }
 
     protected get sizeClass(): string {
-        return `fd-ui-textarea--size-${this.size}`;
+        return `fd-ui-textarea--size-${this.size()}`;
     }
 }

@@ -1,10 +1,10 @@
 @if (bare()) {
-    <ng-container *ngTemplateOutlet="summaryContent"></ng-container>
+    <ng-container *ngTemplateOutlet="summaryContent" />
 } @else {
     <fd-custom-group
         [title]="'SHARED.NUTRIENTS_SUMMARY.SUMMARY' | translate"
     >
-        <ng-container *ngTemplateOutlet="summaryContent"></ng-container>
+        <ng-container *ngTemplateOutlet="summaryContent" />
     </fd-custom-group>
 }
 

@@ -88,7 +88,7 @@
         <fd-ui-menu-item routerLink="/statistics">
             {{ 'HEADER.STATISTICS' | translate }}
         </fd-ui-menu-item>
-        <fd-ui-menu-divider></fd-ui-menu-divider>
+        <fd-ui-menu-divider />
         <fd-ui-menu-item (itemClick)="goToProfile()">
             {{ 'HEADER.PROFILE_EDIT' | translate }}
         </fd-ui-menu-item>
@@ -102,7 +102,7 @@
             {{ 'HEADER.LOGOUT' | translate }}
         </fd-ui-menu-item>
     } @else {
-        <fd-ui-menu-divider></fd-ui-menu-divider>
+        <fd-ui-menu-divider />
         <fd-ui-menu-item routerLink="/auth">
             {{ 'HEADER.LOGIN' | translate }}
         </fd-ui-menu-item>

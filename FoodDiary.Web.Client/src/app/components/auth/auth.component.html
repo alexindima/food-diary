@@ -1,42 +1,38 @@
 <div class="auth">
     <fd-ui-card class="auth__card">
         <div class="auth__tabs">
-            <fd-ui-tabs
-                [tabs]="authTabs"
+            <fd-ui-tabs [tabs]="authTabs"
                 [selectedValue]="authMode"
                 (selectedValueChange)="handleTabChange($event)"
-            ></fd-ui-tabs>
+             />
         </div>
 
         <div class="auth__content">
             @if (authMode === 'login') {
                 <form [formGroup]="loginForm" (ngSubmit)="onLoginSubmit()" class="auth__form">
                     <div class="auth__field">
-                        <fd-ui-input
-                            formControlName="email"
+                        <fd-ui-input formControlName="email"
                             type="email"
                             [label]="'AUTH.LOGIN.EMAIL' | translate"
                             [placeholder]="'AUTH.LOGIN.EMAIL_PLACEHOLDER' | translate"
                             autocomplete="email"
-                        ></fd-ui-input>
-                        <fd-ui-form-error [control]="loginForm.controls.email"></fd-ui-form-error>
+                         />
+                        <fd-ui-form-error [control]="loginForm.controls.email" />
                     </div>
 
                     <div class="auth__field">
-                        <fd-ui-input
-                            formControlName="password"
+                        <fd-ui-input formControlName="password"
                             type="password"
                             [label]="'AUTH.LOGIN.PASSWORD' | translate"
                             [placeholder]="'AUTH.LOGIN.PASSWORD_PLACEHOLDER' | translate"
                             autocomplete="current-password"
-                        ></fd-ui-input>
-                        <fd-ui-form-error [control]="loginForm.controls.password"></fd-ui-form-error>
+                         />
+                        <fd-ui-form-error [control]="loginForm.controls.password" />
                     </div>
 
-                    <fd-ui-checkbox
-                        formControlName="rememberMe"
+                    <fd-ui-checkbox formControlName="rememberMe"
                         [label]="'AUTH.LOGIN.REMEMBER_ME' | translate"
-                    ></fd-ui-checkbox>
+                     />
 
                     <div class="auth__actions">
                         <fd-ui-button
@@ -47,47 +43,43 @@
                         >
                             {{ 'AUTH.LOGIN.LOGIN' | translate }}
                         </fd-ui-button>
-                        <fd-ui-form-error [error]="globalError()"></fd-ui-form-error>
+                        <fd-ui-form-error [error]="globalError()" />
                     </div>
                 </form>
             } @else {
                 <form [formGroup]="registerForm" (ngSubmit)="onRegisterSubmit()" class="auth__form">
                     <div class="auth__field">
-                        <fd-ui-input
-                            formControlName="email"
+                        <fd-ui-input formControlName="email"
                             type="email"
                             [label]="'AUTH.REGISTER.EMAIL' | translate"
                             [placeholder]="'AUTH.REGISTER.EMAIL_PLACEHOLDER' | translate"
                             autocomplete="email"
-                        ></fd-ui-input>
-                        <fd-ui-form-error [control]="registerForm.controls.email"></fd-ui-form-error>
+                         />
+                        <fd-ui-form-error [control]="registerForm.controls.email" />
                     </div>
                     <div class="auth__field">
-                        <fd-ui-input
-                            formControlName="password"
+                        <fd-ui-input formControlName="password"
                             type="password"
                             [label]="'AUTH.REGISTER.PASSWORD' | translate"
                             [placeholder]="'AUTH.REGISTER.PASSWORD_PLACEHOLDER' | translate"
                             autocomplete="new-password"
-                        ></fd-ui-input>
-                        <fd-ui-form-error [control]="registerForm.controls.password"></fd-ui-form-error>
+                         />
+                        <fd-ui-form-error [control]="registerForm.controls.password" />
                     </div>
                     <div class="auth__field">
-                        <fd-ui-input
-                            formControlName="confirmPassword"
+                        <fd-ui-input formControlName="confirmPassword"
                             type="password"
                             [label]="'AUTH.REGISTER.CONFIRM_PASSWORD' | translate"
                             [placeholder]="'AUTH.REGISTER.CONFIRM_PASSWORD_PLACEHOLDER' | translate"
                             autocomplete="new-password"
-                        ></fd-ui-input>
-                        <fd-ui-form-error [control]="registerForm.controls.confirmPassword"></fd-ui-form-error>
+                         />
+                        <fd-ui-form-error [control]="registerForm.controls.confirmPassword" />
                     </div>
 
                     <div class="auth__checkbox-row">
-                        <fd-ui-checkbox
-                            formControlName="agreeTerms"
+                        <fd-ui-checkbox formControlName="agreeTerms"
                             label=""
-                        ></fd-ui-checkbox>
+                         />
                         <div
                             class="auth__checkbox-text"
                             [innerHTML]="'AUTH.REGISTER.AGREE_TO_TERMS' | translate: { termsUrl: '/terms', privacyUrl: '/privacy'}"
@@ -103,7 +95,7 @@
                         >
                             {{ 'AUTH.REGISTER.REGISTER' | translate }}
                         </fd-ui-button>
-                        <fd-ui-form-error [error]="globalError()"></fd-ui-form-error>
+                        <fd-ui-form-error [error]="globalError()" />
                     </div>
                 </form>
             }

@@ -5,19 +5,17 @@
             <h1 class="statistics__title">{{ 'STATISTICS.TITLE' | translate }}</h1>
         </div>
         <div class="statistics__range-controls">
-            <fd-ui-tabs
-                class="statistics__tabs statistics__tabs--range"
+            <fd-ui-tabs class="statistics__tabs statistics__tabs--range"
                 [tabs]="rangeTabs"
                 [selectedValue]="selectedRange()"
                 (selectedValueChange)="changeRange($event)"
-            ></fd-ui-tabs>
+             />
             @if (selectedRange() === 'custom') {
-                <fd-ui-date-range-input
-                    class="statistics__custom-range"
+                <fd-ui-date-range-input class="statistics__custom-range"
                     [startPlaceholder]="'STATISTICS.CUSTOM_RANGE_PLACEHOLDER' | translate"
                     [endPlaceholder]="'STATISTICS.CUSTOM_RANGE_PLACEHOLDER' | translate"
                     [formControl]="customRangeControl"
-                ></fd-ui-date-range-input>
+                 />
             }
         </div>
     </header>
@@ -93,12 +91,11 @@
         </fd-ui-card>
 
         <fd-ui-card class="statistics__card statistics__card--charts" [title]="'STATISTICS.NUTRITION_CHARTS_TITLE' | translate">
-            <fd-ui-tabs
-                class="statistics__tabs"
+            <fd-ui-tabs class="statistics__tabs"
                 [tabs]="nutritionTabs"
                 [selectedValue]="selectedNutritionTab()"
                 (selectedValueChange)="changeNutritionTab($event)"
-            ></fd-ui-tabs>
+             />
 
             @if (!hasStatisticsData()) {
                 <p class="statistics__empty">{{ 'STATISTICS.NO_DATA' | translate }}</p>
@@ -164,12 +161,11 @@
         </fd-ui-card>
 
         <fd-ui-card class="statistics__card statistics__card--body" [title]="'STATISTICS.BODY_CHARTS_TITLE' | translate">
-            <fd-ui-tabs
-                class="statistics__tabs"
+            <fd-ui-tabs class="statistics__tabs"
                 [tabs]="bodyTabs"
                 [selectedValue]="selectedBodyTab()"
                 (selectedValueChange)="changeBodyTab($event)"
-            ></fd-ui-tabs>
+             />
 
             @if (isBodyLoading()) {
                 <div class="statistics__loader">{{ 'STATISTICS.LOADING' | translate }}</div>

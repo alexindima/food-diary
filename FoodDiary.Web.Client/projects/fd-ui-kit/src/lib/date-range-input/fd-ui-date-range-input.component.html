@@ -1,31 +1,33 @@
 <mat-form-field
-    appearance="outline"
-    class="fd-ui-date-range-input"
-    [class.fd-ui-date-range-input--disabled]="isDisabled"
-    [ngClass]="[sizeClass, hideSubscript ? 'fd-ui-date-range-input--no-subscript' : '']"
-    [floatLabel]="floatLabel"
->
-    <mat-label *ngIf="label">{{ label }}</mat-label>
+  appearance="outline"
+  class="fd-ui-date-range-input"
+  [class.fd-ui-date-range-input--disabled]="isDisabled"
+  [ngClass]="[sizeClass, hideSubscript() ? 'fd-ui-date-range-input--no-subscript' : '']"
+  [floatLabel]="floatLabel()"
+  >
+  @if (label()) {
+    <mat-label>{{ label() }}</mat-label>
+  }
 
-    <mat-date-range-input
-        [formGroup]="rangeGroup"
-        [rangePicker]="rangePicker"
-        [min]="min"
-        [max]="max"
+  <mat-date-range-input
+    [formGroup]="rangeGroup"
+    [rangePicker]="rangePicker"
+    [min]="min()"
+    [max]="max()"
     >
-        <input
-            matStartDate
-            formControlName="start"
-            [placeholder]="startPlaceholder"
-            (blur)="handleBlur()"
+    <input
+      matStartDate
+      formControlName="start"
+      [placeholder]="startPlaceholder()"
+      (blur)="handleBlur()"
+      />
+      <input
+        matEndDate
+        formControlName="end"
+        [placeholder]="endPlaceholder()"
+        (blur)="handleBlur()"
         />
-        <input
-            matEndDate
-            formControlName="end"
-            [placeholder]="endPlaceholder"
-            (blur)="handleBlur()"
-        />
-    </mat-date-range-input>
-    <mat-datepicker-toggle matSuffix [for]="rangePicker"></mat-datepicker-toggle>
-</mat-form-field>
-<mat-date-range-picker #rangePicker (closed)="rangeGroup.markAsTouched()"></mat-date-range-picker>
+      </mat-date-range-input>
+      <mat-datepicker-toggle matSuffix [for]="rangePicker" />
+    </mat-form-field>
+    <mat-date-range-picker #rangePicker (closed)="rangeGroup.markAsTouched()" />

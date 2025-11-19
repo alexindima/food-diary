@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ContentChild, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, contentChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FdUiCardComponent, FdUiCardAppearance } from '../card/fd-ui-card.component';
 import { FdUiEntityCardHeaderDirective } from './fd-ui-entity-card-header.directive';
@@ -12,23 +12,23 @@ import { FdUiEntityCardHeaderDirective } from './fd-ui-entity-card-header.direct
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FdUiEntityCardComponent {
-    @Input() public title?: string;
-    @Input() public meta?: string;
-    @Input() public appearance: FdUiCardAppearance = 'default';
-    @Input() public imageUrl?: string | null;
-    @Input() public fallbackImage = 'assets/images/vegetables.svg';
+    public readonly title = input<string>();
+    public readonly meta = input<string>();
+    public readonly appearance = input<FdUiCardAppearance>('default');
+    public readonly imageUrl = input<string | null>();
+    public readonly fallbackImage = input('assets/images/vegetables.svg');
 
-    @ContentChild(FdUiEntityCardHeaderDirective)
-    public headerTemplate?: FdUiEntityCardHeaderDirective;
+    public readonly headerTemplate = contentChild(FdUiEntityCardHeaderDirective);
 
     private hasImageError = false;
 
     public get resolvedImage(): string {
-        if (this.hasImageError || !this.imageUrl) {
-            return this.fallbackImage;
+        const imageUrl = this.imageUrl();
+        if (this.hasImageError || !imageUrl) {
+            return this.fallbackImage();
         }
 
-        return this.imageUrl;
+        return imageUrl;
     }
 
     public handleImageError(): void {

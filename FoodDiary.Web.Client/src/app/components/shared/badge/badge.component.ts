@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { NgClass } from '@angular/common';
 import { FdUiIconModule } from 'fd-ui-kit/material';
 
@@ -13,11 +13,11 @@ type BadgeVariant = 'primary' | 'success' | 'warning' | 'danger' | 'neutral';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BadgeComponent {
-    @Input({ required: true }) public label!: string;
-    @Input() public icon?: string;
-    @Input() public variant: BadgeVariant = 'neutral';
+    public readonly label = input.required<string>();
+    public readonly icon = input<string>();
+    public readonly variant = input<BadgeVariant>('neutral');
 
     public get variantClass(): string {
-        return `fd-badge--${this.variant}`;
+        return `fd-badge--${this.variant()}`;
     }
 }

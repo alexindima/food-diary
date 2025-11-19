@@ -1,14 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    EventEmitter,
-    forwardRef,
-    Input,
-    Output,
-    ViewEncapsulation,
-} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, ViewEncapsulation, inject, input, output } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldAppearance, MatFormFieldModule } from '@angular/material/form-field';
@@ -35,29 +26,31 @@ let uniqueId = 0;
     ],
 })
 export class FdUiInputComponent implements ControlValueAccessor {
-    @Input() public id = `fd-ui-input-${uniqueId++}`;
-    @Input() public label?: string;
-    @Input() public placeholder?: string;
-    @Input() public type: 'text' | 'number' | 'password' | 'email' | 'tel' | 'date' | 'datetime-local' | 'time' = 'text';
-    @Input() public hint?: string;
-    @Input() public error?: string | null;
-    @Input() public prefixIcon?: string;
-    @Input() public suffixIcon?: string;
-    @Input() public clearable = false;
-    @Input() public appearance: MatFormFieldAppearance = 'outline';
-    @Input() public floatLabel: 'auto' | 'always' = 'auto';
-    @Input() public autocomplete: string | null = null;
-    @Input() public required = false;
-    @Input() public readonly = false;
-    @Input() public maxLength?: number;
-    @Input() public suffixButtonIcon?: string;
-    @Input() public suffixButtonAriaLabel?: string;
-    @Input() public step?: string | number;
-    @Input() public size: FdUiFieldSize = 'md';
-    @Input() public hideSubscript = false;
+    private readonly cdr = inject(ChangeDetectorRef);
 
-    @Output() public cleared = new EventEmitter<void>();
-    @Output() public suffixButtonClicked = new EventEmitter<void>();
+    public readonly id = input(`fd-ui-input-${uniqueId++}`);
+    public readonly label = input<string>();
+    public readonly placeholder = input<string>();
+    public readonly type = input<'text' | 'number' | 'password' | 'email' | 'tel' | 'date' | 'datetime-local' | 'time'>('text');
+    public readonly hint = input<string>();
+    public readonly error = input<string | null>();
+    public readonly prefixIcon = input<string>();
+    public readonly suffixIcon = input<string>();
+    public readonly clearable = input(false);
+    public readonly appearance = input<MatFormFieldAppearance>('outline');
+    public readonly floatLabel = input<'auto' | 'always'>('auto');
+    public readonly autocomplete = input<string | null>(null);
+    public readonly required = input(false);
+    public readonly readonly = input(false);
+    public readonly maxLength = input<number>();
+    public readonly suffixButtonIcon = input<string>();
+    public readonly suffixButtonAriaLabel = input<string>();
+    public readonly step = input<string | number>();
+    public readonly size = input<FdUiFieldSize>('md');
+    public readonly hideSubscript = input(false);
+
+    public readonly cleared = output<void>();
+    public readonly suffixButtonClicked = output<void>();
 
     protected isFocused = false;
     protected internalValue = '';
@@ -66,10 +59,8 @@ export class FdUiInputComponent implements ControlValueAccessor {
     private onChange: (value: string) => void = () => undefined;
     private onTouched: () => void = () => undefined;
 
-    public constructor(private readonly cdr: ChangeDetectorRef) {}
-
     protected get sizeClass(): string {
-        return `fd-ui-input--size-${this.size}`;
+        return `fd-ui-input--size-${this.size()}`;
     }
 
     public writeValue(value: string | null): void {
@@ -109,19 +100,21 @@ export class FdUiInputComponent implements ControlValueAccessor {
     }
 
     protected clearValue(): void {
-        if (!this.clearable || this.disabled) {
+        if (!this.clearable() || this.disabled) {
             return;
         }
 
         this.handleInput('');
+        // TODO: The 'emit' function requires a mandatory void argument
         this.cleared.emit();
     }
 
     protected triggerSuffixButton(): void {
-        if (this.disabled || !this.suffixButtonIcon) {
+        if (this.disabled || !this.suffixButtonIcon()) {
             return;
         }
 
+        // TODO: The 'emit' function requires a mandatory void argument
         this.suffixButtonClicked.emit();
     }
 }

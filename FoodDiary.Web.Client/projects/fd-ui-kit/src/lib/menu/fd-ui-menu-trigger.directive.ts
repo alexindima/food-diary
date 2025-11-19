@@ -4,7 +4,7 @@ import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 @Component({
     selector: '[fdUiMenuTrigger]',
     standalone: true,
-    template: `<ng-content></ng-content>`,
+    template: `<ng-content />`,
     hostDirectives: [
         {
             directive: MatMenuTrigger,

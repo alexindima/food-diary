@@ -5,11 +5,10 @@
 >
     <div class="scanner-popup">
         <div class="scanner-popup__scanner-wrapper">
-            <zxing-scanner
-                [formats]="allowedScannerFormats"
+            <zxing-scanner [formats]="allowedScannerFormats"
                 (camerasFound)="onCamerasFound($event)"
                 (scanSuccess)="onScanSuccess($event)"
-            ></zxing-scanner>
+             />
             @if (!isCameraReady()) {
                 <div class="scanner-popup__loader-overlay">
                     @if (isCameraError()) {
@@ -17,7 +16,7 @@
                             {{ 'BARCODE_SCANNER.CAMERA_ERROR' | translate }}
                         </p>
                     } @else {
-                        <fd-ui-loader></fd-ui-loader>
+                        <fd-ui-loader />
                         <p class="scanner-popup__loader-info">
                             {{ 'BARCODE_SCANNER.CAMERA_INITIALIZING' | translate }}
                         </p>

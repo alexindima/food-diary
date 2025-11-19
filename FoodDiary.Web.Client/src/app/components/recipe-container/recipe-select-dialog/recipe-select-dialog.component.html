@@ -3,14 +3,13 @@
 
     <div class="recipe-select__actions">
         <form class="recipe-select__search-form" [formGroup]="searchForm">
-            <fd-ui-input
-                formControlName="search"
+            <fd-ui-input formControlName="search"
                 prefixIcon="search"
                 [clearable]="true"
                 [placeholder]="'RECIPE_SELECT_DIALOG.SEARCH_PLACEHOLDER' | translate"
                 (cleared)="searchForm.controls.search.setValue('')"
                 floatLabel="always"
-            ></fd-ui-input>
+             />
         </form>
         <label class="recipe-select__toggle">
             <input
@@ -33,7 +32,7 @@
     </div>
 
     @if (recipeData.isLoading()) {
-        <fd-ui-loader class="recipe-select__loader"></fd-ui-loader>
+        <fd-ui-loader class="recipe-select__loader" />
     } @else {
         @if (recipeData.items().length > 0) {
             <div class="recipe-select__list">
@@ -48,16 +47,14 @@
                     >
                         <ng-container fdUiEntityCardHeader>
                             <div class="recipe-card__badges">
-                                <fd-badge
-                                    [label]="('RECIPE_VISIBILITY.' + recipe.visibility) | translate"
+                                <fd-badge [label]="('RECIPE_VISIBILITY.' + recipe.visibility) | translate"
                                     [variant]="isPrivateVisibility(recipe.visibility) ? 'warning' : 'success'"
                                     [icon]="isPrivateVisibility(recipe.visibility) ? 'lock' : 'public'"
-                                ></fd-badge>
-                                <fd-badge
-                                    [label]="recipe.isOwnedByCurrentUser ? ('RECIPE_SELECT_DIALOG.MY_RECIPE_BADGE' | translate) : ('RECIPE_SELECT_DIALOG.SHARED_RECIPE_BADGE' | translate)"
+                                 />
+                                <fd-badge [label]="recipe.isOwnedByCurrentUser ? ('RECIPE_SELECT_DIALOG.MY_RECIPE_BADGE' | translate) : ('RECIPE_SELECT_DIALOG.SHARED_RECIPE_BADGE' | translate)"
                                     [variant]="recipe.isOwnedByCurrentUser ? 'primary' : 'neutral'"
                                     [icon]="recipe.isOwnedByCurrentUser ? 'restaurant' : 'groups'"
-                                ></fd-badge>
+                                 />
                             </div>
                         </ng-container>
                         <div class="recipe-card">
@@ -93,12 +90,11 @@
     }
 
     @if (recipeData.totalPages > 1) {
-        <fd-ui-pagination
-            class="recipe-select__pagination"
+        <fd-ui-pagination class="recipe-select__pagination"
             [length]="recipeData.totalItems"
             [pageSize]="10"
             [pageIndex]="currentPageIndex"
             (pageIndexChange)="onPageChange($event)"
-        ></fd-ui-pagination>
+         />
     }
 </div>

@@ -6,8 +6,7 @@
 
         <div class="recipe-list__actions">
             <form class="recipe-list__search-form" [formGroup]="searchForm">
-                <fd-ui-input
-                    class="recipe-list__search-input"
+                <fd-ui-input class="recipe-list__search-input"
                     formControlName="search"
                     prefixIcon="search"
                     [label]="'RECIPE_LIST.SEARCH_PLACEHOLDER' | translate"
@@ -15,11 +14,10 @@
                     [placeholder]="'RECIPE_LIST.SEARCH_PLACEHOLDER' | translate"
                     [hideSubscript]="true"
                     (cleared)="searchForm.controls.search.setValue('')"
-                ></fd-ui-input>
+                 />
             </form>
 
-            <fd-ui-button
-                class="recipe-list__filter-button"
+            <fd-ui-button class="recipe-list__filter-button"
                 variant="info"
                 [fill]="'solid'"
                 [iconSize]="'xl'"
@@ -30,7 +28,7 @@
                         : ('RECIPE_LIST.ONLY_MY_RECIPES' | translate)
                 "
                 (click)="toggleOnlyMine()"
-            ></fd-ui-button>
+             />
 
             <fd-ui-button
                 class="recipe-list__add-button"
@@ -43,7 +41,7 @@
     </div>
 
     @if (recipeData.isLoading()) {
-        <fd-ui-loader class="recipe-list__loader"></fd-ui-loader>
+        <fd-ui-loader class="recipe-list__loader" />
     } @else {
         @if (recipeData.items().length > 0) {
             <div class="recipe-list__items">
@@ -61,17 +59,15 @@
                                 </div>
                                 <div class="product-card__badges">
                                     @if (recipe.isOwnedByCurrentUser) {
-                                        <fd-badge
-                                            [label]="getVisibilityTranslation(recipe.visibility)"
+                                        <fd-badge [label]="getVisibilityTranslation(recipe.visibility)"
                                             [variant]="isPrivateVisibility(recipe.visibility) ? 'warning' : 'success'"
                                             [icon]="isPrivateVisibility(recipe.visibility) ? 'lock' : 'public'"
-                                        ></fd-badge>
+                                         />
                                     }
-                                    <fd-badge
-                                        [label]="recipe.isOwnedByCurrentUser ? ('RECIPE_BADGE.MY' | translate) : ('RECIPE_BADGE.SHARED' | translate)"
+                                    <fd-badge [label]="recipe.isOwnedByCurrentUser ? ('RECIPE_BADGE.MY' | translate) : ('RECIPE_BADGE.SHARED' | translate)"
                                         [variant]="recipe.isOwnedByCurrentUser ? 'primary' : 'neutral'"
                                         [icon]="recipe.isOwnedByCurrentUser ? 'person' : 'groups'"
-                                    ></fd-badge>
+                                     />
                                 </div>
                             </div>
                             <div class="product-card__stats">
@@ -111,12 +107,11 @@
     }
 
     @if (recipeData.totalPages > 1) {
-        <fd-ui-pagination
-            class="recipe-list__pagination"
+        <fd-ui-pagination class="recipe-list__pagination"
             [length]="recipeData.totalItems"
             [pageSize]="pageSize"
             [pageIndex]="currentPageIndex"
             (pageIndexChange)="onPageChange($event)"
-        ></fd-ui-pagination>
+         />
     }
 </div>

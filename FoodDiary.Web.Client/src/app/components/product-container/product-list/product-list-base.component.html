@@ -6,8 +6,7 @@
 
         <div class="product-list__actions">
             <form class="product-list__search-form" [formGroup]="searchForm">
-                <fd-ui-input
-                    class="product-list__search-input"
+                <fd-ui-input class="product-list__search-input"
                     formControlName="search"
                     prefixIcon="search"
                     [label]="'PRODUCT_LIST.SEARCH_PLACEHOLDER' | translate"
@@ -18,11 +17,10 @@
                     [hideSubscript]="true"
                     (cleared)="searchForm.controls.search.setValue('')"
                     (suffixButtonClicked)="openBarcodeScanner()"
-                ></fd-ui-input>
+                 />
             </form>
 
-            <fd-ui-button
-                class="product-list__filter-button"
+            <fd-ui-button class="product-list__filter-button"
                 variant="info"
                 [fill]="'solid'"
                 [iconSize]="'xl'"
@@ -33,7 +31,7 @@
                         : ('PRODUCT_LIST.ONLY_MY_PRODUCTS' | translate)
                 "
                 (click)="toggleOnlyMine()"
-            ></fd-ui-button>
+             />
 
             <fd-ui-button
                 class="product-list__add-button"
@@ -46,7 +44,7 @@
     </div>
 
     @if (productData.isLoading()) {
-        <fd-ui-loader class="product-list__loader"></fd-ui-loader>
+        <fd-ui-loader class="product-list__loader" />
     } @else {
         @if (productData.items().length > 0) {
             @for (product of productData.items(); track product) {
@@ -66,17 +64,15 @@
                             </div>
                             <div class="product-card__badges">
                                 @if (product.isOwnedByCurrentUser) {
-                                    <fd-badge
-                                        [label]="('PRODUCT_VISIBILITY.' + product.visibility) | translate"
+                                    <fd-badge [label]="('PRODUCT_VISIBILITY.' + product.visibility) | translate"
                                         [variant]="isPrivateVisibility(product.visibility) ? 'warning' : 'success'"
                                         [icon]="isPrivateVisibility(product.visibility) ? 'lock' : 'public'"
-                                    ></fd-badge>
+                                     />
                                 }
-                                <fd-badge
-                                    [label]="product.isOwnedByCurrentUser ? ('PRODUCT_BADGE.MY' | translate) : ('PRODUCT_BADGE.SHARED' | translate)"
+                                <fd-badge [label]="product.isOwnedByCurrentUser ? ('PRODUCT_BADGE.MY' | translate) : ('PRODUCT_BADGE.SHARED' | translate)"
                                     [variant]="product.isOwnedByCurrentUser ? 'primary' : 'neutral'"
                                     [icon]="product.isOwnedByCurrentUser ? 'person' : 'groups'"
-                                ></fd-badge>
+                                 />
                             </div>
                         </div>
                         <div class="product-card__stats">
@@ -106,12 +102,11 @@
     }
 
     @if (productData.totalPages > 1) {
-        <fd-ui-pagination
-            class="product-list__pagination"
+        <fd-ui-pagination class="product-list__pagination"
             [length]="productData.totalItems"
             [pageSize]="pageSize"
             [pageIndex]="currentPageIndex"
             (pageIndexChange)="onPageChange($event)"
-        ></fd-ui-pagination>
+         />
     }
 </div>

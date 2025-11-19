@@ -1,19 +1,19 @@
-import { CommonModule } from '@angular/common';
-import { Component, ViewChild } from '@angular/core';
+
+import { Component, viewChild } from '@angular/core';
 import { MatMenuModule, MatMenu } from '@angular/material/menu';
 
 @Component({
     selector: 'fd-ui-menu',
     standalone: true,
-    imports: [CommonModule, MatMenuModule],
+    imports: [MatMenuModule],
     templateUrl: './fd-ui-menu.component.html',
     styleUrls: ['./fd-ui-menu.component.scss'],
     exportAs: 'fdUiMenu',
 })
 export class FdUiMenuComponent {
-    @ViewChild(MatMenu, { static: true }) private readonly matMenuRef!: MatMenu;
+    private readonly matMenuRef = viewChild.required(MatMenu);
 
     public get matMenu(): MatMenu {
-        return this.matMenuRef;
+        return this.matMenuRef();
     }
 }

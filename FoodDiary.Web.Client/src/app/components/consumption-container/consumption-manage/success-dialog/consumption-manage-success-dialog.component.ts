@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FD_UI_DIALOG_DATA, FdUiDialogRef } from 'fd-ui-kit/material';
 import { TranslateModule } from '@ngx-translate/core';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog.component';
@@ -34,10 +34,9 @@ export type ConsumptionManageRedirectAction = 'Home' | 'ConsumptionList';
     imports: [TranslateModule, FdUiDialogComponent, FdUiDialogFooterDirective, FdUiButtonComponent],
 })
 export class ConsumptionManageSuccessDialogComponent {
-    public constructor(
-        @Inject(FD_UI_DIALOG_DATA) public readonly data: ConsumptionManageSuccessDialogData,
-        private readonly dialogRef: FdUiDialogRef<ConsumptionManageSuccessDialogComponent, ConsumptionManageRedirectAction>,
-    ) {}
+    readonly data = inject<ConsumptionManageSuccessDialogData>(FD_UI_DIALOG_DATA);
+    private readonly dialogRef = inject<FdUiDialogRef<ConsumptionManageSuccessDialogComponent, ConsumptionManageRedirectAction>>(FdUiDialogRef);
+
 
     public close(action: ConsumptionManageRedirectAction): void {
         this.dialogRef.close(action);

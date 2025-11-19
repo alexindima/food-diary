@@ -1,26 +1,34 @@
 <mat-form-field
-    class="fd-ui-textarea"
-    appearance="outline"
-    [ngClass]="sizeClass"
->
-    <mat-label *ngIf="label">
-        {{ label }}<span *ngIf="required" aria-hidden="true">*</span>
-    </mat-label>
+  class="fd-ui-textarea"
+  appearance="outline"
+  [ngClass]="sizeClass"
+  >
+  @if (label()) {
+    <mat-label>
+      {{ label() }}@if (required()) {
+      <span aria-hidden="true">*</span>
+    }
+  </mat-label>
+}
 
-    <textarea
-        matInput
-        [id]="id"
-        [rows]="rows"
-        [value]="internalValue"
-        [placeholder]="placeholder ?? ''"
-        [required]="required"
-        [readonly]="readonly"
-        [disabled]="disabled"
-        [attr.maxlength]="maxlength ?? null"
-        (input)="handleInput($any($event.target).value)"
-        (blur)="handleBlur()"
-    ></textarea>
+<textarea
+  matInput
+  [id]="id()"
+  [rows]="rows()"
+  [value]="internalValue"
+  [placeholder]="placeholder() ?? ''"
+  [required]="required()"
+  [readonly]="readonly()"
+  [disabled]="disabled"
+  [attr.maxlength]="maxlength() ?? null"
+  (input)="handleInput($any($event.target).value)"
+  (blur)="handleBlur()"
+></textarea>
 
-    <mat-hint *ngIf="hint && !error">{{ hint }}</mat-hint>
-    <mat-error *ngIf="error">{{ error }}</mat-error>
+@if (hint() && !error()) {
+  <mat-hint>{{ hint() }}</mat-hint>
+}
+@if (error()) {
+  <mat-error>{{ error() }}</mat-error>
+}
 </mat-form-field>

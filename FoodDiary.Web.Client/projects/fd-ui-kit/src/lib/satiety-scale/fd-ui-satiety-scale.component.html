@@ -1,24 +1,24 @@
 <div
     class="satiety-scale"
-    [class.satiety-scale--grid]="layout === 'grid'"
-    [class.satiety-scale--vertical]="layout === 'vertical'"
+    [class.satiety-scale--grid]="layout() === 'grid'"
+    [class.satiety-scale--vertical]="layout() === 'vertical'"
 >
-    @if (label) {
+    @if (label()) {
         <label class="satiety-scale__label">
-            {{ label }}
-            @if (required) {
+            {{ label() }}
+            @if (required()) {
                 <span class="satiety-scale__required">*</span>
             }
         </label>
     }
-    @if (hint) {
+    @if (hint()) {
         <p class="satiety-scale__hint">
-            {{ hint }}
+            {{ hint() }}
         </p>
     }
 
     <div class="satiety-scale__list" role="radiogroup" [attr.aria-disabled]="disabled">
-        @for (level of levels; track level.value) {
+        @for (level of levels(); track level.value) {
             <button
                 type="button"
                 class="satiety-scale__option"
@@ -45,7 +45,7 @@
         }
     </div>
 
-    @if (error) {
-        <div class="satiety-scale__error">{{ error }}</div>
+    @if (error()) {
+        <div class="satiety-scale__error">{{ error() }}</div>
     }
 </div>

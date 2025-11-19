@@ -27,62 +27,56 @@
                 <fd-ui-card class="product-manage__card" [title]="'PRODUCT_MANAGE.BASIC_INFO' | translate">
                     <div class="product-manage__basic-grid">
                         <div class="product-manage__field product-manage__field--full">
-                            <fd-ui-input
-                                formControlName="name"
+                            <fd-ui-input formControlName="name"
                                 [label]="('PRODUCT_MANAGE.NAME' | translate) + '*'"
                                 [placeholder]="'PRODUCT_MANAGE.NAME_PLACEHOLDER' | translate"
                                 [required]="true"
                                 [error]="getControlError('name')"
-                            ></fd-ui-input>
+                             />
                         </div>
                         <div class="product-manage__field">
-                            <fd-ui-input
-                                formControlName="barcode"
+                            <fd-ui-input formControlName="barcode"
                                 [label]="'PRODUCT_MANAGE.BARCODE' | translate"
                                 [placeholder]="'PRODUCT_MANAGE.BARCODE_PLACEHOLDER' | translate"
                                 [suffixButtonIcon]="'qr_code_scanner'"
                                 [suffixButtonAriaLabel]="'PRODUCT_MANAGE.SCAN_BARCODE' | translate"
                                 (suffixButtonClicked)="openBarcodeScanner()"
-                            ></fd-ui-input>
+                             />
                         </div>
                         <div class="product-manage__field">
-                            <fd-ui-select
-                                formControlName="productType"
+                            <fd-ui-select formControlName="productType"
                                 [label]="('PRODUCT_MANAGE.PRODUCT_TYPE' | translate) + '*'"
                                 [placeholder]="'PRODUCT_MANAGE.PRODUCT_TYPE_PLACEHOLDER' | translate"
                                 [options]="productTypeSelectOptions"
                                 [required]="true"
                                 [error]="getControlError('productType')"
-                            ></fd-ui-select>
+                             />
                         </div>
                         <div class="product-manage__serving-row product-manage__field--full">
                             <div class="product-manage__serving-part">
-                                <fd-ui-input
-                                    formControlName="baseAmount"
+                                <fd-ui-input formControlName="baseAmount"
                                     type="number"
                                     [label]="('PRODUCT_MANAGE.DEFAULT_SERVING' | translate) + '*'"
                                     [placeholder]="'PRODUCT_MANAGE.DEFAULT_SERVING_PLACEHOLDER' | translate"
                                     [required]="true"
                                     [error]="getControlError('baseAmount')"
-                                ></fd-ui-input>
+                                 />
                             </div>
                         <div class="product-manage__serving-part">
-                            <fd-ui-select
-                                formControlName="baseUnit"
+                            <fd-ui-select formControlName="baseUnit"
                                 [label]="('PRODUCT_MANAGE.DEFAULT_SERVING_UNIT' | translate) + '*'"
                                 [options]="unitOptions"
                                 [required]="true"
                                 [error]="getControlError('baseUnit')"
-                            ></fd-ui-select>
+                             />
                         </div>
                         </div>
                         <div class="product-manage__field product-manage__field--full">
-                            <fd-ui-textarea
-                                formControlName="comment"
+                            <fd-ui-textarea formControlName="comment"
                                 [label]="'PRODUCT_MANAGE.COMMENT' | translate"
                                 [placeholder]="'PRODUCT_MANAGE.COMMENT_PLACEHOLDER' | translate"
                                 [rows]="4"
-                            ></fd-ui-textarea>
+                             />
                         </div>
                     </div>
                 </fd-ui-card>
@@ -90,56 +84,51 @@
                 <fd-ui-card class="product-manage__card" [title]="'PRODUCT_MANAGE.NUTRITION_VALUE' | translate">
                     <div class="product-manage__nutrients-row product-manage__nutrients-row--two">
                         <div class="product-manage__nutrient">
-                            <fd-ui-input
-                                formControlName="caloriesPerBase"
+                            <fd-ui-input formControlName="caloriesPerBase"
                                 type="number"
                                 [label]="('PRODUCT_MANAGE.CALORIES' | translate) + ' ' + getDynamicNutrientPlaceholder + '*'"
                                 placeholder="0"
                                 [required]="true"
                                 [error]="getControlError('caloriesPerBase')"
-                            ></fd-ui-input>
+                             />
                         </div>
                         <div class="product-manage__nutrient">
-                            <fd-ui-input
-                                formControlName="fiberPerBase"
+                            <fd-ui-input formControlName="fiberPerBase"
                                 type="number"
                                 [label]="('PRODUCT_MANAGE.FIBER' | translate) + ' ' + getDynamicNutrientPlaceholder + '*'"
                                 placeholder="0"
                                 [required]="true"
                                 [error]="getControlError('fiberPerBase')"
-                            ></fd-ui-input>
+                             />
                         </div>
                     </div>
                     <div class="product-manage__nutrients-row product-manage__nutrients-row--three">
                         <div class="product-manage__nutrient">
-                            <fd-ui-input
-                                formControlName="proteinsPerBase"
+                            <fd-ui-input formControlName="proteinsPerBase"
                                 type="number"
                                 [label]="('PRODUCT_MANAGE.PROTEINS' | translate) + ' ' + getDynamicNutrientPlaceholder + '*'"
                                 placeholder="0"
                                 [required]="true"
                                 [error]="getControlError('proteinsPerBase')"
-                            ></fd-ui-input>
+                             />
                         </div>
                         <div class="product-manage__nutrient">
-                            <fd-ui-input
-                                formControlName="fatsPerBase"
+                            <fd-ui-input formControlName="fatsPerBase"
                                 type="number"
                                 [label]="('PRODUCT_MANAGE.FATS' | translate) + ' ' + getDynamicNutrientPlaceholder + '*'"
                                 placeholder="0"
                                 [required]="true"
                                 [error]="getControlError('fatsPerBase')"
-                            ></fd-ui-input>
+                             />
                         </div>
                         <div class="product-manage__nutrient">
-                            <fd-ui-input
-                                formControlName="carbsPerBase"
+                            <fd-ui-input formControlName="carbsPerBase"
                                 type="number"
                                 [label]="('PRODUCT_MANAGE.CARBS' | translate) + ' ' + getDynamicNutrientPlaceholder + '*'"
                                 placeholder="0"
                                 [required]="true"
                                 [error]="getControlError('carbsPerBase')"
-                            ></fd-ui-input>
+                             />
                         </div>
                     </div>
                 </fd-ui-card>
@@ -149,13 +138,12 @@
             <div class="product-manage__column product-manage__column--secondary">
                 <div class="product-manage__sticky-stack">
                     <fd-ui-card class="product-manage__card" [title]="'PRODUCT_MANAGE.VISIBILITY_GROUP_TITLE' | translate">
-                        <fd-ui-select
-                            formControlName="visibility"
+                        <fd-ui-select formControlName="visibility"
                             [label]="('PRODUCT_MANAGE.VISIBILITY' | translate) + '*'"
                             [required]="true"
                             [options]="visibilitySelectOptions"
                             [error]="getControlError('visibility')"
-                        ></fd-ui-select>
+                         />
                     </fd-ui-card>
 
                     <fd-ui-card
@@ -166,8 +154,7 @@
                             {{ 'PRODUCT_MANAGE.SUMMARY_CALORIES_LABEL' | translate }}:
                             <strong>{{ calories() | number:'1.0-0' }} {{ 'STATISTICS.KKAL' | translate }}</strong>
                         </p>
-                        <fd-nutrients-summary
-                            [bare]="true"
+                        <fd-nutrients-summary [bare]="true"
                             [calories]="calories()"
                             [nutrientChartData]="nutrientChartData()"
                             [config]="nutrientSummaryConfig"
@@ -177,7 +164,7 @@
                                     ? 'PRODUCT_AMOUNT_UNITS_SHORT.' + productForm.controls.baseUnit.value
                                     : 'PRODUCT_AMOUNT_UNITS_SHORT.G'
                             "
-                        ></fd-nutrients-summary>
+                         />
                     </fd-ui-card>
                 </div>
             </div>
@@ -212,7 +199,7 @@
                     </fd-ui-button>
                 }
             </div>
-            <fd-ui-form-error class="product-manage__footer-error" [error]="globalError()"></fd-ui-form-error>
+            <fd-ui-form-error class="product-manage__footer-error" [error]="globalError()" />
         </div>
     </form>
 </div>

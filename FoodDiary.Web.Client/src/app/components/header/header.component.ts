@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
@@ -17,15 +17,14 @@ import {
 @Component({
     selector: 'fd-header',
     imports: [
-        CommonModule,
-        TranslateModule,
-        RouterModule,
-        FdUiIconModule,
-        FdUiMenuComponent,
-        FdUiMenuTriggerDirective,
-        FdUiMenuItemComponent,
-        FdUiMenuDividerComponent,
-    ],
+    TranslateModule,
+    RouterModule,
+    FdUiIconModule,
+    FdUiMenuComponent,
+    FdUiMenuTriggerDirective,
+    FdUiMenuItemComponent,
+    FdUiMenuDividerComponent
+],
     templateUrl: './header.component.html',
     styleUrls: ['./header.component.scss']
 })

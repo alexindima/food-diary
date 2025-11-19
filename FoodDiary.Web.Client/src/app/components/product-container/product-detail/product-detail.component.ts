@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Inject, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Product } from '../../../types/product.data';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
@@ -76,7 +76,9 @@ export class ProductDetailComponent {
             : 'PRODUCT_DETAIL.WARNING_NOT_OWNER';
     }
 
-    public constructor(@Inject(FD_UI_DIALOG_DATA) data: Product) {
+    public constructor() {
+        const data = inject<Product>(FD_UI_DIALOG_DATA);
+
         this.product = data;
         this.productTypeKey = buildProductTypeTranslationKey(this.product.productType ?? this.product.category ?? null);
 

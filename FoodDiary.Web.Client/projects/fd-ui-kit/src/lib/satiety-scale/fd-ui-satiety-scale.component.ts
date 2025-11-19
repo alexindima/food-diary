@@ -1,13 +1,5 @@
-import { CommonModule } from '@angular/common';
-import {
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    EventEmitter,
-    Input,
-    Output,
-    forwardRef,
-} from '@angular/core';
+
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, inject, input, output } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 
@@ -84,7 +76,7 @@ export const DEFAULT_SATIETY_LEVELS: FdUiSatietyScaleLevel[] = [
 @Component({
     selector: 'fd-ui-satiety-scale',
     standalone: true,
-    imports: [CommonModule, TranslateModule],
+    imports: [TranslateModule],
     templateUrl: './fd-ui-satiety-scale.component.html',
     styleUrls: ['./fd-ui-satiety-scale.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -97,21 +89,21 @@ export const DEFAULT_SATIETY_LEVELS: FdUiSatietyScaleLevel[] = [
     ],
 })
 export class FdUiSatietyScaleComponent implements ControlValueAccessor {
-    @Input() public label?: string;
-    @Input() public hint?: string;
-    @Input() public error?: string | null;
-    @Input() public required = false;
-    @Input() public layout: 'grid' | 'vertical' = 'grid';
-    @Input() public levels: FdUiSatietyScaleLevel[] = DEFAULT_SATIETY_LEVELS;
-    @Output() public levelSelected = new EventEmitter<number>();
+    private readonly cdr = inject(ChangeDetectorRef);
+
+    public readonly label = input<string>();
+    public readonly hint = input<string>();
+    public readonly error = input<string | null>();
+    public readonly required = input(false);
+    public readonly layout = input<'grid' | 'vertical'>('grid');
+    public readonly levels = input<FdUiSatietyScaleLevel[]>(DEFAULT_SATIETY_LEVELS);
+    public readonly levelSelected = output<number>();
 
     protected value: number | null = null;
     protected disabled = false;
 
     private onChange: (value: number | null) => void = () => undefined;
     private onTouched: () => void = () => undefined;
-
-    public constructor(private readonly cdr: ChangeDetectorRef) {}
 
     public writeValue(value: number | null): void {
         this.value = value;

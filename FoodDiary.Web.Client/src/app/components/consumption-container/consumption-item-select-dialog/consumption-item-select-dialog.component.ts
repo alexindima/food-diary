@@ -1,11 +1,11 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject, input, output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Product } from '../../../types/product.data';
 import { Recipe } from '../../../types/recipe.data';
 import { ProductListDialogComponent } from '../../product-container/product-list/product-list-dialog/product-list-dialog.component';
 import { RecipeSelectDialogComponent } from '../../recipe-container/recipe-select-dialog/recipe-select-dialog.component';
 import { FD_UI_DIALOG_DATA, FdUiDialogRef } from 'fd-ui-kit/material';
-import { Inject, Optional } from '@angular/core';
+
 import { FdUiTabsComponent, FdUiTab } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
 
 export type ConsumptionItemSelection =
@@ -25,10 +25,12 @@ export type ConsumptionItemSelectDialogData = {
     imports: [FdUiTabsComponent, TranslatePipe, ProductListDialogComponent, RecipeSelectDialogComponent],
 })
 export class ConsumptionItemSelectDialogComponent implements OnInit {
-    @Input() public embedded: boolean = false;
-    @Output() public productSelected = new EventEmitter<Product>();
-    @Output() public recipeSelected = new EventEmitter<Recipe>();
-    @Output() public createRecipeRequested = new EventEmitter<void>();
+    private readonly dialogData = inject<ConsumptionItemSelectDialogData | null>(FD_UI_DIALOG_DATA, { optional: true });
+
+    public readonly embedded = input<boolean>(false);
+    public readonly productSelected = output<Product>();
+    public readonly recipeSelected = output<Recipe>();
+    public readonly createRecipeRequested = output<void>();
     public readonly tabs: FdUiTab[] = [
         {
             value: 'Product',
@@ -45,14 +47,8 @@ export class ConsumptionItemSelectDialogComponent implements OnInit {
         { optional: true },
     );
 
-    public constructor(
-        @Optional()
-        @Inject(FD_UI_DIALOG_DATA)
-        private readonly dialogData: ConsumptionItemSelectDialogData | null,
-    ) {}
-
     public ngOnInit(): void {
-        if (!this.embedded && this.dialogData?.initialTab === 'Recipe') {
+        if (!this.embedded() && this.dialogData?.initialTab === 'Recipe') {
             this.activeTab = 'Recipe';
         }
     }
@@ -70,12 +66,13 @@ export class ConsumptionItemSelectDialogComponent implements OnInit {
     }
 
     private completeWith(selection: ConsumptionItemSelection | null): void {
-        if (!this.embedded && this.dialogRef) {
+        if (!this.embedded() && this.dialogRef) {
             this.dialogRef.close(selection);
             return;
         }
 
         if (!selection) {
+            // TODO: The 'emit' function requires a mandatory void argument
             this.createRecipeRequested.emit();
             return;
         }

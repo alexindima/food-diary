@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { ComponentType } from '@angular/cdk/portal';
 import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
 import { FdUiDialogSize } from './fd-ui-dialog.component';
@@ -11,7 +11,8 @@ export interface FdUiDialogConfig<D = unknown> extends MatDialogConfig<D> {
     providedIn: 'root',
 })
 export class FdUiDialogService {
-    public constructor(private readonly matDialog: MatDialog) {}
+    private readonly matDialog = inject(MatDialog);
+
 
     public open<T, D = unknown, R = unknown>(
         component: ComponentType<T>,

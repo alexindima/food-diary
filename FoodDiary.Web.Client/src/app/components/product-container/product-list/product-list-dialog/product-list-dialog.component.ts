@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ProductListBaseComponent } from '../product-list-base.component';
 import { Product } from '../../../../types/product.data';
@@ -32,8 +32,8 @@ import { FdUiIconModule } from 'fd-ui-kit/material';
     ]
 })
 export class ProductListDialogComponent extends ProductListBaseComponent {
-    @Input() public embedded: boolean = false;
-    @Output() public productSelected = new EventEmitter<Product>();
+    public readonly embedded = input<boolean>(false);
+    public readonly productSelected = output<Product>();
 
     private readonly dialogRef = inject(FdUiDialogRef<ProductListDialogComponent, Product | null>, {
         optional: true,
@@ -56,7 +56,7 @@ export class ProductListDialogComponent extends ProductListBaseComponent {
     }
 
     private handleSelection(product: Product): void {
-        if (!this.embedded && this.dialogRef) {
+        if (!this.embedded() && this.dialogRef) {
             this.dialogRef.close(product);
         } else {
             this.productSelected.emit(product);

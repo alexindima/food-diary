@@ -1,12 +1,5 @@
-import { CommonModule } from '@angular/common';
-import {
-    ChangeDetectionStrategy,
-    Component,
-    Inject,
-    InjectionToken,
-    Input,
-    Optional,
-} from '@angular/core';
+
+import { ChangeDetectionStrategy, Component, InjectionToken, inject, input } from '@angular/core';
 import { AbstractControl } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
@@ -35,7 +28,7 @@ export const FD_VALIDATION_ERRORS = new InjectionToken<FdValidationErrors>('FD_V
 @Component({
     selector: 'fd-ui-form-error',
     standalone: true,
-    imports: [CommonModule, TranslateModule],
+    imports: [TranslateModule],
     template: `
         @if (message) {
             <p class="fd-ui-form-error__text">{{ message }}</p>
@@ -45,25 +38,25 @@ export const FD_VALIDATION_ERRORS = new InjectionToken<FdValidationErrors>('FD_V
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FdUiFormErrorComponent {
-    @Input() public control?: AbstractControl | null;
-    @Input() public error?: string | null;
-    @Input() public context?: Record<string, unknown>;
+    private readonly translate = inject(TranslateService);
+    private readonly validationErrors = inject<FdValidationErrors>(FD_VALIDATION_ERRORS, { optional: true });
 
-    public constructor(
-        private readonly translate: TranslateService,
-        @Optional() @Inject(FD_VALIDATION_ERRORS) private readonly validationErrors?: FdValidationErrors,
-    ) {}
+    public readonly control = input<AbstractControl | null>();
+    public readonly error = input<string | null>();
+    public readonly context = input<Record<string, unknown>>();
 
     public get message(): string | null {
-        if (this.error) {
-            return this.translate.instant(this.error, this.context);
+        const error = this.error();
+        if (error) {
+            return this.translate.instant(error, this.context());
         }
 
-        if (!this.control || !this.control.invalid || !this.control.touched) {
+        const control = this.control();
+        if (!control || !control.invalid || !control.touched) {
             return null;
         }
 
-        const errors = this.control.errors;
+        const errors = control.errors;
         if (!errors) {
             return null;
         }
@@ -80,13 +73,13 @@ export class FdUiFormErrorComponent {
             const result = resolver(controlErrors[key]);
 
             if (typeof result === 'string') {
-                return this.translate.instant(result, { ...controlParams, ...(this.context ?? {}) });
+                return this.translate.instant(result, { ...controlParams, ...(this.context() ?? {}) });
             }
 
             return this.translate.instant(result.key, {
                 ...controlParams,
                 ...(result.params ?? {}),
-                ...(this.context ?? {}),
+                ...(this.context() ?? {}),
             });
         }
 
