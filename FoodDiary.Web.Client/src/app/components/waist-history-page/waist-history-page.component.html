@@ -14,12 +14,12 @@
         </div>
         @if (selectedRange() === 'custom') {
             <div class="waist-history-page__custom-range">
-                <fd-ui-date-input
+                <fd-ui-date-range-input
                     class="waist-history-page__custom-range-input"
-                    mode="range"
-                    [placeholder]="'WAIST_HISTORY.CUSTOM_RANGE_PLACEHOLDER' | translate"
+                    [startPlaceholder]="'WAIST_HISTORY.CUSTOM_RANGE_PLACEHOLDER' | translate"
+                    [endPlaceholder]="'WAIST_HISTORY.CUSTOM_RANGE_PLACEHOLDER' | translate"
                     [formControl]="customRangeControl"
-                ></fd-ui-date-input>
+                ></fd-ui-date-range-input>
             </div>
         }
         @if (isSummaryLoading()) {
@@ -98,7 +98,6 @@
                     <fd-ui-date-input
                         class="waist-history-page__form-control"
                         formControlName="date"
-                        mode="single"
                         [label]="'WAIST_HISTORY.DATE_LABEL' | translate"
                         [placeholder]="'WAIST_HISTORY.DATE_PLACEHOLDER' | translate"
                     ></fd-ui-date-input>

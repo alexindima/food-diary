@@ -10,6 +10,7 @@ import {
 import {
     ControlValueAccessor,
     FormControl,
+    FormGroup,
     NG_VALUE_ACCESSOR,
     ReactiveFormsModule,
 } from '@angular/forms';
@@ -21,8 +22,13 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { FdUiFieldSize } from '../types/field-size.type';
 
+export interface FdUiDateRangeValue {
+    start: Date | null;
+    end: Date | null;
+}
+
 @Component({
-    selector: 'fd-ui-date-input',
+    selector: 'fd-ui-date-range-input',
     standalone: true,
     imports: [
         CommonModule,
@@ -32,49 +38,56 @@ import { FdUiFieldSize } from '../types/field-size.type';
         MatDatepickerModule,
         MatNativeDateModule,
     ],
-    templateUrl: './fd-ui-date-input.component.html',
-    styleUrls: ['./fd-ui-date-input.component.scss'],
+    templateUrl: './fd-ui-date-range-input.component.html',
+    styleUrls: ['./fd-ui-date-range-input.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,
-            useExisting: forwardRef((): typeof FdUiDateInputComponent => FdUiDateInputComponent),
+            useExisting: forwardRef((): typeof FdUiDateRangeInputComponent => FdUiDateRangeInputComponent),
             multi: true,
         },
     ],
 })
-export class FdUiDateInputComponent implements ControlValueAccessor {
+export class FdUiDateRangeInputComponent implements ControlValueAccessor {
     @Input() public label?: string;
-    @Input() public placeholder = '';
+    @Input() public startPlaceholder = '';
+    @Input() public endPlaceholder = '';
     @Input() public min?: Date;
     @Input() public max?: Date;
     @Input() public floatLabel: 'auto' | 'always' = 'auto';
     @Input() public size: FdUiFieldSize = 'md';
     @Input() public hideSubscript = false;
 
-    protected readonly dateControl = new FormControl<Date | null>(null);
+    protected readonly rangeGroup = new FormGroup({
+        start: new FormControl<Date | null>(null),
+        end: new FormControl<Date | null>(null),
+    });
     protected isDisabled = false;
 
     private readonly destroyRef = inject(DestroyRef);
-    private onChange: (value: Date | null) => void = () => undefined;
+    private onChange: (value: FdUiDateRangeValue) => void = () => undefined;
     private onTouched: () => void = () => undefined;
 
     public constructor(private readonly cdr: ChangeDetectorRef) {
-        this.dateControl.valueChanges
+        this.rangeGroup.valueChanges
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(value => {
-                this.onChange(value ?? null);
+                this.onChange({
+                    start: value.start ?? null,
+                    end: value.end ?? null,
+                });
             });
     }
 
-    public writeValue(value: Date | string | number | null): void {
-        const coerced = this.toDateValue(value);
-        this.dateControl.setValue(coerced, { emitEvent: false });
+    public writeValue(value: FdUiDateRangeValue | null): void {
+        const coerced = this.toRangeValue(value);
+        this.rangeGroup.setValue(coerced, { emitEvent: false });
         this.cdr.markForCheck();
     }
 
-    public registerOnChange(fn: (value: Date | null) => void): void {
+    public registerOnChange(fn: (value: FdUiDateRangeValue) => void): void {
         this.onChange = fn;
     }
 
@@ -85,9 +98,9 @@ export class FdUiDateInputComponent implements ControlValueAccessor {
     public setDisabledState(isDisabled: boolean): void {
         this.isDisabled = isDisabled;
         if (isDisabled) {
-            this.dateControl.disable({ emitEvent: false });
+            this.rangeGroup.disable({ emitEvent: false });
         } else {
-            this.dateControl.enable({ emitEvent: false });
+            this.rangeGroup.enable({ emitEvent: false });
         }
         this.cdr.markForCheck();
     }
@@ -97,7 +110,18 @@ export class FdUiDateInputComponent implements ControlValueAccessor {
     }
 
     protected get sizeClass(): string {
-        return `fd-ui-date-input--size-${this.size}`;
+        return `fd-ui-date-range-input--size-${this.size}`;
+    }
+
+    private toRangeValue(value: FdUiDateRangeValue | null): FdUiDateRangeValue {
+        if (!value) {
+            return { start: null, end: null };
+        }
+
+        return {
+            start: this.toDateValue(value.start),
+            end: this.toDateValue(value.end),
+        };
     }
 
     private toDateValue(value: Date | string | number | null | undefined): Date | null {

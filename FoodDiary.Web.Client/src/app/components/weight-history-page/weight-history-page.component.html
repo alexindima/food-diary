@@ -14,12 +14,12 @@
         </div>
         @if (selectedRange() === 'custom') {
             <div class="weight-history-page__custom-range">
-                <fd-ui-date-input
+                <fd-ui-date-range-input
                     class="weight-history-page__custom-range-input"
-                    mode="range"
-                    [placeholder]="'WEIGHT_HISTORY.CUSTOM_RANGE_PLACEHOLDER' | translate"
+                    [startPlaceholder]="'WEIGHT_HISTORY.CUSTOM_RANGE_PLACEHOLDER' | translate"
+                    [endPlaceholder]="'WEIGHT_HISTORY.CUSTOM_RANGE_PLACEHOLDER' | translate"
                     [formControl]="customRangeControl"
-                ></fd-ui-date-input>
+                ></fd-ui-date-range-input>
             </div>
         }
         @if (isSummaryLoading()) {
@@ -99,7 +99,6 @@
                     <fd-ui-date-input
                         class="weight-history-page__form-control"
                         formControlName="date"
-                        mode="single"
                         [label]="'WEIGHT_HISTORY.DATE_LABEL' | translate"
                         [placeholder]="'WEIGHT_HISTORY.DATE_PLACEHOLDER' | translate"
                     ></fd-ui-date-input>

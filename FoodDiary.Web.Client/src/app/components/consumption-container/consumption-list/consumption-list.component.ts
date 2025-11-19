@@ -14,7 +14,7 @@ import {
 import { FormGroupControls } from '../../../types/common.data';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
-import { FdUiDateInputComponent, FdUiDateRangeValue } from 'fd-ui-kit/date-input/fd-ui-date-input.component';
+import { FdUiDateRangeInputComponent, FdUiDateRangeValue } from 'fd-ui-kit/date-range-input/fd-ui-date-range-input.component';
 import { FdUiEntityCardComponent } from 'fd-ui-kit/entity-card/fd-ui-entity-card.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
@@ -32,7 +32,7 @@ import { FdUiIconModule } from 'fd-ui-kit/material';
         DatePipe,
         DecimalPipe,
         FdUiButtonComponent,
-        FdUiDateInputComponent,
+        FdUiDateRangeInputComponent,
         FdUiEntityCardComponent,
         FdUiLoaderComponent,
         FdUiPaginationComponent,

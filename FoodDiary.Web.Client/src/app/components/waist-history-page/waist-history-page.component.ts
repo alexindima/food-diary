@@ -17,6 +17,7 @@ import { FdUiTabsComponent, FdUiTab } from 'fd-ui-kit/tabs/fd-ui-tabs.component'
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDateInputComponent } from 'fd-ui-kit/date-input/fd-ui-date-input.component';
+import { FdUiDateRangeInputComponent } from 'fd-ui-kit/date-range-input/fd-ui-date-range-input.component';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { WaistEntriesService } from '../../services/waist-entries.service';
 import { NavigationService } from '../../services/navigation.service';
@@ -42,6 +43,7 @@ import { UserService } from '../../services/user.service';
         FdUiCardComponent,
         FdUiButtonComponent,
         FdUiDateInputComponent,
+        FdUiDateRangeInputComponent,
         FdUiInputComponent,
     ],
     templateUrl: './waist-history-page.component.html',

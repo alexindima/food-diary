@@ -12,12 +12,12 @@
                 (selectedValueChange)="changeRange($event)"
             ></fd-ui-tabs>
             @if (selectedRange() === 'custom') {
-                <fd-ui-date-input
+                <fd-ui-date-range-input
                     class="statistics__custom-range"
-                    mode="range"
-                    [placeholder]="'STATISTICS.CUSTOM_RANGE_PLACEHOLDER' | translate"
+                    [startPlaceholder]="'STATISTICS.CUSTOM_RANGE_PLACEHOLDER' | translate"
+                    [endPlaceholder]="'STATISTICS.CUSTOM_RANGE_PLACEHOLDER' | translate"
                     [formControl]="customRangeControl"
-                ></fd-ui-date-input>
+                ></fd-ui-date-range-input>
             }
         </div>
     </header>

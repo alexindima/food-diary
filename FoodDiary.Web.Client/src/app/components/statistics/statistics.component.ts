@@ -17,7 +17,7 @@ import { map, finalize, Observable, forkJoin } from 'rxjs';
 
 import { FdUiTabsComponent, FdUiTab } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
-import { FdUiDateInputComponent } from 'fd-ui-kit/date-input/fd-ui-date-input.component';
+import { FdUiDateRangeInputComponent } from 'fd-ui-kit/date-range-input/fd-ui-date-range-input.component';
 import { StatisticsService } from '../../services/statistics.service';
 import { MappedStatistics, StatisticsMapper } from '../../types/statistics.data';
 import { CHART_COLORS } from '../../constants/chart-colors';
@@ -46,7 +46,7 @@ interface DateRange {
         BaseChartDirective,
         FdUiTabsComponent,
         FdUiCardComponent,
-        FdUiDateInputComponent,
+        FdUiDateRangeInputComponent,
     ],
     templateUrl: './statistics.component.html',
     styleUrls: ['./statistics.component.scss'],

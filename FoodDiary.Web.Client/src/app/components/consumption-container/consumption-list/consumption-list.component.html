@@ -4,13 +4,13 @@
     <div class="consumption-list__actions">
         <div class="consumption-list__search-group">
             <form [formGroup]="searchForm" class="consumption-list__date-range-form">
-                <fd-ui-date-input
+                <fd-ui-date-range-input
                     formControlName="dateRange"
-                    mode="range"
                     class="consumption-list__date-input"
                     [label]="'CONSUMPTION_LIST.CHOOSE_DATES' | translate"
-                    [placeholder]="'CONSUMPTION_LIST.DATE_PLACEHOLDER' | translate"
-                ></fd-ui-date-input>
+                    [startPlaceholder]="'CONSUMPTION_LIST.DATE_PLACEHOLDER' | translate"
+                    [endPlaceholder]="'CONSUMPTION_LIST.DATE_PLACEHOLDER' | translate"
+                ></fd-ui-date-range-input>
             </form>
         </div>
         <fd-ui-button

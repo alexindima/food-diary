@@ -18,6 +18,7 @@ import { WeightEntry, WeightEntryFilters, WeightEntrySummaryFilters, WeightEntry
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDateInputComponent } from 'fd-ui-kit/date-input/fd-ui-date-input.component';
+import { FdUiDateRangeInputComponent } from 'fd-ui-kit/date-range-input/fd-ui-date-range-input.component';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiTabsComponent, FdUiTab } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
 import { UserService } from '../../services/user.service';
@@ -35,6 +36,7 @@ import { NavigationService } from '../../services/navigation.service';
         FdUiCardComponent,
         FdUiButtonComponent,
         FdUiDateInputComponent,
+        FdUiDateRangeInputComponent,
         FdUiInputComponent,
     ],
     templateUrl: './weight-history-page.component.html',
