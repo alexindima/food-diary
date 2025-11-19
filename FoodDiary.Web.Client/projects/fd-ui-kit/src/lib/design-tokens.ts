@@ -65,6 +65,23 @@ const COLOR_DIALOG = {
     overlay: 'rgba(15, 23, 42, 0.6)',
 } as const;
 
+const LAYOUT_PAGE = {
+    background: COLOR_BACKGROUND.page,
+    horizontalPadding: '32px',
+    verticalPadding: '48px',
+    contentMaxWidth: '1200px',
+    sectionSpacing: '40px',
+} as const;
+
+const LAYOUT_HEADER = {
+    height: '72px',
+    background: COLOR_PRIMARY['800'],
+    textColor: '#FFFFFF',
+    shadow: '0 12px 34px rgba(15, 23, 42, 0.12)',
+    horizontalPaddingLeft: '32px',
+    horizontalPaddingRight: '16px',
+} as const;
+
 export const DESIGN_TOKEN_VALUES = {
     color: {
         primary: COLOR_PRIMARY,
@@ -74,6 +91,10 @@ export const DESIGN_TOKEN_VALUES = {
         background: COLOR_BACKGROUND,
         chart: COLOR_CHART,
         dialog: COLOR_DIALOG,
+    },
+    layout: {
+        page: LAYOUT_PAGE,
+        header: LAYOUT_HEADER,
     },
     button: {
         primary: {
@@ -232,6 +253,23 @@ export const DESIGN_TOKEN_CSS_VARIABLES = {
             surfaceMuted: '--fd-color-dialog-surface-muted',
             border: '--fd-color-dialog-border',
             overlay: '--fd-color-dialog-overlay',
+        },
+    },
+    layout: {
+        page: {
+            background: '--fd-layout-page-background',
+            horizontalPadding: '--fd-layout-page-horizontal-padding',
+            verticalPadding: '--fd-layout-page-vertical-padding',
+            contentMaxWidth: '--fd-layout-page-content-max-width',
+            sectionSpacing: '--fd-layout-page-section-spacing',
+        },
+        header: {
+            height: '--fd-layout-header-height',
+            background: '--fd-layout-header-background',
+            textColor: '--fd-layout-header-text-color',
+            shadow: '--fd-layout-header-shadow',
+            horizontalPaddingLeft: '--fd-layout-header-horizontal-padding-left',
+            horizontalPaddingRight: '--fd-layout-header-horizontal-padding-right',
         },
     },
     button: {

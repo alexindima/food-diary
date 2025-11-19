@@ -47,12 +47,31 @@ $fd-elevation-tokens: (
     md: 0 4px 12px rgba(24, 39, 75, 0.15),
 );
 
+$fd-layout-page-tokens: (
+    background: #f5f7fb,
+    horizontal-padding: 32px,
+    vertical-padding: 48px,
+    content-max-width: 1200px,
+    section-spacing: 40px,
+);
+
+$fd-layout-header-tokens: (
+    height: 72px,
+    background: #1b2a80,
+    text-color: #ffffff,
+    horizontal-padding-left: 32px,
+    horizontal-padding-right: 16px,
+    shadow: 0 12px 34px rgba(15, 23, 42, 0.12),
+);
+
 $fd-design-tokens: (
     colors: $fd-color-tokens,
     radius: $fd-radius-tokens,
     spacing: $fd-spacing-tokens,
     typography: $fd-typography-tokens,
     elevation: $fd-elevation-tokens,
+    layout-page: $fd-layout-page-tokens,
+    layout-header: $fd-layout-header-tokens,
 );
 
 @function fd-token($group, $name) {
@@ -109,5 +128,18 @@ $fd-design-tokens: (
         --fd-shadow-xs: #{fd-token(elevation, xs)};
         --fd-shadow-sm: #{fd-token(elevation, sm)};
         --fd-shadow-md: #{fd-token(elevation, md)};
+
+        --fd-layout-page-background: #{fd-token(layout-page, background)};
+        --fd-layout-page-horizontal-padding: #{fd-token(layout-page, horizontal-padding)};
+        --fd-layout-page-vertical-padding: #{fd-token(layout-page, vertical-padding)};
+        --fd-layout-page-content-max-width: #{fd-token(layout-page, content-max-width)};
+        --fd-layout-page-section-spacing: #{fd-token(layout-page, section-spacing)};
+
+        --fd-layout-header-height: #{fd-token(layout-header, height)};
+        --fd-layout-header-background: #{fd-token(layout-header, background)};
+        --fd-layout-header-text-color: #{fd-token(layout-header, text-color)};
+        --fd-layout-header-horizontal-padding-left: #{fd-token(layout-header, horizontal-padding-left)};
+        --fd-layout-header-horizontal-padding-right: #{fd-token(layout-header, horizontal-padding-right)};
+        --fd-layout-header-shadow: #{fd-token(layout-header, shadow)};
     }
 }

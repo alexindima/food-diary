@@ -1,5 +1,9 @@
 <div class="fd-root">
     <fd-header class="fd-root__header"></fd-header>
-    <router-outlet class="fd-root__content"></router-outlet>
+    <div fdLayoutPage class="fd-root__content">
+        <div class="fd-layout-page__content">
+            <router-outlet></router-outlet>
+        </div>
+    </div>
     <fd-footer class="fd-root__footer"></fd-footer>
 </div>

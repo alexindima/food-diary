@@ -11,7 +11,26 @@ body {
     font-size: var(--fd-font-size-base, 16px);
     line-height: var(--fd-line-height-base, 1.5);
     color: var(--fd-color-text, #333333);
-    background-color: var(--fd-color-page-background, #f5f6fa);
+    background-color: var(--fd-layout-page-background, #f5f6fa);
+}
+
+.fd-layout-page {
+    width: 100%;
+    min-height: 0;
+    background: var(--fd-layout-page-background);
+    padding: var(--fd-layout-page-vertical-padding) var(--fd-layout-page-horizontal-padding);
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+}
+
+.fd-layout-page__content {
+    width: 100%;
+    max-width: var(--fd-layout-page-content-max-width);
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--fd-layout-page-section-spacing);
 }
 
 .mat-mdc-snack-bar-container.fd-ui-toast {

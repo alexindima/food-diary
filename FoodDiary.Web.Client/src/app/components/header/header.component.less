@@ -1,13 +1,18 @@
 @import 'variables';
 
 .header {
-    position: relative;
-    z-index: 1;
+    position: sticky;
+    top: 0;
+    z-index: 10;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid var(--tui-border-normal);
-    padding-left: @gap-l;
+    min-height: var(--fd-layout-header-height);
+    background: var(--fd-layout-header-background);
+    color: var(--fd-layout-header-text-color);
+    padding-left: var(--fd-layout-header-horizontal-padding-left);
+    padding-right: var(--fd-layout-header-horizontal-padding-right);
+    box-shadow: var(--fd-layout-header-shadow);
 
     &__logo {
         display: flex;
@@ -30,34 +35,36 @@
     &__tabs-container {
         display: flex;
         align-items: center;
-        padding: 0 @gap-m;
     }
 
     &__tabs {
         display: flex;
-        gap: @gap-s;
 
         .header__tab {
             border: none;
             background: transparent;
-            padding: @gap-xs @gap-s;
+            padding: 6px @gap-s;
             font: inherit;
-            color: @color-text-main;
+            color: inherit;
             text-decoration: none;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
             gap: 6px;
             border-bottom: 2px solid transparent;
+            border-radius: 0;
             transition: color 0.2s ease, border-color 0.2s ease;
+            color: #d1d5db;
+            border-color: transparent;
 
             &.active-tab {
-                color: @color-primary;
-                border-color: @color-primary;
+                color: #ffffff;
+                border-color: #ffffff;
             }
 
-            &:hover {
-                color: @color-primary;
+            &:hover:not(.active-tab) {
+                color: #ffffff;
+                border-color: transparent;
             }
         }
 
@@ -69,7 +76,8 @@
     &__tab--dropdown {
         mat-icon {
             font-size: 18px;
-            vertical-align: middle;
+            display: flex;
+            align-items: center;
         }
 
         @media @media-tablet {
@@ -87,7 +95,7 @@ tui-tabs::before {
     height: 56px;
     border: none;
     background: transparent;
-    color: @color-text-main;
+    color: inherit;
     font: inherit;
     cursor: pointer;
     gap: 4px;
