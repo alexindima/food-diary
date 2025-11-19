@@ -2,9 +2,6 @@
     <div class="recipe-list__header">
         <h2 class="recipe-list__title">
             {{ 'RECIPE_LIST.TITLE' | translate }}
-            @if (searchForm.controls.search.value) {
-                ({{ 'RECIPE_LIST.SEARCH_TITLE' | translate }} {{ searchForm.controls.search.value }})
-            }
         </h2>
 
         <div class="recipe-list__actions">
@@ -13,8 +10,10 @@
                     class="recipe-list__search-input"
                     formControlName="search"
                     prefixIcon="search"
+                    [label]="'RECIPE_LIST.SEARCH_PLACEHOLDER' | translate"
                     [clearable]="true"
                     [placeholder]="'RECIPE_LIST.SEARCH_PLACEHOLDER' | translate"
+                    [hideSubscript]="true"
                     (cleared)="searchForm.controls.search.setValue('')"
                 ></fd-ui-input>
             </form>

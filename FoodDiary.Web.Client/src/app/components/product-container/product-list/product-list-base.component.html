@@ -2,9 +2,6 @@
     <div class="product-list__header">
         <h2 class="product-list__title">
             {{ 'PRODUCT_LIST.TITLE' | translate }}
-            @if (searchForm.controls.search.value) {
-                ({{ 'PRODUCT_LIST.SEARCH_TITLE' | translate }} {{ searchForm.controls.search.value }})
-            }
         </h2>
 
         <div class="product-list__actions">
@@ -13,10 +10,12 @@
                     class="product-list__search-input"
                     formControlName="search"
                     prefixIcon="search"
+                    [label]="'PRODUCT_LIST.SEARCH_PLACEHOLDER' | translate"
                     [clearable]="true"
                     [placeholder]="'PRODUCT_LIST.SEARCH_PLACEHOLDER' | translate"
                     suffixButtonIcon="qr_code_scanner"
                     [suffixButtonAriaLabel]="'PRODUCT_LIST.SCAN_BARCODE' | translate"
+                    [hideSubscript]="true"
                     (cleared)="searchForm.controls.search.setValue('')"
                     (suffixButtonClicked)="openBarcodeScanner()"
                 ></fd-ui-input>

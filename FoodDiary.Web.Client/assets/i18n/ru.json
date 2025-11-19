@@ -120,7 +120,7 @@
     "PRODUCT_LIST": {
         "TITLE": "Список продуктов",
         "SEARCH_TITLE": "Поиск:",
-        "SEARCH_PLACEHOLDER": "Введите название или штрихкод",
+        "SEARCH_PLACEHOLDER": "Поиск по названию или штрихкоду",
         "SEARCH_BUTTON": "Поиск",
         "ADD_PRODUCT_BUTTON": "Добавить",
         "ONLY_MY_PRODUCTS": "Только мои",

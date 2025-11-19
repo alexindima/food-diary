@@ -2,7 +2,7 @@
     [appearance]="appearance"
     [floatLabel]="floatLabel"
     class="fd-ui-input"
-    [ngClass]="sizeClass"
+    [ngClass]="[sizeClass, hideSubscript ? 'fd-ui-input--no-subscript' : '']"
     [class.fd-ui-input--focused]="isFocused"
     [class.fd-ui-input--has-error]="!!error"
 >

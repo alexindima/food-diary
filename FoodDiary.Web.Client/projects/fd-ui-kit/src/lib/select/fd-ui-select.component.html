@@ -2,7 +2,7 @@
     class="fd-ui-select"
     appearance="outline"
     [floatLabel]="floatLabel"
-    [ngClass]="sizeClass"
+    [ngClass]="[sizeClass, hideSubscript ? 'fd-ui-select--no-subscript' : '']"
 >
     <mat-label *ngIf="label">
         {{ label }}<span *ngIf="required" aria-hidden="true">*</span>

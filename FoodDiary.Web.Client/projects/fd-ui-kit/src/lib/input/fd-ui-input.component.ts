@@ -54,6 +54,7 @@ export class FdUiInputComponent implements ControlValueAccessor {
     @Input() public suffixButtonAriaLabel?: string;
     @Input() public step?: string | number;
     @Input() public size: FdUiFieldSize = 'md';
+    @Input() public hideSubscript = false;
 
     @Output() public cleared = new EventEmitter<void>();
     @Output() public suffixButtonClicked = new EventEmitter<void>();
