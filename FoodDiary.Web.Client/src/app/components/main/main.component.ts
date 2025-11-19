@@ -8,7 +8,7 @@ import { AuthService } from '../../services/auth.service';
     selector: 'fd-main',
     imports: [HeroComponent, FeaturesComponent, TodayConsumptionComponent],
     templateUrl: './main.component.html',
-    styleUrls: ['./main.component.less']
+    styleUrls: ['./main.component.scss']
 })
 export class MainComponent {
     private readonly authService = inject(AuthService);

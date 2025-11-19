@@ -36,7 +36,7 @@
                         "styles": [
                             "src/styles/design-tokens.global.scss",
                             "src/styles/material-theme.scss",
-                            "src/styles.less"
+                            "src/styles.scss"
                         ],
                         "scripts": [],
                         "stylePreprocessorOptions": {
@@ -132,7 +132,7 @@
                         "styles": [
                             "src/styles/design-tokens.global.scss",
                             "src/styles/material-theme.scss",
-                            "src/styles.less"
+                            "src/styles.scss"
                         ],
                         "scripts": []
                     }

@@ -8,7 +8,7 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
     selector: 'fd-hero',
     imports: [CommonModule, FdUiButtonComponent, TranslateModule],
     templateUrl: './hero.component.html',
-    styleUrl: './hero.component.less'
+    styleUrl: './hero.component.scss'
 })
 export class HeroComponent implements OnInit, OnDestroy {
     private readonly navigationService = inject(NavigationService);

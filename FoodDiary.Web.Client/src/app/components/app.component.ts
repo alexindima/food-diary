@@ -8,7 +8,7 @@ import { FdLayoutPageDirective } from '../directives/layout/page-layout.directiv
     selector: 'fd-root',
     imports: [RouterOutlet, HeaderComponent, FooterComponent, FdLayoutPageDirective],
     templateUrl: './app.component.html',
-    styleUrl: './app.component.less',
+    styleUrl: './app.component.scss',
     encapsulation: ViewEncapsulation.None
 })
 export class AppComponent {

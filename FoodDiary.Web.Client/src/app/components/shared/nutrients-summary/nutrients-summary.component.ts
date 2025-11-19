@@ -27,7 +27,7 @@ import { CustomGroupComponent } from '../custom-group/custom-group.component';
         NgTemplateOutlet,
     ],
     templateUrl: './nutrients-summary.component.html',
-    styleUrl: './nutrients-summary.component.less',
+    styleUrl: './nutrients-summary.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NutrientsSummaryComponent implements OnInit {

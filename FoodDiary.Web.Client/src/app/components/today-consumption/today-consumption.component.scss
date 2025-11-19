@@ -1,0 +1,440 @@
+@use 'variables' as *;
+
+$color-text-secondary: $color-text-additional;
+$color-primary: #2563eb;
+
+.dashboard {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 24px 64px;
+
+    &__header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 16px;
+    }
+
+    &__title-block {
+        flex: 1;
+        min-width: 200px;
+    }
+
+    &__eyebrow {
+        margin: 0 0 4px;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        font-size: 0.75rem;
+        color: $color-text-secondary;
+        font-weight: 600;
+    }
+
+    &__title {
+        margin: 0;
+        font-size: 2.25rem;
+        font-weight: 700;
+        color: $color-text-main;
+    }
+
+    &__header-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        justify-content: flex-end;
+    }
+
+    &__date-field {
+        opacity: 0;
+        height: 0;
+        width: 0;
+        margin: 0;
+        padding: 0;
+        pointer-events: none;
+        position: absolute;
+    }
+
+    &__grid {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+    }
+
+    &__key-metrics {
+        display: grid;
+        gap: 24px;
+        grid-template-columns: minmax(320px, 2fr) minmax(280px, 1fr);
+        align-items: stretch;
+    }
+
+    &__insights {
+        display: grid;
+        gap: 24px;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    }
+
+    &__card {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+
+        > .fd-ui-card {
+            height: 100%;
+        }
+
+        &--clickable {
+            cursor: pointer;
+
+            > .fd-ui-card {
+                transition: box-shadow 0.2s ease, transform 0.2s ease;
+
+                &:hover {
+                    box-shadow: 0 12px 24px rgba(15, 23, 42, 0.15);
+                    transform: translateY(-2px);
+                }
+            }
+        }
+
+        &--motivation-wide {
+            width: 100%;
+        }
+    }
+
+    &__key-metrics fd-ui-card.dashboard__card {
+        height: 100%;
+    }
+
+    @media #{$media-tablet} {
+        &__key-metrics {
+            grid-template-columns: 1fr;
+        }
+
+        &__activity-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    &__progress {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    &__progress-headline {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+    }
+
+    &__progress-label {
+        font-size: 0.9rem;
+        color: $color-text-secondary;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+    }
+
+    &__progress-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: $color-text-main;
+    }
+
+    &__progress-percent {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: $color-primary;
+    }
+
+    &__progress-meta {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 16px;
+    }
+
+    &__meta-label {
+        display: block;
+        font-size: 0.85rem;
+        color: $color-text-secondary;
+        margin-bottom: 4px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+    }
+
+    &__macros {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 16px;
+    }
+
+    &__macro {
+        padding: 12px;
+        border-radius: 12px;
+        background: rgba(148, 163, 184, 0.12);
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    &__macro-label {
+        font-size: 0.9rem;
+        color: $color-text-secondary;
+    }
+
+    &__macro-value {
+        font-size: 1.2rem;
+        color: $color-text-main;
+    }
+
+    &__motivation-copy {
+        margin: 0;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: $color-text-main;
+    }
+
+    &__weight-summary {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    &__weight-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: $color-text-main;
+    }
+
+    &__weight-trend {
+        font-size: 0.95rem;
+        color: $color-text-secondary;
+    }
+
+    &__weight-loading {
+        color: $color-text-secondary;
+        font-size: 0.9rem;
+    }
+
+    &__activity-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+    }
+
+    &__activity-label {
+        margin: 0 0 4px;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: $color-text-secondary;
+    }
+
+    &__activity-value {
+        margin: 0;
+        font-size: 1.4rem;
+        font-weight: 600;
+        color: $color-text-main;
+    }
+
+    &__section-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    &__section-title {
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: $color-text-main;
+    }
+
+    &__meals {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    &__loader,
+    &__empty {
+        border: 1px dashed rgba(15, 23, 42, 0.2);
+        border-radius: 16px;
+        padding: 24px;
+        text-align: center;
+        color: $color-text-secondary;
+        font-size: 0.95rem;
+    }
+
+    &__meal-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+
+        fd-ui-entity-card {
+            display: block;
+        }
+
+        .product-card {
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: $gap-xxs;
+
+            &__header {
+                display: flex;
+                align-items: baseline;
+                gap: $gap-s;
+                justify-content: space-between;
+            }
+
+            &__title {
+                display: flex;
+                gap: $gap-xs;
+                font-size: 1.5em;
+                font-weight: 700;
+                line-height: 1.5rem;
+                color: $color-text-main;
+                min-width: 0;
+            }
+
+            &__name {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+            &__barcode {
+                font-size: 1.05em;
+                color: $color-text-main;
+                font-weight: 600;
+                white-space: nowrap;
+            }
+
+            &__stats {
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-start;
+                gap: $gap-m;
+
+                @media #{$media-mobile} {
+                    flex-direction: column;
+                    align-items: flex-start;
+                    gap: $gap-xs;
+                }
+            }
+
+            &__calories {
+                font-size: 1.2em;
+                font-weight: 500;
+                color: $color-text-main;
+            }
+
+            &__macros {
+                font-size: 0.95em;
+                color: $color-text-additional;
+                text-align: right;
+
+                @media #{$media-mobile} {
+                    text-align: left;
+                }
+            }
+        }
+    }
+
+    .consumption-card__meta {
+        font-size: 0.9em;
+        color: $color-text-additional;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        min-height: 1rem;
+
+        @media #{$media-mobile} {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: $gap-xs;
+        }
+
+        & > * {
+            flex: none;
+        }
+
+        & .consumption-card__comment {
+            font-style: italic;
+            text-align: right;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+
+            @media #{$media-mobile} {
+                text-align: left;
+                white-space: normal;
+            }
+        }
+    }
+
+    &__quick-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    &__quick-actions-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 16px;
+    }
+
+    &__quick-card {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    &__quick-card-content {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+    }
+
+    &__quick-card-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        background: rgba(37, 99, 235, 0.12);
+        color: $color-primary;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.4rem;
+    }
+
+    &__quick-card-title {
+        margin: 0 0 2px;
+        font-size: 1rem;
+        font-weight: 600;
+    }
+
+    &__quick-card-description {
+        font-size: 0.85rem;
+        color: $color-text-secondary;
+    }
+
+    @media #{$media-mobile} {
+        padding: 24px 16px 48px;
+
+        &__progress-headline {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        &__progress-percent {
+            font-size: 1.8rem;
+        }
+    }
+}

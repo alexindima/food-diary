@@ -4,7 +4,7 @@ import { BaseConsumptionManageComponent } from '../base-consumption-manage.compo
 @Component({
     selector: 'fd-consumption-add',
     templateUrl: './consumption-add.component.html',
-    styleUrls: ['./consumption-add.component.less', '../base-consumption-manage.component.less'],
+    styleUrls: ['./consumption-add.component.scss', '../base-consumption-manage.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [BaseConsumptionManageComponent]
 })

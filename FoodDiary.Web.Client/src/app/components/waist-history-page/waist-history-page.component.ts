@@ -45,7 +45,7 @@ import { UserService } from '../../services/user.service';
         FdUiInputComponent,
     ],
     templateUrl: './waist-history-page.component.html',
-    styleUrls: ['./waist-history-page.component.less'],
+    styleUrls: ['./waist-history-page.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WaistHistoryPageComponent implements OnInit {

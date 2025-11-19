@@ -9,7 +9,7 @@ type BadgeVariant = 'primary' | 'success' | 'warning' | 'danger' | 'neutral';
     standalone: true,
     imports: [FdUiIconModule, NgClass],
     templateUrl: './badge.component.html',
-    styleUrls: ['./badge.component.less'],
+    styleUrls: ['./badge.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BadgeComponent {

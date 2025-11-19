@@ -17,7 +17,7 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
             </div>
         </fd-ui-dialog>
     `,
-    styleUrls: ['./update-success-dialog.component.less'],
+    styleUrls: ['./update-success-dialog.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [TranslateModule, FdUiDialogComponent, FdUiDialogFooterDirective, FdUiButtonComponent],
 })

@@ -1,0 +1,215 @@
+@use 'variables' as *;
+
+.recipe-manage {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: $gap-xl;
+    display: flex;
+    flex-direction: column;
+    gap: $gap-l;
+    box-sizing: border-box;
+
+    &__header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    &__title {
+        margin: 0;
+        font-size: 2rem;
+        font-weight: 600;
+        color: $color-text-main;
+    }
+
+    &__form {
+        display: flex;
+        flex-direction: column;
+        gap: $gap-l;
+    }
+
+    &__error {
+        padding: $gap-s;
+        border-radius: $border-radius-m;
+        background: #fdecee;
+        color: #b3261e;
+        font-weight: 500;
+    }
+
+    &__grid {
+        display: grid;
+        grid-template-columns: minmax(0, 7fr) minmax(0, 3fr);
+        gap: $gap-l;
+        align-items: flex-start;
+
+        @media #{$media-tablet} {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    &__column {
+        display: flex;
+        flex-direction: column;
+        gap: $gap-l;
+    }
+
+    &__card {
+        display: flex;
+        flex-direction: column;
+        gap: $gap-m;
+
+    }
+
+    &__sticky-stack {
+        position: sticky;
+        top: $gap-xl;
+        display: flex;
+        flex-direction: column;
+        gap: $gap-l;
+
+        @media #{$media-mobile} {
+            position: static;
+        }
+    }
+
+    &__basic-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: $gap-m;
+
+        @media #{$media-mobile} {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    &__field--full {
+        grid-column: 1 / -1;
+    }
+
+    &__steps-section {
+        display: flex;
+        flex-direction: column;
+        gap: $gap-m;
+    }
+
+    &__steps {
+        display: flex;
+        flex-direction: column;
+        gap: $gap-m;
+    }
+
+    &__manual-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: $gap-m;
+
+        @media #{$media-mobile} {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    &__summary-calories {
+        margin: 0;
+        font-size: 0.95rem;
+        color: $color-text-main;
+
+        strong {
+            font-weight: 600;
+        }
+    }
+
+    &__nutrition-hint {
+        margin: 0;
+        font-size: 0.9rem;
+        color: $color-text-additional;
+    }
+
+    &__footer {
+        display: flex;
+        flex-direction: column;
+        gap: $gap-s;
+    }
+
+    &__footer-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: $gap-m;
+        flex-wrap: wrap;
+    }
+
+    &__action-button {
+        min-width: 220px;
+    }
+
+    @media #{$media-mobile} {
+        &__footer-actions {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        &__action-button {
+            width: 100%;
+        }
+    }
+
+    &__array-error {
+        color: $color-no-results;
+        font-size: 0.9rem;
+    }
+}
+
+.recipe-step-card__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: $gap-m;
+    cursor: grab;
+}
+
+.recipe-step-card__title {
+    font-weight: 600;
+    color: $color-text-main;
+}
+
+.recipe-step-card__ingredients {
+    display: flex;
+    flex-direction: column;
+    gap: $gap-m;
+}
+
+.recipe-ingredient {
+    display: flex;
+    gap: $gap-m;
+
+    @media #{$media-mobile} {
+        flex-direction: column;
+    }
+}
+
+.recipe-ingredient__name {
+    flex: 1;
+}
+
+.recipe-ingredient__amount {
+    display: flex;
+    flex: 0 0 35%;
+    gap: $gap-s;
+    align-items: flex-start;
+
+    @media #{$media-mobile} {
+        width: 100%;
+    }
+}
+
+.recipe-manage__drag-card {
+    text-align: center;
+}
+
+.recipe-manage__drag-placeholder {
+    border: 2px dashed fade($color-text-additional, 40%);
+    border-radius: $border-radius-m;
+    padding: $gap-m;
+    text-align: center;
+    color: $color-text-additional;
+    font-size: 0.9rem;
+}

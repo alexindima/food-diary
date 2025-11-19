@@ -51,7 +51,7 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
         FdUiFormErrorComponent,
     ],
     templateUrl: './user-manage.component.html',
-    styleUrl: './user-manage.component.less',
+    styleUrl: './user-manage.component.scss',
     providers: [VALIDATION_ERRORS_PROVIDER],
     changeDetection: ChangeDetectionStrategy.OnPush
 })

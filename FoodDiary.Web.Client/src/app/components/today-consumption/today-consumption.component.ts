@@ -58,7 +58,7 @@ interface DashboardQuickAction {
         FdUiIconModule,
     ],
     templateUrl: './today-consumption.component.html',
-    styleUrl: './today-consumption.component.less',
+    styleUrl: './today-consumption.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TodayConsumptionComponent implements OnInit {

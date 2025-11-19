@@ -18,7 +18,7 @@ import { FdUiIconModule } from 'fd-ui-kit/material';
     selector: 'fd-product-list-dialog',
     standalone: true,
     templateUrl: '../product-list-base.component.html',
-    styleUrls: ['./product-list-dialog.component.less', '../product-list-base.component.less'],
+    styleUrls: ['./product-list-dialog.component.scss', '../product-list-base.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         ReactiveFormsModule,

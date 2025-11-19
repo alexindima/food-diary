@@ -5,6 +5,6 @@ import { TranslateModule } from '@ngx-translate/core';
     selector: 'fd-footer',
     imports: [TranslateModule],
     templateUrl: './footer.component.html',
-    styleUrl: './footer.component.less'
+    styleUrl: './footer.component.scss'
 })
 export class FooterComponent {}

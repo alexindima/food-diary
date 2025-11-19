@@ -52,7 +52,7 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
 @Component({
     selector: 'fd-base-product-manage',
     templateUrl: './base-product-manage.component.html',
-    styleUrls: ['./base-product-manage.component.less'],
+    styleUrls: ['./base-product-manage.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [VALIDATION_ERRORS_PROVIDER],
     imports: [

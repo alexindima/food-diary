@@ -29,7 +29,7 @@ export type ConsumptionManageRedirectAction = 'Home' | 'ConsumptionList';
             </div>
         </fd-ui-dialog>
     `,
-    styleUrls: ['./consumption-manage-success-dialog.component.less'],
+    styleUrls: ['./consumption-manage-success-dialog.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [TranslateModule, FdUiDialogComponent, FdUiDialogFooterDirective, FdUiButtonComponent],
 })

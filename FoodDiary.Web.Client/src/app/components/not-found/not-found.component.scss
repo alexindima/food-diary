@@ -1,0 +1,78 @@
+@use 'mixins' as *;
+@use 'variables' as *;
+
+:host {
+    @include host-style('/assets/images/background.webp');
+}
+
+.not-found {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 40px;
+    position: relative;
+}
+
+.not-found__icon {
+    font-size: 4em;
+    color: $color-no-results;
+    margin-bottom: 20px;
+}
+
+.not-found__title {
+    font-size: 2.5em;
+    font-weight: bold;
+    line-height: 36px;
+    color: $color-no-results;
+    margin-bottom: 20px;
+}
+
+.not-found__description {
+    font-size: 1.2em;
+    color: $color-text-additional;
+    margin-bottom: 20px;
+}
+
+.not-found__actions {
+    display: flex;
+    gap: $gap-m;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.not-found__button {
+    padding: 10px 20px;
+    font-size: $font-size-main;
+    font-weight: bold;
+    border: none;
+    border-radius: $border-radius-s;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+.not-found__button--primary {
+    background-color: #007bff;
+    color: white;
+}
+
+.not-found__button--primary:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+.not-found__button--secondary {
+    background-color: transparent;
+    color: #007bff;
+    border: 2px solid #007bff;
+}
+
+.not-found__button--secondary:hover {
+    background-color: #e0f0ff;
+    transform: scale(1.05);
+}
+
+.not-found__button:active {
+    transform: scale(1);
+}

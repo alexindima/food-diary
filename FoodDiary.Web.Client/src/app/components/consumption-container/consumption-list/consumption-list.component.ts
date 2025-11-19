@@ -24,7 +24,7 @@ import { FdUiIconModule } from 'fd-ui-kit/material';
 @Component({
     selector: 'fd-consumption-list',
     templateUrl: './consumption-list.component.html',
-    styleUrls: ['./consumption-list.component.less'],
+    styleUrls: ['./consumption-list.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         ReactiveFormsModule,

@@ -21,7 +21,7 @@ import {
     selector: 'fd-product-detail',
     standalone: true,
     templateUrl: './product-detail.component.html',
-    styleUrls: ['./product-detail.component.less'],
+    styleUrls: ['./product-detail.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [TranslatePipe, NutrientsSummaryComponent, FdUiDialogComponent, FdUiButtonComponent],
 })

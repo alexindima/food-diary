@@ -12,7 +12,7 @@ import { NgStyle } from '@angular/common';
         NgStyle
     ],
   templateUrl: './custom-group.component.html',
-  styleUrl: './custom-group.component.less'
+  styleUrl: './custom-group.component.scss'
 })
 export class CustomGroupComponent {
     /**

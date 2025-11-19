@@ -21,7 +21,7 @@ import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 @Component({
     selector: 'fd-product-list-page',
     templateUrl: '../product-list-base.component.html',
-    styleUrls: ['./product-list-page.component.less', '../product-list-base.component.less'],
+    styleUrls: ['./product-list-page.component.scss', '../product-list-base.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         ReactiveFormsModule,

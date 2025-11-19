@@ -4,7 +4,7 @@ import { RecipeManageComponent } from '../recipe-manage.component';
 @Component({
     selector: 'fd-recipe-edit',
     templateUrl: './recipe-edit.component.html',
-    styleUrls: ['./recipe-edit.component.less'],
+    styleUrls: ['./recipe-edit.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [RecipeManageComponent],
 })

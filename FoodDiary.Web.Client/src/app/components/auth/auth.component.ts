@@ -34,7 +34,7 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
 @Component({
     selector: 'fd-auth',
     templateUrl: './auth.component.html',
-    styleUrls: ['./auth.component.less'],
+    styleUrls: ['./auth.component.scss'],
     providers: [VALIDATION_ERRORS_PROVIDER],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [

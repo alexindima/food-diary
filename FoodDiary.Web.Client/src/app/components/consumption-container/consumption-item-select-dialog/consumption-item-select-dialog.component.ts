@@ -20,7 +20,7 @@ export type ConsumptionItemSelectDialogData = {
     selector: 'fd-consumption-item-select-dialog',
     standalone: true,
     templateUrl: './consumption-item-select-dialog.component.html',
-    styleUrls: ['./consumption-item-select-dialog.component.less'],
+    styleUrls: ['./consumption-item-select-dialog.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [FdUiTabsComponent, TranslatePipe, ProductListDialogComponent, RecipeSelectDialogComponent],
 })

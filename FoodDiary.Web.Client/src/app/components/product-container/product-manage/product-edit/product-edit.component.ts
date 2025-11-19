@@ -4,7 +4,7 @@ import { BaseProductManageComponent } from '../base-product-manage.component';
 @Component({
     selector: 'fd-product-edit',
     templateUrl: './product-edit.component.html',
-    styleUrls: ['./product-edit.component.less', '../base-product-manage.component.less'],
+    styleUrls: ['./product-edit.component.scss', '../base-product-manage.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [BaseProductManageComponent],
 })

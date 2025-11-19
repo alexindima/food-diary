@@ -38,7 +38,7 @@ import { NavigationService } from '../../services/navigation.service';
         FdUiInputComponent,
     ],
     templateUrl: './weight-history-page.component.html',
-    styleUrls: ['./weight-history-page.component.less'],
+    styleUrls: ['./weight-history-page.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WeightHistoryPageComponent implements OnInit {

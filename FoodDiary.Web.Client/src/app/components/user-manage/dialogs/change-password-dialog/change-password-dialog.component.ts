@@ -16,7 +16,7 @@ import { matchFieldValidator } from '../../../../validators/match-field.validato
     selector: 'fd-change-password-dialog',
     standalone: true,
     templateUrl: './change-password-dialog.component.html',
-    styleUrls: ['./change-password-dialog.component.less'],
+    styleUrls: ['./change-password-dialog.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         CommonModule,

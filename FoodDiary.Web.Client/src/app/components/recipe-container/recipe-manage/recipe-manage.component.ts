@@ -53,7 +53,7 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
         FdUiCheckboxComponent,
     ],
     templateUrl: './recipe-manage.component.html',
-    styleUrls: ['./recipe-manage.component.less'],
+    styleUrls: ['./recipe-manage.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RecipeManageComponent implements OnInit {

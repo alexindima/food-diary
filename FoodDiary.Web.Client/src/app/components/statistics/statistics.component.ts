@@ -49,7 +49,7 @@ interface DateRange {
         FdUiDateInputComponent,
     ],
     templateUrl: './statistics.component.html',
-    styleUrls: ['./statistics.component.less'],
+    styleUrls: ['./statistics.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StatisticsComponent implements OnInit {

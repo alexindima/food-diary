@@ -34,7 +34,7 @@ import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
     selector: 'fd-recipe-select-dialog',
     standalone: true,
     templateUrl: './recipe-select-dialog.component.html',
-    styleUrls: ['./recipe-select-dialog.component.less'],
+    styleUrls: ['./recipe-select-dialog.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         ReactiveFormsModule,

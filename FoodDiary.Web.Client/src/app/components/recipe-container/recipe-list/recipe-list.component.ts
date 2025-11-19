@@ -23,7 +23,7 @@ import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 @Component({
     selector: 'fd-recipe-list',
     templateUrl: './recipe-list.component.html',
-    styleUrls: ['./recipe-list.component.less'],
+    styleUrls: ['./recipe-list.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         ReactiveFormsModule,

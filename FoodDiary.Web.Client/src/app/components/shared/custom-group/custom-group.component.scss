@@ -1,0 +1,64 @@
+@use 'variables' as *;
+
+.custom-group-wrapper {
+    padding-top: $gap-xs;
+    font-family: "Open Sans", sans-serif;
+}
+
+.custom-group {
+    border: 2px solid #d9d9d9;
+    border-radius: $border-radius-m;
+    padding: $gap-l;
+    position: relative;
+    background-color: var(--custom-group-background, transparent);
+}
+
+.custom-group__title {
+    position: absolute;
+    top: -11px;
+    background: white;
+    border: 2px solid #d9d9d9;
+    border-radius: $border-radius-s;
+    padding: 0 $gap-xs;
+    font-weight: bold;
+    font-size: 10px;
+    line-height: 20px;
+}
+
+.custom-group__toggle {
+    position: absolute;
+    top: -11px;
+    left: 10px;
+    background: white;
+    border: 2px solid #d9d9d9;
+    border-radius: $border-radius-s;
+    padding: 0;
+    width: 24px;
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 20px;
+}
+
+.custom-group__button {
+    position: absolute;
+    top: -11px;
+    right: 15px;
+    background: #ff7043;
+    border-radius: $border-radius-s;
+    padding: 0 $gap-xs;
+    font-weight: bold;
+    font-size: 10px;
+    line-height: 20px;
+    cursor: pointer;
+}
+
+.custom-group__hint {
+    margin: 0;
+    color: #888;
+    font-size: 0.9rem;
+    font-style: italic;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+

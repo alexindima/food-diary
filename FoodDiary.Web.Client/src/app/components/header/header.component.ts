@@ -27,7 +27,7 @@ import {
         FdUiMenuDividerComponent,
     ],
     templateUrl: './header.component.html',
-    styleUrls: ['./header.component.less']
+    styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit {
     private readonly router = inject(Router);

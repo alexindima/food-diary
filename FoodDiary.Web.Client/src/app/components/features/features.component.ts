@@ -7,7 +7,7 @@ import { CommonModule } from '@angular/common';
     selector: 'fd-features',
     imports: [CommonModule, FdUiButtonComponent, TranslateModule],
     templateUrl: './features.component.html',
-    styleUrl: './features.component.less'
+    styleUrl: './features.component.scss'
 })
 export class FeaturesComponent {
     public features: Feature[] = [

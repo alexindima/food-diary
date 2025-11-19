@@ -1,0 +1,9 @@
+@mixin host-style($background-image-path, $opacity: 0.05) {
+    flex: 1;
+    display: block;
+    position: relative;
+    width: 100%;
+    box-sizing: border-box;
+    min-height: 100%;
+    background-color: #f5f6fa;
+}

@@ -7,6 +7,6 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
     selector: 'fd-not-found',
     imports: [RouterLink, FdUiButtonComponent, TranslatePipe],
     templateUrl: './not-found.component.html',
-    styleUrl: './not-found.component.less'
+    styleUrl: './not-found.component.scss'
 })
 export class NotFoundComponent {}

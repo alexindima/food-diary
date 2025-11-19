@@ -19,7 +19,7 @@ import { FdUiFormErrorComponent } from 'fd-ui-kit/form-error/fd-ui-form-error.co
 @Component({
     selector: 'fd-product-add-dialog',
     templateUrl: '../base-product-manage.component.html',
-    styleUrls: ['./product-add-dialog.component.less', '../base-product-manage.component.less'],
+    styleUrls: ['./product-add-dialog.component.scss', '../base-product-manage.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         ReactiveFormsModule,

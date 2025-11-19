@@ -18,7 +18,7 @@ import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
         FdUiLoaderComponent,
     ],
     templateUrl: './barcode-scanner.component.html',
-    styleUrl: './barcode-scanner.component.less',
+    styleUrl: './barcode-scanner.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BarcodeScannerComponent {

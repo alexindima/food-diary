@@ -8,7 +8,7 @@ import { NgClass, NgStyle } from '@angular/common';
         NgClass
     ],
     templateUrl: './dynamic-progress-bar.component.html',
-    styleUrls: ['./dynamic-progress-bar.component.less'],
+    styleUrls: ['./dynamic-progress-bar.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DynamicProgressBarComponent {

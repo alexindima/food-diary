@@ -72,7 +72,7 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
 @Component({
     selector: 'fd-base-consumption-manage',
     templateUrl: './base-consumption-manage.component.html',
-    styleUrls: ['./base-consumption-manage.component.less'],
+    styleUrls: ['./base-consumption-manage.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [VALIDATION_ERRORS_PROVIDER],
     imports: [

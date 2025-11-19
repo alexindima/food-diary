@@ -21,7 +21,7 @@ import {
     selector: 'fd-recipe-detail',
     standalone: true,
     templateUrl: './recipe-detail.component.html',
-    styleUrls: ['./recipe-detail.component.less'],
+    styleUrls: ['./recipe-detail.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         TranslatePipe,

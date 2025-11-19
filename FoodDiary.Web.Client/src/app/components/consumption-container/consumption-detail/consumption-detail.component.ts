@@ -20,7 +20,7 @@ import {
     selector: 'fd-consumption-detail',
     standalone: true,
     templateUrl: './consumption-detail.component.html',
-    styleUrls: ['./consumption-detail.component.less'],
+    styleUrls: ['./consumption-detail.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [DatePipe],
     imports: [
