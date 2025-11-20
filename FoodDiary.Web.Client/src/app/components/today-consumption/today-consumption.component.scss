@@ -8,19 +8,12 @@ $color-primary: #2563eb;
     flex-direction: column;
     gap: 32px;
     margin: 0 auto;
-    padding: 32px 24px 64px;
 
     &__header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        flex-wrap: wrap;
-        gap: 16px;
-    }
-
-    &__title-block {
-        flex: 1;
-        min-width: 200px;
+        margin-bottom: var(--fd-page-header-gap, 16px);
+        .fd-page-header__title-block {
+            min-width: 220px;
+        }
     }
 
     &__eyebrow {
@@ -34,16 +27,10 @@ $color-primary: #2563eb;
 
     &__title {
         margin: 0;
-        font-size: 2.25rem;
-        font-weight: 700;
+        font-size: var(--fd-page-title-size, 2rem);
+        line-height: var(--fd-page-title-line-height, 1.2);
+        font-weight: var(--fd-page-title-weight, 700);
         color: $color-text-main;
-    }
-
-    &__header-actions {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 12px;
-        justify-content: flex-end;
     }
 
     &__date-field {
@@ -429,8 +416,6 @@ $color-primary: #2563eb;
     }
 
     @media #{$media-mobile} {
-        padding: 24px 16px 48px;
-
         &__progress-headline {
             flex-direction: column;
             align-items: flex-start;

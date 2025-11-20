@@ -35,6 +35,7 @@ import { FdUiSelectComponent, FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-se
 import { FdUiCheckboxComponent } from 'fd-ui-kit/checkbox/fd-ui-checkbox.component';
 import { CommonModule } from '@angular/common';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { PageHeaderComponent } from '../../shared/page-header/page-header.component';
 
 @Component({
     selector: 'fd-recipe-manage',
@@ -51,6 +52,7 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
         FdUiButtonComponent,
         FdUiSelectComponent,
         FdUiCheckboxComponent,
+        PageHeaderComponent,
     ],
     templateUrl: './recipe-manage.component.html',
     styleUrls: ['./recipe-manage.component.scss'],
@@ -679,6 +681,5 @@ interface IngredientFormValues {
 type RecipeFormData = FormGroupControls<RecipeFormValues>;
 type StepFormData = FormGroupControls<StepFormValues>;
 type IngredientFormData = FormGroupControls<IngredientFormValues>;
-
 
 

@@ -1,13 +1,8 @@
 <div class="recipe-manage">
-  <div class="recipe-manage__header">
-    <h2 class="recipe-manage__title">
-      @if (recipe()) {
-        {{ 'RECIPE_MANAGE.EDIT_TITLE' | translate }}
-      } @else {
-        {{ 'RECIPE_MANAGE.ADD_TITLE' | translate }}
-      }
-    </h2>
-  </div>
+  <fd-page-header
+    class="recipe-manage__header"
+    [title]="recipe() ? ('RECIPE_MANAGE.EDIT_TITLE' | translate) : ('RECIPE_MANAGE.ADD_TITLE' | translate)"
+  />
 
   <form class="recipe-manage__form" [formGroup]="recipeForm" (ngSubmit)="onSubmit()">
     @if (globalError()) {

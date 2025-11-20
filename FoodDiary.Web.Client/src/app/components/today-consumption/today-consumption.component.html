@@ -1,18 +1,34 @@
 <div class="dashboard">
-    <header class="dashboard__header">
-        <div class="dashboard__title-block">
-            <h1 class="dashboard__title">{{ 'DASHBOARD.TITLE' | translate }}</h1>
-        </div>
-        <div class="dashboard__header-actions">
-            <fd-ui-button
-                class="dashboard__date-button"
-                variant="secondary"
-                fill="outline"
-                icon="calendar_today"
-                (click)="openDatePicker()"
-            >
-                {{ selectedDate() | date:'d MMMM y' }}
-            </fd-ui-button>
+    <fd-page-header
+        class="dashboard__header"
+        [title]="
+            isTodaySelected()
+                ? ('DASHBOARD.TITLE' | translate)
+                : ('DASHBOARD.TITLE_FOR_DATE' | translate:{ date: (selectedDate() | date:'d MMMM y') })
+        "
+    >
+        <ng-container fdPageHeaderActions>
+            <div>
+                <mat-form-field class="dashboard__date-field" appearance="outline">
+                    <input
+                        matInput
+                        [matDatepicker]="headerDatePicker"
+                        [value]="selectedDate()"
+                        (dateChange)="handleDateChange($event)"
+                    />
+                </mat-form-field>
+                <mat-datepicker #headerDatePicker />
+                <fd-ui-button
+                    class="dashboard__date-button"
+                    variant="secondary"
+                    fill="outline"
+                    icon="calendar_today"
+                    (click)="openDatePicker()"
+                >
+                    {{ selectedDate() | date:'d MMMM y' }}
+                </fd-ui-button>
+            </div>
+
             <fd-ui-button
                 class="dashboard__primary-action"
                 icon="add"
@@ -20,17 +36,8 @@
             >
                 {{ 'DASHBOARD.ACTIONS.ADD_CONSUMPTION_BUTTON' | translate }}
             </fd-ui-button>
-        </div>
-        <mat-form-field class="dashboard__date-field" appearance="outline">
-            <input
-                matInput
-                [matDatepicker]="headerDatePicker"
-                [value]="selectedDate()"
-                (dateChange)="handleDateChange($event)"
-            />
-        </mat-form-field>
-        <mat-datepicker #headerDatePicker />
-    </header>
+        </ng-container>
+    </fd-page-header>
 
     <section class="dashboard__grid">
         <div class="dashboard__key-metrics">

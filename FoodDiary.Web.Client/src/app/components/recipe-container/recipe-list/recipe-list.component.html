@@ -1,10 +1,6 @@
 <div class="recipe-list" #container>
-    <div class="recipe-list__header">
-        <h2 class="recipe-list__title">
-            {{ 'RECIPE_LIST.TITLE' | translate }}
-        </h2>
-
-        <div class="recipe-list__actions">
+    <fd-page-header class="recipe-list__header" [title]="'RECIPE_LIST.TITLE' | translate">
+        <ng-container fdPageHeaderActions>
             <form class="recipe-list__search-form" [formGroup]="searchForm">
                 <fd-ui-input class="recipe-list__search-input"
                     formControlName="search"
@@ -37,8 +33,8 @@
             >
                 {{ 'RECIPE_LIST.ADD_RECIPE_BUTTON' | translate }}
             </fd-ui-button>
-        </div>
-    </div>
+        </ng-container>
+    </fd-page-header>
 
     @if (recipeData.isLoading()) {
         <fd-ui-loader class="recipe-list__loader" />

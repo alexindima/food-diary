@@ -1,10 +1,6 @@
 <div class="product-list" #container>
-    <div class="product-list__header">
-        <h2 class="product-list__title">
-            {{ 'PRODUCT_LIST.TITLE' | translate }}
-        </h2>
-
-        <div class="product-list__actions">
+    <fd-page-header class="product-list__header" [title]="'PRODUCT_LIST.TITLE' | translate">
+        <ng-container fdPageHeaderActions>
             <form class="product-list__search-form" [formGroup]="searchForm">
                 <fd-ui-input class="product-list__search-input"
                     formControlName="search"
@@ -40,8 +36,8 @@
             >
                 {{ 'PRODUCT_LIST.ADD_PRODUCT_BUTTON' | translate }}
             </fd-ui-button>
-        </div>
-    </div>
+        </ng-container>
+    </fd-page-header>
 
     @if (productData.isLoading()) {
         <fd-ui-loader class="product-list__loader" />

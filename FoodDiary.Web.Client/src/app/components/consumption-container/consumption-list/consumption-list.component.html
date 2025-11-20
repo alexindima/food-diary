@@ -1,8 +1,6 @@
 <div class="consumption-list" #container>
-    <div class="consumption-list__header">
-        <h2 class="consumption-list__title">{{ 'CONSUMPTION_LIST.TITLE' | translate }}</h2>
-
-        <div class="consumption-list__actions">
+    <fd-page-header class="consumption-list__header" [title]="'CONSUMPTION_LIST.TITLE' | translate">
+        <ng-container fdPageHeaderActions>
             <div class="consumption-list__search-group">
                 <form [formGroup]="searchForm" class="consumption-list__date-range-form">
                     <fd-ui-date-range-input formControlName="dateRange"
@@ -21,8 +19,8 @@
             >
                 {{ 'CONSUMPTION_LIST.ADD_CONSUMPTION_BUTTON' | translate }}
             </fd-ui-button>
-        </div>
-    </div>
+        </ng-container>
+    </fd-page-header>
 
     @if (consumptionData.isLoading()) {
         <fd-ui-loader class="consumption-list__loader" />

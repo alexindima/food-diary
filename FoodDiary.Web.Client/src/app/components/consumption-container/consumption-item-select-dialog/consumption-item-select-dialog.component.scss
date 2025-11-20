@@ -3,38 +3,33 @@
     flex-direction: column;
     gap: 16px;
     max-height: 90vh;
-}
 
-.consumption-item-select__header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    flex-wrap: wrap;
-}
+    &__header {
+        .fd-page-header__title-block {
+            flex: 1 1 200px;
 
-.consumption-item-select__title {
-    margin: 0;
-    font-size: 1.5rem;
-    font-weight: 600;
-    flex: 1 1 200px;
-}
+            .fd-page-title {
+                font-size: 1.5rem;
+                font-weight: 600;
+                margin: 0;
+            }
+        }
 
-.consumption-item-select__actions {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    flex: 1 1 240px;
-    min-width: 200px;
-}
+        .fd-page-header__actions {
+            justify-content: flex-end;
+            align-items: center;
+            min-width: 200px;
+        }
+    }
 
-.consumption-item-select__tabs {
-    margin-bottom: 0;
-    width: 100%;
-}
+    &__tabs {
+        margin-bottom: 0;
+        width: 100%;
+    }
 
-.consumption-item-select__content {
-    flex: 1;
-    min-height: 0;
-    overflow: auto;
+    &__content {
+        flex: 1;
+        min-height: 0;
+        overflow: auto;
+    }
 }

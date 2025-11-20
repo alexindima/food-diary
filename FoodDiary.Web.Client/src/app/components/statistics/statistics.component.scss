@@ -11,45 +11,22 @@
     flex-direction: column;
     gap: 24px;
     margin: 0 auto;
-    padding: 0;
+
+    &__hero {
+        display: flex;
+        flex-direction: column;
+        gap: var(--fd-page-header-gap, 16px);
+    }
 
     &__header {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 8px;
-        margin-bottom: 8px;
-    }
-
-    &__title-block {
-        display: flex;
-        flex-direction: column;
-        gap: 6px;
-        width: 100%;
-        min-width: 220px;
-    }
-
-    &__title {
         margin: 0;
-        font-size: 2rem;
-        font-weight: 700;
-        color: $color-text-main;
     }
 
-    &__header-actions {
-        display: flex;
-        width: 100%;
-        justify-content: flex-start;
-        align-items: center;
-        min-width: 260px;
-    }
-
-    &__range-controls {
+    &__filters {
         display: flex;
         flex-wrap: wrap;
         align-items: center;
-        justify-content: flex-start;
-        gap: 12px;
+        gap: var(--fd-page-actions-gap, 12px);
     }
 
     &__tabs {
@@ -240,8 +217,6 @@
     }
 
     @media #{$media-mobile} {
-        padding: 24px 16px 48px;
-
         &__header {
             align-items: flex-start;
         }

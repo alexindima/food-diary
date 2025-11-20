@@ -15,6 +15,7 @@ import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea.compone
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FD_UI_DIALOG_DATA, FdUiDialogRef } from 'fd-ui-kit/material';
 import { FdUiFormErrorComponent } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
+import { PageHeaderComponent } from '../../../shared/page-header/page-header.component';
 
 @Component({
     selector: 'fd-product-add-dialog',
@@ -33,6 +34,7 @@ import { FdUiFormErrorComponent } from 'fd-ui-kit/form-error/fd-ui-form-error.co
         FdUiTextareaComponent,
         FdUiButtonComponent,
         FdUiFormErrorComponent,
+        PageHeaderComponent,
     ]
 })
 export class ProductAddDialogComponent extends BaseProductManageComponent {

@@ -5,33 +5,19 @@
     display: flex;
     flex-direction: column;
     gap: 24px;
-    padding: 0;
     margin: 0 auto;
 
     &__header {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 8px;
+        margin-bottom: var(--fd-page-header-gap, 16px);
     }
 
     &__title {
         margin: 0;
-        font-size: 2rem;
-        font-weight: 700;
+        font-size: var(--fd-page-title-size, 2rem);
+        line-height: var(--fd-page-title-line-height, 1.2);
+        font-weight: var(--fd-page-title-weight, 700);
         color: #0f172a;
-        flex: 1 1 240px;
         width: 100%;
-    }
-
-    &__header-actions {
-        display: flex;
-        gap: 12px;
-        flex-wrap: wrap;
-        justify-content: flex-start;
-        align-items: center;
-        width: 100%;
-        min-width: 260px;
     }
 
     &__tabs {
@@ -311,8 +297,6 @@
     }
 
     @media (max-width: 640px) {
-        padding: 24px 16px;
-
         &__entry {
             grid-template-columns: 1fr;
             text-align: left;

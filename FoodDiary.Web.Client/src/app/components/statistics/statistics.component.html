@@ -1,25 +1,22 @@
 <div class="statistics">
-    <header class="statistics__header">
-        <div class="statistics__title-block">
-            <h1 class="statistics__title">{{ 'STATISTICS.TITLE' | translate }}</h1>
-        </div>
-        <div class="statistics__header-actions">
-            <div class="statistics__range-controls">
-                <fd-ui-tabs class="statistics__tabs statistics__tabs--range"
-                    [tabs]="rangeTabs"
-                    [selectedValue]="selectedRange()"
-                    (selectedValueChange)="changeRange($event)"
+    <div class="statistics__hero">
+        <fd-page-header class="statistics__header" [title]="'STATISTICS.TITLE' | translate" />
+
+        <div class="statistics__filters">
+            <fd-ui-tabs class="statistics__tabs statistics__tabs--range"
+                [tabs]="rangeTabs"
+                [selectedValue]="selectedRange()"
+                (selectedValueChange)="changeRange($event)"
+             />
+            @if (selectedRange() === 'custom') {
+                <fd-ui-date-range-input class="statistics__custom-range"
+                    [startPlaceholder]="'STATISTICS.CUSTOM_RANGE_PLACEHOLDER' | translate"
+                    [endPlaceholder]="'STATISTICS.CUSTOM_RANGE_PLACEHOLDER' | translate"
+                    [formControl]="customRangeControl"
                  />
-                @if (selectedRange() === 'custom') {
-                    <fd-ui-date-range-input class="statistics__custom-range"
-                        [startPlaceholder]="'STATISTICS.CUSTOM_RANGE_PLACEHOLDER' | translate"
-                        [endPlaceholder]="'STATISTICS.CUSTOM_RANGE_PLACEHOLDER' | translate"
-                        [formControl]="customRangeControl"
-                     />
-                }
-            </div>
+            }
         </div>
-    </header>
+    </div>
 
     @if (isLoading()) {
         <div class="statistics__loader">{{ 'STATISTICS.LOADING' | translate }}</div>

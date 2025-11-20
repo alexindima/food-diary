@@ -18,7 +18,6 @@ body {
     width: 100%;
     min-height: 0;
     background: var(--fd-layout-page-background);
-    padding: var(--fd-layout-page-vertical-padding) var(--fd-layout-page-horizontal-padding);
     display: flex;
     justify-content: center;
     align-items: stretch;
@@ -30,6 +29,51 @@ body {
     margin: 0 auto;
     display: flex;
     flex-direction: column;
+    padding: var(--fd-layout-page-top-padding, 16px) var(--fd-layout-page-horizontal-padding)
+        var(--fd-layout-page-vertical-padding);
+    background: var(--fd-layout-page-background);
+}
+
+.fd-page-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--fd-page-header-gap, 16px);
+    min-height: var(--fd-page-header-height, auto);
+}
+
+.fd-page-header__title-block {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 220px;
+}
+
+.fd-page-title {
+    margin: 0;
+    font-size: var(--fd-page-title-size, 2rem);
+    line-height: var(--fd-page-title-line-height, 1.2);
+    font-weight: var(--fd-page-title-weight, 700);
+    color: var(--fd-color-text, #333333);
+}
+
+.fd-page-subtitle {
+    margin: 0;
+    font-size: var(--fd-page-subtitle-size, 1rem);
+    line-height: var(--fd-page-subtitle-line-height, 1.5);
+    font-weight: var(--fd-page-subtitle-weight, 500);
+    color: var(--fd-color-text-muted, #757575);
+}
+
+.fd-page-header__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    align-items: center;
+    gap: var(--fd-page-actions-gap, 12px);
+    flex: 1 1 320px;
+    min-width: 240px;
 }
 
 .mat-mdc-snack-bar-container.fd-ui-toast {

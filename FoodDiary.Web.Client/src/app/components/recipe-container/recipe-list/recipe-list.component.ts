@@ -18,6 +18,7 @@ import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
+import { PageHeaderComponent } from '../../shared/page-header/page-header.component';
 
 @Component({
     selector: 'fd-recipe-list',
@@ -34,6 +35,7 @@ import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
         FdUiLoaderComponent,
         FdUiPaginationComponent,
         FdUiIconModule,
+        PageHeaderComponent,
     ],
 })
 export class RecipeListComponent implements OnInit {

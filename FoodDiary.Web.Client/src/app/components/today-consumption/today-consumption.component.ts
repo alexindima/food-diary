@@ -30,6 +30,7 @@ import { WeightEntriesService } from '../../services/weight-entries.service';
 import { WeightEntry } from '../../types/weight-entry.data';
 import { WaistEntriesService } from '../../services/waist-entries.service';
 import { WaistEntry } from '../../types/waist-entry.data';
+import { PageHeaderComponent } from '../shared/page-header/page-header.component';
 
 interface DashboardQuickAction {
     icon: string;
@@ -56,6 +57,7 @@ interface DashboardQuickAction {
         FdUiFormFieldModule,
         FdUiNativeDateModule,
         FdUiIconModule,
+        PageHeaderComponent,
     ],
     templateUrl: './today-consumption.component.html',
     styleUrl: './today-consumption.component.scss',
@@ -74,6 +76,10 @@ export class TodayConsumptionComponent implements OnInit {
     private readonly headerDatePicker = viewChild<FdUiDatepicker<Date>>('headerDatePicker');
 
     public selectedDate = signal<Date>(this.normalizeDate(new Date()));
+    public readonly isTodaySelected = computed(() => {
+        const today = this.normalizeDate(new Date());
+        return this.selectedDate().getTime() === today.getTime();
+    });
     public todayCalories = signal<number>(0);
     public todayFiber = signal<number | null>(null);
     public nutrientChartData = signal<NutrientChartData>({

@@ -7,36 +7,14 @@
 
 .consumption-list {
     margin: 0 auto;
-    padding: $gap-m;
     box-sizing: border-box;
     font-size: 14px;
 
     &__header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: $gap-m;
-        flex-wrap: wrap;
         margin-bottom: $gap-l;
-    }
-
-    &__title {
-        font-size: 1.8em;
-        font-weight: bold;
-        color: $color-text-main;
-        margin: 0;
-        flex: 1 1 auto;
-        text-align: left;
-    }
-
-    &__actions {
-        display: flex;
-        align-items: center;
-        gap: $gap-s;
-        flex: 1 1 320px;
-        justify-content: flex-end;
-        flex-wrap: wrap;
-        min-width: 0;
+        .fd-page-header__actions {
+            gap: $gap-s;
+        }
     }
 
     &__search-group {
@@ -94,11 +72,10 @@
         &__header {
             flex-direction: column;
             align-items: stretch;
-        }
-
-        &__actions {
-            width: 100%;
-            justify-content: flex-start;
+            .fd-page-header__actions {
+                width: 100%;
+                justify-content: flex-start;
+            }
         }
 
         &__search-group {

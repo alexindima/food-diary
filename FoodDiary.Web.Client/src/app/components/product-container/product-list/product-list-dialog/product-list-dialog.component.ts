@@ -12,6 +12,7 @@ import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.component';
 import { FdUiDialogRef } from 'fd-ui-kit/material';
 import { FdUiIconModule } from 'fd-ui-kit/material';
+import { PageHeaderComponent } from '../../../shared/page-header/page-header.component';
 
 @Component({
     selector: 'fd-product-list-dialog',
@@ -29,6 +30,7 @@ import { FdUiIconModule } from 'fd-ui-kit/material';
         FdUiLoaderComponent,
         FdUiPaginationComponent,
         FdUiIconModule,
+        PageHeaderComponent,
     ]
 })
 export class ProductListDialogComponent extends ProductListBaseComponent {

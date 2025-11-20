@@ -26,6 +26,7 @@ import { WaistEntriesService } from '../../services/waist-entries.service';
 import { WeightEntrySummaryPoint } from '../../types/weight-entry.data';
 import { WaistEntrySummaryPoint } from '../../types/waist-entry.data';
 import { UserService } from '../../services/user.service';
+import { PageHeaderComponent } from '../shared/page-header/page-header.component';
 
 type StatisticsRange = 'week' | 'month' | 'year' | 'custom';
 type NutritionChartTab = 'calories' | 'macros' | 'distribution';
@@ -47,6 +48,7 @@ interface DateRange {
         FdUiTabsComponent,
         FdUiCardComponent,
         FdUiDateRangeInputComponent,
+        PageHeaderComponent,
     ],
     templateUrl: './statistics.component.html',
     styleUrls: ['./statistics.component.scss'],

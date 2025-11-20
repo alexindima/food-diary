@@ -7,14 +7,9 @@
 
 .auth {
     margin: 0 auto;
-    padding: $gap-xl $gap-m $gap-xxl;
     display: flex;
     flex-direction: column;
     gap: $gap-l;
-
-    @media #{$media-mobile} {
-        padding: $gap-l $gap-s $gap-xl;
-    }
 
     &__card,
     &__info-card {

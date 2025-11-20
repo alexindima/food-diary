@@ -37,6 +37,7 @@ import {
     ProductSaveSuccessDialogComponent,
     ProductSaveSuccessDialogData,
 } from './product-save-success-dialog.component';
+import { PageHeaderComponent } from '../../shared/page-header/page-header.component';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: FD_VALIDATION_ERRORS,
@@ -67,6 +68,7 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
         FdUiTextareaComponent,
         FdUiButtonComponent,
         FdUiFormErrorComponent,
+        PageHeaderComponent,
     ],
 })
 export class BaseProductManageComponent implements OnInit {
@@ -443,5 +445,4 @@ export interface ProductFormValues {
 type ProductFormData = FormGroupControls<ProductFormValues>;
 
 export type RedirectAction = 'Home' | 'ProductList';
-
 

@@ -1,25 +1,23 @@
 <div class="product-manage">
-    <div class="product-manage__header">
-        <h2 class="product-manage__title">
-            @if (product()) {
-                {{ 'PRODUCT_MANAGE.EDIT_TITLE' | translate }}
-            } @else {
-                {{ 'PRODUCT_MANAGE.ADD_TITLE' | translate }}
+    <fd-page-header
+        class="product-manage__header"
+        [title]="product() ? ('PRODUCT_MANAGE.EDIT_TITLE' | translate) : ('PRODUCT_MANAGE.ADD_TITLE' | translate)"
+    >
+        <ng-container fdPageHeaderActions>
+            @if (canShowDeleteButton) {
+                <fd-ui-button
+                    type="button"
+                    class="product-manage__delete-button"
+                    variant="danger"
+                    icon="delete"
+                    [disabled]="isDeleting()"
+                    (click)="onDeleteProduct()"
+                >
+                    {{ 'PRODUCT_MANAGE.DELETE_BUTTON' | translate }}
+                </fd-ui-button>
             }
-        </h2>
-        @if (canShowDeleteButton) {
-            <fd-ui-button
-                type="button"
-                class="product-manage__delete-button"
-                variant="danger"
-                icon="delete"
-                [disabled]="isDeleting()"
-                (click)="onDeleteProduct()"
-            >
-                {{ 'PRODUCT_MANAGE.DELETE_BUTTON' | translate }}
-            </fd-ui-button>
-        }
-    </div>
+        </ng-container>
+    </fd-page-header>
 
     <form class="product-manage__form" [formGroup]="productForm" (ngSubmit)="onSubmit()">
         <div class="product-manage__grid">

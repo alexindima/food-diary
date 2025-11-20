@@ -56,6 +56,7 @@ import {
     ConsumptionManageSuccessDialogComponent,
     ConsumptionManageSuccessDialogData,
 } from './success-dialog/consumption-manage-success-dialog.component';
+import { PageHeaderComponent } from '../../shared/page-header/page-header.component';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: FD_VALIDATION_ERRORS,
@@ -88,7 +89,8 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
         FdUiCheckboxComponent,
         FdUiIconModule,
         FdUiFormErrorComponent,
-    ]
+        PageHeaderComponent,
+    ],
 })
 export class BaseConsumptionManageComponent implements OnInit {
     private readonly consumptionService = inject(ConsumptionService);
@@ -944,6 +946,5 @@ type NutritionTotals = {
     carbs: number;
     fiber: number;
 };
-
 
 

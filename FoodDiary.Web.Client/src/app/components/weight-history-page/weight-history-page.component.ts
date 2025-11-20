@@ -23,6 +23,7 @@ import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiTabsComponent, FdUiTab } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
 import { UserService } from '../../services/user.service';
 import { NavigationService } from '../../services/navigation.service';
+import { PageHeaderComponent } from '../shared/page-header/page-header.component';
 
 @Component({
     selector: 'fd-weight-history-page',
@@ -38,6 +39,7 @@ import { NavigationService } from '../../services/navigation.service';
         FdUiDateInputComponent,
         FdUiDateRangeInputComponent,
         FdUiInputComponent,
+        PageHeaderComponent,
     ],
     templateUrl: './weight-history-page.component.html',
     styleUrls: ['./weight-history-page.component.scss'],

@@ -7,6 +7,7 @@ import { RecipeSelectDialogComponent } from '../../recipe-container/recipe-selec
 import { FD_UI_DIALOG_DATA, FdUiDialogRef } from 'fd-ui-kit/material';
 
 import { FdUiTabsComponent, FdUiTab } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
+import { PageHeaderComponent } from '../../shared/page-header/page-header.component';
 
 export type ConsumptionItemSelection =
     | { type: 'Product'; product: Product }
@@ -22,7 +23,7 @@ export type ConsumptionItemSelectDialogData = {
     templateUrl: './consumption-item-select-dialog.component.html',
     styleUrls: ['./consumption-item-select-dialog.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [FdUiTabsComponent, TranslatePipe, ProductListDialogComponent, RecipeSelectDialogComponent],
+    imports: [FdUiTabsComponent, TranslatePipe, ProductListDialogComponent, RecipeSelectDialogComponent, PageHeaderComponent],
 })
 export class ConsumptionItemSelectDialogComponent implements OnInit {
     private readonly dialogData = inject<ConsumptionItemSelectDialogData | null>(FD_UI_DIALOG_DATA, { optional: true });

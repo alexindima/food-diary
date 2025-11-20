@@ -1,13 +1,8 @@
 <div class="consumption-manage">
-    <div class="consumption-manage__header">
-        <h2 class="consumption-manage__title">
-            @if (consumption()) {
-                {{ 'CONSUMPTION_MANAGE.EDIT_TITLE' | translate }}
-            } @else {
-                {{ 'CONSUMPTION_MANAGE.ADD_TITLE' | translate }}
-            }
-        </h2>
-    </div>
+    <fd-page-header
+        class="consumption-manage__header"
+        [title]="consumption() ? ('CONSUMPTION_MANAGE.EDIT_TITLE' | translate) : ('CONSUMPTION_MANAGE.ADD_TITLE' | translate)"
+    />
 
     <form class="consumption-manage__form" [formGroup]="consumptionForm" (ngSubmit)="onSubmit()">
         <div class="consumption-manage__grid">

@@ -526,6 +526,7 @@
     "DASHBOARD": {
         "SUBTITLE": "Личный обзор",
         "TITLE": "Потребление за сегодня",
+        "TITLE_FOR_DATE": "Потребление за {{ date }}",
         "PROGRESS_TITLE": "Прогресс за день",
         "CONSUMED_TODAY": "Уже съедено",
         "GOAL_LABEL": "Цель дня",

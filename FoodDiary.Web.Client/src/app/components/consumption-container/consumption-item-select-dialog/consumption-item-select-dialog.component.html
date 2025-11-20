@@ -1,15 +1,12 @@
 <div class="consumption-item-select">
-    <div class="consumption-item-select__header">
-        <h2 class="consumption-item-select__title">
-            {{ 'CONSUMPTION_MANAGE.ITEM_SELECT_DIALOG.TITLE' | translate }}
-        </h2>
-        <div class="consumption-item-select__actions">
+    <fd-page-header class="consumption-item-select__header" [title]="'CONSUMPTION_MANAGE.ITEM_SELECT_DIALOG.TITLE' | translate">
+        <ng-container fdPageHeaderActions>
             <fd-ui-tabs class="consumption-item-select__tabs"
                 [tabs]="tabs"
                 [(selectedValue)]="activeTab"
              />
-        </div>
-    </div>
+        </ng-container>
+    </fd-page-header>
 
     <div class="consumption-item-select__content">
         @if (activeTab === 'Product') {

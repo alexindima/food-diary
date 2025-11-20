@@ -611,6 +611,7 @@
     "DASHBOARD": {
         "SUBTITLE": "Daily overview",
         "TITLE": "Consumption for today",
+        "TITLE_FOR_DATE": "Consumption for {{ date }}",
         "PROGRESS_TITLE": "Daily progress",
         "CONSUMED_TODAY": "Consumed today",
         "GOAL_LABEL": "Daily goal",

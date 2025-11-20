@@ -30,6 +30,7 @@ import {
     WaistEntrySummaryPoint,
 } from '../../types/waist-entry.data';
 import { UserService } from '../../services/user.service';
+import { PageHeaderComponent } from '../shared/page-header/page-header.component';
 
 @Component({
     selector: 'fd-waist-history-page',
@@ -45,6 +46,7 @@ import { UserService } from '../../services/user.service';
         FdUiDateInputComponent,
         FdUiDateRangeInputComponent,
         FdUiInputComponent,
+        PageHeaderComponent,
     ],
     templateUrl: './waist-history-page.component.html',
     styleUrls: ['./waist-history-page.component.scss'],

@@ -25,6 +25,7 @@ import { ChangePasswordDialogComponent } from './dialogs/change-password-dialog/
 import { PasswordSuccessDialogComponent } from './dialogs/password-success-dialog/password-success-dialog.component';
 import { UpdateSuccessDialogComponent } from './dialogs/update-success-dialog/update-success-dialog.component';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
+import { PageHeaderComponent } from '../shared/page-header/page-header.component';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: FD_VALIDATION_ERRORS,
@@ -49,6 +50,7 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
         FdUiDateInputComponent,
         FdUiButtonComponent,
         FdUiFormErrorComponent,
+        PageHeaderComponent,
     ],
     templateUrl: './user-manage.component.html',
     styleUrl: './user-manage.component.scss',

@@ -20,6 +20,7 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.component';
 import { FdUiIconModule } from 'fd-ui-kit/material';
+import { PageHeaderComponent } from '../../shared/page-header/page-header.component';
 
 @Component({
     selector: 'fd-consumption-list',
@@ -37,7 +38,8 @@ import { FdUiIconModule } from 'fd-ui-kit/material';
         FdUiLoaderComponent,
         FdUiPaginationComponent,
         FdUiIconModule,
-    ]
+        PageHeaderComponent,
+    ],
 })
 export class ConsumptionListComponent implements OnInit {
     private readonly consumptionService = inject(ConsumptionService);

@@ -2,22 +2,17 @@
 
 .recipe-manage {
     margin: 0 auto;
-    padding: $gap-xl;
     display: flex;
     flex-direction: column;
     gap: $gap-l;
     box-sizing: border-box;
 
     &__header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
+        margin-bottom: $gap-m;
     }
 
     &__title {
         margin: 0;
-        font-size: 2rem;
-        font-weight: 600;
         color: $color-text-main;
     }
 

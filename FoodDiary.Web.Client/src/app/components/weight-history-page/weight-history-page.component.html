@@ -1,7 +1,6 @@
 <div class="weight-history-page">
-    <header class="weight-history-page__header">
-        <h1 class="weight-history-page__title">{{ 'WEIGHT_HISTORY.TITLE' | translate }}</h1>
-        <div class="weight-history-page__header-actions">
+    <fd-page-header class="weight-history-page__header" [title]="'WEIGHT_HISTORY.TITLE' | translate">
+        <ng-container fdPageHeaderActions>
             <fd-ui-tabs class="weight-history-page__tabs"
                 [tabs]="rangeTabs"
                 [selectedValue]="selectedRange()"
@@ -14,8 +13,8 @@
                     [formControl]="customRangeControl"
                  />
             }
-        </div>
-    </header>
+        </ng-container>
+    </fd-page-header>
 
     <fd-ui-card class="weight-history-page__card weight-history-page__card--chart" [title]="'WEIGHT_HISTORY.CHART_TITLE' | translate">
         @if (isSummaryLoading()) {

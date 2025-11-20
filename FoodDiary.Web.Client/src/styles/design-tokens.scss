@@ -49,6 +49,7 @@ $fd-elevation-tokens: (
 
 $fd-layout-page-tokens: (
     background: #f5f7fb,
+    top-padding: 16px,
     horizontal-padding: 32px,
     vertical-padding: 48px,
     content-max-width: 1200px,
@@ -64,6 +65,18 @@ $fd-layout-header-tokens: (
     shadow: 0 12px 34px rgba(15, 23, 42, 0.12),
 );
 
+$fd-page-header-tokens: (
+    title-size: 2rem,
+    title-line-height: 1.2,
+    title-weight: 700,
+    height: 72px,
+    subtitle-size: 1rem,
+    subtitle-line-height: 1.5,
+    subtitle-weight: 500,
+    gap: 16px,
+    actions-gap: 12px,
+);
+
 $fd-design-tokens: (
     colors: $fd-color-tokens,
     radius: $fd-radius-tokens,
@@ -72,6 +85,7 @@ $fd-design-tokens: (
     elevation: $fd-elevation-tokens,
     layout-page: $fd-layout-page-tokens,
     layout-header: $fd-layout-header-tokens,
+    page-header: $fd-page-header-tokens,
 );
 
 @function fd-token($group, $name) {
@@ -130,6 +144,7 @@ $fd-design-tokens: (
         --fd-shadow-md: #{fd-token(elevation, md)};
 
         --fd-layout-page-background: #{fd-token(layout-page, background)};
+        --fd-layout-page-top-padding: #{fd-token(layout-page, top-padding)};
         --fd-layout-page-horizontal-padding: #{fd-token(layout-page, horizontal-padding)};
         --fd-layout-page-vertical-padding: #{fd-token(layout-page, vertical-padding)};
         --fd-layout-page-content-max-width: #{fd-token(layout-page, content-max-width)};
@@ -141,5 +156,15 @@ $fd-design-tokens: (
         --fd-layout-header-horizontal-padding-left: #{fd-token(layout-header, horizontal-padding-left)};
         --fd-layout-header-horizontal-padding-right: #{fd-token(layout-header, horizontal-padding-right)};
         --fd-layout-header-shadow: #{fd-token(layout-header, shadow)};
+
+        --fd-page-title-size: #{fd-token(page-header, title-size)};
+        --fd-page-title-line-height: #{fd-token(page-header, title-line-height)};
+        --fd-page-title-weight: #{fd-token(page-header, title-weight)};
+        --fd-page-header-height: #{fd-token(page-header, height)};
+        --fd-page-subtitle-size: #{fd-token(page-header, subtitle-size)};
+        --fd-page-subtitle-line-height: #{fd-token(page-header, subtitle-line-height)};
+        --fd-page-subtitle-weight: #{fd-token(page-header, subtitle-weight)};
+        --fd-page-header-gap: #{fd-token(page-header, gap)};
+        --fd-page-actions-gap: #{fd-token(page-header, actions-gap)};
     }
 }
