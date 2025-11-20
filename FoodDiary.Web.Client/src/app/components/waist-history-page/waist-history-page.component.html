@@ -1,22 +1,18 @@
 <div class="waist-history-page" fdPageContainer>
-    <fd-page-header class="waist-history-page__header" [title]="'WAIST_HISTORY.TITLE' | translate">
-        <ng-container fdPageHeaderActions>
-            <fd-ui-tabs class="waist-history-page__tabs"
-                [tabs]="rangeTabs"
-                [selectedValue]="selectedRange()"
-                (selectedValueChange)="changeRange($event)"
-             />
-            @if (selectedRange() === 'custom') {
-                <fd-ui-date-range-input class="waist-history-page__custom-range-input"
-                    [startPlaceholder]="'WAIST_HISTORY.CUSTOM_RANGE_PLACEHOLDER' | translate"
-                    [endPlaceholder]="'WAIST_HISTORY.CUSTOM_RANGE_PLACEHOLDER' | translate"
-                    [formControl]="customRangeControl"
-                 />
-            }
-        </ng-container>
-    </fd-page-header>
+    <fd-page-header class="waist-history-page__header" [title]="'WAIST_HISTORY.TITLE' | translate" />
 
     <fd-page-body>
+        <fd-period-filter
+            class="waist-history-page__period"
+            [tabs]="rangeTabs"
+            [selectedValue]="selectedRange()"
+            [rangeControl]="customRangeControl"
+            [displayRange]="currentRange()"
+            [startPlaceholder]="'WAIST_HISTORY.CUSTOM_RANGE_PLACEHOLDER' | translate"
+            [endPlaceholder]="'WAIST_HISTORY.CUSTOM_RANGE_PLACEHOLDER' | translate"
+            (rangeChange)="changeRange($event)"
+        />
+
         <fd-ui-card class="waist-history-page__card waist-history-page__card--chart" [title]="'WAIST_HISTORY.CHART_TITLE' | translate">
             @if (isSummaryLoading()) {
                 <div class="waist-history-page__loader">

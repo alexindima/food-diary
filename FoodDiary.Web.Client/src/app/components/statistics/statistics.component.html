@@ -2,20 +2,16 @@
     <fd-page-header class="statistics__header" [title]="'STATISTICS.TITLE' | translate" />
 
     <fd-page-body>
-        <div class="statistics__filters">
-            <fd-ui-tabs class="statistics__tabs statistics__tabs--range"
-                [tabs]="rangeTabs"
-                [selectedValue]="selectedRange()"
-                (selectedValueChange)="changeRange($event)"
-             />
-            @if (selectedRange() === 'custom') {
-                <fd-ui-date-range-input class="statistics__custom-range"
-                    [startPlaceholder]="'STATISTICS.CUSTOM_RANGE_PLACEHOLDER' | translate"
-                    [endPlaceholder]="'STATISTICS.CUSTOM_RANGE_PLACEHOLDER' | translate"
-                    [formControl]="customRangeControl"
-                 />
-            }
-        </div>
+        <fd-period-filter
+            class="statistics__period"
+            [tabs]="rangeTabs"
+            [selectedValue]="selectedRange()"
+            [rangeControl]="customRangeControl"
+            [displayRange]="currentRange()"
+            [startPlaceholder]="'STATISTICS.CUSTOM_RANGE_PLACEHOLDER' | translate"
+            [endPlaceholder]="'STATISTICS.CUSTOM_RANGE_PLACEHOLDER' | translate"
+            (rangeChange)="changeRange($event)"
+        />
 
         @if (isLoading()) {
             <div class="statistics__loader">{{ 'STATISTICS.LOADING' | translate }}</div>

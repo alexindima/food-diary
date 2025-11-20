@@ -5,6 +5,7 @@ import {
     DestroyRef,
     OnInit,
     computed,
+    effect,
     inject,
     signal,
 } from '@angular/core';
@@ -12,20 +13,21 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration } from 'chart.js';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { distinctUntilChanged, startWith } from 'rxjs';
 import { WeightEntriesService } from '../../services/weight-entries.service';
 import { WeightEntry, WeightEntryFilters, WeightEntrySummaryFilters, WeightEntrySummaryPoint } from '../../types/weight-entry.data';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDateInputComponent } from 'fd-ui-kit/date-input/fd-ui-date-input.component';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
-import { FdUiTab, FdUiTabsComponent } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
-import { FdUiDateRangeInputComponent } from 'fd-ui-kit/date-range-input/fd-ui-date-range-input.component';
+import { FdUiTab } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
 import { UserService } from '../../services/user.service';
 import { NavigationService } from '../../services/navigation.service';
 import { PageHeaderComponent } from '../shared/page-header/page-header.component';
 import { PageBodyComponent } from '../shared/page-body/page-body.component';
 import { FdPageContainerDirective } from '../../directives/layout/page-container.directive';
+import { PeriodFilterComponent } from '../shared/period-filter/period-filter.component';
 
 @Component({
     selector: 'fd-weight-history-page',
@@ -40,10 +42,9 @@ import { FdPageContainerDirective } from '../../directives/layout/page-container
         FdUiDateInputComponent,
         FdUiInputComponent,
         PageHeaderComponent,
-        FdUiTabsComponent,
-        FdUiDateRangeInputComponent,
         PageBodyComponent,
         FdPageContainerDirective,
+        PeriodFilterComponent,
     ],
     templateUrl: './weight-history-page.component.html',
     styleUrls: ['./weight-history-page.component.scss'],
@@ -76,6 +77,7 @@ export class WeightHistoryPageComponent implements OnInit {
     public readonly isSummaryLoading = signal<boolean>(false);
     public readonly customRangeControl = new FormControl<{ start: Date | null; end: Date | null } | null>(null);
     private readonly editingEntryId = signal<string | null>(null);
+    private lastLoadedRangeKey: string | null = null;
 
     public readonly entriesDescending = computed(() =>
         [...this.entries()].sort(
@@ -220,16 +222,34 @@ export class WeightHistoryPageComponent implements OnInit {
         };
     });
 
-    public ngOnInit(): void {
-        this.customRangeControl.valueChanges
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(range => {
-                if (this.selectedRange() === 'custom' && range?.start && range?.end) {
-                    this.loadEntries();
-                }
-            });
+    private readonly customRangeValue = toSignal(
+        this.customRangeControl.valueChanges.pipe(
+            startWith(this.customRangeControl.value),
+            distinctUntilChanged((prev, curr) => {
+                const prevStart = prev?.start?.getTime();
+                const prevEnd = prev?.end?.getTime();
+                const currStart = curr?.start?.getTime();
+                const currEnd = curr?.end?.getTime();
+                return prevStart === currStart && prevEnd === currEnd;
+            }),
+        ),
+    );
 
-        this.loadEntries();
+    private readonly rangeEffect = effect(() => {
+        const range = this.selectedRange();
+        const customRange = this.customRangeValue();
+
+        if (range !== 'custom') {
+            this.loadEntries();
+            return;
+        }
+
+        if (customRange?.start && customRange?.end) {
+            this.loadEntries();
+        }
+    });
+
+    public ngOnInit(): void {
         this.loadDesiredWeight();
         this.loadUserProfile();
     }
@@ -260,7 +280,7 @@ export class WeightHistoryPageComponent implements OnInit {
             .subscribe({
                 next: () => {
                     this.isSaving.set(false);
-                    this.loadEntries(false);
+                    this.loadEntries(false, true);
                     if (editingId) {
                         this.resetEditingState();
                     } else {
@@ -299,7 +319,7 @@ export class WeightHistoryPageComponent implements OnInit {
             .subscribe({
                 next: () => {
                     this.isSaving.set(false);
-                    this.loadEntries(false);
+                    this.loadEntries(false, true);
                     if (this.editingEntryId() === entry.id) {
                         this.resetEditingState();
                     }
@@ -354,22 +374,28 @@ export class WeightHistoryPageComponent implements OnInit {
                         start,
                         end,
                     },
-                    { emitEvent: false },
+                    { emitEvent: true },
                 );
             }
         } else {
             this.customRangeControl.setValue(null, { emitEvent: false });
         }
 
-        this.loadEntries();
+        // rangeEffect will handle loading once range/custom dates are set
     }
 
-    private loadEntries(showLoader = true): void {
+    private loadEntries(showLoader = true, force = false): void {
+        const { entriesParams, summaryParams, rangeKey } = this.buildFiltersForRange(this.selectedRange());
+
+        if (!force && rangeKey === this.lastLoadedRangeKey) {
+            return;
+        }
+
+        this.lastLoadedRangeKey = rangeKey;
+
         if (showLoader) {
             this.isLoading.set(true);
         }
-
-        const { entriesParams, summaryParams } = this.buildFiltersForRange(this.selectedRange());
 
         this.weightEntriesService
             .getEntries(entriesParams)
@@ -462,6 +488,7 @@ export class WeightHistoryPageComponent implements OnInit {
     private buildFiltersForRange(range: WeightHistoryRange): {
         entriesParams: WeightEntryFilters;
         summaryParams: WeightEntrySummaryFilters;
+        rangeKey: string;
     } {
         const { start, end } = this.calculateRangeDates(range);
 
@@ -470,6 +497,7 @@ export class WeightHistoryPageComponent implements OnInit {
         const totalDays = Math.max(1, Math.ceil((normalizedEnd.getTime() - normalizedStart.getTime()) / MS_IN_DAY));
         const quantizationDays = this.getQuantizationDays(range, totalDays);
         const limit = Math.min(500, totalDays * 5);
+        const rangeKey = `${normalizedStart.toISOString()}_${normalizedEnd.toISOString()}`;
 
         return {
             entriesParams: {
@@ -483,6 +511,7 @@ export class WeightHistoryPageComponent implements OnInit {
                 dateTo: normalizedEnd.toISOString(),
                 quantizationDays,
             },
+            rangeKey,
         };
     }
 

@@ -1,22 +1,18 @@
 <div class="weight-history-page" fdPageContainer>
-    <fd-page-header class="weight-history-page__header" [title]="'WEIGHT_HISTORY.TITLE' | translate">
-        <ng-container fdPageHeaderActions>
-            <fd-ui-tabs class="weight-history-page__tabs"
-                [tabs]="rangeTabs"
-                [selectedValue]="selectedRange()"
-                (selectedValueChange)="changeRange($event)"
-             />
-            @if (selectedRange() === 'custom') {
-                <fd-ui-date-range-input class="weight-history-page__custom-range-input"
-                    [startPlaceholder]="'WEIGHT_HISTORY.CUSTOM_RANGE_PLACEHOLDER' | translate"
-                    [endPlaceholder]="'WEIGHT_HISTORY.CUSTOM_RANGE_PLACEHOLDER' | translate"
-                    [formControl]="customRangeControl"
-                 />
-            }
-        </ng-container>
-    </fd-page-header>
+    <fd-page-header class="weight-history-page__header" [title]="'WEIGHT_HISTORY.TITLE' | translate" />
 
     <fd-page-body>
+        <fd-period-filter
+            class="weight-history-page__period"
+            [tabs]="rangeTabs"
+            [selectedValue]="selectedRange()"
+            [rangeControl]="customRangeControl"
+            [displayRange]="currentRange()"
+            [startPlaceholder]="'WEIGHT_HISTORY.CUSTOM_RANGE_PLACEHOLDER' | translate"
+            [endPlaceholder]="'WEIGHT_HISTORY.CUSTOM_RANGE_PLACEHOLDER' | translate"
+            (rangeChange)="changeRange($event)"
+        />
+
         <fd-ui-card class="weight-history-page__card weight-history-page__card--chart" [title]="'WEIGHT_HISTORY.CHART_TITLE' | translate">
             @if (isSummaryLoading()) {
                 <div class="weight-history-page__loader">

@@ -5,6 +5,7 @@ import {
     DestroyRef,
     OnInit,
     computed,
+    effect,
     inject,
     signal,
 } from '@angular/core';
@@ -13,7 +14,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration, ChartOptions, ChartTypeRegistry, TooltipItem } from 'chart.js';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { map, finalize, Observable, forkJoin } from 'rxjs';
+import { map, finalize, Observable, forkJoin, distinctUntilChanged, startWith } from 'rxjs';
 
 import { FdUiTabsComponent, FdUiTab } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
@@ -26,9 +27,9 @@ import { WeightEntrySummaryPoint } from '../../types/weight-entry.data';
 import { WaistEntrySummaryPoint } from '../../types/waist-entry.data';
 import { UserService } from '../../services/user.service';
 import { PageHeaderComponent } from '../shared/page-header/page-header.component';
-import { FdUiDateRangeInputComponent } from 'fd-ui-kit/date-range-input/fd-ui-date-range-input.component';
 import { PageBodyComponent } from '../shared/page-body/page-body.component';
 import { FdPageContainerDirective } from '../../directives/layout/page-container.directive';
+import { PeriodFilterComponent } from '../shared/period-filter/period-filter.component';
 
 type StatisticsRange = 'week' | 'month' | 'year' | 'custom';
 type NutritionChartTab = 'calories' | 'macros' | 'distribution';
@@ -50,9 +51,9 @@ interface DateRange {
         FdUiTabsComponent,
         FdUiCardComponent,
         PageHeaderComponent,
-        FdUiDateRangeInputComponent,
         PageBodyComponent,
         FdPageContainerDirective,
+        PeriodFilterComponent,
     ],
     templateUrl: './statistics.component.html',
     styleUrls: ['./statistics.component.scss'],
@@ -96,6 +97,7 @@ export class StatisticsComponent implements OnInit {
     public readonly weightSummaryPoints = signal<WeightEntrySummaryPoint[]>([]);
     public readonly waistSummaryPoints = signal<WaistEntrySummaryPoint[]>([]);
     public readonly userHeightCm = signal<number | null>(null);
+    private lastLoadedRangeKey: string | null = null;
 
     public readonly summaryMetrics = computed(() => {
         const stats = this.chartStatisticsData();
@@ -463,18 +465,36 @@ export class StatisticsComponent implements OnInit {
         },
     };
 
+    private readonly customRangeValue = toSignal(
+        this.customRangeControl.valueChanges.pipe(
+            startWith(this.customRangeControl.value),
+            distinctUntilChanged((prev, curr) => {
+                const prevStart = prev?.start?.getTime();
+                const prevEnd = prev?.end?.getTime();
+                const currStart = curr?.start?.getTime();
+                const currEnd = curr?.end?.getTime();
+                return prevStart === currStart && prevEnd === currEnd;
+            }),
+        ),
+    );
+
+    private readonly rangeEffect = effect(() => {
+        const range = this.selectedRange();
+        const customRange = this.customRangeValue();
+
+        if (range !== 'custom') {
+            this.loadAllData();
+            return;
+        }
+
+        if (customRange?.start && customRange?.end) {
+            this.loadAllData();
+        }
+    });
+
     public ngOnInit(): void {
         this.initializeCustomRange();
         this.loadUserProfile();
-        this.loadAllData();
-
-        this.customRangeControl.valueChanges
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(range => {
-                if (this.selectedRange() === 'custom' && range?.start && range?.end) {
-                    this.loadAllData();
-                }
-            });
     }
 
     public changeRange(value: unknown): void {
@@ -483,20 +503,13 @@ export class StatisticsComponent implements OnInit {
         }
         this.selectedRange.set(value);
 
-        if (value !== 'custom') {
-            this.loadAllData();
-            return;
-        }
-
         const current = this.customRangeControl.value;
         if (!current?.start || !current?.end) {
             const end = new Date();
             const start = new Date(end);
             start.setMonth(start.getMonth() - 1);
-            this.customRangeControl.setValue({ start, end }, { emitEvent: false });
+            this.customRangeControl.setValue({ start, end }, { emitEvent: true });
         }
-
-        this.loadAllData();
     }
 
     public changeNutritionTab(value: unknown): void {
@@ -513,6 +526,16 @@ export class StatisticsComponent implements OnInit {
 
     private loadAllData(): void {
         const range = this.getCurrentDateRange();
+        const normalizedStart = this.normalizeStartOfDay(range.start);
+        const normalizedEnd = this.normalizeEndOfDay(range.end);
+        const rangeKey = `${normalizedStart.toISOString()}_${normalizedEnd.toISOString()}`;
+
+        if (rangeKey === this.lastLoadedRangeKey) {
+            return;
+        }
+
+        this.lastLoadedRangeKey = rangeKey;
+
         this.loadStatistics(range);
         this.loadBodySummaries(range);
     }
