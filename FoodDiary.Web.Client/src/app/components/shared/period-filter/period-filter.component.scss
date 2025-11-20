@@ -1,0 +1,21 @@
+.fd-period-filter {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--fd-period-gap, 24px);
+
+    &__tabs {
+        flex: 1 1 260px;
+        min-width: 200px;
+    }
+
+    &__range {
+        flex: 0 1 320px;
+        max-width: 100%;
+        min-width: 240px;
+    }
+
+    @media (min-width: 768px) {
+        flex-wrap: nowrap;
+    }
+}

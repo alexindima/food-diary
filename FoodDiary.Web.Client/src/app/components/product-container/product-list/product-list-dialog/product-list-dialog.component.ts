@@ -13,6 +13,8 @@ import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.c
 import { FdUiDialogRef } from 'fd-ui-kit/material';
 import { FdUiIconModule } from 'fd-ui-kit/material';
 import { PageHeaderComponent } from '../../../shared/page-header/page-header.component';
+import { PageBodyComponent } from '../../../shared/page-body/page-body.component';
+import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
 
 @Component({
     selector: 'fd-product-list-dialog',
@@ -31,6 +33,8 @@ import { PageHeaderComponent } from '../../../shared/page-header/page-header.com
         FdUiPaginationComponent,
         FdUiIconModule,
         PageHeaderComponent,
+        PageBodyComponent,
+        FdPageContainerDirective,
     ]
 })
 export class ProductListDialogComponent extends ProductListBaseComponent {

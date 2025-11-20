@@ -1,0 +1,7 @@
+.fd-page-body {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: var(--fd-layout-page-section-spacing, 24px);
+    box-sizing: border-box;
+}

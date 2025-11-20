@@ -17,7 +17,6 @@ import { map, finalize, Observable, forkJoin } from 'rxjs';
 
 import { FdUiTabsComponent, FdUiTab } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
-import { FdUiDateRangeInputComponent } from 'fd-ui-kit/date-range-input/fd-ui-date-range-input.component';
 import { StatisticsService } from '../../services/statistics.service';
 import { MappedStatistics, StatisticsMapper } from '../../types/statistics.data';
 import { CHART_COLORS } from '../../constants/chart-colors';
@@ -27,6 +26,9 @@ import { WeightEntrySummaryPoint } from '../../types/weight-entry.data';
 import { WaistEntrySummaryPoint } from '../../types/waist-entry.data';
 import { UserService } from '../../services/user.service';
 import { PageHeaderComponent } from '../shared/page-header/page-header.component';
+import { FdUiDateRangeInputComponent } from 'fd-ui-kit/date-range-input/fd-ui-date-range-input.component';
+import { PageBodyComponent } from '../shared/page-body/page-body.component';
+import { FdPageContainerDirective } from '../../directives/layout/page-container.directive';
 
 type StatisticsRange = 'week' | 'month' | 'year' | 'custom';
 type NutritionChartTab = 'calories' | 'macros' | 'distribution';
@@ -47,8 +49,10 @@ interface DateRange {
         BaseChartDirective,
         FdUiTabsComponent,
         FdUiCardComponent,
-        FdUiDateRangeInputComponent,
         PageHeaderComponent,
+        FdUiDateRangeInputComponent,
+        PageBodyComponent,
+        FdPageContainerDirective,
     ],
     templateUrl: './statistics.component.html',
     styleUrls: ['./statistics.component.scss'],
@@ -62,6 +66,7 @@ export class StatisticsComponent implements OnInit {
     private readonly translateService = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
     private dateLabelFormatterCache: { locale: string; formatter: Intl.DateTimeFormat } | null = null;
+    public readonly currentRange = computed<DateRange>(() => this.getCurrentDateRange());
     public readonly rangeTabs: FdUiTab[] = [
         { value: 'week', labelKey: 'STATISTICS.RANGES.WEEK' },
         { value: 'month', labelKey: 'STATISTICS.RANGES.MONTH' },
@@ -472,7 +477,7 @@ export class StatisticsComponent implements OnInit {
             });
     }
 
-    public changeRange(value: string): void {
+    public changeRange(value: unknown): void {
         if (!isStatisticsRange(value) || value === this.selectedRange()) {
             return;
         }
@@ -494,13 +499,13 @@ export class StatisticsComponent implements OnInit {
         this.loadAllData();
     }
 
-    public changeNutritionTab(value: string): void {
+    public changeNutritionTab(value: unknown): void {
         if (isNutritionTab(value)) {
             this.selectedNutritionTab.set(value);
         }
     }
 
-    public changeBodyTab(value: string): void {
+    public changeBodyTab(value: unknown): void {
         if (isBodyTab(value)) {
             this.selectedBodyTab.set(value);
         }
@@ -736,14 +741,14 @@ export class StatisticsComponent implements OnInit {
 
 const MS_IN_DAY = 24 * 60 * 60 * 1000;
 
-function isStatisticsRange(value: string): value is StatisticsRange {
+function isStatisticsRange(value: unknown): value is StatisticsRange {
     return value === 'week' || value === 'month' || value === 'year' || value === 'custom';
 }
 
-function isNutritionTab(value: string): value is NutritionChartTab {
+function isNutritionTab(value: unknown): value is NutritionChartTab {
     return value === 'calories' || value === 'macros' || value === 'distribution';
 }
 
-function isBodyTab(value: string): value is BodyChartTab {
+function isBodyTab(value: unknown): value is BodyChartTab {
     return value === 'weight' || value === 'bmi' || value === 'waist' || value === 'whtr';
 }

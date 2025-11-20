@@ -17,6 +17,8 @@ import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.c
 import { FdUiIconModule } from 'fd-ui-kit/material';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { PageHeaderComponent } from '../../../shared/page-header/page-header.component';
+import { PageBodyComponent } from '../../../shared/page-body/page-body.component';
+import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
 
 @Component({
     selector: 'fd-product-list-page',
@@ -34,6 +36,8 @@ import { PageHeaderComponent } from '../../../shared/page-header/page-header.com
         FdUiPaginationComponent,
         FdUiIconModule,
         PageHeaderComponent,
+        PageBodyComponent,
+        FdPageContainerDirective,
     ]
 })
 export class ProductListPageComponent extends ProductListBaseComponent implements OnInit {

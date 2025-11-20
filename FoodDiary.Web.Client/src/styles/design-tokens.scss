@@ -56,6 +56,14 @@ $fd-layout-page-tokens: (
     section-spacing: 40px,
 );
 
+$fd-period-filter-tokens: (
+    gap: 24px,
+);
+
+$fd-page-body-tokens: (
+    gap: 16px,
+);
+
 $fd-layout-header-tokens: (
     height: 56px,
     background: #1b2a80,
@@ -86,6 +94,8 @@ $fd-design-tokens: (
     layout-page: $fd-layout-page-tokens,
     layout-header: $fd-layout-header-tokens,
     page-header: $fd-page-header-tokens,
+    period-filter: $fd-period-filter-tokens,
+    page-body: $fd-page-body-tokens,
 );
 
 @function fd-token($group, $name) {
@@ -149,6 +159,8 @@ $fd-design-tokens: (
         --fd-layout-page-vertical-padding: #{fd-token(layout-page, vertical-padding)};
         --fd-layout-page-content-max-width: #{fd-token(layout-page, content-max-width)};
         --fd-layout-page-section-spacing: #{fd-token(layout-page, section-spacing)};
+        --fd-period-gap: #{fd-token(period-filter, gap)};
+        --fd-page-body-gap: #{fd-token(page-body, gap)};
 
         --fd-layout-header-height: #{fd-token(layout-header, height)};
         --fd-layout-header-background: #{fd-token(layout-header, background)};

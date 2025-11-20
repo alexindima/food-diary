@@ -11,7 +11,7 @@ body {
     font-size: var(--fd-font-size-base, 16px);
     line-height: var(--fd-line-height-base, 1.5);
     color: var(--fd-color-text, #333333);
-    background-color: var(--fd-layout-page-background, #f5f6fa);
+    background-color: var(--fd-color-background, var(--fd-layout-page-background, #f5f6fa));
 }
 
 .fd-layout-page {
@@ -33,6 +33,8 @@ body {
         var(--fd-layout-page-vertical-padding);
     background: var(--fd-layout-page-background);
 }
+
+/* legacy layout classes removed; page layout handled via fdPageLayout directive */
 
 .fd-page-header {
     display: flex;
@@ -68,11 +70,9 @@ body {
 
 .fd-page-header__actions {
     display: flex;
-    flex-wrap: wrap;
     justify-content: flex-end;
     align-items: center;
     gap: var(--fd-page-actions-gap, 12px);
-    flex: 1 1 320px;
     min-width: 240px;
 }
 

@@ -6,6 +6,7 @@
 .fd-ui-tabs {
     width: 100%;
     --fd-tabs-color: #0f172a;
+    --fd-tabs-height: 40px;
 
     .mdc-tab__text-label {
         font-weight: 600;
@@ -24,5 +25,21 @@
 
     .mat-mdc-tab-group {
         width: 100%;
+    }
+
+    ::ng-deep .mat-mdc-tab {
+        --mdc-tab-height: var(--fd-tabs-height);
+        min-height: var(--fd-tabs-height);
+        height: var(--fd-tabs-height);
+    }
+
+    ::ng-deep .mat-mdc-tab .mdc-tab {
+        min-height: var(--fd-tabs-height);
+        height: var(--fd-tabs-height);
+    }
+
+    ::ng-deep .mat-mdc-tab .mdc-tab__content {
+        height: var(--fd-tabs-height);
+        align-items: center;
     }
 }

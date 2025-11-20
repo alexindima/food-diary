@@ -13,12 +13,12 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration } from 'chart.js';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FdUiTabsComponent, FdUiTab } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
+import { FdUiTab, FdUiTabsComponent } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDateInputComponent } from 'fd-ui-kit/date-input/fd-ui-date-input.component';
-import { FdUiDateRangeInputComponent } from 'fd-ui-kit/date-range-input/fd-ui-date-range-input.component';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
+import { FdUiDateRangeInputComponent } from 'fd-ui-kit/date-range-input/fd-ui-date-range-input.component';
 import { WaistEntriesService } from '../../services/waist-entries.service';
 import { NavigationService } from '../../services/navigation.service';
 import {
@@ -31,6 +31,8 @@ import {
 } from '../../types/waist-entry.data';
 import { UserService } from '../../services/user.service';
 import { PageHeaderComponent } from '../shared/page-header/page-header.component';
+import { PageBodyComponent } from '../shared/page-body/page-body.component';
+import { FdPageContainerDirective } from '../../directives/layout/page-container.directive';
 
 @Component({
     selector: 'fd-waist-history-page',
@@ -40,13 +42,15 @@ import { PageHeaderComponent } from '../shared/page-header/page-header.component
         TranslateModule,
         ReactiveFormsModule,
         BaseChartDirective,
-        FdUiTabsComponent,
         FdUiCardComponent,
         FdUiButtonComponent,
         FdUiDateInputComponent,
-        FdUiDateRangeInputComponent,
         FdUiInputComponent,
+        FdUiTabsComponent,
+        FdUiDateRangeInputComponent,
         PageHeaderComponent,
+        PageBodyComponent,
+        FdPageContainerDirective,
     ],
     templateUrl: './waist-history-page.component.html',
     styleUrls: ['./waist-history-page.component.scss'],
@@ -65,6 +69,9 @@ export class WaistHistoryPageComponent implements OnInit {
     private readonly pointerPaddingPercent = 1;
 
     public readonly selectedRange = signal<WaistHistoryRange>(this.defaultRange);
+    public readonly currentRange = computed<{ start: Date; end: Date }>(() =>
+        this.calculateRangeDates(this.selectedRange()),
+    );
     public readonly entries = signal<WaistEntry[]>([]);
     public readonly isLoading = signal(false);
     public readonly isSaving = signal(false);
@@ -438,6 +445,30 @@ export class WaistHistoryPageComponent implements OnInit {
         entriesParams: WaistEntryFilters;
         summaryParams: WaistEntrySummaryFilters;
     } {
+        const { start, end } = this.calculateRangeDates(range);
+
+        const normalizedStart = this.normalizeStartOfDay(start);
+        const normalizedEnd = this.normalizeEndOfDay(end);
+        const totalDays = Math.max(1, Math.ceil((normalizedEnd.getTime() - normalizedStart.getTime()) / MS_IN_DAY));
+        const quantizationDays = this.getQuantizationDays(range, totalDays);
+        const limit = Math.min(500, totalDays * 5);
+
+        return {
+            entriesParams: {
+                dateFrom: normalizedStart.toISOString(),
+                dateTo: normalizedEnd.toISOString(),
+                sort: 'desc',
+                limit,
+            },
+            summaryParams: {
+                dateFrom: normalizedStart.toISOString(),
+                dateTo: normalizedEnd.toISOString(),
+                quantizationDays,
+            },
+        };
+    }
+
+    private calculateRangeDates(range: WaistHistoryRange): { start: Date; end: Date } {
         const now = new Date();
         let start = new Date(now);
         let end = new Date(now);
@@ -461,24 +492,9 @@ export class WaistHistoryPageComponent implements OnInit {
             }
         }
 
-        const normalizedStart = this.normalizeStartOfDay(start);
-        const normalizedEnd = this.normalizeEndOfDay(end);
-        const totalDays = Math.max(1, Math.ceil((normalizedEnd.getTime() - normalizedStart.getTime()) / MS_IN_DAY));
-        const quantizationDays = this.getQuantizationDays(range, totalDays);
-        const limit = Math.min(500, totalDays * 5);
-
         return {
-            entriesParams: {
-                dateFrom: normalizedStart.toISOString(),
-                dateTo: normalizedEnd.toISOString(),
-                sort: 'desc',
-                limit,
-            },
-            summaryParams: {
-                dateFrom: normalizedStart.toISOString(),
-                dateTo: normalizedEnd.toISOString(),
-                quantizationDays,
-            },
+            start,
+            end,
         };
     }
 

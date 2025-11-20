@@ -31,6 +31,8 @@ import { WeightEntry } from '../../types/weight-entry.data';
 import { WaistEntriesService } from '../../services/waist-entries.service';
 import { WaistEntry } from '../../types/waist-entry.data';
 import { PageHeaderComponent } from '../shared/page-header/page-header.component';
+import { PageBodyComponent } from '../shared/page-body/page-body.component';
+import { FdPageContainerDirective } from '../../directives/layout/page-container.directive';
 
 interface DashboardQuickAction {
     icon: string;
@@ -58,6 +60,8 @@ interface DashboardQuickAction {
         FdUiNativeDateModule,
         FdUiIconModule,
         PageHeaderComponent,
+        PageBodyComponent,
+        FdPageContainerDirective,
     ],
     templateUrl: './today-consumption.component.html',
     styleUrl: './today-consumption.component.scss',

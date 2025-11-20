@@ -1,0 +1,11 @@
+<header class="fd-page-header">
+    <div class="fd-page-header__title-block">
+        <h1 class="fd-page-title">{{ title() }}</h1>
+        @if (subtitle()) {
+            <p class="fd-page-subtitle">{{ subtitle() }}</p>
+        }
+    </div>
+    <div class="fd-page-header__actions">
+        <ng-content select="[fdPageHeaderActions]"></ng-content>
+    </div>
+</header>

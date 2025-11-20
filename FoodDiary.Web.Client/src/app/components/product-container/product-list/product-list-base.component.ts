@@ -19,6 +19,8 @@ import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.c
 import { buildProductTypeTranslationKey } from '../../../utils/product-type.utils';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiIconModule } from 'fd-ui-kit/material';
+import { PageBodyComponent } from '../../shared/page-body/page-body.component';
+import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
 
 @Component({
     selector: 'fd-product-list-base',
@@ -37,6 +39,8 @@ import { FdUiIconModule } from 'fd-ui-kit/material';
         FdUiPaginationComponent,
         FdUiIconModule,
         PageHeaderComponent,
+        PageBodyComponent,
+        FdPageContainerDirective,
     ],
 })
 export class ProductListBaseComponent implements OnInit {
@@ -45,7 +49,7 @@ export class ProductListBaseComponent implements OnInit {
     protected readonly pageSize = 10;
     protected readonly fdDialogService = inject(FdUiDialogService);
 
-    private readonly container = viewChild.required<ElementRef<HTMLElement>>('container');
+    private readonly header = viewChild.required<PageHeaderComponent, ElementRef>(PageHeaderComponent, { read: ElementRef });
 
     public searchForm: FormGroup<ProductSearchFormGroup>;
     public productData: PagedData<Product> = new PagedData<Product>();
@@ -129,7 +133,7 @@ export class ProductListBaseComponent implements OnInit {
     }
 
     protected scrollToTop(): void {
-        this.container().nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        this.header().nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
     protected onProductClick(_product: Product): void {}

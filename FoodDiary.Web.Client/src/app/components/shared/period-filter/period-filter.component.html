@@ -1,0 +1,17 @@
+<div class="fd-period-filter">
+    <fd-ui-tabs
+        class="fd-period-filter__tabs"
+        [tabs]="tabs()"
+        [selectedValue]="selectedValue()"
+        (selectedValueChange)="onRangeChange($event)"
+    />
+
+    <fd-ui-date-range-input
+        class="fd-period-filter__range"
+        [formControl]="rangeControl()"
+        [startPlaceholder]="startPlaceholder() || ''"
+        [endPlaceholder]="endPlaceholder() || ''"
+        [disabled]="selectedValue() !== 'custom'"
+        [hideSubscript]="true"
+    />
+</div>

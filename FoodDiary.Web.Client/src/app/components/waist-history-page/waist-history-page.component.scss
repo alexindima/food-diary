@@ -11,6 +11,10 @@
         margin-bottom: var(--fd-page-header-gap, 16px);
     }
 
+    &__period {
+        width: 100%;
+    }
+
     &__title {
         margin: 0;
         font-size: var(--fd-page-title-size, 2rem);

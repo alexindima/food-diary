@@ -1,4 +1,4 @@
-<div class="recipe-list" #container>
+<div class="recipe-list" fdPageContainer #container>
     <fd-page-header class="recipe-list__header" [title]="'RECIPE_LIST.TITLE' | translate">
         <ng-container fdPageHeaderActions>
             <form class="recipe-list__search-form" [formGroup]="searchForm">
@@ -36,78 +36,80 @@
         </ng-container>
     </fd-page-header>
 
-    @if (recipeData.isLoading()) {
-        <fd-ui-loader class="recipe-list__loader" />
-    } @else {
-        @if (recipeData.items().length > 0) {
-            <div class="recipe-list__items">
-                @for (recipe of recipeData.items(); track recipe.id) {
-                    <fd-ui-entity-card
-                        class="fd-ui-entity-card--hoverable"
-                        appearance="recipe"
-                        (click)="onRecipeClick(recipe)"
-                        [imageUrl]="recipe.imageUrl"
-                    >
-                        <div class="recipe-card product-card">
-                            <div class="product-card__header">
-                                <div class="product-card__title">
-                                    <span class="product-card__name">{{ recipe.name }}</span>
-                                </div>
-                                <div class="product-card__badges">
-                                    @if (recipe.isOwnedByCurrentUser) {
-                                        <fd-badge [label]="getVisibilityTranslation(recipe.visibility)"
-                                            [variant]="isPrivateVisibility(recipe.visibility) ? 'warning' : 'success'"
-                                            [icon]="isPrivateVisibility(recipe.visibility) ? 'lock' : 'public'"
-                                         />
-                                    }
-                                    <fd-badge [label]="recipe.isOwnedByCurrentUser ? ('RECIPE_BADGE.MY' | translate) : ('RECIPE_BADGE.SHARED' | translate)"
-                                        [variant]="recipe.isOwnedByCurrentUser ? 'primary' : 'neutral'"
-                                        [icon]="recipe.isOwnedByCurrentUser ? 'person' : 'groups'"
-                                     />
-                                </div>
-                            </div>
-                            <div class="product-card__stats">
-                                <span class="product-card__calories">
-                                    {{ 'PRODUCT_LIST.CALORIES' | translate }}: {{ recipe.totalCalories ?? '-' }}
-                                    {{ 'PRODUCT_LIST.KCAL' | translate }}
-                                </span>
-                                <span class="product-card__macros">
-                                    {{ 'PRODUCT_LIST.PROTEINS' | translate }}: {{ recipe.totalProteins ?? '-' }}g ·
-                                    {{ 'PRODUCT_LIST.FATS' | translate }}: {{ recipe.totalFats ?? '-' }}g ·
-                                    {{ 'PRODUCT_LIST.CARBS' | translate }}: {{ recipe.totalCarbs ?? '-' }}g
-                                </span>
-                            </div>
-                            <div class="recipe-card__meta">
-                                <span class="recipe-card__prep-time">
-                                    {{ 'RECIPE_LIST.PREP_TIME' | translate }}:
-                                    @if (getPrepTime(recipe) !== null) {
-                                        {{ getPrepTime(recipe) }} {{ 'RECIPE_DETAIL.MIN' | translate }}
-                                    } @else {
-                                        -
-                                    }
-                                </span>
-                                <span class="recipe-card__ingredients">
-                                    {{ 'RECIPE_LIST.INGREDIENTS_COUNT' | translate }}: {{ getIngredientCount(recipe) }}
-                                </span>
-                            </div>
-                        </div>
-                    </fd-ui-entity-card>
-                }
-            </div>
+    <fd-page-body>
+        @if (recipeData.isLoading()) {
+            <fd-ui-loader class="recipe-list__loader" />
         } @else {
-            <div class="recipe-list__no-results">
-                <mat-icon class="recipe-list__no-results-icon">search_off</mat-icon>
-                {{ 'RECIPE_LIST.NO_RECIPES_FOUND' | translate }}
-            </div>
+            @if (recipeData.items().length > 0) {
+                <div class="recipe-list__items">
+                    @for (recipe of recipeData.items(); track recipe.id) {
+                        <fd-ui-entity-card
+                            class="fd-ui-entity-card--hoverable"
+                            appearance="recipe"
+                            (click)="onRecipeClick(recipe)"
+                            [imageUrl]="recipe.imageUrl"
+                        >
+                            <div class="recipe-card product-card">
+                                <div class="product-card__header">
+                                    <div class="product-card__title">
+                                        <span class="product-card__name">{{ recipe.name }}</span>
+                                    </div>
+                                    <div class="product-card__badges">
+                                        @if (recipe.isOwnedByCurrentUser) {
+                                            <fd-badge [label]="getVisibilityTranslation(recipe.visibility)"
+                                                [variant]="isPrivateVisibility(recipe.visibility) ? 'warning' : 'success'"
+                                                [icon]="isPrivateVisibility(recipe.visibility) ? 'lock' : 'public'"
+                                             />
+                                        }
+                                        <fd-badge [label]="recipe.isOwnedByCurrentUser ? ('RECIPE_BADGE.MY' | translate) : ('RECIPE_BADGE.SHARED' | translate)"
+                                            [variant]="recipe.isOwnedByCurrentUser ? 'primary' : 'neutral'"
+                                            [icon]="recipe.isOwnedByCurrentUser ? 'person' : 'groups'"
+                                         />
+                                    </div>
+                                </div>
+                                <div class="product-card__stats">
+                                    <span class="product-card__calories">
+                                        {{ 'PRODUCT_LIST.CALORIES' | translate }}: {{ recipe.totalCalories ?? '-' }}
+                                        {{ 'PRODUCT_LIST.KCAL' | translate }}
+                                    </span>
+                                    <span class="product-card__macros">
+                                        {{ 'PRODUCT_LIST.PROTEINS' | translate }}: {{ recipe.totalProteins ?? '-' }}g ·
+                                        {{ 'PRODUCT_LIST.FATS' | translate }}: {{ recipe.totalFats ?? '-' }}g ·
+                                        {{ 'PRODUCT_LIST.CARBS' | translate }}: {{ recipe.totalCarbs ?? '-' }}g
+                                    </span>
+                                </div>
+                                <div class="recipe-card__meta">
+                                    <span class="recipe-card__prep-time">
+                                        {{ 'RECIPE_LIST.PREP_TIME' | translate }}:
+                                        @if (getPrepTime(recipe) !== null) {
+                                            {{ getPrepTime(recipe) }} {{ 'RECIPE_DETAIL.MIN' | translate }}
+                                        } @else {
+                                            -
+                                        }
+                                    </span>
+                                    <span class="recipe-card__ingredients">
+                                        {{ 'RECIPE_LIST.INGREDIENTS_COUNT' | translate }}: {{ getIngredientCount(recipe) }}
+                                    </span>
+                                </div>
+                            </div>
+                        </fd-ui-entity-card>
+                    }
+                </div>
+            } @else {
+                <div class="recipe-list__no-results">
+                    <mat-icon class="recipe-list__no-results-icon">search_off</mat-icon>
+                    {{ 'RECIPE_LIST.NO_RECIPES_FOUND' | translate }}
+                </div>
+            }
         }
-    }
 
-    @if (recipeData.totalPages > 1) {
-        <fd-ui-pagination class="recipe-list__pagination"
-            [length]="recipeData.totalItems"
-            [pageSize]="pageSize"
-            [pageIndex]="currentPageIndex"
-            (pageIndexChange)="onPageChange($event)"
-         />
-    }
+        @if (recipeData.totalPages > 1) {
+            <fd-ui-pagination class="recipe-list__pagination"
+                [length]="recipeData.totalItems"
+                [pageSize]="pageSize"
+                [pageIndex]="currentPageIndex"
+                (pageIndexChange)="onPageChange($event)"
+             />
+        }
+    </fd-page-body>
 </div>

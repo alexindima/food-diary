@@ -1,4 +1,4 @@
-<div class="product-list" #container>
+<div class="product-list" fdPageContainer>
     <fd-page-header class="product-list__header" [title]="'PRODUCT_LIST.TITLE' | translate">
         <ng-container fdPageHeaderActions>
             <form class="product-list__search-form" [formGroup]="searchForm">
@@ -39,70 +39,72 @@
         </ng-container>
     </fd-page-header>
 
-    @if (productData.isLoading()) {
-        <fd-ui-loader class="product-list__loader" />
-    } @else {
-        @if (productData.items().length > 0) {
-            @for (product of productData.items(); track product) {
-                <fd-ui-entity-card
-                    class="product-card fd-ui-entity-card--hoverable"
-                    appearance="product"
-                    (click)="onProductClick(product)"
-                    [imageUrl]="product.imageUrl"
-                >
-                    <div class="product-card">
-                        <div class="product-card__header">
-                            <div class="product-card__title">
-                                <span class="product-card__name">{{ product.name }}</span>
-                                @if (product.barcode) {
-                                    <span class="product-card__barcode">[{{ product.barcode }}]</span>
-                                }
-                            </div>
-                            <div class="product-card__badges">
-                                @if (product.isOwnedByCurrentUser) {
-                                    <fd-badge [label]="('PRODUCT_VISIBILITY.' + product.visibility) | translate"
-                                        [variant]="isPrivateVisibility(product.visibility) ? 'warning' : 'success'"
-                                        [icon]="isPrivateVisibility(product.visibility) ? 'lock' : 'public'"
-                                     />
-                                }
-                                <fd-badge [label]="product.isOwnedByCurrentUser ? ('PRODUCT_BADGE.MY' | translate) : ('PRODUCT_BADGE.SHARED' | translate)"
-                                    [variant]="product.isOwnedByCurrentUser ? 'primary' : 'neutral'"
-                                    [icon]="product.isOwnedByCurrentUser ? 'person' : 'groups'"
-                                 />
-                            </div>
-                        </div>
-                        <div class="product-card__stats">
-                            <span class="product-card__calories">
-                                {{ 'PRODUCT_LIST.CALORIES' | translate }}: {{ product.caloriesPerBase }}
-                                {{ 'PRODUCT_LIST.KCAL' | translate }}
-                            </span>
-                            <span class="product-card__macros">
-                                {{ 'PRODUCT_LIST.PROTEINS' | translate }}: {{ product.proteinsPerBase }}g ·
-                                {{ 'PRODUCT_LIST.FATS' | translate }}: {{ product.fatsPerBase }}g ·
-                                {{ 'PRODUCT_LIST.CARBS' | translate }}: {{ product.carbsPerBase }}g
-                            </span>
-                        </div>
-                        <div class="product-card__serving">
-                            {{ 'PRODUCT_MANAGE.PRODUCT_TYPE' | translate }}:
-                            {{ getProductTypeTranslationKey(product) | translate }}
-                        </div>
-                    </div>
-                </fd-ui-entity-card>
-            }
+    <fd-page-body>
+        @if (productData.isLoading()) {
+            <fd-ui-loader class="product-list__loader" />
         } @else {
-            <div class="product-list__no-results">
-                <mat-icon class="product-list__no-results-icon">search_off</mat-icon>
-                {{ 'PRODUCT_LIST.NO_PRODUCTS_FOUND' | translate }}
-            </div>
+            @if (productData.items().length > 0) {
+                @for (product of productData.items(); track product) {
+                    <fd-ui-entity-card
+                        class="product-card fd-ui-entity-card--hoverable"
+                        appearance="product"
+                        (click)="onProductClick(product)"
+                        [imageUrl]="product.imageUrl"
+                    >
+                        <div class="product-card">
+                            <div class="product-card__header">
+                                <div class="product-card__title">
+                                    <span class="product-card__name">{{ product.name }}</span>
+                                    @if (product.barcode) {
+                                        <span class="product-card__barcode">[{{ product.barcode }}]</span>
+                                    }
+                                </div>
+                                <div class="product-card__badges">
+                                    @if (product.isOwnedByCurrentUser) {
+                                        <fd-badge [label]="('PRODUCT_VISIBILITY.' + product.visibility) | translate"
+                                            [variant]="isPrivateVisibility(product.visibility) ? 'warning' : 'success'"
+                                            [icon]="isPrivateVisibility(product.visibility) ? 'lock' : 'public'"
+                                         />
+                                    }
+                                    <fd-badge [label]="product.isOwnedByCurrentUser ? ('PRODUCT_BADGE.MY' | translate) : ('PRODUCT_BADGE.SHARED' | translate)"
+                                        [variant]="product.isOwnedByCurrentUser ? 'primary' : 'neutral'"
+                                        [icon]="product.isOwnedByCurrentUser ? 'person' : 'groups'"
+                                     />
+                                </div>
+                            </div>
+                            <div class="product-card__stats">
+                                <span class="product-card__calories">
+                                    {{ 'PRODUCT_LIST.CALORIES' | translate }}: {{ product.caloriesPerBase }}
+                                    {{ 'PRODUCT_LIST.KCAL' | translate }}
+                                </span>
+                                <span class="product-card__macros">
+                                    {{ 'PRODUCT_LIST.PROTEINS' | translate }}: {{ product.proteinsPerBase }}g ·
+                                    {{ 'PRODUCT_LIST.FATS' | translate }}: {{ product.fatsPerBase }}g ·
+                                    {{ 'PRODUCT_LIST.CARBS' | translate }}: {{ product.carbsPerBase }}g
+                                </span>
+                            </div>
+                            <div class="product-card__serving">
+                                {{ 'PRODUCT_MANAGE.PRODUCT_TYPE' | translate }}:
+                                {{ getProductTypeTranslationKey(product) | translate }}
+                            </div>
+                        </div>
+                    </fd-ui-entity-card>
+                }
+            } @else {
+                <div class="product-list__no-results">
+                    <mat-icon class="product-list__no-results-icon">search_off</mat-icon>
+                    {{ 'PRODUCT_LIST.NO_PRODUCTS_FOUND' | translate }}
+                </div>
+            }
         }
-    }
 
-    @if (productData.totalPages > 1) {
-        <fd-ui-pagination class="product-list__pagination"
-            [length]="productData.totalItems"
-            [pageSize]="pageSize"
-            [pageIndex]="currentPageIndex"
-            (pageIndexChange)="onPageChange($event)"
-         />
-    }
+        @if (productData.totalPages > 1) {
+            <fd-ui-pagination class="product-list__pagination"
+                [length]="productData.totalItems"
+                [pageSize]="pageSize"
+                [pageIndex]="currentPageIndex"
+                (pageIndexChange)="onPageChange($event)"
+             />
+        }
+    </fd-page-body>
 </div>

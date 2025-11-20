@@ -18,12 +18,14 @@ import { WeightEntry, WeightEntryFilters, WeightEntrySummaryFilters, WeightEntry
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDateInputComponent } from 'fd-ui-kit/date-input/fd-ui-date-input.component';
-import { FdUiDateRangeInputComponent } from 'fd-ui-kit/date-range-input/fd-ui-date-range-input.component';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
-import { FdUiTabsComponent, FdUiTab } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
+import { FdUiTab, FdUiTabsComponent } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
+import { FdUiDateRangeInputComponent } from 'fd-ui-kit/date-range-input/fd-ui-date-range-input.component';
 import { UserService } from '../../services/user.service';
 import { NavigationService } from '../../services/navigation.service';
 import { PageHeaderComponent } from '../shared/page-header/page-header.component';
+import { PageBodyComponent } from '../shared/page-body/page-body.component';
+import { FdPageContainerDirective } from '../../directives/layout/page-container.directive';
 
 @Component({
     selector: 'fd-weight-history-page',
@@ -33,13 +35,15 @@ import { PageHeaderComponent } from '../shared/page-header/page-header.component
         TranslateModule,
         ReactiveFormsModule,
         BaseChartDirective,
-        FdUiTabsComponent,
         FdUiCardComponent,
         FdUiButtonComponent,
         FdUiDateInputComponent,
-        FdUiDateRangeInputComponent,
         FdUiInputComponent,
         PageHeaderComponent,
+        FdUiTabsComponent,
+        FdUiDateRangeInputComponent,
+        PageBodyComponent,
+        FdPageContainerDirective,
     ],
     templateUrl: './weight-history-page.component.html',
     styleUrls: ['./weight-history-page.component.scss'],
@@ -58,6 +62,9 @@ export class WeightHistoryPageComponent implements OnInit {
 
     private readonly defaultRange: WeightHistoryRange = 'month';
     public readonly selectedRange = signal<WeightHistoryRange>(this.defaultRange);
+    public readonly currentRange = computed<{ start: Date; end: Date }>(() =>
+        this.calculateRangeDates(this.selectedRange()),
+    );
 
     public readonly entries = signal<WeightEntry[]>([]);
     public readonly isLoading = signal<boolean>(false);
@@ -456,6 +463,30 @@ export class WeightHistoryPageComponent implements OnInit {
         entriesParams: WeightEntryFilters;
         summaryParams: WeightEntrySummaryFilters;
     } {
+        const { start, end } = this.calculateRangeDates(range);
+
+        const normalizedStart = this.normalizeStartOfDay(start);
+        const normalizedEnd = this.normalizeEndOfDay(end);
+        const totalDays = Math.max(1, Math.ceil((normalizedEnd.getTime() - normalizedStart.getTime()) / MS_IN_DAY));
+        const quantizationDays = this.getQuantizationDays(range, totalDays);
+        const limit = Math.min(500, totalDays * 5);
+
+        return {
+            entriesParams: {
+                dateFrom: normalizedStart.toISOString(),
+                dateTo: normalizedEnd.toISOString(),
+                sort: 'desc',
+                limit,
+            },
+            summaryParams: {
+                dateFrom: normalizedStart.toISOString(),
+                dateTo: normalizedEnd.toISOString(),
+                quantizationDays,
+            },
+        };
+    }
+
+    private calculateRangeDates(range: WeightHistoryRange): { start: Date; end: Date } {
         const now = new Date();
         let start = new Date(now);
         let end = new Date(now);
@@ -478,24 +509,9 @@ export class WeightHistoryPageComponent implements OnInit {
             }
         }
 
-        const normalizedStart = this.normalizeStartOfDay(start);
-        const normalizedEnd = this.normalizeEndOfDay(end);
-        const totalDays = Math.max(1, Math.ceil((normalizedEnd.getTime() - normalizedStart.getTime()) / MS_IN_DAY));
-        const quantizationDays = this.getQuantizationDays(range, totalDays);
-        const limit = Math.min(500, totalDays * 5);
-
         return {
-            entriesParams: {
-                dateFrom: normalizedStart.toISOString(),
-                dateTo: normalizedEnd.toISOString(),
-                sort: 'desc',
-                limit,
-            },
-            summaryParams: {
-                dateFrom: normalizedStart.toISOString(),
-                dateTo: normalizedEnd.toISOString(),
-                quantizationDays,
-            },
+            start,
+            end,
         };
     }
 
