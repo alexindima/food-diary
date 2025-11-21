@@ -770,5 +770,12 @@
     },
     "USER_MANAGE": {
         "EDIT_SUBTITLE": "Цели, профиль и настройки"
+    },
+    "DAILY_PROGRESS_CARD": {
+        "TITLE": "Прогресс за день",
+        "CONSUMED": "Съедено сегодня",
+        "GOAL_LABEL": "Цель",
+        "REMAINING_LABEL": "Осталось",
+        "UNIT": "ккал"
     }
 }

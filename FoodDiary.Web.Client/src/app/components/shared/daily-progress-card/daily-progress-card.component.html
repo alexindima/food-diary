@@ -1,14 +1,14 @@
 <fd-ui-card
     class="daily-progress-card"
-    [title]="'DASHBOARD.PROGRESS_TITLE' | translate"
+    [title]="'DAILY_PROGRESS_CARD.TITLE' | translate"
     [meta]="date() | localizedDate:'d MMMM y'"
 >
     <div class="daily-progress-card__content">
         <div class="daily-progress-card__headline">
             <div>
-                <span class="daily-progress-card__label">{{ 'DASHBOARD.CONSUMED_TODAY' | translate }}</span>
+                <span class="daily-progress-card__label">{{ 'DAILY_PROGRESS_CARD.CONSUMED' | translate }}</span>
                 <strong class="daily-progress-card__value">
-                    {{ consumed() | number:'1.0-0' }} {{ 'PRODUCT_LIST.KCAL' | translate }}
+                    {{ consumed() | number:'1.0-0' }} {{ 'DAILY_PROGRESS_CARD.UNIT' | translate }}
                 </strong>
             </div>
             <span class="daily-progress-card__percent">{{ progressPercent() }}%</span>
@@ -17,17 +17,17 @@
         <fd-dynamic-progress-bar
             [current]="consumed()"
             [max]="goal()"
-            [unit]="'PRODUCT_LIST.KCAL' | translate"
+            [unit]="'DAILY_PROGRESS_CARD.UNIT' | translate"
         />
 
         <div class="daily-progress-card__meta">
             <div>
-                <span class="daily-progress-card__meta-label">{{ 'DASHBOARD.GOAL_LABEL' | translate }}</span>
-                <strong>{{ goal() | number:'1.0-0' }} {{ 'PRODUCT_LIST.KCAL' | translate }}</strong>
+                <span class="daily-progress-card__meta-label">{{ 'DAILY_PROGRESS_CARD.GOAL_LABEL' | translate }}</span>
+                <strong>{{ goal() | number:'1.0-0' }} {{ 'DAILY_PROGRESS_CARD.UNIT' | translate }}</strong>
             </div>
             <div>
-                <span class="daily-progress-card__meta-label">{{ 'DASHBOARD.REMAINING_LABEL' | translate }}</span>
-                <strong>{{ remaining() | number:'1.0-0' }} {{ 'PRODUCT_LIST.KCAL' | translate }}</strong>
+                <span class="daily-progress-card__meta-label">{{ 'DAILY_PROGRESS_CARD.REMAINING_LABEL' | translate }}</span>
+                <strong>{{ remaining() | number:'1.0-0' }} {{ 'DAILY_PROGRESS_CARD.UNIT' | translate }}</strong>
             </div>
         </div>
     </div>

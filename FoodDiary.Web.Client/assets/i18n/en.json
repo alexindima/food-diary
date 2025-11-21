@@ -16,6 +16,13 @@
         "INVALID_MIN_AMOUNT_MUST_BE_MORE_ZERO": "Value must be greater than 0",
         "UNKNOWN": "Unknown error"
     },
+    "DAILY_PROGRESS_CARD": {
+        "TITLE": "Daily progress",
+        "CONSUMED": "Consumed today",
+        "GOAL_LABEL": "Goal",
+        "REMAINING_LABEL": "Remaining",
+        "UNIT": "kcal"
+    },
     "HEADER": {
         "HOME": "Home",
         "LOGIN": "Login",
