@@ -14,9 +14,11 @@ import { FdUiSatietyScaleComponent } from './satiety-scale/fd-ui-satiety-scale.c
 import { FdUiDialogComponent } from './dialog/fd-ui-dialog.component';
 import { FdUiDialogFooterDirective } from './dialog/fd-ui-dialog-footer.directive';
 import { FdUiConfirmDialogComponent } from './dialog/fd-ui-confirm-dialog.component';
+import { FdUiAccentSurfaceComponent } from './accent-surface/fd-ui-accent-surface.component';
 
 const FD_UI_COMPONENTS = [
     FdUiInputComponent,
+    FdUiAccentSurfaceComponent,
     FdUiCardComponent,
     FdUiRadioGroupComponent,
     FdUiSelectComponent,

@@ -1,0 +1,96 @@
+:host {
+    --fd-accent-color: #2563eb;
+    --fd-accent-thickness: 6px;
+    --fd-accent-thickness-active: 10px;
+    --fd-accent-overlay-opacity: 0;
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    transition: box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+:host::before,
+:host::after {
+    content: '';
+    position: absolute;
+    pointer-events: none;
+}
+
+:host::before {
+    inset: 0;
+    background: var(--fd-accent-color);
+    opacity: var(--fd-accent-overlay-opacity);
+    transition: opacity 0.25s ease;
+    z-index: 0;
+}
+
+:host::after {
+    background: var(--fd-accent-color);
+    transition:
+        width 0.25s ease,
+        height 0.25s ease,
+        opacity 0.25s ease;
+    opacity: 0.92;
+    z-index: 1;
+}
+
+:host(.fd-ui-accent-surface--side-top)::after,
+:host(.fd-ui-accent-surface--side-bottom)::after {
+    --fd-accent-thickness: 4px;
+    --fd-accent-thickness-active: 8px;
+    left: 0;
+    right: 0;
+}
+
+:host(.fd-ui-accent-surface--side-top)::after {
+    top: 0;
+    height: var(--fd-accent-thickness);
+    border-radius: 999px 999px 0 0;
+}
+
+:host(.fd-ui-accent-surface--side-bottom)::after {
+    bottom: 0;
+    height: var(--fd-accent-thickness);
+    border-radius: 0 0 999px 999px;
+}
+
+:host(.fd-ui-accent-surface--side-left)::after,
+:host(.fd-ui-accent-surface--side-right)::after {
+    top: 0;
+    bottom: 0;
+}
+
+:host(.fd-ui-accent-surface--side-left)::after {
+    left: 0;
+    width: var(--fd-accent-thickness);
+    border-radius: 999px 0 0 999px;
+}
+
+:host(.fd-ui-accent-surface--side-right)::after {
+    right: 0;
+    width: var(--fd-accent-thickness);
+    border-radius: 0 999px 999px 0;
+}
+
+:host(.fd-ui-accent-surface--active).fd-ui-accent-surface--side-top::after,
+:host(.fd-ui-accent-surface--active).fd-ui-accent-surface--side-bottom::after {
+    height: var(--fd-accent-thickness-active);
+}
+
+:host(.fd-ui-accent-surface--active).fd-ui-accent-surface--side-left::after,
+:host(.fd-ui-accent-surface--active).fd-ui-accent-surface--side-right::after {
+    width: var(--fd-accent-thickness-active);
+}
+
+:host(.fd-ui-accent-surface--tinted) {
+    --fd-accent-overlay-opacity: 0.12;
+}
+
+:host(.fd-ui-accent-surface--tinted).fd-ui-accent-surface--active {
+    --fd-accent-overlay-opacity: 0.25;
+}
+
+:host > * {
+    position: relative;
+    z-index: 2;
+}

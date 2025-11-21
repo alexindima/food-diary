@@ -20,13 +20,17 @@
     <div class="satiety-scale__list" role="radiogroup" [attr.aria-disabled]="disabled">
         @for (level of levels(); track level.value) {
             <button
+                fdUiAccentSurface
                 type="button"
                 class="satiety-scale__option"
                 [class.satiety-scale__option--selected]="isSelected(level.value)"
                 [disabled]="disabled"
                 (click)="selectLevel(level.value)"
                 (blur)="handleBlur()"
-                [style.--satiety-scale-gradient]="level.gradient"
+                accentSide="left"
+                [accentColor]="level.gradient"
+                [active]="isSelected(level.value)"
+                [tinted]="true"
                 [attr.aria-checked]="isSelected(level.value)"
                 role="radio"
             >

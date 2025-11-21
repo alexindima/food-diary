@@ -121,7 +121,6 @@
     }
 
     &__macro-card {
-        position: relative;
         padding: 16px;
         border-radius: 16px;
         background: #ffffff;
@@ -129,17 +128,6 @@
         display: flex;
         flex-direction: column;
         gap: 6px;
-
-        &::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            border-radius: 16px 16px 0 0;
-            background: var(--macro-color, #2563eb);
-        }
     }
 
     &__summary-label {

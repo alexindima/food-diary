@@ -69,12 +69,17 @@
                         </div>
                         <div class="statistics__summary-row statistics__summary-row--macros">
                             @for (macro of summary.macros; track macro.labelKey) {
-                                <div class="statistics__macro-card" [style.--macro-color]="macro.color">
+                                <fd-ui-accent-surface
+                                    class="statistics__macro-card"
+                                    accentSide="top"
+                                    [accentColor]="macro.color"
+                                    [tinted]="true"
+                                >
                                     <span class="statistics__summary-label">{{ macro.labelKey | translate }}</span>
                                     <strong class="statistics__summary-value">
                                         {{ macro.value | number: '1.0-1' }} {{ 'PRODUCT_LIST.GRAMS' | translate }}
                                     </strong>
-                                </div>
+                                </fd-ui-accent-surface>
                             }
                         </div>
                     </div>

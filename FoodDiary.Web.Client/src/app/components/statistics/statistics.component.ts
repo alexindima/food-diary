@@ -18,6 +18,7 @@ import { map, finalize, Observable, forkJoin, distinctUntilChanged, startWith } 
 
 import { FdUiTabsComponent, FdUiTab } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
+import { FdUiAccentSurfaceComponent } from 'fd-ui-kit/accent-surface/fd-ui-accent-surface.component';
 import { StatisticsService } from '../../services/statistics.service';
 import { MappedStatistics, StatisticsMapper } from '../../types/statistics.data';
 import { CHART_COLORS } from '../../constants/chart-colors';
@@ -54,6 +55,7 @@ interface DateRange {
         PageBodyComponent,
         FdPageContainerDirective,
         PeriodFilterComponent,
+        FdUiAccentSurfaceComponent,
     ],
     templateUrl: './statistics.component.html',
     styleUrls: ['./statistics.component.scss'],

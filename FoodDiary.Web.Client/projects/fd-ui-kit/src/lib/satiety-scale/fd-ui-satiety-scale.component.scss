@@ -50,15 +50,11 @@
         width: 100%;
         max-width: 420px;
         min-height: auto;
-    }
-
-    &--vertical &__option::after {
-        width: 4px;
+        --fd-accent-thickness: 4px;
+        --fd-accent-thickness-active: 8px;
     }
 
     &__option {
-        --satiety-scale-gradient: linear-gradient(135deg, #9f1239, #f43f5e);
-        position: relative;
         border: none;
         border-radius: 16px;
         padding: 12px 16px;
@@ -71,7 +67,6 @@
         box-shadow: 0 4px 18px rgba(15, 23, 42, 0.08);
         transition: transform 0.25s ease, box-shadow 0.25s ease, border 0.25s ease;
         border: 1px solid rgba(15, 23, 42, 0.05);
-        overflow: hidden;
 
         &:hover:not(:disabled) {
             transform: translateY(-2px);
@@ -82,44 +77,13 @@
             cursor: not-allowed;
             opacity: 0.6;
         }
+    }
 
-        &::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: var(--satiety-scale-gradient);
-            opacity: 0.12;
-            pointer-events: none;
-            transition: opacity 0.25s ease;
-        }
-
-        &::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            width: 6px;
-            background: var(--satiety-scale-gradient);
-            opacity: 0.9;
-            transition: opacity 0.25s ease, width 0.25s ease;
-        }
-
-        &--selected {
-            border-color: rgba(59, 130, 246, 0.5);
-            box-shadow:
-                0 12px 30px rgba(15, 23, 42, 0.18),
-                0 0 24px rgba(59, 130, 246, 0.35);
-
-            &::before {
-                opacity: 0.28;
-            }
-
-            &::after {
-                opacity: 1;
-                width: 10px;
-            }
-        }
+    &__option--selected {
+        border-color: rgba(59, 130, 246, 0.5);
+        box-shadow:
+            0 12px 30px rgba(15, 23, 42, 0.18),
+            0 0 24px rgba(59, 130, 246, 0.35);
     }
 
     &__indicator {

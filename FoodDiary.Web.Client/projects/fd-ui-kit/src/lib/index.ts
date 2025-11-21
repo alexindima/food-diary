@@ -8,6 +8,7 @@ export * from './select/fd-ui-select.component';
 export * from './textarea/fd-ui-textarea.component';
 export * from './entity-card/fd-ui-entity-card.component';
 export * from './entity-card/fd-ui-entity-card-header.directive';
+export * from './accent-surface/fd-ui-accent-surface.component';
 export * from './button/fd-ui-button.component';
 export * from './checkbox/fd-ui-checkbox.component';
 export * from './date-input/fd-ui-date-input.component';

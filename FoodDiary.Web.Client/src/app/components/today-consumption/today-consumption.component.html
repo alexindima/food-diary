@@ -80,12 +80,17 @@
                 >
                     <div class="dashboard__macros">
                         @for (macro of macroSummary(); track macro.labelKey) {
-                            <div class="dashboard__macro">
+                            <fd-ui-accent-surface
+                                class="dashboard__macro"
+                                accentSide="top"
+                                [accentColor]="macro.color"
+                                [tinted]="true"
+                            >
                                 <span class="dashboard__macro-label">{{ macro.labelKey | translate }}</span>
                                 <strong class="dashboard__macro-value">
                                     {{ macro.value | number:'1.0-1' }} {{ 'PRODUCT_LIST.GRAMS' | translate }}
                                 </strong>
-                            </div>
+                            </fd-ui-accent-surface>
                         }
                     </div>
                 </fd-ui-card>

@@ -33,6 +33,8 @@ import { WaistEntry } from '../../types/waist-entry.data';
 import { PageHeaderComponent } from '../shared/page-header/page-header.component';
 import { PageBodyComponent } from '../shared/page-body/page-body.component';
 import { FdPageContainerDirective } from '../../directives/layout/page-container.directive';
+import { FdUiAccentSurfaceComponent } from 'fd-ui-kit/accent-surface/fd-ui-accent-surface.component';
+import { CHART_COLORS } from '../../constants/chart-colors';
 
 interface DashboardQuickAction {
     icon: string;
@@ -62,6 +64,7 @@ interface DashboardQuickAction {
         PageHeaderComponent,
         PageBodyComponent,
         FdPageContainerDirective,
+        FdUiAccentSurfaceComponent,
     ],
     templateUrl: './today-consumption.component.html',
     styleUrl: './today-consumption.component.scss',
@@ -111,21 +114,25 @@ export class TodayConsumptionComponent implements OnInit {
             labelKey: 'PRODUCT_LIST.PROTEINS',
             value: this.nutrientChartData().proteins,
             unitKey: 'PRODUCT_LIST.GRAMS' as const,
+            color: CHART_COLORS.proteins,
         },
         {
             labelKey: 'PRODUCT_LIST.FATS',
             value: this.nutrientChartData().fats,
             unitKey: 'PRODUCT_LIST.GRAMS' as const,
+            color: CHART_COLORS.fats,
         },
         {
             labelKey: 'PRODUCT_LIST.CARBS',
             value: this.nutrientChartData().carbs,
             unitKey: 'PRODUCT_LIST.GRAMS' as const,
+            color: CHART_COLORS.carbs,
         },
         {
             labelKey: 'SHARED.NUTRIENTS_SUMMARY.FIBER',
             value: this.todayFiber() ?? 0,
             unitKey: 'PRODUCT_LIST.GRAMS' as const,
+            color: CHART_COLORS.fiber,
         },
     ]));
 
