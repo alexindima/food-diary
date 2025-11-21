@@ -1,4 +1,4 @@
-import { DatePipe } from '@angular/common';
+import { formatDate } from '@angular/common';
 import { Pipe, PipeTransform, inject } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -8,21 +8,21 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class LocalizedDatePipe implements PipeTransform {
     private readonly translateService = inject(TranslateService);
-    private readonly datePipe = inject(DatePipe);
-
     private locale = this.translateService.getCurrentLang() ?? 'en-US';
 
     public constructor() {
-        this.translateService.onLangChange.subscribe(e => {
-            this.locale = e.lang;
-        });
+        this.translateService.onLangChange.subscribe(e => this.locale = e.lang);
     }
 
-    public transform(value: Date | string | null | undefined, pattern = 'mediumDate'): string | undefined {
-        if (!value) {
+    public transform(value: Date | string | number | null | undefined, pattern = 'mediumDate'): string | undefined {
+        if (value === null || value === undefined) {
             return undefined;
         }
 
-        return this.datePipe.transform(value, pattern, undefined, this.locale) ?? undefined;
+        try {
+            return formatDate(value as any, pattern, this.locale);
+        } catch {
+            return undefined;
+        }
     }
 }

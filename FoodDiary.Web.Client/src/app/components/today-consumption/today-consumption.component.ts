@@ -1,4 +1,4 @@
-import { CommonModule, DatePipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -56,8 +56,7 @@ import { LocalizedDatePipe } from '../../pipes/localized-date.pipe';
         FdPageContainerDirective,
         FdUiAccentSurfaceComponent,
         DailyProgressCardComponent,
-        LocalizedDatePipe,
-        DatePipe
+        LocalizedDatePipe
     ],
     templateUrl: './today-consumption.component.html',
     styleUrl: './today-consumption.component.scss',
