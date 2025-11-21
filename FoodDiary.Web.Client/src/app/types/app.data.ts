@@ -12,4 +12,5 @@ export interface AppConfigApiUrls {
     logs: string;
     weights: string;
     waists: string;
+    cycles: string;
 }

@@ -23,6 +23,7 @@ import { RecipeEditComponent } from './components/recipe-container/recipe-manage
 import { recipeResolver } from './resolvers/recipe.resolver';
 import { WeightHistoryPageComponent } from './components/weight-history-page/weight-history-page.component';
 import { WaistHistoryPageComponent } from './components/waist-history-page/waist-history-page.component';
+import { CycleTrackingPageComponent } from './components/cycle-tracking-page/cycle-tracking-page.component';
 
 export const routes: Routes = [
     { path: '', component: MainComponent },
@@ -96,6 +97,11 @@ export const routes: Routes = [
     {
         path: 'waist-history',
         component: WaistHistoryPageComponent,
+        canActivate: [authGuard],
+    },
+    {
+        path: 'cycle-tracking',
+        component: CycleTrackingPageComponent,
         canActivate: [authGuard],
     },
     { path: '**', component: NotFoundComponent },

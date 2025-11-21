@@ -115,4 +115,18 @@ public static class Errors
             "WaistEntry.AlreadyExists",
             $"Waist entry for {date:yyyy-MM-dd} already exists.");
     }
+
+    public static class Cycle
+    {
+        public static Error NotFound(Guid id) => new(
+            "Cycle.NotFound",
+            $"Cycle with ID {id} was not found.");
+    }
+
+    public static class CycleDay
+    {
+        public static Error NotFound(DateTime date) => new(
+            "CycleDay.NotFound",
+            $"Cycle day for {date:yyyy-MM-dd} was not found.");
+    }
 }

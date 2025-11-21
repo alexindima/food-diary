@@ -36,6 +36,7 @@ public sealed class User : AggregateRoot<UserId> {
     public ICollection<Recipe> Recipes { get; private set; } = new List<Recipe>();
     public ICollection<WeightEntry> WeightEntries { get; private set; } = new List<WeightEntry>();
     public ICollection<WaistEntry> WaistEntries { get; private set; } = new List<WaistEntry>();
+    public ICollection<Cycle> Cycles { get; private set; } = new List<Cycle>();
 
     // Конструктор для EF Core
     private User() {

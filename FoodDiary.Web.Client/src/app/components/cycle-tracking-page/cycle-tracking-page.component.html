@@ -1,0 +1,176 @@
+<div class="cycle-tracking" fdPageContainer>
+    <fd-page-header
+        class="cycle-tracking__header"
+        [title]="'CYCLE_TRACKING.TITLE' | translate"
+        [subtitle]="'CYCLE_TRACKING.SUBTITLE' | translate"
+    />
+
+    <fd-page-body>
+        <div class="cycle-tracking__grid">
+            <fd-ui-card class="cycle-tracking__card" [title]="'CYCLE_TRACKING.CREATE_CYCLE_TITLE' | translate">
+                <form class="cycle-tracking__form" [formGroup]="startCycleForm" (ngSubmit)="startCycle()">
+                    <div class="cycle-tracking__form-row">
+                        <fd-ui-date-input
+                            class="cycle-tracking__form-control"
+                            formControlName="startDate"
+                            [label]="'CYCLE_TRACKING.START_DATE' | translate"
+                        />
+                        <fd-ui-input
+                            class="cycle-tracking__form-control"
+                            type="number"
+                            formControlName="averageLength"
+                            [label]="'CYCLE_TRACKING.AVG_LENGTH' | translate"
+                        />
+                        <fd-ui-input
+                            class="cycle-tracking__form-control"
+                            type="number"
+                            formControlName="lutealLength"
+                            [label]="'CYCLE_TRACKING.LUTEAL_LENGTH' | translate"
+                        />
+                    </div>
+                    <div class="cycle-tracking__actions">
+                        <fd-ui-button type="submit" [disabled]="isSavingCycle()">
+                            {{ 'CYCLE_TRACKING.SAVE_CYCLE' | translate }}
+                        </fd-ui-button>
+                    </div>
+                </form>
+            </fd-ui-card>
+
+            <fd-ui-card class="cycle-tracking__card" [title]="currentCycleTitle() | translate">
+                @if (isLoading()) {
+                    <div class="cycle-tracking__loader">{{ 'CYCLE_TRACKING.LOADING' | translate }}</div>
+                } @else {
+                    @if (cycle(); as current) {
+                        <div class="cycle-tracking__summary">
+                            <fd-ui-accent-surface class="cycle-tracking__summary-item" accentSide="top" accentColor="#7c3aed" [tinted]="true">
+                                <span class="cycle-tracking__label">{{ 'CYCLE_TRACKING.STARTED' | translate }}</span>
+                                <strong class="cycle-tracking__value">{{ current.startDate | date:'d MMM y' }}</strong>
+                            </fd-ui-accent-surface>
+                            <fd-ui-accent-surface class="cycle-tracking__summary-item" accentSide="top" accentColor="#0ea5e9" [tinted]="true">
+                                <span class="cycle-tracking__label">{{ 'CYCLE_TRACKING.AVG_LENGTH' | translate }}</span>
+                                <strong class="cycle-tracking__value">{{ current.averageLength }} {{ 'CYCLE_TRACKING.DAYS' | translate }}</strong>
+                            </fd-ui-accent-surface>
+                            <fd-ui-accent-surface class="cycle-tracking__summary-item" accentSide="top" accentColor="#14b8a6" [tinted]="true">
+                                <span class="cycle-tracking__label">{{ 'CYCLE_TRACKING.LUTEAL_LENGTH' | translate }}</span>
+                                <strong class="cycle-tracking__value">{{ current.lutealLength }} {{ 'CYCLE_TRACKING.DAYS' | translate }}</strong>
+                            </fd-ui-accent-surface>
+                        </div>
+
+                        @if (predictions(); as prediction) {
+                            <div class="cycle-tracking__predictions">
+                                <fd-ui-accent-surface class="cycle-tracking__prediction" accentSide="top" accentColor="#f97316" [tinted]="true">
+                                    <span class="cycle-tracking__label">{{ 'CYCLE_TRACKING.PRED_NEXT' | translate }}</span>
+                                    <strong class="cycle-tracking__value">
+                                        {{ prediction.nextPeriodStart | date:'d MMM':'UTC' }}
+                                    </strong>
+                                </fd-ui-accent-surface>
+                                <fd-ui-accent-surface class="cycle-tracking__prediction" accentSide="top" accentColor="#22c55e" [tinted]="true">
+                                    <span class="cycle-tracking__label">{{ 'CYCLE_TRACKING.PRED_OVULATION' | translate }}</span>
+                                    <strong class="cycle-tracking__value">
+                                        {{ prediction.ovulationDate | date:'d MMM':'UTC' }}
+                                    </strong>
+                                </fd-ui-accent-surface>
+                                <fd-ui-accent-surface class="cycle-tracking__prediction" accentSide="top" accentColor="#3b82f6" [tinted]="true">
+                                    <span class="cycle-tracking__label">{{ 'CYCLE_TRACKING.PRED_PMS' | translate }}</span>
+                                    <strong class="cycle-tracking__value">
+                                        {{ prediction.pmsStart | date:'d MMM':'UTC' }}
+                                    </strong>
+                                </fd-ui-accent-surface>
+                            </div>
+                        }
+                    } @else {
+                        <p class="cycle-tracking__empty">{{ 'CYCLE_TRACKING.NO_CYCLE_COPY' | translate }}</p>
+                    }
+                }
+            </fd-ui-card>
+        </div>
+
+        <div class="cycle-tracking__grid cycle-tracking__grid--log">
+            <fd-ui-card class="cycle-tracking__card" [title]="'CYCLE_TRACKING.LOG_DAY_TITLE' | translate">
+                @if (!cycle()) {
+                    <p class="cycle-tracking__empty">{{ 'CYCLE_TRACKING.NO_CYCLE_SHORT' | translate }}</p>
+                } @else {
+                    <form class="cycle-tracking__form" [formGroup]="dayForm" (ngSubmit)="saveDay()">
+                        <div class="cycle-tracking__form-row cycle-tracking__form-row--wide">
+                            <fd-ui-date-input
+                                class="cycle-tracking__form-control"
+                                formControlName="date"
+                                [label]="'CYCLE_TRACKING.DAY_DATE' | translate"
+                            />
+                            <fd-ui-checkbox
+                                class="cycle-tracking__form-control cycle-tracking__checkbox"
+                                formControlName="isPeriod"
+                            >
+                                {{ 'CYCLE_TRACKING.IS_PERIOD' | translate }}
+                            </fd-ui-checkbox>
+                        </div>
+
+                        <div class="cycle-tracking__symptom-grid">
+                            @for (field of symptomFields; track field.key) {
+                                <fd-ui-input
+                                    class="cycle-tracking__form-control"
+                                    type="number"
+                                    [step]="1"
+                                    [label]="field.labelKey | translate"
+                                    [formControlName]="field.key"
+                                />
+                            }
+                        </div>
+
+                        <fd-ui-input
+                            class="cycle-tracking__form-control"
+                            [label]="'CYCLE_TRACKING.NOTES' | translate"
+                            [placeholder]="'CYCLE_TRACKING.NOTES_PLACEHOLDER' | translate"
+                            formControlName="notes"
+                        />
+
+                        <div class="cycle-tracking__actions">
+                            <fd-ui-button type="submit" [disabled]="isSavingDay()">
+                                {{ 'CYCLE_TRACKING.SAVE_DAY' | translate }}
+                            </fd-ui-button>
+                        </div>
+                    </form>
+                }
+            </fd-ui-card>
+
+            <fd-ui-card class="cycle-tracking__card" [title]="'CYCLE_TRACKING.DAYS_TITLE' | translate">
+                @if (isLoading()) {
+                    <div class="cycle-tracking__loader">{{ 'CYCLE_TRACKING.LOADING' | translate }}</div>
+                } @else {
+                    @if (days().length === 0) {
+                        <p class="cycle-tracking__empty">{{ 'CYCLE_TRACKING.NO_DAYS' | translate }}</p>
+                    } @else {
+                        <div class="cycle-tracking__days">
+                            @for (day of days(); track day.id) {
+                                <fd-ui-accent-surface
+                                    class="cycle-tracking__day"
+                                    accentSide="left"
+                                    [accentColor]="day.isPeriod ? 'linear-gradient(135deg, #dc2626, #f97316)' : '#0ea5e9'"
+                                    [tinted]="true"
+                                >
+                                    <div class="cycle-tracking__day-header">
+                                        <div class="cycle-tracking__day-date">
+                                            {{ day.date | date:'d MMM, y' }}
+                                        </div>
+                                        <div class="cycle-tracking__day-badge" [class.cycle-tracking__day-badge--period]="day.isPeriod">
+                                            {{ day.isPeriod ? ('CYCLE_TRACKING.BADGE_PERIOD' | translate) : ('CYCLE_TRACKING.BADGE_FOLLICULAR' | translate) }}
+                                        </div>
+                                    </div>
+                                    <div class="cycle-tracking__symptoms-row">
+                                        <span>{{ 'CYCLE_TRACKING.SYMPTOM_PAIN' | translate }}: {{ day.symptoms.pain }}/9</span>
+                                        <span>{{ 'CYCLE_TRACKING.SYMPTOM_MOOD' | translate }}: {{ day.symptoms.mood }}/9</span>
+                                        <span>{{ 'CYCLE_TRACKING.SYMPTOM_ENERGY' | translate }}: {{ day.symptoms.energy }}/9</span>
+                                        <span>{{ 'CYCLE_TRACKING.SYMPTOM_SLEEP' | translate }}: {{ day.symptoms.sleepQuality }}/9</span>
+                                    </div>
+                                    @if (day.notes) {
+                                        <p class="cycle-tracking__day-notes">{{ day.notes }}</p>
+                                    }
+                                </fd-ui-accent-surface>
+                            }
+                        </div>
+                    }
+                }
+            </fd-ui-card>
+        </div>
+    </fd-page-body>
+</div>

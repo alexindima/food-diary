@@ -18,6 +18,8 @@ public class FoodDiaryDbContext : DbContext
     public DbSet<RecipeIngredient> RecipeIngredients => Set<RecipeIngredient>();
     public DbSet<WeightEntry> WeightEntries => Set<WeightEntry>();
     public DbSet<WaistEntry> WaistEntries => Set<WaistEntry>();
+    public DbSet<Cycle> Cycles => Set<Cycle>();
+    public DbSet<CycleDay> CycleDays => Set<CycleDay>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -220,6 +222,70 @@ public class FoodDiaryDbContext : DbContext
                 .WithMany(u => u.WaistEntries)
                 .HasForeignKey(e => e.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        modelBuilder.Entity<Cycle>(entity =>
+        {
+            entity.Property(e => e.Id).HasConversion(
+                id => id.Value,
+                value => new CycleId(value));
+
+            entity.Property(e => e.UserId).HasConversion(
+                id => id.Value,
+                value => new UserId(value));
+
+            entity.Property(e => e.StartDate)
+                .HasColumnType("date");
+
+            entity.Property(e => e.AverageLength)
+                .HasDefaultValue(28);
+
+            entity.Property(e => e.LutealLength)
+                .HasDefaultValue(14);
+
+            entity.Property(e => e.Notes)
+                .HasMaxLength(1024);
+
+            entity.HasMany(e => e.Days)
+                .WithOne(d => d.Cycle)
+                .HasForeignKey(d => d.CycleId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.Navigation(e => e.Days)
+                .UsePropertyAccessMode(PropertyAccessMode.Field);
+
+            entity.HasIndex(e => new { e.UserId, e.StartDate })
+                .HasDatabaseName("IX_Cycles_User_StartDate");
+        });
+
+        modelBuilder.Entity<CycleDay>(entity =>
+        {
+            entity.Property(e => e.Id).HasConversion(
+                id => id.Value,
+                value => new CycleDayId(value));
+
+            entity.Property(e => e.CycleId).HasConversion(
+                id => id.Value,
+                value => new CycleId(value));
+
+            entity.Property(e => e.Date)
+                .HasColumnType("date");
+
+            entity.Property(e => e.Notes)
+                .HasMaxLength(1024);
+
+            entity.HasIndex(e => new { e.CycleId, e.Date }).IsUnique();
+
+            entity.OwnsOne(e => e.Symptoms, builder =>
+            {
+                builder.Property(s => s.Pain).HasColumnName("Pain").IsRequired();
+                builder.Property(s => s.Mood).HasColumnName("Mood").IsRequired();
+                builder.Property(s => s.Edema).HasColumnName("Edema").IsRequired();
+                builder.Property(s => s.Headache).HasColumnName("Headache").IsRequired();
+                builder.Property(s => s.Energy).HasColumnName("Energy").IsRequired();
+                builder.Property(s => s.SleepQuality).HasColumnName("SleepQuality").IsRequired();
+                builder.Property(s => s.Libido).HasColumnName("Libido").IsRequired();
+            });
         });
     }
 }

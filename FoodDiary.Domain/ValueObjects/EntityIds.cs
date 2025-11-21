@@ -127,3 +127,31 @@ public readonly record struct WaistEntryId(Guid Value) : IEntityId<Guid>
 
     public override string ToString() => Value.ToString();
 }
+
+/// <summary>
+/// Identifier for menstrual cycles.
+/// </summary>
+public readonly record struct CycleId(Guid Value) : IEntityId<Guid>
+{
+    public static CycleId New() => new(Guid.NewGuid());
+    public static CycleId Empty => new(Guid.Empty);
+
+    public static implicit operator Guid(CycleId id) => id.Value;
+    public static explicit operator CycleId(Guid value) => new(value);
+
+    public override string ToString() => Value.ToString();
+}
+
+/// <summary>
+/// Identifier for cycle days.
+/// </summary>
+public readonly record struct CycleDayId(Guid Value) : IEntityId<Guid>
+{
+    public static CycleDayId New() => new(Guid.NewGuid());
+    public static CycleDayId Empty => new(Guid.Empty);
+
+    public static implicit operator Guid(CycleDayId id) => id.Value;
+    public static explicit operator CycleDayId(Guid value) => new(value);
+
+    public override string ToString() => Value.ToString();
+}

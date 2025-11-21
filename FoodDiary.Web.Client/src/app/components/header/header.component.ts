@@ -60,6 +60,10 @@ export class HeaderComponent implements OnInit {
         await this.navigationService.navigateToWaistHistory();
     }
 
+    protected async goToCycleTracking(): Promise<void> {
+        await this.navigationService.navigateToCycleTracking();
+    }
+
     protected async logout(): Promise<void> {
         await this.authService.onLogout();
     }
