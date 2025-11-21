@@ -24,6 +24,13 @@
         "FIBER": "Fiber",
         "UNIT": "g"
     },
+    "MOTIVATION_CARD": {
+        "TITLE": "Motivation",
+        "EARLY": "You have logged only {{ percent }}% of your goal — keep it up!",
+        "MID": "Great progress! You're already at {{ percent }}% of the plan.",
+        "NEARLY": "Almost there. Finish strong to hit {{ percent }}%.",
+        "ABOVE": "You've passed the target for today. Nice work!"
+    },
     "DAILY_PROGRESS_CARD": {
         "TITLE": "Daily progress",
         "CONSUMED": "Consumed today",

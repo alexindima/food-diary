@@ -57,14 +57,11 @@
                 />
             </div>
 
-            <fd-ui-card
+            <fd-motivation-card
                 class="dashboard__card dashboard__card--motivation dashboard__card--motivation-wide"
-                [title]="'DASHBOARD.MOTIVATION_TITLE' | translate"
-            >
-                <p class="dashboard__motivation-copy">
-                    {{ motivationKey() | translate:{ percent: progressPercent() } }}
-                </p>
-            </fd-ui-card>
+                [consumed]="todayCalories()"
+                [goal]="dailyGoal()"
+            />
 
             <div class="dashboard__insights">
                 <fd-ui-card

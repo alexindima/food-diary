@@ -35,6 +35,7 @@ import { FdPageContainerDirective } from '../../directives/layout/page-container
 import { DailyProgressCardComponent } from '../shared/daily-progress-card/daily-progress-card.component';
 import { LocalizedDatePipe } from '../../pipes/localized-date.pipe';
 import { MacroSummaryComponent } from '../shared/macro-summary/macro-summary.component';
+import { MotivationCardComponent } from '../shared/motivation-card/motivation-card.component';
 
 @Component({
     selector: 'fd-today-consumption',
@@ -55,7 +56,8 @@ import { MacroSummaryComponent } from '../shared/macro-summary/macro-summary.com
         FdPageContainerDirective,
         DailyProgressCardComponent,
         LocalizedDatePipe,
-        MacroSummaryComponent
+        MacroSummaryComponent,
+        MotivationCardComponent
     ],
     templateUrl: './today-consumption.component.html',
     styleUrl: './today-consumption.component.scss',
@@ -99,39 +101,6 @@ export class TodayConsumptionComponent implements OnInit {
     public isWaistLoading = signal<boolean>(false);
     public desiredWaist = signal<number | null>(null);
     public isDesiredWaistLoading = signal<boolean>(false);
-
-    public readonly progressPercent = computed(() => {
-        const goal = this.dailyGoal();
-        if (!goal || goal <= 0) {
-            return 0;
-        }
-
-        const percent = (this.todayCalories() / goal) * 100;
-        return Math.round(Math.max(0, percent));
-    });
-
-    public readonly remainingCalories = computed(() => {
-        const remaining = this.dailyGoal() - this.todayCalories();
-        return remaining > 0 ? remaining : 0;
-    });
-
-    public readonly motivationKey = computed(() => {
-        const percent = this.progressPercent();
-
-        if (percent < 25) {
-            return 'DASHBOARD.MOTIVATION.EARLY';
-        }
-
-        if (percent < 60) {
-            return 'DASHBOARD.MOTIVATION.MID';
-        }
-
-        if (percent < 100) {
-            return 'DASHBOARD.MOTIVATION.NEARLY';
-        }
-
-        return 'DASHBOARD.MOTIVATION.ABOVE';
-    });
 
     public readonly weightMetaText = computed(() => {
         if (this.isDesiredWeightLoading()) {
