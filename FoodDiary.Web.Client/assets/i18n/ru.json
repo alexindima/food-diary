@@ -32,6 +32,14 @@
         "LOGOUT": "Выход",
         "MENU": "Меню"
     },
+    "MACRO_SUMMARY": {
+        "TITLE": "Баланс нутриентов",
+        "PROTEINS": "Белки",
+        "FATS": "Жиры",
+        "CARBS": "Углеводы",
+        "FIBER": "Клетчатка",
+        "UNIT": "г"
+    },
     "FOOTER": {
         "CONTACTS": {
             "TITLE": "Контакты",

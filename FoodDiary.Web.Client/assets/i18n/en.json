@@ -16,6 +16,14 @@
         "INVALID_MIN_AMOUNT_MUST_BE_MORE_ZERO": "Value must be greater than 0",
         "UNKNOWN": "Unknown error"
     },
+    "MACRO_SUMMARY": {
+        "TITLE": "Nutrient balance",
+        "PROTEINS": "Proteins",
+        "FATS": "Fats",
+        "CARBS": "Carbs",
+        "FIBER": "Fiber",
+        "UNIT": "g"
+    },
     "DAILY_PROGRESS_CARD": {
         "TITLE": "Daily progress",
         "CONSUMED": "Consumed today",

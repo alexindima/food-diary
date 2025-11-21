@@ -1,0 +1,17 @@
+<fd-ui-card class="macro-summary__card" [title]="'MACRO_SUMMARY.TITLE' | translate">
+    <div class="macro-summary__grid">
+        @for (macro of items(); track macro.labelKey) {
+            <fd-ui-accent-surface
+                class="macro-summary__item"
+                accentSide="top"
+                [accentColor]="macro.color"
+                [tinted]="true"
+            >
+                <span class="macro-summary__label">{{ macro.labelKey | translate }}</span>
+                <strong class="macro-summary__value">
+                    {{ macro.value | number:'1.0-1' }} {{ macro.unitKey | translate }}
+                </strong>
+            </fd-ui-accent-surface>
+        }
+    </div>
+</fd-ui-card>

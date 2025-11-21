@@ -32,10 +32,9 @@ import { WaistEntry } from '../../types/waist-entry.data';
 import { PageHeaderComponent } from '../shared/page-header/page-header.component';
 import { PageBodyComponent } from '../shared/page-body/page-body.component';
 import { FdPageContainerDirective } from '../../directives/layout/page-container.directive';
-import { FdUiAccentSurfaceComponent } from 'fd-ui-kit/accent-surface/fd-ui-accent-surface.component';
-import { CHART_COLORS } from '../../constants/chart-colors';
 import { DailyProgressCardComponent } from '../shared/daily-progress-card/daily-progress-card.component';
 import { LocalizedDatePipe } from '../../pipes/localized-date.pipe';
+import { MacroSummaryComponent } from '../shared/macro-summary/macro-summary.component';
 
 @Component({
     selector: 'fd-today-consumption',
@@ -54,9 +53,9 @@ import { LocalizedDatePipe } from '../../pipes/localized-date.pipe';
         PageHeaderComponent,
         PageBodyComponent,
         FdPageContainerDirective,
-        FdUiAccentSurfaceComponent,
         DailyProgressCardComponent,
-        LocalizedDatePipe
+        LocalizedDatePipe,
+        MacroSummaryComponent
     ],
     templateUrl: './today-consumption.component.html',
     styleUrl: './today-consumption.component.scss',
@@ -100,33 +99,6 @@ export class TodayConsumptionComponent implements OnInit {
     public isWaistLoading = signal<boolean>(false);
     public desiredWaist = signal<number | null>(null);
     public isDesiredWaistLoading = signal<boolean>(false);
-
-    public readonly macroSummary = computed<MacroSummaryItem[]>(() => ([
-        {
-            labelKey: 'PRODUCT_LIST.PROTEINS',
-            value: this.nutrientChartData().proteins,
-            unitKey: 'PRODUCT_LIST.GRAMS',
-            color: CHART_COLORS.proteins,
-        },
-        {
-            labelKey: 'PRODUCT_LIST.FATS',
-            value: this.nutrientChartData().fats,
-            unitKey: 'PRODUCT_LIST.GRAMS',
-            color: CHART_COLORS.fats,
-        },
-        {
-            labelKey: 'PRODUCT_LIST.CARBS',
-            value: this.nutrientChartData().carbs,
-            unitKey: 'PRODUCT_LIST.GRAMS',
-            color: CHART_COLORS.carbs,
-        },
-        {
-            labelKey: 'SHARED.NUTRIENTS_SUMMARY.FIBER',
-            value: this.todayFiber() ?? 0,
-            unitKey: 'PRODUCT_LIST.GRAMS',
-            color: CHART_COLORS.fiber,
-        },
-    ]));
 
     public readonly progressPercent = computed(() => {
         const goal = this.dailyGoal();
@@ -471,11 +443,4 @@ interface DashboardQuickAction {
     variant: 'primary' | 'secondary' | 'danger';
     fill: 'solid' | 'outline' | 'text';
     action: () => void;
-}
-
-interface MacroSummaryItem {
-    labelKey: string;
-    value: number;
-    unitKey: string;
-    color: string;
 }

@@ -50,26 +50,11 @@
                     [goal]="dailyGoal()"
                 />
 
-                <fd-ui-card
+                <fd-macro-summary
                     class="dashboard__card dashboard__card--macros"
-                    [title]="'DASHBOARD.MACRO_TITLE' | translate"
-                >
-                    <div class="dashboard__macros">
-                        @for (macro of macroSummary(); track macro.labelKey) {
-                            <fd-ui-accent-surface
-                                class="dashboard__macro"
-                                accentSide="top"
-                                [accentColor]="macro.color"
-                                [tinted]="true"
-                            >
-                                <span class="dashboard__macro-label">{{ macro.labelKey | translate }}</span>
-                                <strong class="dashboard__macro-value">
-                                    {{ macro.value | number:'1.0-1' }} {{ 'PRODUCT_LIST.GRAMS' | translate }}
-                                </strong>
-                            </fd-ui-accent-surface>
-                        }
-                    </div>
-                </fd-ui-card>
+                    [nutrientData]="nutrientChartData()"
+                    [fiber]="todayFiber() ?? 0"
+                />
             </div>
 
             <fd-ui-card
