@@ -120,6 +120,7 @@
     },
     "PRODUCT_LIST": {
         "TITLE": "Список продуктов",
+        "SUBTITLE": "Просматривайте и управляйте своими продуктами",
         "SEARCH_TITLE": "Поиск:",
         "SEARCH_PLACEHOLDER": "Поиск по названию или штрихкоду",
         "SEARCH_BUTTON": "Поиск",
@@ -149,6 +150,7 @@
     },
     "RECIPE_LIST": {
         "TITLE": "Список рецептов",
+        "SUBTITLE": "Коллекция ваших блюд и идей",
         "SEARCH_TITLE": "Поиск:",
         "SEARCH_PLACEHOLDER": "Поиск по названию",
         "ADD_RECIPE_BUTTON": "Добавить",
@@ -179,6 +181,7 @@
     "RECIPE_MANAGE": {
         "ADD_TITLE": "Добавление рецепта",
         "EDIT_TITLE": "Редактирование рецепта",
+        "SUBTITLE": "Соберите ингредиенты, шаги и нутриенты",
         "GENERAL_GROUP_TITLE": "Общая информация",
         "NAME": "Название",
         "NAME_PLACEHOLDER": "Введите название рецепта",
@@ -247,6 +250,7 @@
     "PRODUCT_MANAGE": {
         "ADD_TITLE": "Добавить новый продукт",
         "EDIT_TITLE": "Редактировать продукт",
+        "SUBTITLE": "Заполните данные и сохраните продукт",
         "NAME": "Название",
         "NAME_PLACEHOLDER": "Введите название продукта",
         "BARCODE": "Штрихкод",
@@ -304,6 +308,7 @@
     },
     "CONSUMPTION_LIST": {
         "TITLE": "Список приемов пищи",
+        "SUBTITLE": "Управляйте записанными приёмами и перекусами",
         "ADD_CONSUMPTION_BUTTON": "Добавить",
         "NO_CONSUMPTIONS_FOUND": "прием пищи не найден",
         "DATE": "Дата",
@@ -341,6 +346,7 @@
     "CONSUMPTION_MANAGE": {
         "EDIT_TITLE": "Редактировать прием пищи",
         "ADD_TITLE": "Добавить прием пищи",
+        "SUBTITLE": "Записывайте продукты для этого приема",
         "CHOOSE_DATE": "Дата и время",
         "ITEMS_GROUP_TITLE": "Что было в приеме пищи",
         "ITEM_TYPE_LABEL": "Тип записи",
@@ -761,5 +767,8 @@
         "NO_DAYS": "Записей пока нет.",
         "BADGE_PERIOD": "Месячные",
         "BADGE_FOLLICULAR": "Запись"
+    },
+    "USER_MANAGE": {
+        "EDIT_SUBTITLE": "Цели, профиль и настройки"
     }
 }

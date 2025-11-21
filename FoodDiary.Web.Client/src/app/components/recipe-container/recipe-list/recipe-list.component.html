@@ -1,5 +1,9 @@
 <div class="recipe-list" fdPageContainer #container>
-    <fd-page-header class="recipe-list__header" [title]="'RECIPE_LIST.TITLE' | translate">
+    <fd-page-header
+        class="recipe-list__header"
+        [title]="'RECIPE_LIST.TITLE' | translate"
+        [subtitle]="'RECIPE_LIST.SUBTITLE' | translate"
+    >
         <ng-container fdPageHeaderActions>
             <form class="recipe-list__search-form" [formGroup]="searchForm">
                 <fd-ui-input class="recipe-list__search-input"

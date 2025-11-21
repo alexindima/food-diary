@@ -6,6 +6,7 @@
                 ? ('DASHBOARD.TITLE' | translate)
                 : ('DASHBOARD.TITLE_FOR_DATE' | translate:{ date: (selectedDate() | date:'d MMMM y') })
         "
+        [subtitle]="'DASHBOARD.SUBTITLE' | translate"
     >
         <ng-container fdPageHeaderActions>
             <div>

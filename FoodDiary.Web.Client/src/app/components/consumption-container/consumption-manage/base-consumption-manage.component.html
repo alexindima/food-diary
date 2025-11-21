@@ -2,6 +2,7 @@
     <fd-page-header
         class="consumption-manage__header"
         [title]="consumption() ? ('CONSUMPTION_MANAGE.EDIT_TITLE' | translate) : ('CONSUMPTION_MANAGE.ADD_TITLE' | translate)"
+        [subtitle]="'CONSUMPTION_MANAGE.SUBTITLE' | translate"
     />
 
     <form class="consumption-manage__form" [formGroup]="consumptionForm" (ngSubmit)="onSubmit()">

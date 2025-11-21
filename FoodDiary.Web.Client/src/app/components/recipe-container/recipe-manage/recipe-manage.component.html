@@ -2,6 +2,7 @@
   <fd-page-header
     class="recipe-manage__header"
     [title]="recipe() ? ('RECIPE_MANAGE.EDIT_TITLE' | translate) : ('RECIPE_MANAGE.ADD_TITLE' | translate)"
+    [subtitle]="'RECIPE_MANAGE.SUBTITLE' | translate"
   />
 
   <form class="recipe-manage__form" [formGroup]="recipeForm" (ngSubmit)="onSubmit()">

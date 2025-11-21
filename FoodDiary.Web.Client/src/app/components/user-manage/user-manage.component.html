@@ -1,5 +1,9 @@
 <div class="user-manage" fdPageContainer>
-    <fd-page-header class="user-manage__header" [title]="'USER_MANAGE.EDIT_TITLE' | translate" />
+    <fd-page-header
+        class="user-manage__header"
+        [title]="'USER_MANAGE.EDIT_TITLE' | translate"
+        [subtitle]="'USER_MANAGE.EDIT_SUBTITLE' | translate"
+    />
     <fd-page-body>
         <form class="user-manage__form" [formGroup]="userForm" (ngSubmit)="onSubmit()">
             <fd-ui-card class="user-manage__card" [title]="'USER_MANAGE.ACCOUNT_SECTION' | translate">

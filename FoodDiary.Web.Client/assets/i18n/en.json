@@ -120,6 +120,7 @@
     },
     "PRODUCT_LIST": {
         "TITLE": "Product List",
+        "SUBTITLE": "Browse and manage your products",
         "SEARCH_TITLE": "Searching:",
         "SEARCH_PLACEHOLDER": "Search by name or barcode",
         "SEARCH_BUTTON": "Search",
@@ -149,6 +150,7 @@
     },
     "RECIPE_LIST": {
         "TITLE": "Recipe List",
+        "SUBTITLE": "Collection of your dishes and ideas",
         "SEARCH_TITLE": "Searching:",
         "SEARCH_PLACEHOLDER": "Search by name",
         "ADD_RECIPE_BUTTON": "Add",
@@ -179,6 +181,7 @@
     "RECIPE_MANAGE": {
         "ADD_TITLE": "Add Recipe",
         "EDIT_TITLE": "Edit Recipe",
+        "SUBTITLE": "Compose ingredients, steps, and nutrition",
         "GENERAL_GROUP_TITLE": "General information",
         "NAME": "Name",
         "NAME_PLACEHOLDER": "Enter recipe name",
@@ -266,6 +269,7 @@
     "PRODUCT_MANAGE": {
         "ADD_TITLE": "Add New Product",
         "EDIT_TITLE": "Edit Product",
+        "SUBTITLE": "Fill nutrition and details to save",
         "NAME": "Name",
         "NAME_PLACEHOLDER": "Enter product name",
         "BARCODE": "Barcode",
@@ -323,6 +327,7 @@
     },
     "CONSUMPTION_LIST": {
         "TITLE": "Consumption List",
+        "SUBTITLE": "Manage your logged meals and snacks",
         "ADD_CONSUMPTION_BUTTON": "Add Consumption",
         "NO_CONSUMPTIONS_FOUND": "No consumptions found",
         "DATE": "Date",
@@ -360,6 +365,7 @@
     "CONSUMPTION_MANAGE": {
         "EDIT_TITLE": "Edit Consumption",
         "ADD_TITLE": "Add Consumption",
+        "SUBTITLE": "Log foods for this meal",
         "GENERAL_GROUP_TITLE": "General information",
         "SUMMARY_TITLE": "Summary",
         "TOTAL_CALORIES": "Total calories",
@@ -535,6 +541,7 @@
     },
     "USER_MANAGE": {
         "EDIT_TITLE": "Edit User Information",
+        "EDIT_SUBTITLE": "Goals, profile and preferences",
         "EMAIL": "Email",
         "EMAIL_PLACEHOLDER": "user@example.com",
         "NEW_PASSWORD": "New Password",

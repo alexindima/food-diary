@@ -1,5 +1,9 @@
 <div class="product-list" fdPageContainer>
-    <fd-page-header class="product-list__header" [title]="'PRODUCT_LIST.TITLE' | translate">
+    <fd-page-header
+        class="product-list__header"
+        [title]="'PRODUCT_LIST.TITLE' | translate"
+        [subtitle]="'PRODUCT_LIST.SUBTITLE' | translate"
+    >
         <ng-container fdPageHeaderActions>
             <form class="product-list__search-form" [formGroup]="searchForm">
                 <fd-ui-input class="product-list__search-input"

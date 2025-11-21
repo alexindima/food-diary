@@ -1,5 +1,9 @@
 <div class="consumption-list" fdPageContainer #container>
-    <fd-page-header class="consumption-list__header" [title]="'CONSUMPTION_LIST.TITLE' | translate">
+    <fd-page-header
+        class="consumption-list__header"
+        [title]="'CONSUMPTION_LIST.TITLE' | translate"
+        [subtitle]="'CONSUMPTION_LIST.SUBTITLE' | translate"
+    >
         <ng-container fdPageHeaderActions>
             <div class="consumption-list__search-group">
                 <form [formGroup]="searchForm" class="consumption-list__date-range-form">
