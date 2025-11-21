@@ -1,0 +1,57 @@
+.daily-progress-card {
+    height: 100%;
+
+    &__content {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    &__headline {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        flex-wrap: wrap;
+    }
+
+    &__label {
+        font-size: 0.9rem;
+        color: var(--fd-text-secondary, #64748b);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+    }
+
+    &__value {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--fd-text-main, #0f172a);
+    }
+
+    &__percent {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #2563eb;
+    }
+
+    &__meta {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 12px;
+    }
+
+    &__meta-label {
+        display: block;
+        font-size: 0.85rem;
+        color: var(--fd-text-secondary, #64748b);
+        margin-bottom: 4px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+    }
+
+    @media (max-width: 600px) {
+        &__percent {
+            font-size: 1.8rem;
+        }
+    }
+}

@@ -15,7 +15,7 @@ import { nonEmptyArrayValidator } from '../../../validators/non-empty-array.vali
 import {
     ProductListDialogComponent
 } from '../../product-container/product-list/product-list-dialog/product-list-dialog.component';
-import { NutrientChartData } from '../../../types/charts.data';
+import { NutrientData } from '../../../types/charts.data';
 import { HttpErrorResponse } from '@angular/common/http';
 import {
     NutrientsSummaryComponent
@@ -66,7 +66,7 @@ export class RecipeManageComponent implements OnInit {
     public recipe = input<Recipe | null>(null);
     public totalCalories = signal<number>(0);
     public totalFiber = signal<number>(0);
-    public nutrientChartData = signal<NutrientChartData>({
+    public nutrientChartData = signal<NutrientData>({
         proteins: 0,
         fats: 0,
         carbs: 0,

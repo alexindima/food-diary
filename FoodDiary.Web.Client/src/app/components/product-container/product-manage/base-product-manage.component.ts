@@ -18,7 +18,7 @@ import { NavigationService } from '../../../services/navigation.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormGroupControls } from '../../../types/common.data';
-import { NutrientChartData } from '../../../types/charts.data';
+import { NutrientData } from '../../../types/charts.data';
 import {
     NutrientsSummaryComponent, NutrientsSummaryConfig
 } from '../../shared/nutrients-summary/nutrients-summary.component';
@@ -83,7 +83,7 @@ export class BaseProductManageComponent implements OnInit {
     public product = input<Product | null>();
     public globalError = signal<string | null>(null);
     public calories = signal<number>(0);
-    public nutrientChartData = signal<NutrientChartData>({
+    public nutrientChartData = signal<NutrientData>({
         proteins: 0,
         fats: 0,
         carbs: 0,

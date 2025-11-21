@@ -5,7 +5,7 @@ import {
     NutrientsSummaryComponent,
     NutrientsSummaryConfig,
 } from '../../shared/nutrients-summary/nutrients-summary.component';
-import { NutrientChartData } from '../../../types/charts.data';
+import { NutrientData } from '../../../types/charts.data';
 import { RecipeService } from '../../../services/recipe.service';
 import { FD_UI_DIALOG_DATA, FdUiDialogRef } from 'fd-ui-kit/material';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog.component';
@@ -39,7 +39,7 @@ export class RecipeDetailComponent {
 
     public readonly recipe: Recipe;
     public readonly calories: number;
-    public readonly nutrientChartData: NutrientChartData;
+    public readonly nutrientChartData: NutrientData;
 
     public readonly nutrientSummaryConfig: NutrientsSummaryConfig = {
         styles: {

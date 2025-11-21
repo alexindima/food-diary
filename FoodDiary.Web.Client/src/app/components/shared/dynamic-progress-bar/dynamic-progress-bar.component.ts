@@ -12,9 +12,9 @@ import { NgClass, NgStyle } from '@angular/common';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DynamicProgressBarComponent {
-    public current = input.required<number>();
-    public max = input.required<number>();
-    public unit = input<string>('');
+    public readonly current = input.required<number>();
+    public readonly max = input.required<number>();
+    public readonly unit = input<string>('');
 
     public progress = computed<number>(() => Math.round((this.current() / this.max()) * 100));
     public progressBarWidth = computed<string>(() => Math.min(this.progress(), 100) + '%');

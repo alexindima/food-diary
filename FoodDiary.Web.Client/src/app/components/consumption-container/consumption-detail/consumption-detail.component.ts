@@ -7,7 +7,7 @@ import {
     NutrientsSummaryComponent,
     NutrientsSummaryConfig,
 } from '../../shared/nutrients-summary/nutrients-summary.component';
-import { NutrientChartData } from '../../../types/charts.data';
+import { NutrientData } from '../../../types/charts.data';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
@@ -57,7 +57,7 @@ export class ConsumptionDetailComponent {
     };
 
     public readonly calories: number;
-    public readonly nutrientChartData: NutrientChartData;
+    public readonly nutrientChartData: NutrientData;
 
     public constructor() {
         const data = inject<Consumption>(FD_UI_DIALOG_DATA);

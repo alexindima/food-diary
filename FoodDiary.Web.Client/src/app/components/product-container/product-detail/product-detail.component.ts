@@ -5,7 +5,7 @@ import {
     NutrientsSummaryComponent,
     NutrientsSummaryConfig,
 } from '../../shared/nutrients-summary/nutrients-summary.component';
-import { NutrientChartData } from '../../../types/charts.data';
+import { NutrientData } from '../../../types/charts.data';
 import { ProductService } from '../../../services/product.service';
 import { buildProductTypeTranslationKey } from '../../../utils/product-type.utils';
 import { FD_UI_DIALOG_DATA, FdUiDialogRef } from 'fd-ui-kit/material';
@@ -51,7 +51,7 @@ export class ProductDetailComponent {
     };
 
     public calories: number;
-    public nutrientChartData: NutrientChartData;
+    public nutrientChartData: NutrientData;
     public isDuplicateInProgress = false;
 
     public get isDeleteDisabled(): boolean {

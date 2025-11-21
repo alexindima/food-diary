@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -13,8 +13,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { StatisticsService } from '../../services/statistics.service';
 import { NavigationService } from '../../services/navigation.service';
 import { UserService } from '../../services/user.service';
-import { NutrientChartData } from '../../types/charts.data';
-import { DynamicProgressBarComponent } from '../shared/dynamic-progress-bar/dynamic-progress-bar.component';
+import { NutrientData } from '../../types/charts.data';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiEntityCardComponent } from 'fd-ui-kit/entity-card/fd-ui-entity-card.component';
@@ -35,16 +34,8 @@ import { PageBodyComponent } from '../shared/page-body/page-body.component';
 import { FdPageContainerDirective } from '../../directives/layout/page-container.directive';
 import { FdUiAccentSurfaceComponent } from 'fd-ui-kit/accent-surface/fd-ui-accent-surface.component';
 import { CHART_COLORS } from '../../constants/chart-colors';
-
-interface DashboardQuickAction {
-    icon: string;
-    titleKey: string;
-    descriptionKey: string;
-    buttonKey: string;
-    variant: 'primary' | 'secondary' | 'danger';
-    fill: 'solid' | 'outline' | 'text';
-    action: () => void;
-}
+import { DailyProgressCardComponent } from '../shared/daily-progress-card/daily-progress-card.component';
+import { LocalizedDatePipe } from '../../pipes/localized-date.pipe';
 
 @Component({
     selector: 'fd-today-consumption',
@@ -52,7 +43,6 @@ interface DashboardQuickAction {
     imports: [
         CommonModule,
         TranslatePipe,
-        DynamicProgressBarComponent,
         FdUiCardComponent,
         FdUiButtonComponent,
         FdUiEntityCardComponent,
@@ -65,6 +55,9 @@ interface DashboardQuickAction {
         PageBodyComponent,
         FdPageContainerDirective,
         FdUiAccentSurfaceComponent,
+        DailyProgressCardComponent,
+        LocalizedDatePipe,
+        DatePipe
     ],
     templateUrl: './today-consumption.component.html',
     styleUrl: './today-consumption.component.scss',
@@ -89,7 +82,7 @@ export class TodayConsumptionComponent implements OnInit {
     });
     public todayCalories = signal<number>(0);
     public todayFiber = signal<number | null>(null);
-    public nutrientChartData = signal<NutrientChartData>({
+    public nutrientChartData = signal<NutrientData>({
         proteins: 0,
         fats: 0,
         carbs: 0,
@@ -109,29 +102,29 @@ export class TodayConsumptionComponent implements OnInit {
     public desiredWaist = signal<number | null>(null);
     public isDesiredWaistLoading = signal<boolean>(false);
 
-    public readonly macroSummary = computed(() => ([
+    public readonly macroSummary = computed<MacroSummaryItem[]>(() => ([
         {
             labelKey: 'PRODUCT_LIST.PROTEINS',
             value: this.nutrientChartData().proteins,
-            unitKey: 'PRODUCT_LIST.GRAMS' as const,
+            unitKey: 'PRODUCT_LIST.GRAMS',
             color: CHART_COLORS.proteins,
         },
         {
             labelKey: 'PRODUCT_LIST.FATS',
             value: this.nutrientChartData().fats,
-            unitKey: 'PRODUCT_LIST.GRAMS' as const,
+            unitKey: 'PRODUCT_LIST.GRAMS',
             color: CHART_COLORS.fats,
         },
         {
             labelKey: 'PRODUCT_LIST.CARBS',
             value: this.nutrientChartData().carbs,
-            unitKey: 'PRODUCT_LIST.GRAMS' as const,
+            unitKey: 'PRODUCT_LIST.GRAMS',
             color: CHART_COLORS.carbs,
         },
         {
             labelKey: 'SHARED.NUTRIENTS_SUMMARY.FIBER',
             value: this.todayFiber() ?? 0,
-            unitKey: 'PRODUCT_LIST.GRAMS' as const,
+            unitKey: 'PRODUCT_LIST.GRAMS',
             color: CHART_COLORS.fiber,
         },
     ]));
@@ -469,4 +462,21 @@ export class TodayConsumptionComponent implements OnInit {
     public async goToStatistics(): Promise<void> {
         await this.navigationService.navigateToStatistics();
     }
+}
+
+interface DashboardQuickAction {
+    icon: string;
+    titleKey: string;
+    descriptionKey: string;
+    buttonKey: string;
+    variant: 'primary' | 'secondary' | 'danger';
+    fill: 'solid' | 'outline' | 'text';
+    action: () => void;
+}
+
+interface MacroSummaryItem {
+    labelKey: string;
+    value: number;
+    unitKey: string;
+    color: string;
 }

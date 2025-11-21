@@ -11,7 +11,7 @@ import { DecimalPipe, NgStyle, NgTemplateOutlet } from '@angular/common';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ChartData, ChartOptions, ChartTypeRegistry, TooltipItem } from 'chart.js';
 import { CHART_COLORS } from '../../../constants/chart-colors';
-import { NutrientChartData } from '../../../types/charts.data';
+import { NutrientData } from '../../../types/charts.data';
 import { RecursivePartial } from '../../../types/common.data';
 import { CustomGroupComponent } from '../custom-group/custom-group.component';
 
@@ -35,7 +35,7 @@ export class NutrientsSummaryComponent implements OnInit {
     private readonly translateService = inject(TranslateService);
 
     public calories = input.required<number>();
-    public nutrientChartData = input.required<NutrientChartData>();
+    public nutrientChartData = input.required<NutrientData>();
     public fiberValue = input<number | null>(null);
     public fiberUnitKey = input<string>('PRODUCT_AMOUNT_UNITS_SHORT.G');
     public bare = input<boolean>(false);

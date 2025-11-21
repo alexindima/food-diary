@@ -1,0 +1,34 @@
+<fd-ui-card
+    class="daily-progress-card"
+    [title]="'DASHBOARD.PROGRESS_TITLE' | translate"
+    [meta]="date() | localizedDate:'d MMMM y'"
+>
+    <div class="daily-progress-card__content">
+        <div class="daily-progress-card__headline">
+            <div>
+                <span class="daily-progress-card__label">{{ 'DASHBOARD.CONSUMED_TODAY' | translate }}</span>
+                <strong class="daily-progress-card__value">
+                    {{ consumed() | number:'1.0-0' }} {{ 'PRODUCT_LIST.KCAL' | translate }}
+                </strong>
+            </div>
+            <span class="daily-progress-card__percent">{{ progressPercent() }}%</span>
+        </div>
+
+        <fd-dynamic-progress-bar
+            [current]="consumed()"
+            [max]="goal()"
+            [unit]="'PRODUCT_LIST.KCAL' | translate"
+        />
+
+        <div class="daily-progress-card__meta">
+            <div>
+                <span class="daily-progress-card__meta-label">{{ 'DASHBOARD.GOAL_LABEL' | translate }}</span>
+                <strong>{{ goal() | number:'1.0-0' }} {{ 'PRODUCT_LIST.KCAL' | translate }}</strong>
+            </div>
+            <div>
+                <span class="daily-progress-card__meta-label">{{ 'DASHBOARD.REMAINING_LABEL' | translate }}</span>
+                <strong>{{ remaining() | number:'1.0-0' }} {{ 'PRODUCT_LIST.KCAL' | translate }}</strong>
+            </div>
+        </div>
+    </div>
+</fd-ui-card>

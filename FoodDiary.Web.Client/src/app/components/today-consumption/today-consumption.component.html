@@ -43,37 +43,12 @@
     <fd-page-body>
         <section class="dashboard__grid">
             <div class="dashboard__key-metrics">
-                <fd-ui-card
+                <fd-daily-progress-card
                     class="dashboard__card dashboard__card--progress"
-                    [title]="'DASHBOARD.PROGRESS_TITLE' | translate"
-                    [meta]="(selectedDate() | date:'d MMMM y') || ''"
-                >
-                    <div class="dashboard__progress">
-                        <div class="dashboard__progress-headline">
-                            <div>
-                                <span class="dashboard__progress-label">{{ 'DASHBOARD.CONSUMED_TODAY' | translate }}</span>
-                                <strong class="dashboard__progress-value">
-                                    {{ todayCalories() | number:'1.0-0' }} {{ 'PRODUCT_LIST.KCAL' | translate }}
-                                </strong>
-                            </div>
-                            <span class="dashboard__progress-percent">{{ progressPercent() }}%</span>
-                        </div>
-                        <fd-dynamic-progress-bar [current]="todayCalories()"
-                                                 [max]="dailyGoal()"
-                                                 [unit]="'PRODUCT_LIST.KCAL' | translate"
-                        />
-                        <div class="dashboard__progress-meta">
-                            <div>
-                                <span class="dashboard__meta-label">{{ 'DASHBOARD.GOAL_LABEL' | translate }}</span>
-                                <strong>{{ dailyGoal() | number:'1.0-0' }} {{ 'PRODUCT_LIST.KCAL' | translate }}</strong>
-                            </div>
-                            <div>
-                                <span class="dashboard__meta-label">{{ 'DASHBOARD.REMAINING_LABEL' | translate }}</span>
-                                <strong>{{ remainingCalories() | number:'1.0-0' }} {{ 'PRODUCT_LIST.KCAL' | translate }}</strong>
-                            </div>
-                        </div>
-                    </div>
-                </fd-ui-card>
+                    [date]="selectedDate()"
+                    [consumed]="todayCalories()"
+                    [goal]="dailyGoal()"
+                />
 
                 <fd-ui-card
                     class="dashboard__card dashboard__card--macros"

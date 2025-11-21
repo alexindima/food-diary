@@ -31,7 +31,7 @@ import { Recipe, RecipeIngredient } from '../../../types/recipe.data';
 import { HttpErrorResponse } from '@angular/common/http';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { nonEmptyArrayValidator } from '../../../validators/non-empty-array.validator';
-import { NutrientChartData } from '../../../types/charts.data';
+import { NutrientData } from '../../../types/charts.data';
 import {
     NutrientsSummaryComponent
 } from '../../shared/nutrients-summary/nutrients-summary.component';
@@ -104,7 +104,7 @@ export class BaseConsumptionManageComponent implements OnInit {
     public consumption = input<Consumption | null>();
     public totalCalories = signal<number>(0);
     public totalFiber = signal<number>(0);
-    public nutrientChartData = signal<NutrientChartData>({
+    public nutrientChartData = signal<NutrientData>({
         proteins: 0,
         fats: 0,
         carbs: 0,

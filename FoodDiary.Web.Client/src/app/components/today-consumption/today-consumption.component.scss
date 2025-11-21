@@ -93,67 +93,6 @@ $color-primary: #2563eb;
         height: 100%;
     }
 
-    @media #{$media-tablet} {
-        &__key-metrics {
-            grid-template-columns: 1fr;
-        }
-
-        &__activity-grid {
-            grid-template-columns: 1fr;
-        }
-
-        &__header {
-            align-items: flex-start;
-        }
-    }
-
-    &__progress {
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-    }
-
-    &__progress-headline {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 16px;
-    }
-
-    &__progress-label {
-        font-size: 0.9rem;
-        color: $color-text-secondary;
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
-    }
-
-    &__progress-value {
-        font-size: 2rem;
-        font-weight: 700;
-        color: $color-text-main;
-    }
-
-    &__progress-percent {
-        font-size: 2.5rem;
-        font-weight: 700;
-        color: $color-primary;
-    }
-
-    &__progress-meta {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-        gap: 16px;
-    }
-
-    &__meta-label {
-        display: block;
-        font-size: 0.85rem;
-        color: $color-text-secondary;
-        margin-bottom: 4px;
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
-    }
-
     &__macros {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
@@ -418,13 +357,8 @@ $color-primary: #2563eb;
     }
 
     @media #{$media-mobile} {
-        &__progress-headline {
-            flex-direction: column;
+        &__header {
             align-items: flex-start;
-        }
-
-        &__progress-percent {
-            font-size: 1.8rem;
         }
     }
 }

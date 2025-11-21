@@ -1,4 +1,4 @@
-import { NutrientChartData } from './charts.data';
+import { NutrientData } from './charts.data';
 import { MeasurementUnit, Product } from './product.data';
 
 export enum RecipeVisibility {
@@ -31,7 +31,7 @@ export interface Recipe {
     manualCarbs?: number | null;
     manualFiber?: number | null;
     steps: RecipeStep[];
-    nutrientChartData?: NutrientChartData;
+    nutrientChartData?: NutrientData;
 }
 
 export interface RecipeStep {
