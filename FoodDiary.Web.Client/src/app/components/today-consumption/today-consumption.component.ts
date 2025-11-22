@@ -34,6 +34,7 @@ import { MotivationCardComponent } from '../shared/motivation-card/motivation-ca
 import { DashboardService } from '../../services/dashboard.service';
 import { DashboardSnapshot } from '../../types/dashboard.data';
 import { WeightSummaryCardComponent } from '../shared/weight-summary-card/weight-summary-card.component';
+import { WaistSummaryCardComponent } from '../shared/waist-summary-card/waist-summary-card.component';
 
 @Component({
     selector: 'fd-today-consumption',
@@ -56,7 +57,8 @@ import { WeightSummaryCardComponent } from '../shared/weight-summary-card/weight
         LocalizedDatePipe,
         MacroSummaryComponent,
         MotivationCardComponent,
-        WeightSummaryCardComponent
+        WeightSummaryCardComponent,
+        WaistSummaryCardComponent
     ],
     templateUrl: './today-consumption.component.html',
     styleUrl: './today-consumption.component.scss',
@@ -64,7 +66,6 @@ import { WeightSummaryCardComponent } from '../shared/weight-summary-card/weight
 })
 export class TodayConsumptionComponent implements OnInit {
     private readonly navigationService = inject(NavigationService);
-    private readonly translateService = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly dashboardService = inject(DashboardService);
 
@@ -91,35 +92,6 @@ export class TodayConsumptionComponent implements OnInit {
     public latestWaistEntry = signal<WaistEntry | null>(null);
     public previousWaistEntry = signal<WaistEntry | null>(null);
     public desiredWaist = signal<number | null>(null);
-
-    public readonly waistMetaText = computed(() => {
-        if (this.isLoading()) {
-            return this.translateService.instant('WAIST_HISTORY.LOADING');
-        }
-
-        const desired = this.desiredWaist();
-        if (desired !== null && desired !== undefined) {
-            return this.translateService.instant('DASHBOARD.WAIST_GOAL', { value: desired });
-        }
-
-        return this.translateService.instant('DASHBOARD.WAIST_META_EMPTY');
-    });
-
-    public readonly waistTrendLabel = computed(() => {
-        const latest = this.latestWaistEntry();
-        const previous = this.previousWaistEntry();
-        if (!latest || !previous) {
-            return this.translateService.instant('WAIST_HISTORY.NO_PREVIOUS');
-        }
-
-        const diff = latest.circumference - previous.circumference;
-        if (Math.abs(diff) < 0.01) {
-            return this.translateService.instant('WAIST_HISTORY.NO_CHANGE');
-        }
-
-        const direction = diff > 0 ? '↑' : '↓';
-        return `${direction} ${Math.abs(diff).toFixed(1)} ${this.translateService.instant('DASHBOARD.CM')}`;
-    });
 
     public quickActions: DashboardQuickAction[] = [
         {

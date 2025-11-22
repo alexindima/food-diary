@@ -74,28 +74,13 @@
                         [desired]="desiredWeight()"
                         (cardClick)="openWeightHistory()"
                     />
-                    <fd-ui-card
+                    <fd-waist-summary-card
                         class="dashboard__card dashboard__card--waist dashboard__card--clickable"
-                        role="button"
-                        tabindex="0"
-                        (click)="openWaistHistory()"
-                        [title]="'DASHBOARD.WAIST_TITLE' | translate"
-                        [meta]="waistMetaText()"
-                    >
-                        <div class="dashboard__weight-summary">
-                            <strong class="dashboard__weight-value">
-                                @if (latestWaistEntry()) {
-                                    {{ latestWaistEntry()?.circumference | number:'1.0-1' }}
-                                    {{ 'DASHBOARD.CM' | translate }}
-                                } @else {
-                                    {{ 'WAIST_HISTORY.NO_DATA' | translate }}
-                                }
-                            </strong>
-                            <span class="dashboard__weight-trend">
-                            {{ waistTrendLabel() }}
-                        </span>
-                        </div>
-                    </fd-ui-card>
+                        [latest]="latestWaistEntry()"
+                        [previous]="previousWaistEntry()"
+                        [desired]="desiredWaist()"
+                        (cardClick)="openWaistHistory()"
+                    />
                     <fd-ui-card
                         class="dashboard__card dashboard__card--activity"
                         [title]="'DASHBOARD.ACTIVITY_TITLE' | translate"

@@ -878,5 +878,14 @@
         "NO_PREVIOUS": "Not enough data yet",
         "NO_CHANGE": "No change since last log",
         "NO_DATA": "Add your weight to begin"
+    },
+    "WAIST_CARD": {
+        "TITLE": "Waist trend",
+        "CM": "cm",
+        "GOAL": "Goal: {{value}} cm",
+        "META_EMPTY": "Set your waist goal",
+        "NO_PREVIOUS": "Not enough data yet",
+        "NO_CHANGE": "No change since last log",
+        "NO_DATA": "Add your waist to begin"
     }
 }

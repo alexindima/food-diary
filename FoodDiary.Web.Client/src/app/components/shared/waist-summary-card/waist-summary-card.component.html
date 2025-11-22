@@ -1,0 +1,27 @@
+<fd-ui-card
+    class="waist-summary-card"
+    [subtle]="false"
+    [title]="'WAIST_CARD.TITLE' | translate"
+    [meta]="metaText()"
+    (click)="cardClick.emit()"
+    role="button"
+    tabindex="0"
+>
+    <div class="waist-summary-card__content">
+        <strong class="waist-summary-card__value">
+            @if (latest()) {
+                {{ latest()?.circumference | number:'1.0-1' }} {{ 'WAIST_CARD.CM' | translate }}
+            } @else {
+                {{ 'WAIST_CARD.NO_DATA' | translate }}
+            }
+        </strong>
+        <span
+            class="waist-summary-card__trend"
+            [class.waist-summary-card__trend--positive]="trend().status === 'positive'"
+            [class.waist-summary-card__trend--negative]="trend().status === 'negative'"
+            [class.waist-summary-card__trend--neutral]="trend().status === 'neutral'"
+        >
+            {{ trend().label }}
+        </span>
+    </div>
+</fd-ui-card>
