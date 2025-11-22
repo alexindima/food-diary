@@ -33,6 +33,7 @@ import { MacroSummaryComponent } from '../shared/macro-summary/macro-summary.com
 import { MotivationCardComponent } from '../shared/motivation-card/motivation-card.component';
 import { DashboardService } from '../../services/dashboard.service';
 import { DashboardSnapshot } from '../../types/dashboard.data';
+import { WeightSummaryCardComponent } from '../shared/weight-summary-card/weight-summary-card.component';
 
 @Component({
     selector: 'fd-today-consumption',
@@ -54,7 +55,8 @@ import { DashboardSnapshot } from '../../types/dashboard.data';
         DailyProgressCardComponent,
         LocalizedDatePipe,
         MacroSummaryComponent,
-        MotivationCardComponent
+        MotivationCardComponent,
+        WeightSummaryCardComponent
     ],
     templateUrl: './today-consumption.component.html',
     styleUrl: './today-consumption.component.scss',
@@ -81,51 +83,17 @@ export class TodayConsumptionComponent implements OnInit {
         carbs: 0,
     });
     public meals = signal<Consumption[]>([]);
-    public isStatsLoading = signal<boolean>(false);
-    public isMealsLoading = signal<boolean>(false);
+    public isLoading = signal<boolean>(false);
     public dailyGoal = signal<number>(2000);
     public latestWeightEntry = signal<WeightEntry | null>(null);
     public previousWeightEntry = signal<WeightEntry | null>(null);
-    public isWeightLoading = signal<boolean>(false);
     public desiredWeight = signal<number | null>(null);
-    public isDesiredWeightLoading = signal<boolean>(false);
     public latestWaistEntry = signal<WaistEntry | null>(null);
     public previousWaistEntry = signal<WaistEntry | null>(null);
-    public isWaistLoading = signal<boolean>(false);
     public desiredWaist = signal<number | null>(null);
-    public isDesiredWaistLoading = signal<boolean>(false);
-
-    public readonly weightMetaText = computed(() => {
-        if (this.isDesiredWeightLoading()) {
-            return this.translateService.instant('WEIGHT_HISTORY.LOADING');
-        }
-
-        const desired = this.desiredWeight();
-        if (desired !== null && desired !== undefined) {
-            return this.translateService.instant('DASHBOARD.WEIGHT_GOAL', { value: desired });
-        }
-
-        return this.translateService.instant('DASHBOARD.WEIGHT_META_EMPTY');
-    });
-
-    public readonly weightTrendLabel = computed(() => {
-        const latest = this.latestWeightEntry();
-        const previous = this.previousWeightEntry();
-        if (!latest || !previous) {
-            return this.translateService.instant('WEIGHT_HISTORY.NO_PREVIOUS');
-        }
-
-        const diff = latest.weight - previous.weight;
-        if (Math.abs(diff) < 0.01) {
-            return this.translateService.instant('WEIGHT_HISTORY.NO_CHANGE');
-        }
-
-        const direction = diff > 0 ? '↑' : '↓';
-        return `${direction} ${Math.abs(diff).toFixed(1)} ${this.translateService.instant('DASHBOARD.KG')}`;
-    });
 
     public readonly waistMetaText = computed(() => {
-        if (this.isDesiredWaistLoading()) {
+        if (this.isLoading()) {
             return this.translateService.instant('WAIST_HISTORY.LOADING');
         }
 
@@ -231,12 +199,7 @@ export class TodayConsumptionComponent implements OnInit {
 
     private loadDashboardSnapshot(): void {
         const targetDate = this.selectedDate();
-        this.isStatsLoading.set(true);
-        this.isMealsLoading.set(true);
-        this.isWeightLoading.set(true);
-        this.isWaistLoading.set(true);
-        this.isDesiredWeightLoading.set(true);
-        this.isDesiredWaistLoading.set(true);
+        this.isLoading.set(true);
 
         this.dashboardService
             .getSnapshot(targetDate, 1, 10)
@@ -286,12 +249,7 @@ export class TodayConsumptionComponent implements OnInit {
 
         this.meals.set(snapshot.meals.items ?? []);
 
-        this.isStatsLoading.set(false);
-        this.isMealsLoading.set(false);
-        this.isWeightLoading.set(false);
-        this.isWaistLoading.set(false);
-        this.isDesiredWeightLoading.set(false);
-        this.isDesiredWaistLoading.set(false);
+        this.isLoading.set(false);
     }
 
     private resetSnapshotState(): void {
@@ -307,12 +265,7 @@ export class TodayConsumptionComponent implements OnInit {
         this.previousWaistEntry.set(null);
         this.desiredWaist.set(null);
 
-        this.isStatsLoading.set(false);
-        this.isMealsLoading.set(false);
-        this.isWeightLoading.set(false);
-        this.isWaistLoading.set(false);
-        this.isDesiredWeightLoading.set(false);
-        this.isDesiredWaistLoading.set(false);
+        this.isLoading.set(false);
     }
 
     private normalizeDate(date: Date): Date {

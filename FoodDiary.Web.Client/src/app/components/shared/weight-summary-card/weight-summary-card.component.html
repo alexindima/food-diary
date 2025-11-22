@@ -1,0 +1,27 @@
+<fd-ui-card
+    class="weight-summary-card"
+    [subtle]="false"
+    [title]="'WEIGHT_CARD.TITLE' | translate"
+    [meta]="metaText()"
+    (click)="cardClick.emit()"
+    role="button"
+    tabindex="0"
+>
+    <div class="weight-summary-card__content">
+        <strong class="weight-summary-card__value">
+            @if (latest()) {
+                {{ latest()?.weight | number:'1.0-1' }} {{ 'WEIGHT_CARD.KG' | translate }}
+            } @else {
+                {{ 'WEIGHT_CARD.NO_DATA' | translate }}
+            }
+        </strong>
+        <span
+            class="weight-summary-card__trend"
+            [class.weight-summary-card__trend--positive]="trend().status === 'positive'"
+            [class.weight-summary-card__trend--negative]="trend().status === 'negative'"
+            [class.weight-summary-card__trend--neutral]="trend().status === 'neutral'"
+        >
+            {{ trend().label }}
+        </span>
+    </div>
+</fd-ui-card>

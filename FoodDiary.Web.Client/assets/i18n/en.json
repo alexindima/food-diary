@@ -869,5 +869,14 @@
         "TITLE": "Scan the barcode",
         "CAMERA_INITIALIZING": "Initializing camera, please wait...",
         "CAMERA_ERROR": "Camera initialization failed. Please check your camera settings."
+    },
+    "WEIGHT_CARD": {
+        "TITLE": "Weight trend",
+        "KG": "kg",
+        "GOAL": "Goal: {{value}} kg",
+        "META_EMPTY": "Set your weight goal",
+        "NO_PREVIOUS": "Not enough data yet",
+        "NO_CHANGE": "No change since last log",
+        "NO_DATA": "Add your weight to begin"
     }
 }
