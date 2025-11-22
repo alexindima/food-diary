@@ -134,8 +134,12 @@ jobs:
         env:
           CONNECTION_STRING: ${{ secrets.PROD_CONNECTION_STRING }}
         run: |
-          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no root@${{ env.SERVER_IP }} << 'EOF'
+          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no root@${{ env.SERVER_IP }} << EOF
             set -e
+            if [ -z "${CONNECTION_STRING}" ]; then
+              echo "Missing CONNECTION_STRING env for migrations" >&2
+              exit 1
+            fi
             cd "${{ env.BACKEND_DEPLOY_DIR }}"
             chmod +x ./migrate
 
