@@ -46,6 +46,15 @@ jobs:
           dotnet publish ${{ env.BACKEND_PROJECT }} -c Release -o ${{ env.BACKEND_PUBLISH_DIR }}
           echo "Backend publish completed."
 
+      - name: Build EF Core migration bundle
+        run: |
+          dotnet tool restore
+          dotnet ef migrations bundle \
+            --project ${{ env.BACKEND_PROJECT }} \
+            --startup-project ${{ env.BACKEND_PROJECT }} \
+            --configuration Release \
+            --output ${{ env.BACKEND_PUBLISH_DIR }}/migrate
+
       - name: Setting up SSH
         env:
           SSH_KEY: ${{ secrets.SSH_KEY }}
@@ -120,6 +129,21 @@ jobs:
         run: |
           rsync -az --quiet --human-readable -e "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no" \
             ${{ env.BACKEND_PUBLISH_DIR }}/ root@${{ env.SERVER_IP }}:${{ env.BACKEND_DEPLOY_DIR }}/
+
+      - name: Run migration bundle on server
+        env:
+          CONNECTION_STRING: ${{ secrets.PROD_CONNECTION_STRING }}
+        run: |
+          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no root@${{ env.SERVER_IP }} << 'EOF'
+            set -e
+            cd "${{ env.BACKEND_DEPLOY_DIR }}"
+            chmod +x ./migrate
+
+            export ConnectionStrings__DefaultConnection="${CONNECTION_STRING}"
+
+            ./migrate
+            echo "Migrations applied by bundle."
+          EOF
 
       - name: Restart backend service
         run: |
