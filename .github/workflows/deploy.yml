@@ -9,7 +9,7 @@ on:
 env:
   NODE_VERSION: 22
   SERVER_IP: 193.109.69.58
-  FRONTEND_DIR: frontend/food-diary-web-client
+  FRONTEND_DIR: FoodDiary.Web.Client
   BACKEND_PROJECT: FoodDiary.Web.Api/FoodDiary.Web.Api.csproj
   BACKEND_PUBLISH_DIR: FoodDiary.Web.Api/publish
   FRONTEND_DEPLOY_DIR: /var/www/fooddiary.club
