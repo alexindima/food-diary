@@ -13,7 +13,6 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { NavigationService } from '../../services/navigation.service';
 import { NutrientData } from '../../types/charts.data';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
-import { FdUiEntityCardComponent } from 'fd-ui-kit/entity-card/fd-ui-entity-card.component';
 import { Consumption } from '../../types/consumption.data';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FdUiDatepicker, FdUiDatepickerInputEvent, FdUiDatepickerModule } from 'fd-ui-kit/material';
@@ -36,6 +35,7 @@ import { WeightSummaryCardComponent } from '../shared/weight-summary-card/weight
 import { WaistSummaryCardComponent } from '../shared/waist-summary-card/waist-summary-card.component';
 import { ActivityCardComponent } from '../shared/activity-card/activity-card.component';
 import { QuickActionsSectionComponent } from '../shared/quick-actions/quick-actions-section/quick-actions-section.component';
+import { MealCardComponent } from '../shared/meal-card/meal-card.component';
 
 @Component({
     selector: 'fd-today-consumption',
@@ -44,7 +44,6 @@ import { QuickActionsSectionComponent } from '../shared/quick-actions/quick-acti
         CommonModule,
         TranslatePipe,
         FdUiButtonComponent,
-        FdUiEntityCardComponent,
         FdUiDatepickerModule,
         FdUiInputFieldModule,
         FdUiFormFieldModule,
@@ -60,7 +59,8 @@ import { QuickActionsSectionComponent } from '../shared/quick-actions/quick-acti
         WeightSummaryCardComponent,
         WaistSummaryCardComponent,
         ActivityCardComponent,
-        QuickActionsSectionComponent
+        QuickActionsSectionComponent,
+        MealCardComponent
     ],
     templateUrl: './today-consumption.component.html',
     styleUrl: './today-consumption.component.scss',

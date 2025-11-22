@@ -840,5 +840,21 @@
             "DESCRIPTION": "Посмотреть детальные тренды.",
             "BUTTON": "Открыть статистику"
         }
+    },
+    "MEAL_CARD": {
+        "DATE": "Дата",
+        "TOTAL_CALORIES": "Суммарно калорий",
+        "KCAL": "ккал",
+        "PROTEINS": "Белки",
+        "FATS": "Жиры",
+        "CARBS": "Углеводы",
+        "ITEM_COUNT": "Кол-во позиций",
+        "MEAL_TYPES": {
+            "BREAKFAST": "Завтрак",
+            "LUNCH": "Обед",
+            "DINNER": "Ужин",
+            "SNACK": "Перекус",
+            "OTHER": "Другое"
+        }
     }
 }

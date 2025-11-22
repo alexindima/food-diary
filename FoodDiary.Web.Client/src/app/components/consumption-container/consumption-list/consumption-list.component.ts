@@ -4,7 +4,6 @@ import { catchError, debounceTime, map, Observable, of, startWith, switchMap } f
 import { TranslatePipe } from '@ngx-translate/core';
 import { Consumption, ConsumptionFilters } from '../../../types/consumption.data';
 import { ConsumptionService } from '../../../services/consumption.service';
-import { DatePipe, DecimalPipe } from '@angular/common';
 import { PagedData } from '../../../types/paged-data.data';
 import { NavigationService } from '../../../services/navigation.service';
 import {
@@ -15,7 +14,6 @@ import { FormGroupControls } from '../../../types/common.data';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDateRangeInputComponent, FdUiDateRangeValue } from 'fd-ui-kit/date-range-input/fd-ui-date-range-input.component';
-import { FdUiEntityCardComponent } from 'fd-ui-kit/entity-card/fd-ui-entity-card.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.component';
@@ -23,6 +21,7 @@ import { FdUiIconModule } from 'fd-ui-kit/material';
 import { PageHeaderComponent } from '../../shared/page-header/page-header.component';
 import { PageBodyComponent } from '../../shared/page-body/page-body.component';
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
+import { MealCardComponent } from '../../shared/meal-card/meal-card.component';
 
 @Component({
     selector: 'fd-consumption-list',
@@ -32,17 +31,15 @@ import { FdPageContainerDirective } from '../../../directives/layout/page-contai
     imports: [
         ReactiveFormsModule,
         TranslatePipe,
-        DatePipe,
-        DecimalPipe,
         FdUiButtonComponent,
         FdUiDateRangeInputComponent,
-        FdUiEntityCardComponent,
         FdUiLoaderComponent,
         FdUiPaginationComponent,
         FdUiIconModule,
         PageHeaderComponent,
         PageBodyComponent,
         FdPageContainerDirective,
+        MealCardComponent,
     ],
 })
 export class ConsumptionListComponent implements OnInit {

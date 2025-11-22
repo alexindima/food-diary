@@ -1,0 +1,45 @@
+<fd-ui-entity-card
+    class="consumption-card fd-ui-entity-card--hoverable"
+    appearance="info"
+    [imageUrl]="meal().imageUrl || undefined"
+    (click)="handleOpen()"
+>
+    <div class="product-card consumption-card__content">
+        <div class="product-card__header">
+            <div class="product-card__title">
+                <span class="product-card__name">
+                    @if (meal().mealType) {
+                        {{ ('MEAL_CARD.MEAL_TYPES.' + meal().mealType) | translate }}
+                    } @else {
+                        {{ 'MEAL_CARD.MEAL_TYPES.OTHER' | translate }}
+                    }
+                </span>
+            </div>
+            <span class="product-card__barcode">
+                {{ meal().date | localizedDate:'d MMMM y' }} · {{ meal().date | date:'HH:mm' }}
+            </span>
+        </div>
+        <div class="product-card__stats">
+            <span class="product-card__calories">
+                {{ 'MEAL_CARD.TOTAL_CALORIES' | translate }}:
+                {{ meal().totalCalories | number: '1.0-2' }}
+                {{ 'MEAL_CARD.KCAL' | translate }}
+            </span>
+            <span class="product-card__macros">
+                {{ 'MEAL_CARD.PROTEINS' | translate }}: {{ meal().totalProteins | number: '1.0-2' }}g ·
+                {{ 'MEAL_CARD.FATS' | translate }}: {{ meal().totalFats | number: '1.0-2' }}g ·
+                {{ 'MEAL_CARD.CARBS' | translate }}: {{ meal().totalCarbs | number: '1.0-2' }}g
+            </span>
+        </div>
+        <div class="consumption-card__meta">
+            <span class="consumption-card__count">
+                {{ 'MEAL_CARD.ITEM_COUNT' | translate }}: {{ meal().items.length }}
+            </span>
+            @if (meal().comment) {
+                <span class="consumption-card__comment">
+                    {{ meal().comment }}
+                </span>
+            }
+        </div>
+    </div>
+</fd-ui-entity-card>

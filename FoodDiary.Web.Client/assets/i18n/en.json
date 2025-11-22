@@ -917,5 +917,21 @@
             "DESCRIPTION": "See detailed trends.",
             "BUTTON": "Open statistics"
         }
+    },
+    "MEAL_CARD": {
+        "DATE": "Date",
+        "TOTAL_CALORIES": "Total Calories",
+        "KCAL": "kcal",
+        "PROTEINS": "Proteins",
+        "FATS": "Fats",
+        "CARBS": "Carbs",
+        "ITEM_COUNT": "Item count",
+        "MEAL_TYPES": {
+            "BREAKFAST": "Breakfast",
+            "LUNCH": "Lunch",
+            "DINNER": "Dinner",
+            "SNACK": "Snack",
+            "OTHER": "Other"
+        }
     }
 }
