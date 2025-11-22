@@ -2,9 +2,11 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 import {
     ApplicationConfig,
     ErrorHandler,
-    importProvidersFrom, inject,
+    importProvidersFrom,
+    inject,
+    isDevMode,
     provideAppInitializer,
-    provideZoneChangeDetection, isDevMode
+    provideZonelessChangeDetection
 } from '@angular/core';
 import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { routes } from './app.routes';
@@ -40,7 +42,7 @@ export const appConfig: ApplicationConfig = {
             authService.initializeAuth();
         }),
         provideAnimations(),
-        provideZoneChangeDetection({ eventCoalescing: true }),
+        provideZonelessChangeDetection(),
         provideRouter(routes, withComponentInputBinding()),
         provideHttpClient(withInterceptorsFromDi()),
         importProvidersFrom(
