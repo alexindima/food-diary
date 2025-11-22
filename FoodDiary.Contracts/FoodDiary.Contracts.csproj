@@ -5,5 +5,10 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
+  <ItemGroup>
+    <Compile Update="Dashboard\DashboardSnapshotResponse.cs">
+      <DependentUpon></DependentUpon>
+    </Compile>
+  </ItemGroup>
 
 </Project>

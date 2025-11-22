@@ -10,24 +10,19 @@ import {
   viewChild
 } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { StatisticsService } from '../../services/statistics.service';
 import { NavigationService } from '../../services/navigation.service';
-import { UserService } from '../../services/user.service';
 import { NutrientData } from '../../types/charts.data';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiEntityCardComponent } from 'fd-ui-kit/entity-card/fd-ui-entity-card.component';
-import { Consumption, ConsumptionFilters } from '../../types/consumption.data';
-import { ConsumptionService } from '../../services/consumption.service';
+import { Consumption } from '../../types/consumption.data';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FdUiDatepicker, FdUiDatepickerInputEvent, FdUiDatepickerModule } from 'fd-ui-kit/material';
 import { FdUiInputFieldModule } from 'fd-ui-kit/material';
 import { FdUiFormFieldModule } from 'fd-ui-kit/material';
 import { FdUiNativeDateModule } from 'fd-ui-kit/material';
 import { FdUiIconModule } from 'fd-ui-kit/material';
-import { WeightEntriesService } from '../../services/weight-entries.service';
 import { WeightEntry } from '../../types/weight-entry.data';
-import { WaistEntriesService } from '../../services/waist-entries.service';
 import { WaistEntry } from '../../types/waist-entry.data';
 import { PageHeaderComponent } from '../shared/page-header/page-header.component';
 import { PageBodyComponent } from '../shared/page-body/page-body.component';
@@ -36,6 +31,8 @@ import { DailyProgressCardComponent } from '../shared/daily-progress-card/daily-
 import { LocalizedDatePipe } from '../../pipes/localized-date.pipe';
 import { MacroSummaryComponent } from '../shared/macro-summary/macro-summary.component';
 import { MotivationCardComponent } from '../shared/motivation-card/motivation-card.component';
+import { DashboardService } from '../../services/dashboard.service';
+import { DashboardSnapshot } from '../../types/dashboard.data';
 
 @Component({
     selector: 'fd-today-consumption',
@@ -64,14 +61,10 @@ import { MotivationCardComponent } from '../shared/motivation-card/motivation-ca
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TodayConsumptionComponent implements OnInit {
-    private readonly statisticsService = inject(StatisticsService);
     private readonly navigationService = inject(NavigationService);
-    private readonly userService = inject(UserService);
-    private readonly consumptionService = inject(ConsumptionService);
-    private readonly weightEntriesService = inject(WeightEntriesService);
-    private readonly waistEntriesService = inject(WaistEntriesService);
     private readonly translateService = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly dashboardService = inject(DashboardService);
 
     private readonly headerDatePicker = viewChild<FdUiDatepicker<Date>>('headerDatePicker');
 
@@ -200,14 +193,7 @@ export class TodayConsumptionComponent implements OnInit {
     ];
 
     public ngOnInit(): void {
-        this.userService
-            .getUserCalories()
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(goal => this.dailyGoal.set(goal ?? 2000));
-
-        this.fetchDashboardData();
-        this.fetchWeightSummary();
-        this.fetchWaistSummary();
+        this.loadDashboardSnapshot();
     }
 
     public openDatePicker(): void {
@@ -240,137 +226,93 @@ export class TodayConsumptionComponent implements OnInit {
     }
 
     private fetchDashboardData(): void {
+        this.loadDashboardSnapshot();
+    }
+
+    private loadDashboardSnapshot(): void {
         const targetDate = this.selectedDate();
-        this.fetchTodayData(targetDate);
-        this.fetchMeals(targetDate);
-    }
-
-    private fetchWeightSummary(): void {
-        this.isWeightLoading.set(true);
-        this.weightEntriesService
-            .getEntries({ limit: 2, sort: 'desc' })
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: entries => {
-                    const [latest, previous] = entries;
-                    this.latestWeightEntry.set(latest ?? null);
-                    this.previousWeightEntry.set(previous ?? null);
-                    this.isWeightLoading.set(false);
-                },
-                error: () => {
-                    this.isWeightLoading.set(false);
-                },
-            });
-        this.fetchDesiredWeight();
-    }
-
-    private fetchDesiredWeight(): void {
-        this.isDesiredWeightLoading.set(true);
-        this.userService
-            .getDesiredWeight()
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: value => {
-                    this.desiredWeight.set(value);
-                    this.isDesiredWeightLoading.set(false);
-                },
-                error: () => {
-                    this.isDesiredWeightLoading.set(false);
-                },
-            });
-    }
-
-    private fetchWaistSummary(): void {
-        this.isWaistLoading.set(true);
-        this.waistEntriesService
-            .getEntries({ limit: 2, sort: 'desc' })
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: entries => {
-                    const [latest, previous] = entries;
-                    this.latestWaistEntry.set(latest ?? null);
-                    this.previousWaistEntry.set(previous ?? null);
-                    this.isWaistLoading.set(false);
-                },
-                error: () => {
-                    this.isWaistLoading.set(false);
-                },
-            });
-        this.fetchDesiredWaist();
-    }
-
-    private fetchDesiredWaist(): void {
-        this.isDesiredWaistLoading.set(true);
-        this.userService
-            .getDesiredWaist()
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: value => {
-                    this.desiredWaist.set(value);
-                    this.isDesiredWaistLoading.set(false);
-                },
-                error: () => {
-                    this.isDesiredWaistLoading.set(false);
-                },
-            });
-    }
-
-    private fetchTodayData(date: Date): void {
         this.isStatsLoading.set(true);
-        this.statisticsService
-            .getAggregatedStatistics({
-                dateFrom: date,
-                dateTo: date,
-                quantizationDays: 1,
-            })
-            .subscribe({
-                next: data => {
-                    const stats = data?.[0];
-                    this.todayCalories.set(stats?.totalCalories ?? 0);
-
-                    this.nutrientChartData.set({
-                        proteins: stats?.averageProteins ?? 0,
-                        fats: stats?.averageFats ?? 0,
-                        carbs: stats?.averageCarbs ?? 0,
-                    });
-                    this.todayFiber.set(stats?.averageFiber ?? null);
-                    this.isStatsLoading.set(false);
-                },
-                error: () => {
-                    this.isStatsLoading.set(false);
-                },
-            });
-    }
-
-    private fetchMeals(date: Date): void {
         this.isMealsLoading.set(true);
-        const filters = this.getDateFilters(date);
+        this.isWeightLoading.set(true);
+        this.isWaistLoading.set(true);
+        this.isDesiredWeightLoading.set(true);
+        this.isDesiredWaistLoading.set(true);
 
-        this.consumptionService
-            .query(1, 10, filters)
+        this.dashboardService
+            .getSnapshot(targetDate, 1, 10)
+            .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
-                next: response => {
-                    this.meals.set(response.data);
-                    this.isMealsLoading.set(false);
+                next: snapshot => {
+                    if (!snapshot) {
+                        this.resetSnapshotState();
+                        return;
+                    }
+                    this.applySnapshot(snapshot);
                 },
-                error: () => {
-                    this.meals.set([]);
-                    this.isMealsLoading.set(false);
-                },
+                error: () => this.resetSnapshotState(),
             });
     }
 
-    private getDateFilters(date: Date): ConsumptionFilters {
-        const from = new Date(date);
-        from.setHours(0, 0, 0, 0);
+    private applySnapshot(snapshot: DashboardSnapshot): void {
+        this.dailyGoal.set(snapshot.dailyGoal || 0);
 
-        const to = new Date(date);
-        to.setHours(23, 59, 59, 999);
+        this.todayCalories.set(snapshot.statistics.totalCalories || 0);
+        this.nutrientChartData.set({
+            proteins: snapshot.statistics.averageProteins || 0,
+            fats: snapshot.statistics.averageFats || 0,
+            carbs: snapshot.statistics.averageCarbs || 0,
+        });
+        this.todayFiber.set(snapshot.statistics.averageFiber ?? null);
 
-        return {
-            dateFrom: from.toISOString(),
-            dateTo: to.toISOString(),
-        };
+        const latestWeight = snapshot.weight.latest
+            ? { id: '', userId: '', weight: snapshot.weight.latest.weight, date: new Date(snapshot.weight.latest.date) }
+            : null;
+        const previousWeight = snapshot.weight.previous
+            ? { id: '', userId: '', weight: snapshot.weight.previous.weight, date: new Date(snapshot.weight.previous.date) }
+            : null;
+        this.latestWeightEntry.set(latestWeight as WeightEntry | null);
+        this.previousWeightEntry.set(previousWeight as WeightEntry | null);
+        this.desiredWeight.set(snapshot.weight.desired ?? null);
+
+        const latestWaist = snapshot.waist.latest
+            ? { id: '', userId: '', circumference: snapshot.waist.latest.circumference, date: new Date(snapshot.waist.latest.date) }
+            : null;
+        const previousWaist = snapshot.waist.previous
+            ? { id: '', userId: '', circumference: snapshot.waist.previous.circumference, date: new Date(snapshot.waist.previous.date) }
+            : null;
+        this.latestWaistEntry.set(latestWaist as WaistEntry | null);
+        this.previousWaistEntry.set(previousWaist as WaistEntry | null);
+        this.desiredWaist.set(snapshot.waist.desired ?? null);
+
+        this.meals.set(snapshot.meals.items ?? []);
+
+        this.isStatsLoading.set(false);
+        this.isMealsLoading.set(false);
+        this.isWeightLoading.set(false);
+        this.isWaistLoading.set(false);
+        this.isDesiredWeightLoading.set(false);
+        this.isDesiredWaistLoading.set(false);
+    }
+
+    private resetSnapshotState(): void {
+        this.dailyGoal.set(0);
+        this.todayCalories.set(0);
+        this.nutrientChartData.set({ proteins: 0, fats: 0, carbs: 0 });
+        this.todayFiber.set(null);
+        this.meals.set([]);
+        this.latestWeightEntry.set(null);
+        this.previousWeightEntry.set(null);
+        this.desiredWeight.set(null);
+        this.latestWaistEntry.set(null);
+        this.previousWaistEntry.set(null);
+        this.desiredWaist.set(null);
+
+        this.isStatsLoading.set(false);
+        this.isMealsLoading.set(false);
+        this.isWeightLoading.set(false);
+        this.isWaistLoading.set(false);
+        this.isDesiredWeightLoading.set(false);
+        this.isDesiredWaistLoading.set(false);
     }
 
     private normalizeDate(date: Date): Date {

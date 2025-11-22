@@ -13,4 +13,5 @@ export interface AppConfigApiUrls {
     weights: string;
     waists: string;
     cycles: string;
+    dashboard: string;
 }
