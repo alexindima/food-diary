@@ -1,18 +1,17 @@
 import { CommonModule } from '@angular/common';
 import {
-  ChangeDetectionStrategy,
-  Component,
-  DestroyRef,
-  OnInit,
-  computed,
-  inject,
-  signal,
-  viewChild
+    ChangeDetectionStrategy,
+    Component,
+    DestroyRef,
+    OnInit,
+    computed,
+    inject,
+    signal,
+    viewChild
 } from '@angular/core';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { NavigationService } from '../../services/navigation.service';
 import { NutrientData } from '../../types/charts.data';
-import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiEntityCardComponent } from 'fd-ui-kit/entity-card/fd-ui-entity-card.component';
 import { Consumption } from '../../types/consumption.data';
@@ -36,6 +35,7 @@ import { DashboardSnapshot } from '../../types/dashboard.data';
 import { WeightSummaryCardComponent } from '../shared/weight-summary-card/weight-summary-card.component';
 import { WaistSummaryCardComponent } from '../shared/waist-summary-card/waist-summary-card.component';
 import { ActivityCardComponent } from '../shared/activity-card/activity-card.component';
+import { QuickActionsSectionComponent } from '../shared/quick-actions/quick-actions-section/quick-actions-section.component';
 
 @Component({
     selector: 'fd-today-consumption',
@@ -43,7 +43,6 @@ import { ActivityCardComponent } from '../shared/activity-card/activity-card.com
     imports: [
         CommonModule,
         TranslatePipe,
-        FdUiCardComponent,
         FdUiButtonComponent,
         FdUiEntityCardComponent,
         FdUiDatepickerModule,
@@ -60,7 +59,8 @@ import { ActivityCardComponent } from '../shared/activity-card/activity-card.com
         MotivationCardComponent,
         WeightSummaryCardComponent,
         WaistSummaryCardComponent,
-        ActivityCardComponent
+        ActivityCardComponent,
+        QuickActionsSectionComponent
     ],
     templateUrl: './today-consumption.component.html',
     styleUrl: './today-consumption.component.scss',
@@ -94,45 +94,6 @@ export class TodayConsumptionComponent implements OnInit {
     public latestWaistEntry = signal<WaistEntry | null>(null);
     public previousWaistEntry = signal<WaistEntry | null>(null);
     public desiredWaist = signal<number | null>(null);
-
-    public quickActions: DashboardQuickAction[] = [
-        {
-            icon: 'restaurant',
-            titleKey: 'DASHBOARD.ACTIONS.ADD_CONSUMPTION_TITLE',
-            descriptionKey: 'DASHBOARD.ACTIONS.ADD_CONSUMPTION_DESCRIPTION',
-            buttonKey: 'DASHBOARD.ACTIONS.ADD_CONSUMPTION_BUTTON',
-            variant: 'primary',
-            fill: 'solid',
-            action: () => this.addConsumption(),
-        },
-        {
-            icon: 'add_shopping_cart',
-            titleKey: 'DASHBOARD.ACTIONS.ADD_PRODUCT_TITLE',
-            descriptionKey: 'DASHBOARD.ACTIONS.ADD_PRODUCT_DESCRIPTION',
-            buttonKey: 'DASHBOARD.ACTIONS.ADD_PRODUCT_BUTTON',
-            variant: 'secondary',
-            fill: 'outline',
-            action: () => this.addProduct(),
-        },
-        {
-            icon: 'menu_book',
-            titleKey: 'DASHBOARD.ACTIONS.ADD_RECIPE_TITLE',
-            descriptionKey: 'DASHBOARD.ACTIONS.ADD_RECIPE_DESCRIPTION',
-            buttonKey: 'DASHBOARD.ACTIONS.ADD_RECIPE_BUTTON',
-            variant: 'secondary',
-            fill: 'outline',
-            action: () => this.addRecipe(),
-        },
-        {
-            icon: 'monitoring',
-            titleKey: 'DASHBOARD.ACTIONS.STATISTICS_TITLE',
-            descriptionKey: 'DASHBOARD.ACTIONS.STATISTICS_DESCRIPTION',
-            buttonKey: 'DASHBOARD.ACTIONS.STATISTICS_BUTTON',
-            variant: 'primary',
-            fill: 'text',
-            action: () => this.goToStatistics(),
-        },
-    ];
 
     public ngOnInit(): void {
         this.loadDashboardSnapshot();
@@ -252,33 +213,7 @@ export class TodayConsumptionComponent implements OnInit {
         await this.navigationService.navigateToConsumptionAdd();
     }
 
-    public async addProduct(): Promise<void> {
-        await this.navigationService.navigateToProductAdd();
-    }
-
-    public async addRecipe(): Promise<void> {
-        await this.navigationService.navigateToRecipeAdd();
-    }
-
     public async manageConsumptions(): Promise<void> {
         await this.navigationService.navigateToConsumptionList();
     }
-
-    public async manageProducts(): Promise<void> {
-        await this.navigationService.navigateToProductList();
-    }
-
-    public async goToStatistics(): Promise<void> {
-        await this.navigationService.navigateToStatistics();
-    }
-}
-
-interface DashboardQuickAction {
-    icon: string;
-    titleKey: string;
-    descriptionKey: string;
-    buttonKey: string;
-    variant: 'primary' | 'secondary' | 'danger';
-    fill: 'solid' | 'outline' | 'text';
-    action: () => void;
 }

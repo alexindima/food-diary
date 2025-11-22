@@ -1,6 +1,5 @@
 <div
-  class="fd-ui-card"
-  [ngClass]="[subtle() ? 'fd-ui-card--subtle' : '', appearanceClass]"
+  [class]="cardClass()"
   >
   @if (title() || meta() || headerActions()) {
     <header class="fd-ui-card__header">

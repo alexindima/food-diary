@@ -162,34 +162,7 @@
                 }
             </section>
 
-            <section class="dashboard__quick-actions">
-                <h2 class="dashboard__section-title">{{ 'DASHBOARD.QUICK_ACTIONS_TITLE' | translate }}</h2>
-                <div class="dashboard__quick-actions-grid">
-                    @for (action of quickActions; track action.buttonKey) {
-                        <fd-ui-card class="dashboard__quick-card" [subtle]="true">
-                            <div class="dashboard__quick-card-content">
-                                <div class="dashboard__quick-card-icon">
-                                    <mat-icon>{{ action.icon }}</mat-icon>
-                                </div>
-                                <div>
-                                    <p class="dashboard__quick-card-title">{{ action.titleKey | translate }}</p>
-                                    <span class="dashboard__quick-card-description">
-                                {{ action.descriptionKey | translate }}
-                            </span>
-                                </div>
-                            </div>
-                            <fd-ui-button
-                                [variant]="action.variant"
-                                [fill]="action.fill"
-                                [fullWidth]="true"
-                                (click)="action.action()"
-                            >
-                                {{ action.buttonKey | translate }}
-                            </fd-ui-button>
-                        </fd-ui-card>
-                    }
-                </div>
-            </section>
+            <fd-quick-actions-section />
         }
     </fd-page-body>
 </div>

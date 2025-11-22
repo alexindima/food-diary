@@ -1,0 +1,22 @@
+:host {
+    display: block;
+}
+
+.quick-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.quick-actions__title {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--fd-text-main);
+}
+
+.quick-actions__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+}

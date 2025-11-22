@@ -894,5 +894,28 @@
         "CALORIES_BURNED": "Calories burned",
         "STEPS": "Steps",
         "KCAL": "kcal"
+    },
+    "QUICK_ACTIONS": {
+        "TITLE": "Quick actions",
+        "ADD_CONSUMPTION": {
+            "TITLE": "Add consumption",
+            "DESCRIPTION": "Log a meal in a few taps.",
+            "BUTTON": "Add consumption"
+        },
+        "ADD_PRODUCT": {
+            "TITLE": "Create product",
+            "DESCRIPTION": "Save frequently used foods.",
+            "BUTTON": "Add product"
+        },
+        "ADD_RECIPE": {
+            "TITLE": "Create recipe",
+            "DESCRIPTION": "Group ingredients into dishes.",
+            "BUTTON": "Add recipe"
+        },
+        "STATISTICS": {
+            "TITLE": "Statistics",
+            "DESCRIPTION": "See detailed trends.",
+            "BUTTON": "Open statistics"
+        }
     }
 }

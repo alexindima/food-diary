@@ -3,7 +3,8 @@ import {
   ChangeDetectionStrategy,
   Component,
   input,
-  contentChild
+  contentChild,
+  computed
 } from '@angular/core';
 import { FdUiCardActionsDirective } from './fd-ui-card-actions.directive';
 
@@ -25,7 +26,12 @@ export class FdUiCardComponent {
 
     public readonly headerActions = contentChild(FdUiCardActionsDirective);
 
-    public get appearanceClass(): string {
-        return `fd-ui-card--appearance-${this.appearance()}`;
-    }
+    public readonly cardClass = computed(() => {
+        const classes = ['fd-ui-card'];
+        if (this.subtle()) {
+            classes.push('fd-ui-card--subtle');
+        }
+        classes.push(`fd-ui-card--appearance-${this.appearance()}`);
+        return classes.join(' ');
+    });
 }
