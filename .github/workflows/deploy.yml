@@ -1,14 +1,17 @@
 name: Deploy
 
 on:
-  # Temporarily disabled automatic runs; trigger manually when ready.
+  push:
+    branches:
+      - master
   workflow_dispatch:
 
 env:
   NODE_VERSION: 22
   SERVER_IP: 193.109.69.58
-  FRONTEND_DIR: FoodDiary.Web.Client
-  BACKEND_DIR: backend/food-diary.web.api
+  FRONTEND_DIR: frontend/food-diary-web-client
+  BACKEND_PROJECT: FoodDiary.Web.Api/FoodDiary.Web.Api.csproj
+  BACKEND_PUBLISH_DIR: FoodDiary.Web.Api/publish
   FRONTEND_DEPLOY_DIR: /var/www/fooddiary.club
   BACKEND_DEPLOY_DIR: /var/www/fooddiary-backend
 
@@ -18,12 +21,17 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ env.NODE_VERSION }}
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 9.0.x
 
       - name: Build Angular frontend
         run: |
@@ -32,12 +40,11 @@ jobs:
           npm run build:prod
           echo "Frontend build completed."
 
-      - name: Build NestJS backend
+      - name: Publish .NET backend
         run: |
-          cd ${{ env.BACKEND_DIR }}
-          npm install
-          npm run build
-          echo "Backend build completed."
+          dotnet restore ${{ env.BACKEND_PROJECT }}
+          dotnet publish ${{ env.BACKEND_PROJECT }} -c Release -o ${{ env.BACKEND_PUBLISH_DIR }}
+          echo "Backend publish completed."
 
       - name: Setting up SSH
         env:
@@ -62,6 +69,43 @@ jobs:
           echo "Directories created, cleaned, and permissions set."
           EOF
 
+      - name: Install .NET runtime and configure systemd service
+        run: |
+          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no root@${{ env.SERVER_IP }} << 'EOF'
+            set -e
+            # Install ASP.NET Core Runtime 9.0 if missing
+            if ! command -v dotnet >/dev/null 2>&1 || ! dotnet --list-runtimes | grep -q "Microsoft.AspNetCore.App 9"; then
+              wget https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+              dpkg -i packages-microsoft-prod.deb
+              rm -f packages-microsoft-prod.deb
+              apt-get update
+              apt-get install -y aspnetcore-runtime-9.0
+            fi
+
+            # Write/refresh systemd unit
+            printf "%s\n" \
+              "[Unit]" \
+              "Description=FoodDiary API" \
+              "After=network.target" \
+              "" \
+              "[Service]" \
+              "WorkingDirectory=${{ env.BACKEND_DEPLOY_DIR }}" \
+              "ExecStart=/usr/bin/dotnet FoodDiary.Web.Api.dll" \
+              "Restart=always" \
+              "RestartSec=5" \
+              "SyslogIdentifier=food-diary-api" \
+              "User=www-data" \
+              "Environment=ASPNETCORE_ENVIRONMENT=Production" \
+              "# TODO: add real secrets/connection strings as Environment=... or EnvironmentFile=" \
+              "" \
+              "[Install]" \
+              "WantedBy=multi-user.target" \
+              > /etc/systemd/system/food-diary-api.service
+
+            systemctl daemon-reload
+            systemctl enable food-diary-api
+          EOF
+
       - name: Uploading frontend files
         run: |
           START_TIME=$(date +%s)
@@ -74,28 +118,14 @@ jobs:
 
       - name: Uploading backend files
         run: |
-          rsync -az --quiet --human-readable --exclude=node_modules --exclude=dist -e "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no" \
-            ${{ env.BACKEND_DIR }}/ root@${{ env.SERVER_IP }}:${{ env.BACKEND_DEPLOY_DIR }}/
+          rsync -az --quiet --human-readable -e "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no" \
+            ${{ env.BACKEND_PUBLISH_DIR }}/ root@${{ env.SERVER_IP }}:${{ env.BACKEND_DEPLOY_DIR }}/
 
-      - name: Install backend dependencies on server
+      - name: Restart backend service
         run: |
           ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no root@${{ env.SERVER_IP }} << EOF
-          cd "${{ env.BACKEND_DEPLOY_DIR }}"
-          npm install --production
-          EOF
-
-      - name: Build backend on server
-        run: |
-          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no root@${{ env.SERVER_IP }} << EOF
-          cd "${{ env.BACKEND_DEPLOY_DIR }}"
-          npm run build
-          EOF
-
-      - name: Restarting backend with PM2
-        run: |
-          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no root@${{ env.SERVER_IP }} << EOF
-          pm2 delete fooddiary-backend || true
-          NODE_ENV=production pm2 start "${{ env.BACKEND_DEPLOY_DIR }}/dist/src/main.js" --name fooddiary-backend
+          systemctl restart food-diary-api
+          systemctl status food-diary-api --no-pager -n 20 || true
           EOF
 
       - name: Confirm deployment completion
