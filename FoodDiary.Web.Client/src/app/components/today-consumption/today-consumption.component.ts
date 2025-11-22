@@ -20,8 +20,6 @@ import { FdUiInputFieldModule } from 'fd-ui-kit/material';
 import { FdUiFormFieldModule } from 'fd-ui-kit/material';
 import { FdUiNativeDateModule } from 'fd-ui-kit/material';
 import { FdUiIconModule } from 'fd-ui-kit/material';
-import { WeightEntry } from '../../types/weight-entry.data';
-import { WaistEntry } from '../../types/waist-entry.data';
 import { PageHeaderComponent } from '../shared/page-header/page-header.component';
 import { PageBodyComponent } from '../shared/page-body/page-body.component';
 import { FdPageContainerDirective } from '../../directives/layout/page-container.directive';
@@ -78,22 +76,24 @@ export class TodayConsumptionComponent implements OnInit {
         const today = this.normalizeDate(new Date());
         return this.selectedDate().getTime() === today.getTime();
     });
-    public todayCalories = signal<number>(0);
-    public todayFiber = signal<number | null>(null);
-    public nutrientChartData = signal<NutrientData>({
-        proteins: 0,
-        fats: 0,
-        carbs: 0,
-    });
-    public meals = signal<Consumption[]>([]);
+    public snapshot = signal<DashboardSnapshot | null>(null);
     public isLoading = signal<boolean>(false);
-    public dailyGoal = signal<number>(2000);
-    public latestWeightEntry = signal<WeightEntry | null>(null);
-    public previousWeightEntry = signal<WeightEntry | null>(null);
-    public desiredWeight = signal<number | null>(null);
-    public latestWaistEntry = signal<WaistEntry | null>(null);
-    public previousWaistEntry = signal<WaistEntry | null>(null);
-    public desiredWaist = signal<number | null>(null);
+
+    public readonly dailyGoal = computed(() => this.snapshot()?.dailyGoal ?? 0);
+    public readonly todayCalories = computed(() => this.snapshot()?.statistics.totalCalories ?? 0);
+    public readonly nutrientChartData = computed<NutrientData>(() => ({
+        proteins: this.snapshot()?.statistics.averageProteins ?? 0,
+        fats: this.snapshot()?.statistics.averageFats ?? 0,
+        carbs: this.snapshot()?.statistics.averageCarbs ?? 0,
+    }));
+    public readonly todayFiber = computed(() => this.snapshot()?.statistics.averageFiber ?? null);
+    public readonly meals = computed<Consumption[]>(() => this.snapshot()?.meals.items ?? []);
+    public readonly latestWeight = computed(() => this.snapshot()?.weight.latest?.weight ?? null);
+    public readonly previousWeight = computed(() => this.snapshot()?.weight.previous?.weight ?? null);
+    public readonly desiredWeight = computed(() => this.snapshot()?.weight.desired ?? null);
+    public readonly latestWaist = computed(() => this.snapshot()?.waist.latest?.circumference ?? null);
+    public readonly previousWaist = computed(() => this.snapshot()?.waist.previous?.circumference ?? null);
+    public readonly desiredWaist = computed(() => this.snapshot()?.waist.desired ?? null);
 
     public ngOnInit(): void {
         this.loadDashboardSnapshot();
@@ -141,66 +141,14 @@ export class TodayConsumptionComponent implements OnInit {
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: snapshot => {
-                    if (!snapshot) {
-                        this.resetSnapshotState();
-                        return;
-                    }
-                    this.applySnapshot(snapshot);
+                    this.snapshot.set(snapshot);
+                    this.isLoading.set(false);
                 },
-                error: () => this.resetSnapshotState(),
+                error: () => {
+                    this.snapshot.set(null);
+                    this.isLoading.set(false);
+                },
             });
-    }
-
-    private applySnapshot(snapshot: DashboardSnapshot): void {
-        this.dailyGoal.set(snapshot.dailyGoal || 0);
-
-        this.todayCalories.set(snapshot.statistics.totalCalories || 0);
-        this.nutrientChartData.set({
-            proteins: snapshot.statistics.averageProteins || 0,
-            fats: snapshot.statistics.averageFats || 0,
-            carbs: snapshot.statistics.averageCarbs || 0,
-        });
-        this.todayFiber.set(snapshot.statistics.averageFiber ?? null);
-
-        const latestWeight = snapshot.weight.latest
-            ? { id: '', userId: '', weight: snapshot.weight.latest.weight, date: new Date(snapshot.weight.latest.date) }
-            : null;
-        const previousWeight = snapshot.weight.previous
-            ? { id: '', userId: '', weight: snapshot.weight.previous.weight, date: new Date(snapshot.weight.previous.date) }
-            : null;
-        this.latestWeightEntry.set(latestWeight as WeightEntry | null);
-        this.previousWeightEntry.set(previousWeight as WeightEntry | null);
-        this.desiredWeight.set(snapshot.weight.desired ?? null);
-
-        const latestWaist = snapshot.waist.latest
-            ? { id: '', userId: '', circumference: snapshot.waist.latest.circumference, date: new Date(snapshot.waist.latest.date) }
-            : null;
-        const previousWaist = snapshot.waist.previous
-            ? { id: '', userId: '', circumference: snapshot.waist.previous.circumference, date: new Date(snapshot.waist.previous.date) }
-            : null;
-        this.latestWaistEntry.set(latestWaist as WaistEntry | null);
-        this.previousWaistEntry.set(previousWaist as WaistEntry | null);
-        this.desiredWaist.set(snapshot.waist.desired ?? null);
-
-        this.meals.set(snapshot.meals.items ?? []);
-
-        this.isLoading.set(false);
-    }
-
-    private resetSnapshotState(): void {
-        this.dailyGoal.set(0);
-        this.todayCalories.set(0);
-        this.nutrientChartData.set({ proteins: 0, fats: 0, carbs: 0 });
-        this.todayFiber.set(null);
-        this.meals.set([]);
-        this.latestWeightEntry.set(null);
-        this.previousWeightEntry.set(null);
-        this.desiredWeight.set(null);
-        this.latestWaistEntry.set(null);
-        this.previousWaistEntry.set(null);
-        this.desiredWaist.set(null);
-
-        this.isLoading.set(false);
     }
 
     private normalizeDate(date: Date): Date {

@@ -10,7 +10,7 @@
     <div class="waist-summary-card__content">
         <strong class="waist-summary-card__value">
             @if (latest()) {
-                {{ latest()?.circumference | number:'1.0-1' }} {{ 'WAIST_CARD.CM' | translate }}
+                {{ latest() | number:'1.0-1' }} {{ 'WAIST_CARD.CM' | translate }}
             } @else {
                 {{ 'WAIST_CARD.NO_DATA' | translate }}
             }

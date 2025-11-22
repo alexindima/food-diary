@@ -10,7 +10,7 @@
     <div class="weight-summary-card__content">
         <strong class="weight-summary-card__value">
             @if (latest()) {
-                {{ latest()?.weight | number:'1.0-1' }} {{ 'WEIGHT_CARD.KG' | translate }}
+                {{ latest() | number:'1.0-1' }} {{ 'WEIGHT_CARD.KG' | translate }}
             } @else {
                 {{ 'WEIGHT_CARD.NO_DATA' | translate }}
             }

@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, computed, inject, input, output } f
 import { DecimalPipe } from '@angular/common';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { WeightEntry } from '../../../types/weight-entry.data';
 
 @Component({
     selector: 'fd-weight-summary-card',
@@ -13,8 +12,8 @@ import { WeightEntry } from '../../../types/weight-entry.data';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WeightSummaryCardComponent {
-    public readonly latest = input<WeightEntry | null>(null);
-    public readonly previous = input<WeightEntry | null>(null);
+    public readonly latest = input<number | null>(null);
+    public readonly previous = input<number | null>(null);
     public readonly desired = input<number | null>(null);
     public readonly cardClick = output<void>();
 
@@ -39,7 +38,7 @@ export class WeightSummaryCardComponent {
             };
         }
 
-        const diff = latest.weight - previous.weight;
+        const diff = latest - previous;
         if (Math.abs(diff) < 0.01) {
             return {
                 label: this.translateService.instant('WEIGHT_CARD.NO_CHANGE'),
@@ -53,8 +52,8 @@ export class WeightSummaryCardComponent {
         let status: TrendStatus = 'neutral';
         if (desired !== null && desired !== undefined) {
             const isImproving =
-                (diff < 0 && latest.weight > desired) ||
-                (diff > 0 && latest.weight < desired);
+                (diff < 0 && latest > desired) ||
+                (diff > 0 && latest < desired);
             status = isImproving ? 'positive' : 'negative';
         }
 

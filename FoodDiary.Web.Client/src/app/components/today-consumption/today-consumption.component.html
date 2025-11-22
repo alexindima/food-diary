@@ -69,15 +69,15 @@
                 <div class="dashboard__insights">
                     <fd-weight-summary-card
                         class="dashboard__card dashboard__card--weight dashboard__card--clickable"
-                        [latest]="latestWeightEntry()"
-                        [previous]="previousWeightEntry()"
+                        [latest]="latestWeight()"
+                        [previous]="previousWeight()"
                         [desired]="desiredWeight()"
                         (cardClick)="openWeightHistory()"
                     />
                     <fd-waist-summary-card
                         class="dashboard__card dashboard__card--waist dashboard__card--clickable"
-                        [latest]="latestWaistEntry()"
-                        [previous]="previousWaistEntry()"
+                        [latest]="latestWaist()"
+                        [previous]="previousWaist()"
                         [desired]="desiredWaist()"
                         (cardClick)="openWaistHistory()"
                     />
