@@ -35,6 +35,7 @@ import { DashboardService } from '../../services/dashboard.service';
 import { DashboardSnapshot } from '../../types/dashboard.data';
 import { WeightSummaryCardComponent } from '../shared/weight-summary-card/weight-summary-card.component';
 import { WaistSummaryCardComponent } from '../shared/waist-summary-card/waist-summary-card.component';
+import { ActivityCardComponent } from '../shared/activity-card/activity-card.component';
 
 @Component({
     selector: 'fd-today-consumption',
@@ -58,7 +59,8 @@ import { WaistSummaryCardComponent } from '../shared/waist-summary-card/waist-su
         MacroSummaryComponent,
         MotivationCardComponent,
         WeightSummaryCardComponent,
-        WaistSummaryCardComponent
+        WaistSummaryCardComponent,
+        ActivityCardComponent
     ],
     templateUrl: './today-consumption.component.html',
     styleUrl: './today-consumption.component.scss',

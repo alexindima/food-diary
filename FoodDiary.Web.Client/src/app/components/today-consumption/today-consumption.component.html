@@ -81,22 +81,11 @@
                         [desired]="desiredWaist()"
                         (cardClick)="openWaistHistory()"
                     />
-                    <fd-ui-card
+                    <fd-activity-card
                         class="dashboard__card dashboard__card--activity"
-                        [title]="'DASHBOARD.ACTIVITY_TITLE' | translate"
-                        [meta]="'DASHBOARD.ACTIVITY_META' | translate"
-                    >
-                        <div class="dashboard__activity-grid">
-                            <div>
-                                <p class="dashboard__activity-label">{{ 'DASHBOARD.CALORIES_BURNED' | translate }}</p>
-                                <strong class="dashboard__activity-value">215 {{ 'PRODUCT_LIST.KCAL' | translate }}</strong>
-                            </div>
-                            <div>
-                                <p class="dashboard__activity-label">{{ 'DASHBOARD.STEPS' | translate }}</p>
-                                <strong class="dashboard__activity-value">5 420</strong>
-                            </div>
-                        </div>
-                    </fd-ui-card>
+                        [burnedCalories]="215"
+                        [steps]="5420"
+                    />
                 </div>
             </section>
 

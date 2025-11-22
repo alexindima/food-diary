@@ -1,0 +1,21 @@
+<fd-ui-card
+    class="activity-card"
+    [subtle]="false"
+    [title]="'ACTIVITY_CARD.TITLE' | translate"
+    [meta]="'ACTIVITY_CARD.META' | translate"
+>
+    <div class="activity-card__grid">
+        <div>
+            <p class="activity-card__label">{{ 'ACTIVITY_CARD.CALORIES_BURNED' | translate }}</p>
+            <strong class="activity-card__value">
+                {{ burnedCalories() }} {{ 'ACTIVITY_CARD.KCAL' | translate }}
+            </strong>
+        </div>
+        <div>
+            <p class="activity-card__label">{{ 'ACTIVITY_CARD.STEPS' | translate }}</p>
+            <strong class="activity-card__value">
+                {{ steps() }}
+            </strong>
+        </div>
+    </div>
+</fd-ui-card>

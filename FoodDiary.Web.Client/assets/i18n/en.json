@@ -887,5 +887,12 @@
         "NO_PREVIOUS": "Not enough data yet",
         "NO_CHANGE": "No change since last log",
         "NO_DATA": "Add your waist to begin"
+    },
+    "ACTIVITY_CARD": {
+        "TITLE": "Daily activity",
+        "META": "From Google Fit soon",
+        "CALORIES_BURNED": "Calories burned",
+        "STEPS": "Steps",
+        "KCAL": "kcal"
     }
 }
