@@ -12,18 +12,19 @@ namespace FoodDiary.Infrastructure.Migrations
         {
             migrationBuilder.Sql(
                 """
-                DO 
+                DO $$
                 BEGIN
                     IF NOT EXISTS (
                         SELECT 1
                         FROM information_schema.columns
-                        WHERE table_name = 'Products'
+                        WHERE table_schema = current_schema()
+                          AND table_name = 'Products'
                           AND column_name = 'ProductType'
                     ) THEN
                         ALTER TABLE "Products"
                             ADD COLUMN "ProductType" integer NOT NULL DEFAULT 0;
                     END IF;
-                END ;
+                END $$;
                 """);
         }
 
@@ -32,18 +33,19 @@ namespace FoodDiary.Infrastructure.Migrations
         {
             migrationBuilder.Sql(
                 """
-                DO 
+                DO $$
                 BEGIN
                     IF EXISTS (
                         SELECT 1
                         FROM information_schema.columns
-                        WHERE table_name = 'Products'
+                        WHERE table_schema = current_schema()
+                          AND table_name = 'Products'
                           AND column_name = 'ProductType'
                     ) THEN
                         ALTER TABLE "Products"
                             DROP COLUMN "ProductType";
                     END IF;
-                END ;
+                END $$;
                 """);
         }
     }
