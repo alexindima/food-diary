@@ -45,7 +45,7 @@
             <div class="dashboard__loader">{{ 'DASHBOARD.LOADING' | translate }}</div>
         } @else {
             <section class="dashboard__grid">
-                <div class="dashboard__key-metrics">
+                <div class="dashboard__column">
                     <fd-daily-progress-card
                         class="dashboard__card dashboard__card--progress"
                         [date]="selectedDate()"
@@ -53,34 +53,35 @@
                         [goal]="dailyGoal()"
                     />
 
+                    <div class="dashboard__row dashboard__row--pair">
+                        <fd-weight-summary-card
+                            class="dashboard__card dashboard__card--weight dashboard__card--clickable"
+                            [latest]="latestWeight()"
+                            [previous]="previousWeight()"
+                            [desired]="desiredWeight()"
+                            (cardClick)="openWeightHistory()"
+                        />
+                        <fd-waist-summary-card
+                            class="dashboard__card dashboard__card--waist dashboard__card--clickable"
+                            [latest]="latestWaist()"
+                            [previous]="previousWaist()"
+                            [desired]="desiredWaist()"
+                            (cardClick)="openWaistHistory()"
+                        />
+                    </div>
+                </div>
+
+                <div class="dashboard__column dashboard__column--aside">
                     <fd-macro-summary
                         class="dashboard__card dashboard__card--macros"
                         [nutrientData]="nutrientChartData()"
                         [fiber]="todayFiber() ?? 0"
+                        [proteinGoal]="proteinGoal()"
+                        [fatGoal]="fatGoal()"
+                        [carbGoal]="carbGoal()"
+                        [fiberGoal]="fiberGoal()"
                     />
-                </div>
 
-                <fd-motivation-card
-                    class="dashboard__card dashboard__card--motivation dashboard__card--motivation-wide"
-                    [consumed]="todayCalories()"
-                    [goal]="dailyGoal()"
-                />
-
-                <div class="dashboard__insights">
-                    <fd-weight-summary-card
-                        class="dashboard__card dashboard__card--weight dashboard__card--clickable"
-                        [latest]="latestWeight()"
-                        [previous]="previousWeight()"
-                        [desired]="desiredWeight()"
-                        (cardClick)="openWeightHistory()"
-                    />
-                    <fd-waist-summary-card
-                        class="dashboard__card dashboard__card--waist dashboard__card--clickable"
-                        [latest]="latestWaist()"
-                        [previous]="previousWaist()"
-                        [desired]="desiredWaist()"
-                        (cardClick)="openWaistHistory()"
-                    />
                     <fd-activity-card
                         class="dashboard__card dashboard__card--activity"
                         [burnedCalories]="215"

@@ -76,42 +76,35 @@
 
             <fd-ui-card class="user-manage__card" [title]="'USER_MANAGE.NUTRITION_SECTION' | translate">
                 <div class="user-manage__card-content user-manage__card-content--nutrition">
-                    <fd-ui-input formControlName="dailyCalorieTarget"
-                                 type="number"
-                                 [label]="'USER_MANAGE.DAILY_CALORIES' | translate"
-                                 [placeholder]="'USER_MANAGE.DAILY_CALORIES_PLACEHOLDER' | translate"
-                                 floatLabel="always"
-                    />
-                    <fd-ui-input formControlName="proteinTarget"
-                                 type="number"
-                                 [label]="'USER_MANAGE.PROTEIN_TARGET' | translate"
-                                 [placeholder]="'USER_MANAGE.PROTEIN_TARGET_PLACEHOLDER' | translate"
-                                 floatLabel="always"
-                    />
-                    <fd-ui-input formControlName="fatTarget"
-                                 type="number"
-                                 [label]="'USER_MANAGE.FAT_TARGET' | translate"
-                                 [placeholder]="'USER_MANAGE.FAT_TARGET_PLACEHOLDER' | translate"
-                                 floatLabel="always"
-                    />
-                    <fd-ui-input formControlName="carbTarget"
-                                 type="number"
-                                 [label]="'USER_MANAGE.CARB_TARGET' | translate"
-                                 [placeholder]="'USER_MANAGE.CARB_TARGET_PLACEHOLDER' | translate"
-                                 floatLabel="always"
-                    />
-                    <fd-ui-input formControlName="stepGoal"
-                                 type="number"
-                                 [label]="'USER_MANAGE.STEP_GOAL' | translate"
-                                 [placeholder]="'USER_MANAGE.STEP_GOAL_PLACEHOLDER' | translate"
-                                 floatLabel="always"
-                    />
-                    <fd-ui-input formControlName="waterGoal"
-                                 type="number"
-                                 [label]="'USER_MANAGE.WATER_GOAL' | translate"
-                                 [placeholder]="'USER_MANAGE.WATER_GOAL_PLACEHOLDER' | translate"
-                                 floatLabel="always"
-                    />
+                    <div class="user-manage__nutrition-summary">
+                        <div>
+                            <span class="user-manage__meta-label">{{ 'USER_MANAGE.DAILY_CALORIES' | translate }}</span>
+                            <strong>{{ userForm.controls.dailyCalorieTarget.value ?? '—' }}</strong>
+                        </div>
+                        <div>
+                            <span class="user-manage__meta-label">{{ 'USER_MANAGE.PROTEIN_TARGET' | translate }}</span>
+                            <strong>{{ userForm.controls.proteinTarget.value ?? '—' }}</strong>
+                        </div>
+                        <div>
+                            <span class="user-manage__meta-label">{{ 'USER_MANAGE.FAT_TARGET' | translate }}</span>
+                            <strong>{{ userForm.controls.fatTarget.value ?? '—' }}</strong>
+                        </div>
+                        <div>
+                            <span class="user-manage__meta-label">{{ 'USER_MANAGE.CARB_TARGET' | translate }}</span>
+                            <strong>{{ userForm.controls.carbTarget.value ?? '—' }}</strong>
+                        </div>
+                        <div>
+                            <span class="user-manage__meta-label">{{ 'USER_MANAGE.STEP_GOAL' | translate }}</span>
+                            <strong>{{ userForm.controls.stepGoal.value ?? '—' }}</strong>
+                        </div>
+                        <div>
+                            <span class="user-manage__meta-label">{{ 'USER_MANAGE.WATER_GOAL' | translate }}</span>
+                            <strong>{{ userForm.controls.waterGoal.value ?? '—' }}</strong>
+                        </div>
+                    </div>
+                    <fd-ui-button type="button" icon="flag" (click)="openGoalDialog()">
+                        {{ 'USER_MANAGE.EDIT_GOALS' | translate }}
+                    </fd-ui-button>
                 </div>
             </fd-ui-card>
             <div class="user-manage__actions">

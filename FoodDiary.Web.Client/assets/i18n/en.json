@@ -33,10 +33,31 @@
     },
     "DAILY_PROGRESS_CARD": {
         "TITLE": "Daily progress",
-        "CONSUMED": "Consumed today",
-        "GOAL_LABEL": "Goal",
-        "REMAINING_LABEL": "Remaining",
-        "UNIT": "kcal"
+      "CONSUMED": "Consumed today",
+      "GOAL_LABEL": "Goal",
+      "REMAINING_LABEL": "Remaining",
+        "UNIT": "kcal",
+        "NO_GOAL_LABEL": "Goal not set",
+        "NO_GOAL_TITLE": "No goal set",
+        "NO_GOAL_HINT": "Set a daily calorie target (and macros) in your profile to see progress here.",
+      "SET_GOAL_CTA": "Set goal",
+      "PLACEHOLDER": "Your progress will appear here once a goal is set."
+      ,
+      "MOTIVATION": {
+        "NONE": "You haven't logged anything yet — a great time to start!",
+        "P0_10": "Just getting started. A few bites logged, keep going!",
+        "P10_20": "Warm-up phase — you're at {{ percent }}% of your goal.",
+        "P20_30": "Momentum building. {{ percent }}% reached.",
+        "P30_40": "Nice! {{ percent }}% done — stay consistent.",
+        "P40_50": "Halfway is near. {{ percent }}% logged.",
+        "P50_60": "Over the midline: {{ percent }}% completed.",
+        "P60_70": "Strong progress — {{ percent }}% on the board.",
+        "P70_80": "Closing in. {{ percent }}% achieved.",
+        "P80_90": "Almost there — {{ percent }}%. Finish strong.",
+        "P90_110": "Goal met! You're around {{ percent }}% today.",
+        "P110_200": "You've gone over the target ({{ percent }}%). Keep balance in mind.",
+        "ABOVE_200": "Far above the plan ({{ percent }}%). Consider adjusting tomorrow."
+      }
     },
     "HEADER": {
         "HOME": "Home",
@@ -620,6 +641,10 @@
         "STEP_GOAL_PLACEHOLDER": "Set your daily steps goal",
         "WATER_GOAL": "Water goal (ml/day)",
         "WATER_GOAL_PLACEHOLDER": "Set your daily water target",
+        "EDIT_GOALS": "Edit goals",
+        "GOALS_DIALOG": {
+            "TITLE": "Set daily goals"
+        },
         "DELETE_ACCOUNT_BUTTON": "Delete account",
         "DELETE_ACCOUNT_INFO": "Account deletion will be available soon.",
         "SAVE_BUTTON": "Save",

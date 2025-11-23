@@ -16,15 +16,30 @@ export class DynamicProgressBarComponent {
     public readonly max = input.required<number>();
     public readonly unit = input<string>('');
 
-    public progress = computed<number>(() => Math.round((this.current() / this.max()) * 100));
+    public progress = computed<number>(() => {
+        const maxValue = this.max();
+        if (maxValue <= 0) {
+            return 0;
+        }
+        return Math.round((this.current() / maxValue) * 100);
+    });
+
     public progressBarWidth = computed<string>(() => Math.min(this.progress(), 100) + '%');
-    public maxPosition = computed(() => this.current() > this.max()
-        ? (this.max() / this.current()) * 100
-        : 100
-    );
+
+    public maxPosition = computed(() => {
+        const maxValue = this.max();
+        const currentValue = this.current();
+        if (maxValue <= 0 || currentValue <= 0) {
+            return 100;
+        }
+        return currentValue > maxValue ? (maxValue / currentValue) * 100 : 100;
+    });
+
     public textPosition = computed<string>(() => {
         let position;
-        if (this.progress() < 50) {
+        if (this.max() <= 0) {
+            position = 50;
+        } else if (this.progress() < 50) {
             position = 100 - ((100 - this.progress()) / 2);
         } else if (this.progress() > 200) {
             position = 100 - ((100 - (this.max() / this.current()) * 100 ) / 2) ;

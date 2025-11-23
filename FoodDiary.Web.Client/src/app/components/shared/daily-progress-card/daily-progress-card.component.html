@@ -4,31 +4,71 @@
     [meta]="date() | localizedDate:'d MMMM y'"
 >
     <div class="daily-progress-card__content">
-        <div class="daily-progress-card__headline">
-            <div>
-                <span class="daily-progress-card__label">{{ 'DAILY_PROGRESS_CARD.CONSUMED' | translate }}</span>
-                <strong class="daily-progress-card__value">
-                    {{ consumed() | number:'1.0-0' }} {{ 'DAILY_PROGRESS_CARD.UNIT' | translate }}
-                </strong>
+        @if (hasGoal()) {
+            <div class="daily-progress-card__headline">
+                <div>
+                    <span class="daily-progress-card__label">{{ 'DAILY_PROGRESS_CARD.CONSUMED' | translate }}</span>
+                    <strong class="daily-progress-card__value">
+                        {{ consumed() | number:'1.0-0' }} {{ 'DAILY_PROGRESS_CARD.UNIT' | translate }}
+                    </strong>
+                </div>
+                <span class="daily-progress-card__percent">{{ progressPercent() }}%</span>
             </div>
-            <span class="daily-progress-card__percent">{{ progressPercent() }}%</span>
-        </div>
 
-        <fd-dynamic-progress-bar
-            [current]="consumed()"
-            [max]="goal()"
-            [unit]="'DAILY_PROGRESS_CARD.UNIT' | translate"
-        />
+            <fd-dynamic-progress-bar
+                [current]="consumed()"
+                [max]="goal()"
+                [unit]="'DAILY_PROGRESS_CARD.UNIT' | translate"
+            />
 
-        <div class="daily-progress-card__meta">
-            <div>
-                <span class="daily-progress-card__meta-label">{{ 'DAILY_PROGRESS_CARD.GOAL_LABEL' | translate }}</span>
-                <strong>{{ goal() | number:'1.0-0' }} {{ 'DAILY_PROGRESS_CARD.UNIT' | translate }}</strong>
+            <div class="daily-progress-card__meta">
+                <div>
+                    <span class="daily-progress-card__meta-label">{{ 'DAILY_PROGRESS_CARD.GOAL_LABEL' | translate }}</span>
+                    <strong>{{ goal() | number:'1.0-0' }} {{ 'DAILY_PROGRESS_CARD.UNIT' | translate }}</strong>
+                </div>
+                <div>
+                    <span class="daily-progress-card__meta-label">{{ 'DAILY_PROGRESS_CARD.REMAINING_LABEL' | translate }}</span>
+                    <strong>{{ remaining() | number:'1.0-0' }} {{ 'DAILY_PROGRESS_CARD.UNIT' | translate }}</strong>
+                </div>
             </div>
-            <div>
-                <span class="daily-progress-card__meta-label">{{ 'DAILY_PROGRESS_CARD.REMAINING_LABEL' | translate }}</span>
-                <strong>{{ remaining() | number:'1.0-0' }} {{ 'DAILY_PROGRESS_CARD.UNIT' | translate }}</strong>
+        } @else {
+            <div class="daily-progress-card__headline">
+                <div>
+                    <span class="daily-progress-card__label">{{ 'DAILY_PROGRESS_CARD.CONSUMED' | translate }}</span>
+                    <strong class="daily-progress-card__value">
+                        {{ consumed() | number:'1.0-0' }} {{ 'DAILY_PROGRESS_CARD.UNIT' | translate }}
+                    </strong>
+                </div>
             </div>
-        </div>
+
+            <div class="daily-progress-card__empty">
+                <div class="daily-progress-card__empty-text">
+                    <div class="daily-progress-card__empty-title">
+                        {{ 'DAILY_PROGRESS_CARD.NO_GOAL_TITLE' | translate }}
+                    </div>
+                    <div class="daily-progress-card__empty-subtitle">
+                        {{ 'DAILY_PROGRESS_CARD.NO_GOAL_HINT' | translate }}
+                    </div>
+                </div>
+                <div class="daily-progress-card__actions-inline">
+                    <fd-ui-button variant="primary" icon="flag" (click)="navigateToGoal()">
+                        {{ 'DAILY_PROGRESS_CARD.SET_GOAL_CTA' | translate }}
+                    </fd-ui-button>
+                </div>
+            </div>
+
+            <div class="daily-progress-card__placeholder">
+                <div class="daily-progress-card__placeholder-bar"></div>
+                <span class="daily-progress-card__placeholder-text">
+                    {{ 'DAILY_PROGRESS_CARD.PLACEHOLDER' | translate }}
+                </span>
+            </div>
+        }
+
+        @if (hasGoal() && motivationKey()) {
+            <p class="daily-progress-card__motivation">
+                {{ motivationKey() | translate:{ percent: progressPercent() } }}
+            </p>
+        }
     </div>
 </fd-ui-card>

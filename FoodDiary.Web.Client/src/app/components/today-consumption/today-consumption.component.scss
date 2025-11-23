@@ -44,22 +44,29 @@ $color-primary: #2563eb;
     }
 
     &__grid {
-        display: flex;
-        flex-direction: column;
-        gap: 24px;
-    }
-
-    &__key-metrics {
         display: grid;
         gap: 24px;
-        grid-template-columns: minmax(320px, 2fr) minmax(280px, 1fr);
-        align-items: stretch;
+        grid-template-columns: minmax(0, 7fr) minmax(280px, 3fr);
+        align-items: start;
     }
 
-    &__insights {
+    &__column {
         display: grid;
         gap: 24px;
-        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        align-content: start;
+    }
+
+    &__column--aside {
+        grid-template-rows: auto auto;
+    }
+
+    &__row {
+        display: grid;
+        gap: 24px;
+
+        &--pair {
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        }
     }
 
     &__card {
@@ -87,10 +94,6 @@ $color-primary: #2563eb;
         &--motivation-wide {
             width: 100%;
         }
-    }
-
-    &__key-metrics fd-ui-card.dashboard__card {
-        height: 100%;
     }
 
     &__macros {
@@ -347,6 +350,10 @@ $color-primary: #2563eb;
     @media #{$media-mobile} {
         &__header {
             align-items: flex-start;
+        }
+
+        &__grid {
+            grid-template-columns: 1fr;
         }
     }
 }

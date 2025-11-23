@@ -72,7 +72,7 @@ public class GetDashboardSnapshotQueryHandler(
             descending: true,
             cancellationToken: cancellationToken);
 
-        var statistics = DashboardMapping.ToStatisticsDto(statsResult.Value.FirstOrDefault());
+        var statistics = DashboardMapping.ToStatisticsDto(statsResult.Value.FirstOrDefault(), user);
         var weight = DashboardMapping.ToWeightDto(weightEntries, user?.DesiredWeight);
         var waist = DashboardMapping.ToWaistDto(waistEntries, user?.DesiredWaist);
         var meals = new DashboardMealsDto(

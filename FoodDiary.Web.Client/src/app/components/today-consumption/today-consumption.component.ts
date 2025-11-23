@@ -26,7 +26,6 @@ import { FdPageContainerDirective } from '../../directives/layout/page-container
 import { DailyProgressCardComponent } from '../shared/daily-progress-card/daily-progress-card.component';
 import { LocalizedDatePipe } from '../../pipes/localized-date.pipe';
 import { MacroSummaryComponent } from '../shared/macro-summary/macro-summary.component';
-import { MotivationCardComponent } from '../shared/motivation-card/motivation-card.component';
 import { DashboardService } from '../../services/dashboard.service';
 import { DashboardSnapshot } from '../../types/dashboard.data';
 import { WeightSummaryCardComponent } from '../shared/weight-summary-card/weight-summary-card.component';
@@ -53,7 +52,6 @@ import { MealCardComponent } from '../shared/meal-card/meal-card.component';
         DailyProgressCardComponent,
         LocalizedDatePipe,
         MacroSummaryComponent,
-        MotivationCardComponent,
         WeightSummaryCardComponent,
         WaistSummaryCardComponent,
         ActivityCardComponent,
@@ -86,6 +84,10 @@ export class TodayConsumptionComponent implements OnInit {
         fats: this.snapshot()?.statistics.averageFats ?? 0,
         carbs: this.snapshot()?.statistics.averageCarbs ?? 0,
     }));
+    public readonly proteinGoal = computed(() => this.snapshot()?.statistics.proteinGoal ?? null);
+    public readonly fatGoal = computed(() => this.snapshot()?.statistics.fatGoal ?? null);
+    public readonly carbGoal = computed(() => this.snapshot()?.statistics.carbGoal ?? null);
+    public readonly fiberGoal = computed(() => this.snapshot()?.statistics.fiberGoal ?? null);
     public readonly todayFiber = computed(() => this.snapshot()?.statistics.averageFiber ?? null);
     public readonly meals = computed<Consumption[]>(() => this.snapshot()?.meals.items ?? []);
     public readonly latestWeight = computed(() => this.snapshot()?.weight.latest?.weight ?? null);

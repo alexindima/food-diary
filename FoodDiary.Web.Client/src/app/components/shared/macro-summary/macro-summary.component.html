@@ -9,7 +9,16 @@
             >
                 <span class="macro-summary__label">{{ macro.labelKey | translate }}</span>
                 <strong class="macro-summary__value">
-                    {{ macro.value | number:'1.0-1' }} {{ macro.unitKey | translate }}
+                    @if (macro.goal && macro.goal > 0) {
+                        <span [ngClass]="getValueClass(macro)" class="macro-summary__value-line">
+                            {{ macro.value | number:'1.0-1' }}
+                            <span class="macro-summary__divider">/</span>
+                            <span class="macro-summary__goal">{{ macro.goal | number:'1.0-0' }}</span>
+                            <span class="macro-summary__unit">{{ macro.unitKey | translate }}</span>
+                        </span>
+                    } @else {
+                        {{ macro.value | number:'1.0-1' }} {{ macro.unitKey | translate }}
+                    }
                 </strong>
             </fd-ui-accent-surface>
         }

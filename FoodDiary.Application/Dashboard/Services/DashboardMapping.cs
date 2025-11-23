@@ -8,11 +8,11 @@ namespace FoodDiary.Application.Dashboard.Services;
 
 public static class DashboardMapping
 {
-    public static DashboardStatisticsDto ToStatisticsDto(AggregatedStatisticsResponse? response)
+    public static DashboardStatisticsDto ToStatisticsDto(AggregatedStatisticsResponse? response, User? user)
     {
         if (response is null)
         {
-            return new DashboardStatisticsDto(0, 0, 0, 0, 0);
+            return new DashboardStatisticsDto(0, 0, 0, 0, 0, null, null, null, null);
         }
 
         return new DashboardStatisticsDto(
@@ -20,7 +20,11 @@ public static class DashboardMapping
             response.AverageProteins,
             response.AverageFats,
             response.AverageCarbs,
-            response.AverageFiber);
+            response.AverageFiber,
+            user?.ProteinTarget,
+            user?.FatTarget,
+            user?.CarbTarget,
+            null);
     }
 
     public static DashboardWeightDto ToWeightDto(IReadOnlyList<WeightEntry> entries, double? desired)

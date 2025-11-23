@@ -7,4 +7,5 @@ export const CHART_COLORS = {
     radarBackground: 'rgba(54, 162, 235, 0.2)',
     radarBorder: 'rgba(54, 162, 235, 1)',
     primaryLine: '#2563eb',
+    warning: '#f97316',
 };

@@ -17,7 +17,11 @@ public record DashboardStatisticsDto(
     double AverageProteins,
     double AverageFats,
     double AverageCarbs,
-    double AverageFiber);
+    double AverageFiber,
+    double? ProteinGoal,
+    double? FatGoal,
+    double? CarbGoal,
+    double? FiberGoal);
 
 public record DashboardWeightDto(
     WeightEntryDto? Latest,

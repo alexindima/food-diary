@@ -32,6 +32,39 @@ $fd-color-gray-700: #374151;
 $fd-color-gray-800: #1F2933;
 $fd-color-gray-900: #111827;
 
+$fd-color-success-50:  #ecfdf3;
+$fd-color-success-100: #d1fae5;
+$fd-color-success-200: #a7f3d0;
+$fd-color-success-300: #6ee7b7;
+$fd-color-success-400: #34d399;
+$fd-color-success-500: #10b981;
+$fd-color-success-600: #059669;
+$fd-color-success-700: #047857;
+$fd-color-success-800: #065f46;
+$fd-color-success-900: #064e3b;
+
+$fd-color-warning-50:  #fff7ed;
+$fd-color-warning-100: #ffedd5;
+$fd-color-warning-200: #fed7aa;
+$fd-color-warning-300: #fdba74;
+$fd-color-warning-400: #fb923c;
+$fd-color-warning-500: #f97316;
+$fd-color-warning-600: #ea580c;
+$fd-color-warning-700: #c2410c;
+$fd-color-warning-800: #9a3412;
+$fd-color-warning-900: #7c2d12;
+
+$fd-color-danger-50:  #fef2f2;
+$fd-color-danger-100: #fee2e2;
+$fd-color-danger-200: #fecaca;
+$fd-color-danger-300: #fca5a5;
+$fd-color-danger-400: #f87171;
+$fd-color-danger-500: #ef4444;
+$fd-color-danger-600: #dc2626;
+$fd-color-danger-700: #b91c1c;
+$fd-color-danger-800: #991b1b;
+$fd-color-danger-900: #7f1d1d;
+
 $fd-color-success: #4BB543;
 $fd-color-warning: #FFCC00;
 $fd-color-danger:  #FF3B3B;
@@ -253,6 +286,39 @@ $fd-button-tokens: (
   --fd-color-gray-800: #1F2933;
   --fd-color-gray-900: #111827;
 
+  --fd-color-success-50:  #{$fd-color-success-50};
+  --fd-color-success-100: #{$fd-color-success-100};
+  --fd-color-success-200: #{$fd-color-success-200};
+  --fd-color-success-300: #{$fd-color-success-300};
+  --fd-color-success-400: #{$fd-color-success-400};
+  --fd-color-success-500: #{$fd-color-success-500};
+  --fd-color-success-600: #{$fd-color-success-600};
+  --fd-color-success-700: #{$fd-color-success-700};
+  --fd-color-success-800: #{$fd-color-success-800};
+  --fd-color-success-900: #{$fd-color-success-900};
+
+  --fd-color-warning-50:  #{$fd-color-warning-50};
+  --fd-color-warning-100: #{$fd-color-warning-100};
+  --fd-color-warning-200: #{$fd-color-warning-200};
+  --fd-color-warning-300: #{$fd-color-warning-300};
+  --fd-color-warning-400: #{$fd-color-warning-400};
+  --fd-color-warning-500: #{$fd-color-warning-500};
+  --fd-color-warning-600: #{$fd-color-warning-600};
+  --fd-color-warning-700: #{$fd-color-warning-700};
+  --fd-color-warning-800: #{$fd-color-warning-800};
+  --fd-color-warning-900: #{$fd-color-warning-900};
+
+  --fd-color-danger-50:  #{$fd-color-danger-50};
+  --fd-color-danger-100: #{$fd-color-danger-100};
+  --fd-color-danger-200: #{$fd-color-danger-200};
+  --fd-color-danger-300: #{$fd-color-danger-300};
+  --fd-color-danger-400: #{$fd-color-danger-400};
+  --fd-color-danger-500: #{$fd-color-danger-500};
+  --fd-color-danger-600: #{$fd-color-danger-600};
+  --fd-color-danger-700: #{$fd-color-danger-700};
+  --fd-color-danger-800: #{$fd-color-danger-800};
+  --fd-color-danger-900: #{$fd-color-danger-900};
+
   --fd-color-success: #4BB543;
   --fd-color-warning: #FFCC00;
   --fd-color-danger:  #FF3B3B;
@@ -271,6 +337,11 @@ $fd-button-tokens: (
   --fd-color-dialog-surface-muted: #F8FAFF;
   --fd-color-dialog-border:        rgba(17, 24, 39, 0.08);
   --fd-color-dialog-overlay:       rgba(15, 23, 42, 0.6);
+
+  /* Extended semantic accents */
+  --fd-color-warn-strong:   #f97316;
+  --fd-color-success-strong:#16a34a;
+  --fd-color-danger-strong: #dc2626;
 
   /* Button design tokens */
   @each $variant, $tokens in $fd-button-tokens {
@@ -320,6 +391,45 @@ $fd-colors-gray: (
   700: $fd-color-gray-700,
   800: $fd-color-gray-800,
   900: $fd-color-gray-900
+);
+
+$fd-colors-success: (
+  50:  $fd-color-success-50,
+  100: $fd-color-success-100,
+  200: $fd-color-success-200,
+  300: $fd-color-success-300,
+  400: $fd-color-success-400,
+  500: $fd-color-success-500,
+  600: $fd-color-success-600,
+  700: $fd-color-success-700,
+  800: $fd-color-success-800,
+  900: $fd-color-success-900
+);
+
+$fd-colors-warning: (
+  50:  $fd-color-warning-50,
+  100: $fd-color-warning-100,
+  200: $fd-color-warning-200,
+  300: $fd-color-warning-300,
+  400: $fd-color-warning-400,
+  500: $fd-color-warning-500,
+  600: $fd-color-warning-600,
+  700: $fd-color-warning-700,
+  800: $fd-color-warning-800,
+  900: $fd-color-warning-900
+);
+
+$fd-colors-danger: (
+  50:  $fd-color-danger-50,
+  100: $fd-color-danger-100,
+  200: $fd-color-danger-200,
+  300: $fd-color-danger-300,
+  400: $fd-color-danger-400,
+  500: $fd-color-danger-500,
+  600: $fd-color-danger-600,
+  700: $fd-color-danger-700,
+  800: $fd-color-danger-800,
+  900: $fd-color-danger-900
 );
 
 $fd-colors-semantic: (

@@ -15,6 +15,10 @@ export interface DashboardStatistics {
     averageFats: number;
     averageCarbs: number;
     averageFiber: number;
+    proteinGoal?: number | null;
+    fatGoal?: number | null;
+    carbGoal?: number | null;
+    fiberGoal?: number | null;
 }
 
 export interface DashboardWeight {

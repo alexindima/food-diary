@@ -1,0 +1,62 @@
+<fd-ui-dialog class="goal-settings-dialog" [title]="'USER_MANAGE.GOALS_DIALOG.TITLE' | translate">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <div class="goal-settings-dialog__grid">
+            <fd-ui-input
+                formControlName="dailyCalorieTarget"
+                type="number"
+                [label]="'USER_MANAGE.DAILY_CALORIES' | translate"
+                [placeholder]="'USER_MANAGE.DAILY_CALORIES_PLACEHOLDER' | translate"
+                floatLabel="always"
+            />
+
+            <fd-ui-input
+                formControlName="proteinTarget"
+                type="number"
+                [label]="'USER_MANAGE.PROTEIN_TARGET' | translate"
+                [placeholder]="'USER_MANAGE.PROTEIN_TARGET_PLACEHOLDER' | translate"
+                floatLabel="always"
+            />
+
+            <fd-ui-input
+                formControlName="fatTarget"
+                type="number"
+                [label]="'USER_MANAGE.FAT_TARGET' | translate"
+                [placeholder]="'USER_MANAGE.FAT_TARGET_PLACEHOLDER' | translate"
+                floatLabel="always"
+            />
+
+            <fd-ui-input
+                formControlName="carbTarget"
+                type="number"
+                [label]="'USER_MANAGE.CARB_TARGET' | translate"
+                [placeholder]="'USER_MANAGE.CARB_TARGET_PLACEHOLDER' | translate"
+                floatLabel="always"
+            />
+
+            <fd-ui-input
+                formControlName="stepGoal"
+                type="number"
+                [label]="'USER_MANAGE.STEP_GOAL' | translate"
+                [placeholder]="'USER_MANAGE.STEP_GOAL_PLACEHOLDER' | translate"
+                floatLabel="always"
+            />
+
+            <fd-ui-input
+                formControlName="waterGoal"
+                type="number"
+                [label]="'USER_MANAGE.WATER_GOAL' | translate"
+                [placeholder]="'USER_MANAGE.WATER_GOAL_PLACEHOLDER' | translate"
+                floatLabel="always"
+            />
+        </div>
+
+        <div fdUiDialogFooter class="goal-settings-dialog__footer">
+            <fd-ui-button type="button" variant="secondary" fill="ghost" (click)="onCancel()">
+                {{ 'COMMON.CANCEL' | translate }}
+            </fd-ui-button>
+            <fd-ui-button type="submit" icon="save">
+                {{ 'COMMON.SAVE' | translate }}
+            </fd-ui-button>
+        </div>
+    </form>
+</fd-ui-dialog>

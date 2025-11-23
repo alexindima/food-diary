@@ -2,6 +2,10 @@
     height: 100%;
 }
 
+:host ::ng-deep .macro-summary__card .fd-ui-card {
+    padding-bottom: calc(var(--fd-spacing-sm) * 2);
+}
+
 .macro-summary__grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
@@ -26,5 +30,39 @@
 
 .macro-summary__value {
     font-size: 1.2rem;
-    color: #0f172a;
+    color: var(--fd-color-gray-900, #0f172a);
+    display: inline-flex;
+    align-items: baseline;
+    gap: 4px;
+
+    &--warn {
+        color: var(--fd-color-warning-600, #ea580c);
+    }
+
+    &--ok {
+        color: var(--fd-color-success-600, #059669);
+    }
+
+    &--danger {
+        color: var(--fd-color-danger-600, #dc2626);
+    }
+}
+
+.macro-summary__divider {
+    color: inherit;
+}
+
+.macro-summary__goal {
+    color: inherit;
+}
+
+.macro-summary__unit {
+    color: inherit;
+    font-size: 0.95rem;
+}
+
+.macro-summary__value-line {
+    display: inline-flex;
+    gap: 4px;
+    align-items: baseline;
 }

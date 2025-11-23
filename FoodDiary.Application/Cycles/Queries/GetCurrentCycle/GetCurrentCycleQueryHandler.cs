@@ -32,6 +32,6 @@ public class GetCurrentCycleQueryHandler(ICycleRepository cycleRepository)
         }
 
         var predictions = CyclePredictionService.CalculatePredictions(cycle);
-        return Result.Success(cycle.ToResponse(predictions));
+        return Result.Success<CycleResponse?>(cycle.ToResponse(predictions));
     }
 }
