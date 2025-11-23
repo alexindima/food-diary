@@ -36,7 +36,7 @@ public class MealRepository : IMealRepository
     }
 
     public async Task<Meal?> GetByIdAsync(
-        int id,
+        MealId id,
         UserId userId,
         bool includeItems = false,
         bool asTracking = false,

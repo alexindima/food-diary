@@ -2,7 +2,7 @@ import { Product, MeasurementUnit, ProductType, ProductVisibility } from './prod
 import { Recipe, RecipeVisibility } from './recipe.data';
 
 export interface Consumption {
-    id: number;
+    id: string;
     date: string;
     mealType?: string | null;
     comment?: string | null;
@@ -24,8 +24,8 @@ export interface Consumption {
 }
 
 export interface ConsumptionItem {
-    id: number;
-    consumptionId: number;
+    id: string;
+    consumptionId: string;
     amount: number;
     sourceType: ConsumptionSourceType;
     product?: Product | null;
@@ -33,7 +33,7 @@ export interface ConsumptionItem {
 }
 
 export interface ConsumptionResponseDto {
-    id: number;
+    id: string;
     date: string;
     mealType?: string | null;
     comment?: string | null;
@@ -55,8 +55,8 @@ export interface ConsumptionResponseDto {
 }
 
 export interface ConsumptionItemResponseDto {
-    id: number;
-    consumptionId: number;
+    id: string;
+    consumptionId: string;
     amount: number;
     productId?: string | null;
     productName?: string | null;

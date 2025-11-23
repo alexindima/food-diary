@@ -70,6 +70,12 @@ public class FoodDiaryDbContext : DbContext
         // Meal configuration
         modelBuilder.Entity<Meal>(entity =>
         {
+            entity.Property(e => e.Id)
+                .HasConversion(
+                    id => id.Value,
+                    value => new MealId(value))
+                .ValueGeneratedNever();
+
             entity.Property(e => e.UserId).HasConversion(
                 id => id.Value,
                 value => new UserId(value));
@@ -105,6 +111,16 @@ public class FoodDiaryDbContext : DbContext
         // MealItem configuration - XOR constraint: ProductId OR RecipeId
         modelBuilder.Entity<MealItem>(entity =>
         {
+            entity.Property(e => e.Id)
+                .HasConversion(
+                    id => id.Value,
+                    value => new MealItemId(value))
+                .ValueGeneratedNever();
+
+            entity.Property(e => e.MealId).HasConversion(
+                id => id.Value,
+                value => new MealId(value));
+
             entity.Property(e => e.ProductId).HasConversion(
                 id => id.HasValue ? id.Value.Value : (Guid?)null,
                 value => value.HasValue ? new ProductId(value.Value) : null);

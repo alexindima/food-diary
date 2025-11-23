@@ -9,7 +9,7 @@ namespace FoodDiary.Domain.Entities;
 /// Прием пищи - корень агрегата
 /// Управляет коллекцией MealItems (продуктов и блюд)
 /// </summary>
-public sealed class Meal : AggregateRoot<int> {
+public sealed class Meal : AggregateRoot<MealId> {
     public UserId UserId { get; private set; }
     public DateTime Date { get; private set; } = DateTime.UtcNow;
     public MealType? MealType { get; private set; }
@@ -49,6 +49,7 @@ public sealed class Meal : AggregateRoot<int> {
         int preMealSatietyLevel = 0,
         int postMealSatietyLevel = 0) {
         var meal = new Meal {
+            Id = MealId.New(),
             UserId = userId,
             Date = date,
             MealType = mealType,
@@ -152,7 +153,7 @@ public sealed class Meal : AggregateRoot<int> {
         }
 
         PreMealSatietyLevel = normalizedPre;
-            PostMealSatietyLevel = normalizedPost;
+        PostMealSatietyLevel = normalizedPost;
         SetModified();
     }
 

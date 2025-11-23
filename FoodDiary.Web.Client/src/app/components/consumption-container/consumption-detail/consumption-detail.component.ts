@@ -103,7 +103,7 @@ export class ConsumptionDetailComponent {
 
 export class ConsumptionDetailActionResult {
     public constructor(
-        public id: number,
+        public id: string,
         public action: ConsumptionDetailAction,
     ) {}
 }

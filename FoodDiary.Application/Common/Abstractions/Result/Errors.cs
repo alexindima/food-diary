@@ -40,7 +40,7 @@ public static class Errors
 
     public static class Consumption
     {
-        public static Error NotFound(int id) => new(
+        public static Error NotFound(Guid id) => new(
             "Consumption.NotFound",
             $"Consumption with ID {id} was not found.");
 

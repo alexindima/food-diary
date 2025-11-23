@@ -11,7 +11,7 @@ export const consumptionResolver: ResolveFn<Consumption | null> = route => {
 
     const consumptionId = route.paramMap.get('id')!;
 
-    return foodService.getById(+consumptionId).pipe(
+    return foodService.getById(consumptionId).pipe(
         map(consumption => {
             if (consumption) {
                 return consumption;

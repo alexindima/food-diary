@@ -12,10 +12,10 @@ public static class ConsumptionMappings
     public static ConsumptionResponse ToResponse(this Meal meal)
     {
         var items = meal.Items
-            .OrderBy(i => i.Id)
+            .OrderBy(i => i.Id.Value)
             .Select(item => new ConsumptionItemResponse(
-                item.Id,
-                item.MealId,
+                item.Id.Value,
+                item.MealId.Value,
                 item.Amount,
                 item.ProductId?.Value,
                 item.Product?.Name,
@@ -37,7 +37,7 @@ public static class ConsumptionMappings
             .ToList();
 
         return new ConsumptionResponse(
-            meal.Id,
+            meal.Id.Value,
             meal.Date,
             meal.MealType?.ToString(),
             meal.Comment,

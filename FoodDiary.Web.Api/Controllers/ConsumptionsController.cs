@@ -7,6 +7,7 @@ using FoodDiary.Application.Consumptions.Mappings;
 using FoodDiary.Application.Consumptions.Queries.GetConsumptionById;
 using FoodDiary.Application.Consumptions.Queries.GetConsumptions;
 using FoodDiary.Contracts.Consumptions;
+using FoodDiary.Domain.ValueObjects;
 using FoodDiary.WebApi.Extensions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -29,10 +30,10 @@ public class ConsumptionsController(ISender mediator) : AuthorizedController(med
         return result.ToActionResult();
     }
 
-    [HttpGet("{id:int}")]
-    public async Task<IActionResult> GetById(int id)
+    [HttpGet("{id:guid}")]
+    public async Task<IActionResult> GetById(Guid id)
     {
-        var query = new GetConsumptionByIdQuery(CurrentUserId, id);
+        var query = new GetConsumptionByIdQuery(CurrentUserId, new MealId(id));
         var result = await Mediator.Send(query);
         return result.ToActionResult();
     }
@@ -45,18 +46,18 @@ public class ConsumptionsController(ISender mediator) : AuthorizedController(med
         return result.ToActionResult();
     }
 
-    [HttpPatch("{id:int}")]
-    public async Task<IActionResult> Update(int id, [FromBody] UpdateConsumptionRequest request)
+    [HttpPatch("{id:guid}")]
+    public async Task<IActionResult> Update(Guid id, [FromBody] UpdateConsumptionRequest request)
     {
         var command = request.ToCommand(CurrentUserGuid, id);
         var result = await Mediator.Send(command);
         return result.ToActionResult();
     }
 
-    [HttpDelete("{id:int}")]
-    public async Task<IActionResult> Delete(int id)
+    [HttpDelete("{id:guid}")]
+    public async Task<IActionResult> Delete(Guid id)
     {
-        var command = new DeleteConsumptionCommand(CurrentUserId, id);
+        var command = new DeleteConsumptionCommand(CurrentUserId, new MealId(id));
         var result = await Mediator.Send(command);
         return result.ToActionResult();
     }

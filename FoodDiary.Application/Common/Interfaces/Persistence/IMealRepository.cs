@@ -16,7 +16,7 @@ public interface IMealRepository
     Task DeleteAsync(Meal meal, CancellationToken cancellationToken = default);
 
     Task<Meal?> GetByIdAsync(
-        int id,
+        MealId id,
         UserId userId,
         bool includeItems = false,
         bool asTracking = false,

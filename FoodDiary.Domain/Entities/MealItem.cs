@@ -8,9 +8,9 @@ namespace FoodDiary.Domain.Entities;
 /// НЕ является корнем агрегата
 /// Может быть либо Product (простой продукт), либо Recipe (блюдо)
 /// </summary>
-public class MealItem : Entity<int>
+public class MealItem : Entity<MealItemId>
 {
-    public int MealId { get; private set; }
+    public MealId MealId { get; private set; }
 
     // XOR: либо ProductId, либо RecipeId
     public ProductId? ProductId { get; private set; }
@@ -27,12 +27,13 @@ public class MealItem : Entity<int>
     private MealItem() { }
 
     // Factory method для добавления продукта
-    internal static MealItem CreateWithProduct(int mealId, ProductId productId, double amount)
+    internal static MealItem CreateWithProduct(MealId mealId, ProductId productId, double amount)
     {
         ValidateAmount(amount);
 
         var item = new MealItem
         {
+            Id = MealItemId.New(),
             MealId = mealId,
             ProductId = productId,
             RecipeId = null,
@@ -43,12 +44,13 @@ public class MealItem : Entity<int>
     }
 
     // Factory method для добавления рецепта (блюда)
-    internal static MealItem CreateWithRecipe(int mealId, RecipeId recipeId, double servings)
+    internal static MealItem CreateWithRecipe(MealId mealId, RecipeId recipeId, double servings)
     {
         ValidateAmount(servings);
 
         var item = new MealItem
         {
+            Id = MealItemId.New(),
             MealId = mealId,
             ProductId = null,
             RecipeId = recipeId,

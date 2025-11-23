@@ -41,7 +41,7 @@ export class NavigationService {
         await this.router.navigate(['/consumptions/add']);
     }
 
-    public async navigateToConsumptionEdit(id: number): Promise<void> {
+    public async navigateToConsumptionEdit(id: string): Promise<void> {
         await this.router.navigate([`/consumptions/${id}/edit`]);
     }
 

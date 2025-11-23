@@ -12,10 +12,9 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FoodDiary.Infrastructure.Migrations
 {
     [DbContext(typeof(FoodDiaryDbContext))]
-    [Migration("20251116214332_AddUserNutritionGoals")]
-    partial class AddUserNutritionGoals
+    [Migration("20251123024500_UseStronglyTypedMealIds")]
+    partial class UseStronglyTypedMealIds
     {
-        /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
@@ -25,13 +24,81 @@ namespace FoodDiary.Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("FoodDiary.Domain.Entities.Cycle", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("AverageLength")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(28);
+
+                    b.Property<DateTime>("CreatedOnUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("LutealLength")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(14);
+
+                    b.Property<DateTime?>("ModifiedOnUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(1024)
+                        .HasColumnType("character varying(1024)");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("date");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId", "StartDate")
+                        .HasDatabaseName("IX_Cycles_User_StartDate");
+
+                    b.ToTable("Cycles");
+                });
+
+            modelBuilder.Entity("FoodDiary.Domain.Entities.CycleDay", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedOnUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("CycleId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("date");
+
+                    b.Property<bool>("IsPeriod")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime?>("ModifiedOnUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(1024)
+                        .HasColumnType("character varying(1024)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CycleId", "Date")
+                        .IsUnique();
+
+                    b.ToTable("CycleDays");
+                });
+
             modelBuilder.Entity("FoodDiary.Domain.Entities.Meal", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Comment")
                         .HasColumnType("text");
@@ -104,11 +171,8 @@ namespace FoodDiary.Infrastructure.Migrations
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.MealItem", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
 
                     b.Property<double>("Amount")
                         .HasColumnType("double precision");
@@ -116,8 +180,8 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedOnUtc")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("MealId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("MealId")
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime?>("ModifiedOnUtc")
                         .HasColumnType("timestamp with time zone");
@@ -384,6 +448,9 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.Property<double?>("DailyCalorieTarget")
                         .HasColumnType("double precision");
 
+                    b.Property<double?>("DesiredWaist")
+                        .HasColumnType("double precision");
+
                     b.Property<double?>("DesiredWeight")
                         .HasColumnType("double precision");
 
@@ -447,6 +514,34 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("FoodDiary.Domain.Entities.WaistEntry", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<double>("Circumference")
+                        .HasColumnType("double precision");
+
+                    b.Property<DateTime>("CreatedOnUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("date");
+
+                    b.Property<DateTime?>("ModifiedOnUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId", "Date")
+                        .IsUnique();
+
+                    b.ToTable("WaistEntries");
+                });
+
             modelBuilder.Entity("FoodDiary.Domain.Entities.WeightEntry", b =>
                 {
                     b.Property<Guid>("Id")
@@ -473,6 +568,70 @@ namespace FoodDiary.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("WeightEntries");
+                });
+
+            modelBuilder.Entity("FoodDiary.Domain.Entities.Cycle", b =>
+                {
+                    b.HasOne("FoodDiary.Domain.Entities.User", null)
+                        .WithMany("Cycles")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("FoodDiary.Domain.Entities.CycleDay", b =>
+                {
+                    b.HasOne("FoodDiary.Domain.Entities.Cycle", "Cycle")
+                        .WithMany("Days")
+                        .HasForeignKey("CycleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.OwnsOne("FoodDiary.Domain.ValueObjects.DailySymptoms", "Symptoms", b1 =>
+                        {
+                            b1.Property<Guid>("CycleDayId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<int>("Edema")
+                                .HasColumnType("integer")
+                                .HasColumnName("Edema");
+
+                            b1.Property<int>("Energy")
+                                .HasColumnType("integer")
+                                .HasColumnName("Energy");
+
+                            b1.Property<int>("Headache")
+                                .HasColumnType("integer")
+                                .HasColumnName("Headache");
+
+                            b1.Property<int>("Libido")
+                                .HasColumnType("integer")
+                                .HasColumnName("Libido");
+
+                            b1.Property<int>("Mood")
+                                .HasColumnType("integer")
+                                .HasColumnName("Mood");
+
+                            b1.Property<int>("Pain")
+                                .HasColumnType("integer")
+                                .HasColumnName("Pain");
+
+                            b1.Property<int>("SleepQuality")
+                                .HasColumnType("integer")
+                                .HasColumnName("SleepQuality");
+
+                            b1.HasKey("CycleDayId");
+
+                            b1.ToTable("CycleDays");
+
+                            b1.WithOwner()
+                                .HasForeignKey("CycleDayId");
+                        });
+
+                    b.Navigation("Cycle");
+
+                    b.Navigation("Symptoms")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.Meal", b =>
@@ -566,6 +725,17 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.Navigation("Recipe");
                 });
 
+            modelBuilder.Entity("FoodDiary.Domain.Entities.WaistEntry", b =>
+                {
+                    b.HasOne("FoodDiary.Domain.Entities.User", "User")
+                        .WithMany("WaistEntries")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("FoodDiary.Domain.Entities.WeightEntry", b =>
                 {
                     b.HasOne("FoodDiary.Domain.Entities.User", "User")
@@ -575,6 +745,11 @@ namespace FoodDiary.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("FoodDiary.Domain.Entities.Cycle", b =>
+                {
+                    b.Navigation("Days");
                 });
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.Meal", b =>
@@ -605,11 +780,15 @@ namespace FoodDiary.Infrastructure.Migrations
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.User", b =>
                 {
+                    b.Navigation("Cycles");
+
                     b.Navigation("Meals");
 
                     b.Navigation("Products");
 
                     b.Navigation("Recipes");
+
+                    b.Navigation("WaistEntries");
 
                     b.Navigation("WeightEntries");
                 });

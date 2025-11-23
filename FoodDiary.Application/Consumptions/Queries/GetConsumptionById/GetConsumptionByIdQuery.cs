@@ -5,5 +5,5 @@ using FoodDiary.Domain.ValueObjects;
 
 namespace FoodDiary.Application.Consumptions.Queries.GetConsumptionById;
 
-public record GetConsumptionByIdQuery(UserId? UserId, int ConsumptionId)
+public record GetConsumptionByIdQuery(UserId? UserId, MealId ConsumptionId)
     : IQuery<Result<ConsumptionResponse>>;

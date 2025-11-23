@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace FoodDiary.Contracts.Consumptions;
 
 public record ConsumptionResponse(
-    int Id,
+    Guid Id,
     DateTime Date,
     string? MealType,
     string? Comment,
@@ -25,8 +25,8 @@ public record ConsumptionResponse(
     IReadOnlyList<ConsumptionItemResponse> Items);
 
 public record ConsumptionItemResponse(
-    int Id,
-    int ConsumptionId,
+    Guid Id,
+    Guid ConsumptionId,
     double Amount,
     Guid? ProductId,
     string? ProductName,

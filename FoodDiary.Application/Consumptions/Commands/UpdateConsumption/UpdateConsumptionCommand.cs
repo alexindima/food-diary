@@ -10,7 +10,7 @@ namespace FoodDiary.Application.Consumptions.Commands.UpdateConsumption;
 
 public record UpdateConsumptionCommand(
     UserId? UserId,
-    int ConsumptionId,
+    MealId ConsumptionId,
     DateTime Date,
     string? MealType,
     string? Comment,

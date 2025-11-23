@@ -35,7 +35,7 @@ public class UpdateConsumptionCommandHandler(
 
         if (meal is null)
         {
-            return Result.Failure<ConsumptionResponse>(Errors.Consumption.NotFound(command.ConsumptionId));
+            return Result.Failure<ConsumptionResponse>(Errors.Consumption.NotFound(command.ConsumptionId.Value));
         }
 
         if (command.Items is not { Count: > 0 })

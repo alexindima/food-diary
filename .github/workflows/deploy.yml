@@ -31,7 +31,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v5
         with:
-          dotnet-version: 9.0.x
+          dotnet-version: 10.0.x
 
       - name: Build Angular frontend
         run: |
@@ -82,13 +82,13 @@ jobs:
         run: |
           ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no root@${{ env.SERVER_IP }} << 'EOF'
             set -e
-            # Install ASP.NET Core Runtime 9.0 if missing
-            if ! command -v dotnet >/dev/null 2>&1 || ! dotnet --list-runtimes | grep -q "Microsoft.AspNetCore.App 9"; then
+            # Install ASP.NET Core Runtime 10.0 if missing
+            if ! command -v dotnet >/dev/null 2>&1 || ! dotnet --list-runtimes | grep -q "Microsoft.AspNetCore.App 10"; then
               wget https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
               dpkg -i packages-microsoft-prod.deb
               rm -f packages-microsoft-prod.deb
               apt-get update
-              apt-get install -y aspnetcore-runtime-9.0
+              apt-get install -y aspnetcore-runtime-10.0
             fi
 
             # Write/refresh systemd unit

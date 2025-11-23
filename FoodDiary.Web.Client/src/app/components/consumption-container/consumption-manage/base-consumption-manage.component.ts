@@ -638,7 +638,7 @@ export class BaseConsumptionManageComponent implements OnInit {
         });
     }
 
-    private async updateConsumption(id: number, consumptionData: ConsumptionManageDto): Promise<void> {
+    private async updateConsumption(id: string, consumptionData: ConsumptionManageDto): Promise<void> {
         this.consumptionService.update(id, consumptionData).subscribe({
             next: response => this.handleSubmitResponse(response),
             error: error => this.handleSubmitError(error),
@@ -946,5 +946,4 @@ type NutritionTotals = {
     carbs: number;
     fiber: number;
 };
-
 

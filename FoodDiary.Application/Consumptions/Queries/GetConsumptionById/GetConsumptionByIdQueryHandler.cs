@@ -27,7 +27,7 @@ public class GetConsumptionByIdQueryHandler(IMealRepository mealRepository)
 
         if (meal is null)
         {
-            return Result.Failure<ConsumptionResponse>(Errors.Consumption.NotFound(request.ConsumptionId));
+            return Result.Failure<ConsumptionResponse>(Errors.Consumption.NotFound(request.ConsumptionId.Value));
         }
 
         return Result.Success(meal.ToResponse());

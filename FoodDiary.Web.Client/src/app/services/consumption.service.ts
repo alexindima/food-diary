@@ -43,7 +43,7 @@ export class ConsumptionService extends ApiService {
         );
     }
 
-    public getById(id: number): Observable<Consumption | null> {
+    public getById(id: string): Observable<Consumption | null> {
         return this.get<ConsumptionResponseDto>(`${id}`).pipe(
             map(response => this.mapConsumption(response)),
             catchError(() => of(null)),
@@ -57,14 +57,14 @@ export class ConsumptionService extends ApiService {
         );
     }
 
-    public update(id: number, data: ConsumptionManageDto): Observable<Consumption | null> {
+    public update(id: string, data: ConsumptionManageDto): Observable<Consumption | null> {
         return this.patch<ConsumptionResponseDto>(`${id}`, data).pipe(
             map(response => this.mapConsumption(response)),
             catchError(() => of(null)),
         );
     }
 
-    public deleteById(id: number): Observable<void> {
+    public deleteById(id: string): Observable<void> {
         return this.delete<void>(`${id}`).pipe(catchError(() => of(void 0)));
     }
 

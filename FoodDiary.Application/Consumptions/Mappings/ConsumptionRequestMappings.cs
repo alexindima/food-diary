@@ -25,10 +25,10 @@ public static class ConsumptionRequestMappings
             request.PreMealSatietyLevel,
             request.PostMealSatietyLevel);
 
-    public static UpdateConsumptionCommand ToCommand(this UpdateConsumptionRequest request, Guid? userId, int consumptionId) =>
+    public static UpdateConsumptionCommand ToCommand(this UpdateConsumptionRequest request, Guid? userId, Guid consumptionId) =>
         new(
             userId.HasValue ? new UserId(userId.Value) : null,
-            consumptionId,
+            new MealId(consumptionId),
             request.Date,
             request.MealType,
             request.Comment,

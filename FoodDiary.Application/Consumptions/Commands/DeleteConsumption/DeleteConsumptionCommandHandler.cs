@@ -26,7 +26,7 @@ public class DeleteConsumptionCommandHandler(IMealRepository mealRepository)
 
         if (meal is null)
         {
-            return Result.Failure<bool>(Errors.Consumption.NotFound(command.ConsumptionId));
+            return Result.Failure<bool>(Errors.Consumption.NotFound(command.ConsumptionId.Value));
         }
 
         await mealRepository.DeleteAsync(meal, cancellationToken);
