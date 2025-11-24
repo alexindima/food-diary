@@ -1,40 +1,27 @@
 <section class="quick-actions">
-    <h2 class="quick-actions__title">{{ 'QUICK_ACTIONS.TITLE' | translate }}</h2>
     <div class="quick-actions__grid">
         <fd-quick-action-card
             icon="restaurant"
             titleKey="QUICK_ACTIONS.ADD_CONSUMPTION.TITLE"
             descriptionKey="QUICK_ACTIONS.ADD_CONSUMPTION.DESCRIPTION"
-            buttonKey="QUICK_ACTIONS.ADD_CONSUMPTION.BUTTON"
-            variant="primary"
-            fill="solid"
             (action)="addConsumption()"
         />
         <fd-quick-action-card
             icon="add_shopping_cart"
             titleKey="QUICK_ACTIONS.ADD_PRODUCT.TITLE"
             descriptionKey="QUICK_ACTIONS.ADD_PRODUCT.DESCRIPTION"
-            buttonKey="QUICK_ACTIONS.ADD_PRODUCT.BUTTON"
-            variant="secondary"
-            fill="outline"
             (action)="addProduct()"
         />
         <fd-quick-action-card
             icon="menu_book"
             titleKey="QUICK_ACTIONS.ADD_RECIPE.TITLE"
             descriptionKey="QUICK_ACTIONS.ADD_RECIPE.DESCRIPTION"
-            buttonKey="QUICK_ACTIONS.ADD_RECIPE.BUTTON"
-            variant="secondary"
-            fill="outline"
             (action)="addRecipe()"
         />
         <fd-quick-action-card
             icon="monitoring"
             titleKey="QUICK_ACTIONS.STATISTICS.TITLE"
             descriptionKey="QUICK_ACTIONS.STATISTICS.DESCRIPTION"
-            buttonKey="QUICK_ACTIONS.STATISTICS.BUTTON"
-            variant="primary"
-            fill="text"
             (action)="openStatistics()"
         />
     </div>

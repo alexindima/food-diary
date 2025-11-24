@@ -5,14 +5,7 @@
 .quick-actions {
     display: flex;
     flex-direction: column;
-    gap: 16px;
-}
-
-.quick-actions__title {
-    margin: 0;
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: var(--fd-text-main);
+    gap: 12px;
 }
 
 .quick-actions__grid {

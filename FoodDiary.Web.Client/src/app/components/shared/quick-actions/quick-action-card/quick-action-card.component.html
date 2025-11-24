@@ -1,21 +1,13 @@
-<fd-ui-card class="quick-action-card" [subtle]="true">
+<fd-ui-card class="quick-action-card" [subtle]="true" (click)="action.emit()">
     <div class="quick-action-card__content">
         <div class="quick-action-card__icon">
             <mat-icon>{{ icon() }}</mat-icon>
         </div>
-        <div>
+        <div class="quick-action-card__text">
             <p class="quick-action-card__title">{{ titleKey() | translate }}</p>
             <span class="quick-action-card__description">
                 {{ descriptionKey() | translate }}
             </span>
         </div>
     </div>
-    <fd-ui-button
-        [variant]="variant()"
-        [fill]="fill()"
-        [fullWidth]="true"
-        (click)="action.emit()"
-    >
-        {{ buttonKey() | translate }}
-    </fd-ui-button>
 </fd-ui-card>
