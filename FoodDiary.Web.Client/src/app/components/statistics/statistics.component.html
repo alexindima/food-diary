@@ -83,6 +83,14 @@
                                     <strong class="statistics__summary-value">
                                         {{ macro.value | number: '1.0-1' }} {{ 'PRODUCT_LIST.GRAMS' | translate }}
                                     </strong>
+                                    <div class="statistics__macro-trend">
+                                        <canvas
+                                            baseChart
+                                            [type]="'line'"
+                                            [data]="macroSparklineData()[macro.key]"
+                                            [options]="summarySparklineOptions"
+                                        ></canvas>
+                                    </div>
                                 </fd-ui-accent-surface>
                             }
                         </div>

@@ -1,12 +1,11 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { QuickActionCardComponent } from '../quick-action-card/quick-action-card.component';
-import { TranslatePipe } from '@ngx-translate/core';
 import { NavigationService } from '../../../../services/navigation.service';
 
 @Component({
     selector: 'fd-quick-actions-section',
     standalone: true,
-    imports: [QuickActionCardComponent, TranslatePipe],
+    imports: [QuickActionCardComponent],
     templateUrl: './quick-actions-section.component.html',
     styleUrls: ['./quick-actions-section.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,

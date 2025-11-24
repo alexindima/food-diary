@@ -57,5 +57,5 @@ export class FdUiButtonComponent {
 export type FdUiButtonType = 'button' | 'submit' | 'reset';
 export type FdUiButtonVariant = 'primary' | 'secondary' | 'danger' | 'info' | 'ghost' | 'outline';
 export type FdUiButtonFill = 'solid' | 'outline' | 'text' | 'ghost';
-export type FdUiButtonSize = 'sm' | 'md' | 'lg';
-export type FdUiButtonIconSize = 'sm' | 'md' | 'lg' | 'xl';
+export type FdUiButtonSize = 'xs' | 'sm' | 'md' | 'lg';
+export type FdUiButtonIconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';

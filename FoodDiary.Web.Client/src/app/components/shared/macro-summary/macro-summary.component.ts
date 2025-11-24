@@ -1,15 +1,24 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiAccentSurfaceComponent } from 'fd-ui-kit/accent-surface/fd-ui-accent-surface.component';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
+import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
+import { FdUiCardActionsDirective } from 'fd-ui-kit/card/fd-ui-card-actions.directive';
 import { NutrientData } from '../../../types/charts.data';
 import { CHART_COLORS } from '../../../constants/chart-colors';
 
 @Component({
     selector: 'fd-macro-summary',
     standalone: true,
-    imports: [CommonModule, TranslatePipe, FdUiCardComponent, FdUiAccentSurfaceComponent],
+    imports: [
+        CommonModule,
+        TranslatePipe,
+        FdUiCardComponent,
+        FdUiAccentSurfaceComponent,
+        FdUiButtonComponent,
+        FdUiCardActionsDirective,
+    ],
     templateUrl: './macro-summary.component.html',
     styleUrl: './macro-summary.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -21,6 +30,7 @@ export class MacroSummaryComponent {
     public readonly fatGoal = input<number | null>(null);
     public readonly carbGoal = input<number | null>(null);
     public readonly fiberGoal = input<number | null>(null);
+    public readonly settingsClick = output<void>();
 
     public readonly items = computed<MacroItem[]>(() => {
         const data = this.nutrientData();

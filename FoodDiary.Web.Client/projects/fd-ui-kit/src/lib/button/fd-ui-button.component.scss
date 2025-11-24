@@ -71,6 +71,13 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
+        font-size: var(--fd-button-icon-size, 1rem);
+        width: var(--fd-button-icon-size, 1rem);
+        height: var(--fd-button-icon-size, 1rem);
+    }
+
+    &__label:empty {
+        display: none;
     }
 
     &--outline,
@@ -224,6 +231,12 @@
     --fd-button-text-padding-x: 0.25rem;
 }
 
+.fd-ui-button--size-xs {
+    --fd-button-height: 28px;
+    --fd-button-padding-x: 0.375rem;
+    --fd-button-text-padding-x: 0.2rem;
+}
+
 .fd-ui-button--size-md {
     --fd-button-height: 40px;
     --fd-button-padding-x: 0.75rem;
@@ -238,6 +251,10 @@
 
 .fd-ui-button--icon-sm {
     --fd-button-icon-size: 1rem;
+}
+
+.fd-ui-button--icon-xs {
+    --fd-button-icon-size: 0.9rem;
 }
 
 .fd-ui-button--icon-md {

@@ -6,6 +6,11 @@
     padding-bottom: calc(var(--fd-spacing-sm) * 2);
 }
 
+:host ::ng-deep .macro-summary__card .fd-ui-card__actions {
+    align-items: center;
+    justify-content: flex-end;
+}
+
 .macro-summary__grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));

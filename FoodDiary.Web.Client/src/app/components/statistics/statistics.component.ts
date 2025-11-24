@@ -35,6 +35,7 @@ import { PeriodFilterComponent } from '../shared/period-filter/period-filter.com
 type StatisticsRange = 'week' | 'month' | 'year' | 'custom';
 type NutritionChartTab = 'calories' | 'macros' | 'distribution';
 type BodyChartTab = 'weight' | 'bmi' | 'waist' | 'whtr';
+type MacroKey = 'proteins' | 'fats' | 'carbs' | 'fiber';
 
 interface DateRange {
     start: Date;
@@ -122,26 +123,59 @@ export class StatisticsComponent implements OnInit {
             },
             macros: [
                 {
+                    key: 'proteins' as const,
                     labelKey: 'PRODUCT_LIST.PROTEINS',
                     value: aggregated?.proteins ?? 0,
                     color: CHART_COLORS.proteins,
                 },
                 {
+                    key: 'fats' as const,
                     labelKey: 'PRODUCT_LIST.FATS',
                     value: aggregated?.fats ?? 0,
                     color: CHART_COLORS.fats,
                 },
                 {
+                    key: 'carbs' as const,
                     labelKey: 'PRODUCT_LIST.CARBS',
                     value: aggregated?.carbs ?? 0,
                     color: CHART_COLORS.carbs,
                 },
                 {
+                    key: 'fiber' as const,
                     labelKey: 'SHARED.NUTRIENTS_SUMMARY.FIBER',
                     value: aggregated?.fiber ?? 0,
                     color: CHART_COLORS.fiber,
                 },
             ],
+        };
+    });
+
+    public readonly macroSparklineData = computed<Record<MacroKey, ChartConfiguration<'line'>['data']>>(() => {
+        const stats = this.chartStatisticsData();
+        const labels = stats?.date.map(date => this.formatDateLabel(date)) ?? [];
+        const nutrients = stats?.nutrientsStatistic;
+
+        const buildData = (series: number[] | undefined, color: string, fillAlpha = 0.16) => ({
+            labels,
+            datasets: [
+                {
+                    data: series ?? [],
+                    borderColor: color,
+                    backgroundColor: this.applyAlpha(color, fillAlpha),
+                    tension: 0.35,
+                    borderWidth: 2,
+                    fill: true,
+                    pointRadius: 0,
+                    spanGaps: true,
+                },
+            ],
+        });
+
+        return {
+            proteins: buildData(nutrients?.proteins, CHART_COLORS.proteins, 0.18),
+            fats: buildData(nutrients?.fats, CHART_COLORS.fats, 0.18),
+            carbs: buildData(nutrients?.carbs, CHART_COLORS.carbs, 0.18),
+            fiber: buildData(nutrients?.fiber, CHART_COLORS.fiber, 0.18),
         };
     });
 
@@ -742,6 +776,18 @@ export class StatisticsComponent implements OnInit {
     private formatSummaryLabel(dateString: string): string {
         const date = new Date(dateString);
         return date.toLocaleDateString(this.getCurrentLocale());
+    }
+
+    private applyAlpha(hexColor: string, alpha: number): string {
+        const match = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hexColor);
+        if (!match) {
+            return hexColor;
+        }
+
+        const r = parseInt(match[1], 16);
+        const g = parseInt(match[2], 16);
+        const b = parseInt(match[3], 16);
+        return `rgba(${r}, ${g}, ${b}, ${alpha})`;
     }
 
     private normalizeStartOfDay(date: Date): Date {

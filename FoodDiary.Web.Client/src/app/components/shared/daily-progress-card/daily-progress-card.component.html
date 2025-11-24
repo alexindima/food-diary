@@ -1,8 +1,18 @@
 <fd-ui-card
     class="daily-progress-card"
     [title]="'DAILY_PROGRESS_CARD.TITLE' | translate"
-    [meta]="date() | localizedDate:'d MMMM y'"
 >
+    <fd-ui-button
+        fdUiCardActions
+        variant="secondary"
+        fill="ghost"
+        size="xs"
+        icon="settings"
+        iconSize="sm"
+        ariaLabel="Settings"
+        (click)="settingsClick.emit()"
+    />
+
     <div class="daily-progress-card__content">
         @if (hasGoal()) {
             <div class="daily-progress-card__headline">

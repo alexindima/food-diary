@@ -1,0 +1,43 @@
+<fd-ui-dialog class="macro-goal-dialog" [title]="'MACRO_SUMMARY.TITLE' | translate">
+    <form [formGroup]="form" (ngSubmit)="save()">
+        <div class="macro-goal-dialog__grid">
+            <fd-ui-input
+                formControlName="proteinTarget"
+                type="number"
+                [label]="'USER_MANAGE.PROTEIN_TARGET' | translate"
+                [placeholder]="'USER_MANAGE.PROTEIN_TARGET_PLACEHOLDER' | translate"
+                floatLabel="always"
+            />
+            <fd-ui-input
+                formControlName="fatTarget"
+                type="number"
+                [label]="'USER_MANAGE.FAT_TARGET' | translate"
+                [placeholder]="'USER_MANAGE.FAT_TARGET_PLACEHOLDER' | translate"
+                floatLabel="always"
+            />
+            <fd-ui-input
+                formControlName="carbTarget"
+                type="number"
+                [label]="'USER_MANAGE.CARB_TARGET' | translate"
+                [placeholder]="'USER_MANAGE.CARB_TARGET_PLACEHOLDER' | translate"
+                floatLabel="always"
+            />
+            <fd-ui-input
+                formControlName="fiberTarget"
+                type="number"
+                [label]="'SHARED.NUTRIENTS_SUMMARY.FIBER' | translate"
+                [placeholder]="'SHARED.NUTRIENTS_SUMMARY.FIBER' | translate"
+                floatLabel="always"
+            />
+        </div>
+
+        <div fdUiDialogFooter class="macro-goal-dialog__footer">
+            <fd-ui-button type="button" variant="secondary" fill="ghost" (click)="cancel()">
+                {{ 'COMMON.CANCEL' | translate }}
+            </fd-ui-button>
+            <fd-ui-button type="submit" icon="save">
+                {{ 'COMMON.SAVE' | translate }}
+            </fd-ui-button>
+        </div>
+    </form>
+</fd-ui-dialog>

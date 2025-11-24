@@ -33,6 +33,9 @@ import { WaistSummaryCardComponent } from '../shared/waist-summary-card/waist-su
 import { ActivityCardComponent } from '../shared/activity-card/activity-card.component';
 import { QuickActionsSectionComponent } from '../shared/quick-actions/quick-actions-section/quick-actions-section.component';
 import { MealCardComponent } from '../shared/meal-card/meal-card.component';
+import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { CalorieGoalDialogComponent } from './dialogs/calorie-goal-dialog/calorie-goal-dialog.component';
+import { MacroGoalDialogComponent } from './dialogs/macro-goal-dialog/macro-goal-dialog.component';
 
 @Component({
     selector: 'fd-today-consumption',
@@ -66,6 +69,7 @@ export class TodayConsumptionComponent implements OnInit {
     private readonly navigationService = inject(NavigationService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly dashboardService = inject(DashboardService);
+    private readonly dialogService = inject(FdUiDialogService);
 
     private readonly headerDatePicker = viewChild<FdUiDatepicker<Date>>('headerDatePicker');
 
@@ -128,6 +132,43 @@ export class TodayConsumptionComponent implements OnInit {
 
     public openConsumption(consumption: Consumption): void {
         void this.navigationService.navigateToConsumptionEdit(consumption.id);
+    }
+
+    public openCalorieGoalDialog(): void {
+        this.dialogService
+            .open(CalorieGoalDialogComponent, {
+                size: 'sm',
+                data: {
+                    dailyCalorieTarget: this.dailyGoal() || null,
+                },
+            })
+            .afterClosed()
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(saved => {
+                if (saved) {
+                    this.loadDashboardSnapshot();
+                }
+            });
+    }
+
+    public openMacroGoalDialog(): void {
+        this.dialogService
+            .open(MacroGoalDialogComponent, {
+                size: 'md',
+                data: {
+                    proteinTarget: this.proteinGoal(),
+                    fatTarget: this.fatGoal(),
+                    carbTarget: this.carbGoal(),
+                    fiberTarget: this.fiberGoal(),
+                },
+            })
+            .afterClosed()
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(saved => {
+                if (saved) {
+                    this.loadDashboardSnapshot();
+                }
+            });
     }
 
     private fetchDashboardData(): void {

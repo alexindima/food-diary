@@ -1,11 +1,11 @@
-import { CommonModule, DatePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { DynamicProgressBarComponent } from '../dynamic-progress-bar/dynamic-progress-bar.component';
-import { LocalizedDatePipe } from '../../../pipes/localized-date.pipe';
 import { NavigationService } from '../../../services/navigation.service';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
+import { FdUiCardActionsDirective } from 'fd-ui-kit/card/fd-ui-card-actions.directive';
 import { inject } from '@angular/core';
 
 @Component({
@@ -14,15 +14,14 @@ import { inject } from '@angular/core';
     imports: [
         CommonModule,
         TranslatePipe,
-        LocalizedDatePipe,
         FdUiCardComponent,
         DynamicProgressBarComponent,
         FdUiButtonComponent,
+        FdUiCardActionsDirective,
     ],
     templateUrl: './daily-progress-card.component.html',
     styleUrl: './daily-progress-card.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [DatePipe],
 })
 export class DailyProgressCardComponent {
     private readonly navigation = inject(NavigationService);
@@ -30,6 +29,7 @@ export class DailyProgressCardComponent {
     public readonly date = input.required<Date>();
     public readonly consumed = input<number>(0);
     public readonly goal = input<number>(0);
+    public readonly settingsClick = output<void>();
 
     public readonly hasGoal = computed(() => this.goal() > 0);
 

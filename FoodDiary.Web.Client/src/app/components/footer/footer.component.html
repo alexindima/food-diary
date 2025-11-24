@@ -1,39 +1,63 @@
-<footer class="footer">
-    <div class="footer__container">
-        <div class="footer__sections">
-            <div class="footer__section footer__section--contacts">
-                <h4 class="footer__title">{{ 'FOOTER.CONTACTS.TITLE' | translate }}</h4>
-                <p class="footer__text">{{ 'FOOTER.CONTACTS.EMAIL' | translate }}</p>
-                <p class="footer__text">{{ 'FOOTER.CONTACTS.PHONE' | translate }}</p>
+<footer class="fd-footer">
+    <div class="fd-footer__top">
+        <div class="fd-footer__inner">
+            <div class="fd-footer__contacts">
+                <p class="fd-footer__heading">{{ 'FOOTER.CONTACTS.TITLE' | translate }}</p>
+                <div class="fd-footer__contact-list">
+                    <a class="fd-footer__contact" href="mailto:support@example.com">
+                        {{ 'FOOTER.CONTACTS.EMAIL' | translate }}
+                    </a>
+                    <a class="fd-footer__contact" href="tel:+11234567890">
+                        {{ 'FOOTER.CONTACTS.PHONE' | translate }}
+                    </a>
+                </div>
             </div>
-            <div class="footer__section footer__section--social">
-                <h4 class="footer__title">{{ 'FOOTER.FOLLOW_US.TITLE' | translate }}</h4>
-                <div class="footer__social-icons">
-                    <a href="#" class="footer__social-link">
-                        <img src="assets/images/footer/facebook.svg" alt="{{ 'FOOTER.FOLLOW_US.FACEBOOK' | translate }}" class="footer__social-icon" />
+            <div class="fd-footer__social">
+                <p class="fd-footer__heading">{{ 'FOOTER.FOLLOW_US.TITLE' | translate }}</p>
+                <div class="fd-footer__social-list">
+                    <a href="#" class="fd-footer__social-link" aria-label="{{ 'FOOTER.FOLLOW_US.FACEBOOK' | translate }}">
+                        <span class="fd-footer__social-icon">
+                            <img src="assets/images/footer/facebook.svg" alt="{{ 'FOOTER.FOLLOW_US.FACEBOOK' | translate }}" />
+                        </span>
                     </a>
-                    <a href="#" class="footer__social-link">
-                        <img src="assets/images/footer/instagram.svg" alt="{{ 'FOOTER.FOLLOW_US.INSTAGRAM' | translate }}" class="footer__social-icon" />
+                    <a href="#" class="fd-footer__social-link" aria-label="{{ 'FOOTER.FOLLOW_US.INSTAGRAM' | translate }}">
+                        <span class="fd-footer__social-icon">
+                            <img src="assets/images/footer/instagram.svg" alt="{{ 'FOOTER.FOLLOW_US.INSTAGRAM' | translate }}" />
+                        </span>
                     </a>
-                    <a href="#" class="footer__social-link">
-                        <img src="assets/images/footer/linkedin.svg" alt="{{ 'FOOTER.FOLLOW_US.LINKEDIN' | translate }}" class="footer__social-icon" />
+                    <a href="#" class="fd-footer__social-link" aria-label="{{ 'FOOTER.FOLLOW_US.LINKEDIN' | translate }}">
+                        <span class="fd-footer__social-icon">
+                            <img src="assets/images/footer/linkedin.svg" alt="{{ 'FOOTER.FOLLOW_US.LINKEDIN' | translate }}" />
+                        </span>
                     </a>
-                    <a href="#" class="footer__social-link">
-                        <img src="assets/images/footer/telegram.svg" alt="{{ 'FOOTER.FOLLOW_US.TELEGRAM' | translate }}" class="footer__social-icon" />
+                    <a href="#" class="fd-footer__social-link" aria-label="{{ 'FOOTER.FOLLOW_US.TELEGRAM' | translate }}">
+                        <span class="fd-footer__social-icon">
+                            <img src="assets/images/footer/telegram.svg" alt="{{ 'FOOTER.FOLLOW_US.TELEGRAM' | translate }}" />
+                        </span>
                     </a>
-                    <a href="#" class="footer__social-link">
-                        <img src="assets/images/footer/vk.svg" alt="{{ 'FOOTER.FOLLOW_US.VK' | translate }}" class="footer__social-icon" />
+                    <a href="#" class="fd-footer__social-link" aria-label="{{ 'FOOTER.FOLLOW_US.VK' | translate }}">
+                        <span class="fd-footer__social-icon">
+                            <img src="assets/images/footer/vk.svg" alt="{{ 'FOOTER.FOLLOW_US.VK' | translate }}" />
+                        </span>
                     </a>
-                    <a href="#" class="footer__social-link">
-                        <img src="assets/images/footer/youtube.svg" alt="{{ 'FOOTER.FOLLOW_US.YOUTUBE' | translate }}" class="footer__social-icon" />
+                    <a href="#" class="fd-footer__social-link" aria-label="{{ 'FOOTER.FOLLOW_US.YOUTUBE' | translate }}">
+                        <span class="fd-footer__social-icon">
+                            <img src="assets/images/footer/youtube.svg" alt="{{ 'FOOTER.FOLLOW_US.YOUTUBE' | translate }}" />
+                        </span>
                     </a>
                 </div>
             </div>
         </div>
-        <div class="footer__bottom">
-            <p class="footer__bottom-text">{{ 'FOOTER.BOTTOM.COPYRIGHT' | translate }}</p>
-            <a href="#" class="footer__bottom-link">{{ 'FOOTER.BOTTOM.PRIVACY_POLICY' | translate }}</a> |
-            <a href="#" class="footer__bottom-link">{{ 'FOOTER.BOTTOM.TERMS_OF_USE' | translate }}</a>
+    </div>
+
+    <div class="fd-footer__bottom">
+        <div class="fd-footer__inner fd-footer__bottom-inner">
+            <p class="fd-footer__copyright">{{ 'FOOTER.BOTTOM.COPYRIGHT' | translate }}</p>
+            <div class="fd-footer__links">
+                <a href="#" class="fd-footer__link">{{ 'FOOTER.BOTTOM.PRIVACY_POLICY' | translate }}</a>
+                <span class="fd-footer__divider" aria-hidden="true"></span>
+                <a href="#" class="fd-footer__link">{{ 'FOOTER.BOTTOM.TERMS_OF_USE' | translate }}</a>
+            </div>
         </div>
     </div>
 </footer>

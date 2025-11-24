@@ -51,6 +51,7 @@
                         [date]="selectedDate()"
                         [consumed]="todayCalories()"
                         [goal]="dailyGoal()"
+                        (settingsClick)="openCalorieGoalDialog()"
                     />
 
                     <div class="dashboard__row dashboard__row--pair">
@@ -80,6 +81,7 @@
                         [fatGoal]="fatGoal()"
                         [carbGoal]="carbGoal()"
                         [fiberGoal]="fiberGoal()"
+                        (settingsClick)="openMacroGoalDialog()"
                     />
 
                     <fd-activity-card

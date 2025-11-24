@@ -19,6 +19,7 @@ export interface User {
     proteinTarget?: number;
     fatTarget?: number;
     carbTarget?: number;
+    fiberTarget?: number;
     stepGoal?: number;
     waterGoal?: number;
     profileImage?: string;
@@ -42,8 +43,9 @@ export class UpdateUserDto {
     public waterGoal?: number;
     public profileImage?: string;
     public isActive?: boolean;
+    public fiberTarget?: number;
 
-    public constructor(formValues: Partial<UserFormValues>) {
+    public constructor(formValues: Partial<UserFormValues> & { fiberTarget?: number | null }) {
         this.username = normalizeString(formValues.username);
         this.firstName = normalizeString(formValues.firstName);
         this.lastName = normalizeString(formValues.lastName);
@@ -55,6 +57,7 @@ export class UpdateUserDto {
         this.proteinTarget = normalizeNumber(formValues.proteinTarget);
         this.fatTarget = normalizeNumber(formValues.fatTarget);
         this.carbTarget = normalizeNumber(formValues.carbTarget);
+        this.fiberTarget = normalizeNumber((formValues as any).fiberTarget);
         this.stepGoal = normalizeInteger(formValues.stepGoal);
         this.waterGoal = normalizeNumber(formValues.waterGoal);
         this.profileImage = normalizeString(formValues.profileImage);

@@ -1,4 +1,15 @@
 <fd-ui-card class="macro-summary__card" [title]="'MACRO_SUMMARY.TITLE' | translate">
+    <fd-ui-button
+        fdUiCardActions
+        variant="secondary"
+        fill="ghost"
+        size="xs"
+        icon="settings"
+        iconSize="sm"
+        ariaLabel="Settings"
+        (click)="settingsClick.emit()"
+    />
+
     <div class="macro-summary__grid">
         @for (macro of items(); track macro.labelKey) {
             <fd-ui-accent-surface
