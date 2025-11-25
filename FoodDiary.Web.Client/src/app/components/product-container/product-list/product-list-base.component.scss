@@ -4,6 +4,7 @@
     margin: 0 auto;
     box-sizing: border-box;
     font-size: 14px;
+    --fd-layout-page-section-spacing: $gap-m;
 
     &__header .fd-page-header__actions {
         gap: $gap-s;
@@ -61,7 +62,11 @@
 
     fd-ui-entity-card {
         display: block;
-        margin-bottom: 12px;
+        margin-bottom: $gap-m;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
     }
 
     @media #{$media-mobile} {
@@ -80,7 +85,7 @@
     padding: 0;
     display: flex;
     flex-direction: column;
-    gap: $gap-xxs;
+    gap: $gap-xs;
 
     &__header {
         display: flex;
@@ -92,7 +97,6 @@
     &__title {
         display: flex;
         gap: $gap-xs;
-        font-size: 1.5em;
         font-weight: 700;
         line-height: 1.5rem;
         color: $color-text-main;
@@ -100,20 +104,21 @@
     }
 
     &__name {
+        font-size: 1.8rem;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
     }
 
     &__barcode {
-        font-size: 0.9em;
+        font-size: 1.6rem;
         color: $color-text-additional;
     }
 
     &__stats {
         display: flex;
         justify-content: space-between;
-        align-items: flex-start;
+        align-items: center;
         gap: $gap-m;
 
         @media #{$media-mobile} {
@@ -124,13 +129,13 @@
     }
 
     &__calories {
-        font-size: 1.2em;
+        font-size: 1.2rem;
         font-weight: 500;
         color: $color-text-main;
     }
 
     &__macros {
-        font-size: 0.95em;
+        font-size: 1rem;
         color: $color-text-additional;
         text-align: right;
 
@@ -140,7 +145,7 @@
     }
 
     &__serving {
-        font-size: 0.9em;
+        font-size: 1rem;
         color: $color-text-additional;
     }
 

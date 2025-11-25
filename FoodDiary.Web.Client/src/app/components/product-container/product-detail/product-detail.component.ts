@@ -1,10 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Product } from '../../../types/product.data';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import {
-    NutrientsSummaryComponent,
-    NutrientsSummaryConfig,
-} from '../../shared/nutrients-summary/nutrients-summary.component';
 import { NutrientData } from '../../../types/charts.data';
 import { ProductService } from '../../../services/product.service';
 import { buildProductTypeTranslationKey } from '../../../utils/product-type.utils';
@@ -17,6 +13,11 @@ import {
     FdUiConfirmDialogComponent,
     FdUiConfirmDialogData,
 } from 'fd-ui-kit/dialog/fd-ui-confirm-dialog.component';
+import { FdUiTabsComponent, FdUiTab } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
+import { FdUiAccentSurfaceComponent } from 'fd-ui-kit/accent-surface/fd-ui-accent-surface.component';
+import { CHART_COLORS } from '../../../constants/chart-colors';
+import { BaseChartDirective } from 'ng2-charts';
+import { ChartData, ChartOptions } from 'chart.js';
 
 @Component({
     selector: 'fd-product-detail',
@@ -26,10 +27,12 @@ import {
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         TranslatePipe,
-        NutrientsSummaryComponent,
         FdUiDialogComponent,
         FdUiDialogFooterDirective,
         FdUiButtonComponent,
+        FdUiTabsComponent,
+        FdUiAccentSurfaceComponent,
+        BaseChartDirective,
     ],
 })
 export class ProductDetailComponent {
@@ -40,25 +43,30 @@ export class ProductDetailComponent {
 
     public product: Product;
     public readonly productTypeKey: string;
-
-    public readonly nutrientSummaryConfig: NutrientsSummaryConfig = {
-        styles: {
-            common: {
-                infoBreakpoints: {
-                    columnLayout: 680,
-                },
-            },
-            charts: {
-                chartBlockSize: 160,
-                breakpoints: {
-                    columnLayout: 680,
-                },
-            },
-        },
+    public readonly tabs: FdUiTab[] = [
+        { value: 'summary', labelKey: 'PRODUCT_DETAIL.TABS.SUMMARY' },
+        { value: 'nutrients', labelKey: 'PRODUCT_DETAIL.TABS.NUTRIENTS' },
+    ];
+    public activeTab: 'summary' | 'nutrients' = 'summary';
+    public readonly onTabChange = (tab: string): void => {
+        if (tab === 'summary' || tab === 'nutrients') {
+            this.activeTab = tab;
+        }
     };
 
     public calories: number;
     public nutrientChartData: NutrientData;
+    public pieChartData: ChartData<'pie', number[], string>;
+    public barChartData: ChartData<'bar', number[], string>;
+    public pieChartOptions: ChartOptions<'pie'>;
+    public barChartOptions: ChartOptions<'bar'>;
+    public readonly chartSize = 200;
+    public readonly macroBlocks: {
+        labelKey: string;
+        value: number;
+        unitKey: string;
+        color: string;
+    }[];
     public isDuplicateInProgress = false;
 
     public get isDeleteDisabled(): boolean {
@@ -95,6 +103,89 @@ export class ProductDetailComponent {
             fats: this.product.fatsPerBase,
             carbs: this.product.carbsPerBase,
         };
+        const labels = [
+            this.translate.instant('NUTRIENTS.PROTEINS'),
+            this.translate.instant('NUTRIENTS.FATS'),
+            this.translate.instant('NUTRIENTS.CARBS'),
+        ];
+        const datasetValues = [
+            this.product.proteinsPerBase,
+            this.product.fatsPerBase,
+            this.product.carbsPerBase,
+        ];
+        const colors = [CHART_COLORS.proteins, CHART_COLORS.fats, CHART_COLORS.carbs];
+        this.pieChartData = {
+            labels,
+            datasets: [
+                {
+                    data: datasetValues,
+                    backgroundColor: colors,
+                },
+            ],
+        };
+        this.barChartData = {
+            labels,
+            datasets: [
+                {
+                    data: datasetValues,
+                    backgroundColor: colors,
+                },
+            ],
+        };
+        const tooltipLabel = (label: string, value: number) =>
+            `${label}: ${value.toFixed(2)} ${this.translate.instant('STATISTICS.GRAMS')}`;
+        this.pieChartOptions = {
+            responsive: true,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: ctx => tooltipLabel(ctx.label ?? '', Number(ctx.raw) || 0),
+                    },
+                },
+            },
+        };
+        this.barChartOptions = {
+            responsive: true,
+            scales: {
+                x: { display: false },
+                y: { beginAtZero: true },
+            },
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: ctx => tooltipLabel(ctx.label ?? '', Number(ctx.raw) || 0),
+                    },
+                },
+            },
+        };
+        this.macroBlocks = [
+            {
+                labelKey: 'PRODUCT_LIST.PROTEINS',
+                value: this.product.proteinsPerBase,
+                unitKey: 'PRODUCT_AMOUNT_UNITS_SHORT.G',
+                color: CHART_COLORS.proteins,
+            },
+            {
+                labelKey: 'PRODUCT_LIST.FATS',
+                value: this.product.fatsPerBase,
+                unitKey: 'PRODUCT_AMOUNT_UNITS_SHORT.G',
+                color: CHART_COLORS.fats,
+            },
+            {
+                labelKey: 'PRODUCT_LIST.CARBS',
+                value: this.product.carbsPerBase,
+                unitKey: 'PRODUCT_AMOUNT_UNITS_SHORT.G',
+                color: CHART_COLORS.carbs,
+            },
+            {
+                labelKey: 'PRODUCT_DETAIL.SUMMARY.FIBER',
+                value: this.product.fiberPerBase,
+                unitKey: 'PRODUCT_AMOUNT_UNITS_SHORT.G',
+                color: CHART_COLORS.fiber,
+            },
+        ];
     }
 
     public onEdit(): void {

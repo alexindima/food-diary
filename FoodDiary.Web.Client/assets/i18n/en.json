@@ -311,7 +311,18 @@
         "CREATE_SUCCESS": "Product created successfully!",
         "EDIT_SUCCESS": "Product edited successfully!",
         "GO_TO_HOME_BUTTON": "Go to Home",
-        "GO_TO_PRODUCT_LIST_BUTTON": "Go to Product List"
+        "GO_TO_PRODUCT_LIST_BUTTON": "Go to Product List",
+        "TABS": {
+            "SUMMARY": "Summary",
+            "NUTRIENTS": "Nutrients"
+        },
+        "SUMMARY": {
+            "CALORIES": "Calories",
+            "BARCODE": "Barcode",
+            "SERVING": "Serving",
+            "PRODUCT_TYPE": "Product type",
+            "FIBER": "Fiber"
+        }
     },
     "PRODUCT_MANAGE": {
         "ADD_TITLE": "Add New Product",

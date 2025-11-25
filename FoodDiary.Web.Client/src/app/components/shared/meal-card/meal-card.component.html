@@ -26,9 +26,9 @@
                 {{ 'MEAL_CARD.KCAL' | translate }}
             </span>
             <span class="product-card__macros">
-                {{ 'MEAL_CARD.PROTEINS' | translate }}: {{ meal().totalProteins | number: '1.0-2' }}g ·
-                {{ 'MEAL_CARD.FATS' | translate }}: {{ meal().totalFats | number: '1.0-2' }}g ·
-                {{ 'MEAL_CARD.CARBS' | translate }}: {{ meal().totalCarbs | number: '1.0-2' }}g
+                {{ 'MEAL_CARD.PROTEINS' | translate }}: {{ meal().totalProteins | number: '1.0-2' }} {{ 'PRODUCT_AMOUNT_UNITS_SHORT.G' | translate }} ·
+                {{ 'MEAL_CARD.FATS' | translate }}: {{ meal().totalFats | number: '1.0-2' }} {{ 'PRODUCT_AMOUNT_UNITS_SHORT.G' | translate }} ·
+                {{ 'MEAL_CARD.CARBS' | translate }}: {{ meal().totalCarbs | number: '1.0-2' }} {{ 'PRODUCT_AMOUNT_UNITS_SHORT.G' | translate }}
             </span>
         </div>
         <div class="consumption-card__meta">

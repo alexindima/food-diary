@@ -1,39 +1,116 @@
-<fd-ui-dialog
-    [title]="product.name"
-    [subtitle]="product.barcode ? '[' + product.barcode + ']' : undefined"
-    size="lg"
->
+<fd-ui-dialog [title]="product.name" size="lg">
+    <fd-ui-tabs class="product-detail__tabs"
+        [tabs]="tabs"
+        [selectedValue]="activeTab"
+        (selectedValueChange)="onTabChange($event)"
+     />
+
     <div class="product-detail">
-        <div class="product-detail__info">
-            <p class="product-detail__text">
-                <span class="product-detail__label">{{ 'PRODUCT_DETAIL.PRODUCT_TYPE' | translate }}</span>
-                {{ productTypeKey | translate }}
-            </p>
-            <p class="product-detail__text">
-                <span class="product-detail__label">{{ 'PRODUCT_DETAIL.BASE_AMOUNT' | translate }}</span>
-                {{ product.baseAmount }}
-                {{ ('PRODUCT_AMOUNT_UNITS_SHORT.' + product.baseUnit) | translate }}
-            </p>
-        </div>
-        <fd-nutrients-summary [calories]="calories"
-            [nutrientChartData]="nutrientChartData"
-            [config]="nutrientSummaryConfig"
-            [fiberValue]="product.fiberPerBase"
-            [fiberUnitKey]="'PRODUCT_AMOUNT_UNITS_SHORT.' + product.baseUnit"
-         />
+        @switch (activeTab) {
+            @case ('summary') {
+                <div class="product-detail__summary">
+                    <fd-ui-accent-surface class="product-detail__surface"
+                        accentSide="top"
+                        accentColor="var(--fd-color-accent, #f5a623)"
+                        [tinted]="true"
+                    >
+                        <span class="product-detail__surface-label">{{ 'PRODUCT_DETAIL.SUMMARY.CALORIES' | translate }}</span>
+                        <strong class="product-detail__surface-value">
+                            {{ calories }}
+                            {{ 'PRODUCT_LIST.KCAL' | translate }}
+                        </strong>
+                    </fd-ui-accent-surface>
+
+                    @if (product.barcode) {
+                        <fd-ui-accent-surface class="product-detail__surface"
+                            accentSide="top"
+                            accentColor="var(--fd-color-primary, #667c89)"
+                            [tinted]="true"
+                        >
+                            <span class="product-detail__surface-label">{{ 'PRODUCT_DETAIL.SUMMARY.BARCODE' | translate }}</span>
+                            <strong class="product-detail__surface-value">{{ product.barcode }}</strong>
+                        </fd-ui-accent-surface>
+                    }
+
+                    <fd-ui-accent-surface class="product-detail__surface"
+                        accentSide="top"
+                        accentColor="var(--fd-color-info, #4a90e2)"
+                        [tinted]="true"
+                    >
+                        <span class="product-detail__surface-label">{{ 'PRODUCT_DETAIL.SUMMARY.SERVING' | translate }}</span>
+                        <strong class="product-detail__surface-value">
+                            {{ product.baseAmount }}
+                            {{ ('PRODUCT_AMOUNT_UNITS_SHORT.' + product.baseUnit) | translate }}
+                        </strong>
+                    </fd-ui-accent-surface>
+
+                        <fd-ui-accent-surface class="product-detail__surface"
+                            accentSide="top"
+                            accentColor="var(--fd-color-success, #50e3c2)"
+                            [tinted]="true"
+                        >
+                            <span class="product-detail__surface-label">{{ 'PRODUCT_DETAIL.SUMMARY.PRODUCT_TYPE' | translate }}</span>
+                            <strong class="product-detail__surface-value">{{ productTypeKey | translate }}</strong>
+                        </fd-ui-accent-surface>
+                </div>
+            }
+            @case ('nutrients') {
+                <div class="product-detail__nutrients">
+                    <div class="product-detail__macro-grid">
+                        @for (macro of macroBlocks; track macro.labelKey) {
+                            <fd-ui-accent-surface class="product-detail__surface"
+                                accentSide="top"
+                                [accentColor]="macro.color"
+                                [tinted]="true"
+                            >
+                                <span class="product-detail__surface-label">{{ macro.labelKey | translate }}</span>
+                                <strong class="product-detail__surface-value">
+                                    {{ macro.value }}
+                                    {{ macro.unitKey | translate }}
+                                </strong>
+                            </fd-ui-accent-surface>
+                        }
+                    </div>
+                    <div class="product-detail__charts">
+                        <div class="product-detail__chart" [style.width.px]="chartSize" [style.height.px]="chartSize">
+                            <canvas
+                                baseChart
+                                [style.width.px]="chartSize"
+                                [style.height.px]="chartSize"
+                                [data]="pieChartData"
+                                [options]="pieChartOptions"
+                                [type]="'pie'"
+                                [legend]="false"
+                            ></canvas>
+                        </div>
+                        <div class="product-detail__chart" [style.width.px]="chartSize" [style.height.px]="chartSize">
+                            <canvas
+                                baseChart
+                                [style.width.px]="chartSize"
+                                [style.height.px]="chartSize"
+                                [data]="barChartData"
+                                [options]="barChartOptions"
+                                [type]="'bar'"
+                                [legend]="false"
+                            ></canvas>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
     </div>
 
     <div fdUiDialogFooter class="product-detail__footer">
         @if (canModify) {
-            <fd-ui-button size="sm" variant="secondary" icon="edit" (click)="onEdit()">
+            <fd-ui-button size="md" variant="secondary" icon="edit" (click)="onEdit()">
                 {{ 'PRODUCT_DETAIL.EDIT_BUTTON' | translate }}
             </fd-ui-button>
-            <fd-ui-button size="sm" variant="danger" icon="delete" (click)="onDelete()">
+            <fd-ui-button size="md" variant="danger" icon="delete" (click)="onDelete()">
                 {{ 'PRODUCT_DETAIL.DELETE_BUTTON' | translate }}
             </fd-ui-button>
         } @else {
             <fd-ui-button
-                size="sm"
+                size="md"
                 variant="secondary"
                 fill="outline"
                 icon="content_copy"

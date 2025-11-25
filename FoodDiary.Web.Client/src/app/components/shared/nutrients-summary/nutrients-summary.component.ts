@@ -39,6 +39,7 @@ export class NutrientsSummaryComponent implements OnInit {
     public fiberValue = input<number | null>(null);
     public fiberUnitKey = input<string>('PRODUCT_AMOUNT_UNITS_SHORT.G');
     public bare = input<boolean>(false);
+    public showBarChart = input<boolean>(false);
 
     public readonly config = input<NutrientsSummaryConfig>({});
     public mergedConfig!: NutrientsSummaryConfigInternal;
@@ -157,6 +158,11 @@ export class NutrientsSummaryComponent implements OnInit {
                 ...userConfig.content,
             },
         };
+    }
+
+    public get hasNutrientData(): boolean {
+        const data = this.nutrientChartData();
+        return (data.proteins ?? 0) + (data.fats ?? 0) + (data.carbs ?? 0) > 0;
     }
 
     public get nutrientsPieChartData(): ChartData<'pie', number[], string> {

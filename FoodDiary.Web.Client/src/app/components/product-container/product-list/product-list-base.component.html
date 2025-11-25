@@ -82,9 +82,9 @@
                                     {{ 'PRODUCT_LIST.KCAL' | translate }}
                                 </span>
                                 <span class="product-card__macros">
-                                    {{ 'PRODUCT_LIST.PROTEINS' | translate }}: {{ product.proteinsPerBase }}g ·
-                                    {{ 'PRODUCT_LIST.FATS' | translate }}: {{ product.fatsPerBase }}g ·
-                                    {{ 'PRODUCT_LIST.CARBS' | translate }}: {{ product.carbsPerBase }}g
+                                    {{ 'PRODUCT_LIST.PROTEINS' | translate }}: {{ product.proteinsPerBase }} {{ 'PRODUCT_AMOUNT_UNITS_SHORT.G' | translate }} ·
+                                    {{ 'PRODUCT_LIST.FATS' | translate }}: {{ product.fatsPerBase }} {{ 'PRODUCT_AMOUNT_UNITS_SHORT.G' | translate }} ·
+                                    {{ 'PRODUCT_LIST.CARBS' | translate }}: {{ product.carbsPerBase }} {{ 'PRODUCT_AMOUNT_UNITS_SHORT.G' | translate }}
                                 </span>
                             </div>
                             <div class="product-card__serving">
@@ -112,3 +112,4 @@
         }
     </fd-page-body>
 </div>
+

@@ -264,7 +264,18 @@
         "CREATE_SUCCESS": "Продукт успешно создан!",
         "EDIT_SUCCESS": "Продукт успешно отредактирован!",
         "GO_TO_HOME_BUTTON": "На главную",
-        "GO_TO_PRODUCT_LIST_BUTTON": "К списку продуктов"
+        "GO_TO_PRODUCT_LIST_BUTTON": "К списку продуктов",
+        "TABS": {
+            "SUMMARY": "Сводка",
+            "NUTRIENTS": "Нутриенты"
+        },
+        "SUMMARY": {
+            "CALORIES": "Калории",
+            "BARCODE": "Штрихкод",
+            "SERVING": "Порция",
+            "PRODUCT_TYPE": "Тип продукта",
+            "FIBER": "Клетчатка"
+        }
     },
     "PRODUCT_MANAGE": {
         "ADD_TITLE": "Добавить новый продукт",

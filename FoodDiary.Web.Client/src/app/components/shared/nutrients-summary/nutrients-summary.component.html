@@ -67,24 +67,40 @@
                 </li>
             </ul>
         </div>
-        @if (!mergedConfig.content.hidePieChart && (this.nutrientChartData().proteins + this.nutrientChartData().fats + this.nutrientChartData().carbs) > 0) {
+        @if (hasNutrientData) {
             <div
                 class="charts-wrapper"
                 [ngStyle]="chartsWrapperStyles"
                 [class.column-layout]="isColumnLayout"
             >
-                <div class="chart" [ngStyle]="chartStyles">
-                    <canvas
-                        baseChart
-                        [style.width.px]="chartsBlockSize"
-                        [style.height.px]="chartsBlockSize"
-                        [ngStyle]="chartCanvasStyles"
-                        [data]="nutrientsPieChartData"
-                        [options]="pieChartOptions"
-                        [type]="'pie'"
-                        [legend]="false"
-                    ></canvas>
-                </div>
+                @if (!mergedConfig.content.hidePieChart) {
+                    <div class="chart" [ngStyle]="chartStyles">
+                        <canvas
+                            baseChart
+                            [style.width.px]="chartsBlockSize"
+                            [style.height.px]="chartsBlockSize"
+                            [ngStyle]="chartCanvasStyles"
+                            [data]="nutrientsPieChartData"
+                            [options]="pieChartOptions"
+                            [type]="'pie'"
+                            [legend]="false"
+                        ></canvas>
+                    </div>
+                }
+                @if (showBarChart()) {
+                    <div class="chart" [ngStyle]="chartStyles">
+                        <canvas
+                            baseChart
+                            [style.width.px]="chartsBlockSize"
+                            [style.height.px]="chartsBlockSize"
+                            [ngStyle]="chartCanvasStyles"
+                            [data]="nutrientsBarChartData"
+                            [options]="barChartOptions"
+                            [type]="'bar'"
+                            [legend]="false"
+                        ></canvas>
+                    </div>
+                }
             </div>
         }
     </div>

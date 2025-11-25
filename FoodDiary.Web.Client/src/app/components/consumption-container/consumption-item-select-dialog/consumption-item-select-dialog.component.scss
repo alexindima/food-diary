@@ -4,6 +4,16 @@
     gap: 16px;
     max-height: 90vh;
 
+    :host {
+        --fd-dialog-header-margin-bottom: 0;
+        --fd-dialog-header-padding-bottom: 1rem;
+    }
+
+    :host ::ng-deep .fd-ui-dialog__header {
+        margin-bottom: 0 !important;
+        padding-bottom: 1rem;
+    }
+
     &__header {
         .fd-page-header__title-block {
             flex: 1 1 200px;
