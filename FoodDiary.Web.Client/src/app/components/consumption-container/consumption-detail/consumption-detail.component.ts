@@ -9,6 +9,7 @@ import {
 } from '../../shared/nutrients-summary/nutrients-summary.component';
 import { NutrientData } from '../../../types/charts.data';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog.component';
+import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import {
@@ -30,6 +31,7 @@ import {
         DecimalPipe,
         NutrientsSummaryComponent,
         FdUiDialogComponent,
+        FdUiDialogFooterDirective,
         FdUiButtonComponent,
     ],
 })

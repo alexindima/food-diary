@@ -51,6 +51,7 @@
                         [date]="selectedDate()"
                         [consumed]="todayCalories()"
                         [goal]="dailyGoal()"
+                        (setGoalClick)="openCalorieGoalDialog()"
                         (settingsClick)="openCalorieGoalDialog()"
                     />
 

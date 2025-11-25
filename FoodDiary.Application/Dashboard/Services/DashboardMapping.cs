@@ -24,7 +24,7 @@ public static class DashboardMapping
             user?.ProteinTarget,
             user?.FatTarget,
             user?.CarbTarget,
-            null);
+            user?.FiberTarget);
     }
 
     public static DashboardWeightDto ToWeightDto(IReadOnlyList<WeightEntry> entries, double? desired)

@@ -440,6 +440,9 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.Property<double?>("CarbTarget")
                         .HasColumnType("double precision");
 
+                    b.Property<double?>("FiberTarget")
+                        .HasColumnType("double precision");
+
                     b.Property<DateTime>("CreatedOnUtc")
                         .HasColumnType("timestamp with time zone");
 

@@ -3,10 +3,8 @@ import { ChangeDetectionStrategy, Component, computed, input, output } from '@an
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { DynamicProgressBarComponent } from '../dynamic-progress-bar/dynamic-progress-bar.component';
-import { NavigationService } from '../../../services/navigation.service';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiCardActionsDirective } from 'fd-ui-kit/card/fd-ui-card-actions.directive';
-import { inject } from '@angular/core';
 
 @Component({
     selector: 'fd-daily-progress-card',
@@ -24,12 +22,11 @@ import { inject } from '@angular/core';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DailyProgressCardComponent {
-    private readonly navigation = inject(NavigationService);
-
     public readonly date = input.required<Date>();
     public readonly consumed = input<number>(0);
     public readonly goal = input<number>(0);
     public readonly settingsClick = output<void>();
+    public readonly setGoalClick = output<void>();
 
     public readonly hasGoal = computed(() => this.goal() > 0);
 
@@ -47,10 +44,6 @@ export class DailyProgressCardComponent {
         const remaining = this.goal() - this.consumed();
         return remaining > 0 ? remaining : 0;
     });
-
-    public navigateToGoal(): void {
-        this.navigation.navigateToProfile();
-    }
 
     public readonly motivationKey = computed(() => {
         if (!this.hasGoal()) {

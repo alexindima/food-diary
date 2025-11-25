@@ -23,6 +23,7 @@ public static class UserCommandMappings
             request.ProteinTarget,
             request.FatTarget,
             request.CarbTarget,
+            request.FiberTarget,
             request.StepGoal,
             request.WaterGoal,
             request.ProfileImage,

@@ -24,6 +24,7 @@ public static class UserMappings
             user.ProteinTarget,
             user.FatTarget,
             user.CarbTarget,
+            user.FiberTarget,
             user.StepGoal,
             user.WaterGoal,
             user.ProfileImage,

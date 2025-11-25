@@ -68,12 +68,17 @@
         display: flex;
         align-items: center;
         justify-content: flex-end;
+        flex-shrink: 0;
+        .fd-ui-button {
+            white-space: nowrap;
+        }
     }
 
     &__empty-text {
         display: flex;
         flex-direction: column;
         gap: 4px;
+        min-width: 0;
     }
 
     &__empty-title {
@@ -147,6 +152,7 @@
         &__empty {
             flex-wrap: wrap;
             justify-content: flex-start;
+            row-gap: 8px;
         }
     }
 }

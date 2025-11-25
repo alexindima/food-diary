@@ -35,6 +35,7 @@ public class UpdateUserCommandHandler(IUserRepository userRepository)
             proteinTarget: command.ProteinTarget,
             fatTarget: command.FatTarget,
             carbTarget: command.CarbTarget,
+            fiberTarget: command.FiberTarget,
             stepGoal: command.StepGoal,
             waterGoal: command.WaterGoal,
             profileImage: Normalize(command.ProfileImage)

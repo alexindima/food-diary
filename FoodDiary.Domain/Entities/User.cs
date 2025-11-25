@@ -25,6 +25,7 @@ public sealed class User : AggregateRoot<UserId> {
     public double? ProteinTarget { get; private set; }
     public double? FatTarget { get; private set; }
     public double? CarbTarget { get; private set; }
+    public double? FiberTarget { get; private set; }
     public int? StepGoal { get; private set; }
     public double? WaterGoal { get; private set; }
     public string? ProfileImage { get; private set; }
@@ -77,6 +78,7 @@ public sealed class User : AggregateRoot<UserId> {
         double? proteinTarget = null,
         double? fatTarget = null,
         double? carbTarget = null,
+        double? fiberTarget = null,
         int? stepGoal = null,
         double? waterGoal = null,
         string? profileImage = null) {
@@ -93,6 +95,7 @@ public sealed class User : AggregateRoot<UserId> {
         if (proteinTarget.HasValue) ProteinTarget = proteinTarget;
         if (fatTarget.HasValue) FatTarget = fatTarget;
         if (carbTarget.HasValue) CarbTarget = carbTarget;
+        if (fiberTarget.HasValue) FiberTarget = fiberTarget;
         if (stepGoal.HasValue) StepGoal = stepGoal;
         if (waterGoal.HasValue) WaterGoal = waterGoal;
         if (profileImage is not null) ProfileImage = profileImage;

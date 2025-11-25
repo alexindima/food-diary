@@ -35,7 +35,7 @@ export class FdUiDialogComponent {
     private readonly dialogRef = inject(MatDialogRef<FdUiDialogComponent>, { optional: true });
     private readonly injectedData = inject(MAT_DIALOG_DATA, { optional: true }) as FdUiDialogData | null;
 
-    private readonly footerSlot = contentChild(FdUiDialogFooterDirective);
+    private readonly footerSlot = contentChild(FdUiDialogFooterDirective, { descendants: true });
 
     public readonly title = input<string | undefined>(this.injectedData?.title);
     public readonly subtitle = input<string | undefined>(this.injectedData?.subtitle);

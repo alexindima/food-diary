@@ -16,6 +16,10 @@
         "INVALID_MIN_AMOUNT_MUST_BE_MORE_ZERO": "Value must be greater than 0",
         "UNKNOWN": "Unknown error"
     },
+    "COMMON": {
+        "CANCEL": "Cancel",
+        "SAVE": "Save"
+    },
     "MACRO_SUMMARY": {
         "TITLE": "Nutrient balance",
         "PROTEINS": "Proteins",
@@ -629,14 +633,19 @@
             "EXTREME": "Extreme activity"
         },
         "NUTRITION_SECTION": "Nutrition goals",
-        "DAILY_CALORIES": "Daily calorie target (kcal)",
+        "DAILY_CALORIES": "Daily calorie target",
+        "CALORIE_TARGET_LABEL": "Calorie target (kcal)",
         "DAILY_CALORIES_PLACEHOLDER": "Set your calorie target",
+        "CALORIE_TARGET_HINT": "Used to calculate daily progress.",
         "PROTEIN_TARGET": "Protein target (g)",
         "PROTEIN_TARGET_PLACEHOLDER": "Set your protein goal",
         "FAT_TARGET": "Fat target (g)",
         "FAT_TARGET_PLACEHOLDER": "Set your fat goal",
         "CARB_TARGET": "Carb target (g)",
         "CARB_TARGET_PLACEHOLDER": "Set your carb goal",
+        "FIBER_TARGET": "Fiber target (g)",
+        "FIBER_TARGET_PLACEHOLDER": "Set your fiber goal",
+        "MACRO_TARGET_HINT": "Used to calculate daily macro balance.",
         "STEP_GOAL": "Step goal (per day)",
         "STEP_GOAL_PLACEHOLDER": "Set your daily steps goal",
         "WATER_GOAL": "Water goal (ml/day)",

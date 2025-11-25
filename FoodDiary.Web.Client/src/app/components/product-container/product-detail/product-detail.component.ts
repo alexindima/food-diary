@@ -10,6 +10,7 @@ import { ProductService } from '../../../services/product.service';
 import { buildProductTypeTranslationKey } from '../../../utils/product-type.utils';
 import { FD_UI_DIALOG_DATA, FdUiDialogRef } from 'fd-ui-kit/material';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog.component';
+import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import {
@@ -23,7 +24,13 @@ import {
     templateUrl: './product-detail.component.html',
     styleUrls: ['./product-detail.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [TranslatePipe, NutrientsSummaryComponent, FdUiDialogComponent, FdUiButtonComponent],
+    imports: [
+        TranslatePipe,
+        NutrientsSummaryComponent,
+        FdUiDialogComponent,
+        FdUiDialogFooterDirective,
+        FdUiButtonComponent,
+    ],
 })
 export class ProductDetailComponent {
     private readonly productService = inject(ProductService);

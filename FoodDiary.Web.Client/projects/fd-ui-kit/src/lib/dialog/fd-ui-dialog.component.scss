@@ -4,18 +4,40 @@
 }
 
 .fd-ui-dialog {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    background: var(--fd-color-dialog-surface, #FFFFFF);
+    border-radius: 1rem;
+    box-shadow: 0 20px 60px rgba(15, 23, 42, 0.14);
+    border: 1px solid var(--fd-color-dialog-border, rgba(17, 24, 39, 0.08));
+    padding: 1.25rem;
+    box-sizing: border-box;
+    max-height: 80vh;
+    min-width: 0;
+    width: 100%;
+    overflow: hidden;
+}
+
+.fd-ui-dialog--size-sm {
+    padding: 1rem;
+}
+
+.fd-ui-dialog--size-lg {
+    padding: 1.5rem;
+}
+
+.fd-ui-dialog:not(.fd-ui-dialog--has-footer) {
+    grid-template-rows: auto minmax(0, 1fr);
 }
 
 .fd-ui-dialog__header {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
-    gap: 1rem;
+    gap: 0.75rem;
     border-bottom: 1px solid var(--fd-color-dialog-border, rgba(17, 24, 39, 0.08));
-    padding-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    margin-bottom: 1rem;
 }
 
 .fd-ui-dialog__heading {
@@ -59,7 +81,8 @@
 
 .fd-ui-dialog__body {
     color: inherit;
-    max-height: calc(80vh - 6rem);
+    min-height: 0;
+    padding-block: 0.25rem;
     overflow-y: auto;
 }
 
@@ -68,16 +91,15 @@
     justify-content: flex-end;
     gap: 0.75rem;
     border-top: 1px solid var(--fd-color-dialog-border, rgba(17, 24, 39, 0.08));
-    padding-top: 1rem;
+
+    &:empty {
+        display: none;
+        border-top: 0;
+        padding-top: 0;
+    }
 }
 
 .fd-ui-dialog-panel {
-    background: var(--fd-color-dialog-surface, #FFFFFF);
-    border-radius: 1rem;
-    box-shadow: 0 20px 60px rgba(15, 23, 42, 0.14);
-    border: 1px solid var(--fd-color-dialog-border, rgba(17, 24, 39, 0.08));
-    padding: 1.5rem;
-    box-sizing: border-box;
     width: min(calc(100vw - 2rem), 520px);
 }
 
@@ -87,7 +109,14 @@
 
 .fd-ui-dialog-panel--lg {
     width: min(calc(100vw - 2rem), 720px);
-    padding: 2rem;
+}
+
+.fd-ui-dialog-panel .mat-mdc-dialog-surface {
+    padding: 0;
+    background: transparent;
+    box-shadow: none;
+    border-radius: 0;
+    overflow: visible;
 }
 
 .fd-ui-dialog-backdrop {

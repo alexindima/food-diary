@@ -42,7 +42,7 @@
     top: -5px;
     bottom: -5px;
     width: 2px;
-    background-color: black;
+    background-color: rgba(15, 23, 42, 0.35);
     transform: translateX(-50%);
     transition: left 0.3s ease, width 0.3s ease;
 }
@@ -57,4 +57,18 @@
     font-size: 12px;
     font-weight: bold;
     transition: left 0.3s ease, width 0.3s ease;
+}
+
+.dynamic-progress-bar-threshold {
+    display: none;
+}
+
+.dynamic-progress-bar-overflow-label {
+    position: absolute;
+    top: calc(100% + 6px);
+    transform: translateX(-50%);
+    font-size: 0.75rem;
+    color: rgba(15, 23, 42, 0.6);
+    line-height: 1;
+    white-space: nowrap;
 }

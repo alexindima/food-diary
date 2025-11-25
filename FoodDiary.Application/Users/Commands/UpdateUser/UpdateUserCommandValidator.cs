@@ -30,9 +30,9 @@ public class UpdateUserCommandValidator : AbstractValidator<UpdateUserCommand> {
 
         When(x => x.DailyCalorieTarget.HasValue, () => {
             RuleFor(x => x.DailyCalorieTarget)
-                .GreaterThan(0)
+                .GreaterThanOrEqualTo(0)
                 .WithErrorCode("Validation.Invalid")
-                .WithMessage("DailyCalorieTarget must be greater than 0");
+                .WithMessage("DailyCalorieTarget must be greater than or equal to 0");
         });
 
         When(x => x.ProteinTarget.HasValue, () => {
@@ -54,6 +54,13 @@ public class UpdateUserCommandValidator : AbstractValidator<UpdateUserCommand> {
                 .GreaterThanOrEqualTo(0)
                 .WithErrorCode("Validation.Invalid")
                 .WithMessage("CarbTarget must be greater than or equal to 0");
+        });
+
+        When(x => x.FiberTarget.HasValue, () => {
+            RuleFor(x => x.FiberTarget)
+                .GreaterThanOrEqualTo(0)
+                .WithErrorCode("Validation.Invalid")
+                .WithMessage("FiberTarget must be greater than or equal to 0");
         });
 
         When(x => x.StepGoal.HasValue, () => {

@@ -2,5 +2,12 @@
     display: flex;
     justify-content: flex-end;
     gap: 12px;
-    margin-top: 12px;
+    margin-top: 8px;
+}
+
+.calorie-goal-dialog__hint {
+    margin: 8px 0 0;
+    color: var(--fd-color-gray-600, #4B5563);
+    font-size: 0.95rem;
+    line-height: 1.4;
 }

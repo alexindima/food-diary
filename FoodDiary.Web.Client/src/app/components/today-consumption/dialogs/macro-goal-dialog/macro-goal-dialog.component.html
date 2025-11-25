@@ -1,5 +1,5 @@
 <fd-ui-dialog class="macro-goal-dialog" [title]="'MACRO_SUMMARY.TITLE' | translate">
-    <form [formGroup]="form" (ngSubmit)="save()">
+    <form [formGroup]="form" (ngSubmit)="save()" id="macroGoalForm">
         <div class="macro-goal-dialog__grid">
             <fd-ui-input
                 formControlName="proteinTarget"
@@ -25,19 +25,23 @@
             <fd-ui-input
                 formControlName="fiberTarget"
                 type="number"
-                [label]="'SHARED.NUTRIENTS_SUMMARY.FIBER' | translate"
-                [placeholder]="'SHARED.NUTRIENTS_SUMMARY.FIBER' | translate"
+                [label]="'USER_MANAGE.FIBER_TARGET' | translate"
+                [placeholder]="'USER_MANAGE.FIBER_TARGET_PLACEHOLDER' | translate"
                 floatLabel="always"
             />
         </div>
-
-        <div fdUiDialogFooter class="macro-goal-dialog__footer">
-            <fd-ui-button type="button" variant="secondary" fill="ghost" (click)="cancel()">
-                {{ 'COMMON.CANCEL' | translate }}
-            </fd-ui-button>
-            <fd-ui-button type="submit" icon="save">
-                {{ 'COMMON.SAVE' | translate }}
-            </fd-ui-button>
-        </div>
     </form>
+
+    <p class="macro-goal-dialog__hint">
+        {{ 'USER_MANAGE.MACRO_TARGET_HINT' | translate }}
+    </p>
+
+    <div fdUiDialogFooter class="macro-goal-dialog__footer">
+        <fd-ui-button type="button" variant="secondary" fill="ghost" (click)="cancel()">
+            {{ 'COMMON.CANCEL' | translate }}
+        </fd-ui-button>
+        <fd-ui-button type="submit" icon="save" form="macroGoalForm" (click)="save()">
+            {{ 'COMMON.SAVE' | translate }}
+        </fd-ui-button>
+    </div>
 </fd-ui-dialog>

@@ -16,6 +16,10 @@
         "INVALID_MIN_AMOUNT_MUST_BE_MORE_ZERO": "Значение должно быть больше 0",
         "UNKNOWN": "Неизвестная ошибка"
     },
+    "COMMON": {
+        "CANCEL": "Отмена",
+        "SAVE": "Сохранить"
+    },
     "HEADER": {
         "HOME": "Главная",
         "LOGIN": "Вход",
@@ -789,6 +793,19 @@
         "GOALS_DIALOG": {
             "TITLE": "Настройка ежедневных целей"
         },
+        "DAILY_CALORIES": "Цель по калориям",
+        "CALORIE_TARGET_LABEL": "Цель по калориям (ккал)",
+        "DAILY_CALORIES_PLACEHOLDER": "Укажите цель по калориям",
+        "CALORIE_TARGET_HINT": "Используется для расчёта дневного прогресса.",
+        "PROTEIN_TARGET": "Цель по белкам (г)",
+        "PROTEIN_TARGET_PLACEHOLDER": "Укажите цель по белкам",
+        "FAT_TARGET": "Цель по жирам (г)",
+        "FAT_TARGET_PLACEHOLDER": "Укажите цель по жирам",
+        "CARB_TARGET": "Цель по углеводам (г)",
+        "CARB_TARGET_PLACEHOLDER": "Укажите цель по углеводам",
+        "FIBER_TARGET": "Цель по клетчатке (г)",
+        "FIBER_TARGET_PLACEHOLDER": "Укажите цель по клетчатке",
+        "MACRO_TARGET_HINT": "Используется для расчёта баланса нутриентов за день.",
         "STEP_GOAL": "Цель по шагам (в день)",
         "STEP_GOAL_PLACEHOLDER": "Задайте дневную цель по шагам",
         "WATER_GOAL": "Цель по воде (мл/день)",

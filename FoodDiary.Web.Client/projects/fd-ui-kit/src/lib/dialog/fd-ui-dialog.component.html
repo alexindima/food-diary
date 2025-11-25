@@ -1,4 +1,4 @@
-<div class="fd-ui-dialog" [ngClass]="['fd-ui-dialog--size-' + size()]">
+<div class="fd-ui-dialog" [ngClass]="['fd-ui-dialog--size-' + size(), hasFooter ? 'fd-ui-dialog--has-footer' : '']">
   @if (showHeader()) {
     <header class="fd-ui-dialog__header">
       <div class="fd-ui-dialog__heading">

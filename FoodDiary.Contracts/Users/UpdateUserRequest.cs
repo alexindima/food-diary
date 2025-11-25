@@ -13,6 +13,7 @@ public record UpdateUserRequest(
     double? ProteinTarget,
     double? FatTarget,
     double? CarbTarget,
+    double? FiberTarget,
     int? StepGoal,
     double? WaterGoal,
     string? ProfileImage,
