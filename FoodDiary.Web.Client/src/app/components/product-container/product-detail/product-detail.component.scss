@@ -39,6 +39,10 @@
         border-radius: var(--fd-radius-lg, 12px);
     }
 
+    &__surface--summary {
+        background: var(--fd-color-primary-50, #eef2ff);
+    }
+
     &__surface-label {
         font-size: 0.9rem;
         color: var(--fd-color-text-muted, #6b7280);
@@ -81,15 +85,24 @@
 
     &__footer {
         display: flex;
-        justify-content: flex-end;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+    }
+
+    &__actions {
+        display: inline-flex;
         gap: 0.75rem;
         flex-wrap: wrap;
+        justify-content: flex-end;
+        align-self: flex-end;
     }
 
     &__warning {
-        margin: 1rem 0 0;
         color: var(--fd-color-warning, #FFCC00);
         font-size: 0.9rem;
+        font-weight: 600;
+        width: 100%;
     }
 
     @media (max-width: 900px) {

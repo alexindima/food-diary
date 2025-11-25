@@ -9,11 +9,11 @@
         @switch (activeTab) {
             @case ('summary') {
                 <div class="product-detail__summary">
-                    <fd-ui-accent-surface class="product-detail__surface"
+                    <fd-ui-accent-surface class="product-detail__surface product-detail__surface--summary"
                         accentSide="top"
-                        accentColor="var(--fd-color-accent, #f5a623)"
+                        accentColor="var(--fd-color-primary-300, #93C5FD)"
                         [tinted]="true"
-                    >
+                     >
                         <span class="product-detail__surface-label">{{ 'PRODUCT_DETAIL.SUMMARY.CALORIES' | translate }}</span>
                         <strong class="product-detail__surface-value">
                             {{ calories }}
@@ -22,9 +22,9 @@
                     </fd-ui-accent-surface>
 
                     @if (product.barcode) {
-                        <fd-ui-accent-surface class="product-detail__surface"
+                        <fd-ui-accent-surface class="product-detail__surface product-detail__surface--summary"
                             accentSide="top"
-                            accentColor="var(--fd-color-primary, #667c89)"
+                            accentColor="var(--fd-color-primary-300, #93C5FD)"
                             [tinted]="true"
                         >
                             <span class="product-detail__surface-label">{{ 'PRODUCT_DETAIL.SUMMARY.BARCODE' | translate }}</span>
@@ -32,9 +32,9 @@
                         </fd-ui-accent-surface>
                     }
 
-                    <fd-ui-accent-surface class="product-detail__surface"
+                    <fd-ui-accent-surface class="product-detail__surface product-detail__surface--summary"
                         accentSide="top"
-                        accentColor="var(--fd-color-info, #4a90e2)"
+                        accentColor="var(--fd-color-primary-300, #93C5FD)"
                         [tinted]="true"
                     >
                         <span class="product-detail__surface-label">{{ 'PRODUCT_DETAIL.SUMMARY.SERVING' | translate }}</span>
@@ -44,14 +44,14 @@
                         </strong>
                     </fd-ui-accent-surface>
 
-                        <fd-ui-accent-surface class="product-detail__surface"
-                            accentSide="top"
-                            accentColor="var(--fd-color-success, #50e3c2)"
-                            [tinted]="true"
-                        >
-                            <span class="product-detail__surface-label">{{ 'PRODUCT_DETAIL.SUMMARY.PRODUCT_TYPE' | translate }}</span>
-                            <strong class="product-detail__surface-value">{{ productTypeKey | translate }}</strong>
-                        </fd-ui-accent-surface>
+                    <fd-ui-accent-surface class="product-detail__surface product-detail__surface--summary"
+                        accentSide="top"
+                        accentColor="var(--fd-color-primary-300, #93C5FD)"
+                        [tinted]="true"
+                    >
+                        <span class="product-detail__surface-label">{{ 'PRODUCT_DETAIL.SUMMARY.PRODUCT_TYPE' | translate }}</span>
+                        <strong class="product-detail__surface-value">{{ productTypeKey | translate }}</strong>
+                    </fd-ui-accent-surface>
                 </div>
             }
             @case ('nutrients') {
@@ -101,28 +101,29 @@
     </div>
 
     <div fdUiDialogFooter class="product-detail__footer">
-        @if (canModify) {
-            <fd-ui-button size="md" variant="secondary" icon="edit" (click)="onEdit()">
-                {{ 'PRODUCT_DETAIL.EDIT_BUTTON' | translate }}
-            </fd-ui-button>
-            <fd-ui-button size="md" variant="danger" icon="delete" (click)="onDelete()">
-                {{ 'PRODUCT_DETAIL.DELETE_BUTTON' | translate }}
-            </fd-ui-button>
-        } @else {
-            <fd-ui-button
-                size="md"
-                variant="secondary"
-                fill="outline"
-                icon="content_copy"
-                [disabled]="isDuplicateInProgress"
-                (click)="onDuplicate()"
-            >
-                {{ 'PRODUCT_DETAIL.DUPLICATE_BUTTON' | translate }}
-            </fd-ui-button>
+        @if (warningMessage) {
+            <span class="product-detail__warning">{{ warningMessage | translate }}</span>
         }
+        <div class="product-detail__actions">
+            @if (canModify) {
+                <fd-ui-button size="md" variant="secondary" icon="edit" (click)="onEdit()">
+                    {{ 'PRODUCT_DETAIL.EDIT_BUTTON' | translate }}
+                </fd-ui-button>
+                <fd-ui-button size="md" variant="danger" icon="delete" (click)="onDelete()">
+                    {{ 'PRODUCT_DETAIL.DELETE_BUTTON' | translate }}
+                </fd-ui-button>
+            } @else {
+                <fd-ui-button
+                    size="md"
+                    variant="secondary"
+                    fill="outline"
+                    icon="content_copy"
+                    [disabled]="isDuplicateInProgress"
+                    (click)="onDuplicate()"
+                >
+                    {{ 'PRODUCT_DETAIL.DUPLICATE_BUTTON' | translate }}
+                </fd-ui-button>
+            }
+        </div>
     </div>
-
-    @if (warningMessage) {
-        <p class="product-detail__warning">{{ warningMessage | translate }}</p>
-    }
 </fd-ui-dialog>
