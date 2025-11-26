@@ -29,6 +29,7 @@ public class DuplicateProductCommandHandler(IProductRepository productRepository
             original.Name,
             original.BaseUnit,
             original.BaseAmount,
+            original.DefaultPortionAmount,
             original.CaloriesPerBase,
             original.ProteinsPerBase,
             original.FatsPerBase,

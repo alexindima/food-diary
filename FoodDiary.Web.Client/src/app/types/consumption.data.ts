@@ -114,6 +114,7 @@ export const createEmptyProductSnapshot = (): Product => ({
     productType: ProductType.Unknown,
     baseUnit: MeasurementUnit.G,
     baseAmount: 1,
+    defaultPortionAmount: 1,
     caloriesPerBase: 0,
     proteinsPerBase: 0,
     fatsPerBase: 0,

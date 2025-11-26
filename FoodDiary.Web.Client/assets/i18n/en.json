@@ -320,6 +320,7 @@
             "CALORIES": "Calories",
             "BARCODE": "Barcode",
             "SERVING": "Serving",
+            "DEFAULT_PORTION": "Portion / package size",
             "PRODUCT_TYPE": "Product type",
             "FIBER": "Fiber"
         }
@@ -334,6 +335,8 @@
         "BARCODE_PLACEHOLDER": "Enter barcode",
         "CATEGORY": "Category",
         "CATEGORY_PLACEHOLDER": "Enter category",
+        "DEFAULT_PORTION_AMOUNT": "Package weight / default portion (for recipes)",
+        "DEFAULT_PORTION_PLACEHOLDER": "e.g. 300",
         "PRODUCT_TYPE": "Product type",
         "PRODUCT_TYPE_PLACEHOLDER": "Select product type",
         "PRODUCT_TYPE_OPTIONS": {

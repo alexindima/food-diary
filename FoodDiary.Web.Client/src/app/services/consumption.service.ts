@@ -115,6 +115,7 @@ export class ConsumptionService extends ApiService {
             name: response.productName ?? '',
             baseUnit: this.normalizeMeasurementUnit(response.productBaseUnit),
             baseAmount: response.productBaseAmount ?? 1,
+            defaultPortionAmount: response.productBaseAmount ?? 1,
             caloriesPerBase: response.productCaloriesPerBase ?? 0,
             proteinsPerBase: response.productProteinsPerBase ?? 0,
             fatsPerBase: response.productFatsPerBase ?? 0,

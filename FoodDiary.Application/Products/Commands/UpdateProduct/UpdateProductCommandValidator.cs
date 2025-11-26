@@ -33,6 +33,12 @@ public class UpdateProductCommandValidator : AbstractValidator<UpdateProductComm
             .WithMessage("BaseAmount must be greater than 0")
             .When(x => x.BaseAmount.HasValue);
 
+        RuleFor(x => x.DefaultPortionAmount)
+            .GreaterThan(0)
+            .WithErrorCode("Validation.Invalid")
+            .WithMessage("DefaultPortionAmount must be greater than 0")
+            .When(x => x.DefaultPortionAmount.HasValue);
+
         RuleFor(x => x.CaloriesPerBase)
             .GreaterThanOrEqualTo(0)
             .WithErrorCode("Validation.Invalid")

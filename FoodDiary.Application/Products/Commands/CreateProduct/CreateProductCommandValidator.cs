@@ -49,6 +49,11 @@ public class CreateProductCommandValidator : AbstractValidator<CreateProductComm
             .WithErrorCode("Validation.Invalid")
             .WithMessage("BaseAmount must be greater than 0");
 
+        RuleFor(x => x.DefaultPortionAmount)
+            .GreaterThan(0)
+            .WithErrorCode("Validation.Invalid")
+            .WithMessage("DefaultPortionAmount must be greater than 0");
+
         RuleFor(x => x.CaloriesPerBase)
             .GreaterThanOrEqualTo(0)
             .WithErrorCode("Validation.Invalid")

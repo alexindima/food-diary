@@ -1,4 +1,4 @@
-<div class="product-manage">
+<div class="product-manage" fdPageContainer>
     <fd-page-header
         class="product-manage__header"
         [title]="product() ? ('PRODUCT_MANAGE.EDIT_TITLE' | translate) : ('PRODUCT_MANAGE.ADD_TITLE' | translate)"
@@ -69,6 +69,17 @@
                                 [error]="getControlError('baseUnit')"
                              />
                         </div>
+                        </div>
+                        <div class="product-manage__serving-row product-manage__field--full">
+                            <div class="product-manage__serving-part product-manage__serving-part--wide">
+                                <fd-ui-input formControlName="defaultPortionAmount"
+                                    type="number"
+                                    [label]="('PRODUCT_MANAGE.DEFAULT_PORTION_AMOUNT' | translate) + '*'"
+                                    [placeholder]="'PRODUCT_MANAGE.DEFAULT_PORTION_PLACEHOLDER' | translate"
+                                    [required]="true"
+                                    [error]="getControlError('defaultPortionAmount')"
+                                 />
+                            </div>
                         </div>
                         <div class="product-manage__field product-manage__field--full">
                             <fd-ui-textarea formControlName="comment"

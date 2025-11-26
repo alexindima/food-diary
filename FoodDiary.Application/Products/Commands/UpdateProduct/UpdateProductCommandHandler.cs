@@ -41,6 +41,7 @@ public class UpdateProductCommandHandler(IProductRepository productRepository)
             name: command.Name,
             baseUnit: newUnit,
             baseAmount: command.BaseAmount,
+            defaultPortionAmount: command.DefaultPortionAmount,
             caloriesPerBase: command.CaloriesPerBase,
             proteinsPerBase: command.ProteinsPerBase,
             fatsPerBase: command.FatsPerBase,

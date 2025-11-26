@@ -16,6 +16,7 @@ describe('ProductDetailComponent', () => {
                         id: '1',
                         name: 'Test product',
                         baseAmount: 100,
+                        defaultPortionAmount: 100,
                         baseUnit: 'g',
                         caloriesPerBase: 0,
                         proteinsPerBase: 0,

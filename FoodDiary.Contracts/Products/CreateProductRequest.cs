@@ -11,6 +11,7 @@ public record CreateProductRequest(
     string? ImageUrl,
     string BaseUnit,
     double BaseAmount,
+    double DefaultPortionAmount,
     double CaloriesPerBase,
     double ProteinsPerBase,
     double FatsPerBase,

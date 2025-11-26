@@ -36,6 +36,7 @@ import { FdUiCheckboxComponent } from 'fd-ui-kit/checkbox/fd-ui-checkbox.compone
 import { CommonModule } from '@angular/common';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { PageHeaderComponent } from '../../shared/page-header/page-header.component';
+import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
 
 @Component({
     selector: 'fd-recipe-manage',
@@ -53,6 +54,7 @@ import { PageHeaderComponent } from '../../shared/page-header/page-header.compon
         FdUiSelectComponent,
         FdUiCheckboxComponent,
         PageHeaderComponent,
+        FdPageContainerDirective,
     ],
     templateUrl: './recipe-manage.component.html',
     styleUrls: ['./recipe-manage.component.scss'],
@@ -207,15 +209,16 @@ export class RecipeManageComponent implements OnInit {
             .open<ProductListDialogComponent, Product | null, Product | null>(ProductListDialogComponent, {
                 size: 'lg',
             })
-            .afterClosed()
-            .subscribe(food => {
-                if (!food) {
-                    return;
-                }
-                const ingredientsArray = this.getStepIngredients(stepIndex);
-                const foodGroup = ingredientsArray.at(ingredientIndex);
-                foodGroup.patchValue({ food, foodName: food.name });
-            });
+              .afterClosed()
+              .subscribe(food => {
+                  if (!food) {
+                      return;
+                  }
+                  const ingredientsArray = this.getStepIngredients(stepIndex);
+                  const foodGroup = ingredientsArray.at(ingredientIndex);
+                  const defaultAmount = food.defaultPortionAmount ?? food.baseAmount ?? 0;
+                  foodGroup.patchValue({ food, foodName: food.name, amount: defaultAmount });
+              });
     }
 
     public addIngredientToStep(stepIndex: number): void {
@@ -347,6 +350,7 @@ export class RecipeManageComponent implements OnInit {
             description: null,
             imageUrl: null,
             baseAmount,
+            defaultPortionAmount: baseAmount,
             caloriesPerBase: ingredient.productCaloriesPerBase ?? 0,
             proteinsPerBase: ingredient.productProteinsPerBase ?? 0,
             fatsPerBase: ingredient.productFatsPerBase ?? 0,
@@ -681,5 +685,3 @@ interface IngredientFormValues {
 type RecipeFormData = FormGroupControls<RecipeFormValues>;
 type StepFormData = FormGroupControls<StepFormValues>;
 type IngredientFormData = FormGroupControls<IngredientFormValues>;
-
-

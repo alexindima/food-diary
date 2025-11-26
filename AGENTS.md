@@ -43,3 +43,6 @@
 ## Commit & Pull Request Guidelines
 - Use descriptive commit titles (imperative mood), e.g., “Add user dialog service” or “Fix Jwt refresh flow”.
 - PRs should include: a concise summary, linked issue (if applicable), screenshots for UI-facing changes, and notes on testing (commands run, results). Ensure both `npm run build` and `dotnet build` succeed before requesting review.
+
+### EF Core migrations
+- При добавлении миграций всегда коммитьте оба файла: основной `*.cs` и `*.Designer.cs`, чтобы инструменты и проверки видели модель.

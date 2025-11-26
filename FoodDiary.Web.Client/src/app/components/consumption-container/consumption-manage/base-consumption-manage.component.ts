@@ -57,6 +57,7 @@ import {
     ConsumptionManageSuccessDialogData,
 } from './success-dialog/consumption-manage-success-dialog.component';
 import { PageHeaderComponent } from '../../shared/page-header/page-header.component';
+import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: FD_VALIDATION_ERRORS,
@@ -90,6 +91,7 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
         FdUiIconModule,
         FdUiFormErrorComponent,
         PageHeaderComponent,
+        FdPageContainerDirective,
     ],
 })
 export class BaseConsumptionManageComponent implements OnInit {
@@ -946,4 +948,3 @@ type NutritionTotals = {
     carbs: number;
     fiber: number;
 };
-

@@ -23,6 +23,7 @@ public class CreateProductCommandHandler(IProductRepository productRepository)
             name: command.Name,
             baseUnit: baseUnit,
             baseAmount: command.BaseAmount,
+            defaultPortionAmount: command.DefaultPortionAmount,
             caloriesPerBase: command.CaloriesPerBase,
             proteinsPerBase: command.ProteinsPerBase,
             fatsPerBase: command.FatsPerBase,

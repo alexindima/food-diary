@@ -19,6 +19,10 @@ public sealed class Product : AggregateRoot<ProductId> {
     public ProductType ProductType { get; private set; } = ProductType.Unknown;
     public MeasurementUnit BaseUnit { get; private set; }
     public double BaseAmount { get; private set; }
+    /// <summary>
+    /// Размер продукта (например, масса упаковки), используется как значение по умолчанию при добавлении в рецепты
+    /// </summary>
+    public double DefaultPortionAmount { get; private set; }
     public double CaloriesPerBase { get; private set; }
     public double ProteinsPerBase { get; private set; }
     public double FatsPerBase { get; private set; }
@@ -50,6 +54,7 @@ public sealed class Product : AggregateRoot<ProductId> {
         string name,
         MeasurementUnit baseUnit,
         double baseAmount,
+        double? defaultPortionAmount,
         double caloriesPerBase,
         double proteinsPerBase,
         double fatsPerBase,
@@ -69,6 +74,7 @@ public sealed class Product : AggregateRoot<ProductId> {
             Name = name,
             BaseUnit = baseUnit,
             BaseAmount = baseAmount,
+            DefaultPortionAmount = defaultPortionAmount ?? baseAmount,
             CaloriesPerBase = caloriesPerBase,
             ProteinsPerBase = proteinsPerBase,
             FatsPerBase = fatsPerBase,
@@ -91,6 +97,7 @@ public sealed class Product : AggregateRoot<ProductId> {
         string? name = null,
         MeasurementUnit? baseUnit = null,
         double? baseAmount = null,
+        double? defaultPortionAmount = null,
         double? caloriesPerBase = null,
         double? proteinsPerBase = null,
         double? fatsPerBase = null,
@@ -107,6 +114,7 @@ public sealed class Product : AggregateRoot<ProductId> {
         if (name is not null) Name = name;
         if (baseUnit.HasValue) BaseUnit = baseUnit.Value;
         if (baseAmount.HasValue) BaseAmount = baseAmount.Value;
+        if (defaultPortionAmount.HasValue) DefaultPortionAmount = defaultPortionAmount.Value;
         if (caloriesPerBase.HasValue) CaloriesPerBase = caloriesPerBase.Value;
         if (proteinsPerBase.HasValue) ProteinsPerBase = proteinsPerBase.Value;
         if (fatsPerBase.HasValue) FatsPerBase = fatsPerBase.Value;

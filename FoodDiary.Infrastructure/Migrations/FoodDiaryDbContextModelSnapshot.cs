@@ -212,6 +212,9 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.Property<double>("BaseAmount")
                         .HasColumnType("double precision");
 
+                    b.Property<double>("DefaultPortionAmount")
+                        .HasColumnType("double precision");
+
                     b.Property<int>("BaseUnit")
                         .HasColumnType("integer");
 

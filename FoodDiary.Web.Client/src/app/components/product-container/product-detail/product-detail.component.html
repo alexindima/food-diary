@@ -37,9 +37,9 @@
                         accentColor="var(--fd-color-primary-300, #93C5FD)"
                         [tinted]="true"
                     >
-                        <span class="product-detail__surface-label">{{ 'PRODUCT_DETAIL.SUMMARY.SERVING' | translate }}</span>
+                        <span class="product-detail__surface-label">{{ 'PRODUCT_DETAIL.SUMMARY.DEFAULT_PORTION' | translate }}</span>
                         <strong class="product-detail__surface-value">
-                            {{ product.baseAmount }}
+                            {{ product.defaultPortionAmount }}
                             {{ ('PRODUCT_AMOUNT_UNITS_SHORT.' + product.baseUnit) | translate }}
                         </strong>
                     </fd-ui-accent-surface>

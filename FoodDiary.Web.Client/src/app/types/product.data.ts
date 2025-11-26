@@ -10,6 +10,7 @@ export interface Product {
     imageUrl?: string | null;
     baseUnit: MeasurementUnit;
     baseAmount: number;
+    defaultPortionAmount: number;
     caloriesPerBase: number;
     proteinsPerBase: number;
     fatsPerBase: number;
@@ -32,6 +33,7 @@ export interface CreateProductRequest {
     imageUrl?: string | null;
     baseUnit: MeasurementUnit;
     baseAmount: number;
+    defaultPortionAmount: number;
     caloriesPerBase: number;
     proteinsPerBase: number;
     fatsPerBase: number;

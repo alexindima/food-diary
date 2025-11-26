@@ -38,6 +38,7 @@ import {
     ProductSaveSuccessDialogData,
 } from './product-save-success-dialog.component';
 import { PageHeaderComponent } from '../../shared/page-header/page-header.component';
+import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: FD_VALIDATION_ERRORS,
@@ -69,6 +70,7 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
         FdUiButtonComponent,
         FdUiFormErrorComponent,
         PageHeaderComponent,
+        FdPageContainerDirective,
     ],
 })
 export class BaseProductManageComponent implements OnInit {
@@ -108,6 +110,10 @@ export class BaseProductManageComponent implements OnInit {
             comment: new FormControl(null),
             imageUrl: new FormControl(null),
             baseAmount: new FormControl(100, { nonNullable: true, validators: [Validators.required, Validators.min(0.001)] }),
+            defaultPortionAmount: new FormControl(100, {
+                nonNullable: true,
+                validators: [Validators.required, Validators.min(0.001)],
+            }),
             baseUnit: new FormControl(MeasurementUnit.G, { nonNullable: true, validators: Validators.required }),
             caloriesPerBase: new FormControl(null, [Validators.required, Validators.min(0.001)]),
             proteinsPerBase: new FormControl(null, Validators.required),
@@ -218,6 +224,7 @@ export class BaseProductManageComponent implements OnInit {
                 comment: this.productForm.value.comment || null,
                 imageUrl: this.productForm.value.imageUrl || null,
                 baseAmount: this.productForm.value.baseAmount!,
+                defaultPortionAmount: this.productForm.value.defaultPortionAmount!,
                 baseUnit: this.productForm.value.baseUnit!,
                 caloriesPerBase: this.productForm.value.caloriesPerBase!,
                 proteinsPerBase: this.productForm.value.proteinsPerBase!,
@@ -315,6 +322,7 @@ export class BaseProductManageComponent implements OnInit {
             comment: product.comment ?? null,
             imageUrl: product.imageUrl ?? null,
             baseAmount: product.baseAmount,
+            defaultPortionAmount: product.defaultPortionAmount,
             baseUnit: product.baseUnit,
             caloriesPerBase: product.caloriesPerBase,
             proteinsPerBase: product.proteinsPerBase,
@@ -433,6 +441,7 @@ export interface ProductFormValues {
     comment: string | null;
     imageUrl: string | null;
     baseAmount: number;
+    defaultPortionAmount: number;
     baseUnit: MeasurementUnit;
     caloriesPerBase: number | null;
     proteinsPerBase: number | null;
@@ -445,4 +454,3 @@ export interface ProductFormValues {
 type ProductFormData = FormGroupControls<ProductFormValues>;
 
 export type RedirectAction = 'Home' | 'ProductList';
-
