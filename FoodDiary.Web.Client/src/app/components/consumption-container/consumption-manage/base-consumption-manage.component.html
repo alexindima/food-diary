@@ -13,7 +13,7 @@
                         <div class="consumption-manage__field">
                             <fd-ui-input formControlName="date"
                                 type="datetime-local"
-                                [label]="('CONSUMPTION_MANAGE.CHOOSE_DATE' | translate) + '*'"
+                                [label]="'CONSUMPTION_MANAGE.CHOOSE_DATE' | translate"
                                 [required]="true"
                                 [error]="getControlError('date')"
                              />
@@ -184,7 +184,7 @@
                                                 <fd-ui-input formControlName="amount"
                                                     type="number"
                                                     [step]="0.01"
-                                                    [label]="('CONSUMPTION_MANAGE.ADD_ITEM_ROW.AMOUNT' | translate) + '*'"
+                                                    [label]="'CONSUMPTION_MANAGE.ADD_ITEM_ROW.AMOUNT' | translate"
                                                     [placeholder]="(getAmountPlaceholder(i) | translate)"
                                                     [hint]="getAmountUnitLabel(i) || undefined"
                                                     [required]="true"
@@ -219,31 +219,31 @@
                         <div class="consumption-manage__manual-grid">
                             <fd-ui-input formControlName="manualCalories"
                                 type="number"
-                                [label]="('CONSUMPTION_MANAGE.MANUAL_CALORIES' | translate) + '*'"
+                                [label]="'CONSUMPTION_MANAGE.MANUAL_CALORIES' | translate"
                                 [required]="true"
                                 [error]="getControlError('manualCalories')"
                              />
                             <fd-ui-input formControlName="manualFiber"
                                 type="number"
-                                [label]="('CONSUMPTION_MANAGE.MANUAL_FIBER' | translate) + '*'"
+                                [label]="'CONSUMPTION_MANAGE.MANUAL_FIBER' | translate"
                                 [required]="true"
                                 [error]="getControlError('manualFiber')"
                              />
                             <fd-ui-input formControlName="manualProteins"
                                 type="number"
-                                [label]="('CONSUMPTION_MANAGE.MANUAL_PROTEINS' | translate) + '*'"
+                                [label]="'CONSUMPTION_MANAGE.MANUAL_PROTEINS' | translate"
                                 [required]="true"
                                 [error]="getControlError('manualProteins')"
                              />
                             <fd-ui-input formControlName="manualFats"
                                 type="number"
-                                [label]="('CONSUMPTION_MANAGE.MANUAL_FATS' | translate) + '*'"
+                                [label]="'CONSUMPTION_MANAGE.MANUAL_FATS' | translate"
                                 [required]="true"
                                 [error]="getControlError('manualFats')"
                              />
                             <fd-ui-input formControlName="manualCarbs"
                                 type="number"
-                                [label]="('CONSUMPTION_MANAGE.MANUAL_CARBS' | translate) + '*'"
+                                [label]="'CONSUMPTION_MANAGE.MANUAL_CARBS' | translate"
                                 [required]="true"
                                 [error]="getControlError('manualCarbs')"
                              />

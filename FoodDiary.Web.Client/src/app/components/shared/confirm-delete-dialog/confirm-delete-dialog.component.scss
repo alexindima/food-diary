@@ -1,0 +1,13 @@
+.confirm-delete-dialog {
+    &__message {
+        margin: 0;
+        font-size: 0.95rem;
+        color: var(--fd-color-text-main);
+    }
+
+    &__footer {
+        display: flex;
+        justify-content: flex-end;
+        gap: 12px;
+    }
+}

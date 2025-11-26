@@ -33,7 +33,7 @@
         min-height: var(--fd-input-height) !important;
         height: var(--fd-input-height) !important;
         border-radius: var(--fd-radius-md);
-        background-color: var(--fd-color-surface);
+        background-color: var(--fd-input-background, var(--fd-color-surface));
     }
 
     .mat-mdc-form-field-flex {

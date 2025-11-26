@@ -136,6 +136,22 @@
         flex: 1 1 180px;
     }
 
+    &__nutrients-chart {
+        margin-top: $gap-m;
+        display: flex;
+        justify-content: center;
+
+        canvas {
+            width: 100% !important;
+            max-width: 240px;
+            min-width: 180px;
+            max-height: 240px;
+            min-height: 180px;
+            height: auto !important;
+            aspect-ratio: 1 / 1;
+        }
+    }
+
     &__footer {
         margin-top: $gap-xl;
         display: flex;

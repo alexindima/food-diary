@@ -3,25 +3,23 @@ import {
     Component,
     DestroyRef,
     FactoryProvider,
+    computed,
     effect,
     inject,
     input,
     OnInit,
     signal,
+    ViewChild,
 } from '@angular/core';
 import { Product, CreateProductRequest, MeasurementUnit, ProductVisibility, ProductType } from '../../../types/product.data';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { DecimalPipe } from '@angular/common';
 import { ProductService } from '../../../services/product.service';
 import { NavigationService } from '../../../services/navigation.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormGroupControls } from '../../../types/common.data';
 import { NutrientData } from '../../../types/charts.data';
-import {
-    NutrientsSummaryComponent, NutrientsSummaryConfig
-} from '../../shared/nutrients-summary/nutrients-summary.component';
 import { firstValueFrom } from 'rxjs';
 import { ZXingScannerModule } from '@zxing/ngx-scanner';
 import { BarcodeScannerComponent } from '../../shared/barcode-scanner/barcode-scanner.component';
@@ -39,6 +37,13 @@ import {
 } from './product-save-success-dialog.component';
 import { PageHeaderComponent } from '../../shared/page-header/page-header.component';
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
+import { CHART_COLORS } from '../../../constants/chart-colors';
+import { ChartData, ChartOptions } from 'chart.js';
+import { BaseChartDirective } from 'ng2-charts';
+import {
+    ConfirmDeleteDialogComponent,
+    ConfirmDeleteDialogData,
+} from '../../shared/confirm-delete-dialog/confirm-delete-dialog.component';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: FD_VALIDATION_ERRORS,
@@ -60,8 +65,7 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     imports: [
         ReactiveFormsModule,
         TranslatePipe,
-        DecimalPipe,
-        NutrientsSummaryComponent,
+        BaseChartDirective,
         ZXingScannerModule,
         FdUiInputComponent,
         FdUiCardComponent,
@@ -79,8 +83,7 @@ export class BaseProductManageComponent implements OnInit {
     protected readonly navigationService = inject(NavigationService);
     protected readonly fdDialogService = inject(FdUiDialogService);
     private readonly destroyRef = inject(DestroyRef);
-
-    protected nutrientSummaryConfig: NutrientsSummaryConfig = {};
+    @ViewChild(BaseChartDirective) private nutrientChart?: BaseChartDirective;
 
     public product = input<Product | null>();
     public globalError = signal<string | null>(null);
@@ -90,6 +93,7 @@ export class BaseProductManageComponent implements OnInit {
         fats: 0,
         carbs: 0,
     });
+    private formInitialized = false;
     public readonly isDeleting = signal(false);
 
     protected skipConfirmDialog = false;
@@ -100,6 +104,54 @@ export class BaseProductManageComponent implements OnInit {
     public productTypeSelectOptions: FdUiSelectOption<ProductType>[] = [];
     public visibilityOptions = Object.values(ProductVisibility) as ProductVisibility[];
     public visibilitySelectOptions: FdUiSelectOption<ProductVisibility>[] = [];
+    private readonly nutrientFillAlpha = 0.08;
+    public readonly nutrientsPieChartOptions: ChartOptions<'pie'> = {
+        responsive: true,
+        aspectRatio: 1,
+        plugins: {
+            legend: { display: false },
+            tooltip: {
+                callbacks: {
+                    label: context =>
+                        this.getPieTooltipLabel(String(context.label ?? ''), Number(context.raw) || 0),
+                },
+            },
+        },
+    };
+    public readonly nutrientsPieChartData = computed<ChartData<'pie', number[], string>>(() => ({
+        labels: [
+            this.translateService.instant('NUTRIENTS.PROTEINS'),
+            this.translateService.instant('NUTRIENTS.FATS'),
+            this.translateService.instant('NUTRIENTS.CARBS'),
+        ],
+        datasets: [
+            {
+                data: [
+                    this.nutrientChartData().proteins ?? 0,
+                    this.nutrientChartData().fats ?? 0,
+                    this.nutrientChartData().carbs ?? 0,
+                ],
+                backgroundColor: [
+                    CHART_COLORS.proteins,
+                    CHART_COLORS.fats,
+                    CHART_COLORS.carbs,
+                ],
+            },
+        ],
+    }));
+    public readonly nutrientFillColors = {
+        calories: this.applyAlpha(CHART_COLORS.calories, this.nutrientFillAlpha),
+        fiber: this.applyAlpha(CHART_COLORS.fiber, this.nutrientFillAlpha),
+        proteins: this.applyAlpha(CHART_COLORS.proteins, this.nutrientFillAlpha),
+        fats: this.applyAlpha(CHART_COLORS.fats, this.nutrientFillAlpha),
+        carbs: this.applyAlpha(CHART_COLORS.carbs, this.nutrientFillAlpha),
+    };
+    public readonly showNutrientChart = computed(
+        () =>
+            (this.nutrientChartData().proteins ?? 0) > 0 ||
+            (this.nutrientChartData().fats ?? 0) > 0 ||
+            (this.nutrientChartData().carbs ?? 0) > 0,
+    );
     public constructor() {
         this.productForm = new FormGroup<ProductFormData>({
             name: new FormControl('', { nonNullable: true, validators: Validators.required }),
@@ -115,17 +167,18 @@ export class BaseProductManageComponent implements OnInit {
                 validators: [Validators.required, Validators.min(0.001)],
             }),
             baseUnit: new FormControl(MeasurementUnit.G, { nonNullable: true, validators: Validators.required }),
-            caloriesPerBase: new FormControl(null, [Validators.required, Validators.min(0.001)]),
-            proteinsPerBase: new FormControl(null, Validators.required),
-            fatsPerBase: new FormControl(null, Validators.required),
-            carbsPerBase: new FormControl(null, Validators.required),
-            fiberPerBase: new FormControl(null, Validators.required),
+            caloriesPerBase: new FormControl(null, [Validators.required, Validators.min(0)]),
+            proteinsPerBase: new FormControl(null, [Validators.required, Validators.min(0)]),
+            fatsPerBase: new FormControl(null, [Validators.required, Validators.min(0)]),
+            carbsPerBase: new FormControl(null, [Validators.required, Validators.min(0)]),
+            fiberPerBase: new FormControl(null, [Validators.required, Validators.min(0)]),
             visibility: new FormControl(ProductVisibility.Private, { nonNullable: true, validators: Validators.required }),
         });
 
         this.buildUnitOptions();
         this.buildProductTypeOptions();
         this.buildVisibilityOptions();
+        this.coerceNumericControls();
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.buildUnitOptions();
             this.buildProductTypeOptions();
@@ -134,9 +187,10 @@ export class BaseProductManageComponent implements OnInit {
 
         effect(() => {
             const currentProduct = this.product();
-            if (currentProduct) {
+            if (currentProduct && !this.formInitialized) {
                 this.populateForm(currentProduct);
                 this.updateSummary();
+                this.formInitialized = true;
             }
         });
     }
@@ -187,9 +241,22 @@ export class BaseProductManageComponent implements OnInit {
             return;
         }
 
-        const confirmationMessage = this.translateService.instant('PRODUCT_MANAGE.DELETE_CONFIRM');
+        const data: ConfirmDeleteDialogData = {
+            title: this.translateService.instant('CONFIRM_DELETE.TITLE', {
+                type: this.translateService.instant('PRODUCT_DETAIL.ENTITY_NAME'),
+            }),
+            message: this.translateService.instant('CONFIRM_DELETE.MESSAGE', { name: currentProduct.name }),
+            name: currentProduct.name,
+            entityType: this.translateService.instant('PRODUCT_DETAIL.ENTITY_NAME'),
+            confirmLabel: this.translateService.instant('CONFIRM_DELETE.CONFIRM'),
+            cancelLabel: this.translateService.instant('CONFIRM_DELETE.CANCEL'),
+        };
 
-        if (!window.confirm(confirmationMessage)) {
+        const confirmed = await firstValueFrom(
+            this.fdDialogService.open(ConfirmDeleteDialogComponent, { data, size: 'sm' }).afterClosed(),
+        );
+
+        if (!confirmed) {
             return;
         }
 
@@ -208,12 +275,15 @@ export class BaseProductManageComponent implements OnInit {
     public async onSubmit(): Promise<Product | null> {
         this.productForm.markAllAsTouched();
 
-        if (!this.isMacronutrientsValid()) {
-            this.setGlobalError('FORM_ERRORS.AT_LEAST_ONE_MACRONUTRIENT_MUST_BE_SET');
-            return null;
-        }
-
         if (this.productForm.valid) {
+            const baseAmount = this.getNumberValue(this.productForm.controls.baseAmount);
+            const defaultPortionAmount = this.getNumberValue(this.productForm.controls.defaultPortionAmount);
+            const caloriesPerBase = this.getNumberValue(this.productForm.controls.caloriesPerBase);
+            const proteinsPerBase = this.getNumberValue(this.productForm.controls.proteinsPerBase);
+            const fatsPerBase = this.getNumberValue(this.productForm.controls.fatsPerBase);
+            const carbsPerBase = this.getNumberValue(this.productForm.controls.carbsPerBase);
+            const fiberPerBase = this.getNumberValue(this.productForm.controls.fiberPerBase);
+
             const productData: CreateProductRequest = {
                 name: this.productForm.value.name!,
                 barcode: this.productForm.value.barcode || null,
@@ -223,14 +293,14 @@ export class BaseProductManageComponent implements OnInit {
                 description: this.productForm.value.description || null,
                 comment: this.productForm.value.comment || null,
                 imageUrl: this.productForm.value.imageUrl || null,
-                baseAmount: this.productForm.value.baseAmount!,
-                defaultPortionAmount: this.productForm.value.defaultPortionAmount!,
+                baseAmount,
+                defaultPortionAmount,
                 baseUnit: this.productForm.value.baseUnit!,
-                caloriesPerBase: this.productForm.value.caloriesPerBase!,
-                proteinsPerBase: this.productForm.value.proteinsPerBase!,
-                fatsPerBase: this.productForm.value.fatsPerBase!,
-                carbsPerBase: this.productForm.value.carbsPerBase!,
-                fiberPerBase: this.productForm.value.fiberPerBase!,
+                caloriesPerBase,
+                proteinsPerBase,
+                fatsPerBase,
+                carbsPerBase,
+                fiberPerBase,
                 visibility: this.productForm.value.visibility!,
             };
             const product = this.product();
@@ -241,6 +311,12 @@ export class BaseProductManageComponent implements OnInit {
         }
 
         return null;
+    }
+
+    public get nutritionCardTitle(): string {
+        return this.translateService.instant('PRODUCT_MANAGE.NUTRITION_VALUE_TEMPLATE', {
+            base: this.getDynamicNutrientPlaceholder,
+        });
     }
 
     public get getDynamicNutrientPlaceholder(): string {
@@ -278,10 +354,10 @@ export class BaseProductManageComponent implements OnInit {
     }
 
     private updateSummary(): void {
-        const caloriesPerBase = this.productForm.controls.caloriesPerBase.value ?? 0;
-        const proteinsPerBase = this.productForm.controls.proteinsPerBase.value ?? 0;
-        const fatsPerBase = this.productForm.controls.fatsPerBase.value ?? 0;
-        const carbsPerBase = this.productForm.controls.carbsPerBase.value ?? 0;
+        const caloriesPerBase = this.getNumberValue(this.productForm.controls.caloriesPerBase);
+        const proteinsPerBase = this.getNumberValue(this.productForm.controls.proteinsPerBase);
+        const fatsPerBase = this.getNumberValue(this.productForm.controls.fatsPerBase);
+        const carbsPerBase = this.getNumberValue(this.productForm.controls.carbsPerBase);
 
         const newTotalCalories = caloriesPerBase;
         const newNutrientChartData = {
@@ -300,12 +376,8 @@ export class BaseProductManageComponent implements OnInit {
             this.nutrientChartData().carbs !== newNutrientChartData.carbs
         ) {
             this.nutrientChartData.set(newNutrientChartData);
+            this.nutrientChart?.update();
         }
-    }
-
-    private isMacronutrientsValid(): boolean {
-        const { proteinsPerBase, fatsPerBase, carbsPerBase } = this.productForm.value;
-        return (proteinsPerBase ?? 0) + (fatsPerBase ?? 0) + (carbsPerBase ?? 0) > 0;
     }
 
     private populateForm(product: Product): void {
@@ -335,6 +407,7 @@ export class BaseProductManageComponent implements OnInit {
 
     private async addProduct(productData: CreateProductRequest): Promise<Product | null> {
         try {
+            console.log('[ProductManage] add', productData);
             const product = await firstValueFrom(this.productService.create(productData));
             if (!this.skipConfirmDialog) {
                 await this.showConfirmDialog();
@@ -348,6 +421,7 @@ export class BaseProductManageComponent implements OnInit {
 
     private async updateProduct(id: string, productData: Partial<CreateProductRequest>): Promise<Product | null> {
         try {
+            console.log('[ProductManage] update', { id, data: productData });
             const product = await firstValueFrom(this.productService.update(id, productData));
             if (!this.skipConfirmDialog) {
                 await this.showConfirmDialog();
@@ -375,6 +449,61 @@ export class BaseProductManageComponent implements OnInit {
 
     private clearGlobalError(): void {
         this.globalError.set(null);
+    }
+
+    private applyAlpha(hexColor: string, alpha: number): string {
+        const normalized = hexColor.replace('#', '');
+        const value = parseInt(normalized, 16);
+        const r = (value >> 16) & 255;
+        const g = (value >> 8) & 255;
+        const b = value & 255;
+
+        return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+    }
+
+    private getNumberValue(control: FormControl<number | string | null>): number {
+        const value = control.value as unknown;
+        if (value === null || value === undefined || value === '') {
+            return 0;
+        }
+        const parsed = Number(value);
+        return Number.isFinite(parsed) ? parsed : 0;
+    }
+
+    private coerceNumericControls(): void {
+        const numericControls: (keyof ProductFormData)[] = [
+            'baseAmount',
+            'defaultPortionAmount',
+            'caloriesPerBase',
+            'proteinsPerBase',
+            'fatsPerBase',
+            'carbsPerBase',
+            'fiberPerBase',
+        ];
+
+        numericControls.forEach(key => {
+            const control = this.productForm.controls[key] as FormControl<number | string | null>;
+            control.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(value => {
+                if (value === '' || value === null || value === undefined) {
+                    control.setValue(null as unknown as number, { emitEvent: false });
+                    return;
+                }
+
+                const numericValue = Number(value);
+                if (!Number.isFinite(numericValue)) {
+                    return;
+                }
+
+                if (numericValue !== value) {
+                    control.setValue(numericValue as number, { emitEvent: false });
+                }
+            });
+        });
+    }
+
+    private getPieTooltipLabel(label: string, value: number): string {
+        const formattedValue = parseFloat(value.toFixed(2));
+        return `${label}: ${formattedValue} ${this.translateService.instant('STATISTICS.GRAMS')}`;
     }
 
     private buildVisibilityOptions(): void {

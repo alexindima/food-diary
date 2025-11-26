@@ -18,7 +18,7 @@
           <div class="recipe-manage__basic-grid">
             <fd-ui-input class="recipe-manage__field--full"
               formControlName="name"
-              [label]="('RECIPE_MANAGE.NAME' | translate) + '*'"
+              [label]="'RECIPE_MANAGE.NAME' | translate"
               [placeholder]="'RECIPE_MANAGE.NAME_PLACEHOLDER' | translate"
               [required]="true"
               [error]="getFieldError('name')"
@@ -37,7 +37,7 @@
             <fd-ui-input formControlName="prepTime"
               type="number"
               [step]="1"
-              [label]="('RECIPE_MANAGE.PREP_TIME' | translate) + '*'"
+              [label]="'RECIPE_MANAGE.PREP_TIME' | translate"
               [required]="true"
               [error]="getFieldError('prepTime')"
              />
@@ -45,7 +45,7 @@
             <fd-ui-input formControlName="cookTime"
               type="number"
               [step]="1"
-              [label]="('RECIPE_MANAGE.COOK_TIME' | translate) + '*'"
+              [label]="'RECIPE_MANAGE.COOK_TIME' | translate"
               [required]="true"
               [error]="getFieldError('cookTime')"
              />
@@ -53,7 +53,7 @@
             <fd-ui-input formControlName="servings"
               type="number"
               [step]="1"
-              [label]="('RECIPE_MANAGE.SERVINGS' | translate) + '*'"
+              [label]="'RECIPE_MANAGE.SERVINGS' | translate"
               [required]="true"
               [error]="getFieldError('servings')"
              />
@@ -189,31 +189,31 @@
               <div class="recipe-manage__manual-grid">
                 <fd-ui-input formControlName="manualCalories"
                   type="number"
-                  [label]="('RECIPE_MANAGE.MANUAL_CALORIES' | translate) + '*'"
+                  [label]="'RECIPE_MANAGE.MANUAL_CALORIES' | translate"
                   [required]="true"
                   [error]="getFieldError('manualCalories')"
                  />
                 <fd-ui-input formControlName="manualFiber"
                   type="number"
-                  [label]="('RECIPE_MANAGE.MANUAL_FIBER' | translate) + '*'"
+                  [label]="'RECIPE_MANAGE.MANUAL_FIBER' | translate"
                   [required]="true"
                   [error]="getFieldError('manualFiber')"
                  />
                 <fd-ui-input formControlName="manualProteins"
                   type="number"
-                  [label]="('RECIPE_MANAGE.MANUAL_PROTEINS' | translate) + '*'"
+                  [label]="'RECIPE_MANAGE.MANUAL_PROTEINS' | translate"
                   [required]="true"
                   [error]="getFieldError('manualProteins')"
                  />
                 <fd-ui-input formControlName="manualFats"
                   type="number"
-                  [label]="('RECIPE_MANAGE.MANUAL_FATS' | translate) + '*'"
+                  [label]="'RECIPE_MANAGE.MANUAL_FATS' | translate"
                   [required]="true"
                   [error]="getFieldError('manualFats')"
                  />
                 <fd-ui-input formControlName="manualCarbs"
                   type="number"
-                  [label]="('RECIPE_MANAGE.MANUAL_CARBS' | translate) + '*'"
+                  [label]="'RECIPE_MANAGE.MANUAL_CARBS' | translate"
                   [required]="true"
                   [error]="getFieldError('manualCarbs')"
                  />
@@ -226,7 +226,7 @@
             [title]="'RECIPE_MANAGE.VISIBILITY_GROUP_TITLE' | translate"
             >
             <fd-ui-select formControlName="visibility"
-              [label]="('RECIPE_MANAGE.VISIBILITY' | translate) + '*'"
+              [label]="'RECIPE_MANAGE.VISIBILITY' | translate"
               [required]="true"
               [options]="visibilitySelectOptions"
               [error]="getFieldError('visibility')"

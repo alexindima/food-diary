@@ -1,0 +1,27 @@
+<fd-ui-dialog
+    class="confirm-delete-dialog"
+    [title]="data.title || ('CONFIRM_DELETE.TITLE' | translate:{ type: data.entityType })"
+>
+    <p class="confirm-delete-dialog__message">
+        {{ data.message || ('CONFIRM_DELETE.MESSAGE' | translate:{ name: data.name }) }}
+    </p>
+
+    <div fdUiDialogFooter class="confirm-delete-dialog__footer">
+        <fd-ui-button
+            type="button"
+            fill="ghost"
+            variant="secondary"
+            (click)="onCancel()"
+        >
+            {{ data.cancelLabel || ('CONFIRM_DELETE.CANCEL' | translate) }}
+        </fd-ui-button>
+        <fd-ui-button
+            type="button"
+            variant="danger"
+            icon="delete"
+            (click)="onConfirm()"
+        >
+            {{ data.confirmLabel || ('CONFIRM_DELETE.CONFIRM' | translate) }}
+        </fd-ui-button>
+    </div>
+</fd-ui-dialog>

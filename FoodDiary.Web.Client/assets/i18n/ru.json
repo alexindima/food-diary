@@ -157,6 +157,9 @@
         "KCAL": "ККал",
         "DELETE_ERROR": "Не удалось удалить продукт. Попробуйте ещё раз."
     },
+    "STATISTICS": {
+        "GRAMS": "г"
+    },
     "PRODUCT_VISIBILITY": {
         "Public": "Публичный",
         "Private": "Приватный",
@@ -249,6 +252,7 @@
         "BARCODE": "Штрихкод:",
         "CATEGORY": "Категория:",
         "PRODUCT_TYPE": "Тип продукта",
+        "ENTITY_NAME": "продукт",
         "BASE_AMOUNT": "Стандартная порция:",
         "USAGE_COUNT": "Количество использований:",
         "EDIT_BUTTON": "Редактировать",
@@ -308,11 +312,11 @@
         "COMMENT": "Комментарий",
         "COMMENT_PLACEHOLDER": "Добавьте заметку о продукте",
         "SCAN_BARCODE": "Сканировать штрихкод",
-        "CALORIES": "Калорий на",
-        "PROTEINS": "Белков на",
-        "FATS": "Жиров на",
-        "CARBS": "Углеводов на",
-        "FIBER": "Клетчатка на",
+        "CALORIES": "Калории, ккал",
+        "PROTEINS": "Белки, г",
+        "FATS": "Жиры, г",
+        "CARBS": "Углеводы, г",
+        "FIBER": "Клетчатка, г",
         "DEFAULT_SERVING": "Стандартная порция",
         "DEFAULT_SERVING_UNIT": "Единица измерения порции",
         "DEFAULT_SERVING_UNIT_PLACEHOLDER": "Выберите единицу измерения",
@@ -323,6 +327,7 @@
         },
         "BASIC_INFO": "Основное",
         "NUTRITION_VALUE": "Пищевая ценность",
+        "NUTRITION_VALUE_TEMPLATE": "Пищевая ценность на {{base}}",
         "SUMMARY_TITLE": "Сводка",
         "SUMMARY_CALORIES_LABEL": "Калории",
         "SAVE_BUTTON": "Сохранить изменения",
@@ -338,6 +343,13 @@
             "PRIVATE": "Только я",
             "PUBLIC": "Все пользователи"
         }
+    },
+    
+                "CONFIRM_DELETE": {
+        "TITLE": "Удалить {{type}}?",
+        "MESSAGE": "Действие нельзя отменить. Удалить «{{name}}»?",
+        "CONFIRM": "Удалить",
+        "CANCEL": "Отмена"
     },
     "CONSUMPTION_LIST": {
         "TITLE": "Список приемов пищи",
@@ -917,3 +929,24 @@
         }
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

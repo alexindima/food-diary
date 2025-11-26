@@ -3,6 +3,7 @@
   [floatLabel]="floatLabel()"
   class="fd-ui-input"
   [ngClass]="[sizeClass, hideSubscript() ? 'fd-ui-input--no-subscript' : '']"
+  [style.--fd-input-background]="fillColor() || null"
   [class.fd-ui-input--focused]="isFocused"
   [class.fd-ui-input--has-error]="!!error()"
   >

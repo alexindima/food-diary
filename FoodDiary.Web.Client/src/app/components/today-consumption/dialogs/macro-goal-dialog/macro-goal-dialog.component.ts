@@ -8,6 +8,7 @@ import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { UpdateUserDto } from '../../../../types/user.data';
 import { UserService } from '../../../../services/user.service';
+import { CHART_COLORS } from '../../../../constants/chart-colors';
 
 export interface MacroGoalDialogData {
     proteinTarget?: number | null;
@@ -35,6 +36,13 @@ export class MacroGoalDialogComponent {
     private readonly dialogRef = inject(MatDialogRef<MacroGoalDialogComponent>);
     private readonly data = inject<MacroGoalDialogData | null>(MAT_DIALOG_DATA, { optional: true }) ?? {};
     private readonly userService = inject(UserService);
+    private readonly fillAlpha = 0.08;
+    public readonly nutrientFillColors = {
+        protein: this.applyAlpha(CHART_COLORS.proteins, this.fillAlpha),
+        fat: this.applyAlpha(CHART_COLORS.fats, this.fillAlpha),
+        carb: this.applyAlpha(CHART_COLORS.carbs, this.fillAlpha),
+        fiber: this.applyAlpha(CHART_COLORS.fiber, this.fillAlpha),
+    };
 
     public readonly form = new FormGroup({
         proteinTarget: new FormControl<number | null>(null, [Validators.min(0)]),
@@ -73,5 +81,15 @@ export class MacroGoalDialogComponent {
 
     public cancel(): void {
         this.dialogRef.close(false);
+    }
+
+    private applyAlpha(hexColor: string, alpha: number): string {
+        const normalized = hexColor.replace('#', '');
+        const value = parseInt(normalized, 16);
+        const r = (value >> 16) & 255;
+        const g = (value >> 8) & 255;
+        const b = value & 255;
+
+        return `rgba(${r}, ${g}, ${b}, ${alpha})`;
     }
 }

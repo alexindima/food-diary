@@ -9,15 +9,15 @@ import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog.component';
 import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import {
-    FdUiConfirmDialogComponent,
-    FdUiConfirmDialogData,
-} from 'fd-ui-kit/dialog/fd-ui-confirm-dialog.component';
 import { FdUiTabsComponent, FdUiTab } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
 import { FdUiAccentSurfaceComponent } from 'fd-ui-kit/accent-surface/fd-ui-accent-surface.component';
 import { CHART_COLORS } from '../../../constants/chart-colors';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartData, ChartOptions } from 'chart.js';
+import {
+    ConfirmDeleteDialogComponent,
+    ConfirmDeleteDialogData,
+} from '../../shared/confirm-delete-dialog/confirm-delete-dialog.component';
 
 @Component({
     selector: 'fd-product-detail',
@@ -200,16 +200,19 @@ export class ProductDetailComponent {
         if (this.isDeleteDisabled) {
             return;
         }
-        const data: FdUiConfirmDialogData = {
-            title: this.translate.instant('PRODUCT_DETAIL.CONFIRM_DELETE_TITLE'),
-            message: this.product.name,
-            confirmLabel: this.translate.instant('PRODUCT_DETAIL.CONFIRM_BUTTON'),
-            cancelLabel: this.translate.instant('PRODUCT_DETAIL.CANCEL_BUTTON'),
-            danger: true,
+        const data: ConfirmDeleteDialogData = {
+            title: this.translate.instant('CONFIRM_DELETE.TITLE', {
+                type: this.translate.instant('PRODUCT_DETAIL.ENTITY_NAME'),
+            }),
+            message: this.translate.instant('CONFIRM_DELETE.MESSAGE', { name: this.product.name }),
+            name: this.product.name,
+            entityType: this.translate.instant('PRODUCT_DETAIL.ENTITY_NAME'),
+            confirmLabel: this.translate.instant('CONFIRM_DELETE.CONFIRM'),
+            cancelLabel: this.translate.instant('CONFIRM_DELETE.CANCEL'),
         };
 
         this.fdDialogService
-            .open(FdUiConfirmDialogComponent, { data, size: 'sm' })
+            .open(ConfirmDeleteDialogComponent, { data, size: 'sm' })
             .afterClosed()
             .subscribe(confirm => {
                 if (confirm) {

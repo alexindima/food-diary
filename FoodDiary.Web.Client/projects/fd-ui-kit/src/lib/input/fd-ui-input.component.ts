@@ -48,6 +48,7 @@ export class FdUiInputComponent implements ControlValueAccessor {
     public readonly step = input<string | number>();
     public readonly size = input<FdUiFieldSize>('md');
     public readonly hideSubscript = input(false);
+    public readonly fillColor = input<string | null>(null);
 
     public readonly cleared = output<void>();
     public readonly suffixButtonClicked = output<void>();
