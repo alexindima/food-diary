@@ -108,12 +108,23 @@
         }
     },
     "HERO": {
-        "WELCOME": "Welcome to Food Diary!",
-        "DESCRIPTION": "Track your diet and achieve goals with our app!",
+        "OVERLINE": "Online food diary",
+        "HEADLINE": "Track your meals. Hit your goals.",
+        "SUBTITLE": "Log products and recipes, see daily macros, and watch your progress in one clean dashboard.",
+        "REASSURANCE": "Free • No ads • Start in under a minute",
         "LOGIN": "Login",
-        "REGISTER": "Register"
+        "REGISTER": "Register",
+        "MOCK_TITLE": "Food Diary Dashboard",
+        "MOCK_CALORIES": "Consumed today",
+        "MOCK_GOAL": "Goal: 1 800 kcal",
+        "MOCK_TREND": "This week",
+        "MOCK_WEEK": "vs last week",
+        "MOCK_MEAL": "Breakfast",
+        "MOCK_CHART": "Progress"
     },
     "FEATURES": {
+        "EYEBROW": "Why Food Diary",
+        "SUBTITLE": "Everything you need to keep nutrition consistent and visible.",
         "TITLE": "Features",
         "CALORIE_TRACKING": {
             "TITLE": "Calorie Tracking",
@@ -133,9 +144,43 @@
         },
         "BUTTON_MORE": "Learn More"
     },
+    "LANDING": {
+        "PREVIEW": {
+            "EYEBROW": "Product tour",
+            "TITLE": "See your day at a glance",
+            "SUBTITLE": "Charts, meals, and trends live together so you always know where you stand.",
+            "CALORIES": "Calories",
+            "WEIGHT": "Weight",
+            "TREND": "Trend",
+            "MEAL": "Meal",
+            "PROGRESS": "Progress"
+        },
+        "STEPS": {
+            "EYEBROW": "How it works",
+            "TITLE": "Three steps to a clear routine",
+            "SUBTITLE": "From sign-up to tracking in seconds.",
+            "STEP1": {
+                "TITLE": "Create an account",
+                "TEXT": "Answer a few questions so we can tailor your diary."
+            },
+            "STEP2": {
+                "TITLE": "Log meals with products or recipes",
+                "TEXT": "Add portions, scan items, and reuse saved meals."
+            },
+            "STEP3": {
+                "TITLE": "Watch your progress",
+                "TEXT": "Track calories, macros, weight and trends in one place."
+            }
+        },
+        "CTA": {
+            "TITLE": "Ready to start?",
+            "SUBTITLE": "Registration takes less than a minute. You can leave anytime."
+        }
+    },
     "AUTH": {
         "LOGIN": {
             "TITLE": "Login",
+            "SUBTITLE": "Sign in to continue.",
             "EMAIL": "Email",
             "EMAIL_PLACEHOLDER": "user@example.com",
             "PASSWORD": "Password",
@@ -146,6 +191,7 @@
         },
         "REGISTER": {
             "TITLE": "Register",
+            "SUBTITLE": "Create an account to keep your food diary in sync.",
             "EMAIL": "Email",
             "EMAIL_PLACEHOLDER": "user@example.com",
             "PASSWORD": "Password",

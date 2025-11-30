@@ -1,90 +1,102 @@
-@use 'sass:color';
 @use 'variables' as *;
 
 .features {
-    padding-bottom: 40px;
-    text-align: center;
+    padding: clamp(28px, 3vw, 48px) 0 clamp(24px, 3vw, 40px);
+    background: var(--fd-color-surface-muted, #f8fafc);
+
+    &__inner {
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 0 var(--fd-layout-page-horizontal-padding, 24px);
+        display: flex;
+        flex-direction: column;
+        gap: clamp($gap-s, 2vw, $gap-l);
+    }
+
+    &__header {
+        display: flex;
+        align-items: center;
+        gap: $gap-m;
+        flex-wrap: wrap;
+    }
+
+    &__eyebrow {
+        display: inline-flex;
+        padding: 6px 12px;
+        border-radius: 999px;
+        background: rgba(59, 130, 246, 0.1);
+        color: $color-primary;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        font-size: 0.9rem;
+    }
 
     &__title {
-        font-size: 28px;
-        margin-bottom: $gap-l;
+        margin: 0;
+        font-size: clamp(24px, 3vw, 32px);
         color: $color-text-main;
     }
 
+    &__subtitle {
+        margin: 6px 0 0;
+        color: $color-text-additional;
+        font-size: 1rem;
+    }
+
     &__grid {
-        display: flex;
-        gap: 20px;
-        flex-wrap: wrap;
-        justify-content: center;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: $gap-m $gap-l;
+        justify-items: center;
     }
 
     &__item {
-        max-width: 320px;
-        padding: $gap-l;
+        background: #fff;
+        border-radius: 14px;
+        padding: $gap-m;
+        border: 1px solid rgba(17, 24, 39, 0.06);
+        box-shadow: 0 16px 36px rgba(15, 23, 42, 0.08);
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
-        align-items: center;
-        box-sizing: border-box;
-        background: white;
-        border-radius: $border-radius-m;
-        box-shadow: 0 10px 30px rgba(15, 23, 42, 0.12);
-        border: 1px solid rgba(15, 23, 42, 0.05);
-        transition:
-            transform 0.2s ease,
-            box-shadow 0.2s ease;
+        gap: $gap-s;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        max-width: 280px;
+        width: 100%;
 
         &:hover {
             transform: translateY(-3px);
-            box-shadow: 0 16px 30px rgba(15, 23, 42, 0.18);
-        }
-
-        &-title {
-            font-size: 22px;
-            margin: 0;
-            color: #555555;
-        }
-
-        &-icon {
-            width: 100%;
-            margin-bottom: $gap-m;
-        }
-
-        &-description {
-            font-size: $font-size-main;
-            color: #777;
-            margin: 0;
-        }
-
-        &-footer {
-            margin-top: auto;
-        }
-
-        &-button {
-            font-size: $font-size-main;
-            padding: $gap-s $gap-l;
-            color: $color-background;
-            background-color: #007bff;
-            border: none;
-            border-radius: $border-radius-s;
-            cursor: pointer;
-
-            &:hover {
-                background-color: color.adjust(#007bff, $lightness: -10%);
-            }
+            box-shadow: 0 18px 42px rgba(15, 23, 42, 0.12);
         }
     }
 
-    @media #{$media-mobile} {
-        &__grid {
-            flex-direction: column;
-            gap: $gap-m;
-        }
+    &__icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        background: rgba(59, 130, 246, 0.1);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+        color: $color-primary;
+    }
 
-        &__item {
-            width: 100%;
-            max-width: none;
-            margin: 0 auto;
-        }
+    &__item-title {
+        margin: 0;
+        font-size: 1.1rem;
+        color: $color-text-main;
+    }
+
+    &__item-description {
+        margin: 0;
+        color: $color-text-additional;
+        line-height: 1.5;
+        font-size: 0.97rem;
+    }
+
+    &__item-button {
+        align-self: flex-start;
+        padding: 0;
+        font-weight: 600;
     }
 }

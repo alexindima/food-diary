@@ -1,5 +1,4 @@
 import { Routes } from '@angular/router';
-import { AuthComponent } from './components/auth/auth.component';
 import { MainComponent } from './components/main/main.component';
 import { ProductContainerComponent } from './components/product-container/product-container.component';
 import { ProductListPageComponent } from './components/product-container/product-list/product-list-page/product-list-page.component';
@@ -29,12 +28,14 @@ export const routes: Routes = [
     { path: '', component: MainComponent },
     {
         path: 'auth',
-        component: AuthComponent,
+        component: MainComponent,
+        data: { openAuth: true },
         canActivate: [loggedInGuard],
     },
     {
         path: 'auth/:mode',
-        component: AuthComponent,
+        component: MainComponent,
+        data: { openAuth: true },
         canActivate: [loggedInGuard],
     },
     {

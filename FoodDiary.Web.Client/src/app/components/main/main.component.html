@@ -3,4 +3,96 @@
 } @else {
     <fd-hero />
     <fd-features />
+    <section class="landing-section landing-section--preview">
+        <div class="landing-section__inner">
+            <div class="landing-section__copy">
+                <span class="landing-section__eyebrow">{{ 'LANDING.PREVIEW.EYEBROW' | translate }}</span>
+                <h2 class="landing-section__title">{{ 'LANDING.PREVIEW.TITLE' | translate }}</h2>
+                <p class="landing-section__subtitle">{{ 'LANDING.PREVIEW.SUBTITLE' | translate }}</p>
+            </div>
+            <div class="landing-preview">
+                <div class="landing-preview__main-card">
+                    <div class="landing-preview__header">
+                        <span class="landing-preview__badge">Dashboard</span>
+                        <span class="landing-preview__meta">Сегодня</span>
+                    </div>
+                    <div class="landing-preview__stats">
+                        <div>
+                            <p class="landing-preview__label">{{ 'LANDING.PREVIEW.CALORIES' | translate }}</p>
+                            <p class="landing-preview__value">1 420 / 1 800</p>
+                        </div>
+                        <div>
+                            <p class="landing-preview__label">{{ 'LANDING.PREVIEW.WEIGHT' | translate }}</p>
+                            <p class="landing-preview__value">62.4 кг</p>
+                        </div>
+                        <div>
+                            <p class="landing-preview__label">{{ 'LANDING.PREVIEW.TREND' | translate }}</p>
+                            <p class="landing-preview__value landing-preview__value--positive">-0.3</p>
+                        </div>
+                    </div>
+                    <div class="landing-preview__chart">
+                        <span class="landing-preview__spark landing-preview__spark--1"></span>
+                        <span class="landing-preview__spark landing-preview__spark--2"></span>
+                        <span class="landing-preview__spark landing-preview__spark--3"></span>
+                        <span class="landing-preview__spark landing-preview__spark--4"></span>
+                    </div>
+                </div>
+                <div class="landing-preview__stack">
+                    <div class="landing-preview__card">
+                        <p class="landing-preview__card-title">{{ 'LANDING.PREVIEW.MEAL' | translate }}</p>
+                        <p class="landing-preview__card-text">Омлет, овощи, кофе</p>
+                        <p class="landing-preview__card-meta">350 ккал</p>
+                    </div>
+                    <div class="landing-preview__card landing-preview__card--ghost">
+                        <p class="landing-preview__card-title">{{ 'LANDING.PREVIEW.PROGRESS' | translate }}</p>
+                        <div class="landing-preview__bars">
+                            <span class="landing-preview__bar landing-preview__bar--1"></span>
+                            <span class="landing-preview__bar landing-preview__bar--2"></span>
+                            <span class="landing-preview__bar landing-preview__bar--3"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="landing-section landing-section--steps">
+        <div class="landing-section__inner">
+            <div class="landing-section__copy landing-section__copy--center">
+                <span class="landing-section__eyebrow">{{ 'LANDING.STEPS.EYEBROW' | translate }}</span>
+                <h2 class="landing-section__title">{{ 'LANDING.STEPS.TITLE' | translate }}</h2>
+                <p class="landing-section__subtitle">{{ 'LANDING.STEPS.SUBTITLE' | translate }}</p>
+            </div>
+            <div class="landing-steps">
+                <div class="landing-steps__item">
+                    <div class="landing-steps__icon">1</div>
+                    <h3 class="landing-steps__title">{{ 'LANDING.STEPS.STEP1.TITLE' | translate }}</h3>
+                    <p class="landing-steps__text">{{ 'LANDING.STEPS.STEP1.TEXT' | translate }}</p>
+                </div>
+                <div class="landing-steps__item">
+                    <div class="landing-steps__icon">2</div>
+                    <h3 class="landing-steps__title">{{ 'LANDING.STEPS.STEP2.TITLE' | translate }}</h3>
+                    <p class="landing-steps__text">{{ 'LANDING.STEPS.STEP2.TEXT' | translate }}</p>
+                </div>
+                <div class="landing-steps__item">
+                    <div class="landing-steps__icon">3</div>
+                    <h3 class="landing-steps__title">{{ 'LANDING.STEPS.STEP3.TITLE' | translate }}</h3>
+                    <p class="landing-steps__text">{{ 'LANDING.STEPS.STEP3.TEXT' | translate }}</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="landing-section landing-section--cta">
+        <div class="landing-section__inner landing-section__inner--cta">
+            <div>
+                <h2 class="landing-section__title">{{ 'LANDING.CTA.TITLE' | translate }}</h2>
+                <p class="landing-section__subtitle">{{ 'LANDING.CTA.SUBTITLE' | translate }}</p>
+            </div>
+            <div class="landing-section__actions">
+                <fd-ui-button size="lg" variant="primary" (click)="openAuthDialog('register')">{{ 'HERO.REGISTER' | translate }}</fd-ui-button>
+                <fd-ui-button size="lg" variant="secondary" fill="outline" (click)="openAuthDialog('login')">{{ 'HERO.LOGIN' | translate }}</fd-ui-button>
+            </div>
+        </div>
+    </section>
 }

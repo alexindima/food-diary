@@ -1,117 +1,120 @@
 <div class="auth">
-    <fd-ui-card class="auth__card">
-        <div class="auth__tabs">
-            <fd-ui-tabs [tabs]="authTabs"
-                [selectedValue]="authMode"
-                (selectedValueChange)="handleTabChange($event)"
-             />
-        </div>
+    <div class="auth__tabs">
+        <button type="button"
+            class="auth__tab"
+            [class.auth__tab--active]="authMode === 'login'"
+            (click)="handleTabChange('login')"
+        >
+            {{ 'AUTH.LOGIN.TITLE' | translate }}
+        </button>
+        <button type="button"
+            class="auth__tab"
+            [class.auth__tab--active]="authMode === 'register'"
+            (click)="handleTabChange('register')"
+        >
+            {{ 'AUTH.REGISTER.TITLE' | translate }}
+        </button>
+    </div>
 
-        <div class="auth__content">
-            @if (authMode === 'login') {
-                <form [formGroup]="loginForm" (ngSubmit)="onLoginSubmit()" class="auth__form">
-                    <div class="auth__field">
-                        <fd-ui-input formControlName="email"
-                            type="email"
-                            [label]="'AUTH.LOGIN.EMAIL' | translate"
-                            [placeholder]="'AUTH.LOGIN.EMAIL_PLACEHOLDER' | translate"
-                            autocomplete="email"
-                         />
-                        <fd-ui-form-error [control]="loginForm.controls.email" />
-                    </div>
+    <p class="auth__subtitle">
+        @if (authMode === 'login') {
+            {{ 'AUTH.LOGIN.SUBTITLE' | translate }}
+        } @else {
+            {{ 'AUTH.REGISTER.SUBTITLE' | translate }}
+        }
+    </p>
 
-                    <div class="auth__field">
-                        <fd-ui-input formControlName="password"
-                            type="password"
-                            [label]="'AUTH.LOGIN.PASSWORD' | translate"
-                            [placeholder]="'AUTH.LOGIN.PASSWORD_PLACEHOLDER' | translate"
-                            autocomplete="current-password"
-                         />
-                        <fd-ui-form-error [control]="loginForm.controls.password" />
-                    </div>
-
-                    <fd-ui-checkbox formControlName="rememberMe"
-                        [label]="'AUTH.LOGIN.REMEMBER_ME' | translate"
+    <div class="auth__content">
+        @if (authMode === 'login') {
+            <form [formGroup]="loginForm" (ngSubmit)="onLoginSubmit()" class="auth__form">
+                <div class="auth__field">
+                    <fd-ui-input formControlName="email"
+                        type="email"
+                        [label]="'AUTH.LOGIN.EMAIL' | translate"
+                        [placeholder]="'AUTH.LOGIN.EMAIL_PLACEHOLDER' | translate"
+                        autocomplete="email"
                      />
+                    <fd-ui-form-error [control]="loginForm.controls.email" />
+                </div>
 
-                    <div class="auth__actions">
-                        <fd-ui-button
-                            type="submit"
-                            variant="primary"
-                            [disabled]="loginForm.invalid"
-                            [fullWidth]="true"
-                        >
-                            {{ 'AUTH.LOGIN.LOGIN' | translate }}
-                        </fd-ui-button>
-                        <fd-ui-form-error [error]="globalError()" />
-                    </div>
-                </form>
-            } @else {
-                <form [formGroup]="registerForm" (ngSubmit)="onRegisterSubmit()" class="auth__form">
-                    <div class="auth__field">
-                        <fd-ui-input formControlName="email"
-                            type="email"
-                            [label]="'AUTH.REGISTER.EMAIL' | translate"
-                            [placeholder]="'AUTH.REGISTER.EMAIL_PLACEHOLDER' | translate"
-                            autocomplete="email"
-                         />
-                        <fd-ui-form-error [control]="registerForm.controls.email" />
-                    </div>
-                    <div class="auth__field">
-                        <fd-ui-input formControlName="password"
-                            type="password"
-                            [label]="'AUTH.REGISTER.PASSWORD' | translate"
-                            [placeholder]="'AUTH.REGISTER.PASSWORD_PLACEHOLDER' | translate"
-                            autocomplete="new-password"
-                         />
-                        <fd-ui-form-error [control]="registerForm.controls.password" />
-                    </div>
-                    <div class="auth__field">
-                        <fd-ui-input formControlName="confirmPassword"
-                            type="password"
-                            [label]="'AUTH.REGISTER.CONFIRM_PASSWORD' | translate"
-                            [placeholder]="'AUTH.REGISTER.CONFIRM_PASSWORD_PLACEHOLDER' | translate"
-                            autocomplete="new-password"
-                         />
-                        <fd-ui-form-error [control]="registerForm.controls.confirmPassword" />
-                    </div>
+                <div class="auth__field">
+                    <fd-ui-input formControlName="password"
+                        type="password"
+                        [label]="'AUTH.LOGIN.PASSWORD' | translate"
+                        [placeholder]="'AUTH.LOGIN.PASSWORD_PLACEHOLDER' | translate"
+                        autocomplete="current-password"
+                     />
+                    <fd-ui-form-error [control]="loginForm.controls.password" />
+                </div>
 
-                    <div class="auth__checkbox-row">
-                        <fd-ui-checkbox formControlName="agreeTerms"
-                            label=""
-                         />
-                        <div
-                            class="auth__checkbox-text"
-                            [innerHTML]="'AUTH.REGISTER.AGREE_TO_TERMS' | translate: { termsUrl: '/terms', privacyUrl: '/privacy'}"
-                        ></div>
-                    </div>
+                <fd-ui-checkbox formControlName="rememberMe"
+                    [label]="'AUTH.LOGIN.REMEMBER_ME' | translate"
+                 />
 
-                    <div class="auth__actions">
-                        <fd-ui-button
-                            type="submit"
-                            variant="primary"
-                            [disabled]="registerForm.invalid"
-                            [fullWidth]="true"
-                        >
-                            {{ 'AUTH.REGISTER.REGISTER' | translate }}
-                        </fd-ui-button>
-                        <fd-ui-form-error [error]="globalError()" />
-                    </div>
-                </form>
-            }
-        </div>
-    </fd-ui-card>
+                <div class="auth__actions">
+                    <fd-ui-button
+                        type="submit"
+                        variant="primary"
+                        [disabled]="loginForm.invalid"
+                        [fullWidth]="true"
+                    >
+                        {{ 'AUTH.LOGIN.LOGIN' | translate }}
+                    </fd-ui-button>
+                    <fd-ui-form-error [error]="globalError()" />
+                </div>
+            </form>
+        } @else {
+            <form [formGroup]="registerForm" (ngSubmit)="onRegisterSubmit()" class="auth__form">
+                <div class="auth__field">
+                    <fd-ui-input formControlName="email"
+                        type="email"
+                        [label]="'AUTH.REGISTER.EMAIL' | translate"
+                        [placeholder]="'AUTH.REGISTER.EMAIL_PLACEHOLDER' | translate"
+                        autocomplete="email"
+                     />
+                    <fd-ui-form-error [control]="registerForm.controls.email" />
+                </div>
+                <div class="auth__field">
+                    <fd-ui-input formControlName="password"
+                        type="password"
+                        [label]="'AUTH.REGISTER.PASSWORD' | translate"
+                        [placeholder]="'AUTH.REGISTER.PASSWORD_PLACEHOLDER' | translate"
+                        autocomplete="new-password"
+                     />
+                    <fd-ui-form-error [control]="registerForm.controls.password" />
+                </div>
+                <div class="auth__field">
+                    <fd-ui-input formControlName="confirmPassword"
+                        type="password"
+                        [label]="'AUTH.REGISTER.CONFIRM_PASSWORD' | translate"
+                        [placeholder]="'AUTH.REGISTER.CONFIRM_PASSWORD_PLACEHOLDER' | translate"
+                        autocomplete="new-password"
+                     />
+                    <fd-ui-form-error [control]="registerForm.controls.confirmPassword" />
+                </div>
 
-    <fd-ui-card class="auth__info-card" [title]="'AUTH.INFO.TITLE' | translate">
-        <p class="auth__info-lead">
-            {{ 'AUTH.INFO.LEAD' | translate }}
-        </p>
-        <ul class="auth__info-list">
-            @for (benefit of authBenefits; track benefit) {
-                <li class="auth__info-item">
-                    {{ benefit | translate }}
-                </li>
-            }
-        </ul>
-    </fd-ui-card>
+                <div class="auth__checkbox-row">
+                    <fd-ui-checkbox formControlName="agreeTerms"
+                        label=""
+                     />
+                    <div
+                        class="auth__checkbox-text"
+                        [innerHTML]="'AUTH.REGISTER.AGREE_TO_TERMS' | translate: { termsUrl: '/terms', privacyUrl: '/privacy'}"
+                    ></div>
+                </div>
+
+                <div class="auth__actions">
+                    <fd-ui-button
+                        type="submit"
+                        variant="primary"
+                        [disabled]="registerForm.invalid"
+                        [fullWidth]="true"
+                    >
+                        {{ 'AUTH.REGISTER.REGISTER' | translate }}
+                    </fd-ui-button>
+                    <fd-ui-form-error [error]="globalError()" />
+                </div>
+            </form>
+        }
+    </div>
 </div>

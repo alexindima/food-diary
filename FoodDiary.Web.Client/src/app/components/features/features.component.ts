@@ -12,19 +12,19 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 export class FeaturesComponent {
     public features: Feature[] = [
         {
-            icon: 'tracking.webp',
+            icon: '📊',
             key: 'CALORIE_TRACKING',
         },
         {
-            icon: 'planning.webp',
+            icon: '📅',
             key: 'MEAL_PLANNING',
         },
         {
-            icon: 'analytics.webp',
+            icon: '📈',
             key: 'PROGRESS_ANALYTICS',
         },
         {
-            icon: 'support.webp',
+            icon: '🤝',
             key: 'COMMUNITY_SUPPORT',
         },
     ];

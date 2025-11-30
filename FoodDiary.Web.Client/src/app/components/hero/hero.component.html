@@ -1,55 +1,62 @@
-<div class="hero">
-    <div class="hero__content">
-        <h1 class="hero__title">{{ 'HERO.WELCOME' | translate }}</h1>
-        <p class="hero__description">{{ 'HERO.DESCRIPTION' | translate }}</p>
-        <div class="hero__actions">
-            <div class="hero__button-container">
+<section class="hero">
+    <div class="hero__grid">
+        <div class="hero__copy">
+            <span class="hero__eyebrow">{{ 'HERO.OVERLINE' | translate }}</span>
+            <h1 class="hero__title">{{ 'HERO.HEADLINE' | translate }}</h1>
+            <p class="hero__subtitle">{{ 'HERO.SUBTITLE' | translate }}</p>
+
+            <div class="hero__actions">
                 <fd-ui-button
-                    class="action-button action-button--primary"
+                    class="hero__button"
                     size="lg"
                     variant="primary"
-                    (click)="goToLogin()"
-                >
-                    {{ 'HERO.LOGIN' | translate }}
-                </fd-ui-button>
-                <fd-ui-button
-                    class="action-button action-button--secondary"
-                    size="lg"
-                    variant="secondary"
-                    fill="outline"
                     (click)="goToRegister()"
                 >
                     {{ 'HERO.REGISTER' | translate }}
                 </fd-ui-button>
+                <fd-ui-button
+                    class="hero__button hero__button--ghost"
+                    size="lg"
+                    variant="secondary"
+                    fill="outline"
+                    (click)="goToLogin()"
+                >
+                    {{ 'HERO.LOGIN' | translate }}
+                </fd-ui-button>
+            </div>
+
+            <p class="hero__reassurance">{{ 'HERO.REASSURANCE' | translate }}</p>
+        </div>
+
+        <div class="hero__visual">
+            <div class="hero__blob"></div>
+            <div class="hero__preview-card">
+                <p class="hero__preview-title">{{ 'HERO.MOCK_TITLE' | translate }}</p>
+
+                <div class="hero__preview-block">
+                    <div class="hero__preview-heading">
+                        <p class="hero__preview-label">{{ 'HERO.MOCK_CALORIES' | translate }}</p>
+                        <p class="hero__preview-value">420 ккал</p>
+                        <p class="hero__preview-meta">{{ 'HERO.MOCK_GOAL' | translate }}</p>
+                    </div>
+                    <div class="hero__progress">
+                        <div class="hero__progress-fill"></div>
+                    </div>
+                </div>
+
+                <div class="hero__week">
+                    <p class="hero__week-title">{{ 'HERO.MOCK_TREND' | translate }}</p>
+                    <p class="hero__week-meta">12% лучше прошлой</p>
+                </div>
+
+                <div class="hero__meal">
+                    <div class="hero__meal-header">
+                        <span class="hero__meal-title">{{ 'HERO.MOCK_MEAL' | translate }} 08:30</span>
+                        <span class="hero__meal-meta">{{ 'CONSUMPTION_DETAIL.SERVINGS' | translate }}</span>
+                    </div>
+                    <p class="hero__meal-text">Овсянка, яйца, кофе</p>
+                </div>
             </div>
         </div>
     </div>
-    <div class="hero__slider">
-        <div class="hero__slides">
-            @for (slide of slides; track slide; let i = $index) {
-                <picture class="hero__slide" [class.hero__slide--active]="currentSlide === i">
-                    <source srcset="assets/images/hero/{{ slide }}-1024.webp" media="(max-width: 1024px)" type="image/webp" />
-                    <source srcset="assets/images/hero/{{ slide }}-768.webp" media="(max-width: 768px)" type="image/webp" />
-                    <source srcset="assets/images/hero/{{ slide }}-480.webp" media="(max-width: 480px)" type="image/webp" />
-                    <img
-                        src="assets/images/hero/{{ slide }}.webp"
-                        alt="{{ 'HERO.SLIDE_ALT' | translate:{index: i} }}"
-                        draggable="false"
-                        loading="lazy"
-                    />
-                </picture>
-            }
-        </div>
-        <div class="hero__dots">
-            @for (slide of slides; track slide; let i = $index) {
-                <button
-                    type="button"
-                    class="hero__dot"
-                    [class.hero__dot--active]="currentSlide === i"
-                    (click)="goToSlide(i)"
-                    [attr.aria-label]="'HERO.SLIDE_ALT' | translate:{index: i}"
-                ></button>
-            }
-        </div>
-    </div>
-</div>
+</section>

@@ -1,168 +1,59 @@
 @use 'variables' as *;
 
 .fd-footer {
-    color: var(--fd-color-gray-100, #e5e7eb);
-    background: var(--fd-color-gray-900, #111827);
-    font-size: 13px;
-    line-height: 1.4;
-
-    &__top {
-        background: var(--fd-color-gray-800, #1f2933);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-        min-height: 56px;
-        padding: 16px 0;
-        display: flex;
-        align-items: center;
-    }
-
-    &__bottom {
-        background: var(--fd-color-gray-900, #111827);
-        min-height: 40px;
-        padding: 12px 0;
-        display: flex;
-        align-items: center;
-    }
+    background: var(--fd-color-gray-900, #0f172a);
+    color: var(--fd-color-gray-200, #e5e7eb);
+    padding: 28px 0;
 
     &__inner {
-        width: 100%;
         max-width: var(--fd-layout-page-content-max-width, 1200px);
         margin: 0 auto;
         padding: 0 var(--fd-layout-page-horizontal-padding, 24px);
         display: flex;
         justify-content: space-between;
-        align-items: center;
-        gap: 24px;
+        gap: $gap-l;
+        align-items: flex-start;
+
+        @media (max-width: 768px) {
+            flex-direction: column;
+            gap: $gap-s;
+        }
     }
 
-    &__bottom-inner {
-        justify-content: space-between;
+    &__brand {
+        max-width: 420px;
+        flex: 1 1 50%;
     }
 
-    &__contacts,
-    &__social {
-        display: flex;
-        align-items: center;
-        gap: 16px;
+    &__logo {
+        margin: 0 0 6px;
+        font-weight: 800;
+        font-size: 1.1rem;
+        letter-spacing: 0.02em;
     }
 
-    &__heading {
+    &__tagline {
         margin: 0;
-        font-size: 14px;
-        font-weight: 600;
-        color: var(--fd-color-gray-100, #e5e7eb);
-        letter-spacing: 0.01em;
-        white-space: nowrap;
-    }
-
-    &__contact-list {
-        display: flex;
-        gap: 12px;
-        flex-wrap: wrap;
-        align-items: center;
-    }
-
-    &__contact {
-        color: var(--fd-color-gray-300, #d1d5db);
-        text-decoration: none;
-        transition: color 0.2s ease;
-        font-weight: 500;
-
-        &:hover {
-            color: var(--fd-color-primary-300, #93c5fd);
-        }
-    }
-
-    &__social-list {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-
-    &__social-link {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 32px;
-        height: 32px;
-        border-radius: 10px;
-        background: rgba(255, 255, 255, 0.04);
-        transition: background-color 0.2s ease, transform 0.2s ease;
-
-        &:hover {
-            background: rgba(37, 99, 235, 0.16);
-            transform: translateY(-1px);
-        }
-    }
-
-    &__social-icon {
-        display: inline-flex;
-        width: 20px;
-        height: 20px;
-
-        img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-        }
+        color: var(--fd-color-gray-400, #9ca3af);
+        line-height: 1.5;
     }
 
     &__links {
         display: flex;
-        align-items: center;
-        gap: 10px;
-        color: var(--fd-color-gray-300, #d1d5db);
-        font-size: 12px;
+        gap: $gap-s;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        flex: 1 1 50%;
     }
 
     &__link {
         color: var(--fd-color-primary-300, #93c5fd);
         text-decoration: none;
+        font-weight: 600;
         transition: color 0.2s ease;
-        font-weight: 500;
 
         &:hover {
-            color: var(--fd-color-primary-400, #60a5fa);
-        }
-    }
-
-    &__divider {
-        width: 1px;
-        height: 14px;
-        background: rgba(255, 255, 255, 0.06);
-        display: inline-block;
-    }
-
-    &__copyright {
-        margin: 0;
-        color: var(--fd-color-gray-400, #9ca3af);
-        font-size: 12px;
-        font-weight: 500;
-    }
-
-    @media (max-width: 768px) {
-        &__inner {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 12px;
-        }
-
-        &__contacts,
-        &__social {
-            flex-direction: column;
-            align-items: flex-start;
-            width: 100%;
-        }
-
-        &__contact-list,
-        &__social-list {
-            width: 100%;
-            justify-content: flex-start;
-        }
-
-        &__bottom-inner {
-            align-items: flex-start;
-            flex-direction: column;
-            gap: 8px;
+            color: var(--fd-color-primary-200, #bfdbfe);
         }
     }
 }

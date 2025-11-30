@@ -1,32 +1,29 @@
 <section class="features">
-    <h2 class="features__title">{{ 'FEATURES.TITLE' | translate }}</h2>
-    <div class="features__grid">
-        @for (feature of features; track feature) {
-            <div class="features__item">
-                <header class="features__item-header">
-                    <h2 class="features__item-title">{{ 'FEATURES.' + feature.key + '.TITLE' | translate }}</h2>
-                </header>
+    <div class="features__inner">
+        <header class="features__header">
+            <span class="features__eyebrow">{{ 'FEATURES.EYEBROW' | translate }}</span>
+            <div>
+                <h2 class="features__title">{{ 'FEATURES.TITLE' | translate }}</h2>
+                <p class="features__subtitle">{{ 'FEATURES.SUBTITLE' | translate }}</p>
+            </div>
+        </header>
 
-                <section class="features__item-content">
-                    <img
-                        src="assets/images/features/{{ feature.icon }}"
-                        [alt]="'FEATURES.' + feature.key + '.TITLE' | translate"
-                        class="features__item-icon"
-                    />
+        <div class="features__grid">
+            @for (feature of features; track feature) {
+                <article class="features__item">
+                    <div class="features__icon">{{ feature.icon }}</div>
+                    <h3 class="features__item-title">{{ 'FEATURES.' + feature.key + '.TITLE' | translate }}</h3>
                     <p class="features__item-description">{{ 'FEATURES.' + feature.key + '.DESCRIPTION' | translate }}</p>
-                </section>
-
-                <footer class="features__item-footer">
                     <fd-ui-button
                         class="features__item-button"
                         variant="secondary"
-                        fill="outline"
-                        size="md"
+                        fill="text"
+                        size="sm"
                     >
                         {{ 'FEATURES.BUTTON_MORE' | translate }}
                     </fd-ui-button>
-                </footer>
-            </div>
-        }
+                </article>
+            }
+        </div>
     </div>
 </section>

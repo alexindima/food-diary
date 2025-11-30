@@ -1,23 +1,59 @@
-@use 'mixins' as *;
 @use 'variables' as *;
-
-:host {
-    @include host-style('/assets/images/background.webp');
-}
 
 .auth {
     margin: 0 auto;
     display: flex;
     flex-direction: column;
-    gap: $gap-l;
-
-    &__card,
-    &__info-card {
-        width: 100%;
-    }
+    gap: $gap-m;
+    max-width: 440px;
 
     &__tabs {
-        margin-bottom: $gap-m;
+        display: flex;
+        justify-content: center;
+        gap: $gap-l;
+        position: relative;
+        margin-bottom: $gap-xs;
+    }
+
+    &__tab {
+        position: relative;
+        padding: $gap-xs 0;
+        background: transparent;
+        border: none;
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #7d8699;
+        cursor: pointer;
+        transition: color 0.2s ease;
+
+        &::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -6px;
+            height: 2px;
+            width: 100%;
+            background: #3b6dfc;
+            border-radius: 999px;
+            transform: scaleX(0);
+            transform-origin: center;
+            transition: transform 0.25s ease;
+        }
+
+        &--active {
+            color: #1f2533;
+
+            &::after {
+                transform: scaleX(1);
+            }
+        }
+    }
+
+    &__subtitle {
+        margin: 12px 0 $gap-m;
+        text-align: center;
+        color: #444444;
+        font-size: 14px;
     }
 
     &__content {
@@ -42,34 +78,84 @@
         display: flex;
         flex-direction: column;
         gap: $gap-s;
+
+        fd-ui-button {
+            height: 48px;
+            border-radius: 12px;
+
+            ::ng-deep button {
+                background: #9db7ff;
+                font-weight: 600;
+                font-size: 16px;
+                transition: transform 0.15s ease, filter 0.15s ease;
+
+                &:hover {
+                    transform: translateY(-1px);
+                    filter: brightness(0.96);
+                }
+
+                &:disabled {
+                    opacity: 1;
+                    background: #d9e1ff;
+                    color: #8ca0ff;
+                    cursor: not-allowed;
+                    transform: none;
+                }
+            }
+        }
     }
 
     &__checkbox-row {
         display: flex;
         gap: $gap-s;
         align-items: flex-start;
+        font-size: 0.95rem;
+        color: #5b6275;
     }
 
     &__checkbox-text {
-        font-size: 0.85rem;
-        color: $color-text-additional;
+        font-size: 0.9rem;
+        color: #5b6275;
 
         a {
-            color: $color-primary;
+            color: #3b6dfc;
+            font-weight: 500;
         }
     }
+}
 
-    &__info-lead {
-        margin: 0 0 $gap-s;
-        color: $color-text-additional;
+/* Input and checkbox tweaks inside auth dialog */
+:host ::ng-deep fd-ui-input .fd-ui-input__control {
+    border-radius: 12px;
+    background: #fff;
+    border: 1px solid #d5d9e2;
+    padding: 14px 16px;
+    font-size: 16px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+    &:focus,
+    &:focus-visible {
+        border-color: #3b6dfc;
+        box-shadow: 0 0 0 3px rgba(59, 109, 252, 0.15);
     }
 
-    &__info-list {
-        margin: 0;
-        padding-left: 20px;
-        display: flex;
-        flex-direction: column;
-        gap: $gap-xs;
-        color: $color-text-main;
+    &:hover {
+        border-color: #bfc4d2;
     }
+}
+
+:host ::ng-deep fd-ui-checkbox .fd-ui-checkbox__control {
+    width: 18px;
+    height: 18px;
+    border-radius: 6px;
+    border: 1px solid rgba(148, 163, 184, 0.6);
+}
+
+:host ::ng-deep fd-ui-checkbox .fd-ui-checkbox__input:checked + .fd-ui-checkbox__control {
+    background: #3b6dfc;
+    border-color: #3b6dfc;
+}
+
+:host ::ng-deep fd-ui-checkbox .fd-ui-checkbox__label {
+    color: #5b6275;
 }

@@ -1,4 +1,13 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, FactoryProvider, inject, signal } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    DestroyRef,
+    FactoryProvider,
+    Input,
+    OnInit,
+    inject,
+    signal,
+} from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
@@ -9,11 +18,9 @@ import { FormGroupControls } from '../../types/common.data';
 import { LoginRequest, RegisterRequest } from '../../types/auth.data';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { HttpErrorResponse } from '@angular/common/http';
-import { FdUiTabsComponent, FdUiTab } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiCheckboxComponent } from 'fd-ui-kit/checkbox/fd-ui-checkbox.component';
-import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiFormErrorComponent, FD_VALIDATION_ERRORS, FdValidationErrors } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
@@ -37,29 +44,19 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     styleUrls: ['./auth.component.scss'],
     providers: [VALIDATION_ERRORS_PROVIDER],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [
-        TranslateModule,
-        ReactiveFormsModule,
-        FdUiTabsComponent,
-        FdUiInputComponent,
-        FdUiButtonComponent,
-        FdUiCheckboxComponent,
-        FdUiCardComponent,
-        FdUiFormErrorComponent,
-    ]
+    imports: [TranslateModule, ReactiveFormsModule, FdUiInputComponent, FdUiButtonComponent, FdUiCheckboxComponent, FdUiFormErrorComponent]
 })
-export class AuthComponent {
-    private readonly route = inject(ActivatedRoute);
-    private readonly router = inject(Router);
+export class AuthComponent implements OnInit {
+    @Input() public useRouting = true;
+    @Input() public initialMode: 'login' | 'register' = 'login';
+
+    private readonly route = inject(ActivatedRoute, { optional: true });
+    private readonly router = inject(Router, { optional: true });
     private readonly navigationService = inject(NavigationService);
     private readonly authService = inject(AuthService);
     private readonly translateService = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
 
-    public authTabs: FdUiTab[] = [
-        { value: 'login', labelKey: 'AUTH.LOGIN.TITLE' },
-        { value: 'register', labelKey: 'AUTH.REGISTER.TITLE' },
-    ];
     public authMode: 'login' | 'register' = 'login';
 
     public loginForm: FormGroup<LoginFormGroup>;
@@ -71,14 +68,9 @@ export class AuthComponent {
         'AUTH.INFO.HIGHLIGHTS.LIBRARY',
     ];
 
-    private readonly returnUrl: string | null = null;
+    private returnUrl: string | null = null;
 
     public constructor() {
-        this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || null;
-
-        const mode = this.route.snapshot.params['mode'] === 'register' ? 'register' : 'login';
-        this.authMode = mode;
-
         this.loginForm = new FormGroup<LoginFormGroup>({
             email: new FormControl<string>('', { nonNullable: true, validators: [Validators.required, Validators.email] }),
             password: new FormControl<string>('', { nonNullable: true, validators: [Validators.required, Validators.minLength(6)] }),
@@ -103,6 +95,12 @@ export class AuthComponent {
         });
     }
 
+    public ngOnInit(): void {
+        const routeMode = this.route?.snapshot.params['mode'] === 'register' ? 'register' : 'login';
+        this.authMode = this.useRouting ? routeMode : this.initialMode;
+        this.returnUrl = this.useRouting ? this.route?.snapshot.queryParams['returnUrl'] || null : null;
+    }
+
     public handleTabChange(value: string): void {
         const mode: 'login' | 'register' = value === 'register' ? 'register' : 'login';
         void this.onTabChange(mode);
@@ -124,7 +122,9 @@ export class AuthComponent {
             confirmPassword: '',
             agreeTerms: false,
         });
-        await this.router.navigate(['/auth', mode]);
+        if (this.useRouting && this.router) {
+            await this.router.navigate(['/auth', mode]);
+        }
     }
 
     public async onLoginSubmit(): Promise<void> {
