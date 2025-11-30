@@ -293,7 +293,19 @@
         "WARNING_NOT_OWNER": "Only the author can edit or delete this recipe.",
         "CONFIRM_DELETE": "Delete recipe",
         "CANCEL_BUTTON": "Cancel",
-        "CONFIRM_BUTTON": "Delete"
+        "CONFIRM_BUTTON": "Delete",
+        "ENTITY_NAME": "recipe",
+        "TABS": {
+            "SUMMARY": "Summary",
+            "NUTRIENTS": "Nutrients"
+        },
+        "SUMMARY": {
+            "CALORIES": "Calories",
+            "SERVINGS": "Servings",
+            "TOTAL_TIME": "Total time",
+            "INGREDIENTS": "Ingredients",
+            "VISIBILITY": "Visibility"
+        }
     },
     "PRODUCT_DETAIL": {
         "BARCODE": "Barcode:",
@@ -426,7 +438,20 @@
         "DELETE_BUTTON": "Delete",
         "CONFIRM_DELETE_TITLE": "Are you sure you want to delete the record from",
         "CANCEL_BUTTON": "Cancel",
-        "CONFIRM_BUTTON": "Confirm"
+        "CONFIRM_BUTTON": "Confirm",
+        "ENTITY_NAME": "consumption",
+        "TABS": {
+            "SUMMARY": "Summary",
+            "NUTRIENTS": "Nutrients"
+        },
+        "SUMMARY": {
+            "CALORIES": "Calories",
+            "MEAL_TYPE": "Meal type",
+            "ITEMS": "Items",
+            "DATE": "Date",
+            "COMMENT": "Comment",
+            "UNKNOWN_MEAL": "Not specified"
+        }
     },
     "MEAL_TYPES": {
         "BREAKFAST": "Breakfast",

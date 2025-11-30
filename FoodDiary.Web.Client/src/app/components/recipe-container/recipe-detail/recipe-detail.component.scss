@@ -1,57 +1,111 @@
-@use 'variables' as *;
-
 :host {
-    display: block;
-    width: 100%;
+    --fd-dialog-header-border: none;
+    --fd-dialog-header-margin-bottom: 0;
+    --fd-dialog-header-padding-bottom: 0.25rem;
+    --fd-dialog-footer-padding-top: 1rem;
+    --fd-dialog-footer-margin-top: 1rem;
 }
 
 .recipe-detail {
     display: flex;
     flex-direction: column;
-    gap: $gap-s;
-}
+    gap: 1.25rem;
 
-.recipe-detail__body {
-    display: flex;
-    flex-direction: column;
-    gap: $gap-m;
-}
+    :host ::ng-deep fd-ui-dialog.fd-ui-dialog .fd-ui-dialog__header,
+    :host ::ng-deep fd-ui-dialog .fd-ui-dialog__header,
+    :host ::ng-deep .fd-ui-dialog__header {
+        border-bottom: none !important;
+        margin-bottom: 0 !important;
+        padding-bottom: 0.25rem !important;
+    }
 
-.recipe-detail__info {
-    display: flex;
-    flex-direction: column;
-    gap: $gap-xxs;
-}
+    &__tabs {
+        margin: -0.5rem -0.25rem 0.75rem;
+        padding-bottom: 0.25rem;
+    }
 
-.recipe-detail__text {
-    margin: 0;
-    font-size: $font-size-main;
-    color: $color-text-main;
-    display: flex;
-    align-items: baseline;
-    gap: $gap-xxs;
-}
+    &__summary {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 0.75rem;
+        margin-bottom: 0.5rem;
+    }
 
-.recipe-detail__property-name {
-    font-weight: 600;
-}
+    &__surface {
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+        padding: 0.75rem 1rem;
+        border-radius: var(--fd-radius-lg, 12px);
+    }
 
-.recipe-detail__footer {
-    display: flex;
-    flex-direction: column;
-    gap: $gap-xs;
-}
+    &__surface--summary {
+        background: var(--fd-color-primary-50, #eef2ff);
+    }
 
-.recipe-detail__actions {
-    display: flex;
-    gap: $gap-s;
-    flex-wrap: wrap;
-}
+    &__surface-label {
+        font-size: 0.9rem;
+        color: var(--fd-color-text-muted, #6b7280);
+        font-weight: 500;
+    }
 
-.recipe-detail__warning {
-    margin: 0;
-    color: $color-text-additional;
-    font-size: 0.9em;
-    font-style: italic;
-    text-align: left;
+    &__surface-value {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--fd-color-text, #111827);
+        word-break: break-word;
+    }
+
+    &__nutrients {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1rem;
+        align-items: stretch;
+        margin-bottom: 0.5rem;
+    }
+
+    &__macro-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 0.85rem;
+    }
+
+    &__charts {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 0.85rem;
+        justify-items: center;
+    }
+
+    &__chart {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    &__footer {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+    }
+
+    &__actions {
+        display: inline-flex;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        align-self: flex-end;
+    }
+
+    &__warning {
+        color: var(--fd-color-warning, #FFCC00);
+        font-size: 0.9rem;
+        font-weight: 600;
+        width: 100%;
+    }
+
+    @media (max-width: 900px) {
+        grid-template-columns: 1fr;
+    }
 }

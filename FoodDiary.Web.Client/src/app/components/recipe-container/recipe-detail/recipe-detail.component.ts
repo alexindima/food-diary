@@ -1,11 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { Recipe, RecipeVisibility } from '../../../types/recipe.data';
+import { Recipe } from '../../../types/recipe.data';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import {
-    NutrientsSummaryComponent,
-    NutrientsSummaryConfig,
-} from '../../shared/nutrients-summary/nutrients-summary.component';
-import { NutrientData } from '../../../types/charts.data';
 import { RecipeService } from '../../../services/recipe.service';
 import { FD_UI_DIALOG_DATA, FdUiDialogRef } from 'fd-ui-kit/material';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog.component';
@@ -13,9 +8,14 @@ import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import {
-    FdUiConfirmDialogComponent,
-    FdUiConfirmDialogData,
-} from 'fd-ui-kit/dialog/fd-ui-confirm-dialog.component';
+    ConfirmDeleteDialogComponent,
+    ConfirmDeleteDialogData,
+} from '../../shared/confirm-delete-dialog/confirm-delete-dialog.component';
+import { FdUiTabsComponent, FdUiTab } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
+import { FdUiAccentSurfaceComponent } from 'fd-ui-kit/accent-surface/fd-ui-accent-surface.component';
+import { CHART_COLORS } from '../../../constants/chart-colors';
+import { BaseChartDirective } from 'ng2-charts';
+import { ChartData, ChartOptions } from 'chart.js';
 
 @Component({
     selector: 'fd-recipe-detail',
@@ -25,10 +25,12 @@ import {
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         TranslatePipe,
-        NutrientsSummaryComponent,
         FdUiDialogComponent,
         FdUiDialogFooterDirective,
         FdUiButtonComponent,
+        FdUiTabsComponent,
+        FdUiAccentSurfaceComponent,
+        BaseChartDirective,
     ],
 })
 export class RecipeDetailComponent {
@@ -39,15 +41,28 @@ export class RecipeDetailComponent {
 
     public readonly recipe: Recipe;
     public readonly calories: number;
-    public readonly nutrientChartData: NutrientData;
-
-    public readonly nutrientSummaryConfig: NutrientsSummaryConfig = {
-        styles: {
-            charts: {
-                chartBlockSize: 140,
-            },
-        },
-    };
+    public readonly proteins: number;
+    public readonly fats: number;
+    public readonly carbs: number;
+    public readonly fiber: number;
+    public readonly pieChartData: ChartData<'pie', number[], string>;
+    public readonly barChartData: ChartData<'bar', number[], string>;
+    public readonly pieChartOptions: ChartOptions<'pie'>;
+    public readonly barChartOptions: ChartOptions<'bar'>;
+    public readonly chartSize = 200;
+    public readonly macroBlocks: {
+        labelKey: string;
+        value: number;
+        unitKey: string;
+        color: string;
+    }[];
+    public readonly tabs: FdUiTab[] = [
+        { value: 'summary', labelKey: 'RECIPE_DETAIL.TABS.SUMMARY' },
+        { value: 'nutrients', labelKey: 'RECIPE_DETAIL.TABS.NUTRIENTS' },
+    ];
+    public activeTab: 'summary' | 'nutrients' = 'summary';
+    public readonly totalTime: number | null;
+    public readonly ingredientCount: number;
 
     public isDuplicateInProgress = false;
 
@@ -55,12 +70,92 @@ export class RecipeDetailComponent {
         const data = inject<Recipe>(FD_UI_DIALOG_DATA);
 
         this.recipe = data;
-        this.calories = this.recipe.totalCalories ?? 0;
-        this.nutrientChartData = {
-            proteins: this.recipe.totalProteins ?? 0,
-            fats: this.recipe.totalFats ?? 0,
-            carbs: this.recipe.totalCarbs ?? 0,
+        this.calories = this.resolveNutrientValue(data.totalCalories, data.manualCalories);
+        this.proteins = this.resolveNutrientValue(data.totalProteins, data.manualProteins);
+        this.fats = this.resolveNutrientValue(data.totalFats, data.manualFats);
+        this.carbs = this.resolveNutrientValue(data.totalCarbs, data.manualCarbs);
+        this.fiber = this.fiberValueComputed;
+        this.totalTime = this.calculateTotalPreparationTime();
+        this.ingredientCount = this.computeIngredientCount();
+        const labels = [
+            this.translateService.instant('NUTRIENTS.PROTEINS'),
+            this.translateService.instant('NUTRIENTS.FATS'),
+            this.translateService.instant('NUTRIENTS.CARBS'),
+        ];
+        const datasetValues = [this.proteins, this.fats, this.carbs];
+        const colors = [CHART_COLORS.proteins, CHART_COLORS.fats, CHART_COLORS.carbs];
+        this.pieChartData = {
+            labels,
+            datasets: [
+                {
+                    data: datasetValues,
+                    backgroundColor: colors,
+                },
+            ],
         };
+        this.barChartData = {
+            labels,
+            datasets: [
+                {
+                    data: datasetValues,
+                    backgroundColor: colors,
+                },
+            ],
+        };
+        const tooltipLabel = (label: string, value: number) =>
+            `${label}: ${value.toFixed(2)} ${this.translateService.instant('STATISTICS.GRAMS')}`;
+        this.pieChartOptions = {
+            responsive: true,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: ctx => tooltipLabel(ctx.label ?? '', Number(ctx.raw) || 0),
+                    },
+                },
+            },
+        };
+        this.barChartOptions = {
+            responsive: true,
+            scales: {
+                x: { display: false },
+                y: { beginAtZero: true },
+            },
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: ctx => tooltipLabel(ctx.label ?? '', Number(ctx.raw) || 0),
+                    },
+                },
+            },
+        };
+        this.macroBlocks = [
+            {
+                labelKey: 'PRODUCT_LIST.PROTEINS',
+                value: this.proteins,
+                unitKey: 'PRODUCT_AMOUNT_UNITS_SHORT.G',
+                color: CHART_COLORS.proteins,
+            },
+            {
+                labelKey: 'PRODUCT_LIST.FATS',
+                value: this.fats,
+                unitKey: 'PRODUCT_AMOUNT_UNITS_SHORT.G',
+                color: CHART_COLORS.fats,
+            },
+            {
+                labelKey: 'PRODUCT_LIST.CARBS',
+                value: this.carbs,
+                unitKey: 'PRODUCT_AMOUNT_UNITS_SHORT.G',
+                color: CHART_COLORS.carbs,
+            },
+            {
+                labelKey: 'PRODUCT_DETAIL.SUMMARY.FIBER',
+                value: this.fiber,
+                unitKey: 'PRODUCT_AMOUNT_UNITS_SHORT.G',
+                color: CHART_COLORS.fiber,
+            },
+        ];
     }
 
     public get visibilityKey(): string {
@@ -102,15 +197,13 @@ export class RecipeDetailComponent {
         return computed ?? 0;
     }
 
-    public getIngredientCount(): number {
-        if (!this.recipe?.steps?.length) {
-            return 0;
+    public onTabChange(tab: string): void {
+        if (tab === 'summary' || tab === 'nutrients') {
+            this.activeTab = tab;
         }
-
-        return this.recipe.steps.reduce((total, step) => total + (step.ingredients?.length ?? 0), 0);
     }
 
-    public getTotalPreparationTime(): number | null {
+    private calculateTotalPreparationTime(): number | null {
         const hasPrep = this.recipe.prepTime !== null && this.recipe.prepTime !== undefined;
         const hasCook = this.recipe.cookTime !== null && this.recipe.cookTime !== undefined;
 
@@ -160,6 +253,26 @@ export class RecipeDetailComponent {
         return hasFiber ? Math.round(totalFiber * 100) / 100 : null;
     }
 
+    private computeIngredientCount(): number {
+        if (!this.recipe?.steps?.length) {
+            return 0;
+        }
+
+        return this.recipe.steps.reduce((total, step) => total + (step.ingredients?.length ?? 0), 0);
+    }
+
+    private resolveNutrientValue(value?: number | null, manual?: number | null): number {
+        if (manual !== null && manual !== undefined) {
+            return manual;
+        }
+
+        if (value !== null && value !== undefined) {
+            return value;
+        }
+
+        return 0;
+    }
+
     public onEdit(): void {
         if (this.isEditDisabled) {
             return;
@@ -193,16 +306,19 @@ export class RecipeDetailComponent {
     }
 
     private showConfirmDialog(): void {
-        const data: FdUiConfirmDialogData = {
-            title: this.translateService.instant('RECIPE_DETAIL.CONFIRM_DELETE'),
-            message: this.recipe.name,
-            confirmLabel: this.translateService.instant('RECIPE_DETAIL.CONFIRM_BUTTON'),
-            cancelLabel: this.translateService.instant('RECIPE_DETAIL.CANCEL_BUTTON'),
-            danger: true,
+        const data: ConfirmDeleteDialogData = {
+            title: this.translateService.instant('CONFIRM_DELETE.TITLE', {
+                type: this.translateService.instant('RECIPE_DETAIL.ENTITY_NAME'),
+            }),
+            message: this.translateService.instant('CONFIRM_DELETE.MESSAGE', { name: this.recipe.name }),
+            name: this.recipe.name,
+            entityType: this.translateService.instant('RECIPE_DETAIL.ENTITY_NAME'),
+            confirmLabel: this.translateService.instant('CONFIRM_DELETE.CONFIRM'),
+            cancelLabel: this.translateService.instant('CONFIRM_DELETE.CANCEL'),
         };
 
         this.fdDialogService
-            .open(FdUiConfirmDialogComponent, {
+            .open(ConfirmDeleteDialogComponent, {
                 size: 'sm',
                 data,
             })

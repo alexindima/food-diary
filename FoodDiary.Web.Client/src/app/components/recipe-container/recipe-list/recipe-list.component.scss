@@ -45,7 +45,7 @@
     &__items {
         display: flex;
         flex-direction: column;
-        gap: 0;
+        gap: $gap-m;
     }
 
     &__no-results {
@@ -85,7 +85,7 @@
     padding: 0;
     display: flex;
     flex-direction: column;
-    gap: $gap-xxs;
+    gap: $gap-xs;
 
     &__header {
         display: flex;
@@ -97,7 +97,6 @@
     &__title {
         display: flex;
         gap: $gap-xs;
-        font-size: 1.5em;
         font-weight: 700;
         line-height: 1.5rem;
         color: $color-text-main;
@@ -105,6 +104,7 @@
     }
 
     &__name {
+        font-size: 1.8rem;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
@@ -118,7 +118,7 @@
     &__stats {
         display: flex;
         justify-content: space-between;
-        align-items: flex-start;
+        align-items: center;
         gap: $gap-m;
 
         @media #{$media-mobile} {
@@ -129,13 +129,13 @@
     }
 
     &__calories {
-        font-size: 1.2em;
+        font-size: 1.2rem;
         font-weight: 500;
         color: $color-text-main;
     }
 
     &__macros {
-        font-size: 0.95em;
+        font-size: 1rem;
         color: $color-text-additional;
         text-align: right;
 
@@ -153,11 +153,6 @@
     }
 }
 
-.recipe-list fd-ui-entity-card {
-    display: block;
-    margin-bottom: 12px;
-}
-
 .recipe-card {
     &__meta {
         display: flex;
@@ -165,7 +160,7 @@
         align-items: center;
         gap: $gap-xs;
         flex-wrap: wrap;
-        font-size: 0.9em;
+        font-size: 1rem;
         color: $color-text-additional;
 
         @media #{$media-mobile} {

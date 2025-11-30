@@ -248,6 +248,37 @@
         "SAVE_BUTTON": "Сохранить изменения",
         "ADD_BUTTON": "Создать рецепт"
     },
+    "RECIPE_DETAIL": {
+        "CATEGORY": "Категория",
+        "SERVINGS": "Порции",
+        "PREP_TIME": "Время подготовки",
+        "COOK_TIME": "Время приготовления",
+        "MIN": "мин",
+        "INGREDIENTS_COUNT": "Ингредиентов",
+        "USAGE_COUNT": "Использований",
+        "STEPS_TITLE": "Шаги ({{count}})",
+        "UNKNOWN_INGREDIENT": "Ингредиент",
+        "EDIT_BUTTON": "Редактировать",
+        "DELETE_BUTTON": "Удалить",
+        "DUPLICATE_BUTTON": "Скопировать и редактировать",
+        "WARNING_IN_USE": "Рецепт используется в приёмах пищи, удалить нельзя.",
+        "WARNING_NOT_OWNER": "Только автор может редактировать или удалять этот рецепт.",
+        "CONFIRM_DELETE": "Удалить рецепт",
+        "CANCEL_BUTTON": "Отмена",
+        "CONFIRM_BUTTON": "Удалить",
+        "ENTITY_NAME": "рецепт",
+        "TABS": {
+            "SUMMARY": "Сводка",
+            "NUTRIENTS": "Нутриенты"
+        },
+        "SUMMARY": {
+            "CALORIES": "Калории",
+            "SERVINGS": "Порции",
+            "TOTAL_TIME": "Общее время",
+            "INGREDIENTS": "Ингредиенты",
+            "VISIBILITY": "Видимость"
+        }
+    },
     "PRODUCT_DETAIL": {
         "BARCODE": "Штрихкод:",
         "CATEGORY": "Категория:",
@@ -379,7 +410,20 @@
         "DELETE_BUTTON": "Удалить",
         "CONFIRM_DELETE_TITLE": "Вы уверены, что хотите удалить запись за",
         "CANCEL_BUTTON": "Отмена",
-        "CONFIRM_BUTTON": "Подтвердить"
+        "CONFIRM_BUTTON": "Подтвердить",
+        "ENTITY_NAME": "приём пищи",
+        "TABS": {
+            "SUMMARY": "Сводка",
+            "NUTRIENTS": "Нутриенты"
+        },
+        "SUMMARY": {
+            "CALORIES": "Калории",
+            "MEAL_TYPE": "Тип",
+            "ITEMS": "Позиции",
+            "DATE": "Дата",
+            "COMMENT": "Комментарий",
+            "UNKNOWN_MEAL": "Не указано"
+        }
     },
     "MEAL_TYPES": {
         "BREAKFAST": "Завтрак",

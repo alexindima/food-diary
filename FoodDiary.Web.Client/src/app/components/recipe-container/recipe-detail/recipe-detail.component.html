@@ -1,35 +1,117 @@
-<fd-ui-dialog [title]="recipe.name" size="lg" class="recipe-detail">
-    <div class="recipe-detail__body">
-        <div class="recipe-detail__info">
-            <p class="recipe-detail__text">
-                <span class="recipe-detail__property-name">{{ 'RECIPE_DETAIL.PREP_TIME' | translate }}:</span>
-                @if (getTotalPreparationTime() !== null) {
-                    {{ getTotalPreparationTime() }} {{ 'RECIPE_DETAIL.MIN' | translate }}
-                } @else {
-                    -
-                }
-            </p>
-            <p class="recipe-detail__text">
-                <span class="recipe-detail__property-name">{{ 'RECIPE_DETAIL.INGREDIENTS_COUNT' | translate }}:</span>
-                {{ getIngredientCount() }}
-            </p>
-        </div>
+<fd-ui-dialog [title]="recipe.name" size="lg">
+    <fd-ui-tabs class="recipe-detail__tabs"
+        [tabs]="tabs"
+        [selectedValue]="activeTab"
+        (selectedValueChange)="onTabChange($event)"
+     />
 
-        <fd-nutrients-summary [calories]="calories"
-            [nutrientChartData]="nutrientChartData"
-            [config]="nutrientSummaryConfig"
-            [fiberValue]="fiberValueComputed"
-            fiberUnitKey="PRODUCT_AMOUNT_UNITS_SHORT.G"
-         />
+    <div class="recipe-detail">
+        @switch (activeTab) {
+            @case ('summary') {
+                <div class="recipe-detail__summary">
+                    <fd-ui-accent-surface class="recipe-detail__surface recipe-detail__surface--summary"
+                        accentSide="top"
+                        accentColor="var(--fd-color-primary-300, #93C5FD)"
+                        [tinted]="true"
+                    >
+                        <span class="recipe-detail__surface-label">{{ 'RECIPE_DETAIL.SUMMARY.CALORIES' | translate }}</span>
+                        <strong class="recipe-detail__surface-value">
+                            {{ calories }}
+                            {{ 'PRODUCT_LIST.KCAL' | translate }}
+                        </strong>
+                    </fd-ui-accent-surface>
+
+                    <fd-ui-accent-surface class="recipe-detail__surface recipe-detail__surface--summary"
+                        accentSide="top"
+                        accentColor="var(--fd-color-primary-300, #93C5FD)"
+                        [tinted]="true"
+                    >
+                        <span class="recipe-detail__surface-label">{{ 'RECIPE_DETAIL.SUMMARY.SERVINGS' | translate }}</span>
+                        <strong class="recipe-detail__surface-value">{{ recipe.servings }}</strong>
+                    </fd-ui-accent-surface>
+
+                    <fd-ui-accent-surface class="recipe-detail__surface recipe-detail__surface--summary"
+                        accentSide="top"
+                        accentColor="var(--fd-color-primary-300, #93C5FD)"
+                        [tinted]="true"
+                    >
+                        <span class="recipe-detail__surface-label">{{ 'RECIPE_DETAIL.SUMMARY.TOTAL_TIME' | translate }}</span>
+                        <strong class="recipe-detail__surface-value">
+                            @if (totalTime !== null) {
+                                {{ totalTime }} {{ 'RECIPE_DETAIL.MIN' | translate }}
+                            } @else {
+                                -
+                            }
+                        </strong>
+                    </fd-ui-accent-surface>
+
+                    <fd-ui-accent-surface class="recipe-detail__surface recipe-detail__surface--summary"
+                        accentSide="top"
+                        accentColor="var(--fd-color-primary-300, #93C5FD)"
+                        [tinted]="true"
+                    >
+                        <span class="recipe-detail__surface-label">{{ 'RECIPE_DETAIL.SUMMARY.INGREDIENTS' | translate }}</span>
+                        <strong class="recipe-detail__surface-value">{{ ingredientCount }}</strong>
+                    </fd-ui-accent-surface>
+                </div>
+            }
+            @case ('nutrients') {
+                <div class="recipe-detail__nutrients">
+                    <div class="recipe-detail__macro-grid">
+                        @for (macro of macroBlocks; track macro.labelKey) {
+                            <fd-ui-accent-surface class="recipe-detail__surface"
+                                accentSide="top"
+                                [accentColor]="macro.color"
+                                [tinted]="true"
+                            >
+                                <span class="recipe-detail__surface-label">{{ macro.labelKey | translate }}</span>
+                                <strong class="recipe-detail__surface-value">
+                                    {{ macro.value }}
+                                    {{ macro.unitKey | translate }}
+                                </strong>
+                            </fd-ui-accent-surface>
+                        }
+                    </div>
+                    <div class="recipe-detail__charts">
+                        <div class="recipe-detail__chart" [style.width.px]="chartSize" [style.height.px]="chartSize">
+                            <canvas
+                                baseChart
+                                [style.width.px]="chartSize"
+                                [style.height.px]="chartSize"
+                                [data]="pieChartData"
+                                [options]="pieChartOptions"
+                                [type]="'pie'"
+                                [legend]="false"
+                            ></canvas>
+                        </div>
+                        <div class="recipe-detail__chart" [style.width.px]="chartSize" [style.height.px]="chartSize">
+                            <canvas
+                                baseChart
+                                [style.width.px]="chartSize"
+                                [style.height.px]="chartSize"
+                                [data]="barChartData"
+                                [options]="barChartOptions"
+                                [type]="'bar'"
+                                [legend]="false"
+                            ></canvas>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
     </div>
 
     <div fdUiDialogFooter class="recipe-detail__footer">
+        @if (warningMessage) {
+            <span class="recipe-detail__warning">{{ warningMessage | translate }}</span>
+        }
         <div class="recipe-detail__actions">
             @if (canModify) {
-                <fd-ui-button icon="edit" (click)="onEdit()">
+                <fd-ui-button size="md" variant="secondary" icon="edit" (click)="onEdit()">
                     {{ 'RECIPE_DETAIL.EDIT_BUTTON' | translate }}
                 </fd-ui-button>
                 <fd-ui-button
+                    size="md"
                     variant="danger"
                     icon="delete"
                     [disabled]="isDeleteDisabled"
@@ -38,14 +120,17 @@
                     {{ 'RECIPE_DETAIL.DELETE_BUTTON' | translate }}
                 </fd-ui-button>
             } @else {
-                <fd-ui-button icon="copy" [disabled]="isDuplicateInProgress" (click)="onDuplicate()">
+                <fd-ui-button
+                    size="md"
+                    variant="secondary"
+                    fill="outline"
+                    icon="content_copy"
+                    [disabled]="isDuplicateInProgress"
+                    (click)="onDuplicate()"
+                >
                     {{ 'RECIPE_DETAIL.DUPLICATE_BUTTON' | translate }}
                 </fd-ui-button>
             }
         </div>
-
-        @if (warningMessage) {
-            <p class="recipe-detail__warning">{{ warningMessage | translate }}</p>
-        }
     </div>
 </fd-ui-dialog>

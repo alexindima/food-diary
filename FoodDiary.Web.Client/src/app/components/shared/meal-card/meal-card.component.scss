@@ -1,3 +1,5 @@
+@use 'variables' as *;
+
 :host {
     display: block;
 }
@@ -6,22 +8,22 @@
     padding: 0;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: $gap-xs;
 
     &__header {
         display: flex;
-        align-items: baseline;
-        gap: 8px;
+        align-items: center;
+        gap: $gap-s;
         justify-content: space-between;
     }
 
     &__title {
         display: flex;
-        gap: 4px;
-        font-size: 1.5em;
+        gap: $gap-xs;
+        font-size: 1.8rem;
         font-weight: 700;
         line-height: 1.5rem;
-        color: var(--fd-color-text, #0f172a);
+        color: $color-text-main;
         min-width: 0;
     }
 
@@ -42,24 +44,24 @@
         display: flex;
         justify-content: space-between;
         align-items: flex-start;
-        gap: 12px;
+        gap: $gap-m;
 
         @media (max-width: 768px) {
             flex-direction: column;
             align-items: flex-start;
-            gap: 8px;
+            gap: $gap-xs;
         }
     }
 
     &__calories {
-        font-size: 1.2em;
+        font-size: 1.2rem;
         font-weight: 500;
-        color: var(--fd-color-text, #0f172a);
+        color: $color-text-main;
     }
 
     &__macros {
-        font-size: 0.95em;
-        color: var(--fd-color-text-muted, #6b7280);
+        font-size: 1rem;
+        color: $color-text-additional;
         text-align: right;
 
         @media (max-width: 768px) {
@@ -69,8 +71,8 @@
 }
 
 .consumption-card__meta {
-    font-size: 0.9em;
-    color: var(--fd-color-text-muted, #6b7280);
+    font-size: 1rem;
+    color: $color-text-additional;
     display: flex;
     justify-content: space-between;
     align-items: center;

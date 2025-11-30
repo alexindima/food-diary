@@ -9,9 +9,9 @@
     margin: 0 auto;
     box-sizing: border-box;
     font-size: 14px;
+    --fd-layout-page-section-spacing: $gap-m;
 
     &__header {
-        margin-bottom: $gap-l;
         .fd-page-header__actions {
             gap: $gap-s;
         }
@@ -62,9 +62,13 @@
         margin-top: $gap-l;
     }
 
-    fd-ui-entity-card {
+    .consumption-card {
         display: block;
-        margin-bottom: 12px;
+        margin-bottom: $gap-m;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
     }
 
     @media #{$media-mobile} {
