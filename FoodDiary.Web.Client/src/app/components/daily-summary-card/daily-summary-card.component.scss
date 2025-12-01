@@ -5,15 +5,16 @@
 }
 
 .daily-card {
-    background: radial-gradient(circle at 20% 20%, rgba(147, 197, 253, 0.14), transparent 35%), #fff;
+    background: radial-gradient(circle at 18% 12%, rgba(74, 108, 247, 0.06), rgba(74, 108, 247, 0.02) 34%, transparent 55%),
+        linear-gradient(160deg, #fbfdff 0%, #ffffff 40%, #ffffff 100%);
     border: 1px solid rgba(59, 130, 246, 0.08);
-    border-radius: 18px;
-    padding: 18px 18px 20px;
-    box-shadow: 0 14px 38px rgba(15, 23, 42, 0.12);
+    border-radius: 26px;
+    padding: 18px 30px 30px;
+    box-shadow: 0 22px 54px rgba(15, 23, 42, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.4);
     display: flex;
     flex-direction: column;
-    gap: 14px;
-    max-width: 520px;
+    gap: 18px;
+    max-width: 640px;
 }
 
 .daily-card__header {
@@ -24,16 +25,29 @@
 }
 
 .daily-card__eyebrow {
-    margin: 0 0 6px;
+    margin: 0 0 10px;
     font-size: 0.95rem;
     font-weight: 700;
     color: $color-text-additional;
+    position: relative;
+
+    &::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: -6px;
+        width: 72px;
+        height: 3px;
+        background: linear-gradient(90deg, #4a6cf7 0%, rgba(74, 108, 247, 0.2) 100%);
+        border-radius: 999px;
+    }
 }
 
 .daily-card__main-row {
     display: flex;
     align-items: baseline;
     gap: 10px;
+    justify-content: space-between;
 }
 
 .daily-card__kcal {
@@ -43,7 +57,7 @@
 }
 
 .daily-card__value {
-    font-size: 2.2rem;
+    font-size: 2.7rem;
     font-weight: 800;
     color: $color-text-main;
 }
@@ -54,10 +68,10 @@
 }
 
 .daily-card__percent {
-    font-size: 1.4rem;
+    font-size: 1.45rem;
     font-weight: 800;
-    color: $color-primary;
-    margin-left: auto;
+    color: #3a6ff7;
+    margin-left: 16px;
 }
 
 .daily-card__settings-btn {
@@ -69,7 +83,7 @@
 }
 
 .daily-card__meta {
-    margin: 4px 0 0;
+    margin: 6px 0 0;
     color: $color-text-additional;
     font-weight: 600;
     font-size: 0.95rem;
@@ -77,10 +91,11 @@
 
 .daily-card__progress {
     width: 100%;
-    height: 10px;
-    background: rgba(59, 130, 246, 0.12);
+    height: 18px;
+    background: #e6ecff;
     border-radius: 999px;
     overflow: hidden;
+    position: relative;
 }
 
 .daily-card__progress-fill {
@@ -99,6 +114,21 @@
     &--red {
         background: linear-gradient(90deg, #f87171 0%, #ef4444 100%);
     }
+}
+
+.daily-card__progress-label {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+}
+
+.daily-card__progress-text {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #0f172a;
 }
 
 .weekly {
@@ -135,8 +165,8 @@
 
 .daily-card__stats {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 10px;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
 
     fd-ui-accent-surface {
         width: 100%;
@@ -145,8 +175,11 @@
 }
 
 .stat {
-    padding: 10px 12px;
-    border-radius: 12px;
+    padding: 16px 16px 14px;
+    border-radius: 18px;
+    background: #f2f6ff;
+    box-shadow: 0 12px 30px rgba(41, 86, 190, 0.12);
+    min-height: unset;
 
     &__label {
         margin: 0 0 4px;
@@ -161,18 +194,81 @@
         font-weight: 700;
         font-size: 1.05rem;
     }
+
+    &--chart {
+        min-height: 120px;
+    }
+
+    &__chart-canvas {
+        position: relative;
+        height: 80px;
+        width: 100%;
+    }
 }
 
 .daily-card__motivation {
     margin: 0;
-    color: #065f46;
+    color: #0f172a;
     font-weight: 700;
-    line-height: 1.4;
-    background: rgba(16, 185, 129, 0.12);
-    border: 1px solid rgba(16, 185, 129, 0.2);
-    border-radius: 12px;
-    padding: 12px 14px;
+    line-height: 1.35;
+    background: linear-gradient(180deg, #fff7ee 0%, #fff3e5 60%, #fff1e6 100%);
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    border-radius: 14px;
+    padding: 14px 16px 24px;
     width: 100%;
+    min-height: 44px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    box-shadow:
+        0 14px 32px rgba(15, 23, 42, 0.08),
+        0 8px 18px rgba(15, 23, 42, 0.06);
+}
+
+.daily-card__analytics-title {
+    font-size: 0.98rem;
+    font-weight: 800;
+    margin: 0;
+}
+
+.daily-card__analytics-heading {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.daily-card__analytics-icon {
+    font-size: 1rem;
+    line-height: 1;
+}
+
+.daily-card__analytics-list {
+    display: grid;
+    gap: 8px;
+}
+
+.daily-card__analytics-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.daily-card__analytics-divider {
+    height: 1px;
+    width: 100%;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    margin: 12px 0;
+}
+
+.daily-card__analytics-label {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #3c3c3c;
+}
+
+.daily-card__analytics-value {
+    font-size: 0.95rem;
+    font-weight: 600;
 }
 
 .meal {

@@ -7,11 +7,10 @@
                     <span class="daily-card__value">{{ data.eatenTodayKcal }}</span>
                     <span class="daily-card__unit">ккал</span>
                 </div>
-                <div class="daily-card__percent" *ngIf="data.mode === 'full' && data.percentage !== undefined">
-                    {{ data.percentage }}%
+                <div class="daily-card__percent">
+                    {{ displayPercent }}%
                 </div>
             </div>
-            <p class="daily-card__meta">Цель: {{ data.goalKcal | number }} ккал</p>
         </div>
 
         <fd-ui-button
@@ -33,6 +32,9 @@
             [ngClass]="'daily-card__progress-fill--' + progressState"
             [style.width.%]="progress"
         ></div>
+        <div class="daily-card__progress-label">
+            <span class="daily-card__progress-text">{{ data.eatenTodayKcal }} ккал ({{ displayPercent }}%)</span>
+        </div>
     </div>
 
     <ng-container *ngIf="data.mode === 'preview'; else fullMode">
@@ -69,13 +71,48 @@
         </div>
 
         <fd-ui-accent-surface
-            *ngIf="data.motivationText"
-            class="daily-card__motivation"
+            *ngIf="weeklyBars.length"
+            class="stat stat--chart"
             accentSide="top"
-            accentColor="var(--fd-color-success-500, #22c55e)"
+            accentColor="var(--fd-color-primary-300, #93c5fd)"
             [tinted]="true"
         >
-            {{ data.motivationText }}
+            <p class="stat__label">Прогресс за неделю</p>
+            <div class="stat__chart-canvas">
+                <canvas
+                    *ngIf="weeklyLineChartData"
+                    baseChart
+                    [type]="'line'"
+                    [data]="weeklyLineChartData"
+                    [options]="weeklyLineChartOptions"
+                ></canvas>
+            </div>
+        </fd-ui-accent-surface>
+
+        <fd-ui-accent-surface
+            *ngIf="data.motivationText || motivationKey || forecast"
+            class="daily-card__motivation"
+            accentSide="top"
+            accentColor="var(--fd-color-primary-300, #93c5fd)"
+            [tinted]="true"
+        >
+            <div class="daily-card__analytics-heading">
+                <span class="daily-card__analytics-icon" aria-hidden="true">➤</span>
+                <p class="daily-card__analytics-title">Аналитика дня</p>
+            </div>
+            <div class="daily-card__analytics-list">
+                <div class="daily-card__analytics-row" *ngIf="data.motivationText || motivationKey">
+                    <span class="daily-card__analytics-label">Мотивация:</span>
+                    <span class="daily-card__analytics-value">
+                        {{ data.motivationText || (motivationKey | translate:{ percent: displayPercent }) }}
+                    </span>
+                </div>
+                <div class="daily-card__analytics-divider" *ngIf="forecast && (data.motivationText || motivationKey)"></div>
+                <div class="daily-card__analytics-row" *ngIf="forecast">
+                    <span class="daily-card__analytics-label">Прогноз:</span>
+                    <span class="daily-card__analytics-value">{{ forecast }}</span>
+                </div>
+            </div>
         </fd-ui-accent-surface>
 
         <div class="meal meal--compact" *ngIf="data.lastMealTitle || data.lastMealDescription">

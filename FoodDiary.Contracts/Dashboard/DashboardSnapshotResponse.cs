@@ -8,6 +8,7 @@ public record DashboardSnapshotResponse(
     DateTime Date,
     double DailyGoal,
     DashboardStatisticsDto Statistics,
+    IReadOnlyList<DailyCaloriesDto> WeeklyCalories,
     DashboardWeightDto Weight,
     DashboardWaistDto Waist,
     DashboardMealsDto Meals);
@@ -36,6 +37,8 @@ public record DashboardWaistDto(
 public record DashboardMealsDto(
     IReadOnlyList<ConsumptionResponse> Items,
     int Total);
+
+public record DailyCaloriesDto(DateTime Date, double Calories);
 
 public record WeightEntryDto(DateTime Date, double Weight);
 

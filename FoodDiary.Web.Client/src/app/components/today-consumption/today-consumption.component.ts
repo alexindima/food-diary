@@ -108,7 +108,16 @@ export class TodayConsumptionComponent implements OnInit {
         const percentage = goal > 0 ? Math.round((consumed / goal) * 100) : 0;
         const remaining = goal > 0 ? Math.max(goal - consumed, 0) : undefined;
         const latestMeal = this.meals()[0];
-        const motivationFallback = 'Только стартуем. Чуть-чуть добавлено, продолжайте!';
+        const weeklyProgress =
+            this.snapshot()?.weeklyCalories?.map((point, index, arr) => {
+                const date = new Date(point.date);
+                const isToday = index === arr.length - 1;
+                return {
+                    date,
+                    calories: point.calories,
+                    isToday,
+                };
+            }) ?? [];
         return {
             mode: 'full',
             sectionTitle: 'Съедено сегодня',
@@ -118,7 +127,8 @@ export class TodayConsumptionComponent implements OnInit {
             remainingKcal: remaining,
             weeklyDiffText: undefined,
             weeklyDiffType: 'neutral',
-            motivationText: motivationFallback,
+            motivationText: undefined,
+            weeklyProgress,
             lastMealTitle: latestMeal?.mealType || undefined,
             lastMealDescription: latestMeal?.comment || undefined,
             showSettings: true,

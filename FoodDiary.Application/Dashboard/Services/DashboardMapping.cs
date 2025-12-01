@@ -27,6 +27,14 @@ public static class DashboardMapping
             user?.FiberTarget);
     }
 
+    public static IReadOnlyList<DailyCaloriesDto> ToWeeklyCalories(IReadOnlyList<AggregatedStatisticsResponse> responses)
+    {
+        return responses
+            .OrderBy(r => r.DateFrom)
+            .Select(r => new DailyCaloriesDto(r.DateFrom, r.TotalCalories))
+            .ToList();
+    }
+
     public static DashboardWeightDto ToWeightDto(IReadOnlyList<WeightEntry> entries, double? desired)
     {
         var latest = entries.FirstOrDefault();

@@ -4,6 +4,7 @@ export interface DashboardSnapshot {
     date: string;
     dailyGoal: number;
     statistics: DashboardStatistics;
+    weeklyCalories: WeeklyCaloriesPoint[];
     weight: DashboardWeight;
     waist: DashboardWaist;
     meals: DashboardMeals;
@@ -19,6 +20,11 @@ export interface DashboardStatistics {
     fatGoal?: number | null;
     carbGoal?: number | null;
     fiberGoal?: number | null;
+}
+
+export interface WeeklyCaloriesPoint {
+    date: string;
+    calories: number;
 }
 
 export interface DashboardWeight {

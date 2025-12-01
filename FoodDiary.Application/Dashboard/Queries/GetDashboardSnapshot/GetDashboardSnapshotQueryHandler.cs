@@ -43,6 +43,17 @@ public class GetDashboardSnapshotQueryHandler(
             return Result.Failure<DashboardSnapshotResponse>(statsResult.Error);
         }
 
+        var weekStart = dayStart.AddDays(-6);
+        var weeklyStatsResult = await sender.Send(new GetStatisticsQuery(
+            userId,
+            weekStart,
+            dayEnd,
+            1), cancellationToken);
+        if (weeklyStatsResult.IsFailure)
+        {
+            return Result.Failure<DashboardSnapshotResponse>(weeklyStatsResult.Error);
+        }
+
         var mealsResult = await sender.Send(new GetConsumptionsQuery(
             userId,
             query.Page,
@@ -73,6 +84,7 @@ public class GetDashboardSnapshotQueryHandler(
             cancellationToken: cancellationToken);
 
         var statistics = DashboardMapping.ToStatisticsDto(statsResult.Value.FirstOrDefault(), user);
+        var weeklyCalories = DashboardMapping.ToWeeklyCalories(weeklyStatsResult.Value);
         var weight = DashboardMapping.ToWeightDto(weightEntries, user?.DesiredWeight);
         var waist = DashboardMapping.ToWaistDto(waistEntries, user?.DesiredWaist);
         var meals = new DashboardMealsDto(
@@ -85,6 +97,7 @@ public class GetDashboardSnapshotQueryHandler(
             date,
             dailyGoal,
             statistics,
+            weeklyCalories,
             weight,
             waist,
             meals);
