@@ -4,6 +4,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { CommonModule } from '@angular/common';
 import { Consumption } from '../../../types/consumption.data';
 import { LocalizedDatePipe } from '../../../pipes/localized-date.pipe';
+import { resolveMealImageUrl } from '../../../utils/meal-stub.utils';
 
 @Component({
     selector: 'fd-meal-card',
@@ -16,8 +17,13 @@ import { LocalizedDatePipe } from '../../../pipes/localized-date.pipe';
 export class MealCardComponent {
     public readonly meal = input.required<Consumption>();
     public readonly open = output<Consumption>();
+    protected readonly fallbackMealImage = 'assets/images/stubs/meals/other.png';
 
     public handleOpen(): void {
         this.open.emit(this.meal());
+    }
+
+    public resolveImage(meal: Consumption): string | undefined {
+        return resolveMealImageUrl(meal.imageUrl ?? undefined, meal.mealType ?? undefined);
     }
 }

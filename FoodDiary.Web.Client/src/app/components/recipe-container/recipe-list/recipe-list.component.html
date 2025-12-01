@@ -51,7 +51,8 @@
                             class="fd-ui-entity-card--hoverable"
                             appearance="recipe"
                             (click)="onRecipeClick(recipe)"
-                            [imageUrl]="recipe.imageUrl"
+                            [imageUrl]="resolveImage(recipe)"
+                            [fallbackImage]="fallbackRecipeImage"
                         >
                             <div class="recipe-card product-card">
                                 <div class="product-card__header">

@@ -1,7 +1,8 @@
 <fd-ui-entity-card
     class="consumption-card fd-ui-entity-card--hoverable"
     appearance="info"
-    [imageUrl]="meal().imageUrl || undefined"
+    [imageUrl]="resolveImage(meal())"
+    [fallbackImage]="fallbackMealImage"
     (click)="handleOpen()"
 >
     <div class="product-card consumption-card__content">

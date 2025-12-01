@@ -43,7 +43,8 @@
                         appearance="recipe"
                         [title]="recipe.name"
                         [meta]="recipe.category || undefined"
-                        [imageUrl]="recipe.imageUrl"
+                        [imageUrl]="resolveImage(recipe)"
+                        [fallbackImage]="fallbackRecipeImage"
                     >
                         <ng-container fdUiEntityCardHeader>
                             <div class="recipe-card__badges">

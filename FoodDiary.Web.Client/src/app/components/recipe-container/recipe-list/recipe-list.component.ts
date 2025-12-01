@@ -21,6 +21,7 @@ import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { PageHeaderComponent } from '../../shared/page-header/page-header.component';
 import { PageBodyComponent } from '../../shared/page-body/page-body.component';
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
+import { resolveRecipeImageUrl } from '../../../utils/recipe-stub.utils';
 
 @Component({
     selector: 'fd-recipe-list',
@@ -56,12 +57,17 @@ export class RecipeListComponent implements OnInit {
     public currentPageIndex = 0;
     public searchForm: FormGroup<RecipeSearchFormGroup>;
     public isDeleting = false;
+    protected readonly fallbackRecipeImage = 'assets/images/stubs/receipt.png';
 
     public constructor() {
         this.searchForm = new FormGroup<RecipeSearchFormGroup>({
             search: new FormControl<string | null>(null),
             onlyMine: new FormControl<boolean>(false, { nonNullable: true }),
         });
+    }
+
+    public resolveImage(recipe: Recipe): string | undefined {
+        return resolveRecipeImageUrl(recipe.imageUrl ?? undefined);
     }
 
     public ngOnInit(): void {

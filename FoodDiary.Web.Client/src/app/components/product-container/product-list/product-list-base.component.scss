@@ -156,4 +156,32 @@
         align-items: center;
         justify-content: flex-end;
     }
+
+}
+
+// Force media block sizing inside fd-ui-entity-card
+:host ::ng-deep .product-card .fd-ui-entity-card__body {
+    align-items: center;
+}
+
+:host ::ng-deep .product-card .fd-ui-entity-card__media {
+    width: 96px;
+    min-width: 96px;
+    max-width: 96px;
+    flex: 0 0 96px;
+    aspect-ratio: 1 / 1;
+}
+
+@media #{$media-mobile} {
+    :host ::ng-deep .product-card .fd-ui-entity-card__body {
+        align-items: flex-start;
+    }
+
+    :host ::ng-deep .product-card .fd-ui-entity-card__media {
+        width: 100%;
+        min-width: 0;
+        max-width: none;
+        flex: none;
+        max-height: 220px;
+    }
 }

@@ -49,12 +49,12 @@
         } @else {
             @if (productData.items().length > 0) {
                 @for (product of productData.items(); track product) {
-                    <fd-ui-entity-card
-                        class="product-card fd-ui-entity-card--hoverable"
-                        appearance="product"
-                        (click)="onProductClick(product)"
-                        [imageUrl]="product.imageUrl"
-                    >
+                        <fd-ui-entity-card
+                            class="product-card fd-ui-entity-card--hoverable"
+                            appearance="product"
+                            (click)="onProductClick(product)"
+                            [imageUrl]="resolveImage(product)"
+                        >
                         <div class="product-card">
                             <div class="product-card__header">
                                 <div class="product-card__title">

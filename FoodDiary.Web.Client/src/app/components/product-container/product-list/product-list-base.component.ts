@@ -4,7 +4,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { ProductService } from '../../../services/product.service';
 import { NavigationService } from '../../../services/navigation.service';
 import { PagedData } from '../../../types/paged-data.data';
-import { Product, ProductFilters } from '../../../types/product.data';
+import { Product, ProductFilters, ProductType } from '../../../types/product.data';
 import { catchError, debounceTime, distinctUntilChanged, finalize, map, Observable, of, switchMap, tap } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FormGroupControls } from '../../../types/common.data';
@@ -21,6 +21,7 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiIconModule } from 'fd-ui-kit/material';
 import { PageBodyComponent } from '../../shared/page-body/page-body.component';
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
+import { resolveProductImageUrl } from '../../../utils/product-stub.utils';
 
 @Component({
     selector: 'fd-product-list-base',
@@ -60,6 +61,10 @@ export class ProductListBaseComponent implements OnInit {
             search: new FormControl<string | null>(null),
             onlyMine: new FormControl<boolean>(false, { nonNullable: true }),
         });
+    }
+
+    public resolveImage(product: Product): string | undefined {
+        return resolveProductImageUrl(product.imageUrl ?? undefined, product.productType ?? ProductType.Unknown);
     }
 
     protected isPrivateVisibility(visibility: Product['visibility']): boolean {

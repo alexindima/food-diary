@@ -101,3 +101,30 @@
         }
     }
 }
+
+// constrain media previews inside meal cards
+:host ::ng-deep .fd-ui-entity-card__body {
+    align-items: center;
+}
+
+:host ::ng-deep .fd-ui-entity-card__media {
+    width: 96px;
+    min-width: 96px;
+    max-width: 96px;
+    flex: 0 0 96px;
+    aspect-ratio: 1 / 1;
+}
+
+@media (max-width: 768px) {
+    :host ::ng-deep .fd-ui-entity-card__body {
+        align-items: flex-start;
+    }
+
+    :host ::ng-deep .fd-ui-entity-card__media {
+        width: 100%;
+        min-width: 0;
+        max-width: none;
+        flex: none;
+        max-height: 220px;
+    }
+}

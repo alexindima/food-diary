@@ -28,6 +28,7 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.component';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
+import { resolveRecipeImageUrl } from '../../../utils/recipe-stub.utils';
 
 @Component({
     selector: 'fd-recipe-select-dialog',
@@ -69,6 +70,7 @@ export class RecipeSelectDialogComponent implements OnInit {
     public constructor() {}
     public recipeData: PagedData<Recipe> = new PagedData<Recipe>();
     public currentPageIndex = 0;
+    protected readonly fallbackRecipeImage = 'assets/images/stubs/receipt.png';
 
     private readonly container = viewChild.required<ElementRef<HTMLElement>>('container');
 
@@ -122,6 +124,10 @@ export class RecipeSelectDialogComponent implements OnInit {
 
     public onRecipeClick(recipe: Recipe): void {
         this.handleSelection(recipe);
+    }
+
+    public resolveImage(recipe: Recipe): string | undefined {
+        return resolveRecipeImageUrl(recipe.imageUrl ?? undefined);
     }
 
     public async onCreateRecipeClick(): Promise<void> {
