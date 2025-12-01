@@ -42,6 +42,7 @@ public class DuplicateProductCommandHandler(IProductRepository productRepository
             original.Description,
             original.Comment,
             original.ImageUrl,
+            null,
             original.Visibility);
 
         await productRepository.AddAsync(duplicate);

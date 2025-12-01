@@ -16,6 +16,7 @@ public sealed class Product : AggregateRoot<ProductId> {
     public string? Description { get; private set; }
     public string? Comment { get; private set; }
     public string? ImageUrl { get; private set; }
+    public ImageAssetId? ImageAssetId { get; private set; }
     public ProductType ProductType { get; private set; } = ProductType.Unknown;
     public MeasurementUnit BaseUnit { get; private set; }
     public double BaseAmount { get; private set; }
@@ -67,6 +68,7 @@ public sealed class Product : AggregateRoot<ProductId> {
         string? description = null,
         string? comment = null,
         string? imageUrl = null,
+        ImageAssetId? imageAssetId = null,
         Visibility visibility = Visibility.PUBLIC) {
         var product = new Product {
             Id = ProductId.New(),
@@ -87,6 +89,7 @@ public sealed class Product : AggregateRoot<ProductId> {
             Description = description,
             Comment = comment,
             ImageUrl = imageUrl,
+            ImageAssetId = imageAssetId,
             Visibility = visibility
         };
         product.SetCreated();
@@ -110,6 +113,7 @@ public sealed class Product : AggregateRoot<ProductId> {
         string? description = null,
         string? comment = null,
         string? imageUrl = null,
+        ImageAssetId? imageAssetId = null,
         Visibility? visibility = null) {
         if (name is not null) Name = name;
         if (baseUnit.HasValue) BaseUnit = baseUnit.Value;
@@ -127,6 +131,7 @@ public sealed class Product : AggregateRoot<ProductId> {
         if (description is not null) Description = description;
         if (comment is not null) Comment = comment;
         if (imageUrl is not null) ImageUrl = imageUrl;
+        if (imageAssetId.HasValue) ImageAssetId = imageAssetId;
         if (visibility.HasValue) Visibility = visibility.Value;
 
         SetModified();

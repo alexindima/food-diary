@@ -29,9 +29,9 @@
               [placeholder]="'RECIPE_MANAGE.CATEGORY_PLACEHOLDER' | translate"
              />
 
-            <fd-ui-input formControlName="imageUrl"
-              [label]="'RECIPE_MANAGE.IMAGE_URL' | translate"
-              [placeholder]="'RECIPE_MANAGE.IMAGE_URL_PLACEHOLDER' | translate"
+            <fd-image-upload-field formControlName="imageUrl"
+              [label]="'RECIPE_MANAGE.IMAGE' | translate"
+              [description]="'RECIPE_MANAGE.IMAGE_HINT' | translate"
              />
 
             <fd-ui-input formControlName="prepTime"

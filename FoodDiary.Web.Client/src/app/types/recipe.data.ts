@@ -12,6 +12,7 @@ export interface Recipe {
     description?: string | null;
     category?: string | null;
     imageUrl?: string | null;
+    imageAssetId?: string | null;
     prepTime?: number | null;
     cookTime?: number | null;
     servings: number;
@@ -67,6 +68,7 @@ export interface RecipeDto {
     description?: string | null;
     category?: string | null;
     imageUrl?: string | null;
+    imageAssetId?: string | null;
     prepTime: number;
     cookTime: number;
     servings: number;

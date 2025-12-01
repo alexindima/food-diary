@@ -5,6 +5,7 @@ using FoodDiary.Application.Products.Mappings;
 using FoodDiary.Contracts.Products;
 using FoodDiary.Domain.Entities;
 using FoodDiary.Domain.Enums;
+using FoodDiary.Domain.ValueObjects;
 
 namespace FoodDiary.Application.Products.Commands.CreateProduct;
 
@@ -36,6 +37,7 @@ public class CreateProductCommandHandler(IProductRepository productRepository)
             description: command.Description,
             comment: command.Comment,
             imageUrl: command.ImageUrl,
+            imageAssetId: command.ImageAssetId.HasValue ? new ImageAssetId(command.ImageAssetId.Value) : null,
             visibility: visibility
         );
 

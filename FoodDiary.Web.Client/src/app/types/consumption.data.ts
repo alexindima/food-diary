@@ -7,6 +7,7 @@ export interface Consumption {
     mealType?: string | null;
     comment?: string | null;
     imageUrl?: string | null;
+    imageAssetId?: string | null;
     totalCalories: number;
     totalProteins: number;
     totalFats: number;
@@ -38,6 +39,7 @@ export interface ConsumptionResponseDto {
     mealType?: string | null;
     comment?: string | null;
     imageUrl?: string | null;
+    imageAssetId?: string | null;
     totalCalories: number;
     totalProteins: number;
     totalFats: number;
@@ -91,6 +93,8 @@ export interface ConsumptionManageDto {
     date: Date;
     mealType?: string | null;
     comment?: string;
+    imageUrl?: string | null;
+    imageAssetId?: string | null;
     items: ConsumptionItemManageDto[];
     isNutritionAutoCalculated: boolean;
     manualCalories?: number | null;

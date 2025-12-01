@@ -8,6 +8,7 @@ export interface Product {
     description?: string | null;
     comment?: string | null;
     imageUrl?: string | null;
+    imageAssetId?: string | null;
     baseUnit: MeasurementUnit;
     baseAmount: number;
     defaultPortionAmount: number;
@@ -31,6 +32,7 @@ export interface CreateProductRequest {
     description?: string | null;
     comment?: string | null;
     imageUrl?: string | null;
+    imageAssetId?: string | null;
     baseUnit: MeasurementUnit;
     baseAmount: number;
     defaultPortionAmount: number;

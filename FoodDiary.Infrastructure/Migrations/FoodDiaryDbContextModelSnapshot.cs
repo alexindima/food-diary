@@ -93,6 +93,35 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.ToTable("CycleDays");
                 });
 
+            modelBuilder.Entity("FoodDiary.Domain.Entities.ImageAsset", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedOnUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("ModifiedOnUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ObjectKey")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ImageAssets");
+                });
+
             modelBuilder.Entity("FoodDiary.Domain.Entities.Meal", b =>
                 {
                     b.Property<Guid>("Id")
@@ -106,6 +135,9 @@ namespace FoodDiary.Infrastructure.Migrations
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid?>("ImageAssetId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("ImageUrl")
                         .HasColumnType("text");
@@ -162,6 +194,8 @@ namespace FoodDiary.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ImageAssetId");
+
                     b.HasIndex("UserId");
 
                     b.ToTable("Meals");
@@ -212,9 +246,6 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.Property<double>("BaseAmount")
                         .HasColumnType("double precision");
 
-                    b.Property<double>("DefaultPortionAmount")
-                        .HasColumnType("double precision");
-
                     b.Property<int>("BaseUnit")
                         .HasColumnType("integer");
 
@@ -236,6 +267,9 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedOnUtc")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<double>("DefaultPortionAmount")
+                        .HasColumnType("double precision");
+
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
@@ -244,6 +278,9 @@ namespace FoodDiary.Infrastructure.Migrations
 
                     b.Property<double>("FiberPerBase")
                         .HasColumnType("double precision");
+
+                    b.Property<Guid?>("ImageAssetId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("ImageUrl")
                         .HasColumnType("text");
@@ -273,6 +310,8 @@ namespace FoodDiary.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ImageAssetId");
+
                     b.HasIndex("UserId");
 
                     b.ToTable("Products");
@@ -294,6 +333,9 @@ namespace FoodDiary.Infrastructure.Migrations
 
                     b.Property<string>("Description")
                         .HasColumnType("text");
+
+                    b.Property<Guid?>("ImageAssetId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("ImageUrl")
                         .HasColumnType("text");
@@ -355,6 +397,8 @@ namespace FoodDiary.Infrastructure.Migrations
                         .HasDefaultValue(0);
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ImageAssetId");
 
                     b.HasIndex("UserId");
 
@@ -443,9 +487,6 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.Property<double?>("CarbTarget")
                         .HasColumnType("double precision");
 
-                    b.Property<double?>("FiberTarget")
-                        .HasColumnType("double precision");
-
                     b.Property<DateTime>("CreatedOnUtc")
                         .HasColumnType("timestamp with time zone");
 
@@ -463,6 +504,9 @@ namespace FoodDiary.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<double?>("FatTarget")
+                        .HasColumnType("double precision");
+
+                    b.Property<double?>("FiberTarget")
                         .HasColumnType("double precision");
 
                     b.Property<string>("FirstName")
@@ -638,8 +682,24 @@ namespace FoodDiary.Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("FoodDiary.Domain.Entities.ImageAsset", b =>
+                {
+                    b.HasOne("FoodDiary.Domain.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("FoodDiary.Domain.Entities.Meal", b =>
                 {
+                    b.HasOne("FoodDiary.Domain.Entities.ImageAsset", null)
+                        .WithMany()
+                        .HasForeignKey("ImageAssetId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.HasOne("FoodDiary.Domain.Entities.User", "User")
                         .WithMany("Meals")
                         .HasForeignKey("UserId")
@@ -674,6 +734,11 @@ namespace FoodDiary.Infrastructure.Migrations
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.Product", b =>
                 {
+                    b.HasOne("FoodDiary.Domain.Entities.ImageAsset", null)
+                        .WithMany()
+                        .HasForeignKey("ImageAssetId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.HasOne("FoodDiary.Domain.Entities.User", "User")
                         .WithMany("Products")
                         .HasForeignKey("UserId")
@@ -685,6 +750,11 @@ namespace FoodDiary.Infrastructure.Migrations
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.Recipe", b =>
                 {
+                    b.HasOne("FoodDiary.Domain.Entities.ImageAsset", null)
+                        .WithMany()
+                        .HasForeignKey("ImageAssetId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.HasOne("FoodDiary.Domain.Entities.User", "User")
                         .WithMany("Recipes")
                         .HasForeignKey("UserId")

@@ -96,6 +96,13 @@
                                 [rows]="4"
                              />
                         </div>
+                        <div class="product-manage__field product-manage__field--full">
+                            <fd-image-upload-field
+                                formControlName="imageUrl"
+                                [label]="'PRODUCT_MANAGE.IMAGE' | translate"
+                                [description]="'PRODUCT_MANAGE.IMAGE_DESCRIPTION' | translate"
+                            />
+                        </div>
                     </div>
                 </fd-ui-card>
             </div>
@@ -207,5 +214,4 @@
         </div>
     </form>
 </div>
-
 

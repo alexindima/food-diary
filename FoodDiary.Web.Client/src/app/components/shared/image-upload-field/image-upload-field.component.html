@@ -1,0 +1,70 @@
+<div class="image-upload-field" [class.image-upload-field--disabled]="disabled">
+    <div class="image-upload-field__header">
+        <div class="image-upload-field__title">{{ label() }}</div>
+        @if (description()) {
+            <div class="image-upload-field__description">{{ description() }}</div>
+        }
+    </div>
+
+    <div
+        class="image-upload-field__dropzone"
+        [class.image-upload-field__dropzone--dragging]="isDragging"
+        [class.image-upload-field__dropzone--uploading]="isUploading"
+        (click)="fileInput.click()"
+        (drop)="onDrop($event)"
+    >
+        <input
+            #fileInput
+            type="file"
+            [accept]="acceptedTypes()"
+            [disabled]="disabled || isUploading"
+            (change)="onFileSelected($event)"
+            hidden
+        />
+
+        @if (selection.url) {
+            <img class="image-upload-field__preview" [src]="selection.url" alt="Preview" />
+        } @else {
+            <div class="image-upload-field__placeholder">
+                <div class="image-upload-field__icon">⬆</div>
+                <div class="image-upload-field__main-text">Select a file or drop it here</div>
+                <div class="image-upload-field__sub-text">
+                    JPG, PNG, GIF, WebP up to {{ maxSizeMb() }} MB.
+                </div>
+                <div class="image-upload-field__hint">Recommended size: {{ recommendedSize() }}.</div>
+            </div>
+        }
+
+        @if (isUploading) {
+            <div class="image-upload-field__overlay">Uploading...</div>
+        }
+    </div>
+
+    <div class="image-upload-field__actions">
+        <fd-ui-button
+            type="button"
+            variant="primary"
+            fill="outline"
+            icon="upload_file"
+            [disabled]="disabled || isUploading"
+            (click)="fileInput.click()"
+        >
+            Upload
+        </fd-ui-button>
+        @if (selection.url) {
+            <fd-ui-button
+                type="button"
+                variant="secondary"
+                fill="ghost"
+                icon="delete"
+                [disabled]="disabled || isUploading"
+                (click)="clearImage()"
+            >
+                Remove
+            </fd-ui-button>
+        }
+        @if (error) {
+            <span class="image-upload-field__error">{{ error }}</span>
+        }
+    </div>
+</div>

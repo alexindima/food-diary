@@ -37,6 +37,8 @@ import { CommonModule } from '@angular/common';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { PageHeaderComponent } from '../../shared/page-header/page-header.component';
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
+import { ImageUploadFieldComponent } from '../../shared/image-upload-field/image-upload-field.component';
+import { ImageSelection } from '../../../types/image-upload.data';
 
 @Component({
     selector: 'fd-recipe-manage',
@@ -55,6 +57,7 @@ import { FdPageContainerDirective } from '../../../directives/layout/page-contai
         FdUiCheckboxComponent,
         PageHeaderComponent,
         FdPageContainerDirective,
+        ImageUploadFieldComponent,
     ],
     templateUrl: './recipe-manage.component.html',
     styleUrls: ['./recipe-manage.component.scss'],
@@ -90,7 +93,7 @@ export class RecipeManageComponent implements OnInit {
             name: new FormControl<string>('', { nonNullable: true, validators: [Validators.required] }),
             description: new FormControl('', [Validators.maxLength(1000)]),
             category: new FormControl<string | null>(null),
-            imageUrl: new FormControl<string | null>(null),
+            imageUrl: new FormControl<ImageSelection | null>(null),
             prepTime: new FormControl<number | null>(null, [Validators.required, Validators.min(1)]),
             cookTime: new FormControl<number | null>(null, [Validators.required, Validators.min(1)]),
             servings: new FormControl(1, { nonNullable: true, validators: [Validators.required, Validators.min(1)] }),
@@ -240,7 +243,10 @@ export class RecipeManageComponent implements OnInit {
             name: recipeData.name,
             description: recipeData.description ?? '',
             category: recipeData.category ?? null,
-            imageUrl: recipeData.imageUrl ?? null,
+            imageUrl: {
+                url: recipeData.imageUrl ?? null,
+                assetId: recipeData.imageAssetId ?? null,
+            },
             prepTime: recipeData.prepTime ?? null,
             cookTime: recipeData.cookTime ?? null,
             servings: recipeData.servings,
@@ -463,7 +469,8 @@ export class RecipeManageComponent implements OnInit {
             name: formValue.name,
             description: formValue.description || null,
             category: formValue.category || null,
-            imageUrl: formValue.imageUrl || null,
+            imageUrl: formValue.imageUrl?.url || null,
+            imageAssetId: formValue.imageUrl?.assetId || null,
             prepTime: formValue.prepTime ?? 0,
             cookTime: formValue.cookTime ?? 0,
             servings: formValue.servings,
@@ -657,7 +664,7 @@ interface RecipeFormValues {
     name: string;
     description: string | null;
     category: string | null;
-    imageUrl: string | null;
+    imageUrl: ImageSelection | null;
     prepTime: number | null;
     cookTime: number | null;
     servings: number;

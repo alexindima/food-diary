@@ -40,7 +40,8 @@ public class CreateConsumptionCommandHandler(
             return Result.Failure<ConsumptionResponse>(mealTypeResult.Error);
         }
 
-        var meal = Meal.Create(command.UserId.Value, command.Date, mealTypeResult.Value, command.Comment);
+        var meal = Meal.Create(command.UserId.Value, command.Date, mealTypeResult.Value, command.Comment, command.ImageUrl,
+            command.ImageAssetId.HasValue ? new ImageAssetId(command.ImageAssetId.Value) : null);
 
         var satietyValidation = SatietyLevelValidator.Validate(
             command.PreMealSatietyLevel,

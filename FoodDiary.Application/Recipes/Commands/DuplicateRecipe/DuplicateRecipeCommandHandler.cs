@@ -33,6 +33,7 @@ public class DuplicateRecipeCommandHandler(IRecipeRepository recipeRepository)
             original.Description,
             original.Category,
             original.ImageUrl,
+            null,
             original.PrepTime,
             original.CookTime,
             original.Visibility);

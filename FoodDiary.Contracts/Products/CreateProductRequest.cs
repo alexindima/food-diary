@@ -9,6 +9,7 @@ public record CreateProductRequest(
     string? Description,
     string? Comment,
     string? ImageUrl,
+    Guid? ImageAssetId,
     string BaseUnit,
     double BaseAmount,
     double DefaultPortionAmount,

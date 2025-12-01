@@ -9,6 +9,7 @@ public record UpdateProductRequest(
     string? Description,
     string? Comment,
     string? ImageUrl,
+    Guid? ImageAssetId,
     string? BaseUnit,
     double? BaseAmount,
     double? DefaultPortionAmount,

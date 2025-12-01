@@ -10,6 +10,7 @@ public class FoodDiaryDbContext : DbContext
     public FoodDiaryDbContext(DbContextOptions<FoodDiaryDbContext> options) : base(options) { }
 
     public DbSet<User> Users => Set<User>();
+    public DbSet<ImageAsset> ImageAssets => Set<ImageAsset>();
     public DbSet<Product> Products => Set<Product>();
     public DbSet<Meal> Meals => Set<Meal>();
     public DbSet<MealItem> MealItems => Set<MealItem>();
@@ -47,6 +48,25 @@ public class FoodDiaryDbContext : DbContext
                 .OnDelete(DeleteBehavior.Cascade);
         });
 
+        modelBuilder.Entity<ImageAsset>(entity =>
+        {
+            entity.Property(e => e.Id).HasConversion(
+                id => id.Value,
+                value => new ImageAssetId(value));
+
+            entity.Property(e => e.UserId).HasConversion(
+                id => id.Value,
+                value => new UserId(value));
+
+            entity.Property(e => e.ObjectKey).IsRequired();
+            entity.Property(e => e.Url).IsRequired();
+
+            entity.HasOne(e => e.User)
+                .WithMany()
+                .HasForeignKey(e => e.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
         // Product configuration
         modelBuilder.Entity<Product>(entity =>
         {
@@ -58,11 +78,21 @@ public class FoodDiaryDbContext : DbContext
                 id => id.Value,
                 value => new UserId(value));
 
+            entity.Property(e => e.ImageAssetId).HasConversion(
+                id => id.HasValue ? id.Value.Value : (Guid?)null,
+                value => value.HasValue ? new ImageAssetId(value.Value) : null);
+
             entity.Property(e => e.Visibility).HasDefaultValue(Visibility.PUBLIC);
             entity.Property(e => e.ProductType).HasDefaultValue(ProductType.Unknown);
 
             // UsageCount - не хранится в БД, вычисляется динамически в запросах
             entity.Ignore(e => e.UsageCount);
+
+            entity.HasOne<ImageAsset>()
+                .WithMany()
+                .HasForeignKey(e => e.ImageAssetId)
+                .IsRequired(false)
+                .OnDelete(DeleteBehavior.SetNull);
 
             entity.HasOne(e => e.User).WithMany(u => u.Products).HasForeignKey(e => e.UserId);
         });
@@ -80,8 +110,18 @@ public class FoodDiaryDbContext : DbContext
                 id => id.Value,
                 value => new UserId(value));
 
+            entity.Property(e => e.ImageAssetId).HasConversion(
+                id => id.HasValue ? id.Value.Value : (Guid?)null,
+                value => value.HasValue ? new ImageAssetId(value.Value) : null);
+
             entity.HasOne(e => e.User).WithMany(u => u.Meals).HasForeignKey(e => e.UserId);
             entity.Property(e => e.IsNutritionAutoCalculated).HasDefaultValue(true);
+
+            entity.HasOne<ImageAsset>()
+                .WithMany()
+                .HasForeignKey(e => e.ImageAssetId)
+                .IsRequired(false)
+                .OnDelete(DeleteBehavior.SetNull);
         });
 
         // Recipe configuration
@@ -95,6 +135,10 @@ public class FoodDiaryDbContext : DbContext
                 id => id.Value,
                 value => new UserId(value));
 
+            entity.Property(e => e.ImageAssetId).HasConversion(
+                id => id.HasValue ? id.Value.Value : (Guid?)null,
+                value => value.HasValue ? new ImageAssetId(value.Value) : null);
+
             entity.Property(e => e.Visibility).HasDefaultValue(Visibility.PUBLIC);
             entity.Property(e => e.IsNutritionAutoCalculated).HasDefaultValue(true);
 
@@ -106,6 +150,12 @@ public class FoodDiaryDbContext : DbContext
                 .WithOne(mi => mi.Recipe)
                 .HasForeignKey(mi => mi.RecipeId)
                 .IsRequired(false);
+
+            entity.HasOne<ImageAsset>()
+                .WithMany()
+                .HasForeignKey(e => e.ImageAssetId)
+                .IsRequired(false)
+                .OnDelete(DeleteBehavior.SetNull);
         });
 
         // MealItem configuration - XOR constraint: ProductId OR RecipeId

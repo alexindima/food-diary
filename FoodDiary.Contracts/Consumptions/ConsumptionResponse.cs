@@ -9,6 +9,7 @@ public record ConsumptionResponse(
     string? MealType,
     string? Comment,
     string? ImageUrl,
+    Guid? ImageAssetId,
     double TotalCalories,
     double TotalProteins,
     double TotalFats,

@@ -15,6 +15,7 @@ public sealed class Meal : AggregateRoot<MealId> {
     public MealType? MealType { get; private set; }
     public string? Comment { get; private set; }
     public string? ImageUrl { get; private set; }
+    public ImageAssetId? ImageAssetId { get; private set; }
     public double TotalCalories { get; private set; }
     public double TotalProteins { get; private set; }
     public double TotalFats { get; private set; }
@@ -46,6 +47,7 @@ public sealed class Meal : AggregateRoot<MealId> {
         MealType? mealType = null,
         string? comment = null,
         string? imageUrl = null,
+        ImageAssetId? imageAssetId = null,
         int preMealSatietyLevel = 0,
         int postMealSatietyLevel = 0) {
         var meal = new Meal {
@@ -55,6 +57,7 @@ public sealed class Meal : AggregateRoot<MealId> {
             MealType = mealType,
             Comment = comment,
             ImageUrl = imageUrl,
+            ImageAssetId = imageAssetId,
             PreMealSatietyLevel = NormalizeSatietyLevel(preMealSatietyLevel),
             PostMealSatietyLevel = NormalizeSatietyLevel(postMealSatietyLevel)
         };
@@ -64,6 +67,14 @@ public sealed class Meal : AggregateRoot<MealId> {
 
     public void UpdateComment(string? comment) {
         Comment = comment;
+        SetModified();
+    }
+
+    public void UpdateImage(string? imageUrl, ImageAssetId? imageAssetId = null) {
+        ImageUrl = imageUrl;
+        if (imageAssetId.HasValue) {
+            ImageAssetId = imageAssetId;
+        }
         SetModified();
     }
 

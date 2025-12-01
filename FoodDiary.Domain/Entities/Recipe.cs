@@ -13,6 +13,7 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
     public string? Description { get; private set; }
     public string? Category { get; private set; }
     public string? ImageUrl { get; private set; }
+    public ImageAssetId? ImageAssetId { get; private set; }
     public int? PrepTime { get; private set; }
     public int? CookTime { get; private set; }
     public int Servings { get; private set; }
@@ -52,6 +53,7 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
         string? description = null,
         string? category = null,
         string? imageUrl = null,
+        ImageAssetId? imageAssetId = null,
         int? prepTime = null,
         int? cookTime = null,
         Visibility visibility = Visibility.PUBLIC) {
@@ -63,6 +65,7 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
             Description = description,
             Category = category,
             ImageUrl = imageUrl,
+            ImageAssetId = imageAssetId,
             PrepTime = prepTime,
             CookTime = cookTime,
             Visibility = visibility
@@ -76,6 +79,7 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
         string? description = null,
         string? category = null,
         string? imageUrl = null,
+        ImageAssetId? imageAssetId = null,
         int? prepTime = null,
         int? cookTime = null,
         int? servings = null,
@@ -84,6 +88,7 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
         if (description is not null) Description = description;
         if (category is not null) Category = category;
         if (imageUrl is not null) ImageUrl = imageUrl;
+        if (imageAssetId.HasValue) ImageAssetId = imageAssetId;
         if (prepTime.HasValue) PrepTime = prepTime;
         if (cookTime.HasValue) CookTime = cookTime;
         if (servings.HasValue) Servings = servings.Value;

@@ -15,5 +15,6 @@ export const environment: AppConfig = {
         waists: `${serverUrl}/api/waist-entries`,
         cycles: `${serverUrl}/api/cycles`,
         dashboard: `${serverUrl}/api/dashboard`,
+        images: `${serverUrl}/api/images`,
     },
 };

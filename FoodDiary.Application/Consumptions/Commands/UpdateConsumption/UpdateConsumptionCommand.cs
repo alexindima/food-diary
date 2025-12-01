@@ -14,6 +14,8 @@ public record UpdateConsumptionCommand(
     DateTime Date,
     string? MealType,
     string? Comment,
+    string? ImageUrl,
+    Guid? ImageAssetId,
     IReadOnlyList<ConsumptionItemInput> Items,
     bool IsNutritionAutoCalculated,
     double? ManualCalories,

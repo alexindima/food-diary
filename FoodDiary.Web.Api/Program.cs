@@ -56,6 +56,12 @@ else
     app.UseHttpsRedirection();
 }
 
+var s3 = builder.Configuration.GetSection("S3").GetChildren();
+foreach (var v in s3)
+{
+    Console.WriteLine($"{v.Key} = {v.Value}");
+}
+
 app.UseCors("AllowAll");
 app.UseAuthentication();
 app.UseAuthorization();

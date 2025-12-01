@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
+using FoodDiary.Application.Common.Interfaces.Services;
 using FoodDiary.Application.Consumptions.Common;
 using FoodDiary.Application.Consumptions.Mappings;
 using FoodDiary.Application.Consumptions.Services;
@@ -16,7 +17,9 @@ namespace FoodDiary.Application.Consumptions.Commands.UpdateConsumption;
 public class UpdateConsumptionCommandHandler(
     IMealRepository mealRepository,
     IProductRepository productRepository,
-    IRecipeRepository recipeRepository)
+    IRecipeRepository recipeRepository,
+    IImageAssetRepository imageAssetRepository,
+    IImageStorageService imageStorageService)
     : ICommandHandler<UpdateConsumptionCommand, Result<ConsumptionResponse>>
 {
     public async Task<Result<ConsumptionResponse>> Handle(UpdateConsumptionCommand command, CancellationToken cancellationToken)
@@ -49,9 +52,12 @@ public class UpdateConsumptionCommandHandler(
             return Result.Failure<ConsumptionResponse>(mealTypeResult.Error);
         }
 
+        var oldAssetId = meal.ImageAssetId;
+
         meal.UpdateDate(command.Date);
         meal.UpdateMealType(mealTypeResult.Value);
         meal.UpdateComment(command.Comment);
+        meal.UpdateImage(command.ImageUrl, command.ImageAssetId.HasValue ? new ImageAssetId(command.ImageAssetId.Value) : null);
 
         var satietyValidation = SatietyLevelValidator.Validate(
             command.PreMealSatietyLevel,
@@ -130,6 +136,11 @@ public class UpdateConsumptionCommandHandler(
 
         await mealRepository.UpdateAsync(meal, cancellationToken);
 
+        if (oldAssetId.HasValue && (!command.ImageAssetId.HasValue || oldAssetId.Value.Value != command.ImageAssetId.Value))
+        {
+            await TryDeleteAssetAsync(oldAssetId.Value, imageAssetRepository, imageStorageService, cancellationToken);
+        }
+
         var updated = await mealRepository.GetByIdAsync(
             meal.Id,
             command.UserId.Value,
@@ -142,6 +153,28 @@ public class UpdateConsumptionCommandHandler(
         }
 
         return Result.Success(updated.ToResponse());
+    }
+
+    private static async Task TryDeleteAssetAsync(
+        ImageAssetId assetId,
+        IImageAssetRepository imageAssetRepository,
+        IImageStorageService storageService,
+        CancellationToken cancellationToken)
+    {
+        var asset = await imageAssetRepository.GetByIdAsync(assetId, cancellationToken);
+        if (asset is null)
+        {
+            return;
+        }
+
+        var inUse = await imageAssetRepository.IsAssetInUse(assetId, cancellationToken);
+        if (inUse)
+        {
+            return;
+        }
+
+        await storageService.DeleteAsync(asset.ObjectKey, cancellationToken);
+        await imageAssetRepository.DeleteAsync(asset, cancellationToken);
     }
 
     private static Result<MealType?> ParseMealType(string? mealType)

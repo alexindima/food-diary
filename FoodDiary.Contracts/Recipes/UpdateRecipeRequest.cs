@@ -7,6 +7,7 @@ public record UpdateRecipeRequest(
     string? Description,
     string? Category,
     string? ImageUrl,
+    Guid? ImageAssetId,
     int? PrepTime,
     int? CookTime,
     int? Servings,

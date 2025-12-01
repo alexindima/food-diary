@@ -10,6 +10,7 @@ public record ProductResponse(
     string? Description,
     string? Comment,
     string? ImageUrl,
+    Guid? ImageAssetId,
     string BaseUnit,
     double BaseAmount,
     double DefaultPortionAmount,

@@ -2,12 +2,18 @@ import { inject, Injectable } from '@angular/core';
 import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { AuthService } from '../services/auth.service';
 import { catchError, Observable, switchMap, throwError } from 'rxjs';
+import { SKIP_AUTH } from '../constants/http-context.tokens';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
     private readonly authService = inject(AuthService);
 
     public intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+        const skipAuth = req.context.get(SKIP_AUTH);
+        if (skipAuth) {
+            return next.handle(req);
+        }
+
         const token = this.authService.getToken();
         let request = req;
 

@@ -58,6 +58,8 @@ import {
 } from './success-dialog/consumption-manage-success-dialog.component';
 import { PageHeaderComponent } from '../../shared/page-header/page-header.component';
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
+import { ImageUploadFieldComponent } from '../../shared/image-upload-field/image-upload-field.component';
+import { ImageSelection } from '../../../types/image-upload.data';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: FD_VALIDATION_ERRORS,
@@ -92,6 +94,7 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
         FdUiFormErrorComponent,
         PageHeaderComponent,
         FdPageContainerDirective,
+        ImageUploadFieldComponent,
     ],
 })
 export class BaseConsumptionManageComponent implements OnInit {
@@ -129,6 +132,7 @@ export class BaseConsumptionManageComponent implements OnInit {
                 nonEmptyArrayValidator()
             ),
             comment: new FormControl<string | null>(null),
+            imageUrl: new FormControl<ImageSelection | null>(null),
             isNutritionAutoCalculated: new FormControl<boolean>(true, { nonNullable: true }),
             manualCalories: new FormControl<number | null>(null),
             manualProteins: new FormControl<number | null>(null),
@@ -436,11 +440,14 @@ export class BaseConsumptionManageComponent implements OnInit {
         const manualTotals = this.getManualNutritionTotals();
         const preMealSatietyLevel = this.consumptionForm.controls.preMealSatietyLevel.value;
         const postMealSatietyLevel = this.consumptionForm.controls.postMealSatietyLevel.value;
+        const image = this.consumptionForm.controls.imageUrl.value;
 
         const consumptionData: ConsumptionManageDto = {
             date: consumptionDate,
             mealType: mealType ?? undefined,
             comment: comment ?? undefined,
+            imageUrl: image?.url ?? undefined,
+            imageAssetId: image?.assetId ?? undefined,
             items: mappedItems,
             isNutritionAutoCalculated,
             manualCalories: isNutritionAutoCalculated ? undefined : manualTotals.calories,
@@ -476,6 +483,10 @@ export class BaseConsumptionManageComponent implements OnInit {
             date: this.getDateInputValue(new Date(consumption.date)),
             mealType: consumption.mealType ?? null,
             comment: consumption.comment || null,
+            imageUrl: {
+                url: consumption.imageUrl ?? null,
+                assetId: consumption.imageAssetId ?? null,
+            },
             isNutritionAutoCalculated: consumption.isNutritionAutoCalculated,
             manualCalories: consumption.manualCalories ?? consumption.totalCalories,
             manualProteins: consumption.manualProteins ?? consumption.totalProteins,
@@ -920,6 +931,7 @@ type ConsumptionFormValues = {
     mealType: string | null;
     items: ConsumptionItemFormValues[];
     comment: string | null;
+    imageUrl: ImageSelection | null;
     isNutritionAutoCalculated: boolean;
     manualCalories: number | null;
     manualProteins: number | null;

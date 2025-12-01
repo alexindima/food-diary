@@ -1,13 +1,18 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
+using FoodDiary.Application.Common.Interfaces.Services;
 using FoodDiary.Application.Products.Mappings;
 using FoodDiary.Contracts.Products;
 using FoodDiary.Domain.Enums;
+using FoodDiary.Domain.ValueObjects;
 
 namespace FoodDiary.Application.Products.Commands.UpdateProduct;
 
-public class UpdateProductCommandHandler(IProductRepository productRepository)
+public class UpdateProductCommandHandler(
+    IProductRepository productRepository,
+    IImageAssetRepository imageAssetRepository,
+    IImageStorageService imageStorageService)
     : ICommandHandler<UpdateProductCommand, Result<ProductResponse>> {
     public async Task<Result<ProductResponse>>
         Handle(UpdateProductCommand command, CancellationToken cancellationToken) {
@@ -37,6 +42,8 @@ public class UpdateProductCommandHandler(IProductRepository productRepository)
             newProductType = parsedProductType;
         }
 
+        var oldAssetId = product.ImageAssetId;
+
         product.Update(
             name: command.Name,
             baseUnit: newUnit,
@@ -54,11 +61,39 @@ public class UpdateProductCommandHandler(IProductRepository productRepository)
             description: command.Description,
             comment: command.Comment,
             imageUrl: command.ImageUrl,
+            imageAssetId: command.ImageAssetId.HasValue ? new ImageAssetId(command.ImageAssetId.Value) : null,
             visibility: newVisibility);
 
         await productRepository.UpdateAsync(product);
 
+        if (oldAssetId.HasValue && (!command.ImageAssetId.HasValue || oldAssetId.Value.Value != command.ImageAssetId.Value))
+        {
+            await TryDeleteAssetAsync(oldAssetId.Value, imageAssetRepository, imageStorageService, cancellationToken);
+        }
+
         var usageCount = product.MealItems.Count + product.RecipeIngredients.Count;
         return Result.Success(product.ToResponse(usageCount, true));
+    }
+
+    private static async Task TryDeleteAssetAsync(
+        ImageAssetId assetId,
+        IImageAssetRepository imageAssetRepository,
+        IImageStorageService storageService,
+        CancellationToken cancellationToken)
+    {
+        var asset = await imageAssetRepository.GetByIdAsync(assetId, cancellationToken);
+        if (asset is null)
+        {
+            return;
+        }
+
+        var inUse = await imageAssetRepository.IsAssetInUse(assetId, cancellationToken);
+        if (inUse)
+        {
+            return;
+        }
+
+        await storageService.DeleteAsync(asset.ObjectKey, cancellationToken);
+        await imageAssetRepository.DeleteAsync(asset, cancellationToken);
     }
 }

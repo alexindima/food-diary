@@ -44,6 +44,8 @@ import {
     ConfirmDeleteDialogComponent,
     ConfirmDeleteDialogData,
 } from '../../shared/confirm-delete-dialog/confirm-delete-dialog.component';
+import { ImageUploadFieldComponent } from '../../shared/image-upload-field/image-upload-field.component';
+import { ImageSelection } from '../../../types/image-upload.data';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: FD_VALIDATION_ERRORS,
@@ -75,6 +77,7 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
         FdUiFormErrorComponent,
         PageHeaderComponent,
         FdPageContainerDirective,
+        ImageUploadFieldComponent,
     ],
 })
 export class BaseProductManageComponent implements OnInit {
@@ -160,7 +163,7 @@ export class BaseProductManageComponent implements OnInit {
             productType: new FormControl<ProductType>(ProductType.Unknown, { nonNullable: true }),
             description: new FormControl(null),
             comment: new FormControl(null),
-            imageUrl: new FormControl(null),
+            imageUrl: new FormControl<ImageSelection | null>(null),
             baseAmount: new FormControl(100, { nonNullable: true, validators: [Validators.required, Validators.min(0.001)] }),
             defaultPortionAmount: new FormControl(100, {
                 nonNullable: true,
@@ -292,7 +295,8 @@ export class BaseProductManageComponent implements OnInit {
                 category: this.productForm.value.productType || null,
                 description: this.productForm.value.description || null,
                 comment: this.productForm.value.comment || null,
-                imageUrl: this.productForm.value.imageUrl || null,
+                imageUrl: this.productForm.value.imageUrl?.url || null,
+                imageAssetId: this.productForm.value.imageUrl?.assetId || null,
                 baseAmount,
                 defaultPortionAmount,
                 baseUnit: this.productForm.value.baseUnit!,
@@ -392,7 +396,10 @@ export class BaseProductManageComponent implements OnInit {
             productType: normalizedProductType,
             description: product.description ?? null,
             comment: product.comment ?? null,
-            imageUrl: product.imageUrl ?? null,
+            imageUrl: {
+                url: product.imageUrl ?? null,
+                assetId: product.imageAssetId ?? null,
+            },
             baseAmount: product.baseAmount,
             defaultPortionAmount: product.defaultPortionAmount,
             baseUnit: product.baseUnit,
@@ -568,7 +575,7 @@ export interface ProductFormValues {
     productType: ProductType;
     description: string | null;
     comment: string | null;
-    imageUrl: string | null;
+    imageUrl: ImageSelection | null;
     baseAmount: number;
     defaultPortionAmount: number;
     baseUnit: MeasurementUnit;

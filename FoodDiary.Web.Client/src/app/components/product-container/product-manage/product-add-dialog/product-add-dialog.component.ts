@@ -14,6 +14,7 @@ import { FdUiFormErrorComponent } from 'fd-ui-kit/form-error/fd-ui-form-error.co
 import { PageHeaderComponent } from '../../../shared/page-header/page-header.component';
 import { BaseChartDirective } from 'ng2-charts';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
+import { ImageUploadFieldComponent } from '../../../shared/image-upload-field/image-upload-field.component';
 
 @Component({
     selector: 'fd-product-add-dialog',
@@ -33,6 +34,7 @@ import { FdPageContainerDirective } from '../../../../directives/layout/page-con
         PageHeaderComponent,
         BaseChartDirective,
         FdPageContainerDirective,
+        ImageUploadFieldComponent,
     ]
 })
 export class ProductAddDialogComponent extends BaseProductManageComponent {
