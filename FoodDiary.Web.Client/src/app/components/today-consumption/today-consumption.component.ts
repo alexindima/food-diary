@@ -36,6 +36,7 @@ import { MealCardComponent } from '../shared/meal-card/meal-card.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { CalorieGoalDialogComponent } from './dialogs/calorie-goal-dialog/calorie-goal-dialog.component';
 import { MacroGoalDialogComponent } from './dialogs/macro-goal-dialog/macro-goal-dialog.component';
+import { DailySummaryCardComponent, DailySummaryData } from '../daily-summary-card/daily-summary-card.component';
 
 @Component({
     selector: 'fd-today-consumption',
@@ -59,7 +60,8 @@ import { MacroGoalDialogComponent } from './dialogs/macro-goal-dialog/macro-goal
         WaistSummaryCardComponent,
         ActivityCardComponent,
         QuickActionsSectionComponent,
-        MealCardComponent
+        MealCardComponent,
+        DailySummaryCardComponent
     ],
     templateUrl: './today-consumption.component.html',
     styleUrl: './today-consumption.component.scss',
@@ -100,6 +102,29 @@ export class TodayConsumptionComponent implements OnInit {
     public readonly latestWaist = computed(() => this.snapshot()?.waist.latest?.circumference ?? null);
     public readonly previousWaist = computed(() => this.snapshot()?.waist.previous?.circumference ?? null);
     public readonly desiredWaist = computed(() => this.snapshot()?.waist.desired ?? null);
+    public readonly dailySummaryData = computed<DailySummaryData>(() => {
+        const consumed = this.todayCalories() || 0;
+        const goal = this.dailyGoal() || 0;
+        const percentage = goal > 0 ? Math.round((consumed / goal) * 100) : 0;
+        const remaining = goal > 0 ? Math.max(goal - consumed, 0) : undefined;
+        const latestMeal = this.meals()[0];
+        const motivationFallback = 'Только стартуем. Чуть-чуть добавлено, продолжайте!';
+        return {
+            mode: 'full',
+            sectionTitle: 'Съедено сегодня',
+            eatenTodayKcal: consumed,
+            goalKcal: goal,
+            percentage,
+            remainingKcal: remaining,
+            weeklyDiffText: undefined,
+            weeklyDiffType: 'neutral',
+            motivationText: motivationFallback,
+            lastMealTitle: latestMeal?.mealType || undefined,
+            lastMealDescription: latestMeal?.comment || undefined,
+            showSettings: true,
+            onSettingsClick: () => this.openCalorieGoalDialog(),
+        };
+    });
 
     public ngOnInit(): void {
         this.loadDashboardSnapshot();

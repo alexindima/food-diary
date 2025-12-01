@@ -46,6 +46,11 @@
         } @else {
             <section class="dashboard__grid">
                 <div class="dashboard__column">
+                    <app-daily-summary-card
+                        class="dashboard__card dashboard__card--summary"
+                        [data]="dailySummaryData()"
+                    />
+
                     <fd-daily-progress-card
                         class="dashboard__card dashboard__card--progress"
                         [date]="selectedDate()"

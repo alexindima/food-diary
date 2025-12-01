@@ -1,0 +1,89 @@
+<div class="daily-card" [class.daily-card--full]="data.mode === 'full'">
+    <div class="daily-card__header">
+        <div>
+            <p class="daily-card__eyebrow">{{ data.sectionTitle || 'Съедено сегодня' }}</p>
+            <div class="daily-card__main-row">
+                <div class="daily-card__kcal">
+                    <span class="daily-card__value">{{ data.eatenTodayKcal }}</span>
+                    <span class="daily-card__unit">ккал</span>
+                </div>
+                <div class="daily-card__percent" *ngIf="data.mode === 'full' && data.percentage !== undefined">
+                    {{ data.percentage }}%
+                </div>
+            </div>
+            <p class="daily-card__meta">Цель: {{ data.goalKcal | number }} ккал</p>
+        </div>
+
+        <fd-ui-button
+            *ngIf="data.showSettings"
+            class="daily-card__settings-btn"
+            variant="secondary"
+            fill="ghost"
+            size="xs"
+            icon="settings"
+            iconSize="sm"
+            ariaLabel="Настройки цели"
+            (click)="data.onSettingsClick?.()"
+        />
+    </div>
+
+    <div class="daily-card__progress">
+        <div
+            class="daily-card__progress-fill"
+            [ngClass]="'daily-card__progress-fill--' + progressState"
+            [style.width.%]="progress"
+        ></div>
+    </div>
+
+    <ng-container *ngIf="data.mode === 'preview'; else fullMode">
+        <div class="weekly" [ngClass]="weeklyClass" *ngIf="data.weeklyDiffText">
+            <div class="weekly__title">Эта неделя</div>
+            <div class="weekly__text">{{ data.weeklyDiffText }}</div>
+        </div>
+
+        <div class="meal" *ngIf="data.lastMealTitle || data.lastMealDescription">
+            <div class="meal__row">
+                <span class="meal__title">{{ data.lastMealTitle || data.lastMealTimeLabel }}</span>
+                <span class="meal__meta" *ngIf="data.lastMealUnitsLabel">{{ data.lastMealUnitsLabel }}</span>
+            </div>
+            <p class="meal__desc" *ngIf="data.lastMealDescription">{{ data.lastMealDescription }}</p>
+        </div>
+    </ng-container>
+
+    <ng-template #fullMode>
+        <div class="daily-card__stats">
+            <fd-ui-accent-surface class="stat" accentSide="top" accentColor="var(--fd-color-primary-300, #93c5fd)" [tinted]="true">
+                <p class="stat__label">Цель</p>
+                <p class="stat__value">{{ data.goalKcal | number }} ккал</p>
+            </fd-ui-accent-surface>
+            <fd-ui-accent-surface
+                *ngIf="data.remainingKcal !== undefined"
+                class="stat"
+                accentSide="top"
+                accentColor="var(--fd-color-primary-300, #93c5fd)"
+                [tinted]="true"
+            >
+                <p class="stat__label">Осталось</p>
+                <p class="stat__value">{{ data.remainingKcal | number }} ккал</p>
+            </fd-ui-accent-surface>
+        </div>
+
+        <fd-ui-accent-surface
+            *ngIf="data.motivationText"
+            class="daily-card__motivation"
+            accentSide="top"
+            accentColor="var(--fd-color-success-500, #22c55e)"
+            [tinted]="true"
+        >
+            {{ data.motivationText }}
+        </fd-ui-accent-surface>
+
+        <div class="meal meal--compact" *ngIf="data.lastMealTitle || data.lastMealDescription">
+            <div class="meal__row">
+                <span class="meal__title">{{ data.lastMealTitle || 'Последний приём пищи' }}</span>
+                <span class="meal__meta" *ngIf="data.lastMealUnitsLabel">{{ data.lastMealUnitsLabel }}</span>
+            </div>
+            <p class="meal__desc" *ngIf="data.lastMealDescription">{{ data.lastMealDescription }}</p>
+        </div>
+    </ng-template>
+</div>
