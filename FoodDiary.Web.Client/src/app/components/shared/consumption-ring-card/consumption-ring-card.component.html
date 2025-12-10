@@ -1,0 +1,76 @@
+<fd-ui-card class="consumption-ring-card" [title]="'CONSUMPTION_RING.TITLE' | translate">
+    <div class="consumption-ring-card__layout">
+        <div class="consumption-ring-card__chart">
+            <svg
+                class="consumption-ring-card__svg"
+                viewBox="0 0 260 260"
+                aria-hidden="true"
+            >
+                <g class="consumption-ring-card__ring consumption-ring-card__ring--daily">
+                    <circle class="consumption-ring-card__track consumption-ring-card__track--daily" cx="130" cy="130" r="112" />
+                    <circle
+                        class="consumption-ring-card__progress consumption-ring-card__progress--daily"
+                        cx="130"
+                        cy="130"
+                        r="112"
+                        [attr.stroke-dasharray]="dailyDasharray()"
+                        [attr.stroke]="dailyStrokeColor()"
+                    />
+                </g>
+
+                <g class="consumption-ring-card__ring consumption-ring-card__ring--weekly">
+                    <circle class="consumption-ring-card__track consumption-ring-card__track--weekly" cx="130" cy="130" r="88" />
+                    <circle
+                        class="consumption-ring-card__progress consumption-ring-card__progress--weekly"
+                        cx="130"
+                        cy="130"
+                        r="88"
+                        [attr.stroke-dasharray]="weeklyDasharray()"
+                        [attr.stroke]="weeklyStrokeColor()"
+                    />
+                </g>
+            </svg>
+
+            <div class="consumption-ring-card__center">
+                <div class="consumption-ring-card__percent">
+                    <span class="consumption-ring-card__percent-value">{{ dailyPercent() }}</span>
+                    <span class="consumption-ring-card__percent-sign">%</span>
+                </div>
+                <div class="consumption-ring-card__primary-line">
+                    {{ dailyConsumed() | number:'1.0-0' }} / {{ normalizedDailyGoal() | number:'1.0-0' }}
+                    {{ 'CONSUMPTION_RING.UNIT' | translate }}
+                </div>
+                <div class="consumption-ring-card__secondary-line">
+                    {{ 'CONSUMPTION_RING.WEEKLY_LABEL' | translate }}: {{ weeklyPercent() }}%
+                </div>
+            </div>
+        </div>
+
+        <div class="consumption-ring-card__legend">
+            <div class="consumption-ring-card__legend-item">
+                <span class="consumption-ring-card__dot consumption-ring-card__dot--daily" aria-hidden="true"></span>
+                <div>
+                    <div class="consumption-ring-card__legend-title">
+                        {{ 'CONSUMPTION_RING.DAILY_PROGRESS' | translate }}
+                    </div>
+                    <div class="consumption-ring-card__legend-value">
+                        {{ dailyConsumed() | number:'1.0-0' }} / {{ normalizedDailyGoal() | number:'1.0-0' }}
+                        {{ 'CONSUMPTION_RING.UNIT' | translate }}
+                    </div>
+                </div>
+            </div>
+            <div class="consumption-ring-card__legend-item">
+                <span class="consumption-ring-card__dot consumption-ring-card__dot--weekly" aria-hidden="true"></span>
+                <div>
+                    <div class="consumption-ring-card__legend-title">
+                        {{ 'CONSUMPTION_RING.WEEKLY_PROGRESS' | translate }}
+                    </div>
+                    <div class="consumption-ring-card__legend-value">
+                        {{ safeWeeklyConsumed() | number:'1.0-0' }} / {{ normalizedWeeklyGoal() | number:'1.0-0' }}
+                        {{ 'CONSUMPTION_RING.UNIT' | translate }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</fd-ui-card>

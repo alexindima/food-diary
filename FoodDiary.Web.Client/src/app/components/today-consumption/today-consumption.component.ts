@@ -37,6 +37,7 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { CalorieGoalDialogComponent } from './dialogs/calorie-goal-dialog/calorie-goal-dialog.component';
 import { MacroGoalDialogComponent } from './dialogs/macro-goal-dialog/macro-goal-dialog.component';
 import { DailySummaryCardComponent, DailySummaryData } from '../daily-summary-card/daily-summary-card.component';
+import { ConsumptionRingCardComponent } from '../shared/consumption-ring-card/consumption-ring-card.component';
 
 @Component({
     selector: 'fd-today-consumption',
@@ -61,7 +62,8 @@ import { DailySummaryCardComponent, DailySummaryData } from '../daily-summary-ca
         ActivityCardComponent,
         QuickActionsSectionComponent,
         MealCardComponent,
-        DailySummaryCardComponent
+        DailySummaryCardComponent,
+        ConsumptionRingCardComponent
     ],
     templateUrl: './today-consumption.component.html',
     styleUrl: './today-consumption.component.scss',
@@ -102,6 +104,9 @@ export class TodayConsumptionComponent implements OnInit {
     public readonly latestWaist = computed(() => this.snapshot()?.waist.latest?.circumference ?? null);
     public readonly previousWaist = computed(() => this.snapshot()?.waist.previous?.circumference ?? null);
     public readonly desiredWaist = computed(() => this.snapshot()?.waist.desired ?? null);
+    public readonly weeklyConsumed = computed(() =>
+        (this.snapshot()?.weeklyCalories ?? []).reduce((sum, point) => sum + (point?.calories ?? 0), 0)
+    );
     public readonly dailySummaryData = computed<DailySummaryData>(() => {
         const consumed = this.todayCalories() || 0;
         const goal = this.dailyGoal() || 0;
@@ -133,6 +138,30 @@ export class TodayConsumptionComponent implements OnInit {
             lastMealDescription: latestMeal?.comment || undefined,
             showSettings: true,
             onSettingsClick: () => this.openCalorieGoalDialog(),
+        };
+    });
+    public readonly consumptionRingData = computed(() => {
+        const snapshot = this.snapshot();
+        const dailyGoal = snapshot?.dailyGoal ?? 0;
+        const consumedToday = snapshot?.statistics.totalCalories ?? 0;
+        const weeklyConsumed = this.weeklyConsumed();
+        const hasData = snapshot && (dailyGoal > 0 || consumedToday > 0 || weeklyConsumed > 0);
+
+        if (!hasData) {
+            const fallbackGoal = 2000;
+            return {
+                dailyGoal: fallbackGoal,
+                dailyConsumed: 1450,
+                weeklyConsumed: 6000,
+                weeklyGoal: fallbackGoal * 7,
+            };
+        }
+
+        return {
+            dailyGoal,
+            dailyConsumed: consumedToday,
+            weeklyConsumed,
+            weeklyGoal: dailyGoal > 0 ? dailyGoal * 7 : 0,
         };
     });
 

@@ -48,7 +48,7 @@
       "PLACEHOLDER": "Your progress will appear here once a goal is set."
       ,
       "MOTIVATION": {
-        "NONE": "You haven't logged anything yet — a great time to start!",
+        "NONE": "You haven't logged anything yet - a great time to start!",
         "P0_10": "Just getting started. A few bites logged, keep going!",
         "P10_20": "Warm-up phase — you're at {{ percent }}% of your goal.",
         "P20_30": "Momentum building. {{ percent }}% reached.",
@@ -62,6 +62,13 @@
         "P110_200": "You've gone over the target ({{ percent }}%). Keep balance in mind.",
         "ABOVE_200": "Far above the plan ({{ percent }}%). Consider adjusting tomorrow."
       }
+    },
+    "CONSUMPTION_RING": {
+        "TITLE": "Calories: day & week",
+        "UNIT": "kcal",
+        "DAILY_PROGRESS": "Today",
+        "WEEKLY_PROGRESS": "This week",
+        "WEEKLY_LABEL": "Weekly"
     },
     "HEADER": {
         "HOME": "Home",
@@ -1070,7 +1077,6 @@
         }
     }
 }
-
 
 
 

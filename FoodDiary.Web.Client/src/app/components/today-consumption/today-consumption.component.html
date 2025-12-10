@@ -46,6 +46,14 @@
         } @else {
             <section class="dashboard__grid">
                 <div class="dashboard__column">
+                    <fd-consumption-ring-card
+                        class="dashboard__card dashboard__card--ring"
+                        [dailyGoal]="consumptionRingData().dailyGoal"
+                        [dailyConsumed]="consumptionRingData().dailyConsumed"
+                        [weeklyConsumed]="consumptionRingData().weeklyConsumed"
+                        [weeklyGoal]="consumptionRingData().weeklyGoal"
+                    />
+
                     <app-daily-summary-card
                         class="dashboard__card dashboard__card--summary"
                         [data]="dailySummaryData()"

@@ -91,6 +91,12 @@ $color-primary: #2563eb;
             }
         }
 
+        &--ring {
+            > .fd-ui-card {
+                min-height: 340px;
+            }
+        }
+
         &--motivation-wide {
             width: 100%;
         }
