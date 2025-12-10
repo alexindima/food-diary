@@ -18,12 +18,32 @@
         max-width: 320px;
         margin: 0 auto;
         aspect-ratio: 1 / 1;
+        z-index: 1;
+
+        &.is-daily-hovered {
+            .consumption-ring-card__center {
+                transform: translateY(4px) scale(1.12);
+            }
+            .consumption-ring-card__secondary-line {
+                transform: scale(0.9);
+                opacity: 0.75;
+            }
+        }
+
+        &.is-weekly-hovered {
+            .consumption-ring-card__secondary-line {
+                transform: scale(1.12);
+                opacity: 1;
+                color: $color-text-main;
+            }
+        }
     }
 
     &__svg {
         width: 100%;
         height: 100%;
         transform: rotate(-90deg);
+        transition: transform 0.2s ease;
     }
 
     &__ring circle {
@@ -34,26 +54,42 @@
         stroke: #e8eef9;
         opacity: 0.9;
         stroke-linecap: round;
+        transition: stroke 0.2s ease, filter 0.2s ease, transform 0.2s ease;
+        transform-box: fill-box;
+        transform-origin: center;
 
         &--daily {
-            stroke-width: 16;
+            stroke-width: 20;
         }
 
         &--weekly {
             stroke-width: 10;
+        }
+
+        &.is-hovered {
+            stroke: color-mix(in srgb, var(--ring-color, #c8dafd) 45%, #ffffff 55%);
+            filter: drop-shadow(0 0 4px color-mix(in srgb, var(--ring-color, #c8dafd) 35%, transparent 65%));
+            transform: scale(1.02) translateZ(0);
         }
     }
 
     &__progress {
         stroke-linecap: round;
-        transition: none;
+        transition: stroke-dasharray 0s, stroke 0.8s linear, opacity 0.35s ease-in-out, transform 0.2s ease, filter 0.2s ease;
+        transform-box: fill-box;
+        transform-origin: center;
 
         &--daily {
-            stroke-width: 16;
+            stroke-width: 20;
         }
 
         &--weekly {
             stroke-width: 10;
+        }
+
+        &.is-hovered {
+            transform: scale(1.02) translateZ(0);
+            filter: drop-shadow(0 0 4px color-mix(in srgb, var(--ring-color, rgba(59, 130, 246, 0.2)) 35%, transparent 65%));
         }
     }
 
@@ -68,6 +104,23 @@
         gap: 6px;
         padding: 12px;
         color: $color-text-main;
+        transition: transform 0.2s ease, opacity 0.2s ease;
+        pointer-events: none;
+
+        &.is-daily-hovered .consumption-ring-card__secondary-line {
+            transform: scale(0.8);
+            opacity: 0.6;
+        }
+
+        &.is-weekly-hovered .consumption-ring-card__secondary-line {
+            transform: scale(1.25);
+        }
+
+        &.is-weekly-hovered .consumption-ring-card__percent,
+        &.is-weekly-hovered .consumption-ring-card__primary-line {
+            transform: scale(0.85);
+            opacity: 0.6;
+        }
     }
 
     &__percent {
@@ -77,6 +130,8 @@
         font-weight: 800;
         line-height: 1;
         color: #0f172a;
+        transition: transform 0.25s ease, opacity 0.25s ease;
+        padding-left: 6px;
     }
 
     &__percent-value {
@@ -92,11 +147,13 @@
     &__primary-line {
         font-size: 1rem;
         font-weight: 600;
+        transition: transform 0.25s ease, opacity 0.25s ease;
     }
 
     &__secondary-line {
         font-size: 0.95rem;
         color: $color-text-additional;
+        transition: transform 0.2s ease, color 0.2s ease, opacity 0.2s ease;
     }
 
     &__legend {

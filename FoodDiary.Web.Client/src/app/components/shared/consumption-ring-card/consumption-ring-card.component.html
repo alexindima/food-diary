@@ -1,15 +1,35 @@
 <fd-ui-card class="consumption-ring-card" [title]="'CONSUMPTION_RING.TITLE' | translate">
     <div class="consumption-ring-card__layout">
-        <div class="consumption-ring-card__chart">
+        <div
+            class="consumption-ring-card__chart"
+            [class.is-daily-hovered]="isDailyHovered()"
+            [class.is-weekly-hovered]="isWeeklyHovered()"
+        >
             <svg
                 class="consumption-ring-card__svg"
-                viewBox="0 0 260 260"
+                viewBox="-5 -5 270 270"
                 aria-hidden="true"
             >
-                <g class="consumption-ring-card__ring consumption-ring-card__ring--daily">
-                    <circle class="consumption-ring-card__track consumption-ring-card__track--daily" cx="130" cy="130" r="112" />
+                <g
+                    class="consumption-ring-card__ring consumption-ring-card__ring--daily"
+                    [class.is-hovered]="isDailyHovered()"
+                    (mouseenter)="setDailyHover(true)"
+                    (mouseleave)="setDailyHover(false)"
+                    [attr.tabindex]="0"
+                    (focus)="setDailyHover(true)"
+                    (blur)="setDailyHover(false)"
+                    [style.--ring-color]="dailyStrokeColor()"
+                >
+                    <circle
+                        class="consumption-ring-card__track consumption-ring-card__track--daily"
+                        [class.is-hovered]="isDailyHovered()"
+                        cx="130"
+                        cy="130"
+                        r="112"
+                    />
                     <circle
                         class="consumption-ring-card__progress consumption-ring-card__progress--daily"
+                        [class.is-hovered]="isDailyHovered()"
                         cx="130"
                         cy="130"
                         r="112"
@@ -18,10 +38,26 @@
                     />
                 </g>
 
-                <g class="consumption-ring-card__ring consumption-ring-card__ring--weekly">
-                    <circle class="consumption-ring-card__track consumption-ring-card__track--weekly" cx="130" cy="130" r="88" />
+                <g
+                    class="consumption-ring-card__ring consumption-ring-card__ring--weekly"
+                    [class.is-hovered]="isWeeklyHovered()"
+                    (mouseenter)="setWeeklyHover(true)"
+                    (mouseleave)="setWeeklyHover(false)"
+                    [attr.tabindex]="0"
+                    (focus)="setWeeklyHover(true)"
+                    (blur)="setWeeklyHover(false)"
+                    [style.--ring-color]="weeklyStrokeColor()"
+                >
+                    <circle
+                        class="consumption-ring-card__track consumption-ring-card__track--weekly"
+                        [class.is-hovered]="isWeeklyHovered()"
+                        cx="130"
+                        cy="130"
+                        r="88"
+                    />
                     <circle
                         class="consumption-ring-card__progress consumption-ring-card__progress--weekly"
+                        [class.is-hovered]="isWeeklyHovered()"
                         cx="130"
                         cy="130"
                         r="88"
@@ -31,7 +67,11 @@
                 </g>
             </svg>
 
-            <div class="consumption-ring-card__center">
+            <div
+                class="consumption-ring-card__center"
+                [class.is-daily-hovered]="isDailyHovered()"
+                [class.is-weekly-hovered]="isWeeklyHovered()"
+            >
                 <div class="consumption-ring-card__percent">
                     <span class="consumption-ring-card__percent-value">{{ dailyPercent() }}</span>
                     <span class="consumption-ring-card__percent-sign">%</span>

@@ -16,6 +16,8 @@ export class ConsumptionRingCardComponent {
     public readonly dailyConsumed = input<number>(0);
     public readonly weeklyConsumed = input<number>(0);
     public readonly weeklyGoal = input<number | null>(null);
+    public readonly isDailyHovered = signal(false);
+    public readonly isWeeklyHovered = signal(false);
 
     private readonly outerRadius = 112;
     private readonly innerRadius = 88;
@@ -114,6 +116,14 @@ export class ConsumptionRingCardComponent {
             cancelAnimationFrame(handle);
             this.animationHandles.delete(targetSignal);
         }
+    }
+
+    public setDailyHover(state: boolean): void {
+        this.isDailyHovered.set(state);
+    }
+
+    public setWeeklyHover(state: boolean): void {
+        this.isWeeklyHovered.set(state);
     }
 
     private getColorForPercent(percent: number): string {
