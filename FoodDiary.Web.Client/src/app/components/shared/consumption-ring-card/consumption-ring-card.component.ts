@@ -3,6 +3,16 @@ import { ChangeDetectionStrategy, Component, computed, effect, input, signal } f
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 
+export interface NutrientBar {
+    id: string;
+    label: string;
+    current: number;
+    target: number;
+    unit: string;
+    colorStart: string;
+    colorEnd: string;
+}
+
 @Component({
     selector: 'fd-consumption-ring-card',
     standalone: true,
@@ -16,6 +26,7 @@ export class ConsumptionRingCardComponent {
     public readonly dailyConsumed = input<number>(0);
     public readonly weeklyConsumed = input<number>(0);
     public readonly weeklyGoal = input<number | null>(null);
+    public readonly nutrientBars = input<NutrientBar[] | null>(null);
     public readonly isDailyHovered = signal(false);
     public readonly isWeeklyHovered = signal(false);
 
@@ -66,6 +77,7 @@ export class ConsumptionRingCardComponent {
     public readonly dailyGradientEnd = computed(() => this.mixWithWhite(this.dailyStrokeColor(), 0.15));
     public readonly weeklyGradientStart = computed(() => this.mixWithWhite(this.weeklyStrokeColor(), 0.05));
     public readonly weeklyGradientEnd = computed(() => this.mixWithWhite(this.weeklyStrokeColor(), 0.15));
+    public readonly resolvedNutrientBars = computed(() => this.nutrientBars() ?? this.buildDefaultNutrientBars());
 
     public constructor() {
         effect(onCleanup => {
@@ -95,6 +107,12 @@ export class ConsumptionRingCardComponent {
         const clamped = Math.min(Math.max(percent, 0), 100);
         const filled = (circumference * clamped) / 100;
         return `${filled} ${circumference}`;
+    }
+    public clampPercent(value: number): number {
+        if (Number.isNaN(value)) {
+            return 0;
+        }
+        return Math.min(Math.max(value, 0), 120);
     }
 
     private startAnimation(targetSignal: { set: (v: number) => void; (): number }, target: number): void {
@@ -227,5 +245,22 @@ export class ConsumptionRingCardComponent {
 
     public get weeklyGradientId(): string {
         return this.gradientIdWeekly;
+    }
+
+    private buildDefaultNutrientBars(): NutrientBar[] {
+        return [
+            { id: 'protein', label: 'Protein', current: 110, target: 140, unit: 'g', colorStart: '#4dabff', colorEnd: '#2563eb' },
+            { id: 'carbs', label: 'Carbs', current: 180, target: 250, unit: 'g', colorStart: '#2dd4bf', colorEnd: '#0ea5e9' },
+            { id: 'fats', label: 'Fats', current: 45, target: 70, unit: 'g', colorStart: '#fbbf24', colorEnd: '#f97316' },
+            { id: 'fiber', label: 'Fiber', current: 18, target: 30, unit: 'g', colorStart: '#fb7185', colorEnd: '#ec4899' },
+        ];
+    }
+
+    public getBarColor(bar: NutrientBar): string {
+        if (!bar.target || bar.target <= 0) {
+            return '#6b7280';
+        }
+        const pct = (bar.current / bar.target) * 100;
+        return this.getColorForPercent(pct);
     }
 }

@@ -4,11 +4,12 @@
     &__layout {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 20px;
+        gap: 12px;
         align-items: center;
 
         @media #{$media-tablet} {
             grid-template-columns: 1fr;
+            gap: 20px;
         }
     }
 
@@ -16,7 +17,7 @@
         position: relative;
         width: 100%;
         max-width: 320px;
-        margin: 0 auto;
+        margin: 0 0 0 4px;
         aspect-ratio: 1 / 1;
         z-index: 1;
 
@@ -161,39 +162,62 @@
         gap: 14px;
     }
 
-    &__legend-item {
+    &__bars {
         display: grid;
-        grid-template-columns: auto 1fr;
-        gap: 12px;
+        gap: 20px;
+    }
+
+    &__bar {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        transition: transform 0.2s ease, filter 0.2s ease;
+
+        &:hover {
+            transform: translateY(-2px) scale(1.02);
+            filter: drop-shadow(0 4px 10px rgba(15, 23, 42, 0.08));
+
+            .consumption-ring-card__bar-fill {
+                opacity: 1;
+                filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.1));
+            }
+        }
+    }
+
+    &__bar-header {
+        display: flex;
+        justify-content: space-between;
         align-items: center;
-    }
-
-    &__dot {
-        width: 14px;
-        height: 14px;
-        border-radius: 50%;
-        display: inline-block;
-        box-shadow: 0 0 0 3px rgba(31, 107, 255, 0.08);
-
-        &--daily {
-            background: linear-gradient(135deg, #5ab6ff, #1f6bff);
-        }
-
-        &--weekly {
-            background: linear-gradient(135deg, #81e6d9, #38bdf8);
-            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.1);
-        }
-    }
-
-    &__legend-title {
         font-size: 0.95rem;
-        font-weight: 600;
         color: $color-text-main;
-        margin-bottom: 2px;
+        gap: 8px;
     }
 
-    &__legend-value {
-        font-size: 0.95rem;
+    &__bar-label {
+        font-weight: 600;
+    }
+
+    &__bar-value {
         color: $color-text-additional;
+        font-size: 0.9rem;
+        white-space: nowrap;
+    }
+
+    &__bar-track {
+        width: 100%;
+        height: 20px;
+        border-radius: 999px;
+        background: #e5e7eb;
+        overflow: hidden;
+        position: relative;
+    }
+
+    &__bar-fill {
+        position: absolute;
+        inset: 0;
+        width: 0;
+        height: 100%;
+        border-radius: 999px;
+        transition: width 0.4s ease;
     }
 }

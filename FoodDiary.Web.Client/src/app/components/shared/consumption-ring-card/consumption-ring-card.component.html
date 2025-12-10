@@ -1,4 +1,4 @@
-<fd-ui-card class="consumption-ring-card" [title]="'CONSUMPTION_RING.TITLE' | translate">
+<fd-ui-card class="consumption-ring-card">
     <div class="consumption-ring-card__layout">
         <div
             class="consumption-ring-card__chart"
@@ -108,31 +108,29 @@
             </div>
         </div>
 
-        <div class="consumption-ring-card__legend">
-            <div class="consumption-ring-card__legend-item">
-                <span class="consumption-ring-card__dot consumption-ring-card__dot--daily" aria-hidden="true"></span>
-                <div>
-                    <div class="consumption-ring-card__legend-title">
-                        {{ 'CONSUMPTION_RING.DAILY_PROGRESS' | translate }}
+        <div class="consumption-ring-card__bars">
+            @for (bar of resolvedNutrientBars(); track bar.id) {
+                <div class="consumption-ring-card__bar">
+                    <div class="consumption-ring-card__bar-header">
+                        <span class="consumption-ring-card__bar-label">{{ bar.label }}</span>
+                        <span
+                            class="consumption-ring-card__bar-value"
+                            [style.color]="getBarColor(bar)"
+                        >
+                            {{ bar.current | number:'1.0-0' }} / {{ bar.target | number:'1.0-0' }} {{ bar.unit }}
+                        </span>
                     </div>
-                    <div class="consumption-ring-card__legend-value">
-                        {{ dailyConsumed() | number:'1.0-0' }} / {{ normalizedDailyGoal() | number:'1.0-0' }}
-                        {{ 'CONSUMPTION_RING.UNIT' | translate }}
-                    </div>
-                </div>
-            </div>
-            <div class="consumption-ring-card__legend-item">
-                <span class="consumption-ring-card__dot consumption-ring-card__dot--weekly" aria-hidden="true"></span>
-                <div>
-                    <div class="consumption-ring-card__legend-title">
-                        {{ 'CONSUMPTION_RING.WEEKLY_PROGRESS' | translate }}
-                    </div>
-                    <div class="consumption-ring-card__legend-value">
-                        {{ safeWeeklyConsumed() | number:'1.0-0' }} / {{ normalizedWeeklyGoal() | number:'1.0-0' }}
-                        {{ 'CONSUMPTION_RING.UNIT' | translate }}
+                    <div class="consumption-ring-card__bar-track">
+                        <div
+                            class="consumption-ring-card__bar-fill"
+                            [style.background]="
+                                'linear-gradient(90deg, ' + bar.colorStart + ' 0%, ' + bar.colorEnd + ' 100%)'
+                            "
+                            [style.width.%]="clampPercent((bar.current / (bar.target || 1)) * 100)"
+                        ></div>
                     </div>
                 </div>
-            </div>
+            }
         </div>
     </div>
 </fd-ui-card>

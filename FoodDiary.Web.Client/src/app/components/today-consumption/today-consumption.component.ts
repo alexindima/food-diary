@@ -37,7 +37,10 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { CalorieGoalDialogComponent } from './dialogs/calorie-goal-dialog/calorie-goal-dialog.component';
 import { MacroGoalDialogComponent } from './dialogs/macro-goal-dialog/macro-goal-dialog.component';
 import { DailySummaryCardComponent, DailySummaryData } from '../daily-summary-card/daily-summary-card.component';
-import { ConsumptionRingCardComponent } from '../shared/consumption-ring-card/consumption-ring-card.component';
+import {
+    ConsumptionRingCardComponent,
+    NutrientBar
+} from '../shared/consumption-ring-card/consumption-ring-card.component';
 
 @Component({
     selector: 'fd-today-consumption',
@@ -107,6 +110,26 @@ export class TodayConsumptionComponent implements OnInit {
     public readonly weeklyConsumed = computed(() =>
         (this.snapshot()?.weeklyCalories ?? []).reduce((sum, point) => sum + (point?.calories ?? 0), 0)
     );
+    public readonly nutrientBars = computed<NutrientBar[]>(() => {
+        const snapshot = this.snapshot();
+
+        const proteins = snapshot?.statistics.averageProteins ?? 110;
+        const fats = snapshot?.statistics.averageFats ?? 45;
+        const carbs = snapshot?.statistics.averageCarbs ?? 180;
+        const fiber = snapshot?.statistics.averageFiber ?? 18;
+
+        const proteinGoal = snapshot?.statistics.proteinGoal ?? 140;
+        const fatGoal = snapshot?.statistics.fatGoal ?? 70;
+        const carbGoal = snapshot?.statistics.carbGoal ?? 250;
+        const fiberGoal = snapshot?.statistics.fiberGoal ?? 30;
+
+        return [
+            { id: 'protein', label: 'Protein', current: proteins, target: proteinGoal, unit: 'g', colorStart: '#4dabff', colorEnd: '#2563eb' },
+            { id: 'carbs', label: 'Carbs', current: carbs, target: carbGoal, unit: 'g', colorStart: '#2dd4bf', colorEnd: '#0ea5e9' },
+            { id: 'fats', label: 'Fats', current: fats, target: fatGoal, unit: 'g', colorStart: '#fbbf24', colorEnd: '#f97316' },
+            { id: 'fiber', label: 'Fiber', current: fiber, target: fiberGoal, unit: 'g', colorStart: '#fb7185', colorEnd: '#ec4899' },
+        ];
+    });
     public readonly dailySummaryData = computed<DailySummaryData>(() => {
         const consumed = this.todayCalories() || 0;
         const goal = this.dailyGoal() || 0;
@@ -154,6 +177,7 @@ export class TodayConsumptionComponent implements OnInit {
                 dailyConsumed: 1450,
                 weeklyConsumed: 6000,
                 weeklyGoal: fallbackGoal * 7,
+                nutrientBars: this.nutrientBars(),
             };
         }
 
@@ -162,6 +186,7 @@ export class TodayConsumptionComponent implements OnInit {
             dailyConsumed: consumedToday,
             weeklyConsumed,
             weeklyGoal: dailyGoal > 0 ? dailyGoal * 7 : 0,
+            nutrientBars: this.nutrientBars(),
         };
     });
 
