@@ -10,6 +10,28 @@
                 viewBox="-5 -5 270 270"
                 aria-hidden="true"
             >
+                <defs>
+                    <linearGradient
+                        [id]="dailyGradientId"
+                        x1="0%"
+                        y1="0%"
+                        x2="100%"
+                        y2="100%"
+                    >
+                        <stop offset="0%" [attr.stop-color]="dailyGradientStart()" />
+                        <stop offset="100%" [attr.stop-color]="dailyGradientEnd()" />
+                    </linearGradient>
+                    <linearGradient
+                        [id]="weeklyGradientId"
+                        x1="0%"
+                        y1="0%"
+                        x2="100%"
+                        y2="100%"
+                    >
+                        <stop offset="0%" [attr.stop-color]="weeklyGradientStart()" />
+                        <stop offset="100%" [attr.stop-color]="weeklyGradientEnd()" />
+                    </linearGradient>
+                </defs>
                 <g
                     class="consumption-ring-card__ring consumption-ring-card__ring--daily"
                     [class.is-hovered]="isDailyHovered()"
@@ -34,7 +56,7 @@
                         cy="130"
                         r="112"
                         [attr.stroke-dasharray]="dailyDasharray()"
-                        [attr.stroke]="dailyStrokeColor()"
+                        [attr.stroke]="'url(#' + dailyGradientId + ')'"
                     />
                 </g>
 
@@ -62,7 +84,7 @@
                         cy="130"
                         r="88"
                         [attr.stroke-dasharray]="weeklyDasharray()"
-                        [attr.stroke]="weeklyStrokeColor()"
+                        [attr.stroke]="'url(#' + weeklyGradientId + ')'"
                     />
                 </g>
             </svg>

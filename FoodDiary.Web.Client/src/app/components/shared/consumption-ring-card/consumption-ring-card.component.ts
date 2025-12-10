@@ -23,12 +23,18 @@ export class ConsumptionRingCardComponent {
     private readonly innerRadius = 88;
     public readonly dailyCircumference = 2 * Math.PI * this.outerRadius;
     public readonly weeklyCircumference = 2 * Math.PI * this.innerRadius;
+    private readonly gradientIdDaily = `consumption-ring-daily-${Math.random().toString(36).slice(2, 9)}`;
+    private readonly gradientIdWeekly = `consumption-ring-weekly-${Math.random().toString(36).slice(2, 9)}`;
     private readonly colorStops = [
         { percent: 0, color: '#5aa9fa' },
+        { percent: 50, color: '#3f8df0' },
         { percent: 70, color: '#3f8df0' },
+        { percent: 80, color: '#34d399' },
         { percent: 90, color: '#22c55e' },
-        { percent: 110, color: '#FBBF24' },
-        { percent: 130, color: '#F87171' },
+        { percent: 100, color: '#16a34a' },
+        { percent: 110, color: '#f59e0b' },
+        { percent: 120, color: '#f97316' },
+        { percent: 130, color: '#ef4444' },
     ];
 
     public readonly normalizedDailyGoal = computed(() => Math.max(this.dailyGoal(), 0));
@@ -56,6 +62,10 @@ export class ConsumptionRingCardComponent {
     public readonly weeklyDasharray = computed(() => this.buildDasharray(this.animatedWeeklyPercent(), this.innerRadius));
     public readonly dailyStrokeColor = computed(() => this.getColorForPercent(this.animatedDailyPercent()));
     public readonly weeklyStrokeColor = computed(() => this.getColorForPercent(this.animatedWeeklyPercent()));
+    public readonly dailyGradientStart = computed(() => this.mixWithWhite(this.dailyStrokeColor(), 0.05));
+    public readonly dailyGradientEnd = computed(() => this.mixWithWhite(this.dailyStrokeColor(), 0.15));
+    public readonly weeklyGradientStart = computed(() => this.mixWithWhite(this.weeklyStrokeColor(), 0.05));
+    public readonly weeklyGradientEnd = computed(() => this.mixWithWhite(this.weeklyStrokeColor(), 0.15));
 
     public constructor() {
         effect(onCleanup => {
@@ -164,7 +174,10 @@ export class ConsumptionRingCardComponent {
         const [r1, g1, b1] = this.hexToRgb(hexA);
         const [r2, g2, b2] = this.hexToRgb(hexB);
         const lerp = (a: number, b: number) => Math.round(a + (b - a) * t);
-        return `rgb(${lerp(r1, r2)}, ${lerp(g1, g2)}, ${lerp(b1, b2)})`;
+        const r = lerp(r1, r2);
+        const g = lerp(g1, g2);
+        const b = lerp(b1, b2);
+        return `#${this.toHex(r)}${this.toHex(g)}${this.toHex(b)}`;
     }
 
     private hexToRgb(hex: string): [number, number, number] {
@@ -178,4 +191,41 @@ export class ConsumptionRingCardComponent {
     }
 
     private readonly animationHandles = new Map<object, number>();
+
+    private toHex(value: number): string {
+        return value.toString(16).padStart(2, '0');
+    }
+
+    private parseColor(value: string): [number, number, number] {
+        if (value.startsWith('#')) {
+            return this.hexToRgb(value);
+        }
+
+        const match = value.match(/rgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)/i);
+        if (match) {
+            return [Number(match[1]), Number(match[2]), Number(match[3])];
+        }
+
+        return this.hexToRgb(this.colorStops[0]?.color ?? '#000000');
+    }
+
+    private mixWithWhite(color: string, ratio: number): string {
+        const [r, g, b] = this.parseColor(color);
+        const mix = (c: number) => Math.round(c + (255 - c) * ratio);
+        return `rgb(${mix(r)}, ${mix(g)}, ${mix(b)})`;
+    }
+
+    private mixWithDark(color: string, ratio: number): string {
+        const [r, g, b] = this.parseColor(color);
+        const mix = (c: number) => Math.round(c * (1 - ratio));
+        return `rgb(${mix(r)}, ${mix(g)}, ${mix(b)})`;
+    }
+
+    public get dailyGradientId(): string {
+        return this.gradientIdDaily;
+    }
+
+    public get weeklyGradientId(): string {
+        return this.gradientIdWeekly;
+    }
 }
