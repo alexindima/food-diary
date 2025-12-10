@@ -1,7 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { HeroComponent } from '../hero/hero.component';
 import { FeaturesComponent } from '../features/features.component';
-import { TodayConsumptionComponent } from '../today-consumption/today-consumption.component';
+import { DashboardComponent } from '../dashboard/dashboard.component';
 import { AuthService } from '../../services/auth.service';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { TranslateModule } from '@ngx-translate/core';
@@ -14,7 +14,7 @@ import { ActivatedRoute } from '@angular/router';
     imports: [
         HeroComponent,
         FeaturesComponent,
-        TodayConsumptionComponent,
+        DashboardComponent,
         FdUiButtonComponent,
         TranslateModule,
     ],

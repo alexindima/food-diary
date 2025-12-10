@@ -43,7 +43,7 @@ import {
 } from '../shared/consumption-ring-card/consumption-ring-card.component';
 
 @Component({
-    selector: 'fd-today-consumption',
+    selector: 'fd-dashboard',
     standalone: true,
     imports: [
         CommonModule,
@@ -68,11 +68,11 @@ import {
         DailySummaryCardComponent,
         ConsumptionRingCardComponent
     ],
-    templateUrl: './today-consumption.component.html',
-    styleUrl: './today-consumption.component.scss',
+    templateUrl: './dashboard.component.html',
+    styleUrl: './dashboard.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TodayConsumptionComponent implements OnInit {
+export class DashboardComponent implements OnInit {
     private readonly navigationService = inject(NavigationService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly dashboardService = inject(DashboardService);

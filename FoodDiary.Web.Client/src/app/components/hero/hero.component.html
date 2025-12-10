@@ -31,31 +31,13 @@
         <div class="hero__visual">
             <div class="hero__blob"></div>
             <div class="hero__preview-card">
-                <p class="hero__preview-title">{{ 'HERO.MOCK_TITLE' | translate }}</p>
-
-                <div class="hero__preview-block">
-                    <div class="hero__preview-heading">
-                        <p class="hero__preview-label">{{ 'HERO.MOCK_CALORIES' | translate }}</p>
-                        <p class="hero__preview-value">420 ккал</p>
-                        <p class="hero__preview-meta">{{ 'HERO.MOCK_GOAL' | translate }}</p>
-                    </div>
-                    <div class="hero__progress">
-                        <div class="hero__progress-fill"></div>
-                    </div>
-                </div>
-
-                <div class="hero__week">
-                    <p class="hero__week-title">{{ 'HERO.MOCK_TREND' | translate }}</p>
-                    <p class="hero__week-meta">12% лучше прошлой</p>
-                </div>
-
-                <div class="hero__meal">
-                    <div class="hero__meal-header">
-                        <span class="hero__meal-title">{{ 'HERO.MOCK_MEAL' | translate }} 08:30</span>
-                        <span class="hero__meal-meta">{{ 'CONSUMPTION_DETAIL.SERVINGS' | translate }}</span>
-                    </div>
-                    <p class="hero__meal-text">Овсянка, яйца, кофе</p>
-                </div>
+                <fd-consumption-ring-card
+                    [dailyGoal]="ringData.dailyGoal"
+                    [dailyConsumed]="ringData.dailyConsumed"
+                    [weeklyConsumed]="ringData.weeklyConsumed"
+                    [weeklyGoal]="ringData.weeklyGoal"
+                    [nutrientBars]="ringData.nutrientBars"
+                />
             </div>
         </div>
     </div>

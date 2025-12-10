@@ -3,15 +3,29 @@ import { Component, inject } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { NavigationService } from '../../services/navigation.service';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
+import { ConsumptionRingCardComponent, NutrientBar } from '../shared/consumption-ring-card/consumption-ring-card.component';
 
 @Component({
     selector: 'fd-hero',
-    imports: [FdUiButtonComponent, TranslateModule],
+    imports: [FdUiButtonComponent, TranslateModule, ConsumptionRingCardComponent],
     templateUrl: './hero.component.html',
     styleUrl: './hero.component.scss'
 })
 export class HeroComponent {
     private readonly navigationService = inject(NavigationService);
+
+    protected readonly ringData = {
+        dailyGoal: 2000,
+        dailyConsumed: 1450,
+        weeklyConsumed: 8200,
+        weeklyGoal: 14000,
+        nutrientBars: [
+            { id: 'protein', label: 'Protein', current: 110, target: 140, unit: 'g', colorStart: '#4dabff', colorEnd: '#2563eb' },
+            { id: 'carbs', label: 'Carbs', current: 180, target: 250, unit: 'g', colorStart: '#2dd4bf', colorEnd: '#0ea5e9' },
+            { id: 'fats', label: 'Fats', current: 45, target: 70, unit: 'g', colorStart: '#fbbf24', colorEnd: '#f97316' },
+            { id: 'fiber', label: 'Fiber', current: 18, target: 30, unit: 'g', colorStart: '#fb7185', colorEnd: '#ec4899' },
+        ] satisfies NutrientBar[],
+    };
 
     public async goToLogin(): Promise<void> {
         await this.navigationService.navigateToAuth('login');

@@ -80,6 +80,7 @@
         display: flex;
         justify-content: flex-end;
         align-items: flex-start;
+        min-height: 360px;
     }
 
     &__blob {
@@ -97,15 +98,11 @@
     &__preview-card {
         position: relative;
         z-index: 2;
-        width: min(400px, 100%);
+        width: 750px;
         background: #fff;
         border-radius: 16px;
         box-shadow: 0 22px 60px rgba(15, 23, 42, 0.14);
-        border: 1px solid rgba(17, 24, 39, 0.08);
-        padding: 16px;
-        display: flex;
-        flex-direction: column;
-        gap: 14px;
+        padding: 0;
         transform: translate(8%, -8px);
     }
 
