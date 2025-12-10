@@ -1,4 +1,4 @@
-import { CommonModule, DatePipe, DecimalPipe } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FD_UI_DIALOG_DATA, FdUiDialogRef } from 'fd-ui-kit/material';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -27,8 +27,6 @@ import { ChartData, ChartOptions } from 'chart.js';
     imports: [
         CommonModule,
         TranslatePipe,
-        DatePipe,
-        DecimalPipe,
         FdUiDialogComponent,
         FdUiDialogFooterDirective,
         FdUiButtonComponent,

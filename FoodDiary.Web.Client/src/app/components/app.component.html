@@ -1,5 +1,9 @@
-<div class="fd-root">
-    <fd-header class="fd-root__header" />
-    <router-outlet />
-    <fd-footer class="fd-root__footer" />
+<div class="fd-root" [class.fd-root--no-sidebar]="!isAuthenticated()">
+    @if (isAuthenticated()) {
+        <fd-sidebar class="fd-root__sidebar" />
+    }
+    <div class="fd-root__main">
+        <router-outlet class="fd-root__content" />
+        <fd-footer class="fd-root__footer" />
+    </div>
 </div>

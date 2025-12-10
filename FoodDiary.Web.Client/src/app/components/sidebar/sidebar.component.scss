@@ -1,0 +1,198 @@
+@use 'variables' as *;
+
+.sidebar {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 20px 16px;
+    background: linear-gradient(180deg, #f8fbff 0%, #eef4ff 100%);
+    border-right: 1px solid rgba(15, 23, 42, 0.06);
+    box-shadow: 6px 0 24px rgba(15, 23, 42, 0.06);
+
+    &__brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 12px;
+        border-radius: 14px;
+        background: #fff;
+        box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+    }
+
+    &__logo img {
+        width: 42px;
+        height: 42px;
+        object-fit: contain;
+    }
+
+    &__brand-text {
+        display: flex;
+        flex-direction: column;
+        line-height: 1.2;
+    }
+
+    &__brand-title {
+        font-weight: 800;
+        color: #0f172a;
+    }
+
+    &__brand-plan {
+        font-size: 0.85rem;
+        color: #2563eb;
+        font-weight: 700;
+    }
+
+    &__nav {
+        display: grid;
+        gap: 6px;
+        margin-top: 6px;
+    }
+
+    &__link {
+        display: grid;
+        grid-template-columns: 24px 1fr;
+        gap: 10px;
+        align-items: center;
+        padding: 10px 12px;
+        border-radius: 12px;
+        color: #475569;
+        text-decoration: none;
+        font-weight: 600;
+        transition: background 0.2s ease, color 0.2s ease;
+
+        mat-icon {
+            font-size: 20px;
+            color: #2563eb;
+        }
+
+        &:hover {
+            background: rgba(37, 99, 235, 0.08);
+            color: #0f172a;
+        }
+
+        &.is-active {
+            background: linear-gradient(135deg, #4dabff, #2563eb);
+            color: #fff;
+            box-shadow: 0 10px 26px rgba(37, 99, 235, 0.28);
+
+            mat-icon {
+                color: #fff;
+            }
+        }
+    }
+
+    &__section {
+        padding-top: 8px;
+        border-top: 1px solid rgba(15, 23, 42, 0.06);
+    }
+
+    &__section-header {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        padding: 8px 4px;
+        background: transparent;
+        border: none;
+        color: #475569;
+        font-weight: 700;
+        font-size: 0.95rem;
+        cursor: pointer;
+        letter-spacing: 0.01em;
+
+        mat-icon {
+            transition: transform 0.2s ease;
+
+            &.is-open {
+                transform: rotate(180deg);
+            }
+        }
+    }
+
+    &__nav--secondary {
+        gap: 4px;
+    }
+
+    &__nav--bottom {
+        margin-top: 4px;
+        padding-top: 4px;
+        border-top: 1px solid rgba(15, 23, 42, 0.06);
+    }
+
+    &__link--secondary {
+        padding: 8px 10px;
+        font-weight: 600;
+
+        mat-icon {
+            font-size: 18px;
+        }
+    }
+
+    &__spacer {
+        flex: 1 1 auto;
+    }
+
+    &__premium {
+        padding: 14px 12px;
+        border-radius: 14px;
+        background: linear-gradient(135deg, #0f172a, #1e293b);
+        color: #e2e8f0;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        box-shadow: 0 14px 30px rgba(15, 23, 42, 0.35);
+    }
+
+    &__premium-title {
+        font-weight: 700;
+        color: #fff;
+    }
+
+    &__premium-text {
+        font-size: 0.9rem;
+        line-height: 1.4;
+        color: #cbd5e1;
+    }
+
+    &__premium-button {
+        justify-content: center;
+        width: 100%;
+    }
+
+    &__user {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 10px;
+        align-items: center;
+        padding: 10px 12px;
+        border-radius: 12px;
+        background: #fff;
+        border: 1px solid rgba(15, 23, 42, 0.06);
+        box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+    }
+
+    &__avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        display: grid;
+        place-items: center;
+        background: linear-gradient(135deg, #60a5fa, #2563eb);
+        color: #fff;
+        font-weight: 800;
+    }
+
+    &__user-name {
+        font-weight: 700;
+        color: #0f172a;
+    }
+
+    &__user-plan {
+        font-size: 0.9rem;
+        color: #94a3b8;
+    }
+}

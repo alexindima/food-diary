@@ -1,0 +1,89 @@
+<aside class="sidebar">
+    <div class="sidebar__brand">
+        <div class="sidebar__logo">
+            <img src="assets/images/header/logo.svg" alt="Food Diary" />
+        </div>
+        <div class="sidebar__brand-text">
+            <span class="sidebar__brand-title">Food Diary</span>
+            <span class="sidebar__brand-plan">Pro</span>
+        </div>
+    </div>
+
+    <nav class="sidebar__nav">
+        <a routerLink="/" routerLinkActive="is-active" [routerLinkActiveOptions]="{ exact: true }" class="sidebar__link">
+            <mat-icon>dashboard</mat-icon>
+            <span>Dashboard</span>
+        </a>
+    </nav>
+
+    <div class="sidebar__section">
+        <button class="sidebar__section-header" type="button" (click)="toggleFoodTracking()">
+            <span>Food tracking</span>
+            <mat-icon [class.is-open]="isFoodTrackingOpen()">expand_more</mat-icon>
+        </button>
+        @if (isFoodTrackingOpen()) {
+            <nav class="sidebar__nav sidebar__nav--secondary">
+                <a routerLink="/products" routerLinkActive="is-active" class="sidebar__link sidebar__link--secondary">
+                    <mat-icon>inventory_2</mat-icon>
+                    <span>Products</span>
+                </a>
+                <a routerLink="/recipes" routerLinkActive="is-active" class="sidebar__link sidebar__link--secondary">
+                    <mat-icon>restaurant</mat-icon>
+                    <span>Recipes</span>
+                </a>
+                <a routerLink="/consumptions" routerLinkActive="is-active" class="sidebar__link sidebar__link--secondary">
+                    <mat-icon>restaurant_menu</mat-icon>
+                    <span>Food Diary</span>
+                </a>
+            </nav>
+        }
+    </div>
+
+    <div class="sidebar__section">
+        <button class="sidebar__section-header" type="button" (click)="toggleBodyTracking()">
+            <span>Body tracking</span>
+            <mat-icon [class.is-open]="isBodyTrackingOpen()">expand_more</mat-icon>
+        </button>
+        @if (isBodyTrackingOpen()) {
+            <nav class="sidebar__nav sidebar__nav--secondary">
+                <a routerLink="/weight-history" routerLinkActive="is-active" class="sidebar__link sidebar__link--secondary">
+                    <mat-icon>monitor_weight</mat-icon>
+                    <span>Weight</span>
+                </a>
+                <a routerLink="/waist-history" routerLinkActive="is-active" class="sidebar__link sidebar__link--secondary">
+                    <mat-icon>straighten</mat-icon>
+                    <span>Waist</span>
+                </a>
+                <a routerLink="/cycle-tracking" routerLinkActive="is-active" class="sidebar__link sidebar__link--secondary">
+                    <mat-icon>favorite</mat-icon>
+                    <span>Cycle</span>
+                </a>
+            </nav>
+        }
+    </div>
+
+    <div class="sidebar__spacer"></div>
+
+    <nav class="sidebar__nav sidebar__nav--secondary sidebar__nav--bottom">
+        <a routerLink="/statistics" routerLinkActive="is-active" class="sidebar__link sidebar__link--secondary">
+            <mat-icon>bar_chart</mat-icon>
+            <span>Reports</span>
+        </a>
+        <a routerLink="/profile" routerLinkActive="is-active" class="sidebar__link sidebar__link--secondary">
+            <mat-icon>flag</mat-icon>
+            <span>Goals</span>
+        </a>
+        <a routerLink="/profile" routerLinkActive="is-active" class="sidebar__link sidebar__link--secondary">
+            <mat-icon>settings</mat-icon>
+            <span>Settings</span>
+        </a>
+    </nav>
+
+    <div class="sidebar__user">
+        <div class="sidebar__avatar">U</div>
+        <div>
+            <div class="sidebar__user-name">User</div>
+            <div class="sidebar__user-plan">Free Account</div>
+        </div>
+    </div>
+</aside>
