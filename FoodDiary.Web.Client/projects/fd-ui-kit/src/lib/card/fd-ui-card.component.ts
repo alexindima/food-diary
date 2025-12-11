@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import {
   ChangeDetectionStrategy,
   Component,
@@ -13,7 +13,7 @@ export type FdUiCardAppearance = 'default' | 'product' | 'recipe' | 'info' | 'ge
 @Component({
     selector: 'fd-ui-card',
     standalone: true,
-    imports: [CommonModule],
+    imports: [],
     templateUrl: './fd-ui-card.component.html',
     styleUrls: ['./fd-ui-card.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,

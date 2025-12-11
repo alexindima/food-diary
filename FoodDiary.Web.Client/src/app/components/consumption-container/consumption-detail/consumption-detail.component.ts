@@ -1,4 +1,4 @@
-import { CommonModule, DatePipe } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FD_UI_DIALOG_DATA, FdUiDialogRef } from 'fd-ui-kit/material';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -25,15 +25,14 @@ import { ChartData, ChartOptions } from 'chart.js';
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [DatePipe],
     imports: [
-        CommonModule,
-        TranslatePipe,
-        FdUiDialogComponent,
-        FdUiDialogFooterDirective,
-        FdUiButtonComponent,
-        FdUiTabsComponent,
-        FdUiAccentSurfaceComponent,
-        BaseChartDirective,
-    ],
+    TranslatePipe,
+    FdUiDialogComponent,
+    FdUiDialogFooterDirective,
+    FdUiButtonComponent,
+    FdUiTabsComponent,
+    FdUiAccentSurfaceComponent,
+    BaseChartDirective
+],
 })
 export class ConsumptionDetailComponent {
     private readonly dialogRef = inject(FdUiDialogRef<ConsumptionDetailComponent>);

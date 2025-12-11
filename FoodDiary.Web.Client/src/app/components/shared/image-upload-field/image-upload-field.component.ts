@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -19,7 +19,7 @@ import { ImageSelection } from '../../../types/image-upload.data';
 @Component({
     selector: 'fd-image-upload-field',
     standalone: true,
-    imports: [CommonModule, FdUiButtonComponent],
+    imports: [FdUiButtonComponent],
     templateUrl: './image-upload-field.component.html',
     styleUrls: ['./image-upload-field.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
