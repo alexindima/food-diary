@@ -114,12 +114,19 @@ public static class Errors
         public static Error AlreadyExists(DateTime date) => new(
             "WaistEntry.AlreadyExists",
             $"Waist entry for {date:yyyy-MM-dd} already exists.");
-    }
+        }
 
-    public static class Cycle
-    {
-        public static Error NotFound(Guid id) => new(
-            "Cycle.NotFound",
+        public static class HydrationEntry
+        {
+            public static Error NotFound(Guid id) => new(
+                "HydrationEntry.NotFound",
+                $"Hydration entry with id '{id}' not found");
+        }
+
+        public static class Cycle
+        {
+            public static Error NotFound(Guid id) => new(
+                "Cycle.NotFound",
             $"Cycle with ID {id} was not found.");
     }
 

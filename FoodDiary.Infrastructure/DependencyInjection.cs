@@ -30,6 +30,7 @@ public static class DependencyInjection
         services.AddScoped<IMealRepository, MealRepository>();
         services.AddScoped<IWeightEntryRepository, WeightEntryRepository>();
         services.AddScoped<IWaistEntryRepository, WaistEntryRepository>();
+        services.AddScoped<IHydrationEntryRepository, HydrationEntryRepository>();
         services.AddScoped<ICycleRepository, CycleRepository>();
         services.AddScoped<IImageAssetRepository, ImageAssetRepository>();
         services.AddSingleton<IAmazonS3>(provider =>

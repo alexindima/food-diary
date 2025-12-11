@@ -22,6 +22,7 @@ export interface User {
     fiberTarget?: number;
     stepGoal?: number;
     waterGoal?: number;
+    hydrationGoal?: number;
     profileImage?: string;
     isActive: boolean;
     calories?: number; // Local field, not from backend
@@ -41,6 +42,7 @@ export class UpdateUserDto {
     public carbTarget?: number;
     public stepGoal?: number;
     public waterGoal?: number;
+    public hydrationGoal?: number;
     public profileImage?: string;
     public isActive?: boolean;
     public fiberTarget?: number;
@@ -60,6 +62,7 @@ export class UpdateUserDto {
         this.fiberTarget = normalizeNumber((formValues as any).fiberTarget);
         this.stepGoal = normalizeInteger(formValues.stepGoal);
         this.waterGoal = normalizeNumber(formValues.waterGoal);
+        this.hydrationGoal = normalizeNumber((formValues as any).hydrationGoal);
         this.profileImage = normalizeString(formValues.profileImage);
         this.isActive = true;
     }

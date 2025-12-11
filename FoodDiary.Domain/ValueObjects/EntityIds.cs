@@ -169,3 +169,17 @@ public readonly record struct ImageAssetId(Guid Value) : IEntityId<Guid>
 
     public override string ToString() => Value.ToString();
 }
+
+/// <summary>
+/// Identifier for hydration entries.
+/// </summary>
+public readonly record struct HydrationEntryId(Guid Value) : IEntityId<Guid>
+{
+    public static HydrationEntryId New() => new(Guid.NewGuid());
+    public static HydrationEntryId Empty => new(Guid.Empty);
+
+    public static implicit operator Guid(HydrationEntryId id) => id.Value;
+    public static explicit operator HydrationEntryId(Guid value) => new(value);
+
+    public override string ToString() => Value.ToString();
+}

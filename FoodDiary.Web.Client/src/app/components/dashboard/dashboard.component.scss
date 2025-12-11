@@ -57,7 +57,7 @@ $color-primary: #2563eb;
     }
 
     &__column--aside {
-        grid-template-rows: auto auto;
+        grid-auto-rows: auto;
     }
 
     &__row {
@@ -95,6 +95,10 @@ $color-primary: #2563eb;
             > .fd-ui-card {
                 min-height: 340px;
             }
+        }
+
+        &--hydration {
+            height: auto;
         }
 
         &--motivation-wide {

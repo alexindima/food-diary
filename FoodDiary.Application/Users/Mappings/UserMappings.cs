@@ -27,6 +27,7 @@ public static class UserMappings
             user.FiberTarget,
             user.StepGoal,
             user.WaterGoal,
+            user.HydrationGoal,
             user.ProfileImage,
             user.IsActive
         );

@@ -15,4 +15,5 @@ export interface AppConfigApiUrls {
     cycles: string;
     dashboard: string;
     images: string;
+    hydration: string;
 }

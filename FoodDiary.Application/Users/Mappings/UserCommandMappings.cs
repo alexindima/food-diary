@@ -26,6 +26,7 @@ public static class UserCommandMappings
             request.FiberTarget,
             request.StepGoal,
             request.WaterGoal,
+            request.HydrationGoal,
             request.ProfileImage,
             request.IsActive
         );

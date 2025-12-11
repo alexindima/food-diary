@@ -22,6 +22,7 @@ public record UserResponse(
     double? FiberTarget,
     int? StepGoal,
     double? WaterGoal,
+    double? HydrationGoal,
     string? ProfileImage,
     bool IsActive
 );

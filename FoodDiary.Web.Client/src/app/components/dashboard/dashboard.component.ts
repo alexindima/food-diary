@@ -41,6 +41,9 @@ import {
     ConsumptionRingCardComponent,
     NutrientBar
 } from '../shared/consumption-ring-card/consumption-ring-card.component';
+import { HydrationService } from '../../services/hydration.service';
+import { HydrationCardComponent } from '../shared/hydration-card/hydration-card.component';
+import { HydrationDaily } from '../../types/hydration.data';
 
 @Component({
     selector: 'fd-dashboard',
@@ -66,7 +69,8 @@ import {
         QuickActionsSectionComponent,
         MealCardComponent,
         DailySummaryCardComponent,
-        ConsumptionRingCardComponent
+        ConsumptionRingCardComponent,
+        HydrationCardComponent
     ],
     templateUrl: './dashboard.component.html',
     styleUrl: './dashboard.component.scss',
@@ -77,6 +81,7 @@ export class DashboardComponent implements OnInit {
     private readonly destroyRef = inject(DestroyRef);
     private readonly dashboardService = inject(DashboardService);
     private readonly dialogService = inject(FdUiDialogService);
+    private readonly hydrationService = inject(HydrationService);
 
     private readonly headerDatePicker = viewChild<FdUiDatepicker<Date>>('headerDatePicker');
 
@@ -110,6 +115,9 @@ export class DashboardComponent implements OnInit {
     public readonly weeklyConsumed = computed(() =>
         (this.snapshot()?.weeklyCalories ?? []).reduce((sum, point) => sum + (point?.calories ?? 0), 0)
     );
+    public readonly hydration = signal<HydrationDaily | null>(null);
+    public readonly isHydrationLoading = signal<boolean>(false);
+
     public readonly nutrientBars = computed<NutrientBar[]>(() => {
         const snapshot = this.snapshot();
 
@@ -192,6 +200,7 @@ export class DashboardComponent implements OnInit {
 
     public ngOnInit(): void {
         this.loadDashboardSnapshot();
+        this.loadHydration();
     }
 
     public openDatePicker(): void {
@@ -262,6 +271,7 @@ export class DashboardComponent implements OnInit {
 
     private fetchDashboardData(): void {
         this.loadDashboardSnapshot();
+        this.loadHydration();
     }
 
     private loadDashboardSnapshot(): void {
@@ -283,6 +293,25 @@ export class DashboardComponent implements OnInit {
             });
     }
 
+    private loadHydration(): void {
+        const targetDate = this.selectedDate();
+        this.isHydrationLoading.set(true);
+
+        this.hydrationService
+            .getDaily(targetDate)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe({
+                next: daily => {
+                    this.hydration.set(daily);
+                    this.isHydrationLoading.set(false);
+                },
+                error: () => {
+                    this.hydration.set({ dateUtc: targetDate.toISOString(), totalMl: 0, goalMl: null });
+                    this.isHydrationLoading.set(false);
+                },
+            });
+    }
+
     private normalizeDate(date: Date): Date {
         const normalized = new Date(date);
         normalized.setHours(0, 0, 0, 0);
@@ -295,5 +324,16 @@ export class DashboardComponent implements OnInit {
 
     public async manageConsumptions(): Promise<void> {
         await this.navigationService.navigateToConsumptionList();
+    }
+
+    public addHydration(amount: number): void {
+        this.isHydrationLoading.set(true);
+        this.hydrationService
+            .addEntry(amount)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe({
+                next: () => this.loadHydration(),
+                error: () => this.isHydrationLoading.set(false),
+            });
     }
 }

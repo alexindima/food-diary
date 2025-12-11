@@ -38,6 +38,7 @@ public class UpdateUserCommandHandler(IUserRepository userRepository)
             fiberTarget: command.FiberTarget,
             stepGoal: command.StepGoal,
             waterGoal: command.WaterGoal,
+            hydrationGoal: command.HydrationGoal,
             profileImage: Normalize(command.ProfileImage)
         );
 

@@ -16,5 +16,6 @@ export const environment: AppConfig = {
         cycles: `${serverUrl}/api/cycles`,
         dashboard: `${serverUrl}/api/dashboard`,
         images: `${serverUrl}/api/images`,
+        hydration: `${serverUrl}/api/hydrations`,
     },
 };

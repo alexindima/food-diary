@@ -88,6 +88,14 @@
                 </div>
 
                 <div class="dashboard__column dashboard__column--aside">
+                    <fd-hydration-card
+                        class="dashboard__card dashboard__card--hydration"
+                        [total]="hydration()?.totalMl ?? 0"
+                        [goal]="hydration()?.goalMl ?? 2500"
+                        [isLoading]="isHydrationLoading()"
+                        (addClick)="addHydration($event)"
+                    />
+
                     <fd-macro-summary
                         class="dashboard__card dashboard__card--macros"
                         [nutrientData]="nutrientChartData()"

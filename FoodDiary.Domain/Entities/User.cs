@@ -28,6 +28,7 @@ public sealed class User : AggregateRoot<UserId> {
     public double? FiberTarget { get; private set; }
     public int? StepGoal { get; private set; }
     public double? WaterGoal { get; private set; }
+    public double? HydrationGoal { get; private set; }
     public string? ProfileImage { get; private set; }
     public bool IsActive { get; private set; } = true;
 
@@ -38,6 +39,7 @@ public sealed class User : AggregateRoot<UserId> {
     public ICollection<WeightEntry> WeightEntries { get; private set; } = new List<WeightEntry>();
     public ICollection<WaistEntry> WaistEntries { get; private set; } = new List<WaistEntry>();
     public ICollection<Cycle> Cycles { get; private set; } = new List<Cycle>();
+    public ICollection<HydrationEntry> HydrationEntries { get; private set; } = new List<HydrationEntry>();
 
     // Конструктор для EF Core
     private User() {
@@ -81,6 +83,7 @@ public sealed class User : AggregateRoot<UserId> {
         double? fiberTarget = null,
         int? stepGoal = null,
         double? waterGoal = null,
+        double? hydrationGoal = null,
         string? profileImage = null) {
         if (username is not null) Username = username;
         if (firstName is not null) FirstName = firstName;
@@ -98,6 +101,7 @@ public sealed class User : AggregateRoot<UserId> {
         if (fiberTarget.HasValue) FiberTarget = fiberTarget;
         if (stepGoal.HasValue) StepGoal = stepGoal;
         if (waterGoal.HasValue) WaterGoal = waterGoal;
+        if (hydrationGoal.HasValue) HydrationGoal = hydrationGoal;
         if (profileImage is not null) ProfileImage = profileImage;
 
         SetModified();

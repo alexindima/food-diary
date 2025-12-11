@@ -16,6 +16,7 @@ public record UpdateUserRequest(
     double? FiberTarget,
     int? StepGoal,
     double? WaterGoal,
+    double? HydrationGoal,
     string? ProfileImage,
     bool? IsActive
 );

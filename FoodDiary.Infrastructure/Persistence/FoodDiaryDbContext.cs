@@ -21,6 +21,7 @@ public class FoodDiaryDbContext : DbContext
     public DbSet<WaistEntry> WaistEntries => Set<WaistEntry>();
     public DbSet<Cycle> Cycles => Set<Cycle>();
     public DbSet<CycleDay> CycleDays => Set<CycleDay>();
+    public DbSet<HydrationEntry> HydrationEntries => Set<HydrationEntry>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -45,6 +46,11 @@ public class FoodDiaryDbContext : DbContext
             entity.HasMany(e => e.WaistEntries)
                 .WithOne(w => w.User)
                 .HasForeignKey(w => w.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasMany(e => e.HydrationEntries)
+                .WithOne(h => h.User)
+                .HasForeignKey(h => h.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
         });
 
@@ -352,6 +358,30 @@ public class FoodDiaryDbContext : DbContext
                 builder.Property(s => s.SleepQuality).HasColumnName("SleepQuality").IsRequired();
                 builder.Property(s => s.Libido).HasColumnName("Libido").IsRequired();
             });
+        });
+
+        modelBuilder.Entity<HydrationEntry>(entity =>
+        {
+            entity.Property(e => e.Id).HasConversion(
+                id => id.Value,
+                value => new HydrationEntryId(value));
+
+            entity.Property(e => e.UserId).HasConversion(
+                id => id.Value,
+                value => new UserId(value));
+
+            entity.Property(e => e.Timestamp)
+                .HasColumnType("timestamp with time zone");
+
+            entity.Property(e => e.AmountMl)
+                .IsRequired();
+
+            entity.HasIndex(e => new { e.UserId, e.Timestamp }).HasDatabaseName("IX_HydrationEntries_User_Timestamp");
+
+            entity.HasOne(e => e.User)
+                .WithMany(u => u.HydrationEntries)
+                .HasForeignKey(e => e.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
         });
     }
 }
