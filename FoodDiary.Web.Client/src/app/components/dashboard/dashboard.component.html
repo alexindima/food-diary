@@ -55,36 +55,39 @@
                         [nutrientBars]="consumptionRingData().nutrientBars"
                     />
 
-                    <app-daily-summary-card
-                        class="dashboard__card dashboard__card--summary"
-                        [data]="dailySummaryData()"
-                    />
+                    <section class="dashboard__meals">
+                        <div class="dashboard__section-header">
+                            <div>
+                                <h2 class="dashboard__section-title">{{ 'DASHBOARD.MEALS_TITLE' | translate }}</h2>
+                            </div>
+                            <fd-ui-button
+                                variant="primary"
+                                fill="text"
+                                size="sm"
+                                icon="open_in_new"
+                                (click)="manageConsumptions()"
+                            >
+                                {{ 'DASHBOARD.MEALS_VIEW_ALL' | translate }}
+                            </fd-ui-button>
+                        </div>
 
-                    <fd-daily-progress-card
-                        class="dashboard__card dashboard__card--progress"
-                        [date]="selectedDate()"
-                        [consumed]="todayCalories()"
-                        [goal]="dailyGoal()"
-                        (setGoalClick)="openCalorieGoalDialog()"
-                        (settingsClick)="openCalorieGoalDialog()"
-                    />
+                        @if (meals().length === 0) {
+                            <div class="dashboard__empty">
+                                {{ 'DASHBOARD.MEALS_EMPTY' | translate }}
+                            </div>
+                        } @else {
+                            <div class="dashboard__meal-list">
+                                @for (meal of meals(); track meal.id) {
+                                    <fd-meal-card
+                                        class="dashboard__meal-card"
+                                        [meal]="meal"
+                                        (open)="openConsumption(meal)"
+                                    />
+                                }
+                            </div>
+                        }
+                    </section>
 
-                    <div class="dashboard__row dashboard__row--pair">
-                        <fd-weight-summary-card
-                            class="dashboard__card dashboard__card--weight dashboard__card--clickable"
-                            [latest]="latestWeight()"
-                            [previous]="previousWeight()"
-                            [desired]="desiredWeight()"
-                            (cardClick)="openWeightHistory()"
-                        />
-                        <fd-waist-summary-card
-                            class="dashboard__card dashboard__card--waist dashboard__card--clickable"
-                            [latest]="latestWaist()"
-                            [previous]="previousWaist()"
-                            [desired]="desiredWaist()"
-                            (cardClick)="openWaistHistory()"
-                        />
-                    </div>
                 </div>
 
                 <div class="dashboard__column dashboard__column--aside">
@@ -95,60 +98,31 @@
                         [isLoading]="isHydrationLoading()"
                         (addClick)="addHydration($event)"
                     />
-
-                    <fd-macro-summary
-                        class="dashboard__card dashboard__card--macros"
-                        [nutrientData]="nutrientChartData()"
-                        [fiber]="todayFiber() ?? 0"
-                        [proteinGoal]="proteinGoal()"
-                        [fatGoal]="fatGoal()"
-                        [carbGoal]="carbGoal()"
-                        [fiberGoal]="fiberGoal()"
-                        (settingsClick)="openMacroGoalDialog()"
+                    <fd-weight-trend-card
+                        class="dashboard__card dashboard__card--weight-trend"
+                        [currentWeight]="weightTrendCurrent()"
+                        [change]="weightTrendChange()"
+                        [points]="weightTrendSeries()"
+                        [timeframeLabel]="'WEIGHT_TREND_CARD.LAST_7_DAYS' | translate"
+                        [isLoading]="isWeightTrendLoading()"
+                    />
+                    <fd-weight-trend-card
+                        class="dashboard__card dashboard__card--waist-trend"
+                        [title]="'WAIST_CARD.TITLE'"
+                        [currentWeight]="waistTrendCurrent()"
+                        [change]="waistTrendChange()"
+                        [points]="waistTrendSeries()"
+                        [timeframeLabel]="'WEIGHT_TREND_CARD.LAST_7_DAYS' | translate"
+                        [unitKey]="'WAIST_CARD.CM'"
+                        [iconLabel]="'WS'"
+                        [accentColor]="'#0ea5e9'"
+                        [iconGradient]="'linear-gradient(135deg, #22c55e, #10b981)'"
+                        [isLoading]="isWaistTrendLoading()"
                     />
 
-                    <fd-activity-card
-                        class="dashboard__card dashboard__card--activity"
-                        [burnedCalories]="215"
-                        [steps]="5420"
-                    />
                 </div>
             </section>
 
-            <fd-quick-actions-section />
-
-            <section class="dashboard__meals">
-                <div class="dashboard__section-header">
-                    <div>
-                        <h2 class="dashboard__section-title">{{ 'DASHBOARD.MEALS_TITLE' | translate }}</h2>
-                    </div>
-                    <fd-ui-button
-                        variant="primary"
-                        fill="text"
-                        size="sm"
-                        icon="open_in_new"
-                        (click)="manageConsumptions()"
-                    >
-                        {{ 'DASHBOARD.MEALS_VIEW_ALL' | translate }}
-                    </fd-ui-button>
-                </div>
-
-                @if (meals().length === 0) {
-                    <div class="dashboard__empty">
-                        {{ 'DASHBOARD.MEALS_EMPTY' | translate }}
-                    </div>
-                } @else {
-                    <div class="dashboard__meal-list">
-                        @for (meal of meals(); track meal.id) {
-                            <fd-meal-card
-                                class="dashboard__meal-card"
-                                [meal]="meal"
-                                (open)="openConsumption(meal)"
-                            />
-                        }
-                    </div>
-                }
-            </section>
         }
     </fd-page-body>
 </div>

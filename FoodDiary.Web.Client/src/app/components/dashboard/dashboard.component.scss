@@ -106,28 +106,6 @@ $color-primary: #2563eb;
         }
     }
 
-    &__macros {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-        gap: 16px;
-    }
-
-    &__macro {
-        display: flex;
-        flex-direction: column;
-        gap: 4px;
-    }
-
-    &__macro-label {
-        font-size: 0.9rem;
-        color: $color-text-secondary;
-    }
-
-    &__macro-value {
-        font-size: 1.2rem;
-        color: $color-text-main;
-    }
-
     &__weight-summary {
         display: flex;
         flex-direction: column;
@@ -308,53 +286,6 @@ $color-primary: #2563eb;
                 white-space: normal;
             }
         }
-    }
-
-    &__quick-actions {
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-    }
-
-    &__quick-actions-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-        gap: 16px;
-    }
-
-    &__quick-card {
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-    }
-
-    &__quick-card-content {
-        display: flex;
-        gap: 12px;
-        align-items: center;
-    }
-
-    &__quick-card-icon {
-        width: 44px;
-        height: 44px;
-        border-radius: 12px;
-        background: rgba(37, 99, 235, 0.12);
-        color: $color-primary;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.4rem;
-    }
-
-    &__quick-card-title {
-        margin: 0 0 2px;
-        font-size: 1rem;
-        font-weight: 600;
-    }
-
-    &__quick-card-description {
-        font-size: 0.85rem;
-        color: $color-text-secondary;
     }
 
     @media #{$media-mobile} {

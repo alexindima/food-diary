@@ -1,0 +1,50 @@
+<div class="weight-trend-card" [class.weight-trend-card--loading]="isLoading()">
+    <div class="weight-trend-card__header">
+        <div class="weight-trend-card__icon" [style.background]="iconGradient()" aria-hidden="true">
+            {{ iconLabel() }}
+        </div>
+        <div class="weight-trend-card__title-block">
+            <div class="weight-trend-card__title">{{ title() | translate }}</div>
+            <div
+                class="weight-trend-card__delta"
+                [class.weight-trend-card__delta--positive]="changeTone() === 'positive'"
+                [class.weight-trend-card__delta--negative]="changeTone() === 'negative'"
+            >
+                @if (formattedChangeValue()) {
+                    {{ formattedChangeValue() }} {{ unitKey() | translate }}
+                } @else {
+                    -- {{ unitKey() | translate }}
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="weight-trend-card__value-row">
+        <div class="weight-trend-card__value">
+            @if (hasValue()) {
+                {{ currentWeight() | number: '1.0-1' }}
+            } @else {
+                --
+            }
+        </div>
+        <div class="weight-trend-card__unit">{{ unitKey() | translate }}</div>
+    </div>
+
+    @if (chartData()) {
+        <div class="weight-trend-card__chart">
+            <canvas
+                baseChart
+                [type]="'line'"
+                [data]="chartData()!"
+                [options]="chartOptions"
+                aria-hidden="true"
+            ></canvas>
+        </div>
+    } @else {
+        <div class="weight-trend-card__empty">{{ 'WEIGHT_TREND_CARD.NO_DATA' | translate }}</div>
+    }
+
+    <div class="weight-trend-card__footer">
+        {{ timeframeLabel() || ('WEIGHT_TREND_CARD.LAST_7_DAYS' | translate) }}
+    </div>
+</div>

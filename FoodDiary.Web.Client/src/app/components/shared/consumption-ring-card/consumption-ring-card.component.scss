@@ -1,6 +1,24 @@
 @use 'variables' as *;
 
+:host {
+    display: block;
+}
+
 .consumption-ring-card {
+    --crc-surface: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    border-radius: 22px;
+    padding: 18px 18px 20px;
+    background: var(--crc-surface);
+    box-shadow: 0 18px 34px rgba(15, 23, 42, 0.16);
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    color: $color-text-main;
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 22px 40px rgba(15, 23, 42, 0.18);
+    }
+
     &__layout {
         display: grid;
         grid-template-columns: 1fr 1fr;

@@ -1021,6 +1021,10 @@
         "NO_CHANGE": "No change since last log",
         "NO_DATA": "Add your weight to begin"
     },
+    "WEIGHT_TREND_CARD": {
+        "LAST_7_DAYS": "Last 7 days",
+        "NO_DATA": "No weight data yet"
+    },
     "WAIST_CARD": {
         "TITLE": "Waist trend",
         "CM": "cm",
@@ -1077,6 +1081,5 @@
         }
     }
 }
-
 
 

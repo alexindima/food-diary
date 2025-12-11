@@ -11,7 +11,6 @@ import {
 } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { NavigationService } from '../../services/navigation.service';
-import { NutrientData } from '../../types/charts.data';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { Consumption } from '../../types/consumption.data';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -23,20 +22,12 @@ import { FdUiIconModule } from 'fd-ui-kit/material';
 import { PageHeaderComponent } from '../shared/page-header/page-header.component';
 import { PageBodyComponent } from '../shared/page-body/page-body.component';
 import { FdPageContainerDirective } from '../../directives/layout/page-container.directive';
-import { DailyProgressCardComponent } from '../shared/daily-progress-card/daily-progress-card.component';
 import { LocalizedDatePipe } from '../../pipes/localized-date.pipe';
-import { MacroSummaryComponent } from '../shared/macro-summary/macro-summary.component';
 import { DashboardService } from '../../services/dashboard.service';
 import { DashboardSnapshot } from '../../types/dashboard.data';
-import { WeightSummaryCardComponent } from '../shared/weight-summary-card/weight-summary-card.component';
-import { WaistSummaryCardComponent } from '../shared/waist-summary-card/waist-summary-card.component';
-import { ActivityCardComponent } from '../shared/activity-card/activity-card.component';
-import { QuickActionsSectionComponent } from '../shared/quick-actions/quick-actions-section/quick-actions-section.component';
 import { MealCardComponent } from '../shared/meal-card/meal-card.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { CalorieGoalDialogComponent } from './dialogs/calorie-goal-dialog/calorie-goal-dialog.component';
-import { MacroGoalDialogComponent } from './dialogs/macro-goal-dialog/macro-goal-dialog.component';
-import { DailySummaryCardComponent, DailySummaryData } from '../daily-summary-card/daily-summary-card.component';
 import {
     ConsumptionRingCardComponent,
     NutrientBar
@@ -44,6 +35,11 @@ import {
 import { HydrationService } from '../../services/hydration.service';
 import { HydrationCardComponent } from '../shared/hydration-card/hydration-card.component';
 import { HydrationDaily } from '../../types/hydration.data';
+import { WeightEntriesService } from '../../services/weight-entries.service';
+import { WeightEntrySummaryPoint } from '../../types/weight-entry.data';
+import { WeightTrendCardComponent, WeightTrendPoint } from '../shared/weight-trend-card/weight-trend-card.component';
+import { WaistEntriesService } from '../../services/waist-entries.service';
+import { WaistEntrySummaryPoint } from '../../types/waist-entry.data';
 
 @Component({
     selector: 'fd-dashboard',
@@ -59,17 +55,11 @@ import { HydrationDaily } from '../../types/hydration.data';
     PageHeaderComponent,
     PageBodyComponent,
     FdPageContainerDirective,
-    DailyProgressCardComponent,
     LocalizedDatePipe,
-    MacroSummaryComponent,
-    WeightSummaryCardComponent,
-    WaistSummaryCardComponent,
-    ActivityCardComponent,
-    QuickActionsSectionComponent,
     MealCardComponent,
-    DailySummaryCardComponent,
     ConsumptionRingCardComponent,
-    HydrationCardComponent
+    HydrationCardComponent,
+    WeightTrendCardComponent
 ],
     templateUrl: './dashboard.component.html',
     styleUrl: './dashboard.component.scss',
@@ -81,6 +71,8 @@ export class DashboardComponent implements OnInit {
     private readonly dashboardService = inject(DashboardService);
     private readonly dialogService = inject(FdUiDialogService);
     private readonly hydrationService = inject(HydrationService);
+    private readonly weightEntriesService = inject(WeightEntriesService);
+    private readonly waistEntriesService = inject(WaistEntriesService);
 
     private readonly headerDatePicker = viewChild<FdUiDatepicker<Date>>('headerDatePicker');
 
@@ -94,16 +86,6 @@ export class DashboardComponent implements OnInit {
 
     public readonly dailyGoal = computed(() => this.snapshot()?.dailyGoal ?? 0);
     public readonly todayCalories = computed(() => this.snapshot()?.statistics.totalCalories ?? 0);
-    public readonly nutrientChartData = computed<NutrientData>(() => ({
-        proteins: this.snapshot()?.statistics.averageProteins ?? 0,
-        fats: this.snapshot()?.statistics.averageFats ?? 0,
-        carbs: this.snapshot()?.statistics.averageCarbs ?? 0,
-    }));
-    public readonly proteinGoal = computed(() => this.snapshot()?.statistics.proteinGoal ?? null);
-    public readonly fatGoal = computed(() => this.snapshot()?.statistics.fatGoal ?? null);
-    public readonly carbGoal = computed(() => this.snapshot()?.statistics.carbGoal ?? null);
-    public readonly fiberGoal = computed(() => this.snapshot()?.statistics.fiberGoal ?? null);
-    public readonly todayFiber = computed(() => this.snapshot()?.statistics.averageFiber ?? null);
     public readonly meals = computed<Consumption[]>(() => this.snapshot()?.meals.items ?? []);
     public readonly latestWeight = computed(() => this.snapshot()?.weight.latest?.weight ?? null);
     public readonly previousWeight = computed(() => this.snapshot()?.weight.previous?.weight ?? null);
@@ -116,6 +98,10 @@ export class DashboardComponent implements OnInit {
     );
     public readonly hydration = signal<HydrationDaily | null>(null);
     public readonly isHydrationLoading = signal<boolean>(false);
+    public readonly weightTrendPoints = signal<WeightEntrySummaryPoint[]>([]);
+    public readonly isWeightTrendLoading = signal<boolean>(false);
+    public readonly waistTrendPoints = signal<WaistEntrySummaryPoint[]>([]);
+    public readonly isWaistTrendLoading = signal<boolean>(false);
 
     public readonly nutrientBars = computed<NutrientBar[]>(() => {
         const snapshot = this.snapshot();
@@ -136,39 +122,6 @@ export class DashboardComponent implements OnInit {
             { id: 'fats', label: 'Fats', current: fats, target: fatGoal, unit: 'g', colorStart: '#fbbf24', colorEnd: '#f97316' },
             { id: 'fiber', label: 'Fiber', current: fiber, target: fiberGoal, unit: 'g', colorStart: '#fb7185', colorEnd: '#ec4899' },
         ];
-    });
-    public readonly dailySummaryData = computed<DailySummaryData>(() => {
-        const consumed = this.todayCalories() || 0;
-        const goal = this.dailyGoal() || 0;
-        const percentage = goal > 0 ? Math.round((consumed / goal) * 100) : 0;
-        const remaining = goal > 0 ? Math.max(goal - consumed, 0) : undefined;
-        const latestMeal = this.meals()[0];
-        const weeklyProgress =
-            this.snapshot()?.weeklyCalories?.map((point, index, arr) => {
-                const date = new Date(point.date);
-                const isToday = index === arr.length - 1;
-                return {
-                    date,
-                    calories: point.calories,
-                    isToday,
-                };
-            }) ?? [];
-        return {
-            mode: 'full',
-            sectionTitle: 'Съедено сегодня',
-            eatenTodayKcal: consumed,
-            goalKcal: goal,
-            percentage,
-            remainingKcal: remaining,
-            weeklyDiffText: undefined,
-            weeklyDiffType: 'neutral',
-            motivationText: undefined,
-            weeklyProgress,
-            lastMealTitle: latestMeal?.mealType || undefined,
-            lastMealDescription: latestMeal?.comment || undefined,
-            showSettings: true,
-            onSettingsClick: () => this.openCalorieGoalDialog(),
-        };
     });
     public readonly consumptionRingData = computed(() => {
         const snapshot = this.snapshot();
@@ -196,10 +149,44 @@ export class DashboardComponent implements OnInit {
             nutrientBars: this.nutrientBars(),
         };
     });
+    public readonly weightTrendSeries = computed<WeightTrendPoint[]>(() =>
+        this.weightTrendPoints().map(point => ({
+            date: point.dateFrom,
+            value: point.averageWeight > 0 ? point.averageWeight : null,
+        })).length
+            ? this.weightTrendPoints().map(point => ({
+                  date: point.dateFrom,
+                  value: point.averageWeight > 0 ? point.averageWeight : null,
+              }))
+            : this.buildFallbackWeightTrend(),
+    );
+    public readonly weightTrendChange = computed(() => {
+        const ordered = [...this.weightTrendSeries()].sort(
+            (a, b) => new Date(a.date as string).getTime() - new Date(b.date as string).getTime(),
+        );
+        const first = ordered.find(point => point.value !== null && point.value !== undefined);
+        const last = [...ordered].reverse().find(point => point.value !== null && point.value !== undefined);
+
+        if (!first || !last) {
+            return null;
+        }
+
+        const diff = (last.value ?? 0) - (first.value ?? 0);
+        return Math.round(diff * 10) / 10;
+    });
+    public readonly weightTrendCurrent = computed(() => {
+        const ordered = [...this.weightTrendSeries()].sort(
+            (a, b) => new Date(a.date as string).getTime() - new Date(b.date as string).getTime(),
+        );
+        const last = [...ordered].reverse().find(point => point.value !== null && point.value !== undefined);
+        return last?.value ?? this.latestWeight() ?? null;
+    });
 
     public ngOnInit(): void {
         this.loadDashboardSnapshot();
         this.loadHydration();
+        this.loadWeightTrend();
+        this.loadWaistTrend();
     }
 
     public openDatePicker(): void {
@@ -248,29 +235,11 @@ export class DashboardComponent implements OnInit {
             });
     }
 
-    public openMacroGoalDialog(): void {
-        this.dialogService
-            .open(MacroGoalDialogComponent, {
-                size: 'md',
-                data: {
-                    proteinTarget: this.proteinGoal(),
-                    fatTarget: this.fatGoal(),
-                    carbTarget: this.carbGoal(),
-                    fiberTarget: this.fiberGoal(),
-                },
-            })
-            .afterClosed()
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(saved => {
-                if (saved) {
-                    this.loadDashboardSnapshot();
-                }
-            });
-    }
-
     private fetchDashboardData(): void {
         this.loadDashboardSnapshot();
         this.loadHydration();
+        this.loadWeightTrend();
+        this.loadWaistTrend();
     }
 
     private loadDashboardSnapshot(): void {
@@ -334,5 +303,145 @@ export class DashboardComponent implements OnInit {
                 next: () => this.loadHydration(),
                 error: () => this.isHydrationLoading.set(false),
             });
+    }
+
+    private loadWeightTrend(): void {
+        const { start, end } = this.getWeightTrendRange();
+        this.isWeightTrendLoading.set(true);
+
+        this.weightEntriesService
+            .getSummary({
+                dateFrom: start.toISOString(),
+                dateTo: end.toISOString(),
+                quantizationDays: 1,
+            })
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe({
+                next: points => {
+                    this.weightTrendPoints.set(points);
+                    this.isWeightTrendLoading.set(false);
+                },
+                error: () => {
+                    this.weightTrendPoints.set([]);
+                    this.isWeightTrendLoading.set(false);
+                },
+            });
+    }
+
+    private getWeightTrendRange(): { start: Date; end: Date } {
+        const end = this.selectedDate();
+        const start = new Date(end);
+        start.setDate(start.getDate() - 6);
+
+        return {
+            start: this.normalizeStartOfDayUtc(start),
+            end: this.normalizeEndOfDayUtc(end),
+        };
+    }
+
+    private normalizeStartOfDayUtc(date: Date): Date {
+        return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+    }
+
+    private normalizeEndOfDayUtc(date: Date): Date {
+        return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59, 999));
+    }
+
+    private buildFallbackWeightTrend(): WeightTrendPoint[] {
+        const latest = this.latestWeight();
+        if (!latest) {
+            return [];
+        }
+
+        const { start } = this.getWeightTrendRange();
+        const points: WeightTrendPoint[] = [];
+
+        for (let i = 0; i < 7; i++) {
+            const date = new Date(start);
+            date.setDate(start.getDate() + i);
+            points.push({
+                date: date.toISOString(),
+                value: latest,
+            });
+        }
+
+        return points;
+    }
+
+    public readonly waistTrendSeries = computed<WeightTrendPoint[]>(() =>
+        this.waistTrendPoints().map(point => ({
+            date: point.dateFrom,
+            value: point.averageCircumference > 0 ? point.averageCircumference : null,
+        })).length
+            ? this.waistTrendPoints().map(point => ({
+                  date: point.dateFrom,
+                  value: point.averageCircumference > 0 ? point.averageCircumference : null,
+              }))
+            : this.buildFallbackWaistTrend(),
+    );
+    public readonly waistTrendChange = computed(() => {
+        const ordered = [...this.waistTrendSeries()].sort(
+            (a, b) => new Date(a.date as string).getTime() - new Date(b.date as string).getTime(),
+        );
+        const first = ordered.find(point => point.value !== null && point.value !== undefined);
+        const last = [...ordered].reverse().find(point => point.value !== null && point.value !== undefined);
+
+        if (!first || !last) {
+            return null;
+        }
+
+        const diff = (last.value ?? 0) - (first.value ?? 0);
+        return Math.round(diff * 10) / 10;
+    });
+    public readonly waistTrendCurrent = computed(() => {
+        const ordered = [...this.waistTrendSeries()].sort(
+            (a, b) => new Date(a.date as string).getTime() - new Date(b.date as string).getTime(),
+        );
+        const last = [...ordered].reverse().find(point => point.value !== null && point.value !== undefined);
+        return last?.value ?? this.latestWaist() ?? null;
+    });
+
+    private loadWaistTrend(): void {
+        const { start, end } = this.getWeightTrendRange();
+        this.isWaistTrendLoading.set(true);
+
+        this.waistEntriesService
+            .getSummary({
+                dateFrom: start.toISOString(),
+                dateTo: end.toISOString(),
+                quantizationDays: 1,
+            })
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe({
+                next: points => {
+                    this.waistTrendPoints.set(points);
+                    this.isWaistTrendLoading.set(false);
+                },
+                error: () => {
+                    this.waistTrendPoints.set([]);
+                    this.isWaistTrendLoading.set(false);
+                },
+            });
+    }
+
+    private buildFallbackWaistTrend(): WeightTrendPoint[] {
+        const latest = this.latestWaist();
+        if (!latest) {
+            return [];
+        }
+
+        const { start } = this.getWeightTrendRange();
+        const points: WeightTrendPoint[] = [];
+
+        for (let i = 0; i < 7; i++) {
+            const date = new Date(start);
+            date.setDate(start.getDate() + i);
+            points.push({
+                date: date.toISOString(),
+                value: latest,
+            });
+        }
+
+        return points;
     }
 }
