@@ -29,7 +29,7 @@ body {
     margin: 0 auto;
     display: flex;
     flex-direction: column;
-    padding: var(--fd-layout-page-top-padding, 16px) var(--fd-layout-page-horizontal-padding)
+    padding: var(--fd-layout-page-top-padding, 10px) var(--fd-layout-page-horizontal-padding)
         var(--fd-layout-page-vertical-padding);
     background: var(--fd-layout-page-background);
 }

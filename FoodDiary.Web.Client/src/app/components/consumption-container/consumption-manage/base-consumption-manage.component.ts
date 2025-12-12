@@ -60,6 +60,7 @@ import { PageHeaderComponent } from '../../shared/page-header/page-header.compon
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
 import { ImageUploadFieldComponent } from '../../shared/image-upload-field/image-upload-field.component';
 import { ImageSelection } from '../../../types/image-upload.data';
+import { ActivatedRoute, Router } from '@angular/router';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: FD_VALIDATION_ERRORS,
@@ -104,6 +105,8 @@ export class BaseConsumptionManageComponent implements OnInit {
     private readonly destroyRef = inject(DestroyRef);
     private readonly recipeService = inject(RecipeService);
     private readonly fdDialogService = inject(FdUiDialogService);
+    private readonly router = inject(Router);
+    private readonly route = inject(ActivatedRoute);
     private readonly recipeServingWeightCache = new Map<string, number | null>();
 
     public consumption = input<Consumption | null>();
@@ -161,6 +164,11 @@ export class BaseConsumptionManageComponent implements OnInit {
     }
 
     public ngOnInit(): void {
+        const presetMealType = this.resolvePresetMealType();
+        if (presetMealType) {
+            this.consumptionForm.controls.mealType.setValue(presetMealType);
+        }
+
         const consumption = this.consumption();
         if (consumption) {
             this.populateForm(consumption);
@@ -179,6 +187,18 @@ export class BaseConsumptionManageComponent implements OnInit {
 
     public get items(): FormArray<FormGroup<ConsumptionItemFormData>> {
         return this.consumptionForm.controls.items;
+    }
+
+    private resolvePresetMealType(): string | null {
+        const stateMealType = (this.router.getCurrentNavigation()?.extras.state as { mealType?: string } | undefined)
+            ?.mealType;
+        const queryMealType = this.route.snapshot.queryParamMap.get('mealType');
+        const raw = (stateMealType ?? queryMealType)?.toUpperCase();
+        if (!raw) {
+            return null;
+        }
+        const isValid = this.mealTypeOptions.includes(raw as (typeof this.mealTypeOptions)[number]);
+        return isValid ? raw : null;
     }
 
     public stringifyMealType = (value: string | null): string =>

@@ -2,13 +2,7 @@
     <div class="meal-card__header">
         <div class="meal-card__meta">
             <div class="meal-card__icon">
-                <img
-                    [ngSrc]="coverImage() ?? 'assets/images/stubs/meals/other.png'"
-                    width="48"
-                    height="48"
-                    alt=""
-                    loading="lazy"
-                />
+                <img [ngSrc]="coverImage()" width="48" height="48" alt="" loading="lazy" />
             </div>
             <div class="meal-card__titles">
                 <div class="meal-card__title">

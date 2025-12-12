@@ -19,7 +19,7 @@ import { NgOptimizedImage } from '@angular/common';
 export class MealCardComponent {
     public readonly meal = input.required<Consumption>();
     public readonly open = output<Consumption>();
-    private readonly fallbackMealImage = 'assets/images/stubs/meals/other.png';
+    private readonly fallbackMealImage = 'assets/images/stubs/meals/other.svg';
     private readonly previewLimit = 3;
 
     public readonly coverImage = computed(() => {

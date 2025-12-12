@@ -41,6 +41,8 @@ import { WeightTrendCardComponent, WeightTrendPoint } from '../shared/weight-tre
 import { WaistEntriesService } from '../../services/waist-entries.service';
 import { WaistEntrySummaryPoint } from '../../types/waist-entry.data';
 
+type MealSlot = 'BREAKFAST' | 'LUNCH' | 'DINNER';
+
 @Component({
     selector: 'fd-dashboard',
     standalone: true,
@@ -102,6 +104,27 @@ export class DashboardComponent implements OnInit {
     public readonly isWeightTrendLoading = signal<boolean>(false);
     public readonly waistTrendPoints = signal<WaistEntrySummaryPoint[]>([]);
     public readonly isWaistTrendLoading = signal<boolean>(false);
+    private readonly mealSlots: MealSlot[] = ['BREAKFAST', 'LUNCH', 'DINNER'];
+    public readonly displayedMeals = computed(() => {
+        const meals = [...(this.meals() ?? [])];
+        const result: { meal: Consumption | null; slot?: MealSlot }[] = [];
+
+        for (const slot of this.mealSlots) {
+            const index = meals.findIndex(m => (m.mealType ?? '').toUpperCase() === slot);
+            if (index >= 0) {
+                result.push({ meal: meals[index], slot });
+                meals.splice(index, 1);
+            } else {
+                result.push({ meal: null, slot });
+            }
+        }
+
+        for (const meal of meals) {
+            result.push({ meal, slot: (meal.mealType ?? '').toUpperCase() as MealSlot | undefined });
+        }
+
+        return result;
+    });
 
     public readonly nutrientBars = computed<NutrientBar[]>(() => {
         const snapshot = this.snapshot();
@@ -286,8 +309,8 @@ export class DashboardComponent implements OnInit {
         return normalized;
     }
 
-    public async addConsumption(): Promise<void> {
-        await this.navigationService.navigateToConsumptionAdd();
+    public async addConsumption(mealType?: string): Promise<void> {
+        await this.navigationService.navigateToConsumptionAdd(mealType);
     }
 
     public async manageConsumptions(): Promise<void> {
@@ -443,5 +466,29 @@ export class DashboardComponent implements OnInit {
         }
 
         return points;
+    }
+
+    public placeholderIcon(slot?: MealSlot | string): string {
+        switch (slot) {
+            case 'BREAKFAST':
+                return 'wb_sunny';
+            case 'LUNCH':
+                return 'lunch_dining';
+            case 'DINNER':
+                return 'nights_stay';
+            case 'SNACK':
+                return 'cookie';
+            case 'OTHER':
+                return 'more_horiz';
+            default:
+                return 'restaurant_menu';
+        }
+    }
+
+    public placeholderLabel(slot?: MealSlot | string): string {
+        if (!slot) {
+            return 'MEAL_CARD.MEAL_TYPES.OTHER';
+        }
+        return `MEAL_CARD.MEAL_TYPES.${slot}`;
     }
 }

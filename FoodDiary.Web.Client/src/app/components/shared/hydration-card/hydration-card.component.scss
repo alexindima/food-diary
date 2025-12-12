@@ -32,10 +32,33 @@
     }
 
     &__add {
-        --fd-button-border-radius: 16px;
-        --fd-button-padding-x: 14px;
-        --fd-button-padding-y: 8px;
-        box-shadow: 0 6px 16px rgba(255, 255, 255, 0.25);
+        --fd-button-border-radius: 999px;
+        --fd-button-padding-x: 20px;
+        --fd-button-padding-y: 10px;
+        --fd-button-font-weight: 700;
+        --fd-button-font-size: 1rem;
+        --fd-button-background: rgba(255, 255, 255, 0.26);
+        --fd-button-hover-background: linear-gradient(135deg, #4dabff, #2563eb);
+        --fd-button-color: #f4f9ff;
+        --fd-button-border-color: transparent;
+        --fd-button-border-width: 0;
+        box-shadow: 0 13px 26px rgba(12, 83, 196, 0.2);
+        backdrop-filter: blur(14px);
+        border: none;
+
+        ::ng-deep button {
+            min-height: 42px;
+            background: var(--fd-button-background);
+            color: var(--fd-button-color);
+            border: none;
+            box-shadow: none;
+
+            &:hover {
+                background: var(--fd-button-hover-background);
+                border: none;
+                box-shadow: 0 16px 32px rgba(37, 99, 235, 0.28);
+            }
+        }
     }
 
     &__content {

@@ -23,6 +23,10 @@
         </button>
         @if (isFoodTrackingOpen()) {
             <nav class="sidebar__nav sidebar__nav--secondary">
+                <a routerLink="/consumptions" routerLinkActive="is-active" class="sidebar__link sidebar__link--secondary">
+                    <mat-icon>restaurant_menu</mat-icon>
+                    <span>Food Diary</span>
+                </a>
                 <a routerLink="/products" routerLinkActive="is-active" class="sidebar__link sidebar__link--secondary">
                     <mat-icon>inventory_2</mat-icon>
                     <span>Products</span>
@@ -30,10 +34,6 @@
                 <a routerLink="/recipes" routerLinkActive="is-active" class="sidebar__link sidebar__link--secondary">
                     <mat-icon>restaurant</mat-icon>
                     <span>Recipes</span>
-                </a>
-                <a routerLink="/consumptions" routerLinkActive="is-active" class="sidebar__link sidebar__link--secondary">
-                    <mat-icon>restaurant_menu</mat-icon>
-                    <span>Food Diary</span>
                 </a>
             </nav>
         }

@@ -210,9 +210,61 @@ $color-primary: #2563eb;
         display: flex;
         flex-direction: column;
         gap: 12px;
+    }
 
-        fd-ui-entity-card {
-            display: block;
+    &__meal-placeholder {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 14px 16px;
+        border: 1px dashed rgba(37, 99, 235, 0.3);
+        border-radius: 18px;
+        background: rgba(37, 99, 235, 0.03);
+        color: $color-text-main;
+        cursor: pointer;
+        transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+
+        &:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 12px 22px rgba(37, 99, 235, 0.18);
+            border-color: rgba(37, 99, 235, 0.5);
+            background: rgba(37, 99, 235, 0.05);
+        }
+
+        &__left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        &__icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #e0ecff, #f1f5ff);
+            display: grid;
+            place-items: center;
+            color: #2563eb;
+        }
+
+        &__text {
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        &__action {
+            width: 32px;
+            height: 32px;
+            border-radius: 10px;
+            display: grid;
+            place-items: center;
+            background: linear-gradient(135deg, #4dabff, #2563eb);
+            box-shadow: 0 10px 22px rgba(37, 99, 235, 0.26);
+
+            mat-icon {
+                color: #fff;
+            }
         }
     }
 

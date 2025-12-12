@@ -71,21 +71,37 @@
                             </fd-ui-button>
                         </div>
 
-                        @if (meals().length === 0) {
-                            <div class="dashboard__empty">
-                                {{ 'DASHBOARD.MEALS_EMPTY' | translate }}
-                            </div>
-                        } @else {
-                            <div class="dashboard__meal-list">
-                                @for (meal of meals(); track meal.id) {
-                                    <fd-meal-card
-                                        class="dashboard__meal-card"
-                                        [meal]="meal"
-                                        (open)="openConsumption(meal)"
-                                    />
+                        <div class="dashboard__meal-list">
+                            @if (displayedMeals().length === 0) {
+                                <div class="dashboard__empty">
+                                    {{ 'DASHBOARD.MEALS_EMPTY' | translate }}
+                                </div>
+                            } @else {
+                                @for (entry of displayedMeals(); track entry.meal?.id ?? entry.slot ?? $index) {
+                                    @if (entry.meal) {
+                                        <fd-meal-card
+                                            class="dashboard__meal-card"
+                                            [meal]="entry.meal"
+                                            (open)="openConsumption(entry.meal)"
+                                        />
+                                    } @else {
+                                        <button class="dashboard__meal-placeholder" type="button" (click)="addConsumption(entry.slot)">
+                                            <div class="dashboard__meal-placeholder__left">
+                                                <div class="dashboard__meal-placeholder__icon">
+                                                    <mat-icon>{{ placeholderIcon(entry.slot) }}</mat-icon>
+                                                </div>
+                                                <div class="dashboard__meal-placeholder__text">
+                                                    {{ placeholderLabel(entry.slot) | translate }}
+                                                </div>
+                                            </div>
+                                            <div class="dashboard__meal-placeholder__action">
+                                                <mat-icon>add</mat-icon>
+                                            </div>
+                                        </button>
+                                    }
                                 }
-                            </div>
-                        }
+                            }
+                        </div>
                     </section>
 
                 </div>
