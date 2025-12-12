@@ -135,6 +135,11 @@
                         [iconGradient]="'linear-gradient(135deg, #22c55e, #10b981)'"
                         [isLoading]="isWaistTrendLoading()"
                     />
+                    <fd-daily-advice-card
+                        class="dashboard__card dashboard__card--advice"
+                        [advice]="dailyAdvice()"
+                        [isLoading]="isAdviceLoading()"
+                    />
 
                 </div>
             </section>

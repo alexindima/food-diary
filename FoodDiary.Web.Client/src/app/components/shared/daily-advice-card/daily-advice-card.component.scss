@@ -1,0 +1,62 @@
+@use 'variables' as *;
+
+.daily-advice-card {
+    background: linear-gradient(135deg, #e0f2fe, #eef2ff);
+    border: 1px solid rgba(14, 165, 233, 0.16);
+    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+
+    .fd-ui-card__title {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    &__content {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        padding-top: 4px;
+    }
+
+    &__text {
+        margin: 0;
+        font-size: 1rem;
+        line-height: 1.6;
+        color: $color-text-main;
+        font-weight: 600;
+    }
+
+    &__chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 10px;
+        border-radius: 12px;
+        background: rgba(14, 165, 233, 0.14);
+        color: #0ea5e9;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        font-size: 0.75rem;
+
+        mat-icon {
+            font-size: 16px;
+            width: 16px;
+            height: 16px;
+        }
+    }
+
+    &__loading,
+    &__empty {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: $color-text-additional;
+        font-weight: 600;
+        padding: 2px 0;
+
+        mat-icon {
+            color: #0ea5e9;
+        }
+    }
+}

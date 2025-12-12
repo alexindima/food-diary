@@ -130,6 +130,12 @@ $color-primary: #2563eb;
         &--motivation-wide {
             width: 100%;
         }
+
+        &--advice {
+            > fd-daily-advice-card {
+                width: 100%;
+            }
+        }
     }
 
     &__weight-summary {

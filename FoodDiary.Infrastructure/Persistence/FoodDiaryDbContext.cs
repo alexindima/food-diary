@@ -22,6 +22,7 @@ public class FoodDiaryDbContext : DbContext
     public DbSet<Cycle> Cycles => Set<Cycle>();
     public DbSet<CycleDay> CycleDays => Set<CycleDay>();
     public DbSet<HydrationEntry> HydrationEntries => Set<HydrationEntry>();
+    public DbSet<DailyAdvice> DailyAdvices => Set<DailyAdvice>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -382,6 +383,29 @@ public class FoodDiaryDbContext : DbContext
                 .WithMany(u => u.HydrationEntries)
                 .HasForeignKey(e => e.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        modelBuilder.Entity<DailyAdvice>(entity =>
+        {
+            entity.Property(e => e.Id).HasConversion(
+                id => id.Value,
+                value => new DailyAdviceId(value));
+
+            entity.Property(e => e.Locale)
+                .IsRequired()
+                .HasMaxLength(10);
+
+            entity.Property(e => e.Value)
+                .IsRequired()
+                .HasMaxLength(512);
+
+            entity.Property(e => e.Tag)
+                .HasMaxLength(64);
+
+            entity.Property(e => e.Weight)
+                .HasDefaultValue(1);
+
+            entity.HasIndex(e => new { e.Locale, e.Tag });
         });
     }
 }

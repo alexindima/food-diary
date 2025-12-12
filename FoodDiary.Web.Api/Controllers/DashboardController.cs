@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using FoodDiary.Application.DailyAdvices.Queries.GetDailyAdvice;
 using FoodDiary.Application.Dashboard.Queries.GetDashboardSnapshot;
 using FoodDiary.WebApi.Extensions;
 using MediatR;
@@ -18,6 +19,16 @@ public class DashboardController(ISender mediator) : AuthorizedController(mediat
         [FromQuery] int pageSize = 10)
     {
         var query = new GetDashboardSnapshotQuery(CurrentUserId, date, page, pageSize);
+        var result = await Mediator.Send(query);
+        return result.ToActionResult();
+    }
+
+    [HttpGet("advice")]
+    public async Task<IActionResult> GetAdvice(
+        [FromQuery] DateTime date,
+        [FromQuery] string locale = "en")
+    {
+        var query = new GetDailyAdviceQuery(CurrentUserId, date, locale);
         var result = await Mediator.Send(query);
         return result.ToActionResult();
     }

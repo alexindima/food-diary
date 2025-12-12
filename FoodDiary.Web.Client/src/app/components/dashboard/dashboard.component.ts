@@ -10,6 +10,7 @@ import {
     viewChild
 } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
 import { NavigationService } from '../../services/navigation.service';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { Consumption } from '../../types/consumption.data';
@@ -40,6 +41,8 @@ import { WeightEntrySummaryPoint } from '../../types/weight-entry.data';
 import { WeightTrendCardComponent, WeightTrendPoint } from '../shared/weight-trend-card/weight-trend-card.component';
 import { WaistEntriesService } from '../../services/waist-entries.service';
 import { WaistEntrySummaryPoint } from '../../types/waist-entry.data';
+import { DailyAdviceCardComponent } from '../shared/daily-advice-card/daily-advice-card.component';
+import { DailyAdvice } from '../../types/daily-advice.data';
 
 type MealSlot = 'BREAKFAST' | 'LUNCH' | 'DINNER';
 
@@ -61,7 +64,8 @@ type MealSlot = 'BREAKFAST' | 'LUNCH' | 'DINNER';
     MealCardComponent,
     ConsumptionRingCardComponent,
     HydrationCardComponent,
-    WeightTrendCardComponent
+    WeightTrendCardComponent,
+    DailyAdviceCardComponent
 ],
     templateUrl: './dashboard.component.html',
     styleUrl: './dashboard.component.scss',
@@ -75,6 +79,7 @@ export class DashboardComponent implements OnInit {
     private readonly hydrationService = inject(HydrationService);
     private readonly weightEntriesService = inject(WeightEntriesService);
     private readonly waistEntriesService = inject(WaistEntriesService);
+    private readonly translateService = inject(TranslateService);
 
     private readonly headerDatePicker = viewChild<FdUiDatepicker<Date>>('headerDatePicker');
 
@@ -104,6 +109,8 @@ export class DashboardComponent implements OnInit {
     public readonly isWeightTrendLoading = signal<boolean>(false);
     public readonly waistTrendPoints = signal<WaistEntrySummaryPoint[]>([]);
     public readonly isWaistTrendLoading = signal<boolean>(false);
+    public readonly dailyAdvice = signal<DailyAdvice | null>(null);
+    public readonly isAdviceLoading = signal<boolean>(false);
     private readonly mealSlots: MealSlot[] = ['BREAKFAST', 'LUNCH', 'DINNER'];
     public readonly displayedMeals = computed(() => {
         const meals = [...(this.meals() ?? [])];
@@ -210,6 +217,11 @@ export class DashboardComponent implements OnInit {
         this.loadHydration();
         this.loadWeightTrend();
         this.loadWaistTrend();
+        this.loadDailyAdvice();
+
+        this.translateService.onLangChange
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => this.loadDailyAdvice());
     }
 
     public openDatePicker(): void {
@@ -263,6 +275,7 @@ export class DashboardComponent implements OnInit {
         this.loadHydration();
         this.loadWeightTrend();
         this.loadWaistTrend();
+        this.loadDailyAdvice();
     }
 
     private loadDashboardSnapshot(): void {
@@ -328,6 +341,26 @@ export class DashboardComponent implements OnInit {
             });
     }
 
+    private loadDailyAdvice(): void {
+        const targetDate = this.selectedDate();
+        const locale = this.getCurrentLocale();
+
+        this.isAdviceLoading.set(true);
+        this.dashboardService
+            .getDailyAdvice(targetDate, locale)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe({
+                next: advice => {
+                    this.dailyAdvice.set(advice);
+                    this.isAdviceLoading.set(false);
+                },
+                error: () => {
+                    this.dailyAdvice.set(null);
+                    this.isAdviceLoading.set(false);
+                },
+            });
+    }
+
     private loadWeightTrend(): void {
         const { start, end } = this.getWeightTrendRange();
         this.isWeightTrendLoading.set(true);
@@ -368,6 +401,11 @@ export class DashboardComponent implements OnInit {
 
     private normalizeEndOfDayUtc(date: Date): Date {
         return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59, 999));
+    }
+
+    private getCurrentLocale(): string {
+        const lang = this.translateService.currentLang || this.translateService.getDefaultLang() || 'en';
+        return lang.split(/[-_]/)[0];
     }
 
     private buildFallbackWeightTrend(): WeightTrendPoint[] {

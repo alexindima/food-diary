@@ -704,6 +704,16 @@
         "ACTIVITY_META": "Скоро из Google Fit",
         "CALORIES_BURNED": "Сожжено",
         "STEPS": "Шаги",
+        "ADVICE_TITLE": "Совет дня",
+        "ADVICE_LOADING": "Подбираем лучший совет на сегодня...",
+        "ADVICE_EMPTY": "Для этого дня ещё нет совета.",
+        "ADVICE_TAGS": {
+            "HYDRATION": "Гидратация",
+            "PROTEIN": "Белок",
+            "PREP": "Подготовка",
+            "MOVEMENT": "Движение",
+            "PLANNING": "Планирование"
+        },
         "ACTIONS": {
             "ADD_CONSUMPTION_TITLE": "Добавить приём пищи",
             "ADD_CONSUMPTION_DESCRIPTION": "Зафиксируйте очередной приём еды.",
@@ -1034,7 +1044,6 @@
         }
     }
 }
-
 
 
 

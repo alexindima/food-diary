@@ -811,6 +811,16 @@
         "ACTIVITY_META": "From Google Fit soon",
         "CALORIES_BURNED": "Calories burned",
         "STEPS": "Steps",
+        "ADVICE_TITLE": "Daily tip",
+        "ADVICE_LOADING": "Picking the best tip for today...",
+        "ADVICE_EMPTY": "No tip for this day yet.",
+        "ADVICE_TAGS": {
+            "HYDRATION": "Hydration",
+            "PROTEIN": "Protein",
+            "PREP": "Prep",
+            "MOVEMENT": "Movement",
+            "PLANNING": "Planning"
+        },
         "ACTIONS": {
             "ADD_CONSUMPTION_TITLE": "Add consumption",
             "ADD_CONSUMPTION_DESCRIPTION": "Log a meal in a few taps.",
@@ -1081,5 +1091,4 @@
         }
     }
 }
-
 
