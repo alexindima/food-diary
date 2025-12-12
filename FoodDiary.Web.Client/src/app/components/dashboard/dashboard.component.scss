@@ -14,6 +14,32 @@ $color-primary: #2563eb;
         .fd-page-header__title-block {
             min-width: 220px;
         }
+        .dashboard__primary-action {
+            --fd-button-padding-x: 18px;
+            --fd-button-padding-y: 10px;
+            --fd-button-border-radius: 14px;
+        }
+
+        .dashboard__primary-action ::ng-deep button,
+        .dashboard__primary-action ::ng-deep .fd-ui-button {
+            background: linear-gradient(135deg, #4dabff, #2563eb);
+            color: #fff;
+            box-shadow: 0 12px 26px rgba(37, 99, 235, 0.28);
+            border: none;
+            font-weight: 700;
+            transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+
+            &:hover {
+                transform: translateY(-1px);
+                box-shadow: 0 16px 30px rgba(37, 99, 235, 0.32);
+                filter: brightness(1.02);
+            }
+
+            &:active {
+                transform: translateY(0);
+                box-shadow: 0 10px 22px rgba(37, 99, 235, 0.24);
+            }
+        }
     }
 
     &__eyebrow {
@@ -187,72 +213,6 @@ $color-primary: #2563eb;
 
         fd-ui-entity-card {
             display: block;
-        }
-
-        .product-card {
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            gap: $gap-xxs;
-
-            &__header {
-                display: flex;
-                align-items: baseline;
-                gap: $gap-s;
-                justify-content: space-between;
-            }
-
-            &__title {
-                display: flex;
-                gap: $gap-xs;
-                font-size: 1.5em;
-                font-weight: 700;
-                line-height: 1.5rem;
-                color: $color-text-main;
-                min-width: 0;
-            }
-
-            &__name {
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
-            }
-
-            &__barcode {
-                font-size: 1.05em;
-                color: $color-text-main;
-                font-weight: 600;
-                white-space: nowrap;
-            }
-
-            &__stats {
-                display: flex;
-                justify-content: space-between;
-                align-items: flex-start;
-                gap: $gap-m;
-
-                @media #{$media-mobile} {
-                    flex-direction: column;
-                    align-items: flex-start;
-                    gap: $gap-xs;
-                }
-            }
-
-            &__calories {
-                font-size: 1.2em;
-                font-weight: 500;
-                color: $color-text-main;
-            }
-
-            &__macros {
-                font-size: 0.95em;
-                color: $color-text-additional;
-                text-align: right;
-
-                @media #{$media-mobile} {
-                    text-align: left;
-                }
-            }
         }
     }
 

@@ -1,0 +1,37 @@
+<svg width="96" height="96" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="gradSnackLeaf" x1="26" y1="22" x2="40" y2="38" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#B2FFDA"/>
+      <stop offset="1" stop-color="#5CE6A7"/>
+    </linearGradient>
+    <linearGradient id="gradSnackCookie" x1="22" y1="40" x2="38" y2="28" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#CDEAFF"/>
+      <stop offset="1" stop-color="#6EC5FF"/>
+    </linearGradient>
+    <filter id="neoSnack" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="5" stdDeviation="5" flood-color="#000000" flood-opacity="0.16"/>
+      <feDropShadow dx="0" dy="-3" stdDeviation="4" flood-color="#FFFFFF" flood-opacity="0.9"/>
+    </filter>
+    <filter id="glowSnack" x="-80%" y="-80%" width="260%" height="260%">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feColorMatrix in="blur" type="matrix"
+        values="0 0 0 0 0.4
+                0 0 0 0 1
+                0 0 0 0 0.8
+                0 0 0 0.7 0"/>
+    </filter>
+  </defs>
+
+  <circle cx="30" cy="34" r="21" filter="url(#glowSnack)" opacity="0.7"/>
+
+  <g filter="url(#neoSnack)">
+    <path d="M36 21.5C29.7 21.5 25.2 26.6 25.2 32.2C25.2 37.8 29.7 42.9 36 42.9C42.3 42.9 46.8 37.8 46.8 32.2C46.8 26.6 42.3 21.5 36 21.5Z"
+          fill="url(#gradSnackLeaf)"/>
+    <path d="M31.3 29.7C33.2 31 36.3 34.2 38 38.1" stroke="#34C986" stroke-width="2.6" stroke-linecap="round" opacity="0.7"/>
+
+    <circle cx="26" cy="36" r="11" fill="url(#gradSnackCookie)"/>
+    <circle cx="22.3" cy="33.7" r="2" fill="#2A7BDD" opacity="0.9"/>
+    <circle cx="29.1" cy="36.6" r="2" fill="#2A7BDD" opacity="0.9"/>
+    <circle cx="23.8" cy="39.9" r="2" fill="#2A7BDD" opacity="0.9"/>
+  </g>
+</svg>

@@ -1,0 +1,34 @@
+<svg width="96" height="96" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <linearGradient id="gradDinnerPlate" x1="20" y1="44" x2="44" y2="20" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#E3F1FF"/>
+            <stop offset="1" stop-color="#B6D6FF"/>
+        </linearGradient>
+        <linearGradient id="gradDinnerMoon" x1="28" y1="22" x2="40" y2="34" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#8EC5FF"/>
+            <stop offset="1" stop-color="#4F9BFF"/>
+        </linearGradient>
+        <filter id="neoDinner" x="-30%" y="-30%" width="160%" height="160%">
+            <feDropShadow dx="0" dy="5" stdDeviation="5" flood-color="#000000" flood-opacity="0.17"/>
+            <feDropShadow dx="0" dy="-3" stdDeviation="4" flood-color="#FFFFFF" flood-opacity="0.9"/>
+        </filter>
+        <filter id="glowDinner" x="-80%" y="-80%" width="260%" height="260%">
+            <feGaussianBlur stdDeviation="8" result="blur"/>
+            <feColorMatrix in="blur" type="matrix"
+                           values="0 0 0 0 0.4
+                0 0 0 0 0.75
+                0 0 0 0 1
+                0 0 0 0.7 0"/>
+        </filter>
+    </defs>
+
+    <circle cx="32" cy="32" r="22" filter="url(#glowDinner)" opacity="0.75"/>
+
+    <g filter="url(#neoDinner)">
+        <circle cx="32" cy="32" r="18" fill="url(#gradDinnerPlate)"/>
+        <circle cx="32" cy="32" r="13" fill="#F4F8FF"/>
+
+        <path d="M36.2 23.2C32.8 23.2 30 26 30 29.5C30 33 32.8 35.8 36.2 35.8C37.4 35.8 38.5 35.5 39.5 35C38.1 37.4 35.7 39 32.9 39C28.5 39 24.9 35.4 24.9 31C24.9 26.6 28.5 23 32.9 23C34.4 23 35.9 23.4 37.1 24"
+              fill="url(#gradDinnerMoon)"/>
+    </g>
+</svg>

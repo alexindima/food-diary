@@ -1,46 +1,64 @@
-<fd-ui-entity-card
-    class="consumption-card fd-ui-entity-card--hoverable"
-    appearance="info"
-    [imageUrl]="resolveImage(meal())"
-    [fallbackImage]="fallbackMealImage"
-    (click)="handleOpen()"
->
-    <div class="product-card consumption-card__content">
-        <div class="product-card__header">
-            <div class="product-card__title">
-                <span class="product-card__name">
+<div class="meal-card" (click)="handleOpen()">
+    <div class="meal-card__header">
+        <div class="meal-card__meta">
+            <div class="meal-card__icon">
+                <img
+                    [ngSrc]="coverImage() ?? 'assets/images/stubs/meals/other.png'"
+                    width="48"
+                    height="48"
+                    alt=""
+                    loading="lazy"
+                />
+            </div>
+            <div class="meal-card__titles">
+                <div class="meal-card__title">
                     @if (meal().mealType) {
                         {{ ('MEAL_CARD.MEAL_TYPES.' + meal().mealType) | translate }}
                     } @else {
                         {{ 'MEAL_CARD.MEAL_TYPES.OTHER' | translate }}
                     }
-                </span>
+                </div>
+                <div class="meal-card__time">
+                    {{ meal().date | date:'HH:mm' }}
+                </div>
             </div>
-            <span class="product-card__barcode">
-                {{ meal().date | localizedDate:'d MMMM y' }} · {{ meal().date | date:'HH:mm' }}
-            </span>
         </div>
-        <div class="product-card__stats">
-            <span class="product-card__calories">
-                {{ 'MEAL_CARD.TOTAL_CALORIES' | translate }}:
-                {{ meal().totalCalories | number: '1.0-2' }}
-                {{ 'MEAL_CARD.KCAL' | translate }}
-            </span>
-            <span class="product-card__macros">
-                {{ 'MEAL_CARD.PROTEINS' | translate }}: {{ meal().totalProteins | number: '1.0-2' }} {{ 'PRODUCT_AMOUNT_UNITS_SHORT.G' | translate }} ·
-                {{ 'MEAL_CARD.FATS' | translate }}: {{ meal().totalFats | number: '1.0-2' }} {{ 'PRODUCT_AMOUNT_UNITS_SHORT.G' | translate }} ·
-                {{ 'MEAL_CARD.CARBS' | translate }}: {{ meal().totalCarbs | number: '1.0-2' }} {{ 'PRODUCT_AMOUNT_UNITS_SHORT.G' | translate }}
-            </span>
+        <div class="meal-card__calories">
+            {{ meal().totalCalories | number:'1.0-0' }}
+            <span class="meal-card__calories-unit">{{ 'MEAL_CARD.KCAL' | translate }}</span>
         </div>
-        <div class="consumption-card__meta">
-            <span class="consumption-card__count">
-                {{ 'MEAL_CARD.ITEM_COUNT' | translate }}: {{ meal().items.length }}
-            </span>
-            @if (meal().comment) {
-                <span class="consumption-card__comment">
-                    {{ meal().comment }}
+    </div>
+
+    <div class="meal-card__body">
+        <div class="meal-card__gallery">
+            @for (image of previewImages(); track idx; let idx = $index) {
+                <div
+                    class="meal-card__thumb meal-card__thumb--stack"
+                    [style.zIndex]="20 - idx"
+                    [style.marginLeft.px]="idx === 0 ? 0 : -14"
+                >
+                    <img [ngSrc]="image" width="40" height="40" alt="" loading="lazy" />
+                </div>
+            }
+            @if (extraCount() > 0) {
+                <div
+                    class="meal-card__thumb meal-card__thumb--stack meal-card__thumb--more"
+                    [style.marginLeft.px]="previewImages().length ? -14 : 0"
+                    [style.zIndex]="10"
+                >
+                    +{{ extraCount() }}
+                </div>
+            }
+        </div>
+
+        <div class="meal-card__macros">
+            @for (chip of macroChips(); track chip.label) {
+                <span class="meal-card__chip">
+                    <span class="meal-card__chip-dot" [style.background]="chip.color"></span>
+                    {{ chip.value | number:'1.0-0' }} {{ 'PRODUCT_AMOUNT_UNITS_SHORT.G' | translate }}
+                    {{ chip.label | translate }}
                 </span>
             }
         </div>
     </div>
-</fd-ui-entity-card>
+</div>

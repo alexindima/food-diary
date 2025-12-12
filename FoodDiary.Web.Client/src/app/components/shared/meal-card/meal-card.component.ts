@@ -1,15 +1,17 @@
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
-import { FdUiEntityCardComponent } from 'fd-ui-kit/entity-card/fd-ui-entity-card.component';
+import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { CommonModule } from '@angular/common';
 import { Consumption } from '../../../types/consumption.data';
-import { LocalizedDatePipe } from '../../../pipes/localized-date.pipe';
 import { resolveMealImageUrl } from '../../../utils/meal-stub.utils';
+import { ProductType } from '../../../types/product.data';
+import { resolveProductImageUrl } from '../../../utils/product-stub.utils';
+import { resolveRecipeImageUrl } from '../../../utils/recipe-stub.utils';
+import { NgOptimizedImage } from '@angular/common';
 
 @Component({
     selector: 'fd-meal-card',
     standalone: true,
-    imports: [CommonModule, FdUiEntityCardComponent, TranslatePipe, LocalizedDatePipe],
+    imports: [CommonModule, TranslatePipe, NgOptimizedImage],
     templateUrl: './meal-card.component.html',
     styleUrls: ['./meal-card.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -17,13 +19,68 @@ import { resolveMealImageUrl } from '../../../utils/meal-stub.utils';
 export class MealCardComponent {
     public readonly meal = input.required<Consumption>();
     public readonly open = output<Consumption>();
-    protected readonly fallbackMealImage = 'assets/images/stubs/meals/other.png';
+    private readonly fallbackMealImage = 'assets/images/stubs/meals/other.png';
+    private readonly previewLimit = 3;
+
+    public readonly coverImage = computed(() => {
+        const image = this.meal().imageUrl?.trim();
+        const resolved = resolveMealImageUrl(image ?? undefined, this.meal().mealType ?? undefined) ?? image;
+        return resolved ?? this.fallbackMealImage;
+    });
+
+    private readonly itemImages = computed(() => {
+        const images: string[] = [];
+        const items = this.meal().items ?? [];
+
+        for (const item of items) {
+            if (item.recipe) {
+                const recipeImage = resolveRecipeImageUrl(item.recipe.imageUrl ?? undefined) ?? this.fallbackMealImage;
+                images.push(recipeImage);
+                continue;
+            }
+
+            if (item.product) {
+                const type = (item.product.productType as ProductType | undefined) ?? ProductType.Unknown;
+                const productImage = resolveProductImageUrl(item.product.imageUrl ?? undefined, type) ?? this.fallbackMealImage;
+                images.push(productImage);
+                continue;
+            }
+        }
+
+        return images;
+    });
+
+    public readonly galleryImages = computed(() => {
+        const items = this.itemImages();
+        if (items.length) {
+            return items;
+        }
+
+        return [this.fallbackMealImage];
+    });
+
+    public readonly previewImages = computed(() => this.galleryImages().slice(0, this.previewLimit));
+    public readonly extraCount = computed(() => Math.max(0, this.galleryImages().length - this.previewLimit));
+
+    public readonly macroChips = computed(() => [
+        {
+            label: 'MEAL_CARD.PROTEINS',
+            value: this.meal().totalProteins,
+            color: '#4f46e5',
+        },
+        {
+            label: 'MEAL_CARD.CARBS',
+            value: this.meal().totalCarbs,
+            color: '#0ea5e9',
+        },
+        {
+            label: 'MEAL_CARD.FATS',
+            value: this.meal().totalFats,
+            color: '#f59e0b',
+        },
+    ]);
 
     public handleOpen(): void {
         this.open.emit(this.meal());
-    }
-
-    public resolveImage(meal: Consumption): string | undefined {
-        return resolveMealImageUrl(meal.imageUrl ?? undefined, meal.mealType ?? undefined);
     }
 }

@@ -1,0 +1,46 @@
+<svg width="96" height="96" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <linearGradient id="gradBreakfastPlate" x1="18" y1="40" x2="46" y2="24" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#FFF6C9"/>
+            <stop offset="1" stop-color="#FFE08A"/>
+        </linearGradient>
+        <linearGradient id="gradBreakfastYolk" x1="32" y1="32" x2="40" y2="24" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#FFC857"/>
+            <stop offset="1" stop-color="#FFAD2F"/>
+        </linearGradient>
+        <linearGradient id="gradBreakfastSun" x1="24" y1="16" x2="40" y2="8" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#FFE68A"/>
+            <stop offset="1" stop-color="#FFCF4A"/>
+        </linearGradient>
+        <filter id="neoBreakfast" x="-30%" y="-30%" width="160%" height="160%">
+            <feDropShadow dx="0" dy="5" stdDeviation="5" flood-color="#000000" flood-opacity="0.15"/>
+            <feDropShadow dx="0" dy="-3" stdDeviation="4" flood-color="#FFFFFF" flood-opacity="0.9"/>
+        </filter>
+        <filter id="glowBreakfast" x="-80%" y="-80%" width="260%" height="260%">
+            <feGaussianBlur stdDeviation="8" result="blur"/>
+            <feColorMatrix in="blur" type="matrix"
+                           values="0 0 0 0 1
+                0 0 0 0 0.85
+                0 0 0 0 0.25
+                0 0 0 0.6 0"/>
+        </filter>
+    </defs>
+
+    <circle cx="28" cy="30" r="20" filter="url(#glowBreakfast)" opacity="0.7"/>
+
+    <g filter="url(#neoBreakfast)">
+        <circle cx="30" cy="34" r="16" fill="url(#gradBreakfastPlate)"/>
+        <circle cx="30" cy="34" r="10" fill="#FFFDF8"/>
+        <circle cx="32" cy="32" r="5.2" fill="url(#gradBreakfastYolk)"/>
+
+        <circle cx="30" cy="18" r="7" fill="url(#gradBreakfastSun)"/>
+
+        <g stroke="#FFC857" stroke-linecap="round" stroke-width="3">
+            <line x1="30" y1="5"  x2="30" y2="11"/>
+            <line x1="18.5" y1="8.5" x2="23" y2="13"/>
+            <line x1="41.5" y1="8.5" x2="37" y2="13"/>
+            <line x1="18" y1="18" x2="23" y2="18"/>
+            <line x1="42" y1="18" x2="37" y2="18"/>
+        </g>
+    </g>
+</svg>

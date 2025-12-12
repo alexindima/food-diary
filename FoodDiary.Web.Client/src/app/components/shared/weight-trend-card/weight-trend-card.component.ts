@@ -51,10 +51,10 @@ export class WeightTrendCardComponent {
                 {
                     data: values,
                     borderColor: this.accentColor(),
-                    backgroundColor: 'transparent',
-                    borderWidth: 5,
+                    backgroundColor: this.getFillColor(),
+                    borderWidth: 4,
                     tension: 0.48,
-                    fill: false,
+                    fill: true,
                     spanGaps: true,
                     pointRadius: values.map((_, index) => (index === lastIndex ? 5 : 0)),
                     pointHoverRadius: values.map((_, index) => (index === lastIndex ? 6 : 0)),
@@ -66,7 +66,7 @@ export class WeightTrendCardComponent {
         };
     });
 
-    public readonly chartOptions: ChartConfiguration<'line'>['options'] = {
+    private readonly baseChartOptions: ChartConfiguration<'line'>['options'] = {
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
@@ -133,4 +133,44 @@ export class WeightTrendCardComponent {
         const value = this.currentWeight();
         return value !== null && value !== undefined;
     });
+
+    public readonly dynamicChartOptions = computed<ChartConfiguration<'line'>['options']>(() => {
+        const values = (this.chartData()?.datasets[0].data as (number | null)[] | undefined) ?? [];
+        const numeric = values.filter(v => typeof v === 'number') as number[];
+        const minVal = numeric.length ? Math.min(...numeric) : 0;
+        const maxVal = numeric.length ? Math.max(...numeric) : 1;
+        const padding = Math.max(0.5, (maxVal - minVal) * 0.08);
+        const suggestedMin = Math.max(0, minVal - padding);
+        const baseOptions = this.baseChartOptions as ChartConfiguration<'line'>['options'];
+        const baseScales = ((baseOptions as any)?.scales ?? {}) as Record<string, unknown>;
+        const baseY = (baseScales as any)?.y as Record<string, unknown> | undefined;
+
+        return {
+            ...baseOptions,
+            scales: {
+                ...baseScales,
+                y: {
+                    ...(baseY ?? {}),
+                    min: suggestedMin,
+                },
+            },
+        };
+    });
+
+    private getFillColor(): string {
+        const color = this.accentColor();
+        const rgba = this.hexToRgba(color, 0.15);
+        return rgba ?? 'rgba(27, 132, 255, 0.14)';
+    }
+
+    private hexToRgba(hex: string, alpha: number): string | null {
+        const match = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+        if (!match) {
+            return null;
+        }
+        const r = parseInt(match[1], 16);
+        const g = parseInt(match[2], 16);
+        const b = parseInt(match[3], 16);
+        return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+    }
 }

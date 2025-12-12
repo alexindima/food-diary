@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, effect, input, signal } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 
 export interface NutrientBar {
     id: string;
@@ -16,7 +15,7 @@ export interface NutrientBar {
 @Component({
     selector: 'fd-consumption-ring-card',
     standalone: true,
-    imports: [CommonModule, TranslatePipe, FdUiCardComponent],
+    imports: [CommonModule, TranslatePipe],
     templateUrl: './consumption-ring-card.component.html',
     styleUrl: './consumption-ring-card.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

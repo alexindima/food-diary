@@ -1,11 +1,11 @@
 import { Consumption, ConsumptionSourceType } from '../types/consumption.data';
 
 const MEAL_STUBS: Record<string, string> = {
-    BREAKFAST: 'assets/images/stubs/meals/breakfast.png',
-    LUNCH: 'assets/images/stubs/meals/lunch.png',
-    DINNER: 'assets/images/stubs/meals/dinner.png',
-    SNACK: 'assets/images/stubs/meals/snack.png',
-    OTHER: 'assets/images/stubs/meals/other.png',
+    BREAKFAST: 'assets/images/stubs/meals/breakfast.svg',
+    LUNCH: 'assets/images/stubs/meals/lunch.svg',
+    DINNER: 'assets/images/stubs/meals/dinner.svg',
+    SNACK: 'assets/images/stubs/meals/snack.svg',
+    OTHER: 'assets/images/stubs/meals/other.svg',
 };
 
 export function resolveMealImageUrl(imageUrl: string | null | undefined, mealType: string | null | undefined): string | undefined {
