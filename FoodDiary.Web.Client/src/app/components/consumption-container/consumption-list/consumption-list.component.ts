@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, inject, OnInit, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, computed, inject, OnInit, viewChild } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { catchError, debounceTime, map, Observable, of, startWith, switchMap } from 'rxjs';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -22,6 +22,7 @@ import { PageHeaderComponent } from '../../shared/page-header/page-header.compon
 import { PageBodyComponent } from '../../shared/page-body/page-body.component';
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
 import { MealCardComponent } from '../../shared/meal-card/meal-card.component';
+import { LocalizedDatePipe } from '../../../pipes/localized-date.pipe';
 
 @Component({
     selector: 'fd-consumption-list',
@@ -40,6 +41,7 @@ import { MealCardComponent } from '../../shared/meal-card/meal-card.component';
         PageBodyComponent,
         FdPageContainerDirective,
         MealCardComponent,
+        LocalizedDatePipe,
     ],
 })
 export class ConsumptionListComponent implements OnInit {
@@ -51,6 +53,9 @@ export class ConsumptionListComponent implements OnInit {
     public searchForm: FormGroup<SearchFormGroup>;
     public consumptionData: PagedData<Consumption> = new PagedData<Consumption>();
     public currentPageIndex = 0;
+    public readonly groupedConsumptions = computed(() =>
+        this.groupByDate(this.consumptionData.items()),
+    );
 
     private readonly container = viewChild.required<ElementRef<HTMLElement>>('container');
 
@@ -141,6 +146,23 @@ export class ConsumptionListComponent implements OnInit {
 
         const normalized = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
         return normalized.toISOString();
+    }
+
+    private groupByDate(items: Consumption[]): { date: Date; items: Consumption[] }[] {
+        const buckets = new Map<string, { date: Date; items: Consumption[] }>();
+
+        for (const item of items) {
+            const date = new Date(item.date);
+            const key = date.toISOString().slice(0, 10);
+            if (!buckets.has(key)) {
+                buckets.set(key, { date, items: [] });
+            }
+            buckets.get(key)!.items.push(item);
+        }
+
+        return Array.from(buckets.values()).sort(
+            (a, b) => b.date.getTime() - a.date.getTime(),
+        );
     }
 }
 

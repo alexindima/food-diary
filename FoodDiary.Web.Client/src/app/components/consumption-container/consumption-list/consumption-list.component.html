@@ -42,13 +42,25 @@
                 </div>
             }
 
-            <div class="consumption-list__grid">
-                @for (consumption of consumptionData.items(); track consumption) {
-                    <fd-meal-card
-                        class="consumption-card"
-                        [meal]="consumption"
-                        (open)="openConsumptionDetails(consumption)"
-                    />
+            <div class="consumption-list__groups">
+                @for (group of groupedConsumptions(); track group.date) {
+                    <div class="consumption-list__day">
+                        <div class="consumption-list__day-header">
+                            <span class="consumption-list__day-label">
+                                {{ group.date | localizedDate:'d MMMM y' }}
+                            </span>
+                            <span class="consumption-list__day-line"></span>
+                        </div>
+                        <div class="consumption-list__grid">
+                            @for (consumption of group.items; track consumption) {
+                                <fd-meal-card
+                                    class="consumption-card"
+                                    [meal]="consumption"
+                                    (open)="openConsumptionDetails(consumption)"
+                                />
+                            }
+                        </div>
+                    </div>
                 }
             </div>
         }

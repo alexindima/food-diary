@@ -289,6 +289,9 @@
         "DELETE": "Delete",
         "DELETE_ERROR": "Unable to delete the recipe. Please try again."
     },
+    "RECIPE_CARD": {
+        "ADD_TO_MEAL": "Add to meal"
+    },
     "RECIPE_BADGE": {
         "MY": "My recipe",
         "SHARED": "Shared recipe"
@@ -1098,13 +1101,13 @@
         "KCAL": "kcal",
         "PROTEINS": "Proteins",
         "FATS": "Fats",
-        "CARBS": "Carbs",
-        "ITEM_COUNT": "Item count",
-        "MEAL_TYPES": {
-            "BREAKFAST": "Breakfast",
-            "LUNCH": "Lunch",
-            "DINNER": "Dinner",
-            "SNACK": "Snack",
+      "CARBS": "Carbs",
+      "ITEM_COUNT": "Item count",
+      "MEAL_TYPES": {
+        "BREAKFAST": "Breakfast",
+        "LUNCH": "Lunch",
+        "DINNER": "Dinner",
+        "SNACK": "Snack",
             "OTHER": "Other"
         }
     }

@@ -5,38 +5,47 @@
         [subtitle]="'RECIPE_LIST.SUBTITLE' | translate"
     >
         <ng-container fdPageHeaderActions>
-            <form class="recipe-list__search-form" [formGroup]="searchForm">
-                <fd-ui-input class="recipe-list__search-input"
-                    formControlName="search"
-                    prefixIcon="search"
-                    [label]="'RECIPE_LIST.SEARCH_PLACEHOLDER' | translate"
-                    [clearable]="true"
-                    [placeholder]="'RECIPE_LIST.SEARCH_PLACEHOLDER' | translate"
-                    [hideSubscript]="true"
-                    (cleared)="searchForm.controls.search.setValue('')"
-                 />
-            </form>
+            <div class="recipe-list__controls">
+                <form class="recipe-list__search-form" [formGroup]="searchForm">
+                    <fd-ui-input class="recipe-list__search-input"
+                        formControlName="search"
+                        prefixIcon="search"
+                        [label]="''"
+                        [clearable]="true"
+                        [placeholder]="'RECIPE_LIST.SEARCH_PLACEHOLDER' | translate"
+                        [hideSubscript]="true"
+                        (cleared)="searchForm.controls.search.setValue('')"
+                     />
+                </form>
 
-            <fd-ui-button class="recipe-list__filter-button"
-                variant="info"
-                [fill]="'solid'"
-                [iconSize]="'xl'"
-                [icon]="searchForm.controls.onlyMine.value ? 'person' : 'groups'"
-                [ariaLabel]="
-                    searchForm.controls.onlyMine.value
-                        ? ('RECIPE_LIST.SHOW_ALL_RECIPES' | translate)
-                        : ('RECIPE_LIST.ONLY_MY_RECIPES' | translate)
-                "
-                (click)="toggleOnlyMine()"
-             />
-
-            <fd-ui-button
-                class="recipe-list__add-button"
-                icon="add"
-                (click)="onAddRecipeClick()"
-            >
-                {{ 'RECIPE_LIST.ADD_RECIPE_BUTTON' | translate }}
-            </fd-ui-button>
+                <div class="recipe-list__filters">
+                    <fd-ui-button class="recipe-list__pill"
+                        variant="secondary"
+                        fill="outline"
+                        icon="tune"
+                        [ariaLabel]="
+                            searchForm.controls.onlyMine.value
+                                ? ('RECIPE_LIST.SHOW_ALL_RECIPES' | translate)
+                                : ('RECIPE_LIST.ONLY_MY_RECIPES' | translate)
+                        "
+                        (click)="toggleOnlyMine()"
+                        [class.recipe-list__pill--active]="searchForm.controls.onlyMine.value"
+                    >
+                        {{ searchForm.controls.onlyMine.value
+                            ? ('RECIPE_LIST.ONLY_MY_RECIPES' | translate)
+                            : ('RECIPE_LIST.SHOW_ALL_RECIPES' | translate) }}
+                    </fd-ui-button>
+                    <fd-ui-button
+                        class="recipe-list__pill recipe-list__pill--ghost"
+                        variant="primary"
+                        fill="solid"
+                        icon="add"
+                        (click)="onAddRecipeClick()"
+                    >
+                        {{ 'RECIPE_LIST.ADD_RECIPE_BUTTON' | translate }}
+                    </fd-ui-button>
+                </div>
+            </div>
         </ng-container>
     </fd-page-header>
 
@@ -45,59 +54,13 @@
             <fd-ui-loader class="recipe-list__loader" />
         } @else {
             @if (recipeData.items().length > 0) {
-                <div class="recipe-list__items">
+                <div class="recipe-list__grid">
                     @for (recipe of recipeData.items(); track recipe.id) {
-                        <fd-ui-entity-card
-                            class="fd-ui-entity-card--hoverable"
-                            appearance="recipe"
-                            (click)="onRecipeClick(recipe)"
+                        <fd-recipe-card
+                            [recipe]="recipe"
                             [imageUrl]="resolveImage(recipe)"
-                            [fallbackImage]="fallbackRecipeImage"
-                        >
-                            <div class="recipe-card product-card">
-                                <div class="product-card__header">
-                                    <div class="product-card__title">
-                                        <span class="product-card__name">{{ recipe.name }}</span>
-                                    </div>
-                                    <div class="product-card__badges">
-                                        @if (recipe.isOwnedByCurrentUser) {
-                                            <fd-badge [label]="getVisibilityTranslation(recipe.visibility)"
-                                                [variant]="isPrivateVisibility(recipe.visibility) ? 'warning' : 'success'"
-                                                [icon]="isPrivateVisibility(recipe.visibility) ? 'lock' : 'public'"
-                                             />
-                                        }
-                                        <fd-badge [label]="recipe.isOwnedByCurrentUser ? ('RECIPE_BADGE.MY' | translate) : ('RECIPE_BADGE.SHARED' | translate)"
-                                            [variant]="recipe.isOwnedByCurrentUser ? 'primary' : 'neutral'"
-                                            [icon]="recipe.isOwnedByCurrentUser ? 'person' : 'groups'"
-                                         />
-                                    </div>
-                                </div>
-                                <div class="product-card__stats">
-                                    <span class="product-card__calories">
-                                        {{ 'PRODUCT_LIST.CALORIES' | translate }}: {{ recipe.totalCalories ?? '-' }}
-                                        {{ 'PRODUCT_LIST.KCAL' | translate }}
-                                    </span>
-                                    <span class="product-card__macros">
-                                        {{ 'PRODUCT_LIST.PROTEINS' | translate }}: {{ recipe.totalProteins ?? '-' }} {{ 'PRODUCT_AMOUNT_UNITS_SHORT.G' | translate }} ·
-                                        {{ 'PRODUCT_LIST.FATS' | translate }}: {{ recipe.totalFats ?? '-' }} {{ 'PRODUCT_AMOUNT_UNITS_SHORT.G' | translate }} ·
-                                        {{ 'PRODUCT_LIST.CARBS' | translate }}: {{ recipe.totalCarbs ?? '-' }} {{ 'PRODUCT_AMOUNT_UNITS_SHORT.G' | translate }}
-                                    </span>
-                                </div>
-                                <div class="recipe-card__meta">
-                                    <span class="recipe-card__prep-time">
-                                        {{ 'RECIPE_LIST.PREP_TIME' | translate }}:
-                                        @if (getPrepTime(recipe) !== null) {
-                                            {{ getPrepTime(recipe) }} {{ 'RECIPE_DETAIL.MIN' | translate }}
-                                        } @else {
-                                            -
-                                        }
-                                    </span>
-                                    <span class="recipe-card__ingredients">
-                                        {{ 'RECIPE_LIST.INGREDIENTS_COUNT' | translate }}: {{ getIngredientCount(recipe) }}
-                                    </span>
-                                </div>
-                            </div>
-                        </fd-ui-entity-card>
+                            (open)="onRecipeClick(recipe)"
+                        />
                     }
                 </div>
             } @else {

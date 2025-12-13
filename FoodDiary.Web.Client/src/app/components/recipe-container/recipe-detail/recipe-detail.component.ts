@@ -78,9 +78,9 @@ export class RecipeDetailComponent {
         this.totalTime = this.calculateTotalPreparationTime();
         this.ingredientCount = this.computeIngredientCount();
         const labels = [
-            this.translateService.instant('NUTRIENTS.PROTEINS'),
-            this.translateService.instant('NUTRIENTS.FATS'),
-            this.translateService.instant('NUTRIENTS.CARBS'),
+            this.translateService.instant('GENERAL.NUTRIENTS.PROTEIN'),
+            this.translateService.instant('GENERAL.NUTRIENTS.FAT'),
+            this.translateService.instant('GENERAL.NUTRIENTS.CARB'),
         ];
         const datasetValues = [this.proteins, this.fats, this.carbs];
         const colors = [CHART_COLORS.proteins, CHART_COLORS.fats, CHART_COLORS.carbs];
@@ -132,27 +132,27 @@ export class RecipeDetailComponent {
         };
         this.macroBlocks = [
             {
-                labelKey: 'PRODUCT_LIST.PROTEINS',
+                labelKey: 'GENERAL.NUTRIENTS.PROTEIN',
                 value: this.proteins,
-                unitKey: 'PRODUCT_AMOUNT_UNITS_SHORT.G',
+                unitKey: 'GENERAL.UNITS.G',
                 color: CHART_COLORS.proteins,
             },
             {
-                labelKey: 'PRODUCT_LIST.FATS',
+                labelKey: 'GENERAL.NUTRIENTS.FAT',
                 value: this.fats,
-                unitKey: 'PRODUCT_AMOUNT_UNITS_SHORT.G',
+                unitKey: 'GENERAL.UNITS.G',
                 color: CHART_COLORS.fats,
             },
             {
-                labelKey: 'PRODUCT_LIST.CARBS',
+                labelKey: 'GENERAL.NUTRIENTS.CARB',
                 value: this.carbs,
-                unitKey: 'PRODUCT_AMOUNT_UNITS_SHORT.G',
+                unitKey: 'GENERAL.UNITS.G',
                 color: CHART_COLORS.carbs,
             },
             {
-                labelKey: 'PRODUCT_DETAIL.SUMMARY.FIBER',
+                labelKey: 'GENERAL.NUTRIENTS.FIBER',
                 value: this.fiber,
-                unitKey: 'PRODUCT_AMOUNT_UNITS_SHORT.G',
+                unitKey: 'GENERAL.UNITS.G',
                 color: CHART_COLORS.fiber,
             },
         ];

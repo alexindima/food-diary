@@ -12,8 +12,6 @@ import { catchError, debounceTime, finalize, map, Observable, of, switchMap, tap
 import { HttpErrorResponse } from '@angular/common/http';
 import { FormGroupControls } from '../../../types/common.data';
 import { RecipeDetailComponent, RecipeDetailActionResult } from '../recipe-detail/recipe-detail.component';
-import { BadgeComponent } from '../../shared/badge/badge.component';
-import { FdUiEntityCardComponent } from 'fd-ui-kit/entity-card/fd-ui-entity-card.component';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
@@ -22,6 +20,7 @@ import { PageHeaderComponent } from '../../shared/page-header/page-header.compon
 import { PageBodyComponent } from '../../shared/page-body/page-body.component';
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
 import { resolveRecipeImageUrl } from '../../../utils/recipe-stub.utils';
+import { RecipeCardComponent } from '../../shared/recipe-card/recipe-card.component';
 
 @Component({
     selector: 'fd-recipe-list',
@@ -31,8 +30,6 @@ import { resolveRecipeImageUrl } from '../../../utils/recipe-stub.utils';
     imports: [
         ReactiveFormsModule,
         TranslatePipe,
-        BadgeComponent,
-        FdUiEntityCardComponent,
         FdUiInputComponent,
         FdUiButtonComponent,
         FdUiLoaderComponent,
@@ -41,6 +38,7 @@ import { resolveRecipeImageUrl } from '../../../utils/recipe-stub.utils';
         PageHeaderComponent,
         PageBodyComponent,
         FdPageContainerDirective,
+        RecipeCardComponent,
     ],
 })
 export class RecipeListComponent implements OnInit {
@@ -193,21 +191,6 @@ export class RecipeListComponent implements OnInit {
         if (result.action === 'Delete') {
             this.onDeleteRecipe(recipe);
         }
-    }
-
-    public getIngredientCount(recipe: Recipe): number {
-        if (!recipe?.steps?.length) {
-            return 0;
-        }
-
-        return recipe.steps.reduce((total, step) => total + (step.ingredients?.length ?? 0), 0);
-    }
-
-    public getPrepTime(recipe: Recipe): number | null {
-        const prep = recipe.prepTime ?? 0;
-        const cook = recipe.cookTime ?? 0;
-        const total = prep + cook;
-        return total > 0 ? total : null;
     }
 
     public isPrivateVisibility(visibility: RecipeVisibility | string | null | undefined): boolean {

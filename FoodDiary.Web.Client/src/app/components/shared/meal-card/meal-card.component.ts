@@ -1,12 +1,11 @@
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { Consumption } from '../../../types/consumption.data';
 import { resolveMealImageUrl } from '../../../utils/meal-stub.utils';
 import { ProductType } from '../../../types/product.data';
 import { resolveProductImageUrl } from '../../../utils/product-stub.utils';
 import { resolveRecipeImageUrl } from '../../../utils/recipe-stub.utils';
-import { NgOptimizedImage } from '@angular/common';
 
 @Component({
     selector: 'fd-meal-card',
