@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, ElementRef, inject, OnInit, viewChild } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
 import { ProductService } from '../../../services/product.service';
 import { NavigationService } from '../../../services/navigation.service';
@@ -9,9 +10,7 @@ import { catchError, debounceTime, distinctUntilChanged, finalize, map, Observab
 import { HttpErrorResponse } from '@angular/common/http';
 import { FormGroupControls } from '../../../types/common.data';
 import { BarcodeScannerComponent } from '../../shared/barcode-scanner/barcode-scanner.component';
-import { BadgeComponent } from '../../shared/badge/badge.component';
 import { PageHeaderComponent } from '../../shared/page-header/page-header.component';
-import { FdUiEntityCardComponent } from 'fd-ui-kit/entity-card/fd-ui-entity-card.component';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
@@ -22,6 +21,7 @@ import { FdUiIconModule } from 'fd-ui-kit/material';
 import { PageBodyComponent } from '../../shared/page-body/page-body.component';
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
 import { resolveProductImageUrl } from '../../../utils/product-stub.utils';
+import { ProductCardComponent } from '../../shared/product-card/product-card.component';
 
 @Component({
     selector: 'fd-product-list-base',
@@ -30,10 +30,9 @@ import { resolveProductImageUrl } from '../../../utils/product-stub.utils';
     styleUrls: ['./product-list-base.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
+        CommonModule,
         ReactiveFormsModule,
         TranslatePipe,
-        BadgeComponent,
-        FdUiEntityCardComponent,
         FdUiInputComponent,
         FdUiButtonComponent,
         FdUiLoaderComponent,
@@ -42,6 +41,7 @@ import { resolveProductImageUrl } from '../../../utils/product-stub.utils';
         PageHeaderComponent,
         PageBodyComponent,
         FdPageContainerDirective,
+        ProductCardComponent,
     ],
 })
 export class ProductListBaseComponent implements OnInit {

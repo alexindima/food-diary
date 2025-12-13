@@ -64,19 +64,24 @@ export class MealCardComponent {
 
     public readonly macroChips = computed(() => [
         {
-            label: 'MEAL_CARD.PROTEINS',
+            label: 'GENERAL.NUTRIENTS.PROTEIN',
             value: this.meal().totalProteins,
             color: '#4f46e5',
         },
         {
-            label: 'MEAL_CARD.CARBS',
+            label: 'GENERAL.NUTRIENTS.CARB',
             value: this.meal().totalCarbs,
             color: '#0ea5e9',
         },
         {
-            label: 'MEAL_CARD.FATS',
+            label: 'GENERAL.NUTRIENTS.FAT',
             value: this.meal().totalFats,
             color: '#f59e0b',
+        },
+        {
+            label: 'GENERAL.NUTRIENTS.FIBER',
+            value: this.meal().totalFiber,
+            color: '#94a3b8',
         },
     ]);
 

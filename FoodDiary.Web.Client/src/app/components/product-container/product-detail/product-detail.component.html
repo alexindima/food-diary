@@ -13,11 +13,11 @@
                         accentSide="top"
                         accentColor="var(--fd-color-primary-300, #93C5FD)"
                         [tinted]="true"
-                     >
+                    >
                         <span class="product-detail__surface-label">{{ 'PRODUCT_DETAIL.SUMMARY.CALORIES' | translate }}</span>
                         <strong class="product-detail__surface-value">
                             {{ calories }}
-                            {{ 'PRODUCT_LIST.KCAL' | translate }}
+                            {{ 'GENERAL.UNITS.KCAL' | translate }}
                         </strong>
                     </fd-ui-accent-surface>
 
@@ -40,7 +40,7 @@
                         <span class="product-detail__surface-label">{{ 'PRODUCT_DETAIL.SUMMARY.DEFAULT_PORTION' | translate }}</span>
                         <strong class="product-detail__surface-value">
                             {{ product.defaultPortionAmount }}
-                            {{ ('PRODUCT_AMOUNT_UNITS_SHORT.' + product.baseUnit) | translate }}
+                            {{ ('GENERAL.UNITS.' + product.baseUnit) | translate }}
                         </strong>
                     </fd-ui-accent-surface>
 

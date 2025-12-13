@@ -104,9 +104,9 @@ export class ProductDetailComponent {
             carbs: this.product.carbsPerBase,
         };
         const labels = [
-            this.translate.instant('NUTRIENTS.PROTEINS'),
-            this.translate.instant('NUTRIENTS.FATS'),
-            this.translate.instant('NUTRIENTS.CARBS'),
+            this.translate.instant('GENERAL.NUTRIENTS.PROTEIN'),
+            this.translate.instant('GENERAL.NUTRIENTS.FAT'),
+            this.translate.instant('GENERAL.NUTRIENTS.CARB'),
         ];
         const datasetValues = [
             this.product.proteinsPerBase,
@@ -133,7 +133,7 @@ export class ProductDetailComponent {
             ],
         };
         const tooltipLabel = (label: string, value: number) =>
-            `${label}: ${value.toFixed(2)} ${this.translate.instant('STATISTICS.GRAMS')}`;
+            `${label}: ${value.toFixed(2)} ${this.translate.instant('GENERAL.UNITS.G')}`;
         this.pieChartOptions = {
             responsive: true,
             plugins: {
@@ -162,27 +162,27 @@ export class ProductDetailComponent {
         };
         this.macroBlocks = [
             {
-                labelKey: 'PRODUCT_LIST.PROTEINS',
+                labelKey: 'GENERAL.NUTRIENTS.PROTEIN',
                 value: this.product.proteinsPerBase,
-                unitKey: 'PRODUCT_AMOUNT_UNITS_SHORT.G',
+                unitKey: 'GENERAL.UNITS.G',
                 color: CHART_COLORS.proteins,
             },
             {
-                labelKey: 'PRODUCT_LIST.FATS',
+                labelKey: 'GENERAL.NUTRIENTS.FAT',
                 value: this.product.fatsPerBase,
-                unitKey: 'PRODUCT_AMOUNT_UNITS_SHORT.G',
+                unitKey: 'GENERAL.UNITS.G',
                 color: CHART_COLORS.fats,
             },
             {
-                labelKey: 'PRODUCT_LIST.CARBS',
+                labelKey: 'GENERAL.NUTRIENTS.CARB',
                 value: this.product.carbsPerBase,
-                unitKey: 'PRODUCT_AMOUNT_UNITS_SHORT.G',
+                unitKey: 'GENERAL.UNITS.G',
                 color: CHART_COLORS.carbs,
             },
             {
-                labelKey: 'PRODUCT_DETAIL.SUMMARY.FIBER',
+                labelKey: 'GENERAL.NUTRIENTS.FIBER',
                 value: this.product.fiberPerBase,
-                unitKey: 'PRODUCT_AMOUNT_UNITS_SHORT.G',
+                unitKey: 'GENERAL.UNITS.G',
                 color: CHART_COLORS.fiber,
             },
         ];

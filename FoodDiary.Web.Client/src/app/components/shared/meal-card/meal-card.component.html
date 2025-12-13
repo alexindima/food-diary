@@ -24,6 +24,16 @@
     </div>
 
     <div class="meal-card__body">
+        <div class="meal-card__macros">
+            @for (chip of macroChips(); track chip.label) {
+                <span class="meal-card__chip">
+                    <span class="meal-card__chip-dot" [style.background]="chip.color"></span>
+                    {{ chip.value | number:'1.0-0' }} {{ 'GENERAL.UNITS.G' | translate }}
+                    {{ chip.label | translate }}
+                </span>
+            }
+        </div>
+
         <div class="meal-card__gallery">
             @for (image of previewImages(); track idx; let idx = $index) {
                 <div
@@ -42,16 +52,6 @@
                 >
                     +{{ extraCount() }}
                 </div>
-            }
-        </div>
-
-        <div class="meal-card__macros">
-            @for (chip of macroChips(); track chip.label) {
-                <span class="meal-card__chip">
-                    <span class="meal-card__chip-dot" [style.background]="chip.color"></span>
-                    {{ chip.value | number:'1.0-0' }} {{ 'PRODUCT_AMOUNT_UNITS_SHORT.G' | translate }}
-                    {{ chip.label | translate }}
-                </span>
             }
         </div>
     </div>

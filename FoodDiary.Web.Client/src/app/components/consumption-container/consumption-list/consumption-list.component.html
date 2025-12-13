@@ -5,24 +5,29 @@
         [subtitle]="'CONSUMPTION_LIST.SUBTITLE' | translate"
     >
         <ng-container fdPageHeaderActions>
-            <div class="consumption-list__search-group">
+            <div class="consumption-list__controls">
                 <form [formGroup]="searchForm" class="consumption-list__date-range-form">
                     <fd-ui-date-range-input formControlName="dateRange"
                         class="consumption-list__date-input"
-                        [label]="'CONSUMPTION_LIST.CHOOSE_DATES' | translate"
+                        [label]="''"
                         [startPlaceholder]="'CONSUMPTION_LIST.DATE_PLACEHOLDER' | translate"
                         [endPlaceholder]="'CONSUMPTION_LIST.DATE_PLACEHOLDER' | translate"
                         [hideSubscript]="true"
                      />
                 </form>
+
+                <div class="consumption-list__actions">
+                    <fd-ui-button
+                        class="consumption-list__pill consumption-list__pill--ghost"
+                        icon="add"
+                        variant="primary"
+                        fill="solid"
+                        (click)="goToConsumptionAdd()"
+                    >
+                        {{ 'CONSUMPTION_LIST.ADD_CONSUMPTION_BUTTON' | translate }}
+                    </fd-ui-button>
+                </div>
             </div>
-            <fd-ui-button
-                class="consumption-list__add-button"
-                icon="add"
-                (click)="goToConsumptionAdd()"
-            >
-                {{ 'CONSUMPTION_LIST.ADD_CONSUMPTION_BUTTON' | translate }}
-            </fd-ui-button>
         </ng-container>
     </fd-page-header>
 
@@ -37,13 +42,15 @@
                 </div>
             }
 
-            @for (consumption of consumptionData.items(); track consumption) {
-                <fd-meal-card
-                    class="consumption-card"
-                    [meal]="consumption"
-                    (open)="openConsumptionDetails(consumption)"
-                />
-            }
+            <div class="consumption-list__grid">
+                @for (consumption of consumptionData.items(); track consumption) {
+                    <fd-meal-card
+                        class="consumption-card"
+                        [meal]="consumption"
+                        (open)="openConsumptionDetails(consumption)"
+                    />
+                }
+            </div>
         }
 
         @if (consumptionData.totalPages > 1) {

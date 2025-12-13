@@ -20,6 +20,21 @@
         "CANCEL": "Cancel",
         "SAVE": "Save"
     },
+    "GENERAL": {
+        "UNITS": {
+            "KCAL": "kcal",
+            "G": "g",
+            "ML": "ml",
+            "PCS": "pcs"
+        },
+        "NUTRIENTS": {
+            "CALORIES": "Calories",
+            "PROTEIN": "Proteins",
+            "FAT": "Fats",
+            "CARB": "Carbs",
+            "FIBER": "Fiber"
+        }
+    },
     "MACRO_SUMMARY": {
         "TITLE": "Nutrient balance",
         "PROTEINS": "Proteins",
@@ -228,15 +243,18 @@
         "ONLY_MY_PRODUCTS": "Show only mine",
         "SHOW_ALL_PRODUCTS": "Show all products",
         "NO_PRODUCTS_FOUND": "No products found",
-        "CALORIES": "Calories",
+        "CALORIES": "@:GENERAL.NUTRIENTS.CALORIES",
         "BARCODE": "Barcode",
-        "PROTEINS": "Proteins",
-        "FATS": "Fats",
-        "CARBS": "Carbs",
+        "PROTEINS": "@:GENERAL.NUTRIENTS.PROTEIN",
+        "FATS": "@:GENERAL.NUTRIENTS.FAT",
+        "CARBS": "@:GENERAL.NUTRIENTS.CARB",
         "DEFAULT_SERVING": "Product type",
-        "GRAMS": "g",
-        "KCAL": "kcal",
+        "GRAMS": "@:GENERAL.UNITS.G",
+        "KCAL": "@:GENERAL.UNITS.KCAL",
         "DELETE_ERROR": "Unable to delete the product. Please try again."
+    },
+    "PRODUCT_CARD": {
+        "ADD_TO_CONSUMPTION": "Add to meal"
     },
     "STATISTICS": {
         "GRAMS": "g"
@@ -1013,9 +1031,9 @@
         "PCS": "pieces"
     },
     "PRODUCT_AMOUNT_UNITS_SHORT": {
-        "G": "g",
-        "ML": "ml",
-        "PCS": "pcs"
+        "G": "@:GENERAL.UNITS.G",
+        "ML": "@:GENERAL.UNITS.ML",
+        "PCS": "@:GENERAL.UNITS.PCS"
     },
     "BARCODE_SCANNER": {
         "TITLE": "Scan the barcode",
@@ -1091,4 +1109,3 @@
         }
     }
 }
-

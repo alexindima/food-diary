@@ -1,0 +1,64 @@
+<div class="product-card" (click)="handleOpen()">
+    <div class="product-card__header">
+        <div class="product-card__meta">
+            <div class="product-card__thumb">
+                @if (imageUrl) {
+                    <img [src]="imageUrl" [alt]="product.name" />
+                } @else {
+                    <mat-icon fontIcon="restaurant"></mat-icon>
+                }
+            </div>
+            <div class="product-card__titles">
+                <div class="product-card__name">{{ product.name }}</div>
+                @if (product.barcode) {
+                    <div class="product-card__barcode">
+                        <mat-icon fontIcon="qr_code_2"></mat-icon>
+                        {{ product.barcode }}
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="product-card__calories">
+            <span class="product-card__calories-row">
+                {{ product.caloriesPerBase | number:'1.0-0' }}
+                <span class="product-card__calories-unit">{{ 'GENERAL.UNITS.KCAL' | translate }}</span>
+            </span>
+            <div class="product-card__serving">
+                {{ product.baseAmount }} {{ ('GENERAL.UNITS.' + product.baseUnit) | translate }}
+            </div>
+        </div>
+    </div>
+
+    <div class="product-card__macros">
+        <span class="product-card__chip">
+            <span class="product-card__chip-dot product-card__chip-dot--protein"></span>
+            {{ product.proteinsPerBase | number:'1.0-0' }}{{ 'GENERAL.UNITS.G' | translate }}
+            {{ 'GENERAL.NUTRIENTS.PROTEIN' | translate }}
+        </span>
+        <span class="product-card__chip">
+            <span class="product-card__chip-dot product-card__chip-dot--carb"></span>
+            {{ product.carbsPerBase | number:'1.0-0' }}{{ 'GENERAL.UNITS.G' | translate }}
+            {{ 'GENERAL.NUTRIENTS.CARB' | translate }}
+        </span>
+        <span class="product-card__chip">
+            <span class="product-card__chip-dot product-card__chip-dot--fat"></span>
+            {{ product.fatsPerBase | number:'1.0-0' }}{{ 'GENERAL.UNITS.G' | translate }}
+            {{ 'GENERAL.NUTRIENTS.FAT' | translate }}
+        </span>
+        <span class="product-card__chip">
+            <span class="product-card__chip-dot product-card__chip-dot--fiber"></span>
+            {{ product.fiberPerBase | number:'1.0-0' }}{{ 'GENERAL.UNITS.G' | translate }}
+            {{ 'GENERAL.NUTRIENTS.FIBER' | translate }}
+        </span>
+    </div>
+
+    <fd-ui-button
+        class="product-card__action"
+        icon="add"
+        variant="primary"
+        fill="solid"
+        (click)="$event.stopPropagation(); handleOpen()"
+    >
+        {{ 'PRODUCT_CARD.ADD_TO_CONSUMPTION' | translate }}
+    </fd-ui-button>
+</div>

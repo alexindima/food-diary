@@ -5,41 +5,46 @@
         [subtitle]="'PRODUCT_LIST.SUBTITLE' | translate"
     >
         <ng-container fdPageHeaderActions>
-            <form class="product-list__search-form" [formGroup]="searchForm">
-                <fd-ui-input class="product-list__search-input"
-                    formControlName="search"
-                    prefixIcon="search"
-                    [label]="'PRODUCT_LIST.SEARCH_PLACEHOLDER' | translate"
-                    [clearable]="true"
-                    [placeholder]="'PRODUCT_LIST.SEARCH_PLACEHOLDER' | translate"
-                    suffixButtonIcon="qr_code_scanner"
-                    [suffixButtonAriaLabel]="'PRODUCT_LIST.SCAN_BARCODE' | translate"
-                    [hideSubscript]="true"
-                    (cleared)="searchForm.controls.search.setValue('')"
-                    (suffixButtonClicked)="openBarcodeScanner()"
-                 />
-            </form>
+            <div class="product-list__controls">
+                <form class="product-list__search-form" [formGroup]="searchForm">
+                    <fd-ui-input class="product-list__search-input"
+                        formControlName="search"
+                        prefixIcon="search"
+                        [label]="''"
+                        [clearable]="true"
+                        [placeholder]="'PRODUCT_LIST.SEARCH_PLACEHOLDER' | translate"
+                        suffixButtonIcon="qr_code_scanner"
+                        [suffixButtonAriaLabel]="'PRODUCT_LIST.SCAN_BARCODE' | translate"
+                        [hideSubscript]="true"
+                        (cleared)="searchForm.controls.search.setValue('')"
+                        (suffixButtonClicked)="openBarcodeScanner()"
+                     />
+                </form>
 
-            <fd-ui-button class="product-list__filter-button"
-                variant="info"
-                [fill]="'solid'"
-                [iconSize]="'xl'"
-                [icon]="searchForm.controls.onlyMine.value ? 'person' : 'groups'"
-                [ariaLabel]="
-                    searchForm.controls.onlyMine.value
-                        ? ('PRODUCT_LIST.SHOW_ALL_PRODUCTS' | translate)
-                        : ('PRODUCT_LIST.ONLY_MY_PRODUCTS' | translate)
-                "
-                (click)="toggleOnlyMine()"
-             />
-
-            <fd-ui-button
-                class="product-list__add-button"
-                icon="add"
-                (click)="onAddProductClick()"
-            >
-                {{ 'PRODUCT_LIST.ADD_PRODUCT_BUTTON' | translate }}
-            </fd-ui-button>
+                <div class="product-list__filters">
+                    <fd-ui-button class="product-list__pill"
+                        variant="secondary"
+                        fill="outline"
+                        icon="tune"
+                        [ariaLabel]="'PRODUCT_LIST.ONLY_MY_PRODUCTS' | translate"
+                        (click)="toggleOnlyMine()"
+                        [class.product-list__pill--active]="searchForm.controls.onlyMine.value"
+                    >
+                        {{ searchForm.controls.onlyMine.value
+                            ? ('PRODUCT_LIST.ONLY_MY_PRODUCTS' | translate)
+                            : ('PRODUCT_LIST.SHOW_ALL_PRODUCTS' | translate) }}
+                    </fd-ui-button>
+                    <fd-ui-button
+                        class="product-list__pill product-list__pill--ghost"
+                        variant="secondary"
+                        fill="text"
+                        icon="add"
+                        (click)="onAddProductClick()"
+                    >
+                        {{ 'PRODUCT_LIST.ADD_PRODUCT_BUTTON' | translate }}
+                    </fd-ui-button>
+                </div>
+            </div>
         </ng-container>
     </fd-page-header>
 
@@ -48,52 +53,15 @@
             <fd-ui-loader class="product-list__loader" />
         } @else {
             @if (productData.items().length > 0) {
-                @for (product of productData.items(); track product) {
-                        <fd-ui-entity-card
-                            class="product-card fd-ui-entity-card--hoverable"
-                            appearance="product"
-                            (click)="onProductClick(product)"
+                <div class="product-list__grid">
+                    @for (product of productData.items(); track product) {
+                        <fd-product-card
+                            [product]="product"
                             [imageUrl]="resolveImage(product)"
-                        >
-                        <div class="product-card">
-                            <div class="product-card__header">
-                                <div class="product-card__title">
-                                    <span class="product-card__name">{{ product.name }}</span>
-                                    @if (product.barcode) {
-                                        <span class="product-card__barcode">[{{ product.barcode }}]</span>
-                                    }
-                                </div>
-                                <div class="product-card__badges">
-                                    @if (product.isOwnedByCurrentUser) {
-                                        <fd-badge [label]="('PRODUCT_VISIBILITY.' + product.visibility) | translate"
-                                            [variant]="isPrivateVisibility(product.visibility) ? 'warning' : 'success'"
-                                            [icon]="isPrivateVisibility(product.visibility) ? 'lock' : 'public'"
-                                         />
-                                    }
-                                    <fd-badge [label]="product.isOwnedByCurrentUser ? ('PRODUCT_BADGE.MY' | translate) : ('PRODUCT_BADGE.SHARED' | translate)"
-                                        [variant]="product.isOwnedByCurrentUser ? 'primary' : 'neutral'"
-                                        [icon]="product.isOwnedByCurrentUser ? 'person' : 'groups'"
-                                     />
-                                </div>
-                            </div>
-                            <div class="product-card__stats">
-                                <span class="product-card__calories">
-                                    {{ 'PRODUCT_LIST.CALORIES' | translate }}: {{ product.caloriesPerBase }}
-                                    {{ 'PRODUCT_LIST.KCAL' | translate }}
-                                </span>
-                                <span class="product-card__macros">
-                                    {{ 'PRODUCT_LIST.PROTEINS' | translate }}: {{ product.proteinsPerBase }} {{ 'PRODUCT_AMOUNT_UNITS_SHORT.G' | translate }} ·
-                                    {{ 'PRODUCT_LIST.FATS' | translate }}: {{ product.fatsPerBase }} {{ 'PRODUCT_AMOUNT_UNITS_SHORT.G' | translate }} ·
-                                    {{ 'PRODUCT_LIST.CARBS' | translate }}: {{ product.carbsPerBase }} {{ 'PRODUCT_AMOUNT_UNITS_SHORT.G' | translate }}
-                                </span>
-                            </div>
-                            <div class="product-card__serving">
-                                {{ 'PRODUCT_MANAGE.PRODUCT_TYPE' | translate }}:
-                                {{ getProductTypeTranslationKey(product) | translate }}
-                            </div>
-                        </div>
-                    </fd-ui-entity-card>
-                }
+                            (open)="onProductClick(product)"
+                        />
+                    }
+                </div>
             } @else {
                 <div class="product-list__no-results">
                     <mat-icon class="product-list__no-results-icon">search_off</mat-icon>
@@ -112,4 +80,3 @@
         }
     </fd-page-body>
 </div>
-

@@ -7,8 +7,6 @@ import {
     ProductDetailComponent,
     ProductDetailActionResult,
 } from '../../product-detail/product-detail.component';
-import { BadgeComponent } from '../../../shared/badge/badge.component';
-import { FdUiEntityCardComponent } from 'fd-ui-kit/entity-card/fd-ui-entity-card.component';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { finalize } from 'rxjs';
@@ -19,6 +17,7 @@ import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { PageHeaderComponent } from '../../../shared/page-header/page-header.component';
 import { PageBodyComponent } from '../../../shared/page-body/page-body.component';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
+import { ProductCardComponent } from '../../../shared/product-card/product-card.component';
 
 @Component({
     selector: 'fd-product-list-page',
@@ -28,8 +27,6 @@ import { FdPageContainerDirective } from '../../../../directives/layout/page-con
     imports: [
         ReactiveFormsModule,
         TranslatePipe,
-        BadgeComponent,
-        FdUiEntityCardComponent,
         FdUiInputComponent,
         FdUiButtonComponent,
         FdUiLoaderComponent,
@@ -38,6 +35,7 @@ import { FdPageContainerDirective } from '../../../../directives/layout/page-con
         PageHeaderComponent,
         PageBodyComponent,
         FdPageContainerDirective,
+        ProductCardComponent,
     ]
 })
 export class ProductListPageComponent extends ProductListBaseComponent implements OnInit {

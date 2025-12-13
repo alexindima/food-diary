@@ -4,8 +4,6 @@ import { ProductListBaseComponent } from '../product-list-base.component';
 import { Product } from '../../../../types/product.data';
 import { TranslatePipe } from '@ngx-translate/core';
 import { ProductAddDialogComponent } from '../../product-manage/product-add-dialog/product-add-dialog.component';
-import { BadgeComponent } from '../../../shared/badge/badge.component';
-import { FdUiEntityCardComponent } from 'fd-ui-kit/entity-card/fd-ui-entity-card.component';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
@@ -15,6 +13,7 @@ import { FdUiIconModule } from 'fd-ui-kit/material';
 import { PageHeaderComponent } from '../../../shared/page-header/page-header.component';
 import { PageBodyComponent } from '../../../shared/page-body/page-body.component';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
+import { ProductCardComponent } from '../../../shared/product-card/product-card.component';
 
 @Component({
     selector: 'fd-product-list-dialog',
@@ -25,8 +24,6 @@ import { FdPageContainerDirective } from '../../../../directives/layout/page-con
     imports: [
         ReactiveFormsModule,
         TranslatePipe,
-        BadgeComponent,
-        FdUiEntityCardComponent,
         FdUiInputComponent,
         FdUiButtonComponent,
         FdUiLoaderComponent,
@@ -35,6 +32,7 @@ import { FdPageContainerDirective } from '../../../../directives/layout/page-con
         PageHeaderComponent,
         PageBodyComponent,
         FdPageContainerDirective,
+        ProductCardComponent,
     ]
 })
 export class ProductListDialogComponent extends ProductListBaseComponent {

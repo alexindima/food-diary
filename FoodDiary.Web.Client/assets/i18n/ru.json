@@ -20,6 +20,21 @@
         "CANCEL": "Отмена",
         "SAVE": "Сохранить"
     },
+    "GENERAL": {
+        "UNITS": {
+            "KCAL": "ккал",
+            "G": "г",
+            "ML": "мл",
+            "PCS": "шт"
+        },
+        "NUTRIENTS": {
+            "CALORIES": "Калории",
+            "PROTEIN": "Белки",
+            "FAT": "Жиры",
+            "CARB": "Углеводы",
+            "FIBER": "Клетчатка"
+        }
+    },
     "HEADER": {
         "HOME": "Главная",
         "LOGIN": "Вход",
@@ -193,15 +208,18 @@
         "ONLY_MY_PRODUCTS": "Только мои",
         "SHOW_ALL_PRODUCTS": "Показать все продукты",
         "NO_PRODUCTS_FOUND": "Продукты не найдены",
-        "CALORIES": "Калории",
+        "CALORIES": "@:GENERAL.NUTRIENTS.CALORIES",
         "BARCODE": "Штрихкод",
-        "PROTEINS": "Белки",
-        "FATS": "Жиры",
-        "CARBS": "Углеводы",
+        "PROTEINS": "@:GENERAL.NUTRIENTS.PROTEIN",
+        "FATS": "@:GENERAL.NUTRIENTS.FAT",
+        "CARBS": "@:GENERAL.NUTRIENTS.CARB",
         "DEFAULT_SERVING": "Тип продукта",
-        "GRAMS": "г",
-        "KCAL": "ККал",
+        "GRAMS": "@:GENERAL.UNITS.G",
+        "KCAL": "@:GENERAL.UNITS.KCAL",
         "DELETE_ERROR": "Не удалось удалить продукт. Попробуйте ещё раз."
+    },
+    "PRODUCT_CARD": {
+        "ADD_TO_CONSUMPTION": "Добавить к приему"
     },
     "STATISTICS": {
         "GRAMS": "г"
@@ -818,9 +836,9 @@
         "PCS": "штуки"
     },
     "PRODUCT_AMOUNT_UNITS_SHORT": {
-        "G": "г",
-        "ML": "мл",
-        "PCS": "шт"
+        "G": "@:GENERAL.UNITS.G",
+        "ML": "@:GENERAL.UNITS.ML",
+        "PCS": "@:GENERAL.UNITS.PCS"
     },
     "BARCODE_SCANNER": {
         "TITLE": "Сканируйте штрихкод",
@@ -1044,10 +1062,6 @@
         }
     }
 }
-
-
-
-
 
 
 
