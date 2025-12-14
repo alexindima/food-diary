@@ -23,9 +23,15 @@ export class RecipeCardComponent {
     @Input({ required: true }) recipe!: Recipe;
     @Input() imageUrl?: string;
     @Output() open = new EventEmitter<void>();
+    @Output() addToMeal = new EventEmitter<Recipe>();
 
     public handleOpen(): void {
         this.open.emit();
+    }
+
+    public handleAdd(event: Event): void {
+        event.stopPropagation();
+        this.addToMeal.emit(this.recipe);
     }
 
     public getTotalTime(): number | null {

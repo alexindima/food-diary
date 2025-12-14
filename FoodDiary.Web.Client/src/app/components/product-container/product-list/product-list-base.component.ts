@@ -22,6 +22,7 @@ import { PageBodyComponent } from '../../shared/page-body/page-body.component';
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
 import { resolveProductImageUrl } from '../../../utils/product-stub.utils';
 import { ProductCardComponent } from '../../shared/product-card/product-card.component';
+import { QuickConsumptionService } from '../../../services/quick-consumption.service';
 
 @Component({
     selector: 'fd-product-list-base',
@@ -49,6 +50,7 @@ export class ProductListBaseComponent implements OnInit {
     protected readonly navigationService = inject(NavigationService);
     protected readonly pageSize = 10;
     protected readonly fdDialogService = inject(FdUiDialogService);
+    protected readonly quickConsumptionService = inject(QuickConsumptionService);
 
     private readonly header = viewChild.required<PageHeaderComponent, ElementRef>(PageHeaderComponent, { read: ElementRef });
 
@@ -142,6 +144,10 @@ export class ProductListBaseComponent implements OnInit {
     }
 
     protected onProductClick(_product: Product): void {}
+
+    public onAddToMeal(product: Product): void {
+        this.quickConsumptionService.addProduct(product);
+    }
 
     protected getProductTypeTranslationKey(product: Product): string {
         return buildProductTypeTranslationKey(product.productType ?? product.category ?? null);

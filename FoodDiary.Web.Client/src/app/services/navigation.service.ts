@@ -37,14 +37,14 @@ export class NavigationService {
         await this.router.navigate(['/consumptions']);
     }
 
-    public async navigateToConsumptionAdd(mealType?: string): Promise<void> {
-        const extras = mealType
+    public async navigateToConsumptionAdd(mealType?: string, extras?: { state?: Record<string, unknown> }): Promise<void> {
+        const navigationExtras = mealType
             ? {
-                  state: { mealType },
+                  state: { mealType, ...(extras?.state ?? {}) },
                   queryParams: { mealType },
               }
-            : {};
-        await this.router.navigate(['/consumptions/add'], extras);
+            : { state: extras?.state };
+        await this.router.navigate(['/consumptions/add'], navigationExtras);
     }
 
     public async navigateToConsumptionEdit(id: string): Promise<void> {

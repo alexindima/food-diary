@@ -17,8 +17,14 @@ export class ProductCardComponent {
     @Input({ required: true }) product!: Product;
     @Input() imageUrl?: string;
     @Output() open = new EventEmitter<void>();
+    @Output() addToMeal = new EventEmitter<Product>();
 
     public handleOpen(): void {
         this.open.emit();
+    }
+
+    public handleAdd(event: Event): void {
+        event.stopPropagation();
+        this.addToMeal.emit(this.product);
     }
 }

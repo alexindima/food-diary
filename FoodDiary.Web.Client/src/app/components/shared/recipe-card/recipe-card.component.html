@@ -81,7 +81,7 @@
         icon="add"
         variant="primary"
         fill="solid"
-        (click)="$event.stopPropagation(); handleOpen()"
+        (click)="handleAdd($event)"
     >
         {{ 'RECIPE_CARD.ADD_TO_MEAL' | translate }}
     </fd-ui-button>

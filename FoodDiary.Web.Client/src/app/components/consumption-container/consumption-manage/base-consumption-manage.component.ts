@@ -61,6 +61,7 @@ import { FdPageContainerDirective } from '../../../directives/layout/page-contai
 import { ImageUploadFieldComponent } from '../../shared/image-upload-field/image-upload-field.component';
 import { ImageSelection } from '../../../types/image-upload.data';
 import { ActivatedRoute, Router } from '@angular/router';
+import { QuickConsumptionItem } from '../../../services/quick-consumption.service';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: FD_VALIDATION_ERRORS,
@@ -169,6 +170,8 @@ export class BaseConsumptionManageComponent implements OnInit {
             this.consumptionForm.controls.mealType.setValue(presetMealType);
         }
 
+        this.prefillFromNavigationState();
+
         const consumption = this.consumption();
         if (consumption) {
             this.populateForm(consumption);
@@ -199,6 +202,45 @@ export class BaseConsumptionManageComponent implements OnInit {
         }
         const isValid = this.mealTypeOptions.includes(raw as (typeof this.mealTypeOptions)[number]);
         return isValid ? raw : null;
+    }
+
+    private prefillFromNavigationState(): void {
+        if (this.consumption()) {
+            return;
+        }
+
+        const navigationState = (this.router.getCurrentNavigation()?.extras.state as { quickConsumptionItems?: QuickConsumptionItem[] } | undefined)
+            ?.quickConsumptionItems;
+        const historyState = (window.history.state as { quickConsumptionItems?: QuickConsumptionItem[] } | undefined)
+            ?.quickConsumptionItems;
+        const draftItems = navigationState ?? historyState;
+
+        if (!draftItems?.length) {
+            return;
+        }
+
+        this.items.clear();
+        draftItems.forEach(item => {
+            const sourceType = item.type === 'recipe' ? ConsumptionSourceType.Recipe : ConsumptionSourceType.Product;
+            const amount = item.amount ?? 0;
+            this.items.push(this.createConsumptionItem(
+                sourceType === ConsumptionSourceType.Product ? item.product ?? null : null,
+                sourceType === ConsumptionSourceType.Recipe ? item.recipe ?? null : null,
+                amount,
+                sourceType,
+            ));
+
+            if (sourceType === ConsumptionSourceType.Recipe) {
+                const currentIndex = this.items.length - 1;
+                this.ensureRecipeWeightForExistingItem(currentIndex, amount, item.recipe ?? null);
+            }
+        });
+
+        if (!this.items.length) {
+            this.items.push(this.createConsumptionItem());
+        }
+
+        this.updateSummary();
     }
 
     public stringifyMealType = (value: string | null): string =>

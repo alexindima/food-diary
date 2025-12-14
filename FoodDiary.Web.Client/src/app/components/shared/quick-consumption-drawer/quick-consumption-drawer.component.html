@@ -1,0 +1,62 @@
+@if (hasItems()) {
+    <div class="quick-consumption">
+        <div class="quick-consumption__header">
+            <div>
+                <div class="quick-consumption__title">{{ 'QUICK_CONSUMPTION.TITLE' | translate }}</div>
+                <div class="quick-consumption__subtitle">
+                    {{ items().length }} {{ 'QUICK_CONSUMPTION.ITEMS' | translate }}
+                </div>
+            </div>
+            <button class="quick-consumption__clear" type="button" (click)="clear()">
+                <mat-icon fontIcon="close"></mat-icon>
+            </button>
+        </div>
+
+        <div class="quick-consumption__list">
+            @for (item of items(); track item.key) {
+                <div class="quick-consumption__item">
+                    <div class="quick-consumption__thumb">
+                        <img [ngSrc]="imageFor(item)" width="44" height="44" alt="" loading="lazy" />
+                    </div>
+                    <div class="quick-consumption__info">
+                        <div class="quick-consumption__name">
+                            {{ item.type === 'product' ? item.product?.name : item.recipe?.name }}
+                        </div>
+                        <div class="quick-consumption__meta">
+                            {{ 'QUICK_CONSUMPTION.AMOUNT' | translate }}:
+                            @if (item.type === 'product') {
+                                {{ item.amount | number:'1.0-1' }}
+                                {{ ('GENERAL.UNITS.' + (item.product?.baseUnit ?? 'G')) | translate }}
+                            } @else {
+                                {{ item.amount | number:'1.0-1' }}
+                                {{ 'QUICK_CONSUMPTION.SERVINGS' | translate }}
+                            }
+                        </div>
+                    </div>
+                    <button class="quick-consumption__remove" type="button" (click)="remove(item.key)">
+                        <mat-icon fontIcon="delete"></mat-icon>
+                    </button>
+                </div>
+            }
+        </div>
+
+        <div class="quick-consumption__actions">
+            <fd-ui-button variant="secondary" fill="outline" icon="edit" (click)="openEditor()">
+                {{ 'QUICK_CONSUMPTION.EDIT' | translate }}
+            </fd-ui-button>
+            <fd-ui-button
+                class="quick-consumption__save"
+                variant="primary"
+                icon="check"
+                [disabled]="isSaving()"
+                (click)="save()"
+            >
+                @if (isSaving()) {
+                    {{ 'QUICK_CONSUMPTION.SAVING' | translate }}
+                } @else {
+                    {{ 'QUICK_CONSUMPTION.SAVE' | translate }}
+                }
+            </fd-ui-button>
+        </div>
+    </div>
+}

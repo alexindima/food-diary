@@ -292,6 +292,19 @@
     "RECIPE_CARD": {
         "ADD_TO_MEAL": "Add to meal"
     },
+    "QUICK_CONSUMPTION": {
+        "TITLE": "Meal draft",
+        "ITEMS": "items",
+        "AMOUNT": "Amount",
+        "SERVINGS": "servings",
+        "EDIT": "Edit",
+        "SAVE": "Save",
+        "SAVING": "Saving...",
+        "ADDED_PRODUCT": "Product added to draft",
+        "ADDED_RECIPE": "Recipe added to draft",
+        "SAVE_SUCCESS": "Meal saved",
+        "SAVE_ERROR": "Failed to save meal"
+    },
     "RECIPE_BADGE": {
         "MY": "My recipe",
         "SHARED": "Shared recipe"

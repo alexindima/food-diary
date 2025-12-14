@@ -21,6 +21,7 @@ import { PageBodyComponent } from '../../shared/page-body/page-body.component';
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
 import { resolveRecipeImageUrl } from '../../../utils/recipe-stub.utils';
 import { RecipeCardComponent } from '../../shared/recipe-card/recipe-card.component';
+import { QuickConsumptionService } from '../../../services/quick-consumption.service';
 
 @Component({
     selector: 'fd-recipe-list',
@@ -47,6 +48,7 @@ export class RecipeListComponent implements OnInit {
     private readonly translateService = inject(TranslateService);
     private readonly fdDialogService = inject(FdUiDialogService);
     private readonly toastService = inject(FdUiToastService);
+    private readonly quickConsumptionService = inject(QuickConsumptionService);
 
     private readonly container = viewChild.required<ElementRef<HTMLElement>>('container');
 
@@ -200,6 +202,10 @@ export class RecipeListComponent implements OnInit {
     public toggleOnlyMine(): void {
         const control = this.searchForm.controls.onlyMine;
         control.setValue(!control.value);
+    }
+
+    public onAddToMeal(recipe: Recipe): void {
+        this.quickConsumptionService.addRecipe(recipe);
     }
 }
 

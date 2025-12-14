@@ -57,7 +57,7 @@
         icon="add"
         variant="primary"
         fill="solid"
-        (click)="$event.stopPropagation(); handleOpen()"
+        (click)="handleAdd($event)"
     >
         {{ 'PRODUCT_CARD.ADD_TO_CONSUMPTION' | translate }}
     </fd-ui-button>
