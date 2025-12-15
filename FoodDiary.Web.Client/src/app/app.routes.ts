@@ -23,6 +23,7 @@ import { recipeResolver } from './resolvers/recipe.resolver';
 import { WeightHistoryPageComponent } from './components/weight-history-page/weight-history-page.component';
 import { WaistHistoryPageComponent } from './components/waist-history-page/waist-history-page.component';
 import { CycleTrackingPageComponent } from './components/cycle-tracking-page/cycle-tracking-page.component';
+import { GoalsPageComponent } from './components/goals-page/goals-page.component';
 
 export const routes: Routes = [
     { path: '', component: MainComponent },
@@ -88,6 +89,11 @@ export const routes: Routes = [
     {
         path: 'profile',
         component: UserManageComponent,
+        canActivate: [authGuard],
+    },
+    {
+        path: 'goals',
+        component: GoalsPageComponent,
         canActivate: [authGuard],
     },
     {

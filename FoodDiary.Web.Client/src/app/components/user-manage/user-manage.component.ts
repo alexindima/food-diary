@@ -24,12 +24,10 @@ import { FdUiFormErrorComponent, FD_VALIDATION_ERRORS, FdValidationErrors } from
 import { ChangePasswordDialogComponent } from './dialogs/change-password-dialog/change-password-dialog.component';
 import { PasswordSuccessDialogComponent } from './dialogs/password-success-dialog/password-success-dialog.component';
 import { UpdateSuccessDialogComponent } from './dialogs/update-success-dialog/update-success-dialog.component';
-import { GoalSettingsDialogComponent } from './dialogs/goal-settings-dialog/goal-settings-dialog.component';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { PageHeaderComponent } from '../shared/page-header/page-header.component';
 import { PageBodyComponent } from "../shared/page-body/page-body.component";
 import { FdPageContainerDirective } from "../../directives/layout/page-container.directive";
-import { ActivatedRoute } from '@angular/router';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: FD_VALIDATION_ERRORS,
@@ -70,7 +68,6 @@ export class UserManageComponent implements OnInit {
     private readonly navigationService = inject(NavigationService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly toastService = inject(FdUiToastService);
-    private readonly route = inject(ActivatedRoute);
 
     public genders = Object.values(Gender);
     public activityLevels: ActivityLevelOption[] = ['MINIMAL', 'LIGHT', 'MODERATE', 'HIGH', 'EXTREME'];
@@ -109,7 +106,6 @@ export class UserManageComponent implements OnInit {
         this.userForm.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.clearGlobalError());
 
         this.loadUserData();
-        this.maybeOpenGoalDialogFromQuery();
     }
 
     private loadUserData(): void {
@@ -187,28 +183,6 @@ export class UserManageComponent implements OnInit {
         });
     }
 
-    public openGoalDialog(): void {
-        const current = this.userForm.getRawValue();
-        this.fdDialogService
-            .open(GoalSettingsDialogComponent, {
-                size: 'md',
-                data: {
-                    dailyCalorieTarget: current.dailyCalorieTarget,
-                    proteinTarget: current.proteinTarget,
-                    fatTarget: current.fatTarget,
-                    carbTarget: current.carbTarget,
-                    stepGoal: current.stepGoal,
-                    waterGoal: current.waterGoal,
-                },
-            })
-            .afterClosed()
-            .subscribe(changed => {
-                if (changed) {
-                    this.loadUserData();
-                }
-            });
-    }
-
     protected showSuccessDialog(): void {
         this.fdDialogService
             .open(UpdateSuccessDialogComponent, {
@@ -240,13 +214,6 @@ export class UserManageComponent implements OnInit {
             label: this.translateService.instant(`USER_MANAGE.ACTIVITY_LEVEL_OPTIONS.${level}`),
             value: level,
         }));
-    }
-
-    private maybeOpenGoalDialogFromQuery(): void {
-        const openGoal = this.route.snapshot.queryParamMap.get('goal') === '1';
-        if (openGoal) {
-            queueMicrotask(() => this.openGoalDialog());
-        }
     }
 }
 

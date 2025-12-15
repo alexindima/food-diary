@@ -951,6 +951,44 @@
         "BADGE_PERIOD": "Месячные",
         "BADGE_FOLLICULAR": "Запись"
     },
+    "GOALS_PAGE": {
+        "TITLE": "Цели и показатели",
+        "SUBTITLE": "Настройте дневные нутриционные цели и цели для тела. Пока блоки заполнены заглушками.",
+        "SAVE_BUTTON": "Сохранить изменения",
+        "STATUS_LOADING": "Загружаем цели…",
+        "STATUS_SAVING": "Сохраняем…",
+        "STATUS_READY": "Цели сохранены",
+        "NUTRITION_TITLE": "Цели по питанию",
+        "DAILY_TARGET": "Дневная цель",
+        "NUTRITION_PLACEHOLDER": "Подключите свои макроцели, чтобы увидеть здесь фактический прогресс.",
+        "BODY_TITLE": "Цели для тела",
+        "BODY_TARGET_WEIGHT": "Целевой вес",
+        "BODY_TARGET_WAIST": "Целевой обхват талии",
+        "CURRENT_LABEL": "Текущий: {{value}} {{unit}}",
+        "TO_GO": "осталось",
+        "TIMEFRAME": "Период цели",
+        "TIMEFRAMES": {
+            "WEEKLY": "Недельный",
+            "MONTHLY": "Месячный",
+            "YEARLY": "Годовой"
+        },
+        "BODY_PLACEHOLDER": "Подключите измерения и цели, чтобы заменить эти заглушки.",
+        "MACROS": {
+            "PROTEIN": "Белки",
+            "CARBS": "Углеводы",
+            "FATS": "Жиры",
+            "FIBER": "Клетчатка"
+        },
+        "CORE_MACROS": "БЖУ",
+        "FIBER_GROUP": "Клетчатка",
+        "MACRO_PRESET_LABEL": "Предустановки",
+        "MACRO_PRESET_CUSTOM": "Свои значения",
+        "MACRO_PRESET_BALANCED_GYM": "40/40/20 · зал",
+        "MACRO_PRESET_CLASSIC": "30/30/40 · классика",
+        "MACRO_PRESET_LOW_CARB": "50/30/20 · низкоуглеводный",
+        "MACRO_PRESET_HIGH_CARB": "25/25/50 · высокоуглеводный",
+        "MACRO_PRESET_ENDURANCE": "20/30/50 · выносливость"
+    },
     "USER_MANAGE": {
          "EDIT_SUBTITLE": "Цели, профиль и настройки",
         "EDIT_GOALS": "Настроить цели",
@@ -1078,11 +1116,6 @@
         }
     }
 }
-
-
-
-
-
 
 
 

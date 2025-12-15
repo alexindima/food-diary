@@ -1021,6 +1021,44 @@
         "BADGE_PERIOD": "Period",
         "BADGE_FOLLICULAR": "Logged"
     },
+    "GOALS_PAGE": {
+        "TITLE": "Goals & targets",
+        "SUBTITLE": "Customize your daily nutrition targets and body goals. Blocks use placeholder data for now.",
+        "SAVE_BUTTON": "Save changes",
+        "STATUS_LOADING": "Loading goals…",
+        "STATUS_SAVING": "Saving…",
+        "STATUS_READY": "Goals up to date",
+        "NUTRITION_TITLE": "Nutrition goals",
+        "DAILY_TARGET": "Daily target",
+        "NUTRITION_PLACEHOLDER": "Hook this card to your macro targets to see live progress.",
+        "BODY_TITLE": "Body goals",
+        "BODY_TARGET_WEIGHT": "Target weight",
+        "BODY_TARGET_WAIST": "Target waist",
+        "CURRENT_LABEL": "Current: {{value}} {{unit}}",
+        "TO_GO": "to go",
+        "TIMEFRAME": "Goal timeframe",
+        "TIMEFRAMES": {
+            "WEEKLY": "Weekly",
+            "MONTHLY": "Monthly",
+            "YEARLY": "Yearly"
+        },
+        "BODY_PLACEHOLDER": "Connect your measurements and goals to replace these stubs soon.",
+        "MACROS": {
+            "PROTEIN": "Protein",
+            "CARBS": "Carbs",
+            "FATS": "Fats",
+            "FIBER": "Fiber"
+        },
+        "CORE_MACROS": "Macronutrients",
+        "FIBER_GROUP": "Fiber focus",
+        "MACRO_PRESET_LABEL": "Apply preset",
+        "MACRO_PRESET_CUSTOM": "Custom",
+        "MACRO_PRESET_BALANCED_GYM": "40/40/20 · gym balance",
+        "MACRO_PRESET_CLASSIC": "30/30/40 · classic",
+        "MACRO_PRESET_LOW_CARB": "50/30/20 · low carb",
+        "MACRO_PRESET_HIGH_CARB": "25/25/50 · high carb",
+        "MACRO_PRESET_ENDURANCE": "20/30/50 · endurance"
+    },
     "SHARED": {
         "NUTRIENTS_SUMMARY": {
             "SUMMARY": "Summary",

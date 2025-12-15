@@ -74,39 +74,6 @@
                 </div>
             </fd-ui-card>
 
-            <fd-ui-card class="user-manage__card" [title]="'USER_MANAGE.NUTRITION_SECTION' | translate">
-                <div class="user-manage__card-content user-manage__card-content--nutrition">
-                    <div class="user-manage__nutrition-summary">
-                        <div>
-                            <span class="user-manage__meta-label">{{ 'USER_MANAGE.DAILY_CALORIES' | translate }}</span>
-                            <strong>{{ userForm.controls.dailyCalorieTarget.value ?? '—' }}</strong>
-                        </div>
-                        <div>
-                            <span class="user-manage__meta-label">{{ 'USER_MANAGE.PROTEIN_TARGET' | translate }}</span>
-                            <strong>{{ userForm.controls.proteinTarget.value ?? '—' }}</strong>
-                        </div>
-                        <div>
-                            <span class="user-manage__meta-label">{{ 'USER_MANAGE.FAT_TARGET' | translate }}</span>
-                            <strong>{{ userForm.controls.fatTarget.value ?? '—' }}</strong>
-                        </div>
-                        <div>
-                            <span class="user-manage__meta-label">{{ 'USER_MANAGE.CARB_TARGET' | translate }}</span>
-                            <strong>{{ userForm.controls.carbTarget.value ?? '—' }}</strong>
-                        </div>
-                        <div>
-                            <span class="user-manage__meta-label">{{ 'USER_MANAGE.STEP_GOAL' | translate }}</span>
-                            <strong>{{ userForm.controls.stepGoal.value ?? '—' }}</strong>
-                        </div>
-                        <div>
-                            <span class="user-manage__meta-label">{{ 'USER_MANAGE.WATER_GOAL' | translate }}</span>
-                            <strong>{{ userForm.controls.waterGoal.value ?? '—' }}</strong>
-                        </div>
-                    </div>
-                    <fd-ui-button type="button" icon="flag" (click)="openGoalDialog()">
-                        {{ 'USER_MANAGE.EDIT_GOALS' | translate }}
-                    </fd-ui-button>
-                </div>
-            </fd-ui-card>
             <div class="user-manage__actions">
                 <fd-ui-button type="submit" icon="save">
                     {{ 'USER_MANAGE.SAVE_BUTTON' | translate }}
