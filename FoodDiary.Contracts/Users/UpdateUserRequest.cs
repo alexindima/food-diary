@@ -18,5 +18,6 @@ public record UpdateUserRequest(
     double? WaterGoal,
     double? HydrationGoal,
     string? ProfileImage,
+    Guid? ProfileImageAssetId,
     bool? IsActive
 );

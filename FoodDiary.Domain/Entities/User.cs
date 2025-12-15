@@ -30,6 +30,7 @@ public sealed class User : AggregateRoot<UserId> {
     public double? WaterGoal { get; private set; }
     public double? HydrationGoal { get; private set; }
     public string? ProfileImage { get; private set; }
+    public ImageAssetId? ProfileImageAssetId { get; private set; }
     public bool IsActive { get; private set; } = true;
 
     // Navigation properties
@@ -84,7 +85,8 @@ public sealed class User : AggregateRoot<UserId> {
         int? stepGoal = null,
         double? waterGoal = null,
         double? hydrationGoal = null,
-        string? profileImage = null) {
+        string? profileImage = null,
+        ImageAssetId? profileImageAssetId = null) {
         if (username is not null) Username = username;
         if (firstName is not null) FirstName = firstName;
         if (lastName is not null) LastName = lastName;
@@ -103,6 +105,7 @@ public sealed class User : AggregateRoot<UserId> {
         if (waterGoal.HasValue) WaterGoal = waterGoal;
         if (hydrationGoal.HasValue) HydrationGoal = hydrationGoal;
         if (profileImage is not null) ProfileImage = profileImage;
+        if (profileImageAssetId.HasValue) ProfileImageAssetId = profileImageAssetId;
 
         SetModified();
     }

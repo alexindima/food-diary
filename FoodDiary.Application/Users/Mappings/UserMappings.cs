@@ -29,6 +29,7 @@ public static class UserMappings
             user.WaterGoal,
             user.HydrationGoal,
             user.ProfileImage,
+            user.ProfileImageAssetId?.Value,
             user.IsActive
         );
     }

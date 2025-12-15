@@ -33,6 +33,10 @@ public class FoodDiaryDbContext : DbContext
                 id => id.Value,
                 value => new UserId(value));
 
+            entity.Property(e => e.ProfileImageAssetId).HasConversion(
+                id => id.HasValue ? id.Value.Value : (Guid?)null,
+                value => value.HasValue ? new ImageAssetId(value.Value) : null);
+
             entity.HasIndex(e => e.Email).IsUnique();
             entity.Property(e => e.IsActive).HasDefaultValue(true);
             entity.Property(e => e.ActivityLevel)
@@ -53,6 +57,12 @@ public class FoodDiaryDbContext : DbContext
                 .WithOne(h => h.User)
                 .HasForeignKey(h => h.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne<ImageAsset>()
+                .WithMany()
+                .HasForeignKey(e => e.ProfileImageAssetId)
+                .IsRequired(false)
+                .OnDelete(DeleteBehavior.SetNull);
         });
 
         modelBuilder.Entity<ImageAsset>(entity =>

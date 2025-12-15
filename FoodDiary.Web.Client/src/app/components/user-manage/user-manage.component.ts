@@ -28,6 +28,8 @@ import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { PageHeaderComponent } from '../shared/page-header/page-header.component';
 import { PageBodyComponent } from "../shared/page-body/page-body.component";
 import { FdPageContainerDirective } from "../../directives/layout/page-container.directive";
+import { ImageUploadFieldComponent } from '../shared/image-upload-field/image-upload-field.component';
+import { ImageSelection } from '../../types/image-upload.data';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: FD_VALIDATION_ERRORS,
@@ -55,6 +57,7 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
         PageHeaderComponent,
         PageBodyComponent,
         FdPageContainerDirective,
+        ImageUploadFieldComponent,
     ],
     templateUrl: './user-manage.component.html',
     styleUrl: './user-manage.component.scss',
@@ -93,7 +96,7 @@ export class UserManageComponent implements OnInit {
             carbTarget: new FormControl<number | null>(null),
             stepGoal: new FormControl<number | null>(null),
             waterGoal: new FormControl<number | null>(null),
-            profileImage: new FormControl<string | null>(null),
+            profileImage: new FormControl<ImageSelection | null>(null),
         });
 
         this.buildSelectOptions();
@@ -125,6 +128,9 @@ export class UserManageComponent implements OnInit {
                         carbTarget: user.carbTarget ?? null,
                         stepGoal: user.stepGoal ?? null,
                         waterGoal: user.waterGoal ?? null,
+                        profileImage: user.profileImage
+                            ? { url: user.profileImage, assetId: user.profileImageAssetId ?? null }
+                            : null,
                     };
                     this.userForm.patchValue(userData);
                 } else {
@@ -142,7 +148,10 @@ export class UserManageComponent implements OnInit {
 
         if (this.userForm.valid) {
             const formData = this.userForm.value;
-            const updateData = new UpdateUserDto(formData);
+            const updateData = new UpdateUserDto({
+                ...formData,
+                profileImage: formData.profileImage as ImageSelection | null,
+            });
 
             this.userService.update(updateData).subscribe({
                 next: user => {
@@ -232,7 +241,7 @@ export interface UserFormValues {
     carbTarget: number | null;
     stepGoal: number | null;
     waterGoal: number | null;
-    profileImage: string | null;
+    profileImage: ImageSelection | null;
 }
 
 export type UserFormData = FormGroupControls<UserFormValues>;

@@ -1,4 +1,5 @@
 import { UserFormValues } from '../components/user-manage/user-manage.component';
+import { ImageSelection } from './image-upload.data';
 
 export type ActivityLevelOption = 'MINIMAL' | 'LIGHT' | 'MODERATE' | 'HIGH' | 'EXTREME';
 
@@ -24,6 +25,7 @@ export interface User {
     waterGoal?: number;
     hydrationGoal?: number;
     profileImage?: string;
+    profileImageAssetId?: string;
     isActive: boolean;
     calories?: number; // Local field, not from backend
 }
@@ -44,6 +46,7 @@ export class UpdateUserDto {
     public waterGoal?: number;
     public hydrationGoal?: number;
     public profileImage?: string;
+    public profileImageAssetId?: string;
     public isActive?: boolean;
     public fiberTarget?: number;
 
@@ -63,7 +66,9 @@ export class UpdateUserDto {
         this.stepGoal = normalizeInteger(formValues.stepGoal);
         this.waterGoal = normalizeNumber(formValues.waterGoal);
         this.hydrationGoal = normalizeNumber((formValues as any).hydrationGoal);
-        this.profileImage = normalizeString(formValues.profileImage);
+        const normalizedImage = normalizeProfileImage(formValues.profileImage as ImageSelection | string | null | undefined);
+        this.profileImage = normalizedImage?.url;
+        this.profileImageAssetId = normalizedImage?.assetId;
         this.isActive = true;
     }
 }
@@ -101,6 +106,27 @@ const normalizeActivityLevel = (value: ActivityLevelOption | null | undefined): 
 
     const lower = value.toLowerCase();
     return lower.charAt(0).toUpperCase() + lower.slice(1);
+};
+
+const normalizeProfileImage = (
+    value: ImageSelection | string | null | undefined,
+): { url: string; assetId?: string } | undefined => {
+    if (!value) {
+        return undefined;
+    }
+
+    if (typeof value === 'string') {
+        const normalized = normalizeString(value);
+        return normalized ? { url: normalized } : undefined;
+    }
+
+    const url = normalizeString(value.url ?? undefined);
+    if (!url) {
+        return undefined;
+    }
+
+    const assetId = value.assetId ?? undefined;
+    return { url, assetId: assetId ?? undefined };
 };
 
 export interface ChangePasswordRequest {

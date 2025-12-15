@@ -28,6 +28,7 @@ public static class UserCommandMappings
             request.WaterGoal,
             request.HydrationGoal,
             request.ProfileImage,
+            request.ProfileImageAssetId,
             request.IsActive
         );
     }

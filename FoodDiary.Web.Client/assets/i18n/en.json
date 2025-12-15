@@ -796,6 +796,8 @@
         "GOALS_DIALOG": {
             "TITLE": "Set daily goals"
         },
+        "AVATAR": "Profile photo",
+        "AVATAR_DESC": "Upload a square image, min 512x512",
         "DELETE_ACCOUNT_BUTTON": "Delete account",
         "DELETE_ACCOUNT_INFO": "Account deletion will be available soon.",
         "SAVE_BUTTON": "Save",

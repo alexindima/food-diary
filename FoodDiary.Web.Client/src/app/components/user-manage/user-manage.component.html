@@ -8,6 +8,15 @@
         <form class="user-manage__form" [formGroup]="userForm" (ngSubmit)="onSubmit()">
             <fd-ui-card class="user-manage__card" [title]="'USER_MANAGE.ACCOUNT_SECTION' | translate">
                 <div class="user-manage__card-content user-manage__card-content--account">
+                    <fd-image-upload-field
+                        class="user-manage__avatar"
+                        formControlName="profileImage"
+                        [label]="'USER_MANAGE.AVATAR' | translate"
+                        [description]="'USER_MANAGE.AVATAR_DESC' | translate"
+                        [recommendedSize]="'512 x 512'"
+                        [maxSizeMb]="5"
+                        [acceptedTypes]="'image/png,image/jpeg,image/webp'"
+                    />
                     <fd-ui-input formControlName="email"
                                  type="email"
                                  [label]="'USER_MANAGE.EMAIL' | translate"

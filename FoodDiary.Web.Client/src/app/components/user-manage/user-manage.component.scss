@@ -35,8 +35,9 @@
         grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
 
         &--account {
-            grid-template-columns: minmax(0, 3fr) auto;
-            align-items: end;
+            grid-template-columns: minmax(220px, 1.5fr) minmax(240px, 2fr);
+            align-items: start;
+            gap: $gap-l;
 
             @media #{$media-tablet} {
                 grid-template-columns: 1fr;
@@ -60,6 +61,12 @@
         display: flex;
         justify-content: center;
         margin-top: $gap-m;
+    }
+
+    &__avatar {
+        width: 100%;
+        max-width: 240px;
+        align-self: stretch;
     }
 
     &__error {

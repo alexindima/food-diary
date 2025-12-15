@@ -24,5 +24,6 @@ public record UpdateUserCommand(
     double? WaterGoal,
     double? HydrationGoal,
     string? ProfileImage,
+    Guid? ProfileImageAssetId,
     bool? IsActive
 ) : ICommand<Result<UserResponse>>;

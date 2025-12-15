@@ -36,6 +36,9 @@ public class ImageAssetRepository(FoodDiaryDbContext context) : IImageAssetRepos
         if (recipeUse) return true;
 
         var mealUse = await _context.Meals.AnyAsync(m => m.ImageAssetId == assetId, cancellationToken);
-        return mealUse;
+        if (mealUse) return true;
+
+        var userUse = await _context.Users.AnyAsync(u => u.ProfileImageAssetId == assetId, cancellationToken);
+        return userUse;
     }
 }

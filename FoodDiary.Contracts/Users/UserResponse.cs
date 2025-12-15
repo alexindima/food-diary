@@ -24,5 +24,6 @@ public record UserResponse(
     double? WaterGoal,
     double? HydrationGoal,
     string? ProfileImage,
+    Guid? ProfileImageAssetId,
     bool IsActive
 );

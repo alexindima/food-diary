@@ -990,11 +990,9 @@
         "MACRO_PRESET_ENDURANCE": "20/30/50 · выносливость"
     },
     "USER_MANAGE": {
-         "EDIT_SUBTITLE": "Цели, профиль и настройки",
-        "EDIT_GOALS": "Настроить цели",
-        "GOALS_DIALOG": {
-            "TITLE": "Настройка ежедневных целей"
-        },
+        "EDIT_SUBTITLE": "Цели, профиль и настройки",
+        "AVATAR": "Аватар",
+        "AVATAR_DESC": "Загрузите квадратное изображение, минимум 512x512",
         "DAILY_CALORIES": "Цель по калориям",
         "CALORIE_TARGET_LABEL": "Цель по калориям (ккал)",
         "DAILY_CALORIES_PLACEHOLDER": "Укажите цель по калориям",
@@ -1116,7 +1114,6 @@
         }
     }
 }
-
 
 
 
