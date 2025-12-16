@@ -1,4 +1,5 @@
 using FoodDiary.Application.Images.Commands.GetUploadUrl;
+using FoodDiary.Application.Images.Commands.DeleteImageAsset;
 using FoodDiary.Application.Common.Interfaces.Services;
 using FoodDiary.Contracts.Images;
 using FoodDiary.WebApi.Controllers;
@@ -47,5 +48,31 @@ public sealed class ImagesController(ISender mediator) : AuthorizedController(me
             result.AssetId);
 
         return Ok(response);
+    }
+
+    [HttpDelete("{assetId:guid}")]
+    public async Task<IActionResult> Delete(Guid assetId)
+    {
+        if (CurrentUserId is null)
+        {
+            return Unauthorized();
+        }
+
+        var command = new DeleteImageAssetCommand(CurrentUserId.Value, new(assetId));
+        var result = await Mediator.Send(command);
+
+        if (!result.Deleted)
+        {
+            return result.ErrorCode switch
+            {
+                "not_found" => NotFound(),
+                "forbidden" => Forbid(),
+                "in_use" => Conflict("Asset is already in use."),
+                "storage_error" => StatusCode(502, "Failed to remove image from storage."),
+                _ => BadRequest()
+            };
+        }
+
+        return NoContent();
     }
 }

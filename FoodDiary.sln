@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoodDiary.Web.Api", "FoodDi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoodDiary.Contracts", "FoodDiary.Contracts\FoodDiary.Contracts.csproj", "{0F353380-75BA-4352-A37B-D418BAEE5180}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoodDiary.JobManager", "FoodDiary.JobManager\FoodDiary.JobManager.csproj", "{25627282-57B9-4170-9B1D-9B4FAFEFEFBB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,5 +44,9 @@ Global
 		{0F353380-75BA-4352-A37B-D418BAEE5180}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0F353380-75BA-4352-A37B-D418BAEE5180}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0F353380-75BA-4352-A37B-D418BAEE5180}.Release|Any CPU.Build.0 = Release|Any CPU
+		{25627282-57B9-4170-9B1D-9B4FAFEFEFBB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{25627282-57B9-4170-9B1D-9B4FAFEFEFBB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{25627282-57B9-4170-9B1D-9B4FAFEFEFBB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{25627282-57B9-4170-9B1D-9B4FAFEFEFBB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

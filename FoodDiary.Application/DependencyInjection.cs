@@ -1,5 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using FoodDiary.Application.Common.Behaviors;
+using FoodDiary.Application.Common.Interfaces.Services;
+using FoodDiary.Application.Images.Services;
 using FluentValidation;
 using System.Reflection;
 
@@ -21,6 +23,8 @@ public static class DependencyInjection
 
         // FluentValidation - регистрируем все валидаторы из сборки
         services.AddValidatorsFromAssembly(assembly);
+
+        services.AddScoped<IImageAssetCleanupService, ImageAssetCleanupService>();
 
         return services;
     }

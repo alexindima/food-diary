@@ -11,7 +11,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FormGroupControls } from '../../types/common.data';
 import { UserService } from '../../services/user.service';
-import { ActivityLevelOption, Gender, UpdateUserDto } from '../../types/user.data';
+import { ActivityLevelOption, Gender, UpdateUserDto, User } from '../../types/user.data';
 import { NavigationService } from '../../services/navigation.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
@@ -30,6 +30,7 @@ import { PageBodyComponent } from "../shared/page-body/page-body.component";
 import { FdPageContainerDirective } from "../../directives/layout/page-container.directive";
 import { ImageUploadFieldComponent } from '../shared/image-upload-field/image-upload-field.component';
 import { ImageSelection } from '../../types/image-upload.data';
+import { ImageUploadService } from "../../services/image-upload.service";
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: FD_VALIDATION_ERRORS,
@@ -71,6 +72,8 @@ export class UserManageComponent implements OnInit {
     private readonly navigationService = inject(NavigationService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly toastService = inject(FdUiToastService);
+    private readonly imageUploadService = inject(ImageUploadService);
+    private lastUserData: Partial<UserFormValues> | null = null;
 
     public genders = Object.values(Gender);
     public activityLevels: ActivityLevelOption[] = ['MINIMAL', 'LIGHT', 'MODERATE', 'HIGH', 'EXTREME'];
@@ -115,24 +118,9 @@ export class UserManageComponent implements OnInit {
         this.userService.getInfo().subscribe({
             next: user => {
                 if (user) {
-                    const userData = {
-                        ...user,
-                        gender: user.gender as Gender | null,
-                        birthDate: user.birthDate ? new Date(user.birthDate) : null,
-                        activityLevel: user.activityLevel
-                            ? (user.activityLevel.toUpperCase() as ActivityLevelOption)
-                            : null,
-                        dailyCalorieTarget: user.dailyCalorieTarget ?? null,
-                        proteinTarget: user.proteinTarget ?? null,
-                        fatTarget: user.fatTarget ?? null,
-                        carbTarget: user.carbTarget ?? null,
-                        stepGoal: user.stepGoal ?? null,
-                        waterGoal: user.waterGoal ?? null,
-                        profileImage: user.profileImage
-                            ? { url: user.profileImage, assetId: user.profileImageAssetId ?? null }
-                            : null,
-                    };
-                    this.userForm.patchValue(userData);
+                    const userData = this.mapUserToForm(user);
+                    this.lastUserData = userData;
+                    this.applyUserData(userData);
                 } else {
                     this.setGlobalError('USER_MANAGE.LOAD_ERROR');
                 }
@@ -141,6 +129,12 @@ export class UserManageComponent implements OnInit {
                 this.setGlobalError('USER_MANAGE.LOAD_ERROR');
             },
         });
+    }
+
+    private applyUserData(userData: Partial<UserFormValues>): void {
+        this.userForm.patchValue(userData);
+        this.userForm.markAsPristine();
+        this.userForm.markAsUntouched();
     }
 
     public async onSubmit(): Promise<void> {
@@ -156,6 +150,9 @@ export class UserManageComponent implements OnInit {
             this.userService.update(updateData).subscribe({
                 next: user => {
                     if (user) {
+                        const updatedData = this.mapUserToForm(user);
+                        this.lastUserData = updatedData;
+                        this.applyUserData(updatedData);
                         this.showSuccessDialog();
                     } else {
                         this.setGlobalError('USER_MANAGE.UPDATE_ERROR');
@@ -165,6 +162,24 @@ export class UserManageComponent implements OnInit {
                     this.setGlobalError('USER_MANAGE.UPDATE_ERROR');
                 },
             });
+        }
+    }
+
+    public resetForm(): void {
+        this.clearGlobalError();
+        const currentImageId = this.userForm.controls.profileImage.value?.assetId;
+        const baselineImageId = this.lastUserData?.profileImage?.assetId ?? null;
+        if (currentImageId && currentImageId !== baselineImageId) {
+            this.imageUploadService.deleteAsset(currentImageId).subscribe({
+                error: () => {
+                    // swallow errors to avoid blocking reset
+                },
+            });
+        }
+        if (this.lastUserData) {
+            this.applyUserData(this.lastUserData);
+        } else {
+            this.loadUserData();
         }
     }
 
@@ -183,6 +198,12 @@ export class UserManageComponent implements OnInit {
 
     private openPasswordSuccessDialog(): void {
         this.fdDialogService.open(PasswordSuccessDialogComponent, { size: 'sm' }).afterClosed().subscribe();
+    }
+
+    public onGenderSelect(value: Gender | null): void {
+        this.userForm.controls.gender.setValue(value);
+        this.userForm.controls.gender.markAsDirty();
+        this.userForm.controls.gender.markAsTouched();
     }
 
     public onDeleteAccount(): void {
@@ -223,6 +244,26 @@ export class UserManageComponent implements OnInit {
             label: this.translateService.instant(`USER_MANAGE.ACTIVITY_LEVEL_OPTIONS.${level}`),
             value: level,
         }));
+    }
+
+    private mapUserToForm(user: User): Partial<UserFormValues> {
+        return {
+            email: user.email ?? null,
+            username: user.username ?? null,
+            firstName: user.firstName ?? null,
+            lastName: user.lastName ?? null,
+            gender: user.gender as Gender | null,
+            birthDate: user.birthDate ? new Date(user.birthDate) : null,
+            height: user.height ?? null,
+            activityLevel: user.activityLevel ? (user.activityLevel.toUpperCase() as ActivityLevelOption) : null,
+            dailyCalorieTarget: user.dailyCalorieTarget ?? null,
+            proteinTarget: user.proteinTarget ?? null,
+            fatTarget: user.fatTarget ?? null,
+            carbTarget: user.carbTarget ?? null,
+            stepGoal: user.stepGoal ?? null,
+            waterGoal: user.waterGoal ?? null,
+            profileImage: user.profileImage ? { url: user.profileImage, assetId: user.profileImageAssetId ?? null } : null,
+        };
     }
 }
 

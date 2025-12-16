@@ -23,6 +23,7 @@ public class ImageAssetRepository(FoodDiaryDbContext context) : IImageAssetRepos
 
     public async Task DeleteAsync(ImageAsset asset, CancellationToken cancellationToken = default)
     {
+        _context.ImageAssets.Attach(asset);
         _context.ImageAssets.Remove(asset);
         await _context.SaveChangesAsync(cancellationToken);
     }
@@ -40,5 +41,23 @@ public class ImageAssetRepository(FoodDiaryDbContext context) : IImageAssetRepos
 
         var userUse = await _context.Users.AnyAsync(u => u.ProfileImageAssetId == assetId, cancellationToken);
         return userUse;
+    }
+
+    public async Task<IReadOnlyList<ImageAsset>> GetUnusedOlderThanAsync(
+        DateTime olderThanUtc,
+        int batchSize,
+        CancellationToken cancellationToken = default)
+    {
+        return await _context.ImageAssets
+            .AsNoTracking()
+            .Where(asset =>
+                asset.CreatedOnUtc < olderThanUtc &&
+                !_context.Products.Any(p => p.ImageAssetId == asset.Id) &&
+                !_context.Recipes.Any(r => r.ImageAssetId == asset.Id) &&
+                !_context.Meals.Any(m => m.ImageAssetId == asset.Id) &&
+                !_context.Users.Any(u => u.ProfileImageAssetId == asset.Id))
+            .OrderBy(asset => asset.CreatedOnUtc)
+            .Take(batchSize)
+            .ToListAsync(cancellationToken);
     }
 }

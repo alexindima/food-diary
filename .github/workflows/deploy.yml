@@ -12,8 +12,12 @@ env:
   FRONTEND_DIR: FoodDiary.Web.Client
   BACKEND_PROJECT: FoodDiary.Web.Api/FoodDiary.Web.Api.csproj
   BACKEND_PUBLISH_DIR: FoodDiary.Web.Api/publish
+  JOBMANAGER_PROJECT: FoodDiary.JobManager/FoodDiary.JobManager.csproj
+  JOBMANAGER_PUBLISH_DIR: FoodDiary.JobManager/publish
+  ENABLE_JOBMANAGER: "false"
   FRONTEND_DEPLOY_DIR: /var/www/fooddiary.club
   BACKEND_DEPLOY_DIR: /var/www/fooddiary-backend
+  JOBMANAGER_DEPLOY_DIR: /var/www/food-diary-jobs
 
 jobs:
   deploy:
@@ -46,6 +50,13 @@ jobs:
           dotnet publish ${{ env.BACKEND_PROJECT }} -c Release -o ${{ env.BACKEND_PUBLISH_DIR }}
           echo "Backend publish completed."
 
+      - name: Publish JobManager
+        if: env.ENABLE_JOBMANAGER == 'true'
+        run: |
+          dotnet restore ${{ env.JOBMANAGER_PROJECT }}
+          dotnet publish ${{ env.JOBMANAGER_PROJECT }} -c Release -o ${{ env.JOBMANAGER_PUBLISH_DIR }}
+          echo "JobManager publish completed."
+
       - name: Build EF Core migration bundle
         run: |
           dotnet tool restore
@@ -69,12 +80,24 @@ jobs:
           ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no root@${{ env.SERVER_IP }} << EOF
           rm -rf "${{ env.FRONTEND_DEPLOY_DIR }}"
           rm -rf "${{ env.BACKEND_DEPLOY_DIR }}"
+          if [ "${ENABLE_JOBMANAGER}" = "true" ]; then
+            rm -rf "${{ env.JOBMANAGER_DEPLOY_DIR }}"
+          fi
           mkdir -p "${{ env.FRONTEND_DEPLOY_DIR }}"
           mkdir -p "${{ env.BACKEND_DEPLOY_DIR }}"
+          if [ "${ENABLE_JOBMANAGER}" = "true" ]; then
+            mkdir -p "${{ env.JOBMANAGER_DEPLOY_DIR }}"
+          fi
           chmod -R 755 "${{ env.FRONTEND_DEPLOY_DIR }}"
           chmod -R 755 "${{ env.BACKEND_DEPLOY_DIR }}"
+          if [ "${ENABLE_JOBMANAGER}" = "true" ]; then
+            chmod -R 755 "${{ env.JOBMANAGER_DEPLOY_DIR }}"
+          fi
           chown -R www-data:www-data "${{ env.FRONTEND_DEPLOY_DIR }}"
           chown -R www-data:www-data "${{ env.BACKEND_DEPLOY_DIR }}"
+          if [ "${ENABLE_JOBMANAGER}" = "true" ]; then
+            chown -R www-data:www-data "${{ env.JOBMANAGER_DEPLOY_DIR }}"
+          fi
           echo "Directories created, cleaned, and permissions set."
           EOF
 
@@ -111,6 +134,27 @@ jobs:
               "WantedBy=multi-user.target" \
               > /etc/systemd/system/food-diary-api.service
 
+            if [ "${ENABLE_JOBMANAGER}" = "true" ]; then
+              printf "%s\n" \
+                "[Unit]" \
+                "Description=FoodDiary background jobs" \
+                "After=network.target" \
+                "" \
+                "[Service]" \
+                "WorkingDirectory=${{ env.JOBMANAGER_DEPLOY_DIR }}" \
+                "ExecStart=/usr/bin/dotnet FoodDiary.JobManager.dll" \
+                "Restart=always" \
+                "RestartSec=5" \
+                "SyslogIdentifier=food-diary-jobs" \
+                "User=www-data" \
+                "Environment=ASPNETCORE_ENVIRONMENT=Production" \
+                "# TODO: add real secrets/connection strings as Environment=... or EnvironmentFile=" \
+                "" \
+                "[Install]" \
+                "WantedBy=multi-user.target" \
+                > /etc/systemd/system/food-diary-jobs.service
+            fi
+
             systemctl daemon-reload
             systemctl enable food-diary-api
           EOF
@@ -129,6 +173,12 @@ jobs:
         run: |
           rsync -az --quiet --human-readable -e "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no" \
             ${{ env.BACKEND_PUBLISH_DIR }}/ root@${{ env.SERVER_IP }}:${{ env.BACKEND_DEPLOY_DIR }}/
+
+      - name: Uploading job manager files
+        if: env.ENABLE_JOBMANAGER == 'true'
+        run: |
+          rsync -az --quiet --human-readable -e "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no" \
+            ${{ env.JOBMANAGER_PUBLISH_DIR }}/ root@${{ env.SERVER_IP }}:${{ env.JOBMANAGER_DEPLOY_DIR }}/
 
       - name: Run migration bundle on server
         env:
@@ -154,6 +204,10 @@ jobs:
           ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no root@${{ env.SERVER_IP }} << EOF
           systemctl restart food-diary-api
           systemctl status food-diary-api --no-pager -n 20 || true
+          if [ "${ENABLE_JOBMANAGER}" = "true" ]; then
+            systemctl restart food-diary-jobs
+            systemctl status food-diary-jobs --no-pager -n 20 || true
+          fi
           EOF
 
       - name: Confirm deployment completion

@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>e0f57a9e-2df7-4a68-9f4d-18b69a4d6e0a</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Hangfire.AspNetCore" Version="1.8.15" />
+    <PackageReference Include="Hangfire.Core" Version="1.8.15" />
+    <PackageReference Include="Hangfire.PostgreSql" Version="1.20.3" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FoodDiary.Application\FoodDiary.Application.csproj" />
+    <ProjectReference Include="..\FoodDiary.Infrastructure\FoodDiary.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

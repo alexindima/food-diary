@@ -67,4 +67,34 @@
             <span class="image-upload-field__error">{{ error }}</span>
         }
     </div>
+
+    @if (isCropping && cropPreviewUrl) {
+        <div class="image-upload-field__cropper-backdrop">
+            <div class="image-upload-field__cropper">
+                <div class="image-upload-field__cropper-header">
+                    <div class="image-upload-field__cropper-title">Crop image</div>
+                    <div class="image-upload-field__cropper-subtitle">
+                        Keep a square crop so your avatar looks sharp.
+                    </div>
+                </div>
+                <div class="image-upload-field__cropper-body">
+                    <img
+                        #cropImage
+                        [src]="cropPreviewUrl"
+                        alt="Crop preview"
+                        (load)="onCropperImageLoaded(cropImage)"
+                        class="image-upload-field__cropper-image"
+                    />
+                </div>
+                <div class="image-upload-field__cropper-actions">
+                    <fd-ui-button type="button" variant="secondary" fill="ghost" (click)="cancelCrop()">
+                        Cancel
+                    </fd-ui-button>
+                    <fd-ui-button type="button" variant="primary" icon="check" (click)="confirmCrop()">
+                        Apply
+                    </fd-ui-button>
+                </div>
+            </div>
+        </div>
+    }
 </div>

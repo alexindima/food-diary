@@ -15,6 +15,7 @@ import { finalize, map, switchMap } from 'rxjs/operators';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { ImageUploadService } from '../../../services/image-upload.service';
 import { ImageSelection } from '../../../types/image-upload.data';
+import Cropper from 'cropperjs';
 
 @Component({
     selector: 'fd-image-upload-field',
@@ -41,6 +42,10 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
     public readonly recommendedSize = input<string>('2160 x 1080');
     public readonly maxSizeMb = input<number>(20);
     public readonly acceptedTypes = input<string>('image/jpeg,image/png,image/webp,image/gif');
+    public readonly cropEnabled = input<boolean>(false);
+    public readonly cropSize = input<number>(512);
+    public readonly cropAspectRatio = input<number>(1);
+    public readonly deleteOnClear = input<boolean>(false);
 
     public readonly imageChanged = output<ImageSelection | null>();
 
@@ -49,6 +54,10 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
     public isUploading = false;
     public error: string | null = null;
     public disabled = false;
+    public isCropping = false;
+    public cropPreviewUrl: string | null = null;
+    private cropper: Cropper | null = null;
+    private originalFile: File | null = null;
 
     private onChange: (value: ImageSelection | null) => void = () => {};
     private onTouched: () => void = () => {};
@@ -75,7 +84,7 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
         const target = event.target as HTMLInputElement;
         const file = target.files?.[0];
         if (file) {
-            this.uploadFile(file);
+            this.handleIncomingFile(file);
         }
         target.value = '';
     }
@@ -89,7 +98,7 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
         this.isDragging = false;
         const file = event.dataTransfer?.files?.[0];
         if (file) {
-            this.uploadFile(file);
+            this.handleIncomingFile(file);
         }
     }
 
@@ -109,12 +118,111 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
     }
 
     public clearImage(): void {
+        const assetId = this.selection.assetId;
         this.selection = { url: null, assetId: null };
         this.error = null;
         this.onChange(this.selection);
         this.onTouched();
         this.imageChanged.emit(this.selection);
+        this.isCropping = false;
+        this.destroyCropper();
+        this.clearCropState();
         this.cdr.markForCheck();
+
+        if (this.deleteOnClear() && assetId) {
+            this.imageUploadService.deleteAsset(assetId).subscribe({
+                error: err => console.warn('Failed to delete orphan image asset', err),
+            });
+        }
+    }
+
+    public onCropperImageLoaded(img: HTMLImageElement): void {
+        this.destroyCropper();
+        this.cropper = new Cropper(img, {
+            aspectRatio: this.cropAspectRatio(),
+            viewMode: 1,
+            background: false,
+            autoCropArea: 1,
+            movable: true,
+            scalable: false,
+            zoomable: true,
+            rotatable: false,
+        });
+    }
+
+    public cancelCrop(): void {
+        this.isCropping = false;
+        this.destroyCropper();
+        this.clearCropState();
+        this.cdr.markForCheck();
+    }
+
+    public confirmCrop(): void {
+        if (!this.cropper) {
+            return;
+        }
+
+        const canvas = this.cropper.getCroppedCanvas({
+            width: this.cropSize(),
+            height: this.cropSize(),
+            fillColor: '#fff',
+        });
+
+        canvas.toBlob(blob => {
+            if (!blob) {
+                this.error = 'Image processing failed. Please try again.';
+                this.cdr.markForCheck();
+                return;
+            }
+
+            const fileName = this.originalFile?.name ?? 'avatar.png';
+            const croppedFile = new File([blob], fileName, { type: this.originalFile?.type || 'image/png' });
+            this.isCropping = false;
+            this.destroyCropper();
+            this.clearCropState();
+            this.uploadFile(croppedFile);
+        }, this.originalFile?.type || 'image/png');
+    }
+
+    private handleIncomingFile(file: File): void {
+        if (this.disabled || this.isUploading) {
+            return;
+        }
+
+        this.error = null;
+        if (!file.type.startsWith('image/')) {
+            this.error = 'Only image files are allowed.';
+            this.cdr.markForCheck();
+            return;
+        }
+
+        const maxBytes = this.maxSizeMb() * 1024 * 1024;
+        if (!this.cropEnabled() && file.size > maxBytes) {
+            this.error = `File size exceeds ${this.maxSizeMb()} MB.`;
+            this.cdr.markForCheck();
+            return;
+        }
+
+        if (this.cropEnabled()) {
+            this.startCropping(file);
+        } else {
+            this.uploadFile(file);
+        }
+    }
+
+    private startCropping(file: File): void {
+        this.originalFile = file;
+        const reader = new FileReader();
+        reader.onload = () => {
+            this.cropPreviewUrl = typeof reader.result === 'string' ? reader.result : null;
+            this.isCropping = !!this.cropPreviewUrl;
+            this.cdr.markForCheck();
+        };
+        reader.onerror = () => {
+            this.error = 'Could not read the image. Please try another file.';
+            this.cdr.markForCheck();
+        };
+        reader.readAsDataURL(file);
     }
 
     private uploadFile(file: File): void {
@@ -123,19 +231,6 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
         }
 
         this.error = null;
-
-        if (!file.type.startsWith('image/')) {
-            this.error = 'Only image files are allowed.';
-            this.cdr.markForCheck();
-            return;
-        }
-
-        const maxBytes = this.maxSizeMb() * 1024 * 1024;
-        if (file.size > maxBytes) {
-            this.error = `File size exceeds ${this.maxSizeMb()} MB.`;
-            this.cdr.markForCheck();
-            return;
-        }
 
         this.isUploading = true;
         this.cdr.markForCheck();
@@ -166,5 +261,19 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
                     this.cdr.markForCheck();
                 },
             });
+    }
+
+    private destroyCropper(): void {
+        if (this.cropper) {
+            this.cropper.destroy();
+            this.cropper = null;
+        }
+    }
+
+    private clearCropState(): void {
+        if (this.cropPreviewUrl) {
+            this.cropPreviewUrl = null;
+        }
+        this.originalFile = null;
     }
 }

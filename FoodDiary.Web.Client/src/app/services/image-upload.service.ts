@@ -42,4 +42,13 @@ export class ImageUploadService {
             }),
         );
     }
+
+    public deleteAsset(assetId: string): Observable<void> {
+        return this.http.delete<void>(`${this.baseUrl}/${assetId}`).pipe(
+            catchError(error => {
+                console.error('Failed to delete image asset', error);
+                return throwError(() => error);
+            }),
+        );
+    }
 }
