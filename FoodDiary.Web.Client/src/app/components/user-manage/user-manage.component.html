@@ -40,22 +40,22 @@
                     </div>
                     <div class="user-manage__account">
                         <div class="user-manage__avatar-block">
+                            <div class="image-upload-field__label-block">
+                                <div class="image-upload-field__label-title">{{ 'USER_MANAGE.AVATAR' | translate }}</div>
+                                <div class="image-upload-field__label-desc">{{ 'USER_MANAGE.AVATAR_DESC' | translate }}</div>
+                            </div>
                             <fd-image-upload-field
-                        class="user-manage__avatar"
-                        formControlName="profileImage"
-                        [label]="'USER_MANAGE.AVATAR' | translate"
-                        [description]="'USER_MANAGE.AVATAR_DESC' | translate"
-                        [recommendedSize]="'512 x 512'"
-                        [maxSizeMb]="5"
-                        [acceptedTypes]="'image/png,image/jpeg,image/webp'"
-                        [cropEnabled]="true"
-                        [cropSize]="512"
-                        [cropAspectRatio]="1"
-                        [deleteOnClear]="true"
-                    />
-                            <p class="user-manage__avatar-hint">
-                                {{ 'USER_MANAGE.AVATAR_DESC' | translate }}
-                            </p>
+                                class="user-manage__avatar"
+                                formControlName="profileImage"
+                                [description]="'USER_MANAGE.AVATAR_DESC' | translate"
+                                [recommendedSize]="'512 x 512'"
+                                [maxSizeMb]="5"
+                                [acceptedTypes]="'image/png,image/jpeg,image/webp'"
+                                [cropEnabled]="true"
+                                [cropSize]="512"
+                                [cropAspectRatio]="1"
+                                [deleteOnClear]="true"
+                            />
                         </div>
                         <div class="user-manage__account-fields">
                             <fd-ui-input

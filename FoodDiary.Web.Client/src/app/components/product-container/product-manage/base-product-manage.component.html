@@ -97,9 +97,12 @@
                              />
                         </div>
                         <div class="product-manage__field product-manage__field--full">
+                            <div class="image-upload-field__label-block">
+                                <div class="image-upload-field__label-title">{{ 'PRODUCT_MANAGE.IMAGE' | translate }}</div>
+                                <div class="image-upload-field__label-desc">{{ 'PRODUCT_MANAGE.IMAGE_DESCRIPTION' | translate }}</div>
+                            </div>
                             <fd-image-upload-field
                                 formControlName="imageUrl"
-                                [label]="'PRODUCT_MANAGE.IMAGE' | translate"
                                 [description]="'PRODUCT_MANAGE.IMAGE_DESCRIPTION' | translate"
                             />
                         </div>
@@ -214,4 +217,3 @@
         </div>
     </form>
 </div>
-

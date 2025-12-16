@@ -184,6 +184,18 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
         }, this.originalFile?.type || 'image/png');
     }
 
+    public onZoneClick(fileInput: HTMLInputElement): void {
+        if (this.disabled || this.isUploading || this.selection.url) {
+            return;
+        }
+        fileInput.click();
+    }
+
+    public onDeleteClick(event: Event): void {
+        event.stopPropagation();
+        this.clearImage();
+    }
+
     private handleIncomingFile(file: File): void {
         if (this.disabled || this.isUploading) {
             return;

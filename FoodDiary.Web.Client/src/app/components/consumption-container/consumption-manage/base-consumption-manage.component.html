@@ -34,9 +34,12 @@
                              />
                         </div>
                         <div class="consumption-manage__field consumption-manage__field--full">
+                            <div class="image-upload-field__label-block">
+                                <div class="image-upload-field__label-title">{{ 'CONSUMPTION_MANAGE.IMAGE' | translate }}</div>
+                                <div class="image-upload-field__label-desc">{{ 'CONSUMPTION_MANAGE.IMAGE_DESCRIPTION' | translate }}</div>
+                            </div>
                             <fd-image-upload-field
                                 formControlName="imageUrl"
-                                [label]="'CONSUMPTION_MANAGE.IMAGE' | translate"
                                 [description]="'CONSUMPTION_MANAGE.IMAGE_DESCRIPTION' | translate"
                             />
                         </div>

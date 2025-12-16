@@ -79,11 +79,21 @@
         </a>
     </nav>
 
-    <div class="sidebar__user">
-        <div class="sidebar__avatar">U</div>
-        <div>
-            <div class="sidebar__user-name">User</div>
-            <div class="sidebar__user-plan">Free Account</div>
+    @if (currentUser(); as user) {
+        <div class="sidebar__user">
+            @if (user.profileImage) {
+                <div class="sidebar__avatar sidebar__avatar--image">
+                    <img [src]="user.profileImage" alt="Avatar" />
+                </div>
+            } @else {
+                <div class="sidebar__avatar">
+                    {{ (user.username || user.email || 'U') | slice:0:1 | uppercase }}
+                </div>
+            }
+            <div>
+                <div class="sidebar__user-name">{{ user.username || user.email }}</div>
+                <div class="sidebar__user-plan">Free Account</div>
+            </div>
         </div>
-    </div>
+    }
 </aside>

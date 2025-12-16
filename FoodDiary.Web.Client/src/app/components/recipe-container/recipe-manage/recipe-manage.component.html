@@ -29,8 +29,11 @@
               [placeholder]="'RECIPE_MANAGE.CATEGORY_PLACEHOLDER' | translate"
              />
 
+            <div class="image-upload-field__label-block">
+              <div class="image-upload-field__label-title">{{ 'RECIPE_MANAGE.IMAGE' | translate }}</div>
+              <div class="image-upload-field__label-desc">{{ 'RECIPE_MANAGE.IMAGE_HINT' | translate }}</div>
+            </div>
             <fd-image-upload-field formControlName="imageUrl"
-              [label]="'RECIPE_MANAGE.IMAGE' | translate"
               [description]="'RECIPE_MANAGE.IMAGE_HINT' | translate"
              />
 

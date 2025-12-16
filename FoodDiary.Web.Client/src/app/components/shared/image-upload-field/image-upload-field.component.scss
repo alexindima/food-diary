@@ -3,24 +3,7 @@
 .image-upload-field {
     display: flex;
     flex-direction: column;
-    gap: 12px;
-
-    &__header {
-        display: flex;
-        flex-direction: column;
-        gap: 4px;
-    }
-
-    &__title {
-        font-weight: 600;
-        font-size: 14px;
-        color: #0f172a;
-    }
-
-    &__description {
-        font-size: 13px;
-        color: #475569;
-    }
+    gap: 8px;
 
     &__dropzone {
         position: relative;
@@ -34,6 +17,7 @@
         overflow: hidden;
         cursor: pointer;
         transition: all 160ms ease;
+        padding: 0;
 
         &--dragging {
             border-color: #2563eb;
@@ -45,6 +29,10 @@
             cursor: progress;
             opacity: 0.7;
         }
+
+        &--has-image {
+            cursor: default;
+        }
     }
 
     &__placeholder {
@@ -53,6 +41,8 @@
         display: grid;
         gap: 8px;
         color: #0f172a;
+        text-align: center;
+        width: 100%;
     }
 
     &__icon {
@@ -86,6 +76,7 @@
         height: 100%;
         object-fit: cover;
         display: block;
+        border-radius: 10px;
     }
 
     &__overlay {
@@ -114,6 +105,68 @@
     &--disabled {
         opacity: 0.6;
         pointer-events: none;
+    }
+
+    &__control {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        display: inline-flex;
+        border-radius: 12px;
+        overflow: hidden;
+        background: rgba(15, 23, 42, 0.85);
+        box-shadow: 0 8px 20px rgba(15, 23, 42, 0.35);
+    }
+
+    &__control-btn {
+        appearance: none;
+        border: none;
+        background: transparent;
+        color: #e5e7eb;
+        padding: 8px 10px;
+        cursor: pointer;
+        font-size: 16px;
+        line-height: 1;
+        transition: background 120ms ease, color 120ms ease;
+
+        &:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+        }
+
+        &--danger:hover {
+            color: #f87171;
+            background: rgba(248, 113, 113, 0.1);
+        }
+
+        &:not(:last-child) {
+            border-right: 1px solid rgba(255, 255, 255, 0.12);
+        }
+    }
+
+    &__hint--inline {
+        position: absolute;
+        bottom: 8px;
+        left: 10px;
+        right: 10px;
+        text-align: left;
+    }
+
+    &__label-block {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        margin-bottom: 6px;
+    }
+
+    &__label-title {
+        font-weight: 700;
+        color: #0f172a;
+    }
+
+    &__label-desc {
+        color: #475569;
+        font-size: 13px;
     }
 
     &__cropper-backdrop {
