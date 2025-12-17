@@ -430,7 +430,9 @@
         "FATS": "Жиры, г",
         "CARBS": "Углеводы, г",
         "FIBER": "Клетчатка, г",
+        "CALORIES_MISMATCH_WARNING": "По указанным макронутриентам ожидается около {{expected}} ккал, но вы указали {{actual}} ккал. Проверьте, пожалуйста.",
         "DEFAULT_SERVING": "Стандартная порция",
+        "DEFAULT_SERVING_WITH_UNIT": "Стандартная порция ({{unit}})",
         "DEFAULT_SERVING_UNIT": "Единица измерения порции",
         "DEFAULT_SERVING_UNIT_PLACEHOLDER": "Выберите единицу измерения",
         "DEFAULT_SERVING_UNITS": {
@@ -1114,6 +1116,4 @@
         }
     }
 }
-
-
 

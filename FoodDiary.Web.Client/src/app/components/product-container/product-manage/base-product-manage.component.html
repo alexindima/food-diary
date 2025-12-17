@@ -23,18 +23,34 @@
     <form class="product-manage__form" [formGroup]="productForm" (ngSubmit)="onSubmit()">
         <div class="product-manage__grid">
             <div class="product-manage__column product-manage__column--primary">
-                <fd-ui-card class="product-manage__card" [title]="'PRODUCT_MANAGE.BASIC_INFO' | translate">
-                    <div class="product-manage__basic-grid">
-                        <div class="product-manage__field product-manage__field--full">
+                <fd-ui-card
+                    class="product-manage__card product-manage__card--basic"
+                    appearance="entry"
+                    [title]="'PRODUCT_MANAGE.BASIC_INFO' | translate"
+                >
+                    <div class="product-manage__hero">
+                        <div class="product-manage__image">
+                            <fd-image-upload-field
+                                formControlName="imageUrl"
+                                [description]="'PRODUCT_MANAGE.IMAGE_DESCRIPTION' | translate"
+                                [recommendedSize]="'512 x 512'"
+                                [cropEnabled]="true"
+                                [cropSize]="512"
+                                [cropAspectRatio]="1"
+                            />
+                        </div>
+                        <div class="product-manage__hero-field">
                             <fd-ui-input formControlName="name"
+                                size="lg"
                                 [label]="'PRODUCT_MANAGE.NAME' | translate"
                                 [placeholder]="'PRODUCT_MANAGE.NAME_PLACEHOLDER' | translate"
                                 [required]="true"
                                 [error]="getControlError('name')"
                              />
                         </div>
-                        <div class="product-manage__field product-manage__field--full">
+                        <div class="product-manage__hero-field">
                             <fd-ui-input formControlName="barcode"
+                                size="lg"
                                 [label]="'PRODUCT_MANAGE.BARCODE' | translate"
                                 [placeholder]="'PRODUCT_MANAGE.BARCODE_PLACEHOLDER' | translate"
                                 [suffixButtonIcon]="'qr_code_scanner'"
@@ -42,25 +58,18 @@
                                 (suffixButtonClicked)="openBarcodeScanner()"
                              />
                         </div>
-                        <div class="product-manage__serving-row product-manage__field--full">
-                            <div class="product-manage__serving-part">
-                                <fd-ui-input formControlName="baseAmount"
-                                    type="number"
-                                    [label]="'PRODUCT_MANAGE.DEFAULT_SERVING' | translate"
-                                    [placeholder]="'PRODUCT_MANAGE.DEFAULT_SERVING_PLACEHOLDER' | translate"
-                                    [required]="true"
-                                    [error]="getControlError('baseAmount')"
-                                 />
-                            </div>
-                            <div class="product-manage__serving-part">
-                                <fd-ui-select formControlName="baseUnit"
-                                    [label]="'PRODUCT_MANAGE.DEFAULT_SERVING_UNIT' | translate"
-                                    [options]="unitOptions"
-                                    [required]="true"
-                                    [error]="getControlError('baseUnit')"
-                                 />
-                            </div>
+                        <div class="product-manage__hero-field">
+                            <fd-ui-select formControlName="productType"
+                                size="lg"
+                                [label]="'PRODUCT_MANAGE.PRODUCT_TYPE' | translate"
+                                [placeholder]="'PRODUCT_MANAGE.PRODUCT_TYPE_PLACEHOLDER' | translate"
+                                [options]="productTypeSelectOptions"
+                                [required]="true"
+                                [error]="getControlError('productType')"
+                             />
                         </div>
+                    </div>
+                    <div class="product-manage__basic-grid">
                         <div class="product-manage__serving-row product-manage__field--full">
                             <div class="product-manage__serving-part">
                                 <fd-ui-input formControlName="defaultPortionAmount"
@@ -72,12 +81,11 @@
                                  />
                             </div>
                             <div class="product-manage__serving-part">
-                                <fd-ui-select formControlName="productType"
-                                    [label]="'PRODUCT_MANAGE.PRODUCT_TYPE' | translate"
-                                    [placeholder]="'PRODUCT_MANAGE.PRODUCT_TYPE_PLACEHOLDER' | translate"
-                                    [options]="productTypeSelectOptions"
+                                <fd-ui-select formControlName="baseUnit"
+                                    [label]="'PRODUCT_MANAGE.DEFAULT_SERVING_UNIT' | translate"
+                                    [options]="unitOptions"
                                     [required]="true"
-                                    [error]="getControlError('productType')"
+                                    [error]="getControlError('baseUnit')"
                                  />
                             </div>
                         </div>
@@ -96,23 +104,28 @@
                                 [rows]="4"
                              />
                         </div>
-                        <div class="product-manage__field product-manage__field--full">
-                            <div class="image-upload-field__label-block">
-                                <div class="image-upload-field__label-title">{{ 'PRODUCT_MANAGE.IMAGE' | translate }}</div>
-                                <div class="image-upload-field__label-desc">{{ 'PRODUCT_MANAGE.IMAGE_DESCRIPTION' | translate }}</div>
-                            </div>
-                            <fd-image-upload-field
-                                formControlName="imageUrl"
-                                [description]="'PRODUCT_MANAGE.IMAGE_DESCRIPTION' | translate"
-                            />
-                        </div>
                     </div>
                 </fd-ui-card>
             </div>
 
             <div class="product-manage__column product-manage__column--secondary">
                 <div class="product-manage__sticky-stack">
-                    <fd-ui-card class="product-manage__card" [title]="nutritionCardTitle">
+                    <fd-ui-card
+                        class="product-manage__card product-manage__card--nutrition"
+                        appearance="entry"
+                        [title]="'PRODUCT_MANAGE.NUTRITION_VALUE' | translate"
+                    >
+                        <div class="product-manage__nutrients-row">
+                            <div class="product-manage__nutrient">
+                                <fd-ui-input formControlName="baseAmount"
+                                    type="number"
+                                    [label]="'PRODUCT_MANAGE.DEFAULT_SERVING_WITH_UNIT' | translate: { unit: baseUnitLabel }"
+                                    [placeholder]="'PRODUCT_MANAGE.DEFAULT_SERVING_PLACEHOLDER' | translate"
+                                    [required]="true"
+                                    [error]="getControlError('baseAmount')"
+                                 />
+                            </div>
+                        </div>
                         <div class="product-manage__nutrients-row">
                             <div class="product-manage__nutrient">
                                 <fd-ui-input formControlName="caloriesPerBase"
@@ -169,14 +182,12 @@
                                  />
                             </div>
                         </div>
-                        @if (showNutrientChart()) {
-                            <div class="product-manage__nutrients-chart">
-                                <canvas
-                                    baseChart
-                                    [type]="'pie'"
-                                    [data]="nutrientsPieChartData()"
-                                    [options]="nutrientsPieChartOptions"
-                                ></canvas>
+                        @if (nutritionWarning(); as warning) {
+                            <div class="product-manage__nutrition-warning">
+                                {{ 'PRODUCT_MANAGE.CALORIES_MISMATCH_WARNING' | translate: {
+                                    expected: warning.expectedCalories,
+                                    actual: warning.actualCalories
+                                } }}
                             </div>
                         }
                     </fd-ui-card>

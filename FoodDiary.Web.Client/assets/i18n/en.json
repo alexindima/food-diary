@@ -466,6 +466,7 @@
         "FATS": "Fats, g",
         "CARBS": "Carbs, g",
         "FIBER": "Fiber, g",
+        "CALORIES_MISMATCH_WARNING": "Based on macros, expected about {{expected}} kcal, but you entered {{actual}} kcal. Please double-check.",
         "VISIBILITY": "Visibility",
         "VISIBILITY_GROUP_TITLE": "Visibility",
         "VISIBILITY_PLACEHOLDER": "Select visibility",
@@ -474,6 +475,7 @@
             "PUBLIC": "Public"
         },
         "DEFAULT_SERVING": "Default Serving",
+        "DEFAULT_SERVING_WITH_UNIT": "Default Serving ({{unit}})",
         "DEFAULT_SERVING_UNIT": "Serving Unit",
         "DEFAULT_SERVING_UNIT_PLACEHOLDER": "Select serving unit",
         "DEFAULT_SERVING_UNITS": {

@@ -3,13 +3,11 @@ import {
     Component,
     DestroyRef,
     FactoryProvider,
-    computed,
     effect,
     inject,
     input,
     OnInit,
     signal,
-    ViewChild,
 } from '@angular/core';
 import { Product, CreateProductRequest, MeasurementUnit, ProductVisibility, ProductType } from '../../../types/product.data';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -19,7 +17,6 @@ import { NavigationService } from '../../../services/navigation.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormGroupControls } from '../../../types/common.data';
-import { NutrientData } from '../../../types/charts.data';
 import { firstValueFrom } from 'rxjs';
 import { ZXingScannerModule } from '@zxing/ngx-scanner';
 import { BarcodeScannerComponent } from '../../shared/barcode-scanner/barcode-scanner.component';
@@ -38,8 +35,7 @@ import {
 import { PageHeaderComponent } from '../../shared/page-header/page-header.component';
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
 import { CHART_COLORS } from '../../../constants/chart-colors';
-import { ChartData, ChartOptions } from 'chart.js';
-import { BaseChartDirective } from 'ng2-charts';
+import { NutritionCalculationService } from '../../../services/nutrition-calculation.service';
 import {
     ConfirmDeleteDialogComponent,
     ConfirmDeleteDialogData,
@@ -67,7 +63,6 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     imports: [
         ReactiveFormsModule,
         TranslatePipe,
-        BaseChartDirective,
         ZXingScannerModule,
         FdUiInputComponent,
         FdUiCardComponent,
@@ -85,19 +80,15 @@ export class BaseProductManageComponent implements OnInit {
     protected readonly translateService = inject(TranslateService);
     protected readonly navigationService = inject(NavigationService);
     protected readonly fdDialogService = inject(FdUiDialogService);
+    private readonly nutritionCalculationService = inject(NutritionCalculationService);
     private readonly destroyRef = inject(DestroyRef);
-    @ViewChild(BaseChartDirective) private nutrientChart?: BaseChartDirective;
 
     public product = input<Product | null>();
     public globalError = signal<string | null>(null);
-    public calories = signal<number>(0);
-    public nutrientChartData = signal<NutrientData>({
-        proteins: 0,
-        fats: 0,
-        carbs: 0,
-    });
+    public nutritionWarning = signal<CalorieMismatchWarning | null>(null);
     private formInitialized = false;
     public readonly isDeleting = signal(false);
+    private readonly calorieMismatchThreshold = 0.2;
 
     protected skipConfirmDialog = false;
     public productForm: FormGroup<ProductFormData>;
@@ -108,40 +99,6 @@ export class BaseProductManageComponent implements OnInit {
     public visibilityOptions = Object.values(ProductVisibility) as ProductVisibility[];
     public visibilitySelectOptions: FdUiSelectOption<ProductVisibility>[] = [];
     private readonly nutrientFillAlpha = 0.08;
-    public readonly nutrientsPieChartOptions: ChartOptions<'pie'> = {
-        responsive: true,
-        aspectRatio: 1,
-        plugins: {
-            legend: { display: false },
-            tooltip: {
-                callbacks: {
-                    label: context =>
-                        this.getPieTooltipLabel(String(context.label ?? ''), Number(context.raw) || 0),
-                },
-            },
-        },
-    };
-    public readonly nutrientsPieChartData = computed<ChartData<'pie', number[], string>>(() => ({
-        labels: [
-            this.translateService.instant('NUTRIENTS.PROTEINS'),
-            this.translateService.instant('NUTRIENTS.FATS'),
-            this.translateService.instant('NUTRIENTS.CARBS'),
-        ],
-        datasets: [
-            {
-                data: [
-                    this.nutrientChartData().proteins ?? 0,
-                    this.nutrientChartData().fats ?? 0,
-                    this.nutrientChartData().carbs ?? 0,
-                ],
-                backgroundColor: [
-                    CHART_COLORS.proteins,
-                    CHART_COLORS.fats,
-                    CHART_COLORS.carbs,
-                ],
-            },
-        ],
-    }));
     public readonly nutrientFillColors = {
         calories: this.applyAlpha(CHART_COLORS.calories, this.nutrientFillAlpha),
         fiber: this.applyAlpha(CHART_COLORS.fiber, this.nutrientFillAlpha),
@@ -149,12 +106,6 @@ export class BaseProductManageComponent implements OnInit {
         fats: this.applyAlpha(CHART_COLORS.fats, this.nutrientFillAlpha),
         carbs: this.applyAlpha(CHART_COLORS.carbs, this.nutrientFillAlpha),
     };
-    public readonly showNutrientChart = computed(
-        () =>
-            (this.nutrientChartData().proteins ?? 0) > 0 ||
-            (this.nutrientChartData().fats ?? 0) > 0 ||
-            (this.nutrientChartData().carbs ?? 0) > 0,
-    );
     public constructor() {
         this.productForm = new FormGroup<ProductFormData>({
             name: new FormControl('', { nonNullable: true, validators: Validators.required }),
@@ -182,6 +133,14 @@ export class BaseProductManageComponent implements OnInit {
         this.buildProductTypeOptions();
         this.buildVisibilityOptions();
         this.coerceNumericControls();
+        this.productForm.controls.baseUnit.valueChanges
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(unit => {
+                if (!unit) {
+                    return;
+                }
+                this.productForm.controls.baseAmount.setValue(this.getDefaultBaseAmount(unit));
+            });
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.buildUnitOptions();
             this.buildProductTypeOptions();
@@ -192,7 +151,6 @@ export class BaseProductManageComponent implements OnInit {
             const currentProduct = this.product();
             if (currentProduct && !this.formInitialized) {
                 this.populateForm(currentProduct);
-                this.updateSummary();
                 this.formInitialized = true;
             }
         });
@@ -201,7 +159,7 @@ export class BaseProductManageComponent implements OnInit {
     public ngOnInit(): void {
         this.productForm.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.clearGlobalError();
-            this.updateSummary();
+            this.updateCalorieWarning();
         });
 
     }
@@ -317,18 +275,43 @@ export class BaseProductManageComponent implements OnInit {
         return null;
     }
 
-    public get nutritionCardTitle(): string {
-        return this.translateService.instant('PRODUCT_MANAGE.NUTRITION_VALUE_TEMPLATE', {
-            base: this.getDynamicNutrientPlaceholder,
-        });
+    public get baseUnitLabel(): string {
+        return this.getUnitLabel(this.productForm.controls.baseUnit.value);
     }
 
-    public get getDynamicNutrientPlaceholder(): string {
-        const baseAmount = this.productForm.controls.baseAmount.value ?? 0;
-        const baseUnit = this.productForm.controls.baseUnit.value;
+    private updateCalorieWarning(): void {
+        const calories = this.getNumberValue(this.productForm.controls.caloriesPerBase);
+        const proteins = this.getNumberValue(this.productForm.controls.proteinsPerBase);
+        const fats = this.getNumberValue(this.productForm.controls.fatsPerBase);
+        const carbs = this.getNumberValue(this.productForm.controls.carbsPerBase);
+        const expectedCalories = this.nutritionCalculationService.calculateCaloriesFromMacros(proteins, fats, carbs);
 
-        const unitLabel = this.translateService.instant(`PRODUCT_AMOUNT_UNITS_SHORT.${baseUnit}`);
-        return `${baseAmount} ${unitLabel}`;
+        if (expectedCalories <= 0 || calories <= 0) {
+            this.nutritionWarning.set(null);
+            return;
+        }
+
+        const deviation = Math.abs(calories - expectedCalories) / expectedCalories;
+        if (deviation > this.calorieMismatchThreshold) {
+            this.nutritionWarning.set({
+                expectedCalories: Math.round(expectedCalories),
+                actualCalories: Math.round(calories),
+            });
+            return;
+        }
+
+        this.nutritionWarning.set(null);
+    }
+
+    private getUnitLabel(baseUnit: MeasurementUnit | null): string {
+        if (!baseUnit) {
+            return '';
+        }
+        return this.translateService.instant(`GENERAL.UNITS.${baseUnit}`);
+    }
+
+    private getDefaultBaseAmount(unit: MeasurementUnit): number {
+        return unit === MeasurementUnit.PCS ? 1 : 100;
     }
 
     public getControlError(controlName: keyof ProductFormData): string | null {
@@ -357,59 +340,36 @@ export class BaseProductManageComponent implements OnInit {
         return null;
     }
 
-    private updateSummary(): void {
-        const caloriesPerBase = this.getNumberValue(this.productForm.controls.caloriesPerBase);
-        const proteinsPerBase = this.getNumberValue(this.productForm.controls.proteinsPerBase);
-        const fatsPerBase = this.getNumberValue(this.productForm.controls.fatsPerBase);
-        const carbsPerBase = this.getNumberValue(this.productForm.controls.carbsPerBase);
-
-        const newTotalCalories = caloriesPerBase;
-        const newNutrientChartData = {
-            proteins: proteinsPerBase,
-            fats: fatsPerBase,
-            carbs: carbsPerBase,
-        };
-
-        if (this.calories() !== newTotalCalories) {
-            this.calories.set(newTotalCalories);
-        }
-
-        if (
-            this.nutrientChartData().proteins !== newNutrientChartData.proteins ||
-            this.nutrientChartData().fats !== newNutrientChartData.fats ||
-            this.nutrientChartData().carbs !== newNutrientChartData.carbs
-        ) {
-            this.nutrientChartData.set(newNutrientChartData);
-            this.nutrientChart?.update();
-        }
-    }
-
     private populateForm(product: Product): void {
         const normalizedVisibility = this.normalizeVisibility(product.visibility);
         const normalizedProductType =
             normalizeProductTypeValue(product.productType ?? product.category ?? null) ?? ProductType.Unknown;
 
-        this.productForm.patchValue({
-            name: product.name,
-            barcode: product.barcode ?? null,
-            brand: product.brand ?? null,
-            productType: normalizedProductType,
-            description: product.description ?? null,
-            comment: product.comment ?? null,
-            imageUrl: {
-                url: product.imageUrl ?? null,
-                assetId: product.imageAssetId ?? null,
+        this.productForm.patchValue(
+            {
+                name: product.name,
+                barcode: product.barcode ?? null,
+                brand: product.brand ?? null,
+                productType: normalizedProductType,
+                description: product.description ?? null,
+                comment: product.comment ?? null,
+                imageUrl: {
+                    url: product.imageUrl ?? null,
+                    assetId: product.imageAssetId ?? null,
+                },
+                baseAmount: product.baseAmount,
+                defaultPortionAmount: product.defaultPortionAmount,
+                baseUnit: product.baseUnit,
+                caloriesPerBase: product.caloriesPerBase,
+                proteinsPerBase: product.proteinsPerBase,
+                fatsPerBase: product.fatsPerBase,
+                carbsPerBase: product.carbsPerBase,
+                fiberPerBase: product.fiberPerBase,
+                visibility: normalizedVisibility,
             },
-            baseAmount: product.baseAmount,
-            defaultPortionAmount: product.defaultPortionAmount,
-            baseUnit: product.baseUnit,
-            caloriesPerBase: product.caloriesPerBase,
-            proteinsPerBase: product.proteinsPerBase,
-            fatsPerBase: product.fatsPerBase,
-            carbsPerBase: product.carbsPerBase,
-            fiberPerBase: product.fiberPerBase,
-            visibility: normalizedVisibility,
-        });
+            { emitEvent: false },
+        );
+        this.updateCalorieWarning();
     }
 
     private async addProduct(productData: CreateProductRequest): Promise<Product | null> {
@@ -508,11 +468,6 @@ export class BaseProductManageComponent implements OnInit {
         });
     }
 
-    private getPieTooltipLabel(label: string, value: number): string {
-        const formattedValue = parseFloat(value.toFixed(2));
-        return `${label}: ${formattedValue} ${this.translateService.instant('STATISTICS.GRAMS')}`;
-    }
-
     private buildVisibilityOptions(): void {
         this.visibilitySelectOptions = this.visibilityOptions.map(option => ({
             value: option,
@@ -588,5 +543,10 @@ export interface ProductFormValues {
 }
 
 type ProductFormData = FormGroupControls<ProductFormValues>;
+
+interface CalorieMismatchWarning {
+    expectedCalories: number;
+    actualCalories: number;
+}
 
 export type RedirectAction = 'Home' | 'ProductList';
