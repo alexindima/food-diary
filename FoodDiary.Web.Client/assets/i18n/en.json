@@ -488,6 +488,7 @@
         "NUTRITION_VALUE_TEMPLATE": "Nutrition value per {{base}}",
         "SUMMARY_TITLE": "Summary",
         "SUMMARY_CALORIES_LABEL": "Calories",
+        "STEPS_TITLE": "Ingredients & Steps",
         "SAVE_BUTTON": "Save Changes",
         "ADD_BUTTON": "Add Product",
         "CANCEL_BUTTON": "Cancel",
@@ -1089,9 +1090,9 @@
         "PCS": "pieces"
     },
     "PRODUCT_AMOUNT_UNITS_SHORT": {
-        "G": "@:GENERAL.UNITS.G",
-        "ML": "@:GENERAL.UNITS.ML",
-        "PCS": "@:GENERAL.UNITS.PCS"
+        "G": "g",
+        "ML": "ml",
+        "PCS": "pcs"
     },
     "BARCODE_SCANNER": {
         "TITLE": "Scan the barcode",

@@ -1,6 +1,7 @@
 import {
     ChangeDetectionStrategy,
     Component,
+    computed,
     effect,
     inject,
     input,
@@ -17,9 +18,6 @@ import {
 } from '../../product-container/product-list/product-list-dialog/product-list-dialog.component';
 import { NutrientData } from '../../../types/charts.data';
 import { HttpErrorResponse } from '@angular/common/http';
-import {
-    NutrientsSummaryComponent
-} from '../../shared/nutrients-summary/nutrients-summary.component';
 import { Recipe, RecipeDto, RecipeVisibility, RecipeIngredient } from '../../../types/recipe.data';
 import { RecipeService } from '../../../services/recipe.service';
 import { DropZoneDirective } from '../../../directives/drop-zone.directive';
@@ -33,12 +31,15 @@ import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea.compone
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiSelectComponent, FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
 import { FdUiCheckboxComponent } from 'fd-ui-kit/checkbox/fd-ui-checkbox.component';
+import { FdUiAccentSurfaceComponent } from 'fd-ui-kit/accent-surface/fd-ui-accent-surface.component';
 import { CommonModule } from '@angular/common';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { PageHeaderComponent } from '../../shared/page-header/page-header.component';
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
 import { ImageUploadFieldComponent } from '../../shared/image-upload-field/image-upload-field.component';
 import { ImageSelection } from '../../../types/image-upload.data';
+import { CHART_COLORS } from '../../../constants/chart-colors';
+import { NutritionCalculationService } from '../../../services/nutrition-calculation.service';
 
 @Component({
     selector: 'fd-recipe-manage',
@@ -46,7 +47,6 @@ import { ImageSelection } from '../../../types/image-upload.data';
         CommonModule,
         ReactiveFormsModule,
         TranslatePipe,
-        NutrientsSummaryComponent,
         DropZoneDirective,
         DraggableDirective,
         FdUiCardComponent,
@@ -55,6 +55,7 @@ import { ImageSelection } from '../../../types/image-upload.data';
         FdUiButtonComponent,
         FdUiSelectComponent,
         FdUiCheckboxComponent,
+        FdUiAccentSurfaceComponent,
         PageHeaderComponent,
         FdPageContainerDirective,
         ImageUploadFieldComponent,
@@ -67,6 +68,32 @@ export class RecipeManageComponent implements OnInit {
     private readonly recipeService = inject(RecipeService);
     private readonly translateService = inject(TranslateService);
     private readonly navigationService = inject(NavigationService);
+    private readonly nutritionCalculationService = inject(NutritionCalculationService);
+
+    public readonly chartColors = CHART_COLORS;
+    private readonly calorieMismatchThreshold = 0.2;
+
+    public readonly nutritionWarning = computed<CalorieMismatchWarning | null>(() => {
+        const calories = this.recipeForm.controls.manualCalories.value ?? 0;
+        const proteins = this.recipeForm.controls.manualProteins.value;
+        const fats = this.recipeForm.controls.manualFats.value;
+        const carbs = this.recipeForm.controls.manualCarbs.value;
+        const expectedCalories = this.nutritionCalculationService.calculateCaloriesFromMacros(proteins, fats, carbs);
+
+        if (expectedCalories <= 0 || calories <= 0) {
+            return null;
+        }
+
+        const deviation = Math.abs(calories - expectedCalories) / expectedCalories;
+        if (deviation <= this.calorieMismatchThreshold) {
+            return null;
+        }
+
+        return {
+            expectedCalories: Math.round(expectedCalories),
+            actualCalories: Math.round(calories),
+        };
+    });
 
     public recipe = input<Recipe | null>(null);
     public totalCalories = signal<number>(0);
@@ -617,10 +644,24 @@ export class RecipeManageComponent implements OnInit {
             fats: this.roundNutrient(fats),
             carbs: this.roundNutrient(carbs),
         });
+
+        if (this.recipeForm.controls.calculateNutritionAutomatically.value) {
+            this.syncManualControlsWithSummary();
+        }
     }
 
     private roundNutrient(value: number): number {
         return Math.round(value * 100) / 100;
+    }
+
+    private syncManualControlsWithSummary(): void {
+        this.recipeForm.patchValue({
+            manualCalories: this.totalCalories(),
+            manualProteins: this.nutrientChartData().proteins,
+            manualFats: this.nutrientChartData().fats,
+            manualCarbs: this.nutrientChartData().carbs,
+            manualFiber: this.totalFiber(),
+        }, { emitEvent: false });
     }
 
     private updateManualNutritionValidators(isAuto: boolean): void {
@@ -692,3 +733,8 @@ interface IngredientFormValues {
 type RecipeFormData = FormGroupControls<RecipeFormValues>;
 type StepFormData = FormGroupControls<StepFormValues>;
 type IngredientFormData = FormGroupControls<IngredientFormValues>;
+
+interface CalorieMismatchWarning {
+    expectedCalories: number;
+    actualCalories: number;
+}

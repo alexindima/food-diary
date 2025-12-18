@@ -14,43 +14,60 @@
 
     <div class="recipe-manage__grid">
       <div class="recipe-manage__column recipe-manage__column--primary">
-        <fd-ui-card class="recipe-manage__card" [title]="'RECIPE_MANAGE.GENERAL_GROUP_TITLE' | translate">
-          <div class="recipe-manage__basic-grid">
-            <fd-ui-input class="recipe-manage__field--full"
-              formControlName="name"
-              [label]="'RECIPE_MANAGE.NAME' | translate"
-              [placeholder]="'RECIPE_MANAGE.NAME_PLACEHOLDER' | translate"
-              [required]="true"
-              [error]="getFieldError('name')"
-             />
-
-            <fd-ui-input formControlName="category"
-              [label]="'RECIPE_MANAGE.CATEGORY' | translate"
-              [placeholder]="'RECIPE_MANAGE.CATEGORY_PLACEHOLDER' | translate"
-             />
-
-            <div class="image-upload-field__label-block">
-              <div class="image-upload-field__label-title">{{ 'RECIPE_MANAGE.IMAGE' | translate }}</div>
-              <div class="image-upload-field__label-desc">{{ 'RECIPE_MANAGE.IMAGE_HINT' | translate }}</div>
+        <fd-ui-card class="recipe-manage__card recipe-manage__card--general" appearance="entry">
+          <div class="recipe-manage__card-heading">
+            <div class="recipe-manage__card-icon recipe-manage__card-icon--general"></div>
+            <div>
+              <div class="recipe-manage__card-title">{{ 'RECIPE_MANAGE.GENERAL_GROUP_TITLE' | translate }}</div>
+              <div class="recipe-manage__card-subtitle">{{ 'RECIPE_MANAGE.SUBTITLE' | translate }}</div>
             </div>
-            <fd-image-upload-field formControlName="imageUrl"
-              [description]="'RECIPE_MANAGE.IMAGE_HINT' | translate"
-             />
+          </div>
 
+          <div class="recipe-manage__hero-row">
+            <div class="recipe-manage__image">
+              <fd-image-upload-field
+                formControlName="imageUrl"
+                [description]="'RECIPE_MANAGE.IMAGE_HINT' | translate"
+                [recommendedSize]="'512 x 512'"
+                [maxSizeMb]="10"
+                [acceptedTypes]="'image/png,image/jpeg,image/webp'"
+                [cropEnabled]="true"
+                [cropSize]="512"
+                [cropAspectRatio]="1"
+              />
+            </div>
+            <div class="recipe-manage__hero-fields">
+              <fd-ui-input
+                formControlName="name"
+                size="lg"
+                [label]="'RECIPE_MANAGE.NAME' | translate"
+                [placeholder]="'RECIPE_MANAGE.NAME_PLACEHOLDER' | translate"
+                [required]="true"
+                [error]="getFieldError('name')"
+               />
+
+              <fd-ui-input formControlName="category"
+                [label]="'RECIPE_MANAGE.CATEGORY' | translate"
+                [placeholder]="'RECIPE_MANAGE.CATEGORY_PLACEHOLDER' | translate"
+               />
+
+              <fd-ui-input formControlName="cookTime"
+                type="number"
+                [step]="1"
+                [label]="'RECIPE_MANAGE.COOK_TIME' | translate"
+                [required]="true"
+                [error]="getFieldError('cookTime')"
+               />
+            </div>
+          </div>
+
+          <div class="recipe-manage__basic-grid">
             <fd-ui-input formControlName="prepTime"
               type="number"
               [step]="1"
               [label]="'RECIPE_MANAGE.PREP_TIME' | translate"
               [required]="true"
               [error]="getFieldError('prepTime')"
-             />
-
-            <fd-ui-input formControlName="cookTime"
-              type="number"
-              [step]="1"
-              [label]="'RECIPE_MANAGE.COOK_TIME' | translate"
-              [required]="true"
-              [error]="getFieldError('cookTime')"
              />
 
             <fd-ui-input formControlName="servings"
@@ -61,196 +78,282 @@
               [error]="getFieldError('servings')"
              />
 
+            <fd-ui-select class="recipe-manage__field--full"
+              formControlName="visibility"
+              [label]="'RECIPE_MANAGE.VISIBILITY' | translate"
+              [required]="true"
+              [options]="visibilitySelectOptions"
+              [error]="getFieldError('visibility')"
+             />
+
             <fd-ui-textarea class="recipe-manage__field--full"
               formControlName="description"
               [label]="'RECIPE_MANAGE.DESCRIPTION' | translate"
               [placeholder]="'RECIPE_MANAGE.DESCRIPTION_PLACEHOLDER' | translate"
-              [rows]="4"
+              [rows]="3"
               [maxlength]="1000"
               [error]="getFieldError('description')"
              />
           </div>
         </fd-ui-card>
 
-        <section class="recipe-manage__steps-section" formArrayName="steps">
-          <div class="recipe-manage__steps" #dragBoundary fdDropZone>
-            @for (step of steps.controls; track step; let index = $index; let first = $first) {
-              <div
-                class="recipe-step"
-                [formGroupName]="index"
-                fdDraggable
-                [fdDraggableDragView]="customDragView"
-                [fdDraggablePlaceholder]="customDragPlaceholder"
-                [fdDraggableAxis]="'Y'"
-                [fdDraggableBoundary]="dragBoundary"
-                >
-                <fd-ui-card
-                  class="recipe-step-card"
-                  [subtle]="true"
+        <fd-ui-card class="recipe-manage__card recipe-manage__card--steps" appearance="entry">
+          <div class="recipe-manage__card-heading">
+            <div class="recipe-manage__card-icon recipe-manage__card-icon--steps"></div>
+            <div class="recipe-manage__card-title">{{ 'RECIPE_MANAGE.STEPS_TITLE' | translate }}</div>
+          </div>
+
+          <section class="recipe-manage__steps-section" formArrayName="steps">
+            <div class="recipe-manage__steps" #dragBoundary fdDropZone>
+              @for (step of steps.controls; track step; let index = $index; let first = $first) {
+                <div
+                  class="recipe-step"
+                  [formGroupName]="index"
+                  fdDraggable
+                  [fdDraggableDragView]="customDragView"
+                  [fdDraggablePlaceholder]="customDragPlaceholder"
+                  [fdDraggableAxis]="'Y'"
+                  [fdDraggableBoundary]="dragBoundary"
                   >
-                  <div class="recipe-step-card__header" fdDragHandle>
-                    <span class="recipe-step-card__title">
-                      {{ 'RECIPE_MANAGE.STEP_TITLE' | translate : { index: index + 1 } }}
-                    </span>
-                    <fd-ui-button
-                      type="button"
-                      variant="danger"
-                      fill="text"
-                      icon="delete"
-                      [disabled]="first"
-                      (click)="removeStep(index)"
-                      >
-                      {{ 'RECIPE_MANAGE.REMOVE_STEP' | translate }}
-                    </fd-ui-button>
-                  </div>
+                  <fd-ui-card
+                    class="recipe-step-card"
+                    [subtle]="true"
+                    >
+                    <div class="recipe-step-card__header" fdDragHandle>
+                      <span class="recipe-step-card__title">
+                        {{ 'RECIPE_MANAGE.STEP_TITLE' | translate : { index: index + 1 } }}
+                      </span>
+                      <fd-ui-button
+                        type="button"
+                        variant="danger"
+                        fill="text"
+                        icon="delete"
+                        [disabled]="first"
+                        (click)="removeStep(index)"
+                        >
+                        {{ 'RECIPE_MANAGE.REMOVE_STEP' | translate }}
+                      </fd-ui-button>
+                    </div>
 
-                  <fd-ui-textarea formControlName="description"
-                    [rows]="3"
-                    [label]="'RECIPE_MANAGE.STEP_DESCRIPTION' | translate"
-                    [placeholder]="'RECIPE_MANAGE.STEP_DESCRIPTION_PLACEHOLDER' | translate"
-                    [error]="getStepDescriptionError(index)"
-                   />
+                    <fd-ui-textarea formControlName="description"
+                      [rows]="3"
+                      [label]="'RECIPE_MANAGE.STEP_DESCRIPTION' | translate"
+                      [placeholder]="'RECIPE_MANAGE.STEP_DESCRIPTION_PLACEHOLDER' | translate"
+                      [error]="getStepDescriptionError(index)"
+                     />
 
-                  <div class="recipe-step-card__ingredients" formArrayName="ingredients">
-                    @for (ingredient of getStepIngredients(index).controls; track ingredient; let ingredientIndex = $index; let firstIngredient = $first) {
-                      <div class="recipe-ingredient" [formGroupName]="ingredientIndex">
-                        <input type="hidden" formControlName="food" />
-                        <fd-ui-input class="recipe-ingredient__name"
-                          formControlName="foodName"
-                          [label]="'RECIPE_MANAGE.INGREDIENT_NAME' | translate"
-                          [placeholder]="'RECIPE_MANAGE.INGREDIENT_NAME_PLACEHOLDER' | translate"
-                          [readonly]="true"
-                          suffixButtonIcon="search"
-                          [suffixButtonAriaLabel]="'RECIPE_MANAGE.SELECT_INGREDIENT' | translate"
-                          (suffixButtonClicked)="onProductSelectClick(index, ingredientIndex)"
-                          (click)="onProductSelectClick(index, ingredientIndex)"
-                          [error]="getIngredientControlError(index, ingredientIndex, 'food')"
-                         />
-
-                        <div class="recipe-ingredient__amount">
-                          <fd-ui-input formControlName="amount"
-                            type="number"
-                            [step]="0.01"
-                            [label]="getIngredientAmountLabel(index, ingredientIndex)"
-                            [error]="getIngredientControlError(index, ingredientIndex, 'amount')"
+                    <div class="recipe-step-card__ingredients" formArrayName="ingredients">
+                      @for (ingredient of getStepIngredients(index).controls; track ingredient; let ingredientIndex = $index; let firstIngredient = $first) {
+                        <div class="recipe-ingredient" [formGroupName]="ingredientIndex">
+                          <input type="hidden" formControlName="food" />
+                          <fd-ui-input class="recipe-ingredient__name"
+                            formControlName="foodName"
+                            [label]="'RECIPE_MANAGE.INGREDIENT_NAME' | translate"
+                            [placeholder]="'RECIPE_MANAGE.INGREDIENT_NAME_PLACEHOLDER' | translate"
+                            [readonly]="true"
+                            suffixButtonIcon="search"
+                            [suffixButtonAriaLabel]="'RECIPE_MANAGE.SELECT_INGREDIENT' | translate"
+                            (suffixButtonClicked)="onProductSelectClick(index, ingredientIndex)"
+                            (click)="onProductSelectClick(index, ingredientIndex)"
+                            [error]="getIngredientControlError(index, ingredientIndex, 'food')"
                            />
-                          <fd-ui-button type="button"
-                            variant="danger"
-                            fill="text"
-                            icon="delete"
-                            [disabled]="firstIngredient"
-                            (click)="removeIngredientFromStep(index, ingredientIndex)"
-                           />
+
+                          <div class="recipe-ingredient__amount">
+                            <fd-ui-input formControlName="amount"
+                              type="number"
+                              [step]="0.01"
+                              [label]="getIngredientAmountLabel(index, ingredientIndex)"
+                              [error]="getIngredientControlError(index, ingredientIndex, 'amount')"
+                             />
+                            <fd-ui-button type="button"
+                              variant="danger"
+                              fill="text"
+                              icon="delete"
+                              [disabled]="firstIngredient"
+                              (click)="removeIngredientFromStep(index, ingredientIndex)"
+                             />
+                          </div>
                         </div>
-                      </div>
-                    }
+                      }
 
-                    <fd-ui-button
-                      type="button"
-                      icon="add"
-                      variant="primary"
-                      fill="outline"
-                      (click)="addIngredientToStep(index)"
-                      >
-                      {{ 'RECIPE_MANAGE.ADD_INGREDIENT' | translate }}
-                    </fd-ui-button>
-                  </div>
-                </fd-ui-card>
+                      <fd-ui-button
+                        type="button"
+                        icon="add"
+                        variant="primary"
+                        fill="outline"
+                        (click)="addIngredientToStep(index)"
+                        >
+                        {{ 'RECIPE_MANAGE.ADD_INGREDIENT' | translate }}
+                      </fd-ui-button>
+                    </div>
+                  </fd-ui-card>
+                </div>
+              }
+            </div>
+            <fd-ui-button
+              type="button"
+              icon="add"
+              variant="primary"
+              (click)="addStep()"
+              >
+              {{ 'RECIPE_MANAGE.ADD_STEP' | translate }}
+            </fd-ui-button>
+            @if (steps.invalid && steps.touched) {
+              <div class="recipe-manage__array-error">
+                {{ 'FORM_ERRORS.NON_EMPTY_ARRAY' | translate }}
               </div>
             }
-          </div>
-          <fd-ui-button
-            type="button"
-            icon="add"
-            variant="primary"
-            (click)="addStep()"
-            >
-            {{ 'RECIPE_MANAGE.ADD_STEP' | translate }}
-          </fd-ui-button>
-          @if (steps.invalid && steps.touched) {
-            <div class="recipe-manage__array-error">
-              {{ 'FORM_ERRORS.NON_EMPTY_ARRAY' | translate }}
-            </div>
-          }
-        </section>
+          </section>
+        </fd-ui-card>
       </div>
 
       <div class="recipe-manage__column recipe-manage__column--secondary">
         <div class="recipe-manage__sticky-stack">
           <fd-ui-card
-            class="recipe-manage__card"
-            [title]="'RECIPE_MANAGE.MANUAL_NUTRITION_TITLE' | translate"
+            class="recipe-manage__card recipe-manage__card--facts"
+            appearance="entry"
             >
-            <fd-ui-checkbox formControlName="calculateNutritionAutomatically"
-              [label]="'RECIPE_MANAGE.AUTO_NUTRITION_LABEL' | translate"
-             />
+            <div class="recipe-manage__calories-header">
+              <div class="recipe-manage__calories-label">{{ 'RECIPE_MANAGE.NUTRITION_GROUP_TITLE' | translate }}</div>
+              <fd-ui-checkbox formControlName="calculateNutritionAutomatically"
+                class="recipe-manage__calories-toggle"
+                [label]="'RECIPE_MANAGE.AUTO_NUTRITION_LABEL' | translate"
+               />
+            </div>
+
+            <div class="recipe-manage__nutrition-grid">
+              <div class="recipe-manage__calories-input">
+                <label class="recipe-manage__input-label" for="recipeCaloriesInput">
+                  {{ 'RECIPE_MANAGE.MANUAL_CALORIES' | translate }}
+                </label>
+                <div class="recipe-manage__input-field recipe-manage__input-field--calories">
+                  <input
+                    id="recipeCaloriesInput"
+                    class="recipe-manage__input recipe-manage__input--calories"
+                    type="number"
+                    step="1"
+                    formControlName="manualCalories"
+                    [readonly]="recipeForm.controls.calculateNutritionAutomatically.value"
+                    inputmode="decimal"
+                  />
+                  <span class="recipe-manage__input-unit">{{ 'GENERAL.UNITS.KCAL' | translate }}</span>
+                </div>
+                @if (getFieldError('manualCalories')) {
+                  <div class="recipe-manage__input-error">{{ getFieldError('manualCalories') }}</div>
+                }
+              </div>
+
+              <div class="recipe-manage__facts-grid">
+                <fd-ui-accent-surface
+                  class="recipe-manage__macro-card"
+                  accentSide="top"
+                  [accentColor]="chartColors.proteins"
+                  [tinted]="true"
+                >
+                  <div class="recipe-manage__fact-label">{{ 'NUTRIENTS.PROTEINS' | translate }}</div>
+                  <div class="recipe-manage__input-field recipe-manage__input-field--macro">
+                    <input
+                      class="recipe-manage__input recipe-manage__input--macro"
+                      type="number"
+                      step="0.1"
+                      formControlName="manualProteins"
+                      [readonly]="recipeForm.controls.calculateNutritionAutomatically.value"
+                      inputmode="decimal"
+                    />
+                    <span class="recipe-manage__input-unit">{{ 'PRODUCT_AMOUNT_UNITS_SHORT.G' | translate }}</span>
+                  </div>
+                  @if (getFieldError('manualProteins')) {
+                    <div class="recipe-manage__input-error">{{ getFieldError('manualProteins') }}</div>
+                  }
+                </fd-ui-accent-surface>
+
+                <fd-ui-accent-surface
+                  class="recipe-manage__macro-card"
+                  accentSide="top"
+                  [accentColor]="chartColors.fats"
+                  [tinted]="true"
+                >
+                  <div class="recipe-manage__fact-label">{{ 'NUTRIENTS.FATS' | translate }}</div>
+                  <div class="recipe-manage__input-field recipe-manage__input-field--macro">
+                    <input
+                      class="recipe-manage__input recipe-manage__input--macro"
+                      type="number"
+                      step="0.1"
+                      formControlName="manualFats"
+                      [readonly]="recipeForm.controls.calculateNutritionAutomatically.value"
+                      inputmode="decimal"
+                    />
+                    <span class="recipe-manage__input-unit">{{ 'PRODUCT_AMOUNT_UNITS_SHORT.G' | translate }}</span>
+                  </div>
+                  @if (getFieldError('manualFats')) {
+                    <div class="recipe-manage__input-error">{{ getFieldError('manualFats') }}</div>
+                  }
+                </fd-ui-accent-surface>
+
+                <fd-ui-accent-surface
+                  class="recipe-manage__macro-card"
+                  accentSide="top"
+                  [accentColor]="chartColors.carbs"
+                  [tinted]="true"
+                >
+                  <div class="recipe-manage__fact-label">{{ 'NUTRIENTS.CARBS' | translate }}</div>
+                  <div class="recipe-manage__input-field recipe-manage__input-field--macro">
+                    <input
+                      class="recipe-manage__input recipe-manage__input--macro"
+                      type="number"
+                      step="0.1"
+                      formControlName="manualCarbs"
+                      [readonly]="recipeForm.controls.calculateNutritionAutomatically.value"
+                      inputmode="decimal"
+                    />
+                    <span class="recipe-manage__input-unit">{{ 'PRODUCT_AMOUNT_UNITS_SHORT.G' | translate }}</span>
+                  </div>
+                  @if (getFieldError('manualCarbs')) {
+                    <div class="recipe-manage__input-error">{{ getFieldError('manualCarbs') }}</div>
+                  }
+                </fd-ui-accent-surface>
+
+                <fd-ui-accent-surface
+                  class="recipe-manage__macro-card"
+                  accentSide="top"
+                  [accentColor]="chartColors.fiber"
+                  [tinted]="true"
+                >
+                  <div class="recipe-manage__fact-label">{{ 'NUTRIENTS.FIBER' | translate }}</div>
+                  <div class="recipe-manage__input-field recipe-manage__input-field--macro">
+                    <input
+                      class="recipe-manage__input recipe-manage__input--macro"
+                      type="number"
+                      step="0.1"
+                      formControlName="manualFiber"
+                      [readonly]="recipeForm.controls.calculateNutritionAutomatically.value"
+                      inputmode="decimal"
+                    />
+                    <span class="recipe-manage__input-unit">{{ 'PRODUCT_AMOUNT_UNITS_SHORT.G' | translate }}</span>
+                  </div>
+                  @if (getFieldError('manualFiber')) {
+                    <div class="recipe-manage__input-error">{{ getFieldError('manualFiber') }}</div>
+                  }
+                </fd-ui-accent-surface>
+              </div>
+            </div>
 
             @if (!recipeForm.controls.calculateNutritionAutomatically.value) {
               <p class="recipe-manage__nutrition-hint">
                 {{ 'RECIPE_MANAGE.MANUAL_NUTRITION_HINT' | translate }}
               </p>
-              <div class="recipe-manage__manual-grid">
-                <fd-ui-input formControlName="manualCalories"
-                  type="number"
-                  [label]="'RECIPE_MANAGE.MANUAL_CALORIES' | translate"
-                  [required]="true"
-                  [error]="getFieldError('manualCalories')"
-                 />
-                <fd-ui-input formControlName="manualFiber"
-                  type="number"
-                  [label]="'RECIPE_MANAGE.MANUAL_FIBER' | translate"
-                  [required]="true"
-                  [error]="getFieldError('manualFiber')"
-                 />
-                <fd-ui-input formControlName="manualProteins"
-                  type="number"
-                  [label]="'RECIPE_MANAGE.MANUAL_PROTEINS' | translate"
-                  [required]="true"
-                  [error]="getFieldError('manualProteins')"
-                 />
-                <fd-ui-input formControlName="manualFats"
-                  type="number"
-                  [label]="'RECIPE_MANAGE.MANUAL_FATS' | translate"
-                  [required]="true"
-                  [error]="getFieldError('manualFats')"
-                 />
-                <fd-ui-input formControlName="manualCarbs"
-                  type="number"
-                  [label]="'RECIPE_MANAGE.MANUAL_CARBS' | translate"
-                  [required]="true"
-                  [error]="getFieldError('manualCarbs')"
-                 />
+            }
+
+            @if (nutritionWarning(); as warning) {
+              <div class="recipe-manage__nutrition-warning">
+                {{ 'PRODUCT_MANAGE.CALORIES_MISMATCH_WARNING' | translate: {
+                  expected: warning.expectedCalories,
+                  actual: warning.actualCalories
+                } }}
               </div>
             }
           </fd-ui-card>
 
-          <fd-ui-card
-            class="recipe-manage__card"
-            [title]="'RECIPE_MANAGE.VISIBILITY_GROUP_TITLE' | translate"
-            >
-            <fd-ui-select formControlName="visibility"
-              [label]="'RECIPE_MANAGE.VISIBILITY' | translate"
-              [required]="true"
-              [options]="visibilitySelectOptions"
-              [error]="getFieldError('visibility')"
-             />
-          </fd-ui-card>
-
-          <fd-ui-card
-            class="recipe-manage__card"
-            [title]="'RECIPE_MANAGE.NUTRITION_GROUP_TITLE' | translate"
-            >
-            <p class="recipe-manage__summary-calories">
-              {{ 'RECIPE_MANAGE.MANUAL_CALORIES' | translate }}:
-              <strong>{{ totalCalories() | number:'1.0-2' }} {{ 'PRODUCT_LIST.KCAL' | translate }}</strong>
-            </p>
-            <fd-nutrients-summary [bare]="true"
-              [calories]="totalCalories()"
-              [nutrientChartData]="nutrientChartData()"
-              [fiberValue]="totalFiber()"
-              fiberUnitKey="PRODUCT_AMOUNT_UNITS_SHORT.G"
-             />
-          </fd-ui-card>
         </div>
       </div>
     </div>

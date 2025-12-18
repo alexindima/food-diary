@@ -457,7 +457,8 @@
         "VISIBILITY_OPTIONS": {
             "PRIVATE": "Только я",
             "PUBLIC": "Все пользователи"
-        }
+        },
+        "STEPS_TITLE": "Ингредиенты и шаги"
     },
     
                 "CONFIRM_DELETE": {
@@ -846,7 +847,8 @@
     "NUTRIENTS": {
         "PROTEINS": "Белки",
         "FATS": "Жиры",
-        "CARBS": "Углеводы"
+        "CARBS": "Углеводы",
+        "FIBER": "Клетчатка"
     },
     "PRODUCT_AMOUNT_UNITS": {
         "G": "граммы",
@@ -854,9 +856,9 @@
         "PCS": "штуки"
     },
     "PRODUCT_AMOUNT_UNITS_SHORT": {
-        "G": "@:GENERAL.UNITS.G",
-        "ML": "@:GENERAL.UNITS.ML",
-        "PCS": "@:GENERAL.UNITS.PCS"
+        "G": "г",
+        "ML": "мл",
+        "PCS": "шт"
     },
     "BARCODE_SCANNER": {
         "TITLE": "Сканируйте штрихкод",
@@ -1116,4 +1118,3 @@
         }
     }
 }
-
