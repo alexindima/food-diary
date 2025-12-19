@@ -1,9 +1,10 @@
 
 import { Component, inject } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
-import { NavigationService } from '../../services/navigation.service';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { ConsumptionRingCardComponent, NutrientBar } from '../shared/consumption-ring-card/consumption-ring-card.component';
+import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { AuthDialogComponent } from '../auth/auth-dialog.component';
 
 @Component({
     selector: 'fd-hero',
@@ -12,7 +13,7 @@ import { ConsumptionRingCardComponent, NutrientBar } from '../shared/consumption
     styleUrl: './hero.component.scss'
 })
 export class HeroComponent {
-    private readonly navigationService = inject(NavigationService);
+    private readonly fdDialogService = inject(FdUiDialogService);
 
     protected readonly ringData = {
         dailyGoal: 2000,
@@ -28,10 +29,17 @@ export class HeroComponent {
     };
 
     public async goToLogin(): Promise<void> {
-        await this.navigationService.navigateToAuth('login');
+        this.openAuthDialog('login');
     }
 
     public async goToRegister(): Promise<void> {
-        await this.navigationService.navigateToAuth('register');
+        this.openAuthDialog('register');
+    }
+
+    private openAuthDialog(mode: 'login' | 'register'): void {
+        this.fdDialogService.open(AuthDialogComponent, {
+            size: 'md',
+            data: { mode },
+        });
     }
 }

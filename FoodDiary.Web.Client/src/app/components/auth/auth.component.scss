@@ -84,14 +84,18 @@
             border-radius: 12px;
 
             ::ng-deep button {
-                background: #9db7ff;
-                font-weight: 600;
+                background: linear-gradient(135deg, #4dabff, #2563eb);
+                color: #fff;
+                font-weight: 700;
                 font-size: 16px;
-                transition: transform 0.15s ease, filter 0.15s ease;
+                border: none;
+                box-shadow: 0 12px 30px rgba(37, 99, 235, 0.25);
+                transition: transform 0.15s ease, filter 0.15s ease, box-shadow 0.15s ease;
 
                 &:hover {
                     transform: translateY(-1px);
-                    filter: brightness(0.96);
+                    filter: brightness(0.98);
+                    box-shadow: 0 14px 34px rgba(37, 99, 235, 0.3);
                 }
 
                 &:disabled {
@@ -100,9 +104,46 @@
                     color: #8ca0ff;
                     cursor: not-allowed;
                     transform: none;
+                    box-shadow: none;
                 }
             }
         }
+    }
+
+    &__divider {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: $color-text-additional;
+        font-weight: 600;
+        font-size: 0.9rem;
+        margin: $gap-s 0;
+
+        &::before,
+        &::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(148, 163, 184, 0.5);
+        }
+    }
+
+    &__social {
+        display: flex;
+        flex-direction: column;
+        gap: $gap-xs;
+    }
+
+    &__google-button {
+        display: inline-flex;
+        width: 100%;
+        justify-content: center;
+    }
+
+    &__google-hint {
+        text-align: center;
+        color: $color-text-additional;
+        font-size: 0.9rem;
     }
 
     &__checkbox-row {

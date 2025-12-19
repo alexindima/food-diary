@@ -4,10 +4,14 @@ import {
     DestroyRef,
     FactoryProvider,
     Input,
+    AfterViewInit,
+    ElementRef,
+    ViewChild,
     OnInit,
     inject,
     signal,
 } from '@angular/core';
+import { MatDialogRef } from '@angular/material/dialog';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
@@ -22,6 +26,9 @@ import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiCheckboxComponent } from 'fd-ui-kit/checkbox/fd-ui-checkbox.component';
 import { FdUiFormErrorComponent, FD_VALIDATION_ERRORS, FdValidationErrors } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
+import { GoogleIdentityService } from '../../services/google-identity.service';
+import { environment } from '../../../environments/environment';
+import { GoogleLoginRequest } from '../../types/google-auth.data';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: FD_VALIDATION_ERRORS,
@@ -46,22 +53,27 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [TranslateModule, ReactiveFormsModule, FdUiInputComponent, FdUiButtonComponent, FdUiCheckboxComponent, FdUiFormErrorComponent]
 })
-export class AuthComponent implements OnInit {
+export class AuthComponent implements OnInit, AfterViewInit {
     @Input() public useRouting = true;
     @Input() public initialMode: 'login' | 'register' = 'login';
+    @ViewChild('googleLoginButton') private googleLoginButton?: ElementRef<HTMLElement>;
+    @ViewChild('googleRegisterButton') private googleRegisterButton?: ElementRef<HTMLElement>;
 
     private readonly route = inject(ActivatedRoute, { optional: true });
     private readonly router = inject(Router, { optional: true });
     private readonly navigationService = inject(NavigationService);
     private readonly authService = inject(AuthService);
     private readonly translateService = inject(TranslateService);
+    private readonly googleIdentityService = inject(GoogleIdentityService);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly dialogRef = inject(MatDialogRef<AuthComponent>, { optional: true });
 
     public authMode: 'login' | 'register' = 'login';
 
     public loginForm: FormGroup<LoginFormGroup>;
     public registerForm: FormGroup<RegisterFormGroup>;
     public globalError = signal<string | null>(null);
+    public googleReady = signal<boolean>(false);
     public authBenefits: string[] = [
         'AUTH.INFO.HIGHLIGHTS.SYNC',
         'AUTH.INFO.HIGHLIGHTS.INSIGHTS',
@@ -101,6 +113,10 @@ export class AuthComponent implements OnInit {
         this.returnUrl = this.useRouting ? this.route?.snapshot.queryParams['returnUrl'] || null : null;
     }
 
+    public async ngAfterViewInit(): Promise<void> {
+        await this.initializeGoogle();
+    }
+
     public handleTabChange(value: string): void {
         const mode: 'login' | 'register' = value === 'register' ? 'register' : 'login';
         void this.onTabChange(mode);
@@ -125,6 +141,7 @@ export class AuthComponent implements OnInit {
         if (this.useRouting && this.router) {
             await this.router.navigate(['/auth', mode]);
         }
+        this.renderGoogleButton();
     }
 
     public async onLoginSubmit(): Promise<void> {
@@ -137,6 +154,7 @@ export class AuthComponent implements OnInit {
         this.authService.login(loginRequest).subscribe({
             next: () => {
                 this.navigationService.navigateToReturnUrl(this.returnUrl);
+                this.closeDialogIfAny();
             },
             error: (error: HttpErrorResponse) => {
                 this.handleLoginError(error.error?.error);
@@ -154,11 +172,61 @@ export class AuthComponent implements OnInit {
         this.authService.register(registerRequest).subscribe({
             next: () => {
                 this.navigationService.navigateToReturnUrl(this.returnUrl);
+                this.closeDialogIfAny();
             },
             error: (error: HttpErrorResponse) => {
                 this.handleRegisterError(error.error?.error);
             },
         });
+    }
+
+    private async initializeGoogle(): Promise<void> {
+        const clientId = environment.googleClientId;
+        if (!clientId) {
+            return;
+        }
+        try {
+            await this.googleIdentityService.initialize({
+                clientId,
+                callback: credential => this.onGoogleCredential(credential),
+            });
+            this.googleReady.set(true);
+            this.renderGoogleButton();
+            this.googleIdentityService.prompt();
+        } catch (error) {
+            console.error('Google init failed', error);
+        }
+    }
+
+    private renderGoogleButton(): void {
+        if (!this.googleReady()) {
+            return;
+        }
+        const target = this.authMode === 'login' ? this.googleLoginButton?.nativeElement : this.googleRegisterButton?.nativeElement;
+        [this.googleLoginButton, this.googleRegisterButton].forEach(ref => {
+            if (ref?.nativeElement) {
+                ref.nativeElement.innerHTML = '';
+            }
+        });
+        if (target) {
+            this.googleIdentityService.renderButton(target, 'filled_blue');
+        }
+    }
+
+    private onGoogleCredential(credential: string): void {
+        const rememberMe = this.authMode === 'login' ? this.loginForm.controls.rememberMe.value : false;
+        const request: GoogleLoginRequest = { credential, rememberMe: !!rememberMe };
+        this.authService.loginWithGoogle(request).subscribe({
+            next: () => {
+                this.navigationService.navigateToReturnUrl(this.returnUrl);
+                this.closeDialogIfAny();
+            },
+            error: () => this.setGlobalError('FORM_ERRORS.UNKNOWN'),
+        });
+    }
+
+    private closeDialogIfAny(): void {
+        this.dialogRef?.close();
     }
 
     private handleLoginError(errorCode?: string): void {

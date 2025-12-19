@@ -1,5 +1,6 @@
 export interface AppConfig {
     apiUrls: AppConfigApiUrls;
+    googleClientId?: string;
 }
 
 export interface AppConfigApiUrls {

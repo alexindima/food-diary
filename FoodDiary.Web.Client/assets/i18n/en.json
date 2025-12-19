@@ -231,6 +231,12 @@
                 "INSIGHTS": "Unlock personalized analytics and see how your habits change week over week.",
                 "LIBRARY": "Store favorite products, recipes, and daily targets so logging stays effortless."
             }
+        },
+        "GOOGLE": {
+            "OR": "or continue with",
+            "LOGIN_BUTTON": "Continue with Google",
+            "REGISTER_BUTTON": "Register with Google",
+            "UNAVAILABLE": "Google sign-in is unavailable right now."
         }
     },
     "PRODUCT_LIST": {

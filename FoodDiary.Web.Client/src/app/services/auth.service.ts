@@ -5,6 +5,7 @@ import { environment } from '../../environments/environment';
 import { ApiService } from './api.service';
 import { NavigationService } from './navigation.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { GoogleLoginRequest } from '../types/google-auth.data';
 
 @Injectable({
     providedIn: 'root',
@@ -55,6 +56,18 @@ export class AuthService extends ApiService {
             }),
             catchError((error: HttpErrorResponse) => {
                 console.error('Register error', error);
+                return throwError(() => error);
+            }),
+        );
+    }
+
+    public loginWithGoogle(data: GoogleLoginRequest): Observable<AuthResponse> {
+        return this.post<AuthResponse>('google', data).pipe(
+            tap(response => {
+                this.onLogin(response, data.rememberMe ?? false);
+            }),
+            catchError((error: HttpErrorResponse) => {
+                console.error('Google login error', error);
                 return throwError(() => error);
             }),
         );

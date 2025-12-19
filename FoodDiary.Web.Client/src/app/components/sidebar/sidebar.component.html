@@ -80,20 +80,32 @@
     </nav>
 
     @if (currentUser(); as user) {
-        <div class="sidebar__user">
-            @if (user.profileImage) {
-                <div class="sidebar__avatar sidebar__avatar--image">
-                    <img [src]="user.profileImage" alt="Avatar" />
+        <div class="sidebar__user-wrapper">
+            <button type="button" class="sidebar__user" (click)="toggleUserMenu()">
+                @if (user.profileImage) {
+                    <div class="sidebar__avatar sidebar__avatar--image">
+                        <img [src]="user.profileImage" alt="Avatar" />
+                    </div>
+                } @else {
+                    <div class="sidebar__avatar">
+                        {{ (user.username || user.email || 'U') | slice:0:1 | uppercase }}
+                    </div>
+                }
+                <div class="sidebar__user-meta">
+                    <div class="sidebar__user-name">{{ user.username || user.email }}</div>
+                    <div class="sidebar__user-plan">Free Account</div>
                 </div>
-            } @else {
-                <div class="sidebar__avatar">
-                    {{ (user.username || user.email || 'U') | slice:0:1 | uppercase }}
+                <mat-icon class="sidebar__user-arrow" [class.is-open]="isUserMenuOpen()">expand_less</mat-icon>
+            </button>
+
+            @if (isUserMenuOpen()) {
+                <div class="sidebar__user-menu">
+                    <button type="button" class="sidebar__logout" (click)="logout()">
+                        <mat-icon>logout</mat-icon>
+                        <span>{{ 'HEADER.LOGOUT' | translate }}</span>
+                    </button>
                 </div>
             }
-            <div>
-                <div class="sidebar__user-name">{{ user.username || user.email }}</div>
-                <div class="sidebar__user-plan">Free Account</div>
-            </div>
         </div>
     }
 </aside>

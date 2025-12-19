@@ -62,6 +62,17 @@
                     </fd-ui-button>
                     <fd-ui-form-error [error]="globalError()" />
                 </div>
+
+                <div class="auth__divider">
+                    <span>{{ 'AUTH.GOOGLE.OR' | translate }}</span>
+                </div>
+
+                <div class="auth__social">
+                    <div #googleLoginButton class="auth__google-button" aria-label="{{ 'AUTH.GOOGLE.LOGIN_BUTTON' | translate }}"></div>
+                    @if (!googleReady()) {
+                        <div class="auth__google-hint">{{ 'AUTH.GOOGLE.UNAVAILABLE' | translate }}</div>
+                    }
+                </div>
             </form>
         } @else {
             <form [formGroup]="registerForm" (ngSubmit)="onRegisterSubmit()" class="auth__form">
@@ -113,6 +124,17 @@
                         {{ 'AUTH.REGISTER.REGISTER' | translate }}
                     </fd-ui-button>
                     <fd-ui-form-error [error]="globalError()" />
+                </div>
+
+                <div class="auth__divider">
+                    <span>{{ 'AUTH.GOOGLE.OR' | translate }}</span>
+                </div>
+
+                <div class="auth__social">
+                    <div #googleRegisterButton class="auth__google-button" aria-label="{{ 'AUTH.GOOGLE.REGISTER_BUTTON' | translate }}"></div>
+                    @if (!googleReady()) {
+                        <div class="auth__google-hint">{{ 'AUTH.GOOGLE.UNAVAILABLE' | translate }}</div>
+                    }
                 </div>
             </form>
         }

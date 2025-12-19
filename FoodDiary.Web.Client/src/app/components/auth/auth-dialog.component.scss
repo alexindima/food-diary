@@ -12,14 +12,20 @@
         border: 1px solid rgba(255, 255, 255, 0.4);
         background: radial-gradient(circle at top, #f4f7ff 0%, #f1f3f6 40%, #eef1f5 100%);
         max-width: 440px;
+        max-height: 90vh;
+        overflow: hidden;
         transform: scale(0.97);
         opacity: 0;
         animation: authDialogIn 180ms ease-out forwards;
+        display: grid;
+        grid-template-rows: 1fr;
     }
 
-    ::ng-deep .fd-ui-dialog__content {
-        padding: 32px;
-        max-width: 440px;
+    ::ng-deep .fd-ui-dialog__body {
+        padding: 0;
+        max-height: calc(90vh - 32px);
+        overflow-y: auto;
+        min-height: 0;
     }
 
     ::ng-deep .fd-ui-dialog__header {

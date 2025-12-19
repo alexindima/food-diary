@@ -55,6 +55,7 @@
 .fd-root--no-sidebar {
     grid-template-columns: 1fr;
     .fd-root__main {
+        grid-column: 1 / span 1;
         padding-left: 0;
         padding-right: 0;
     }

@@ -29,6 +29,7 @@ export class SidebarComponent {
     protected currentUser = signal<User | null>(null);
     protected isFoodTrackingOpen = signal(true);
     protected isBodyTrackingOpen = signal(false);
+    protected isUserMenuOpen = signal(false);
 
     public constructor() {
         if (this.isAuthenticated()) {
@@ -50,5 +51,14 @@ export class SidebarComponent {
         if (next) {
             this.isFoodTrackingOpen.set(false);
         }
+    }
+
+    protected toggleUserMenu(): void {
+        this.isUserMenuOpen.set(!this.isUserMenuOpen());
+    }
+
+    protected async logout(): Promise<void> {
+        await this.authService.onLogout(true);
+        this.isUserMenuOpen.set(false);
     }
 }
