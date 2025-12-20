@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, Input } from '@angular/core';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
@@ -21,9 +21,20 @@ export class QuickConsumptionDrawerComponent {
     private readonly quickService = inject(QuickConsumptionService);
     private readonly fallbackImage = 'assets/images/stubs/receipt.png';
 
+    @Input() forceShow = false;
+    @Input() layout: 'fixed' | 'inline' = 'fixed';
+
     public readonly items = this.quickService.items;
     public readonly hasItems = this.quickService.hasItems;
     public readonly isSaving = this.quickService.isSaving;
+
+    public get shouldRender(): boolean {
+        return this.forceShow || this.hasItems();
+    }
+
+    public get isInline(): boolean {
+        return this.layout === 'inline';
+    }
 
     public imageFor(item: QuickConsumptionItem): string {
         if (item.type === 'product' && item.product) {

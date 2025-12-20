@@ -28,6 +28,7 @@ export class QuickConsumptionService {
 
     private readonly itemsSignal = signal<QuickConsumptionItem[]>([]);
     private readonly isSavingSignal = signal(false);
+    private isPreviewMode = false;
 
     public readonly items = computed(() => this.itemsSignal());
     public readonly hasItems = computed(() => this.itemsSignal().length > 0);
@@ -47,6 +48,10 @@ export class QuickConsumptionService {
             amount,
         });
 
+        if (this.isPreviewMode) {
+            return;
+        }
+
         this.toastService.open(this.translateService.instant('QUICK_CONSUMPTION.ADDED_PRODUCT'), { appearance: 'positive' });
     }
 
@@ -63,6 +68,10 @@ export class QuickConsumptionService {
             amount: 1,
         });
 
+        if (this.isPreviewMode) {
+            return;
+        }
+
         this.toastService.open(this.translateService.instant('QUICK_CONSUMPTION.ADDED_RECIPE'), { appearance: 'positive' });
     }
 
@@ -75,6 +84,10 @@ export class QuickConsumptionService {
     }
 
     public async openEditor(): Promise<void> {
+        if (this.isPreviewMode) {
+            return;
+        }
+
         const items = this.consumeItems();
         if (!items.length) {
             return;
@@ -86,6 +99,10 @@ export class QuickConsumptionService {
     }
 
     public saveDraft(): void {
+        if (this.isPreviewMode) {
+            return;
+        }
+
         const items = this.itemsSignal();
         if (!items.length || this.isSavingSignal()) {
             return;
@@ -112,6 +129,21 @@ export class QuickConsumptionService {
 
     public getPrefillItems(): QuickConsumptionItem[] {
         return this.itemsSignal();
+    }
+
+    public setPreviewItems(items: QuickConsumptionItem[]): void {
+        this.isPreviewMode = true;
+        this.isSavingSignal.set(false);
+        this.itemsSignal.set(items);
+    }
+
+    public exitPreview(): void {
+        if (!this.isPreviewMode) {
+            return;
+        }
+
+        this.clear();
+        this.isPreviewMode = false;
     }
 
     private consumeItems(): QuickConsumptionItem[] {

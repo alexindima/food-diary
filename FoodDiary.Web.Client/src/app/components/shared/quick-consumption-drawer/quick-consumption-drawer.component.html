@@ -1,5 +1,5 @@
-@if (hasItems()) {
-    <div class="quick-consumption">
+@if (shouldRender) {
+    <div class="quick-consumption" [class.quick-consumption--inline]="isInline">
         <div class="quick-consumption__header">
             <div>
                 <div class="quick-consumption__title">{{ 'QUICK_CONSUMPTION.TITLE' | translate }}</div>
@@ -12,33 +12,37 @@
             </button>
         </div>
 
-        <div class="quick-consumption__list">
-            @for (item of items(); track item.key) {
-                <div class="quick-consumption__item">
-                    <div class="quick-consumption__thumb">
-                        <img [ngSrc]="imageFor(item)" width="44" height="44" alt="" loading="lazy" />
-                    </div>
-                    <div class="quick-consumption__info">
-                        <div class="quick-consumption__name">
-                            {{ item.type === 'product' ? item.product?.name : item.recipe?.name }}
+        @if (hasItems()) {
+            <div class="quick-consumption__list">
+                @for (item of items(); track item.key) {
+                    <div class="quick-consumption__item">
+                        <div class="quick-consumption__thumb">
+                            <img [ngSrc]="imageFor(item)" width="44" height="44" alt="" loading="lazy" />
                         </div>
-                        <div class="quick-consumption__meta">
-                            {{ 'QUICK_CONSUMPTION.AMOUNT' | translate }}:
-                            @if (item.type === 'product') {
-                                {{ item.amount | number:'1.0-1' }}
-                                {{ ('GENERAL.UNITS.' + (item.product?.baseUnit ?? 'G')) | translate }}
-                            } @else {
-                                {{ item.amount | number:'1.0-1' }}
-                                {{ 'QUICK_CONSUMPTION.SERVINGS' | translate }}
-                            }
+                        <div class="quick-consumption__info">
+                            <div class="quick-consumption__name">
+                                {{ item.type === 'product' ? item.product?.name : item.recipe?.name }}
+                            </div>
+                            <div class="quick-consumption__meta">
+                                {{ 'QUICK_CONSUMPTION.AMOUNT' | translate }}:
+                                @if (item.type === 'product') {
+                                    {{ item.amount | number:'1.0-1' }}
+                                    {{ ('GENERAL.UNITS.' + (item.product?.baseUnit ?? 'G')) | translate }}
+                                } @else {
+                                    {{ item.amount | number:'1.0-1' }}
+                                    {{ 'QUICK_CONSUMPTION.SERVINGS' | translate }}
+                                }
+                            </div>
                         </div>
+                        <button class="quick-consumption__remove" type="button" (click)="remove(item.key)">
+                            <mat-icon fontIcon="delete"></mat-icon>
+                        </button>
                     </div>
-                    <button class="quick-consumption__remove" type="button" (click)="remove(item.key)">
-                        <mat-icon fontIcon="delete"></mat-icon>
-                    </button>
-                </div>
-            }
-        </div>
+                }
+            </div>
+        } @else {
+            <p class="quick-consumption__empty">{{ 'QUICK_CONSUMPTION.PREVIEW_EMPTY' | translate }}</p>
+        }
 
         <div class="quick-consumption__actions">
             <fd-ui-button variant="secondary" fill="outline" icon="edit" (click)="openEditor()">

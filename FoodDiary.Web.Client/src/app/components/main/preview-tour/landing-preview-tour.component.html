@@ -1,0 +1,88 @@
+<section class="landing-section landing-section--preview landing-section--tour">
+    <div class="landing-section__inner">
+        <div class="landing-section__copy">
+            <span class="landing-section__eyebrow">{{ 'LANDING.PREVIEW.EYEBROW' | translate }}</span>
+            <h2 class="landing-section__title">{{ 'LANDING.PREVIEW.TITLE' | translate }}</h2>
+            <p class="landing-section__subtitle">{{ 'LANDING.PREVIEW.SUBTITLE' | translate }}</p>
+        </div>
+        <div class="landing-preview landing-preview--meals">
+            <fd-meals-preview
+                [entries]="guestMealEntries"
+                [titleKey]="'HERO.MEALS_PREVIEW.TITLE'"
+                [viewAllKey]="'HERO.MEALS_PREVIEW.VIEW_ALL'"
+                [emptyKey]="'HERO.MEALS_PREVIEW.PLACEHOLDER'"
+                [showAddButtons]="true"
+                (add)="openAuthDialog('register')"
+                (viewAll)="openAuthDialog('login')"
+            />
+            <fd-statistics-summary
+                [summary]="guestSummary"
+                [summarySparklineData]="guestSummarySparkline"
+                [summarySparklineOptions]="guestSummarySparklineOptions"
+                [macroSparklineData]="guestMacroSparkline"
+            />
+            <fd-statistics-nutrition
+                [tabs]="nutritionTabs"
+                [selectedTab]="selectedNutritionTab"
+                [hasData]="true"
+                [caloriesLineChartData]="guestCaloriesLineData"
+                [caloriesLineChartOptions]="lineOptions"
+                [nutrientsLineChartData]="guestNutrientsLineData"
+                [nutrientsLineChartOptions]="lineOptionsWithLegend"
+                [nutrientsPieChartData]="guestPieData"
+                [pieChartOptions]="pieOptions"
+                [nutrientsRadarChartData]="guestRadarData"
+                [radarChartOptions]="radarOptions"
+                [nutrientsBarChartData]="guestBarData"
+                [barChartOptions]="barOptions"
+            />
+            <fd-statistics-body
+                [tabs]="bodyTabs"
+                [selectedTab]="selectedBodyTab"
+                [isLoading]="false"
+                [bodyChartData]="guestBodyData"
+                [bodyChartOptions]="lineOptions"
+                [hasBodyData]="true"
+            />
+        </div>
+
+        <div class="landing-section__copy landing-section__copy--secondary">
+            <h2 class="landing-section__title">{{ 'LANDING.TOUR.TITLE' | translate }}</h2>
+            <p class="landing-section__subtitle">{{ 'LANDING.TOUR.SUBTITLE' | translate }}</p>
+        </div>
+        <div class="landing-tour">
+            <div class="landing-tour__catalog">
+                <div class="landing-tour__group">
+                    <div class="landing-tour__group-title">{{ 'LANDING.TOUR.PRODUCTS' | translate }}</div>
+                    <div class="landing-tour__cards">
+                        @for (product of previewProducts; track product.id) {
+                            <fd-product-card
+                                class="landing-tour__card"
+                                [product]="product"
+                                (addToMeal)="addPreviewProduct($event)"
+                                (open)="openAuthDialog('login')"
+                            />
+                        }
+                    </div>
+                </div>
+                <div class="landing-tour__group">
+                    <div class="landing-tour__group-title">{{ 'LANDING.TOUR.RECIPES' | translate }}</div>
+                    <div class="landing-tour__cards">
+                        @for (recipe of previewRecipes; track recipe.id) {
+                            <fd-recipe-card
+                                class="landing-tour__card"
+                                [recipe]="recipe"
+                                (addToMeal)="addPreviewRecipe($event)"
+                                (open)="openAuthDialog('login')"
+                            />
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="landing-tour__drawer">
+                <fd-quick-consumption-drawer [forceShow]="true" layout="inline" />
+                <p class="landing-tour__hint">{{ 'LANDING.TOUR.DRAWER_HINT' | translate }}</p>
+            </div>
+        </div>
+    </div>
+</section>
