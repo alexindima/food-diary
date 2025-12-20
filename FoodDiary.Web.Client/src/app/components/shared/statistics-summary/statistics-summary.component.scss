@@ -1,0 +1,113 @@
+@use 'variables' as *;
+
+.stats-summary-card__content {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.stats-summary-card__row {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.stats-summary-card__row--top > * {
+    min-width: 240px;
+}
+
+.stats-summary-card__row--macros {
+    gap: 12px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+}
+
+.stats-summary-card__total,
+.stats-summary-card__average {
+    background: #f8fafc;
+    border-radius: 20px;
+    padding: 20px;
+    flex: 1;
+    border: 1px solid #e2e8f0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.stats-summary-card__total {
+    flex: 2;
+    position: relative;
+    overflow: hidden;
+}
+
+.stats-summary-card__average {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.stats-summary-card__average-main {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.stats-summary-card__average-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 12px;
+}
+
+.stats-summary-card__average-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding-top: 8px;
+    border-top: 1px solid #e2e8f0;
+}
+
+.stats-summary-card__trend {
+    height: 80px;
+    margin-top: auto;
+}
+
+.stats-summary-card__macro-card {
+    padding: 16px;
+    border-radius: 16px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.stats-summary-card__label {
+    font-size: 0.85rem;
+    color: $color-text-additional;
+    margin: 0;
+}
+
+.stats-summary-card__value {
+    margin: 0;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: $color-text-main;
+}
+
+.stats-summary-card__note {
+    font-size: 0.75rem;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.stats-summary-card__macro-trend {
+    height: 48px;
+}
+
+.stats-summary-card__empty {
+    margin: 0;
+    text-align: center;
+    color: $color-text-additional;
+    padding: 12px 0;
+}

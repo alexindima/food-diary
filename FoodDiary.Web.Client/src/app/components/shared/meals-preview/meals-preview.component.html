@@ -1,0 +1,49 @@
+<section class="meals-preview">
+    <div class="meals-preview__header">
+        <h2 class="meals-preview__title">{{ titleKey() | translate }}</h2>
+        @if (showViewAll()) {
+            <fd-ui-button variant="primary" fill="text" size="sm" icon="open_in_new" (click)="viewAll.emit()">
+                {{ viewAllKey() | translate }}
+            </fd-ui-button>
+        }
+    </div>
+
+    <div class="meals-preview__list">
+        @if (!entries().length) {
+            <div class="meals-preview__empty">
+                {{ emptyKey() | translate }}
+            </div>
+        } @else {
+            @for (entry of entries(); track entry.meal?.id ?? entry.slot ?? $index) {
+                @if (entry.meal) {
+                    <fd-meal-card
+                        class="meals-preview__meal-card"
+                        [meal]="entry.meal"
+                        (open)="open.emit(entry.meal!)"
+                    />
+                } @else {
+                    <button
+                        class="meals-preview__placeholder"
+                        type="button"
+                        [disabled]="!showAddButtons()"
+                        (click)="add.emit(entry.slot)"
+                    >
+                        <div class="meals-preview__placeholder-left">
+                            <div class="meals-preview__placeholder-icon">
+                                <mat-icon>{{ entry.icon || 'restaurant_menu' }}</mat-icon>
+                            </div>
+                            <div class="meals-preview__placeholder-text">
+                                {{ entry.labelKey || 'MEAL_CARD.MEAL_TYPES.OTHER' | translate }}
+                            </div>
+                        </div>
+                        @if (showAddButtons()) {
+                            <div class="meals-preview__placeholder-action">
+                                <mat-icon>add</mat-icon>
+                            </div>
+                        }
+                    </button>
+                }
+            }
+        }
+    </div>
+</section>

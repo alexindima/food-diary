@@ -26,7 +26,6 @@ import { FdPageContainerDirective } from '../../directives/layout/page-container
 import { LocalizedDatePipe } from '../../pipes/localized-date.pipe';
 import { DashboardService } from '../../services/dashboard.service';
 import { DashboardSnapshot } from '../../types/dashboard.data';
-import { MealCardComponent } from '../shared/meal-card/meal-card.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { CalorieGoalDialogComponent } from './dialogs/calorie-goal-dialog/calorie-goal-dialog.component';
 import {
@@ -43,6 +42,7 @@ import { WaistEntriesService } from '../../services/waist-entries.service';
 import { WaistEntrySummaryPoint } from '../../types/waist-entry.data';
 import { DailyAdviceCardComponent } from '../shared/daily-advice-card/daily-advice-card.component';
 import { DailyAdvice } from '../../types/daily-advice.data';
+import { MealsPreviewComponent, MealPreviewEntry } from '../shared/meals-preview/meals-preview.component';
 
 type MealSlot = 'BREAKFAST' | 'LUNCH' | 'DINNER';
 
@@ -61,11 +61,11 @@ type MealSlot = 'BREAKFAST' | 'LUNCH' | 'DINNER';
     PageBodyComponent,
     FdPageContainerDirective,
     LocalizedDatePipe,
-    MealCardComponent,
     ConsumptionRingCardComponent,
     HydrationCardComponent,
     WeightTrendCardComponent,
-    DailyAdviceCardComponent
+    DailyAdviceCardComponent,
+    MealsPreviewComponent
 ],
     templateUrl: './dashboard.component.html',
     styleUrl: './dashboard.component.scss',
@@ -132,6 +132,14 @@ export class DashboardComponent implements OnInit {
 
         return result;
     });
+    public readonly mealPreviewEntries = computed<MealPreviewEntry[]>(() =>
+        this.displayedMeals().map(entry => ({
+            meal: entry.meal ?? null,
+            slot: entry.slot,
+            icon: this.placeholderIcon(entry.slot),
+            labelKey: this.placeholderLabel(entry.slot),
+        })),
+    );
 
     public readonly nutrientBars = computed<NutrientBar[]>(() => {
         const snapshot = this.snapshot();
@@ -322,8 +330,8 @@ export class DashboardComponent implements OnInit {
         return normalized;
     }
 
-    public async addConsumption(mealType?: string): Promise<void> {
-        await this.navigationService.navigateToConsumptionAdd(mealType);
+    public async addConsumption(mealType?: string | null): Promise<void> {
+        await this.navigationService.navigateToConsumptionAdd(mealType ?? undefined);
     }
 
     public async manageConsumptions(): Promise<void> {

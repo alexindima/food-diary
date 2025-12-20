@@ -44,6 +44,7 @@
         "CONSUMPTION": "Прием пищи",
         "STATISTICS": "Статистика",
         "USER": "Пользователь",
+        "ACCOUNT": "Аккаунт",
         "PROFILE_EDIT": "Редактировать профиль",
         "WEIGHT_HISTORY": "История веса",
         "WAIST_HISTORY": "История талии",
@@ -107,7 +108,13 @@
         "MOCK_TREND": "Эта неделя",
         "MOCK_WEEK": "к прошлой",
         "MOCK_MEAL": "Завтрак",
-        "MOCK_CHART": "Прогресс"
+        "MOCK_CHART": "Прогресс",
+        "MEALS_PREVIEW": {
+            "EYEBROW": "Сегодня",
+            "TITLE": "Пример сегодняшних приёмов",
+            "VIEW_ALL": "Открыть все приёмы",
+            "PLACEHOLDER": "Добавьте приём пищи, чтобы увидеть его здесь"
+        }
     },
     "FEATURES": {
         "EYEBROW": "Почему Food Diary",
@@ -214,14 +221,14 @@
         "ONLY_MY_PRODUCTS": "Только мои",
         "SHOW_ALL_PRODUCTS": "Показать все продукты",
         "NO_PRODUCTS_FOUND": "Продукты не найдены",
-        "CALORIES": "@:GENERAL.NUTRIENTS.CALORIES",
+        "CALORIES": "Калории",
         "BARCODE": "Штрихкод",
-        "PROTEINS": "@:GENERAL.NUTRIENTS.PROTEIN",
-        "FATS": "@:GENERAL.NUTRIENTS.FAT",
-        "CARBS": "@:GENERAL.NUTRIENTS.CARB",
+        "PROTEINS": "Белки",
+        "FATS": "Жиры",
+        "CARBS": "Углеводы",
         "DEFAULT_SERVING": "Тип продукта",
-        "GRAMS": "@:GENERAL.UNITS.G",
-        "KCAL": "@:GENERAL.UNITS.KCAL",
+        "GRAMS": "г",
+        "KCAL": "ккал",
         "DELETE_ERROR": "Не удалось удалить продукт. Попробуйте ещё раз."
     },
     "PRODUCT_CARD": {
@@ -1000,7 +1007,8 @@
         "MACRO_PRESET_ENDURANCE": "20/30/50 · выносливость"
     },
     "USER_MANAGE": {
-        "EDIT_SUBTITLE": "Цели, профиль и настройки",
+        "EDIT_TITLE": "Аккаунт",
+        "EDIT_SUBTITLE": "Профиль, цели и настройки",
         "AVATAR": "Аватар",
         "AVATAR_DESC": "Загрузите квадратное изображение, минимум 512x512",
         "DAILY_CALORIES": "Цель по калориям",

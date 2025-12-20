@@ -1,0 +1,29 @@
+<fd-ui-card class="stats-body-card" [title]="'STATISTICS.BODY_CHARTS_TITLE' | translate">
+    <fd-ui-tabs class="stats-body-card__tabs"
+        [tabs]="tabs()"
+        [selectedValue]="selectedTab()"
+        (selectedValueChange)="onTabChange($event)"
+     />
+
+    @if (isLoading()) {
+        <div class="stats-body-card__loader">{{ 'STATISTICS.LOADING' | translate }}</div>
+    } @else {
+        @if (bodyChartData(); as bodyData) {
+            @if (hasBodyData()) {
+                <div class="stats-body-card__chart-area">
+                    <canvas
+                        baseChart
+                        [type]="'line'"
+                        [data]="bodyData"
+                        [options]="bodyChartOptions() || {}"
+                        [legend]="false"
+                    ></canvas>
+                </div>
+            } @else {
+                <p class="stats-body-card__empty">{{ noDataKey() | translate }}</p>
+            }
+        } @else {
+            <p class="stats-body-card__empty">{{ noDataKey() | translate }}</p>
+        }
+    }
+</fd-ui-card>

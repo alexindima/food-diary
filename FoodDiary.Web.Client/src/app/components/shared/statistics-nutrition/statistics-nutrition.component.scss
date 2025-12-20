@@ -1,0 +1,50 @@
+@use 'variables' as *;
+
+.stats-nutrition-card {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.stats-nutrition-card__tabs {
+    width: 100%;
+}
+
+.stats-nutrition-card__chart-area {
+    min-height: 320px;
+}
+
+.stats-nutrition-card__distribution-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+}
+
+.stats-nutrition-card__chart-card {
+    background: #f8fafc;
+    border-radius: 16px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+
+    h4 {
+        margin: 0;
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: $color-text-main;
+    }
+
+    canvas {
+        width: 100%;
+        height: 220px;
+    }
+}
+
+.stats-nutrition-card__empty {
+    margin: 0;
+    text-align: center;
+    color: $color-text-additional;
+    padding: 24px 0;
+}

@@ -94,6 +94,7 @@
         "CONSUMPTION": "Consumption",
         "STATISTICS": "Statistics",
         "USER": "User",
+        "ACCOUNT": "Account",
         "PROFILE_EDIT": "Profile Edit",
         "WEIGHT_HISTORY": "Weight history",
         "WAIST_HISTORY": "Waist history",
@@ -142,7 +143,13 @@
         "MOCK_TREND": "This week",
         "MOCK_WEEK": "vs last week",
         "MOCK_MEAL": "Breakfast",
-        "MOCK_CHART": "Progress"
+        "MOCK_CHART": "Progress",
+        "MEALS_PREVIEW": {
+            "EYEBROW": "See today",
+            "TITLE": "Today's meals preview",
+            "VIEW_ALL": "Open all meals",
+            "PLACEHOLDER": "Add a meal to see it here"
+        }
     },
     "FEATURES": {
         "EYEBROW": "Why Food Diary",
@@ -249,14 +256,14 @@
         "ONLY_MY_PRODUCTS": "Show only mine",
         "SHOW_ALL_PRODUCTS": "Show all products",
         "NO_PRODUCTS_FOUND": "No products found",
-        "CALORIES": "@:GENERAL.NUTRIENTS.CALORIES",
+        "CALORIES": "Calories",
         "BARCODE": "Barcode",
-        "PROTEINS": "@:GENERAL.NUTRIENTS.PROTEIN",
-        "FATS": "@:GENERAL.NUTRIENTS.FAT",
-        "CARBS": "@:GENERAL.NUTRIENTS.CARB",
+        "PROTEINS": "Proteins",
+        "FATS": "Fats",
+        "CARBS": "Carbs",
         "DEFAULT_SERVING": "Product type",
-        "GRAMS": "@:GENERAL.UNITS.G",
-        "KCAL": "@:GENERAL.UNITS.KCAL",
+        "GRAMS": "g",
+        "KCAL": "kcal",
         "DELETE_ERROR": "Unable to delete the product. Please try again."
     },
     "PRODUCT_CARD": {
@@ -738,8 +745,8 @@
         "LOADING": "Loading statistics..."
     },
     "USER_MANAGE": {
-        "EDIT_TITLE": "Edit User Information",
-        "EDIT_SUBTITLE": "Goals, profile and preferences",
+        "EDIT_TITLE": "Account",
+        "EDIT_SUBTITLE": "Profile, goals and preferences",
         "EMAIL": "Email",
         "EMAIL_PLACEHOLDER": "user@example.com",
         "NEW_PASSWORD": "New Password",

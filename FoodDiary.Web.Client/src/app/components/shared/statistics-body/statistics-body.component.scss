@@ -1,0 +1,23 @@
+@use 'variables' as *;
+
+.stats-body-card {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.stats-body-card__tabs {
+    width: 100%;
+}
+
+.stats-body-card__chart-area {
+    min-height: 320px;
+}
+
+.stats-body-card__loader,
+.stats-body-card__empty {
+    margin: 0;
+    text-align: center;
+    color: $color-text-additional;
+    padding: 24px 0;
+}

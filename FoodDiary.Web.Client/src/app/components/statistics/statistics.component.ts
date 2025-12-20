@@ -11,14 +11,11 @@ import {
 } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration, ChartOptions, ChartTypeRegistry, TooltipItem } from 'chart.js';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { map, finalize, Observable, forkJoin, distinctUntilChanged, startWith } from 'rxjs';
 
-import { FdUiTabsComponent, FdUiTab } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
-import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
-import { FdUiAccentSurfaceComponent } from 'fd-ui-kit/accent-surface/fd-ui-accent-surface.component';
+import { FdUiTab } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
 import { StatisticsService } from '../../services/statistics.service';
 import { MappedStatistics, StatisticsMapper } from '../../types/statistics.data';
 import { CHART_COLORS } from '../../constants/chart-colors';
@@ -31,6 +28,9 @@ import { PageHeaderComponent } from '../shared/page-header/page-header.component
 import { PageBodyComponent } from '../shared/page-body/page-body.component';
 import { FdPageContainerDirective } from '../../directives/layout/page-container.directive';
 import { PeriodFilterComponent } from '../shared/period-filter/period-filter.component';
+import { StatisticsSummaryComponent, SummaryMetrics } from '../shared/statistics-summary/statistics-summary.component';
+import { StatisticsNutritionComponent } from '../shared/statistics-nutrition/statistics-nutrition.component';
+import { StatisticsBodyComponent } from '../shared/statistics-body/statistics-body.component';
 
 type StatisticsRange = 'week' | 'month' | 'year' | 'custom';
 type NutritionChartTab = 'calories' | 'macros' | 'distribution';
@@ -49,14 +49,13 @@ interface DateRange {
         CommonModule,
         TranslatePipe,
         ReactiveFormsModule,
-        BaseChartDirective,
-        FdUiTabsComponent,
-        FdUiCardComponent,
         PageHeaderComponent,
         PageBodyComponent,
         FdPageContainerDirective,
         PeriodFilterComponent,
-        FdUiAccentSurfaceComponent,
+        StatisticsSummaryComponent,
+        StatisticsNutritionComponent,
+        StatisticsBodyComponent,
     ],
     templateUrl: './statistics.component.html',
     styleUrls: ['./statistics.component.scss'],
@@ -102,7 +101,7 @@ export class StatisticsComponent implements OnInit {
     public readonly userHeightCm = signal<number | null>(null);
     private lastLoadedRangeKey: string | null = null;
 
-    public readonly summaryMetrics = computed(() => {
+    public readonly summaryMetrics = computed<SummaryMetrics | null>(() => {
         const stats = this.chartStatisticsData();
         if (!stats) {
             return null;
@@ -124,19 +123,19 @@ export class StatisticsComponent implements OnInit {
             macros: [
                 {
                     key: 'proteins' as const,
-                    labelKey: 'PRODUCT_LIST.PROTEINS',
+                    labelKey: 'GENERAL.NUTRIENTS.PROTEIN',
                     value: aggregated?.proteins ?? 0,
                     color: CHART_COLORS.proteins,
                 },
                 {
                     key: 'fats' as const,
-                    labelKey: 'PRODUCT_LIST.FATS',
+                    labelKey: 'GENERAL.NUTRIENTS.FAT',
                     value: aggregated?.fats ?? 0,
                     color: CHART_COLORS.fats,
                 },
                 {
                     key: 'carbs' as const,
-                    labelKey: 'PRODUCT_LIST.CARBS',
+                    labelKey: 'GENERAL.NUTRIENTS.CARB',
                     value: aggregated?.carbs ?? 0,
                     color: CHART_COLORS.carbs,
                 },
@@ -399,7 +398,7 @@ export class StatisticsComponent implements OnInit {
             legend: { display: false },
             tooltip: {
                 callbacks: {
-                    label: context => this.getFormattedTooltip(context, 'PRODUCT_LIST.KCAL'),
+                    label: context => this.getFormattedTooltip(context, 'GENERAL.UNITS.KCAL'),
                 },
             },
         },
@@ -442,7 +441,7 @@ export class StatisticsComponent implements OnInit {
         plugins: {
             tooltip: {
                 callbacks: {
-                    label: context => this.getFormattedTooltip(context, 'PRODUCT_LIST.GRAMS'),
+                    label: context => this.getFormattedTooltip(context, 'GENERAL.UNITS.G'),
                 },
             },
         },

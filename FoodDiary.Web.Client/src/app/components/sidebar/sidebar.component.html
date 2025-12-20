@@ -73,10 +73,6 @@
             <mat-icon>flag</mat-icon>
             <span>Goals</span>
         </a>
-        <a routerLink="/profile" routerLinkActive="is-active" class="sidebar__link sidebar__link--secondary">
-            <mat-icon>settings</mat-icon>
-            <span>Settings</span>
-        </a>
     </nav>
 
     @if (currentUser(); as user) {
@@ -100,6 +96,10 @@
 
             @if (isUserMenuOpen()) {
                 <div class="sidebar__user-menu">
+                    <a routerLink="/profile" routerLinkActive="is-active" class="sidebar__user-menu-link">
+                        <mat-icon>settings</mat-icon>
+                        <span>{{ 'HEADER.ACCOUNT' | translate }}</span>
+                    </a>
                     <button type="button" class="sidebar__logout" (click)="logout()">
                         <mat-icon>logout</mat-icon>
                         <span>{{ 'HEADER.LOGOUT' | translate }}</span>

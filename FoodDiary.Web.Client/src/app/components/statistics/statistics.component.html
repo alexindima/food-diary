@@ -20,185 +20,41 @@
         @if (isLoading()) {
             <div class="statistics__loader">{{ 'STATISTICS.LOADING' | translate }}</div>
         } @else {
-            <fd-ui-card class="statistics__card statistics__card--summary" [title]="'STATISTICS.SUMMARY_TITLE' | translate">
-                @if (summaryMetrics(); as summary) {
-                    <div class="statistics__summary">
-                        <div class="statistics__summary-row statistics__summary-row--top">
-                            <div class="statistics__summary-total">
-                                <span class="statistics__summary-label">{{ 'STATISTICS.TOTAL_CALORIES' | translate }}</span>
-                                <strong class="statistics__summary-value">
-                                    {{ summary.totalCalories | number: '1.0-0' }}
-                                    {{ 'PRODUCT_LIST.KCAL' | translate }}
-                                </strong>
-                                <div class="statistics__summary-trend">
-                                    <canvas
-                                        baseChart
-                                        [type]="'line'"
-                                        [data]="summarySparklineData()"
-                                        [options]="summarySparklineOptions"
-                                    ></canvas>
-                                </div>
-                            </div>
-                            <div class="statistics__summary-average">
-                                <div class="statistics__summary-average-main">
-                                    <span class="statistics__summary-label">{{ 'STATISTICS.AVERAGE_CALORIES' | translate }}</span>
-                                    <strong class="statistics__summary-value">
-                                        {{ summary.averageCard.consumption | number: '1.0-0' }}
-                                        {{ 'PRODUCT_LIST.KCAL' | translate }}
-                                    </strong>
-                                    <span class="statistics__summary-note">
-                                        {{ 'STATISTICS.AVERAGE_CARD.CONSUMPTION' | translate }}
-                                    </span>
-                                </div>
-                                <div class="statistics__summary-average-details">
-                                    <div class="statistics__summary-average-item">
-                                        <strong class="statistics__summary-value">
-                                            {{ summary.averageCard.steps | number: '1.0-0' }}
-                                        </strong>
-                                        <span class="statistics__summary-note">
-                                            {{ 'STATISTICS.AVERAGE_CARD.STEPS' | translate }}
-                                        </span>
-                                    </div>
-                                    <div class="statistics__summary-average-item">
-                                        <strong class="statistics__summary-value">
-                                            {{ summary.averageCard.burned | number: '1.0-0' }}
-                                            {{ 'PRODUCT_LIST.KCAL' | translate }}
-                                        </strong>
-                                        <span class="statistics__summary-note">
-                                            {{ 'STATISTICS.AVERAGE_CARD.BURNED' | translate }}
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="statistics__summary-row statistics__summary-row--macros">
-                            @for (macro of summary.macros; track macro.labelKey) {
-                                <fd-ui-accent-surface
-                                    class="statistics__macro-card"
-                                    accentSide="top"
-                                    [accentColor]="macro.color"
-                                    [tinted]="true"
-                                >
-                                    <span class="statistics__summary-label">{{ macro.labelKey | translate }}</span>
-                                    <strong class="statistics__summary-value">
-                                        {{ macro.value | number: '1.0-1' }} {{ 'PRODUCT_LIST.GRAMS' | translate }}
-                                    </strong>
-                                    <div class="statistics__macro-trend">
-                                        <canvas
-                                            baseChart
-                                            [type]="'line'"
-                                            [data]="macroSparklineData()[macro.key]"
-                                            [options]="summarySparklineOptions"
-                                        ></canvas>
-                                    </div>
-                                </fd-ui-accent-surface>
-                            }
-                        </div>
-                    </div>
-                } @else {
-                    <p class="statistics__empty">{{ 'STATISTICS.NO_DATA' | translate }}</p>
-                }
-            </fd-ui-card>
+            <fd-statistics-summary
+                [summary]="summaryMetrics()"
+                [summarySparklineData]="summarySparklineData()"
+                [summarySparklineOptions]="summarySparklineOptions"
+                [macroSparklineData]="macroSparklineData()"
+            />
 
-            <fd-ui-card class="statistics__card statistics__card--charts" [title]="'STATISTICS.NUTRITION_CHARTS_TITLE' | translate">
-                <fd-ui-tabs class="statistics__tabs"
-                    [tabs]="nutritionTabs"
-                    [selectedValue]="selectedNutritionTab()"
-                    (selectedValueChange)="changeNutritionTab($event)"
-                 />
+            <fd-statistics-nutrition
+                class="statistics__card statistics__card--charts"
+                [tabs]="nutritionTabs"
+                [selectedTab]="selectedNutritionTab()"
+                [hasData]="hasStatisticsData()"
+                [caloriesLineChartData]="caloriesLineChartData()"
+                [caloriesLineChartOptions]="caloriesLineChartOptions"
+                [nutrientsLineChartData]="nutrientsLineChartData()"
+                [nutrientsLineChartOptions]="nutrientsLineChartOptions"
+                [nutrientsPieChartData]="nutrientsPieChartData()"
+                [pieChartOptions]="pieChartOptions"
+                [nutrientsRadarChartData]="nutrientsRadarChartData()"
+                [radarChartOptions]="radarChartOptions"
+                [nutrientsBarChartData]="nutrientsBarChartData()"
+                [barChartOptions]="barChartOptions"
+                (selectedTabChange)="changeNutritionTab($event)"
+            />
 
-                @if (!hasStatisticsData()) {
-                    <p class="statistics__empty">{{ 'STATISTICS.NO_DATA' | translate }}</p>
-                } @else {
-                    @switch (selectedNutritionTab()) {
-                        @case ('calories') {
-                            <div class="statistics__chart-area">
-                                <canvas
-                                    baseChart
-                                    [type]="'line'"
-                                    [data]="caloriesLineChartData()"
-                                    [options]="caloriesLineChartOptions"
-                                    [legend]="false"
-                                ></canvas>
-                            </div>
-                        }
-                        @case ('macros') {
-                            <div class="statistics__chart-area">
-                                <canvas
-                                    baseChart
-                                    [type]="'line'"
-                                    [data]="nutrientsLineChartData()"
-                                    [options]="nutrientsLineChartOptions"
-                                ></canvas>
-                            </div>
-                        }
-                        @case ('distribution') {
-                            <div class="statistics__distribution-grid">
-                                <div class="statistics__chart-card">
-                                    <h4>{{ 'STATISTICS.NUTRITION_DISTRIBUTION.PIE' | translate }}</h4>
-                                    <canvas
-                                        baseChart
-                                        [type]="'pie'"
-                                        [data]="nutrientsPieChartData()"
-                                        [options]="pieChartOptions"
-                                        [legend]="false"
-                                    ></canvas>
-                                </div>
-                                <div class="statistics__chart-card">
-                                    <h4>{{ 'STATISTICS.NUTRITION_DISTRIBUTION.RADAR' | translate }}</h4>
-                                    <canvas
-                                        baseChart
-                                        [type]="'radar'"
-                                        [data]="nutrientsRadarChartData()"
-                                        [options]="radarChartOptions"
-                                        [legend]="false"
-                                    ></canvas>
-                                </div>
-                                <div class="statistics__chart-card">
-                                    <h4>{{ 'STATISTICS.NUTRITION_DISTRIBUTION.BAR' | translate }}</h4>
-                                    <canvas
-                                        baseChart
-                                        [type]="'bar'"
-                                        [data]="nutrientsBarChartData()"
-                                        [options]="barChartOptions"
-                                        [legend]="false"
-                                    ></canvas>
-                                </div>
-                            </div>
-                        }
-                    }
-                }
-            </fd-ui-card>
-
-            <fd-ui-card class="statistics__card statistics__card--body" [title]="'STATISTICS.BODY_CHARTS_TITLE' | translate">
-                <fd-ui-tabs class="statistics__tabs"
-                    [tabs]="bodyTabs"
-                    [selectedValue]="selectedBodyTab()"
-                    (selectedValueChange)="changeBodyTab($event)"
-                 />
-
-                @if (isBodyLoading()) {
-                    <div class="statistics__loader">{{ 'STATISTICS.LOADING' | translate }}</div>
-                } @else {
-                    @if (bodyChartData(); as bodyData) {
-                        @if (hasBodyData()) {
-                            <div class="statistics__chart-area">
-                                <canvas
-                                    baseChart
-                                    [type]="'line'"
-                                    [data]="bodyData"
-                                    [options]="bodyChartOptions"
-                                    [legend]="false"
-                                ></canvas>
-                            </div>
-                        } @else {
-                            <p class="statistics__empty">{{ 'STATISTICS.BODY_NO_DATA' | translate }}</p>
-                        }
-                    } @else {
-                        <p class="statistics__empty">{{ 'STATISTICS.BODY_NO_DATA' | translate }}</p>
-                    }
-                }
-            </fd-ui-card>
+            <fd-statistics-body
+                class="statistics__card statistics__card--body"
+                [tabs]="bodyTabs"
+                [selectedTab]="selectedBodyTab()"
+                [isLoading]="isBodyLoading()"
+                [bodyChartData]="bodyChartData()"
+                [bodyChartOptions]="bodyChartOptions"
+                [hasBodyData]="hasBodyData()"
+                (selectedTabChange)="changeBodyTab($event)"
+            />
         }
     </fd-page-body>
 </div>
