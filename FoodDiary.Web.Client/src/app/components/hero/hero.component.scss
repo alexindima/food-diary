@@ -2,7 +2,7 @@
 
 .hero {
     position: relative;
-    padding: clamp(48px, 6vw, 80px) 0 clamp(32px, 4vw, 56px);
+    padding: clamp(14px, 3vw, 24px) 0 clamp(32px, 4vw, 56px);
     overflow: hidden;
     background: linear-gradient(180deg, #e8f3ff 0%, #f5faff 40%, #e9f4ff 100%);
     color: $color-text-main;
@@ -13,7 +13,7 @@
         padding: 0 var(--fd-layout-page-horizontal-padding, 24px);
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        align-items: center;
+        align-items: start;
         gap: clamp($gap-m, 3vw, 40px);
     }
 
@@ -119,6 +119,7 @@
         display: flex;
         justify-content: flex-end;
         align-items: flex-start;
+        padding-top: clamp(12px, 2vw, 24px);
         min-height: 360px;
     }
 
@@ -137,12 +138,23 @@
     &__preview-card {
         position: relative;
         z-index: 2;
-        width: 750px;
+        width: min(750px, 100%);
         background: #fff;
         border-radius: 16px;
         box-shadow: 0 22px 60px rgba(15, 23, 42, 0.14);
         padding: 0;
         transform: translate(8%, -8px);
+    }
+
+    @media (max-width: 1200px) {
+        &__visual {
+            justify-content: center;
+            padding-top: 0;
+        }
+
+        &__preview-card {
+            transform: none;
+        }
     }
 
     &__preview-title {

@@ -2,6 +2,7 @@
 
 :host {
     display: block;
+    container-type: inline-size;
 }
 
 .consumption-ring-card {
@@ -33,10 +34,11 @@
 
     &__chart {
         position: relative;
-        width: 320px;
+        width: clamp(220px, 40vw, 320px);
         margin: 0;
         aspect-ratio: 1 / 1;
         z-index: 1;
+        max-width: 100%;
 
         &.is-daily-hovered {
             .consumption-ring-card__center {
@@ -153,7 +155,7 @@
     }
 
     &__percent-value {
-        font-size: 2.75rem;
+        font-size: clamp(2.1rem, 4vw, 2.75rem);
         letter-spacing: -0.02em;
     }
 
@@ -163,13 +165,13 @@
     }
 
     &__primary-line {
-        font-size: 1rem;
+        font-size: clamp(0.95rem, 2.4vw, 1rem);
         font-weight: 600;
         transition: transform 0.25s ease, opacity 0.25s ease;
     }
 
     &__secondary-line {
-        font-size: 0.95rem;
+        font-size: clamp(0.9rem, 2.2vw, 0.95rem);
         color: $color-text-additional;
         transition: transform 0.2s ease, color 0.2s ease, opacity 0.2s ease;
     }
@@ -205,7 +207,7 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        font-size: 0.95rem;
+        font-size: clamp(0.9rem, 2.2vw, 0.95rem);
         color: $color-text-main;
         gap: 8px;
     }
@@ -216,7 +218,7 @@
 
     &__bar-value {
         color: $color-text-additional;
-        font-size: 0.9rem;
+        font-size: clamp(0.85rem, 2.1vw, 0.9rem);
         white-space: nowrap;
     }
 
@@ -236,5 +238,28 @@
         height: 100%;
         border-radius: 999px;
         transition: width 0.4s ease;
+    }
+}
+
+@container (max-width: 520px) {
+    .consumption-ring-card {
+        &__layout {
+            grid-template-columns: 1fr;
+            gap: 16px;
+            justify-items: center;
+        }
+
+        &__chart {
+            width: 100%;
+            max-width: 320px;
+        }
+
+        &__legend {
+            width: 100%;
+        }
+
+        &__bars {
+            width: 100%;
+        }
     }
 }

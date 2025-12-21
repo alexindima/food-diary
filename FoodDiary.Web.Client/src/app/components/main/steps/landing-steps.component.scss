@@ -24,6 +24,7 @@
 
     &__eyebrow {
         display: inline-flex;
+        align-self: flex-start;
         padding: 6px 12px;
         border-radius: 999px;
         background: rgba(59, 130, 246, 0.1);
@@ -31,6 +32,8 @@
         font-weight: 700;
         font-size: 0.9rem;
         letter-spacing: 0.02em;
+        width: fit-content;
+        max-width: 100%;
     }
 
     &__title {

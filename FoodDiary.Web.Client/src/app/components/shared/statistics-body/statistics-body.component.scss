@@ -1,17 +1,45 @@
 @use 'variables' as *;
 
+:host {
+    display: block;
+}
+
 .stats-body-card {
     display: flex;
     flex-direction: column;
     gap: 16px;
+    width: 100%;
 }
 
 .stats-body-card__tabs {
     width: 100%;
 }
 
+.stats-body-card__tabs ::ng-deep .mat-mdc-tab-labels {
+    flex-wrap: wrap;
+    row-gap: 6px;
+}
+
+.stats-body-card__tabs ::ng-deep .mdc-tab {
+    min-width: 0;
+    padding-inline: 12px;
+}
+
+.stats-body-card__tabs ::ng-deep .mdc-tab__text-label {
+    white-space: normal;
+    line-height: 1.1;
+    text-align: center;
+}
+
 .stats-body-card__chart-area {
     min-height: 320px;
+    width: 100%;
+}
+
+.stats-body-card__chart-area canvas {
+    width: 100% !important;
+    height: 100% !important;
+    display: block;
 }
 
 .stats-body-card__loader,

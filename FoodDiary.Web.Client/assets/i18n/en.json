@@ -178,6 +178,28 @@
             "EYEBROW": "Product tour",
             "TITLE": "See your day at a glance",
             "SUBTITLE": "Charts, meals, and trends live together so you always know where you stand.",
+            "BLOCKS": {
+                "MEALS": {
+                    "EYEBROW": "Meals",
+                    "TITLE": "Preview today in one list",
+                    "SUBTITLE": "Add products and recipes to sketch your day before you log."
+                },
+                "SUMMARY": {
+                    "EYEBROW": "Overview",
+                    "TITLE": "Daily totals stay visible",
+                    "SUBTITLE": "Calories and macro balance update as you build a plan."
+                },
+                "NUTRITION": {
+                    "EYEBROW": "Nutrition",
+                    "TITLE": "Tune your macros",
+                    "SUBTITLE": "Trends and distributions show how protein, fats, and carbs split."
+                },
+                "BODY": {
+                    "EYEBROW": "Body",
+                    "TITLE": "Follow body metrics",
+                    "SUBTITLE": "Weight and waist charts highlight long-term progress."
+                }
+            },
             "CALORIES": "Calories",
             "WEIGHT": "Weight",
             "TREND": "Trend",

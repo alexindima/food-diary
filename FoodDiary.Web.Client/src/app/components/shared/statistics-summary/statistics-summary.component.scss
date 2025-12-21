@@ -1,5 +1,13 @@
 @use 'variables' as *;
 
+:host {
+    display: block;
+}
+
+.stats-summary-card {
+    width: 100%;
+}
+
 .stats-summary-card__content {
     display: flex;
     flex-direction: column;
@@ -13,7 +21,8 @@
 }
 
 .stats-summary-card__row--top > * {
-    min-width: 240px;
+    flex: 1 1 220px;
+    min-width: 0;
 }
 
 .stats-summary-card__row--macros {
@@ -27,15 +36,16 @@
     background: #f8fafc;
     border-radius: 20px;
     padding: 20px;
-    flex: 1;
+    flex: 1 1 220px;
     border: 1px solid #e2e8f0;
     display: flex;
     flex-direction: column;
     gap: 12px;
+    min-width: 0;
 }
 
 .stats-summary-card__total {
-    flex: 2;
+    flex: 2 1 260px;
     position: relative;
     overflow: hidden;
 }
@@ -69,6 +79,14 @@
 .stats-summary-card__trend {
     height: 80px;
     margin-top: auto;
+    width: 100%;
+}
+
+.stats-summary-card__trend canvas,
+.stats-summary-card__macro-trend canvas {
+    display: block;
+    width: 100% !important;
+    height: 100% !important;
 }
 
 .stats-summary-card__macro-card {
@@ -103,6 +121,24 @@
 
 .stats-summary-card__macro-trend {
     height: 48px;
+}
+
+@media (max-width: 540px) {
+    .stats-summary-card__row--top {
+        flex-direction: column;
+    }
+
+    .stats-summary-card__row--top > * {
+        min-width: 0;
+    }
+
+    .stats-summary-card__average-details {
+        grid-template-columns: 1fr;
+    }
+
+    .stats-summary-card__row--macros {
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    }
 }
 
 .stats-summary-card__empty {

@@ -23,6 +23,7 @@
 
     &__eyebrow {
         display: inline-flex;
+        align-self: flex-start;
         padding: 6px 12px;
         border-radius: 999px;
         background: rgba(59, 130, 246, 0.1);
@@ -30,6 +31,8 @@
         font-weight: 700;
         font-size: 0.9rem;
         letter-spacing: 0.02em;
+        width: fit-content;
+        max-width: 100%;
     }
 
     &__title {
@@ -59,19 +62,111 @@
 .landing-preview {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
-    gap: $gap-m;
+    gap: clamp($gap-l, 4vw, 40px);
     margin-top: $gap-m;
+
+    &__item {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+        gap: clamp($gap-m, 3vw, 32px);
+        align-items: start;
+    }
+
+    &__item--reverse {
+        grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+
+        .landing-preview__copy {
+            order: 2;
+        }
+
+        .landing-preview__card {
+            order: 1;
+            justify-content: flex-start;
+        }
+    }
+
+    &__copy {
+        display: flex;
+        flex-direction: column;
+        gap: $gap-xs;
+        padding-top: clamp(4px, 1vw, 10px);
+    }
+
+    &__eyebrow {
+        display: inline-flex;
+        align-self: flex-start;
+        padding: 6px 12px;
+        border-radius: 999px;
+        background: rgba(59, 130, 246, 0.1);
+        color: $color-primary;
+        font-weight: 700;
+        font-size: 0.85rem;
+        letter-spacing: 0.02em;
+    }
+
+    &__title {
+        margin: 0;
+        font-size: clamp(20px, 2.6vw, 28px);
+        color: $color-text-main;
+        letter-spacing: -0.01em;
+    }
+
+    &__subtitle {
+        margin: 0;
+        color: $color-text-additional;
+        font-size: 1rem;
+        max-width: 520px;
+    }
+
+    &__card {
+        display: flex;
+        justify-content: flex-end;
+        align-items: flex-start;
+    }
+
+    &__card > * {
+        width: min(680px, 100%);
+    }
+
+    @media (max-width: 1024px) {
+        &__item {
+            grid-template-columns: 1fr;
+        }
+
+        &__item--reverse {
+            .landing-preview__copy,
+            .landing-preview__card {
+                order: initial;
+            }
+        }
+
+        &__card {
+            justify-content: center;
+        }
+    }
 }
 
-.landing-tour {
-    margin-top: $gap-m;
+.landing-tour-block {
+    margin-top: $gap-l;
     display: grid;
-    grid-template-columns: 1.3fr 0.9fr;
-    gap: $gap-m;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr);
+    gap: clamp($gap-m, 3vw, 32px);
+    align-items: start;
+
+    .landing-section__copy--secondary {
+        margin-top: 0;
+    }
 
     @media (max-width: 1024px) {
         grid-template-columns: 1fr;
     }
+}
+
+.landing-tour {
+    margin-top: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: $gap-m;
 
     &__catalog {
         display: grid;
@@ -115,6 +210,8 @@
         display: grid;
         gap: $gap-s;
         align-content: start;
+        width: min(720px, 100%);
+        margin: 0;
     }
 
     &__hint {

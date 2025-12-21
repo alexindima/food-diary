@@ -59,6 +59,8 @@ export class LandingPreviewTourComponent implements OnInit {
     public bodyTabs: FdUiTab[] = [
         { value: 'weight', labelKey: 'STATISTICS.BODY_TABS.WEIGHT' },
         { value: 'bmi', labelKey: 'STATISTICS.BODY_TABS.BMI' },
+        { value: 'waist', labelKey: 'STATISTICS.BODY_TABS.WAIST' },
+        { value: 'whtr', labelKey: 'STATISTICS.BODY_TABS.WHTR' },
     ];
     public selectedNutritionTab: string = 'calories';
     public selectedBodyTab: string = 'weight';
@@ -67,7 +69,12 @@ export class LandingPreviewTourComponent implements OnInit {
     public guestPieData = this.buildPieData();
     public guestRadarData = this.buildRadarData();
     public guestBarData = this.buildBarData();
-    public guestBodyData = this.buildBodyData();
+    public guestBodyDataByTab: Record<string, ChartConfiguration<'line'>['data']> = {
+        weight: this.buildBodyLineData([72.4, 72.1, 71.9, 72.0, 71.8, 71.6, 71.5]),
+        bmi: this.buildBodyLineData([23.6, 23.5, 23.4, 23.4, 23.3, 23.3, 23.2]),
+        waist: this.buildBodyLineData([82.0, 81.6, 81.4, 81.3, 81.0, 80.8, 80.6]),
+        whtr: this.buildBodyLineData([0.49, 0.49, 0.48, 0.48, 0.47, 0.47, 0.46]),
+    };
     public previewProducts: Product[] = this.buildPreviewProducts();
     public previewRecipes: Recipe[] = this.buildPreviewRecipes();
     public previewQuickItems: QuickConsumptionItem[] = this.buildPreviewQuickItems();
@@ -266,12 +273,12 @@ export class LandingPreviewTourComponent implements OnInit {
         };
     }
 
-    private buildBodyData(): ChartConfiguration<'line'>['data'] {
+    private buildBodyLineData(values: number[]): ChartConfiguration<'line'>['data'] {
         return {
             labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
             datasets: [
                 {
-                    data: [72.4, 72.1, 71.9, 72.0, 71.8, 71.6, 71.5],
+                    data: values,
                     borderColor: '#2563eb',
                     backgroundColor: 'rgba(37, 99, 235, 0.16)',
                     tension: 0.3,
