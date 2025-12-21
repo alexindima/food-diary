@@ -1,16 +1,18 @@
 <div class="hydration-card" [class.hydration-card--loading]="isLoading()">
     <div class="hydration-card__header">
         <div class="hydration-card__title">{{ title() }}</div>
-        <fd-ui-button
-            size="sm"
-            variant="primary"
-            fill="solid"
-            class="hydration-card__add"
-            [disabled]="isLoading()"
-            (click)="onAdd()"
-        >
-            +{{ addStep() }} ml
-        </fd-ui-button>
+        @if (canAdd()) {
+            <fd-ui-button
+                size="sm"
+                variant="primary"
+                fill="solid"
+                class="hydration-card__add"
+                [disabled]="isLoading()"
+                (click)="onAdd()"
+            >
+                +{{ addStep() }} ml
+            </fd-ui-button>
+        }
     </div>
 
     <div class="hydration-card__content">

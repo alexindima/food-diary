@@ -1,6 +1,8 @@
 <section class="meals-preview">
     <div class="meals-preview__header">
-        <h2 class="meals-preview__title">{{ titleKey() | translate }}</h2>
+        <h2 class="meals-preview__title">
+            {{ titleText() || (titleKey() | translate) }}
+        </h2>
         @if (showViewAll()) {
             <fd-ui-button variant="primary" fill="text" size="sm" icon="open_in_new" (click)="viewAll.emit()">
                 {{ viewAllKey() | translate }}
@@ -9,7 +11,7 @@
     </div>
 
     <div class="meals-preview__list">
-        @if (!entries().length) {
+        @if (!entries().length && showEmptyState()) {
             <div class="meals-preview__empty">
                 {{ emptyKey() | translate }}
             </div>
@@ -21,11 +23,10 @@
                         [meal]="entry.meal"
                         (open)="open.emit(entry.meal!)"
                     />
-                } @else {
+                } @else if (showAddButtons()) {
                     <button
                         class="meals-preview__placeholder"
                         type="button"
-                        [disabled]="!showAddButtons()"
                         (click)="add.emit(entry.slot)"
                     >
                         <div class="meals-preview__placeholder-left">
@@ -36,11 +37,9 @@
                                 {{ entry.labelKey || 'MEAL_CARD.MEAL_TYPES.OTHER' | translate }}
                             </div>
                         </div>
-                        @if (showAddButtons()) {
-                            <div class="meals-preview__placeholder-action">
-                                <mat-icon>add</mat-icon>
-                            </div>
-                        }
+                        <div class="meals-preview__placeholder-action">
+                            <mat-icon>add</mat-icon>
+                        </div>
                     </button>
                 }
             }

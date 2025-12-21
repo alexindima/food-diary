@@ -112,8 +112,16 @@ export class DashboardComponent implements OnInit {
     public readonly dailyAdvice = signal<DailyAdvice | null>(null);
     public readonly isAdviceLoading = signal<boolean>(false);
     private readonly mealSlots: MealSlot[] = ['BREAKFAST', 'LUNCH', 'DINNER'];
-    public readonly displayedMeals = computed(() => {
+    public readonly mealPreviewEntries = computed<MealPreviewEntry[]>(() => {
         const meals = [...(this.meals() ?? [])];
+
+        if (!this.isTodaySelected()) {
+            return meals.map(meal => ({
+                meal,
+                slot: meal.mealType ?? undefined,
+            }));
+        }
+
         const result: { meal: Consumption | null; slot?: MealSlot }[] = [];
 
         for (const slot of this.mealSlots) {
@@ -130,16 +138,13 @@ export class DashboardComponent implements OnInit {
             result.push({ meal, slot: (meal.mealType ?? '').toUpperCase() as MealSlot | undefined });
         }
 
-        return result;
-    });
-    public readonly mealPreviewEntries = computed<MealPreviewEntry[]>(() =>
-        this.displayedMeals().map(entry => ({
+        return result.map(entry => ({
             meal: entry.meal ?? null,
             slot: entry.slot,
             icon: this.placeholderIcon(entry.slot),
             labelKey: this.placeholderLabel(entry.slot),
-        })),
-    );
+        }));
+    });
 
     public readonly nutrientBars = computed<NutrientBar[]>(() => {
         const snapshot = this.snapshot();
@@ -301,7 +306,7 @@ export class DashboardComponent implements OnInit {
     }
 
     private loadDashboardSnapshot(): void {
-        const targetDate = this.selectedDate();
+        const targetDate = this.getDashboardDateUtc(this.selectedDate());
         this.isLoading.set(true);
 
         this.dashboardService
@@ -320,7 +325,7 @@ export class DashboardComponent implements OnInit {
     }
 
     private loadHydration(): void {
-        const targetDate = this.selectedDate();
+        const targetDate = this.getHydrationDateUtc(this.selectedDate());
         this.isHydrationLoading.set(true);
 
         this.hydrationService
@@ -354,8 +359,9 @@ export class DashboardComponent implements OnInit {
 
     public addHydration(amount: number): void {
         this.isHydrationLoading.set(true);
+        const targetDate = this.getHydrationDateUtc(this.selectedDate());
         this.hydrationService
-            .addEntry(amount)
+            .addEntry(amount, targetDate)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: () => this.loadHydration(),
@@ -364,7 +370,7 @@ export class DashboardComponent implements OnInit {
     }
 
     private loadDailyAdvice(): void {
-        const targetDate = this.selectedDate();
+        const targetDate = this.getDashboardDateUtc(this.selectedDate());
         const locale = this.getCurrentLocale();
 
         this.isAdviceLoading.set(true);
@@ -423,6 +429,14 @@ export class DashboardComponent implements OnInit {
 
     private normalizeEndOfDayUtc(date: Date): Date {
         return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59, 999));
+    }
+
+    private getDashboardDateUtc(date: Date): Date {
+        return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+    }
+
+    private getHydrationDateUtc(date: Date): Date {
+        return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 12, 0, 0));
     }
 
     private getCurrentLocale(): string {

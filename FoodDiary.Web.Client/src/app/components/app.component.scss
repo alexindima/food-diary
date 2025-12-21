@@ -4,7 +4,7 @@
     display: grid;
     grid-template-columns: 260px 1fr;
     min-height: 100vh;
-    background: linear-gradient(180deg, #f4f7fb 0%, #eef3fb 100%);
+    background: var(--fd-layout-page-background);
 
     &__sidebar {
         grid-row: 1 / span 1;
@@ -21,10 +21,22 @@
         display: flex;
         flex-direction: column;
         min-height: 100vh;
-        padding: 6px 16px 24px;
+        padding: 0;
     }
 
     &__content {
+        flex: 0 0 auto;
+        width: 100%;
+    }
+
+    &__main > * {
+        flex: 1 1 auto;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+    }
+
+    &__main > router-outlet {
         flex: 0 0 auto;
     }
 
@@ -54,7 +66,7 @@
     }
 
     .fd-root__main {
-        padding: 8px 12px 90px;
+        padding: 0 0 90px;
     }
 
     .fd-root__footer {

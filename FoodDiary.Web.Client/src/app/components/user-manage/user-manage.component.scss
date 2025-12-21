@@ -1,8 +1,6 @@
-@use 'mixins' as *;
 @use 'variables' as *;
 
 :host {
-    @include host-style('/assets/images/background.webp');
     --user-card-radius: 24px;
 }
 

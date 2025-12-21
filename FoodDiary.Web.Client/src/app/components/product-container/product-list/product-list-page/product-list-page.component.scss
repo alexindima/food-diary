@@ -1,5 +1,3 @@
-@use 'mixins' as *;
-
 :host {
-    @include host-style('/assets/images/background.webp');
+    display: block;
 }

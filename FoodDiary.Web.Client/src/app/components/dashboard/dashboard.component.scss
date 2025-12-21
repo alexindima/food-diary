@@ -1,5 +1,11 @@
 @use 'variables' as *;
 
+:host {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+}
+
 $color-text-secondary: $color-text-additional;
 $color-primary: #2563eb;
 

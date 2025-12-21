@@ -1,19 +1,14 @@
-@use 'mixins' as *;
 @use 'variables' as *;
-
-:host {
-    @include host-style('/assets/images/background.webp');
-}
 
 .recipe-list {
     margin: 0 auto;
     box-sizing: border-box;
     font-size: 14px;
     --fd-layout-page-section-spacing: $gap-m;
-    background: linear-gradient(180deg, #eaf3ff 0%, #f8fbff 100%);
-    padding: $gap-m;
-    border-radius: 32px;
-    box-shadow: 0 14px 36px rgba(59, 130, 246, 0.12);
+    background: transparent;
+    padding: 0;
+    border-radius: 0;
+    box-shadow: none;
 
     &__header .fd-page-header__actions {
         gap: $gap-s;

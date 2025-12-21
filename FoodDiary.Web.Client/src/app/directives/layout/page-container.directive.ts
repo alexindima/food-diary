@@ -14,6 +14,12 @@ export class FdPageContainerDirective {
     @HostBinding('style.flex-direction')
     protected readonly direction = 'column';
 
+    @HostBinding('style.flex')
+    protected readonly flex = '1 1 auto';
+
+    @HostBinding('style.min-height')
+    protected readonly minHeight = '100%';
+
     @HostBinding('style.gap')
     protected readonly gap = 'var(--fd-page-body-gap, 16px)';
 

@@ -57,9 +57,16 @@
 
                     <fd-meals-preview
                         [entries]="mealPreviewEntries()"
+                        [titleText]="
+                            isTodaySelected()
+                                ? null
+                                : ('DASHBOARD.MEALS_TITLE_FOR_DATE' | translate:{ date: (selectedDate() | localizedDate:'d MMMM y') })
+                        "
                         [titleKey]="'DASHBOARD.MEALS_TITLE'"
                         [viewAllKey]="'DASHBOARD.MEALS_VIEW_ALL'"
-                        [emptyKey]="'DASHBOARD.MEALS_EMPTY'"
+                        [emptyKey]="isTodaySelected() ? 'DASHBOARD.MEALS_EMPTY' : 'DASHBOARD.MEALS_EMPTY_FOR_DATE'"
+                        [showAddButtons]="isTodaySelected()"
+                        [showEmptyState]="!isTodaySelected()"
                         (viewAll)="manageConsumptions()"
                         (add)="addConsumption($event)"
                         (open)="openConsumption($event)"
@@ -73,6 +80,7 @@
                         [total]="hydration()?.totalMl ?? 0"
                         [goal]="hydration()?.goalMl ?? 2500"
                         [isLoading]="isHydrationLoading()"
+                        [canAdd]="isTodaySelected()"
                         (addClick)="addHydration($event)"
                     />
                     <fd-weight-trend-card

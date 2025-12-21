@@ -16,6 +16,7 @@ export class HydrationCardComponent {
     public readonly goal = input<number | null>(null);
     public readonly addStep = input<number>(250);
     public readonly isLoading = input<boolean>(false);
+    public readonly canAdd = input<boolean>(true);
     public readonly addClick = output<number>();
 
     public readonly hasGoal = computed(() => !!this.goal() && this.goal()! > 0);
@@ -28,6 +29,9 @@ export class HydrationCardComponent {
     public readonly trackWidth = computed(() => `${Math.min(this.percent(), 130)}%`);
 
     public onAdd(): void {
+        if (!this.canAdd()) {
+            return;
+        }
         const step = Math.max(1, this.addStep());
         this.addClick.emit(step);
     }

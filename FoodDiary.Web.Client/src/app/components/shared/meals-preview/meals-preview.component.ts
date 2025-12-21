@@ -23,10 +23,12 @@ export interface MealPreviewEntry {
 })
 export class MealsPreviewComponent {
     public readonly titleKey = input<string>('DASHBOARD.MEALS_TITLE');
+    public readonly titleText = input<string | null>(null);
     public readonly viewAllKey = input<string>('DASHBOARD.MEALS_VIEW_ALL');
     public readonly emptyKey = input<string>('DASHBOARD.MEALS_EMPTY');
     public readonly showViewAll = input<boolean>(true);
     public readonly showAddButtons = input<boolean>(true);
+    public readonly showEmptyState = input<boolean>(true);
     public readonly entries = input.required<MealPreviewEntry[]>();
 
     public readonly viewAll = output<void>();
