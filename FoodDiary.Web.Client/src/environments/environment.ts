@@ -17,6 +17,7 @@ export const environment: AppConfig = {
         dashboard: `${serverUrl}/api/dashboard`,
         images: `${serverUrl}/api/images`,
         hydration: `${serverUrl}/api/hydrations`,
+        goals: `${serverUrl}/api/goals`,
     },
     googleClientId: '958507321562-8btd704hjhgsl7niklereh81utg5p780.apps.googleusercontent.com',
 };

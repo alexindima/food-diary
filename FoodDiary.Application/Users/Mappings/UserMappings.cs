@@ -1,4 +1,5 @@
 using FoodDiary.Contracts.Users;
+using FoodDiary.Contracts.Goals;
 using FoodDiary.Domain.Entities;
 using System.Text.Json;
 
@@ -46,6 +47,20 @@ public static class UserMappings
             user.ProfileImageAssetId?.Value,
             layout,
             user.IsActive
+        );
+    }
+
+    public static GoalsResponse ToGoalsResponse(this User user)
+    {
+        return new GoalsResponse(
+            user.DailyCalorieTarget,
+            user.ProteinTarget,
+            user.FatTarget,
+            user.CarbTarget,
+            user.FiberTarget,
+            user.WaterGoal,
+            user.DesiredWeight,
+            user.DesiredWaist
         );
     }
 }

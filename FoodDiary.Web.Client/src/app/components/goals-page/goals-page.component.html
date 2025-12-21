@@ -19,180 +19,236 @@
     <fd-page-body>
 
         <div class="goals__grid">
-            <fd-ui-card class="goals__card goals__card--nutrition" [title]="'GOALS_PAGE.NUTRITION_TITLE' | translate">
-                <div class="goals__card-inner">
-                    <div
-                        class="goals__ring"
-                        [style.--goals-progress]="progressPercent() + '%'"
-                        [style.--goals-accent]="accentColor()"
-                        [style.--goals-angle]="knobAngle() + 'deg'"
-                        (pointerdown)="startRingDrag($event)"
-                        (pointermove)="onRingHover($event)"
-                        (pointerleave)="onRingLeave($event)"
-                    >
-                        <div class="goals__ring-track"></div>
-                        <div class="goals__ring-center">
-                            <span class="goals__ring-label">{{ 'GOALS_PAGE.DAILY_TARGET' | translate }}</span>
-                            <input
-                                type="number"
-                                class="goals__calorie-input"
-                                [min]="minCalories"
-                                [max]="maxCalories"
-                                [value]="calorieTarget()"
-                                (input)="onCaloriesInput($event)"
-                                (blur)="onCaloriesBlur($event)"
-                            />
-                            <span class="goals__ring-unit">kcal</span>
-                        </div>
-                        <div class="goals__knob" aria-hidden="true"></div>
-                        <input
-                            class="goals__range"
-                            type="range"
-                            [min]="minCalories"
-                            [max]="maxCalories"
-                            [value]="calorieTarget()"
-                            (pointerdown)="startRingDrag($event)"
-                            (input)="onSliderInput($event)"
-                            aria-label="{{ 'GOALS_PAGE.DAILY_TARGET' | translate }}"
-                        />
-                    </div>
-                    <div class="goals__macro-list">
-                        <div class="goals__macro-group">
-                            <div class="goals__macro-group-title">{{ 'GOALS_PAGE.CORE_MACROS' | translate }}</div>
-                            <div class="goals__preset">
-                                <label class="goals__preset-label" for="macroPreset">
-                                    {{ 'GOALS_PAGE.MACRO_PRESET_LABEL' | translate }}
-                                </label>
-                                <select
-                                    id="macroPreset"
-                                    class="goals__preset-select"
-                                    [value]="selectedPreset()"
-                                    (change)="onMacroPresetChange($event)"
+            <div class="goals__column goals__column--main">
+                <div class="goals__main-grid">
+                    <div class="goals__calorie-stack">
+                        <fd-ui-card class="goals__card goals__card--calories" [title]="'GOALS_PAGE.NUTRITION_TITLE' | translate">
+                            <div class="goals__card-inner goals__card-inner--center">
+                                <div
+                                    class="goals__ring"
+                                    [style.--goals-progress]="progressPercent() + '%'"
+                                    [style.--goals-accent]="accentColor()"
+                                    [style.--goals-angle]="knobAngle() + 'deg'"
+                                    (pointerdown)="startRingDrag($event)"
+                                    (pointermove)="onRingHover($event)"
+                                    (pointerleave)="onRingLeave($event)"
                                 >
-                                    @for (preset of macroPresets; track preset.key) {
-                                        <option [value]="preset.key">
-                                            {{ preset.labelKey | translate }}
-                                        </option>
-                                    }
-                                </select>
-                            </div>
-                            @for (macro of coreMacroStates(); track macro.key) {
-                                <div class="goals__macro goals__macro--slider">
-                                    <div class="goals__macro-header">
-                                        <div class="goals__macro-label">
-                                            <span class="goals__dot" [style.background]="macro.accent"></span>
-                                            <span>{{ macro.labelKey | translate }}</span>
-                                        </div>
-                                        <div class="goals__macro-value-block">
-                                            <input
-                                                type="number"
-                                                class="goals__macro-input"
-                                            [min]="0"
-                                            [max]="macro.max"
-                                            [value]="macro.value"
-                                            (input)="onMacroInputChange(macro.key, $event)"
-                                        />
-                                        <span class="goals__macro-unit">{{ macro.unit }}</span>
-                                    </div>
-                                </div>
-
-                                    <div
-                                        class="goals__macro-slider"
-                                        [style.--macro-progress]="macro.percent + '%'"
-                                        [style.--macro-accent]="macro.accent"
-                                        [style.--macro-gradient]="macro.gradient"
-                                    >
-                                        <div class="goals__macro-rail"></div>
-                                        <div class="goals__macro-fill"></div>
+                                    <div class="goals__ring-track"></div>
+                                    <div class="goals__ring-center">
+                                        <span class="goals__ring-label">{{ 'GOALS_PAGE.DAILY_TARGET' | translate }}</span>
                                         <input
-                                            class="goals__macro-range"
-                                            type="range"
-                                            [min]="0"
-                                            [max]="macro.max"
-                                            [value]="macro.value"
-                                            (input)="onMacroSliderChange(macro.key, $event)"
-                                            aria-label="{{ macro.labelKey | translate }}"
+                                            type="number"
+                                            class="goals__calorie-input"
+                                            [min]="minCalories"
+                                            [max]="maxCalories"
+                                            [value]="calorieTarget()"
+                                            (input)="onCaloriesInput($event)"
+                                            (blur)="onCaloriesBlur($event)"
                                         />
+                                        <span class="goals__ring-unit">kcal</span>
+                                    </div>
+                                    <div class="goals__knob" aria-hidden="true"></div>
+                                    <input
+                                        class="goals__range"
+                                        type="range"
+                                        [min]="minCalories"
+                                        [max]="maxCalories"
+                                        [value]="calorieTarget()"
+                                        (pointerdown)="startRingDrag($event)"
+                                        (input)="onSliderInput($event)"
+                                        aria-label="{{ 'GOALS_PAGE.DAILY_TARGET' | translate }}"
+                                    />
+                                </div>
+                            </div>
+                        </fd-ui-card>
+
+                        @if (waterState(); as water) {
+                            <fd-ui-card class="goals__card goals__card--water" [title]="'GOALS_PAGE.WATER_TITLE' | translate">
+                                <div class="goals__card-inner goals__card-inner--column">
+                                    <div class="goals__macro goals__macro--slider">
+                                        <div class="goals__macro-header">
+                                            <div class="goals__macro-label">
+                                                <span>{{ water.labelKey | translate }}</span>
+                                            </div>
+                                            <div class="goals__macro-value-block">
+                                                <input
+                                                    type="number"
+                                                    class="goals__macro-input"
+                                                [min]="0"
+                                                [max]="water.max"
+                                                [value]="water.value"
+                                                (input)="onWaterInputChange($event)"
+                                            />
+                                            <span class="goals__macro-unit">{{ water.unit }}</span>
+                                        </div>
+                                    </div>
+
+                                        <div
+                                            class="goals__macro-slider"
+                                            [style.--macro-progress]="water.percent + '%'"
+                                            [style.--macro-progress-ratio]="water.percent / 100"
+                                            [style.--macro-accent]="water.accent"
+                                            [style.--macro-gradient]="water.gradient"
+                                        >
+                                            <div class="goals__macro-rail"></div>
+                                            <div class="goals__macro-fill"></div>
+                                            <input
+                                                class="goals__macro-range"
+                                                type="range"
+                                                [min]="0"
+                                                [max]="water.max"
+                                                [value]="water.value"
+                                                (input)="onWaterSliderChange($event)"
+                                                aria-label="{{ water.labelKey | translate }}"
+                                            />
+                                        </div>
                                     </div>
                                 </div>
-                            }
-                        </div>
+                            </fd-ui-card>
+                        }
+                    </div>
+
+                    <div class="goals__macro-stack">
+                        <fd-ui-card class="goals__card goals__card--macros" [title]="'GOALS_PAGE.CORE_MACROS' | translate">
+                            <div class="goals__card-inner goals__card-inner--column">
+                                <div class="goals__preset">
+                                    <label class="goals__preset-label" for="macroPreset">
+                                        {{ 'GOALS_PAGE.MACRO_PRESET_LABEL' | translate }}
+                                    </label>
+                                    <select
+                                        id="macroPreset"
+                                        class="goals__preset-select"
+                                        [value]="selectedPreset()"
+                                        (change)="onMacroPresetChange($event)"
+                                    >
+                                        @for (preset of macroPresets; track preset.key) {
+                                            <option [value]="preset.key">
+                                                {{ preset.labelKey | translate }}
+                                            </option>
+                                        }
+                                    </select>
+                                </div>
+                                @for (macro of coreMacroStates(); track macro.key) {
+                                    <div class="goals__macro goals__macro--slider">
+                                        <div class="goals__macro-header">
+                                            <div class="goals__macro-label">
+                                                <span>{{ macro.labelKey | translate }}</span>
+                                            </div>
+                                            <div class="goals__macro-value-block">
+                                                <input
+                                                    type="number"
+                                                    class="goals__macro-input"
+                                                [min]="0"
+                                                [max]="macro.max"
+                                                [value]="macro.value"
+                                                (input)="onMacroInputChange(macro.key, $event)"
+                                            />
+                                            <span class="goals__macro-unit">{{ macro.unit }}</span>
+                                        </div>
+                                    </div>
+
+                                        <div
+                                            class="goals__macro-slider"
+                                            [style.--macro-progress]="macro.percent + '%'"
+                                            [style.--macro-progress-ratio]="macro.percent / 100"
+                                            [style.--macro-accent]="macro.accent"
+                                            [style.--macro-gradient]="macro.gradient"
+                                        >
+                                            <div class="goals__macro-rail"></div>
+                                            <div class="goals__macro-fill"></div>
+                                            <input
+                                                class="goals__macro-range"
+                                                type="range"
+                                                [min]="0"
+                                                [max]="macro.max"
+                                                [value]="macro.value"
+                                                (input)="onMacroSliderChange(macro.key, $event)"
+                                                aria-label="{{ macro.labelKey | translate }}"
+                                            />
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </fd-ui-card>
 
                         @if (fiberMacroState(); as fiber) {
-                            <div class="goals__macro-group goals__macro-group--fiber">
-                                <div class="goals__macro-group-title">{{ 'GOALS_PAGE.FIBER_GROUP' | translate }}</div>
-                                <div class="goals__macro goals__macro--slider">
-                                    <div class="goals__macro-header">
-                                        <div class="goals__macro-label">
-                                            <span class="goals__dot" [style.background]="fiber.accent"></span>
-                                            <span>{{ fiber.labelKey | translate }}</span>
+                            <fd-ui-card class="goals__card goals__card--fiber" [title]="'GOALS_PAGE.FIBER_GROUP' | translate">
+                                <div class="goals__card-inner goals__card-inner--column">
+                                    <div class="goals__macro goals__macro--slider">
+                                        <div class="goals__macro-header">
+                                            <div class="goals__macro-label">
+                                                <span>{{ fiber.labelKey | translate }}</span>
+                                            </div>
+                                            <div class="goals__macro-value-block">
+                                                <input
+                                                    type="number"
+                                                    class="goals__macro-input"
+                                                [min]="0"
+                                                [max]="fiber.max"
+                                                [value]="fiber.value"
+                                                (input)="onMacroInputChange(fiber.key, $event)"
+                                            />
+                                            <span class="goals__macro-unit">{{ fiber.unit }}</span>
                                         </div>
-                                        <div class="goals__macro-value-block">
+                                        </div>
+                                        <div
+                                            class="goals__macro-slider"
+                                            [style.--macro-progress]="fiber.percent + '%'"
+                                            [style.--macro-progress-ratio]="fiber.percent / 100"
+                                            [style.--macro-accent]="fiber.accent"
+                                            [style.--macro-gradient]="fiber.gradient"
+                                        >
+                                            <div class="goals__macro-rail"></div>
+                                            <div class="goals__macro-fill"></div>
                                             <input
-                                                type="number"
-                                                class="goals__macro-input"
-                                            [min]="0"
-                                            [max]="fiber.max"
-                                            [value]="fiber.value"
-                                            (input)="onMacroInputChange(fiber.key, $event)"
-                                        />
-                                        <span class="goals__macro-unit">{{ fiber.unit }}</span>
-                                    </div>
-                                    </div>
-                                    <div
-                                        class="goals__macro-slider"
-                                        [style.--macro-progress]="fiber.percent + '%'"
-                                        [style.--macro-accent]="fiber.accent"
-                                        [style.--macro-gradient]="fiber.gradient"
-                                    >
-                                        <div class="goals__macro-rail"></div>
-                                        <div class="goals__macro-fill"></div>
-                                        <input
-                                            class="goals__macro-range"
-                                            type="range"
-                                            [min]="0"
-                                            [max]="fiber.max"
-                                            [value]="fiber.value"
-                                            (input)="onMacroSliderChange(fiber.key, $event)"
-                                            aria-label="{{ fiber.labelKey | translate }}"
-                                        />
+                                                class="goals__macro-range"
+                                                type="range"
+                                                [min]="0"
+                                                [max]="fiber.max"
+                                                [value]="fiber.value"
+                                                (input)="onMacroSliderChange(fiber.key, $event)"
+                                                aria-label="{{ fiber.labelKey | translate }}"
+                                            />
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            </fd-ui-card>
                         }
                     </div>
                 </div>
-            </fd-ui-card>
+            </div>
 
-            <fd-ui-card class="goals__card goals__card--body" [title]="'GOALS_PAGE.BODY_TITLE' | translate">
-                <div class="goals__card-inner goals__card-inner--column">
-                    @for (target of currentBodyTargets(); track target.key) {
-                        <div class="goals__target">
-                            <div class="goals__target-header">
-                                <div class="goals__target-title">{{ target.titleKey | translate }}</div>
-                                <div class="goals__target-value">
-                                    <input
-                                        type="number"
-                                        class="goals__body-input"
-                                        [value]="target.value"
-                                        (input)="onBodyTargetChange(target.key, $event)"
-                                    />
-                                    <span class="goals__target-unit">{{ target.unit }}</span>
+            <div class="goals__column goals__column--side">
+                @for (target of currentBodyTargets(); track target.key) {
+                    <fd-ui-card class="goals__card goals__card--body-target" [title]="target.titleKey | translate">
+                        <div class="goals__card-inner goals__card-inner--column">
+                            <div class="goals__target">
+                                <div class="goals__target-header">
+                                    <div class="goals__target-value">
+                                        <input
+                                            type="number"
+                                            class="goals__body-input"
+                                            [value]="target.value"
+                                            (input)="onBodyTargetChange(target.key, $event)"
+                                        />
+                                        <span class="goals__target-unit">{{ target.unit }}</span>
+                                    </div>
+                                </div>
+                                <div class="goals__target-meta">
+                                    @if (target.current && target.delta) {
+                                        <span class="goals__meta-label">
+                                            {{ 'GOALS_PAGE.CURRENT_LABEL' | translate:{ value: target.current, unit: target.unit } }}
+                                        </span>
+                                        <span class="goals__delta goals__delta--positive">
+                                            {{ target.delta }} {{ 'GOALS_PAGE.TO_GO' | translate }}
+                                        </span>
+                                    }
                                 </div>
                             </div>
-                            <div class="goals__target-meta">
-                                <span class="goals__meta-label">
-                                    {{ 'GOALS_PAGE.CURRENT_LABEL' | translate:{ value: target.current, unit: target.unit } }}
-                                </span>
-                                <span class="goals__delta goals__delta--positive">
-                                    {{ target.delta }} {{ 'GOALS_PAGE.TO_GO' | translate }}
-                                </span>
-                            </div>
                         </div>
-                    }
-
-                </div>
-            </fd-ui-card>
+                    </fd-ui-card>
+                }
+            </div>
         </div>
     </fd-page-body>
 </div>

@@ -17,4 +17,5 @@ export interface AppConfigApiUrls {
     dashboard: string;
     images: string;
     hydration: string;
+    goals: string;
 }

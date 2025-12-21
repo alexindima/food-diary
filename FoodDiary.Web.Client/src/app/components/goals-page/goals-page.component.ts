@@ -6,9 +6,8 @@ import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { PageHeaderComponent } from '../shared/page-header/page-header.component';
 import { PageBodyComponent } from '../shared/page-body/page-body.component';
 import { FdPageContainerDirective } from '../../directives/layout/page-container.directive';
-import { UserService } from '../../services/user.service';
-import { UpdateUserDto } from '../../types/user.data';
-import { finalize, forkJoin } from 'rxjs';
+import { GoalsService } from '../../services/goals.service';
+import { finalize } from 'rxjs';
 
 type MacroKey = 'protein' | 'fats' | 'carbs' | 'fiber';
 
@@ -25,7 +24,6 @@ type MacroItem = {
     max: number;
     greenFrom: number;
     greenTo: number;
-    defaultValue: number;
     zones: MacroZone[];
 };
 
@@ -43,6 +41,15 @@ type MacroPercent = {
     carbs: number;
 };
 
+type SliderConfig = {
+    labelKey: string;
+    unit: string;
+    max: number;
+    greenFrom: number;
+    greenTo: number;
+    zones: MacroZone[];
+};
+
 type BodyTargetKey = 'weight' | 'waist';
 
 type BodyTarget = {
@@ -50,8 +57,8 @@ type BodyTarget = {
     titleKey: string;
     value: number;
     unit: string;
-    current: string;
-    delta: string;
+    current?: string | null;
+    delta?: string | null;
 };
 
 type TimeframeOption = {
@@ -76,11 +83,11 @@ type TimeframeOption = {
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GoalsPageComponent implements OnInit {
-    private readonly userService = inject(UserService);
+    private readonly goalsService = inject(GoalsService);
 
     protected readonly minCalories = 0;
     protected readonly maxCalories = 5000;
-    protected readonly calorieTarget = signal(2000);
+    protected readonly calorieTarget = signal(0);
     private activeRingElement: HTMLElement | null = null;
     private readonly colorBlue = '#2563eb';
     private readonly colorGreen = '#16a34a';
@@ -95,7 +102,6 @@ export class GoalsPageComponent implements OnInit {
             max: 220,
             greenFrom: 80,
             greenTo: 130,
-            defaultValue: 120,
             zones: [
                 { from: 0, to: 60, color: this.colorBlue },
                 { from: 60, to: 130, color: this.colorGreen },
@@ -110,7 +116,6 @@ export class GoalsPageComponent implements OnInit {
             max: 160,
             greenFrom: 55,
             greenTo: 90,
-            defaultValue: 70,
             zones: [
                 { from: 0, to: 45, color: this.colorBlue },
                 { from: 45, to: 90, color: this.colorGreen },
@@ -125,7 +130,6 @@ export class GoalsPageComponent implements OnInit {
             max: 480,
             greenFrom: 200,
             greenTo: 300,
-            defaultValue: 260,
             zones: [
                 { from: 0, to: 150, color: this.colorBlue },
                 { from: 150, to: 300, color: this.colorGreen },
@@ -140,7 +144,6 @@ export class GoalsPageComponent implements OnInit {
             max: 80,
             greenFrom: 25,
             greenTo: 40,
-            defaultValue: 28,
             zones: [
                 { from: 0, to: 15, color: this.colorBlue },
                 { from: 15, to: 40, color: this.colorGreen },
@@ -149,16 +152,30 @@ export class GoalsPageComponent implements OnInit {
             ],
         },
     ];
+    private readonly waterConfig: SliderConfig = {
+        labelKey: 'GOALS_PAGE.WATER_LABEL',
+        unit: 'ml',
+        max: 5000,
+        greenFrom: 1200,
+        greenTo: 2500,
+        zones: [
+            { from: 0, to: 1200, color: this.colorBlue },
+            { from: 1200, to: 2500, color: this.colorGreen },
+            { from: 2500, to: 3500, color: this.colorOrange },
+            { from: 3500, to: 5000, color: this.colorRed },
+        ],
+    };
 
     private readonly macroValues = signal<Record<MacroKey, number>>({
-        protein: 180,
-        fats: 65,
-        carbs: 200,
-        fiber: 28,
+        protein: 0,
+        fats: 0,
+        carbs: 0,
+        fiber: 0,
     });
+    private readonly waterValue = signal(0);
     private readonly bodyTargetValues = signal<Record<BodyTargetKey, number>>({
-        weight: 65,
-        waist: 78,
+        weight: 0,
+        waist: 0,
     });
     protected readonly isLoadingGoals = signal(true);
     protected readonly isSavingGoals = signal(false);
@@ -192,7 +209,7 @@ export class GoalsPageComponent implements OnInit {
         },
     ];
 
-    protected readonly selectedPreset = signal<MacroPresetKey>('balancedGym');
+    protected readonly selectedPreset = signal<MacroPresetKey>('custom');
     private readonly presetSync = effect(() => {
         const presetKey = this.selectedPreset();
         if (presetKey === 'custom') {
@@ -211,15 +228,15 @@ export class GoalsPageComponent implements OnInit {
 
     private loadGoals(): void {
         this.isLoadingGoals.set(true);
-        this.userService
-            .getInfo()
+        this.goalsService
+            .getGoals()
             .pipe(finalize(() => this.isLoadingGoals.set(false)))
-            .subscribe(user => {
+            .subscribe(goals => {
                 // prevent preset effect from overriding loaded values
                 this.selectedPreset.set('custom');
 
-                if (user?.dailyCalorieTarget !== undefined && user?.dailyCalorieTarget !== null) {
-                    this.calorieTarget.set(this.clampCalories(user.dailyCalorieTarget));
+                if (goals?.dailyCalorieTarget !== undefined && goals?.dailyCalorieTarget !== null) {
+                    this.calorieTarget.set(this.clampCalories(goals.dailyCalorieTarget));
                 }
 
                 const nextMacros = { ...this.macroValues() };
@@ -237,28 +254,31 @@ export class GoalsPageComponent implements OnInit {
                     hasUserMacros = true;
                 };
 
-                applyMacro('protein', user?.proteinTarget);
-                applyMacro('fats', user?.fatTarget);
-                applyMacro('carbs', user?.carbTarget);
-                applyMacro('fiber', user?.fiberTarget);
+                applyMacro('protein', goals?.proteinTarget);
+                applyMacro('fats', goals?.fatTarget);
+                applyMacro('carbs', goals?.carbTarget);
+                applyMacro('fiber', goals?.fiberTarget);
 
                 if (hasUserMacros) {
                     this.macroValues.set(nextMacros);
+                }
+
+                if (goals?.waterGoal !== undefined && goals?.waterGoal !== null) {
+                    this.waterValue.set(this.clampValue(goals.waterGoal, this.waterConfig.max));
                 } else {
-                    this.selectedPreset.set('balancedGym');
-                    this.reapplyPresetIfNeeded();
+                    this.waterValue.set(0);
                 }
 
                 this.bodyTargetValues.set({
-                    weight: user?.desiredWeight ?? this.bodyTargetValues().weight,
-                    waist: user?.desiredWaist ?? this.bodyTargetValues().waist,
+                    weight: goals?.desiredWeight ?? 0,
+                    waist: goals?.desiredWaist ?? 0,
                 });
             });
     }
 
     protected readonly macroStates = computed(() =>
         this.macroConfigs.map(cfg => {
-            const rawValue = this.macroValues()[cfg.key] ?? cfg.defaultValue;
+            const rawValue = this.macroValues()[cfg.key] ?? 0;
             const value = this.clampValue(rawValue, cfg.max);
             const percent = Math.min(100, Math.max(0, Math.round((value / cfg.max) * 100)));
             const accent = this.pickZoneColor(cfg, value);
@@ -269,6 +289,19 @@ export class GoalsPageComponent implements OnInit {
             return { ...cfg, value, percent, accent, gradient, shortfall, inRange };
         }),
     );
+
+    protected readonly waterState = computed(() => {
+        const cfg = this.waterConfig;
+        const rawValue = this.waterValue();
+        const value = this.clampValue(rawValue, cfg.max);
+        const percent = Math.min(100, Math.max(0, Math.round((value / cfg.max) * 100)));
+        const accent = this.pickZoneColor(cfg, value);
+        const gradient = this.buildZoneGradient(cfg);
+        const shortfall = Math.max(0, Math.ceil(cfg.greenFrom - value));
+        const inRange = value >= cfg.greenFrom && value <= cfg.greenTo;
+
+        return { ...cfg, value, percent, accent, gradient, shortfall, inRange };
+    });
 
     protected readonly coreMacroStates = computed(() =>
         this.macroStates().filter(macro => macro.key !== 'fiber'),
@@ -359,21 +392,20 @@ export class GoalsPageComponent implements OnInit {
 
         const macros = this.macroValues();
         const bodyTargets = this.bodyTargetValues();
-        const updateDto = new UpdateUserDto({
-            dailyCalorieTarget: this.calorieTarget(),
-            proteinTarget: macros.protein,
-            fatTarget: macros.fats,
-            carbTarget: macros.carbs,
-            fiberTarget: macros.fiber,
-        });
 
         this.isSavingGoals.set(true);
 
-        forkJoin({
-            user: this.userService.update(updateDto),
-            weight: this.userService.updateDesiredWeight(bodyTargets.weight),
-            waist: this.userService.updateDesiredWaist(bodyTargets.waist),
-        })
+        this.goalsService
+            .updateGoals({
+                dailyCalorieTarget: this.calorieTarget(),
+                proteinTarget: macros.protein,
+                fatTarget: macros.fats,
+                carbTarget: macros.carbs,
+                fiberTarget: macros.fiber,
+                waterGoal: this.waterValue(),
+                desiredWeight: bodyTargets.weight,
+                desiredWaist: bodyTargets.waist,
+            })
             .pipe(finalize(() => this.isSavingGoals.set(false)))
             .subscribe();
     }
@@ -389,6 +421,26 @@ export class GoalsPageComponent implements OnInit {
         target.value = clamped.toString();
         this.updateMacroValue(key, clamped);
         this.selectedPreset.set('custom');
+    }
+
+    protected onWaterInputChange(event: Event): void {
+        const target = event.target as HTMLInputElement;
+        const numeric = Number(target.value);
+        if (Number.isNaN(numeric)) {
+            return;
+        }
+        const clamped = this.clampValue(numeric, this.waterConfig.max);
+        target.value = clamped.toString();
+        this.waterValue.set(clamped);
+    }
+
+    protected onWaterSliderChange(event: Event): void {
+        const target = event.target as HTMLInputElement;
+        const numeric = Number(target.value);
+        if (Number.isNaN(numeric)) {
+            return;
+        }
+        this.waterValue.set(this.clampValue(numeric, this.waterConfig.max));
     }
 
     protected onRingHover(event: PointerEvent): void {
@@ -489,12 +541,12 @@ export class GoalsPageComponent implements OnInit {
         }));
     }
 
-    private pickZoneColor(cfg: MacroItem, value: number): string {
+    private pickZoneColor(cfg: SliderConfig | MacroItem, value: number): string {
         const zone = cfg.zones.find(z => value >= z.from && value <= z.to);
         return zone?.color ?? this.colorGreen;
     }
 
-    private buildZoneGradient(cfg: MacroItem): string {
+    private buildZoneGradient(cfg: SliderConfig | MacroItem): string {
         const parts = cfg.zones.map(zone => {
             const start = Math.max(0, Math.min(100, (zone.from / cfg.max) * 100));
             const end = Math.max(0, Math.min(100, (zone.to / cfg.max) * 100));
@@ -557,18 +609,18 @@ export class GoalsPageComponent implements OnInit {
         {
             key: 'weight',
             titleKey: 'GOALS_PAGE.BODY_TARGET_WEIGHT',
-            value: 65,
+            value: 0,
             unit: 'kg',
-            current: '68.4',
-            delta: '-3.4',
+            current: null,
+            delta: null,
         },
         {
             key: 'waist',
             titleKey: 'GOALS_PAGE.BODY_TARGET_WAIST',
-            value: 78,
+            value: 0,
             unit: 'cm',
-            current: '82',
-            delta: '-4',
+            current: null,
+            delta: null,
         },
     ];
 
