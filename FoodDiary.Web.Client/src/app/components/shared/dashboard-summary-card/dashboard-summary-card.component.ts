@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, effect, input, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { ChangeDetectionStrategy, Component, computed, effect, input, output, signal } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
+import { NoticeBannerComponent } from '../notice-banner/notice-banner.component';
 
 export interface NutrientBar {
     id: string;
@@ -16,12 +16,13 @@ export interface NutrientBar {
 @Component({
     selector: 'fd-dashboard-summary-card',
     standalone: true,
-    imports: [CommonModule, TranslatePipe, RouterLink],
+    imports: [CommonModule, TranslatePipe, NoticeBannerComponent],
     templateUrl: './dashboard-summary-card.component.html',
     styleUrl: './dashboard-summary-card.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardSummaryCardComponent {
+    public readonly goalAction = output<void>();
     public readonly dailyGoal = input<number>(0);
     public readonly dailyConsumed = input<number>(0);
     public readonly weeklyConsumed = input<number>(0);
@@ -178,6 +179,10 @@ export class DashboardSummaryCardComponent {
             return;
         }
         this.isWeeklyHovered.set(state);
+    }
+
+    public onGoalAction(): void {
+        this.goalAction.emit();
     }
 
     private getColorForPercent(percent: number): string {

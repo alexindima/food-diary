@@ -20,70 +20,9 @@
         box-shadow: 0 22px 40px rgba(15, 23, 42, 0.18);
     }
 
-    &__notice {
-        display: flex;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 14px;
-        padding: 14px 16px;
-        border-radius: 16px;
-        border: 1px solid rgba(59, 130, 246, 0.18);
-        background: linear-gradient(135deg, rgba(219, 234, 254, 0.7), rgba(239, 246, 255, 0.9));
-        color: #1e3a8a;
+    fd-notice-banner {
+        display: block;
         margin-bottom: 16px;
-        width: 100%;
-        box-sizing: border-box;
-    }
-
-    &__notice-main {
-        display: flex;
-        align-items: center;
-        gap: 14px;
-        flex: 1 1 auto;
-        min-width: 0;
-    }
-
-    &__notice-icon {
-        width: 36px;
-        height: 36px;
-        border-radius: 12px;
-        background: #3b82f6;
-        color: #ffffff;
-        display: grid;
-        place-items: center;
-        font-weight: 800;
-        font-size: 1rem;
-        flex: 0 0 auto;
-    }
-
-    &__notice-text {
-        display: flex;
-        flex-direction: column;
-        gap: 2px;
-        min-width: 0;
-        flex: 1 1 auto;
-    }
-
-    &__notice-title {
-        font-weight: 700;
-        font-size: 0.95rem;
-    }
-
-    &__notice-body {
-        font-size: 0.9rem;
-        color: #475569;
-    }
-
-    &__notice-link {
-        font-weight: 700;
-        color: #2563eb;
-        text-decoration: none;
-        white-space: nowrap;
-        flex: 0 0 auto;
-
-        &:hover {
-            text-decoration: underline;
-        }
     }
 
     &__layout {
@@ -324,10 +263,6 @@
 
 @container (max-width: 520px) {
     .dashboard-summary-card {
-        &__notice-link {
-            flex-basis: 100%;
-        }
-
         &__layout {
             grid-template-columns: 1fr;
             gap: 16px;

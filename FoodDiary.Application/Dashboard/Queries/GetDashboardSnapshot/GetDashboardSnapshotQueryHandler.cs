@@ -15,6 +15,8 @@ using FoodDiary.Application.WeightEntries.Queries.GetWeightSummaries;
 using FoodDiary.Contracts.Dashboard;
 using FoodDiary.Contracts.WaistEntries;
 using FoodDiary.Contracts.WeightEntries;
+using FoodDiary.Contracts.Users;
+using System.Text.Json;
 using FoodDiary.Domain.ValueObjects;
 using MediatR;
 
@@ -117,6 +119,18 @@ public class GetDashboardSnapshotQueryHandler(
             cancellationToken);
 
         var dailyGoal = user?.DailyCalorieTarget ?? 0;
+        DashboardLayoutSettings? layout = null;
+        if (!string.IsNullOrWhiteSpace(user?.DashboardLayoutJson))
+        {
+            try
+            {
+                layout = JsonSerializer.Deserialize<DashboardLayoutSettings>(user.DashboardLayoutJson!);
+            }
+            catch (JsonException)
+            {
+                layout = null;
+            }
+        }
 
         var response = new DashboardSnapshotResponse(
             date,
@@ -129,7 +143,8 @@ public class GetDashboardSnapshotQueryHandler(
             hydrationResult.IsSuccess ? hydrationResult.Value : null,
             adviceResult.IsSuccess ? adviceResult.Value : null,
             weightTrendResult.IsSuccess ? weightTrendResult.Value : Array.Empty<WeightEntrySummaryResponse>(),
-            waistTrendResult.IsSuccess ? waistTrendResult.Value : Array.Empty<WaistEntrySummaryResponse>());
+            waistTrendResult.IsSuccess ? waistTrendResult.Value : Array.Empty<WaistEntrySummaryResponse>(),
+            layout);
 
         return Result.Success(response);
     }

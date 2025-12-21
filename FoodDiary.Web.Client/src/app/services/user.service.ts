@@ -4,6 +4,7 @@ import { environment } from '../../environments/environment';
 import { catchError, map, Observable, of } from 'rxjs';
 import {
     ChangePasswordRequest,
+    DashboardLayoutSettings,
     DesiredWaistResponse,
     DesiredWeightResponse,
     UpdateUserDto,
@@ -33,6 +34,15 @@ export class UserService extends ApiService {
         return this.patch<User>('info', data).pipe(
             catchError(error => {
                 console.error('Update user error', error);
+                return of(null);
+            }),
+        );
+    }
+
+    public updateDashboardLayout(layout: DashboardLayoutSettings): Observable<User | null> {
+        return this.patch<User>('info', { dashboardLayout: layout }).pipe(
+            catchError(error => {
+                console.error('Update dashboard layout error', error);
                 return of(null);
             }),
         );

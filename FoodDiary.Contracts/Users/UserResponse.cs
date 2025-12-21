@@ -25,5 +25,6 @@ public record UserResponse(
     double? HydrationGoal,
     string? ProfileImage,
     Guid? ProfileImageAssetId,
+    DashboardLayoutSettings? DashboardLayout,
     bool IsActive
 );

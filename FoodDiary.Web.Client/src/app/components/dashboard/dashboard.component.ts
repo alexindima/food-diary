@@ -37,6 +37,12 @@ import { HydrationCardComponent } from '../shared/hydration-card/hydration-card.
 import { WeightTrendCardComponent, WeightTrendPoint } from '../shared/weight-trend-card/weight-trend-card.component';
 import { DailyAdviceCardComponent } from '../shared/daily-advice-card/daily-advice-card.component';
 import { MealsPreviewComponent, MealPreviewEntry } from '../shared/meals-preview/meals-preview.component';
+import { CycleSummaryCardComponent } from '../shared/cycle-summary-card/cycle-summary-card.component';
+import { CyclesService } from '../../services/cycles.service';
+import { CycleResponse } from '../../types/cycle.data';
+import { UserService } from '../../services/user.service';
+import { DashboardLayoutSettings } from '../../types/user.data';
+import { fromEvent } from 'rxjs';
 
 type MealSlot = 'BREAKFAST' | 'LUNCH' | 'DINNER';
 
@@ -59,6 +65,7 @@ type MealSlot = 'BREAKFAST' | 'LUNCH' | 'DINNER';
     HydrationCardComponent,
     WeightTrendCardComponent,
     DailyAdviceCardComponent,
+    CycleSummaryCardComponent,
     MealsPreviewComponent
 ],
     templateUrl: './dashboard.component.html',
@@ -71,6 +78,8 @@ export class DashboardComponent implements OnInit {
     private readonly dashboardService = inject(DashboardService);
     private readonly dialogService = inject(FdUiDialogService);
     private readonly hydrationService = inject(HydrationService);
+    private readonly cyclesService = inject(CyclesService);
+    private readonly userService = inject(UserService);
     private readonly translateService = inject(TranslateService);
 
     private readonly headerDatePicker = viewChild<FdUiDatepicker<Date>>('headerDatePicker');
@@ -105,6 +114,23 @@ export class DashboardComponent implements OnInit {
     public readonly isWeightTrendLoading = computed(() => this.isLoading());
     public readonly isWaistTrendLoading = computed(() => this.isLoading());
     public readonly isAdviceLoading = computed(() => this.isLoading());
+    public readonly cycle = signal<CycleResponse | null>(null);
+    public readonly isCycleLoading = signal<boolean>(false);
+    public readonly isEditingLayout = signal<boolean>(false);
+    private readonly layoutInitialized = signal<boolean>(false);
+    private readonly defaultLayout: DashboardLayoutSettings = {
+        web: ['summary', 'meals', 'hydration', 'cycle', 'weight', 'waist', 'advice'],
+        mobile: ['summary', 'meals', 'hydration', 'cycle', 'weight', 'waist', 'advice'],
+    };
+    private readonly viewportWidth = signal<number>(
+        typeof window === 'undefined' ? 1024 : window.innerWidth,
+    );
+    private readonly layoutSettings = signal<DashboardLayoutSettings>({
+        web: [...this.defaultLayout.web!],
+        mobile: [...this.defaultLayout.mobile!],
+    });
+    public readonly layoutKey = computed<'web' | 'mobile'>(() => (this.viewportWidth() < 768 ? 'mobile' : 'web'));
+    public readonly visibleBlocks = computed(() => this.getLayoutForKey(this.layoutKey()));
     private readonly mealSlots: MealSlot[] = ['BREAKFAST', 'LUNCH', 'DINNER'];
     public readonly mealPreviewEntries = computed<MealPreviewEntry[]>(() => {
         const meals = [...(this.meals() ?? [])];
@@ -235,6 +261,13 @@ export class DashboardComponent implements OnInit {
 
     public ngOnInit(): void {
         this.loadDashboardSnapshot();
+        this.loadCycle();
+
+        if (typeof window !== 'undefined') {
+            fromEvent(window, 'resize')
+                .pipe(takeUntilDestroyed(this.destroyRef))
+                .subscribe(() => this.viewportWidth.set(window.innerWidth));
+        }
 
         this.translateService.onLangChange
             .pipe(takeUntilDestroyed(this.destroyRef))
@@ -264,6 +297,54 @@ export class DashboardComponent implements OnInit {
 
     public async openWaistHistory(): Promise<void> {
         await this.navigationService.navigateToWaistHistory();
+    }
+
+    public async openCycleTracking(): Promise<void> {
+        await this.navigationService.navigateToCycleTracking();
+    }
+
+    public async openGoals(): Promise<void> {
+        await this.navigationService.navigateToGoals();
+    }
+
+    public openDashboardSettings(): void {
+        const next = !this.isEditingLayout();
+        this.isEditingLayout.set(next);
+        if (!next) {
+            this.persistLayout();
+        }
+    }
+
+    public shouldRenderBlock(blockId: string): boolean {
+        return this.isEditingLayout() || this.isBlockVisible(blockId);
+    }
+
+    public isBlockVisible(blockId: string): boolean {
+        return this.visibleBlocks().includes(blockId);
+    }
+
+    public canToggleBlock(blockId: string): boolean {
+        return blockId !== 'summary';
+    }
+
+    public toggleBlock(blockId: string): void {
+        if (!this.isEditingLayout() || !this.canToggleBlock(blockId)) {
+            return;
+        }
+
+        const key = this.layoutKey();
+        const baseOrder = this.defaultLayout[key] ?? [];
+        const current = this.getLayoutForKey(key);
+        const isVisible = current.includes(blockId);
+
+        const next = isVisible
+            ? current.filter(item => item !== blockId)
+            : baseOrder.filter(item => item === blockId || current.includes(item));
+
+        this.layoutSettings.update(layout => ({
+            ...layout,
+            [key]: this.ensureSummary(next, baseOrder),
+        }));
     }
 
     public openConsumption(consumption: Consumption): void {
@@ -305,6 +386,7 @@ export class DashboardComponent implements OnInit {
             .subscribe({
                 next: snapshot => {
                     this.snapshot.set(snapshot);
+                    this.initializeLayout(snapshot?.dashboardLayout ?? null);
                     this.isLoading.set(false);
                     if (clearHydrationUpdate) {
                         this.isHydrationUpdating.set(false);
@@ -312,12 +394,56 @@ export class DashboardComponent implements OnInit {
                 },
                 error: () => {
                     this.snapshot.set(null);
+                    this.initializeLayout(null);
                     this.isLoading.set(false);
                     if (clearHydrationUpdate) {
                         this.isHydrationUpdating.set(false);
                     }
                 },
             });
+    }
+
+    private initializeLayout(layout: DashboardLayoutSettings | null): void {
+        if (this.layoutInitialized()) {
+            return;
+        }
+
+        const normalized = this.normalizeLayout(layout);
+        this.layoutSettings.set(normalized);
+        this.layoutInitialized.set(true);
+    }
+
+    private normalizeLayout(layout: DashboardLayoutSettings | null): DashboardLayoutSettings {
+        return {
+            web: this.normalizeLayoutList(layout?.web, this.defaultLayout.web ?? []),
+            mobile: this.normalizeLayoutList(layout?.mobile, this.defaultLayout.mobile ?? []),
+        };
+    }
+
+    private normalizeLayoutList(values: string[] | null | undefined, fallback: string[]): string[] {
+        const allowed = new Set(fallback);
+        const source = values && values.length ? values : fallback;
+        const filtered: string[] = [];
+        for (const item of source) {
+            if (allowed.has(item) && !filtered.includes(item)) {
+                filtered.push(item);
+            }
+        }
+        return this.ensureSummary(filtered, fallback);
+    }
+
+    private ensureSummary(values: string[], fallback: string[]): string[] {
+        if (values.includes('summary')) {
+            return values;
+        }
+        return ['summary', ...values.filter(item => item !== 'summary' && fallback.includes(item))];
+    }
+
+    private getLayoutForKey(key: 'web' | 'mobile'): string[] {
+        const layout = this.layoutSettings();
+        const fallback = this.defaultLayout[key] ?? [];
+        const values = layout[key] && layout[key]?.length ? layout[key]! : fallback;
+        return this.ensureSummary(values, fallback);
     }
 
     private normalizeDate(date: Date): Date {
@@ -375,6 +501,23 @@ export class DashboardComponent implements OnInit {
     private getCurrentLocale(): string {
         const lang = this.translateService.currentLang || this.translateService.getDefaultLang() || 'en';
         return lang.split(/[-_]/)[0];
+    }
+
+    private loadCycle(): void {
+        this.isCycleLoading.set(true);
+        this.cyclesService
+            .getCurrent()
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe({
+                next: cycle => {
+                    this.cycle.set(cycle);
+                    this.isCycleLoading.set(false);
+                },
+                error: () => {
+                    this.cycle.set(null);
+                    this.isCycleLoading.set(false);
+                },
+            });
     }
 
     private buildFallbackWeightTrend(): WeightTrendPoint[] {
@@ -450,6 +593,20 @@ export class DashboardComponent implements OnInit {
         }
 
         return points;
+    }
+
+    private persistLayout(): void {
+        const layout = this.normalizeLayout(this.layoutSettings());
+        this.userService
+            .updateDashboardLayout(layout)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(user => {
+                if (user?.dashboardLayout) {
+                    this.layoutSettings.set(this.normalizeLayout(user.dashboardLayout));
+                } else {
+                    this.layoutSettings.set(layout);
+                }
+            });
     }
 
     public placeholderIcon(slot?: MealSlot | string): string {

@@ -79,6 +79,10 @@ export class NavigationService {
         await this.router.navigate(['/waist-history']);
     }
 
+    public async navigateToGoals(): Promise<void> {
+        await this.router.navigate(['/goals']);
+    }
+
     public async navigateToCycleTracking(): Promise<void> {
         await this.router.navigate(['/cycle-tracking']);
     }

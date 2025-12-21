@@ -1,0 +1,97 @@
+﻿.fd-notice {
+    --fd-notice-bg: rgba(219, 234, 254, 0.7);
+    --fd-notice-border: rgba(59, 130, 246, 0.18);
+    --fd-notice-text: #1e3a8a;
+    --fd-notice-icon-bg: #3b82f6;
+    --fd-notice-icon-fg: #ffffff;
+    --fd-notice-action: #2563eb;
+
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 14px;
+    padding: 14px 16px;
+    border-radius: 16px;
+    border: 1px solid var(--fd-notice-border);
+    background: var(--fd-notice-bg);
+    color: var(--fd-notice-text);
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.fd-notice__main {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.fd-notice__icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 12px;
+    background: var(--fd-notice-icon-bg);
+    color: var(--fd-notice-icon-fg);
+    display: grid;
+    place-items: center;
+    font-weight: 800;
+    font-size: 1rem;
+    flex: 0 0 auto;
+}
+
+.fd-notice__text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+    flex: 1 1 auto;
+}
+
+.fd-notice__title {
+    font-weight: 700;
+    font-size: 0.95rem;
+}
+
+.fd-notice__message {
+    font-size: 0.9rem;
+    color: #475569;
+}
+
+.fd-notice__action {
+    font-weight: 700;
+    color: var(--fd-notice-action);
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    white-space: nowrap;
+    flex: 0 0 auto;
+}
+
+.fd-notice__action:hover {
+    text-decoration: underline;
+}
+
+.fd-notice--warning {
+    --fd-notice-bg: rgba(254, 243, 199, 0.9);
+    --fd-notice-border: rgba(245, 158, 11, 0.35);
+    --fd-notice-text: #92400e;
+    --fd-notice-icon-bg: #f59e0b;
+    --fd-notice-action: #b45309;
+}
+
+.fd-notice--error {
+    --fd-notice-bg: rgba(254, 226, 226, 0.85);
+    --fd-notice-border: rgba(239, 68, 68, 0.35);
+    --fd-notice-text: #991b1b;
+    --fd-notice-icon-bg: #ef4444;
+    --fd-notice-action: #b91c1c;
+}
+
+@media (max-width: 520px) {
+    .fd-notice__action {
+        flex-basis: 100%;
+        text-align: left;
+    }
+}

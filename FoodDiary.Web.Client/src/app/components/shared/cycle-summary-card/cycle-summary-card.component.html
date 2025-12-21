@@ -1,0 +1,29 @@
+﻿<div class="cycle-summary-card" [class.cycle-summary-card--loading]="isLoading()">
+    <div class="cycle-summary-card__header">
+        <div class="cycle-summary-card__icon" aria-hidden="true">CY</div>
+        <div class="cycle-summary-card__title">{{ title() | translate }}</div>
+    </div>
+
+    @if (hasCycle()) {
+        <div class="cycle-summary-card__day">
+            {{ 'CYCLE_CARD.DAY_LABEL' | translate:{ day: cycleDay() } }}
+        </div>
+        @if (statusKey()) {
+            <div class="cycle-summary-card__status">
+                @if (statusDays() !== null) {
+                    {{ statusKey() | translate:{ days: statusDays() } }}
+                } @else {
+                    {{ statusKey() | translate }}
+                }
+            </div>
+        }
+    } @else {
+        <fd-notice-banner
+            type="info"
+            [title]="'CYCLE_CARD.NO_DATA_TITLE' | translate"
+            [message]="'CYCLE_CARD.NO_DATA_BODY' | translate"
+            [actionLabel]="'CYCLE_CARD.NO_DATA_ACTION' | translate"
+            (action)="onSetup()"
+        />
+    }
+</div>

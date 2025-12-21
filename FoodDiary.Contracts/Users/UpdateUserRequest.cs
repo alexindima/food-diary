@@ -19,5 +19,6 @@ public record UpdateUserRequest(
     double? HydrationGoal,
     string? ProfileImage,
     Guid? ProfileImageAssetId,
+    DashboardLayoutSettings? DashboardLayout,
     bool? IsActive
 );

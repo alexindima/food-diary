@@ -1,37 +1,24 @@
 <div class="dashboard-summary-card">
     @if (showNotice()) {
-        <div class="dashboard-summary-card__notice">
-            <div class="dashboard-summary-card__notice-main">
-                <div class="dashboard-summary-card__notice-icon" aria-hidden="true">i</div>
-                <div class="dashboard-summary-card__notice-text">
-                    @if (noticeVariant() === 'none') {
-                        <div class="dashboard-summary-card__notice-title">
-                            {{ 'DASHBOARD_SUMMARY.GOALS_TITLE' | translate }}
-                        </div>
-                        <div class="dashboard-summary-card__notice-body">
-                            {{ 'DASHBOARD_SUMMARY.GOALS_BODY' | translate }}
-                        </div>
-                    } @else if (noticeVariant() === 'macros') {
-                        <div class="dashboard-summary-card__notice-title">
-                            {{ 'DASHBOARD_SUMMARY.MACROS_TITLE' | translate }}
-                        </div>
-                        <div class="dashboard-summary-card__notice-body">
-                            {{ 'DASHBOARD_SUMMARY.MACROS_BODY' | translate }}
-                        </div>
-                    } @else if (noticeVariant() === 'calories') {
-                        <div class="dashboard-summary-card__notice-title">
-                            {{ 'DASHBOARD_SUMMARY.CALORIES_TITLE' | translate }}
-                        </div>
-                        <div class="dashboard-summary-card__notice-body">
-                            {{ 'DASHBOARD_SUMMARY.CALORIES_BODY' | translate }}
-                        </div>
-                    }
-                </div>
-            </div>
-            <a class="dashboard-summary-card__notice-link" routerLink="/goals">
-                {{ 'DASHBOARD_SUMMARY.GOALS_ACTION' | translate }}
-            </a>
-        </div>
+        <fd-notice-banner
+            type="info"
+            [title]="
+                noticeVariant() === 'none'
+                    ? ('DASHBOARD_SUMMARY.GOALS_TITLE' | translate)
+                    : noticeVariant() === 'macros'
+                        ? ('DASHBOARD_SUMMARY.MACROS_TITLE' | translate)
+                        : ('DASHBOARD_SUMMARY.CALORIES_TITLE' | translate)
+            "
+            [message]="
+                noticeVariant() === 'none'
+                    ? ('DASHBOARD_SUMMARY.GOALS_BODY' | translate)
+                    : noticeVariant() === 'macros'
+                        ? ('DASHBOARD_SUMMARY.MACROS_BODY' | translate)
+                        : ('DASHBOARD_SUMMARY.CALORIES_BODY' | translate)
+            "
+            [actionLabel]="'DASHBOARD_SUMMARY.GOALS_ACTION' | translate"
+            (action)="onGoalAction()"
+        />
     }
     <div class="dashboard-summary-card__layout">
         <div

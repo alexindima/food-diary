@@ -3,6 +3,11 @@ import { ImageSelection } from './image-upload.data';
 
 export type ActivityLevelOption = 'MINIMAL' | 'LIGHT' | 'MODERATE' | 'HIGH' | 'EXTREME';
 
+export interface DashboardLayoutSettings {
+    web?: string[];
+    mobile?: string[];
+}
+
 export interface User {
     id: string; // User ID (Guid)
     email: string;
@@ -26,6 +31,7 @@ export interface User {
     hydrationGoal?: number;
     profileImage?: string;
     profileImageAssetId?: string;
+    dashboardLayout?: DashboardLayoutSettings | null;
     isActive: boolean;
     calories?: number; // Local field, not from backend
 }
@@ -47,6 +53,7 @@ export class UpdateUserDto {
     public hydrationGoal?: number;
     public profileImage?: string;
     public profileImageAssetId?: string;
+    public dashboardLayout?: DashboardLayoutSettings | null;
     public isActive?: boolean;
     public fiberTarget?: number;
 

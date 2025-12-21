@@ -1,4 +1,7 @@
 <div class="dashboard" fdPageContainer>
+    @if (isEditingLayout()) {
+        <div class="dashboard__edit-overlay"></div>
+    }
     <fd-page-header
         class="dashboard__header"
         [title]="
@@ -31,6 +34,17 @@
             </div>
 
             <fd-ui-button
+                class="dashboard__settings-action"
+                variant="secondary"
+                fill="outline"
+                icon="tune"
+                [ariaLabel]="'DASHBOARD.ACTIONS.OPEN_SETTINGS' | translate"
+                [class.dashboard__settings-action--active]="isEditingLayout()"
+                [attr.aria-pressed]="isEditingLayout()"
+                (click)="openDashboardSettings()"
+            />
+
+            <fd-ui-button
                 class="dashboard__primary-action"
                 icon="add"
                 (click)="addConsumption()"
@@ -41,78 +55,257 @@
     </fd-page-header>
 
     <fd-page-body>
-        @if (isLoading()) {
-            <div class="dashboard__loader">{{ 'DASHBOARD.LOADING' | translate }}</div>
-        } @else {
-            <section class="dashboard__grid">
-                <div class="dashboard__column">
-                    <fd-dashboard-summary-card
-                        class="dashboard__card dashboard__card--ring"
-                        [dailyGoal]="consumptionRingData().dailyGoal"
-                        [dailyConsumed]="consumptionRingData().dailyConsumed"
-                        [weeklyConsumed]="consumptionRingData().weeklyConsumed"
-                        [weeklyGoal]="consumptionRingData().weeklyGoal"
-                        [nutrientBars]="consumptionRingData().nutrientBars"
-                    />
+        <div class="dashboard__body">
+            @if (isLoading()) {
+                <div class="dashboard__loader">{{ 'DASHBOARD.LOADING' | translate }}</div>
+            } @else {
+                <section class="dashboard__grid" [class.dashboard__grid--editing]="isEditingLayout()">
+                    @if (isEditingLayout()) {
+                        <div class="dashboard__edit-hint">
+                            {{ 'DASHBOARD.SETTINGS.HINT' | translate }}
+                        </div>
+                    }
+                    <div class="dashboard__column">
+                    @if (shouldRenderBlock('summary')) {
+                        <div
+                            class="dashboard__block dashboard__block--locked"
+                            [class.dashboard__block--hidden]="isEditingLayout() && !isBlockVisible('summary')"
+                            [attr.role]="isEditingLayout() ? 'button' : null"
+                            [attr.tabindex]="isEditingLayout() ? 0 : -1"
+                            [attr.aria-pressed]="isEditingLayout() ? isBlockVisible('summary') : null"
+                            [attr.aria-disabled]="isEditingLayout() ? !canToggleBlock('summary') : null"
+                            (click)="toggleBlock('summary')"
+                            (keydown.enter)="toggleBlock('summary')"
+                        >
+                            @if (isEditingLayout()) {
+                                <div class="dashboard__block-label dashboard__block-label--locked">
+                                    {{ 'DASHBOARD.SETTINGS.LOCKED' | translate }}
+                                </div>
+                            }
+                            <fd-dashboard-summary-card
+                                class="dashboard__card dashboard__card--ring"
+                                [dailyGoal]="consumptionRingData().dailyGoal"
+                                [dailyConsumed]="consumptionRingData().dailyConsumed"
+                                [weeklyConsumed]="consumptionRingData().weeklyConsumed"
+                                [weeklyGoal]="consumptionRingData().weeklyGoal"
+                                [nutrientBars]="consumptionRingData().nutrientBars"
+                                (goalAction)="openGoals()"
+                            />
+                        </div>
+                    }
 
-                    <fd-meals-preview
-                        [entries]="mealPreviewEntries()"
-                        [titleText]="
-                            isTodaySelected()
-                                ? null
-                                : ('DASHBOARD.MEALS_TITLE_FOR_DATE' | translate:{ date: (selectedDate() | localizedDate:'d MMMM y') })
-                        "
-                        [titleKey]="'DASHBOARD.MEALS_TITLE'"
-                        [viewAllKey]="'DASHBOARD.MEALS_VIEW_ALL'"
-                        [emptyKey]="isTodaySelected() ? 'DASHBOARD.MEALS_EMPTY' : 'DASHBOARD.MEALS_EMPTY_FOR_DATE'"
-                        [showAddButtons]="isTodaySelected()"
-                        [showEmptyState]="!isTodaySelected()"
-                        (viewAll)="manageConsumptions()"
-                        (add)="addConsumption($event)"
-                        (open)="openConsumption($event)"
-                    />
+                    @if (shouldRenderBlock('meals')) {
+                        <div
+                            class="dashboard__block dashboard__block--meals"
+                            [class.dashboard__block--hidden]="isEditingLayout() && !isBlockVisible('meals')"
+                            [attr.role]="isEditingLayout() ? 'button' : null"
+                            [attr.tabindex]="isEditingLayout() ? 0 : -1"
+                            [attr.aria-pressed]="isEditingLayout() ? isBlockVisible('meals') : null"
+                            (click)="toggleBlock('meals')"
+                            (keydown.enter)="toggleBlock('meals')"
+                        >
+                            @if (isEditingLayout()) {
+                                <div
+                                    class="dashboard__block-label"
+                                    [class.dashboard__block-label--hidden]="!isBlockVisible('meals')"
+                                >
+                                    {{
+                                        isBlockVisible('meals')
+                                            ? ('DASHBOARD.SETTINGS.VISIBLE' | translate)
+                                            : ('DASHBOARD.SETTINGS.HIDDEN' | translate)
+                                    }}
+                                </div>
+                            }
+                            <fd-meals-preview
+                                [entries]="mealPreviewEntries()"
+                                [titleText]="
+                                    isTodaySelected()
+                                        ? null
+                                        : ('DASHBOARD.MEALS_TITLE_FOR_DATE' | translate:{ date: (selectedDate() | localizedDate:'d MMMM y') })
+                                "
+                                [titleKey]="'DASHBOARD.MEALS_TITLE'"
+                                [viewAllKey]="'DASHBOARD.MEALS_VIEW_ALL'"
+                                [emptyKey]="isTodaySelected() ? 'DASHBOARD.MEALS_EMPTY' : 'DASHBOARD.MEALS_EMPTY_FOR_DATE'"
+                                [showAddButtons]="isTodaySelected()"
+                                [showEmptyState]="!isTodaySelected()"
+                                (viewAll)="manageConsumptions()"
+                                (add)="addConsumption($event)"
+                                (open)="openConsumption($event)"
+                            />
+                        </div>
+                    }
 
                 </div>
 
                 <div class="dashboard__column dashboard__column--aside">
-                    <fd-hydration-card
-                        class="dashboard__card dashboard__card--hydration"
-                        [total]="hydration()?.totalMl ?? 0"
-                        [goal]="hydration()?.goalMl ?? 2500"
-                        [isLoading]="isHydrationLoading()"
-                        [canAdd]="isTodaySelected()"
-                        (addClick)="addHydration($event)"
-                    />
-                    <fd-weight-trend-card
-                        class="dashboard__card dashboard__card--weight-trend"
-                        [currentWeight]="weightTrendCurrent()"
-                        [change]="weightTrendChange()"
-                        [points]="weightTrendSeries()"
-                        [timeframeLabel]="'WEIGHT_TREND_CARD.LAST_7_DAYS' | translate"
-                        [isLoading]="isWeightTrendLoading()"
-                    />
-                    <fd-weight-trend-card
-                        class="dashboard__card dashboard__card--waist-trend"
-                        [title]="'WAIST_CARD.TITLE'"
-                        [currentWeight]="waistTrendCurrent()"
-                        [change]="waistTrendChange()"
-                        [points]="waistTrendSeries()"
-                        [timeframeLabel]="'WEIGHT_TREND_CARD.LAST_7_DAYS' | translate"
-                        [unitKey]="'WAIST_CARD.CM'"
-                        [iconLabel]="'WS'"
-                        [accentColor]="'#0ea5e9'"
-                        [iconGradient]="'linear-gradient(135deg, #22c55e, #10b981)'"
-                        [isLoading]="isWaistTrendLoading()"
-                    />
-                    <fd-daily-advice-card
-                        class="dashboard__card dashboard__card--advice"
-                        [advice]="dailyAdvice()"
-                        [isLoading]="isAdviceLoading()"
-                    />
+                    @if (shouldRenderBlock('hydration')) {
+                        <div
+                            class="dashboard__block"
+                            [class.dashboard__block--hidden]="isEditingLayout() && !isBlockVisible('hydration')"
+                            [attr.role]="isEditingLayout() ? 'button' : null"
+                            [attr.tabindex]="isEditingLayout() ? 0 : -1"
+                            [attr.aria-pressed]="isEditingLayout() ? isBlockVisible('hydration') : null"
+                            (click)="toggleBlock('hydration')"
+                            (keydown.enter)="toggleBlock('hydration')"
+                        >
+                            @if (isEditingLayout()) {
+                                <div
+                                    class="dashboard__block-label"
+                                    [class.dashboard__block-label--hidden]="!isBlockVisible('hydration')"
+                                >
+                                    {{
+                                        isBlockVisible('hydration')
+                                            ? ('DASHBOARD.SETTINGS.VISIBLE' | translate)
+                                            : ('DASHBOARD.SETTINGS.HIDDEN' | translate)
+                                    }}
+                                </div>
+                            }
+                            <fd-hydration-card
+                                class="dashboard__card dashboard__card--hydration"
+                                [total]="hydration()?.totalMl ?? 0"
+                                [goal]="hydration()?.goalMl ?? null"
+                                [isLoading]="isHydrationLoading()"
+                                [canAdd]="isTodaySelected()"
+                                (addClick)="addHydration($event)"
+                                (goalAction)="openGoals()"
+                            />
+                        </div>
+                    }
+                    @if (shouldRenderBlock('cycle')) {
+                        <div
+                            class="dashboard__block"
+                            [class.dashboard__block--hidden]="isEditingLayout() && !isBlockVisible('cycle')"
+                            [attr.role]="isEditingLayout() ? 'button' : null"
+                            [attr.tabindex]="isEditingLayout() ? 0 : -1"
+                            [attr.aria-pressed]="isEditingLayout() ? isBlockVisible('cycle') : null"
+                            (click)="toggleBlock('cycle')"
+                            (keydown.enter)="toggleBlock('cycle')"
+                        >
+                            @if (isEditingLayout()) {
+                                <div
+                                    class="dashboard__block-label"
+                                    [class.dashboard__block-label--hidden]="!isBlockVisible('cycle')"
+                                >
+                                    {{
+                                        isBlockVisible('cycle')
+                                            ? ('DASHBOARD.SETTINGS.VISIBLE' | translate)
+                                            : ('DASHBOARD.SETTINGS.HIDDEN' | translate)
+                                    }}
+                                </div>
+                            }
+                            <fd-cycle-summary-card
+                                class="dashboard__card dashboard__card--cycle"
+                                [startDate]="cycle()?.startDate ?? null"
+                                [predictions]="cycle()?.predictions ?? null"
+                                [referenceDate]="selectedDate()"
+                                [isLoading]="isCycleLoading()"
+                                (setupAction)="openCycleTracking()"
+                            />
+                        </div>
+                    }
+                    @if (shouldRenderBlock('weight')) {
+                        <div
+                            class="dashboard__block"
+                            [class.dashboard__block--hidden]="isEditingLayout() && !isBlockVisible('weight')"
+                            [attr.role]="isEditingLayout() ? 'button' : null"
+                            [attr.tabindex]="isEditingLayout() ? 0 : -1"
+                            [attr.aria-pressed]="isEditingLayout() ? isBlockVisible('weight') : null"
+                            (click)="toggleBlock('weight')"
+                            (keydown.enter)="toggleBlock('weight')"
+                        >
+                            @if (isEditingLayout()) {
+                                <div
+                                    class="dashboard__block-label"
+                                    [class.dashboard__block-label--hidden]="!isBlockVisible('weight')"
+                                >
+                                    {{
+                                        isBlockVisible('weight')
+                                            ? ('DASHBOARD.SETTINGS.VISIBLE' | translate)
+                                            : ('DASHBOARD.SETTINGS.HIDDEN' | translate)
+                                    }}
+                                </div>
+                            }
+                            <fd-weight-trend-card
+                                class="dashboard__card dashboard__card--weight-trend"
+                                [currentWeight]="weightTrendCurrent()"
+                                [change]="weightTrendChange()"
+                                [points]="weightTrendSeries()"
+                                [timeframeLabel]="'WEIGHT_TREND_CARD.LAST_7_DAYS' | translate"
+                                [isLoading]="isWeightTrendLoading()"
+                            />
+                        </div>
+                    }
+                    @if (shouldRenderBlock('waist')) {
+                        <div
+                            class="dashboard__block"
+                            [class.dashboard__block--hidden]="isEditingLayout() && !isBlockVisible('waist')"
+                            [attr.role]="isEditingLayout() ? 'button' : null"
+                            [attr.tabindex]="isEditingLayout() ? 0 : -1"
+                            [attr.aria-pressed]="isEditingLayout() ? isBlockVisible('waist') : null"
+                            (click)="toggleBlock('waist')"
+                            (keydown.enter)="toggleBlock('waist')"
+                        >
+                            @if (isEditingLayout()) {
+                                <div
+                                    class="dashboard__block-label"
+                                    [class.dashboard__block-label--hidden]="!isBlockVisible('waist')"
+                                >
+                                    {{
+                                        isBlockVisible('waist')
+                                            ? ('DASHBOARD.SETTINGS.VISIBLE' | translate)
+                                            : ('DASHBOARD.SETTINGS.HIDDEN' | translate)
+                                    }}
+                                </div>
+                            }
+                            <fd-weight-trend-card
+                                class="dashboard__card dashboard__card--waist-trend"
+                                [title]="'WAIST_CARD.TITLE'"
+                                [currentWeight]="waistTrendCurrent()"
+                                [change]="waistTrendChange()"
+                                [points]="waistTrendSeries()"
+                                [timeframeLabel]="'WEIGHT_TREND_CARD.LAST_7_DAYS' | translate"
+                                [unitKey]="'WAIST_CARD.CM'"
+                                [iconLabel]="'WS'"
+                                [accentColor]="'#0ea5e9'"
+                                [iconGradient]="'linear-gradient(135deg, #22c55e, #10b981)'"
+                                [isLoading]="isWaistTrendLoading()"
+                            />
+                        </div>
+                    }
+                    @if (shouldRenderBlock('advice')) {
+                        <div
+                            class="dashboard__block"
+                            [class.dashboard__block--hidden]="isEditingLayout() && !isBlockVisible('advice')"
+                            [attr.role]="isEditingLayout() ? 'button' : null"
+                            [attr.tabindex]="isEditingLayout() ? 0 : -1"
+                            [attr.aria-pressed]="isEditingLayout() ? isBlockVisible('advice') : null"
+                            (click)="toggleBlock('advice')"
+                            (keydown.enter)="toggleBlock('advice')"
+                        >
+                            @if (isEditingLayout()) {
+                                <div
+                                    class="dashboard__block-label"
+                                    [class.dashboard__block-label--hidden]="!isBlockVisible('advice')"
+                                >
+                                    {{
+                                        isBlockVisible('advice')
+                                            ? ('DASHBOARD.SETTINGS.VISIBLE' | translate)
+                                            : ('DASHBOARD.SETTINGS.HIDDEN' | translate)
+                                    }}
+                                </div>
+                            }
+                            <fd-daily-advice-card
+                                class="dashboard__card dashboard__card--advice"
+                                [advice]="dailyAdvice()"
+                                [isLoading]="isAdviceLoading()"
+                            />
+                        </div>
+                    }
 
                 </div>
-            </section>
+                </section>
 
-        }
+            }
+        </div>
     </fd-page-body>
 </div>

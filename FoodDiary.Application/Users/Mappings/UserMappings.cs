@@ -1,5 +1,6 @@
 using FoodDiary.Contracts.Users;
 using FoodDiary.Domain.Entities;
+using System.Text.Json;
 
 namespace FoodDiary.Application.Users.Mappings;
 
@@ -7,6 +8,19 @@ public static class UserMappings
 {
     public static UserResponse ToResponse(this User user)
     {
+        DashboardLayoutSettings? layout = null;
+        if (!string.IsNullOrWhiteSpace(user.DashboardLayoutJson))
+        {
+            try
+            {
+                layout = JsonSerializer.Deserialize<DashboardLayoutSettings>(user.DashboardLayoutJson);
+            }
+            catch (JsonException)
+            {
+                layout = null;
+            }
+        }
+
         return new UserResponse(
             user.Id.Value,
             user.Email,
@@ -30,6 +44,7 @@ public static class UserMappings
             user.HydrationGoal,
             user.ProfileImage,
             user.ProfileImageAssetId?.Value,
+            layout,
             user.IsActive
         );
     }

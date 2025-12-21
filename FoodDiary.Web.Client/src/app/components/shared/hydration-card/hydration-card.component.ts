@@ -1,11 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
+import { NoticeBannerComponent } from '../notice-banner/notice-banner.component';
 
 @Component({
     selector: 'fd-hydration-card',
     standalone: true,
-    imports: [CommonModule, FdUiButtonComponent],
+    imports: [CommonModule, FdUiButtonComponent, TranslatePipe, NoticeBannerComponent],
     templateUrl: './hydration-card.component.html',
     styleUrl: './hydration-card.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -18,6 +20,7 @@ export class HydrationCardComponent {
     public readonly isLoading = input<boolean>(false);
     public readonly canAdd = input<boolean>(true);
     public readonly addClick = output<number>();
+    public readonly goalAction = output<void>();
 
     public readonly hasGoal = computed(() => !!this.goal() && this.goal()! > 0);
     public readonly percent = computed(() => {
@@ -34,5 +37,9 @@ export class HydrationCardComponent {
         }
         const step = Math.max(1, this.addStep());
         this.addClick.emit(step);
+    }
+
+    public onGoalAction(): void {
+        this.goalAction.emit();
     }
 }

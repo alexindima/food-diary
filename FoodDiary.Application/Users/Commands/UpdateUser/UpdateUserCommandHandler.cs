@@ -52,7 +52,8 @@ public class UpdateUserCommandHandler(
             waterGoal: command.WaterGoal,
             hydrationGoal: command.HydrationGoal,
             profileImage: Normalize(command.ProfileImage),
-            profileImageAssetId: newAssetId
+            profileImageAssetId: newAssetId,
+            dashboardLayoutJson: command.DashboardLayoutJson
         );
 
         if (command.IsActive.HasValue) {

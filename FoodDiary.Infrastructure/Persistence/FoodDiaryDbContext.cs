@@ -42,6 +42,9 @@ public class FoodDiaryDbContext : DbContext
             entity.Property(e => e.ActivityLevel)
                 .HasConversion<string>()
                 .HasDefaultValue(ActivityLevel.Moderate);
+            entity.Property(e => e.DashboardLayoutJson)
+                .HasColumnType("jsonb")
+                .HasColumnName("DashboardLayout");
 
             entity.HasMany(e => e.WeightEntries)
                 .WithOne(w => w.User)

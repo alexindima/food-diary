@@ -914,7 +914,14 @@
             "ADD_RECIPE_BUTTON": "Add recipe",
             "STATISTICS_TITLE": "Statistics",
             "STATISTICS_DESCRIPTION": "See detailed trends.",
-            "STATISTICS_BUTTON": "Open statistics"
+            "STATISTICS_BUTTON": "Open statistics",
+            "OPEN_SETTINGS": "Customize dashboard"
+        },
+        "SETTINGS": {
+            "HINT": "Click a card to hide or show it. Summary is always visible.",
+            "VISIBLE": "Visible",
+            "HIDDEN": "Hidden",
+            "LOCKED": "Required"
         },
         "MOTIVATION": {
             "EARLY": "You have logged only {{ percent }}% of your goal — keep it up!",
@@ -1217,5 +1224,20 @@
         "MACROS_BODY": "Add protein, carbs, fats, and fiber targets to see macro progress bars.",
         "CALORIES_TITLE": "Calorie goal missing",
         "CALORIES_BODY": "Set your daily calorie target to see progress rings and weekly status."
+    },
+    "HYDRATION_CARD": {
+        "GOAL_TITLE": "Hydration goal missing",
+        "GOAL_BODY": "Set a daily water target to track progress.",
+        "GOAL_ACTION": "Add goal"
+    },
+    "CYCLE_CARD": {
+        "TITLE": "Cycle",
+        "DAY_LABEL": "Day {{day}}",
+        "OVULATION_IN": "Ovulation in {{days}} days",
+        "NEXT_PERIOD_IN": "Next period in {{days}} days",
+        "NEXT_PERIOD_TODAY": "Period expected today",
+        "NO_DATA_TITLE": "Cycle not set",
+        "NO_DATA_BODY": "Add your cycle start date to see predictions here.",
+        "NO_DATA_ACTION": "Set cycle"
     }
 }

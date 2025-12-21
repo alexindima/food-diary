@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using FoodDiary.Contracts.Consumptions;
 using FoodDiary.Contracts.DailyAdvices;
 using FoodDiary.Contracts.Hydration;
+using FoodDiary.Contracts.Users;
 using FoodDiary.Contracts.WaistEntries;
 using FoodDiary.Contracts.WeightEntries;
 
@@ -19,7 +20,8 @@ public record DashboardSnapshotResponse(
     HydrationDailyResponse? Hydration = null,
     DailyAdviceResponse? Advice = null,
     IReadOnlyList<WeightEntrySummaryResponse>? WeightTrend = null,
-    IReadOnlyList<WaistEntrySummaryResponse>? WaistTrend = null);
+    IReadOnlyList<WaistEntrySummaryResponse>? WaistTrend = null,
+    DashboardLayoutSettings? DashboardLayout = null);
 
 public record DashboardStatisticsDto(
     double TotalCalories,

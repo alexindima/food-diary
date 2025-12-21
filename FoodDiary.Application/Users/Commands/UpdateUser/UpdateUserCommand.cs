@@ -25,5 +25,6 @@ public record UpdateUserCommand(
     double? HydrationGoal,
     string? ProfileImage,
     Guid? ProfileImageAssetId,
+    string? DashboardLayoutJson,
     bool? IsActive
 ) : ICommand<Result<UserResponse>>;

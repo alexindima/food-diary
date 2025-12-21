@@ -1,0 +1,20 @@
+﻿<div class="fd-notice" [class]="'fd-notice--' + type()">
+    <div class="fd-notice__main">
+        <div class="fd-notice__icon" aria-hidden="true">
+            @switch (type()) {
+                @case ('warning') { ! }
+                @case ('error') { x }
+                @default { i }
+            }
+        </div>
+        <div class="fd-notice__text">
+            <div class="fd-notice__title">{{ title() }}</div>
+            <div class="fd-notice__message">{{ message() }}</div>
+        </div>
+    </div>
+    @if (showAction()) {
+        <button class="fd-notice__action" type="button" (click)="onAction()">
+            {{ actionLabel() }}
+        </button>
+    }
+</div>
