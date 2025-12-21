@@ -168,6 +168,8 @@ export class BaseConsumptionManageComponent implements OnInit {
         const presetMealType = this.resolvePresetMealType();
         if (presetMealType) {
             this.consumptionForm.controls.mealType.setValue(presetMealType);
+        } else if (!this.consumption()) {
+            this.setAutoMealTypeFromDate(this.consumptionForm.controls.date.value);
         }
 
         this.prefillFromNavigationState();
@@ -176,6 +178,14 @@ export class BaseConsumptionManageComponent implements OnInit {
         if (consumption) {
             this.populateForm(consumption);
             this.updateSummary();
+        }
+
+        if (!presetMealType && !this.consumption()) {
+            this.consumptionForm.controls.date.valueChanges
+                .pipe(takeUntilDestroyed(this.destroyRef))
+                .subscribe(value => {
+                    this.setAutoMealTypeFromDate(value);
+                });
         }
 
         this.consumptionForm.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
@@ -202,6 +212,38 @@ export class BaseConsumptionManageComponent implements OnInit {
         }
         const isValid = this.mealTypeOptions.includes(raw as (typeof this.mealTypeOptions)[number]);
         return isValid ? raw : null;
+    }
+
+    private setAutoMealTypeFromDate(dateValue?: string | null): void {
+        if (this.consumption()) {
+            return;
+        }
+
+        const mealTypeControl = this.consumptionForm.controls.mealType;
+        if (mealTypeControl.dirty) {
+            return;
+        }
+
+        const date = dateValue ? new Date(dateValue) : new Date();
+        if (Number.isNaN(date.getTime())) {
+            return;
+        }
+
+        mealTypeControl.setValue(this.resolveMealTypeByTime(date), { emitEvent: false });
+    }
+
+    private resolveMealTypeByTime(date: Date): string {
+        const totalMinutes = date.getHours() * 60 + date.getMinutes();
+        if (totalMinutes >= 300 && totalMinutes < 660) {
+            return 'BREAKFAST';
+        }
+        if (totalMinutes >= 660 && totalMinutes < 1020) {
+            return 'LUNCH';
+        }
+        if (totalMinutes >= 1020 && totalMinutes < 1320) {
+            return 'DINNER';
+        }
+        return 'SNACK';
     }
 
     private prefillFromNavigationState(): void {
