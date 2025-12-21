@@ -1,0 +1,8 @@
+<Solution>
+  <Project Path="FoodDiary.Application/FoodDiary.Application.csproj" />
+  <Project Path="FoodDiary.Contracts/FoodDiary.Contracts.csproj" />
+  <Project Path="FoodDiary.Domain/FoodDiary.Domain.csproj" />
+  <Project Path="FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj" />
+  <Project Path="FoodDiary.JobManager/FoodDiary.JobManager.csproj" />
+  <Project Path="FoodDiary.Web.Api/FoodDiary.Web.Api.csproj" />
+</Solution>

@@ -29,19 +29,13 @@ import { DashboardSnapshot } from '../../types/dashboard.data';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { CalorieGoalDialogComponent } from './dialogs/calorie-goal-dialog/calorie-goal-dialog.component';
 import {
-    ConsumptionRingCardComponent,
+    DashboardSummaryCardComponent,
     NutrientBar
-} from '../shared/consumption-ring-card/consumption-ring-card.component';
+} from '../shared/dashboard-summary-card/dashboard-summary-card.component';
 import { HydrationService } from '../../services/hydration.service';
 import { HydrationCardComponent } from '../shared/hydration-card/hydration-card.component';
-import { HydrationDaily } from '../../types/hydration.data';
-import { WeightEntriesService } from '../../services/weight-entries.service';
-import { WeightEntrySummaryPoint } from '../../types/weight-entry.data';
 import { WeightTrendCardComponent, WeightTrendPoint } from '../shared/weight-trend-card/weight-trend-card.component';
-import { WaistEntriesService } from '../../services/waist-entries.service';
-import { WaistEntrySummaryPoint } from '../../types/waist-entry.data';
 import { DailyAdviceCardComponent } from '../shared/daily-advice-card/daily-advice-card.component';
-import { DailyAdvice } from '../../types/daily-advice.data';
 import { MealsPreviewComponent, MealPreviewEntry } from '../shared/meals-preview/meals-preview.component';
 
 type MealSlot = 'BREAKFAST' | 'LUNCH' | 'DINNER';
@@ -61,7 +55,7 @@ type MealSlot = 'BREAKFAST' | 'LUNCH' | 'DINNER';
     PageBodyComponent,
     FdPageContainerDirective,
     LocalizedDatePipe,
-    ConsumptionRingCardComponent,
+    DashboardSummaryCardComponent,
     HydrationCardComponent,
     WeightTrendCardComponent,
     DailyAdviceCardComponent,
@@ -77,8 +71,6 @@ export class DashboardComponent implements OnInit {
     private readonly dashboardService = inject(DashboardService);
     private readonly dialogService = inject(FdUiDialogService);
     private readonly hydrationService = inject(HydrationService);
-    private readonly weightEntriesService = inject(WeightEntriesService);
-    private readonly waistEntriesService = inject(WaistEntriesService);
     private readonly translateService = inject(TranslateService);
 
     private readonly headerDatePicker = viewChild<FdUiDatepicker<Date>>('headerDatePicker');
@@ -103,14 +95,16 @@ export class DashboardComponent implements OnInit {
     public readonly weeklyConsumed = computed(() =>
         (this.snapshot()?.weeklyCalories ?? []).reduce((sum, point) => sum + (point?.calories ?? 0), 0)
     );
-    public readonly hydration = signal<HydrationDaily | null>(null);
-    public readonly isHydrationLoading = signal<boolean>(false);
-    public readonly weightTrendPoints = signal<WeightEntrySummaryPoint[]>([]);
-    public readonly isWeightTrendLoading = signal<boolean>(false);
-    public readonly waistTrendPoints = signal<WaistEntrySummaryPoint[]>([]);
-    public readonly isWaistTrendLoading = signal<boolean>(false);
-    public readonly dailyAdvice = signal<DailyAdvice | null>(null);
-    public readonly isAdviceLoading = signal<boolean>(false);
+    private readonly isHydrationUpdating = signal<boolean>(false);
+    private readonly trendDays = 7;
+    public readonly hydration = computed(() => this.snapshot()?.hydration ?? null);
+    public readonly dailyAdvice = computed(() => this.snapshot()?.advice ?? null);
+    private readonly weightTrendPoints = computed(() => this.snapshot()?.weightTrend ?? []);
+    private readonly waistTrendPoints = computed(() => this.snapshot()?.waistTrend ?? []);
+    public readonly isHydrationLoading = computed(() => this.isLoading() || this.isHydrationUpdating());
+    public readonly isWeightTrendLoading = computed(() => this.isLoading());
+    public readonly isWaistTrendLoading = computed(() => this.isLoading());
+    public readonly isAdviceLoading = computed(() => this.isLoading());
     private readonly mealSlots: MealSlot[] = ['BREAKFAST', 'LUNCH', 'DINNER'];
     public readonly mealPreviewEntries = computed<MealPreviewEntry[]>(() => {
         const meals = [...(this.meals() ?? [])];
@@ -241,14 +235,10 @@ export class DashboardComponent implements OnInit {
 
     public ngOnInit(): void {
         this.loadDashboardSnapshot();
-        this.loadHydration();
-        this.loadWeightTrend();
-        this.loadWaistTrend();
-        this.loadDailyAdvice();
 
         this.translateService.onLangChange
             .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => this.loadDailyAdvice());
+            .subscribe(() => this.loadDashboardSnapshot(false));
     }
 
     public openDatePicker(): void {
@@ -299,46 +289,33 @@ export class DashboardComponent implements OnInit {
 
     private fetchDashboardData(): void {
         this.loadDashboardSnapshot();
-        this.loadHydration();
-        this.loadWeightTrend();
-        this.loadWaistTrend();
-        this.loadDailyAdvice();
     }
 
-    private loadDashboardSnapshot(): void {
+    private loadDashboardSnapshot(showLoader = true, clearHydrationUpdate = false): void {
         const targetDate = this.getDashboardDateUtc(this.selectedDate());
-        this.isLoading.set(true);
+        const locale = this.getCurrentLocale();
+
+        if (showLoader) {
+            this.isLoading.set(true);
+        }
 
         this.dashboardService
-            .getSnapshot(targetDate, 1, 10)
+            .getSnapshot(targetDate, 1, 10, locale, this.trendDays)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: snapshot => {
                     this.snapshot.set(snapshot);
                     this.isLoading.set(false);
+                    if (clearHydrationUpdate) {
+                        this.isHydrationUpdating.set(false);
+                    }
                 },
                 error: () => {
                     this.snapshot.set(null);
                     this.isLoading.set(false);
-                },
-            });
-    }
-
-    private loadHydration(): void {
-        const targetDate = this.getHydrationDateUtc(this.selectedDate());
-        this.isHydrationLoading.set(true);
-
-        this.hydrationService
-            .getDaily(targetDate)
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: daily => {
-                    this.hydration.set(daily);
-                    this.isHydrationLoading.set(false);
-                },
-                error: () => {
-                    this.hydration.set({ dateUtc: targetDate.toISOString(), totalMl: 0, goalMl: null });
-                    this.isHydrationLoading.set(false);
+                    if (clearHydrationUpdate) {
+                        this.isHydrationUpdating.set(false);
+                    }
                 },
             });
     }
@@ -358,64 +335,20 @@ export class DashboardComponent implements OnInit {
     }
 
     public addHydration(amount: number): void {
-        this.isHydrationLoading.set(true);
+        this.isHydrationUpdating.set(true);
         const targetDate = this.getHydrationDateUtc(this.selectedDate());
         this.hydrationService
             .addEntry(amount, targetDate)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
-                next: () => this.loadHydration(),
-                error: () => this.isHydrationLoading.set(false),
+                next: () => this.loadDashboardSnapshot(false, true),
+                error: () => this.isHydrationUpdating.set(false),
             });
     }
-
-    private loadDailyAdvice(): void {
-        const targetDate = this.getDashboardDateUtc(this.selectedDate());
-        const locale = this.getCurrentLocale();
-
-        this.isAdviceLoading.set(true);
-        this.dashboardService
-            .getDailyAdvice(targetDate, locale)
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: advice => {
-                    this.dailyAdvice.set(advice);
-                    this.isAdviceLoading.set(false);
-                },
-                error: () => {
-                    this.dailyAdvice.set(null);
-                    this.isAdviceLoading.set(false);
-                },
-            });
-    }
-
-    private loadWeightTrend(): void {
-        const { start, end } = this.getWeightTrendRange();
-        this.isWeightTrendLoading.set(true);
-
-        this.weightEntriesService
-            .getSummary({
-                dateFrom: start.toISOString(),
-                dateTo: end.toISOString(),
-                quantizationDays: 1,
-            })
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: points => {
-                    this.weightTrendPoints.set(points);
-                    this.isWeightTrendLoading.set(false);
-                },
-                error: () => {
-                    this.weightTrendPoints.set([]);
-                    this.isWeightTrendLoading.set(false);
-                },
-            });
-    }
-
     private getWeightTrendRange(): { start: Date; end: Date } {
         const end = this.selectedDate();
         const start = new Date(end);
-        start.setDate(start.getDate() - 6);
+        start.setDate(start.getDate() - (this.trendDays - 1));
 
         return {
             start: this.normalizeStartOfDayUtc(start),
@@ -497,29 +430,6 @@ export class DashboardComponent implements OnInit {
         const last = [...ordered].reverse().find(point => point.value !== null && point.value !== undefined);
         return last?.value ?? this.latestWaist() ?? null;
     });
-
-    private loadWaistTrend(): void {
-        const { start, end } = this.getWeightTrendRange();
-        this.isWaistTrendLoading.set(true);
-
-        this.waistEntriesService
-            .getSummary({
-                dateFrom: start.toISOString(),
-                dateTo: end.toISOString(),
-                quantizationDays: 1,
-            })
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: points => {
-                    this.waistTrendPoints.set(points);
-                    this.isWaistTrendLoading.set(false);
-                },
-                error: () => {
-                    this.waistTrendPoints.set([]);
-                    this.isWaistTrendLoading.set(false);
-                },
-            });
-    }
 
     private buildFallbackWaistTrend(): WeightTrendPoint[] {
         const latest = this.latestWaist();

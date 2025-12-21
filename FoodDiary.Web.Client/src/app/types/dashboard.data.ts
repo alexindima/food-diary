@@ -1,4 +1,8 @@
 import { Consumption } from './consumption.data';
+import { DailyAdvice } from './daily-advice.data';
+import { HydrationDaily } from './hydration.data';
+import { WaistEntrySummaryPoint } from './waist-entry.data';
+import { WeightEntrySummaryPoint } from './weight-entry.data';
 
 export interface DashboardSnapshot {
     date: string;
@@ -8,6 +12,10 @@ export interface DashboardSnapshot {
     weight: DashboardWeight;
     waist: DashboardWaist;
     meals: DashboardMeals;
+    hydration?: HydrationDaily | null;
+    advice?: DailyAdvice | null;
+    weightTrend?: WeightEntrySummaryPoint[];
+    waistTrend?: WaistEntrySummaryPoint[];
 }
 
 export interface DashboardStatistics {

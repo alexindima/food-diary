@@ -265,7 +265,44 @@
         "ADD_TO_CONSUMPTION": "Добавить к приему"
     },
     "STATISTICS": {
-        "GRAMS": "г"
+        "TITLE": "Статистика",
+        "SUBTITLE": "Общий прогресс",
+        "SUMMARY_TITLE": "Сводка за период",
+        "TOTAL_CALORIES": "Всего калорий",
+        "AVERAGE_CALORIES": "Среднее в день",
+        "NUTRITION_CHARTS_TITLE": "Графики питания",
+        "NUTRITION_TABS": {
+            "CALORIES": "Калории",
+            "MACROS": "Нутриенты",
+            "DISTRIBUTION": "Соотношение"
+        },
+        "NUTRITION_DISTRIBUTION": {
+            "PIE": "Распределение",
+            "RADAR": "Баланс",
+            "BAR": "Суммарно"
+        },
+        "AVERAGE_CARD": {
+            "CONSUMPTION": "Прием пищи",
+            "STEPS": "Шаги",
+            "BURNED": "Сожжено"
+        },
+        "BODY_CHARTS_TITLE": "Графики тела",
+        "BODY_TABS": {
+            "WEIGHT": "Вес",
+            "BMI": "ИМТ",
+            "WAIST": "Талия",
+            "WHTR": "WHtR"
+        },
+        "BODY_NO_DATA": "Недостаточно измерений для этого графика.",
+        "RANGES": {
+            "WEEK": "Неделя",
+            "MONTH": "Месяц",
+            "YEAR": "Год",
+            "CUSTOM": "Диапазон"
+        },
+        "CUSTOM_RANGE_PLACEHOLDER": "Выберите даты",
+        "NO_DATA": "Недостаточно данных для выбранного периода.",
+        "LOADING": "Загружаем статистику..."
     },
     "PRODUCT_VISIBILITY": {
         "Public": "Публичный",
@@ -504,8 +541,7 @@
         },
         "STEPS_TITLE": "Ингредиенты и шаги"
     },
-    
-                "CONFIRM_DELETE": {
+    "CONFIRM_DELETE": {
         "TITLE": "Удалить {{type}}?",
         "MESSAGE": "Действие нельзя отменить. Удалить «{{name}}»?",
         "CONFIRM": "Удалить",
@@ -700,46 +736,6 @@
         "MY_RECIPE_BADGE": "Мой",
         "SHARED_RECIPE_BADGE": "Общий"
     },
-    "STATISTICS": {
-        "TITLE": "Статистика",
-        "SUBTITLE": "Общий прогресс",
-        "SUMMARY_TITLE": "Сводка за период",
-        "TOTAL_CALORIES": "Всего калорий",
-        "AVERAGE_CALORIES": "Среднее в день",
-        "NUTRITION_CHARTS_TITLE": "Графики питания",
-        "NUTRITION_TABS": {
-            "CALORIES": "Калории",
-            "MACROS": "Нутриенты",
-            "DISTRIBUTION": "Соотношение"
-        },
-        "NUTRITION_DISTRIBUTION": {
-            "PIE": "Распределение",
-            "RADAR": "Баланс",
-            "BAR": "Суммарно"
-        },
-        "AVERAGE_CARD": {
-            "CONSUMPTION": "Прием пищи",
-            "STEPS": "Шаги",
-            "BURNED": "Сожжено"
-        },
-        "BODY_CHARTS_TITLE": "Графики тела",
-        "BODY_TABS": {
-            "WEIGHT": "Вес",
-            "BMI": "ИМТ",
-            "WAIST": "Талия",
-            "WHTR": "WHtR"
-        },
-        "BODY_NO_DATA": "Недостаточно измерений для этого графика.",
-        "RANGES": {
-            "WEEK": "Неделя",
-            "MONTH": "Месяц",
-            "YEAR": "Год",
-            "CUSTOM": "Диапазон"
-        },
-        "CUSTOM_RANGE_PLACEHOLDER": "Выберите даты",
-        "NO_DATA": "Недостаточно данных для выбранного периода.",
-        "LOADING": "Загружаем статистику..."
-    },
     "TODAY_CONSUMPTION": {
         "TITLE": "Приемы пищи за сегодня",
         "TOTAL_CONSUMPTION": "Общее потребление",
@@ -776,13 +772,9 @@
         "WEIGHT_CHANGE": "{{ value }} кг с прошлой записи",
         "KG": "кг",
         "WAIST_TITLE": "Динамика талии",
-
         "WAIST_META_EMPTY": "Укажите цель для талии",
-
         "WAIST_GOAL": "Цель: {{value}} см",
-
         "CM": "см",
-
         "ACTIVITY_TITLE": "Активность за день",
         "ACTIVITY_META": "Скоро из Google Fit",
         "CALORIES_BURNED": "Сожжено",
@@ -847,11 +839,9 @@
         "EDIT": "Редактировать",
         "HISTORY_TITLE": "История записей",
         "NO_ENTRIES": "Записей о весе пока нет.",
-        "NO_DATA": "Добавьте измерение талии, чтобы начать.",
-
+        "NO_DATA": "Нажмите, чтобы добавить вес",
         "NO_PREVIOUS": "Недостаточно данных",
         "NO_CHANGE": "Изменений нет",
-        "NO_DATA": "Нажмите, чтобы добавить вес",
         "LOADING": "Загружаем вес...",
         "BMI_CARD_TITLE": "Индекс массы тела",
         "BMI_NOTE": "Рассчитан по последней записи веса и росту из профиля.",
@@ -950,9 +940,7 @@
         "WHT_CURRENT": "Текущий WHtR",
         "WHT_NO_DATA": "Добавьте рост в профиле и хотя бы одно измерение талии.",
         "NO_PREVIOUS": "Пока недостаточно данных",
-
         "NO_CHANGE": "Изменений нет",
-
         "WHT_STATUS": {
             "UNDER": "Ниже оптимума",
             "NORMAL": "Здоровый диапазон",
@@ -1061,13 +1049,13 @@
         "STEP_GOAL_PLACEHOLDER": "Задайте дневную цель по шагам",
         "WATER_GOAL": "Цель по воде (мл/день)",
         "WATER_GOAL_PLACEHOLDER": "Задайте дневную норму воды"
-     },
+    },
     "DAILY_PROGRESS_CARD": {
         "TITLE": "Прогресс за день",
-      "CONSUMED": "Съедено сегодня",
-      "GOAL_LABEL": "Цель",
-      "REMAINING_LABEL": "Осталось",
-      "UNIT": "ккал",
+        "CONSUMED": "Съедено сегодня",
+        "GOAL_LABEL": "Цель",
+        "REMAINING_LABEL": "Осталось",
+        "UNIT": "ккал",
         "NO_GOAL_LABEL": "Цель не задана",
         "NO_GOAL_TITLE": "Цель не задана",
         "NO_GOAL_HINT": "Задайте дневную норму калорий и БЖУ в профиле, чтобы видеть прогресс здесь.",
@@ -1088,7 +1076,7 @@
             "P110_200": "Немного выше нормы ({{ percent }}%). Держите баланс.",
             "ABOVE_200": "Сильно выше плана ({{ percent }}%). Подумайте, как отрегулировать завтра."
         }
-      },
+    },
     "CONSUMPTION_RING": {
         "TITLE": "Калории: день и неделя",
         "UNIT": "ккал",
@@ -1154,14 +1142,23 @@
         "KCAL": "ккал",
         "PROTEINS": "Белки",
         "FATS": "Жиры",
-      "CARBS": "Углеводы",
-      "ITEM_COUNT": "Кол-во позиций",
-      "MEAL_TYPES": {
-        "BREAKFAST": "Завтрак",
-        "LUNCH": "Обед",
-        "DINNER": "Ужин",
-        "SNACK": "Перекус",
+        "CARBS": "Углеводы",
+        "ITEM_COUNT": "Кол-во позиций",
+        "MEAL_TYPES": {
+            "BREAKFAST": "Завтрак",
+            "LUNCH": "Обед",
+            "DINNER": "Ужин",
+            "SNACK": "Перекус",
             "OTHER": "Другое"
         }
+    },
+    "DASHBOARD_SUMMARY": {
+        "GOALS_TITLE": "???? ?? ??????",
+        "GOALS_BODY": "??????? ????, ????? ?????? ???????? ? ??????? ??????.",
+        "GOALS_ACTION": "???????? ????",
+        "MACROS_TITLE": "??? ????? ?? ??????????",
+        "MACROS_BODY": "???????? ???? ?? ??????, ?????????, ????? ? ?????????, ????? ?????? ???????? ?????.",
+        "CALORIES_TITLE": "??? ???? ?? ????????",
+        "CALORIES_BODY": "??????? ??????? ???? ?? ????????, ????? ?????? ???????? ? ????????? ??????."
     }
 }

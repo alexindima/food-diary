@@ -52,31 +52,30 @@
     },
     "DAILY_PROGRESS_CARD": {
         "TITLE": "Daily progress",
-      "CONSUMED": "Consumed today",
-      "GOAL_LABEL": "Goal",
-      "REMAINING_LABEL": "Remaining",
+        "CONSUMED": "Consumed today",
+        "GOAL_LABEL": "Goal",
+        "REMAINING_LABEL": "Remaining",
         "UNIT": "kcal",
         "NO_GOAL_LABEL": "Goal not set",
         "NO_GOAL_TITLE": "No goal set",
         "NO_GOAL_HINT": "Set a daily calorie target (and macros) in your profile to see progress here.",
-      "SET_GOAL_CTA": "Set goal",
-      "PLACEHOLDER": "Your progress will appear here once a goal is set."
-      ,
-      "MOTIVATION": {
-        "NONE": "You haven't logged anything yet - a great time to start!",
-        "P0_10": "Just getting started. A few bites logged, keep going!",
-        "P10_20": "Warm-up phase — you're at {{ percent }}% of your goal.",
-        "P20_30": "Momentum building. {{ percent }}% reached.",
-        "P30_40": "Nice! {{ percent }}% done — stay consistent.",
-        "P40_50": "Halfway is near. {{ percent }}% logged.",
-        "P50_60": "Over the midline: {{ percent }}% completed.",
-        "P60_70": "Strong progress — {{ percent }}% on the board.",
-        "P70_80": "Closing in. {{ percent }}% achieved.",
-        "P80_90": "Almost there — {{ percent }}%. Finish strong.",
-        "P90_110": "Goal met! You're around {{ percent }}% today.",
-        "P110_200": "You've gone over the target ({{ percent }}%). Keep balance in mind.",
-        "ABOVE_200": "Far above the plan ({{ percent }}%). Consider adjusting tomorrow."
-      }
+        "SET_GOAL_CTA": "Set goal",
+        "PLACEHOLDER": "Your progress will appear here once a goal is set.",
+        "MOTIVATION": {
+            "NONE": "You haven't logged anything yet - a great time to start!",
+            "P0_10": "Just getting started. A few bites logged, keep going!",
+            "P10_20": "Warm-up phase — you're at {{ percent }}% of your goal.",
+            "P20_30": "Momentum building. {{ percent }}% reached.",
+            "P30_40": "Nice! {{ percent }}% done — stay consistent.",
+            "P40_50": "Halfway is near. {{ percent }}% logged.",
+            "P50_60": "Over the midline: {{ percent }}% completed.",
+            "P60_70": "Strong progress — {{ percent }}% on the board.",
+            "P70_80": "Closing in. {{ percent }}% achieved.",
+            "P80_90": "Almost there — {{ percent }}%. Finish strong.",
+            "P90_110": "Goal met! You're around {{ percent }}% today.",
+            "P110_200": "You've gone over the target ({{ percent }}%). Keep balance in mind.",
+            "ABOVE_200": "Far above the plan ({{ percent }}%). Consider adjusting tomorrow."
+        }
     },
     "CONSUMPTION_RING": {
         "TITLE": "Calories: day & week",
@@ -300,7 +299,44 @@
         "ADD_TO_CONSUMPTION": "Add to meal"
     },
     "STATISTICS": {
-        "GRAMS": "g"
+        "TITLE": "Statistics",
+        "SUBTITLE": "Trends overview",
+        "SUMMARY_TITLE": "Daily overview",
+        "TOTAL_CALORIES": "Total calories",
+        "AVERAGE_CALORIES": "Average per day",
+        "NUTRITION_CHARTS_TITLE": "Nutrition charts",
+        "NUTRITION_TABS": {
+            "CALORIES": "Calories",
+            "MACROS": "Macros",
+            "DISTRIBUTION": "Distribution"
+        },
+        "NUTRITION_DISTRIBUTION": {
+            "PIE": "Macro split",
+            "RADAR": "Balance radar",
+            "BAR": "Totals"
+        },
+        "AVERAGE_CARD": {
+            "CONSUMPTION": "Intake",
+            "STEPS": "Steps",
+            "BURNED": "Burned"
+        },
+        "BODY_CHARTS_TITLE": "Body metrics",
+        "BODY_TABS": {
+            "WEIGHT": "Weight",
+            "BMI": "BMI",
+            "WAIST": "Waist",
+            "WHTR": "WHtR"
+        },
+        "BODY_NO_DATA": "Not enough measurements for this chart yet.",
+        "RANGES": {
+            "WEEK": "Week",
+            "MONTH": "Month",
+            "YEAR": "Year",
+            "CUSTOM": "Custom"
+        },
+        "CUSTOM_RANGE_PLACEHOLDER": "Select dates",
+        "NO_DATA": "Add more entries to see data for this period.",
+        "LOADING": "Loading statistics..."
     },
     "PRODUCT_VISIBILITY": {
         "Public": "Public",
@@ -735,46 +771,6 @@
         "MY_RECIPE_BADGE": "Mine",
         "SHARED_RECIPE_BADGE": "Shared"
     },
-    "STATISTICS": {
-        "TITLE": "Statistics",
-        "SUBTITLE": "Trends overview",
-        "SUMMARY_TITLE": "Daily overview",
-        "TOTAL_CALORIES": "Total calories",
-        "AVERAGE_CALORIES": "Average per day",
-        "NUTRITION_CHARTS_TITLE": "Nutrition charts",
-        "NUTRITION_TABS": {
-            "CALORIES": "Calories",
-            "MACROS": "Macros",
-            "DISTRIBUTION": "Distribution"
-        },
-        "NUTRITION_DISTRIBUTION": {
-            "PIE": "Macro split",
-            "RADAR": "Balance radar",
-            "BAR": "Totals"
-        },
-        "AVERAGE_CARD": {
-            "CONSUMPTION": "Intake",
-            "STEPS": "Steps",
-            "BURNED": "Burned"
-        },
-        "BODY_CHARTS_TITLE": "Body metrics",
-        "BODY_TABS": {
-            "WEIGHT": "Weight",
-            "BMI": "BMI",
-            "WAIST": "Waist",
-            "WHTR": "WHtR"
-        },
-        "BODY_NO_DATA": "Not enough measurements for this chart yet.",
-        "RANGES": {
-            "WEEK": "Week",
-            "MONTH": "Month",
-            "YEAR": "Year",
-            "CUSTOM": "Custom"
-        },
-        "CUSTOM_RANGE_PLACEHOLDER": "Select dates",
-        "NO_DATA": "Add more entries to see data for this period.",
-        "LOADING": "Loading statistics..."
-    },
     "USER_MANAGE": {
         "EDIT_TITLE": "Account",
         "EDIT_SUBTITLE": "Profile, goals and preferences",
@@ -1203,14 +1199,23 @@
         "KCAL": "kcal",
         "PROTEINS": "Proteins",
         "FATS": "Fats",
-      "CARBS": "Carbs",
-      "ITEM_COUNT": "Item count",
-      "MEAL_TYPES": {
-        "BREAKFAST": "Breakfast",
-        "LUNCH": "Lunch",
-        "DINNER": "Dinner",
-        "SNACK": "Snack",
+        "CARBS": "Carbs",
+        "ITEM_COUNT": "Item count",
+        "MEAL_TYPES": {
+            "BREAKFAST": "Breakfast",
+            "LUNCH": "Lunch",
+            "DINNER": "Dinner",
+            "SNACK": "Snack",
             "OTHER": "Other"
         }
+    },
+    "DASHBOARD_SUMMARY": {
+        "GOALS_TITLE": "Goals not set",
+        "GOALS_BODY": "Set goals to see progress rings and daily limits.",
+        "GOALS_ACTION": "Add goals",
+        "MACROS_TITLE": "Macro goals missing",
+        "MACROS_BODY": "Add protein, carbs, fats, and fiber targets to see macro progress bars.",
+        "CALORIES_TITLE": "Calorie goal missing",
+        "CALORIES_BODY": "Set your daily calorie target to see progress rings and weekly status."
     }
 }

@@ -1,0 +1,187 @@
+<div class="dashboard-summary-card">
+    @if (showNotice()) {
+        <div class="dashboard-summary-card__notice">
+            <div class="dashboard-summary-card__notice-main">
+                <div class="dashboard-summary-card__notice-icon" aria-hidden="true">i</div>
+                <div class="dashboard-summary-card__notice-text">
+                    @if (noticeVariant() === 'none') {
+                        <div class="dashboard-summary-card__notice-title">
+                            {{ 'DASHBOARD_SUMMARY.GOALS_TITLE' | translate }}
+                        </div>
+                        <div class="dashboard-summary-card__notice-body">
+                            {{ 'DASHBOARD_SUMMARY.GOALS_BODY' | translate }}
+                        </div>
+                    } @else if (noticeVariant() === 'macros') {
+                        <div class="dashboard-summary-card__notice-title">
+                            {{ 'DASHBOARD_SUMMARY.MACROS_TITLE' | translate }}
+                        </div>
+                        <div class="dashboard-summary-card__notice-body">
+                            {{ 'DASHBOARD_SUMMARY.MACROS_BODY' | translate }}
+                        </div>
+                    } @else if (noticeVariant() === 'calories') {
+                        <div class="dashboard-summary-card__notice-title">
+                            {{ 'DASHBOARD_SUMMARY.CALORIES_TITLE' | translate }}
+                        </div>
+                        <div class="dashboard-summary-card__notice-body">
+                            {{ 'DASHBOARD_SUMMARY.CALORIES_BODY' | translate }}
+                        </div>
+                    }
+                </div>
+            </div>
+            <a class="dashboard-summary-card__notice-link" routerLink="/goals">
+                {{ 'DASHBOARD_SUMMARY.GOALS_ACTION' | translate }}
+            </a>
+        </div>
+    }
+    <div class="dashboard-summary-card__layout">
+        <div
+            class="dashboard-summary-card__chart"
+            [class.is-daily-hovered]="isDailyHovered()"
+            [class.is-weekly-hovered]="isWeeklyHovered()"
+            [class.is-goal-missing]="normalizedDailyGoal() <= 0"
+        >
+            <svg
+                class="dashboard-summary-card__svg"
+                viewBox="-5 -5 270 270"
+                aria-hidden="true"
+            >
+                <defs>
+                    <linearGradient
+                        [id]="dailyGradientId"
+                        x1="0%"
+                        y1="0%"
+                        x2="100%"
+                        y2="100%"
+                    >
+                        <stop offset="0%" [attr.stop-color]="dailyGradientStart()" />
+                        <stop offset="100%" [attr.stop-color]="dailyGradientEnd()" />
+                    </linearGradient>
+                    <linearGradient
+                        [id]="weeklyGradientId"
+                        x1="0%"
+                        y1="0%"
+                        x2="100%"
+                        y2="100%"
+                    >
+                        <stop offset="0%" [attr.stop-color]="weeklyGradientStart()" />
+                        <stop offset="100%" [attr.stop-color]="weeklyGradientEnd()" />
+                    </linearGradient>
+                </defs>
+                <g
+                    class="dashboard-summary-card__ring dashboard-summary-card__ring--daily"
+                    [class.is-hovered]="isDailyHovered()"
+                    (mouseenter)="setDailyHover(true)"
+                    (mouseleave)="setDailyHover(false)"
+                    [attr.tabindex]="normalizedDailyGoal() > 0 ? 0 : null"
+                    (focus)="setDailyHover(true)"
+                    (blur)="setDailyHover(false)"
+                    [style.--ring-color]="dailyStrokeColor()"
+                >
+                    <circle
+                        class="dashboard-summary-card__track dashboard-summary-card__track--daily"
+                        [class.is-hovered]="isDailyHovered()"
+                        cx="130"
+                        cy="130"
+                        r="112"
+                    />
+                    <circle
+                        class="dashboard-summary-card__progress dashboard-summary-card__progress--daily"
+                        [class.is-hovered]="isDailyHovered()"
+                        cx="130"
+                        cy="130"
+                        r="112"
+                        [attr.stroke-dasharray]="dailyDasharray()"
+                        [attr.stroke]="'url(#' + dailyGradientId + ')'"
+                    />
+                </g>
+
+                <g
+                    class="dashboard-summary-card__ring dashboard-summary-card__ring--weekly"
+                    [class.is-hovered]="isWeeklyHovered()"
+                    (mouseenter)="setWeeklyHover(true)"
+                    (mouseleave)="setWeeklyHover(false)"
+                    [attr.tabindex]="normalizedDailyGoal() > 0 ? 0 : null"
+                    (focus)="setWeeklyHover(true)"
+                    (blur)="setWeeklyHover(false)"
+                    [style.--ring-color]="weeklyStrokeColor()"
+                >
+                    <circle
+                        class="dashboard-summary-card__track dashboard-summary-card__track--weekly"
+                        [class.is-hovered]="isWeeklyHovered()"
+                        cx="130"
+                        cy="130"
+                        r="88"
+                    />
+                    <circle
+                        class="dashboard-summary-card__progress dashboard-summary-card__progress--weekly"
+                        [class.is-hovered]="isWeeklyHovered()"
+                        cx="130"
+                        cy="130"
+                        r="88"
+                        [attr.stroke-dasharray]="weeklyDasharray()"
+                        [attr.stroke]="'url(#' + weeklyGradientId + ')'"
+                    />
+                </g>
+            </svg>
+
+            <div
+                class="dashboard-summary-card__center"
+                [class.is-daily-hovered]="isDailyHovered()"
+                [class.is-weekly-hovered]="isWeeklyHovered()"
+            >
+                @if (normalizedDailyGoal() > 0) {
+                    <div class="dashboard-summary-card__percent">
+                        <span class="dashboard-summary-card__percent-value">{{ dailyPercent() }}</span>
+                        <span class="dashboard-summary-card__percent-sign">%</span>
+                    </div>
+                }
+                <div
+                    class="dashboard-summary-card__primary-line"
+                    [class.dashboard-summary-card__primary-line--solo]="normalizedDailyGoal() <= 0"
+                >
+                    {{ dailyConsumed() | number:'1.0-0' }}
+                    @if (normalizedDailyGoal() > 0) {
+                        / {{ normalizedDailyGoal() | number:'1.0-0' }}
+                    }
+                    {{ 'CONSUMPTION_RING.UNIT' | translate }}
+                </div>
+                @if (normalizedDailyGoal() > 0) {
+                    <div class="dashboard-summary-card__secondary-line">
+                        {{ 'CONSUMPTION_RING.WEEKLY_LABEL' | translate }}: {{ weeklyPercent() }}%
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="dashboard-summary-card__bars">
+            @for (bar of resolvedNutrientBars(); track bar.id) {
+                <div class="dashboard-summary-card__bar">
+                    <div class="dashboard-summary-card__bar-header">
+                        <span class="dashboard-summary-card__bar-label">{{ bar.label }}</span>
+                        <span
+                            class="dashboard-summary-card__bar-value"
+                            [style.color]="getBarColor(bar)"
+                        >
+                            {{ bar.current | number:'1.0-0' }}
+                            @if (bar.target > 0) {
+                                / {{ bar.target | number:'1.0-0' }}
+                            }
+                            {{ bar.unit }}
+                        </span>
+                    </div>
+                    <div class="dashboard-summary-card__bar-track">
+                        <div
+                            class="dashboard-summary-card__bar-fill"
+                            [style.background]="
+                                bar.target > 0
+                                    ? 'linear-gradient(90deg, ' + bar.colorStart + ' 0%, ' + bar.colorEnd + ' 100%)'
+                                    : '#d1d5db'
+                            "
+                            [style.width.%]="bar.target > 0 ? clampPercent((bar.current / bar.target) * 100) : 100"
+                        ></div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

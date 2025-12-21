@@ -2,13 +2,13 @@
 import { Component, inject } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
-import { ConsumptionRingCardComponent, NutrientBar } from '../shared/consumption-ring-card/consumption-ring-card.component';
+import { DashboardSummaryCardComponent, NutrientBar } from '../shared/dashboard-summary-card/dashboard-summary-card.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { AuthDialogComponent } from '../auth/auth-dialog.component';
 
 @Component({
     selector: 'fd-hero',
-    imports: [FdUiButtonComponent, TranslateModule, ConsumptionRingCardComponent],
+    imports: [FdUiButtonComponent, TranslateModule, DashboardSummaryCardComponent],
     templateUrl: './hero.component.html',
     styleUrl: './hero.component.scss'
 })

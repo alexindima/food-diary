@@ -16,9 +16,11 @@ public class DashboardController(ISender mediator) : AuthorizedController(mediat
     public async Task<IActionResult> Get(
         [FromQuery] DateTime date,
         [FromQuery] int page = 1,
-        [FromQuery] int pageSize = 10)
+        [FromQuery] int pageSize = 10,
+        [FromQuery] string locale = "en",
+        [FromQuery] int trendDays = 7)
     {
-        var query = new GetDashboardSnapshotQuery(CurrentUserId, date, page, pageSize);
+        var query = new GetDashboardSnapshotQuery(CurrentUserId, date, page, pageSize, locale, trendDays);
         var result = await Mediator.Send(query);
         return result.ToActionResult();
     }

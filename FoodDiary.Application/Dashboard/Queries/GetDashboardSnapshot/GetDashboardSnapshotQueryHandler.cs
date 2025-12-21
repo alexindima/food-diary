@@ -6,9 +6,15 @@ using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Consumptions.Queries.GetConsumptions;
+using FoodDiary.Application.DailyAdvices.Queries.GetDailyAdvice;
 using FoodDiary.Application.Dashboard.Services;
+using FoodDiary.Application.Hydration.Queries.GetHydrationDailyTotal;
 using FoodDiary.Application.Statistics.Queries.GetStatistics;
+using FoodDiary.Application.WaistEntries.Queries.GetWaistSummaries;
+using FoodDiary.Application.WeightEntries.Queries.GetWeightSummaries;
 using FoodDiary.Contracts.Dashboard;
+using FoodDiary.Contracts.WaistEntries;
+using FoodDiary.Contracts.WeightEntries;
 using FoodDiary.Domain.ValueObjects;
 using MediatR;
 
@@ -32,6 +38,9 @@ public class GetDashboardSnapshotQueryHandler(
         var dayStart = DateTime.SpecifyKind(date, DateTimeKind.Utc).Date;
         var dayEnd = dayStart.AddDays(1).AddTicks(-1);
         var userId = query.UserId.Value;
+        var locale = string.IsNullOrWhiteSpace(query.Locale) ? "en" : query.Locale;
+        var trendDays = Math.Clamp(query.TrendDays <= 0 ? 7 : query.TrendDays, 1, 31);
+        var trendStart = dayStart.AddDays(-(trendDays - 1));
 
         var statsResult = await sender.Send(new GetStatisticsQuery(
             userId,
@@ -91,6 +100,22 @@ public class GetDashboardSnapshotQueryHandler(
             mealsResult.Value.Data,
             mealsResult.Value.TotalItems);
 
+        var hydrationResult = await sender.Send(
+            new GetHydrationDailyTotalQuery(userId, dayStart),
+            cancellationToken);
+
+        var adviceResult = await sender.Send(
+            new GetDailyAdviceQuery(userId, dayStart, locale),
+            cancellationToken);
+
+        var weightTrendResult = await sender.Send(
+            new GetWeightSummariesQuery(userId, trendStart, dayStart, 1),
+            cancellationToken);
+
+        var waistTrendResult = await sender.Send(
+            new GetWaistSummariesQuery(userId, trendStart, dayStart, 1),
+            cancellationToken);
+
         var dailyGoal = user?.DailyCalorieTarget ?? 0;
 
         var response = new DashboardSnapshotResponse(
@@ -100,7 +125,11 @@ public class GetDashboardSnapshotQueryHandler(
             weeklyCalories,
             weight,
             waist,
-            meals);
+            meals,
+            hydrationResult.IsSuccess ? hydrationResult.Value : null,
+            adviceResult.IsSuccess ? adviceResult.Value : null,
+            weightTrendResult.IsSuccess ? weightTrendResult.Value : Array.Empty<WeightEntrySummaryResponse>(),
+            waistTrendResult.IsSuccess ? waistTrendResult.Value : Array.Empty<WaistEntrySummaryResponse>());
 
         return Result.Success(response);
     }

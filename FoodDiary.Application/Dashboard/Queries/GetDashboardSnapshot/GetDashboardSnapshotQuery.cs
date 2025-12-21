@@ -10,4 +10,6 @@ public record GetDashboardSnapshotQuery(
     UserId? UserId,
     DateTime Date,
     int Page,
-    int PageSize) : IQuery<Result<DashboardSnapshotResponse>>;
+    int PageSize,
+    string Locale,
+    int TrendDays) : IQuery<Result<DashboardSnapshotResponse>>;

@@ -1,6 +1,10 @@
 using System;
 using System.Collections.Generic;
 using FoodDiary.Contracts.Consumptions;
+using FoodDiary.Contracts.DailyAdvices;
+using FoodDiary.Contracts.Hydration;
+using FoodDiary.Contracts.WaistEntries;
+using FoodDiary.Contracts.WeightEntries;
 
 namespace FoodDiary.Contracts.Dashboard;
 
@@ -11,7 +15,11 @@ public record DashboardSnapshotResponse(
     IReadOnlyList<DailyCaloriesDto> WeeklyCalories,
     DashboardWeightDto Weight,
     DashboardWaistDto Waist,
-    DashboardMealsDto Meals);
+    DashboardMealsDto Meals,
+    HydrationDailyResponse? Hydration = null,
+    DailyAdviceResponse? Advice = null,
+    IReadOnlyList<WeightEntrySummaryResponse>? WeightTrend = null,
+    IReadOnlyList<WaistEntrySummaryResponse>? WaistTrend = null);
 
 public record DashboardStatisticsDto(
     double TotalCalories,

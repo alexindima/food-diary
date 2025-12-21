@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, effect, input, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 
 export interface NutrientBar {
@@ -13,14 +14,14 @@ export interface NutrientBar {
 }
 
 @Component({
-    selector: 'fd-consumption-ring-card',
+    selector: 'fd-dashboard-summary-card',
     standalone: true,
-    imports: [CommonModule, TranslatePipe],
-    templateUrl: './consumption-ring-card.component.html',
-    styleUrl: './consumption-ring-card.component.scss',
+    imports: [CommonModule, TranslatePipe, RouterLink],
+    templateUrl: './dashboard-summary-card.component.html',
+    styleUrl: './dashboard-summary-card.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ConsumptionRingCardComponent {
+export class DashboardSummaryCardComponent {
     public readonly dailyGoal = input<number>(0);
     public readonly dailyConsumed = input<number>(0);
     public readonly weeklyConsumed = input<number>(0);
@@ -77,6 +78,24 @@ export class ConsumptionRingCardComponent {
     public readonly weeklyGradientStart = computed(() => this.mixWithWhite(this.weeklyStrokeColor(), 0.05));
     public readonly weeklyGradientEnd = computed(() => this.mixWithWhite(this.weeklyStrokeColor(), 0.15));
     public readonly resolvedNutrientBars = computed(() => this.nutrientBars() ?? this.buildDefaultNutrientBars());
+    private readonly hasCalorieGoal = computed(() => this.normalizedDailyGoal() > 0);
+    private readonly hasMacroGoals = computed(() => (this.nutrientBars() ?? []).some(bar => bar.target > 0));
+    public readonly showNotice = computed(() => !this.hasCalorieGoal() || !this.hasMacroGoals());
+    public readonly noticeVariant = computed(() => {
+        const hasCalories = this.hasCalorieGoal();
+        const hasMacros = this.hasMacroGoals();
+
+        if (!hasCalories && !hasMacros) {
+            return 'none';
+        }
+        if (hasCalories && !hasMacros) {
+            return 'macros';
+        }
+        if (!hasCalories && hasMacros) {
+            return 'calories';
+        }
+        return 'ok';
+    });
 
     public constructor() {
         effect(onCleanup => {
@@ -146,10 +165,18 @@ export class ConsumptionRingCardComponent {
     }
 
     public setDailyHover(state: boolean): void {
+        if (this.normalizedDailyGoal() <= 0) {
+            this.isDailyHovered.set(false);
+            return;
+        }
         this.isDailyHovered.set(state);
     }
 
     public setWeeklyHover(state: boolean): void {
+        if (this.normalizedDailyGoal() <= 0) {
+            this.isWeeklyHovered.set(false);
+            return;
+        }
         this.isWeeklyHovered.set(state);
     }
 
