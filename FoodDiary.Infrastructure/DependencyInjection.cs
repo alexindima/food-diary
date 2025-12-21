@@ -64,6 +64,7 @@ public static class DependencyInjection
         services.AddSingleton<IImageStorageService, S3ImageStorageService>();
         services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
         services.AddSingleton<IPasswordHasher, PasswordHasher>();
+        services.AddScoped<IUserCleanupService, UserCleanupService>();
 
         return services;
     }

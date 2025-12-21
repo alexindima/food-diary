@@ -61,6 +61,18 @@
                         {{ 'AUTH.LOGIN.LOGIN' | translate }}
                     </fd-ui-button>
                     <fd-ui-form-error [error]="globalError()" />
+                    @if (showRestoreAction()) {
+                        <fd-ui-button
+                            type="button"
+                            variant="secondary"
+                            fill="outline"
+                            [disabled]="loginForm.invalid || isRestoring()"
+                            [fullWidth]="true"
+                            (click)="onRestoreSubmit()"
+                        >
+                            {{ 'AUTH.LOGIN.RESTORE' | translate }}
+                        </fd-ui-button>
+                    }
                 </div>
 
                 <div class="auth__divider">

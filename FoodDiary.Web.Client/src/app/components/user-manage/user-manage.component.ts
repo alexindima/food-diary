@@ -24,13 +24,17 @@ import { FdUiFormErrorComponent, FD_VALIDATION_ERRORS, FdValidationErrors } from
 import { ChangePasswordDialogComponent } from './dialogs/change-password-dialog/change-password-dialog.component';
 import { PasswordSuccessDialogComponent } from './dialogs/password-success-dialog/password-success-dialog.component';
 import { UpdateSuccessDialogComponent } from './dialogs/update-success-dialog/update-success-dialog.component';
-import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { PageHeaderComponent } from '../shared/page-header/page-header.component';
 import { PageBodyComponent } from "../shared/page-body/page-body.component";
 import { FdPageContainerDirective } from "../../directives/layout/page-container.directive";
 import { ImageUploadFieldComponent } from '../shared/image-upload-field/image-upload-field.component';
 import { ImageSelection } from '../../types/image-upload.data';
 import { ImageUploadService } from "../../services/image-upload.service";
+import {
+    ConfirmDeleteDialogComponent,
+    ConfirmDeleteDialogData,
+} from '../shared/confirm-delete-dialog/confirm-delete-dialog.component';
+import { AuthService } from '../../services/auth.service';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: FD_VALIDATION_ERRORS,
@@ -71,8 +75,8 @@ export class UserManageComponent implements OnInit {
     private readonly fdDialogService = inject(FdUiDialogService);
     private readonly navigationService = inject(NavigationService);
     private readonly destroyRef = inject(DestroyRef);
-    private readonly toastService = inject(FdUiToastService);
     private readonly imageUploadService = inject(ImageUploadService);
+    private readonly authService = inject(AuthService);
     private lastUserData: Partial<UserFormValues> | null = null;
 
     public genders = Object.values(Gender);
@@ -82,6 +86,7 @@ export class UserManageComponent implements OnInit {
 
     public userForm: FormGroup<UserFormData>;
     public globalError = signal<string | null>(null);
+    public isDeleting = signal<boolean>(false);
 
     public constructor() {
         this.userForm = new FormGroup<UserFormData>({
@@ -207,10 +212,45 @@ export class UserManageComponent implements OnInit {
     }
 
     public onDeleteAccount(): void {
-        this.toastService.open(this.translateService.instant('USER_MANAGE.DELETE_ACCOUNT_INFO'), {
-            appearance: 'warning',
-            duration: 6000,
-        });
+        if (this.isDeleting()) {
+            return;
+        }
+
+        const data: ConfirmDeleteDialogData = {
+            title: this.translateService.instant('USER_MANAGE.DELETE_ACCOUNT_CONFIRM_TITLE'),
+            message: this.translateService.instant('USER_MANAGE.DELETE_ACCOUNT_CONFIRM_MESSAGE'),
+            confirmLabel: this.translateService.instant('USER_MANAGE.DELETE_ACCOUNT_CONFIRM'),
+            cancelLabel: this.translateService.instant('COMMON.CANCEL'),
+        };
+
+        this.fdDialogService
+            .open(ConfirmDeleteDialogComponent, {
+                size: 'sm',
+                data,
+            })
+            .afterClosed()
+            .subscribe(confirmed => {
+                if (!confirmed || this.isDeleting()) {
+                    return;
+                }
+
+                this.isDeleting.set(true);
+                this.userService.deleteCurrentUser().subscribe({
+                    next: success => {
+                        this.isDeleting.set(false);
+                        if (!success) {
+                            this.setGlobalError('USER_MANAGE.DELETE_ACCOUNT_ERROR');
+                            return;
+                        }
+
+                        void this.authService.onLogout(true);
+                    },
+                    error: () => {
+                        this.isDeleting.set(false);
+                        this.setGlobalError('USER_MANAGE.DELETE_ACCOUNT_ERROR');
+                    },
+                });
+            });
     }
 
     protected showSuccessDialog(): void {

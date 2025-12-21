@@ -24,6 +24,16 @@ export class RegisterRequest {
     }
 }
 
+export class RestoreAccountRequest {
+    public email: string;
+    public password: string;
+
+    public constructor(formValue: Partial<RestoreAccountRequest>) {
+        this.email = formValue.email || '';
+        this.password = formValue.password || '';
+    }
+}
+
 export interface AuthResponse {
     accessToken: string;
     refreshToken: string;

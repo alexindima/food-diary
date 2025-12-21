@@ -33,6 +33,7 @@ public sealed class User : AggregateRoot<UserId> {
     public ImageAssetId? ProfileImageAssetId { get; private set; }
     public string? DashboardLayoutJson { get; private set; }
     public bool IsActive { get; private set; } = true;
+    public DateTime? DeletedAt { get; private set; }
 
     // Navigation properties
     public ICollection<Meal> Meals { get; private set; } = new List<Meal>();
@@ -131,6 +132,20 @@ public sealed class User : AggregateRoot<UserId> {
     }
 
     public void Activate() {
+        IsActive = true;
+        SetModified();
+    }
+
+    public void MarkDeleted(DateTime deletedAtUtc)
+    {
+        DeletedAt = deletedAtUtc;
+        IsActive = false;
+        SetModified();
+    }
+
+    public void Restore()
+    {
+        DeletedAt = null;
         IsActive = true;
         SetModified();
     }

@@ -39,6 +39,8 @@ public class FoodDiaryDbContext : DbContext
 
             entity.HasIndex(e => e.Email).IsUnique();
             entity.Property(e => e.IsActive).HasDefaultValue(true);
+            entity.Property(e => e.DeletedAt)
+                .HasColumnType("timestamp with time zone");
             entity.Property(e => e.ActivityLevel)
                 .HasConversion<string>()
                 .HasDefaultValue(ActivityLevel.Moderate);

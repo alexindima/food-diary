@@ -1,6 +1,6 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { catchError, map, Observable, of, tap, throwError } from 'rxjs';
-import { AuthResponse, LoginRequest, RegisterRequest } from '../types/auth.data';
+import { AuthResponse, LoginRequest, RegisterRequest, RestoreAccountRequest } from '../types/auth.data';
 import { environment } from '../../environments/environment';
 import { ApiService } from './api.service';
 import { NavigationService } from './navigation.service';
@@ -58,6 +58,18 @@ export class AuthService extends ApiService {
             }),
             catchError((error: HttpErrorResponse) => {
                 console.error('Register error', error);
+                return throwError(() => error);
+            }),
+        );
+    }
+
+    public restoreAccount(data: RestoreAccountRequest, rememberMe = false): Observable<AuthResponse> {
+        return this.post<AuthResponse>('restore', data).pipe(
+            tap(response => {
+                this.onLogin(response, rememberMe);
+            }),
+            catchError((error: HttpErrorResponse) => {
+                console.error('Restore account error', error);
                 return throwError(() => error);
             }),
         );

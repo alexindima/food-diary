@@ -58,6 +58,16 @@ export class UserService extends ApiService {
         );
     }
 
+    public deleteCurrentUser(): Observable<boolean> {
+        return this.delete<void>('').pipe(
+            map(() => true),
+            catchError(error => {
+                console.error('Delete user error', error);
+                return of(false);
+            }),
+        );
+    }
+
     public getDesiredWeight(): Observable<number | null> {
         return this.get<DesiredWeightResponse>('desired-weight').pipe(
             map(response => response.desiredWeight ?? null),

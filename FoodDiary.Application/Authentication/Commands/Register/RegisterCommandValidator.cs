@@ -1,5 +1,6 @@
 using FluentValidation;
 using FoodDiary.Application.Common.Interfaces.Persistence;
+using FluentValidation.Results;
 
 namespace FoodDiary.Application.Authentication.Commands.Register;
 
@@ -18,9 +19,7 @@ public class RegisterCommandValidator : AbstractValidator<RegisterCommand>
             .EmailAddress()
             .WithErrorCode("Validation.Invalid")
             .WithMessage("Invalid email format")
-            .MustAsync(BeUniqueEmail)
-            .WithErrorCode("Validation.Conflict")
-            .WithMessage("User with this email already exists");
+            .CustomAsync(ValidateEmailAsync);
 
         RuleFor(x => x.Password)
             .NotEmpty()
@@ -31,9 +30,30 @@ public class RegisterCommandValidator : AbstractValidator<RegisterCommand>
             .WithMessage("Password must be at least 6 characters");
     }
 
-    private async Task<bool> BeUniqueEmail(string email, CancellationToken cancellationToken)
+    private async Task ValidateEmailAsync(string email, ValidationContext<RegisterCommand> context, CancellationToken cancellationToken)
     {
-        var user = await _userRepository.GetByEmailAsync(email);
-        return user is null;
+        var user = await _userRepository.GetByEmailIncludingDeletedAsync(email);
+        if (user is null)
+        {
+            return;
+        }
+
+        if (user.DeletedAt is not null)
+        {
+            context.AddFailure(new ValidationFailure(
+                nameof(RegisterCommand.Email),
+                "Account is scheduled for deletion.")
+            {
+                ErrorCode = "Authentication.AccountDeleted",
+            });
+            return;
+        }
+
+        context.AddFailure(new ValidationFailure(
+            nameof(RegisterCommand.Email),
+            "User with this email already exists.")
+        {
+            ErrorCode = "Validation.Conflict",
+        });
     }
 }

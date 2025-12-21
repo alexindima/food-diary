@@ -245,7 +245,9 @@
             "PASSWORD_PLACEHOLDER": "Enter your password",
             "REMEMBER_ME": "Remember me",
             "FORGOT_PASSWORD": "Forgot password?",
-            "LOGIN": "Login"
+            "LOGIN": "Login",
+            "RESTORE": "Restore account",
+            "ACCOUNT_DELETED": "This account is scheduled for deletion. Restore it to continue."
         },
         "REGISTER": {
             "TITLE": "Register",
@@ -257,7 +259,8 @@
             "CONFIRM_PASSWORD": "Confirm password",
             "CONFIRM_PASSWORD_PLACEHOLDER": "Repeat the password",
             "AGREE_TO_TERMS": "I agree to the <a href='{{termsUrl}}'>Terms of Use</a> and <a href='{{privacyUrl}}'>Privacy Policy</a>",
-            "REGISTER": "Register"
+            "REGISTER": "Register",
+            "ACCOUNT_DELETED": "This email belongs to a deleted account. Please restore it instead."
         },
         "INFO": {
             "TITLE": "Why create an account?",
@@ -843,6 +846,10 @@
         "AVATAR_DESC": "Upload a square image, min 512x512",
         "DELETE_ACCOUNT_BUTTON": "Delete account",
         "DELETE_ACCOUNT_INFO": "Account deletion will be available soon.",
+        "DELETE_ACCOUNT_CONFIRM_TITLE": "Delete account?",
+        "DELETE_ACCOUNT_CONFIRM_MESSAGE": "We'll schedule your account for deletion. You can restore it later by logging in.",
+        "DELETE_ACCOUNT_CONFIRM": "Delete account",
+        "DELETE_ACCOUNT_ERROR": "Failed to delete the account. Please try again.",
         "SAVE_BUTTON": "Save",
         "LOAD_ERROR": "Failed to load user information.",
         "UPDATE_ERROR": "Failed to update user information.",

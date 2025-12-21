@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, DestroyRef, effect, inject, signal } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
@@ -6,6 +6,7 @@ import { FdUiIconModule } from 'fd-ui-kit/material';
 import { MatIconModule } from '@angular/material/icon';
 import { UserService } from '../../services/user.service';
 import { User } from '../../types/user.data';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SlicePipe, UpperCasePipe } from '@angular/common';
 
 @Component({
@@ -24,6 +25,7 @@ import { SlicePipe, UpperCasePipe } from '@angular/common';
 export class SidebarComponent {
     private readonly authService = inject(AuthService);
     private readonly userService = inject(UserService);
+    private readonly destroyRef = inject(DestroyRef);
 
     public isAuthenticated = this.authService.isAuthenticated;
     protected currentUser = signal<User | null>(null);
@@ -35,11 +37,19 @@ export class SidebarComponent {
     protected isMobileReportsOpen = signal(false);
     protected isMobileUserOpen = signal(false);
 
-    public constructor() {
-        if (this.isAuthenticated()) {
-            this.userService.getInfo().subscribe(user => this.currentUser.set(user));
+    private readonly userSync = effect(onCleanup => {
+        if (!this.isAuthenticated()) {
+            this.currentUser.set(null);
+            return;
         }
-    }
+
+        const subscription = this.userService
+            .getInfo()
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(user => this.currentUser.set(user));
+
+        onCleanup(() => subscription.unsubscribe());
+    });
 
     protected toggleFoodTracking(): void {
         const next = !this.isFoodTrackingOpen();

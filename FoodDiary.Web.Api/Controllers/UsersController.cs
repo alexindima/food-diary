@@ -8,6 +8,7 @@ using FoodDiary.Application.Users.Commands.UpdateDesiredWeight;
 using FoodDiary.Application.Users.Commands.UpdateDesiredWaist;
 using FoodDiary.Application.Users.Queries.GetDesiredWeight;
 using FoodDiary.Application.Users.Queries.GetDesiredWaist;
+using FoodDiary.Application.Users.Commands.DeleteUser;
 
 namespace FoodDiary.WebApi.Controllers;
 
@@ -63,6 +64,14 @@ public class UsersController(ISender mediator) : AuthorizedController(mediator) 
     public async Task<IActionResult> UpdateDesiredWaist([FromBody] UpdateDesiredWaistRequest request)
     {
         var command = new UpdateDesiredWaistCommand(CurrentUserId, request.DesiredWaist);
+        var result = await Mediator.Send(command);
+        return result.ToActionResult();
+    }
+
+    [HttpDelete]
+    public async Task<IActionResult> DeleteCurrentUser()
+    {
+        var command = new DeleteUserCommand(CurrentUserId);
         var result = await Mediator.Send(command);
         return result.ToActionResult();
     }

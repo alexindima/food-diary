@@ -549,6 +549,9 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.Property<DateTime?>("BirthDate")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<double?>("CarbTarget")
                         .HasColumnType("double precision");
 

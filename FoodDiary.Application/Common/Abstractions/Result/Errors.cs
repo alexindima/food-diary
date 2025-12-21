@@ -81,6 +81,14 @@ public static class Errors
         public static Error InvalidToken => new(
             "Authentication.InvalidToken",
             "Invalid authorization token.");
+
+        public static Error AccountDeleted => new(
+            "Authentication.AccountDeleted",
+            "Account is scheduled for deletion.");
+
+        public static Error AccountNotDeleted => new(
+            "Authentication.AccountNotDeleted",
+            "Account is already active.");
     }
 
     public static class Validation

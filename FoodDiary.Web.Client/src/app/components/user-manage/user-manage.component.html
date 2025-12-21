@@ -163,6 +163,7 @@
                     variant="danger"
                     fill="outline"
                     icon="delete"
+                    [disabled]="isDeleting()"
                     (click)="onDeleteAccount()"
                 >
                     {{ 'USER_MANAGE.DELETE_ACCOUNT_BUTTON' | translate }}

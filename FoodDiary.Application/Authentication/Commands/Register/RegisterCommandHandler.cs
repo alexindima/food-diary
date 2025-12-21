@@ -30,6 +30,14 @@ public class RegisterCommandHandler : ICommandHandler<RegisterCommand, Result<Au
         // Валидация email уникальности через FluentValidation
         var hashedPassword = _passwordHasher.Hash(command.Password);
         var user = User.Create(command.Email, hashedPassword);
+        user.UpdateProfile(
+            dailyCalorieTarget: 2000,
+            proteinTarget: 150,
+            fatTarget: 65,
+            carbTarget: 200,
+            fiberTarget: 28,
+            waterGoal: 2000
+        );
 
         user = await _userRepository.AddAsync(user);
 

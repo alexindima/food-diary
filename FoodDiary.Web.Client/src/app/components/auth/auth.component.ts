@@ -19,7 +19,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { matchFieldValidator } from '../../validators/match-field.validator';
 import { NavigationService } from '../../services/navigation.service';
 import { FormGroupControls } from '../../types/common.data';
-import { LoginRequest, RegisterRequest } from '../../types/auth.data';
+import { LoginRequest, RegisterRequest, RestoreAccountRequest } from '../../types/auth.data';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
@@ -74,6 +74,8 @@ export class AuthComponent implements OnInit, AfterViewInit {
     public registerForm: FormGroup<RegisterFormGroup>;
     public globalError = signal<string | null>(null);
     public googleReady = signal<boolean>(false);
+    public showRestoreAction = signal<boolean>(false);
+    public isRestoring = signal<boolean>(false);
     public authBenefits: string[] = [
         'AUTH.INFO.HIGHLIGHTS.SYNC',
         'AUTH.INFO.HIGHLIGHTS.INSIGHTS',
@@ -162,6 +164,28 @@ export class AuthComponent implements OnInit, AfterViewInit {
         });
     }
 
+    public onRestoreSubmit(): void {
+        if (!this.loginForm.valid || this.isRestoring()) {
+            return;
+        }
+
+        const restoreRequest = new RestoreAccountRequest(this.loginForm.value);
+        const rememberMe = this.loginForm.controls.rememberMe.value;
+        this.isRestoring.set(true);
+
+        this.authService.restoreAccount(restoreRequest, rememberMe).subscribe({
+            next: () => {
+                this.isRestoring.set(false);
+                this.navigationService.navigateToReturnUrl(this.returnUrl);
+                this.closeDialogIfAny();
+            },
+            error: () => {
+                this.isRestoring.set(false);
+                this.setGlobalError('FORM_ERRORS.UNKNOWN');
+            },
+        });
+    }
+
     public async onRegisterSubmit(): Promise<void> {
         if (!this.registerForm.valid) {
             return;
@@ -232,16 +256,23 @@ export class AuthComponent implements OnInit, AfterViewInit {
     private handleLoginError(errorCode?: string): void {
         if (errorCode === 'User.InvalidCredentials' || errorCode === 'Authentication.InvalidCredentials') {
             this.setGlobalError('FORM_ERRORS.INVALID_CREDENTIALS');
+            this.showRestoreAction.set(false);
+        } else if (errorCode === 'Authentication.AccountDeleted') {
+            this.setGlobalError('AUTH.LOGIN.ACCOUNT_DELETED');
+            this.showRestoreAction.set(true);
         } else {
             this.setGlobalError('FORM_ERRORS.UNKNOWN');
+            this.showRestoreAction.set(false);
         }
     }
 
     private handleRegisterError(errorCode?: string): void {
-        if (errorCode === 'User.EmailAlreadyExists') {
+        if (errorCode === 'User.EmailAlreadyExists' || errorCode === 'Validation.Conflict') {
             const emailField = this.registerForm.controls.email;
             emailField?.updateValueAndValidity();
             emailField?.setErrors({ userExists: true });
+        } else if (errorCode === 'Authentication.AccountDeleted') {
+            this.setGlobalError('AUTH.REGISTER.ACCOUNT_DELETED');
         } else {
             this.setGlobalError('FORM_ERRORS.UNKNOWN');
         }
@@ -253,6 +284,7 @@ export class AuthComponent implements OnInit, AfterViewInit {
 
     private clearGlobalError(): void {
         this.globalError.set(null);
+        this.showRestoreAction.set(false);
     }
 }
 

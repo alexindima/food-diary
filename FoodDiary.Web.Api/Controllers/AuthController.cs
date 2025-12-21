@@ -30,4 +30,11 @@ public class AuthController(ISender mediator) : BaseApiController(mediator) {
 
         return result.IsSuccess ? Ok(new { accessToken = result.Value }) : result.ToActionResult();
     }
+
+    [HttpPost("restore")]
+    public async Task<IActionResult> RestoreAccount(RestoreAccountRequest request) {
+        var command = request.ToCommand();
+        var result = await Mediator.Send(command);
+        return result.ToActionResult();
+    }
 }

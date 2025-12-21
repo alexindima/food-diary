@@ -1,6 +1,7 @@
 using FoodDiary.Application.Authentication.Commands.Login;
 using FoodDiary.Application.Authentication.Commands.RefreshToken;
 using FoodDiary.Application.Authentication.Commands.Register;
+using FoodDiary.Application.Authentication.Commands.RestoreAccount;
 using FoodDiary.Contracts.Authentication;
 
 namespace FoodDiary.Application.Authentication.Mappings;
@@ -10,6 +11,11 @@ public static class AuthenticationMappings
     public static RegisterCommand ToCommand(this RegisterRequest request)
     {
         return new RegisterCommand(request.Email, request.Password);
+    }
+
+    public static RestoreAccountCommand ToCommand(this RestoreAccountRequest request)
+    {
+        return new RestoreAccountCommand(request.Email, request.Password);
     }
 
     public static LoginCommand ToCommand(this LoginRequest request)
