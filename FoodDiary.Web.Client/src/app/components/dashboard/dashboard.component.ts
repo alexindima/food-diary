@@ -144,21 +144,47 @@ export class DashboardComponent implements OnInit {
     public readonly nutrientBars = computed<NutrientBar[]>(() => {
         const snapshot = this.snapshot();
 
-        const proteins = snapshot?.statistics.averageProteins ?? 110;
-        const fats = snapshot?.statistics.averageFats ?? 45;
-        const carbs = snapshot?.statistics.averageCarbs ?? 180;
-        const fiber = snapshot?.statistics.averageFiber ?? 18;
-
-        const proteinGoal = snapshot?.statistics.proteinGoal ?? 140;
-        const fatGoal = snapshot?.statistics.fatGoal ?? 70;
-        const carbGoal = snapshot?.statistics.carbGoal ?? 250;
-        const fiberGoal = snapshot?.statistics.fiberGoal ?? 30;
+        if (!snapshot) {
+            return [];
+        }
 
         return [
-            { id: 'protein', label: 'Protein', current: proteins, target: proteinGoal, unit: 'g', colorStart: '#4dabff', colorEnd: '#2563eb' },
-            { id: 'carbs', label: 'Carbs', current: carbs, target: carbGoal, unit: 'g', colorStart: '#2dd4bf', colorEnd: '#0ea5e9' },
-            { id: 'fats', label: 'Fats', current: fats, target: fatGoal, unit: 'g', colorStart: '#fbbf24', colorEnd: '#f97316' },
-            { id: 'fiber', label: 'Fiber', current: fiber, target: fiberGoal, unit: 'g', colorStart: '#fb7185', colorEnd: '#ec4899' },
+            {
+                id: 'protein',
+                label: 'Protein',
+                current: snapshot.statistics.averageProteins ?? 0,
+                target: snapshot.statistics.proteinGoal ?? 0,
+                unit: 'g',
+                colorStart: '#4dabff',
+                colorEnd: '#2563eb',
+            },
+            {
+                id: 'carbs',
+                label: 'Carbs',
+                current: snapshot.statistics.averageCarbs ?? 0,
+                target: snapshot.statistics.carbGoal ?? 0,
+                unit: 'g',
+                colorStart: '#2dd4bf',
+                colorEnd: '#0ea5e9',
+            },
+            {
+                id: 'fats',
+                label: 'Fats',
+                current: snapshot.statistics.averageFats ?? 0,
+                target: snapshot.statistics.fatGoal ?? 0,
+                unit: 'g',
+                colorStart: '#fbbf24',
+                colorEnd: '#f97316',
+            },
+            {
+                id: 'fiber',
+                label: 'Fiber',
+                current: snapshot.statistics.averageFiber ?? 0,
+                target: snapshot.statistics.fiberGoal ?? 0,
+                unit: 'g',
+                colorStart: '#fb7185',
+                colorEnd: '#ec4899',
+            },
         ];
     });
     public readonly consumptionRingData = computed(() => {
@@ -166,18 +192,6 @@ export class DashboardComponent implements OnInit {
         const dailyGoal = snapshot?.dailyGoal ?? 0;
         const consumedToday = snapshot?.statistics.totalCalories ?? 0;
         const weeklyConsumed = this.weeklyConsumed();
-        const hasData = snapshot && (dailyGoal > 0 || consumedToday > 0 || weeklyConsumed > 0);
-
-        if (!hasData) {
-            const fallbackGoal = 2000;
-            return {
-                dailyGoal: fallbackGoal,
-                dailyConsumed: 1450,
-                weeklyConsumed: 6000,
-                weeklyGoal: fallbackGoal * 7,
-                nutrientBars: this.nutrientBars(),
-            };
-        }
 
         return {
             dailyGoal,

@@ -109,3 +109,120 @@
         </div>
     }
 </aside>
+
+<nav class="sidebar-mobile" aria-label="Mobile navigation">
+    <a
+        class="sidebar-mobile__item"
+        routerLink="/"
+        routerLinkActive="is-active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        (click)="closeMobileMenus()"
+    >
+        <mat-icon>dashboard</mat-icon>
+        <span class="sidebar-mobile__label">Dashboard</span>
+    </a>
+    <button
+        type="button"
+        class="sidebar-mobile__item"
+        [class.is-open]="isMobileFoodOpen()"
+        (click)="toggleMobileFood()"
+        aria-haspopup="true"
+        [attr.aria-expanded]="isMobileFoodOpen()"
+    >
+        <mat-icon>restaurant_menu</mat-icon>
+        <span class="sidebar-mobile__label">Food</span>
+    </button>
+    <button
+        type="button"
+        class="sidebar-mobile__item"
+        [class.is-open]="isMobileBodyOpen()"
+        (click)="toggleMobileBody()"
+        aria-haspopup="true"
+        [attr.aria-expanded]="isMobileBodyOpen()"
+    >
+        <mat-icon>monitor_weight</mat-icon>
+        <span class="sidebar-mobile__label">Body</span>
+    </button>
+    <button
+        type="button"
+        class="sidebar-mobile__item"
+        [class.is-open]="isMobileReportsOpen()"
+        (click)="toggleMobileReports()"
+        aria-haspopup="true"
+        [attr.aria-expanded]="isMobileReportsOpen()"
+    >
+        <mat-icon>bar_chart</mat-icon>
+        <span class="sidebar-mobile__label">Reports</span>
+    </button>
+    <button
+        type="button"
+        class="sidebar-mobile__item"
+        [class.is-open]="isMobileUserOpen()"
+        (click)="toggleMobileUser()"
+        aria-haspopup="true"
+        [attr.aria-expanded]="isMobileUserOpen()"
+    >
+        <mat-icon>person</mat-icon>
+        <span class="sidebar-mobile__label">User</span>
+    </button>
+</nav>
+
+@if (isMobileFoodOpen()) {
+    <div class="sidebar-mobile__sheet" role="dialog" aria-label="Food tracking">
+        <a routerLink="/consumptions" routerLinkActive="is-active" (click)="closeMobileMenus()">
+            <mat-icon>restaurant_menu</mat-icon>
+            <span>Food Diary</span>
+        </a>
+        <a routerLink="/products" routerLinkActive="is-active" (click)="closeMobileMenus()">
+            <mat-icon>inventory_2</mat-icon>
+            <span>Products</span>
+        </a>
+        <a routerLink="/recipes" routerLinkActive="is-active" (click)="closeMobileMenus()">
+            <mat-icon>restaurant</mat-icon>
+            <span>Recipes</span>
+        </a>
+    </div>
+}
+
+@if (isMobileBodyOpen()) {
+    <div class="sidebar-mobile__sheet" role="dialog" aria-label="Body tracking">
+        <a routerLink="/weight-history" routerLinkActive="is-active" (click)="closeMobileMenus()">
+            <mat-icon>monitor_weight</mat-icon>
+            <span>Weight</span>
+        </a>
+        <a routerLink="/waist-history" routerLinkActive="is-active" (click)="closeMobileMenus()">
+            <mat-icon>straighten</mat-icon>
+            <span>Waist</span>
+        </a>
+        <a routerLink="/cycle-tracking" routerLinkActive="is-active" (click)="closeMobileMenus()">
+            <mat-icon>favorite</mat-icon>
+            <span>Cycle</span>
+        </a>
+    </div>
+}
+
+@if (isMobileReportsOpen()) {
+    <div class="sidebar-mobile__sheet" role="dialog" aria-label="Reports and goals">
+        <a routerLink="/statistics" routerLinkActive="is-active" (click)="closeMobileMenus()">
+            <mat-icon>bar_chart</mat-icon>
+            <span>Reports</span>
+        </a>
+        <a routerLink="/goals" routerLinkActive="is-active" (click)="closeMobileMenus()">
+            <mat-icon>flag</mat-icon>
+            <span>Goals</span>
+        </a>
+    </div>
+}
+
+@if (isMobileUserOpen()) {
+    <div class="sidebar-mobile__sheet" role="dialog" aria-label="User menu">
+        <a routerLink="/profile" routerLinkActive="is-active" (click)="closeMobileMenus()">
+            <mat-icon>settings</mat-icon>
+            <span>{{ 'HEADER.ACCOUNT' | translate }}</span>
+        </a>
+        <button type="button" (click)="logout(); closeMobileMenus()">
+            <mat-icon>logout</mat-icon>
+            <span>{{ 'HEADER.LOGOUT' | translate }}</span>
+        </button>
+    </div>
+}

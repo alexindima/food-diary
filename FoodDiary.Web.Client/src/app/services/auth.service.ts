@@ -6,12 +6,14 @@ import { ApiService } from './api.service';
 import { NavigationService } from './navigation.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { GoogleLoginRequest } from '../types/google-auth.data';
+import { QuickConsumptionService } from './quick-consumption.service';
 
 @Injectable({
     providedIn: 'root',
 })
 export class AuthService extends ApiService {
     private readonly navigationService = inject(NavigationService);
+    private readonly quickConsumptionService = inject(QuickConsumptionService);
     protected readonly baseUrl = environment.apiUrls.auth;
 
     private authTokenSignal = signal<string | null>(this.getToken());
@@ -111,6 +113,7 @@ export class AuthService extends ApiService {
     }
 
     private onLogin(authResponse: AuthResponse, rememberMe: boolean): void {
+        this.quickConsumptionService.exitPreview();
         this.setToken(authResponse.accessToken, rememberMe);
         this.setRefreshToken(authResponse.refreshToken);
         this.authTokenSignal.set(authResponse.accessToken);
