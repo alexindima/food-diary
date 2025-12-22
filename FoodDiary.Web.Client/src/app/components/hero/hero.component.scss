@@ -139,9 +139,9 @@
         position: relative;
         z-index: 2;
         width: min(750px, 100%);
-        background: #fff;
-        border-radius: 16px;
-        box-shadow: 0 22px 60px rgba(15, 23, 42, 0.14);
+        background: transparent;
+        border-radius: 0;
+        box-shadow: none;
         padding: 0;
         transform: translate(8%, -8px);
     }

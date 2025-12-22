@@ -37,9 +37,12 @@
         min-width: 0;
     }
 
-    &__thumb {
+    &__thumb--header {
         width: 56px;
         height: 56px;
+        min-width: 56px;
+        min-height: 56px;
+        flex: 0 0 56px;
         border-radius: 16px;
         overflow: hidden;
         display: grid;
@@ -56,6 +59,10 @@
 
         mat-icon {
             color: #0ea5e9;
+            font-size: 28px;
+            width: 28px;
+            height: 28px;
+            line-height: 1;
         }
     }
 
@@ -164,16 +171,28 @@
         --fd-button-padding-y: 12px;
         --fd-button-padding-x: 16px;
         font-weight: 800;
-        background: linear-gradient(135deg, #4dabff, #2563eb);
-        color: #fff;
-        box-shadow: 0 14px 28px rgba(37, 99, 235, 0.28);
+        background: transparent;
+        color: inherit;
+        box-shadow: none;
         border: none;
 
         ::ng-deep button,
         ::ng-deep .fd-ui-button {
-            background: transparent;
+            background: linear-gradient(135deg, #4dabff, #2563eb);
             border: none;
             color: #fff;
+            box-shadow: 0 10px 26px rgba(37, 99, 235, 0.28);
+        }
+
+        ::ng-deep button:hover:not(:disabled),
+        ::ng-deep .fd-ui-button:hover:not(:disabled) {
+            background: linear-gradient(135deg, #60b6ff, #2f6df2);
+            box-shadow: 0 12px 30px rgba(37, 99, 235, 0.32);
+        }
+
+        ::ng-deep button:active:not(:disabled),
+        ::ng-deep .fd-ui-button:active:not(:disabled) {
+            background: linear-gradient(135deg, #4dabff, #2563eb);
             box-shadow: none;
         }
     }

@@ -84,6 +84,15 @@
         fill: none;
     }
 
+    &__ring {
+        outline: none;
+    }
+
+    &__ring:focus,
+    &__ring:focus-visible {
+        outline: none;
+    }
+
     &__track {
         stroke: #e8eef9;
         opacity: 0.9;
@@ -100,11 +109,6 @@
             stroke-width: 10;
         }
 
-        &.is-hovered {
-            stroke: color-mix(in srgb, var(--ring-color, #c8dafd) 45%, #ffffff 55%);
-            filter: drop-shadow(0 0 4px color-mix(in srgb, var(--ring-color, #c8dafd) 35%, transparent 65%));
-            transform: scale(1.02) translateZ(0);
-        }
     }
 
     &__progress {
@@ -121,10 +125,6 @@
             stroke-width: 10;
         }
 
-        &.is-hovered {
-            transform: scale(1.02) translateZ(0);
-            filter: drop-shadow(0 0 4px color-mix(in srgb, var(--ring-color, rgba(59, 130, 246, 0.2)) 35%, transparent 65%));
-        }
     }
 
     &__center {

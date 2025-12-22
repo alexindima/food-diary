@@ -30,7 +30,6 @@ export class DashboardSummaryCardComponent {
     public readonly nutrientBars = input<NutrientBar[] | null>(null);
     public readonly isDailyHovered = signal(false);
     public readonly isWeeklyHovered = signal(false);
-
     private readonly outerRadius = 112;
     private readonly innerRadius = 88;
     public readonly dailyCircumference = 2 * Math.PI * this.outerRadius;

@@ -18,6 +18,7 @@
 
         &--secondary {
             margin-top: $gap-l;
+            padding-top: clamp(4px, 1vw, 10px);
         }
     }
 
@@ -63,7 +64,7 @@
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     gap: clamp($gap-l, 4vw, 40px);
-    margin-top: $gap-m;
+    margin-top: 0;
 
     &__item {
         display: grid;
@@ -146,8 +147,14 @@
     }
 }
 
+.landing-preview__stack {
+    display: grid;
+    gap: clamp($gap-l, 4vw, 40px);
+    margin-top: $gap-m;
+}
+
 .landing-tour-block {
-    margin-top: $gap-l;
+    margin-top: 0;
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr);
     gap: clamp($gap-m, 3vw, 32px);
@@ -166,20 +173,16 @@
     margin-top: 0;
     display: grid;
     grid-template-columns: 1fr;
-    gap: $gap-m;
+    gap: 0;
 
     &__catalog {
         display: grid;
-        gap: $gap-s;
+        gap: 0;
         align-content: start;
     }
 
     &__group {
-        background: #fff;
-        border: 1px solid rgba(17, 24, 39, 0.06);
-        border-radius: 14px;
         padding: $gap-m;
-        box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
         display: grid;
         gap: $gap-s;
     }
@@ -202,11 +205,7 @@
 
     &__drawer {
         position: relative;
-        background: linear-gradient(180deg, rgba(59, 130, 246, 0.08), rgba(59, 130, 246, 0.02));
-        border: 1px solid rgba(59, 130, 246, 0.15);
-        border-radius: 16px;
         padding: $gap-m;
-        box-shadow: 0 16px 36px rgba(15, 23, 42, 0.12);
         display: grid;
         gap: $gap-s;
         align-content: start;
