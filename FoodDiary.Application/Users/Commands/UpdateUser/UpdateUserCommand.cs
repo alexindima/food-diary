@@ -23,6 +23,7 @@ public record UpdateUserCommand(
     int? StepGoal,
     double? WaterGoal,
     double? HydrationGoal,
+    string? Language,
     string? ProfileImage,
     Guid? ProfileImageAssetId,
     string? DashboardLayoutJson,

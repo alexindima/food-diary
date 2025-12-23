@@ -27,6 +27,12 @@ public class UpdateUserCommandHandler(
             return Result.Failure<UserResponse>(activityLevelResult.Error);
         }
 
+        var languageResult = NormalizeLanguage(command.Language);
+        if (languageResult.IsFailure)
+        {
+            return Result.Failure<UserResponse>(languageResult.Error);
+        }
+
         var oldAssetId = user.ProfileImageAssetId;
         ImageAssetId? newAssetId = null;
         if (command.ProfileImageAssetId.HasValue)
@@ -51,6 +57,7 @@ public class UpdateUserCommandHandler(
             stepGoal: command.StepGoal,
             waterGoal: command.WaterGoal,
             hydrationGoal: command.HydrationGoal,
+            language: languageResult.Value,
             profileImage: Normalize(command.ProfileImage),
             profileImageAssetId: newAssetId,
             dashboardLayoutJson: command.DashboardLayoutJson
@@ -86,6 +93,19 @@ public class UpdateUserCommandHandler(
         return Enum.TryParse<ActivityLevel>(value, true, out var parsed)
             ? Result.Success<ActivityLevel?>(parsed)
             : Result.Failure<ActivityLevel?>(Validation.Invalid(nameof(UpdateUserCommand.ActivityLevel), "Invalid activity level value."));
+    }
+
+    private static Result<string?> NormalizeLanguage(string? value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            return Result.Success<string?>(null);
+        }
+
+        var normalized = value.Trim().ToLowerInvariant();
+        return normalized is "en" or "ru"
+            ? Result.Success<string?>(normalized)
+            : Result.Failure<string?>(Validation.Invalid(nameof(UpdateUserCommand.Language), "Invalid language value."));
     }
 
     private static async Task TryDeleteAssetAsync(

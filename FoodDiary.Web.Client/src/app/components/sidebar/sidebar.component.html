@@ -5,35 +5,35 @@
         </div>
         <div class="sidebar__brand-text">
             <span class="sidebar__brand-title">Food Diary</span>
-            <span class="sidebar__brand-plan">Pro</span>
+            <span class="sidebar__brand-plan">{{ 'SIDEBAR.PLAN_PRO' | translate }}</span>
         </div>
     </div>
 
     <nav class="sidebar__nav">
         <a routerLink="/" routerLinkActive="is-active" [routerLinkActiveOptions]="{ exact: true }" class="sidebar__link">
             <mat-icon>dashboard</mat-icon>
-            <span>Dashboard</span>
+            <span>{{ 'SIDEBAR.DASHBOARD' | translate }}</span>
         </a>
     </nav>
 
     <div class="sidebar__section">
         <button class="sidebar__section-header" type="button" (click)="toggleFoodTracking()">
-            <span>Food tracking</span>
+            <span>{{ 'SIDEBAR.FOOD_TRACKING' | translate }}</span>
             <mat-icon [class.is-open]="isFoodTrackingOpen()">expand_more</mat-icon>
         </button>
         @if (isFoodTrackingOpen()) {
             <nav class="sidebar__nav sidebar__nav--secondary">
                 <a routerLink="/consumptions" routerLinkActive="is-active" class="sidebar__link sidebar__link--secondary">
                     <mat-icon>restaurant_menu</mat-icon>
-                    <span>Food Diary</span>
+                    <span>{{ 'SIDEBAR.FOOD_DIARY' | translate }}</span>
                 </a>
                 <a routerLink="/products" routerLinkActive="is-active" class="sidebar__link sidebar__link--secondary">
                     <mat-icon>inventory_2</mat-icon>
-                    <span>Products</span>
+                    <span>{{ 'SIDEBAR.PRODUCTS' | translate }}</span>
                 </a>
                 <a routerLink="/recipes" routerLinkActive="is-active" class="sidebar__link sidebar__link--secondary">
                     <mat-icon>restaurant</mat-icon>
-                    <span>Recipes</span>
+                    <span>{{ 'SIDEBAR.RECIPES' | translate }}</span>
                 </a>
             </nav>
         }
@@ -41,22 +41,22 @@
 
     <div class="sidebar__section">
         <button class="sidebar__section-header" type="button" (click)="toggleBodyTracking()">
-            <span>Body tracking</span>
+            <span>{{ 'SIDEBAR.BODY_TRACKING' | translate }}</span>
             <mat-icon [class.is-open]="isBodyTrackingOpen()">expand_more</mat-icon>
         </button>
         @if (isBodyTrackingOpen()) {
             <nav class="sidebar__nav sidebar__nav--secondary">
                 <a routerLink="/weight-history" routerLinkActive="is-active" class="sidebar__link sidebar__link--secondary">
                     <mat-icon>monitor_weight</mat-icon>
-                    <span>Weight</span>
+                    <span>{{ 'SIDEBAR.WEIGHT' | translate }}</span>
                 </a>
                 <a routerLink="/waist-history" routerLinkActive="is-active" class="sidebar__link sidebar__link--secondary">
                     <mat-icon>straighten</mat-icon>
-                    <span>Waist</span>
+                    <span>{{ 'SIDEBAR.WAIST' | translate }}</span>
                 </a>
                 <a routerLink="/cycle-tracking" routerLinkActive="is-active" class="sidebar__link sidebar__link--secondary">
                     <mat-icon>favorite</mat-icon>
-                    <span>Cycle</span>
+                    <span>{{ 'SIDEBAR.CYCLE' | translate }}</span>
                 </a>
             </nav>
         }
@@ -67,11 +67,11 @@
     <nav class="sidebar__nav sidebar__nav--secondary sidebar__nav--bottom">
         <a routerLink="/statistics" routerLinkActive="is-active" class="sidebar__link sidebar__link--secondary">
             <mat-icon>bar_chart</mat-icon>
-            <span>Reports</span>
+            <span>{{ 'SIDEBAR.REPORTS' | translate }}</span>
         </a>
         <a routerLink="/goals" routerLinkActive="is-active" class="sidebar__link sidebar__link--secondary">
             <mat-icon>flag</mat-icon>
-            <span>Goals</span>
+            <span>{{ 'SIDEBAR.GOALS' | translate }}</span>
         </a>
     </nav>
 
@@ -89,7 +89,7 @@
                 }
                 <div class="sidebar__user-meta">
                     <div class="sidebar__user-name">{{ user.username || user.email }}</div>
-                    <div class="sidebar__user-plan">Free Account</div>
+                    <div class="sidebar__user-plan">{{ 'SIDEBAR.PLAN_FREE' | translate }}</div>
                 </div>
                 <mat-icon class="sidebar__user-arrow" [class.is-open]="isUserMenuOpen()">expand_less</mat-icon>
             </button>
@@ -119,7 +119,7 @@
         (click)="closeMobileMenus()"
     >
         <mat-icon>dashboard</mat-icon>
-        <span class="sidebar-mobile__label">Dashboard</span>
+        <span class="sidebar-mobile__label">{{ 'SIDEBAR.DASHBOARD' | translate }}</span>
     </a>
     <button
         type="button"
@@ -130,7 +130,7 @@
         [attr.aria-expanded]="isMobileFoodOpen()"
     >
         <mat-icon>restaurant_menu</mat-icon>
-        <span class="sidebar-mobile__label">Food</span>
+        <span class="sidebar-mobile__label">{{ 'SIDEBAR.FOOD' | translate }}</span>
     </button>
     <button
         type="button"
@@ -141,7 +141,7 @@
         [attr.aria-expanded]="isMobileBodyOpen()"
     >
         <mat-icon>monitor_weight</mat-icon>
-        <span class="sidebar-mobile__label">Body</span>
+        <span class="sidebar-mobile__label">{{ 'SIDEBAR.BODY' | translate }}</span>
     </button>
     <button
         type="button"
@@ -152,7 +152,7 @@
         [attr.aria-expanded]="isMobileReportsOpen()"
     >
         <mat-icon>bar_chart</mat-icon>
-        <span class="sidebar-mobile__label">Reports</span>
+        <span class="sidebar-mobile__label">{{ 'SIDEBAR.REPORTS' | translate }}</span>
     </button>
     <button
         type="button"
@@ -163,59 +163,59 @@
         [attr.aria-expanded]="isMobileUserOpen()"
     >
         <mat-icon>person</mat-icon>
-        <span class="sidebar-mobile__label">User</span>
+        <span class="sidebar-mobile__label">{{ 'SIDEBAR.USER' | translate }}</span>
     </button>
 </nav>
 
 @if (isMobileFoodOpen()) {
-    <div class="sidebar-mobile__sheet" role="dialog" aria-label="Food tracking">
+    <div class="sidebar-mobile__sheet" role="dialog" [attr.aria-label]="'SIDEBAR.FOOD_TRACKING' | translate">
         <a routerLink="/consumptions" routerLinkActive="is-active" (click)="closeMobileMenus()">
             <mat-icon>restaurant_menu</mat-icon>
-            <span>Food Diary</span>
+            <span>{{ 'SIDEBAR.FOOD_DIARY' | translate }}</span>
         </a>
         <a routerLink="/products" routerLinkActive="is-active" (click)="closeMobileMenus()">
             <mat-icon>inventory_2</mat-icon>
-            <span>Products</span>
+            <span>{{ 'SIDEBAR.PRODUCTS' | translate }}</span>
         </a>
         <a routerLink="/recipes" routerLinkActive="is-active" (click)="closeMobileMenus()">
             <mat-icon>restaurant</mat-icon>
-            <span>Recipes</span>
+            <span>{{ 'SIDEBAR.RECIPES' | translate }}</span>
         </a>
     </div>
 }
 
 @if (isMobileBodyOpen()) {
-    <div class="sidebar-mobile__sheet" role="dialog" aria-label="Body tracking">
+    <div class="sidebar-mobile__sheet" role="dialog" [attr.aria-label]="'SIDEBAR.BODY_TRACKING' | translate">
         <a routerLink="/weight-history" routerLinkActive="is-active" (click)="closeMobileMenus()">
             <mat-icon>monitor_weight</mat-icon>
-            <span>Weight</span>
+            <span>{{ 'SIDEBAR.WEIGHT' | translate }}</span>
         </a>
         <a routerLink="/waist-history" routerLinkActive="is-active" (click)="closeMobileMenus()">
             <mat-icon>straighten</mat-icon>
-            <span>Waist</span>
+            <span>{{ 'SIDEBAR.WAIST' | translate }}</span>
         </a>
         <a routerLink="/cycle-tracking" routerLinkActive="is-active" (click)="closeMobileMenus()">
             <mat-icon>favorite</mat-icon>
-            <span>Cycle</span>
+            <span>{{ 'SIDEBAR.CYCLE' | translate }}</span>
         </a>
     </div>
 }
 
 @if (isMobileReportsOpen()) {
-    <div class="sidebar-mobile__sheet" role="dialog" aria-label="Reports and goals">
+    <div class="sidebar-mobile__sheet" role="dialog" [attr.aria-label]="'SIDEBAR.REPORTS_AND_GOALS' | translate">
         <a routerLink="/statistics" routerLinkActive="is-active" (click)="closeMobileMenus()">
             <mat-icon>bar_chart</mat-icon>
-            <span>Reports</span>
+            <span>{{ 'SIDEBAR.REPORTS' | translate }}</span>
         </a>
         <a routerLink="/goals" routerLinkActive="is-active" (click)="closeMobileMenus()">
             <mat-icon>flag</mat-icon>
-            <span>Goals</span>
+            <span>{{ 'SIDEBAR.GOALS' | translate }}</span>
         </a>
     </div>
 }
 
 @if (isMobileUserOpen()) {
-    <div class="sidebar-mobile__sheet" role="dialog" aria-label="User menu">
+    <div class="sidebar-mobile__sheet" role="dialog" [attr.aria-label]="'SIDEBAR.USER_MENU' | translate">
         <a routerLink="/profile" routerLinkActive="is-active" (click)="closeMobileMenus()">
             <mat-icon>settings</mat-icon>
             <span>{{ 'HEADER.ACCOUNT' | translate }}</span>

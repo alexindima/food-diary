@@ -32,6 +32,7 @@ public sealed class User : AggregateRoot<UserId> {
     public string? ProfileImage { get; private set; }
     public ImageAssetId? ProfileImageAssetId { get; private set; }
     public string? DashboardLayoutJson { get; private set; }
+    public string? Language { get; private set; }
     public bool IsActive { get; private set; } = true;
     public DateTime? DeletedAt { get; private set; }
 
@@ -89,7 +90,8 @@ public sealed class User : AggregateRoot<UserId> {
         double? hydrationGoal = null,
         string? profileImage = null,
         ImageAssetId? profileImageAssetId = null,
-        string? dashboardLayoutJson = null) {
+        string? dashboardLayoutJson = null,
+        string? language = null) {
         if (username is not null) Username = username;
         if (firstName is not null) FirstName = firstName;
         if (lastName is not null) LastName = lastName;
@@ -110,6 +112,7 @@ public sealed class User : AggregateRoot<UserId> {
         if (profileImage is not null) ProfileImage = profileImage;
         if (profileImageAssetId.HasValue) ProfileImageAssetId = profileImageAssetId;
         if (dashboardLayoutJson is not null) DashboardLayoutJson = dashboardLayoutJson;
+        if (language is not null) Language = language;
 
         SetModified();
     }

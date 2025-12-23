@@ -831,6 +831,8 @@
         "EDIT_SUBTITLE": "Profile, goals and preferences",
         "EMAIL": "Email",
         "EMAIL_PLACEHOLDER": "user@example.com",
+        "LANGUAGE": "Language",
+        "LANGUAGE_PLACEHOLDER": "Select language",
         "NEW_PASSWORD": "New Password",
         "NEW_PASSWORD_PLACEHOLDER": "Enter a new password",
         "CONFIRM_NEW_PASSWORD": "Confirm New Password",
@@ -872,6 +874,10 @@
             "HIGH": "High activity",
             "EXTREME": "Extreme activity"
         },
+        "LANGUAGE_OPTIONS": {
+            "EN": "English",
+            "RU": "Russian"
+        },
         "NUTRITION_SECTION": "Nutrition goals",
         "DAILY_CALORIES": "Daily calorie target",
         "CALORIE_TARGET_LABEL": "Calorie target (kcal)",
@@ -907,6 +913,26 @@
         "UPDATE_ERROR": "Failed to update user information.",
         "UPDATE_SUCCESS": "User information updated successfully!",
         "GO_TO_HOME_BUTTON": "Go to Home"
+    },
+    "SIDEBAR": {
+        "PLAN_PRO": "Pro",
+        "PLAN_FREE": "Free Account",
+        "DASHBOARD": "Dashboard",
+        "FOOD_TRACKING": "Food tracking",
+        "FOOD_DIARY": "Food Diary",
+        "PRODUCTS": "Products",
+        "RECIPES": "Recipes",
+        "BODY_TRACKING": "Body tracking",
+        "WEIGHT": "Weight",
+        "WAIST": "Waist",
+        "CYCLE": "Cycle",
+        "REPORTS": "Reports",
+        "GOALS": "Goals",
+        "FOOD": "Food",
+        "BODY": "Body",
+        "USER": "User",
+        "REPORTS_AND_GOALS": "Reports and goals",
+        "USER_MENU": "User menu"
     },
     "TODAY_CONSUMPTION": {
         "TITLE": "Today's Consumption",

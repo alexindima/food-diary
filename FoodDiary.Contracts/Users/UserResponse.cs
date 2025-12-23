@@ -23,6 +23,7 @@ public record UserResponse(
     int? StepGoal,
     double? WaterGoal,
     double? HydrationGoal,
+    string? Language,
     string? ProfileImage,
     Guid? ProfileImageAssetId,
     DashboardLayoutSettings? DashboardLayout,

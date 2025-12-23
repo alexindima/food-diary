@@ -29,6 +29,7 @@ export interface User {
     stepGoal?: number;
     waterGoal?: number;
     hydrationGoal?: number;
+    language?: string;
     profileImage?: string;
     profileImageAssetId?: string;
     dashboardLayout?: DashboardLayoutSettings | null;
@@ -51,6 +52,7 @@ export class UpdateUserDto {
     public stepGoal?: number;
     public waterGoal?: number;
     public hydrationGoal?: number;
+    public language?: string;
     public profileImage?: string;
     public profileImageAssetId?: string;
     public dashboardLayout?: DashboardLayoutSettings | null;
@@ -73,6 +75,7 @@ export class UpdateUserDto {
         this.stepGoal = normalizeInteger(formValues.stepGoal);
         this.waterGoal = normalizeNumber(formValues.waterGoal);
         this.hydrationGoal = normalizeNumber((formValues as any).hydrationGoal);
+        this.language = normalizeLanguage((formValues as any).language);
         const normalizedImage = normalizeProfileImage(formValues.profileImage as ImageSelection | string | null | undefined);
         this.profileImage = normalizedImage?.url;
         this.profileImageAssetId = normalizedImage?.assetId;
@@ -113,6 +116,15 @@ const normalizeActivityLevel = (value: ActivityLevelOption | null | undefined): 
 
     const lower = value.toLowerCase();
     return lower.charAt(0).toUpperCase() + lower.slice(1);
+};
+
+const normalizeLanguage = (value: string | null | undefined): string | undefined => {
+    if (!value) {
+        return undefined;
+    }
+
+    const normalized = value.trim().toLowerCase();
+    return normalized ? normalized : undefined;
 };
 
 const normalizeProfileImage = (

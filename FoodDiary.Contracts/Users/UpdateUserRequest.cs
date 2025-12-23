@@ -17,6 +17,7 @@ public record UpdateUserRequest(
     int? StepGoal,
     double? WaterGoal,
     double? HydrationGoal,
+    string? Language,
     string? ProfileImage,
     Guid? ProfileImageAssetId,
     DashboardLayoutSettings? DashboardLayout,

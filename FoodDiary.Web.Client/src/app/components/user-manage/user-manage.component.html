@@ -71,6 +71,13 @@
                                 [placeholder]="'USER_MANAGE.EMAIL_PLACEHOLDER' | translate"
                                 floatLabel="always"
                             />
+                            <fd-ui-select
+                                formControlName="language"
+                                [label]="'USER_MANAGE.LANGUAGE' | translate"
+                                [placeholder]="'USER_MANAGE.LANGUAGE_PLACEHOLDER' | translate"
+                                [options]="languageOptions"
+                                floatLabel="always"
+                            />
                             <div class="user-manage__link-button">
                                 <fd-ui-button
                                     type="button"

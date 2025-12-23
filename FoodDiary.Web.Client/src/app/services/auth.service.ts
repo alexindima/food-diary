@@ -7,6 +7,7 @@ import { NavigationService } from './navigation.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { GoogleLoginRequest } from '../types/google-auth.data';
 import { QuickConsumptionService } from './quick-consumption.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Injectable({
     providedIn: 'root',
@@ -14,6 +15,7 @@ import { QuickConsumptionService } from './quick-consumption.service';
 export class AuthService extends ApiService {
     private readonly navigationService = inject(NavigationService);
     private readonly quickConsumptionService = inject(QuickConsumptionService);
+    private readonly translateService = inject(TranslateService);
     protected readonly baseUrl = environment.apiUrls.auth;
 
     private authTokenSignal = signal<string | null>(this.getToken());
@@ -129,6 +131,14 @@ export class AuthService extends ApiService {
         this.setToken(authResponse.accessToken, rememberMe);
         this.setRefreshToken(authResponse.refreshToken);
         this.authTokenSignal.set(authResponse.accessToken);
+
+        const preferredLanguage = authResponse.user?.language;
+        if (preferredLanguage) {
+            const current = this.translateService.currentLang || this.translateService.getDefaultLang();
+            if (current !== preferredLanguage) {
+                this.translateService.use(preferredLanguage).subscribe();
+            }
+        }
 
         const userId = authResponse.user?.id ?? this.extractUserIdFromToken(authResponse.accessToken);
         if (userId) {

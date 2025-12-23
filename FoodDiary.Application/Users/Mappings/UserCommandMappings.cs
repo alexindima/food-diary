@@ -32,6 +32,7 @@ public static class UserCommandMappings
             request.StepGoal,
             request.WaterGoal,
             request.HydrationGoal,
+            request.Language,
             request.ProfileImage,
             request.ProfileImageAssetId,
             dashboardLayoutJson,

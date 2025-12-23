@@ -81,8 +81,10 @@ export class UserManageComponent implements OnInit {
 
     public genders = Object.values(Gender);
     public activityLevels: ActivityLevelOption[] = ['MINIMAL', 'LIGHT', 'MODERATE', 'HIGH', 'EXTREME'];
+    public languageCodes: string[] = ['en', 'ru'];
     public genderOptions: FdUiSelectOption<Gender | null>[] = [];
     public activityLevelOptions: FdUiSelectOption<ActivityLevelOption | null>[] = [];
+    public languageOptions: FdUiSelectOption<string | null>[] = [];
 
     public userForm: FormGroup<UserFormData>;
     public globalError = signal<string | null>(null);
@@ -96,6 +98,7 @@ export class UserManageComponent implements OnInit {
             lastName: new FormControl<string | null>(null),
             birthDate: new FormControl<Date | null>(null),
             gender: new FormControl<Gender | null>(null),
+            language: new FormControl<string | null>(null),
             height: new FormControl<number | null>(null),
             activityLevel: new FormControl<ActivityLevelOption | null>(null),
             dailyCalorieTarget: new FormControl<number | null>(null),
@@ -115,6 +118,14 @@ export class UserManageComponent implements OnInit {
 
     public ngOnInit(): void {
         this.userForm.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.clearGlobalError());
+        this.userForm.controls.language.valueChanges
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(language => {
+                if (!this.userForm.controls.language.dirty) {
+                    return;
+                }
+                this.applyLanguagePreference(language ?? null);
+            });
 
         this.loadUserData();
     }
@@ -126,6 +137,7 @@ export class UserManageComponent implements OnInit {
                     const userData = this.mapUserToForm(user);
                     this.lastUserData = userData;
                     this.applyUserData(userData);
+                    this.applyLanguagePreference(user.language ?? null);
                 } else {
                     this.setGlobalError('USER_MANAGE.LOAD_ERROR');
                 }
@@ -158,6 +170,7 @@ export class UserManageComponent implements OnInit {
                         const updatedData = this.mapUserToForm(user);
                         this.lastUserData = updatedData;
                         this.applyUserData(updatedData);
+                        this.applyLanguagePreference(user.language ?? null);
                         this.showSuccessDialog();
                     } else {
                         this.setGlobalError('USER_MANAGE.UPDATE_ERROR');
@@ -284,6 +297,24 @@ export class UserManageComponent implements OnInit {
             label: this.translateService.instant(`USER_MANAGE.ACTIVITY_LEVEL_OPTIONS.${level}`),
             value: level,
         }));
+
+        this.languageOptions = this.languageCodes.map(code => ({
+            label: this.translateService.instant(`USER_MANAGE.LANGUAGE_OPTIONS.${code.toUpperCase()}`),
+            value: code,
+        }));
+    }
+
+    private applyLanguagePreference(language: string | null): void {
+        if (!language) {
+            return;
+        }
+
+        const current = this.translateService.currentLang || this.translateService.getDefaultLang();
+        if (current === language) {
+            return;
+        }
+
+        this.translateService.use(language).subscribe();
     }
 
     private mapUserToForm(user: User): Partial<UserFormValues> {
@@ -293,6 +324,7 @@ export class UserManageComponent implements OnInit {
             firstName: user.firstName ?? null,
             lastName: user.lastName ?? null,
             gender: user.gender as Gender | null,
+            language: user.language ?? null,
             birthDate: user.birthDate ? new Date(user.birthDate) : null,
             height: user.height ?? null,
             activityLevel: user.activityLevel ? (user.activityLevel.toUpperCase() as ActivityLevelOption) : null,
@@ -314,6 +346,7 @@ export interface UserFormValues {
     email: string | null;
     birthDate: Date | null;
     gender: Gender | null;
+    language: string | null;
     height: number | null;
     activityLevel: ActivityLevelOption | null;
     dailyCalorieTarget: number | null;

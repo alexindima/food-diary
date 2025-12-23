@@ -43,6 +43,7 @@ public static class UserMappings
             user.StepGoal,
             user.WaterGoal,
             user.HydrationGoal,
+            user.Language,
             user.ProfileImage,
             user.ProfileImageAssetId?.Value,
             layout,
