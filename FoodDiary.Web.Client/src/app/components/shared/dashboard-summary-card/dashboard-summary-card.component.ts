@@ -6,9 +6,11 @@ import { NoticeBannerComponent } from '../notice-banner/notice-banner.component'
 export interface NutrientBar {
     id: string;
     label: string;
+    labelKey?: string;
     current: number;
     target: number;
     unit: string;
+    unitKey?: string;
     colorStart: string;
     colorEnd: string;
 }
@@ -279,10 +281,10 @@ export class DashboardSummaryCardComponent {
 
     private buildDefaultNutrientBars(): NutrientBar[] {
         return [
-            { id: 'protein', label: 'Protein', current: 110, target: 140, unit: 'g', colorStart: '#4dabff', colorEnd: '#2563eb' },
-            { id: 'carbs', label: 'Carbs', current: 180, target: 250, unit: 'g', colorStart: '#2dd4bf', colorEnd: '#0ea5e9' },
-            { id: 'fats', label: 'Fats', current: 45, target: 70, unit: 'g', colorStart: '#fbbf24', colorEnd: '#f97316' },
-            { id: 'fiber', label: 'Fiber', current: 18, target: 30, unit: 'g', colorStart: '#fb7185', colorEnd: '#ec4899' },
+            { id: 'protein', label: 'Protein', labelKey: 'GENERAL.NUTRIENTS.PROTEIN', current: 110, target: 140, unit: 'g', unitKey: 'GENERAL.UNITS.G', colorStart: '#4dabff', colorEnd: '#2563eb' },
+            { id: 'carbs', label: 'Carbs', labelKey: 'GENERAL.NUTRIENTS.CARB', current: 180, target: 250, unit: 'g', unitKey: 'GENERAL.UNITS.G', colorStart: '#2dd4bf', colorEnd: '#0ea5e9' },
+            { id: 'fats', label: 'Fats', labelKey: 'GENERAL.NUTRIENTS.FAT', current: 45, target: 70, unit: 'g', unitKey: 'GENERAL.UNITS.G', colorStart: '#fbbf24', colorEnd: '#f97316' },
+            { id: 'fiber', label: 'Fiber', labelKey: 'SHARED.NUTRIENTS_SUMMARY.FIBER', current: 18, target: 30, unit: 'g', unitKey: 'GENERAL.UNITS.G', colorStart: '#fb7185', colorEnd: '#ec4899' },
         ];
     }
 

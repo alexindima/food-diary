@@ -7,6 +7,18 @@
     background: linear-gradient(180deg, #e8f3ff 0%, #f5faff 40%, #e9f4ff 100%);
     color: $color-text-main;
 
+    &__top {
+        max-width: 1200px;
+        margin: 0 auto clamp(12px, 2vw, 20px);
+        padding: 0 0 0 var(--fd-layout-page-horizontal-padding, 24px);
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    &__language-toggle {
+        transform: translateX(clamp(80px, 6vw, 130px));
+    }
+
     &__grid {
         max-width: 1200px;
         margin: 0 auto;
@@ -265,6 +277,15 @@
     }
 
     @media (max-width: 768px) {
+        &__top {
+            padding: 0 var(--fd-layout-page-horizontal-padding, 24px);
+            justify-content: center;
+        }
+
+        &__language-toggle {
+            transform: none;
+        }
+
         &__grid {
             grid-template-columns: 1fr;
         }

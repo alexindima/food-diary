@@ -1,9 +1,18 @@
 <section class="hero">
+    <div class="hero__top">
+        <fd-ui-segmented-toggle
+            class="hero__language-toggle"
+            [options]="languageOptions"
+            [(selectedValue)]="language"
+            (selectedValueChange)="updateLanguage()"
+            [ariaLabel]="'LANDING_HERO.LANGUAGE_LABEL' | translate"
+        />
+    </div>
     <div class="hero__grid">
         <div class="hero__copy">
-            <span class="hero__eyebrow">{{ 'HERO.OVERLINE' | translate }}</span>
-            <h1 class="hero__title">{{ 'HERO.HEADLINE' | translate }}</h1>
-            <p class="hero__subtitle">{{ 'HERO.SUBTITLE' | translate }}</p>
+            <span class="hero__eyebrow">{{ 'LANDING_HERO.OVERLINE' | translate }}</span>
+            <h1 class="hero__title">{{ 'LANDING_HERO.HEADLINE' | translate }}</h1>
+            <p class="hero__subtitle">{{ 'LANDING_HERO.SUBTITLE' | translate }}</p>
 
             <div class="hero__actions">
                 <fd-ui-button
@@ -12,7 +21,7 @@
                     variant="primary"
                     (click)="goToRegister()"
                 >
-                    {{ 'HERO.REGISTER' | translate }}
+                    {{ 'LANDING_HERO.REGISTER' | translate }}
                 </fd-ui-button>
                 <fd-ui-button
                     class="hero__cta hero__cta--secondary"
@@ -21,11 +30,11 @@
                     fill="outline"
                     (click)="goToLogin()"
                 >
-                    {{ 'HERO.LOGIN' | translate }}
+                    {{ 'LANDING_HERO.LOGIN' | translate }}
                 </fd-ui-button>
             </div>
 
-            <p class="hero__reassurance">{{ 'HERO.REASSURANCE' | translate }}</p>
+            <p class="hero__reassurance">{{ 'LANDING_HERO.REASSURANCE' | translate }}</p>
         </div>
 
         <div class="hero__visual">

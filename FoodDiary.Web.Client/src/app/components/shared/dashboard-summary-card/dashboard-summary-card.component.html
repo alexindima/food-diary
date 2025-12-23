@@ -144,7 +144,9 @@
             @for (bar of resolvedNutrientBars(); track bar.id) {
                 <div class="dashboard-summary-card__bar">
                     <div class="dashboard-summary-card__bar-header">
-                        <span class="dashboard-summary-card__bar-label">{{ bar.label }}</span>
+                        <span class="dashboard-summary-card__bar-label">
+                            {{ bar.labelKey ? (bar.labelKey | translate) : bar.label }}
+                        </span>
                         <span
                             class="dashboard-summary-card__bar-value"
                             [style.color]="getBarColor(bar)"
@@ -153,7 +155,7 @@
                             @if (bar.target > 0) {
                                 / {{ bar.target | number:'1.0-0' }}
                             }
-                            {{ bar.unit }}
+                            {{ bar.unitKey ? (bar.unitKey | translate) : bar.unit }}
                         </span>
                     </div>
                     <div class="dashboard-summary-card__bar-track">

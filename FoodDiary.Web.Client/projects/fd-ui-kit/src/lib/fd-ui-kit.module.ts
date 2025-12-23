@@ -15,6 +15,7 @@ import { FdUiDialogComponent } from './dialog/fd-ui-dialog.component';
 import { FdUiDialogFooterDirective } from './dialog/fd-ui-dialog-footer.directive';
 import { FdUiConfirmDialogComponent } from './dialog/fd-ui-confirm-dialog.component';
 import { FdUiAccentSurfaceComponent } from './accent-surface/fd-ui-accent-surface.component';
+import { FdUiSegmentedToggleComponent } from './segmented-toggle/fd-ui-segmented-toggle.component';
 
 const FD_UI_COMPONENTS = [
     FdUiInputComponent,
@@ -33,6 +34,7 @@ const FD_UI_COMPONENTS = [
     FdUiDialogComponent,
     FdUiDialogFooterDirective,
     FdUiConfirmDialogComponent,
+    FdUiSegmentedToggleComponent,
 ];
 
 @NgModule({

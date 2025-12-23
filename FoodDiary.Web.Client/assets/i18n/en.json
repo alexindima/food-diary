@@ -129,26 +129,27 @@
             "TERMS_OF_USE": "Terms of Use"
         }
     },
-    "HERO": {
+    "LANDING_HERO": {
         "OVERLINE": "Online food diary",
         "HEADLINE": "Track your meals. Hit your goals.",
         "SUBTITLE": "Log products and recipes, see daily macros, and watch your progress in one clean dashboard.",
         "REASSURANCE": "Free • No ads • Start in under a minute",
         "LOGIN": "Login",
         "REGISTER": "Register",
+        "LANGUAGE_LABEL": "Language",
         "MOCK_TITLE": "Food Diary Dashboard",
         "MOCK_CALORIES": "Consumed today",
         "MOCK_GOAL": "Goal: 1 800 kcal",
         "MOCK_TREND": "This week",
         "MOCK_WEEK": "vs last week",
         "MOCK_MEAL": "Breakfast",
-        "MOCK_CHART": "Progress",
-        "MEALS_PREVIEW": {
-            "EYEBROW": "See today",
-            "TITLE": "Today's meals preview",
-            "VIEW_ALL": "Open all meals",
-            "PLACEHOLDER": "Add a meal to see it here"
-        }
+        "MOCK_CHART": "Progress"
+    },
+    "MEALS_PREVIEW": {
+        "EYEBROW": "See today",
+        "TITLE": "Today's meals preview",
+        "VIEW_ALL": "Open all meals",
+        "PLACEHOLDER": "Add a meal to see it here"
     },
     "FEATURES": {
         "EYEBROW": "Why Food Diary",
@@ -172,7 +173,7 @@
         },
         "BUTTON_MORE": "Learn More"
     },
-    "LANDING": {
+    "LANDING_PREVIEW_TOUR": {
         "PREVIEW": {
             "EYEBROW": "Product tour",
             "TITLE": "See your day at a glance",
@@ -213,27 +214,78 @@
             "RECIPES": "Recipes",
             "DRAWER_HINT": "Preview: edit and save actions unlock after you sign up."
         },
-        "STEPS": {
-            "EYEBROW": "How it works",
-            "TITLE": "Three steps to a clear routine",
-            "SUBTITLE": "From sign-up to tracking in seconds.",
-            "STEP1": {
-                "TITLE": "Create an account",
-                "TEXT": "Answer a few questions so we can tailor your diary."
+        "PREVIEW_DATA": {
+            "MEAL_COMMENT": "Quinoa salad with chicken and avocado",
+            "PRODUCTS": {
+                "YOGURT": {
+                    "NAME": "Greek yogurt 2%",
+                    "CATEGORY": "Dairy",
+                    "DESCRIPTION": "A classic yogurt for breakfasts."
+                },
+                "GRANOLA": {
+                    "NAME": "Nut granola",
+                    "CATEGORY": "Grains",
+                    "DESCRIPTION": "Crunchy granola for quick snacks."
+                }
             },
-            "STEP2": {
-                "TITLE": "Log meals with products or recipes",
-                "TEXT": "Add portions, scan items, and reuse saved meals."
+            "RECIPES": {
+                "BOWL": {
+                    "NAME": "Salmon quinoa bowl",
+                    "DESCRIPTION": "A hearty lunch in 10 minutes.",
+                    "CATEGORY": "Lunch",
+                    "STEP": "Mix quinoa, vegetables, and roasted salmon."
+                },
+                "SALAD": {
+                    "NAME": "Chicken avocado salad",
+                    "DESCRIPTION": "A light dinner with plenty of protein.",
+                    "CATEGORY": "Dinner",
+                    "STEP": "Combine greens, chicken, avocado, and dressing."
+                }
             },
-            "STEP3": {
-                "TITLE": "Watch your progress",
-                "TEXT": "Track calories, macros, weight and trends in one place."
+            "WEEKDAYS": {
+                "MON": "Mon",
+                "TUE": "Tue",
+                "WED": "Wed",
+                "THU": "Thu",
+                "FRI": "Fri",
+                "SAT": "Sat",
+                "SUN": "Sun"
+            },
+            "NUTRIENTS": {
+                "PROTEINS": "Proteins",
+                "FATS": "Fats",
+                "CARBS": "Carbs",
+                "FIBER": "Fiber"
+            },
+            "NUTRIENTS_SHORT": {
+                "PROTEINS": "P",
+                "FATS": "F",
+                "CARBS": "C"
             }
-        },
-        "CTA": {
-            "TITLE": "Ready to start?",
-            "SUBTITLE": "Registration takes less than a minute. You can leave anytime."
         }
+    },
+    "LANDING_STEPS": {
+        "EYEBROW": "How it works",
+        "TITLE": "Three steps to a clear routine",
+        "SUBTITLE": "From sign-up to tracking in seconds.",
+        "STEP1": {
+            "TITLE": "Create an account",
+            "TEXT": "Answer a few questions so we can tailor your diary."
+        },
+        "STEP2": {
+            "TITLE": "Log meals with products or recipes",
+            "TEXT": "Add portions, scan items, and reuse saved meals."
+        },
+        "STEP3": {
+            "TITLE": "Watch your progress",
+            "TEXT": "Track calories, macros, weight and trends in one place."
+        }
+    },
+    "LANDING_CTA": {
+        "TITLE": "Ready to start?",
+        "SUBTITLE": "Registration takes less than a minute. You can leave anytime.",
+        "REGISTER": "Register",
+        "LOGIN": "Login"
     },
     "AUTH": {
         "LOGIN": {
@@ -1250,3 +1302,5 @@
         "NO_DATA_ACTION": "Set cycle"
     }
 }
+
+

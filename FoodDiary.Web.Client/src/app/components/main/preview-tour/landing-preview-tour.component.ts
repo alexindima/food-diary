@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component, OnInit, effect, inject } from '@angular/core';
-import { TranslateModule } from '@ngx-translate/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, effect, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ChartConfiguration, ChartOptions } from 'chart.js';
 import { MealsPreviewComponent, MealPreviewEntry } from '../../shared/meals-preview/meals-preview.component';
 import { StatisticsSummaryComponent, SummaryMetrics } from '../../shared/statistics-summary/statistics-summary.component';
@@ -38,9 +39,11 @@ export class LandingPreviewTourComponent implements OnInit {
     private readonly authService = inject(AuthService);
     private readonly fdDialogService = inject(FdUiDialogService);
     private readonly quickConsumptionService = inject(QuickConsumptionService);
+    private readonly translateService = inject(TranslateService);
+    private readonly destroyRef = inject(DestroyRef);
 
     public isAuthenticated = this.authService.isAuthenticated;
-    public guestMealEntries: MealPreviewEntry[] = this.buildGuestMeals();
+    public guestMealEntries: MealPreviewEntry[] = [];
     public guestSummary = this.buildGuestSummary();
     public guestSummarySparkline = this.buildSparkline();
     public guestMacroSparkline = this.buildMacroSparkline();
@@ -75,9 +78,9 @@ export class LandingPreviewTourComponent implements OnInit {
         waist: this.buildBodyLineData([82.0, 81.6, 81.4, 81.3, 81.0, 80.8, 80.6]),
         whtr: this.buildBodyLineData([0.49, 0.49, 0.48, 0.48, 0.47, 0.47, 0.46]),
     };
-    public previewProducts: Product[] = this.buildPreviewProducts();
-    public previewRecipes: Recipe[] = this.buildPreviewRecipes();
-    public previewQuickItems: QuickConsumptionItem[] = this.buildPreviewQuickItems();
+    public previewProducts: Product[] = [];
+    public previewRecipes: Recipe[] = [];
+    public previewQuickItems: QuickConsumptionItem[] = [];
     public lineOptions: ChartConfiguration['options'] = {
         responsive: true,
         maintainAspectRatio: false,
@@ -95,16 +98,17 @@ export class LandingPreviewTourComponent implements OnInit {
     public radarOptions: ChartOptions<'radar'> = { scales: { r: { beginAtZero: true } } };
     public barOptions: ChartOptions<'bar'> = { plugins: { legend: { display: false } }, responsive: true, scales: { y: { beginAtZero: true } } };
 
-    private previewSeeded = false;
     private readonly clearPreviewOnAuth = effect(() => {
         if (this.isAuthenticated()) {
             this.quickConsumptionService.exitPreview();
-            this.previewSeeded = false;
         }
     });
 
     public ngOnInit(): void {
-        this.seedPreviewQuickConsumption();
+        this.refreshPreviewContent();
+        this.translateService.onLangChange
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => this.refreshPreviewContent());
     }
 
     public addPreviewProduct(product: Product): void {
@@ -123,6 +127,7 @@ export class LandingPreviewTourComponent implements OnInit {
     }
 
     private buildGuestMeals(): MealPreviewEntry[] {
+        const comment = this.translateService.instant('LANDING_PREVIEW_TOUR.PREVIEW_DATA.MEAL_COMMENT');
         const lunch: Consumption = {
             id: 'guest-lunch',
             date: new Date().toISOString(),
@@ -140,7 +145,7 @@ export class LandingPreviewTourComponent implements OnInit {
             manualFiber: null,
             preMealSatietyLevel: null,
             postMealSatietyLevel: null,
-            comment: 'Салат с киноа, курицей и авокадо',
+            comment,
             imageUrl: 'assets/images/stubs/meals/salad.svg',
             imageAssetId: null,
             items: [],
@@ -168,7 +173,7 @@ export class LandingPreviewTourComponent implements OnInit {
 
     private buildSparkline(): ChartConfiguration<'line'>['data'] {
         return {
-            labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+            labels: this.getWeekdayLabels(),
             datasets: [
                 {
                     data: [1600, 1700, 1800, 1500, 1900, 1750, 1820],
@@ -185,7 +190,7 @@ export class LandingPreviewTourComponent implements OnInit {
 
     private buildMacroSparkline(): Record<string, ChartConfiguration<'line'>['data']> {
         const template = (color: string) => ({
-            labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+            labels: this.getWeekdayLabels(),
             datasets: [
                 {
                     data: [12, 14, 16, 11, 18, 15, 17],
@@ -208,7 +213,7 @@ export class LandingPreviewTourComponent implements OnInit {
 
     private buildLineData(values: number[]): ChartConfiguration<'line'>['data'] {
         return {
-            labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+            labels: this.getWeekdayLabels(),
             datasets: [
                 {
                     data: values,
@@ -224,19 +229,21 @@ export class LandingPreviewTourComponent implements OnInit {
     }
 
     private buildMultiLineData(): ChartConfiguration<'line'>['data'] {
+        const nutrientLabels = this.getNutrientLabels();
         return {
-            labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+            labels: this.getWeekdayLabels(),
             datasets: [
-                { data: [110, 120, 130, 125, 140, 135, 138], label: 'Proteins', borderColor: '#36A2EB', tension: 0.35, borderWidth: 2 },
-                { data: [40, 42, 45, 44, 46, 48, 47], label: 'Fats', borderColor: '#FFCE56', tension: 0.35, borderWidth: 2 },
-                { data: [160, 170, 180, 175, 185, 190, 195], label: 'Carbs', borderColor: '#4BC0C0', tension: 0.35, borderWidth: 2 },
+                { data: [110, 120, 130, 125, 140, 135, 138], label: nutrientLabels.proteins, borderColor: '#36A2EB', tension: 0.35, borderWidth: 2 },
+                { data: [40, 42, 45, 44, 46, 48, 47], label: nutrientLabels.fats, borderColor: '#FFCE56', tension: 0.35, borderWidth: 2 },
+                { data: [160, 170, 180, 175, 185, 190, 195], label: nutrientLabels.carbs, borderColor: '#4BC0C0', tension: 0.35, borderWidth: 2 },
             ],
         };
     }
 
     private buildPieData(): ChartConfiguration<'pie'>['data'] {
+        const nutrientLabels = this.getNutrientLabels();
         return {
-            labels: ['Proteins', 'Fats', 'Carbs'],
+            labels: [nutrientLabels.proteins, nutrientLabels.fats, nutrientLabels.carbs],
             datasets: [
                 {
                     data: [24, 18, 58],
@@ -247,8 +254,9 @@ export class LandingPreviewTourComponent implements OnInit {
     }
 
     private buildRadarData(): ChartConfiguration<'radar'>['data'] {
+        const nutrientLabels = this.getNutrientLabels();
         return {
-            labels: ['Proteins', 'Fats', 'Carbs', 'Fiber'],
+            labels: [nutrientLabels.proteins, nutrientLabels.fats, nutrientLabels.carbs, nutrientLabels.fiber],
             datasets: [
                 {
                     data: [70, 55, 80, 60],
@@ -262,8 +270,9 @@ export class LandingPreviewTourComponent implements OnInit {
     }
 
     private buildBarData(): ChartConfiguration<'bar'>['data'] {
+        const shortLabels = this.getNutrientShortLabels();
         return {
-            labels: ['P', 'F', 'C'],
+            labels: [shortLabels.proteins, shortLabels.fats, shortLabels.carbs],
             datasets: [
                 {
                     data: [110, 45, 180],
@@ -275,7 +284,7 @@ export class LandingPreviewTourComponent implements OnInit {
 
     private buildBodyLineData(values: number[]): ChartConfiguration<'line'>['data'] {
         return {
-            labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+            labels: this.getWeekdayLabels(),
             datasets: [
                 {
                     data: values,
@@ -291,10 +300,17 @@ export class LandingPreviewTourComponent implements OnInit {
     }
 
     private buildPreviewProducts(): Product[] {
+        const yogurtName = this.translateService.instant('LANDING_PREVIEW_TOUR.PREVIEW_DATA.PRODUCTS.YOGURT.NAME');
+        const yogurtCategory = this.translateService.instant('LANDING_PREVIEW_TOUR.PREVIEW_DATA.PRODUCTS.YOGURT.CATEGORY');
+        const yogurtDescription = this.translateService.instant('LANDING_PREVIEW_TOUR.PREVIEW_DATA.PRODUCTS.YOGURT.DESCRIPTION');
+        const granolaName = this.translateService.instant('LANDING_PREVIEW_TOUR.PREVIEW_DATA.PRODUCTS.GRANOLA.NAME');
+        const granolaCategory = this.translateService.instant('LANDING_PREVIEW_TOUR.PREVIEW_DATA.PRODUCTS.GRANOLA.CATEGORY');
+        const granolaDescription = this.translateService.instant('LANDING_PREVIEW_TOUR.PREVIEW_DATA.PRODUCTS.GRANOLA.DESCRIPTION');
+
         return [
             {
                 id: 'preview-yogurt',
-                name: 'Греческий йогурт 2%',
+                name: yogurtName,
                 baseUnit: MeasurementUnit.G,
                 baseAmount: 100,
                 defaultPortionAmount: 150,
@@ -306,8 +322,8 @@ export class LandingPreviewTourComponent implements OnInit {
                 productType: ProductType.Dairy,
                 brand: 'FarmFresh',
                 barcode: null,
-                category: 'Молочное',
-                description: 'Классический йогурт для завтраков.',
+                category: yogurtCategory,
+                description: yogurtDescription,
                 comment: null,
                 imageUrl: null,
                 imageAssetId: null,
@@ -318,7 +334,7 @@ export class LandingPreviewTourComponent implements OnInit {
             },
             {
                 id: 'preview-granola',
-                name: 'Гранола с орехами',
+                name: granolaName,
                 baseUnit: MeasurementUnit.G,
                 baseAmount: 50,
                 defaultPortionAmount: 60,
@@ -330,8 +346,8 @@ export class LandingPreviewTourComponent implements OnInit {
                 productType: ProductType.Grain,
                 brand: 'Crunchy',
                 barcode: null,
-                category: 'Зерновые',
-                description: 'Хрустящая гранола для перекусов.',
+                category: granolaCategory,
+                description: granolaDescription,
                 comment: null,
                 imageUrl: null,
                 imageAssetId: null,
@@ -344,12 +360,21 @@ export class LandingPreviewTourComponent implements OnInit {
     }
 
     private buildPreviewRecipes(): Recipe[] {
+        const bowlName = this.translateService.instant('LANDING_PREVIEW_TOUR.PREVIEW_DATA.RECIPES.BOWL.NAME');
+        const bowlDescription = this.translateService.instant('LANDING_PREVIEW_TOUR.PREVIEW_DATA.RECIPES.BOWL.DESCRIPTION');
+        const bowlCategory = this.translateService.instant('LANDING_PREVIEW_TOUR.PREVIEW_DATA.RECIPES.BOWL.CATEGORY');
+        const bowlStep = this.translateService.instant('LANDING_PREVIEW_TOUR.PREVIEW_DATA.RECIPES.BOWL.STEP');
+        const saladName = this.translateService.instant('LANDING_PREVIEW_TOUR.PREVIEW_DATA.RECIPES.SALAD.NAME');
+        const saladDescription = this.translateService.instant('LANDING_PREVIEW_TOUR.PREVIEW_DATA.RECIPES.SALAD.DESCRIPTION');
+        const saladCategory = this.translateService.instant('LANDING_PREVIEW_TOUR.PREVIEW_DATA.RECIPES.SALAD.CATEGORY');
+        const saladStep = this.translateService.instant('LANDING_PREVIEW_TOUR.PREVIEW_DATA.RECIPES.SALAD.STEP');
+
         return [
             {
                 id: 'preview-bowl',
-                name: 'Боул с лососем и киноа',
-                description: 'Сытный ланч за 10 минут.',
-                category: 'Обед',
+                name: bowlName,
+                description: bowlDescription,
+                category: bowlCategory,
                 imageUrl: null,
                 imageAssetId: null,
                 prepTime: 10,
@@ -374,16 +399,16 @@ export class LandingPreviewTourComponent implements OnInit {
                     {
                         id: 'step-1',
                         stepNumber: 1,
-                        instruction: 'Смешайте киноа, овощи и запечённый лосось.',
+                        instruction: bowlStep,
                         ingredients: [],
                     },
                 ],
             },
             {
                 id: 'preview-salad',
-                name: 'Салат с курицей и авокадо',
-                description: 'Лёгкий ужин с высоким содержанием белка.',
-                category: 'Ужин',
+                name: saladName,
+                description: saladDescription,
+                category: saladCategory,
                 imageUrl: null,
                 imageAssetId: null,
                 prepTime: 12,
@@ -408,7 +433,7 @@ export class LandingPreviewTourComponent implements OnInit {
                     {
                         id: 'step-1',
                         stepNumber: 1,
-                        instruction: 'Соберите листья, курицу, авокадо и соус.',
+                        instruction: saladStep,
                         ingredients: [],
                     },
                 ],
@@ -442,12 +467,58 @@ export class LandingPreviewTourComponent implements OnInit {
         ];
     }
 
-    private seedPreviewQuickConsumption(): void {
-        if (this.isAuthenticated() || this.previewSeeded) {
+    private refreshPreviewContent(): void {
+        this.previewProducts = this.buildPreviewProducts();
+        this.previewRecipes = this.buildPreviewRecipes();
+        this.previewQuickItems = this.buildPreviewQuickItems();
+        this.guestMealEntries = this.buildGuestMeals();
+        this.guestSummarySparkline = this.buildSparkline();
+        this.guestMacroSparkline = this.buildMacroSparkline();
+        this.guestCaloriesLineData = this.buildLineData([1200, 1450, 1600, 1800, 1750, 1900, 2000]);
+        this.guestNutrientsLineData = this.buildMultiLineData();
+        this.guestPieData = this.buildPieData();
+        this.guestRadarData = this.buildRadarData();
+        this.guestBarData = this.buildBarData();
+        this.guestBodyDataByTab = {
+            weight: this.buildBodyLineData([72.4, 72.1, 71.9, 72.0, 71.8, 71.6, 71.5]),
+            bmi: this.buildBodyLineData([23.6, 23.5, 23.4, 23.4, 23.3, 23.3, 23.2]),
+            waist: this.buildBodyLineData([82.0, 81.6, 81.4, 81.3, 81.0, 80.8, 80.6]),
+            whtr: this.buildBodyLineData([0.49, 0.49, 0.48, 0.48, 0.47, 0.47, 0.46]),
+        };
+
+        if (this.isAuthenticated()) {
             return;
         }
 
         this.quickConsumptionService.setPreviewItems(this.previewQuickItems);
-        this.previewSeeded = true;
+    }
+
+    private getWeekdayLabels(): string[] {
+        return [
+            this.translateService.instant('LANDING_PREVIEW_TOUR.PREVIEW_DATA.WEEKDAYS.MON'),
+            this.translateService.instant('LANDING_PREVIEW_TOUR.PREVIEW_DATA.WEEKDAYS.TUE'),
+            this.translateService.instant('LANDING_PREVIEW_TOUR.PREVIEW_DATA.WEEKDAYS.WED'),
+            this.translateService.instant('LANDING_PREVIEW_TOUR.PREVIEW_DATA.WEEKDAYS.THU'),
+            this.translateService.instant('LANDING_PREVIEW_TOUR.PREVIEW_DATA.WEEKDAYS.FRI'),
+            this.translateService.instant('LANDING_PREVIEW_TOUR.PREVIEW_DATA.WEEKDAYS.SAT'),
+            this.translateService.instant('LANDING_PREVIEW_TOUR.PREVIEW_DATA.WEEKDAYS.SUN'),
+        ];
+    }
+
+    private getNutrientLabels(): { proteins: string; fats: string; carbs: string; fiber: string } {
+        return {
+            proteins: this.translateService.instant('LANDING_PREVIEW_TOUR.PREVIEW_DATA.NUTRIENTS.PROTEINS'),
+            fats: this.translateService.instant('LANDING_PREVIEW_TOUR.PREVIEW_DATA.NUTRIENTS.FATS'),
+            carbs: this.translateService.instant('LANDING_PREVIEW_TOUR.PREVIEW_DATA.NUTRIENTS.CARBS'),
+            fiber: this.translateService.instant('LANDING_PREVIEW_TOUR.PREVIEW_DATA.NUTRIENTS.FIBER'),
+        };
+    }
+
+    private getNutrientShortLabels(): { proteins: string; fats: string; carbs: string } {
+        return {
+            proteins: this.translateService.instant('LANDING_PREVIEW_TOUR.PREVIEW_DATA.NUTRIENTS_SHORT.PROTEINS'),
+            fats: this.translateService.instant('LANDING_PREVIEW_TOUR.PREVIEW_DATA.NUTRIENTS_SHORT.FATS'),
+            carbs: this.translateService.instant('LANDING_PREVIEW_TOUR.PREVIEW_DATA.NUTRIENTS_SHORT.CARBS'),
+        };
     }
 }
