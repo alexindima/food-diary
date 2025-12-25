@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, ViewEncapsulation, inject, input, output } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild, ViewEncapsulation, effect, forwardRef, inject, input, output } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { ErrorStateMatcher } from '@angular/material/core';
 import { MatFormFieldAppearance, MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
+import { MatInput, MatInputModule } from '@angular/material/input';
 import { FdUiFieldSize } from '../types/field-size.type';
 
 let uniqueId = 0;
@@ -25,8 +26,16 @@ let uniqueId = 0;
         },
     ],
 })
-export class FdUiInputComponent implements ControlValueAccessor {
+export class FdUiInputComponent implements ControlValueAccessor, AfterViewInit {
     private readonly cdr = inject(ChangeDetectorRef);
+    private readonly errorStateEffect = effect(() => {
+        this.syncErrorState();
+    });
+
+    @ViewChild(MatInput) private matInput?: MatInput;
+    protected readonly errorStateMatcher: ErrorStateMatcher = {
+        isErrorState: () => !!this.error(),
+    };
 
     public readonly id = input(`fd-ui-input-${uniqueId++}`);
     public readonly label = input<string>();
@@ -117,5 +126,19 @@ export class FdUiInputComponent implements ControlValueAccessor {
 
         // TODO: The 'emit' function requires a mandatory void argument
         this.suffixButtonClicked.emit();
+    }
+
+    public ngAfterViewInit(): void {
+        this.syncErrorState();
+    }
+
+    private syncErrorState(): void {
+        const hasError = !!this.error();
+        if (!this.matInput || this.matInput.errorState === hasError) {
+            return;
+        }
+
+        this.matInput.errorState = hasError;
+        this.matInput.stateChanges.next();
     }
 }

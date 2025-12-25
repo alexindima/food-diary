@@ -1,13 +1,17 @@
 import { CommonModule } from '@angular/common';
 import {
-  ChangeDetectionStrategy,
-  Component,
-  forwardRef,
-  input
+    AfterViewInit,
+    ChangeDetectionStrategy,
+    Component,
+    ViewChild,
+    effect,
+    forwardRef,
+    input,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ErrorStateMatcher } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
+import { MatInput, MatInputModule } from '@angular/material/input';
 import { FdUiFieldSize } from '../types/field-size.type';
 
 let uniqueId = 0;
@@ -27,7 +31,7 @@ let uniqueId = 0;
         },
     ],
 })
-export class FdUiTextareaComponent implements ControlValueAccessor {
+export class FdUiTextareaComponent implements ControlValueAccessor, AfterViewInit {
     public readonly id = input(`fd-ui-textarea-${uniqueId++}`);
     public readonly label = input<string>();
     public readonly placeholder = input<string | null>(null);
@@ -41,6 +45,14 @@ export class FdUiTextareaComponent implements ControlValueAccessor {
 
     protected disabled = false;
     protected internalValue = '';
+    protected readonly errorStateMatcher: ErrorStateMatcher = {
+        isErrorState: () => !!this.error(),
+    };
+    private readonly errorStateEffect = effect(() => {
+        this.syncErrorState();
+    });
+
+    @ViewChild(MatInput) private matInput?: MatInput;
 
     private onChange: (value: string) => void = () => undefined;
     private onTouched: () => void = () => undefined;
@@ -76,5 +88,19 @@ export class FdUiTextareaComponent implements ControlValueAccessor {
 
     protected get sizeClass(): string {
         return `fd-ui-textarea--size-${this.size()}`;
+    }
+
+    public ngAfterViewInit(): void {
+        this.syncErrorState();
+    }
+
+    private syncErrorState(): void {
+        const hasError = !!this.error();
+        if (!this.matInput || this.matInput.errorState === hasError) {
+            return;
+        }
+
+        this.matInput.errorState = hasError;
+        this.matInput.stateChanges.next();
     }
 }

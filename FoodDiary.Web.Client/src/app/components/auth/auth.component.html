@@ -33,8 +33,8 @@
                         [label]="'AUTH.LOGIN.EMAIL' | translate"
                         [placeholder]="'AUTH.LOGIN.EMAIL_PLACEHOLDER' | translate"
                         autocomplete="email"
+                        [error]="getControlError(loginForm.controls.email)"
                      />
-                    <fd-ui-form-error [control]="loginForm.controls.email" />
                 </div>
 
                 <div class="auth__field">
@@ -43,8 +43,8 @@
                         [label]="'AUTH.LOGIN.PASSWORD' | translate"
                         [placeholder]="'AUTH.LOGIN.PASSWORD_PLACEHOLDER' | translate"
                         autocomplete="current-password"
+                        [error]="getControlError(loginForm.controls.password)"
                      />
-                    <fd-ui-form-error [control]="loginForm.controls.password" />
                 </div>
 
                 <fd-ui-checkbox formControlName="rememberMe"
@@ -94,8 +94,8 @@
                         [label]="'AUTH.REGISTER.EMAIL' | translate"
                         [placeholder]="'AUTH.REGISTER.EMAIL_PLACEHOLDER' | translate"
                         autocomplete="email"
+                        [error]="getControlError(registerForm.controls.email)"
                      />
-                    <fd-ui-form-error [control]="registerForm.controls.email" />
                 </div>
                 <div class="auth__field">
                     <fd-ui-input formControlName="password"
@@ -103,8 +103,8 @@
                         [label]="'AUTH.REGISTER.PASSWORD' | translate"
                         [placeholder]="'AUTH.REGISTER.PASSWORD_PLACEHOLDER' | translate"
                         autocomplete="new-password"
+                        [error]="getControlError(registerForm.controls.password)"
                      />
-                    <fd-ui-form-error [control]="registerForm.controls.password" />
                 </div>
                 <div class="auth__field">
                     <fd-ui-input formControlName="confirmPassword"
@@ -112,8 +112,8 @@
                         [label]="'AUTH.REGISTER.CONFIRM_PASSWORD' | translate"
                         [placeholder]="'AUTH.REGISTER.CONFIRM_PASSWORD_PLACEHOLDER' | translate"
                         autocomplete="new-password"
+                        [error]="getControlError(registerForm.controls.confirmPassword)"
                      />
-                    <fd-ui-form-error [control]="registerForm.controls.confirmPassword" />
                 </div>
 
                 <div class="auth__checkbox-row">

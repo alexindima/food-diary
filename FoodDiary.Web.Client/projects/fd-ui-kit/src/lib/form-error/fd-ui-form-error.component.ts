@@ -1,7 +1,8 @@
 
-import { ChangeDetectionStrategy, Component, InjectionToken, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, InjectionToken, effect, inject, input } from '@angular/core';
 import { AbstractControl } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { merge } from 'rxjs';
 
 export interface FdValidationErrorConfig {
     key: string;
@@ -39,11 +40,24 @@ export const FD_VALIDATION_ERRORS = new InjectionToken<FdValidationErrors>('FD_V
 })
 export class FdUiFormErrorComponent {
     private readonly translate = inject(TranslateService);
+    private readonly cdr = inject(ChangeDetectorRef);
     private readonly validationErrors = inject<FdValidationErrors>(FD_VALIDATION_ERRORS, { optional: true });
 
     public readonly control = input<AbstractControl | null>();
     public readonly error = input<string | null>();
     public readonly context = input<Record<string, unknown>>();
+    public readonly showOnDirty = input(false);
+    private readonly controlSubscription = effect(onCleanup => {
+        const control = this.control();
+        if (!control) {
+            return;
+        }
+
+        const subscription = merge(control.statusChanges, control.valueChanges)
+            .subscribe(() => this.cdr.markForCheck());
+
+        onCleanup(() => subscription.unsubscribe());
+    });
 
     public get message(): string | null {
         const error = this.error();
@@ -52,7 +66,11 @@ export class FdUiFormErrorComponent {
         }
 
         const control = this.control();
-        if (!control || !control.invalid || !control.touched) {
+        if (!control) {
+            return null;
+        }
+        const shouldShow = control.touched || (this.showOnDirty() && control.dirty);
+        if (!control.invalid || !shouldShow) {
             return null;
         }
 

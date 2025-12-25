@@ -16,6 +16,7 @@
   [disabled]="disabled"
   [value]="internalValue"
   [placeholder]="placeholder() ?? ''"
+  [errorStateMatcher]="errorStateMatcher"
   (selectionChange)="handleSelectionChange($event)"
   (blur)="onTouchedHandler()"
   >

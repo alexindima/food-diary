@@ -21,6 +21,7 @@
   [readonly]="readonly()"
   [disabled]="disabled"
   [attr.maxlength]="maxlength() ?? null"
+  [errorStateMatcher]="errorStateMatcher"
   (input)="handleInput($any($event.target).value)"
   (blur)="handleBlur()"
 ></textarea>

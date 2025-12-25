@@ -27,6 +27,7 @@
     [attr.maxLength]="maxLength() ?? null"
     [attr.step]="step() ?? null"
     [attr.autocomplete]="autocomplete()"
+    [errorStateMatcher]="errorStateMatcher"
     (focus)="handleFocus()"
     (blur)="handleBlur()"
     (input)="handleInput($any($event.target).value)"

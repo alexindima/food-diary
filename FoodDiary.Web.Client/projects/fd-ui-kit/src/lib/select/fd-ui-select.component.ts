@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, inject, input } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild, effect, forwardRef, inject, input } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ErrorStateMatcher } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatSelectChange, MatSelectModule } from '@angular/material/select';
+import { MatSelect, MatSelectChange, MatSelectModule } from '@angular/material/select';
 import { FdUiFieldSize } from '../types/field-size.type';
 
 export interface FdUiSelectOption<T = unknown> {
@@ -26,8 +27,13 @@ export interface FdUiSelectOption<T = unknown> {
         },
     ],
 })
-export class FdUiSelectComponent<T = unknown> implements ControlValueAccessor {
+export class FdUiSelectComponent<T = unknown> implements ControlValueAccessor, AfterViewInit {
     private readonly cdr = inject(ChangeDetectorRef);
+    private readonly errorStateEffect = effect(() => {
+        this.syncErrorState();
+    });
+
+    @ViewChild(MatSelect) private matSelect?: MatSelect;
 
     public readonly label = input<string>();
     public readonly placeholder = input<string>();
@@ -42,6 +48,9 @@ export class FdUiSelectComponent<T = unknown> implements ControlValueAccessor {
     protected disabled = false;
     protected internalValue: T | null = null;
     protected readonly onTouchedHandler = () => this.onTouched();
+    protected readonly errorStateMatcher: ErrorStateMatcher = {
+        isErrorState: () => !!this.error(),
+    };
 
     private onChange: (value: T | null) => void = () => undefined;
     private onTouched: () => void = () => undefined;
@@ -76,5 +85,19 @@ export class FdUiSelectComponent<T = unknown> implements ControlValueAccessor {
         this.internalValue = change.value as T;
         this.onChange(this.internalValue);
         this.onTouched();
+    }
+
+    public ngAfterViewInit(): void {
+        this.syncErrorState();
+    }
+
+    private syncErrorState(): void {
+        const hasError = !!this.error();
+        if (!this.matSelect || this.matSelect.errorState === hasError) {
+            return;
+        }
+
+        this.matSelect.errorState = hasError;
+        this.matSelect.stateChanges.next();
     }
 }

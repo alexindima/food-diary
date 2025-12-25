@@ -12,7 +12,8 @@ import {
     signal,
 } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -64,6 +65,8 @@ export class AuthComponent implements OnInit, AfterViewInit {
     private readonly navigationService = inject(NavigationService);
     private readonly authService = inject(AuthService);
     private readonly translateService = inject(TranslateService);
+    private readonly validationErrors = inject<FdValidationErrors>(FD_VALIDATION_ERRORS, { optional: true });
+    private readonly cdr = inject(ChangeDetectorRef);
     private readonly googleIdentityService = inject(GoogleIdentityService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly dialogRef = inject(MatDialogRef<AuthComponent>, { optional: true });
@@ -101,8 +104,20 @@ export class AuthComponent implements OnInit, AfterViewInit {
             agreeTerms: new FormControl<boolean>(false, { nonNullable: true, validators: Validators.requiredTrue }),
         });
 
-        this.loginForm.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.clearGlobalError());
-        this.registerForm.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.clearGlobalError());
+        this.loginForm.valueChanges
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => {
+                this.clearGlobalError();
+                this.markDirtyControlsTouched(this.loginForm);
+                this.cdr.markForCheck();
+            });
+        this.registerForm.valueChanges
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => {
+                this.clearGlobalError();
+                this.markDirtyControlsTouched(this.registerForm);
+                this.cdr.markForCheck();
+            });
 
         this.registerForm.controls.password.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.registerForm.controls.confirmPassword.updateValueAndValidity();
@@ -285,6 +300,51 @@ export class AuthComponent implements OnInit, AfterViewInit {
     private clearGlobalError(): void {
         this.globalError.set(null);
         this.showRestoreAction.set(false);
+    }
+
+    public getControlError(control: AbstractControl | null): string | null {
+        if (!control || !control.invalid) {
+            return null;
+        }
+
+        const shouldShow = control.touched || control.dirty;
+        if (!shouldShow) {
+            return null;
+        }
+
+        const errors = control.errors;
+        if (!errors) {
+            return null;
+        }
+
+        for (const key of Object.keys(errors)) {
+            const resolver = this.validationErrors?.[key];
+            if (!resolver) {
+                continue;
+            }
+
+            const controlParams = typeof errors[key] === 'object' ? errors[key] : {};
+            const result = resolver(errors[key]);
+
+            if (typeof result === 'string') {
+                return this.translateService.instant(result, controlParams);
+            }
+
+            return this.translateService.instant(result.key, {
+                ...controlParams,
+                ...(result.params ?? {}),
+            });
+        }
+
+        return this.translateService.instant('FORM_ERRORS.UNKNOWN');
+    }
+
+    private markDirtyControlsTouched(form: FormGroup): void {
+        Object.values(form.controls).forEach(control => {
+            if (control.dirty && !control.touched) {
+                control.markAsTouched();
+            }
+        });
     }
 }
 

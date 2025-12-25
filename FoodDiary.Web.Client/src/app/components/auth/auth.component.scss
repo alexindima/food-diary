@@ -148,15 +148,16 @@
 
     &__checkbox-row {
         display: flex;
-        gap: $gap-s;
-        align-items: flex-start;
+        align-items: center;
         font-size: 0.95rem;
         color: #5b6275;
     }
 
     &__checkbox-text {
-        font-size: 0.9rem;
+        font-size: 0.95rem;
+        font-weight: 500;
         color: #5b6275;
+        line-height: 1.4;
 
         a {
             color: #3b6dfc;
@@ -184,6 +185,7 @@
         border-color: #bfc4d2;
     }
 }
+
 
 :host ::ng-deep fd-ui-checkbox .fd-ui-checkbox__control {
     width: 18px;

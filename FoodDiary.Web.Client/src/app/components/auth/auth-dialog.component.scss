@@ -19,6 +19,7 @@
         animation: authDialogIn 180ms ease-out forwards;
         display: grid;
         grid-template-rows: 1fr;
+        padding: 0;
     }
 
     ::ng-deep .fd-ui-dialog__body {
@@ -26,6 +27,12 @@
         max-height: calc(90vh - 32px);
         overflow-y: auto;
         min-height: 0;
+        scrollbar-gutter: stable;
+    }
+
+    ::ng-deep fd-auth {
+        display: block;
+        padding: 28px 24px 32px;
     }
 
     ::ng-deep .fd-ui-dialog__header {
@@ -33,7 +40,7 @@
     }
 
     @media (max-width: 520px) {
-        ::ng-deep .fd-ui-dialog__content {
+        ::ng-deep fd-auth {
             padding: 28px 20px 32px;
         }
     }
