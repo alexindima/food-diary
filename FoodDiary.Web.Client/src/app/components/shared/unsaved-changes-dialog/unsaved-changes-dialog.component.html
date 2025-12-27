@@ -1,0 +1,19 @@
+<fd-ui-dialog-shell [title]="data?.title || ('UNSAVED_CHANGES.TITLE' | translate)" size="sm" [dismissible]="false">
+    <div class="unsaved-changes-dialog__body">
+        <p class="unsaved-changes-dialog__message">
+            {{ data?.message || ('UNSAVED_CHANGES.MESSAGE' | translate) }}
+        </p>
+    </div>
+
+    <div fdUiDialogFooter class="unsaved-changes-dialog__footer">
+        <fd-ui-button class="unsaved-changes-dialog__action unsaved-changes-dialog__action--primary" variant="primary" [fullWidth]="true" (click)="onSave()">
+            {{ data?.saveLabel || ('UNSAVED_CHANGES.SAVE' | translate) }}
+        </fd-ui-button>
+        <fd-ui-button class="unsaved-changes-dialog__action" variant="secondary" fill="outline" [fullWidth]="true" (click)="onDiscard()">
+            {{ data?.discardLabel || ('UNSAVED_CHANGES.DISCARD' | translate) }}
+        </fd-ui-button>
+        <fd-ui-button class="unsaved-changes-dialog__action" variant="secondary" fill="text" [fullWidth]="true" (click)="onStay()">
+            {{ data?.stayLabel || ('UNSAVED_CHANGES.STAY' | translate) }}
+        </fd-ui-button>
+    </div>
+</fd-ui-dialog-shell>

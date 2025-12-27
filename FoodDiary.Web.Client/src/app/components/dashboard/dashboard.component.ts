@@ -44,6 +44,7 @@ import { UserService } from '../../services/user.service';
 import { DashboardLayoutSettings } from '../../types/user.data';
 import { NoticeBannerComponent } from '../shared/notice-banner/notice-banner.component';
 import { fromEvent } from 'rxjs';
+import { UnsavedChangesService, UnsavedChangesHandler } from '../../services/unsaved-changes.service';
 
 type MealSlot = 'BREAKFAST' | 'LUNCH' | 'DINNER';
 
@@ -83,6 +84,7 @@ export class DashboardComponent implements OnInit {
     private readonly cyclesService = inject(CyclesService);
     private readonly userService = inject(UserService);
     private readonly translateService = inject(TranslateService);
+    private readonly unsavedChangesService = inject(UnsavedChangesService);
 
     private readonly headerDatePicker = viewChild<FdUiDatepicker<Date>>('headerDatePicker');
 
@@ -288,6 +290,13 @@ export class DashboardComponent implements OnInit {
     public ngOnInit(): void {
         this.loadDashboardSnapshot();
         this.loadCycle();
+        const handler: UnsavedChangesHandler = {
+            hasChanges: () => this.hasLayoutChanges(),
+            save: () => this.saveDashboardLayout(),
+            discard: () => this.discardDashboardLayoutChanges(),
+        };
+        this.unsavedChangesService.register(handler);
+        this.destroyRef.onDestroy(() => this.unsavedChangesService.clear(handler));
 
         if (typeof window !== 'undefined') {
             fromEvent(window, 'resize')
@@ -351,6 +360,19 @@ export class DashboardComponent implements OnInit {
 
         this.isEditingLayout.set(false);
         this.persistLayoutIfChanged();
+        this.layoutSnapshot.set(null);
+    }
+
+    public discardDashboardLayoutChanges(): void {
+        if (!this.isEditingLayout()) {
+            return;
+        }
+
+        const snapshot = this.layoutSnapshot();
+        if (snapshot) {
+            this.layoutSettings.set(this.normalizeLayout(snapshot));
+        }
+        this.isEditingLayout.set(false);
         this.layoutSnapshot.set(null);
     }
 

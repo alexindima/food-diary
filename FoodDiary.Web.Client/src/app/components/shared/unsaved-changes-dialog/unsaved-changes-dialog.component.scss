@@ -1,0 +1,56 @@
+@use 'variables' as *;
+
+.unsaved-changes-dialog__message {
+    margin: 0;
+    color: $color-text-main;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.unsaved-changes-dialog__body {
+    padding: 1.25rem;
+}
+
+.unsaved-changes-dialog__footer {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 0 1.25rem 1.25rem;
+    width: 100%;
+}
+
+:host ::ng-deep .unsaved-changes-dialog__action button,
+:host ::ng-deep .unsaved-changes-dialog__action .fd-ui-button {
+    width: 100%;
+    justify-content: center;
+    padding: 10px 12px;
+    min-height: 44px;
+    line-height: 1.2;
+    border-radius: 12px;
+    font-weight: 600;
+    background: #ffffff;
+    color: #475569;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    box-shadow: none;
+    transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+}
+
+:host ::ng-deep .unsaved-changes-dialog__action button:hover,
+:host ::ng-deep .unsaved-changes-dialog__action .fd-ui-button:hover {
+    background: rgba(37, 99, 235, 0.08);
+    color: #0f172a;
+}
+
+:host ::ng-deep .unsaved-changes-dialog__action--primary button,
+:host ::ng-deep .unsaved-changes-dialog__action--primary .fd-ui-button {
+    background: linear-gradient(135deg, #4dabff, #2563eb);
+    color: #fff;
+    border-color: transparent;
+    box-shadow: 0 10px 26px rgba(37, 99, 235, 0.28);
+}
+
+:host ::ng-deep .unsaved-changes-dialog__action--primary button:hover,
+:host ::ng-deep .unsaved-changes-dialog__action--primary .fd-ui-button:hover {
+    background: linear-gradient(135deg, #5ab5ff, #2d6df0);
+    color: #fff;
+}

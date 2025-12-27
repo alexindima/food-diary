@@ -19,6 +19,7 @@ export * from './dialog/fd-ui-dialog.component';
 export * from './dialog/fd-ui-dialog-footer.directive';
 export * from './dialog/fd-ui-dialog.service';
 export * from './dialog/fd-ui-confirm-dialog.component';
+export * from './dialog-shell/fd-ui-dialog-shell.component';
 export * from './toast/fd-ui-toast.service';
 export * from './menu/fd-ui-menu.component';
 export * from './menu/fd-ui-menu-trigger.directive';

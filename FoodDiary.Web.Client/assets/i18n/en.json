@@ -18,7 +18,15 @@
     },
     "COMMON": {
         "CANCEL": "Cancel",
-        "SAVE": "Save"
+        "SAVE": "Save",
+        "CONFIRM": "Confirm"
+    },
+    "UNSAVED_CHANGES": {
+        "TITLE": "Unsaved changes",
+        "MESSAGE": "You have changes that haven’t been saved. What would you like to do?",
+        "SAVE": "Save changes",
+        "DISCARD": "Don't save",
+        "STAY": "Stay on page"
     },
     "GENERAL": {
         "UNITS": {

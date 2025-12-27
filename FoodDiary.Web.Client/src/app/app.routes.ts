@@ -24,9 +24,10 @@ import { WeightHistoryPageComponent } from './components/weight-history-page/wei
 import { WaistHistoryPageComponent } from './components/waist-history-page/waist-history-page.component';
 import { CycleTrackingPageComponent } from './components/cycle-tracking-page/cycle-tracking-page.component';
 import { GoalsPageComponent } from './components/goals-page/goals-page.component';
+import { unsavedChangesGuard } from './guards/unsaved-changes.guard';
 
 export const routes: Routes = [
-    { path: '', component: MainComponent },
+    { path: '', component: MainComponent, canDeactivate: [unsavedChangesGuard] },
     {
         path: 'auth',
         component: MainComponent,
