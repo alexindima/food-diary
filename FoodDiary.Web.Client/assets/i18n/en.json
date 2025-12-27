@@ -1003,7 +1003,9 @@
             "OPEN_SETTINGS": "Customize dashboard"
         },
         "SETTINGS": {
+            "TITLE": "Dashboard editing",
             "HINT": "Click a card to hide or show it. Summary is always visible.",
+            "SAVE": "Save changes",
             "VISIBLE": "Visible",
             "HIDDEN": "Hidden",
             "LOCKED": "Required"

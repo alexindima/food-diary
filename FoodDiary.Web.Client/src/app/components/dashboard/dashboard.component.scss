@@ -20,6 +20,7 @@ $color-primary: #2563eb;
 
     &__header {
         margin-bottom: var(--fd-page-header-gap, 16px);
+        position: relative;
         .fd-page-header__title-block {
             min-width: 220px;
         }
@@ -52,9 +53,36 @@ $color-primary: #2563eb;
 
         .dashboard__settings-action--active ::ng-deep button,
         .dashboard__settings-action--active ::ng-deep .fd-ui-button {
-            background: rgba(37, 99, 235, 0.12);
+            background: #ffffff;
             border-color: rgba(37, 99, 235, 0.4);
             color: #1d4ed8;
+            box-shadow: 0 10px 22px rgba(37, 99, 235, 0.18);
+        }
+
+        .dashboard__settings-action {
+            position: relative;
+            z-index: 5;
+        }
+
+        .dashboard__settings-action ::ng-deep button,
+        .dashboard__settings-action ::ng-deep .fd-ui-button {
+            position: relative;
+            z-index: 5;
+        }
+    }
+
+    &--editing {
+        .dashboard__date-button,
+        .dashboard__primary-action {
+            pointer-events: none;
+        }
+
+        .dashboard__date-button ::ng-deep button,
+        .dashboard__date-button ::ng-deep .fd-ui-button,
+        .dashboard__primary-action ::ng-deep button,
+        .dashboard__primary-action ::ng-deep .fd-ui-button {
+            pointer-events: none;
+            box-shadow: none;
         }
     }
 
@@ -92,6 +120,10 @@ $color-primary: #2563eb;
         align-items: start;
     }
 
+    &__grid--single {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
     &__grid--editing {
         .dashboard__block {
             cursor: pointer;
@@ -120,23 +152,25 @@ $color-primary: #2563eb;
 
     &__body {
         position: relative;
+        z-index: 2;
+    }
+
+    &__body > fd-page-body {
+        position: relative;
     }
 
     &__edit-hint {
         grid-column: 1 / -1;
-        padding: 12px 16px;
-        border-radius: 16px;
-        background: rgba(37, 99, 235, 0.08);
-        color: $color-text-main;
-        font-size: 0.9rem;
-        font-weight: 600;
         position: relative;
         z-index: 2;
     }
 
     &__edit-overlay {
-        position: absolute;
-        inset: 0;
+        position: fixed;
+        top: 0;
+        left: var(--fd-layout-sidebar-width, 0px);
+        width: calc(100vw - var(--fd-layout-sidebar-width, 0px));
+        height: 100vh;
         background: rgba(15, 23, 42, 0.28);
         pointer-events: none;
         z-index: 1;
@@ -210,8 +244,24 @@ $color-primary: #2563eb;
     }
 
     &__block--hidden {
-        opacity: 0.55;
-        filter: grayscale(0.2);
+        opacity: 1;
+        filter: grayscale(0.35);
+    }
+
+    &__block--hidden::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: 22px;
+        background-image: repeating-linear-gradient(
+            -45deg,
+            rgba(100, 116, 139, 0.32),
+            rgba(100, 116, 139, 0.32) 10px,
+            rgba(255, 255, 255, 0) 10px,
+            rgba(255, 255, 255, 0) 20px
+        );
+        pointer-events: none;
+        z-index: 3;
     }
 
     &__block-label {

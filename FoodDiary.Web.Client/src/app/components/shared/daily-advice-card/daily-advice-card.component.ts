@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiIconModule } from 'fd-ui-kit/material';
 import { TranslatePipe } from '@ngx-translate/core';
 import { DailyAdvice } from '../../../types/daily-advice.data';
@@ -8,7 +7,7 @@ import { DailyAdvice } from '../../../types/daily-advice.data';
 @Component({
     selector: 'fd-daily-advice-card',
     standalone: true,
-    imports: [CommonModule, FdUiCardComponent, FdUiIconModule, TranslatePipe],
+    imports: [CommonModule, FdUiIconModule, TranslatePipe],
     templateUrl: './daily-advice-card.component.html',
     styleUrl: './daily-advice-card.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

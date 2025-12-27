@@ -42,6 +42,7 @@ import { CyclesService } from '../../services/cycles.service';
 import { CycleResponse } from '../../types/cycle.data';
 import { UserService } from '../../services/user.service';
 import { DashboardLayoutSettings } from '../../types/user.data';
+import { NoticeBannerComponent } from '../shared/notice-banner/notice-banner.component';
 import { fromEvent } from 'rxjs';
 
 type MealSlot = 'BREAKFAST' | 'LUNCH' | 'DINNER';
@@ -66,7 +67,8 @@ type MealSlot = 'BREAKFAST' | 'LUNCH' | 'DINNER';
     WeightTrendCardComponent,
     DailyAdviceCardComponent,
     CycleSummaryCardComponent,
-    MealsPreviewComponent
+    MealsPreviewComponent,
+    NoticeBannerComponent
 ],
     templateUrl: './dashboard.component.html',
     styleUrl: './dashboard.component.scss',
@@ -118,6 +120,7 @@ export class DashboardComponent implements OnInit {
     public readonly isCycleLoading = signal<boolean>(false);
     public readonly isEditingLayout = signal<boolean>(false);
     private readonly layoutInitialized = signal<boolean>(false);
+    private readonly layoutSnapshot = signal<DashboardLayoutSettings | null>(null);
     private readonly defaultLayout: DashboardLayoutSettings = {
         web: ['summary', 'meals', 'hydration', 'cycle', 'weight', 'waist', 'advice'],
         mobile: ['summary', 'meals', 'hydration', 'cycle', 'weight', 'waist', 'advice'],
@@ -131,6 +134,21 @@ export class DashboardComponent implements OnInit {
     });
     public readonly layoutKey = computed<'web' | 'mobile'>(() => (this.viewportWidth() < 768 ? 'mobile' : 'web'));
     public readonly visibleBlocks = computed(() => this.getLayoutForKey(this.layoutKey()));
+    public readonly hasAsideBlocks = computed(() => {
+        const blocks = this.visibleBlocks();
+        return blocks.some(block => ['hydration', 'cycle', 'weight', 'waist', 'advice'].includes(block));
+    });
+    public readonly hasLayoutChanges = computed(() => {
+        if (!this.isEditingLayout()) {
+            return false;
+        }
+        const previous = this.layoutSnapshot();
+        if (!previous) {
+            return false;
+        }
+        const current = this.normalizeLayout(this.layoutSettings());
+        return !this.areLayoutsEqual(previous, current);
+    });
     private readonly mealSlots: MealSlot[] = ['BREAKFAST', 'LUNCH', 'DINNER'];
     public readonly mealPreviewEntries = computed<MealPreviewEntry[]>(() => {
         const meals = [...(this.meals() ?? [])];
@@ -319,8 +337,21 @@ export class DashboardComponent implements OnInit {
         const next = !this.isEditingLayout();
         this.isEditingLayout.set(next);
         if (!next) {
-            this.persistLayout();
+            this.persistLayoutIfChanged();
+            this.layoutSnapshot.set(null);
+        } else {
+            this.layoutSnapshot.set(this.normalizeLayout(this.layoutSettings()));
         }
+    }
+
+    public saveDashboardLayout(): void {
+        if (!this.isEditingLayout()) {
+            return;
+        }
+
+        this.isEditingLayout.set(false);
+        this.persistLayoutIfChanged();
+        this.layoutSnapshot.set(null);
     }
 
     public shouldRenderBlock(blockId: string): boolean {
@@ -615,6 +646,26 @@ export class DashboardComponent implements OnInit {
                     this.layoutSettings.set(layout);
                 }
             });
+    }
+
+    private persistLayoutIfChanged(): void {
+        const current = this.normalizeLayout(this.layoutSettings());
+        const previous = this.layoutSnapshot();
+        if (previous && this.areLayoutsEqual(previous, current)) {
+            return;
+        }
+
+        this.persistLayout();
+    }
+
+    private areLayoutsEqual(a: DashboardLayoutSettings, b: DashboardLayoutSettings): boolean {
+        return this.layoutToKey(a) === this.layoutToKey(b);
+    }
+
+    private layoutToKey(layout: DashboardLayoutSettings): string {
+        const web = (layout.web ?? []).join('|');
+        const mobile = (layout.mobile ?? []).join('|');
+        return `${web}::${mobile}`;
     }
 
     public placeholderIcon(slot?: MealSlot | string): string {

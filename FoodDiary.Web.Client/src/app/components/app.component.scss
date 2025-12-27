@@ -5,6 +5,7 @@
     grid-template-columns: 260px 1fr;
     min-height: 100vh;
     background: var(--fd-layout-page-background);
+    --fd-layout-sidebar-width: 260px;
 
     &__sidebar {
         grid-row: 1 / span 1;
@@ -47,6 +48,7 @@
 
 .fd-root--no-sidebar {
     grid-template-columns: 1fr;
+    --fd-layout-sidebar-width: 0px;
     .fd-root__main {
         grid-column: 1 / span 1;
         padding-left: 0;
@@ -57,6 +59,7 @@
 @media (max-width: 768px) {
     .fd-root {
         grid-template-columns: 1fr;
+        --fd-layout-sidebar-width: 0px;
     }
 
     .fd-root__sidebar {

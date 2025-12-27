@@ -1,4 +1,4 @@
-<div class="dashboard" fdPageContainer>
+<div class="dashboard" fdPageContainer [class.dashboard--editing]="isEditingLayout()">
     @if (isEditingLayout()) {
         <div class="dashboard__edit-overlay"></div>
     }
@@ -59,11 +59,20 @@
             @if (isLoading()) {
                 <div class="dashboard__loader">{{ 'DASHBOARD.LOADING' | translate }}</div>
             } @else {
-                <section class="dashboard__grid" [class.dashboard__grid--editing]="isEditingLayout()">
+                <section
+                    class="dashboard__grid"
+                    [class.dashboard__grid--editing]="isEditingLayout()"
+                    [class.dashboard__grid--single]="!hasAsideBlocks() && !isEditingLayout()"
+                >
                     @if (isEditingLayout()) {
-                        <div class="dashboard__edit-hint">
-                            {{ 'DASHBOARD.SETTINGS.HINT' | translate }}
-                        </div>
+                        <fd-notice-banner
+                            class="dashboard__edit-hint"
+                            type="info"
+                            [title]="'DASHBOARD.SETTINGS.TITLE' | translate"
+                            [message]="'DASHBOARD.SETTINGS.HINT' | translate"
+                            [actionLabel]="hasLayoutChanges() ? ('DASHBOARD.SETTINGS.SAVE' | translate) : null"
+                            (action)="saveDashboardLayout()"
+                        />
                     }
                     <div class="dashboard__column">
                     @if (shouldRenderBlock('summary')) {
@@ -104,18 +113,6 @@
                             (click)="toggleBlock('meals')"
                             (keydown.enter)="toggleBlock('meals')"
                         >
-                            @if (isEditingLayout()) {
-                                <div
-                                    class="dashboard__block-label"
-                                    [class.dashboard__block-label--hidden]="!isBlockVisible('meals')"
-                                >
-                                    {{
-                                        isBlockVisible('meals')
-                                            ? ('DASHBOARD.SETTINGS.VISIBLE' | translate)
-                                            : ('DASHBOARD.SETTINGS.HIDDEN' | translate)
-                                    }}
-                                </div>
-                            }
                             <fd-meals-preview
                                 [entries]="mealPreviewEntries()"
                                 [titleText]="
@@ -148,18 +145,6 @@
                             (click)="toggleBlock('hydration')"
                             (keydown.enter)="toggleBlock('hydration')"
                         >
-                            @if (isEditingLayout()) {
-                                <div
-                                    class="dashboard__block-label"
-                                    [class.dashboard__block-label--hidden]="!isBlockVisible('hydration')"
-                                >
-                                    {{
-                                        isBlockVisible('hydration')
-                                            ? ('DASHBOARD.SETTINGS.VISIBLE' | translate)
-                                            : ('DASHBOARD.SETTINGS.HIDDEN' | translate)
-                                    }}
-                                </div>
-                            }
                             <fd-hydration-card
                                 class="dashboard__card dashboard__card--hydration"
                                 [total]="hydration()?.totalMl ?? 0"
@@ -181,18 +166,6 @@
                             (click)="toggleBlock('cycle')"
                             (keydown.enter)="toggleBlock('cycle')"
                         >
-                            @if (isEditingLayout()) {
-                                <div
-                                    class="dashboard__block-label"
-                                    [class.dashboard__block-label--hidden]="!isBlockVisible('cycle')"
-                                >
-                                    {{
-                                        isBlockVisible('cycle')
-                                            ? ('DASHBOARD.SETTINGS.VISIBLE' | translate)
-                                            : ('DASHBOARD.SETTINGS.HIDDEN' | translate)
-                                    }}
-                                </div>
-                            }
                             <fd-cycle-summary-card
                                 class="dashboard__card dashboard__card--cycle"
                                 [startDate]="cycle()?.startDate ?? null"
@@ -213,18 +186,6 @@
                             (click)="toggleBlock('weight')"
                             (keydown.enter)="toggleBlock('weight')"
                         >
-                            @if (isEditingLayout()) {
-                                <div
-                                    class="dashboard__block-label"
-                                    [class.dashboard__block-label--hidden]="!isBlockVisible('weight')"
-                                >
-                                    {{
-                                        isBlockVisible('weight')
-                                            ? ('DASHBOARD.SETTINGS.VISIBLE' | translate)
-                                            : ('DASHBOARD.SETTINGS.HIDDEN' | translate)
-                                    }}
-                                </div>
-                            }
                             <fd-weight-trend-card
                                 class="dashboard__card dashboard__card--weight-trend"
                                 [currentWeight]="weightTrendCurrent()"
@@ -245,18 +206,6 @@
                             (click)="toggleBlock('waist')"
                             (keydown.enter)="toggleBlock('waist')"
                         >
-                            @if (isEditingLayout()) {
-                                <div
-                                    class="dashboard__block-label"
-                                    [class.dashboard__block-label--hidden]="!isBlockVisible('waist')"
-                                >
-                                    {{
-                                        isBlockVisible('waist')
-                                            ? ('DASHBOARD.SETTINGS.VISIBLE' | translate)
-                                            : ('DASHBOARD.SETTINGS.HIDDEN' | translate)
-                                    }}
-                                </div>
-                            }
                             <fd-weight-trend-card
                                 class="dashboard__card dashboard__card--waist-trend"
                                 [title]="'WAIST_CARD.TITLE'"
@@ -282,18 +231,6 @@
                             (click)="toggleBlock('advice')"
                             (keydown.enter)="toggleBlock('advice')"
                         >
-                            @if (isEditingLayout()) {
-                                <div
-                                    class="dashboard__block-label"
-                                    [class.dashboard__block-label--hidden]="!isBlockVisible('advice')"
-                                >
-                                    {{
-                                        isBlockVisible('advice')
-                                            ? ('DASHBOARD.SETTINGS.VISIBLE' | translate)
-                                            : ('DASHBOARD.SETTINGS.HIDDEN' | translate)
-                                    }}
-                                </div>
-                            }
                             <fd-daily-advice-card
                                 class="dashboard__card dashboard__card--advice"
                                 [advice]="dailyAdvice()"
