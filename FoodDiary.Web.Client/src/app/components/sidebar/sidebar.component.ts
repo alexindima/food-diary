@@ -5,7 +5,6 @@ import { AuthService } from '../../services/auth.service';
 import { FdUiIconModule } from 'fd-ui-kit/material';
 import { MatIconModule } from '@angular/material/icon';
 import { UserService } from '../../services/user.service';
-import { User } from '../../types/user.data';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SlicePipe, UpperCasePipe } from '@angular/common';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
@@ -34,7 +33,7 @@ export class SidebarComponent {
     private readonly unsavedChangesService = inject(UnsavedChangesService);
 
     public isAuthenticated = this.authService.isAuthenticated;
-    protected currentUser = signal<User | null>(null);
+    protected readonly currentUser = this.userService.user;
     protected isFoodTrackingOpen = signal(true);
     protected isBodyTrackingOpen = signal(false);
     protected isUserMenuOpen = signal(false);
@@ -45,14 +44,14 @@ export class SidebarComponent {
 
     private readonly userSync = effect(onCleanup => {
         if (!this.isAuthenticated()) {
-            this.currentUser.set(null);
+            this.userService.clearUser();
             return;
         }
 
         const subscription = this.userService
             .getInfo()
             .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(user => this.currentUser.set(user));
+            .subscribe();
 
         onCleanup(() => subscription.unsubscribe());
     });
