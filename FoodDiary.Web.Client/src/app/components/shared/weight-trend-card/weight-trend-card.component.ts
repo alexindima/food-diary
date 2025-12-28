@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, computed, input } from '@angular/co
 import { TranslatePipe } from '@ngx-translate/core';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration } from 'chart.js';
+import { FdCardHoverDirective } from '../../../directives/card-hover.directive';
 
 export interface WeightTrendPoint {
     date: string | Date;
@@ -12,7 +13,7 @@ export interface WeightTrendPoint {
 @Component({
     selector: 'fd-weight-trend-card',
     standalone: true,
-    imports: [CommonModule, BaseChartDirective, TranslatePipe],
+    imports: [CommonModule, BaseChartDirective, TranslatePipe, FdCardHoverDirective],
     templateUrl: './weight-trend-card.component.html',
     styleUrl: './weight-trend-card.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

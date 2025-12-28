@@ -6,12 +6,6 @@
     color: #eef6ff;
     padding: 18px 18px 20px;
     box-shadow: 0 14px 34px rgba(13, 71, 161, 0.25);
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
-
-    &:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 16px 40px rgba(13, 71, 161, 0.3);
-    }
 
     &--loading {
         opacity: 0.8;

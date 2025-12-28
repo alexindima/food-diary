@@ -14,12 +14,6 @@
     background: var(--wt-surface);
     color: $color-text-main;
     overflow: hidden;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-
-    &:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 22px 40px rgba(15, 23, 42, 0.18);
-    }
 
     &--loading {
         opacity: 0.75;

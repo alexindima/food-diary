@@ -1,9 +1,9 @@
 import {
     Directive,
+    DestroyRef,
     ElementRef,
     Renderer2,
     inject,
-    OnDestroy,
     OnInit
 } from '@angular/core';
 import { DragDropService } from '../services/drag-drop.service';
@@ -14,10 +14,11 @@ import { DragDropService } from '../services/drag-drop.service';
 @Directive({
     selector: '[fdDropZone]',
 })
-export class DropZoneDirective implements OnInit, OnDestroy {
+export class DropZoneDirective implements OnInit {
     public readonly elementRef = inject(ElementRef);
     private readonly renderer = inject(Renderer2);
     private readonly dragDropService = inject(DragDropService);
+    private readonly destroyRef = inject(DestroyRef);
 
     private element: ElementRef | null = null;
     private view: HTMLElement | null = null;
@@ -25,6 +26,7 @@ export class DropZoneDirective implements OnInit, OnDestroy {
 
     public ngOnInit(): void {
         this.dragDropService.registerDropZone(this);
+        this.destroyRef.onDestroy(() => this.dragDropService.unregisterDropZone(this));
     }
 
     public startDragging(
@@ -120,7 +122,4 @@ export class DropZoneDirective implements OnInit, OnDestroy {
         }
     }
 
-    public ngOnDestroy(): void {
-        this.dragDropService.unregisterDropZone(this);
-    }
 }

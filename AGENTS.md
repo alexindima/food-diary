@@ -29,7 +29,7 @@
 - Use strict typing, favor inference when obvious, and avoid `any` (prefer `unknown` when uncertain).
 - Standalone components are the default in Angular v20+; do not set `standalone: true` manually.
 - Prefer signals for local state and `computed()` for derived data; avoid `mutate`, use `update`/`set`.
-- Use `input()`/`output()` helpers instead of decorators; keep components focused and small with `ChangeDetectionStrategy.OnPush`.
+- Use `input()`/`output()` helpers (components and directives) instead of decorators; keep components focused and small with `ChangeDetectionStrategy.OnPush`.
 - Place host bindings/listeners in the `host` object, not via `@HostBinding`/`@HostListener`.
 - Use lazy-loaded feature routes and `NgOptimizedImage` for static images (not for inline base64).
 - Templates: use native control flow (`@if`, `@for`, `@switch`), avoid template arrow functions/regex/globals; prefer class/style bindings over `ngClass`/`ngStyle`.
