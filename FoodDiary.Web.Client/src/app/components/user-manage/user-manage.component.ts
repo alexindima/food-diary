@@ -218,12 +218,6 @@ export class UserManageComponent implements OnInit {
         this.fdDialogService.open(PasswordSuccessDialogComponent, { size: 'sm' }).afterClosed().subscribe();
     }
 
-    public onGenderSelect(value: Gender | null): void {
-        this.userForm.controls.gender.setValue(value);
-        this.userForm.controls.gender.markAsDirty();
-        this.userForm.controls.gender.markAsTouched();
-    }
-
     public onDeleteAccount(): void {
         if (this.isDeleting()) {
             return;
@@ -305,16 +299,31 @@ export class UserManageComponent implements OnInit {
     }
 
     private applyLanguagePreference(language: string | null): void {
-        if (!language) {
+        const normalized = this.normalizeLanguage(language);
+        if (!normalized) {
             return;
         }
 
         const current = this.translateService.currentLang || this.translateService.getDefaultLang();
-        if (current === language) {
+        if (current === normalized) {
             return;
         }
 
-        this.translateService.use(language).subscribe();
+        this.translateService.use(normalized).subscribe();
+    }
+
+    private normalizeLanguage(value: string | null | undefined): string | null {
+        if (!value) {
+            return null;
+        }
+
+        const normalized = value.trim().toLowerCase();
+        if (!normalized) {
+            return null;
+        }
+
+        const [code] = normalized.split(/[-_]/);
+        return code || null;
     }
 
     private mapUserToForm(user: User): Partial<UserFormValues> {
@@ -324,7 +333,7 @@ export class UserManageComponent implements OnInit {
             firstName: user.firstName ?? null,
             lastName: user.lastName ?? null,
             gender: user.gender as Gender | null,
-            language: user.language ?? null,
+            language: this.normalizeLanguage(user.language),
             birthDate: user.birthDate ? new Date(user.birthDate) : null,
             height: user.height ?? null,
             activityLevel: user.activityLevel ? (user.activityLevel.toUpperCase() as ActivityLevelOption) : null,

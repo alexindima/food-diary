@@ -869,6 +869,7 @@
             "O": "Other"
         },
         "ACCOUNT_SECTION": "Account",
+        "ACCOUNT_DESC": "Core account settings",
         "PERSONAL_SECTION": "Personal Information",
         "BODY_SECTION": "Body Metrics",
         "HEIGHT": "Height",

@@ -36,7 +36,8 @@ public class RegisterCommandHandler : ICommandHandler<RegisterCommand, Result<Au
             fatTarget: 65,
             carbTarget: 200,
             fiberTarget: 28,
-            waterGoal: 2000
+            waterGoal: 2000,
+            language: "en"
         );
 
         user = await _userRepository.AddAsync(user);

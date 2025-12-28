@@ -9,6 +9,7 @@ public static class UserMappings
 {
     public static UserResponse ToResponse(this User user)
     {
+        const string defaultLanguage = "en";
         DashboardLayoutSettings? layout = null;
         if (!string.IsNullOrWhiteSpace(user.DashboardLayoutJson))
         {
@@ -43,7 +44,7 @@ public static class UserMappings
             user.StepGoal,
             user.WaterGoal,
             user.HydrationGoal,
-            user.Language,
+            user.Language ?? defaultLanguage,
             user.ProfileImage,
             user.ProfileImageAssetId?.Value,
             layout,

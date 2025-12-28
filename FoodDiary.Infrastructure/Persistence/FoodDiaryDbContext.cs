@@ -44,6 +44,8 @@ public class FoodDiaryDbContext : DbContext
             entity.Property(e => e.ActivityLevel)
                 .HasConversion<string>()
                 .HasDefaultValue(ActivityLevel.Moderate);
+            entity.Property(e => e.Language)
+                .HasDefaultValue("en");
             entity.Property(e => e.DashboardLayoutJson)
                 .HasColumnType("jsonb")
                 .HasColumnName("DashboardLayout");

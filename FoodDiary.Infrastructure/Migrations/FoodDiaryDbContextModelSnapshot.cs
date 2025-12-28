@@ -593,8 +593,9 @@ b.Property<string>("DashboardLayoutJson")
                     b.Property<double?>("HydrationGoal")
                         .HasColumnType("double precision");
 
-                    b.Property<string>("Language")
-                        .HasColumnType("text");
+                b.Property<string>("Language")
+                    .HasColumnType("text")
+                    .HasDefaultValue("en");
 
                     b.Property<bool>("IsActive")
                         .ValueGeneratedOnAdd()

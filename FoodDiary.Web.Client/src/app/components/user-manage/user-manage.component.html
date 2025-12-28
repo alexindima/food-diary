@@ -34,7 +34,7 @@
                         <div class="user-manage__card-text">
                             <div class="user-manage__card-title">{{ 'USER_MANAGE.ACCOUNT_SECTION' | translate }}</div>
                             <div class="user-manage__card-subtitle">
-                                {{ 'USER_MANAGE.AVATAR_DESC' | translate }}
+                                {{ 'USER_MANAGE.ACCOUNT_DESC' | translate }}
                             </div>
                         </div>
                     </div>
@@ -42,7 +42,6 @@
                         <div class="user-manage__avatar-block">
                             <div class="image-upload-field__label-block">
                                 <div class="image-upload-field__label-title">{{ 'USER_MANAGE.AVATAR' | translate }}</div>
-                                <div class="image-upload-field__label-desc">{{ 'USER_MANAGE.AVATAR_DESC' | translate }}</div>
                             </div>
                             <fd-image-upload-field
                                 class="user-manage__avatar"
@@ -58,80 +57,76 @@
                             />
                         </div>
                         <div class="user-manage__account-fields">
-                            <fd-ui-input
-                                formControlName="username"
-                                [label]="'USER_MANAGE.USERNAME' | translate"
-                                [placeholder]="'USER_MANAGE.USERNAME_PLACEHOLDER' | translate"
-                                floatLabel="always"
-                            />
-                            <fd-ui-input
-                                formControlName="email"
-                                type="email"
-                                [label]="'USER_MANAGE.EMAIL' | translate"
-                                [placeholder]="'USER_MANAGE.EMAIL_PLACEHOLDER' | translate"
-                                floatLabel="always"
-                            />
-                            <fd-ui-select
-                                formControlName="language"
-                                [label]="'USER_MANAGE.LANGUAGE' | translate"
-                                [placeholder]="'USER_MANAGE.LANGUAGE_PLACEHOLDER' | translate"
-                                [options]="languageOptions"
-                                floatLabel="always"
-                            />
-                            <div class="user-manage__link-button">
-                                <fd-ui-button
-                                    type="button"
-                                    fill="text"
-                                    variant="primary"
-                                    icon="lock"
-                                    (click)="openChangePasswordDialog()"
-                                >
-                                    {{ 'USER_MANAGE.CHANGE_PASSWORD' | translate }}
-                                </fd-ui-button>
+                            <div class="user-manage__account-row">
+                                <fd-ui-input
+                                    class="user-manage__account-row-field"
+                                    formControlName="email"
+                                    type="email"
+                                    [label]="'USER_MANAGE.EMAIL' | translate"
+                                    [placeholder]="'USER_MANAGE.EMAIL_PLACEHOLDER' | translate"
+                                    floatLabel="always"
+                                />
+                                <fd-ui-input
+                                    class="user-manage__account-row-field"
+                                    formControlName="username"
+                                    [label]="'USER_MANAGE.USERNAME' | translate"
+                                    [placeholder]="'USER_MANAGE.USERNAME_PLACEHOLDER' | translate"
+                                    floatLabel="always"
+                                />
                             </div>
-                        </div>
-                    </div>
-                </fd-ui-card>
-
-                <fd-ui-card class="user-manage__card user-manage__card--personal">
-                    <div class="user-manage__card-header">
-                        <div class="user-manage__card-icon user-manage__card-icon--personal"></div>
-                        <div class="user-manage__card-text">
-                            <div class="user-manage__card-title">{{ 'USER_MANAGE.PERSONAL_SECTION' | translate }}</div>
-                        </div>
-                    </div>
-                    <div class="user-manage__personal">
-                        <fd-ui-input
-                            formControlName="firstName"
-                            [label]="'USER_MANAGE.FIRST_NAME' | translate"
-                            [placeholder]="'USER_MANAGE.FIRST_NAME_PLACEHOLDER' | translate"
-                            floatLabel="always"
-                        />
-                        <fd-ui-input
-                            formControlName="lastName"
-                            [label]="'USER_MANAGE.LAST_NAME' | translate"
-                            [placeholder]="'USER_MANAGE.LAST_NAME_PLACEHOLDER' | translate"
-                            floatLabel="always"
-                        />
-                        <fd-ui-date-input
-                            formControlName="birthDate"
-                            [label]="'USER_MANAGE.BIRTH_DATE' | translate"
-                            [placeholder]="'USER_MANAGE.BIRTH_DATE_PLACEHOLDER' | translate"
-                            floatLabel="always"
-                        />
-                        <div class="user-manage__gender">
-                            <label class="user-manage__label">{{ 'USER_MANAGE.GENDER' | translate }}</label>
-                            <div class="user-manage__gender-options">
-                                @for (option of genderOptions; track option.value) {
-                                    <button
+                            <div class="user-manage__account-row">
+                                <fd-ui-input
+                                    class="user-manage__account-row-field"
+                                    formControlName="firstName"
+                                    [label]="'USER_MANAGE.FIRST_NAME' | translate"
+                                    [placeholder]="'USER_MANAGE.FIRST_NAME_PLACEHOLDER' | translate"
+                                    floatLabel="always"
+                                />
+                                <fd-ui-input
+                                    class="user-manage__account-row-field"
+                                    formControlName="lastName"
+                                    [label]="'USER_MANAGE.LAST_NAME' | translate"
+                                    [placeholder]="'USER_MANAGE.LAST_NAME_PLACEHOLDER' | translate"
+                                    floatLabel="always"
+                                />
+                            </div>
+                            <div class="user-manage__account-row">
+                                <fd-ui-date-input
+                                    class="user-manage__account-row-field"
+                                    formControlName="birthDate"
+                                    [label]="'USER_MANAGE.BIRTH_DATE' | translate"
+                                    [placeholder]="'USER_MANAGE.BIRTH_DATE_PLACEHOLDER' | translate"
+                                    floatLabel="always"
+                                />
+                                <fd-ui-select
+                                    class="user-manage__account-row-field"
+                                    formControlName="gender"
+                                    [label]="'USER_MANAGE.GENDER' | translate"
+                                    [placeholder]="'USER_MANAGE.SELECT_GENDER' | translate"
+                                    [options]="genderOptions"
+                                    floatLabel="always"
+                                />
+                            </div>
+                            <div class="user-manage__account-row">
+                                <fd-ui-select
+                                    class="user-manage__account-row-field"
+                                    formControlName="language"
+                                    [label]="'USER_MANAGE.LANGUAGE' | translate"
+                                    [placeholder]="'USER_MANAGE.LANGUAGE_PLACEHOLDER' | translate"
+                                    [options]="languageOptions"
+                                    floatLabel="always"
+                                />
+                                <div class="user-manage__link-button">
+                                    <fd-ui-button
                                         type="button"
-                                        class="user-manage__gender-chip"
-                                        [class.user-manage__gender-chip--active]="userForm.controls.gender.value === option.value"
-                                        (click)="onGenderSelect(option.value)"
+                                        fill="outline"
+                                        variant="secondary"
+                                        icon="lock"
+                                        (click)="openChangePasswordDialog()"
                                     >
-                                        {{ option.label }}
-                                    </button>
-                                }
+                                        {{ 'USER_MANAGE.CHANGE_PASSWORD' | translate }}
+                                    </fd-ui-button>
+                                </div>
                             </div>
                         </div>
                     </div>
