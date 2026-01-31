@@ -23,6 +23,7 @@ public static class DependencyInjection
             options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
 
         services.Configure<S3Options>(configuration.GetSection(S3Options.SectionName));
+        services.Configure<TelegramAuthOptions>(configuration.GetSection(TelegramAuthOptions.SectionName));
 
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IProductRepository, ProductRepository>();
@@ -64,6 +65,7 @@ public static class DependencyInjection
         services.AddSingleton<IImageStorageService, S3ImageStorageService>();
         services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
         services.AddSingleton<IPasswordHasher, PasswordHasher>();
+        services.AddSingleton<ITelegramAuthValidator, TelegramAuthValidator>();
         services.AddScoped<IUserCleanupService, UserCleanupService>();
 
         return services;

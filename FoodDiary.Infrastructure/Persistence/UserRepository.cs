@@ -22,6 +22,13 @@ public class UserRepository : IUserRepository
         await _context.Users.FirstOrDefaultAsync(u =>
             u.Id == id && u.IsActive && u.DeletedAt == null);
 
+    public async Task<User?> GetByTelegramUserIdAsync(long telegramUserId) =>
+        await _context.Users.FirstOrDefaultAsync(u =>
+            u.TelegramUserId == telegramUserId && u.IsActive && u.DeletedAt == null);
+
+    public async Task<User?> GetByTelegramUserIdIncludingDeletedAsync(long telegramUserId) =>
+        await _context.Users.FirstOrDefaultAsync(u => u.TelegramUserId == telegramUserId);
+
     public async Task<User> AddAsync(User user)
     {
         _context.Users.Add(user);

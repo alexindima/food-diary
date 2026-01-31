@@ -1,5 +1,6 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using FoodDiary.Application.Authentication.Mappings;
 using FoodDiary.Contracts.Authentication;
 using FoodDiary.WebApi.Extensions;
@@ -34,6 +35,29 @@ public class AuthController(ISender mediator) : BaseApiController(mediator) {
     [HttpPost("restore")]
     public async Task<IActionResult> RestoreAccount(RestoreAccountRequest request) {
         var command = request.ToCommand();
+        var result = await Mediator.Send(command);
+        return result.ToActionResult();
+    }
+
+    [HttpPost("telegram/verify")]
+    public async Task<IActionResult> TelegramVerify(TelegramAuthRequest request)
+    {
+        var command = request.ToCommand();
+        var result = await Mediator.Send(command);
+        return result.ToActionResult();
+    }
+
+    [Authorize]
+    [HttpPost("telegram/link")]
+    public async Task<IActionResult> LinkTelegram(TelegramAuthRequest request)
+    {
+        var userId = User.GetUserId();
+        if (userId is null)
+        {
+            return Unauthorized();
+        }
+
+        var command = request.ToLinkCommand(userId.Value);
         var result = await Mediator.Send(command);
         return result.ToActionResult();
     }

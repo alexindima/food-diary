@@ -22,6 +22,26 @@ public static class ResultExtensions
                 error = result.Error.Code,
                 message = result.Error.Message
             }),
+            var code when code.Contains("Authentication.TelegramInvalidData") => new BadRequestObjectResult(new
+            {
+                error = result.Error.Code,
+                message = result.Error.Message
+            }),
+            var code when code.Contains("Authentication.TelegramAuthExpired") => new UnauthorizedObjectResult(new
+            {
+                error = result.Error.Code,
+                message = result.Error.Message
+            }),
+            var code when code.Contains("Authentication.TelegramNotLinked") => new NotFoundObjectResult(new
+            {
+                error = result.Error.Code,
+                message = result.Error.Message
+            }),
+            var code when code.Contains("Authentication.TelegramAlreadyLinked") => new ConflictObjectResult(new
+            {
+                error = result.Error.Code,
+                message = result.Error.Message
+            }),
             var code when code.Contains("NotFound") => new NotFoundObjectResult(new
             {
                 error = result.Error.Code,

@@ -46,6 +46,8 @@ public class FoodDiaryDbContext : DbContext
                 .HasDefaultValue(ActivityLevel.Moderate);
             entity.Property(e => e.Language)
                 .HasDefaultValue("en");
+            entity.Property(e => e.TelegramUserId)
+                .HasColumnType("bigint");
             entity.Property(e => e.DashboardLayoutJson)
                 .HasColumnType("jsonb")
                 .HasColumnName("DashboardLayout");
@@ -70,6 +72,9 @@ public class FoodDiaryDbContext : DbContext
                 .HasForeignKey(e => e.ProfileImageAssetId)
                 .IsRequired(false)
                 .OnDelete(DeleteBehavior.SetNull);
+
+            entity.HasIndex(e => e.TelegramUserId)
+                .IsUnique();
         });
 
         modelBuilder.Entity<ImageAsset>(entity =>

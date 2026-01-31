@@ -89,6 +89,26 @@ public static class Errors
         public static Error AccountNotDeleted => new(
             "Authentication.AccountNotDeleted",
             "Account is already active.");
+
+        public static Error TelegramInvalidData => new(
+            "Authentication.TelegramInvalidData",
+            "Telegram auth data is invalid.");
+
+        public static Error TelegramAuthExpired => new(
+            "Authentication.TelegramAuthExpired",
+            "Telegram auth data has expired.");
+
+        public static Error TelegramNotLinked => new(
+            "Authentication.TelegramNotLinked",
+            "Telegram account is not linked.");
+
+        public static Error TelegramAlreadyLinked => new(
+            "Authentication.TelegramAlreadyLinked",
+            "Telegram account is already linked to another user.");
+
+        public static Error TelegramNotConfigured => new(
+            "Authentication.TelegramNotConfigured",
+            "Telegram authentication is not configured.");
     }
 
     public static class Validation

@@ -33,6 +33,7 @@ public sealed class User : AggregateRoot<UserId> {
     public ImageAssetId? ProfileImageAssetId { get; private set; }
     public string? DashboardLayoutJson { get; private set; }
     public string? Language { get; private set; }
+    public long? TelegramUserId { get; private set; }
     public bool IsActive { get; private set; } = true;
     public DateTime? DeletedAt { get; private set; }
 
@@ -62,6 +63,18 @@ public sealed class User : AggregateRoot<UserId> {
 
     public void UpdateRefreshToken(string? refreshToken) {
         RefreshToken = refreshToken;
+        SetModified();
+    }
+
+    public void LinkTelegram(long telegramUserId)
+    {
+        TelegramUserId = telegramUserId;
+        SetModified();
+    }
+
+    public void UnlinkTelegram()
+    {
+        TelegramUserId = null;
         SetModified();
     }
 
