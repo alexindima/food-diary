@@ -10,8 +10,8 @@
                     <fd-ui-date-range-input formControlName="dateRange"
                         class="consumption-list__date-input"
                         [label]="''"
-                        [startPlaceholder]="'CONSUMPTION_LIST.DATE_PLACEHOLDER' | translate"
-                        [endPlaceholder]="'CONSUMPTION_LIST.DATE_PLACEHOLDER' | translate"
+                        [startPlaceholder]="'CONSUMPTION_LIST.DATE_FROM_PLACEHOLDER' | translate"
+                        [endPlaceholder]="'CONSUMPTION_LIST.DATE_TO_PLACEHOLDER' | translate"
                         [hideSubscript]="true"
                      />
                 </form>
@@ -22,6 +22,7 @@
                         icon="add"
                         variant="primary"
                         fill="solid"
+                        [ariaLabel]="'CONSUMPTION_LIST.ADD_CONSUMPTION_BUTTON' | translate"
                         (click)="goToConsumptionAdd()"
                     >
                         {{ 'CONSUMPTION_LIST.ADD_CONSUMPTION_BUTTON' | translate }}

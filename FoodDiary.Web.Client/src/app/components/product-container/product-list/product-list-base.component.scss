@@ -96,6 +96,18 @@
         }
     }
 
+    @media (max-width: 360px) {
+        &__add-button {
+            --fd-button-padding-x: 10px;
+            font-size: 0;
+            line-height: 0;
+        }
+
+        &__add-button ::ng-deep .fd-ui-button__label {
+            display: none;
+        }
+    }
+
     &__pill {
         --fd-button-border-radius: 18px;
         --fd-button-padding-x: 14px;

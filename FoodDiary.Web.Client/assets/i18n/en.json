@@ -339,7 +339,7 @@
         }
     },
     "PRODUCT_LIST": {
-        "TITLE": "Product List",
+        "TITLE": "Products",
         "SUBTITLE": "Browse and manage your products",
         "SEARCH_TITLE": "Searching:",
         "SEARCH_PLACEHOLDER": "Search by name or barcode",
@@ -412,7 +412,7 @@
         "SHARED": "Shared product"
     },
     "RECIPE_LIST": {
-        "TITLE": "Recipe List",
+        "TITLE": "Recipes",
         "SUBTITLE": "Collection of your dishes and ideas",
         "SEARCH_TITLE": "Searching:",
         "SEARCH_PLACEHOLDER": "Search by name",
@@ -646,7 +646,7 @@
         "CANCEL": "Cancel"
     },
     "CONSUMPTION_LIST": {
-        "TITLE": "Consumption List",
+        "TITLE": "Meals",
         "SUBTITLE": "Manage your logged meals and snacks",
         "ADD_CONSUMPTION_BUTTON": "Add Consumption",
         "NO_CONSUMPTIONS_FOUND": "No consumptions found",
@@ -654,7 +654,8 @@
         "ITEM_COUNT": "Item count",
         "MEAL_TYPE": "Meal type",
         "CHOOSE_DATES": "Choose dates",
-        "DATE_PLACEHOLDER": "From - To",
+        "DATE_FROM_PLACEHOLDER": "From",
+        "DATE_TO_PLACEHOLDER": "To",
         "TOTAL_CALORIES": "Total Calories",
         "TOTAL_PROTEINS": "Total Proteins",
         "TOTAL_FATS": "Total Fats",
@@ -1324,6 +1325,7 @@
         "CALORIES_BODY": "Set your daily calorie target to see progress rings and weekly status."
     },
     "HYDRATION_CARD": {
+        "TITLE": "Hydration",
         "GOAL_TITLE": "Hydration goal missing",
         "GOAL_BODY": "Set a daily water target to track progress.",
         "GOAL_ACTION": "Add goal"

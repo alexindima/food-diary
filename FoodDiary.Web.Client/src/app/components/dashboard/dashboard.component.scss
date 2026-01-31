@@ -28,6 +28,29 @@ $color-primary: #2563eb;
             --fd-button-border-radius: 14px;
         }
 
+        @media (max-width: 420px) {
+            .dashboard__primary-action {
+                --fd-button-padding-x: 14px;
+                --fd-button-padding-y: 8px;
+                font-size: 0.95rem;
+                line-height: 1.1;
+                white-space: nowrap;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .dashboard__primary-action {
+                --fd-button-padding-x: 10px;
+                --fd-button-padding-y: 8px;
+                font-size: 0;
+                line-height: 0;
+            }
+
+            .dashboard__primary-action ::ng-deep .fd-ui-button__label {
+                display: none;
+            }
+        }
+
         .dashboard__primary-action ::ng-deep button,
         .dashboard__primary-action ::ng-deep .fd-ui-button {
             background: linear-gradient(135deg, #4dabff, #2563eb);

@@ -305,7 +305,7 @@
         }
     },
     "PRODUCT_LIST": {
-        "TITLE": "Список продуктов",
+        "TITLE": "Продукты",
         "SUBTITLE": "Просматривайте и управляйте своими продуктами",
         "SEARCH_TITLE": "Поиск:",
         "SEARCH_PLACEHOLDER": "Поиск по названию или штрихкоду",
@@ -378,7 +378,7 @@
         "SHARED": "Общий продукт"
     },
     "RECIPE_LIST": {
-        "TITLE": "Список рецептов",
+        "TITLE": "Рецепты",
         "SUBTITLE": "Коллекция ваших блюд и идей",
         "SEARCH_TITLE": "Поиск:",
         "SEARCH_PLACEHOLDER": "Поиск по названию",
@@ -611,15 +611,16 @@
         "CANCEL": "Отмена"
     },
     "CONSUMPTION_LIST": {
-        "TITLE": "Список приемов пищи",
+        "TITLE": "Приёмы пищи",
         "SUBTITLE": "Управляйте записанными приёмами и перекусами",
         "ADD_CONSUMPTION_BUTTON": "Добавить",
-        "NO_CONSUMPTIONS_FOUND": "прием пищи не найден",
+        "NO_CONSUMPTIONS_FOUND": "Приёмы пищи не найдены",
         "DATE": "Дата",
         "ITEM_COUNT": "Количество позиций",
         "MEAL_TYPE": "Тип приема пищи",
         "CHOOSE_DATES": "Выберите даты",
-        "DATE_PLACEHOLDER": "От - До",
+        "DATE_FROM_PLACEHOLDER": "От",
+        "DATE_TO_PLACEHOLDER": "До",
         "TOTAL_CALORIES": "Всего калорий",
         "TOTAL_PROTEINS": "Всего белков",
         "TOTAL_FATS": "Всего жиров",
@@ -1269,6 +1270,7 @@
         "USER_MENU": "Меню пользователя"
     },
     "HYDRATION_CARD": {
+        "TITLE": "Вода",
         "GOAL_TITLE": "Цель по воде не задана",
         "GOAL_BODY": "Укажите дневную цель по воде, чтобы отслеживать прогресс.",
         "GOAL_ACTION": "Добавить цель"

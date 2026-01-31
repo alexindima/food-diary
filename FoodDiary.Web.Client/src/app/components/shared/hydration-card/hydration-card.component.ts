@@ -14,7 +14,7 @@ import { FdCardHoverDirective } from '../../../directives/card-hover.directive';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HydrationCardComponent {
-    public readonly title = input<string>('Hydration');
+    public readonly title = input<string>('HYDRATION_CARD.TITLE');
     public readonly total = input<number>(0);
     public readonly goal = input<number | null>(null);
     public readonly addStep = input<number>(250);

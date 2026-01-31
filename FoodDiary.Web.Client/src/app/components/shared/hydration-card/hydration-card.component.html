@@ -5,7 +5,7 @@
     [class.hydration-card--loading]="isLoading()"
 >
     <div class="hydration-card__header">
-        <div class="hydration-card__title">{{ title() }}</div>
+        <div class="hydration-card__title">{{ title() | translate }}</div>
         @if (canAdd()) {
             <fd-ui-button
                 size="sm"
@@ -15,7 +15,7 @@
                 [disabled]="isLoading()"
                 (click)="onAdd()"
             >
-                +{{ addStep() }} ml
+                +{{ addStep() }} {{ 'GENERAL.UNITS.ML' | translate }}
             </fd-ui-button>
         }
     </div>
@@ -25,9 +25,9 @@
             <span class="hydration-card__liters">{{ total() | number: '1.0-0' }}</span>
             <span class="hydration-card__unit">
                 @if (hasGoal()) {
-                    / {{ goal() | number: '1.0-0' }} ml
+                    / {{ goal() | number: '1.0-0' }} {{ 'GENERAL.UNITS.ML' | translate }}
                 } @else {
-                    ml
+                    {{ 'GENERAL.UNITS.ML' | translate }}
                 }
             </span>
         </div>
