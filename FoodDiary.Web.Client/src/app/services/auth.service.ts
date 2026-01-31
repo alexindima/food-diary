@@ -7,7 +7,7 @@ import { NavigationService } from './navigation.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { GoogleLoginRequest } from '../types/google-auth.data';
 import { QuickConsumptionService } from './quick-consumption.service';
-import { TranslateService } from '@ngx-translate/core';
+import { LocalizationService } from './localization.service';
 
 @Injectable({
     providedIn: 'root',
@@ -15,7 +15,7 @@ import { TranslateService } from '@ngx-translate/core';
 export class AuthService extends ApiService {
     private readonly navigationService = inject(NavigationService);
     private readonly quickConsumptionService = inject(QuickConsumptionService);
-    private readonly translateService = inject(TranslateService);
+    private readonly localizationService = inject(LocalizationService);
     protected readonly baseUrl = environment.apiUrls.auth;
 
     private authTokenSignal = signal<string | null>(this.getToken());
@@ -119,6 +119,7 @@ export class AuthService extends ApiService {
         this.clearToken();
         this.clearUserId();
         this.clearRefreshToken();
+        this.localizationService.clearStoredLanguage();
         if (redirectToAuth) {
             await this.navigationService.navigateToAuth('login');
             return;
@@ -134,10 +135,7 @@ export class AuthService extends ApiService {
 
         const preferredLanguage = authResponse.user?.language;
         if (preferredLanguage) {
-            const current = this.translateService.currentLang || this.translateService.getDefaultLang();
-            if (current !== preferredLanguage) {
-                this.translateService.use(preferredLanguage).subscribe();
-            }
+            void this.localizationService.applyLanguagePreference(preferredLanguage);
         }
 
         const userId = authResponse.user?.id ?? this.extractUserIdFromToken(authResponse.accessToken);

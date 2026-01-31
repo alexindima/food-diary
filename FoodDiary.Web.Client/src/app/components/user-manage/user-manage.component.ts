@@ -35,6 +35,7 @@ import {
     ConfirmDeleteDialogData,
 } from '../shared/confirm-delete-dialog/confirm-delete-dialog.component';
 import { AuthService } from '../../services/auth.service';
+import { LocalizationService } from '../../services/localization.service';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: FD_VALIDATION_ERRORS,
@@ -77,6 +78,7 @@ export class UserManageComponent implements OnInit {
     private readonly destroyRef = inject(DestroyRef);
     private readonly imageUploadService = inject(ImageUploadService);
     private readonly authService = inject(AuthService);
+    private readonly localizationService = inject(LocalizationService);
     private lastUserData: Partial<UserFormValues> | null = null;
 
     public genders = Object.values(Gender);
@@ -299,17 +301,7 @@ export class UserManageComponent implements OnInit {
     }
 
     private applyLanguagePreference(language: string | null): void {
-        const normalized = this.normalizeLanguage(language);
-        if (!normalized) {
-            return;
-        }
-
-        const current = this.translateService.currentLang || this.translateService.getDefaultLang();
-        if (current === normalized) {
-            return;
-        }
-
-        this.translateService.use(normalized).subscribe();
+        void this.localizationService.applyLanguagePreference(language);
     }
 
     private normalizeLanguage(value: string | null | undefined): string | null {

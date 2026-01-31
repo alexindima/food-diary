@@ -7,6 +7,7 @@ import { FdUiSegmentedToggleComponent, FdUiSegmentedToggleOption } from 'fd-ui-k
 import { DashboardSummaryCardComponent, NutrientBar } from '../shared/dashboard-summary-card/dashboard-summary-card.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { AuthDialogComponent } from '../auth/auth-dialog.component';
+import { LocalizationService } from '../../services/localization.service';
 
 @Component({
     selector: 'fd-hero',
@@ -17,6 +18,7 @@ import { AuthDialogComponent } from '../auth/auth-dialog.component';
 export class HeroComponent {
     private readonly fdDialogService = inject(FdUiDialogService);
     private readonly translateService = inject(TranslateService);
+    private readonly localizationService = inject(LocalizationService);
     private readonly destroyRef = inject(DestroyRef);
 
     protected readonly languageOptions: FdUiSegmentedToggleOption[] = [
@@ -56,7 +58,7 @@ export class HeroComponent {
         }
 
         this.currentLanguage = target;
-        this.translateService.use(target).subscribe();
+        void this.localizationService.applyLanguagePreference(target);
     }
 
     public async goToLogin(): Promise<void> {

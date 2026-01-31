@@ -7,7 +7,7 @@
     --fd-input-height: 40px;
     --mdc-outlined-text-field-container-height: var(--fd-input-height) !important;
     --mat-form-field-container-height: var(--fd-input-height) !important;
-    --mdc-outlined-text-field-container-shape: var(--fd-radius-md);
+    --mdc-outlined-text-field-container-shape: var(--fd-input-border-radius, var(--fd-button-border-radius, var(--fd-radius-md, 8px)));
 
     &.fd-ui-input--has-error {
         --mdc-outlined-text-field-focus-outline-color: var(--fd-color-warn);
@@ -32,14 +32,30 @@
     .mat-mdc-text-field-wrapper {
         min-height: var(--fd-input-height) !important;
         height: var(--fd-input-height) !important;
-        border-radius: var(--fd-radius-md);
+        border-radius: var(--fd-input-border-radius, var(--fd-button-border-radius, var(--fd-radius-md, 8px)));
         background-color: var(--fd-input-background, var(--fd-color-surface));
+        box-shadow: inset 0 0 0 1px var(--fd-input-outline-color, rgba(148, 163, 184, 0.5));
+    }
+
+    .mdc-notched-outline,
+    .mdc-notched-outline__leading,
+    .mdc-notched-outline__trailing,
+    .mdc-notched-outline__notch {
+        display: none;
     }
 
     .mat-mdc-form-field-flex {
         min-height: var(--fd-input-height) !important;
         height: var(--fd-input-height) !important;
         align-items: center;
+    }
+
+    &.fd-ui-input--focused {
+        --fd-input-outline-color: var(--mdc-outlined-text-field-focus-outline-color);
+    }
+
+    &.fd-ui-input--has-error {
+        --fd-input-outline-color: var(--fd-color-warn);
     }
 
     .mat-mdc-form-field-infix {

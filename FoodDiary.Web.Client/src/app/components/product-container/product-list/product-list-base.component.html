@@ -13,9 +13,9 @@
                         [label]="''"
                         [clearable]="true"
                         [placeholder]="'PRODUCT_LIST.SEARCH_PLACEHOLDER' | translate"
+                        [hideSubscript]="true"
                         suffixButtonIcon="qr_code_scanner"
                         [suffixButtonAriaLabel]="'PRODUCT_LIST.SCAN_BARCODE' | translate"
-                        [hideSubscript]="true"
                         (cleared)="searchForm.controls.search.setValue('')"
                         (suffixButtonClicked)="openBarcodeScanner()"
                      />
@@ -35,9 +35,9 @@
                             : ('PRODUCT_LIST.SHOW_ALL_PRODUCTS' | translate) }}
                     </fd-ui-button>
                     <fd-ui-button
-                        class="product-list__pill product-list__pill--ghost"
-                        variant="secondary"
-                        fill="text"
+                        class="product-list__add-button"
+                        variant="primary"
+                        fill="solid"
                         icon="add"
                         (click)="onAddProductClick()"
                     >

@@ -29,10 +29,13 @@
     &__search-form {
         flex: 1 1 320px;
         min-width: 220px;
-        background: #ffffff;
-        border-radius: 16px;
-        box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.2);
-        padding: 4px 10px;
+        padding: 0;
+        background: transparent;
+        box-shadow: none;
+    }
+
+    &__search-input {
+        width: 100%;
 
         ::ng-deep .mat-mdc-form-field-subscript-wrapper {
             display: none;
@@ -40,13 +43,13 @@
             margin: 0;
         }
 
-        ::ng-deep .mat-mdc-form-field-flex {
-            align-items: center;
+        ::ng-deep .fd-ui-input {
+            --mdc-outlined-text-field-container-shape: 18px;
         }
-    }
 
-    &__search-input {
-        width: 100%;
+        ::ng-deep .mat-mdc-text-field-wrapper {
+            border-radius: 18px;
+        }
     }
 
     &__filter-button {
@@ -62,28 +65,59 @@
         justify-content: flex-end;
     }
 
+    &__add-button {
+        --fd-button-border-radius: 18px;
+        --fd-button-padding-x: 16px;
+        --fd-button-padding-y: 8px;
+        font-weight: 800;
+        border: none;
+        background: transparent;
+        color: #ffffff;
+        box-shadow: none;
+
+        ::ng-deep button,
+        ::ng-deep .fd-ui-button {
+            background: linear-gradient(135deg, #4dabff, #2563eb);
+            border: none;
+            color: #ffffff;
+            box-shadow: 0 10px 26px rgba(37, 99, 235, 0.28);
+        }
+
+        ::ng-deep button:hover:not(:disabled),
+        ::ng-deep .fd-ui-button:hover:not(:disabled) {
+            background: linear-gradient(135deg, #60b6ff, #2f6df2);
+            box-shadow: 0 12px 30px rgba(37, 99, 235, 0.32);
+        }
+
+        ::ng-deep button:active:not(:disabled),
+        ::ng-deep .fd-ui-button:active:not(:disabled) {
+            background: linear-gradient(135deg, #4dabff, #2563eb);
+            box-shadow: none;
+        }
+    }
+
     &__pill {
         --fd-button-border-radius: 18px;
         --fd-button-padding-x: 14px;
         --fd-button-padding-y: 8px;
         font-weight: 700;
-        border: 1px solid rgba(15, 23, 42, 0.08);
-        background: #ffffff;
+        border: none;
+        background: transparent;
         color: $color-text-main;
 
-        &--ghost {
-            background: linear-gradient(135deg, #1d4ed8, #0ea5e9);
-            color: #ffffff;
-            box-shadow: 0 10px 24px rgba(14, 165, 233, 0.24);
-
-            ::ng-deep button {
-                color: #ffffff;
-            }
+        ::ng-deep button,
+        ::ng-deep .fd-ui-button {
+            border: 1px solid rgba(15, 23, 42, 0.08);
+            background: #ffffff;
+            color: $color-text-main;
         }
 
         &--active {
-            border-color: #0ea5e9;
-            background: rgba(14, 165, 233, 0.12);
+            ::ng-deep button,
+            ::ng-deep .fd-ui-button {
+                border-color: #0ea5e9;
+                background: rgba(14, 165, 233, 0.12);
+            }
         }
     }
 

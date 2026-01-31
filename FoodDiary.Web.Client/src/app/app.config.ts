@@ -21,6 +21,8 @@ import { LoggingApiService } from './services/logging-api.service';
 import { provideServiceWorker } from '@angular/service-worker';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import { FdUiSnackBarModule } from 'fd-ui-kit/material';
+import { UserService } from './services/user.service';
+import { firstValueFrom } from 'rxjs';
 
 export const appConfig: ApplicationConfig = {
     providers: [
@@ -35,11 +37,19 @@ export const appConfig: ApplicationConfig = {
         },
         provideAppInitializer(() => {
             const localizationService = inject(LocalizationService);
-            return localizationService.initializeLocalization();
-        }),
-        provideAppInitializer(() => {
             const authService = inject(AuthService);
-            authService.initializeAuth();
+            const userService = inject(UserService);
+
+            return localizationService.initializeLocalization().then(async () => {
+                authService.initializeAuth();
+
+                if (!authService.isAuthenticated()) {
+                    return;
+                }
+
+                const user = await firstValueFrom(userService.getInfo());
+                await localizationService.applyLanguagePreference(user?.language ?? null);
+            });
         }),
         provideAnimations(),
         provideZonelessChangeDetection(),

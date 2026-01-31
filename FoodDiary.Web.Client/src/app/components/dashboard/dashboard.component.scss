@@ -15,8 +15,6 @@ $color-primary: #2563eb;
     gap: 32px;
     margin: 0 auto;
     position: relative;
-    --fd-layout-page-top-padding: 16px;
-    --fd-page-header-height: auto;
 
     &__header {
         margin-bottom: var(--fd-page-header-gap, 16px);
