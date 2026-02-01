@@ -19,8 +19,36 @@ $color-primary: #2563eb;
     &__header {
         margin-bottom: var(--fd-page-header-gap, 16px);
         position: relative;
+        .fd-page-header__actions {
+            display: flex;
+            align-items: center;
+            gap: $gap-s;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            width: 100%;
+        }
         .fd-page-header__title-block {
             min-width: 220px;
+        }
+        .dashboard__actions-left {
+            display: flex;
+            align-items: center;
+            gap: $gap-xs;
+            flex-wrap: wrap;
+        }
+        .dashboard__date-group {
+            display: inline-flex;
+            align-items: center;
+            gap: 0;
+        }
+        .dashboard__date-button {
+            margin-left: 0;
+        }
+        .dashboard__actions-right {
+            display: flex;
+            align-items: center;
+            gap: $gap-s;
+            margin-left: auto;
         }
         .dashboard__primary-action {
             --fd-button-padding-x: 18px;
@@ -35,6 +63,10 @@ $color-primary: #2563eb;
                 font-size: 0.95rem;
                 line-height: 1.1;
                 white-space: nowrap;
+            }
+
+            .dashboard__primary-action ::ng-deep .fd-ui-button__label {
+                display: none;
             }
         }
 

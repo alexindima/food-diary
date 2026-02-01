@@ -12,45 +12,49 @@
         [subtitle]="'DASHBOARD.SUBTITLE' | translate"
     >
         <ng-container fdPageHeaderActions>
-            <div>
-                <mat-form-field class="dashboard__date-field" appearance="outline">
-                    <input
-                        matInput
-                        [matDatepicker]="headerDatePicker"
-                        [value]="selectedDate()"
-                        (dateChange)="handleDateChange($event)"
-                    />
-                </mat-form-field>
-                <mat-datepicker #headerDatePicker />
+            <div class="dashboard__actions-left">
+                <div class="dashboard__date-group">
+                    <mat-form-field class="dashboard__date-field" appearance="outline">
+                        <input
+                            matInput
+                            [matDatepicker]="headerDatePicker"
+                            [value]="selectedDate()"
+                            (dateChange)="handleDateChange($event)"
+                        />
+                    </mat-form-field>
+                    <mat-datepicker #headerDatePicker />
+                    <fd-ui-button
+                        class="dashboard__date-button"
+                        variant="secondary"
+                        fill="outline"
+                        icon="calendar_today"
+                        (click)="openDatePicker()"
+                    >
+                        {{ selectedDate() | localizedDate:'d MMMM y' }}
+                    </fd-ui-button>
+                </div>
+
                 <fd-ui-button
-                    class="dashboard__date-button"
+                    class="dashboard__settings-action"
                     variant="secondary"
                     fill="outline"
-                    icon="calendar_today"
-                    (click)="openDatePicker()"
-                >
-                    {{ selectedDate() | localizedDate:'d MMMM y' }}
-                </fd-ui-button>
+                    icon="tune"
+                    [ariaLabel]="'DASHBOARD.ACTIONS.OPEN_SETTINGS' | translate"
+                    [class.dashboard__settings-action--active]="isEditingLayout()"
+                    [attr.aria-pressed]="isEditingLayout()"
+                    (click)="openDashboardSettings()"
+                />
             </div>
 
-            <fd-ui-button
-                class="dashboard__settings-action"
-                variant="secondary"
-                fill="outline"
-                icon="tune"
-                [ariaLabel]="'DASHBOARD.ACTIONS.OPEN_SETTINGS' | translate"
-                [class.dashboard__settings-action--active]="isEditingLayout()"
-                [attr.aria-pressed]="isEditingLayout()"
-                (click)="openDashboardSettings()"
-            />
-
-            <fd-ui-button
-                class="dashboard__primary-action"
-                icon="add"
-                (click)="addConsumption()"
-            >
-                {{ 'DASHBOARD.ACTIONS.ADD_CONSUMPTION_BUTTON' | translate }}
-            </fd-ui-button>
+            <div class="dashboard__actions-right">
+                <fd-ui-button
+                    class="dashboard__primary-action"
+                    icon="add"
+                    (click)="addConsumption()"
+                >
+                    {{ 'DASHBOARD.ACTIONS.ADD_CONSUMPTION_BUTTON' | translate }}
+                </fd-ui-button>
+            </div>
         </ng-container>
     </fd-page-header>
 

@@ -170,4 +170,68 @@
             min-width: 100%;
         }
     }
+
+    @media (max-width: 900px) {
+        &__controls {
+            grid-template-columns: 1fr;
+        }
+
+        &__filters {
+            flex-direction: row;
+            align-items: center;
+            flex-wrap: nowrap;
+            gap: $gap-xs;
+            width: 100%;
+            justify-content: space-between;
+        }
+
+        &__pill {
+            flex: 1 1 auto;
+            min-width: 0;
+        }
+
+        &__pill ::ng-deep .fd-ui-button,
+        &__pill ::ng-deep button {
+            width: 100%;
+            padding-left: 12px;
+            padding-right: 12px;
+            font-size: 0.92rem;
+            white-space: nowrap;
+        }
+
+        &__add-button {
+            flex: 0 0 auto;
+            min-width: 44px;
+            margin-left: auto;
+        }
+
+        &__add-button ::ng-deep .fd-ui-button,
+        &__add-button ::ng-deep button {
+            width: 44px;
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        &__add-button ::ng-deep .fd-ui-button__label {
+            display: none;
+        }
+    }
+
+    @media (max-width: 360px) {
+        &__pill {
+            flex: 0 0 auto;
+            min-width: 44px;
+        }
+
+        &__pill ::ng-deep .fd-ui-button,
+        &__pill ::ng-deep button {
+            width: 44px;
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        &__pill ::ng-deep .fd-ui-button__label {
+            display: none;
+        }
+    }
 }
