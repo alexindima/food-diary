@@ -23,8 +23,9 @@ import { BarcodeScannerComponent } from '../../shared/barcode-scanner/barcode-sc
 import { FdUiFormErrorComponent, FD_VALIDATION_ERRORS, FdValidationErrors } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
 import { FdUiPlainInputComponent } from 'fd-ui-kit/plain-input/fd-ui-plain-input.component';
 import { FdUiPlainTextareaComponent } from 'fd-ui-kit/plain-textarea/fd-ui-plain-textarea.component';
+import { FdUiPlainSelectComponent } from 'fd-ui-kit/plain-select/fd-ui-plain-select.component';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
-import { FdUiSelectComponent, FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
+import { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiNutrientInputComponent } from 'fd-ui-kit/nutrient-input/fd-ui-nutrient-input.component';
 import { normalizeProductType as normalizeProductTypeValue } from '../../../utils/product-type.utils';
@@ -66,8 +67,8 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
         ZXingScannerModule,
         FdUiPlainInputComponent,
         FdUiPlainTextareaComponent,
+        FdUiPlainSelectComponent,
         FdUiCardComponent,
-        FdUiSelectComponent,
         FdUiButtonComponent,
         FdUiNutrientInputComponent,
         FdUiFormErrorComponent,

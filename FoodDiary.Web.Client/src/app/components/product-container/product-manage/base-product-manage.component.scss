@@ -71,6 +71,12 @@
         gap: $gap-xl;
     }
 
+    &__column--primary {
+        ::ng-deep .fd-ui-card__content {
+            gap: 28px;
+        }
+    }
+
     &__card {
         --fd-ui-card-border-color: rgba(15, 23, 42, 0.08);
         --fd-ui-card-title-color: #0f172a;
@@ -105,6 +111,10 @@
 
     &__card--basic {
         --fd-ui-card-border-color: rgba(37, 99, 235, 0.16);
+
+        ::ng-deep .fd-ui-card {
+            padding-bottom: $gap-l;
+        }
     }
 
     &__card--nutrition {
@@ -183,22 +193,26 @@
         }
 
         ::ng-deep .image-upload-field__placeholder {
-            padding: 12px;
-            gap: 6px;
+            padding: 20px 12px;
+            gap: 8px;
         }
 
         ::ng-deep .image-upload-field__icon {
-            width: 32px;
-            height: 32px;
-            font-size: 16px;
-            border-radius: 10px;
+            font-size: 28px;
+            width: auto;
+            height: auto;
         }
 
         ::ng-deep .image-upload-field__main-text {
-            font-size: 0.75rem;
+            font-size: 0.95rem;
         }
 
-        ::ng-deep .image-upload-field__sub-text,
+        ::ng-deep .image-upload-field__sub-text--plain {
+            display: block;
+            font-size: 0.8rem;
+        }
+
+        ::ng-deep .image-upload-field__sub-text:not(.image-upload-field__sub-text--plain),
         ::ng-deep .image-upload-field__hint {
             display: none;
         }

@@ -59,7 +59,7 @@
                              />
                         </div>
                         <div class="product-manage__hero-field">
-                            <fd-ui-select formControlName="productType"
+                            <fd-ui-plain-select formControlName="productType"
                                 size="lg"
                                 [label]="'PRODUCT_MANAGE.PRODUCT_TYPE' | translate"
                                 [placeholder]="'PRODUCT_MANAGE.PRODUCT_TYPE_PLACEHOLDER' | translate"
@@ -81,7 +81,7 @@
                                  />
                             </div>
                             <div class="product-manage__serving-part">
-                                <fd-ui-select formControlName="baseUnit"
+                                <fd-ui-plain-select formControlName="baseUnit"
                                     [label]="'PRODUCT_MANAGE.DEFAULT_SERVING_UNIT' | translate"
                                     [options]="unitOptions"
                                     [required]="true"
@@ -99,7 +99,7 @@
                 >
                     <div class="product-manage__basic-grid">
                         <div class="product-manage__field product-manage__field--full">
-                            <fd-ui-select formControlName="visibility"
+                            <fd-ui-plain-select formControlName="visibility"
                                 [label]="'PRODUCT_MANAGE.VISIBILITY' | translate"
                                 [required]="true"
                                 [options]="visibilitySelectOptions"

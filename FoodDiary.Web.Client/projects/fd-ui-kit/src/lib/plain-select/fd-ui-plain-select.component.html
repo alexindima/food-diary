@@ -1,0 +1,32 @@
+<div class="fd-ui-plain-select" [ngClass]="[sizeClass, error() ? 'fd-ui-plain-select--has-error' : '', shouldFloatLabel ? 'fd-ui-plain-select--floating' : '']">
+  <div class="fd-ui-plain-select__control-wrap" [style.background]="fillColor() || null">
+    @if (label()) {
+      <label class="fd-ui-plain-select__label" [attr.for]="id()">
+        <span class="fd-ui-plain-select__label-text">{{ label() }}</span>@if (required()) {<span class="fd-ui-plain-select__required">*</span>}
+      </label>
+    }
+
+    <select
+      class="fd-ui-plain-select__control"
+      [id]="id()"
+      [disabled]="disabled"
+      [value]="selectedIndex >= 0 ? selectedIndex : ''"
+      (focus)="onFocus()"
+      (blur)="onBlur()"
+      (change)="onNativeChange($any($event.target).value)"
+    >
+      <option value="" [disabled]="required()">{{ placeholder() || '' }}</option>
+      @for (option of options(); track option.value; let i = $index) {
+        <option [value]="i">{{ option.label }}</option>
+      }
+    </select>
+
+    <span class="fd-ui-plain-select__suffix" aria-hidden="true">
+      <mat-icon>expand_more</mat-icon>
+    </span>
+  </div>
+
+  @if (error()) {
+    <div class="fd-ui-plain-select__error">{{ error() }}</div>
+  }
+</div>

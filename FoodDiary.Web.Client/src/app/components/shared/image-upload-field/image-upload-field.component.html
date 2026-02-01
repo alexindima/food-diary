@@ -38,8 +38,9 @@
             </div>
         } @else {
             <div class="image-upload-field__placeholder">
-                <div class="image-upload-field__icon">⬆</div>
-                <div class="image-upload-field__main-text">Select a file or drop it here</div>
+                <div class="image-upload-field__icon">↑</div>
+                <div class="image-upload-field__main-text">Select a file</div>
+                <div class="image-upload-field__sub-text image-upload-field__sub-text--plain">or drop it here</div>
                 <div class="image-upload-field__sub-text">
                     {{ description() || ('JPG, PNG, GIF, WebP up to ' + maxSizeMb() + ' MB.') }}
                 </div>

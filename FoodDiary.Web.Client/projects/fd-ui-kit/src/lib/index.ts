@@ -2,6 +2,7 @@ export * from './design-tokens';
 export * from './input/fd-ui-input.component';
 export * from './plain-input/fd-ui-plain-input.component';
 export * from './plain-textarea/fd-ui-plain-textarea.component';
+export * from './plain-select/fd-ui-plain-select.component';
 export * from './nutrient-input/fd-ui-nutrient-input.component';
 export * from './fd-ui-kit.module';
 export * from './card/fd-ui-card.component';

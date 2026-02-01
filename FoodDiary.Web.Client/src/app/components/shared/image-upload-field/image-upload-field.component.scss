@@ -4,16 +4,16 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
-    padding: 6px;
+    padding: 0;
     border-radius: 16px;
-    background: linear-gradient(135deg, rgba(34, 197, 94, 0.05), rgba(59, 130, 246, 0.08));
+    background: transparent;
 
     &__dropzone {
         position: relative;
-        border: 1px dashed #cbd5e1;
-        border-radius: 12px;
+        border: 2px dashed #bfdbfe;
+        border-radius: 24px;
         min-height: 190px;
-        background: linear-gradient(135deg, rgba(148, 163, 184, 0.08), rgba(59, 130, 246, 0.08));
+        background: #f8fbff;
         color: #0f172a;
         display: grid;
         place-items: center;
@@ -42,26 +42,31 @@
         text-align: center;
         padding: 28px 24px;
         display: grid;
-        gap: 8px;
+        gap: 6px;
         color: #0f172a;
         text-align: center;
         width: 100%;
     }
 
     &__icon {
-        width: 44px;
-        height: 44px;
-        display: grid;
-        place-items: center;
-        border-radius: 12px;
-        background: #e2e8f0;
-        color: #0f172a;
-        font-size: 20px;
+        width: auto;
+        height: auto;
+        display: block;
+        color: #3b82f6;
+        font-size: 36px;
+        line-height: 1;
         margin: 0 auto;
     }
 
     &__main-text {
+        color: #2563eb;
         font-weight: 600;
+        font-size: 1.05rem;
+    }
+
+    &__sub-text--plain {
+        color: #94a3b8;
+        font-size: 0.85rem;
     }
 
     &__sub-text {
