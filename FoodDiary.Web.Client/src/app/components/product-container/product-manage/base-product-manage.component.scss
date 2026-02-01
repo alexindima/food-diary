@@ -119,6 +119,7 @@
 
     &__card--nutrition {
         --fd-ui-card-border-color: rgba(34, 197, 94, 0.18);
+        container-type: inline-size;
 
         ::ng-deep .fd-ui-card {
             padding-bottom: $gap-l;
@@ -129,6 +130,10 @@
         ::ng-deep .fd-ui-card {
             padding-bottom: $gap-l;
         }
+    }
+
+    &__actions-panel {
+        width: 100%;
     }
 
     &__sticky-stack {
@@ -212,9 +217,16 @@
             font-size: 0.8rem;
         }
 
-        ::ng-deep .image-upload-field__sub-text:not(.image-upload-field__sub-text--plain),
+        ::ng-deep .image-upload-field__sub-text:not(.image-upload-field__sub-text--plain) {
+            display: block;
+            font-size: 0.72rem;
+            color: #64748b;
+        }
+
         ::ng-deep .image-upload-field__hint {
-            display: none;
+            display: block;
+            font-size: 0.68rem;
+            color: #94a3b8;
         }
     }
 
@@ -291,6 +303,12 @@
         gap: $gap-m;
     }
 
+    @container (max-width: 359px) {
+        .product-manage__nutrition-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
     &__nutrition-input {
         width: 100%;
     }
@@ -318,33 +336,49 @@
         gap: 4px;
     }
 
-    &__footer {
-        margin-top: $gap-xl;
-        display: flex;
-        flex-direction: column;
-        gap: $gap-xs;
-        padding: $gap-m $gap-l;
-        border-radius: $border-radius-l;
-        background: #ffffff;
-        border: 1px solid rgba(15, 23, 42, 0.06);
-        box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
-    }
-
     &__footer-actions {
-        display: flex;
-        justify-content: flex-end;
+        display: grid;
+        grid-template-columns: max-content minmax(0, 1fr);
         gap: $gap-m;
-        flex-wrap: wrap;
         align-items: center;
+        width: 100%;
     }
 
     &__action-button {
-        min-width: 220px;
+        min-width: 0;
+        width: 100%;
+    }
+
+    &__action-button--add {
+        --fd-button-border-radius: 18px;
+        --fd-button-padding-x: 16px;
+        --fd-button-padding-y: 8px;
+        font-weight: 800;
+
+        ::ng-deep button,
+        ::ng-deep .fd-ui-button {
+            background: linear-gradient(135deg, #4dabff, #2563eb);
+            border: none;
+            color: #ffffff;
+            box-shadow: 0 10px 26px rgba(37, 99, 235, 0.28);
+        }
+
+        ::ng-deep button:hover:not(:disabled),
+        ::ng-deep .fd-ui-button:hover:not(:disabled) {
+            background: linear-gradient(135deg, #60b6ff, #2f6df2);
+            box-shadow: 0 12px 30px rgba(37, 99, 235, 0.32);
+        }
+
+        ::ng-deep button:active:not(:disabled),
+        ::ng-deep .fd-ui-button:active:not(:disabled) {
+            background: linear-gradient(135deg, #4dabff, #2563eb);
+            box-shadow: none;
+        }
     }
 
     &__footer-error {
         width: 100%;
-        text-align: right;
+        text-align: left;
         color: $color-no-results;
     }
 
@@ -376,8 +410,7 @@
         }
 
         &__footer-actions {
-            flex-direction: column;
-            align-items: stretch;
+            grid-template-columns: 1fr;
         }
     }
 

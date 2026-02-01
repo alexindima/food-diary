@@ -235,40 +235,44 @@
                             </div>
                         }
                     </fd-ui-card>
+
+                    <div class="product-manage__actions-panel">
+                        <div class="product-manage__footer-actions">
+                            <fd-ui-button
+                                type="button"
+                                fill="outline"
+                                variant="primary"
+                                icon="arrow_back"
+                                (click)="onCancel()"
+                            >
+                                {{ 'PRODUCT_MANAGE.CANCEL_BUTTON' | translate }}
+                            </fd-ui-button>
+                            @if (product()) {
+                                <fd-ui-button
+                                    type="submit"
+                                    class="product-manage__action-button"
+                                    icon="save"
+                                    [fullWidth]="true"
+                                >
+                                    {{ 'PRODUCT_MANAGE.SAVE_BUTTON' | translate }}
+                                </fd-ui-button>
+                            } @else {
+                                <fd-ui-button
+                                    type="submit"
+                                    class="product-manage__action-button product-manage__action-button--add"
+                                    icon="add"
+                                    [fullWidth]="true"
+                                >
+                                    {{ 'PRODUCT_MANAGE.ADD_BUTTON' | translate }}
+                                </fd-ui-button>
+                            }
+                        </div>
+                        @if (globalError()) {
+                            <fd-ui-form-error class="product-manage__footer-error" [error]="globalError()" />
+                        }
+                    </div>
                 </div>
             </div>
-        </div>
-
-        <div class="product-manage__footer">
-            <div class="product-manage__footer-actions">
-                <fd-ui-button
-                    type="button"
-                    fill="outline"
-                    variant="primary"
-                    icon="arrow_back"
-                    (click)="onCancel()"
-                >
-                    {{ 'PRODUCT_MANAGE.CANCEL_BUTTON' | translate }}
-                </fd-ui-button>
-                @if (product()) {
-                    <fd-ui-button
-                        type="submit"
-                        class="product-manage__action-button"
-                        icon="save"
-                    >
-                        {{ 'PRODUCT_MANAGE.SAVE_BUTTON' | translate }}
-                    </fd-ui-button>
-                } @else {
-                    <fd-ui-button
-                        type="submit"
-                        class="product-manage__action-button"
-                        icon="add"
-                    >
-                        {{ 'PRODUCT_MANAGE.ADD_BUTTON' | translate }}
-                    </fd-ui-button>
-                }
-            </div>
-            <fd-ui-form-error class="product-manage__footer-error" [error]="globalError()" />
         </div>
     </form>
 </div>

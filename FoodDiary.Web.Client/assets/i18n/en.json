@@ -648,6 +648,25 @@
         "DELETE_CONFIRM": "Are you sure you want to delete this product?",
         "DELETE_ERROR": "Unable to delete the product. Please try again."
     },
+    "IMAGE_UPLOAD_FIELD": {
+        "SELECT_FILE": "Select a file",
+        "DROP_HERE": "or drop it here",
+        "DEFAULT_DESCRIPTION": "JPG, PNG, GIF, WebP up to {{maxSizeMb}} MB",
+        "RECOMMENDED": "Recommended: {{size}}.",
+        "UPLOADING": "Uploading...",
+        "REPLACE": "Replace",
+        "REMOVE": "Remove",
+        "CROP_TITLE": "Crop image",
+        "CROP_SUBTITLE": "Keep a square crop so your image looks sharp.",
+        "APPLY": "Apply",
+        "ERRORS": {
+            "ONLY_IMAGES": "Only image files are allowed.",
+            "FILE_TOO_LARGE": "File size exceeds {{maxSizeMb}} MB.",
+            "READ_FAILED": "Could not read the image. Please try another file.",
+            "PROCESSING_FAILED": "Image processing failed. Please try again.",
+            "UPLOAD_FAILED": "Image upload failed. Please try again."
+        }
+    },
     "CONFIRM_DELETE": {
         "TITLE": "Delete {{type}}?",
         "MESSAGE": "This action cannot be undone. Delete “{{name}}”?",

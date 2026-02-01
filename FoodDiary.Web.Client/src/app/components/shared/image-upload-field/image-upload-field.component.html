@@ -22,7 +22,7 @@
                 <button
                     type="button"
                     class="image-upload-field__control-btn"
-                    title="Replace"
+                    [title]="'IMAGE_UPLOAD_FIELD.REPLACE' | translate"
                     (click)="$event.stopPropagation(); fileInput.click()"
                 >
                     &#10227;
@@ -30,7 +30,7 @@
                 <button
                     type="button"
                     class="image-upload-field__control-btn image-upload-field__control-btn--danger"
-                    title="Remove"
+                    [title]="'IMAGE_UPLOAD_FIELD.REMOVE' | translate"
                     (click)="onDeleteClick($event)"
                 >
                     &#128465;
@@ -39,17 +39,21 @@
         } @else {
             <div class="image-upload-field__placeholder">
                 <div class="image-upload-field__icon">↑</div>
-                <div class="image-upload-field__main-text">Select a file</div>
-                <div class="image-upload-field__sub-text image-upload-field__sub-text--plain">or drop it here</div>
-                <div class="image-upload-field__sub-text">
-                    {{ description() || ('JPG, PNG, GIF, WebP up to ' + maxSizeMb() + ' MB.') }}
+                <div class="image-upload-field__main-text">{{ 'IMAGE_UPLOAD_FIELD.SELECT_FILE' | translate }}</div>
+                <div class="image-upload-field__sub-text image-upload-field__sub-text--plain">
+                    {{ 'IMAGE_UPLOAD_FIELD.DROP_HERE' | translate }}
                 </div>
-                <div class="image-upload-field__hint">Recommended: {{ recommendedSize() }}.</div>
+                <div class="image-upload-field__sub-text">
+                    {{ description() || ( 'IMAGE_UPLOAD_FIELD.DEFAULT_DESCRIPTION' | translate:{ maxSizeMb: maxSizeMb() } ) }}
+                </div>
+                <div class="image-upload-field__hint">
+                    {{ 'IMAGE_UPLOAD_FIELD.RECOMMENDED' | translate:{ size: recommendedSize() } }}
+                </div>
             </div>
         }
 
         @if (isUploading) {
-            <div class="image-upload-field__overlay">Uploading...</div>
+            <div class="image-upload-field__overlay">{{ 'IMAGE_UPLOAD_FIELD.UPLOADING' | translate }}</div>
         }
     </div>
     @if (error) {
@@ -60,9 +64,9 @@
         <div class="image-upload-field__cropper-backdrop">
             <div class="image-upload-field__cropper">
                 <div class="image-upload-field__cropper-header">
-                    <div class="image-upload-field__cropper-title">Crop image</div>
+                    <div class="image-upload-field__cropper-title">{{ 'IMAGE_UPLOAD_FIELD.CROP_TITLE' | translate }}</div>
                     <div class="image-upload-field__cropper-subtitle">
-                        Keep a square crop so your avatar looks sharp.
+                        {{ 'IMAGE_UPLOAD_FIELD.CROP_SUBTITLE' | translate }}
                     </div>
                 </div>
                 <div class="image-upload-field__cropper-body">
@@ -75,11 +79,9 @@
                     />
                 </div>
                 <div class="image-upload-field__cropper-actions">
-                    <fd-ui-button type="button" variant="secondary" fill="ghost" (click)="cancelCrop()">
-                        Cancel
-                    </fd-ui-button>
+                    <fd-ui-button type="button" variant="secondary" fill="ghost" (click)="cancelCrop()">{{ 'COMMON.CANCEL' | translate }}</fd-ui-button>
                     <fd-ui-button type="button" variant="primary" icon="check" (click)="confirmCrop()">
-                        Apply
+                        {{ 'IMAGE_UPLOAD_FIELD.APPLY' | translate }}
                     </fd-ui-button>
                 </div>
             </div>

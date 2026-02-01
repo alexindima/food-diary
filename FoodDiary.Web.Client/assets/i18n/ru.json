@@ -462,7 +462,6 @@
         "MANUAL_CARBS": "Углеводы",
         "MANUAL_FIBER": "Клетчатка",
         "MANUAL_ALCOHOL": "Алкоголь",
-        "MANUAL_ALCOHOL": "Алкоголь",
         "REMOVE_STEP": "Удалить шаг",
         "VISIBILITY_GROUP_TITLE": "Видимость",
         "VISIBILITY": "Видимость",
@@ -612,6 +611,25 @@
             "PUBLIC": "Все пользователи"
         },
         "STEPS_TITLE": "Ингредиенты и шаги"
+    },
+    "IMAGE_UPLOAD_FIELD": {
+        "SELECT_FILE": "Выберите файл",
+        "DROP_HERE": "или перетащите его сюда",
+        "DEFAULT_DESCRIPTION": "JPG, PNG, GIF, WebP до {{maxSizeMb}} МБ",
+        "RECOMMENDED": "Рекомендуемый размер: {{size}}.",
+        "UPLOADING": "Загрузка...",
+        "REPLACE": "Заменить",
+        "REMOVE": "Удалить",
+        "CROP_TITLE": "Обрезать изображение",
+        "CROP_SUBTITLE": "Оставьте квадратную обрезку, чтобы изображение выглядело четко.",
+        "APPLY": "Применить",
+        "ERRORS": {
+            "ONLY_IMAGES": "Разрешены только файлы изображений.",
+            "FILE_TOO_LARGE": "Размер файла превышает {{maxSizeMb}} МБ.",
+            "READ_FAILED": "Не удалось прочитать изображение. Попробуйте другой файл.",
+            "PROCESSING_FAILED": "Не удалось обработать изображение. Попробуйте еще раз.",
+            "UPLOAD_FAILED": "Не удалось загрузить изображение. Попробуйте еще раз."
+        }
     },
     "CONFIRM_DELETE": {
         "TITLE": "Удалить {{type}}?",
@@ -1141,12 +1159,12 @@
             "EN": "Английский",
             "RU": "Русский"
         },
-        "DELETE_ACCOUNT_BUTTON": "\u0423\u0434\u0430\u043b\u0438\u0442\u044c \u0430\u043a\u043a\u0430\u0443\u043d\u0442",
-        "DELETE_ACCOUNT_INFO": "\u0423\u0434\u0430\u043b\u0435\u043d\u0438\u0435 \u0430\u043a\u043a\u0430\u0443\u043d\u0442\u0430 \u0441\u043a\u043e\u0440\u043e \u0431\u0443\u0434\u0435\u0442 \u0434\u043e\u0441\u0442\u0443\u043f\u043d\u043e.",
-        "DELETE_ACCOUNT_CONFIRM_TITLE": "\u0423\u0434\u0430\u043b\u0438\u0442\u044c \u0430\u043a\u043a\u0430\u0443\u043d\u0442?",
-        "DELETE_ACCOUNT_CONFIRM_MESSAGE": "\u041c\u044b \u0437\u0430\u043f\u043b\u0430\u043d\u0438\u0440\u0443\u0435\u043c \u0443\u0434\u0430\u043b\u0435\u043d\u0438\u0435 \u0430\u043a\u043a\u0430\u0443\u043d\u0442\u0430. \u0412\u044b \u0441\u043c\u043e\u0436\u0435\u0442\u0435 \u0432\u043e\u0441\u0441\u0442\u0430\u043d\u043e\u0432\u0438\u0442\u044c \u0435\u0433\u043e, \u0432\u043e\u0439\u0434\u044f \u0441\u043d\u043e\u0432\u0430.",
-        "DELETE_ACCOUNT_CONFIRM": "\u0423\u0434\u0430\u043b\u0438\u0442\u044c \u0430\u043a\u043a\u0430\u0443\u043d\u0442",
-        "DELETE_ACCOUNT_ERROR": "\u041d\u0435 \u0443\u0434\u0430\u043b\u043e\u0441\u044c \u0443\u0434\u0430\u043b\u0438\u0442\u044c \u0430\u043a\u043a\u0430\u0443\u043d\u0442. \u041f\u043e\u043f\u0440\u043e\u0431\u0443\u0439\u0442\u0435 \u0435\u0449\u0435 \u0440\u0430\u0437."
+        "DELETE_ACCOUNT_BUTTON": "Удалить аккаунт",
+        "DELETE_ACCOUNT_INFO": "Удаление аккаунта скоро будет доступно.",
+        "DELETE_ACCOUNT_CONFIRM_TITLE": "Удалить аккаунт?",
+        "DELETE_ACCOUNT_CONFIRM_MESSAGE": "Мы запланируем удаление аккаунта. Вы сможете восстановить его, войдя снова.",
+        "DELETE_ACCOUNT_CONFIRM": "Удалить аккаунт",
+        "DELETE_ACCOUNT_ERROR": "Не удалось удалить аккаунт. Попробуйте еще раз."
     },
     "DAILY_PROGRESS_CARD": {
         "TITLE": "Прогресс за день",

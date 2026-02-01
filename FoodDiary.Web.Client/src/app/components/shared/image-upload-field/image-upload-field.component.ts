@@ -13,6 +13,7 @@ import {
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { finalize, map, switchMap } from 'rxjs/operators';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ImageUploadService } from '../../../services/image-upload.service';
 import { ImageSelection } from '../../../types/image-upload.data';
 import Cropper from 'cropperjs';
@@ -20,7 +21,7 @@ import Cropper from 'cropperjs';
 @Component({
     selector: 'fd-image-upload-field',
     standalone: true,
-    imports: [FdUiButtonComponent],
+    imports: [FdUiButtonComponent, TranslatePipe],
     templateUrl: './image-upload-field.component.html',
     styleUrls: ['./image-upload-field.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -36,6 +37,7 @@ import Cropper from 'cropperjs';
 export class ImageUploadFieldComponent implements ControlValueAccessor {
     private readonly cdr = inject(ChangeDetectorRef);
     private readonly imageUploadService = inject(ImageUploadService);
+    private readonly translateService = inject(TranslateService);
 
     public readonly label = input<string>('Image');
     public readonly description = input<string>();
@@ -170,7 +172,7 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
 
         canvas.toBlob(blob => {
             if (!blob) {
-                this.error = 'Image processing failed. Please try again.';
+                this.error = this.translateService.instant('IMAGE_UPLOAD_FIELD.ERRORS.PROCESSING_FAILED');
                 this.cdr.markForCheck();
                 return;
             }
@@ -203,14 +205,16 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
 
         this.error = null;
         if (!file.type.startsWith('image/')) {
-            this.error = 'Only image files are allowed.';
+            this.error = this.translateService.instant('IMAGE_UPLOAD_FIELD.ERRORS.ONLY_IMAGES');
             this.cdr.markForCheck();
             return;
         }
 
         const maxBytes = this.maxSizeMb() * 1024 * 1024;
         if (!this.cropEnabled() && file.size > maxBytes) {
-            this.error = `File size exceeds ${this.maxSizeMb()} MB.`;
+            this.error = this.translateService.instant('IMAGE_UPLOAD_FIELD.ERRORS.FILE_TOO_LARGE', {
+                maxSizeMb: this.maxSizeMb(),
+            });
             this.cdr.markForCheck();
             return;
         }
@@ -231,7 +235,7 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
             this.cdr.markForCheck();
         };
         reader.onerror = () => {
-            this.error = 'Could not read the image. Please try another file.';
+            this.error = this.translateService.instant('IMAGE_UPLOAD_FIELD.ERRORS.READ_FAILED');
             this.cdr.markForCheck();
         };
         reader.readAsDataURL(file);
@@ -269,7 +273,7 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
                     this.cdr.markForCheck();
                 },
                 error: () => {
-                    this.error = 'Image upload failed. Please try again.';
+                    this.error = this.translateService.instant('IMAGE_UPLOAD_FIELD.ERRORS.UPLOAD_FAILED');
                     this.cdr.markForCheck();
                 },
             });
