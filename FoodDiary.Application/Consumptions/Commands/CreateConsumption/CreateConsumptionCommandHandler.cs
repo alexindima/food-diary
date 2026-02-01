@@ -86,6 +86,7 @@ public class CreateConsumptionCommandHandler(
                 nutritionResult.Value.Fats,
                 nutritionResult.Value.Carbs,
                 nutritionResult.Value.Fiber,
+                nutritionResult.Value.Alcohol,
                 isAutoCalculated: true);
         }
         else
@@ -95,7 +96,8 @@ public class CreateConsumptionCommandHandler(
                 command.ManualProteins,
                 command.ManualFats,
                 command.ManualCarbs,
-                command.ManualFiber);
+                command.ManualFiber,
+                command.ManualAlcohol);
 
             if (manualNutritionResult.IsFailure)
             {
@@ -109,12 +111,14 @@ public class CreateConsumptionCommandHandler(
                 manual.Fats,
                 manual.Carbs,
                 manual.Fiber,
+                manual.Alcohol,
                 isAutoCalculated: false,
                 manual.Calories,
                 manual.Proteins,
                 manual.Fats,
                 manual.Carbs,
-                manual.Fiber);
+                manual.Fiber,
+                manual.Alcohol);
         }
 
         await mealRepository.AddAsync(meal, cancellationToken);

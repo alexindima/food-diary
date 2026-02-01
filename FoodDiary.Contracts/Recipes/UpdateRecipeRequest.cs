@@ -18,4 +18,5 @@ public record UpdateRecipeRequest(
     double? ManualFats,
     double? ManualCarbs,
     double? ManualFiber,
+    double? ManualAlcohol,
     IReadOnlyList<RecipeStepRequest>? Steps);

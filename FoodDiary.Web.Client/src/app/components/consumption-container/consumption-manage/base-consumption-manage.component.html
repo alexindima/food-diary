@@ -257,6 +257,11 @@
                                 [required]="true"
                                 [error]="getControlError('manualCarbs')"
                              />
+                            <fd-ui-input formControlName="manualAlcohol"
+                                type="number"
+                                [label]="'CONSUMPTION_MANAGE.MANUAL_ALCOHOL' | translate"
+                                [error]="getControlError('manualAlcohol')"
+                             />
                         </div>
                     }
                 </fd-ui-card>
@@ -268,10 +273,15 @@
                         {{ 'CONSUMPTION_MANAGE.TOTAL_CALORIES' | translate }}:
                         <strong>{{ totalCalories() | number:'1.0-2' }} {{ 'PRODUCT_LIST.KCAL' | translate }}</strong>
                     </p>
+                    <p class="consumption-manage__summary-alcohol">
+                        {{ 'NUTRIENTS.ALCOHOL' | translate }}:
+                        <strong>{{ totalAlcohol() | number:'1.0-2' }} {{ 'PRODUCT_AMOUNT_UNITS_SHORT.G' | translate }}</strong>
+                    </p>
                     <fd-nutrients-summary [bare]="true"
                         [calories]="totalCalories()"
                         [nutrientChartData]="nutrientChartData()"
                         [fiberValue]="totalFiber()"
+                        [alcoholValue]="totalAlcohol()"
                      />
                 </fd-ui-card>
             </div>

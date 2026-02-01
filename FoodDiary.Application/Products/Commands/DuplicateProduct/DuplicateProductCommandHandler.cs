@@ -35,6 +35,7 @@ public class DuplicateProductCommandHandler(IProductRepository productRepository
             original.FatsPerBase,
             original.CarbsPerBase,
             original.FiberPerBase,
+            original.AlcoholPerBase,
             original.Barcode,
             original.Brand,
             original.ProductType,

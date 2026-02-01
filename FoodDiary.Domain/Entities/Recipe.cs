@@ -22,12 +22,14 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
     public double? TotalFats { get; private set; }
     public double? TotalCarbs { get; private set; }
     public double? TotalFiber { get; private set; }
+    public double? TotalAlcohol { get; private set; }
     public bool IsNutritionAutoCalculated { get; private set; } = true;
     public double? ManualCalories { get; private set; }
     public double? ManualProteins { get; private set; }
     public double? ManualFats { get; private set; }
     public double? ManualCarbs { get; private set; }
     public double? ManualFiber { get; private set; }
+    public double? ManualAlcohol { get; private set; }
     public Visibility Visibility { get; private set; } = Visibility.PUBLIC;
     public int UsageCount { get; private set; }
 
@@ -116,12 +118,12 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
 
     public void EnableAutoNutrition() {
         if (IsNutritionAutoCalculated && ManualCalories is null && ManualProteins is null &&
-            ManualFats is null && ManualCarbs is null && ManualFiber is null) {
+            ManualFats is null && ManualCarbs is null && ManualFiber is null && ManualAlcohol is null) {
             return;
         }
 
         IsNutritionAutoCalculated = true;
-        ManualCalories = ManualProteins = ManualFats = ManualCarbs = ManualFiber = null;
+        ManualCalories = ManualProteins = ManualFats = ManualCarbs = ManualFiber = ManualAlcohol = null;
         SetModified();
     }
 
@@ -130,18 +132,21 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
         double? proteins,
         double? fats,
         double? carbs,
-        double? fiber) {
+        double? fiber,
+        double? alcohol) {
         IsNutritionAutoCalculated = false;
         ManualCalories = calories;
         ManualProteins = proteins;
         ManualFats = fats;
         ManualCarbs = carbs;
         ManualFiber = fiber;
+        ManualAlcohol = alcohol;
         TotalCalories = calories;
         TotalProteins = proteins;
         TotalFats = fats;
         TotalCarbs = carbs;
         TotalFiber = fiber;
+        TotalAlcohol = alcohol;
         SetModified();
     }
 
@@ -150,7 +155,8 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
         double? proteins,
         double? fats,
         double? carbs,
-        double? fiber) {
+        double? fiber,
+        double? alcohol) {
         if (!IsNutritionAutoCalculated) {
             return;
         }
@@ -160,6 +166,7 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
         TotalFats = fats;
         TotalCarbs = carbs;
         TotalFiber = fiber;
+        TotalAlcohol = alcohol;
         SetModified();
     }
 }

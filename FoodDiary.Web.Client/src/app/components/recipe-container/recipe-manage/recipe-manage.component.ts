@@ -78,7 +78,8 @@ export class RecipeManageComponent implements OnInit {
         const proteins = this.recipeForm.controls.manualProteins.value;
         const fats = this.recipeForm.controls.manualFats.value;
         const carbs = this.recipeForm.controls.manualCarbs.value;
-        const expectedCalories = this.nutritionCalculationService.calculateCaloriesFromMacros(proteins, fats, carbs);
+        const alcohol = this.recipeForm.controls.manualAlcohol.value ?? 0;
+        const expectedCalories = this.nutritionCalculationService.calculateCaloriesFromMacros(proteins, fats, carbs, alcohol);
 
         if (expectedCalories <= 0 || calories <= 0) {
             return null;
@@ -98,6 +99,7 @@ export class RecipeManageComponent implements OnInit {
     public recipe = input<Recipe | null>(null);
     public totalCalories = signal<number>(0);
     public totalFiber = signal<number>(0);
+    public totalAlcohol = signal<number>(0);
     public nutrientChartData = signal<NutrientData>({
         proteins: 0,
         fats: 0,
@@ -131,6 +133,7 @@ export class RecipeManageComponent implements OnInit {
             manualFats: new FormControl<number | null>(null, [Validators.min(0)]),
             manualCarbs: new FormControl<number | null>(null, [Validators.min(0)]),
             manualFiber: new FormControl<number | null>(null, [Validators.min(0)]),
+            manualAlcohol: new FormControl<number | null>(null, [Validators.min(0)]),
             steps: new FormArray<FormGroup<FormGroupControls<StepFormValues>>>([], nonEmptyArrayValidator()),
         });
 
@@ -284,6 +287,7 @@ export class RecipeManageComponent implements OnInit {
             manualFats: recipeData.manualFats ?? recipeData.totalFats ?? null,
             manualCarbs: recipeData.manualCarbs ?? recipeData.totalCarbs ?? null,
             manualFiber: recipeData.manualFiber ?? recipeData.totalFiber ?? null,
+            manualAlcohol: recipeData.manualAlcohol ?? recipeData.totalAlcohol ?? null,
         });
 
         this.resetSteps();
@@ -389,6 +393,7 @@ export class RecipeManageComponent implements OnInit {
             fatsPerBase: ingredient.productFatsPerBase ?? 0,
             carbsPerBase: ingredient.productCarbsPerBase ?? 0,
             fiberPerBase: ingredient.productFiberPerBase ?? 0,
+            alcoholPerBase: ingredient.productAlcoholPerBase ?? 0,
             usageCount: 0,
             visibility: ProductVisibility.Private,
             createdAt: new Date(),
@@ -508,6 +513,7 @@ export class RecipeManageComponent implements OnInit {
             manualFats: formValue.calculateNutritionAutomatically ? null : (formValue.manualFats ?? 0),
             manualCarbs: formValue.calculateNutritionAutomatically ? null : (formValue.manualCarbs ?? 0),
             manualFiber: formValue.calculateNutritionAutomatically ? null : (formValue.manualFiber ?? 0),
+            manualAlcohol: formValue.calculateNutritionAutomatically ? null : (formValue.manualAlcohol ?? 0),
             steps,
         };
     }
@@ -525,7 +531,7 @@ export class RecipeManageComponent implements OnInit {
 
     private updateNutrientSummary(recipeData: Recipe | null): void {
         if (!recipeData) {
-            this.setNutrientSummary(0, 0, 0, 0, 0);
+            this.setNutrientSummary(0, 0, 0, 0, 0, 0);
             return;
         }
 
@@ -535,6 +541,7 @@ export class RecipeManageComponent implements OnInit {
             recipeData.totalFats ?? this.nutrientChartData().fats,
             recipeData.totalCarbs ?? this.nutrientChartData().carbs,
             recipeData.totalFiber ?? this.totalFiber(),
+            recipeData.totalAlcohol ?? this.totalAlcohol(),
         );
     }
 
@@ -550,6 +557,7 @@ export class RecipeManageComponent implements OnInit {
             this.recipeForm.controls.manualFats.value ?? 0,
             this.recipeForm.controls.manualCarbs.value ?? 0,
             this.recipeForm.controls.manualFiber.value ?? 0,
+            this.recipeForm.controls.manualAlcohol.value ?? 0,
         );
     }
 
@@ -560,6 +568,7 @@ export class RecipeManageComponent implements OnInit {
             manualFats: this.nutrientChartData().fats,
             manualCarbs: this.nutrientChartData().carbs,
             manualFiber: this.totalFiber(),
+            manualAlcohol: this.totalAlcohol(),
         }, { emitEvent: false });
     }
 
@@ -596,7 +605,7 @@ export class RecipeManageComponent implements OnInit {
     private recalculateNutrientsFromForm(): void {
         const stepsArray = this.recipeForm.controls.steps;
         if (!stepsArray || stepsArray.length === 0) {
-            this.setNutrientSummary(0, 0, 0, 0, 0);
+            this.setNutrientSummary(0, 0, 0, 0, 0, 0);
             return;
         }
 
@@ -605,6 +614,7 @@ export class RecipeManageComponent implements OnInit {
         let totalFats = 0;
         let totalCarbs = 0;
         let totalFiber = 0;
+        let totalAlcohol = 0;
 
         stepsArray.controls.forEach(stepGroup => {
             const ingredients = stepGroup.controls.ingredients;
@@ -624,6 +634,7 @@ export class RecipeManageComponent implements OnInit {
                 totalFats += (food.fatsPerBase ?? 0) * multiplier;
                 totalCarbs += (food.carbsPerBase ?? 0) * multiplier;
                 totalFiber += (food.fiberPerBase ?? 0) * multiplier;
+                totalAlcohol += (food.alcoholPerBase ?? 0) * multiplier;
             });
         });
 
@@ -633,12 +644,21 @@ export class RecipeManageComponent implements OnInit {
             this.roundNutrient(totalFats),
             this.roundNutrient(totalCarbs),
             this.roundNutrient(totalFiber),
+            this.roundNutrient(totalAlcohol),
         );
     }
 
-    private setNutrientSummary(calories: number, proteins: number, fats: number, carbs: number, fiber: number): void {
+    private setNutrientSummary(
+        calories: number,
+        proteins: number,
+        fats: number,
+        carbs: number,
+        fiber: number,
+        alcohol: number,
+    ): void {
         this.totalCalories.set(this.roundNutrient(calories));
         this.totalFiber.set(this.roundNutrient(fiber));
+        this.totalAlcohol.set(this.roundNutrient(alcohol));
         this.nutrientChartData.set({
             proteins: this.roundNutrient(proteins),
             fats: this.roundNutrient(fats),
@@ -661,6 +681,7 @@ export class RecipeManageComponent implements OnInit {
             manualFats: this.nutrientChartData().fats,
             manualCarbs: this.nutrientChartData().carbs,
             manualFiber: this.totalFiber(),
+            manualAlcohol: this.totalAlcohol(),
         }, { emitEvent: false });
     }
 
@@ -716,6 +737,7 @@ interface RecipeFormValues {
     manualFats: number | null;
     manualCarbs: number | null;
     manualFiber: number | null;
+    manualAlcohol: number | null;
     steps: StepFormValues[];
 }
 

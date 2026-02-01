@@ -25,6 +25,17 @@
                     </span>
                 </p>
             }
+            @if (alcoholValue() !== null) {
+                <p
+                    class="alcohol-highlight"
+                    [ngStyle]="nutrientStyles"
+                >
+                    {{ 'NUTRIENTS.ALCOHOL' | translate }}:
+                    <span>
+                        {{ alcoholValue() | number: '1.0-2' }} {{ alcoholUnitKey() | translate }}
+                    </span>
+                </p>
+            }
             <ul class="nutrient-list">
                 <li
                     class="nutrient"

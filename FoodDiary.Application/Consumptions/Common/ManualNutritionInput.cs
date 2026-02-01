@@ -5,5 +5,6 @@ public sealed record ManualNutritionInput(
     double Proteins,
     double Fats,
     double Carbs,
-    double Fiber);
+    double Fiber,
+    double Alcohol);
 

@@ -30,6 +30,7 @@ public class CreateProductCommandHandler(IProductRepository productRepository)
             fatsPerBase: command.FatsPerBase,
             carbsPerBase: command.CarbsPerBase,
             fiberPerBase: command.FiberPerBase,
+            alcoholPerBase: command.AlcoholPerBase,
             barcode: command.Barcode,
             brand: command.Brand,
             productType: productType,

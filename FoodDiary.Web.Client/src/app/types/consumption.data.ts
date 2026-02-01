@@ -13,12 +13,14 @@ export interface Consumption {
     totalFats: number;
     totalCarbs: number;
     totalFiber: number;
+    totalAlcohol: number;
     isNutritionAutoCalculated: boolean;
     manualCalories?: number | null;
     manualProteins?: number | null;
     manualFats?: number | null;
     manualCarbs?: number | null;
     manualFiber?: number | null;
+    manualAlcohol?: number | null;
     preMealSatietyLevel?: number | null;
     postMealSatietyLevel?: number | null;
     items: ConsumptionItem[];
@@ -45,12 +47,14 @@ export interface ConsumptionResponseDto {
     totalFats: number;
     totalCarbs: number;
     totalFiber: number;
+    totalAlcohol: number;
     isNutritionAutoCalculated: boolean;
     manualCalories?: number | null;
     manualProteins?: number | null;
     manualFats?: number | null;
     manualCarbs?: number | null;
     manualFiber?: number | null;
+    manualAlcohol?: number | null;
     preMealSatietyLevel?: number | null;
     postMealSatietyLevel?: number | null;
     items: ConsumptionItemResponseDto[];
@@ -69,6 +73,7 @@ export interface ConsumptionItemResponseDto {
     productFatsPerBase?: number | null;
     productCarbsPerBase?: number | null;
     productFiberPerBase?: number | null;
+    productAlcoholPerBase?: number | null;
     recipeId?: string | null;
     recipeName?: string | null;
     recipeServings?: number | null;
@@ -77,6 +82,7 @@ export interface ConsumptionItemResponseDto {
     recipeTotalFats?: number | null;
     recipeTotalCarbs?: number | null;
     recipeTotalFiber?: number | null;
+    recipeTotalAlcohol?: number | null;
 }
 
 export enum ConsumptionSourceType {
@@ -102,6 +108,7 @@ export interface ConsumptionManageDto {
     manualFats?: number | null;
     manualCarbs?: number | null;
     manualFiber?: number | null;
+    manualAlcohol?: number | null;
     preMealSatietyLevel?: number | null;
     postMealSatietyLevel?: number | null;
 }
@@ -124,6 +131,7 @@ export const createEmptyProductSnapshot = (): Product => ({
     fatsPerBase: 0,
     carbsPerBase: 0,
     fiberPerBase: 0,
+    alcoholPerBase: 0,
     visibility: ProductVisibility.Private,
     usageCount: 0,
     createdAt: new Date(),

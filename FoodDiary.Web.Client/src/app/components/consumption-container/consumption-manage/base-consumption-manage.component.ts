@@ -113,6 +113,7 @@ export class BaseConsumptionManageComponent implements OnInit {
     public consumption = input<Consumption | null>();
     public totalCalories = signal<number>(0);
     public totalFiber = signal<number>(0);
+    public totalAlcohol = signal<number>(0);
     public nutrientChartData = signal<NutrientData>({
         proteins: 0,
         fats: 0,
@@ -143,6 +144,7 @@ export class BaseConsumptionManageComponent implements OnInit {
             manualFats: new FormControl<number | null>(null),
             manualCarbs: new FormControl<number | null>(null),
             manualFiber: new FormControl<number | null>(null),
+            manualAlcohol: new FormControl<number | null>(null, [Validators.min(0)]),
             preMealSatietyLevel: new FormControl<number | null>(null),
             postMealSatietyLevel: new FormControl<number | null>(null),
         });
@@ -559,6 +561,7 @@ export class BaseConsumptionManageComponent implements OnInit {
             manualFats: isNutritionAutoCalculated ? undefined : manualTotals.fats,
             manualCarbs: isNutritionAutoCalculated ? undefined : manualTotals.carbs,
             manualFiber: isNutritionAutoCalculated ? undefined : manualTotals.fiber,
+            manualAlcohol: isNutritionAutoCalculated ? undefined : manualTotals.alcohol,
             preMealSatietyLevel: preMealSatietyLevel ?? undefined,
             postMealSatietyLevel: postMealSatietyLevel ?? undefined,
         };
@@ -597,6 +600,7 @@ export class BaseConsumptionManageComponent implements OnInit {
             manualFats: consumption.manualFats ?? consumption.totalFats,
             manualCarbs: consumption.manualCarbs ?? consumption.totalCarbs,
             manualFiber: consumption.manualFiber ?? consumption.totalFiber,
+            manualAlcohol: consumption.manualAlcohol ?? consumption.totalAlcohol,
             preMealSatietyLevel: consumption.preMealSatietyLevel ?? null,
             postMealSatietyLevel: consumption.postMealSatietyLevel ?? null,
         });
@@ -640,6 +644,7 @@ export class BaseConsumptionManageComponent implements OnInit {
             fats: this.roundNutrient(summaryTotals.fats),
             carbs: this.roundNutrient(summaryTotals.carbs),
             fiber: this.roundNutrient(summaryTotals.fiber),
+            alcohol: this.roundNutrient(summaryTotals.alcohol),
         });
     }
 
@@ -660,6 +665,7 @@ export class BaseConsumptionManageComponent implements OnInit {
                     totals.fats += food.fatsPerBase * multiplier;
                     totals.carbs += food.carbsPerBase * multiplier;
                     totals.fiber += (food.fiberPerBase ?? 0) * multiplier;
+                    totals.alcohol += (food.alcoholPerBase ?? 0) * multiplier;
                     return totals;
                 }
 
@@ -671,6 +677,7 @@ export class BaseConsumptionManageComponent implements OnInit {
                     const fatsPerServing = (recipe.totalFats ?? 0) / servings;
                     const carbsPerServing = (recipe.totalCarbs ?? 0) / servings;
                     const fiberPerServing = (recipe.totalFiber ?? 0) / servings;
+                    const alcoholPerServing = (recipe.totalAlcohol ?? 0) / servings;
                     const servingsAmount = this.convertRecipeGramsToServings(recipe, amount);
 
                     totals.calories += caloriesPerServing * servingsAmount;
@@ -678,11 +685,12 @@ export class BaseConsumptionManageComponent implements OnInit {
                     totals.fats += fatsPerServing * servingsAmount;
                     totals.carbs += carbsPerServing * servingsAmount;
                     totals.fiber += fiberPerServing * servingsAmount;
+                    totals.alcohol += alcoholPerServing * servingsAmount;
                 }
 
                 return totals;
             },
-            { calories: 0, proteins: 0, fats: 0, carbs: 0, fiber: 0 }
+            { calories: 0, proteins: 0, fats: 0, carbs: 0, fiber: 0, alcohol: 0 }
         );
     }
 
@@ -693,6 +701,7 @@ export class BaseConsumptionManageComponent implements OnInit {
             fats: this.consumptionForm.controls.manualFats.value ?? 0,
             carbs: this.consumptionForm.controls.manualCarbs.value ?? 0,
             fiber: this.consumptionForm.controls.manualFiber.value ?? 0,
+            alcohol: this.consumptionForm.controls.manualAlcohol.value ?? 0,
         };
     }
 
@@ -703,6 +712,10 @@ export class BaseConsumptionManageComponent implements OnInit {
 
         if (this.totalFiber() !== totals.fiber) {
             this.totalFiber.set(totals.fiber);
+        }
+
+        if (this.totalAlcohol() !== totals.alcohol) {
+            this.totalAlcohol.set(totals.alcohol);
         }
 
         const currentNutrientData = this.nutrientChartData();
@@ -727,6 +740,7 @@ export class BaseConsumptionManageComponent implements OnInit {
             manualFats: this.roundNutrient(totals.fats),
             manualCarbs: this.roundNutrient(totals.carbs),
             manualFiber: this.roundNutrient(totals.fiber),
+            manualAlcohol: this.roundNutrient(totals.alcohol),
         }, { emitEvent: false });
     }
 
@@ -775,6 +789,7 @@ export class BaseConsumptionManageComponent implements OnInit {
                         manualFats: null,
                         manualCarbs: null,
                         manualFiber: null,
+                        manualAlcohol: null,
                     });
                     this.items.clear();
                     this.items.push(this.createConsumptionItem());
@@ -1042,6 +1057,7 @@ type ConsumptionFormValues = {
     manualFats: number | null;
     manualCarbs: number | null;
     manualFiber: number | null;
+    manualAlcohol: number | null;
     preMealSatietyLevel: number | null;
     postMealSatietyLevel: number | null;
 };
@@ -1063,4 +1079,5 @@ type NutritionTotals = {
     fats: number;
     carbs: number;
     fiber: number;
+    alcohol: number;
 };

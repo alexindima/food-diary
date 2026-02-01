@@ -182,6 +182,17 @@
                                  />
                             </div>
                         </div>
+                        <div class="product-manage__nutrients-row">
+                            <div class="product-manage__nutrient">
+                                <fd-ui-input formControlName="alcoholPerBase"
+                                    type="number"
+                                    [label]="'PRODUCT_MANAGE.ALCOHOL' | translate"
+                                    placeholder="0"
+                                    [fillColor]="nutrientFillColors.alcohol"
+                                    [error]="getControlError('alcoholPerBase')"
+                                 />
+                            </div>
+                        </div>
                         @if (nutritionWarning(); as warning) {
                             <div class="product-manage__nutrition-warning">
                                 {{ 'PRODUCT_MANAGE.CALORIES_MISMATCH_WARNING' | translate: {

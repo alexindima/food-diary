@@ -18,6 +18,7 @@ public static class RecipeNutritionCalculator
         double totalFats = 0;
         double totalCarbs = 0;
         double totalFiber = 0;
+        double totalAlcohol = 0;
         var hasComputedValues = false;
 
         foreach (var step in recipe.Steps)
@@ -32,6 +33,7 @@ public static class RecipeNutritionCalculator
                     totalFats += product.FatsPerBase * factor;
                     totalCarbs += product.CarbsPerBase * factor;
                     totalFiber += product.FiberPerBase * factor;
+                    totalAlcohol += product.AlcoholPerBase * factor;
                     hasComputedValues = true;
                 }
                 else if (ingredient.NestedRecipe is { } nested && nested.Servings > 0)
@@ -41,6 +43,7 @@ public static class RecipeNutritionCalculator
                     totalProteins += (nested.TotalProteins ?? 0) * factor;
                     totalFats += (nested.TotalFats ?? 0) * factor;
                     totalCarbs += (nested.TotalCarbs ?? 0) * factor;
+                    totalAlcohol += (nested.TotalAlcohol ?? 0) * factor;
                     hasComputedValues = true;
                 }
             }
@@ -56,7 +59,8 @@ public static class RecipeNutritionCalculator
             Math.Round(totalProteins, 2),
             Math.Round(totalFats, 2),
             Math.Round(totalCarbs, 2),
-            Math.Round(totalFiber, 2));
+            Math.Round(totalFiber, 2),
+            Math.Round(totalAlcohol, 2));
     }
 
     private static RecipeNutritionSummary FromStoredNutrition(Recipe recipe) =>
@@ -65,7 +69,8 @@ public static class RecipeNutritionCalculator
             recipe.TotalProteins,
             recipe.TotalFats,
             recipe.TotalCarbs,
-            recipe.TotalFiber);
+            recipe.TotalFiber,
+            recipe.TotalAlcohol);
 }
 
 public sealed record RecipeNutritionSummary(
@@ -73,4 +78,5 @@ public sealed record RecipeNutritionSummary(
     double? TotalProteins,
     double? TotalFats,
     double? TotalCarbs,
-    double? TotalFiber);
+    double? TotalFiber,
+    double? TotalAlcohol);

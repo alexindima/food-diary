@@ -24,5 +24,6 @@ public record CreateProductCommand(
     double FatsPerBase,
     double CarbsPerBase,
     double FiberPerBase,
+    double AlcoholPerBase,
     string Visibility
 ) : ICommand<Result<ProductResponse>>;

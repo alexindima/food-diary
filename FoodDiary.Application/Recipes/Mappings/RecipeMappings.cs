@@ -35,6 +35,7 @@ public static class RecipeMappings
                         ingredient.Product?.FatsPerBase,
                         ingredient.Product?.CarbsPerBase,
                         ingredient.Product?.FiberPerBase,
+                        ingredient.Product?.AlcoholPerBase,
                         ingredient.NestedRecipeId?.Value,
                         ingredient.NestedRecipe?.Name))
                     .ToList()))
@@ -57,12 +58,14 @@ public static class RecipeMappings
             nutrition.TotalFats,
             nutrition.TotalCarbs,
             nutrition.TotalFiber,
+            nutrition.TotalAlcohol,
             recipe.IsNutritionAutoCalculated,
             recipe.ManualCalories,
             recipe.ManualProteins,
             recipe.ManualFats,
             recipe.ManualCarbs,
             recipe.ManualFiber,
+            recipe.ManualAlcohol,
             recipe.Visibility.ToString(),
             usageCount,
             recipe.CreatedOnUtc,
@@ -89,6 +92,7 @@ public static class RecipeMappings
             request.ManualFats,
             request.ManualCarbs,
             request.ManualFiber,
+            request.ManualAlcohol,
             MapSteps(request.Steps));
     }
 
@@ -112,6 +116,7 @@ public static class RecipeMappings
             request.ManualFats,
             request.ManualCarbs,
             request.ManualFiber,
+            request.ManualAlcohol,
             request.Steps is null ? null : MapSteps(request.Steps));
     }
 
@@ -138,7 +143,8 @@ public static class RecipeMappings
                 recipe.ManualProteins ?? recipe.TotalProteins,
                 recipe.ManualFats ?? recipe.TotalFats,
                 recipe.ManualCarbs ?? recipe.TotalCarbs,
-                recipe.ManualFiber ?? recipe.TotalFiber);
+                recipe.ManualFiber ?? recipe.TotalFiber,
+                recipe.ManualAlcohol ?? recipe.TotalAlcohol);
         }
 
         return RecipeNutritionCalculator.Calculate(recipe);

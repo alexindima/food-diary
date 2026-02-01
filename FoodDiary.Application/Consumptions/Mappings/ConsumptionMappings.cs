@@ -26,6 +26,7 @@ public static class ConsumptionMappings
                 item.Product?.FatsPerBase,
                 item.Product?.CarbsPerBase,
                 item.Product?.FiberPerBase,
+                item.Product?.AlcoholPerBase,
                 item.RecipeId?.Value,
                 item.Recipe?.Name,
                 item.Recipe?.Servings,
@@ -33,7 +34,8 @@ public static class ConsumptionMappings
                 item.Recipe?.TotalProteins,
                 item.Recipe?.TotalFats,
                 item.Recipe?.TotalCarbs,
-                item.Recipe?.TotalFiber))
+                item.Recipe?.TotalFiber,
+                item.Recipe?.TotalAlcohol))
             .ToList();
 
         return new ConsumptionResponse(
@@ -48,12 +50,14 @@ public static class ConsumptionMappings
             meal.TotalFats,
             meal.TotalCarbs,
             meal.TotalFiber,
+            meal.TotalAlcohol,
             meal.IsNutritionAutoCalculated,
             meal.ManualCalories,
             meal.ManualProteins,
             meal.ManualFats,
             meal.ManualCarbs,
             meal.ManualFiber,
+            meal.ManualAlcohol,
             meal.PreMealSatietyLevel,
             meal.PostMealSatietyLevel,
             items);

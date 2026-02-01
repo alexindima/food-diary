@@ -97,6 +97,10 @@ public class UpdateRecipeCommandValidator : AbstractValidator<UpdateRecipeComman
         RuleFor(x => x.ManualFiber)
             .GreaterThanOrEqualTo(0)
             .When(x => !x.CalculateNutritionAutomatically);
+
+        RuleFor(x => x.ManualAlcohol)
+            .GreaterThanOrEqualTo(0)
+            .When(x => !x.CalculateNutritionAutomatically && x.ManualAlcohol.HasValue);
     }
 
     private async Task EnsureRecipeEditableAsync(

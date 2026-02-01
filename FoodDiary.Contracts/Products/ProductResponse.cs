@@ -19,6 +19,7 @@ public record ProductResponse(
     double FatsPerBase,
     double CarbsPerBase,
     double FiberPerBase,
+    double AlcoholPerBase,
     int UsageCount,
     string Visibility,
     DateTime CreatedAt,

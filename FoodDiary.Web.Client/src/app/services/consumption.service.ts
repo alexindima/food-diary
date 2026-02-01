@@ -81,12 +81,14 @@ export class ConsumptionService extends ApiService {
             totalFats: response.totalFats,
             totalCarbs: response.totalCarbs,
             totalFiber: response.totalFiber,
+            totalAlcohol: response.totalAlcohol ?? 0,
             isNutritionAutoCalculated: response.isNutritionAutoCalculated ?? true,
             manualCalories: response.manualCalories ?? null,
             manualProteins: response.manualProteins ?? null,
             manualFats: response.manualFats ?? null,
             manualCarbs: response.manualCarbs ?? null,
             manualFiber: response.manualFiber ?? null,
+            manualAlcohol: response.manualAlcohol ?? null,
             preMealSatietyLevel: response.preMealSatietyLevel ?? 0,
             postMealSatietyLevel: response.postMealSatietyLevel ?? 0,
             items: response.items.map(item => this.mapConsumptionItem(item)),
@@ -122,6 +124,7 @@ export class ConsumptionService extends ApiService {
             fatsPerBase: response.productFatsPerBase ?? 0,
             carbsPerBase: response.productCarbsPerBase ?? 0,
             fiberPerBase: response.productFiberPerBase ?? 0,
+            alcoholPerBase: response.productAlcoholPerBase ?? 0,
         };
     }
 
@@ -137,6 +140,7 @@ export class ConsumptionService extends ApiService {
             totalFats: response.recipeTotalFats ?? 0,
             totalCarbs: response.recipeTotalCarbs ?? 0,
             totalFiber: response.recipeTotalFiber ?? 0,
+            totalAlcohol: response.recipeTotalAlcohol ?? 0,
         };
     }
 

@@ -18,5 +18,6 @@ public record CreateProductRequest(
     double FatsPerBase,
     double CarbsPerBase,
     double FiberPerBase,
+    double AlcoholPerBase,
     string Visibility
 );

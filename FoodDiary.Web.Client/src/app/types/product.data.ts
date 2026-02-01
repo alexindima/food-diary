@@ -17,6 +17,7 @@ export interface Product {
     fatsPerBase: number;
     carbsPerBase: number;
     fiberPerBase: number;
+    alcoholPerBase: number;
     usageCount: number;
     visibility: ProductVisibility;
     createdAt: Date;
@@ -41,6 +42,7 @@ export interface CreateProductRequest {
     fatsPerBase: number;
     carbsPerBase: number;
     fiberPerBase: number;
+    alcoholPerBase: number;
     visibility: ProductVisibility;
 }
 

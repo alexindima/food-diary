@@ -51,7 +51,8 @@ public class DuplicateRecipeCommandHandler(IRecipeRepository recipeRepository)
                 original.ManualProteins ?? original.TotalProteins,
                 original.ManualFats ?? original.TotalFats,
                 original.ManualCarbs ?? original.TotalCarbs,
-                original.ManualFiber ?? original.TotalFiber);
+                original.ManualFiber ?? original.TotalFiber,
+                original.ManualAlcohol ?? original.TotalAlcohol);
         }
 
         await recipeRepository.AddAsync(duplicate);

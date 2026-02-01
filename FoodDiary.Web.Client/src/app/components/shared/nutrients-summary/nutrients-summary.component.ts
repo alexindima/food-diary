@@ -38,6 +38,8 @@ export class NutrientsSummaryComponent implements OnInit {
     public nutrientChartData = input.required<NutrientData>();
     public fiberValue = input<number | null>(null);
     public fiberUnitKey = input<string>('PRODUCT_AMOUNT_UNITS_SHORT.G');
+    public alcoholValue = input<number | null>(null);
+    public alcoholUnitKey = input<string>('PRODUCT_AMOUNT_UNITS_SHORT.G');
     public bare = input<boolean>(false);
     public showBarChart = input<boolean>(false);
 

@@ -40,7 +40,8 @@
             "PROTEIN": "Белки",
             "FAT": "Жиры",
             "CARB": "Углеводы",
-            "FIBER": "Клетчатка"
+            "FIBER": "Клетчатка",
+            "ALCOHOL": "Алкоголь"
         }
     },
     "HEADER": {
@@ -460,6 +461,8 @@
         "MANUAL_FATS": "Жиры",
         "MANUAL_CARBS": "Углеводы",
         "MANUAL_FIBER": "Клетчатка",
+        "MANUAL_ALCOHOL": "Алкоголь",
+        "MANUAL_ALCOHOL": "Алкоголь",
         "REMOVE_STEP": "Удалить шаг",
         "VISIBILITY_GROUP_TITLE": "Видимость",
         "VISIBILITY": "Видимость",
@@ -574,6 +577,7 @@
         "FATS": "Жиры, г",
         "CARBS": "Углеводы, г",
         "FIBER": "Клетчатка, г",
+        "ALCOHOL": "Алкоголь, г",
         "CALORIES_MISMATCH_WARNING": "По указанным макронутриентам ожидается около {{expected}} ккал, но вы указали {{actual}} ккал. Проверьте, пожалуйста.",
         "DEFAULT_SERVING": "Стандартная порция",
         "DEFAULT_SERVING_WITH_UNIT": "Стандартная порция ({{unit}})",
@@ -957,7 +961,8 @@
         "PROTEINS": "Белки",
         "FATS": "Жиры",
         "CARBS": "Углеводы",
-        "FIBER": "Клетчатка"
+        "FIBER": "Клетчатка",
+        "ALCOHOL": "Алкоголь"
     },
     "PRODUCT_AMOUNT_UNITS": {
         "G": "граммы",

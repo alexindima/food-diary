@@ -82,6 +82,11 @@ export class MealCardComponent {
             value: this.meal().totalFiber,
             color: '#94a3b8',
         },
+        {
+            label: 'GENERAL.NUTRIENTS.ALCOHOL',
+            value: this.meal().totalAlcohol,
+            color: '#cbd5f5',
+        },
     ]);
 
     public handleOpen(): void {

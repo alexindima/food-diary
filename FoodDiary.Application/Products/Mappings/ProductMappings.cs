@@ -35,6 +35,7 @@ public static class ProductMappings
             product.FatsPerBase,
             product.CarbsPerBase,
             product.FiberPerBase,
+            product.AlcoholPerBase,
             usageCount,
             product.Visibility.ToString(),
             product.CreatedOnUtc,
@@ -66,6 +67,7 @@ public static class ProductMappings
             request.FatsPerBase,
             request.CarbsPerBase,
             request.FiberPerBase,
+            request.AlcoholPerBase,
             request.Visibility
         );
     }
@@ -92,6 +94,7 @@ public static class ProductMappings
             request.FatsPerBase,
             request.CarbsPerBase,
             request.FiberPerBase,
+            request.AlcoholPerBase,
             request.Visibility);
     }
 }

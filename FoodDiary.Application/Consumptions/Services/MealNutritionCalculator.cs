@@ -16,6 +16,7 @@ public static class MealNutritionCalculator
         double fats = 0;
         double carbs = 0;
         double fiber = 0;
+        double alcohol = 0;
 
         foreach (var item in meal.Items)
         {
@@ -28,6 +29,7 @@ public static class MealNutritionCalculator
                 fats += product.FatsPerBase * multiplier;
                 carbs += product.CarbsPerBase * multiplier;
                 fiber += product.FiberPerBase * multiplier;
+                alcohol += product.AlcoholPerBase * multiplier;
                 continue;
             }
 
@@ -40,10 +42,11 @@ public static class MealNutritionCalculator
                 fats += ((recipe.TotalFats ?? 0) / servings) * servingsMultiplier;
                 carbs += ((recipe.TotalCarbs ?? 0) / servings) * servingsMultiplier;
                 fiber += ((recipe.TotalFiber ?? 0) / servings) * servingsMultiplier;
+                alcohol += ((recipe.TotalAlcohol ?? 0) / servings) * servingsMultiplier;
             }
         }
 
-        return new MealNutritionSummary(calories, proteins, fats, carbs, fiber);
+        return new MealNutritionSummary(calories, proteins, fats, carbs, fiber, alcohol);
     }
 }
 
@@ -52,4 +55,5 @@ public sealed record MealNutritionSummary(
     double Proteins,
     double Fats,
     double Carbs,
-    double Fiber);
+    double Fiber,
+    double Alcohol);

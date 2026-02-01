@@ -98,7 +98,8 @@ public class UpdateRecipeCommandHandler(
                 command.ManualProteins ?? 0,
                 command.ManualFats ?? 0,
                 command.ManualCarbs ?? 0,
-                command.ManualFiber ?? 0);
+                command.ManualFiber ?? 0,
+                command.ManualAlcohol ?? 0);
         }
 
         await recipeRepository.UpdateAsync(recipe);

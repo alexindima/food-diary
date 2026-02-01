@@ -26,7 +26,13 @@ public static class RecipeNutritionUpdater
             return;
         }
 
-        recipe.ApplyComputedNutrition(summary.TotalCalories, summary.TotalProteins, summary.TotalFats, summary.TotalCarbs, summary.TotalFiber);
+        recipe.ApplyComputedNutrition(
+            summary.TotalCalories,
+            summary.TotalProteins,
+            summary.TotalFats,
+            summary.TotalCarbs,
+            summary.TotalFiber,
+            summary.TotalAlcohol);
         await repository.UpdateNutritionAsync(recipe, cancellationToken);
     }
 
@@ -35,7 +41,8 @@ public static class RecipeNutritionUpdater
         || !AreClose(recipe.TotalProteins, summary.TotalProteins)
         || !AreClose(recipe.TotalFats, summary.TotalFats)
         || !AreClose(recipe.TotalCarbs, summary.TotalCarbs)
-        || !AreClose(recipe.TotalFiber, summary.TotalFiber);
+        || !AreClose(recipe.TotalFiber, summary.TotalFiber)
+        || !AreClose(recipe.TotalAlcohol, summary.TotalAlcohol);
 
     private static bool AreClose(double? left, double? right)
     {

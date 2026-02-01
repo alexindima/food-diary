@@ -136,6 +136,7 @@ public class RecipeRepository : IRecipeRepository
         entry.Property(r => r.TotalFats).IsModified = true;
         entry.Property(r => r.TotalCarbs).IsModified = true;
         entry.Property(r => r.TotalFiber).IsModified = true;
+        entry.Property(r => r.TotalAlcohol).IsModified = true;
 
         await _context.SaveChangesAsync(cancellationToken);
     }

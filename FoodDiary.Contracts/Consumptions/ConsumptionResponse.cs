@@ -15,12 +15,14 @@ public record ConsumptionResponse(
     double TotalFats,
     double TotalCarbs,
     double TotalFiber,
+    double TotalAlcohol,
     bool IsNutritionAutoCalculated,
     double? ManualCalories,
     double? ManualProteins,
     double? ManualFats,
     double? ManualCarbs,
     double? ManualFiber,
+    double? ManualAlcohol,
     int PreMealSatietyLevel,
     int PostMealSatietyLevel,
     IReadOnlyList<ConsumptionItemResponse> Items);
@@ -38,6 +40,7 @@ public record ConsumptionItemResponse(
     double? ProductFatsPerBase,
     double? ProductCarbsPerBase,
     double? ProductFiberPerBase,
+    double? ProductAlcoholPerBase,
     Guid? RecipeId,
     string? RecipeName,
     int? RecipeServings,
@@ -45,4 +48,5 @@ public record ConsumptionItemResponse(
     double? RecipeTotalProteins,
     double? RecipeTotalFats,
     double? RecipeTotalCarbs,
-    double? RecipeTotalFiber);
+    double? RecipeTotalFiber,
+    double? RecipeTotalAlcohol);

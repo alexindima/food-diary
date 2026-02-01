@@ -46,6 +46,7 @@ export class ConsumptionDetailComponent {
     public readonly fats: number;
     public readonly carbs: number;
     public readonly fiber: number;
+    public readonly alcohol: number;
     public readonly itemsCount: number;
     public readonly formattedDate: string | null;
     public readonly mealTypeLabel: string | null;
@@ -75,6 +76,7 @@ export class ConsumptionDetailComponent {
         this.fats = data.totalFats ?? 0;
         this.carbs = data.totalCarbs ?? 0;
         this.fiber = data.totalFiber ?? 0;
+        this.alcohol = data.totalAlcohol ?? 0;
         this.itemsCount = data.items.length;
         this.formattedDate = this.datePipe.transform(this.consumption.date, 'dd.MM.yyyy, HH:mm');
         this.mealTypeLabel = data.mealType ? this.translate.instant(`MEAL_TYPES.${data.mealType}`) : null;
@@ -156,6 +158,12 @@ export class ConsumptionDetailComponent {
                 value: this.fiber,
                 unitKey: 'GENERAL.UNITS.G',
                 color: CHART_COLORS.fiber,
+            },
+            {
+                labelKey: 'GENERAL.NUTRIENTS.ALCOHOL',
+                value: this.alcohol,
+                unitKey: 'GENERAL.UNITS.G',
+                color: CHART_COLORS.alcohol,
             },
         ];
     }

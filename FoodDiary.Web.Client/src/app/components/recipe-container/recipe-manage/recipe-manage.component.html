@@ -335,6 +335,29 @@
                     <div class="recipe-manage__input-error">{{ getFieldError('manualFiber') }}</div>
                   }
                 </fd-ui-accent-surface>
+
+                <fd-ui-accent-surface
+                  class="recipe-manage__macro-card"
+                  accentSide="top"
+                  [accentColor]="chartColors.alcohol"
+                  [tinted]="true"
+                >
+                  <div class="recipe-manage__fact-label">{{ 'NUTRIENTS.ALCOHOL' | translate }}</div>
+                  <div class="recipe-manage__input-field recipe-manage__input-field--macro">
+                    <input
+                      class="recipe-manage__input recipe-manage__input--macro"
+                      type="number"
+                      step="0.1"
+                      formControlName="manualAlcohol"
+                      [readonly]="recipeForm.controls.calculateNutritionAutomatically.value"
+                      inputmode="decimal"
+                    />
+                    <span class="recipe-manage__input-unit">{{ 'PRODUCT_AMOUNT_UNITS_SHORT.G' | translate }}</span>
+                  </div>
+                  @if (getFieldError('manualAlcohol')) {
+                    <div class="recipe-manage__input-error">{{ getFieldError('manualAlcohol') }}</div>
+                  }
+                </fd-ui-accent-surface>
               </div>
             </div>
 

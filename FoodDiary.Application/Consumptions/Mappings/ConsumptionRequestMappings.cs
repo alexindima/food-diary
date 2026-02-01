@@ -24,6 +24,7 @@ public static class ConsumptionRequestMappings
             request.ManualFats,
             request.ManualCarbs,
             request.ManualFiber,
+            request.ManualAlcohol,
             request.PreMealSatietyLevel,
             request.PostMealSatietyLevel);
 
@@ -43,6 +44,7 @@ public static class ConsumptionRequestMappings
             request.ManualFats,
             request.ManualCarbs,
             request.ManualFiber,
+            request.ManualAlcohol,
             request.PreMealSatietyLevel,
             request.PostMealSatietyLevel);
 

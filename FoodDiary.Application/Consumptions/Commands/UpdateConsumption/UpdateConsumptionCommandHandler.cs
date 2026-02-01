@@ -103,6 +103,7 @@ public class UpdateConsumptionCommandHandler(
                 nutritionResult.Value.Fats,
                 nutritionResult.Value.Carbs,
                 nutritionResult.Value.Fiber,
+                nutritionResult.Value.Alcohol,
                 isAutoCalculated: true);
         }
         else
@@ -112,7 +113,8 @@ public class UpdateConsumptionCommandHandler(
                 command.ManualProteins,
                 command.ManualFats,
                 command.ManualCarbs,
-                command.ManualFiber);
+                command.ManualFiber,
+                command.ManualAlcohol);
 
             if (manualNutritionResult.IsFailure)
             {
@@ -126,12 +128,14 @@ public class UpdateConsumptionCommandHandler(
                 manual.Fats,
                 manual.Carbs,
                 manual.Fiber,
+                manual.Alcohol,
                 isAutoCalculated: false,
                 manual.Calories,
                 manual.Proteins,
                 manual.Fats,
                 manual.Carbs,
-                manual.Fiber);
+                manual.Fiber,
+                manual.Alcohol);
         }
 
         await mealRepository.UpdateAsync(meal, cancellationToken);

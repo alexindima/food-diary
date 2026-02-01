@@ -45,6 +45,7 @@ export class RecipeDetailComponent {
     public readonly fats: number;
     public readonly carbs: number;
     public readonly fiber: number;
+    public readonly alcohol: number;
     public readonly pieChartData: ChartData<'pie', number[], string>;
     public readonly barChartData: ChartData<'bar', number[], string>;
     public readonly pieChartOptions: ChartOptions<'pie'>;
@@ -75,6 +76,7 @@ export class RecipeDetailComponent {
         this.fats = this.resolveNutrientValue(data.totalFats, data.manualFats);
         this.carbs = this.resolveNutrientValue(data.totalCarbs, data.manualCarbs);
         this.fiber = this.fiberValueComputed;
+        this.alcohol = this.alcoholValueComputed;
         this.totalTime = this.calculateTotalPreparationTime();
         this.ingredientCount = this.computeIngredientCount();
         const labels = [
@@ -155,6 +157,12 @@ export class RecipeDetailComponent {
                 unitKey: 'GENERAL.UNITS.G',
                 color: CHART_COLORS.fiber,
             },
+            {
+                labelKey: 'GENERAL.NUTRIENTS.ALCOHOL',
+                value: this.alcohol,
+                unitKey: 'GENERAL.UNITS.G',
+                color: CHART_COLORS.alcohol,
+            },
         ];
     }
 
@@ -194,6 +202,19 @@ export class RecipeDetailComponent {
         }
 
         const computed = this.computeFiberFromSteps();
+        return computed ?? 0;
+    }
+
+    public get alcoholValueComputed(): number {
+        if (this.recipe.totalAlcohol !== null && this.recipe.totalAlcohol !== undefined) {
+            return this.recipe.totalAlcohol;
+        }
+
+        if (this.recipe.manualAlcohol !== null && this.recipe.manualAlcohol !== undefined) {
+            return this.recipe.manualAlcohol;
+        }
+
+        const computed = this.computeAlcoholFromSteps();
         return computed ?? 0;
     }
 
@@ -251,6 +272,37 @@ export class RecipeDetailComponent {
         }
 
         return hasFiber ? Math.round(totalFiber * 100) / 100 : null;
+    }
+
+    private computeAlcoholFromSteps(): number | null {
+        if (!this.recipe.steps?.length) {
+            return null;
+        }
+
+        let totalAlcohol = 0;
+        let hasAlcohol = false;
+
+        for (const step of this.recipe.steps) {
+            for (const ingredient of step.ingredients) {
+                const alcoholPerBase = ingredient.productAlcoholPerBase;
+                const baseAmount = ingredient.productBaseAmount;
+                if (
+                    alcoholPerBase === null ||
+                    alcoholPerBase === undefined ||
+                    baseAmount === null ||
+                    baseAmount === undefined ||
+                    baseAmount === 0
+                ) {
+                    continue;
+                }
+
+                const multiplier = ingredient.amount / baseAmount;
+                totalAlcohol += alcoholPerBase * multiplier;
+                hasAlcohol = true;
+            }
+        }
+
+        return hasAlcohol ? Math.round(totalAlcohol * 100) / 100 : null;
     }
 
     private computeIngredientCount(): number {

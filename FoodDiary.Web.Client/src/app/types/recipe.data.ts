@@ -25,12 +25,14 @@ export interface Recipe {
     totalFats?: number | null;
     totalCarbs?: number | null;
     totalFiber?: number | null;
+    totalAlcohol?: number | null;
     isNutritionAutoCalculated: boolean;
     manualCalories?: number | null;
     manualProteins?: number | null;
     manualFats?: number | null;
     manualCarbs?: number | null;
     manualFiber?: number | null;
+    manualAlcohol?: number | null;
     steps: RecipeStep[];
     nutrientChartData?: NutrientData;
 }
@@ -55,6 +57,7 @@ export interface RecipeIngredient {
     productFatsPerBase?: number | null;
     productCarbsPerBase?: number | null;
     productFiberPerBase?: number | null;
+    productAlcoholPerBase?: number | null;
     nestedRecipeId?: string | null;
     nestedRecipeName?: string | null;
 }
@@ -79,6 +82,7 @@ export interface RecipeDto {
     manualFats?: number | null;
     manualCarbs?: number | null;
     manualFiber?: number | null;
+    manualAlcohol?: number | null;
     steps: RecipeStepDto[];
 }
 

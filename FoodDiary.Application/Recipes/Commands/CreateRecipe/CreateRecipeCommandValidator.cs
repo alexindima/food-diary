@@ -83,6 +83,10 @@ public class CreateRecipeCommandValidator : AbstractValidator<CreateRecipeComman
         RuleFor(x => x.ManualFiber)
             .GreaterThanOrEqualTo(0)
             .When(x => !x.CalculateNutritionAutomatically);
+
+        RuleFor(x => x.ManualAlcohol)
+            .GreaterThanOrEqualTo(0)
+            .When(x => !x.CalculateNutritionAutomatically && x.ManualAlcohol.HasValue);
     }
 
     private static bool BeValidVisibility(string visibility) =>

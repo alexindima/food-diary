@@ -185,6 +185,12 @@ export class ProductDetailComponent {
                 unitKey: 'GENERAL.UNITS.G',
                 color: CHART_COLORS.fiber,
             },
+            {
+                labelKey: 'GENERAL.NUTRIENTS.ALCOHOL',
+                value: this.product.alcoholPerBase,
+                unitKey: 'GENERAL.UNITS.G',
+                color: CHART_COLORS.alcohol,
+            },
         ];
     }
 

@@ -69,6 +69,12 @@ public class UpdateProductCommandValidator : AbstractValidator<UpdateProductComm
             .WithMessage("FiberPerBase must be non-negative")
             .When(x => x.FiberPerBase.HasValue);
 
+        RuleFor(x => x.AlcoholPerBase)
+            .GreaterThanOrEqualTo(0)
+            .WithErrorCode("Validation.Invalid")
+            .WithMessage("AlcoholPerBase must be non-negative")
+            .When(x => x.AlcoholPerBase.HasValue);
+
         RuleFor(x => x.BaseUnit)
             .Must(BeValidUnit)
             .WithErrorCode("Validation.Invalid")

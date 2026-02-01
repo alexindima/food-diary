@@ -18,4 +18,5 @@ public record UpdateProductRequest(
     double? FatsPerBase,
     double? CarbsPerBase,
     double? FiberPerBase,
+    double? AlcoholPerBase,
     string? Visibility);

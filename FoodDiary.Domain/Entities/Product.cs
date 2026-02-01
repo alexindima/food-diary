@@ -29,6 +29,7 @@ public sealed class Product : AggregateRoot<ProductId> {
     public double FatsPerBase { get; private set; }
     public double CarbsPerBase { get; private set; }
     public double FiberPerBase { get; private set; }
+    public double AlcoholPerBase { get; private set; }
 
     /// <summary>
     /// Количество использований в блюдах (computed column)
@@ -61,6 +62,7 @@ public sealed class Product : AggregateRoot<ProductId> {
         double fatsPerBase,
         double carbsPerBase,
         double fiberPerBase,
+        double alcoholPerBase,
         string? barcode = null,
         string? brand = null,
         ProductType productType = ProductType.Unknown,
@@ -82,6 +84,7 @@ public sealed class Product : AggregateRoot<ProductId> {
             FatsPerBase = fatsPerBase,
             CarbsPerBase = carbsPerBase,
             FiberPerBase = fiberPerBase,
+            AlcoholPerBase = alcoholPerBase,
             Barcode = barcode,
             Brand = brand,
             ProductType = productType,
@@ -106,6 +109,7 @@ public sealed class Product : AggregateRoot<ProductId> {
         double? fatsPerBase = null,
         double? carbsPerBase = null,
         double? fiberPerBase = null,
+        double? alcoholPerBase = null,
         string? barcode = null,
         string? brand = null,
         string? category = null,
@@ -124,6 +128,7 @@ public sealed class Product : AggregateRoot<ProductId> {
         if (fatsPerBase.HasValue) FatsPerBase = fatsPerBase.Value;
         if (carbsPerBase.HasValue) CarbsPerBase = carbsPerBase.Value;
         if (fiberPerBase.HasValue) FiberPerBase = fiberPerBase.Value;
+        if (alcoholPerBase.HasValue) AlcoholPerBase = alcoholPerBase.Value;
         if (barcode is not null) Barcode = barcode;
         if (brand is not null) Brand = brand;
         if (productType.HasValue) ProductType = productType.Value;

@@ -25,4 +25,5 @@ public record UpdateRecipeCommand(
     double? ManualFats,
     double? ManualCarbs,
     double? ManualFiber,
+    double? ManualAlcohol,
     IReadOnlyList<RecipeStepInput>? Steps) : ICommand<Result<RecipeResponse>>;

@@ -54,6 +54,7 @@ public class UpdateProductCommandHandler(
             fatsPerBase: command.FatsPerBase,
             carbsPerBase: command.CarbsPerBase,
             fiberPerBase: command.FiberPerBase,
+            alcoholPerBase: command.AlcoholPerBase,
             barcode: command.Barcode,
             brand: command.Brand,
             productType: newProductType,

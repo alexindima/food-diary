@@ -10,13 +10,15 @@ public static class ManualNutritionValidator
     private const string FatsField = "ManualFats";
     private const string CarbsField = "ManualCarbs";
     private const string FiberField = "ManualFiber";
+    private const string AlcoholField = "ManualAlcohol";
 
     public static Result<ManualNutritionInput> Validate(
         double? calories,
         double? proteins,
         double? fats,
         double? carbs,
-        double? fiber)
+        double? fiber,
+        double? alcohol)
     {
         if (!calories.HasValue)
         {
@@ -43,7 +45,7 @@ public static class ManualNutritionValidator
             return Result.Failure<ManualNutritionInput>(Errors.Validation.Required(FiberField));
         }
 
-        if (calories < 0 || proteins < 0 || fats < 0 || carbs < 0 || fiber < 0)
+        if (calories < 0 || proteins < 0 || fats < 0 || carbs < 0 || fiber < 0 || alcohol < 0)
         {
             return Result.Failure<ManualNutritionInput>(
                 Errors.Validation.Invalid("ManualNutrition", "Values must be greater than or equal to 0."));
@@ -54,6 +56,7 @@ public static class ManualNutritionValidator
             proteins.Value,
             fats.Value,
             carbs.Value,
-            fiber.Value));
+            fiber.Value,
+            alcohol ?? 0));
     }
 }

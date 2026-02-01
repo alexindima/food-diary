@@ -22,6 +22,8 @@ describe('ProductDetailComponent', () => {
                         proteinsPerBase: 0,
                         fatsPerBase: 0,
                         carbsPerBase: 0,
+                        fiberPerBase: 0,
+                        alcoholPerBase: 0,
                         isOwnedByCurrentUser: true,
                         usageCount: 0,
                     },

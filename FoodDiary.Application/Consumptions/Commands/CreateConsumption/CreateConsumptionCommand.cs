@@ -22,5 +22,6 @@ public record CreateConsumptionCommand(
     double? ManualFats,
     double? ManualCarbs,
     double? ManualFiber,
+    double? ManualAlcohol,
     int PreMealSatietyLevel,
     int PostMealSatietyLevel) : ICommand<Result<ConsumptionResponse>>;

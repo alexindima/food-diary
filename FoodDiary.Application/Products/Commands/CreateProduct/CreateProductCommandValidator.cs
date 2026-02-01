@@ -78,6 +78,11 @@ public class CreateProductCommandValidator : AbstractValidator<CreateProductComm
             .GreaterThanOrEqualTo(0)
             .WithErrorCode("Validation.Invalid")
             .WithMessage("FiberPerBase must be non-negative");
+
+        RuleFor(x => x.AlcoholPerBase)
+            .GreaterThanOrEqualTo(0)
+            .WithErrorCode("Validation.Invalid")
+            .WithMessage("AlcoholPerBase must be non-negative");
     }
 
     private static bool BeValidUnit(string unit) {

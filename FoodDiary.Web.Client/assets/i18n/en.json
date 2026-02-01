@@ -40,7 +40,8 @@
             "PROTEIN": "Proteins",
             "FAT": "Fats",
             "CARB": "Carbs",
-            "FIBER": "Fiber"
+            "FIBER": "Fiber",
+            "ALCOHOL": "Alcohol"
         }
     },
     "MACRO_SUMMARY": {
@@ -494,6 +495,8 @@
         "MANUAL_FATS": "Fats",
         "MANUAL_CARBS": "Carbs",
         "MANUAL_FIBER": "Fiber",
+        "MANUAL_ALCOHOL": "Alcohol",
+        "MANUAL_ALCOHOL": "Alcohol",
         "REMOVE_STEP": "Remove step",
         "VISIBILITY_GROUP_TITLE": "Visibility",
         "VISIBILITY": "Visibility",
@@ -609,6 +612,7 @@
         "FATS": "Fats, g",
         "CARBS": "Carbs, g",
         "FIBER": "Fiber, g",
+        "ALCOHOL": "Alcohol, g",
         "CALORIES_MISMATCH_WARNING": "Based on macros, expected about {{expected}} kcal, but you entered {{actual}} kcal. Please double-check.",
         "VISIBILITY": "Visibility",
         "VISIBILITY_GROUP_TITLE": "Visibility",
@@ -1230,7 +1234,8 @@
         "PROTEINS": "Proteins",
         "FATS": "Fats",
         "CARBS": "Carbs",
-        "FIBER": "Fiber"
+        "FIBER": "Fiber",
+        "ALCOHOL": "Alcohol"
     },
     "PRODUCT_AMOUNT_UNITS": {
         "G": "grams",

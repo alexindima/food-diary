@@ -105,6 +105,7 @@ export class BaseProductManageComponent implements OnInit {
         proteins: this.applyAlpha(CHART_COLORS.proteins, this.nutrientFillAlpha),
         fats: this.applyAlpha(CHART_COLORS.fats, this.nutrientFillAlpha),
         carbs: this.applyAlpha(CHART_COLORS.carbs, this.nutrientFillAlpha),
+        alcohol: this.applyAlpha(CHART_COLORS.alcohol, this.nutrientFillAlpha),
     };
     public constructor() {
         this.productForm = new FormGroup<ProductFormData>({
@@ -126,6 +127,7 @@ export class BaseProductManageComponent implements OnInit {
             fatsPerBase: new FormControl(null, [Validators.required, Validators.min(0)]),
             carbsPerBase: new FormControl(null, [Validators.required, Validators.min(0)]),
             fiberPerBase: new FormControl(null, [Validators.required, Validators.min(0)]),
+            alcoholPerBase: new FormControl(0, [Validators.min(0)]),
             visibility: new FormControl(ProductVisibility.Private, { nonNullable: true, validators: Validators.required }),
         });
 
@@ -244,6 +246,7 @@ export class BaseProductManageComponent implements OnInit {
             const fatsPerBase = this.getNumberValue(this.productForm.controls.fatsPerBase);
             const carbsPerBase = this.getNumberValue(this.productForm.controls.carbsPerBase);
             const fiberPerBase = this.getNumberValue(this.productForm.controls.fiberPerBase);
+            const alcoholPerBase = this.getNumberValue(this.productForm.controls.alcoholPerBase);
 
             const productData: CreateProductRequest = {
                 name: this.productForm.value.name!,
@@ -263,6 +266,7 @@ export class BaseProductManageComponent implements OnInit {
                 fatsPerBase,
                 carbsPerBase,
                 fiberPerBase,
+                alcoholPerBase,
                 visibility: this.productForm.value.visibility!,
             };
             const product = this.product();
@@ -284,7 +288,8 @@ export class BaseProductManageComponent implements OnInit {
         const proteins = this.getNumberValue(this.productForm.controls.proteinsPerBase);
         const fats = this.getNumberValue(this.productForm.controls.fatsPerBase);
         const carbs = this.getNumberValue(this.productForm.controls.carbsPerBase);
-        const expectedCalories = this.nutritionCalculationService.calculateCaloriesFromMacros(proteins, fats, carbs);
+        const alcohol = this.getNumberValue(this.productForm.controls.alcoholPerBase);
+        const expectedCalories = this.nutritionCalculationService.calculateCaloriesFromMacros(proteins, fats, carbs, alcohol);
 
         if (expectedCalories <= 0 || calories <= 0) {
             this.nutritionWarning.set(null);
@@ -365,6 +370,7 @@ export class BaseProductManageComponent implements OnInit {
                 fatsPerBase: product.fatsPerBase,
                 carbsPerBase: product.carbsPerBase,
                 fiberPerBase: product.fiberPerBase,
+                alcoholPerBase: product.alcoholPerBase,
                 visibility: normalizedVisibility,
             },
             { emitEvent: false },
@@ -446,6 +452,7 @@ export class BaseProductManageComponent implements OnInit {
             'fatsPerBase',
             'carbsPerBase',
             'fiberPerBase',
+            'alcoholPerBase',
         ];
 
         numericControls.forEach(key => {
@@ -539,6 +546,7 @@ export interface ProductFormValues {
     fatsPerBase: number | null;
     carbsPerBase: number | null;
     fiberPerBase: number | null;
+    alcoholPerBase: number | null;
     visibility: ProductVisibility;
 }
 

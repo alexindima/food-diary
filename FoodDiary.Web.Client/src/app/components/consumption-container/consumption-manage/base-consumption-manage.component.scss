@@ -92,6 +92,16 @@
         }
     }
 
+    &__summary-alcohol {
+        margin: 0;
+        font-size: 0.9rem;
+        color: $color-text-additional;
+
+        strong {
+            font-weight: 600;
+        }
+    }
+
     &__manual-card {
         gap: $gap-m;
     }
