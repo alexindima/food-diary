@@ -1,6 +1,6 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { catchError, map, Observable, of, tap, throwError } from 'rxjs';
-import { AuthResponse, LoginRequest, RegisterRequest, RestoreAccountRequest, TelegramLoginWidgetRequest } from '../types/auth.data';
+import { AuthResponse, LoginRequest, RegisterRequest, RestoreAccountRequest, TelegramLoginWidgetRequest, TelegramAuthRequest } from '../types/auth.data';
 import { environment } from '../../environments/environment';
 import { ApiService } from './api.service';
 import { NavigationService } from './navigation.service';
@@ -159,6 +159,36 @@ export class AuthService extends ApiService {
             this.clearUserId();
             this.userSignal.set(null);
         }
+
+        this.linkTelegramIfAvailable();
+    }
+
+    private linkTelegramIfAvailable(): void {
+        const initData = this.getTelegramInitData();
+        if (!initData) {
+            return;
+        }
+
+        const request: TelegramAuthRequest = { initData };
+        this.post<unknown>('telegram/link', request)
+            .pipe(
+                catchError(error => {
+                    console.warn('Telegram link failed', error);
+                    return of(null);
+                }),
+            )
+            .subscribe();
+    }
+
+    private getTelegramInitData(): string | null {
+        const telegram = (window as { Telegram?: { WebApp?: { initData?: string } } }).Telegram;
+        const initData = telegram?.WebApp?.initData;
+        if (!initData || typeof initData !== 'string') {
+            return null;
+        }
+
+        const trimmed = initData.trim();
+        return trimmed.length > 0 ? trimmed : null;
     }
 
     public getToken(): string | null {

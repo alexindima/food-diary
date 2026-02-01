@@ -44,6 +44,10 @@ export interface TelegramLoginWidgetRequest {
     photoUrl?: string;
 }
 
+export interface TelegramAuthRequest {
+    initData: string;
+}
+
 export interface AuthResponse {
     accessToken: string;
     refreshToken: string;
