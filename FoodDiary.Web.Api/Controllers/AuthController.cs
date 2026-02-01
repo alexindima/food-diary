@@ -1,15 +1,23 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
 using FoodDiary.Application.Authentication.Mappings;
 using FoodDiary.Contracts.Authentication;
+using FoodDiary.Infrastructure.Options;
 using FoodDiary.WebApi.Extensions;
 
 namespace FoodDiary.WebApi.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class AuthController(ISender mediator) : BaseApiController(mediator) {
+public class AuthController(
+    ISender mediator,
+    IOptions<TelegramBotOptions> telegramBotOptions) : BaseApiController(mediator)
+{
+    private readonly TelegramBotOptions _telegramBotOptions = telegramBotOptions.Value;
+
     [HttpPost("register")]
     public async Task<IActionResult> Register(RegisterRequest request) {
         var command = request.ToCommand();
@@ -58,6 +66,34 @@ public class AuthController(ISender mediator) : BaseApiController(mediator) {
         }
 
         var command = request.ToLinkCommand(userId.Value);
+        var result = await Mediator.Send(command);
+        return result.ToActionResult();
+    }
+
+    [HttpPost("telegram/bot/auth")]
+    public async Task<IActionResult> TelegramBotAuth(
+        [FromHeader(Name = "X-Telegram-Bot-Secret")] string? secret,
+        TelegramBotAuthRequest request)
+    {
+        if (string.IsNullOrWhiteSpace(_telegramBotOptions.ApiSecret))
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, new
+            {
+                error = "Authentication.TelegramBotNotConfigured",
+                message = "Telegram bot authentication is not configured."
+            });
+        }
+
+        if (!string.Equals(secret, _telegramBotOptions.ApiSecret, StringComparison.Ordinal))
+        {
+            return Unauthorized(new
+            {
+                error = "Authentication.TelegramBotInvalidSecret",
+                message = "Telegram bot secret is invalid."
+            });
+        }
+
+        var command = request.ToCommand();
         var result = await Mediator.Send(command);
         return result.ToActionResult();
     }

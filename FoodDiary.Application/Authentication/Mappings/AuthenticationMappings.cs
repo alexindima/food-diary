@@ -4,6 +4,7 @@ using FoodDiary.Application.Authentication.Commands.Register;
 using FoodDiary.Application.Authentication.Commands.RestoreAccount;
 using FoodDiary.Application.Authentication.Commands.LinkTelegram;
 using FoodDiary.Application.Authentication.Commands.TelegramVerify;
+using FoodDiary.Application.Authentication.Commands.TelegramBotAuth;
 using FoodDiary.Contracts.Authentication;
 using FoodDiary.Domain.ValueObjects;
 
@@ -39,5 +40,10 @@ public static class AuthenticationMappings
     public static LinkTelegramCommand ToLinkCommand(this TelegramAuthRequest request, UserId userId)
     {
         return new LinkTelegramCommand(userId, request.InitData);
+    }
+
+    public static TelegramBotAuthCommand ToCommand(this TelegramBotAuthRequest request)
+    {
+        return new TelegramBotAuthCommand(request.TelegramUserId);
     }
 }

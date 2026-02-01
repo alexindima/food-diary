@@ -24,6 +24,7 @@ public static class DependencyInjection
 
         services.Configure<S3Options>(configuration.GetSection(S3Options.SectionName));
         services.Configure<TelegramAuthOptions>(configuration.GetSection(TelegramAuthOptions.SectionName));
+        services.Configure<TelegramBotOptions>(configuration.GetSection(TelegramBotOptions.SectionName));
 
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IProductRepository, ProductRepository>();

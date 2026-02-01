@@ -4,5 +4,6 @@
   <Project Path="FoodDiary.Domain/FoodDiary.Domain.csproj" />
   <Project Path="FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj" />
   <Project Path="FoodDiary.JobManager/FoodDiary.JobManager.csproj" />
+  <Project Path="FoodDiary.Telegram.Bot/FoodDiary.Telegram.Bot.csproj" />
   <Project Path="FoodDiary.Web.Api/FoodDiary.Web.Api.csproj" />
 </Solution>
