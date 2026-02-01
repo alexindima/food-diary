@@ -7,6 +7,11 @@
     --fd-textarea-label-height: 40px;
     --mdc-outlined-text-field-container-height: var(--fd-textarea-label-height);
     --mat-form-field-container-height: var(--fd-textarea-label-height);
+    --fd-input-outline-color: rgba(148, 163, 184, 0.5);
+    --mdc-outlined-text-field-outline-color: var(--fd-input-outline-color);
+    --mdc-outlined-text-field-hover-outline-color: var(--fd-input-outline-color);
+    --mdc-outlined-text-field-focus-outline-color: var(--fd-color-primary);
+    --mdc-outlined-text-field-disabled-outline-color: rgba(148, 163, 184, 0.3);
 
     &--size-sm {
         --fd-textarea-label-height: 32px;
@@ -23,7 +28,7 @@
     .mat-mdc-text-field-wrapper {
         min-height: var(--fd-textarea-label-height);
         border-radius: var(--fd-radius-md, 8px);
-        background-color: var(--fd-color-surface, #fff);
+        background-color: var(--fd-input-background, var(--fd-color-surface, #fff));
     }
 
     .mat-mdc-form-field-flex {
