@@ -1,0 +1,89 @@
+:host {
+    display: block;
+}
+
+.fd-ui-plain-textarea {
+    --fd-plain-textarea-radius: 14px;
+    --fd-plain-textarea-border: rgba(148, 163, 184, 0.38);
+    --fd-plain-textarea-label-bg: var(--fd-color-surface, #fff);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.fd-ui-plain-textarea__label {
+    color: #64748b;
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.2;
+    display: inline-flex;
+    align-items: center;
+    max-width: calc(100% - 28px);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    position: absolute;
+    top: 18px;
+    left: 14px;
+    transform: translateY(-50%);
+    transition: transform 0.15s ease, top 0.15s ease, font-size 0.15s ease;
+    background: var(--fd-plain-textarea-label-bg);
+    padding: 0 4px;
+    pointer-events: none;
+}
+
+.fd-ui-plain-textarea__required {
+    margin-left: 0;
+    color: #ef4444;
+}
+
+.fd-ui-plain-textarea__control-wrap {
+    border: 1px solid var(--fd-plain-textarea-border);
+    border-radius: var(--fd-plain-textarea-radius);
+    background: #fff;
+    transition: border-color 0.15s ease;
+    position: relative;
+    padding: 16px 12px 12px;
+}
+
+.fd-ui-plain-textarea__control-wrap:focus-within {
+    border-color: #3b82f6;
+}
+
+.fd-ui-plain-textarea__control {
+    display: block;
+    width: 100%;
+    min-height: 96px;
+    border: none;
+    outline: none;
+    resize: vertical;
+    background: transparent;
+    color: #1e293b;
+    font: inherit;
+    line-height: 1.4;
+    padding: 0;
+}
+
+.fd-ui-plain-textarea__control::placeholder {
+    color: #94a3b8;
+}
+
+.fd-ui-plain-textarea--has-error .fd-ui-plain-textarea__control-wrap {
+    border-color: #ef4444;
+}
+
+.fd-ui-plain-textarea--floating .fd-ui-plain-textarea__label {
+    top: 0;
+    transform: translateY(-50%);
+    font-size: 0.8rem;
+}
+
+.fd-ui-plain-textarea__error {
+    color: #ef4444;
+    font-size: 0.75rem;
+    line-height: 1.2;
+    margin-top: 2px;
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: anywhere;
+}

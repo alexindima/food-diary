@@ -115,6 +115,12 @@
         }
     }
 
+    &__card--tracking {
+        ::ng-deep .fd-ui-card {
+            padding-bottom: $gap-l;
+        }
+    }
+
     &__sticky-stack {
         position: sticky;
         top: calc($gap-xl + 8px);

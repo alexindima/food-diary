@@ -93,7 +93,7 @@
                 </fd-ui-card>
 
                 <fd-ui-card
-                    class="product-manage__card product-manage__card--basic"
+                    class="product-manage__card product-manage__card--basic product-manage__card--tracking"
                     appearance="entry"
                     [title]="'PRODUCT_MANAGE.TRACKING_PREFERENCES' | translate"
                 >
@@ -107,7 +107,7 @@
                              />
                         </div>
                         <div class="product-manage__field product-manage__field--full">
-                            <fd-ui-textarea formControlName="comment"
+                            <fd-ui-plain-textarea formControlName="comment"
                                 [label]="'PRODUCT_MANAGE.COMMENT' | translate"
                                 [placeholder]="'PRODUCT_MANAGE.COMMENT_PLACEHOLDER' | translate"
                                 [rows]="4"

@@ -5,9 +5,9 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import { ZXingScannerModule } from '@zxing/ngx-scanner';
 import { FdUiPlainInputComponent } from 'fd-ui-kit/plain-input/fd-ui-plain-input.component';
+import { FdUiPlainTextareaComponent } from 'fd-ui-kit/plain-textarea/fd-ui-plain-textarea.component';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiSelectComponent } from 'fd-ui-kit/select/fd-ui-select.component';
-import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiNutrientInputComponent } from 'fd-ui-kit/nutrient-input/fd-ui-nutrient-input.component';
 import { FD_UI_DIALOG_DATA, FdUiDialogRef } from 'fd-ui-kit/material';
@@ -27,9 +27,9 @@ import { ImageUploadFieldComponent } from '../../../shared/image-upload-field/im
         TranslatePipe,
         ZXingScannerModule,
         FdUiPlainInputComponent,
+        FdUiPlainTextareaComponent,
         FdUiCardComponent,
         FdUiSelectComponent,
-        FdUiTextareaComponent,
         FdUiButtonComponent,
         FdUiNutrientInputComponent,
         FdUiFormErrorComponent,
