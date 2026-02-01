@@ -12,11 +12,14 @@ env:
   FRONTEND_DIR: FoodDiary.Web.Client
   BACKEND_PROJECT: FoodDiary.Web.Api/FoodDiary.Web.Api.csproj
   BACKEND_PUBLISH_DIR: FoodDiary.Web.Api/publish
+  BOT_PROJECT: FoodDiary.Telegram.Bot/FoodDiary.Telegram.Bot.csproj
+  BOT_PUBLISH_DIR: FoodDiary.Telegram.Bot/publish
   JOBMANAGER_PROJECT: FoodDiary.JobManager/FoodDiary.JobManager.csproj
   JOBMANAGER_PUBLISH_DIR: FoodDiary.JobManager/publish
   ENABLE_JOBMANAGER: "false"
   FRONTEND_DEPLOY_DIR: /var/www/fooddiary.club
   BACKEND_DEPLOY_DIR: /var/www/fooddiary-backend
+  BOT_DEPLOY_DIR: /var/www/fooddiary-telegram-bot
   JOBMANAGER_DEPLOY_DIR: /var/www/food-diary-jobs
 
 jobs:
@@ -50,6 +53,12 @@ jobs:
           dotnet publish ${{ env.BACKEND_PROJECT }} -c Release -o ${{ env.BACKEND_PUBLISH_DIR }}
           echo "Backend publish completed."
 
+      - name: Publish Telegram bot
+        run: |
+          dotnet restore ${{ env.BOT_PROJECT }}
+          dotnet publish ${{ env.BOT_PROJECT }} -c Release -o ${{ env.BOT_PUBLISH_DIR }}
+          echo "Telegram bot publish completed."
+
       - name: Publish JobManager
         if: env.ENABLE_JOBMANAGER == 'true'
         run: |
@@ -80,21 +89,25 @@ jobs:
           ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no root@${{ env.SERVER_IP }} << EOF
           rm -rf "${{ env.FRONTEND_DEPLOY_DIR }}"
           rm -rf "${{ env.BACKEND_DEPLOY_DIR }}"
+          rm -rf "${{ env.BOT_DEPLOY_DIR }}"
           if [ "${ENABLE_JOBMANAGER}" = "true" ]; then
             rm -rf "${{ env.JOBMANAGER_DEPLOY_DIR }}"
           fi
           mkdir -p "${{ env.FRONTEND_DEPLOY_DIR }}"
           mkdir -p "${{ env.BACKEND_DEPLOY_DIR }}"
+          mkdir -p "${{ env.BOT_DEPLOY_DIR }}"
           if [ "${ENABLE_JOBMANAGER}" = "true" ]; then
             mkdir -p "${{ env.JOBMANAGER_DEPLOY_DIR }}"
           fi
           chmod -R 755 "${{ env.FRONTEND_DEPLOY_DIR }}"
           chmod -R 755 "${{ env.BACKEND_DEPLOY_DIR }}"
+          chmod -R 755 "${{ env.BOT_DEPLOY_DIR }}"
           if [ "${ENABLE_JOBMANAGER}" = "true" ]; then
             chmod -R 755 "${{ env.JOBMANAGER_DEPLOY_DIR }}"
           fi
           chown -R www-data:www-data "${{ env.FRONTEND_DEPLOY_DIR }}"
           chown -R www-data:www-data "${{ env.BACKEND_DEPLOY_DIR }}"
+          chown -R www-data:www-data "${{ env.BOT_DEPLOY_DIR }}"
           if [ "${ENABLE_JOBMANAGER}" = "true" ]; then
             chown -R www-data:www-data "${{ env.JOBMANAGER_DEPLOY_DIR }}"
           fi
@@ -128,11 +141,30 @@ jobs:
               "SyslogIdentifier=food-diary-api" \
               "User=www-data" \
               "Environment=ASPNETCORE_ENVIRONMENT=Production" \
-              "# TODO: add real secrets/connection strings as Environment=... or EnvironmentFile=" \
+              "EnvironmentFile=/etc/fooddiary/fooddiary.env" \
               "" \
               "[Install]" \
               "WantedBy=multi-user.target" \
               > /etc/systemd/system/food-diary-api.service
+
+            printf "%s\n" \
+              "[Unit]" \
+              "Description=FoodDiary Telegram bot" \
+              "After=network.target" \
+              "" \
+              "[Service]" \
+              "WorkingDirectory=${{ env.BOT_DEPLOY_DIR }}" \
+              "ExecStart=/usr/bin/dotnet FoodDiary.Telegram.Bot.dll" \
+              "Restart=always" \
+              "RestartSec=5" \
+              "SyslogIdentifier=food-diary-telegram-bot" \
+              "User=www-data" \
+              "Environment=ASPNETCORE_ENVIRONMENT=Production" \
+              "EnvironmentFile=/etc/fooddiary/fooddiary.env" \
+              "" \
+              "[Install]" \
+              "WantedBy=multi-user.target" \
+              > /etc/systemd/system/food-diary-telegram-bot.service
 
             if [ "${ENABLE_JOBMANAGER}" = "true" ]; then
               printf "%s\n" \
@@ -148,7 +180,7 @@ jobs:
                 "SyslogIdentifier=food-diary-jobs" \
                 "User=www-data" \
                 "Environment=ASPNETCORE_ENVIRONMENT=Production" \
-                "# TODO: add real secrets/connection strings as Environment=... or EnvironmentFile=" \
+                "EnvironmentFile=/etc/fooddiary/fooddiary.env" \
                 "" \
                 "[Install]" \
                 "WantedBy=multi-user.target" \
@@ -157,6 +189,7 @@ jobs:
 
             systemctl daemon-reload
             systemctl enable food-diary-api
+            systemctl enable food-diary-telegram-bot
           EOF
 
       - name: Uploading frontend files
@@ -173,6 +206,11 @@ jobs:
         run: |
           rsync -az --quiet --human-readable -e "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no" \
             ${{ env.BACKEND_PUBLISH_DIR }}/ root@${{ env.SERVER_IP }}:${{ env.BACKEND_DEPLOY_DIR }}/
+
+      - name: Uploading telegram bot files
+        run: |
+          rsync -az --quiet --human-readable -e "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no" \
+            ${{ env.BOT_PUBLISH_DIR }}/ root@${{ env.SERVER_IP }}:${{ env.BOT_DEPLOY_DIR }}/
 
       - name: Uploading job manager files
         if: env.ENABLE_JOBMANAGER == 'true'
@@ -204,6 +242,8 @@ jobs:
           ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no root@${{ env.SERVER_IP }} << EOF
           systemctl restart food-diary-api
           systemctl status food-diary-api --no-pager -n 20 || true
+          systemctl restart food-diary-telegram-bot
+          systemctl status food-diary-telegram-bot --no-pager -n 20 || true
           if [ "${ENABLE_JOBMANAGER}" = "true" ]; then
             systemctl restart food-diary-jobs
             systemctl status food-diary-jobs --no-pager -n 20 || true
