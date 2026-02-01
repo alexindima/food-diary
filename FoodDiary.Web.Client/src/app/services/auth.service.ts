@@ -38,6 +38,8 @@ export class AuthService extends ApiService {
                 this.userSignal.set(resolvedUserId);
             }
         }
+
+        this.linkTelegramIfAvailable();
     }
 
     public login(data: LoginRequest): Observable<AuthResponse> {
