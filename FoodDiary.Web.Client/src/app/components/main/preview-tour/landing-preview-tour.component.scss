@@ -2,6 +2,7 @@
 
 :host {
     display: block;
+    --fd-layout-page-horizontal-padding: clamp(12px, 4vw, 24px);
 }
 
 .landing-section {
@@ -9,6 +10,7 @@
         max-width: 1180px;
         margin: 0 auto;
         padding: 0 var(--fd-layout-page-horizontal-padding, 24px);
+        min-width: 0;
     }
 
     &__copy {
@@ -71,6 +73,7 @@
         grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
         gap: clamp($gap-m, 3vw, 32px);
         align-items: start;
+        min-width: 0;
     }
 
     &__item--reverse {
@@ -91,6 +94,7 @@
         flex-direction: column;
         gap: $gap-xs;
         padding-top: clamp(4px, 1vw, 10px);
+        min-width: 0;
     }
 
     &__eyebrow {
@@ -123,6 +127,7 @@
         display: flex;
         justify-content: flex-end;
         align-items: flex-start;
+        min-width: 0;
     }
 
     &__card > * {
@@ -159,6 +164,7 @@
     grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr);
     gap: clamp($gap-m, 3vw, 32px);
     align-items: start;
+    min-width: 0;
 
     .landing-section__copy--secondary {
         margin-top: 0;
@@ -182,7 +188,7 @@
     }
 
     &__group {
-        padding: $gap-m;
+        padding: 0;
         display: grid;
         gap: $gap-s;
     }
@@ -197,6 +203,7 @@
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
         gap: $gap-s;
+        justify-items: stretch;
     }
 
     &__card {
@@ -211,6 +218,7 @@
         align-content: start;
         width: min(720px, 100%);
         margin: 0;
+        min-width: 0;
     }
 
     &__hint {
@@ -218,4 +226,39 @@
         color: $color-text-additional;
         font-size: 0.95rem;
     }
+}
+
+@media (max-width: 768px) {
+    :host {
+        --fd-layout-page-horizontal-padding: 16px;
+    }
+
+    .landing-tour__cards {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 420px) {
+    .landing-tour__cards {
+        grid-template-columns: 1fr;
+    }
+
+    .landing-tour__card {
+        max-width: 100%;
+        width: 100%;
+        min-width: 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .landing-tour__cards {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+:host ::ng-deep .landing-tour__card .product-card,
+:host ::ng-deep .landing-tour__card .recipe-card {
+    width: 100%;
+    max-width: 100%;
 }

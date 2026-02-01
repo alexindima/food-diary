@@ -3,6 +3,7 @@
 .features {
     padding: clamp(28px, 3vw, 48px) 0 clamp(24px, 3vw, 40px);
     background: var(--fd-color-surface-muted, #f8fafc);
+    --fd-layout-page-horizontal-padding: clamp(12px, 4vw, 24px);
 
     &__inner {
         max-width: 1180px;
@@ -11,6 +12,7 @@
         display: flex;
         flex-direction: column;
         gap: clamp($gap-s, 2vw, $gap-l);
+        min-width: 0;
     }
 
     &__header {
@@ -46,9 +48,10 @@
 
     &__grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
         gap: $gap-m $gap-l;
         justify-items: center;
+        min-width: 0;
     }
 
     &__item {
@@ -96,6 +99,8 @@
     }
 
     @media (max-width: 640px) {
+        --fd-layout-page-horizontal-padding: 16px;
+
         &__item {
             max-width: none;
         }
