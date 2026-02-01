@@ -7,6 +7,8 @@ var builder = Host.CreateApplicationBuilder(args);
 builder.Services.Configure<TelegramBotOptions>(
     builder.Configuration.GetSection(TelegramBotOptions.SectionName));
 
+builder.Services.AddHttpClient();
+
 builder.Services.AddSingleton<ITelegramBotClient>(sp =>
 {
     var options = sp.GetRequiredService<IOptions<TelegramBotOptions>>().Value;
