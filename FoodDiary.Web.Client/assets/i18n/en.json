@@ -614,6 +614,10 @@
         "FIBER": "Fiber, g",
         "ALCOHOL": "Alcohol, g",
         "CALORIES_MISMATCH_WARNING": "Based on macros, expected about {{expected}} kcal, but you entered {{actual}} kcal. Please double-check.",
+        "NUTRITION_ERRORS": {
+            "CALORIES_REQUIRED": "Calories must be greater than 0.",
+            "MACROS_REQUIRED": "Set at least one macro (proteins, fats, or carbs)."
+        },
         "VISIBILITY": "Visibility",
         "VISIBILITY_GROUP_TITLE": "Visibility",
         "VISIBILITY_PLACEHOLDER": "Select visibility",
@@ -631,6 +635,7 @@
             "PCS": "pieces"
         },
         "BASIC_INFO": "Basics",
+        "TRACKING_PREFERENCES": "Tracking Preferences",
         "NUTRITION_VALUE": "Nutrition value",
         "NUTRITION_VALUE_TEMPLATE": "Nutrition value per {{base}}",
         "SUMMARY_TITLE": "Summary",
@@ -1346,5 +1351,3 @@
         "NO_DATA_ACTION": "Set cycle"
     }
 }
-
-

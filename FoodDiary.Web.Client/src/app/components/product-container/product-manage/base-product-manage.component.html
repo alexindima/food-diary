@@ -89,6 +89,15 @@
                                  />
                             </div>
                         </div>
+                    </div>
+                </fd-ui-card>
+
+                <fd-ui-card
+                    class="product-manage__card product-manage__card--basic"
+                    appearance="entry"
+                    [title]="'PRODUCT_MANAGE.TRACKING_PREFERENCES' | translate"
+                >
+                    <div class="product-manage__basic-grid">
                         <div class="product-manage__field product-manage__field--full">
                             <fd-ui-select formControlName="visibility"
                                 [label]="'PRODUCT_MANAGE.VISIBILITY' | translate"
@@ -115,83 +124,107 @@
                         appearance="entry"
                         [title]="'PRODUCT_MANAGE.NUTRITION_VALUE' | translate"
                     >
-                        <div class="product-manage__nutrients-row">
-                            <div class="product-manage__nutrient">
-                                <fd-ui-input formControlName="baseAmount"
+                        <div class="product-manage__nutrition">
+                            <fd-ui-nutrient-input
+                                class="product-manage__nutrition-input product-manage__nutrition-input--serving"
+                                formControlName="baseAmount"
+                                type="number"
+                                size="md"
+                                variant="tinted"
+                                valueAlign="left"
+                                [labelUppercase]="false"
+                                [label]="'PRODUCT_MANAGE.DEFAULT_SERVING_WITH_UNIT' | translate: { unit: baseUnitLabel }"
+                                [placeholder]="'PRODUCT_MANAGE.DEFAULT_SERVING_PLACEHOLDER' | translate"
+                                [required]="true"
+                                [tintColor]="'rgba(148, 163, 184, 0.10)'"
+                            />
+
+                            <fd-ui-nutrient-input
+                                class="product-manage__nutrition-input product-manage__nutrition-input--calories"
+                                formControlName="caloriesPerBase"
+                                type="number"
+                                size="lg"
+                                icon="local_fire_department"
+                                [label]="'PRODUCT_MANAGE.CALORIES' | translate"
+                                placeholder="0"
+                                [required]="true"
+                                [tintColor]="nutrientFillColors.calories"
+                                [textColor]="nutrientTextColors.calories"
+                            />
+                            @if (caloriesError()) {
+                                <div class="product-manage__nutrition-errors">
+                                    {{ caloriesError() }}
+                                </div>
+                            }
+
+                            <div class="product-manage__nutrition-grid">
+                                <fd-ui-nutrient-input
+                                    class="product-manage__nutrition-input product-manage__nutrition-input--macro product-manage__nutrition-input--proteins"
+                                    formControlName="proteinsPerBase"
                                     type="number"
-                                    [label]="'PRODUCT_MANAGE.DEFAULT_SERVING_WITH_UNIT' | translate: { unit: baseUnitLabel }"
-                                    [placeholder]="'PRODUCT_MANAGE.DEFAULT_SERVING_PLACEHOLDER' | translate"
-                                    [required]="true"
-                                    [error]="getControlError('baseAmount')"
-                                 />
-                            </div>
-                        </div>
-                        <div class="product-manage__nutrients-row">
-                            <div class="product-manage__nutrient">
-                                <fd-ui-input formControlName="caloriesPerBase"
-                                    type="number"
-                                    [label]="'PRODUCT_MANAGE.CALORIES' | translate"
-                                    placeholder="0"
-                                    [required]="true"
-                                    [fillColor]="nutrientFillColors.calories"
-                                    [error]="getControlError('caloriesPerBase')"
-                                 />
-                            </div>
-                        </div>
-                        <div class="product-manage__nutrients-row product-manage__nutrients-row--two">
-                            <div class="product-manage__nutrient">
-                                <fd-ui-input formControlName="proteinsPerBase"
-                                    type="number"
+                                    size="md"
+                                    icon="fitness_center"
                                     [label]="'PRODUCT_MANAGE.PROTEINS' | translate"
                                     placeholder="0"
                                     [required]="true"
-                                    [fillColor]="nutrientFillColors.proteins"
-                                    [error]="getControlError('proteinsPerBase')"
-                                 />
-                            </div>
-                            <div class="product-manage__nutrient">
-                                <fd-ui-input formControlName="fatsPerBase"
+                                    [tintColor]="nutrientFillColors.proteins"
+                                    [textColor]="nutrientTextColors.proteins"
+                                />
+                                <fd-ui-nutrient-input
+                                    class="product-manage__nutrition-input product-manage__nutrition-input--macro product-manage__nutrition-input--fats"
+                                    formControlName="fatsPerBase"
                                     type="number"
+                                    size="md"
+                                    icon="opacity"
                                     [label]="'PRODUCT_MANAGE.FATS' | translate"
                                     placeholder="0"
                                     [required]="true"
-                                    [fillColor]="nutrientFillColors.fats"
-                                    [error]="getControlError('fatsPerBase')"
-                                 />
-                            </div>
-                        </div>
-                        <div class="product-manage__nutrients-row product-manage__nutrients-row--two">
-                            <div class="product-manage__nutrient">
-                                <fd-ui-input formControlName="carbsPerBase"
+                                    [tintColor]="nutrientFillColors.fats"
+                                    [textColor]="nutrientTextColors.fats"
+                                />
+                                <fd-ui-nutrient-input
+                                    class="product-manage__nutrition-input product-manage__nutrition-input--macro product-manage__nutrition-input--carbs"
+                                    formControlName="carbsPerBase"
                                     type="number"
+                                    size="md"
+                                    icon="grain"
                                     [label]="'PRODUCT_MANAGE.CARBS' | translate"
                                     placeholder="0"
                                     [required]="true"
-                                    [fillColor]="nutrientFillColors.carbs"
-                                    [error]="getControlError('carbsPerBase')"
-                                 />
-                            </div>
-                            <div class="product-manage__nutrient">
-                                <fd-ui-input formControlName="fiberPerBase"
+                                    [tintColor]="nutrientFillColors.carbs"
+                                    [textColor]="nutrientTextColors.carbs"
+                                />
+                                <fd-ui-nutrient-input
+                                    class="product-manage__nutrition-input product-manage__nutrition-input--macro product-manage__nutrition-input--fiber"
+                                    formControlName="fiberPerBase"
                                     type="number"
+                                    size="md"
+                                    icon="spa"
                                     [label]="'PRODUCT_MANAGE.FIBER' | translate"
                                     placeholder="0"
-                                    [required]="true"
-                                    [fillColor]="nutrientFillColors.fiber"
-                                    [error]="getControlError('fiberPerBase')"
-                                 />
+                                    [tintColor]="nutrientFillColors.fiber"
+                                    [textColor]="nutrientTextColors.fiber"
+                                />
                             </div>
-                        </div>
-                        <div class="product-manage__nutrients-row">
-                            <div class="product-manage__nutrient">
-                                <fd-ui-input formControlName="alcoholPerBase"
-                                    type="number"
-                                    [label]="'PRODUCT_MANAGE.ALCOHOL' | translate"
-                                    placeholder="0"
-                                    [fillColor]="nutrientFillColors.alcohol"
-                                    [error]="getControlError('alcoholPerBase')"
-                                 />
-                            </div>
+                            @if (macrosError()) {
+                                <div class="product-manage__nutrition-errors">
+                                    {{ macrosError() }}
+                                </div>
+                            }
+
+                            <fd-ui-nutrient-input
+                                class="product-manage__nutrition-input product-manage__nutrition-input--alcohol"
+                                formControlName="alcoholPerBase"
+                                type="number"
+                                size="md"
+                                icon="wine_bar"
+                                variant="tinted"
+                                valueAlign="left"
+                                [labelUppercase]="false"
+                                [label]="'PRODUCT_MANAGE.ALCOHOL' | translate"
+                                placeholder="0"
+                                [tintColor]="'rgba(148, 163, 184, 0.10)'"
+                            />
                         </div>
                         @if (nutritionWarning(); as warning) {
                             <div class="product-manage__nutrition-warning">

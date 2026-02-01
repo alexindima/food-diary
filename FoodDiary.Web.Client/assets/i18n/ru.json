@@ -1,4 +1,4 @@
-﻿{
+{
     "FORM_ERRORS": {
         "REQUIRED": "Это поле обязательно для заполнения",
         "USER_EXISTS": "Пользователь с таким email уже существует",
@@ -579,6 +579,10 @@
         "FIBER": "Клетчатка, г",
         "ALCOHOL": "Алкоголь, г",
         "CALORIES_MISMATCH_WARNING": "По указанным макронутриентам ожидается около {{expected}} ккал, но вы указали {{actual}} ккал. Проверьте, пожалуйста.",
+        "NUTRITION_ERRORS": {
+            "CALORIES_REQUIRED": "Калорийность должна быть больше 0.",
+            "MACROS_REQUIRED": "Укажите хотя бы один макрос (белки, жиры или углеводы)."
+        },
         "DEFAULT_SERVING": "Стандартная порция",
         "DEFAULT_SERVING_WITH_UNIT": "Стандартная порция ({{unit}})",
         "DEFAULT_SERVING_UNIT": "Единица измерения порции",
@@ -589,6 +593,7 @@
             "PCS": "штуки"
         },
         "BASIC_INFO": "Основное",
+        "TRACKING_PREFERENCES": "Параметры учета",
         "NUTRITION_VALUE": "Пищевая ценность",
         "NUTRITION_VALUE_TEMPLATE": "Пищевая ценность на {{base}}",
         "SUMMARY_TITLE": "Сводка",
@@ -1291,8 +1296,3 @@
         "NO_DATA_ACTION": "Задать цикл"
     }
 }
-
-
-
-
-

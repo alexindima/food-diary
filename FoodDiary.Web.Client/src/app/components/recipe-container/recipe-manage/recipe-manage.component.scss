@@ -8,8 +8,21 @@
     gap: $gap-m;
     box-sizing: border-box;
 
+    @media (max-width: 1100px) {
+        --fd-layout-page-content-max-width: 100%;
+        max-width: 100% !important;
+    }
+
+    ::ng-deep .fd-ui-input {
+        --fd-input-height: 48px;
+    }
+
+    ::ng-deep .fd-ui-select {
+        --fd-select-height: 48px;
+    }
+
     &__header {
-        margin-bottom: $gap-xl;
+        margin-bottom: 0;
     }
 
     &__title {
@@ -34,7 +47,7 @@
     &__grid {
         display: grid;
         grid-template-columns: minmax(0, 7fr) minmax(0, 4fr);
-        gap: $gap-s;
+        gap: $gap-xl;
         align-items: stretch;
 
         @media #{$media-tablet} {
@@ -49,17 +62,18 @@
     }
 
     &__card {
-        --fd-ui-card-border-color: transparent;
+        --fd-ui-card-border-color: rgba(15, 23, 42, 0.08);
         --fd-ui-card-title-color: #0f172a;
         --fd-ui-card-meta-color: #94a3b8;
-        --fd-shadow-sm: none;
-        --fd-radius-lg: 20px;
+        --fd-shadow-sm: 0 20px 45px rgba(15, 23, 42, 0.08);
+        --fd-radius-lg: 22px;
         --fd-color-surface: #ffffff;
         display: flex;
         flex-direction: column;
         gap: $gap-m;
-        padding: $gap-m;
-        border-radius: 20px;
+        border: 1px solid rgba(15, 23, 42, 0.06);
+        border-radius: var(--fd-radius-lg);
+        overflow: hidden;
 
         &--general {
             gap: $gap-l;
@@ -73,6 +87,23 @@
         &--facts,
         &--visibility {
             gap: $gap-m;
+        }
+
+        ::ng-deep .fd-ui-card__header {
+            margin-bottom: $gap-s;
+            align-items: center;
+        }
+
+        ::ng-deep .fd-ui-card__title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            text-transform: none;
+            letter-spacing: normal;
+        }
+
+        ::ng-deep .fd-ui-card__meta {
+            font-size: 0.85rem;
+            font-weight: 600;
         }
     }
 
@@ -176,37 +207,6 @@
     &__array-error {
         color: $color-no-results;
         font-size: 0.9rem;
-    }
-
-    &__card-heading {
-        display: flex;
-        gap: $gap-m;
-        align-items: center;
-    }
-
-    &__card-title {
-        font-size: 1.1rem;
-        font-weight: 700;
-        margin: 0;
-        color: #0f172a;
-    }
-
-    &__card-subtitle {
-        font-size: 0.95rem;
-        margin: 2px 0 0;
-        color: #64748b;
-    }
-
-    &__card-icon {
-        width: 36px;
-        height: 36px;
-        border-radius: 12px;
-        background: linear-gradient(135deg, #2563eb, #60a5fa);
-        box-shadow: 0 10px 30px rgba(37, 99, 235, 0.25);
-
-        &--steps {
-            background: linear-gradient(135deg, #0ea5e9, #22d3ee);
-        }
     }
 
     &__hero-image {

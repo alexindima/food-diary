@@ -14,14 +14,11 @@
 
     <div class="recipe-manage__grid">
       <div class="recipe-manage__column recipe-manage__column--primary">
-        <fd-ui-card class="recipe-manage__card recipe-manage__card--general" appearance="entry">
-          <div class="recipe-manage__card-heading">
-            <div class="recipe-manage__card-icon recipe-manage__card-icon--general"></div>
-            <div>
-              <div class="recipe-manage__card-title">{{ 'RECIPE_MANAGE.GENERAL_GROUP_TITLE' | translate }}</div>
-              <div class="recipe-manage__card-subtitle">{{ 'RECIPE_MANAGE.SUBTITLE' | translate }}</div>
-            </div>
-          </div>
+        <fd-ui-card
+          class="recipe-manage__card recipe-manage__card--general"
+          appearance="entry"
+          [title]="'RECIPE_MANAGE.GENERAL_GROUP_TITLE' | translate"
+        >
 
           <div class="recipe-manage__hero-row">
             <div class="recipe-manage__image">
@@ -97,11 +94,11 @@
           </div>
         </fd-ui-card>
 
-        <fd-ui-card class="recipe-manage__card recipe-manage__card--steps" appearance="entry">
-          <div class="recipe-manage__card-heading">
-            <div class="recipe-manage__card-icon recipe-manage__card-icon--steps"></div>
-            <div class="recipe-manage__card-title">{{ 'RECIPE_MANAGE.STEPS_TITLE' | translate }}</div>
-          </div>
+        <fd-ui-card
+          class="recipe-manage__card recipe-manage__card--steps"
+          appearance="entry"
+          [title]="'RECIPE_MANAGE.STEPS_TITLE' | translate"
+        >
 
           <section class="recipe-manage__steps-section" formArrayName="steps">
             <div class="recipe-manage__steps" #dragBoundary fdDropZone>
@@ -212,9 +209,9 @@
           <fd-ui-card
             class="recipe-manage__card recipe-manage__card--facts"
             appearance="entry"
-            >
+            [title]="'RECIPE_MANAGE.NUTRITION_GROUP_TITLE' | translate"
+          >
             <div class="recipe-manage__calories-header">
-              <div class="recipe-manage__calories-label">{{ 'RECIPE_MANAGE.NUTRITION_GROUP_TITLE' | translate }}</div>
               <fd-ui-checkbox formControlName="calculateNutritionAutomatically"
                 class="recipe-manage__calories-toggle"
                 [label]="'RECIPE_MANAGE.AUTO_NUTRITION_LABEL' | translate"

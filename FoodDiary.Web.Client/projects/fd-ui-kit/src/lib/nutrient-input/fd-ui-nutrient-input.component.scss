@@ -1,0 +1,142 @@
+:host {
+    display: block;
+}
+
+.fd-ui-nutrient-input {
+    --fd-nutrient-tint: rgba(148, 163, 184, 0.2);
+    --fd-nutrient-text-color: rgba(15, 23, 42, 0.65);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 16px 18px;
+    border-radius: 20px;
+    background: var(--fd-nutrient-tint);
+    box-shadow: 0 14px 28px rgba(15, 23, 42, 0.08);
+    border: 1px solid rgba(15, 23, 42, 0.04);
+    cursor: default;
+}
+
+.fd-ui-nutrient-input__label {
+    font-size: 0.76rem;
+    letter-spacing: 0.08em;
+    font-weight: 800;
+    color: var(--fd-nutrient-text-color);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.fd-ui-nutrient-input__label-text {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+}
+
+.fd-ui-nutrient-input__label--uppercase {
+    text-transform: uppercase;
+}
+
+.fd-ui-nutrient-input__icon {
+    font-size: 1.2rem;
+    width: 1.2rem;
+    height: 1.2rem;
+    color: var(--fd-nutrient-text-color);
+    flex: 0 0 auto;
+}
+
+.fd-ui-nutrient-input__required {
+    color: var(--fd-nutrient-text-color);
+    line-height: 1;
+}
+
+.fd-ui-nutrient-input__control {
+    border: none;
+    background: transparent;
+    font-weight: 900;
+    font-size: 1.5rem;
+    color: var(--fd-nutrient-text-color);
+    outline: none;
+    padding: 0;
+    text-align: center;
+    width: 100%;
+    min-width: 0;
+    cursor: text;
+    caret-color: var(--fd-nutrient-text-color);
+}
+
+.fd-ui-nutrient-input__control::placeholder {
+    color: color-mix(in srgb, var(--fd-nutrient-text-color) 45%, white);
+}
+
+input.fd-ui-nutrient-input__control[type='number'] {
+    -moz-appearance: textfield;
+}
+
+input.fd-ui-nutrient-input__control[type='number']::-webkit-outer-spin-button,
+input.fd-ui-nutrient-input__control[type='number']::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.fd-ui-nutrient-input--lg {
+    padding: 22px 22px;
+    border-radius: 24px;
+}
+
+.fd-ui-nutrient-input--lg .fd-ui-nutrient-input__control {
+    font-size: 2rem;
+}
+
+.fd-ui-nutrient-input--sm {
+    padding: 12px 14px;
+    border-radius: 16px;
+}
+
+.fd-ui-nutrient-input--sm .fd-ui-nutrient-input__control {
+    font-size: 1.25rem;
+}
+
+.fd-ui-nutrient-input--error {
+    border-color: #ef4444;
+}
+
+.fd-ui-nutrient-input--disabled {
+    opacity: 0.6;
+    box-shadow: none;
+}
+
+.fd-ui-nutrient-input--readonly {
+    .fd-ui-nutrient-input__control {
+        cursor: default;
+    }
+}
+
+.fd-ui-nutrient-input__error {
+    font-size: 0.75rem;
+    color: #ef4444;
+}
+
+.fd-ui-nutrient-input--outline {
+    background: #ffffff;
+    border: 1px solid rgba(148, 163, 184, 0.35);
+    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+
+    .fd-ui-nutrient-input__control {
+        text-align: left;
+    }
+}
+
+.fd-ui-nutrient-input__value-row {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    width: 100%;
+}
+
+.fd-ui-nutrient-input__value-row .fd-ui-nutrient-input__control {
+    flex: 1;
+}
+
+.fd-ui-nutrient-input--value-left .fd-ui-nutrient-input__control {
+    text-align: left;
+}

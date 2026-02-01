@@ -26,6 +26,7 @@ import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiSelectComponent, FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
+import { FdUiNutrientInputComponent } from 'fd-ui-kit/nutrient-input/fd-ui-nutrient-input.component';
 import { normalizeProductType as normalizeProductTypeValue } from '../../../utils/product-type.utils';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import {
@@ -34,7 +35,6 @@ import {
 } from './product-save-success-dialog.component';
 import { PageHeaderComponent } from '../../shared/page-header/page-header.component';
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
-import { CHART_COLORS } from '../../../constants/chart-colors';
 import { NutritionCalculationService } from '../../../services/nutrition-calculation.service';
 import {
     ConfirmDeleteDialogComponent,
@@ -69,6 +69,7 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
         FdUiSelectComponent,
         FdUiTextareaComponent,
         FdUiButtonComponent,
+        FdUiNutrientInputComponent,
         FdUiFormErrorComponent,
         PageHeaderComponent,
         FdPageContainerDirective,
@@ -98,14 +99,29 @@ export class BaseProductManageComponent implements OnInit {
     public productTypeSelectOptions: FdUiSelectOption<ProductType>[] = [];
     public visibilityOptions = Object.values(ProductVisibility) as ProductVisibility[];
     public visibilitySelectOptions: FdUiSelectOption<ProductVisibility>[] = [];
-    private readonly nutrientFillAlpha = 0.08;
+    private readonly nutrientFillAlpha = 0.14;
+    private readonly nutrientPalette = {
+        calories: '#E11D48',
+        proteins: '#0284C7',
+        fats: '#C2410C',
+        carbs: '#0F766E',
+        fiber: '#7E22CE',
+        alcohol: '#64748B',
+    };
     public readonly nutrientFillColors = {
-        calories: this.applyAlpha(CHART_COLORS.calories, this.nutrientFillAlpha),
-        fiber: this.applyAlpha(CHART_COLORS.fiber, this.nutrientFillAlpha),
-        proteins: this.applyAlpha(CHART_COLORS.proteins, this.nutrientFillAlpha),
-        fats: this.applyAlpha(CHART_COLORS.fats, this.nutrientFillAlpha),
-        carbs: this.applyAlpha(CHART_COLORS.carbs, this.nutrientFillAlpha),
-        alcohol: this.applyAlpha(CHART_COLORS.alcohol, this.nutrientFillAlpha),
+        calories: this.applyAlpha(this.nutrientPalette.calories, this.nutrientFillAlpha),
+        fiber: this.applyAlpha(this.nutrientPalette.fiber, this.nutrientFillAlpha),
+        proteins: this.applyAlpha(this.nutrientPalette.proteins, this.nutrientFillAlpha),
+        fats: this.applyAlpha(this.nutrientPalette.fats, this.nutrientFillAlpha),
+        carbs: this.applyAlpha(this.nutrientPalette.carbs, this.nutrientFillAlpha),
+        alcohol: this.applyAlpha(this.nutrientPalette.alcohol, this.nutrientFillAlpha),
+    };
+    public readonly nutrientTextColors = {
+        calories: this.nutrientPalette.calories,
+        fiber: this.nutrientPalette.fiber,
+        proteins: this.nutrientPalette.proteins,
+        fats: this.nutrientPalette.fats,
+        carbs: this.nutrientPalette.carbs,
     };
     public constructor() {
         this.productForm = new FormGroup<ProductFormData>({
@@ -134,7 +150,6 @@ export class BaseProductManageComponent implements OnInit {
         this.buildUnitOptions();
         this.buildProductTypeOptions();
         this.buildVisibilityOptions();
-        this.coerceNumericControls();
         this.productForm.controls.baseUnit.valueChanges
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(unit => {
@@ -281,6 +296,39 @@ export class BaseProductManageComponent implements OnInit {
 
     public get baseUnitLabel(): string {
         return this.getUnitLabel(this.productForm.controls.baseUnit.value);
+    }
+
+    public caloriesError(): string | null {
+        const control = this.productForm.controls.caloriesPerBase;
+        if (!control.touched && !control.dirty) {
+            return null;
+        }
+
+        const calories = this.getNumberValue(control);
+        return calories <= 0
+            ? this.translateService.instant('PRODUCT_MANAGE.NUTRITION_ERRORS.CALORIES_REQUIRED')
+            : null;
+    }
+
+    public macrosError(): string | null {
+        const controls = [
+            this.productForm.controls.proteinsPerBase,
+            this.productForm.controls.fatsPerBase,
+            this.productForm.controls.carbsPerBase,
+        ];
+
+        const shouldShow = controls.some(control => control.touched || control.dirty);
+        if (!shouldShow) {
+            return null;
+        }
+
+        const proteins = this.getNumberValue(this.productForm.controls.proteinsPerBase);
+        const fats = this.getNumberValue(this.productForm.controls.fatsPerBase);
+        const carbs = this.getNumberValue(this.productForm.controls.carbsPerBase);
+
+        return proteins <= 0 && fats <= 0 && carbs <= 0
+            ? this.translateService.instant('PRODUCT_MANAGE.NUTRITION_ERRORS.MACROS_REQUIRED')
+            : null;
     }
 
     private updateCalorieWarning(): void {
@@ -441,38 +489,6 @@ export class BaseProductManageComponent implements OnInit {
         }
         const parsed = Number(value);
         return Number.isFinite(parsed) ? parsed : 0;
-    }
-
-    private coerceNumericControls(): void {
-        const numericControls: (keyof ProductFormData)[] = [
-            'baseAmount',
-            'defaultPortionAmount',
-            'caloriesPerBase',
-            'proteinsPerBase',
-            'fatsPerBase',
-            'carbsPerBase',
-            'fiberPerBase',
-            'alcoholPerBase',
-        ];
-
-        numericControls.forEach(key => {
-            const control = this.productForm.controls[key] as FormControl<number | string | null>;
-            control.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(value => {
-                if (value === '' || value === null || value === undefined) {
-                    control.setValue(null as unknown as number, { emitEvent: false });
-                    return;
-                }
-
-                const numericValue = Number(value);
-                if (!Number.isFinite(numericValue)) {
-                    return;
-                }
-
-                if (numericValue !== value) {
-                    control.setValue(numericValue as number, { emitEvent: false });
-                }
-            });
-        });
     }
 
     private buildVisibilityOptions(): void {

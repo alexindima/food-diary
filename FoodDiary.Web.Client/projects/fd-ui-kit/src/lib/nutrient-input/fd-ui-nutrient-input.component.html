@@ -1,0 +1,50 @@
+<div
+  class="fd-ui-nutrient-input"
+  [ngClass]="[
+    'fd-ui-nutrient-input--' + size,
+    'fd-ui-nutrient-input--' + variant,
+    'fd-ui-nutrient-input--value-' + valueAlign,
+    disabled ? 'fd-ui-nutrient-input--disabled' : '',
+    readonly ? 'fd-ui-nutrient-input--readonly' : '',
+    error ? 'fd-ui-nutrient-input--error' : ''
+  ]"
+  [style.--fd-nutrient-tint]="tintColor || null"
+  [style.--fd-nutrient-text-color]="textColor || null"
+>
+  @if (label) {
+    <div class="fd-ui-nutrient-input__label" [class.fd-ui-nutrient-input__label--uppercase]="labelUppercase">
+      @if (icon) {
+        <mat-icon class="fd-ui-nutrient-input__icon">{{ icon }}</mat-icon>
+      }
+      <span class="fd-ui-nutrient-input__label-text">
+        {{ label }}
+        @if (required) {
+          <span class="fd-ui-nutrient-input__required">*</span>
+        }
+      </span>
+    </div>
+  }
+
+  <div class="fd-ui-nutrient-input__value-row">
+    <input
+      class="fd-ui-nutrient-input__control"
+      [attr.name]="name || null"
+      [attr.type]="type === 'number' ? 'text' : type"
+      [attr.inputmode]="type === 'number' ? 'decimal' : null"
+      [attr.placeholder]="placeholder"
+      [required]="required"
+      [readonly]="readonly"
+      [attr.step]="step ?? null"
+      [attr.min]="min ?? null"
+      [attr.max]="max ?? null"
+      [disabled]="disabled"
+      [value]="value ?? ''"
+      (input)="onInput($event)"
+      (blur)="onBlur()"
+    />
+  </div>
+
+  @if (error) {
+    <div class="fd-ui-nutrient-input__error">{{ error }}</div>
+  }
+</div>

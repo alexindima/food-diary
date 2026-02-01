@@ -17,8 +17,6 @@
     }
 
     &__main {
-        grid-row: 1 / span 1;
-        grid-column: 2 / span 1;
         display: flex;
         flex-direction: column;
         min-height: 100vh;
@@ -66,8 +64,18 @@ html.cdk-global-scrollblock .fd-root__sidebar {
     }
 }
 
+.fd-root:not(.fd-root--no-sidebar) .fd-root__main {
+    grid-row: 1 / span 1;
+    grid-column: 2 / span 1;
+}
+
+.fd-root--no-sidebar .fd-root__main {
+    grid-column: 1 / -1;
+}
+
 @media (max-width: 768px) {
     .fd-root {
+        display: block;
         grid-template-columns: 1fr;
         --fd-layout-sidebar-width: 0px;
     }
@@ -88,6 +96,7 @@ html.cdk-global-scrollblock .fd-root__sidebar {
 
     .fd-root__main {
         padding: 0 0 90px;
+        grid-column: 1 / -1;
     }
 
     .fd-root__footer {

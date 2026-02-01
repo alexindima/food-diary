@@ -5,12 +5,13 @@
 .fd-ui-input {
     width: 100%;
     --fd-input-height: 40px;
+    --fd-input-border-radius: var(--fd-field-border-radius, 14px);
     --mdc-outlined-text-field-container-height: var(--fd-input-height) !important;
     --mat-form-field-container-height: var(--fd-input-height) !important;
-    --mdc-outlined-text-field-container-shape: var(--fd-input-border-radius, var(--fd-button-border-radius, var(--fd-radius-md, 8px)));
-    --fd-input-outline-color: rgba(148, 163, 184, 0.5);
+    --mdc-outlined-text-field-container-shape: var(--fd-input-border-radius);
+    --fd-input-outline-color: rgba(148, 163, 184, 0.38);
     --mdc-outlined-text-field-outline-color: var(--fd-input-outline-color);
-    --mdc-outlined-text-field-hover-outline-color: var(--fd-input-outline-color);
+    --mdc-outlined-text-field-hover-outline-color: rgba(148, 163, 184, 0.55);
     --mdc-outlined-text-field-focus-outline-color: var(--fd-color-primary);
     --mdc-outlined-text-field-disabled-outline-color: rgba(148, 163, 184, 0.3);
 
@@ -37,12 +38,12 @@
     .mat-mdc-text-field-wrapper {
         min-height: var(--fd-input-height) !important;
         height: var(--fd-input-height) !important;
-        border-radius: var(--fd-input-border-radius, var(--fd-button-border-radius, var(--fd-radius-md, 8px)));
+        border-radius: var(--fd-input-border-radius);
         background-color: var(--fd-input-background, var(--fd-color-surface));
     }
 
     .mdc-notched-outline {
-        border-radius: var(--fd-input-border-radius, var(--fd-button-border-radius, var(--fd-radius-md, 8px)));
+        border-radius: var(--fd-input-border-radius);
     }
 
 

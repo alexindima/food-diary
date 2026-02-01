@@ -40,10 +40,10 @@
 
     &__title {
         margin: 0;
-        font-size: 0.75rem;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        font-weight: 600;
+        font-size: 1.05rem;
+        letter-spacing: normal;
+        text-transform: none;
+        font-weight: 700;
         color: var(--fd-ui-card-title-color);
     }
 
@@ -98,7 +98,7 @@
     --fd-ui-card-meta-color: var(--fd-color-text-muted, #6b7280);
 
     .fd-ui-card__title {
-        font-size: 0.95rem;
+        font-size: 1.05rem;
         letter-spacing: normal;
         text-transform: none;
     }
