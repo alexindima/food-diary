@@ -1,0 +1,135 @@
+:host {
+    display: block;
+}
+
+.fd-ui-plain-input {
+    --fd-plain-input-height: 40px;
+    --fd-plain-input-radius: 14px;
+    --fd-plain-input-border: rgba(148, 163, 184, 0.38);
+    --fd-plain-input-label-bg: var(--fd-color-surface, #fff);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.fd-ui-plain-input--size-sm {
+    --fd-plain-input-height: 32px;
+}
+
+.fd-ui-plain-input--size-md {
+    --fd-plain-input-height: 48px;
+}
+
+.fd-ui-plain-input--size-lg {
+    --fd-plain-input-height: 48px;
+}
+
+.fd-ui-plain-input__label {
+    color: #64748b;
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.2;
+    display: inline-flex;
+    align-items: center;
+    max-width: calc(100% - 28px);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    position: absolute;
+    top: 50%;
+    left: 14px;
+    transform: translateY(-50%);
+    transition: transform 0.15s ease, top 0.15s ease, font-size 0.15s ease;
+    background: var(--fd-plain-input-label-bg);
+    padding: 0 4px;
+    pointer-events: none;
+}
+
+.fd-ui-plain-input__required {
+    margin-left: 0;
+    color: #ef4444;
+}
+
+.fd-ui-plain-input__control-wrap {
+    min-height: var(--fd-plain-input-height);
+    border: 1px solid var(--fd-plain-input-border);
+    border-radius: var(--fd-plain-input-radius);
+    background: #fff;
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    transition: border-color 0.15s ease;
+    position: relative;
+}
+
+.fd-ui-plain-input__control-wrap:focus-within {
+    border-color: #3b82f6;
+}
+
+.fd-ui-plain-input__control {
+    flex: 1;
+    width: 100%;
+    min-width: 0;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: #1e293b;
+    font: inherit;
+    margin-top: 0;
+}
+
+.fd-ui-plain-input__control::placeholder {
+    color: #94a3b8;
+}
+
+.fd-ui-plain-input__suffix {
+    border: none;
+    background: transparent;
+    color: #94a3b8;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+}
+
+.fd-ui-plain-input__suffix:disabled {
+    opacity: 0.6;
+    cursor: default;
+}
+
+.fd-ui-plain-input--has-error .fd-ui-plain-input__control-wrap {
+    border-color: #ef4444;
+}
+
+.fd-ui-plain-input--floating .fd-ui-plain-input__label {
+    top: 0;
+    transform: translateY(-50%);
+    font-size: 0.8rem;
+}
+
+.fd-ui-plain-input--floating .fd-ui-plain-input__control-wrap {
+    padding-top: 8px;
+    padding-bottom: 2px;
+}
+
+.fd-ui-plain-input__error {
+    color: #ef4444;
+    font-size: 0.75rem;
+    line-height: 1.2;
+    margin-top: 2px;
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: anywhere;
+}
+
+.fd-ui-plain-input__control[type='number'] {
+    -moz-appearance: textfield;
+}
+
+.fd-ui-plain-input__control[type='number']::-webkit-outer-spin-button,
+.fd-ui-plain-input__control[type='number']::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}

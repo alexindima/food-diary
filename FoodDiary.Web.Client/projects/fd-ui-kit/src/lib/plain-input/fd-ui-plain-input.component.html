@@ -1,0 +1,40 @@
+<div class="fd-ui-plain-input" [ngClass]="[sizeClass, error() ? 'fd-ui-plain-input--has-error' : '', shouldFloatLabel ? 'fd-ui-plain-input--floating' : '']">
+  <div class="fd-ui-plain-input__control-wrap" [style.background]="fillColor() || null">
+    @if (label()) {
+      <label class="fd-ui-plain-input__label" [attr.for]="id()">
+        <span class="fd-ui-plain-input__label-text">{{ label() }}</span>@if (required()) {<span class="fd-ui-plain-input__required">*</span>}
+      </label>
+    }
+    <input
+      class="fd-ui-plain-input__control"
+      [id]="id()"
+      [attr.type]="type()"
+      [value]="internalValue"
+      [required]="required()"
+      [readonly]="readonly()"
+      [disabled]="disabled"
+      [attr.placeholder]="shouldShowPlaceholder ? (placeholder() ?? null) : null"
+      [attr.maxlength]="maxLength() ?? null"
+      [attr.step]="step() ?? null"
+      (input)="onInput($any($event.target).value)"
+      (focus)="onFocus()"
+      (blur)="onBlur()"
+    />
+
+    @if (suffixButtonIcon()) {
+      <button
+        class="fd-ui-plain-input__suffix"
+        type="button"
+        [attr.aria-label]="suffixButtonAriaLabel() || suffixButtonIcon()"
+        [disabled]="disabled"
+        (click)="triggerSuffixButton()"
+      >
+        <mat-icon>{{ suffixButtonIcon() }}</mat-icon>
+      </button>
+    }
+  </div>
+
+  @if (error()) {
+    <div class="fd-ui-plain-input__error">{{ error() }}</div>
+  }
+</div>

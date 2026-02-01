@@ -4,7 +4,7 @@ import { Product } from '../../../../types/product.data';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import { ZXingScannerModule } from '@zxing/ngx-scanner';
-import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
+import { FdUiPlainInputComponent } from 'fd-ui-kit/plain-input/fd-ui-plain-input.component';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiSelectComponent } from 'fd-ui-kit/select/fd-ui-select.component';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea.component';
@@ -26,7 +26,7 @@ import { ImageUploadFieldComponent } from '../../../shared/image-upload-field/im
         ReactiveFormsModule,
         TranslatePipe,
         ZXingScannerModule,
-        FdUiInputComponent,
+        FdUiPlainInputComponent,
         FdUiCardComponent,
         FdUiSelectComponent,
         FdUiTextareaComponent,
