@@ -84,6 +84,9 @@
                     @if (!googleReady()) {
                         <div class="auth__google-hint">{{ 'AUTH.GOOGLE.UNAVAILABLE' | translate }}</div>
                     }
+                    @if (telegramLoginEnabled()) {
+                        <div #telegramLoginButton class="auth__telegram-button" aria-label="Telegram login"></div>
+                    }
                 </div>
             </form>
         } @else {

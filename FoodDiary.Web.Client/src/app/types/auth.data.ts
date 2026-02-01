@@ -34,6 +34,16 @@ export class RestoreAccountRequest {
     }
 }
 
+export interface TelegramLoginWidgetRequest {
+    id: number;
+    authDate: number;
+    hash: string;
+    username?: string;
+    firstName?: string;
+    lastName?: string;
+    photoUrl?: string;
+}
+
 export interface AuthResponse {
     accessToken: string;
     refreshToken: string;

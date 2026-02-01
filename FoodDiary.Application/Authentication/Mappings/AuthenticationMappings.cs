@@ -3,6 +3,7 @@ using FoodDiary.Application.Authentication.Commands.RefreshToken;
 using FoodDiary.Application.Authentication.Commands.Register;
 using FoodDiary.Application.Authentication.Commands.RestoreAccount;
 using FoodDiary.Application.Authentication.Commands.LinkTelegram;
+using FoodDiary.Application.Authentication.Commands.TelegramLoginWidget;
 using FoodDiary.Application.Authentication.Commands.TelegramVerify;
 using FoodDiary.Application.Authentication.Commands.TelegramBotAuth;
 using FoodDiary.Contracts.Authentication;
@@ -45,5 +46,17 @@ public static class AuthenticationMappings
     public static TelegramBotAuthCommand ToCommand(this TelegramBotAuthRequest request)
     {
         return new TelegramBotAuthCommand(request.TelegramUserId);
+    }
+
+    public static TelegramLoginWidgetCommand ToCommand(this TelegramLoginWidgetRequest request)
+    {
+        return new TelegramLoginWidgetCommand(
+            request.Id,
+            request.AuthDate,
+            request.Hash,
+            request.Username,
+            request.FirstName,
+            request.LastName,
+            request.PhotoUrl);
     }
 }

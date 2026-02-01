@@ -55,6 +55,14 @@ public class AuthController(
         return result.ToActionResult();
     }
 
+    [HttpPost("telegram/login-widget")]
+    public async Task<IActionResult> TelegramLoginWidget(TelegramLoginWidgetRequest request)
+    {
+        var command = request.ToCommand();
+        var result = await Mediator.Send(command);
+        return result.ToActionResult();
+    }
+
     [Authorize]
     [HttpPost("telegram/link")]
     public async Task<IActionResult> LinkTelegram(TelegramAuthRequest request)

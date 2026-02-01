@@ -140,6 +140,12 @@
         justify-content: center;
     }
 
+    &__telegram-button {
+        display: inline-flex;
+        width: 100%;
+        justify-content: center;
+    }
+
     &__google-hint {
         text-align: center;
         color: $color-text-additional;

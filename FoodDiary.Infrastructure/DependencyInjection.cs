@@ -67,6 +67,7 @@ public static class DependencyInjection
         services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
         services.AddSingleton<IPasswordHasher, PasswordHasher>();
         services.AddSingleton<ITelegramAuthValidator, TelegramAuthValidator>();
+        services.AddSingleton<ITelegramLoginWidgetValidator, TelegramLoginWidgetValidator>();
         services.AddScoped<IUserCleanupService, UserCleanupService>();
 
         return services;

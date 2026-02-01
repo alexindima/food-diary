@@ -1,6 +1,6 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { catchError, map, Observable, of, tap, throwError } from 'rxjs';
-import { AuthResponse, LoginRequest, RegisterRequest, RestoreAccountRequest } from '../types/auth.data';
+import { AuthResponse, LoginRequest, RegisterRequest, RestoreAccountRequest, TelegramLoginWidgetRequest } from '../types/auth.data';
 import { environment } from '../../environments/environment';
 import { ApiService } from './api.service';
 import { NavigationService } from './navigation.service';
@@ -84,6 +84,18 @@ export class AuthService extends ApiService {
             }),
             catchError((error: HttpErrorResponse) => {
                 console.error('Google login error', error);
+                return throwError(() => error);
+            }),
+        );
+    }
+
+    public loginWithTelegramWidget(data: TelegramLoginWidgetRequest, rememberMe: boolean): Observable<AuthResponse> {
+        return this.post<AuthResponse>('telegram/login-widget', data).pipe(
+            tap(response => {
+                this.onLogin(response, rememberMe);
+            }),
+            catchError((error: HttpErrorResponse) => {
+                console.error('Telegram login error', error);
                 return throwError(() => error);
             }),
         );

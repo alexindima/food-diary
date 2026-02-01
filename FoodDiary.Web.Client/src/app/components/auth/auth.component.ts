@@ -20,7 +20,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { matchFieldValidator } from '../../validators/match-field.validator';
 import { NavigationService } from '../../services/navigation.service';
 import { FormGroupControls } from '../../types/common.data';
-import { LoginRequest, RegisterRequest, RestoreAccountRequest } from '../../types/auth.data';
+import { LoginRequest, RegisterRequest, RestoreAccountRequest, TelegramLoginWidgetRequest } from '../../types/auth.data';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
@@ -59,6 +59,7 @@ export class AuthComponent implements OnInit, AfterViewInit {
     @Input() public initialMode: 'login' | 'register' = 'login';
     @ViewChild('googleLoginButton') private googleLoginButton?: ElementRef<HTMLElement>;
     @ViewChild('googleRegisterButton') private googleRegisterButton?: ElementRef<HTMLElement>;
+    @ViewChild('telegramLoginButton') private telegramLoginButton?: ElementRef<HTMLElement>;
 
     private readonly route = inject(ActivatedRoute, { optional: true });
     private readonly router = inject(Router, { optional: true });
@@ -77,6 +78,7 @@ export class AuthComponent implements OnInit, AfterViewInit {
     public registerForm: FormGroup<RegisterFormGroup>;
     public globalError = signal<string | null>(null);
     public googleReady = signal<boolean>(false);
+    public telegramLoginEnabled = signal<boolean>(false);
     public showRestoreAction = signal<boolean>(false);
     public isRestoring = signal<boolean>(false);
     public authBenefits: string[] = [
@@ -132,6 +134,7 @@ export class AuthComponent implements OnInit, AfterViewInit {
 
     public async ngAfterViewInit(): Promise<void> {
         await this.initializeGoogle();
+        this.initializeTelegramLogin();
     }
 
     public handleTabChange(value: string): void {
@@ -159,6 +162,7 @@ export class AuthComponent implements OnInit, AfterViewInit {
             await this.router.navigate(['/auth', mode]);
         }
         this.renderGoogleButton();
+        this.renderTelegramWidget();
     }
 
     public async onLoginSubmit(): Promise<void> {
@@ -237,6 +241,16 @@ export class AuthComponent implements OnInit, AfterViewInit {
         }
     }
 
+    private initializeTelegramLogin(): void {
+        if (!environment.telegramBotUsername) {
+            return;
+        }
+        this.telegramLoginEnabled.set(true);
+        (window as { fdTelegramAuth?: (user: TelegramLoginWidgetUser) => void }).fdTelegramAuth =
+            user => this.onTelegramAuth(user);
+        this.renderTelegramWidget();
+    }
+
     private renderGoogleButton(): void {
         if (!this.googleReady()) {
             return;
@@ -252,6 +266,29 @@ export class AuthComponent implements OnInit, AfterViewInit {
         }
     }
 
+    private renderTelegramWidget(): void {
+        if (!this.telegramLoginEnabled() || this.authMode !== 'login') {
+            return;
+        }
+
+        const target = this.telegramLoginButton?.nativeElement;
+        if (!target || !environment.telegramBotUsername) {
+            return;
+        }
+
+        target.innerHTML = '';
+
+        const script = document.createElement('script');
+        script.async = true;
+        script.src = 'https://telegram.org/js/telegram-widget.js?22';
+        script.setAttribute('data-telegram-login', environment.telegramBotUsername);
+        script.setAttribute('data-size', 'large');
+        script.setAttribute('data-userpic', 'false');
+        script.setAttribute('data-request-access', 'write');
+        script.setAttribute('data-onauth', 'fdTelegramAuth(user)');
+        target.appendChild(script);
+    }
+
     private onGoogleCredential(credential: string): void {
         const rememberMe = this.authMode === 'login' ? this.loginForm.controls.rememberMe.value : false;
         const request: GoogleLoginRequest = { credential, rememberMe: !!rememberMe };
@@ -261,6 +298,36 @@ export class AuthComponent implements OnInit, AfterViewInit {
                 this.closeDialogIfAny();
             },
             error: () => this.setGlobalError('FORM_ERRORS.UNKNOWN'),
+        });
+    }
+
+    private onTelegramAuth(user: TelegramLoginWidgetUser): void {
+        const rememberMe = this.loginForm.controls.rememberMe.value;
+        const request: TelegramLoginWidgetRequest = {
+            id: user.id,
+            authDate: user.auth_date,
+            hash: user.hash,
+            username: user.username,
+            firstName: user.first_name,
+            lastName: user.last_name,
+            photoUrl: user.photo_url,
+        };
+
+        this.authService.loginWithTelegramWidget(request, rememberMe).subscribe({
+            next: () => {
+                this.navigationService.navigateToReturnUrl(this.returnUrl);
+                this.closeDialogIfAny();
+            },
+            error: (error: HttpErrorResponse) => {
+                const errorCode = error.error?.error;
+                if (errorCode === 'Authentication.TelegramNotLinked') {
+                    this.setGlobalErrorMessage('Telegram account is not linked. Open the WebApp from the bot once.');
+                } else if (errorCode === 'Authentication.TelegramAuthExpired') {
+                    this.setGlobalErrorMessage('Telegram auth expired. Please try again.');
+                } else {
+                    this.setGlobalError('FORM_ERRORS.UNKNOWN');
+                }
+            },
         });
     }
 
@@ -295,6 +362,11 @@ export class AuthComponent implements OnInit, AfterViewInit {
 
     private setGlobalError(errorKey: string): void {
         this.globalError.set(this.translateService.instant(errorKey));
+    }
+
+    private setGlobalErrorMessage(message: string): void {
+        this.globalError.set(message);
+        this.showRestoreAction.set(false);
     }
 
     private clearGlobalError(): void {
@@ -346,6 +418,16 @@ export class AuthComponent implements OnInit, AfterViewInit {
             }
         });
     }
+}
+
+interface TelegramLoginWidgetUser {
+    id: number;
+    auth_date: number;
+    hash: string;
+    username?: string;
+    first_name?: string;
+    last_name?: string;
+    photo_url?: string;
 }
 
 interface LoginFormValues {
