@@ -7,14 +7,14 @@
         <ng-container fdPageHeaderActions>
             <div class="recipe-list__controls">
                 <form class="recipe-list__search-form" [formGroup]="searchForm">
-                    <fd-ui-input class="recipe-list__search-input"
+                    <fd-ui-plain-input class="recipe-list__search-input"
                         formControlName="search"
+                        [label]="'RECIPE_LIST.SEARCH_LABEL' | translate"
                         prefixIcon="search"
-                        [label]="''"
-                        [clearable]="true"
+                        suffixButtonIcon="close"
+                        [suffixButtonAriaLabel]="'COMMON.CLEAR' | translate"
                         [placeholder]="'RECIPE_LIST.SEARCH_PLACEHOLDER' | translate"
-                        [hideSubscript]="true"
-                        (cleared)="searchForm.controls.search.setValue('')"
+                        (suffixButtonClicked)="clearSearch()"
                      />
                 </form>
 

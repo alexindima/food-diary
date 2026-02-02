@@ -73,6 +73,7 @@ export class RecipeManageComponent implements OnInit {
     private readonly nutritionCalculationService = inject(NutritionCalculationService);
     private readonly editingStepTitles = new Set<number>();
     private readonly expandedSteps = new Set<number>();
+    private lastRecipeId: string | null = null;
 
     private readonly nutrientFillAlpha = 0.14;
     private readonly nutrientPalette = {
@@ -190,8 +191,12 @@ export class RecipeManageComponent implements OnInit {
         effect(() => {
             const recipe = this.recipe();
             if (recipe) {
-                this.populateForm(recipe);
+                if (this.lastRecipeId !== recipe.id) {
+                    this.lastRecipeId = recipe.id;
+                    this.populateForm(recipe);
+                }
             } else {
+                this.lastRecipeId = null;
                 this.updateNutrientSummary(null);
             }
         });
@@ -659,6 +664,17 @@ export class RecipeManageComponent implements OnInit {
                     return;
                 }
                 this.updateSummaryFromForm();
+            });
+
+        this.recipeForm.controls.steps.valueChanges
+            .pipe(takeUntilDestroyed())
+            .subscribe(() => {
+                if (!this.isFormReady) {
+                    return;
+                }
+                if (this.recipeForm.controls.calculateNutritionAutomatically.value) {
+                    this.recalculateNutrientsFromForm();
+                }
             });
     }
 

@@ -12,7 +12,7 @@ import { catchError, debounceTime, finalize, map, Observable, of, switchMap, tap
 import { HttpErrorResponse } from '@angular/common/http';
 import { FormGroupControls } from '../../../types/common.data';
 import { RecipeDetailComponent, RecipeDetailActionResult } from '../recipe-detail/recipe-detail.component';
-import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
+import { FdUiPlainInputComponent } from 'fd-ui-kit/plain-input/fd-ui-plain-input.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
@@ -31,7 +31,7 @@ import { QuickConsumptionService } from '../../../services/quick-consumption.ser
     imports: [
         ReactiveFormsModule,
         TranslatePipe,
-        FdUiInputComponent,
+        FdUiPlainInputComponent,
         FdUiButtonComponent,
         FdUiLoaderComponent,
         FdUiPaginationComponent,
@@ -202,6 +202,10 @@ export class RecipeListComponent implements OnInit {
     public toggleOnlyMine(): void {
         const control = this.searchForm.controls.onlyMine;
         control.setValue(!control.value);
+    }
+
+    public clearSearch(): void {
+        this.searchForm.controls.search.setValue('');
     }
 
     public onAddToMeal(recipe: Recipe): void {

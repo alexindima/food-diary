@@ -416,6 +416,7 @@
     "RECIPE_LIST": {
         "TITLE": "Recipes",
         "SUBTITLE": "Collection of your dishes and ideas",
+        "SEARCH_LABEL": "Search",
         "SEARCH_TITLE": "Searching:",
         "SEARCH_PLACEHOLDER": "Search by name",
         "ADD_RECIPE_BUTTON": "Add",

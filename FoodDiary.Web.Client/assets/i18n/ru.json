@@ -382,6 +382,7 @@
     "RECIPE_LIST": {
         "TITLE": "Рецепты",
         "SUBTITLE": "Коллекция ваших блюд и идей",
+        "SEARCH_LABEL": "Поиск",
         "SEARCH_TITLE": "Поиск:",
         "SEARCH_PLACEHOLDER": "Поиск по названию",
         "ADD_RECIPE_BUTTON": "Добавить",

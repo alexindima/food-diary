@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, forwardRef, Input, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, Input, ViewEncapsulation, inject } from '@angular/core';
 import { NgClass } from '@angular/common';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
@@ -20,6 +20,7 @@ import { MatIconModule } from '@angular/material/icon';
     ],
 })
 export class FdUiNutrientInputComponent implements ControlValueAccessor {
+    private readonly cdr = inject(ChangeDetectorRef);
     @Input() public label: string = '';
     @Input() public icon?: string;
     @Input() public placeholder: string = '0';
@@ -46,6 +47,7 @@ export class FdUiNutrientInputComponent implements ControlValueAccessor {
 
     public writeValue(value: string | number | null): void {
         this.value = value === null || value === undefined ? '' : String(value);
+        this.cdr.markForCheck();
     }
 
     public registerOnChange(fn: (value: string) => void): void {
@@ -58,6 +60,7 @@ export class FdUiNutrientInputComponent implements ControlValueAccessor {
 
     public setDisabledState(isDisabled: boolean): void {
         this.disabled = isDisabled;
+        this.cdr.markForCheck();
     }
 
     public onInput(event: Event): void {
