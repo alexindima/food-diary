@@ -36,6 +36,9 @@ public class ImageAssetRepository(FoodDiaryDbContext context) : IImageAssetRepos
         var recipeUse = await _context.Recipes.AnyAsync(r => r.ImageAssetId == assetId, cancellationToken);
         if (recipeUse) return true;
 
+        var stepUse = await _context.RecipeSteps.AnyAsync(s => s.ImageAssetId == assetId, cancellationToken);
+        if (stepUse) return true;
+
         var mealUse = await _context.Meals.AnyAsync(m => m.ImageAssetId == assetId, cancellationToken);
         if (mealUse) return true;
 
@@ -54,6 +57,7 @@ public class ImageAssetRepository(FoodDiaryDbContext context) : IImageAssetRepos
                 asset.CreatedOnUtc < olderThanUtc &&
                 !_context.Products.Any(p => p.ImageAssetId == asset.Id) &&
                 !_context.Recipes.Any(r => r.ImageAssetId == asset.Id) &&
+                !_context.RecipeSteps.Any(s => s.ImageAssetId == asset.Id) &&
                 !_context.Meals.Any(m => m.ImageAssetId == asset.Id) &&
                 !_context.Users.Any(u => u.ProfileImageAssetId == asset.Id))
             .OrderBy(asset => asset.CreatedOnUtc)

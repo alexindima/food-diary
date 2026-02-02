@@ -42,10 +42,10 @@ public class UpdateRecipeCommandValidator : AbstractValidator<UpdateRecipeComman
             .WithMessage("Servings must be greater than zero");
 
         RuleFor(x => x.PrepTime)
-            .GreaterThan(0)
+            .GreaterThanOrEqualTo(0)
             .When(x => x.PrepTime.HasValue)
             .WithErrorCode("Validation.Invalid")
-            .WithMessage("PrepTime must be greater than zero");
+            .WithMessage("PrepTime must be greater than or equal to zero");
 
         RuleFor(x => x.CookTime)
             .GreaterThan(0)

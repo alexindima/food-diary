@@ -240,6 +240,16 @@ public class FoodDiaryDbContext : DbContext
                 .WithMany(r => r.Steps)
                 .HasForeignKey(e => e.RecipeId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            entity.Property(e => e.ImageAssetId).HasConversion(
+                id => id.HasValue ? id.Value.Value : (Guid?)null,
+                value => value.HasValue ? new ImageAssetId(value.Value) : null);
+
+            entity.HasOne<ImageAsset>()
+                .WithMany()
+                .HasForeignKey(e => e.ImageAssetId)
+                .IsRequired(false)
+                .OnDelete(DeleteBehavior.SetNull);
         });
 
         modelBuilder.Entity<RecipeIngredient>(entity =>

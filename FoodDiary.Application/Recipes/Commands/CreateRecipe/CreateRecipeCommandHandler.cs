@@ -31,7 +31,7 @@ public class CreateRecipeCommandHandler(IRecipeRepository recipeRepository)
             command.Category,
             command.ImageUrl,
             command.ImageAssetId.HasValue ? new ImageAssetId(command.ImageAssetId.Value) : null,
-            command.PrepTime,
+            command.PrepTime ?? 0,
             command.CookTime,
             visibility);
 
@@ -80,7 +80,12 @@ public class CreateRecipeCommandHandler(IRecipeRepository recipeRepository)
 
         foreach (var entry in orderedSteps)
         {
-            var step = recipe.AddStep(entry.Order, entry.Step.Description, entry.Step.ImageUrl);
+            var step = recipe.AddStep(
+                entry.Order,
+                entry.Step.Description,
+                entry.Step.Title,
+                entry.Step.ImageUrl,
+                entry.Step.ImageAssetId.HasValue ? new ImageAssetId(entry.Step.ImageAssetId.Value) : null);
             foreach (var ingredient in entry.Step.Ingredients)
             {
                 if (ingredient.ProductId.HasValue)

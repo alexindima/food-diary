@@ -36,8 +36,10 @@ public record RecipeResponse(
 public record RecipeStepResponse(
     Guid Id,
     int StepNumber,
+    string? Title,
     string Instruction,
     string? ImageUrl,
+    Guid? ImageAssetId,
     IReadOnlyList<RecipeIngredientResponse> Ingredients);
 
 public record RecipeIngredientResponse(

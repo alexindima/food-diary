@@ -41,8 +41,10 @@ export interface Recipe {
 export interface RecipeStep {
     id: string;
     stepNumber: number;
+    title?: string | null;
     instruction: string;
     imageUrl?: string | null;
+    imageAssetId?: string | null;
     ingredients: RecipeIngredient[];
 }
 
@@ -89,8 +91,10 @@ export interface RecipeDto {
 }
 
 export interface RecipeStepDto {
+    title?: string | null;
     description: string;
     imageUrl?: string | null;
+    imageAssetId?: string | null;
     ingredients: RecipeIngredientDto[];
 }
 

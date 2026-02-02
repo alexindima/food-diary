@@ -104,8 +104,13 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
         SetModified();
     }
 
-    public RecipeStep AddStep(int stepNumber, string instruction, string? imageUrl = null) {
-        var step = RecipeStep.Create(Id, stepNumber, instruction, imageUrl);
+    public RecipeStep AddStep(
+        int stepNumber,
+        string instruction,
+        string? title = null,
+        string? imageUrl = null,
+        ImageAssetId? imageAssetId = null) {
+        var step = RecipeStep.Create(Id, stepNumber, instruction, title, imageUrl, imageAssetId);
         _steps.Add(step);
         SetModified();
         return step;

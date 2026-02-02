@@ -20,8 +20,10 @@ public static class RecipeMappings
             .Select(step => new RecipeStepResponse(
                 step.Id.Value,
                 step.StepNumber,
+                step.Title,
                 step.Instruction,
                 step.ImageUrl,
+                step.ImageAssetId?.Value,
                 step.Ingredients
                     .Select(ingredient => new RecipeIngredientResponse(
                         ingredient.Id.Value,
@@ -128,7 +130,9 @@ public static class RecipeMappings
             new RecipeStepInput(
                 index + 1,
                 step.Description,
+                step.Title,
                 step.ImageUrl,
+                step.ImageAssetId,
                 step.Ingredients
                     .Select(ingredient => new RecipeIngredientInput(
                         ingredient.ProductId,

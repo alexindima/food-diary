@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using FoodDiary.Application.Common.Abstractions.Messaging;
@@ -20,7 +21,7 @@ public class DeleteRecipeCommandHandler(
             command.RecipeId,
             command.UserId!.Value,
             includePublic: false,
-            includeSteps: false,
+            includeSteps: true,
             asTracking: true,
             cancellationToken: cancellationToken);
 
@@ -36,11 +37,22 @@ public class DeleteRecipeCommandHandler(
         }
 
         var assetId = recipe.ImageAssetId;
+        var stepAssetIds = recipe.Steps
+            .Select(step => step.ImageAssetId)
+            .Where(id => id.HasValue)
+            .Select(id => id!.Value)
+            .Distinct()
+            .ToList();
         await recipeRepository.DeleteAsync(recipe);
 
         if (assetId.HasValue)
         {
             await TryDeleteAssetAsync(assetId.Value, imageAssetRepository, imageStorageService, cancellationToken);
+        }
+
+        foreach (var stepAssetId in stepAssetIds)
+        {
+            await TryDeleteAssetAsync(stepAssetId, imageAssetRepository, imageStorageService, cancellationToken);
         }
 
         return Result.Success(true);

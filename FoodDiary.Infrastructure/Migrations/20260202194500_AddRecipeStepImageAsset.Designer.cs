@@ -3,18 +3,20 @@ using System;
 using FoodDiary.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace FoodDiary.Infrastructure.Migrations
+namespace FoodDiary.Infrastructure.Migrations;
+
+[DbContext(typeof(FoodDiaryDbContext))]
+[Migration("20260202194500_AddRecipeStepImageAsset")]
+public partial class AddRecipeStepImageAsset : Migration
 {
-    [DbContext(typeof(FoodDiaryDbContext))]
-    partial class FoodDiaryDbContextModelSnapshot : ModelSnapshot
+    protected override void BuildTargetModel(ModelBuilder modelBuilder)
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
-        {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "10.0.0")
@@ -522,7 +524,7 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.ToTable("RecipeIngredients");
                 });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.RecipeStep", b =>
+                modelBuilder.Entity("FoodDiary.Domain.Entities.RecipeStep", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
@@ -1009,6 +1011,5 @@ b.Property<string>("DashboardLayoutJson")
                     b.Navigation("WeightEntries");
                 });
 #pragma warning restore 612, 618
-        }
     }
 }

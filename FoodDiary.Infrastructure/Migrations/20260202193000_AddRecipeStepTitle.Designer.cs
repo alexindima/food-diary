@@ -3,18 +3,20 @@ using System;
 using FoodDiary.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace FoodDiary.Infrastructure.Migrations
+namespace FoodDiary.Infrastructure.Migrations;
+
+[DbContext(typeof(FoodDiaryDbContext))]
+[Migration("20260202193000_AddRecipeStepTitle")]
+public partial class AddRecipeStepTitle : Migration
 {
-    [DbContext(typeof(FoodDiaryDbContext))]
-    partial class FoodDiaryDbContextModelSnapshot : ModelSnapshot
+    protected override void BuildTargetModel(ModelBuilder modelBuilder)
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
-        {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "10.0.0")
@@ -530,9 +532,6 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedOnUtc")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<Guid?>("ImageAssetId")
-                        .HasColumnType("uuid");
-
                     b.Property<string>("ImageUrl")
                         .HasColumnType("text");
 
@@ -553,8 +552,6 @@ namespace FoodDiary.Infrastructure.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ImageAssetId");
 
                     b.HasIndex("RecipeId");
 
@@ -917,11 +914,6 @@ b.Property<string>("DashboardLayoutJson")
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.RecipeStep", b =>
                 {
-                    b.HasOne("FoodDiary.Domain.Entities.ImageAsset", null)
-                        .WithMany()
-                        .HasForeignKey("ImageAssetId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
                     b.HasOne("FoodDiary.Domain.Entities.Recipe", "Recipe")
                         .WithMany("Steps")
                         .HasForeignKey("RecipeId")
@@ -1009,6 +1001,5 @@ b.Property<string>("DashboardLayoutJson")
                     b.Navigation("WeightEntries");
                 });
 #pragma warning restore 612, 618
-        }
     }
 }

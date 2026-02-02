@@ -73,6 +73,7 @@ export class RecipeManageComponent implements OnInit {
     private readonly translateService = inject(TranslateService);
     private readonly navigationService = inject(NavigationService);
     private readonly nutritionCalculationService = inject(NutritionCalculationService);
+    private readonly editingStepTitles = new Set<number>();
 
     private readonly nutrientFillAlpha = 0.14;
     private readonly nutrientPalette = {
@@ -151,7 +152,7 @@ export class RecipeManageComponent implements OnInit {
             comment: new FormControl<string | null>(null, [Validators.maxLength(1000)]),
             category: new FormControl<string | null>(null),
             imageUrl: new FormControl<ImageSelection | null>(null),
-            prepTime: new FormControl<number | null>(null, [Validators.required, Validators.min(1)]),
+            prepTime: new FormControl<number | null>(0, [Validators.min(0)]),
             cookTime: new FormControl<number | null>(null, [Validators.required, Validators.min(1)]),
             servings: new FormControl(1, { nonNullable: true, validators: [Validators.required, Validators.min(1)] }),
             visibility: new FormControl<RecipeVisibility>(RecipeVisibility.Public, { nonNullable: true }),
@@ -249,6 +250,36 @@ export class RecipeManageComponent implements OnInit {
         return this.resolveControlError(this.recipeForm.controls[controlName]);
     }
 
+    public isStepTitleEditing(stepIndex: number): boolean {
+        return this.editingStepTitles.has(stepIndex);
+    }
+
+    public toggleStepTitleEdit(stepIndex: number): void {
+        if (this.editingStepTitles.has(stepIndex)) {
+            this.commitStepTitle(stepIndex);
+            this.editingStepTitles.delete(stepIndex);
+            return;
+        }
+
+        this.editingStepTitles.add(stepIndex);
+    }
+
+    public onStepTitleBlur(stepIndex: number): void {
+        this.commitStepTitle(stepIndex);
+        this.editingStepTitles.delete(stepIndex);
+    }
+
+    public getStepTitleDisplay(stepIndex: number): string {
+        const step = this.steps.at(stepIndex);
+        const titleValue = step?.controls.title.value;
+        const trimmedTitle = typeof titleValue === 'string' ? titleValue.trim() : '';
+        if (trimmedTitle.length > 0) {
+            return trimmedTitle;
+        }
+
+        return this.translateService.instant('RECIPE_MANAGE.STEP_TITLE', { index: stepIndex + 1 });
+    }
+
     public getStepDescriptionError(stepIndex: number): string | null {
         const step = this.steps.at(stepIndex);
         return this.resolveControlError(step.controls.description);
@@ -306,7 +337,7 @@ export class RecipeManageComponent implements OnInit {
                 url: recipeData.imageUrl ?? null,
                 assetId: recipeData.imageAssetId ?? null,
             },
-            prepTime: recipeData.prepTime ?? null,
+            prepTime: recipeData.prepTime ?? 0,
             cookTime: recipeData.cookTime ?? null,
             servings: recipeData.servings,
             visibility: this.normalizeVisibility(recipeData.visibility),
@@ -328,6 +359,11 @@ export class RecipeManageComponent implements OnInit {
 
         recipeData.steps.forEach(step => {
             const stepValue: StepFormValues = {
+                title: step.title ?? null,
+                imageUrl: {
+                    url: step.imageUrl ?? null,
+                    assetId: step.imageAssetId ?? null,
+                },
                 description: step.instruction,
                 ingredients: step.ingredients
                     .map(ingredient => this.mapIngredientToFormValue(ingredient))
@@ -362,6 +398,8 @@ export class RecipeManageComponent implements OnInit {
             : [{ food: null, amount: null }];
 
         return new FormGroup<StepFormData>({
+            title: new FormControl(step?.title ?? null, [Validators.maxLength(120)]),
+            imageUrl: new FormControl<ImageSelection | null>(step?.imageUrl ?? null),
             description: new FormControl(step?.description ?? '', {
                 nonNullable: true,
                 validators: [Validators.required],
@@ -371,6 +409,18 @@ export class RecipeManageComponent implements OnInit {
                 nonEmptyArrayValidator(),
             ),
         });
+    }
+
+    private commitStepTitle(stepIndex: number): void {
+        const step = this.steps.at(stepIndex);
+        const titleControl = step?.controls.title;
+        if (!titleControl) {
+            return;
+        }
+
+        const titleValue = titleControl.value;
+        const trimmedTitle = typeof titleValue === 'string' ? titleValue.trim() : '';
+        titleControl.setValue(trimmedTitle.length > 0 ? trimmedTitle : null);
     }
 
     private createIngredientGroup(food: Product | null = null, amount: number | null = null): FormGroup<IngredientFormData> {
@@ -520,6 +570,9 @@ export class RecipeManageComponent implements OnInit {
                     }));
 
                 return {
+                    title: step.title || null,
+                    imageUrl: step.imageUrl?.url || null,
+                    imageAssetId: step.imageUrl?.assetId || null,
                     description: step.description,
                     ingredients,
                 };
@@ -796,6 +849,8 @@ interface RecipeFormValues {
 }
 
 interface StepFormValues {
+    title: string | null;
+    imageUrl: ImageSelection | null;
     description: string;
     ingredients: IngredientFormValues[];
 }

@@ -55,8 +55,14 @@ public sealed class UserCleanupService(
                     .Select(r => r.ImageAssetId!)
                     .ToListAsync(cancellationToken);
 
+                var stepAssetIds = await dbContext.RecipeSteps
+                    .Where(step => step.Recipe.UserId == userId && step.ImageAssetId != null)
+                    .Select(step => step.ImageAssetId!)
+                    .ToListAsync(cancellationToken);
+
                 var assetIds = productAssetIds
                     .Concat(recipeAssetIds)
+                    .Concat(stepAssetIds)
                     .Distinct()
                     .ToList();
 

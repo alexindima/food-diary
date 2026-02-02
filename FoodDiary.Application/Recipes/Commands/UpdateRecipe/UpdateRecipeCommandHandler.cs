@@ -53,6 +53,12 @@ public class UpdateRecipeCommandHandler(
         }
 
         var oldAssetId = recipe.ImageAssetId;
+        var oldStepAssetIds = recipe.Steps
+            .Select(step => step.ImageAssetId)
+            .Where(id => id.HasValue)
+            .Select(id => id!.Value)
+            .Distinct()
+            .ToList();
 
         recipe.Update(
             name: command.Name,
@@ -61,7 +67,7 @@ public class UpdateRecipeCommandHandler(
             category: command.Category,
             imageUrl: command.ImageUrl,
             imageAssetId: command.ImageAssetId.HasValue ? new ImageAssetId(command.ImageAssetId.Value) : null,
-            prepTime: command.PrepTime,
+            prepTime: command.PrepTime ?? 0,
             cookTime: command.CookTime,
             servings: command.Servings,
             visibility: visibility);
@@ -74,7 +80,12 @@ public class UpdateRecipeCommandHandler(
 
         foreach (var entry in orderedSteps)
         {
-            var step = recipe.AddStep(entry.Order, entry.Step.Description, entry.Step.ImageUrl);
+            var step = recipe.AddStep(
+                entry.Order,
+                entry.Step.Description,
+                entry.Step.Title,
+                entry.Step.ImageUrl,
+                entry.Step.ImageAssetId.HasValue ? new ImageAssetId(entry.Step.ImageAssetId.Value) : null);
             foreach (var ingredient in entry.Step.Ingredients)
             {
                 if (ingredient.ProductId.HasValue)
@@ -123,6 +134,23 @@ public class UpdateRecipeCommandHandler(
         if (oldAssetId.HasValue && (!command.ImageAssetId.HasValue || oldAssetId.Value.Value != command.ImageAssetId.Value))
         {
             await TryDeleteAssetAsync(oldAssetId.Value, imageAssetRepository, imageStorageService, cancellationToken);
+        }
+
+        if (oldStepAssetIds.Count > 0)
+        {
+            var newStepAssetIds = orderedSteps
+                .Select(entry => entry.Step.ImageAssetId)
+                .Where(id => id.HasValue)
+                .Select(id => new ImageAssetId(id!.Value))
+                .ToHashSet();
+
+            foreach (var assetId in oldStepAssetIds)
+            {
+                if (!newStepAssetIds.Contains(assetId))
+                {
+                    await TryDeleteAssetAsync(assetId, imageAssetRepository, imageStorageService, cancellationToken);
+                }
+            }
         }
 
         return Result.Success(updated.ToResponse(updated.MealItems.Count + updated.NestedRecipeUsages.Count, true));

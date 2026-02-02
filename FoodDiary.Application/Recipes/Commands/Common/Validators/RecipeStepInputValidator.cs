@@ -6,6 +6,10 @@ internal class RecipeStepInputValidator : AbstractValidator<RecipeStepInput>
 {
     public RecipeStepInputValidator()
     {
+        RuleFor(x => x.Title)
+            .MaximumLength(120)
+            .WithMessage("Step title must be 120 characters or less");
+
         RuleFor(x => x.Description)
             .NotEmpty()
             .WithMessage("Step description is required");

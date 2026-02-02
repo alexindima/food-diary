@@ -412,7 +412,6 @@
     justify-content: space-between;
     align-items: center;
     gap: $gap-m;
-    cursor: grab;
     background: #f8fafc;
     border-bottom: 1px solid rgba(148, 163, 184, 0.2);
     padding: 12px var(--fd-spacing-lg);
@@ -433,11 +432,35 @@
     background-size: 4px 4px;
     background-position: center;
     opacity: 0.8;
+    cursor: grab;
+}
+
+.recipe-step-card__drag:active {
+    cursor: grabbing;
 }
 
 .recipe-step-card__title {
     font-weight: 600;
     color: $color-text-main;
+}
+
+.recipe-step-card__title-input {
+    min-width: 200px;
+
+    ::ng-deep .fd-ui-plain-input__label {
+        display: none;
+    }
+
+    ::ng-deep .fd-ui-plain-input__control {
+        height: 32px;
+        font-size: 0.95rem;
+        padding: 0 10px;
+    }
+}
+
+.recipe-step-card__edit {
+    margin-left: 2px;
+    color: #64748b;
 }
 
 .recipe-step-card {
@@ -451,6 +474,29 @@
     display: flex;
     flex-direction: column;
     gap: $gap-m;
+}
+
+.recipe-step-card__content {
+    display: grid;
+    grid-template-columns: minmax(180px, 220px) minmax(0, 1fr);
+    gap: $gap-m;
+    align-items: start;
+
+    @media #{$media-mobile} {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+.recipe-step-card__image {
+    width: 100%;
+}
+
+.recipe-step-card__image ::ng-deep .image-upload-field__dropzone {
+    min-height: 180px;
+}
+
+.recipe-step-card__description {
+    min-width: 0;
 }
 
 .recipe-step-card__subtitle {
