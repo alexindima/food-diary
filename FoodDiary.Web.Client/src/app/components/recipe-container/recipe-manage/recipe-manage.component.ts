@@ -20,8 +20,7 @@ import { NutrientData } from '../../../types/charts.data';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Recipe, RecipeDto, RecipeVisibility, RecipeIngredient } from '../../../types/recipe.data';
 import { RecipeService } from '../../../services/recipe.service';
-import { DropZoneDirective } from '../../../directives/drop-zone.directive';
-import { DraggableDirective } from '../../../directives/draggable.directive';
+import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 import { NavigationService } from '../../../services/navigation.service';
 import { finalize } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -49,8 +48,7 @@ import { NutritionCalculationService } from '../../../services/nutrition-calcula
         CommonModule,
         ReactiveFormsModule,
         TranslatePipe,
-        DropZoneDirective,
-        DraggableDirective,
+        DragDropModule,
         FdUiCardComponent,
         FdUiInputComponent,
         FdUiTextareaComponent,
@@ -74,6 +72,7 @@ export class RecipeManageComponent implements OnInit {
     private readonly navigationService = inject(NavigationService);
     private readonly nutritionCalculationService = inject(NutritionCalculationService);
     private readonly editingStepTitles = new Set<number>();
+    private readonly expandedSteps = new Set<number>();
 
     private readonly nutrientFillAlpha = 0.14;
     private readonly nutrientPalette = {
@@ -214,10 +213,20 @@ export class RecipeManageComponent implements OnInit {
 
     public addStep(): void {
         this.steps.push(this.createStepGroup());
+        this.expandedSteps.add(this.steps.length - 1);
     }
 
     public removeStep(index: number): void {
         this.steps.removeAt(index);
+        const nextExpanded = new Set<number>();
+        this.expandedSteps.forEach(stepIndex => {
+            if (stepIndex === index) {
+                return;
+            }
+            nextExpanded.add(stepIndex > index ? stepIndex - 1 : stepIndex);
+        });
+        this.expandedSteps.clear();
+        nextExpanded.forEach(stepIndex => this.expandedSteps.add(stepIndex));
     }
 
     public getStepIngredients(stepIndex: number):  FormArray<FormGroup<FormGroupControls<IngredientFormValues>>> {
@@ -283,6 +292,43 @@ export class RecipeManageComponent implements OnInit {
     public getStepDescriptionError(stepIndex: number): string | null {
         const step = this.steps.at(stepIndex);
         return this.resolveControlError(step.controls.description);
+    }
+
+    public isStepExpanded(stepIndex: number): boolean {
+        return this.expandedSteps.has(stepIndex);
+    }
+
+    public toggleStepExpanded(stepIndex: number): void {
+        if (this.expandedSteps.has(stepIndex)) {
+            this.expandedSteps.delete(stepIndex);
+        } else {
+            this.expandedSteps.add(stepIndex);
+        }
+    }
+
+    public getStepIngredientsCount(stepIndex: number): number {
+        const step = this.steps.at(stepIndex);
+        return step?.controls.ingredients.length ?? 0;
+    }
+
+    public getStepDescriptionSummary(stepIndex: number): string {
+        const step = this.steps.at(stepIndex);
+        const description = step?.controls.description.value?.trim() ?? '';
+        if (!description) {
+            return this.translateService.instant('RECIPE_MANAGE.STEP_NO_DESCRIPTION');
+        }
+
+        return description;
+    }
+
+    public onStepDrop(event: CdkDragDrop<FormGroup<StepFormData>[]>): void {
+        if (event.previousIndex === event.currentIndex) {
+            return;
+        }
+
+        moveItemInArray(this.steps.controls, event.previousIndex, event.currentIndex);
+        this.steps.updateValueAndValidity();
+        this.steps.markAsDirty();
     }
 
     public getIngredientControlError(
@@ -351,13 +397,14 @@ export class RecipeManageComponent implements OnInit {
         });
 
         this.resetSteps();
+        this.expandedSteps.clear();
 
         if (recipeData.steps.length === 0) {
             this.addStep();
             return;
         }
 
-        recipeData.steps.forEach(step => {
+        recipeData.steps.forEach((step, index) => {
             const stepValue: StepFormValues = {
                 title: step.title ?? null,
                 imageUrl: {
@@ -370,6 +417,7 @@ export class RecipeManageComponent implements OnInit {
                     .filter(Boolean) as IngredientFormValues[],
             };
             this.steps.push(this.createStepGroup(stepValue));
+            this.expandedSteps.add(index);
         });
 
         this.updateNutrientSummary(recipeData);
@@ -391,6 +439,7 @@ export class RecipeManageComponent implements OnInit {
             this.steps.removeAt(0);
         }
     }
+
 
     private createStepGroup(step?: StepFormValues): FormGroup<StepFormData> {
         const ingredientValues = step?.ingredients?.length
@@ -422,6 +471,7 @@ export class RecipeManageComponent implements OnInit {
         const trimmedTitle = typeof titleValue === 'string' ? titleValue.trim() : '';
         titleControl.setValue(trimmedTitle.length > 0 ? trimmedTitle : null);
     }
+
 
     private createIngredientGroup(food: Product | null = null, amount: number | null = null): FormGroup<IngredientFormData> {
         return new FormGroup<IngredientFormData>({
