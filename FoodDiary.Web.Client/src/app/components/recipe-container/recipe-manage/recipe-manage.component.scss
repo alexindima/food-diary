@@ -33,7 +33,7 @@
     &__form {
         display: flex;
         flex-direction: column;
-        gap: $gap-m;
+        gap: $gap-l;
     }
 
     &__error {
@@ -50,6 +50,10 @@
         gap: $gap-xl;
         align-items: stretch;
 
+        @media (max-width: 1100px) {
+            grid-template-columns: 1fr;
+        }
+
         @media #{$media-tablet} {
             grid-template-columns: 1fr;
         }
@@ -58,7 +62,13 @@
     &__column {
         display: flex;
         flex-direction: column;
-        gap: $gap-s;
+        gap: $gap-xl;
+    }
+
+    &__column--primary {
+        ::ng-deep .fd-ui-card__content {
+            gap: 28px;
+        }
     }
 
     &__card {
@@ -79,6 +89,14 @@
             gap: $gap-l;
         }
 
+        &--basic {
+            --fd-ui-card-border-color: rgba(37, 99, 235, 0.16);
+
+            ::ng-deep .fd-ui-card {
+                padding-bottom: $gap-l;
+            }
+        }
+
         &--steps {
             gap: $gap-m;
         }
@@ -90,6 +108,12 @@
         }
 
         &--facts {
+            ::ng-deep .fd-ui-card {
+                padding-bottom: $gap-l;
+            }
+        }
+
+        &--tracking {
             ::ng-deep .fd-ui-card {
                 padding-bottom: $gap-l;
             }
@@ -115,10 +139,10 @@
 
     &__sticky-stack {
         position: sticky;
-        top: calc($gap-m + 8px);
+        top: calc($gap-xl + 8px);
         display: flex;
         flex-direction: column;
-        gap: $gap-m;
+        gap: $gap-l;
 
         @media #{$media-mobile} {
             position: static;
@@ -128,7 +152,7 @@
     &__basic-grid {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: $gap-m;
+        gap: $gap-l;
 
         @media #{$media-mobile} {
             grid-template-columns: 1fr;
@@ -139,7 +163,19 @@
         grid-column: 1 / -1;
     }
 
+    &__field {
+        display: flex;
+        flex-direction: column;
+        gap: $gap-xs;
+    }
+
     &__steps-section {
+        display: flex;
+        flex-direction: column;
+        gap: $gap-s;
+    }
+
+    &__steps-block {
         display: flex;
         flex-direction: column;
         gap: $gap-s;
@@ -149,6 +185,15 @@
         display: flex;
         flex-direction: column;
         gap: $gap-s;
+    }
+
+    &__steps-title {
+        font-size: 0.85rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #94a3b8;
+        margin-bottom: $gap-xs;
     }
 
     &__summary-calories {
@@ -177,32 +222,53 @@
         line-height: 1.4;
     }
 
-    &__footer {
-        display: flex;
-        flex-direction: column;
-        gap: $gap-s;
-        padding: $gap-m $gap-l;
-        border-radius: $border-radius-l;
-        background: #ffffff;
-        border: 1px solid rgba(15, 23, 42, 0.06);
-        box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+    &__actions-panel {
+        width: 100%;
     }
 
     &__footer-actions {
-        display: flex;
-        justify-content: flex-end;
+        display: grid;
+        grid-template-columns: max-content minmax(0, 1fr);
         gap: $gap-m;
-        flex-wrap: wrap;
+        align-items: center;
+        width: 100%;
     }
 
     &__action-button {
-        min-width: 220px;
+        min-width: 0;
+        width: 100%;
+    }
+
+    &__action-button--add {
+        --fd-button-border-radius: 18px;
+        --fd-button-padding-x: 16px;
+        --fd-button-padding-y: 8px;
+        font-weight: 800;
+
+        ::ng-deep button,
+        ::ng-deep .fd-ui-button {
+            background: linear-gradient(135deg, #4dabff, #2563eb);
+            border: none;
+            color: #ffffff;
+            box-shadow: 0 10px 26px rgba(37, 99, 235, 0.28);
+        }
+
+        ::ng-deep button:hover:not(:disabled),
+        ::ng-deep .fd-ui-button:hover:not(:disabled) {
+            background: linear-gradient(135deg, #60b6ff, #2f6df2);
+            box-shadow: 0 12px 30px rgba(37, 99, 235, 0.32);
+        }
+
+        ::ng-deep button:active:not(:disabled),
+        ::ng-deep .fd-ui-button:active:not(:disabled) {
+            background: linear-gradient(135deg, #4dabff, #2563eb);
+            box-shadow: none;
+        }
     }
 
     @media #{$media-mobile} {
         &__footer-actions {
-            flex-direction: column;
-            align-items: stretch;
+            grid-template-columns: 1fr;
         }
 
         &__action-button {
@@ -215,53 +281,107 @@
         font-size: 0.9rem;
     }
 
-    &__hero-image {
+    &__add-step {
         width: 100%;
-        border-radius: 20px;
-        overflow: hidden;
-        border: 1px dashed rgba(148, 163, 184, 0.45);
-        background: linear-gradient(135deg, rgba(34, 197, 94, 0.05), rgba(59, 130, 246, 0.05));
-        padding: 4px;
+        --fd-radius-md: 22px;
 
-        fd-image-upload-field {
+        ::ng-deep .fd-ui-button,
+        ::ng-deep button {
+            width: 100%;
+            border-style: dashed;
+            border-color: rgba(148, 163, 184, 0.6);
+            color: #64748b;
+            font-weight: 600;
+            background: rgba(248, 250, 252, 0.6);
+        }
+    }
+
+    &__hero {
+        --fd-recipe-input-height: 48px;
+        --fd-recipe-input-subscript: 18px;
+        --fd-recipe-image-size: calc(
+            (var(--fd-recipe-input-height) + var(--fd-recipe-input-subscript)) * 3 + #{$gap-l * 2}
+        );
+        display: grid;
+        grid-template-columns: var(--fd-recipe-image-size) minmax(0, 1fr);
+        grid-template-rows: repeat(3, minmax(0, auto));
+        gap: $gap-l;
+        align-items: stretch;
+    }
+
+    &__image {
+        grid-row: 1 / span 3;
+        width: var(--fd-recipe-image-size);
+        height: var(--fd-recipe-image-size);
+        aspect-ratio: 1 / 1;
+        align-self: start;
+        justify-self: start;
+        display: flex;
+
+        > fd-image-upload-field {
             display: block;
             width: 100%;
             height: 100%;
         }
 
-        ::ng-deep .image-upload-field__dropzone {
-            min-height: 320px;
+        ::ng-deep .image-upload-field {
+            width: 100%;
             height: 100%;
         }
 
+        ::ng-deep .image-upload-field__dropzone {
+            width: 100%;
+            height: 100%;
+            min-height: 0;
+        }
+
         ::ng-deep .image-upload-field__placeholder {
-            padding: 24px;
+            padding: 20px 12px;
             gap: 8px;
         }
-    }
 
-    &__hero-row {
-        display: grid;
-        grid-template-columns: minmax(240px, 2fr) minmax(0, 3fr);
-        gap: $gap-m;
-        align-items: stretch;
+        ::ng-deep .image-upload-field__icon {
+            font-size: 28px;
+            width: auto;
+            height: auto;
+        }
 
-        @media #{$media-mobile} {
-            grid-template-columns: 1fr;
+        ::ng-deep .image-upload-field__main-text {
+            font-size: 0.95rem;
+        }
+
+        ::ng-deep .image-upload-field__sub-text--plain {
+            display: block;
+            font-size: 0.8rem;
+        }
+
+        ::ng-deep .image-upload-field__sub-text:not(.image-upload-field__sub-text--plain) {
+            display: block;
+            font-size: 0.72rem;
+            color: #64748b;
+        }
+
+        ::ng-deep .image-upload-field__hint {
+            display: block;
+            font-size: 0.68rem;
+            color: #94a3b8;
         }
     }
 
-    &__image {
-        aspect-ratio: 16 / 9;
+    &__hero-field {
         display: flex;
-        align-items: stretch;
+        flex-direction: column;
+        gap: $gap-xs;
     }
+    @media #{$media-mobile} {
+        &__hero {
+            grid-template-columns: 1fr;
+        }
 
-    &__hero-fields {
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: $gap-m;
-        align-content: start;
+        &__image {
+            width: 100%;
+            height: auto;
+        }
     }
 
     &__calories-header {
@@ -293,6 +413,26 @@
     align-items: center;
     gap: $gap-m;
     cursor: grab;
+    background: #f8fafc;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+    padding: 12px var(--fd-spacing-lg);
+    margin: calc(var(--fd-spacing-sm) * -1) calc(var(--fd-spacing-lg) * -1) 0;
+}
+
+.recipe-step-card__header-left {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.recipe-step-card__drag {
+    width: 16px;
+    height: 16px;
+    border-radius: 6px;
+    background-image: radial-gradient(#94a3b8 1.2px, transparent 1.2px);
+    background-size: 4px 4px;
+    background-position: center;
+    opacity: 0.8;
 }
 
 .recipe-step-card__title {
@@ -300,10 +440,37 @@
     color: $color-text-main;
 }
 
+.recipe-step-card {
+    ::ng-deep .fd-ui-card {
+        overflow: hidden;
+        padding-bottom: $gap-l;
+    }
+}
+
 .recipe-step-card__ingredients {
     display: flex;
     flex-direction: column;
     gap: $gap-m;
+}
+
+.recipe-step-card__subtitle {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #64748b;
+}
+
+.recipe-step-card__add-ingredient {
+    align-self: flex-start;
+    --fd-button-border-radius: 14px;
+
+    ::ng-deep .fd-ui-button,
+    ::ng-deep button {
+        border-style: dashed;
+        border-color: rgba(148, 163, 184, 0.6);
+        background: rgba(248, 250, 252, 0.6);
+        color: #3b82f6;
+        font-weight: 600;
+    }
 }
 
 .recipe-ingredient {
@@ -328,6 +495,10 @@
     @media #{$media-mobile} {
         width: 100%;
     }
+}
+
+.recipe-ingredient__amount ::ng-deep .fd-ui-plain-input__control-wrap {
+    min-height: 48px;
 }
 
 .recipe-manage__drag-card {

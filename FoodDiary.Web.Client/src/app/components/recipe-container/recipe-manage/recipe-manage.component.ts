@@ -29,7 +29,10 @@ import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
-import { FdUiSelectComponent, FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
+import { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
+import { FdUiPlainInputComponent } from 'fd-ui-kit/plain-input/fd-ui-plain-input.component';
+import { FdUiPlainTextareaComponent } from 'fd-ui-kit/plain-textarea/fd-ui-plain-textarea.component';
+import { FdUiPlainSelectComponent } from 'fd-ui-kit/plain-select/fd-ui-plain-select.component';
 import { FdUiCheckboxComponent } from 'fd-ui-kit/checkbox/fd-ui-checkbox.component';
 import { FdUiNutrientInputComponent } from 'fd-ui-kit/nutrient-input/fd-ui-nutrient-input.component';
 import { CommonModule } from '@angular/common';
@@ -52,7 +55,9 @@ import { NutritionCalculationService } from '../../../services/nutrition-calcula
         FdUiInputComponent,
         FdUiTextareaComponent,
         FdUiButtonComponent,
-        FdUiSelectComponent,
+        FdUiPlainInputComponent,
+        FdUiPlainTextareaComponent,
+        FdUiPlainSelectComponent,
         FdUiCheckboxComponent,
         FdUiNutrientInputComponent,
         PageHeaderComponent,
