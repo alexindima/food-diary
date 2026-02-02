@@ -9,7 +9,7 @@ namespace FoodDiary.Application.Consumptions.Mappings;
 
 public static class ConsumptionMappings
 {
-    public static ConsumptionResponse ToResponse(this Meal meal)
+    public static ConsumptionResponse ToResponse(this Meal meal, bool isOwnedByCurrentUser = true)
     {
         var items = meal.Items
             .OrderBy(i => i.Id.Value)
@@ -42,7 +42,7 @@ public static class ConsumptionMappings
             meal.Id.Value,
             meal.Date,
             meal.MealType?.ToString(),
-            meal.Comment,
+            isOwnedByCurrentUser ? meal.Comment : null,
             meal.ImageUrl,
             meal.ImageAssetId?.Value,
             meal.TotalCalories,
@@ -69,7 +69,7 @@ public static class ConsumptionMappings
         int limit)
     {
         var totalPages = (int)Math.Ceiling(pageData.TotalItems / (double)limit);
-        var items = pageData.Items.Select(ToResponse).ToList();
+        var items = pageData.Items.Select(item => item.ToResponse()).ToList();
         return new PagedResponse<ConsumptionResponse>(items, page, limit, totalPages, pageData.TotalItems);
     }
 }

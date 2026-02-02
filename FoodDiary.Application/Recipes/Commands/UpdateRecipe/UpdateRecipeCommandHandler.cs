@@ -57,6 +57,7 @@ public class UpdateRecipeCommandHandler(
         recipe.Update(
             name: command.Name,
             description: command.Description,
+            comment: command.Comment,
             category: command.Category,
             imageUrl: command.ImageUrl,
             imageAssetId: command.ImageAssetId.HasValue ? new ImageAssetId(command.ImageAssetId.Value) : null,

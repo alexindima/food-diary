@@ -5,6 +5,7 @@ namespace FoodDiary.Contracts.Recipes;
 public record CreateRecipeRequest(
     string Name,
     string? Description,
+    string? Comment,
     string? Category,
     string? ImageUrl,
     Guid? ImageAssetId,

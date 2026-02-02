@@ -5,6 +5,7 @@ namespace FoodDiary.Contracts.Recipes;
 public record UpdateRecipeRequest(
     string? Name,
     string? Description,
+    string? Comment,
     string? Category,
     string? ImageUrl,
     Guid? ImageAssetId,

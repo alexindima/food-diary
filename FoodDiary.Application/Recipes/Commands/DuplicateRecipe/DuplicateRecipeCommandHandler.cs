@@ -31,6 +31,7 @@ public class DuplicateRecipeCommandHandler(IRecipeRepository recipeRepository)
             original.Name,
             original.Servings,
             original.Description,
+            original.Comment,
             original.Category,
             original.ImageUrl,
             null,

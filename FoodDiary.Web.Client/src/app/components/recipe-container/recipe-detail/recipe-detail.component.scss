@@ -72,6 +72,10 @@
         background: var(--fd-color-primary-50, #eef2ff);
     }
 
+    &__surface--comment {
+        margin-top: 0.25rem;
+    }
+
     &__surface-label {
         font-size: 0.9rem;
         color: var(--fd-color-text-muted, #6b7280);

@@ -24,7 +24,7 @@ public static class ProductMappings
             product.ProductType.ToString(),
             product.Category,
             product.Description,
-            product.Comment,
+            isOwnedByCurrentUser ? product.Comment : null,
             product.ImageUrl,
             product.ImageAssetId?.Value,
             product.BaseUnit.ToString(),

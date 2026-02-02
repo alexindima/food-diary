@@ -27,6 +27,7 @@ public class CreateRecipeCommandHandler(IRecipeRepository recipeRepository)
             command.Name,
             command.Servings,
             command.Description,
+            command.Comment,
             command.Category,
             command.ImageUrl,
             command.ImageAssetId.HasValue ? new ImageAssetId(command.ImageAssetId.Value) : null,

@@ -11,6 +11,7 @@ public record CreateRecipeCommand(
     UserId? UserId,
     string Name,
     string? Description,
+    string? Comment,
     string? Category,
     string? ImageUrl,
     Guid? ImageAssetId,

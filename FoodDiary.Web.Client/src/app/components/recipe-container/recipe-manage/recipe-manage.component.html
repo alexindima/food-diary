@@ -91,6 +91,15 @@
               [maxlength]="1000"
               [error]="getFieldError('description')"
              />
+
+            <fd-ui-textarea class="recipe-manage__field--full"
+              formControlName="comment"
+              [label]="'RECIPE_MANAGE.COMMENT' | translate"
+              [placeholder]="'RECIPE_MANAGE.COMMENT_PLACEHOLDER' | translate"
+              [rows]="3"
+              [maxlength]="1000"
+              [error]="getFieldError('comment')"
+             />
           </div>
         </fd-ui-card>
 
@@ -218,144 +227,89 @@
                />
             </div>
 
-            <div class="recipe-manage__nutrition-grid">
-              <div class="recipe-manage__calories-input">
-                <label class="recipe-manage__input-label" for="recipeCaloriesInput">
-                  {{ 'RECIPE_MANAGE.MANUAL_CALORIES' | translate }}
-                </label>
-                <div class="recipe-manage__input-field recipe-manage__input-field--calories">
-                  <input
-                    id="recipeCaloriesInput"
-                    class="recipe-manage__input recipe-manage__input--calories"
-                    type="number"
-                    step="1"
-                    formControlName="manualCalories"
-                    [readonly]="recipeForm.controls.calculateNutritionAutomatically.value"
-                    inputmode="decimal"
-                  />
-                  <span class="recipe-manage__input-unit">{{ 'GENERAL.UNITS.KCAL' | translate }}</span>
-                </div>
-                @if (getFieldError('manualCalories')) {
-                  <div class="recipe-manage__input-error">{{ getFieldError('manualCalories') }}</div>
-                }
+            <div class="recipe-manage__nutrition">
+              <fd-ui-nutrient-input
+                class="recipe-manage__nutrition-input recipe-manage__nutrition-input--calories"
+                formControlName="manualCalories"
+                type="number"
+                size="lg"
+                icon="local_fire_department"
+                [label]="'PRODUCT_MANAGE.CALORIES' | translate"
+                placeholder="0"
+                [required]="true"
+                [readonly]="recipeForm.controls.calculateNutritionAutomatically.value"
+                [tintColor]="nutrientFillColors.calories"
+                [textColor]="nutrientTextColors.calories"
+              />
+
+              <div class="recipe-manage__nutrition-grid">
+                <fd-ui-nutrient-input
+                  class="recipe-manage__nutrition-input recipe-manage__nutrition-input--macro"
+                  formControlName="manualProteins"
+                  type="number"
+                  size="md"
+                  icon="fitness_center"
+                  [label]="'PRODUCT_MANAGE.PROTEINS' | translate"
+                  placeholder="0"
+                  [required]="true"
+                  [readonly]="recipeForm.controls.calculateNutritionAutomatically.value"
+                  [tintColor]="nutrientFillColors.proteins"
+                  [textColor]="nutrientTextColors.proteins"
+                />
+                <fd-ui-nutrient-input
+                  class="recipe-manage__nutrition-input recipe-manage__nutrition-input--macro"
+                  formControlName="manualFats"
+                  type="number"
+                  size="md"
+                  icon="opacity"
+                  [label]="'PRODUCT_MANAGE.FATS' | translate"
+                  placeholder="0"
+                  [required]="true"
+                  [readonly]="recipeForm.controls.calculateNutritionAutomatically.value"
+                  [tintColor]="nutrientFillColors.fats"
+                  [textColor]="nutrientTextColors.fats"
+                />
+                <fd-ui-nutrient-input
+                  class="recipe-manage__nutrition-input recipe-manage__nutrition-input--macro"
+                  formControlName="manualCarbs"
+                  type="number"
+                  size="md"
+                  icon="grain"
+                  [label]="'PRODUCT_MANAGE.CARBS' | translate"
+                  placeholder="0"
+                  [required]="true"
+                  [readonly]="recipeForm.controls.calculateNutritionAutomatically.value"
+                  [tintColor]="nutrientFillColors.carbs"
+                  [textColor]="nutrientTextColors.carbs"
+                />
+                <fd-ui-nutrient-input
+                  class="recipe-manage__nutrition-input recipe-manage__nutrition-input--macro"
+                  formControlName="manualFiber"
+                  type="number"
+                  size="md"
+                  icon="spa"
+                  [label]="'PRODUCT_MANAGE.FIBER' | translate"
+                  placeholder="0"
+                  [readonly]="recipeForm.controls.calculateNutritionAutomatically.value"
+                  [tintColor]="nutrientFillColors.fiber"
+                  [textColor]="nutrientTextColors.fiber"
+                />
               </div>
 
-              <div class="recipe-manage__facts-grid">
-                <fd-ui-accent-surface
-                  class="recipe-manage__macro-card"
-                  accentSide="top"
-                  [accentColor]="chartColors.proteins"
-                  [tinted]="true"
-                >
-                  <div class="recipe-manage__fact-label">{{ 'NUTRIENTS.PROTEINS' | translate }}</div>
-                  <div class="recipe-manage__input-field recipe-manage__input-field--macro">
-                    <input
-                      class="recipe-manage__input recipe-manage__input--macro"
-                      type="number"
-                      step="0.1"
-                      formControlName="manualProteins"
-                      [readonly]="recipeForm.controls.calculateNutritionAutomatically.value"
-                      inputmode="decimal"
-                    />
-                    <span class="recipe-manage__input-unit">{{ 'PRODUCT_AMOUNT_UNITS_SHORT.G' | translate }}</span>
-                  </div>
-                  @if (getFieldError('manualProteins')) {
-                    <div class="recipe-manage__input-error">{{ getFieldError('manualProteins') }}</div>
-                  }
-                </fd-ui-accent-surface>
-
-                <fd-ui-accent-surface
-                  class="recipe-manage__macro-card"
-                  accentSide="top"
-                  [accentColor]="chartColors.fats"
-                  [tinted]="true"
-                >
-                  <div class="recipe-manage__fact-label">{{ 'NUTRIENTS.FATS' | translate }}</div>
-                  <div class="recipe-manage__input-field recipe-manage__input-field--macro">
-                    <input
-                      class="recipe-manage__input recipe-manage__input--macro"
-                      type="number"
-                      step="0.1"
-                      formControlName="manualFats"
-                      [readonly]="recipeForm.controls.calculateNutritionAutomatically.value"
-                      inputmode="decimal"
-                    />
-                    <span class="recipe-manage__input-unit">{{ 'PRODUCT_AMOUNT_UNITS_SHORT.G' | translate }}</span>
-                  </div>
-                  @if (getFieldError('manualFats')) {
-                    <div class="recipe-manage__input-error">{{ getFieldError('manualFats') }}</div>
-                  }
-                </fd-ui-accent-surface>
-
-                <fd-ui-accent-surface
-                  class="recipe-manage__macro-card"
-                  accentSide="top"
-                  [accentColor]="chartColors.carbs"
-                  [tinted]="true"
-                >
-                  <div class="recipe-manage__fact-label">{{ 'NUTRIENTS.CARBS' | translate }}</div>
-                  <div class="recipe-manage__input-field recipe-manage__input-field--macro">
-                    <input
-                      class="recipe-manage__input recipe-manage__input--macro"
-                      type="number"
-                      step="0.1"
-                      formControlName="manualCarbs"
-                      [readonly]="recipeForm.controls.calculateNutritionAutomatically.value"
-                      inputmode="decimal"
-                    />
-                    <span class="recipe-manage__input-unit">{{ 'PRODUCT_AMOUNT_UNITS_SHORT.G' | translate }}</span>
-                  </div>
-                  @if (getFieldError('manualCarbs')) {
-                    <div class="recipe-manage__input-error">{{ getFieldError('manualCarbs') }}</div>
-                  }
-                </fd-ui-accent-surface>
-
-                <fd-ui-accent-surface
-                  class="recipe-manage__macro-card"
-                  accentSide="top"
-                  [accentColor]="chartColors.fiber"
-                  [tinted]="true"
-                >
-                  <div class="recipe-manage__fact-label">{{ 'NUTRIENTS.FIBER' | translate }}</div>
-                  <div class="recipe-manage__input-field recipe-manage__input-field--macro">
-                    <input
-                      class="recipe-manage__input recipe-manage__input--macro"
-                      type="number"
-                      step="0.1"
-                      formControlName="manualFiber"
-                      [readonly]="recipeForm.controls.calculateNutritionAutomatically.value"
-                      inputmode="decimal"
-                    />
-                    <span class="recipe-manage__input-unit">{{ 'PRODUCT_AMOUNT_UNITS_SHORT.G' | translate }}</span>
-                  </div>
-                  @if (getFieldError('manualFiber')) {
-                    <div class="recipe-manage__input-error">{{ getFieldError('manualFiber') }}</div>
-                  }
-                </fd-ui-accent-surface>
-
-                <fd-ui-accent-surface
-                  class="recipe-manage__macro-card"
-                  accentSide="top"
-                  [accentColor]="chartColors.alcohol"
-                  [tinted]="true"
-                >
-                  <div class="recipe-manage__fact-label">{{ 'NUTRIENTS.ALCOHOL' | translate }}</div>
-                  <div class="recipe-manage__input-field recipe-manage__input-field--macro">
-                    <input
-                      class="recipe-manage__input recipe-manage__input--macro"
-                      type="number"
-                      step="0.1"
-                      formControlName="manualAlcohol"
-                      [readonly]="recipeForm.controls.calculateNutritionAutomatically.value"
-                      inputmode="decimal"
-                    />
-                    <span class="recipe-manage__input-unit">{{ 'PRODUCT_AMOUNT_UNITS_SHORT.G' | translate }}</span>
-                  </div>
-                  @if (getFieldError('manualAlcohol')) {
-                    <div class="recipe-manage__input-error">{{ getFieldError('manualAlcohol') }}</div>
-                  }
-                </fd-ui-accent-surface>
-              </div>
+              <fd-ui-nutrient-input
+                class="recipe-manage__nutrition-input recipe-manage__nutrition-input--alcohol"
+                formControlName="manualAlcohol"
+                type="number"
+                size="md"
+                icon="wine_bar"
+                variant="tinted"
+                valueAlign="left"
+                [labelUppercase]="false"
+                [label]="'PRODUCT_MANAGE.ALCOHOL' | translate"
+                placeholder="0"
+                [readonly]="recipeForm.controls.calculateNutritionAutomatically.value"
+                [tintColor]="'rgba(148, 163, 184, 0.10)'"
+              />
             </div>
 
             @if (!recipeForm.controls.calculateNutritionAutomatically.value) {

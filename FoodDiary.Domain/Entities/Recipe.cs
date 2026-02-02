@@ -11,6 +11,7 @@ namespace FoodDiary.Domain.Entities;
 public sealed class Recipe : AggregateRoot<RecipeId> {
     public string Name { get; private set; } = string.Empty;
     public string? Description { get; private set; }
+    public string? Comment { get; private set; }
     public string? Category { get; private set; }
     public string? ImageUrl { get; private set; }
     public ImageAssetId? ImageAssetId { get; private set; }
@@ -53,6 +54,7 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
         string name,
         int servings,
         string? description = null,
+        string? comment = null,
         string? category = null,
         string? imageUrl = null,
         ImageAssetId? imageAssetId = null,
@@ -65,6 +67,7 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
             Name = name,
             Servings = servings,
             Description = description,
+            Comment = comment,
             Category = category,
             ImageUrl = imageUrl,
             ImageAssetId = imageAssetId,
@@ -79,6 +82,7 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
     public void Update(
         string? name = null,
         string? description = null,
+        string? comment = null,
         string? category = null,
         string? imageUrl = null,
         ImageAssetId? imageAssetId = null,
@@ -88,6 +92,7 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
         Visibility? visibility = null) {
         if (name is not null) Name = name;
         if (description is not null) Description = description;
+        if (comment is not null) Comment = comment;
         if (category is not null) Category = category;
         if (imageUrl is not null) ImageUrl = imageUrl;
         if (imageAssetId.HasValue) ImageAssetId = imageAssetId;

@@ -469,6 +469,8 @@
         "NAME_PLACEHOLDER": "Enter recipe name",
         "DESCRIPTION": "Description",
         "DESCRIPTION_PLACEHOLDER": "Add a short description",
+        "COMMENT": "Comment",
+        "COMMENT_PLACEHOLDER": "Enter a comment",
         "CATEGORY": "Category",
         "CATEGORY_PLACEHOLDER": "e.g. Breakfast, Dessert",
         "IMAGE": "Image",
@@ -537,7 +539,8 @@
             "SERVINGS": "Servings",
             "TOTAL_TIME": "Total time",
             "INGREDIENTS": "Ingredients",
-            "VISIBILITY": "Visibility"
+            "VISIBILITY": "Visibility",
+            "COMMENT": "Comment"
         }
     },
     "PRODUCT_DETAIL": {

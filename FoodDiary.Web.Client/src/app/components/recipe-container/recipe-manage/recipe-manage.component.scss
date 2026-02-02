@@ -89,6 +89,12 @@
             gap: $gap-m;
         }
 
+        &--facts {
+            ::ng-deep .fd-ui-card {
+                padding-bottom: $gap-l;
+            }
+        }
+
         ::ng-deep .fd-ui-card__header {
             margin-bottom: $gap-s;
             align-items: center;
@@ -264,134 +270,20 @@
         gap: $gap-s;
     }
 
-    &__calories-label {
-        font-weight: 600;
-        color: #0f172a;
-    }
-
-    &__nutrition-grid {
+    &__nutrition {
         display: flex;
         flex-direction: column;
         gap: $gap-m;
     }
 
-    &__calories-input {
-        display: flex;
-        flex-direction: column;
-        gap: $gap-xs;
+    &__nutrition-input {
+        width: 100%;
     }
 
-    &__input-label {
-        font-weight: 700;
-        color: #475569;
-    }
-
-    &__input-field {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) auto;
-        align-items: baseline;
-        column-gap: $gap-s;
-        padding: 12px 14px;
-        border-radius: 16px;
-        border: 1px solid rgba(15, 23, 42, 0.08);
-        background: rgba(255, 255, 255, 0.9);
-        box-shadow:
-            inset 0 1px 0 rgba(255, 255, 255, 0.7),
-            0 10px 30px rgba(15, 23, 42, 0.06);
-
-        &--calories {
-            gap: $gap-s;
-        }
-
-        &--macro {
-            padding: 8px 10px;
-            border-radius: 12px;
-            background: #ffffff;
-            box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.06);
-        }
-    }
-
-    &__input {
-        flex: 1;
-        min-width: 0;
-        border: none;
-        outline: none;
-        background: transparent;
-        font-weight: 800;
-        font-size: 1.25rem;
-        color: #0f172a;
-        padding: 2px 0;
-
-        &::-webkit-outer-spin-button,
-        &::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-
-        &[type='number'] {
-            -moz-appearance: textfield;
-        }
-
-        &:focus {
-            outline: none;
-        }
-
-        &[readonly] {
-            color: #94a3b8;
-        }
-    }
-
-    &__input--calories {
-        font-size: 2.6rem;
-        line-height: 1.1;
-        text-align: left;
-    }
-
-    &__input--macro {
-        font-size: 1.25rem;
-        text-align: right;
-    }
-
-    &__input-unit {
-        color: #475569;
-        font-weight: 700;
-        flex: 0 0 auto;
-        min-width: 38px;
-        white-space: nowrap;
-        justify-self: end;
-    }
-
-    .recipe-manage__input[readonly] + .recipe-manage__input-unit {
-        color: #94a3b8;
-    }
-
-    &__facts-grid {
+    &__nutrition-grid {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: $gap-s;
-    }
-
-    &__macro-card {
-        padding: $gap-m;
-        border-radius: 16px;
-        background: rgba(255, 255, 255, 0.9);
-        border: 1px solid rgba(15, 23, 42, 0.08);
-        box-shadow:
-            inset 0 1px 0 rgba(255, 255, 255, 0.7),
-            0 10px 30px rgba(15, 23, 42, 0.06);
-        display: flex;
-        flex-direction: column;
-        gap: 6px;
-    }
-
-    &__fact-label {
-        font-size: 0.9rem;
-        color: #64748b;
-    }
-
-    &__input-error {
-        color: #b3261e;
-        font-size: 0.85rem;
     }
 }
 

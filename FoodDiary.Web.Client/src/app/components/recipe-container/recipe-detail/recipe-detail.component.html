@@ -54,6 +54,16 @@
                         <strong class="recipe-detail__surface-value">{{ ingredientCount }}</strong>
                     </fd-ui-accent-surface>
                 </div>
+                @if (recipe.comment) {
+                    <fd-ui-accent-surface class="recipe-detail__surface recipe-detail__surface--summary recipe-detail__surface--comment"
+                        accentSide="top"
+                        accentColor="var(--fd-color-primary-300, #93C5FD)"
+                        [tinted]="true"
+                    >
+                        <span class="recipe-detail__surface-label">{{ 'RECIPE_DETAIL.SUMMARY.COMMENT' | translate }}</span>
+                        <span class="recipe-detail__surface-value">{{ recipe.comment }}</span>
+                    </fd-ui-accent-surface>
+                }
             }
             @case ('nutrients') {
                 <div class="recipe-detail__nutrients">

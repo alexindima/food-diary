@@ -435,6 +435,8 @@
         "NAME_PLACEHOLDER": "Введите название рецепта",
         "DESCRIPTION": "Описание",
         "DESCRIPTION_PLACEHOLDER": "Кратко опишите блюдо",
+        "COMMENT": "Комментарий",
+        "COMMENT_PLACEHOLDER": "Введите комментарий",
         "CATEGORY": "Категория",
         "CATEGORY_PLACEHOLDER": "например: Завтрак, Десерт",
         "IMAGE": "Изображение",
@@ -503,7 +505,8 @@
             "SERVINGS": "Порции",
             "TOTAL_TIME": "Общее время",
             "INGREDIENTS": "Ингредиенты",
-            "VISIBILITY": "Видимость"
+            "VISIBILITY": "Видимость",
+            "COMMENT": "Комментарий"
         }
     },
     "PRODUCT_DETAIL": {

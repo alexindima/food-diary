@@ -10,6 +10,7 @@ export interface Recipe {
     id: string;
     name: string;
     description?: string | null;
+    comment?: string | null;
     category?: string | null;
     imageUrl?: string | null;
     imageAssetId?: string | null;
@@ -69,6 +70,7 @@ export interface RecipeFilters {
 export interface RecipeDto {
     name: string;
     description?: string | null;
+    comment?: string | null;
     category?: string | null;
     imageUrl?: string | null;
     imageAssetId?: string | null;

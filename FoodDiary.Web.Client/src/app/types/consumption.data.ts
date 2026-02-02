@@ -141,6 +141,7 @@ export const createEmptyProductSnapshot = (): Product => ({
 export const createEmptyRecipeSnapshot = (): Recipe => ({
     id: '',
     name: '',
+    comment: null,
     servings: 1,
     visibility: RecipeVisibility.Private,
     usageCount: 0,

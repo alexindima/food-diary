@@ -31,14 +31,13 @@ import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea.compone
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiSelectComponent, FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
 import { FdUiCheckboxComponent } from 'fd-ui-kit/checkbox/fd-ui-checkbox.component';
-import { FdUiAccentSurfaceComponent } from 'fd-ui-kit/accent-surface/fd-ui-accent-surface.component';
+import { FdUiNutrientInputComponent } from 'fd-ui-kit/nutrient-input/fd-ui-nutrient-input.component';
 import { CommonModule } from '@angular/common';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { PageHeaderComponent } from '../../shared/page-header/page-header.component';
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
 import { ImageUploadFieldComponent } from '../../shared/image-upload-field/image-upload-field.component';
 import { ImageSelection } from '../../../types/image-upload.data';
-import { CHART_COLORS } from '../../../constants/chart-colors';
 import { NutritionCalculationService } from '../../../services/nutrition-calculation.service';
 
 @Component({
@@ -55,7 +54,7 @@ import { NutritionCalculationService } from '../../../services/nutrition-calcula
         FdUiButtonComponent,
         FdUiSelectComponent,
         FdUiCheckboxComponent,
-        FdUiAccentSurfaceComponent,
+        FdUiNutrientInputComponent,
         PageHeaderComponent,
         FdPageContainerDirective,
         ImageUploadFieldComponent,
@@ -70,7 +69,30 @@ export class RecipeManageComponent implements OnInit {
     private readonly navigationService = inject(NavigationService);
     private readonly nutritionCalculationService = inject(NutritionCalculationService);
 
-    public readonly chartColors = CHART_COLORS;
+    private readonly nutrientFillAlpha = 0.14;
+    private readonly nutrientPalette = {
+        calories: '#E11D48',
+        proteins: '#0284C7',
+        fats: '#C2410C',
+        carbs: '#0F766E',
+        fiber: '#7E22CE',
+        alcohol: '#64748B',
+    };
+    public readonly nutrientFillColors = {
+        calories: this.applyAlpha(this.nutrientPalette.calories, this.nutrientFillAlpha),
+        fiber: this.applyAlpha(this.nutrientPalette.fiber, this.nutrientFillAlpha),
+        proteins: this.applyAlpha(this.nutrientPalette.proteins, this.nutrientFillAlpha),
+        fats: this.applyAlpha(this.nutrientPalette.fats, this.nutrientFillAlpha),
+        carbs: this.applyAlpha(this.nutrientPalette.carbs, this.nutrientFillAlpha),
+        alcohol: this.applyAlpha(this.nutrientPalette.alcohol, this.nutrientFillAlpha),
+    };
+    public readonly nutrientTextColors = {
+        calories: this.nutrientPalette.calories,
+        fiber: this.nutrientPalette.fiber,
+        proteins: this.nutrientPalette.proteins,
+        fats: this.nutrientPalette.fats,
+        carbs: this.nutrientPalette.carbs,
+    };
     private readonly calorieMismatchThreshold = 0.2;
 
     public readonly nutritionWarning = computed<CalorieMismatchWarning | null>(() => {
@@ -121,6 +143,7 @@ export class RecipeManageComponent implements OnInit {
         this.recipeForm = new FormGroup<RecipeFormData>({
             name: new FormControl<string>('', { nonNullable: true, validators: [Validators.required] }),
             description: new FormControl('', [Validators.maxLength(1000)]),
+            comment: new FormControl<string | null>(null, [Validators.maxLength(1000)]),
             category: new FormControl<string | null>(null),
             imageUrl: new FormControl<ImageSelection | null>(null),
             prepTime: new FormControl<number | null>(null, [Validators.required, Validators.min(1)]),
@@ -272,6 +295,7 @@ export class RecipeManageComponent implements OnInit {
         this.recipeForm.patchValue({
             name: recipeData.name,
             description: recipeData.description ?? '',
+            comment: recipeData.comment ?? null,
             category: recipeData.category ?? null,
             imageUrl: {
                 url: recipeData.imageUrl ?? null,
@@ -500,6 +524,7 @@ export class RecipeManageComponent implements OnInit {
         return {
             name: formValue.name,
             description: formValue.description || null,
+            comment: formValue.comment || null,
             category: formValue.category || null,
             imageUrl: formValue.imageUrl?.url || null,
             imageAssetId: formValue.imageUrl?.assetId || null,
@@ -689,8 +714,21 @@ export class RecipeManageComponent implements OnInit {
         const validators = isAuto ? [] : [Validators.required, Validators.min(0)];
         this.getManualNutritionControls().forEach(control => {
             control.setValidators(validators);
+            if (isAuto) {
+                control.disable({ emitEvent: false });
+            } else {
+                control.enable({ emitEvent: false });
+            }
             control.updateValueAndValidity({ emitEvent: false });
         });
+
+        const alcoholControl = this.recipeForm.controls.manualAlcohol;
+        if (isAuto) {
+            alcoholControl.disable({ emitEvent: false });
+        } else {
+            alcoholControl.enable({ emitEvent: false });
+        }
+        alcoholControl.updateValueAndValidity({ emitEvent: false });
     }
 
     private getManualNutritionControls(): Array<FormControl<number | null>> {
@@ -720,11 +758,22 @@ export class RecipeManageComponent implements OnInit {
             ? RecipeVisibility.Private
             : RecipeVisibility.Public;
     }
+
+    private applyAlpha(hexColor: string, alpha: number): string {
+        const normalized = hexColor.replace('#', '');
+        const value = parseInt(normalized, 16);
+        const r = (value >> 16) & 255;
+        const g = (value >> 8) & 255;
+        const b = value & 255;
+
+        return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+    }
 }
 
 interface RecipeFormValues {
     name: string;
     description: string | null;
+    comment: string | null;
     category: string | null;
     imageUrl: ImageSelection | null;
     prepTime: number | null;
