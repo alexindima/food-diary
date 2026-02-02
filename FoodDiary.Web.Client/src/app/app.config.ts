@@ -23,6 +23,7 @@ import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import { FdUiSnackBarModule } from 'fd-ui-kit/material';
 import { UserService } from './services/user.service';
 import { firstValueFrom } from 'rxjs';
+import { environment } from '../environments/environment';
 
 export const appConfig: ApplicationConfig = {
     providers: [
@@ -61,7 +62,7 @@ export const appConfig: ApplicationConfig = {
         ),
         provideTranslateHttpLoader({
             prefix: './assets/i18n/',
-            suffix: '.json',
+            suffix: `.json?v=${environment.buildVersion ?? 'dev'}`,
         }),
         provideCharts(withDefaultRegisterables()),
         provideServiceWorker('ngsw-worker.js', {

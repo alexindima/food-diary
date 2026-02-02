@@ -21,4 +21,5 @@ export const environment: AppConfig = {
     },
     googleClientId: '958507321562-8btd704hjhgsl7niklereh81utg5p780.apps.googleusercontent.com',
     telegramBotUsername: 'fooddiaryclub_bot',
+    buildVersion: '__BUILD_VERSION__',
 };

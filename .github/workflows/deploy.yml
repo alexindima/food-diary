@@ -43,6 +43,9 @@ jobs:
       - name: Build Angular frontend
         run: |
           cd ${{ env.FRONTEND_DIR }}
+          BUILD_VERSION="${GITHUB_SHA::8}"
+          sed -i "s/__BUILD_VERSION__/${BUILD_VERSION}/g" src/environments/environment.prod.ts
+          sed -i "s/__BUILD_VERSION__/${BUILD_VERSION}/g" src/environments/environment.staging.ts
           npm install
           npm run build:prod
           echo "Frontend build completed."
