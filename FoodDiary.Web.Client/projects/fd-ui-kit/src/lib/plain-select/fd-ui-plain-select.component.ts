@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, forwardRef, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation, forwardRef, input } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
 import { FdUiFieldSize } from '../types/field-size.type';
 import { FdUiSelectOption } from '../select/fd-ui-select.component';
 
@@ -10,10 +11,11 @@ let uniqueId = 0;
 @Component({
     selector: 'fd-ui-plain-select',
     standalone: true,
-    imports: [CommonModule, MatIconModule],
+    imports: [CommonModule, MatIconModule, MatMenuModule],
     templateUrl: './fd-ui-plain-select.component.html',
     styleUrls: ['./fd-ui-plain-select.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,
@@ -23,6 +25,7 @@ let uniqueId = 0;
     ],
 })
 export class FdUiPlainSelectComponent<T = unknown> implements ControlValueAccessor {
+    protected readonly isEqual = Object.is;
     public readonly id = input(`fd-ui-plain-select-${uniqueId++}`);
     public readonly label = input<string>();
     public readonly placeholder = input<string>();
@@ -35,6 +38,7 @@ export class FdUiPlainSelectComponent<T = unknown> implements ControlValueAccess
     protected internalValue: T | null = null;
     protected disabled = false;
     protected isFocused = false;
+    protected isOpen = false;
 
     private onChange: (value: T | null) => void = () => undefined;
     private onTouched: () => void = () => undefined;
@@ -44,7 +48,7 @@ export class FdUiPlainSelectComponent<T = unknown> implements ControlValueAccess
     }
 
     protected get selectedIndex(): number {
-        return this.options().findIndex(option => Object.is(option.value, this.internalValue));
+        return this.options().findIndex(option => this.isEqual(option.value, this.internalValue));
     }
 
     protected get shouldFloatLabel(): boolean {
@@ -67,21 +71,14 @@ export class FdUiPlainSelectComponent<T = unknown> implements ControlValueAccess
         this.disabled = isDisabled;
     }
 
-    protected onNativeChange(rawIndex: string): void {
+    protected onOptionSelect(option: FdUiSelectOption<T>): void {
         if (this.disabled) {
             return;
         }
 
-        const optionIndex = Number(rawIndex);
-        if (!Number.isInteger(optionIndex) || optionIndex < 0 || optionIndex >= this.options().length) {
-            this.internalValue = null;
-            this.onChange(null);
-            return;
-        }
-
-        const value = this.options()[optionIndex]?.value ?? null;
-        this.internalValue = value;
-        this.onChange(value);
+        this.internalValue = option.value;
+        this.onChange(this.internalValue);
+        this.onTouched();
     }
 
     protected onFocus(): void {
@@ -90,6 +87,44 @@ export class FdUiPlainSelectComponent<T = unknown> implements ControlValueAccess
 
     protected onBlur(): void {
         this.isFocused = false;
+        this.isOpen = false;
         this.onTouched();
+    }
+
+    protected onMenuOpened(): void {
+        this.isOpen = true;
+        this.onFocus();
+    }
+
+    protected onMenuClosed(): void {
+        this.isOpen = false;
+        this.onBlur();
+    }
+
+    protected get selectedLabel(): string {
+        if (this.selectedIndex < 0) {
+            return this.placeholder() ?? '';
+        }
+
+        return this.options()[this.selectedIndex]?.label ?? '';
+    }
+
+    protected get hasValue(): boolean {
+        return this.selectedIndex >= 0;
+    }
+
+    protected openMenu(event: MouseEvent, control: HTMLButtonElement): void {
+        if (this.disabled) {
+            return;
+        }
+
+        const target = event.target as HTMLElement | null;
+        if (target?.closest('.fd-ui-plain-select__control')) {
+            control.focus();
+            return;
+        }
+
+        control.click();
+        control.focus();
     }
 }

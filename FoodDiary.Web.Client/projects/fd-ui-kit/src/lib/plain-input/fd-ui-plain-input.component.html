@@ -1,11 +1,12 @@
 <div class="fd-ui-plain-input" [ngClass]="[sizeClass, error() ? 'fd-ui-plain-input--has-error' : '', shouldFloatLabel ? 'fd-ui-plain-input--floating' : '']">
-  <div class="fd-ui-plain-input__control-wrap" [style.background]="fillColor() || null">
+  <div class="fd-ui-plain-input__control-wrap" [style.background]="fillColor() || null" (click)="focusControl($event, control)">
     @if (label()) {
       <label class="fd-ui-plain-input__label" [attr.for]="id()">
         <span class="fd-ui-plain-input__label-text">{{ label() }}</span>@if (required()) {<span class="fd-ui-plain-input__required">*</span>}
       </label>
     }
     <input
+      #control
       class="fd-ui-plain-input__control"
       [id]="id()"
       [attr.type]="type()"

@@ -1,11 +1,12 @@
 <div class="fd-ui-plain-textarea" [ngClass]="[sizeClass, error() ? 'fd-ui-plain-textarea--has-error' : '', shouldFloatLabel ? 'fd-ui-plain-textarea--floating' : '']">
-  <div class="fd-ui-plain-textarea__control-wrap" [style.background]="fillColor() || null">
+  <div class="fd-ui-plain-textarea__control-wrap" [style.background]="fillColor() || null" (click)="focusControl(control)">
     @if (label()) {
       <label class="fd-ui-plain-textarea__label" [attr.for]="id()">
         <span class="fd-ui-plain-textarea__label-text">{{ label() }}</span>@if (required()) {<span class="fd-ui-plain-textarea__required">*</span>}
       </label>
     }
     <textarea
+      #control
       class="fd-ui-plain-textarea__control"
       [id]="id()"
       [value]="internalValue"

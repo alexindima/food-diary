@@ -84,4 +84,12 @@ export class FdUiPlainTextareaComponent implements ControlValueAccessor {
     protected get shouldShowPlaceholder(): boolean {
         return this.isFocused && this.internalValue.trim().length === 0;
     }
+
+    protected focusControl(control: HTMLTextAreaElement): void {
+        if (this.disabled) {
+            return;
+        }
+
+        control.focus();
+    }
 }

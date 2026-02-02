@@ -100,4 +100,17 @@ export class FdUiPlainInputComponent implements ControlValueAccessor {
 
         this.suffixButtonClicked.emit();
     }
+
+    protected focusControl(event: MouseEvent, control: HTMLInputElement): void {
+        if (this.disabled) {
+            return;
+        }
+
+        const target = event.target as HTMLElement | null;
+        if (target?.closest('.fd-ui-plain-input__suffix')) {
+            return;
+        }
+
+        control.focus();
+    }
 }
