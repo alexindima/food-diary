@@ -62,6 +62,15 @@
     position: relative;
 }
 
+.fd-ui-plain-input__control-wrap--with-prefix {
+    padding-left: 44px;
+}
+
+.fd-ui-plain-input__control-wrap--with-prefix .fd-ui-plain-input__label {
+    left: 44px;
+    max-width: calc(100% - 58px);
+}
+
 .fd-ui-plain-input__control-wrap:focus-within {
     border-color: #3b82f6;
 }
@@ -76,6 +85,20 @@
     color: #1e293b;
     font: inherit;
     margin-top: 0;
+}
+
+.fd-ui-plain-input__prefix {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    color: #64748b;
+    pointer-events: none;
 }
 
 .fd-ui-plain-input__control::placeholder {

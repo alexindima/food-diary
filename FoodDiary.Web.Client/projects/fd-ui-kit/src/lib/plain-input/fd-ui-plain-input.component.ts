@@ -32,6 +32,7 @@ export class FdUiPlainInputComponent implements ControlValueAccessor {
     public readonly maxLength = input<number>();
     public readonly suffixButtonIcon = input<string>();
     public readonly suffixButtonAriaLabel = input<string>();
+    public readonly prefixIcon = input<string>();
     public readonly step = input<string | number>();
     public readonly size = input<FdUiFieldSize>('md');
     public readonly fillColor = input<string | null>(null);

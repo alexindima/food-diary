@@ -11,7 +11,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { FormGroupControls } from '../../../types/common.data';
 import { BarcodeScannerComponent } from '../../shared/barcode-scanner/barcode-scanner.component';
 import { PageHeaderComponent } from '../../shared/page-header/page-header.component';
-import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
+import { FdUiPlainInputComponent } from 'fd-ui-kit/plain-input/fd-ui-plain-input.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.component';
@@ -34,7 +34,7 @@ import { QuickConsumptionService } from '../../../services/quick-consumption.ser
         CommonModule,
         ReactiveFormsModule,
         TranslatePipe,
-        FdUiInputComponent,
+        FdUiPlainInputComponent,
         FdUiButtonComponent,
         FdUiLoaderComponent,
         FdUiPaginationComponent,

@@ -323,7 +323,8 @@
         "DEFAULT_SERVING": "Тип продукта",
         "GRAMS": "г",
         "KCAL": "ккал",
-        "DELETE_ERROR": "Не удалось удалить продукт. Попробуйте ещё раз."
+        "DELETE_ERROR": "Не удалось удалить продукт. Попробуйте ещё раз.",
+        "SEARCH_LABEL": "Поиск"
     },
     "PRODUCT_CARD": {
         "ADD_TO_CONSUMPTION": "Добавить к приему"

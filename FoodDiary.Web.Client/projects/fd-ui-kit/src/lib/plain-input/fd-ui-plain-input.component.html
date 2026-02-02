@@ -1,9 +1,19 @@
 <div class="fd-ui-plain-input" [ngClass]="[sizeClass, error() ? 'fd-ui-plain-input--has-error' : '', shouldFloatLabel ? 'fd-ui-plain-input--floating' : '']">
-  <div class="fd-ui-plain-input__control-wrap" [style.background]="fillColor() || null" (click)="focusControl($event, control)">
+  <div
+    class="fd-ui-plain-input__control-wrap"
+    [class.fd-ui-plain-input__control-wrap--with-prefix]="prefixIcon()"
+    [style.background]="fillColor() || null"
+    (click)="focusControl($event, control)"
+  >
     @if (label()) {
       <label class="fd-ui-plain-input__label" [attr.for]="id()">
         <span class="fd-ui-plain-input__label-text">{{ label() }}</span>@if (required()) {<span class="fd-ui-plain-input__required">*</span>}
       </label>
+    }
+    @if (prefixIcon()) {
+      <span class="fd-ui-plain-input__prefix" aria-hidden="true">
+        <mat-icon>{{ prefixIcon() }}</mat-icon>
+      </span>
     }
     <input
       #control

@@ -357,7 +357,8 @@
         "DEFAULT_SERVING": "Product type",
         "GRAMS": "g",
         "KCAL": "kcal",
-        "DELETE_ERROR": "Unable to delete the product. Please try again."
+        "DELETE_ERROR": "Unable to delete the product. Please try again.",
+        "SEARCH_LABEL": "Search"
     },
     "PRODUCT_CARD": {
         "ADD_TO_CONSUMPTION": "Add to meal"
@@ -495,7 +496,6 @@
         "MANUAL_FATS": "Fats",
         "MANUAL_CARBS": "Carbs",
         "MANUAL_FIBER": "Fiber",
-        "MANUAL_ALCOHOL": "Alcohol",
         "MANUAL_ALCOHOL": "Alcohol",
         "REMOVE_STEP": "Remove step",
         "VISIBILITY_GROUP_TITLE": "Visibility",

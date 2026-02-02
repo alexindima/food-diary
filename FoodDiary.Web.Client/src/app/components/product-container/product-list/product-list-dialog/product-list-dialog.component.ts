@@ -4,7 +4,7 @@ import { ProductListBaseComponent } from '../product-list-base.component';
 import { Product } from '../../../../types/product.data';
 import { TranslatePipe } from '@ngx-translate/core';
 import { ProductAddDialogComponent } from '../../product-manage/product-add-dialog/product-add-dialog.component';
-import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
+import { FdUiPlainInputComponent } from 'fd-ui-kit/plain-input/fd-ui-plain-input.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.component';
@@ -24,7 +24,7 @@ import { ProductCardComponent } from '../../../shared/product-card/product-card.
     imports: [
         ReactiveFormsModule,
         TranslatePipe,
-        FdUiInputComponent,
+        FdUiPlainInputComponent,
         FdUiButtonComponent,
         FdUiLoaderComponent,
         FdUiPaginationComponent,

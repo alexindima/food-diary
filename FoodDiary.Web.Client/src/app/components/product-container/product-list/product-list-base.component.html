@@ -7,16 +7,14 @@
         <ng-container fdPageHeaderActions>
             <div class="product-list__controls">
                 <form class="product-list__search-form" [formGroup]="searchForm">
-                    <fd-ui-input class="product-list__search-input"
+                    <fd-ui-plain-input class="product-list__search-input"
                         formControlName="search"
-                        prefixIcon="search"
-                        [label]="''"
-                        [clearable]="true"
+                        size="md"
+                        [label]="'PRODUCT_LIST.SEARCH_LABEL' | translate"
+                        [prefixIcon]="'search'"
                         [placeholder]="'PRODUCT_LIST.SEARCH_PLACEHOLDER' | translate"
-                        [hideSubscript]="true"
-                        suffixButtonIcon="qr_code_scanner"
+                        [suffixButtonIcon]="'qr_code_scanner'"
                         [suffixButtonAriaLabel]="'PRODUCT_LIST.SCAN_BARCODE' | translate"
-                        (cleared)="searchForm.controls.search.setValue('')"
                         (suffixButtonClicked)="openBarcodeScanner()"
                      />
                 </form>

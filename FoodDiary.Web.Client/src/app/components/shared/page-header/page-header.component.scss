@@ -18,4 +18,9 @@
     gap: 12px;
     flex-wrap: wrap;
     width: 100%;
+
+    ::ng-deep .fd-ui-button,
+    ::ng-deep button.fd-ui-button {
+        --fd-button-height: 48px;
+    }
 }
