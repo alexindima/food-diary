@@ -3,18 +3,16 @@
     [subtitle]="data.subtitleKey ? (data.subtitleKey | translate) : undefined"
     size="lg"
 >
-    <fd-ui-satiety-scale layout="grid"
-        [label]="getSelectionLabel()"
-        [hint]="'CONSUMPTION_MANAGE.SATIETY_DIALOG_SUBHINT' | translate"
+    <fd-ui-satiety-scale layout="vertical"
         [ngModel]="selectedValue()"
         (ngModelChange)="onValueSelected($event)"
      />
 
     <div fdUiDialogFooter>
-        <fd-ui-button variant="secondary" fill="text" size="sm" (click)="close()">
+        <fd-ui-button variant="secondary" fill="outline" (click)="close()">
             {{ 'CONSUMPTION_MANAGE.SATIETY_DIALOG_CANCEL' | translate }}
         </fd-ui-button>
-        <fd-ui-button size="sm" (click)="closeWithValue()" [disabled]="selectedValue() === null">
+        <fd-ui-button variant="primary" (click)="closeWithValue()" [disabled]="selectedValue() === null">
             {{ 'CONSUMPTION_MANAGE.SATIETY_DIALOG_APPLY' | translate }}
         </fd-ui-button>
     </div>

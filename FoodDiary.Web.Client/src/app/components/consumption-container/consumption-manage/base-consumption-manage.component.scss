@@ -30,8 +30,9 @@
     &__grid {
         display: grid;
         grid-template-columns: minmax(0, 7fr) minmax(0, 4fr);
-        gap: $gap-l;
-        align-items: flex-start;
+        gap: $gap-xl;
+        align-items: stretch;
+        overflow: visible;
 
         @media #{$media-tablet} {
             grid-template-columns: 1fr;
@@ -42,6 +43,10 @@
         display: flex;
         flex-direction: column;
         gap: $gap-l;
+    }
+
+    &__column--secondary {
+        overflow: visible;
     }
 
     &__column--secondary {
@@ -274,6 +279,77 @@
         gap: $gap-xs;
     }
 
+    &__sticky-stack {
+        position: sticky;
+        top: calc($gap-xl + 8px);
+        display: flex;
+        flex-direction: column;
+        gap: $gap-l;
+        align-self: flex-start;
+        justify-self: stretch;
+        width: 100%;
+
+        @media #{$media-mobile} {
+            position: static;
+        }
+    }
+
+    &__actions-panel {
+        width: 100%;
+    }
+
+    &__footer-actions {
+        display: grid;
+        grid-template-columns: max-content minmax(0, 1fr);
+        gap: $gap-m;
+        align-items: center;
+    }
+
+    &__action-button {
+        min-width: 0;
+        width: 100%;
+    }
+
+    &__action-button--add {
+        --fd-button-border-radius: 18px;
+        --fd-button-padding-x: 16px;
+        --fd-button-padding-y: 8px;
+        font-weight: 800;
+
+        ::ng-deep button,
+        ::ng-deep .fd-ui-button {
+            background: linear-gradient(135deg, #4dabff, #2563eb);
+            border: none;
+            color: #ffffff;
+            box-shadow: 0 10px 26px rgba(37, 99, 235, 0.28);
+        }
+
+        ::ng-deep button:hover:not(:disabled),
+        ::ng-deep .fd-ui-button:hover:not(:disabled) {
+            background: linear-gradient(135deg, #60b6ff, #2f6df2);
+            box-shadow: 0 12px 30px rgba(37, 99, 235, 0.32);
+        }
+
+        ::ng-deep button:active:not(:disabled),
+        ::ng-deep .fd-ui-button:active:not(:disabled) {
+            background: linear-gradient(135deg, #4dabff, #2563eb);
+            box-shadow: none;
+        }
+    }
+
+    &__footer-error {
+        width: 100%;
+        text-align: left;
+        color: $color-no-results;
+    }
+
+    @media #{$media-mobile} {
+        &__footer-actions {
+            grid-template-columns: 1fr;
+            align-items: stretch;
+        }
+    }
+
     &__items-section {
         display: flex;
         flex-direction: column;
@@ -391,31 +467,6 @@
         color: $color-text-main;
     }
 
-    &__footer-actions {
-        display: flex;
-        justify-content: flex-end;
-        gap: $gap-m;
-        flex-wrap: wrap;
-    }
-
-    &__action-button {
-        min-width: 220px;
-    }
-
-    &__footer-error {
-        text-align: right;
-    }
-
-    @media #{$media-mobile} {
-        &__action-button {
-            width: 100%;
-        }
-
-        &__footer-actions {
-            flex-direction: column;
-            align-items: stretch;
-        }
-    }
 }
 
 .consumption-items {

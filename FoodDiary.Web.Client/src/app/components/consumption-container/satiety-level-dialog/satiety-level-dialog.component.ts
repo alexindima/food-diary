@@ -18,6 +18,7 @@ export interface SatietyLevelDialogData {
     selector: 'fd-satiety-level-dialog',
     standalone: true,
     templateUrl: './satiety-level-dialog.component.html',
+    styleUrls: ['./satiety-level-dialog.component.scss'],
     imports: [
     FormsModule,
     TranslateModule,
@@ -36,7 +37,7 @@ export class SatietyLevelDialogComponent {
     public selectedValue = signal<number | null>(null);
 
     public constructor() {
-        this.selectedValue.set(this.data.value ?? null);
+        this.selectedValue.set(this.data.value ?? 0);
     }
 
     public onValueSelected(level: number): void {
