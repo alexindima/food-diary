@@ -706,7 +706,8 @@
         "EDIT_TITLE": "Редактировать прием пищи",
         "ADD_TITLE": "Добавить прием пищи",
         "SUBTITLE": "Записывайте продукты для этого приема",
-        "CHOOSE_DATE": "Дата и время",
+        "CHOOSE_DATE": "Дата",
+        "CHOOSE_TIME": "Время",
         "ITEMS_GROUP_TITLE": "Что было в приеме пищи",
         "ITEM_TYPE_LABEL": "Тип записи",
         "ITEM_TYPE_OPTIONS": {

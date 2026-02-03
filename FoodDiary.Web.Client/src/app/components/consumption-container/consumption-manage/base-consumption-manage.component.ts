@@ -40,11 +40,15 @@ import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
-import { FdUiSelectComponent, FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
-import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea.component';
+import { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiCheckboxComponent } from 'fd-ui-kit/checkbox/fd-ui-checkbox.component';
 import { FdUiIconModule } from 'fd-ui-kit/material';
+import { FdUiNutrientInputComponent } from 'fd-ui-kit/nutrient-input/fd-ui-nutrient-input.component';
+import { FdUiPlainDateInputComponent } from 'fd-ui-kit/plain-date-input/fd-ui-plain-date-input.component';
+import { FdUiPlainTimeInputComponent } from 'fd-ui-kit/plain-time-input/fd-ui-plain-time-input.component';
+import { FdUiPlainSelectComponent } from 'fd-ui-kit/plain-select/fd-ui-plain-select.component';
+import { FdUiPlainTextareaComponent } from 'fd-ui-kit/plain-textarea/fd-ui-plain-textarea.component';
 import {
     SatietyLevelDialogComponent,
     SatietyLevelDialogData,
@@ -88,10 +92,13 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
         NutrientsSummaryComponent,
         FdUiCardComponent,
         FdUiInputComponent,
-        FdUiSelectComponent,
-        FdUiTextareaComponent,
         FdUiButtonComponent,
         FdUiCheckboxComponent,
+        FdUiNutrientInputComponent,
+        FdUiPlainDateInputComponent,
+        FdUiPlainTimeInputComponent,
+        FdUiPlainSelectComponent,
+        FdUiPlainTextareaComponent,
         FdUiIconModule,
         FdUiFormErrorComponent,
         PageHeaderComponent,
@@ -109,6 +116,30 @@ export class BaseConsumptionManageComponent implements OnInit {
     private readonly router = inject(Router);
     private readonly route = inject(ActivatedRoute);
     private readonly recipeServingWeightCache = new Map<string, number | null>();
+    private readonly nutrientFillAlpha = 0.14;
+    private readonly nutrientPalette = {
+        calories: '#E11D48',
+        proteins: '#0284C7',
+        fats: '#C2410C',
+        carbs: '#0F766E',
+        fiber: '#7E22CE',
+        alcohol: '#64748B',
+    };
+    public readonly nutrientFillColors = {
+        calories: this.applyAlpha(this.nutrientPalette.calories, this.nutrientFillAlpha),
+        fiber: this.applyAlpha(this.nutrientPalette.fiber, this.nutrientFillAlpha),
+        proteins: this.applyAlpha(this.nutrientPalette.proteins, this.nutrientFillAlpha),
+        fats: this.applyAlpha(this.nutrientPalette.fats, this.nutrientFillAlpha),
+        carbs: this.applyAlpha(this.nutrientPalette.carbs, this.nutrientFillAlpha),
+        alcohol: this.applyAlpha(this.nutrientPalette.alcohol, this.nutrientFillAlpha),
+    };
+    public readonly nutrientTextColors = {
+        calories: this.nutrientPalette.calories,
+        fiber: this.nutrientPalette.fiber,
+        proteins: this.nutrientPalette.proteins,
+        fats: this.nutrientPalette.fats,
+        carbs: this.nutrientPalette.carbs,
+    };
 
     public consumption = input<Consumption | null>();
     public totalCalories = signal<number>(0);
@@ -128,6 +159,10 @@ export class BaseConsumptionManageComponent implements OnInit {
     public constructor() {
         this.consumptionForm = new FormGroup<ConsumptionFormData>({
             date: new FormControl<string>(this.getDateInputValue(new Date()), {
+                nonNullable: true,
+                validators: Validators.required,
+            }),
+            time: new FormControl<string>(this.getTimeInputValue(new Date()), {
                 nonNullable: true,
                 validators: Validators.required,
             }),
@@ -171,7 +206,7 @@ export class BaseConsumptionManageComponent implements OnInit {
         if (presetMealType) {
             this.consumptionForm.controls.mealType.setValue(presetMealType);
         } else if (!this.consumption()) {
-            this.setAutoMealTypeFromDate(this.consumptionForm.controls.date.value);
+            this.setAutoMealTypeFromDate();
         }
 
         this.prefillFromNavigationState();
@@ -185,8 +220,13 @@ export class BaseConsumptionManageComponent implements OnInit {
         if (!presetMealType && !this.consumption()) {
             this.consumptionForm.controls.date.valueChanges
                 .pipe(takeUntilDestroyed(this.destroyRef))
-                .subscribe(value => {
-                    this.setAutoMealTypeFromDate(value);
+                .subscribe(() => {
+                    this.setAutoMealTypeFromDate();
+                });
+            this.consumptionForm.controls.time.valueChanges
+                .pipe(takeUntilDestroyed(this.destroyRef))
+                .subscribe(() => {
+                    this.setAutoMealTypeFromDate();
                 });
         }
 
@@ -216,7 +256,7 @@ export class BaseConsumptionManageComponent implements OnInit {
         return isValid ? raw : null;
     }
 
-    private setAutoMealTypeFromDate(dateValue?: string | null): void {
+    private setAutoMealTypeFromDate(): void {
         if (this.consumption()) {
             return;
         }
@@ -226,7 +266,7 @@ export class BaseConsumptionManageComponent implements OnInit {
             return;
         }
 
-        const date = dateValue ? new Date(dateValue) : new Date();
+        const date = this.buildDateTime();
         if (Number.isNaN(date.getTime())) {
             return;
         }
@@ -511,11 +551,10 @@ export class BaseConsumptionManageComponent implements OnInit {
             return;
         }
 
-        const dateInput = this.consumptionForm.controls.date.value;
         const mealType = this.consumptionForm.controls.mealType.value;
         const comment = this.consumptionForm.controls.comment.value;
         const formItems = this.consumptionForm.controls.items.value;
-        const consumptionDate = dateInput ? new Date(dateInput) : new Date();
+        const consumptionDate = this.buildDateTime();
 
         const mappedItems: ConsumptionItemManageDto[] = [];
 
@@ -588,6 +627,7 @@ export class BaseConsumptionManageComponent implements OnInit {
     private populateForm(consumption: Consumption): void {
         this.consumptionForm.patchValue({
             date: this.getDateInputValue(new Date(consumption.date)),
+            time: this.getTimeInputValue(new Date(consumption.date)),
             mealType: consumption.mealType ?? null,
             comment: consumption.comment || null,
             imageUrl: {
@@ -752,6 +792,17 @@ export class BaseConsumptionManageComponent implements OnInit {
         });
     }
 
+    private applyAlpha(color: string, alpha: number): string {
+        const trimmed = color.replace('#', '');
+        const r = Number.parseInt(trimmed.slice(0, 2), 16);
+        const g = Number.parseInt(trimmed.slice(2, 4), 16);
+        const b = Number.parseInt(trimmed.slice(4, 6), 16);
+        if ([r, g, b].some(channel => Number.isNaN(channel))) {
+            return color;
+        }
+        return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+    }
+
     private getManualNutritionControls(): Array<FormControl<number | null>> {
         return [
             this.consumptionForm.controls.manualCalories,
@@ -781,6 +832,7 @@ export class BaseConsumptionManageComponent implements OnInit {
                 if (!this.consumption()) {
                     this.consumptionForm.reset({
                         date: this.getDateInputValue(new Date()),
+                        time: this.getTimeInputValue(new Date()),
                         mealType: null,
                         comment: null,
                         isNutritionAutoCalculated: true,
@@ -939,9 +991,23 @@ export class BaseConsumptionManageComponent implements OnInit {
         const year = date.getFullYear();
         const month = this.padNumber(date.getMonth() + 1);
         const day = this.padNumber(date.getDate());
+        return `${year}-${month}-${day}`;
+    }
+
+    private getTimeInputValue(date: Date): string {
         const hours = this.padNumber(date.getHours());
         const minutes = this.padNumber(date.getMinutes());
-        return `${year}-${month}-${day}T${hours}:${minutes}`;
+        return `${hours}:${minutes}`;
+    }
+
+    private buildDateTime(): Date {
+        const dateValue = this.consumptionForm.controls.date.value;
+        const timeValue = this.consumptionForm.controls.time.value;
+        const datePart = dateValue ?? this.getDateInputValue(new Date());
+        const timePart = timeValue ?? this.getTimeInputValue(new Date());
+        const combined = `${datePart}T${timePart}`;
+        const parsed = new Date(combined);
+        return Number.isNaN(parsed.getTime()) ? new Date() : parsed;
     }
 
     private padNumber(value: number): string {
@@ -1047,6 +1113,7 @@ export class BaseConsumptionManageComponent implements OnInit {
 
 type ConsumptionFormValues = {
     date: string;
+    time: string;
     mealType: string | null;
     items: ConsumptionItemFormValues[];
     comment: string | null;

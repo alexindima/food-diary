@@ -66,6 +66,10 @@
     padding-left: 44px;
 }
 
+.fd-ui-plain-input__control-wrap--date {
+    padding-right: 16px;
+}
+
 .fd-ui-plain-input__control-wrap--with-prefix .fd-ui-plain-input__label {
     left: 44px;
     max-width: calc(100% - 58px);
@@ -159,4 +163,10 @@
 .fd-ui-plain-input__control[type='number']::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
+}
+
+.fd-ui-plain-input__control[type='date']::-webkit-calendar-picker-indicator,
+.fd-ui-plain-input__control[type='datetime-local']::-webkit-calendar-picker-indicator,
+.fd-ui-plain-input__control[type='time']::-webkit-calendar-picker-indicator {
+    margin-right: -2px;
 }

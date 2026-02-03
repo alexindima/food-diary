@@ -361,6 +361,9 @@ export class RecipeManageComponent implements OnInit {
                   const foodGroup = ingredientsArray.at(ingredientIndex);
                   const defaultAmount = food.defaultPortionAmount ?? food.baseAmount ?? 0;
                   foodGroup.patchValue({ food, foodName: food.name, amount: defaultAmount });
+                  if (this.recipeForm.controls.calculateNutritionAutomatically.value) {
+                      this.recalculateNutrientsFromForm();
+                  }
               });
     }
 
@@ -838,20 +841,10 @@ export class RecipeManageComponent implements OnInit {
         const validators = isAuto ? [] : [Validators.required, Validators.min(0)];
         this.getManualNutritionControls().forEach(control => {
             control.setValidators(validators);
-            if (isAuto) {
-                control.disable({ emitEvent: false });
-            } else {
-                control.enable({ emitEvent: false });
-            }
             control.updateValueAndValidity({ emitEvent: false });
         });
 
         const alcoholControl = this.recipeForm.controls.manualAlcohol;
-        if (isAuto) {
-            alcoholControl.disable({ emitEvent: false });
-        } else {
-            alcoholControl.enable({ emitEvent: false });
-        }
         alcoholControl.updateValueAndValidity({ emitEvent: false });
     }
 

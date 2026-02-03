@@ -50,6 +50,11 @@ export class FdUiPlainInputComponent implements ControlValueAccessor {
         return `fd-ui-plain-input--size-${this.size()}`;
     }
 
+    protected get isDateInput(): boolean {
+        const type = this.type();
+        return type === 'date' || type === 'datetime-local' || type === 'time';
+    }
+
     public writeValue(value: string | number | null): void {
         this.internalValue = value ?? '';
     }

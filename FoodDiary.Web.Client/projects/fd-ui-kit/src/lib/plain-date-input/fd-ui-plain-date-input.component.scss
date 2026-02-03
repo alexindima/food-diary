@@ -1,0 +1,127 @@
+@use 'variables' as *;
+
+:host {
+    display: block;
+}
+
+.fd-ui-plain-date-input {
+    --fd-plain-date-height: 48px;
+    --fd-plain-date-radius: 14px;
+    --fd-plain-date-border: rgba(148, 163, 184, 0.38);
+    --fd-plain-date-label-bg: var(--fd-color-surface, #fff);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.fd-ui-plain-date-input--size-sm {
+    --fd-plain-date-height: 32px;
+}
+
+.fd-ui-plain-date-input--size-md,
+.fd-ui-plain-date-input--size-lg {
+    --fd-plain-date-height: 48px;
+}
+
+.fd-ui-plain-date-input__label {
+    color: #64748b;
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.2;
+    display: inline-flex;
+    align-items: center;
+    max-width: calc(100% - 28px);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    position: absolute;
+    top: 50%;
+    left: 14px;
+    transform: translateY(-50%);
+    transition: transform 0.15s ease, top 0.15s ease, font-size 0.15s ease;
+    background: var(--fd-plain-date-label-bg);
+    padding: 0 4px;
+    pointer-events: none;
+}
+
+.fd-ui-plain-date-input__required {
+    margin-left: 0;
+    color: #ef4444;
+}
+
+.fd-ui-plain-date-input__control-wrap {
+    height: var(--fd-plain-date-height);
+    box-sizing: border-box;
+    border: 1px solid var(--fd-plain-date-border);
+    border-radius: var(--fd-plain-date-radius);
+    background: #fff;
+    display: flex;
+    align-items: center;
+    padding: 0;
+    transition: border-color 0.15s ease;
+    position: relative;
+}
+
+.fd-ui-plain-date-input__control-wrap:focus-within {
+    border-color: #3b82f6;
+}
+
+.fd-ui-plain-date-input__segment {
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: 100%;
+    padding: 0 40px 0 14px;
+    width: 100%;
+}
+
+.fd-ui-plain-date-input__control {
+    width: 100%;
+    min-width: 0;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: #1e293b;
+    font: inherit;
+}
+
+.fd-ui-plain-date-input__suffix {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    border: none;
+    background: transparent;
+    color: #94a3b8;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    cursor: pointer;
+}
+
+.fd-ui-plain-date-input--has-error .fd-ui-plain-date-input__control-wrap {
+    border-color: #ef4444;
+}
+
+.fd-ui-plain-date-input--floating .fd-ui-plain-date-input__label {
+    top: 0;
+    transform: translateY(-50%);
+    font-size: 0.8rem;
+}
+
+.fd-ui-plain-date-input--floating .fd-ui-plain-date-input__control-wrap {
+    padding-top: 8px;
+    padding-bottom: 2px;
+}
+
+.fd-ui-plain-date-input__error {
+    color: #ef4444;
+    font-size: 0.75rem;
+    line-height: 1.2;
+    margin-top: 2px;
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: anywhere;
+}

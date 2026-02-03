@@ -2,6 +2,7 @@
   <div
     class="fd-ui-plain-input__control-wrap"
     [class.fd-ui-plain-input__control-wrap--with-prefix]="prefixIcon()"
+    [class.fd-ui-plain-input__control-wrap--date]="isDateInput"
     [style.background]="fillColor() || null"
     (click)="focusControl($event, control)"
   >
