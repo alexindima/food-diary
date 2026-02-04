@@ -13,7 +13,10 @@ import {
 import { FormGroupControls } from '../../../types/common.data';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
-import { FdUiDateRangeInputComponent, FdUiDateRangeValue } from 'fd-ui-kit/date-range-input/fd-ui-date-range-input.component';
+import {
+    FdUiPlainDateRangeInputComponent,
+    FdUiPlainDateRangeValue,
+} from 'fd-ui-kit/plain-date-range-input/fd-ui-plain-date-range-input.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.component';
@@ -33,7 +36,7 @@ import { LocalizedDatePipe } from '../../../pipes/localized-date.pipe';
         ReactiveFormsModule,
         TranslatePipe,
         FdUiButtonComponent,
-        FdUiDateRangeInputComponent,
+        FdUiPlainDateRangeInputComponent,
         FdUiLoaderComponent,
         FdUiPaginationComponent,
         FdUiIconModule,
@@ -61,7 +64,7 @@ export class ConsumptionListComponent implements OnInit {
 
     public constructor() {
         this.searchForm = new FormGroup<SearchFormGroup>({
-            dateRange: new FormControl<FdUiDateRangeValue | null>(null),
+            dateRange: new FormControl<FdUiPlainDateRangeValue | null>(null),
         });
     }
 
@@ -167,7 +170,7 @@ export class ConsumptionListComponent implements OnInit {
 }
 
 interface SearchFormValues {
-    dateRange: FdUiDateRangeValue | null;
+    dateRange: FdUiPlainDateRangeValue | null;
 }
 
 type SearchFormGroup = FormGroupControls<SearchFormValues>;

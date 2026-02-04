@@ -2,6 +2,7 @@ export * from './design-tokens';
 export * from './input/fd-ui-input.component';
 export * from './plain-input/fd-ui-plain-input.component';
 export * from './plain-date-input/fd-ui-plain-date-input.component';
+export * from './plain-date-range-input/fd-ui-plain-date-range-input.component';
 export * from './plain-datetime-input/fd-ui-plain-datetime-input.component';
 export * from './plain-textarea/fd-ui-plain-textarea.component';
 export * from './plain-select/fd-ui-plain-select.component';

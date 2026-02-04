@@ -12,6 +12,8 @@
             [selectedValue]="selectedRange()"
             [rangeControl]="customRangeControl"
             [displayRange]="currentRange()"
+            [startLabel]="'STATISTICS.CUSTOM_RANGE_FROM_LABEL' | translate"
+            [endLabel]="'STATISTICS.CUSTOM_RANGE_TO_LABEL' | translate"
             [startPlaceholder]="'STATISTICS.CUSTOM_RANGE_PLACEHOLDER' | translate"
             [endPlaceholder]="'STATISTICS.CUSTOM_RANGE_PLACEHOLDER' | translate"
             (rangeChange)="changeRange($event)"

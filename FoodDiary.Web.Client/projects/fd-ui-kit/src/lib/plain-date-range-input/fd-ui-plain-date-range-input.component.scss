@@ -1,0 +1,19 @@
+@use 'variables' as *;
+
+:host {
+    display: block;
+}
+
+.fd-ui-plain-date-range-input {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    gap: $gap-s;
+    align-items: center;
+}
+
+.fd-ui-plain-date-range-input__divider {
+    color: #94a3b8;
+    font-size: 0.95rem;
+    font-weight: 600;
+    line-height: 1;
+}

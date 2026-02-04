@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, effect, input, output } from '@angular/core';
 import { FdUiTabsComponent, FdUiTab } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
-import { FdUiDateRangeInputComponent } from 'fd-ui-kit/date-range-input/fd-ui-date-range-input.component';
+import { FdUiPlainDateRangeInputComponent } from 'fd-ui-kit/plain-date-range-input/fd-ui-plain-date-range-input.component';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 
 type DateRangeValue = { start: Date | null; end: Date | null } | null;
@@ -8,7 +8,7 @@ type DateRangeValue = { start: Date | null; end: Date | null } | null;
 @Component({
     selector: 'fd-period-filter',
     standalone: true,
-    imports: [FdUiTabsComponent, FdUiDateRangeInputComponent, ReactiveFormsModule],
+    imports: [FdUiTabsComponent, FdUiPlainDateRangeInputComponent, ReactiveFormsModule],
     templateUrl: './period-filter.component.html',
     styleUrls: ['./period-filter.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -18,6 +18,8 @@ export class PeriodFilterComponent {
     public readonly selectedValue = input.required<string>();
     public readonly rangeControl = input.required<FormControl<DateRangeValue>>();
     public readonly displayRange = input<{ start: Date; end: Date } | null>(null);
+    public readonly startLabel = input<string>();
+    public readonly endLabel = input<string>();
     public readonly startPlaceholder = input<string>();
     public readonly endPlaceholder = input<string>();
 

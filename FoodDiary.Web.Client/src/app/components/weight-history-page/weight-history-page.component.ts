@@ -19,8 +19,8 @@ import { WeightEntriesService } from '../../services/weight-entries.service';
 import { WeightEntry, WeightEntryFilters, WeightEntrySummaryFilters, WeightEntrySummaryPoint } from '../../types/weight-entry.data';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
-import { FdUiDateInputComponent } from 'fd-ui-kit/date-input/fd-ui-date-input.component';
-import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
+import { FdUiPlainDateInputComponent } from 'fd-ui-kit/plain-date-input/fd-ui-plain-date-input.component';
+import { FdUiPlainInputComponent } from 'fd-ui-kit/plain-input/fd-ui-plain-input.component';
 import { FdUiTab } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
 import { UserService } from '../../services/user.service';
 import { NavigationService } from '../../services/navigation.service';
@@ -39,8 +39,8 @@ import { PeriodFilterComponent } from '../shared/period-filter/period-filter.com
         BaseChartDirective,
         FdUiCardComponent,
         FdUiButtonComponent,
-        FdUiDateInputComponent,
-        FdUiInputComponent,
+        FdUiPlainDateInputComponent,
+        FdUiPlainInputComponent,
         PageHeaderComponent,
         PageBodyComponent,
         FdPageContainerDirective,
@@ -136,7 +136,7 @@ export class WeightHistoryPageComponent implements OnInit {
     };
 
     public readonly form = this.fb.group({
-        date: [new Date(), Validators.required],
+        date: [this.formatDateInput(new Date()), Validators.required],
         weight: ['', [Validators.required, Validators.min(1), Validators.max(500)]],
     });
 
@@ -297,7 +297,7 @@ export class WeightHistoryPageComponent implements OnInit {
         this.isEditing.set(true);
         this.editingEntryId.set(entry.id);
         this.form.setValue({
-            date: new Date(entry.date),
+            date: this.formatDateInput(new Date(entry.date)),
             weight: entry.weight.toString(),
         });
     }
@@ -306,7 +306,7 @@ export class WeightHistoryPageComponent implements OnInit {
         this.resetEditingState();
         const latest = this.entriesDescending()[0];
         this.form.setValue({
-            date: new Date(),
+            date: this.formatDateInput(new Date()),
             weight: (latest?.weight ?? '').toString(),
         });
     }
@@ -468,7 +468,7 @@ export class WeightHistoryPageComponent implements OnInit {
             return null;
         }
 
-        const date = rawDate instanceof Date ? rawDate : new Date(rawDate);
+        const date = typeof rawDate === 'string' ? new Date(rawDate) : rawDate;
         const utcDate = this.normalizeStartOfDay(date);
         const weight = Number(rawWeight);
         return {
@@ -481,7 +481,7 @@ export class WeightHistoryPageComponent implements OnInit {
         this.isEditing.set(false);
         this.editingEntryId.set(null);
         this.form.patchValue({
-            date: new Date(),
+            date: this.formatDateInput(new Date()),
         });
     }
 
@@ -550,6 +550,13 @@ export class WeightHistoryPageComponent implements OnInit {
 
     private normalizeEndOfDay(date: Date): Date {
         return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59, 999));
+    }
+
+    private formatDateInput(date: Date): string {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
     }
 
     private getQuantizationDays(range: WeightHistoryRange, totalDays: number): number {

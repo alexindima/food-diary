@@ -3,12 +3,12 @@
 
     <div class="recipe-select__actions">
         <form class="recipe-select__search-form" [formGroup]="searchForm">
-            <fd-ui-input formControlName="search"
+            <fd-ui-plain-input formControlName="search"
                 prefixIcon="search"
-                [clearable]="true"
-                [placeholder]="'RECIPE_SELECT_DIALOG.SEARCH_PLACEHOLDER' | translate"
-                (cleared)="searchForm.controls.search.setValue('')"
-                floatLabel="always"
+                [label]="'RECIPE_SELECT_DIALOG.SEARCH_PLACEHOLDER' | translate"
+                [suffixButtonIcon]="searchForm.controls.search.value ? 'close' : undefined"
+                [suffixButtonAriaLabel]="'RECIPE_SELECT_DIALOG.SEARCH_CLEAR' | translate"
+                (suffixButtonClicked)="searchForm.controls.search.setValue('')"
              />
         </form>
         <label class="recipe-select__toggle">

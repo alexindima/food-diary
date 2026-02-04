@@ -39,7 +39,7 @@ import { FdUiFormErrorComponent, FD_VALIDATION_ERRORS, FdValidationErrors } from
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
-import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
+import { FdUiPlainInputComponent } from 'fd-ui-kit/plain-input/fd-ui-plain-input.component';
 import { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiCheckboxComponent } from 'fd-ui-kit/checkbox/fd-ui-checkbox.component';
@@ -91,7 +91,7 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
         DecimalPipe,
         NutrientsSummaryComponent,
         FdUiCardComponent,
-        FdUiInputComponent,
+        FdUiPlainInputComponent,
         FdUiButtonComponent,
         FdUiCheckboxComponent,
         FdUiNutrientInputComponent,

@@ -12,6 +12,8 @@
             [selectedValue]="selectedRange()"
             [rangeControl]="customRangeControl"
             [displayRange]="currentRange()"
+            [startLabel]="'WEIGHT_HISTORY.CUSTOM_RANGE_FROM_LABEL' | translate"
+            [endLabel]="'WEIGHT_HISTORY.CUSTOM_RANGE_TO_LABEL' | translate"
             [startPlaceholder]="'WEIGHT_HISTORY.CUSTOM_RANGE_PLACEHOLDER' | translate"
             [endPlaceholder]="'WEIGHT_HISTORY.CUSTOM_RANGE_PLACEHOLDER' | translate"
             (rangeChange)="changeRange($event)"
@@ -92,13 +94,13 @@
             <fd-ui-card class="weight-history-page__card weight-history-page__card--form" [title]="'WEIGHT_HISTORY.ADD_ENTRY_TITLE' | translate">
                 <form class="weight-history-page__form" [formGroup]="form" (ngSubmit)="submit()">
                     <div class="weight-history-page__form-row">
-                        <fd-ui-date-input class="weight-history-page__form-control"
+                        <fd-ui-plain-date-input class="weight-history-page__form-control"
                             formControlName="date"
                             [label]="'WEIGHT_HISTORY.DATE_LABEL' | translate"
                             [placeholder]="'WEIGHT_HISTORY.DATE_PLACEHOLDER' | translate"
                          />
 
-                        <fd-ui-input class="weight-history-page__form-control"
+                        <fd-ui-plain-input class="weight-history-page__form-control"
                             formControlName="weight"
                             type="number"
                             [step]="0.1"
@@ -134,11 +136,11 @@
 
             <fd-ui-card class="weight-history-page__card weight-history-page__card--goal" [title]="'WEIGHT_HISTORY.GOAL_CARD_TITLE' | translate">
                 <div class="weight-history-page__goal-body">
-                    <fd-ui-input class="weight-history-page__goal-input"
+                    <fd-ui-plain-input class="weight-history-page__goal-input"
                         type="number"
                         [step]="0.1"
                         [placeholder]="'WEIGHT_HISTORY.GOAL_PLACEHOLDER' | translate"
-                        [suffixIcon]="desiredWeightControl.value ? 'backspace' : undefined"
+                        [suffixButtonIcon]="desiredWeightControl.value ? 'backspace' : undefined"
                         (suffixButtonClicked)="desiredWeightControl.setValue('')"
                         [formControl]="desiredWeightControl"
                      />

@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog.component';
-import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
+import { FdUiPlainInputComponent } from 'fd-ui-kit/plain-input/fd-ui-plain-input.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
@@ -24,7 +24,7 @@ export interface MacroGoalDialogData {
         ReactiveFormsModule,
         TranslatePipe,
         FdUiDialogComponent,
-        FdUiInputComponent,
+        FdUiPlainInputComponent,
         FdUiButtonComponent,
         FdUiDialogFooterDirective,
     ],

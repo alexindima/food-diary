@@ -25,8 +25,6 @@ import { NavigationService } from '../../../services/navigation.service';
 import { finalize } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
-import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
-import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
 import { FdUiPlainInputComponent } from 'fd-ui-kit/plain-input/fd-ui-plain-input.component';
@@ -50,8 +48,6 @@ import { NutritionCalculationService } from '../../../services/nutrition-calcula
         TranslatePipe,
         DragDropModule,
         FdUiCardComponent,
-        FdUiInputComponent,
-        FdUiTextareaComponent,
         FdUiButtonComponent,
         FdUiPlainInputComponent,
         FdUiPlainTextareaComponent,

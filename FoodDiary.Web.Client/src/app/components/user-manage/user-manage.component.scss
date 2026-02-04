@@ -200,14 +200,8 @@
         min-width: 0;
     }
 
-    &__account-row-field fd-ui-date-input {
-        --fd-date-input-height: 40px;
-    }
-
-    &__account-row-field fd-ui-date-input ::ng-deep .mat-mdc-text-field-wrapper,
-    &__account-row-field fd-ui-date-input ::ng-deep .mat-mdc-form-field-flex {
-        min-height: 40px !important;
-        height: 40px !important;
+    &__account-row-field fd-ui-plain-date-input {
+        width: 100%;
     }
 
     &__body {

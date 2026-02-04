@@ -7,12 +7,12 @@
         <ng-container fdPageHeaderActions>
             <div class="consumption-list__controls">
                 <form [formGroup]="searchForm" class="consumption-list__date-range-form">
-                    <fd-ui-date-range-input formControlName="dateRange"
+                    <fd-ui-plain-date-range-input formControlName="dateRange"
                         class="consumption-list__date-input"
-                        [label]="''"
+                        [startLabel]="'CONSUMPTION_LIST.DATE_FILTER_FROM_LABEL' | translate"
+                        [endLabel]="'CONSUMPTION_LIST.DATE_FILTER_TO_LABEL' | translate"
                         [startPlaceholder]="'CONSUMPTION_LIST.DATE_FROM_PLACEHOLDER' | translate"
                         [endPlaceholder]="'CONSUMPTION_LIST.DATE_TO_PLACEHOLDER' | translate"
-                        [hideSubscript]="true"
                      />
                 </form>
 

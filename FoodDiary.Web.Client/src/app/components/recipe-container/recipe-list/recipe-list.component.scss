@@ -36,18 +36,8 @@
     &__search-input {
         width: 100%;
 
-        ::ng-deep .mat-mdc-form-field-subscript-wrapper {
-            display: none;
-            height: 0;
-            margin: 0;
-        }
-
-        ::ng-deep .fd-ui-input {
-            --mdc-outlined-text-field-container-shape: 18px;
-        }
-
-        ::ng-deep .mat-mdc-text-field-wrapper {
-            border-radius: 18px;
+        ::ng-deep .fd-ui-plain-input {
+            --fd-plain-input-radius: 18px;
         }
     }
 

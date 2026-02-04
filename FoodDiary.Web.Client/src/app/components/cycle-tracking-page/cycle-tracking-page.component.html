@@ -10,18 +10,18 @@
             <fd-ui-card class="cycle-tracking__card" [title]="'CYCLE_TRACKING.CREATE_CYCLE_TITLE' | translate">
                 <form class="cycle-tracking__form" [formGroup]="startCycleForm" (ngSubmit)="startCycle()">
                     <div class="cycle-tracking__form-row">
-                        <fd-ui-date-input
+                        <fd-ui-plain-date-input
                             class="cycle-tracking__form-control"
                             formControlName="startDate"
                             [label]="'CYCLE_TRACKING.START_DATE' | translate"
                         />
-                        <fd-ui-input
+                        <fd-ui-plain-input
                             class="cycle-tracking__form-control"
                             type="number"
                             formControlName="averageLength"
                             [label]="'CYCLE_TRACKING.AVG_LENGTH' | translate"
                         />
-                        <fd-ui-input
+                        <fd-ui-plain-input
                             class="cycle-tracking__form-control"
                             type="number"
                             formControlName="lutealLength"
@@ -92,7 +92,7 @@
                 } @else {
                     <form class="cycle-tracking__form" [formGroup]="dayForm" (ngSubmit)="saveDay()">
                         <div class="cycle-tracking__form-row cycle-tracking__form-row--wide">
-                            <fd-ui-date-input
+                            <fd-ui-plain-date-input
                                 class="cycle-tracking__form-control"
                                 formControlName="date"
                                 [label]="'CYCLE_TRACKING.DAY_DATE' | translate"
@@ -107,7 +107,7 @@
 
                         <div class="cycle-tracking__symptom-grid">
                             @for (field of symptomFields; track field.key) {
-                                <fd-ui-input
+                                <fd-ui-plain-input
                                     class="cycle-tracking__form-control"
                                     type="number"
                                     [step]="1"
@@ -117,7 +117,7 @@
                             }
                         </div>
 
-                        <fd-ui-input
+                        <fd-ui-plain-input
                             class="cycle-tracking__form-control"
                             [label]="'CYCLE_TRACKING.NOTES' | translate"
                             [placeholder]="'CYCLE_TRACKING.NOTES_PLACEHOLDER' | translate"

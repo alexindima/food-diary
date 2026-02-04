@@ -17,8 +17,8 @@ import { PageBodyComponent } from '../shared/page-body/page-body.component';
 import { FdPageContainerDirective } from '../../directives/layout/page-container.directive';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
-import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
-import { FdUiDateInputComponent } from 'fd-ui-kit/date-input/fd-ui-date-input.component';
+import { FdUiPlainInputComponent } from 'fd-ui-kit/plain-input/fd-ui-plain-input.component';
+import { FdUiPlainDateInputComponent } from 'fd-ui-kit/plain-date-input/fd-ui-plain-date-input.component';
 import { FdUiCheckboxComponent } from 'fd-ui-kit/checkbox/fd-ui-checkbox.component';
 import { CyclesService } from '../../services/cycles.service';
 import {
@@ -42,8 +42,8 @@ import { FdUiAccentSurfaceComponent } from 'fd-ui-kit/accent-surface/fd-ui-accen
         ReactiveFormsModule,
         FdUiCardComponent,
         FdUiButtonComponent,
-        FdUiInputComponent,
-        FdUiDateInputComponent,
+        FdUiPlainInputComponent,
+        FdUiPlainDateInputComponent,
         FdUiCheckboxComponent,
         FdUiAccentSurfaceComponent,
     ],
@@ -62,13 +62,13 @@ export class CycleTrackingPageComponent implements OnInit {
     public readonly cycle = signal<CycleResponse | null>(null);
 
     public readonly startCycleForm = this.fb.group({
-        startDate: new FormControl<Date | null>(new Date(), { validators: [Validators.required] }),
+        startDate: new FormControl<string | null>(this.formatDateInput(new Date()), { validators: [Validators.required] }),
         averageLength: new FormControl<number | null>(28, { validators: [Validators.min(18), Validators.max(60)] }),
         lutealLength: new FormControl<number | null>(14, { validators: [Validators.min(8), Validators.max(18)] }),
     });
 
     public readonly dayForm = this.fb.group({
-        date: new FormControl<Date | null>(new Date(), { validators: [Validators.required] }),
+        date: new FormControl<string | null>(this.formatDateInput(new Date()), { validators: [Validators.required] }),
         isPeriod: new FormControl<boolean>(false),
         pain: new FormControl<number>(0),
         mood: new FormControl<number>(0),
@@ -118,8 +118,9 @@ export class CycleTrackingPageComponent implements OnInit {
             return;
         }
 
+        const startDate = new Date(formValue.startDate);
         const payload: CreateCyclePayload = {
-            startDate: formValue.startDate.toISOString(),
+            startDate: startDate.toISOString(),
             averageLength: formValue.averageLength ?? undefined,
             lutealLength: formValue.lutealLength ?? undefined,
         };
@@ -153,6 +154,7 @@ export class CycleTrackingPageComponent implements OnInit {
             return;
         }
 
+        const entryDate = new Date(date);
         const symptoms: DailySymptoms = {
             pain: this.clampSymptom(formValue.pain),
             mood: this.clampSymptom(formValue.mood),
@@ -166,7 +168,7 @@ export class CycleTrackingPageComponent implements OnInit {
         this.isSavingDay.set(true);
         this.cyclesService
             .upsertDay(this.cycle()!.id, {
-                date: date.toISOString(),
+                date: entryDate.toISOString(),
                 isPeriod: !!formValue.isPeriod,
                 symptoms,
                 notes: formValue.notes ?? undefined,
@@ -210,5 +212,12 @@ export class CycleTrackingPageComponent implements OnInit {
             return 0;
         }
         return Math.min(9, Math.max(0, value));
+    }
+
+    private formatDateInput(date: Date): string {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
     }
 }

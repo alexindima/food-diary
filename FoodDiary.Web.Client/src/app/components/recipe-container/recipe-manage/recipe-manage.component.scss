@@ -13,12 +13,12 @@
         max-width: 100% !important;
     }
 
-    ::ng-deep .fd-ui-input {
-        --fd-input-height: 48px;
+    ::ng-deep .fd-ui-plain-input {
+        --fd-plain-input-height: 48px;
     }
 
-    ::ng-deep .fd-ui-select {
-        --fd-select-height: 48px;
+    ::ng-deep .fd-ui-plain-select {
+        --fd-plain-select-height: 48px;
     }
 
     &__header {

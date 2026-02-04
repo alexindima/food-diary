@@ -6,12 +6,13 @@
         (selectedValueChange)="onRangeChange($event)"
     />
 
-    <fd-ui-date-range-input
+    <fd-ui-plain-date-range-input
         class="fd-period-filter__range"
         [formControl]="rangeControl()"
+        [startLabel]="startLabel()"
+        [endLabel]="endLabel()"
         [startPlaceholder]="startPlaceholder() || ''"
         [endPlaceholder]="endPlaceholder() || ''"
         [disabled]="selectedValue() !== 'custom'"
-        [hideSubscript]="true"
     />
 </div>

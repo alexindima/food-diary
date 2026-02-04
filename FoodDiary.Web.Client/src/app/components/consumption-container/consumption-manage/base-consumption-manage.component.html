@@ -153,12 +153,11 @@
                                             <fd-ui-form-error [error]="getItemSourceError(i)" />
                                         </div>
                                         <div class="consumption-item__field consumption-item__field--amount">
-                                            <fd-ui-input formControlName="amount"
+                                            <fd-ui-plain-input formControlName="amount"
                                                 type="number"
                                                 [step]="0.01"
                                                 [label]="'CONSUMPTION_MANAGE.ADD_ITEM_ROW.AMOUNT' | translate"
                                                 [placeholder]="(getAmountPlaceholder(i) | translate)"
-                                                [hint]="getAmountUnitLabel(i) || undefined"
                                                 [required]="true"
                                                 [error]="getAmountControlError(i)"
                                                 [readonly]="!items.at(i).controls.product.value && !items.at(i).controls.recipe.value"
