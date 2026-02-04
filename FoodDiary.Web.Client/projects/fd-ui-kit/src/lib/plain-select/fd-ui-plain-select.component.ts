@@ -103,7 +103,7 @@ export class FdUiPlainSelectComponent<T = unknown> implements ControlValueAccess
 
     protected get selectedLabel(): string {
         if (this.selectedIndex < 0) {
-            return this.placeholder() ?? '';
+            return this.isFocused ? (this.placeholder() ?? '') : '';
         }
 
         return this.options()[this.selectedIndex]?.label ?? '';

@@ -143,11 +143,11 @@
         flex-direction: column;
         align-items: center;
         gap: 12px;
-        padding: 16px;
-        border-radius: 18px;
-        background: linear-gradient(180deg, #f5f9ff 0%, #eef4ff 100%);
-        border: 1px solid rgba(37, 99, 235, 0.16);
-        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+        padding: 0;
+        border-radius: 0;
+        background: transparent;
+        border: none;
+        box-shadow: none;
     }
 
     &__avatar {
@@ -166,7 +166,7 @@
     &__account-fields {
         display: flex;
         flex-direction: column;
-        gap: 12px;
+        gap: $gap-l;
         align-self: start;
         padding: 0;
     }
@@ -192,7 +192,7 @@
     &__account-row {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 12px;
+        gap: $gap-l;
         align-items: start;
     }
 
@@ -213,7 +213,7 @@
     &__body {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-        gap: 16px 18px;
+        gap: $gap-l;
         align-items: start;
     }
 

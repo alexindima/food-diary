@@ -15,9 +15,7 @@ import { ActivityLevelOption, Gender, UpdateUserDto, User } from '../../types/us
 import { NavigationService } from '../../services/navigation.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
-import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
-import { FdUiSelectComponent, FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
-import { FdUiDateInputComponent } from 'fd-ui-kit/date-input/fd-ui-date-input.component';
+import { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiFormErrorComponent, FD_VALIDATION_ERRORS, FdValidationErrors } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
@@ -36,6 +34,9 @@ import {
 } from '../shared/confirm-delete-dialog/confirm-delete-dialog.component';
 import { AuthService } from '../../services/auth.service';
 import { LocalizationService } from '../../services/localization.service';
+import { FdUiPlainInputComponent } from 'fd-ui-kit/plain-input/fd-ui-plain-input.component';
+import { FdUiPlainSelectComponent } from 'fd-ui-kit/plain-select/fd-ui-plain-select.component';
+import { FdUiPlainDateInputComponent } from 'fd-ui-kit/plain-date-input/fd-ui-plain-date-input.component';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: FD_VALIDATION_ERRORS,
@@ -55,9 +56,9 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
         ReactiveFormsModule,
         TranslatePipe,
         FdUiCardComponent,
-        FdUiInputComponent,
-        FdUiSelectComponent,
-        FdUiDateInputComponent,
+        FdUiPlainInputComponent,
+        FdUiPlainSelectComponent,
+        FdUiPlainDateInputComponent,
         FdUiButtonComponent,
         FdUiFormErrorComponent,
         PageHeaderComponent,
@@ -98,7 +99,7 @@ export class UserManageComponent implements OnInit {
             username: new FormControl<string | null>(null),
             firstName: new FormControl<string | null>(null),
             lastName: new FormControl<string | null>(null),
-            birthDate: new FormControl<Date | null>(null),
+            birthDate: new FormControl<string | null>(null),
             gender: new FormControl<Gender | null>(null),
             language: new FormControl<string | null>(null),
             height: new FormControl<number | null>(null),
@@ -326,7 +327,7 @@ export class UserManageComponent implements OnInit {
             lastName: user.lastName ?? null,
             gender: user.gender as Gender | null,
             language: this.normalizeLanguage(user.language),
-            birthDate: user.birthDate ? new Date(user.birthDate) : null,
+            birthDate: user.birthDate ? this.formatDateInput(new Date(user.birthDate)) : null,
             height: user.height ?? null,
             activityLevel: user.activityLevel ? (user.activityLevel.toUpperCase() as ActivityLevelOption) : null,
             dailyCalorieTarget: user.dailyCalorieTarget ?? null,
@@ -338,6 +339,13 @@ export class UserManageComponent implements OnInit {
             profileImage: user.profileImage ? { url: user.profileImage, assetId: user.profileImageAssetId ?? null } : null,
         };
     }
+
+    private formatDateInput(date: Date): string {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
 }
 
 export interface UserFormValues {
@@ -345,7 +353,7 @@ export interface UserFormValues {
     firstName: string | null;
     lastName: string | null;
     email: string | null;
-    birthDate: Date | null;
+    birthDate: string | null;
     gender: Gender | null;
     language: string | null;
     height: number | null;

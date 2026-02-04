@@ -14,7 +14,7 @@
         step="60"
         inputmode="numeric"
         [value]="internalValue"
-        [attr.placeholder]="shouldFloatLabel ? null : (placeholder() ?? 'HH:mm')"
+        [attr.placeholder]="shouldShowPlaceholder ? (placeholder() ?? 'HH:mm') : null"
         [disabled]="disabled"
         (focus)="onFocus()"
         (input)="onInput($any($event.target).value)"

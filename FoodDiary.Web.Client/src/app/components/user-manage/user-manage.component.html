@@ -58,64 +58,64 @@
                         </div>
                         <div class="user-manage__account-fields">
                             <div class="user-manage__account-row">
-                                <fd-ui-input
+                                <fd-ui-plain-input
                                     class="user-manage__account-row-field"
                                     formControlName="email"
                                     type="email"
+                                    size="lg"
                                     [label]="'USER_MANAGE.EMAIL' | translate"
                                     [placeholder]="'USER_MANAGE.EMAIL_PLACEHOLDER' | translate"
-                                    floatLabel="always"
-                                />
-                                <fd-ui-input
+                                 />
+                                <fd-ui-plain-input
                                     class="user-manage__account-row-field"
                                     formControlName="username"
+                                    size="lg"
                                     [label]="'USER_MANAGE.USERNAME' | translate"
                                     [placeholder]="'USER_MANAGE.USERNAME_PLACEHOLDER' | translate"
-                                    floatLabel="always"
-                                />
+                                 />
                             </div>
                             <div class="user-manage__account-row">
-                                <fd-ui-input
+                                <fd-ui-plain-input
                                     class="user-manage__account-row-field"
                                     formControlName="firstName"
+                                    size="lg"
                                     [label]="'USER_MANAGE.FIRST_NAME' | translate"
                                     [placeholder]="'USER_MANAGE.FIRST_NAME_PLACEHOLDER' | translate"
-                                    floatLabel="always"
-                                />
-                                <fd-ui-input
+                                 />
+                                <fd-ui-plain-input
                                     class="user-manage__account-row-field"
                                     formControlName="lastName"
+                                    size="lg"
                                     [label]="'USER_MANAGE.LAST_NAME' | translate"
                                     [placeholder]="'USER_MANAGE.LAST_NAME_PLACEHOLDER' | translate"
-                                    floatLabel="always"
-                                />
+                                 />
                             </div>
                             <div class="user-manage__account-row">
-                                <fd-ui-date-input
+                                <fd-ui-plain-date-input
                                     class="user-manage__account-row-field"
                                     formControlName="birthDate"
+                                    size="lg"
                                     [label]="'USER_MANAGE.BIRTH_DATE' | translate"
                                     [placeholder]="'USER_MANAGE.BIRTH_DATE_PLACEHOLDER' | translate"
-                                    floatLabel="always"
-                                />
-                                <fd-ui-select
+                                 />
+                                <fd-ui-plain-select
                                     class="user-manage__account-row-field"
                                     formControlName="gender"
+                                    size="lg"
                                     [label]="'USER_MANAGE.GENDER' | translate"
                                     [placeholder]="'USER_MANAGE.SELECT_GENDER' | translate"
                                     [options]="genderOptions"
-                                    floatLabel="always"
-                                />
+                                 />
                             </div>
                             <div class="user-manage__account-row">
-                                <fd-ui-select
+                                <fd-ui-plain-select
                                     class="user-manage__account-row-field"
                                     formControlName="language"
+                                    size="lg"
                                     [label]="'USER_MANAGE.LANGUAGE' | translate"
                                     [placeholder]="'USER_MANAGE.LANGUAGE_PLACEHOLDER' | translate"
                                     [options]="languageOptions"
-                                    floatLabel="always"
-                                />
+                                 />
                                 <div class="user-manage__link-button">
                                     <fd-ui-button
                                         type="button"
@@ -140,20 +140,20 @@
                         </div>
                     </div>
                     <div class="user-manage__body">
-                        <fd-ui-input
+                        <fd-ui-plain-input
                             formControlName="height"
                             type="number"
+                            size="lg"
                             [label]="'USER_MANAGE.HEIGHT' | translate"
                             [placeholder]="'USER_MANAGE.HEIGHT_PLACEHOLDER' | translate"
-                            floatLabel="always"
-                        />
-                        <fd-ui-select
+                         />
+                        <fd-ui-plain-select
                             formControlName="activityLevel"
+                            size="lg"
                             [label]="'USER_MANAGE.ACTIVITY_LEVEL' | translate"
                             [placeholder]="'USER_MANAGE.SELECT_ACTIVITY_LEVEL' | translate"
                             [options]="activityLevelOptions"
-                            floatLabel="always"
-                        />
+                         />
                     </div>
                 </fd-ui-card>
             </div>

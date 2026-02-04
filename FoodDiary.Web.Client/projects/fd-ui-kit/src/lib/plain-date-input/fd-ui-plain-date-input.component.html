@@ -13,7 +13,7 @@
         [id]="id()"
         [matDatepicker]="picker"
         [formControl]="dateControl"
-        [attr.placeholder]="shouldFloatLabel ? null : (placeholder() ?? null)"
+        [attr.placeholder]="shouldShowPlaceholder ? (placeholder() ?? null) : null"
         [disabled]="disabled"
         />
       <button

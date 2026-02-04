@@ -71,11 +71,12 @@
     display: flex;
     align-items: center;
     height: 100%;
-    padding: 0 40px 0 14px;
+    padding: 0 14px;
     width: 100%;
 }
 
 .fd-ui-plain-time-input__control {
+    flex: 1;
     width: 100%;
     min-width: 0;
     border: none;
@@ -86,10 +87,9 @@
 }
 
 .fd-ui-plain-time-input__suffix {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
+    position: static;
+    margin-left: 8px;
+    transform: none;
     border: none;
     background: transparent;
     color: #94a3b8;
@@ -112,8 +112,8 @@
 }
 
 .fd-ui-plain-time-input--floating .fd-ui-plain-time-input__control-wrap {
-    padding-top: 8px;
-    padding-bottom: 2px;
+    padding-top: 0;
+    padding-bottom: 0;
 }
 
 .fd-ui-plain-time-input__error {

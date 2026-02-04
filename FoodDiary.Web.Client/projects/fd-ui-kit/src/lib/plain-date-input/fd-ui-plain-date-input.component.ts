@@ -74,6 +74,10 @@ export class FdUiPlainDateInputComponent implements ControlValueAccessor {
         return this.isFocused || !!this.dateControl.value;
     }
 
+    protected get shouldShowPlaceholder(): boolean {
+        return this.isFocused && !this.dateControl.value;
+    }
+
     public writeValue(value: string | Date | null): void {
         if (!value) {
             this.dateControl.setValue(null, { emitEvent: false });

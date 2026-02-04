@@ -71,11 +71,18 @@
     display: flex;
     align-items: center;
     height: 100%;
-    padding: 0 40px 0 14px;
+    padding: 0 14px;
     width: 100%;
 }
 
+/* Keep icon and input vertically centered even when label floats */
+.fd-ui-plain-date-input--floating .fd-ui-plain-date-input__segment {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
 .fd-ui-plain-date-input__control {
+    flex: 1;
     width: 100%;
     min-width: 0;
     border: none;
@@ -86,10 +93,9 @@
 }
 
 .fd-ui-plain-date-input__suffix {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
+    position: static;
+    margin-left: 8px;
+    transform: none;
     border: none;
     background: transparent;
     color: #94a3b8;
@@ -99,6 +105,15 @@
     width: 28px;
     height: 28px;
     cursor: pointer;
+    margin-top: 0;
+}
+
+.fd-ui-plain-date-input__suffix mat-icon {
+    width: 20px;
+    height: 20px;
+    font-size: 20px;
+    line-height: 20px;
+    display: block;
 }
 
 .fd-ui-plain-date-input--has-error .fd-ui-plain-date-input__control-wrap {
@@ -111,9 +126,10 @@
     font-size: 0.8rem;
 }
 
+/* No extra padding when label floats to avoid shifting suffix */
 .fd-ui-plain-date-input--floating .fd-ui-plain-date-input__control-wrap {
-    padding-top: 8px;
-    padding-bottom: 2px;
+    padding-top: 0;
+    padding-bottom: 0;
 }
 
 .fd-ui-plain-date-input__error {

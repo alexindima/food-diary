@@ -46,6 +46,10 @@ export class FdUiPlainTimeInputComponent implements ControlValueAccessor {
         return this.isFocused || this.internalValue.trim().length > 0;
     }
 
+    protected get shouldShowPlaceholder(): boolean {
+        return this.isFocused && this.internalValue.trim().length === 0;
+    }
+
     public writeValue(value: string | null): void {
         this.internalValue = value ?? '';
     }

@@ -88,7 +88,7 @@ const normalizeString = (value: string | null | undefined): string | undefined =
     return trimmed ? trimmed : undefined;
 };
 
-const normalizeDate = (value: Date | null | undefined): Date | undefined => {
+const normalizeDate = (value: Date | string | null | undefined): Date | undefined => {
     if (!value) {
         return undefined;
     }
