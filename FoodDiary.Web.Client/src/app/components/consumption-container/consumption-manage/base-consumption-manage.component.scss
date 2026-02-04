@@ -568,40 +568,8 @@
     }
 }
 
-.consumption-item__selector {
+.consumption-item__selector-input {
     width: 100%;
-    border: 1px solid fade($color-border, 50%);
-    border-radius: $border-radius-m;
-    padding: $gap-s $gap-m;
-    background-color: $color-background;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: $gap-s;
-    cursor: pointer;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
-
-    &:hover {
-        border-color: $color-text-main;
-        box-shadow: 0 4px 18px fade($color-text-main, 12%);
-    }
-
-    &--invalid {
-        border-color: $color-no-results;
-    }
-
-    mat-icon {
-        color: $color-text-additional;
-    }
-}
-
-.consumption-item__selector-value {
-    flex: 1;
-    text-align: left;
-    color: $color-text-main;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
 }
 
 .consumption-item__actions {

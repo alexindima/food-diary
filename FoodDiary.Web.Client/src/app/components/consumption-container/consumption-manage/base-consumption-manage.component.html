@@ -136,21 +136,17 @@
                                 <div class="consumption-item__fields">
                                     <div class="consumption-item__row consumption-item__row--with-remove">
                                         <div class="consumption-item__field consumption-item__field--source">
-                                            <button
-                                                type="button"
-                                                class="consumption-item__selector"
-                                                [class.consumption-item__selector--invalid]="isItemSourceInvalid(i)"
+                                            <fd-ui-input
+                                                class="consumption-item__selector-input"
+                                                [ngModel]="getItemSourceName(i)"
+                                                [ngModelOptions]="{ standalone: true }"
+                                                [label]="'CONSUMPTION_MANAGE.ITEM_SOURCE_LABEL' | translate"
+                                                [placeholder]="'CONSUMPTION_MANAGE.ITEM_SOURCE_PLACEHOLDER' | translate"
+                                                [readonly]="true"
+                                                [prefixIcon]="getItemSourceIcon(i)"
+                                                [error]="getItemSourceError(i)"
                                                 (click)="onItemSourceClick(i)"
-                                            >
-                                                <span class="consumption-item__selector-value">
-                                                    {{
-                                                        getItemSourceName(i)
-                                                            || ('CONSUMPTION_MANAGE.ITEM_SOURCE_PLACEHOLDER' | translate)
-                                                    }}
-                                                </span>
-                                                <mat-icon>{{ getItemSourceIcon(i) }}</mat-icon>
-                                            </button>
-                                            <fd-ui-form-error [error]="getItemSourceError(i)" />
+                                            />
                                         </div>
                                         <div class="consumption-item__field consumption-item__field--amount">
                                             <fd-ui-input formControlName="amount"
