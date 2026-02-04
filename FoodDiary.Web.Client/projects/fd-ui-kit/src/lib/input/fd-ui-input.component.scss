@@ -1,106 +1,173 @@
-:host {
+﻿:host {
     display: block;
 }
 
 .fd-ui-input {
-    width: 100%;
     --fd-input-height: 40px;
-    --fd-input-border-radius: var(--fd-field-border-radius, 14px);
-    --mdc-outlined-text-field-container-height: var(--fd-input-height) !important;
-    --mat-form-field-container-height: var(--fd-input-height) !important;
-    --mdc-outlined-text-field-container-shape: var(--fd-input-border-radius);
-    --fd-input-outline-color: rgba(148, 163, 184, 0.38);
-    --mdc-outlined-text-field-outline-color: var(--fd-input-outline-color);
-    --mdc-outlined-text-field-hover-outline-color: rgba(148, 163, 184, 0.55);
-    --mdc-outlined-text-field-focus-outline-color: var(--fd-color-primary);
-    --mdc-outlined-text-field-disabled-outline-color: rgba(148, 163, 184, 0.3);
-
-    &.fd-ui-input--has-error {
-        --mdc-outlined-text-field-focus-outline-color: var(--fd-color-warn);
-    }
-
-    &:not(.fd-ui-input--has-error) {
-        --mdc-outlined-text-field-focus-outline-color: var(--fd-color-primary);
-    }
-
-    &--size-sm {
-        --fd-input-height: 32px;
-    }
-
-    &--size-md {
-        --fd-input-height: 40px;
-    }
-
-    &--size-lg {
-        --fd-input-height: 48px;
-    }
-
-    .mat-mdc-text-field-wrapper {
-        min-height: var(--fd-input-height) !important;
-        height: var(--fd-input-height) !important;
-        border-radius: var(--fd-input-border-radius);
-        background-color: var(--fd-input-background, var(--fd-color-surface));
-    }
-
-    .mdc-notched-outline {
-        border-radius: var(--fd-input-border-radius);
-    }
-
-
-    .mat-mdc-form-field-flex {
-        min-height: var(--fd-input-height) !important;
-        height: var(--fd-input-height) !important;
-        align-items: center;
-    }
-
-    &.fd-ui-input--focused {
-        --fd-input-outline-color: var(--mdc-outlined-text-field-focus-outline-color);
-    }
-
-    &.fd-ui-input--has-error {
-        --fd-input-outline-color: var(--fd-color-warn);
-    }
-
-    .mat-mdc-form-field-infix {
-        min-height: calc(var(--fd-input-height) - 14px) !important;
-        padding-top: 6px;
-        padding-bottom: 6px;
-    }
-
-    .mat-mdc-form-field-subscript-wrapper {
-        font-size: 0.75rem;
-        line-height: 1.2;
-        margin-top: 4px;
-    }
-
-    &.fd-ui-input--no-subscript {
-        ::ng-deep .mat-mdc-form-field-subscript-wrapper {
-            min-height: 0 !important;
-            height: 0 !important;
-            margin-top: 0 !important;
-            overflow: hidden;
-        }
-    }
+    --fd-input-radius: 14px;
+    --fd-input-border: rgba(148, 163, 184, 0.38);
+    --fd-input-label-bg: var(--fd-color-surface, #fff);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
 }
 
-.fd-ui-input__clear {
-    color: var(--fd-color-text-muted);
-
-    &:disabled {
-        color: rgba(0, 0, 0, 0.26);
-    }
+.fd-ui-input--size-sm {
+    --fd-input-height: 32px;
 }
 
-.mat-mdc-input-element {
+.fd-ui-input--size-md {
+    --fd-input-height: 48px;
+}
+
+.fd-ui-input--size-lg {
+    --fd-input-height: 48px;
+}
+
+.fd-ui-input__label {
+    color: #64748b;
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.2;
+    display: inline-flex;
+    align-items: center;
+    max-width: calc(100% - 28px);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    position: absolute;
+    top: 50%;
+    left: 14px;
+    transform: translateY(-50%);
+    transition: transform 0.15s ease, top 0.15s ease, font-size 0.15s ease;
+    background: var(--fd-input-label-bg);
+    padding: 0 4px;
+    pointer-events: none;
+}
+
+.fd-ui-input__required {
+    margin-left: 0;
+    color: #ef4444;
+}
+
+.fd-ui-input__control-wrap {
+    min-height: var(--fd-input-height);
+    border: 1px solid var(--fd-input-border);
+    border-radius: var(--fd-input-radius);
+    background: #fff;
+    display: flex;
+    align-items: center;
+    padding: 0 44px 0 12px;
+    transition: border-color 0.15s ease;
+    position: relative;
+}
+
+.fd-ui-input__control-wrap--with-prefix {
+    padding-left: 44px;
+}
+
+.fd-ui-input__control-wrap--date {
+    padding-right: 16px;
+}
+
+.fd-ui-input__control-wrap--with-prefix .fd-ui-input__label {
+    left: 44px;
+    max-width: calc(100% - 58px);
+}
+
+.fd-ui-input__control-wrap:focus-within {
+    border-color: #3b82f6;
+}
+
+.fd-ui-input__control {
+    flex: 1;
+    width: 100%;
+    min-width: 0;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: #1e293b;
     font: inherit;
-
-    &[type='number'] {
-        -moz-appearance: textfield;
-
-        &::-webkit-outer-spin-button,
-        &::-webkit-inner-spin-button {
-            margin: 0;
-            -webkit-appearance: none;
-        }
-    }
+    margin-top: 0;
 }
+
+.fd-ui-input__prefix {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    color: #64748b;
+    pointer-events: none;
+}
+
+.fd-ui-input__control::placeholder {
+    color: #94a3b8;
+}
+
+.fd-ui-input__suffix {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    border: none;
+    background: transparent;
+    color: #94a3b8;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+}
+
+.fd-ui-input__suffix:disabled {
+    opacity: 0.6;
+    cursor: default;
+}
+
+.fd-ui-input--has-error .fd-ui-input__control-wrap {
+    border-color: #ef4444;
+}
+
+.fd-ui-input--floating .fd-ui-input__label {
+    top: 0;
+    transform: translateY(-50%);
+    font-size: 0.8rem;
+}
+
+.fd-ui-input--floating .fd-ui-input__control-wrap {
+    padding-top: 8px;
+    padding-bottom: 2px;
+}
+
+.fd-ui-input__error {
+    color: #ef4444;
+    font-size: 0.75rem;
+    line-height: 1.2;
+    margin-top: 2px;
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: anywhere;
+}
+
+.fd-ui-input__control[type='number'] {
+    -moz-appearance: textfield;
+}
+
+.fd-ui-input__control[type='number']::-webkit-outer-spin-button,
+.fd-ui-input__control[type='number']::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.fd-ui-input__control[type='date']::-webkit-calendar-picker-indicator,
+.fd-ui-input__control[type='datetime-local']::-webkit-calendar-picker-indicator,
+.fd-ui-input__control[type='time']::-webkit-calendar-picker-indicator {
+    margin-right: -2px;
+}
+

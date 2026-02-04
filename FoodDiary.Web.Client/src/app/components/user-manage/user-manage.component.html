@@ -1,4 +1,4 @@
-<div class="user-manage" fdPageContainer>
+﻿<div class="user-manage" fdPageContainer>
     <fd-page-header
         class="user-manage__header"
         [title]="'USER_MANAGE.EDIT_TITLE' | translate"
@@ -58,7 +58,7 @@
                         </div>
                         <div class="user-manage__account-fields">
                             <div class="user-manage__account-row">
-                                <fd-ui-plain-input
+                                <fd-ui-input
                                     class="user-manage__account-row-field"
                                     formControlName="email"
                                     type="email"
@@ -66,7 +66,7 @@
                                     [label]="'USER_MANAGE.EMAIL' | translate"
                                     [placeholder]="'USER_MANAGE.EMAIL_PLACEHOLDER' | translate"
                                  />
-                                <fd-ui-plain-input
+                                <fd-ui-input
                                     class="user-manage__account-row-field"
                                     formControlName="username"
                                     size="lg"
@@ -75,14 +75,14 @@
                                  />
                             </div>
                             <div class="user-manage__account-row">
-                                <fd-ui-plain-input
+                                <fd-ui-input
                                     class="user-manage__account-row-field"
                                     formControlName="firstName"
                                     size="lg"
                                     [label]="'USER_MANAGE.FIRST_NAME' | translate"
                                     [placeholder]="'USER_MANAGE.FIRST_NAME_PLACEHOLDER' | translate"
                                  />
-                                <fd-ui-plain-input
+                                <fd-ui-input
                                     class="user-manage__account-row-field"
                                     formControlName="lastName"
                                     size="lg"
@@ -91,14 +91,14 @@
                                  />
                             </div>
                             <div class="user-manage__account-row">
-                                <fd-ui-plain-date-input
+                                <fd-ui-date-input
                                     class="user-manage__account-row-field"
                                     formControlName="birthDate"
                                     size="lg"
                                     [label]="'USER_MANAGE.BIRTH_DATE' | translate"
                                     [placeholder]="'USER_MANAGE.BIRTH_DATE_PLACEHOLDER' | translate"
                                  />
-                                <fd-ui-plain-select
+                                <fd-ui-select
                                     class="user-manage__account-row-field"
                                     formControlName="gender"
                                     size="lg"
@@ -108,7 +108,7 @@
                                  />
                             </div>
                             <div class="user-manage__account-row">
-                                <fd-ui-plain-select
+                                <fd-ui-select
                                     class="user-manage__account-row-field"
                                     formControlName="language"
                                     size="lg"
@@ -140,14 +140,14 @@
                         </div>
                     </div>
                     <div class="user-manage__body">
-                        <fd-ui-plain-input
+                        <fd-ui-input
                             formControlName="height"
                             type="number"
                             size="lg"
                             [label]="'USER_MANAGE.HEIGHT' | translate"
                             [placeholder]="'USER_MANAGE.HEIGHT_PLACEHOLDER' | translate"
                          />
-                        <fd-ui-plain-select
+                        <fd-ui-select
                             formControlName="activityLevel"
                             size="lg"
                             [label]="'USER_MANAGE.ACTIVITY_LEVEL' | translate"
@@ -174,3 +174,4 @@
         </form>
     </fd-page-body>
 </div>
+

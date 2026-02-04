@@ -1,4 +1,4 @@
-@use '@angular/material' as mat;
+﻿@use '@angular/material' as mat;
 @use './design-tokens';
 
 @include mat.core();
@@ -29,3 +29,4 @@ $fd-theme: mat.define-theme((
     --mdc-outlined-text-field-container-height: 40px;
     --mat-form-field-container-height: 40px;
 }
+

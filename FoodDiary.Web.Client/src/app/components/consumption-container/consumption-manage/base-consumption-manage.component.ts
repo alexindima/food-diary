@@ -1,4 +1,4 @@
-import {
+﻿import {
     ChangeDetectionStrategy,
     Component,
     DestroyRef,
@@ -10,7 +10,6 @@ import {
 } from '@angular/core';
 import { AbstractControl, FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { DecimalPipe } from '@angular/common';
 import { NavigationService } from '../../../services/navigation.service';
 import { RecipeService } from '../../../services/recipe.service';
 import {
@@ -33,22 +32,21 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { nonEmptyArrayValidator } from '../../../validators/non-empty-array.validator';
 import { NutrientData } from '../../../types/charts.data';
 import {
-    NutrientsSummaryComponent
 } from '../../shared/nutrients-summary/nutrients-summary.component';
 import { FdUiFormErrorComponent, FD_VALIDATION_ERRORS, FdValidationErrors } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
-import { FdUiPlainInputComponent } from 'fd-ui-kit/plain-input/fd-ui-plain-input.component';
+import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiCheckboxComponent } from 'fd-ui-kit/checkbox/fd-ui-checkbox.component';
 import { FdUiIconModule } from 'fd-ui-kit/material';
 import { FdUiNutrientInputComponent } from 'fd-ui-kit/nutrient-input/fd-ui-nutrient-input.component';
-import { FdUiPlainDateInputComponent } from 'fd-ui-kit/plain-date-input/fd-ui-plain-date-input.component';
-import { FdUiPlainTimeInputComponent } from 'fd-ui-kit/plain-time-input/fd-ui-plain-time-input.component';
-import { FdUiPlainSelectComponent } from 'fd-ui-kit/plain-select/fd-ui-plain-select.component';
-import { FdUiPlainTextareaComponent } from 'fd-ui-kit/plain-textarea/fd-ui-plain-textarea.component';
+import { FdUiDateInputComponent } from 'fd-ui-kit/date-input/fd-ui-date-input.component';
+import { FdUiTimeInputComponent } from 'fd-ui-kit/time-input/fd-ui-time-input.component';
+import { FdUiSelectComponent } from 'fd-ui-kit/select/fd-ui-select.component';
+import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea.component';
 import {
     SatietyLevelDialogComponent,
     SatietyLevelDialogData,
@@ -88,17 +86,15 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     imports: [
         ReactiveFormsModule,
         TranslatePipe,
-        DecimalPipe,
-        NutrientsSummaryComponent,
         FdUiCardComponent,
-        FdUiPlainInputComponent,
+        FdUiInputComponent,
         FdUiButtonComponent,
         FdUiCheckboxComponent,
         FdUiNutrientInputComponent,
-        FdUiPlainDateInputComponent,
-        FdUiPlainTimeInputComponent,
-        FdUiPlainSelectComponent,
-        FdUiPlainTextareaComponent,
+        FdUiDateInputComponent,
+        FdUiTimeInputComponent,
+        FdUiSelectComponent,
+        FdUiTextareaComponent,
         FdUiIconModule,
         FdUiFormErrorComponent,
         PageHeaderComponent,
@@ -452,7 +448,7 @@ export class BaseConsumptionManageComponent implements OnInit {
             return this.translateService.instant('CONSUMPTION_MANAGE.SATIETY_NOT_SELECTED');
         }
         const title = this.translateService.instant(`HUNGER_SCALE.LEVEL_${value}.TITLE`);
-        return `${value} — ${title}`;
+        return `${value} â€” ${title}`;
     }
 
     public getSatietyLevelMeta(value: number | null): { label: string; description: string; gradient: string } {
@@ -466,7 +462,7 @@ export class BaseConsumptionManageComponent implements OnInit {
 
         const config = DEFAULT_SATIETY_LEVELS.find(level => level.value === value);
         return {
-            label: `${value} — ${this.translateService.instant(config?.titleKey ?? '')}`,
+            label: `${value} â€” ${this.translateService.instant(config?.titleKey ?? '')}`,
             description: this.translateService.instant(config?.descriptionKey ?? ''),
             gradient: config?.gradient ?? 'linear-gradient(135deg, #e2e8f0, #cbd5f5)',
         };
@@ -1148,3 +1144,4 @@ type NutritionTotals = {
     fiber: number;
     alcohol: number;
 };
+

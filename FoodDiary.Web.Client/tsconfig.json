@@ -8,8 +8,8 @@
         "noImplicitOverride": true,
         "paths": {
             "fd-ui-kit": [
-                "./dist/fd-ui-kit",
-                "./projects/fd-ui-kit/src/public-api"
+                "./projects/fd-ui-kit/src/public-api",
+                "./dist/fd-ui-kit"
             ],
             "fd-ui-kit/*": ["./projects/fd-ui-kit/src/lib/*"]
         },

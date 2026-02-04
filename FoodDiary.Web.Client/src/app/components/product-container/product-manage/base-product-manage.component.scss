@@ -1,4 +1,4 @@
-@use 'variables' as *;
+﻿@use 'variables' as *;
 
 .product-manage {
     --fd-layout-page-background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 45%, #eef2f7 100%);
@@ -14,12 +14,12 @@
         max-width: 100% !important;
     }
 
-    ::ng-deep .fd-ui-plain-input {
-        --fd-plain-input-height: 48px;
+    ::ng-deep .fd-ui-input {
+        --fd-input-height: 48px;
     }
 
-    ::ng-deep .fd-ui-plain-select {
-        --fd-plain-select-height: 48px;
+    ::ng-deep .fd-ui-select {
+        --fd-select-height: 48px;
     }
 
     &__header {
@@ -432,3 +432,4 @@
         }
     }
 }
+

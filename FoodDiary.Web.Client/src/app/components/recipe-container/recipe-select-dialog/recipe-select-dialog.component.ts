@@ -1,4 +1,4 @@
-import {
+﻿import {
   ChangeDetectionStrategy,
   Component,
   DestroyRef,
@@ -27,7 +27,7 @@ import { FdUiDialogRef } from 'fd-ui-kit/material';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.component';
-import { FdUiPlainInputComponent } from 'fd-ui-kit/plain-input/fd-ui-plain-input.component';
+import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { resolveRecipeImageUrl } from '../../../utils/recipe-stub.utils';
 
 @Component({
@@ -47,7 +47,7 @@ import { resolveRecipeImageUrl } from '../../../utils/recipe-stub.utils';
         FdUiLoaderComponent,
         FdUiPaginationComponent,
         FdUiIconModule,
-        FdUiPlainInputComponent,
+        FdUiInputComponent,
     ],
 })
 export class RecipeSelectDialogComponent implements OnInit {
@@ -163,3 +163,4 @@ interface RecipeSearchFormValues {
 }
 
 type RecipeSearchFormGroup = FormGroupControls<RecipeSearchFormValues>;
+

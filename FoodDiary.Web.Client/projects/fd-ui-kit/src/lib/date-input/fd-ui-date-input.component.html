@@ -1,22 +1,35 @@
-<mat-form-field
-  appearance="outline"
-  class="fd-ui-date-input"
-  [class.fd-ui-date-input--disabled]="isDisabled"
-  [floatLabel]="floatLabel()"
-  [ngClass]="[sizeClass, hideSubscript() ? 'fd-ui-date-input--no-subscript' : '']"
-  >
-  @if (label()) {
-    <mat-label>{{ label() }}</mat-label>
+﻿<div class="fd-ui-date-input" [ngClass]="[sizeClass, error() ? 'fd-ui-date-input--has-error' : '', shouldFloatLabel ? 'fd-ui-date-input--floating' : '']">
+  <div class="fd-ui-date-input__control-wrap" (focusin)="onFocusIn()" (focusout)="onFocusOut()">
+    @if (label()) {
+      <label class="fd-ui-date-input__label" [attr.for]="id()">
+        <span class="fd-ui-date-input__label-text">{{ label() }}</span>@if (required()) {<span class="fd-ui-date-input__required">*</span>}
+      </label>
+    }
+    <div class="fd-ui-date-input__segment">
+      <input
+        #dateInput
+        matInput
+        class="fd-ui-date-input__control"
+        [id]="id()"
+        [matDatepicker]="picker"
+        [formControl]="dateControl"
+        [attr.placeholder]="shouldShowPlaceholder ? (placeholder() ?? null) : null"
+        [disabled]="disabled"
+        />
+      <button
+        type="button"
+        class="fd-ui-date-input__suffix"
+        [disabled]="disabled"
+        (click)="openDatePicker(picker)"
+        >
+        <mat-icon>calendar_today</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  @if (error()) {
+    <div class="fd-ui-date-input__error">{{ error() }}</div>
   }
-  <input
-    matInput
-    [matDatepicker]="datePicker"
-    [formControl]="dateControl"
-    [placeholder]="placeholder()"
-    [min]="min()"
-    [max]="max()"
-    (blur)="handleBlur()"
-    />
-  <mat-datepicker-toggle matSuffix [for]="datePicker" />
-</mat-form-field>
-<mat-datepicker #datePicker (closed)="dateControl.markAsTouched()" />
+</div>
+<mat-datepicker #picker (closed)="dateControl.markAsTouched()" />
+

@@ -1,11 +1,11 @@
-import { CommonModule } from '@angular/common';
+﻿import { CommonModule } from '@angular/common';
 import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  forwardRef,
-  ViewEncapsulation,
-  input
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    forwardRef,
+    input,
+    ViewEncapsulation,
 } from '@angular/core';
 import {
     ControlValueAccessor,
@@ -16,11 +16,8 @@ import {
 } from '@angular/forms';
 import { DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
 import { FdUiFieldSize } from '../types/field-size.type';
+import { FdUiDateInputComponent } from '../date-input/fd-ui-date-input.component';
 
 export interface FdUiDateRangeValue {
     start: Date | null;
@@ -30,14 +27,7 @@ export interface FdUiDateRangeValue {
 @Component({
     selector: 'fd-ui-date-range-input',
     standalone: true,
-    imports: [
-        CommonModule,
-        ReactiveFormsModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatDatepickerModule,
-        MatNativeDateModule,
-    ],
+    imports: [CommonModule, ReactiveFormsModule, FdUiDateInputComponent],
     templateUrl: './fd-ui-date-range-input.component.html',
     styleUrls: ['./fd-ui-date-range-input.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -52,23 +42,20 @@ export interface FdUiDateRangeValue {
 })
 export class FdUiDateRangeInputComponent implements ControlValueAccessor {
     private readonly cdr = inject(ChangeDetectorRef);
+    private readonly destroyRef = inject(DestroyRef);
 
-    public readonly label = input<string>();
-    public readonly startPlaceholder = input('');
-    public readonly endPlaceholder = input('');
-    public readonly min = input<Date>();
-    public readonly max = input<Date>();
-    public readonly floatLabel = input<'auto' | 'always'>('auto');
+    public readonly startPlaceholder = input<string>();
+    public readonly endPlaceholder = input<string>();
+    public readonly startLabel = input<string>();
+    public readonly endLabel = input<string>();
     public readonly size = input<FdUiFieldSize>('md');
-    public readonly hideSubscript = input(false);
 
     protected readonly rangeGroup = new FormGroup({
-        start: new FormControl<Date | null>(null),
-        end: new FormControl<Date | null>(null),
+        start: new FormControl<string | null>(null),
+        end: new FormControl<string | null>(null),
     });
     protected isDisabled = false;
 
-    private readonly destroyRef = inject(DestroyRef);
     private onChange: (value: FdUiDateRangeValue) => void = () => undefined;
     private onTouched: () => void = () => undefined;
 
@@ -77,8 +64,8 @@ export class FdUiDateRangeInputComponent implements ControlValueAccessor {
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(value => {
                 this.onChange({
-                    start: value.start ?? null,
-                    end: value.end ?? null,
+                    start: this.toDateValue(value.start),
+                    end: this.toDateValue(value.end),
                 });
             });
     }
@@ -111,22 +98,18 @@ export class FdUiDateRangeInputComponent implements ControlValueAccessor {
         this.onTouched();
     }
 
-    protected get sizeClass(): string {
-        return `fd-ui-date-range-input--size-${this.size()}`;
-    }
-
-    private toRangeValue(value: FdUiDateRangeValue | null): FdUiDateRangeValue {
+    private toRangeValue(value: FdUiDateRangeValue | null): { start: string | null; end: string | null } {
         if (!value) {
             return { start: null, end: null };
         }
 
         return {
-            start: this.toDateValue(value.start),
-            end: this.toDateValue(value.end),
+            start: this.formatDate(value.start),
+            end: this.formatDate(value.end),
         };
     }
 
-    private toDateValue(value: Date | string | number | null | undefined): Date | null {
+    private toDateValue(value: string | Date | null | undefined): Date | null {
         if (!value) {
             return null;
         }
@@ -138,4 +121,21 @@ export class FdUiDateRangeInputComponent implements ControlValueAccessor {
         const date = new Date(value);
         return Number.isNaN(date.getTime()) ? null : date;
     }
+
+    private formatDate(value: Date | null | undefined): string | null {
+        if (!value) {
+            return null;
+        }
+
+        const date = value instanceof Date ? value : new Date(value);
+        if (Number.isNaN(date.getTime())) {
+            return null;
+        }
+
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
 }
+

@@ -1,4 +1,4 @@
-@use 'variables' as *;
+﻿@use 'variables' as *;
 
 .recipe-list {
     margin: 0 auto;
@@ -36,8 +36,8 @@
     &__search-input {
         width: 100%;
 
-        ::ng-deep .fd-ui-plain-input {
-            --fd-plain-input-radius: 18px;
+        ::ng-deep .fd-ui-input {
+            --fd-input-radius: 18px;
         }
     }
 
@@ -225,3 +225,4 @@
         }
     }
 }
+

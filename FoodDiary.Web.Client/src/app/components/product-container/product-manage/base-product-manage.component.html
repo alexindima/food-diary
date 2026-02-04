@@ -1,4 +1,4 @@
-<div class="product-manage" fdPageContainer>
+﻿<div class="product-manage" fdPageContainer>
     <fd-page-header
         class="product-manage__header"
         [title]="product() ? ('PRODUCT_MANAGE.EDIT_TITLE' | translate) : ('PRODUCT_MANAGE.ADD_TITLE' | translate)"
@@ -40,7 +40,7 @@
                             />
                         </div>
                         <div class="product-manage__hero-field">
-                            <fd-ui-plain-input formControlName="name"
+                            <fd-ui-input formControlName="name"
                                 size="lg"
                                 [label]="'PRODUCT_MANAGE.NAME' | translate"
                                 [placeholder]="'PRODUCT_MANAGE.NAME_PLACEHOLDER' | translate"
@@ -49,7 +49,7 @@
                              />
                         </div>
                         <div class="product-manage__hero-field">
-                            <fd-ui-plain-input formControlName="barcode"
+                            <fd-ui-input formControlName="barcode"
                                 size="lg"
                                 [label]="'PRODUCT_MANAGE.BARCODE' | translate"
                                 [placeholder]="'PRODUCT_MANAGE.BARCODE_PLACEHOLDER' | translate"
@@ -59,7 +59,7 @@
                              />
                         </div>
                         <div class="product-manage__hero-field">
-                            <fd-ui-plain-select formControlName="productType"
+                            <fd-ui-select formControlName="productType"
                                 size="lg"
                                 [label]="'PRODUCT_MANAGE.PRODUCT_TYPE' | translate"
                                 [placeholder]="'PRODUCT_MANAGE.PRODUCT_TYPE_PLACEHOLDER' | translate"
@@ -72,7 +72,7 @@
                     <div class="product-manage__basic-grid">
                         <div class="product-manage__serving-row product-manage__field--full">
                             <div class="product-manage__serving-part">
-                                <fd-ui-plain-input formControlName="defaultPortionAmount"
+                                <fd-ui-input formControlName="defaultPortionAmount"
                                     type="number"
                                     [label]="'PRODUCT_MANAGE.DEFAULT_PORTION_AMOUNT' | translate"
                                     [placeholder]="'PRODUCT_MANAGE.DEFAULT_PORTION_PLACEHOLDER' | translate"
@@ -81,7 +81,7 @@
                                  />
                             </div>
                             <div class="product-manage__serving-part">
-                                <fd-ui-plain-select formControlName="baseUnit"
+                                <fd-ui-select formControlName="baseUnit"
                                     [label]="'PRODUCT_MANAGE.DEFAULT_SERVING_UNIT' | translate"
                                     [options]="unitOptions"
                                     [required]="true"
@@ -99,7 +99,7 @@
                 >
                     <div class="product-manage__basic-grid">
                         <div class="product-manage__field product-manage__field--full">
-                            <fd-ui-plain-select formControlName="visibility"
+                            <fd-ui-select formControlName="visibility"
                                 [label]="'PRODUCT_MANAGE.VISIBILITY' | translate"
                                 [required]="true"
                                 [options]="visibilitySelectOptions"
@@ -107,7 +107,7 @@
                              />
                         </div>
                         <div class="product-manage__field product-manage__field--full">
-                            <fd-ui-plain-textarea formControlName="comment"
+                            <fd-ui-textarea formControlName="comment"
                                 [label]="'PRODUCT_MANAGE.COMMENT' | translate"
                                 [placeholder]="'PRODUCT_MANAGE.COMMENT_PLACEHOLDER' | translate"
                                 [rows]="4"
@@ -276,3 +276,4 @@
         </div>
     </form>
 </div>
+

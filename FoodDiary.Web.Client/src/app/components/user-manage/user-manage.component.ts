@@ -1,4 +1,4 @@
-import {
+﻿import {
     ChangeDetectionStrategy,
     Component,
     DestroyRef,
@@ -34,9 +34,9 @@ import {
 } from '../shared/confirm-delete-dialog/confirm-delete-dialog.component';
 import { AuthService } from '../../services/auth.service';
 import { LocalizationService } from '../../services/localization.service';
-import { FdUiPlainInputComponent } from 'fd-ui-kit/plain-input/fd-ui-plain-input.component';
-import { FdUiPlainSelectComponent } from 'fd-ui-kit/plain-select/fd-ui-plain-select.component';
-import { FdUiPlainDateInputComponent } from 'fd-ui-kit/plain-date-input/fd-ui-plain-date-input.component';
+import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
+import { FdUiSelectComponent } from 'fd-ui-kit/select/fd-ui-select.component';
+import { FdUiDateInputComponent } from 'fd-ui-kit/date-input/fd-ui-date-input.component';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: FD_VALIDATION_ERRORS,
@@ -56,9 +56,9 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
         ReactiveFormsModule,
         TranslatePipe,
         FdUiCardComponent,
-        FdUiPlainInputComponent,
-        FdUiPlainSelectComponent,
-        FdUiPlainDateInputComponent,
+        FdUiInputComponent,
+        FdUiSelectComponent,
+        FdUiDateInputComponent,
         FdUiButtonComponent,
         FdUiFormErrorComponent,
         PageHeaderComponent,
@@ -368,3 +368,4 @@ export interface UserFormValues {
 }
 
 export type UserFormData = FormGroupControls<UserFormValues>;
+

@@ -1,25 +1,23 @@
-import { CommonModule } from '@angular/common';
+﻿import { CommonModule } from '@angular/common';
 import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  forwardRef,
-  ViewEncapsulation,
-  input
+    ChangeDetectionStrategy,
+    Component,
+    DestroyRef,
+    ElementRef,
+    forwardRef,
+    inject,
+    input,
+    ViewEncapsulation,
 } from '@angular/core';
-import {
-    ControlValueAccessor,
-    FormControl,
-    NG_VALUE_ACCESSOR,
-    ReactiveFormsModule,
-} from '@angular/forms';
-import { DestroyRef, inject } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatDatepickerModule } from '@angular/material/datepicker';
+import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
+import { MatDatepicker, MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FdUiFieldSize } from '../types/field-size.type';
+
+let uniqueId = 0;
 
 @Component({
     selector: 'fd-ui-date-input',
@@ -27,10 +25,10 @@ import { FdUiFieldSize } from '../types/field-size.type';
     imports: [
         CommonModule,
         ReactiveFormsModule,
-        MatFormFieldModule,
-        MatInputModule,
         MatDatepickerModule,
         MatNativeDateModule,
+        MatInputModule,
+        MatIconModule,
     ],
     templateUrl: './fd-ui-date-input.component.html',
     styleUrls: ['./fd-ui-date-input.component.scss'],
@@ -45,38 +43,57 @@ import { FdUiFieldSize } from '../types/field-size.type';
     ],
 })
 export class FdUiDateInputComponent implements ControlValueAccessor {
-    private readonly cdr = inject(ChangeDetectorRef);
-
+    public readonly id = input(`fd-ui-date-input-${uniqueId++}`);
     public readonly label = input<string>();
-    public readonly placeholder = input('');
-    public readonly min = input<Date>();
-    public readonly max = input<Date>();
-    public readonly floatLabel = input<'auto' | 'always'>('auto');
+    public readonly placeholder = input<string>();
+    public readonly error = input<string | null>();
+    public readonly required = input(false);
     public readonly size = input<FdUiFieldSize>('md');
-    public readonly hideSubscript = input(false);
 
     protected readonly dateControl = new FormControl<Date | null>(null);
-    protected isDisabled = false;
+    protected disabled = false;
+    protected isFocused = false;
 
     private readonly destroyRef = inject(DestroyRef);
-    private onChange: (value: Date | null) => void = () => undefined;
+    private readonly host = inject(ElementRef<HTMLElement>);
+
+    private onChange: (value: string | null) => void = () => undefined;
     private onTouched: () => void = () => undefined;
 
     public constructor() {
         this.dateControl.valueChanges
             .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(value => {
-                this.onChange(value ?? null);
-            });
+            .subscribe(date => this.emitValue(date));
     }
 
-    public writeValue(value: Date | string | number | null): void {
-        const coerced = this.toDateValue(value);
-        this.dateControl.setValue(coerced, { emitEvent: false });
-        this.cdr.markForCheck();
+    protected get sizeClass(): string {
+        return `fd-ui-date-input--size-${this.size()}`;
     }
 
-    public registerOnChange(fn: (value: Date | null) => void): void {
+    protected get shouldFloatLabel(): boolean {
+        return this.isFocused || !!this.dateControl.value;
+    }
+
+    protected get shouldShowPlaceholder(): boolean {
+        return this.isFocused && !this.dateControl.value;
+    }
+
+    public writeValue(value: string | Date | null): void {
+        if (!value) {
+            this.dateControl.setValue(null, { emitEvent: false });
+            return;
+        }
+
+        const parsed = typeof value === 'string' ? this.parseDateString(value) : value;
+        if (!parsed) {
+            this.dateControl.setValue(null, { emitEvent: false });
+            return;
+        }
+
+        this.dateControl.setValue(parsed, { emitEvent: false });
+    }
+
+    public registerOnChange(fn: (value: string | null) => void): void {
         this.onChange = fn;
     }
 
@@ -85,33 +102,62 @@ export class FdUiDateInputComponent implements ControlValueAccessor {
     }
 
     public setDisabledState(isDisabled: boolean): void {
-        this.isDisabled = isDisabled;
+        this.disabled = isDisabled;
         if (isDisabled) {
             this.dateControl.disable({ emitEvent: false });
         } else {
             this.dateControl.enable({ emitEvent: false });
         }
-        this.cdr.markForCheck();
     }
 
-    protected handleBlur(): void {
+    protected openDatePicker(picker: MatDatepicker<Date>): void {
+        if (this.disabled) {
+            return;
+        }
+        picker.open();
+    }
+
+    protected onFocusIn(): void {
+        this.isFocused = true;
+    }
+
+    protected onFocusOut(): void {
+        const active = document.activeElement;
+        if (active && this.host.nativeElement.contains(active)) {
+            return;
+        }
+        this.isFocused = false;
         this.onTouched();
     }
 
-    protected get sizeClass(): string {
-        return `fd-ui-date-input--size-${this.size()}`;
+    private emitValue(date: Date | null): void {
+        if (!date) {
+            this.onChange(null);
+            return;
+        }
+
+        const formatted = [
+            date.getFullYear(),
+            this.padNumber(date.getMonth() + 1),
+            this.padNumber(date.getDate()),
+        ].join('-');
+        this.onChange(formatted);
     }
 
-    private toDateValue(value: Date | string | number | null | undefined): Date | null {
-        if (!value) {
-            return null;
+    private parseDateString(value: string): Date | null {
+        const match = value.match(/^(\d{4})-(\d{2})-(\d{2})/);
+        if (!match) {
+            const date = new Date(value);
+            return Number.isNaN(date.getTime()) ? null : date;
         }
+        const year = Number(match[1]);
+        const month = Number(match[2]);
+        const day = Number(match[3]);
+        return new Date(year, month - 1, day);
+    }
 
-        if (value instanceof Date) {
-            return value;
-        }
-
-        const date = new Date(value);
-        return Number.isNaN(date.getTime()) ? null : date;
+    private padNumber(value: number): string {
+        return value.toString().padStart(2, '0');
     }
 }
+

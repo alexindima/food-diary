@@ -1,4 +1,4 @@
-@use 'variables' as *;
+﻿@use 'variables' as *;
 
 .auth {
     margin: 0 auto;
@@ -173,7 +173,7 @@
 }
 
 /* Input and checkbox tweaks inside auth dialog */
-:host ::ng-deep fd-ui-plain-input .fd-ui-plain-input__control {
+:host ::ng-deep fd-ui-input .fd-ui-input__control {
     border-radius: 12px;
     background: #fff;
     border: 1px solid #d5d9e2;
@@ -208,3 +208,4 @@
 :host ::ng-deep fd-ui-checkbox .fd-ui-checkbox__label {
     color: #5b6275;
 }
+

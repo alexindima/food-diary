@@ -1,4 +1,4 @@
-<div class="auth">
+﻿<div class="auth">
     <div class="auth__tabs">
         <button type="button"
             class="auth__tab"
@@ -28,7 +28,7 @@
         @if (authMode === 'login') {
             <form [formGroup]="loginForm" (ngSubmit)="onLoginSubmit()" class="auth__form">
                 <div class="auth__field">
-                    <fd-ui-plain-input formControlName="email"
+                    <fd-ui-input formControlName="email"
                         type="email"
                         [label]="'AUTH.LOGIN.EMAIL' | translate"
                         [placeholder]="'AUTH.LOGIN.EMAIL_PLACEHOLDER' | translate"
@@ -38,7 +38,7 @@
                 </div>
 
                 <div class="auth__field">
-                    <fd-ui-plain-input formControlName="password"
+                    <fd-ui-input formControlName="password"
                         type="password"
                         [label]="'AUTH.LOGIN.PASSWORD' | translate"
                         [placeholder]="'AUTH.LOGIN.PASSWORD_PLACEHOLDER' | translate"
@@ -92,7 +92,7 @@
         } @else {
             <form [formGroup]="registerForm" (ngSubmit)="onRegisterSubmit()" class="auth__form">
                 <div class="auth__field">
-                    <fd-ui-plain-input formControlName="email"
+                    <fd-ui-input formControlName="email"
                         type="email"
                         [label]="'AUTH.REGISTER.EMAIL' | translate"
                         [placeholder]="'AUTH.REGISTER.EMAIL_PLACEHOLDER' | translate"
@@ -101,7 +101,7 @@
                      />
                 </div>
                 <div class="auth__field">
-                    <fd-ui-plain-input formControlName="password"
+                    <fd-ui-input formControlName="password"
                         type="password"
                         [label]="'AUTH.REGISTER.PASSWORD' | translate"
                         [placeholder]="'AUTH.REGISTER.PASSWORD_PLACEHOLDER' | translate"
@@ -110,7 +110,7 @@
                      />
                 </div>
                 <div class="auth__field">
-                    <fd-ui-plain-input formControlName="confirmPassword"
+                    <fd-ui-input formControlName="confirmPassword"
                         type="password"
                         [label]="'AUTH.REGISTER.CONFIRM_PASSWORD' | translate"
                         [placeholder]="'AUTH.REGISTER.CONFIRM_PASSWORD_PLACEHOLDER' | translate"
@@ -155,3 +155,4 @@
         }
     </div>
 </div>
+

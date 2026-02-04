@@ -1,16 +1,16 @@
-<div class="fd-ui-plain-datetime-input" [ngClass]="[sizeClass, error() ? 'fd-ui-plain-datetime-input--has-error' : '', shouldFloatLabel ? 'fd-ui-plain-datetime-input--floating' : '']">
-  <div class="fd-ui-plain-datetime-input__control-wrap" (focusin)="onFocusIn()" (focusout)="onFocusOut()">
+﻿<div class="fd-ui-datetime-input" [ngClass]="[sizeClass, error() ? 'fd-ui-datetime-input--has-error' : '', shouldFloatLabel ? 'fd-ui-datetime-input--floating' : '']">
+  <div class="fd-ui-datetime-input__control-wrap" (focusin)="onFocusIn()" (focusout)="onFocusOut()">
     @if (label()) {
-      <label class="fd-ui-plain-datetime-input__label" [attr.for]="id()">
-        <span class="fd-ui-plain-datetime-input__label-text">{{ label() }}</span>@if (required()) {<span class="fd-ui-plain-datetime-input__required">*</span>}
+      <label class="fd-ui-datetime-input__label" [attr.for]="id()">
+        <span class="fd-ui-datetime-input__label-text">{{ label() }}</span>@if (required()) {<span class="fd-ui-datetime-input__required">*</span>}
       </label>
     }
-    <div class="fd-ui-plain-datetime-input__fields">
-      <div class="fd-ui-plain-datetime-input__segment">
+    <div class="fd-ui-datetime-input__fields">
+      <div class="fd-ui-datetime-input__segment">
         <input
           #dateInput
           matInput
-          class="fd-ui-plain-datetime-input__control"
+          class="fd-ui-datetime-input__control"
           [id]="id()"
           [matDatepicker]="picker"
           [formControl]="dateControl"
@@ -19,18 +19,18 @@
           />
         <button
           type="button"
-          class="fd-ui-plain-datetime-input__suffix"
+          class="fd-ui-datetime-input__suffix"
           [disabled]="disabled"
           (click)="openDatePicker(picker)"
           >
           <mat-icon>calendar_today</mat-icon>
         </button>
       </div>
-      <div class="fd-ui-plain-datetime-input__divider" aria-hidden="true"></div>
-      <div class="fd-ui-plain-datetime-input__segment">
+      <div class="fd-ui-datetime-input__divider" aria-hidden="true"></div>
+      <div class="fd-ui-datetime-input__segment">
         <input
           #timeInput
-          class="fd-ui-plain-datetime-input__control fd-ui-plain-datetime-input__control--time"
+          class="fd-ui-datetime-input__control fd-ui-datetime-input__control--time"
           [value]="timeValue"
           type="time"
           step="60"
@@ -42,7 +42,7 @@
           />
         <button
           type="button"
-          class="fd-ui-plain-datetime-input__suffix"
+          class="fd-ui-datetime-input__suffix"
           [disabled]="disabled"
           (click)="focusTimeInput(timeInput)"
           >
@@ -53,7 +53,8 @@
   </div>
 
   @if (error()) {
-    <div class="fd-ui-plain-datetime-input__error">{{ error() }}</div>
+    <div class="fd-ui-datetime-input__error">{{ error() }}</div>
   }
 </div>
 <mat-datepicker #picker (closed)="dateControl.markAsTouched()" />
+

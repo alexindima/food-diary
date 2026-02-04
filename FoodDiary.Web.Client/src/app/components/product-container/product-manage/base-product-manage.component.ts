@@ -1,4 +1,4 @@
-import {
+﻿import {
     ChangeDetectionStrategy,
     Component,
     DestroyRef,
@@ -21,9 +21,9 @@ import { firstValueFrom } from 'rxjs';
 import { ZXingScannerModule } from '@zxing/ngx-scanner';
 import { BarcodeScannerComponent } from '../../shared/barcode-scanner/barcode-scanner.component';
 import { FdUiFormErrorComponent, FD_VALIDATION_ERRORS, FdValidationErrors } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
-import { FdUiPlainInputComponent } from 'fd-ui-kit/plain-input/fd-ui-plain-input.component';
-import { FdUiPlainTextareaComponent } from 'fd-ui-kit/plain-textarea/fd-ui-plain-textarea.component';
-import { FdUiPlainSelectComponent } from 'fd-ui-kit/plain-select/fd-ui-plain-select.component';
+import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
+import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea.component';
+import { FdUiSelectComponent } from 'fd-ui-kit/select/fd-ui-select.component';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
@@ -65,9 +65,9 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
         ReactiveFormsModule,
         TranslatePipe,
         ZXingScannerModule,
-        FdUiPlainInputComponent,
-        FdUiPlainTextareaComponent,
-        FdUiPlainSelectComponent,
+        FdUiInputComponent,
+        FdUiTextareaComponent,
+        FdUiSelectComponent,
         FdUiCardComponent,
         FdUiButtonComponent,
         FdUiNutrientInputComponent,
@@ -575,3 +575,4 @@ interface CalorieMismatchWarning {
 }
 
 export type RedirectAction = 'Home' | 'ProductList';
+

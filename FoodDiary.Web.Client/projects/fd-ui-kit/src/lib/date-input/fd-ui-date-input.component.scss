@@ -1,94 +1,145 @@
+﻿@use 'variables' as *;
+
 :host {
     display: block;
 }
 
 .fd-ui-date-input {
-    width: 100%;
-    --fd-date-input-height: 40px;
-    --mdc-outlined-text-field-container-height: var(--fd-date-input-height) !important;
-    --mat-form-field-container-height: var(--fd-date-input-height) !important;
-    --mdc-outlined-text-field-container-shape: var(--fd-radius-md);
-
-    &:not(.fd-ui-date-input--disabled) {
-        --mdc-outlined-text-field-focus-outline-color: var(--fd-color-primary);
-    }
-
-    &.fd-ui-date-input--disabled {
-        opacity: 0.7;
-    }
-
-    &--size-sm {
-        --fd-date-input-height: 32px;
-    }
-
-    &--size-md {
-        --fd-date-input-height: 40px;
-    }
-
-    &--size-lg {
-        --fd-date-input-height: 48px;
-    }
-
-    .mat-mdc-text-field-wrapper {
-        min-height: var(--fd-date-input-height) !important;
-        height: var(--fd-date-input-height) !important;
-        border-radius: var(--fd-radius-md);
-        background-color: var(--fd-color-surface);
-    }
-
-    .mat-mdc-form-field-flex {
-        min-height: var(--fd-date-input-height) !important;
-        height: var(--fd-date-input-height) !important;
-        align-items: center;
-    }
-
-    .mat-mdc-form-field-infix {
-        min-height: calc(var(--fd-date-input-height) - 14px) !important;
-        padding-top: 6px;
-        padding-bottom: 6px;
-        display: flex;
-        align-items: center;
-    }
-
-    .mat-mdc-icon-button {
-        --mdc-icon-button-state-layer-size: calc(var(--fd-date-input-height) - 8px);
-        --mdc-icon-button-icon-size: 20px;
-        width: calc(var(--fd-date-input-height) - 8px);
-        height: calc(var(--fd-date-input-height) - 8px);
-        min-width: calc(var(--fd-date-input-height) - 8px);
-        min-height: calc(var(--fd-date-input-height) - 8px);
-        padding: 0;
-        line-height: 1;
-    }
-
-    .mat-mdc-icon-button .mat-mdc-button-touch-target {
-        width: calc(var(--fd-date-input-height) - 8px) !important;
-        height: calc(var(--fd-date-input-height) - 8px) !important;
-    }
-
-    .mat-mdc-form-field-icon-suffix {
-        height: 100%;
-        padding: 0;
-        display: flex;
-        align-items: center;
-    }
-
-    .mat-mdc-form-field-subscript-wrapper {
-        font-size: 0.75rem;
-        line-height: 1.2;
-        margin-top: 4px;
-    }
-
-    .mat-mdc-input-element {
-        font: inherit;
-    }
-
-    &--no-subscript {
-        .mat-mdc-form-field-subscript-wrapper {
-            min-height: 0;
-            height: 0;
-            margin-top: 0;
-            overflow: hidden;
-        }
-    }
+    --fd-date-height: 48px;
+    --fd-date-radius: 14px;
+    --fd-date-border: rgba(148, 163, 184, 0.38);
+    --fd-date-label-bg: var(--fd-color-surface, #fff);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
 }
+
+.fd-ui-date-input--size-sm {
+    --fd-date-height: 32px;
+}
+
+.fd-ui-date-input--size-md,
+.fd-ui-date-input--size-lg {
+    --fd-date-height: 48px;
+}
+
+.fd-ui-date-input__label {
+    color: #64748b;
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.2;
+    display: inline-flex;
+    align-items: center;
+    max-width: calc(100% - 28px);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    position: absolute;
+    top: 50%;
+    left: 14px;
+    transform: translateY(-50%);
+    transition: transform 0.15s ease, top 0.15s ease, font-size 0.15s ease;
+    background: var(--fd-date-label-bg);
+    padding: 0 4px;
+    pointer-events: none;
+}
+
+.fd-ui-date-input__required {
+    margin-left: 0;
+    color: #ef4444;
+}
+
+.fd-ui-date-input__control-wrap {
+    height: var(--fd-date-height);
+    box-sizing: border-box;
+    border: 1px solid var(--fd-date-border);
+    border-radius: var(--fd-date-radius);
+    background: #fff;
+    display: flex;
+    align-items: center;
+    padding: 0;
+    transition: border-color 0.15s ease;
+    position: relative;
+}
+
+.fd-ui-date-input__control-wrap:focus-within {
+    border-color: #3b82f6;
+}
+
+.fd-ui-date-input__segment {
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: 100%;
+    padding: 0 14px;
+    width: 100%;
+}
+
+/* Keep icon and input vertically centered even when label floats */
+.fd-ui-date-input--floating .fd-ui-date-input__segment {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.fd-ui-date-input__control {
+    flex: 1;
+    width: 100%;
+    min-width: 0;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: #1e293b;
+    font: inherit;
+}
+
+.fd-ui-date-input__suffix {
+    position: static;
+    margin-left: 8px;
+    transform: none;
+    border: none;
+    background: transparent;
+    color: #94a3b8;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    cursor: pointer;
+    margin-top: 0;
+}
+
+.fd-ui-date-input__suffix mat-icon {
+    width: 20px;
+    height: 20px;
+    font-size: 20px;
+    line-height: 20px;
+    display: block;
+}
+
+.fd-ui-date-input--has-error .fd-ui-date-input__control-wrap {
+    border-color: #ef4444;
+}
+
+.fd-ui-date-input--floating .fd-ui-date-input__label {
+    top: 0;
+    transform: translateY(-50%);
+    font-size: 0.8rem;
+}
+
+/* No extra padding when label floats to avoid shifting suffix */
+.fd-ui-date-input--floating .fd-ui-date-input__control-wrap {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.fd-ui-date-input__error {
+    color: #ef4444;
+    font-size: 0.75rem;
+    line-height: 1.2;
+    margin-top: 2px;
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: anywhere;
+}
+
+

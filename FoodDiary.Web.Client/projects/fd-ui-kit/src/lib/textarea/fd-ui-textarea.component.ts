@@ -1,17 +1,6 @@
+﻿import { ChangeDetectionStrategy, Component, forwardRef, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {
-    AfterViewInit,
-    ChangeDetectionStrategy,
-    Component,
-    ViewChild,
-    effect,
-    forwardRef,
-    input,
-} from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { ErrorStateMatcher } from '@angular/material/core';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInput, MatInputModule } from '@angular/material/input';
 import { FdUiFieldSize } from '../types/field-size.type';
 
 let uniqueId = 0;
@@ -19,46 +8,43 @@ let uniqueId = 0;
 @Component({
     selector: 'fd-ui-textarea',
     standalone: true,
-    imports: [CommonModule, MatFormFieldModule, MatInputModule],
+    imports: [CommonModule],
     templateUrl: './fd-ui-textarea.component.html',
     styleUrls: ['./fd-ui-textarea.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,
-            useExisting: forwardRef(() => FdUiTextareaComponent),
+            useExisting: forwardRef((): typeof FdUiTextareaComponent => FdUiTextareaComponent),
             multi: true,
         },
     ],
 })
-export class FdUiTextareaComponent implements ControlValueAccessor, AfterViewInit {
+export class FdUiTextareaComponent implements ControlValueAccessor {
     public readonly id = input(`fd-ui-textarea-${uniqueId++}`);
     public readonly label = input<string>();
-    public readonly placeholder = input<string | null>(null);
-    public readonly hint = input<string>();
+    public readonly placeholder = input<string>();
     public readonly error = input<string | null>();
     public readonly required = input(false);
-    public readonly rows = input(4);
-    public readonly maxlength = input<number>();
     public readonly readonly = input(false);
+    public readonly rows = input(4);
+    public readonly maxLength = input<number>();
     public readonly size = input<FdUiFieldSize>('md');
+    public readonly fillColor = input<string | null>(null);
 
-    protected disabled = false;
     protected internalValue = '';
-    protected readonly errorStateMatcher: ErrorStateMatcher = {
-        isErrorState: () => !!this.error(),
-    };
-    private readonly errorStateEffect = effect(() => {
-        this.syncErrorState();
-    });
-
-    @ViewChild(MatInput) private matInput?: MatInput;
+    protected disabled = false;
+    protected isFocused = false;
 
     private onChange: (value: string) => void = () => undefined;
     private onTouched: () => void = () => undefined;
 
-    public writeValue(value: string | null): void {
-        this.internalValue = value ?? '';
+    protected get sizeClass(): string {
+        return `fd-ui-textarea--size-${this.size()}`;
+    }
+
+    public writeValue(value: string | number | null): void {
+        this.internalValue = value === null || value === undefined ? '' : String(value);
     }
 
     public registerOnChange(fn: (value: string) => void): void {
@@ -73,7 +59,7 @@ export class FdUiTextareaComponent implements ControlValueAccessor, AfterViewIni
         this.disabled = isDisabled;
     }
 
-    protected handleInput(value: string): void {
+    protected onInput(value: string): void {
         if (this.disabled) {
             return;
         }
@@ -82,25 +68,29 @@ export class FdUiTextareaComponent implements ControlValueAccessor, AfterViewIni
         this.onChange(value);
     }
 
-    protected handleBlur(): void {
+    protected onBlur(): void {
+        this.isFocused = false;
         this.onTouched();
     }
 
-    protected get sizeClass(): string {
-        return `fd-ui-textarea--size-${this.size()}`;
+    protected onFocus(): void {
+        this.isFocused = true;
     }
 
-    public ngAfterViewInit(): void {
-        this.syncErrorState();
+    protected get shouldFloatLabel(): boolean {
+        return this.isFocused || this.internalValue.trim().length > 0;
     }
 
-    private syncErrorState(): void {
-        const hasError = !!this.error();
-        if (!this.matInput || this.matInput.errorState === hasError) {
+    protected get shouldShowPlaceholder(): boolean {
+        return this.isFocused && this.internalValue.trim().length === 0;
+    }
+
+    protected focusControl(control: HTMLTextAreaElement): void {
+        if (this.disabled) {
             return;
         }
 
-        this.matInput.errorState = hasError;
-        this.matInput.stateChanges.next();
+        control.focus();
     }
 }
+

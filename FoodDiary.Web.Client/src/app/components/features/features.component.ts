@@ -1,11 +1,10 @@
 import { Component } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
-import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 
 
 @Component({
     selector: 'fd-features',
-    imports: [FdUiButtonComponent, TranslateModule],
+    imports: [TranslateModule],
     templateUrl: './features.component.html',
     styleUrl: './features.component.scss'
 })

@@ -1,56 +1,90 @@
-:host {
+﻿:host {
     display: block;
 }
 
 .fd-ui-textarea {
+    --fd-textarea-radius: 14px;
+    --fd-textarea-border: rgba(148, 163, 184, 0.38);
+    --fd-textarea-label-bg: var(--fd-color-surface, #fff);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.fd-ui-textarea__label {
+    color: #64748b;
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.2;
+    display: inline-flex;
+    align-items: center;
+    max-width: calc(100% - 28px);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    position: absolute;
+    top: 18px;
+    left: 14px;
+    transform: translateY(-50%);
+    transition: transform 0.15s ease, top 0.15s ease, font-size 0.15s ease;
+    background: var(--fd-textarea-label-bg);
+    padding: 0 4px;
+    pointer-events: none;
+}
+
+.fd-ui-textarea__required {
+    margin-left: 0;
+    color: #ef4444;
+}
+
+.fd-ui-textarea__control-wrap {
+    border: 1px solid var(--fd-textarea-border);
+    border-radius: var(--fd-textarea-radius);
+    background: #fff;
+    transition: border-color 0.15s ease;
+    position: relative;
+    padding: 16px 12px 12px;
+}
+
+.fd-ui-textarea__control-wrap:focus-within {
+    border-color: #3b82f6;
+}
+
+.fd-ui-textarea__control {
+    display: block;
     width: 100%;
-    --fd-textarea-label-height: 40px;
-    --fd-textarea-border-radius: var(--fd-field-border-radius, 14px);
-    --mdc-outlined-text-field-container-height: var(--fd-textarea-label-height);
-    --mat-form-field-container-height: var(--fd-textarea-label-height);
-    --fd-input-outline-color: rgba(148, 163, 184, 0.38);
-    --mdc-outlined-text-field-outline-color: var(--fd-input-outline-color);
-    --mdc-outlined-text-field-hover-outline-color: rgba(148, 163, 184, 0.55);
-    --mdc-outlined-text-field-focus-outline-color: var(--fd-color-primary);
-    --mdc-outlined-text-field-disabled-outline-color: rgba(148, 163, 184, 0.3);
-
-    &--size-sm {
-        --fd-textarea-label-height: 32px;
-    }
-
-    &--size-md {
-        --fd-textarea-label-height: 40px;
-    }
-
-    &--size-lg {
-        --fd-textarea-label-height: 48px;
-    }
-
-    .mat-mdc-text-field-wrapper {
-        min-height: var(--fd-textarea-label-height);
-        border-radius: var(--fd-textarea-border-radius);
-        background-color: var(--fd-input-background, var(--fd-color-surface, #fff));
-    }
-
-    .mat-mdc-form-field-flex {
-        min-height: var(--fd-textarea-label-height);
-        align-items: flex-start;
-    }
-
-    .mat-mdc-form-field-infix {
-        padding-top: 8px;
-        padding-bottom: 8px;
-    }
-
-    .mat-mdc-form-field-subscript-wrapper {
-        font-size: 0.75rem;
-        line-height: 1.2;
-        margin-top: 4px;
-    }
-}
-
-.mat-mdc-input-element {
-    font: inherit;
-    line-height: 1.5;
+    min-height: 96px;
+    border: none;
+    outline: none;
     resize: vertical;
+    background: transparent;
+    color: #1e293b;
+    font: inherit;
+    line-height: 1.4;
+    padding: 0;
 }
+
+.fd-ui-textarea__control::placeholder {
+    color: #94a3b8;
+}
+
+.fd-ui-textarea--has-error .fd-ui-textarea__control-wrap {
+    border-color: #ef4444;
+}
+
+.fd-ui-textarea--floating .fd-ui-textarea__label {
+    top: 0;
+    transform: translateY(-50%);
+    font-size: 0.8rem;
+}
+
+.fd-ui-textarea__error {
+    color: #ef4444;
+    font-size: 0.75rem;
+    line-height: 1.2;
+    margin-top: 2px;
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: anywhere;
+}
+

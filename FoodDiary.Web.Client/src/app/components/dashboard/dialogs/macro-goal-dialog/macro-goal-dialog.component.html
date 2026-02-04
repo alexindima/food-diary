@@ -1,7 +1,7 @@
-<fd-ui-dialog class="macro-goal-dialog" [title]="'MACRO_SUMMARY.TITLE' | translate">
+﻿<fd-ui-dialog class="macro-goal-dialog" [title]="'MACRO_SUMMARY.TITLE' | translate">
     <form [formGroup]="form" (ngSubmit)="save()" id="macroGoalForm">
         <div class="macro-goal-dialog__grid">
-            <fd-ui-plain-input
+            <fd-ui-input
                 formControlName="proteinTarget"
                 type="number"
                 [label]="'USER_MANAGE.PROTEIN_TARGET' | translate"
@@ -9,7 +9,7 @@
                 [fillColor]="nutrientFillColors.protein"
                 floatLabel="always"
             />
-            <fd-ui-plain-input
+            <fd-ui-input
                 formControlName="fatTarget"
                 type="number"
                 [label]="'USER_MANAGE.FAT_TARGET' | translate"
@@ -17,7 +17,7 @@
                 [fillColor]="nutrientFillColors.fat"
                 floatLabel="always"
             />
-            <fd-ui-plain-input
+            <fd-ui-input
                 formControlName="carbTarget"
                 type="number"
                 [label]="'USER_MANAGE.CARB_TARGET' | translate"
@@ -25,7 +25,7 @@
                 [fillColor]="nutrientFillColors.carb"
                 floatLabel="always"
             />
-            <fd-ui-plain-input
+            <fd-ui-input
                 formControlName="fiberTarget"
                 type="number"
                 [label]="'USER_MANAGE.FIBER_TARGET' | translate"
@@ -49,3 +49,4 @@
         </fd-ui-button>
     </div>
 </fd-ui-dialog>
+

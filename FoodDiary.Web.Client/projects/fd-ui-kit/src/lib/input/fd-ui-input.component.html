@@ -1,73 +1,53 @@
-<mat-form-field
-  [appearance]="appearance()"
-  [floatLabel]="floatLabel()"
-  class="fd-ui-input"
-  [ngClass]="[sizeClass, hideSubscript() ? 'fd-ui-input--no-subscript' : '']"
-  [style.--fd-input-background]="fillColor() || null"
-  [class.fd-ui-input--focused]="isFocused"
-  [class.fd-ui-input--has-error]="!!error()"
+﻿<div class="fd-ui-input" [ngClass]="[sizeClass, error() ? 'fd-ui-input--has-error' : '', shouldFloatLabel ? 'fd-ui-input--floating' : '']">
+  <div
+    class="fd-ui-input__control-wrap"
+    [class.fd-ui-input__control-wrap--with-prefix]="prefixIcon()"
+    [class.fd-ui-input__control-wrap--date]="isDateInput"
+    [style.background]="fillColor() || null"
+    (click)="focusControl($event, control)"
   >
-  @if (label()) {
-    <mat-label>{{ label() }}</mat-label>
-  }
-
-  @if (prefixIcon()) {
-    <mat-icon matPrefix>{{ prefixIcon() }}</mat-icon>
-  }
-
-  <input
-    matInput
-    [id]="id()"
-    [type]="type()"
-    [value]="internalValue"
-    [required]="required()"
-    [readonly]="readonly()"
-    [disabled]="disabled"
-    [attr.placeholder]="placeholder() ?? null"
-    [attr.maxLength]="maxLength() ?? null"
-    [attr.step]="step() ?? null"
-    [attr.autocomplete]="autocomplete()"
-    [errorStateMatcher]="errorStateMatcher"
-    (focus)="handleFocus()"
-    (blur)="handleBlur()"
-    (input)="handleInput($any($event.target).value)"
+    @if (label()) {
+      <label class="fd-ui-input__label" [attr.for]="id()">
+        <span class="fd-ui-input__label-text">{{ label() }}</span>@if (required()) {<span class="fd-ui-input__required">*</span>}
+      </label>
+    }
+    @if (prefixIcon()) {
+      <span class="fd-ui-input__prefix" aria-hidden="true">
+        <mat-icon>{{ prefixIcon() }}</mat-icon>
+      </span>
+    }
+    <input
+      #control
+      class="fd-ui-input__control"
+      [id]="id()"
+      [attr.type]="type()"
+      [value]="internalValue"
+      [required]="required()"
+      [readonly]="readonly()"
+      [disabled]="disabled"
+      [attr.placeholder]="shouldShowPlaceholder ? (placeholder() ?? null) : null"
+      [attr.maxlength]="maxLength() ?? null"
+      [attr.step]="step() ?? null"
+      (input)="onInput($any($event.target).value)"
+      (focus)="onFocus()"
+      (blur)="onBlur()"
     />
 
-  @if (clearable() && internalValue) {
-    <button
-      matSuffix
-      mat-icon-button
-      type="button"
-      class="fd-ui-input__clear"
-      (click)="clearValue()"
-      [disabled]="disabled"
+    @if (suffixButtonIcon()) {
+      <button
+        class="fd-ui-input__suffix"
+        type="button"
+        [attr.aria-label]="suffixButtonAriaLabel() || suffixButtonIcon()"
+        [disabled]="disabled"
+        (click)="triggerSuffixButton()"
       >
-      <mat-icon>close</mat-icon>
-    </button>
-  }
+        <mat-icon>{{ suffixButtonIcon() }}</mat-icon>
+      </button>
+    }
+  </div>
 
-  @if (suffixButtonIcon()) {
-    <button
-      matSuffix
-      mat-icon-button
-      type="button"
-      class="fd-ui-input__suffix-button"
-      [attr.aria-label]="suffixButtonAriaLabel() || suffixButtonIcon()"
-      (click)="triggerSuffixButton()"
-      [disabled]="disabled"
-      >
-      <mat-icon>{{ suffixButtonIcon() }}</mat-icon>
-    </button>
-  }
-
-  @if (suffixIcon()) {
-    <mat-icon matSuffix>{{ suffixIcon() }}</mat-icon>
-  }
-
-  @if (hint() && !error()) {
-    <mat-hint>{{ hint() }}</mat-hint>
-  }
   @if (error()) {
-    <mat-error>{{ error() }}</mat-error>
+    <div class="fd-ui-input__error">{{ error() }}</div>
   }
-</mat-form-field>
+</div>
+

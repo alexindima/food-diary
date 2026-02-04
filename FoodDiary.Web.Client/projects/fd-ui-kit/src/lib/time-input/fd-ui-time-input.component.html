@@ -1,0 +1,38 @@
+﻿<div class="fd-ui-time-input" [ngClass]="[sizeClass, error() ? 'fd-ui-time-input--has-error' : '', shouldFloatLabel ? 'fd-ui-time-input--floating' : '']">
+  <div class="fd-ui-time-input__control-wrap" (focusout)="onFocusOut()">
+    @if (label()) {
+      <label class="fd-ui-time-input__label" [attr.for]="id()">
+        <span class="fd-ui-time-input__label-text">{{ label() }}</span>@if (required()) {<span class="fd-ui-time-input__required">*</span>}
+      </label>
+    }
+    <div class="fd-ui-time-input__segment">
+      <input
+        #timeInput
+        class="fd-ui-time-input__control"
+        [id]="id()"
+        type="time"
+        step="60"
+        inputmode="numeric"
+        [value]="internalValue"
+        [attr.placeholder]="shouldShowPlaceholder ? (placeholder() ?? 'HH:mm') : null"
+        [disabled]="disabled"
+        (focus)="onFocus()"
+        (input)="onInput($any($event.target).value)"
+        (blur)="onBlur()"
+        />
+      <button
+        type="button"
+        class="fd-ui-time-input__suffix"
+        [disabled]="disabled"
+        (click)="focusTime(timeInput)"
+        >
+        <mat-icon>schedule</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  @if (error()) {
+    <div class="fd-ui-time-input__error">{{ error() }}</div>
+  }
+</div>
+

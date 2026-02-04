@@ -1,29 +1,29 @@
-@use 'variables' as *;
+﻿@use 'variables' as *;
 
 :host {
     display: block;
 }
 
-.fd-ui-plain-datetime-input {
-    --fd-plain-datetime-height: 48px;
-    --fd-plain-datetime-radius: 14px;
-    --fd-plain-datetime-border: rgba(148, 163, 184, 0.38);
-    --fd-plain-datetime-label-bg: var(--fd-color-surface, #fff);
+.fd-ui-datetime-input {
+    --fd-datetime-height: 48px;
+    --fd-datetime-radius: 14px;
+    --fd-datetime-border: rgba(148, 163, 184, 0.38);
+    --fd-datetime-label-bg: var(--fd-color-surface, #fff);
     display: flex;
     flex-direction: column;
     gap: 6px;
 }
 
-.fd-ui-plain-datetime-input--size-sm {
-    --fd-plain-datetime-height: 32px;
+.fd-ui-datetime-input--size-sm {
+    --fd-datetime-height: 32px;
 }
 
-.fd-ui-plain-datetime-input--size-md,
-.fd-ui-plain-datetime-input--size-lg {
-    --fd-plain-datetime-height: 48px;
+.fd-ui-datetime-input--size-md,
+.fd-ui-datetime-input--size-lg {
+    --fd-datetime-height: 48px;
 }
 
-.fd-ui-plain-datetime-input__label {
+.fd-ui-datetime-input__label {
     color: #64748b;
     font-size: 1rem;
     font-weight: 600;
@@ -39,20 +39,20 @@
     left: 14px;
     transform: translateY(-50%);
     transition: transform 0.15s ease, top 0.15s ease, font-size 0.15s ease;
-    background: var(--fd-plain-datetime-label-bg);
+    background: var(--fd-datetime-label-bg);
     padding: 0 4px;
     pointer-events: none;
 }
 
-.fd-ui-plain-datetime-input__required {
+.fd-ui-datetime-input__required {
     margin-left: 0;
     color: #ef4444;
 }
 
-.fd-ui-plain-datetime-input__control-wrap {
-    min-height: var(--fd-plain-datetime-height);
-    border: 1px solid var(--fd-plain-datetime-border);
-    border-radius: var(--fd-plain-datetime-radius);
+.fd-ui-datetime-input__control-wrap {
+    min-height: var(--fd-datetime-height);
+    border: 1px solid var(--fd-datetime-border);
+    border-radius: var(--fd-datetime-radius);
     background: #fff;
     display: flex;
     align-items: center;
@@ -61,11 +61,11 @@
     position: relative;
 }
 
-.fd-ui-plain-datetime-input__control-wrap:focus-within {
+.fd-ui-datetime-input__control-wrap:focus-within {
     border-color: #3b82f6;
 }
 
-.fd-ui-plain-datetime-input__fields {
+.fd-ui-datetime-input__fields {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
     gap: 0;
@@ -73,7 +73,7 @@
     width: 100%;
 }
 
-.fd-ui-plain-datetime-input__control {
+.fd-ui-datetime-input__control {
     width: 100%;
     min-width: 0;
     border: none;
@@ -83,29 +83,29 @@
     font: inherit;
 }
 
-.fd-ui-plain-datetime-input__control--time {
+.fd-ui-datetime-input__control--time {
     text-align: left;
 }
 
-.fd-ui-plain-datetime-input__segment {
+.fd-ui-datetime-input__segment {
     position: relative;
     display: flex;
     align-items: center;
-    min-height: var(--fd-plain-datetime-height);
+    min-height: var(--fd-datetime-height);
     padding: 0 40px 0 14px;
 }
 
-.fd-ui-plain-datetime-input__segment:first-child {
+.fd-ui-datetime-input__segment:first-child {
     padding-right: 40px;
 }
 
-.fd-ui-plain-datetime-input__divider {
+.fd-ui-datetime-input__divider {
     width: 1px;
     align-self: stretch;
     background: rgba(148, 163, 184, 0.28);
 }
 
-.fd-ui-plain-datetime-input__suffix {
+.fd-ui-datetime-input__suffix {
     position: absolute;
     right: 10px;
     top: 50%;
@@ -121,22 +121,22 @@
     cursor: pointer;
 }
 
-.fd-ui-plain-datetime-input--has-error .fd-ui-plain-datetime-input__control-wrap {
+.fd-ui-datetime-input--has-error .fd-ui-datetime-input__control-wrap {
     border-color: #ef4444;
 }
 
-.fd-ui-plain-datetime-input--floating .fd-ui-plain-datetime-input__label {
+.fd-ui-datetime-input--floating .fd-ui-datetime-input__label {
     top: 0;
     transform: translateY(-50%);
     font-size: 0.8rem;
 }
 
-.fd-ui-plain-datetime-input--floating .fd-ui-plain-datetime-input__control-wrap {
+.fd-ui-datetime-input--floating .fd-ui-datetime-input__control-wrap {
     padding-top: 8px;
     padding-bottom: 2px;
 }
 
-.fd-ui-plain-datetime-input__error {
+.fd-ui-datetime-input__error {
     color: #ef4444;
     font-size: 0.75rem;
     line-height: 1.2;
@@ -145,3 +145,5 @@
     white-space: normal;
     overflow-wrap: anywhere;
 }
+
+

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ElementRef, forwardRef, inject, input } from '@angular/core';
+﻿import { ChangeDetectionStrategy, Component, ElementRef, forwardRef, inject, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
@@ -7,22 +7,22 @@ import { FdUiFieldSize } from '../types/field-size.type';
 let uniqueId = 0;
 
 @Component({
-    selector: 'fd-ui-plain-time-input',
+    selector: 'fd-ui-time-input',
     standalone: true,
     imports: [CommonModule, MatIconModule],
-    templateUrl: './fd-ui-plain-time-input.component.html',
-    styleUrls: ['./fd-ui-plain-time-input.component.scss'],
+    templateUrl: './fd-ui-time-input.component.html',
+    styleUrls: ['./fd-ui-time-input.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,
-            useExisting: forwardRef((): typeof FdUiPlainTimeInputComponent => FdUiPlainTimeInputComponent),
+            useExisting: forwardRef((): typeof FdUiTimeInputComponent => FdUiTimeInputComponent),
             multi: true,
         },
     ],
 })
-export class FdUiPlainTimeInputComponent implements ControlValueAccessor {
-    public readonly id = input(`fd-ui-plain-time-input-${uniqueId++}`);
+export class FdUiTimeInputComponent implements ControlValueAccessor {
+    public readonly id = input(`fd-ui-time-input-${uniqueId++}`);
     public readonly label = input<string>();
     public readonly placeholder = input<string>();
     public readonly error = input<string | null>();
@@ -39,7 +39,7 @@ export class FdUiPlainTimeInputComponent implements ControlValueAccessor {
     private onTouched: () => void = () => undefined;
 
     protected get sizeClass(): string {
-        return `fd-ui-plain-time-input--size-${this.size()}`;
+        return `fd-ui-time-input--size-${this.size()}`;
     }
 
     protected get shouldFloatLabel(): boolean {
@@ -140,3 +140,4 @@ export class FdUiPlainTimeInputComponent implements ControlValueAccessor {
         return value.toString().padStart(2, '0');
     }
 }
+

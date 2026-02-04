@@ -1,4 +1,4 @@
-@use 'variables' as *;
+﻿@use 'variables' as *;
 
 :host {
     --user-card-radius: 24px;
@@ -200,7 +200,7 @@
         min-width: 0;
     }
 
-    &__account-row-field fd-ui-plain-date-input {
+    &__account-row-field fd-ui-date-input {
         width: 100%;
     }
 
@@ -236,3 +236,4 @@
         }
     }
 }
+

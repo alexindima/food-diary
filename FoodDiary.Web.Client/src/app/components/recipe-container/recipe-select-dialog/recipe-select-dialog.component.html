@@ -1,9 +1,9 @@
-<div class="recipe-select" #container>
+﻿<div class="recipe-select" #container>
     <h2 class="recipe-select__title">{{ 'RECIPE_SELECT_DIALOG.TITLE' | translate }}</h2>
 
     <div class="recipe-select__actions">
         <form class="recipe-select__search-form" [formGroup]="searchForm">
-            <fd-ui-plain-input formControlName="search"
+            <fd-ui-input formControlName="search"
                 prefixIcon="search"
                 [label]="'RECIPE_SELECT_DIALOG.SEARCH_PLACEHOLDER' | translate"
                 [suffixButtonIcon]="searchForm.controls.search.value ? 'close' : undefined"
@@ -99,3 +99,4 @@
          />
     }
 </div>
+

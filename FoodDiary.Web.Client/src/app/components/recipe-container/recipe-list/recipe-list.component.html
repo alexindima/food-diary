@@ -1,4 +1,4 @@
-<div class="recipe-list" fdPageContainer #container>
+﻿<div class="recipe-list" fdPageContainer #container>
     <fd-page-header
         class="recipe-list__header"
         [title]="'RECIPE_LIST.TITLE' | translate"
@@ -7,7 +7,7 @@
         <ng-container fdPageHeaderActions>
             <div class="recipe-list__controls">
                 <form class="recipe-list__search-form" [formGroup]="searchForm">
-                    <fd-ui-plain-input class="recipe-list__search-input"
+                    <fd-ui-input class="recipe-list__search-input"
                         formControlName="search"
                         [label]="'RECIPE_LIST.SEARCH_LABEL' | translate"
                         prefixIcon="search"
@@ -83,3 +83,4 @@
         }
     </fd-page-body>
 </div>
+

@@ -1,11 +1,7 @@
+﻿import { ChangeDetectionStrategy, Component, forwardRef, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild, ViewEncapsulation, effect, forwardRef, inject, input, output } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
-import { ErrorStateMatcher } from '@angular/material/core';
-import { MatFormFieldAppearance, MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
-import { MatInput, MatInputModule } from '@angular/material/input';
 import { FdUiFieldSize } from '../types/field-size.type';
 
 let uniqueId = 0;
@@ -13,11 +9,10 @@ let uniqueId = 0;
 @Component({
     selector: 'fd-ui-input',
     standalone: true,
-    imports: [CommonModule, MatFormFieldModule, MatInputModule, MatIconModule, MatButtonModule],
+    imports: [CommonModule, MatIconModule],
     templateUrl: './fd-ui-input.component.html',
     styleUrls: ['./fd-ui-input.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,
@@ -26,45 +21,27 @@ let uniqueId = 0;
         },
     ],
 })
-export class FdUiInputComponent implements ControlValueAccessor, AfterViewInit {
-    private readonly cdr = inject(ChangeDetectorRef);
-    private readonly errorStateEffect = effect(() => {
-        this.syncErrorState();
-    });
-
-    @ViewChild(MatInput) private matInput?: MatInput;
-    protected readonly errorStateMatcher: ErrorStateMatcher = {
-        isErrorState: () => !!this.error(),
-    };
-
+export class FdUiInputComponent implements ControlValueAccessor {
     public readonly id = input(`fd-ui-input-${uniqueId++}`);
     public readonly label = input<string>();
     public readonly placeholder = input<string>();
     public readonly type = input<'text' | 'number' | 'password' | 'email' | 'tel' | 'date' | 'datetime-local' | 'time'>('text');
-    public readonly hint = input<string>();
     public readonly error = input<string | null>();
-    public readonly prefixIcon = input<string>();
-    public readonly suffixIcon = input<string>();
-    public readonly clearable = input(false);
-    public readonly appearance = input<MatFormFieldAppearance>('outline');
-    public readonly floatLabel = input<'auto' | 'always'>('auto');
-    public readonly autocomplete = input<string | null>(null);
     public readonly required = input(false);
     public readonly readonly = input(false);
     public readonly maxLength = input<number>();
     public readonly suffixButtonIcon = input<string>();
     public readonly suffixButtonAriaLabel = input<string>();
+    public readonly prefixIcon = input<string>();
     public readonly step = input<string | number>();
     public readonly size = input<FdUiFieldSize>('md');
-    public readonly hideSubscript = input(false);
     public readonly fillColor = input<string | null>(null);
 
-    public readonly cleared = output<void>();
     public readonly suffixButtonClicked = output<void>();
 
-    protected isFocused = false;
-    protected internalValue = '';
+    protected internalValue: string | number = '';
     protected disabled = false;
+    protected isFocused = false;
 
     private onChange: (value: string) => void = () => undefined;
     private onTouched: () => void = () => undefined;
@@ -73,9 +50,13 @@ export class FdUiInputComponent implements ControlValueAccessor, AfterViewInit {
         return `fd-ui-input--size-${this.size()}`;
     }
 
-    public writeValue(value: string | null): void {
+    protected get isDateInput(): boolean {
+        const type = this.type();
+        return type === 'date' || type === 'datetime-local' || type === 'time';
+    }
+
+    public writeValue(value: string | number | null): void {
         this.internalValue = value ?? '';
-        this.cdr.markForCheck();
     }
 
     public registerOnChange(fn: (value: string) => void): void {
@@ -88,10 +69,9 @@ export class FdUiInputComponent implements ControlValueAccessor, AfterViewInit {
 
     public setDisabledState(isDisabled: boolean): void {
         this.disabled = isDisabled;
-        this.cdr.markForCheck();
     }
 
-    protected handleInput(value: string): void {
+    protected onInput(value: string): void {
         if (this.disabled) {
             return;
         }
@@ -100,23 +80,23 @@ export class FdUiInputComponent implements ControlValueAccessor, AfterViewInit {
         this.onChange(value);
     }
 
-    protected handleBlur(): void {
+    protected onBlur(): void {
         this.isFocused = false;
         this.onTouched();
     }
 
-    protected handleFocus(): void {
+    protected onFocus(): void {
         this.isFocused = true;
     }
 
-    protected clearValue(): void {
-        if (!this.clearable() || this.disabled) {
-            return;
-        }
+    protected get shouldFloatLabel(): boolean {
+        const text = String(this.internalValue ?? '').trim();
+        return this.isFocused || text.length > 0;
+    }
 
-        this.handleInput('');
-        // TODO: The 'emit' function requires a mandatory void argument
-        this.cleared.emit();
+    protected get shouldShowPlaceholder(): boolean {
+        const text = String(this.internalValue ?? '').trim();
+        return this.isFocused && text.length === 0;
     }
 
     protected triggerSuffixButton(): void {
@@ -124,21 +104,20 @@ export class FdUiInputComponent implements ControlValueAccessor, AfterViewInit {
             return;
         }
 
-        // TODO: The 'emit' function requires a mandatory void argument
         this.suffixButtonClicked.emit();
     }
 
-    public ngAfterViewInit(): void {
-        this.syncErrorState();
-    }
-
-    private syncErrorState(): void {
-        const hasError = !!this.error();
-        if (!this.matInput || this.matInput.errorState === hasError) {
+    protected focusControl(event: MouseEvent, control: HTMLInputElement): void {
+        if (this.disabled) {
             return;
         }
 
-        this.matInput.errorState = hasError;
-        this.matInput.stateChanges.next();
+        const target = event.target as HTMLElement | null;
+        if (target?.closest('.fd-ui-input__suffix')) {
+            return;
+        }
+
+        control.focus();
     }
 }
+

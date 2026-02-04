@@ -1,35 +1,29 @@
-<mat-form-field
-  class="fd-ui-textarea"
-  appearance="outline"
-  [ngClass]="sizeClass"
-  >
-  @if (label()) {
-    <mat-label>
-      {{ label() }}@if (required()) {
-      <span aria-hidden="true">*</span>
+﻿<div class="fd-ui-textarea" [ngClass]="[sizeClass, error() ? 'fd-ui-textarea--has-error' : '', shouldFloatLabel ? 'fd-ui-textarea--floating' : '']">
+  <div class="fd-ui-textarea__control-wrap" [style.background]="fillColor() || null" (click)="focusControl(control)">
+    @if (label()) {
+      <label class="fd-ui-textarea__label" [attr.for]="id()">
+        <span class="fd-ui-textarea__label-text">{{ label() }}</span>@if (required()) {<span class="fd-ui-textarea__required">*</span>}
+      </label>
     }
-  </mat-label>
-}
+    <textarea
+      #control
+      class="fd-ui-textarea__control"
+      [id]="id()"
+      [value]="internalValue"
+      [required]="required()"
+      [readonly]="readonly()"
+      [disabled]="disabled"
+      [attr.placeholder]="shouldShowPlaceholder ? (placeholder() ?? null) : null"
+      [attr.maxlength]="maxLength() ?? null"
+      [attr.rows]="rows()"
+      (input)="onInput($any($event.target).value)"
+      (focus)="onFocus()"
+      (blur)="onBlur()"
+    ></textarea>
+  </div>
 
-<textarea
-  matInput
-  [id]="id()"
-  [rows]="rows()"
-  [value]="internalValue"
-  [placeholder]="placeholder() ?? ''"
-  [required]="required()"
-  [readonly]="readonly()"
-  [disabled]="disabled"
-  [attr.maxlength]="maxlength() ?? null"
-  [errorStateMatcher]="errorStateMatcher"
-  (input)="handleInput($any($event.target).value)"
-  (blur)="handleBlur()"
-></textarea>
+  @if (error()) {
+    <div class="fd-ui-textarea__error">{{ error() }}</div>
+  }
+</div>
 
-@if (hint() && !error()) {
-  <mat-hint>{{ hint() }}</mat-hint>
-}
-@if (error()) {
-  <mat-error>{{ error() }}</mat-error>
-}
-</mat-form-field>

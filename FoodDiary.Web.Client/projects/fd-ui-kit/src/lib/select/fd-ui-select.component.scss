@@ -1,79 +1,154 @@
-:host {
+﻿:host {
     display: block;
 }
 
 .fd-ui-select {
-    width: 100%;
+    --fd-select-height: 48px;
+    --fd-select-radius: 14px;
+    --fd-select-border: rgba(148, 163, 184, 0.38);
+    --fd-select-label-bg: var(--fd-color-surface, #fff);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.fd-ui-select--size-sm {
     --fd-select-height: 40px;
-    --fd-select-border-radius: var(--fd-field-border-radius, 14px);
-    --mdc-outlined-text-field-container-shape: var(--fd-select-border-radius);
-    --fd-input-outline-color: rgba(148, 163, 184, 0.38);
-    --mdc-outlined-text-field-outline-color: var(--fd-input-outline-color);
-    --mdc-outlined-text-field-hover-outline-color: rgba(148, 163, 184, 0.55);
-    --mdc-outlined-text-field-focus-outline-color: var(--fd-color-primary);
-    --mdc-outlined-text-field-disabled-outline-color: rgba(148, 163, 184, 0.3);
-
-    &--size-sm {
-        --fd-select-height: 32px;
-    }
-
-    &--size-md {
-        --fd-select-height: 40px;
-    }
-
-    &--size-lg {
-        --fd-select-height: 48px;
-    }
-
-    ::ng-deep .mat-mdc-form-field {
-        --mdc-outlined-text-field-container-height: var(--fd-select-height) !important;
-        --mat-form-field-container-height: var(--fd-select-height) !important;
-    }
-
-    ::ng-deep .mat-mdc-text-field-wrapper {
-        min-height: var(--fd-select-height) !important;
-        height: var(--fd-select-height) !important;
-        border-radius: var(--fd-select-border-radius);
-        background-color: var(--fd-input-background, var(--fd-color-surface));
-    }
-
-    ::ng-deep .mat-mdc-form-field-flex {
-        min-height: var(--fd-select-height) !important;
-        height: var(--fd-select-height) !important;
-        align-items: center;
-    }
-
-    ::ng-deep .mat-mdc-form-field-infix {
-        min-height: calc(var(--fd-select-height) - 14px) !important;
-        padding-top: 6px;
-        padding-bottom: 6px;
-    }
-
-    ::ng-deep .mat-mdc-select-trigger {
-        min-height: calc(var(--fd-select-height) - 14px) !important;
-    }
-
-    ::ng-deep .mat-mdc-form-field-subscript-wrapper {
-        font-size: 0.75rem;
-        line-height: 1.2;
-        margin-top: 4px;
-    }
-
-    &--no-subscript {
-        ::ng-deep .mat-mdc-form-field-subscript-wrapper {
-            min-height: 0 !important;
-            height: 0 !important;
-            margin-top: 0 !important;
-            overflow: hidden;
-        }
-    }
 }
 
-.fd-ui-select__option-label {
+.fd-ui-select--size-md {
+    --fd-select-height: 48px;
+}
+
+.fd-ui-select--size-lg {
+    --fd-select-height: 48px;
+}
+
+.fd-ui-select__label {
+    color: #64748b;
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.2;
+    display: inline-flex;
+    align-items: center;
+    max-width: calc(100% - 28px);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    position: absolute;
+    top: 50%;
+    left: 14px;
+    transform: translateY(-50%);
+    transition: transform 0.15s ease, top 0.15s ease, font-size 0.15s ease;
+    background: var(--fd-select-label-bg);
+    padding: 0 4px;
+    pointer-events: none;
+}
+
+.fd-ui-select__required {
+    margin-left: 0;
+    color: #ef4444;
+}
+
+.fd-ui-select__control-wrap {
+    min-height: var(--fd-select-height);
+    border: 1px solid var(--fd-select-border);
+    border-radius: var(--fd-select-radius);
+    background: #fff;
+    display: flex;
+    align-items: center;
+    position: relative;
+    padding: 0 44px 0 12px;
+    transition: border-color 0.15s ease;
+}
+
+.fd-ui-select__control-wrap:focus-within {
+    border-color: #3b82f6;
+}
+
+.fd-ui-select__control {
+    width: 100%;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: #1e293b;
+    font: inherit;
+    padding: 0;
+    min-width: 0;
+    cursor: pointer;
+    text-align: left;
     display: block;
+    line-height: 1.25;
 }
 
-.fd-ui-select__option-hint {
-    display: block;
-    color: var(--fd-color-text-muted, rgba(0, 0, 0, 0.6));
+.fd-ui-select__control:disabled {
+    cursor: default;
 }
+
+.fd-ui-select__control--placeholder {
+    color: #94a3b8;
+}
+
+.fd-ui-select__suffix {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    color: #94a3b8;
+    pointer-events: none;
+    transition: transform 0.15s ease, color 0.15s ease;
+}
+
+.fd-ui-select__suffix--open {
+    transform: translateY(-50%) rotate(180deg);
+    color: #3b82f6;
+}
+
+.fd-ui-select--has-error .fd-ui-select__control-wrap {
+    border-color: #ef4444;
+}
+
+.fd-ui-select--floating .fd-ui-select__label {
+    top: 0;
+    transform: translateY(-50%);
+    font-size: 0.8rem;
+}
+
+.fd-ui-select--floating .fd-ui-select__control-wrap {
+    padding-top: 8px;
+    padding-bottom: 2px;
+}
+
+.fd-ui-select__error {
+    color: #ef4444;
+    font-size: 0.75rem;
+    line-height: 1.2;
+    margin-top: 2px;
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: anywhere;
+}
+
+.fd-ui-select-menu {
+    .mat-mdc-menu-content {
+        padding: 6px;
+    }
+}
+
+.fd-ui-select__menu-item {
+    border-radius: 10px;
+    min-height: 38px !important;
+    line-height: 1.2 !important;
+}
+
+.fd-ui-select__menu-item--selected {
+    background: rgba(37, 99, 235, 0.12);
+    color: #1d4ed8;
+    font-weight: 700;
+}
+

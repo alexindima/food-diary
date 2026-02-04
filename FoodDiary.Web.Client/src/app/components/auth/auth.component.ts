@@ -1,4 +1,4 @@
-import {
+﻿import {
     ChangeDetectionStrategy,
     Component,
     DestroyRef,
@@ -23,7 +23,7 @@ import { FormGroupControls } from '../../types/common.data';
 import { LoginRequest, RegisterRequest, RestoreAccountRequest, TelegramLoginWidgetRequest } from '../../types/auth.data';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { HttpErrorResponse } from '@angular/common/http';
-import { FdUiPlainInputComponent } from 'fd-ui-kit/plain-input/fd-ui-plain-input.component';
+import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiCheckboxComponent } from 'fd-ui-kit/checkbox/fd-ui-checkbox.component';
 import { FdUiFormErrorComponent, FD_VALIDATION_ERRORS, FdValidationErrors } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
@@ -52,7 +52,7 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     styleUrls: ['./auth.component.scss'],
     providers: [VALIDATION_ERRORS_PROVIDER],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [TranslateModule, ReactiveFormsModule, FdUiPlainInputComponent, FdUiButtonComponent, FdUiCheckboxComponent, FdUiFormErrorComponent]
+    imports: [TranslateModule, ReactiveFormsModule, FdUiInputComponent, FdUiButtonComponent, FdUiCheckboxComponent, FdUiFormErrorComponent]
 })
 export class AuthComponent implements OnInit, AfterViewInit {
     @Input() public useRouting = true;
@@ -445,3 +445,4 @@ interface RegisterFormValues {
 
 type LoginFormGroup = FormGroupControls<LoginFormValues>;
 type RegisterFormGroup = FormGroupControls<RegisterFormValues>;
+

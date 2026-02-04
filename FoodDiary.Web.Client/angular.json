@@ -38,6 +38,9 @@
                             "src/styles/material-theme.scss",
                             "src/styles.scss"
                         ],
+                        "allowedCommonJsDependencies": [
+                            "cropperjs"
+                        ],
                         "scripts": [],
                         "stylePreprocessorOptions": {
                             "includePaths": [
@@ -62,8 +65,8 @@
                                 },
                                 {
                                     "type": "anyComponentStyle",
-                                    "maximumWarning": "9kB",
-                                    "maximumError": "14kB"
+                                    "maximumWarning": "12kB",
+                                    "maximumError": "16kB"
                                 }
                             ],
                             "outputHashing": "all",

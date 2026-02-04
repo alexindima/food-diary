@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+﻿import { CommonModule } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -17,8 +17,8 @@ import { PageBodyComponent } from '../shared/page-body/page-body.component';
 import { FdPageContainerDirective } from '../../directives/layout/page-container.directive';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
-import { FdUiPlainInputComponent } from 'fd-ui-kit/plain-input/fd-ui-plain-input.component';
-import { FdUiPlainDateInputComponent } from 'fd-ui-kit/plain-date-input/fd-ui-plain-date-input.component';
+import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
+import { FdUiDateInputComponent } from 'fd-ui-kit/date-input/fd-ui-date-input.component';
 import { FdUiCheckboxComponent } from 'fd-ui-kit/checkbox/fd-ui-checkbox.component';
 import { CyclesService } from '../../services/cycles.service';
 import {
@@ -42,8 +42,8 @@ import { FdUiAccentSurfaceComponent } from 'fd-ui-kit/accent-surface/fd-ui-accen
         ReactiveFormsModule,
         FdUiCardComponent,
         FdUiButtonComponent,
-        FdUiPlainInputComponent,
-        FdUiPlainDateInputComponent,
+        FdUiInputComponent,
+        FdUiDateInputComponent,
         FdUiCheckboxComponent,
         FdUiAccentSurfaceComponent,
     ],
@@ -221,3 +221,4 @@ export class CycleTrackingPageComponent implements OnInit {
         return `${year}-${month}-${day}`;
     }
 }
+

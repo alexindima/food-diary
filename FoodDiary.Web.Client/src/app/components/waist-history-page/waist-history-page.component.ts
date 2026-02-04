@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+﻿import { CommonModule } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -18,8 +18,8 @@ import { distinctUntilChanged, startWith } from 'rxjs';
 import { FdUiTab } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
-import { FdUiPlainDateInputComponent } from 'fd-ui-kit/plain-date-input/fd-ui-plain-date-input.component';
-import { FdUiPlainInputComponent } from 'fd-ui-kit/plain-input/fd-ui-plain-input.component';
+import { FdUiDateInputComponent } from 'fd-ui-kit/date-input/fd-ui-date-input.component';
+import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { WaistEntriesService } from '../../services/waist-entries.service';
 import { NavigationService } from '../../services/navigation.service';
 import {
@@ -46,8 +46,8 @@ import { PeriodFilterComponent } from '../shared/period-filter/period-filter.com
         BaseChartDirective,
         FdUiCardComponent,
         FdUiButtonComponent,
-        FdUiPlainDateInputComponent,
-        FdUiPlainInputComponent,
+        FdUiDateInputComponent,
+        FdUiInputComponent,
         PageHeaderComponent,
         PageBodyComponent,
         FdPageContainerDirective,
@@ -589,3 +589,4 @@ interface WhtStatusInfo {
 function isWaistHistoryRange(value: string): value is WaistHistoryRange {
     return value === 'week' || value === 'month' || value === 'year' || value === 'custom';
 }
+

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, computed, inject, OnInit, viewChild } from '@angular/core';
+﻿import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, computed, inject, OnInit, viewChild } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { catchError, debounceTime, map, Observable, of, startWith, switchMap } from 'rxjs';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -13,10 +13,7 @@ import {
 import { FormGroupControls } from '../../../types/common.data';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
-import {
-    FdUiPlainDateRangeInputComponent,
-    FdUiPlainDateRangeValue,
-} from 'fd-ui-kit/plain-date-range-input/fd-ui-plain-date-range-input.component';
+import { FdUiDateRangeInputComponent, FdUiDateRangeValue } from 'fd-ui-kit';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.component';
@@ -36,7 +33,7 @@ import { LocalizedDatePipe } from '../../../pipes/localized-date.pipe';
         ReactiveFormsModule,
         TranslatePipe,
         FdUiButtonComponent,
-        FdUiPlainDateRangeInputComponent,
+        FdUiDateRangeInputComponent,
         FdUiLoaderComponent,
         FdUiPaginationComponent,
         FdUiIconModule,
@@ -64,7 +61,7 @@ export class ConsumptionListComponent implements OnInit {
 
     public constructor() {
         this.searchForm = new FormGroup<SearchFormGroup>({
-            dateRange: new FormControl<FdUiPlainDateRangeValue | null>(null),
+            dateRange: new FormControl<FdUiDateRangeValue | null>(null),
         });
     }
 
@@ -170,7 +167,8 @@ export class ConsumptionListComponent implements OnInit {
 }
 
 interface SearchFormValues {
-    dateRange: FdUiPlainDateRangeValue | null;
+    dateRange: FdUiDateRangeValue | null;
 }
 
 type SearchFormGroup = FormGroupControls<SearchFormValues>;
+

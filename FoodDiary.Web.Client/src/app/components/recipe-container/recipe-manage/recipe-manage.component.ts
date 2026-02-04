@@ -1,4 +1,4 @@
-import {
+﻿import {
     ChangeDetectionStrategy,
     Component,
     computed,
@@ -27,9 +27,9 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
-import { FdUiPlainInputComponent } from 'fd-ui-kit/plain-input/fd-ui-plain-input.component';
-import { FdUiPlainTextareaComponent } from 'fd-ui-kit/plain-textarea/fd-ui-plain-textarea.component';
-import { FdUiPlainSelectComponent } from 'fd-ui-kit/plain-select/fd-ui-plain-select.component';
+import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
+import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea.component';
+import { FdUiSelectComponent } from 'fd-ui-kit/select/fd-ui-select.component';
 import { FdUiCheckboxComponent } from 'fd-ui-kit/checkbox/fd-ui-checkbox.component';
 import { FdUiNutrientInputComponent } from 'fd-ui-kit/nutrient-input/fd-ui-nutrient-input.component';
 import { CommonModule } from '@angular/common';
@@ -49,9 +49,9 @@ import { NutritionCalculationService } from '../../../services/nutrition-calcula
         DragDropModule,
         FdUiCardComponent,
         FdUiButtonComponent,
-        FdUiPlainInputComponent,
-        FdUiPlainTextareaComponent,
-        FdUiPlainSelectComponent,
+        FdUiInputComponent,
+        FdUiTextareaComponent,
+        FdUiSelectComponent,
         FdUiCheckboxComponent,
         FdUiNutrientInputComponent,
         PageHeaderComponent,
@@ -924,3 +924,4 @@ interface CalorieMismatchWarning {
     expectedCalories: number;
     actualCalories: number;
 }
+

@@ -1,4 +1,4 @@
-@use 'variables' as *;
+﻿@use 'variables' as *;
 
 .recipe-manage {
     --fd-layout-page-background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 45%, #eef2f7 100%);
@@ -13,12 +13,12 @@
         max-width: 100% !important;
     }
 
-    ::ng-deep .fd-ui-plain-input {
-        --fd-plain-input-height: 48px;
+    ::ng-deep .fd-ui-input {
+        --fd-input-height: 48px;
     }
 
-    ::ng-deep .fd-ui-plain-select {
-        --fd-plain-select-height: 48px;
+    ::ng-deep .fd-ui-select {
+        --fd-select-height: 48px;
     }
 
     &__header {
@@ -459,11 +459,11 @@
 .recipe-step-card__title-input {
     min-width: 200px;
 
-    ::ng-deep .fd-ui-plain-input__label {
+    ::ng-deep .fd-ui-input__label {
         display: none;
     }
 
-    ::ng-deep .fd-ui-plain-input__control {
+    ::ng-deep .fd-ui-input__control {
         height: 32px;
         font-size: 0.95rem;
         padding: 0 10px;
@@ -575,7 +575,7 @@
     }
 }
 
-.recipe-ingredient__amount ::ng-deep .fd-ui-plain-input__control-wrap {
+.recipe-ingredient__amount ::ng-deep .fd-ui-input__control-wrap {
     min-height: 48px;
 }
 
@@ -596,3 +596,4 @@
     color: $color-text-additional;
     font-size: 0.9rem;
 }
+

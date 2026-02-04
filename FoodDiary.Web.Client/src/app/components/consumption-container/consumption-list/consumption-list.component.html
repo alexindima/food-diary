@@ -1,4 +1,4 @@
-<div class="consumption-list" fdPageContainer #container>
+﻿<div class="consumption-list" fdPageContainer #container>
     <fd-page-header
         class="consumption-list__header"
         [title]="'CONSUMPTION_LIST.TITLE' | translate"
@@ -7,7 +7,7 @@
         <ng-container fdPageHeaderActions>
             <div class="consumption-list__controls">
                 <form [formGroup]="searchForm" class="consumption-list__date-range-form">
-                    <fd-ui-plain-date-range-input formControlName="dateRange"
+                    <fd-ui-date-range-input formControlName="dateRange"
                         class="consumption-list__date-input"
                         [startLabel]="'CONSUMPTION_LIST.DATE_FILTER_FROM_LABEL' | translate"
                         [endLabel]="'CONSUMPTION_LIST.DATE_FILTER_TO_LABEL' | translate"
@@ -76,3 +76,4 @@
         }
     </fd-page-body>
 </div>
+
