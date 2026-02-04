@@ -1,23 +1,59 @@
-<div class="consumption-item-select">
-    <fd-page-header class="consumption-item-select__header" [title]="'CONSUMPTION_MANAGE.ITEM_SELECT_DIALOG.TITLE' | translate">
-        <ng-container fdPageHeaderActions>
+﻿@if (!embedded()) {
+    <fd-ui-dialog
+        [title]="'CONSUMPTION_MANAGE.ITEM_SELECT_DIALOG.TITLE' | translate"
+        size="lg"
+    >
+        <div class="consumption-item-select">
             <fd-ui-tabs class="consumption-item-select__tabs"
                 [tabs]="tabs"
                 [(selectedValue)]="activeTab"
-             />
-        </ng-container>
-    </fd-page-header>
+            />
 
-    <div class="consumption-item-select__content">
-        @if (activeTab === 'Product') {
-            <fd-product-list-dialog [embedded]="true"
-                (productSelected)="onProductSelected($event)"
-             />
-        } @else {
-            <fd-recipe-select-dialog [embedded]="true"
-                (recipeSelected)="onRecipeSelected($event)"
-                (createRecipeRequested)="onCreateRecipeRequested()"
-             />
-        }
+            <div class="consumption-item-select__content">
+                @if (activeTab === 'Product') {
+                    <fd-product-list-dialog [embedded]="true"
+                        (productSelected)="onProductSelected($event)"
+                    />
+                } @else {
+                    <fd-recipe-select-dialog [embedded]="true"
+                        (recipeSelected)="onRecipeSelected($event)"
+                        (createRecipeRequested)="onCreateRecipeRequested()"
+                    />
+                }
+            </div>
+        </div>
+
+        <div fdUiDialogFooter class="consumption-item-select__footer">
+            <fd-ui-button
+                variant="primary"
+                fill="solid"
+                icon="add"
+                (click)="onCreateAction()"
+            >
+                {{ activeTab === 'Product'
+                    ? ('PRODUCT_LIST.ADD_PRODUCT_BUTTON' | translate)
+                    : ('RECIPE_SELECT_DIALOG.ADD_RECIPE_BUTTON' | translate) }}
+            </fd-ui-button>
+        </div>
+    </fd-ui-dialog>
+} @else {
+    <div class="consumption-item-select">
+        <fd-ui-tabs class="consumption-item-select__tabs"
+            [tabs]="tabs"
+            [(selectedValue)]="activeTab"
+         />
+
+        <div class="consumption-item-select__content">
+            @if (activeTab === 'Product') {
+                <fd-product-list-dialog [embedded]="true"
+                    (productSelected)="onProductSelected($event)"
+                />
+            } @else {
+                <fd-recipe-select-dialog [embedded]="true"
+                    (recipeSelected)="onRecipeSelected($event)"
+                    (createRecipeRequested)="onCreateRecipeRequested()"
+                />
+            }
+        </div>
     </div>
-</div>
+}

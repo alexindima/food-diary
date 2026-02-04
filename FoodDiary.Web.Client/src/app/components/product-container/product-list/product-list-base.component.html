@@ -23,7 +23,7 @@
                     <fd-ui-button class="product-list__pill"
                         variant="secondary"
                         fill="outline"
-                        icon="tune"
+                        [icon]="searchForm.controls.onlyMine.value ? 'person' : 'groups'"
                         [ariaLabel]="'PRODUCT_LIST.ONLY_MY_PRODUCTS' | translate"
                         (click)="toggleOnlyMine()"
                         [class.product-list__pill--active]="searchForm.controls.onlyMine.value"

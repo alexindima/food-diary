@@ -4,6 +4,7 @@
 - `FoodDiary.Web.Client/` – Angular workspace; `src/` hosts the primary SPA, while shared UI components live in `projects/fd-ui-kit/`. Build artifacts drop under `dist/`.
 - `.NET` solution (`FoodDiary.*`, `FoodDiary.Web.Api/`) sits in the repo root. Each layer (Domain, Application, Infrastructure, Web.Api) is a separate project referenced by `FoodDiary.sln`.
 - Legacy Nest backend remains in `backend/food-diary.web.api/`. Only touch if you intend to update the existing Node stack.
+- UI kit component reference: `FoodDiary.Web.Client/projects/fd-ui-kit/COMPONENTS.md`.
 
 ## Build, Test, and Development Commands
 - Frontend: `cd FoodDiary.Web.Client && npm install` to restore packages, `npm run build` for production build, `npm run lint` / `npm run test` for ESLint/Karma (lint currently fails until rule fixes land).

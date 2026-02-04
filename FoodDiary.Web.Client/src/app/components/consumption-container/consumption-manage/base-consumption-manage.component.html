@@ -148,7 +148,7 @@
                                                             || ('CONSUMPTION_MANAGE.ITEM_SOURCE_PLACEHOLDER' | translate)
                                                     }}
                                                 </span>
-                                                <mat-icon>search</mat-icon>
+                                                <mat-icon>{{ getItemSourceIcon(i) }}</mat-icon>
                                             </button>
                                             <fd-ui-form-error [error]="getItemSourceError(i)" />
                                         </div>

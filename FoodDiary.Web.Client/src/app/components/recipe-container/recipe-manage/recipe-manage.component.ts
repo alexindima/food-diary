@@ -14,8 +14,10 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { MeasurementUnit, Product, ProductVisibility, ProductType } from '../../../types/product.data';
 import { nonEmptyArrayValidator } from '../../../validators/non-empty-array.validator';
 import {
-    ProductListDialogComponent
-} from '../../product-container/product-list/product-list-dialog/product-list-dialog.component';
+    ConsumptionItemSelectDialogComponent,
+    ConsumptionItemSelection,
+    ConsumptionItemSelectDialogData,
+} from '../../consumption-container/consumption-item-select-dialog/consumption-item-select-dialog.component';
 import { NutrientData } from '../../../types/charts.data';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Recipe, RecipeDto, RecipeVisibility, RecipeIngredient } from '../../../types/recipe.data';
@@ -34,6 +36,7 @@ import { FdUiCheckboxComponent } from 'fd-ui-kit/checkbox/fd-ui-checkbox.compone
 import { FdUiNutrientInputComponent } from 'fd-ui-kit/nutrient-input/fd-ui-nutrient-input.component';
 import { CommonModule } from '@angular/common';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { FdUiDialogRef } from 'fd-ui-kit/material';
 import { PageHeaderComponent } from '../../shared/page-header/page-header.component';
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
 import { ImageUploadFieldComponent } from '../../shared/image-upload-field/image-upload-field.component';
@@ -139,6 +142,7 @@ export class RecipeManageComponent implements OnInit {
     public visibilitySelectOptions: FdUiSelectOption<RecipeVisibility>[] = [];
 
     private readonly fdDialogService = inject(FdUiDialogService);
+    private readonly dialogRef = inject(FdUiDialogRef<RecipeManageComponent, Recipe | null>, { optional: true });
     private isFormReady = true;
 
     public constructor() {
@@ -235,10 +239,14 @@ export class RecipeManageComponent implements OnInit {
         return step.controls.ingredients;
     }
 
-    public getProductName(stepIndex: number, ingredientIndex: number): string {
+    public getIngredientName(stepIndex: number, ingredientIndex: number): string {
         const ingredientsArray = this.getStepIngredients(stepIndex);
-        const foodControl = ingredientsArray.at(ingredientIndex).controls.food;
-        return foodControl?.value?.name || this.translateService.instant('RECIPE_MANAGE.SELECT_INGREDIENT');
+        const ingredient = ingredientsArray.at(ingredientIndex);
+        return (
+            ingredient.controls.food.value?.name ??
+            ingredient.controls.nestedRecipeName.value ??
+            this.translateService.instant('RECIPE_MANAGE.SELECT_INGREDIENT')
+        );
     }
 
     public getProductUnit(stepIndex: number, ingredientIndex: number): string | null {
@@ -251,9 +259,26 @@ export class RecipeManageComponent implements OnInit {
     }
 
     public getIngredientAmountLabel(stepIndex: number, ingredientIndex: number): string {
+        const ingredientsArray = this.getStepIngredients(stepIndex);
+        const ingredient = ingredientsArray.at(ingredientIndex);
+        if (ingredient.controls.nestedRecipeId.value) {
+            return this.translateService.instant('RECIPE_SELECT_DIALOG.SERVINGS');
+        }
         const baseLabel = this.translateService.instant('RECIPE_MANAGE.INGREDIENT_AMOUNT');
         const unit = this.getProductUnit(stepIndex, ingredientIndex);
         return unit ? `${baseLabel} (${unit})` : baseLabel;
+    }
+
+    public getIngredientIcon(stepIndex: number, ingredientIndex: number): string {
+        const ingredientsArray = this.getStepIngredients(stepIndex);
+        const ingredient = ingredientsArray.at(ingredientIndex);
+        if (ingredient.controls.nestedRecipeId.value) {
+            return 'menu_book';
+        }
+        if (ingredient.controls.food.value) {
+            return 'restaurant';
+        }
+        return 'search';
     }
 
     public getFieldError(controlName: keyof RecipeFormData): string | null {
@@ -335,7 +360,7 @@ export class RecipeManageComponent implements OnInit {
     public getIngredientControlError(
         stepIndex: number,
         ingredientIndex: number,
-        controlName: 'food' | 'amount',
+        controlName: 'food' | 'foodName' | 'amount',
     ): string | null {
         const ingredient = this.getStepIngredients(stepIndex).at(ingredientIndex);
         return this.resolveControlError(ingredient.controls[controlName]);
@@ -345,22 +370,44 @@ export class RecipeManageComponent implements OnInit {
         this.selectedStepIndex = stepIndex;
         this.selectedIngredientIndex = ingredientIndex;
         this.fdDialogService
-            .open<ProductListDialogComponent, Product | null, Product | null>(ProductListDialogComponent, {
-                size: 'lg',
-            })
-              .afterClosed()
-              .subscribe(food => {
-                  if (!food) {
-                      return;
-                  }
-                  const ingredientsArray = this.getStepIngredients(stepIndex);
-                  const foodGroup = ingredientsArray.at(ingredientIndex);
-                  const defaultAmount = food.defaultPortionAmount ?? food.baseAmount ?? 0;
-                  foodGroup.patchValue({ food, foodName: food.name, amount: defaultAmount });
-                  if (this.recipeForm.controls.calculateNutritionAutomatically.value) {
-                      this.recalculateNutrientsFromForm();
-                  }
-              });
+            .open<ConsumptionItemSelectDialogComponent, ConsumptionItemSelectDialogData, ConsumptionItemSelection | null>(
+                ConsumptionItemSelectDialogComponent,
+                {
+                    size: 'lg',
+                    data: { initialTab: 'Product' },
+                },
+            )
+            .afterClosed()
+            .subscribe(selection => {
+                if (!selection) {
+                    return;
+                }
+                const ingredientsArray = this.getStepIngredients(stepIndex);
+                const foodGroup = ingredientsArray.at(ingredientIndex);
+                if (selection.type === 'Product') {
+                    const food = selection.product;
+                    const defaultAmount = food.defaultPortionAmount ?? food.baseAmount ?? 0;
+                    foodGroup.patchValue({
+                        food,
+                        foodName: food.name,
+                        nestedRecipeId: null,
+                        nestedRecipeName: null,
+                        amount: defaultAmount,
+                    });
+                } else {
+                    const recipe = selection.recipe;
+                    foodGroup.patchValue({
+                        food: null,
+                        foodName: recipe.name,
+                        nestedRecipeId: recipe.id,
+                        nestedRecipeName: recipe.name,
+                        amount: 1,
+                    });
+                }
+                if (this.recipeForm.controls.calculateNutritionAutomatically.value) {
+                    this.recalculateNutrientsFromForm();
+                }
+            });
     }
 
     public addIngredientToStep(stepIndex: number): void {
@@ -448,7 +495,7 @@ export class RecipeManageComponent implements OnInit {
     private createStepGroup(step?: StepFormValues): FormGroup<StepFormData> {
         const ingredientValues = step?.ingredients?.length
             ? step.ingredients
-            : [{ food: null, amount: null }];
+            : [{ food: null, amount: null, foodName: null, nestedRecipeId: null, nestedRecipeName: null }];
 
         return new FormGroup<StepFormData>({
             title: new FormControl(step?.title ?? null, [Validators.maxLength(120)]),
@@ -458,7 +505,14 @@ export class RecipeManageComponent implements OnInit {
                 validators: [Validators.required],
             }),
             ingredients: new FormArray<FormGroup<IngredientFormData>>(
-                ingredientValues.map(ingredient => this.createIngredientGroup(ingredient.food, ingredient.amount)),
+                ingredientValues.map(ingredient =>
+                    this.createIngredientGroup(
+                        ingredient.food,
+                        ingredient.amount,
+                        ingredient.nestedRecipeId,
+                        ingredient.nestedRecipeName,
+                    ),
+                ),
                 nonEmptyArrayValidator(),
             ),
         });
@@ -477,15 +531,31 @@ export class RecipeManageComponent implements OnInit {
     }
 
 
-    private createIngredientGroup(food: Product | null = null, amount: number | null = null): FormGroup<IngredientFormData> {
+    private createIngredientGroup(
+        food: Product | null = null,
+        amount: number | null = null,
+        nestedRecipeId: string | null = null,
+        nestedRecipeName: string | null = null,
+    ): FormGroup<IngredientFormData> {
         return new FormGroup<IngredientFormData>({
-            food: new FormControl(food, [Validators.required]),
+            food: new FormControl(food),
             amount: new FormControl(amount, [Validators.required, Validators.min(0.01)]),
-            foodName: new FormControl<string | null>(food?.name ?? null),
+            foodName: new FormControl<string | null>(food?.name ?? nestedRecipeName ?? null, [Validators.required]),
+            nestedRecipeId: new FormControl<string | null>(nestedRecipeId),
+            nestedRecipeName: new FormControl<string | null>(nestedRecipeName),
         });
     }
 
     private mapIngredientToFormValue(ingredient: RecipeIngredient): IngredientFormValues | null {
+        if (ingredient.nestedRecipeId) {
+            return {
+                food: null,
+                amount: ingredient.amount,
+                foodName: ingredient.nestedRecipeName ?? this.translateService.instant('RECIPE_MANAGE.SELECT_INGREDIENT'),
+                nestedRecipeId: ingredient.nestedRecipeId,
+                nestedRecipeName: ingredient.nestedRecipeName ?? null,
+            };
+        }
         const product = this.buildIngredientProduct(ingredient);
         if (!product) {
             return null;
@@ -495,6 +565,8 @@ export class RecipeManageComponent implements OnInit {
             food: product,
             amount: ingredient.amount,
             foodName: product.name,
+            nestedRecipeId: null,
+            nestedRecipeName: null,
         };
     }
 
@@ -579,11 +651,19 @@ export class RecipeManageComponent implements OnInit {
     }
 
     public async onCancel(): Promise<void> {
+        if (this.dialogRef) {
+            this.dialogRef.close(null);
+            return;
+        }
         await this.navigationService.navigateToRecipeList();
     }
 
     private async handleSubmitResponse(_response: Recipe): Promise<void> {
         this.clearGlobalError();
+        if (this.dialogRef) {
+            this.dialogRef.close(_response);
+            return;
+        }
         await this.navigationService.navigateToRecipeList();
     }
 
@@ -617,9 +697,10 @@ export class RecipeManageComponent implements OnInit {
         const steps = formValue.steps
             .map(step => {
                 const ingredients = step.ingredients
-                    .filter(ingredient => !!ingredient.food)
+                    .filter(ingredient => !!ingredient.food || !!ingredient.nestedRecipeId)
                     .map(ingredient => ({
-                        productId: ingredient.food!.id,
+                        productId: ingredient.food?.id,
+                        nestedRecipeId: ingredient.nestedRecipeId ?? undefined,
                         amount: ingredient.amount ?? 0,
                     }));
 
@@ -914,6 +995,8 @@ interface IngredientFormValues {
     food: Product | null;
     amount: number | null;
     foodName: string | null;
+    nestedRecipeId: string | null;
+    nestedRecipeName: string | null;
 }
 
 type RecipeFormData = FormGroupControls<RecipeFormValues>;

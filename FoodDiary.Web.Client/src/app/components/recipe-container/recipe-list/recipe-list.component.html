@@ -22,7 +22,7 @@
                     <fd-ui-button class="recipe-list__pill"
                         variant="secondary"
                         fill="outline"
-                        icon="tune"
+                        [icon]="searchForm.controls.onlyMine.value ? 'person' : 'groups'"
                         [ariaLabel]="
                             searchForm.controls.onlyMine.value
                                 ? ('RECIPE_LIST.SHOW_ALL_RECIPES' | translate)

@@ -10,16 +10,12 @@ import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.component';
 import { FdUiDialogRef } from 'fd-ui-kit/material';
 import { FdUiIconModule } from 'fd-ui-kit/material';
-import { PageHeaderComponent } from '../../../shared/page-header/page-header.component';
-import { PageBodyComponent } from '../../../shared/page-body/page-body.component';
-import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
-import { ProductCardComponent } from '../../../shared/product-card/product-card.component';
 
 @Component({
     selector: 'fd-product-list-dialog',
     standalone: true,
-    templateUrl: '../product-list-base.component.html',
-    styleUrls: ['./product-list-dialog.component.scss', '../product-list-base.component.scss'],
+    templateUrl: './product-list-dialog.component.html',
+    styleUrls: ['./product-list-dialog.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         ReactiveFormsModule,
@@ -29,10 +25,6 @@ import { ProductCardComponent } from '../../../shared/product-card/product-card.
         FdUiLoaderComponent,
         FdUiPaginationComponent,
         FdUiIconModule,
-        PageHeaderComponent,
-        PageBodyComponent,
-        FdPageContainerDirective,
-        ProductCardComponent,
     ]
 })
 export class ProductListDialogComponent extends ProductListBaseComponent {
@@ -46,6 +38,7 @@ export class ProductListDialogComponent extends ProductListBaseComponent {
         this.fdDialogService
             .open<ProductAddDialogComponent, Product | null, Product | null>(ProductAddDialogComponent, {
                 size: 'lg',
+                panelClass: 'fd-ui-dialog-panel--fullscreen',
             })
             .afterClosed()
             .subscribe(product => {

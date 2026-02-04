@@ -10,25 +10,22 @@
   viewChild
 } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { DecimalPipe } from '@angular/common';
 import { FdUiIconModule } from 'fd-ui-kit/material';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Recipe, RecipeFilters } from '../../../types/recipe.data';
 import { RecipeService } from '../../../services/recipe.service';
 import { catchError, debounceTime, distinctUntilChanged, finalize, map, Observable, of, switchMap, tap } from 'rxjs';
-import { NavigationService } from '../../../services/navigation.service';
 import { PagedData } from '../../../types/paged-data.data';
 import { FormGroupControls } from '../../../types/common.data';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { BadgeComponent } from '../../shared/badge/badge.component';
-import { FdUiEntityCardComponent } from 'fd-ui-kit/entity-card/fd-ui-entity-card.component';
-import { FdUiEntityCardHeaderDirective } from 'fd-ui-kit/entity-card/fd-ui-entity-card-header.directive';
 import { FdUiDialogRef } from 'fd-ui-kit/material';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.component';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { resolveRecipeImageUrl } from '../../../utils/recipe-stub.utils';
+import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { RecipeManageComponent } from '../recipe-manage/recipe-manage.component';
 
 @Component({
     selector: 'fd-recipe-select-dialog',
@@ -38,11 +35,7 @@ import { resolveRecipeImageUrl } from '../../../utils/recipe-stub.utils';
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         ReactiveFormsModule,
-        DecimalPipe,
         TranslatePipe,
-        BadgeComponent,
-        FdUiEntityCardComponent,
-        FdUiEntityCardHeaderDirective,
         FdUiButtonComponent,
         FdUiLoaderComponent,
         FdUiPaginationComponent,
@@ -52,11 +45,11 @@ import { resolveRecipeImageUrl } from '../../../utils/recipe-stub.utils';
 })
 export class RecipeSelectDialogComponent implements OnInit {
     private readonly recipeService = inject(RecipeService);
-    private readonly navigationService = inject(NavigationService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly dialogRef = inject(FdUiDialogRef<RecipeSelectDialogComponent, Recipe | null>, {
         optional: true,
     });
+    private readonly fdDialogService = inject(FdUiDialogService);
 
     public readonly embedded = input<boolean>(false);
     public readonly recipeSelected = output<Recipe>();
@@ -131,13 +124,18 @@ export class RecipeSelectDialogComponent implements OnInit {
     }
 
     public async onCreateRecipeClick(): Promise<void> {
-        if (!this.embedded() && this.dialogRef) {
-            this.dialogRef.close(null);
-        } else {
-            // TODO: The 'emit' function requires a mandatory void argument
-            this.createRecipeRequested.emit();
-        }
-        await this.navigationService.navigateToRecipeAdd();
+        this.fdDialogService
+            .open<RecipeManageComponent, null, Recipe | null>(RecipeManageComponent, {
+                size: 'lg',
+                panelClass: 'fd-ui-dialog-panel--fullscreen',
+            })
+            .afterClosed()
+            .subscribe(recipe => {
+                if (!recipe) {
+                    return;
+                }
+                this.handleSelection(recipe);
+            });
     }
 
     private handleSelection(recipe: Recipe): void {

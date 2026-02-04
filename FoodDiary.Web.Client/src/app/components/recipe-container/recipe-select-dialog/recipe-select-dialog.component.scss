@@ -1,110 +1,150 @@
+﻿@use 'variables' as *;
+
 .recipe-select {
     display: flex;
     flex-direction: column;
-    gap: 16px;
-    max-width: 1000px;
-    margin: 0 auto;
-    box-sizing: border-box;
-}
+    gap: $gap-m;
 
-.recipe-select__title {
-    margin: 0;
-    text-align: center;
-}
+    &__header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
 
-.recipe-select__actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    align-items: center;
-}
+    &__title {
+        font-size: 1.4rem;
+        font-weight: 800;
+        margin: 0;
+    }
 
-.recipe-select__search {
-    flex: 1;
-}
+    &__controls {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: $gap-s;
+        align-items: center;
 
-.recipe-select__search-form {
-    width: 100%;
-}
+        @media #{$media-mobile} {
+            grid-template-columns: 1fr;
+        }
+    }
 
-.recipe-select__toggle {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 14px;
-}
+    &__search-form {
+        min-width: 0;
+    }
 
-.recipe-select__toggle-input {
-    width: 18px;
-    height: 18px;
-}
+    &__search-input {
+        width: 100%;
 
-.recipe-select__loader {
-    align-self: center;
-}
+        ::ng-deep .fd-ui-input {
+            --fd-input-radius: 18px;
+        }
+    }
 
-.recipe-select__list {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
+    &__filter-button {
+        --fd-button-border-radius: 18px;
+        --fd-button-padding-x: 12px;
+        --fd-button-padding-y: 8px;
 
-.recipe-select__card {
-    cursor: pointer;
-}
+        ::ng-deep button,
+        ::ng-deep .fd-ui-button {
+            border: 1px solid rgba(15, 23, 42, 0.08);
+            background: #ffffff;
+        }
 
-.recipe-card {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
+        &--active {
+            ::ng-deep button,
+            ::ng-deep .fd-ui-button {
+                border-color: #0ea5e9;
+                background: rgba(14, 165, 233, 0.12);
+            }
+        }
+    }
 
-.recipe-card__header {
-    display: flex;
-    justify-content: space-between;
-    gap: 12px;
-    flex-wrap: wrap;
-}
+    &__list {
+        display: flex;
+        flex-direction: column;
+        gap: $gap-s;
+    }
 
-.recipe-card__name {
-    font-size: 1.1rem;
-    font-weight: 600;
-}
+    &__item {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        gap: $gap-s;
+        align-items: center;
+        padding: 12px 14px;
+        border-radius: 16px;
+        border: 1px solid rgba(15, 23, 42, 0.08);
+        background: #ffffff;
+        box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+        text-align: left;
+        cursor: pointer;
+    }
 
-.recipe-card__category {
-    display: inline-block;
-    font-size: 0.85rem;
-    color: var(--tui-text-02);
-    margin-left: 8px;
-}
+    &__thumb {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        overflow: hidden;
+        display: grid;
+        place-items: center;
+        background: #eef2ff;
 
-.recipe-card__badges {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-}
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
 
-.recipe-card__info,
-.recipe-card__macros {
-    display: flex;
-    gap: 16px;
-    flex-wrap: wrap;
-    font-size: 0.95rem;
-}
+        mat-icon {
+            color: #2563eb;
+        }
+    }
 
-.recipe-select__no-results {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    padding: 24px;
-    color: var(--tui-text-02);
-}
+    &__info {
+        min-width: 0;
+    }
 
-.recipe-select__no-results-icon {
-    font-size: 32px;
-}
+    &__name {
+        font-weight: 700;
+        color: $color-text-main;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
 
-.recipe-select__pagination {
-    align-self: center;
+    &__meta {
+        font-size: 0.85rem;
+        color: $color-text-additional;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    &__action {
+        display: inline-flex;
+        align-items: center;
+    }
+
+    &__footer {
+        display: flex;
+        justify-content: flex-end;
+        padding-top: $gap-s;
+    }
+
+    &__pagination {
+        margin-top: $gap-s;
+    }
+
+    &__no-results {
+        text-align: center;
+        color: $color-text-additional;
+        display: grid;
+        gap: $gap-xs;
+        justify-items: center;
+    }
+
+    &__no-results-icon {
+        font-size: 2rem;
+        color: $color-no-results;
+    }
 }

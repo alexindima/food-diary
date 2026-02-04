@@ -1,34 +1,33 @@
 ﻿<div class="recipe-select" #container>
-    <h2 class="recipe-select__title">{{ 'RECIPE_SELECT_DIALOG.TITLE' | translate }}</h2>
+    @if (!embedded()) {
+        <div class="recipe-select__header">
+            <div>
+                <h2 class="recipe-select__title">{{ 'RECIPE_SELECT_DIALOG.TITLE' | translate }}</h2>
+            </div>
+        </div>
+    }
 
-    <div class="recipe-select__actions">
+    <div class="recipe-select__controls">
         <form class="recipe-select__search-form" [formGroup]="searchForm">
-            <fd-ui-input formControlName="search"
+            <fd-ui-input
+                class="recipe-select__search-input"
+                formControlName="search"
                 prefixIcon="search"
                 [label]="'RECIPE_SELECT_DIALOG.SEARCH_PLACEHOLDER' | translate"
                 [suffixButtonIcon]="searchForm.controls.search.value ? 'close' : undefined"
                 [suffixButtonAriaLabel]="'RECIPE_SELECT_DIALOG.SEARCH_CLEAR' | translate"
                 (suffixButtonClicked)="searchForm.controls.search.setValue('')"
-             />
-        </form>
-        <label class="recipe-select__toggle">
-            <input
-                type="checkbox"
-                class="recipe-select__toggle-input"
-                [formControl]="searchForm.controls.onlyMine"
             />
-            <span class="recipe-select__toggle-label">
-                {{ 'RECIPE_SELECT_DIALOG.ONLY_MY_RECIPES' | translate }}
-            </span>
-        </label>
+        </form>
         <fd-ui-button
-            icon="add"
-            size="md"
-            variant="primary"
-            (click)="onCreateRecipeClick()"
-        >
-            {{ 'RECIPE_SELECT_DIALOG.ADD_RECIPE_BUTTON' | translate }}
-        </fd-ui-button>
+            class="recipe-select__filter-button"
+            variant="secondary"
+            fill="outline"
+            [icon]="searchForm.controls.onlyMine.value ? 'person' : 'groups'"
+            [ariaLabel]="'RECIPE_SELECT_DIALOG.ONLY_MY_RECIPES' | translate"
+            (click)="searchForm.controls.onlyMine.setValue(!searchForm.controls.onlyMine.value)"
+            [class.recipe-select__filter-button--active]="searchForm.controls.onlyMine.value"
+        />
     </div>
 
     @if (recipeData.isLoading()) {
@@ -37,49 +36,26 @@
         @if (recipeData.items().length > 0) {
             <div class="recipe-select__list">
                 @for (recipe of recipeData.items(); track recipe.id) {
-                    <fd-ui-entity-card
-                        class="recipe-select__card fd-ui-entity-card--hoverable"
-                        (click)="onRecipeClick(recipe)"
-                        appearance="recipe"
-                        [title]="recipe.name"
-                        [meta]="recipe.category || undefined"
-                        [imageUrl]="resolveImage(recipe)"
-                        [fallbackImage]="fallbackRecipeImage"
-                    >
-                        <ng-container fdUiEntityCardHeader>
-                            <div class="recipe-card__badges">
-                                <fd-badge [label]="('RECIPE_VISIBILITY.' + recipe.visibility) | translate"
-                                    [variant]="isPrivateVisibility(recipe.visibility) ? 'warning' : 'success'"
-                                    [icon]="isPrivateVisibility(recipe.visibility) ? 'lock' : 'public'"
-                                 />
-                                <fd-badge [label]="recipe.isOwnedByCurrentUser ? ('RECIPE_SELECT_DIALOG.MY_RECIPE_BADGE' | translate) : ('RECIPE_SELECT_DIALOG.SHARED_RECIPE_BADGE' | translate)"
-                                    [variant]="recipe.isOwnedByCurrentUser ? 'primary' : 'neutral'"
-                                    [icon]="recipe.isOwnedByCurrentUser ? 'restaurant' : 'groups'"
-                                 />
-                            </div>
-                        </ng-container>
-                        <div class="recipe-card">
-                            <div class="recipe-card__info">
-                                <span>
-                                    {{ 'RECIPE_SELECT_DIALOG.SERVINGS' | translate }}:
-                                    {{ recipe.servings }}
-                                </span>
-                                <span>
-                                    {{ 'RECIPE_SELECT_DIALOG.TOTAL_CALORIES' | translate }}:
-                                    {{ (recipe.totalCalories ?? 0) | number:'1.0-2' }}
-                                    {{ 'SHARED.NUTRIENTS_SUMMARY.KKAL' | translate }}
-                                </span>
-                            </div>
-                            <div class="recipe-card__macros">
-                                {{ 'NUTRIENTS.PROTEINS' | translate }}:
-                                {{ (recipe.totalProteins ?? 0) | number:'1.0-2' }} {{ 'PRODUCT_AMOUNT_UNITS_SHORT.G' | translate }} |
-                                {{ 'NUTRIENTS.FATS' | translate }}:
-                                {{ (recipe.totalFats ?? 0) | number:'1.0-2' }} {{ 'PRODUCT_AMOUNT_UNITS_SHORT.G' | translate }} |
-                                {{ 'NUTRIENTS.CARBS' | translate }}:
-                                {{ (recipe.totalCarbs ?? 0) | number:'1.0-2' }} {{ 'PRODUCT_AMOUNT_UNITS_SHORT.G' | translate }}
+                    <button type="button" class="recipe-select__item" (click)="onRecipeClick(recipe)">
+                        <div class="recipe-select__thumb">
+                            @if (resolveImage(recipe)) {
+                                <img [src]="resolveImage(recipe)" [alt]="recipe.name" />
+                            } @else {
+                                <mat-icon>restaurant</mat-icon>
+                            }
+                        </div>
+                        <div class="recipe-select__info">
+                            <div class="recipe-select__name">{{ recipe.name }}</div>
+                            <div class="recipe-select__meta">
+                                @if (recipe.category) { {{ recipe.category }} · }
+                                {{ recipe.totalCalories ?? 0 }} {{ 'SHARED.NUTRIENTS_SUMMARY.KKAL' | translate }} ·
+                                {{ recipe.servings }} {{ 'RECIPE_SELECT_DIALOG.SERVINGS' | translate }}
                             </div>
                         </div>
-                    </fd-ui-entity-card>
+                        <span class="recipe-select__action">
+                            <fd-ui-button icon="add" variant="primary" fill="solid" size="sm" ariaLabel="{{ 'COMMON.ADD' | translate }}" />
+                        </span>
+                    </button>
                 }
             </div>
         } @else {
@@ -98,5 +74,17 @@
             (pageIndexChange)="onPageChange($event)"
          />
     }
-</div>
 
+    @if (!embedded()) {
+        <div class="recipe-select__footer">
+            <fd-ui-button
+                variant="primary"
+                fill="solid"
+                icon="add"
+                (click)="onCreateRecipeClick()"
+            >
+                {{ 'RECIPE_SELECT_DIALOG.ADD_RECIPE_BUTTON' | translate }}
+            </fd-ui-button>
+        </div>
+    }
+</div>

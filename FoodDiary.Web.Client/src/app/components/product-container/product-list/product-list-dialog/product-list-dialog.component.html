@@ -1,0 +1,88 @@
+﻿<div class="product-select" #container>
+    @if (!embedded()) {
+        <div class="product-select__header">
+            <div>
+                <h2 class="product-select__title">{{ 'PRODUCT_LIST.TITLE' | translate }}</h2>
+                <p class="product-select__subtitle">{{ 'PRODUCT_LIST.SUBTITLE' | translate }}</p>
+            </div>
+        </div>
+    }
+
+    <div class="product-select__controls">
+        <form class="product-select__search-form" [formGroup]="searchForm">
+            <fd-ui-input
+                class="product-select__search-input"
+                formControlName="search"
+                prefixIcon="search"
+                [label]="'PRODUCT_LIST.SEARCH_LABEL' | translate"
+                [placeholder]="'PRODUCT_LIST.SEARCH_PLACEHOLDER' | translate"
+            />
+        </form>
+        <fd-ui-button
+            class="product-select__filter-button"
+            variant="secondary"
+            fill="outline"
+            [icon]="searchForm.controls.onlyMine.value ? 'person' : 'groups'"
+            [ariaLabel]="'PRODUCT_LIST.ONLY_MY_PRODUCTS' | translate"
+            (click)="toggleOnlyMine()"
+            [class.product-select__filter-button--active]="searchForm.controls.onlyMine.value"
+        />
+    </div>
+
+    @if (productData.isLoading()) {
+        <fd-ui-loader class="product-select__loader" />
+    } @else {
+        @if (productData.items().length > 0) {
+            <div class="product-select__list">
+                @for (product of productData.items(); track product) {
+                    <button type="button" class="product-select__item" (click)="onProductClick(product)">
+                        <div class="product-select__thumb">
+                            @if (resolveImage(product)) {
+                                <img [src]="resolveImage(product)" [alt]="product.name" />
+                            } @else {
+                                <mat-icon>restaurant</mat-icon>
+                            }
+                        </div>
+                        <div class="product-select__info">
+                            <div class="product-select__name">{{ product.name }}</div>
+                            <div class="product-select__meta">
+                                @if (product.brand) { {{ product.brand }} · }
+                                {{ product.caloriesPerBase }} {{ 'SHARED.NUTRIENTS_SUMMARY.KKAL' | translate }}/{{ product.baseAmount }}{{ 'PRODUCT_AMOUNT_UNITS_SHORT.G' | translate }}
+                            </div>
+                        </div>
+                        <span class="product-select__action">
+                            <fd-ui-button icon="add" variant="primary" fill="solid" size="sm" ariaLabel="{{ 'COMMON.ADD' | translate }}" />
+                        </span>
+                    </button>
+                }
+            </div>
+        } @else {
+            <div class="product-select__no-results">
+                <mat-icon class="product-select__no-results-icon">search_off</mat-icon>
+                {{ 'PRODUCT_LIST.NO_PRODUCTS_FOUND' | translate }}
+            </div>
+        }
+    }
+
+    @if (productData.totalPages > 1) {
+        <fd-ui-pagination class="product-select__pagination"
+            [length]="productData.totalItems"
+            [pageSize]="pageSize"
+            [pageIndex]="currentPageIndex"
+            (pageIndexChange)="onPageChange($event)"
+         />
+    }
+
+    @if (!embedded()) {
+        <div class="product-select__footer">
+            <fd-ui-button
+                variant="primary"
+                fill="solid"
+                icon="add"
+                (click)="onAddProductClick()"
+            >
+                {{ 'PRODUCT_LIST.ADD_PRODUCT_BUTTON' | translate }}
+            </fd-ui-button>
+        </div>
+    }
+</div>

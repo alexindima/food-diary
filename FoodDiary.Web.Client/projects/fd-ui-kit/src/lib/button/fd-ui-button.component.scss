@@ -98,16 +98,26 @@
 
 /* Primary solid */
 .fd-ui-button--primary.fd-ui-button--solid {
-    --fd-button-background-default: var(--fd-button-primary-background-default);
-    --fd-button-background-hover: var(--fd-button-primary-background-hover);
-    --fd-button-background-active: var(--fd-button-primary-background-active);
-    --fd-button-background-disabled: var(--fd-button-primary-background-disabled);
-    --fd-button-border-default: var(--fd-button-primary-border-default);
-    --fd-button-border-hover: var(--fd-button-primary-border-hover);
-    --fd-button-border-active: var(--fd-button-primary-border-active);
-    --fd-button-border-disabled: var(--fd-button-primary-border-disabled);
-    --fd-button-text-default: var(--fd-button-primary-text-default);
-    --fd-button-text-disabled: var(--fd-button-primary-text-disabled);
+    background: linear-gradient(135deg, #4dabff, #2563eb);
+    border: none;
+    color: #ffffff;
+    box-shadow: 0 10px 26px rgba(37, 99, 235, 0.28);
+
+    &:hover:not(:disabled) {
+        background: linear-gradient(135deg, #60b6ff, #2f6df2);
+        box-shadow: 0 12px 30px rgba(37, 99, 235, 0.32);
+    }
+
+    &:active:not(:disabled) {
+        background: linear-gradient(135deg, #4dabff, #2563eb);
+        box-shadow: none;
+    }
+
+    &:disabled {
+        background: #cbd5e1;
+        color: #f8fafc;
+        box-shadow: none;
+    }
 }
 
 /* Primary outline */

@@ -239,17 +239,18 @@
                         </div>
                         @for (ingredient of getStepIngredients(index).controls; track ingredient; let ingredientIndex = $index; let firstIngredient = $first) {
                           <div class="recipe-ingredient" [formGroupName]="ingredientIndex">
-                            <input type="hidden" formControlName="food" />
-                            <fd-ui-input class="recipe-ingredient__name"
-                              formControlName="foodName"
-                              [label]="'RECIPE_MANAGE.INGREDIENT_NAME' | translate"
-                              [placeholder]="'RECIPE_MANAGE.INGREDIENT_NAME_PLACEHOLDER' | translate"
-                              [readonly]="true"
-                              prefixIcon="search"
-                              [ariaLabel]="'RECIPE_MANAGE.SELECT_INGREDIENT' | translate"
-                              (click)="onProductSelectClick(index, ingredientIndex)"
-                              [error]="getIngredientControlError(index, ingredientIndex, 'food')"
-                             />
+                              <input type="hidden" formControlName="food" />
+                              <input type="hidden" formControlName="nestedRecipeId" />
+                              <fd-ui-input class="recipe-ingredient__name"
+                                formControlName="foodName"
+                                [label]="'RECIPE_MANAGE.INGREDIENT_NAME' | translate"
+                                [placeholder]="'RECIPE_MANAGE.INGREDIENT_NAME_PLACEHOLDER' | translate"
+                                [readonly]="true"
+                                [prefixIcon]="getIngredientIcon(index, ingredientIndex)"
+                                [ariaLabel]="'RECIPE_MANAGE.SELECT_INGREDIENT' | translate"
+                                (click)="onProductSelectClick(index, ingredientIndex)"
+                                [error]="getIngredientControlError(index, ingredientIndex, 'foodName')"
+                               />
 
                             <div class="recipe-ingredient__amount">
                               <fd-ui-input formControlName="amount"

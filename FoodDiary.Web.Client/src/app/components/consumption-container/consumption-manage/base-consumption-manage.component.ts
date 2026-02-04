@@ -400,6 +400,16 @@ export class BaseConsumptionManageComponent implements OnInit {
         return this.getProductName(index);
     }
 
+    public getItemSourceIcon(index: number): string {
+        if (this.isRecipeItem(index) && this.items.at(index).controls.recipe.value) {
+            return 'menu_book';
+        }
+        if (this.isProductItem(index) && this.items.at(index).controls.product.value) {
+            return 'restaurant';
+        }
+        return 'search';
+    }
+
     public getItemCardTitle(index: number): string {
         return this.translateService.instant('CONSUMPTION_MANAGE.ITEM_CARD_PLACEHOLDER', {
             index: index + 1,
