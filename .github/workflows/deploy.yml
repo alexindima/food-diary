@@ -10,7 +10,7 @@ env:
   NODE_VERSION: 22
   SERVER_IP: 193.109.69.58
   FRONTEND_DIR: FoodDiary.Web.Client
-  ADMIN_FRONTEND_BUILD_DIR: FoodDiary.Web.Client/dist/admin
+  ADMIN_FRONTEND_BUILD_DIR: FoodDiary.Web.Client/dist-admin
   BACKEND_PROJECT: FoodDiary.Web.Api/FoodDiary.Web.Api.csproj
   BACKEND_PUBLISH_DIR: FoodDiary.Web.Api/publish
   BOT_PROJECT: FoodDiary.Telegram.Bot/FoodDiary.Telegram.Bot.csproj

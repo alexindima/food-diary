@@ -187,8 +187,8 @@
               "builder": "@angular/build:application",
               "options": {
                 "outputPath": {
-                  "base": "dist",
-                  "browser": "admin"
+                  "base": "dist-admin",
+                  "browser": ""
                 },
                 "index": "projects/fooddiary-admin/src/index.html",
                 "browser": "projects/fooddiary-admin/src/main.ts",
