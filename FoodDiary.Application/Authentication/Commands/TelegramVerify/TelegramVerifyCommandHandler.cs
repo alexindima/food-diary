@@ -5,6 +5,7 @@ using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Interfaces.Services;
 using FoodDiary.Application.Users.Mappings;
 using FoodDiary.Contracts.Authentication;
+using System.Linq;
 
 namespace FoodDiary.Application.Authentication.Commands.TelegramVerify;
 
@@ -52,8 +53,14 @@ public sealed class TelegramVerifyCommandHandler : ICommandHandler<TelegramVerif
             return Result.Failure<AuthenticationResponse>(Errors.Authentication.InvalidCredentials);
         }
 
-        var accessToken = _jwtTokenGenerator.GenerateAccessToken(user.Id, user.Email);
-        var refreshToken = _jwtTokenGenerator.GenerateRefreshToken(user.Id, user.Email);
+        var roles = user.UserRoles
+            .Select(role => role.Role?.Name)
+            .Where(name => !string.IsNullOrWhiteSpace(name))
+            .Select(name => name!)
+            .ToArray();
+
+        var accessToken = _jwtTokenGenerator.GenerateAccessToken(user.Id, user.Email, roles);
+        var refreshToken = _jwtTokenGenerator.GenerateRefreshToken(user.Id, user.Email, roles);
         var hashedRefreshToken = _passwordHasher.Hash(refreshToken);
         user.UpdateRefreshToken(hashedRefreshToken);
         await _userRepository.UpdateAsync(user);

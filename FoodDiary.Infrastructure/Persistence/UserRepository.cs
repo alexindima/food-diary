@@ -11,23 +11,28 @@ public class UserRepository : IUserRepository
 
     public UserRepository(FoodDiaryDbContext context) => _context = context;
 
+    private IQueryable<User> UsersWithRoles() =>
+        _context.Users
+            .Include(u => u.UserRoles)
+            .ThenInclude(ur => ur.Role);
+
     public async Task<User?> GetByEmailAsync(string email) =>
-        await _context.Users.FirstOrDefaultAsync(u =>
+        await UsersWithRoles().FirstOrDefaultAsync(u =>
             u.Email == email && u.IsActive && u.DeletedAt == null);
 
     public async Task<User?> GetByEmailIncludingDeletedAsync(string email) =>
-        await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+        await UsersWithRoles().FirstOrDefaultAsync(u => u.Email == email);
 
     public async Task<User?> GetByIdAsync(UserId id) =>
-        await _context.Users.FirstOrDefaultAsync(u =>
+        await UsersWithRoles().FirstOrDefaultAsync(u =>
             u.Id == id && u.IsActive && u.DeletedAt == null);
 
     public async Task<User?> GetByTelegramUserIdAsync(long telegramUserId) =>
-        await _context.Users.FirstOrDefaultAsync(u =>
+        await UsersWithRoles().FirstOrDefaultAsync(u =>
             u.TelegramUserId == telegramUserId && u.IsActive && u.DeletedAt == null);
 
     public async Task<User?> GetByTelegramUserIdIncludingDeletedAsync(long telegramUserId) =>
-        await _context.Users.FirstOrDefaultAsync(u => u.TelegramUserId == telegramUserId);
+        await UsersWithRoles().FirstOrDefaultAsync(u => u.TelegramUserId == telegramUserId);
 
     public async Task<User> AddAsync(User user)
     {

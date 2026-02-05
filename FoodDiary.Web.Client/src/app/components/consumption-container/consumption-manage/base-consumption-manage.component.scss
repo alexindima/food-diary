@@ -570,6 +570,10 @@
 
 .consumption-item__selector-input {
     width: 100%;
+
+    ::ng-deep .fd-ui-input__control-wrap {
+        min-height: 48px;
+    }
 }
 
 .consumption-item__actions {

@@ -4,6 +4,7 @@ using static FoodDiary.Application.Common.Abstractions.Result.Errors;
 using FoodDiary.Application.Common.Interfaces.Authentication;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Interfaces.Services;
+using System.Linq;
 
 namespace FoodDiary.Application.Authentication.Commands.RefreshToken;
 
@@ -44,7 +45,12 @@ public class RefreshTokenCommandHandler : ICommandHandler<RefreshTokenCommand, R
             return Result.Failure<string>(Errors.Authentication.InvalidToken);
         }
 
-        var newAccessToken = _jwtTokenGenerator.GenerateAccessToken(userId, email);
+        var roles = user.UserRoles
+            .Select(role => role.Role?.Name)
+            .Where(name => !string.IsNullOrWhiteSpace(name))
+            .Select(name => name!)
+            .ToArray();
+        var newAccessToken = _jwtTokenGenerator.GenerateAccessToken(userId, email, roles);
         return Result.Success(newAccessToken);
     }
 }

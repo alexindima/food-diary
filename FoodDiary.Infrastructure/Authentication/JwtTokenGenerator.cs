@@ -1,6 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using FoodDiary.Application.Common.Interfaces.Authentication;
@@ -14,11 +15,11 @@ public class JwtTokenGenerator : IJwtTokenGenerator
 
     public JwtTokenGenerator(IConfiguration configuration) => _configuration = configuration;
 
-    public string GenerateAccessToken(UserId userId, string email) =>
-        GenerateToken(userId, email, int.Parse(_configuration["JwtSettings:ExpirationMinutes"] ?? "60"));
+    public string GenerateAccessToken(UserId userId, string email, IReadOnlyCollection<string> roles) =>
+        GenerateToken(userId, email, roles, int.Parse(_configuration["JwtSettings:ExpirationMinutes"] ?? "60"));
 
-    public string GenerateRefreshToken(UserId userId, string email) =>
-        GenerateToken(userId, email, int.Parse(_configuration["JwtSettings:RefreshTokenExpirationDays"] ?? "7") * 1440);
+    public string GenerateRefreshToken(UserId userId, string email, IReadOnlyCollection<string> roles) =>
+        GenerateToken(userId, email, roles, int.Parse(_configuration["JwtSettings:RefreshTokenExpirationDays"] ?? "7") * 1440);
 
     public (UserId userId, string email)? ValidateToken(string token)
     {
@@ -51,17 +52,22 @@ public class JwtTokenGenerator : IJwtTokenGenerator
         }
     }
 
-    private string GenerateToken(UserId userId, string email, int expirationMinutes)
+    private string GenerateToken(UserId userId, string email, IReadOnlyCollection<string> roles, int expirationMinutes)
     {
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtSettings:SecretKey"]!));
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-        var claims = new[]
+        var claims = new List<Claim>
         {
             new Claim(ClaimTypes.NameIdentifier, userId.Value.ToString()),
             new Claim(ClaimTypes.Email, email),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
+
+        foreach (var role in roles)
+        {
+            claims.Add(new Claim(ClaimTypes.Role, role));
+        }
 
         var token = new JwtSecurityToken(
             issuer: _configuration["JwtSettings:Issuer"],

@@ -10,6 +10,8 @@ public class FoodDiaryDbContext : DbContext
     public FoodDiaryDbContext(DbContextOptions<FoodDiaryDbContext> options) : base(options) { }
 
     public DbSet<User> Users => Set<User>();
+    public DbSet<Role> Roles => Set<Role>();
+    public DbSet<UserRole> UserRoles => Set<UserRole>();
     public DbSet<ImageAsset> ImageAssets => Set<ImageAsset>();
     public DbSet<Product> Products => Set<Product>();
     public DbSet<Meal> Meals => Set<Meal>();
@@ -75,6 +77,43 @@ public class FoodDiaryDbContext : DbContext
 
             entity.HasIndex(e => e.TelegramUserId)
                 .IsUnique();
+        });
+
+        modelBuilder.Entity<Role>(entity =>
+        {
+            entity.Property(e => e.Id).HasConversion(
+                id => id.Value,
+                value => new RoleId(value));
+
+            entity.Property(e => e.Name)
+                .IsRequired()
+                .HasMaxLength(64);
+
+            entity.HasIndex(e => e.Name)
+                .IsUnique();
+        });
+
+        modelBuilder.Entity<UserRole>(entity =>
+        {
+            entity.HasKey(e => new { e.UserId, e.RoleId });
+
+            entity.Property(e => e.UserId).HasConversion(
+                id => id.Value,
+                value => new UserId(value));
+
+            entity.Property(e => e.RoleId).HasConversion(
+                id => id.Value,
+                value => new RoleId(value));
+
+            entity.HasOne(e => e.User)
+                .WithMany(u => u.UserRoles)
+                .HasForeignKey(e => e.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(e => e.Role)
+                .WithMany(r => r.UserRoles)
+                .HasForeignKey(e => e.RoleId)
+                .OnDelete(DeleteBehavior.Cascade);
         });
 
         modelBuilder.Entity<ImageAsset>(entity =>

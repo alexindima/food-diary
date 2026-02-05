@@ -6,6 +6,7 @@ using FoodDiary.Application.Common.Interfaces.Services;
 using FoodDiary.Application.Users.Mappings;
 using FoodDiary.Contracts.Authentication;
 using FoodDiary.Domain.Entities;
+using System;
 
 namespace FoodDiary.Application.Authentication.Commands.Register;
 
@@ -43,8 +44,9 @@ public class RegisterCommandHandler : ICommandHandler<RegisterCommand, Result<Au
         user = await _userRepository.AddAsync(user);
 
         // Создание токенов
-        var accessToken = _jwtTokenGenerator.GenerateAccessToken(user.Id, user.Email);
-        var refreshToken = _jwtTokenGenerator.GenerateRefreshToken(user.Id, user.Email);
+        var roles = Array.Empty<string>();
+        var accessToken = _jwtTokenGenerator.GenerateAccessToken(user.Id, user.Email, roles);
+        var refreshToken = _jwtTokenGenerator.GenerateRefreshToken(user.Id, user.Email, roles);
 
         var hashedRefreshToken = _passwordHasher.Hash(refreshToken);
         user.UpdateRefreshToken(hashedRefreshToken);

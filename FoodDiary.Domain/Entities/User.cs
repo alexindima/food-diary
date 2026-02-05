@@ -45,6 +45,7 @@ public sealed class User : AggregateRoot<UserId> {
     public ICollection<WaistEntry> WaistEntries { get; private set; } = new List<WaistEntry>();
     public ICollection<Cycle> Cycles { get; private set; } = new List<Cycle>();
     public ICollection<HydrationEntry> HydrationEntries { get; private set; } = new List<HydrationEntry>();
+    public ICollection<UserRole> UserRoles { get; private set; } = new List<UserRole>();
 
     // Конструктор для EF Core
     private User() {
