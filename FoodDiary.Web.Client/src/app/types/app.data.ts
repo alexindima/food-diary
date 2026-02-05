@@ -21,4 +21,5 @@ export interface AppConfigApiUrls {
     images: string;
     hydration: string;
     goals: string;
+    ai: string;
 }

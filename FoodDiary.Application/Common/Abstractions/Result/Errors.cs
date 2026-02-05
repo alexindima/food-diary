@@ -181,4 +181,27 @@ public static class Errors
             "CycleDay.NotFound",
             $"Cycle day for {date:yyyy-MM-dd} was not found.");
     }
+
+    public static class Ai
+    {
+        public static Error ImageNotFound(Guid id) => new(
+            "Ai.ImageNotFound",
+            $"Image asset with ID {id} was not found.");
+
+        public static Error Forbidden() => new(
+            "Ai.Forbidden",
+            "Image asset does not belong to the current user.");
+
+        public static Error EmptyItems() => new(
+            "Ai.EmptyItems",
+            "No food items were provided.");
+
+        public static Error OpenAiFailed(string reason) => new(
+            "Ai.OpenAiFailed",
+            reason);
+
+        public static Error InvalidResponse(string reason) => new(
+            "Ai.InvalidResponse",
+            reason);
+    }
 }

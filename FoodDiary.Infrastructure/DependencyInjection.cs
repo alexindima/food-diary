@@ -12,6 +12,7 @@ using FoodDiary.Infrastructure.Authentication;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Options;
 using FoodDiary.Infrastructure.Services;
+using FoodDiary.Application.Common.Interfaces.Services;
 
 namespace FoodDiary.Infrastructure;
 
@@ -25,6 +26,7 @@ public static class DependencyInjection
         services.Configure<S3Options>(configuration.GetSection(S3Options.SectionName));
         services.Configure<TelegramAuthOptions>(configuration.GetSection(TelegramAuthOptions.SectionName));
         services.Configure<TelegramBotOptions>(configuration.GetSection(TelegramBotOptions.SectionName));
+        services.Configure<OpenAiOptions>(configuration.GetSection(OpenAiOptions.SectionName));
 
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IProductRepository, ProductRepository>();
@@ -65,6 +67,7 @@ public static class DependencyInjection
         services.AddSingleton<ITelegramLoginWidgetValidator, TelegramLoginWidgetValidator>();
         services.AddSingleton<IAdminSsoService, AdminSsoService>();
         services.AddScoped<IUserCleanupService, UserCleanupService>();
+        services.AddHttpClient<IOpenAiFoodService, OpenAiFoodService>();
 
         return services;
     }

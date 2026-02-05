@@ -18,6 +18,7 @@ export const environment: AppConfig = {
         images: `${serverUrl}/api/images`,
         hydration: `${serverUrl}/api/hydrations`,
         goals: `${serverUrl}/api/goals`,
+        ai: `${serverUrl}/api/ai`,
     },
     googleClientId: '958507321562-8btd704hjhgsl7niklereh81utg5p780.apps.googleusercontent.com',
     telegramBotUsername: 'fooddiaryclub_bot',

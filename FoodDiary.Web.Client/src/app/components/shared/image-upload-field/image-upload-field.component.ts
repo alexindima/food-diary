@@ -45,8 +45,9 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
     public readonly maxSizeMb = input<number>(20);
     public readonly acceptedTypes = input<string>('image/jpeg,image/png,image/webp,image/gif');
     public readonly cropEnabled = input<boolean>(false);
-    public readonly cropSize = input<number>(512);
-    public readonly cropAspectRatio = input<number>(1);
+    public readonly cropSize = input<number | null>(512);
+    public readonly cropMaxSize = input<number>(1024);
+    public readonly cropAspectRatio = input<number | null>(1);
     public readonly deleteOnClear = input<boolean>(false);
 
     public readonly imageChanged = output<ImageSelection | null>();
@@ -140,8 +141,9 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
 
     public onCropperImageLoaded(img: HTMLImageElement): void {
         this.destroyCropper();
+        const aspectRatio = this.cropAspectRatio();
         this.cropper = new Cropper(img, {
-            aspectRatio: this.cropAspectRatio(),
+            aspectRatio: aspectRatio ?? NaN,
             viewMode: 1,
             background: false,
             autoCropArea: 1,
@@ -164,11 +166,36 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
             return;
         }
 
-        const canvas = this.cropper.getCroppedCanvas({
-            width: this.cropSize(),
-            height: this.cropSize(),
-            fillColor: '#fff',
-        });
+        const fixedSize = this.cropSize();
+        let canvas = fixedSize
+            ? this.cropper.getCroppedCanvas({
+                  width: fixedSize,
+                  height: fixedSize,
+                  fillColor: '#fff',
+              })
+            : this.cropper.getCroppedCanvas({
+                  fillColor: '#fff',
+              });
+
+        if (!fixedSize) {
+            const maxSize = this.cropMaxSize();
+            if (maxSize > 0 && (canvas.width > maxSize || canvas.height > maxSize)) {
+                const scale = Math.min(maxSize / canvas.width, maxSize / canvas.height);
+                const targetWidth = Math.max(1, Math.round(canvas.width * scale));
+                const targetHeight = Math.max(1, Math.round(canvas.height * scale));
+                const resized = document.createElement('canvas');
+                resized.width = targetWidth;
+                resized.height = targetHeight;
+                const ctx = resized.getContext('2d');
+                if (!ctx) {
+                    this.error = this.translateService.instant('IMAGE_UPLOAD_FIELD.ERRORS.PROCESSING_FAILED');
+                    this.cdr.markForCheck();
+                    return;
+                }
+                ctx.drawImage(canvas, 0, 0, targetWidth, targetHeight);
+                canvas = resized;
+            }
+        }
 
         canvas.toBlob(blob => {
             if (!blob) {

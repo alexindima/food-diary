@@ -794,6 +794,21 @@
         },
         "ADD_ITEM": "Add product or recipe",
         "ADD_ITEM_FROM_PHOTO": "Add automatically via photo",
+        "PHOTO_AI_DIALOG": {
+            "TITLE": "Recognize food from photo",
+            "SUBTITLE": "Upload a photo to identify foods and amounts.",
+            "UPLOAD_LABEL": "Meal photo",
+            "UPLOAD_DESC": "Crop and upload a clear image. We will analyze it automatically.",
+            "UPLOAD_RECOMMENDED": "Recommended: 1024 × 1024",
+            "LOADING": "Analyzing photo…",
+            "ERROR_PREMIUM": "Photo recognition is available for Premium users.",
+            "ERROR_GENERIC": "Failed to analyze the photo. Please try again.",
+            "RESULTS_TITLE": "Recognized items",
+            "NAME_LABEL": "Name",
+            "AMOUNT_LABEL": "Amount",
+            "UNIT_LABEL": "Unit",
+            "CLOSE": "Close"
+        },
         "ITEM_CARD_PLACEHOLDER": "Entry #{{index}}",
         "ITEM_CARD_META": {
             "PRODUCT": "Product",

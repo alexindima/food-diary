@@ -65,6 +65,7 @@ import { ImageUploadFieldComponent } from '../../shared/image-upload-field/image
 import { ImageSelection } from '../../../types/image-upload.data';
 import { ActivatedRoute, Router } from '@angular/router';
 import { QuickConsumptionItem } from '../../../services/quick-consumption.service';
+import { ConsumptionPhotoRecognitionDialogComponent } from '../consumption-photo-recognition-dialog/consumption-photo-recognition-dialog.component';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: FD_VALIDATION_ERRORS,
@@ -382,7 +383,9 @@ export class BaseConsumptionManageComponent implements OnInit {
     }
 
     public onAddConsumptionFromPhoto(): void {
-        // Placeholder for future AI-powered photo recognition flow
+        this.fdDialogService.open(ConsumptionPhotoRecognitionDialogComponent, {
+            size: 'lg',
+        });
     }
 
     public removeItem(index: number): void {

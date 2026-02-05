@@ -1,22 +1,24 @@
 <fd-ui-dialog title="Edit user" [subtitle]="user.email" size="sm">
-  <div class="admin-user-dialog__section">
-    <label class="admin-user-dialog__label">
-      <input type="checkbox" [formControl]="form.controls.isActive" />
-      Active
-    </label>
-  </div>
-
-  <div class="admin-user-dialog__section">
-    <div class="admin-user-dialog__label">Roles</div>
-    <div class="admin-user-dialog__roles">
-      <label *ngFor="let role of roles" class="admin-user-dialog__role">
-        <input
-          type="checkbox"
-          [checked]="hasRole(role)"
-          (change)="toggleRole(role)"
-        />
-        {{ role }}
+  <div class="admin-user-dialog">
+    <div class="admin-user-dialog__section">
+      <label class="admin-user-dialog__label">
+        <input type="checkbox" [formControl]="form.controls.isActive" />
+        Active
       </label>
+    </div>
+
+    <div class="admin-user-dialog__section">
+      <div class="admin-user-dialog__label">Roles</div>
+      <div class="admin-user-dialog__roles">
+        <label *ngFor="let role of roles" class="admin-user-dialog__role">
+          <input
+            type="checkbox"
+            [checked]="hasRole(role)"
+            (change)="toggleRole(role)"
+          />
+          {{ role }}
+        </label>
+      </div>
     </div>
   </div>
 

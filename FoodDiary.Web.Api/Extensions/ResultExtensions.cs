@@ -56,6 +56,22 @@ public static class ResultExtensions
                 error = result.Error.Code,
                 message = result.Error.Message
             }),
+            var code when code.Contains("Ai.Forbidden") => new ObjectResult(new
+            {
+                error = result.Error.Code,
+                message = result.Error.Message
+            })
+            {
+                StatusCode = StatusCodes.Status403Forbidden
+            },
+            var code when code.Contains("Ai.OpenAiFailed") || code.Contains("Ai.InvalidResponse") => new ObjectResult(new
+            {
+                error = result.Error.Code,
+                message = result.Error.Message
+            })
+            {
+                StatusCode = StatusCodes.Status502BadGateway
+            },
             var code when code.Contains("NotFound") => new NotFoundObjectResult(new
             {
                 error = result.Error.Code,
