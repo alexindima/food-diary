@@ -1,0 +1,67 @@
+.admin-user-dialog {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 320px;
+}
+
+.admin-user-dialog__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.admin-user-dialog__title {
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.admin-user-dialog__subtitle {
+  color: #6b7280;
+  font-size: 0.95rem;
+}
+
+.admin-user-dialog__close {
+  border: none;
+  background: transparent;
+  font-size: 1.4rem;
+  cursor: pointer;
+  color: #6b7280;
+}
+
+.admin-user-dialog__section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.admin-user-dialog__label {
+  font-weight: 600;
+  color: #334155;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.admin-user-dialog__roles {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+}
+
+.admin-user-dialog__role {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 12px;
+  background: #f8fafc;
+}
+
+.admin-user-dialog__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}

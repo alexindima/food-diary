@@ -1,0 +1,87 @@
+<div class="admin-users">
+  <div class="admin-users__header">
+    <div>
+      <div class="admin-users__title">Users</div>
+      <div class="admin-users__subtitle">Manage access, roles, and status.</div>
+    </div>
+    <div class="admin-users__actions">
+      <fd-ui-input
+        class="admin-users__search"
+        [label]="'Search'"
+        [placeholder]="'Email or name'"
+        [ngModel]="search()"
+        (ngModelChange)="onSearchChange($event)"
+      ></fd-ui-input>
+      <fd-ui-button
+        type="button"
+        fill="outline"
+        variant="secondary"
+        (click)="toggleIncludeDeleted()"
+      >
+        {{ includeDeleted() ? 'Hide deleted' : 'Show deleted' }}
+      </fd-ui-button>
+    </div>
+  </div>
+
+  <div class="admin-users__table">
+    <div class="admin-users__row admin-users__row--head">
+      <div>Email</div>
+      <div>Name</div>
+      <div>Roles</div>
+      <div>Status</div>
+      <div>Created</div>
+      <div></div>
+    </div>
+
+    <div class="admin-users__row" *ngFor="let user of users()">
+      <div class="admin-users__cell admin-users__cell--primary">{{ user.email }}</div>
+      <div class="admin-users__cell">
+        {{ user.firstName || user.lastName ? (user.firstName || '') + ' ' + (user.lastName || '') : '-' }}
+      </div>
+      <div class="admin-users__cell">
+        {{ user.roles.length ? user.roles.join(', ') : '-' }}
+      </div>
+      <div class="admin-users__cell">
+        <span class="admin-users__badge" [class.admin-users__badge--inactive]="!user.isActive">
+          {{ user.isActive ? 'Active' : 'Inactive' }}
+        </span>
+      </div>
+      <div class="admin-users__cell">
+        {{ user.createdOnUtc | date: 'yyyy-MM-dd' }}
+      </div>
+      <div class="admin-users__cell admin-users__cell--actions">
+        <fd-ui-button type="button" fill="outline" variant="secondary" (click)="openEdit(user)">
+          Edit
+        </fd-ui-button>
+      </div>
+    </div>
+
+    <div class="admin-users__empty" *ngIf="!isLoading() && users().length === 0">
+      No users found.
+    </div>
+  </div>
+
+  <div class="admin-users__pagination">
+    <fd-ui-button
+      type="button"
+      fill="outline"
+      variant="secondary"
+      [disabled]="page() <= 1"
+      (click)="goToPage(page() - 1)"
+    >
+      Prev
+    </fd-ui-button>
+    <div class="admin-users__pagination-info">
+      Page {{ page() }} / {{ totalPages() }} · {{ totalItems() }} users
+    </div>
+    <fd-ui-button
+      type="button"
+      fill="outline"
+      variant="secondary"
+      [disabled]="page() >= totalPages()"
+      (click)="goToPage(page() + 1)"
+    >
+      Next
+    </fd-ui-button>
+  </div>
+</div>

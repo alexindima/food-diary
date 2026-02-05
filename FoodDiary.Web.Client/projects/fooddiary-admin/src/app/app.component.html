@@ -9,15 +9,15 @@
     </div>
 
     <nav class="admin-shell__nav">
-      <button class="admin-shell__nav-item admin-shell__nav-item--active" type="button">
+      <a class="admin-shell__nav-item" routerLink="/" routerLinkActive="admin-shell__nav-item--active" [routerLinkActiveOptions]="{ exact: true }">
         Dashboard
-      </button>
-      <button class="admin-shell__nav-item" type="button">
+      </a>
+      <a class="admin-shell__nav-item" routerLink="/users" routerLinkActive="admin-shell__nav-item--active">
         Users
-      </button>
-      <button class="admin-shell__nav-item" type="button">
+      </a>
+      <a class="admin-shell__nav-item" href="#" (click)="$event.preventDefault()">
         AI Logs
-      </button>
+      </a>
     </nav>
   </aside>
 
