@@ -4,26 +4,33 @@
     size="lg"
 >
     <div class="photo-ai-dialog">
-        <fd-image-upload-field
-            [label]="'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.UPLOAD_LABEL' | translate"
-            [description]="'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.UPLOAD_DESC' | translate"
-            [recommendedSize]="'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.UPLOAD_RECOMMENDED' | translate"
-            [cropEnabled]="true"
-            [cropSize]="null"
-            [cropMaxSize]="1024"
-            [cropAspectRatio]="null"
-            [deleteOnClear]="true"
-            (imageChanged)="onImageChanged($event)"
-        />
+        <div class="photo-ai-dialog__upload">
+            <fd-image-upload-field
+                [label]="'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.UPLOAD_LABEL' | translate"
+                [description]="'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.UPLOAD_DESC' | translate"
+                [recommendedSize]="'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.UPLOAD_RECOMMENDED' | translate"
+                [cropEnabled]="true"
+                [cropSize]="null"
+                [cropMaxSize]="1024"
+                [cropAspectRatio]="null"
+                [deleteOnClear]="true"
+                (imageChanged)="onImageChanged($event)"
+            />
 
-        @if (isLoading()) {
-            <div class="photo-ai-dialog__loader">
-                <fd-ui-loader />
-                <div class="photo-ai-dialog__loader-text">
-                    {{ 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.LOADING' | translate }}
+            @if (statusKey()) {
+                <div class="photo-ai-dialog__status" [class.photo-ai-dialog__status--loading]="isLoading()">
+                    {{ statusKey() | translate }}
                 </div>
-            </div>
-        } @else {
+            }
+
+            @if (isLoading()) {
+                <div class="photo-ai-dialog__scan-overlay">
+                    <div class="photo-ai-dialog__scan-line"></div>
+                </div>
+            }
+        </div>
+
+        @if (!isLoading()) {
             @if (errorKey()) {
                 <div class="photo-ai-dialog__error">
                     {{ errorKey() | translate }}
@@ -33,33 +40,119 @@
             @if (results().length) {
                 <div class="photo-ai-dialog__results">
                     <div class="photo-ai-dialog__results-title">
-                        {{ 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.RESULTS_TITLE' | translate }}
+                        <span>{{ 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.RESULTS_TITLE' | translate }}</span>
+                        <span class="photo-ai-dialog__title-actions">
+                            <button
+                                type="button"
+                                class="photo-ai-dialog__action-button"
+                                [attr.aria-label]="'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.EDIT_ACTION' | translate"
+                            >
+                                <mat-icon class="photo-ai-dialog__action-icon" fontIcon="edit"></mat-icon>
+                            </button>
+                            <button
+                                type="button"
+                                class="photo-ai-dialog__action-button"
+                                [disabled]="isLoading() || !selection()?.assetId"
+                                [attr.aria-label]="'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.REANALYZE_ACTION' | translate"
+                                (click)="onReanalyze()"
+                            >
+                                <mat-icon class="photo-ai-dialog__action-icon" fontIcon="refresh"></mat-icon>
+                            </button>
+                        </span>
                     </div>
-                    <div class="photo-ai-dialog__results-grid">
-                        <div class="photo-ai-dialog__results-row" *ngFor="let item of results(); let i = index">
-                            <fd-ui-input
-                                [label]="'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.NAME_LABEL' | translate"
-                                [ngModel]="getDisplayName(item)"
-                                [ngModelOptions]="{ standalone: true }"
-                                [readonly]="true"
-                            />
-                            <fd-ui-input
-                                [label]="'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.AMOUNT_LABEL' | translate"
-                                [ngModel]="item.amount"
-                                [ngModelOptions]="{ standalone: true }"
-                                [readonly]="true"
-                                type="number"
-                            />
-                            <div class="photo-ai-dialog__unit">
-                                <span class="photo-ai-dialog__unit-label">
-                                    {{ 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.UNIT_LABEL' | translate }}
-                                </span>
-                                <span class="photo-ai-dialog__unit-value">
-                                    {{ item.unit }}
-                                </span>
+                    <div class="photo-ai-dialog__table">
+                        <div class="photo-ai-dialog__table-head">
+                            <div class="photo-ai-dialog__cell photo-ai-dialog__cell--name">
+                                {{ 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.NAME_LABEL' | translate }}
+                            </div>
+                            <div class="photo-ai-dialog__cell photo-ai-dialog__cell--amount">
+                                {{ 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.AMOUNT_LABEL' | translate }}
+                            </div>
+                        </div>
+                        <div class="photo-ai-dialog__table-body">
+                            <div class="photo-ai-dialog__table-row" *ngFor="let item of results(); let i = index">
+                                <div class="photo-ai-dialog__cell photo-ai-dialog__cell--name">
+                                    {{ getDisplayName(item) }}
+                                </div>
+                                <div class="photo-ai-dialog__cell photo-ai-dialog__cell--amount">
+                                    {{ formatAmount(item) }}
+                                </div>
                             </div>
                         </div>
                     </div>
+
+                    @if (isNutritionLoading()) {
+                        <div class="photo-ai-dialog__nutrition-loading">
+                            <div class="photo-ai-dialog__nutrition-bar"></div>
+                            <div class="photo-ai-dialog__nutrition-text">
+                                {{ 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.NUTRITION_LOADING' | translate }}
+                            </div>
+                        </div>
+                    } @else {
+                        @if (nutrition()) {
+                            <div class="photo-ai-dialog__nutrition">
+                                <div class="photo-ai-dialog__nutrition-title">
+                                    {{ 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.NUTRITION_TITLE' | translate }}
+                                </div>
+                                <div class="photo-ai-dialog__nutrition-grid">
+                                    <div class="photo-ai-dialog__nutrition-item">
+                                        <span class="photo-ai-dialog__nutrition-label">
+                                            {{ 'GENERAL.NUTRIENTS.CALORIES' | translate }}
+                                        </span>
+                                        <span class="photo-ai-dialog__nutrition-value">
+                                            {{ formatMacro(nutrition()!.calories, 'GENERAL.UNITS.KCAL') }}
+                                        </span>
+                                    </div>
+                                    <div class="photo-ai-dialog__nutrition-item">
+                                        <span class="photo-ai-dialog__nutrition-label">
+                                            {{ 'GENERAL.NUTRIENTS.PROTEIN' | translate }}
+                                        </span>
+                                        <span class="photo-ai-dialog__nutrition-value">
+                                            {{ formatMacro(nutrition()!.protein, 'GENERAL.UNITS.G') }}
+                                        </span>
+                                    </div>
+                                    <div class="photo-ai-dialog__nutrition-item">
+                                        <span class="photo-ai-dialog__nutrition-label">
+                                            {{ 'GENERAL.NUTRIENTS.FAT' | translate }}
+                                        </span>
+                                        <span class="photo-ai-dialog__nutrition-value">
+                                            {{ formatMacro(nutrition()!.fat, 'GENERAL.UNITS.G') }}
+                                        </span>
+                                    </div>
+                                    <div class="photo-ai-dialog__nutrition-item">
+                                        <span class="photo-ai-dialog__nutrition-label">
+                                            {{ 'GENERAL.NUTRIENTS.CARB' | translate }}
+                                        </span>
+                                        <span class="photo-ai-dialog__nutrition-value">
+                                            {{ formatMacro(nutrition()!.carbs, 'GENERAL.UNITS.G') }}
+                                        </span>
+                                    </div>
+                                    <div class="photo-ai-dialog__nutrition-item">
+                                        <span class="photo-ai-dialog__nutrition-label">
+                                            {{ 'GENERAL.NUTRIENTS.FIBER' | translate }}
+                                        </span>
+                                        <span class="photo-ai-dialog__nutrition-value">
+                                            {{ formatMacro(nutrition()!.fiber, 'GENERAL.UNITS.G') }}
+                                        </span>
+                                    </div>
+                                    <div class="photo-ai-dialog__nutrition-item">
+                                        <span class="photo-ai-dialog__nutrition-label">
+                                            {{ 'GENERAL.NUTRIENTS.ALCOHOL' | translate }}
+                                        </span>
+                                        <span class="photo-ai-dialog__nutrition-value">
+                                            {{ formatMacro(nutrition()!.alcohol, 'GENERAL.UNITS.G') }}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        } @else {
+                            @if (nutritionErrorKey()) {
+                                <div class="photo-ai-dialog__nutrition-error">
+                                    {{ nutritionErrorKey() | translate }}
+                                </div>
+                            }
+                        }
+                    }
                 </div>
             }
         }
@@ -67,7 +160,15 @@
 
     <div fdUiDialogFooter class="photo-ai-dialog__actions">
         <fd-ui-button fill="outline" variant="secondary" (click)="close()">
-            {{ 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.CLOSE' | translate }}
+            {{ 'COMMON.CANCEL' | translate }}
+        </fd-ui-button>
+        <fd-ui-button
+            variant="primary"
+            fill="solid"
+            [disabled]="!nutrition() || isLoading() || isNutritionLoading()"
+            (click)="addToMeal()"
+        >
+            {{ 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ADD_TO_MEAL' | translate }}
         </fd-ui-button>
     </div>
 </fd-ui-dialog>

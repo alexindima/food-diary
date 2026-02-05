@@ -807,7 +807,15 @@
             "NAME_LABEL": "Name",
             "AMOUNT_LABEL": "Amount",
             "UNIT_LABEL": "Unit",
-            "CLOSE": "Close"
+            "CLOSE": "Close",
+            "STATUS_ANALYZING": "Recognition in progress",
+            "STATUS_DONE": "Recognition complete",
+            "ADD_TO_MEAL": "Add to meal",
+            "EDIT_ACTION": "Edit recognized items",
+            "REANALYZE_ACTION": "Recognize again",
+            "NUTRITION_TITLE": "Nutrition summary",
+            "NUTRITION_LOADING": "Calculating nutrition?",
+            "NUTRITION_ERROR": "Failed to calculate nutrition. Please try again."
         },
         "ITEM_CARD_PLACEHOLDER": "Entry #{{index}}",
         "ITEM_CARD_META": {
@@ -841,7 +849,10 @@
         "HUNGER_BEFORE_DIALOG_TITLE": "Hunger level before the meal",
         "HUNGER_AFTER_DIALOG_TITLE": "Satiety level after the meal",
         "SATIETY_PLACEHOLDER_TITLE": "Not selected",
-        "SATIETY_PLACEHOLDER_DESCRIPTION": "Tap to set a level."
+        "SATIETY_PLACEHOLDER_DESCRIPTION": "Tap to set a level.",
+        "ITEMS_ADDED_TITLE": "Added items",
+        "ITEMS_AI_TITLE": "Recognized from photo",
+        "ITEMS_AI_HINT": "Upload a meal photo to recognize items automatically."
     },
     "HUNGER_SCALE": {
         "LEVEL_0": {

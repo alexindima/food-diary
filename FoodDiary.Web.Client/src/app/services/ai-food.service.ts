@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { FoodVisionRequest, FoodVisionResponse } from '../types/ai.data';
+import { FoodNutritionRequest, FoodNutritionResponse, FoodVisionRequest, FoodVisionResponse } from '../types/ai.data';
 
 @Injectable({ providedIn: 'root' })
 export class AiFoodService {
@@ -12,5 +12,9 @@ export class AiFoodService {
 
     public analyzeFoodImage(request: FoodVisionRequest): Observable<FoodVisionResponse> {
         return this.http.post<FoodVisionResponse>(`${this.baseUrl}/food/vision`, request);
+    }
+
+    public calculateNutrition(request: FoodNutritionRequest): Observable<FoodNutritionResponse> {
+        return this.http.post<FoodNutritionResponse>(`${this.baseUrl}/food/nutrition`, request);
     }
 }

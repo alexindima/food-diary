@@ -4,17 +4,74 @@
     gap: 20px;
 }
 
-.photo-ai-dialog__loader {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 12px;
-    padding: 16px 0;
-    color: var(--fd-color-gray-600, #4B5563);
+.photo-ai-dialog__upload {
+    position: relative;
 }
 
-.photo-ai-dialog__loader-text {
-    font-size: 0.95rem;
+.photo-ai-dialog__status {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    background: #ffffff;
+    color: #1d4ed8;
+    border: 1px solid rgba(148, 163, 184, 0.6);
+    box-shadow: 0 12px 24px rgba(15, 23, 42, 0.12);
+    z-index: 2;
+    text-transform: uppercase;
+}
+
+.photo-ai-dialog__status--loading {
+    color: #1e3a8a;
+    border-color: rgba(59, 130, 246, 0.45);
+    box-shadow: 0 12px 28px rgba(37, 99, 235, 0.18);
+}
+
+.photo-ai-dialog__scan-overlay {
+    position: absolute;
+    inset: 0;
+    border-radius: 24px;
+    overflow: hidden;
+    pointer-events: none;
+    background: linear-gradient(180deg, rgba(59, 130, 246, 0.05), rgba(59, 130, 246, 0));
+}
+
+.photo-ai-dialog__scan-line {
+    position: absolute;
+    left: 16px;
+    right: 16px;
+    height: 7px;
+    border-radius: 999px;
+    background: linear-gradient(
+        90deg,
+        rgba(59, 130, 246, 0),
+        rgba(59, 130, 246, 1),
+        rgba(96, 165, 250, 0.95),
+        rgba(59, 130, 246, 1),
+        rgba(59, 130, 246, 0)
+    );
+    box-shadow: 0 0 22px rgba(59, 130, 246, 0.8), 0 0 40px rgba(96, 165, 250, 0.6);
+    filter: drop-shadow(0 0 8px rgba(96, 165, 250, 0.9));
+    animation: photo-ai-scan 4s ease-in-out infinite;
+}
+
+@keyframes photo-ai-scan {
+    0% {
+        top: 12px;
+        opacity: 0.6;
+    }
+    50% {
+        top: calc(100% - 24px);
+        opacity: 1;
+    }
+    100% {
+        top: 12px;
+        opacity: 0.6;
+    }
 }
 
 .photo-ai-dialog__error {
@@ -35,37 +92,195 @@
 .photo-ai-dialog__results-title {
     font-weight: 600;
     color: var(--fd-color-gray-800, #1F2937);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
 }
 
-.photo-ai-dialog__results-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.photo-ai-dialog__results-row {
-    display: grid;
-    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 0.6fr);
-    gap: 12px;
-    align-items: end;
-}
-
-.photo-ai-dialog__unit {
-    display: flex;
-    flex-direction: column;
+.photo-ai-dialog__title-actions {
+    display: inline-flex;
+    align-items: center;
     gap: 6px;
-    font-size: 0.9rem;
-    color: var(--fd-color-gray-700, #374151);
+    padding-left: 4px;
 }
 
-.photo-ai-dialog__unit-label {
+.photo-ai-dialog__action-button {
+    appearance: none;
+    border: none;
+    background: transparent;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: inherit;
+}
+
+.photo-ai-dialog__action-button:disabled {
+    cursor: default;
+    opacity: 0.5;
+}
+
+.photo-ai-dialog__action-button:not(:disabled):hover .photo-ai-dialog__action-icon {
+    color: #64748b;
+}
+
+.photo-ai-dialog__action-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    color: #94a3b8;
+}
+
+.photo-ai-dialog__table {
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    overflow: hidden;
+    background: #fff;
+}
+
+.photo-ai-dialog__table-head,
+.photo-ai-dialog__table-row {
+    display: grid;
+    grid-template-columns: minmax(0, 2.2fr) minmax(0, 0.8fr);
+    gap: 10px;
+    align-items: center;
+}
+
+.photo-ai-dialog__table-head {
+    background: #f8fafc;
+    color: #64748b;
     font-size: 0.8rem;
-    color: var(--fd-color-gray-500, #6B7280);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 10px 16px;
 }
 
-.photo-ai-dialog__unit-value {
+.photo-ai-dialog__table-body {
+    display: flex;
+    flex-direction: column;
+}
+
+.photo-ai-dialog__table-row {
+    padding: 12px 16px;
+    font-size: 0.95rem;
+    color: #0f172a;
+    border-top: 1px solid #e2e8f0;
+}
+
+.photo-ai-dialog__table-row:first-child {
+    border-top: none;
+}
+
+.photo-ai-dialog__cell--amount {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    color: #1f2937;
+}
+
+.photo-ai-dialog__nutrition {
+    margin-top: 14px;
+    padding: 14px 16px;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.photo-ai-dialog__nutrition-title {
     font-weight: 600;
-    text-transform: lowercase;
+    color: #0f172a;
+    font-size: 0.95rem;
+}
+
+.photo-ai-dialog__nutrition-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px 14px;
+}
+
+.photo-ai-dialog__nutrition-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.photo-ai-dialog__nutrition-label {
+    font-size: 0.78rem;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.photo-ai-dialog__nutrition-value {
+    font-weight: 600;
+    color: #1f2937;
+    font-variant-numeric: tabular-nums;
+}
+
+.photo-ai-dialog__nutrition-loading {
+    margin-top: 14px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: 1px dashed #cbd5f5;
+    background: #f8fbff;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.photo-ai-dialog__nutrition-bar {
+    position: relative;
+    width: 160px;
+    height: 6px;
+    border-radius: 999px;
+    background: rgba(59, 130, 246, 0.15);
+    overflow: hidden;
+}
+
+.photo-ai-dialog__nutrition-bar::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -30%;
+    width: 45%;
+    height: 100%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.85), transparent);
+    animation: nutrition-progress 1.8s ease-in-out infinite;
+}
+
+.photo-ai-dialog__nutrition-text {
+    font-size: 0.9rem;
+    color: #475569;
+}
+
+.photo-ai-dialog__nutrition-error {
+    margin-top: 12px;
+    background: rgba(239, 68, 68, 0.08);
+    color: #b91c1c;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    border-radius: 12px;
+    padding: 10px 12px;
+    font-size: 0.9rem;
+}
+
+@keyframes nutrition-progress {
+    0% {
+        left: -30%;
+        opacity: 0.5;
+    }
+    50% {
+        left: 85%;
+        opacity: 1;
+    }
+    100% {
+        left: -30%;
+        opacity: 0.5;
+    }
 }
 
 .photo-ai-dialog__actions {
@@ -74,8 +289,48 @@
     gap: 12px;
 }
 
+.photo-ai-dialog__upload ::ng-deep .image-upload-field__dropzone {
+    height: 240px;
+    min-height: 240px;
+    border-radius: 24px;
+    padding: 0;
+}
+
+.photo-ai-dialog__upload ::ng-deep .image-upload-field__control {
+    display: none;
+}
+
+.photo-ai-dialog__upload ::ng-deep .image-upload-field__preview {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain !important;
+    border-radius: 24px;
+    background: #f8fafc;
+}
+
 @media (max-width: 640px) {
-    .photo-ai-dialog__results-row {
-        grid-template-columns: 1fr;
+    .photo-ai-dialog__table-head,
+    .photo-ai-dialog__table-row {
+        grid-template-columns: minmax(0, 1.6fr) minmax(0, 0.8fr);
+    }
+
+    .photo-ai-dialog__upload ::ng-deep .image-upload-field__dropzone {
+        height: 210px;
+        min-height: 210px;
+    }
+
+    .photo-ai-dialog__nutrition-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .photo-ai-dialog__nutrition-loading {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .photo-ai-dialog__nutrition-bar {
+        width: 100%;
     }
 }

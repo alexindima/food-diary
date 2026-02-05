@@ -129,79 +129,100 @@
                     </div>
                 </fd-ui-card>
 
-                <fd-ui-card class="consumption-manage__card consumption-manage__card--items" [title]="'CONSUMPTION_MANAGE.ITEMS_GROUP_TITLE' | translate">
-                    <div class="consumption-items" formArrayName="items">
-                        @for (item of items.controls; track item; let i = $index; let first = $first) {
-                            <div class="consumption-item-card" [formGroupName]="i">
-                                <div class="consumption-item__fields">
-                                    <div class="consumption-item__row consumption-item__row--with-remove">
-                                        <div class="consumption-item__field consumption-item__field--source">
-                                            <fd-ui-input
-                                                class="consumption-item__selector-input"
-                                                [ngModel]="getItemSourceName(i)"
-                                                [ngModelOptions]="{ standalone: true }"
-                                                [label]="'CONSUMPTION_MANAGE.ITEM_SOURCE_LABEL' | translate"
-                                                [placeholder]="'CONSUMPTION_MANAGE.ITEM_SOURCE_PLACEHOLDER' | translate"
-                                                [readonly]="true"
-                                                [prefixIcon]="getItemSourceIcon(i)"
-                                                [error]="getItemSourceError(i)"
-                                                (click)="onItemSourceClick(i)"
-                                            />
+                <div class="consumption-manage__items-section">
+                    <div class="consumption-manage__items-header">
+                        <h2 class="consumption-manage__section-title">
+                            {{ 'CONSUMPTION_MANAGE.ITEMS_GROUP_TITLE' | translate }}
+                        </h2>
+                    </div>
+                    <div class="consumption-manage__items-grid">
+                        <fd-ui-card class="consumption-manage__card consumption-manage__card--items"
+                            [title]="'CONSUMPTION_MANAGE.ITEMS_ADDED_TITLE' | translate"
+                        >
+                            <div class="consumption-items" formArrayName="items">
+                                @for (item of items.controls; track item; let i = $index; let first = $first) {
+                                    <div class="consumption-item-card" [formGroupName]="i">
+                                        <div class="consumption-item__fields">
+                                            <div class="consumption-item__row consumption-item__row--with-remove">
+                                                <div class="consumption-item__field consumption-item__field--source">
+                                                    <fd-ui-input
+                                                        class="consumption-item__selector-input"
+                                                        [ngModel]="getItemSourceName(i)"
+                                                        [ngModelOptions]="{ standalone: true }"
+                                                        [label]="'CONSUMPTION_MANAGE.ITEM_SOURCE_LABEL' | translate"
+                                                        [placeholder]="'CONSUMPTION_MANAGE.ITEM_SOURCE_PLACEHOLDER' | translate"
+                                                        [readonly]="true"
+                                                        [prefixIcon]="getItemSourceIcon(i)"
+                                                        [error]="getItemSourceError(i)"
+                                                        (click)="onItemSourceClick(i)"
+                                                    />
+                                                </div>
+                                                <div class="consumption-item__field consumption-item__field--amount">
+                                                    <fd-ui-input formControlName="amount"
+                                                        type="number"
+                                                        [step]="0.01"
+                                                        [label]="'CONSUMPTION_MANAGE.ADD_ITEM_ROW.AMOUNT' | translate"
+                                                        [placeholder]="(getAmountPlaceholder(i) | translate)"
+                                                        [required]="true"
+                                                        [error]="getAmountControlError(i)"
+                                                        [readonly]="!items.at(i).controls.product.value && !items.at(i).controls.recipe.value"
+                                                     />
+                                                </div>
+                                                <fd-ui-button
+                                                    type="button"
+                                                    variant="danger"
+                                                    fill="text"
+                                                    icon="close"
+                                                    [ariaLabel]="'CONSUMPTION_MANAGE.REMOVE_ITEM' | translate"
+                                                    class="consumption-item__remove consumption-item__remove--inline"
+                                                    [disabled]="first"
+                                                    (click)="removeItem(i)"
+                                                >
+                                                    {{ 'CONSUMPTION_MANAGE.REMOVE_ITEM' | translate }}
+                                                </fd-ui-button>
+                                            </div>
                                         </div>
-                                        <div class="consumption-item__field consumption-item__field--amount">
-                                            <fd-ui-input formControlName="amount"
-                                                type="number"
-                                                [step]="0.01"
-                                                [label]="'CONSUMPTION_MANAGE.ADD_ITEM_ROW.AMOUNT' | translate"
-                                                [placeholder]="(getAmountPlaceholder(i) | translate)"
-                                                [required]="true"
-                                                [error]="getAmountControlError(i)"
-                                                [readonly]="!items.at(i).controls.product.value && !items.at(i).controls.recipe.value"
-                                             />
-                                        </div>
-                                        <fd-ui-button
-                                            type="button"
-                                            variant="danger"
-                                            fill="text"
-                                            icon="close"
-                                            [ariaLabel]="'CONSUMPTION_MANAGE.REMOVE_ITEM' | translate"
-                                            class="consumption-item__remove consumption-item__remove--inline"
-                                            [disabled]="first"
-                                            (click)="removeItem(i)"
-                                        >
-                                            {{ 'CONSUMPTION_MANAGE.REMOVE_ITEM' | translate }}
-                                        </fd-ui-button>
                                     </div>
-                                </div>
+                                }
                             </div>
-                        }
-                    </div>
-                    <div class="consumption-item__actions consumption-item__actions--stack">
-                        <fd-ui-button
-                            type="button"
-                            icon="add"
-                            class="consumption-item__add"
-                            variant="secondary"
-                            fill="outline"
-                            (click)="addConsumptionItem()"
+                            <div class="consumption-item__actions consumption-item__actions--stack">
+                                <fd-ui-button
+                                    type="button"
+                                    icon="add"
+                                    class="consumption-item__add"
+                                    variant="secondary"
+                                    fill="outline"
+                                    (click)="addConsumptionItem()"
+                                >
+                                    {{ 'CONSUMPTION_MANAGE.ADD_ITEM' | translate }}
+                                </fd-ui-button>
+                            </div>
+                            <fd-ui-form-error class="consumption-item__error"
+                                [error]="items.invalid && items.touched ? ('FORM_ERRORS.NON_EMPTY_ARRAY' | translate) : null"
+                             />
+                        </fd-ui-card>
+
+                        <fd-ui-card class="consumption-manage__card consumption-manage__card--items-ai"
+                            [title]="'CONSUMPTION_MANAGE.ITEMS_AI_TITLE' | translate"
                         >
-                            {{ 'CONSUMPTION_MANAGE.ADD_ITEM' | translate }}
-                        </fd-ui-button>
-                        <fd-ui-button
-                            type="button"
-                            icon="photo_camera"
-                            class="consumption-item__add"
-                            variant="secondary"
-                            fill="outline"
-                            (click)="onAddConsumptionFromPhoto()"
-                        >
-                            {{ 'CONSUMPTION_MANAGE.ADD_ITEM_FROM_PHOTO' | translate }}
-                        </fd-ui-button>
+                            <p class="consumption-manage__items-hint">
+                                {{ 'CONSUMPTION_MANAGE.ITEMS_AI_HINT' | translate }}
+                            </p>
+                            <div class="consumption-item__actions consumption-item__actions--stack">
+                                <fd-ui-button
+                                    type="button"
+                                    icon="photo_camera"
+                                    class="consumption-item__add"
+                                    variant="secondary"
+                                    fill="outline"
+                                    (click)="onAddConsumptionFromPhoto()"
+                                >
+                                    {{ 'CONSUMPTION_MANAGE.ADD_ITEM_FROM_PHOTO' | translate }}
+                                </fd-ui-button>
+                            </div>
+                        </fd-ui-card>
                     </div>
-                    <fd-ui-form-error class="consumption-item__error"
-                        [error]="items.invalid && items.touched ? ('FORM_ERRORS.NON_EMPTY_ARRAY' | translate) : null"
-                     />
-                </fd-ui-card>
+                </div>
             </div>
 
             <div class="consumption-manage__column consumption-manage__column--secondary">

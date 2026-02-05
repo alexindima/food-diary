@@ -129,7 +129,17 @@
 
     &__card--items {
         ::ng-deep .fd-ui-card {
-            padding-bottom: $gap-m;
+            padding-bottom: $gap-s;
+        }
+
+        ::ng-deep .fd-ui-card__content {
+            gap: $gap-s;
+        }
+    }
+
+    &__card--items-ai {
+        ::ng-deep .fd-ui-card__content {
+            gap: $gap-s;
         }
     }
 
@@ -356,6 +366,12 @@
         gap: $gap-m;
     }
 
+    &__items-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: $gap-l;
+    }
+
     &__satiety-grid {
         display: grid;
         grid-template-columns: 1fr;
@@ -465,6 +481,12 @@
         font-size: 1.3rem;
         font-weight: 600;
         color: $color-text-main;
+    }
+
+    &__items-hint {
+        margin: 0;
+        font-size: 0.9rem;
+        color: $color-text-additional;
     }
 
 }
@@ -588,7 +610,7 @@
     align-items: stretch;
     gap: $gap-s;
     justify-content: flex-start;
-    margin-top: $gap-m;
+    margin-top: $gap-s;
 
     .consumption-item__add {
         width: 100%;
