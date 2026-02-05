@@ -1,0 +1,64 @@
+<section class="admin-ai-usage">
+  <header class="admin-ai-usage__header">
+    <div>
+      <h1 class="admin-ai-usage__title">AI usage</h1>
+      <p class="admin-ai-usage__subtitle">Last 30 days summary across vision and nutrition requests.</p>
+    </div>
+  </header>
+
+  <div class="admin-ai-usage__metrics">
+    <fd-ui-card class="admin-ai-usage__metric-card" appearance="entry" title="Total tokens">
+      <div class="admin-ai-usage__metric-value">{{ usage()?.totalTokens ?? 0 }}</div>
+      <div class="admin-ai-usage__metric-label">Input + output</div>
+    </fd-ui-card>
+    <fd-ui-card class="admin-ai-usage__metric-card" appearance="entry" title="Input tokens">
+      <div class="admin-ai-usage__metric-value">{{ usage()?.inputTokens ?? 0 }}</div>
+      <div class="admin-ai-usage__metric-label">Prompt tokens</div>
+    </fd-ui-card>
+    <fd-ui-card class="admin-ai-usage__metric-card" appearance="entry" title="Output tokens">
+      <div class="admin-ai-usage__metric-value">{{ usage()?.outputTokens ?? 0 }}</div>
+      <div class="admin-ai-usage__metric-label">Completion tokens</div>
+    </fd-ui-card>
+  </div>
+
+  <div class="admin-ai-usage__grid">
+    <fd-ui-card class="admin-ai-usage__panel" appearance="entry" title="Usage by operation">
+      <div class="admin-ai-usage__panel-body" *ngIf="usage(); else emptyState">
+        <div class="admin-ai-usage__list">
+          <div class="admin-ai-usage__row" *ngFor="let item of usage()?.byOperation">
+            <span>{{ item.key }}</span>
+            <span class="admin-ai-usage__meta">{{ item.totalTokens }}</span>
+          </div>
+        </div>
+      </div>
+    </fd-ui-card>
+
+    <fd-ui-card class="admin-ai-usage__panel" appearance="entry" title="Usage by model">
+      <div class="admin-ai-usage__panel-body" *ngIf="usage(); else emptyState">
+        <div class="admin-ai-usage__list">
+          <div class="admin-ai-usage__row" *ngFor="let item of usage()?.byModel">
+            <span>{{ item.key }}</span>
+            <span class="admin-ai-usage__meta">{{ item.totalTokens }}</span>
+          </div>
+        </div>
+      </div>
+    </fd-ui-card>
+  </div>
+
+  <fd-ui-card class="admin-ai-usage__panel" appearance="entry" title="Daily totals">
+    <div class="admin-ai-usage__panel-body" *ngIf="usage(); else emptyState">
+      <div class="admin-ai-usage__list">
+        <div class="admin-ai-usage__row" *ngFor="let item of usage()?.byDay">
+          <span>{{ item.date | date: 'MMM d' }}</span>
+          <span class="admin-ai-usage__meta">{{ item.totalTokens }}</span>
+        </div>
+      </div>
+    </div>
+  </fd-ui-card>
+
+  <ng-template #emptyState>
+    <div class="admin-ai-usage__panel-body">
+      <p class="admin-ai-usage__meta">No AI usage yet.</p>
+    </div>
+  </ng-template>
+</section>

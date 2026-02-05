@@ -2,54 +2,41 @@ import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '
 import { CommonModule } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
-import {
-  AdminAiUsageSummary,
-  AdminDashboardService,
-  AdminDashboardSummary,
-} from './admin-dashboard.service';
+import { AdminDashboardService, AdminAiUsageSummary } from '../admin-dashboard/admin-dashboard.service';
 
 @Component({
-  selector: 'fd-admin-dashboard',
+  selector: 'fd-admin-ai-usage',
   standalone: true,
   imports: [CommonModule, FdUiCardComponent],
-  templateUrl: './admin-dashboard.component.html',
-  styleUrl: './admin-dashboard.component.scss',
+  templateUrl: './admin-ai-usage.component.html',
+  styleUrl: './admin-ai-usage.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AdminDashboardComponent {
+export class AdminAiUsageComponent {
   private readonly dashboardService = inject(AdminDashboardService);
   private readonly destroyRef = inject(DestroyRef);
 
-  public readonly summary = signal<AdminDashboardSummary | null>(null);
-  public readonly aiUsage = signal<AdminAiUsageSummary | null>(null);
+  public readonly usage = signal<AdminAiUsageSummary | null>(null);
   public readonly isLoading = signal(false);
 
   public constructor() {
-    this.loadSummary();
+    this.loadUsage();
   }
 
-  public loadSummary(): void {
+  public loadUsage(): void {
     this.isLoading.set(true);
-    this.dashboardService
-      .getSummary()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: response => {
-          this.summary.set(response);
-          this.isLoading.set(false);
-        },
-        error: () => {
-          this.summary.set(null);
-          this.isLoading.set(false);
-        },
-      });
-
     this.dashboardService
       .getAiUsageSummary()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: response => this.aiUsage.set(response),
-        error: () => this.aiUsage.set(null),
+        next: response => {
+          this.usage.set(response);
+          this.isLoading.set(false);
+        },
+        error: () => {
+          this.usage.set(null);
+          this.isLoading.set(false);
+        },
       });
   }
 }

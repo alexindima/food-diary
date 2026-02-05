@@ -25,6 +25,7 @@ public class FoodDiaryDbContext : DbContext
     public DbSet<CycleDay> CycleDays => Set<CycleDay>();
     public DbSet<HydrationEntry> HydrationEntries => Set<HydrationEntry>();
     public DbSet<DailyAdvice> DailyAdvices => Set<DailyAdvice>();
+    public DbSet<AiUsage> AiUsages => Set<AiUsage>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -477,6 +478,24 @@ public class FoodDiaryDbContext : DbContext
                 .HasDefaultValue(1);
 
             entity.HasIndex(e => new { e.Locale, e.Tag });
+        });
+
+        modelBuilder.Entity<AiUsage>(entity =>
+        {
+            entity.Property(e => e.UserId).HasConversion(
+                id => id.Value,
+                value => new UserId(value));
+
+            entity.Property(e => e.Operation)
+                .IsRequired()
+                .HasMaxLength(32);
+
+            entity.Property(e => e.Model)
+                .IsRequired()
+                .HasMaxLength(64);
+
+            entity.HasIndex(e => e.UserId);
+            entity.HasIndex(e => e.CreatedOnUtc);
         });
     }
 }

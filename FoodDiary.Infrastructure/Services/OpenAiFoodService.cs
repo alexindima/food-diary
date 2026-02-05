@@ -4,25 +4,31 @@ using System.Text.Json;
 using System.Linq;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Services;
+using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Contracts.Ai;
 using FoodDiary.Infrastructure.Options;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using FoodDiary.Domain.Entities;
+using FoodDiary.Domain.ValueObjects;
 
 namespace FoodDiary.Infrastructure.Services;
 
 public sealed class OpenAiFoodService(
     HttpClient httpClient,
     IOptions<OpenAiOptions> options,
-    ILogger<OpenAiFoodService> logger)
+    ILogger<OpenAiFoodService> logger,
+    IAiUsageRepository aiUsageRepository)
     : IOpenAiFoodService
 {
     private readonly OpenAiOptions _options = options.Value;
     private readonly ILogger<OpenAiFoodService> _logger = logger;
+    private readonly IAiUsageRepository _aiUsageRepository = aiUsageRepository;
 
     public async Task<Result<FoodVisionResponse>> AnalyzeFoodImageAsync(
         string imageUrl,
         string? userLanguage,
+        UserId userId,
         CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(_options.ApiKey))
@@ -30,11 +36,13 @@ public sealed class OpenAiFoodService(
             return Result.Failure<FoodVisionResponse>(Errors.Ai.OpenAiFailed("OpenAI API key is not configured."));
         }
 
-        var request = BuildVisionRequest(_options.VisionModel, imageUrl, userLanguage);
+        var requestModel = _options.VisionModel;
+        var request = BuildVisionRequest(requestModel, imageUrl, userLanguage);
         var response = await SendRequestAsync(request, cancellationToken);
         if (!response.IsSuccess)
         {
-            var fallback = BuildVisionRequest(_options.VisionFallbackModel, imageUrl, userLanguage);
+            requestModel = _options.VisionFallbackModel;
+            var fallback = BuildVisionRequest(requestModel, imageUrl, userLanguage);
             response = await SendRequestAsync(fallback, cancellationToken);
         }
 
@@ -44,11 +52,16 @@ public sealed class OpenAiFoodService(
         }
 
         var parsed = ParseVisionResponse(response.Json!);
+        if (parsed.IsSuccess)
+        {
+            await SaveUsageAsync(response.Json!, userId, "vision", requestModel, cancellationToken);
+        }
         return parsed;
     }
 
     public async Task<Result<FoodNutritionResponse>> CalculateNutritionAsync(
         IReadOnlyList<FoodVisionItem> items,
+        UserId userId,
         CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(_options.ApiKey))
@@ -56,14 +69,21 @@ public sealed class OpenAiFoodService(
             return Result.Failure<FoodNutritionResponse>(Errors.Ai.OpenAiFailed("OpenAI API key is not configured."));
         }
 
-        var request = BuildNutritionRequest(_options.TextModel, items);
+        var requestModel = _options.TextModel;
+        var request = BuildNutritionRequest(requestModel, items);
         var response = await SendRequestAsync(request, cancellationToken);
         if (!response.IsSuccess)
         {
             return Result.Failure<FoodNutritionResponse>(response.Error);
         }
 
-        return ParseNutritionResponse(response.Json!);
+        var parsed = ParseNutritionResponse(response.Json!);
+        if (parsed.IsSuccess)
+        {
+            await SaveUsageAsync(response.Json!, userId, "nutrition", requestModel, cancellationToken);
+        }
+
+        return parsed;
     }
 
     private async Task<(bool IsSuccess, JsonDocument? Json, Error Error)> SendRequestAsync(
@@ -346,4 +366,45 @@ public sealed class OpenAiFoodService(
 
     private static JsonSerializerOptions JsonOptions()
         => new() { PropertyNameCaseInsensitive = true };
+
+    private async Task SaveUsageAsync(
+        JsonDocument json,
+        UserId userId,
+        string operation,
+        string model,
+        CancellationToken cancellationToken)
+    {
+        var usage = ExtractUsage(json);
+        if (usage is null)
+        {
+            return;
+        }
+
+        var entity = AiUsage.Create(
+            userId,
+            operation,
+            model,
+            usage.Value.InputTokens,
+            usage.Value.OutputTokens,
+            usage.Value.TotalTokens);
+
+        await _aiUsageRepository.AddAsync(entity, cancellationToken);
+    }
+
+    private static UsageTokens? ExtractUsage(JsonDocument json)
+    {
+        if (!json.RootElement.TryGetProperty("usage", out var usage) ||
+            usage.ValueKind != JsonValueKind.Object)
+        {
+            return null;
+        }
+
+        var input = usage.TryGetProperty("input_tokens", out var inputTokens) ? inputTokens.GetInt32() : 0;
+        var output = usage.TryGetProperty("output_tokens", out var outputTokens) ? outputTokens.GetInt32() : 0;
+        var total = usage.TryGetProperty("total_tokens", out var totalTokens) ? totalTokens.GetInt32() : input + output;
+
+        return new UsageTokens(input, output, total);
+    }
+
+    private readonly record struct UsageTokens(int InputTokens, int OutputTokens, int TotalTokens);
 }

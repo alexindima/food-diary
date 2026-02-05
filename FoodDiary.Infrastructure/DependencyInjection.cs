@@ -38,6 +38,7 @@ public static class DependencyInjection
         services.AddScoped<IDailyAdviceRepository, DailyAdviceRepository>();
         services.AddScoped<ICycleRepository, CycleRepository>();
         services.AddScoped<IImageAssetRepository, ImageAssetRepository>();
+        services.AddScoped<IAiUsageRepository, AiUsageRepository>();
         services.AddSingleton<IAmazonS3>(provider =>
         {
             var s3Options = provider.GetRequiredService<IOptions<S3Options>>().Value;

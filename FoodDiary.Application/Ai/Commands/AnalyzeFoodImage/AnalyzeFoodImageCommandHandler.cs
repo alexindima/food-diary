@@ -34,6 +34,10 @@ public sealed class AnalyzeFoodImageCommandHandler(
             return Result.Failure<FoodVisionResponse>(Errors.User.NotFound(query.UserId.Value));
         }
 
-        return await openAiFoodService.AnalyzeFoodImageAsync(asset.Url, user.Language, cancellationToken);
+        return await openAiFoodService.AnalyzeFoodImageAsync(
+            asset.Url,
+            user.Language,
+            query.UserId,
+            cancellationToken);
     }
 }

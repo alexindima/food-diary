@@ -1,0 +1,79 @@
+.admin-ai-usage {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.admin-ai-usage__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.admin-ai-usage__title {
+  margin: 0;
+  font-size: 1.8rem;
+}
+
+.admin-ai-usage__subtitle {
+  margin: 4px 0 0;
+  color: #6b7280;
+}
+
+.admin-ai-usage__metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.admin-ai-usage__metric-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.admin-ai-usage__metric-value {
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+.admin-ai-usage__metric-label,
+.admin-ai-usage__meta {
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
+.admin-ai-usage__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.admin-ai-usage__panel-body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.admin-ai-usage__list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.admin-ai-usage__row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+@media (max-width: 900px) {
+  .admin-ai-usage__metrics {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-ai-usage__grid {
+    grid-template-columns: 1fr;
+  }
+}

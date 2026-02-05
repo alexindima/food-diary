@@ -3,6 +3,7 @@ import { AdminDashboardComponent } from './pages/admin-dashboard/admin-dashboard
 import { AdminUsersComponent } from './pages/admin-users/admin-users.component';
 import { UnauthorizedComponent } from './pages/unauthorized/unauthorized.component';
 import { adminAuthGuard } from './guards/admin-auth.guard';
+import { AdminAiUsageComponent } from './pages/admin-ai-usage/admin-ai-usage.component';
 
 export const routes: Routes = [
   {
@@ -13,6 +14,11 @@ export const routes: Routes = [
   {
     path: 'users',
     component: AdminUsersComponent,
+    canActivate: [adminAuthGuard],
+  },
+  {
+    path: 'ai-usage',
+    component: AdminAiUsageComponent,
     canActivate: [adminAuthGuard],
   },
   {

@@ -55,6 +55,57 @@
   gap: 12px;
 }
 
+.admin-dashboard__usage-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  padding: 4px 0 12px;
+}
+
+.admin-dashboard__usage-value {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.admin-dashboard__usage-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.admin-dashboard__usage-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.admin-dashboard__usage-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.admin-dashboard__usage-title {
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.admin-dashboard__usage-days {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+@media (max-width: 900px) {
+  .admin-dashboard__usage-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-dashboard__usage-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 .admin-dashboard__user {
   display: flex;
   justify-content: space-between;

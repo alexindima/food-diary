@@ -39,5 +39,59 @@
         </div>
       </ng-template>
     </fd-ui-card>
+    <fd-ui-card class="admin-dashboard__panel" appearance="entry" title="AI usage (last 30 days)">
+      <div class="admin-dashboard__panel-body" *ngIf="aiUsage(); else aiEmpty">
+        <div class="admin-dashboard__usage-summary">
+          <div>
+            <div class="admin-dashboard__usage-value">{{ aiUsage()?.totalTokens ?? 0 }}</div>
+            <div class="admin-dashboard__meta">Total tokens</div>
+          </div>
+          <div>
+            <div class="admin-dashboard__usage-value">{{ aiUsage()?.inputTokens ?? 0 }}</div>
+            <div class="admin-dashboard__meta">Input</div>
+          </div>
+          <div>
+            <div class="admin-dashboard__usage-value">{{ aiUsage()?.outputTokens ?? 0 }}</div>
+            <div class="admin-dashboard__meta">Output</div>
+          </div>
+        </div>
+
+        <div class="admin-dashboard__usage-grid">
+          <div>
+            <div class="admin-dashboard__meta admin-dashboard__usage-title">By operation</div>
+            <div class="admin-dashboard__usage-list">
+              <div class="admin-dashboard__usage-row" *ngFor="let item of aiUsage()?.byOperation">
+                <span>{{ item.key }}</span>
+                <span class="admin-dashboard__meta">{{ item.totalTokens }}</span>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="admin-dashboard__meta admin-dashboard__usage-title">By model</div>
+            <div class="admin-dashboard__usage-list">
+              <div class="admin-dashboard__usage-row" *ngFor="let item of aiUsage()?.byModel">
+                <span>{{ item.key }}</span>
+                <span class="admin-dashboard__meta">{{ item.totalTokens }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="admin-dashboard__usage-days">
+          <div class="admin-dashboard__meta admin-dashboard__usage-title">Daily totals</div>
+          <div class="admin-dashboard__usage-list">
+            <div class="admin-dashboard__usage-row" *ngFor="let item of aiUsage()?.byDay">
+              <span>{{ item.date | date: 'MMM d' }}</span>
+              <span class="admin-dashboard__meta">{{ item.totalTokens }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <ng-template #aiEmpty>
+        <div class="admin-dashboard__panel-body">
+          <p class="admin-dashboard__meta">No AI usage yet.</p>
+        </div>
+      </ng-template>
+    </fd-ui-card>
   </div>
 </section>

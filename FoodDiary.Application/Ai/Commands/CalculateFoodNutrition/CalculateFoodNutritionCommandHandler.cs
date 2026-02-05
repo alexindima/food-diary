@@ -17,6 +17,6 @@ public sealed class CalculateFoodNutritionCommandHandler(IOpenAiFoodService open
             return Result.Failure<FoodNutritionResponse>(Errors.Ai.EmptyItems());
         }
 
-        return await openAiFoodService.CalculateNutritionAsync(query.Items, cancellationToken);
+        return await openAiFoodService.CalculateNutritionAsync(query.Items, query.UserId, cancellationToken);
     }
 }

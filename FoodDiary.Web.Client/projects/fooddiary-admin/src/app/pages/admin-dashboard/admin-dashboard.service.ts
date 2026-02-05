@@ -23,13 +23,41 @@ export type AdminDashboardSummary = {
   recentUsers: AdminDashboardUser[];
 };
 
+export type AdminAiUsageDaily = {
+  date: string;
+  totalTokens: number;
+  inputTokens: number;
+  outputTokens: number;
+};
+
+export type AdminAiUsageBreakdown = {
+  key: string;
+  totalTokens: number;
+  inputTokens: number;
+  outputTokens: number;
+};
+
+export type AdminAiUsageSummary = {
+  totalTokens: number;
+  inputTokens: number;
+  outputTokens: number;
+  byDay: AdminAiUsageDaily[];
+  byOperation: AdminAiUsageBreakdown[];
+  byModel: AdminAiUsageBreakdown[];
+};
+
 @Injectable({ providedIn: 'root' })
 export class AdminDashboardService {
   private readonly baseUrl = `${environment.apiUrls.auth.replace(/\/auth$/, '')}/admin/dashboard`;
+  private readonly aiUsageUrl = `${environment.apiUrls.auth.replace(/\/auth$/, '')}/admin/ai-usage/summary`;
 
   constructor(private readonly http: HttpClient) {}
 
   public getSummary(): Observable<AdminDashboardSummary> {
     return this.http.get<AdminDashboardSummary>(this.baseUrl);
+  }
+
+  public getAiUsageSummary(): Observable<AdminAiUsageSummary> {
+    return this.http.get<AdminAiUsageSummary>(this.aiUsageUrl);
   }
 }
