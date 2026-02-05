@@ -7,6 +7,7 @@
     OnInit,
     signal,
 } from '@angular/core';
+import { NgIf } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FormGroupControls } from '../../types/common.data';
@@ -37,6 +38,7 @@ import { LocalizationService } from '../../services/localization.service';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiSelectComponent } from 'fd-ui-kit/select/fd-ui-select.component';
 import { FdUiDateInputComponent } from 'fd-ui-kit/date-input/fd-ui-date-input.component';
+import { environment } from '../../../environments/environment';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: FD_VALIDATION_ERRORS,
@@ -55,6 +57,7 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     imports: [
         ReactiveFormsModule,
         TranslatePipe,
+        NgIf,
         FdUiCardComponent,
         FdUiInputComponent,
         FdUiSelectComponent,
@@ -303,6 +306,27 @@ export class UserManageComponent implements OnInit {
 
     private applyLanguagePreference(language: string | null): void {
         void this.localizationService.applyLanguagePreference(language);
+    }
+
+    public isAdminUser(): boolean {
+        return this.authService.isAdmin();
+    }
+
+    public openAdminPanel(): void {
+        if (!environment.adminAppUrl) {
+            return;
+        }
+
+        this.authService.startAdminSso().subscribe({
+            next: response => {
+                const url = new URL('/', environment.adminAppUrl);
+                url.searchParams.set('code', response.code);
+                window.location.href = url.toString();
+            },
+            error: () => {
+                this.setGlobalError('USER_MANAGE.ADMIN_SSO_ERROR');
+            },
+        });
     }
 
     private normalizeLanguage(value: string | null | undefined): string | null {

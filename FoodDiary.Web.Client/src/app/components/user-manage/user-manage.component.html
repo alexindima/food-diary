@@ -128,6 +128,17 @@
                                     </fd-ui-button>
                                 </div>
                             </div>
+                            <div class="user-manage__account-row" *ngIf="isAdminUser()">
+                                <div class="user-manage__link-button user-manage__link-button--admin">
+                                    <fd-ui-button
+                                        type="button"
+                                        icon="shield"
+                                        (click)="openAdminPanel()"
+                                    >
+                                        {{ 'USER_MANAGE.ADMIN_PANEL' | translate }}
+                                    </fd-ui-button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </fd-ui-card>

@@ -1,0 +1,27 @@
+<div class="admin-shell">
+  <aside class="admin-shell__sidebar">
+    <div class="admin-shell__brand">
+      <div class="admin-shell__logo">FD</div>
+      <div>
+        <div class="admin-shell__title">FoodDiary</div>
+        <div class="admin-shell__subtitle">Admin</div>
+      </div>
+    </div>
+
+    <nav class="admin-shell__nav">
+      <button class="admin-shell__nav-item admin-shell__nav-item--active" type="button">
+        Dashboard
+      </button>
+      <button class="admin-shell__nav-item" type="button">
+        Users
+      </button>
+      <button class="admin-shell__nav-item" type="button">
+        AI Logs
+      </button>
+    </nav>
+  </aside>
+
+  <main class="admin-shell__content">
+    <router-outlet />
+  </main>
+</div>

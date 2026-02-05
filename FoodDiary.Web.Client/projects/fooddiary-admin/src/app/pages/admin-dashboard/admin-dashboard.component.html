@@ -1,0 +1,53 @@
+<section class="admin-dashboard">
+  <header class="admin-dashboard__header">
+    <div>
+      <h1 class="admin-dashboard__title">Admin Dashboard</h1>
+      <p class="admin-dashboard__subtitle">Quick overview of users, activity, and AI usage.</p>
+    </div>
+    <fd-ui-button variant="primary" fill="solid" icon="bolt">
+      Run health check
+    </fd-ui-button>
+  </header>
+
+  <div class="admin-dashboard__metrics">
+    <fd-ui-card class="admin-dashboard__metric-card" appearance="entry" title="Active users">
+      <div class="admin-dashboard__metric-value">1,240</div>
+      <div class="admin-dashboard__metric-label">Last 7 days</div>
+    </fd-ui-card>
+    <fd-ui-card class="admin-dashboard__metric-card" appearance="entry" title="Premium users">
+      <div class="admin-dashboard__metric-value">318</div>
+      <div class="admin-dashboard__metric-label">Paid plans</div>
+    </fd-ui-card>
+    <fd-ui-card class="admin-dashboard__metric-card" appearance="entry" title="AI requests">
+      <div class="admin-dashboard__metric-value">9,842</div>
+      <div class="admin-dashboard__metric-label">This month</div>
+    </fd-ui-card>
+  </div>
+
+  <div class="admin-dashboard__grid">
+    <fd-ui-card class="admin-dashboard__panel" appearance="entry" title="Latest users">
+      <div class="admin-dashboard__panel-body">
+        <div class="admin-dashboard__user">
+          <span>alex@fooddiary.club</span>
+          <span class="admin-dashboard__meta">2 min ago</span>
+        </div>
+        <div class="admin-dashboard__user">
+          <span>maria@fooddiary.club</span>
+          <span class="admin-dashboard__meta">14 min ago</span>
+        </div>
+        <div class="admin-dashboard__user">
+          <span>user123@fooddiary.club</span>
+          <span class="admin-dashboard__meta">1 hour ago</span>
+        </div>
+      </div>
+    </fd-ui-card>
+
+    <fd-ui-card class="admin-dashboard__panel" appearance="entry" title="AI usage">
+      <div class="admin-dashboard__panel-body">
+        <p class="admin-dashboard__meta">Most active feature: nutrition extraction</p>
+        <p class="admin-dashboard__meta">Avg latency: 2.4s</p>
+        <p class="admin-dashboard__meta">Errors: 1.2%</p>
+      </div>
+    </fd-ui-card>
+  </div>
+</section>

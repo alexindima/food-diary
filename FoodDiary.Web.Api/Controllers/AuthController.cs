@@ -4,7 +4,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using FoodDiary.Application.Authentication.Mappings;
+using FoodDiary.Application.Authentication.Commands.AdminSsoStart;
 using FoodDiary.Contracts.Authentication;
+using FoodDiary.Domain.Enums;
 using FoodDiary.Infrastructure.Options;
 using FoodDiary.WebApi.Extensions;
 
@@ -101,6 +103,30 @@ public class AuthController(
             });
         }
 
+        var command = request.ToCommand();
+        var result = await Mediator.Send(command);
+        return result.ToActionResult();
+    }
+
+    [Authorize(Roles = RoleNames.Admin)]
+    [HttpPost("admin-sso/start")]
+    public async Task<IActionResult> AdminSsoStart()
+    {
+        var userId = User.GetUserId();
+        if (userId is null)
+        {
+            return Unauthorized();
+        }
+
+        var command = new AdminSsoStartCommand(userId.Value);
+        var result = await Mediator.Send(command);
+        return result.ToActionResult();
+    }
+
+    [AllowAnonymous]
+    [HttpPost("admin-sso/exchange")]
+    public async Task<IActionResult> AdminSsoExchange(AdminSsoExchangeRequest request)
+    {
         var command = request.ToCommand();
         var result = await Mediator.Send(command);
         return result.ToActionResult();

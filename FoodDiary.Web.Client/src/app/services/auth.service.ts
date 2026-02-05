@@ -22,6 +22,7 @@ export class AuthService extends ApiService {
     private userSignal = signal<string | null>(this.loadUserId());
 
     public readonly isAuthenticated = computed(() => this.authTokenSignal() !== null);
+    public readonly isAdmin = computed(() => this.hasRole('Admin'));
 
     public initializeAuth(): void {
         const token = this.getToken();
@@ -101,6 +102,10 @@ export class AuthService extends ApiService {
                 return throwError(() => error);
             }),
         );
+    }
+
+    public startAdminSso(): Observable<AdminSsoStartResponse> {
+        return this.post<AdminSsoStartResponse>('admin-sso/start', {});
     }
 
     public refreshToken(): Observable<string | null> {
@@ -292,4 +297,58 @@ export class AuthService extends ApiService {
             return null;
         }
     }
+
+    private hasRole(role: string): boolean {
+        const token = this.authTokenSignal();
+        if (!token) {
+            return false;
+        }
+
+        return this.extractRolesFromToken(token).includes(role);
+    }
+
+    private extractRolesFromToken(token: string): string[] {
+        const payload = this.decodePayload(token);
+        if (!payload) {
+            return [];
+        }
+
+        const roleClaim =
+            payload['role'] ??
+            payload['roles'] ??
+            payload['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] ??
+            payload['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/role'];
+
+        if (Array.isArray(roleClaim)) {
+            return roleClaim.filter((value): value is string => typeof value === 'string');
+        }
+
+        if (typeof roleClaim === 'string') {
+            return [roleClaim];
+        }
+
+        return [];
+    }
+
+    private decodePayload(token: string): Record<string, unknown> | null {
+        const [, payloadSegment] = token.split('.');
+        if (!payloadSegment) {
+            return null;
+        }
+
+        try {
+            const normalized = payloadSegment.replace(/-/g, '+').replace(/_/g, '/');
+            const padLength = (4 - (normalized.length % 4 || 4)) % 4;
+            const padded = normalized.padEnd(normalized.length + padLength, '=');
+            const decoded = atob(padded);
+            return JSON.parse(decoded) as Record<string, unknown>;
+        } catch {
+            return null;
+        }
+    }
 }
+
+type AdminSsoStartResponse = {
+    code: string;
+    expiresAtUtc: string;
+};

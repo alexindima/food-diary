@@ -1,0 +1,14 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--fd-font-family-base, 'Inter', 'Segoe UI', system-ui, sans-serif);
+  font-size: var(--fd-font-size-base, 16px);
+  line-height: var(--fd-line-height-base, 1.5);
+  color: var(--fd-color-text, #333333);
+  background-color: var(--fd-color-background, var(--fd-layout-page-background, #f5f6fa));
+}

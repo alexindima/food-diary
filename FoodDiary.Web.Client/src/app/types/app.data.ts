@@ -3,6 +3,7 @@ export interface AppConfig {
     googleClientId?: string;
     telegramBotUsername?: string;
     buildVersion?: string;
+    adminAppUrl?: string;
 }
 
 export interface AppConfigApiUrls {

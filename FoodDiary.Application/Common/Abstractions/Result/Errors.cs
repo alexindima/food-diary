@@ -109,6 +109,14 @@ public static class Errors
         public static Error TelegramNotConfigured => new(
             "Authentication.TelegramNotConfigured",
             "Telegram authentication is not configured.");
+
+        public static Error AdminSsoInvalidCode => new(
+            "Authentication.AdminSsoInvalidCode",
+            "Admin SSO code is invalid or expired.");
+
+        public static Error AdminSsoForbidden => new(
+            "Authentication.AdminSsoForbidden",
+            "User is not allowed to access admin SSO.");
     }
 
     public static class Validation

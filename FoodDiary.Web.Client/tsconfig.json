@@ -40,6 +40,12 @@
       },
       {
         "path": "./projects/fd-ui-kit/tsconfig.spec.json"
+      },
+      {
+        "path": "./projects/fooddiary-admin/tsconfig.app.json"
+      },
+      {
+        "path": "./projects/fooddiary-admin/tsconfig.spec.json"
       }
     ]
 }

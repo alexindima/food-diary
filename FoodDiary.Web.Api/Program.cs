@@ -9,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add layers
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddDistributedMemoryCache();
 
 // Add CORS
 builder.Services.AddCors(options =>

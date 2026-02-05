@@ -1188,7 +1188,9 @@
         "DELETE_ACCOUNT_CONFIRM_TITLE": "Удалить аккаунт?",
         "DELETE_ACCOUNT_CONFIRM_MESSAGE": "Мы запланируем удаление аккаунта. Вы сможете восстановить его, войдя снова.",
         "DELETE_ACCOUNT_CONFIRM": "Удалить аккаунт",
-        "DELETE_ACCOUNT_ERROR": "Не удалось удалить аккаунт. Попробуйте еще раз."
+        "DELETE_ACCOUNT_ERROR": "Не удалось удалить аккаунт. Попробуйте еще раз.",
+        "ADMIN_PANEL": "Открыть админ-панель",
+        "ADMIN_SSO_ERROR": "Не удалось открыть админ-панель. Попробуйте еще раз."
     },
     "DAILY_PROGRESS_CARD": {
         "TITLE": "Прогресс за день",

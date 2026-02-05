@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 using FoodDiary.Application.Common.Abstractions.Result;
 
 namespace FoodDiary.WebApi.Extensions;
@@ -38,6 +39,19 @@ public static class ResultExtensions
                 message = result.Error.Message
             }),
             var code when code.Contains("Authentication.TelegramAlreadyLinked") => new ConflictObjectResult(new
+            {
+                error = result.Error.Code,
+                message = result.Error.Message
+            }),
+            var code when code.Contains("Authentication.AdminSsoForbidden") => new ObjectResult(new
+            {
+                error = result.Error.Code,
+                message = result.Error.Message
+            })
+            {
+                StatusCode = StatusCodes.Status403Forbidden
+            },
+            var code when code.Contains("Authentication.AdminSsoInvalidCode") => new UnauthorizedObjectResult(new
             {
                 error = result.Error.Code,
                 message = result.Error.Message

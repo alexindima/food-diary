@@ -189,6 +189,10 @@
         }
     }
 
+    &__link-button--admin {
+        grid-column: 1 / -1;
+    }
+
     &__account-row {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));

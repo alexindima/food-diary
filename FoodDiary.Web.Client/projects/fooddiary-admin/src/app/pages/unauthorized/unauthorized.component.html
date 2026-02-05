@@ -1,0 +1,15 @@
+<section class="unauthorized">
+  <div class="unauthorized__card">
+    <h1 class="unauthorized__title">Access restricted</h1>
+    <p class="unauthorized__text">
+      @if (reason === 'unauthenticated') {
+        You need to sign in with an admin account to access the admin panel.
+      } @else {
+        Your account does not have access to the admin panel.
+      }
+    </p>
+    <fd-ui-button variant="primary" fill="solid" (click)="goToLogin()">
+      Go to login
+    </fd-ui-button>
+  </div>
+</section>

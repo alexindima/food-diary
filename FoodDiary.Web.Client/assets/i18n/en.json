@@ -969,6 +969,8 @@
         "LOAD_ERROR": "Failed to load user information.",
         "UPDATE_ERROR": "Failed to update user information.",
         "UPDATE_SUCCESS": "User information updated successfully!",
+        "ADMIN_PANEL": "Open admin panel",
+        "ADMIN_SSO_ERROR": "Failed to open the admin panel. Please try again.",
         "GO_TO_HOME_BUTTON": "Go to Home"
     },
     "SIDEBAR": {

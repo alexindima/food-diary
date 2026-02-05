@@ -100,6 +100,9 @@
                 },
                 "serve": {
                     "builder": "@angular/build:dev-server",
+                    "options": {
+                        "port": 4200
+                    },
                     "configurations": {
                         "production": {
                             "buildTarget": "food-diary-web-client:build:production"
@@ -166,6 +169,108 @@
                 "tsConfig": "projects/fd-ui-kit/tsconfig.spec.json",
                 "polyfills": []
               }
+            }
+          }
+        },
+        "fooddiary-admin": {
+          "projectType": "application",
+          "schematics": {
+            "@schematics/angular:component": {
+              "style": "scss"
+            }
+          },
+          "root": "projects/fooddiary-admin",
+          "sourceRoot": "projects/fooddiary-admin/src",
+          "prefix": "app",
+          "architect": {
+            "build": {
+              "builder": "@angular/build:application",
+              "options": {
+                "outputPath": {
+                  "base": "dist",
+                  "browser": "admin"
+                },
+                "index": "projects/fooddiary-admin/src/index.html",
+                "browser": "projects/fooddiary-admin/src/main.ts",
+                "polyfills": [],
+                "tsConfig": "projects/fooddiary-admin/tsconfig.app.json",
+                "inlineStyleLanguage": "scss",
+                "assets": [
+                  {
+                    "glob": "**/*",
+                    "input": "projects/fooddiary-admin/public"
+                  },
+                  {
+                    "glob": "**/*",
+                    "input": "assets",
+                    "output": "/assets"
+                  }
+                ],
+                "styles": [
+                  "src/styles/design-tokens.global.scss",
+                  "src/styles/material-theme.scss",
+                  "projects/fooddiary-admin/src/styles.scss"
+                ],
+                "stylePreprocessorOptions": {
+                  "includePaths": [
+                    "src/styles",
+                    "projects/fd-ui-kit/src/lib"
+                  ]
+                }
+              },
+              "configurations": {
+                "production": {
+                  "fileReplacements": [
+                    {
+                      "replace": "projects/fooddiary-admin/src/environments/environment.ts",
+                      "with": "projects/fooddiary-admin/src/environments/environment.prod.ts"
+                    }
+                  ],
+                  "budgets": [
+                    {
+                      "type": "initial",
+                      "maximumWarning": "500kB",
+                      "maximumError": "1MB"
+                    },
+                    {
+                      "type": "anyComponentStyle",
+                      "maximumWarning": "4kB",
+                      "maximumError": "8kB"
+                    }
+                  ],
+                  "outputHashing": "all"
+                },
+                "development": {
+                  "fileReplacements": [
+                    {
+                      "replace": "projects/fooddiary-admin/src/environments/environment.ts",
+                      "with": "projects/fooddiary-admin/src/environments/environment.ts"
+                    }
+                  ],
+                  "optimization": false,
+                  "extractLicenses": false,
+                  "sourceMap": true
+                }
+              },
+              "defaultConfiguration": "production"
+            },
+            "serve": {
+              "builder": "@angular/build:dev-server",
+              "options": {
+                "port": 4300
+              },
+              "configurations": {
+                "production": {
+                  "buildTarget": "fooddiary-admin:build:production"
+                },
+                "development": {
+                  "buildTarget": "fooddiary-admin:build:development"
+                }
+              },
+              "defaultConfiguration": "development"
+            },
+            "test": {
+              "builder": "@angular/build:unit-test"
             }
           }
         }

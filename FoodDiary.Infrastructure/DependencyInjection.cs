@@ -39,9 +39,6 @@ public static class DependencyInjection
         services.AddSingleton<IAmazonS3>(provider =>
         {
             var s3Options = provider.GetRequiredService<IOptions<S3Options>>().Value;
-            Console.WriteLine($"[S3 config] AccessKeyId set: {(!string.IsNullOrWhiteSpace(s3Options.AccessKeyId)).ToString().ToLowerInvariant()}");
-            Console.WriteLine($"[S3 config] Region: {s3Options.Region}");
-            Console.WriteLine($"[S3 config] ServiceUrl: {s3Options.ServiceUrl}");
             var credentials = new BasicAWSCredentials(s3Options.AccessKeyId, s3Options.SecretAccessKey);
             var regionValue = s3Options.Region?.Trim();
             RegionEndpoint? regionEndpoint = null;
@@ -50,8 +47,6 @@ public static class DependencyInjection
                 regionEndpoint = RegionEndpoint.GetBySystemName(regionValue);
             }
             regionEndpoint ??= RegionEndpoint.USEast1;
-
-            Console.WriteLine($"[S3 config] Resolved region: {regionEndpoint.SystemName}");
 
             var config = new AmazonS3Config
             {
@@ -68,6 +63,7 @@ public static class DependencyInjection
         services.AddSingleton<IPasswordHasher, PasswordHasher>();
         services.AddSingleton<ITelegramAuthValidator, TelegramAuthValidator>();
         services.AddSingleton<ITelegramLoginWidgetValidator, TelegramLoginWidgetValidator>();
+        services.AddSingleton<IAdminSsoService, AdminSsoService>();
         services.AddScoped<IUserCleanupService, UserCleanupService>();
 
         return services;
