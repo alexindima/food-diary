@@ -203,5 +203,9 @@ public static class Errors
         public static Error InvalidResponse(string reason) => new(
             "Ai.InvalidResponse",
             reason);
+
+        public static Error QuotaExceeded() => new(
+            "Ai.QuotaExceeded",
+            "AI token quota exceeded for the current month.");
     }
 }

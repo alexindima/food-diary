@@ -8,6 +8,9 @@ namespace FoodDiary.Domain.Entities;
 /// Пользователь системы - корень агрегата
 /// </summary>
 public sealed class User : AggregateRoot<UserId> {
+    private const long DefaultAiInputTokenLimit = 5_000_000;
+    private const long DefaultAiOutputTokenLimit = 1_000_000;
+
     public string Email { get; private set; } = string.Empty;
     public string Password { get; private set; } = string.Empty;
     public string? RefreshToken { get; private set; }
@@ -34,6 +37,8 @@ public sealed class User : AggregateRoot<UserId> {
     public string? DashboardLayoutJson { get; private set; }
     public string? Language { get; private set; }
     public long? TelegramUserId { get; private set; }
+    public long AiInputTokenLimit { get; private set; } = DefaultAiInputTokenLimit;
+    public long AiOutputTokenLimit { get; private set; } = DefaultAiOutputTokenLimit;
     public bool IsActive { get; private set; } = true;
     public DateTime? DeletedAt { get; private set; }
 
@@ -56,7 +61,9 @@ public sealed class User : AggregateRoot<UserId> {
         var user = new User {
             Id = UserId.New(),
             Email = email,
-            Password = hashedPassword
+            Password = hashedPassword,
+            AiInputTokenLimit = DefaultAiInputTokenLimit,
+            AiOutputTokenLimit = DefaultAiOutputTokenLimit
         };
         user.SetCreated();
         return user;
@@ -127,6 +134,21 @@ public sealed class User : AggregateRoot<UserId> {
         if (profileImageAssetId.HasValue) ProfileImageAssetId = profileImageAssetId;
         if (dashboardLayoutJson is not null) DashboardLayoutJson = dashboardLayoutJson;
         if (language is not null) Language = language;
+
+        SetModified();
+    }
+
+    public void UpdateAiTokenLimits(long? inputLimit, long? outputLimit)
+    {
+        if (inputLimit.HasValue)
+        {
+            AiInputTokenLimit = inputLimit.Value;
+        }
+
+        if (outputLimit.HasValue)
+        {
+            AiOutputTokenLimit = outputLimit.Value;
+        }
 
         SetModified();
     }

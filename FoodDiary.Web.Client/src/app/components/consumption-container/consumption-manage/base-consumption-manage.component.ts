@@ -3,6 +3,7 @@
     Component,
     DestroyRef,
     FactoryProvider,
+    computed,
     inject,
     input,
     OnInit,
@@ -67,6 +68,8 @@ import { ImageSelection } from '../../../types/image-upload.data';
 import { ActivatedRoute, Router } from '@angular/router';
 import { QuickConsumptionItem } from '../../../services/quick-consumption.service';
 import { ConsumptionPhotoRecognitionDialogComponent } from '../consumption-photo-recognition-dialog/consumption-photo-recognition-dialog.component';
+import { AiFoodService } from '../../../services/ai-food.service';
+import { UserAiUsageResponse } from '../../../types/ai.data';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: FD_VALIDATION_ERRORS,
@@ -113,6 +116,7 @@ export class BaseConsumptionManageComponent implements OnInit {
     private readonly destroyRef = inject(DestroyRef);
     private readonly recipeService = inject(RecipeService);
     private readonly fdDialogService = inject(FdUiDialogService);
+    private readonly aiFoodService = inject(AiFoodService);
     private readonly router = inject(Router);
     private readonly route = inject(ActivatedRoute);
     private readonly recipeServingWeightCache = new Map<string, number | null>();
@@ -152,6 +156,14 @@ export class BaseConsumptionManageComponent implements OnInit {
     });
     public globalError = signal<string | null>(null);
     public aiSessions = signal<ConsumptionAiSessionManageDto[]>([]);
+    public aiUsage = signal<UserAiUsageResponse | null>(null);
+    public aiQuotaExceeded = computed(() => {
+        const usage = this.aiUsage();
+        if (!usage) {
+            return false;
+        }
+        return usage.inputUsed >= usage.inputLimit || usage.outputUsed >= usage.outputLimit;
+    });
 
     public consumptionForm: FormGroup<ConsumptionFormData>;
     public readonly mealTypeOptions = ['BREAKFAST', 'LUNCH', 'DINNER', 'SNACK', 'OTHER'] as const;
@@ -203,6 +215,7 @@ export class BaseConsumptionManageComponent implements OnInit {
     }
 
     public ngOnInit(): void {
+        this.loadAiUsage();
         const presetMealType = this.resolvePresetMealType();
         if (presetMealType) {
             this.consumptionForm.controls.mealType.setValue(presetMealType);
@@ -385,6 +398,10 @@ export class BaseConsumptionManageComponent implements OnInit {
     }
 
     public onAddConsumptionFromPhoto(): void {
+        if (this.aiQuotaExceeded()) {
+            return;
+        }
+
         this.fdDialogService
             .open<ConsumptionPhotoRecognitionDialogComponent, never, ConsumptionAiSessionManageDto | null>(
                 ConsumptionPhotoRecognitionDialogComponent,
@@ -396,6 +413,32 @@ export class BaseConsumptionManageComponent implements OnInit {
                     return;
                 }
                 this.aiSessions.update(current => [...current, session]);
+            });
+    }
+
+    public onDeleteAiSession(index: number): void {
+        this.aiSessions.update(current => current.filter((_, currentIndex) => currentIndex !== index));
+    }
+
+    public onEditAiSession(index: number): void {
+        const session = this.aiSessions()[index];
+        const selection: ImageSelection | null = session?.imageUrl
+            ? { url: session.imageUrl ?? null, assetId: session.imageAssetId ?? null }
+            : null;
+
+        this.fdDialogService
+            .open<ConsumptionPhotoRecognitionDialogComponent, { initialSelection: ImageSelection | null }, ConsumptionAiSessionManageDto | null>(
+                ConsumptionPhotoRecognitionDialogComponent,
+                { size: 'lg', data: { initialSelection: selection } },
+            )
+            .afterClosed()
+            .subscribe(updated => {
+                if (!updated) {
+                    return;
+                }
+                this.aiSessions.update(current =>
+                    current.map((item, currentIndex) => (currentIndex === index ? updated : item))
+                );
             });
     }
 
@@ -418,6 +461,13 @@ export class BaseConsumptionManageComponent implements OnInit {
         const unitKey = normalized ? unitMap[normalized] : null;
         const unitLabel = unitKey ? this.translateService.instant(unitKey) : unit;
         return unitLabel ? `${amount} ${unitLabel}`.trim() : `${amount}`.trim();
+    }
+
+    private loadAiUsage(): void {
+        this.aiFoodService.getUsageSummary().subscribe({
+            next: usage => this.aiUsage.set(usage),
+            error: error => console.error('Failed to load AI usage summary', error),
+        });
     }
 
     public removeItem(index: number): void {

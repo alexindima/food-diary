@@ -22,6 +22,8 @@ public static class AdminUserMappings
             user.IsActive,
             user.CreatedOnUtc,
             user.DeletedAt,
-            roles);
+            roles,
+            user.AiInputTokenLimit,
+            user.AiOutputTokenLimit);
     }
 }

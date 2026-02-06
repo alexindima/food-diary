@@ -16,6 +16,7 @@ public sealed class MealAiSession : Entity<MealAiSessionId>
 
     // Navigation properties
     public Meal Meal { get; private set; } = null!;
+    public ImageAsset? ImageAsset { get; private set; }
     private readonly List<MealAiItem> _items = new();
     public IReadOnlyCollection<MealAiItem> Items => _items.AsReadOnly();
 

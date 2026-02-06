@@ -30,7 +30,12 @@ public sealed class AdminUsersController(ISender mediator) : BaseApiController(m
     [HttpPatch("{id:guid}")]
     public async Task<IActionResult> UpdateUser(Guid id, [FromBody] AdminUserUpdateRequest request)
     {
-        var command = new UpdateAdminUserCommand(new UserId(id), request.IsActive, request.Roles ?? Array.Empty<string>());
+        var command = new UpdateAdminUserCommand(
+            new UserId(id),
+            request.IsActive,
+            request.Roles ?? Array.Empty<string>(),
+            request.AiInputTokenLimit,
+            request.AiOutputTokenLimit);
         var result = await Mediator.Send(command);
         return result.ToActionResult();
     }

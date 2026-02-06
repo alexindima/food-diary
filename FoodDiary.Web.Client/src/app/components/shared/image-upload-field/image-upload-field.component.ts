@@ -4,6 +4,7 @@ import {
     ChangeDetectorRef,
     Component,
     HostListener,
+    OnInit,
     ViewEncapsulation,
     forwardRef,
     inject,
@@ -34,7 +35,7 @@ import Cropper from 'cropperjs';
         },
     ],
 })
-export class ImageUploadFieldComponent implements ControlValueAccessor {
+export class ImageUploadFieldComponent implements ControlValueAccessor, OnInit {
     private readonly cdr = inject(ChangeDetectorRef);
     private readonly imageUploadService = inject(ImageUploadService);
     private readonly translateService = inject(TranslateService);
@@ -49,6 +50,7 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
     public readonly cropMaxSize = input<number>(1024);
     public readonly cropAspectRatio = input<number | null>(1);
     public readonly deleteOnClear = input<boolean>(false);
+    public readonly initialSelection = input<ImageSelection | null>(null);
 
     public readonly imageChanged = output<ImageSelection | null>();
 
@@ -58,6 +60,18 @@ export class ImageUploadFieldComponent implements ControlValueAccessor {
     public error: string | null = null;
     public disabled = false;
     public isCropping = false;
+
+    public ngOnInit(): void {
+        const initial = this.initialSelection();
+        if (initial?.url || initial?.assetId) {
+            this.selection = {
+                url: initial.url ?? null,
+                assetId: initial.assetId ?? null,
+            };
+            this.imageChanged.emit(this.selection);
+            this.cdr.markForCheck();
+        }
+    }
     public cropPreviewUrl: string | null = null;
     private cropper: Cropper | null = null;
     private originalFile: File | null = null;

@@ -56,6 +56,10 @@ public class FoodDiaryDbContext : DbContext
             entity.Property(e => e.DashboardLayoutJson)
                 .HasColumnType("jsonb")
                 .HasColumnName("DashboardLayout");
+            entity.Property(e => e.AiInputTokenLimit)
+                .HasDefaultValue(5_000_000L);
+            entity.Property(e => e.AiOutputTokenLimit)
+                .HasDefaultValue(1_000_000L);
 
             entity.HasMany(e => e.WeightEntries)
                 .WithOne(w => w.User)
@@ -290,6 +294,11 @@ public class FoodDiaryDbContext : DbContext
             entity.Property(e => e.ImageAssetId).HasConversion(
                 id => id.HasValue ? id.Value.Value : (Guid?)null,
                 value => value.HasValue ? new ImageAssetId(value.Value) : null);
+
+            entity.HasOne(e => e.ImageAsset)
+                .WithMany()
+                .HasForeignKey(e => e.ImageAssetId)
+                .OnDelete(DeleteBehavior.SetNull);
 
             entity.Property(e => e.RecognizedAtUtc)
                 .HasColumnType("timestamp with time zone");

@@ -3,6 +3,7 @@ using System;
 using FoodDiary.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FoodDiary.Infrastructure.Migrations
 {
     [DbContext(typeof(FoodDiaryDbContext))]
-    partial class FoodDiaryDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260206224341_AddUserAiTokenLimits")]
+    partial class AddUserAiTokenLimits
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -396,8 +399,6 @@ namespace FoodDiary.Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ImageAssetId");
 
                     b.HasIndex("MealId");
 
@@ -1031,18 +1032,11 @@ namespace FoodDiary.Infrastructure.Migrations
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.MealAiSession", b =>
                 {
-                    b.HasOne("FoodDiary.Domain.Entities.ImageAsset", "ImageAsset")
-                        .WithMany()
-                        .HasForeignKey("ImageAssetId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
                     b.HasOne("FoodDiary.Domain.Entities.Meal", "Meal")
                         .WithMany("AiSessions")
                         .HasForeignKey("MealId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("ImageAsset");
 
                     b.Navigation("Meal");
                 });

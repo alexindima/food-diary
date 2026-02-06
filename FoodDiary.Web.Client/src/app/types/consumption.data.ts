@@ -40,6 +40,7 @@ export interface ConsumptionAiSession {
     id: string;
     consumptionId: string;
     imageAssetId?: string | null;
+    imageUrl?: string | null;
     recognizedAtUtc: string;
     notes?: string | null;
     items: ConsumptionAiItem[];
@@ -115,6 +116,7 @@ export interface ConsumptionAiSessionResponseDto {
     id: string;
     consumptionId: string;
     imageAssetId?: string | null;
+    imageUrl?: string | null;
     recognizedAtUtc: string;
     notes?: string | null;
     items: ConsumptionAiItemResponseDto[];
@@ -172,6 +174,7 @@ export interface ConsumptionItemManageDto {
 
 export interface ConsumptionAiSessionManageDto {
     imageAssetId?: string | null;
+    imageUrl?: string | null;
     recognizedAtUtc?: string | null;
     notes?: string | null;
     items: ConsumptionAiItemManageDto[];

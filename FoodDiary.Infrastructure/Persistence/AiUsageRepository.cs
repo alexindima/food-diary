@@ -1,6 +1,8 @@
 using FoodDiary.Application.Admin.Models;
 using FoodDiary.Application.Common.Interfaces.Persistence;
+using FoodDiary.Application.Common.Models;
 using FoodDiary.Domain.Entities;
+using FoodDiary.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence;
@@ -85,5 +87,23 @@ public sealed class AiUsageRepository(FoodDiaryDbContext context) : IAiUsageRepo
             daily,
             byOperation,
             byModel);
+    }
+
+    public async Task<AiUsageTotals> GetUserTotalsAsync(
+        UserId userId,
+        DateTime fromUtc,
+        DateTime toUtc,
+        CancellationToken cancellationToken = default)
+    {
+        var totals = await context.AiUsages
+            .AsNoTracking()
+            .Where(x => x.UserId == userId && x.CreatedOnUtc >= fromUtc && x.CreatedOnUtc < toUtc)
+            .GroupBy(_ => 1)
+            .Select(group => new AiUsageTotals(
+                group.Sum(x => (long)x.InputTokens),
+                group.Sum(x => (long)x.OutputTokens)))
+            .FirstOrDefaultAsync(cancellationToken);
+
+        return totals ?? new AiUsageTotals(0, 0);
     }
 }

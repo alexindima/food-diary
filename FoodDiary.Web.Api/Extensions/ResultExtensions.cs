@@ -64,6 +64,14 @@ public static class ResultExtensions
             {
                 StatusCode = StatusCodes.Status403Forbidden
             },
+            var code when code.Contains("Ai.QuotaExceeded") => new ObjectResult(new
+            {
+                error = result.Error.Code,
+                message = result.Error.Message
+            })
+            {
+                StatusCode = StatusCodes.Status429TooManyRequests
+            },
             var code when code.Contains("Ai.OpenAiFailed") || code.Contains("Ai.InvalidResponse") => new ObjectResult(new
             {
                 error = result.Error.Code,

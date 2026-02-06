@@ -802,6 +802,7 @@
             "UPLOAD_RECOMMENDED": "Recommended: 1024 × 1024",
             "LOADING": "Analyzing photo…",
             "ERROR_PREMIUM": "Photo recognition is available for Premium users.",
+            "ERROR_QUOTA": "Monthly AI limit reached. Try again later or upgrade your plan.",
             "ERROR_GENERIC": "Failed to analyze the photo. Please try again.",
             "RESULTS_TITLE": "Recognized items",
             "NAME_LABEL": "Name",
@@ -854,7 +855,9 @@
         "ITEMS_ADDED_TITLE": "Added items",
         "ITEMS_AI_TITLE": "Recognized from photo",
         "ITEMS_AI_HINT": "Upload a meal photo to recognize items automatically.",
-        "ITEMS_AI_SUMMARY": "Recognized: {{count}} items"
+        "ITEMS_AI_SUMMARY": "Recognized: {{count}} items",
+        "ITEMS_AI_EDIT": "Edit recognition",
+        "ITEMS_AI_DELETE": "Remove recognition"
     },
     "HUNGER_SCALE": {
         "LEVEL_0": {

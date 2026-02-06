@@ -152,6 +152,7 @@ export class ConsumptionService extends ApiService {
             id: response.id,
             consumptionId: response.consumptionId,
             imageAssetId: response.imageAssetId ?? null,
+            imageUrl: response.imageUrl ?? null,
             recognizedAtUtc: response.recognizedAtUtc,
             notes: response.notes ?? null,
             items: response.items.map(item => ({

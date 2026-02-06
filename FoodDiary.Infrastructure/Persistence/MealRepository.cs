@@ -52,7 +52,9 @@ public class MealRepository : IMealRepository
                 .Include(m => m.Items)
                     .ThenInclude(i => i.Recipe)
                 .Include(m => m.AiSessions)
-                    .ThenInclude(s => s.Items);
+                    .ThenInclude(s => s.Items)
+                .Include(m => m.AiSessions)
+                    .ThenInclude(s => s.ImageAsset);
         }
 
         if (!asTracking)
@@ -84,6 +86,8 @@ public class MealRepository : IMealRepository
                 .ThenInclude(i => i.Recipe)
             .Include(m => m.AiSessions)
                 .ThenInclude(s => s.Items)
+            .Include(m => m.AiSessions)
+                .ThenInclude(s => s.ImageAsset)
             .Where(m => m.UserId == userId);
 
         if (dateFrom.HasValue)

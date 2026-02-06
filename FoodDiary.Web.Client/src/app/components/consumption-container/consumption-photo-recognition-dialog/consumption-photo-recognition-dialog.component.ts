@@ -9,7 +9,7 @@ import { ImageSelection } from '../../../types/image-upload.data';
 import { AiFoodService } from '../../../services/ai-food.service';
 import { FoodNutritionResponse, FoodVisionItem } from '../../../types/ai.data';
 import { ConsumptionAiSessionManageDto } from '../../../types/consumption.data';
-import { FdUiDialogRef, FdUiIconModule } from 'fd-ui-kit/material';
+import { FD_UI_DIALOG_DATA, FdUiDialogRef, FdUiIconModule } from 'fd-ui-kit/material';
 import { catchError, of } from 'rxjs';
 
 @Component({
@@ -29,6 +29,8 @@ import { catchError, of } from 'rxjs';
     ],
 })
 export class ConsumptionPhotoRecognitionDialogComponent {
+    private readonly dialogData =
+        inject<{ initialSelection?: ImageSelection | null }>(FD_UI_DIALOG_DATA, { optional: true }) ?? {};
     private readonly aiFoodService = inject(AiFoodService);
     private readonly translateService = inject(TranslateService);
     private readonly dialogRef = inject(
@@ -44,6 +46,7 @@ export class ConsumptionPhotoRecognitionDialogComponent {
     public readonly isNutritionLoading = signal(false);
     public readonly nutrition = signal<FoodNutritionResponse | null>(null);
     public readonly nutritionErrorKey = signal<string | null>(null);
+    public readonly initialSelection = this.dialogData.initialSelection ?? null;
     public readonly statusKey = computed(() => {
         if (!this.selection()) {
             return null;
@@ -181,6 +184,7 @@ export class ConsumptionPhotoRecognitionDialogComponent {
 
         return {
             imageAssetId: assetId,
+            imageUrl: this.selection()?.url ?? null,
             recognizedAtUtc: new Date().toISOString(),
             notes: nutrition.notes ?? null,
             items,
@@ -207,6 +211,8 @@ export class ConsumptionPhotoRecognitionDialogComponent {
                 catchError(err => {
                     if (err?.status === 403) {
                         this.errorKey.set('CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ERROR_PREMIUM');
+                    } else if (err?.status === 429) {
+                        this.errorKey.set('CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ERROR_QUOTA');
                     } else {
                         this.errorKey.set('CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ERROR_GENERIC');
                     }
@@ -237,7 +243,11 @@ export class ConsumptionPhotoRecognitionDialogComponent {
             .pipe(
                 catchError(err => {
                     console.error('Failed to calculate nutrition', err);
+                    if (err?.status === 429) {
+                        this.nutritionErrorKey.set('CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ERROR_QUOTA');
+                    } else {
                     this.nutritionErrorKey.set('CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.NUTRITION_ERROR');
+                    }
                     return of(null);
                 }),
             )

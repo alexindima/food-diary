@@ -41,3 +41,11 @@ export type FoodNutritionResponse = {
 export type FoodNutritionRequest = {
     items: FoodVisionItem[];
 };
+
+export type UserAiUsageResponse = {
+    inputLimit: number;
+    outputLimit: number;
+    inputUsed: number;
+    outputUsed: number;
+    resetAtUtc: string;
+};

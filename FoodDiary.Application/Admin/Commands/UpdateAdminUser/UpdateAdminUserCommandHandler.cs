@@ -55,6 +55,23 @@ public sealed class UpdateAdminUserCommandHandler(IUserRepository userRepository
             UpdateUserRoles(user, roleEntities);
         }
 
+        if (command.AiInputTokenLimit.HasValue || command.AiOutputTokenLimit.HasValue)
+        {
+            if (command.AiInputTokenLimit.HasValue && command.AiInputTokenLimit.Value < 0)
+            {
+                return Result.Failure<AdminUserResponse>(
+                    Errors.Validation.Invalid("aiInputTokenLimit", "AI input token limit must be non-negative."));
+            }
+
+            if (command.AiOutputTokenLimit.HasValue && command.AiOutputTokenLimit.Value < 0)
+            {
+                return Result.Failure<AdminUserResponse>(
+                    Errors.Validation.Invalid("aiOutputTokenLimit", "AI output token limit must be non-negative."));
+            }
+
+            user.UpdateAiTokenLimits(command.AiInputTokenLimit, command.AiOutputTokenLimit);
+        }
+
         await userRepository.UpdateAsync(user);
         return Result.Success(user.ToAdminResponse());
     }

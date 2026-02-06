@@ -9,5 +9,7 @@ public sealed record AdminUserResponse(
     bool IsActive,
     DateTime CreatedOnUtc,
     DateTime? DeletedAt,
-    string[] Roles
+    string[] Roles,
+    long AiInputTokenLimit,
+    long AiOutputTokenLimit
 );

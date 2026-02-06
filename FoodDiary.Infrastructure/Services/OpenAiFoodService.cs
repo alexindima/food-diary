@@ -18,12 +18,14 @@ public sealed class OpenAiFoodService(
     HttpClient httpClient,
     IOptions<OpenAiOptions> options,
     ILogger<OpenAiFoodService> logger,
-    IAiUsageRepository aiUsageRepository)
+    IAiUsageRepository aiUsageRepository,
+    IUserRepository userRepository)
     : IOpenAiFoodService
 {
     private readonly OpenAiOptions _options = options.Value;
     private readonly ILogger<OpenAiFoodService> _logger = logger;
     private readonly IAiUsageRepository _aiUsageRepository = aiUsageRepository;
+    private readonly IUserRepository _userRepository = userRepository;
 
     public async Task<Result<FoodVisionResponse>> AnalyzeFoodImageAsync(
         string imageUrl,
@@ -31,6 +33,12 @@ public sealed class OpenAiFoodService(
         UserId userId,
         CancellationToken cancellationToken)
     {
+        var quotaCheck = await EnsureMonthlyQuotaAsync(userId, cancellationToken);
+        if (quotaCheck.IsFailure)
+        {
+            return Result.Failure<FoodVisionResponse>(quotaCheck.Error);
+        }
+
         if (string.IsNullOrWhiteSpace(_options.ApiKey))
         {
             return Result.Failure<FoodVisionResponse>(Errors.Ai.OpenAiFailed("OpenAI API key is not configured."));
@@ -64,6 +72,12 @@ public sealed class OpenAiFoodService(
         UserId userId,
         CancellationToken cancellationToken)
     {
+        var quotaCheck = await EnsureMonthlyQuotaAsync(userId, cancellationToken);
+        if (quotaCheck.IsFailure)
+        {
+            return Result.Failure<FoodNutritionResponse>(quotaCheck.Error);
+        }
+
         if (string.IsNullOrWhiteSpace(_options.ApiKey))
         {
             return Result.Failure<FoodNutritionResponse>(Errors.Ai.OpenAiFailed("OpenAI API key is not configured."));
@@ -366,6 +380,27 @@ public sealed class OpenAiFoodService(
 
     private static JsonSerializerOptions JsonOptions()
         => new() { PropertyNameCaseInsensitive = true };
+
+    private async Task<Result> EnsureMonthlyQuotaAsync(UserId userId, CancellationToken cancellationToken)
+    {
+        var user = await _userRepository.GetByIdAsync(userId);
+        if (user is null)
+        {
+            return Result.Failure(Errors.User.NotFound(userId.Value));
+        }
+
+        var nowUtc = DateTime.UtcNow;
+        var monthStartUtc = new DateTime(nowUtc.Year, nowUtc.Month, 1, 0, 0, 0, DateTimeKind.Utc);
+        var monthEndUtc = monthStartUtc.AddMonths(1);
+        var totals = await _aiUsageRepository.GetUserTotalsAsync(userId, monthStartUtc, monthEndUtc, cancellationToken);
+
+        if (totals.InputTokens >= user.AiInputTokenLimit || totals.OutputTokens >= user.AiOutputTokenLimit)
+        {
+            return Result.Failure(Errors.Ai.QuotaExceeded());
+        }
+
+        return Result.Success();
+    }
 
     private async Task SaveUsageAsync(
         JsonDocument json,

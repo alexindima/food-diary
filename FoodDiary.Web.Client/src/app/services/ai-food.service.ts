@@ -2,7 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { FoodNutritionRequest, FoodNutritionResponse, FoodVisionRequest, FoodVisionResponse } from '../types/ai.data';
+import {
+    FoodNutritionRequest,
+    FoodNutritionResponse,
+    FoodVisionRequest,
+    FoodVisionResponse,
+    UserAiUsageResponse,
+} from '../types/ai.data';
 
 @Injectable({ providedIn: 'root' })
 export class AiFoodService {
@@ -16,5 +22,9 @@ export class AiFoodService {
 
     public calculateNutrition(request: FoodNutritionRequest): Observable<FoodNutritionResponse> {
         return this.http.post<FoodNutritionResponse>(`${this.baseUrl}/food/nutrition`, request);
+    }
+
+    public getUsageSummary(): Observable<UserAiUsageResponse> {
+        return this.http.get<UserAiUsageResponse>(`${this.baseUrl}/usage/me`);
     }
 }

@@ -56,6 +56,7 @@ public record ConsumptionAiSessionResponse(
     Guid Id,
     Guid ConsumptionId,
     Guid? ImageAssetId,
+    string? ImageUrl,
     DateTime RecognizedAtUtc,
     string? Notes,
     IReadOnlyList<ConsumptionAiItemResponse> Items);

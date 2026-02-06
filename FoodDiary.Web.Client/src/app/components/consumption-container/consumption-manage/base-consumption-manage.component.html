@@ -209,23 +209,55 @@
                                 {{ 'CONSUMPTION_MANAGE.ITEMS_AI_HINT' | translate }}
                             </p>
                             @if (aiSessions().length) {
-                                @let latestSession = aiSessions()[aiSessions().length - 1];
-                                <div class="consumption-manage__ai-summary">
-                                    <div class="consumption-manage__ai-summary-title">
-                                        {{ 'CONSUMPTION_MANAGE.ITEMS_AI_SUMMARY' | translate:{ count: latestSession.items.length } }}
-                                    </div>
-                                    <div class="consumption-manage__ai-summary-list">
-                                        @for (aiItem of latestSession.items; track aiItem; let idx = $index) {
-                                            <div class="consumption-manage__ai-summary-row">
-                                                <span class="consumption-manage__ai-summary-name">
-                                                    {{ aiItem.nameLocal || aiItem.nameEn }}
-                                                </span>
-                                                <span class="consumption-manage__ai-summary-amount">
-                                                    {{ formatAiAmount(aiItem.amount, aiItem.unit) }}
-                                                </span>
+                                <div class="consumption-manage__ai-summary-listing">
+                                    @for (session of aiSessions(); track session; let idx = $index) {
+                                        <div class="consumption-manage__ai-summary">
+                                            <div class="consumption-manage__ai-summary-header">
+                                                <div class="consumption-manage__ai-summary-title">
+                                                    {{ 'CONSUMPTION_MANAGE.ITEMS_AI_SUMMARY' | translate:{ count: session.items.length } }}
+                                                </div>
+                                                <div class="consumption-manage__ai-summary-actions">
+                                                    <button
+                                                        type="button"
+                                                        class="consumption-manage__ai-summary-action"
+                                                        [attr.aria-label]="'CONSUMPTION_MANAGE.ITEMS_AI_EDIT' | translate"
+                                                        (click)="onEditAiSession(idx)"
+                                                    >
+                                                        <mat-icon fontIcon="edit"></mat-icon>
+                                                    </button>
+                                                    <button
+                                                        type="button"
+                                                        class="consumption-manage__ai-summary-action consumption-manage__ai-summary-action--danger"
+                                                        [attr.aria-label]="'CONSUMPTION_MANAGE.ITEMS_AI_DELETE' | translate"
+                                                        (click)="onDeleteAiSession(idx)"
+                                                    >
+                                                        <mat-icon fontIcon="delete"></mat-icon>
+                                                    </button>
+                                                </div>
                                             </div>
-                                        }
-                                    </div>
+                                            <div class="consumption-manage__ai-summary-body">
+                                                <div class="consumption-manage__ai-summary-image">
+                                                    @if (session.imageUrl) {
+                                                        <img [src]="session.imageUrl" alt="" loading="lazy" />
+                                                    } @else {
+                                                        <mat-icon fontIcon="photo_camera"></mat-icon>
+                                                    }
+                                                </div>
+                                                <div class="consumption-manage__ai-summary-list">
+                                                    @for (aiItem of session.items; track aiItem; let itemIdx = $index) {
+                                                        <div class="consumption-manage__ai-summary-row">
+                                                            <span class="consumption-manage__ai-summary-name">
+                                                                {{ aiItem.nameLocal || aiItem.nameEn }}
+                                                            </span>
+                                                            <span class="consumption-manage__ai-summary-amount">
+                                                                {{ formatAiAmount(aiItem.amount, aiItem.unit) }}
+                                                            </span>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
                                 </div>
                             }
                             <div class="consumption-item__actions consumption-item__actions--stack">
@@ -235,6 +267,7 @@
                                     class="consumption-item__add"
                                     variant="secondary"
                                     fill="outline"
+                                    [disabled]="aiQuotaExceeded()"
                                     (click)="onAddConsumptionFromPhoto()"
                                 >
                                     {{ 'CONSUMPTION_MANAGE.ADD_ITEM_FROM_PHOTO' | translate }}
