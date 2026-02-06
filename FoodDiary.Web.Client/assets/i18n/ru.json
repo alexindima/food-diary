@@ -823,7 +823,9 @@
         "ITEMS_AI_SUMMARY": "Распознанных позиций: {{count}}",
         "ITEMS_AI_EDIT": "Редактировать распознавание",
         "ITEMS_AI_DELETE": "Удалить распознавание",
-        "ITEMS_AI_PHOTO_LABEL": "Фото {{index}}"
+        "ITEMS_AI_PHOTO_LABEL": "Фото {{index}}",
+        "ITEMS_AI_MORE": "+ ещё {{count}}",
+        "ITEMS_AI_HIDE": "Скрыть"
     },
     "HUNGER_SCALE": {
         "LEVEL_0": {

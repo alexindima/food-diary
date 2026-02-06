@@ -858,7 +858,9 @@
         "ITEMS_AI_SUMMARY": "Recognized: {{count}} items",
         "ITEMS_AI_EDIT": "Edit recognition",
         "ITEMS_AI_DELETE": "Remove recognition",
-        "ITEMS_AI_PHOTO_LABEL": "Photo {{index}}"
+        "ITEMS_AI_PHOTO_LABEL": "Photo {{index}}",
+        "ITEMS_AI_MORE": "+ {{count}} more",
+        "ITEMS_AI_HIDE": "Hide"
     },
     "HUNGER_SCALE": {
         "LEVEL_0": {

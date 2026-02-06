@@ -21,6 +21,7 @@ import {
 } from '../consumption-item-select-dialog/consumption-item-select-dialog.component';
 import {
     Consumption,
+    ConsumptionAiItemManageDto,
     ConsumptionAiSessionManageDto,
     ConsumptionItemManageDto,
     ConsumptionManageDto,
@@ -477,6 +478,17 @@ export class BaseConsumptionManageComponent implements OnInit {
         return `${first.toLocaleUpperCase()}${rest.join('')}`;
     }
 
+    public visibleAiItems(
+        items: ConsumptionAiItemManageDto[],
+        maxVisible: number,
+    ): ConsumptionAiItemManageDto[] {
+        return items.slice(0, Math.max(0, maxVisible));
+    }
+
+    public getHiddenAiItemsCount(items: ConsumptionAiItemManageDto[], maxVisible: number): number {
+        return Math.max(0, items.length - Math.max(0, maxVisible));
+    }
+
     public getAiSessionLabel(index: number): string {
         return this.translateService.instant('CONSUMPTION_MANAGE.ITEMS_AI_PHOTO_LABEL', { index: index + 1 });
     }
@@ -493,6 +505,25 @@ export class BaseConsumptionManageComponent implements OnInit {
             }),
             { calories: 0, proteins: 0, fats: 0, carbs: 0, fiber: 0, alcohol: 0 }
         );
+    }
+
+    public readonly aiPreviewMaxItems = 2;
+    public readonly expandedAiSessions = signal<Set<number>>(new Set());
+
+    public isAiSessionExpanded(index: number): boolean {
+        return this.expandedAiSessions().has(index);
+    }
+
+    public toggleAiSessionExpanded(index: number): void {
+        this.expandedAiSessions.update(current => {
+            const next = new Set(current);
+            if (next.has(index)) {
+                next.delete(index);
+            } else {
+                next.add(index);
+            }
+            return next;
+        });
     }
 
     public formatAiMacro(value: number, unitKey: string): string {

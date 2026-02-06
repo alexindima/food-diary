@@ -269,7 +269,7 @@
                                             </div>
                                             <div class="consumption-manage__ai-summary-body">
                                                 <div class="consumption-manage__ai-summary-list">
-                                                    @for (aiItem of session.items; track aiItem; let itemIdx = $index) {
+                                                    @for (aiItem of (isAiSessionExpanded(idx) ? session.items : visibleAiItems(session.items, aiPreviewMaxItems)); track aiItem; let itemIdx = $index) {
                                                         <div class="consumption-manage__ai-summary-row">
                                                             <span class="consumption-manage__ai-summary-name">
                                                                 {{ formatAiName(aiItem.nameLocal || aiItem.nameEn) }}
@@ -278,6 +278,21 @@
                                                                 {{ formatAiAmount(aiItem.amount, aiItem.unit) }}
                                                             </span>
                                                         </div>
+                                                    }
+                                                    @if (getHiddenAiItemsCount(session.items, aiPreviewMaxItems) > 0) {
+                                                        <button
+                                                            type="button"
+                                                            class="consumption-manage__ai-summary-more"
+                                                            (click)="toggleAiSessionExpanded(idx)"
+                                                        >
+                                                            @if (isAiSessionExpanded(idx)) {
+                                                                {{ 'CONSUMPTION_MANAGE.ITEMS_AI_HIDE' | translate }}
+                                                            } @else {
+                                                                {{ 'CONSUMPTION_MANAGE.ITEMS_AI_MORE' | translate:{
+                                                                    count: getHiddenAiItemsCount(session.items, aiPreviewMaxItems)
+                                                                } }}
+                                                            }
+                                                        </button>
                                                     }
                                                 </div>
                                             </div>
