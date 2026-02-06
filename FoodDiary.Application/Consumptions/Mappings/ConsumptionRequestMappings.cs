@@ -18,6 +18,7 @@ public static class ConsumptionRequestMappings
             request.ImageUrl,
             request.ImageAssetId,
             request.Items.Select(ToInput).ToList(),
+            request.AiSessions?.Select(ToInput).ToList() ?? new(),
             request.IsNutritionAutoCalculated,
             request.ManualCalories,
             request.ManualProteins,
@@ -38,6 +39,7 @@ public static class ConsumptionRequestMappings
             request.ImageUrl,
             request.ImageAssetId,
             request.Items.Select(ToInput).ToList(),
+            request.AiSessions?.Select(ToInput).ToList() ?? new(),
             request.IsNutritionAutoCalculated,
             request.ManualCalories,
             request.ManualProteins,
@@ -50,4 +52,24 @@ public static class ConsumptionRequestMappings
 
     private static ConsumptionItemInput ToInput(ConsumptionItemRequest request) =>
         new(request.ProductId, request.RecipeId, request.Amount);
+
+    private static ConsumptionAiSessionInput ToInput(ConsumptionAiSessionRequest request) =>
+        new(
+            request.ImageAssetId,
+            request.RecognizedAtUtc,
+            request.Notes,
+            request.Items.Select(ToInput).ToList());
+
+    private static ConsumptionAiItemInput ToInput(ConsumptionAiItemRequest request) =>
+        new(
+            request.NameEn,
+            request.NameLocal,
+            request.Amount,
+            request.Unit,
+            request.Calories,
+            request.Proteins,
+            request.Fats,
+            request.Carbs,
+            request.Fiber,
+            request.Alcohol);
 }

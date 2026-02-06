@@ -43,6 +43,20 @@ public static class StronglyTypedIdConverters
             value => new MealItemId(value));
     }
 
+    public static class MealAiSessionIdConverter
+    {
+        public static ValueConverter<MealAiSessionId, Guid> Instance { get; } = new(
+            id => id.Value,
+            value => new MealAiSessionId(value));
+    }
+
+    public static class MealAiItemIdConverter
+    {
+        public static ValueConverter<MealAiItemId, Guid> Instance { get; } = new(
+            id => id.Value,
+            value => new MealAiItemId(value));
+    }
+
     public static class RecipeIngredientIdConverter
     {
         public static ValueConverter<RecipeIngredientId, Guid> Instance { get; } = new(

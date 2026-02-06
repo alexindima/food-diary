@@ -72,6 +72,29 @@ public class CreateConsumptionCommandHandler(
             }
         }
 
+        foreach (var session in command.AiSessions)
+        {
+            var sessionItems = session.Items
+                .Select(aiItem => new MealAiItemData(
+                    aiItem.NameEn,
+                    aiItem.NameLocal,
+                    aiItem.Amount,
+                    aiItem.Unit,
+                    aiItem.Calories,
+                    aiItem.Proteins,
+                    aiItem.Fats,
+                    aiItem.Carbs,
+                    aiItem.Fiber,
+                    aiItem.Alcohol))
+                .ToList();
+
+            meal.AddAiSession(
+                session.ImageAssetId.HasValue ? new ImageAssetId(session.ImageAssetId.Value) : null,
+                session.RecognizedAtUtc ?? DateTime.UtcNow,
+                session.Notes,
+                sessionItems);
+        }
+
         if (command.IsNutritionAutoCalculated)
         {
             var nutritionResult = await CalculateNutritionAsync(meal, command.UserId.Value, cancellationToken);

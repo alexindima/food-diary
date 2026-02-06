@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using FoodDiary.Domain.Common;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
@@ -36,10 +37,13 @@ public sealed class Meal : AggregateRoot<MealId> {
     public User User { get; private set; } = null!;
     private readonly List<MealItem> _items = new();
     public IReadOnlyCollection<MealItem> Items => _items.AsReadOnly();
+    private readonly List<MealAiSession> _aiSessions = new();
+    public IReadOnlyCollection<MealAiSession> AiSessions => _aiSessions.AsReadOnly();
 
     // Конструктор для EF Core
     private Meal() {
         _items = new List<MealItem>();
+        _aiSessions = new List<MealAiSession>();
     }
 
     // Factory method для создания приема пищи
@@ -117,6 +121,46 @@ public sealed class Meal : AggregateRoot<MealId> {
 
     public void ClearItems() {
         _items.Clear();
+        SetModified();
+    }
+
+    public MealAiSession AddAiSession(
+        ImageAssetId? imageAssetId,
+        DateTime recognizedAtUtc,
+        string? notes,
+        IReadOnlyList<MealAiItemData> items)
+    {
+        var session = MealAiSession.Create(Id, imageAssetId, recognizedAtUtc, notes);
+        _aiSessions.Add(session);
+        if (items.Count > 0)
+        {
+            var createdItems = items
+                .Select(item => MealAiItem.Create(
+                    item.NameEn,
+                    item.NameLocal,
+                    item.Amount,
+                    item.Unit,
+                    item.Calories,
+                    item.Proteins,
+                    item.Fats,
+                    item.Carbs,
+                    item.Fiber,
+                    item.Alcohol))
+                .ToList();
+
+            foreach (var item in createdItems)
+            {
+                item.AttachToSession(session.Id);
+            }
+            session.AddItems(createdItems);
+        }
+        SetModified();
+        return session;
+    }
+
+    public void ClearAiSessions()
+    {
+        _aiSessions.Clear();
         SetModified();
     }
 

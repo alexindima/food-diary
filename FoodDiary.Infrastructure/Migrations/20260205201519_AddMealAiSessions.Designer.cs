@@ -3,6 +3,7 @@ using System;
 using FoodDiary.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FoodDiary.Infrastructure.Migrations
 {
     [DbContext(typeof(FoodDiaryDbContext))]
-    partial class FoodDiaryDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260205201519_AddMealAiSessions")]
+    partial class AddMealAiSessions
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -347,12 +350,8 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.Property<DateTime?>("ModifiedOnUtc")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("NameEn")
+                    b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
-
-                    b.Property<string>("NameLocal")
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
 

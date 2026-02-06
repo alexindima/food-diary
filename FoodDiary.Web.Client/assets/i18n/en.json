@@ -815,7 +815,8 @@
             "REANALYZE_ACTION": "Recognize again",
             "NUTRITION_TITLE": "Nutrition summary",
             "NUTRITION_LOADING": "Calculating nutrition?",
-            "NUTRITION_ERROR": "Failed to calculate nutrition. Please try again."
+            "NUTRITION_ERROR": "Failed to calculate nutrition. Please try again.",
+            "STATUS_NUTRITION": "Calculating nutrition"
         },
         "ITEM_CARD_PLACEHOLDER": "Entry #{{index}}",
         "ITEM_CARD_META": {
@@ -852,7 +853,8 @@
         "SATIETY_PLACEHOLDER_DESCRIPTION": "Tap to set a level.",
         "ITEMS_ADDED_TITLE": "Added items",
         "ITEMS_AI_TITLE": "Recognized from photo",
-        "ITEMS_AI_HINT": "Upload a meal photo to recognize items automatically."
+        "ITEMS_AI_HINT": "Upload a meal photo to recognize items automatically.",
+        "ITEMS_AI_SUMMARY": "Recognized: {{count}} items"
     },
     "HUNGER_SCALE": {
         "LEVEL_0": {

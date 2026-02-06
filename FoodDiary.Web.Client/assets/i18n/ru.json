@@ -780,7 +780,8 @@
             "REANALYZE_ACTION": "Распознать заново",
             "NUTRITION_TITLE": "Итого по нутриентам",
             "NUTRITION_LOADING": "Считаем нутриенты…",
-            "NUTRITION_ERROR": "Не удалось рассчитать нутриенты. Попробуйте ещё раз."
+            "NUTRITION_ERROR": "Не удалось рассчитать нутриенты. Попробуйте ещё раз.",
+            "STATUS_NUTRITION": "Расчет нутриентов"
         },
         "ITEM_CARD_PLACEHOLDER": "Позиция №{{index}}",
         "ITEM_CARD_META": {
@@ -817,7 +818,8 @@
         "SATIETY_PLACEHOLDER_DESCRIPTION": "Нажмите, чтобы выбрать уровень.",
         "ITEMS_ADDED_TITLE": "Добавленные позиции",
         "ITEMS_AI_TITLE": "Распознано по фото",
-        "ITEMS_AI_HINT": "Загрузите фото приёма пищи, чтобы распознать позиции автоматически."
+        "ITEMS_AI_HINT": "Загрузите фото приёма пищи, чтобы распознать позиции автоматически.",
+        "ITEMS_AI_SUMMARY": "Распознанных позиций: {{count}}"
     },
     "HUNGER_SCALE": {
         "LEVEL_0": {

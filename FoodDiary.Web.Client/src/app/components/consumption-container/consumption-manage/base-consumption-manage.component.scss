@@ -489,6 +489,49 @@
         color: $color-text-additional;
     }
 
+    &__ai-summary {
+        display: flex;
+        flex-direction: column;
+        gap: $gap-s;
+        padding: $gap-s $gap-m;
+        border: 1px solid rgba(148, 163, 184, 0.2);
+        border-radius: $border-radius-l;
+        background: rgba(248, 250, 252, 0.6);
+    }
+
+    &__ai-summary-title {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: $color-text-additional;
+    }
+
+    &__ai-summary-list {
+        display: flex;
+        flex-direction: column;
+        gap: $gap-xs;
+    }
+
+    &__ai-summary-row {
+        display: flex;
+        justify-content: space-between;
+        gap: $gap-m;
+        font-size: 0.95rem;
+        color: $color-text-main;
+    }
+
+    &__ai-summary-name {
+        flex: 1;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    &__ai-summary-amount {
+        font-variant-numeric: tabular-nums;
+        color: $color-text-additional;
+    }
+
 }
 
 .consumption-items {

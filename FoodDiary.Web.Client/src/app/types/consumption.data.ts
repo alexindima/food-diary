@@ -24,6 +24,7 @@ export interface Consumption {
     preMealSatietyLevel?: number | null;
     postMealSatietyLevel?: number | null;
     items: ConsumptionItem[];
+    aiSessions?: ConsumptionAiSession[];
 }
 
 export interface ConsumptionItem {
@@ -33,6 +34,30 @@ export interface ConsumptionItem {
     sourceType: ConsumptionSourceType;
     product?: Product | null;
     recipe?: Recipe | null;
+}
+
+export interface ConsumptionAiSession {
+    id: string;
+    consumptionId: string;
+    imageAssetId?: string | null;
+    recognizedAtUtc: string;
+    notes?: string | null;
+    items: ConsumptionAiItem[];
+}
+
+export interface ConsumptionAiItem {
+    id: string;
+    sessionId: string;
+    nameEn: string;
+    nameLocal?: string | null;
+    amount: number;
+    unit: string;
+    calories: number;
+    proteins: number;
+    fats: number;
+    carbs: number;
+    fiber: number;
+    alcohol: number;
 }
 
 export interface ConsumptionResponseDto {
@@ -58,6 +83,7 @@ export interface ConsumptionResponseDto {
     preMealSatietyLevel?: number | null;
     postMealSatietyLevel?: number | null;
     items: ConsumptionItemResponseDto[];
+    aiSessions?: ConsumptionAiSessionResponseDto[];
 }
 
 export interface ConsumptionItemResponseDto {
@@ -83,6 +109,30 @@ export interface ConsumptionItemResponseDto {
     recipeTotalCarbs?: number | null;
     recipeTotalFiber?: number | null;
     recipeTotalAlcohol?: number | null;
+}
+
+export interface ConsumptionAiSessionResponseDto {
+    id: string;
+    consumptionId: string;
+    imageAssetId?: string | null;
+    recognizedAtUtc: string;
+    notes?: string | null;
+    items: ConsumptionAiItemResponseDto[];
+}
+
+export interface ConsumptionAiItemResponseDto {
+    id: string;
+    sessionId: string;
+    nameEn: string;
+    nameLocal?: string | null;
+    amount: number;
+    unit: string;
+    calories: number;
+    proteins: number;
+    fats: number;
+    carbs: number;
+    fiber: number;
+    alcohol: number;
 }
 
 export enum ConsumptionSourceType {
@@ -111,12 +161,33 @@ export interface ConsumptionManageDto {
     manualAlcohol?: number | null;
     preMealSatietyLevel?: number | null;
     postMealSatietyLevel?: number | null;
+    aiSessions?: ConsumptionAiSessionManageDto[];
 }
 
 export interface ConsumptionItemManageDto {
     productId?: string | null;
     recipeId?: string | null;
     amount: number;
+}
+
+export interface ConsumptionAiSessionManageDto {
+    imageAssetId?: string | null;
+    recognizedAtUtc?: string | null;
+    notes?: string | null;
+    items: ConsumptionAiItemManageDto[];
+}
+
+export interface ConsumptionAiItemManageDto {
+    nameEn: string;
+    nameLocal?: string | null;
+    amount: number;
+    unit: string;
+    calories: number;
+    proteins: number;
+    fats: number;
+    carbs: number;
+    fiber: number;
+    alcohol: number;
 }
 
 export const createEmptyProductSnapshot = (): Product => ({

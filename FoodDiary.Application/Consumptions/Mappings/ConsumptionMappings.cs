@@ -38,6 +38,32 @@ public static class ConsumptionMappings
                 item.Recipe?.TotalAlcohol))
             .ToList();
 
+        var aiSessions = meal.AiSessions
+            .OrderBy(s => s.RecognizedAtUtc)
+            .Select(session => new ConsumptionAiSessionResponse(
+                session.Id.Value,
+                session.MealId.Value,
+                session.ImageAssetId?.Value,
+                session.RecognizedAtUtc,
+                session.Notes,
+                session.Items
+                    .OrderBy(i => i.Id.Value)
+                    .Select(aiItem => new ConsumptionAiItemResponse(
+                        aiItem.Id.Value,
+                        aiItem.MealAiSessionId.Value,
+                        aiItem.NameEn,
+                        aiItem.NameLocal,
+                        aiItem.Amount,
+                        aiItem.Unit,
+                        aiItem.Calories,
+                        aiItem.Proteins,
+                        aiItem.Fats,
+                        aiItem.Carbs,
+                        aiItem.Fiber,
+                        aiItem.Alcohol))
+                    .ToList()))
+            .ToList();
+
         return new ConsumptionResponse(
             meal.Id.Value,
             meal.Date,
@@ -60,7 +86,8 @@ public static class ConsumptionMappings
             meal.ManualAlcohol,
             meal.PreMealSatietyLevel,
             meal.PostMealSatietyLevel,
-            items);
+            items,
+            aiSessions);
     }
 
     public static PagedResponse<ConsumptionResponse> ToPagedResponse(

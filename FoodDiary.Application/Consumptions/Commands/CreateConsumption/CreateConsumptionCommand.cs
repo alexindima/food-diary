@@ -16,6 +16,7 @@ public record CreateConsumptionCommand(
     string? ImageUrl,
     Guid? ImageAssetId,
     IReadOnlyList<ConsumptionItemInput> Items,
+    IReadOnlyList<ConsumptionAiSessionInput> AiSessions,
     bool IsNutritionAutoCalculated,
     double? ManualCalories,
     double? ManualProteins,

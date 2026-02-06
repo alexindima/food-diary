@@ -16,6 +16,8 @@ public class FoodDiaryDbContext : DbContext
     public DbSet<Product> Products => Set<Product>();
     public DbSet<Meal> Meals => Set<Meal>();
     public DbSet<MealItem> MealItems => Set<MealItem>();
+    public DbSet<MealAiSession> MealAiSessions => Set<MealAiSession>();
+    public DbSet<MealAiItem> MealAiItems => Set<MealAiItem>();
     public DbSet<Recipe> Recipes => Set<Recipe>();
     public DbSet<RecipeStep> RecipeSteps => Set<RecipeStep>();
     public DbSet<RecipeIngredient> RecipeIngredients => Set<RecipeIngredient>();
@@ -191,6 +193,14 @@ public class FoodDiaryDbContext : DbContext
                 .HasForeignKey(e => e.ImageAssetId)
                 .IsRequired(false)
                 .OnDelete(DeleteBehavior.SetNull);
+
+            entity.HasMany(e => e.AiSessions)
+                .WithOne(s => s.Meal)
+                .HasForeignKey(s => s.MealId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.Navigation(e => e.AiSessions)
+                .UsePropertyAccessMode(PropertyAccessMode.Field);
         });
 
         // Recipe configuration
@@ -265,6 +275,61 @@ public class FoodDiaryDbContext : DbContext
             // XOR check constraint будет в миграции: CHECK ((ProductId IS NULL) <> (RecipeId IS NULL))
         });
 
+        modelBuilder.Entity<MealAiSession>(entity =>
+        {
+            entity.Property(e => e.Id)
+                .HasConversion(
+                    id => id.Value,
+                    value => new MealAiSessionId(value))
+                .ValueGeneratedNever();
+
+            entity.Property(e => e.MealId).HasConversion(
+                id => id.Value,
+                value => new MealId(value));
+
+            entity.Property(e => e.ImageAssetId).HasConversion(
+                id => id.HasValue ? id.Value.Value : (Guid?)null,
+                value => value.HasValue ? new ImageAssetId(value.Value) : null);
+
+            entity.Property(e => e.RecognizedAtUtc)
+                .HasColumnType("timestamp with time zone");
+
+            entity.Property(e => e.Notes)
+                .HasMaxLength(2048);
+
+            entity.HasMany(e => e.Items)
+                .WithOne(i => i.Session)
+                .HasForeignKey(i => i.MealAiSessionId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.Navigation(e => e.Items)
+                .UsePropertyAccessMode(PropertyAccessMode.Field);
+        });
+
+        modelBuilder.Entity<MealAiItem>(entity =>
+        {
+            entity.Property(e => e.Id)
+                .HasConversion(
+                    id => id.Value,
+                    value => new MealAiItemId(value))
+                .ValueGeneratedNever();
+
+            entity.Property(e => e.MealAiSessionId).HasConversion(
+                id => id.Value,
+                value => new MealAiSessionId(value));
+
+            entity.Property(e => e.NameEn)
+                .IsRequired()
+                .HasMaxLength(256);
+
+            entity.Property(e => e.NameLocal)
+                .HasMaxLength(256);
+
+            entity.Property(e => e.Unit)
+                .IsRequired()
+                .HasMaxLength(32);
+        });
+
         // RecipeStep configuration
         modelBuilder.Entity<RecipeStep>(entity =>
         {
@@ -290,6 +355,7 @@ public class FoodDiaryDbContext : DbContext
                 .HasForeignKey(e => e.ImageAssetId)
                 .IsRequired(false)
                 .OnDelete(DeleteBehavior.SetNull);
+
         });
 
         modelBuilder.Entity<RecipeIngredient>(entity =>

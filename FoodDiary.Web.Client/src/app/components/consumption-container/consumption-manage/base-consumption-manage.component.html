@@ -208,6 +208,26 @@
                             <p class="consumption-manage__items-hint">
                                 {{ 'CONSUMPTION_MANAGE.ITEMS_AI_HINT' | translate }}
                             </p>
+                            @if (aiSessions().length) {
+                                @let latestSession = aiSessions()[aiSessions().length - 1];
+                                <div class="consumption-manage__ai-summary">
+                                    <div class="consumption-manage__ai-summary-title">
+                                        {{ 'CONSUMPTION_MANAGE.ITEMS_AI_SUMMARY' | translate:{ count: latestSession.items.length } }}
+                                    </div>
+                                    <div class="consumption-manage__ai-summary-list">
+                                        @for (aiItem of latestSession.items; track aiItem; let idx = $index) {
+                                            <div class="consumption-manage__ai-summary-row">
+                                                <span class="consumption-manage__ai-summary-name">
+                                                    {{ aiItem.nameLocal || aiItem.nameEn }}
+                                                </span>
+                                                <span class="consumption-manage__ai-summary-amount">
+                                                    {{ formatAiAmount(aiItem.amount, aiItem.unit) }}
+                                                </span>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            }
                             <div class="consumption-item__actions consumption-item__actions--stack">
                                 <fd-ui-button
                                     type="button"

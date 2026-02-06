@@ -8,6 +8,7 @@ import { ImageUploadFieldComponent } from '../../shared/image-upload-field/image
 import { ImageSelection } from '../../../types/image-upload.data';
 import { AiFoodService } from '../../../services/ai-food.service';
 import { FoodNutritionResponse, FoodVisionItem } from '../../../types/ai.data';
+import { ConsumptionAiSessionManageDto } from '../../../types/consumption.data';
 import { FdUiDialogRef, FdUiIconModule } from 'fd-ui-kit/material';
 import { catchError, of } from 'rxjs';
 
@@ -31,7 +32,7 @@ export class ConsumptionPhotoRecognitionDialogComponent {
     private readonly aiFoodService = inject(AiFoodService);
     private readonly translateService = inject(TranslateService);
     private readonly dialogRef = inject(
-        FdUiDialogRef<ConsumptionPhotoRecognitionDialogComponent, FoodVisionItem[] | null>,
+        FdUiDialogRef<ConsumptionPhotoRecognitionDialogComponent, ConsumptionAiSessionManageDto | null>,
         { optional: true },
     );
 
@@ -50,6 +51,10 @@ export class ConsumptionPhotoRecognitionDialogComponent {
 
         if (this.isLoading()) {
             return 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.STATUS_ANALYZING';
+        }
+
+        if (this.isNutritionLoading()) {
+            return 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.STATUS_NUTRITION';
         }
 
         if (this.hasAnalyzed()) {
@@ -140,11 +145,58 @@ export class ConsumptionPhotoRecognitionDialogComponent {
     }
 
     public addToMeal(): void {
-        return;
+        const session = this.buildSessionPayload();
+        if (!session) {
+            return;
+        }
+        this.dialogRef?.close(session);
     }
 
     public close(): void {
         this.dialogRef?.close(null);
+    }
+
+    private buildSessionPayload(): ConsumptionAiSessionManageDto | null {
+        const nutrition = this.nutrition();
+        if (!nutrition) {
+            return null;
+        }
+
+        const assetId = this.selection()?.assetId ?? null;
+        const items = nutrition.items?.map(item => {
+            const match = this.findVisionMatch(item.name);
+            return {
+                nameEn: match?.nameEn ?? item.name,
+                nameLocal: match?.nameLocal ?? null,
+                amount: item.amount,
+                unit: item.unit,
+                calories: item.calories,
+                proteins: item.protein,
+                fats: item.fat,
+                carbs: item.carbs,
+                fiber: item.fiber,
+                alcohol: item.alcohol,
+            };
+        }) ?? [];
+
+        return {
+            imageAssetId: assetId,
+            recognizedAtUtc: new Date().toISOString(),
+            notes: nutrition.notes ?? null,
+            items,
+        };
+    }
+
+    private findVisionMatch(name: string | null | undefined): FoodVisionItem | null {
+        if (!name) {
+            return null;
+        }
+
+        const normalized = name.trim().toLowerCase();
+        return this.results().find(item =>
+            item.nameEn?.trim().toLowerCase() === normalized
+            || item.nameLocal?.trim().toLowerCase() === normalized
+        ) ?? null;
     }
 
     private runAnalysis(assetId: string): void {

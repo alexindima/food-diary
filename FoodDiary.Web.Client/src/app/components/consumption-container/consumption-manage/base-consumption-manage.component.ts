@@ -20,6 +20,7 @@ import {
 } from '../consumption-item-select-dialog/consumption-item-select-dialog.component';
 import {
     Consumption,
+    ConsumptionAiSessionManageDto,
     ConsumptionItemManageDto,
     ConsumptionManageDto,
     ConsumptionSourceType,
@@ -150,6 +151,7 @@ export class BaseConsumptionManageComponent implements OnInit {
         carbs: 0,
     });
     public globalError = signal<string | null>(null);
+    public aiSessions = signal<ConsumptionAiSessionManageDto[]>([]);
 
     public consumptionForm: FormGroup<ConsumptionFormData>;
     public readonly mealTypeOptions = ['BREAKFAST', 'LUNCH', 'DINNER', 'SNACK', 'OTHER'] as const;
@@ -383,9 +385,39 @@ export class BaseConsumptionManageComponent implements OnInit {
     }
 
     public onAddConsumptionFromPhoto(): void {
-        this.fdDialogService.open(ConsumptionPhotoRecognitionDialogComponent, {
-            size: 'lg',
-        });
+        this.fdDialogService
+            .open<ConsumptionPhotoRecognitionDialogComponent, never, ConsumptionAiSessionManageDto | null>(
+                ConsumptionPhotoRecognitionDialogComponent,
+                { size: 'lg' },
+            )
+            .afterClosed()
+            .subscribe(session => {
+                if (!session) {
+                    return;
+                }
+                this.aiSessions.update(current => [...current, session]);
+            });
+    }
+
+    public formatAiAmount(amount: number, unit: string): string {
+        const normalized = unit?.trim().toLowerCase();
+        const unitMap: Record<string, string> = {
+            g: 'GENERAL.UNITS.G',
+            gram: 'GENERAL.UNITS.G',
+            grams: 'GENERAL.UNITS.G',
+            gr: 'GENERAL.UNITS.G',
+            ml: 'GENERAL.UNITS.ML',
+            l: 'GENERAL.UNITS.ML',
+            pcs: 'GENERAL.UNITS.PCS',
+            pc: 'GENERAL.UNITS.PCS',
+            piece: 'GENERAL.UNITS.PCS',
+            pieces: 'GENERAL.UNITS.PCS',
+            kcal: 'GENERAL.UNITS.KCAL',
+        };
+
+        const unitKey = normalized ? unitMap[normalized] : null;
+        const unitLabel = unitKey ? this.translateService.instant(unitKey) : unit;
+        return unitLabel ? `${amount} ${unitLabel}`.trim() : `${amount}`.trim();
     }
 
     public removeItem(index: number): void {
@@ -605,6 +637,7 @@ export class BaseConsumptionManageComponent implements OnInit {
             imageUrl: image?.url ?? undefined,
             imageAssetId: image?.assetId ?? undefined,
             items: mappedItems,
+            aiSessions: this.aiSessions(),
             isNutritionAutoCalculated,
             manualCalories: isNutritionAutoCalculated ? undefined : manualTotals.calories,
             manualProteins: isNutritionAutoCalculated ? undefined : manualTotals.proteins,
@@ -655,6 +688,7 @@ export class BaseConsumptionManageComponent implements OnInit {
             preMealSatietyLevel: consumption.preMealSatietyLevel ?? null,
             postMealSatietyLevel: consumption.postMealSatietyLevel ?? null,
         });
+        this.aiSessions.set(consumption.aiSessions ?? []);
 
         const itemsArray = this.items;
         itemsArray.clear();
@@ -856,6 +890,7 @@ export class BaseConsumptionManageComponent implements OnInit {
                     });
                     this.items.clear();
                     this.items.push(this.createConsumptionItem());
+                    this.aiSessions.set([]);
                 }
             await this.showConfirmDialog();
         } else {

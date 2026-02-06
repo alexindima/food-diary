@@ -9,6 +9,7 @@ using FoodDiary.Application.Consumptions.Common;
 using FoodDiary.Application.Consumptions.Mappings;
 using FoodDiary.Application.Consumptions.Services;
 using FoodDiary.Contracts.Consumptions;
+using FoodDiary.Domain.Entities;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
 
@@ -70,6 +71,7 @@ public class UpdateConsumptionCommandHandler(
 
         meal.UpdateSatietyLevels(command.PreMealSatietyLevel, command.PostMealSatietyLevel);
         meal.ClearItems();
+        meal.ClearAiSessions();
 
         foreach (var item in command.Items)
         {
@@ -87,6 +89,29 @@ public class UpdateConsumptionCommandHandler(
             {
                 meal.AddRecipe(new RecipeId(item.RecipeId.Value), item.Amount);
             }
+        }
+
+        foreach (var session in command.AiSessions)
+        {
+            var sessionItems = session.Items
+                .Select(aiItem => new MealAiItemData(
+                    aiItem.NameEn,
+                    aiItem.NameLocal,
+                    aiItem.Amount,
+                    aiItem.Unit,
+                    aiItem.Calories,
+                    aiItem.Proteins,
+                    aiItem.Fats,
+                    aiItem.Carbs,
+                    aiItem.Fiber,
+                    aiItem.Alcohol))
+                .ToList();
+
+            meal.AddAiSession(
+                session.ImageAssetId.HasValue ? new ImageAssetId(session.ImageAssetId.Value) : null,
+                session.RecognizedAtUtc ?? System.DateTime.UtcNow,
+                session.Notes,
+                sessionItems);
         }
 
         if (command.IsNutritionAutoCalculated)

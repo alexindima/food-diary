@@ -10,6 +10,7 @@ public record CreateConsumptionRequest(
     string? ImageUrl,
     Guid? ImageAssetId,
     IReadOnlyList<ConsumptionItemRequest> Items,
+    IReadOnlyList<ConsumptionAiSessionRequest>? AiSessions = null,
     bool IsNutritionAutoCalculated = true,
     double? ManualCalories = null,
     double? ManualProteins = null,
@@ -27,6 +28,7 @@ public record UpdateConsumptionRequest(
     string? ImageUrl,
     Guid? ImageAssetId,
     IReadOnlyList<ConsumptionItemRequest> Items,
+    IReadOnlyList<ConsumptionAiSessionRequest>? AiSessions = null,
     bool IsNutritionAutoCalculated = true,
     double? ManualCalories = null,
     double? ManualProteins = null,
@@ -41,3 +43,21 @@ public record ConsumptionItemRequest(
     Guid? ProductId,
     Guid? RecipeId,
     double Amount);
+
+public record ConsumptionAiSessionRequest(
+    Guid? ImageAssetId,
+    DateTime? RecognizedAtUtc,
+    string? Notes,
+    IReadOnlyList<ConsumptionAiItemRequest> Items);
+
+public record ConsumptionAiItemRequest(
+    string NameEn,
+    string? NameLocal,
+    double Amount,
+    string Unit,
+    double Calories,
+    double Proteins,
+    double Fats,
+    double Carbs,
+    double Fiber,
+    double Alcohol);

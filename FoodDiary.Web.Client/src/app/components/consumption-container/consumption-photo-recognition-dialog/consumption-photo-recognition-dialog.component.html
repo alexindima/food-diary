@@ -23,9 +23,9 @@
                 </div>
             }
 
-            @if (isLoading()) {
+            @if (isLoading() || isNutritionLoading()) {
                 <div class="photo-ai-dialog__scan-overlay">
-                    <div class="photo-ai-dialog__scan-line"></div>
+                    <div class="photo-ai-dialog__scan-line" [class.photo-ai-dialog__scan-line--nutrition]="isNutritionLoading()"></div>
                 </div>
             }
         </div>
@@ -81,14 +81,7 @@
                         </div>
                     </div>
 
-                    @if (isNutritionLoading()) {
-                        <div class="photo-ai-dialog__nutrition-loading">
-                            <div class="photo-ai-dialog__nutrition-bar"></div>
-                            <div class="photo-ai-dialog__nutrition-text">
-                                {{ 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.NUTRITION_LOADING' | translate }}
-                            </div>
-                        </div>
-                    } @else {
+                    @if (!isNutritionLoading()) {
                         @if (nutrition()) {
                             <div class="photo-ai-dialog__nutrition">
                                 <div class="photo-ai-dialog__nutrition-title">

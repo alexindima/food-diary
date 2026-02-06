@@ -25,7 +25,8 @@ public record ConsumptionResponse(
     double? ManualAlcohol,
     int PreMealSatietyLevel,
     int PostMealSatietyLevel,
-    IReadOnlyList<ConsumptionItemResponse> Items);
+    IReadOnlyList<ConsumptionItemResponse> Items,
+    IReadOnlyList<ConsumptionAiSessionResponse> AiSessions);
 
 public record ConsumptionItemResponse(
     Guid Id,
@@ -50,3 +51,25 @@ public record ConsumptionItemResponse(
     double? RecipeTotalCarbs,
     double? RecipeTotalFiber,
     double? RecipeTotalAlcohol);
+
+public record ConsumptionAiSessionResponse(
+    Guid Id,
+    Guid ConsumptionId,
+    Guid? ImageAssetId,
+    DateTime RecognizedAtUtc,
+    string? Notes,
+    IReadOnlyList<ConsumptionAiItemResponse> Items);
+
+public record ConsumptionAiItemResponse(
+    Guid Id,
+    Guid SessionId,
+    string NameEn,
+    string? NameLocal,
+    double Amount,
+    string Unit,
+    double Calories,
+    double Proteins,
+    double Fats,
+    double Carbs,
+    double Fiber,
+    double Alcohol);

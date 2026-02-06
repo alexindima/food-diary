@@ -87,6 +87,34 @@ public readonly record struct MealItemId(Guid Value) : IEntityId<Guid>
 }
 
 /// <summary>
+/// Identifier for AI recognition session within a meal.
+/// </summary>
+public readonly record struct MealAiSessionId(Guid Value) : IEntityId<Guid>
+{
+    public static MealAiSessionId New() => new(Guid.NewGuid());
+    public static MealAiSessionId Empty => new(Guid.Empty);
+
+    public static implicit operator Guid(MealAiSessionId id) => id.Value;
+    public static explicit operator MealAiSessionId(Guid value) => new(value);
+
+    public override string ToString() => Value.ToString();
+}
+
+/// <summary>
+/// Identifier for AI recognized item within a session.
+/// </summary>
+public readonly record struct MealAiItemId(Guid Value) : IEntityId<Guid>
+{
+    public static MealAiItemId New() => new(Guid.NewGuid());
+    public static MealAiItemId Empty => new(Guid.Empty);
+
+    public static implicit operator Guid(MealAiItemId id) => id.Value;
+    public static explicit operator MealAiItemId(Guid value) => new(value);
+
+    public override string ToString() => Value.ToString();
+}
+
+/// <summary>
 /// Строготипизированный идентификатор шага рецепта
 /// </summary>
 public readonly record struct RecipeStepId(Guid Value) : IEntityId<Guid>

@@ -6,6 +6,8 @@ import {
     ConsumptionFilters,
     ConsumptionItem,
     ConsumptionItemResponseDto,
+    ConsumptionAiSession,
+    ConsumptionAiSessionResponseDto,
     ConsumptionManageDto,
     ConsumptionResponseDto,
     ConsumptionSourceType,
@@ -92,6 +94,7 @@ export class ConsumptionService extends ApiService {
             preMealSatietyLevel: response.preMealSatietyLevel ?? 0,
             postMealSatietyLevel: response.postMealSatietyLevel ?? 0,
             items: response.items.map(item => this.mapConsumptionItem(item)),
+            aiSessions: response.aiSessions?.map(session => this.mapAiSession(session)) ?? [],
         };
     }
 
@@ -141,6 +144,30 @@ export class ConsumptionService extends ApiService {
             totalCarbs: response.recipeTotalCarbs ?? 0,
             totalFiber: response.recipeTotalFiber ?? 0,
             totalAlcohol: response.recipeTotalAlcohol ?? 0,
+        };
+    }
+
+    private mapAiSession(response: ConsumptionAiSessionResponseDto): ConsumptionAiSession {
+        return {
+            id: response.id,
+            consumptionId: response.consumptionId,
+            imageAssetId: response.imageAssetId ?? null,
+            recognizedAtUtc: response.recognizedAtUtc,
+            notes: response.notes ?? null,
+            items: response.items.map(item => ({
+                id: item.id,
+                sessionId: item.sessionId,
+                nameEn: item.nameEn,
+                nameLocal: item.nameLocal ?? null,
+                amount: item.amount,
+                unit: item.unit,
+                calories: item.calories,
+                proteins: item.proteins,
+                fats: item.fats,
+                carbs: item.carbs,
+                fiber: item.fiber,
+                alcohol: item.alcohol,
+            })),
         };
     }
 
