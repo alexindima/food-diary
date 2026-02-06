@@ -492,11 +492,12 @@
     &__ai-summary {
         display: flex;
         flex-direction: column;
-        gap: $gap-s;
-        padding: $gap-s $gap-m;
+        gap: $gap-m;
+        padding: $gap-m;
         border: 1px solid rgba(148, 163, 184, 0.2);
-        border-radius: $border-radius-l;
-        background: rgba(248, 250, 252, 0.6);
+        border-radius: 20px;
+        background: #ffffff;
+        box-shadow: 0 14px 30px rgba(15, 23, 42, 0.06);
     }
 
     &__ai-summary-listing {
@@ -507,15 +508,54 @@
 
     &__ai-summary-header {
         display: flex;
-        align-items: center;
+        align-items: flex-start;
         justify-content: space-between;
         gap: $gap-s;
     }
 
+    &__ai-summary-heading {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        flex: 1;
+        min-width: 0;
+    }
+
     &__ai-summary-title {
         font-size: 0.85rem;
-        font-weight: 600;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: #64748b;
+    }
+
+    &__ai-summary-stats {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        font-size: 0.9rem;
         color: $color-text-additional;
+    }
+
+    &__ai-summary-calories {
+        display: inline-flex;
+        align-items: baseline;
+        gap: 6px;
+        color: $color-text-main;
+        font-weight: 600;
+    }
+
+    &__ai-summary-label {
+        color: $color-text-additional;
+        font-weight: 600;
+    }
+
+    &__ai-summary-nutrients {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        color: $color-text-additional;
+        font-weight: 500;
     }
 
     &__ai-summary-actions {
@@ -562,11 +602,11 @@
     }
 
     &__ai-summary-image {
-        width: 88px;
-        height: 88px;
-        flex: 0 0 88px;
-        border-radius: 14px;
-        background: rgba(148, 163, 184, 0.15);
+        width: 64px;
+        height: 64px;
+        flex: 0 0 64px;
+        border-radius: 16px;
+        background: rgba(148, 163, 184, 0.12);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -607,6 +647,7 @@
         font-variant-numeric: tabular-nums;
         color: $color-text-additional;
     }
+
 
 }
 

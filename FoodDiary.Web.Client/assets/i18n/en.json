@@ -857,7 +857,8 @@
         "ITEMS_AI_HINT": "Upload a meal photo to recognize items automatically.",
         "ITEMS_AI_SUMMARY": "Recognized: {{count}} items",
         "ITEMS_AI_EDIT": "Edit recognition",
-        "ITEMS_AI_DELETE": "Remove recognition"
+        "ITEMS_AI_DELETE": "Remove recognition",
+        "ITEMS_AI_PHOTO_LABEL": "Photo {{index}}"
     },
     "HUNGER_SCALE": {
         "LEVEL_0": {

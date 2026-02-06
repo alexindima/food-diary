@@ -463,6 +463,49 @@ export class BaseConsumptionManageComponent implements OnInit {
         return unitLabel ? `${amount} ${unitLabel}`.trim() : `${amount}`.trim();
     }
 
+    public formatAiName(name?: string | null): string {
+        if (!name) {
+            return '';
+        }
+
+        const trimmed = name.trim();
+        if (!trimmed) {
+            return '';
+        }
+
+        const [first, ...rest] = trimmed;
+        return `${first.toLocaleUpperCase()}${rest.join('')}`;
+    }
+
+    public getAiSessionLabel(index: number): string {
+        return this.translateService.instant('CONSUMPTION_MANAGE.ITEMS_AI_PHOTO_LABEL', { index: index + 1 });
+    }
+
+    public getAiSessionTotals(session: ConsumptionAiSessionManageDto): NutritionTotals {
+        return session.items.reduce(
+            (totals, item) => ({
+                calories: totals.calories + (item.calories ?? 0),
+                proteins: totals.proteins + (item.proteins ?? 0),
+                fats: totals.fats + (item.fats ?? 0),
+                carbs: totals.carbs + (item.carbs ?? 0),
+                fiber: totals.fiber + (item.fiber ?? 0),
+                alcohol: totals.alcohol + (item.alcohol ?? 0),
+            }),
+            { calories: 0, proteins: 0, fats: 0, carbs: 0, fiber: 0, alcohol: 0 }
+        );
+    }
+
+    public formatAiMacro(value: number, unitKey: string): string {
+        const locale = this.translateService.currentLang || this.translateService.defaultLang || 'en';
+        const hasFraction = Math.abs(value % 1) > 0.01;
+        const formatter = new Intl.NumberFormat(locale, {
+            maximumFractionDigits: hasFraction ? 1 : 0,
+            minimumFractionDigits: hasFraction ? 1 : 0,
+        });
+        const unitLabel = this.translateService.instant(unitKey);
+        return `${formatter.format(value)} ${unitLabel}`.trim();
+    }
+
     private loadAiUsage(): void {
         this.aiFoodService.getUsageSummary().subscribe({
             next: usage => this.aiUsage.set(usage),

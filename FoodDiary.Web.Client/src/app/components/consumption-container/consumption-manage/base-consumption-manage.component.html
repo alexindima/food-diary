@@ -211,10 +211,42 @@
                             @if (aiSessions().length) {
                                 <div class="consumption-manage__ai-summary-listing">
                                     @for (session of aiSessions(); track session; let idx = $index) {
+                                        @let totals = getAiSessionTotals(session);
                                         <div class="consumption-manage__ai-summary">
                                             <div class="consumption-manage__ai-summary-header">
-                                                <div class="consumption-manage__ai-summary-title">
-                                                    {{ 'CONSUMPTION_MANAGE.ITEMS_AI_SUMMARY' | translate:{ count: session.items.length } }}
+                                                <div class="consumption-manage__ai-summary-image">
+                                                    @if (session.imageUrl) {
+                                                        <img [src]="session.imageUrl" alt="" loading="lazy" />
+                                                    } @else {
+                                                        <mat-icon fontIcon="photo_camera"></mat-icon>
+                                                    }
+                                                </div>
+                                                <div class="consumption-manage__ai-summary-heading">
+                                                    <div class="consumption-manage__ai-summary-title">
+                                                        {{ 'CONSUMPTION_MANAGE.ITEMS_AI_SUMMARY' | translate:{ count: session.items.length } }}
+                                                    </div>
+                                                    <div class="consumption-manage__ai-summary-stats">
+                                                        <div class="consumption-manage__ai-summary-calories">
+                                                            <span class="consumption-manage__ai-summary-label">
+                                                                {{ 'GENERAL.NUTRIENTS.CALORIES' | translate }}:
+                                                            </span>
+                                                            <span>{{ formatAiMacro(totals.calories, 'GENERAL.UNITS.KCAL') }}</span>
+                                                        </div>
+                                                        <div class="consumption-manage__ai-summary-nutrients">
+                                                            <span>
+                                                                {{ 'GENERAL.NUTRIENTS.PROTEIN' | translate }}:
+                                                                {{ formatAiMacro(totals.proteins, 'GENERAL.UNITS.G') }}
+                                                            </span>
+                                                            <span>
+                                                                {{ 'GENERAL.NUTRIENTS.FAT' | translate }}:
+                                                                {{ formatAiMacro(totals.fats, 'GENERAL.UNITS.G') }}
+                                                            </span>
+                                                            <span>
+                                                                {{ 'GENERAL.NUTRIENTS.CARB' | translate }}:
+                                                                {{ formatAiMacro(totals.carbs, 'GENERAL.UNITS.G') }}
+                                                            </span>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                                 <div class="consumption-manage__ai-summary-actions">
                                                     <button
@@ -236,18 +268,11 @@
                                                 </div>
                                             </div>
                                             <div class="consumption-manage__ai-summary-body">
-                                                <div class="consumption-manage__ai-summary-image">
-                                                    @if (session.imageUrl) {
-                                                        <img [src]="session.imageUrl" alt="" loading="lazy" />
-                                                    } @else {
-                                                        <mat-icon fontIcon="photo_camera"></mat-icon>
-                                                    }
-                                                </div>
                                                 <div class="consumption-manage__ai-summary-list">
                                                     @for (aiItem of session.items; track aiItem; let itemIdx = $index) {
                                                         <div class="consumption-manage__ai-summary-row">
                                                             <span class="consumption-manage__ai-summary-name">
-                                                                {{ aiItem.nameLocal || aiItem.nameEn }}
+                                                                {{ formatAiName(aiItem.nameLocal || aiItem.nameEn) }}
                                                             </span>
                                                             <span class="consumption-manage__ai-summary-amount">
                                                                 {{ formatAiAmount(aiItem.amount, aiItem.unit) }}
