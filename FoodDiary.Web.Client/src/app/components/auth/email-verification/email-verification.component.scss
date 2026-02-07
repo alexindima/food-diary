@@ -1,0 +1,22 @@
+.email-verify {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 16px;
+}
+
+.email-verify__card {
+    width: min(520px, 100%);
+}
+
+.email-verify__description {
+    margin: 0 0 16px;
+    color: var(--fd-text-muted, #6b7280);
+    line-height: 1.5;
+}
+
+.email-verify__actions {
+    display: flex;
+    gap: 12px;
+}

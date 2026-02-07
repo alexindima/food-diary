@@ -1,0 +1,34 @@
+.email-verify-pending {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 16px;
+}
+
+.email-verify-pending__card {
+    width: min(520px, 100%);
+}
+
+.email-verify-pending__description {
+    margin: 0 0 16px;
+    color: var(--fd-text-muted, #6b7280);
+    line-height: 1.5;
+}
+
+.email-verify-pending__status {
+    margin-bottom: 16px;
+    font-weight: 500;
+}
+
+.email-verify-pending__actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-start;
+}
+
+.email-verify-pending__cooldown {
+    margin-top: 12px;
+    color: var(--fd-text-muted, #6b7280);
+    font-size: 0.9rem;
+}

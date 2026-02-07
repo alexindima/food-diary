@@ -7,6 +7,9 @@ using FoodDiary.Application.Authentication.Commands.TelegramLoginWidget;
 using FoodDiary.Application.Authentication.Commands.TelegramVerify;
 using FoodDiary.Application.Authentication.Commands.TelegramBotAuth;
 using FoodDiary.Application.Authentication.Commands.AdminSsoExchange;
+using FoodDiary.Application.Authentication.Commands.ConfirmPasswordReset;
+using FoodDiary.Application.Authentication.Commands.RequestPasswordReset;
+using FoodDiary.Application.Authentication.Commands.VerifyEmail;
 using FoodDiary.Contracts.Authentication;
 using FoodDiary.Domain.ValueObjects;
 
@@ -52,6 +55,21 @@ public static class AuthenticationMappings
     public static AdminSsoExchangeCommand ToCommand(this AdminSsoExchangeRequest request)
     {
         return new AdminSsoExchangeCommand(request.Code);
+    }
+
+    public static VerifyEmailCommand ToCommand(this VerifyEmailRequest request)
+    {
+        return new VerifyEmailCommand(new UserId(request.UserId), request.Token);
+    }
+
+    public static RequestPasswordResetCommand ToCommand(this RequestPasswordResetRequest request)
+    {
+        return new RequestPasswordResetCommand(request.Email);
+    }
+
+    public static ConfirmPasswordResetCommand ToCommand(this ConfirmPasswordResetRequest request)
+    {
+        return new ConfirmPasswordResetCommand(new UserId(request.UserId), request.Token, request.NewPassword);
     }
 
     public static TelegramLoginWidgetCommand ToCommand(this TelegramLoginWidgetRequest request)

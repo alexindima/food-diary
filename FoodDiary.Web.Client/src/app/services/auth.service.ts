@@ -20,8 +20,10 @@ export class AuthService extends ApiService {
 
     private authTokenSignal = signal<string | null>(this.getToken());
     private userSignal = signal<string | null>(this.loadUserId());
+    private emailConfirmedSignal = signal<boolean | null>(this.loadEmailConfirmed());
 
     public readonly isAuthenticated = computed(() => this.authTokenSignal() !== null);
+    public readonly isEmailConfirmed = computed(() => this.emailConfirmedSignal() ?? true);
     public readonly isAdmin = computed(() => this.hasRole('Admin'));
 
     public initializeAuth(): void {
@@ -38,6 +40,10 @@ export class AuthService extends ApiService {
                 this.setUserId(resolvedUserId);
                 this.userSignal.set(resolvedUserId);
             }
+        }
+        if (this.emailConfirmedSignal() === null) {
+            const stored = this.loadEmailConfirmed();
+            this.emailConfirmedSignal.set(stored ?? true);
         }
 
         this.linkTelegramIfAvailable();
@@ -63,6 +69,29 @@ export class AuthService extends ApiService {
             }),
             catchError((error: HttpErrorResponse) => {
                 console.error('Register error', error);
+                return throwError(() => error);
+            }),
+        );
+    }
+
+    public verifyEmail(userId: string, token: string): Observable<boolean> {
+        return this.post<boolean>('verify-email', { userId, token }).pipe(
+            tap(success => {
+                if (success) {
+                    this.setEmailConfirmed(true);
+                }
+            }),
+            catchError((error: HttpErrorResponse) => {
+                console.error('Verify email error', error);
+                return throwError(() => error);
+            }),
+        );
+    }
+
+    public resendEmailVerification(): Observable<boolean> {
+        return this.post<boolean>('verify-email/resend', {}).pipe(
+            catchError((error: HttpErrorResponse) => {
+                console.error('Resend email verification error', error);
                 return throwError(() => error);
             }),
         );
@@ -135,9 +164,11 @@ export class AuthService extends ApiService {
     public async onLogout(redirectToAuth = false): Promise<void> {
         this.authTokenSignal.set(null);
         this.userSignal.set(null);
+        this.emailConfirmedSignal.set(null);
         this.clearToken();
         this.clearUserId();
         this.clearRefreshToken();
+        this.clearEmailConfirmed();
         this.localizationService.clearStoredLanguage();
         if (redirectToAuth) {
             await this.navigationService.navigateToAuth('login');
@@ -155,6 +186,12 @@ export class AuthService extends ApiService {
         const preferredLanguage = authResponse.user?.language;
         if (preferredLanguage) {
             void this.localizationService.applyLanguagePreference(preferredLanguage);
+        }
+
+        if (typeof authResponse.user?.isEmailConfirmed === 'boolean') {
+            this.setEmailConfirmed(authResponse.user.isEmailConfirmed);
+        } else {
+            this.setEmailConfirmed(true);
         }
 
         const userId = authResponse.user?.id ?? this.extractUserIdFromToken(authResponse.accessToken);
@@ -269,6 +306,26 @@ export class AuthService extends ApiService {
     private clearUserId(): void {
         localStorage.removeItem('userId');
         sessionStorage.removeItem('userId');
+    }
+
+    public setEmailConfirmed(value: boolean): void {
+        this.emailConfirmedSignal.set(value);
+        localStorage.setItem('emailConfirmed', value ? 'true' : 'false');
+    }
+
+    private loadEmailConfirmed(): boolean | null {
+        const stored = localStorage.getItem('emailConfirmed');
+        if (stored === 'true') {
+            return true;
+        }
+        if (stored === 'false') {
+            return false;
+        }
+        return null;
+    }
+
+    private clearEmailConfirmed(): void {
+        localStorage.removeItem('emailConfirmed');
     }
 
     private extractUserIdFromToken(token: string | null): string | null {

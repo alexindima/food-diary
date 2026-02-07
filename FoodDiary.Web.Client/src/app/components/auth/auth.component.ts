@@ -214,7 +214,7 @@ export class AuthComponent implements OnInit, AfterViewInit {
 
         this.authService.register(registerRequest).subscribe({
             next: () => {
-                this.navigationService.navigateToReturnUrl(this.returnUrl);
+                this.navigationService.navigateToEmailVerificationPending();
                 this.closeDialogIfAny();
             },
             error: (error: HttpErrorResponse) => {

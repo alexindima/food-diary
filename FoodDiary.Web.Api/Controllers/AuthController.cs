@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using FoodDiary.Application.Authentication.Mappings;
 using FoodDiary.Application.Authentication.Commands.AdminSsoStart;
+using FoodDiary.Application.Authentication.Commands.ResendEmailVerification;
 using FoodDiary.Contracts.Authentication;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Infrastructure.Options;
@@ -44,6 +45,45 @@ public class AuthController(
 
     [HttpPost("restore")]
     public async Task<IActionResult> RestoreAccount(RestoreAccountRequest request) {
+        var command = request.ToCommand();
+        var result = await Mediator.Send(command);
+        return result.ToActionResult();
+    }
+
+    [HttpPost("verify-email")]
+    public async Task<IActionResult> VerifyEmail(VerifyEmailRequest request)
+    {
+        var command = request.ToCommand();
+        var result = await Mediator.Send(command);
+        return result.ToActionResult();
+    }
+
+    [Authorize]
+    [HttpPost("verify-email/resend")]
+    public async Task<IActionResult> ResendVerifyEmail()
+    {
+        var userId = User.GetUserId();
+        if (userId is null)
+        {
+            return Unauthorized();
+        }
+
+        var command = new ResendEmailVerificationCommand(userId.Value);
+        var result = await Mediator.Send(command);
+        return result.ToActionResult();
+    }
+
+    [HttpPost("password-reset/request")]
+    public async Task<IActionResult> RequestPasswordReset(RequestPasswordResetRequest request)
+    {
+        var command = request.ToCommand();
+        var result = await Mediator.Send(command);
+        return result.ToActionResult();
+    }
+
+    [HttpPost("password-reset/confirm")]
+    public async Task<IActionResult> ConfirmPasswordReset(ConfirmPasswordResetRequest request)
+    {
         var command = request.ToCommand();
         var result = await Mediator.Send(command);
         return result.ToActionResult();

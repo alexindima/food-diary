@@ -3,6 +3,7 @@ using System;
 using FoodDiary.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FoodDiary.Infrastructure.Migrations
 {
     [DbContext(typeof(FoodDiaryDbContext))]
-    partial class FoodDiaryDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260207192305_AddEmailVerificationAndPasswordResetTokens")]
+    partial class AddEmailVerificationAndPasswordResetTokens
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -767,14 +770,16 @@ namespace FoodDiary.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("EmailConfirmationTokenHash")
+                        .HasColumnType("text");
+
                     b.Property<DateTime?>("EmailConfirmationTokenExpiresAtUtc")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTime?>("EmailConfirmationSentAtUtc")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("EmailConfirmationTokenHash")
-                        .HasColumnType("text");
+                    b.Property<bool>("IsEmailConfirmed")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
 
                     b.Property<double?>("FatTarget")
                         .HasColumnType("double precision");
@@ -799,11 +804,6 @@ namespace FoodDiary.Infrastructure.Migrations
                         .HasColumnType("boolean")
                         .HasDefaultValue(true);
 
-                    b.Property<bool>("IsEmailConfirmed")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(false);
-
                     b.Property<string>("Language")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("text")
@@ -819,11 +819,11 @@ namespace FoodDiary.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<DateTime?>("PasswordResetTokenExpiresAtUtc")
-                        .HasColumnType("timestamp with time zone");
-
                     b.Property<string>("PasswordResetTokenHash")
                         .HasColumnType("text");
+
+                    b.Property<DateTime?>("PasswordResetTokenExpiresAtUtc")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("ProfileImage")
                         .HasColumnType("text");

@@ -337,6 +337,29 @@
             "LOGIN_BUTTON": "Continue with Google",
             "REGISTER_BUTTON": "Register with Google",
             "UNAVAILABLE": "Google sign-in is unavailable right now."
+        },
+        "VERIFY": {
+            "TITLE": "Email verification",
+            "PENDING": "Verifying your email address...",
+            "SUCCESS": "Email confirmed. You can continue.",
+            "ERROR_GENERIC": "We couldn't verify the email. Try again or request a new link.",
+            "ERROR_INVALID": "Verification link is invalid or expired.",
+            "CONTINUE": "Continue",
+            "RETRY": "Try again"
+        },
+        "VERIFY_PENDING": {
+            "TITLE": "Check your email",
+            "DESCRIPTION": "We sent a confirmation link to {{ email }}. Open the email and click the link to verify your account.",
+            "DESCRIPTION_FALLBACK": "We sent a confirmation link to your email. Open it and click the link to verify your account.",
+            "INITIAL": "Waiting for verification...",
+            "NOT_CONFIRMED": "Still not confirmed. Please check your inbox or spam folder.",
+            "SUCCESS": "Email confirmed. Redirecting...",
+            "ERROR": "We couldn't load your profile. Please try again.",
+            "REFRESH": "I've verified, refresh status",
+            "RESEND": "Send again",
+            "RESENT": "Verification email sent.",
+            "RESEND_ERROR": "Couldn't send the email. Please try again later.",
+            "RESEND_COOLDOWN": "You can resend in {{ seconds }}s."
         }
     },
     "PRODUCT_LIST": {

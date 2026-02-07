@@ -34,6 +34,7 @@ export interface User {
     profileImageAssetId?: string;
     dashboardLayout?: DashboardLayoutSettings | null;
     isActive: boolean;
+    isEmailConfirmed: boolean;
     calories?: number; // Local field, not from backend
 }
 

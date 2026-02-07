@@ -17,6 +17,10 @@ export class NavigationService {
         await this.router.navigate(['/auth', mode], { queryParams });
     }
 
+    public async navigateToEmailVerificationPending(): Promise<void> {
+        await this.router.navigate(['/verify-pending']);
+    }
+
     public async navigateToReturnUrl(returnUrl: string | null): Promise<void> {
         await this.router.navigateByUrl(returnUrl || '/');
     }

@@ -27,5 +27,6 @@ public record UserResponse(
     string? ProfileImage,
     Guid? ProfileImageAssetId,
     DashboardLayoutSettings? DashboardLayout,
-    bool IsActive
+    bool IsActive,
+    bool IsEmailConfirmed
 );

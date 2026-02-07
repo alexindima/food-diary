@@ -44,6 +44,13 @@ public class FoodDiaryDbContext : DbContext
 
             entity.HasIndex(e => e.Email).IsUnique();
             entity.Property(e => e.IsActive).HasDefaultValue(true);
+            entity.Property(e => e.IsEmailConfirmed).HasDefaultValue(false);
+            entity.Property(e => e.EmailConfirmationTokenExpiresAtUtc)
+                .HasColumnType("timestamp with time zone");
+            entity.Property(e => e.EmailConfirmationSentAtUtc)
+                .HasColumnType("timestamp with time zone");
+            entity.Property(e => e.PasswordResetTokenExpiresAtUtc)
+                .HasColumnType("timestamp with time zone");
             entity.Property(e => e.DeletedAt)
                 .HasColumnType("timestamp with time zone");
             entity.Property(e => e.ActivityLevel)

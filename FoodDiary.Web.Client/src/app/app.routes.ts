@@ -25,6 +25,8 @@ import { WaistHistoryPageComponent } from './components/waist-history-page/waist
 import { CycleTrackingPageComponent } from './components/cycle-tracking-page/cycle-tracking-page.component';
 import { GoalsPageComponent } from './components/goals-page/goals-page.component';
 import { unsavedChangesGuard } from './guards/unsaved-changes.guard';
+import { EmailVerificationPendingComponent } from './components/auth/email-verification-pending/email-verification-pending.component';
+import { EmailVerificationComponent } from './components/auth/email-verification/email-verification.component';
 
 export const routes: Routes = [
     { path: '', component: MainComponent, canDeactivate: [unsavedChangesGuard] },
@@ -39,6 +41,14 @@ export const routes: Routes = [
         component: MainComponent,
         data: { openAuth: true },
         canActivate: [loggedInGuard],
+    },
+    {
+        path: 'verify-pending',
+        component: EmailVerificationPendingComponent,
+    },
+    {
+        path: 'verify-email',
+        component: EmailVerificationComponent,
     },
     {
         path: 'products',

@@ -14,6 +14,12 @@ public sealed class User : AggregateRoot<UserId> {
     public string Email { get; private set; } = string.Empty;
     public string Password { get; private set; } = string.Empty;
     public string? RefreshToken { get; private set; }
+    public bool IsEmailConfirmed { get; private set; }
+    public string? EmailConfirmationTokenHash { get; private set; }
+    public DateTime? EmailConfirmationTokenExpiresAtUtc { get; private set; }
+    public DateTime? EmailConfirmationSentAtUtc { get; private set; }
+    public string? PasswordResetTokenHash { get; private set; }
+    public DateTime? PasswordResetTokenExpiresAtUtc { get; private set; }
     public string? Username { get; private set; }
     public string? FirstName { get; private set; }
     public string? LastName { get; private set; }
@@ -63,7 +69,8 @@ public sealed class User : AggregateRoot<UserId> {
             Email = email,
             Password = hashedPassword,
             AiInputTokenLimit = DefaultAiInputTokenLimit,
-            AiOutputTokenLimit = DefaultAiOutputTokenLimit
+            AiOutputTokenLimit = DefaultAiOutputTokenLimit,
+            IsEmailConfirmed = false
         };
         user.SetCreated();
         return user;
@@ -88,6 +95,37 @@ public sealed class User : AggregateRoot<UserId> {
 
     public void UpdatePassword(string hashedPassword) {
         Password = hashedPassword;
+        SetModified();
+    }
+
+    public void SetEmailConfirmationToken(string tokenHash, DateTime expiresAtUtc)
+    {
+        EmailConfirmationTokenHash = tokenHash;
+        EmailConfirmationTokenExpiresAtUtc = expiresAtUtc;
+        EmailConfirmationSentAtUtc = DateTime.UtcNow;
+        SetModified();
+    }
+
+    public void ConfirmEmail()
+    {
+        IsEmailConfirmed = true;
+        EmailConfirmationTokenHash = null;
+        EmailConfirmationTokenExpiresAtUtc = null;
+        EmailConfirmationSentAtUtc = null;
+        SetModified();
+    }
+
+    public void SetPasswordResetToken(string tokenHash, DateTime expiresAtUtc)
+    {
+        PasswordResetTokenHash = tokenHash;
+        PasswordResetTokenExpiresAtUtc = expiresAtUtc;
+        SetModified();
+    }
+
+    public void ClearPasswordResetToken()
+    {
+        PasswordResetTokenHash = null;
+        PasswordResetTokenExpiresAtUtc = null;
         SetModified();
     }
 
