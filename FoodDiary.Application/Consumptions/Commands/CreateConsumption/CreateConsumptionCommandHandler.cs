@@ -29,7 +29,9 @@ public class CreateConsumptionCommandHandler(
             return Result.Failure<ConsumptionResponse>(Errors.Authentication.InvalidToken);
         }
 
-        if (command.Items is not { Count: > 0 })
+        var hasManualItems = command.Items is { Count: > 0 };
+        var hasAiItems = command.AiSessions is { Count: > 0 } && command.AiSessions.Any(session => session.Items.Count > 0);
+        if (!hasManualItems && !hasAiItems)
         {
             return Result.Failure<ConsumptionResponse>(Errors.Validation.Required("Items"));
         }

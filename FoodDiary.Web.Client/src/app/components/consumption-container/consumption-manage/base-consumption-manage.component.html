@@ -198,7 +198,7 @@
                                 </fd-ui-button>
                             </div>
                             <fd-ui-form-error class="consumption-item__error"
-                                [error]="items.invalid && items.touched ? ('FORM_ERRORS.NON_EMPTY_ARRAY' | translate) : null"
+                                [error]="items.touched && items.errors?.['nonEmptyArray'] ? ('FORM_ERRORS.NON_EMPTY_ARRAY' | translate) : null"
                              />
                         </fd-ui-card>
 

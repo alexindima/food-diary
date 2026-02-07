@@ -9,7 +9,7 @@
     OnInit,
     signal,
 } from '@angular/core';
-import { AbstractControl, FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { NavigationService } from '../../../services/navigation.service';
@@ -33,7 +33,6 @@ import { Product, MeasurementUnit } from '../../../types/product.data';
 import { Recipe, RecipeIngredient } from '../../../types/recipe.data';
 import { HttpErrorResponse } from '@angular/common/http';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { nonEmptyArrayValidator } from '../../../validators/non-empty-array.validator';
 import { NutrientData } from '../../../types/charts.data';
 import {
 } from '../../shared/nutrients-summary/nutrients-summary.component';
@@ -183,7 +182,7 @@ export class BaseConsumptionManageComponent implements OnInit {
             mealType: new FormControl<string | null>(null),
             items: new FormArray<FormGroup<ConsumptionItemFormData>>(
                 [this.createConsumptionItem()],
-                nonEmptyArrayValidator()
+                this.buildItemsValidator()
             ),
             comment: new FormControl<string | null>(null),
             imageUrl: new FormControl<ImageSelection | null>(null),
@@ -204,6 +203,7 @@ export class BaseConsumptionManageComponent implements OnInit {
         });
 
         this.updateManualNutritionValidators(true);
+        this.updateItemValidationRules();
         this.consumptionForm.controls.isNutritionAutoCalculated.valueChanges
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(isAuto => {
@@ -229,6 +229,7 @@ export class BaseConsumptionManageComponent implements OnInit {
         const consumption = this.consumption();
         if (consumption) {
             this.populateForm(consumption);
+            this.updateItemValidationRules();
             this.updateSummary();
         }
 
@@ -246,6 +247,7 @@ export class BaseConsumptionManageComponent implements OnInit {
         }
 
         this.consumptionForm.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            this.updateItemValidationRules();
             this.updateSummary();
             this.clearGlobalError();
         });
@@ -339,6 +341,7 @@ export class BaseConsumptionManageComponent implements OnInit {
             this.items.push(this.createConsumptionItem());
         }
 
+        this.updateItemValidationRules();
         this.updateSummary();
     }
 
@@ -414,12 +417,16 @@ export class BaseConsumptionManageComponent implements OnInit {
                     return;
                 }
                 this.aiSessions.update(current => [...current, session]);
+                this.items.updateValueAndValidity({ emitEvent: false });
+                this.updateItemValidationRules();
                 this.updateSummary();
             });
     }
 
     public onDeleteAiSession(index: number): void {
         this.aiSessions.update(current => current.filter((_, currentIndex) => currentIndex !== index));
+        this.items.updateValueAndValidity({ emitEvent: false });
+        this.updateItemValidationRules();
         this.updateSummary();
     }
 
@@ -446,6 +453,8 @@ export class BaseConsumptionManageComponent implements OnInit {
                 this.aiSessions.update(current =>
                     current.map((item, currentIndex) => (currentIndex === index ? updated : item))
                 );
+                this.items.updateValueAndValidity({ emitEvent: false });
+                this.updateItemValidationRules();
                 this.updateSummary();
             });
     }
@@ -848,6 +857,9 @@ export class BaseConsumptionManageComponent implements OnInit {
                 this.ensureRecipeWeightForExistingItem(currentIndex, item.amount ?? 0, item.recipe ?? null);
             }
         });
+
+        this.items.updateValueAndValidity({ emitEvent: false });
+        this.updateItemValidationRules();
     }
 
     private updateSummary(): void {
@@ -862,6 +874,9 @@ export class BaseConsumptionManageComponent implements OnInit {
             fiber: this.roundNutrient(summaryTotals.fiber),
             alcohol: this.roundNutrient(summaryTotals.alcohol),
         });
+        if (isAuto) {
+            this.syncManualControlsWithSummary(autoTotals);
+        }
     }
 
     private calculateAutoNutritionTotals(): NutritionTotals {
@@ -978,12 +993,73 @@ export class BaseConsumptionManageComponent implements OnInit {
         }, { emitEvent: false });
     }
 
+    private syncManualControlsWithSummary(totals: NutritionTotals): void {
+        this.consumptionForm.patchValue({
+            manualCalories: this.roundNutrient(totals.calories),
+            manualProteins: this.roundNutrient(totals.proteins),
+            manualFats: this.roundNutrient(totals.fats),
+            manualCarbs: this.roundNutrient(totals.carbs),
+            manualFiber: this.roundNutrient(totals.fiber),
+            manualAlcohol: this.roundNutrient(totals.alcohol),
+        }, { emitEvent: false });
+    }
+
     private updateManualNutritionValidators(isAuto: boolean): void {
         const validators = isAuto ? [] : [Validators.required, Validators.min(0)];
         this.getManualNutritionControls().forEach(control => {
             control.setValidators(validators);
             control.updateValueAndValidity({ emitEvent: false });
         });
+    }
+
+    private buildItemsValidator(): ValidatorFn {
+        return (control: AbstractControl): ValidationErrors | null => {
+            const value = control.value as ConsumptionItemFormValues[] | null;
+            const hasManualItems = Array.isArray(value)
+                ? value.some(item => Boolean(item?.product) || Boolean(item?.recipe))
+                : false;
+            const hasAiItems = this.aiSessions().length > 0;
+            return hasManualItems || hasAiItems ? null : { nonEmptyArray: true };
+        };
+    }
+
+    private isItemEmpty(group: FormGroup<ConsumptionItemFormData>): boolean {
+        const hasSource = Boolean(group.controls.product.value) || Boolean(group.controls.recipe.value);
+        const amount = group.controls.amount.value ?? 0;
+        return !hasSource && amount <= 0;
+    }
+
+    private updateItemValidationRules(): void {
+        if (!this.consumptionForm) {
+            return;
+        }
+
+        const items = this.consumptionForm.controls.items;
+
+        items.controls.forEach(group => {
+            const isEmpty = this.isItemEmpty(group);
+            if (isEmpty) {
+                group.controls.product.clearValidators();
+                group.controls.recipe.clearValidators();
+                group.controls.amount.clearValidators();
+            } else {
+                const sourceType = group.controls.sourceType.value;
+                if (sourceType === ConsumptionSourceType.Product) {
+                    group.controls.product.setValidators([Validators.required]);
+                    group.controls.recipe.clearValidators();
+                } else {
+                    group.controls.recipe.setValidators([Validators.required]);
+                    group.controls.product.clearValidators();
+                }
+                group.controls.amount.setValidators([Validators.required, Validators.min(0.01)]);
+            }
+
+            group.controls.product.updateValueAndValidity({ emitEvent: false });
+            group.controls.recipe.updateValueAndValidity({ emitEvent: false });
+            group.controls.amount.updateValueAndValidity({ emitEvent: false });
+        });
+
+        items.updateValueAndValidity({ emitEvent: false });
     }
 
     private applyAlpha(color: string, alpha: number): string {
@@ -1103,8 +1179,8 @@ export class BaseConsumptionManageComponent implements OnInit {
             }
         }
 
-        group.controls.product.updateValueAndValidity();
-        group.controls.recipe.updateValueAndValidity();
+        group.controls.product.updateValueAndValidity({ emitEvent: false });
+        group.controls.recipe.updateValueAndValidity({ emitEvent: false });
 
         if (clearSelection) {
             group.controls.amount.setValue(null);
@@ -1112,6 +1188,7 @@ export class BaseConsumptionManageComponent implements OnInit {
         }
 
         this.updateAmountControlState(group);
+        this.updateItemValidationRules();
     }
 
     private createConsumptionItem(

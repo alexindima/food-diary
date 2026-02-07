@@ -1,3 +1,4 @@
+@use 'sass:color';
 @use 'variables' as *;
 
 .consumption-manage {
@@ -594,7 +595,7 @@
     }
 
     &__ai-summary-action--danger:hover {
-        color: darken($color-no-results, 8%);
+        color: color.adjust($color-no-results, $lightness: -8%);
     }
 
     &__ai-summary-body {
