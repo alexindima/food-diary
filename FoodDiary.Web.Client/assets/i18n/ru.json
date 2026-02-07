@@ -783,7 +783,10 @@
             "NUTRITION_LOADING": "Считаем нутриенты…",
             "NUTRITION_ERROR": "Не удалось рассчитать нутриенты. Попробуйте ещё раз.",
             "STATUS_NUTRITION": "Расчет нутриентов",
-            "SAVE": "Сохранить"
+            "SAVE": "Сохранить",
+            "DONE": "Готово",
+            "ADD_ITEM": "Добавить вручную",
+            "EDIT_BUTTON": "Редактировать"
         },
         "ITEM_CARD_PLACEHOLDER": "Позиция №{{index}}",
         "ITEM_CARD_META": {

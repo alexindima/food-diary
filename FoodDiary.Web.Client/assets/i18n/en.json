@@ -818,7 +818,10 @@
             "NUTRITION_LOADING": "Calculating nutrition?",
             "NUTRITION_ERROR": "Failed to calculate nutrition. Please try again.",
             "STATUS_NUTRITION": "Calculating nutrition",
-            "SAVE": "Save"
+            "SAVE": "Save",
+            "DONE": "Done",
+            "ADD_ITEM": "Add manually",
+            "EDIT_BUTTON": "Edit"
         },
         "ITEM_CARD_PLACEHOLDER": "Entry #{{index}}",
         "ITEM_CARD_META": {

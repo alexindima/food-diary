@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog.component';
 import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
@@ -31,6 +32,7 @@ type PhotoAiDialogData = {
         FdUiDialogFooterDirective,
         FdUiButtonComponent,
         FdUiIconModule,
+        DragDropModule,
         ImageUploadFieldComponent,
     ],
 })
@@ -54,7 +56,10 @@ export class ConsumptionPhotoRecognitionDialogComponent {
     public readonly nutritionErrorKey = signal<string | null>(null);
     public readonly initialSelection = this.dialogData.initialSelection ?? null;
     public readonly isEditMode = signal(this.dialogData.mode === 'edit');
+    public readonly isEditing = signal(false);
+    public readonly editItems = signal<EditableAiItem[]>([]);
     private shouldSkipNextImageChange = Boolean(this.dialogData.initialSession);
+    private readonly unitOptions = ['g', 'ml', 'pcs'] as const;
     public readonly statusKey = computed(() => {
         if (!this.selection()) {
             return null;
@@ -155,7 +160,7 @@ export class ConsumptionPhotoRecognitionDialogComponent {
 
     public onReanalyze(): void {
         const assetId = this.selection()?.assetId;
-        if (!assetId || this.isLoading()) {
+        if (!assetId || this.isLoading() || this.isEditing()) {
             return;
         }
 
@@ -292,6 +297,106 @@ export class ConsumptionPhotoRecognitionDialogComponent {
         return `${formatter.format(value)} ${unitLabel}`.trim();
     }
 
+    public startEditing(): void {
+        const items = this.results().length
+            ? this.results()
+            : this.nutrition()?.items?.map(item => ({
+                nameEn: item.name,
+                nameLocal: null,
+                amount: item.amount,
+                unit: item.unit,
+                confidence: 1,
+            })) ?? [];
+
+        this.editItems.set(items.map(item => ({
+            id: this.createEditId(),
+            name: item.nameLocal ?? item.nameEn,
+            amount: item.amount,
+            unit: item.unit,
+        })));
+        this.isEditing.set(true);
+    }
+
+    public applyEditing(): void {
+        const items = this.editItems()
+            .filter(item => item.name.trim().length > 0 && item.amount > 0)
+            .map(item => ({
+                nameEn: item.name.trim(),
+                nameLocal: item.name.trim(),
+                amount: item.amount,
+                unit: item.unit,
+                confidence: 1,
+            }));
+
+        this.results.set(items);
+        this.hasAnalyzed.set(true);
+        this.isEditing.set(false);
+        this.runNutrition(items);
+    }
+
+    public cancelEditing(): void {
+        this.isEditing.set(false);
+    }
+
+    public onEditItemDrop(event: CdkDragDrop<EditableAiItem[]>): void {
+        if (event.previousIndex === event.currentIndex) {
+            return;
+        }
+
+        const items = [...this.editItems()];
+        moveItemInArray(items, event.previousIndex, event.currentIndex);
+        this.editItems.set(items);
+    }
+
+    public updateEditItem(
+        index: number,
+        field: 'name' | 'amount' | 'unit',
+        value: string,
+    ): void {
+        this.editItems.update(items =>
+            items.map((item, idx) => {
+                if (idx !== index) {
+                    return item;
+                }
+
+                if (field === 'amount') {
+                    const parsed = Number.parseFloat(value);
+                    return { ...item, amount: Number.isNaN(parsed) ? 0 : parsed };
+                }
+
+                if (field === 'unit') {
+                    return { ...item, unit: value };
+                }
+
+                return { ...item, name: value };
+            }),
+        );
+    }
+
+    public removeEditItem(index: number): void {
+        this.editItems.update(items => items.filter((_, idx) => idx !== index));
+    }
+
+    public addEditItem(): void {
+        this.editItems.update(items => ([
+            ...items,
+            { id: this.createEditId(), name: '', amount: 0, unit: 'g' },
+        ]));
+    }
+
+    public getUnitOptions(): readonly string[] {
+        return this.unitOptions;
+    }
+
+    public getUnitLabel(unit: string): string {
+        const unitKey = this.resolveUnitKey(unit);
+        return unitKey ? this.translateService.instant(unitKey) : unit;
+    }
+
+    private createEditId(): string {
+        return (crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random()}`);
+    }
+
     private applyInitialSession(session: ConsumptionAiSessionManageDto): void {
         this.selection.set(session.imageUrl || session.imageAssetId ? {
             url: session.imageUrl ?? null,
@@ -341,3 +446,10 @@ export class ConsumptionPhotoRecognitionDialogComponent {
         };
     }
 }
+
+type EditableAiItem = {
+    id: string;
+    name: string;
+    amount: number;
+    unit: string;
+};

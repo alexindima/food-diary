@@ -41,46 +41,105 @@
             @if (results().length) {
                 <div class="photo-ai-dialog__results">
                     <div class="photo-ai-dialog__results-title">
-                        <span>{{ 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.RESULTS_TITLE' | translate }}</span>
-                        <span class="photo-ai-dialog__title-actions">
+                        <span class="photo-ai-dialog__title-left">
+                            <span>{{ 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.RESULTS_TITLE' | translate }}</span>
                             <button
                                 type="button"
                                 class="photo-ai-dialog__action-button"
-                                [attr.aria-label]="'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.EDIT_ACTION' | translate"
-                            >
-                                <mat-icon class="photo-ai-dialog__action-icon" fontIcon="edit"></mat-icon>
-                            </button>
-                            <button
-                                type="button"
-                                class="photo-ai-dialog__action-button"
-                                [disabled]="isLoading() || !selection()?.assetId"
+                                [disabled]="isLoading() || !selection()?.assetId || isEditing()"
                                 [attr.aria-label]="'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.REANALYZE_ACTION' | translate"
                                 (click)="onReanalyze()"
                             >
                                 <mat-icon class="photo-ai-dialog__action-icon" fontIcon="refresh"></mat-icon>
                             </button>
                         </span>
+                        <span class="photo-ai-dialog__title-actions">
+                            <fd-ui-button
+                                [variant]="isEditing() ? 'primary' : 'secondary'"
+                                [fill]="isEditing() ? 'solid' : 'outline'"
+                                size="sm"
+                                class="photo-ai-dialog__edit-toggle"
+                                (click)="isEditing() ? applyEditing() : startEditing()"
+                            >
+                                {{ (isEditing() ? 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.SAVE' : 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.EDIT_BUTTON') | translate }}
+                            </fd-ui-button>
+                        </span>
                     </div>
-                    <div class="photo-ai-dialog__table">
-                        <div class="photo-ai-dialog__table-head">
-                            <div class="photo-ai-dialog__cell photo-ai-dialog__cell--name">
-                                {{ 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.NAME_LABEL' | translate }}
-                            </div>
-                            <div class="photo-ai-dialog__cell photo-ai-dialog__cell--amount">
-                                {{ 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.AMOUNT_LABEL' | translate }}
-                            </div>
+                    @if (isEditing()) {
+                        <div
+                            class="photo-ai-dialog__edit-list"
+                            cdkDropList
+                            (cdkDropListDropped)="onEditItemDrop($event)"
+                        >
+                            @for (item of editItems(); track item.id; let i = $index) {
+                                <div class="photo-ai-dialog__edit-row" cdkDrag>
+                                    <div class="photo-ai-dialog__edit-handle" cdkDragHandle>
+                                        <mat-icon fontIcon="drag_indicator"></mat-icon>
+                                    </div>
+                                    <input
+                                        class="photo-ai-dialog__edit-input photo-ai-dialog__edit-input--name"
+                                        type="text"
+                                        [value]="item.name"
+                                        (input)="updateEditItem(i, 'name', nameInput.value)"
+                                        #nameInput
+                                    />
+                                    <input
+                                        class="photo-ai-dialog__edit-input photo-ai-dialog__edit-input--amount"
+                                        type="number"
+                                        [value]="item.amount"
+                                        (input)="updateEditItem(i, 'amount', amountInput.value)"
+                                        #amountInput
+                                    />
+                                    <select
+                                        class="photo-ai-dialog__edit-select"
+                                        [value]="item.unit"
+                                        (change)="updateEditItem(i, 'unit', unitSelect.value)"
+                                        #unitSelect
+                                    >
+                                        @for (unit of getUnitOptions(); track unit) {
+                                            <option [value]="unit">{{ getUnitLabel(unit) }}</option>
+                                        }
+                                    </select>
+                                    <button
+                                        type="button"
+                                        class="photo-ai-dialog__edit-remove"
+                                        [attr.aria-label]="'COMMON.DELETE' | translate"
+                                        (click)="removeEditItem(i)"
+                                    >
+                                        <mat-icon fontIcon="delete"></mat-icon>
+                                    </button>
+                                </div>
+                            }
                         </div>
-                        <div class="photo-ai-dialog__table-body">
-                            <div class="photo-ai-dialog__table-row" *ngFor="let item of results(); let i = index">
+                        <button
+                            type="button"
+                            class="photo-ai-dialog__edit-add"
+                            (click)="addEditItem()"
+                        >
+                            + {{ 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ADD_ITEM' | translate }}
+                        </button>
+                    } @else {
+                        <div class="photo-ai-dialog__table">
+                            <div class="photo-ai-dialog__table-head">
                                 <div class="photo-ai-dialog__cell photo-ai-dialog__cell--name">
-                                    {{ getDisplayName(item) }}
+                                    {{ 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.NAME_LABEL' | translate }}
                                 </div>
                                 <div class="photo-ai-dialog__cell photo-ai-dialog__cell--amount">
-                                    {{ formatAmount(item) }}
+                                    {{ 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.AMOUNT_LABEL' | translate }}
+                                </div>
+                            </div>
+                            <div class="photo-ai-dialog__table-body">
+                                <div class="photo-ai-dialog__table-row" *ngFor="let item of results(); let i = index">
+                                    <div class="photo-ai-dialog__cell photo-ai-dialog__cell--name">
+                                        {{ getDisplayName(item) }}
+                                    </div>
+                                    <div class="photo-ai-dialog__cell photo-ai-dialog__cell--amount">
+                                        {{ formatAmount(item) }}
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    }
 
                     @if (!isNutritionLoading()) {
                         @if (nutrition()) {
@@ -156,13 +215,15 @@
         <fd-ui-button fill="outline" variant="secondary" (click)="close()">
             {{ 'COMMON.CANCEL' | translate }}
         </fd-ui-button>
-        <fd-ui-button
-            variant="primary"
-            fill="solid"
-            [disabled]="!nutrition() || isLoading() || isNutritionLoading()"
-            (click)="addToMeal()"
-        >
-            {{ (isEditMode() ? 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.SAVE' : 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ADD_TO_MEAL') | translate }}
-        </fd-ui-button>
+        @if (!isEditing()) {
+            <fd-ui-button
+                variant="primary"
+                fill="solid"
+                [disabled]="!nutrition() || isLoading() || isNutritionLoading()"
+                (click)="addToMeal()"
+            >
+                {{ (isEditMode() ? 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.SAVE' : 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ADD_TO_MEAL') | translate }}
+            </fd-ui-button>
+        }
     </div>
 </fd-ui-dialog>

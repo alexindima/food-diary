@@ -2,6 +2,17 @@
     display: flex;
     flex-direction: column;
     gap: 20px;
+    padding-right: 0;
+}
+
+:host ::ng-deep .fd-ui-dialog__body {
+    scrollbar-gutter: stable;
+    padding-right: 12px;
+    margin-right: -12px;
+}
+
+:host ::ng-deep .fd-ui-dialog__body::-webkit-scrollbar {
+    width: 10px;
 }
 
 .photo-ai-dialog__upload {
@@ -112,6 +123,107 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
+    width: 100%;
+}
+
+.photo-ai-dialog__title-left {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+
+.photo-ai-dialog__edit-header {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.photo-ai-dialog__edit-title {
+    font-weight: 600;
+    color: var(--fd-color-gray-800, #1F2937);
+}
+
+.photo-ai-dialog__edit-done ::ng-deep button,
+.photo-ai-dialog__edit-done ::ng-deep .fd-ui-button {
+    height: 36px;
+    padding: 0 16px;
+}
+
+.photo-ai-dialog__edit-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 12px;
+    border-radius: 16px;
+    border: 1px solid #e2e8f0;
+    background: #ffffff;
+}
+
+.photo-ai-dialog__edit-row {
+    display: grid;
+    grid-template-columns: 28px minmax(0, 2fr) minmax(0, 0.8fr) minmax(0, 0.7fr) 28px;
+    gap: 10px;
+    align-items: center;
+    padding: 8px 10px;
+    border-radius: 14px;
+    border: 1px solid #e2e8f0;
+    background: #f8fafc;
+}
+
+.photo-ai-dialog__edit-handle {
+    cursor: grab;
+    color: #94a3b8;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.photo-ai-dialog__edit-input,
+.photo-ai-dialog__edit-select {
+    height: 38px;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    padding: 0 12px;
+    font-size: 0.95rem;
+    background: #fff;
+}
+
+.photo-ai-dialog__edit-input--amount {
+    text-align: right;
+}
+
+.photo-ai-dialog__edit-remove {
+    appearance: none;
+    border: none;
+    background: transparent;
+    color: #94a3b8;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.photo-ai-dialog__edit-remove:hover {
+    color: #ef4444;
+}
+
+.photo-ai-dialog__edit-add {
+    margin-top: 8px;
+    width: 100%;
+    height: 42px;
+    border-radius: 999px;
+    border: 1px dashed #cbd5f5;
+    background: #f8fbff;
+    font-weight: 600;
+    color: #64748b;
+    cursor: pointer;
+}
+
+.photo-ai-dialog__edit-add:hover {
+    color: #334155;
+    border-color: #94a3b8;
 }
 
 .photo-ai-dialog__title-actions {
@@ -119,6 +231,15 @@
     align-items: center;
     gap: 6px;
     padding-left: 4px;
+    margin-left: auto;
+}
+
+
+.photo-ai-dialog__edit-toggle ::ng-deep button,
+.photo-ai-dialog__edit-toggle ::ng-deep .fd-ui-button {
+    height: 30px;
+    padding: 0 14px;
+    font-weight: 600;
 }
 
 .photo-ai-dialog__action-button {
