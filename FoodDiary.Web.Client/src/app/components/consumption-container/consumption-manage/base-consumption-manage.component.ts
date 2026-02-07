@@ -428,9 +428,13 @@ export class BaseConsumptionManageComponent implements OnInit {
             : null;
 
         this.fdDialogService
-            .open<ConsumptionPhotoRecognitionDialogComponent, { initialSelection: ImageSelection | null }, ConsumptionAiSessionManageDto | null>(
+            .open<
                 ConsumptionPhotoRecognitionDialogComponent,
-                { size: 'lg', data: { initialSelection: selection } },
+                { initialSelection: ImageSelection | null; initialSession: ConsumptionAiSessionManageDto | null; mode: 'edit' },
+                ConsumptionAiSessionManageDto | null
+            >(
+                ConsumptionPhotoRecognitionDialogComponent,
+                { size: 'lg', data: { initialSelection: selection, initialSession: session ?? null, mode: 'edit' } },
             )
             .afterClosed()
             .subscribe(updated => {

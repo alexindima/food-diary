@@ -817,7 +817,8 @@
             "NUTRITION_TITLE": "Nutrition summary",
             "NUTRITION_LOADING": "Calculating nutrition?",
             "NUTRITION_ERROR": "Failed to calculate nutrition. Please try again.",
-            "STATUS_NUTRITION": "Calculating nutrition"
+            "STATUS_NUTRITION": "Calculating nutrition",
+            "SAVE": "Save"
         },
         "ITEM_CARD_PLACEHOLDER": "Entry #{{index}}",
         "ITEM_CARD_META": {

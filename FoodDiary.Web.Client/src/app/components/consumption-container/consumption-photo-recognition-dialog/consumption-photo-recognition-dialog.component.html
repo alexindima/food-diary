@@ -162,7 +162,7 @@
             [disabled]="!nutrition() || isLoading() || isNutritionLoading()"
             (click)="addToMeal()"
         >
-            {{ 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ADD_TO_MEAL' | translate }}
+            {{ (isEditMode() ? 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.SAVE' : 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ADD_TO_MEAL') | translate }}
         </fd-ui-button>
     </div>
 </fd-ui-dialog>

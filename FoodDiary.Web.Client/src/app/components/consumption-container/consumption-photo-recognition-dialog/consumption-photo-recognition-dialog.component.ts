@@ -12,6 +12,12 @@ import { ConsumptionAiSessionManageDto } from '../../../types/consumption.data';
 import { FD_UI_DIALOG_DATA, FdUiDialogRef, FdUiIconModule } from 'fd-ui-kit/material';
 import { catchError, of } from 'rxjs';
 
+type PhotoAiDialogData = {
+    initialSelection?: ImageSelection | null;
+    initialSession?: ConsumptionAiSessionManageDto | null;
+    mode?: 'edit' | 'create';
+};
+
 @Component({
     selector: 'fd-consumption-photo-recognition-dialog',
     standalone: true,
@@ -30,7 +36,7 @@ import { catchError, of } from 'rxjs';
 })
 export class ConsumptionPhotoRecognitionDialogComponent {
     private readonly dialogData =
-        inject<{ initialSelection?: ImageSelection | null }>(FD_UI_DIALOG_DATA, { optional: true }) ?? {};
+        inject<PhotoAiDialogData>(FD_UI_DIALOG_DATA, { optional: true }) ?? {};
     private readonly aiFoodService = inject(AiFoodService);
     private readonly translateService = inject(TranslateService);
     private readonly dialogRef = inject(
@@ -47,6 +53,8 @@ export class ConsumptionPhotoRecognitionDialogComponent {
     public readonly nutrition = signal<FoodNutritionResponse | null>(null);
     public readonly nutritionErrorKey = signal<string | null>(null);
     public readonly initialSelection = this.dialogData.initialSelection ?? null;
+    public readonly isEditMode = signal(this.dialogData.mode === 'edit');
+    private shouldSkipNextImageChange = Boolean(this.dialogData.initialSession);
     public readonly statusKey = computed(() => {
         if (!this.selection()) {
             return null;
@@ -66,6 +74,13 @@ export class ConsumptionPhotoRecognitionDialogComponent {
 
         return null;
     });
+
+    public constructor() {
+        const session = this.dialogData.initialSession;
+        if (session) {
+            this.applyInitialSession(session);
+        }
+    }
 
     public getDisplayName(item: FoodVisionItem): string {
         const rawName = item.nameLocal?.trim() || item.nameEn;
@@ -117,6 +132,12 @@ export class ConsumptionPhotoRecognitionDialogComponent {
     }
 
     public onImageChanged(selection: ImageSelection | null): void {
+        if (this.shouldSkipNextImageChange) {
+            this.shouldSkipNextImageChange = false;
+            this.selection.set(selection);
+            return;
+        }
+
         this.selection.set(selection);
         this.errorKey.set(null);
         this.results.set([]);
@@ -269,5 +290,54 @@ export class ConsumptionPhotoRecognitionDialogComponent {
         });
         const unitLabel = this.translateService.instant(unitKey);
         return `${formatter.format(value)} ${unitLabel}`.trim();
+    }
+
+    private applyInitialSession(session: ConsumptionAiSessionManageDto): void {
+        this.selection.set(session.imageUrl || session.imageAssetId ? {
+            url: session.imageUrl ?? null,
+            assetId: session.imageAssetId ?? null,
+        } : null);
+        this.results.set(session.items.map(item => ({
+            nameEn: item.nameEn,
+            nameLocal: item.nameLocal ?? null,
+            amount: item.amount,
+            unit: item.unit,
+            confidence: 1,
+        })));
+        this.hasAnalyzed.set(true);
+        this.isLoading.set(false);
+        this.errorKey.set(null);
+        this.nutritionErrorKey.set(null);
+        this.isNutritionLoading.set(false);
+        this.nutrition.set(this.buildNutritionFromSession(session.items));
+    }
+
+    private buildNutritionFromSession(items: ConsumptionAiSessionManageDto['items']): FoodNutritionResponse {
+        const totals = items.reduce(
+            (acc, item) => ({
+                calories: acc.calories + (item.calories ?? 0),
+                protein: acc.protein + (item.proteins ?? 0),
+                fat: acc.fat + (item.fats ?? 0),
+                carbs: acc.carbs + (item.carbs ?? 0),
+                fiber: acc.fiber + (item.fiber ?? 0),
+                alcohol: acc.alcohol + (item.alcohol ?? 0),
+            }),
+            { calories: 0, protein: 0, fat: 0, carbs: 0, fiber: 0, alcohol: 0 },
+        );
+
+        return {
+            ...totals,
+            items: items.map(item => ({
+                name: item.nameLocal ?? item.nameEn,
+                amount: item.amount,
+                unit: item.unit,
+                calories: item.calories,
+                protein: item.proteins,
+                fat: item.fats,
+                carbs: item.carbs,
+                fiber: item.fiber,
+                alcohol: item.alcohol,
+            })),
+        };
     }
 }
