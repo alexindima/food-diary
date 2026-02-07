@@ -46,6 +46,19 @@ public static class MealNutritionCalculator
             }
         }
 
+        foreach (var session in meal.AiSessions)
+        {
+            foreach (var aiItem in session.Items)
+            {
+                calories += aiItem.Calories;
+                proteins += aiItem.Proteins;
+                fats += aiItem.Fats;
+                carbs += aiItem.Carbs;
+                fiber += aiItem.Fiber;
+                alcohol += aiItem.Alcohol;
+            }
+        }
+
         return new MealNutritionSummary(calories, proteins, fats, carbs, fiber, alcohol);
     }
 }

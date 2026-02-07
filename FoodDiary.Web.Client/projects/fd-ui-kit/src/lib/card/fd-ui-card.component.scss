@@ -27,7 +27,7 @@
         justify-content: space-between;
         gap: var(--fd-spacing-sm);
         flex-wrap: wrap;
-        margin-bottom: calc(var(--fd-spacing-sm) * -0.25);
+        margin-bottom: 0;
         width: 100%;
     }
 
@@ -102,4 +102,8 @@
         letter-spacing: normal;
         text-transform: none;
     }
+}
+
+.fd-ui-card--appearance-default {
+    gap: 0;
 }

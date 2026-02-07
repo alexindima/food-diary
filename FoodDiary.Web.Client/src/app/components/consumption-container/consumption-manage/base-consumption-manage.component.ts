@@ -414,11 +414,13 @@ export class BaseConsumptionManageComponent implements OnInit {
                     return;
                 }
                 this.aiSessions.update(current => [...current, session]);
+                this.updateSummary();
             });
     }
 
     public onDeleteAiSession(index: number): void {
         this.aiSessions.update(current => current.filter((_, currentIndex) => currentIndex !== index));
+        this.updateSummary();
     }
 
     public onEditAiSession(index: number): void {
@@ -444,6 +446,7 @@ export class BaseConsumptionManageComponent implements OnInit {
                 this.aiSessions.update(current =>
                     current.map((item, currentIndex) => (currentIndex === index ? updated : item))
                 );
+                this.updateSummary();
             });
     }
 
@@ -862,6 +865,7 @@ export class BaseConsumptionManageComponent implements OnInit {
     }
 
     private calculateAutoNutritionTotals(): NutritionTotals {
+        const aiTotals = this.getAiNutritionTotals();
         return this.items.controls.reduce(
             (totals, group) => {
                 const sourceType = group.controls.sourceType.value;
@@ -903,7 +907,24 @@ export class BaseConsumptionManageComponent implements OnInit {
 
                 return totals;
             },
-            { calories: 0, proteins: 0, fats: 0, carbs: 0, fiber: 0, alcohol: 0 }
+            { ...aiTotals }
+        );
+    }
+
+    private getAiNutritionTotals(): NutritionTotals {
+        return this.aiSessions().reduce(
+            (totals, session) => session.items.reduce(
+                (sessionTotals, item) => ({
+                    calories: sessionTotals.calories + (item.calories ?? 0),
+                    proteins: sessionTotals.proteins + (item.proteins ?? 0),
+                    fats: sessionTotals.fats + (item.fats ?? 0),
+                    carbs: sessionTotals.carbs + (item.carbs ?? 0),
+                    fiber: sessionTotals.fiber + (item.fiber ?? 0),
+                    alcohol: sessionTotals.alcohol + (item.alcohol ?? 0),
+                }),
+                totals,
+            ),
+            { calories: 0, proteins: 0, fats: 0, carbs: 0, fiber: 0, alcohol: 0 },
         );
     }
 
@@ -1019,6 +1040,7 @@ export class BaseConsumptionManageComponent implements OnInit {
                     this.items.clear();
                     this.items.push(this.createConsumptionItem());
                     this.aiSessions.set([]);
+                    this.updateSummary();
                 }
             await this.showConfirmDialog();
         } else {

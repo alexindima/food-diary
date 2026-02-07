@@ -58,6 +58,7 @@ export class ConsumptionPhotoRecognitionDialogComponent {
     public readonly isEditMode = signal(this.dialogData.mode === 'edit');
     public readonly isEditing = signal(false);
     public readonly editItems = signal<EditableAiItem[]>([]);
+    private readonly sourceItems = signal<EditableAiItem[]>([]);
     private shouldSkipNextImageChange = Boolean(this.dialogData.initialSession);
     private readonly unitOptions = ['g', 'ml', 'pcs'] as const;
     public readonly statusKey = computed(() => {
@@ -308,30 +309,46 @@ export class ConsumptionPhotoRecognitionDialogComponent {
                 confidence: 1,
             })) ?? [];
 
-        this.editItems.set(items.map(item => ({
+        const editable = items.map(item => ({
             id: this.createEditId(),
             name: item.nameLocal ?? item.nameEn,
+            nameEn: item.nameEn,
+            nameLocal: item.nameLocal ?? null,
             amount: item.amount,
             unit: item.unit,
-        })));
+        }));
+        this.editItems.set(editable);
+        this.sourceItems.set(editable.map(item => ({ ...item })));
         this.isEditing.set(true);
     }
 
     public applyEditing(): void {
-        const items = this.editItems()
-            .filter(item => item.name.trim().length > 0 && item.amount > 0)
-            .map(item => ({
-                nameEn: item.name.trim(),
-                nameLocal: item.name.trim(),
-                amount: item.amount,
-                unit: item.unit,
-                confidence: 1,
-            }));
+        const edited = this.editItems()
+            .filter(item => item.name.trim().length > 0 && item.amount > 0);
+        const normalized = edited.map(item => ({
+            nameEn: item.nameEn?.trim() || item.name.trim(),
+            nameLocal: item.nameLocal && item.nameLocal.trim().length ? item.nameLocal.trim() : null,
+            amount: item.amount,
+            unit: item.unit,
+            confidence: 1,
+        }));
 
-        this.results.set(items);
+        const changes = this.analyzeEditChanges(this.sourceItems(), edited);
+        this.results.set(normalized);
         this.hasAnalyzed.set(true);
         this.isEditing.set(false);
-        this.runNutrition(items);
+
+        if (changes.requiresAi) {
+            this.runNutrition(normalized);
+            return;
+        }
+
+        const recalculated = this.recalculateNutritionFromLocal(changes, edited);
+        if (recalculated) {
+            this.nutrition.set(recalculated);
+        } else {
+            this.runNutrition(normalized);
+        }
     }
 
     public cancelEditing(): void {
@@ -368,7 +385,7 @@ export class ConsumptionPhotoRecognitionDialogComponent {
                     return { ...item, unit: value };
                 }
 
-                return { ...item, name: value };
+                return { ...item, name: value, nameEn: value, nameLocal: value };
             }),
         );
     }
@@ -380,7 +397,7 @@ export class ConsumptionPhotoRecognitionDialogComponent {
     public addEditItem(): void {
         this.editItems.update(items => ([
             ...items,
-            { id: this.createEditId(), name: '', amount: 0, unit: 'g' },
+            { id: this.createEditId(), name: '', nameEn: '', nameLocal: '', amount: 0, unit: 'g' },
         ]));
     }
 
@@ -445,11 +462,130 @@ export class ConsumptionPhotoRecognitionDialogComponent {
             })),
         };
     }
+
+    private analyzeEditChanges(
+        source: EditableAiItem[],
+        edited: EditableAiItem[],
+    ): EditChangeSummary {
+        const sourceById = new Map(source.map(item => [item.id, item]));
+        const editedById = new Map(edited.map(item => [item.id, item]));
+        const removedIds = source.filter(item => !editedById.has(item.id)).map(item => item.id);
+        const addedItems = edited.filter(item => !sourceById.has(item.id));
+
+        let requiresAi = addedItems.length > 0;
+        const amountChanges: AmountChange[] = [];
+
+        for (const item of edited) {
+            const previous = sourceById.get(item.id);
+            if (!previous) {
+                continue;
+            }
+
+            const nameChanged = this.normalizeName(previous.name) !== this.normalizeName(item.name);
+            const unitChanged = (previous.unit || '').trim().toLowerCase() !== (item.unit || '').trim().toLowerCase();
+            if (nameChanged || unitChanged) {
+                requiresAi = true;
+            }
+
+            if (previous.amount !== item.amount) {
+                amountChanges.push({
+                    id: item.id,
+                    previousAmount: previous.amount,
+                    nextAmount: item.amount,
+                });
+            }
+        }
+
+        return {
+            requiresAi,
+            removedIds,
+            addedItems,
+            amountChanges,
+        };
+    }
+
+    private recalculateNutritionFromLocal(
+        changes: EditChangeSummary,
+        edited: EditableAiItem[],
+    ): FoodNutritionResponse | null {
+        const nutrition = this.nutrition();
+        if (!nutrition) {
+            return null;
+        }
+
+        const nutritionById = new Map(
+            nutrition.items.map(item => [this.normalizeName(item.name), item]),
+        );
+        const source = this.sourceItems();
+
+        const updatedItems = edited.map(item => {
+            const base = source.find(sourceItem => sourceItem.id === item.id);
+            const originalName = base?.nameEn ?? base?.name ?? item.name;
+            const originalNutrition = nutritionById.get(this.normalizeName(originalName));
+            if (!originalNutrition) {
+                return null;
+            }
+
+            const ratio = base && base.amount > 0 ? item.amount / base.amount : 1;
+            return {
+                name: item.name,
+                amount: item.amount,
+                unit: item.unit,
+                calories: originalNutrition.calories * ratio,
+                protein: originalNutrition.protein * ratio,
+                fat: originalNutrition.fat * ratio,
+                carbs: originalNutrition.carbs * ratio,
+                fiber: originalNutrition.fiber * ratio,
+                alcohol: originalNutrition.alcohol * ratio,
+            };
+        }).filter((item): item is FoodNutritionResponse['items'][number] => item !== null);
+
+        if (updatedItems.length !== edited.length) {
+            return null;
+        }
+
+        const totals = updatedItems.reduce(
+            (acc, item) => ({
+                calories: acc.calories + item.calories,
+                protein: acc.protein + item.protein,
+                fat: acc.fat + item.fat,
+                carbs: acc.carbs + item.carbs,
+                fiber: acc.fiber + item.fiber,
+                alcohol: acc.alcohol + item.alcohol,
+            }),
+            { calories: 0, protein: 0, fat: 0, carbs: 0, fiber: 0, alcohol: 0 },
+        );
+
+        return {
+            ...totals,
+            items: updatedItems,
+            notes: nutrition.notes ?? null,
+        };
+    }
+
+    private normalizeName(value?: string | null): string {
+        return (value ?? '').trim().toLowerCase();
+    }
 }
 
 type EditableAiItem = {
     id: string;
     name: string;
+    nameEn: string;
+    nameLocal: string | null;
     amount: number;
     unit: string;
+};
+
+type AmountChange = {
+    id: string;
+    previousAmount: number;
+    nextAmount: number;
+};
+
+type EditChangeSummary = {
+    requiresAi: boolean;
+    removedIds: string[];
+    addedItems: EditableAiItem[];
+    amountChanges: AmountChange[];
 };
