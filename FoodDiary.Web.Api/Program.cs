@@ -17,12 +17,17 @@ builder.Services.AddDistributedMemoryCache();
 
 // Add CORS
 const string corsPolicyName = "AppCors";
+var corsOrigins = builder.Configuration.GetSection("Cors:Origins").Get<string[]>();
+var allowedOrigins = corsOrigins is { Length: > 0 }
+    ? corsOrigins
+    : ["http://localhost:4200", "http://localhost:4300"];
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(corsPolicyName, policy =>
     {
         policy
-            .WithOrigins("http://localhost:4200", "http://localhost:4300")
+            .WithOrigins(allowedOrigins)
             .AllowAnyMethod()
             .AllowAnyHeader()
             .AllowCredentials();
