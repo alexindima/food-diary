@@ -36,6 +36,7 @@
     "@angular/service-worker": "^21.0.3",
     "@ngx-translate/core": "^17.0.0",
     "@ngx-translate/http-loader": "^17.0.0",
+    "@microsoft/signalr": "^8.0.5",
     "@zxing/browser": "^0.1.5",
     "@zxing/library": "^0.21.3",
     "@zxing/ngx-scanner": "^21.0.0",

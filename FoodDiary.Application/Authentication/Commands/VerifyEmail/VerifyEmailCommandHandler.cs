@@ -8,9 +8,11 @@ namespace FoodDiary.Application.Authentication.Commands.VerifyEmail;
 
 public sealed class VerifyEmailCommandHandler(
     IUserRepository userRepository,
-    IPasswordHasher passwordHasher)
+    IPasswordHasher passwordHasher,
+    IEmailVerificationNotifier emailVerificationNotifier)
     : ICommandHandler<VerifyEmailCommand, Result<bool>>
 {
+    private readonly IEmailVerificationNotifier _emailVerificationNotifier = emailVerificationNotifier;
     public async Task<Result<bool>> Handle(VerifyEmailCommand command, CancellationToken cancellationToken)
     {
         var user = await userRepository.GetByIdAsync(command.UserId);
@@ -39,6 +41,15 @@ public sealed class VerifyEmailCommandHandler(
 
         user.ConfirmEmail();
         await userRepository.UpdateAsync(user);
+
+        try
+        {
+            await _emailVerificationNotifier.NotifyEmailVerifiedAsync(user.Id, cancellationToken);
+        }
+        catch
+        {
+            // Notification failures shouldn't block verification.
+        }
 
         return Result.Success(true);
     }

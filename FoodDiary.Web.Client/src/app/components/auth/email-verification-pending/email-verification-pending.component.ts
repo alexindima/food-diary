@@ -6,6 +6,7 @@ import { UserService } from '../../../services/user.service';
 import { AuthService } from '../../../services/auth.service';
 import { NavigationService } from '../../../services/navigation.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { EmailVerificationRealtimeService } from '../../../services/email-verification-realtime.service';
 
 @Component({
     selector: 'fd-email-verification-pending',
@@ -20,6 +21,7 @@ export class EmailVerificationPendingComponent {
     private readonly navigationService = inject(NavigationService);
     private readonly translateService = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly realtimeService = inject(EmailVerificationRealtimeService);
 
     public readonly email = signal<string | null>(null);
     public readonly statusMessage = signal<string | null>(null);
@@ -32,6 +34,7 @@ export class EmailVerificationPendingComponent {
             void this.navigationService.navigateToAuth('login');
             return;
         }
+        this.startRealtime();
         this.loadCurrentUser();
     }
 
@@ -100,5 +103,19 @@ export class EmailVerificationPendingComponent {
                 this.statusMessage.set(this.translateService.instant('AUTH.VERIFY_PENDING.INITIAL'));
             }
         });
+    }
+
+    private startRealtime(): void {
+        this.realtimeService
+            .connect(this.authService, () => {
+                this.authService.setEmailConfirmed(true);
+                this.statusMessage.set(this.translateService.instant('AUTH.VERIFY_PENDING.SUCCESS'));
+                void this.navigationService.navigateToHome();
+            })
+            .then(() => {
+                this.destroyRef.onDestroy(() => {
+                    void this.realtimeService.disconnect();
+                });
+            });
     }
 }

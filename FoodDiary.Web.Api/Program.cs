@@ -3,6 +3,10 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using FoodDiary.Application;
 using FoodDiary.Infrastructure;
+using FoodDiary.Application.Common.Interfaces.Services;
+using FoodDiary.WebApi.Hubs;
+using FoodDiary.WebApi.Services;
+using Microsoft.AspNetCore.SignalR;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,11 +16,16 @@ builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddDistributedMemoryCache();
 
 // Add CORS
+const string corsPolicyName = "AppCors";
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll", policy =>
+    options.AddPolicy(corsPolicyName, policy =>
     {
-        policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+        policy
+            .WithOrigins("http://localhost:4200", "http://localhost:4300")
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .AllowCredentials();
     });
 });
 
@@ -38,12 +47,29 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateLifetime = true,
             ClockSkew = TimeSpan.Zero
         };
+        options.Events = new JwtBearerEvents
+        {
+            OnMessageReceived = context =>
+            {
+                var accessToken = context.Request.Query["access_token"];
+                var path = context.HttpContext.Request.Path;
+                if (!string.IsNullOrWhiteSpace(accessToken) &&
+                    path.StartsWithSegments("/hubs/email-verification"))
+                {
+                    context.Token = accessToken;
+                }
+                return Task.CompletedTask;
+            }
+        };
     });
 
 builder.Services.AddAuthorization();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddSignalR();
+builder.Services.AddSingleton<IUserIdProvider, UserIdProvider>();
+builder.Services.AddScoped<IEmailVerificationNotifier, EmailVerificationNotifier>();
 
 var app = builder.Build();
 
@@ -63,9 +89,10 @@ foreach (var v in s3)
     Console.WriteLine($"{v.Key} = {v.Value}");
 }
 
-app.UseCors("AllowAll");
+app.UseCors(corsPolicyName);
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+app.MapHub<EmailVerificationHub>("/hubs/email-verification").RequireCors(corsPolicyName);
 
 app.Run();
