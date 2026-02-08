@@ -10,6 +10,7 @@ export type AdminUser = {
   firstName?: string | null;
   lastName?: string | null;
   isActive: boolean;
+  isEmailConfirmed: boolean;
   createdOnUtc: string;
   deletedAt?: string | null;
   roles: string[];
@@ -17,6 +18,7 @@ export type AdminUser = {
 
 export type AdminUserUpdate = {
   isActive?: boolean | null;
+  isEmailConfirmed?: boolean | null;
   roles: string[];
 };
 

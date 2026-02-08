@@ -8,6 +8,13 @@
     </div>
 
     <div class="admin-user-dialog__section">
+      <label class="admin-user-dialog__label">
+        <input type="checkbox" [formControl]="form.controls.isEmailConfirmed" />
+        Email confirmed
+      </label>
+    </div>
+
+    <div class="admin-user-dialog__section">
       <div class="admin-user-dialog__label">Roles</div>
       <div class="admin-user-dialog__roles">
         <label *ngFor="let role of roles" class="admin-user-dialog__role">

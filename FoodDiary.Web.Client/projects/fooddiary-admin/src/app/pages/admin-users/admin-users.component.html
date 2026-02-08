@@ -29,6 +29,7 @@
       <div>Name</div>
       <div>Roles</div>
       <div>Status</div>
+      <div>Email</div>
       <div>Created</div>
       <div></div>
     </div>
@@ -44,6 +45,11 @@
       <div class="admin-users__cell">
         <span class="admin-users__badge" [class.admin-users__badge--inactive]="!user.isActive">
           {{ user.isActive ? 'Active' : 'Inactive' }}
+        </span>
+      </div>
+      <div class="admin-users__cell">
+        <span class="admin-users__badge" [class.admin-users__badge--inactive]="!user.isEmailConfirmed">
+          {{ user.isEmailConfirmed ? 'Confirmed' : 'Unconfirmed' }}
         </span>
       </div>
       <div class="admin-users__cell">

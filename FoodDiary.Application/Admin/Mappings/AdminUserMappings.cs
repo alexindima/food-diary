@@ -20,6 +20,7 @@ public static class AdminUserMappings
             user.FirstName,
             user.LastName,
             user.IsActive,
+            user.IsEmailConfirmed,
             user.CreatedOnUtc,
             user.DeletedAt,
             roles,

@@ -108,7 +108,12 @@ public sealed class User : AggregateRoot<UserId> {
 
     public void ConfirmEmail()
     {
-        IsEmailConfirmed = true;
+        SetEmailConfirmed(true);
+    }
+
+    public void SetEmailConfirmed(bool isConfirmed)
+    {
+        IsEmailConfirmed = isConfirmed;
         EmailConfirmationTokenHash = null;
         EmailConfirmationTokenExpiresAtUtc = null;
         EmailConfirmationSentAtUtc = null;

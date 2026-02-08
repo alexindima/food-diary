@@ -8,6 +8,7 @@ namespace FoodDiary.Application.Admin.Commands.UpdateAdminUser;
 public sealed record UpdateAdminUserCommand(
     UserId UserId,
     bool? IsActive,
+    bool? IsEmailConfirmed,
     string[] Roles,
     long? AiInputTokenLimit,
     long? AiOutputTokenLimit)

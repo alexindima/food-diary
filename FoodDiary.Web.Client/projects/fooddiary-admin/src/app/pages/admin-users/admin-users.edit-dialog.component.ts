@@ -9,6 +9,7 @@ import { AdminUser, AdminUsersService } from '../../services/admin-users.service
 
 type AdminUserForm = {
   isActive: FormControl<boolean>;
+  isEmailConfirmed: FormControl<boolean>;
   roles: FormControl<string[]>;
 };
 
@@ -29,6 +30,7 @@ export class AdminUserEditDialogComponent {
   public readonly roles = ['Admin', 'Premium', 'Support'];
   public readonly form: FormGroup<AdminUserForm> = this.fb.group({
     isActive: this.fb.nonNullable.control(this.data.isActive),
+    isEmailConfirmed: this.fb.nonNullable.control(this.data.isEmailConfirmed),
     roles: this.fb.nonNullable.control(this.data.roles ?? []),
   });
 
@@ -41,7 +43,7 @@ export class AdminUserEditDialogComponent {
   public save(): void {
     const value = this.form.getRawValue();
     this.usersService
-      .updateUser(this.user.id, { isActive: value.isActive, roles: value.roles })
+      .updateUser(this.user.id, { isActive: value.isActive, isEmailConfirmed: value.isEmailConfirmed, roles: value.roles })
       .subscribe({
         next: () => this.dialogRef.close(true),
         error: () => this.dialogRef.close(false),

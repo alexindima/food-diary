@@ -33,6 +33,7 @@ public sealed class AdminUsersController(ISender mediator) : BaseApiController(m
         var command = new UpdateAdminUserCommand(
             new UserId(id),
             request.IsActive,
+            request.IsEmailConfirmed,
             request.Roles ?? Array.Empty<string>(),
             request.AiInputTokenLimit,
             request.AiOutputTokenLimit);

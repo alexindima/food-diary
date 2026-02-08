@@ -7,6 +7,7 @@ public sealed record AdminUserResponse(
     string? FirstName,
     string? LastName,
     bool IsActive,
+    bool IsEmailConfirmed,
     DateTime CreatedOnUtc,
     DateTime? DeletedAt,
     string[] Roles,

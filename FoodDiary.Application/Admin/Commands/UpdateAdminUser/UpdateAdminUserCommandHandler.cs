@@ -33,6 +33,11 @@ public sealed class UpdateAdminUserCommandHandler(IUserRepository userRepository
             }
         }
 
+        if (command.IsEmailConfirmed.HasValue)
+        {
+            user.SetEmailConfirmed(command.IsEmailConfirmed.Value);
+        }
+
         if (command.Roles is not null)
         {
             var requestedRoles = command.Roles
