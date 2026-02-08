@@ -1,0 +1,30 @@
+.email-template-dialog {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.email-template-dialog__header {
+  h2 {
+    margin: 0;
+    font-size: 1.25rem;
+  }
+
+  p {
+    margin: 4px 0 0;
+    color: #6b7280;
+    font-size: 0.9rem;
+  }
+}
+
+.email-template-dialog__form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.email-template-dialog__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}

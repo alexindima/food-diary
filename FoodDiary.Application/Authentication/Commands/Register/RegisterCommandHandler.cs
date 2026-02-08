@@ -36,6 +36,7 @@ public class RegisterCommandHandler : ICommandHandler<RegisterCommand, Result<Au
         // Валидация email уникальности через FluentValidation
         var hashedPassword = _passwordHasher.Hash(command.Password);
         var user = User.Create(command.Email, hashedPassword);
+        var normalizedLanguage = NormalizeLanguage(command.Language);
         user.UpdateProfile(
             dailyCalorieTarget: 2000,
             proteinTarget: 150,
@@ -43,7 +44,7 @@ public class RegisterCommandHandler : ICommandHandler<RegisterCommand, Result<Au
             carbTarget: 200,
             fiberTarget: 28,
             waterGoal: 2000,
-            language: "en"
+            language: normalizedLanguage
         );
 
         user = await _userRepository.AddAsync(user);
@@ -64,7 +65,7 @@ public class RegisterCommandHandler : ICommandHandler<RegisterCommand, Result<Au
         try
         {
             await _emailSender.SendEmailVerificationAsync(
-                new EmailVerificationMessage(user.Email, user.Id.Value.ToString(), emailToken),
+                new EmailVerificationMessage(user.Email, user.Id.Value.ToString(), emailToken, user.Language),
                 cancellationToken);
         }
         catch
@@ -76,4 +77,20 @@ public class RegisterCommandHandler : ICommandHandler<RegisterCommand, Result<Au
         var authResponse = new AuthenticationResponse(accessToken, refreshToken, userResponse);
         return Result.Success(authResponse);
     }
+    private static string NormalizeLanguage(string? value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            return "en";
+        }
+
+        var lower = value.Trim().ToLowerInvariant();
+        if (lower.StartsWith("ru"))
+        {
+            return "ru";
+        }
+
+        return "en";
+    }
+
 }

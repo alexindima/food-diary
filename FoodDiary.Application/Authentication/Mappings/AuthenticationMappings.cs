@@ -19,7 +19,7 @@ public static class AuthenticationMappings
 {
     public static RegisterCommand ToCommand(this RegisterRequest request)
     {
-        return new RegisterCommand(request.Email, request.Password);
+        return new RegisterCommand(request.Email, request.Password, request.Language);
     }
 
     public static RestoreAccountCommand ToCommand(this RestoreAccountRequest request)

@@ -45,6 +45,11 @@ export class LocalizationService {
         return firstValueFrom(this.translateService.use(normalized)).then(() => void 0);
     }
 
+    public getCurrentLanguage(): string {
+        const current = this.translateService.currentLang || this.translateService.getDefaultLang();
+        return this.normalizeLanguage(current);
+    }
+
     public clearStoredLanguage(): void {
         localStorage.removeItem(this.storageKey);
     }

@@ -16,6 +16,13 @@ export const adminAuthGuard: CanActivateFn = async (_route, state) => {
   }
 
   if (!authService.isAdmin()) {
+    const upgraded = await authService.tryUpgradeToAdmin();
+    authService.refreshTokenState();
+
+    if (upgraded && authService.isAdmin()) {
+      return true;
+    }
+
     return router.createUrlTree(['/unauthorized'], {
       queryParams: { reason: 'forbidden', returnUrl: state.url },
     });

@@ -4,6 +4,7 @@ import { AdminUsersComponent } from './pages/admin-users/admin-users.component';
 import { UnauthorizedComponent } from './pages/unauthorized/unauthorized.component';
 import { adminAuthGuard } from './guards/admin-auth.guard';
 import { AdminAiUsageComponent } from './pages/admin-ai-usage/admin-ai-usage.component';
+import { AdminEmailTemplatesComponent } from './pages/admin-email-templates/admin-email-templates.component';
 
 export const routes: Routes = [
   {
@@ -19,6 +20,11 @@ export const routes: Routes = [
   {
     path: 'ai-usage',
     component: AdminAiUsageComponent,
+    canActivate: [adminAuthGuard],
+  },
+  {
+    path: 'email-templates',
+    component: AdminEmailTemplatesComponent,
     canActivate: [adminAuthGuard],
   },
   {

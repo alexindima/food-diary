@@ -6,5 +6,6 @@ namespace FoodDiary.Application.Authentication.Commands.Register;
 
 public record RegisterCommand(
     string Email,
-    string Password
+    string Password,
+    string? Language
 ) : ICommand<Result<AuthenticationResponse>>;

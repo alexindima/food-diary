@@ -19,6 +19,7 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
+        services.AddMemoryCache();
         services.AddDbContext<FoodDiaryDbContext>(options =>
             options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
 
@@ -39,6 +40,7 @@ public static class DependencyInjection
         services.AddScoped<ICycleRepository, CycleRepository>();
         services.AddScoped<IImageAssetRepository, ImageAssetRepository>();
         services.AddScoped<IAiUsageRepository, AiUsageRepository>();
+        services.AddScoped<IEmailTemplateRepository, EmailTemplateRepository>();
         services.AddSingleton<IAmazonS3>(provider =>
         {
             var s3Options = provider.GetRequiredService<IOptions<S3Options>>().Value;
@@ -68,6 +70,7 @@ public static class DependencyInjection
         services.AddSingleton<ITelegramLoginWidgetValidator, TelegramLoginWidgetValidator>();
         services.AddSingleton<IAdminSsoService, AdminSsoService>();
         services.AddScoped<IUserCleanupService, UserCleanupService>();
+        services.AddSingleton<IEmailTemplateProvider, EmailTemplateProvider>();
         services.AddSingleton<IEmailSender, SmtpEmailSender>();
         services.AddHttpClient<IOpenAiFoodService, OpenAiFoodService>();
 

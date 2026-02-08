@@ -17,10 +17,12 @@ export class LoginRequest {
 export class RegisterRequest {
     public email: string;
     public password: string;
+    public language?: string;
 
     public constructor(formValue: Partial<RegisterRequest>) {
         this.email = formValue.email || '';
         this.password = formValue.password || '';
+        this.language = formValue.language;
     }
 }
 

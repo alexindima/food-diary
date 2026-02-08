@@ -47,7 +47,7 @@ public sealed class RequestPasswordResetCommandHandler(
         try
         {
             await emailSender.SendPasswordResetAsync(
-                new PasswordResetMessage(user.Email, user.Id.Value.ToString(), token),
+                new PasswordResetMessage(user.Email, user.Id.Value.ToString(), token, user.Language),
                 cancellationToken);
             logger.LogInformation("Password reset email sent for user {UserId}.", user.Id.Value);
         }

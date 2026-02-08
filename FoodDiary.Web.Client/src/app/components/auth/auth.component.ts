@@ -34,6 +34,7 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiCheckboxComponent } from 'fd-ui-kit/checkbox/fd-ui-checkbox.component';
 import { FdUiFormErrorComponent, FD_VALIDATION_ERRORS, FdValidationErrors } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
 import { GoogleIdentityService } from '../../services/google-identity.service';
+import { LocalizationService } from '../../services/localization.service';
 import { environment } from '../../../environments/environment';
 import { GoogleLoginRequest } from '../../types/google-auth.data';
 
@@ -75,6 +76,7 @@ export class AuthComponent implements OnInit, AfterViewInit {
     private readonly validationErrors = inject<FdValidationErrors>(FD_VALIDATION_ERRORS, { optional: true });
     private readonly cdr = inject(ChangeDetectorRef);
     private readonly googleIdentityService = inject(GoogleIdentityService);
+    private readonly localizationService = inject(LocalizationService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly dialogRef = inject(MatDialogRef<AuthComponent>, { optional: true });
 
@@ -238,7 +240,10 @@ export class AuthComponent implements OnInit, AfterViewInit {
             return;
         }
 
-        const registerRequest = new RegisterRequest(this.registerForm.value);
+        const registerRequest = new RegisterRequest({
+            ...this.registerForm.value,
+            language: this.localizationService.getCurrentLanguage(),
+        });
 
         this.authService.register(registerRequest).subscribe({
             next: () => {

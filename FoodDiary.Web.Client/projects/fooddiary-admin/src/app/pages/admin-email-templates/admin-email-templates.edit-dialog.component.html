@@ -1,0 +1,38 @@
+<div class="email-template-dialog">
+  <div class="email-template-dialog__header">
+    <h2>{{ isNew ? 'New template' : (data.key + ' - ' + data.locale) }}</h2>
+    <p>Use {{'{{link}}'}} and {{'{{brand}}'}} placeholders.</p>
+  </div>
+
+  <form [formGroup]="form" class="email-template-dialog__form">
+    <fd-ui-input formControlName="key" label="Key" placeholder="email_verification" />
+    <fd-ui-input formControlName="locale" label="Locale" placeholder="en" />
+
+    <fd-ui-input formControlName="subject" label="Subject" placeholder="Subject" />
+
+    <fd-ui-textarea
+      formControlName="htmlBody"
+      label="HTML body"
+      placeholder="HTML content"
+      [rows]="8"
+    />
+
+    <fd-ui-textarea
+      formControlName="textBody"
+      label="Text body"
+      placeholder="Text content"
+      [rows]="6"
+    />
+
+    <fd-ui-checkbox formControlName="isActive" label="Active" />
+
+    <div class="email-template-dialog__actions">
+      <fd-ui-button type="button" variant="secondary" fill="outline" (click)="onCancel()">Cancel</fd-ui-button>
+      <fd-ui-button type="button" variant="primary" [disabled]="form.invalid || isSaving()" (click)="onSave()">
+        Save
+      </fd-ui-button>
+    </div>
+  </form>
+</div>
+
+

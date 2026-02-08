@@ -1,0 +1,41 @@
+<section class="admin-email-templates">
+  <header class="admin-email-templates__header">
+    <div>
+      <h1 class="admin-email-templates__title">Email templates</h1>
+      <p class="admin-email-templates__subtitle">Edit subjects and bodies used for transactional emails.</p>
+    </div>
+    <fd-ui-button type="button" variant="primary" (click)="openCreate()">Add template</fd-ui-button>
+  </header>
+
+  <div class="admin-email-templates__table">
+    <div class="admin-email-templates__row admin-email-templates__row--head">
+      <span>Key</span>
+      <span>Locale</span>
+      <span>Subject</span>
+      <span>Status</span>
+      <span>Updated</span>
+      <span></span>
+    </div>
+    @for (template of templates(); track template.id) {
+      <div class="admin-email-templates__row">
+        <span class="admin-email-templates__key">{{ template.key }}</span>
+        <span>{{ template.locale }}</span>
+        <span class="admin-email-templates__subject">{{ template.subject }}</span>
+        <span>
+          <span class="admin-email-templates__badge" [class.admin-email-templates__badge--inactive]="!template.isActive">
+            {{ template.isActive ? 'Active' : 'Disabled' }}
+          </span>
+        </span>
+        <span>{{ template.updatedOnUtc || template.createdOnUtc | date: 'yyyy-MM-dd HH:mm' }}</span>
+        <span>
+          <fd-ui-button type="button" variant="secondary" fill="outline" (click)="openEdit(template)">
+            Edit
+          </fd-ui-button>
+        </span>
+      </div>
+    }
+    @if (!isLoading() && templates().length === 0) {
+      <div class="admin-email-templates__empty">No templates yet.</div>
+    }
+  </div>
+</section>
