@@ -1,6 +1,15 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { catchError, map, Observable, of, tap, throwError } from 'rxjs';
-import { AuthResponse, LoginRequest, RegisterRequest, RestoreAccountRequest, TelegramLoginWidgetRequest, TelegramAuthRequest } from '../types/auth.data';
+import {
+    AuthResponse,
+    LoginRequest,
+    RegisterRequest,
+    RestoreAccountRequest,
+    TelegramLoginWidgetRequest,
+    TelegramAuthRequest,
+    PasswordResetRequest,
+    ConfirmPasswordResetRequest,
+} from '../types/auth.data';
 import { environment } from '../../environments/environment';
 import { ApiService } from './api.service';
 import { NavigationService } from './navigation.service';
@@ -116,6 +125,27 @@ export class AuthService extends ApiService {
             }),
             catchError((error: HttpErrorResponse) => {
                 console.error('Google login error', error);
+                return throwError(() => error);
+            }),
+        );
+    }
+
+    public requestPasswordReset(data: PasswordResetRequest): Observable<boolean> {
+        return this.post<boolean>('password-reset/request', data).pipe(
+            catchError((error: HttpErrorResponse) => {
+                console.error('Password reset request error', error);
+                return throwError(() => error);
+            }),
+        );
+    }
+
+    public confirmPasswordReset(data: ConfirmPasswordResetRequest): Observable<AuthResponse> {
+        return this.post<AuthResponse>('password-reset/confirm', data).pipe(
+            tap(response => {
+                this.onLogin(response, false);
+            }),
+            catchError((error: HttpErrorResponse) => {
+                console.error('Password reset confirm error', error);
                 return throwError(() => error);
             }),
         );

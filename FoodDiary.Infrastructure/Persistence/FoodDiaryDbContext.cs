@@ -51,6 +51,8 @@ public class FoodDiaryDbContext : DbContext
                 .HasColumnType("timestamp with time zone");
             entity.Property(e => e.PasswordResetTokenExpiresAtUtc)
                 .HasColumnType("timestamp with time zone");
+            entity.Property(e => e.PasswordResetSentAtUtc)
+                .HasColumnType("timestamp with time zone");
             entity.Property(e => e.DeletedAt)
                 .HasColumnType("timestamp with time zone");
             entity.Property(e => e.ActivityLevel)

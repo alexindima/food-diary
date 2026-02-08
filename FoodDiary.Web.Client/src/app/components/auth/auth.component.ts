@@ -20,7 +20,13 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { matchFieldValidator } from '../../validators/match-field.validator';
 import { NavigationService } from '../../services/navigation.service';
 import { FormGroupControls } from '../../types/common.data';
-import { LoginRequest, RegisterRequest, RestoreAccountRequest, TelegramLoginWidgetRequest } from '../../types/auth.data';
+import {
+    LoginRequest,
+    RegisterRequest,
+    RestoreAccountRequest,
+    TelegramLoginWidgetRequest,
+    PasswordResetRequest,
+} from '../../types/auth.data';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
@@ -76,11 +82,17 @@ export class AuthComponent implements OnInit, AfterViewInit {
 
     public loginForm: FormGroup<LoginFormGroup>;
     public registerForm: FormGroup<RegisterFormGroup>;
+    public passwordResetForm: FormGroup<PasswordResetFormGroup>;
     public globalError = signal<string | null>(null);
     public googleReady = signal<boolean>(false);
     public telegramLoginEnabled = signal<boolean>(false);
     public showRestoreAction = signal<boolean>(false);
     public isRestoring = signal<boolean>(false);
+    public showPasswordReset = signal<boolean>(false);
+    public isPasswordResetting = signal<boolean>(false);
+    public passwordResetSent = signal<boolean>(false);
+    public passwordResetCooldownSeconds = signal<number>(0);
+    private passwordResetCooldownTimerId: number | null = null;
     public authBenefits: string[] = [
         'AUTH.INFO.HIGHLIGHTS.SYNC',
         'AUTH.INFO.HIGHLIGHTS.INSIGHTS',
@@ -106,6 +118,10 @@ export class AuthComponent implements OnInit, AfterViewInit {
             agreeTerms: new FormControl<boolean>(false, { nonNullable: true, validators: Validators.requiredTrue }),
         });
 
+        this.passwordResetForm = new FormGroup<PasswordResetFormGroup>({
+            email: new FormControl<string>('', { nonNullable: true, validators: [Validators.required, Validators.email] }),
+        });
+
         this.loginForm.valueChanges
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(() => {
@@ -118,6 +134,13 @@ export class AuthComponent implements OnInit, AfterViewInit {
             .subscribe(() => {
                 this.clearGlobalError();
                 this.markDirtyControlsTouched(this.registerForm);
+                this.cdr.markForCheck();
+            });
+        this.passwordResetForm.valueChanges
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => {
+                this.clearGlobalError();
+                this.markDirtyControlsTouched(this.passwordResetForm);
                 this.cdr.markForCheck();
             });
 
@@ -158,6 +181,11 @@ export class AuthComponent implements OnInit, AfterViewInit {
             confirmPassword: '',
             agreeTerms: false,
         });
+        this.passwordResetForm.reset({
+            email: '',
+        });
+        this.showPasswordReset.set(false);
+        this.passwordResetSent.set(false);
         if (this.useRouting && this.router) {
             await this.router.navigate(['/auth', mode]);
         }
@@ -331,6 +359,74 @@ export class AuthComponent implements OnInit, AfterViewInit {
         });
     }
 
+    public onPasswordResetOpen(): void {
+        if (this.showPasswordReset()) {
+            return;
+        }
+        this.clearGlobalError();
+        this.passwordResetForm.reset({
+            email: this.loginForm.controls.email.value || '',
+        });
+        this.passwordResetSent.set(false);
+        this.showPasswordReset.set(true);
+    }
+
+    public onPasswordResetClose(): void {
+        this.showPasswordReset.set(false);
+        this.passwordResetSent.set(false);
+        this.clearGlobalError();
+    }
+
+    public onPasswordResetSubmit(): void {
+        if (!this.passwordResetForm.valid || this.isPasswordResetting()) {
+            return;
+        }
+        if (this.passwordResetCooldownSeconds() > 0) {
+            return;
+        }
+
+        const request = new PasswordResetRequest(this.passwordResetForm.value);
+        this.isPasswordResetting.set(true);
+
+        this.authService.requestPasswordReset(request).subscribe({
+            next: () => {
+                this.isPasswordResetting.set(false);
+                this.passwordResetSent.set(true);
+                this.startPasswordResetCooldown();
+            },
+            error: () => {
+                this.isPasswordResetting.set(false);
+                this.setGlobalError('FORM_ERRORS.UNKNOWN');
+            },
+        });
+    }
+
+    private startPasswordResetCooldown(seconds = 60): void {
+        this.passwordResetCooldownSeconds.set(seconds);
+        if (this.passwordResetCooldownTimerId) {
+            window.clearInterval(this.passwordResetCooldownTimerId);
+        }
+        this.passwordResetCooldownTimerId = window.setInterval(() => {
+            const remaining = this.passwordResetCooldownSeconds();
+            if (remaining <= 1) {
+                this.passwordResetCooldownSeconds.set(0);
+                if (this.passwordResetCooldownTimerId) {
+                    window.clearInterval(this.passwordResetCooldownTimerId);
+                    this.passwordResetCooldownTimerId = null;
+                }
+                return;
+            }
+            this.passwordResetCooldownSeconds.set(remaining - 1);
+        }, 1000);
+
+        this.destroyRef.onDestroy(() => {
+            if (this.passwordResetCooldownTimerId) {
+                window.clearInterval(this.passwordResetCooldownTimerId);
+                this.passwordResetCooldownTimerId = null;
+            }
+        });
+    }
+
     private closeDialogIfAny(): void {
         this.dialogRef?.close();
     }
@@ -445,4 +541,10 @@ interface RegisterFormValues {
 
 type LoginFormGroup = FormGroupControls<LoginFormValues>;
 type RegisterFormGroup = FormGroupControls<RegisterFormValues>;
+
+interface PasswordResetFormValues {
+    email: string;
+}
+
+type PasswordResetFormGroup = FormGroupControls<PasswordResetFormValues>;
 

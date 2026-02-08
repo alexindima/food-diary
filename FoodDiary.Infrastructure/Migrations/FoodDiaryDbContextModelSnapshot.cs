@@ -822,6 +822,9 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.Property<DateTime?>("PasswordResetTokenExpiresAtUtc")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<DateTime?>("PasswordResetSentAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("PasswordResetTokenHash")
                         .HasColumnType("text");
 

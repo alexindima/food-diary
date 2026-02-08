@@ -26,69 +26,116 @@
 
     <div class="auth__content">
         @if (authMode === 'login') {
-            <form [formGroup]="loginForm" (ngSubmit)="onLoginSubmit()" class="auth__form">
-                <div class="auth__field">
-                    <fd-ui-input formControlName="email"
-                        type="email"
-                        [label]="'AUTH.LOGIN.EMAIL' | translate"
-                        [placeholder]="'AUTH.LOGIN.EMAIL_PLACEHOLDER' | translate"
-                        autocomplete="email"
-                        [error]="getControlError(loginForm.controls.email)"
-                     />
-                </div>
+            @if (showPasswordReset()) {
+                <form [formGroup]="passwordResetForm" (ngSubmit)="onPasswordResetSubmit()" class="auth__form">
+                    <div class="auth__field">
+                        <fd-ui-input formControlName="email"
+                            type="email"
+                            [label]="'AUTH.RESET.EMAIL' | translate"
+                            [placeholder]="'AUTH.RESET.EMAIL_PLACEHOLDER' | translate"
+                            autocomplete="email"
+                            [error]="getControlError(passwordResetForm.controls.email)"
+                         />
+                    </div>
 
-                <div class="auth__field">
-                    <fd-ui-input formControlName="password"
-                        type="password"
-                        [label]="'AUTH.LOGIN.PASSWORD' | translate"
-                        [placeholder]="'AUTH.LOGIN.PASSWORD_PLACEHOLDER' | translate"
-                        autocomplete="current-password"
-                        [error]="getControlError(loginForm.controls.password)"
-                     />
-                </div>
-
-                <fd-ui-checkbox formControlName="rememberMe"
-                    [label]="'AUTH.LOGIN.REMEMBER_ME' | translate"
-                 />
-
-                <div class="auth__actions">
-                    <fd-ui-button
-                        type="submit"
-                        variant="primary"
-                        [disabled]="loginForm.invalid"
-                        [fullWidth]="true"
-                    >
-                        {{ 'AUTH.LOGIN.LOGIN' | translate }}
-                    </fd-ui-button>
-                    <fd-ui-form-error [error]="globalError()" />
-                    @if (showRestoreAction()) {
+                    <div class="auth__actions">
+                        <fd-ui-button
+                            type="submit"
+                            variant="primary"
+                            [disabled]="passwordResetForm.invalid || isPasswordResetting() || passwordResetCooldownSeconds() > 0"
+                            [fullWidth]="true"
+                        >
+                            {{ 'AUTH.RESET.SEND' | translate }}
+                        </fd-ui-button>
+                        <fd-ui-form-error [error]="globalError()" />
+                        @if (passwordResetSent()) {
+                            <p class="auth__hint">{{ 'AUTH.RESET.SENT' | translate }}</p>
+                        }
+                        @if (passwordResetCooldownSeconds() > 0) {
+                            <p class="auth__hint">
+                                {{ 'AUTH.RESET.RESEND_COOLDOWN' | translate: { seconds: passwordResetCooldownSeconds() } }}
+                            </p>
+                        }
                         <fd-ui-button
                             type="button"
                             variant="secondary"
                             fill="outline"
-                            [disabled]="loginForm.invalid || isRestoring()"
                             [fullWidth]="true"
-                            (click)="onRestoreSubmit()"
+                            (click)="onPasswordResetClose()"
                         >
-                            {{ 'AUTH.LOGIN.RESTORE' | translate }}
+                            {{ 'AUTH.RESET.BACK' | translate }}
                         </fd-ui-button>
-                    }
-                </div>
+                    </div>
+                </form>
+            } @else {
+                <form [formGroup]="loginForm" (ngSubmit)="onLoginSubmit()" class="auth__form">
+                    <div class="auth__field">
+                        <fd-ui-input formControlName="email"
+                            type="email"
+                            [label]="'AUTH.LOGIN.EMAIL' | translate"
+                            [placeholder]="'AUTH.LOGIN.EMAIL_PLACEHOLDER' | translate"
+                            autocomplete="email"
+                            [error]="getControlError(loginForm.controls.email)"
+                         />
+                    </div>
 
-                <div class="auth__divider">
-                    <span>{{ 'AUTH.GOOGLE.OR' | translate }}</span>
-                </div>
+                    <div class="auth__field">
+                        <fd-ui-input formControlName="password"
+                            type="password"
+                            [label]="'AUTH.LOGIN.PASSWORD' | translate"
+                            [placeholder]="'AUTH.LOGIN.PASSWORD_PLACEHOLDER' | translate"
+                            autocomplete="current-password"
+                            [error]="getControlError(loginForm.controls.password)"
+                         />
+                    </div>
 
-                <div class="auth__social">
-                    <div #googleLoginButton class="auth__google-button" aria-label="{{ 'AUTH.GOOGLE.LOGIN_BUTTON' | translate }}"></div>
-                    @if (!googleReady()) {
-                        <div class="auth__google-hint">{{ 'AUTH.GOOGLE.UNAVAILABLE' | translate }}</div>
-                    }
-                    @if (telegramLoginEnabled()) {
-                        <div #telegramLoginButton class="auth__telegram-button" aria-label="Telegram login"></div>
-                    }
-                </div>
-            </form>
+                    <fd-ui-checkbox formControlName="rememberMe"
+                        [label]="'AUTH.LOGIN.REMEMBER_ME' | translate"
+                     />
+
+                    <button type="button" class="auth__link" (click)="onPasswordResetOpen()">
+                        {{ 'AUTH.LOGIN.FORGOT_PASSWORD' | translate }}
+                    </button>
+
+                    <div class="auth__actions">
+                        <fd-ui-button
+                            type="submit"
+                            variant="primary"
+                            [disabled]="loginForm.invalid"
+                            [fullWidth]="true"
+                        >
+                            {{ 'AUTH.LOGIN.LOGIN' | translate }}
+                        </fd-ui-button>
+                        <fd-ui-form-error [error]="globalError()" />
+                        @if (showRestoreAction()) {
+                            <fd-ui-button
+                                type="button"
+                                variant="secondary"
+                                fill="outline"
+                                [disabled]="loginForm.invalid || isRestoring()"
+                                [fullWidth]="true"
+                                (click)="onRestoreSubmit()"
+                            >
+                                {{ 'AUTH.LOGIN.RESTORE' | translate }}
+                            </fd-ui-button>
+                        }
+                    </div>
+
+                    <div class="auth__divider">
+                        <span>{{ 'AUTH.GOOGLE.OR' | translate }}</span>
+                    </div>
+
+                    <div class="auth__social">
+                        <div #googleLoginButton class="auth__google-button" aria-label="{{ 'AUTH.GOOGLE.LOGIN_BUTTON' | translate }}"></div>
+                        @if (!googleReady()) {
+                            <div class="auth__google-hint">{{ 'AUTH.GOOGLE.UNAVAILABLE' | translate }}</div>
+                        }
+                        @if (telegramLoginEnabled()) {
+                            <div #telegramLoginButton class="auth__telegram-button" aria-label="Telegram login"></div>
+                        }
+                    </div>
+                </form>
+            }
         } @else {
             <form [formGroup]="registerForm" (ngSubmit)="onRegisterSubmit()" class="auth__form">
                 <div class="auth__field">

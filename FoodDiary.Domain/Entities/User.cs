@@ -20,6 +20,7 @@ public sealed class User : AggregateRoot<UserId> {
     public DateTime? EmailConfirmationSentAtUtc { get; private set; }
     public string? PasswordResetTokenHash { get; private set; }
     public DateTime? PasswordResetTokenExpiresAtUtc { get; private set; }
+    public DateTime? PasswordResetSentAtUtc { get; private set; }
     public string? Username { get; private set; }
     public string? FirstName { get; private set; }
     public string? LastName { get; private set; }
@@ -124,6 +125,7 @@ public sealed class User : AggregateRoot<UserId> {
     {
         PasswordResetTokenHash = tokenHash;
         PasswordResetTokenExpiresAtUtc = expiresAtUtc;
+        PasswordResetSentAtUtc = DateTime.UtcNow;
         SetModified();
     }
 
@@ -131,6 +133,7 @@ public sealed class User : AggregateRoot<UserId> {
     {
         PasswordResetTokenHash = null;
         PasswordResetTokenExpiresAtUtc = null;
+        PasswordResetSentAtUtc = null;
         SetModified();
     }
 

@@ -360,6 +360,24 @@
             "RESENT": "Verification email sent.",
             "RESEND_ERROR": "Couldn't send the email. Please try again later.",
             "RESEND_COOLDOWN": "You can resend in {{ seconds }}s."
+        },
+        "RESET": {
+            "TITLE": "Reset your password",
+            "SUBTITLE": "Create a new password to regain access to your account.",
+            "EMAIL": "Email",
+            "EMAIL_PLACEHOLDER": "user@example.com",
+            "SEND": "Send reset link",
+            "SENT": "Password reset link sent. Check your inbox.",
+            "BACK": "Back to login",
+            "PASSWORD": "New password",
+            "PASSWORD_PLACEHOLDER": "Enter a new password",
+            "CONFIRM_PASSWORD": "Confirm new password",
+            "CONFIRM_PASSWORD_PLACEHOLDER": "Repeat the new password",
+            "SAVE": "Save new password",
+            "INVALID": "The reset link is invalid or expired.",
+            "ERROR_GENERIC": "We couldn't reset the password. Please try again.",
+            "BACK_TO_LOGIN": "Back to login",
+            "RESEND_COOLDOWN": "You can resend in {{ seconds }}s."
         }
     },
     "PRODUCT_LIST": {

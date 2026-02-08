@@ -34,6 +34,26 @@ export class RestoreAccountRequest {
     }
 }
 
+export class PasswordResetRequest {
+    public email: string;
+
+    public constructor(formValue: Partial<PasswordResetRequest>) {
+        this.email = formValue.email || '';
+    }
+}
+
+export class ConfirmPasswordResetRequest {
+    public userId: string;
+    public token: string;
+    public newPassword: string;
+
+    public constructor(formValue: Partial<ConfirmPasswordResetRequest>) {
+        this.userId = formValue.userId || '';
+        this.token = formValue.token || '';
+        this.newPassword = formValue.newPassword || '';
+    }
+}
+
 export interface TelegramLoginWidgetRequest {
     id: number;
     authDate: number;

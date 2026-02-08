@@ -27,6 +27,7 @@ import { GoalsPageComponent } from './components/goals-page/goals-page.component
 import { unsavedChangesGuard } from './guards/unsaved-changes.guard';
 import { EmailVerificationPendingComponent } from './components/auth/email-verification-pending/email-verification-pending.component';
 import { EmailVerificationComponent } from './components/auth/email-verification/email-verification.component';
+import { PasswordResetComponent } from './components/auth/password-reset/password-reset.component';
 
 export const routes: Routes = [
     { path: '', component: MainComponent, canDeactivate: [unsavedChangesGuard] },
@@ -49,6 +50,10 @@ export const routes: Routes = [
     {
         path: 'verify-email',
         component: EmailVerificationComponent,
+    },
+    {
+        path: 'reset-password',
+        component: PasswordResetComponent,
     },
     {
         path: 'products',

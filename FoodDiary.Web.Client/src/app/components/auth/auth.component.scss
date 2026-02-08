@@ -110,6 +110,29 @@
         }
     }
 
+    &__link {
+        align-self: flex-start;
+        margin-top: -4px;
+        background: none;
+        border: none;
+        padding: 0;
+        color: #3b6dfc;
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: pointer;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+
+    &__hint {
+        margin: 0;
+        text-align: center;
+        color: #5b6275;
+        font-size: 0.95rem;
+    }
+
     &__divider {
         display: flex;
         align-items: center;
