@@ -1,38 +1,78 @@
 <div class="email-template-dialog">
   <div class="email-template-dialog__header">
-    <h2>{{ isNew ? 'New template' : (data.key + ' - ' + data.locale) }}</h2>
-    <p>Use {{'{{link}}'}} and {{'{{brand}}'}} placeholders.</p>
-  </div>
-
-  <form [formGroup]="form" class="email-template-dialog__form">
-    <fd-ui-input formControlName="key" label="Key" placeholder="email_verification" />
-    <fd-ui-input formControlName="locale" label="Locale" placeholder="en" />
-
-    <fd-ui-input formControlName="subject" label="Subject" placeholder="Subject" />
-
-    <fd-ui-textarea
-      formControlName="htmlBody"
-      label="HTML body"
-      placeholder="HTML content"
-      [rows]="8"
-    />
-
-    <fd-ui-textarea
-      formControlName="textBody"
-      label="Text body"
-      placeholder="Text content"
-      [rows]="6"
-    />
-
-    <fd-ui-checkbox formControlName="isActive" label="Active" />
-
-    <div class="email-template-dialog__actions">
+    <div>
+      <h2>{{ isNew ? 'New template' : (data.key + ' - ' + data.locale) }}</h2>
+      <p>Use {{'{{link}}'}} and {{'{{brand}}'}} placeholders.</p>
+    </div>
+    <div class="email-template-dialog__actions email-template-dialog__actions--header">
       <fd-ui-button type="button" variant="secondary" fill="outline" (click)="onCancel()">Cancel</fd-ui-button>
       <fd-ui-button type="button" variant="primary" [disabled]="form.invalid || isSaving()" (click)="onSave()">
         Save
       </fd-ui-button>
     </div>
-  </form>
+  </div>
+
+  <div class="email-template-dialog__layout">
+    <form [formGroup]="form" class="email-template-dialog__form">
+      <fd-ui-input formControlName="key" label="Key" placeholder="email_verification" />
+      <fd-ui-input formControlName="locale" label="Locale" placeholder="en" />
+
+      <fd-ui-input formControlName="subject" label="Subject" placeholder="Subject" />
+
+      <fd-ui-textarea
+        formControlName="htmlBody"
+        label="HTML body"
+        placeholder="HTML content"
+        [rows]="14"
+      />
+
+      <fd-ui-textarea
+        formControlName="textBody"
+        label="Text body"
+        placeholder="Text content"
+        [rows]="8"
+      />
+
+      <fd-ui-checkbox formControlName="isActive" label="Active" />
+    </form>
+
+    <div class="email-template-dialog__preview">
+      <div class="email-template-dialog__preview-header">
+        <div class="email-template-dialog__preview-title">Preview</div>
+        <div class="email-template-dialog__preview-tabs">
+          <button
+            type="button"
+            class="email-template-dialog__preview-tab"
+            [class.email-template-dialog__preview-tab--active]="previewMode() === 'html'"
+            (click)="setPreviewMode('html')"
+          >
+            HTML
+          </button>
+          <button
+            type="button"
+            class="email-template-dialog__preview-tab"
+            [class.email-template-dialog__preview-tab--active]="previewMode() === 'text'"
+            (click)="setPreviewMode('text')"
+          >
+            Text
+          </button>
+        </div>
+      </div>
+
+      <div class="email-template-dialog__preview-body">
+        @if (previewMode() === 'html') {
+          <iframe
+            class="email-template-dialog__preview-iframe"
+            [srcdoc]="previewHtml()"
+            sandbox="allow-same-origin"
+            title="Email preview"
+          ></iframe>
+        } @else {
+          <pre class="email-template-dialog__preview-text">{{ previewText() }}</pre>
+        }
+      </div>
+    </div>
+  </div>
 </div>
 
 

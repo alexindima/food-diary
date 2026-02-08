@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
@@ -7,6 +7,7 @@ import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea.compone
 import { FdUiCheckboxComponent } from 'fd-ui-kit/checkbox/fd-ui-checkbox.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { AdminEmailTemplatesService, AdminEmailTemplate } from '../../services/admin-email-templates.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 type TemplateForm = {
   key: FormControl<string>;
@@ -36,9 +37,15 @@ export class AdminEmailTemplateEditDialogComponent {
   public readonly data = inject<AdminEmailTemplate>(MAT_DIALOG_DATA);
   private readonly dialogRef = inject<MatDialogRef<AdminEmailTemplateEditDialogComponent, boolean>>(MatDialogRef);
   private readonly service = inject(AdminEmailTemplatesService);
+  private readonly destroyRef = inject(DestroyRef);
 
   public readonly isNew = (this.data as AdminEmailTemplate & { isNew?: boolean }).isNew === true;
   public readonly isSaving = signal(false);
+  public readonly previewMode = signal<'html' | 'text'>('html');
+  public readonly previewHtml = signal('');
+  public readonly previewText = signal('');
+  public readonly previewBrand = signal('FoodDiary');
+  public readonly previewLink = signal('https://fooddiary.club/verify-email?userId=demo&token=demo');
   public readonly form = new FormGroup<TemplateForm>({
     key: new FormControl(this.data.key, { nonNullable: true, validators: [Validators.required] }),
     locale: new FormControl(this.data.locale, { nonNullable: true, validators: [Validators.required] }),
@@ -53,6 +60,9 @@ export class AdminEmailTemplateEditDialogComponent {
       this.form.controls.key.disable({ emitEvent: false });
       this.form.controls.locale.disable({ emitEvent: false });
     }
+
+    this.updatePreview();
+    this.form.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.updatePreview());
   }
 
   public onCancel(): void {
@@ -84,5 +94,26 @@ export class AdminEmailTemplateEditDialogComponent {
           this.isSaving.set(false);
         },
       });
+  }
+
+  public setPreviewMode(mode: 'html' | 'text'): void {
+    this.previewMode.set(mode);
+  }
+
+  private updatePreview(): void {
+    const subject = this.form.controls.subject.value ?? '';
+    const htmlBody = this.form.controls.htmlBody.value ?? '';
+    const textBody = this.form.controls.textBody.value ?? '';
+    const brand = this.previewBrand();
+    const link = this.previewLink();
+
+    this.previewHtml.set(this.applyTokens(htmlBody || `<div style="font-family:Segoe UI,Arial,sans-serif;">${subject}</div>`, link, brand));
+    this.previewText.set(this.applyTokens(textBody || subject, link, brand));
+  }
+
+  private applyTokens(value: string, link: string, brand: string): string {
+    return value
+      .replace(/{{\s*link\s*}}/gi, link)
+      .replace(/{{\s*brand\s*}}/gi, brand);
   }
 }

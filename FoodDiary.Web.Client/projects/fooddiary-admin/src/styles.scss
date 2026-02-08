@@ -12,3 +12,35 @@ body {
   color: var(--fd-color-text, #333333);
   background-color: var(--fd-color-background, var(--fd-layout-page-background, #f5f6fa));
 }
+
+.fd-ui-dialog-backdrop {
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(4px);
+}
+
+.cdk-overlay-pane.fd-admin-email-template-dialog {
+  width: min(calc(100vw - 2rem), 1120px);
+}
+
+.cdk-overlay-pane.fd-admin-email-template-dialog--fullscreen {
+  width: 100vw;
+  height: 100vh;
+  max-width: 100vw;
+  max-height: 100vh;
+  margin: 0;
+  top: 0;
+  left: 0;
+}
+
+.cdk-overlay-pane.fd-admin-email-template-dialog--fullscreen .mat-mdc-dialog-container {
+  align-items: stretch;
+  justify-content: stretch;
+}
+
+.cdk-overlay-pane.fd-admin-email-template-dialog--fullscreen .mat-mdc-dialog-surface {
+  width: 100vw;
+  height: 100vh;
+  max-width: 100vw;
+  max-height: 100vh;
+  border-radius: 0;
+}
