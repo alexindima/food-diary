@@ -6,4 +6,5 @@ public sealed record AdminAiUsageSummaryResponse(
     int OutputTokens,
     IReadOnlyList<AdminAiUsageDailyResponse> ByDay,
     IReadOnlyList<AdminAiUsageBreakdownResponse> ByOperation,
-    IReadOnlyList<AdminAiUsageBreakdownResponse> ByModel);
+    IReadOnlyList<AdminAiUsageBreakdownResponse> ByModel,
+    IReadOnlyList<AdminAiUsageUserResponse> ByUser);

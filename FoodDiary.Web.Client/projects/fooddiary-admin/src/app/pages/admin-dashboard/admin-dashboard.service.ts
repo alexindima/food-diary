@@ -37,6 +37,14 @@ export type AdminAiUsageBreakdown = {
   outputTokens: number;
 };
 
+export type AdminAiUsageUser = {
+  id: string;
+  email: string;
+  totalTokens: number;
+  inputTokens: number;
+  outputTokens: number;
+};
+
 export type AdminAiUsageSummary = {
   totalTokens: number;
   inputTokens: number;
@@ -44,6 +52,7 @@ export type AdminAiUsageSummary = {
   byDay: AdminAiUsageDaily[];
   byOperation: AdminAiUsageBreakdown[];
   byModel: AdminAiUsageBreakdown[];
+  byUser: AdminAiUsageUser[];
 };
 
 @Injectable({ providedIn: 'root' })

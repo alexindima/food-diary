@@ -68,6 +68,24 @@
   gap: 12px;
 }
 
+.admin-ai-usage__row--split {
+  align-items: flex-start;
+}
+
+.admin-ai-usage__user {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.admin-ai-usage__user-email {
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 @media (max-width: 900px) {
   .admin-ai-usage__metrics {
     grid-template-columns: 1fr;

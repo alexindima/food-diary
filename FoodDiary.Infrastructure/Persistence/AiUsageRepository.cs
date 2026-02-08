@@ -64,6 +64,24 @@ public sealed class AiUsageRepository(FoodDiaryDbContext context) : IAiUsageRepo
             .OrderByDescending(x => x.Total)
             .ToListAsync(cancellationToken);
 
+        var byUserRaw = await query
+            .Join(
+                context.Users.AsNoTracking(),
+                usage => usage.UserId,
+                user => user.Id,
+                (usage, user) => new { usage, user.Id, user.Email })
+            .GroupBy(x => new { x.Id, x.Email })
+            .Select(group => new
+            {
+                group.Key.Id,
+                group.Key.Email,
+                Total = group.Sum(x => x.usage.TotalTokens),
+                Input = group.Sum(x => x.usage.InputTokens),
+                Output = group.Sum(x => x.usage.OutputTokens)
+            })
+            .OrderByDescending(x => x.Total)
+            .ToListAsync(cancellationToken);
+
         var daily = byDay
             .Select(x => new AiUsageDailySummary(
                 DateOnly.FromDateTime(x.Date),
@@ -80,13 +98,18 @@ public sealed class AiUsageRepository(FoodDiaryDbContext context) : IAiUsageRepo
             .Select(x => new AiUsageBreakdown(x.Key, x.Total, x.Input, x.Output))
             .ToList();
 
+        var byUser = byUserRaw
+            .Select(x => new AiUsageUserSummary(new UserId(x.Id), x.Email, x.Total, x.Input, x.Output))
+            .ToList();
+
         return new AiUsageSummary(
             totalTokens,
             inputTokens,
             outputTokens,
             daily,
             byOperation,
-            byModel);
+            byModel,
+            byUser);
     }
 
     public async Task<AiUsageTotals> GetUserTotalsAsync(

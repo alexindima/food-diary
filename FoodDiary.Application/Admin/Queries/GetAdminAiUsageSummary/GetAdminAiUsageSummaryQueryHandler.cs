@@ -28,7 +28,8 @@ public sealed class GetAdminAiUsageSummaryQueryHandler(IAiUsageRepository aiUsag
             summary.OutputTokens,
             summary.ByDay.Select(MapDaily).ToList(),
             summary.ByOperation.Select(MapBreakdown).ToList(),
-            summary.ByModel.Select(MapBreakdown).ToList());
+            summary.ByModel.Select(MapBreakdown).ToList(),
+            summary.ByUser.Select(MapUser).ToList());
 
         return Result.Success(response);
     }
@@ -38,4 +39,7 @@ public sealed class GetAdminAiUsageSummaryQueryHandler(IAiUsageRepository aiUsag
 
     private static AdminAiUsageBreakdownResponse MapBreakdown(AiUsageBreakdown breakdown)
         => new(breakdown.Key, breakdown.TotalTokens, breakdown.InputTokens, breakdown.OutputTokens);
+
+    private static AdminAiUsageUserResponse MapUser(AiUsageUserSummary user)
+        => new(user.UserId.Value, user.Email, user.TotalTokens, user.InputTokens, user.OutputTokens);
 }
