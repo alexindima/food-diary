@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace FoodDiary.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class SeedEmailTemplates : Migration
+    public partial class SeedEmailTemplatesAfterAddEmailTemplates : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
