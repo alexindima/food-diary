@@ -12,7 +12,7 @@ namespace FoodDiary.Infrastructure.Migrations
         {
             migrationBuilder.Sql(
                 """
-                DO $$
+                DO $seed$
                 BEGIN
                   IF to_regclass('public."EmailTemplates"') IS NOT NULL THEN
                     INSERT INTO "EmailTemplates"
@@ -22,7 +22,7 @@ namespace FoodDiary.Infrastructure.Migrations
                         'email_verification',
                         'en',
                         'Confirm your email',
-                        $$<!doctype html>
+                        $html$<!doctype html>
                 <html lang="en">
                   <head>
                     <meta charset="UTF-8">
@@ -66,10 +66,10 @@ namespace FoodDiary.Infrastructure.Migrations
                       </tr>
                     </table>
                   </body>
-                </html>$$,
-                        $$Thanks for registering in {{brand}}.
+                </html>$html$,
+                        $text$Thanks for registering in {{brand}}.
                 Please confirm your email: {{link}}
-                If you did not request this, you can ignore this email.$$,
+                If you did not request this, you can ignore this email.$text$,
                         true,
                         TIMESTAMPTZ '2026-02-08T00:00:00Z',
                         NULL
@@ -84,7 +84,7 @@ namespace FoodDiary.Infrastructure.Migrations
                         'email_verification',
                         'ru',
                         '??????????? email',
-                        $$<!doctype html>
+                        $html$<!doctype html>
                 <html lang="ru">
                   <head>
                     <meta charset="UTF-8">
@@ -128,10 +128,10 @@ namespace FoodDiary.Infrastructure.Migrations
                       </tr>
                     </table>
                   </body>
-                </html>$$,
-                        $$??????? ?? ??????????? ? {{brand}}.
+                </html>$html$,
+                        $text$??????? ?? ??????????? ? {{brand}}.
                 ??????????? email: {{link}}
-                ???? ?? ?? ??????????? ???, ?????? ?????????????? ??????.$$,
+                ???? ?? ?? ??????????? ???, ?????? ?????????????? ??????.$text$,
                         true,
                         TIMESTAMPTZ '2026-02-08T00:00:00Z',
                         NULL
@@ -146,7 +146,7 @@ namespace FoodDiary.Infrastructure.Migrations
                         'password_reset',
                         'en',
                         'Reset your password',
-                        $$<!doctype html>
+                        $html$<!doctype html>
                 <html lang="en">
                   <head>
                     <meta charset="UTF-8">
@@ -190,10 +190,10 @@ namespace FoodDiary.Infrastructure.Migrations
                       </tr>
                     </table>
                   </body>
-                </html>$$,
-                        $$We received a request to reset your {{brand}} password.
+                </html>$html$,
+                        $text$We received a request to reset your {{brand}} password.
                 Reset your password: {{link}}
-                If you did not request this, you can ignore this email.$$,
+                If you did not request this, you can ignore this email.$text$,
                         true,
                         TIMESTAMPTZ '2026-02-08T00:00:00Z',
                         NULL
@@ -208,7 +208,7 @@ namespace FoodDiary.Infrastructure.Migrations
                         'password_reset',
                         'ru',
                         '????? ??????',
-                        $$<!doctype html>
+                        $html$<!doctype html>
                 <html lang="ru">
                   <head>
                     <meta charset="UTF-8">
@@ -252,10 +252,10 @@ namespace FoodDiary.Infrastructure.Migrations
                       </tr>
                     </table>
                   </body>
-                </html>$$,
-                        $$?? ???????? ?????? ?? ????? ?????? {{brand}}.
+                </html>$html$,
+                        $text$?? ???????? ?????? ?? ????? ?????? {{brand}}.
                 ???????? ??????: {{link}}
-                ???? ?? ?? ??????????? ???, ?????? ?????????????? ??????.$$,
+                ???? ?? ?? ??????????? ???, ?????? ?????????????? ??????.$text$,
                         true,
                         TIMESTAMPTZ '2026-02-08T00:00:00Z',
                         NULL
@@ -263,7 +263,7 @@ namespace FoodDiary.Infrastructure.Migrations
                         SELECT 1 FROM "EmailTemplates" WHERE "Key" = 'password_reset' AND "Locale" = 'ru'
                     );
                   END IF;
-                END $$;
+                END $seed$;
                 """);
         }
 
