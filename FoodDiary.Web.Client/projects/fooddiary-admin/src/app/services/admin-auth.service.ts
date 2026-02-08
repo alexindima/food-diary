@@ -41,7 +41,20 @@ export class AdminAuthService {
       return;
     }
 
+    if (this.isAuthenticated()) {
+      this.clearCodeFromUrl(params);
+      this.tokenSignal.set(this.getToken());
+      return;
+    }
+
+    if (this.wasCodeProcessed(code)) {
+      this.clearCodeFromUrl(params);
+      this.tokenSignal.set(this.getToken());
+      return;
+    }
+
     const success = await this.exchangeSsoCode(code);
+    this.markCodeProcessed(code);
 
     params.delete('code');
     if (!success) {
@@ -60,7 +73,16 @@ export class AdminAuthService {
       return null;
     }
 
+    if (this.isAuthenticated()) {
+      return result.cleanedUrl;
+    }
+
+    if (this.wasCodeProcessed(result.code)) {
+      return result.cleanedUrl;
+    }
+
     const success = await this.exchangeSsoCode(result.code);
+    this.markCodeProcessed(result.code);
     this.tokenSignal.set(this.getToken());
     return success ? result.cleanedUrl : null;
   }
@@ -115,11 +137,30 @@ export class AdminAuthService {
     }
 
     localStorage.setItem('authToken', token);
+    this.clearTokenParams(params);
+  }
+
+  private clearCodeFromUrl(params: URLSearchParams): void {
+    params.delete('code');
+    const nextQuery = params.toString();
+    const nextUrl = nextQuery ? `${window.location.pathname}?${nextQuery}` : window.location.pathname;
+    window.history.replaceState({}, '', nextUrl);
+  }
+
+  private clearTokenParams(params: URLSearchParams): void {
     params.delete('authToken');
     params.delete('accessToken');
     const nextQuery = params.toString();
     const nextUrl = nextQuery ? `${window.location.pathname}?${nextQuery}` : window.location.pathname;
     window.history.replaceState({}, '', nextUrl);
+  }
+
+  private wasCodeProcessed(code: string): boolean {
+    return sessionStorage.getItem('adminSsoCode') === code;
+  }
+
+  private markCodeProcessed(code: string): void {
+    sessionStorage.setItem('adminSsoCode', code);
   }
 
   private extractRolesFromToken(token: string): string[] {

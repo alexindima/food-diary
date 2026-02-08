@@ -8,6 +8,7 @@ import { FdUiCheckboxComponent } from 'fd-ui-kit/checkbox/fd-ui-checkbox.compone
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { AdminEmailTemplatesService, AdminEmailTemplate } from '../../services/admin-email-templates.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 type TemplateForm = {
   key: FormControl<string>;
@@ -38,11 +39,12 @@ export class AdminEmailTemplateEditDialogComponent {
   private readonly dialogRef = inject<MatDialogRef<AdminEmailTemplateEditDialogComponent, boolean>>(MatDialogRef);
   private readonly service = inject(AdminEmailTemplatesService);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly sanitizer = inject(DomSanitizer);
 
   public readonly isNew = (this.data as AdminEmailTemplate & { isNew?: boolean }).isNew === true;
   public readonly isSaving = signal(false);
   public readonly previewMode = signal<'html' | 'text'>('html');
-  public readonly previewHtml = signal('');
+  public readonly previewHtml = signal<SafeHtml>('' as SafeHtml);
   public readonly previewText = signal('');
   public readonly previewBrand = signal('FoodDiary');
   public readonly previewLink = signal('https://fooddiary.club/verify-email?userId=demo&token=demo');
@@ -107,7 +109,12 @@ export class AdminEmailTemplateEditDialogComponent {
     const brand = this.previewBrand();
     const link = this.previewLink();
 
-    this.previewHtml.set(this.applyTokens(htmlBody || `<div style="font-family:Segoe UI,Arial,sans-serif;">${subject}</div>`, link, brand));
+    const html = this.applyTokens(
+      htmlBody || `<div style="font-family:Segoe UI,Arial,sans-serif;">${subject}</div>`,
+      link,
+      brand
+    );
+    this.previewHtml.set(this.sanitizer.bypassSecurityTrustHtml(html));
     this.previewText.set(this.applyTokens(textBody || subject, link, brand));
   }
 

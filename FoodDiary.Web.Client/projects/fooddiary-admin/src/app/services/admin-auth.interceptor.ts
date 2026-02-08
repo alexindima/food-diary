@@ -18,6 +18,10 @@ export const adminAuthInterceptor: HttpInterceptorFn = (req, next) => {
     })
   ).pipe(
     catchError((error: HttpErrorResponse) => {
+      if (req.url.includes('/admin-sso/exchange')) {
+        return throwError(() => error);
+      }
+
       if (error.status === 401 || error.status === 403) {
         localStorage.removeItem('authToken');
         localStorage.removeItem('refreshToken');

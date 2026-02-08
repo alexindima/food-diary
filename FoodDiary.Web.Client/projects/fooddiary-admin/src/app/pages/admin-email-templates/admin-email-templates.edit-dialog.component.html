@@ -4,12 +4,7 @@
       <h2>{{ isNew ? 'New template' : (data.key + ' - ' + data.locale) }}</h2>
       <p>Use {{'{{link}}'}} and {{'{{brand}}'}} placeholders.</p>
     </div>
-    <div class="email-template-dialog__actions email-template-dialog__actions--header">
-      <fd-ui-button type="button" variant="secondary" fill="outline" (click)="onCancel()">Cancel</fd-ui-button>
-      <fd-ui-button type="button" variant="primary" [disabled]="form.invalid || isSaving()" (click)="onSave()">
-        Save
-      </fd-ui-button>
-    </div>
+    <div></div>
   </div>
 
   <div class="email-template-dialog__layout">
@@ -34,6 +29,13 @@
       />
 
       <fd-ui-checkbox formControlName="isActive" label="Active" />
+
+      <div class="email-template-dialog__actions email-template-dialog__actions--footer">
+        <fd-ui-button type="button" variant="secondary" fill="outline" (click)="onCancel()">Cancel</fd-ui-button>
+        <fd-ui-button type="button" variant="primary" [disabled]="form.invalid || isSaving()" (click)="onSave()">
+          Save
+        </fd-ui-button>
+      </div>
     </form>
 
     <div class="email-template-dialog__preview">
