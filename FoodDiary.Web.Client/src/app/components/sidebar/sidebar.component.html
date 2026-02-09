@@ -35,6 +35,10 @@
                     <mat-icon>restaurant</mat-icon>
                     <span>{{ 'SIDEBAR.RECIPES' | translate }}</span>
                 </a>
+                <a routerLink="/shopping-lists" routerLinkActive="is-active" class="sidebar__link sidebar__link--secondary">
+                    <mat-icon>shopping_cart</mat-icon>
+                    <span>{{ 'SIDEBAR.SHOPPING_LIST' | translate }}</span>
+                </a>
             </nav>
         }
     </div>
@@ -182,6 +186,10 @@
         <a routerLink="/recipes" routerLinkActive="is-active" (click)="closeMobileMenus()">
             <mat-icon>restaurant</mat-icon>
             <span>{{ 'SIDEBAR.RECIPES' | translate }}</span>
+        </a>
+        <a routerLink="/shopping-lists" routerLinkActive="is-active" (click)="closeMobileMenus()">
+            <mat-icon>shopping_cart</mat-icon>
+            <span>{{ 'SIDEBAR.SHOPPING_LIST' | translate }}</span>
         </a>
     </div>
 }

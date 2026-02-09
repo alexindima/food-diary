@@ -22,4 +22,5 @@ export interface AppConfigApiUrls {
     hydration: string;
     goals: string;
     ai: string;
+    shoppingLists: string;
 }

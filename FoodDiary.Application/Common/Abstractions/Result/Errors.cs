@@ -168,6 +168,17 @@ public static class Errors
                 : $"Daily advice items are not configured for locale '{locale}'.");
     }
 
+    public static class ShoppingList
+    {
+        public static Error NotFound(Guid id) => new(
+            "ShoppingList.NotFound",
+            $"Shopping list with ID {id} was not found.");
+
+        public static Error CurrentNotFound() => new(
+            "ShoppingList.NotFound",
+            "Shopping list was not found.");
+    }
+
     public static class Cycle
     {
         public static Error NotFound(Guid id) => new(

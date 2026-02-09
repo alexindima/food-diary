@@ -28,6 +28,7 @@ import { unsavedChangesGuard } from './guards/unsaved-changes.guard';
 import { EmailVerificationPendingComponent } from './components/auth/email-verification-pending/email-verification-pending.component';
 import { EmailVerificationComponent } from './components/auth/email-verification/email-verification.component';
 import { PasswordResetComponent } from './components/auth/password-reset/password-reset.component';
+import { ShoppingListPageComponent } from './components/shopping-list-page/shopping-list-page.component';
 
 export const routes: Routes = [
     { path: '', component: MainComponent, canDeactivate: [unsavedChangesGuard] },
@@ -96,6 +97,11 @@ export const routes: Routes = [
                 resolve: { recipe: recipeResolver },
             },
         ],
+    },
+    {
+        path: 'shopping-lists',
+        component: ShoppingListPageComponent,
+        canActivate: [authGuard],
     },
     {
         path: 'statistics',

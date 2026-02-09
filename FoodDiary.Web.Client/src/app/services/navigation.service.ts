@@ -67,6 +67,10 @@ export class NavigationService {
         await this.router.navigate([`/recipes/${id}/edit`]);
     }
 
+    public async navigateToShoppingList(): Promise<void> {
+        await this.router.navigate(['/shopping-lists']);
+    }
+
     public async navigateToStatistics(): Promise<void> {
         await this.router.navigate(['/statistics']);
     }

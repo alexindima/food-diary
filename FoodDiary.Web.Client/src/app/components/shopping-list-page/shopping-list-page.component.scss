@@ -1,0 +1,165 @@
+@use 'variables' as *;
+
+.shopping-list {
+    margin: 0 auto;
+    box-sizing: border-box;
+    font-size: 14px;
+    --fd-layout-page-section-spacing: $gap-m;
+    background: transparent;
+    padding: 0;
+    border-radius: 0;
+    box-shadow: none;
+
+    &__header-actions {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: $gap-s;
+        width: 100%;
+        align-items: end;
+    }
+
+    &__name-input {
+        width: 100%;
+    }
+
+    &__save-button {
+        --fd-button-border-radius: 18px;
+        --fd-button-padding-x: 16px;
+        --fd-button-padding-y: 8px;
+        font-weight: 700;
+        border: none;
+        background: transparent;
+        color: #ffffff;
+        box-shadow: none;
+
+        ::ng-deep button,
+        ::ng-deep .fd-ui-button {
+            background: linear-gradient(135deg, #16a34a, #15803d);
+            border: none;
+            color: #ffffff;
+            box-shadow: 0 10px 24px rgba(22, 163, 74, 0.24);
+        }
+    }
+
+    &__loader {
+        display: block;
+        margin: $gap-l auto;
+    }
+
+    &__panel {
+        display: flex;
+        flex-direction: column;
+        gap: $gap-m;
+    }
+
+    &__add-form {
+        display: grid;
+        grid-template-columns: minmax(200px, 1.4fr) 110px 140px minmax(160px, 1fr) auto;
+        gap: $gap-s;
+        align-items: end;
+        background: #ffffff;
+        border-radius: 16px;
+        padding: $gap-m;
+        box-shadow: 0 12px 30px rgba(15, 23, 42, 0.05);
+
+        ::ng-deep .fd-ui-input,
+        ::ng-deep .fd-ui-select {
+            width: 100%;
+        }
+    }
+
+    &__items {
+        display: flex;
+        flex-direction: column;
+        gap: $gap-xs;
+    }
+
+    &__item {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        gap: $gap-s;
+        align-items: center;
+        padding: $gap-s $gap-m;
+        border-radius: 14px;
+        background: #ffffff;
+        border: 1px solid rgba(15, 23, 42, 0.06);
+        box-shadow: 0 10px 22px rgba(15, 23, 42, 0.04);
+
+        &--checked {
+            opacity: 0.6;
+
+            .shopping-list__item-name {
+                text-decoration: line-through;
+            }
+        }
+    }
+
+    &__checkbox {
+        margin-left: 4px;
+    }
+
+    &__item-body {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    &__item-name {
+        font-weight: 700;
+        color: $color-text-main;
+    }
+
+    &__item-meta {
+        font-size: 0.85rem;
+        color: $color-text-additional;
+    }
+
+    &__item-remove {
+        border: none;
+        background: rgba(15, 23, 42, 0.06);
+        border-radius: 999px;
+        width: 32px;
+        height: 32px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: $color-text-additional;
+        cursor: pointer;
+        transition: background 0.2s ease;
+
+        &:hover {
+            background: rgba(239, 68, 68, 0.15);
+            color: #dc2626;
+        }
+    }
+
+    &__empty {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: $gap-xs;
+        color: $color-text-additional;
+        font-weight: 600;
+        padding: $gap-xl 0;
+    }
+
+    @media #{$media-mobile} {
+        &__header-actions {
+            grid-template-columns: 1fr;
+        }
+
+        &__add-form {
+            grid-template-columns: 1fr;
+        }
+
+        &__item {
+            grid-template-columns: auto 1fr;
+            grid-template-rows: auto auto;
+
+            &-remove {
+                grid-column: 2;
+                justify-self: end;
+            }
+        }
+    }
+}

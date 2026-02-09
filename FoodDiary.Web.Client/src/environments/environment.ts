@@ -19,6 +19,7 @@ export const environment: AppConfig = {
         hydration: `${serverUrl}/api/hydrations`,
         goals: `${serverUrl}/api/goals`,
         ai: `${serverUrl}/api/ai`,
+        shoppingLists: `${serverUrl}/api/shopping-lists`,
     },
     googleClientId: '958507321562-8btd704hjhgsl7niklereh81utg5p780.apps.googleusercontent.com',
     telegramBotUsername: 'fooddiaryclub_bot',

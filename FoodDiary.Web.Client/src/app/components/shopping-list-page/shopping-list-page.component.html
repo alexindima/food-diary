@@ -1,0 +1,99 @@
+<div class="shopping-list" fdPageContainer>
+    <fd-page-header
+        class="shopping-list__header"
+        [title]="'SHOPPING_LIST.TITLE' | translate"
+        [subtitle]="'SHOPPING_LIST.SUBTITLE' | translate"
+    >
+        <ng-container fdPageHeaderActions>
+            <div class="shopping-list__header-actions">
+                <fd-ui-input
+                    class="shopping-list__name-input"
+                    [formControl]="listNameControl"
+                    [label]="'SHOPPING_LIST.NAME_LABEL' | translate"
+                    [placeholder]="'SHOPPING_LIST.NAME_PLACEHOLDER' | translate"
+                 />
+                <fd-ui-button
+                    class="shopping-list__save-button"
+                    variant="primary"
+                    fill="solid"
+                    icon="save"
+                    [disabled]="isSaving() || isLoading() || listNameControl.invalid"
+                    (click)="saveList()"
+                >
+                    {{ 'COMMON.SAVE' | translate }}
+                </fd-ui-button>
+            </div>
+        </ng-container>
+    </fd-page-header>
+
+    <fd-page-body>
+        @if (isLoading()) {
+            <fd-ui-loader class="shopping-list__loader" />
+        } @else {
+            <div class="shopping-list__panel">
+                <form class="shopping-list__add-form" [formGroup]="itemForm" (ngSubmit)="addItem()">
+                    <fd-ui-input
+                        formControlName="name"
+                        [label]="'SHOPPING_LIST.ADD_ITEM_NAME' | translate"
+                        [placeholder]="'SHOPPING_LIST.ADD_ITEM_NAME_PLACEHOLDER' | translate"
+                     />
+                    <fd-ui-input
+                        formControlName="amount"
+                        type="number"
+                        [label]="'SHOPPING_LIST.ADD_ITEM_AMOUNT' | translate"
+                        [placeholder]="'SHOPPING_LIST.ADD_ITEM_AMOUNT_PLACEHOLDER' | translate"
+                     />
+                    <fd-ui-select
+                        formControlName="unit"
+                        [label]="'SHOPPING_LIST.ADD_ITEM_UNIT' | translate"
+                        [placeholder]="'SHOPPING_LIST.ADD_ITEM_UNIT_PLACEHOLDER' | translate"
+                        [options]="unitOptions"
+                    />
+                    <fd-ui-input
+                        formControlName="category"
+                        [label]="'SHOPPING_LIST.ADD_ITEM_CATEGORY' | translate"
+                        [placeholder]="'SHOPPING_LIST.ADD_ITEM_CATEGORY_PLACEHOLDER' | translate"
+                     />
+                    <fd-ui-button
+                        type="submit"
+                        variant="secondary"
+                        fill="outline"
+                        icon="add"
+                        [disabled]="itemForm.invalid"
+                    >
+                        {{ 'SHOPPING_LIST.ADD_ITEM_BUTTON' | translate }}
+                    </fd-ui-button>
+                </form>
+
+                @if (items().length > 0) {
+                    <div class="shopping-list__items">
+                        @for (item of items(); track item.id) {
+                            <div class="shopping-list__item" [class.shopping-list__item--checked]="item.isChecked">
+                                <fd-ui-checkbox
+                                    class="shopping-list__checkbox"
+                                    [ngModel]="item.isChecked"
+                                    (ngModelChange)="toggleItemChecked(item, $event)"
+                                    label=""
+                                 />
+                                <div class="shopping-list__item-body">
+                                    <div class="shopping-list__item-name">{{ item.name }}</div>
+                                    @if (formatItemMeta(item)) {
+                                        <div class="shopping-list__item-meta">{{ formatItemMeta(item) }}</div>
+                                    }
+                                </div>
+                                <button type="button" class="shopping-list__item-remove" (click)="removeItem(item.id)">
+                                    <mat-icon>close</mat-icon>
+                                </button>
+                            </div>
+                        }
+                    </div>
+                } @else {
+                    <div class="shopping-list__empty">
+                        <mat-icon>shopping_cart</mat-icon>
+                        <span>{{ 'SHOPPING_LIST.EMPTY' | translate }}</span>
+                    </div>
+                }
+            </div>
+        }
+    </fd-page-body>
+</div>
