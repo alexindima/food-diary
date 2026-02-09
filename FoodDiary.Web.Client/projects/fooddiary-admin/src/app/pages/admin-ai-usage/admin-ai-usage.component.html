@@ -23,7 +23,7 @@
 
   <div class="admin-ai-usage__grid">
     <fd-ui-card class="admin-ai-usage__panel" appearance="entry" title="Usage by operation">
-      <div class="admin-ai-usage__panel-body" *ngIf="usage(); else emptyState">
+      <div class="admin-ai-usage__panel-body" *ngIf="(usage()?.byOperation?.length ?? 0) > 0; else emptyPanel">
         <div class="admin-ai-usage__list">
           <div class="admin-ai-usage__row" *ngFor="let item of usage()?.byOperation">
             <span>{{ item.key }}</span>
@@ -34,7 +34,7 @@
     </fd-ui-card>
 
     <fd-ui-card class="admin-ai-usage__panel" appearance="entry" title="Usage by model">
-      <div class="admin-ai-usage__panel-body" *ngIf="usage(); else emptyState">
+      <div class="admin-ai-usage__panel-body" *ngIf="(usage()?.byModel?.length ?? 0) > 0; else emptyPanel">
         <div class="admin-ai-usage__list">
           <div class="admin-ai-usage__row" *ngFor="let item of usage()?.byModel">
             <span>{{ item.key }}</span>
@@ -46,7 +46,7 @@
   </div>
 
   <fd-ui-card class="admin-ai-usage__panel" appearance="entry" title="Daily totals">
-    <div class="admin-ai-usage__panel-body" *ngIf="usage(); else emptyState">
+    <div class="admin-ai-usage__panel-body" *ngIf="(usage()?.byDay?.length ?? 0) > 0; else emptyPanel">
       <div class="admin-ai-usage__list">
         <div class="admin-ai-usage__row" *ngFor="let item of usage()?.byDay">
           <span>{{ item.date | date: 'MMM d' }}</span>
@@ -57,12 +57,12 @@
   </fd-ui-card>
 
   <fd-ui-card class="admin-ai-usage__panel" appearance="entry" title="Usage by user">
-    <div class="admin-ai-usage__panel-body" *ngIf="usage(); else emptyState">
+    <div class="admin-ai-usage__panel-body" *ngIf="(usage()?.byUser?.length ?? 0) > 0; else emptyPanel">
       <div class="admin-ai-usage__list">
         <div class="admin-ai-usage__row admin-ai-usage__row--split" *ngFor="let item of usage()?.byUser">
           <div class="admin-ai-usage__user">
             <span class="admin-ai-usage__user-email">{{ item.email }}</span>
-            <span class="admin-ai-usage__meta">Input {{ item.inputTokens }} · Output {{ item.outputTokens }}</span>
+            <span class="admin-ai-usage__meta">Input {{ item.inputTokens }} - Output {{ item.outputTokens }}</span>
           </div>
           <span class="admin-ai-usage__meta">{{ item.totalTokens }}</span>
         </div>
@@ -70,9 +70,9 @@
     </div>
   </fd-ui-card>
 
-  <ng-template #emptyState>
+  <ng-template #emptyPanel>
     <div class="admin-ai-usage__panel-body">
-      <p class="admin-ai-usage__meta">No AI usage yet.</p>
+      <p class="admin-ai-usage__meta">No data yet.</p>
     </div>
   </ng-template>
 </section>

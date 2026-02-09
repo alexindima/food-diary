@@ -33,6 +33,7 @@ export class SidebarComponent {
     private readonly unsavedChangesService = inject(UnsavedChangesService);
 
     public isAuthenticated = this.authService.isAuthenticated;
+    public isPremium = this.authService.isPremium;
     protected readonly currentUser = this.userService.user;
     protected isFoodTrackingOpen = signal(true);
     protected isBodyTrackingOpen = signal(false);

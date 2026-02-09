@@ -34,6 +34,7 @@ export class AuthService extends ApiService {
     public readonly isAuthenticated = computed(() => this.authTokenSignal() !== null);
     public readonly isEmailConfirmed = computed(() => this.emailConfirmedSignal() ?? true);
     public readonly isAdmin = computed(() => this.hasRole('Admin'));
+    public readonly isPremium = computed(() => this.hasRole('Premium'));
 
     public initializeAuth(): void {
         const token = this.getToken();

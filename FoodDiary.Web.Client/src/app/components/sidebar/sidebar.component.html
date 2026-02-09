@@ -89,7 +89,9 @@
                 }
                 <div class="sidebar__user-meta">
                     <div class="sidebar__user-name">{{ user.username || user.email }}</div>
-                    <div class="sidebar__user-plan">{{ 'SIDEBAR.PLAN_FREE' | translate }}</div>
+                    <div class="sidebar__user-plan">
+                        {{ (isPremium() ? 'SIDEBAR.PLAN_PRO' : 'SIDEBAR.PLAN_FREE') | translate }}
+                    </div>
                 </div>
                 <mat-icon class="sidebar__user-arrow" [class.is-open]="isUserMenuOpen()">expand_less</mat-icon>
             </button>
