@@ -38,7 +38,7 @@ export class NavigationService {
     }
 
     public async navigateToConsumptionList(): Promise<void> {
-        await this.router.navigate(['/consumptions']);
+        await this.router.navigate(['/meals']);
     }
 
     public async navigateToConsumptionAdd(mealType?: string, extras?: { state?: Record<string, unknown> }): Promise<void> {
@@ -48,11 +48,11 @@ export class NavigationService {
                   queryParams: { mealType },
               }
             : { state: extras?.state };
-        await this.router.navigate(['/consumptions/add'], navigationExtras);
+        await this.router.navigate(['/meals/add'], navigationExtras);
     }
 
     public async navigateToConsumptionEdit(id: string): Promise<void> {
-        await this.router.navigate([`/consumptions/${id}/edit`]);
+        await this.router.navigate([`/meals/${id}/edit`]);
     }
 
     public async navigateToRecipeList(): Promise<void> {

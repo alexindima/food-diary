@@ -71,7 +71,7 @@ export const routes: Routes = [
         ],
     },
     {
-        path: 'consumptions',
+        path: 'meals',
         component: ConsumptionContainerComponent,
         canActivate: [authGuard],
         children: [

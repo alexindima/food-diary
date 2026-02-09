@@ -23,7 +23,7 @@
         </button>
         @if (isFoodTrackingOpen()) {
             <nav class="sidebar__nav sidebar__nav--secondary">
-                <a routerLink="/consumptions" routerLinkActive="is-active" class="sidebar__link sidebar__link--secondary">
+                <a routerLink="/meals" routerLinkActive="is-active" class="sidebar__link sidebar__link--secondary">
                     <mat-icon>restaurant_menu</mat-icon>
                     <span>{{ 'SIDEBAR.FOOD_DIARY' | translate }}</span>
                 </a>
@@ -175,7 +175,7 @@
 
 @if (isMobileFoodOpen()) {
     <div class="sidebar-mobile__sheet" role="dialog" [attr.aria-label]="'SIDEBAR.FOOD_TRACKING' | translate">
-        <a routerLink="/consumptions" routerLinkActive="is-active" (click)="closeMobileMenus()">
+        <a routerLink="/meals" routerLinkActive="is-active" (click)="closeMobileMenus()">
             <mat-icon>restaurant_menu</mat-icon>
             <span>{{ 'SIDEBAR.FOOD_DIARY' | translate }}</span>
         </a>

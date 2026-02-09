@@ -1,10 +1,11 @@
 <div class="meal-card" (click)="handleOpen()">
-    <div class="meal-card__header">
-        <div class="meal-card__meta">
-            <div class="meal-card__icon">
-                <img [ngSrc]="coverImage()" width="48" height="48" alt="" loading="lazy" />
-            </div>
-            <div class="meal-card__titles">
+    <div class="meal-card__thumb">
+        <img [ngSrc]="coverImage()" width="96" height="96" alt="" loading="lazy" />
+    </div>
+
+    <div class="meal-card__content">
+        <div class="meal-card__title-block">
+            <div class="meal-card__title-row">
                 <div class="meal-card__title">
                     @if (meal().mealType) {
                         {{ ('MEAL_CARD.MEAL_TYPES.' + meal().mealType) | translate }}
@@ -16,43 +17,26 @@
                     {{ meal().date | date:'HH:mm' }}
                 </div>
             </div>
-        </div>
-        <div class="meal-card__calories">
-            {{ meal().totalCalories | number:'1.0-0' }}
-            <span class="meal-card__calories-unit">{{ 'MEAL_CARD.KCAL' | translate }}</span>
+            <div class="meal-card__items">
+                {{ 'MEAL_CARD.ITEM_COUNT' | translate }}: {{ itemCount() }}
+            </div>
         </div>
     </div>
 
-    <div class="meal-card__body">
-        <div class="meal-card__macros">
-            @for (chip of macroChips(); track chip.label) {
-                <span class="meal-card__chip">
-                    <span class="meal-card__chip-dot" [style.background]="chip.color"></span>
-                    {{ chip.value | number:'1.0-0' }} {{ 'GENERAL.UNITS.G' | translate }}
-                    {{ chip.label | translate }}
-                </span>
-            }
-        </div>
+    <div class="meal-card__calories">
+        <span class="meal-card__calories-value">
+            {{ meal().totalCalories | number:'1.0-0' }}
+        </span>
+        <span class="meal-card__calories-unit">{{ 'MEAL_CARD.KCAL' | translate }}</span>
+    </div>
 
-        <div class="meal-card__gallery">
-            @for (image of previewImages(); track idx; let idx = $index) {
-                <div
-                    class="meal-card__thumb meal-card__thumb--stack"
-                    [style.zIndex]="20 - idx"
-                    [style.marginLeft.px]="idx === 0 ? 0 : -14"
-                >
-                    <img [ngSrc]="image" width="40" height="40" alt="" loading="lazy" />
-                </div>
-            }
-            @if (extraCount() > 0) {
-                <div
-                    class="meal-card__thumb meal-card__thumb--stack meal-card__thumb--more"
-                    [style.marginLeft.px]="previewImages().length ? -14 : 0"
-                    [style.zIndex]="10"
-                >
-                    +{{ extraCount() }}
-                </div>
-            }
-        </div>
+    <div class="meal-card__nutrients">
+        <fd-nutrient-badges
+            [proteins]="meal().totalProteins ?? 0"
+            [fats]="meal().totalFats ?? 0"
+            [carbs]="meal().totalCarbs ?? 0"
+            [fiber]="meal().totalFiber ?? 0"
+            [alcohol]="meal().totalAlcohol ?? 0"
+        />
     </div>
 </div>
