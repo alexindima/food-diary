@@ -2,47 +2,33 @@
 
 :host {
     display: block;
+    container-type: inline-size;
 }
 
 .product-card {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    padding: 16px;
+    display: grid;
+    grid-template-columns: clamp(72px, 10vw, 120px) minmax(0, 1fr) auto;
+    gap: 24px;
+    align-items: center;
+    padding: 18px 20px;
     border-radius: 22px;
     background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
     box-shadow: 0 14px 32px rgba(15, 23, 42, 0.12);
     border: 1px solid rgba(15, 23, 42, 0.04);
     cursor: pointer;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
-    max-width: 360px;
-    margin: 0 auto;
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
 
     &:hover {
         transform: translateY(-2px);
         box-shadow: 0 18px 40px rgba(15, 23, 42, 0.15);
     }
 
-    &__header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 12px;
-    }
-
-    &__meta {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        min-width: 0;
-    }
-
     &__thumb {
-        width: 56px;
-        height: 56px;
-        min-width: 56px;
-        min-height: 56px;
-        flex: 0 0 56px;
+        width: clamp(72px, 10vw, 120px);
+        height: clamp(72px, 10vw, 120px);
         border-radius: 16px;
         overflow: hidden;
         display: grid;
@@ -66,112 +52,113 @@
         }
     }
 
-    &__titles {
+    &__content {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        grid-template-rows: auto auto;
+        gap: 10px 16px;
+        min-width: 0;
+    }
+
+    &__title-block {
+        grid-column: 1;
+        grid-row: 1;
         display: flex;
         flex-direction: column;
         gap: 4px;
         min-width: 0;
+        flex: 1 1 auto;
+    }
+
+    &__name-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        min-width: 0;
+        overflow: visible;
     }
 
     &__name {
         font-size: 1.2rem;
         font-weight: 800;
         color: $color-text-main;
-        line-height: 1.2;
+        line-height: 1.35;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        min-width: 0;
+    }
+
+    &__calories-inline {
+        grid-column: 2;
+        grid-row: 1 / -1;
+        display: inline-flex;
+        align-items: baseline;
+        gap: 6px;
+        font-weight: 800;
+        color: $color-text-main;
+        white-space: nowrap;
+        flex-shrink: 0;
+        align-self: center;
+    }
+
+    &__calories-value {
+        font-size: 1.8rem;
+        line-height: 1;
+    }
+
+    &__calories-unit {
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: $color-text-additional;
+        letter-spacing: 0.1em;
+    }
+
+    &__nutrients {
+        container-type: inline-size;
+        width: 100%;
+        display: flex;
+        align-items: flex-start;
+    }
+
+    &__barcode-text {
+        font-size: 0.9rem;
+        color: rgba(148, 163, 184, 0.9);
+        font-weight: 500;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
     }
 
-    &__serving {
-        font-size: 0.9rem;
-        color: $color-text-additional;
-        font-weight: 600;
-        margin-top: 4px;
-    }
-
-    &__barcode {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        padding: 6px 10px;
-        border-radius: 12px;
-        background: #eef2ff;
-        color: #475569;
-        font-weight: 700;
-        font-size: 0.85rem;
-
-        mat-icon {
-            font-size: 16px;
-            width: 16px;
-            height: 16px;
-            color: #0ea5e9;
-        }
-    }
-
-    &__calories {
-        font-size: 1.3rem;
-        font-weight: 800;
-        color: $color-text-main;
-        white-space: nowrap;
-        display: flex;
-        flex-direction: column;
-        align-items: flex-end;
-        gap: 4px;
-
-        &-row {
-            display: inline-flex;
-            align-items: baseline;
-            gap: 6px;
-        }
-
-        &-unit {
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: $color-text-additional;
-            letter-spacing: 0.08em;
-        }
-    }
-
-    &__macros {
+    &__meta-row {
         display: flex;
         align-items: center;
         gap: 10px;
+        min-width: 0;
         flex-wrap: wrap;
-        color: $color-text-main;
     }
 
-    &__chip {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        padding: 8px 12px;
-        border-radius: 999px;
-        background: #f7f9fb;
-        font-size: 0.95rem;
-        font-weight: 600;
-        color: $color-text-main;
-        box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.04);
-    }
-
-    &__chip-dot {
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        display: inline-block;
-
-        &--protein { background: #8b5cf6; }
-        &--carb { background: #22c55e; }
-        &--fat { background: #f59e0b; }
-        &--fiber { background: #94a3b8; }
+    &__visibility-icon {
+        font-size: 16px;
+        width: 16px;
+        height: 16px;
+        line-height: 1;
+        color: $color-text-additional;
+        flex-shrink: 0;
     }
 
     &__action {
-        width: 100%;
-        --fd-button-border-radius: 18px;
-        --fd-button-padding-y: 12px;
-        --fd-button-padding-x: 16px;
-        font-weight: 800;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    &__action-button {
+        --fd-button-border-radius: 999px;
+        --fd-button-padding-y: 0;
+        --fd-button-padding-x: 0;
+        width: 52px;
+        height: 52px;
         background: transparent;
         color: inherit;
         box-shadow: none;
@@ -179,6 +166,9 @@
 
         ::ng-deep button,
         ::ng-deep .fd-ui-button {
+            width: 52px;
+            height: 52px;
+            border-radius: 999px;
             background: linear-gradient(135deg, #4dabff, #2563eb);
             border: none;
             color: #fff;
@@ -196,15 +186,101 @@
             background: linear-gradient(135deg, #4dabff, #2563eb);
             box-shadow: none;
         }
+
+        ::ng-deep .fd-ui-button__label {
+            display: none;
+        }
     }
 
-    @media #{$media-mobile} {
-        &__header {
-            align-items: flex-start;
-        }
+}
 
-        &__name {
-            white-space: normal;
-        }
+@container (max-width: 620px) {
+    .product-card {
+        grid-template-columns: 1fr;
+        align-items: stretch;
+        padding: 22px;
+        text-align: center;
+    }
+
+    .product-card__thumb {
+        width: 96px;
+        height: 96px;
+        border-radius: 999px;
+        margin: 0 auto;
+        background: #f8fafc;
+        box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+    }
+
+    .product-card__content {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto;
+        gap: 12px;
+        justify-items: center;
+    }
+
+    .product-card__title-block {
+        grid-column: 1;
+        grid-row: 1;
+        align-items: center;
+    }
+
+    .product-card__name-row {
+        justify-content: center;
+        align-items: flex-start;
+    }
+
+    .product-card__name {
+        font-size: 2.2rem;
+        line-height: 1.2;
+        flex: 1 1 auto;
+        max-width: 100%;
+        white-space: normal;
+        display: -webkit-box;
+        -webkit-line-clamp: 4;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-align: center;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+    }
+
+    .product-card__visibility-icon {
+        font-size: 24px;
+        width: 24px;
+        height: 24px;
+    }
+
+    .product-card__calories-inline {
+        grid-column: 1;
+        grid-row: 2;
+        align-self: center;
+        justify-content: center;
+    }
+
+    .product-card__nutrients {
+        grid-column: 1;
+        grid-row: 3;
+        justify-content: center;
+    }
+
+    .product-card__action {
+        justify-content: center;
+    }
+
+    .product-card__action-button {
+        width: 100%;
+        height: 52px;
+        --fd-button-border-radius: 999px;
+    }
+
+    .product-card__action-button ::ng-deep button,
+    .product-card__action-button ::ng-deep .fd-ui-button {
+        width: 100%;
+        height: 52px;
+        border-radius: 999px;
+    }
+
+    .product-card__action-button ::ng-deep .fd-ui-button__label {
+        display: inline;
     }
 }

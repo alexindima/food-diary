@@ -37,3 +37,4 @@ export * from './pagination/fd-ui-pagination.component';
 export * from './segmented-toggle/fd-ui-segmented-toggle.component';
 export * from './form-error/fd-ui-form-error.component';
 export * from './material';
+export * from './hint/fd-ui-hint.directive';

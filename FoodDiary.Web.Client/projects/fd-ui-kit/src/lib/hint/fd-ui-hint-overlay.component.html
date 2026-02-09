@@ -1,0 +1,8 @@
+<div class="fd-ui-hint" role="tooltip">
+    @if (contentText()) {
+        <div class="fd-ui-hint__content">{{ contentText() }}</div>
+    }
+    @if (contentHtml()) {
+        <div class="fd-ui-hint__content" [innerHTML]="contentHtml()"></div>
+    }
+</div>

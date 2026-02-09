@@ -1,0 +1,113 @@
+@use 'variables' as *;
+
+:host {
+    display: block;
+}
+
+.nutrient-badges {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    border-radius: 999px;
+    background: #f8fafc;
+    color: $color-text-main;
+    width: fit-content;
+    max-width: 100%;
+    border: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.nutrient-badges__chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border-radius: 0;
+    background: transparent;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--chip-color, $color-text-main);
+    box-shadow: none;
+    border-right: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.nutrient-badges__chip:last-child {
+    border-right: none;
+}
+
+.nutrient-badges__chip-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    line-height: 1;
+    color: inherit;
+}
+
+.nutrient-badges__chip-value {
+    font-variant-numeric: tabular-nums;
+}
+
+.nutrient-badges__unit {
+    margin-left: 2px;
+}
+
+.nutrient-badges__chip--protein {
+    --chip-color: #0284c7;
+}
+
+.nutrient-badges__chip--carb {
+    --chip-color: #0f766e;
+}
+
+.nutrient-badges__chip--fat {
+    --chip-color: #c2410c;
+}
+
+.nutrient-badges__chip--fiber {
+    --chip-color: #7e22ce;
+}
+
+.nutrient-badges__chip--alcohol {
+    --chip-color: #64748b;
+}
+
+@container (max-width: 480px) {
+    .nutrient-badges {
+        gap: 0;
+        padding: 6px 8px;
+        border-radius: 16px;
+        background: #f8fafc;
+        display: inline-grid;
+        grid-auto-flow: column;
+        grid-auto-columns: minmax(0, 1fr);
+        align-items: center;
+        width: max-content;
+    }
+
+    .nutrient-badges__chip {
+        flex-direction: column;
+        justify-content: center;
+        gap: 4px;
+        padding: 6px 8px;
+        border-right: 1px solid rgba(148, 163, 184, 0.2);
+        min-width: 0;
+    }
+
+    .nutrient-badges__chip:last-child {
+        border-right: none;
+    }
+
+    .nutrient-badges__chip-icon {
+        font-size: 14px;
+        width: 14px;
+        height: 14px;
+    }
+
+    .nutrient-badges__chip-value {
+        font-size: 0.85rem;
+        line-height: 1.1;
+    }
+
+    .nutrient-badges__unit {
+        display: none;
+    }
+}

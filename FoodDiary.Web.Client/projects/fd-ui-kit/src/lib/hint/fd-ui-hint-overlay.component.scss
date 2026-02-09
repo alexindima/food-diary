@@ -1,0 +1,20 @@
+:host {
+    display: block;
+    pointer-events: none;
+}
+
+.fd-ui-hint {
+    max-width: 280px;
+    padding: 10px 12px;
+    border-radius: 12px;
+    background: #ffffff;
+    color: var(--fd-color-text, #111827);
+    box-shadow: 0 12px 28px rgba(15, 23, 42, 0.16);
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    font-size: 0.85rem;
+    line-height: 1.4;
+}
+
+.fd-ui-hint__content {
+    word-break: break-word;
+}

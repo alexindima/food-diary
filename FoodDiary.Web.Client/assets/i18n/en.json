@@ -402,7 +402,8 @@
         "SEARCH_LABEL": "Search"
     },
     "PRODUCT_CARD": {
-        "ADD_TO_CONSUMPTION": "Add to meal"
+        "ADD_TO_CONSUMPTION": "Add to meal",
+        "NO_BARCODE": "No barcode"
     },
     "STATISTICS": {
         "TITLE": "Statistics",

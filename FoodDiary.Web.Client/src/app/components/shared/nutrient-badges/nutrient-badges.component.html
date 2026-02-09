@@ -1,0 +1,32 @@
+<div class="nutrient-badges">
+    <span class="nutrient-badges__chip nutrient-badges__chip--protein">
+        <mat-icon class="nutrient-badges__chip-icon">fitness_center</mat-icon>
+        <span class="nutrient-badges__chip-value">
+            {{ proteins() | number:'1.0-0' }}<span class="nutrient-badges__unit">{{ 'GENERAL.UNITS.G' | translate }}</span>
+        </span>
+    </span>
+    <span class="nutrient-badges__chip nutrient-badges__chip--fat">
+        <mat-icon class="nutrient-badges__chip-icon">opacity</mat-icon>
+        <span class="nutrient-badges__chip-value">
+            {{ fats() | number:'1.0-0' }}<span class="nutrient-badges__unit">{{ 'GENERAL.UNITS.G' | translate }}</span>
+        </span>
+    </span>
+    <span class="nutrient-badges__chip nutrient-badges__chip--carb">
+        <mat-icon class="nutrient-badges__chip-icon">grain</mat-icon>
+        <span class="nutrient-badges__chip-value">
+            {{ carbs() | number:'1.0-0' }}<span class="nutrient-badges__unit">{{ 'GENERAL.UNITS.G' | translate }}</span>
+        </span>
+    </span>
+    <span class="nutrient-badges__chip nutrient-badges__chip--fiber">
+        <mat-icon class="nutrient-badges__chip-icon">spa</mat-icon>
+        <span class="nutrient-badges__chip-value">
+            {{ fiber() | number:'1.0-0' }}<span class="nutrient-badges__unit">{{ 'GENERAL.UNITS.G' | translate }}</span>
+        </span>
+    </span>
+    <span class="nutrient-badges__chip nutrient-badges__chip--alcohol">
+        <mat-icon class="nutrient-badges__chip-icon">wine_bar</mat-icon>
+        <span class="nutrient-badges__chip-value">
+            {{ alcohol() | number:'1.0-0' }}<span class="nutrient-badges__unit">{{ 'GENERAL.UNITS.G' | translate }}</span>
+        </span>
+    </span>
+</div>
