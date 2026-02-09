@@ -3,7 +3,7 @@ import { environment } from '../../environments/environment';
 import { catchError, Observable, throwError } from 'rxjs';
 import { ApiService } from './api.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { ShoppingList, ShoppingListCreateDto, ShoppingListUpdateDto } from '../types/shopping-list.data';
+import { ShoppingList, ShoppingListCreateDto, ShoppingListSummary, ShoppingListUpdateDto } from '../types/shopping-list.data';
 
 @Injectable({
     providedIn: 'root',
@@ -15,6 +15,15 @@ export class ShoppingListService extends ApiService {
         return this.get<ShoppingList>('current').pipe(
             catchError((error: HttpErrorResponse) => {
                 console.error('Get current shopping list error', error);
+                return throwError(() => error);
+            }),
+        );
+    }
+
+    public getAll(): Observable<ShoppingListSummary[]> {
+        return this.get<ShoppingListSummary[]>('').pipe(
+            catchError((error: HttpErrorResponse) => {
+                console.error('Get shopping lists error', error);
                 return throwError(() => error);
             }),
         );
@@ -42,6 +51,15 @@ export class ShoppingListService extends ApiService {
         return this.patch<ShoppingList>(`${id}`, data).pipe(
             catchError((error: HttpErrorResponse) => {
                 console.error('Update shopping list error', error);
+                return throwError(() => error);
+            }),
+        );
+    }
+
+    public deleteById(id: string): Observable<void> {
+        return this.delete<void>(`${id}`).pipe(
+            catchError((error: HttpErrorResponse) => {
+                console.error('Delete shopping list error', error);
                 return throwError(() => error);
             }),
         );

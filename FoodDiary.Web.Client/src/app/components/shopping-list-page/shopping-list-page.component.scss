@@ -12,33 +12,39 @@
 
     &__header-actions {
         display: grid;
-        grid-template-columns: 1fr auto;
+        grid-template-columns: minmax(220px, 1fr) minmax(240px, 1.2fr) auto auto;
         gap: $gap-s;
         width: 100%;
         align-items: end;
+    }
+
+    &__list-select {
+        width: 100%;
     }
 
     &__name-input {
         width: 100%;
     }
 
-    &__save-button {
+    &__new-button {
         --fd-button-border-radius: 18px;
-        --fd-button-padding-x: 16px;
+        --fd-button-padding-x: 14px;
         --fd-button-padding-y: 8px;
         font-weight: 700;
-        border: none;
-        background: transparent;
-        color: #ffffff;
-        box-shadow: none;
+    }
 
-        ::ng-deep button,
-        ::ng-deep .fd-ui-button {
-            background: linear-gradient(135deg, #16a34a, #15803d);
-            border: none;
-            color: #ffffff;
-            box-shadow: 0 10px 24px rgba(22, 163, 74, 0.24);
-        }
+    &__delete-button {
+        --fd-button-border-radius: 18px;
+        --fd-button-padding-x: 14px;
+        --fd-button-padding-y: 8px;
+        font-weight: 700;
+    }
+
+    &__clear-button {
+        --fd-button-border-radius: 18px;
+        --fd-button-padding-x: 14px;
+        --fd-button-padding-y: 8px;
+        font-weight: 700;
     }
 
     &__loader {

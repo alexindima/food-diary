@@ -19,6 +19,13 @@ export interface ShoppingListItem {
     sortOrder: number;
 }
 
+export interface ShoppingListSummary {
+    id: string;
+    name: string;
+    createdAt: string;
+    itemsCount: number;
+}
+
 export interface ShoppingListCreateDto {
     name: string;
     items?: ShoppingListItemDto[];

@@ -29,4 +29,11 @@ public static class ShoppingListMappings
             list.CreatedOnUtc,
             items);
     }
+
+    public static ShoppingListSummaryResponse ToSummaryResponse(this ShoppingList list) =>
+        new(
+            list.Id.Value,
+            list.Name,
+            list.CreatedOnUtc,
+            list.Items.Count);
 }

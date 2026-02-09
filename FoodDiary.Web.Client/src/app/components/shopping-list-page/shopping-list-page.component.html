@@ -6,6 +6,13 @@
     >
         <ng-container fdPageHeaderActions>
             <div class="shopping-list__header-actions">
+                <fd-ui-select
+                    class="shopping-list__list-select"
+                    [formControl]="listSelectControl"
+                    [label]="'SHOPPING_LIST.LISTS_LABEL' | translate"
+                    [placeholder]="'SHOPPING_LIST.LISTS_PLACEHOLDER' | translate"
+                    [options]="listOptions"
+                />
                 <fd-ui-input
                     class="shopping-list__name-input"
                     [formControl]="listNameControl"
@@ -13,15 +20,39 @@
                     [placeholder]="'SHOPPING_LIST.NAME_PLACEHOLDER' | translate"
                  />
                 <fd-ui-button
-                    class="shopping-list__save-button"
-                    variant="primary"
-                    fill="solid"
-                    icon="save"
-                    [disabled]="isSaving() || isLoading() || listNameControl.invalid"
-                    (click)="saveList()"
+                    class="shopping-list__new-button"
+                    variant="secondary"
+                    fill="outline"
+                    icon="add"
+                    [disabled]="isLoading()"
+                    (click)="createNewList()"
                 >
-                    {{ 'COMMON.SAVE' | translate }}
+                    {{ 'SHOPPING_LIST.NEW_LIST_BUTTON' | translate }}
                 </fd-ui-button>
+                @if (lists().length > 1) {
+                    <fd-ui-button
+                        class="shopping-list__delete-button"
+                        variant="danger"
+                        fill="outline"
+                        icon="delete"
+                        [disabled]="!canDeleteList"
+                        (click)="deleteCurrentList()"
+                    >
+                        {{ 'SHOPPING_LIST.DELETE_LIST_BUTTON' | translate }}
+                    </fd-ui-button>
+                }
+                @if (lists().length === 1) {
+                    <fd-ui-button
+                        class="shopping-list__clear-button"
+                        variant="secondary"
+                        fill="outline"
+                        icon="delete_sweep"
+                        [disabled]="!canClearList"
+                        (click)="clearCurrentList()"
+                    >
+                        {{ 'SHOPPING_LIST.CLEAR_LIST_BUTTON' | translate }}
+                    </fd-ui-button>
+                }
             </div>
         </ng-container>
     </fd-page-header>

@@ -22,5 +22,12 @@ public interface IShoppingListRepository
         bool asTracking = false,
         CancellationToken cancellationToken = default);
 
+    Task<IReadOnlyList<ShoppingList>> GetAllAsync(
+        UserId userId,
+        bool includeItems = false,
+        CancellationToken cancellationToken = default);
+
     Task UpdateAsync(ShoppingList list);
+
+    Task DeleteAsync(ShoppingList list);
 }

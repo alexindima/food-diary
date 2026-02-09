@@ -69,9 +69,33 @@ public class ShoppingListRepository : IShoppingListRepository
             .FirstOrDefaultAsync(cancellationToken);
     }
 
+    public async Task<IReadOnlyList<ShoppingList>> GetAllAsync(
+        UserId userId,
+        bool includeItems = false,
+        CancellationToken cancellationToken = default)
+    {
+        IQueryable<ShoppingList> query = _context.ShoppingLists.AsNoTracking();
+
+        if (includeItems)
+        {
+            query = query.Include(l => l.Items);
+        }
+
+        return await query
+            .Where(list => list.UserId == userId)
+            .OrderByDescending(list => list.CreatedOnUtc)
+            .ToListAsync(cancellationToken);
+    }
+
     public async Task UpdateAsync(ShoppingList list)
     {
         _context.ShoppingLists.Update(list);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task DeleteAsync(ShoppingList list)
+    {
+        _context.ShoppingLists.Remove(list);
         await _context.SaveChangesAsync();
     }
 }

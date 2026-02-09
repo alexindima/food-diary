@@ -1,6 +1,8 @@
 using System;
 using System.Threading.Tasks;
 using FoodDiary.Application.ShoppingLists.Mappings;
+using FoodDiary.Application.ShoppingLists.Commands.DeleteShoppingList;
+using FoodDiary.Application.ShoppingLists.Queries.GetShoppingLists;
 using FoodDiary.Application.ShoppingLists.Queries.GetCurrentShoppingList;
 using FoodDiary.Application.ShoppingLists.Queries.GetShoppingListById;
 using FoodDiary.Contracts.ShoppingLists;
@@ -19,6 +21,14 @@ public class ShoppingListsController(ISender mediator) : AuthorizedController(me
     public async Task<IActionResult> GetCurrent()
     {
         var query = new GetCurrentShoppingListQuery(CurrentUserId);
+        var result = await Mediator.Send(query);
+        return result.ToActionResult();
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetAll()
+    {
+        var query = new GetShoppingListsQuery(CurrentUserId);
         var result = await Mediator.Send(query);
         return result.ToActionResult();
     }
@@ -43,6 +53,14 @@ public class ShoppingListsController(ISender mediator) : AuthorizedController(me
     public async Task<IActionResult> Update(Guid id, [FromBody] UpdateShoppingListRequest request)
     {
         var command = request.ToCommand(CurrentUserGuid, id);
+        var result = await Mediator.Send(command);
+        return result.ToActionResult();
+    }
+
+    [HttpDelete("{id:guid}")]
+    public async Task<IActionResult> Delete(Guid id)
+    {
+        var command = new DeleteShoppingListCommand(CurrentUserId, new ShoppingListId(id));
         var result = await Mediator.Send(command);
         return result.ToActionResult();
     }
