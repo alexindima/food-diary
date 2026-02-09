@@ -196,23 +196,26 @@
 }
 
 /* Input and checkbox tweaks inside auth dialog */
-:host ::ng-deep fd-ui-input .fd-ui-input__control {
+:host ::ng-deep fd-ui-input .fd-ui-input__control-wrap {
     border-radius: 12px;
     background: #fff;
     border: 1px solid #d5d9e2;
-    padding: 14px 16px;
-    font-size: 16px;
+    padding: 0 16px;
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
-
-    &:focus,
-    &:focus-visible {
-        border-color: #3b6dfc;
-        box-shadow: 0 0 0 3px rgba(59, 109, 252, 0.15);
-    }
 
     &:hover {
         border-color: #bfc4d2;
     }
+
+    &:focus-within {
+        border-color: #3b6dfc;
+        box-shadow: 0 0 0 3px rgba(59, 109, 252, 0.15);
+    }
+}
+
+:host ::ng-deep fd-ui-input .fd-ui-input__control {
+    font-size: 16px;
+    padding: 0;
 }
 
 
