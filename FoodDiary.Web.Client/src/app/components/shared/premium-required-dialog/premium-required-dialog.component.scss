@@ -1,0 +1,30 @@
+.premium-required-dialog__message {
+  margin: 0 0 12px;
+  color: #0f172a;
+  font-size: 0.98rem;
+  line-height: 1.5;
+}
+
+.premium-required-dialog__note {
+  margin: 0;
+  color: #475569;
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+.premium-required-dialog__link {
+  color: #2563eb;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.premium-required-dialog__link:hover,
+.premium-required-dialog__link:focus {
+  text-decoration: underline;
+}
+
+.premium-required-dialog__footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}

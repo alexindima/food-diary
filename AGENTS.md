@@ -1,4 +1,4 @@
-# Repository Guidelines
+﻿# Repository Guidelines
 
 ## Project Structure & Module Organization
 - `FoodDiary.Web.Client/` – Angular workspace; `src/` hosts the primary SPA, while shared UI components live in `projects/fd-ui-kit/`. Build artifacts drop under `dist/`.
@@ -37,6 +37,8 @@
 - Templates: use native control flow (`@if`, `@for`, `@switch`), avoid template arrow functions/regex/globals; prefer class/style bindings over `ngClass`/`ngStyle`.
 - Services: single responsibility, `providedIn: 'root'` for singletons, `inject()` over constructor injection.
 - Accessibility: meet WCAG AA, pass AXE checks, handle focus management and ARIA attributes explicitly.
+- Localization: UI strings live in `FoodDiary.Web.Client/assets/i18n/en.json` and `FoodDiary.Web.Client/assets/i18n/ru.json`; update both when adding copy.
+- Localization: always verify Russian translations render correctly (no `????`/mojibake) after edits; avoid PowerShell encoding pitfalls when inserting Cyrillic text.
 
 ## Testing Guidelines
 - Angular unit tests via Karma/Jasmine: `npm run test`. Specs sit beside components (`*.spec.ts`).

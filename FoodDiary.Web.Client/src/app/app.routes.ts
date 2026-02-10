@@ -29,6 +29,7 @@ import { EmailVerificationPendingComponent } from './components/auth/email-verif
 import { EmailVerificationComponent } from './components/auth/email-verification/email-verification.component';
 import { PasswordResetComponent } from './components/auth/password-reset/password-reset.component';
 import { ShoppingListPageComponent } from './components/shopping-list-page/shopping-list-page.component';
+import { PremiumAccessPageComponent } from './components/premium-access-page/premium-access-page.component';
 
 export const routes: Routes = [
     { path: '', component: MainComponent, canDeactivate: [unsavedChangesGuard] },
@@ -111,6 +112,11 @@ export const routes: Routes = [
     {
         path: 'profile',
         component: UserManageComponent,
+        canActivate: [authGuard],
+    },
+    {
+        path: 'premium',
+        component: PremiumAccessPageComponent,
         canActivate: [authGuard],
     },
     {

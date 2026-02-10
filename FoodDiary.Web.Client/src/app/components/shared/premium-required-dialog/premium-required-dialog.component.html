@@ -1,0 +1,13 @@
+<fd-ui-dialog class="premium-required-dialog" [title]="data.title || ('AI.PREMIUM_DIALOG.TITLE' | translate)">
+    <p class="premium-required-dialog__message">
+        {{ data.message || ('AI.PREMIUM_DIALOG.MESSAGE' | translate) }}
+    </p>
+    <div fdUiDialogFooter class="premium-required-dialog__footer">
+        <fd-ui-button type="button" fill="ghost" variant="secondary" (click)="onCancel()">
+            {{ data.cancelLabel || ('AI.PREMIUM_DIALOG.CANCEL' | translate) }}
+        </fd-ui-button>
+        <fd-ui-button type="button" (click)="onConfirm()">
+            {{ data.actionLabel || ('AI.PREMIUM_DIALOG.ACTION' | translate) }}
+        </fd-ui-button>
+    </div>
+</fd-ui-dialog>

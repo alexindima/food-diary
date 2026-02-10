@@ -79,6 +79,10 @@ export class NavigationService {
         await this.router.navigate(['/profile']);
     }
 
+    public async navigateToPremiumAccess(): Promise<void> {
+        await this.router.navigate(['/premium']);
+    }
+
     public async navigateToWeightHistory(): Promise<void> {
         await this.router.navigate(['/weight-history']);
     }

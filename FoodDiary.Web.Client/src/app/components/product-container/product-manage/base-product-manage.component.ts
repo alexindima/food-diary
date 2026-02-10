@@ -47,6 +47,8 @@ import {
     ProductAiRecognitionDialogComponent,
     ProductAiRecognitionResult,
 } from './product-ai-recognition-dialog/product-ai-recognition-dialog.component';
+import { AuthService } from '../../../services/auth.service';
+import { PremiumRequiredDialogComponent } from '../../shared/premium-required-dialog/premium-required-dialog.component';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: FD_VALIDATION_ERRORS,
@@ -86,6 +88,7 @@ export class BaseProductManageComponent implements OnInit {
     protected readonly translateService = inject(TranslateService);
     protected readonly navigationService = inject(NavigationService);
     protected readonly fdDialogService = inject(FdUiDialogService);
+    private readonly authService = inject(AuthService);
     private readonly nutritionCalculationService = inject(NutritionCalculationService);
     private readonly destroyRef = inject(DestroyRef);
 
@@ -214,6 +217,10 @@ export class BaseProductManageComponent implements OnInit {
     }
 
     public openAiRecognitionDialog(): void {
+        if (!this.ensurePremiumAccess()) {
+            return;
+        }
+
         this.fdDialogService
             .open<ProductAiRecognitionDialogComponent, { initialDescription?: string | null }, ProductAiRecognitionResult | null>(
                 ProductAiRecognitionDialogComponent,
@@ -584,6 +591,22 @@ export class BaseProductManageComponent implements OnInit {
                     this.navigationService.navigateToProductList();
                 }
             });
+    }
+
+    private ensurePremiumAccess(): boolean {
+        if (this.authService.isPremium()) {
+            return true;
+        }
+
+        this.fdDialogService
+            .open<PremiumRequiredDialogComponent, never, boolean>(PremiumRequiredDialogComponent, { size: 'sm' })
+            .afterClosed()
+            .subscribe(confirmed => {
+                if (confirmed) {
+                    this.navigationService.navigateToPremiumAccess();
+                }
+            });
+        return false;
     }
 
     protected readonly MeasurementUnit = MeasurementUnit;

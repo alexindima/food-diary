@@ -1534,5 +1534,21 @@
         "NO_DATA_TITLE": "Cycle not set",
         "NO_DATA_BODY": "Add your cycle start date to see predictions here.",
         "NO_DATA_ACTION": "Set cycle"
+    },
+    "AI": {
+        "PREMIUM_DIALOG": {
+            "TITLE": "AI access",
+            "MESSAGE": "AI features are available with Premium. Go Premium?",
+            "NOTE": "To get AI access, email",
+            "ACTION": "Go",
+            "CANCEL": "Close"
+        },
+        "PREMIUM_PAGE": {
+            "TITLE": "Premium & AI",
+            "SUBTITLE": "Purchases are temporarily unavailable",
+            "CARD_TITLE": "Access to AI features",
+            "CARD_LINE_ONE": "Purchases in the app are currently unavailable.",
+            "CARD_LINE_TWO": "To get AI access, email"
+        }
     }
 }

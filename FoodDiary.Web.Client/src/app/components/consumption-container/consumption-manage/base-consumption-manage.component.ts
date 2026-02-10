@@ -70,6 +70,8 @@ import { QuickConsumptionItem } from '../../../services/quick-consumption.servic
 import { ConsumptionPhotoRecognitionDialogComponent } from '../consumption-photo-recognition-dialog/consumption-photo-recognition-dialog.component';
 import { AiFoodService } from '../../../services/ai-food.service';
 import { UserAiUsageResponse } from '../../../types/ai.data';
+import { AuthService } from '../../../services/auth.service';
+import { PremiumRequiredDialogComponent } from '../../shared/premium-required-dialog/premium-required-dialog.component';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: FD_VALIDATION_ERRORS,
@@ -117,6 +119,7 @@ export class BaseConsumptionManageComponent implements OnInit {
     private readonly recipeService = inject(RecipeService);
     private readonly fdDialogService = inject(FdUiDialogService);
     private readonly aiFoodService = inject(AiFoodService);
+    private readonly authService = inject(AuthService);
     private readonly router = inject(Router);
     private readonly route = inject(ActivatedRoute);
     private readonly recipeServingWeightCache = new Map<string, number | null>();
@@ -402,6 +405,10 @@ export class BaseConsumptionManageComponent implements OnInit {
     }
 
     public onAddConsumptionFromPhoto(): void {
+        if (!this.ensurePremiumAccess()) {
+            return;
+        }
+
         if (this.aiQuotaExceeded()) {
             return;
         }
@@ -431,6 +438,10 @@ export class BaseConsumptionManageComponent implements OnInit {
     }
 
     public onEditAiSession(index: number): void {
+        if (!this.ensurePremiumAccess()) {
+            return;
+        }
+
         const session = this.aiSessions()[index];
         const selection: ImageSelection | null = session?.imageUrl
             ? { url: session.imageUrl ?? null, assetId: session.imageAssetId ?? null }
@@ -1156,6 +1167,22 @@ export class BaseConsumptionManageComponent implements OnInit {
                     this.navigationService.navigateToConsumptionList();
                 }
             });
+    }
+
+    private ensurePremiumAccess(): boolean {
+        if (this.authService.isPremium()) {
+            return true;
+        }
+
+        this.fdDialogService
+            .open<PremiumRequiredDialogComponent, never, boolean>(PremiumRequiredDialogComponent, { size: 'sm' })
+            .afterClosed()
+            .subscribe(confirmed => {
+                if (confirmed) {
+                    this.navigationService.navigateToPremiumAccess();
+                }
+            });
+        return false;
     }
 
     private configureItemType(

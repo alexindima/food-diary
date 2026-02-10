@@ -1,0 +1,34 @@
+.premium-access-page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.premium-access-page__card {
+  padding: 24px;
+  display: grid;
+  gap: 12px;
+}
+
+.premium-access-page__title {
+  margin: 0;
+  font-size: 1.25rem;
+  color: #0f172a;
+}
+
+.premium-access-page__text {
+  margin: 0;
+  color: #475569;
+  line-height: 1.6;
+}
+
+.premium-access-page__link {
+  color: #2563eb;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.premium-access-page__link:hover,
+.premium-access-page__link:focus {
+  text-decoration: underline;
+}
