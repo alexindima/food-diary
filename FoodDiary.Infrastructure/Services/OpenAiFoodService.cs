@@ -31,6 +31,7 @@ public sealed class OpenAiFoodService(
         string imageUrl,
         string? userLanguage,
         UserId userId,
+        string? description,
         CancellationToken cancellationToken)
     {
         var quotaCheck = await EnsureMonthlyQuotaAsync(userId, cancellationToken);
@@ -45,12 +46,12 @@ public sealed class OpenAiFoodService(
         }
 
         var requestModel = _options.VisionModel;
-        var request = BuildVisionRequest(requestModel, imageUrl, userLanguage);
+        var request = BuildVisionRequest(requestModel, imageUrl, userLanguage, description);
         var response = await SendRequestAsync(request, cancellationToken);
         if (!response.IsSuccess)
         {
             requestModel = _options.VisionFallbackModel;
-            var fallback = BuildVisionRequest(requestModel, imageUrl, userLanguage);
+            var fallback = BuildVisionRequest(requestModel, imageUrl, userLanguage, description);
             response = await SendRequestAsync(fallback, cancellationToken);
         }
 
@@ -138,13 +139,20 @@ public sealed class OpenAiFoodService(
         }
     }
 
-    private static object BuildVisionRequest(string model, string imageUrl, string? userLanguage)
+    private static object BuildVisionRequest(
+        string model,
+        string imageUrl,
+        string? userLanguage,
+        string? description)
     {
         var language = string.IsNullOrWhiteSpace(userLanguage) ? "en" : userLanguage.Trim().ToLowerInvariant();
         var includeLocal = language != "en";
         var languageHint = includeLocal
             ? $"Return nameEn in English and nameLocal in language '{language}'."
             : "Return nameEn in English and set nameLocal to null.";
+        var descriptionHint = string.IsNullOrWhiteSpace(description)
+            ? string.Empty
+            : $"User hint: {description.Trim()}. ";
 
         return new
         {
@@ -159,7 +167,8 @@ public sealed class OpenAiFoodService(
                         new
                         {
                             type = "input_text",
-                            text = "Analyze the food photo and return only JSON with list of items. " +
+                            text = descriptionHint +
+                                   "Analyze the food photo and return only JSON with list of items. " +
                                    "Each item must include nameEn, nameLocal, amount, unit, confidence (0-1). " +
                                    "Use grams (g) when possible. " +
                                    languageHint

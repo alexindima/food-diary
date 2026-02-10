@@ -626,6 +626,9 @@
         },
         "COMMENT": "Комментарий",
         "COMMENT_PLACEHOLDER": "Добавьте заметку о продукте",
+        "DESCRIPTION": "Описание",
+
+        "DESCRIPTION_PLACEHOLDER": "Коротко опишите продукт",
         "IMAGE": "Изображение",
         "IMAGE_DESCRIPTION": "Добавьте фото продукта. Допустимые форматы: JPG, PNG, GIF, WebP до 20 МБ",
         "SCAN_BARCODE": "Сканировать штрихкод",
@@ -653,6 +656,11 @@
         "TRACKING_PREFERENCES": "Параметры учета",
         "NUTRITION_VALUE": "Пищевая ценность",
         "NUTRITION_VALUE_TEMPLATE": "Пищевая ценность на {{base}}",
+        "AI_TITLE": "Распознать по фото",
+
+        "AI_SUBTITLE": "Загрузите этикетку или фото, чтобы заполнить нутриенты",
+
+        "AI_BUTTON": "Распознать",
         "SUMMARY_TITLE": "Сводка",
         "SUMMARY_CALORIES_LABEL": "Калории",
         "SAVE_BUTTON": "Сохранить изменения",
@@ -670,6 +678,31 @@
         },
         "STEPS_TITLE": "Ингредиенты и шаги"
     },
+    "PRODUCT_AI_DIALOG": {
+        "TITLE": "Распознавание продукта",
+        "IMAGE_LABEL": "Фото для распознавания",
+        "IMAGE_DESCRIPTION": "Загрузите фото этикетки или продукта. Поддерживаются: JPG, PNG, WebP до 20 МБ",
+        "DESCRIPTION": "Подсказка (необязательно)",
+        "DESCRIPTION_PLACEHOLDER": "Например: шоколадный батончик с орехами, 50 г",
+        "REANALYZE": "Распознать снова",
+        "STATUS_ANALYZING": "Анализируем изображение...",
+        "STATUS_NUTRITION": "Считаем нутриенты...",
+        "STATUS_DONE": "Распознавание завершено",
+        "ERROR_PREMIUM": "Распознавание доступно только для Premium.",
+        "ERROR_QUOTA": "Лимит AI на месяц исчерпан. Попробуйте позже.",
+        "ERROR_GENERIC": "Не удалось распознать данные.",
+        "NUTRITION_ERROR": "Не удалось посчитать нутриенты. Попробуйте еще раз.",
+        "ITEMS_LABEL": "Найдены позиции",
+        "MULTIPLE_ITEMS_NOTE": "Найдено несколько позиций. Значения суммируются.",
+        "NAME": "Название",
+        "NAME_PLACEHOLDER": "Введите название продукта",
+        "BASE_AMOUNT": "Базовое количество",
+        "BASE_AMOUNT_PLACEHOLDER": "например, 100",
+        "BASE_UNIT": "Базовая единица",
+        "CANCEL": "Отмена",
+        "APPLY": "Применить значения"
+    },
+
     "IMAGE_UPLOAD_FIELD": {
         "SELECT_FILE": "Выберите файл",
         "DROP_HERE": "или перетащите его сюда",

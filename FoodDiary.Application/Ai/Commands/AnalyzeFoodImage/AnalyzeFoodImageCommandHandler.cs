@@ -38,6 +38,7 @@ public sealed class AnalyzeFoodImageCommandHandler(
             asset.Url,
             user.Language,
             query.UserId,
+            query.Description,
             cancellationToken);
     }
 }

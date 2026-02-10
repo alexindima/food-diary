@@ -1,3 +1,3 @@
 namespace FoodDiary.Contracts.Ai;
 
-public sealed record FoodVisionRequest(Guid ImageAssetId);
+public sealed record FoodVisionRequest(Guid ImageAssetId, string? Description);

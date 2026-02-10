@@ -1,0 +1,152 @@
+<fd-ui-dialog [title]="'PRODUCT_AI_DIALOG.TITLE' | translate">
+    <div class="product-ai-dialog">
+        <div class="product-ai-dialog__upload">
+            <fd-image-upload-field
+                [label]="'PRODUCT_AI_DIALOG.IMAGE_LABEL' | translate"
+                [description]="'PRODUCT_AI_DIALOG.IMAGE_DESCRIPTION' | translate"
+                [recommendedSize]="'1024 x 1024'"
+                [cropEnabled]="true"
+                [cropSize]="1024"
+                [cropAspectRatio]="1"
+                [deleteOnClear]="true"
+                (imageChanged)="onImageChanged($event)"
+            />
+
+            @if (statusKey(); as status) {
+                <div class="product-ai-dialog__status" [class.product-ai-dialog__status--loading]="isLoading()">
+                    {{ status | translate }}
+                </div>
+            }
+
+            @if (isLoading() || isNutritionLoading()) {
+                <div class="product-ai-dialog__scan-overlay">
+                    <div class="product-ai-dialog__scan-line" [class.product-ai-dialog__scan-line--nutrition]="isNutritionLoading()"></div>
+                </div>
+            }
+        </div>
+
+        <fd-ui-textarea
+            [formControl]="descriptionControl"
+            [label]="'PRODUCT_AI_DIALOG.DESCRIPTION' | translate"
+            [placeholder]="'PRODUCT_AI_DIALOG.DESCRIPTION_PLACEHOLDER' | translate"
+            [rows]="3"
+        />
+
+        <div class="product-ai-dialog__controls">
+            <fd-ui-button
+                type="button"
+                variant="primary"
+                fill="outline"
+                icon="auto_awesome"
+                [disabled]="!selection() || isLoading() || isNutritionLoading()"
+                (click)="reanalyze()"
+            >
+                {{ 'PRODUCT_AI_DIALOG.REANALYZE' | translate }}
+            </fd-ui-button>
+        </div>
+
+        @if (errorKey(); as error) {
+            <div class="product-ai-dialog__error">
+                {{ error | translate }}
+            </div>
+        }
+
+        @if (nutritionErrorKey(); as error) {
+            <div class="product-ai-dialog__error">
+                {{ error | translate }}
+            </div>
+        }
+
+        @if (nutrition(); as nutrition) {
+            <div class="product-ai-dialog__summary" [formGroup]="resultForm">
+                @if (itemNames().length) {
+                    <div class="product-ai-dialog__items">
+                        <div class="product-ai-dialog__items-label">
+                            {{ 'PRODUCT_AI_DIALOG.ITEMS_LABEL' | translate }}
+                        </div>
+                        <div class="product-ai-dialog__items-list">
+                            @for (item of itemNames(); track item) {
+                                <span class="product-ai-dialog__item-chip">{{ item }}</span>
+                            }
+                        </div>
+                    </div>
+                }
+
+                @if (hasMultipleItems()) {
+                    <div class="product-ai-dialog__note">
+                        {{ 'PRODUCT_AI_DIALOG.MULTIPLE_ITEMS_NOTE' | translate }}
+                    </div>
+                }
+
+                @if (nutrition.notes) {
+                    <div class="product-ai-dialog__note">
+                        {{ nutrition.notes }}
+                    </div>
+                }
+
+                <div class="product-ai-dialog__form-grid">
+                    <fd-ui-input
+                        formControlName="name"
+                        [label]="'PRODUCT_AI_DIALOG.NAME' | translate"
+                        [placeholder]="'PRODUCT_AI_DIALOG.NAME_PLACEHOLDER' | translate"
+                    />
+                    <fd-ui-select
+                        formControlName="baseUnit"
+                        [label]="'PRODUCT_AI_DIALOG.BASE_UNIT' | translate"
+                        [options]="unitOptions"
+                    />
+                </div>
+
+                <div class="product-ai-dialog__nutrition-grid">
+                    <fd-ui-input
+                        formControlName="caloriesPerBase"
+                        type="number"
+                        [label]="'PRODUCT_MANAGE.CALORIES' | translate"
+                    />
+                    <fd-ui-input
+                        formControlName="proteinsPerBase"
+                        type="number"
+                        [label]="'PRODUCT_MANAGE.PROTEINS' | translate"
+                    />
+                    <fd-ui-input
+                        formControlName="fatsPerBase"
+                        type="number"
+                        [label]="'PRODUCT_MANAGE.FATS' | translate"
+                    />
+                    <fd-ui-input
+                        formControlName="carbsPerBase"
+                        type="number"
+                        [label]="'PRODUCT_MANAGE.CARBS' | translate"
+                    />
+                    <fd-ui-input
+                        formControlName="fiberPerBase"
+                        type="number"
+                        [label]="'PRODUCT_MANAGE.FIBER' | translate"
+                    />
+                    <fd-ui-input
+                        formControlName="alcoholPerBase"
+                        type="number"
+                        [label]="'PRODUCT_MANAGE.ALCOHOL' | translate"
+                    />
+                </div>
+            </div>
+        }
+    </div>
+
+    <ng-container fdUiDialogFooter>
+        <div class="product-ai-dialog__footer">
+            <fd-ui-button type="button" variant="primary" fill="outline" (click)="close()">
+                {{ 'PRODUCT_AI_DIALOG.CANCEL' | translate }}
+            </fd-ui-button>
+            <fd-ui-button
+                type="button"
+                variant="primary"
+                icon="check"
+                [disabled]="!canApply()"
+                (click)="apply()"
+            >
+                {{ 'PRODUCT_AI_DIALOG.APPLY' | translate }}
+            </fd-ui-button>
+        </div>
+    </ng-container>
+</fd-ui-dialog>

@@ -297,6 +297,39 @@
         gap: $gap-l;
     }
 
+    &__ai {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: $gap-m;
+        padding: 12px 14px;
+        border-radius: 16px;
+        border: 1px solid rgba(148, 163, 184, 0.2);
+        background: rgba(248, 250, 252, 0.9);
+
+        @media #{$media-mobile} {
+            flex-direction: column;
+            align-items: stretch;
+        }
+    }
+
+    &__ai-text {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    &__ai-title {
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: $color-text-main;
+    }
+
+    &__ai-subtitle {
+        font-size: 0.85rem;
+        color: $color-text-additional;
+    }
+
     &__nutrition-grid {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));

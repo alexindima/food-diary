@@ -13,6 +13,7 @@ export type FoodVisionResponse = {
 
 export type FoodVisionRequest = {
     imageAssetId: string;
+    description?: string | null;
 };
 
 export type FoodNutritionItem = {

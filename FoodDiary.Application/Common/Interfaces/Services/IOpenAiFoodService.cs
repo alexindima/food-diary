@@ -10,6 +10,7 @@ public interface IOpenAiFoodService
         string imageUrl,
         string? userLanguage,
         UserId userId,
+        string? description,
         CancellationToken cancellationToken);
     Task<Result<FoodNutritionResponse>> CalculateNutritionAsync(
         IReadOnlyList<FoodVisionItem> items,

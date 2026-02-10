@@ -43,6 +43,10 @@ import {
 } from '../../shared/confirm-delete-dialog/confirm-delete-dialog.component';
 import { ImageUploadFieldComponent } from '../../shared/image-upload-field/image-upload-field.component';
 import { ImageSelection } from '../../../types/image-upload.data';
+import {
+    ProductAiRecognitionDialogComponent,
+    ProductAiRecognitionResult,
+} from './product-ai-recognition-dialog/product-ai-recognition-dialog.component';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: FD_VALIDATION_ERRORS,
@@ -206,6 +210,27 @@ export class BaseProductManageComponent implements OnInit {
                 if (barcode) {
                     this.productForm.controls.barcode.setValue(barcode);
                 }
+            });
+    }
+
+    public openAiRecognitionDialog(): void {
+        this.fdDialogService
+            .open<ProductAiRecognitionDialogComponent, { initialDescription?: string | null }, ProductAiRecognitionResult | null>(
+                ProductAiRecognitionDialogComponent,
+                {
+                    size: 'lg',
+                    data: {
+                        initialDescription: this.productForm.controls.description.value ?? null,
+                    },
+                },
+            )
+            .afterClosed()
+            .subscribe(result => {
+                if (!result) {
+                    return;
+                }
+
+                this.applyAiResult(result);
             });
     }
 
@@ -425,6 +450,25 @@ export class BaseProductManageComponent implements OnInit {
             { emitEvent: false },
         );
         this.updateCalorieWarning();
+    }
+
+    private applyAiResult(result: ProductAiRecognitionResult): void {
+        const defaultPortionControl = this.productForm.controls.defaultPortionAmount;
+        const shouldUpdatePortion = defaultPortionControl.pristine || defaultPortionControl.value === this.getDefaultBaseAmount(this.productForm.controls.baseUnit.value);
+
+        this.productForm.patchValue({
+            name: result.name || this.productForm.controls.name.value,
+            description: result.description ?? this.productForm.controls.description.value,
+            baseAmount: result.baseAmount,
+            baseUnit: result.baseUnit,
+            caloriesPerBase: result.caloriesPerBase,
+            proteinsPerBase: result.proteinsPerBase,
+            fatsPerBase: result.fatsPerBase,
+            carbsPerBase: result.carbsPerBase,
+            fiberPerBase: result.fiberPerBase,
+            alcoholPerBase: result.alcoholPerBase,
+            defaultPortionAmount: shouldUpdatePortion ? result.baseAmount : defaultPortionControl.value,
+        });
     }
 
     private async addProduct(productData: CreateProductRequest): Promise<Product | null> {

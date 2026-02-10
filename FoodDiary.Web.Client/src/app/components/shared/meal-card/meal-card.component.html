@@ -21,22 +21,22 @@
                 {{ 'MEAL_CARD.ITEM_COUNT' | translate }}: {{ itemCount() }}
             </div>
         </div>
-    </div>
 
-    <div class="meal-card__calories">
-        <span class="meal-card__calories-value">
-            {{ meal().totalCalories | number:'1.0-0' }}
-        </span>
-        <span class="meal-card__calories-unit">{{ 'MEAL_CARD.KCAL' | translate }}</span>
-    </div>
+        <div class="meal-card__calories">
+            <span class="meal-card__calories-value">
+                {{ meal().totalCalories | number:'1.0-0' }}
+            </span>
+            <span class="meal-card__calories-unit">{{ 'MEAL_CARD.KCAL' | translate }}</span>
+        </div>
 
-    <div class="meal-card__nutrients">
-        <fd-nutrient-badges
-            [proteins]="meal().totalProteins ?? 0"
-            [fats]="meal().totalFats ?? 0"
-            [carbs]="meal().totalCarbs ?? 0"
-            [fiber]="meal().totalFiber ?? 0"
-            [alcohol]="meal().totalAlcohol ?? 0"
-        />
+        <div class="meal-card__nutrients">
+            <fd-nutrient-badges
+                [proteins]="meal().totalProteins ?? 0"
+                [fats]="meal().totalFats ?? 0"
+                [carbs]="meal().totalCarbs ?? 0"
+                [fiber]="meal().totalFiber ?? 0"
+                [alcohol]="meal().totalAlcohol ?? 0"
+            />
+        </div>
     </div>
 </div>

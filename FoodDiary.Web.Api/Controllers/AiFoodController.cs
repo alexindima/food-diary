@@ -23,7 +23,10 @@ public sealed class AiFoodController(ISender mediator) : AuthorizedController(me
             return Unauthorized();
         }
 
-        var command = new AnalyzeFoodImageCommand(CurrentUserId.Value, new ImageAssetId(request.ImageAssetId));
+        var command = new AnalyzeFoodImageCommand(
+            CurrentUserId.Value,
+            new ImageAssetId(request.ImageAssetId),
+            request.Description);
         var result = await Mediator.Send(command);
         return result.ToActionResult();
     }

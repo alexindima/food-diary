@@ -7,12 +7,8 @@
 
 .meal-card {
     display: grid;
-    grid-template-columns: clamp(72px, 10vw, 120px) minmax(0, 1fr) auto;
-    grid-template-rows: auto auto;
-    grid-template-areas:
-        "thumb content calories"
-        "thumb nutrients calories";
-    gap: 4px 24px;
+    grid-template-columns: clamp(72px, 10vw, 120px) minmax(0, 1fr);
+    gap: 24px;
     align-items: center;
     padding: 18px 20px;
     border-radius: 22px;
@@ -50,17 +46,19 @@
     }
 
     &__content {
-        grid-area: content;
-        display: flex;
-        flex-direction: column;
-        gap: 4px;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        grid-template-rows: auto auto;
+        gap: 10px 16px;
         min-width: 0;
     }
 
     &__title-block {
+        grid-column: 1;
+        grid-row: 1;
         display: flex;
         flex-direction: column;
-        gap: 0;
+        gap: 4px;
         min-width: 0;
     }
 
@@ -99,7 +97,8 @@
     }
 
     &__calories {
-        grid-area: calories;
+        grid-column: 2;
+        grid-row: 1 / -1;
         display: inline-flex;
         align-items: baseline;
         gap: 6px;
@@ -123,24 +122,18 @@
     }
 
     &__nutrients {
-        grid-area: nutrients;
+        grid-column: 1;
+        grid-row: 2;
         container-type: inline-size;
         width: 100%;
         display: flex;
         align-items: flex-start;
-        margin-top: -4px;
     }
 }
 
 @container (max-width: 620px) {
     .meal-card {
         grid-template-columns: 1fr;
-        grid-template-rows: auto auto auto auto;
-        grid-template-areas:
-            "thumb"
-            "content"
-            "calories"
-            "nutrients";
         align-items: stretch;
         padding: 22px;
         text-align: center;
@@ -157,7 +150,11 @@
     }
 
     .meal-card__content {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto;
+        gap: 12px;
         align-items: center;
+        justify-items: center;
     }
 
     .meal-card__title-row {
@@ -185,10 +182,15 @@
     }
 
     .meal-card__calories {
+        grid-column: 1;
+        grid-row: 2;
+        align-self: center;
         justify-content: center;
     }
 
     .meal-card__nutrients {
+        grid-column: 1;
+        grid-row: 3;
         justify-content: center;
     }
 }

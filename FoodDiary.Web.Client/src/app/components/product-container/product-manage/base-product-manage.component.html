@@ -70,6 +70,14 @@
                         </div>
                     </div>
                     <div class="product-manage__basic-grid">
+                        <div class="product-manage__field product-manage__field--full">
+                            <fd-ui-textarea
+                                formControlName="description"
+                                [label]="'PRODUCT_MANAGE.DESCRIPTION' | translate"
+                                [placeholder]="'PRODUCT_MANAGE.DESCRIPTION_PLACEHOLDER' | translate"
+                                [rows]="3"
+                            />
+                        </div>
                         <div class="product-manage__serving-row product-manage__field--full">
                             <div class="product-manage__serving-part">
                                 <fd-ui-input formControlName="defaultPortionAmount"
@@ -125,6 +133,25 @@
                         [title]="'PRODUCT_MANAGE.NUTRITION_VALUE' | translate"
                     >
                         <div class="product-manage__nutrition">
+                            <div class="product-manage__ai">
+                                <div class="product-manage__ai-text">
+                                    <div class="product-manage__ai-title">
+                                        {{ 'PRODUCT_MANAGE.AI_TITLE' | translate }}
+                                    </div>
+                                    <div class="product-manage__ai-subtitle">
+                                        {{ 'PRODUCT_MANAGE.AI_SUBTITLE' | translate }}
+                                    </div>
+                                </div>
+                                <fd-ui-button
+                                    type="button"
+                                    variant="primary"
+                                    fill="outline"
+                                    icon="auto_awesome"
+                                    (click)="openAiRecognitionDialog()"
+                                >
+                                    {{ 'PRODUCT_MANAGE.AI_BUTTON' | translate }}
+                                </fd-ui-button>
+                            </div>
                             <fd-ui-nutrient-input
                                 class="product-manage__nutrition-input product-manage__nutrition-input--serving"
                                 formControlName="baseAmount"
