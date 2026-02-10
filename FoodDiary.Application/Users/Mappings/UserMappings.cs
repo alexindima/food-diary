@@ -49,7 +49,8 @@ public static class UserMappings
             user.ProfileImageAssetId?.Value,
             layout,
             user.IsActive,
-            user.IsEmailConfirmed
+            user.IsEmailConfirmed,
+            user.LastLoginAtUtc
         );
     }
 

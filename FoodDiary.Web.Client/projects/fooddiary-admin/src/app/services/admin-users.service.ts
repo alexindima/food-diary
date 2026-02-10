@@ -13,6 +13,7 @@ export type AdminUser = {
   isEmailConfirmed: boolean;
   createdOnUtc: string;
   deletedAt?: string | null;
+  lastLoginAtUtc?: string | null;
   roles: string[];
 };
 

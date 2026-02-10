@@ -21,6 +21,7 @@ public sealed class User : AggregateRoot<UserId> {
     public string? PasswordResetTokenHash { get; private set; }
     public DateTime? PasswordResetTokenExpiresAtUtc { get; private set; }
     public DateTime? PasswordResetSentAtUtc { get; private set; }
+    public DateTime? LastLoginAtUtc { get; private set; }
     public string? Username { get; private set; }
     public string? FirstName { get; private set; }
     public string? LastName { get; private set; }
@@ -80,6 +81,7 @@ public sealed class User : AggregateRoot<UserId> {
 
     public void UpdateRefreshToken(string? refreshToken) {
         RefreshToken = refreshToken;
+        LastLoginAtUtc = DateTime.UtcNow;
         SetModified();
     }
 

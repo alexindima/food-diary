@@ -31,6 +31,7 @@
       <div>Status</div>
       <div>Email</div>
       <div>Created</div>
+      <div>Last login</div>
       <div></div>
     </div>
 
@@ -54,6 +55,9 @@
       </div>
       <div class="admin-users__cell">
         {{ user.createdOnUtc | date: 'yyyy-MM-dd' }}
+      </div>
+      <div class="admin-users__cell">
+        {{ user.lastLoginAtUtc ? (user.lastLoginAtUtc | date: 'yyyy-MM-dd') : '-' }}
       </div>
       <div class="admin-users__cell admin-users__cell--actions">
         <fd-ui-button type="button" fill="outline" variant="secondary" (click)="openEdit(user)">

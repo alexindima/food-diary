@@ -28,5 +28,6 @@ public record UserResponse(
     Guid? ProfileImageAssetId,
     DashboardLayoutSettings? DashboardLayout,
     bool IsActive,
-    bool IsEmailConfirmed
+    bool IsEmailConfirmed,
+    DateTime? LastLoginAtUtc
 );

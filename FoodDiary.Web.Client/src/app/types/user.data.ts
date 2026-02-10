@@ -35,6 +35,7 @@ export interface User {
     dashboardLayout?: DashboardLayoutSettings | null;
     isActive: boolean;
     isEmailConfirmed: boolean;
+    lastLoginAtUtc?: string | null;
     calories?: number; // Local field, not from backend
 }
 

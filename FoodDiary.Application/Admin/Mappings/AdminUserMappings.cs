@@ -23,6 +23,7 @@ public static class AdminUserMappings
             user.IsEmailConfirmed,
             user.CreatedOnUtc,
             user.DeletedAt,
+            user.LastLoginAtUtc,
             roles,
             user.AiInputTokenLimit,
             user.AiOutputTokenLimit);

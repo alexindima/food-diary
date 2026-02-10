@@ -10,6 +10,7 @@ public sealed record AdminUserResponse(
     bool IsEmailConfirmed,
     DateTime CreatedOnUtc,
     DateTime? DeletedAt,
+    DateTime? LastLoginAtUtc,
     string[] Roles,
     long AiInputTokenLimit,
     long AiOutputTokenLimit
