@@ -38,15 +38,20 @@ export class FdUiNutrientInputComponent implements ControlValueAccessor {
     @Input() public variant: 'tinted' | 'outline' = 'tinted';
     @Input() public labelUppercase = true;
     @Input() public valueAlign: 'center' | 'left' = 'center';
+    @Input() public unitLabel?: string;
 
     public disabled = false;
     public value = '';
+    public inputSize = 1;
+    public inputWidth = '1ch';
+    public readonly maxInputChars = 8;
 
     private onChange: (value: string) => void = () => undefined;
     private onTouched: () => void = () => undefined;
 
     public writeValue(value: string | number | null): void {
         this.value = value === null || value === undefined ? '' : String(value);
+        this.updateInputMeasure(this.value);
         this.cdr.markForCheck();
     }
 
@@ -71,11 +76,13 @@ export class FdUiNutrientInputComponent implements ControlValueAccessor {
             const sanitized = this.sanitizeDecimalInput(rawValue);
             this.value = sanitized;
             target.value = sanitized;
+            this.updateInputMeasure(sanitized);
             this.onChange(sanitized);
             return;
         }
 
         this.value = rawValue;
+        this.updateInputMeasure(rawValue);
         this.onChange(rawValue);
     }
 
@@ -96,5 +103,12 @@ export class FdUiNutrientInputComponent implements ControlValueAccessor {
         }
 
         return `${parts[0]}.${parts.slice(1).join('')}`;
+    }
+
+    private updateInputMeasure(value: string): void {
+        const length = Math.max(1, value.length);
+        const clamped = Math.min(this.maxInputChars, length);
+        this.inputSize = clamped;
+        this.inputWidth = `${clamped}ch`;
     }
 }

@@ -24,12 +24,15 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
+    justify-content: center;
+    width: 100%;
 }
 
 .fd-ui-nutrient-input__label-text {
     display: inline-flex;
     align-items: center;
     gap: 2px;
+    justify-content: center;
 }
 
 .fd-ui-nutrient-input__label--uppercase {
@@ -127,16 +130,41 @@ input.fd-ui-nutrient-input__control[type='number']::-webkit-inner-spin-button {
 }
 
 .fd-ui-nutrient-input__value-row {
-    display: flex;
-    align-items: center;
-    gap: 0;
-    width: 100%;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 6px;
+    width: fit-content;
+    max-width: 100%;
+    overflow: hidden;
+    justify-content: center;
+    margin: 0 auto;
+    padding: 0 4px;
+    box-sizing: border-box;
 }
 
 .fd-ui-nutrient-input__value-row .fd-ui-nutrient-input__control {
-    flex: 1;
+    flex: 0 0 auto;
+    width: auto;
+    min-width: 1ch;
+    max-width: 10ch;
+    overflow: hidden;
+}
+
+.fd-ui-nutrient-input__unit {
+    font-size: 1em;
+    font-weight: 700;
+    color: color-mix(in srgb, var(--fd-nutrient-text-color) 70%, white);
+    letter-spacing: 0.02em;
+    text-transform: lowercase;
+    flex: 0 0 auto;
 }
 
 .fd-ui-nutrient-input--value-left .fd-ui-nutrient-input__control {
     text-align: left;
+}
+
+.fd-ui-nutrient-input--value-left .fd-ui-nutrient-input__value-row {
+    justify-content: flex-start;
+    width: 100%;
+    margin: 0;
 }

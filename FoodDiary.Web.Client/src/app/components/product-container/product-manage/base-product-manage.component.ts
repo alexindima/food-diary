@@ -28,6 +28,7 @@ import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiNutrientInputComponent } from 'fd-ui-kit/nutrient-input/fd-ui-nutrient-input.component';
+import { FdUiSegmentedToggleComponent, FdUiSegmentedToggleOption } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle.component';
 import { normalizeProductType as normalizeProductTypeValue } from '../../../utils/product-type.utils';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import {
@@ -77,6 +78,7 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
         FdUiCardComponent,
         FdUiButtonComponent,
         FdUiNutrientInputComponent,
+        FdUiSegmentedToggleComponent,
         FdUiFormErrorComponent,
         PageHeaderComponent,
         FdPageContainerDirective,
@@ -93,8 +95,9 @@ export class BaseProductManageComponent implements OnInit {
     private readonly destroyRef = inject(DestroyRef);
 
     public product = input<Product | null>();
-    public globalError = signal<string | null>(null);
+public globalError = signal<string | null>(null);
     public nutritionWarning = signal<CalorieMismatchWarning | null>(null);
+    public macroBarState = signal<MacroBarState>({ isEmpty: true, segments: [] });
     private formInitialized = false;
     public readonly isDeleting = signal(false);
     private readonly calorieMismatchThreshold = 0.2;
@@ -107,6 +110,8 @@ export class BaseProductManageComponent implements OnInit {
     public productTypeSelectOptions: FdUiSelectOption<ProductType>[] = [];
     public visibilityOptions = Object.values(ProductVisibility) as ProductVisibility[];
     public visibilitySelectOptions: FdUiSelectOption<ProductVisibility>[] = [];
+    public nutritionMode: NutritionMode = 'base';
+    public nutritionModeOptions: FdUiSegmentedToggleOption[] = [];
     private readonly nutrientFillAlpha = 0.14;
     private readonly nutrientPalette = {
         calories: '#E11D48',
@@ -147,17 +152,18 @@ export class BaseProductManageComponent implements OnInit {
             }),
             baseUnit: new FormControl(MeasurementUnit.G, { nonNullable: true, validators: Validators.required }),
             caloriesPerBase: new FormControl(null, [Validators.required, Validators.min(0)]),
-            proteinsPerBase: new FormControl(null, [Validators.required, Validators.min(0)]),
-            fatsPerBase: new FormControl(null, [Validators.required, Validators.min(0)]),
-            carbsPerBase: new FormControl(null, [Validators.required, Validators.min(0)]),
-            fiberPerBase: new FormControl(null, [Validators.required, Validators.min(0)]),
-            alcoholPerBase: new FormControl(0, [Validators.min(0)]),
+            proteinsPerBase: new FormControl(null, [Validators.min(0)]),
+            fatsPerBase: new FormControl(null, [Validators.min(0)]),
+            carbsPerBase: new FormControl(null, [Validators.min(0)]),
+            fiberPerBase: new FormControl(null, [Validators.min(0)]),
+            alcoholPerBase: new FormControl(null, [Validators.min(0)]),
             visibility: new FormControl(ProductVisibility.Private, { nonNullable: true, validators: Validators.required }),
         });
 
         this.buildUnitOptions();
         this.buildProductTypeOptions();
         this.buildVisibilityOptions();
+        this.buildNutritionModeOptions();
         this.productForm.controls.baseUnit.valueChanges
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(unit => {
@@ -165,11 +171,13 @@ export class BaseProductManageComponent implements OnInit {
                     return;
                 }
                 this.productForm.controls.baseAmount.setValue(this.getDefaultBaseAmount(unit));
+                this.buildNutritionModeOptions();
             });
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.buildUnitOptions();
             this.buildProductTypeOptions();
             this.buildVisibilityOptions();
+            this.buildNutritionModeOptions();
         });
 
         effect(() => {
@@ -185,6 +193,7 @@ export class BaseProductManageComponent implements OnInit {
         this.productForm.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.clearGlobalError();
             this.updateCalorieWarning();
+            this.updateMacroDistribution();
         });
 
     }
@@ -286,15 +295,35 @@ export class BaseProductManageComponent implements OnInit {
     public async onSubmit(): Promise<Product | null> {
         this.productForm.markAllAsTouched();
 
+        if (this.macrosError()) {
+            return null;
+        }
+
         if (this.productForm.valid) {
-            const baseAmount = this.getNumberValue(this.productForm.controls.baseAmount);
+            const baseAmount = this.getDefaultBaseAmount(this.productForm.controls.baseUnit.value);
             const defaultPortionAmount = this.getNumberValue(this.productForm.controls.defaultPortionAmount);
-            const caloriesPerBase = this.getNumberValue(this.productForm.controls.caloriesPerBase);
-            const proteinsPerBase = this.getNumberValue(this.productForm.controls.proteinsPerBase);
-            const fatsPerBase = this.getNumberValue(this.productForm.controls.fatsPerBase);
-            const carbsPerBase = this.getNumberValue(this.productForm.controls.carbsPerBase);
-            const fiberPerBase = this.getNumberValue(this.productForm.controls.fiberPerBase);
-            const alcoholPerBase = this.getNumberValue(this.productForm.controls.alcoholPerBase);
+            const normalizeFactor =
+                this.nutritionMode === 'portion' && defaultPortionAmount > 0
+                    ? baseAmount / defaultPortionAmount
+                    : 1;
+            const caloriesPerBase = this.roundValue(
+                this.getNumberValue(this.productForm.controls.caloriesPerBase) * normalizeFactor,
+            );
+            const proteinsPerBase = this.roundValue(
+                this.getNumberValue(this.productForm.controls.proteinsPerBase) * normalizeFactor,
+            );
+            const fatsPerBase = this.roundValue(
+                this.getNumberValue(this.productForm.controls.fatsPerBase) * normalizeFactor,
+            );
+            const carbsPerBase = this.roundValue(
+                this.getNumberValue(this.productForm.controls.carbsPerBase) * normalizeFactor,
+            );
+            const fiberPerBase = this.roundValue(
+                this.getNumberValue(this.productForm.controls.fiberPerBase) * normalizeFactor,
+            );
+            const alcoholPerBase = this.roundValue(
+                this.getNumberValue(this.productForm.controls.alcoholPerBase) * normalizeFactor,
+            );
 
             const productData: CreateProductRequest = {
                 name: this.productForm.value.name!,
@@ -331,6 +360,27 @@ export class BaseProductManageComponent implements OnInit {
         return this.getUnitLabel(this.productForm.controls.baseUnit.value);
     }
 
+    public getMacroColor(key: MacroKey): string {
+        return this.nutrientTextColors[key];
+    }
+
+    public onNutritionModeChange(nextMode: string): void {
+        const resolvedMode: NutritionMode = nextMode === 'portion' ? 'portion' : 'base';
+        if (resolvedMode === this.nutritionMode) {
+            return;
+        }
+
+        const baseAmount = this.getDefaultBaseAmount(this.productForm.controls.baseUnit.value);
+        const portionAmount = this.getNumberValue(this.productForm.controls.defaultPortionAmount);
+
+        if (portionAmount > 0) {
+            const factor = resolvedMode === 'portion' ? portionAmount / baseAmount : baseAmount / portionAmount;
+            this.convertNutritionControls(factor);
+        }
+
+        this.nutritionMode = resolvedMode;
+    }
+
     public caloriesError(): string | null {
         const control = this.productForm.controls.caloriesPerBase;
         if (!control.touched && !control.dirty) {
@@ -348,6 +398,7 @@ export class BaseProductManageComponent implements OnInit {
             this.productForm.controls.proteinsPerBase,
             this.productForm.controls.fatsPerBase,
             this.productForm.controls.carbsPerBase,
+            this.productForm.controls.alcoholPerBase,
         ];
 
         const shouldShow = controls.some(control => control.touched || control.dirty);
@@ -358,8 +409,9 @@ export class BaseProductManageComponent implements OnInit {
         const proteins = this.getNumberValue(this.productForm.controls.proteinsPerBase);
         const fats = this.getNumberValue(this.productForm.controls.fatsPerBase);
         const carbs = this.getNumberValue(this.productForm.controls.carbsPerBase);
+        const alcohol = this.getNumberValue(this.productForm.controls.alcoholPerBase);
 
-        return proteins <= 0 && fats <= 0 && carbs <= 0
+        return proteins <= 0 && fats <= 0 && carbs <= 0 && alcohol <= 0
             ? this.translateService.instant('PRODUCT_MANAGE.NUTRITION_ERRORS.MACROS_REQUIRED')
             : null;
     }
@@ -387,6 +439,95 @@ export class BaseProductManageComponent implements OnInit {
         }
 
         this.nutritionWarning.set(null);
+    }
+
+    private updateMacroDistribution(): void {
+        const controls = {
+            proteins: this.productForm.controls.proteinsPerBase,
+            fats: this.productForm.controls.fatsPerBase,
+            carbs: this.productForm.controls.carbsPerBase,
+        };
+
+        const entries = (Object.keys(controls) as MacroKey[]).map(key => ({
+            key,
+            value: this.getNumberValue(controls[key]),
+        }));
+
+        const positive = entries.filter(entry => entry.value > 0);
+        if (positive.length === 0) {
+            this.macroBarState.set({ isEmpty: true, segments: [] });
+            return;
+        }
+
+        const total = positive.reduce((sum, entry) => sum + entry.value, 0);
+        this.macroBarState.set({
+            isEmpty: false,
+            segments: positive.map(entry => ({
+                key: entry.key,
+                percent: (entry.value / total) * 100,
+            })),
+        });
+    }
+
+    private convertNutritionControls(factor: number): void {
+        const patch: Partial<ProductFormValues> = {};
+        const fields: Array<keyof Pick<
+            ProductFormValues,
+            'caloriesPerBase' | 'proteinsPerBase' | 'fatsPerBase' | 'carbsPerBase' | 'fiberPerBase' | 'alcoholPerBase'
+        >> = [
+            'caloriesPerBase',
+            'proteinsPerBase',
+            'fatsPerBase',
+            'carbsPerBase',
+            'fiberPerBase',
+            'alcoholPerBase',
+        ];
+
+        fields.forEach(field => {
+            const control = this.productForm.controls[field];
+            const rawValue = control.value as unknown;
+            if (rawValue === null || rawValue === undefined || rawValue === '') {
+                return;
+            }
+            const value = this.getNumberValue(control);
+            patch[field] = this.roundValue(value * factor);
+        });
+
+        if (Object.keys(patch).length > 0) {
+            this.productForm.patchValue(patch);
+        }
+    }
+
+    private normalizeNutritionValues(
+        values: NutritionValues,
+        sourceAmount: number | null,
+        targetAmount: number,
+    ): NutritionValues {
+        if (!sourceAmount || sourceAmount <= 0 || sourceAmount === targetAmount) {
+            return values;
+        }
+
+        const factor = targetAmount / sourceAmount;
+
+        return {
+            caloriesPerBase: this.roundOptional(values.caloriesPerBase, factor),
+            proteinsPerBase: this.roundOptional(values.proteinsPerBase, factor),
+            fatsPerBase: this.roundOptional(values.fatsPerBase, factor),
+            carbsPerBase: this.roundOptional(values.carbsPerBase, factor),
+            fiberPerBase: this.roundOptional(values.fiberPerBase, factor),
+            alcoholPerBase: this.roundOptional(values.alcoholPerBase, factor),
+        };
+    }
+
+    private roundOptional(value: number | null, factor: number): number | null {
+        if (value === null || value === undefined) {
+            return null;
+        }
+        return this.roundValue(value * factor);
+    }
+
+    private roundValue(value: number): number {
+        return Math.round(value * 1000) / 1000;
     }
 
     private getUnitLabel(baseUnit: MeasurementUnit | null): string {
@@ -430,6 +571,19 @@ export class BaseProductManageComponent implements OnInit {
         const normalizedVisibility = this.normalizeVisibility(product.visibility);
         const normalizedProductType =
             normalizeProductTypeValue(product.productType ?? product.category ?? null) ?? ProductType.Unknown;
+        const targetBaseAmount = this.getDefaultBaseAmount(product.baseUnit);
+        const normalizedNutrition = this.normalizeNutritionValues(
+            {
+                caloriesPerBase: product.caloriesPerBase,
+                proteinsPerBase: product.proteinsPerBase,
+                fatsPerBase: product.fatsPerBase,
+                carbsPerBase: product.carbsPerBase,
+                fiberPerBase: product.fiberPerBase,
+                alcoholPerBase: product.alcoholPerBase,
+            },
+            product.baseAmount,
+            targetBaseAmount,
+        );
 
         this.productForm.patchValue(
             {
@@ -443,39 +597,63 @@ export class BaseProductManageComponent implements OnInit {
                     url: product.imageUrl ?? null,
                     assetId: product.imageAssetId ?? null,
                 },
-                baseAmount: product.baseAmount,
+                baseAmount: targetBaseAmount,
                 defaultPortionAmount: product.defaultPortionAmount,
                 baseUnit: product.baseUnit,
-                caloriesPerBase: product.caloriesPerBase,
-                proteinsPerBase: product.proteinsPerBase,
-                fatsPerBase: product.fatsPerBase,
-                carbsPerBase: product.carbsPerBase,
-                fiberPerBase: product.fiberPerBase,
-                alcoholPerBase: product.alcoholPerBase,
+                caloriesPerBase: normalizedNutrition.caloriesPerBase,
+                proteinsPerBase: normalizedNutrition.proteinsPerBase,
+                fatsPerBase: normalizedNutrition.fatsPerBase,
+                carbsPerBase: normalizedNutrition.carbsPerBase,
+                fiberPerBase: normalizedNutrition.fiberPerBase,
+                alcoholPerBase: normalizedNutrition.alcoholPerBase,
                 visibility: normalizedVisibility,
             },
             { emitEvent: false },
         );
+        this.nutritionMode = 'base';
         this.updateCalorieWarning();
+        this.updateMacroDistribution();
     }
 
     private applyAiResult(result: ProductAiRecognitionResult): void {
         const defaultPortionControl = this.productForm.controls.defaultPortionAmount;
-        const shouldUpdatePortion = defaultPortionControl.pristine || defaultPortionControl.value === this.getDefaultBaseAmount(this.productForm.controls.baseUnit.value);
+        const targetBaseAmount = this.getDefaultBaseAmount(result.baseUnit);
+        const shouldUpdatePortion =
+            defaultPortionControl.pristine || defaultPortionControl.value === this.getDefaultBaseAmount(this.productForm.controls.baseUnit.value);
+        const normalizedNutrition = this.normalizeNutritionValues(
+            {
+                caloriesPerBase: result.caloriesPerBase,
+                proteinsPerBase: result.proteinsPerBase,
+                fatsPerBase: result.fatsPerBase,
+                carbsPerBase: result.carbsPerBase,
+                fiberPerBase: result.fiberPerBase,
+                alcoholPerBase: result.alcoholPerBase,
+            },
+            result.baseAmount,
+            targetBaseAmount,
+        );
 
         this.productForm.patchValue({
             name: result.name || this.productForm.controls.name.value,
             description: result.description ?? this.productForm.controls.description.value,
-            baseAmount: result.baseAmount,
+            baseAmount: targetBaseAmount,
             baseUnit: result.baseUnit,
-            caloriesPerBase: result.caloriesPerBase,
-            proteinsPerBase: result.proteinsPerBase,
-            fatsPerBase: result.fatsPerBase,
-            carbsPerBase: result.carbsPerBase,
-            fiberPerBase: result.fiberPerBase,
-            alcoholPerBase: result.alcoholPerBase,
-            defaultPortionAmount: shouldUpdatePortion ? result.baseAmount : defaultPortionControl.value,
+            caloriesPerBase: normalizedNutrition.caloriesPerBase,
+            proteinsPerBase: normalizedNutrition.proteinsPerBase,
+            fatsPerBase: normalizedNutrition.fatsPerBase,
+            carbsPerBase: normalizedNutrition.carbsPerBase,
+            fiberPerBase: normalizedNutrition.fiberPerBase,
+            alcoholPerBase: normalizedNutrition.alcoholPerBase,
+            defaultPortionAmount: shouldUpdatePortion ? targetBaseAmount : defaultPortionControl.value,
         });
+
+        if (this.nutritionMode === 'portion') {
+            const portionAmount = this.getNumberValue(defaultPortionControl);
+            if (portionAmount > 0) {
+                this.convertNutritionControls(portionAmount / targetBaseAmount);
+            }
+        }
+        this.updateMacroDistribution();
     }
 
     private async addProduct(productData: CreateProductRequest): Promise<Product | null> {
@@ -539,7 +717,9 @@ export class BaseProductManageComponent implements OnInit {
         if (value === null || value === undefined || value === '') {
             return 0;
         }
-        const parsed = Number(value);
+        const raw = String(value).replace(',', '.').replace(/[^0-9.-]/g, '');
+        const match = raw.match(/-?\d+(\.\d+)?/);
+        const parsed = match ? Number(match[0]) : NaN;
         return Number.isFinite(parsed) ? parsed : 0;
     }
 
@@ -562,6 +742,26 @@ export class BaseProductManageComponent implements OnInit {
             value: type,
             label: this.translateService.instant(`PRODUCT_MANAGE.PRODUCT_TYPE_OPTIONS.${type.toUpperCase()}`),
         }));
+    }
+
+    private buildNutritionModeOptions(): void {
+        const baseUnit = this.productForm.controls.baseUnit.value;
+        const amount = this.getDefaultBaseAmount(baseUnit);
+        const unitLabel = this.getUnitLabel(baseUnit);
+
+        this.nutritionModeOptions = [
+            {
+                value: 'base',
+                label: this.translateService.instant('PRODUCT_MANAGE.NUTRITION_MODE.BASE', {
+                    amount,
+                    unit: unitLabel,
+                }),
+            },
+            {
+                value: 'portion',
+                label: this.translateService.instant('PRODUCT_MANAGE.NUTRITION_MODE.PORTION'),
+            },
+        ];
     }
 
     private normalizeVisibility(value: ProductVisibility | null | string | undefined): ProductVisibility {
@@ -632,6 +832,29 @@ export interface ProductFormValues {
     fiberPerBase: number | null;
     alcoholPerBase: number | null;
     visibility: ProductVisibility;
+}
+
+type NutritionMode = 'base' | 'portion';
+
+interface NutritionValues {
+    caloriesPerBase: number | null;
+    proteinsPerBase: number | null;
+    fatsPerBase: number | null;
+    carbsPerBase: number | null;
+    fiberPerBase: number | null;
+    alcoholPerBase: number | null;
+}
+
+type MacroKey = 'proteins' | 'fats' | 'carbs';
+
+interface MacroBarSegment {
+    key: MacroKey;
+    percent: number;
+}
+
+interface MacroBarState {
+    isEmpty: boolean;
+    segments: MacroBarSegment[];
 }
 
 type ProductFormData = FormGroupControls<ProductFormValues>;

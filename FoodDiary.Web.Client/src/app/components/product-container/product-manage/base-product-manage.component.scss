@@ -297,20 +297,35 @@
         gap: $gap-l;
     }
 
+    &__nutrition-toggle {
+        width: 100%;
+
+        ::ng-deep .fd-ui-segmented-toggle {
+            width: 100%;
+            justify-content: space-between;
+            background: rgba(148, 163, 184, 0.14);
+            border: 1px solid rgba(148, 163, 184, 0.24);
+            box-shadow: none;
+        }
+
+        ::ng-deep .fd-ui-segmented-toggle__item {
+            flex: 1;
+            min-width: 0;
+            text-transform: none;
+            letter-spacing: normal;
+        }
+    }
+
     &__ai {
         display: flex;
-        align-items: center;
-        justify-content: space-between;
+        flex-direction: column;
+        align-items: stretch;
+        justify-content: flex-start;
         gap: $gap-m;
         padding: 12px 14px;
         border-radius: 16px;
         border: 1px solid rgba(148, 163, 184, 0.2);
         background: rgba(248, 250, 252, 0.9);
-
-        @media #{$media-mobile} {
-            flex-direction: column;
-            align-items: stretch;
-        }
     }
 
     &__ai-text {
@@ -334,6 +349,27 @@
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: $gap-m;
+    }
+
+    &__nutrition-grid--secondary {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    &__nutrition-grid:not(&__nutrition-grid--secondary) {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    &__macro-bar {
+        height: 16px;
+        border-radius: 999px;
+        overflow: hidden;
+        display: flex;
+        background: rgba(148, 163, 184, 0.18);
+    }
+
+    &__macro-bar-segment {
+        height: 100%;
+        min-width: 6px;
     }
 
     @container (max-width: 359px) {
@@ -465,4 +501,3 @@
         }
     }
 }
-

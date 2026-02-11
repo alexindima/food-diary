@@ -642,7 +642,7 @@
         "BARCODE_PLACEHOLDER": "Enter barcode",
         "CATEGORY": "Category",
         "CATEGORY_PLACEHOLDER": "Enter category",
-        "DEFAULT_PORTION_AMOUNT": "Package weight / default portion (for recipes)",
+        "DEFAULT_PORTION_AMOUNT": "Package weight / portion",
         "DEFAULT_PORTION_PLACEHOLDER": "e.g. 300",
         "PRODUCT_TYPE": "Product type",
         "PRODUCT_TYPE_PLACEHOLDER": "Select product type",
@@ -666,16 +666,21 @@
         "IMAGE": "Image",
         "IMAGE_DESCRIPTION": "Upload a product photo. Supported: JPG, PNG, GIF, WebP up to 20 MB",
         "SCAN_BARCODE": "Scan barcode",
-        "CALORIES": "Calories, kcal",
-        "PROTEINS": "Proteins, g",
-        "FATS": "Fats, g",
-        "CARBS": "Carbs, g",
-        "FIBER": "Fiber, g",
-        "ALCOHOL": "Alcohol, g",
+        "CALORIES": "Calories",
+        "PROTEINS": "P",
+        "FATS": "F",
+        "CARBS": "C",
+        "FIBER": "Fiber",
+        "ALCOHOL": "Alcohol",
         "CALORIES_MISMATCH_WARNING": "Based on macros, expected about {{expected}} kcal, but you entered {{actual}} kcal. Please double-check.",
+        "NUTRITION_MODE": {
+            "BASE": "Per {{amount}} {{unit}}",
+            "PORTION": "Per serving",
+            "ARIA": "Nutrition basis"
+        },
         "NUTRITION_ERRORS": {
             "CALORIES_REQUIRED": "Calories must be greater than 0.",
-            "MACROS_REQUIRED": "Set at least one macro (proteins, fats, or carbs)."
+            "MACROS_REQUIRED": "Set at least one macro (proteins, fats, carbs, or alcohol)."
         },
         "VISIBILITY": "Visibility",
         "VISIBILITY_GROUP_TITLE": "Visibility",

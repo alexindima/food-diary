@@ -607,7 +607,7 @@
         "BARCODE_PLACEHOLDER": "Введите штрихкод",
         "CATEGORY": "Категория",
         "CATEGORY_PLACEHOLDER": "Введите категорию",
-        "DEFAULT_PORTION_AMOUNT": "Вес упаковки / порция по умолчанию (для рецептов)",
+        "DEFAULT_PORTION_AMOUNT": "Вес упаковки / порция",
         "DEFAULT_PORTION_PLACEHOLDER": "например 300",
         "PRODUCT_TYPE": "Тип продукта",
         "PRODUCT_TYPE_PLACEHOLDER": "Выберите тип продукта",
@@ -631,16 +631,21 @@
         "IMAGE": "Изображение",
         "IMAGE_DESCRIPTION": "Добавьте фото продукта. Допустимые форматы: JPG, PNG, GIF, WebP до 20 МБ",
         "SCAN_BARCODE": "Сканировать штрихкод",
-        "CALORIES": "Калории, ккал",
-        "PROTEINS": "Белки, г",
-        "FATS": "Жиры, г",
-        "CARBS": "Углеводы, г",
-        "FIBER": "Клетчатка, г",
-        "ALCOHOL": "Алкоголь, г",
+        "CALORIES": "Калории",
+        "PROTEINS": "Б",
+        "FATS": "Ж",
+        "CARBS": "У",
+        "FIBER": "Клетчатка",
+        "ALCOHOL": "Алкоголь",
         "CALORIES_MISMATCH_WARNING": "По указанным макронутриентам ожидается около {{expected}} ккал, но вы указали {{actual}} ккал. Проверьте, пожалуйста.",
+        "NUTRITION_MODE": {
+            "BASE": "На {{amount}} {{unit}}",
+            "PORTION": "На порцию",
+            "ARIA": "Основа пищевой ценности"
+        },
         "NUTRITION_ERRORS": {
             "CALORIES_REQUIRED": "Калорийность должна быть больше 0.",
-            "MACROS_REQUIRED": "Укажите хотя бы один макрос (белки, жиры или углеводы)."
+            "MACROS_REQUIRED": "Укажите хотя бы один макрос (белки, жиры, углеводы или алкоголь)."
         },
         "DEFAULT_SERVING": "Стандартная порция",
         "DEFAULT_SERVING_WITH_UNIT": "Стандартная порция ({{unit}})",

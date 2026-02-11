@@ -37,11 +37,16 @@
       [attr.step]="step ?? null"
       [attr.min]="min ?? null"
       [attr.max]="max ?? null"
+      [attr.size]="inputSize"
+      [style.width]="inputWidth"
       [disabled]="disabled"
       [value]="value"
       (input)="onInput($event)"
       (blur)="onBlur()"
     />
+    @if (unitLabel) {
+      <span class="fd-ui-nutrient-input__unit">{{ unitLabel }}</span>
+    }
   </div>
 
   @if (error) {
