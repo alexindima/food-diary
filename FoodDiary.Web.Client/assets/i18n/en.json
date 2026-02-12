@@ -638,6 +638,8 @@
         "SUBTITLE": "Fill nutrition and details to save",
         "NAME": "Name",
         "NAME_PLACEHOLDER": "Enter product name",
+        "BRAND": "Brand / manufacturer",
+        "BRAND_PLACEHOLDER": "Enter brand or manufacturer",
         "BARCODE": "Barcode",
         "BARCODE_PLACEHOLDER": "Enter barcode",
         "CATEGORY": "Category",

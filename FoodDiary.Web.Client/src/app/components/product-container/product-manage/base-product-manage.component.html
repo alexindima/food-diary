@@ -49,6 +49,13 @@
                              />
                         </div>
                         <div class="product-manage__hero-field">
+                            <fd-ui-input formControlName="brand"
+                                size="lg"
+                                [label]="'PRODUCT_MANAGE.BRAND' | translate"
+                                [placeholder]="'PRODUCT_MANAGE.BRAND_PLACEHOLDER' | translate"
+                             />
+                        </div>
+                        <div class="product-manage__hero-field">
                             <fd-ui-input formControlName="barcode"
                                 size="lg"
                                 [label]="'PRODUCT_MANAGE.BARCODE' | translate"
@@ -58,17 +65,16 @@
                                 (suffixButtonClicked)="openBarcodeScanner()"
                              />
                         </div>
-                        <div class="product-manage__hero-field">
+                    </div>
+                    <div class="product-manage__basic-grid">
+                        <div class="product-manage__field product-manage__field--full">
                             <fd-ui-select formControlName="productType"
-                                size="lg"
                                 [label]="'PRODUCT_MANAGE.PRODUCT_TYPE' | translate"
                                 [placeholder]="'PRODUCT_MANAGE.PRODUCT_TYPE_PLACEHOLDER' | translate"
                                 [options]="productTypeSelectOptions"
                                 [error]="getControlError('productType')"
                              />
                         </div>
-                    </div>
-                    <div class="product-manage__basic-grid">
                         <div class="product-manage__field product-manage__field--full">
                             <fd-ui-textarea
                                 formControlName="description"
