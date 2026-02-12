@@ -6,8 +6,39 @@
     gap: $gap-l;
 }
 
+:host ::ng-deep .fd-ui-dialog__body {
+    scrollbar-gutter: stable;
+    padding-right: 12px;
+    margin-right: -12px;
+}
+
+:host ::ng-deep .fd-ui-dialog__body::-webkit-scrollbar {
+    width: 10px;
+}
+
 .product-ai-dialog__upload {
     position: relative;
+}
+
+.product-ai-dialog__upload ::ng-deep .image-upload-field__dropzone {
+    height: 240px;
+    min-height: 240px;
+    border-radius: 24px;
+    padding: 0;
+}
+
+.product-ai-dialog__upload ::ng-deep .image-upload-field__control {
+    display: none;
+}
+
+.product-ai-dialog__upload ::ng-deep .image-upload-field__preview {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain !important;
+    border-radius: 24px;
+    background: #f8fafc;
 }
 
 .product-ai-dialog__status {
@@ -90,6 +121,13 @@
     100% {
         top: 12px;
         opacity: 0.6;
+    }
+}
+
+@media (max-width: 640px) {
+    .product-ai-dialog__upload ::ng-deep .image-upload-field__dropzone {
+        height: 210px;
+        min-height: 210px;
     }
 }
 

@@ -6,8 +6,9 @@
                 [description]="'PRODUCT_AI_DIALOG.IMAGE_DESCRIPTION' | translate"
                 [recommendedSize]="'1024 x 1024'"
                 [cropEnabled]="true"
-                [cropSize]="1024"
-                [cropAspectRatio]="1"
+                [cropSize]="null"
+                [cropMaxSize]="1024"
+                [cropAspectRatio]="null"
                 [deleteOnClear]="true"
                 (imageChanged)="onImageChanged($event)"
             />
@@ -30,19 +31,33 @@
             [label]="'PRODUCT_AI_DIALOG.DESCRIPTION' | translate"
             [placeholder]="'PRODUCT_AI_DIALOG.DESCRIPTION_PLACEHOLDER' | translate"
             [rows]="3"
+            [disabled]="isLoading() || isNutritionLoading()"
         />
 
         <div class="product-ai-dialog__controls">
-            <fd-ui-button
-                type="button"
-                variant="primary"
-                fill="outline"
-                icon="auto_awesome"
-                [disabled]="!selection() || isLoading() || isNutritionLoading()"
-                (click)="reanalyze()"
-            >
-                {{ 'PRODUCT_AI_DIALOG.REANALYZE' | translate }}
-            </fd-ui-button>
+            @if (hasAnalyzed()) {
+                <fd-ui-button
+                    type="button"
+                    variant="primary"
+                    fill="outline"
+                    icon="auto_awesome"
+                    [disabled]="!selection() || isLoading() || isNutritionLoading()"
+                    (click)="reanalyze()"
+                >
+                    {{ 'PRODUCT_AI_DIALOG.REANALYZE' | translate }}
+                </fd-ui-button>
+            } @else {
+                <fd-ui-button
+                    type="button"
+                    variant="primary"
+                    fill="outline"
+                    icon="auto_awesome"
+                    [disabled]="!selection() || isLoading() || isNutritionLoading()"
+                    (click)="startAnalysis()"
+                >
+                    {{ 'PRODUCT_AI_DIALOG.ANALYZE' | translate }}
+                </fd-ui-button>
+            }
         </div>
 
         @if (errorKey(); as error) {

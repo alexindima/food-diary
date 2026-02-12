@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -92,6 +92,17 @@ export class ProductAiRecognitionDialogComponent {
         label: this.translateService.instant(`PRODUCT_AMOUNT_UNITS.${MeasurementUnit[unit]}`),
     }));
 
+    public constructor() {
+        effect(() => {
+            const disabled = this.isLoading() || this.isNutritionLoading();
+            if (disabled) {
+                this.descriptionControl.disable({ emitEvent: false });
+            } else {
+                this.descriptionControl.enable({ emitEvent: false });
+            }
+        });
+    }
+
     public readonly statusKey = computed(() => {
         if (!this.selection()) {
             return null;
@@ -115,15 +126,17 @@ export class ProductAiRecognitionDialogComponent {
         this.results.set([]);
         this.nutrition.set(null);
         this.hasAnalyzed.set(false);
+    }
 
-        if (!selection?.assetId) {
-            return;
-        }
-
-        this.runAnalysis(selection.assetId);
+    public startAnalysis(): void {
+        this.runAnalysisFlow();
     }
 
     public reanalyze(): void {
+        this.runAnalysisFlow();
+    }
+
+    private runAnalysisFlow(): void {
         if (this.isLoading() || this.isNutritionLoading()) {
             return;
         }
@@ -179,7 +192,7 @@ export class ProductAiRecognitionDialogComponent {
 
     public itemNames(): string[] {
         return this.results()
-            .map(item => item.nameLocal?.trim() || item.nameEn?.trim() || '')
+            .map(item => this.capitalizeName(item.nameLocal?.trim() || item.nameEn?.trim() || ''))
             .filter(Boolean);
     }
 
@@ -248,7 +261,7 @@ export class ProductAiRecognitionDialogComponent {
 
     private applyNutritionToForm(items: FoodVisionItem[], nutrition: FoodNutritionResponse): void {
         const primary = items[0];
-        const name = primary?.nameLocal?.trim() || primary?.nameEn?.trim() || '';
+        const name = this.capitalizeName(primary?.nameLocal?.trim() || primary?.nameEn?.trim() || '');
         const baseUnit = this.resolveUnit(primary?.unit);
         const baseAmount = this.getDefaultBaseAmount(baseUnit);
 
@@ -311,6 +324,13 @@ export class ProductAiRecognitionDialogComponent {
 
     private getFallbackName(): string {
         return this.itemNames()[0] ?? '';
+    }
+
+    private capitalizeName(value: string): string {
+        if (!value) {
+            return '';
+        }
+        return value.charAt(0).toUpperCase() + value.slice(1);
     }
 
     private getNumber(value: number | string): number {

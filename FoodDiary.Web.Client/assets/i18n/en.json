@@ -724,6 +724,7 @@
         "DESCRIPTION": "Product hint (optional)",
         "DESCRIPTION_PLACEHOLDER": "e.g. chocolate bar with nuts, 50 g",
         "REANALYZE": "Analyze again",
+        "ANALYZE": "Analyze photo",
         "STATUS_ANALYZING": "Analyzing photo...",
         "STATUS_NUTRITION": "Calculating nutrients...",
         "STATUS_DONE": "Recognition complete",
