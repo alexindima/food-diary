@@ -31,16 +31,32 @@
     }
 
     &__delete-button {
-        border-color: $color-no-results;
-        color: $color-no-results;
+        ::ng-deep .fd-ui-button {
+            border-color: $color-no-results;
+            color: $color-no-results;
+        }
 
-        &:hover:not([disabled]) {
+        ::ng-deep .fd-ui-button:hover:not(:disabled) {
             background-color: fade($color-no-results, 10%);
         }
 
-        &:disabled {
+        ::ng-deep .fd-ui-button:disabled {
             opacity: 0.6;
             cursor: not-allowed;
+        }
+
+        &--icon {
+            --fd-button-padding-x: 0;
+            --fd-button-height: 40px;
+            width: 40px;
+            min-width: 40px;
+            display: inline-flex;
+
+            ::ng-deep .fd-ui-button {
+                width: 100%;
+                min-width: 40px;
+                justify-content: center;
+            }
         }
     }
 
@@ -407,7 +423,7 @@
 
     &__footer-actions {
         display: grid;
-        grid-template-columns: max-content minmax(0, 1fr);
+        grid-template-columns: max-content max-content minmax(0, 1fr);
         gap: $gap-m;
         align-items: center;
         width: 100%;

@@ -35,6 +35,7 @@ public sealed class AdminUsersController(ISender mediator) : BaseApiController(m
             request.IsActive,
             request.IsEmailConfirmed,
             request.Roles ?? Array.Empty<string>(),
+            request.Language,
             request.AiInputTokenLimit,
             request.AiOutputTokenLimit);
         var result = await Mediator.Send(command);

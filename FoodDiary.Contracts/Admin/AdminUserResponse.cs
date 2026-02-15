@@ -6,6 +6,7 @@ public sealed record AdminUserResponse(
     string? Username,
     string? FirstName,
     string? LastName,
+    string? Language,
     bool IsActive,
     bool IsEmailConfirmed,
     DateTime CreatedOnUtc,

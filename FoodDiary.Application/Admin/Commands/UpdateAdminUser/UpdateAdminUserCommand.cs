@@ -10,6 +10,7 @@ public sealed record UpdateAdminUserCommand(
     bool? IsActive,
     bool? IsEmailConfirmed,
     string[] Roles,
+    string? Language,
     long? AiInputTokenLimit,
     long? AiOutputTokenLimit)
     : ICommand<Result<AdminUserResponse>>;

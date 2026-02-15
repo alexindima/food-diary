@@ -3,22 +3,7 @@
         class="product-manage__header"
         [title]="product() ? ('PRODUCT_MANAGE.EDIT_TITLE' | translate) : ('PRODUCT_MANAGE.ADD_TITLE' | translate)"
         [subtitle]="'PRODUCT_MANAGE.SUBTITLE' | translate"
-    >
-        <ng-container fdPageHeaderActions>
-            @if (canShowDeleteButton) {
-                <fd-ui-button
-                    type="button"
-                    class="product-manage__delete-button"
-                    variant="danger"
-                    icon="delete"
-                    [disabled]="isDeleting()"
-                    (click)="onDeleteProduct()"
-                >
-                    {{ 'PRODUCT_MANAGE.DELETE_BUTTON' | translate }}
-                </fd-ui-button>
-            }
-        </ng-container>
-    </fd-page-header>
+    />
 
     <form class="product-manage__form" [formGroup]="productForm" (ngSubmit)="onSubmit()">
         <div class="product-manage__grid">
@@ -286,6 +271,17 @@
                             >
                                 {{ 'PRODUCT_MANAGE.CANCEL_BUTTON' | translate }}
                             </fd-ui-button>
+                            @if (canShowDeleteButton) {
+                                <fd-ui-button
+                                    type="button"
+                                    class="product-manage__delete-button product-manage__delete-button--icon"
+                                    variant="danger"
+                                    icon="delete"
+                                    [ariaLabel]="'PRODUCT_MANAGE.DELETE_BUTTON' | translate"
+                                    [disabled]="isDeleting()"
+                                    (click)="onDeleteProduct()"
+                                />
+                            }
                             @if (product()) {
                                 <fd-ui-button
                                     type="submit"

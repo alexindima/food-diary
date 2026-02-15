@@ -38,6 +38,17 @@ public sealed class UpdateAdminUserCommandHandler(IUserRepository userRepository
             user.SetEmailConfirmed(command.IsEmailConfirmed.Value);
         }
 
+        var languageResult = NormalizeLanguage(command.Language);
+        if (languageResult.IsFailure)
+        {
+            return Result.Failure<AdminUserResponse>(languageResult.Error);
+        }
+
+        if (languageResult.Value is not null)
+        {
+            user.UpdateProfile(language: languageResult.Value);
+        }
+
         if (command.Roles is not null)
         {
             var requestedRoles = command.Roles
@@ -88,5 +99,18 @@ public sealed class UpdateAdminUserCommandHandler(IUserRepository userRepository
         {
             user.UserRoles.Add(new UserRole(user.Id, role.Id));
         }
+    }
+
+    private static Result<string?> NormalizeLanguage(string? value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            return Result.Success<string?>(null);
+        }
+
+        var normalized = value.Trim().ToLowerInvariant();
+        return normalized is "en" or "ru"
+            ? Result.Success<string?>(normalized)
+            : Result.Failure<string?>(Errors.Validation.Invalid("language", "Invalid language value."));
     }
 }

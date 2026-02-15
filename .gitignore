@@ -50,3 +50,4 @@ appsettings.*.json
 # OS junk
 .DS_Store
 Thumbs.db
+/FoodDiary.Web.Client/dist-admin/

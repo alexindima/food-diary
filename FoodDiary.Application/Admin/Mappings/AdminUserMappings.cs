@@ -19,6 +19,7 @@ public static class AdminUserMappings
             user.Username,
             user.FirstName,
             user.LastName,
+            user.Language,
             user.IsActive,
             user.IsEmailConfirmed,
             user.CreatedOnUtc,

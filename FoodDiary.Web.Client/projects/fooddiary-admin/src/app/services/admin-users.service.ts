@@ -9,6 +9,7 @@ export type AdminUser = {
   username?: string | null;
   firstName?: string | null;
   lastName?: string | null;
+  language?: string | null;
   isActive: boolean;
   isEmailConfirmed: boolean;
   createdOnUtc: string;
@@ -21,6 +22,7 @@ export type AdminUserUpdate = {
   isActive?: boolean | null;
   isEmailConfirmed?: boolean | null;
   roles: string[];
+  language?: string | null;
 };
 
 type ApiPagedResponse<T> = {

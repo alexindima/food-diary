@@ -27,6 +27,13 @@
         </label>
       </div>
     </div>
+
+    <div class="admin-user-dialog__section">
+      <label class="admin-user-dialog__label" for="admin-user-language">Language</label>
+      <select id="admin-user-language" class="admin-user-dialog__select" [formControl]="form.controls.language">
+        <option *ngFor="let language of languages" [value]="language.value">{{ language.label }}</option>
+      </select>
+    </div>
   </div>
 
   <div fdUiDialogFooter class="admin-user-dialog__actions">

@@ -5,12 +5,13 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog.component';
 import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { AdminUser, AdminUsersService } from '../../services/admin-users.service';
+import { AdminUser, AdminUsersService, AdminUserUpdate } from '../../services/admin-users.service';
 
 type AdminUserForm = {
   isActive: FormControl<boolean>;
   isEmailConfirmed: FormControl<boolean>;
   roles: FormControl<string[]>;
+  language: FormControl<'en' | 'ru'>;
 };
 
 @Component({
@@ -28,10 +29,15 @@ export class AdminUserEditDialogComponent {
   private readonly fb = inject(FormBuilder);
 
   public readonly roles = ['Admin', 'Premium', 'Support'];
+  public readonly languages: ReadonlyArray<{ value: 'en' | 'ru'; label: string }> = [
+    { value: 'en', label: 'English' },
+    { value: 'ru', label: 'Russian' },
+  ];
   public readonly form: FormGroup<AdminUserForm> = this.fb.group({
     isActive: this.fb.nonNullable.control(this.data.isActive),
     isEmailConfirmed: this.fb.nonNullable.control(this.data.isEmailConfirmed),
     roles: this.fb.nonNullable.control(this.data.roles ?? []),
+    language: this.fb.nonNullable.control(this.normalizeLanguage(this.data.language) ?? 'en'),
   });
 
   public readonly user = this.data;
@@ -42,8 +48,18 @@ export class AdminUserEditDialogComponent {
 
   public save(): void {
     const value = this.form.getRawValue();
+    const payload: AdminUserUpdate = {
+      isActive: value.isActive,
+      isEmailConfirmed: value.isEmailConfirmed,
+      roles: value.roles,
+    };
+    const currentLanguage = this.normalizeLanguage(this.user.language) ?? 'en';
+    if (value.language !== currentLanguage) {
+      payload.language = value.language;
+    }
+
     this.usersService
-      .updateUser(this.user.id, { isActive: value.isActive, isEmailConfirmed: value.isEmailConfirmed, roles: value.roles })
+      .updateUser(this.user.id, payload)
       .subscribe({
         next: () => this.dialogRef.close(true),
         error: () => this.dialogRef.close(false),
@@ -59,5 +75,22 @@ export class AdminUserEditDialogComponent {
 
   public hasRole(role: string): boolean {
     return (this.form.controls.roles.value ?? []).includes(role);
+  }
+
+  private normalizeLanguage(value: string | null | undefined): 'en' | 'ru' | null {
+    if (!value) {
+      return null;
+    }
+
+    const normalized = value.trim().toLowerCase();
+    if (normalized === 'en' || normalized.startsWith('en-')) {
+      return 'en';
+    }
+
+    if (normalized === 'ru' || normalized.startsWith('ru-')) {
+      return 'ru';
+    }
+
+    return null;
   }
 }
