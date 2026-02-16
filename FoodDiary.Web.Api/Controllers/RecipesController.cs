@@ -7,6 +7,7 @@ using FoodDiary.Application.Recipes.Commands.DuplicateRecipe;
 using FoodDiary.Application.Recipes.Mappings;
 using FoodDiary.Application.Recipes.Queries.GetRecipeById;
 using FoodDiary.Application.Recipes.Queries.GetRecipes;
+using FoodDiary.Application.Recipes.Queries.GetRecentRecipes;
 using FoodDiary.Contracts.Recipes;
 using FoodDiary.Domain.ValueObjects;
 using MediatR;
@@ -27,6 +28,17 @@ public class RecipesController(ISender mediator) : AuthorizedController(mediator
         [FromQuery] bool includePublic = true)
     {
         var query = new GetRecipesQuery(CurrentUserId, page, limit, search, includePublic);
+        var result = await Mediator.Send(query);
+        return result.ToActionResult();
+    }
+
+    [HttpGet("recent")]
+    public async Task<IActionResult> GetRecent(
+        [FromQuery] int limit = 10,
+        [FromQuery] bool includePublic = true)
+    {
+        var sanitizedLimit = Math.Clamp(limit, 1, 50);
+        var query = new GetRecentRecipesQuery(CurrentUserId, sanitizedLimit, includePublic);
         var result = await Mediator.Send(query);
         return result.ToActionResult();
     }

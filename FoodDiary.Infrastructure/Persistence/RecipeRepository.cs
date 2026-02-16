@@ -161,4 +161,37 @@ public class RecipeRepository : IRecipeRepository
         var recipes = await query.ToListAsync(cancellationToken);
         return recipes.ToDictionary(r => r.Id);
     }
+
+    public async Task<IReadOnlyDictionary<RecipeId, (Recipe Recipe, int UsageCount)>> GetByIdsWithUsageAsync(
+        IEnumerable<RecipeId> ids,
+        UserId userId,
+        bool includePublic = true,
+        CancellationToken cancellationToken = default)
+    {
+        var recipeIds = ids.Distinct().ToList();
+        if (recipeIds.Count == 0)
+        {
+            return new Dictionary<RecipeId, (Recipe Recipe, int UsageCount)>();
+        }
+
+        var items = await _context.Recipes
+            .AsNoTracking()
+            .Include(r => r.Steps)
+                .ThenInclude(s => s.Ingredients)
+                    .ThenInclude(i => i.Product)
+            .Include(r => r.Steps)
+                .ThenInclude(s => s.Ingredients)
+                    .ThenInclude(i => i.NestedRecipe)
+            .Where(r => recipeIds.Contains(r.Id) && (includePublic
+                ? r.UserId == userId || r.Visibility == Visibility.PUBLIC
+                : r.UserId == userId))
+            .Select(r => new
+            {
+                Recipe = r,
+                UsageCount = r.MealItems.Count + r.NestedRecipeUsages.Count
+            })
+            .ToListAsync(cancellationToken);
+
+        return items.ToDictionary(x => x.Recipe.Id, x => (x.Recipe, x.UsageCount));
+    }
 }

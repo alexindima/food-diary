@@ -149,7 +149,39 @@
         margin-top: $gap-l;
     }
 
-    &__grid {
+    &__groups {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+    }
+
+    &__section {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    &__section-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    &__section-label {
+        font-weight: 800;
+        font-size: 1.05rem;
+        color: $color-text-main;
+        white-space: nowrap;
+    }
+
+    &__section-line {
+        flex: 1;
+        height: 1px;
+        background: rgba(15, 23, 42, 0.08);
+        border-radius: 999px;
+    }
+
+    &__section-grid {
         display: grid;
         grid-template-columns: 1fr;
         gap: 18px;
@@ -195,7 +227,23 @@
             margin-left: auto;
         }
 
-        &__grid {
+        &__groups {
+            gap: 12px;
+        }
+
+        &__section {
+            gap: 8px;
+        }
+
+        &__section-header {
+            padding: 0 16px;
+        }
+
+        &__section-label {
+            font-size: 0.95rem;
+        }
+
+        &__section-grid {
             gap: 0;
             margin: 0;
             background: #ffffff;

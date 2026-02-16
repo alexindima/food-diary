@@ -1,3 +1,5 @@
+import { PageOf } from './page-of.data';
+
 export interface Product {
     id: string; // Guid
     barcode?: string | null;
@@ -54,6 +56,11 @@ export class ProductFilters {
             this.search = search;
         }
     }
+}
+
+export interface ProductListWithRecent {
+    recentItems: Product[];
+    allProducts: PageOf<Product>;
 }
 
 export enum MeasurementUnit {

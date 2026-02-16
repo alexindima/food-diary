@@ -19,7 +19,8 @@ namespace FoodDiary.Application.Consumptions.Commands.CreateConsumption;
 public class CreateConsumptionCommandHandler(
     IMealRepository mealRepository,
     IProductRepository productRepository,
-    IRecipeRepository recipeRepository)
+    IRecipeRepository recipeRepository,
+    IRecentItemRepository recentItemRepository)
     : ICommandHandler<CreateConsumptionCommand, Result<ConsumptionResponse>>
 {
     public async Task<Result<ConsumptionResponse>> Handle(CreateConsumptionCommand command, CancellationToken cancellationToken)
@@ -147,6 +148,11 @@ public class CreateConsumptionCommandHandler(
         }
 
         await mealRepository.AddAsync(meal, cancellationToken);
+        await recentItemRepository.RegisterUsageAsync(
+            command.UserId.Value,
+            meal.Items.Where(x => x.ProductId.HasValue).Select(x => x.ProductId!.Value).ToList(),
+            meal.Items.Where(x => x.RecipeId.HasValue).Select(x => x.RecipeId!.Value).ToList(),
+            cancellationToken);
 
         var created = await mealRepository.GetByIdAsync(
             meal.Id,

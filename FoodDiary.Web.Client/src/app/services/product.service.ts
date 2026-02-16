@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ApiService } from './api.service';
 import { environment } from '../../environments/environment';
 import { catchError, Observable, throwError } from 'rxjs';
-import { Product, CreateProductRequest, ProductFilters } from '../types/product.data';
+import { Product, CreateProductRequest, ProductFilters, ProductListWithRecent } from '../types/product.data';
 import { HttpErrorResponse } from '@angular/common/http';
 import { PageOf } from '../types/page-of.data';
 
@@ -31,6 +31,36 @@ export class ProductService extends ApiService {
         return this.get<Product>(`${id}`).pipe(
             catchError((error: HttpErrorResponse) => {
                 console.error('Get product error', error);
+                return throwError(() => error);
+            }),
+        );
+    }
+
+    public queryWithRecent(
+        page: number,
+        limit: number,
+        filters?: ProductFilters,
+        includePublic = true,
+        recentLimit = 10): Observable<ProductListWithRecent> {
+        const params: Record<string, string | number | boolean> = { page, limit, includePublic, recentLimit };
+        const search = filters?.search?.trim();
+        if (search) {
+            params['search'] = search;
+        }
+
+        return this.get<ProductListWithRecent>('with-recent', params).pipe(
+            catchError((error: HttpErrorResponse) => {
+                console.error('Query products with recent error', error);
+                return throwError(() => error);
+            }),
+        );
+    }
+
+    public getRecent(limit = 10, includePublic = true): Observable<Product[]> {
+        const params: Record<string, string | number | boolean> = { limit, includePublic };
+        return this.get<Product[]>('recent', params).pipe(
+            catchError((error: HttpErrorResponse) => {
+                console.error('Get recent products error', error);
                 return throwError(() => error);
             }),
         );

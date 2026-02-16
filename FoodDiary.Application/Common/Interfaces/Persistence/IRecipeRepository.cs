@@ -30,6 +30,11 @@ public interface IRecipeRepository
         UserId userId,
         bool includePublic = true,
         CancellationToken cancellationToken = default);
+    Task<IReadOnlyDictionary<RecipeId, (Recipe Recipe, int UsageCount)>> GetByIdsWithUsageAsync(
+        IEnumerable<RecipeId> ids,
+        UserId userId,
+        bool includePublic = true,
+        CancellationToken cancellationToken = default);
 
     Task UpdateAsync(Recipe recipe);
 

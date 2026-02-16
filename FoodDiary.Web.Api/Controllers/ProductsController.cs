@@ -5,6 +5,8 @@ using FoodDiary.Application.Products.Commands.DeleteProduct;
 using FoodDiary.Application.Products.Commands.DuplicateProduct;
 using FoodDiary.Application.Products.Queries.GetProductById;
 using FoodDiary.Application.Products.Queries.GetProducts;
+using FoodDiary.Application.Products.Queries.GetProductsWithRecent;
+using FoodDiary.Application.Products.Queries.GetRecentProducts;
 using FoodDiary.Contracts.Products;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.WebApi.Extensions;
@@ -26,6 +28,42 @@ public class ProductsController(ISender mediator) : AuthorizedController(mediato
 
         var query = new GetProductsQuery(CurrentUserId, sanitizedPage, sanitizedLimit, sanitizedSearch,
             includePublic);
+        var result = await Mediator.Send(query);
+        return result.ToActionResult();
+    }
+
+    [HttpGet("with-recent")]
+    public async Task<IActionResult> GetAllWithRecent(
+        [FromQuery] int page = 1,
+        [FromQuery] int limit = 10,
+        [FromQuery] int recentLimit = 10,
+        [FromQuery] string? search = null,
+        [FromQuery] bool includePublic = true)
+    {
+        var sanitizedPage = Math.Max(page, 1);
+        var sanitizedLimit = Math.Clamp(limit, 1, 100);
+        var sanitizedRecentLimit = Math.Clamp(recentLimit, 1, 50);
+        var sanitizedSearch = string.IsNullOrWhiteSpace(search) ? null : search.Trim();
+
+        var query = new GetProductsWithRecentQuery(
+            CurrentUserId,
+            sanitizedPage,
+            sanitizedLimit,
+            sanitizedSearch,
+            includePublic,
+            sanitizedRecentLimit);
+
+        var result = await Mediator.Send(query);
+        return result.ToActionResult();
+    }
+
+    [HttpGet("recent")]
+    public async Task<IActionResult> GetRecent(
+        [FromQuery] int limit = 10,
+        [FromQuery] bool includePublic = true)
+    {
+        var sanitizedLimit = Math.Clamp(limit, 1, 50);
+        var query = new GetRecentProductsQuery(CurrentUserId, sanitizedLimit, includePublic);
         var result = await Mediator.Send(query);
         return result.ToActionResult();
     }

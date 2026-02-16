@@ -14,6 +14,7 @@ public class FoodDiaryDbContext : DbContext
     public DbSet<UserRole> UserRoles => Set<UserRole>();
     public DbSet<ImageAsset> ImageAssets => Set<ImageAsset>();
     public DbSet<Product> Products => Set<Product>();
+    public DbSet<RecentItem> RecentItems => Set<RecentItem>();
     public DbSet<Meal> Meals => Set<Meal>();
     public DbSet<MealItem> MealItems => Set<MealItem>();
     public DbSet<MealAiSession> MealAiSessions => Set<MealAiSession>();
@@ -184,6 +185,34 @@ public class FoodDiaryDbContext : DbContext
                 .OnDelete(DeleteBehavior.SetNull);
 
             entity.HasOne(e => e.User).WithMany(u => u.Products).HasForeignKey(e => e.UserId);
+        });
+
+        modelBuilder.Entity<RecentItem>(entity =>
+        {
+            entity.Property(e => e.Id).HasConversion(
+                id => id.Value,
+                value => new RecentItemId(value));
+
+            entity.Property(e => e.UserId).HasConversion(
+                id => id.Value,
+                value => new UserId(value));
+
+            entity.Property(e => e.ItemType)
+                .HasConversion<string>()
+                .HasMaxLength(32);
+
+            entity.Property(e => e.LastUsedAtUtc)
+                .HasColumnType("timestamp with time zone");
+
+            entity.HasIndex(e => new { e.UserId, e.ItemType, e.ItemId })
+                .IsUnique();
+
+            entity.HasIndex(e => new { e.UserId, e.ItemType, e.LastUsedAtUtc });
+
+            entity.HasOne(e => e.User)
+                .WithMany()
+                .HasForeignKey(e => e.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
         });
 
         // Meal configuration

@@ -73,6 +73,20 @@ public readonly record struct RecipeId(Guid Value) : IEntityId<Guid>
 }
 
 /// <summary>
+/// Identifier for recent item entries.
+/// </summary>
+public readonly record struct RecentItemId(Guid Value) : IEntityId<Guid>
+{
+    public static RecentItemId New() => new(Guid.NewGuid());
+    public static RecentItemId Empty => new(Guid.Empty);
+
+    public static implicit operator Guid(RecentItemId id) => id.Value;
+    public static explicit operator RecentItemId(Guid value) => new(value);
+
+    public override string ToString() => Value.ToString();
+}
+
+/// <summary>
 /// Строготипизированный идентификатор элемента приема пищи
 /// </summary>
 public readonly record struct MealItemId(Guid Value) : IEntityId<Guid>

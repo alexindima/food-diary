@@ -105,6 +105,33 @@ public class ProductRepository : IProductRepository
         return products.ToDictionary(p => p.Id);
     }
 
+    public async Task<IReadOnlyDictionary<ProductId, (Product Product, int UsageCount)>> GetByIdsWithUsageAsync(
+        IEnumerable<ProductId> ids,
+        UserId userId,
+        bool includePublic = true,
+        CancellationToken cancellationToken = default)
+    {
+        var productIds = ids.Distinct().ToList();
+        if (productIds.Count == 0)
+        {
+            return new Dictionary<ProductId, (Product Product, int UsageCount)>();
+        }
+
+        var items = await _context.Products
+            .AsNoTracking()
+            .Where(p => productIds.Contains(p.Id) && (includePublic
+                ? p.UserId == userId || p.Visibility == Visibility.PUBLIC
+                : p.UserId == userId))
+            .Select(p => new
+            {
+                Product = p,
+                UsageCount = p.MealItems.Count + p.RecipeIngredients.Count
+            })
+            .ToListAsync(cancellationToken);
+
+        return items.ToDictionary(x => x.Product.Id, x => (x.Product, x.UsageCount));
+    }
+
     public async Task UpdateAsync(Product product)
     {
         _context.Products.Update(product);

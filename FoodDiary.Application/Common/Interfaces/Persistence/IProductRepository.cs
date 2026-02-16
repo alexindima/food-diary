@@ -26,6 +26,11 @@ public interface IProductRepository
         UserId userId,
         bool includePublic = true,
         CancellationToken cancellationToken = default);
+    Task<IReadOnlyDictionary<ProductId, (Product Product, int UsageCount)>> GetByIdsWithUsageAsync(
+        IEnumerable<ProductId> ids,
+        UserId userId,
+        bool includePublic = true,
+        CancellationToken cancellationToken = default);
     Task UpdateAsync(Product product);
     Task DeleteAsync(Product product);
 }

@@ -19,6 +19,7 @@ public class UpdateConsumptionCommandHandler(
     IMealRepository mealRepository,
     IProductRepository productRepository,
     IRecipeRepository recipeRepository,
+    IRecentItemRepository recentItemRepository,
     IImageAssetRepository imageAssetRepository,
     IImageStorageService imageStorageService)
     : ICommandHandler<UpdateConsumptionCommand, Result<ConsumptionResponse>>
@@ -166,6 +167,11 @@ public class UpdateConsumptionCommandHandler(
         }
 
         await mealRepository.UpdateAsync(meal, cancellationToken);
+        await recentItemRepository.RegisterUsageAsync(
+            command.UserId.Value,
+            meal.Items.Where(x => x.ProductId.HasValue).Select(x => x.ProductId!.Value).ToList(),
+            meal.Items.Where(x => x.RecipeId.HasValue).Select(x => x.RecipeId!.Value).ToList(),
+            cancellationToken);
 
         if (oldAssetId.HasValue && (!command.ImageAssetId.HasValue || oldAssetId.Value.Value != command.ImageAssetId.Value))
         {

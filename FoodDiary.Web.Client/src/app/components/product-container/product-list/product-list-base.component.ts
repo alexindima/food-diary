@@ -57,6 +57,7 @@ export class ProductListBaseComponent implements OnInit {
     public searchForm: FormGroup<ProductSearchFormGroup>;
     public productData: PagedData<Product> = new PagedData<Product>();
     public currentPageIndex = 0;
+    public recentProducts: Product[] = [];
 
     public constructor() {
         this.searchForm = new FormGroup<ProductSearchFormGroup>({
@@ -124,15 +125,17 @@ export class ProductListBaseComponent implements OnInit {
         this.productData.setLoading(true);
         const filters = new ProductFilters(search);
         const includePublic = !this.searchForm.controls.onlyMine.value;
-        return this.productService.query(page, limit, filters, includePublic).pipe(
-            tap(pageData => {
-                this.productData.setData(pageData);
-                this.currentPageIndex = pageData.page - 1;
+        return this.productService.queryWithRecent(page, limit, filters, includePublic, 10).pipe(
+            tap(data => {
+                this.productData.setData(data.allProducts);
+                this.recentProducts = data.recentItems;
+                this.currentPageIndex = data.allProducts.page - 1;
             }),
             map(() => void 0),
             catchError((error: HttpErrorResponse) => {
                 console.error('Error loading products:', error);
                 this.productData.clearData();
+                this.recentProducts = [];
                 return of(void 0);
             }),
             finalize(() => this.productData.setLoading(false)),
@@ -151,6 +154,32 @@ export class ProductListBaseComponent implements OnInit {
 
     protected getProductTypeTranslationKey(product: Product): string {
         return buildProductTypeTranslationKey(product.productType ?? product.category ?? null);
+    }
+
+    public get showRecentSection(): boolean {
+        return !this.hasSearchValue(this.searchForm.controls.search.value) && this.recentProducts.length > 0;
+    }
+
+    public get allProductsSectionItems(): Product[] {
+        const products = this.productData.items();
+        if (products.length === 0) {
+            return [];
+        }
+
+        if (!this.showRecentSection) {
+            return products;
+        }
+
+        const recentIds = new Set(this.recentProducts.map(product => product.id));
+        return products.filter(product => !recentIds.has(product.id));
+    }
+
+    public get hasVisibleProducts(): boolean {
+        return this.showRecentSection || this.allProductsSectionItems.length > 0;
+    }
+
+    private hasSearchValue(value: string | null): boolean {
+        return !!value?.trim();
     }
 }
 

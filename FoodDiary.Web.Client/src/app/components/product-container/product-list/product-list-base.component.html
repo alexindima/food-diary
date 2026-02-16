@@ -52,15 +52,48 @@
         @if (productData.isLoading()) {
             <fd-ui-loader class="product-list__loader" />
         } @else {
-            @if (productData.items().length > 0) {
-                <div class="product-list__grid">
-                    @for (product of productData.items(); track product) {
-                        <fd-product-card
-                            [product]="product"
-                            [imageUrl]="resolveImage(product)"
-                            (open)="onProductClick(product)"
-                            (addToMeal)="onAddToMeal(product)"
-                        />
+            @if (hasVisibleProducts) {
+                <div class="product-list__groups">
+                    @if (showRecentSection) {
+                        <div class="product-list__section">
+                            <div class="product-list__section-header">
+                                <span class="product-list__section-label">
+                                    {{ 'PRODUCT_LIST.RECENT_PRODUCTS' | translate }}
+                                </span>
+                                <span class="product-list__section-line"></span>
+                            </div>
+                            <div class="product-list__section-grid">
+                                @for (product of recentProducts; track product) {
+                                    <fd-product-card
+                                        [product]="product"
+                                        [imageUrl]="resolveImage(product)"
+                                        (open)="onProductClick(product)"
+                                        (addToMeal)="onAddToMeal(product)"
+                                    />
+                                }
+                            </div>
+                        </div>
+                    }
+
+                    @if (allProductsSectionItems.length > 0) {
+                        <div class="product-list__section">
+                            <div class="product-list__section-header">
+                                <span class="product-list__section-label">
+                                    {{ 'PRODUCT_LIST.ALL_PRODUCTS' | translate }}
+                                </span>
+                                <span class="product-list__section-line"></span>
+                            </div>
+                            <div class="product-list__section-grid">
+                                @for (product of allProductsSectionItems; track product) {
+                                    <fd-product-card
+                                        [product]="product"
+                                        [imageUrl]="resolveImage(product)"
+                                        (open)="onProductClick(product)"
+                                        (addToMeal)="onAddToMeal(product)"
+                                    />
+                                }
+                            </div>
+                        </div>
                     }
                 </div>
             } @else {

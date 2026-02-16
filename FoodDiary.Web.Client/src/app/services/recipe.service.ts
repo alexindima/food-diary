@@ -42,6 +42,16 @@ export class RecipeService extends ApiService {
         );
     }
 
+    public getRecent(limit = 10, includePublic = true): Observable<Recipe[]> {
+        const params: Record<string, string | number | boolean> = { limit, includePublic };
+        return this.get<Recipe[]>('recent', params).pipe(
+            catchError((error: HttpErrorResponse) => {
+                console.error('Get recent recipes error', error);
+                return throwError(() => error);
+            }),
+        );
+    }
+
     public create(data: RecipeDto): Observable<Recipe> {
         return this.post<Recipe>('', data).pipe(
             catchError((error: HttpErrorResponse) => {

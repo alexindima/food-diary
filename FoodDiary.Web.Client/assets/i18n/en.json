@@ -389,6 +389,8 @@
         "ADD_PRODUCT_BUTTON": "Add ",
         "ONLY_MY_PRODUCTS": "Show only mine",
         "SHOW_ALL_PRODUCTS": "Show all products",
+        "RECENT_PRODUCTS": "Recently used",
+        "ALL_PRODUCTS": "All products",
         "NO_PRODUCTS_FOUND": "No products found",
         "CALORIES": "Calories",
         "BARCODE": "Barcode",
