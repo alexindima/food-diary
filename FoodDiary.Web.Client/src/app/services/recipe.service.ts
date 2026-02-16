@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { catchError, Observable, throwError } from 'rxjs';
 import { PageOf } from '../types/page-of.data';
-import { Recipe, RecipeDto, RecipeFilters } from '../types/recipe.data';
+import { Recipe, RecipeDto, RecipeFilters, RecipeListWithRecent } from '../types/recipe.data';
 import { ApiService } from './api.service';
 import { HttpErrorResponse } from '@angular/common/http';
 
@@ -47,6 +47,26 @@ export class RecipeService extends ApiService {
         return this.get<Recipe[]>('recent', params).pipe(
             catchError((error: HttpErrorResponse) => {
                 console.error('Get recent recipes error', error);
+                return throwError(() => error);
+            }),
+        );
+    }
+
+    public queryWithRecent(
+        page: number,
+        limit: number,
+        filters?: RecipeFilters,
+        includePublic = true,
+        recentLimit = 10): Observable<RecipeListWithRecent> {
+        const params: Record<string, string | number | boolean> = { page, limit, includePublic, recentLimit };
+        const search = filters?.search?.trim();
+        if (search) {
+            params['search'] = search;
+        }
+
+        return this.get<RecipeListWithRecent>('with-recent', params).pipe(
+            catchError((error: HttpErrorResponse) => {
+                console.error('Query recipes with recent error', error);
                 return throwError(() => error);
             }),
         );

@@ -7,6 +7,7 @@ using FoodDiary.Application.Recipes.Commands.DuplicateRecipe;
 using FoodDiary.Application.Recipes.Mappings;
 using FoodDiary.Application.Recipes.Queries.GetRecipeById;
 using FoodDiary.Application.Recipes.Queries.GetRecipes;
+using FoodDiary.Application.Recipes.Queries.GetRecipesWithRecent;
 using FoodDiary.Application.Recipes.Queries.GetRecentRecipes;
 using FoodDiary.Contracts.Recipes;
 using FoodDiary.Domain.ValueObjects;
@@ -28,6 +29,31 @@ public class RecipesController(ISender mediator) : AuthorizedController(mediator
         [FromQuery] bool includePublic = true)
     {
         var query = new GetRecipesQuery(CurrentUserId, page, limit, search, includePublic);
+        var result = await Mediator.Send(query);
+        return result.ToActionResult();
+    }
+
+    [HttpGet("with-recent")]
+    public async Task<IActionResult> GetAllWithRecent(
+        [FromQuery] int page = 1,
+        [FromQuery] int limit = 10,
+        [FromQuery] int recentLimit = 10,
+        [FromQuery] string? search = null,
+        [FromQuery] bool includePublic = true)
+    {
+        var sanitizedPage = Math.Max(page, 1);
+        var sanitizedLimit = Math.Clamp(limit, 1, 100);
+        var sanitizedRecentLimit = Math.Clamp(recentLimit, 1, 50);
+        var sanitizedSearch = string.IsNullOrWhiteSpace(search) ? null : search.Trim();
+
+        var query = new GetRecipesWithRecentQuery(
+            CurrentUserId,
+            sanitizedPage,
+            sanitizedLimit,
+            sanitizedSearch,
+            includePublic,
+            sanitizedRecentLimit);
+
         var result = await Mediator.Send(query);
         return result.ToActionResult();
     }

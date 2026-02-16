@@ -1,5 +1,6 @@
 import { NutrientData } from './charts.data';
 import { MeasurementUnit, Product } from './product.data';
+import { PageOf } from './page-of.data';
 
 export enum RecipeVisibility {
     Private = 'Private',
@@ -67,6 +68,11 @@ export interface RecipeIngredient {
 
 export interface RecipeFilters {
     search?: string | null;
+}
+
+export interface RecipeListWithRecent {
+    recentItems: Recipe[];
+    allRecipes: PageOf<Recipe>;
 }
 
 export interface RecipeDto {

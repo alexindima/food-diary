@@ -55,6 +55,7 @@ export class RecipeListComponent implements OnInit {
     public readonly pageSize = 10;
     public recipeData: PagedData<Recipe> = new PagedData<Recipe>();
     public currentPageIndex = 0;
+    public recentRecipes: Recipe[] = [];
     public searchForm: FormGroup<RecipeSearchFormGroup>;
     public isDeleting = false;
     protected readonly fallbackRecipeImage = 'assets/images/stubs/receipt.png';
@@ -160,15 +161,17 @@ export class RecipeListComponent implements OnInit {
         const filters: RecipeFilters = { search };
         const includePublic = !this.searchForm.controls.onlyMine.value;
 
-        return this.recipeService.query(page, limit, filters, includePublic).pipe(
-            tap(pageData => {
-                this.recipeData.setData(pageData);
-                this.currentPageIndex = pageData.page - 1;
+        return this.recipeService.queryWithRecent(page, limit, filters, includePublic, 10).pipe(
+            tap(data => {
+                this.recipeData.setData(data.allRecipes);
+                this.recentRecipes = data.recentItems;
+                this.currentPageIndex = data.allRecipes.page - 1;
             }),
             map(() => void 0),
             catchError((error: HttpErrorResponse) => {
                 console.error('Error loading recipes:', error);
                 this.recipeData.clearData();
+                this.recentRecipes = [];
                 return of(void 0);
             }),
             finalize(() => this.recipeData.setLoading(false)),
@@ -210,6 +213,32 @@ export class RecipeListComponent implements OnInit {
 
     public onAddToMeal(recipe: Recipe): void {
         this.quickConsumptionService.addRecipe(recipe);
+    }
+
+    public get showRecentSection(): boolean {
+        return !this.hasSearchValue(this.searchForm.controls.search.value) && this.recentRecipes.length > 0;
+    }
+
+    public get allRecipesSectionItems(): Recipe[] {
+        const recipes = this.recipeData.items();
+        if (recipes.length === 0) {
+            return [];
+        }
+
+        if (!this.showRecentSection) {
+            return recipes;
+        }
+
+        const recentIds = new Set(this.recentRecipes.map(recipe => recipe.id));
+        return recipes.filter(recipe => !recentIds.has(recipe.id));
+    }
+
+    public get hasVisibleRecipes(): boolean {
+        return this.showRecentSection || this.allRecipesSectionItems.length > 0;
+    }
+
+    private hasSearchValue(value: string | null): boolean {
+        return !!value?.trim();
     }
 }
 

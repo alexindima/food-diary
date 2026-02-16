@@ -54,15 +54,48 @@
         @if (recipeData.isLoading()) {
             <fd-ui-loader class="recipe-list__loader" />
         } @else {
-            @if (recipeData.items().length > 0) {
-                <div class="recipe-list__grid">
-                    @for (recipe of recipeData.items(); track recipe.id) {
-                        <fd-recipe-card
-                            [recipe]="recipe"
-                            [imageUrl]="resolveImage(recipe)"
-                            (open)="onRecipeClick(recipe)"
-                            (addToMeal)="onAddToMeal(recipe)"
-                        />
+            @if (hasVisibleRecipes) {
+                <div class="recipe-list__groups">
+                    @if (showRecentSection) {
+                        <div class="recipe-list__section">
+                            <div class="recipe-list__section-header">
+                                <span class="recipe-list__section-label">
+                                    {{ 'RECIPE_LIST.RECENT_RECIPES' | translate }}
+                                </span>
+                                <span class="recipe-list__section-line"></span>
+                            </div>
+                            <div class="recipe-list__section-grid">
+                                @for (recipe of recentRecipes; track recipe.id) {
+                                    <fd-recipe-card
+                                        [recipe]="recipe"
+                                        [imageUrl]="resolveImage(recipe)"
+                                        (open)="onRecipeClick(recipe)"
+                                        (addToMeal)="onAddToMeal(recipe)"
+                                    />
+                                }
+                            </div>
+                        </div>
+                    }
+
+                    @if (allRecipesSectionItems.length > 0) {
+                        <div class="recipe-list__section">
+                            <div class="recipe-list__section-header">
+                                <span class="recipe-list__section-label">
+                                    {{ 'RECIPE_LIST.ALL_RECIPES' | translate }}
+                                </span>
+                                <span class="recipe-list__section-line"></span>
+                            </div>
+                            <div class="recipe-list__section-grid">
+                                @for (recipe of allRecipesSectionItems; track recipe.id) {
+                                    <fd-recipe-card
+                                        [recipe]="recipe"
+                                        [imageUrl]="resolveImage(recipe)"
+                                        (open)="onRecipeClick(recipe)"
+                                        (addToMeal)="onAddToMeal(recipe)"
+                                    />
+                                }
+                            </div>
+                        </div>
                     }
                 </div>
             } @else {

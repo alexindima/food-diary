@@ -434,6 +434,8 @@
         "ADD_RECIPE_BUTTON": "Добавить",
         "ONLY_MY_RECIPES": "Только мои рецепты",
         "SHOW_ALL_RECIPES": "Показать все рецепты",
+        "RECENT_RECIPES": "Недавние рецепты",
+        "ALL_RECIPES": "Все рецепты",
         "NO_RECIPES_FOUND": "Рецепты не найдены",
         "TOTAL_CALORIES": "Калорийность",
         "PREP_TIME": "Время приготовления",

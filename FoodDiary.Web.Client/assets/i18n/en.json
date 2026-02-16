@@ -468,6 +468,8 @@
         "ADD_RECIPE_BUTTON": "Add",
         "ONLY_MY_RECIPES": "Show only my recipes",
         "SHOW_ALL_RECIPES": "Show all recipes",
+        "RECENT_RECIPES": "Recently used",
+        "ALL_RECIPES": "All recipes",
         "NO_RECIPES_FOUND": "No recipes found",
         "TOTAL_CALORIES": "Total calories",
         "PREP_TIME": "Prep time",
