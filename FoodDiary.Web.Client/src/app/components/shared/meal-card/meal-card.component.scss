@@ -27,7 +27,8 @@
     }
 
     &__thumb {
-        grid-area: thumb;
+        grid-column: 1;
+        grid-row: 1;
         width: clamp(72px, 10vw, 120px);
         height: clamp(72px, 10vw, 120px);
         border-radius: 16px;
@@ -46,6 +47,8 @@
     }
 
     &__content {
+        grid-column: 2;
+        grid-row: 1;
         display: grid;
         grid-template-columns: minmax(0, 1fr) auto;
         grid-template-rows: auto auto;

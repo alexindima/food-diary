@@ -646,7 +646,7 @@ export class BaseConsumptionManageComponent implements OnInit {
             return this.translateService.instant('CONSUMPTION_MANAGE.SATIETY_NOT_SELECTED');
         }
         const title = this.translateService.instant(`HUNGER_SCALE.LEVEL_${value}.TITLE`);
-        return `${value} â€” ${title}`;
+        return `${value} - ${title}`;
     }
 
     public getSatietyLevelMeta(value: number | null): { label: string; description: string; gradient: string } {
@@ -660,7 +660,7 @@ export class BaseConsumptionManageComponent implements OnInit {
 
         const config = DEFAULT_SATIETY_LEVELS.find(level => level.value === value);
         return {
-            label: `${value} â€” ${this.translateService.instant(config?.titleKey ?? '')}`,
+            label: `${value} - ${this.translateService.instant(config?.titleKey ?? '')}`,
             description: this.translateService.instant(config?.descriptionKey ?? ''),
             gradient: config?.gradient ?? 'linear-gradient(135deg, #e2e8f0, #cbd5f5)',
         };
