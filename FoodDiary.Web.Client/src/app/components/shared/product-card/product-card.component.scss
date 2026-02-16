@@ -54,9 +54,9 @@
 
     &__content {
         display: grid;
-        grid-template-columns: minmax(0, 1fr) auto;
+        grid-template-columns: minmax(0, 1fr);
         grid-template-rows: auto auto;
-        gap: 10px 16px;
+        gap: 10px;
         min-width: 0;
     }
 
@@ -91,8 +91,6 @@
     }
 
     &__calories-inline {
-        grid-column: 2;
-        grid-row: 1 / -1;
         display: inline-flex;
         align-items: baseline;
         gap: 6px;
@@ -139,6 +137,17 @@
         flex-wrap: wrap;
     }
 
+    &__subtitle {
+        font-size: 0.85rem;
+        color: rgba(100, 116, 139, 0.92);
+        font-weight: 700;
+        letter-spacing: 0.03em;
+        text-transform: uppercase;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
     &__visibility-icon {
         font-size: 16px;
         width: 16px;
@@ -149,8 +158,13 @@
     }
 
     &__action {
+        display: none;
+    }
+
+    &__action-group {
         display: flex;
         align-items: center;
+        gap: 8px;
         justify-content: center;
     }
 
@@ -195,93 +209,128 @@
 
 }
 
-@container (max-width: 620px) {
+@media #{$media-mobile} {
     .product-card {
-        grid-template-columns: 1fr;
-        align-items: stretch;
-        padding: 22px;
-        text-align: center;
+        grid-template-columns: 48px minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 16px;
+        border-radius: 0;
+        background: transparent;
+        box-shadow: none;
+        border: none;
     }
 
     .product-card__thumb {
-        width: 96px;
-        height: 96px;
-        border-radius: 999px;
-        margin: 0 auto;
-        background: #f8fafc;
-        box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+        width: 48px;
+        height: 48px;
+        border-radius: 10px;
+        margin: 0;
+        background: #eff6ff;
+        box-shadow: none;
     }
 
     .product-card__content {
-        grid-template-columns: 1fr;
-        grid-template-rows: auto auto auto;
-        gap: 12px;
-        justify-items: center;
+        grid-column: 2;
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: auto auto;
+        gap: 8px;
+        align-items: center;
+        justify-items: stretch;
     }
 
     .product-card__title-block {
         grid-column: 1;
         grid-row: 1;
-        align-items: center;
+        align-items: flex-start;
+        gap: 2px;
     }
 
     .product-card__name-row {
-        justify-content: center;
-        align-items: flex-start;
+        justify-content: flex-start;
+        align-items: center;
+        gap: 6px;
     }
 
     .product-card__name {
-        font-size: 2.2rem;
+        font-size: 1.1rem;
         line-height: 1.2;
-        flex: 1 1 auto;
-        max-width: 100%;
-        white-space: normal;
+        white-space: nowrap;
         display: -webkit-box;
-        -webkit-line-clamp: 4;
+        -webkit-line-clamp: 1;
         -webkit-box-orient: vertical;
         overflow: hidden;
         text-align: left;
-        overflow-wrap: anywhere;
-        word-break: break-word;
     }
 
     .product-card__visibility-icon {
-        font-size: 24px;
-        width: 24px;
-        height: 24px;
+        font-size: 14px;
+        width: 14px;
+        height: 14px;
     }
 
-    .product-card__calories-inline {
-        grid-column: 1;
-        grid-row: 2;
-        align-self: center;
-        justify-content: center;
+    .product-card__calories-value {
+        font-size: 1rem;
+    }
+
+    .product-card__calories-unit {
+        font-size: 0.7rem;
+        letter-spacing: normal;
+    }
+
+    .product-card__meta-row {
+        justify-content: flex-start;
+    }
+
+    .product-card__subtitle,
+    .product-card__barcode-text {
+        font-size: 0.78rem;
     }
 
     .product-card__nutrients {
-        grid-column: 1;
-        grid-row: 3;
-        justify-content: center;
+        display: none;
     }
 
-    .product-card__action {
+    .product-card__action-group {
+        grid-column: 3;
+        align-self: center;
+        justify-content: flex-end;
+        gap: 6px;
+        border: 1px solid rgba(37, 99, 235, 0.22);
+        background: rgba(59, 130, 246, 0.1);
+        border-radius: 999px;
+        padding: 2px 2px 2px 12px;
+        overflow: hidden;
+    }
+
+    .product-card__calories-inline {
         justify-content: center;
+        gap: 4px;
     }
 
     .product-card__action-button {
-        width: 100%;
-        height: 52px;
+        width: 34px;
+        min-width: 34px;
+        height: 34px;
         --fd-button-border-radius: 999px;
+        --fd-button-height: 34px;
+        flex: 0 0 34px;
     }
 
     .product-card__action-button ::ng-deep button,
     .product-card__action-button ::ng-deep .fd-ui-button {
-        width: 100%;
-        height: 52px;
-        border-radius: 999px;
+        width: 34px;
+        min-width: 34px;
+        height: 34px;
+        min-height: 34px;
+        padding: 0;
+        margin: 0;
+        border-radius: 50%;
+        box-shadow: none;
+        transform: none;
     }
 
     .product-card__action-button ::ng-deep .fd-ui-button__label {
-        display: inline;
+        display: none;
     }
 }

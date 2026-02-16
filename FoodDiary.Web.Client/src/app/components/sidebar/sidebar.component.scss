@@ -322,16 +322,62 @@
     left: 0;
     right: 0;
     bottom: 0;
-    height: 68px;
     display: none;
-    grid-template-columns: repeat(5, 1fr);
-    align-items: center;
     gap: 8px;
-    padding: 8px 14px 10px;
+    padding: 8px 12px calc(10px + env(safe-area-inset-bottom));
     background: #ffffff;
     border-top: 1px solid rgba(15, 23, 42, 0.08);
     box-shadow: 0 -12px 30px rgba(15, 23, 42, 0.12);
     z-index: 1200;
+
+    &__progress {
+        display: grid;
+        gap: 5px;
+        padding: 8px 10px;
+        border-radius: 12px;
+        background: rgba(59, 130, 246, 0.08);
+        border: 1px solid rgba(59, 130, 246, 0.18);
+    }
+
+    &__progress-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+    }
+
+    &__progress-title,
+    &__progress-value {
+        font-size: 0.74rem;
+        font-weight: 700;
+        color: #475569;
+        white-space: nowrap;
+    }
+
+    &__progress-value {
+        color: #1d4ed8;
+    }
+
+    &__progress-track {
+        height: 5px;
+        border-radius: 999px;
+        overflow: hidden;
+        background: rgba(148, 163, 184, 0.26);
+    }
+
+    &__progress-fill {
+        display: block;
+        height: 100%;
+        border-radius: 999px;
+        background: linear-gradient(90deg, #60a5fa, #2563eb);
+    }
+
+    &__nav {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        align-items: center;
+        gap: 8px;
+    }
 
     &__item {
         appearance: none;
@@ -374,7 +420,7 @@
         position: fixed;
         left: 12px;
         right: 12px;
-        bottom: 78px;
+        bottom: 126px;
         background: #ffffff;
         border-radius: 16px;
         padding: 10px;

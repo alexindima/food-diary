@@ -1109,7 +1109,8 @@
         "BODY": "Body",
         "USER": "User",
         "REPORTS_AND_GOALS": "Reports and goals",
-        "USER_MENU": "User menu"
+        "USER_MENU": "User menu",
+        "DAILY_NORM": "Daily norm"
     },
     "SHOPPING_LIST": {
         "TITLE": "Shopping list",

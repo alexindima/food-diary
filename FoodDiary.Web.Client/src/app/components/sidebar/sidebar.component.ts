@@ -1,4 +1,4 @@
-import { Component, DestroyRef, effect, inject, signal } from '@angular/core';
+import { Component, DestroyRef, computed, effect, inject, signal } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
@@ -11,6 +11,7 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { UnsavedChangesService } from '../../services/unsaved-changes.service';
 import { UnsavedChangesDialogComponent, UnsavedChangesDialogResult } from '../shared/unsaved-changes-dialog/unsaved-changes-dialog.component';
 import { firstValueFrom } from 'rxjs';
+import { DashboardService } from '../../services/dashboard.service';
 
 @Component({
     selector: 'fd-sidebar',
@@ -26,11 +27,13 @@ import { firstValueFrom } from 'rxjs';
     styleUrls: ['./sidebar.component.scss']
 })
 export class SidebarComponent {
+    protected readonly Math = Math;
     private readonly authService = inject(AuthService);
     private readonly userService = inject(UserService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly dialogService = inject(FdUiDialogService);
     private readonly unsavedChangesService = inject(UnsavedChangesService);
+    private readonly dashboardService = inject(DashboardService);
 
     public isAuthenticated = this.authService.isAuthenticated;
     public isPremium = this.authService.isPremium;
@@ -42,6 +45,16 @@ export class SidebarComponent {
     protected isMobileBodyOpen = signal(false);
     protected isMobileReportsOpen = signal(false);
     protected isMobileUserOpen = signal(false);
+    protected readonly dailyConsumedKcal = signal(0);
+    protected readonly dailyGoalKcal = signal(0);
+    protected readonly dailyProgressPercent = computed(() => {
+        const goal = this.dailyGoalKcal();
+        if (goal <= 0) {
+            return 0;
+        }
+
+        return Math.max(0, Math.min((this.dailyConsumedKcal() / goal) * 100, 100));
+    });
 
     private readonly userSync = effect(onCleanup => {
         if (!this.isAuthenticated()) {
@@ -53,6 +66,23 @@ export class SidebarComponent {
             .getInfo()
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe();
+
+        onCleanup(() => subscription.unsubscribe());
+    });
+
+    private readonly progressSync = effect(onCleanup => {
+        if (!this.isAuthenticated()) {
+            this.dailyConsumedKcal.set(0);
+            this.dailyGoalKcal.set(0);
+            return;
+        }
+
+        const subscription = this.dashboardService
+            .getSnapshot(new Date(), 1, 1)
+            .subscribe(snapshot => {
+                this.dailyConsumedKcal.set(snapshot?.statistics?.totalCalories ?? 0);
+                this.dailyGoalKcal.set(snapshot?.dailyGoal ?? 0);
+            });
 
         onCleanup(() => subscription.unsubscribe());
     });

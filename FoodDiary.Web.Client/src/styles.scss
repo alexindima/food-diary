@@ -5,6 +5,11 @@
     box-sizing: border-box;
 }
 
+html,
+body {
+    height: 100%;
+}
+
 body {
     margin: 0;
     font-family: var(--fd-font-family-base, 'Inter', 'Segoe UI', system-ui, sans-serif);
@@ -12,6 +17,7 @@ body {
     line-height: var(--fd-line-height-base, 1.5);
     color: var(--fd-color-text, #333333);
     background-color: var(--fd-color-background, var(--fd-layout-page-background, #f5f6fa));
+    overflow: hidden;
 }
 
 .mat-icon {

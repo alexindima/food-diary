@@ -166,6 +166,16 @@
     }
 
     @media #{$media-mobile} {
+        --fd-layout-page-horizontal-padding: 0;
+        --fd-layout-page-vertical-padding: 0;
+
+        &__header {
+            padding: 14px 16px 12px;
+            margin: 0;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.22);
+            background: #f8fafc;
+        }
+
         &__header .fd-page-header__actions {
             width: 100%;
             justify-content: flex-start;
@@ -183,6 +193,24 @@
 
         &__add-button {
             margin-left: auto;
+        }
+
+        &__grid {
+            gap: 0;
+            margin: 0;
+            background: #ffffff;
+            border-top: 1px solid rgba(148, 163, 184, 0.2);
+
+            fd-product-card {
+                border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+            }
+        }
+
+        &__no-results,
+        &__loader,
+        &__pagination {
+            padding-left: 16px;
+            padding-right: 16px;
         }
     }
 

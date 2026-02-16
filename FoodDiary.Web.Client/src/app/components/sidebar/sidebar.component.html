@@ -117,60 +117,76 @@
 </aside>
 
 <nav class="sidebar-mobile" aria-label="Mobile navigation">
-    <a
-        class="sidebar-mobile__item"
-        routerLink="/"
-        routerLinkActive="is-active"
-        [routerLinkActiveOptions]="{ exact: true }"
-        (click)="closeMobileMenus()"
-    >
-        <mat-icon>dashboard</mat-icon>
-        <span class="sidebar-mobile__label">{{ 'SIDEBAR.DASHBOARD' | translate }}</span>
-    </a>
-    <button
-        type="button"
-        class="sidebar-mobile__item"
-        [class.is-open]="isMobileFoodOpen()"
-        (click)="toggleMobileFood()"
-        aria-haspopup="true"
-        [attr.aria-expanded]="isMobileFoodOpen()"
-    >
-        <mat-icon>restaurant_menu</mat-icon>
-        <span class="sidebar-mobile__label">{{ 'SIDEBAR.FOOD' | translate }}</span>
-    </button>
-    <button
-        type="button"
-        class="sidebar-mobile__item"
-        [class.is-open]="isMobileBodyOpen()"
-        (click)="toggleMobileBody()"
-        aria-haspopup="true"
-        [attr.aria-expanded]="isMobileBodyOpen()"
-    >
-        <mat-icon>monitor_weight</mat-icon>
-        <span class="sidebar-mobile__label">{{ 'SIDEBAR.BODY' | translate }}</span>
-    </button>
-    <button
-        type="button"
-        class="sidebar-mobile__item"
-        [class.is-open]="isMobileReportsOpen()"
-        (click)="toggleMobileReports()"
-        aria-haspopup="true"
-        [attr.aria-expanded]="isMobileReportsOpen()"
-    >
-        <mat-icon>bar_chart</mat-icon>
-        <span class="sidebar-mobile__label">{{ 'SIDEBAR.REPORTS' | translate }}</span>
-    </button>
-    <button
-        type="button"
-        class="sidebar-mobile__item"
-        [class.is-open]="isMobileUserOpen()"
-        (click)="toggleMobileUser()"
-        aria-haspopup="true"
-        [attr.aria-expanded]="isMobileUserOpen()"
-    >
-        <mat-icon>person</mat-icon>
-        <span class="sidebar-mobile__label">{{ 'SIDEBAR.USER' | translate }}</span>
-    </button>
+    @if (isAuthenticated()) {
+        <section class="sidebar-mobile__progress" aria-live="polite">
+            <div class="sidebar-mobile__progress-head">
+                <span class="sidebar-mobile__progress-title">{{ 'SIDEBAR.DAILY_NORM' | translate }}</span>
+                <span class="sidebar-mobile__progress-value">
+                    {{ Math.round(dailyConsumedKcal()) }}/{{ Math.round(dailyGoalKcal()) }} {{ 'GENERAL.UNITS.KCAL' | translate }}
+                </span>
+            </div>
+            <div class="sidebar-mobile__progress-track" aria-hidden="true">
+                <span class="sidebar-mobile__progress-fill" [style.width.%]="dailyProgressPercent()"></span>
+            </div>
+        </section>
+    }
+
+    <div class="sidebar-mobile__nav">
+        <a
+            class="sidebar-mobile__item"
+            routerLink="/"
+            routerLinkActive="is-active"
+            [routerLinkActiveOptions]="{ exact: true }"
+            (click)="closeMobileMenus()"
+        >
+            <mat-icon>dashboard</mat-icon>
+            <span class="sidebar-mobile__label">{{ 'SIDEBAR.DASHBOARD' | translate }}</span>
+        </a>
+        <button
+            type="button"
+            class="sidebar-mobile__item"
+            [class.is-open]="isMobileFoodOpen()"
+            (click)="toggleMobileFood()"
+            aria-haspopup="true"
+            [attr.aria-expanded]="isMobileFoodOpen()"
+        >
+            <mat-icon>restaurant_menu</mat-icon>
+            <span class="sidebar-mobile__label">{{ 'SIDEBAR.FOOD' | translate }}</span>
+        </button>
+        <button
+            type="button"
+            class="sidebar-mobile__item"
+            [class.is-open]="isMobileBodyOpen()"
+            (click)="toggleMobileBody()"
+            aria-haspopup="true"
+            [attr.aria-expanded]="isMobileBodyOpen()"
+        >
+            <mat-icon>monitor_weight</mat-icon>
+            <span class="sidebar-mobile__label">{{ 'SIDEBAR.BODY' | translate }}</span>
+        </button>
+        <button
+            type="button"
+            class="sidebar-mobile__item"
+            [class.is-open]="isMobileReportsOpen()"
+            (click)="toggleMobileReports()"
+            aria-haspopup="true"
+            [attr.aria-expanded]="isMobileReportsOpen()"
+        >
+            <mat-icon>bar_chart</mat-icon>
+            <span class="sidebar-mobile__label">{{ 'SIDEBAR.REPORTS' | translate }}</span>
+        </button>
+        <button
+            type="button"
+            class="sidebar-mobile__item"
+            [class.is-open]="isMobileUserOpen()"
+            (click)="toggleMobileUser()"
+            aria-haspopup="true"
+            [attr.aria-expanded]="isMobileUserOpen()"
+        >
+            <mat-icon>person</mat-icon>
+            <span class="sidebar-mobile__label">{{ 'SIDEBAR.USER' | translate }}</span>
+        </button>
+    </div>
 </nav>
 
 @if (isMobileFoodOpen()) {
