@@ -1,35 +1,71 @@
-﻿<div class="consumption-list" fdPageContainer #container>
+<div class="consumption-list" fdPageContainer #container>
     <fd-page-header
         class="consumption-list__header"
         [title]="'CONSUMPTION_LIST.TITLE' | translate"
         [subtitle]="'CONSUMPTION_LIST.SUBTITLE' | translate"
     >
         <ng-container fdPageHeaderActions>
-            <div class="consumption-list__controls">
-                <form [formGroup]="searchForm" class="consumption-list__date-range-form">
+            @if (isMobileView()) {
+                <div class="consumption-list__mobile-toolbar">
+                    <fd-ui-button class="consumption-list__icon-button consumption-list__filter-button"
+                        variant="secondary"
+                        fill="outline"
+                        icon="date_range"
+                        [ariaLabel]="'CONSUMPTION_LIST.DATE_FILTER_BUTTON' | translate"
+                        (click)="toggleMobileDateFilter()"
+                        [class.consumption-list__filter-button--active]="hasDateFilter"
+                    />
+                    <fd-ui-button
+                        class="consumption-list__icon-button consumption-list__icon-button--primary"
+                        icon="add"
+                        variant="primary"
+                        fill="solid"
+                        [ariaLabel]="'CONSUMPTION_LIST.ADD_CONSUMPTION_BUTTON' | translate"
+                        (click)="goToConsumptionAdd()"
+                    />
+                </div>
+            } @else {
+                <div class="consumption-list__controls">
+                    <form [formGroup]="searchForm" class="consumption-list__date-range-form">
+                        <fd-ui-date-range-input formControlName="dateRange"
+                            class="consumption-list__date-input"
+                            [startLabel]="'CONSUMPTION_LIST.DATE_FILTER_FROM_LABEL' | translate"
+                            [endLabel]="'CONSUMPTION_LIST.DATE_FILTER_TO_LABEL' | translate"
+                            [startPlaceholder]="'CONSUMPTION_LIST.DATE_FROM_PLACEHOLDER' | translate"
+                            [endPlaceholder]="'CONSUMPTION_LIST.DATE_TO_PLACEHOLDER' | translate"
+                        />
+                    </form>
+
+                    <div class="consumption-list__actions">
+                        <fd-ui-button
+                            class="consumption-list__add-button"
+                            icon="add"
+                            variant="primary"
+                            fill="solid"
+                            [ariaLabel]="'CONSUMPTION_LIST.ADD_CONSUMPTION_BUTTON' | translate"
+                            (click)="goToConsumptionAdd()"
+                        >
+                            {{ 'CONSUMPTION_LIST.ADD_CONSUMPTION_BUTTON' | translate }}
+                        </fd-ui-button>
+                    </div>
+                </div>
+            }
+        </ng-container>
+
+        @if (isMobileView()) {
+            <div fdPageHeaderExtra class="consumption-list__mobile-filter"
+                [class.consumption-list__mobile-filter--open]="isMobileDateFilterVisible">
+                <form [formGroup]="searchForm" class="consumption-list__date-range-form consumption-list__date-range-form--mobile">
                     <fd-ui-date-range-input formControlName="dateRange"
                         class="consumption-list__date-input"
                         [startLabel]="'CONSUMPTION_LIST.DATE_FILTER_FROM_LABEL' | translate"
                         [endLabel]="'CONSUMPTION_LIST.DATE_FILTER_TO_LABEL' | translate"
                         [startPlaceholder]="'CONSUMPTION_LIST.DATE_FROM_PLACEHOLDER' | translate"
                         [endPlaceholder]="'CONSUMPTION_LIST.DATE_TO_PLACEHOLDER' | translate"
-                     />
+                    />
                 </form>
-
-                <div class="consumption-list__actions">
-                    <fd-ui-button
-                        class="consumption-list__add-button"
-                        icon="add"
-                        variant="primary"
-                        fill="solid"
-                        [ariaLabel]="'CONSUMPTION_LIST.ADD_CONSUMPTION_BUTTON' | translate"
-                        (click)="goToConsumptionAdd()"
-                    >
-                        {{ 'CONSUMPTION_LIST.ADD_CONSUMPTION_BUTTON' | translate }}
-                    </fd-ui-button>
-                </div>
             </div>
-        </ng-container>
+        }
     </fd-page-header>
 
     <fd-page-body>
@@ -72,8 +108,7 @@
                 [pageSize]="10"
                 [pageIndex]="currentPageIndex"
                 (pageIndexChange)="onPageChange($event)"
-             />
+            />
         }
     </fd-page-body>
 </div>
-

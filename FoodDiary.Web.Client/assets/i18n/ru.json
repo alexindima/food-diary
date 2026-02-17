@@ -765,7 +765,8 @@
         "TOTAL_CALORIES": "Всего калорий",
         "TOTAL_PROTEINS": "Всего белков",
         "TOTAL_FATS": "Всего жиров",
-        "TOTAL_CARBS": "Всего углеводов"
+        "TOTAL_CARBS": "Всего углеводов",
+        "DATE_FILTER_BUTTON": "Фильтр дат"
     },
     "CONSUMPTION_DETAIL": {
         "TITLE": "Детали приема пищи",
