@@ -18,6 +18,9 @@ export class ProductService extends ApiService {
         if (search) {
             params['search'] = search;
         }
+        if (filters?.productTypes && filters.productTypes.length > 0) {
+            params['productTypes'] = filters.productTypes.join(',');
+        }
 
         return this.get<PageOf<Product>>('', params).pipe(
             catchError((error: HttpErrorResponse) => {
@@ -46,6 +49,9 @@ export class ProductService extends ApiService {
         const search = filters?.search?.trim();
         if (search) {
             params['search'] = search;
+        }
+        if (filters?.productTypes && filters.productTypes.length > 0) {
+            params['productTypes'] = filters.productTypes.join(',');
         }
 
         return this.get<ProductListWithRecent>('with-recent', params).pipe(

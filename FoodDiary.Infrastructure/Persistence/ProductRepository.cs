@@ -30,6 +30,7 @@ public class ProductRepository : IProductRepository
         int page,
         int limit,
         string? search,
+        IReadOnlyCollection<ProductType>? productTypes = null,
         CancellationToken cancellationToken = default)
     {
         var pageNumber = Math.Max(page, 1);
@@ -49,6 +50,11 @@ public class ProductRepository : IProductRepository
                 (p.Brand != null && p.Brand.ToLower().Contains(normalizedSearch)) ||
                 (p.Category != null && p.Category.ToLower().Contains(normalizedSearch)) ||
                 (p.Barcode != null && p.Barcode.ToLower().Contains(normalizedSearch)));
+        }
+
+        if (productTypes is { Count: > 0 })
+        {
+            query = query.Where(p => productTypes.Contains(p.ProductType));
         }
 
         var orderedQuery = query.OrderByDescending(p => p.CreatedOnUtc);

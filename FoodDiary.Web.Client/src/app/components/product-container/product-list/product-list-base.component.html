@@ -5,8 +5,75 @@
         [subtitle]="'PRODUCT_LIST.SUBTITLE' | translate"
     >
         <ng-container fdPageHeaderActions>
-            <div class="product-list__controls">
-                <form class="product-list__search-form" [formGroup]="searchForm">
+            @if (isMobileView()) {
+                <div class="product-list__mobile-toolbar">
+                    <fd-ui-button class="product-list__icon-button product-list__filter-button"
+                        variant="secondary"
+                        fill="outline"
+                        icon="filter_alt"
+                        [ariaLabel]="'PRODUCT_LIST.FILTERS_BUTTON' | translate"
+                        (click)="openFilters()"
+                        [class.product-list__filter-button--active]="hasActiveFilters"
+                    />
+                    <fd-ui-button
+                        class="product-list__icon-button"
+                        variant="secondary"
+                        fill="outline"
+                        icon="search"
+                        [ariaLabel]="'PRODUCT_LIST.SEARCH_LABEL' | translate"
+                        (click)="toggleMobileSearch()"
+                    />
+                    <fd-ui-button
+                        class="product-list__icon-button product-list__icon-button--primary"
+                        variant="primary"
+                        fill="solid"
+                        icon="add"
+                        [ariaLabel]="'PRODUCT_LIST.ADD_PRODUCT_BUTTON' | translate"
+                        (click)="onAddProductClick()"
+                    />
+                </div>
+            } @else {
+                <div class="product-list__controls">
+                    <form class="product-list__search-form" [formGroup]="searchForm">
+                        <fd-ui-input class="product-list__search-input"
+                            formControlName="search"
+                            size="md"
+                            [label]="'PRODUCT_LIST.SEARCH_LABEL' | translate"
+                            [prefixIcon]="'search'"
+                            [placeholder]="'PRODUCT_LIST.SEARCH_PLACEHOLDER' | translate"
+                            [suffixButtonIcon]="'qr_code_scanner'"
+                            [suffixButtonAriaLabel]="'PRODUCT_LIST.SCAN_BARCODE' | translate"
+                            (suffixButtonClicked)="openBarcodeScanner()"
+                         />
+                    </form>
+
+                    <div class="product-list__filters">
+                        <fd-ui-button class="product-list__icon-button product-list__filter-button"
+                            variant="secondary"
+                            fill="outline"
+                            icon="filter_alt"
+                            [ariaLabel]="'PRODUCT_LIST.FILTERS_BUTTON' | translate"
+                            (click)="openFilters()"
+                            [class.product-list__filter-button--active]="hasActiveFilters"
+                        />
+                        <fd-ui-button
+                            class="product-list__add-button"
+                            variant="primary"
+                            fill="solid"
+                            icon="add"
+                            [ariaLabel]="'PRODUCT_LIST.ADD_PRODUCT_BUTTON' | translate"
+                            (click)="onAddProductClick()"
+                        >
+                            {{ 'PRODUCT_LIST.ADD_PRODUCT_BUTTON' | translate }}
+                        </fd-ui-button>
+                    </div>
+                </div>
+            }
+        </ng-container>
+        @if (isMobileView()) {
+            <div fdPageHeaderExtra class="product-list__mobile-search"
+                [class.product-list__mobile-search--open]="isMobileSearchVisible">
+                <form class="product-list__search-form product-list__search-form--mobile" [formGroup]="searchForm">
                     <fd-ui-input class="product-list__search-input"
                         formControlName="search"
                         size="md"
@@ -16,36 +83,10 @@
                         [suffixButtonIcon]="'qr_code_scanner'"
                         [suffixButtonAriaLabel]="'PRODUCT_LIST.SCAN_BARCODE' | translate"
                         (suffixButtonClicked)="openBarcodeScanner()"
-                     />
+                    />
                 </form>
-
-                <div class="product-list__filters">
-                    <fd-ui-button class="product-list__pill"
-                        variant="secondary"
-                        fill="outline"
-                        [icon]="searchForm.controls.onlyMine.value ? 'person' : 'groups'"
-                        [ariaLabel]="'PRODUCT_LIST.ONLY_MY_PRODUCTS' | translate"
-                        (click)="toggleOnlyMine()"
-                        [class.product-list__pill--active]="searchForm.controls.onlyMine.value"
-                    >
-                        {{ searchForm.controls.onlyMine.value
-                            ? ('PRODUCT_LIST.ONLY_MY_PRODUCTS' | translate)
-                            : ('PRODUCT_LIST.SHOW_ALL_PRODUCTS' | translate) }}
-                    </fd-ui-button>
-                    <fd-ui-button
-                        class="product-list__add-button"
-                        variant="primary"
-                        fill="solid"
-                        icon="add"
-                        [ariaLabel]="'PRODUCT_LIST.ADD_PRODUCT_BUTTON' | translate"
-                        (click)="onAddProductClick()"
-                    >
-                        {{ 'PRODUCT_LIST.ADD_PRODUCT_BUTTON' | translate }}
-                    </fd-ui-button>
-                </div>
-
             </div>
-        </ng-container>
+        }
     </fd-page-header>
 
     <fd-page-body>
@@ -79,7 +120,7 @@
                         <div class="product-list__section">
                             <div class="product-list__section-header">
                                 <span class="product-list__section-label">
-                                    {{ 'PRODUCT_LIST.ALL_PRODUCTS' | translate }}
+                                    {{ allProductsSectionLabelKey | translate }}
                                 </span>
                                 <span class="product-list__section-line"></span>
                             </div>

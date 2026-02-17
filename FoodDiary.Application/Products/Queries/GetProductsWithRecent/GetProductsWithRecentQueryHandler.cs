@@ -4,6 +4,7 @@ using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Products.Mappings;
 using FoodDiary.Contracts.Common;
 using FoodDiary.Contracts.Products;
+using FoodDiary.Domain.Enums;
 
 namespace FoodDiary.Application.Products.Queries.GetProductsWithRecent;
 
@@ -25,6 +26,12 @@ public sealed class GetProductsWithRecentQueryHandler(
         var pageNumber = Math.Max(query.Page, 1);
         var pageSize = Math.Max(query.Limit, 1);
         var recentLimit = Math.Clamp(query.RecentLimit, 1, 50);
+        var productTypes = query.ProductTypes?
+            .Select(type => Enum.TryParse<ProductType>(type, true, out var parsed) ? parsed : (ProductType?)null)
+            .OfType<ProductType>()
+            .Distinct()
+            .ToArray();
+        var selectedProductTypes = productTypes is { Length: > 0 } ? productTypes.ToHashSet() : null;
 
         var (items, totalItems) = await productRepository.GetPagedAsync(
             userId,
@@ -32,6 +39,7 @@ public sealed class GetProductsWithRecentQueryHandler(
             pageNumber,
             pageSize,
             query.Search,
+            productTypes is { Length: > 0 } ? productTypes : null,
             cancellationToken);
 
         var allProducts = items.Select(item => new
@@ -67,8 +75,15 @@ public sealed class GetProductsWithRecentQueryHandler(
                     .Select(id =>
                     {
                         var item = productsById[id];
+                        if (selectedProductTypes is not null && !selectedProductTypes.Contains(item.Product.ProductType))
+                        {
+                            return null;
+                        }
+
                         return item.Product.ToResponse(item.UsageCount, item.Product.UserId == userId);
                     })
+                    .Where(response => response is not null)
+                    .Select(response => response!)
                     .ToArray();
             }
         }

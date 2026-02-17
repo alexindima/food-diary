@@ -50,10 +50,15 @@ export interface CreateProductRequest {
 
 export class ProductFilters {
     public search?: string;
+    public productTypes?: ProductType[];
 
-    public constructor(search: string | null) {
+    public constructor(search: string | null, productTypes?: ProductType[]) {
         if (search) {
             this.search = search;
+        }
+
+        if (productTypes && productTypes.length > 0) {
+            this.productTypes = productTypes;
         }
     }
 }

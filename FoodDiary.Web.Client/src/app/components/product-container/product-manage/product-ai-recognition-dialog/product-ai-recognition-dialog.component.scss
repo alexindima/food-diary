@@ -6,16 +6,6 @@
     gap: $gap-l;
 }
 
-:host ::ng-deep .fd-ui-dialog__body {
-    scrollbar-gutter: stable;
-    padding-right: 12px;
-    margin-right: -12px;
-}
-
-:host ::ng-deep .fd-ui-dialog__body::-webkit-scrollbar {
-    width: 10px;
-}
-
 .product-ai-dialog__upload {
     position: relative;
 }

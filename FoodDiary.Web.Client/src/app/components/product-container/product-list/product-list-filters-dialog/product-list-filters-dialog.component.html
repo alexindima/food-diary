@@ -1,0 +1,34 @@
+<fd-ui-dialog class="product-list-filters-dialog" [title]="'PRODUCT_LIST.FILTERS_TITLE' | translate">
+    <fd-ui-segmented-toggle
+        class="product-list-filters-dialog__visibility"
+        [options]="visibilityOptions"
+        [selectedValue]="visibilityValue"
+        (selectedValueChange)="onVisibilityChange($event)"
+        [ariaLabel]="'PRODUCT_LIST.FILTERS_TITLE' | translate"
+    />
+
+    <section class="product-list-filters-dialog__section">
+        <h3 class="product-list-filters-dialog__section-title">{{ 'PRODUCT_LIST.FILTER_CATEGORIES' | translate }}</h3>
+        <div class="product-list-filters-dialog__types">
+            @for (type of productTypes; track type) {
+                <button
+                    type="button"
+                    class="product-list-filters-dialog__type"
+                    [class.product-list-filters-dialog__type--selected]="isTypeSelected(type)"
+                    (click)="toggleType(type)"
+                >
+                    {{ ('PRODUCT_MANAGE.PRODUCT_TYPE_OPTIONS.' + type.toUpperCase()) | translate }}
+                </button>
+            }
+        </div>
+    </section>
+
+    <div fdUiDialogFooter class="product-list-filters-dialog__footer">
+        <fd-ui-button type="button" variant="secondary" fill="ghost" (click)="onCancel()">
+            {{ 'COMMON.CANCEL' | translate }}
+        </fd-ui-button>
+        <fd-ui-button type="button" variant="primary" fill="solid" (click)="onApply()">
+            {{ 'PRODUCT_LIST.FILTER_APPLY_BUTTON' | translate }}
+        </fd-ui-button>
+    </div>
+</fd-ui-dialog>

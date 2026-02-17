@@ -1,6 +1,8 @@
-import { ChangeDetectionStrategy, Component, ElementRef, inject, OnInit, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, inject, OnInit, signal, viewChild } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { BreakpointObserver } from '@angular/cdk/layout';
 import { TranslatePipe } from '@ngx-translate/core';
 import { ProductService } from '../../../services/product.service';
 import { NavigationService } from '../../../services/navigation.service';
@@ -23,6 +25,10 @@ import { FdPageContainerDirective } from '../../../directives/layout/page-contai
 import { resolveProductImageUrl } from '../../../utils/product-stub.utils';
 import { ProductCardComponent } from '../../shared/product-card/product-card.component';
 import { QuickConsumptionService } from '../../../services/quick-consumption.service';
+import {
+    ProductListFiltersDialogComponent,
+    ProductListFiltersDialogResult,
+} from './product-list-filters-dialog/product-list-filters-dialog.component';
 
 @Component({
     selector: 'fd-product-list-base',
@@ -51,6 +57,8 @@ export class ProductListBaseComponent implements OnInit {
     protected readonly pageSize = 10;
     protected readonly fdDialogService = inject(FdUiDialogService);
     protected readonly quickConsumptionService = inject(QuickConsumptionService);
+    private readonly breakpointObserver = inject(BreakpointObserver);
+    private readonly destroyRef = inject(DestroyRef);
 
     private readonly header = viewChild.required<PageHeaderComponent, ElementRef>(PageHeaderComponent, { read: ElementRef });
 
@@ -58,6 +66,9 @@ export class ProductListBaseComponent implements OnInit {
     public productData: PagedData<Product> = new PagedData<Product>();
     public currentPageIndex = 0;
     public recentProducts: Product[] = [];
+    public readonly isMobileView = signal<boolean>(window.matchMedia('(max-width: 768px)').matches);
+    private readonly isMobileSearchOpen = signal(false);
+    private readonly selectedProductTypes = signal<ProductType[]>([]);
 
     public constructor() {
         this.searchForm = new FormGroup<ProductSearchFormGroup>({
@@ -75,6 +86,20 @@ export class ProductListBaseComponent implements OnInit {
     }
 
     public ngOnInit(): void {
+        this.breakpointObserver
+            .observe('(max-width: 768px)')
+            .pipe(
+                map(result => result.matches),
+                distinctUntilChanged(),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe(isMobile => {
+                this.isMobileView.set(isMobile);
+                if (!isMobile) {
+                    this.isMobileSearchOpen.set(false);
+                }
+            });
+
         this.loadProducts(1, this.pageSize, this.searchForm.controls.search.value).subscribe();
 
         this.searchForm.controls.search.valueChanges
@@ -121,9 +146,55 @@ export class ProductListBaseComponent implements OnInit {
         control.setValue(!control.value);
     }
 
+    public toggleMobileSearch(): void {
+        this.isMobileSearchOpen.update(value => !value);
+    }
+
+    public openFilters(): void {
+        const currentOnlyMine = this.searchForm.controls.onlyMine.value;
+        const currentTypes = this.selectedProductTypes();
+
+        this.fdDialogService
+            .open<ProductListFiltersDialogComponent, {
+                onlyMine: boolean;
+                productTypes: ProductType[];
+            }, ProductListFiltersDialogResult | null>(ProductListFiltersDialogComponent, {
+                size: 'sm',
+                data: {
+                    onlyMine: currentOnlyMine,
+                    productTypes: [...currentTypes],
+                },
+            })
+            .afterClosed()
+            .subscribe(result => {
+                if (!result) {
+                    return;
+                }
+
+                const normalizedTypes = this.normalizeProductTypes(result.productTypes);
+                const onlyMineChanged = currentOnlyMine !== result.onlyMine;
+                const typesChanged = !this.areProductTypesEqual(currentTypes, normalizedTypes);
+
+                if (!onlyMineChanged && !typesChanged) {
+                    return;
+                }
+
+                if (typesChanged) {
+                    this.selectedProductTypes.set(normalizedTypes);
+                }
+
+                if (onlyMineChanged) {
+                    this.searchForm.controls.onlyMine.setValue(result.onlyMine);
+                    return;
+                }
+
+                this.loadProducts(1, this.pageSize, this.searchForm.controls.search.value).subscribe();
+            });
+    }
+
     protected loadProducts(page: number, limit: number, search: string | null): Observable<void> {
         this.productData.setLoading(true);
-        const filters = new ProductFilters(search);
+        const filters = new ProductFilters(search, this.selectedProductTypes());
         const includePublic = !this.searchForm.controls.onlyMine.value;
         return this.productService.queryWithRecent(page, limit, filters, includePublic, 10).pipe(
             tap(data => {
@@ -178,8 +249,35 @@ export class ProductListBaseComponent implements OnInit {
         return this.showRecentSection || this.allProductsSectionItems.length > 0;
     }
 
+    public get hasActiveFilters(): boolean {
+        return this.searchForm.controls.onlyMine.value || this.selectedProductTypes().length > 0;
+    }
+
+    public get allProductsSectionLabelKey(): string {
+        return this.hasSearchValue(this.searchForm.controls.search.value)
+            ? 'PRODUCT_LIST.SEARCH_RESULTS'
+            : 'PRODUCT_LIST.ALL_PRODUCTS';
+    }
+
+    public get isMobileSearchVisible(): boolean {
+        return this.isMobileSearchOpen() || this.hasSearchValue(this.searchForm.controls.search.value);
+    }
+
     private hasSearchValue(value: string | null): boolean {
         return !!value?.trim();
+    }
+
+    private normalizeProductTypes(productTypes: ProductType[]): ProductType[] {
+        return [...new Set(productTypes)];
+    }
+
+    private areProductTypesEqual(left: ProductType[], right: ProductType[]): boolean {
+        if (left.length !== right.length) {
+            return false;
+        }
+
+        const leftSet = new Set(left);
+        return right.every(type => leftSet.has(type));
     }
 }
 

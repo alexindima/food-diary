@@ -21,13 +21,15 @@ public class ProductsController(ISender mediator) : AuthorizedController(mediato
         [FromQuery] int page = 1,
         [FromQuery] int limit = 10,
         [FromQuery] string? search = null,
-        [FromQuery] bool includePublic = true) {
+        [FromQuery] bool includePublic = true,
+        [FromQuery] string? productTypes = null) {
         var sanitizedPage = Math.Max(page, 1);
         var sanitizedLimit = Math.Clamp(limit, 1, 100);
         var sanitizedSearch = string.IsNullOrWhiteSpace(search) ? null : search.Trim();
+        var sanitizedProductTypes = ParseProductTypes(productTypes);
 
         var query = new GetProductsQuery(CurrentUserId, sanitizedPage, sanitizedLimit, sanitizedSearch,
-            includePublic);
+            includePublic, sanitizedProductTypes);
         var result = await Mediator.Send(query);
         return result.ToActionResult();
     }
@@ -38,12 +40,14 @@ public class ProductsController(ISender mediator) : AuthorizedController(mediato
         [FromQuery] int limit = 10,
         [FromQuery] int recentLimit = 10,
         [FromQuery] string? search = null,
-        [FromQuery] bool includePublic = true)
+        [FromQuery] bool includePublic = true,
+        [FromQuery] string? productTypes = null)
     {
         var sanitizedPage = Math.Max(page, 1);
         var sanitizedLimit = Math.Clamp(limit, 1, 100);
         var sanitizedRecentLimit = Math.Clamp(recentLimit, 1, 50);
         var sanitizedSearch = string.IsNullOrWhiteSpace(search) ? null : search.Trim();
+        var sanitizedProductTypes = ParseProductTypes(productTypes);
 
         var query = new GetProductsWithRecentQuery(
             CurrentUserId,
@@ -51,7 +55,8 @@ public class ProductsController(ISender mediator) : AuthorizedController(mediato
             sanitizedLimit,
             sanitizedSearch,
             includePublic,
-            sanitizedRecentLimit);
+            sanitizedRecentLimit,
+            sanitizedProductTypes);
 
         var result = await Mediator.Send(query);
         return result.ToActionResult();
@@ -102,5 +107,20 @@ public class ProductsController(ISender mediator) : AuthorizedController(mediato
         var command = new DuplicateProductCommand(CurrentUserId, new ProductId(id));
         var result = await Mediator.Send(command);
         return result.ToActionResult();
+    }
+
+    private static IReadOnlyCollection<string>? ParseProductTypes(string? productTypes)
+    {
+        if (string.IsNullOrWhiteSpace(productTypes))
+        {
+            return null;
+        }
+
+        var values = productTypes
+            .Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToArray();
+
+        return values.Length > 0 ? values : null;
     }
 }
