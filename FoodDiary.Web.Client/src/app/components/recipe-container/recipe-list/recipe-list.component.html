@@ -1,53 +1,91 @@
-﻿<div class="recipe-list" fdPageContainer #container>
+<div class="recipe-list" fdPageContainer #container>
     <fd-page-header
         class="recipe-list__header"
         [title]="'RECIPE_LIST.TITLE' | translate"
         [subtitle]="'RECIPE_LIST.SUBTITLE' | translate"
     >
         <ng-container fdPageHeaderActions>
-            <div class="recipe-list__controls">
-                <form class="recipe-list__search-form" [formGroup]="searchForm">
-                    <fd-ui-input class="recipe-list__search-input"
-                        formControlName="search"
-                        [label]="'RECIPE_LIST.SEARCH_LABEL' | translate"
-                        prefixIcon="search"
-                        suffixButtonIcon="close"
-                        [suffixButtonAriaLabel]="'COMMON.CLEAR' | translate"
-                        [placeholder]="'RECIPE_LIST.SEARCH_PLACEHOLDER' | translate"
-                        (suffixButtonClicked)="clearSearch()"
-                     />
-                </form>
-
-                <div class="recipe-list__filters">
-                    <fd-ui-button class="recipe-list__pill"
+            @if (isMobileView()) {
+                <div class="recipe-list__mobile-toolbar">
+                    <fd-ui-button class="recipe-list__icon-button recipe-list__filter-button"
                         variant="secondary"
                         fill="outline"
-                        [icon]="searchForm.controls.onlyMine.value ? 'person' : 'groups'"
-                        [ariaLabel]="
-                            searchForm.controls.onlyMine.value
-                                ? ('RECIPE_LIST.SHOW_ALL_RECIPES' | translate)
-                                : ('RECIPE_LIST.ONLY_MY_RECIPES' | translate)
-                        "
-                        (click)="toggleOnlyMine()"
-                        [class.recipe-list__pill--active]="searchForm.controls.onlyMine.value"
-                    >
-                        {{ searchForm.controls.onlyMine.value
-                            ? ('RECIPE_LIST.ONLY_MY_RECIPES' | translate)
-                            : ('RECIPE_LIST.SHOW_ALL_RECIPES' | translate) }}
-                    </fd-ui-button>
+                        icon="filter_alt"
+                        [ariaLabel]="'RECIPE_LIST.FILTERS_BUTTON' | translate"
+                        (click)="openFilters()"
+                        [class.recipe-list__filter-button--active]="hasActiveFilters"
+                    />
                     <fd-ui-button
-                        class="recipe-list__add-button"
+                        class="recipe-list__icon-button"
+                        variant="secondary"
+                        fill="outline"
+                        icon="search"
+                        [ariaLabel]="'RECIPE_LIST.SEARCH_LABEL' | translate"
+                        (click)="toggleMobileSearch()"
+                    />
+                    <fd-ui-button
+                        class="recipe-list__icon-button recipe-list__icon-button--primary"
                         variant="primary"
                         fill="solid"
                         icon="add"
                         [ariaLabel]="'RECIPE_LIST.ADD_RECIPE_BUTTON' | translate"
                         (click)="onAddRecipeClick()"
-                    >
-                        {{ 'RECIPE_LIST.ADD_RECIPE_BUTTON' | translate }}
-                    </fd-ui-button>
+                    />
                 </div>
-            </div>
+            } @else {
+                <div class="recipe-list__controls">
+                    <form class="recipe-list__search-form" [formGroup]="searchForm">
+                        <fd-ui-input class="recipe-list__search-input"
+                            formControlName="search"
+                            [label]="'RECIPE_LIST.SEARCH_LABEL' | translate"
+                            [prefixIcon]="'search'"
+                            [suffixButtonIcon]="'close'"
+                            [suffixButtonAriaLabel]="'COMMON.CLEAR' | translate"
+                            [placeholder]="'RECIPE_LIST.SEARCH_PLACEHOLDER' | translate"
+                            (suffixButtonClicked)="clearSearch()"
+                        />
+                    </form>
+
+                    <div class="recipe-list__filters">
+                        <fd-ui-button class="recipe-list__icon-button recipe-list__filter-button"
+                            variant="secondary"
+                            fill="outline"
+                            icon="filter_alt"
+                            [ariaLabel]="'RECIPE_LIST.FILTERS_BUTTON' | translate"
+                            (click)="openFilters()"
+                            [class.recipe-list__filter-button--active]="hasActiveFilters"
+                        />
+                        <fd-ui-button
+                            class="recipe-list__add-button"
+                            variant="primary"
+                            fill="solid"
+                            icon="add"
+                            [ariaLabel]="'RECIPE_LIST.ADD_RECIPE_BUTTON' | translate"
+                            (click)="onAddRecipeClick()"
+                        >
+                            {{ 'RECIPE_LIST.ADD_RECIPE_BUTTON' | translate }}
+                        </fd-ui-button>
+                    </div>
+                </div>
+            }
         </ng-container>
+
+        @if (isMobileView()) {
+            <div fdPageHeaderExtra class="recipe-list__mobile-search"
+                [class.recipe-list__mobile-search--open]="isMobileSearchVisible">
+                <form class="recipe-list__search-form recipe-list__search-form--mobile" [formGroup]="searchForm">
+                    <fd-ui-input class="recipe-list__search-input"
+                        formControlName="search"
+                        [label]="'RECIPE_LIST.SEARCH_LABEL' | translate"
+                        [prefixIcon]="'search'"
+                        [suffixButtonIcon]="'close'"
+                        [suffixButtonAriaLabel]="'COMMON.CLEAR' | translate"
+                        [placeholder]="'RECIPE_LIST.SEARCH_PLACEHOLDER' | translate"
+                        (suffixButtonClicked)="clearSearch()"
+                    />
+                </form>
+            </div>
+        }
     </fd-page-header>
 
     <fd-page-body>
@@ -81,7 +119,7 @@
                         <div class="recipe-list__section">
                             <div class="recipe-list__section-header">
                                 <span class="recipe-list__section-label">
-                                    {{ 'RECIPE_LIST.ALL_RECIPES' | translate }}
+                                    {{ allRecipesSectionLabelKey | translate }}
                                 </span>
                                 <span class="recipe-list__section-line"></span>
                             </div>
@@ -112,8 +150,7 @@
                 [pageSize]="pageSize"
                 [pageIndex]="currentPageIndex"
                 (pageIndexChange)="onPageChange($event)"
-             />
+            />
         }
     </fd-page-body>
 </div>
-

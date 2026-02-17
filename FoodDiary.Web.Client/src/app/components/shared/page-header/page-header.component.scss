@@ -6,7 +6,7 @@
 @media (max-width: 768px) {
     :host {
         position: sticky;
-        top: var(--fd-layout-page-top-padding, 10px);
+        top: 0;
         z-index: 20;
         background: var(--fd-layout-page-background, #f5f6fa);
     }

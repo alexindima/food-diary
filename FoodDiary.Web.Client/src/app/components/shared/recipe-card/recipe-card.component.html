@@ -1,4 +1,4 @@
-<div class="recipe-card" (click)="handleOpen()">
+﻿<div class="recipe-card" (click)="handleOpen()">
     <div class="recipe-card__thumb">
         @if (imageUrl) {
             <img [src]="imageUrl" [alt]="recipe.name" />
@@ -20,7 +20,7 @@
                     {{ 'RECIPE_LIST.INGREDIENTS_COUNT' | translate }}: {{ getIngredientCount() }}
                 </span>
                 <span class="recipe-card__meta-divider">•</span>
-                <span class="recipe-card__meta-item">
+                <span class="recipe-card__meta-item recipe-card__meta-item--time">
                     @if (getTotalTime(); as minutes) {
                         {{ minutes }} {{ 'RECIPE_DETAIL.MIN' | translate }}
                     } @else {
@@ -28,13 +28,6 @@
                     }
                 </span>
             </div>
-        </div>
-
-        <div class="recipe-card__calories">
-            <span class="recipe-card__calories-value">
-                {{ (recipe.totalCalories ?? 0) | number:'1.0-0' }}
-            </span>
-            <span class="recipe-card__calories-unit">{{ 'GENERAL.UNITS.KCAL' | translate }}</span>
         </div>
 
         <div class="recipe-card__nutrients">
@@ -48,7 +41,13 @@
         </div>
     </div>
 
-    <div class="recipe-card__action">
+    <div class="recipe-card__action-group">
+        <div class="recipe-card__calories-inline">
+            <span class="recipe-card__calories-value">
+                {{ (recipe.totalCalories ?? 0) | number:'1.0-0' }}
+            </span>
+            <span class="recipe-card__calories-unit">{{ 'GENERAL.UNITS.KCAL' | translate }}</span>
+        </div>
         <fd-ui-button
             class="recipe-card__action-button"
             icon="add"
@@ -61,3 +60,4 @@
         </fd-ui-button>
     </div>
 </div>
+

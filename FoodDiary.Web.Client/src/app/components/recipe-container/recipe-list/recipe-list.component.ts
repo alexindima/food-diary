@@ -1,27 +1,33 @@
-﻿import { ChangeDetectionStrategy, Component, ElementRef, inject, OnInit, viewChild } from '@angular/core';
-import { ReactiveFormsModule, FormControl, FormGroup } from '@angular/forms';
-import { Recipe, RecipeFilters, RecipeVisibility } from '../../../types/recipe.data';
-import { RecipeService } from '../../../services/recipe.service';
-import { NavigationService } from '../../../services/navigation.service';
-import { PagedData } from '../../../types/paged-data.data';
+import { BreakpointObserver } from '@angular/cdk/layout';
+import { HttpErrorResponse } from '@angular/common/http';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, inject, OnInit, signal, viewChild } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
+import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiIconModule } from 'fd-ui-kit/material';
 import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.component';
-import { catchError, debounceTime, finalize, map, Observable, of, switchMap, tap } from 'rxjs';
-import { HttpErrorResponse } from '@angular/common/http';
-import { FormGroupControls } from '../../../types/common.data';
-import { RecipeDetailComponent, RecipeDetailActionResult } from '../recipe-detail/recipe-detail.component';
-import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
-import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
-import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
-import { PageHeaderComponent } from '../../shared/page-header/page-header.component';
-import { PageBodyComponent } from '../../shared/page-body/page-body.component';
+import { catchError, debounceTime, distinctUntilChanged, finalize, map, Observable, of, switchMap, tap } from 'rxjs';
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
-import { resolveRecipeImageUrl } from '../../../utils/recipe-stub.utils';
-import { RecipeCardComponent } from '../../shared/recipe-card/recipe-card.component';
+import { NavigationService } from '../../../services/navigation.service';
 import { QuickConsumptionService } from '../../../services/quick-consumption.service';
+import { RecipeService } from '../../../services/recipe.service';
+import { FormGroupControls } from '../../../types/common.data';
+import { PagedData } from '../../../types/paged-data.data';
+import { Recipe, RecipeFilters, RecipeVisibility } from '../../../types/recipe.data';
+import { resolveRecipeImageUrl } from '../../../utils/recipe-stub.utils';
+import { PageBodyComponent } from '../../shared/page-body/page-body.component';
+import { PageHeaderComponent } from '../../shared/page-header/page-header.component';
+import { RecipeCardComponent } from '../../shared/recipe-card/recipe-card.component';
+import { RecipeDetailActionResult, RecipeDetailComponent } from '../recipe-detail/recipe-detail.component';
+import {
+    RecipeListFiltersDialogComponent,
+    RecipeListFiltersDialogResult,
+} from './recipe-list-filters-dialog/recipe-list-filters-dialog.component';
 
 @Component({
     selector: 'fd-recipe-list',
@@ -49,6 +55,8 @@ export class RecipeListComponent implements OnInit {
     private readonly fdDialogService = inject(FdUiDialogService);
     private readonly toastService = inject(FdUiToastService);
     private readonly quickConsumptionService = inject(QuickConsumptionService);
+    private readonly breakpointObserver = inject(BreakpointObserver);
+    private readonly destroyRef = inject(DestroyRef);
 
     private readonly container = viewChild.required<ElementRef<HTMLElement>>('container');
 
@@ -56,6 +64,8 @@ export class RecipeListComponent implements OnInit {
     public recipeData: PagedData<Recipe> = new PagedData<Recipe>();
     public currentPageIndex = 0;
     public recentRecipes: Recipe[] = [];
+    public readonly isMobileView = signal<boolean>(window.matchMedia('(max-width: 768px)').matches);
+    private readonly isMobileSearchOpen = signal(false);
     public searchForm: FormGroup<RecipeSearchFormGroup>;
     public isDeleting = false;
     protected readonly fallbackRecipeImage = 'assets/images/stubs/receipt.png';
@@ -72,6 +82,20 @@ export class RecipeListComponent implements OnInit {
     }
 
     public ngOnInit(): void {
+        this.breakpointObserver
+            .observe('(max-width: 768px)')
+            .pipe(
+                map(result => result.matches),
+                distinctUntilChanged(),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe(isMobile => {
+                this.isMobileView.set(isMobile);
+                if (!isMobile) {
+                    this.isMobileSearchOpen.set(false);
+                }
+            });
+
         this.loadRecipes(1, this.pageSize, this.searchForm.controls.search.value).subscribe();
 
         this.searchForm.controls.search.valueChanges
@@ -83,6 +107,7 @@ export class RecipeListComponent implements OnInit {
 
         this.searchForm.controls.onlyMine.valueChanges
             .pipe(
+                distinctUntilChanged(),
                 switchMap(() => this.loadRecipes(1, this.pageSize, this.searchForm.controls.search.value)),
             )
             .subscribe();
@@ -140,10 +165,7 @@ export class RecipeListComponent implements OnInit {
                 error: error => {
                     console.error('Delete recipe error', error);
                     this.recipeData.setLoading(false);
-                    this.toastService.open(
-                        this.translateService.instant('RECIPE_LIST.DELETE_ERROR'),
-                        { appearance: 'negative' },
-                    );
+                    this.toastService.open(this.translateService.instant('RECIPE_LIST.DELETE_ERROR'), { appearance: 'negative' });
                 },
             });
     }
@@ -154,6 +176,78 @@ export class RecipeListComponent implements OnInit {
 
     public getVisibilityTranslation(visibility: RecipeVisibility): string {
         return this.translateService.instant(`RECIPE_VISIBILITY.${visibility}`);
+    }
+
+    public toggleMobileSearch(): void {
+        this.isMobileSearchOpen.update(value => !value);
+    }
+
+    public openFilters(): void {
+        const currentOnlyMine = this.searchForm.controls.onlyMine.value;
+        this.fdDialogService
+            .open<RecipeListFiltersDialogComponent, { onlyMine: boolean }, RecipeListFiltersDialogResult | null>(
+                RecipeListFiltersDialogComponent,
+                {
+                    size: 'sm',
+                    data: { onlyMine: currentOnlyMine },
+                },
+            )
+            .afterClosed()
+            .subscribe(result => {
+                if (!result || result.onlyMine === currentOnlyMine) {
+                    return;
+                }
+
+                this.searchForm.controls.onlyMine.setValue(result.onlyMine);
+            });
+    }
+
+    public clearSearch(): void {
+        this.searchForm.controls.search.setValue('');
+    }
+
+    public onAddToMeal(recipe: Recipe): void {
+        this.quickConsumptionService.addRecipe(recipe);
+    }
+
+    public get showRecentSection(): boolean {
+        return !this.hasSearchValue(this.searchForm.controls.search.value) && this.recentRecipes.length > 0;
+    }
+
+    public get allRecipesSectionItems(): Recipe[] {
+        const recipes = this.recipeData.items();
+        if (recipes.length === 0) {
+            return [];
+        }
+
+        if (!this.showRecentSection) {
+            return recipes;
+        }
+
+        const recentIds = new Set(this.recentRecipes.map(recipe => recipe.id));
+        return recipes.filter(recipe => !recentIds.has(recipe.id));
+    }
+
+    public get hasVisibleRecipes(): boolean {
+        return this.showRecentSection || this.allRecipesSectionItems.length > 0;
+    }
+
+    public get hasActiveFilters(): boolean {
+        return this.searchForm.controls.onlyMine.value;
+    }
+
+    public get allRecipesSectionLabelKey(): string {
+        return this.hasSearchValue(this.searchForm.controls.search.value)
+            ? 'RECIPE_LIST.SEARCH_RESULTS'
+            : 'RECIPE_LIST.ALL_RECIPES';
+    }
+
+    public get isMobileSearchVisible(): boolean {
+        return this.isMobileSearchOpen() || this.hasSearchValue(this.searchForm.controls.search.value);
+    }
+
+    public isPrivateVisibility(visibility: RecipeVisibility | string | null | undefined): boolean {
+        return visibility?.toString().toUpperCase() === 'PRIVATE';
     }
 
     private loadRecipes(page: number, limit: number, search: string | null): Observable<void> {
@@ -198,45 +292,6 @@ export class RecipeListComponent implements OnInit {
         }
     }
 
-    public isPrivateVisibility(visibility: RecipeVisibility | string | null | undefined): boolean {
-        return visibility?.toString().toUpperCase() === 'PRIVATE';
-    }
-
-    public toggleOnlyMine(): void {
-        const control = this.searchForm.controls.onlyMine;
-        control.setValue(!control.value);
-    }
-
-    public clearSearch(): void {
-        this.searchForm.controls.search.setValue('');
-    }
-
-    public onAddToMeal(recipe: Recipe): void {
-        this.quickConsumptionService.addRecipe(recipe);
-    }
-
-    public get showRecentSection(): boolean {
-        return !this.hasSearchValue(this.searchForm.controls.search.value) && this.recentRecipes.length > 0;
-    }
-
-    public get allRecipesSectionItems(): Recipe[] {
-        const recipes = this.recipeData.items();
-        if (recipes.length === 0) {
-            return [];
-        }
-
-        if (!this.showRecentSection) {
-            return recipes;
-        }
-
-        const recentIds = new Set(this.recentRecipes.map(recipe => recipe.id));
-        return recipes.filter(recipe => !recentIds.has(recipe.id));
-    }
-
-    public get hasVisibleRecipes(): boolean {
-        return this.showRecentSection || this.allRecipesSectionItems.length > 0;
-    }
-
     private hasSearchValue(value: string | null): boolean {
         return !!value?.trim();
     }
@@ -248,4 +303,3 @@ interface RecipeSearchFormValues {
 }
 
 type RecipeSearchFormGroup = FormGroupControls<RecipeSearchFormValues>;
-

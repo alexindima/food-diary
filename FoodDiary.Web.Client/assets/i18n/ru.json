@@ -446,14 +446,20 @@
         "NO_RECIPES_FOUND": "Рецепты не найдены",
         "TOTAL_CALORIES": "Калорийность",
         "PREP_TIME": "Время приготовления",
-        "INGREDIENTS_COUNT": "Количество ингредиентов",
+        "INGREDIENTS_COUNT": "Ингредиенты",
         "SERVINGS": "Порции",
         "NO_DESCRIPTION": "Описание отсутствует",
         "USAGE_COUNT": "Использований",
         "STEPS_COUNT": "Шагов",
         "EDIT": "Редактировать",
         "DELETE": "Удалить",
-        "DELETE_ERROR": "Не удалось удалить рецепт. Попробуйте ещё раз."
+        "DELETE_ERROR": "Не удалось удалить рецепт. Попробуйте ещё раз.",
+        "SEARCH_RESULTS": "Результаты поиска",
+        "FILTERS_BUTTON": "Фильтры",
+        "FILTERS_TITLE": "Фильтры",
+        "FILTER_ALL_RECIPES": "Все рецепты",
+        "FILTER_MY_RECIPES": "Мои рецепты",
+        "FILTER_APPLY_BUTTON": "Применить"
     },
     "RECIPE_CARD": {
         "ADD_TO_MEAL": "Добавить в приём пищи"

@@ -1,0 +1,11 @@
+.recipe-list-filters-dialog {
+    &__visibility {
+        margin-bottom: 8px;
+    }
+
+    &__footer {
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+    }
+}

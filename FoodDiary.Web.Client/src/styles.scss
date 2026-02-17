@@ -51,6 +51,12 @@ body {
     background: var(--fd-layout-page-background);
 }
 
+@media (max-width: 768px) {
+    :root {
+        --fd-layout-page-top-padding: 0px;
+    }
+}
+
 /* legacy layout classes removed; page layout handled via fdPageLayout directive */
 
 .fd-page-header {

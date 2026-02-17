@@ -1,0 +1,18 @@
+<fd-ui-dialog class="recipe-list-filters-dialog" [title]="'RECIPE_LIST.FILTERS_TITLE' | translate">
+    <fd-ui-segmented-toggle
+        class="recipe-list-filters-dialog__visibility"
+        [options]="visibilityOptions"
+        [selectedValue]="visibilityValue"
+        (selectedValueChange)="onVisibilityChange($event)"
+        [ariaLabel]="'RECIPE_LIST.FILTERS_TITLE' | translate"
+    />
+
+    <div fdUiDialogFooter class="recipe-list-filters-dialog__footer">
+        <fd-ui-button type="button" variant="secondary" fill="ghost" (click)="onCancel()">
+            {{ 'COMMON.CANCEL' | translate }}
+        </fd-ui-button>
+        <fd-ui-button type="button" variant="primary" fill="solid" (click)="onApply()">
+            {{ 'RECIPE_LIST.FILTER_APPLY_BUTTON' | translate }}
+        </fd-ui-button>
+    </div>
+</fd-ui-dialog>
