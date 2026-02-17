@@ -20,7 +20,6 @@ import { FdUiInputFieldModule } from 'fd-ui-kit/material';
 import { FdUiFormFieldModule } from 'fd-ui-kit/material';
 import { FdUiNativeDateModule } from 'fd-ui-kit/material';
 import { FdUiIconModule } from 'fd-ui-kit/material';
-import { PageHeaderComponent } from '../shared/page-header/page-header.component';
 import { PageBodyComponent } from '../shared/page-body/page-body.component';
 import { FdPageContainerDirective } from '../../directives/layout/page-container.directive';
 import { LocalizedDatePipe } from '../../pipes/localized-date.pipe';
@@ -59,7 +58,6 @@ type MealSlot = 'BREAKFAST' | 'LUNCH' | 'DINNER';
     FdUiFormFieldModule,
     FdUiNativeDateModule,
     FdUiIconModule,
-    PageHeaderComponent,
     PageBodyComponent,
     FdPageContainerDirective,
     LocalizedDatePipe,

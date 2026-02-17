@@ -85,8 +85,10 @@ html.cdk-global-scrollblock .fd-root__sidebar {
 @media (max-width: 768px) {
     .fd-root {
         display: block;
-        height: 100dvh;
+        height: auto;
+        min-height: 100dvh;
         --fd-layout-sidebar-width: 0px;
+        overflow: visible;
     }
 
     .fd-root__sidebar {
@@ -104,14 +106,20 @@ html.cdk-global-scrollblock .fd-root__sidebar {
     }
 
     .fd-root__main {
-        height: 100dvh;
-        min-height: 0;
+        height: auto;
+        min-height: 100dvh;
         padding: 0;
         grid-column: 1 / -1;
+        overflow: visible;
+    }
+
+    .fd-root__main > * {
+        overflow: visible;
+        min-height: auto;
     }
 
     .fd-root__main > :not(router-outlet) {
-        padding-bottom: 132px;
+        padding-bottom: calc(132px + env(safe-area-inset-bottom));
     }
 
     .fd-root__footer {

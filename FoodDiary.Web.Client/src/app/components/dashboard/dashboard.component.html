@@ -2,61 +2,63 @@
     @if (isEditingLayout()) {
         <div class="dashboard__edit-overlay"></div>
     }
-    <fd-page-header
-        class="dashboard__header"
-        [title]="
-            isTodaySelected()
-                ? ('DASHBOARD.TITLE' | translate)
-                : ('DASHBOARD.TITLE_FOR_DATE' | translate:{ date: (selectedDate() | localizedDate:'d MMMM y') })
-        "
-        [subtitle]="'DASHBOARD.SUBTITLE' | translate"
-    >
-        <ng-container fdPageHeaderActions>
-            <div class="dashboard__actions-left">
-                <div class="dashboard__date-group">
-                    <mat-form-field class="dashboard__date-field" appearance="outline">
-                        <input
-                            matInput
-                            [matDatepicker]="headerDatePicker"
-                            [value]="selectedDate()"
-                            (dateChange)="handleDateChange($event)"
-                        />
-                    </mat-form-field>
-                    <mat-datepicker #headerDatePicker />
-                    <fd-ui-button
-                        class="dashboard__date-button"
-                        variant="secondary"
-                        fill="outline"
-                        icon="calendar_today"
-                        (click)="openDatePicker()"
-                    >
-                        {{ selectedDate() | localizedDate:'d MMMM y' }}
-                    </fd-ui-button>
-                </div>
+    <header class="dashboard__header">
+        <div class="dashboard__title-block">
+            <h1 class="dashboard__title">
+                @if (isTodaySelected()) {
+                    {{ (layoutKey() === 'mobile' ? 'DASHBOARD.TITLE_SHORT' : 'DASHBOARD.TITLE') | translate }}
+                } @else {
+                    {{
+                        (layoutKey() === 'mobile' ? 'DASHBOARD.TITLE_FOR_DATE_SHORT' : 'DASHBOARD.TITLE_FOR_DATE')
+                            | translate:{ date: (selectedDate() | localizedDate:'d MMMM y') }
+                    }}
+                }
+            </h1>
+            <p class="dashboard__subtitle">{{ 'DASHBOARD.SUBTITLE' | translate }}</p>
+        </div>
 
+        <div class="dashboard__header-actions">
+            <div class="dashboard__date-group">
+                <mat-form-field class="dashboard__date-field" appearance="outline">
+                    <input
+                        matInput
+                        [matDatepicker]="headerDatePicker"
+                        [value]="selectedDate()"
+                        (dateChange)="handleDateChange($event)"
+                    />
+                </mat-form-field>
+                <mat-datepicker #headerDatePicker />
                 <fd-ui-button
-                    class="dashboard__settings-action"
+                    class="dashboard__date-button"
                     variant="secondary"
                     fill="outline"
-                    icon="tune"
-                    [ariaLabel]="'DASHBOARD.ACTIONS.OPEN_SETTINGS' | translate"
-                    [class.dashboard__settings-action--active]="isEditingLayout()"
-                    [attr.aria-pressed]="isEditingLayout()"
-                    (click)="openDashboardSettings()"
-                />
-            </div>
-
-            <div class="dashboard__actions-right">
-                <fd-ui-button
-                    class="dashboard__primary-action"
-                    icon="add"
-                    (click)="addConsumption()"
+                    icon="calendar_today"
+                    (click)="openDatePicker()"
                 >
-                    {{ 'DASHBOARD.ACTIONS.ADD_CONSUMPTION_BUTTON' | translate }}
+                    {{ selectedDate() | localizedDate:'d MMMM y' }}
                 </fd-ui-button>
             </div>
-        </ng-container>
-    </fd-page-header>
+
+            <fd-ui-button
+                class="dashboard__settings-action"
+                variant="secondary"
+                fill="outline"
+                icon="tune"
+                [ariaLabel]="'DASHBOARD.ACTIONS.OPEN_SETTINGS' | translate"
+                [class.dashboard__settings-action--active]="isEditingLayout()"
+                [attr.aria-pressed]="isEditingLayout()"
+                (click)="openDashboardSettings()"
+            />
+
+            <fd-ui-button
+                class="dashboard__primary-action"
+                icon="add"
+                (click)="addConsumption()"
+            >
+                {{ 'DASHBOARD.ACTIONS.ADD_CONSUMPTION_BUTTON' | translate }}
+            </fd-ui-button>
+        </div>
+    </header>
 
     <fd-page-body>
         <div class="dashboard__body">

@@ -10,6 +10,12 @@
         z-index: 20;
         background: var(--fd-layout-page-background, #f5f6fa);
     }
+
+    :host(.fd-page-header--mobile-static) {
+        position: static;
+        top: auto;
+        z-index: auto;
+    }
 }
 
 .fd-page-header {

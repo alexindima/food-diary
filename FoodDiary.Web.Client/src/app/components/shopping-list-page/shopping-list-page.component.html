@@ -5,56 +5,125 @@
         [subtitle]="'SHOPPING_LIST.SUBTITLE' | translate"
     >
         <ng-container fdPageHeaderActions>
-            <div class="shopping-list__header-actions">
-                <fd-ui-select
-                    class="shopping-list__list-select"
-                    [formControl]="listSelectControl"
-                    [label]="'SHOPPING_LIST.LISTS_LABEL' | translate"
-                    [placeholder]="'SHOPPING_LIST.LISTS_PLACEHOLDER' | translate"
-                    [options]="listOptions"
-                />
-                <fd-ui-input
-                    class="shopping-list__name-input"
-                    [formControl]="listNameControl"
-                    [label]="'SHOPPING_LIST.NAME_LABEL' | translate"
-                    [placeholder]="'SHOPPING_LIST.NAME_PLACEHOLDER' | translate"
-                 />
-                <fd-ui-button
-                    class="shopping-list__new-button"
-                    variant="secondary"
-                    fill="outline"
-                    icon="add"
-                    [disabled]="isLoading()"
-                    (click)="createNewList()"
-                >
-                    {{ 'SHOPPING_LIST.NEW_LIST_BUTTON' | translate }}
-                </fd-ui-button>
-                @if (lists().length > 1) {
+            @if (isMobileView()) {
+                <div class="shopping-list__mobile-toolbar">
                     <fd-ui-button
-                        class="shopping-list__delete-button"
-                        variant="danger"
-                        fill="outline"
-                        icon="delete"
-                        [disabled]="!canDeleteList"
-                        (click)="deleteCurrentList()"
-                    >
-                        {{ 'SHOPPING_LIST.DELETE_LIST_BUTTON' | translate }}
-                    </fd-ui-button>
-                }
-                @if (lists().length === 1) {
-                    <fd-ui-button
-                        class="shopping-list__clear-button"
+                        class="shopping-list__icon-button shopping-list__manage-button"
                         variant="secondary"
                         fill="outline"
-                        icon="delete_sweep"
-                        [disabled]="!canClearList"
-                        (click)="clearCurrentList()"
+                        icon="tune"
+                        [ariaLabel]="'SHOPPING_LIST.LISTS_LABEL' | translate"
+                        (click)="toggleMobileManage()"
+                    />
+                    <fd-ui-button
+                        class="shopping-list__icon-button shopping-list__icon-button--primary"
+                        variant="primary"
+                        fill="solid"
+                        icon="add"
+                        [ariaLabel]="'SHOPPING_LIST.NEW_LIST_BUTTON' | translate"
+                        [disabled]="isLoading()"
+                        (click)="createNewList()"
+                    />
+                </div>
+            } @else {
+                <div class="shopping-list__header-actions">
+                    <fd-ui-select
+                        class="shopping-list__list-select"
+                        [formControl]="listSelectControl"
+                        [label]="'SHOPPING_LIST.LISTS_LABEL' | translate"
+                        [placeholder]="'SHOPPING_LIST.LISTS_PLACEHOLDER' | translate"
+                        [options]="listOptions"
+                    />
+                    <fd-ui-input
+                        class="shopping-list__name-input"
+                        [formControl]="listNameControl"
+                        [label]="'SHOPPING_LIST.NAME_LABEL' | translate"
+                        [placeholder]="'SHOPPING_LIST.NAME_PLACEHOLDER' | translate"
+                    />
+                    <fd-ui-button
+                        class="shopping-list__new-button"
+                        variant="secondary"
+                        fill="outline"
+                        icon="add"
+                        [disabled]="isLoading()"
+                        (click)="createNewList()"
                     >
-                        {{ 'SHOPPING_LIST.CLEAR_LIST_BUTTON' | translate }}
+                        {{ 'SHOPPING_LIST.NEW_LIST_BUTTON' | translate }}
                     </fd-ui-button>
-                }
-            </div>
+                    @if (lists().length > 1) {
+                        <fd-ui-button
+                            class="shopping-list__delete-button"
+                            variant="danger"
+                            fill="outline"
+                            icon="delete"
+                            [disabled]="!canDeleteList"
+                            (click)="deleteCurrentList()"
+                        >
+                            {{ 'SHOPPING_LIST.DELETE_LIST_BUTTON' | translate }}
+                        </fd-ui-button>
+                    }
+                    @if (lists().length === 1) {
+                        <fd-ui-button
+                            class="shopping-list__clear-button"
+                            variant="secondary"
+                            fill="outline"
+                            icon="delete_sweep"
+                            [disabled]="!canClearList"
+                            (click)="clearCurrentList()"
+                        >
+                            {{ 'SHOPPING_LIST.CLEAR_LIST_BUTTON' | translate }}
+                        </fd-ui-button>
+                    }
+                </div>
+            }
         </ng-container>
+
+        @if (isMobileView()) {
+            <div fdPageHeaderExtra class="shopping-list__mobile-manage"
+                [class.shopping-list__mobile-manage--open]="isMobileManageVisible">
+                <div class="shopping-list__header-actions shopping-list__header-actions--mobile">
+                    <fd-ui-select
+                        class="shopping-list__list-select"
+                        [formControl]="listSelectControl"
+                        [label]="'SHOPPING_LIST.LISTS_LABEL' | translate"
+                        [placeholder]="'SHOPPING_LIST.LISTS_PLACEHOLDER' | translate"
+                        [options]="listOptions"
+                    />
+                    <fd-ui-input
+                        class="shopping-list__name-input"
+                        [formControl]="listNameControl"
+                        [label]="'SHOPPING_LIST.NAME_LABEL' | translate"
+                        [placeholder]="'SHOPPING_LIST.NAME_PLACEHOLDER' | translate"
+                    />
+                    <div class="shopping-list__mobile-manage-actions">
+                        @if (lists().length > 1) {
+                            <fd-ui-button
+                                class="shopping-list__delete-button"
+                                variant="danger"
+                                fill="outline"
+                                icon="delete"
+                                [disabled]="!canDeleteList"
+                                (click)="deleteCurrentList()"
+                            >
+                                {{ 'SHOPPING_LIST.DELETE_LIST_BUTTON' | translate }}
+                            </fd-ui-button>
+                        }
+                        @if (lists().length === 1) {
+                            <fd-ui-button
+                                class="shopping-list__clear-button"
+                                variant="secondary"
+                                fill="outline"
+                                icon="delete_sweep"
+                                [disabled]="!canClearList"
+                                (click)="clearCurrentList()"
+                            >
+                                {{ 'SHOPPING_LIST.CLEAR_LIST_BUTTON' | translate }}
+                            </fd-ui-button>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
     </fd-page-header>
 
     <fd-page-body>
@@ -67,13 +136,13 @@
                         formControlName="name"
                         [label]="'SHOPPING_LIST.ADD_ITEM_NAME' | translate"
                         [placeholder]="'SHOPPING_LIST.ADD_ITEM_NAME_PLACEHOLDER' | translate"
-                     />
+                    />
                     <fd-ui-input
                         formControlName="amount"
                         type="number"
                         [label]="'SHOPPING_LIST.ADD_ITEM_AMOUNT' | translate"
                         [placeholder]="'SHOPPING_LIST.ADD_ITEM_AMOUNT_PLACEHOLDER' | translate"
-                     />
+                    />
                     <fd-ui-select
                         formControlName="unit"
                         [label]="'SHOPPING_LIST.ADD_ITEM_UNIT' | translate"
@@ -84,7 +153,7 @@
                         formControlName="category"
                         [label]="'SHOPPING_LIST.ADD_ITEM_CATEGORY' | translate"
                         [placeholder]="'SHOPPING_LIST.ADD_ITEM_CATEGORY_PLACEHOLDER' | translate"
-                     />
+                    />
                     <fd-ui-button
                         type="submit"
                         variant="secondary"
@@ -105,7 +174,7 @@
                                     [ngModel]="item.isChecked"
                                     (ngModelChange)="toggleItemChecked(item, $event)"
                                     label=""
-                                 />
+                                />
                                 <div class="shopping-list__item-body">
                                     <div class="shopping-list__item-name">{{ item.name }}</div>
                                     @if (formatItemMeta(item)) {

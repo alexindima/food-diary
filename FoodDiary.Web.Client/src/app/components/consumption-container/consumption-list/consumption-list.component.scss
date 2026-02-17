@@ -199,7 +199,7 @@
         border-radius: 999px;
     }
 
-    @media #{$media-mobile} {
+    @media #{$media-tablet} {
         --fd-layout-page-horizontal-padding: 0;
         --fd-layout-page-vertical-padding: 0;
 

@@ -55,6 +55,17 @@ body {
     :root {
         --fd-layout-page-top-padding: 0px;
     }
+
+    html,
+    body {
+        height: auto;
+        min-height: 100%;
+    }
+
+    body {
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
 }
 
 /* legacy layout classes removed; page layout handled via fdPageLayout directive */

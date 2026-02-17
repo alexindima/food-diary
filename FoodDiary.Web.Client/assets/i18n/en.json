@@ -1242,7 +1242,9 @@
             "MID": "Great progress! You're already at {{ percent }}% of the plan.",
             "NEARLY": "Almost there. Finish strong to hit {{ percent }}%.",
             "ABOVE": "You've passed the target for today. Nice work!"
-        }
+        },
+        "TITLE_SHORT": "Today",
+        "TITLE_FOR_DATE_SHORT": "{{ date }}"
     },
     "WEIGHT_HISTORY": {
         "SUBTITLE": "Body metrics",

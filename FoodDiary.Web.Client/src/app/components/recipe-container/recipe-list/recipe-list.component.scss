@@ -21,7 +21,7 @@
         gap: $gap-s;
         width: 100%;
 
-        @media #{$media-mobile} {
+        @media #{$media-tablet} {
             grid-template-columns: 1fr;
         }
     }
@@ -221,7 +221,7 @@
         margin-top: $gap-l;
     }
 
-    @media #{$media-mobile} {
+    @media #{$media-tablet} {
         --fd-layout-page-horizontal-padding: 0;
         --fd-layout-page-vertical-padding: 0;
 

@@ -1,4 +1,4 @@
-@use 'variables' as *;
+﻿@use 'variables' as *;
 
 :host {
     display: flex;
@@ -15,113 +15,125 @@ $color-primary: #2563eb;
     gap: 32px;
     margin: 0 auto;
     position: relative;
+    padding: 0 !important;
 
     &__header {
         margin-bottom: var(--fd-page-header-gap, 16px);
         position: relative;
-        .fd-page-header__actions {
-            display: flex;
-            align-items: center;
-            gap: $gap-s;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            width: 100%;
-        }
-        .fd-page-header__title-block {
-            min-width: 220px;
-        }
-        .dashboard__actions-left {
-            display: flex;
-            align-items: center;
-            gap: $gap-xs;
-            flex-wrap: wrap;
-        }
-        .dashboard__date-group {
-            display: inline-flex;
-            align-items: center;
-            gap: 0;
-        }
-        .dashboard__date-button {
-            margin-left: 0;
-        }
-        .dashboard__actions-right {
-            display: flex;
-            align-items: center;
-            gap: $gap-s;
-            margin-left: auto;
-        }
-        .dashboard__primary-action {
-            --fd-button-padding-x: 18px;
-            --fd-button-padding-y: 10px;
-            --fd-button-border-radius: 14px;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 12px 16px;
+        width: 100%;
+    }
+
+    &__title-block {
+        min-width: 220px;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    &__subtitle {
+        margin: 0;
+        font-size: 0.95rem;
+        line-height: 1.35;
+        font-weight: 500;
+        color: $color-text-additional;
+    }
+
+    &__header-actions {
+        display: flex;
+        align-items: center;
+        gap: $gap-s;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        width: auto;
+        margin-left: auto;
+    }
+
+    &__date-group {
+        display: inline-flex;
+        align-items: center;
+        gap: 0;
+    }
+
+    &__date-button {
+        margin-left: 0;
+    }
+
+    &__primary-action {
+        --fd-button-padding-x: 18px;
+        --fd-button-padding-y: 10px;
+        --fd-button-border-radius: 14px;
+    }
+
+    @media (max-width: 420px) {
+        &__primary-action {
+            --fd-button-padding-x: 14px;
+            --fd-button-padding-y: 8px;
+            font-size: 0.95rem;
+            line-height: 1.1;
+            white-space: nowrap;
         }
 
-        @media (max-width: 420px) {
-            .dashboard__primary-action {
-                --fd-button-padding-x: 14px;
-                --fd-button-padding-y: 8px;
-                font-size: 0.95rem;
-                line-height: 1.1;
-                white-space: nowrap;
-            }
+        &__primary-action ::ng-deep .fd-ui-button__label {
+            display: none;
+        }
+    }
 
-            .dashboard__primary-action ::ng-deep .fd-ui-button__label {
-                display: none;
-            }
+    @media (max-width: 360px) {
+        &__primary-action {
+            --fd-button-padding-x: 10px;
+            --fd-button-padding-y: 8px;
+            font-size: 0;
+            line-height: 0;
         }
 
-        @media (max-width: 360px) {
-            .dashboard__primary-action {
-                --fd-button-padding-x: 10px;
-                --fd-button-padding-y: 8px;
-                font-size: 0;
-                line-height: 0;
-            }
+        &__primary-action ::ng-deep .fd-ui-button__label {
+            display: none;
+        }
+    }
 
-            .dashboard__primary-action ::ng-deep .fd-ui-button__label {
-                display: none;
-            }
+    &__primary-action ::ng-deep button,
+    &__primary-action ::ng-deep .fd-ui-button {
+        background: linear-gradient(135deg, #4dabff, #2563eb);
+        color: #fff;
+        box-shadow: 0 12px 26px rgba(37, 99, 235, 0.28);
+        border: none;
+        font-weight: 700;
+        transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+
+        &:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 16px 30px rgba(37, 99, 235, 0.32);
+            filter: brightness(1.02);
         }
 
-        .dashboard__primary-action ::ng-deep button,
-        .dashboard__primary-action ::ng-deep .fd-ui-button {
-            background: linear-gradient(135deg, #4dabff, #2563eb);
-            color: #fff;
-            box-shadow: 0 12px 26px rgba(37, 99, 235, 0.28);
-            border: none;
-            font-weight: 700;
-            transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
-
-            &:hover {
-                transform: translateY(-1px);
-                box-shadow: 0 16px 30px rgba(37, 99, 235, 0.32);
-                filter: brightness(1.02);
-            }
-
-            &:active {
-                transform: translateY(0);
-                box-shadow: 0 10px 22px rgba(37, 99, 235, 0.24);
-            }
+        &:active {
+            transform: translateY(0);
+            box-shadow: 0 10px 22px rgba(37, 99, 235, 0.24);
         }
+    }
 
-        .dashboard__settings-action--active ::ng-deep button,
-        .dashboard__settings-action--active ::ng-deep .fd-ui-button {
-            background: #ffffff;
-            border-color: rgba(37, 99, 235, 0.4);
-            color: #1d4ed8;
-            box-shadow: 0 10px 22px rgba(37, 99, 235, 0.18);
-        }
+    &__settings-action--active ::ng-deep button,
+    &__settings-action--active ::ng-deep .fd-ui-button {
+        background: #ffffff;
+        border-color: rgba(37, 99, 235, 0.4);
+        color: #1d4ed8;
+        box-shadow: 0 10px 22px rgba(37, 99, 235, 0.18);
+    }
 
-        .dashboard__settings-action {
-            position: relative;
-            z-index: 5;
-        }
+    &__settings-action {
+        position: relative;
+        z-index: 5;
+    }
 
-        .dashboard__settings-action ::ng-deep button,
-        .dashboard__settings-action ::ng-deep .fd-ui-button {
-            position: relative;
-            z-index: 5;
-        }
+    &__settings-action ::ng-deep button,
+    &__settings-action ::ng-deep .fd-ui-button {
+        position: relative;
+        z-index: 5;
     }
 
     &--editing {
@@ -206,6 +218,8 @@ $color-primary: #2563eb;
     &__body {
         position: relative;
         z-index: 2;
+        padding: var(--fd-layout-page-top-padding, 10px) var(--fd-layout-page-horizontal-padding)
+            var(--fd-layout-page-vertical-padding);
     }
 
     &__body > fd-page-body {
@@ -517,7 +531,78 @@ $color-primary: #2563eb;
 
     @media #{$media-mobile} {
         &__header {
-            align-items: flex-start;
+            padding: 10px 12px 8px;
+            margin: 0;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.22);
+            background: #f8fafc;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            grid-template-areas:
+                'title actions'
+                'subtitle subtitle';
+            align-items: center;
+            column-gap: 10px;
+            row-gap: 4px;
+        }
+
+        &__title-block {
+            display: contents;
+        }
+
+        &__title {
+            grid-area: title;
+            font-size: 1.65rem;
+            line-height: 1.1;
+        }
+
+        &__subtitle {
+            grid-area: subtitle;
+            font-size: 0.8rem;
+            line-height: 1.3;
+            max-width: 26ch;
+        }
+
+        &__header-actions {
+            grid-area: actions;
+            margin-left: 0;
+            width: auto;
+            flex-wrap: nowrap;
+            gap: 6px;
+            justify-content: flex-end;
+        }
+
+        &__date-button,
+        &__settings-action,
+        &__primary-action {
+            --fd-button-border-radius: 12px;
+            --fd-button-padding-x: 0;
+            --fd-button-padding-y: 0;
+        }
+
+        &__date-button ::ng-deep button,
+        &__date-button ::ng-deep .fd-ui-button,
+        &__settings-action ::ng-deep button,
+        &__settings-action ::ng-deep .fd-ui-button,
+        &__primary-action ::ng-deep button,
+        &__primary-action ::ng-deep .fd-ui-button {
+            width: 38px;
+            height: 38px;
+            min-width: 38px;
+            padding: 0;
+        }
+
+        &__date-button ::ng-deep .fd-ui-button__label,
+        &__primary-action ::ng-deep .fd-ui-button__label {
+            display: none;
+        }
+
+        &__primary-action ::ng-deep button,
+        &__primary-action ::ng-deep .fd-ui-button {
+            box-shadow: 0 8px 18px rgba(37, 99, 235, 0.24);
+        }
+
+        &__body {
+            padding: 10px 12px 12px;
         }
 
         &__grid {
@@ -525,3 +610,4 @@ $color-primary: #2563eb;
         }
     }
 }
+

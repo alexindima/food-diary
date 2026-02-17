@@ -1,3 +1,4 @@
+﻿import { BreakpointObserver } from '@angular/cdk/layout';
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -20,7 +21,7 @@ import { ShoppingList, ShoppingListItem, ShoppingListItemDto, ShoppingListSummar
 import { ShoppingListService } from '../../services/shopping-list.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FormGroupControls } from '../../types/common.data';
-import { Subject, debounceTime } from 'rxjs';
+import { Subject, debounceTime, distinctUntilChanged, map } from 'rxjs';
 
 @Component({
     selector: 'fd-shopping-list-page',
@@ -48,12 +49,14 @@ export class ShoppingListPageComponent implements OnInit {
     private readonly toastService = inject(FdUiToastService);
     private readonly dialogService = inject(FdUiDialogService);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly breakpointObserver = inject(BreakpointObserver);
     private readonly saveQueue = new Subject<void>();
 
     public readonly list = signal<ShoppingList | null>(null);
     public readonly items = signal<ShoppingListItem[]>([]);
     public readonly isLoading = signal(false);
     public readonly isSaving = signal(false);
+    public readonly isMobileView = signal<boolean>(window.matchMedia('(max-width: 768px)').matches);
     public readonly lists = signal<ShoppingListSummary[]>([]);
     public readonly listSelectControl = new FormControl<string | null>(null);
     public readonly listNameControl = new FormControl<string>('', { nonNullable: true, validators: Validators.required });
@@ -65,6 +68,7 @@ export class ShoppingListPageComponent implements OnInit {
     private lastLoadedListId: string | null = null;
     private suppressAutosave = false;
     private pendingSave = false;
+    private readonly isMobileManageOpen = signal(false);
 
     public constructor() {
         this.itemForm = new FormGroup<ShoppingListItemFormGroup>({
@@ -92,6 +96,20 @@ export class ShoppingListPageComponent implements OnInit {
     }
 
     public ngOnInit(): void {
+        this.breakpointObserver
+            .observe('(max-width: 768px)')
+            .pipe(
+                map(result => result.matches),
+                distinctUntilChanged(),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe(isMobile => {
+                this.isMobileView.set(isMobile);
+                if (!isMobile) {
+                    this.isMobileManageOpen.set(false);
+                }
+            });
+
         this.loadLists();
 
         this.listSelectControl.valueChanges
@@ -166,6 +184,13 @@ export class ShoppingListPageComponent implements OnInit {
         return parts.join(' • ');
     }
 
+    public toggleMobileManage(): void {
+        this.isMobileManageOpen.update(value => !value);
+    }
+
+    public get isMobileManageVisible(): boolean {
+        return this.isMobileManageOpen();
+    }
     public get canDeleteList(): boolean {
         return this.lists().length > 1 && !!this.list() && !this.isSaving() && !this.isLoading();
     }
@@ -537,3 +562,4 @@ interface ShoppingListItemFormValues {
 }
 
 type ShoppingListItemFormGroup = FormGroupControls<ShoppingListItemFormValues>;
+
