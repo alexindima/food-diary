@@ -193,6 +193,12 @@
 
     .recipe-card__title {
         font-size: 1.05rem;
+        line-height: 1.15;
+        white-space: normal;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
     }
 
     .recipe-card__meta-row {
