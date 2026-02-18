@@ -43,7 +43,7 @@ import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
-import { FdUiCheckboxComponent } from 'fd-ui-kit/checkbox/fd-ui-checkbox.component';
+import { FdUiSegmentedToggleComponent, FdUiSegmentedToggleOption } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle.component';
 import { FdUiIconModule } from 'fd-ui-kit/material';
 import { FdUiNutrientInputComponent } from 'fd-ui-kit/nutrient-input/fd-ui-nutrient-input.component';
 import { FdUiDateInputComponent } from 'fd-ui-kit/date-input/fd-ui-date-input.component';
@@ -72,6 +72,7 @@ import { AiFoodService } from '../../../services/ai-food.service';
 import { UserAiUsageResponse } from '../../../types/ai.data';
 import { AuthService } from '../../../services/auth.service';
 import { PremiumRequiredDialogComponent } from '../../shared/premium-required-dialog/premium-required-dialog.component';
+import { NutritionCalculationService } from '../../../services/nutrition-calculation.service';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: FD_VALIDATION_ERRORS,
@@ -98,7 +99,7 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
         FdUiCardComponent,
         FdUiInputComponent,
         FdUiButtonComponent,
-        FdUiCheckboxComponent,
+        FdUiSegmentedToggleComponent,
         FdUiNutrientInputComponent,
         FdUiDateInputComponent,
         FdUiTimeInputComponent,
@@ -120,10 +121,12 @@ export class BaseConsumptionManageComponent implements OnInit {
     private readonly fdDialogService = inject(FdUiDialogService);
     private readonly aiFoodService = inject(AiFoodService);
     private readonly authService = inject(AuthService);
+    private readonly nutritionCalculationService = inject(NutritionCalculationService);
     private readonly router = inject(Router);
     private readonly route = inject(ActivatedRoute);
     private readonly recipeServingWeightCache = new Map<string, number | null>();
     private readonly nutrientFillAlpha = 0.14;
+    private readonly calorieMismatchThreshold = 0.2;
     private readonly nutrientPalette = {
         calories: '#E11D48',
         proteins: '#0284C7',
@@ -160,6 +163,30 @@ export class BaseConsumptionManageComponent implements OnInit {
     public globalError = signal<string | null>(null);
     public aiSessions = signal<ConsumptionAiSessionManageDto[]>([]);
     public aiUsage = signal<UserAiUsageResponse | null>(null);
+    public nutritionMode: NutritionMode = 'auto';
+    public nutritionModeOptions: FdUiSegmentedToggleOption[] = [];
+    public nutritionWarning = signal<CalorieMismatchWarning | null>(null);
+    public readonly macroBarState = computed<MacroBarState>(() => {
+        const nutrients = this.nutrientChartData();
+        const entries: Array<{ key: MacroKey; value: number }> = [
+            { key: 'proteins', value: nutrients.proteins ?? 0 },
+            { key: 'fats', value: nutrients.fats ?? 0 },
+            { key: 'carbs', value: nutrients.carbs ?? 0 },
+        ];
+        const positive = entries.filter(entry => entry.value > 0);
+        if (positive.length === 0) {
+            return { isEmpty: true, segments: [] };
+        }
+
+        const total = positive.reduce((sum, entry) => sum + entry.value, 0);
+        return {
+            isEmpty: false,
+            segments: positive.map(entry => ({
+                key: entry.key,
+                percent: (entry.value / total) * 100,
+            })),
+        };
+    });
     public aiQuotaExceeded = computed(() => {
         const usage = this.aiUsage();
         if (!usage) {
@@ -201,8 +228,11 @@ export class BaseConsumptionManageComponent implements OnInit {
         });
 
         this.buildMealTypeOptions();
+        this.buildNutritionModeOptions();
+        this.nutritionMode = this.consumptionForm.controls.isNutritionAutoCalculated.value ? 'auto' : 'manual';
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.buildMealTypeOptions();
+            this.buildNutritionModeOptions();
         });
 
         this.updateManualNutritionValidators(true);
@@ -210,6 +240,7 @@ export class BaseConsumptionManageComponent implements OnInit {
         this.consumptionForm.controls.isNutritionAutoCalculated.valueChanges
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(isAuto => {
+                this.nutritionMode = isAuto ? 'auto' : 'manual';
                 this.updateManualNutritionValidators(isAuto);
                 if (!isAuto) {
                     this.populateManualNutritionFromCurrentSummary();
@@ -627,6 +658,62 @@ export class BaseConsumptionManageComponent implements OnInit {
         return this.resolveControlError(this.consumptionForm.controls[controlName]);
     }
 
+    public onNutritionModeChange(nextMode: string): void {
+        const resolvedMode: NutritionMode = nextMode === 'manual' ? 'manual' : 'auto';
+        if (this.nutritionMode === resolvedMode) {
+            return;
+        }
+
+        this.nutritionMode = resolvedMode;
+        this.consumptionForm.controls.isNutritionAutoCalculated.setValue(resolvedMode === 'auto');
+    }
+
+    public getMacroColor(key: MacroKey): string {
+        return this.nutrientTextColors[key];
+    }
+
+    public caloriesError(): string | null {
+        if (this.consumptionForm.controls.isNutritionAutoCalculated.value) {
+            return null;
+        }
+
+        const control = this.consumptionForm.controls.manualCalories;
+        if (!control.touched && !control.dirty) {
+            return null;
+        }
+
+        const calories = this.getControlNumericValue(control);
+        return calories <= 0
+            ? this.translateService.instant('PRODUCT_MANAGE.NUTRITION_ERRORS.CALORIES_REQUIRED')
+            : null;
+    }
+
+    public macrosError(): string | null {
+        if (this.consumptionForm.controls.isNutritionAutoCalculated.value) {
+            return null;
+        }
+
+        const controls = [
+            this.consumptionForm.controls.manualProteins,
+            this.consumptionForm.controls.manualFats,
+            this.consumptionForm.controls.manualCarbs,
+            this.consumptionForm.controls.manualAlcohol,
+        ];
+        const shouldShow = controls.some(control => control.touched || control.dirty);
+        if (!shouldShow) {
+            return null;
+        }
+
+        const proteins = this.getControlNumericValue(this.consumptionForm.controls.manualProteins);
+        const fats = this.getControlNumericValue(this.consumptionForm.controls.manualFats);
+        const carbs = this.getControlNumericValue(this.consumptionForm.controls.manualCarbs);
+        const alcohol = this.getControlNumericValue(this.consumptionForm.controls.manualAlcohol);
+
+        return proteins <= 0 && fats <= 0 && carbs <= 0 && alcohol <= 0
+            ? this.translateService.instant('PRODUCT_MANAGE.NUTRITION_ERRORS.MACROS_REQUIRED')
+            : null;
+    }
+
     public getAmountControlError(index: number): string | null {
         return this.resolveControlError(this.items.at(index)?.controls.amount ?? null);
     }
@@ -739,6 +826,10 @@ export class BaseConsumptionManageComponent implements OnInit {
 
     public onSubmit(): void {
         this.markFormGroupTouched(this.consumptionForm);
+
+        if (this.macrosError()) {
+            return;
+        }
 
         if (this.consumptionForm.invalid) {
             this.setGlobalError('FORM_ERRORS.UNKNOWN');
@@ -888,6 +979,7 @@ export class BaseConsumptionManageComponent implements OnInit {
         if (isAuto) {
             this.syncManualControlsWithSummary(autoTotals);
         }
+        this.updateCalorieWarning();
     }
 
     private calculateAutoNutritionTotals(): NutritionTotals {
@@ -956,12 +1048,12 @@ export class BaseConsumptionManageComponent implements OnInit {
 
     private getManualNutritionTotals(): NutritionTotals {
         return {
-            calories: this.consumptionForm.controls.manualCalories.value ?? 0,
-            proteins: this.consumptionForm.controls.manualProteins.value ?? 0,
-            fats: this.consumptionForm.controls.manualFats.value ?? 0,
-            carbs: this.consumptionForm.controls.manualCarbs.value ?? 0,
-            fiber: this.consumptionForm.controls.manualFiber.value ?? 0,
-            alcohol: this.consumptionForm.controls.manualAlcohol.value ?? 0,
+            calories: this.getControlNumericValue(this.consumptionForm.controls.manualCalories),
+            proteins: this.getControlNumericValue(this.consumptionForm.controls.manualProteins),
+            fats: this.getControlNumericValue(this.consumptionForm.controls.manualFats),
+            carbs: this.getControlNumericValue(this.consumptionForm.controls.manualCarbs),
+            fiber: this.getControlNumericValue(this.consumptionForm.controls.manualFiber),
+            alcohol: this.getControlNumericValue(this.consumptionForm.controls.manualAlcohol),
         };
     }
 
@@ -1016,10 +1108,43 @@ export class BaseConsumptionManageComponent implements OnInit {
     }
 
     private updateManualNutritionValidators(isAuto: boolean): void {
-        const validators = isAuto ? [] : [Validators.required, Validators.min(0)];
-        this.getManualNutritionControls().forEach(control => {
-            control.setValidators(validators);
+        const caloriesValidators = isAuto ? [Validators.min(0)] : [Validators.required, Validators.min(0)];
+        this.consumptionForm.controls.manualCalories.setValidators(caloriesValidators);
+        this.consumptionForm.controls.manualCalories.updateValueAndValidity({ emitEvent: false });
+
+        this.getOptionalManualNutritionControls().forEach(control => {
+            control.setValidators([Validators.min(0)]);
             control.updateValueAndValidity({ emitEvent: false });
+        });
+    }
+
+    private updateCalorieWarning(): void {
+        if (this.consumptionForm.controls.isNutritionAutoCalculated.value) {
+            this.nutritionWarning.set(null);
+            return;
+        }
+
+        const calories = this.getControlNumericValue(this.consumptionForm.controls.manualCalories);
+        const proteins = this.getControlNumericValue(this.consumptionForm.controls.manualProteins);
+        const fats = this.getControlNumericValue(this.consumptionForm.controls.manualFats);
+        const carbs = this.getControlNumericValue(this.consumptionForm.controls.manualCarbs);
+        const alcohol = this.getControlNumericValue(this.consumptionForm.controls.manualAlcohol);
+        const expectedCalories = this.nutritionCalculationService.calculateCaloriesFromMacros(proteins, fats, carbs, alcohol);
+
+        if (expectedCalories <= 0 || calories <= 0) {
+            this.nutritionWarning.set(null);
+            return;
+        }
+
+        const deviation = Math.abs(calories - expectedCalories) / expectedCalories;
+        if (deviation <= this.calorieMismatchThreshold) {
+            this.nutritionWarning.set(null);
+            return;
+        }
+
+        this.nutritionWarning.set({
+            expectedCalories: Math.round(expectedCalories),
+            actualCalories: Math.round(calories),
         });
     }
 
@@ -1084,13 +1209,31 @@ export class BaseConsumptionManageComponent implements OnInit {
         return `rgba(${r}, ${g}, ${b}, ${alpha})`;
     }
 
-    private getManualNutritionControls(): Array<FormControl<number | null>> {
+    private getOptionalManualNutritionControls(): Array<FormControl<number | null>> {
         return [
-            this.consumptionForm.controls.manualCalories,
             this.consumptionForm.controls.manualProteins,
             this.consumptionForm.controls.manualFats,
             this.consumptionForm.controls.manualCarbs,
             this.consumptionForm.controls.manualFiber,
+            this.consumptionForm.controls.manualAlcohol,
+        ];
+    }
+
+    private getControlNumericValue(control: FormControl<number | null>): number {
+        const value = Number(control.value);
+        return Number.isFinite(value) ? Math.max(0, value) : 0;
+    }
+
+    private buildNutritionModeOptions(): void {
+        this.nutritionModeOptions = [
+            {
+                value: 'auto',
+                label: this.translateService.instant('CONSUMPTION_MANAGE.NUTRITION_MODE.AUTO'),
+            },
+            {
+                value: 'manual',
+                label: this.translateService.instant('CONSUMPTION_MANAGE.NUTRITION_MODE.MANUAL'),
+            },
         ];
     }
 
@@ -1448,4 +1591,22 @@ type NutritionTotals = {
     fiber: number;
     alcohol: number;
 };
+
+type NutritionMode = 'auto' | 'manual';
+type MacroKey = 'proteins' | 'fats' | 'carbs';
+
+interface MacroBarSegment {
+    key: MacroKey;
+    percent: number;
+}
+
+interface MacroBarState {
+    isEmpty: boolean;
+    segments: MacroBarSegment[];
+}
+
+interface CalorieMismatchWarning {
+    expectedCalories: number;
+    actualCalories: number;
+}
 

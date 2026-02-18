@@ -911,6 +911,11 @@
         "ITEM_SOURCE_ERROR": "Выберите продукт или рецепт",
         "MANUAL_NUTRITION_TITLE": "Корректировка калорийности",
         "MANUAL_NUTRITION_AUTO": "Рассчитывать автоматически",
+        "NUTRITION_MODE": {
+            "AUTO": "Авто",
+            "MANUAL": "Вручную",
+            "ARIA": "Режим расчёта пищевой ценности"
+        },
         "MANUAL_NUTRITION_HINT": "Введённые значения перекроют автоматический расчёт.",
         "MANUAL_CALORIES": "Калории",
         "MANUAL_PROTEINS": "Белки",

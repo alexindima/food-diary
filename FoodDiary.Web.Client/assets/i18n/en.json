@@ -946,6 +946,11 @@
         "ITEM_SOURCE_ERROR": "Please choose a product or recipe",
         "MANUAL_NUTRITION_TITLE": "Adjust nutritional values",
         "MANUAL_NUTRITION_AUTO": "Calculate automatically",
+        "NUTRITION_MODE": {
+            "AUTO": "Automatic",
+            "MANUAL": "Manual",
+            "ARIA": "Nutrition calculation mode"
+        },
         "MANUAL_NUTRITION_HINT": "Custom values override automatic calculations.",
         "MANUAL_CALORIES": "Calories",
         "MANUAL_PROTEINS": "Proteins",
