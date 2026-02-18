@@ -35,7 +35,6 @@ import {
     ProductSaveSuccessDialogComponent,
     ProductSaveSuccessDialogData,
 } from './product-save-success-dialog.component';
-import { PageHeaderComponent } from '../../shared/page-header/page-header.component';
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
 import { NutritionCalculationService } from '../../../services/nutrition-calculation.service';
 import {
@@ -80,7 +79,6 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
         FdUiNutrientInputComponent,
         FdUiSegmentedToggleComponent,
         FdUiFormErrorComponent,
-        PageHeaderComponent,
         FdPageContainerDirective,
         ImageUploadFieldComponent,
     ],
@@ -251,6 +249,13 @@ public globalError = signal<string | null>(null);
     }
 
     public async onCancel(): Promise<void> {
+        if (this.hasUnsavedChanges()) {
+            const shouldLeave = await this.confirmDiscardChanges();
+            if (!shouldLeave) {
+                return;
+            }
+        }
+
         await this.navigationService.navigateToProductList();
     }
 
@@ -791,6 +796,30 @@ public globalError = signal<string | null>(null);
                     this.navigationService.navigateToProductList();
                 }
             });
+    }
+
+    private hasUnsavedChanges(): boolean {
+        return this.productForm.dirty;
+    }
+
+    private async confirmDiscardChanges(): Promise<boolean> {
+        const data: ConfirmDeleteDialogData = {
+            title: this.translateService.instant('PRODUCT_MANAGE.LEAVE_CONFIRM_TITLE'),
+            message: this.translateService.instant('PRODUCT_MANAGE.LEAVE_CONFIRM_MESSAGE'),
+            confirmLabel: this.translateService.instant('PRODUCT_MANAGE.LEAVE_CONFIRM_BUTTON'),
+            cancelLabel: this.translateService.instant('PRODUCT_MANAGE.LEAVE_STAY_BUTTON'),
+        };
+
+        const confirmed = await firstValueFrom(
+            this.fdDialogService
+                .open<ConfirmDeleteDialogComponent, ConfirmDeleteDialogData, boolean>(ConfirmDeleteDialogComponent, {
+                    size: 'sm',
+                    data,
+                })
+                .afterClosed(),
+        );
+
+        return !!confirmed;
     }
 
     private ensurePremiumAccess(): boolean {

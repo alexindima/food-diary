@@ -650,7 +650,7 @@
         }
     },
     "PRODUCT_MANAGE": {
-        "ADD_TITLE": "Add New Product",
+        "ADD_TITLE": "Add product",
         "EDIT_TITLE": "Edit Product",
         "SUBTITLE": "Fill nutrition and details to save",
         "NAME": "Name",
@@ -730,6 +730,10 @@
         "SAVE_BUTTON": "Save Changes",
         "ADD_BUTTON": "Add Product",
         "CANCEL_BUTTON": "Cancel",
+        "LEAVE_CONFIRM_TITLE": "Unsaved changes",
+        "LEAVE_CONFIRM_MESSAGE": "Entered data will be lost. Leave this page?",
+        "LEAVE_CONFIRM_BUTTON": "Leave",
+        "LEAVE_STAY_BUTTON": "Stay",
         "DELETE_BUTTON": "Delete",
         "DELETE_CONFIRM": "Are you sure you want to delete this product?",
         "DELETE_ERROR": "Unable to delete the product. Please try again."

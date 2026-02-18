@@ -1,9 +1,21 @@
 ﻿<div class="product-manage" fdPageContainer>
-    <fd-page-header
-        class="product-manage__header"
-        [title]="product() ? ('PRODUCT_MANAGE.EDIT_TITLE' | translate) : ('PRODUCT_MANAGE.ADD_TITLE' | translate)"
-        [subtitle]="'PRODUCT_MANAGE.SUBTITLE' | translate"
-    />
+    <header class="product-manage__header">
+        <div class="product-manage__title-row">
+            <fd-ui-button
+                type="button"
+                class="product-manage__header-back"
+                variant="secondary"
+                fill="outline"
+                icon="arrow_back"
+                [ariaLabel]="'PRODUCT_MANAGE.CANCEL_BUTTON' | translate"
+                (click)="onCancel()"
+            />
+            <h1 class="product-manage__title">
+                {{ product() ? ('PRODUCT_MANAGE.EDIT_TITLE' | translate) : ('PRODUCT_MANAGE.ADD_TITLE' | translate) }}
+            </h1>
+        </div>
+        <p class="product-manage__subtitle">{{ 'PRODUCT_MANAGE.SUBTITLE' | translate }}</p>
+    </header>
 
     <form class="product-manage__form" [formGroup]="productForm" (ngSubmit)="onSubmit()">
         <div class="product-manage__grid">
@@ -264,6 +276,7 @@
                         <div class="product-manage__footer-actions">
                             <fd-ui-button
                                 type="button"
+                                class="product-manage__cancel-button"
                                 fill="outline"
                                 variant="primary"
                                 icon="arrow_back"

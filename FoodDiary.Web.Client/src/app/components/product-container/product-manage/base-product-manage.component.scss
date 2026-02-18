@@ -6,8 +6,9 @@
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    gap: $gap-l;
+    gap: 0;
     position: relative;
+    padding: 0 !important;
 
     @media (max-width: 1100px) {
         --fd-layout-page-content-max-width: 100%;
@@ -24,10 +25,58 @@
 
     &__header {
         margin-bottom: 0;
+        padding: var(--fd-layout-page-top-padding, 10px) var(--fd-layout-page-horizontal-padding) 0;
     }
 
     &__title {
         margin: 0;
+        font-size: var(--fd-page-title-size, 2rem);
+        line-height: var(--fd-page-title-line-height, 1.2);
+        font-weight: var(--fd-page-title-weight, 700);
+        color: $color-text-main;
+    }
+
+    &__subtitle {
+        margin: 0;
+        font-size: var(--fd-page-subtitle-size, 1rem);
+        line-height: var(--fd-page-subtitle-line-height, 1.5);
+        font-weight: var(--fd-page-subtitle-weight, 500);
+        color: $color-text-additional;
+    }
+
+    &__title-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    &__header-back {
+        --fd-button-border-radius: 12px;
+        --fd-button-padding-x: 0;
+        --fd-button-padding-y: 0;
+        display: none;
+
+        ::ng-deep .fd-ui-button,
+        ::ng-deep button {
+            width: 36px;
+            height: 36px;
+            min-width: 36px;
+            padding: 0;
+            border: none;
+            background: transparent;
+            box-shadow: none;
+            color: $color-text-main;
+        }
+
+        ::ng-deep .fd-ui-button:hover:not(:disabled),
+        ::ng-deep button:hover:not(:disabled),
+        ::ng-deep .fd-ui-button:active:not(:disabled),
+        ::ng-deep button:active:not(:disabled) {
+            border: none;
+            background: transparent;
+            box-shadow: none;
+            color: $color-text-main;
+        }
     }
 
     &__delete-button {
@@ -64,6 +113,7 @@
         display: flex;
         flex-direction: column;
         gap: $gap-l;
+        padding: $gap-l var(--fd-layout-page-horizontal-padding) var(--fd-layout-page-vertical-padding);
     }
 
     &__grid {
@@ -422,8 +472,7 @@
     }
 
     &__footer-actions {
-        display: grid;
-        grid-template-columns: max-content max-content minmax(0, 1fr);
+        display: flex;
         gap: $gap-m;
         align-items: center;
         width: 100%;
@@ -431,7 +480,11 @@
 
     &__action-button {
         min-width: 0;
-        width: 100%;
+        flex: 1 1 auto;
+    }
+
+    &__cancel-button {
+        flex: 0 0 auto;
     }
 
     &__action-button--add {
@@ -467,9 +520,47 @@
         color: $color-no-results;
     }
 
-    @media #{$media-mobile} {
+    @media #{$media-tablet} {
         &__header {
             align-items: flex-start;
+            padding: 10px 12px 8px;
+            margin: 0;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.22);
+            background: #f8fafc;
+            --fd-layout-page-background: #f8fafc;
+        }
+
+        &__title {
+            font-size: 1.65rem;
+            line-height: 1.1;
+        }
+
+        &__header-back {
+            display: inline-flex;
+        }
+
+        &__subtitle {
+            font-size: 0.8rem;
+            line-height: 1.3;
+            margin-top: 4px;
+        }
+
+        &__form {
+            padding: 10px 12px 12px;
+        }
+
+        &__cancel-button {
+            display: none;
+        }
+    }
+
+    @media #{$media-mobile} {
+        &__header {
+            --fd-layout-page-background: #f8fafc;
+        }
+
+        &__title-row {
+            gap: 8px;
         }
 
         &__hero {
@@ -495,7 +586,8 @@
         }
 
         &__footer-actions {
-            grid-template-columns: 1fr;
+            flex-direction: column;
+            align-items: stretch;
         }
     }
 
