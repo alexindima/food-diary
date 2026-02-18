@@ -347,6 +347,13 @@ $fd-button-tokens: (
   --fd-color-nutrition-carbs-fill: rgba(15, 118, 110, 0.14);
   --fd-color-nutrition-fiber-fill: rgba(126, 34, 206, 0.14);
   --fd-color-nutrition-alcohol-fill: rgba(100, 116, 139, 0.10);
+  --fd-color-nutrition-macro-bar-bg: rgba(148, 163, 184, 0.18);
+  --fd-color-nutrition-error-border: rgba(239, 68, 68, 0.2);
+  --fd-color-nutrition-error-bg: rgba(254, 226, 226, 0.7);
+  --fd-color-nutrition-error-text: #b91c1c;
+  --fd-color-nutrition-warning-border: rgba(245, 158, 11, 0.3);
+  --fd-color-nutrition-warning-bg: rgba(255, 251, 235, 0.9);
+  --fd-color-nutrition-warning-text: #92400e;
   --fd-color-dialog-surface:       #FFFFFF;
   --fd-color-dialog-surface-muted: #F8FAFF;
   --fd-color-dialog-border:        rgba(17, 24, 39, 0.08);

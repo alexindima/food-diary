@@ -24,7 +24,7 @@
         border-radius: 999px;
         overflow: hidden;
         display: flex;
-        background: rgba(148, 163, 184, 0.18);
+        background: var(--fd-color-nutrition-macro-bar-bg);
     }
 
     &__macro-bar-segment {
@@ -36,9 +36,9 @@
         margin-top: 0;
         padding: 8px 12px;
         border-radius: 12px;
-        border: 1px solid rgba(239, 68, 68, 0.2);
-        background: rgba(254, 226, 226, 0.7);
-        color: #b91c1c;
+        border: 1px solid var(--fd-color-nutrition-error-border);
+        background: var(--fd-color-nutrition-error-bg);
+        color: var(--fd-color-nutrition-error-text);
         font-size: 0.85rem;
         line-height: 1.4;
         display: grid;
@@ -53,9 +53,9 @@
 
     &__warning {
         border-radius: 14px;
-        border: 1px solid rgba(245, 158, 11, 0.3);
-        background: rgba(255, 251, 235, 0.9);
-        color: #92400e;
+        border: 1px solid var(--fd-color-nutrition-warning-border);
+        background: var(--fd-color-nutrition-warning-bg);
+        color: var(--fd-color-nutrition-warning-text);
         padding: 12px 14px;
         font-size: 0.9rem;
         line-height: 1.4;
