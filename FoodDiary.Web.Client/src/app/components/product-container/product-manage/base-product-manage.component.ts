@@ -49,6 +49,7 @@ import {
 import { AuthService } from '../../../services/auth.service';
 import { PremiumRequiredDialogComponent } from '../../shared/premium-required-dialog/premium-required-dialog.component';
 import { NutritionEditorComponent } from '../../shared/nutrition-editor/nutrition-editor.component';
+import { ManageHeaderComponent } from '../../shared/manage-header/manage-header.component';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: FD_VALIDATION_ERRORS,
@@ -81,6 +82,7 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
         FdPageContainerDirective,
         ImageUploadFieldComponent,
         NutritionEditorComponent,
+        ManageHeaderComponent,
     ],
 })
 export class BaseProductManageComponent implements OnInit {

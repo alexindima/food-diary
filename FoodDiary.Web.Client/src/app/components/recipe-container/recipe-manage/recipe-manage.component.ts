@@ -36,12 +36,12 @@ import { FdUiSegmentedToggleComponent, FdUiSegmentedToggleOption } from 'fd-ui-k
 import { CommonModule } from '@angular/common';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiDialogRef } from 'fd-ui-kit/material';
-import { PageHeaderComponent } from '../../shared/page-header/page-header.component';
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
 import { ImageUploadFieldComponent } from '../../shared/image-upload-field/image-upload-field.component';
 import { ImageSelection } from '../../../types/image-upload.data';
 import { NutritionCalculationService } from '../../../services/nutrition-calculation.service';
 import { NutritionEditorComponent } from '../../shared/nutrition-editor/nutrition-editor.component';
+import { ManageHeaderComponent } from '../../shared/manage-header/manage-header.component';
 
 @Component({
     selector: 'fd-recipe-manage',
@@ -56,7 +56,7 @@ import { NutritionEditorComponent } from '../../shared/nutrition-editor/nutritio
         FdUiTextareaComponent,
         FdUiSelectComponent,
         FdUiSegmentedToggleComponent,
-        PageHeaderComponent,
+        ManageHeaderComponent,
         FdPageContainerDirective,
         ImageUploadFieldComponent,
         NutritionEditorComponent,

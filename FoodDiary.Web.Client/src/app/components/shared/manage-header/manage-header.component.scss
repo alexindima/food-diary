@@ -1,0 +1,100 @@
+@use 'variables' as variables;
+
+:host {
+    display: block;
+    width: 100%;
+}
+
+.fd-manage-header {
+    margin-bottom: 0;
+    padding: var(--fd-layout-page-top-padding, 10px) var(--fd-layout-page-horizontal-padding) 0;
+}
+
+.fd-manage-header__top-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.fd-manage-header__title {
+    margin: 0;
+    font-size: var(--fd-page-title-size, 2rem);
+    line-height: var(--fd-page-title-line-height, 1.2);
+    font-weight: var(--fd-page-title-weight, 700);
+    color: variables.$color-text-main;
+}
+
+.fd-manage-header__subtitle {
+    margin: 0;
+    font-size: var(--fd-page-subtitle-size, 1rem);
+    line-height: var(--fd-page-subtitle-line-height, 1.5);
+    font-weight: var(--fd-page-subtitle-weight, 500);
+    color: variables.$color-text-additional;
+}
+
+.fd-manage-header__actions {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.fd-manage-header__back {
+    --fd-button-border-radius: 12px;
+    --fd-button-padding-x: 0;
+    --fd-button-padding-y: 0;
+}
+
+:host(.fd-manage-header--mobile-back-only) .fd-manage-header__back {
+    display: none;
+}
+
+.fd-manage-header__back {
+    ::ng-deep .fd-ui-button,
+    ::ng-deep button {
+        width: 36px;
+        height: 36px;
+        min-width: 36px;
+        padding: 0;
+        border: none;
+        background: transparent;
+        box-shadow: none;
+        color: variables.$color-text-main;
+    }
+
+    ::ng-deep .fd-ui-button:hover:not(:disabled),
+    ::ng-deep button:hover:not(:disabled),
+    ::ng-deep .fd-ui-button:active:not(:disabled),
+    ::ng-deep button:active:not(:disabled) {
+        border: none;
+        background: transparent;
+        box-shadow: none;
+        color: variables.$color-text-main;
+    }
+}
+
+@media #{variables.$media-tablet} {
+    .fd-manage-header {
+        align-items: flex-start;
+        padding: 10px 12px 8px;
+        margin: 0;
+        border-bottom: 1px solid var(--fd-page-header-mobile-border-color);
+        background: var(--fd-page-header-mobile-background);
+        --fd-layout-page-background: var(--fd-page-header-mobile-background);
+    }
+
+    .fd-manage-header__title {
+        font-size: 1.65rem;
+        line-height: 1.1;
+    }
+
+    :host(.fd-manage-header--mobile-back-only) .fd-manage-header__back {
+        display: inline-flex;
+    }
+
+    .fd-manage-header__subtitle {
+        font-size: 0.8rem;
+        line-height: 1.3;
+        margin-top: 4px;
+    }
+}

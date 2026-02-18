@@ -60,7 +60,6 @@ import {
     ConsumptionManageSuccessDialogComponent,
     ConsumptionManageSuccessDialogData,
 } from './success-dialog/consumption-manage-success-dialog.component';
-import { PageHeaderComponent } from '../../shared/page-header/page-header.component';
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
 import { ImageUploadFieldComponent } from '../../shared/image-upload-field/image-upload-field.component';
 import { ImageSelection } from '../../../types/image-upload.data';
@@ -73,6 +72,7 @@ import { AuthService } from '../../../services/auth.service';
 import { PremiumRequiredDialogComponent } from '../../shared/premium-required-dialog/premium-required-dialog.component';
 import { NutritionCalculationService } from '../../../services/nutrition-calculation.service';
 import { NutritionEditorComponent } from '../../shared/nutrition-editor/nutrition-editor.component';
+import { ManageHeaderComponent } from '../../shared/manage-header/manage-header.component';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: FD_VALIDATION_ERRORS,
@@ -106,7 +106,7 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
         FdUiTextareaComponent,
         FdUiIconModule,
         FdUiFormErrorComponent,
-        PageHeaderComponent,
+        ManageHeaderComponent,
         FdPageContainerDirective,
         ImageUploadFieldComponent,
         NutritionEditorComponent,

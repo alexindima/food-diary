@@ -83,6 +83,8 @@ $fd-page-header-tokens: (
     subtitle-weight: 500,
     gap: 16px,
     actions-gap: 12px,
+    mobile-background: #f8fafc,
+    mobile-border-color: rgba(148, 163, 184, 0.22),
 );
 
 $fd-design-tokens: (
@@ -178,5 +180,7 @@ $fd-design-tokens: (
         --fd-page-subtitle-weight: #{fd-token(page-header, subtitle-weight)};
         --fd-page-header-gap: #{fd-token(page-header, gap)};
         --fd-page-actions-gap: #{fd-token(page-header, actions-gap)};
+        --fd-page-header-mobile-background: #{fd-token(page-header, mobile-background)};
+        --fd-page-header-mobile-border-color: #{fd-token(page-header, mobile-border-color)};
     }
 }

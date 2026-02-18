@@ -15,6 +15,7 @@ import { FdUiFormErrorComponent } from 'fd-ui-kit/form-error/fd-ui-form-error.co
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
 import { ImageUploadFieldComponent } from '../../../shared/image-upload-field/image-upload-field.component';
 import { NutritionEditorComponent } from '../../../shared/nutrition-editor/nutrition-editor.component';
+import { ManageHeaderComponent } from '../../../shared/manage-header/manage-header.component';
 
 @Component({
     selector: 'fd-product-add-dialog',
@@ -35,6 +36,7 @@ import { NutritionEditorComponent } from '../../../shared/nutrition-editor/nutri
         FdPageContainerDirective,
         ImageUploadFieldComponent,
         NutritionEditorComponent,
+        ManageHeaderComponent,
     ]
 })
 export class ProductAddDialogComponent extends BaseProductManageComponent {

@@ -25,58 +25,6 @@
 
     &__header {
         margin-bottom: 0;
-        padding: var(--fd-layout-page-top-padding, 10px) var(--fd-layout-page-horizontal-padding) 0;
-    }
-
-    &__title {
-        margin: 0;
-        font-size: var(--fd-page-title-size, 2rem);
-        line-height: var(--fd-page-title-line-height, 1.2);
-        font-weight: var(--fd-page-title-weight, 700);
-        color: variables.$color-text-main;
-    }
-
-    &__subtitle {
-        margin: 0;
-        font-size: var(--fd-page-subtitle-size, 1rem);
-        line-height: var(--fd-page-subtitle-line-height, 1.5);
-        font-weight: var(--fd-page-subtitle-weight, 500);
-        color: variables.$color-text-additional;
-    }
-
-    &__title-row {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-
-    &__header-back {
-        --fd-button-border-radius: 12px;
-        --fd-button-padding-x: 0;
-        --fd-button-padding-y: 0;
-        display: none;
-
-        ::ng-deep .fd-ui-button,
-        ::ng-deep button {
-            width: 36px;
-            height: 36px;
-            min-width: 36px;
-            padding: 0;
-            border: none;
-            background: transparent;
-            box-shadow: none;
-            color: variables.$color-text-main;
-        }
-
-        ::ng-deep .fd-ui-button:hover:not(:disabled),
-        ::ng-deep button:hover:not(:disabled),
-        ::ng-deep .fd-ui-button:active:not(:disabled),
-        ::ng-deep button:active:not(:disabled) {
-            border: none;
-            background: transparent;
-            box-shadow: none;
-            color: variables.$color-text-main;
-        }
     }
 
     &__delete-button {
@@ -461,30 +409,6 @@
     }
 
     @media #{variables.$media-tablet} {
-        &__header {
-            align-items: flex-start;
-            padding: 10px 12px 8px;
-            margin: 0;
-            border-bottom: 1px solid rgba(148, 163, 184, 0.22);
-            background: #f8fafc;
-            --fd-layout-page-background: #f8fafc;
-        }
-
-        &__title {
-            font-size: 1.65rem;
-            line-height: 1.1;
-        }
-
-        &__header-back {
-            display: inline-flex;
-        }
-
-        &__subtitle {
-            font-size: 0.8rem;
-            line-height: 1.3;
-            margin-top: 4px;
-        }
-
         &__form {
             padding: 10px 12px 12px;
         }
@@ -495,14 +419,6 @@
     }
 
     @media #{variables.$media-mobile} {
-        &__header {
-            --fd-layout-page-background: #f8fafc;
-        }
-
-        &__title-row {
-            gap: 8px;
-        }
-
         &__hero {
             grid-template-columns: 1fr;
             grid-template-rows: auto;

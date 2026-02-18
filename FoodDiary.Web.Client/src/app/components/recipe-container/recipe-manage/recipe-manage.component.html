@@ -1,8 +1,10 @@
 ﻿<div class="recipe-manage" fdPageContainer>
-  <fd-page-header
+  <fd-manage-header
     class="recipe-manage__header"
     [title]="recipe() ? ('RECIPE_MANAGE.EDIT_TITLE' | translate) : ('RECIPE_MANAGE.ADD_TITLE' | translate)"
     [subtitle]="'RECIPE_MANAGE.SUBTITLE' | translate"
+    [backAriaLabel]="'PRODUCT_MANAGE.CANCEL_BUTTON' | translate"
+    (back)="onCancel()"
   />
 
   <form class="recipe-manage__form" [formGroup]="recipeForm" (ngSubmit)="onSubmit()">
@@ -348,6 +350,7 @@
             <div class="recipe-manage__footer-actions">
               <fd-ui-button
                 type="button"
+                class="recipe-manage__cancel-button"
                 variant="secondary"
                 fill="outline"
                 icon="arrow_back"

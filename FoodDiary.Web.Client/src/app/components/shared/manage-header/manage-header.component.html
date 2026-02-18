@@ -1,0 +1,20 @@
+<header class="fd-manage-header">
+    <div class="fd-manage-header__top-row">
+        <fd-ui-button
+            type="button"
+            class="fd-manage-header__back"
+            variant="secondary"
+            fill="outline"
+            icon="arrow_back"
+            [ariaLabel]="backAriaLabel()"
+            (click)="onBackClick()"
+        />
+        <h1 class="fd-manage-header__title">{{ title() }}</h1>
+        <div class="fd-manage-header__actions">
+            <ng-content select="[fdManageHeaderActions]"></ng-content>
+        </div>
+    </div>
+    @if (subtitle()) {
+        <p class="fd-manage-header__subtitle">{{ subtitle() }}</p>
+    }
+</header>

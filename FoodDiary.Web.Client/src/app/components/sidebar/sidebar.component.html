@@ -189,6 +189,10 @@
     </div>
 </nav>
 
+@if (isMobileSheetOpen()) {
+    <div class="sidebar-mobile__backdrop" aria-hidden="true" (click)="closeMobileMenus()"></div>
+}
+
 @if (isMobileFoodOpen()) {
     <div class="sidebar-mobile__sheet" role="dialog" [attr.aria-label]="'SIDEBAR.FOOD_TRACKING' | translate">
         <a routerLink="/meals" routerLinkActive="is-active" (click)="closeMobileMenus()">

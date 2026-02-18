@@ -45,6 +45,9 @@ export class SidebarComponent {
     protected isMobileBodyOpen = signal(false);
     protected isMobileReportsOpen = signal(false);
     protected isMobileUserOpen = signal(false);
+    protected readonly isMobileSheetOpen = computed(() =>
+        this.isMobileFoodOpen() || this.isMobileBodyOpen() || this.isMobileReportsOpen() || this.isMobileUserOpen(),
+    );
     protected readonly dailyConsumedKcal = signal(0);
     protected readonly dailyGoalKcal = signal(0);
     protected readonly dailyProgressPercent = computed(() => {

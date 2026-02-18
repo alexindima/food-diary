@@ -1,8 +1,10 @@
 ﻿<div class="consumption-manage" fdPageContainer>
-    <fd-page-header
+    <fd-manage-header
         class="consumption-manage__header"
         [title]="consumption() ? ('CONSUMPTION_MANAGE.EDIT_TITLE' | translate) : ('CONSUMPTION_MANAGE.ADD_TITLE' | translate)"
         [subtitle]="'CONSUMPTION_MANAGE.SUBTITLE' | translate"
+        [backAriaLabel]="'PRODUCT_MANAGE.CANCEL_BUTTON' | translate"
+        (back)="onCancel()"
     />
 
     <form class="consumption-manage__form" [formGroup]="consumptionForm" (ngSubmit)="onSubmit()">
@@ -353,6 +355,7 @@
                         <div class="consumption-manage__footer-actions">
                             <fd-ui-button
                                 type="button"
+                                class="consumption-manage__cancel-button"
                                 fill="outline"
                                 variant="primary"
                                 icon="arrow_back"
