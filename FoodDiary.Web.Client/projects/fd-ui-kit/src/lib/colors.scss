@@ -333,6 +333,20 @@ $fd-button-tokens: (
   --fd-color-chart-fats:     #F2C94C;
   --fd-color-chart-carbs:    #27AE60;
   --fd-color-chart-fiber:    #9B51E0;
+
+  --fd-color-nutrition-calories: #E11D48;
+  --fd-color-nutrition-proteins: #0284C7;
+  --fd-color-nutrition-fats: #C2410C;
+  --fd-color-nutrition-carbs: #0F766E;
+  --fd-color-nutrition-fiber: #7E22CE;
+  --fd-color-nutrition-alcohol: #64748B;
+
+  --fd-color-nutrition-calories-fill: rgba(225, 29, 72, 0.14);
+  --fd-color-nutrition-proteins-fill: rgba(2, 132, 199, 0.14);
+  --fd-color-nutrition-fats-fill: rgba(194, 65, 12, 0.14);
+  --fd-color-nutrition-carbs-fill: rgba(15, 118, 110, 0.14);
+  --fd-color-nutrition-fiber-fill: rgba(126, 34, 206, 0.14);
+  --fd-color-nutrition-alcohol-fill: rgba(100, 116, 139, 0.10);
   --fd-color-dialog-surface:       #FFFFFF;
   --fd-color-dialog-surface-muted: #F8FAFF;
   --fd-color-dialog-border:        rgba(17, 24, 39, 0.08);

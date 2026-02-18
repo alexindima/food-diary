@@ -1,4 +1,4 @@
-@use 'variables' as *;
+﻿@use 'variables' as variables;
 
 .meals-preview {
     display: flex;
@@ -18,7 +18,7 @@
     margin: 0;
     font-size: 1.5rem;
     font-weight: 600;
-    color: $color-text-main;
+    color: variables.$color-text-main;
 }
 
 .meals-preview__list {
@@ -32,7 +32,7 @@
     border-radius: 16px;
     padding: 24px;
     text-align: center;
-    color: $color-text-additional;
+    color: variables.$color-text-additional;
     font-size: 0.95rem;
 }
 
@@ -45,7 +45,7 @@
     border: 1px dashed rgba(37, 99, 235, 0.3);
     border-radius: 18px;
     background: rgba(37, 99, 235, 0.03);
-    color: $color-text-main;
+    color: variables.$color-text-main;
     cursor: pointer;
     transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease, background 0.15s ease;
     width: 100%;
@@ -104,3 +104,4 @@
 .meals-preview__meal-card {
     width: 100%;
 }
+

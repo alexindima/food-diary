@@ -45,7 +45,6 @@ import { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiSegmentedToggleComponent, FdUiSegmentedToggleOption } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle.component';
 import { FdUiIconModule } from 'fd-ui-kit/material';
-import { FdUiNutrientInputComponent } from 'fd-ui-kit/nutrient-input/fd-ui-nutrient-input.component';
 import { FdUiDateInputComponent } from 'fd-ui-kit/date-input/fd-ui-date-input.component';
 import { FdUiTimeInputComponent } from 'fd-ui-kit/time-input/fd-ui-time-input.component';
 import { FdUiSelectComponent } from 'fd-ui-kit/select/fd-ui-select.component';
@@ -73,6 +72,7 @@ import { UserAiUsageResponse } from '../../../types/ai.data';
 import { AuthService } from '../../../services/auth.service';
 import { PremiumRequiredDialogComponent } from '../../shared/premium-required-dialog/premium-required-dialog.component';
 import { NutritionCalculationService } from '../../../services/nutrition-calculation.service';
+import { NutritionEditorComponent } from '../../shared/nutrition-editor/nutrition-editor.component';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: FD_VALIDATION_ERRORS,
@@ -100,7 +100,6 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
         FdUiInputComponent,
         FdUiButtonComponent,
         FdUiSegmentedToggleComponent,
-        FdUiNutrientInputComponent,
         FdUiDateInputComponent,
         FdUiTimeInputComponent,
         FdUiSelectComponent,
@@ -110,6 +109,7 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
         PageHeaderComponent,
         FdPageContainerDirective,
         ImageUploadFieldComponent,
+        NutritionEditorComponent,
     ],
 })
 export class BaseConsumptionManageComponent implements OnInit {
@@ -125,30 +125,14 @@ export class BaseConsumptionManageComponent implements OnInit {
     private readonly router = inject(Router);
     private readonly route = inject(ActivatedRoute);
     private readonly recipeServingWeightCache = new Map<string, number | null>();
-    private readonly nutrientFillAlpha = 0.14;
     private readonly calorieMismatchThreshold = 0.2;
-    private readonly nutrientPalette = {
-        calories: '#E11D48',
-        proteins: '#0284C7',
-        fats: '#C2410C',
-        carbs: '#0F766E',
-        fiber: '#7E22CE',
-        alcohol: '#64748B',
-    };
-    public readonly nutrientFillColors = {
-        calories: this.applyAlpha(this.nutrientPalette.calories, this.nutrientFillAlpha),
-        fiber: this.applyAlpha(this.nutrientPalette.fiber, this.nutrientFillAlpha),
-        proteins: this.applyAlpha(this.nutrientPalette.proteins, this.nutrientFillAlpha),
-        fats: this.applyAlpha(this.nutrientPalette.fats, this.nutrientFillAlpha),
-        carbs: this.applyAlpha(this.nutrientPalette.carbs, this.nutrientFillAlpha),
-        alcohol: this.applyAlpha(this.nutrientPalette.alcohol, this.nutrientFillAlpha),
-    };
-    public readonly nutrientTextColors = {
-        calories: this.nutrientPalette.calories,
-        fiber: this.nutrientPalette.fiber,
-        proteins: this.nutrientPalette.proteins,
-        fats: this.nutrientPalette.fats,
-        carbs: this.nutrientPalette.carbs,
+    public readonly nutritionControlNames = {
+        calories: 'manualCalories',
+        proteins: 'manualProteins',
+        fats: 'manualFats',
+        carbs: 'manualCarbs',
+        fiber: 'manualFiber',
+        alcohol: 'manualAlcohol',
     };
 
     public consumption = input<Consumption | null>();
@@ -666,10 +650,6 @@ export class BaseConsumptionManageComponent implements OnInit {
 
         this.nutritionMode = resolvedMode;
         this.consumptionForm.controls.isNutritionAutoCalculated.setValue(resolvedMode === 'auto');
-    }
-
-    public getMacroColor(key: MacroKey): string {
-        return this.nutrientTextColors[key];
     }
 
     public caloriesError(): string | null {
@@ -1196,17 +1176,6 @@ export class BaseConsumptionManageComponent implements OnInit {
         });
 
         items.updateValueAndValidity({ emitEvent: false });
-    }
-
-    private applyAlpha(color: string, alpha: number): string {
-        const trimmed = color.replace('#', '');
-        const r = Number.parseInt(trimmed.slice(0, 2), 16);
-        const g = Number.parseInt(trimmed.slice(2, 4), 16);
-        const b = Number.parseInt(trimmed.slice(4, 6), 16);
-        if ([r, g, b].some(channel => Number.isNaN(channel))) {
-            return color;
-        }
-        return `rgba(${r}, ${g}, ${b}, ${alpha})`;
     }
 
     private getOptionalManualNutritionControls(): Array<FormControl<number | null>> {

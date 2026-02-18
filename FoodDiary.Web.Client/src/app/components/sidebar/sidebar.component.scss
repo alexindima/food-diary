@@ -1,4 +1,4 @@
-@use 'variables' as *;
+﻿@use 'variables' as variables;
 
 .sidebar {
     position: sticky;
@@ -468,3 +468,4 @@
         display: none;
     }
 }
+

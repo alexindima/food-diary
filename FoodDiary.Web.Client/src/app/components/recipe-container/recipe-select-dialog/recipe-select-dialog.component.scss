@@ -1,9 +1,9 @@
-﻿@use 'variables' as *;
+﻿@use 'variables' as variables;
 
 .recipe-select {
     display: flex;
     flex-direction: column;
-    gap: $gap-m;
+    gap: variables.$gap-m;
 
     &__header {
         display: flex;
@@ -20,10 +20,10 @@
     &__controls {
         display: grid;
         grid-template-columns: 1fr auto;
-        gap: $gap-s;
+        gap: variables.$gap-s;
         align-items: center;
 
-        @media #{$media-mobile} {
+        @media #{variables.$media-mobile} {
             grid-template-columns: 1fr;
         }
     }
@@ -63,13 +63,13 @@
     &__list {
         display: flex;
         flex-direction: column;
-        gap: $gap-s;
+        gap: variables.$gap-s;
     }
 
     &__item {
         display: grid;
         grid-template-columns: auto 1fr auto;
-        gap: $gap-s;
+        gap: variables.$gap-s;
         align-items: center;
         padding: 12px 14px;
         border-radius: 16px;
@@ -106,7 +106,7 @@
 
     &__name {
         font-weight: 700;
-        color: $color-text-main;
+        color: variables.$color-text-main;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -114,7 +114,7 @@
 
     &__meta {
         font-size: 0.85rem;
-        color: $color-text-additional;
+        color: variables.$color-text-additional;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -128,23 +128,24 @@
     &__footer {
         display: flex;
         justify-content: flex-end;
-        padding-top: $gap-s;
+        padding-top: variables.$gap-s;
     }
 
     &__pagination {
-        margin-top: $gap-s;
+        margin-top: variables.$gap-s;
     }
 
     &__no-results {
         text-align: center;
-        color: $color-text-additional;
+        color: variables.$color-text-additional;
         display: grid;
-        gap: $gap-xs;
+        gap: variables.$gap-xs;
         justify-items: center;
     }
 
     &__no-results-icon {
         font-size: 2rem;
-        color: $color-no-results;
+        color: variables.$color-no-results;
     }
 }
+

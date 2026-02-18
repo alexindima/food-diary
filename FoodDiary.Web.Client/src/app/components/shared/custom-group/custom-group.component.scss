@@ -1,14 +1,14 @@
-@use 'variables' as *;
+﻿@use 'variables' as variables;
 
 .custom-group-wrapper {
-    padding-top: $gap-xs;
+    padding-top: variables.$gap-xs;
     font-family: "Open Sans", sans-serif;
 }
 
 .custom-group {
     border: 2px solid #d9d9d9;
-    border-radius: $border-radius-m;
-    padding: $gap-l;
+    border-radius: variables.$border-radius-m;
+    padding: variables.$gap-l;
     position: relative;
     background-color: var(--custom-group-background, transparent);
 }
@@ -18,8 +18,8 @@
     top: -11px;
     background: white;
     border: 2px solid #d9d9d9;
-    border-radius: $border-radius-s;
-    padding: 0 $gap-xs;
+    border-radius: variables.$border-radius-s;
+    padding: 0 variables.$gap-xs;
     font-weight: bold;
     font-size: 10px;
     line-height: 20px;
@@ -31,7 +31,7 @@
     left: 10px;
     background: white;
     border: 2px solid #d9d9d9;
-    border-radius: $border-radius-s;
+    border-radius: variables.$border-radius-s;
     padding: 0;
     width: 24px;
     font-weight: bold;
@@ -44,8 +44,8 @@
     top: -11px;
     right: 15px;
     background: #ff7043;
-    border-radius: $border-radius-s;
-    padding: 0 $gap-xs;
+    border-radius: variables.$border-radius-s;
+    padding: 0 variables.$gap-xs;
     font-weight: bold;
     font-size: 10px;
     line-height: 20px;
@@ -61,4 +61,5 @@
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
 

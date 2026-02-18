@@ -326,139 +326,27 @@
                         [title]="'PRODUCT_MANAGE.NUTRITION_VALUE' | translate"
                     >
                         <div class="consumption-manage__nutrition">
-                            <fd-ui-segmented-toggle
-                                class="consumption-manage__nutrition-toggle"
-                                [options]="nutritionModeOptions"
-                                [selectedValue]="nutritionMode"
-                                (selectedValueChange)="onNutritionModeChange($event)"
-                                [ariaLabel]="'CONSUMPTION_MANAGE.NUTRITION_MODE.ARIA' | translate"
-                            />
-                            <fd-ui-nutrient-input
-                                class="consumption-manage__nutrition-input consumption-manage__nutrition-input--calories"
-                                formControlName="manualCalories"
-                                type="number"
-                                size="lg"
-                                icon="local_fire_department"
-                                [label]="'PRODUCT_MANAGE.CALORIES' | translate"
-                                [unitLabel]="'GENERAL.UNITS.KCAL' | translate"
-                                placeholder="0"
-                                [required]="true"
+                            <fd-nutrition-editor
+                                [formGroup]="consumptionForm"
+                                [controlNames]="nutritionControlNames"
+                                [macroState]="macroBarState()"
                                 [readonly]="consumptionForm.controls.isNutritionAutoCalculated.value"
-                                [tintColor]="nutrientFillColors.calories"
-                                [textColor]="nutrientTextColors.calories"
-                            />
-                            @if (caloriesError()) {
-                                <div class="consumption-manage__nutrition-errors">
-                                    {{ caloriesError() }}
-                                </div>
-                            }
-
-                            <div class="consumption-manage__nutrition-grid">
-                                <fd-ui-nutrient-input
-                                    class="consumption-manage__nutrition-input consumption-manage__nutrition-input--macro consumption-manage__nutrition-input--proteins"
-                                    formControlName="manualProteins"
-                                    type="number"
-                                    size="md"
-                                    icon="fitness_center"
-                                    [label]="'PRODUCT_MANAGE.PROTEINS' | translate"
-                                    [unitLabel]="'GENERAL.UNITS.G' | translate"
-                                    placeholder="0"
-                                    [required]="true"
-                                    [readonly]="consumptionForm.controls.isNutritionAutoCalculated.value"
-                                    [tintColor]="nutrientFillColors.proteins"
-                                    [textColor]="nutrientTextColors.proteins"
+                                [caloriesError]="caloriesError()"
+                                [macrosError]="macrosError()"
+                                [showManualHint]="!consumptionForm.controls.isNutritionAutoCalculated.value"
+                                [manualHintKey]="'CONSUMPTION_MANAGE.MANUAL_NUTRITION_HINT'"
+                                [warning]="nutritionWarning()"
+                            >
+                                <fd-ui-segmented-toggle
+                                    nutrition-before
+                                    class="consumption-manage__nutrition-toggle"
+                                    [options]="nutritionModeOptions"
+                                    [selectedValue]="nutritionMode"
+                                    (selectedValueChange)="onNutritionModeChange($event)"
+                                    [ariaLabel]="'CONSUMPTION_MANAGE.NUTRITION_MODE.ARIA' | translate"
                                 />
-                                <fd-ui-nutrient-input
-                                    class="consumption-manage__nutrition-input consumption-manage__nutrition-input--macro consumption-manage__nutrition-input--fats"
-                                    formControlName="manualFats"
-                                    type="number"
-                                    size="md"
-                                    icon="opacity"
-                                    [label]="'PRODUCT_MANAGE.FATS' | translate"
-                                    [unitLabel]="'GENERAL.UNITS.G' | translate"
-                                    placeholder="0"
-                                    [required]="true"
-                                    [readonly]="consumptionForm.controls.isNutritionAutoCalculated.value"
-                                    [tintColor]="nutrientFillColors.fats"
-                                    [textColor]="nutrientTextColors.fats"
-                                />
-                                <fd-ui-nutrient-input
-                                    class="consumption-manage__nutrition-input consumption-manage__nutrition-input--macro consumption-manage__nutrition-input--carbs"
-                                    formControlName="manualCarbs"
-                                    type="number"
-                                    size="md"
-                                    icon="grain"
-                                    [label]="'PRODUCT_MANAGE.CARBS' | translate"
-                                    [unitLabel]="'GENERAL.UNITS.G' | translate"
-                                    placeholder="0"
-                                    [required]="true"
-                                    [readonly]="consumptionForm.controls.isNutritionAutoCalculated.value"
-                                    [tintColor]="nutrientFillColors.carbs"
-                                    [textColor]="nutrientTextColors.carbs"
-                                />
-                            </div>
-
-                            <div class="consumption-manage__macro-bar" aria-hidden="true">
-                                @if (!macroBarState().isEmpty) {
-                                    @for (segment of macroBarState().segments; track segment.key) {
-                                        <span
-                                            class="consumption-manage__macro-bar-segment"
-                                            [style.width.%]="segment.percent"
-                                            [style.backgroundColor]="getMacroColor(segment.key)"
-                                        ></span>
-                                    }
-                                }
-                            </div>
-
-                            <div class="consumption-manage__nutrition-grid consumption-manage__nutrition-grid--secondary">
-                                <fd-ui-nutrient-input
-                                    class="consumption-manage__nutrition-input consumption-manage__nutrition-input--macro consumption-manage__nutrition-input--fiber"
-                                    formControlName="manualFiber"
-                                    type="number"
-                                    size="md"
-                                    icon="spa"
-                                    [label]="'PRODUCT_MANAGE.FIBER' | translate"
-                                    [unitLabel]="'GENERAL.UNITS.G' | translate"
-                                    placeholder="0"
-                                    [required]="true"
-                                    [readonly]="consumptionForm.controls.isNutritionAutoCalculated.value"
-                                    [tintColor]="nutrientFillColors.fiber"
-                                    [textColor]="nutrientTextColors.fiber"
-                                />
-                                <fd-ui-nutrient-input
-                                    class="consumption-manage__nutrition-input consumption-manage__nutrition-input--alcohol"
-                                    formControlName="manualAlcohol"
-                                    type="number"
-                                    size="md"
-                                    icon="wine_bar"
-                                    variant="tinted"
-                                    [label]="'PRODUCT_MANAGE.ALCOHOL' | translate"
-                                    [unitLabel]="'GENERAL.UNITS.G' | translate"
-                                    placeholder="0"
-                                    [readonly]="consumptionForm.controls.isNutritionAutoCalculated.value"
-                                    [tintColor]="'rgba(148, 163, 184, 0.10)'"
-                                />
-                            </div>
-                            @if (macrosError()) {
-                                <div class="consumption-manage__nutrition-errors">
-                                    {{ macrosError() }}
-                                </div>
-                            }
+                            </fd-nutrition-editor>
                         </div>
-
-                        @if (!consumptionForm.controls.isNutritionAutoCalculated.value) {
-                            <p class="consumption-manage__nutrition-hint">
-                                {{ 'CONSUMPTION_MANAGE.MANUAL_NUTRITION_HINT' | translate }}
-                            </p>
-                        }
-                        @if (nutritionWarning(); as warning) {
-                            <div class="consumption-manage__nutrition-warning">
-                                {{ 'PRODUCT_MANAGE.CALORIES_MISMATCH_WARNING' | translate: {
-                                    expected: warning.expectedCalories,
-                                    actual: warning.actualCalories
-                                } }}
-                            </div>
-                        }
                     </fd-ui-card>
 
                     <div class="consumption-manage__actions-panel">

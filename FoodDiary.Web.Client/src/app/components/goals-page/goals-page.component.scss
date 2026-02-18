@@ -1,4 +1,4 @@
-@use 'variables' as *;
+﻿@use 'variables' as variables;
 
 :host {
     display: block;
@@ -161,7 +161,7 @@
         font-size: 0.8rem;
         letter-spacing: 0.08em;
         text-transform: uppercase;
-        color: $color-text-additional;
+        color: variables.$color-text-additional;
     }
 
     &__calorie-input {
@@ -203,7 +203,7 @@
     }
 
     &__ring-unit {
-        color: $color-text-additional;
+        color: variables.$color-text-additional;
         font-size: 0.95rem;
         font-weight: 600;
     }
@@ -268,7 +268,7 @@
 
     &__preset-label {
         font-weight: 700;
-        color: $color-text-additional;
+        color: variables.$color-text-additional;
     }
 
     &__preset-select {
@@ -352,7 +352,7 @@
     }
 
     &__macro-unit {
-        color: $color-text-additional;
+        color: variables.$color-text-additional;
         font-weight: 700;
         font-size: 0.9rem;
     }
@@ -445,7 +445,7 @@
 
     &__target-title {
         font-size: 0.95rem;
-        color: $color-text-additional;
+        color: variables.$color-text-additional;
         font-weight: 700;
         letter-spacing: 0.01em;
     }
@@ -464,7 +464,7 @@
     }
 
     &__target-unit {
-        color: $color-text-additional;
+        color: variables.$color-text-additional;
         font-weight: 700;
         font-size: 0.95rem;
     }
@@ -509,7 +509,7 @@
     }
 
     &__meta-label {
-        color: $color-text-additional;
+        color: variables.$color-text-additional;
         font-size: 0.95rem;
         font-weight: 600;
     }
@@ -562,3 +562,4 @@
         }
     }
 }
+

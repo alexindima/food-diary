@@ -1,0 +1,71 @@
+﻿@use 'variables' as variables;
+
+.nutrition-editor {
+    display: flex;
+    flex-direction: column;
+    gap: variables.$gap-m;
+
+    &__input {
+        width: 100%;
+    }
+
+    &__grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: variables.$gap-s;
+
+        &--secondary {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+
+    &__macro-bar {
+        height: 16px;
+        border-radius: 999px;
+        overflow: hidden;
+        display: flex;
+        background: rgba(148, 163, 184, 0.18);
+    }
+
+    &__macro-bar-segment {
+        height: 100%;
+        min-width: 6px;
+    }
+
+    &__errors {
+        margin-top: 0;
+        padding: 8px 12px;
+        border-radius: 12px;
+        border: 1px solid rgba(239, 68, 68, 0.2);
+        background: rgba(254, 226, 226, 0.7);
+        color: #b91c1c;
+        font-size: 0.85rem;
+        line-height: 1.4;
+        display: grid;
+        gap: 4px;
+    }
+
+    &__hint {
+        margin: 0;
+        font-size: 0.9rem;
+        color: variables.$color-text-additional;
+    }
+
+    &__warning {
+        border-radius: 14px;
+        border: 1px solid rgba(245, 158, 11, 0.3);
+        background: rgba(255, 251, 235, 0.9);
+        color: #92400e;
+        padding: 12px 14px;
+        font-size: 0.9rem;
+        line-height: 1.4;
+    }
+}
+
+@container (max-width: 359px) {
+    .nutrition-editor__grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+

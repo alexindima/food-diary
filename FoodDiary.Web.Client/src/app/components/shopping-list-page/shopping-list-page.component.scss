@@ -1,24 +1,24 @@
-@use 'variables' as *;
+﻿@use 'variables' as variables;
 
 .shopping-list {
     margin: 0 auto;
     box-sizing: border-box;
     font-size: 14px;
-    --fd-layout-page-section-spacing: $gap-m;
+    --fd-layout-page-section-spacing: variables.$gap-m;
     background: transparent;
     padding: 0;
     border-radius: 0;
     box-shadow: none;
 
     &__header .fd-page-header__actions {
-        gap: $gap-s;
+        gap: variables.$gap-s;
         width: 100%;
     }
 
     &__header-actions {
         display: grid;
         grid-template-columns: minmax(220px, 1fr) minmax(240px, 1.2fr) auto auto;
-        gap: $gap-s;
+        gap: variables.$gap-s;
         width: 100%;
         align-items: end;
     }
@@ -90,23 +90,23 @@
 
     &__loader {
         display: block;
-        margin: $gap-l auto;
+        margin: variables.$gap-l auto;
     }
 
     &__panel {
         display: flex;
         flex-direction: column;
-        gap: $gap-m;
+        gap: variables.$gap-m;
     }
 
     &__add-form {
         display: grid;
         grid-template-columns: minmax(200px, 1.4fr) 110px 140px minmax(160px, 1fr) auto;
-        gap: $gap-s;
+        gap: variables.$gap-s;
         align-items: end;
         background: #ffffff;
         border-radius: 16px;
-        padding: $gap-m;
+        padding: variables.$gap-m;
         box-shadow: 0 12px 30px rgba(15, 23, 42, 0.05);
 
         ::ng-deep .fd-ui-input,
@@ -118,15 +118,15 @@
     &__items {
         display: flex;
         flex-direction: column;
-        gap: $gap-xs;
+        gap: variables.$gap-xs;
     }
 
     &__item {
         display: grid;
         grid-template-columns: auto 1fr auto;
-        gap: $gap-s;
+        gap: variables.$gap-s;
         align-items: center;
-        padding: $gap-s $gap-m;
+        padding: variables.$gap-s variables.$gap-m;
         border-radius: 14px;
         background: #ffffff;
         border: 1px solid rgba(15, 23, 42, 0.06);
@@ -153,12 +153,12 @@
 
     &__item-name {
         font-weight: 700;
-        color: $color-text-main;
+        color: variables.$color-text-main;
     }
 
     &__item-meta {
         font-size: 0.85rem;
-        color: $color-text-additional;
+        color: variables.$color-text-additional;
     }
 
     &__item-remove {
@@ -170,7 +170,7 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        color: $color-text-additional;
+        color: variables.$color-text-additional;
         cursor: pointer;
         transition: background 0.2s ease;
 
@@ -184,13 +184,13 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: $gap-xs;
-        color: $color-text-additional;
+        gap: variables.$gap-xs;
+        color: variables.$color-text-additional;
         font-weight: 600;
-        padding: $gap-xl 0;
+        padding: variables.$gap-xl 0;
     }
 
-    @media #{$media-tablet} {
+    @media #{variables.$media-tablet} {
         --fd-layout-page-horizontal-padding: 0;
         --fd-layout-page-vertical-padding: 0;
 
@@ -246,3 +246,4 @@
         }
     }
 }
+

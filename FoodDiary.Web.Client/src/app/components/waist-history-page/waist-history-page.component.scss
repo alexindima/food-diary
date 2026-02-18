@@ -1,5 +1,5 @@
-@use 'mixins' as *;
-@use 'variables' as *;
+﻿@use 'mixins' as *;
+@use 'variables' as variables;
 
 .waist-history-page {
     display: flex;
@@ -54,7 +54,7 @@
     &__card--wht {
         display: flex;
         flex-direction: column;
-        gap: $gap-m;
+        gap: variables.$gap-m;
     }
 
     &__tabs {
@@ -169,18 +169,18 @@
     &__wht-top {
         display: flex;
         flex-direction: column;
-        gap: $gap-xs;
+        gap: variables.$gap-xs;
     }
 
     &__wht-note {
-        margin: 0 0 ($gap-xs);
+        margin: 0 0 (variables.$gap-xs);
         font-size: 0.9rem;
-        color: $color-text-additional;
+        color: variables.$color-text-additional;
     }
 
     &__wht-scale {
         position: relative;
-        margin-top: $gap-xs;
+        margin-top: variables.$gap-xs;
     }
 
     &__wht-segments {
@@ -255,12 +255,12 @@
     }
 
     &__wht-footer {
-        margin-top: $gap-s;
+        margin-top: variables.$gap-s;
         display: flex;
         justify-content: space-between;
         align-items: center;
         flex-wrap: wrap;
-        gap: $gap-xs;
+        gap: variables.$gap-xs;
     }
 
     &__wht-status {
@@ -292,7 +292,7 @@
 
     &__wht-description {
         margin: 0;
-        color: $color-text-additional;
+        color: variables.$color-text-additional;
         font-size: 0.9rem;
     }
 
@@ -310,5 +310,6 @@
 .waist-history-page__card--wht {
     display: flex;
     flex-direction: column;
-    gap: $gap-m;
+    gap: variables.$gap-m;
 }
+

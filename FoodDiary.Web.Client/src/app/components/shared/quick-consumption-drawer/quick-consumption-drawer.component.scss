@@ -1,4 +1,4 @@
-@use 'variables' as *;
+﻿@use 'variables' as variables;
 
 .quick-consumption {
     position: fixed;
@@ -33,11 +33,11 @@
 .quick-consumption__title {
     font-weight: 800;
     font-size: 1.05rem;
-    color: $color-text-main;
+    color: variables.$color-text-main;
 }
 
 .quick-consumption__subtitle {
-    color: $color-text-additional;
+    color: variables.$color-text-additional;
     font-weight: 600;
     font-size: 0.9rem;
 }
@@ -51,7 +51,7 @@
     display: grid;
     place-items: center;
     cursor: pointer;
-    color: $color-text-main;
+    color: variables.$color-text-main;
 
     mat-icon {
         font-size: 18px;
@@ -106,14 +106,14 @@
 
 .quick-consumption__name {
     font-weight: 700;
-    color: $color-text-main;
+    color: variables.$color-text-main;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 
 .quick-consumption__meta {
-    color: $color-text-additional;
+    color: variables.$color-text-additional;
     font-size: 0.9rem;
 }
 
@@ -172,7 +172,7 @@
     border-radius: 12px;
     background: #f7f9fb;
     border: 1px dashed rgba(15, 23, 42, 0.12);
-    color: $color-text-additional;
+    color: variables.$color-text-additional;
     font-weight: 600;
     text-align: center;
 }
@@ -184,3 +184,4 @@
         width: auto;
     }
 }
+

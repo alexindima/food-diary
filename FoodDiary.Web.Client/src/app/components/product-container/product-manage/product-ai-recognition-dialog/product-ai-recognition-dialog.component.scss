@@ -1,9 +1,9 @@
-@use 'variables' as *;
+﻿@use 'variables' as variables;
 
 .product-ai-dialog {
     display: flex;
     flex-direction: column;
-    gap: $gap-l;
+    gap: variables.$gap-l;
 }
 
 .product-ai-dialog__upload {
@@ -128,7 +128,7 @@
 
 .product-ai-dialog__status {
     font-size: 0.9rem;
-    color: $color-text-additional;
+    color: variables.$color-text-additional;
 }
 
 .product-ai-dialog__error {
@@ -143,19 +143,19 @@
 .product-ai-dialog__summary {
     display: flex;
     flex-direction: column;
-    gap: $gap-m;
+    gap: variables.$gap-m;
 }
 
 .product-ai-dialog__items {
     display: flex;
     flex-direction: column;
-    gap: $gap-s;
+    gap: variables.$gap-s;
 }
 
 .product-ai-dialog__items-label {
     font-size: 0.85rem;
     font-weight: 600;
-    color: $color-text-additional;
+    color: variables.$color-text-additional;
 }
 
 .product-ai-dialog__items-list {
@@ -177,29 +177,30 @@
     padding: 10px 12px;
     border-radius: 12px;
     background: rgba(148, 163, 184, 0.15);
-    color: $color-text-main;
+    color: variables.$color-text-main;
     font-size: 0.85rem;
     line-height: 1.4;
 }
 
 .product-ai-dialog__form-grid {
     display: grid;
-    gap: $gap-m;
+    gap: variables.$gap-m;
 }
 
 .product-ai-dialog__nutrition-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: $gap-m;
+    gap: variables.$gap-m;
 
-    @media #{$media-mobile} {
+    @media #{variables.$media-mobile} {
         grid-template-columns: 1fr;
     }
 }
 
 .product-ai-dialog__footer {
     display: flex;
-    gap: $gap-m;
+    gap: variables.$gap-m;
     justify-content: flex-end;
     flex-wrap: wrap;
 }
+

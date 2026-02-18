@@ -1,4 +1,4 @@
-@use 'variables' as *;
+﻿@use 'variables' as variables;
 
 :host {
     display: block;
@@ -10,7 +10,7 @@
     flex-wrap: wrap;
     border-radius: 999px;
     background: #f8fafc;
-    color: $color-text-main;
+    color: variables.$color-text-main;
     width: fit-content;
     max-width: 100%;
     border: 1px solid rgba(148, 163, 184, 0.2);
@@ -25,7 +25,7 @@
     background: transparent;
     font-size: 0.95rem;
     font-weight: 600;
-    color: var(--chip-color, $color-text-main);
+    color: var(--chip-color, variables.$color-text-main);
     box-shadow: none;
     border-right: 1px solid rgba(148, 163, 184, 0.2);
 }
@@ -111,3 +111,4 @@
         display: none;
     }
 }
+

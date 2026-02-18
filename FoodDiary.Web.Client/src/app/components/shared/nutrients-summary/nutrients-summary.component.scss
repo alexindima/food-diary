@@ -1,9 +1,9 @@
-@use 'variables' as *;
+﻿@use 'variables' as variables;
 
 .summary-wrapper {
     display: flex;
     flex-direction: column;
-    gap: $gap-m;
+    gap: variables.$gap-m;
 }
 
 .charts-wrapper {
@@ -11,7 +11,7 @@
     justify-content: center;
     flex-wrap: wrap;
     width: 100%;
-    gap: $gap-m;
+    gap: variables.$gap-m;
 
     &.column-layout {
         flex-direction: column;
@@ -26,14 +26,14 @@
 }
 
 .fiber-highlight {
-    margin: 0 0 $gap-m;
-    color: $color-text-main;
+    margin: 0 0 variables.$gap-m;
+    color: variables.$color-text-main;
     font-weight: 600;
 }
 
 .alcohol-highlight {
-    margin: 0 0 $gap-m;
-    color: $color-text-additional;
+    margin: 0 0 variables.$gap-m;
+    color: variables.$color-text-additional;
     font-weight: 600;
 }
 
@@ -43,17 +43,18 @@
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: $gap-xs;
+    gap: variables.$gap-xs;
 
     .nutrient {
     display: flex;
     align-items: center;
-    color: $color-text-main;
+    color: variables.$color-text-main;
 
         .nutrient-color {
-            margin-right: $gap-xs;
-            border-radius: $border-radius-s;
+            margin-right: variables.$gap-xs;
+            border-radius: variables.$border-radius-s;
             display: inline-block;
         }
     }
 }
+

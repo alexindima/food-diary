@@ -1,4 +1,4 @@
-@use 'variables' as *;
+﻿@use 'variables' as variables;
 
 .fd-root {
     display: grid;
@@ -126,3 +126,4 @@ html.cdk-global-scrollblock .fd-root__sidebar {
         display: none;
     }
 }
+

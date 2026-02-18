@@ -27,7 +27,6 @@ import { FdUiSelectComponent } from 'fd-ui-kit/select/fd-ui-select.component';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
-import { FdUiNutrientInputComponent } from 'fd-ui-kit/nutrient-input/fd-ui-nutrient-input.component';
 import { FdUiSegmentedToggleComponent, FdUiSegmentedToggleOption } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle.component';
 import { normalizeProductType as normalizeProductTypeValue } from '../../../utils/product-type.utils';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
@@ -49,6 +48,7 @@ import {
 } from './product-ai-recognition-dialog/product-ai-recognition-dialog.component';
 import { AuthService } from '../../../services/auth.service';
 import { PremiumRequiredDialogComponent } from '../../shared/premium-required-dialog/premium-required-dialog.component';
+import { NutritionEditorComponent } from '../../shared/nutrition-editor/nutrition-editor.component';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: FD_VALIDATION_ERRORS,
@@ -76,11 +76,11 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
         FdUiSelectComponent,
         FdUiCardComponent,
         FdUiButtonComponent,
-        FdUiNutrientInputComponent,
         FdUiSegmentedToggleComponent,
         FdUiFormErrorComponent,
         FdPageContainerDirective,
         ImageUploadFieldComponent,
+        NutritionEditorComponent,
     ],
 })
 export class BaseProductManageComponent implements OnInit {
@@ -93,7 +93,7 @@ export class BaseProductManageComponent implements OnInit {
     private readonly destroyRef = inject(DestroyRef);
 
     public product = input<Product | null>();
-public globalError = signal<string | null>(null);
+    public globalError = signal<string | null>(null);
     public nutritionWarning = signal<CalorieMismatchWarning | null>(null);
     public macroBarState = signal<MacroBarState>({ isEmpty: true, segments: [] });
     private formInitialized = false;
@@ -110,29 +110,13 @@ public globalError = signal<string | null>(null);
     public visibilitySelectOptions: FdUiSelectOption<ProductVisibility>[] = [];
     public nutritionMode: NutritionMode = 'base';
     public nutritionModeOptions: FdUiSegmentedToggleOption[] = [];
-    private readonly nutrientFillAlpha = 0.14;
-    private readonly nutrientPalette = {
-        calories: '#E11D48',
-        proteins: '#0284C7',
-        fats: '#C2410C',
-        carbs: '#0F766E',
-        fiber: '#7E22CE',
-        alcohol: '#64748B',
-    };
-    public readonly nutrientFillColors = {
-        calories: this.applyAlpha(this.nutrientPalette.calories, this.nutrientFillAlpha),
-        fiber: this.applyAlpha(this.nutrientPalette.fiber, this.nutrientFillAlpha),
-        proteins: this.applyAlpha(this.nutrientPalette.proteins, this.nutrientFillAlpha),
-        fats: this.applyAlpha(this.nutrientPalette.fats, this.nutrientFillAlpha),
-        carbs: this.applyAlpha(this.nutrientPalette.carbs, this.nutrientFillAlpha),
-        alcohol: this.applyAlpha(this.nutrientPalette.alcohol, this.nutrientFillAlpha),
-    };
-    public readonly nutrientTextColors = {
-        calories: this.nutrientPalette.calories,
-        fiber: this.nutrientPalette.fiber,
-        proteins: this.nutrientPalette.proteins,
-        fats: this.nutrientPalette.fats,
-        carbs: this.nutrientPalette.carbs,
+    public readonly nutritionControlNames = {
+        calories: 'caloriesPerBase',
+        proteins: 'proteinsPerBase',
+        fats: 'fatsPerBase',
+        carbs: 'carbsPerBase',
+        fiber: 'fiberPerBase',
+        alcohol: 'alcoholPerBase',
     };
     public constructor() {
         this.productForm = new FormGroup<ProductFormData>({
@@ -363,10 +347,6 @@ public globalError = signal<string | null>(null);
 
     public get baseUnitLabel(): string {
         return this.getUnitLabel(this.productForm.controls.baseUnit.value);
-    }
-
-    public getMacroColor(key: MacroKey): string {
-        return this.nutrientTextColors[key];
     }
 
     public onNutritionModeChange(nextMode: string): void {
@@ -705,16 +685,6 @@ public globalError = signal<string | null>(null);
 
     private clearGlobalError(): void {
         this.globalError.set(null);
-    }
-
-    private applyAlpha(hexColor: string, alpha: number): string {
-        const normalized = hexColor.replace('#', '');
-        const value = parseInt(normalized, 16);
-        const r = (value >> 16) & 255;
-        const g = (value >> 8) & 255;
-        const b = value & 255;
-
-        return `rgba(${r}, ${g}, ${b}, ${alpha})`;
     }
 
     private getNumberValue(control: FormControl<number | string | null>): number {

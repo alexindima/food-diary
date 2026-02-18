@@ -1,4 +1,4 @@
-﻿@use 'variables' as *;
+﻿@use 'variables' as variables;
 
 :host {
     display: block;
@@ -145,5 +145,6 @@
     white-space: normal;
     overflow-wrap: anywhere;
 }
+
 
 

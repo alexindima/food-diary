@@ -1,4 +1,4 @@
-﻿@use 'variables' as *;
+﻿@use 'variables' as variables;
 
 :host {
     display: flex;
@@ -6,8 +6,8 @@
     min-height: 100%;
 }
 
-$color-text-secondary: $color-text-additional;
-$color-primary: #2563eb;
+$color-text-secondary: variables.$color-text-additional;
+variables.$color-primary: #2563eb;
 
 .dashboard {
     display: flex;
@@ -40,13 +40,13 @@ $color-primary: #2563eb;
         font-size: 0.95rem;
         line-height: 1.35;
         font-weight: 500;
-        color: $color-text-additional;
+        color: variables.$color-text-additional;
     }
 
     &__header-actions {
         display: flex;
         align-items: center;
-        gap: $gap-s;
+        gap: variables.$gap-s;
         flex-wrap: wrap;
         justify-content: flex-end;
         width: auto;
@@ -165,7 +165,7 @@ $color-primary: #2563eb;
         font-size: var(--fd-page-title-size, 2rem);
         line-height: var(--fd-page-title-line-height, 1.2);
         font-weight: var(--fd-page-title-weight, 700);
-        color: $color-text-main;
+        color: variables.$color-text-main;
     }
 
     &__date-field {
@@ -338,7 +338,7 @@ $color-primary: #2563eb;
         padding: 4px 10px;
         border-radius: 999px;
         background: rgba(15, 23, 42, 0.08);
-        color: $color-text-main;
+        color: variables.$color-text-main;
         font-size: 0.75rem;
         font-weight: 600;
         pointer-events: none;
@@ -364,7 +364,7 @@ $color-primary: #2563eb;
     &__weight-value {
         font-size: 1.8rem;
         font-weight: 700;
-        color: $color-text-main;
+        color: variables.$color-text-main;
     }
 
     &__weight-trend {
@@ -395,7 +395,7 @@ $color-primary: #2563eb;
         margin: 0;
         font-size: 1.4rem;
         font-weight: 600;
-        color: $color-text-main;
+        color: variables.$color-text-main;
     }
 
     &__section-header {
@@ -410,7 +410,7 @@ $color-primary: #2563eb;
         margin: 0;
         font-size: 1.5rem;
         font-weight: 600;
-        color: $color-text-main;
+        color: variables.$color-text-main;
     }
 
     &__meals {
@@ -444,7 +444,7 @@ $color-primary: #2563eb;
         border: 1px dashed rgba(37, 99, 235, 0.3);
         border-radius: 18px;
         background: rgba(37, 99, 235, 0.03);
-        color: $color-text-main;
+        color: variables.$color-text-main;
         cursor: pointer;
         transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease, background 0.15s ease;
 
@@ -493,16 +493,16 @@ $color-primary: #2563eb;
 
     .consumption-card__meta {
         font-size: 0.9em;
-        color: $color-text-additional;
+        color: variables.$color-text-additional;
         display: flex;
         justify-content: space-between;
         align-items: center;
         min-height: 1rem;
 
-        @media #{$media-mobile} {
+        @media #{variables.$media-mobile} {
             flex-direction: column;
             align-items: flex-start;
-            gap: $gap-xs;
+            gap: variables.$gap-xs;
         }
 
         & > * {
@@ -516,7 +516,7 @@ $color-primary: #2563eb;
             text-overflow: ellipsis;
             white-space: nowrap;
 
-            @media #{$media-mobile} {
+            @media #{variables.$media-mobile} {
                 text-align: left;
                 white-space: normal;
             }
@@ -529,7 +529,7 @@ $color-primary: #2563eb;
         }
     }
 
-    @media #{$media-mobile} {
+    @media #{variables.$media-mobile} {
         &__header {
             padding: 10px 12px 8px;
             margin: 0;
@@ -609,4 +609,5 @@ $color-primary: #2563eb;
         }
     }
 }
+
 

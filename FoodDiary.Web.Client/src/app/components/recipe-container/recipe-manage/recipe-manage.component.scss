@@ -1,11 +1,11 @@
-﻿@use 'variables' as *;
+﻿@use 'variables' as variables;
 
 .recipe-manage {
     --fd-layout-page-background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 45%, #eef2f7 100%);
     margin: 0 auto;
     display: flex;
     flex-direction: column;
-    gap: $gap-m;
+    gap: variables.$gap-m;
     box-sizing: border-box;
 
     @media (max-width: 1100px) {
@@ -27,18 +27,18 @@
 
     &__title {
         margin: 0;
-        color: $color-text-main;
+        color: variables.$color-text-main;
     }
 
     &__form {
         display: flex;
         flex-direction: column;
-        gap: $gap-l;
+        gap: variables.$gap-l;
     }
 
     &__error {
-        padding: $gap-s;
-        border-radius: $border-radius-m;
+        padding: variables.$gap-s;
+        border-radius: variables.$border-radius-m;
         background: #fdecee;
         color: #b3261e;
         font-weight: 500;
@@ -47,14 +47,14 @@
     &__grid {
         display: grid;
         grid-template-columns: minmax(0, 7fr) minmax(0, 4fr);
-        gap: $gap-xl;
+        gap: variables.$gap-xl;
         align-items: stretch;
 
         @media (max-width: 1100px) {
             grid-template-columns: 1fr;
         }
 
-        @media #{$media-tablet} {
+        @media #{variables.$media-tablet} {
             grid-template-columns: 1fr;
         }
     }
@@ -62,7 +62,7 @@
     &__column {
         display: flex;
         flex-direction: column;
-        gap: $gap-xl;
+        gap: variables.$gap-xl;
     }
 
     &__column--primary {
@@ -80,49 +80,49 @@
         --fd-color-surface: #ffffff;
         display: flex;
         flex-direction: column;
-        gap: $gap-m;
+        gap: variables.$gap-m;
         border: 1px solid rgba(15, 23, 42, 0.06);
         border-radius: var(--fd-radius-lg);
         overflow: hidden;
 
         &--general {
-            gap: $gap-l;
+            gap: variables.$gap-l;
         }
 
         &--basic {
             --fd-ui-card-border-color: rgba(37, 99, 235, 0.16);
 
             ::ng-deep .fd-ui-card {
-                padding-bottom: $gap-l;
+                padding-bottom: variables.$gap-l;
             }
         }
 
         &--steps {
-            gap: $gap-m;
+            gap: variables.$gap-m;
         }
 
         &--calories,
         &--facts,
         &--visibility {
-            gap: $gap-m;
+            gap: variables.$gap-m;
         }
 
         &--facts {
             container-type: inline-size;
 
             ::ng-deep .fd-ui-card {
-                padding-bottom: $gap-l;
+                padding-bottom: variables.$gap-l;
             }
         }
 
         &--tracking {
             ::ng-deep .fd-ui-card {
-                padding-bottom: $gap-l;
+                padding-bottom: variables.$gap-l;
             }
         }
 
         ::ng-deep .fd-ui-card__header {
-            margin-bottom: $gap-s;
+            margin-bottom: variables.$gap-s;
             align-items: center;
         }
 
@@ -141,12 +141,12 @@
 
     &__sticky-stack {
         position: sticky;
-        top: calc($gap-xl + 8px);
+        top: calc(variables.$gap-xl + 8px);
         display: flex;
         flex-direction: column;
-        gap: $gap-l;
+        gap: variables.$gap-l;
 
-        @media #{$media-mobile} {
+        @media #{variables.$media-mobile} {
             position: static;
         }
     }
@@ -154,9 +154,9 @@
     &__basic-grid {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: $gap-l;
+        gap: variables.$gap-l;
 
-        @media #{$media-mobile} {
+        @media #{variables.$media-mobile} {
             grid-template-columns: 1fr;
         }
     }
@@ -168,25 +168,25 @@
     &__field {
         display: flex;
         flex-direction: column;
-        gap: $gap-xs;
+        gap: variables.$gap-xs;
     }
 
     &__steps-section {
         display: flex;
         flex-direction: column;
-        gap: $gap-s;
+        gap: variables.$gap-s;
     }
 
     &__steps-block {
         display: flex;
         flex-direction: column;
-        gap: $gap-s;
+        gap: variables.$gap-s;
     }
 
     &__steps {
         display: flex;
         flex-direction: column;
-        gap: $gap-s;
+        gap: variables.$gap-s;
     }
 
     &__steps-title {
@@ -195,46 +195,17 @@
         letter-spacing: 0.08em;
         text-transform: uppercase;
         color: #94a3b8;
-        margin-bottom: $gap-xs;
+        margin-bottom: variables.$gap-xs;
     }
 
     &__summary-calories {
         margin: 0;
         font-size: 0.95rem;
-        color: $color-text-main;
+        color: variables.$color-text-main;
 
         strong {
             font-weight: 600;
         }
-    }
-
-    &__nutrition-hint {
-        margin: 0;
-        font-size: 0.9rem;
-        color: $color-text-additional;
-    }
-
-    &__nutrition-warning {
-        border-radius: 14px;
-        border: 1px solid rgba(245, 158, 11, 0.3);
-        background: rgba(255, 251, 235, 0.9);
-        color: #92400e;
-        padding: 12px 14px;
-        font-size: 0.9rem;
-        line-height: 1.4;
-    }
-
-    &__nutrition-errors {
-        margin-top: 0;
-        padding: 8px 12px;
-        border-radius: 12px;
-        border: 1px solid rgba(239, 68, 68, 0.2);
-        background: rgba(254, 226, 226, 0.7);
-        color: #b91c1c;
-        font-size: 0.85rem;
-        line-height: 1.4;
-        display: grid;
-        gap: 4px;
     }
 
     &__actions-panel {
@@ -244,7 +215,7 @@
     &__footer-actions {
         display: grid;
         grid-template-columns: max-content minmax(0, 1fr);
-        gap: $gap-m;
+        gap: variables.$gap-m;
         align-items: center;
         width: 100%;
     }
@@ -281,7 +252,7 @@
         }
     }
 
-    @media #{$media-mobile} {
+    @media #{variables.$media-mobile} {
         &__footer-actions {
             grid-template-columns: 1fr;
         }
@@ -292,7 +263,7 @@
     }
 
     &__array-error {
-        color: $color-no-results;
+        color: variables.$color-no-results;
         font-size: 0.9rem;
     }
 
@@ -315,12 +286,12 @@
         --fd-recipe-input-height: 48px;
         --fd-recipe-input-subscript: 18px;
         --fd-recipe-image-size: calc(
-            (var(--fd-recipe-input-height) + var(--fd-recipe-input-subscript)) * 3 + #{$gap-l * 2}
+            (var(--fd-recipe-input-height) + var(--fd-recipe-input-subscript)) * 3 + #{variables.$gap-l * 2}
         );
         display: grid;
         grid-template-columns: var(--fd-recipe-image-size) minmax(0, 1fr);
         grid-template-rows: repeat(3, minmax(0, auto));
-        gap: $gap-l;
+        gap: variables.$gap-l;
         align-items: stretch;
     }
 
@@ -386,9 +357,9 @@
     &__hero-field {
         display: flex;
         flex-direction: column;
-        gap: $gap-xs;
+        gap: variables.$gap-xs;
     }
-    @media #{$media-mobile} {
+    @media #{variables.$media-mobile} {
         &__hero {
             grid-template-columns: 1fr;
         }
@@ -402,7 +373,7 @@
     &__nutrition {
         display: flex;
         flex-direction: column;
-        gap: $gap-m;
+        gap: variables.$gap-m;
     }
 
     &__nutrition-toggle {
@@ -417,45 +388,13 @@
         }
     }
 
-    &__nutrition-input {
-        width: 100%;
-    }
-
-    &__nutrition-grid {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: $gap-s;
-
-        &--secondary {
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-        }
-    }
-
-    &__macro-bar {
-        height: 16px;
-        border-radius: 999px;
-        overflow: hidden;
-        display: flex;
-        background: rgba(148, 163, 184, 0.18);
-    }
-
-    &__macro-bar-segment {
-        height: 100%;
-        min-width: 6px;
-    }
-
-    @container (max-width: 359px) {
-        .recipe-manage__nutrition-grid {
-            grid-template-columns: 1fr;
-        }
-    }
 }
 
 .recipe-step-card__header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: $gap-m;
+    gap: variables.$gap-m;
     background: #f8fafc;
     border-bottom: 1px solid rgba(148, 163, 184, 0.2);
     padding: 12px var(--fd-spacing-lg);
@@ -497,7 +436,7 @@
 
 .recipe-step-card__title {
     font-weight: 600;
-    color: $color-text-main;
+    color: variables.$color-text-main;
 }
 
 .recipe-step-card__title-input {
@@ -527,7 +466,7 @@
 }
 
 .recipe-step-card__summary-description {
-    color: $color-text-main;
+    color: variables.$color-text-main;
     font-size: 0.95rem;
     white-space: nowrap;
     overflow: hidden;
@@ -542,23 +481,23 @@
 .recipe-step-card {
     ::ng-deep .fd-ui-card {
         overflow: hidden;
-        padding-bottom: $gap-l;
+        padding-bottom: variables.$gap-l;
     }
 }
 
 .recipe-step-card__ingredients {
     display: flex;
     flex-direction: column;
-    gap: $gap-m;
+    gap: variables.$gap-m;
 }
 
 .recipe-step-card__content {
     display: grid;
     grid-template-columns: minmax(180px, 220px) minmax(0, 1fr);
-    gap: $gap-m;
+    gap: variables.$gap-m;
     align-items: start;
 
-    @media #{$media-mobile} {
+    @media #{variables.$media-mobile} {
         grid-template-columns: minmax(0, 1fr);
     }
 }
@@ -597,9 +536,9 @@
 
 .recipe-ingredient {
     display: flex;
-    gap: $gap-m;
+    gap: variables.$gap-m;
 
-    @media #{$media-mobile} {
+    @media #{variables.$media-mobile} {
         flex-direction: column;
     }
 }
@@ -611,10 +550,10 @@
 .recipe-ingredient__amount {
     display: flex;
     flex: 0 0 35%;
-    gap: $gap-s;
+    gap: variables.$gap-s;
     align-items: flex-start;
 
-    @media #{$media-mobile} {
+    @media #{variables.$media-mobile} {
         width: 100%;
     }
 }
@@ -633,11 +572,12 @@
 }
 
 .recipe-manage__drag-placeholder {
-    border: 2px dashed fade($color-text-additional, 40%);
-    border-radius: $border-radius-m;
-    padding: $gap-m;
+    border: 2px dashed fade(variables.$color-text-additional, 40%);
+    border-radius: variables.$border-radius-m;
+    padding: variables.$gap-m;
     text-align: center;
-    color: $color-text-additional;
+    color: variables.$color-text-additional;
     font-size: 0.9rem;
 }
+
 

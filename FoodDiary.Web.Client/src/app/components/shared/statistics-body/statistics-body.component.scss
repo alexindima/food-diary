@@ -1,4 +1,4 @@
-@use 'variables' as *;
+﻿@use 'variables' as variables;
 
 :host {
     display: block;
@@ -46,6 +46,7 @@
 .stats-body-card__empty {
     margin: 0;
     text-align: center;
-    color: $color-text-additional;
+    color: variables.$color-text-additional;
     padding: 24px 0;
 }
+

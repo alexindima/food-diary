@@ -1,4 +1,4 @@
-﻿@use 'variables' as *;
+﻿@use 'variables' as variables;
 
 .product-manage {
     --fd-layout-page-background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 45%, #eef2f7 100%);
@@ -33,7 +33,7 @@
         font-size: var(--fd-page-title-size, 2rem);
         line-height: var(--fd-page-title-line-height, 1.2);
         font-weight: var(--fd-page-title-weight, 700);
-        color: $color-text-main;
+        color: variables.$color-text-main;
     }
 
     &__subtitle {
@@ -41,7 +41,7 @@
         font-size: var(--fd-page-subtitle-size, 1rem);
         line-height: var(--fd-page-subtitle-line-height, 1.5);
         font-weight: var(--fd-page-subtitle-weight, 500);
-        color: $color-text-additional;
+        color: variables.$color-text-additional;
     }
 
     &__title-row {
@@ -65,7 +65,7 @@
             border: none;
             background: transparent;
             box-shadow: none;
-            color: $color-text-main;
+            color: variables.$color-text-main;
         }
 
         ::ng-deep .fd-ui-button:hover:not(:disabled),
@@ -75,18 +75,18 @@
             border: none;
             background: transparent;
             box-shadow: none;
-            color: $color-text-main;
+            color: variables.$color-text-main;
         }
     }
 
     &__delete-button {
         ::ng-deep .fd-ui-button {
-            border-color: $color-no-results;
-            color: $color-no-results;
+            border-color: variables.$color-no-results;
+            color: variables.$color-no-results;
         }
 
         ::ng-deep .fd-ui-button:hover:not(:disabled) {
-            background-color: fade($color-no-results, 10%);
+            background-color: fade(variables.$color-no-results, 10%);
         }
 
         ::ng-deep .fd-ui-button:disabled {
@@ -112,21 +112,21 @@
     &__form {
         display: flex;
         flex-direction: column;
-        gap: $gap-l;
-        padding: $gap-l var(--fd-layout-page-horizontal-padding) var(--fd-layout-page-vertical-padding);
+        gap: variables.$gap-l;
+        padding: variables.$gap-l var(--fd-layout-page-horizontal-padding) var(--fd-layout-page-vertical-padding);
     }
 
     &__grid {
         display: grid;
         grid-template-columns: minmax(0, 7fr) minmax(0, 4fr);
-        gap: $gap-xl;
+        gap: variables.$gap-xl;
         align-items: stretch;
 
         @media (max-width: 1100px) {
             grid-template-columns: 1fr;
         }
 
-        @media #{$media-tablet} {
+        @media #{variables.$media-tablet} {
             grid-template-columns: 1fr;
         }
     }
@@ -134,7 +134,7 @@
     &__column {
         display: flex;
         flex-direction: column;
-        gap: $gap-xl;
+        gap: variables.$gap-xl;
     }
 
     &__column--primary {
@@ -152,13 +152,13 @@
         --fd-color-surface: #ffffff;
         display: flex;
         flex-direction: column;
-        gap: $gap-m;
+        gap: variables.$gap-m;
         border: 1px solid rgba(15, 23, 42, 0.06);
         border-radius: var(--fd-radius-lg);
         overflow: hidden;
 
         ::ng-deep .fd-ui-card__header {
-            margin-bottom: $gap-s;
+            margin-bottom: variables.$gap-s;
             align-items: center;
         }
 
@@ -179,7 +179,7 @@
         --fd-ui-card-border-color: rgba(37, 99, 235, 0.16);
 
         ::ng-deep .fd-ui-card {
-            padding-bottom: $gap-l;
+            padding-bottom: variables.$gap-l;
         }
     }
 
@@ -188,13 +188,13 @@
         container-type: inline-size;
 
         ::ng-deep .fd-ui-card {
-            padding-bottom: $gap-l;
+            padding-bottom: variables.$gap-l;
         }
     }
 
     &__card--tracking {
         ::ng-deep .fd-ui-card {
-            padding-bottom: $gap-l;
+            padding-bottom: variables.$gap-l;
         }
     }
 
@@ -204,12 +204,12 @@
 
     &__sticky-stack {
         position: sticky;
-        top: calc($gap-xl + 8px);
+        top: calc(variables.$gap-xl + 8px);
         display: flex;
         flex-direction: column;
-        gap: $gap-l;
+        gap: variables.$gap-l;
 
-        @media #{$media-mobile} {
+        @media #{variables.$media-mobile} {
             position: static;
         }
     }
@@ -217,7 +217,7 @@
     &__summary-calories {
         margin: 0;
         font-size: 0.9rem;
-        color: $color-text-main;
+        color: variables.$color-text-main;
 
         strong {
             font-size: 1.1rem;
@@ -228,12 +228,12 @@
         --fd-product-input-height: 48px;
         --fd-product-input-subscript: 18px;
         --fd-product-image-size: calc(
-            (var(--fd-product-input-height) + var(--fd-product-input-subscript)) * 3 + #{$gap-l * 2}
+            (var(--fd-product-input-height) + var(--fd-product-input-subscript)) * 3 + #{variables.$gap-l * 2}
         );
         display: grid;
         grid-template-columns: var(--fd-product-image-size) minmax(0, 1fr);
         grid-template-rows: repeat(3, minmax(0, auto));
-        gap: $gap-l;
+        gap: variables.$gap-l;
         align-items: stretch;
     }
 
@@ -299,15 +299,15 @@
     &__hero-field {
         display: flex;
         flex-direction: column;
-        gap: $gap-xs;
+        gap: variables.$gap-xs;
     }
 
     &__basic-grid {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: $gap-l;
+        gap: variables.$gap-l;
 
-        @media #{$media-mobile} {
+        @media #{variables.$media-mobile} {
             grid-template-columns: 1fr;
         }
     }
@@ -315,7 +315,7 @@
     &__field {
         display: flex;
         flex-direction: column;
-        gap: $gap-xs;
+        gap: variables.$gap-xs;
 
         &--full {
             grid-column: 1 / -1;
@@ -325,7 +325,7 @@
     &__serving-row {
         display: flex;
         flex-wrap: wrap;
-        gap: $gap-l;
+        gap: variables.$gap-l;
     }
 
     &__serving-part {
@@ -333,13 +333,13 @@
         min-width: 200px;
         display: flex;
         flex-direction: column;
-        gap: $gap-xs;
+        gap: variables.$gap-xs;
     }
 
     &__nutrients-row {
         display: flex;
         flex-wrap: wrap;
-        gap: $gap-l;
+        gap: variables.$gap-l;
 
         &--two .product-manage__nutrient {
             flex: 1 1 200px;
@@ -353,14 +353,14 @@
     &__nutrient {
         display: flex;
         flex-direction: column;
-        gap: $gap-xs;
+        gap: variables.$gap-xs;
         flex: 1 1 180px;
     }
 
     &__nutrition {
         display: flex;
         flex-direction: column;
-        gap: $gap-l;
+        gap: variables.$gap-l;
     }
 
     &__nutrition-toggle {
@@ -387,7 +387,7 @@
         flex-direction: column;
         align-items: stretch;
         justify-content: flex-start;
-        gap: $gap-m;
+        gap: variables.$gap-m;
         padding: 12px 14px;
         border-radius: 16px;
         border: 1px solid rgba(148, 163, 184, 0.2);
@@ -403,77 +403,17 @@
     &__ai-title {
         font-size: 0.95rem;
         font-weight: 700;
-        color: $color-text-main;
+        color: variables.$color-text-main;
     }
 
     &__ai-subtitle {
         font-size: 0.85rem;
-        color: $color-text-additional;
-    }
-
-    &__nutrition-grid {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: $gap-m;
-    }
-
-    &__nutrition-grid--secondary {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    &__nutrition-grid:not(&__nutrition-grid--secondary) {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-
-    &__macro-bar {
-        height: 16px;
-        border-radius: 999px;
-        overflow: hidden;
-        display: flex;
-        background: rgba(148, 163, 184, 0.18);
-    }
-
-    &__macro-bar-segment {
-        height: 100%;
-        min-width: 6px;
-    }
-
-    @container (max-width: 359px) {
-        .product-manage__nutrition-grid {
-            grid-template-columns: 1fr;
-        }
-    }
-
-    &__nutrition-input {
-        width: 100%;
-    }
-
-    &__nutrition-warning {
-        border-radius: 14px;
-        border: 1px solid rgba(245, 158, 11, 0.3);
-        background: rgba(255, 251, 235, 0.9);
-        color: #92400e;
-        padding: 12px 14px;
-        font-size: 0.9rem;
-        line-height: 1.4;
-    }
-
-    &__nutrition-errors {
-        margin-top: 0;
-        padding: 8px 12px;
-        border-radius: 12px;
-        border: 1px solid rgba(239, 68, 68, 0.2);
-        background: rgba(254, 226, 226, 0.7);
-        color: #b91c1c;
-        font-size: 0.85rem;
-        line-height: 1.4;
-        display: grid;
-        gap: 4px;
+        color: variables.$color-text-additional;
     }
 
     &__footer-actions {
         display: flex;
-        gap: $gap-m;
+        gap: variables.$gap-m;
         align-items: center;
         width: 100%;
     }
@@ -517,10 +457,10 @@
     &__footer-error {
         width: 100%;
         text-align: left;
-        color: $color-no-results;
+        color: variables.$color-no-results;
     }
 
-    @media #{$media-tablet} {
+    @media #{variables.$media-tablet} {
         &__header {
             align-items: flex-start;
             padding: 10px 12px 8px;
@@ -554,7 +494,7 @@
         }
     }
 
-    @media #{$media-mobile} {
+    @media #{variables.$media-mobile} {
         &__header {
             --fd-layout-page-background: #f8fafc;
         }
@@ -592,20 +532,21 @@
     }
 
     &__dialog {
-        padding: $gap-l;
+        padding: variables.$gap-l;
         text-align: center;
 
         &-title {
             font-size: 1.5rem;
             font-weight: bold;
-            color: $color-text-main;
-            margin: 0 0 $gap-l;
+            color: variables.$color-text-main;
+            margin: 0 0 variables.$gap-l;
         }
 
         &-buttons {
             display: flex;
             flex-direction: column;
-            gap: $gap-xl;
+            gap: variables.$gap-xl;
         }
     }
 }
+

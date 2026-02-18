@@ -1,5 +1,5 @@
-@use 'mixins' as *;
-@use 'variables' as *;
+﻿@use 'mixins' as *;
+@use 'variables' as variables;
 
 .weight-history-page {
     display: flex;
@@ -75,18 +75,18 @@
     &__card--bmi {
         display: flex;
         flex-direction: column;
-        gap: $gap-s;
+        gap: variables.$gap-s;
     }
 
     &__bmi-note {
-        margin: 0 0 ($gap-xs);
+        margin: 0 0 (variables.$gap-xs);
         font-size: 0.9rem;
-        color: $color-text-additional;
+        color: variables.$color-text-additional;
     }
 
     &__bmi-scale {
         position: relative;
-        margin-top: $gap-xs;
+        margin-top: variables.$gap-xs;
     }
 
     &__bmi-segments {
@@ -157,7 +157,7 @@
     &__bmi-top {
         display: flex;
         flex-direction: column;
-        gap: $gap-xs;
+        gap: variables.$gap-xs;
     }
 
     &__bmi-bottom {
@@ -167,12 +167,12 @@
     }
 
     &__bmi-footer {
-        margin-top: $gap-s;
+        margin-top: variables.$gap-s;
         display: flex;
         justify-content: space-between;
         align-items: center;
         flex-wrap: wrap;
-        gap: $gap-xs;
+        gap: variables.$gap-xs;
     }
 
     &__bmi-status {
@@ -204,7 +204,7 @@
 
     &__bmi-description {
         margin: 0;
-        color: $color-text-additional;
+        color: variables.$color-text-additional;
         font-size: 0.9rem;
     }
 
@@ -311,3 +311,4 @@
         }
     }
 }
+

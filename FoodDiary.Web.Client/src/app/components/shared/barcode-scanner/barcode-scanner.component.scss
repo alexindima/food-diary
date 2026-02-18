@@ -1,4 +1,4 @@
-@use 'variables' as *;
+﻿@use 'variables' as variables;
 
 .scanner-popup__scanner-wrapper {
     position: relative;
@@ -8,7 +8,7 @@
 }
 
 .scanner-popup__description {
-    font-size: $gap-l;
+    font-size: variables.$gap-l;
 }
 
 .scanner-popup__loader-overlay {
@@ -26,10 +26,11 @@
 }
 
 .scanner-popup__loader-overlay p {
-    margin-top: $gap-xs;
-    font-size: $font-size-main;
+    margin-top: variables.$gap-xs;
+    font-size: variables.$font-size-main;
 }
 
 .scanner-popup__loader-error {
     color: #a94442;
 }
+

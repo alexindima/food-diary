@@ -1,4 +1,4 @@
-﻿@use 'variables' as *;
+﻿@use 'variables' as variables;
 
 :host {
     --user-card-radius: 24px;
@@ -47,7 +47,7 @@
         .user-manage__header-action--ghost ::ng-deep button,
         .user-manage__header-action--ghost ::ng-deep .fd-ui-button {
             background: #f4f7fb;
-            color: $color-text-main;
+            color: variables.$color-text-main;
             border-color: #e0e7f5;
         }
     }
@@ -118,12 +118,12 @@
     &__card-title {
         font-size: 1.1rem;
         font-weight: 700;
-        color: $color-text-main;
+        color: variables.$color-text-main;
     }
 
     &__card-subtitle {
         margin: 0;
-        color: $color-text-additional;
+        color: variables.$color-text-additional;
         font-size: 0.95rem;
     }
 
@@ -133,7 +133,7 @@
         gap: 20px;
         align-items: stretch;
 
-        @media #{$media-tablet} {
+        @media #{variables.$media-tablet} {
             grid-template-columns: 1fr;
         }
     }
@@ -158,7 +158,7 @@
     &__avatar-hint {
         margin: 0;
         text-align: center;
-        color: $color-text-additional;
+        color: variables.$color-text-additional;
         font-size: 0.9rem;
         line-height: 1.3;
     }
@@ -166,7 +166,7 @@
     &__account-fields {
         display: flex;
         flex-direction: column;
-        gap: $gap-l;
+        gap: variables.$gap-l;
         align-self: start;
         padding: 0;
     }
@@ -196,7 +196,7 @@
     &__account-row {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: $gap-l;
+        gap: variables.$gap-l;
         align-items: start;
     }
 
@@ -211,7 +211,7 @@
     &__body {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-        gap: $gap-l;
+        gap: variables.$gap-l;
         align-items: start;
     }
 
@@ -228,7 +228,7 @@
         margin-top: 8px;
     }
 
-    @media #{$media-mobile} {
+    @media #{variables.$media-mobile} {
         &__card {
             ::ng-deep .fd-ui-card {
                 padding: 16px;
@@ -240,4 +240,5 @@
         }
     }
 }
+
 

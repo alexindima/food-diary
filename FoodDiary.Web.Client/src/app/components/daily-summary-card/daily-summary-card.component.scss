@@ -1,4 +1,4 @@
-@use 'variables' as *;
+﻿@use 'variables' as variables;
 
 :host {
     display: block;
@@ -28,7 +28,7 @@
     margin: 0 0 10px;
     font-size: 0.95rem;
     font-weight: 700;
-    color: $color-text-additional;
+    color: variables.$color-text-additional;
     position: relative;
 
     &::after {
@@ -59,12 +59,12 @@
 .daily-card__value {
     font-size: 2.7rem;
     font-weight: 800;
-    color: $color-text-main;
+    color: variables.$color-text-main;
 }
 
 .daily-card__unit {
     font-size: 0.95rem;
-    color: $color-text-additional;
+    color: variables.$color-text-additional;
 }
 
 .daily-card__percent {
@@ -84,7 +84,7 @@
 
 .daily-card__meta {
     margin: 6px 0 0;
-    color: $color-text-additional;
+    color: variables.$color-text-additional;
     font-weight: 600;
     font-size: 0.95rem;
 }
@@ -159,7 +159,7 @@
 
     &.weekly--neutral {
         background: rgba(59, 130, 246, 0.08);
-        color: $color-text-main;
+        color: variables.$color-text-main;
     }
 }
 
@@ -183,14 +183,14 @@
 
     &__label {
         margin: 0 0 4px;
-        color: $color-text-additional;
+        color: variables.$color-text-additional;
         font-weight: 600;
         font-size: 0.95rem;
     }
 
     &__value {
         margin: 0;
-        color: $color-text-main;
+        color: variables.$color-text-main;
         font-weight: 700;
         font-size: 1.05rem;
     }
@@ -290,17 +290,17 @@
 
     &__title {
         font-weight: 700;
-        color: $color-text-main;
+        color: variables.$color-text-main;
     }
 
     &__meta {
-        color: $color-text-additional;
+        color: variables.$color-text-additional;
         font-size: 0.9rem;
     }
 
     &__desc {
         margin: 4px 0 0;
-        color: $color-text-additional;
+        color: variables.$color-text-additional;
         font-size: 0.95rem;
     }
 }
@@ -322,3 +322,4 @@
         margin-left: 0;
     }
 }
+

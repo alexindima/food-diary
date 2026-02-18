@@ -1,12 +1,12 @@
-@use 'sass:color';
-@use 'variables' as *;
+﻿@use 'sass:color';
+@use 'variables' as variables;
 
 .consumption-manage {
     margin: 0 auto;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    gap: $gap-l;
+    gap: variables.$gap-l;
 
     @media (max-width: 1100px) {
         --fd-layout-page-content-max-width: 100%;
@@ -19,23 +19,23 @@
 
     &__title {
         margin: 0;
-        color: $color-text-main;
+        color: variables.$color-text-main;
     }
 
     &__form {
         display: flex;
         flex-direction: column;
-        gap: $gap-l;
+        gap: variables.$gap-l;
     }
 
     &__grid {
         display: grid;
         grid-template-columns: minmax(0, 7fr) minmax(0, 4fr);
-        gap: $gap-xl;
+        gap: variables.$gap-xl;
         align-items: stretch;
         overflow: visible;
 
-        @media #{$media-tablet} {
+        @media #{variables.$media-tablet} {
             grid-template-columns: 1fr;
         }
     }
@@ -43,7 +43,7 @@
     &__column {
         display: flex;
         flex-direction: column;
-        gap: $gap-l;
+        gap: variables.$gap-l;
     }
 
     &__column--secondary {
@@ -59,31 +59,31 @@
     &__card {
         display: flex;
         flex-direction: column;
-        gap: $gap-m;
+        gap: variables.$gap-m;
 
         &--sticky {
             position: sticky;
-            top: $gap-xl;
+            top: variables.$gap-xl;
         }
     }
 
     &__basic-grid {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: $gap-m;
+        gap: variables.$gap-m;
 
-        @media #{$media-mobile} {
+        @media #{variables.$media-mobile} {
             grid-template-columns: 1fr;
         }
 
         &--dates {
             grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
 
-            @media #{$media-tablet} {
+            @media #{variables.$media-tablet} {
                 grid-template-columns: repeat(2, minmax(0, 1fr));
             }
 
-            @media #{$media-mobile} {
+            @media #{variables.$media-mobile} {
                 grid-template-columns: 1fr;
             }
         }
@@ -92,7 +92,7 @@
     &__field {
         display: flex;
         flex-direction: column;
-        gap: $gap-xs;
+        gap: variables.$gap-xs;
 
         &--full {
             grid-column: 1 / -1;
@@ -102,7 +102,7 @@
     &__summary-calories {
         margin: 0;
         font-size: 0.95rem;
-        color: $color-text-main;
+        color: variables.$color-text-main;
 
         strong {
             font-weight: 600;
@@ -112,7 +112,7 @@
     &__summary-alcohol {
         margin: 0;
         font-size: 0.9rem;
-        color: $color-text-additional;
+        color: variables.$color-text-additional;
 
         strong {
             font-weight: 600;
@@ -124,23 +124,23 @@
         container-type: inline-size;
 
         ::ng-deep .fd-ui-card {
-            padding-bottom: $gap-l;
+            padding-bottom: variables.$gap-l;
         }
     }
 
     &__card--items {
         ::ng-deep .fd-ui-card {
-            padding-bottom: $gap-s;
+            padding-bottom: variables.$gap-s;
         }
 
         ::ng-deep .fd-ui-card__content {
-            gap: $gap-s;
+            gap: variables.$gap-s;
         }
     }
 
     &__card--items-ai {
         ::ng-deep .fd-ui-card__content {
-            gap: $gap-s;
+            gap: variables.$gap-s;
         }
     }
 
@@ -153,13 +153,13 @@
         --fd-color-surface: #ffffff;
         display: flex;
         flex-direction: column;
-        gap: $gap-m;
+        gap: variables.$gap-m;
         border: 1px solid rgba(15, 23, 42, 0.06);
         border-radius: var(--fd-radius-lg);
         overflow: hidden;
 
         ::ng-deep .fd-ui-card__header {
-            margin-bottom: $gap-s;
+            margin-bottom: variables.$gap-s;
             align-items: center;
         }
 
@@ -176,7 +176,7 @@
         }
 
         ::ng-deep .fd-ui-card {
-            padding-bottom: $gap-l;
+            padding-bottom: variables.$gap-l;
         }
     }
 
@@ -184,15 +184,15 @@
         --fd-consumption-input-height: 48px;
         --fd-consumption-input-subscript: 18px;
         --fd-consumption-image-size: calc(
-            (var(--fd-consumption-input-height) + var(--fd-consumption-input-subscript)) * 3 + #{$gap-l * 2}
+            (var(--fd-consumption-input-height) + var(--fd-consumption-input-subscript)) * 3 + #{variables.$gap-l * 2}
         );
         display: grid;
         grid-template-columns: var(--fd-consumption-image-size) minmax(0, 1fr);
         grid-template-rows: repeat(3, minmax(0, auto));
-        gap: $gap-l;
+        gap: variables.$gap-l;
         align-items: stretch;
 
-        @media #{$media-mobile} {
+        @media #{variables.$media-mobile} {
             grid-template-columns: 1fr;
         }
     }
@@ -256,7 +256,7 @@
         }
     }
 
-    @media #{$media-mobile} {
+    @media #{variables.$media-mobile} {
         &__image {
             width: 100%;
             height: auto;
@@ -266,20 +266,20 @@
     &__hero-fields {
         display: flex;
         flex-direction: column;
-        gap: $gap-l;
+        gap: variables.$gap-l;
     }
 
     &__field-row {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: $gap-l;
-        margin-bottom: $gap-l;
+        gap: variables.$gap-l;
+        margin-bottom: variables.$gap-l;
 
         &:last-child {
             margin-bottom: 0;
         }
 
-        @media #{$media-mobile} {
+        @media #{variables.$media-mobile} {
             grid-template-columns: 1fr;
         }
     }
@@ -287,20 +287,20 @@
     &__footer {
         display: flex;
         flex-direction: column;
-        gap: $gap-xs;
+        gap: variables.$gap-xs;
     }
 
     &__sticky-stack {
         position: sticky;
-        top: calc($gap-xl + 8px);
+        top: calc(variables.$gap-xl + 8px);
         display: flex;
         flex-direction: column;
-        gap: $gap-l;
+        gap: variables.$gap-l;
         align-self: flex-start;
         justify-self: stretch;
         width: 100%;
 
-        @media #{$media-mobile} {
+        @media #{variables.$media-mobile} {
             position: static;
         }
     }
@@ -312,7 +312,7 @@
     &__footer-actions {
         display: grid;
         grid-template-columns: max-content minmax(0, 1fr);
-        gap: $gap-m;
+        gap: variables.$gap-m;
         align-items: center;
     }
 
@@ -351,10 +351,10 @@
     &__footer-error {
         width: 100%;
         text-align: left;
-        color: $color-no-results;
+        color: variables.$color-no-results;
     }
 
-    @media #{$media-mobile} {
+    @media #{variables.$media-mobile} {
         &__footer-actions {
             grid-template-columns: 1fr;
             align-items: stretch;
@@ -364,52 +364,52 @@
     &__items-section {
         display: flex;
         flex-direction: column;
-        gap: $gap-m;
+        gap: variables.$gap-m;
     }
 
     &__items-grid {
         display: grid;
         grid-template-columns: 1fr;
-        gap: $gap-l;
+        gap: variables.$gap-l;
     }
 
     &__satiety-grid {
         display: grid;
         grid-template-columns: 1fr;
-        gap: $gap-m;
+        gap: variables.$gap-m;
     }
 
     &__satiety-note {
-        margin: 0 0 $gap-m;
+        margin: 0 0 variables.$gap-m;
         font-size: 0.9rem;
-        color: $color-text-additional;
+        color: variables.$color-text-additional;
     }
 
     &__satiety-field {
         display: flex;
         flex-direction: column;
-        gap: $gap-xs;
+        gap: variables.$gap-xs;
     }
 
     &__satiety-picker-label {
         margin: 0;
         font-size: 0.95rem;
         font-weight: 600;
-        color: $color-text-main;
+        color: variables.$color-text-main;
     }
 
     &__satiety-card {
         --satiety-gradient: linear-gradient(135deg, #cbd5f5, #94a3b8);
         border: none;
-        border-radius: $border-radius-l;
-        padding: $gap-m;
+        border-radius: variables.$border-radius-l;
+        padding: variables.$gap-m;
         display: flex;
         align-items: center;
-        gap: $gap-m;
+        gap: variables.$gap-m;
         text-align: left;
         cursor: pointer;
         background: rgba(15, 23, 42, 0.02);
-        box-shadow: 0 8px 20px fade($color-text-main, 8%);
+        box-shadow: 0 8px 20px fade(variables.$color-text-main, 8%);
         position: relative;
         overflow: hidden;
         transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -425,11 +425,11 @@
 
         &:hover {
             transform: translateY(-2px);
-            box-shadow: 0 12px 26px fade($color-text-main, 14%);
+            box-shadow: 0 12px 26px fade(variables.$color-text-main, 14%);
         }
 
         mat-icon {
-            color: $color-text-main;
+            color: variables.$color-text-main;
             position: relative;
             z-index: 1;
         }
@@ -445,7 +445,7 @@
         justify-content: center;
         font-size: 1.1rem;
         font-weight: 600;
-        color: $color-text-main;
+        color: variables.$color-text-main;
         position: relative;
         z-index: 1;
     }
@@ -453,7 +453,7 @@
     &__satiety-card-text {
         display: flex;
         flex-direction: column;
-        gap: $gap-xxs;
+        gap: variables.$gap-xxs;
         position: relative;
         z-index: 1;
         flex: 1;
@@ -461,19 +461,19 @@
 
     &__satiety-card-title {
         font-weight: 600;
-        color: $color-text-main;
+        color: variables.$color-text-main;
     }
 
     &__satiety-card-description {
         font-size: 0.9rem;
-        color: $color-text-additional;
+        color: variables.$color-text-additional;
     }
 
     &__items-header {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: $gap-m;
+        gap: variables.$gap-m;
         flex-wrap: wrap;
     }
 
@@ -481,20 +481,20 @@
         margin: 0;
         font-size: 1.3rem;
         font-weight: 600;
-        color: $color-text-main;
+        color: variables.$color-text-main;
     }
 
     &__items-hint {
         margin: 0;
         font-size: 0.9rem;
-        color: $color-text-additional;
+        color: variables.$color-text-additional;
     }
 
     &__ai-summary {
         display: flex;
         flex-direction: column;
-        gap: $gap-m;
-        padding: $gap-m;
+        gap: variables.$gap-m;
+        padding: variables.$gap-m;
         border: 1px solid rgba(148, 163, 184, 0.2);
         border-radius: 20px;
         background: #ffffff;
@@ -504,15 +504,15 @@
     &__ai-summary-listing {
         display: flex;
         flex-direction: column;
-        gap: $gap-s;
+        gap: variables.$gap-s;
     }
 
     &__ai-summary-header {
         display: flex;
         align-items: flex-start;
         justify-content: space-between;
-        gap: $gap-s;
-        padding-bottom: $gap-s;
+        gap: variables.$gap-s;
+        padding-bottom: variables.$gap-s;
         border-bottom: 1px solid rgba(148, 163, 184, 0.18);
     }
 
@@ -537,19 +537,19 @@
         flex-direction: column;
         gap: 4px;
         font-size: 0.9rem;
-        color: $color-text-additional;
+        color: variables.$color-text-additional;
     }
 
     &__ai-summary-calories {
         display: inline-flex;
         align-items: baseline;
         gap: 6px;
-        color: $color-text-main;
+        color: variables.$color-text-main;
         font-weight: 600;
     }
 
     &__ai-summary-label {
-        color: $color-text-additional;
+        color: variables.$color-text-additional;
         font-weight: 600;
     }
 
@@ -557,21 +557,21 @@
         display: flex;
         flex-wrap: wrap;
         gap: 12px;
-        color: $color-text-additional;
+        color: variables.$color-text-additional;
         font-weight: 500;
     }
 
     &__ai-summary-actions {
         display: inline-flex;
         align-items: center;
-        gap: $gap-xs;
+        gap: variables.$gap-xs;
     }
 
     &__ai-summary-action {
         appearance: none;
         border: none;
         background: transparent;
-        color: $color-text-additional;
+        color: variables.$color-text-additional;
         cursor: pointer;
         display: inline-flex;
         align-items: center;
@@ -587,21 +587,21 @@
     }
 
     &__ai-summary-action:hover {
-        color: $color-text-main;
+        color: variables.$color-text-main;
     }
 
     &__ai-summary-action--danger {
-        color: $color-no-results;
+        color: variables.$color-no-results;
     }
 
     &__ai-summary-action--danger:hover {
-        color: color.adjust($color-no-results, $lightness: -8%);
+        color: color.adjust(variables.$color-no-results, $lightness: -8%);
     }
 
     &__ai-summary-body {
         display: flex;
         align-items: stretch;
-        gap: $gap-m;
+        gap: variables.$gap-m;
     }
 
     &__ai-summary-image {
@@ -614,7 +614,7 @@
         align-items: center;
         justify-content: center;
         overflow: hidden;
-        color: $color-text-additional;
+        color: variables.$color-text-additional;
     }
 
     &__ai-summary-image img {
@@ -626,16 +626,16 @@
     &__ai-summary-list {
         display: flex;
         flex-direction: column;
-        gap: $gap-xs;
+        gap: variables.$gap-xs;
         flex: 1;
     }
 
     &__ai-summary-row {
         display: flex;
         justify-content: space-between;
-        gap: $gap-m;
+        gap: variables.$gap-m;
         font-size: 0.95rem;
-        color: $color-text-main;
+        color: variables.$color-text-main;
     }
 
     &__ai-summary-name {
@@ -648,13 +648,13 @@
 
     &__ai-summary-amount {
         font-variant-numeric: tabular-nums;
-        color: $color-text-additional;
+        color: variables.$color-text-additional;
     }
 
     &__ai-summary-more {
         margin-top: 2px;
         font-size: 0.9rem;
-        color: $color-text-additional;
+        color: variables.$color-text-additional;
         font-weight: 600;
         background: none;
         border: none;
@@ -664,7 +664,7 @@
     }
 
     &__ai-summary-more:hover {
-        color: $color-text-main;
+        color: variables.$color-text-main;
     }
 
 
@@ -679,8 +679,8 @@
 .consumption-item-card {
     display: flex;
     flex-direction: column;
-    gap: $gap-m;
-    padding: $gap-m 0;
+    gap: variables.$gap-m;
+    padding: variables.$gap-m 0;
     border-bottom: 1px solid rgba(148, 163, 184, 0.18);
 }
 
@@ -696,21 +696,21 @@
 .consumption-item {
     display: flex;
     flex-direction: column;
-    gap: $gap-m;
+    gap: variables.$gap-m;
 }
 
 .consumption-item-card__header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: $gap-m;
-    margin-bottom: $gap-s;
+    gap: variables.$gap-m;
+    margin-bottom: variables.$gap-s;
 }
 
 .consumption-item-card__title-wrapper {
     display: flex;
     align-items: center;
-    gap: $gap-s;
+    gap: variables.$gap-s;
     flex: 1;
     min-width: 0;
 }
@@ -718,7 +718,7 @@
 .consumption-item-card__title {
     font-weight: 600;
     font-size: 1rem;
-    color: $color-text-main;
+    color: variables.$color-text-main;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -726,21 +726,21 @@
 
 .consumption-item-card__meta {
     font-size: 0.85rem;
-    color: $color-text-additional;
-    padding: 0 $gap-s;
-    border-radius: $border-radius-m;
-    background-color: fade($color-text-additional, 10%);
+    color: variables.$color-text-additional;
+    padding: 0 variables.$gap-s;
+    border-radius: variables.$border-radius-m;
+    background-color: fade(variables.$color-text-additional, 10%);
 }
 
 .consumption-item__fields {
     display: flex;
     flex-direction: column;
-    gap: $gap-m;
+    gap: variables.$gap-m;
 }
 
 .consumption-item__row {
     display: flex;
-    gap: $gap-m;
+    gap: variables.$gap-m;
     align-items: flex-start;
     flex-wrap: wrap;
 }
@@ -758,7 +758,7 @@
 .consumption-item__field {
     display: flex;
     flex-direction: column;
-    gap: $gap-xs;
+    gap: variables.$gap-xs;
 
     &--source {
         flex: 2 1 240px;
@@ -780,16 +780,16 @@
 .consumption-item__actions {
     display: flex;
     justify-content: flex-end;
-    gap: $gap-s;
+    gap: variables.$gap-s;
     flex-wrap: wrap;
 }
 
 .consumption-item__actions--stack {
     flex-direction: column;
     align-items: stretch;
-    gap: $gap-s;
+    gap: variables.$gap-s;
     justify-content: flex-start;
-    margin-top: $gap-s;
+    margin-top: variables.$gap-s;
 
     .consumption-item__add {
         width: 100%;
@@ -808,13 +808,13 @@
 }
 
 .consumption-item__error {
-    margin-top: $gap-s;
+    margin-top: variables.$gap-s;
 }
 
 .consumption-manage__nutrition {
     display: flex;
     flex-direction: column;
-    gap: $gap-m;
+    gap: variables.$gap-m;
 }
 
 .consumption-manage__nutrition-toggle {
@@ -829,82 +829,21 @@
     }
 }
 
-.consumption-manage__nutrition-input {
-    width: 100%;
-}
-
-.consumption-manage__nutrition-grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: $gap-s;
-
-    &--secondary {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-}
-
-.consumption-manage__macro-bar {
-    height: 16px;
-    border-radius: 999px;
-    overflow: hidden;
-    display: flex;
-    background: rgba(148, 163, 184, 0.18);
-}
-
-.consumption-manage__macro-bar-segment {
-    height: 100%;
-    min-width: 6px;
-}
-
-@container (max-width: 359px) {
-    .consumption-manage__nutrition-grid {
-        grid-template-columns: 1fr;
-    }
-}
-
-.consumption-manage__nutrition-hint {
-    margin: 0;
-    font-size: 0.9rem;
-    color: $color-text-additional;
-}
-
-.consumption-manage__nutrition-errors {
-    margin-top: 0;
-    padding: 8px 12px;
-    border-radius: 12px;
-    border: 1px solid rgba(239, 68, 68, 0.2);
-    background: rgba(254, 226, 226, 0.7);
-    color: #b91c1c;
-    font-size: 0.85rem;
-    line-height: 1.4;
-    display: grid;
-    gap: 4px;
-}
-
-.consumption-manage__nutrition-warning {
-    border-radius: 14px;
-    border: 1px solid rgba(245, 158, 11, 0.3);
-    background: rgba(255, 251, 235, 0.9);
-    color: #92400e;
-    padding: 12px 14px;
-    font-size: 0.9rem;
-    line-height: 1.4;
-}
-
 .consumption-manage__dialog {
-    padding: $gap-l;
+    padding: variables.$gap-l;
     text-align: center;
 
     &-title {
         font-size: 1.5rem;
         font-weight: 600;
-        color: $color-text-main;
-        margin: 0 0 $gap-l;
+        color: variables.$color-text-main;
+        margin: 0 0 variables.$gap-l;
     }
 
     &-buttons {
         display: flex;
         flex-direction: column;
-        gap: $gap-m;
+        gap: variables.$gap-m;
     }
 }
+

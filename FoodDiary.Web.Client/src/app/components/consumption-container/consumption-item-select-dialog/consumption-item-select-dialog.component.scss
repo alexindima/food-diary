@@ -1,9 +1,9 @@
-﻿@use 'variables' as *;
+﻿@use 'variables' as variables;
 
 .consumption-item-select {
     display: flex;
     flex-direction: column;
-    gap: $gap-m;
+    gap: variables.$gap-m;
     max-height: 70vh;
 
     &__tabs {
@@ -19,6 +19,7 @@
     &__footer {
         display: flex;
         justify-content: flex-end;
-        padding-top: $gap-s;
+        padding-top: variables.$gap-s;
     }
 }
+

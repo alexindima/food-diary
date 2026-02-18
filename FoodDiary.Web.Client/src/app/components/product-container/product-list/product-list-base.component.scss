@@ -1,27 +1,27 @@
-﻿@use 'variables' as *;
+﻿@use 'variables' as variables;
 
 .product-list {
     margin: 0 auto;
     box-sizing: border-box;
     font-size: 14px;
-    --fd-layout-page-section-spacing: $gap-m;
+    --fd-layout-page-section-spacing: variables.$gap-m;
     background: transparent;
     padding: 0;
     border-radius: 0;
     box-shadow: none;
 
     &__header .fd-page-header__actions {
-        gap: $gap-s;
+        gap: variables.$gap-s;
         width: 100%;
     }
 
     &__controls {
         display: grid;
         grid-template-columns: 1fr auto;
-        gap: $gap-s;
+        gap: variables.$gap-s;
         width: 100%;
 
-        @media #{$media-tablet} {
+        @media #{variables.$media-tablet} {
             grid-template-columns: 1fr;
         }
     }
@@ -106,7 +106,7 @@
 
     &__filters {
         display: flex;
-        gap: $gap-s;
+        gap: variables.$gap-s;
         align-items: center;
         flex-wrap: wrap;
         justify-content: flex-end;
@@ -162,13 +162,13 @@
         font-weight: 700;
         border: none;
         background: transparent;
-        color: $color-text-main;
+        color: variables.$color-text-main;
 
         ::ng-deep button,
         ::ng-deep .fd-ui-button {
             border: 1px solid rgba(15, 23, 42, 0.08);
             background: #ffffff;
-            color: $color-text-main;
+            color: variables.$color-text-main;
         }
 
         &--active {
@@ -182,28 +182,28 @@
 
     &__loader {
         display: block;
-        margin: $gap-l auto;
+        margin: variables.$gap-l auto;
     }
 
     &__no-results {
         font-size: 1.2em;
         font-weight: bold;
-        color: $color-text-additional;
+        color: variables.$color-text-additional;
         text-align: center;
-        margin-top: $gap-l;
+        margin-top: variables.$gap-l;
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: $gap-xs;
+        gap: variables.$gap-xs;
 
         &-icon {
             font-size: 2em;
-            color: $color-no-results;
+            color: variables.$color-no-results;
         }
     }
 
     &__pagination {
-        margin-top: $gap-l;
+        margin-top: variables.$gap-l;
     }
 
     &__groups {
@@ -227,7 +227,7 @@
     &__section-label {
         font-weight: 800;
         font-size: 1.05rem;
-        color: $color-text-main;
+        color: variables.$color-text-main;
         white-space: nowrap;
     }
 
@@ -254,7 +254,7 @@
         }
     }
 
-    @media #{$media-tablet} {
+    @media #{variables.$media-tablet} {
         --fd-layout-page-horizontal-padding: 0;
         --fd-layout-page-vertical-padding: 0;
 
@@ -323,7 +323,7 @@
             flex-direction: row;
             align-items: center;
             flex-wrap: nowrap;
-            gap: $gap-xs;
+            gap: variables.$gap-xs;
         }
 
         &__controls .product-list__filter-button,
@@ -441,7 +441,7 @@
     &__name {
         font-size: 1.6rem;
         font-weight: 800;
-        color: $color-text-main;
+        color: variables.$color-text-main;
         line-height: 1.2;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -465,7 +465,7 @@
         font-size: 0.75rem;
         letter-spacing: 0.08em;
         text-transform: uppercase;
-        color: $color-text-additional;
+        color: variables.$color-text-additional;
     }
 
     &__serving-row {
@@ -473,13 +473,13 @@
         align-items: center;
         gap: 10px;
         flex-wrap: wrap;
-        color: $color-text-additional;
+        color: variables.$color-text-additional;
         font-size: 1rem;
         font-weight: 600;
     }
 
     &__serving {
-        color: $color-text-additional;
+        color: variables.$color-text-additional;
     }
 
     &__barcode-chip {
@@ -543,14 +543,14 @@
     &__macro-value {
         font-weight: 800;
         font-size: 1rem;
-        color: $color-text-main;
+        color: variables.$color-text-main;
     }
 
     &__macro-label {
         font-size: 0.85rem;
         letter-spacing: 0.06em;
         text-transform: uppercase;
-        color: $color-text-additional;
+        color: variables.$color-text-additional;
     }
 
     &__action {
@@ -568,7 +568,7 @@
         }
     }
 
-    @media #{$media-mobile} {
+    @media #{variables.$media-mobile} {
         &__container {
             padding: 16px;
         }
@@ -598,4 +598,5 @@
         margin: 0 auto;
     }
 }
+
 

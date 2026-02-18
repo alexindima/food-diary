@@ -1,4 +1,4 @@
-﻿@use 'variables' as *;
+﻿@use 'variables' as variables;
 
 :host {
     display: block;
@@ -7,7 +7,7 @@
 .fd-ui-date-range-input {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-    gap: $gap-s;
+    gap: variables.$gap-s;
     align-items: center;
 }
 
@@ -17,4 +17,5 @@
     font-weight: 600;
     line-height: 1;
 }
+
 

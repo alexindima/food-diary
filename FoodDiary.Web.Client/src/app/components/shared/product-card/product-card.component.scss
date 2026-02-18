@@ -1,4 +1,4 @@
-@use 'variables' as *;
+﻿@use 'variables' as variables;
 
 :host {
     display: block;
@@ -81,7 +81,7 @@
     &__name {
         font-size: 1.2rem;
         font-weight: 800;
-        color: $color-text-main;
+        color: variables.$color-text-main;
         line-height: 1.35;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -95,7 +95,7 @@
         align-items: baseline;
         gap: 6px;
         font-weight: 800;
-        color: $color-text-main;
+        color: variables.$color-text-main;
         white-space: nowrap;
         flex-shrink: 0;
         align-self: center;
@@ -109,7 +109,7 @@
     &__calories-unit {
         font-size: 0.75rem;
         font-weight: 600;
-        color: $color-text-additional;
+        color: variables.$color-text-additional;
         letter-spacing: 0.1em;
     }
 
@@ -153,7 +153,7 @@
         width: 16px;
         height: 16px;
         line-height: 1;
-        color: $color-text-additional;
+        color: variables.$color-text-additional;
         flex-shrink: 0;
     }
 
@@ -209,7 +209,7 @@
 
 }
 
-@media #{$media-mobile} {
+@media #{variables.$media-mobile} {
     .product-card {
         grid-template-columns: 48px minmax(0, 1fr) auto;
         align-items: center;
@@ -334,3 +334,4 @@
         display: none;
     }
 }
+

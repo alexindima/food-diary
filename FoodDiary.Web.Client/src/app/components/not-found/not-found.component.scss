@@ -1,5 +1,5 @@
-@use 'mixins' as *;
-@use 'variables' as *;
+﻿@use 'mixins' as *;
+@use 'variables' as variables;
 
 :host {
     @include host-style('/assets/images/background.webp');
@@ -17,7 +17,7 @@
 
 .not-found__icon {
     font-size: 4em;
-    color: $color-no-results;
+    color: variables.$color-no-results;
     margin-bottom: 20px;
 }
 
@@ -25,29 +25,29 @@
     font-size: 2.5em;
     font-weight: bold;
     line-height: 36px;
-    color: $color-no-results;
+    color: variables.$color-no-results;
     margin-bottom: 20px;
 }
 
 .not-found__description {
     font-size: 1.2em;
-    color: $color-text-additional;
+    color: variables.$color-text-additional;
     margin-bottom: 20px;
 }
 
 .not-found__actions {
     display: flex;
-    gap: $gap-m;
+    gap: variables.$gap-m;
     justify-content: center;
     margin-top: 20px;
 }
 
 .not-found__button {
     padding: 10px 20px;
-    font-size: $font-size-main;
+    font-size: variables.$font-size-main;
     font-weight: bold;
     border: none;
-    border-radius: $border-radius-s;
+    border-radius: variables.$border-radius-s;
     cursor: pointer;
     transition: background-color 0.2s, transform 0.2s;
 }
@@ -76,3 +76,4 @@
 .not-found__button:active {
     transform: scale(1);
 }
+

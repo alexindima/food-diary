@@ -1,4 +1,4 @@
-@use 'variables' as *;
+﻿@use 'variables' as variables;
 
 :host {
     display: block;
@@ -55,7 +55,7 @@
         margin: 0;
         font-size: 0.95rem;
         font-weight: 600;
-        color: $color-text-main;
+        color: variables.$color-text-main;
     }
 
     canvas {
@@ -68,7 +68,7 @@
 .stats-nutrition-card__empty {
     margin: 0;
     text-align: center;
-    color: $color-text-additional;
+    color: variables.$color-text-additional;
     padding: 24px 0;
 }
 
@@ -89,3 +89,4 @@
         grid-template-columns: 1fr;
     }
 }
+

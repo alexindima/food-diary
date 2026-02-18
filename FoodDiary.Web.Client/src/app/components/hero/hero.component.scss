@@ -1,11 +1,11 @@
-@use 'variables' as *;
+﻿@use 'variables' as variables;
 
 .hero {
     position: relative;
     padding: clamp(14px, 3vw, 24px) 0 clamp(32px, 4vw, 56px);
     overflow: hidden;
     background: linear-gradient(180deg, #e8f3ff 0%, #f5faff 40%, #e9f4ff 100%);
-    color: $color-text-main;
+    color: variables.$color-text-main;
     --fd-layout-page-horizontal-padding: clamp(12px, 4vw, 24px);
 
     &__top {
@@ -29,7 +29,7 @@
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
         align-items: start;
-        gap: clamp($gap-m, 3vw, 40px);
+        gap: clamp(variables.$gap-m, 3vw, 40px);
 
         > * {
             min-width: 0;
@@ -39,7 +39,7 @@
     &__copy {
         display: flex;
         flex-direction: column;
-        gap: $gap-m;
+        gap: variables.$gap-m;
         max-width: 600px;
         min-width: 0;
     }
@@ -51,7 +51,7 @@
         font-size: 0.85rem;
         border-radius: 999px;
         background: rgba(59, 130, 246, 0.1);
-        color: $color-primary;
+        color: variables.$color-primary;
         font-weight: 700;
         letter-spacing: 0.02em;
     }
@@ -61,19 +61,19 @@
         font-size: clamp(32px, 5vw, 48px);
         line-height: 1.1;
         letter-spacing: -0.02em;
-        color: $color-text-main;
+        color: variables.$color-text-main;
     }
 
     &__subtitle {
         margin: 0;
         font-size: 1.1rem;
-        color: $color-text-additional;
+        color: variables.$color-text-additional;
         max-width: 520px;
     }
 
     &__actions {
         display: flex;
-        gap: $gap-s;
+        gap: variables.$gap-s;
         flex-wrap: wrap;
         align-items: center;
     }
@@ -131,7 +131,7 @@
     &__reassurance {
         margin: 0;
         font-size: 0.95rem;
-        color: $color-text-additional;
+        color: variables.$color-text-additional;
     }
 
     &__visual {
@@ -181,7 +181,7 @@
 
     &__preview-title {
         margin: 0;
-        color: $color-text-additional;
+        color: variables.$color-text-additional;
         font-weight: 700;
     }
 
@@ -201,7 +201,7 @@
     }
 
     &__preview-label {
-        color: $color-text-additional;
+        color: variables.$color-text-additional;
         font-weight: 600;
         font-size: 0.95rem;
     }
@@ -209,11 +209,11 @@
     &__preview-value {
         font-size: 1.65rem;
         font-weight: 800;
-        color: $color-text-main;
+        color: variables.$color-text-main;
     }
 
     &__preview-meta {
-        color: $color-text-additional;
+        color: variables.$color-text-additional;
         font-weight: 600;
         font-size: 0.95rem;
     }
@@ -245,7 +245,7 @@
     }
 
     &__week-title {
-        color: $color-text-additional;
+        color: variables.$color-text-additional;
         font-weight: 600;
         font-size: 0.95rem;
     }
@@ -272,17 +272,17 @@
 
     &__meal-title {
         font-weight: 700;
-        color: $color-text-main;
+        color: variables.$color-text-main;
     }
 
     &__meal-meta {
-        color: $color-text-additional;
+        color: variables.$color-text-additional;
         font-size: 0.9rem;
     }
 
     &__meal-text {
         margin: 0;
-        color: $color-text-additional;
+        color: variables.$color-text-additional;
         font-size: 0.95rem;
     }
 
@@ -315,7 +315,7 @@
         }
 
         &__mock {
-            margin-top: $gap-m;
+            margin-top: variables.$gap-m;
         }
 
         &__visual {
@@ -333,3 +333,4 @@
 :host ::ng-deep .hero__language-toggle .fd-ui-segmented-toggle__item {
     min-width: 0;
 }
+

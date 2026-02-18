@@ -1,4 +1,4 @@
-﻿@use 'variables' as *;
+﻿@use 'variables' as variables;
 
 :host {
     display: block;
@@ -9,7 +9,7 @@
     padding: 18px;
     background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
     box-shadow: 0 18px 34px rgba(15, 23, 42, 0.16);
-    color: $color-text-main;
+    color: variables.$color-text-main;
     display: flex;
     flex-direction: column;
     gap: 12px;
@@ -51,6 +51,7 @@
 
     &__status {
         font-size: 0.95rem;
-        color: $color-text-additional;
+        color: variables.$color-text-additional;
     }
 }
+

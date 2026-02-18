@@ -15,6 +15,7 @@
 
 ## Coding Style & Naming Conventions
 - TypeScript uses Angular defaults: strict compilation, standalone components, SCSS styles. Prefer `fd-ui-kit/...` imports over relative paths for shared UI pieces.
+- SCSS: import shared variables as `@use 'variables' as variables;` and reference tokens via explicit namespace (e.g., `variables.$gap-m`), avoid `@use 'variables' as *;`.
 - Linting: ESLint (`eslint.config.js`), Stylelint, Prettier. Run `npm run lint`, `npm run stylelint`, `npm run prettier` before committing.
 - C# follows standard .NET conventions with nullable enabled. Keep namespace per folder (e.g., `FoodDiary.Application.*`).
 

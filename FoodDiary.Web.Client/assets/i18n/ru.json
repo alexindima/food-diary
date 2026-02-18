@@ -713,6 +713,15 @@
         },
         "STEPS_TITLE": "Ингредиенты и шаги"
     },
+    "NUTRITION_EDITOR": {
+        "CALORIES": "Калории",
+        "PROTEINS": "Б",
+        "FATS": "Ж",
+        "CARBS": "У",
+        "FIBER": "Клетчатка",
+        "ALCOHOL": "Алкоголь",
+        "CALORIES_MISMATCH_WARNING": "По указанным макронутриентам ожидается около {{expected}} ккал, но вы указали {{actual}} ккал. Проверьте, пожалуйста."
+    },
     "PRODUCT_AI_DIALOG": {
         "TITLE": "Распознавание продукта",
         "IMAGE_LABEL": "Фото для распознавания",

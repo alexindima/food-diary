@@ -1,4 +1,4 @@
-@use 'variables' as *;
+﻿@use 'variables' as variables;
 
 :host {
     display: block;
@@ -16,10 +16,10 @@
     &__copy {
         display: flex;
         flex-direction: column;
-        gap: $gap-xs;
+        gap: variables.$gap-xs;
 
         &--secondary {
-            margin-top: $gap-l;
+            margin-top: variables.$gap-l;
             padding-top: clamp(4px, 1vw, 10px);
         }
     }
@@ -30,7 +30,7 @@
         padding: 6px 12px;
         border-radius: 999px;
         background: rgba(59, 130, 246, 0.1);
-        color: $color-primary;
+        color: variables.$color-primary;
         font-weight: 700;
         font-size: 0.9rem;
         letter-spacing: 0.02em;
@@ -41,13 +41,13 @@
     &__title {
         margin: 0;
         font-size: clamp(26px, 3vw, 34px);
-        color: $color-text-main;
+        color: variables.$color-text-main;
         letter-spacing: -0.01em;
     }
 
     &__subtitle {
         margin: 6px 0 0;
-        color: $color-text-additional;
+        color: variables.$color-text-additional;
         font-size: 1.02rem;
         max-width: 620px;
     }
@@ -65,13 +65,13 @@
 .landing-preview {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
-    gap: clamp($gap-l, 4vw, 40px);
+    gap: clamp(variables.$gap-l, 4vw, 40px);
     margin-top: 0;
 
     &__item {
         display: grid;
         grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
-        gap: clamp($gap-m, 3vw, 32px);
+        gap: clamp(variables.$gap-m, 3vw, 32px);
         align-items: start;
         min-width: 0;
     }
@@ -92,7 +92,7 @@
     &__copy {
         display: flex;
         flex-direction: column;
-        gap: $gap-xs;
+        gap: variables.$gap-xs;
         padding-top: clamp(4px, 1vw, 10px);
         min-width: 0;
     }
@@ -103,7 +103,7 @@
         padding: 6px 12px;
         border-radius: 999px;
         background: rgba(59, 130, 246, 0.1);
-        color: $color-primary;
+        color: variables.$color-primary;
         font-weight: 700;
         font-size: 0.85rem;
         letter-spacing: 0.02em;
@@ -112,13 +112,13 @@
     &__title {
         margin: 0;
         font-size: clamp(20px, 2.6vw, 28px);
-        color: $color-text-main;
+        color: variables.$color-text-main;
         letter-spacing: -0.01em;
     }
 
     &__subtitle {
         margin: 0;
-        color: $color-text-additional;
+        color: variables.$color-text-additional;
         font-size: 1rem;
         max-width: 520px;
     }
@@ -154,15 +154,15 @@
 
 .landing-preview__stack {
     display: grid;
-    gap: clamp($gap-l, 4vw, 40px);
-    margin-top: $gap-m;
+    gap: clamp(variables.$gap-l, 4vw, 40px);
+    margin-top: variables.$gap-m;
 }
 
 .landing-tour-block {
     margin-top: 0;
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr);
-    gap: clamp($gap-m, 3vw, 32px);
+    gap: clamp(variables.$gap-m, 3vw, 32px);
     align-items: start;
     min-width: 0;
 
@@ -190,19 +190,19 @@
     &__group {
         padding: 0;
         display: grid;
-        gap: $gap-s;
+        gap: variables.$gap-s;
     }
 
     &__group-title {
         font-weight: 800;
-        color: $color-text-main;
+        color: variables.$color-text-main;
         letter-spacing: -0.01em;
     }
 
     &__cards {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-        gap: $gap-s;
+        gap: variables.$gap-s;
         justify-items: stretch;
     }
 
@@ -212,9 +212,9 @@
 
     &__drawer {
         position: relative;
-        padding: $gap-m;
+        padding: variables.$gap-m;
         display: grid;
-        gap: $gap-s;
+        gap: variables.$gap-s;
         align-content: start;
         width: min(720px, 100%);
         margin: 0;
@@ -223,7 +223,7 @@
 
     &__hint {
         margin: 0;
-        color: $color-text-additional;
+        color: variables.$color-text-additional;
         font-size: 0.95rem;
     }
 }
@@ -262,3 +262,4 @@
     width: 100%;
     max-width: 100%;
 }
+

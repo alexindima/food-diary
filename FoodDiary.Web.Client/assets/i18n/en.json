@@ -748,6 +748,15 @@
         "DELETE_CONFIRM": "Are you sure you want to delete this product?",
         "DELETE_ERROR": "Unable to delete the product. Please try again."
     },
+    "NUTRITION_EDITOR": {
+        "CALORIES": "Calories",
+        "PROTEINS": "P",
+        "FATS": "F",
+        "CARBS": "C",
+        "FIBER": "Fiber",
+        "ALCOHOL": "Alcohol",
+        "CALORIES_MISMATCH_WARNING": "Based on macros, expected about {{expected}} kcal, but you entered {{actual}} kcal. Please double-check."
+    },
     "PRODUCT_AI_DIALOG": {
         "TITLE": "Product recognition",
         "IMAGE_LABEL": "Photo for recognition",

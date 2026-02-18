@@ -1,27 +1,27 @@
-@use 'variables' as *;
+﻿@use 'variables' as variables;
 
 .recipe-list {
     margin: 0 auto;
     box-sizing: border-box;
     font-size: 14px;
-    --fd-layout-page-section-spacing: $gap-m;
+    --fd-layout-page-section-spacing: variables.$gap-m;
     background: transparent;
     padding: 0;
     border-radius: 0;
     box-shadow: none;
 
     &__header .fd-page-header__actions {
-        gap: $gap-s;
+        gap: variables.$gap-s;
         width: 100%;
     }
 
     &__controls {
         display: grid;
         grid-template-columns: 1fr auto;
-        gap: $gap-s;
+        gap: variables.$gap-s;
         width: 100%;
 
-        @media #{$media-tablet} {
+        @media #{variables.$media-tablet} {
             grid-template-columns: 1fr;
         }
     }
@@ -104,7 +104,7 @@
 
     &__filters {
         display: flex;
-        gap: $gap-s;
+        gap: variables.$gap-s;
         align-items: center;
         justify-content: flex-end;
     }
@@ -154,7 +154,7 @@
 
     &__loader {
         display: block;
-        margin: $gap-l auto;
+        margin: variables.$gap-l auto;
     }
 
     &__groups {
@@ -178,7 +178,7 @@
     &__section-label {
         font-weight: 800;
         font-size: 1.05rem;
-        color: $color-text-main;
+        color: variables.$color-text-main;
         white-space: nowrap;
     }
 
@@ -203,25 +203,25 @@
     &__no-results {
         font-size: 1.2em;
         font-weight: bold;
-        color: $color-text-additional;
+        color: variables.$color-text-additional;
         text-align: center;
-        margin-top: $gap-l;
+        margin-top: variables.$gap-l;
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: $gap-xs;
+        gap: variables.$gap-xs;
 
         &-icon {
             font-size: 2em;
-            color: $color-no-results;
+            color: variables.$color-no-results;
         }
     }
 
     &__pagination {
-        margin-top: $gap-l;
+        margin-top: variables.$gap-l;
     }
 
-    @media #{$media-tablet} {
+    @media #{variables.$media-tablet} {
         --fd-layout-page-horizontal-padding: 0;
         --fd-layout-page-vertical-padding: 0;
 
@@ -290,7 +290,7 @@
             flex-direction: row;
             align-items: center;
             flex-wrap: nowrap;
-            gap: $gap-xs;
+            gap: variables.$gap-xs;
         }
 
         &__controls .recipe-list__filter-button {
@@ -324,3 +324,4 @@
         }
     }
 }
+

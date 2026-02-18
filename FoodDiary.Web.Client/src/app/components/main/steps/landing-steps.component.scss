@@ -1,4 +1,4 @@
-@use 'variables' as *;
+﻿@use 'variables' as variables;
 
 :host {
     display: block;
@@ -14,7 +14,7 @@
     &__copy {
         display: flex;
         flex-direction: column;
-        gap: $gap-xs;
+        gap: variables.$gap-xs;
 
         &--center {
             align-items: center;
@@ -28,7 +28,7 @@
         padding: 6px 12px;
         border-radius: 999px;
         background: rgba(59, 130, 246, 0.1);
-        color: $color-primary;
+        color: variables.$color-primary;
         font-weight: 700;
         font-size: 0.9rem;
         letter-spacing: 0.02em;
@@ -39,13 +39,13 @@
     &__title {
         margin: 0;
         font-size: clamp(26px, 3vw, 34px);
-        color: $color-text-main;
+        color: variables.$color-text-main;
         letter-spacing: -0.01em;
     }
 
     &__subtitle {
         margin: 6px 0 0;
-        color: $color-text-additional;
+        color: variables.$color-text-additional;
         font-size: 1.02rem;
         max-width: 620px;
     }
@@ -59,18 +59,18 @@
 .landing-steps {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: $gap-m;
-    margin-top: $gap-m;
+    gap: variables.$gap-m;
+    margin-top: variables.$gap-m;
 
     &__item {
         background: #fff;
         border-radius: 14px;
-        padding: $gap-m;
+        padding: variables.$gap-m;
         border: 1px solid rgba(17, 24, 39, 0.06);
         box-shadow: 0 10px 28px rgba(15, 23, 42, 0.08);
         display: flex;
         flex-direction: column;
-        gap: $gap-xs;
+        gap: variables.$gap-xs;
     }
 
     &__icon {
@@ -78,7 +78,7 @@
         height: 36px;
         border-radius: 12px;
         background: rgba(59, 130, 246, 0.12);
-        color: $color-primary;
+        color: variables.$color-primary;
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -87,13 +87,14 @@
 
     &__title {
         margin: 0;
-        color: $color-text-main;
+        color: variables.$color-text-main;
         font-size: 1.05rem;
     }
 
     &__text {
         margin: 0;
-        color: $color-text-additional;
+        color: variables.$color-text-additional;
         line-height: 1.5;
     }
 }
+
