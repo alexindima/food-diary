@@ -563,6 +563,16 @@
         "MANUAL_NUTRITION_TITLE": "Adjust nutritional values",
         "NUTRITION_GROUP_TITLE": "Nutrition",
         "AUTO_NUTRITION_LABEL": "Calculate automatically",
+        "NUTRITION_MODE": {
+            "AUTO": "Automatic",
+            "MANUAL": "Manual",
+            "ARIA": "Nutrition calculation mode"
+        },
+        "NUTRITION_SCALE_MODE": {
+            "RECIPE": "Per recipe",
+            "PORTION": "Per serving",
+            "ARIA": "Nutrition input basis"
+        },
         "MANUAL_NUTRITION_HINT": "Custom values will override automatic calculations.",
         "MANUAL_CALORIES": "Calories",
         "MANUAL_PROTEINS": "Proteins",

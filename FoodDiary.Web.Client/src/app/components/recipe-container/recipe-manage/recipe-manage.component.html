@@ -312,14 +312,22 @@
             appearance="entry"
             [title]="'RECIPE_MANAGE.NUTRITION_GROUP_TITLE' | translate"
           >
-            <div class="recipe-manage__calories-header">
-              <fd-ui-checkbox formControlName="calculateNutritionAutomatically"
-                class="recipe-manage__calories-toggle"
-                [label]="'RECIPE_MANAGE.AUTO_NUTRITION_LABEL' | translate"
-               />
-            </div>
-
             <div class="recipe-manage__nutrition">
+              <fd-ui-segmented-toggle
+                class="recipe-manage__nutrition-toggle"
+                [options]="nutritionModeOptions"
+                [selectedValue]="nutritionMode"
+                (selectedValueChange)="onNutritionModeChange($event)"
+                [ariaLabel]="'RECIPE_MANAGE.NUTRITION_MODE.ARIA' | translate"
+              />
+              <fd-ui-segmented-toggle
+                class="recipe-manage__nutrition-toggle"
+                [options]="nutritionScaleModeOptions"
+                [selectedValue]="nutritionScaleMode"
+                (selectedValueChange)="onNutritionScaleModeChange($event)"
+                [ariaLabel]="'RECIPE_MANAGE.NUTRITION_SCALE_MODE.ARIA' | translate"
+              />
+
               <fd-ui-nutrient-input
                 class="recipe-manage__nutrition-input recipe-manage__nutrition-input--calories"
                 formControlName="manualCalories"
@@ -334,10 +342,15 @@
                 [tintColor]="nutrientFillColors.calories"
                 [textColor]="nutrientTextColors.calories"
               />
+              @if (caloriesError()) {
+                <div class="recipe-manage__nutrition-errors">
+                  {{ caloriesError() }}
+                </div>
+              }
 
               <div class="recipe-manage__nutrition-grid">
                 <fd-ui-nutrient-input
-                  class="recipe-manage__nutrition-input recipe-manage__nutrition-input--macro"
+                  class="recipe-manage__nutrition-input recipe-manage__nutrition-input--macro recipe-manage__nutrition-input--proteins"
                   formControlName="manualProteins"
                     type="number"
                     size="md"
@@ -351,7 +364,7 @@
                   [textColor]="nutrientTextColors.proteins"
                 />
                 <fd-ui-nutrient-input
-                  class="recipe-manage__nutrition-input recipe-manage__nutrition-input--macro"
+                  class="recipe-manage__nutrition-input recipe-manage__nutrition-input--macro recipe-manage__nutrition-input--fats"
                   formControlName="manualFats"
                     type="number"
                     size="md"
@@ -365,7 +378,7 @@
                   [textColor]="nutrientTextColors.fats"
                 />
                 <fd-ui-nutrient-input
-                  class="recipe-manage__nutrition-input recipe-manage__nutrition-input--macro"
+                  class="recipe-manage__nutrition-input recipe-manage__nutrition-input--macro recipe-manage__nutrition-input--carbs"
                   formControlName="manualCarbs"
                     type="number"
                     size="md"
@@ -376,10 +389,25 @@
                   [required]="true"
                   [readonly]="recipeForm.controls.calculateNutritionAutomatically.value"
                   [tintColor]="nutrientFillColors.carbs"
-                  [textColor]="nutrientTextColors.carbs"
+                    [textColor]="nutrientTextColors.carbs"
                 />
+              </div>
+
+              <div class="recipe-manage__macro-bar" aria-hidden="true">
+                @if (!macroBarState().isEmpty) {
+                  @for (segment of macroBarState().segments; track segment.key) {
+                    <span
+                      class="recipe-manage__macro-bar-segment"
+                      [style.width.%]="segment.percent"
+                      [style.backgroundColor]="getMacroColor(segment.key)"
+                    ></span>
+                  }
+                }
+              </div>
+
+              <div class="recipe-manage__nutrition-grid recipe-manage__nutrition-grid--secondary">
                 <fd-ui-nutrient-input
-                  class="recipe-manage__nutrition-input recipe-manage__nutrition-input--macro"
+                  class="recipe-manage__nutrition-input recipe-manage__nutrition-input--macro recipe-manage__nutrition-input--fiber"
                   formControlName="manualFiber"
                     type="number"
                     size="md"
@@ -391,11 +419,9 @@
                   [tintColor]="nutrientFillColors.fiber"
                   [textColor]="nutrientTextColors.fiber"
                 />
-              </div>
-
-              <fd-ui-nutrient-input
-                class="recipe-manage__nutrition-input recipe-manage__nutrition-input--alcohol"
-                formControlName="manualAlcohol"
+                <fd-ui-nutrient-input
+                  class="recipe-manage__nutrition-input recipe-manage__nutrition-input--alcohol"
+                  formControlName="manualAlcohol"
                   type="number"
                   size="md"
                   icon="wine_bar"
@@ -403,9 +429,15 @@
                   [label]="'PRODUCT_MANAGE.ALCOHOL' | translate"
                   [unitLabel]="'GENERAL.UNITS.G' | translate"
                   placeholder="0"
-                [readonly]="recipeForm.controls.calculateNutritionAutomatically.value"
-                [tintColor]="'rgba(148, 163, 184, 0.10)'"
-              />
+                  [readonly]="recipeForm.controls.calculateNutritionAutomatically.value"
+                  [tintColor]="'rgba(148, 163, 184, 0.10)'"
+                />
+              </div>
+              @if (macrosError()) {
+                <div class="recipe-manage__nutrition-errors">
+                  {{ macrosError() }}
+                </div>
+              }
             </div>
 
             @if (!recipeForm.controls.calculateNutritionAutomatically.value) {

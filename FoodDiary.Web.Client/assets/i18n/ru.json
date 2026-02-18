@@ -529,6 +529,16 @@
         "MANUAL_NUTRITION_TITLE": "Корректировка калорийности",
         "NUTRITION_GROUP_TITLE": "Пищевая ценность",
         "AUTO_NUTRITION_LABEL": "Рассчитывать автоматически",
+        "NUTRITION_MODE": {
+            "AUTO": "Авто",
+            "MANUAL": "Вручную",
+            "ARIA": "Режим расчёта пищевой ценности"
+        },
+        "NUTRITION_SCALE_MODE": {
+            "RECIPE": "На рецепт",
+            "PORTION": "На порцию",
+            "ARIA": "Основа ввода пищевой ценности"
+        },
         "MANUAL_NUTRITION_HINT": "Введённые значения перекроют автоматический расчёт.",
         "MANUAL_CALORIES": "Калории",
         "MANUAL_PROTEINS": "Белки",

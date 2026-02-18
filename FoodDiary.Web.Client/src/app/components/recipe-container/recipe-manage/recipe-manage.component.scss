@@ -108,6 +108,8 @@
         }
 
         &--facts {
+            container-type: inline-size;
+
             ::ng-deep .fd-ui-card {
                 padding-bottom: $gap-l;
             }
@@ -220,6 +222,19 @@
         padding: 12px 14px;
         font-size: 0.9rem;
         line-height: 1.4;
+    }
+
+    &__nutrition-errors {
+        margin-top: 0;
+        padding: 8px 12px;
+        border-radius: 12px;
+        border: 1px solid rgba(239, 68, 68, 0.2);
+        background: rgba(254, 226, 226, 0.7);
+        color: #b91c1c;
+        font-size: 0.85rem;
+        line-height: 1.4;
+        display: grid;
+        gap: 4px;
     }
 
     &__actions-panel {
@@ -384,16 +399,22 @@
         }
     }
 
-    &__calories-header {
-        display: flex;
-        flex-direction: column;
-        gap: $gap-s;
-    }
-
     &__nutrition {
         display: flex;
         flex-direction: column;
         gap: $gap-m;
+    }
+
+    &__nutrition-toggle {
+        width: 100%;
+
+        ::ng-deep .fd-ui-segmented-toggle {
+            width: 100%;
+            justify-content: space-between;
+            background: rgba(148, 163, 184, 0.14);
+            border: 1px solid rgba(148, 163, 184, 0.24);
+            box-shadow: none;
+        }
     }
 
     &__nutrition-input {
@@ -402,8 +423,31 @@
 
     &__nutrition-grid {
         display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: $gap-s;
+
+        &--secondary {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+
+    &__macro-bar {
+        height: 16px;
+        border-radius: 999px;
+        overflow: hidden;
+        display: flex;
+        background: rgba(148, 163, 184, 0.18);
+    }
+
+    &__macro-bar-segment {
+        height: 100%;
+        min-width: 6px;
+    }
+
+    @container (max-width: 359px) {
+        .recipe-manage__nutrition-grid {
+            grid-template-columns: 1fr;
+        }
     }
 }
 
