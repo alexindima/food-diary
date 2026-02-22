@@ -13,6 +13,7 @@ using FoodDiary.Domain.Entities.Shopping;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
+using FoodDiary.Domain.ValueObjects;
 
 namespace FoodDiary.Application.Admin.Commands.UpdateAdminUser;
 
@@ -116,9 +117,8 @@ public sealed class UpdateAdminUserCommandHandler(IUserRepository userRepository
             return Result.Success<string?>(null);
         }
 
-        var normalized = value.Trim().ToLowerInvariant();
-        return normalized is "en" or "ru"
-            ? Result.Success<string?>(normalized)
+        return LanguageCode.TryParse(value, out var language)
+            ? Result.Success<string?>(language.Value)
             : Result.Failure<string?>(Errors.Validation.Invalid("language", "Invalid language value."));
     }
 }

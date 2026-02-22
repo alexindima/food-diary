@@ -18,24 +18,16 @@ public class UpdateGoalsCommandHandler(IUserRepository userRepository)
             return Result.Failure<GoalsResponse>(User.NotFound(command.UserId.Value));
         }
 
-        user.UpdateProfile(
+        user.UpdateGoals(
             dailyCalorieTarget: command.DailyCalorieTarget,
             proteinTarget: command.ProteinTarget,
             fatTarget: command.FatTarget,
             carbTarget: command.CarbTarget,
             fiberTarget: command.FiberTarget,
-            waterGoal: command.WaterGoal
+            waterGoal: command.WaterGoal,
+            desiredWeight: command.DesiredWeight,
+            desiredWaist: command.DesiredWaist
         );
-
-        if (command.DesiredWeight.HasValue)
-        {
-            user.UpdateDesiredWeight(command.DesiredWeight);
-        }
-
-        if (command.DesiredWaist.HasValue)
-        {
-            user.UpdateDesiredWaist(command.DesiredWaist);
-        }
 
         await userRepository.UpdateAsync(user);
 

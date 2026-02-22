@@ -1,4 +1,5 @@
 using FluentValidation;
+using DesiredWaistValueObject = FoodDiary.Domain.ValueObjects.DesiredWaist;
 
 namespace FoodDiary.Application.Users.Commands.UpdateDesiredWaist;
 
@@ -8,7 +9,7 @@ public class UpdateDesiredWaistCommandValidator : AbstractValidator<UpdateDesire
     {
         RuleFor(c => c.DesiredWaist)
             .GreaterThan(0)
-            .LessThanOrEqualTo(300)
+            .LessThanOrEqualTo(DesiredWaistValueObject.MaxValue)
             .When(c => c.DesiredWaist.HasValue);
     }
 }

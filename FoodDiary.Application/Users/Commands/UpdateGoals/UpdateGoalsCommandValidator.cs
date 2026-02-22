@@ -1,5 +1,7 @@
 using FluentValidation;
 using FoodDiary.Domain.ValueObjects;
+using DesiredWaistValueObject = FoodDiary.Domain.ValueObjects.DesiredWaist;
+using DesiredWeightValueObject = FoodDiary.Domain.ValueObjects.DesiredWeight;
 
 namespace FoodDiary.Application.Users.Commands.UpdateGoals;
 
@@ -67,17 +69,19 @@ public class UpdateGoalsCommandValidator : AbstractValidator<UpdateGoalsCommand>
         When(x => x.DesiredWeight.HasValue, () =>
         {
             RuleFor(x => x.DesiredWeight)
-                .GreaterThanOrEqualTo(0)
+                .GreaterThan(0)
+                .LessThanOrEqualTo(DesiredWeightValueObject.MaxValue)
                 .WithErrorCode("Validation.Invalid")
-                .WithMessage("DesiredWeight must be greater than or equal to 0");
+                .WithMessage($"DesiredWeight must be in range (0, {DesiredWeightValueObject.MaxValue}]");
         });
 
         When(x => x.DesiredWaist.HasValue, () =>
         {
             RuleFor(x => x.DesiredWaist)
-                .GreaterThanOrEqualTo(0)
+                .GreaterThan(0)
+                .LessThanOrEqualTo(DesiredWaistValueObject.MaxValue)
                 .WithErrorCode("Validation.Invalid")
-                .WithMessage("DesiredWaist must be greater than or equal to 0");
+                .WithMessage($"DesiredWaist must be in range (0, {DesiredWaistValueObject.MaxValue}]");
         });
     }
 }

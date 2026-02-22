@@ -33,6 +33,12 @@ public class UpdateUserCommandHandler(
             return Result.Failure<UserResponse>(languageResult.Error);
         }
 
+        var genderResult = ParseGender(command.Gender);
+        if (genderResult.IsFailure)
+        {
+            return Result.Failure<UserResponse>(genderResult.Error);
+        }
+
         var oldAssetId = user.ProfileImageAssetId;
         ImageAssetId? newAssetId = null;
         if (command.ProfileImageAssetId.HasValue)
@@ -45,7 +51,7 @@ public class UpdateUserCommandHandler(
             firstName: Normalize(command.FirstName),
             lastName: Normalize(command.LastName),
             birthDate: command.BirthDate,
-            gender: Normalize(command.Gender),
+            gender: genderResult.Value,
             weight: command.Weight,
             height: command.Height,
             activityLevel: activityLevelResult.Value,
@@ -102,10 +108,21 @@ public class UpdateUserCommandHandler(
             return Result.Success<string?>(null);
         }
 
-        var normalized = value.Trim().ToLowerInvariant();
-        return normalized is "en" or "ru"
-            ? Result.Success<string?>(normalized)
+        return LanguageCode.TryParse(value, out var language)
+            ? Result.Success<string?>(language.Value)
             : Result.Failure<string?>(Validation.Invalid(nameof(UpdateUserCommand.Language), "Invalid language value."));
+    }
+
+    private static Result<string?> ParseGender(string? value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            return Result.Success<string?>(null);
+        }
+
+        return GenderCode.TryParse(value, out var gender)
+            ? Result.Success<string?>(gender.Value)
+            : Result.Failure<string?>(Validation.Invalid(nameof(UpdateUserCommand.Gender), "Invalid gender value."));
     }
 
     private static async Task TryDeleteAssetAsync(

@@ -1,3 +1,5 @@
+using System.Text.RegularExpressions;
+
 namespace FoodDiary.ArchitectureTests;
 
 public class FeatureStructureTests
@@ -43,6 +45,48 @@ public class FeatureStructureTests
         }
     }
 
+    [Theory]
+    [InlineData("FoodDiary.Application", "FoodDiary.Application")]
+    [InlineData("FoodDiary.Domain", "FoodDiary.Domain")]
+    [InlineData("FoodDiary.Web.Api", "FoodDiary.WebApi")]
+    public void Namespaces_Match_ProjectFolderStructure(string projectFolder, string namespaceRoot)
+    {
+        var root = GetRepositoryRoot();
+        var projectPath = Path.Combine(root, projectFolder);
+        var sourceFiles = Directory.GetFiles(projectPath, "*.cs", SearchOption.AllDirectories)
+            .Where(path => !path.Contains($"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase))
+            .Where(path => !path.Contains($"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase))
+            .ToArray();
+
+        Assert.NotEmpty(sourceFiles);
+
+        foreach (var sourceFile in sourceFiles)
+        {
+            var namespaceFromFile = ReadNamespace(sourceFile);
+            if (string.IsNullOrWhiteSpace(namespaceFromFile))
+            {
+                // Entry points may use top-level statements without explicit namespace.
+                if (string.Equals(Path.GetFileName(sourceFile), "Program.cs", StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
+
+                Assert.False(string.IsNullOrWhiteSpace(namespaceFromFile), $"Namespace declaration not found in '{sourceFile}'.");
+            }
+
+            var relativeDirectory = Path.GetDirectoryName(Path.GetRelativePath(projectPath, sourceFile)) ?? string.Empty;
+            var namespaceSuffix = relativeDirectory
+                .Replace(Path.DirectorySeparatorChar, '.')
+                .Replace(Path.AltDirectorySeparatorChar, '.');
+
+            var expectedNamespace = string.IsNullOrWhiteSpace(namespaceSuffix)
+                ? namespaceRoot
+                : $"{namespaceRoot}.{namespaceSuffix}";
+
+            Assert.Equal(expectedNamespace, namespaceFromFile);
+        }
+    }
+
     private static string GetRepositoryRoot()
     {
         var current = new DirectoryInfo(AppContext.BaseDirectory);
@@ -58,5 +102,12 @@ public class FeatureStructureTests
         }
 
         throw new InvalidOperationException("Repository root was not found.");
+    }
+
+    private static string? ReadNamespace(string sourceFilePath)
+    {
+        var source = File.ReadAllText(sourceFilePath);
+        var match = Regex.Match(source, @"^\s*namespace\s+([A-Za-z0-9_.]+)\s*(?:;|\{)", RegexOptions.Multiline);
+        return match.Success ? match.Groups[1].Value : null;
     }
 }

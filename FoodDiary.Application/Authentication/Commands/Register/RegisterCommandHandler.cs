@@ -16,6 +16,7 @@ using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Entities.Shopping;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Domain.ValueObjects;
 using System;
 
 namespace FoodDiary.Application.Authentication.Commands.Register;
@@ -44,7 +45,7 @@ public class RegisterCommandHandler : ICommandHandler<RegisterCommand, Result<Au
         // Валидация email уникальности через FluentValidation
         var hashedPassword = _passwordHasher.Hash(command.Password);
         var user = User.Create(command.Email, hashedPassword);
-        var normalizedLanguage = NormalizeLanguage(command.Language);
+        var normalizedLanguage = LanguageCode.FromPreferred(command.Language).Value;
         user.UpdateProfile(
             dailyCalorieTarget: 2000,
             proteinTarget: 150,
@@ -85,22 +86,6 @@ public class RegisterCommandHandler : ICommandHandler<RegisterCommand, Result<Au
         var authResponse = new AuthenticationResponse(accessToken, refreshToken, userResponse);
         return Result.Success(authResponse);
     }
-    private static string NormalizeLanguage(string? value)
-    {
-        if (string.IsNullOrWhiteSpace(value))
-        {
-            return "en";
-        }
-
-        var lower = value.Trim().ToLowerInvariant();
-        if (lower.StartsWith("ru"))
-        {
-            return "ru";
-        }
-
-        return "en";
-    }
-
 }
 
 

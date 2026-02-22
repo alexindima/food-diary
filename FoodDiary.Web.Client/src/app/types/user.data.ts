@@ -81,7 +81,6 @@ export class UpdateUserDto {
         const normalizedImage = normalizeProfileImage(formValues.profileImage as ImageSelection | string | null | undefined);
         this.profileImage = normalizedImage?.url;
         this.profileImageAssetId = normalizedImage?.assetId;
-        this.isActive = true;
     }
 }
 

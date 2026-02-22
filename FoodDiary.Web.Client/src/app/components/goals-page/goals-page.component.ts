@@ -392,6 +392,8 @@ export class GoalsPageComponent implements OnInit {
 
         const macros = this.macroValues();
         const bodyTargets = this.bodyTargetValues();
+        const desiredWeight = this.normalizeDesiredBodyTarget(bodyTargets.weight);
+        const desiredWaist = this.normalizeDesiredBodyTarget(bodyTargets.waist);
 
         this.isSavingGoals.set(true);
 
@@ -403,11 +405,15 @@ export class GoalsPageComponent implements OnInit {
                 carbTarget: macros.carbs,
                 fiberTarget: macros.fiber,
                 waterGoal: this.waterValue(),
-                desiredWeight: bodyTargets.weight,
-                desiredWaist: bodyTargets.waist,
+                desiredWeight,
+                desiredWaist,
             })
             .pipe(finalize(() => this.isSavingGoals.set(false)))
             .subscribe();
+    }
+
+    private normalizeDesiredBodyTarget(value: number): number | null {
+        return value > 0 ? value : null;
     }
 
     protected onMacroInputChange(key: MacroKey, event: Event): void {
