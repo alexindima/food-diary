@@ -24,8 +24,14 @@ jobs:
       - name: Restore
         run: dotnet restore FoodDiary.slnx
 
+      - name: Build
+        run: dotnet build FoodDiary.slnx --configuration Release --no-restore
+
       - name: Run architecture tests
         run: dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj --configuration Release --no-restore
 
       - name: Run application tests
         run: dotnet test tests/FoodDiary.Application.Tests/FoodDiary.Application.Tests.csproj --configuration Release --no-restore
+
+      - name: Run web api integration tests
+        run: dotnet test tests/FoodDiary.Web.Api.IntegrationTests/FoodDiary.Web.Api.IntegrationTests.csproj --configuration Release --no-restore

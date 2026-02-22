@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using FoodDiary.Application.Common.Abstractions.Result;
+using System;
 
 namespace FoodDiary.WebApi.Extensions;
 
@@ -52,6 +53,11 @@ public static class ResultExtensions
                 StatusCode = StatusCodes.Status403Forbidden
             },
             var code when code.Contains("Authentication.AdminSsoInvalidCode") => new UnauthorizedObjectResult(new
+            {
+                error = result.Error.Code,
+                message = result.Error.Message
+            }),
+            var code when code.StartsWith("Authentication.", StringComparison.Ordinal) => new UnauthorizedObjectResult(new
             {
                 error = result.Error.Code,
                 message = result.Error.Message

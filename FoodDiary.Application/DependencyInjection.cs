@@ -1,4 +1,4 @@
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using FoodDiary.Application.Common.Behaviors;
 using FoodDiary.Application.Common.Interfaces.Services;
 using FoodDiary.Application.Images.Services;
@@ -13,15 +13,15 @@ public static class DependencyInjection
     {
         var assembly = Assembly.GetExecutingAssembly();
 
-        // MediatR - регистрирует все IRequestHandler из сборки
+        // MediatR: register handlers from this assembly.
         services.AddMediatR(cfg =>
         {
             cfg.RegisterServicesFromAssembly(assembly);
-            // Добавляем ValidationBehavior в pipeline
+            // Add request validation into MediatR pipeline.
             cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));
         });
 
-        // FluentValidation - регистрируем все валидаторы из сборки
+        // FluentValidation: register validators from this assembly.
         services.AddValidatorsFromAssembly(assembly);
 
         services.AddScoped<IImageAssetCleanupService, ImageAssetCleanupService>();

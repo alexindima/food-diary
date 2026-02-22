@@ -23,6 +23,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoodDiary.ArchitectureTests
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoodDiary.Application.Tests", "tests\FoodDiary.Application.Tests\FoodDiary.Application.Tests.csproj", "{B048A921-0560-4A98-9AD5-01F5FBA936DA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoodDiary.Web.Api.IntegrationTests", "tests\FoodDiary.Web.Api.IntegrationTests\FoodDiary.Web.Api.IntegrationTests.csproj", "{72285826-8B89-4C59-B1E1-52005EC7737F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -141,6 +143,18 @@ Global
 		{B048A921-0560-4A98-9AD5-01F5FBA936DA}.Release|x64.Build.0 = Release|Any CPU
 		{B048A921-0560-4A98-9AD5-01F5FBA936DA}.Release|x86.ActiveCfg = Release|Any CPU
 		{B048A921-0560-4A98-9AD5-01F5FBA936DA}.Release|x86.Build.0 = Release|Any CPU
+		{72285826-8B89-4C59-B1E1-52005EC7737F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{72285826-8B89-4C59-B1E1-52005EC7737F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{72285826-8B89-4C59-B1E1-52005EC7737F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{72285826-8B89-4C59-B1E1-52005EC7737F}.Debug|x64.Build.0 = Debug|Any CPU
+		{72285826-8B89-4C59-B1E1-52005EC7737F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{72285826-8B89-4C59-B1E1-52005EC7737F}.Debug|x86.Build.0 = Debug|Any CPU
+		{72285826-8B89-4C59-B1E1-52005EC7737F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{72285826-8B89-4C59-B1E1-52005EC7737F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{72285826-8B89-4C59-B1E1-52005EC7737F}.Release|x64.ActiveCfg = Release|Any CPU
+		{72285826-8B89-4C59-B1E1-52005EC7737F}.Release|x64.Build.0 = Release|Any CPU
+		{72285826-8B89-4C59-B1E1-52005EC7737F}.Release|x86.ActiveCfg = Release|Any CPU
+		{72285826-8B89-4C59-B1E1-52005EC7737F}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -148,5 +162,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{2F3EC5F4-03FC-4E87-9791-7767833C85BA} = {0AB3BF05-4346-4AA6-1389-037BE0695223}
 		{B048A921-0560-4A98-9AD5-01F5FBA936DA} = {0AB3BF05-4346-4AA6-1389-037BE0695223}
+		{72285826-8B89-4C59-B1E1-52005EC7737F} = {0AB3BF05-4346-4AA6-1389-037BE0695223}
 	EndGlobalSection
 EndGlobal

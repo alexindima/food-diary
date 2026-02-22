@@ -2,6 +2,7 @@
   <Folder Name="/Tests/">
     <Project Path="tests/FoodDiary.Application.Tests/FoodDiary.Application.Tests.csproj" />
     <Project Path="tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj" />
+    <Project Path="tests/FoodDiary.Web.Api.IntegrationTests/FoodDiary.Web.Api.IntegrationTests.csproj" />
   </Folder>
   <Project Path="FoodDiary.Application/FoodDiary.Application.csproj" />
   <Project Path="FoodDiary.Contracts/FoodDiary.Contracts.csproj" />
