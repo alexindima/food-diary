@@ -3,6 +3,7 @@ using FoodDiary.Domain.Entities.Assets;
 using FoodDiary.Domain.Entities.Content;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Products;
+using FoodDiary.Domain.Entities.Recents;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Entities.Shopping;
 using FoodDiary.Domain.Entities.Tracking;

@@ -4,11 +4,10 @@ using FoodDiary.Domain.ValueObjects;
 
 namespace FoodDiary.Domain.Entities.Recipes;
 
-/// <summary>
-/// Ð˜Ð½Ð³Ñ€ÐµÐ´Ð¸ÐµÐ½Ñ‚ Ð²Ð½ÑƒÑ‚Ñ€Ð¸ ÑˆÐ°Ð³Ð° Ñ€ÐµÑ†ÐµÐ¿Ñ‚Ð°
-/// </summary>
-public sealed class RecipeIngredient : Entity<RecipeIngredientId>
-{
+public sealed class RecipeIngredient : Entity<RecipeIngredientId> {
+    private const double MaxAmount = 1_000_000d;
+    private const double ComparisonEpsilon = 0.000001d;
+
     public RecipeStepId RecipeStepId { get; private set; }
     public ProductId? ProductId { get; private set; }
     public RecipeId? NestedRecipeId { get; private set; }
@@ -18,53 +17,78 @@ public sealed class RecipeIngredient : Entity<RecipeIngredientId>
     public Product? Product { get; private set; }
     public Recipe? NestedRecipe { get; private set; }
 
-    private RecipeIngredient() { }
+    private RecipeIngredient() {
+    }
 
-    internal static RecipeIngredient CreateWithProduct(RecipeStepId recipeStepId, ProductId productId, double amount)
-    {
-        ValidateAmount(amount);
+    internal static RecipeIngredient CreateWithProduct(RecipeStepId recipeStepId, ProductId productId, double amount) {
+        EnsureRecipeStepId(recipeStepId);
+        EnsureProductId(productId);
+        var normalizedAmount = ValidateAmount(amount, nameof(amount));
 
-        var ingredient = new RecipeIngredient
-        {
+        var ingredient = new RecipeIngredient {
             Id = RecipeIngredientId.New(),
             RecipeStepId = recipeStepId,
             ProductId = productId,
             NestedRecipeId = null,
-            Amount = amount
+            Amount = normalizedAmount
         };
         ingredient.SetCreated();
         return ingredient;
     }
 
-    internal static RecipeIngredient CreateWithRecipe(RecipeStepId recipeStepId, RecipeId nestedRecipeId, double servings)
-    {
-        ValidateAmount(servings);
+    internal static RecipeIngredient CreateWithRecipe(RecipeStepId recipeStepId, RecipeId nestedRecipeId, double servings) {
+        EnsureRecipeStepId(recipeStepId);
+        EnsureRecipeId(nestedRecipeId);
+        var normalizedServings = ValidateAmount(servings, nameof(servings));
 
-        var ingredient = new RecipeIngredient
-        {
+        var ingredient = new RecipeIngredient {
             Id = RecipeIngredientId.New(),
             RecipeStepId = recipeStepId,
             ProductId = null,
             NestedRecipeId = nestedRecipeId,
-            Amount = servings
+            Amount = normalizedServings
         };
         ingredient.SetCreated();
         return ingredient;
     }
 
-    public void UpdateAmount(double amount)
-    {
-        ValidateAmount(amount);
-        Amount = amount;
+    public void UpdateAmount(double amount) {
+        var normalizedAmount = ValidateAmount(amount, nameof(amount));
+        if (Math.Abs(Amount - normalizedAmount) <= ComparisonEpsilon) {
+            return;
+        }
+
+        Amount = normalizedAmount;
         SetModified();
     }
 
-    private static void ValidateAmount(double amount)
-    {
-        if (amount <= 0)
-        {
-            throw new ArgumentException("Amount must be greater than zero", nameof(amount));
+    private static double ValidateAmount(double amount, string paramName) {
+        if (double.IsNaN(amount) || double.IsInfinity(amount)) {
+            throw new ArgumentOutOfRangeException(paramName, "Amount must be a finite number.");
+        }
+
+        if (amount <= 0 || amount > MaxAmount) {
+            throw new ArgumentOutOfRangeException(paramName, $"Amount must be in range (0, {MaxAmount}].");
+        }
+
+        return amount;
+    }
+
+    private static void EnsureRecipeStepId(RecipeStepId recipeStepId) {
+        if (recipeStepId == RecipeStepId.Empty) {
+            throw new ArgumentException("RecipeStepId is required.", nameof(recipeStepId));
+        }
+    }
+
+    private static void EnsureProductId(ProductId productId) {
+        if (productId == global::FoodDiary.Domain.ValueObjects.ProductId.Empty) {
+            throw new ArgumentException("ProductId is required.", nameof(productId));
+        }
+    }
+
+    private static void EnsureRecipeId(RecipeId recipeId) {
+        if (recipeId == RecipeId.Empty) {
+            throw new ArgumentException("NestedRecipeId is required.", nameof(recipeId));
         }
     }
 }
-

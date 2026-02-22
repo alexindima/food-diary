@@ -1,13 +1,13 @@
-﻿using FoodDiary.Domain.Common;
+using FoodDiary.Domain.Common;
 using FoodDiary.Domain.ValueObjects;
 
 namespace FoodDiary.Domain.Entities.Recipes;
 
-/// <summary>
-/// Ð¨Ð°Ð³ Ñ€ÐµÑ†ÐµÐ¿Ñ‚Ð° - Ñ‡Ð°ÑÑ‚ÑŒ Ð°Ð³Ñ€ÐµÐ³Ð°Ñ‚Ð° Recipe
-/// ÐÐ• ÑÐ²Ð»ÑÐµÑ‚ÑÑ ÐºÐ¾Ñ€Ð½ÐµÐ¼ Ð°Ð³Ñ€ÐµÐ³Ð°Ñ‚Ð°
-/// </summary>
 public sealed class RecipeStep : Entity<RecipeStepId> {
+    private const int TitleMaxLength = 256;
+    private const int InstructionMaxLength = 4000;
+    private const int ImageUrlMaxLength = 2048;
+
     public RecipeId RecipeId { get; private set; }
     public int StepNumber { get; private set; }
     public string? Title { get; private set; }
@@ -15,17 +15,14 @@ public sealed class RecipeStep : Entity<RecipeStepId> {
     public string? ImageUrl { get; private set; }
     public ImageAssetId? ImageAssetId { get; private set; }
 
-    private readonly List<RecipeIngredient> _ingredients = new();
+    private readonly List<RecipeIngredient> _ingredients = [];
     public IReadOnlyCollection<RecipeIngredient> Ingredients => _ingredients.AsReadOnly();
 
-    // Navigation properties
     public Recipe Recipe { get; private set; } = null!;
 
-    // ÐšÐ¾Ð½ÑÑ‚Ñ€ÑƒÐºÑ‚Ð¾Ñ€ Ð´Ð»Ñ EF Core
     private RecipeStep() {
     }
 
-    // Factory method (Ð²Ñ‹Ð·Ñ‹Ð²Ð°ÐµÑ‚ÑÑ Ð¸Ð· Recipe Ð°Ð³Ñ€ÐµÐ³Ð°Ñ‚Ð°)
     internal static RecipeStep Create(
         RecipeId recipeId,
         int stepNumber,
@@ -33,12 +30,10 @@ public sealed class RecipeStep : Entity<RecipeStepId> {
         string? title = null,
         string? imageUrl = null,
         ImageAssetId? imageAssetId = null) {
+        EnsureRecipeId(recipeId);
+
         if (stepNumber <= 0) {
             throw new ArgumentOutOfRangeException(nameof(stepNumber), "Step number must be greater than zero.");
-        }
-
-        if (string.IsNullOrWhiteSpace(instruction)) {
-            throw new ArgumentException("Instruction is required", nameof(instruction));
         }
 
         var step = new RecipeStep {
@@ -46,8 +41,8 @@ public sealed class RecipeStep : Entity<RecipeStepId> {
             RecipeId = recipeId,
             StepNumber = stepNumber,
             Title = NormalizeTitle(title),
-            Instruction = instruction.Trim(),
-            ImageUrl = imageUrl,
+            Instruction = NormalizeInstruction(instruction, nameof(instruction)),
+            ImageUrl = NormalizeOptionalText(imageUrl, ImageUrlMaxLength, nameof(imageUrl)),
             ImageAssetId = imageAssetId
         };
         step.SetCreated();
@@ -55,13 +50,20 @@ public sealed class RecipeStep : Entity<RecipeStepId> {
     }
 
     public void Update(string instruction, string? title = null, string? imageUrl = null, ImageAssetId? imageAssetId = null) {
-        if (string.IsNullOrWhiteSpace(instruction)) {
-            throw new ArgumentException("Instruction is required", nameof(instruction));
+        var normalizedInstruction = NormalizeInstruction(instruction, nameof(instruction));
+        var normalizedTitle = NormalizeTitle(title);
+        var normalizedImageUrl = NormalizeOptionalText(imageUrl, ImageUrlMaxLength, nameof(imageUrl));
+
+        if (string.Equals(Instruction, normalizedInstruction, StringComparison.Ordinal)
+            && string.Equals(Title, normalizedTitle, StringComparison.Ordinal)
+            && string.Equals(ImageUrl, normalizedImageUrl, StringComparison.Ordinal)
+            && ImageAssetId == imageAssetId) {
+            return;
         }
 
-        Instruction = instruction.Trim();
-        Title = NormalizeTitle(title);
-        ImageUrl = imageUrl;
+        Instruction = normalizedInstruction;
+        Title = normalizedTitle;
+        ImageUrl = normalizedImageUrl;
         ImageAssetId = imageAssetId;
         SetModified();
     }
@@ -81,16 +83,42 @@ public sealed class RecipeStep : Entity<RecipeStepId> {
     }
 
     public void RemoveIngredient(RecipeIngredient ingredient) {
-        _ingredients.Remove(ingredient);
-        SetModified();
+        ArgumentNullException.ThrowIfNull(ingredient);
+
+        if (_ingredients.Remove(ingredient)) {
+            SetModified();
+        }
     }
 
     private static string? NormalizeTitle(string? title) {
-        if (string.IsNullOrWhiteSpace(title)) {
+        return NormalizeOptionalText(title, TitleMaxLength, nameof(title));
+    }
+
+    private static string NormalizeInstruction(string instruction, string paramName) {
+        if (string.IsNullOrWhiteSpace(instruction)) {
+            throw new ArgumentException("Instruction is required", paramName);
+        }
+
+        var normalized = instruction.Trim();
+        return normalized.Length > InstructionMaxLength
+            ? throw new ArgumentOutOfRangeException(paramName, $"Instruction must be at most {InstructionMaxLength} characters.")
+            : normalized;
+    }
+
+    private static string? NormalizeOptionalText(string? value, int maxLength, string paramName) {
+        if (string.IsNullOrWhiteSpace(value)) {
             return null;
         }
 
-        return title.Trim();
+        var normalized = value.Trim();
+        return normalized.Length > maxLength
+            ? throw new ArgumentOutOfRangeException(paramName, $"Value must be at most {maxLength} characters.")
+            : normalized;
+    }
+
+    private static void EnsureRecipeId(RecipeId recipeId) {
+        if (recipeId == RecipeId.Empty) {
+            throw new ArgumentException("RecipeId is required.", nameof(recipeId));
+        }
     }
 }
-

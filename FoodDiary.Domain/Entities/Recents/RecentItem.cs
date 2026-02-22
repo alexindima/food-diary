@@ -3,7 +3,7 @@ using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
 
-namespace FoodDiary.Domain.Entities.Products;
+namespace FoodDiary.Domain.Entities.Recents;
 
 public sealed class RecentItem : Entity<RecentItemId>
 {

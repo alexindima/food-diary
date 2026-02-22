@@ -1,4 +1,3 @@
-﻿using System;
 using FoodDiary.Domain.Common;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Users;
@@ -8,11 +7,13 @@ using FoodDiary.Domain.ValueObjects;
 
 namespace FoodDiary.Domain.Entities.Recipes;
 
-/// <summary>
-/// Ð ÐµÑ†ÐµÐ¿Ñ‚ - ÐºÐ¾Ñ€ÐµÐ½ÑŒ Ð°Ð³Ñ€ÐµÐ³Ð°Ñ‚Ð°
-/// Ð£Ð¿Ñ€Ð°Ð²Ð»ÑÐµÑ‚ ÐºÐ¾Ð»Ð»ÐµÐºÑ†Ð¸ÐµÐ¹ RecipeSteps
-/// </summary>
 public sealed class Recipe : AggregateRoot<RecipeId> {
+    private const int NameMaxLength = 256;
+    private const int CategoryMaxLength = 128;
+    private const int DescriptionMaxLength = 2048;
+    private const int CommentMaxLength = 2048;
+    private const int ImageUrlMaxLength = 2048;
+
     public string Name { get; private set; } = string.Empty;
     public string? Description { get; private set; }
     public string? Comment { get; private set; }
@@ -38,21 +39,16 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
     public Visibility Visibility { get; private set; } = Visibility.PUBLIC;
     public int UsageCount { get; private set; }
 
-    // Foreign keys
     public UserId UserId { get; private set; }
-
-    // Navigation properties
     public User User { get; private set; } = null!;
-    private readonly List<RecipeStep> _steps = new();
+    private readonly List<RecipeStep> _steps = [];
     public IReadOnlyCollection<RecipeStep> Steps => _steps.AsReadOnly();
     public ICollection<MealItem> MealItems { get; private set; } = new List<MealItem>();
     public ICollection<RecipeIngredient> NestedRecipeUsages { get; private set; } = new List<RecipeIngredient>();
 
-    // ÐšÐ¾Ð½ÑÑ‚Ñ€ÑƒÐºÑ‚Ð¾Ñ€ Ð´Ð»Ñ EF Core
     private Recipe() {
     }
 
-    // Factory method Ð´Ð»Ñ ÑÐ¾Ð·Ð´Ð°Ð½Ð¸Ñ Ñ€ÐµÑ†ÐµÐ¿Ñ‚Ð°
     public static Recipe Create(
         UserId userId,
         string name,
@@ -65,25 +61,23 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
         int? prepTime = null,
         int? cookTime = null,
         Visibility visibility = Visibility.PUBLIC) {
-        var normalizedName = NormalizeRequiredName(name);
-        var normalizedServings = RequirePositive(servings, nameof(servings));
-        var normalizedPrepTime = NormalizeOptionalNonNegative(prepTime, nameof(prepTime));
-        var normalizedCookTime = NormalizeOptionalNonNegative(cookTime, nameof(cookTime));
+        EnsureUserId(userId);
 
         var recipe = new Recipe {
             Id = RecipeId.New(),
             UserId = userId,
-            Name = normalizedName,
-            Servings = normalizedServings,
-            Description = description,
-            Comment = comment,
-            Category = category,
-            ImageUrl = imageUrl,
+            Name = NormalizeRequiredName(name),
+            Servings = RequirePositive(servings, nameof(servings)),
+            Description = NormalizeOptionalText(description, DescriptionMaxLength, nameof(description)),
+            Comment = NormalizeOptionalText(comment, CommentMaxLength, nameof(comment)),
+            Category = NormalizeOptionalText(category, CategoryMaxLength, nameof(category)),
+            ImageUrl = NormalizeOptionalText(imageUrl, ImageUrlMaxLength, nameof(imageUrl)),
             ImageAssetId = imageAssetId,
-            PrepTime = normalizedPrepTime,
-            CookTime = normalizedCookTime,
+            PrepTime = NormalizeOptionalNonNegative(prepTime, nameof(prepTime)),
+            CookTime = NormalizeOptionalNonNegative(cookTime, nameof(cookTime)),
             Visibility = visibility
         };
+
         recipe.SetCreated();
         return recipe;
     }
@@ -99,17 +93,49 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
         int? cookTime = null,
         int? servings = null,
         Visibility? visibility = null) {
-        if (name is not null) Name = NormalizeRequiredName(name);
-        if (description is not null) Description = description;
-        if (comment is not null) Comment = comment;
-        if (category is not null) Category = category;
-        if (imageUrl is not null) ImageUrl = imageUrl;
-        if (imageAssetId.HasValue) ImageAssetId = imageAssetId;
-        if (prepTime.HasValue) PrepTime = NormalizeOptionalNonNegative(prepTime, nameof(prepTime));
-        if (cookTime.HasValue) CookTime = NormalizeOptionalNonNegative(cookTime, nameof(cookTime));
-        if (servings.HasValue) Servings = RequirePositive(servings.Value, nameof(servings));
-        if (visibility.HasValue) Visibility = visibility.Value;
+        var changed = false;
+        changed |= ApplyIdentityUpdates(name, description, comment, category);
+        changed |= ApplyMediaUpdates(imageUrl, imageAssetId);
+        changed |= ApplyTimingAndServingsUpdates(prepTime, cookTime, servings);
 
+        if (visibility.HasValue && Visibility != visibility.Value) {
+            Visibility = visibility.Value;
+            changed = true;
+        }
+
+        if (changed) {
+            SetModified();
+        }
+    }
+
+    public void UpdateIdentity(
+        string? name = null,
+        string? description = null,
+        string? comment = null,
+        string? category = null) {
+        if (ApplyIdentityUpdates(name, description, comment, category)) {
+            SetModified();
+        }
+    }
+
+    public void UpdateMedia(string? imageUrl = null, ImageAssetId? imageAssetId = null) {
+        if (ApplyMediaUpdates(imageUrl, imageAssetId)) {
+            SetModified();
+        }
+    }
+
+    public void UpdateTimingAndServings(int? prepTime = null, int? cookTime = null, int? servings = null) {
+        if (ApplyTimingAndServingsUpdates(prepTime, cookTime, servings)) {
+            SetModified();
+        }
+    }
+
+    public void ChangeVisibility(Visibility visibility) {
+        if (Visibility == visibility) {
+            return;
+        }
+
+        Visibility = visibility;
         SetModified();
     }
 
@@ -119,6 +145,10 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
         string? title = null,
         string? imageUrl = null,
         ImageAssetId? imageAssetId = null) {
+        if (_steps.Any(step => step.StepNumber == stepNumber)) {
+            throw new ArgumentException("Step number must be unique within recipe.", nameof(stepNumber));
+        }
+
         var step = RecipeStep.Create(Id, stepNumber, instruction, title, imageUrl, imageAssetId);
         _steps.Add(step);
         SetModified();
@@ -126,23 +156,35 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
     }
 
     public void ClearSteps() {
+        if (_steps.Count == 0) {
+            return;
+        }
+
         _steps.Clear();
         SetModified();
     }
 
     public void RemoveStep(RecipeStep step) {
-        _steps.Remove(step);
-        SetModified();
+        ArgumentNullException.ThrowIfNull(step);
+
+        if (_steps.Remove(step)) {
+            SetModified();
+        }
     }
 
     public void EnableAutoNutrition() {
-        if (IsNutritionAutoCalculated && ManualCalories is null && ManualProteins is null &&
-            ManualFats is null && ManualCarbs is null && ManualFiber is null && ManualAlcohol is null) {
+        if (IsNutritionAutoCalculated
+            && ManualCalories is null
+            && ManualProteins is null
+            && ManualFats is null
+            && ManualCarbs is null
+            && ManualFiber is null
+            && ManualAlcohol is null) {
             return;
         }
 
         IsNutritionAutoCalculated = true;
-        ManualCalories = ManualProteins = ManualFats = ManualCarbs = ManualFiber = ManualAlcohol = null;
+        ApplyManualNutrition(RecipeNutrition.Create(null, null, null, null, null, null));
         RaiseDomainEvent(new RecipeAutoNutritionEnabledDomainEvent(Id));
         SetModified();
     }
@@ -154,26 +196,16 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
         double? carbs,
         double? fiber,
         double? alcohol) {
-        var normalizedCalories = NormalizeOptionalNonNegative(calories, nameof(calories));
-        var normalizedProteins = NormalizeOptionalNonNegative(proteins, nameof(proteins));
-        var normalizedFats = NormalizeOptionalNonNegative(fats, nameof(fats));
-        var normalizedCarbs = NormalizeOptionalNonNegative(carbs, nameof(carbs));
-        var normalizedFiber = NormalizeOptionalNonNegative(fiber, nameof(fiber));
-        var normalizedAlcohol = NormalizeOptionalNonNegative(alcohol, nameof(alcohol));
+        var manualNutrition = RecipeNutrition.Create(calories, proteins, fats, carbs, fiber, alcohol);
+        if (!IsNutritionAutoCalculated
+            && GetManualNutrition() == manualNutrition
+            && GetTotalNutrition() == manualNutrition) {
+            return;
+        }
 
         IsNutritionAutoCalculated = false;
-        ManualCalories = normalizedCalories;
-        ManualProteins = normalizedProteins;
-        ManualFats = normalizedFats;
-        ManualCarbs = normalizedCarbs;
-        ManualFiber = normalizedFiber;
-        ManualAlcohol = normalizedAlcohol;
-        TotalCalories = normalizedCalories;
-        TotalProteins = normalizedProteins;
-        TotalFats = normalizedFats;
-        TotalCarbs = normalizedCarbs;
-        TotalFiber = normalizedFiber;
-        TotalAlcohol = normalizedAlcohol;
+        ApplyManualNutrition(manualNutrition);
+        ApplyTotalNutrition(manualNutrition);
         RaiseDomainEvent(new RecipeManualNutritionSetDomainEvent(Id));
         SetModified();
     }
@@ -189,13 +221,137 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
             return;
         }
 
-        TotalCalories = NormalizeOptionalNonNegative(calories, nameof(calories));
-        TotalProteins = NormalizeOptionalNonNegative(proteins, nameof(proteins));
-        TotalFats = NormalizeOptionalNonNegative(fats, nameof(fats));
-        TotalCarbs = NormalizeOptionalNonNegative(carbs, nameof(carbs));
-        TotalFiber = NormalizeOptionalNonNegative(fiber, nameof(fiber));
-        TotalAlcohol = NormalizeOptionalNonNegative(alcohol, nameof(alcohol));
+        var computedNutrition = RecipeNutrition.Create(calories, proteins, fats, carbs, fiber, alcohol);
+        if (GetTotalNutrition() == computedNutrition) {
+            return;
+        }
+
+        ApplyTotalNutrition(computedNutrition);
         SetModified();
+    }
+
+    private bool ApplyIdentityUpdates(
+        string? name,
+        string? description,
+        string? comment,
+        string? category) {
+        var changed = false;
+
+        if (name is not null) {
+            var normalizedName = NormalizeRequiredName(name);
+            if (!string.Equals(Name, normalizedName, StringComparison.Ordinal)) {
+                Name = normalizedName;
+                changed = true;
+            }
+        }
+
+        if (description is not null) {
+            var normalizedDescription = NormalizeOptionalText(description, DescriptionMaxLength, nameof(description));
+            if (!string.Equals(Description, normalizedDescription, StringComparison.Ordinal)) {
+                Description = normalizedDescription;
+                changed = true;
+            }
+        }
+
+        if (comment is not null) {
+            var normalizedComment = NormalizeOptionalText(comment, CommentMaxLength, nameof(comment));
+            if (!string.Equals(Comment, normalizedComment, StringComparison.Ordinal)) {
+                Comment = normalizedComment;
+                changed = true;
+            }
+        }
+
+        if (category is null) return changed;
+        var normalizedCategory = NormalizeOptionalText(category, CategoryMaxLength, nameof(category));
+        if (string.Equals(Category, normalizedCategory, StringComparison.Ordinal)) return changed;
+        Category = normalizedCategory;
+        changed = true;
+
+        return changed;
+    }
+
+    private bool ApplyMediaUpdates(string? imageUrl, ImageAssetId? imageAssetId) {
+        var changed = false;
+
+        if (imageUrl is not null) {
+            var normalizedImageUrl = NormalizeOptionalText(imageUrl, ImageUrlMaxLength, nameof(imageUrl));
+            if (!string.Equals(ImageUrl, normalizedImageUrl, StringComparison.Ordinal)) {
+                ImageUrl = normalizedImageUrl;
+                changed = true;
+            }
+        }
+
+        if (!imageAssetId.HasValue || ImageAssetId == imageAssetId) return changed;
+        ImageAssetId = imageAssetId;
+        changed = true;
+
+        return changed;
+    }
+
+    private bool ApplyTimingAndServingsUpdates(int? prepTime, int? cookTime, int? servings) {
+        var changed = false;
+
+        if (prepTime.HasValue) {
+            var normalizedPrepTime = NormalizeOptionalNonNegative(prepTime, nameof(prepTime));
+            if (PrepTime != normalizedPrepTime) {
+                PrepTime = normalizedPrepTime;
+                changed = true;
+            }
+        }
+
+        if (cookTime.HasValue) {
+            var normalizedCookTime = NormalizeOptionalNonNegative(cookTime, nameof(cookTime));
+            if (CookTime != normalizedCookTime) {
+                CookTime = normalizedCookTime;
+                changed = true;
+            }
+        }
+
+        if (!servings.HasValue) return changed;
+        var normalizedServings = RequirePositive(servings.Value, nameof(servings));
+        if (Servings == normalizedServings) return changed;
+        Servings = normalizedServings;
+        changed = true;
+
+        return changed;
+    }
+
+    private RecipeNutrition GetManualNutrition() {
+        return RecipeNutrition.Create(
+            ManualCalories,
+            ManualProteins,
+            ManualFats,
+            ManualCarbs,
+            ManualFiber,
+            ManualAlcohol);
+    }
+
+    private RecipeNutrition GetTotalNutrition() {
+        return RecipeNutrition.Create(
+            TotalCalories,
+            TotalProteins,
+            TotalFats,
+            TotalCarbs,
+            TotalFiber,
+            TotalAlcohol);
+    }
+
+    private void ApplyManualNutrition(RecipeNutrition nutrition) {
+        ManualCalories = nutrition.Calories;
+        ManualProteins = nutrition.Proteins;
+        ManualFats = nutrition.Fats;
+        ManualCarbs = nutrition.Carbs;
+        ManualFiber = nutrition.Fiber;
+        ManualAlcohol = nutrition.Alcohol;
+    }
+
+    private void ApplyTotalNutrition(RecipeNutrition nutrition) {
+        TotalCalories = nutrition.Calories;
+        TotalProteins = nutrition.Proteins;
+        TotalFats = nutrition.Fats;
+        TotalCarbs = nutrition.Carbs;
+        TotalFiber = nutrition.Fiber;
+        TotalAlcohol = nutrition.Alcohol;
     }
 
     private static string NormalizeRequiredName(string value) {
@@ -203,39 +359,42 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
             throw new ArgumentException("Recipe name is required.", nameof(value));
         }
 
-        return value.Trim();
+        var normalized = value.Trim();
+        if (normalized.Length > NameMaxLength) {
+            throw new ArgumentOutOfRangeException(nameof(value), $"Recipe name must be at most {NameMaxLength} characters.");
+        }
+
+        return normalized;
     }
 
     private static int RequirePositive(int value, string paramName) {
-        if (value <= 0) {
-            throw new ArgumentOutOfRangeException(paramName, "Value must be greater than zero.");
-        }
-
-        return value;
+        return value <= 0
+            ? throw new ArgumentOutOfRangeException(paramName, "Value must be greater than zero.")
+            : value;
     }
 
     private static int? NormalizeOptionalNonNegative(int? value, string paramName) {
-        if (!value.HasValue) {
-            return null;
-        }
-
-        if (value.Value < 0) {
-            throw new ArgumentOutOfRangeException(paramName, "Value must be non-negative.");
-        }
-
-        return value.Value;
+        return value switch {
+            null => null,
+            < 0 => throw new ArgumentOutOfRangeException(paramName, "Value must be non-negative."),
+            _ => value.Value
+        };
     }
 
-    private static double? NormalizeOptionalNonNegative(double? value, string paramName) {
-        if (!value.HasValue) {
+    private static string? NormalizeOptionalText(string? value, int maxLength, string paramName) {
+        if (string.IsNullOrWhiteSpace(value)) {
             return null;
         }
 
-        if (value.Value < 0) {
-            throw new ArgumentOutOfRangeException(paramName, "Value must be non-negative.");
-        }
+        var normalized = value.Trim();
+        return normalized.Length > maxLength
+            ? throw new ArgumentOutOfRangeException(paramName, $"Value must be at most {maxLength} characters.")
+            : normalized;
+    }
 
-        return value.Value;
+    private static void EnsureUserId(UserId userId) {
+        if (userId == UserId.Empty) {
+            throw new ArgumentException("UserId is required.", nameof(userId));
+        }
     }
 }
-
