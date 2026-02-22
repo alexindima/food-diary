@@ -18,6 +18,7 @@
 - SCSS: import shared variables as `@use 'variables' as variables;` and reference tokens via explicit namespace (e.g., `variables.$gap-m`), avoid `@use 'variables' as *;`.
 - Linting: ESLint (`eslint.config.js`), Stylelint, Prettier. Run `npm run lint`, `npm run stylelint`, `npm run prettier` before committing.
 - C# follows standard .NET conventions with nullable enabled. Keep namespace per folder (e.g., `FoodDiary.Application.*`).
+- Shared .NET project settings are centralized in root `Directory.Build.props`; put common MSBuild properties there instead of duplicating across `*.csproj`.
 
 ## Backend Architecture (.NET)
 - Domain model uses strongly typed IDs/value objects for entities (avoid raw `Guid`/`int` in public surfaces).
