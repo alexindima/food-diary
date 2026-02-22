@@ -1,10 +1,11 @@
-using FoodDiary.Domain.Common;
+﻿using FoodDiary.Domain.Common;
+using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects;
 
-namespace FoodDiary.Domain.Entities;
+namespace FoodDiary.Domain.Entities.Tracking;
 
 /// <summary>
-/// Отдельный приём воды пользователя
+/// ÐžÑ‚Ð´ÐµÐ»ÑŒÐ½Ñ‹Ð¹ Ð¿Ñ€Ð¸Ñ‘Ð¼ Ð²Ð¾Ð´Ñ‹ Ð¿Ð¾Ð»ÑŒÐ·Ð¾Ð²Ð°Ñ‚ÐµÐ»Ñ
 /// </summary>
 public sealed class HydrationEntry : AggregateRoot<HydrationEntryId>
 {
@@ -63,3 +64,4 @@ public sealed class HydrationEntry : AggregateRoot<HydrationEntryId>
         return utc;
     }
 }
+

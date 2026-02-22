@@ -1,4 +1,4 @@
-namespace FoodDiary.Domain.Entities;
+﻿namespace FoodDiary.Domain.Entities.Meals;
 
 public sealed record MealAiItemData(
     string NameEn,
@@ -11,3 +11,4 @@ public sealed record MealAiItemData(
     double Carbs,
     double Fiber,
     double Alcohol);
+

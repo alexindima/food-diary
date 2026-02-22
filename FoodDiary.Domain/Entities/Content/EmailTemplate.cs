@@ -1,6 +1,6 @@
-using FoodDiary.Domain.Common;
+﻿using FoodDiary.Domain.Common;
 
-namespace FoodDiary.Domain.Entities;
+namespace FoodDiary.Domain.Entities.Content;
 
 public sealed class EmailTemplate : Entity<Guid>
 {
@@ -50,3 +50,4 @@ public sealed class EmailTemplate : Entity<Guid>
         SetModified();
     }
 }
+

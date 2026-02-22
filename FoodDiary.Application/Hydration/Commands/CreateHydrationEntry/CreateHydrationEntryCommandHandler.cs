@@ -1,9 +1,17 @@
-using FoodDiary.Application.Common.Abstractions.Messaging;
+﻿using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Hydration.Mappings;
 using FoodDiary.Application.Hydration.Validators;
-using FoodDiary.Domain.Entities;
+using FoodDiary.Domain.Entities.Ai;
+using FoodDiary.Domain.Entities.Assets;
+using FoodDiary.Domain.Entities.Content;
+using FoodDiary.Domain.Entities.Meals;
+using FoodDiary.Domain.Entities.Products;
+using FoodDiary.Domain.Entities.Recipes;
+using FoodDiary.Domain.Entities.Shopping;
+using FoodDiary.Domain.Entities.Tracking;
+using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Contracts.Hydration;
 
@@ -33,3 +41,4 @@ public class CreateHydrationEntryCommandHandler(
         return Result.Success(entry.ToResponse());
     }
 }
+

@@ -1,8 +1,16 @@
-using System.Linq;
+﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using FoodDiary.Application.Common.Interfaces.Persistence;
-using FoodDiary.Domain.Entities;
+using FoodDiary.Domain.Entities.Ai;
+using FoodDiary.Domain.Entities.Assets;
+using FoodDiary.Domain.Entities.Content;
+using FoodDiary.Domain.Entities.Meals;
+using FoodDiary.Domain.Entities.Products;
+using FoodDiary.Domain.Entities.Recipes;
+using FoodDiary.Domain.Entities.Shopping;
+using FoodDiary.Domain.Entities.Tracking;
+using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 
@@ -99,3 +107,4 @@ public class ShoppingListRepository : IShoppingListRepository
         await _context.SaveChangesAsync();
     }
 }
+

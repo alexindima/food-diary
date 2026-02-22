@@ -1,12 +1,16 @@
+﻿using System;
 using FoodDiary.Domain.Common;
+using FoodDiary.Domain.Entities.Meals;
+using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Domain.Events;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
 
-namespace FoodDiary.Domain.Entities;
+namespace FoodDiary.Domain.Entities.Recipes;
 
 /// <summary>
-/// Рецепт - корень агрегата
-/// Управляет коллекцией RecipeSteps
+/// Ð ÐµÑ†ÐµÐ¿Ñ‚ - ÐºÐ¾Ñ€ÐµÐ½ÑŒ Ð°Ð³Ñ€ÐµÐ³Ð°Ñ‚Ð°
+/// Ð£Ð¿Ñ€Ð°Ð²Ð»ÑÐµÑ‚ ÐºÐ¾Ð»Ð»ÐµÐºÑ†Ð¸ÐµÐ¹ RecipeSteps
 /// </summary>
 public sealed class Recipe : AggregateRoot<RecipeId> {
     public string Name { get; private set; } = string.Empty;
@@ -44,11 +48,11 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
     public ICollection<MealItem> MealItems { get; private set; } = new List<MealItem>();
     public ICollection<RecipeIngredient> NestedRecipeUsages { get; private set; } = new List<RecipeIngredient>();
 
-    // Конструктор для EF Core
+    // ÐšÐ¾Ð½ÑÑ‚Ñ€ÑƒÐºÑ‚Ð¾Ñ€ Ð´Ð»Ñ EF Core
     private Recipe() {
     }
 
-    // Factory method для создания рецепта
+    // Factory method Ð´Ð»Ñ ÑÐ¾Ð·Ð´Ð°Ð½Ð¸Ñ Ñ€ÐµÑ†ÐµÐ¿Ñ‚Ð°
     public static Recipe Create(
         UserId userId,
         string name,
@@ -61,18 +65,23 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
         int? prepTime = null,
         int? cookTime = null,
         Visibility visibility = Visibility.PUBLIC) {
+        var normalizedName = NormalizeRequiredName(name);
+        var normalizedServings = RequirePositive(servings, nameof(servings));
+        var normalizedPrepTime = NormalizeOptionalNonNegative(prepTime, nameof(prepTime));
+        var normalizedCookTime = NormalizeOptionalNonNegative(cookTime, nameof(cookTime));
+
         var recipe = new Recipe {
             Id = RecipeId.New(),
             UserId = userId,
-            Name = name,
-            Servings = servings,
+            Name = normalizedName,
+            Servings = normalizedServings,
             Description = description,
             Comment = comment,
             Category = category,
             ImageUrl = imageUrl,
             ImageAssetId = imageAssetId,
-            PrepTime = prepTime,
-            CookTime = cookTime,
+            PrepTime = normalizedPrepTime,
+            CookTime = normalizedCookTime,
             Visibility = visibility
         };
         recipe.SetCreated();
@@ -90,15 +99,15 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
         int? cookTime = null,
         int? servings = null,
         Visibility? visibility = null) {
-        if (name is not null) Name = name;
+        if (name is not null) Name = NormalizeRequiredName(name);
         if (description is not null) Description = description;
         if (comment is not null) Comment = comment;
         if (category is not null) Category = category;
         if (imageUrl is not null) ImageUrl = imageUrl;
         if (imageAssetId.HasValue) ImageAssetId = imageAssetId;
-        if (prepTime.HasValue) PrepTime = prepTime;
-        if (cookTime.HasValue) CookTime = cookTime;
-        if (servings.HasValue) Servings = servings.Value;
+        if (prepTime.HasValue) PrepTime = NormalizeOptionalNonNegative(prepTime, nameof(prepTime));
+        if (cookTime.HasValue) CookTime = NormalizeOptionalNonNegative(cookTime, nameof(cookTime));
+        if (servings.HasValue) Servings = RequirePositive(servings.Value, nameof(servings));
         if (visibility.HasValue) Visibility = visibility.Value;
 
         SetModified();
@@ -134,6 +143,7 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
 
         IsNutritionAutoCalculated = true;
         ManualCalories = ManualProteins = ManualFats = ManualCarbs = ManualFiber = ManualAlcohol = null;
+        RaiseDomainEvent(new RecipeAutoNutritionEnabledDomainEvent(Id));
         SetModified();
     }
 
@@ -144,19 +154,27 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
         double? carbs,
         double? fiber,
         double? alcohol) {
+        var normalizedCalories = NormalizeOptionalNonNegative(calories, nameof(calories));
+        var normalizedProteins = NormalizeOptionalNonNegative(proteins, nameof(proteins));
+        var normalizedFats = NormalizeOptionalNonNegative(fats, nameof(fats));
+        var normalizedCarbs = NormalizeOptionalNonNegative(carbs, nameof(carbs));
+        var normalizedFiber = NormalizeOptionalNonNegative(fiber, nameof(fiber));
+        var normalizedAlcohol = NormalizeOptionalNonNegative(alcohol, nameof(alcohol));
+
         IsNutritionAutoCalculated = false;
-        ManualCalories = calories;
-        ManualProteins = proteins;
-        ManualFats = fats;
-        ManualCarbs = carbs;
-        ManualFiber = fiber;
-        ManualAlcohol = alcohol;
-        TotalCalories = calories;
-        TotalProteins = proteins;
-        TotalFats = fats;
-        TotalCarbs = carbs;
-        TotalFiber = fiber;
-        TotalAlcohol = alcohol;
+        ManualCalories = normalizedCalories;
+        ManualProteins = normalizedProteins;
+        ManualFats = normalizedFats;
+        ManualCarbs = normalizedCarbs;
+        ManualFiber = normalizedFiber;
+        ManualAlcohol = normalizedAlcohol;
+        TotalCalories = normalizedCalories;
+        TotalProteins = normalizedProteins;
+        TotalFats = normalizedFats;
+        TotalCarbs = normalizedCarbs;
+        TotalFiber = normalizedFiber;
+        TotalAlcohol = normalizedAlcohol;
+        RaiseDomainEvent(new RecipeManualNutritionSetDomainEvent(Id));
         SetModified();
     }
 
@@ -171,12 +189,53 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
             return;
         }
 
-        TotalCalories = calories;
-        TotalProteins = proteins;
-        TotalFats = fats;
-        TotalCarbs = carbs;
-        TotalFiber = fiber;
-        TotalAlcohol = alcohol;
+        TotalCalories = NormalizeOptionalNonNegative(calories, nameof(calories));
+        TotalProteins = NormalizeOptionalNonNegative(proteins, nameof(proteins));
+        TotalFats = NormalizeOptionalNonNegative(fats, nameof(fats));
+        TotalCarbs = NormalizeOptionalNonNegative(carbs, nameof(carbs));
+        TotalFiber = NormalizeOptionalNonNegative(fiber, nameof(fiber));
+        TotalAlcohol = NormalizeOptionalNonNegative(alcohol, nameof(alcohol));
         SetModified();
     }
+
+    private static string NormalizeRequiredName(string value) {
+        if (string.IsNullOrWhiteSpace(value)) {
+            throw new ArgumentException("Recipe name is required.", nameof(value));
+        }
+
+        return value.Trim();
+    }
+
+    private static int RequirePositive(int value, string paramName) {
+        if (value <= 0) {
+            throw new ArgumentOutOfRangeException(paramName, "Value must be greater than zero.");
+        }
+
+        return value;
+    }
+
+    private static int? NormalizeOptionalNonNegative(int? value, string paramName) {
+        if (!value.HasValue) {
+            return null;
+        }
+
+        if (value.Value < 0) {
+            throw new ArgumentOutOfRangeException(paramName, "Value must be non-negative.");
+        }
+
+        return value.Value;
+    }
+
+    private static double? NormalizeOptionalNonNegative(double? value, string paramName) {
+        if (!value.HasValue) {
+            return null;
+        }
+
+        if (value.Value < 0) {
+            throw new ArgumentOutOfRangeException(paramName, "Value must be non-negative.");
+        }
+
+        return value.Value;
+    }
 }
+

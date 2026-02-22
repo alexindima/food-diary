@@ -1,6 +1,7 @@
 using FluentValidation;
 using FluentValidation.Results;
 using FoodDiary.Application.Common.Interfaces.Persistence;
+using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
 
@@ -102,7 +103,7 @@ public class UpdateProductCommandValidator : AbstractValidator<UpdateProductComm
         ValidationContext<UpdateProductCommand> context,
         CancellationToken cancellationToken) {
         context.RootContextData.TryGetValue(ProductContextKey, out var cached);
-        var product = cached as Domain.Entities.Product;
+        var product = cached as Product;
 
         if (product is null) {
             if (command.UserId is null || command.UserId.Value == UserId.Empty) {

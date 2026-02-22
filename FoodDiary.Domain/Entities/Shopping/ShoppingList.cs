@@ -1,8 +1,9 @@
-using FoodDiary.Domain.Common;
+﻿using FoodDiary.Domain.Common;
+using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
 
-namespace FoodDiary.Domain.Entities;
+namespace FoodDiary.Domain.Entities.Shopping;
 
 public sealed class ShoppingList : AggregateRoot<ShoppingListId>
 {
@@ -76,3 +77,4 @@ public sealed class ShoppingList : AggregateRoot<ShoppingListId>
         return value.Trim();
     }
 }
+

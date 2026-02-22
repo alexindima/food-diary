@@ -1,13 +1,16 @@
-using System;
+﻿using System;
 using FoodDiary.Domain.Common;
+using FoodDiary.Domain.Entities.Meals;
+using FoodDiary.Domain.Entities.Recipes;
+using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
 
-namespace FoodDiary.Domain.Entities;
+namespace FoodDiary.Domain.Entities.Products;
 
 /// <summary>
-/// Базовый продукт питания - корень агрегата
-/// Представляет простой продукт (например, с штрихкодом из магазина)
+/// Ð‘Ð°Ð·Ð¾Ð²Ñ‹Ð¹ Ð¿Ñ€Ð¾Ð´ÑƒÐºÑ‚ Ð¿Ð¸Ñ‚Ð°Ð½Ð¸Ñ - ÐºÐ¾Ñ€ÐµÐ½ÑŒ Ð°Ð³Ñ€ÐµÐ³Ð°Ñ‚Ð°
+/// ÐŸÑ€ÐµÐ´ÑÑ‚Ð°Ð²Ð»ÑÐµÑ‚ Ð¿Ñ€Ð¾ÑÑ‚Ð¾Ð¹ Ð¿Ñ€Ð¾Ð´ÑƒÐºÑ‚ (Ð½Ð°Ð¿Ñ€Ð¸Ð¼ÐµÑ€, Ñ ÑˆÑ‚Ñ€Ð¸Ñ…ÐºÐ¾Ð´Ð¾Ð¼ Ð¸Ð· Ð¼Ð°Ð³Ð°Ð·Ð¸Ð½Ð°)
 /// </summary>
 public sealed class Product : AggregateRoot<ProductId> {
     public string? Barcode { get; private set; }
@@ -22,7 +25,7 @@ public sealed class Product : AggregateRoot<ProductId> {
     public MeasurementUnit BaseUnit { get; private set; }
     public double BaseAmount { get; private set; }
     /// <summary>
-    /// Размер продукта (например, масса упаковки), используется как значение по умолчанию при добавлении в рецепты
+    /// Ð Ð°Ð·Ð¼ÐµÑ€ Ð¿Ñ€Ð¾Ð´ÑƒÐºÑ‚Ð° (Ð½Ð°Ð¿Ñ€Ð¸Ð¼ÐµÑ€, Ð¼Ð°ÑÑÐ° ÑƒÐ¿Ð°ÐºÐ¾Ð²ÐºÐ¸), Ð¸ÑÐ¿Ð¾Ð»ÑŒÐ·ÑƒÐµÑ‚ÑÑ ÐºÐ°Ðº Ð·Ð½Ð°Ñ‡ÐµÐ½Ð¸Ðµ Ð¿Ð¾ ÑƒÐ¼Ð¾Ð»Ñ‡Ð°Ð½Ð¸ÑŽ Ð¿Ñ€Ð¸ Ð´Ð¾Ð±Ð°Ð²Ð»ÐµÐ½Ð¸Ð¸ Ð² Ñ€ÐµÑ†ÐµÐ¿Ñ‚Ñ‹
     /// </summary>
     public double DefaultPortionAmount { get; private set; }
     public double CaloriesPerBase { get; private set; }
@@ -33,7 +36,7 @@ public sealed class Product : AggregateRoot<ProductId> {
     public double AlcoholPerBase { get; private set; }
 
     /// <summary>
-    /// Количество использований в блюдах (computed column)
+    /// ÐšÐ¾Ð»Ð¸Ñ‡ÐµÑÑ‚Ð²Ð¾ Ð¸ÑÐ¿Ð¾Ð»ÑŒÐ·Ð¾Ð²Ð°Ð½Ð¸Ð¹ Ð² Ð±Ð»ÑŽÐ´Ð°Ñ… (computed column)
     /// </summary>
     public int UsageCount { get; private set; }
 
@@ -47,11 +50,11 @@ public sealed class Product : AggregateRoot<ProductId> {
     public ICollection<MealItem> MealItems { get; private set; } = new List<MealItem>();
     public ICollection<RecipeIngredient> RecipeIngredients { get; private set; } = new List<RecipeIngredient>();
 
-    // Конструктор для EF Core
+    // ÐšÐ¾Ð½ÑÑ‚Ñ€ÑƒÐºÑ‚Ð¾Ñ€ Ð´Ð»Ñ EF Core
     private Product() {
     }
 
-    // Factory method для создания продукта
+    // Factory method Ð´Ð»Ñ ÑÐ¾Ð·Ð´Ð°Ð½Ð¸Ñ Ð¿Ñ€Ð¾Ð´ÑƒÐºÑ‚Ð°
     public static Product Create(
         UserId userId,
         string name,
@@ -177,3 +180,4 @@ public sealed class Product : AggregateRoot<ProductId> {
         return value;
     }
 }
+

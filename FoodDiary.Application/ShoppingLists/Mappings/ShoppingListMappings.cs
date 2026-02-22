@@ -1,6 +1,14 @@
-using System.Linq;
+﻿using System.Linq;
 using FoodDiary.Contracts.ShoppingLists;
-using FoodDiary.Domain.Entities;
+using FoodDiary.Domain.Entities.Ai;
+using FoodDiary.Domain.Entities.Assets;
+using FoodDiary.Domain.Entities.Content;
+using FoodDiary.Domain.Entities.Meals;
+using FoodDiary.Domain.Entities.Products;
+using FoodDiary.Domain.Entities.Recipes;
+using FoodDiary.Domain.Entities.Shopping;
+using FoodDiary.Domain.Entities.Tracking;
+using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.ShoppingLists.Mappings;
 
@@ -37,3 +45,4 @@ public static class ShoppingListMappings
             list.CreatedOnUtc,
             list.Items.Count);
 }
+

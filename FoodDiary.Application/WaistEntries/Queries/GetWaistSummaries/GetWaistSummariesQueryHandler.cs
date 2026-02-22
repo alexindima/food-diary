@@ -7,6 +7,7 @@ using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Contracts.WaistEntries;
+using FoodDiary.Domain.Entities.Tracking;
 
 namespace FoodDiary.Application.WaistEntries.Queries.GetWaistSummaries;
 
@@ -62,7 +63,7 @@ public class GetWaistSummariesQueryHandler(IWaistEntryRepository waistEntryRepos
     private static WaistEntrySummaryResponse BuildResponse(
         DateTime start,
         DateTime end,
-        IReadOnlyList<Domain.Entities.WaistEntry> entries)
+        IReadOnlyList<WaistEntry> entries)
     {
         var bucketEntries = entries
             .Where(entry => entry.Date >= start && entry.Date <= end)

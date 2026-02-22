@@ -1,7 +1,7 @@
-using FoodDiary.Domain.Common;
+﻿using FoodDiary.Domain.Common;
 using FoodDiary.Domain.ValueObjects;
 
-namespace FoodDiary.Domain.Entities;
+namespace FoodDiary.Domain.Entities.Ai;
 
 public sealed class AiUsage : Entity<Guid>
 {
@@ -38,3 +38,4 @@ public sealed class AiUsage : Entity<Guid>
         return usage;
     }
 }
+

@@ -1,11 +1,11 @@
-using FoodDiary.Domain.Common;
+﻿using FoodDiary.Domain.Common;
 using FoodDiary.Domain.ValueObjects;
 
-namespace FoodDiary.Domain.Entities;
+namespace FoodDiary.Domain.Entities.Recipes;
 
 /// <summary>
-/// Шаг рецепта - часть агрегата Recipe
-/// НЕ является корнем агрегата
+/// Ð¨Ð°Ð³ Ñ€ÐµÑ†ÐµÐ¿Ñ‚Ð° - Ñ‡Ð°ÑÑ‚ÑŒ Ð°Ð³Ñ€ÐµÐ³Ð°Ñ‚Ð° Recipe
+/// ÐÐ• ÑÐ²Ð»ÑÐµÑ‚ÑÑ ÐºÐ¾Ñ€Ð½ÐµÐ¼ Ð°Ð³Ñ€ÐµÐ³Ð°Ñ‚Ð°
 /// </summary>
 public sealed class RecipeStep : Entity<RecipeStepId> {
     public RecipeId RecipeId { get; private set; }
@@ -21,11 +21,11 @@ public sealed class RecipeStep : Entity<RecipeStepId> {
     // Navigation properties
     public Recipe Recipe { get; private set; } = null!;
 
-    // Конструктор для EF Core
+    // ÐšÐ¾Ð½ÑÑ‚Ñ€ÑƒÐºÑ‚Ð¾Ñ€ Ð´Ð»Ñ EF Core
     private RecipeStep() {
     }
 
-    // Factory method (вызывается из Recipe агрегата)
+    // Factory method (Ð²Ñ‹Ð·Ñ‹Ð²Ð°ÐµÑ‚ÑÑ Ð¸Ð· Recipe Ð°Ð³Ñ€ÐµÐ³Ð°Ñ‚Ð°)
     internal static RecipeStep Create(
         RecipeId recipeId,
         int stepNumber,
@@ -33,6 +33,10 @@ public sealed class RecipeStep : Entity<RecipeStepId> {
         string? title = null,
         string? imageUrl = null,
         ImageAssetId? imageAssetId = null) {
+        if (stepNumber <= 0) {
+            throw new ArgumentOutOfRangeException(nameof(stepNumber), "Step number must be greater than zero.");
+        }
+
         if (string.IsNullOrWhiteSpace(instruction)) {
             throw new ArgumentException("Instruction is required", nameof(instruction));
         }
@@ -89,3 +93,4 @@ public sealed class RecipeStep : Entity<RecipeStepId> {
         return title.Trim();
     }
 }
+

@@ -1,10 +1,11 @@
-using FoodDiary.Domain.Common;
+﻿using FoodDiary.Domain.Common;
+using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.ValueObjects;
 
-namespace FoodDiary.Domain.Entities;
+namespace FoodDiary.Domain.Entities.Recipes;
 
 /// <summary>
-/// Ингредиент внутри шага рецепта
+/// Ð˜Ð½Ð³Ñ€ÐµÐ´Ð¸ÐµÐ½Ñ‚ Ð²Ð½ÑƒÑ‚Ñ€Ð¸ ÑˆÐ°Ð³Ð° Ñ€ÐµÑ†ÐµÐ¿Ñ‚Ð°
 /// </summary>
 public sealed class RecipeIngredient : Entity<RecipeIngredientId>
 {
@@ -66,3 +67,4 @@ public sealed class RecipeIngredient : Entity<RecipeIngredientId>
         }
     }
 }
+

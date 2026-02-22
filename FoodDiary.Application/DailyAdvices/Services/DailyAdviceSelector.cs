@@ -1,9 +1,17 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using FoodDiary.Domain.Entities;
+using FoodDiary.Domain.Entities.Ai;
+using FoodDiary.Domain.Entities.Assets;
+using FoodDiary.Domain.Entities.Content;
+using FoodDiary.Domain.Entities.Meals;
+using FoodDiary.Domain.Entities.Products;
+using FoodDiary.Domain.Entities.Recipes;
+using FoodDiary.Domain.Entities.Shopping;
+using FoodDiary.Domain.Entities.Tracking;
+using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.DailyAdvices.Services;
 
@@ -87,3 +95,4 @@ internal static class DailyAdviceSelector
         return separatorIndex > 0 ? normalized[..separatorIndex] : normalized;
     }
 }
+

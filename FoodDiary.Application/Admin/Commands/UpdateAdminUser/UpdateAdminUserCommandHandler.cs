@@ -3,7 +3,15 @@ using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Contracts.Admin;
-using FoodDiary.Domain.Entities;
+using FoodDiary.Domain.Entities.Ai;
+using FoodDiary.Domain.Entities.Assets;
+using FoodDiary.Domain.Entities.Content;
+using FoodDiary.Domain.Entities.Meals;
+using FoodDiary.Domain.Entities.Products;
+using FoodDiary.Domain.Entities.Recipes;
+using FoodDiary.Domain.Entities.Shopping;
+using FoodDiary.Domain.Entities.Tracking;
+using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 
 namespace FoodDiary.Application.Admin.Commands.UpdateAdminUser;
@@ -114,3 +122,5 @@ public sealed class UpdateAdminUserCommandHandler(IUserRepository userRepository
             : Result.Failure<string?>(Errors.Validation.Invalid("language", "Invalid language value."));
     }
 }
+
+

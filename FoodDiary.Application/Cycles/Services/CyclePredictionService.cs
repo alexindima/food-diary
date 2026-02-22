@@ -1,6 +1,14 @@
-using System;
+﻿using System;
 using FoodDiary.Contracts.Cycles;
-using FoodDiary.Domain.Entities;
+using FoodDiary.Domain.Entities.Ai;
+using FoodDiary.Domain.Entities.Assets;
+using FoodDiary.Domain.Entities.Content;
+using FoodDiary.Domain.Entities.Meals;
+using FoodDiary.Domain.Entities.Products;
+using FoodDiary.Domain.Entities.Recipes;
+using FoodDiary.Domain.Entities.Shopping;
+using FoodDiary.Domain.Entities.Tracking;
+using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Cycles.Services;
 
@@ -25,3 +33,4 @@ public static class CyclePredictionService
             ? date.Date
             : DateTime.SpecifyKind(date.Date, DateTimeKind.Utc);
 }
+

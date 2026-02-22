@@ -1,15 +1,16 @@
-using System;
+﻿using System;
 using System.Linq;
 using FoodDiary.Domain.Common;
+using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Events;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
 
-namespace FoodDiary.Domain.Entities;
+namespace FoodDiary.Domain.Entities.Meals;
 
 /// <summary>
-/// Прием пищи - корень агрегата
-/// Управляет коллекцией MealItems (продуктов и блюд)
+/// ÐŸÑ€Ð¸ÐµÐ¼ Ð¿Ð¸Ñ‰Ð¸ - ÐºÐ¾Ñ€ÐµÐ½ÑŒ Ð°Ð³Ñ€ÐµÐ³Ð°Ñ‚Ð°
+/// Ð£Ð¿Ñ€Ð°Ð²Ð»ÑÐµÑ‚ ÐºÐ¾Ð»Ð»ÐµÐºÑ†Ð¸ÐµÐ¹ MealItems (Ð¿Ñ€Ð¾Ð´ÑƒÐºÑ‚Ð¾Ð² Ð¸ Ð±Ð»ÑŽÐ´)
 /// </summary>
 public sealed class Meal : AggregateRoot<MealId> {
     public UserId UserId { get; private set; }
@@ -41,13 +42,13 @@ public sealed class Meal : AggregateRoot<MealId> {
     private readonly List<MealAiSession> _aiSessions = new();
     public IReadOnlyCollection<MealAiSession> AiSessions => _aiSessions.AsReadOnly();
 
-    // Конструктор для EF Core
+    // ÐšÐ¾Ð½ÑÑ‚Ñ€ÑƒÐºÑ‚Ð¾Ñ€ Ð´Ð»Ñ EF Core
     private Meal() {
         _items = new List<MealItem>();
         _aiSessions = new List<MealAiSession>();
     }
 
-    // Factory method для создания приема пищи
+    // Factory method Ð´Ð»Ñ ÑÐ¾Ð·Ð´Ð°Ð½Ð¸Ñ Ð¿Ñ€Ð¸ÐµÐ¼Ð° Ð¿Ð¸Ñ‰Ð¸
     public static Meal Create(
         UserId userId,
         DateTime date,
@@ -96,7 +97,7 @@ public sealed class Meal : AggregateRoot<MealId> {
     }
 
     /// <summary>
-    /// Добавить продукт в прием пищи
+    /// Ð”Ð¾Ð±Ð°Ð²Ð¸Ñ‚ÑŒ Ð¿Ñ€Ð¾Ð´ÑƒÐºÑ‚ Ð² Ð¿Ñ€Ð¸ÐµÐ¼ Ð¿Ð¸Ñ‰Ð¸
     /// </summary>
     public MealItem AddProduct(ProductId productId, double amount) {
         var item = MealItem.CreateWithProduct(Id, productId, amount);
@@ -106,7 +107,7 @@ public sealed class Meal : AggregateRoot<MealId> {
     }
 
     /// <summary>
-    /// Добавить блюдо (рецепт) в прием пищи
+    /// Ð”Ð¾Ð±Ð°Ð²Ð¸Ñ‚ÑŒ Ð±Ð»ÑŽÐ´Ð¾ (Ñ€ÐµÑ†ÐµÐ¿Ñ‚) Ð² Ð¿Ñ€Ð¸ÐµÐ¼ Ð¿Ð¸Ñ‰Ð¸
     /// </summary>
     public MealItem AddRecipe(RecipeId recipeId, double servings) {
         var item = MealItem.CreateWithRecipe(Id, recipeId, servings);
@@ -271,3 +272,4 @@ public sealed class Meal : AggregateRoot<MealId> {
         return value;
     }
 }
+

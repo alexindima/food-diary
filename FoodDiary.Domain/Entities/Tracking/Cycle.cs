@@ -1,8 +1,9 @@
-using System.Linq;
+﻿using System.Linq;
 using FoodDiary.Domain.Common;
+using FoodDiary.Domain.Events;
 using FoodDiary.Domain.ValueObjects;
 
-namespace FoodDiary.Domain.Entities;
+namespace FoodDiary.Domain.Entities.Tracking;
 
 /// <summary>
 /// Menstrual cycle aggregate.
@@ -43,7 +44,7 @@ public sealed class Cycle : AggregateRoot<CycleId>
             StartDate = NormalizeDate(startDate),
             AverageLength = NormalizeAverageLength(averageLength),
             LutealLength = NormalizeLutealLength(lutealLength),
-            Notes = notes
+            Notes = NormalizeNotes(notes)
         };
 
         cycle.SetCreated();
@@ -64,7 +65,7 @@ public sealed class Cycle : AggregateRoot<CycleId>
 
         if (notes is not null)
         {
-            Notes = notes;
+            Notes = NormalizeNotes(notes);
         }
 
         SetModified();
@@ -81,12 +82,14 @@ public sealed class Cycle : AggregateRoot<CycleId>
         if (existing is not null)
         {
             existing.Update(isPeriod, symptoms, notes);
+            RaiseDomainEvent(new CycleDayUpsertedDomainEvent(Id, normalizedDate, IsCreated: false));
             SetModified();
             return existing;
         }
 
         var day = CycleDay.Create(Id, normalizedDate, isPeriod, symptoms, notes);
         _days.Add(day);
+        RaiseDomainEvent(new CycleDayUpsertedDomainEvent(Id, normalizedDate, IsCreated: true));
         SetModified();
         return day;
     }
@@ -101,6 +104,7 @@ public sealed class Cycle : AggregateRoot<CycleId>
         }
 
         _days.Remove(existing);
+        RaiseDomainEvent(new CycleDayRemovedDomainEvent(Id, normalizedDate));
         SetModified();
         return true;
     }
@@ -124,4 +128,15 @@ public sealed class Cycle : AggregateRoot<CycleId>
         var length = value ?? DefaultLutealLength;
         return Math.Clamp(length, 8, 18);
     }
+
+    private static string? NormalizeNotes(string? value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            return null;
+        }
+
+        return value.Trim();
+    }
 }
+

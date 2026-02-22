@@ -1,8 +1,9 @@
-using FoodDiary.Domain.Common;
+﻿using FoodDiary.Domain.Common;
+using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
 
-namespace FoodDiary.Domain.Entities;
+namespace FoodDiary.Domain.Entities.Shopping;
 
 public sealed class ShoppingListItem : Entity<ShoppingListItemId>
 {
@@ -63,3 +64,4 @@ public sealed class ShoppingListItem : Entity<ShoppingListItemId>
         return item;
     }
 }
+

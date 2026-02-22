@@ -1,8 +1,9 @@
-using FoodDiary.Domain.Common;
+﻿using FoodDiary.Domain.Common;
+using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
 
-namespace FoodDiary.Domain.Entities;
+namespace FoodDiary.Domain.Entities.Products;
 
 public sealed class RecentItem : Entity<RecentItemId>
 {
@@ -18,7 +19,12 @@ public sealed class RecentItem : Entity<RecentItemId>
 
     public static RecentItem Create(UserId userId, RecentItemType itemType, Guid itemId, DateTime? usedAtUtc = null)
     {
-        var now = usedAtUtc ?? DateTime.UtcNow;
+        if (itemId == Guid.Empty)
+        {
+            throw new ArgumentException("ItemId cannot be empty.", nameof(itemId));
+        }
+
+        var now = NormalizeUtc(usedAtUtc ?? DateTime.UtcNow);
 
         var recentItem = new RecentItem
         {
@@ -36,8 +42,18 @@ public sealed class RecentItem : Entity<RecentItemId>
 
     public void Touch(DateTime? usedAtUtc = null)
     {
-        LastUsedAtUtc = usedAtUtc ?? DateTime.UtcNow;
+        LastUsedAtUtc = NormalizeUtc(usedAtUtc ?? DateTime.UtcNow);
         UsageCount += 1;
         SetModified();
     }
+
+    private static DateTime NormalizeUtc(DateTime value)
+    {
+        return value.Kind switch
+        {
+            DateTimeKind.Utc => value,
+            _ => value.ToUniversalTime()
+        };
+    }
 }
+

@@ -1,6 +1,14 @@
-using FoodDiary.Contracts.Users;
+﻿using FoodDiary.Contracts.Users;
 using FoodDiary.Contracts.Goals;
-using FoodDiary.Domain.Entities;
+using FoodDiary.Domain.Entities.Ai;
+using FoodDiary.Domain.Entities.Assets;
+using FoodDiary.Domain.Entities.Content;
+using FoodDiary.Domain.Entities.Meals;
+using FoodDiary.Domain.Entities.Products;
+using FoodDiary.Domain.Entities.Recipes;
+using FoodDiary.Domain.Entities.Shopping;
+using FoodDiary.Domain.Entities.Tracking;
+using FoodDiary.Domain.Entities.Users;
 using System.Text.Json;
 
 namespace FoodDiary.Application.Users.Mappings;
@@ -68,3 +76,4 @@ public static class UserMappings
         );
     }
 }
+

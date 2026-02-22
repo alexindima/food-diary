@@ -1,7 +1,7 @@
-using FoodDiary.Domain.Common;
+﻿using FoodDiary.Domain.Common;
 using FoodDiary.Domain.ValueObjects;
 
-namespace FoodDiary.Domain.Entities;
+namespace FoodDiary.Domain.Entities.Tracking;
 
 /// <summary>
 /// Specific day of a menstrual cycle with symptom tracking.
@@ -72,3 +72,4 @@ public sealed class CycleDay : Entity<CycleDayId>
             : DateTime.SpecifyKind(dateOnly, DateTimeKind.Utc);
     }
 }
+

@@ -1,5 +1,13 @@
-using Microsoft.EntityFrameworkCore;
-using FoodDiary.Domain.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using FoodDiary.Domain.Entities.Ai;
+using FoodDiary.Domain.Entities.Assets;
+using FoodDiary.Domain.Entities.Content;
+using FoodDiary.Domain.Entities.Meals;
+using FoodDiary.Domain.Entities.Products;
+using FoodDiary.Domain.Entities.Recipes;
+using FoodDiary.Domain.Entities.Shopping;
+using FoodDiary.Domain.Entities.Tracking;
+using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
 
@@ -175,7 +183,7 @@ public class FoodDiaryDbContext : DbContext
             entity.Property(e => e.Visibility).HasDefaultValue(Visibility.PUBLIC);
             entity.Property(e => e.ProductType).HasDefaultValue(ProductType.Unknown);
 
-            // UsageCount - не хранится в БД, вычисляется динамически в запросах
+            // UsageCount - Ð½Ðµ Ñ…Ñ€Ð°Ð½Ð¸Ñ‚ÑÑ Ð² Ð‘Ð”, Ð²Ñ‹Ñ‡Ð¸ÑÐ»ÑÐµÑ‚ÑÑ Ð´Ð¸Ð½Ð°Ð¼Ð¸Ñ‡ÐµÑÐºÐ¸ Ð² Ð·Ð°Ð¿Ñ€Ð¾ÑÐ°Ñ…
             entity.Ignore(e => e.UsageCount);
 
             entity.HasOne<ImageAsset>()
@@ -319,7 +327,7 @@ public class FoodDiaryDbContext : DbContext
                 .HasForeignKey(e => e.RecipeId)
                 .IsRequired(false);
 
-            // XOR check constraint будет в миграции: CHECK ((ProductId IS NULL) <> (RecipeId IS NULL))
+            // XOR check constraint Ð±ÑƒÐ´ÐµÑ‚ Ð² Ð¼Ð¸Ð³Ñ€Ð°Ñ†Ð¸Ð¸: CHECK ((ProductId IS NULL) <> (RecipeId IS NULL))
         });
 
         modelBuilder.Entity<MealAiSession>(entity =>
@@ -712,3 +720,4 @@ public class FoodDiaryDbContext : DbContext
         });
     }
 }
+

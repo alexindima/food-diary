@@ -1,7 +1,7 @@
-using FoodDiary.Domain.Common;
+﻿using FoodDiary.Domain.Common;
 using FoodDiary.Domain.ValueObjects;
 
-namespace FoodDiary.Domain.Entities;
+namespace FoodDiary.Domain.Entities.Users;
 
 public sealed class Role : AggregateRoot<RoleId>
 {
@@ -15,12 +15,25 @@ public sealed class Role : AggregateRoot<RoleId>
 
     public static Role Create(string name)
     {
+        var normalizedName = NormalizeRequiredName(name);
+
         var role = new Role
         {
             Id = RoleId.New(),
-            Name = name
+            Name = normalizedName
         };
         role.SetCreated();
         return role;
     }
+
+    private static string NormalizeRequiredName(string value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            throw new ArgumentException("Role name is required.", nameof(value));
+        }
+
+        return value.Trim();
+    }
 }
+

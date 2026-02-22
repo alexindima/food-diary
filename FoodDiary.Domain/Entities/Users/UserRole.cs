@@ -1,6 +1,6 @@
-using FoodDiary.Domain.ValueObjects;
+﻿using FoodDiary.Domain.ValueObjects;
 
-namespace FoodDiary.Domain.Entities;
+namespace FoodDiary.Domain.Entities.Users;
 
 public sealed class UserRole
 {
@@ -20,3 +20,4 @@ public sealed class UserRole
         RoleId = roleId;
     }
 }
+

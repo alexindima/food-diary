@@ -1,45 +1,46 @@
-using FoodDiary.Domain.Common;
+﻿using FoodDiary.Domain.Common;
+using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects;
 
-namespace FoodDiary.Domain.Entities;
+namespace FoodDiary.Domain.Entities.Tracking;
 
 /// <summary>
-/// Ежедневная запись веса пользователя
+/// Measurement of waist circumference for WHtR tracking.
 /// </summary>
-public sealed class WeightEntry : AggregateRoot<WeightEntryId>
+public sealed class WaistEntry : AggregateRoot<WaistEntryId>
 {
     public UserId UserId { get; private set; }
     public DateTime Date { get; private set; }
-    public double Weight { get; private set; }
+    public double Circumference { get; private set; }
 
     public User User { get; private set; } = null!;
 
-    private WeightEntry()
+    private WaistEntry()
     {
     }
 
-    private WeightEntry(WeightEntryId id) : base(id)
+    private WaistEntry(WaistEntryId id) : base(id)
     {
     }
 
-    public static WeightEntry Create(UserId userId, DateTime date, double weight)
+    public static WaistEntry Create(UserId userId, DateTime date, double circumference)
     {
-        var entry = new WeightEntry(WeightEntryId.New())
+        var entry = new WaistEntry(WaistEntryId.New())
         {
             UserId = userId,
             Date = NormalizeDate(date),
-            Weight = weight
+            Circumference = circumference,
         };
 
         entry.SetCreated();
         return entry;
     }
 
-    public void Update(double? weight = null, DateTime? date = null)
+    public void Update(double? circumference = null, DateTime? date = null)
     {
-        if (weight.HasValue)
+        if (circumference.HasValue)
         {
-            Weight = weight.Value;
+            Circumference = circumference.Value;
         }
 
         if (date.HasValue)
@@ -58,3 +59,4 @@ public sealed class WeightEntry : AggregateRoot<WeightEntryId>
             : DateTime.SpecifyKind(dateOnly, DateTimeKind.Utc);
     }
 }
+

@@ -1,12 +1,17 @@
-using FoodDiary.Domain.Common;
+﻿using FoodDiary.Domain.Common;
+using FoodDiary.Domain.Entities.Meals;
+using FoodDiary.Domain.Entities.Products;
+using FoodDiary.Domain.Entities.Recipes;
+using FoodDiary.Domain.Entities.Shopping;
+using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Events;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
 
-namespace FoodDiary.Domain.Entities;
+namespace FoodDiary.Domain.Entities.Users;
 
 /// <summary>
-/// Пользователь системы - корень агрегата
+/// ÐŸÐ¾Ð»ÑŒÐ·Ð¾Ð²Ð°Ñ‚ÐµÐ»ÑŒ ÑÐ¸ÑÑ‚ÐµÐ¼Ñ‹ - ÐºÐ¾Ñ€ÐµÐ½ÑŒ Ð°Ð³Ñ€ÐµÐ³Ð°Ñ‚Ð°
 /// </summary>
 public sealed class User : AggregateRoot<UserId> {
     private const long DefaultAiInputTokenLimit = 5_000_000;
@@ -62,11 +67,11 @@ public sealed class User : AggregateRoot<UserId> {
     public ICollection<ShoppingList> ShoppingLists { get; private set; } = new List<ShoppingList>();
     public ICollection<UserRole> UserRoles { get; private set; } = new List<UserRole>();
 
-    // Конструктор для EF Core
+    // ÐšÐ¾Ð½ÑÑ‚Ñ€ÑƒÐºÑ‚Ð¾Ñ€ Ð´Ð»Ñ EF Core
     private User() {
     }
 
-    // Factory method для создания нового пользователя
+    // Factory method Ð´Ð»Ñ ÑÐ¾Ð·Ð´Ð°Ð½Ð¸Ñ Ð½Ð¾Ð²Ð¾Ð³Ð¾ Ð¿Ð¾Ð»ÑŒÐ·Ð¾Ð²Ð°Ñ‚ÐµÐ»Ñ
     public static User Create(string email, string hashedPassword) {
         var normalizedEmail = NormalizeRequiredEmail(email);
         var normalizedPassword = NormalizeRequiredPasswordHash(hashedPassword);
@@ -284,3 +289,4 @@ public sealed class User : AggregateRoot<UserId> {
         return value;
     }
 }
+

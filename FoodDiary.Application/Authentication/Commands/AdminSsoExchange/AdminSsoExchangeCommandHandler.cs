@@ -4,6 +4,7 @@ using FoodDiary.Application.Common.Interfaces.Authentication;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Interfaces.Services;
 using FoodDiary.Contracts.Authentication;
+using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Application.Users.Mappings;
@@ -55,7 +56,7 @@ public sealed class AdminSsoExchangeCommandHandler(
         return Result.Success(authResponse);
     }
 
-    private static bool IsAdmin(Domain.Entities.User user)
+    private static bool IsAdmin(User user)
     {
         return user.UserRoles.Any(role => string.Equals(role.Role.Name, RoleNames.Admin, StringComparison.Ordinal));
     }

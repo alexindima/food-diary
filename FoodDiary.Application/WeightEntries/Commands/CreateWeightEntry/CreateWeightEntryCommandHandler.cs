@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
 using FoodDiary.Application.Common.Abstractions.Messaging;
@@ -6,7 +6,15 @@ using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.WeightEntries.Mappings;
 using FoodDiary.Contracts.WeightEntries;
-using FoodDiary.Domain.Entities;
+using FoodDiary.Domain.Entities.Ai;
+using FoodDiary.Domain.Entities.Assets;
+using FoodDiary.Domain.Entities.Content;
+using FoodDiary.Domain.Entities.Meals;
+using FoodDiary.Domain.Entities.Products;
+using FoodDiary.Domain.Entities.Recipes;
+using FoodDiary.Domain.Entities.Shopping;
+using FoodDiary.Domain.Entities.Tracking;
+using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.WeightEntries.Commands.CreateWeightEntry;
 
@@ -39,3 +47,4 @@ public class CreateWeightEntryCommandHandler(IWeightEntryRepository weightEntryR
         return Result.Success(entry.ToResponse());
     }
 }
+

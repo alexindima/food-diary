@@ -1,8 +1,9 @@
-using System;
+﻿using System;
 using FoodDiary.Domain.Common;
+using FoodDiary.Domain.Entities.Assets;
 using FoodDiary.Domain.ValueObjects;
 
-namespace FoodDiary.Domain.Entities;
+namespace FoodDiary.Domain.Entities.Meals;
 
 /// <summary>
 /// AI recognition session for a meal.
@@ -55,3 +56,4 @@ public sealed class MealAiSession : Entity<MealAiSessionId>
         SetModified();
     }
 }
+
