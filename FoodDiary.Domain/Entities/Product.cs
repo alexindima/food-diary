@@ -1,3 +1,4 @@
+using System;
 using FoodDiary.Domain.Common;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
@@ -72,19 +73,29 @@ public sealed class Product : AggregateRoot<ProductId> {
         string? imageUrl = null,
         ImageAssetId? imageAssetId = null,
         Visibility visibility = Visibility.PUBLIC) {
+        var normalizedName = NormalizeRequiredName(name);
+        var normalizedBaseAmount = RequirePositive(baseAmount, nameof(baseAmount));
+        var normalizedDefaultPortionAmount = RequirePositive(defaultPortionAmount ?? baseAmount, nameof(defaultPortionAmount));
+        var normalizedCaloriesPerBase = RequireNonNegative(caloriesPerBase, nameof(caloriesPerBase));
+        var normalizedProteinsPerBase = RequireNonNegative(proteinsPerBase, nameof(proteinsPerBase));
+        var normalizedFatsPerBase = RequireNonNegative(fatsPerBase, nameof(fatsPerBase));
+        var normalizedCarbsPerBase = RequireNonNegative(carbsPerBase, nameof(carbsPerBase));
+        var normalizedFiberPerBase = RequireNonNegative(fiberPerBase, nameof(fiberPerBase));
+        var normalizedAlcoholPerBase = RequireNonNegative(alcoholPerBase, nameof(alcoholPerBase));
+
         var product = new Product {
             Id = ProductId.New(),
             UserId = userId,
-            Name = name,
+            Name = normalizedName,
             BaseUnit = baseUnit,
-            BaseAmount = baseAmount,
-            DefaultPortionAmount = defaultPortionAmount ?? baseAmount,
-            CaloriesPerBase = caloriesPerBase,
-            ProteinsPerBase = proteinsPerBase,
-            FatsPerBase = fatsPerBase,
-            CarbsPerBase = carbsPerBase,
-            FiberPerBase = fiberPerBase,
-            AlcoholPerBase = alcoholPerBase,
+            BaseAmount = normalizedBaseAmount,
+            DefaultPortionAmount = normalizedDefaultPortionAmount,
+            CaloriesPerBase = normalizedCaloriesPerBase,
+            ProteinsPerBase = normalizedProteinsPerBase,
+            FatsPerBase = normalizedFatsPerBase,
+            CarbsPerBase = normalizedCarbsPerBase,
+            FiberPerBase = normalizedFiberPerBase,
+            AlcoholPerBase = normalizedAlcoholPerBase,
             Barcode = barcode,
             Brand = brand,
             ProductType = productType,
@@ -119,16 +130,16 @@ public sealed class Product : AggregateRoot<ProductId> {
         string? imageUrl = null,
         ImageAssetId? imageAssetId = null,
         Visibility? visibility = null) {
-        if (name is not null) Name = name;
+        if (name is not null) Name = NormalizeRequiredName(name);
         if (baseUnit.HasValue) BaseUnit = baseUnit.Value;
-        if (baseAmount.HasValue) BaseAmount = baseAmount.Value;
-        if (defaultPortionAmount.HasValue) DefaultPortionAmount = defaultPortionAmount.Value;
-        if (caloriesPerBase.HasValue) CaloriesPerBase = caloriesPerBase.Value;
-        if (proteinsPerBase.HasValue) ProteinsPerBase = proteinsPerBase.Value;
-        if (fatsPerBase.HasValue) FatsPerBase = fatsPerBase.Value;
-        if (carbsPerBase.HasValue) CarbsPerBase = carbsPerBase.Value;
-        if (fiberPerBase.HasValue) FiberPerBase = fiberPerBase.Value;
-        if (alcoholPerBase.HasValue) AlcoholPerBase = alcoholPerBase.Value;
+        if (baseAmount.HasValue) BaseAmount = RequirePositive(baseAmount.Value, nameof(baseAmount));
+        if (defaultPortionAmount.HasValue) DefaultPortionAmount = RequirePositive(defaultPortionAmount.Value, nameof(defaultPortionAmount));
+        if (caloriesPerBase.HasValue) CaloriesPerBase = RequireNonNegative(caloriesPerBase.Value, nameof(caloriesPerBase));
+        if (proteinsPerBase.HasValue) ProteinsPerBase = RequireNonNegative(proteinsPerBase.Value, nameof(proteinsPerBase));
+        if (fatsPerBase.HasValue) FatsPerBase = RequireNonNegative(fatsPerBase.Value, nameof(fatsPerBase));
+        if (carbsPerBase.HasValue) CarbsPerBase = RequireNonNegative(carbsPerBase.Value, nameof(carbsPerBase));
+        if (fiberPerBase.HasValue) FiberPerBase = RequireNonNegative(fiberPerBase.Value, nameof(fiberPerBase));
+        if (alcoholPerBase.HasValue) AlcoholPerBase = RequireNonNegative(alcoholPerBase.Value, nameof(alcoholPerBase));
         if (barcode is not null) Barcode = barcode;
         if (brand is not null) Brand = brand;
         if (productType.HasValue) ProductType = productType.Value;
@@ -140,5 +151,29 @@ public sealed class Product : AggregateRoot<ProductId> {
         if (visibility.HasValue) Visibility = visibility.Value;
 
         SetModified();
+    }
+
+    private static string NormalizeRequiredName(string value) {
+        if (string.IsNullOrWhiteSpace(value)) {
+            throw new ArgumentException("Product name is required.", nameof(value));
+        }
+
+        return value.Trim();
+    }
+
+    private static double RequirePositive(double value, string paramName) {
+        if (value <= 0) {
+            throw new ArgumentOutOfRangeException(paramName, "Value must be greater than zero.");
+        }
+
+        return value;
+    }
+
+    private static double RequireNonNegative(double value, string paramName) {
+        if (value < 0) {
+            throw new ArgumentOutOfRangeException(paramName, "Value must be non-negative.");
+        }
+
+        return value;
     }
 }

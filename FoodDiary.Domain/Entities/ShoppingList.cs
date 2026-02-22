@@ -25,7 +25,7 @@ public sealed class ShoppingList : AggregateRoot<ShoppingListId>
         {
             Id = ShoppingListId.New(),
             UserId = userId,
-            Name = name.Trim()
+            Name = NormalizeRequiredName(name)
         };
         list.SetCreated();
         return list;
@@ -33,7 +33,7 @@ public sealed class ShoppingList : AggregateRoot<ShoppingListId>
 
     public void UpdateName(string name)
     {
-        Name = name.Trim();
+        Name = NormalizeRequiredName(name);
         SetModified();
     }
 
@@ -64,5 +64,15 @@ public sealed class ShoppingList : AggregateRoot<ShoppingListId>
         _items.Add(item);
         SetModified();
         return item;
+    }
+
+    private static string NormalizeRequiredName(string value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            throw new ArgumentException("Shopping list name is required.", nameof(value));
+        }
+
+        return value.Trim();
     }
 }

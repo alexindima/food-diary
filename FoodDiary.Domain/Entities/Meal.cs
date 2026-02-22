@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using FoodDiary.Domain.Common;
+using FoodDiary.Domain.Events;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
 
@@ -59,7 +60,7 @@ public sealed class Meal : AggregateRoot<MealId> {
         var meal = new Meal {
             Id = MealId.New(),
             UserId = userId,
-            Date = date,
+            Date = NormalizeDate(date),
             MealType = mealType,
             Comment = comment,
             ImageUrl = imageUrl,
@@ -85,7 +86,7 @@ public sealed class Meal : AggregateRoot<MealId> {
     }
 
     public void UpdateDate(DateTime date) {
-        Date = date;
+        Date = NormalizeDate(date);
         SetModified();
     }
 
@@ -178,12 +179,19 @@ public sealed class Meal : AggregateRoot<MealId> {
         double? manualCarbs = null,
         double? manualFiber = null,
         double? manualAlcohol = null) {
-        TotalCalories = Math.Round(totalCalories, 2);
-        TotalProteins = Math.Round(totalProteins, 2);
-        TotalFats = Math.Round(totalFats, 2);
-        TotalCarbs = Math.Round(totalCarbs, 2);
-        TotalFiber = Math.Round(totalFiber, 2);
-        TotalAlcohol = Math.Round(totalAlcohol, 2);
+        var normalizedTotalCalories = RequireNonNegative(totalCalories, nameof(totalCalories));
+        var normalizedTotalProteins = RequireNonNegative(totalProteins, nameof(totalProteins));
+        var normalizedTotalFats = RequireNonNegative(totalFats, nameof(totalFats));
+        var normalizedTotalCarbs = RequireNonNegative(totalCarbs, nameof(totalCarbs));
+        var normalizedTotalFiber = RequireNonNegative(totalFiber, nameof(totalFiber));
+        var normalizedTotalAlcohol = RequireNonNegative(totalAlcohol, nameof(totalAlcohol));
+
+        TotalCalories = Math.Round(normalizedTotalCalories, 2);
+        TotalProteins = Math.Round(normalizedTotalProteins, 2);
+        TotalFats = Math.Round(normalizedTotalFats, 2);
+        TotalCarbs = Math.Round(normalizedTotalCarbs, 2);
+        TotalFiber = Math.Round(normalizedTotalFiber, 2);
+        TotalAlcohol = Math.Round(normalizedTotalAlcohol, 2);
 
         IsNutritionAutoCalculated = isAutoCalculated;
 
@@ -195,13 +203,35 @@ public sealed class Meal : AggregateRoot<MealId> {
             ManualFiber = null;
             ManualAlcohol = null;
         } else {
-            ManualCalories = manualCalories.HasValue ? Math.Round(manualCalories.Value, 2) : TotalCalories;
-            ManualProteins = manualProteins.HasValue ? Math.Round(manualProteins.Value, 2) : TotalProteins;
-            ManualFats = manualFats.HasValue ? Math.Round(manualFats.Value, 2) : TotalFats;
-            ManualCarbs = manualCarbs.HasValue ? Math.Round(manualCarbs.Value, 2) : TotalCarbs;
-            ManualFiber = manualFiber.HasValue ? Math.Round(manualFiber.Value, 2) : TotalFiber;
-            ManualAlcohol = manualAlcohol.HasValue ? Math.Round(manualAlcohol.Value, 2) : TotalAlcohol;
+            ManualCalories = manualCalories.HasValue
+                ? Math.Round(RequireNonNegative(manualCalories.Value, nameof(manualCalories)), 2)
+                : TotalCalories;
+            ManualProteins = manualProteins.HasValue
+                ? Math.Round(RequireNonNegative(manualProteins.Value, nameof(manualProteins)), 2)
+                : TotalProteins;
+            ManualFats = manualFats.HasValue
+                ? Math.Round(RequireNonNegative(manualFats.Value, nameof(manualFats)), 2)
+                : TotalFats;
+            ManualCarbs = manualCarbs.HasValue
+                ? Math.Round(RequireNonNegative(manualCarbs.Value, nameof(manualCarbs)), 2)
+                : TotalCarbs;
+            ManualFiber = manualFiber.HasValue
+                ? Math.Round(RequireNonNegative(manualFiber.Value, nameof(manualFiber)), 2)
+                : TotalFiber;
+            ManualAlcohol = manualAlcohol.HasValue
+                ? Math.Round(RequireNonNegative(manualAlcohol.Value, nameof(manualAlcohol)), 2)
+                : TotalAlcohol;
         }
+
+        RaiseDomainEvent(new MealNutritionAppliedDomainEvent(
+            Id,
+            IsNutritionAutoCalculated,
+            TotalCalories,
+            TotalProteins,
+            TotalFats,
+            TotalCarbs,
+            TotalFiber,
+            TotalAlcohol));
 
         SetModified();
     }
@@ -221,4 +251,23 @@ public sealed class Meal : AggregateRoot<MealId> {
 
     private static int NormalizeSatietyLevel(int level) =>
         level is >= 0 and <= 9 ? level : 0;
+
+    private static DateTime NormalizeDate(DateTime value)
+    {
+        return value.Kind switch
+        {
+            DateTimeKind.Utc => value,
+            _ => value.ToUniversalTime()
+        };
+    }
+
+    private static double RequireNonNegative(double value, string paramName)
+    {
+        if (value < 0)
+        {
+            throw new ArgumentOutOfRangeException(paramName, "Value must be non-negative.");
+        }
+
+        return value;
+    }
 }

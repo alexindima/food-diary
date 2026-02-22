@@ -42,6 +42,11 @@ public sealed class ShoppingListItem : Entity<ShoppingListItemId>
             throw new ArgumentException("Amount must be greater than zero.", nameof(amount));
         }
 
+        if (sortOrder < 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(sortOrder), "Sort order must be non-negative.");
+        }
+
         var item = new ShoppingListItem
         {
             Id = ShoppingListItemId.New(),
@@ -50,7 +55,7 @@ public sealed class ShoppingListItem : Entity<ShoppingListItemId>
             Name = name.Trim(),
             Amount = amount,
             Unit = unit,
-            Category = category?.Trim(),
+            Category = string.IsNullOrWhiteSpace(category) ? null : category.Trim(),
             IsChecked = isChecked,
             SortOrder = sortOrder
         };

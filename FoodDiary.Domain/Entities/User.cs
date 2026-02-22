@@ -1,4 +1,5 @@
 using FoodDiary.Domain.Common;
+using FoodDiary.Domain.Events;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
 
@@ -67,10 +68,13 @@ public sealed class User : AggregateRoot<UserId> {
 
     // Factory method для создания нового пользователя
     public static User Create(string email, string hashedPassword) {
+        var normalizedEmail = NormalizeRequiredEmail(email);
+        var normalizedPassword = NormalizeRequiredPasswordHash(hashedPassword);
+
         var user = new User {
             Id = UserId.New(),
-            Email = email,
-            Password = hashedPassword,
+            Email = normalizedEmail,
+            Password = normalizedPassword,
             AiInputTokenLimit = DefaultAiInputTokenLimit,
             AiOutputTokenLimit = DefaultAiOutputTokenLimit,
             IsEmailConfirmed = false
@@ -98,7 +102,7 @@ public sealed class User : AggregateRoot<UserId> {
     }
 
     public void UpdatePassword(string hashedPassword) {
-        Password = hashedPassword;
+        Password = NormalizeRequiredPasswordHash(hashedPassword);
         SetModified();
     }
 
@@ -191,11 +195,21 @@ public sealed class User : AggregateRoot<UserId> {
     {
         if (inputLimit.HasValue)
         {
+            if (inputLimit.Value < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(inputLimit), "Input limit must be non-negative.");
+            }
+
             AiInputTokenLimit = inputLimit.Value;
         }
 
         if (outputLimit.HasValue)
         {
+            if (outputLimit.Value < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(outputLimit), "Output limit must be non-negative.");
+            }
+
             AiOutputTokenLimit = outputLimit.Value;
         }
 
@@ -226,15 +240,47 @@ public sealed class User : AggregateRoot<UserId> {
 
     public void MarkDeleted(DateTime deletedAtUtc)
     {
+        if (DeletedAt is not null && !IsActive)
+        {
+            return;
+        }
+
         DeletedAt = deletedAtUtc;
         IsActive = false;
+        RaiseDomainEvent(new UserDeletedDomainEvent(Id, deletedAtUtc));
         SetModified();
     }
 
     public void Restore()
     {
+        if (DeletedAt is null && IsActive)
+        {
+            return;
+        }
+
         DeletedAt = null;
         IsActive = true;
+        RaiseDomainEvent(new UserRestoredDomainEvent(Id));
         SetModified();
+    }
+
+    private static string NormalizeRequiredEmail(string value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            throw new ArgumentException("Email is required.", nameof(value));
+        }
+
+        return value.Trim();
+    }
+
+    private static string NormalizeRequiredPasswordHash(string value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            throw new ArgumentException("Password hash is required.", nameof(value));
+        }
+
+        return value;
     }
 }
