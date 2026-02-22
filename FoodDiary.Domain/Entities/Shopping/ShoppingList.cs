@@ -1,13 +1,14 @@
-﻿using FoodDiary.Domain.Common;
+using FoodDiary.Domain.Common;
 using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Domain.Events;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
 
 namespace FoodDiary.Domain.Entities.Shopping;
 
-public sealed class ShoppingList : AggregateRoot<ShoppingListId>
-{
-    private readonly List<ShoppingListItem> _items = new();
+public sealed class ShoppingList : AggregateRoot<ShoppingListId> {
+    private const int NameMaxLength = 128;
+    private readonly List<ShoppingListItem> _items = [];
 
     public UserId UserId { get; private set; }
     public string Name { get; private set; } = string.Empty;
@@ -15,33 +16,43 @@ public sealed class ShoppingList : AggregateRoot<ShoppingListId>
     public User User { get; private set; } = null!;
     public IReadOnlyCollection<ShoppingListItem> Items => _items.AsReadOnly();
 
-    private ShoppingList()
-    {
-        _items = new List<ShoppingListItem>();
+    private ShoppingList() {
     }
 
-    public static ShoppingList Create(UserId userId, string name)
-    {
-        var list = new ShoppingList
-        {
+    public static ShoppingList Create(UserId userId, string name) {
+        EnsureUserId(userId);
+
+        var normalizedName = NormalizeRequiredName(name);
+        var list = new ShoppingList {
             Id = ShoppingListId.New(),
             UserId = userId,
-            Name = NormalizeRequiredName(name)
+            Name = normalizedName
         };
         list.SetCreated();
         return list;
     }
 
-    public void UpdateName(string name)
-    {
-        Name = NormalizeRequiredName(name);
+    public void UpdateName(string name) {
+        var normalizedName = NormalizeRequiredName(name);
+        if (Name == normalizedName) {
+            return;
+        }
+
+        var previousName = Name;
+        Name = normalizedName;
         SetModified();
+        RaiseDomainEvent(new ShoppingListNameUpdatedDomainEvent(Id, previousName, Name));
     }
 
-    public void ClearItems()
-    {
+    public void ClearItems() {
+        if (_items.Count == 0) {
+            return;
+        }
+
+        var clearedItemsCount = _items.Count;
         _items.Clear();
         SetModified();
+        RaiseDomainEvent(new ShoppingListItemsClearedDomainEvent(Id, clearedItemsCount));
     }
 
     public ShoppingListItem AddItem(
@@ -51,8 +62,7 @@ public sealed class ShoppingList : AggregateRoot<ShoppingListId>
         MeasurementUnit? unit,
         string? category,
         bool isChecked,
-        int sortOrder)
-    {
+        int sortOrder) {
         var item = ShoppingListItem.Create(
             Id,
             name,
@@ -64,17 +74,33 @@ public sealed class ShoppingList : AggregateRoot<ShoppingListId>
             sortOrder);
         _items.Add(item);
         SetModified();
+        RaiseDomainEvent(new ShoppingListItemAddedDomainEvent(
+            Id,
+            item.Id,
+            item.ProductId,
+            item.Name,
+            item.Amount,
+            item.Unit,
+            item.Category,
+            item.IsChecked,
+            item.SortOrder));
         return item;
     }
 
-    private static string NormalizeRequiredName(string value)
-    {
-        if (string.IsNullOrWhiteSpace(value))
-        {
+    private static string NormalizeRequiredName(string value) {
+        if (string.IsNullOrWhiteSpace(value)) {
             throw new ArgumentException("Shopping list name is required.", nameof(value));
         }
 
-        return value.Trim();
+        var normalized = value.Trim();
+        return normalized.Length > NameMaxLength
+            ? throw new ArgumentOutOfRangeException(nameof(value), $"Shopping list name must be at most {NameMaxLength} characters.")
+            : normalized;
+    }
+
+    private static void EnsureUserId(UserId userId) {
+        if (userId == UserId.Empty) {
+            throw new ArgumentException("UserId is required.", nameof(userId));
+        }
     }
 }
-

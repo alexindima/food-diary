@@ -5,8 +5,11 @@ using FoodDiary.Domain.ValueObjects;
 
 namespace FoodDiary.Domain.Entities.Shopping;
 
-public sealed class ShoppingListItem : Entity<ShoppingListItemId>
-{
+public sealed class ShoppingListItem : Entity<ShoppingListItemId> {
+    private const int NameMaxLength = 256;
+    private const int CategoryMaxLength = 128;
+    private const double MaxAmount = 1_000_000d;
+
     public ShoppingListId ShoppingListId { get; private set; }
     public ProductId? ProductId { get; private set; }
     public string Name { get; private set; } = string.Empty;
@@ -19,8 +22,7 @@ public sealed class ShoppingListItem : Entity<ShoppingListItemId>
     public ShoppingList ShoppingList { get; private set; } = null!;
     public Product? Product { get; private set; }
 
-    private ShoppingListItem()
-    {
+    private ShoppingListItem() {
     }
 
     public static ShoppingListItem Create(
@@ -31,37 +33,77 @@ public sealed class ShoppingListItem : Entity<ShoppingListItemId>
         MeasurementUnit? unit,
         string? category,
         bool isChecked,
-        int sortOrder)
-    {
-        if (string.IsNullOrWhiteSpace(name))
-        {
-            throw new ArgumentException("Name is required.", nameof(name));
-        }
+        int sortOrder) {
+        EnsureShoppingListId(shoppingListId);
+        EnsureProductId(productId);
+        var normalizedName = NormalizeRequiredName(name);
+        var normalizedAmount = NormalizeOptionalAmount(amount, nameof(amount));
+        var normalizedCategory = NormalizeOptionalText(category, CategoryMaxLength, nameof(category));
 
-        if (amount.HasValue && amount.Value <= 0)
-        {
-            throw new ArgumentException("Amount must be greater than zero.", nameof(amount));
-        }
-
-        if (sortOrder < 0)
-        {
+        if (sortOrder < 0) {
             throw new ArgumentOutOfRangeException(nameof(sortOrder), "Sort order must be non-negative.");
         }
 
-        var item = new ShoppingListItem
-        {
+        var item = new ShoppingListItem {
             Id = ShoppingListItemId.New(),
             ShoppingListId = shoppingListId,
             ProductId = productId,
-            Name = name.Trim(),
-            Amount = amount,
+            Name = normalizedName,
+            Amount = normalizedAmount,
             Unit = unit,
-            Category = string.IsNullOrWhiteSpace(category) ? null : category.Trim(),
+            Category = normalizedCategory,
             IsChecked = isChecked,
             SortOrder = sortOrder
         };
         item.SetCreated();
         return item;
     }
-}
 
+    private static string NormalizeRequiredName(string value) {
+        if (string.IsNullOrWhiteSpace(value)) {
+            throw new ArgumentException("Name is required.", nameof(value));
+        }
+
+        var normalized = value.Trim();
+        return normalized.Length > NameMaxLength
+            ? throw new ArgumentOutOfRangeException(nameof(value), $"Name must be at most {NameMaxLength} characters.")
+            : normalized;
+    }
+
+    private static string? NormalizeOptionalText(string? value, int maxLength, string paramName) {
+        if (string.IsNullOrWhiteSpace(value)) {
+            return null;
+        }
+
+        var normalized = value.Trim();
+        return normalized.Length > maxLength
+            ? throw new ArgumentOutOfRangeException(paramName, $"Value must be at most {maxLength} characters.")
+            : normalized;
+    }
+
+    private static double? NormalizeOptionalAmount(double? value, string paramName) {
+        if (!value.HasValue) {
+            return null;
+        }
+
+        if (double.IsNaN(value.Value) || double.IsInfinity(value.Value)) {
+            throw new ArgumentOutOfRangeException(paramName, "Amount must be a finite number.");
+        }
+
+        return value.Value is <= 0 or > MaxAmount
+            ? throw new ArgumentOutOfRangeException(paramName, $"Amount must be in range (0, {MaxAmount}].")
+            : value.Value;
+    }
+
+    private static void EnsureShoppingListId(ShoppingListId shoppingListId) {
+        if (shoppingListId == ShoppingListId.Empty) {
+            throw new ArgumentException("ShoppingListId is required.", nameof(shoppingListId));
+        }
+    }
+
+    private static void EnsureProductId(ProductId? productId) {
+        if (productId.HasValue && productId.Value == global::FoodDiary.Domain.ValueObjects.ProductId.Empty) {
+            throw new ArgumentException("ProductId cannot be empty.", nameof(productId));
+        }
+    }
+}
