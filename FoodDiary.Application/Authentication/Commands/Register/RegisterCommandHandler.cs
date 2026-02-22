@@ -46,13 +46,15 @@ public class RegisterCommandHandler : ICommandHandler<RegisterCommand, Result<Au
         var hashedPassword = _passwordHasher.Hash(command.Password);
         var user = User.Create(command.Email, hashedPassword);
         var normalizedLanguage = LanguageCode.FromPreferred(command.Language).Value;
-        user.UpdateProfile(
+        user.UpdateGoals(
             dailyCalorieTarget: 2000,
             proteinTarget: 150,
             fatTarget: 65,
             carbTarget: 200,
             fiberTarget: 28,
-            waterGoal: 2000,
+            waterGoal: 2000
+        );
+        user.UpdateProfile(
             language: normalizedLanguage
         );
 

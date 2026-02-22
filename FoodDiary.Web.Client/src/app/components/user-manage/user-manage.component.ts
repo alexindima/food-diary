@@ -107,12 +107,7 @@ export class UserManageComponent implements OnInit {
             language: new FormControl<string | null>(null),
             height: new FormControl<number | null>(null),
             activityLevel: new FormControl<ActivityLevelOption | null>(null),
-            dailyCalorieTarget: new FormControl<number | null>(null),
-            proteinTarget: new FormControl<number | null>(null),
-            fatTarget: new FormControl<number | null>(null),
-            carbTarget: new FormControl<number | null>(null),
             stepGoal: new FormControl<number | null>(null),
-            waterGoal: new FormControl<number | null>(null),
             profileImage: new FormControl<ImageSelection | null>(null),
         });
 
@@ -354,12 +349,7 @@ export class UserManageComponent implements OnInit {
             birthDate: user.birthDate ? this.formatDateInput(new Date(user.birthDate)) : null,
             height: user.height ?? null,
             activityLevel: user.activityLevel ? (user.activityLevel.toUpperCase() as ActivityLevelOption) : null,
-            dailyCalorieTarget: user.dailyCalorieTarget ?? null,
-            proteinTarget: user.proteinTarget ?? null,
-            fatTarget: user.fatTarget ?? null,
-            carbTarget: user.carbTarget ?? null,
             stepGoal: user.stepGoal ?? null,
-            waterGoal: user.waterGoal ?? null,
             profileImage: user.profileImage ? { url: user.profileImage, assetId: user.profileImageAssetId ?? null } : null,
         };
     }
@@ -382,12 +372,7 @@ export interface UserFormValues {
     language: string | null;
     height: number | null;
     activityLevel: ActivityLevelOption | null;
-    dailyCalorieTarget: number | null;
-    proteinTarget: number | null;
-    fatTarget: number | null;
-    carbTarget: number | null;
     stepGoal: number | null;
-    waterGoal: number | null;
     profileImage: ImageSelection | null;
 }
 

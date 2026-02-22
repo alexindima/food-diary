@@ -1,4 +1,5 @@
-﻿using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Domain.Events;
 
 namespace FoodDiary.Application.Tests.Domain;
 
@@ -6,6 +7,11 @@ public class UserInvariantTests {
     [Fact]
     public void Create_WithEmptyEmail_Throws() {
         Assert.Throws<ArgumentException>(() => User.Create("   ", "hash"));
+    }
+
+    [Fact]
+    public void Create_WithEmptyPassword_Throws() {
+        Assert.Throws<ArgumentException>(() => User.Create("test@example.com", "   "));
     }
 
     [Fact]
@@ -56,12 +62,64 @@ public class UserInvariantTests {
             user.SetEmailConfirmationToken("hash", DateTime.UtcNow.AddMinutes(-1)));
     }
 
-    [Fact]
-    public void SetPasswordResetToken_WithEmptyHash_Throws() {
+    [Theory]
+    [InlineData("")]
+    [InlineData(" ")]
+    [InlineData("   ")]
+    public void SetPasswordResetToken_WithEmptyHash_Throws(string tokenHash) {
         var user = User.Create("test@example.com", "hash");
 
         Assert.Throws<ArgumentException>(() =>
-            user.SetPasswordResetToken("   ", DateTime.UtcNow.AddMinutes(30)));
+            user.SetPasswordResetToken(tokenHash, DateTime.UtcNow.AddMinutes(30)));
+    }
+
+    [Fact]
+    public void SetEmailConfirmationToken_WithValidData_UpdatesFields() {
+        var user = User.Create("test@example.com", "hash");
+        var expiresAtUtc = DateTime.UtcNow.AddMinutes(30);
+
+        user.SetEmailConfirmationToken(" token-hash ", expiresAtUtc);
+
+        Assert.Equal("token-hash", user.EmailConfirmationTokenHash);
+        Assert.Equal(expiresAtUtc, user.EmailConfirmationTokenExpiresAtUtc);
+        Assert.NotNull(user.EmailConfirmationSentAtUtc);
+    }
+
+    [Fact]
+    public void ConfirmEmail_ClearsEmailConfirmationTokenFields() {
+        var user = User.Create("test@example.com", "hash");
+        user.SetEmailConfirmationToken("token-hash", DateTime.UtcNow.AddMinutes(30));
+
+        user.ConfirmEmail();
+
+        Assert.True(user.IsEmailConfirmed);
+        Assert.Null(user.EmailConfirmationTokenHash);
+        Assert.Null(user.EmailConfirmationTokenExpiresAtUtc);
+        Assert.Null(user.EmailConfirmationSentAtUtc);
+    }
+
+    [Fact]
+    public void SetPasswordResetToken_WithValidData_UpdatesFields() {
+        var user = User.Create("test@example.com", "hash");
+        var expiresAtUtc = DateTime.UtcNow.AddMinutes(30);
+
+        user.SetPasswordResetToken(" reset-hash ", expiresAtUtc);
+
+        Assert.Equal("reset-hash", user.PasswordResetTokenHash);
+        Assert.Equal(expiresAtUtc, user.PasswordResetTokenExpiresAtUtc);
+        Assert.NotNull(user.PasswordResetSentAtUtc);
+    }
+
+    [Fact]
+    public void ClearPasswordResetToken_ClearsFields() {
+        var user = User.Create("test@example.com", "hash");
+        user.SetPasswordResetToken("reset-hash", DateTime.UtcNow.AddMinutes(30));
+
+        user.ClearPasswordResetToken();
+
+        Assert.Null(user.PasswordResetTokenHash);
+        Assert.Null(user.PasswordResetTokenExpiresAtUtc);
+        Assert.Null(user.PasswordResetSentAtUtc);
     }
 
     [Fact]
@@ -73,32 +131,97 @@ public class UserInvariantTests {
     }
 
     [Fact]
-    public void UpdateProfile_WithNegativeCalorieTarget_Throws() {
+    public void UpdateGoals_WithNegativeCalorieTarget_Throws() {
         var user = User.Create("test@example.com", "hash");
 
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            user.UpdateProfile(dailyCalorieTarget: -1));
+            user.UpdateGoals(dailyCalorieTarget: -1));
     }
 
     [Fact]
-    public void UpdateDesiredWeight_WithZero_Throws() {
+    public void UpdateGoals_WithValidValues_UpdatesTargets() {
         var user = User.Create("test@example.com", "hash");
 
-        Assert.Throws<ArgumentOutOfRangeException>(() => user.UpdateDesiredWeight(0));
+        user.UpdateGoals(
+            dailyCalorieTarget: 2200,
+            proteinTarget: 140,
+            fatTarget: 80,
+            carbTarget: 240,
+            fiberTarget: 30,
+            waterGoal: 2.5,
+            desiredWeight: 74.5,
+            desiredWaist: 88);
+
+        Assert.Equal(2200, user.DailyCalorieTarget);
+        Assert.Equal(140, user.ProteinTarget);
+        Assert.Equal(80, user.FatTarget);
+        Assert.Equal(240, user.CarbTarget);
+        Assert.Equal(30, user.FiberTarget);
+        Assert.Equal(2.5, user.WaterGoal);
+        Assert.Equal(74.5, user.DesiredWeight);
+        Assert.Equal(88, user.DesiredWaist);
+    }
+
+    [Theory]
+    [InlineData(-1d)]
+    [InlineData(0d)]
+    [InlineData(500.0001d)]
+    public void UpdateDesiredWeight_WithInvalidValue_Throws(double desiredWeight) {
+        var user = User.Create("test@example.com", "hash");
+
+        Assert.Throws<ArgumentOutOfRangeException>(() => user.UpdateDesiredWeight(desiredWeight));
+    }
+
+    [Theory]
+    [InlineData(0.0001d)]
+    [InlineData(500d)]
+    public void UpdateDesiredWeight_WithBoundaryValues_UpdatesValue(double desiredWeight) {
+        var user = User.Create("test@example.com", "hash");
+
+        user.UpdateDesiredWeight(desiredWeight);
+
+        Assert.Equal(desiredWeight, user.DesiredWeight);
+    }
+
+    [Theory]
+    [InlineData(-1d)]
+    [InlineData(0d)]
+    [InlineData(300.0001d)]
+    public void UpdateDesiredWaist_WithInvalidValue_Throws(double desiredWaist) {
+        var user = User.Create("test@example.com", "hash");
+
+        Assert.Throws<ArgumentOutOfRangeException>(() => user.UpdateDesiredWaist(desiredWaist));
+    }
+
+    [Theory]
+    [InlineData(0.0001d)]
+    [InlineData(300d)]
+    public void UpdateDesiredWaist_WithBoundaryValues_UpdatesValue(double desiredWaist) {
+        var user = User.Create("test@example.com", "hash");
+
+        user.UpdateDesiredWaist(desiredWaist);
+
+        Assert.Equal(desiredWaist, user.DesiredWaist);
     }
 
     [Fact]
-    public void UpdateDesiredWeight_WithTooLargeValue_Throws() {
+    public void UpdateDesiredWeight_WithNull_ClearsValue() {
         var user = User.Create("test@example.com", "hash");
+        user.UpdateDesiredWeight(80);
 
-        Assert.Throws<ArgumentOutOfRangeException>(() => user.UpdateDesiredWeight(501));
+        user.UpdateDesiredWeight(null);
+
+        Assert.Null(user.DesiredWeight);
     }
 
     [Fact]
-    public void UpdateDesiredWaist_WithTooLargeValue_Throws() {
+    public void UpdateDesiredWaist_WithNull_ClearsValue() {
         var user = User.Create("test@example.com", "hash");
+        user.UpdateDesiredWaist(90);
 
-        Assert.Throws<ArgumentOutOfRangeException>(() => user.UpdateDesiredWaist(301));
+        user.UpdateDesiredWaist(null);
+
+        Assert.Null(user.DesiredWaist);
     }
 
     [Fact]
@@ -133,5 +256,54 @@ public class UserInvariantTests {
         user.UpdateProfile(gender: "f");
 
         Assert.Equal("F", user.Gender);
+    }
+
+    [Fact]
+    public void MarkDeleted_SetsDeletedState_AndRaisesDomainEvent() {
+        var user = User.Create("test@example.com", "hash");
+        var deletedAt = DateTime.UtcNow;
+
+        user.MarkDeleted(deletedAt);
+
+        Assert.False(user.IsActive);
+        Assert.Equal(deletedAt, user.DeletedAt);
+        Assert.Single(user.DomainEvents);
+        Assert.IsType<UserDeletedDomainEvent>(user.DomainEvents[0]);
+    }
+
+    [Fact]
+    public void MarkDeleted_WhenAlreadyDeletedAndInactive_IsIdempotent() {
+        var user = User.Create("test@example.com", "hash");
+        user.MarkDeleted(DateTime.UtcNow);
+        var initialEventCount = user.DomainEvents.Count;
+
+        user.MarkDeleted(DateTime.UtcNow.AddMinutes(1));
+
+        Assert.Equal(initialEventCount, user.DomainEvents.Count);
+    }
+
+    [Fact]
+    public void Restore_WhenDeleted_SetsActiveAndRaisesDomainEvent() {
+        var user = User.Create("test@example.com", "hash");
+        user.MarkDeleted(DateTime.UtcNow);
+        user.ClearDomainEvents();
+
+        user.Restore();
+
+        Assert.True(user.IsActive);
+        Assert.Null(user.DeletedAt);
+        Assert.Single(user.DomainEvents);
+        Assert.IsType<UserRestoredDomainEvent>(user.DomainEvents[0]);
+    }
+
+    [Fact]
+    public void Restore_WhenAlreadyActiveAndNotDeleted_IsIdempotent() {
+        var user = User.Create("test@example.com", "hash");
+
+        user.Restore();
+
+        Assert.Empty(user.DomainEvents);
+        Assert.True(user.IsActive);
+        Assert.Null(user.DeletedAt);
     }
 }

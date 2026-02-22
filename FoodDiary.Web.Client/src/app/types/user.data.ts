@@ -47,21 +47,15 @@ export class UpdateUserDto {
     public gender?: string;
     public height?: number;
     public activityLevel?: string;
-    public dailyCalorieTarget?: number;
-    public proteinTarget?: number;
-    public fatTarget?: number;
-    public carbTarget?: number;
     public stepGoal?: number;
-    public waterGoal?: number;
     public hydrationGoal?: number;
     public language?: string;
     public profileImage?: string;
     public profileImageAssetId?: string;
     public dashboardLayout?: DashboardLayoutSettings | null;
     public isActive?: boolean;
-    public fiberTarget?: number;
 
-    public constructor(formValues: Partial<UserFormValues> & { fiberTarget?: number | null }) {
+    public constructor(formValues: Partial<UserFormValues>) {
         this.username = normalizeString(formValues.username);
         this.firstName = normalizeString(formValues.firstName);
         this.lastName = normalizeString(formValues.lastName);
@@ -69,13 +63,7 @@ export class UpdateUserDto {
         this.gender = normalizeString(formValues.gender);
         this.height = normalizeNumber(formValues.height);
         this.activityLevel = normalizeActivityLevel(formValues.activityLevel);
-        this.dailyCalorieTarget = normalizeNumber(formValues.dailyCalorieTarget);
-        this.proteinTarget = normalizeNumber(formValues.proteinTarget);
-        this.fatTarget = normalizeNumber(formValues.fatTarget);
-        this.carbTarget = normalizeNumber(formValues.carbTarget);
-        this.fiberTarget = normalizeNumber((formValues as any).fiberTarget);
         this.stepGoal = normalizeInteger(formValues.stepGoal);
-        this.waterGoal = normalizeNumber(formValues.waterGoal);
         this.hydrationGoal = normalizeNumber((formValues as any).hydrationGoal);
         this.language = normalizeLanguage((formValues as any).language);
         const normalizedImage = normalizeProfileImage(formValues.profileImage as ImageSelection | string | null | undefined);

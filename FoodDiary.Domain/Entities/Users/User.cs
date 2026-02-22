@@ -153,16 +153,9 @@ public sealed class User : AggregateRoot<UserId> {
         DateTime? birthDate = null,
         string? gender = null,
         double? weight = null,
-        double? circumference = null,
         double? height = null,
         ActivityLevel? activityLevel = null,
-        double? dailyCalorieTarget = null,
-        double? proteinTarget = null,
-        double? fatTarget = null,
-        double? carbTarget = null,
-        double? fiberTarget = null,
         int? stepGoal = null,
-        double? waterGoal = null,
         double? hydrationGoal = null,
         string? profileImage = null,
         ImageAssetId? profileImageAssetId = null,
@@ -170,16 +163,9 @@ public sealed class User : AggregateRoot<UserId> {
         string? language = null) {
         EnsureBirthDateIsNotFuture(birthDate);
         EnsurePositive(weight, nameof(weight));
-        EnsureDesiredWaist(circumference, nameof(circumference));
         EnsurePositive(height, nameof(height));
         EnsureGender(gender, nameof(gender));
-        EnsureNonNegative(dailyCalorieTarget, nameof(dailyCalorieTarget));
-        EnsureNonNegative(proteinTarget, nameof(proteinTarget));
-        EnsureNonNegative(fatTarget, nameof(fatTarget));
-        EnsureNonNegative(carbTarget, nameof(carbTarget));
-        EnsureNonNegative(fiberTarget, nameof(fiberTarget));
         EnsureNonNegative(stepGoal, nameof(stepGoal));
-        EnsureNonNegative(waterGoal, nameof(waterGoal));
         EnsureNonNegative(hydrationGoal, nameof(hydrationGoal));
         EnsureLanguage(language, nameof(language));
 
@@ -189,16 +175,9 @@ public sealed class User : AggregateRoot<UserId> {
         if (birthDate.HasValue) BirthDate = birthDate;
         if (gender is not null) Gender = NormalizeRequiredGender(gender, nameof(gender));
         if (weight.HasValue) Weight = weight;
-        if (circumference.HasValue) DesiredWaist = circumference;
         if (height.HasValue) Height = height;
         if (activityLevel.HasValue) ActivityLevel = activityLevel.Value;
-        if (dailyCalorieTarget.HasValue) DailyCalorieTarget = dailyCalorieTarget;
-        if (proteinTarget.HasValue) ProteinTarget = proteinTarget;
-        if (fatTarget.HasValue) FatTarget = fatTarget;
-        if (carbTarget.HasValue) CarbTarget = carbTarget;
-        if (fiberTarget.HasValue) FiberTarget = fiberTarget;
         if (stepGoal.HasValue) StepGoal = stepGoal;
-        if (waterGoal.HasValue) WaterGoal = waterGoal;
         if (hydrationGoal.HasValue) HydrationGoal = hydrationGoal;
         if (profileImage is not null) ProfileImage = profileImage;
         if (profileImageAssetId.HasValue) ProfileImageAssetId = profileImageAssetId;
