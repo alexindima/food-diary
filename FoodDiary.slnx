@@ -1,4 +1,8 @@
 <Solution>
+  <Folder Name="/Tests/">
+    <Project Path="tests/FoodDiary.Application.Tests/FoodDiary.Application.Tests.csproj" />
+    <Project Path="tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj" />
+  </Folder>
   <Project Path="FoodDiary.Application/FoodDiary.Application.csproj" />
   <Project Path="FoodDiary.Contracts/FoodDiary.Contracts.csproj" />
   <Project Path="FoodDiary.Domain/FoodDiary.Domain.csproj" />
