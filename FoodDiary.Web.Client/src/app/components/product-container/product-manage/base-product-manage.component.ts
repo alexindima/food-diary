@@ -9,7 +9,7 @@
     OnInit,
     signal,
 } from '@angular/core';
-import { Product, CreateProductRequest, MeasurementUnit, ProductVisibility, ProductType } from '../../../types/product.data';
+import { Product, CreateProductRequest, UpdateProductRequest, MeasurementUnit, ProductVisibility, ProductType } from '../../../types/product.data';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ProductService } from '../../../services/product.service';
@@ -340,7 +340,7 @@ export class BaseProductManageComponent implements OnInit {
             const product = this.product();
 
             return product
-                ? await this.updateProduct(product.id, productData)
+                ? await this.updateProduct(product.id, this.buildUpdateProductRequest(productData))
                 : await this.addProduct(productData);
         }
 
@@ -657,7 +657,7 @@ export class BaseProductManageComponent implements OnInit {
         }
     }
 
-    private async updateProduct(id: string, productData: Partial<CreateProductRequest>): Promise<Product | null> {
+    private async updateProduct(id: string, productData: UpdateProductRequest): Promise<Product | null> {
         try {
             console.log('[ProductManage] update', { id, data: productData });
             const product = await firstValueFrom(this.productService.update(id, productData));
@@ -669,6 +669,19 @@ export class BaseProductManageComponent implements OnInit {
             this.handleSubmitError(error as HttpErrorResponse);
             return null;
         }
+    }
+
+    private buildUpdateProductRequest(productData: CreateProductRequest): UpdateProductRequest {
+        return {
+            ...productData,
+            clearBarcode: productData.barcode === null,
+            clearBrand: productData.brand === null,
+            clearCategory: productData.category === null,
+            clearDescription: productData.description === null,
+            clearComment: productData.comment === null,
+            clearImageUrl: productData.imageUrl === null,
+            clearImageAssetId: productData.imageAssetId === null,
+        };
     }
 
     private handleSubmitError(error: HttpErrorResponse): void {

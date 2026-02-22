@@ -55,7 +55,6 @@ public sealed class User : AggregateRoot<UserId> {
     public bool IsActive { get; private set; } = true;
     public DateTime? DeletedAt { get; private set; }
 
-    // Navigation properties
     public ICollection<Meal> Meals { get; private set; } = new List<Meal>();
     public ICollection<Product> Products { get; private set; } = new List<Product>();
     public ICollection<Recipe> Recipes { get; private set; } = new List<Recipe>();
@@ -161,12 +160,14 @@ public sealed class User : AggregateRoot<UserId> {
         ImageAssetId? profileImageAssetId = null,
         string? dashboardLayoutJson = null,
         string? language = null) {
+        var updatedActivityGoals = GetActivityGoals().With(
+            stepGoal: stepGoal,
+            hydrationGoal: hydrationGoal);
+
         EnsureBirthDateIsNotFuture(birthDate);
         EnsurePositive(weight, nameof(weight));
         EnsurePositive(height, nameof(height));
         EnsureGender(gender, nameof(gender));
-        EnsureNonNegative(stepGoal, nameof(stepGoal));
-        EnsureNonNegative(hydrationGoal, nameof(hydrationGoal));
         EnsureLanguage(language, nameof(language));
 
         if (username is not null) Username = username;
@@ -177,8 +178,7 @@ public sealed class User : AggregateRoot<UserId> {
         if (weight.HasValue) Weight = weight;
         if (height.HasValue) Height = height;
         if (activityLevel.HasValue) ActivityLevel = activityLevel.Value;
-        if (stepGoal.HasValue) StepGoal = stepGoal;
-        if (hydrationGoal.HasValue) HydrationGoal = hydrationGoal;
+        ApplyActivityGoals(updatedActivityGoals);
         if (profileImage is not null) ProfileImage = profileImage;
         if (profileImageAssetId.HasValue) ProfileImageAssetId = profileImageAssetId;
         if (dashboardLayoutJson is not null) DashboardLayoutJson = dashboardLayoutJson;
@@ -196,21 +196,18 @@ public sealed class User : AggregateRoot<UserId> {
         double? waterGoal = null,
         double? desiredWeight = null,
         double? desiredWaist = null) {
-        EnsureNonNegative(dailyCalorieTarget, nameof(dailyCalorieTarget));
-        EnsureNonNegative(proteinTarget, nameof(proteinTarget));
-        EnsureNonNegative(fatTarget, nameof(fatTarget));
-        EnsureNonNegative(carbTarget, nameof(carbTarget));
-        EnsureNonNegative(fiberTarget, nameof(fiberTarget));
-        EnsureNonNegative(waterGoal, nameof(waterGoal));
+        var updatedGoals = GetNutritionGoals().With(
+            dailyCalorieTarget: dailyCalorieTarget,
+            proteinTarget: proteinTarget,
+            fatTarget: fatTarget,
+            carbTarget: carbTarget,
+            fiberTarget: fiberTarget,
+            waterGoal: waterGoal);
+
         EnsureDesiredWeight(desiredWeight, nameof(desiredWeight));
         EnsureDesiredWaist(desiredWaist, nameof(desiredWaist));
 
-        if (dailyCalorieTarget.HasValue) DailyCalorieTarget = dailyCalorieTarget;
-        if (proteinTarget.HasValue) ProteinTarget = proteinTarget;
-        if (fatTarget.HasValue) FatTarget = fatTarget;
-        if (carbTarget.HasValue) CarbTarget = carbTarget;
-        if (fiberTarget.HasValue) FiberTarget = fiberTarget;
-        if (waterGoal.HasValue) WaterGoal = waterGoal;
+        ApplyNutritionGoals(updatedGoals);
         if (desiredWeight.HasValue) DesiredWeight = desiredWeight;
         if (desiredWaist.HasValue) DesiredWaist = desiredWaist;
 
@@ -333,16 +330,32 @@ public sealed class User : AggregateRoot<UserId> {
         }
     }
 
-    private static void EnsureNonNegative(double? value, string paramName) {
-        if (value is < 0) {
-            throw new ArgumentOutOfRangeException(paramName, "Value must be non-negative.");
-        }
+    private UserNutritionGoals GetNutritionGoals() {
+        return UserNutritionGoals.Create(
+            DailyCalorieTarget,
+            ProteinTarget,
+            FatTarget,
+            CarbTarget,
+            FiberTarget,
+            WaterGoal);
     }
 
-    private static void EnsureNonNegative(int? value, string paramName) {
-        if (value is < 0) {
-            throw new ArgumentOutOfRangeException(paramName, "Value must be non-negative.");
-        }
+    private void ApplyNutritionGoals(UserNutritionGoals goals) {
+        DailyCalorieTarget = goals.DailyCalorieTarget;
+        ProteinTarget = goals.ProteinTarget;
+        FatTarget = goals.FatTarget;
+        CarbTarget = goals.CarbTarget;
+        FiberTarget = goals.FiberTarget;
+        WaterGoal = goals.WaterGoal;
+    }
+
+    private UserActivityGoals GetActivityGoals() {
+        return UserActivityGoals.Create(StepGoal, HydrationGoal);
+    }
+
+    private void ApplyActivityGoals(UserActivityGoals goals) {
+        StepGoal = goals.StepGoal;
+        HydrationGoal = goals.HydrationGoal;
     }
 
     private static void EnsureLanguage(string? value, string paramName) {

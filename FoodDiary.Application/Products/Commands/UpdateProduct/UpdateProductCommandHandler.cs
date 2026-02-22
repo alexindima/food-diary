@@ -25,6 +25,8 @@ public class UpdateProductCommandHandler(
             return Result.Failure<ProductResponse>(Errors.Product.NotAccessible(command.ProductId.Value));
         }
 
+        var modifiedOnBefore = product.ModifiedOnUtc;
+
         MeasurementUnit? newUnit = null;
         if (!string.IsNullOrWhiteSpace(command.BaseUnit)) {
             newUnit = Enum.Parse<MeasurementUnit>(command.BaseUnit, true);
@@ -44,30 +46,82 @@ public class UpdateProductCommandHandler(
 
         var oldAssetId = product.ImageAssetId;
 
-        product.Update(
-            name: command.Name,
-            baseUnit: newUnit,
-            baseAmount: command.BaseAmount,
-            defaultPortionAmount: command.DefaultPortionAmount,
-            caloriesPerBase: command.CaloriesPerBase,
-            proteinsPerBase: command.ProteinsPerBase,
-            fatsPerBase: command.FatsPerBase,
-            carbsPerBase: command.CarbsPerBase,
-            fiberPerBase: command.FiberPerBase,
-            alcoholPerBase: command.AlcoholPerBase,
-            barcode: command.Barcode,
-            brand: command.Brand,
-            productType: newProductType,
-            category: command.Category,
-            description: command.Description,
-            comment: command.Comment,
-            imageUrl: command.ImageUrl,
-            imageAssetId: command.ImageAssetId.HasValue ? new ImageAssetId(command.ImageAssetId.Value) : null,
-            visibility: newVisibility);
+        if (command.Name is not null ||
+            command.Barcode is not null ||
+            command.ClearBarcode ||
+            command.Brand is not null ||
+            command.ClearBrand ||
+            newProductType.HasValue ||
+            command.Category is not null ||
+            command.ClearCategory ||
+            command.Description is not null ||
+            command.ClearDescription ||
+            command.Comment is not null ||
+            command.ClearComment)
+        {
+            product.UpdateIdentity(
+                name: command.Name,
+                barcode: command.Barcode,
+                clearBarcode: command.ClearBarcode,
+                brand: command.Brand,
+                clearBrand: command.ClearBrand,
+                productType: newProductType,
+                category: command.Category,
+                clearCategory: command.ClearCategory,
+                description: command.Description,
+                clearDescription: command.ClearDescription,
+                comment: command.Comment,
+                clearComment: command.ClearComment);
+        }
 
-        await productRepository.UpdateAsync(product);
+        if (newUnit.HasValue || command.BaseAmount.HasValue || command.DefaultPortionAmount.HasValue)
+        {
+            product.UpdateMeasurement(
+                baseUnit: newUnit,
+                baseAmount: command.BaseAmount,
+                defaultPortionAmount: command.DefaultPortionAmount);
+        }
 
-        if (oldAssetId.HasValue && (!command.ImageAssetId.HasValue || oldAssetId.Value.Value != command.ImageAssetId.Value))
+        if (command.CaloriesPerBase.HasValue ||
+            command.ProteinsPerBase.HasValue ||
+            command.FatsPerBase.HasValue ||
+            command.CarbsPerBase.HasValue ||
+            command.FiberPerBase.HasValue ||
+            command.AlcoholPerBase.HasValue)
+        {
+            product.UpdateNutrition(
+                caloriesPerBase: command.CaloriesPerBase,
+                proteinsPerBase: command.ProteinsPerBase,
+                fatsPerBase: command.FatsPerBase,
+                carbsPerBase: command.CarbsPerBase,
+                fiberPerBase: command.FiberPerBase,
+                alcoholPerBase: command.AlcoholPerBase);
+        }
+
+        if (command.ImageUrl is not null || command.ClearImageUrl || command.ImageAssetId.HasValue || command.ClearImageAssetId)
+        {
+            product.UpdateMedia(
+                imageUrl: command.ImageUrl,
+                clearImageUrl: command.ClearImageUrl,
+                imageAssetId: command.ImageAssetId.HasValue ? new ImageAssetId(command.ImageAssetId.Value) : null,
+                clearImageAssetId: command.ClearImageAssetId);
+        }
+
+        if (newVisibility.HasValue)
+        {
+            product.ChangeVisibility(newVisibility.Value);
+        }
+
+        var hasChanges = product.ModifiedOnUtc != modifiedOnBefore;
+        if (hasChanges)
+        {
+            await productRepository.UpdateAsync(product);
+        }
+
+        var imageAssetChanged = command.ClearImageAssetId ||
+                                (command.ImageAssetId.HasValue && oldAssetId.HasValue && oldAssetId.Value.Value != command.ImageAssetId.Value);
+
+        if (hasChanges && oldAssetId.HasValue && imageAssetChanged)
         {
             await TryDeleteAssetAsync(oldAssetId.Value, imageAssetRepository, imageStorageService, cancellationToken);
         }

@@ -131,11 +131,64 @@ public class UserInvariantTests {
     }
 
     [Fact]
+    public void UpdateProfile_WithNegativeStepGoal_Throws() {
+        var user = User.Create("test@example.com", "hash");
+
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+            user.UpdateProfile(stepGoal: -1));
+    }
+
+    [Fact]
+    public void UpdateProfile_WithNegativeHydrationGoal_Throws() {
+        var user = User.Create("test@example.com", "hash");
+
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+            user.UpdateProfile(hydrationGoal: -0.1));
+    }
+
+    [Fact]
+    public void UpdateProfile_WithPartialActivityGoalUpdate_PreservesOtherValue() {
+        var user = User.Create("test@example.com", "hash");
+        user.UpdateProfile(stepGoal: 8000, hydrationGoal: 2.2);
+
+        user.UpdateProfile(stepGoal: 10000);
+
+        Assert.Equal(10000, user.StepGoal);
+        Assert.Equal(2.2, user.HydrationGoal);
+    }
+
+    [Fact]
     public void UpdateGoals_WithNegativeCalorieTarget_Throws() {
         var user = User.Create("test@example.com", "hash");
 
         Assert.Throws<ArgumentOutOfRangeException>(() =>
             user.UpdateGoals(dailyCalorieTarget: -1));
+    }
+
+    [Theory]
+    [InlineData(-1d, null, null, null, null, null)]
+    [InlineData(null, -1d, null, null, null, null)]
+    [InlineData(null, null, -1d, null, null, null)]
+    [InlineData(null, null, null, -1d, null, null)]
+    [InlineData(null, null, null, null, -1d, null)]
+    [InlineData(null, null, null, null, null, -0.1d)]
+    public void UpdateGoals_WithNegativeNutritionValue_Throws(
+        double? dailyCalorieTarget,
+        double? proteinTarget,
+        double? fatTarget,
+        double? carbTarget,
+        double? fiberTarget,
+        double? waterGoal) {
+        var user = User.Create("test@example.com", "hash");
+
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+            user.UpdateGoals(
+                dailyCalorieTarget: dailyCalorieTarget,
+                proteinTarget: proteinTarget,
+                fatTarget: fatTarget,
+                carbTarget: carbTarget,
+                fiberTarget: fiberTarget,
+                waterGoal: waterGoal));
     }
 
     [Fact]
@@ -160,6 +213,27 @@ public class UserInvariantTests {
         Assert.Equal(2.5, user.WaterGoal);
         Assert.Equal(74.5, user.DesiredWeight);
         Assert.Equal(88, user.DesiredWaist);
+    }
+
+    [Fact]
+    public void UpdateGoals_WithPartialNutritionUpdate_PreservesOtherValues() {
+        var user = User.Create("test@example.com", "hash");
+        user.UpdateGoals(
+            dailyCalorieTarget: 2200,
+            proteinTarget: 140,
+            fatTarget: 80,
+            carbTarget: 240,
+            fiberTarget: 30,
+            waterGoal: 2.5);
+
+        user.UpdateGoals(proteinTarget: 150);
+
+        Assert.Equal(2200, user.DailyCalorieTarget);
+        Assert.Equal(150, user.ProteinTarget);
+        Assert.Equal(80, user.FatTarget);
+        Assert.Equal(240, user.CarbTarget);
+        Assert.Equal(30, user.FiberTarget);
+        Assert.Equal(2.5, user.WaterGoal);
     }
 
     [Theory]

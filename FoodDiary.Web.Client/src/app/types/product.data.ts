@@ -48,6 +48,16 @@ export interface CreateProductRequest {
     visibility: ProductVisibility;
 }
 
+export interface UpdateProductRequest extends Partial<CreateProductRequest> {
+    clearBarcode?: boolean;
+    clearBrand?: boolean;
+    clearCategory?: boolean;
+    clearDescription?: boolean;
+    clearComment?: boolean;
+    clearImageUrl?: boolean;
+    clearImageAssetId?: boolean;
+}
+
 export class ProductFilters {
     public search?: string;
     public productTypes?: ProductType[];

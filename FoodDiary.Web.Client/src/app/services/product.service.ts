@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ApiService } from './api.service';
 import { environment } from '../../environments/environment';
 import { catchError, Observable, throwError } from 'rxjs';
-import { Product, CreateProductRequest, ProductFilters, ProductListWithRecent } from '../types/product.data';
+import { Product, CreateProductRequest, UpdateProductRequest, ProductFilters, ProductListWithRecent } from '../types/product.data';
 import { HttpErrorResponse } from '@angular/common/http';
 import { PageOf } from '../types/page-of.data';
 
@@ -81,7 +81,7 @@ export class ProductService extends ApiService {
         );
     }
 
-    public update(id: string, data: Partial<CreateProductRequest>): Observable<Product> {
+    public update(id: string, data: UpdateProductRequest): Observable<Product> {
         return this.patch<Product>(`${id}`, data).pipe(
             catchError((error: HttpErrorResponse) => {
                 console.error('Update product error', error);
