@@ -32,6 +32,27 @@ public class MiscDomainInvariantTests
     }
 
     [Fact]
+    public void ImageAsset_Create_WithEmptyUserId_Throws()
+    {
+        Assert.Throws<ArgumentException>(() =>
+            ImageAsset.Create(UserId.Empty, "images/a.png", "https://cdn/a.png"));
+    }
+
+    [Fact]
+    public void ImageAsset_Create_WithBlankObjectKey_Throws()
+    {
+        Assert.Throws<ArgumentException>(() =>
+            ImageAsset.Create(UserId.New(), "   ", "https://cdn/a.png"));
+    }
+
+    [Fact]
+    public void ImageAsset_Create_WithBlankUrl_Throws()
+    {
+        Assert.Throws<ArgumentException>(() =>
+            ImageAsset.Create(UserId.New(), "images/a.png", "   "));
+    }
+
+    [Fact]
     public void RecentItem_Create_WithEmptyItemId_Throws()
     {
         Assert.Throws<ArgumentException>(() =>
