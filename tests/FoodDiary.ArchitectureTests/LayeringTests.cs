@@ -84,7 +84,7 @@ public class LayeringTests
         var references = document.Descendants("ProjectReference")
             .Select(node => node.Attribute("Include")?.Value)
             .Where(value => !string.IsNullOrWhiteSpace(value))
-            .Select(value => Path.GetFileNameWithoutExtension(value!))
+            .Select(value => GetProjectNameFromReference(value!))
             .ToHashSet(StringComparer.Ordinal);
 
         return references;
@@ -105,5 +105,12 @@ public class LayeringTests
         }
 
         throw new InvalidOperationException("Repository root was not found.");
+    }
+
+    private static string GetProjectNameFromReference(string includeValue)
+    {
+        var normalized = includeValue.Replace('\\', '/');
+        var fileName = normalized.Split('/', StringSplitOptions.RemoveEmptyEntries).Last();
+        return Path.GetFileNameWithoutExtension(fileName);
     }
 }
