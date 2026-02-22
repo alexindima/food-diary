@@ -56,6 +56,12 @@ public class CreateRecipeCommandValidator : AbstractValidator<CreateRecipeComman
             .WithErrorCode("Validation.Invalid")
             .WithMessage("Recipe must contain at least one step");
 
+        RuleFor(x => x.Steps)
+            .Must(HaveUniqueEffectiveStepOrder)
+            .When(x => x.Steps is { Count: > 0 })
+            .WithErrorCode("Validation.Invalid")
+            .WithMessage("Step order values must be unique");
+
         RuleForEach(x => x.Steps)
             .SetValidator(new RecipeStepInputValidator());
 
@@ -98,4 +104,25 @@ public class CreateRecipeCommandValidator : AbstractValidator<CreateRecipeComman
         && command.ManualFats.HasValue
         && command.ManualCarbs.HasValue
         && command.ManualFiber.HasValue;
+
+    private static bool HaveUniqueEffectiveStepOrder(IReadOnlyList<RecipeStepInput>? steps)
+    {
+        if (steps is null || steps.Count == 0)
+        {
+            return true;
+        }
+
+        var orders = new HashSet<int>();
+        for (var index = 0; index < steps.Count; index++)
+        {
+            var step = steps[index];
+            var effectiveOrder = step.Order > 0 ? step.Order : index + 1;
+            if (!orders.Add(effectiveOrder))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
 }

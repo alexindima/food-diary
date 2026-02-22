@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using FoodDiary.Application.Common.Abstractions.Messaging;
@@ -105,7 +105,7 @@ public class UpdateConsumptionCommandHandler(
         foreach (var session in command.AiSessions)
         {
             var sessionItems = session.Items
-                .Select(aiItem => new MealAiItemData(
+                .Select(aiItem => MealAiItemData.Create(
                     aiItem.NameEn,
                     aiItem.NameLocal,
                     aiItem.Amount,
@@ -269,4 +269,5 @@ public class UpdateConsumptionCommandHandler(
         return Result.Success(summary);
     }
 }
+
 

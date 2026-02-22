@@ -1,5 +1,3 @@
-﻿using System;
-using System.Linq;
 using FoodDiary.Domain.Common;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Events;
@@ -8,11 +6,11 @@ using FoodDiary.Domain.ValueObjects;
 
 namespace FoodDiary.Domain.Entities.Meals;
 
-/// <summary>
-/// ÐŸÑ€Ð¸ÐµÐ¼ Ð¿Ð¸Ñ‰Ð¸ - ÐºÐ¾Ñ€ÐµÐ½ÑŒ Ð°Ð³Ñ€ÐµÐ³Ð°Ñ‚Ð°
-/// Ð£Ð¿Ñ€Ð°Ð²Ð»ÑÐµÑ‚ ÐºÐ¾Ð»Ð»ÐµÐºÑ†Ð¸ÐµÐ¹ MealItems (Ð¿Ñ€Ð¾Ð´ÑƒÐºÑ‚Ð¾Ð² Ð¸ Ð±Ð»ÑŽÐ´)
-/// </summary>
 public sealed class Meal : AggregateRoot<MealId> {
+    private const double ComparisonEpsilon = 0.000001d;
+    private const int CommentMaxLength = 2048;
+    private const int ImageUrlMaxLength = 2048;
+
     public UserId UserId { get; private set; }
     public DateTime Date { get; private set; } = DateTime.UtcNow;
     public MealType? MealType { get; private set; }
@@ -35,20 +33,15 @@ public sealed class Meal : AggregateRoot<MealId> {
     public int PreMealSatietyLevel { get; private set; }
     public int PostMealSatietyLevel { get; private set; }
 
-    // Navigation properties
     public User User { get; private set; } = null!;
-    private readonly List<MealItem> _items = new();
+    private readonly List<MealItem> _items = [];
     public IReadOnlyCollection<MealItem> Items => _items.AsReadOnly();
-    private readonly List<MealAiSession> _aiSessions = new();
+    private readonly List<MealAiSession> _aiSessions = [];
     public IReadOnlyCollection<MealAiSession> AiSessions => _aiSessions.AsReadOnly();
 
-    // ÐšÐ¾Ð½ÑÑ‚Ñ€ÑƒÐºÑ‚Ð¾Ñ€ Ð´Ð»Ñ EF Core
     private Meal() {
-        _items = new List<MealItem>();
-        _aiSessions = new List<MealAiSession>();
     }
 
-    // Factory method Ð´Ð»Ñ ÑÐ¾Ð·Ð´Ð°Ð½Ð¸Ñ Ð¿Ñ€Ð¸ÐµÐ¼Ð° Ð¿Ð¸Ñ‰Ð¸
     public static Meal Create(
         UserId userId,
         DateTime date,
@@ -58,13 +51,15 @@ public sealed class Meal : AggregateRoot<MealId> {
         ImageAssetId? imageAssetId = null,
         int preMealSatietyLevel = 0,
         int postMealSatietyLevel = 0) {
+        EnsureUserId(userId);
+
         var meal = new Meal {
             Id = MealId.New(),
             UserId = userId,
             Date = NormalizeDate(date),
             MealType = mealType,
-            Comment = comment,
-            ImageUrl = imageUrl,
+            Comment = NormalizeOptionalText(comment, CommentMaxLength, nameof(comment)),
+            ImageUrl = NormalizeOptionalText(imageUrl, ImageUrlMaxLength, nameof(imageUrl)),
             ImageAssetId = imageAssetId,
             PreMealSatietyLevel = NormalizeSatietyLevel(preMealSatietyLevel),
             PostMealSatietyLevel = NormalizeSatietyLevel(postMealSatietyLevel)
@@ -74,31 +69,54 @@ public sealed class Meal : AggregateRoot<MealId> {
     }
 
     public void UpdateComment(string? comment) {
-        Comment = comment;
+        var normalizedComment = NormalizeOptionalText(comment, CommentMaxLength, nameof(comment));
+        if (string.Equals(Comment, normalizedComment, StringComparison.Ordinal)) {
+            return;
+        }
+
+        Comment = normalizedComment;
         SetModified();
     }
 
     public void UpdateImage(string? imageUrl, ImageAssetId? imageAssetId = null) {
-        ImageUrl = imageUrl;
-        if (imageAssetId.HasValue) {
-            ImageAssetId = imageAssetId;
+        var changed = false;
+        var normalizedImageUrl = NormalizeOptionalText(imageUrl, ImageUrlMaxLength, nameof(imageUrl));
+        if (!string.Equals(ImageUrl, normalizedImageUrl, StringComparison.Ordinal)) {
+            ImageUrl = normalizedImageUrl;
+            changed = true;
         }
+
+        if (imageAssetId.HasValue && ImageAssetId != imageAssetId) {
+            ImageAssetId = imageAssetId;
+            changed = true;
+        }
+
+        if (!changed) {
+            return;
+        }
+
         SetModified();
     }
 
     public void UpdateDate(DateTime date) {
-        Date = NormalizeDate(date);
+        var normalizedDate = NormalizeDate(date);
+        if (Date == normalizedDate) {
+            return;
+        }
+
+        Date = normalizedDate;
         SetModified();
     }
 
     public void UpdateMealType(MealType? mealType) {
+        if (MealType == mealType) {
+            return;
+        }
+
         MealType = mealType;
         SetModified();
     }
 
-    /// <summary>
-    /// Ð”Ð¾Ð±Ð°Ð²Ð¸Ñ‚ÑŒ Ð¿Ñ€Ð¾Ð´ÑƒÐºÑ‚ Ð² Ð¿Ñ€Ð¸ÐµÐ¼ Ð¿Ð¸Ñ‰Ð¸
-    /// </summary>
     public MealItem AddProduct(ProductId productId, double amount) {
         var item = MealItem.CreateWithProduct(Id, productId, amount);
         _items.Add(item);
@@ -106,9 +124,6 @@ public sealed class Meal : AggregateRoot<MealId> {
         return item;
     }
 
-    /// <summary>
-    /// Ð”Ð¾Ð±Ð°Ð²Ð¸Ñ‚ÑŒ Ð±Ð»ÑŽÐ´Ð¾ (Ñ€ÐµÑ†ÐµÐ¿Ñ‚) Ð² Ð¿Ñ€Ð¸ÐµÐ¼ Ð¿Ð¸Ñ‰Ð¸
-    /// </summary>
     public MealItem AddRecipe(RecipeId recipeId, double servings) {
         var item = MealItem.CreateWithRecipe(Id, recipeId, servings);
         _items.Add(item);
@@ -117,11 +132,20 @@ public sealed class Meal : AggregateRoot<MealId> {
     }
 
     public void RemoveItem(MealItem item) {
-        _items.Remove(item);
-        SetModified();
+        if (item is null) {
+            throw new ArgumentNullException(nameof(item));
+        }
+
+        if (_items.Remove(item)) {
+            SetModified();
+        }
     }
 
     public void ClearItems() {
+        if (_items.Count == 0) {
+            return;
+        }
+
         _items.Clear();
         SetModified();
     }
@@ -130,12 +154,10 @@ public sealed class Meal : AggregateRoot<MealId> {
         ImageAssetId? imageAssetId,
         DateTime recognizedAtUtc,
         string? notes,
-        IReadOnlyList<MealAiItemData> items)
-    {
+        IReadOnlyList<MealAiItemData> items) {
         var session = MealAiSession.Create(Id, imageAssetId, recognizedAtUtc, notes);
         _aiSessions.Add(session);
-        if (items.Count > 0)
-        {
+        if (items.Count > 0) {
             var createdItems = items
                 .Select(item => MealAiItem.Create(
                     item.NameEn,
@@ -150,18 +172,22 @@ public sealed class Meal : AggregateRoot<MealId> {
                     item.Alcohol))
                 .ToList();
 
-            foreach (var item in createdItems)
-            {
+            foreach (var item in createdItems) {
                 item.AttachToSession(session.Id);
             }
+
             session.AddItems(createdItems);
         }
+
         SetModified();
         return session;
     }
 
-    public void ClearAiSessions()
-    {
+    public void ClearAiSessions() {
+        if (_aiSessions.Count == 0) {
+            return;
+        }
+
         _aiSessions.Clear();
         SetModified();
     }
@@ -187,42 +213,73 @@ public sealed class Meal : AggregateRoot<MealId> {
         var normalizedTotalFiber = RequireNonNegative(totalFiber, nameof(totalFiber));
         var normalizedTotalAlcohol = RequireNonNegative(totalAlcohol, nameof(totalAlcohol));
 
-        TotalCalories = Math.Round(normalizedTotalCalories, 2);
-        TotalProteins = Math.Round(normalizedTotalProteins, 2);
-        TotalFats = Math.Round(normalizedTotalFats, 2);
-        TotalCarbs = Math.Round(normalizedTotalCarbs, 2);
-        TotalFiber = Math.Round(normalizedTotalFiber, 2);
-        TotalAlcohol = Math.Round(normalizedTotalAlcohol, 2);
+        var nextTotalCalories = Math.Round(normalizedTotalCalories, 2);
+        var nextTotalProteins = Math.Round(normalizedTotalProteins, 2);
+        var nextTotalFats = Math.Round(normalizedTotalFats, 2);
+        var nextTotalCarbs = Math.Round(normalizedTotalCarbs, 2);
+        var nextTotalFiber = Math.Round(normalizedTotalFiber, 2);
+        var nextTotalAlcohol = Math.Round(normalizedTotalAlcohol, 2);
 
-        IsNutritionAutoCalculated = isAutoCalculated;
-
-        if (isAutoCalculated) {
-            ManualCalories = null;
-            ManualProteins = null;
-            ManualFats = null;
-            ManualCarbs = null;
-            ManualFiber = null;
-            ManualAlcohol = null;
-        } else {
-            ManualCalories = manualCalories.HasValue
+        var nextManualCalories = isAutoCalculated
+            ? (double?)null
+            : manualCalories.HasValue
                 ? Math.Round(RequireNonNegative(manualCalories.Value, nameof(manualCalories)), 2)
-                : TotalCalories;
-            ManualProteins = manualProteins.HasValue
+                : nextTotalCalories;
+        var nextManualProteins = isAutoCalculated
+            ? (double?)null
+            : manualProteins.HasValue
                 ? Math.Round(RequireNonNegative(manualProteins.Value, nameof(manualProteins)), 2)
-                : TotalProteins;
-            ManualFats = manualFats.HasValue
+                : nextTotalProteins;
+        var nextManualFats = isAutoCalculated
+            ? (double?)null
+            : manualFats.HasValue
                 ? Math.Round(RequireNonNegative(manualFats.Value, nameof(manualFats)), 2)
-                : TotalFats;
-            ManualCarbs = manualCarbs.HasValue
+                : nextTotalFats;
+        var nextManualCarbs = isAutoCalculated
+            ? (double?)null
+            : manualCarbs.HasValue
                 ? Math.Round(RequireNonNegative(manualCarbs.Value, nameof(manualCarbs)), 2)
-                : TotalCarbs;
-            ManualFiber = manualFiber.HasValue
+                : nextTotalCarbs;
+        var nextManualFiber = isAutoCalculated
+            ? (double?)null
+            : manualFiber.HasValue
                 ? Math.Round(RequireNonNegative(manualFiber.Value, nameof(manualFiber)), 2)
-                : TotalFiber;
-            ManualAlcohol = manualAlcohol.HasValue
+                : nextTotalFiber;
+        var nextManualAlcohol = isAutoCalculated
+            ? (double?)null
+            : manualAlcohol.HasValue
                 ? Math.Round(RequireNonNegative(manualAlcohol.Value, nameof(manualAlcohol)), 2)
-                : TotalAlcohol;
+                : nextTotalAlcohol;
+
+        if (AreClose(TotalCalories, nextTotalCalories)
+            && AreClose(TotalProteins, nextTotalProteins)
+            && AreClose(TotalFats, nextTotalFats)
+            && AreClose(TotalCarbs, nextTotalCarbs)
+            && AreClose(TotalFiber, nextTotalFiber)
+            && AreClose(TotalAlcohol, nextTotalAlcohol)
+            && IsNutritionAutoCalculated == isAutoCalculated
+            && NullableAreClose(ManualCalories, nextManualCalories)
+            && NullableAreClose(ManualProteins, nextManualProteins)
+            && NullableAreClose(ManualFats, nextManualFats)
+            && NullableAreClose(ManualCarbs, nextManualCarbs)
+            && NullableAreClose(ManualFiber, nextManualFiber)
+            && NullableAreClose(ManualAlcohol, nextManualAlcohol)) {
+            return;
         }
+
+        TotalCalories = nextTotalCalories;
+        TotalProteins = nextTotalProteins;
+        TotalFats = nextTotalFats;
+        TotalCarbs = nextTotalCarbs;
+        TotalFiber = nextTotalFiber;
+        TotalAlcohol = nextTotalAlcohol;
+        IsNutritionAutoCalculated = isAutoCalculated;
+        ManualCalories = nextManualCalories;
+        ManualProteins = nextManualProteins;
+        ManualFats = nextManualFats;
+        ManualCarbs = nextManualCarbs;
+        ManualFiber = nextManualFiber;
+        ManualAlcohol = nextManualAlcohol;
 
         RaiseDomainEvent(new MealNutritionAppliedDomainEvent(
             Id,
@@ -250,26 +307,57 @@ public sealed class Meal : AggregateRoot<MealId> {
         SetModified();
     }
 
-    private static int NormalizeSatietyLevel(int level) =>
-        level is >= 0 and <= 9 ? level : 0;
+    private static int NormalizeSatietyLevel(int level) {
+        return level is < 0 or > 9
+            ? throw new ArgumentOutOfRangeException(nameof(level), "Satiety level must be in range [0, 9].")
+            : level;
+    }
 
-    private static DateTime NormalizeDate(DateTime value)
-    {
-        return value.Kind switch
-        {
+    private static DateTime NormalizeDate(DateTime value) {
+        return value.Kind switch {
             DateTimeKind.Utc => value,
             _ => value.ToUniversalTime()
         };
     }
 
-    private static double RequireNonNegative(double value, string paramName)
-    {
-        if (value < 0)
-        {
+    private static double RequireNonNegative(double value, string paramName) {
+        if (value < 0) {
             throw new ArgumentOutOfRangeException(paramName, "Value must be non-negative.");
         }
 
         return value;
     }
-}
 
+    private static string? NormalizeOptionalText(string? value, int maxLength, string paramName) {
+        if (string.IsNullOrWhiteSpace(value)) {
+            return null;
+        }
+
+        var normalized = value.Trim();
+        return normalized.Length > maxLength
+            ? throw new ArgumentOutOfRangeException(paramName, $"Value must be at most {maxLength} characters.")
+            : normalized;
+    }
+
+    private static void EnsureUserId(UserId userId) {
+        if (userId == UserId.Empty) {
+            throw new ArgumentException("UserId is required.", nameof(userId));
+        }
+    }
+
+    private static bool AreClose(double left, double right) {
+        return Math.Abs(left - right) <= ComparisonEpsilon;
+    }
+
+    private static bool NullableAreClose(double? left, double? right) {
+        if (!left.HasValue && !right.HasValue) {
+            return true;
+        }
+
+        if (!left.HasValue || !right.HasValue) {
+            return false;
+        }
+
+        return AreClose(left.Value, right.Value);
+    }
+}

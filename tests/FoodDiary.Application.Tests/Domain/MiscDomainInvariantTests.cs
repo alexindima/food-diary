@@ -10,6 +10,7 @@ using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
+using System.Reflection;
 
 namespace FoodDiary.Application.Tests.Domain;
 
@@ -35,6 +36,39 @@ public class MiscDomainInvariantTests
     {
         Assert.Throws<ArgumentException>(() =>
             RecentItem.Create(UserId.New(), RecentItemType.Product, Guid.Empty));
+    }
+
+    [Fact]
+    public void RecentItem_Create_WithEmptyUserId_Throws()
+    {
+        Assert.Throws<ArgumentException>(() =>
+            RecentItem.Create(UserId.Empty, RecentItemType.Product, Guid.NewGuid()));
+    }
+
+    [Fact]
+    public void RecentItem_Touch_IncrementsUsageCount()
+    {
+        var recentItem = RecentItem.Create(UserId.New(), RecentItemType.Product, Guid.NewGuid());
+        var previousUsage = recentItem.UsageCount;
+
+        recentItem.Touch();
+
+        Assert.Equal(previousUsage + 1, recentItem.UsageCount);
+        Assert.NotNull(recentItem.ModifiedOnUtc);
+    }
+
+    [Fact]
+    public void RecentItem_Touch_WhenUsageCountAtMaxValue_DoesNotOverflow()
+    {
+        var recentItem = RecentItem.Create(UserId.New(), RecentItemType.Product, Guid.NewGuid());
+        typeof(RecentItem)
+            .GetProperty(nameof(RecentItem.UsageCount), BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)!
+            .SetValue(recentItem, int.MaxValue);
+
+        recentItem.Touch();
+
+        Assert.Equal(int.MaxValue, recentItem.UsageCount);
+        Assert.NotNull(recentItem.ModifiedOnUtc);
     }
 
     [Fact]

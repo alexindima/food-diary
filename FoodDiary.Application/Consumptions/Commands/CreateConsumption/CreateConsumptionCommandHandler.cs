@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -86,7 +86,7 @@ public class CreateConsumptionCommandHandler(
         foreach (var session in command.AiSessions)
         {
             var sessionItems = session.Items
-                .Select(aiItem => new MealAiItemData(
+                .Select(aiItem => MealAiItemData.Create(
                     aiItem.NameEn,
                     aiItem.NameLocal,
                     aiItem.Amount,
@@ -223,4 +223,5 @@ public class CreateConsumptionCommandHandler(
         return Result.Success(summary);
     }
 }
+
 

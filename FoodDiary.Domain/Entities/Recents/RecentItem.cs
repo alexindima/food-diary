@@ -5,8 +5,7 @@ using FoodDiary.Domain.ValueObjects;
 
 namespace FoodDiary.Domain.Entities.Recents;
 
-public sealed class RecentItem : Entity<RecentItemId>
-{
+public sealed class RecentItem : Entity<RecentItemId> {
     public UserId UserId { get; private set; }
     public RecentItemType ItemType { get; private set; }
     public Guid ItemId { get; private set; }
@@ -15,19 +14,21 @@ public sealed class RecentItem : Entity<RecentItemId>
 
     public User User { get; private set; } = null!;
 
-    private RecentItem() { }
+    private RecentItem() {
+    }
 
-    public static RecentItem Create(UserId userId, RecentItemType itemType, Guid itemId, DateTime? usedAtUtc = null)
-    {
-        if (itemId == Guid.Empty)
-        {
+    public static RecentItem Create(UserId userId, RecentItemType itemType, Guid itemId, DateTime? usedAtUtc = null) {
+        if (userId == UserId.Empty) {
+            throw new ArgumentException("UserId cannot be empty.", nameof(userId));
+        }
+
+        if (itemId == Guid.Empty) {
             throw new ArgumentException("ItemId cannot be empty.", nameof(itemId));
         }
 
         var now = NormalizeUtc(usedAtUtc ?? DateTime.UtcNow);
 
-        var recentItem = new RecentItem
-        {
+        var recentItem = new RecentItem {
             Id = RecentItemId.New(),
             UserId = userId,
             ItemType = itemType,
@@ -40,20 +41,19 @@ public sealed class RecentItem : Entity<RecentItemId>
         return recentItem;
     }
 
-    public void Touch(DateTime? usedAtUtc = null)
-    {
+    public void Touch(DateTime? usedAtUtc = null) {
         LastUsedAtUtc = NormalizeUtc(usedAtUtc ?? DateTime.UtcNow);
-        UsageCount += 1;
+        if (UsageCount < int.MaxValue) {
+            UsageCount += 1;
+        }
+
         SetModified();
     }
 
-    private static DateTime NormalizeUtc(DateTime value)
-    {
-        return value.Kind switch
-        {
+    private static DateTime NormalizeUtc(DateTime value) {
+        return value.Kind switch {
             DateTimeKind.Utc => value,
             _ => value.ToUniversalTime()
         };
     }
 }
-
