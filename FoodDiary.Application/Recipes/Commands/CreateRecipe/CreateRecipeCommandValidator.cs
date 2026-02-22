@@ -1,6 +1,6 @@
 using System;
-using FoodDiary.Application.Recipes.Commands.Common;
-using FoodDiary.Application.Recipes.Commands.Common.Validators;
+using FoodDiary.Application.Recipes.Common;
+using FoodDiary.Application.Recipes.Common.Validators;
 using FluentValidation;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;

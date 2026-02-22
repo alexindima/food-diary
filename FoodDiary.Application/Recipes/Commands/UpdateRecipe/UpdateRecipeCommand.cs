@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
-using FoodDiary.Application.Recipes.Commands.Common;
+using FoodDiary.Application.Recipes.Common;
 using FoodDiary.Contracts.Recipes;
 using FoodDiary.Domain.ValueObjects;
 

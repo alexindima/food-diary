@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using FoodDiary.Application.Recipes.Commands.Common;
+using FoodDiary.Application.Recipes.Common;
 using FoodDiary.Application.Recipes.Commands.CreateRecipe;
 using FoodDiary.Application.Recipes.Commands.UpdateRecipe;
 using FoodDiary.Contracts.Recipes;

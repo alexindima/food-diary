@@ -7,12 +7,12 @@ using FoodDiary.Domain.ValueObjects;
 namespace FoodDiary.Application.Products.Mappings;
 
 /// <summary>
-/// Extension methods для маппинга Product
+/// Mapping helpers for product contracts and commands.
 /// </summary>
 public static class ProductMappings
 {
     /// <summary>
-    /// Маппинг Product -> ProductResponse (с UsageCount)
+    /// Maps Product to ProductResponse with optional usage and ownership flags.
     /// </summary>
     public static ProductResponse ToResponse(this Product product, int usageCount = 0, bool isOwnedByCurrentUser = false)
     {
@@ -44,7 +44,7 @@ public static class ProductMappings
     }
 
     /// <summary>
-    /// Маппинг CreateProductRequest -> CreateProductCommand
+    /// Maps CreateProductRequest to CreateProductCommand.
     /// </summary>
     public static CreateProductCommand ToCommand(this CreateProductRequest request, Guid? userIdValue)
     {

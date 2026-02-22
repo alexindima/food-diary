@@ -4,7 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
-using FoodDiary.Application.Recipes.Commands.Common;
+using FoodDiary.Application.Recipes.Common;
 using FoodDiary.Application.Recipes.Mappings;
 using FoodDiary.Contracts.Recipes;
 using FoodDiary.Domain.Enums;
@@ -72,7 +72,7 @@ public class UpdateRecipeCommandHandler(
             visibility: visibility);
 
         recipe.ClearSteps();
-        var steps = command.Steps ?? Array.Empty<Application.Recipes.Commands.Common.RecipeStepInput>();
+        var steps = command.Steps ?? Array.Empty<RecipeStepInput>();
         var orderedSteps = steps
             .Select((step, index) => new { Step = step, Order = step.Order > 0 ? step.Order : index + 1 })
             .OrderBy(x => x.Order);
