@@ -104,5 +104,44 @@ public class MiscDomainInvariantTests
         Assert.Equal(1, advice.Weight);
         Assert.Null(advice.Tag);
     }
+
+    [Fact]
+    public void DailyAdvice_Create_WithLocaleVariant_NormalizesToPrimaryLanguage()
+    {
+        var advice = DailyAdvice.Create("Hydrate", "en-US");
+
+        Assert.Equal("en", advice.Locale);
+    }
+
+    [Fact]
+    public void DailyAdvice_Create_WithUnsupportedLocale_Throws()
+    {
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+            DailyAdvice.Create("Hydrate", "de"));
+    }
+
+    [Fact]
+    public void DailyAdvice_Update_WithSameNormalizedValues_DoesNotSetModifiedOnUtc()
+    {
+        var advice = DailyAdvice.Create("Hydrate", "en", weight: 1, tag: "water");
+
+        advice.Update(value: "  Hydrate  ", locale: " EN ", weight: 1, tag: "  water  ");
+
+        Assert.Null(advice.ModifiedOnUtc);
+    }
+
+    [Fact]
+    public void DailyAdvice_Create_WithTooLongValue_Throws()
+    {
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+            DailyAdvice.Create(new string('a', 513), "en"));
+    }
+
+    [Fact]
+    public void DailyAdvice_Create_WithTooLongTag_Throws()
+    {
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+            DailyAdvice.Create("Hydrate", "en", tag: new string('t', 65)));
+    }
 }
 
