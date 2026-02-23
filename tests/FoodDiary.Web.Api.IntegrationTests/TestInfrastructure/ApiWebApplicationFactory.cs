@@ -8,14 +8,11 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
 
-public sealed class ApiWebApplicationFactory : WebApplicationFactory<Program>
-{
-    protected override void ConfigureWebHost(IWebHostBuilder builder)
-    {
+public sealed class ApiWebApplicationFactory : WebApplicationFactory<Program> {
+    protected override void ConfigureWebHost(IWebHostBuilder builder) {
         builder.UseEnvironment("Development");
 
-        builder.ConfigureServices(services =>
-        {
+        builder.ConfigureServices(services => {
             services.RemoveAll<DbContextOptions<FoodDiaryDbContext>>();
             services.RemoveAll<FoodDiaryDbContext>();
             services.RemoveAll<IDbContextOptionsConfiguration<FoodDiaryDbContext>>();

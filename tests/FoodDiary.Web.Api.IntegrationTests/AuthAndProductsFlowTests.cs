@@ -9,16 +9,13 @@ using Xunit.Abstractions;
 namespace FoodDiary.Web.Api.IntegrationTests;
 
 public sealed class AuthAndProductsFlowTests(ApiWebApplicationFactory factory, ITestOutputHelper output)
-    : IClassFixture<ApiWebApplicationFactory>
-{
-    private static readonly JsonSerializerOptions JsonOptions = new()
-    {
+    : IClassFixture<ApiWebApplicationFactory> {
+    private static readonly JsonSerializerOptions JsonOptions = new() {
         PropertyNameCaseInsensitive = true,
     };
 
     [Fact]
-    public async Task Register_ReturnsAuthenticationTokens()
-    {
+    public async Task Register_ReturnsAuthenticationTokens() {
         var client = factory.CreateClient();
         var email = $"api-tests-{Guid.NewGuid():N}@example.com";
         var request = new RegisterRequest(email, "Password123!", "en");
@@ -37,8 +34,7 @@ public sealed class AuthAndProductsFlowTests(ApiWebApplicationFactory factory, I
     }
 
     [Fact]
-    public async Task Login_WithWrongPassword_ReturnsUnauthorized()
-    {
+    public async Task Login_WithWrongPassword_ReturnsUnauthorized() {
         var client = factory.CreateClient();
         var email = $"api-tests-{Guid.NewGuid():N}@example.com";
 
@@ -55,8 +51,7 @@ public sealed class AuthAndProductsFlowTests(ApiWebApplicationFactory factory, I
     }
 
     [Fact]
-    public async Task Products_RequiresAuth_AndReturnsOkWithBearerToken()
-    {
+    public async Task Products_RequiresAuth_AndReturnsOkWithBearerToken() {
         var client = factory.CreateClient();
         var anonymousResponse = await client.GetAsync("/api/products");
         Assert.Equal(HttpStatusCode.Unauthorized, anonymousResponse.StatusCode);
@@ -78,8 +73,7 @@ public sealed class AuthAndProductsFlowTests(ApiWebApplicationFactory factory, I
     }
 
     [Fact]
-    public async Task UsersInfo_RequiresAuth_AndReturnsOkWithBearerToken()
-    {
+    public async Task UsersInfo_RequiresAuth_AndReturnsOkWithBearerToken() {
         var client = factory.CreateClient();
         var anonymousResponse = await client.GetAsync("/api/users/info");
         Assert.Equal(HttpStatusCode.Unauthorized, anonymousResponse.StatusCode);

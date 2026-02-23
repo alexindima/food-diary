@@ -7,11 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FoodDiary.Web.Api.IntegrationTests.Extensions;
 
-public sealed class ExtensionsTests
-{
+public sealed class ExtensionsTests {
     [Fact]
-    public void ResultExtensions_Success_ReturnsOkObjectResult()
-    {
+    public void ResultExtensions_Success_ReturnsOkObjectResult() {
         var result = Result.Success("ok");
 
         var actionResult = result.ToActionResult();
@@ -21,8 +19,7 @@ public sealed class ExtensionsTests
     }
 
     [Fact]
-    public void ResultExtensions_AuthenticationError_ReturnsUnauthorized()
-    {
+    public void ResultExtensions_AuthenticationError_ReturnsUnauthorized() {
         var result = Result.Failure<string>(new Error("Authentication.InvalidToken", "Invalid authorization token."));
 
         var actionResult = result.ToActionResult();
@@ -32,8 +29,7 @@ public sealed class ExtensionsTests
     }
 
     [Fact]
-    public void ResultExtensions_ValidationError_ReturnsBadRequest()
-    {
+    public void ResultExtensions_ValidationError_ReturnsBadRequest() {
         var result = Result.Failure<string>(new Error("Validation.Invalid", "Invalid field."));
 
         var actionResult = result.ToActionResult();
@@ -43,8 +39,7 @@ public sealed class ExtensionsTests
     }
 
     [Fact]
-    public void ResultExtensions_NotFoundError_ReturnsNotFound()
-    {
+    public void ResultExtensions_NotFoundError_ReturnsNotFound() {
         var result = Result.Failure<string>(new Error("User.NotFound", "Not found."));
 
         var actionResult = result.ToActionResult();
@@ -54,8 +49,7 @@ public sealed class ExtensionsTests
     }
 
     [Fact]
-    public void ResultExtensions_AlreadyExistsError_ReturnsConflict()
-    {
+    public void ResultExtensions_AlreadyExistsError_ReturnsConflict() {
         var result = Result.Failure<string>(new Error("Product.AlreadyExists", "Already exists."));
 
         var actionResult = result.ToActionResult();
@@ -65,8 +59,7 @@ public sealed class ExtensionsTests
     }
 
     [Fact]
-    public void ResultExtensions_AiQuotaExceeded_ReturnsTooManyRequests()
-    {
+    public void ResultExtensions_AiQuotaExceeded_ReturnsTooManyRequests() {
         var result = Result.Failure<string>(new Error("Ai.QuotaExceeded", "Quota exceeded."));
 
         var actionResult = result.ToActionResult();
@@ -76,8 +69,7 @@ public sealed class ExtensionsTests
     }
 
     [Fact]
-    public void UserExtensions_WithValidUserIdClaim_ReturnsUserId()
-    {
+    public void UserExtensions_WithValidUserIdClaim_ReturnsUserId() {
         var expectedGuid = Guid.NewGuid();
         var user = new ClaimsPrincipal(
             new ClaimsIdentity([new Claim(ClaimTypes.NameIdentifier, expectedGuid.ToString())], "test"));
@@ -89,8 +81,7 @@ public sealed class ExtensionsTests
     }
 
     [Fact]
-    public void UserExtensions_WithGuidEmptyClaim_ReturnsNull()
-    {
+    public void UserExtensions_WithGuidEmptyClaim_ReturnsNull() {
         var user = new ClaimsPrincipal(
             new ClaimsIdentity([new Claim(ClaimTypes.NameIdentifier, Guid.Empty.ToString())], "test"));
 
@@ -100,8 +91,7 @@ public sealed class ExtensionsTests
     }
 
     [Fact]
-    public void UserExtensions_WithInvalidClaim_ReturnsNull()
-    {
+    public void UserExtensions_WithInvalidClaim_ReturnsNull() {
         var user = new ClaimsPrincipal(
             new ClaimsIdentity([new Claim(ClaimTypes.NameIdentifier, "not-a-guid")], "test"));
 

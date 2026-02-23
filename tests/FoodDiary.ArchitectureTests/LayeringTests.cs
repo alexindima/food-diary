@@ -2,11 +2,9 @@ using System.Xml.Linq;
 
 namespace FoodDiary.ArchitectureTests;
 
-public class LayeringTests
-{
+public class LayeringTests {
     [Fact]
-    public void DomainProject_DoesNotReference_OtherApplicationLayers()
-    {
+    public void DomainProject_DoesNotReference_OtherApplicationLayers() {
         var references = GetProjectReferences("FoodDiary.Domain/FoodDiary.Domain.csproj");
 
         Assert.DoesNotContain("FoodDiary.Application", references);
@@ -15,8 +13,7 @@ public class LayeringTests
     }
 
     [Fact]
-    public void ApplicationProject_ReferencesOnly_DomainAndContracts_AmongCoreProjects()
-    {
+    public void ApplicationProject_ReferencesOnly_DomainAndContracts_AmongCoreProjects() {
         var references = GetProjectReferences("FoodDiary.Application/FoodDiary.Application.csproj");
 
         Assert.Contains("FoodDiary.Domain", references);
@@ -26,8 +23,7 @@ public class LayeringTests
     }
 
     [Fact]
-    public void InfrastructureProject_DoesNotReference_WebApi()
-    {
+    public void InfrastructureProject_DoesNotReference_WebApi() {
         var references = GetProjectReferences("FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj");
 
         Assert.DoesNotContain("FoodDiary.Web.Api", references);
@@ -35,8 +31,7 @@ public class LayeringTests
     }
 
     [Fact]
-    public void WebApiProject_DoesNotDirectlyReference_Domain()
-    {
+    public void WebApiProject_DoesNotDirectlyReference_Domain() {
         var references = GetProjectReferences("FoodDiary.Web.Api/FoodDiary.Web.Api.csproj");
 
         Assert.DoesNotContain("FoodDiary.Domain", references);
@@ -45,16 +40,14 @@ public class LayeringTests
     }
 
     [Fact]
-    public void JobManagerProject_DoesNotReference_WebApi()
-    {
+    public void JobManagerProject_DoesNotReference_WebApi() {
         var references = GetProjectReferences("FoodDiary.JobManager/FoodDiary.JobManager.csproj");
 
         Assert.DoesNotContain("FoodDiary.Web.Api", references);
     }
 
     [Fact]
-    public void TelegramBotProject_DoesNotReference_CoreProjects()
-    {
+    public void TelegramBotProject_DoesNotReference_CoreProjects() {
         var references = GetProjectReferences("FoodDiary.Telegram.Bot/FoodDiary.Telegram.Bot.csproj");
 
         Assert.DoesNotContain("FoodDiary.Domain", references);
@@ -64,8 +57,7 @@ public class LayeringTests
     }
 
     [Fact]
-    public void WebApi_OnlyBaseControllersRemainInControllersFolder()
-    {
+    public void WebApi_OnlyBaseControllersRemainInControllersFolder() {
         var root = GetRepositoryRoot();
         var controllerFiles = Directory.GetFiles(Path.Combine(root, "FoodDiary.Web.Api", "Controllers"), "*Controller.cs");
         var names = controllerFiles.Select(Path.GetFileNameWithoutExtension).ToArray();
@@ -75,8 +67,7 @@ public class LayeringTests
         Assert.Equal(2, names.Length);
     }
 
-    private static HashSet<string> GetProjectReferences(string relativeProjectPath)
-    {
+    private static HashSet<string> GetProjectReferences(string relativeProjectPath) {
         var root = GetRepositoryRoot();
         var projectPath = Path.Combine(root, relativeProjectPath.Replace('/', Path.DirectorySeparatorChar));
         var document = XDocument.Load(projectPath);
@@ -90,14 +81,11 @@ public class LayeringTests
         return references;
     }
 
-    private static string GetRepositoryRoot()
-    {
+    private static string GetRepositoryRoot() {
         var current = new DirectoryInfo(AppContext.BaseDirectory);
-        while (current is not null)
-        {
+        while (current is not null) {
             var solutionPath = Path.Combine(current.FullName, "FoodDiary.sln");
-            if (File.Exists(solutionPath))
-            {
+            if (File.Exists(solutionPath)) {
                 return current.FullName;
             }
 
@@ -107,8 +95,7 @@ public class LayeringTests
         throw new InvalidOperationException("Repository root was not found.");
     }
 
-    private static string GetProjectNameFromReference(string includeValue)
-    {
+    private static string GetProjectNameFromReference(string includeValue) {
         var normalized = includeValue.Replace('\\', '/');
         var fileName = normalized.Split('/', StringSplitOptions.RemoveEmptyEntries).Last();
         return Path.GetFileNameWithoutExtension(fileName);

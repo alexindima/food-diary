@@ -4,11 +4,9 @@ using Microsoft.Extensions.Configuration;
 
 namespace FoodDiary.Infrastructure.Tests.Authentication;
 
-public sealed class JwtTokenGeneratorTests
-{
+public sealed class JwtTokenGeneratorTests {
     [Fact]
-    public void GenerateAndValidateToken_RoundTrip_Succeeds()
-    {
+    public void GenerateAndValidateToken_RoundTrip_Succeeds() {
         var generator = new JwtTokenGenerator(CreateConfiguration());
         var userId = UserId.New();
         const string email = "user@example.com";
@@ -22,8 +20,7 @@ public sealed class JwtTokenGeneratorTests
     }
 
     [Fact]
-    public void ValidateToken_WithInvalidToken_ReturnsNull()
-    {
+    public void ValidateToken_WithInvalidToken_ReturnsNull() {
         var generator = new JwtTokenGenerator(CreateConfiguration());
 
         var validated = generator.ValidateToken("not-a-jwt-token");
@@ -32,8 +29,7 @@ public sealed class JwtTokenGeneratorTests
     }
 
     [Fact]
-    public void GenerateAccessToken_WithInvalidExpirationValues_UsesFallbacks()
-    {
+    public void GenerateAccessToken_WithInvalidExpirationValues_UsesFallbacks() {
         var generator = new JwtTokenGenerator(CreateConfiguration(expirationMinutes: "-1", refreshDays: "abc"));
         var userId = UserId.New();
 
@@ -45,8 +41,7 @@ public sealed class JwtTokenGeneratorTests
     }
 
     [Fact]
-    public void Constructor_WithoutSecretKey_Throws()
-    {
+    public void Constructor_WithoutSecretKey_Throws() {
         var config = CreateConfiguration(includeSecret: false);
 
         var ex = Assert.Throws<InvalidOperationException>(() => new JwtTokenGenerator(config));
@@ -56,18 +51,15 @@ public sealed class JwtTokenGeneratorTests
     private static IConfiguration CreateConfiguration(
         string expirationMinutes = "60",
         string refreshDays = "7",
-        bool includeSecret = true)
-    {
-        var values = new Dictionary<string, string?>
-        {
+        bool includeSecret = true) {
+        var values = new Dictionary<string, string?> {
             ["JwtSettings:Issuer"] = "FoodDiary",
             ["JwtSettings:Audience"] = "FoodDiaryClients",
             ["JwtSettings:ExpirationMinutes"] = expirationMinutes,
             ["JwtSettings:RefreshTokenExpirationDays"] = refreshDays,
         };
 
-        if (includeSecret)
-        {
+        if (includeSecret) {
             values["JwtSettings:SecretKey"] = "super-secret-key-for-tests-only-123456789";
         }
 

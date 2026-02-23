@@ -2,11 +2,9 @@ using System.Text.RegularExpressions;
 
 namespace FoodDiary.ArchitectureTests;
 
-public class FeatureStructureTests
-{
+public class FeatureStructureTests {
     [Fact]
-    public void Application_Features_HaveCommandsOrQueriesFolders()
-    {
+    public void Application_Features_HaveCommandsOrQueriesFolders() {
         var root = GetRepositoryRoot();
         var applicationPath = Path.Combine(root, "FoodDiary.Application");
         var excluded = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { "bin", "obj", "Common" };
@@ -20,8 +18,7 @@ public class FeatureStructureTests
 
         Assert.NotEmpty(featureDirectories);
 
-        foreach (var feature in featureDirectories)
-        {
+        foreach (var feature in featureDirectories) {
             var featurePath = Path.Combine(applicationPath, feature);
             var hasCommands = Directory.Exists(Path.Combine(featurePath, "Commands"));
             var hasQueries = Directory.Exists(Path.Combine(featurePath, "Queries"));
@@ -30,16 +27,14 @@ public class FeatureStructureTests
     }
 
     [Fact]
-    public void WebApi_FeatureFolders_ContainControllers()
-    {
+    public void WebApi_FeatureFolders_ContainControllers() {
         var root = GetRepositoryRoot();
         var featuresPath = Path.Combine(root, "FoodDiary.Web.Api", "Features");
         var featureDirectories = Directory.GetDirectories(featuresPath);
 
         Assert.NotEmpty(featureDirectories);
 
-        foreach (var featurePath in featureDirectories)
-        {
+        foreach (var featurePath in featureDirectories) {
             var controllers = Directory.GetFiles(featurePath, "*Controller.cs");
             Assert.NotEmpty(controllers);
         }
@@ -53,8 +48,7 @@ public class FeatureStructureTests
     [InlineData("FoodDiary.JobManager", "FoodDiary.JobManager")]
     [InlineData("FoodDiary.Telegram.Bot", "FoodDiary.Telegram.Bot")]
     [InlineData("FoodDiary.Web.Api", "FoodDiary.Web.Api")]
-    public void Namespaces_Match_ProjectFolderStructure(string projectFolder, string namespaceRoot)
-    {
+    public void Namespaces_Match_ProjectFolderStructure(string projectFolder, string namespaceRoot) {
         var root = GetRepositoryRoot();
         var projectPath = Path.Combine(root, projectFolder);
         var sourceFiles = Directory.GetFiles(projectPath, "*.cs", SearchOption.AllDirectories)
@@ -64,17 +58,14 @@ public class FeatureStructureTests
 
         Assert.NotEmpty(sourceFiles);
 
-        foreach (var sourceFile in sourceFiles)
-        {
+        foreach (var sourceFile in sourceFiles) {
             var namespaceFromFile = ReadNamespace(sourceFile);
-            if (string.IsNullOrWhiteSpace(namespaceFromFile))
-            {
+            if (string.IsNullOrWhiteSpace(namespaceFromFile)) {
                 // Entry points may use top-level statements without explicit namespace.
                 // AssemblyInfo files may contain only assembly-level attributes.
                 var fileName = Path.GetFileName(sourceFile);
                 if (string.Equals(fileName, "Program.cs", StringComparison.OrdinalIgnoreCase) ||
-                    string.Equals(fileName, "AssemblyInfo.cs", StringComparison.OrdinalIgnoreCase))
-                {
+                    string.Equals(fileName, "AssemblyInfo.cs", StringComparison.OrdinalIgnoreCase)) {
                     continue;
                 }
 
@@ -94,14 +85,11 @@ public class FeatureStructureTests
         }
     }
 
-    private static string GetRepositoryRoot()
-    {
+    private static string GetRepositoryRoot() {
         var current = new DirectoryInfo(AppContext.BaseDirectory);
-        while (current is not null)
-        {
+        while (current is not null) {
             var solutionPath = Path.Combine(current.FullName, "FoodDiary.sln");
-            if (File.Exists(solutionPath))
-            {
+            if (File.Exists(solutionPath)) {
                 return current.FullName;
             }
 
@@ -111,8 +99,7 @@ public class FeatureStructureTests
         throw new InvalidOperationException("Repository root was not found.");
     }
 
-    private static string? ReadNamespace(string sourceFilePath)
-    {
+    private static string? ReadNamespace(string sourceFilePath) {
         var source = File.ReadAllText(sourceFilePath);
         var match = Regex.Match(source, @"^\s*namespace\s+([A-Za-z0-9_.]+)\s*(?:;|\{)", RegexOptions.Multiline);
         return match.Success ? match.Groups[1].Value : null;
