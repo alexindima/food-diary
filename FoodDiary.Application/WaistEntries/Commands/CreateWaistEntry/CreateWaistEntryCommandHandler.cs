@@ -1,42 +1,28 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.WaistEntries.Mappings;
 using FoodDiary.Contracts.WaistEntries;
-using FoodDiary.Domain.Entities.Ai;
-using FoodDiary.Domain.Entities.Assets;
-using FoodDiary.Domain.Entities.Content;
-using FoodDiary.Domain.Entities.Meals;
-using FoodDiary.Domain.Entities.Products;
-using FoodDiary.Domain.Entities.Recipes;
-using FoodDiary.Domain.Entities.Shopping;
 using FoodDiary.Domain.Entities.Tracking;
-using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.WaistEntries.Commands.CreateWaistEntry;
 
 public class CreateWaistEntryCommandHandler(IWaistEntryRepository waistEntryRepository)
-    : ICommandHandler<CreateWaistEntryCommand, Result<WaistEntryResponse>>
-{
+    : ICommandHandler<CreateWaistEntryCommand, Result<WaistEntryResponse>> {
     public async Task<Result<WaistEntryResponse>> Handle(
         CreateWaistEntryCommand command,
-        CancellationToken cancellationToken)
-    {
-        if (command.UserId is null)
-        {
-            return Result.Failure<WaistEntryResponse>(Errors.User.NotFound());
+        CancellationToken cancellationToken) {
+        if (command.UserId is null || command.UserId.Value == UserId.Empty) {
+            return Result.Failure<WaistEntryResponse>(Errors.Authentication.InvalidToken);
         }
 
-        var normalizedDate = command.Date.Date;
+        var normalizedDate = NormalizeUtcDate(command.Date);
         var existing = await waistEntryRepository.GetByDateAsync(
             command.UserId.Value,
             normalizedDate,
             cancellationToken);
-        if (existing is not null)
-        {
+        if (existing is not null) {
             return Result.Failure<WaistEntryResponse>(
                 Errors.WaistEntry.AlreadyExists(normalizedDate));
         }
@@ -45,5 +31,13 @@ public class CreateWaistEntryCommandHandler(IWaistEntryRepository waistEntryRepo
         entry = await waistEntryRepository.AddAsync(entry, cancellationToken);
         return Result.Success(entry.ToResponse());
     }
-}
 
+    private static DateTime NormalizeUtcDate(DateTime value) {
+        var utc = value.Kind switch {
+            DateTimeKind.Utc => value,
+            _ => value.ToUniversalTime()
+        };
+
+        return DateTime.SpecifyKind(utc.Date, DateTimeKind.Utc);
+    }
+}

@@ -1,19 +1,15 @@
-using System.Threading;
-using System.Threading.Tasks;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
+using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.WaistEntries.Commands.DeleteWaistEntry;
 
 public class DeleteWaistEntryCommandHandler(IWaistEntryRepository waistEntryRepository)
-    : ICommandHandler<DeleteWaistEntryCommand, Result<bool>>
-{
-    public async Task<Result<bool>> Handle(DeleteWaistEntryCommand command, CancellationToken cancellationToken)
-    {
-        if (command.UserId is null)
-        {
-            return Result.Failure<bool>(Errors.User.NotFound());
+    : ICommandHandler<DeleteWaistEntryCommand, Result<bool>> {
+    public async Task<Result<bool>> Handle(DeleteWaistEntryCommand command, CancellationToken cancellationToken) {
+        if (command.UserId is null || command.UserId.Value == UserId.Empty) {
+            return Result.Failure<bool>(Errors.Authentication.InvalidToken);
         }
 
         var entry = await waistEntryRepository.GetByIdAsync(
@@ -22,8 +18,7 @@ public class DeleteWaistEntryCommandHandler(IWaistEntryRepository waistEntryRepo
             asTracking: true,
             cancellationToken);
 
-        if (entry is null)
-        {
+        if (entry is null) {
             return Result.Failure<bool>(Errors.WaistEntry.NotFound(command.WaistEntryId.Value));
         }
 

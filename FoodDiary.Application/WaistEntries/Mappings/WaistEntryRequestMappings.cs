@@ -1,14 +1,11 @@
-using System;
 using FoodDiary.Application.WaistEntries.Commands.CreateWaistEntry;
 using FoodDiary.Application.WaistEntries.Commands.UpdateWaistEntry;
 using FoodDiary.Contracts.WaistEntries;
-using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.WaistEntries.Mappings;
 
-public static class WaistEntryRequestMappings
-{
+public static class WaistEntryRequestMappings {
     public static CreateWaistEntryCommand ToCommand(this CreateWaistEntryRequest request, Guid? userId) =>
         new(
             userId.HasValue ? new UserId(userId.Value) : null,
