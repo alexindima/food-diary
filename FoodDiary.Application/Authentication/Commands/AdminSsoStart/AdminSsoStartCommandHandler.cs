@@ -1,6 +1,6 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
-using FoodDiary.Application.Common.Interfaces.Authentication;
+using FoodDiary.Application.Authentication.Abstractions;
 using FoodDiary.Contracts.Authentication;
 
 namespace FoodDiary.Application.Authentication.Commands.AdminSsoStart;

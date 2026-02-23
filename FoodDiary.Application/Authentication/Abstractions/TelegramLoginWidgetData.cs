@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Common.Interfaces.Authentication;
+namespace FoodDiary.Application.Authentication.Abstractions;
 
 public sealed record TelegramLoginWidgetData(
     long Id,

@@ -1,18 +1,15 @@
 using System.Security.Cryptography;
-using FoodDiary.Application.Common.Interfaces.Authentication;
-using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Application.Authentication.Abstractions;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.Extensions.Caching.Distributed;
 
 namespace FoodDiary.Infrastructure.Authentication;
 
-public sealed class AdminSsoService(IDistributedCache cache) : IAdminSsoService
-{
+public sealed class AdminSsoService(IDistributedCache cache) : IAdminSsoService {
     private const string CachePrefix = "admin-sso:";
     private static readonly TimeSpan CodeTtl = TimeSpan.FromMinutes(2);
 
-    public async Task<AdminSsoCode> CreateCodeAsync(UserId userId, CancellationToken cancellationToken = default)
-    {
+    public async Task<AdminSsoCode> CreateCodeAsync(UserId userId, CancellationToken cancellationToken = default) {
         var code = GenerateCode();
         var expiresAt = DateTime.UtcNow.Add(CodeTtl);
         var key = CachePrefix + code;
@@ -26,17 +23,14 @@ public sealed class AdminSsoService(IDistributedCache cache) : IAdminSsoService
         return new AdminSsoCode(code, expiresAt);
     }
 
-    public async Task<UserId?> ExchangeCodeAsync(string code, CancellationToken cancellationToken = default)
-    {
-        if (string.IsNullOrWhiteSpace(code))
-        {
+    public async Task<UserId?> ExchangeCodeAsync(string code, CancellationToken cancellationToken = default) {
+        if (string.IsNullOrWhiteSpace(code)) {
             return null;
         }
 
         var key = CachePrefix + code;
         var value = await cache.GetStringAsync(key, cancellationToken);
-        if (string.IsNullOrWhiteSpace(value))
-        {
+        if (string.IsNullOrWhiteSpace(value)) {
             return null;
         }
 
@@ -45,8 +39,7 @@ public sealed class AdminSsoService(IDistributedCache cache) : IAdminSsoService
         return Guid.TryParse(value, out var id) ? new UserId(id) : null;
     }
 
-    private static string GenerateCode()
-    {
+    private static string GenerateCode() {
         var bytes = RandomNumberGenerator.GetBytes(32);
         var text = Convert.ToBase64String(bytes)
             .TrimEnd('=')

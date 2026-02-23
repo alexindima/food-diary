@@ -1,10 +1,8 @@
-using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Common.Interfaces.Authentication;
+namespace FoodDiary.Application.Authentication.Abstractions;
 
-public interface IAdminSsoService
-{
+public interface IAdminSsoService {
     Task<AdminSsoCode> CreateCodeAsync(UserId userId, CancellationToken cancellationToken = default);
     Task<UserId?> ExchangeCodeAsync(string code, CancellationToken cancellationToken = default);
 }

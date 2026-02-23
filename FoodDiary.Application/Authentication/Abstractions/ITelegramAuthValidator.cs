@@ -1,8 +1,7 @@
 using FoodDiary.Application.Common.Abstractions.Result;
 
-namespace FoodDiary.Application.Common.Interfaces.Authentication;
+namespace FoodDiary.Application.Authentication.Abstractions;
 
-public interface ITelegramAuthValidator
-{
+public interface ITelegramAuthValidator {
     Result<TelegramInitData> ValidateInitData(string initData);
 }

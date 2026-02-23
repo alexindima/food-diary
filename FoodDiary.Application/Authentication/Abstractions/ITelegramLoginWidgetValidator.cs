@@ -1,8 +1,7 @@
 using FoodDiary.Application.Common.Abstractions.Result;
 
-namespace FoodDiary.Application.Common.Interfaces.Authentication;
+namespace FoodDiary.Application.Authentication.Abstractions;
 
-public interface ITelegramLoginWidgetValidator
-{
+public interface ITelegramLoginWidgetValidator {
     Result<TelegramInitData> ValidateLoginWidget(TelegramLoginWidgetData data);
 }
