@@ -4,6 +4,8 @@ using FoodDiary.Domain.ValueObjects;
 namespace FoodDiary.Domain.Entities.Users;
 
 public sealed class Role : AggregateRoot<RoleId> {
+    private const int NameMaxLength = 64;
+
     public string Name { get; private set; } = string.Empty;
 
     public ICollection<UserRole> UserRoles { get; private set; } = new List<UserRole>();
@@ -23,8 +25,13 @@ public sealed class Role : AggregateRoot<RoleId> {
     }
 
     private static string NormalizeRequiredName(string value) {
-        return string.IsNullOrWhiteSpace(value)
-            ? throw new ArgumentException("Role name is required.", nameof(value))
-            : value.Trim();
+        if (string.IsNullOrWhiteSpace(value)) {
+            throw new ArgumentException("Role name is required.", nameof(value));
+        }
+
+        var normalized = value.Trim();
+        return normalized.Length > NameMaxLength
+            ? throw new ArgumentOutOfRangeException(nameof(value), $"Role name must be at most {NameMaxLength} characters.")
+            : normalized;
     }
 }

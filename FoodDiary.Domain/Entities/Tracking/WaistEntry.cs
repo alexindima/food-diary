@@ -59,10 +59,12 @@ public sealed class WaistEntry : AggregateRoot<WaistEntryId> {
     }
 
     private static DateTime NormalizeDate(DateTime value) {
-        var dateOnly = value.Date;
-        return dateOnly.Kind == DateTimeKind.Utc
-            ? dateOnly
-            : DateTime.SpecifyKind(dateOnly, DateTimeKind.Utc);
+        var utc = value.Kind switch {
+            DateTimeKind.Utc => value,
+            _ => value.ToUniversalTime()
+        };
+
+        return DateTime.SpecifyKind(utc.Date, DateTimeKind.Utc);
     }
 
     private static double NormalizeCircumference(double value) {

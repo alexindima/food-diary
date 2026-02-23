@@ -13,6 +13,14 @@ public sealed class UserRole {
     }
 
     public UserRole(UserId userId, RoleId roleId) {
+        if (userId == UserId.Empty) {
+            throw new ArgumentException("UserId is required.", nameof(userId));
+        }
+
+        if (roleId == RoleId.Empty) {
+            throw new ArgumentException("RoleId is required.", nameof(roleId));
+        }
+
         UserId = userId;
         RoleId = roleId;
     }

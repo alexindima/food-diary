@@ -121,20 +121,26 @@ public sealed class Cycle : AggregateRoot<CycleId> {
     }
 
     private static DateTime NormalizeDate(DateTime value) {
-        var dateOnly = value.Date;
-        return dateOnly.Kind == DateTimeKind.Utc
-            ? dateOnly
-            : DateTime.SpecifyKind(dateOnly, DateTimeKind.Utc);
+        var utc = value.Kind switch {
+            DateTimeKind.Utc => value,
+            _ => value.ToUniversalTime()
+        };
+
+        return DateTime.SpecifyKind(utc.Date, DateTimeKind.Utc);
     }
 
     private static int NormalizeAverageLength(int? value) {
         var length = value ?? DefaultCycleLength;
-        return Math.Clamp(length, 18, 60);
+        return length is < 18 or > 60
+            ? throw new ArgumentOutOfRangeException(nameof(value), "Average cycle length must be in range [18, 60].")
+            : length;
     }
 
     private static int NormalizeLutealLength(int? value) {
         var length = value ?? DefaultLutealLength;
-        return Math.Clamp(length, 8, 18);
+        return length is < 8 or > 18
+            ? throw new ArgumentOutOfRangeException(nameof(value), "Luteal length must be in range [8, 18].")
+            : length;
     }
 
     private static string? NormalizeNotes(string? value) {

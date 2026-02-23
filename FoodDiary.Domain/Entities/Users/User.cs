@@ -15,6 +15,7 @@ namespace FoodDiary.Domain.Entities.Users;
 public sealed class User : AggregateRoot<UserId> {
     private const long DefaultAiInputTokenLimit = 5_000_000;
     private const long DefaultAiOutputTokenLimit = 1_000_000;
+    private const double ComparisonEpsilon = 0.000001d;
 
     public string Email { get; private set; } = string.Empty;
     public string Password { get; private set; } = string.Empty;
@@ -160,6 +161,12 @@ public sealed class User : AggregateRoot<UserId> {
         ImageAssetId? profileImageAssetId = null,
         string? dashboardLayoutJson = null,
         string? language = null) {
+        var normalizedUsername = NormalizeOptionalProfileText(username);
+        var normalizedFirstName = NormalizeOptionalProfileText(firstName);
+        var normalizedLastName = NormalizeOptionalProfileText(lastName);
+        var normalizedProfileImage = NormalizeOptionalProfileText(profileImage);
+        var normalizedDashboardLayoutJson = NormalizeOptionalProfileText(dashboardLayoutJson);
+        var normalizedLanguage = NormalizeOptionalLanguage(language, nameof(language));
         var updatedActivityGoals = GetActivityGoals().With(
             stepGoal: stepGoal,
             hydrationGoal: hydrationGoal);
@@ -170,21 +177,79 @@ public sealed class User : AggregateRoot<UserId> {
         EnsureGender(gender, nameof(gender));
         EnsureLanguage(language, nameof(language));
 
-        if (username is not null) Username = username;
-        if (firstName is not null) FirstName = firstName;
-        if (lastName is not null) LastName = lastName;
-        if (birthDate.HasValue) BirthDate = birthDate;
-        if (gender is not null) Gender = NormalizeRequiredGender(gender, nameof(gender));
-        if (weight.HasValue) Weight = weight;
-        if (height.HasValue) Height = height;
-        if (activityLevel.HasValue) ActivityLevel = activityLevel.Value;
-        ApplyActivityGoals(updatedActivityGoals);
-        if (profileImage is not null) ProfileImage = profileImage;
-        if (profileImageAssetId.HasValue) ProfileImageAssetId = profileImageAssetId;
-        if (dashboardLayoutJson is not null) DashboardLayoutJson = dashboardLayoutJson;
-        if (language is not null) Language = language;
+        var changed = false;
 
-        SetModified();
+        if (username is not null && Username != normalizedUsername) {
+            Username = normalizedUsername;
+            changed = true;
+        }
+
+        if (firstName is not null && FirstName != normalizedFirstName) {
+            FirstName = normalizedFirstName;
+            changed = true;
+        }
+
+        if (lastName is not null && LastName != normalizedLastName) {
+            LastName = normalizedLastName;
+            changed = true;
+        }
+
+        if (birthDate.HasValue && BirthDate != birthDate) {
+            BirthDate = birthDate;
+            changed = true;
+        }
+
+        if (gender is not null) {
+            var normalizedGender = NormalizeRequiredGender(gender, nameof(gender));
+            if (Gender != normalizedGender) {
+                Gender = normalizedGender;
+                changed = true;
+            }
+        }
+
+        if (weight.HasValue && !NullableAreClose(Weight, weight.Value)) {
+            Weight = weight;
+            changed = true;
+        }
+
+        if (height.HasValue && !NullableAreClose(Height, height.Value)) {
+            Height = height;
+            changed = true;
+        }
+
+        if (activityLevel.HasValue && ActivityLevel != activityLevel.Value) {
+            ActivityLevel = activityLevel.Value;
+            changed = true;
+        }
+
+        if (StepGoal != updatedActivityGoals.StepGoal || !NullableAreClose(HydrationGoal, updatedActivityGoals.HydrationGoal)) {
+            ApplyActivityGoals(updatedActivityGoals);
+            changed = true;
+        }
+
+        if (profileImage is not null && ProfileImage != normalizedProfileImage) {
+            ProfileImage = normalizedProfileImage;
+            changed = true;
+        }
+
+        if (profileImageAssetId.HasValue && ProfileImageAssetId != profileImageAssetId) {
+            ProfileImageAssetId = profileImageAssetId;
+            changed = true;
+        }
+
+        if (dashboardLayoutJson is not null && DashboardLayoutJson != normalizedDashboardLayoutJson) {
+            DashboardLayoutJson = normalizedDashboardLayoutJson;
+            changed = true;
+        }
+
+        if (language is not null && Language != normalizedLanguage) {
+            Language = normalizedLanguage;
+            changed = true;
+        }
+
+        if (changed) {
+            SetModified();
+        }
     }
 
     public void UpdateGoals(
@@ -375,8 +440,7 @@ public sealed class User : AggregateRoot<UserId> {
 
         try {
             _ = DesiredWeightValueObject.Create(value.Value);
-        }
-        catch (ArgumentOutOfRangeException ex) {
+        } catch (ArgumentOutOfRangeException ex) {
             throw new ArgumentOutOfRangeException(paramName, ex.Message);
         }
     }
@@ -388,8 +452,7 @@ public sealed class User : AggregateRoot<UserId> {
 
         try {
             _ = DesiredWaistValueObject.Create(value.Value);
-        }
-        catch (ArgumentOutOfRangeException ex) {
+        } catch (ArgumentOutOfRangeException ex) {
             throw new ArgumentOutOfRangeException(paramName, ex.Message);
         }
     }
@@ -410,5 +473,35 @@ public sealed class User : AggregateRoot<UserId> {
         }
 
         return gender.Value;
+    }
+
+    private static string NormalizeOptionalLanguage(string? value, string paramName) {
+        if (value is null) {
+            return string.Empty;
+        }
+
+        return !LanguageCode.TryParse(value, out var languageCode)
+            ? throw new ArgumentOutOfRangeException(paramName, "Language must be one of the supported codes.")
+            : languageCode.Value;
+    }
+
+    private static string? NormalizeOptionalProfileText(string? value) {
+        return value?.Trim();
+    }
+
+    private static bool NullableAreClose(double? left, double? right) {
+        if (!left.HasValue && !right.HasValue) {
+            return true;
+        }
+
+        if (!left.HasValue || !right.HasValue) {
+            return false;
+        }
+
+        return Math.Abs(left.Value - right.Value) <= ComparisonEpsilon;
+    }
+
+    private static bool NullableAreClose(double? left, double right) {
+        return left.HasValue && Math.Abs(left.Value - right) <= ComparisonEpsilon;
     }
 }
