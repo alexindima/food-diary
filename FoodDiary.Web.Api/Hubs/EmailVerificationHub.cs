@@ -1,9 +1,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 
-namespace FoodDiary.WebApi.Hubs;
+namespace FoodDiary.Web.Api.Hubs;
 
 [Authorize]
-public sealed class EmailVerificationHub : Hub
-{
+public sealed class EmailVerificationHub : Hub {
 }

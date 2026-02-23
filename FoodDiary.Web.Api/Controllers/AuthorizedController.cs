@@ -1,13 +1,22 @@
+using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Web.Api.Extensions;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using FoodDiary.Domain.ValueObjects;
-using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.WebApi.Extensions;
 
-namespace FoodDiary.WebApi.Controllers;
+namespace FoodDiary.Web.Api.Controllers;
 
 [Authorize]
 public abstract class AuthorizedController(ISender mediator) : BaseApiController(mediator) {
     protected UserId? CurrentUserId => User.GetUserId();
     protected Guid? CurrentUserGuid => CurrentUserId?.Value;
+
+    protected bool TryGetCurrentUserId(out UserId userId) {
+        if (CurrentUserId is null || CurrentUserId.Value == UserId.Empty) {
+            userId = default;
+            return false;
+        }
+
+        userId = CurrentUserId.Value;
+        return true;
+    }
 }

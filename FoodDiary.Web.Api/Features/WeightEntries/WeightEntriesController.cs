@@ -1,41 +1,43 @@
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
-using FoodDiary.Application.WeightEntries.Commands.CreateWeightEntry;
 using FoodDiary.Application.WeightEntries.Commands.DeleteWeightEntry;
-using FoodDiary.Application.WeightEntries.Commands.UpdateWeightEntry;
 using FoodDiary.Application.WeightEntries.Mappings;
 using FoodDiary.Application.WeightEntries.Queries.GetLatestWeightEntry;
 using FoodDiary.Application.WeightEntries.Queries.GetWeightEntries;
 using FoodDiary.Application.WeightEntries.Queries.GetWeightSummaries;
 using FoodDiary.Contracts.WeightEntries;
-using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.WebApi.Controllers;
-using FoodDiary.WebApi.Extensions;
+using FoodDiary.Web.Api.Controllers;
+using FoodDiary.Web.Api.Extensions;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
-namespace FoodDiary.WebApi.Features.WeightEntries;
+namespace FoodDiary.Web.Api.Features.WeightEntries;
 
 [ApiController]
 [Route("api/weight-entries")]
-public class WeightEntriesController(ISender mediator) : AuthorizedController(mediator)
-{
+public class WeightEntriesController(ISender mediator) : AuthorizedController(mediator) {
     [HttpGet]
     public async Task<IActionResult> GetAll(
         [FromQuery] DateTime? dateFrom = null,
         [FromQuery] DateTime? dateTo = null,
         [FromQuery] int? limit = null,
-        [FromQuery] string sort = "desc")
-    {
+        [FromQuery] string sort = "desc") {
+        if (!TryGetCurrentUserId(out var userId)) {
+            return Unauthorized();
+        }
+
         var descending = !string.Equals(sort, "asc", StringComparison.OrdinalIgnoreCase);
-        var query = new GetWeightEntriesQuery(CurrentUserId, dateFrom, dateTo, limit, descending);
+        var query = new GetWeightEntriesQuery(userId, dateFrom, dateTo, limit, descending);
         var result = await Mediator.Send(query);
         return result.ToActionResult();
     }
 
     [HttpGet("latest")]
-    public async Task<IActionResult> GetLatest()
-    {
-        var query = new GetLatestWeightEntryQuery(CurrentUserId);
+    public async Task<IActionResult> GetLatest() {
+        if (!TryGetCurrentUserId(out var userId)) {
+            return Unauthorized();
+        }
+
+        var query = new GetLatestWeightEntryQuery(userId);
         var result = await Mediator.Send(query);
         return result.ToActionResult();
     }
@@ -44,34 +46,46 @@ public class WeightEntriesController(ISender mediator) : AuthorizedController(me
     public async Task<IActionResult> GetSummary(
         [FromQuery] DateTime dateFrom,
         [FromQuery] DateTime dateTo,
-        [FromQuery] int quantizationDays = 1)
-    {
-        var query = new GetWeightSummariesQuery(CurrentUserId, dateFrom, dateTo, quantizationDays);
+        [FromQuery] int quantizationDays = 1) {
+        if (!TryGetCurrentUserId(out var userId)) {
+            return Unauthorized();
+        }
+
+        var query = new GetWeightSummariesQuery(userId, dateFrom, dateTo, quantizationDays);
         var result = await Mediator.Send(query);
         return result.ToActionResult();
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] CreateWeightEntryRequest request)
-    {
-        var command = request.ToCommand(CurrentUserGuid);
+    public async Task<IActionResult> Create([FromBody] CreateWeightEntryRequest request) {
+        if (!TryGetCurrentUserId(out var userId)) {
+            return Unauthorized();
+        }
+
+        var command = request.ToCommand(userId.Value);
         var result = await Mediator.Send(command);
         return result.ToActionResult();
     }
 
     [HttpPut("{id:guid}")]
-    public async Task<IActionResult> Update(Guid id, [FromBody] UpdateWeightEntryRequest request)
-    {
-        var command = request.ToCommand(CurrentUserGuid, id);
+    public async Task<IActionResult> Update(Guid id, [FromBody] UpdateWeightEntryRequest request) {
+        if (!TryGetCurrentUserId(out var userId)) {
+            return Unauthorized();
+        }
+
+        var command = request.ToCommand(userId.Value, id);
         var result = await Mediator.Send(command);
         return result.ToActionResult();
     }
 
     [HttpDelete("{id:guid}")]
-    public async Task<IActionResult> Delete(Guid id)
-    {
+    public async Task<IActionResult> Delete(Guid id) {
+        if (!TryGetCurrentUserId(out var userId)) {
+            return Unauthorized();
+        }
+
         var command = new DeleteWeightEntryCommand(
-            CurrentUserId,
+            userId,
             new WeightEntryId(id));
 
         var result = await Mediator.Send(command);

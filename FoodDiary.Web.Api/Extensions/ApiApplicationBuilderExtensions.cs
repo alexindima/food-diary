@@ -1,18 +1,13 @@
-using FoodDiary.WebApi.Hubs;
+using FoodDiary.Web.Api.Hubs;
 
-namespace FoodDiary.WebApi.Extensions;
+namespace FoodDiary.Web.Api.Extensions;
 
-public static class ApiApplicationBuilderExtensions
-{
-    public static WebApplication UseApiPipeline(this WebApplication app)
-    {
-        if (app.Environment.IsDevelopment())
-        {
+public static class ApiApplicationBuilderExtensions {
+    public static WebApplication UseApiPipeline(this WebApplication app) {
+        if (app.Environment.IsDevelopment()) {
             app.UseSwagger();
             app.UseSwaggerUI();
-        }
-        else
-        {
+        } else {
             app.UseHttpsRedirection();
         }
 

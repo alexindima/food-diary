@@ -1,9 +1,3 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <ItemGroup>
-    <Compile Update="Dashboard\DashboardSnapshotResponse.cs">
-      <DependentUpon></DependentUpon>
-    </Compile>
-  </ItemGroup>
-
 </Project>

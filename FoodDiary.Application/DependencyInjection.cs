@@ -18,7 +18,7 @@ public static class DependencyInjection {
             cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));
         });
 
-        services.AddValidatorsFromAssembly(assembly);
+        services.AddValidatorsFromAssembly(assembly, includeInternalTypes: true);
 
         services.AddScoped<IImageAssetCleanupService, ImageAssetCleanupService>();
         services.AddSingleton<IDateTimeProvider, SystemDateTimeProvider>();

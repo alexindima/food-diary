@@ -1,23 +1,21 @@
-using MediatR;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 using FoodDiary.Application.Admin.Commands.UpsertAdminEmailTemplate;
 using FoodDiary.Application.Admin.Queries.GetAdminEmailTemplates;
 using FoodDiary.Contracts.Admin;
 using FoodDiary.Domain.Enums;
-using FoodDiary.WebApi.Controllers;
-using FoodDiary.WebApi.Extensions;
+using FoodDiary.Web.Api.Controllers;
+using FoodDiary.Web.Api.Extensions;
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
-namespace FoodDiary.WebApi.Features.Admin;
+namespace FoodDiary.Web.Api.Features.Admin;
 
 [ApiController]
 [Route("api/admin/email-templates")]
 [Authorize(Roles = RoleNames.Admin)]
-public sealed class AdminEmailTemplatesController(ISender mediator) : BaseApiController(mediator)
-{
+public sealed class AdminEmailTemplatesController(ISender mediator) : BaseApiController(mediator) {
     [HttpGet]
-    public async Task<IActionResult> GetAll()
-    {
+    public async Task<IActionResult> GetAll() {
         var result = await Mediator.Send(new GetAdminEmailTemplatesQuery());
         return result.ToActionResult();
     }
@@ -26,8 +24,7 @@ public sealed class AdminEmailTemplatesController(ISender mediator) : BaseApiCon
     public async Task<IActionResult> Upsert(
         string key,
         string locale,
-        [FromBody] AdminEmailTemplateUpsertRequest request)
-    {
+        [FromBody] AdminEmailTemplateUpsertRequest request) {
         var command = new UpsertAdminEmailTemplateCommand(
             key,
             locale,

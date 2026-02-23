@@ -1,61 +1,72 @@
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
-using FoodDiary.Application.Hydration.Commands.CreateHydrationEntry;
 using FoodDiary.Application.Hydration.Commands.DeleteHydrationEntry;
-using FoodDiary.Application.Hydration.Commands.UpdateHydrationEntry;
 using FoodDiary.Application.Hydration.Mappings;
 using FoodDiary.Application.Hydration.Queries.GetHydrationDailyTotal;
 using FoodDiary.Application.Hydration.Queries.GetHydrationEntries;
 using FoodDiary.Contracts.Hydration;
-using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.WebApi.Controllers;
-using FoodDiary.WebApi.Extensions;
+using FoodDiary.Web.Api.Controllers;
+using FoodDiary.Web.Api.Extensions;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
-namespace FoodDiary.WebApi.Features.Hydration;
+namespace FoodDiary.Web.Api.Features.Hydration;
 
 [ApiController]
 [Route("api/hydrations")]
-public class HydrationEntriesController(ISender mediator) : AuthorizedController(mediator)
-{
+public class HydrationEntriesController(ISender mediator) : AuthorizedController(mediator) {
     [HttpGet]
-    public async Task<IActionResult> GetByDate([FromQuery] DateTime? dateUtc = null)
-    {
+    public async Task<IActionResult> GetByDate([FromQuery] DateTime? dateUtc = null) {
+        if (!TryGetCurrentUserId(out var userId)) {
+            return Unauthorized();
+        }
+
         var date = dateUtc ?? DateTime.UtcNow;
-        var query = new GetHydrationEntriesQuery(CurrentUserId, date);
+        var query = new GetHydrationEntriesQuery(userId, date);
         var result = await Mediator.Send(query);
         return result.ToActionResult();
     }
 
     [HttpGet("daily")]
-    public async Task<IActionResult> GetDaily([FromQuery] DateTime? dateUtc = null)
-    {
+    public async Task<IActionResult> GetDaily([FromQuery] DateTime? dateUtc = null) {
+        if (!TryGetCurrentUserId(out var userId)) {
+            return Unauthorized();
+        }
+
         var date = dateUtc ?? DateTime.UtcNow;
-        var query = new GetHydrationDailyTotalQuery(CurrentUserId, date);
+        var query = new GetHydrationDailyTotalQuery(userId, date);
         var result = await Mediator.Send(query);
         return result.ToActionResult();
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] CreateHydrationEntryRequest request)
-    {
-        var command = request.ToCommand(CurrentUserGuid);
+    public async Task<IActionResult> Create([FromBody] CreateHydrationEntryRequest request) {
+        if (!TryGetCurrentUserId(out var userId)) {
+            return Unauthorized();
+        }
+
+        var command = request.ToCommand(userId.Value);
         var result = await Mediator.Send(command);
         return result.ToActionResult();
     }
 
     [HttpPut("{id:guid}")]
-    public async Task<IActionResult> Update(Guid id, [FromBody] UpdateHydrationEntryRequest request)
-    {
-        var command = request.ToCommand(CurrentUserGuid, id);
+    public async Task<IActionResult> Update(Guid id, [FromBody] UpdateHydrationEntryRequest request) {
+        if (!TryGetCurrentUserId(out var userId)) {
+            return Unauthorized();
+        }
+
+        var command = request.ToCommand(userId.Value, id);
         var result = await Mediator.Send(command);
         return result.ToActionResult();
     }
 
     [HttpDelete("{id:guid}")]
-    public async Task<IActionResult> Delete(Guid id)
-    {
-        var command = new DeleteHydrationEntryCommand(CurrentUserId, new HydrationEntryId(id));
+    public async Task<IActionResult> Delete(Guid id) {
+        if (!TryGetCurrentUserId(out var userId)) {
+            return Unauthorized();
+        }
+
+        var command = new DeleteHydrationEntryCommand(userId, new HydrationEntryId(id));
         var result = await Mediator.Send(command);
         return result.ToActionResult();
     }

@@ -2,17 +2,15 @@ using System.Text;
 using FoodDiary.Application;
 using FoodDiary.Application.Common.Interfaces.Services;
 using FoodDiary.Infrastructure;
-using FoodDiary.WebApi.Services;
+using FoodDiary.Web.Api.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.IdentityModel.Tokens;
 
-namespace FoodDiary.WebApi.Extensions;
+namespace FoodDiary.Web.Api.Extensions;
 
-public static class ApiServiceCollectionExtensions
-{
-    public static IServiceCollection AddApiServices(this IServiceCollection services, IConfiguration configuration)
-    {
+public static class ApiServiceCollectionExtensions {
+    public static IServiceCollection AddApiServices(this IServiceCollection services, IConfiguration configuration) {
         services.AddApplication();
         services.AddInfrastructure(configuration);
         services.AddDistributedMemoryCache();
@@ -22,10 +20,8 @@ public static class ApiServiceCollectionExtensions
             ? corsOrigins
             : ["http://localhost:4200", "http://localhost:4300"];
 
-        services.AddCors(options =>
-        {
-            options.AddPolicy(ApiCompositionConstants.CorsPolicyName, policy =>
-            {
+        services.AddCors(options => {
+            options.AddPolicy(ApiCompositionConstants.CorsPolicyName, policy => {
                 policy
                     .WithOrigins(allowedOrigins)
                     .AllowAnyMethod()
@@ -36,14 +32,12 @@ public static class ApiServiceCollectionExtensions
 
         var jwtSettings = configuration.GetSection("JwtSettings");
         var secretKey = jwtSettings["SecretKey"]
-            ?? throw new InvalidOperationException("JWT SecretKey is not configured");
+                        ?? throw new InvalidOperationException("JWT SecretKey is not configured");
 
         services
             .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            .AddJwtBearer(options =>
-            {
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
+            .AddJwtBearer(options => {
+                options.TokenValidationParameters = new TokenValidationParameters {
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey)),
                     ValidateIssuer = true,
@@ -53,15 +47,12 @@ public static class ApiServiceCollectionExtensions
                     ValidateLifetime = true,
                     ClockSkew = TimeSpan.Zero,
                 };
-                options.Events = new JwtBearerEvents
-                {
-                    OnMessageReceived = context =>
-                    {
+                options.Events = new JwtBearerEvents {
+                    OnMessageReceived = context => {
                         var accessToken = context.Request.Query["access_token"];
                         var path = context.HttpContext.Request.Path;
                         if (!string.IsNullOrWhiteSpace(accessToken) &&
-                            path.StartsWithSegments("/hubs/email-verification"))
-                        {
+                            path.StartsWithSegments("/hubs/email-verification")) {
                             context.Token = accessToken;
                         }
 

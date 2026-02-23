@@ -76,4 +76,27 @@ public sealed class AuthAndProductsFlowTests(ApiWebApplicationFactory factory, I
 
         Assert.Equal(HttpStatusCode.OK, authorizedResponse.StatusCode);
     }
+
+    [Fact]
+    public async Task UsersInfo_RequiresAuth_AndReturnsOkWithBearerToken()
+    {
+        var client = factory.CreateClient();
+        var anonymousResponse = await client.GetAsync("/api/users/info");
+        Assert.Equal(HttpStatusCode.Unauthorized, anonymousResponse.StatusCode);
+
+        var email = $"api-tests-{Guid.NewGuid():N}@example.com";
+        var registerResponse = await client.PostAsJsonAsync(
+            "/api/auth/register",
+            new RegisterRequest(email, "Password123!", "en"));
+        Assert.Equal(HttpStatusCode.OK, registerResponse.StatusCode);
+
+        var authPayload = await registerResponse.Content.ReadFromJsonAsync<AuthenticationResponse>(JsonOptions);
+        Assert.NotNull(authPayload);
+        Assert.False(string.IsNullOrWhiteSpace(authPayload.AccessToken));
+
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authPayload.AccessToken);
+        var authorizedResponse = await client.GetAsync("/api/users/info");
+
+        Assert.NotEqual(HttpStatusCode.Unauthorized, authorizedResponse.StatusCode);
+    }
 }

@@ -1,42 +1,33 @@
-using FoodDiary.Application.Images.Commands.GetUploadUrl;
 using FoodDiary.Application.Images.Commands.DeleteImageAsset;
-using FoodDiary.Application.Common.Interfaces.Services;
+using FoodDiary.Application.Images.Commands.GetUploadUrl;
 using FoodDiary.Contracts.Images;
-using FoodDiary.WebApi.Controllers;
-using Microsoft.AspNetCore.Mvc;
+using FoodDiary.Web.Api.Controllers;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
-namespace FoodDiary.WebApi.Features.Images;
+namespace FoodDiary.Web.Api.Features.Images;
 
 [ApiController]
 [Route("api/[controller]")]
-public sealed class ImagesController(ISender mediator) : AuthorizedController(mediator)
-{
+public sealed class ImagesController(ISender mediator) : AuthorizedController(mediator) {
     [HttpPost("upload-url")]
-    public async Task<ActionResult<GetImageUploadUrlResponse>> GetUploadUrl([FromBody] GetImageUploadUrlRequest request)
-    {
-        if (CurrentUserId is null)
-        {
+    public async Task<ActionResult<GetImageUploadUrlResponse>> GetUploadUrl([FromBody] GetImageUploadUrlRequest request) {
+        if (!TryGetCurrentUserId(out var userId)) {
             return Unauthorized();
         }
 
         var command = new GetImageUploadUrlCommand(
-            CurrentUserId.Value,
+            userId,
             request.FileName,
             request.ContentType,
             request.FileSizeBytes);
 
         GetImageUploadUrlResult result;
-        try
-        {
+        try {
             result = await Mediator.Send(command);
-        }
-        catch (ArgumentException ex)
-        {
+        } catch (ArgumentException ex) {
             return BadRequest(ex.Message);
-        }
-        catch (InvalidOperationException ex)
-        {
+        } catch (InvalidOperationException ex) {
             return BadRequest(ex.Message);
         }
 
@@ -51,20 +42,16 @@ public sealed class ImagesController(ISender mediator) : AuthorizedController(me
     }
 
     [HttpDelete("{assetId:guid}")]
-    public async Task<IActionResult> Delete(Guid assetId)
-    {
-        if (CurrentUserId is null)
-        {
+    public async Task<IActionResult> Delete(Guid assetId) {
+        if (!TryGetCurrentUserId(out var userId)) {
             return Unauthorized();
         }
 
-        var command = new DeleteImageAssetCommand(CurrentUserId.Value, new(assetId));
+        var command = new DeleteImageAssetCommand(userId, new(assetId));
         var result = await Mediator.Send(command);
 
-        if (!result.Deleted)
-        {
-            return result.ErrorCode switch
-            {
+        if (!result.Deleted) {
+            return result.ErrorCode switch {
                 "not_found" => NotFound(),
                 "forbidden" => Forbid(),
                 "in_use" => Conflict("Asset is already in use."),

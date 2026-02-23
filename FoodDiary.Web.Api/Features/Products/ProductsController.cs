@@ -1,19 +1,18 @@
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
-using FoodDiary.Application.Products.Mappings;
 using FoodDiary.Application.Products.Commands.DeleteProduct;
 using FoodDiary.Application.Products.Commands.DuplicateProduct;
+using FoodDiary.Application.Products.Mappings;
 using FoodDiary.Application.Products.Queries.GetProductById;
 using FoodDiary.Application.Products.Queries.GetProducts;
 using FoodDiary.Application.Products.Queries.GetProductsWithRecent;
 using FoodDiary.Application.Products.Queries.GetRecentProducts;
 using FoodDiary.Contracts.Products;
-using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.WebApi.Controllers;
-using FoodDiary.WebApi.Extensions;
+using FoodDiary.Web.Api.Controllers;
+using FoodDiary.Web.Api.Extensions;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
-namespace FoodDiary.WebApi.Features.Products;
+namespace FoodDiary.Web.Api.Features.Products;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -25,12 +24,16 @@ public class ProductsController(ISender mediator) : AuthorizedController(mediato
         [FromQuery] string? search = null,
         [FromQuery] bool includePublic = true,
         [FromQuery] string? productTypes = null) {
+        if (!TryGetCurrentUserId(out var userId)) {
+            return Unauthorized();
+        }
+
         var sanitizedPage = Math.Max(page, 1);
         var sanitizedLimit = Math.Clamp(limit, 1, 100);
         var sanitizedSearch = string.IsNullOrWhiteSpace(search) ? null : search.Trim();
         var sanitizedProductTypes = ParseProductTypes(productTypes);
 
-        var query = new GetProductsQuery(CurrentUserId, sanitizedPage, sanitizedLimit, sanitizedSearch,
+        var query = new GetProductsQuery(userId, sanitizedPage, sanitizedLimit, sanitizedSearch,
             includePublic, sanitizedProductTypes);
         var result = await Mediator.Send(query);
         return result.ToActionResult();
@@ -43,8 +46,11 @@ public class ProductsController(ISender mediator) : AuthorizedController(mediato
         [FromQuery] int recentLimit = 10,
         [FromQuery] string? search = null,
         [FromQuery] bool includePublic = true,
-        [FromQuery] string? productTypes = null)
-    {
+        [FromQuery] string? productTypes = null) {
+        if (!TryGetCurrentUserId(out var userId)) {
+            return Unauthorized();
+        }
+
         var sanitizedPage = Math.Max(page, 1);
         var sanitizedLimit = Math.Clamp(limit, 1, 100);
         var sanitizedRecentLimit = Math.Clamp(recentLimit, 1, 50);
@@ -52,7 +58,7 @@ public class ProductsController(ISender mediator) : AuthorizedController(mediato
         var sanitizedProductTypes = ParseProductTypes(productTypes);
 
         var query = new GetProductsWithRecentQuery(
-            CurrentUserId,
+            userId,
             sanitizedPage,
             sanitizedLimit,
             sanitizedSearch,
@@ -67,54 +73,74 @@ public class ProductsController(ISender mediator) : AuthorizedController(mediato
     [HttpGet("recent")]
     public async Task<IActionResult> GetRecent(
         [FromQuery] int limit = 10,
-        [FromQuery] bool includePublic = true)
-    {
+        [FromQuery] bool includePublic = true) {
+        if (!TryGetCurrentUserId(out var userId)) {
+            return Unauthorized();
+        }
+
         var sanitizedLimit = Math.Clamp(limit, 1, 50);
-        var query = new GetRecentProductsQuery(CurrentUserId, sanitizedLimit, includePublic);
+        var query = new GetRecentProductsQuery(userId, sanitizedLimit, includePublic);
         var result = await Mediator.Send(query);
         return result.ToActionResult();
     }
 
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetById(Guid id) {
-        var query = new GetProductByIdQuery(CurrentUserId, new ProductId(id));
+        if (!TryGetCurrentUserId(out var userId)) {
+            return Unauthorized();
+        }
+
+        var query = new GetProductByIdQuery(userId, new ProductId(id));
         var result = await Mediator.Send(query);
         return result.ToActionResult();
     }
 
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreateProductRequest request) {
-        var command = request.ToCommand(CurrentUserGuid);
+        if (!TryGetCurrentUserId(out var userId)) {
+            return Unauthorized();
+        }
+
+        var command = request.ToCommand(userId.Value);
         var result = await Mediator.Send(command);
         return result.ToActionResult();
     }
 
     [HttpPatch("{id:guid}")]
     public async Task<IActionResult> Update(Guid id, [FromBody] UpdateProductRequest request) {
-        var command = request.ToCommand(CurrentUserGuid, id);
+        if (!TryGetCurrentUserId(out var userId)) {
+            return Unauthorized();
+        }
+
+        var command = request.ToCommand(userId.Value, id);
         var result = await Mediator.Send(command);
         return result.ToActionResult();
     }
 
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> Delete(Guid id) {
-        var command = new DeleteProductCommand(CurrentUserId, new ProductId(id));
+        if (!TryGetCurrentUserId(out var userId)) {
+            return Unauthorized();
+        }
+
+        var command = new DeleteProductCommand(userId, new ProductId(id));
         var result = await Mediator.Send(command);
         return result.ToActionResult();
     }
 
     [HttpPost("{id:guid}/duplicate")]
-    public async Task<IActionResult> Duplicate(Guid id)
-    {
-        var command = new DuplicateProductCommand(CurrentUserId, new ProductId(id));
+    public async Task<IActionResult> Duplicate(Guid id) {
+        if (!TryGetCurrentUserId(out var userId)) {
+            return Unauthorized();
+        }
+
+        var command = new DuplicateProductCommand(userId, new ProductId(id));
         var result = await Mediator.Send(command);
         return result.ToActionResult();
     }
 
-    private static IReadOnlyCollection<string>? ParseProductTypes(string? productTypes)
-    {
-        if (string.IsNullOrWhiteSpace(productTypes))
-        {
+    private static IReadOnlyCollection<string>? ParseProductTypes(string? productTypes) {
+        if (string.IsNullOrWhiteSpace(productTypes)) {
             return null;
         }
 

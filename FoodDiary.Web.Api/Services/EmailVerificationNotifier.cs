@@ -1,16 +1,13 @@
 using FoodDiary.Application.Common.Interfaces.Services;
-using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.WebApi.Hubs;
+using FoodDiary.Web.Api.Hubs;
 using Microsoft.AspNetCore.SignalR;
 
-namespace FoodDiary.WebApi.Services;
+namespace FoodDiary.Web.Api.Services;
 
 public sealed class EmailVerificationNotifier(IHubContext<EmailVerificationHub> hubContext)
-    : IEmailVerificationNotifier
-{
-    public Task NotifyEmailVerifiedAsync(UserId userId, CancellationToken cancellationToken = default)
-    {
+    : IEmailVerificationNotifier {
+    public Task NotifyEmailVerifiedAsync(UserId userId, CancellationToken cancellationToken = default) {
         return hubContext.Clients.User(userId.Value.ToString())
             .SendAsync("EmailVerified", cancellationToken);
     }

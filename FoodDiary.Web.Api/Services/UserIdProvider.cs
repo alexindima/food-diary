@@ -1,20 +1,23 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.SignalR;
 
-namespace FoodDiary.WebApi.Services;
+namespace FoodDiary.Web.Api.Services;
 
-public sealed class UserIdProvider : IUserIdProvider
-{
-    public string? GetUserId(HubConnectionContext connection)
-    {
+public sealed class UserIdProvider : IUserIdProvider {
+    public string? GetUserId(HubConnectionContext connection) {
         var user = connection.User;
-        if (user is null)
-        {
+        if (user is null) {
             return null;
         }
 
-        return user.FindFirstValue(ClaimTypes.NameIdentifier)
-               ?? user.FindFirstValue("nameid")
-               ?? user.FindFirstValue("sub");
+        var rawUserId = user.FindFirstValue(ClaimTypes.NameIdentifier)
+                        ?? user.FindFirstValue("nameid")
+                        ?? user.FindFirstValue("sub");
+
+        if (!Guid.TryParse(rawUserId, out var userGuid) || userGuid == Guid.Empty) {
+            return null;
+        }
+
+        return userGuid.ToString();
     }
 }

@@ -1,114 +1,43 @@
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
 using FoodDiary.Application.Common.Abstractions.Result;
-using System;
+using Microsoft.AspNetCore.Mvc;
 
-namespace FoodDiary.WebApi.Extensions;
+namespace FoodDiary.Web.Api.Extensions;
 
-public static class ResultExtensions
-{
-    /// <summary>
-    /// Преобразует Result в IActionResult
-    /// </summary>
-    public static IActionResult ToActionResult<T>(this Result<T> result)
-    {
-        if (result.IsSuccess)
-        {
+public static class ResultExtensions {
+    public static IActionResult ToActionResult<T>(this Result<T> result) {
+        if (result.IsSuccess) {
             return new OkObjectResult(result.Value);
         }
 
-        return result.Error.Code switch
-        {
-            var code when code.Contains("Authentication.InvalidToken") => new UnauthorizedObjectResult(new
-            {
-                error = result.Error.Code,
-                message = result.Error.Message
-            }),
-            var code when code.Contains("Authentication.TelegramInvalidData") => new BadRequestObjectResult(new
-            {
-                error = result.Error.Code,
-                message = result.Error.Message
-            }),
-            var code when code.Contains("Authentication.TelegramAuthExpired") => new UnauthorizedObjectResult(new
-            {
-                error = result.Error.Code,
-                message = result.Error.Message
-            }),
-            var code when code.Contains("Authentication.TelegramNotLinked") => new NotFoundObjectResult(new
-            {
-                error = result.Error.Code,
-                message = result.Error.Message
-            }),
-            var code when code.Contains("Authentication.TelegramAlreadyLinked") => new ConflictObjectResult(new
-            {
-                error = result.Error.Code,
-                message = result.Error.Message
-            }),
-            var code when code.Contains("Authentication.AdminSsoForbidden") => new ObjectResult(new
-            {
-                error = result.Error.Code,
-                message = result.Error.Message
-            })
-            {
-                StatusCode = StatusCodes.Status403Forbidden
-            },
-            var code when code.Contains("Authentication.AdminSsoInvalidCode") => new UnauthorizedObjectResult(new
-            {
-                error = result.Error.Code,
-                message = result.Error.Message
-            }),
-            var code when code.StartsWith("Authentication.", StringComparison.Ordinal) => new UnauthorizedObjectResult(new
-            {
-                error = result.Error.Code,
-                message = result.Error.Message
-            }),
-            var code when code.Contains("Ai.Forbidden") => new ObjectResult(new
-            {
-                error = result.Error.Code,
-                message = result.Error.Message
-            })
-            {
-                StatusCode = StatusCodes.Status403Forbidden
-            },
-            var code when code.Contains("Ai.QuotaExceeded") => new ObjectResult(new
-            {
-                error = result.Error.Code,
-                message = result.Error.Message
-            })
-            {
-                StatusCode = StatusCodes.Status429TooManyRequests
-            },
-            var code when code.Contains("Ai.OpenAiFailed") || code.Contains("Ai.InvalidResponse") => new ObjectResult(new
-            {
-                error = result.Error.Code,
-                message = result.Error.Message
-            })
-            {
-                StatusCode = StatusCodes.Status502BadGateway
-            },
-            var code when code.Contains("NotFound") => new NotFoundObjectResult(new
-            {
-                error = result.Error.Code,
-                message = result.Error.Message
-            }),
-            var code when code.Contains("Validation") => new BadRequestObjectResult(new
-            {
-                error = result.Error.Code,
-                message = result.Error.Message
-            }),
-            var code when code.Contains("AlreadyExists") => new ConflictObjectResult(new
-            {
-                error = result.Error.Code,
-                message = result.Error.Message
-            }),
-            _ => new ObjectResult(new
-            {
-                error = result.Error.Code,
-                message = result.Error.Message
-            })
-            {
-                StatusCode = 500
-            }
+        var code = result.Error.Code;
+
+        return code switch {
+            "Authentication.TelegramInvalidData" => ErrorResult(result.Error, StatusCodes.Status400BadRequest),
+            "Authentication.TelegramAuthExpired" => ErrorResult(result.Error, StatusCodes.Status401Unauthorized),
+            "Authentication.TelegramNotLinked" => ErrorResult(result.Error, StatusCodes.Status404NotFound),
+            "Authentication.TelegramAlreadyLinked" => ErrorResult(result.Error, StatusCodes.Status409Conflict),
+            "Authentication.AdminSsoForbidden" => ErrorResult(result.Error, StatusCodes.Status403Forbidden),
+            "Authentication.AdminSsoInvalidCode" => ErrorResult(result.Error, StatusCodes.Status401Unauthorized),
+            "Ai.Forbidden" => ErrorResult(result.Error, StatusCodes.Status403Forbidden),
+            "Ai.QuotaExceeded" => ErrorResult(result.Error, StatusCodes.Status429TooManyRequests),
+            "Ai.OpenAiFailed" or "Ai.InvalidResponse" => ErrorResult(result.Error, StatusCodes.Status502BadGateway),
+            _ when code.StartsWith("Authentication.", StringComparison.Ordinal) =>
+                ErrorResult(result.Error, StatusCodes.Status401Unauthorized),
+            _ when code.StartsWith("Validation.", StringComparison.Ordinal) =>
+                ErrorResult(result.Error, StatusCodes.Status400BadRequest),
+            _ when code.EndsWith(".AlreadyExists", StringComparison.Ordinal) =>
+                ErrorResult(result.Error, StatusCodes.Status409Conflict),
+            _ when code.EndsWith(".NotFound", StringComparison.Ordinal) =>
+                ErrorResult(result.Error, StatusCodes.Status404NotFound),
+            _ => ErrorResult(result.Error, StatusCodes.Status500InternalServerError),
         };
     }
+
+    private static IActionResult ErrorResult(Error error, int statusCode) =>
+        new ObjectResult(new {
+            error = error.Code,
+            message = error.Message,
+        }) {
+            StatusCode = statusCode,
+        };
 }

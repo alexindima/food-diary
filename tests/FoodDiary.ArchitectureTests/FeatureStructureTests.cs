@@ -48,7 +48,7 @@ public class FeatureStructureTests
     [Theory]
     [InlineData("FoodDiary.Application", "FoodDiary.Application")]
     [InlineData("FoodDiary.Domain", "FoodDiary.Domain")]
-    [InlineData("FoodDiary.Web.Api", "FoodDiary.WebApi")]
+    [InlineData("FoodDiary.Web.Api", "FoodDiary.Web.Api")]
     public void Namespaces_Match_ProjectFolderStructure(string projectFolder, string namespaceRoot)
     {
         var root = GetRepositoryRoot();
