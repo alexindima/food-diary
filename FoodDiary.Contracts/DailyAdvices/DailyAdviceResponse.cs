@@ -1,5 +1,3 @@
-using System;
-
 namespace FoodDiary.Contracts.DailyAdvices;
 
 public record DailyAdviceResponse(

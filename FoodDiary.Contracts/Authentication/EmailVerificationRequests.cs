@@ -1,5 +1,3 @@
-using System;
-
 namespace FoodDiary.Contracts.Authentication;
 
 public record VerifyEmailRequest(

@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using FoodDiary.Contracts.Consumptions;
 using FoodDiary.Contracts.DailyAdvices;
 using FoodDiary.Contracts.Hydration;

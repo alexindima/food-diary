@@ -1,5 +1,3 @@
-using System;
-
 namespace FoodDiary.Contracts.Recipes;
 
 public record RecipeIngredientRequest(

@@ -9,8 +9,7 @@ builder.Services.Configure<TelegramBotOptions>(
 
 builder.Services.AddHttpClient();
 
-builder.Services.AddSingleton<ITelegramBotClient>(sp =>
-{
+builder.Services.AddSingleton<ITelegramBotClient>(sp => {
     var options = sp.GetRequiredService<IOptions<TelegramBotOptions>>().Value;
     return new TelegramBotClient(options.Token);
 });

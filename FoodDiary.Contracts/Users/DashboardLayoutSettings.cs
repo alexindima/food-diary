@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace FoodDiary.Contracts.Users;
 
 public record DashboardLayoutSettings(

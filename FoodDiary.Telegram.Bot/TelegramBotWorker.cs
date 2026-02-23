@@ -9,72 +9,57 @@ using Telegram.Bot.Types.ReplyMarkups;
 
 namespace FoodDiary.Telegram.Bot;
 
-public sealed class TelegramBotWorker : BackgroundService
-{
-    private readonly ITelegramBotClient _botClient;
-    private readonly TelegramBotOptions _options;
-    private readonly ILogger<TelegramBotWorker> _logger;
-    private readonly IHttpClientFactory _httpClientFactory;
+public sealed class TelegramBotWorker(
+    ITelegramBotClient botClient,
+    IOptions<TelegramBotOptions> options,
+    ILogger<TelegramBotWorker> logger,
+    IHttpClientFactory httpClientFactory)
+    : BackgroundService {
+    private readonly TelegramBotOptions _options = options.Value;
 
-    public TelegramBotWorker(
-        ITelegramBotClient botClient,
-        IOptions<TelegramBotOptions> options,
-        ILogger<TelegramBotWorker> logger,
-        IHttpClientFactory httpClientFactory)
-    {
-        _botClient = botClient;
-        _options = options.Value;
-        _logger = logger;
-        _httpClientFactory = httpClientFactory;
-    }
-
-    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
-    {
-        if (string.IsNullOrWhiteSpace(_options.Token))
-        {
-            _logger.LogCritical("Telegram bot token is not configured.");
+    protected override async Task ExecuteAsync(CancellationToken stoppingToken) {
+        if (string.IsNullOrWhiteSpace(_options.Token)) {
+            logger.LogCritical("Telegram bot token is not configured.");
             return;
         }
 
-        var me = await _botClient.GetMe(stoppingToken);
-        _logger.LogInformation("Telegram bot started as {Username}", me.Username ?? me.Id.ToString());
+        var me = await botClient.GetMe(stoppingToken);
+        logger.LogInformation("Telegram bot started as {Username}", me.Username ?? me.Id.ToString());
 
-        var receiverOptions = new ReceiverOptions
-        {
+        var receiverOptions = new ReceiverOptions {
             AllowedUpdates = Array.Empty<UpdateType>()
         };
 
-        _botClient.StartReceiving(
+        botClient.StartReceiving(
             HandleUpdateAsync,
             HandleErrorAsync,
             receiverOptions,
             cancellationToken: stoppingToken);
 
-        await Task.Delay(Timeout.Infinite, stoppingToken);
+        try {
+            await Task.Delay(Timeout.Infinite, stoppingToken);
+        } catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested) {
+            logger.LogInformation("Telegram bot stopping.");
+        }
     }
 
-    private async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
-    {
-        if (update.Type == UpdateType.CallbackQuery && update.CallbackQuery is not null)
-        {
+    private async Task HandleUpdateAsync(ITelegramBotClient tBotClient, Update update, CancellationToken cancellationToken) {
+        if (update is { Type: UpdateType.CallbackQuery, CallbackQuery: not null }) {
             await HandleCallbackAsync(update.CallbackQuery, cancellationToken);
             return;
         }
 
-        if (update.Type != UpdateType.Message)
-        {
+        if (update.Type != UpdateType.Message) {
             return;
         }
 
         var message = update.Message;
-        if (message?.Text is null)
-        {
+        if (message?.Text is null) {
             return;
         }
 
         var command = message.Text.Split(' ', StringSplitOptions.RemoveEmptyEntries)[0];
-        switch (command)
-        {
+        switch (command) {
             case "/start":
                 await SendStartAsync(message.Chat.Id, message.From?.Id, cancellationToken);
                 return;
@@ -87,14 +72,12 @@ public sealed class TelegramBotWorker : BackgroundService
         }
     }
 
-    private async Task SendStartAsync(long chatId, long? telegramUserId, CancellationToken cancellationToken)
-    {
+    private async Task SendStartAsync(long chatId, long? telegramUserId, CancellationToken cancellationToken) {
         var isLinked = await IsLinkedAsync(telegramUserId, cancellationToken);
-        if (!isLinked)
-        {
+        if (!isLinked) {
             var notLinkedText = "To use the bot, open the WebApp once and log in or register.";
             var markup = BuildWebAppMarkup();
-            await _botClient.SendMessage(
+            await botClient.SendMessage(
                 chatId,
                 notLinkedText,
                 replyMarkup: markup,
@@ -104,38 +87,31 @@ public sealed class TelegramBotWorker : BackgroundService
 
         var text = "Quick actions:";
         var keyboard = BuildQuickActionsMarkup();
-        await _botClient.SendMessage(
+        await botClient.SendMessage(
             chatId,
             text,
             replyMarkup: keyboard,
             cancellationToken: cancellationToken);
     }
 
-    private Task SendHelpAsync(long chatId, CancellationToken cancellationToken)
-    {
+    private Task SendHelpAsync(long chatId, CancellationToken cancellationToken) {
         const string text = "Available commands:\n/start - open diary\n/help - help";
-        return _botClient.SendMessage(chatId, text, cancellationToken: cancellationToken);
+        return botClient.SendMessage(chatId, text, cancellationToken: cancellationToken);
     }
 
-    private async Task HandleCallbackAsync(CallbackQuery callbackQuery, CancellationToken cancellationToken)
-    {
-        if (callbackQuery.Data is null || callbackQuery.From is null)
-        {
+    private async Task HandleCallbackAsync(CallbackQuery callbackQuery, CancellationToken cancellationToken) {
+        if (callbackQuery.Data is null || callbackQuery.From is null) {
             return;
         }
 
-        if (callbackQuery.Data.StartsWith("water:", StringComparison.Ordinal))
-        {
-            var amountText = callbackQuery.Data.Replace("water:", string.Empty);
-            if (!int.TryParse(amountText, out var amountMl) || amountMl <= 0)
-            {
+        if (callbackQuery.Data.StartsWith("water:", StringComparison.Ordinal)) {
+            if (!BotInputParser.TryParseWaterAmount(callbackQuery.Data, out var amountMl)) {
                 await AnswerCallbackAsync(callbackQuery, "Invalid amount.", cancellationToken);
                 return;
             }
 
             var accessToken = await TryGetAccessTokenAsync(callbackQuery.From.Id, cancellationToken);
-            if (accessToken is null)
-            {
+            if (accessToken is null) {
                 await AnswerCallbackAsync(callbackQuery, "Please open the WebApp and log in once.", cancellationToken);
                 return;
             }
@@ -145,46 +121,38 @@ public sealed class TelegramBotWorker : BackgroundService
         }
     }
 
-    private Task AnswerCallbackAsync(CallbackQuery callbackQuery, string message, CancellationToken cancellationToken)
-    {
-        return _botClient.AnswerCallbackQuery(
+    private Task AnswerCallbackAsync(CallbackQuery callbackQuery, string message, CancellationToken cancellationToken) {
+        return botClient.AnswerCallbackQuery(
             callbackQuery.Id,
             message,
             cancellationToken: cancellationToken);
     }
 
-    private InlineKeyboardMarkup BuildQuickActionsMarkup()
-    {
-        var buttons = new List<List<InlineKeyboardButton>>
-        {
-            new()
-            {
+    private InlineKeyboardMarkup BuildQuickActionsMarkup() {
+        var buttons = new List<List<InlineKeyboardButton>> {
+            new() {
                 InlineKeyboardButton.WithCallbackData("+250 ml", "water:250"),
                 InlineKeyboardButton.WithCallbackData("+500 ml", "water:500"),
             }
         };
 
         var webAppButtons = new List<InlineKeyboardButton>();
-        var webAppUrl = _options.WebAppUrl?.TrimEnd('/');
-        if (!string.IsNullOrWhiteSpace(webAppUrl))
-        {
+        var webAppUrl = BotUriHelper.NormalizeWebAppUrl(_options.WebAppUrl);
+        if (!string.IsNullOrWhiteSpace(webAppUrl)) {
             webAppButtons.Add(InlineKeyboardButton.WithWebApp("Open diary", webAppUrl));
             webAppButtons.Add(InlineKeyboardButton.WithWebApp("Add meal", $"{webAppUrl}/consumptions/add"));
         }
 
-        if (webAppButtons.Count > 0)
-        {
+        if (webAppButtons.Count > 0) {
             buttons.Add(webAppButtons);
         }
 
         return new InlineKeyboardMarkup(buttons);
     }
 
-    private InlineKeyboardMarkup? BuildWebAppMarkup()
-    {
-        var webAppUrl = _options.WebAppUrl?.TrimEnd('/');
-        if (string.IsNullOrWhiteSpace(webAppUrl))
-        {
+    private InlineKeyboardMarkup? BuildWebAppMarkup() {
+        var webAppUrl = BotUriHelper.NormalizeWebAppUrl(_options.WebAppUrl);
+        if (string.IsNullOrWhiteSpace(webAppUrl)) {
             return null;
         }
 
@@ -192,10 +160,8 @@ public sealed class TelegramBotWorker : BackgroundService
             InlineKeyboardButton.WithWebApp("Open diary", webAppUrl));
     }
 
-    private async Task<bool> IsLinkedAsync(long? telegramUserId, CancellationToken cancellationToken)
-    {
-        if (!telegramUserId.HasValue || telegramUserId.Value <= 0)
-        {
+    private async Task<bool> IsLinkedAsync(long? telegramUserId, CancellationToken cancellationToken) {
+        if (!telegramUserId.HasValue || telegramUserId.Value <= 0) {
             return false;
         }
 
@@ -203,16 +169,15 @@ public sealed class TelegramBotWorker : BackgroundService
         return token is not null;
     }
 
-    private async Task<string?> TryGetAccessTokenAsync(long telegramUserId, CancellationToken cancellationToken)
-    {
-        if (string.IsNullOrWhiteSpace(_options.ApiBaseUrl) || string.IsNullOrWhiteSpace(_options.ApiSecret))
-        {
-            _logger.LogWarning("Telegram bot API settings are missing.");
+    private async Task<string?> TryGetAccessTokenAsync(long telegramUserId, CancellationToken cancellationToken) {
+        if (!BotUriHelper.TryCreateApiBaseUri(_options.ApiBaseUrl, out var baseUri) ||
+            string.IsNullOrWhiteSpace(_options.ApiSecret)) {
+            logger.LogWarning("Telegram bot API settings are missing.");
             return null;
         }
 
-        var client = _httpClientFactory.CreateClient();
-        client.BaseAddress = new Uri(_options.ApiBaseUrl);
+        var client = httpClientFactory.CreateClient();
+        client.BaseAddress = baseUri;
         client.DefaultRequestHeaders.Add("X-Telegram-Bot-Secret", _options.ApiSecret);
 
         var response = await client.PostAsJsonAsync(
@@ -220,8 +185,7 @@ public sealed class TelegramBotWorker : BackgroundService
             new TelegramBotAuthRequest(telegramUserId),
             cancellationToken);
 
-        if (!response.IsSuccessStatusCode)
-        {
+        if (!response.IsSuccessStatusCode) {
             return null;
         }
 
@@ -229,15 +193,13 @@ public sealed class TelegramBotWorker : BackgroundService
         return authResponse?.AccessToken;
     }
 
-    private async Task<bool> CreateHydrationAsync(string accessToken, int amountMl, CancellationToken cancellationToken)
-    {
-        if (string.IsNullOrWhiteSpace(_options.ApiBaseUrl))
-        {
+    private async Task<bool> CreateHydrationAsync(string accessToken, int amountMl, CancellationToken cancellationToken) {
+        if (!BotUriHelper.TryCreateApiBaseUri(_options.ApiBaseUrl, out var baseUri)) {
             return false;
         }
 
-        var client = _httpClientFactory.CreateClient();
-        client.BaseAddress = new Uri(_options.ApiBaseUrl);
+        var client = httpClientFactory.CreateClient();
+        client.BaseAddress = baseUri;
         client.DefaultRequestHeaders.Authorization =
             new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
 
@@ -246,19 +208,19 @@ public sealed class TelegramBotWorker : BackgroundService
         return response.IsSuccessStatusCode;
     }
 
-    private Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
-    {
-        if (exception is ApiRequestException apiRequestException)
-        {
-            _logger.LogWarning(exception, "Telegram API error: {Code} {Message}", apiRequestException.ErrorCode, apiRequestException.Message);
+    private Task HandleErrorAsync(ITelegramBotClient tBotClient, Exception exception, CancellationToken cancellationToken) {
+        if (exception is ApiRequestException apiRequestException) {
+            logger.LogWarning(exception, "Telegram API error: {Code} {Message}", apiRequestException.ErrorCode, apiRequestException.Message);
             return Task.CompletedTask;
         }
 
-        _logger.LogError(exception, "Telegram bot error");
+        logger.LogError(exception, "Telegram bot error");
         return Task.CompletedTask;
     }
 
     private sealed record TelegramBotAuthRequest(long TelegramUserId);
+
     private sealed record AuthResponse(string AccessToken, string RefreshToken);
+
     private sealed record CreateHydrationRequest(DateTime TimestampUtc, int AmountMl);
 }

@@ -1,5 +1,3 @@
-using System;
-
 namespace FoodDiary.Contracts.WaistEntries;
 
 public record WaistEntrySummaryResponse(

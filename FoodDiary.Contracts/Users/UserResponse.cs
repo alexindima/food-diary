@@ -1,5 +1,3 @@
-using System;
-
 namespace FoodDiary.Contracts.Users;
 
 public record UserResponse(

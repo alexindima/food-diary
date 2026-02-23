@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-
 namespace FoodDiary.Contracts.Consumptions;
 
 public record ConsumptionResponse(
