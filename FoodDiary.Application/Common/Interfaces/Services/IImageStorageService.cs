@@ -1,4 +1,3 @@
-using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Common.Interfaces.Services;
@@ -9,8 +8,7 @@ public sealed record PresignedUpload(
     string ObjectKey,
     DateTime ExpirationUtc);
 
-public interface IImageStorageService
-{
+public interface IImageStorageService {
     Task<PresignedUpload> CreatePresignedUploadAsync(
         UserId userId,
         string fileName,

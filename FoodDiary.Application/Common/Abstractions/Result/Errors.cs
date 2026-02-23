@@ -1,11 +1,7 @@
-using System;
-
 namespace FoodDiary.Application.Common.Abstractions.Result;
 
-public static class Errors
-{
-    public static class Product
-    {
+public static class Errors {
+    public static class Product {
         public static Error NotFound(Guid id) => new(
             "Product.NotFound",
             $"Product with ID {id} was not found.");
@@ -23,8 +19,7 @@ public static class Errors
             message);
     }
 
-    public static class Recipe
-    {
+    public static class Recipe {
         public static Error NotFound(Guid id) => new(
             "Recipe.NotFound",
             $"Recipe with ID {id} was not found.");
@@ -38,8 +33,7 @@ public static class Errors
             message);
     }
 
-    public static class Consumption
-    {
+    public static class Consumption {
         public static Error NotFound(Guid id) => new(
             "Consumption.NotFound",
             $"Consumption with ID {id} was not found.");
@@ -49,8 +43,7 @@ public static class Errors
             message);
     }
 
-    public static class User
-    {
+    public static class User {
         public static Error NotFound(Guid id) => new(
             "User.NotFound",
             $"User with ID {id} was not found.");
@@ -72,8 +65,7 @@ public static class Errors
             "A user with this email already exists.");
     }
 
-    public static class Authentication
-    {
+    public static class Authentication {
         public static Error InvalidCredentials => new(
             "Authentication.InvalidCredentials",
             "Invalid email or password.");
@@ -119,8 +111,7 @@ public static class Errors
             "User is not allowed to access admin SSO.");
     }
 
-    public static class Validation
-    {
+    public static class Validation {
         public static Error Required(string field) => new(
             "Validation.Required",
             $"Field {field} is required.");
@@ -130,8 +121,7 @@ public static class Errors
             $"Field {field} is invalid: {reason}");
     }
 
-    public static class WeightEntry
-    {
+    public static class WeightEntry {
         public static Error NotFound(Guid id) => new(
             "WeightEntry.NotFound",
             $"Weight entry with ID {id} was not found.");
@@ -141,8 +131,7 @@ public static class Errors
             $"Weight entry for {date:yyyy-MM-dd} already exists.");
     }
 
-    public static class WaistEntry
-    {
+    public static class WaistEntry {
         public static Error NotFound(Guid id) => new(
             "WaistEntry.NotFound",
             $"Waist entry with ID {id} was not found.");
@@ -152,15 +141,13 @@ public static class Errors
             $"Waist entry for {date:yyyy-MM-dd} already exists.");
     }
 
-    public static class HydrationEntry
-    {
+    public static class HydrationEntry {
         public static Error NotFound(Guid id) => new(
             "HydrationEntry.NotFound",
             $"Hydration entry with id '{id}' not found");
     }
 
-    public static class DailyAdvice
-    {
+    public static class DailyAdvice {
         public static Error NotFound(string? locale = null) => new(
             "DailyAdvice.NotFound",
             locale is null
@@ -168,8 +155,7 @@ public static class Errors
                 : $"Daily advice items are not configured for locale '{locale}'.");
     }
 
-    public static class ShoppingList
-    {
+    public static class ShoppingList {
         public static Error NotFound(Guid id) => new(
             "ShoppingList.NotFound",
             $"Shopping list with ID {id} was not found.");
@@ -179,22 +165,19 @@ public static class Errors
             "Shopping list was not found.");
     }
 
-    public static class Cycle
-    {
+    public static class Cycle {
         public static Error NotFound(Guid id) => new(
             "Cycle.NotFound",
             $"Cycle with ID {id} was not found.");
     }
 
-    public static class CycleDay
-    {
+    public static class CycleDay {
         public static Error NotFound(DateTime date) => new(
             "CycleDay.NotFound",
             $"Cycle day for {date:yyyy-MM-dd} was not found.");
     }
 
-    public static class Ai
-    {
+    public static class Ai {
         public static Error ImageNotFound(Guid id) => new(
             "Ai.ImageNotFound",
             $"Image asset with ID {id} was not found.");

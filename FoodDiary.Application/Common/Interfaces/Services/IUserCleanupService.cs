@@ -1,7 +1,6 @@
 namespace FoodDiary.Application.Common.Interfaces.Services;
 
-public interface IUserCleanupService
-{
+public interface IUserCleanupService {
     Task<int> CleanupDeletedUsersAsync(
         DateTime olderThanUtc,
         int batchSize,

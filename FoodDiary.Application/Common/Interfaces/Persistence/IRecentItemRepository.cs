@@ -1,10 +1,8 @@
-using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Common.Interfaces.Persistence;
 
-public interface IRecentItemRepository
-{
+public interface IRecentItemRepository {
     Task RegisterUsageAsync(
         UserId userId,
         IReadOnlyCollection<ProductId> productIds,

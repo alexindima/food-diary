@@ -1,6 +1,5 @@
 namespace FoodDiary.Application.Common.Interfaces.Services;
 
-public interface IDateTimeProvider
-{
+public interface IDateTimeProvider {
     DateTime UtcNow { get; }
 }

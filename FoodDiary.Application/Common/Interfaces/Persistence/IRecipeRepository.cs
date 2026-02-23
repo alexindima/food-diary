@@ -1,22 +1,9 @@
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-using FoodDiary.Domain.Entities.Ai;
-using FoodDiary.Domain.Entities.Assets;
-using FoodDiary.Domain.Entities.Content;
-using FoodDiary.Domain.Entities.Meals;
-using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Recipes;
-using FoodDiary.Domain.Entities.Shopping;
-using FoodDiary.Domain.Entities.Tracking;
-using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Common.Interfaces.Persistence;
 
-public interface IRecipeRepository
-{
+public interface IRecipeRepository {
     Task<Recipe> AddAsync(Recipe recipe);
 
     Task<(IReadOnlyList<(Recipe Recipe, int UsageCount)> Items, int TotalItems)> GetPagedAsync(
@@ -34,11 +21,13 @@ public interface IRecipeRepository
         bool includeSteps = false,
         bool asTracking = false,
         CancellationToken cancellationToken = default);
+
     Task<IReadOnlyDictionary<RecipeId, Recipe>> GetByIdsAsync(
         IEnumerable<RecipeId> ids,
         UserId userId,
         bool includePublic = true,
         CancellationToken cancellationToken = default);
+
     Task<IReadOnlyDictionary<RecipeId, (Recipe Recipe, int UsageCount)>> GetByIdsWithUsageAsync(
         IEnumerable<RecipeId> ids,
         UserId userId,
@@ -51,5 +40,3 @@ public interface IRecipeRepository
 
     Task UpdateNutritionAsync(Recipe recipe, CancellationToken cancellationToken = default);
 }
-
-
