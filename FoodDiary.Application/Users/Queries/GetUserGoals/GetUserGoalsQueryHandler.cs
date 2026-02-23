@@ -4,26 +4,19 @@ using static FoodDiary.Application.Common.Abstractions.Result.Errors;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Users.Mappings;
 using FoodDiary.Contracts.Goals;
+using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Users.Queries.GetUserGoals;
 
-public class GetUserGoalsQueryHandler : IQueryHandler<GetUserGoalsQuery, Result<GoalsResponse>>
-{
-    private readonly IUserRepository _userRepository;
-
-    public GetUserGoalsQueryHandler(IUserRepository userRepository)
-    {
-        _userRepository = userRepository;
-    }
-
-    public async Task<Result<GoalsResponse>> Handle(GetUserGoalsQuery query, CancellationToken cancellationToken)
-    {
-        var user = await _userRepository.GetByIdAsync(query.UserId!.Value);
-        if (user is null)
-        {
-            return Result.Failure<GoalsResponse>(User.NotFound(query.UserId.Value));
+public class GetUserGoalsQueryHandler(IUserRepository userRepository) : IQueryHandler<GetUserGoalsQuery, Result<GoalsResponse>> {
+    public async Task<Result<GoalsResponse>> Handle(GetUserGoalsQuery query, CancellationToken cancellationToken) {
+        if (query.UserId is null || query.UserId.Value == UserId.Empty) {
+            return Result.Failure<GoalsResponse>(Errors.Authentication.InvalidToken);
         }
 
-        return Result.Success(user.ToGoalsResponse());
+        var user = await userRepository.GetByIdAsync(query.UserId.Value);
+        return user is null
+            ? Result.Failure<GoalsResponse>(User.NotFound(query.UserId.Value))
+            : Result.Success(user.ToGoalsResponse());
     }
 }

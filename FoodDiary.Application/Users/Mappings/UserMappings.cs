@@ -1,32 +1,18 @@
 ﻿using FoodDiary.Contracts.Users;
 using FoodDiary.Contracts.Goals;
-using FoodDiary.Domain.Entities.Ai;
-using FoodDiary.Domain.Entities.Assets;
-using FoodDiary.Domain.Entities.Content;
-using FoodDiary.Domain.Entities.Meals;
-using FoodDiary.Domain.Entities.Products;
-using FoodDiary.Domain.Entities.Recipes;
-using FoodDiary.Domain.Entities.Shopping;
-using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Users;
 using System.Text.Json;
 
 namespace FoodDiary.Application.Users.Mappings;
 
-public static class UserMappings
-{
-    public static UserResponse ToResponse(this User user)
-    {
+public static class UserMappings {
+    public static UserResponse ToResponse(this User user) {
         const string defaultLanguage = "en";
         DashboardLayoutSettings? layout = null;
-        if (!string.IsNullOrWhiteSpace(user.DashboardLayoutJson))
-        {
-            try
-            {
+        if (!string.IsNullOrWhiteSpace(user.DashboardLayoutJson)) {
+            try {
                 layout = JsonSerializer.Deserialize<DashboardLayoutSettings>(user.DashboardLayoutJson);
-            }
-            catch (JsonException)
-            {
+            } catch (JsonException) {
                 layout = null;
             }
         }
@@ -62,8 +48,7 @@ public static class UserMappings
         );
     }
 
-    public static GoalsResponse ToGoalsResponse(this User user)
-    {
+    public static GoalsResponse ToGoalsResponse(this User user) {
         return new GoalsResponse(
             user.DailyCalorieTarget,
             user.ProteinTarget,
@@ -76,4 +61,3 @@ public static class UserMappings
         );
     }
 }
-

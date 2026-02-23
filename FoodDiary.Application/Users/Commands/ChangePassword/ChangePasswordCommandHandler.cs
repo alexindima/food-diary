@@ -2,6 +2,7 @@ using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Interfaces.Services;
+using FoodDiary.Domain.ValueObjects.Ids;
 using static FoodDiary.Application.Common.Abstractions.Result.Errors;
 
 namespace FoodDiary.Application.Users.Commands.ChangePassword;
@@ -11,7 +12,11 @@ public class ChangePasswordCommandHandler(
     IPasswordHasher passwordHasher)
     : ICommandHandler<ChangePasswordCommand, Result<bool>> {
     public async Task<Result<bool>> Handle(ChangePasswordCommand command, CancellationToken cancellationToken) {
-        var user = await userRepository.GetByIdAsync(command.UserId!.Value);
+        if (command.UserId is null || command.UserId.Value == UserId.Empty) {
+            return Result.Failure<bool>(Errors.Authentication.InvalidToken);
+        }
+
+        var user = await userRepository.GetByIdAsync(command.UserId.Value);
         if (user is null) {
             return Result.Failure<bool>(User.NotFound(command.UserId.Value));
         }

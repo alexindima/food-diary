@@ -1,10 +1,10 @@
 using FluentValidation;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Users.Queries.GetUserById;
+namespace FoodDiary.Application.Users.Queries.GetDesiredWeight;
 
-public class GetUserByIdQueryValidator : AbstractValidator<GetUserByIdQuery> {
-    public GetUserByIdQueryValidator() {
+public class GetDesiredWeightQueryValidator : AbstractValidator<GetDesiredWeightQuery> {
+    public GetDesiredWeightQueryValidator() {
         RuleFor(x => x.UserId)
             .Cascade(CascadeMode.Stop)
             .NotNull()

@@ -1,10 +1,10 @@
 using FluentValidation;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Users.Queries.GetUserById;
+namespace FoodDiary.Application.Users.Queries.GetUserGoals;
 
-public class GetUserByIdQueryValidator : AbstractValidator<GetUserByIdQuery> {
-    public GetUserByIdQueryValidator() {
+public class GetUserGoalsQueryValidator : AbstractValidator<GetUserGoalsQuery> {
+    public GetUserGoalsQueryValidator() {
         RuleFor(x => x.UserId)
             .Cascade(CascadeMode.Stop)
             .NotNull()

@@ -17,33 +17,33 @@ public class UpdateUserCommandHandler(
     IImageStorageService imageStorageService)
     : ICommandHandler<UpdateUserCommand, Result<UserResponse>> {
     public async Task<Result<UserResponse>> Handle(UpdateUserCommand command, CancellationToken cancellationToken) {
-        var user = await userRepository.GetByIdAsync(command.UserId!.Value);
+        if (command.UserId is null || command.UserId.Value == UserId.Empty) {
+            return Result.Failure<UserResponse>(Errors.Authentication.InvalidToken);
+        }
+
+        var user = await userRepository.GetByIdAsync(command.UserId.Value);
         if (user is null) {
             return Result.Failure<UserResponse>(User.NotFound(command.UserId.Value));
         }
 
         var activityLevelResult = ParseActivityLevel(command.ActivityLevel);
-        if (activityLevelResult.IsFailure)
-        {
+        if (activityLevelResult.IsFailure) {
             return Result.Failure<UserResponse>(activityLevelResult.Error);
         }
 
         var languageResult = NormalizeLanguage(command.Language);
-        if (languageResult.IsFailure)
-        {
+        if (languageResult.IsFailure) {
             return Result.Failure<UserResponse>(languageResult.Error);
         }
 
         var genderResult = ParseGender(command.Gender);
-        if (genderResult.IsFailure)
-        {
+        if (genderResult.IsFailure) {
             return Result.Failure<UserResponse>(genderResult.Error);
         }
 
         var oldAssetId = user.ProfileImageAssetId;
         ImageAssetId? newAssetId = null;
-        if (command.ProfileImageAssetId.HasValue)
-        {
+        if (command.ProfileImageAssetId.HasValue) {
             newAssetId = new ImageAssetId(command.ProfileImageAssetId.Value);
         }
 
@@ -73,8 +73,7 @@ public class UpdateUserCommandHandler(
 
         await userRepository.UpdateAsync(user);
 
-        if (oldAssetId.HasValue && (!newAssetId.HasValue || oldAssetId.Value.Value != newAssetId.Value.Value))
-        {
+        if (oldAssetId.HasValue && (!newAssetId.HasValue || oldAssetId.Value.Value != newAssetId.Value.Value)) {
             await TryDeleteAssetAsync(oldAssetId.Value, imageAssetRepository, imageStorageService, cancellationToken);
         }
 
@@ -84,10 +83,8 @@ public class UpdateUserCommandHandler(
     private static string? Normalize(string? value) =>
         string.IsNullOrWhiteSpace(value) ? null : value.Trim();
 
-    private static Result<ActivityLevel?> ParseActivityLevel(string? value)
-    {
-        if (string.IsNullOrWhiteSpace(value))
-        {
+    private static Result<ActivityLevel?> ParseActivityLevel(string? value) {
+        if (string.IsNullOrWhiteSpace(value)) {
             return Result.Success<ActivityLevel?>(null);
         }
 
@@ -96,10 +93,8 @@ public class UpdateUserCommandHandler(
             : Result.Failure<ActivityLevel?>(Validation.Invalid(nameof(UpdateUserCommand.ActivityLevel), "Invalid activity level value."));
     }
 
-    private static Result<string?> NormalizeLanguage(string? value)
-    {
-        if (string.IsNullOrWhiteSpace(value))
-        {
+    private static Result<string?> NormalizeLanguage(string? value) {
+        if (string.IsNullOrWhiteSpace(value)) {
             return Result.Success<string?>(null);
         }
 
@@ -108,10 +103,8 @@ public class UpdateUserCommandHandler(
             : Result.Failure<string?>(Validation.Invalid(nameof(UpdateUserCommand.Language), "Invalid language value."));
     }
 
-    private static Result<string?> ParseGender(string? value)
-    {
-        if (string.IsNullOrWhiteSpace(value))
-        {
+    private static Result<string?> ParseGender(string? value) {
+        if (string.IsNullOrWhiteSpace(value)) {
             return Result.Success<string?>(null);
         }
 
@@ -124,17 +117,14 @@ public class UpdateUserCommandHandler(
         ImageAssetId assetId,
         IImageAssetRepository imageAssetRepository,
         IImageStorageService storageService,
-        CancellationToken cancellationToken)
-    {
+        CancellationToken cancellationToken) {
         var asset = await imageAssetRepository.GetByIdAsync(assetId, cancellationToken);
-        if (asset is null)
-        {
+        if (asset is null) {
             return;
         }
 
         var inUse = await imageAssetRepository.IsAssetInUse(assetId, cancellationToken);
-        if (inUse)
-        {
+        if (inUse) {
             return;
         }
 

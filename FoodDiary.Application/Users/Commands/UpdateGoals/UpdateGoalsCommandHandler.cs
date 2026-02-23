@@ -4,17 +4,19 @@ using static FoodDiary.Application.Common.Abstractions.Result.Errors;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Users.Mappings;
 using FoodDiary.Contracts.Goals;
+using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Users.Commands.UpdateGoals;
 
 public class UpdateGoalsCommandHandler(IUserRepository userRepository)
-    : ICommandHandler<UpdateGoalsCommand, Result<GoalsResponse>>
-{
-    public async Task<Result<GoalsResponse>> Handle(UpdateGoalsCommand command, CancellationToken cancellationToken)
-    {
-        var user = await userRepository.GetByIdAsync(command.UserId!.Value);
-        if (user is null)
-        {
+    : ICommandHandler<UpdateGoalsCommand, Result<GoalsResponse>> {
+    public async Task<Result<GoalsResponse>> Handle(UpdateGoalsCommand command, CancellationToken cancellationToken) {
+        if (command.UserId is null || command.UserId.Value == UserId.Empty) {
+            return Result.Failure<GoalsResponse>(Errors.Authentication.InvalidToken);
+        }
+
+        var user = await userRepository.GetByIdAsync(command.UserId.Value);
+        if (user is null) {
             return Result.Failure<GoalsResponse>(User.NotFound(command.UserId.Value));
         }
 

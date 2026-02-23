@@ -1,12 +1,10 @@
 using FoodDiary.Contracts.Goals;
 using FoodDiary.Application.Users.Commands.UpdateGoals;
-using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Users.Mappings;
 
-public static class GoalsCommandMappings
-{
+public static class GoalsCommandMappings {
     public static UpdateGoalsCommand ToCommand(this UpdateGoalsRequest request, UserId? userId)
         => new(
             userId,
