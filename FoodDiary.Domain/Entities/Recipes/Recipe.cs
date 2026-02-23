@@ -36,7 +36,7 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
     public double? ManualCarbs { get; private set; }
     public double? ManualFiber { get; private set; }
     public double? ManualAlcohol { get; private set; }
-    public Visibility Visibility { get; private set; } = Visibility.PUBLIC;
+    public Visibility Visibility { get; private set; } = Visibility.Public;
     public int UsageCount { get; private set; }
 
     public UserId UserId { get; private set; }
@@ -60,7 +60,7 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
         ImageAssetId? imageAssetId = null,
         int? prepTime = null,
         int? cookTime = null,
-        Visibility visibility = Visibility.PUBLIC) {
+        Visibility visibility = Visibility.Public) {
         EnsureUserId(userId);
 
         var recipe = new Recipe {

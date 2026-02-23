@@ -30,7 +30,7 @@ public class DomainEventsTests
     [Fact]
     public void Meal_ApplyNutrition_RaisesDomainEvent()
     {
-        var meal = Meal.Create(UserId.New(), DateTime.UtcNow, MealType.DINNER);
+        var meal = Meal.Create(UserId.New(), DateTime.UtcNow, MealType.Dinner);
 
         meal.ApplyNutrition(
             totalCalories: 400,
@@ -49,7 +49,7 @@ public class DomainEventsTests
     [Fact]
     public void AggregateRoot_ClearDomainEvents_EmptiesCollection()
     {
-        var meal = Meal.Create(UserId.New(), DateTime.UtcNow, MealType.LUNCH);
+        var meal = Meal.Create(UserId.New(), DateTime.UtcNow, MealType.Lunch);
         meal.ApplyNutrition(200, 10, 5, 20, 3, 0, true);
         Assert.NotEmpty(meal.DomainEvents);
 

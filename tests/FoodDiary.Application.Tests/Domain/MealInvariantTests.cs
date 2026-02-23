@@ -10,7 +10,7 @@ public class MealInvariantTests {
     [Fact]
     public void Create_WithEmptyUserId_Throws() {
         Assert.Throws<ArgumentException>(() =>
-            Meal.Create(UserId.Empty, DateTime.UtcNow, MealType.BREAKFAST));
+            Meal.Create(UserId.Empty, DateTime.UtcNow, MealType.Breakfast));
     }
 
     [Theory]
@@ -21,7 +21,7 @@ public class MealInvariantTests {
             Meal.Create(
                 UserId.New(),
                 DateTime.UtcNow,
-                MealType.BREAKFAST,
+                MealType.Breakfast,
                 preMealSatietyLevel: satietyLevel,
                 postMealSatietyLevel: 5));
     }
@@ -158,7 +158,7 @@ public class MealInvariantTests {
 
     [Fact]
     public void ApplyNutrition_WithNegativeTotal_Throws() {
-        var meal = Meal.Create(UserId.New(), DateTime.UtcNow, MealType.BREAKFAST);
+        var meal = Meal.Create(UserId.New(), DateTime.UtcNow, MealType.Breakfast);
 
         Assert.Throws<ArgumentOutOfRangeException>(() => meal.ApplyNutrition(
             totalCalories: -1,

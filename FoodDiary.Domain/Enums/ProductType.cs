@@ -1,7 +1,6 @@
 namespace FoodDiary.Domain.Enums;
 
-public enum ProductType
-{
+public enum ProductType {
     Unknown = 0,
     Meat = 1,
     Fruit = 2,

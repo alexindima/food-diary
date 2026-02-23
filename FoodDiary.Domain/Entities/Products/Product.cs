@@ -36,7 +36,7 @@ public sealed class Product : AggregateRoot<ProductId> {
     public double FiberPerBase { get; private set; }
     public double AlcoholPerBase { get; private set; }
     public int UsageCount { get; private set; }
-    public Visibility Visibility { get; private set; } = Visibility.PUBLIC;
+    public Visibility Visibility { get; private set; } = Visibility.Public;
 
     public UserId UserId { get; private set; }
     public User User { get; private set; } = null!;
@@ -66,7 +66,7 @@ public sealed class Product : AggregateRoot<ProductId> {
         string? comment = null,
         string? imageUrl = null,
         ImageAssetId? imageAssetId = null,
-        Visibility visibility = Visibility.PUBLIC) {
+        Visibility visibility = Visibility.Public) {
         EnsureUserId(userId);
         var normalizedName = NormalizeRequiredName(name);
         var normalizedBaseAmount = NormalizeBaseAmount(baseUnit, baseAmount, nameof(baseAmount));
@@ -358,7 +358,7 @@ public sealed class Product : AggregateRoot<ProductId> {
     }
 
     private static double GetCanonicalBaseAmount(MeasurementUnit unit) {
-        return unit == MeasurementUnit.PCS ? 1d : 100d;
+        return unit == MeasurementUnit.Pcs ? 1d : 100d;
     }
 
     private static bool AreClose(double left, double right) {

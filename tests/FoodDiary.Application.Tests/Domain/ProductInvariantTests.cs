@@ -284,9 +284,9 @@ public class ProductInvariantTests
             fiberPerBase: 2.4,
             alcoholPerBase: 0);
 
-        product.UpdateMeasurement(baseUnit: MeasurementUnit.PCS);
+        product.UpdateMeasurement(baseUnit: MeasurementUnit.Pcs);
 
-        Assert.Equal(MeasurementUnit.PCS, product.BaseUnit);
+        Assert.Equal(MeasurementUnit.Pcs, product.BaseUnit);
         Assert.Equal(1d, product.BaseAmount);
     }
 
@@ -296,7 +296,7 @@ public class ProductInvariantTests
         var product = CreateValidProduct();
 
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            product.UpdateMeasurement(baseUnit: MeasurementUnit.PCS, baseAmount: 2));
+            product.UpdateMeasurement(baseUnit: MeasurementUnit.Pcs, baseAmount: 2));
     }
 
     [Fact]
@@ -404,7 +404,7 @@ public class ProductInvariantTests
     {
         var product = CreateValidProduct();
 
-        product.ChangeVisibility(Visibility.PUBLIC);
+        product.ChangeVisibility(Visibility.Public);
 
         Assert.Null(product.ModifiedOnUtc);
     }
@@ -414,9 +414,9 @@ public class ProductInvariantTests
     {
         var product = CreateValidProduct();
 
-        product.ChangeVisibility(Visibility.PRIVATE);
+        product.ChangeVisibility(Visibility.Private);
 
-        Assert.Equal(Visibility.PRIVATE, product.Visibility);
+        Assert.Equal(Visibility.Private, product.Visibility);
         Assert.NotNull(product.ModifiedOnUtc);
     }
 }

@@ -1,6 +1,6 @@
 namespace FoodDiary.Domain.Enums;
 
 public enum Visibility {
-    PUBLIC,
-    PRIVATE
+    Public = 0,
+    Private = 1
 }

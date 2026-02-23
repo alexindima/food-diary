@@ -68,7 +68,7 @@ public class UpdateRecipeCommandValidatorTests {
             PrepTime: 10,
             CookTime: 20,
             Servings: 2,
-            Visibility: Visibility.PUBLIC.ToString(),
+            Visibility: Visibility.Public.ToString(),
             CalculateNutritionAutomatically: true,
             ManualCalories: null,
             ManualProteins: null,

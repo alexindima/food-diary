@@ -52,7 +52,7 @@ public class RecipeRepository : IRecipeRepository
                 .ThenInclude(s => s.Ingredients)
                     .ThenInclude(i => i.NestedRecipe)
             .Where(includePublic
-                ? r => r.UserId == userId || r.Visibility == Visibility.PUBLIC
+                ? r => r.UserId == userId || r.Visibility == Visibility.Public
                 : r => r.UserId == userId);
 
         if (!string.IsNullOrWhiteSpace(search))
@@ -113,7 +113,7 @@ public class RecipeRepository : IRecipeRepository
 
         return await query.FirstOrDefaultAsync(
             r => r.Id == id && (includePublic
-                ? r.UserId == userId || r.Visibility == Visibility.PUBLIC
+                ? r.UserId == userId || r.Visibility == Visibility.Public
                 : r.UserId == userId),
             cancellationToken);
     }
@@ -163,7 +163,7 @@ public class RecipeRepository : IRecipeRepository
 
         IQueryable<Recipe> query = _context.Recipes.AsNoTracking();
         query = query.Where(r => recipeIds.Contains(r.Id) && (includePublic
-            ? r.UserId == userId || r.Visibility == Visibility.PUBLIC
+            ? r.UserId == userId || r.Visibility == Visibility.Public
             : r.UserId == userId));
 
         var recipes = await query.ToListAsync(cancellationToken);
@@ -191,7 +191,7 @@ public class RecipeRepository : IRecipeRepository
                 .ThenInclude(s => s.Ingredients)
                     .ThenInclude(i => i.NestedRecipe)
             .Where(r => recipeIds.Contains(r.Id) && (includePublic
-                ? r.UserId == userId || r.Visibility == Visibility.PUBLIC
+                ? r.UserId == userId || r.Visibility == Visibility.Public
                 : r.UserId == userId))
             .Select(r => new
             {

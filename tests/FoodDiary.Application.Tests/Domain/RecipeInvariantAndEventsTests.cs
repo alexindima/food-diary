@@ -104,7 +104,7 @@ public class RecipeInvariantAndEventsTests {
             imageUrl: "https://img",
             prepTime: 10,
             cookTime: 20,
-            visibility: Visibility.PUBLIC);
+            visibility: Visibility.Public);
 
         recipe.Update(
             name: " Soup ",
@@ -115,7 +115,7 @@ public class RecipeInvariantAndEventsTests {
             prepTime: 10,
             cookTime: 20,
             servings: 2,
-            visibility: Visibility.PUBLIC);
+            visibility: Visibility.Public);
 
         Assert.Null(recipe.ModifiedOnUtc);
     }
@@ -167,20 +167,20 @@ public class RecipeInvariantAndEventsTests {
 
     [Fact]
     public void ChangeVisibility_WithSameValue_DoesNotSetModifiedOnUtc() {
-        var recipe = Recipe.Create(UserId.New(), "Soup", 2, visibility: Visibility.PUBLIC);
+        var recipe = Recipe.Create(UserId.New(), "Soup", 2, visibility: Visibility.Public);
 
-        recipe.ChangeVisibility(Visibility.PUBLIC);
+        recipe.ChangeVisibility(Visibility.Public);
 
         Assert.Null(recipe.ModifiedOnUtc);
     }
 
     [Fact]
     public void ChangeVisibility_WithDifferentValue_UpdatesState() {
-        var recipe = Recipe.Create(UserId.New(), "Soup", 2, visibility: Visibility.PUBLIC);
+        var recipe = Recipe.Create(UserId.New(), "Soup", 2, visibility: Visibility.Public);
 
-        recipe.ChangeVisibility(Visibility.PRIVATE);
+        recipe.ChangeVisibility(Visibility.Private);
 
-        Assert.Equal(Visibility.PRIVATE, recipe.Visibility);
+        Assert.Equal(Visibility.Private, recipe.Visibility);
         Assert.NotNull(recipe.ModifiedOnUtc);
     }
 

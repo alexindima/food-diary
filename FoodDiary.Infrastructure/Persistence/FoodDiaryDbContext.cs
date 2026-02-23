@@ -181,7 +181,7 @@ public class FoodDiaryDbContext : DbContext
                 id => id.HasValue ? id.Value.Value : (Guid?)null,
                 value => value.HasValue ? new ImageAssetId(value.Value) : null);
 
-            entity.Property(e => e.Visibility).HasDefaultValue(Visibility.PUBLIC);
+            entity.Property(e => e.Visibility).HasDefaultValue(Visibility.Public);
             entity.Property(e => e.ProductType).HasDefaultValue(ProductType.Unknown);
 
             // UsageCount - Ð½Ðµ Ñ…Ñ€Ð°Ð½Ð¸Ñ‚ÑÑ Ð² Ð‘Ð”, Ð²Ñ‹Ñ‡Ð¸ÑÐ»ÑÐµÑ‚ÑÑ Ð´Ð¸Ð½Ð°Ð¼Ð¸Ñ‡ÐµÑÐºÐ¸ Ð² Ð·Ð°Ð¿Ñ€Ð¾ÑÐ°Ñ…
@@ -274,7 +274,7 @@ public class FoodDiaryDbContext : DbContext
                 id => id.HasValue ? id.Value.Value : (Guid?)null,
                 value => value.HasValue ? new ImageAssetId(value.Value) : null);
 
-            entity.Property(e => e.Visibility).HasDefaultValue(Visibility.PUBLIC);
+            entity.Property(e => e.Visibility).HasDefaultValue(Visibility.Public);
             entity.Property(e => e.IsNutritionAutoCalculated).HasDefaultValue(true);
 
             entity.Ignore(e => e.UsageCount);

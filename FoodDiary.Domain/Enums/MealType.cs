@@ -1,32 +1,9 @@
 namespace FoodDiary.Domain.Enums;
 
-/// <summary>
-/// Тип приема пищи
-/// </summary>
-public enum MealType
-{
-    /// <summary>
-    /// Завтрак
-    /// </summary>
-    BREAKFAST,
-
-    /// <summary>
-    /// Обед
-    /// </summary>
-    LUNCH,
-
-    /// <summary>
-    /// Ужин
-    /// </summary>
-    DINNER,
-
-    /// <summary>
-    /// Перекус
-    /// </summary>
-    SNACK,
-
-    /// <summary>
-    /// Другое
-    /// </summary>
-    OTHER
+public enum MealType {
+    Breakfast = 0,
+    Lunch = 1,
+    Dinner = 2,
+    Snack = 3,
+    Other = 4
 }

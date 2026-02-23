@@ -47,7 +47,7 @@ public class ProductRepository : IProductRepository
         IQueryable<Product> query = _context.Products
             .AsNoTracking()
             .Where(includePublic
-                ? p => p.UserId == userId || p.Visibility == Visibility.PUBLIC
+                ? p => p.UserId == userId || p.Visibility == Visibility.Public
                 : p => p.UserId == userId);
 
         if (!string.IsNullOrWhiteSpace(search))
@@ -94,7 +94,7 @@ public class ProductRepository : IProductRepository
             .Include(p => p.RecipeIngredients)
             .FirstOrDefaultAsync(
                 p => p.Id == id && (includePublic
-                    ? p.UserId == userId || p.Visibility == Visibility.PUBLIC
+                    ? p.UserId == userId || p.Visibility == Visibility.Public
                     : p.UserId == userId),
                 cancellationToken);
 
@@ -112,7 +112,7 @@ public class ProductRepository : IProductRepository
 
         IQueryable<Product> query = _context.Products.AsNoTracking();
         query = query.Where(p => productIds.Contains(p.Id) && (includePublic
-            ? p.UserId == userId || p.Visibility == Visibility.PUBLIC
+            ? p.UserId == userId || p.Visibility == Visibility.Public
             : p.UserId == userId));
 
         var products = await query.ToListAsync(cancellationToken);
@@ -134,7 +134,7 @@ public class ProductRepository : IProductRepository
         var items = await _context.Products
             .AsNoTracking()
             .Where(p => productIds.Contains(p.Id) && (includePublic
-                ? p.UserId == userId || p.Visibility == Visibility.PUBLIC
+                ? p.UserId == userId || p.Visibility == Visibility.Public
                 : p.UserId == userId))
             .Select(p => new
             {

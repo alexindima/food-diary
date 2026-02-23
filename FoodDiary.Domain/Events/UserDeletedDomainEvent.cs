@@ -3,7 +3,6 @@ using FoodDiary.Domain.ValueObjects;
 
 namespace FoodDiary.Domain.Events;
 
-public sealed record UserDeletedDomainEvent(UserId UserId, DateTime DeletedAtUtc) : IDomainEvent
-{
+public sealed record UserDeletedDomainEvent(UserId UserId, DateTime DeletedAtUtc) : IDomainEvent {
     public DateTime OccurredOnUtc { get; } = DateTime.UtcNow;
 }
