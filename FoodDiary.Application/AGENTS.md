@@ -23,6 +23,8 @@ Keep namespaces aligned with folder paths.
 - Preserve aggregate invariants; avoid leaking primitives in public contracts.
 - Prefer `Enum.TryParse(..., out ...)` in handlers/services and return validation errors instead of relying on `Enum.Parse` exceptions.
 - Propagate the incoming `CancellationToken` to all async service/repository calls (avoid `CancellationToken.None` in request flow).
+- For time-dependent logic in handlers/services, prefer `IDateTimeProvider` over direct `DateTime.UtcNow`.
+- For authentication flows, centralize token issuance/refresh-token persistence via `IAuthenticationTokenService` instead of duplicating token code in each handler.
 
 ## Commands
 - Build: `dotnet build FoodDiary.Application/FoodDiary.Application.csproj`

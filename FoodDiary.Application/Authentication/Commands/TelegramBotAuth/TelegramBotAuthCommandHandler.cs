@@ -1,62 +1,41 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
+using FoodDiary.Application.Authentication.Services;
 using FoodDiary.Application.Common.Interfaces.Persistence;
-using FoodDiary.Application.Common.Interfaces.Services;
-using FoodDiary.Application.Common.Interfaces.Authentication;
 using FoodDiary.Application.Users.Mappings;
 using FoodDiary.Contracts.Authentication;
-using System.Linq;
 
 namespace FoodDiary.Application.Authentication.Commands.TelegramBotAuth;
 
-public sealed class TelegramBotAuthCommandHandler : ICommandHandler<TelegramBotAuthCommand, Result<AuthenticationResponse>>
-{
+public sealed class TelegramBotAuthCommandHandler : ICommandHandler<TelegramBotAuthCommand, Result<AuthenticationResponse>> {
     private readonly IUserRepository _userRepository;
-    private readonly IJwtTokenGenerator _jwtTokenGenerator;
-    private readonly IPasswordHasher _passwordHasher;
+    private readonly IAuthenticationTokenService _authenticationTokenService;
 
     public TelegramBotAuthCommandHandler(
         IUserRepository userRepository,
-        IJwtTokenGenerator jwtTokenGenerator,
-        IPasswordHasher passwordHasher)
-    {
+        IAuthenticationTokenService authenticationTokenService) {
         _userRepository = userRepository;
-        _jwtTokenGenerator = jwtTokenGenerator;
-        _passwordHasher = passwordHasher;
+        _authenticationTokenService = authenticationTokenService;
     }
 
-    public async Task<Result<AuthenticationResponse>> Handle(TelegramBotAuthCommand command, CancellationToken cancellationToken)
-    {
+    public async Task<Result<AuthenticationResponse>> Handle(TelegramBotAuthCommand command, CancellationToken cancellationToken) {
         var user = await _userRepository.GetByTelegramUserIdAsync(command.TelegramUserId);
-        if (user == null)
-        {
+        if (user == null) {
             return Result.Failure<AuthenticationResponse>(Errors.Authentication.TelegramNotLinked);
         }
 
-        if (user.DeletedAt is not null)
-        {
+        if (user.DeletedAt is not null) {
             return Result.Failure<AuthenticationResponse>(Errors.Authentication.AccountDeleted);
         }
 
-        if (!user.IsActive)
-        {
+        if (!user.IsActive) {
             return Result.Failure<AuthenticationResponse>(Errors.Authentication.InvalidCredentials);
         }
 
-        var roles = user.UserRoles
-            .Select(role => role.Role?.Name)
-            .Where(name => !string.IsNullOrWhiteSpace(name))
-            .Select(name => name!)
-            .ToArray();
-
-        var accessToken = _jwtTokenGenerator.GenerateAccessToken(user.Id, user.Email, roles);
-        var refreshToken = _jwtTokenGenerator.GenerateRefreshToken(user.Id, user.Email, roles);
-        var hashedRefreshToken = _passwordHasher.Hash(refreshToken);
-        user.UpdateRefreshToken(hashedRefreshToken);
-        await _userRepository.UpdateAsync(user);
+        var tokens = await _authenticationTokenService.IssueAndStoreAsync(user, cancellationToken);
 
         var userResponse = user.ToResponse();
-        var authResponse = new AuthenticationResponse(accessToken, refreshToken, userResponse);
+        var authResponse = new AuthenticationResponse(tokens.AccessToken, tokens.RefreshToken, userResponse);
         return Result.Success(authResponse);
     }
 }

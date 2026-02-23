@@ -2,10 +2,11 @@ using FluentValidation;
 
 namespace FoodDiary.Application.Authentication.Commands.TelegramBotAuth;
 
-public sealed class TelegramBotAuthCommandValidator : AbstractValidator<TelegramBotAuthCommand>
-{
-    public TelegramBotAuthCommandValidator()
-    {
-        RuleFor(x => x.TelegramUserId).GreaterThan(0);
+public sealed class TelegramBotAuthCommandValidator : AbstractValidator<TelegramBotAuthCommand> {
+    public TelegramBotAuthCommandValidator() {
+        RuleFor(x => x.TelegramUserId)
+            .GreaterThan(0)
+            .WithErrorCode("Validation.Invalid")
+            .WithMessage("telegramUserId must be greater than 0.");
     }
 }

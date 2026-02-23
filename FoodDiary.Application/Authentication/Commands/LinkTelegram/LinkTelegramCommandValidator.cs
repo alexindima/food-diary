@@ -2,10 +2,8 @@ using FluentValidation;
 
 namespace FoodDiary.Application.Authentication.Commands.LinkTelegram;
 
-public sealed class LinkTelegramCommandValidator : AbstractValidator<LinkTelegramCommand>
-{
-    public LinkTelegramCommandValidator()
-    {
+public sealed class LinkTelegramCommandValidator : AbstractValidator<LinkTelegramCommand> {
+    public LinkTelegramCommandValidator() {
         RuleFor(x => x.UserId)
             .NotNull()
             .WithErrorCode("Validation.Required")

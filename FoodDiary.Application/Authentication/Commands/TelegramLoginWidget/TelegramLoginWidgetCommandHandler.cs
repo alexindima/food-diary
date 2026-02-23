@@ -1,35 +1,28 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
+using FoodDiary.Application.Authentication.Services;
 using FoodDiary.Application.Common.Interfaces.Authentication;
 using FoodDiary.Application.Common.Interfaces.Persistence;
-using FoodDiary.Application.Common.Interfaces.Services;
 using FoodDiary.Application.Users.Mappings;
 using FoodDiary.Contracts.Authentication;
-using System.Linq;
 
 namespace FoodDiary.Application.Authentication.Commands.TelegramLoginWidget;
 
-public sealed class TelegramLoginWidgetCommandHandler : ICommandHandler<TelegramLoginWidgetCommand, Result<AuthenticationResponse>>
-{
+public sealed class TelegramLoginWidgetCommandHandler : ICommandHandler<TelegramLoginWidgetCommand, Result<AuthenticationResponse>> {
     private readonly IUserRepository _userRepository;
-    private readonly IJwtTokenGenerator _jwtTokenGenerator;
-    private readonly IPasswordHasher _passwordHasher;
     private readonly ITelegramLoginWidgetValidator _telegramLoginWidgetValidator;
+    private readonly IAuthenticationTokenService _authenticationTokenService;
 
     public TelegramLoginWidgetCommandHandler(
         IUserRepository userRepository,
-        IJwtTokenGenerator jwtTokenGenerator,
-        IPasswordHasher passwordHasher,
-        ITelegramLoginWidgetValidator telegramLoginWidgetValidator)
-    {
+        ITelegramLoginWidgetValidator telegramLoginWidgetValidator,
+        IAuthenticationTokenService authenticationTokenService) {
         _userRepository = userRepository;
-        _jwtTokenGenerator = jwtTokenGenerator;
-        _passwordHasher = passwordHasher;
         _telegramLoginWidgetValidator = telegramLoginWidgetValidator;
+        _authenticationTokenService = authenticationTokenService;
     }
 
-    public async Task<Result<AuthenticationResponse>> Handle(TelegramLoginWidgetCommand command, CancellationToken cancellationToken)
-    {
+    public async Task<Result<AuthenticationResponse>> Handle(TelegramLoginWidgetCommand command, CancellationToken cancellationToken) {
         var validationResult = _telegramLoginWidgetValidator.ValidateLoginWidget(
             new TelegramLoginWidgetData(
                 command.Id,
@@ -40,42 +33,28 @@ public sealed class TelegramLoginWidgetCommandHandler : ICommandHandler<Telegram
                 command.LastName,
                 command.PhotoUrl));
 
-        if (!validationResult.IsSuccess)
-        {
+        if (!validationResult.IsSuccess) {
             return Result.Failure<AuthenticationResponse>(validationResult.Error);
         }
 
         var initData = validationResult.Value;
         var user = await _userRepository.GetByTelegramUserIdAsync(initData.UserId);
-        if (user == null)
-        {
+        if (user == null) {
             return Result.Failure<AuthenticationResponse>(Errors.Authentication.TelegramNotLinked);
         }
 
-        if (user.DeletedAt is not null)
-        {
+        if (user.DeletedAt is not null) {
             return Result.Failure<AuthenticationResponse>(Errors.Authentication.AccountDeleted);
         }
 
-        if (!user.IsActive)
-        {
+        if (!user.IsActive) {
             return Result.Failure<AuthenticationResponse>(Errors.Authentication.InvalidCredentials);
         }
 
-        var roles = user.UserRoles
-            .Select(role => role.Role?.Name)
-            .Where(name => !string.IsNullOrWhiteSpace(name))
-            .Select(name => name!)
-            .ToArray();
-
-        var accessToken = _jwtTokenGenerator.GenerateAccessToken(user.Id, user.Email, roles);
-        var refreshToken = _jwtTokenGenerator.GenerateRefreshToken(user.Id, user.Email, roles);
-        var hashedRefreshToken = _passwordHasher.Hash(refreshToken);
-        user.UpdateRefreshToken(hashedRefreshToken);
-        await _userRepository.UpdateAsync(user);
+        var tokens = await _authenticationTokenService.IssueAndStoreAsync(user, cancellationToken);
 
         var userResponse = user.ToResponse();
-        var authResponse = new AuthenticationResponse(accessToken, refreshToken, userResponse);
+        var authResponse = new AuthenticationResponse(tokens.AccessToken, tokens.RefreshToken, userResponse);
         return Result.Success(authResponse);
     }
 }

@@ -1,6 +1,8 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
+using FoodDiary.Application.Authentication.Services;
 using FoodDiary.Application.Common.Behaviors;
 using FoodDiary.Application.Common.Interfaces.Services;
+using FoodDiary.Application.Common.Services;
 using FoodDiary.Application.Images.Services;
 using FluentValidation;
 using System.Reflection;
@@ -25,6 +27,8 @@ public static class DependencyInjection
         services.AddValidatorsFromAssembly(assembly);
 
         services.AddScoped<IImageAssetCleanupService, ImageAssetCleanupService>();
+        services.AddSingleton<IDateTimeProvider, SystemDateTimeProvider>();
+        services.AddScoped<IAuthenticationTokenService, AuthenticationTokenService>();
 
         return services;
     }

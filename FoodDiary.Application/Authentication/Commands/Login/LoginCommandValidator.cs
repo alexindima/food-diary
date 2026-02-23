@@ -2,10 +2,8 @@ using FluentValidation;
 
 namespace FoodDiary.Application.Authentication.Commands.Login;
 
-public class LoginCommandValidator : AbstractValidator<LoginCommand>
-{
-    public LoginCommandValidator()
-    {
+public class LoginCommandValidator : AbstractValidator<LoginCommand> {
+    public LoginCommandValidator() {
         RuleFor(x => x.Email)
             .NotEmpty()
             .WithErrorCode("Validation.Required")

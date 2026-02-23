@@ -1,48 +1,38 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
-using FoodDiary.Application.Common.Interfaces.Authentication;
+using FoodDiary.Application.Authentication.Services;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Interfaces.Services;
 using FoodDiary.Application.Common.Models;
 using FoodDiary.Application.Common.Utilities;
 using FoodDiary.Application.Users.Mappings;
 using FoodDiary.Contracts.Authentication;
-using FoodDiary.Domain.Entities.Ai;
-using FoodDiary.Domain.Entities.Assets;
-using FoodDiary.Domain.Entities.Content;
-using FoodDiary.Domain.Entities.Meals;
-using FoodDiary.Domain.Entities.Products;
-using FoodDiary.Domain.Entities.Recipes;
-using FoodDiary.Domain.Entities.Shopping;
-using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects;
-using System;
 
 namespace FoodDiary.Application.Authentication.Commands.Register;
 
-public class RegisterCommandHandler : ICommandHandler<RegisterCommand, Result<AuthenticationResponse>>
-{
+public class RegisterCommandHandler : ICommandHandler<RegisterCommand, Result<AuthenticationResponse>> {
     private readonly IUserRepository _userRepository;
-    private readonly IJwtTokenGenerator _jwtTokenGenerator;
     private readonly IPasswordHasher _passwordHasher;
     private readonly IEmailSender _emailSender;
+    private readonly IDateTimeProvider _dateTimeProvider;
+    private readonly IAuthenticationTokenService _authenticationTokenService;
 
     public RegisterCommandHandler(
         IUserRepository userRepository,
-        IJwtTokenGenerator jwtTokenGenerator,
         IPasswordHasher passwordHasher,
-        IEmailSender emailSender)
-    {
+        IEmailSender emailSender,
+        IDateTimeProvider dateTimeProvider,
+        IAuthenticationTokenService authenticationTokenService) {
         _userRepository = userRepository;
-        _jwtTokenGenerator = jwtTokenGenerator;
         _passwordHasher = passwordHasher;
         _emailSender = emailSender;
+        _dateTimeProvider = dateTimeProvider;
+        _authenticationTokenService = authenticationTokenService;
     }
 
-    public async Task<Result<AuthenticationResponse>> Handle(RegisterCommand command, CancellationToken cancellationToken)
-    {
-        // Валидация email уникальности через FluentValidation
+    public async Task<Result<AuthenticationResponse>> Handle(RegisterCommand command, CancellationToken cancellationToken) {
         var hashedPassword = _passwordHasher.Hash(command.Password);
         var user = User.Create(command.Email, hashedPassword);
         var normalizedLanguage = LanguageCode.FromPreferred(command.Language).Value;
@@ -62,32 +52,20 @@ public class RegisterCommandHandler : ICommandHandler<RegisterCommand, Result<Au
 
         var emailToken = SecurityTokenGenerator.GenerateUrlSafeToken();
         var emailTokenHash = _passwordHasher.Hash(emailToken);
-        user.SetEmailConfirmationToken(emailTokenHash, DateTime.UtcNow.AddHours(24));
+        user.SetEmailConfirmationToken(emailTokenHash, _dateTimeProvider.UtcNow.AddHours(24));
 
-        // Создание токенов
-        var roles = Array.Empty<string>();
-        var accessToken = _jwtTokenGenerator.GenerateAccessToken(user.Id, user.Email, roles);
-        var refreshToken = _jwtTokenGenerator.GenerateRefreshToken(user.Id, user.Email, roles);
+        var tokens = await _authenticationTokenService.IssueAndStoreAsync(user, cancellationToken);
 
-        var hashedRefreshToken = _passwordHasher.Hash(refreshToken);
-        user.UpdateRefreshToken(hashedRefreshToken);
-        await _userRepository.UpdateAsync(user);
-
-        try
-        {
+        try {
             await _emailSender.SendEmailVerificationAsync(
                 new EmailVerificationMessage(user.Email, user.Id.Value.ToString(), emailToken, user.Language),
                 cancellationToken);
-        }
-        catch
-        {
+        } catch {
             // Email failures should not block registration.
         }
 
         var userResponse = user.ToResponse();
-        var authResponse = new AuthenticationResponse(accessToken, refreshToken, userResponse);
+        var authResponse = new AuthenticationResponse(tokens.AccessToken, tokens.RefreshToken, userResponse);
         return Result.Success(authResponse);
     }
 }
-
-
