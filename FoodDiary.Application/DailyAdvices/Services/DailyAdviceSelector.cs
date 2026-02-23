@@ -1,29 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using FoodDiary.Domain.Entities.Ai;
-using FoodDiary.Domain.Entities.Assets;
 using FoodDiary.Domain.Entities.Content;
-using FoodDiary.Domain.Entities.Meals;
-using FoodDiary.Domain.Entities.Products;
-using FoodDiary.Domain.Entities.Recipes;
-using FoodDiary.Domain.Entities.Shopping;
-using FoodDiary.Domain.Entities.Tracking;
-using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Domain.ValueObjects;
 
 namespace FoodDiary.Application.DailyAdvices.Services;
 
-internal static class DailyAdviceSelector
-{
+internal static class DailyAdviceSelector {
     public static DailyAdvice? SelectForDate(
         IReadOnlyList<DailyAdvice> advices,
         DateTime date,
-        string locale)
-    {
-        if (advices.Count == 0)
-        {
+        string locale) {
+        ArgumentNullException.ThrowIfNull(advices);
+
+        if (advices.Count == 0) {
             return null;
         }
 
@@ -32,8 +21,7 @@ internal static class DailyAdviceSelector
             .Where(a => string.Equals(a.Locale, normalizedLocale, StringComparison.OrdinalIgnoreCase))
             .ToList();
 
-        if (filtered.Count == 0)
-        {
+        if (filtered.Count == 0) {
             return null;
         }
 
@@ -42,13 +30,10 @@ internal static class DailyAdviceSelector
         var todayIndex = GetWeightedIndex(ordered, targetDate, normalizedLocale);
         var selected = ordered[todayIndex];
 
-        if (ordered.Count > 1)
-        {
-            var previousIndex = GetWeightedIndex(ordered, targetDate.AddDays(-1), normalizedLocale);
-            if (ordered[previousIndex].Id == selected.Id)
-            {
-                selected = ordered[(todayIndex + 1) % ordered.Count];
-            }
+        if (ordered.Count <= 1) return selected;
+        var previousIndex = GetWeightedIndex(ordered, targetDate.AddDays(-1), normalizedLocale);
+        if (ordered[previousIndex].Id == selected.Id) {
+            selected = ordered[(todayIndex + 1) % ordered.Count];
         }
 
         return selected;
@@ -57,18 +42,15 @@ internal static class DailyAdviceSelector
     private static int GetWeightedIndex(
         IReadOnlyList<DailyAdvice> advices,
         DateTime date,
-        string locale)
-    {
+        string locale) {
         var totalWeight = advices.Sum(advice => Math.Max(1, advice.Weight));
         var hashValue = ComputeStableHash($"{locale}:{date:yyyy-MM-dd}");
         var offset = (int)(hashValue % totalWeight);
 
         var cumulative = 0;
-        for (var i = 0; i < advices.Count; i++)
-        {
+        for (var i = 0; i < advices.Count; i++) {
             cumulative += Math.Max(1, advices[i].Weight);
-            if (offset < cumulative)
-            {
+            if (offset < cumulative) {
                 return i;
             }
         }
@@ -76,23 +58,13 @@ internal static class DailyAdviceSelector
         return advices.Count - 1;
     }
 
-    private static long ComputeStableHash(string input)
-    {
+    private static long ComputeStableHash(string input) {
         var bytes = Encoding.UTF8.GetBytes(input);
         var hash = SHA256.HashData(bytes);
         return BitConverter.ToInt64(hash, 0) & long.MaxValue;
     }
 
-    private static string NormalizeLocale(string locale)
-    {
-        if (string.IsNullOrWhiteSpace(locale))
-        {
-            return "en";
-        }
-
-        var normalized = locale.Trim().ToLowerInvariant();
-        var separatorIndex = normalized.IndexOfAny(new[] { '-', '_' });
-        return separatorIndex > 0 ? normalized[..separatorIndex] : normalized;
+    internal static string NormalizeLocale(string locale) {
+        return LanguageCode.FromPreferred(locale).Value;
     }
 }
-
