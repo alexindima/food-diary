@@ -1,13 +1,10 @@
 using FluentValidation;
-using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Products.Commands.DuplicateProduct;
 
-public class DuplicateProductCommandValidator : AbstractValidator<DuplicateProductCommand>
-{
-    public DuplicateProductCommandValidator()
-    {
+public class DuplicateProductCommandValidator : AbstractValidator<DuplicateProductCommand> {
+    public DuplicateProductCommandValidator() {
         RuleFor(x => x.UserId)
             .NotNull()
             .WithErrorCode("Authentication.InvalidToken")

@@ -1,19 +1,10 @@
-﻿using FoodDiary.Application.Common.Abstractions.Messaging;
+using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Products.Mappings;
 using FoodDiary.Contracts.Products;
-using FoodDiary.Domain.Entities.Ai;
-using FoodDiary.Domain.Entities.Assets;
-using FoodDiary.Domain.Entities.Content;
-using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Products;
-using FoodDiary.Domain.Entities.Recipes;
-using FoodDiary.Domain.Entities.Shopping;
-using FoodDiary.Domain.Entities.Tracking;
-using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Products.Commands.CreateProduct;
@@ -22,6 +13,10 @@ public class CreateProductCommandHandler(IProductRepository productRepository)
     : ICommandHandler<CreateProductCommand, Result<ProductResponse>> {
     public async Task<Result<ProductResponse>>
         Handle(CreateProductCommand command, CancellationToken cancellationToken) {
+        if (command.UserId is null || command.UserId == UserId.Empty) {
+            return Result.Failure<ProductResponse>(Errors.Authentication.InvalidToken);
+        }
+
         if (!Enum.TryParse<MeasurementUnit>(command.BaseUnit, true, out var baseUnit)) {
             return Result.Failure<ProductResponse>(
                 Errors.Validation.Invalid(nameof(command.BaseUnit), "Unknown measurement unit value."));
@@ -37,7 +32,7 @@ public class CreateProductCommandHandler(IProductRepository productRepository)
             : ProductType.Unknown;
 
         var product = Product.Create(
-            userId: command.UserId!.Value,
+            userId: command.UserId.Value,
             name: command.Name,
             baseUnit: baseUnit,
             baseAmount: command.BaseAmount,
@@ -64,4 +59,3 @@ public class CreateProductCommandHandler(IProductRepository productRepository)
         return Result.Success(product.ToResponse(isOwnedByCurrentUser: true));
     }
 }
-

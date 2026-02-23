@@ -1,34 +1,27 @@
-﻿using FoodDiary.Application.Common.Abstractions.Messaging;
+using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Products.Mappings;
 using FoodDiary.Contracts.Products;
-using FoodDiary.Domain.Entities.Ai;
-using FoodDiary.Domain.Entities.Assets;
-using FoodDiary.Domain.Entities.Content;
-using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Products;
-using FoodDiary.Domain.Entities.Recipes;
-using FoodDiary.Domain.Entities.Shopping;
-using FoodDiary.Domain.Entities.Tracking;
-using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.Enums;
+using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Products.Commands.DuplicateProduct;
 
 public class DuplicateProductCommandHandler(IProductRepository productRepository)
-    : ICommandHandler<DuplicateProductCommand, Result<ProductResponse>>
-{
-    public async Task<Result<ProductResponse>> Handle(DuplicateProductCommand command, CancellationToken cancellationToken)
-    {
+    : ICommandHandler<DuplicateProductCommand, Result<ProductResponse>> {
+    public async Task<Result<ProductResponse>> Handle(DuplicateProductCommand command, CancellationToken cancellationToken) {
+        if (command.UserId is null || command.UserId == UserId.Empty) {
+            return Result.Failure<ProductResponse>(Errors.Authentication.InvalidToken);
+        }
+
         var original = await productRepository.GetByIdAsync(
             command.ProductId,
-            command.UserId!.Value,
+            command.UserId.Value,
             includePublic: true,
             cancellationToken: cancellationToken);
 
-        if (original is null)
-        {
+        if (original is null) {
             return Result.Failure<ProductResponse>(Errors.Product.NotFound(command.ProductId.Value));
         }
 
@@ -59,4 +52,3 @@ public class DuplicateProductCommandHandler(IProductRepository productRepository
         return Result.Success(duplicate.ToResponse(0, true));
     }
 }
-

@@ -3,7 +3,6 @@ using FluentValidation.Results;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Products.Commands.UpdateProduct;
@@ -168,4 +167,3 @@ public class UpdateProductCommandValidator : AbstractValidator<UpdateProductComm
         }
     }
 }
-

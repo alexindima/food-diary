@@ -5,6 +5,7 @@ using FoodDiary.Application.Products.Mappings;
 using FoodDiary.Contracts.Common;
 using FoodDiary.Contracts.Products;
 using FoodDiary.Domain.Enums;
+using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Products.Queries.GetProducts;
 
@@ -13,9 +14,13 @@ public class GetProductsQueryHandler(IProductRepository productRepository)
     public async Task<Result<PagedResponse<ProductResponse>>> Handle(
         GetProductsQuery query,
         CancellationToken cancellationToken) {
+        if (query.UserId is null || query.UserId == UserId.Empty) {
+            return Result.Failure<PagedResponse<ProductResponse>>(Errors.Authentication.InvalidToken);
+        }
+
         var pageNumber = Math.Max(query.Page, 1);
         var pageSize = Math.Max(query.Limit, 1);
-        var userId = query.UserId!.Value;
+        var userId = query.UserId.Value;
         var productTypes = query.ProductTypes?
             .Select(type => Enum.TryParse<ProductType>(type, true, out var parsed) ? parsed : (ProductType?)null)
             .OfType<ProductType>()

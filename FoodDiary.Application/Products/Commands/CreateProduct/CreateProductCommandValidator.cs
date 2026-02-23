@@ -1,7 +1,6 @@
 using FluentValidation;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Products.Commands.CreateProduct;

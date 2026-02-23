@@ -1,18 +1,12 @@
 using FluentValidation;
 using FluentValidation.Results;
 using FoodDiary.Application.Common.Interfaces.Persistence;
-using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Products.Commands.DeleteProduct;
 
-public class DeleteProductCommandValidator : AbstractValidator<DeleteProductCommand>
-{
-    private readonly IProductRepository _productRepository;
-
-    public DeleteProductCommandValidator(IProductRepository productRepository)
-    {
-        _productRepository = productRepository;
+public class DeleteProductCommandValidator : AbstractValidator<DeleteProductCommand> {
+    public DeleteProductCommandValidator(IProductRepository productRepository) {
 
         RuleFor(x => x.UserId)
             .Cascade(CascadeMode.Stop)
@@ -29,28 +23,20 @@ public class DeleteProductCommandValidator : AbstractValidator<DeleteProductComm
             .WithMessage("ProductId is required");
 
         RuleFor(x => x)
-            .CustomAsync(async (command, context, cancellationToken) =>
-            {
-                if (command.UserId is null || command.UserId.Value == UserId.Empty)
-                {
+            .CustomAsync(async (command, context, cancellationToken) => {
+                if (command.UserId is null || command.UserId.Value == UserId.Empty) {
                     return;
                 }
 
-                var product = await _productRepository.GetByIdAsync(command.ProductId, command.UserId.Value, includePublic: false, cancellationToken: cancellationToken);
-                if (product is null)
-                {
-                    context.AddFailure(new ValidationFailure(nameof(command.ProductId), "Product not found or you do not have permission to delete it")
-                    {
+                var product = await productRepository.GetByIdAsync(command.ProductId, command.UserId.Value, includePublic: false, cancellationToken: cancellationToken);
+                if (product is null) {
+                    context.AddFailure(new ValidationFailure(nameof(command.ProductId), "Product not found or you do not have permission to delete it") {
                         ErrorCode = "Product.NotFound"
                     });
-                }
-                else
-                {
+                } else {
                     var usageCount = product.MealItems.Count + product.RecipeIngredients.Count;
-                    if (usageCount > 0)
-                    {
-                        context.AddFailure(new ValidationFailure(nameof(command.ProductId), "Product is already used and cannot be deleted")
-                        {
+                    if (usageCount > 0) {
+                        context.AddFailure(new ValidationFailure(nameof(command.ProductId), "Product is already used and cannot be deleted") {
                             ErrorCode = "Validation.Invalid"
                         });
                     }
@@ -58,5 +44,3 @@ public class DeleteProductCommandValidator : AbstractValidator<DeleteProductComm
             });
     }
 }
-
-

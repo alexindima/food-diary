@@ -5,7 +5,6 @@ using FoodDiary.Application.Common.Interfaces.Services;
 using FoodDiary.Application.Products.Mappings;
 using FoodDiary.Contracts.Products;
 using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Products.Commands.UpdateProduct;
@@ -17,9 +16,13 @@ public class UpdateProductCommandHandler(
     : ICommandHandler<UpdateProductCommand, Result<ProductResponse>> {
     public async Task<Result<ProductResponse>>
         Handle(UpdateProductCommand command, CancellationToken cancellationToken) {
+        if (command.UserId is null || command.UserId == UserId.Empty) {
+            return Result.Failure<ProductResponse>(Errors.Authentication.InvalidToken);
+        }
+
         var product = await productRepository.GetByIdAsync(
             command.ProductId,
-            command.UserId!.Value,
+            command.UserId.Value,
             includePublic: false,
             cancellationToken: cancellationToken);
         if (product is null) {
@@ -50,8 +53,7 @@ public class UpdateProductCommandHandler(
 
         ProductType? newProductType = null;
         if (!string.IsNullOrWhiteSpace(command.ProductType) &&
-            Enum.TryParse<ProductType>(command.ProductType, true, out var parsedProductType))
-        {
+            Enum.TryParse<ProductType>(command.ProductType, true, out var parsedProductType)) {
             newProductType = parsedProductType;
         }
 
@@ -68,8 +70,7 @@ public class UpdateProductCommandHandler(
             command.Description is not null ||
             command.ClearDescription ||
             command.Comment is not null ||
-            command.ClearComment)
-        {
+            command.ClearComment) {
             product.UpdateIdentity(
                 name: command.Name,
                 barcode: command.Barcode,
@@ -85,8 +86,7 @@ public class UpdateProductCommandHandler(
                 clearComment: command.ClearComment);
         }
 
-        if (newUnit.HasValue || command.BaseAmount.HasValue || command.DefaultPortionAmount.HasValue)
-        {
+        if (newUnit.HasValue || command.BaseAmount.HasValue || command.DefaultPortionAmount.HasValue) {
             product.UpdateMeasurement(
                 baseUnit: newUnit,
                 baseAmount: command.BaseAmount,
@@ -98,8 +98,7 @@ public class UpdateProductCommandHandler(
             command.FatsPerBase.HasValue ||
             command.CarbsPerBase.HasValue ||
             command.FiberPerBase.HasValue ||
-            command.AlcoholPerBase.HasValue)
-        {
+            command.AlcoholPerBase.HasValue) {
             product.UpdateNutrition(
                 caloriesPerBase: command.CaloriesPerBase,
                 proteinsPerBase: command.ProteinsPerBase,
@@ -109,8 +108,7 @@ public class UpdateProductCommandHandler(
                 alcoholPerBase: command.AlcoholPerBase);
         }
 
-        if (command.ImageUrl is not null || command.ClearImageUrl || command.ImageAssetId.HasValue || command.ClearImageAssetId)
-        {
+        if (command.ImageUrl is not null || command.ClearImageUrl || command.ImageAssetId.HasValue || command.ClearImageAssetId) {
             product.UpdateMedia(
                 imageUrl: command.ImageUrl,
                 clearImageUrl: command.ClearImageUrl,
@@ -118,22 +116,19 @@ public class UpdateProductCommandHandler(
                 clearImageAssetId: command.ClearImageAssetId);
         }
 
-        if (newVisibility.HasValue)
-        {
+        if (newVisibility.HasValue) {
             product.ChangeVisibility(newVisibility.Value);
         }
 
         var hasChanges = product.ModifiedOnUtc != modifiedOnBefore;
-        if (hasChanges)
-        {
+        if (hasChanges) {
             await productRepository.UpdateAsync(product);
         }
 
         var imageAssetChanged = command.ClearImageAssetId ||
                                 (command.ImageAssetId.HasValue && oldAssetId.HasValue && oldAssetId.Value.Value != command.ImageAssetId.Value);
 
-        if (hasChanges && oldAssetId.HasValue && imageAssetChanged)
-        {
+        if (hasChanges && oldAssetId.HasValue && imageAssetChanged) {
             await TryDeleteAssetAsync(oldAssetId.Value, imageAssetRepository, imageStorageService, cancellationToken);
         }
 
@@ -145,17 +140,14 @@ public class UpdateProductCommandHandler(
         ImageAssetId assetId,
         IImageAssetRepository imageAssetRepository,
         IImageStorageService storageService,
-        CancellationToken cancellationToken)
-    {
+        CancellationToken cancellationToken) {
         var asset = await imageAssetRepository.GetByIdAsync(assetId, cancellationToken);
-        if (asset is null)
-        {
+        if (asset is null) {
             return;
         }
 
         var inUse = await imageAssetRepository.IsAssetInUse(assetId, cancellationToken);
-        if (inUse)
-        {
+        if (inUse) {
             return;
         }
 

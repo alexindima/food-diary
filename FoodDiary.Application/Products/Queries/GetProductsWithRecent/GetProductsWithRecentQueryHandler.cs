@@ -12,14 +12,11 @@ namespace FoodDiary.Application.Products.Queries.GetProductsWithRecent;
 public sealed class GetProductsWithRecentQueryHandler(
     IProductRepository productRepository,
     IRecentItemRepository recentItemRepository)
-    : IQueryHandler<GetProductsWithRecentQuery, Result<ProductListWithRecentResponse>>
-{
+    : IQueryHandler<GetProductsWithRecentQuery, Result<ProductListWithRecentResponse>> {
     public async Task<Result<ProductListWithRecentResponse>> Handle(
         GetProductsWithRecentQuery query,
-        CancellationToken cancellationToken)
-    {
-        if (query.UserId is null || query.UserId == UserId.Empty)
-        {
+        CancellationToken cancellationToken) {
+        if (query.UserId is null || query.UserId == UserId.Empty) {
             return Result.Failure<ProductListWithRecentResponse>(Errors.Authentication.InvalidToken);
         }
 
@@ -43,8 +40,7 @@ public sealed class GetProductsWithRecentQueryHandler(
             productTypes is { Length: > 0 } ? productTypes : null,
             cancellationToken);
 
-        var allProducts = items.Select(item => new
-        {
+        var allProducts = items.Select(item => new {
             item.Product,
             item.UsageCount,
             IsOwner = item.Product.UserId == userId
@@ -59,34 +55,29 @@ public sealed class GetProductsWithRecentQueryHandler(
             totalItems);
 
         var recentResponses = Array.Empty<ProductResponse>();
-        if (string.IsNullOrWhiteSpace(query.Search))
-        {
+        if (string.IsNullOrWhiteSpace(query.Search)) {
             var recents = await recentItemRepository.GetRecentProductsAsync(userId, recentLimit, cancellationToken);
-            if (recents.Count > 0)
-            {
-                var recentIds = recents.Select(x => x.ProductId).ToList();
-                var productsById = await productRepository.GetByIdsWithUsageAsync(
-                    recentIds,
-                    userId,
-                    query.IncludePublic,
-                    cancellationToken);
+            if (recents.Count <= 0) return Result.Success(new ProductListWithRecentResponse(recentResponses, allPaged));
+            var recentIds = recents.Select(x => x.ProductId).ToList();
+            var productsById = await productRepository.GetByIdsWithUsageAsync(
+                recentIds,
+                userId,
+                query.IncludePublic,
+                cancellationToken);
 
-                recentResponses = recentIds
-                    .Where(productsById.ContainsKey)
-                    .Select(id =>
-                    {
-                        var item = productsById[id];
-                        if (selectedProductTypes is not null && !selectedProductTypes.Contains(item.Product.ProductType))
-                        {
-                            return null;
-                        }
+            recentResponses = recentIds
+                .Where(productsById.ContainsKey)
+                .Select(id => {
+                    var item = productsById[id];
+                    if (selectedProductTypes is not null && !selectedProductTypes.Contains(item.Product.ProductType)) {
+                        return null;
+                    }
 
-                        return item.Product.ToResponse(item.UsageCount, item.Product.UserId == userId);
-                    })
-                    .Where(response => response is not null)
-                    .Select(response => response!)
-                    .ToArray();
-            }
+                    return item.Product.ToResponse(item.UsageCount, item.Product.UserId == userId);
+                })
+                .Where(response => response is not null)
+                .Select(response => response!)
+                .ToArray();
         }
 
         return Result.Success(new ProductListWithRecentResponse(recentResponses, allPaged));

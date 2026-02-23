@@ -10,14 +10,11 @@ namespace FoodDiary.Application.Products.Queries.GetRecentProducts;
 public sealed class GetRecentProductsQueryHandler(
     IRecentItemRepository recentItemRepository,
     IProductRepository productRepository)
-    : IQueryHandler<GetRecentProductsQuery, Result<IReadOnlyList<ProductResponse>>>
-{
+    : IQueryHandler<GetRecentProductsQuery, Result<IReadOnlyList<ProductResponse>>> {
     public async Task<Result<IReadOnlyList<ProductResponse>>> Handle(
         GetRecentProductsQuery query,
-        CancellationToken cancellationToken)
-    {
-        if (query.UserId is null || query.UserId == UserId.Empty)
-        {
+        CancellationToken cancellationToken) {
+        if (query.UserId is null || query.UserId == UserId.Empty) {
             return Result.Failure<IReadOnlyList<ProductResponse>>(Errors.Authentication.InvalidToken);
         }
 
@@ -25,8 +22,7 @@ public sealed class GetRecentProductsQueryHandler(
         var recentLimit = Math.Clamp(query.Limit, 1, 50);
 
         var recents = await recentItemRepository.GetRecentProductsAsync(userId, recentLimit, cancellationToken);
-        if (recents.Count == 0)
-        {
+        if (recents.Count == 0) {
             return Result.Success<IReadOnlyList<ProductResponse>>(Array.Empty<ProductResponse>());
         }
 
@@ -39,8 +35,7 @@ public sealed class GetRecentProductsQueryHandler(
 
         var response = idsInOrder
             .Where(productsById.ContainsKey)
-            .Select(id =>
-            {
+            .Select(id => {
                 var item = productsById[id];
                 return item.Product.ToResponse(item.UsageCount, item.Product.UserId == userId);
             })

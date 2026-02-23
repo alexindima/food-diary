@@ -3,6 +3,7 @@ using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Products.Mappings;
 using FoodDiary.Contracts.Products;
+using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Products.Queries.GetProductById;
 
@@ -11,7 +12,11 @@ public class GetProductByIdQueryHandler(IProductRepository productRepository)
     public async Task<Result<ProductResponse>> Handle(
         GetProductByIdQuery query,
         CancellationToken cancellationToken) {
-        var userId = query.UserId!.Value;
+        if (query.UserId is null || query.UserId == UserId.Empty) {
+            return Result.Failure<ProductResponse>(Errors.Authentication.InvalidToken);
+        }
+
+        var userId = query.UserId.Value;
         var product = await productRepository.GetByIdAsync(
             query.ProductId,
             userId,

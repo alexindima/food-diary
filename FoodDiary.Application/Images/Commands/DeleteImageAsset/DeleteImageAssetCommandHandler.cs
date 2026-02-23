@@ -1,23 +1,24 @@
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Interfaces.Services;
+using FoodDiary.Domain.ValueObjects.Ids;
 using MediatR;
 
 namespace FoodDiary.Application.Images.Commands.DeleteImageAsset;
 
 public sealed class DeleteImageAssetCommandHandler(
     IImageAssetRepository imageAssetRepository,
-    IImageAssetCleanupService cleanupService) : IRequestHandler<DeleteImageAssetCommand, DeleteImageAssetResult>
-{
-    public async Task<DeleteImageAssetResult> Handle(DeleteImageAssetCommand request, CancellationToken cancellationToken)
-    {
+    IImageAssetCleanupService cleanupService) : IRequestHandler<DeleteImageAssetCommand, DeleteImageAssetResult> {
+    public async Task<DeleteImageAssetResult> Handle(DeleteImageAssetCommand request, CancellationToken cancellationToken) {
+        if (request.UserId == UserId.Empty || request.AssetId == ImageAssetId.Empty) {
+            return new DeleteImageAssetResult(false, "invalid");
+        }
+
         var asset = await imageAssetRepository.GetByIdAsync(request.AssetId, cancellationToken);
-        if (asset is null)
-        {
+        if (asset is null) {
             return new DeleteImageAssetResult(false, "not_found");
         }
 
-        if (asset.UserId != request.UserId)
-        {
+        if (asset.UserId != request.UserId) {
             return new DeleteImageAssetResult(false, "forbidden");
         }
 

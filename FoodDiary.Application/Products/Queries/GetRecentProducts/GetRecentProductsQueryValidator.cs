@@ -1,10 +1,10 @@
 using FluentValidation;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Products.Queries.GetProductById;
+namespace FoodDiary.Application.Products.Queries.GetRecentProducts;
 
-public class GetProductByIdQueryValidator : AbstractValidator<GetProductByIdQuery> {
-    public GetProductByIdQueryValidator() {
+public sealed class GetRecentProductsQueryValidator : AbstractValidator<GetRecentProductsQuery> {
+    public GetRecentProductsQueryValidator() {
         RuleFor(x => x.UserId)
             .Cascade(CascadeMode.Stop)
             .NotNull()
@@ -13,10 +13,5 @@ public class GetProductByIdQueryValidator : AbstractValidator<GetProductByIdQuer
             .Must(userId => userId is not null && userId.Value != UserId.Empty)
             .WithErrorCode("Authentication.InvalidToken")
             .WithMessage("Unable to identify user");
-
-        RuleFor(x => x.ProductId)
-            .Must(id => id != ProductId.Empty)
-            .WithErrorCode("Validation.Required")
-            .WithMessage("ProductId is required");
     }
 }
