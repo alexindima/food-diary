@@ -3,19 +3,15 @@ using FoodDiary.Application.Products.Commands.CreateProduct;
 using FoodDiary.Application.Products.Queries.GetProducts;
 using FoodDiary.Application.Products.Queries.GetProductsWithRecent;
 using FoodDiary.Application.Products.Queries.GetRecentProducts;
-using FoodDiary.Contracts.Common;
-using FoodDiary.Contracts.Products;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.Products;
 
-public class ProductsFeatureTests
-{
+public class ProductsFeatureTests {
     [Fact]
-    public async Task GetProductsWithRecentQueryValidator_WithEmptyUserId_Fails()
-    {
+    public async Task GetProductsWithRecentQueryValidator_WithEmptyUserId_Fails() {
         var validator = new GetProductsWithRecentQueryValidator();
         var query = new GetProductsWithRecentQuery(UserId.Empty, 1, 10, null, true);
 
@@ -25,8 +21,7 @@ public class ProductsFeatureTests
     }
 
     [Fact]
-    public async Task GetRecentProductsQueryValidator_WithValidUserId_Passes()
-    {
+    public async Task GetRecentProductsQueryValidator_WithValidUserId_Passes() {
         var validator = new GetRecentProductsQueryValidator();
         var query = new GetRecentProductsQuery(UserId.New(), 10, true);
 
@@ -36,8 +31,7 @@ public class ProductsFeatureTests
     }
 
     [Fact]
-    public async Task GetProductsQueryHandler_WithMissingUserId_ReturnsInvalidToken()
-    {
+    public async Task GetProductsQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
         var handler = new GetProductsQueryHandler(new NoopProductRepository());
         var query = new GetProductsQuery(null, 1, 10, null, true);
 
@@ -48,8 +42,7 @@ public class ProductsFeatureTests
     }
 
     [Fact]
-    public async Task CreateProductCommandHandler_WithMissingUserId_ReturnsInvalidToken()
-    {
+    public async Task CreateProductCommandHandler_WithMissingUserId_ReturnsInvalidToken() {
         var handler = new CreateProductCommandHandler(new NoopProductRepository());
         var command = new CreateProductCommand(
             UserId: null,
@@ -79,8 +72,7 @@ public class ProductsFeatureTests
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
-    private sealed class NoopProductRepository : IProductRepository
-    {
+    private sealed class NoopProductRepository : IProductRepository {
         public Task<Product> AddAsync(Product product) => Task.FromResult(product);
 
         public Task<(IReadOnlyList<(Product Product, int UsageCount)> Items, int TotalItems)> GetPagedAsync(

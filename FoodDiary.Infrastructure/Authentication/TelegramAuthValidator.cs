@@ -9,12 +9,8 @@ using Microsoft.Extensions.Options;
 
 namespace FoodDiary.Infrastructure.Authentication;
 
-public sealed class TelegramAuthValidator : ITelegramAuthValidator {
-    private readonly TelegramAuthOptions _options;
-
-    public TelegramAuthValidator(IOptions<TelegramAuthOptions> options) {
-        _options = options.Value;
-    }
+public sealed class TelegramAuthValidator(IOptions<TelegramAuthOptions> options) : ITelegramAuthValidator {
+    private readonly TelegramAuthOptions _options = options.Value;
 
     public Result<TelegramInitData> ValidateInitData(string initData) {
         if (string.IsNullOrWhiteSpace(initData)) {

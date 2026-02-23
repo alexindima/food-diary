@@ -10,15 +10,11 @@ using FoodDiary.Domain.Entities.Shopping;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Infrastructure.Persistence;
 
-public class FoodDiaryDbContext : DbContext
-{
-    public FoodDiaryDbContext(DbContextOptions<FoodDiaryDbContext> options) : base(options) { }
-
+public class FoodDiaryDbContext(DbContextOptions<FoodDiaryDbContext> options) : DbContext(options) {
     public DbSet<User> Users => Set<User>();
     public DbSet<Role> Roles => Set<Role>();
     public DbSet<UserRole> UserRoles => Set<UserRole>();
@@ -43,11 +39,8 @@ public class FoodDiaryDbContext : DbContext
     public DbSet<AiUsage> AiUsages => Set<AiUsage>();
     public DbSet<EmailTemplate> EmailTemplates => Set<EmailTemplate>();
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        // User configuration
-        modelBuilder.Entity<User>(entity =>
-        {
+    protected override void OnModelCreating(ModelBuilder modelBuilder) {
+        modelBuilder.Entity<User>(entity => {
             entity.Property(e => e.Id).HasConversion(
                 id => id.Value,
                 value => new UserId(value));
@@ -111,8 +104,7 @@ public class FoodDiaryDbContext : DbContext
                 .IsUnique();
         });
 
-        modelBuilder.Entity<Role>(entity =>
-        {
+        modelBuilder.Entity<Role>(entity => {
             entity.Property(e => e.Id).HasConversion(
                 id => id.Value,
                 value => new RoleId(value));
@@ -125,8 +117,7 @@ public class FoodDiaryDbContext : DbContext
                 .IsUnique();
         });
 
-        modelBuilder.Entity<UserRole>(entity =>
-        {
+        modelBuilder.Entity<UserRole>(entity => {
             entity.HasKey(e => new { e.UserId, e.RoleId });
 
             entity.Property(e => e.UserId).HasConversion(
@@ -148,8 +139,7 @@ public class FoodDiaryDbContext : DbContext
                 .OnDelete(DeleteBehavior.Cascade);
         });
 
-        modelBuilder.Entity<ImageAsset>(entity =>
-        {
+        modelBuilder.Entity<ImageAsset>(entity => {
             entity.Property(e => e.Id).HasConversion(
                 id => id.Value,
                 value => new ImageAssetId(value));
@@ -168,8 +158,7 @@ public class FoodDiaryDbContext : DbContext
         });
 
         // Product configuration
-        modelBuilder.Entity<Product>(entity =>
-        {
+        modelBuilder.Entity<Product>(entity => {
             entity.Property(e => e.Id).HasConversion(
                 id => id.Value,
                 value => new ProductId(value));
@@ -197,8 +186,7 @@ public class FoodDiaryDbContext : DbContext
             entity.HasOne(e => e.User).WithMany(u => u.Products).HasForeignKey(e => e.UserId);
         });
 
-        modelBuilder.Entity<RecentItem>(entity =>
-        {
+        modelBuilder.Entity<RecentItem>(entity => {
             entity.Property(e => e.Id).HasConversion(
                 id => id.Value,
                 value => new RecentItemId(value));
@@ -226,8 +214,7 @@ public class FoodDiaryDbContext : DbContext
         });
 
         // Meal configuration
-        modelBuilder.Entity<Meal>(entity =>
-        {
+        modelBuilder.Entity<Meal>(entity => {
             entity.Property(e => e.Id)
                 .HasConversion(
                     id => id.Value,
@@ -261,8 +248,7 @@ public class FoodDiaryDbContext : DbContext
         });
 
         // Recipe configuration
-        modelBuilder.Entity<Recipe>(entity =>
-        {
+        modelBuilder.Entity<Recipe>(entity => {
             entity.Property(e => e.Id).HasConversion(
                 id => id.Value,
                 value => new RecipeId(value));
@@ -295,8 +281,7 @@ public class FoodDiaryDbContext : DbContext
         });
 
         // MealItem configuration - XOR constraint: ProductId OR RecipeId
-        modelBuilder.Entity<MealItem>(entity =>
-        {
+        modelBuilder.Entity<MealItem>(entity => {
             entity.Property(e => e.Id)
                 .HasConversion(
                     id => id.Value,
@@ -332,8 +317,7 @@ public class FoodDiaryDbContext : DbContext
             // XOR check constraint Ð±ÑƒÐ´ÐµÑ‚ Ð² Ð¼Ð¸Ð³Ñ€Ð°Ñ†Ð¸Ð¸: CHECK ((ProductId IS NULL) <> (RecipeId IS NULL))
         });
 
-        modelBuilder.Entity<MealAiSession>(entity =>
-        {
+        modelBuilder.Entity<MealAiSession>(entity => {
             entity.Property(e => e.Id)
                 .HasConversion(
                     id => id.Value,
@@ -368,8 +352,7 @@ public class FoodDiaryDbContext : DbContext
                 .UsePropertyAccessMode(PropertyAccessMode.Field);
         });
 
-        modelBuilder.Entity<MealAiItem>(entity =>
-        {
+        modelBuilder.Entity<MealAiItem>(entity => {
             entity.Property(e => e.Id)
                 .HasConversion(
                     id => id.Value,
@@ -393,8 +376,7 @@ public class FoodDiaryDbContext : DbContext
         });
 
         // RecipeStep configuration
-        modelBuilder.Entity<RecipeStep>(entity =>
-        {
+        modelBuilder.Entity<RecipeStep>(entity => {
             entity.Property(e => e.Id).HasConversion(
                 id => id.Value,
                 value => new RecipeStepId(value));
@@ -417,11 +399,9 @@ public class FoodDiaryDbContext : DbContext
                 .HasForeignKey(e => e.ImageAssetId)
                 .IsRequired(false)
                 .OnDelete(DeleteBehavior.SetNull);
-
         });
 
-        modelBuilder.Entity<RecipeIngredient>(entity =>
-        {
+        modelBuilder.Entity<RecipeIngredient>(entity => {
             entity.Property(e => e.Id).HasConversion(
                 id => id.Value,
                 value => new RecipeIngredientId(value));
@@ -455,8 +435,7 @@ public class FoodDiaryDbContext : DbContext
                 .OnDelete(DeleteBehavior.Restrict);
         });
 
-        modelBuilder.Entity<ShoppingList>(entity =>
-        {
+        modelBuilder.Entity<ShoppingList>(entity => {
             entity.Property(e => e.Id)
                 .HasConversion(
                     id => id.Value,
@@ -485,8 +464,7 @@ public class FoodDiaryDbContext : DbContext
                 .UsePropertyAccessMode(PropertyAccessMode.Field);
         });
 
-        modelBuilder.Entity<ShoppingListItem>(entity =>
-        {
+        modelBuilder.Entity<ShoppingListItem>(entity => {
             entity.Property(e => e.Id)
                 .HasConversion(
                     id => id.Value,
@@ -521,8 +499,7 @@ public class FoodDiaryDbContext : DbContext
                 .OnDelete(DeleteBehavior.SetNull);
         });
 
-        modelBuilder.Entity<WeightEntry>(entity =>
-        {
+        modelBuilder.Entity<WeightEntry>(entity => {
             entity.Property(e => e.Id).HasConversion(
                 id => id.Value,
                 value => new WeightEntryId(value));
@@ -542,8 +519,7 @@ public class FoodDiaryDbContext : DbContext
                 .OnDelete(DeleteBehavior.Cascade);
         });
 
-        modelBuilder.Entity<WaistEntry>(entity =>
-        {
+        modelBuilder.Entity<WaistEntry>(entity => {
             entity.Property(e => e.Id).HasConversion(
                 id => id.Value,
                 value => new WaistEntryId(value));
@@ -563,8 +539,7 @@ public class FoodDiaryDbContext : DbContext
                 .OnDelete(DeleteBehavior.Cascade);
         });
 
-        modelBuilder.Entity<Cycle>(entity =>
-        {
+        modelBuilder.Entity<Cycle>(entity => {
             entity.Property(e => e.Id).HasConversion(
                 id => id.Value,
                 value => new CycleId(value));
@@ -597,8 +572,7 @@ public class FoodDiaryDbContext : DbContext
                 .HasDatabaseName("IX_Cycles_User_StartDate");
         });
 
-        modelBuilder.Entity<CycleDay>(entity =>
-        {
+        modelBuilder.Entity<CycleDay>(entity => {
             entity.Property(e => e.Id).HasConversion(
                 id => id.Value,
                 value => new CycleDayId(value));
@@ -615,8 +589,7 @@ public class FoodDiaryDbContext : DbContext
 
             entity.HasIndex(e => new { e.CycleId, e.Date }).IsUnique();
 
-            entity.OwnsOne(e => e.Symptoms, builder =>
-            {
+            entity.OwnsOne(e => e.Symptoms, builder => {
                 builder.Property(s => s.Pain).HasColumnName("Pain").IsRequired();
                 builder.Property(s => s.Mood).HasColumnName("Mood").IsRequired();
                 builder.Property(s => s.Edema).HasColumnName("Edema").IsRequired();
@@ -627,8 +600,7 @@ public class FoodDiaryDbContext : DbContext
             });
         });
 
-        modelBuilder.Entity<HydrationEntry>(entity =>
-        {
+        modelBuilder.Entity<HydrationEntry>(entity => {
             entity.Property(e => e.Id).HasConversion(
                 id => id.Value,
                 value => new HydrationEntryId(value));
@@ -651,8 +623,7 @@ public class FoodDiaryDbContext : DbContext
                 .OnDelete(DeleteBehavior.Cascade);
         });
 
-        modelBuilder.Entity<DailyAdvice>(entity =>
-        {
+        modelBuilder.Entity<DailyAdvice>(entity => {
             entity.Property(e => e.Id).HasConversion(
                 id => id.Value,
                 value => new DailyAdviceId(value));
@@ -674,8 +645,7 @@ public class FoodDiaryDbContext : DbContext
             entity.HasIndex(e => new { e.Locale, e.Tag });
         });
 
-        modelBuilder.Entity<AiUsage>(entity =>
-        {
+        modelBuilder.Entity<AiUsage>(entity => {
             entity.Property(e => e.UserId).HasConversion(
                 id => id.Value,
                 value => new UserId(value));
@@ -692,8 +662,7 @@ public class FoodDiaryDbContext : DbContext
             entity.HasIndex(e => e.CreatedOnUtc);
         });
 
-        modelBuilder.Entity<EmailTemplate>(entity =>
-        {
+        modelBuilder.Entity<EmailTemplate>(entity => {
             entity.Property(e => e.Key)
                 .IsRequired()
                 .HasMaxLength(64);
@@ -722,4 +691,3 @@ public class FoodDiaryDbContext : DbContext
         });
     }
 }
-

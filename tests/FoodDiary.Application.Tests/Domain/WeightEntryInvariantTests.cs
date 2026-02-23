@@ -1,14 +1,11 @@
 using FoodDiary.Domain.Entities.Tracking;
-using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.Domain;
 
-public class WeightEntryInvariantTests
-{
+public class WeightEntryInvariantTests {
     [Fact]
-    public void Create_WithEmptyUserId_Throws()
-    {
+    public void Create_WithEmptyUserId_Throws() {
         Assert.Throws<ArgumentException>(() => WeightEntry.Create(UserId.Empty, DateTime.UtcNow, 70));
     }
 
@@ -18,26 +15,23 @@ public class WeightEntryInvariantTests
     [InlineData(500.0001d)]
     [InlineData(double.PositiveInfinity)]
     [InlineData(double.NaN)]
-    public void Create_WithInvalidWeight_Throws(double weight)
-    {
+    public void Create_WithInvalidWeight_Throws(double weight) {
         Assert.Throws<ArgumentOutOfRangeException>(() =>
             WeightEntry.Create(UserId.New(), DateTime.UtcNow, weight));
     }
 
     [Fact]
-    public void Create_WithLocalDate_NormalizesToUtcDate()
-    {
-        var localDate = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Local);
+    public void Create_WithLocalDate_NormalizesToUtcDate() {
+        var localDate = new DateTime(2026, 2, 24, 12, 30, 0, DateTimeKind.Local);
+        var expectedUtcDate = DateTime.SpecifyKind(localDate.ToUniversalTime().Date, DateTimeKind.Utc);
 
         var entry = WeightEntry.Create(UserId.New(), localDate, 72);
 
-        Assert.Equal(DateTimeKind.Utc, entry.Date.Kind);
-        Assert.Equal(localDate.Date, entry.Date.Date);
+        Assert.Equal(expectedUtcDate, entry.Date);
     }
 
     [Fact]
-    public void Update_WithSameValues_DoesNotSetModifiedOnUtc()
-    {
+    public void Update_WithSameValues_DoesNotSetModifiedOnUtc() {
         var date = DateTime.UtcNow.Date;
         var entry = WeightEntry.Create(UserId.New(), date, 72);
 
@@ -52,8 +46,7 @@ public class WeightEntryInvariantTests
     [InlineData(500.0001d)]
     [InlineData(double.PositiveInfinity)]
     [InlineData(double.NaN)]
-    public void Update_WithInvalidWeight_Throws(double weight)
-    {
+    public void Update_WithInvalidWeight_Throws(double weight) {
         var entry = WeightEntry.Create(UserId.New(), DateTime.UtcNow, 72);
 
         Assert.Throws<ArgumentOutOfRangeException>(() => entry.Update(weight: weight));

@@ -1,23 +1,13 @@
-﻿using FoodDiary.Domain.Entities.Ai;
-using FoodDiary.Domain.Entities.Assets;
-using FoodDiary.Domain.Entities.Content;
-using FoodDiary.Domain.Entities.Meals;
-using FoodDiary.Domain.Entities.Products;
-using FoodDiary.Domain.Entities.Recipes;
-using FoodDiary.Domain.Entities.Shopping;
-using FoodDiary.Domain.Entities.Tracking;
-using FoodDiary.Domain.Entities.Users;
+﻿using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Events;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.Domain;
 
-public class CycleEventsTests
-{
+public class CycleEventsTests {
     [Fact]
-    public void AddOrUpdateDay_RaisesUpsertEvent()
-    {
+    public void AddOrUpdateDay_RaisesUpsertEvent() {
         var cycle = Cycle.Create(UserId.New(), DateTime.UtcNow);
         var symptoms = DailySymptoms.Create(0, 0, 0, 0, 0, 0, 0);
 
@@ -28,8 +18,7 @@ public class CycleEventsTests
     }
 
     [Fact]
-    public void RemoveDay_RaisesRemovedEvent()
-    {
+    public void RemoveDay_RaisesRemovedEvent() {
         var cycle = Cycle.Create(UserId.New(), DateTime.UtcNow);
         var symptoms = DailySymptoms.Create(0, 0, 0, 0, 0, 0, 0);
         var date = DateTime.UtcNow.Date;
@@ -42,4 +31,3 @@ public class CycleEventsTests
         Assert.Contains(cycle.DomainEvents, e => e is CycleDayRemovedDomainEvent);
     }
 }
-

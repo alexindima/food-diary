@@ -1,44 +1,24 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using FoodDiary.Application.Common.Interfaces.Persistence;
-using FoodDiary.Domain.Entities.Ai;
-using FoodDiary.Domain.Entities.Assets;
+﻿using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Domain.Entities.Content;
-using FoodDiary.Domain.Entities.Meals;
-using FoodDiary.Domain.Entities.Products;
-using FoodDiary.Domain.Entities.Recipes;
-using FoodDiary.Domain.Entities.Shopping;
-using FoodDiary.Domain.Entities.Tracking;
-using FoodDiary.Domain.Entities.Users;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence;
 
-public class DailyAdviceRepository : IDailyAdviceRepository
-{
-    private readonly FoodDiaryDbContext _context;
-
-    public DailyAdviceRepository(FoodDiaryDbContext context) => _context = context;
-
+public class DailyAdviceRepository(FoodDiaryDbContext context) : IDailyAdviceRepository {
     public async Task<IReadOnlyList<DailyAdvice>> GetByLocaleAsync(
         string locale,
-        CancellationToken cancellationToken = default)
-    {
+        CancellationToken cancellationToken = default) {
         var normalizedLocale = NormalizeLocale(locale);
 
-        return await _context.DailyAdvices
+        return await context.DailyAdvices
             .AsNoTracking()
             .Where(advice => advice.Locale == normalizedLocale)
             .OrderBy(advice => advice.Id)
             .ToListAsync(cancellationToken);
     }
 
-    private static string NormalizeLocale(string locale)
-    {
-        if (string.IsNullOrWhiteSpace(locale))
-        {
+    private static string NormalizeLocale(string locale) {
+        if (string.IsNullOrWhiteSpace(locale)) {
             return "en";
         }
 
@@ -47,4 +27,3 @@ public class DailyAdviceRepository : IDailyAdviceRepository
         return separatorIndex > 0 ? normalized[..separatorIndex] : normalized;
     }
 }
-

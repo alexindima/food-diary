@@ -1,29 +1,17 @@
-﻿using FoodDiary.Domain.Entities.Ai;
-using FoodDiary.Domain.Entities.Assets;
-using FoodDiary.Domain.Entities.Content;
-using FoodDiary.Domain.Entities.Meals;
-using FoodDiary.Domain.Entities.Products;
-using FoodDiary.Domain.Entities.Recipes;
-using FoodDiary.Domain.Entities.Shopping;
-using FoodDiary.Domain.Entities.Tracking;
-using FoodDiary.Domain.Entities.Users;
+﻿using FoodDiary.Domain.Entities.Shopping;
 using FoodDiary.Domain.Events;
-using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.Domain;
 
-public class ShoppingListInvariantTests
-{
+public class ShoppingListInvariantTests {
     [Fact]
-    public void Create_WithBlankName_Throws()
-    {
+    public void Create_WithBlankName_Throws() {
         Assert.Throws<ArgumentException>(() => ShoppingList.Create(UserId.New(), "   "));
     }
 
     [Fact]
-    public void AddItem_WithNegativeSortOrder_Throws()
-    {
+    public void AddItem_WithNegativeSortOrder_Throws() {
         var list = ShoppingList.Create(UserId.New(), "Weekly");
 
         Assert.Throws<ArgumentOutOfRangeException>(() => list.AddItem(
@@ -37,14 +25,12 @@ public class ShoppingListInvariantTests
     }
 
     [Fact]
-    public void Create_WithEmptyUserId_Throws()
-    {
+    public void Create_WithEmptyUserId_Throws() {
         Assert.Throws<ArgumentException>(() => ShoppingList.Create(UserId.Empty, "Weekly"));
     }
 
     [Fact]
-    public void UpdateName_WithSameTrimmedValue_DoesNotSetModifiedOnUtc()
-    {
+    public void UpdateName_WithSameTrimmedValue_DoesNotSetModifiedOnUtc() {
         var list = ShoppingList.Create(UserId.New(), "Weekly");
 
         list.UpdateName("  Weekly  ");
@@ -53,8 +39,7 @@ public class ShoppingListInvariantTests
     }
 
     [Fact]
-    public void ClearItems_WhenAlreadyEmpty_DoesNotSetModifiedOnUtc()
-    {
+    public void ClearItems_WhenAlreadyEmpty_DoesNotSetModifiedOnUtc() {
         var list = ShoppingList.Create(UserId.New(), "Weekly");
 
         list.ClearItems();
@@ -63,8 +48,7 @@ public class ShoppingListInvariantTests
     }
 
     [Fact]
-    public void AddItem_WithEmptyProductId_Throws()
-    {
+    public void AddItem_WithEmptyProductId_Throws() {
         var list = ShoppingList.Create(UserId.New(), "Weekly");
 
         Assert.Throws<ArgumentException>(() => list.AddItem(
@@ -83,8 +67,7 @@ public class ShoppingListInvariantTests
     [InlineData(1000000.0001d)]
     [InlineData(double.PositiveInfinity)]
     [InlineData(double.NaN)]
-    public void AddItem_WithInvalidAmount_Throws(double amount)
-    {
+    public void AddItem_WithInvalidAmount_Throws(double amount) {
         var list = ShoppingList.Create(UserId.New(), "Weekly");
 
         Assert.Throws<ArgumentOutOfRangeException>(() => list.AddItem(
@@ -98,8 +81,7 @@ public class ShoppingListInvariantTests
     }
 
     [Fact]
-    public void AddItem_WithWhitespaceCategory_NormalizesToNull()
-    {
+    public void AddItem_WithWhitespaceCategory_NormalizesToNull() {
         var list = ShoppingList.Create(UserId.New(), "Weekly");
 
         var item = list.AddItem(
@@ -115,8 +97,7 @@ public class ShoppingListInvariantTests
     }
 
     [Fact]
-    public void UpdateName_WithDifferentValue_RaisesNameUpdatedDomainEvent()
-    {
+    public void UpdateName_WithDifferentValue_RaisesNameUpdatedDomainEvent() {
         var list = ShoppingList.Create(UserId.New(), "Weekly");
 
         list.UpdateName("Monthly");
@@ -128,8 +109,7 @@ public class ShoppingListInvariantTests
     }
 
     [Fact]
-    public void AddItem_RaisesItemAddedDomainEvent()
-    {
+    public void AddItem_RaisesItemAddedDomainEvent() {
         var list = ShoppingList.Create(UserId.New(), "Weekly");
 
         var item = list.AddItem(
@@ -150,8 +130,7 @@ public class ShoppingListInvariantTests
     }
 
     [Fact]
-    public void ClearItems_WhenHasItems_RaisesItemsClearedDomainEvent()
-    {
+    public void ClearItems_WhenHasItems_RaisesItemsClearedDomainEvent() {
         var list = ShoppingList.Create(UserId.New(), "Weekly");
         list.AddItem(
             name: "Milk",
@@ -179,8 +158,7 @@ public class ShoppingListInvariantTests
     }
 
     [Fact]
-    public void UpdateName_WithSameTrimmedValue_DoesNotRaiseDomainEvent()
-    {
+    public void UpdateName_WithSameTrimmedValue_DoesNotRaiseDomainEvent() {
         var list = ShoppingList.Create(UserId.New(), "Weekly");
 
         list.UpdateName("  Weekly  ");
@@ -189,8 +167,7 @@ public class ShoppingListInvariantTests
     }
 
     [Fact]
-    public void ClearItems_WhenAlreadyEmpty_DoesNotRaiseDomainEvent()
-    {
+    public void ClearItems_WhenAlreadyEmpty_DoesNotRaiseDomainEvent() {
         var list = ShoppingList.Create(UserId.New(), "Weekly");
 
         list.ClearItems();
@@ -198,4 +175,3 @@ public class ShoppingListInvariantTests
         Assert.DoesNotContain(list.DomainEvents, e => e is ShoppingListItemsClearedDomainEvent);
     }
 }
-

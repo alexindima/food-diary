@@ -1,47 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using FoodDiary.Application.Common.Interfaces.Persistence;
-using FoodDiary.Domain.Entities.Ai;
-using FoodDiary.Domain.Entities.Assets;
-using FoodDiary.Domain.Entities.Content;
+﻿using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Domain.Entities.Meals;
-using FoodDiary.Domain.Entities.Products;
-using FoodDiary.Domain.Entities.Recipes;
-using FoodDiary.Domain.Entities.Shopping;
-using FoodDiary.Domain.Entities.Tracking;
-using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence;
 
-public class MealRepository : IMealRepository
-{
-    private readonly FoodDiaryDbContext _context;
-
-    public MealRepository(FoodDiaryDbContext context) => _context = context;
-
-    public async Task<Meal> AddAsync(Meal meal, CancellationToken cancellationToken = default)
-    {
-        await _context.Meals.AddAsync(meal, cancellationToken);
-        await _context.SaveChangesAsync(cancellationToken);
+public class MealRepository(FoodDiaryDbContext context) : IMealRepository {
+    public async Task<Meal> AddAsync(Meal meal, CancellationToken cancellationToken = default) {
+        await context.Meals.AddAsync(meal, cancellationToken);
+        await context.SaveChangesAsync(cancellationToken);
         return meal;
     }
 
-    public async Task UpdateAsync(Meal meal, CancellationToken cancellationToken = default)
-    {
-        _context.Meals.Update(meal);
-        await _context.SaveChangesAsync(cancellationToken);
+    public async Task UpdateAsync(Meal meal, CancellationToken cancellationToken = default) {
+        context.Meals.Update(meal);
+        await context.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task DeleteAsync(Meal meal, CancellationToken cancellationToken = default)
-    {
-        _context.Meals.Remove(meal);
-        await _context.SaveChangesAsync(cancellationToken);
+    public async Task DeleteAsync(Meal meal, CancellationToken cancellationToken = default) {
+        context.Meals.Remove(meal);
+        await context.SaveChangesAsync(cancellationToken);
     }
 
     public async Task<Meal?> GetByIdAsync(
@@ -49,25 +27,22 @@ public class MealRepository : IMealRepository
         UserId userId,
         bool includeItems = false,
         bool asTracking = false,
-        CancellationToken cancellationToken = default)
-    {
-        IQueryable<Meal> query = _context.Meals;
+        CancellationToken cancellationToken = default) {
+        IQueryable<Meal> query = context.Meals;
 
-        if (includeItems)
-        {
+        if (includeItems) {
             query = query
                 .Include(m => m.Items)
-                    .ThenInclude(i => i.Product)
+                .ThenInclude(i => i.Product)
                 .Include(m => m.Items)
-                    .ThenInclude(i => i.Recipe)
+                .ThenInclude(i => i.Recipe)
                 .Include(m => m.AiSessions)
-                    .ThenInclude(s => s.Items)
+                .ThenInclude(s => s.Items)
                 .Include(m => m.AiSessions)
-                    .ThenInclude(s => s.ImageAsset);
+                .ThenInclude(s => s.ImageAsset);
         }
 
-        if (!asTracking)
-        {
+        if (!asTracking) {
             query = query.AsNoTracking();
         }
 
@@ -82,30 +57,27 @@ public class MealRepository : IMealRepository
         int limit,
         DateTime? dateFrom,
         DateTime? dateTo,
-        CancellationToken cancellationToken = default)
-    {
+        CancellationToken cancellationToken = default) {
         var pageNumber = Math.Max(page, 1);
         var pageSize = Math.Max(limit, 1);
 
-        IQueryable<Meal> query = _context.Meals
+        var query = context.Meals
             .AsNoTracking()
             .Include(m => m.Items)
-                .ThenInclude(i => i.Product)
+            .ThenInclude(i => i.Product)
             .Include(m => m.Items)
-                .ThenInclude(i => i.Recipe)
+            .ThenInclude(i => i.Recipe)
             .Include(m => m.AiSessions)
-                .ThenInclude(s => s.Items)
+            .ThenInclude(s => s.Items)
             .Include(m => m.AiSessions)
-                .ThenInclude(s => s.ImageAsset)
+            .ThenInclude(s => s.ImageAsset)
             .Where(m => m.UserId == userId);
 
-        if (dateFrom.HasValue)
-        {
+        if (dateFrom.HasValue) {
             query = query.Where(m => m.Date >= dateFrom.Value);
         }
 
-        if (dateTo.HasValue)
-        {
+        if (dateTo.HasValue) {
             query = query.Where(m => m.Date <= dateTo.Value);
         }
 
@@ -128,9 +100,8 @@ public class MealRepository : IMealRepository
         UserId userId,
         DateTime dateFrom,
         DateTime dateTo,
-        CancellationToken cancellationToken = default)
-    {
-        return await _context.Meals
+        CancellationToken cancellationToken = default) {
+        return await context.Meals
             .AsNoTracking()
             .Where(m => m.UserId == userId && m.Date >= dateFrom && m.Date <= dateTo)
             .OrderBy(m => m.Date)
@@ -138,4 +109,3 @@ public class MealRepository : IMealRepository
             .ToListAsync(cancellationToken);
     }
 }
-

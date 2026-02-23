@@ -1,24 +1,14 @@
-﻿using FoodDiary.Domain.Entities.Ai;
-using FoodDiary.Domain.Entities.Assets;
-using FoodDiary.Domain.Entities.Content;
-using FoodDiary.Domain.Entities.Meals;
-using FoodDiary.Domain.Entities.Products;
-using FoodDiary.Domain.Entities.Recipes;
-using FoodDiary.Domain.Entities.Shopping;
-using FoodDiary.Domain.Entities.Tracking;
+﻿using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Events;
 using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.Domain;
 
-public class DomainEventsTests
-{
+public class DomainEventsTests {
     [Fact]
-    public void User_MarkDeleted_AndRestore_RaisesEvents()
-    {
+    public void User_MarkDeleted_AndRestore_RaisesEvents() {
         var user = User.Create("events@example.com", "hash");
 
         user.MarkDeleted(DateTime.UtcNow);
@@ -29,8 +19,7 @@ public class DomainEventsTests
     }
 
     [Fact]
-    public void Meal_ApplyNutrition_RaisesDomainEvent()
-    {
+    public void Meal_ApplyNutrition_RaisesDomainEvent() {
         var meal = Meal.Create(UserId.New(), DateTime.UtcNow, MealType.Dinner);
 
         meal.ApplyNutrition(
@@ -48,8 +37,7 @@ public class DomainEventsTests
     }
 
     [Fact]
-    public void AggregateRoot_ClearDomainEvents_EmptiesCollection()
-    {
+    public void AggregateRoot_ClearDomainEvents_EmptiesCollection() {
         var meal = Meal.Create(UserId.New(), DateTime.UtcNow, MealType.Lunch);
         meal.ApplyNutrition(200, 10, 5, 20, 3, 0, true);
         Assert.NotEmpty(meal.DomainEvents);
@@ -59,4 +47,3 @@ public class DomainEventsTests
         Assert.Empty(meal.DomainEvents);
     }
 }
-

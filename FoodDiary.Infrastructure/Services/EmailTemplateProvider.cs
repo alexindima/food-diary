@@ -1,4 +1,3 @@
-using System;
 using FoodDiary.Application.Common.Interfaces.Services;
 using FoodDiary.Application.Common.Models;
 using FoodDiary.Infrastructure.Persistence;
@@ -10,17 +9,14 @@ namespace FoodDiary.Infrastructure.Services;
 
 public sealed class EmailTemplateProvider(
     IServiceScopeFactory scopeFactory,
-    IMemoryCache cache) : IEmailTemplateProvider
-{
+    IMemoryCache cache) : IEmailTemplateProvider {
     private static readonly TimeSpan CacheDuration = TimeSpan.FromMinutes(1);
 
-    public async Task<EmailTemplateContent?> GetActiveTemplateAsync(string key, string locale, CancellationToken cancellationToken = default)
-    {
+    public async Task<EmailTemplateContent?> GetActiveTemplateAsync(string key, string locale, CancellationToken cancellationToken = default) {
         var normalizedKey = NormalizeKey(key);
         var normalizedLocale = NormalizeLocale(locale);
         var cacheKey = $"email-template:{normalizedKey}:{normalizedLocale}";
-        if (cache.TryGetValue(cacheKey, out EmailTemplateContent? cached))
-        {
+        if (cache.TryGetValue(cacheKey, out EmailTemplateContent? cached)) {
             return cached;
         }
 
@@ -33,8 +29,7 @@ public sealed class EmailTemplateProvider(
             .Select(t => new EmailTemplateContent(t.Subject, t.HtmlBody, t.TextBody))
             .FirstOrDefaultAsync(cancellationToken);
 
-        if (template is null && normalizedLocale != "en")
-        {
+        if (template is null && normalizedLocale != "en") {
             template = await db.EmailTemplates
                 .AsNoTracking()
                 .Where(t => t.Key == normalizedKey && t.Locale == "en" && t.IsActive)
@@ -46,10 +41,8 @@ public sealed class EmailTemplateProvider(
         return template;
     }
 
-    private static string NormalizeLocale(string locale)
-    {
-        if (string.IsNullOrWhiteSpace(locale))
-        {
+    private static string NormalizeLocale(string locale) {
+        if (string.IsNullOrWhiteSpace(locale)) {
             return "en";
         }
 
@@ -57,8 +50,7 @@ public sealed class EmailTemplateProvider(
         return lower.StartsWith("ru") ? "ru" : "en";
     }
 
-    private static string NormalizeKey(string key)
-    {
+    private static string NormalizeKey(string key) {
         return string.IsNullOrWhiteSpace(key) ? string.Empty : key.Trim().ToLowerInvariant();
     }
 }

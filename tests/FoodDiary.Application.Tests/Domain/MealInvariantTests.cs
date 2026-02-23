@@ -1,7 +1,6 @@
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Events;
 using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects;
 using System.Reflection;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -551,6 +550,3 @@ public class MealInvariantTests {
         Assert.IsType<ArgumentException>(ex.InnerException);
     }
 }
-
-
-

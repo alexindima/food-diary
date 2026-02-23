@@ -1,5 +1,4 @@
 using FoodDiary.Application;
-using FoodDiary.Application.Common.Interfaces.Services;
 using FoodDiary.Infrastructure;
 using FoodDiary.JobManager.Services;
 using Hangfire;

@@ -10,11 +10,9 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.Users;
 
-public class UsersFeatureTests
-{
+public class UsersFeatureTests {
     [Fact]
-    public async Task ChangePasswordHandler_WithEmptyUserId_ReturnsInvalidToken()
-    {
+    public async Task ChangePasswordHandler_WithEmptyUserId_ReturnsInvalidToken() {
         var handler = new ChangePasswordCommandHandler(
             new SingleUserRepository(User.Create("user@example.com", "hash")),
             new PassthroughPasswordHasher());
@@ -28,8 +26,7 @@ public class UsersFeatureTests
     }
 
     [Fact]
-    public async Task DeleteUserHandler_WithEmptyUserId_ReturnsInvalidToken()
-    {
+    public async Task DeleteUserHandler_WithEmptyUserId_ReturnsInvalidToken() {
         var user = User.Create("user@example.com", "hash");
         var handler = new DeleteUserCommandHandler(
             new SingleUserRepository(user),
@@ -42,8 +39,7 @@ public class UsersFeatureTests
     }
 
     [Fact]
-    public async Task DeleteUserHandler_UsesDateTimeProvider()
-    {
+    public async Task DeleteUserHandler_UsesDateTimeProvider() {
         var user = User.Create("user@example.com", "hash");
         var deletedAtUtc = new DateTime(2026, 2, 23, 10, 30, 0, DateTimeKind.Utc);
         var handler = new DeleteUserCommandHandler(
@@ -58,8 +54,7 @@ public class UsersFeatureTests
     }
 
     [Fact]
-    public async Task GetDesiredWaistQueryValidator_WithEmptyUserId_Fails()
-    {
+    public async Task GetDesiredWaistQueryValidator_WithEmptyUserId_Fails() {
         var validator = new GetDesiredWaistQueryValidator();
         var result = await validator.ValidateAsync(new GetDesiredWaistQuery(UserId.Empty));
 
@@ -67,8 +62,7 @@ public class UsersFeatureTests
     }
 
     [Fact]
-    public async Task GetDesiredWeightQueryValidator_WithNullUserId_Fails()
-    {
+    public async Task GetDesiredWeightQueryValidator_WithNullUserId_Fails() {
         var validator = new GetDesiredWeightQueryValidator();
         var result = await validator.ValidateAsync(new GetDesiredWeightQuery(null));
 
@@ -76,27 +70,23 @@ public class UsersFeatureTests
     }
 
     [Fact]
-    public async Task GetUserGoalsQueryValidator_WithValidUserId_Passes()
-    {
+    public async Task GetUserGoalsQueryValidator_WithValidUserId_Passes() {
         var validator = new GetUserGoalsQueryValidator();
         var result = await validator.ValidateAsync(new GetUserGoalsQuery(UserId.New()));
 
         Assert.True(result.IsValid);
     }
 
-    private sealed class FixedDateTimeProvider(DateTime utcNow) : IDateTimeProvider
-    {
+    private sealed class FixedDateTimeProvider(DateTime utcNow) : IDateTimeProvider {
         public DateTime UtcNow { get; } = utcNow;
     }
 
-    private sealed class PassthroughPasswordHasher : IPasswordHasher
-    {
+    private sealed class PassthroughPasswordHasher : IPasswordHasher {
         public string Hash(string password) => password;
         public bool Verify(string password, string hashedPassword) => password == hashedPassword;
     }
 
-    private sealed class SingleUserRepository(User user) : IUserRepository
-    {
+    private sealed class SingleUserRepository(User user) : IUserRepository {
         public Task<User?> GetByEmailAsync(string email) => throw new NotSupportedException();
 
         public Task<User?> GetByEmailIncludingDeletedAsync(string email) => throw new NotSupportedException();

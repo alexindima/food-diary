@@ -4,7 +4,6 @@ using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Behaviors;
 using FoodDiary.Application.Common.Utilities;
-using MediatR;
 
 namespace FoodDiary.Application.Tests.Common;
 
@@ -63,8 +62,7 @@ public class CommonAbstractionsTests {
             RuleFor(x => x.Value)
                 .Custom((_, context) => context.AddFailure(new ValidationFailure(
                     nameof(GenericCommand.Value),
-                    "value is required")
-                {
+                    "value is required") {
                     ErrorCode = " "
                 }));
         }

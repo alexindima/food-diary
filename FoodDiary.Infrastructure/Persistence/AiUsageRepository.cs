@@ -2,24 +2,13 @@
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Models;
 using FoodDiary.Domain.Entities.Ai;
-using FoodDiary.Domain.Entities.Assets;
-using FoodDiary.Domain.Entities.Content;
-using FoodDiary.Domain.Entities.Meals;
-using FoodDiary.Domain.Entities.Products;
-using FoodDiary.Domain.Entities.Recipes;
-using FoodDiary.Domain.Entities.Shopping;
-using FoodDiary.Domain.Entities.Tracking;
-using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence;
 
-public sealed class AiUsageRepository(FoodDiaryDbContext context) : IAiUsageRepository
-{
-    public async Task AddAsync(AiUsage usage, CancellationToken cancellationToken = default)
-    {
+public sealed class AiUsageRepository(FoodDiaryDbContext context) : IAiUsageRepository {
+    public async Task AddAsync(AiUsage usage, CancellationToken cancellationToken = default) {
         await context.AiUsages.AddAsync(usage, cancellationToken);
         await context.SaveChangesAsync(cancellationToken);
     }
@@ -27,8 +16,7 @@ public sealed class AiUsageRepository(FoodDiaryDbContext context) : IAiUsageRepo
     public async Task<AiUsageSummary> GetSummaryAsync(
         DateTime fromUtc,
         DateTime toUtc,
-        CancellationToken cancellationToken = default)
-    {
+        CancellationToken cancellationToken = default) {
         var query = context.AiUsages
             .AsNoTracking()
             .Where(x => x.CreatedOnUtc >= fromUtc && x.CreatedOnUtc < toUtc);
@@ -39,8 +27,7 @@ public sealed class AiUsageRepository(FoodDiaryDbContext context) : IAiUsageRepo
 
         var byDay = await query
             .GroupBy(x => x.CreatedOnUtc.Date)
-            .Select(group => new
-            {
+            .Select(group => new {
                 Date = group.Key,
                 Total = group.Sum(x => x.TotalTokens),
                 Input = group.Sum(x => x.InputTokens),
@@ -51,8 +38,7 @@ public sealed class AiUsageRepository(FoodDiaryDbContext context) : IAiUsageRepo
 
         var byOperationRaw = await query
             .GroupBy(x => x.Operation)
-            .Select(group => new
-            {
+            .Select(group => new {
                 Key = group.Key,
                 Total = group.Sum(x => x.TotalTokens),
                 Input = group.Sum(x => x.InputTokens),
@@ -63,8 +49,7 @@ public sealed class AiUsageRepository(FoodDiaryDbContext context) : IAiUsageRepo
 
         var byModelRaw = await query
             .GroupBy(x => x.Model)
-            .Select(group => new
-            {
+            .Select(group => new {
                 Key = group.Key,
                 Total = group.Sum(x => x.TotalTokens),
                 Input = group.Sum(x => x.InputTokens),
@@ -80,8 +65,7 @@ public sealed class AiUsageRepository(FoodDiaryDbContext context) : IAiUsageRepo
                 user => user.Id,
                 (usage, user) => new { usage, user.Id, user.Email })
             .GroupBy(x => new { x.Id, x.Email })
-            .Select(group => new
-            {
+            .Select(group => new {
                 group.Key.Id,
                 group.Key.Email,
                 Total = group.Sum(x => x.usage.TotalTokens),
@@ -125,8 +109,7 @@ public sealed class AiUsageRepository(FoodDiaryDbContext context) : IAiUsageRepo
         UserId userId,
         DateTime fromUtc,
         DateTime toUtc,
-        CancellationToken cancellationToken = default)
-    {
+        CancellationToken cancellationToken = default) {
         var totals = await context.AiUsages
             .AsNoTracking()
             .Where(x => x.UserId == userId && x.CreatedOnUtc >= fromUtc && x.CreatedOnUtc < toUtc)
@@ -139,4 +122,3 @@ public sealed class AiUsageRepository(FoodDiaryDbContext context) : IAiUsageRepo
         return totals ?? new AiUsageTotals(0, 0);
     }
 }
-

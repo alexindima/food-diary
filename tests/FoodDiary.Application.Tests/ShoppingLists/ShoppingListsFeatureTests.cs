@@ -11,11 +11,9 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.ShoppingLists;
 
-public class ShoppingListsFeatureTests
-{
+public class ShoppingListsFeatureTests {
     [Fact]
-    public async Task GetCurrentShoppingListQueryHandler_WithMissingUserId_ReturnsInvalidToken()
-    {
+    public async Task GetCurrentShoppingListQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
         var handler = new GetCurrentShoppingListQueryHandler(new NoopShoppingListRepository());
         var result = await handler.Handle(new GetCurrentShoppingListQuery(null), CancellationToken.None);
 
@@ -24,8 +22,7 @@ public class ShoppingListsFeatureTests
     }
 
     [Fact]
-    public async Task GetShoppingListByIdQueryHandler_WithMissingUserId_ReturnsInvalidToken()
-    {
+    public async Task GetShoppingListByIdQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
         var handler = new GetShoppingListByIdQueryHandler(new NoopShoppingListRepository());
         var result = await handler.Handle(new GetShoppingListByIdQuery(null, ShoppingListId.New()), CancellationToken.None);
 
@@ -34,8 +31,7 @@ public class ShoppingListsFeatureTests
     }
 
     [Fact]
-    public async Task GetShoppingListsQueryHandler_WithMissingUserId_ReturnsInvalidToken()
-    {
+    public async Task GetShoppingListsQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
         var handler = new GetShoppingListsQueryHandler(new NoopShoppingListRepository());
         var result = await handler.Handle(new GetShoppingListsQuery(null), CancellationToken.None);
 
@@ -44,10 +40,8 @@ public class ShoppingListsFeatureTests
     }
 
     [Fact]
-    public async Task ShoppingListItemBuilder_WithInvalidUnit_FailsWithUnitField()
-    {
-        var items = new[]
-        {
+    public async Task ShoppingListItemBuilder_WithInvalidUnit_FailsWithUnitField() {
+        var items = new[] {
             new ShoppingListItemInput(null, "Milk", 1, "invalid_unit", null, false, 1)
         };
 
@@ -62,10 +56,8 @@ public class ShoppingListsFeatureTests
     }
 
     [Fact]
-    public async Task ShoppingListItemBuilder_WithNonPositiveAmount_Fails()
-    {
-        var items = new[]
-        {
+    public async Task ShoppingListItemBuilder_WithNonPositiveAmount_Fails() {
+        var items = new[] {
             new ShoppingListItemInput(null, "Milk", 0, null, null, false, 1)
         };
 
@@ -79,8 +71,7 @@ public class ShoppingListsFeatureTests
         Assert.Equal("Validation.Invalid", result.Error.Code);
     }
 
-    private sealed class NoopShoppingListRepository : IShoppingListRepository
-    {
+    private sealed class NoopShoppingListRepository : IShoppingListRepository {
         public Task<ShoppingList> AddAsync(ShoppingList list) => Task.FromResult(list);
 
         public Task<ShoppingList?> GetByIdAsync(
@@ -105,8 +96,7 @@ public class ShoppingListsFeatureTests
         public Task DeleteAsync(ShoppingList list) => Task.CompletedTask;
     }
 
-    private sealed class NoopProductRepository : IProductRepository
-    {
+    private sealed class NoopProductRepository : IProductRepository {
         public Task<Product> AddAsync(Product product) => Task.FromResult(product);
 
         public Task<(IReadOnlyList<(Product Product, int UsageCount)> Items, int TotalItems)> GetPagedAsync(

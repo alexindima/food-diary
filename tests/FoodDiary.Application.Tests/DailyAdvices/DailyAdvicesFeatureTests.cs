@@ -5,11 +5,9 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.DailyAdvices;
 
-public class DailyAdvicesFeatureTests
-{
+public class DailyAdvicesFeatureTests {
     [Fact]
-    public async Task GetDailyAdviceQueryValidator_WithEmptyUserId_Fails()
-    {
+    public async Task GetDailyAdviceQueryValidator_WithEmptyUserId_Fails() {
         var validator = new GetDailyAdviceQueryValidator();
         var query = new GetDailyAdviceQuery(UserId.Empty, DateTime.UtcNow, "en");
 
@@ -19,8 +17,7 @@ public class DailyAdvicesFeatureTests
     }
 
     [Fact]
-    public async Task GetDailyAdviceQueryValidator_WithValidInput_Passes()
-    {
+    public async Task GetDailyAdviceQueryValidator_WithValidInput_Passes() {
         var validator = new GetDailyAdviceQueryValidator();
         var query = new GetDailyAdviceQuery(UserId.New(), DateTime.UtcNow, "ru-RU");
 
@@ -30,18 +27,15 @@ public class DailyAdvicesFeatureTests
     }
 
     [Fact]
-    public void DailyAdviceSelector_NormalizeLocale_UnsupportedLocaleFallsBackToEn()
-    {
+    public void DailyAdviceSelector_NormalizeLocale_UnsupportedLocaleFallsBackToEn() {
         var normalized = InvokeNormalizeLocale("de-DE");
 
         Assert.Equal("en", normalized);
     }
 
     [Fact]
-    public void DailyAdviceSelector_SelectForDate_ReturnsAdviceFromRequestedLocale()
-    {
-        var advices = new List<DailyAdvice>
-        {
+    public void DailyAdviceSelector_SelectForDate_ReturnsAdviceFromRequestedLocale() {
+        var advices = new List<DailyAdvice> {
             DailyAdvice.Create("Hydrate", "en", weight: 1),
             DailyAdvice.Create("Walk", "en", weight: 1),
             DailyAdvice.Create("Пей воду", "ru", weight: 1)
@@ -55,10 +49,8 @@ public class DailyAdvicesFeatureTests
     }
 
     [Fact]
-    public void DailyAdviceSelector_SelectForDate_WhenLocaleHasNoAdvice_ReturnsNull()
-    {
-        var advices = new List<DailyAdvice>
-        {
+    public void DailyAdviceSelector_SelectForDate_WhenLocaleHasNoAdvice_ReturnsNull() {
+        var advices = new List<DailyAdvice> {
             DailyAdvice.Create("Hydrate", "en", weight: 1)
         };
 
@@ -67,8 +59,7 @@ public class DailyAdvicesFeatureTests
         Assert.Null(selected);
     }
 
-    private static string InvokeNormalizeLocale(string locale)
-    {
+    private static string InvokeNormalizeLocale(string locale) {
         var selectorType = GetSelectorType();
         var method = selectorType.GetMethod("NormalizeLocale", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public);
         Assert.NotNull(method);
@@ -76,8 +67,7 @@ public class DailyAdvicesFeatureTests
         return (string)method!.Invoke(null, [locale])!;
     }
 
-    private static DailyAdvice? InvokeSelectForDate(IReadOnlyList<DailyAdvice> advices, DateTime date, string locale)
-    {
+    private static DailyAdvice? InvokeSelectForDate(IReadOnlyList<DailyAdvice> advices, DateTime date, string locale) {
         var selectorType = GetSelectorType();
         var method = selectorType.GetMethod("SelectForDate", BindingFlags.Static | BindingFlags.Public);
         Assert.NotNull(method);
@@ -85,8 +75,7 @@ public class DailyAdvicesFeatureTests
         return (DailyAdvice?)method!.Invoke(null, [advices, date, locale]);
     }
 
-    private static Type GetSelectorType()
-    {
+    private static Type GetSelectorType() {
         var selectorType = Type.GetType("FoodDiary.Application.DailyAdvices.Services.DailyAdviceSelector, FoodDiary.Application");
         Assert.NotNull(selectorType);
         return selectorType!;

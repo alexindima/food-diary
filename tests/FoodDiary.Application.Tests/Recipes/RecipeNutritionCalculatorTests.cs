@@ -1,24 +1,13 @@
 ﻿using FoodDiary.Application.Recipes.Services;
-using FoodDiary.Domain.Entities.Ai;
-using FoodDiary.Domain.Entities.Assets;
-using FoodDiary.Domain.Entities.Content;
-using FoodDiary.Domain.Entities.Meals;
-using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Recipes;
-using FoodDiary.Domain.Entities.Shopping;
-using FoodDiary.Domain.Entities.Tracking;
-using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 using System.Reflection;
 
 namespace FoodDiary.Application.Tests.Recipes;
 
-public class RecipeNutritionCalculatorTests
-{
+public class RecipeNutritionCalculatorTests {
     [Fact]
-    public void Calculate_WhenRecipeHasNoSteps_ReturnsStoredNutrition()
-    {
+    public void Calculate_WhenRecipeHasNoSteps_ReturnsStoredNutrition() {
         var recipe = Recipe.Create(
             UserId.New(),
             name: "Recipe",
@@ -43,8 +32,7 @@ public class RecipeNutritionCalculatorTests
     }
 
     [Fact]
-    public void Calculate_WhenStepIngredientsAreNotHydrated_ReturnsStoredNutrition()
-    {
+    public void Calculate_WhenStepIngredientsAreNotHydrated_ReturnsStoredNutrition() {
         var recipe = Recipe.Create(
             UserId.New(),
             name: "Recipe",
@@ -72,8 +60,7 @@ public class RecipeNutritionCalculatorTests
     }
 
     [Fact]
-    public void Calculate_WhenStepContainsNestedRecipe_IncludesNestedFiber()
-    {
+    public void Calculate_WhenStepContainsNestedRecipe_IncludesNestedFiber() {
         var nested = Recipe.Create(
             UserId.New(),
             name: "Nested",
@@ -110,4 +97,3 @@ public class RecipeNutritionCalculatorTests
         Assert.Equal(0, result.TotalAlcohol);
     }
 }
-

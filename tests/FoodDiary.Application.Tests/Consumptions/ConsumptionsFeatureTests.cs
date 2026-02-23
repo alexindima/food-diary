@@ -2,26 +2,17 @@ using FoodDiary.Application.Consumptions.Common;
 using FoodDiary.Application.Consumptions.Mappings;
 using FoodDiary.Application.Consumptions.Services;
 using FoodDiary.Contracts.Consumptions;
-using FoodDiary.Domain.Entities.Ai;
-using FoodDiary.Domain.Entities.Assets;
-using FoodDiary.Domain.Entities.Content;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Recipes;
-using FoodDiary.Domain.Entities.Shopping;
-using FoodDiary.Domain.Entities.Tracking;
-using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.Consumptions;
 
-public class ConsumptionsFeatureTests
-{
+public class ConsumptionsFeatureTests {
     [Fact]
-    public void ConsumptionItemValidator_WhenIdsAreMissing_Fails()
-    {
+    public void ConsumptionItemValidator_WhenIdsAreMissing_Fails() {
         var result = ConsumptionItemValidator.Validate(new ConsumptionItemInput(null, null, 100));
 
         Assert.True(result.IsFailure);
@@ -29,8 +20,7 @@ public class ConsumptionsFeatureTests
     }
 
     [Fact]
-    public void ManualNutritionValidator_WhenAlcoholIsNull_DefaultsToZero()
-    {
+    public void ManualNutritionValidator_WhenAlcoholIsNull_DefaultsToZero() {
         var result = ManualNutritionValidator.Validate(100, 10, 5, 20, 3, null);
 
         Assert.True(result.IsSuccess);
@@ -38,8 +28,7 @@ public class ConsumptionsFeatureTests
     }
 
     [Fact]
-    public void SatietyLevelValidator_WhenPreMealOutOfRange_UsesContractFieldName()
-    {
+    public void SatietyLevelValidator_WhenPreMealOutOfRange_UsesContractFieldName() {
         var result = SatietyLevelValidator.Validate(-1, 5);
 
         Assert.True(result.IsFailure);
@@ -47,8 +36,7 @@ public class ConsumptionsFeatureTests
     }
 
     [Fact]
-    public void MealNutritionCalculator_WhenMealHasProductRecipeAndAiItems_CalculatesCombinedTotals()
-    {
+    public void MealNutritionCalculator_WhenMealHasProductRecipeAndAiItems_CalculatesCombinedTotals() {
         var userId = UserId.New();
         var meal = Meal.Create(userId, DateTime.UtcNow, MealType.Lunch);
 
@@ -74,8 +62,7 @@ public class ConsumptionsFeatureTests
             imageAssetId: null,
             recognizedAtUtc: DateTime.UtcNow,
             notes: null,
-            items:
-            [
+            items: [
                 MealAiItemData.Create("Banana", null, 100, "g", 89, 1.1, 0.3, 23, 2.6, 0)
             ]);
 
@@ -93,8 +80,7 @@ public class ConsumptionsFeatureTests
     }
 
     [Fact]
-    public void ConsumptionRequestMappings_CreateToCommand_WhenListsAreNull_MapsEmptyCollections()
-    {
+    public void ConsumptionRequestMappings_CreateToCommand_WhenListsAreNull_MapsEmptyCollections() {
         var request = new CreateConsumptionRequest(
             DateTime.UtcNow,
             MealType.Breakfast.ToString(),
@@ -111,20 +97,17 @@ public class ConsumptionsFeatureTests
     }
 
     [Fact]
-    public void ConsumptionRequestMappings_UpdateToCommand_WhenAiItemsAreNull_MapsEmptyCollection()
-    {
+    public void ConsumptionRequestMappings_UpdateToCommand_WhenAiItemsAreNull_MapsEmptyCollection() {
         var request = new UpdateConsumptionRequest(
             DateTime.UtcNow,
             MealType.Dinner.ToString(),
             Comment: "ok",
             ImageUrl: null,
             ImageAssetId: null,
-            Items:
-            [
+            Items: [
                 new ConsumptionItemRequest(ProductId.New().Value, null, 150)
             ],
-            AiSessions:
-            [
+            AiSessions: [
                 new ConsumptionAiSessionRequest(
                     ImageAssetId: null,
                     RecognizedAtUtc: DateTime.UtcNow,

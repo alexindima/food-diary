@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using FoodDiary.Application.Common.Abstractions.Result;
@@ -10,12 +7,8 @@ using Microsoft.Extensions.Options;
 
 namespace FoodDiary.Infrastructure.Authentication;
 
-public sealed class TelegramLoginWidgetValidator : ITelegramLoginWidgetValidator {
-    private readonly TelegramAuthOptions _options;
-
-    public TelegramLoginWidgetValidator(IOptions<TelegramAuthOptions> options) {
-        _options = options.Value;
-    }
+public sealed class TelegramLoginWidgetValidator(IOptions<TelegramAuthOptions> options) : ITelegramLoginWidgetValidator {
+    private readonly TelegramAuthOptions _options = options.Value;
 
     public Result<TelegramInitData> ValidateLoginWidget(TelegramLoginWidgetData data) {
         if (data.Id <= 0 || data.AuthDate <= 0 || string.IsNullOrWhiteSpace(data.Hash)) {

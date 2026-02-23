@@ -1,22 +1,11 @@
-﻿using FoodDiary.Domain.Entities.Ai;
-using FoodDiary.Domain.Entities.Assets;
-using FoodDiary.Domain.Entities.Content;
-using FoodDiary.Domain.Entities.Meals;
-using FoodDiary.Domain.Entities.Products;
-using FoodDiary.Domain.Entities.Recipes;
-using FoodDiary.Domain.Entities.Shopping;
-using FoodDiary.Domain.Entities.Tracking;
-using FoodDiary.Domain.Entities.Users;
+﻿using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.Domain;
 
-public class ProductInvariantTests
-{
-    private static Product CreateValidProduct()
-    {
+public class ProductInvariantTests {
+    private static Product CreateValidProduct() {
         return Product.Create(
             UserId.New(),
             name: "Apple",
@@ -32,8 +21,7 @@ public class ProductInvariantTests
     }
 
     [Fact]
-    public void Create_WithInvalidName_Throws()
-    {
+    public void Create_WithInvalidName_Throws() {
         Assert.Throws<ArgumentException>(() => Product.Create(
             UserId.New(),
             name: "   ",
@@ -49,8 +37,7 @@ public class ProductInvariantTests
     }
 
     [Fact]
-    public void Create_WithNegativeNutrition_Throws()
-    {
+    public void Create_WithNegativeNutrition_Throws() {
         Assert.Throws<ArgumentOutOfRangeException>(() => Product.Create(
             UserId.New(),
             name: "Apple",
@@ -66,8 +53,7 @@ public class ProductInvariantTests
     }
 
     [Fact]
-    public void Create_WithEmptyUserId_Throws()
-    {
+    public void Create_WithEmptyUserId_Throws() {
         Assert.Throws<ArgumentException>(() => Product.Create(
             UserId.Empty,
             name: "Apple",
@@ -83,8 +69,7 @@ public class ProductInvariantTests
     }
 
     [Fact]
-    public void Create_WithTooLongName_Throws()
-    {
+    public void Create_WithTooLongName_Throws() {
         Assert.Throws<ArgumentOutOfRangeException>(() => Product.Create(
             UserId.New(),
             name: new string('a', 257),
@@ -100,8 +85,7 @@ public class ProductInvariantTests
     }
 
     [Fact]
-    public void Create_WithNonCanonicalBaseAmountForGram_Throws()
-    {
+    public void Create_WithNonCanonicalBaseAmountForGram_Throws() {
         Assert.Throws<ArgumentOutOfRangeException>(() => Product.Create(
             UserId.New(),
             name: "Apple",
@@ -117,8 +101,7 @@ public class ProductInvariantTests
     }
 
     [Fact]
-    public void Create_WithWhitespaceOptionalFields_NormalizesToNull()
-    {
+    public void Create_WithWhitespaceOptionalFields_NormalizesToNull() {
         var product = Product.Create(
             UserId.New(),
             name: "Apple",
@@ -147,8 +130,7 @@ public class ProductInvariantTests
     }
 
     [Fact]
-    public void UpdateMeasurement_WithInvalidPortion_Throws()
-    {
+    public void UpdateMeasurement_WithInvalidPortion_Throws() {
         var product = Product.Create(
             UserId.New(),
             name: "Apple",
@@ -166,8 +148,7 @@ public class ProductInvariantTests
     }
 
     [Fact]
-    public void UpdateIdentity_WithClearBrand_ClearsBrand()
-    {
+    public void UpdateIdentity_WithClearBrand_ClearsBrand() {
         var product = Product.Create(
             UserId.New(),
             name: "Apple",
@@ -188,8 +169,7 @@ public class ProductInvariantTests
     }
 
     [Fact]
-    public void UpdateIdentity_WithPaddedBrand_NormalizesAndTrims()
-    {
+    public void UpdateIdentity_WithPaddedBrand_NormalizesAndTrims() {
         var product = Product.Create(
             UserId.New(),
             name: "Apple",
@@ -209,8 +189,7 @@ public class ProductInvariantTests
     }
 
     [Fact]
-    public void UpdateIdentity_WithTooLongBrand_Throws()
-    {
+    public void UpdateIdentity_WithTooLongBrand_Throws() {
         var product = Product.Create(
             UserId.New(),
             name: "Apple",
@@ -229,8 +208,7 @@ public class ProductInvariantTests
     }
 
     [Fact]
-    public void UpdateIdentity_WithSameValues_DoesNotSetModifiedOnUtc()
-    {
+    public void UpdateIdentity_WithSameValues_DoesNotSetModifiedOnUtc() {
         var product = Product.Create(
             UserId.New(),
             name: "Apple",
@@ -251,8 +229,7 @@ public class ProductInvariantTests
     }
 
     [Fact]
-    public void UpdateMedia_WithClearAndValue_Throws()
-    {
+    public void UpdateMedia_WithClearAndValue_Throws() {
         var product = Product.Create(
             UserId.New(),
             name: "Apple",
@@ -270,8 +247,7 @@ public class ProductInvariantTests
     }
 
     [Fact]
-    public void UpdateMeasurement_WithUnitChange_ResetsBaseAmountToCanonical()
-    {
+    public void UpdateMeasurement_WithUnitChange_ResetsBaseAmountToCanonical() {
         var product = Product.Create(
             UserId.New(),
             name: "Apple",
@@ -292,8 +268,7 @@ public class ProductInvariantTests
     }
 
     [Fact]
-    public void UpdateMeasurement_WithNonCanonicalBaseAmountForPcs_Throws()
-    {
+    public void UpdateMeasurement_WithNonCanonicalBaseAmountForPcs_Throws() {
         var product = CreateValidProduct();
 
         Assert.Throws<ArgumentOutOfRangeException>(() =>
@@ -301,8 +276,7 @@ public class ProductInvariantTests
     }
 
     [Fact]
-    public void Create_WithNullDefaultPortionAmount_UsesBaseAmount()
-    {
+    public void Create_WithNullDefaultPortionAmount_UsesBaseAmount() {
         var product = Product.Create(
             UserId.New(),
             name: "Apple",
@@ -320,8 +294,7 @@ public class ProductInvariantTests
     }
 
     [Fact]
-    public void UpdateMeasurement_WithSameValues_DoesNotSetModifiedOnUtc()
-    {
+    public void UpdateMeasurement_WithSameValues_DoesNotSetModifiedOnUtc() {
         var product = CreateValidProduct();
 
         product.UpdateMeasurement(baseAmount: 100, defaultPortionAmount: 100);
@@ -330,8 +303,7 @@ public class ProductInvariantTests
     }
 
     [Fact]
-    public void UpdateNutrition_WithNegativeValue_Throws()
-    {
+    public void UpdateNutrition_WithNegativeValue_Throws() {
         var product = CreateValidProduct();
 
         Assert.Throws<ArgumentOutOfRangeException>(() =>
@@ -339,8 +311,7 @@ public class ProductInvariantTests
     }
 
     [Fact]
-    public void UpdateNutrition_WithPartialUpdate_PreservesOtherValues()
-    {
+    public void UpdateNutrition_WithPartialUpdate_PreservesOtherValues() {
         var product = CreateValidProduct();
 
         product.UpdateNutrition(proteinsPerBase: 1.5);
@@ -354,8 +325,7 @@ public class ProductInvariantTests
     }
 
     [Fact]
-    public void UpdateNutrition_WithSameValues_DoesNotSetModifiedOnUtc()
-    {
+    public void UpdateNutrition_WithSameValues_DoesNotSetModifiedOnUtc() {
         var product = CreateValidProduct();
 
         product.UpdateNutrition(
@@ -370,8 +340,7 @@ public class ProductInvariantTests
     }
 
     [Fact]
-    public void UpdateMedia_WithClearImageAssetIdAndValue_Throws()
-    {
+    public void UpdateMedia_WithClearImageAssetIdAndValue_Throws() {
         var product = CreateValidProduct();
 
         Assert.Throws<ArgumentException>(() =>
@@ -379,8 +348,7 @@ public class ProductInvariantTests
     }
 
     [Fact]
-    public void UpdateMedia_WithSameTrimmedImageUrl_DoesNotSetModifiedOnUtc()
-    {
+    public void UpdateMedia_WithSameTrimmedImageUrl_DoesNotSetModifiedOnUtc() {
         var product = Product.Create(
             UserId.New(),
             name: "Apple",
@@ -401,8 +369,7 @@ public class ProductInvariantTests
     }
 
     [Fact]
-    public void ChangeVisibility_WithSameValue_DoesNotSetModifiedOnUtc()
-    {
+    public void ChangeVisibility_WithSameValue_DoesNotSetModifiedOnUtc() {
         var product = CreateValidProduct();
 
         product.ChangeVisibility(Visibility.Public);
@@ -411,8 +378,7 @@ public class ProductInvariantTests
     }
 
     [Fact]
-    public void ChangeVisibility_WithDifferentValue_UpdatesVisibility()
-    {
+    public void ChangeVisibility_WithDifferentValue_UpdatesVisibility() {
         var product = CreateValidProduct();
 
         product.ChangeVisibility(Visibility.Private);
@@ -421,4 +387,3 @@ public class ProductInvariantTests
         Assert.NotNull(product.ModifiedOnUtc);
     }
 }
-

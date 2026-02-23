@@ -1,35 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using FoodDiary.Application.Common.Interfaces.Persistence;
-using FoodDiary.Domain.Entities.Ai;
-using FoodDiary.Domain.Entities.Assets;
-using FoodDiary.Domain.Entities.Content;
-using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Products;
-using FoodDiary.Domain.Entities.Recipes;
-using FoodDiary.Domain.Entities.Shopping;
-using FoodDiary.Domain.Entities.Tracking;
-using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Infrastructure.Persistence;
 
-public class ProductRepository : IProductRepository
-{
-    private readonly FoodDiaryDbContext _context;
-
-    public ProductRepository(FoodDiaryDbContext context) => _context = context;
-
-    public async Task<Product> AddAsync(Product product)
-    {
-        _context.Products.Add(product);
-        await _context.SaveChangesAsync();
+public class ProductRepository(FoodDiaryDbContext context) : IProductRepository {
+    public async Task<Product> AddAsync(Product product) {
+        context.Products.Add(product);
+        await context.SaveChangesAsync();
         return product;
     }
 
@@ -40,19 +20,17 @@ public class ProductRepository : IProductRepository
         int limit,
         string? search,
         IReadOnlyCollection<ProductType>? productTypes = null,
-        CancellationToken cancellationToken = default)
-    {
+        CancellationToken cancellationToken = default) {
         var pageNumber = Math.Max(page, 1);
         var pageSize = Math.Max(limit, 1);
 
-        IQueryable<Product> query = _context.Products
+        var query = context.Products
             .AsNoTracking()
             .Where(includePublic
                 ? p => p.UserId == userId || p.Visibility == Visibility.Public
                 : p => p.UserId == userId);
 
-        if (!string.IsNullOrWhiteSpace(search))
-        {
+        if (!string.IsNullOrWhiteSpace(search)) {
             var normalizedSearch = search.Trim().ToLower();
             query = query.Where(p =>
                 p.Name.ToLower().Contains(normalizedSearch) ||
@@ -61,8 +39,7 @@ public class ProductRepository : IProductRepository
                 (p.Barcode != null && p.Barcode.ToLower().Contains(normalizedSearch)));
         }
 
-        if (productTypes is { Count: > 0 })
-        {
+        if (productTypes is { Count: > 0 }) {
             query = query.Where(p => productTypes.Contains(p.ProductType));
         }
 
@@ -72,8 +49,7 @@ public class ProductRepository : IProductRepository
         var items = await orderedQuery
             .Skip(skip)
             .Take(pageSize)
-            .Select(p => new
-            {
+            .Select(p => new {
                 Product = p,
                 UsageCount = p.MealItems.Count + p.RecipeIngredients.Count
             })
@@ -89,7 +65,7 @@ public class ProductRepository : IProductRepository
         UserId userId,
         bool includePublic = true,
         CancellationToken cancellationToken = default) =>
-        await _context.Products
+        await context.Products
             .AsNoTracking()
             .Include(p => p.MealItems)
             .Include(p => p.RecipeIngredients)
@@ -103,15 +79,13 @@ public class ProductRepository : IProductRepository
         IEnumerable<ProductId> ids,
         UserId userId,
         bool includePublic = true,
-        CancellationToken cancellationToken = default)
-    {
+        CancellationToken cancellationToken = default) {
         var productIds = ids.Distinct().ToList();
-        if (productIds.Count == 0)
-        {
+        if (productIds.Count == 0) {
             return new Dictionary<ProductId, Product>();
         }
 
-        IQueryable<Product> query = _context.Products.AsNoTracking();
+        var query = context.Products.AsNoTracking();
         query = query.Where(p => productIds.Contains(p.Id) && (includePublic
             ? p.UserId == userId || p.Visibility == Visibility.Public
             : p.UserId == userId));
@@ -124,21 +98,18 @@ public class ProductRepository : IProductRepository
         IEnumerable<ProductId> ids,
         UserId userId,
         bool includePublic = true,
-        CancellationToken cancellationToken = default)
-    {
+        CancellationToken cancellationToken = default) {
         var productIds = ids.Distinct().ToList();
-        if (productIds.Count == 0)
-        {
+        if (productIds.Count == 0) {
             return new Dictionary<ProductId, (Product Product, int UsageCount)>();
         }
 
-        var items = await _context.Products
+        var items = await context.Products
             .AsNoTracking()
             .Where(p => productIds.Contains(p.Id) && (includePublic
                 ? p.UserId == userId || p.Visibility == Visibility.Public
                 : p.UserId == userId))
-            .Select(p => new
-            {
+            .Select(p => new {
                 Product = p,
                 UsageCount = p.MealItems.Count + p.RecipeIngredients.Count
             })
@@ -147,16 +118,13 @@ public class ProductRepository : IProductRepository
         return items.ToDictionary(x => x.Product.Id, x => (x.Product, x.UsageCount));
     }
 
-    public async Task UpdateAsync(Product product)
-    {
-        _context.Products.Update(product);
-        await _context.SaveChangesAsync();
+    public async Task UpdateAsync(Product product) {
+        context.Products.Update(product);
+        await context.SaveChangesAsync();
     }
 
-    public async Task DeleteAsync(Product product)
-    {
-        _context.Products.Remove(product);
-        await _context.SaveChangesAsync();
+    public async Task DeleteAsync(Product product) {
+        context.Products.Remove(product);
+        await context.SaveChangesAsync();
     }
 }
-

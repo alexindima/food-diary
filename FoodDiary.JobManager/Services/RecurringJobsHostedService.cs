@@ -1,5 +1,4 @@
 using Hangfire;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 
 namespace FoodDiary.JobManager.Services;
@@ -9,24 +8,23 @@ public sealed class RecurringJobsHostedService(
     IOptions<ImageCleanupOptions> options,
     IOptions<UserCleanupOptions> userCleanupOptions,
     ImageCleanupJob imageCleanupJob,
-    UserCleanupJob userCleanupJob) : IHostedService
-{
-    public Task StartAsync(CancellationToken cancellationToken)
-    {
+    UserCleanupJob userCleanupJob) : IHostedService {
+    public Task StartAsync(CancellationToken cancellationToken) {
         var settings = options.Value;
         var userSettings = userCleanupOptions.Value;
+        var imageCron = string.IsNullOrWhiteSpace(settings.Cron) ? "0 * * * *" : settings.Cron;
+        var userCron = string.IsNullOrWhiteSpace(userSettings.Cron) ? "0 3 * * *" : userSettings.Cron;
         recurringJobManager.AddOrUpdate(
             "image-assets-cleanup",
             () => imageCleanupJob.Execute(CancellationToken.None),
-            settings.Cron);
+            imageCron);
         recurringJobManager.AddOrUpdate(
             "users-cleanup",
             () => userCleanupJob.Execute(CancellationToken.None),
-            userSettings.Cron);
+            userCron);
 
         return Task.CompletedTask;
     }
 
     public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
 }
-

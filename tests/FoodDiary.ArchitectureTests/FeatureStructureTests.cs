@@ -47,7 +47,11 @@ public class FeatureStructureTests
 
     [Theory]
     [InlineData("FoodDiary.Application", "FoodDiary.Application")]
+    [InlineData("FoodDiary.Contracts", "FoodDiary.Contracts")]
     [InlineData("FoodDiary.Domain", "FoodDiary.Domain")]
+    [InlineData("FoodDiary.Infrastructure", "FoodDiary.Infrastructure")]
+    [InlineData("FoodDiary.JobManager", "FoodDiary.JobManager")]
+    [InlineData("FoodDiary.Telegram.Bot", "FoodDiary.Telegram.Bot")]
     [InlineData("FoodDiary.Web.Api", "FoodDiary.Web.Api")]
     public void Namespaces_Match_ProjectFolderStructure(string projectFolder, string namespaceRoot)
     {
@@ -66,7 +70,10 @@ public class FeatureStructureTests
             if (string.IsNullOrWhiteSpace(namespaceFromFile))
             {
                 // Entry points may use top-level statements without explicit namespace.
-                if (string.Equals(Path.GetFileName(sourceFile), "Program.cs", StringComparison.OrdinalIgnoreCase))
+                // AssemblyInfo files may contain only assembly-level attributes.
+                var fileName = Path.GetFileName(sourceFile);
+                if (string.Equals(fileName, "Program.cs", StringComparison.OrdinalIgnoreCase) ||
+                    string.Equals(fileName, "AssemblyInfo.cs", StringComparison.OrdinalIgnoreCase))
                 {
                     continue;
                 }

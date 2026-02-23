@@ -4,11 +4,9 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.Recipes;
 
-public class RecipesFeatureTests
-{
+public class RecipesFeatureTests {
     [Fact]
-    public async Task GetRecentRecipesQueryValidator_WithEmptyUserId_Fails()
-    {
+    public async Task GetRecentRecipesQueryValidator_WithEmptyUserId_Fails() {
         var validator = new GetRecentRecipesQueryValidator();
         var query = new GetRecentRecipesQuery(UserId.Empty, 10, true);
 
@@ -18,8 +16,7 @@ public class RecipesFeatureTests
     }
 
     [Fact]
-    public async Task GetRecipesWithRecentQueryValidator_WithValidUserId_Passes()
-    {
+    public async Task GetRecipesWithRecentQueryValidator_WithValidUserId_Passes() {
         var validator = new GetRecipesWithRecentQueryValidator();
         var query = new GetRecipesWithRecentQuery(UserId.New(), 1, 10, null, true, 10);
 

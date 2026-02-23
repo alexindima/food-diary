@@ -6,11 +6,9 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.Dashboard;
 
-public class DashboardFeatureTests
-{
+public class DashboardFeatureTests {
     [Fact]
-    public async Task GetDashboardSnapshotQueryValidator_WithEmptyUserId_Fails()
-    {
+    public async Task GetDashboardSnapshotQueryValidator_WithEmptyUserId_Fails() {
         var validator = new GetDashboardSnapshotQueryValidator();
         var query = new GetDashboardSnapshotQuery(
             UserId.Empty,
@@ -26,8 +24,7 @@ public class DashboardFeatureTests
     }
 
     [Fact]
-    public async Task GetDashboardSnapshotQueryValidator_WithValidInput_Passes()
-    {
+    public async Task GetDashboardSnapshotQueryValidator_WithValidInput_Passes() {
         var validator = new GetDashboardSnapshotQueryValidator();
         var query = new GetDashboardSnapshotQuery(
             UserId.New(),
@@ -43,12 +40,10 @@ public class DashboardFeatureTests
     }
 
     [Fact]
-    public void DashboardMapping_ToWeeklyCalories_OrdersByDateAscending()
-    {
+    public void DashboardMapping_ToWeeklyCalories_OrdersByDateAscending() {
         var day1 = new DateTime(2026, 2, 1, 0, 0, 0, DateTimeKind.Utc);
         var day2 = day1.AddDays(1);
-        var responses = new List<AggregatedStatisticsResponse>
-        {
+        var responses = new List<AggregatedStatisticsResponse> {
             new(day2, day2, 2000, 100, 70, 250, 30),
             new(day1, day1, 1800, 90, 60, 220, 25)
         };
@@ -62,13 +57,11 @@ public class DashboardFeatureTests
     }
 
     [Fact]
-    public void DashboardMapping_ToWeightDto_MapsLatestAndPreviousEntries()
-    {
+    public void DashboardMapping_ToWeightDto_MapsLatestAndPreviousEntries() {
         var userId = UserId.New();
         var latestDate = new DateTime(2026, 2, 20, 0, 0, 0, DateTimeKind.Utc);
         var previousDate = latestDate.AddDays(-1);
-        var entries = new List<WeightEntry>
-        {
+        var entries = new List<WeightEntry> {
             WeightEntry.Create(userId, latestDate, 82.5),
             WeightEntry.Create(userId, previousDate, 83)
         };
@@ -83,13 +76,11 @@ public class DashboardFeatureTests
     }
 
     [Fact]
-    public void DashboardMapping_ToWaistDto_MapsLatestAndPreviousEntries()
-    {
+    public void DashboardMapping_ToWaistDto_MapsLatestAndPreviousEntries() {
         var userId = UserId.New();
         var latestDate = new DateTime(2026, 2, 20, 0, 0, 0, DateTimeKind.Utc);
         var previousDate = latestDate.AddDays(-1);
-        var entries = new List<WaistEntry>
-        {
+        var entries = new List<WaistEntry> {
             WaistEntry.Create(userId, latestDate, 92.1),
             WaistEntry.Create(userId, previousDate, 92.8)
         };

@@ -9,11 +9,9 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.Cycles;
 
-public class CyclesFeatureTests
-{
+public class CyclesFeatureTests {
     [Fact]
-    public async Task CreateCycleCommandValidator_WithInvalidLength_Fails()
-    {
+    public async Task CreateCycleCommandValidator_WithInvalidLength_Fails() {
         var validator = new CreateCycleCommandValidator();
         var command = new CreateCycleCommand(UserId.New(), DateTime.UtcNow, AverageLength: 10, LutealLength: 20, Notes: null);
 
@@ -23,8 +21,7 @@ public class CyclesFeatureTests
     }
 
     [Fact]
-    public async Task UpsertCycleDayCommandValidator_WithOutOfRangeSymptoms_Fails()
-    {
+    public async Task UpsertCycleDayCommandValidator_WithOutOfRangeSymptoms_Fails() {
         var validator = new UpsertCycleDayCommandValidator();
         var command = new UpsertCycleDayCommand(
             UserId.New(),
@@ -40,8 +37,7 @@ public class CyclesFeatureTests
     }
 
     [Fact]
-    public void CycleMappings_ToResponse_SortsDaysByDate()
-    {
+    public void CycleMappings_ToResponse_SortsDaysByDate() {
         var cycle = Cycle.Create(UserId.New(), DateTime.UtcNow);
         cycle.AddOrUpdateDay(new DateTime(2026, 2, 10, 0, 0, 0, DateTimeKind.Utc), true, DailySymptoms.Create(1, 1, 1, 1, 1, 1, 1));
         cycle.AddOrUpdateDay(new DateTime(2026, 2, 1, 0, 0, 0, DateTimeKind.Utc), false, DailySymptoms.Create(2, 2, 2, 2, 2, 2, 2));
@@ -55,8 +51,7 @@ public class CyclesFeatureTests
     }
 
     [Fact]
-    public void CyclePredictionService_CalculatePredictions_NormalizesToUtcDate()
-    {
+    public void CyclePredictionService_CalculatePredictions_NormalizesToUtcDate() {
         var localStart = DateTime.SpecifyKind(new DateTime(2026, 1, 10, 23, 30, 0), DateTimeKind.Local);
         var cycle = Cycle.Create(UserId.New(), localStart, averageLength: 28, lutealLength: 14);
 
@@ -71,8 +66,7 @@ public class CyclesFeatureTests
     }
 
     [Fact]
-    public void CyclePredictionService_CalculatePredictions_WithNullCycle_Throws()
-    {
+    public void CyclePredictionService_CalculatePredictions_WithNullCycle_Throws() {
         Assert.Throws<ArgumentNullException>(() => CyclePredictionService.CalculatePredictions(null!));
     }
 }

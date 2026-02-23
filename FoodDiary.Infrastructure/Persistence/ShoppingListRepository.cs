@@ -1,32 +1,14 @@
-﻿using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using FoodDiary.Application.Common.Interfaces.Persistence;
-using FoodDiary.Domain.Entities.Ai;
-using FoodDiary.Domain.Entities.Assets;
-using FoodDiary.Domain.Entities.Content;
-using FoodDiary.Domain.Entities.Meals;
-using FoodDiary.Domain.Entities.Products;
-using FoodDiary.Domain.Entities.Recipes;
+﻿using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Domain.Entities.Shopping;
-using FoodDiary.Domain.Entities.Tracking;
-using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence;
 
-public class ShoppingListRepository : IShoppingListRepository
-{
-    private readonly FoodDiaryDbContext _context;
-
-    public ShoppingListRepository(FoodDiaryDbContext context) => _context = context;
-
-    public async Task<ShoppingList> AddAsync(ShoppingList list)
-    {
-        _context.ShoppingLists.Add(list);
-        await _context.SaveChangesAsync();
+public class ShoppingListRepository(FoodDiaryDbContext context) : IShoppingListRepository {
+    public async Task<ShoppingList> AddAsync(ShoppingList list) {
+        context.ShoppingLists.Add(list);
+        await context.SaveChangesAsync();
         return list;
     }
 
@@ -35,17 +17,14 @@ public class ShoppingListRepository : IShoppingListRepository
         UserId userId,
         bool includeItems = false,
         bool asTracking = false,
-        CancellationToken cancellationToken = default)
-    {
-        IQueryable<ShoppingList> query = _context.ShoppingLists;
+        CancellationToken cancellationToken = default) {
+        IQueryable<ShoppingList> query = context.ShoppingLists;
 
-        if (!asTracking)
-        {
+        if (!asTracking) {
             query = query.AsNoTracking();
         }
 
-        if (includeItems)
-        {
+        if (includeItems) {
             query = query.Include(l => l.Items);
         }
 
@@ -58,17 +37,14 @@ public class ShoppingListRepository : IShoppingListRepository
         UserId userId,
         bool includeItems = false,
         bool asTracking = false,
-        CancellationToken cancellationToken = default)
-    {
-        IQueryable<ShoppingList> query = _context.ShoppingLists;
+        CancellationToken cancellationToken = default) {
+        IQueryable<ShoppingList> query = context.ShoppingLists;
 
-        if (!asTracking)
-        {
+        if (!asTracking) {
             query = query.AsNoTracking();
         }
 
-        if (includeItems)
-        {
+        if (includeItems) {
             query = query.Include(l => l.Items);
         }
 
@@ -81,12 +57,10 @@ public class ShoppingListRepository : IShoppingListRepository
     public async Task<IReadOnlyList<ShoppingList>> GetAllAsync(
         UserId userId,
         bool includeItems = false,
-        CancellationToken cancellationToken = default)
-    {
-        IQueryable<ShoppingList> query = _context.ShoppingLists.AsNoTracking();
+        CancellationToken cancellationToken = default) {
+        var query = context.ShoppingLists.AsNoTracking();
 
-        if (includeItems)
-        {
+        if (includeItems) {
             query = query.Include(l => l.Items);
         }
 
@@ -96,16 +70,13 @@ public class ShoppingListRepository : IShoppingListRepository
             .ToListAsync(cancellationToken);
     }
 
-    public async Task UpdateAsync(ShoppingList list)
-    {
-        _context.ShoppingLists.Update(list);
-        await _context.SaveChangesAsync();
+    public async Task UpdateAsync(ShoppingList list) {
+        context.ShoppingLists.Update(list);
+        await context.SaveChangesAsync();
     }
 
-    public async Task DeleteAsync(ShoppingList list)
-    {
-        _context.ShoppingLists.Remove(list);
-        await _context.SaveChangesAsync();
+    public async Task DeleteAsync(ShoppingList list) {
+        context.ShoppingLists.Remove(list);
+        await context.SaveChangesAsync();
     }
 }
-

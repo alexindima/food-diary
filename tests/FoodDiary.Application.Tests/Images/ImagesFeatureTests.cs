@@ -9,11 +9,9 @@ using Microsoft.Extensions.Logging.Abstractions;
 
 namespace FoodDiary.Application.Tests.Images;
 
-public class ImagesFeatureTests
-{
+public class ImagesFeatureTests {
     [Fact]
-    public async Task GetImageUploadUrlCommandHandler_WithEmptyUserId_Throws()
-    {
+    public async Task GetImageUploadUrlCommandHandler_WithEmptyUserId_Throws() {
         var handler = new GetImageUploadUrlCommandHandler(
             new FakeImageStorageService(),
             new FakeImageAssetRepository());
@@ -24,8 +22,7 @@ public class ImagesFeatureTests
     }
 
     [Fact]
-    public async Task DeleteImageAssetCommandHandler_WithOtherOwner_ReturnsForbidden()
-    {
+    public async Task DeleteImageAssetCommandHandler_WithOtherOwner_ReturnsForbidden() {
         var repo = new FakeImageAssetRepository();
         var owner = UserId.New();
         var anotherUser = UserId.New();
@@ -40,8 +37,7 @@ public class ImagesFeatureTests
     }
 
     [Fact]
-    public async Task ImageAssetCleanupService_CleanupOrphans_WithNonPositiveBatch_ReturnsZero()
-    {
+    public async Task ImageAssetCleanupService_CleanupOrphans_WithNonPositiveBatch_ReturnsZero() {
         var service = new ImageAssetCleanupService(
             new FakeImageAssetRepository(),
             new FakeImageStorageService(),
@@ -53,8 +49,7 @@ public class ImagesFeatureTests
     }
 
     [Fact]
-    public async Task ImageAssetCleanupService_DeleteIfUnused_WhenInUse_ReturnsInUse()
-    {
+    public async Task ImageAssetCleanupService_DeleteIfUnused_WhenInUse_ReturnsInUse() {
         var repo = new FakeImageAssetRepository();
         var asset = ImageAsset.Create(UserId.New(), "images/in-use.jpg", "https://cdn/in-use.jpg");
         await repo.AddAsync(asset, CancellationToken.None);
@@ -71,8 +66,7 @@ public class ImagesFeatureTests
         Assert.Equal("in_use", result.ErrorCode);
     }
 
-    private sealed class FakeCleanupService : IImageAssetCleanupService
-    {
+    private sealed class FakeCleanupService : IImageAssetCleanupService {
         public Task<DeleteImageAssetResult> DeleteIfUnusedAsync(ImageAssetId assetId, CancellationToken cancellationToken = default) =>
             Task.FromResult(new DeleteImageAssetResult(true));
 
@@ -80,15 +74,13 @@ public class ImagesFeatureTests
             Task.FromResult(0);
     }
 
-    private sealed class FakeImageStorageService : IImageStorageService
-    {
+    private sealed class FakeImageStorageService : IImageStorageService {
         public Task<PresignedUpload> CreatePresignedUploadAsync(
             UserId userId,
             string fileName,
             string contentType,
             long fileSizeBytes,
-            CancellationToken cancellationToken)
-        {
+            CancellationToken cancellationToken) {
             return Task.FromResult(new PresignedUpload(
                 "https://upload.example",
                 "https://cdn.example/file.jpg",
@@ -99,25 +91,21 @@ public class ImagesFeatureTests
         public Task DeleteAsync(string objectKey, CancellationToken cancellationToken) => Task.CompletedTask;
     }
 
-    private sealed class FakeImageAssetRepository : IImageAssetRepository
-    {
+    private sealed class FakeImageAssetRepository : IImageAssetRepository {
         private readonly Dictionary<ImageAssetId, ImageAsset> _assets = [];
         public HashSet<ImageAssetId> InUseIds { get; } = [];
 
-        public Task<ImageAsset> AddAsync(ImageAsset asset, CancellationToken cancellationToken = default)
-        {
+        public Task<ImageAsset> AddAsync(ImageAsset asset, CancellationToken cancellationToken = default) {
             _assets[asset.Id] = asset;
             return Task.FromResult(asset);
         }
 
-        public Task<ImageAsset?> GetByIdAsync(ImageAssetId id, CancellationToken cancellationToken = default)
-        {
+        public Task<ImageAsset?> GetByIdAsync(ImageAssetId id, CancellationToken cancellationToken = default) {
             _assets.TryGetValue(id, out var asset);
             return Task.FromResult(asset);
         }
 
-        public Task DeleteAsync(ImageAsset asset, CancellationToken cancellationToken = default)
-        {
+        public Task DeleteAsync(ImageAsset asset, CancellationToken cancellationToken = default) {
             _assets.Remove(asset.Id);
             return Task.CompletedTask;
         }
@@ -128,8 +116,7 @@ public class ImagesFeatureTests
         public Task<IReadOnlyList<ImageAsset>> GetUnusedOlderThanAsync(
             DateTime olderThanUtc,
             int batchSize,
-            CancellationToken cancellationToken = default)
-        {
+            CancellationToken cancellationToken = default) {
             var result = _assets.Values
                 .Where(a => a.CreatedOnUtc <= olderThanUtc && !InUseIds.Contains(a.Id))
                 .Take(batchSize)

@@ -1,7 +1,6 @@
 ﻿using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
-using System.Linq;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Services;
 using FoodDiary.Application.Common.Interfaces.Persistence;
@@ -10,15 +9,6 @@ using FoodDiary.Infrastructure.Options;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using FoodDiary.Domain.Entities.Ai;
-using FoodDiary.Domain.Entities.Assets;
-using FoodDiary.Domain.Entities.Content;
-using FoodDiary.Domain.Entities.Meals;
-using FoodDiary.Domain.Entities.Products;
-using FoodDiary.Domain.Entities.Recipes;
-using FoodDiary.Domain.Entities.Shopping;
-using FoodDiary.Domain.Entities.Tracking;
-using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Infrastructure.Services;
@@ -29,8 +19,7 @@ public sealed class OpenAiFoodService(
     ILogger<OpenAiFoodService> logger,
     IAiUsageRepository aiUsageRepository,
     IUserRepository userRepository)
-    : IOpenAiFoodService
-{
+    : IOpenAiFoodService {
     private readonly OpenAiOptions _options = options.Value;
     private readonly ILogger<OpenAiFoodService> _logger = logger;
     private readonly IAiUsageRepository _aiUsageRepository = aiUsageRepository;
@@ -41,69 +30,59 @@ public sealed class OpenAiFoodService(
         string? userLanguage,
         UserId userId,
         string? description,
-        CancellationToken cancellationToken)
-    {
+        CancellationToken cancellationToken) {
         var quotaCheck = await EnsureMonthlyQuotaAsync(userId, cancellationToken);
-        if (quotaCheck.IsFailure)
-        {
+        if (quotaCheck.IsFailure) {
             return Result.Failure<FoodVisionResponse>(quotaCheck.Error);
         }
 
-        if (string.IsNullOrWhiteSpace(_options.ApiKey))
-        {
+        if (string.IsNullOrWhiteSpace(_options.ApiKey)) {
             return Result.Failure<FoodVisionResponse>(Errors.Ai.OpenAiFailed("OpenAI API key is not configured."));
         }
 
         var requestModel = _options.VisionModel;
         var request = BuildVisionRequest(requestModel, imageUrl, userLanguage, description);
         var response = await SendRequestAsync(request, cancellationToken);
-        if (!response.IsSuccess)
-        {
+        if (!response.IsSuccess) {
             requestModel = _options.VisionFallbackModel;
             var fallback = BuildVisionRequest(requestModel, imageUrl, userLanguage, description);
             response = await SendRequestAsync(fallback, cancellationToken);
         }
 
-        if (!response.IsSuccess)
-        {
+        if (!response.IsSuccess) {
             return Result.Failure<FoodVisionResponse>(response.Error);
         }
 
         var parsed = ParseVisionResponse(response.Json!);
-        if (parsed.IsSuccess)
-        {
+        if (parsed.IsSuccess) {
             await SaveUsageAsync(response.Json!, userId, "vision", requestModel, cancellationToken);
         }
+
         return parsed;
     }
 
     public async Task<Result<FoodNutritionResponse>> CalculateNutritionAsync(
         IReadOnlyList<FoodVisionItem> items,
         UserId userId,
-        CancellationToken cancellationToken)
-    {
+        CancellationToken cancellationToken) {
         var quotaCheck = await EnsureMonthlyQuotaAsync(userId, cancellationToken);
-        if (quotaCheck.IsFailure)
-        {
+        if (quotaCheck.IsFailure) {
             return Result.Failure<FoodNutritionResponse>(quotaCheck.Error);
         }
 
-        if (string.IsNullOrWhiteSpace(_options.ApiKey))
-        {
+        if (string.IsNullOrWhiteSpace(_options.ApiKey)) {
             return Result.Failure<FoodNutritionResponse>(Errors.Ai.OpenAiFailed("OpenAI API key is not configured."));
         }
 
         var requestModel = _options.TextModel;
         var request = BuildNutritionRequest(requestModel, items);
         var response = await SendRequestAsync(request, cancellationToken);
-        if (!response.IsSuccess)
-        {
+        if (!response.IsSuccess) {
             return Result.Failure<FoodNutritionResponse>(response.Error);
         }
 
         var parsed = ParseNutritionResponse(response.Json!);
-        if (parsed.IsSuccess)
-        {
+        if (parsed.IsSuccess) {
             await SaveUsageAsync(response.Json!, userId, "nutrition", requestModel, cancellationToken);
         }
 
@@ -112,8 +91,7 @@ public sealed class OpenAiFoodService(
 
     private async Task<(bool IsSuccess, JsonDocument? Json, Error Error)> SendRequestAsync(
         object payload,
-        CancellationToken cancellationToken)
-    {
+        CancellationToken cancellationToken) {
         using var request = new HttpRequestMessage(HttpMethod.Post, "https://api.openai.com/v1/responses");
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _options.ApiKey);
         request.Content = new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json");
@@ -121,8 +99,7 @@ public sealed class OpenAiFoodService(
         using var response = await httpClient.SendAsync(request, cancellationToken);
         var responseBody = await response.Content.ReadAsStringAsync(cancellationToken);
 
-        if (!response.IsSuccessStatusCode)
-        {
+        if (!response.IsSuccessStatusCode) {
             var statusCode = (int)response.StatusCode;
             var requestId = response.Headers.TryGetValues("x-request-id", out var values)
                 ? string.Join(",", values)
@@ -137,13 +114,10 @@ public sealed class OpenAiFoodService(
             return (false, null, Errors.Ai.OpenAiFailed($"OpenAI error {response.StatusCode}: {responseBody}"));
         }
 
-        try
-        {
+        try {
             var json = JsonDocument.Parse(responseBody);
             return (true, json, Error.None);
-        }
-        catch (JsonException ex)
-        {
+        } catch (JsonException ex) {
             return (false, null, Errors.Ai.InvalidResponse($"Invalid JSON response: {ex.Message}"));
         }
     }
@@ -152,8 +126,7 @@ public sealed class OpenAiFoodService(
         string model,
         string imageUrl,
         string? userLanguage,
-        string? description)
-    {
+        string? description) {
         var language = string.IsNullOrWhiteSpace(userLanguage) ? "en" : userLanguage.Trim().ToLowerInvariant();
         var includeLocal = language != "en";
         var languageHint = includeLocal
@@ -163,18 +136,13 @@ public sealed class OpenAiFoodService(
             ? string.Empty
             : $"User hint: {description.Trim()}. ";
 
-        return new
-        {
+        return new {
             model,
-            input = new[]
-            {
-                new
-                {
+            input = new[] {
+                new {
                     role = "user",
-                    content = new object[]
-                    {
-                        new
-                        {
+                    content = new object[] {
+                        new {
                             type = "input_text",
                             text = descriptionHint +
                                    "Analyze the food photo and return only JSON with list of items. " +
@@ -182,8 +150,7 @@ public sealed class OpenAiFoodService(
                                    "Use grams (g) when possible. " +
                                    languageHint
                         },
-                        new
-                        {
+                        new {
                             type = "input_image",
                             image_url = imageUrl,
                             detail = "high"
@@ -191,25 +158,18 @@ public sealed class OpenAiFoodService(
                     }
                 }
             },
-            text = new
-            {
-                format = new
-                {
+            text = new {
+                format = new {
                     type = "json_schema",
                     name = "food_vision",
-                    schema = new
-                    {
+                    schema = new {
                         type = "object",
-                        properties = new
-                        {
-                            items = new
-                            {
+                        properties = new {
+                            items = new {
                                 type = "array",
-                                items = new
-                                {
+                                items = new {
                                     type = "object",
-                                    properties = new
-                                    {
+                                    properties = new {
                                         nameEn = new { type = "string" },
                                         nameLocal = new { type = new[] { "string", "null" } },
                                         amount = new { type = "number" },
@@ -230,65 +190,50 @@ public sealed class OpenAiFoodService(
         };
     }
 
-    private static object BuildNutritionRequest(string model, IReadOnlyList<FoodVisionItem> items)
-    {
-        var mappedItems = items.Select(item => new
-        {
+    private static object BuildNutritionRequest(string model, IReadOnlyList<FoodVisionItem> items) {
+        var mappedItems = items.Select(item => new {
             name = string.IsNullOrWhiteSpace(item.NameEn) ? (item.NameLocal ?? "unknown") : item.NameEn,
             amount = item.Amount,
             unit = item.Unit
         });
 
-        return new
-        {
+        return new {
             model,
-            input = new[]
-            {
-                new
-                {
+            input = new[] {
+                new {
                     role = "user",
-                    content = new object[]
-                    {
-                        new
-                        {
+                    content = new object[] {
+                        new {
                             type = "input_text",
                             text = "You are a nutrition assistant. Using the provided items with amounts, " +
                                    "estimate calories and nutrients per item and totals. " +
                                    "Item names are in English. Return only JSON."
                         },
-                        new
-                        {
+                        new {
                             type = "input_text",
                             text = JsonSerializer.Serialize(new { items = mappedItems })
                         }
                     }
                 }
             },
-            text = new
-            {
-                format = new
-                {
+            text = new {
+                format = new {
                     type = "json_schema",
                     name = "food_nutrition",
-                    schema = new
-                    {
+                    schema = new {
                         type = "object",
-                        properties = new
-                        {
+                        properties = new {
                             calories = new { type = "number" },
                             protein = new { type = "number" },
                             fat = new { type = "number" },
                             carbs = new { type = "number" },
                             fiber = new { type = "number" },
                             alcohol = new { type = "number" },
-                            items = new
-                            {
+                            items = new {
                                 type = "array",
-                                items = new
-                                {
+                                items = new {
                                     type = "object",
-                                    properties = new
-                                    {
+                                    properties = new {
                                         name = new { type = "string" },
                                         amount = new { type = "number" },
                                         unit = new { type = "string" },
@@ -299,8 +244,7 @@ public sealed class OpenAiFoodService(
                                         fiber = new { type = "number" },
                                         alcohol = new { type = "number" }
                                     },
-                                    required = new[]
-                                    {
+                                    required = new[] {
                                         "name", "amount", "unit",
                                         "calories", "protein", "fat", "carbs", "fiber", "alcohol"
                                     },
@@ -308,8 +252,7 @@ public sealed class OpenAiFoodService(
                                 }
                             },
                         },
-                        required = new[]
-                        {
+                        required = new[] {
                             "calories", "protein", "fat", "carbs", "fiber", "alcohol", "items"
                         },
                         additionalProperties = false
@@ -320,74 +263,56 @@ public sealed class OpenAiFoodService(
         };
     }
 
-    private static Result<FoodVisionResponse> ParseVisionResponse(JsonDocument json)
-    {
+    private static Result<FoodVisionResponse> ParseVisionResponse(JsonDocument json) {
         var text = ExtractOutputText(json);
-        if (string.IsNullOrWhiteSpace(text))
-        {
+        if (string.IsNullOrWhiteSpace(text)) {
             return Result.Failure<FoodVisionResponse>(Errors.Ai.InvalidResponse("Missing output text."));
         }
 
-        try
-        {
+        try {
             var parsed = JsonSerializer.Deserialize<FoodVisionResponse>(text, JsonOptions());
-            if (parsed is null || parsed.Items is null)
-            {
+            if (parsed is null || parsed.Items is null) {
                 return Result.Failure<FoodVisionResponse>(Errors.Ai.InvalidResponse("Vision response is empty."));
             }
 
             return Result.Success(parsed);
-        }
-        catch (JsonException ex)
-        {
+        } catch (JsonException ex) {
             return Result.Failure<FoodVisionResponse>(Errors.Ai.InvalidResponse($"Vision JSON invalid: {ex.Message}"));
         }
     }
 
-    private static Result<FoodNutritionResponse> ParseNutritionResponse(JsonDocument json)
-    {
+    private static Result<FoodNutritionResponse> ParseNutritionResponse(JsonDocument json) {
         var text = ExtractOutputText(json);
-        if (string.IsNullOrWhiteSpace(text))
-        {
+        if (string.IsNullOrWhiteSpace(text)) {
             return Result.Failure<FoodNutritionResponse>(Errors.Ai.InvalidResponse("Missing output text."));
         }
 
-        try
-        {
+        try {
             var parsed = JsonSerializer.Deserialize<FoodNutritionResponse>(text, JsonOptions());
-            if (parsed is null || parsed.Items is null)
-            {
+            if (parsed is null || parsed.Items is null) {
                 return Result.Failure<FoodNutritionResponse>(Errors.Ai.InvalidResponse("Nutrition response is empty."));
             }
 
             return Result.Success(parsed);
-        }
-        catch (JsonException ex)
-        {
+        } catch (JsonException ex) {
             return Result.Failure<FoodNutritionResponse>(Errors.Ai.InvalidResponse($"Nutrition JSON invalid: {ex.Message}"));
         }
     }
 
-    private static string? ExtractOutputText(JsonDocument json)
-    {
-        if (!json.RootElement.TryGetProperty("output", out var output) || output.ValueKind != JsonValueKind.Array)
-        {
+    private static string? ExtractOutputText(JsonDocument json) {
+        if (!json.RootElement.TryGetProperty("output", out var output) || output.ValueKind != JsonValueKind.Array) {
             return null;
         }
 
-        foreach (var item in output.EnumerateArray())
-        {
-            if (!item.TryGetProperty("content", out var content) || content.ValueKind != JsonValueKind.Array)
-            {
+        foreach (var item in output.EnumerateArray()) {
+            if (!item.TryGetProperty("content", out var content) || content.ValueKind != JsonValueKind.Array) {
                 continue;
             }
 
-            foreach (var part in content.EnumerateArray())
-            {
+            foreach (var part in content.EnumerateArray()) {
                 if (part.TryGetProperty("type", out var type) &&
                     type.GetString() == "output_text" &&
-                    part.TryGetProperty("text", out var text))
-                {
+                    part.TryGetProperty("text", out var text)) {
                     return text.GetString();
                 }
             }
@@ -399,11 +324,9 @@ public sealed class OpenAiFoodService(
     private static JsonSerializerOptions JsonOptions()
         => new() { PropertyNameCaseInsensitive = true };
 
-    private async Task<Result> EnsureMonthlyQuotaAsync(UserId userId, CancellationToken cancellationToken)
-    {
+    private async Task<Result> EnsureMonthlyQuotaAsync(UserId userId, CancellationToken cancellationToken) {
         var user = await _userRepository.GetByIdAsync(userId);
-        if (user is null)
-        {
+        if (user is null) {
             return Result.Failure(Errors.User.NotFound(userId.Value));
         }
 
@@ -412,8 +335,7 @@ public sealed class OpenAiFoodService(
         var monthEndUtc = monthStartUtc.AddMonths(1);
         var totals = await _aiUsageRepository.GetUserTotalsAsync(userId, monthStartUtc, monthEndUtc, cancellationToken);
 
-        if (totals.InputTokens >= user.AiInputTokenLimit || totals.OutputTokens >= user.AiOutputTokenLimit)
-        {
+        if (totals.InputTokens >= user.AiInputTokenLimit || totals.OutputTokens >= user.AiOutputTokenLimit) {
             return Result.Failure(Errors.Ai.QuotaExceeded());
         }
 
@@ -425,11 +347,9 @@ public sealed class OpenAiFoodService(
         UserId userId,
         string operation,
         string model,
-        CancellationToken cancellationToken)
-    {
+        CancellationToken cancellationToken) {
         var usage = ExtractUsage(json);
-        if (usage is null)
-        {
+        if (usage is null) {
             return;
         }
 
@@ -444,11 +364,9 @@ public sealed class OpenAiFoodService(
         await _aiUsageRepository.AddAsync(entity, cancellationToken);
     }
 
-    private static UsageTokens? ExtractUsage(JsonDocument json)
-    {
+    private static UsageTokens? ExtractUsage(JsonDocument json) {
         if (!json.RootElement.TryGetProperty("usage", out var usage) ||
-            usage.ValueKind != JsonValueKind.Object)
-        {
+            usage.ValueKind != JsonValueKind.Object) {
             return null;
         }
 
@@ -461,4 +379,3 @@ public sealed class OpenAiFoodService(
 
     private readonly record struct UsageTokens(int InputTokens, int OutputTokens, int TotalTokens);
 }
-

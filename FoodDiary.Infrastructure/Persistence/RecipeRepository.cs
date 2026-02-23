@@ -1,35 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using FoodDiary.Application.Common.Interfaces.Persistence;
-using FoodDiary.Domain.Entities.Ai;
-using FoodDiary.Domain.Entities.Assets;
-using FoodDiary.Domain.Entities.Content;
-using FoodDiary.Domain.Entities.Meals;
-using FoodDiary.Domain.Entities.Products;
+﻿using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Domain.Entities.Recipes;
-using FoodDiary.Domain.Entities.Shopping;
-using FoodDiary.Domain.Entities.Tracking;
-using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence;
 
-public class RecipeRepository : IRecipeRepository
-{
-    private readonly FoodDiaryDbContext _context;
-
-    public RecipeRepository(FoodDiaryDbContext context) => _context = context;
-
-    public async Task<Recipe> AddAsync(Recipe recipe)
-    {
-        _context.Recipes.Add(recipe);
-        await _context.SaveChangesAsync();
+public class RecipeRepository(FoodDiaryDbContext context) : IRecipeRepository {
+    public async Task<Recipe> AddAsync(Recipe recipe) {
+        context.Recipes.Add(recipe);
+        await context.SaveChangesAsync();
         return recipe;
     }
 
@@ -39,25 +19,23 @@ public class RecipeRepository : IRecipeRepository
         int page,
         int limit,
         string? search,
-        CancellationToken cancellationToken = default)
-    {
+        CancellationToken cancellationToken = default) {
         var pageNumber = Math.Max(page, 1);
         var pageSize = Math.Max(limit, 1);
 
-        IQueryable<Recipe> query = _context.Recipes
+        var query = context.Recipes
             .AsNoTracking()
             .Include(r => r.Steps)
-                .ThenInclude(s => s.Ingredients)
-                    .ThenInclude(i => i.Product)
+            .ThenInclude(s => s.Ingredients)
+            .ThenInclude(i => i.Product)
             .Include(r => r.Steps)
-                .ThenInclude(s => s.Ingredients)
-                    .ThenInclude(i => i.NestedRecipe)
+            .ThenInclude(s => s.Ingredients)
+            .ThenInclude(i => i.NestedRecipe)
             .Where(includePublic
                 ? r => r.UserId == userId || r.Visibility == Visibility.Public
                 : r => r.UserId == userId);
 
-        if (!string.IsNullOrWhiteSpace(search))
-        {
+        if (!string.IsNullOrWhiteSpace(search)) {
             var normalized = search.Trim().ToLower();
             query = query.Where(r =>
                 r.Name.ToLower().Contains(normalized) ||
@@ -72,8 +50,7 @@ public class RecipeRepository : IRecipeRepository
         var items = await orderedQuery
             .Skip(skip)
             .Take(pageSize)
-            .Select(r => new
-            {
+            .Select(r => new {
                 Recipe = r,
                 UsageCount = r.MealItems.Count + r.NestedRecipeUsages.Count
             })
@@ -88,24 +65,21 @@ public class RecipeRepository : IRecipeRepository
         bool includePublic = true,
         bool includeSteps = false,
         bool asTracking = false,
-        CancellationToken cancellationToken = default)
-    {
-        IQueryable<Recipe> query = _context.Recipes;
+        CancellationToken cancellationToken = default) {
+        IQueryable<Recipe> query = context.Recipes;
 
-        if (!asTracking)
-        {
+        if (!asTracking) {
             query = query.AsNoTracking();
         }
 
-        if (includeSteps)
-        {
+        if (includeSteps) {
             query = query
                 .Include(r => r.Steps)
-                    .ThenInclude(s => s.Ingredients)
-                        .ThenInclude(i => i.Product)
+                .ThenInclude(s => s.Ingredients)
+                .ThenInclude(i => i.Product)
                 .Include(r => r.Steps)
-                    .ThenInclude(s => s.Ingredients)
-                        .ThenInclude(i => i.NestedRecipe);
+                .ThenInclude(s => s.Ingredients)
+                .ThenInclude(i => i.NestedRecipe);
         }
 
         query = query
@@ -119,25 +93,21 @@ public class RecipeRepository : IRecipeRepository
             cancellationToken);
     }
 
-    public async Task UpdateAsync(Recipe recipe)
-    {
-        _context.Recipes.Update(recipe);
-        await _context.SaveChangesAsync();
+    public async Task UpdateAsync(Recipe recipe) {
+        context.Recipes.Update(recipe);
+        await context.SaveChangesAsync();
     }
 
-    public async Task DeleteAsync(Recipe recipe)
-    {
-        _context.Recipes.Remove(recipe);
-        await _context.SaveChangesAsync();
+    public async Task DeleteAsync(Recipe recipe) {
+        context.Recipes.Remove(recipe);
+        await context.SaveChangesAsync();
     }
 
-    public async Task UpdateNutritionAsync(Recipe recipe, CancellationToken cancellationToken = default)
-    {
-        var entry = _context.Entry(recipe);
-        if (entry.State == EntityState.Detached)
-        {
-            _context.Attach(recipe);
-            entry = _context.Entry(recipe);
+    public async Task UpdateNutritionAsync(Recipe recipe, CancellationToken cancellationToken = default) {
+        var entry = context.Entry(recipe);
+        if (entry.State == EntityState.Detached) {
+            context.Attach(recipe);
+            entry = context.Entry(recipe);
         }
 
         entry.Property(r => r.TotalCalories).IsModified = true;
@@ -147,22 +117,20 @@ public class RecipeRepository : IRecipeRepository
         entry.Property(r => r.TotalFiber).IsModified = true;
         entry.Property(r => r.TotalAlcohol).IsModified = true;
 
-        await _context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken);
     }
 
     public async Task<IReadOnlyDictionary<RecipeId, Recipe>> GetByIdsAsync(
         IEnumerable<RecipeId> ids,
         UserId userId,
         bool includePublic = true,
-        CancellationToken cancellationToken = default)
-    {
+        CancellationToken cancellationToken = default) {
         var recipeIds = ids.Distinct().ToList();
-        if (recipeIds.Count == 0)
-        {
+        if (recipeIds.Count == 0) {
             return new Dictionary<RecipeId, Recipe>();
         }
 
-        IQueryable<Recipe> query = _context.Recipes.AsNoTracking();
+        var query = context.Recipes.AsNoTracking();
         query = query.Where(r => recipeIds.Contains(r.Id) && (includePublic
             ? r.UserId == userId || r.Visibility == Visibility.Public
             : r.UserId == userId));
@@ -175,27 +143,24 @@ public class RecipeRepository : IRecipeRepository
         IEnumerable<RecipeId> ids,
         UserId userId,
         bool includePublic = true,
-        CancellationToken cancellationToken = default)
-    {
+        CancellationToken cancellationToken = default) {
         var recipeIds = ids.Distinct().ToList();
-        if (recipeIds.Count == 0)
-        {
+        if (recipeIds.Count == 0) {
             return new Dictionary<RecipeId, (Recipe Recipe, int UsageCount)>();
         }
 
-        var items = await _context.Recipes
+        var items = await context.Recipes
             .AsNoTracking()
             .Include(r => r.Steps)
-                .ThenInclude(s => s.Ingredients)
-                    .ThenInclude(i => i.Product)
+            .ThenInclude(s => s.Ingredients)
+            .ThenInclude(i => i.Product)
             .Include(r => r.Steps)
-                .ThenInclude(s => s.Ingredients)
-                    .ThenInclude(i => i.NestedRecipe)
+            .ThenInclude(s => s.Ingredients)
+            .ThenInclude(i => i.NestedRecipe)
             .Where(r => recipeIds.Contains(r.Id) && (includePublic
                 ? r.UserId == userId || r.Visibility == Visibility.Public
                 : r.UserId == userId))
-            .Select(r => new
-            {
+            .Select(r => new {
                 Recipe = r,
                 UsageCount = r.MealItems.Count + r.NestedRecipeUsages.Count
             })
@@ -204,4 +169,3 @@ public class RecipeRepository : IRecipeRepository
         return items.ToDictionary(x => x.Recipe.Id, x => (x.Recipe, x.UsageCount));
     }
 }
-

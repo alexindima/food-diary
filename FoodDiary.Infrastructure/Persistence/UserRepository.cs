@@ -1,28 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using FoodDiary.Application.Common.Interfaces.Persistence;
-using FoodDiary.Domain.Entities.Ai;
-using FoodDiary.Domain.Entities.Assets;
-using FoodDiary.Domain.Entities.Content;
-using FoodDiary.Domain.Entities.Meals;
-using FoodDiary.Domain.Entities.Products;
-using FoodDiary.Domain.Entities.Recipes;
-using FoodDiary.Domain.Entities.Shopping;
-using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Infrastructure.Persistence;
 
-public class UserRepository : IUserRepository
-{
-    private readonly FoodDiaryDbContext _context;
-
-    public UserRepository(FoodDiaryDbContext context) => _context = context;
-
+public class UserRepository(FoodDiaryDbContext context) : IUserRepository {
     private IQueryable<User> UsersWithRoles() =>
-        _context.Users
+        context.Users
             .Include(u => u.UserRoles)
             .ThenInclude(ur => ur.Role);
 
@@ -51,17 +37,14 @@ public class UserRepository : IUserRepository
         string? search,
         int page,
         int limit,
-        bool includeDeleted)
-    {
+        bool includeDeleted) {
         var query = UsersWithRoles().AsQueryable();
 
-        if (!includeDeleted)
-        {
+        if (!includeDeleted) {
             query = query.Where(u => u.DeletedAt == null);
         }
 
-        if (!string.IsNullOrWhiteSpace(search))
-        {
+        if (!string.IsNullOrWhiteSpace(search)) {
             var term = search.Trim().ToLower();
             query = query.Where(u =>
                 u.Email.ToLower().Contains(term) ||
@@ -81,12 +64,11 @@ public class UserRepository : IUserRepository
     }
 
     public async Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers)>
-        GetAdminDashboardSummaryAsync(int recentLimit)
-    {
-        var totalUsers = await _context.Users.CountAsync();
-        var activeUsers = await _context.Users.CountAsync(u => u.IsActive && u.DeletedAt == null);
-        var deletedUsers = await _context.Users.CountAsync(u => u.DeletedAt != null);
-        var premiumUsers = await _context.UserRoles
+        GetAdminDashboardSummaryAsync(int recentLimit) {
+        var totalUsers = await context.Users.CountAsync();
+        var activeUsers = await context.Users.CountAsync(u => u.IsActive && u.DeletedAt == null);
+        var deletedUsers = await context.Users.CountAsync(u => u.DeletedAt != null);
+        var premiumUsers = await context.UserRoles
             .Where(ur => ur.Role.Name == RoleNames.Premium)
             .Select(ur => ur.UserId)
             .Distinct()
@@ -101,24 +83,20 @@ public class UserRepository : IUserRepository
         return (totalUsers, activeUsers, premiumUsers, deletedUsers, recentUsers);
     }
 
-    public async Task<IReadOnlyList<Role>> GetRolesByNamesAsync(IReadOnlyList<string> names)
-    {
-        return await _context.Roles
+    public async Task<IReadOnlyList<Role>> GetRolesByNamesAsync(IReadOnlyList<string> names) {
+        return await context.Roles
             .Where(role => names.Contains(role.Name))
             .ToListAsync();
     }
 
-    public async Task<User> AddAsync(User user)
-    {
-        _context.Users.Add(user);
-        await _context.SaveChangesAsync();
+    public async Task<User> AddAsync(User user) {
+        context.Users.Add(user);
+        await context.SaveChangesAsync();
         return user;
     }
 
-    public async Task UpdateAsync(User user)
-    {
-        _context.Users.Update(user);
-        await _context.SaveChangesAsync();
+    public async Task UpdateAsync(User user) {
+        context.Users.Update(user);
+        await context.SaveChangesAsync();
     }
 }
-

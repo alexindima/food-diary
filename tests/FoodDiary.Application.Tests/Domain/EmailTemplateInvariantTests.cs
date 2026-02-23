@@ -2,11 +2,9 @@ using FoodDiary.Domain.Entities.Content;
 
 namespace FoodDiary.Application.Tests.Domain;
 
-public class EmailTemplateInvariantTests
-{
+public class EmailTemplateInvariantTests {
     [Fact]
-    public void Create_NormalizesKeyLocaleAndFields()
-    {
+    public void Create_NormalizesKeyLocaleAndFields() {
         var template = EmailTemplate.Create(
             key: "  EMAIL_VERIFICATION  ",
             locale: "ru-RU",
@@ -23,8 +21,7 @@ public class EmailTemplateInvariantTests
     }
 
     [Fact]
-    public void Create_WithBlankKey_Throws()
-    {
+    public void Create_WithBlankKey_Throws() {
         Assert.Throws<ArgumentException>(() => EmailTemplate.Create(
             key: "   ",
             locale: "en",
@@ -35,8 +32,7 @@ public class EmailTemplateInvariantTests
     }
 
     [Fact]
-    public void Create_WithTooLongKey_Throws()
-    {
+    public void Create_WithTooLongKey_Throws() {
         Assert.Throws<ArgumentOutOfRangeException>(() => EmailTemplate.Create(
             key: new string('k', 65),
             locale: "en",
@@ -47,8 +43,7 @@ public class EmailTemplateInvariantTests
     }
 
     [Fact]
-    public void Create_WithBlankSubject_Throws()
-    {
+    public void Create_WithBlankSubject_Throws() {
         Assert.Throws<ArgumentException>(() => EmailTemplate.Create(
             key: "email_verification",
             locale: "en",
@@ -59,8 +54,7 @@ public class EmailTemplateInvariantTests
     }
 
     [Fact]
-    public void Create_WithTooLongSubject_Throws()
-    {
+    public void Create_WithTooLongSubject_Throws() {
         Assert.Throws<ArgumentOutOfRangeException>(() => EmailTemplate.Create(
             key: "email_verification",
             locale: "en",
@@ -71,8 +65,7 @@ public class EmailTemplateInvariantTests
     }
 
     [Fact]
-    public void Create_WithBlankBodies_Throws()
-    {
+    public void Create_WithBlankBodies_Throws() {
         Assert.Throws<ArgumentException>(() => EmailTemplate.Create(
             key: "email_verification",
             locale: "en",
@@ -91,8 +84,7 @@ public class EmailTemplateInvariantTests
     }
 
     [Fact]
-    public void Update_WithSameNormalizedValues_DoesNotSetModifiedOnUtc()
-    {
+    public void Update_WithSameNormalizedValues_DoesNotSetModifiedOnUtc() {
         var template = EmailTemplate.Create(
             key: "email_verification",
             locale: "en",
@@ -111,8 +103,7 @@ public class EmailTemplateInvariantTests
     }
 
     [Fact]
-    public void Update_WithChanges_SetsModifiedAndAppliesValues()
-    {
+    public void Update_WithChanges_SetsModifiedAndAppliesValues() {
         var template = EmailTemplate.Create(
             key: "email_verification",
             locale: "en",

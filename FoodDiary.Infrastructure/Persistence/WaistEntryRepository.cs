@@ -1,58 +1,35 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using FoodDiary.Application.Common.Interfaces.Persistence;
-using FoodDiary.Domain.Entities.Ai;
-using FoodDiary.Domain.Entities.Assets;
-using FoodDiary.Domain.Entities.Content;
-using FoodDiary.Domain.Entities.Meals;
-using FoodDiary.Domain.Entities.Products;
-using FoodDiary.Domain.Entities.Recipes;
-using FoodDiary.Domain.Entities.Shopping;
+﻿using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Domain.Entities.Tracking;
-using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence;
 
-public class WaistEntryRepository : IWaistEntryRepository
-{
-    private readonly FoodDiaryDbContext _context;
-
-    public WaistEntryRepository(FoodDiaryDbContext context) => _context = context;
-
-    public async Task<WaistEntry> AddAsync(WaistEntry entry, CancellationToken cancellationToken = default)
-    {
-        await _context.WaistEntries.AddAsync(entry, cancellationToken);
-        await _context.SaveChangesAsync(cancellationToken);
+public class WaistEntryRepository(FoodDiaryDbContext context) : IWaistEntryRepository {
+    public async Task<WaistEntry> AddAsync(WaistEntry entry, CancellationToken cancellationToken = default) {
+        await context.WaistEntries.AddAsync(entry, cancellationToken);
+        await context.SaveChangesAsync(cancellationToken);
         return entry;
     }
 
-    public async Task UpdateAsync(WaistEntry entry, CancellationToken cancellationToken = default)
-    {
-        _context.WaistEntries.Update(entry);
-        await _context.SaveChangesAsync(cancellationToken);
+    public async Task UpdateAsync(WaistEntry entry, CancellationToken cancellationToken = default) {
+        context.WaistEntries.Update(entry);
+        await context.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task DeleteAsync(WaistEntry entry, CancellationToken cancellationToken = default)
-    {
-        _context.WaistEntries.Remove(entry);
-        await _context.SaveChangesAsync(cancellationToken);
+    public async Task DeleteAsync(WaistEntry entry, CancellationToken cancellationToken = default) {
+        context.WaistEntries.Remove(entry);
+        await context.SaveChangesAsync(cancellationToken);
     }
 
     public async Task<WaistEntry?> GetByIdAsync(
         WaistEntryId id,
         UserId userId,
         bool asTracking = false,
-        CancellationToken cancellationToken = default)
-    {
+        CancellationToken cancellationToken = default) {
         var query = asTracking
-            ? _context.WaistEntries.AsQueryable()
-            : _context.WaistEntries.AsNoTracking();
+            ? context.WaistEntries.AsQueryable()
+            : context.WaistEntries.AsNoTracking();
 
         return await query.FirstOrDefaultAsync(
             entry => entry.Id == id && entry.UserId == userId,
@@ -62,10 +39,9 @@ public class WaistEntryRepository : IWaistEntryRepository
     public async Task<WaistEntry?> GetByDateAsync(
         UserId userId,
         DateTime date,
-        CancellationToken cancellationToken = default)
-    {
+        CancellationToken cancellationToken = default) {
         var normalizedDate = date.Date;
-        return await _context.WaistEntries
+        return await context.WaistEntries
             .AsNoTracking()
             .FirstOrDefaultAsync(
                 entry => entry.UserId == userId && entry.Date == normalizedDate,
@@ -78,20 +54,17 @@ public class WaistEntryRepository : IWaistEntryRepository
         DateTime? dateTo,
         int? limit,
         bool descending,
-        CancellationToken cancellationToken = default)
-    {
-        var query = _context.WaistEntries
+        CancellationToken cancellationToken = default) {
+        var query = context.WaistEntries
             .AsNoTracking()
             .Where(entry => entry.UserId == userId);
 
-        if (dateFrom.HasValue)
-        {
+        if (dateFrom.HasValue) {
             var from = dateFrom.Value.Date;
             query = query.Where(entry => entry.Date >= from);
         }
 
-        if (dateTo.HasValue)
-        {
+        if (dateTo.HasValue) {
             var to = dateTo.Value.Date;
             query = query.Where(entry => entry.Date <= to);
         }
@@ -100,8 +73,7 @@ public class WaistEntryRepository : IWaistEntryRepository
             ? query.OrderByDescending(entry => entry.Date).ThenByDescending(entry => entry.CreatedOnUtc)
             : query.OrderBy(entry => entry.Date).ThenBy(entry => entry.CreatedOnUtc);
 
-        if (limit.HasValue && limit.Value > 0)
-        {
+        if (limit.HasValue && limit.Value > 0) {
             query = query.Take(limit.Value);
         }
 
@@ -112,12 +84,11 @@ public class WaistEntryRepository : IWaistEntryRepository
         UserId userId,
         DateTime dateFrom,
         DateTime dateTo,
-        CancellationToken cancellationToken = default)
-    {
+        CancellationToken cancellationToken = default) {
         var from = DateTime.SpecifyKind(dateFrom, DateTimeKind.Utc);
         var to = DateTime.SpecifyKind(dateTo, DateTimeKind.Utc);
 
-        return await _context.WaistEntries
+        return await context.WaistEntries
             .AsNoTracking()
             .Where(entry => entry.UserId == userId && entry.Date >= from && entry.Date <= to)
             .OrderBy(entry => entry.Date)
@@ -125,4 +96,3 @@ public class WaistEntryRepository : IWaistEntryRepository
             .ToListAsync(cancellationToken);
     }
 }
-

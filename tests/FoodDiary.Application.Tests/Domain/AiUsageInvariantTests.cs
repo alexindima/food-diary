@@ -1,14 +1,11 @@
 using FoodDiary.Domain.Entities.Ai;
-using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.Domain;
 
-public class AiUsageInvariantTests
-{
+public class AiUsageInvariantTests {
     [Fact]
-    public void Create_WithEmptyUserId_Throws()
-    {
+    public void Create_WithEmptyUserId_Throws() {
         Assert.Throws<ArgumentException>(() =>
             AiUsage.Create(
                 UserId.Empty,
@@ -20,8 +17,7 @@ public class AiUsageInvariantTests
     }
 
     [Fact]
-    public void Create_WithBlankOperation_Throws()
-    {
+    public void Create_WithBlankOperation_Throws() {
         Assert.Throws<ArgumentException>(() =>
             AiUsage.Create(
                 UserId.New(),
@@ -33,8 +29,7 @@ public class AiUsageInvariantTests
     }
 
     [Fact]
-    public void Create_WithBlankModel_Throws()
-    {
+    public void Create_WithBlankModel_Throws() {
         Assert.Throws<ArgumentException>(() =>
             AiUsage.Create(
                 UserId.New(),
@@ -46,8 +41,7 @@ public class AiUsageInvariantTests
     }
 
     [Fact]
-    public void Create_WithTooLongOperation_Throws()
-    {
+    public void Create_WithTooLongOperation_Throws() {
         Assert.Throws<ArgumentOutOfRangeException>(() =>
             AiUsage.Create(
                 UserId.New(),
@@ -59,8 +53,7 @@ public class AiUsageInvariantTests
     }
 
     [Fact]
-    public void Create_WithTooLongModel_Throws()
-    {
+    public void Create_WithTooLongModel_Throws() {
         Assert.Throws<ArgumentOutOfRangeException>(() =>
             AiUsage.Create(
                 UserId.New(),
@@ -78,8 +71,7 @@ public class AiUsageInvariantTests
     public void Create_WithNegativeTokens_Throws(
         int inputTokens,
         int outputTokens,
-        int totalTokens)
-    {
+        int totalTokens) {
         Assert.Throws<ArgumentOutOfRangeException>(() =>
             AiUsage.Create(
                 UserId.New(),
@@ -91,8 +83,7 @@ public class AiUsageInvariantTests
     }
 
     [Fact]
-    public void Create_WithTotalTokensLowerThanInputAndOutputSum_Throws()
-    {
+    public void Create_WithTotalTokensLowerThanInputAndOutputSum_Throws() {
         Assert.Throws<ArgumentOutOfRangeException>(() =>
             AiUsage.Create(
                 UserId.New(),
@@ -104,8 +95,7 @@ public class AiUsageInvariantTests
     }
 
     [Fact]
-    public void Create_WithValidValues_TrimAndStoreFields()
-    {
+    public void Create_WithValidValues_TrimAndStoreFields() {
         var usage = AiUsage.Create(
             UserId.New(),
             operation: "  meal_scan  ",

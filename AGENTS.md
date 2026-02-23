@@ -19,6 +19,8 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Keep architecture feature-first and move legacy flat areas incrementally.
 - Keep .NET shared build settings in root `Directory.Build.props`.
 - Keep nullable enabled in C# projects and align namespaces with folders.
+- Use K&R brace style for C# code (opening brace on the same line).
+- Prefer C# primary constructors where applicable.
 - For UI text changes, update both locales:
   - `FoodDiary.Web.Client/assets/i18n/en.json`
   - `FoodDiary.Web.Client/assets/i18n/ru.json`
