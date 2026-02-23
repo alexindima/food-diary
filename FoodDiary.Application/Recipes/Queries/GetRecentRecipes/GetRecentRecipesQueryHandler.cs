@@ -10,14 +10,11 @@ namespace FoodDiary.Application.Recipes.Queries.GetRecentRecipes;
 public sealed class GetRecentRecipesQueryHandler(
     IRecentItemRepository recentItemRepository,
     IRecipeRepository recipeRepository)
-    : IQueryHandler<GetRecentRecipesQuery, Result<IReadOnlyList<RecipeResponse>>>
-{
+    : IQueryHandler<GetRecentRecipesQuery, Result<IReadOnlyList<RecipeResponse>>> {
     public async Task<Result<IReadOnlyList<RecipeResponse>>> Handle(
         GetRecentRecipesQuery query,
-        CancellationToken cancellationToken)
-    {
-        if (query.UserId is null || query.UserId == UserId.Empty)
-        {
+        CancellationToken cancellationToken) {
+        if (query.UserId is null || query.UserId == UserId.Empty) {
             return Result.Failure<IReadOnlyList<RecipeResponse>>(Errors.Authentication.InvalidToken);
         }
 
@@ -25,8 +22,7 @@ public sealed class GetRecentRecipesQueryHandler(
         var recentLimit = Math.Clamp(query.Limit, 1, 50);
 
         var recents = await recentItemRepository.GetRecentRecipesAsync(userId, recentLimit, cancellationToken);
-        if (recents.Count == 0)
-        {
+        if (recents.Count == 0) {
             return Result.Success<IReadOnlyList<RecipeResponse>>(Array.Empty<RecipeResponse>());
         }
 
@@ -39,8 +35,7 @@ public sealed class GetRecentRecipesQueryHandler(
 
         var response = idsInOrder
             .Where(recipesById.ContainsKey)
-            .Select(id =>
-            {
+            .Select(id => {
                 var item = recipesById[id];
                 return item.Recipe.ToResponse(item.UsageCount, item.Recipe.UserId == userId);
             })

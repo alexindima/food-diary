@@ -1,33 +1,19 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-using FluentValidation;
+﻿using FluentValidation;
 using FluentValidation.Results;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Recipes.Common;
 using FoodDiary.Application.Recipes.Common.Validators;
-using FoodDiary.Domain.Entities.Ai;
-using FoodDiary.Domain.Entities.Assets;
-using FoodDiary.Domain.Entities.Content;
-using FoodDiary.Domain.Entities.Meals;
-using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Recipes;
-using FoodDiary.Domain.Entities.Shopping;
-using FoodDiary.Domain.Entities.Tracking;
-using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Recipes.Commands.UpdateRecipe;
 
-public class UpdateRecipeCommandValidator : AbstractValidator<UpdateRecipeCommand>
-{
+public class UpdateRecipeCommandValidator : AbstractValidator<UpdateRecipeCommand> {
     private const string RecipeContextKey = "__recipe";
     private readonly IRecipeRepository _recipeRepository;
 
-    public UpdateRecipeCommandValidator(IRecipeRepository recipeRepository)
-    {
+    public UpdateRecipeCommandValidator(IRecipeRepository recipeRepository) {
         _recipeRepository = recipeRepository;
 
         RuleFor(x => x.UserId)
@@ -121,24 +107,20 @@ public class UpdateRecipeCommandValidator : AbstractValidator<UpdateRecipeComman
     private async Task EnsureRecipeEditableAsync(
         UpdateRecipeCommand command,
         ValidationContext<UpdateRecipeCommand> context,
-        CancellationToken cancellationToken)
-    {
+        CancellationToken cancellationToken) {
         context.RootContextData.TryGetValue(RecipeContextKey, out var cached);
-        if (cached is Recipe recipe)
-        {
-            if (!ValidateUsage(recipe))
-            {
+        if (cached is Recipe recipe) {
+            if (!ValidateUsage(recipe)) {
                 context.AddFailure(new ValidationFailure(nameof(command.RecipeId),
-                    "Recipe is already used and cannot be modified")
-                {
+                    "Recipe is already used and cannot be modified") {
                     ErrorCode = "Validation.Invalid"
                 });
             }
+
             return;
         }
 
-        if (command.UserId is null || command.UserId.Value == UserId.Empty)
-        {
+        if (command.UserId is null || command.UserId.Value == UserId.Empty) {
             return;
         }
 
@@ -149,11 +131,9 @@ public class UpdateRecipeCommandValidator : AbstractValidator<UpdateRecipeComman
             includeSteps: false,
             cancellationToken: cancellationToken);
 
-        if (existing is null)
-        {
+        if (existing is null) {
             context.AddFailure(new ValidationFailure(nameof(command.RecipeId),
-                "Recipe not found or you do not have permission to modify it")
-            {
+                "Recipe not found or you do not have permission to modify it") {
                 ErrorCode = "Recipe.NotFound"
             });
             return;
@@ -161,18 +141,15 @@ public class UpdateRecipeCommandValidator : AbstractValidator<UpdateRecipeComman
 
         context.RootContextData[RecipeContextKey] = existing;
 
-        if (!ValidateUsage(existing))
-        {
+        if (!ValidateUsage(existing)) {
             context.AddFailure(new ValidationFailure(nameof(command.RecipeId),
-                "Recipe is already used and cannot be modified")
-            {
+                "Recipe is already used and cannot be modified") {
                 ErrorCode = "Validation.Invalid"
             });
         }
     }
 
-    private static bool ValidateUsage(Recipe recipe)
-    {
+    private static bool ValidateUsage(Recipe recipe) {
         var usageCount = recipe.MealItems.Count + recipe.NestedRecipeUsages.Count;
         return usageCount == 0;
     }
@@ -181,11 +158,7 @@ public class UpdateRecipeCommandValidator : AbstractValidator<UpdateRecipeComman
         visibility != null && Enum.TryParse(visibility, ignoreCase: true, out Visibility _);
 
     private static bool HasManualNutrition(UpdateRecipeCommand command) =>
-        command.ManualCalories.HasValue
-        && command.ManualProteins.HasValue
-        && command.ManualFats.HasValue
-        && command.ManualCarbs.HasValue
-        && command.ManualFiber.HasValue;
+        command is { ManualCalories: not null, ManualProteins: not null, ManualFats: not null, ManualCarbs: not null, ManualFiber: not null };
 
     private static bool HaveUniqueEffectiveStepOrder(IReadOnlyList<RecipeStepInput>? steps) {
         if (steps is null || steps.Count == 0) {
@@ -204,4 +177,3 @@ public class UpdateRecipeCommandValidator : AbstractValidator<UpdateRecipeComman
         return true;
     }
 }
-

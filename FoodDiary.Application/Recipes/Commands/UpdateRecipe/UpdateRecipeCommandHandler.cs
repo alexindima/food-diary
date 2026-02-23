@@ -1,17 +1,12 @@
-using System;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
+using FoodDiary.Application.Common.Interfaces.Persistence;
+using FoodDiary.Application.Common.Interfaces.Services;
 using FoodDiary.Application.Recipes.Common;
 using FoodDiary.Application.Recipes.Mappings;
+using FoodDiary.Application.Recipes.Services;
 using FoodDiary.Contracts.Recipes;
 using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects;
-using FoodDiary.Application.Recipes.Services;
-using FoodDiary.Application.Common.Interfaces.Services;
-using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Recipes.Commands.UpdateRecipe;
@@ -20,11 +15,13 @@ public class UpdateRecipeCommandHandler(
     IRecipeRepository recipeRepository,
     IImageAssetRepository imageAssetRepository,
     IImageStorageService imageStorageService)
-    : ICommandHandler<UpdateRecipeCommand, Result<RecipeResponse>>
-{
-    public async Task<Result<RecipeResponse>> Handle(UpdateRecipeCommand command, CancellationToken cancellationToken)
-    {
-        var userId = command.UserId!.Value;
+    : ICommandHandler<UpdateRecipeCommand, Result<RecipeResponse>> {
+    public async Task<Result<RecipeResponse>> Handle(UpdateRecipeCommand command, CancellationToken cancellationToken) {
+        if (command.UserId is null || command.UserId == UserId.Empty) {
+            return Result.Failure<RecipeResponse>(Errors.Authentication.InvalidToken);
+        }
+
+        var userId = command.UserId.Value;
 
         var recipe = await recipeRepository.GetByIdAsync(
             command.RecipeId,
@@ -34,23 +31,19 @@ public class UpdateRecipeCommandHandler(
             asTracking: true,
             cancellationToken: cancellationToken);
 
-        if (recipe is null)
-        {
+        if (recipe is null) {
             return Result.Failure<RecipeResponse>(Errors.Recipe.NotAccessible(command.RecipeId.Value));
         }
 
         var usageCount = recipe.MealItems.Count + recipe.NestedRecipeUsages.Count;
-        if (usageCount > 0)
-        {
+        if (usageCount > 0) {
             return Result.Failure<RecipeResponse>(
                 Errors.Validation.Invalid("RecipeId", "Recipe is already used and cannot be modified"));
         }
 
         Visibility? visibility = null;
-        if (!string.IsNullOrWhiteSpace(command.Visibility))
-        {
-            if (!Enum.TryParse<Visibility>(command.Visibility, true, out var parsedVisibility))
-            {
+        if (!string.IsNullOrWhiteSpace(command.Visibility)) {
+            if (!Enum.TryParse<Visibility>(command.Visibility, true, out var parsedVisibility)) {
                 return Result.Failure<RecipeResponse>(
                     Errors.Validation.Invalid(nameof(command.Visibility), "Unknown visibility value."));
             }
@@ -82,35 +75,28 @@ public class UpdateRecipeCommandHandler(
         var steps = command.Steps ?? Array.Empty<RecipeStepInput>();
         var orderedSteps = steps
             .Select((step, index) => new { Step = step, Order = step.Order > 0 ? step.Order : index + 1 })
-            .OrderBy(x => x.Order);
+            .OrderBy(x => x.Order)
+            .ToList();
 
-        foreach (var entry in orderedSteps)
-        {
+        foreach (var entry in orderedSteps) {
             var step = recipe.AddStep(
                 entry.Order,
                 entry.Step.Description,
                 entry.Step.Title,
                 entry.Step.ImageUrl,
                 entry.Step.ImageAssetId.HasValue ? new ImageAssetId(entry.Step.ImageAssetId.Value) : null);
-            foreach (var ingredient in entry.Step.Ingredients)
-            {
-                if (ingredient.ProductId.HasValue)
-                {
+            foreach (var ingredient in entry.Step.Ingredients) {
+                if (ingredient.ProductId.HasValue) {
                     step.AddProductIngredient(new ProductId(ingredient.ProductId.Value), ingredient.Amount);
-                }
-                else if (ingredient.NestedRecipeId.HasValue)
-                {
+                } else if (ingredient.NestedRecipeId.HasValue) {
                     step.AddNestedRecipeIngredient(new RecipeId(ingredient.NestedRecipeId.Value), ingredient.Amount);
                 }
             }
         }
 
-        if (command.CalculateNutritionAutomatically)
-        {
+        if (command.CalculateNutritionAutomatically) {
             recipe.EnableAutoNutrition();
-        }
-        else
-        {
+        } else {
             recipe.SetManualNutrition(
                 command.ManualCalories ?? 0,
                 command.ManualProteins ?? 0,
@@ -130,30 +116,25 @@ public class UpdateRecipeCommandHandler(
             asTracking: true,
             cancellationToken: cancellationToken);
 
-        if (updated is null)
-        {
+        if (updated is null) {
             return Result.Failure<RecipeResponse>(Errors.Recipe.InvalidData("Failed to load updated recipe."));
         }
 
         await RecipeNutritionUpdater.EnsureNutritionAsync(updated, recipeRepository, cancellationToken);
 
-        if (oldAssetId.HasValue && (!command.ImageAssetId.HasValue || oldAssetId.Value.Value != command.ImageAssetId.Value))
-        {
+        if (oldAssetId.HasValue && (!command.ImageAssetId.HasValue || oldAssetId.Value.Value != command.ImageAssetId.Value)) {
             await TryDeleteAssetAsync(oldAssetId.Value, imageAssetRepository, imageStorageService, cancellationToken);
         }
 
-        if (oldStepAssetIds.Count > 0)
-        {
+        if (oldStepAssetIds.Count > 0) {
             var newStepAssetIds = orderedSteps
                 .Select(entry => entry.Step.ImageAssetId)
                 .Where(id => id.HasValue)
                 .Select(id => new ImageAssetId(id!.Value))
                 .ToHashSet();
 
-            foreach (var assetId in oldStepAssetIds)
-            {
-                if (!newStepAssetIds.Contains(assetId))
-                {
+            foreach (var assetId in oldStepAssetIds) {
+                if (!newStepAssetIds.Contains(assetId)) {
                     await TryDeleteAssetAsync(assetId, imageAssetRepository, imageStorageService, cancellationToken);
                 }
             }
@@ -166,17 +147,14 @@ public class UpdateRecipeCommandHandler(
         ImageAssetId assetId,
         IImageAssetRepository imageAssetRepository,
         IImageStorageService storageService,
-        CancellationToken cancellationToken)
-    {
+        CancellationToken cancellationToken) {
         var asset = await imageAssetRepository.GetByIdAsync(assetId, cancellationToken);
-        if (asset is null)
-        {
+        if (asset is null) {
             return;
         }
 
         var inUse = await imageAssetRepository.IsAssetInUse(assetId, cancellationToken);
-        if (inUse)
-        {
+        if (inUse) {
             return;
         }
 

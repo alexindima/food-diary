@@ -1,36 +1,21 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
 using FoodDiary.Application.Common.Interfaces.Persistence;
-using FoodDiary.Domain.Entities.Ai;
-using FoodDiary.Domain.Entities.Assets;
-using FoodDiary.Domain.Entities.Content;
-using FoodDiary.Domain.Entities.Meals;
-using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Recipes;
-using FoodDiary.Domain.Entities.Shopping;
-using FoodDiary.Domain.Entities.Tracking;
-using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Recipes.Services;
 
-public static class RecipeNutritionUpdater
-{
+public static class RecipeNutritionUpdater {
     private const double Tolerance = 0.01;
 
     public static async Task EnsureNutritionAsync(
         Recipe recipe,
         IRecipeRepository repository,
-        CancellationToken cancellationToken = default)
-    {
-        if (!recipe.IsNutritionAutoCalculated)
-        {
+        CancellationToken cancellationToken = default) {
+        if (!recipe.IsNutritionAutoCalculated) {
             return;
         }
 
         var summary = RecipeNutritionCalculator.Calculate(recipe);
-        if (!NeedsUpdate(recipe, summary))
-        {
+        if (!NeedsUpdate(recipe, summary)) {
             return;
         }
 
@@ -52,19 +37,15 @@ public static class RecipeNutritionUpdater
         || !AreClose(recipe.TotalFiber, summary.TotalFiber)
         || !AreClose(recipe.TotalAlcohol, summary.TotalAlcohol);
 
-    private static bool AreClose(double? left, double? right)
-    {
-        if (!left.HasValue && !right.HasValue)
-        {
+    private static bool AreClose(double? left, double? right) {
+        if (!left.HasValue && !right.HasValue) {
             return true;
         }
 
-        if (!left.HasValue || !right.HasValue)
-        {
+        if (!left.HasValue || !right.HasValue) {
             return false;
         }
 
         return Math.Abs(left.Value - right.Value) <= Tolerance;
     }
 }
-

@@ -1,37 +1,25 @@
-﻿using System;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using FoodDiary.Application.Common.Abstractions.Messaging;
+﻿using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Recipes.Mappings;
-using FoodDiary.Contracts.Recipes;
-using FoodDiary.Domain.Entities.Ai;
-using FoodDiary.Domain.Entities.Assets;
-using FoodDiary.Domain.Entities.Content;
-using FoodDiary.Domain.Entities.Meals;
-using FoodDiary.Domain.Entities.Products;
-using FoodDiary.Domain.Entities.Recipes;
-using FoodDiary.Domain.Entities.Shopping;
-using FoodDiary.Domain.Entities.Tracking;
-using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Application.Recipes.Services;
+using FoodDiary.Contracts.Recipes;
+using FoodDiary.Domain.Entities.Recipes;
+using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Recipes.Commands.CreateRecipe;
 
 public class CreateRecipeCommandHandler(IRecipeRepository recipeRepository)
-    : ICommandHandler<CreateRecipeCommand, Result<RecipeResponse>>
-{
-    public async Task<Result<RecipeResponse>> Handle(CreateRecipeCommand command, CancellationToken cancellationToken)
-    {
-        var userId = command.UserId!.Value;
+    : ICommandHandler<CreateRecipeCommand, Result<RecipeResponse>> {
+    public async Task<Result<RecipeResponse>> Handle(CreateRecipeCommand command, CancellationToken cancellationToken) {
+        if (command.UserId is null || command.UserId == UserId.Empty) {
+            return Result.Failure<RecipeResponse>(Errors.Authentication.InvalidToken);
+        }
 
-        if (!Enum.TryParse<Visibility>(command.Visibility, true, out var visibility))
-        {
+        var userId = command.UserId.Value;
+
+        if (!Enum.TryParse<Visibility>(command.Visibility, true, out var visibility)) {
             return Result.Failure<RecipeResponse>(
                 Errors.Validation.Invalid(nameof(command.Visibility), "Unknown visibility value."));
         }
@@ -51,12 +39,9 @@ public class CreateRecipeCommandHandler(IRecipeRepository recipeRepository)
 
         AddSteps(recipe, command);
 
-        if (command.CalculateNutritionAutomatically)
-        {
+        if (command.CalculateNutritionAutomatically) {
             recipe.EnableAutoNutrition();
-        }
-        else
-        {
+        } else {
             recipe.SetManualNutrition(
                 command.ManualCalories ?? 0,
                 command.ManualProteins ?? 0,
@@ -76,8 +61,7 @@ public class CreateRecipeCommandHandler(IRecipeRepository recipeRepository)
             asTracking: true,
             cancellationToken: cancellationToken);
 
-        if (created is null)
-        {
+        if (created is null) {
             return Result.Failure<RecipeResponse>(Errors.Recipe.InvalidData("Failed to load created recipe."));
         }
 
@@ -86,32 +70,25 @@ public class CreateRecipeCommandHandler(IRecipeRepository recipeRepository)
         return Result.Success(created.ToResponse(0, true));
     }
 
-    private static void AddSteps(Recipe recipe, CreateRecipeCommand command)
-    {
+    private static void AddSteps(Recipe recipe, CreateRecipeCommand command) {
         var orderedSteps = command.Steps
             .Select((step, index) => new { Step = step, Order = step.Order > 0 ? step.Order : index + 1 })
             .OrderBy(x => x.Order);
 
-        foreach (var entry in orderedSteps)
-        {
+        foreach (var entry in orderedSteps) {
             var step = recipe.AddStep(
                 entry.Order,
                 entry.Step.Description,
                 entry.Step.Title,
                 entry.Step.ImageUrl,
                 entry.Step.ImageAssetId.HasValue ? new ImageAssetId(entry.Step.ImageAssetId.Value) : null);
-            foreach (var ingredient in entry.Step.Ingredients)
-            {
-                if (ingredient.ProductId.HasValue)
-                {
+            foreach (var ingredient in entry.Step.Ingredients) {
+                if (ingredient.ProductId.HasValue) {
                     step.AddProductIngredient(new ProductId(ingredient.ProductId.Value), ingredient.Amount);
-                }
-                else if (ingredient.NestedRecipeId.HasValue)
-                {
+                } else if (ingredient.NestedRecipeId.HasValue) {
                     step.AddNestedRecipeIngredient(new RecipeId(ingredient.NestedRecipeId.Value), ingredient.Amount);
                 }
             }
         }
     }
 }
-

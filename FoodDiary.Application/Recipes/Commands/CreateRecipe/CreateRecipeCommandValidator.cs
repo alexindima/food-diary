@@ -1,17 +1,13 @@
-using System;
 using FoodDiary.Application.Recipes.Common;
 using FoodDiary.Application.Recipes.Common.Validators;
 using FluentValidation;
 using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Recipes.Commands.CreateRecipe;
 
-public class CreateRecipeCommandValidator : AbstractValidator<CreateRecipeCommand>
-{
-    public CreateRecipeCommandValidator()
-    {
+public class CreateRecipeCommandValidator : AbstractValidator<CreateRecipeCommand> {
+    public CreateRecipeCommandValidator() {
         RuleFor(x => x.UserId)
             .Cascade(CascadeMode.Stop)
             .NotNull()
@@ -100,26 +96,18 @@ public class CreateRecipeCommandValidator : AbstractValidator<CreateRecipeComman
         Enum.TryParse(visibility, ignoreCase: true, out Visibility _);
 
     private static bool HasManualNutrition(CreateRecipeCommand command) =>
-        command.ManualCalories.HasValue
-        && command.ManualProteins.HasValue
-        && command.ManualFats.HasValue
-        && command.ManualCarbs.HasValue
-        && command.ManualFiber.HasValue;
+        command is { ManualCalories: not null, ManualProteins: not null, ManualFats: not null, ManualCarbs: not null, ManualFiber: not null };
 
-    private static bool HaveUniqueEffectiveStepOrder(IReadOnlyList<RecipeStepInput>? steps)
-    {
-        if (steps is null || steps.Count == 0)
-        {
+    private static bool HaveUniqueEffectiveStepOrder(IReadOnlyList<RecipeStepInput>? steps) {
+        if (steps is null || steps.Count == 0) {
             return true;
         }
 
         var orders = new HashSet<int>();
-        for (var index = 0; index < steps.Count; index++)
-        {
+        for (var index = 0; index < steps.Count; index++) {
             var step = steps[index];
             var effectiveOrder = step.Order > 0 ? step.Order : index + 1;
-            if (!orders.Add(effectiveOrder))
-            {
+            if (!orders.Add(effectiveOrder)) {
                 return false;
             }
         }

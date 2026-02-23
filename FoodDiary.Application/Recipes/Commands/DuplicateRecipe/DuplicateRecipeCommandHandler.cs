@@ -1,36 +1,29 @@
-﻿using FoodDiary.Application.Common.Abstractions.Messaging;
+using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Recipes.Mappings;
-using FoodDiary.Contracts.Recipes;
-using FoodDiary.Domain.Entities.Ai;
-using FoodDiary.Domain.Entities.Assets;
-using FoodDiary.Domain.Entities.Content;
-using FoodDiary.Domain.Entities.Meals;
-using FoodDiary.Domain.Entities.Products;
-using FoodDiary.Domain.Entities.Recipes;
-using FoodDiary.Domain.Entities.Shopping;
-using FoodDiary.Domain.Entities.Tracking;
-using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.Enums;
 using FoodDiary.Application.Recipes.Services;
+using FoodDiary.Contracts.Recipes;
+using FoodDiary.Domain.Entities.Recipes;
+using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Recipes.Commands.DuplicateRecipe;
 
 public class DuplicateRecipeCommandHandler(IRecipeRepository recipeRepository)
-    : ICommandHandler<DuplicateRecipeCommand, Result<RecipeResponse>>
-{
-    public async Task<Result<RecipeResponse>> Handle(DuplicateRecipeCommand command, CancellationToken cancellationToken)
-    {
+    : ICommandHandler<DuplicateRecipeCommand, Result<RecipeResponse>> {
+    public async Task<Result<RecipeResponse>> Handle(DuplicateRecipeCommand command, CancellationToken cancellationToken) {
+        if (command.UserId is null || command.UserId == UserId.Empty) {
+            return Result.Failure<RecipeResponse>(Errors.Authentication.InvalidToken);
+        }
+
         var original = await recipeRepository.GetByIdAsync(
             command.RecipeId,
-            command.UserId!.Value,
+            command.UserId.Value,
             includePublic: true,
             includeSteps: true,
             cancellationToken: cancellationToken);
 
-        if (original is null)
-        {
+        if (original is null) {
             return Result.Failure<RecipeResponse>(Errors.Recipe.NotFound(command.RecipeId.Value));
         }
 
@@ -49,12 +42,9 @@ public class DuplicateRecipeCommandHandler(IRecipeRepository recipeRepository)
 
         AddStepsFromOriginal(duplicate, original);
 
-        if (original.IsNutritionAutoCalculated)
-        {
+        if (original.IsNutritionAutoCalculated) {
             duplicate.EnableAutoNutrition();
-        }
-        else
-        {
+        } else {
             duplicate.SetManualNutrition(
                 original.ManualCalories ?? original.TotalCalories,
                 original.ManualProteins ?? original.TotalProteins,
@@ -74,8 +64,7 @@ public class DuplicateRecipeCommandHandler(IRecipeRepository recipeRepository)
             asTracking: true,
             cancellationToken: cancellationToken);
 
-        if (created is null)
-        {
+        if (created is null) {
             return Result.Failure<RecipeResponse>(Errors.Recipe.InvalidData("Failed to load duplicated recipe."));
         }
 
@@ -84,28 +73,21 @@ public class DuplicateRecipeCommandHandler(IRecipeRepository recipeRepository)
         return Result.Success(created.ToResponse(0, true));
     }
 
-    private static void AddStepsFromOriginal(Recipe target, Recipe source)
-    {
+    private static void AddStepsFromOriginal(Recipe target, Recipe source) {
         var orderedSteps = source.Steps
             .OrderBy(step => step.StepNumber)
             .ToList();
 
-        foreach (var step in orderedSteps)
-        {
+        foreach (var step in orderedSteps) {
             var newStep = target.AddStep(step.StepNumber, step.Instruction, step.Title, step.ImageUrl, step.ImageAssetId);
 
-            foreach (var ingredient in step.Ingredients)
-            {
-                if (ingredient.ProductId.HasValue)
-                {
+            foreach (var ingredient in step.Ingredients) {
+                if (ingredient.ProductId.HasValue) {
                     newStep.AddProductIngredient(ingredient.ProductId.Value, ingredient.Amount);
-                }
-                else if (ingredient.NestedRecipeId.HasValue)
-                {
+                } else if (ingredient.NestedRecipeId.HasValue) {
                     newStep.AddNestedRecipeIngredient(ingredient.NestedRecipeId.Value, ingredient.Amount);
                 }
             }
         }
     }
 }
-

@@ -1,21 +1,17 @@
 using FluentValidation;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Recipes.Commands.DuplicateRecipe;
+namespace FoodDiary.Application.Recipes.Queries.GetRecentRecipes;
 
-public class DuplicateRecipeCommandValidator : AbstractValidator<DuplicateRecipeCommand> {
-    public DuplicateRecipeCommandValidator() {
+public sealed class GetRecentRecipesQueryValidator : AbstractValidator<GetRecentRecipesQuery> {
+    public GetRecentRecipesQueryValidator() {
         RuleFor(x => x.UserId)
+            .Cascade(CascadeMode.Stop)
             .NotNull()
             .WithErrorCode("Authentication.InvalidToken")
             .WithMessage("Unable to identify user")
             .Must(id => id is not null && id.Value != UserId.Empty)
             .WithErrorCode("Authentication.InvalidToken")
             .WithMessage("Unable to identify user");
-
-        RuleFor(x => x.RecipeId)
-            .Must(id => id != RecipeId.Empty)
-            .WithErrorCode("Validation.Required")
-            .WithMessage("RecipeId is required");
     }
 }

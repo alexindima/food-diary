@@ -1,23 +1,10 @@
-﻿using System;
-using System.Linq;
-using FoodDiary.Domain.Entities.Ai;
-using FoodDiary.Domain.Entities.Assets;
-using FoodDiary.Domain.Entities.Content;
-using FoodDiary.Domain.Entities.Meals;
-using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Recipes;
-using FoodDiary.Domain.Entities.Shopping;
-using FoodDiary.Domain.Entities.Tracking;
-using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Recipes.Services;
 
-public static class RecipeNutritionCalculator
-{
-    public static RecipeNutritionSummary Calculate(Recipe recipe)
-    {
-        if (!recipe.Steps.Any() || recipe.Steps.All(step => !step.Ingredients.Any()))
-        {
+public static class RecipeNutritionCalculator {
+    public static RecipeNutritionSummary Calculate(Recipe recipe) {
+        if (!recipe.Steps.Any() || recipe.Steps.All(step => !step.Ingredients.Any())) {
             return FromStoredNutrition(recipe);
         }
 
@@ -29,12 +16,9 @@ public static class RecipeNutritionCalculator
         double totalAlcohol = 0;
         var hasComputedValues = false;
 
-        foreach (var step in recipe.Steps)
-        {
-            foreach (var ingredient in step.Ingredients)
-            {
-                if (ingredient.Product is { } product && product.BaseAmount > 0)
-                {
+        foreach (var step in recipe.Steps) {
+            foreach (var ingredient in step.Ingredients) {
+                if (ingredient.Product is { } product && product.BaseAmount > 0) {
                     var factor = ingredient.Amount / product.BaseAmount;
                     totalCalories += product.CaloriesPerBase * factor;
                     totalProteins += product.ProteinsPerBase * factor;
@@ -43,22 +27,20 @@ public static class RecipeNutritionCalculator
                     totalFiber += product.FiberPerBase * factor;
                     totalAlcohol += product.AlcoholPerBase * factor;
                     hasComputedValues = true;
-                }
-                else if (ingredient.NestedRecipe is { } nested && nested.Servings > 0)
-                {
+                } else if (ingredient.NestedRecipe is { } nested && nested.Servings > 0) {
                     var factor = ingredient.Amount / nested.Servings;
                     totalCalories += (nested.TotalCalories ?? 0) * factor;
                     totalProteins += (nested.TotalProteins ?? 0) * factor;
                     totalFats += (nested.TotalFats ?? 0) * factor;
                     totalCarbs += (nested.TotalCarbs ?? 0) * factor;
+                    totalFiber += (nested.TotalFiber ?? 0) * factor;
                     totalAlcohol += (nested.TotalAlcohol ?? 0) * factor;
                     hasComputedValues = true;
                 }
             }
         }
 
-        if (!hasComputedValues)
-        {
+        if (!hasComputedValues) {
             return FromStoredNutrition(recipe);
         }
 
@@ -88,4 +70,3 @@ public sealed record RecipeNutritionSummary(
     double? TotalCarbs,
     double? TotalFiber,
     double? TotalAlcohol);
-

@@ -1,19 +1,14 @@
-using System.Threading;
-using System.Threading.Tasks;
 using FluentValidation;
 using FluentValidation.Results;
 using FoodDiary.Application.Common.Interfaces.Persistence;
-using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Recipes.Commands.DeleteRecipe;
 
-public class DeleteRecipeCommandValidator : AbstractValidator<DeleteRecipeCommand>
-{
+public class DeleteRecipeCommandValidator : AbstractValidator<DeleteRecipeCommand> {
     private readonly IRecipeRepository _recipeRepository;
 
-    public DeleteRecipeCommandValidator(IRecipeRepository recipeRepository)
-    {
+    public DeleteRecipeCommandValidator(IRecipeRepository recipeRepository) {
         _recipeRepository = recipeRepository;
 
         RuleFor(x => x.UserId)
@@ -37,10 +32,8 @@ public class DeleteRecipeCommandValidator : AbstractValidator<DeleteRecipeComman
     private async Task EnsureRecipeDeletableAsync(
         DeleteRecipeCommand command,
         ValidationContext<DeleteRecipeCommand> context,
-        CancellationToken cancellationToken)
-    {
-        if (command.UserId is null || command.UserId.Value == UserId.Empty)
-        {
+        CancellationToken cancellationToken) {
+        if (command.UserId is null || command.UserId.Value == UserId.Empty) {
             return;
         }
 
@@ -51,22 +44,18 @@ public class DeleteRecipeCommandValidator : AbstractValidator<DeleteRecipeComman
             includeSteps: false,
             cancellationToken: cancellationToken);
 
-        if (recipe is null)
-        {
+        if (recipe is null) {
             context.AddFailure(new ValidationFailure(nameof(command.RecipeId),
-                "Recipe not found or you do not have permission to delete it")
-            {
+                "Recipe not found or you do not have permission to delete it") {
                 ErrorCode = "Recipe.NotFound"
             });
             return;
         }
 
         var usageCount = recipe.MealItems.Count + recipe.NestedRecipeUsages.Count;
-        if (usageCount > 0)
-        {
+        if (usageCount > 0) {
             context.AddFailure(new ValidationFailure(nameof(command.RecipeId),
-                "Recipe is already used and cannot be deleted")
-            {
+                "Recipe is already used and cannot be deleted") {
                 ErrorCode = "Validation.Invalid"
             });
         }

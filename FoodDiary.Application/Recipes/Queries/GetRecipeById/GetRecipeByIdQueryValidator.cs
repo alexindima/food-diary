@@ -1,13 +1,10 @@
 using FluentValidation;
-using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Recipes.Queries.GetRecipeById;
 
-public class GetRecipeByIdQueryValidator : AbstractValidator<GetRecipeByIdQuery>
-{
-    public GetRecipeByIdQueryValidator()
-    {
+public class GetRecipeByIdQueryValidator : AbstractValidator<GetRecipeByIdQuery> {
+    public GetRecipeByIdQueryValidator() {
         RuleFor(x => x.UserId)
             .NotNull()
             .WithErrorCode("Authentication.InvalidToken")

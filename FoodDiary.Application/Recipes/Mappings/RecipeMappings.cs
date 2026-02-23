@@ -1,29 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using FoodDiary.Application.Recipes.Common;
-using FoodDiary.Application.Recipes.Commands.CreateRecipe;
+﻿using FoodDiary.Application.Recipes.Commands.CreateRecipe;
 using FoodDiary.Application.Recipes.Commands.UpdateRecipe;
-using FoodDiary.Contracts.Recipes;
-using FoodDiary.Domain.Entities.Ai;
-using FoodDiary.Domain.Entities.Assets;
-using FoodDiary.Domain.Entities.Content;
-using FoodDiary.Domain.Entities.Meals;
-using FoodDiary.Domain.Entities.Products;
-using FoodDiary.Domain.Entities.Recipes;
-using FoodDiary.Domain.Entities.Shopping;
-using FoodDiary.Domain.Entities.Tracking;
-using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Application.Recipes.Common;
 using FoodDiary.Application.Recipes.Services;
+using FoodDiary.Contracts.Recipes;
+using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Recipes.Mappings;
 
-public static class RecipeMappings
-{
-    public static RecipeResponse ToResponse(this Recipe recipe, int usageCount, bool isOwnedByCurrentUser)
-    {
+public static class RecipeMappings {
+    public static RecipeResponse ToResponse(this Recipe recipe, int usageCount, bool isOwnedByCurrentUser) {
         var steps = recipe.Steps
             .OrderBy(s => s.StepNumber)
             .Select(step => new RecipeStepResponse(
@@ -85,8 +71,7 @@ public static class RecipeMappings
             steps);
     }
 
-    public static CreateRecipeCommand ToCommand(this CreateRecipeRequest request, Guid? userIdValue)
-    {
+    public static CreateRecipeCommand ToCommand(this CreateRecipeRequest request, Guid? userIdValue) {
         return new CreateRecipeCommand(
             userIdValue.HasValue ? new UserId(userIdValue.Value) : null,
             request.Name,
@@ -109,8 +94,7 @@ public static class RecipeMappings
             MapSteps(request.Steps));
     }
 
-    public static UpdateRecipeCommand ToCommand(this UpdateRecipeRequest request, Guid? userIdValue, Guid recipeId)
-    {
+    public static UpdateRecipeCommand ToCommand(this UpdateRecipeRequest request, Guid? userIdValue, Guid recipeId) {
         return new UpdateRecipeCommand(
             userIdValue.HasValue ? new UserId(userIdValue.Value) : null,
             new RecipeId(recipeId),
@@ -136,24 +120,22 @@ public static class RecipeMappings
 
     private static IReadOnlyList<RecipeStepInput> MapSteps(IReadOnlyList<RecipeStepRequest> steps) =>
         steps.Select((step, index) =>
-            new RecipeStepInput(
-                index + 1,
-                step.Description,
-                step.Title,
-                step.ImageUrl,
-                step.ImageAssetId,
-                step.Ingredients
-                    .Select(ingredient => new RecipeIngredientInput(
-                        ingredient.ProductId,
-                        ingredient.NestedRecipeId,
-                        ingredient.Amount))
-                    .ToList()))
-        .ToList();
+                new RecipeStepInput(
+                    index + 1,
+                    step.Description,
+                    step.Title,
+                    step.ImageUrl,
+                    step.ImageAssetId,
+                    step.Ingredients
+                        .Select(ingredient => new RecipeIngredientInput(
+                            ingredient.ProductId,
+                            ingredient.NestedRecipeId,
+                            ingredient.Amount))
+                        .ToList()))
+            .ToList();
 
-    private static RecipeNutritionSummary BuildNutrition(Recipe recipe)
-    {
-        if (!recipe.IsNutritionAutoCalculated)
-        {
+    private static RecipeNutritionSummary BuildNutrition(Recipe recipe) {
+        if (!recipe.IsNutritionAutoCalculated) {
             return new RecipeNutritionSummary(
                 recipe.ManualCalories ?? recipe.TotalCalories,
                 recipe.ManualProteins ?? recipe.TotalProteins,
@@ -166,4 +148,3 @@ public static class RecipeMappings
         return RecipeNutritionCalculator.Calculate(recipe);
     }
 }
-

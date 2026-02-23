@@ -11,14 +11,11 @@ namespace FoodDiary.Application.Recipes.Queries.GetRecipesWithRecent;
 public sealed class GetRecipesWithRecentQueryHandler(
     IRecipeRepository recipeRepository,
     IRecentItemRepository recentItemRepository)
-    : IQueryHandler<GetRecipesWithRecentQuery, Result<RecipeListWithRecentResponse>>
-{
+    : IQueryHandler<GetRecipesWithRecentQuery, Result<RecipeListWithRecentResponse>> {
     public async Task<Result<RecipeListWithRecentResponse>> Handle(
         GetRecipesWithRecentQuery query,
-        CancellationToken cancellationToken)
-    {
-        if (query.UserId is null || query.UserId == UserId.Empty)
-        {
+        CancellationToken cancellationToken) {
+        if (query.UserId is null || query.UserId == UserId.Empty) {
             return Result.Failure<RecipeListWithRecentResponse>(Errors.Authentication.InvalidToken);
         }
 
@@ -35,8 +32,7 @@ public sealed class GetRecipesWithRecentQueryHandler(
             query.Search,
             cancellationToken);
 
-        var allRecipes = items.Select(item => new
-        {
+        var allRecipes = items.Select(item => new {
             item.Recipe,
             item.UsageCount,
             IsOwner = item.Recipe.UserId == userId
@@ -51,27 +47,23 @@ public sealed class GetRecipesWithRecentQueryHandler(
             totalItems);
 
         var recentResponses = Array.Empty<RecipeResponse>();
-        if (string.IsNullOrWhiteSpace(query.Search))
-        {
+        if (string.IsNullOrWhiteSpace(query.Search)) {
             var recents = await recentItemRepository.GetRecentRecipesAsync(userId, recentLimit, cancellationToken);
-            if (recents.Count > 0)
-            {
-                var recentIds = recents.Select(x => x.RecipeId).ToList();
-                var recipesById = await recipeRepository.GetByIdsWithUsageAsync(
-                    recentIds,
-                    userId,
-                    query.IncludePublic,
-                    cancellationToken);
+            if (recents.Count <= 0) return Result.Success(new RecipeListWithRecentResponse(recentResponses, allPaged));
+            var recentIds = recents.Select(x => x.RecipeId).ToList();
+            var recipesById = await recipeRepository.GetByIdsWithUsageAsync(
+                recentIds,
+                userId,
+                query.IncludePublic,
+                cancellationToken);
 
-                recentResponses = recentIds
-                    .Where(recipesById.ContainsKey)
-                    .Select(id =>
-                    {
-                        var item = recipesById[id];
-                        return item.Recipe.ToResponse(item.UsageCount, item.Recipe.UserId == userId);
-                    })
-                    .ToArray();
-            }
+            recentResponses = recentIds
+                .Where(recipesById.ContainsKey)
+                .Select(id => {
+                    var item = recipesById[id];
+                    return item.Recipe.ToResponse(item.UsageCount, item.Recipe.UserId == userId);
+                })
+                .ToArray();
         }
 
         return Result.Success(new RecipeListWithRecentResponse(recentResponses, allPaged));
