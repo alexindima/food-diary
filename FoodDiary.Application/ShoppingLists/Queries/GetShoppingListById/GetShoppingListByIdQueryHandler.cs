@@ -1,31 +1,29 @@
-using System.Threading;
-using System.Threading.Tasks;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.ShoppingLists.Mappings;
 using FoodDiary.Contracts.ShoppingLists;
+using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.ShoppingLists.Queries.GetShoppingListById;
 
 public class GetShoppingListByIdQueryHandler(IShoppingListRepository shoppingListRepository)
-    : IQueryHandler<GetShoppingListByIdQuery, Result<ShoppingListResponse>>
-{
+    : IQueryHandler<GetShoppingListByIdQuery, Result<ShoppingListResponse>> {
     public async Task<Result<ShoppingListResponse>> Handle(
         GetShoppingListByIdQuery query,
-        CancellationToken cancellationToken)
-    {
+        CancellationToken cancellationToken) {
+        if (query.UserId is null || query.UserId == UserId.Empty) {
+            return Result.Failure<ShoppingListResponse>(Errors.Authentication.InvalidToken);
+        }
+
         var list = await shoppingListRepository.GetByIdAsync(
             query.ShoppingListId,
-            query.UserId!.Value,
+            query.UserId.Value,
             includeItems: true,
             cancellationToken: cancellationToken);
 
-        if (list is null)
-        {
-            return Result.Failure<ShoppingListResponse>(Errors.ShoppingList.NotFound(query.ShoppingListId.Value));
-        }
-
-        return Result.Success(list.ToResponse());
+        return list is null
+            ? Result.Failure<ShoppingListResponse>(Errors.ShoppingList.NotFound(query.ShoppingListId.Value))
+            : Result.Success(list.ToResponse());
     }
 }

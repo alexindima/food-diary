@@ -1,13 +1,10 @@
 using FluentValidation;
-using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.ShoppingLists.Queries.GetShoppingLists;
 
-public class GetShoppingListsQueryValidator : AbstractValidator<GetShoppingListsQuery>
-{
-    public GetShoppingListsQueryValidator()
-    {
+public class GetShoppingListsQueryValidator : AbstractValidator<GetShoppingListsQuery> {
+    public GetShoppingListsQueryValidator() {
         RuleFor(x => x.UserId)
             .NotNull()
             .WithErrorCode("Authentication.InvalidToken")

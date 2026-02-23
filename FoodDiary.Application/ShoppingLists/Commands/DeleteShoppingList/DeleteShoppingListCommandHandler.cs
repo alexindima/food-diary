@@ -1,27 +1,27 @@
-using System.Threading;
-using System.Threading.Tasks;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
+using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.ShoppingLists.Commands.DeleteShoppingList;
 
 public class DeleteShoppingListCommandHandler(IShoppingListRepository shoppingListRepository)
-    : ICommandHandler<DeleteShoppingListCommand, Result<bool>>
-{
+    : ICommandHandler<DeleteShoppingListCommand, Result<bool>> {
     public async Task<Result<bool>> Handle(
         DeleteShoppingListCommand command,
-        CancellationToken cancellationToken)
-    {
+        CancellationToken cancellationToken) {
+        if (command.UserId is null || command.UserId == UserId.Empty) {
+            return Result.Failure<bool>(Errors.Authentication.InvalidToken);
+        }
+
         var list = await shoppingListRepository.GetByIdAsync(
             command.ShoppingListId,
-            command.UserId!.Value,
+            command.UserId.Value,
             includeItems: true,
             asTracking: true,
             cancellationToken: cancellationToken);
 
-        if (list is null)
-        {
+        if (list is null) {
             return Result.Failure<bool>(Errors.ShoppingList.NotFound(command.ShoppingListId.Value));
         }
 

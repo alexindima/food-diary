@@ -1,21 +1,10 @@
-﻿using System.Linq;
 using FoodDiary.Contracts.ShoppingLists;
-using FoodDiary.Domain.Entities.Ai;
-using FoodDiary.Domain.Entities.Assets;
-using FoodDiary.Domain.Entities.Content;
-using FoodDiary.Domain.Entities.Meals;
-using FoodDiary.Domain.Entities.Products;
-using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Entities.Shopping;
-using FoodDiary.Domain.Entities.Tracking;
-using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.ShoppingLists.Mappings;
 
-public static class ShoppingListMappings
-{
-    public static ShoppingListResponse ToResponse(this ShoppingList list)
-    {
+public static class ShoppingListMappings {
+    public static ShoppingListResponse ToResponse(this ShoppingList list) {
         var items = list.Items
             .OrderBy(i => i.SortOrder)
             .ThenBy(i => i.Id.Value)
@@ -45,4 +34,3 @@ public static class ShoppingListMappings
             list.CreatedOnUtc,
             list.Items.Count);
 }
-

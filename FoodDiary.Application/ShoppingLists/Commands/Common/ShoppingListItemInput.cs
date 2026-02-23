@@ -1,5 +1,3 @@
-using System;
-
 namespace FoodDiary.Application.ShoppingLists.Commands.Common;
 
 public record ShoppingListItemInput(

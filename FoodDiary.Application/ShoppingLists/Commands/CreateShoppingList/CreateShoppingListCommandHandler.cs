@@ -1,21 +1,10 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using FoodDiary.Application.Common.Abstractions.Messaging;
+﻿using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.ShoppingLists.Mappings;
 using FoodDiary.Application.ShoppingLists.Services;
 using FoodDiary.Contracts.ShoppingLists;
-using FoodDiary.Domain.Entities.Ai;
-using FoodDiary.Domain.Entities.Assets;
-using FoodDiary.Domain.Entities.Content;
-using FoodDiary.Domain.Entities.Meals;
-using FoodDiary.Domain.Entities.Products;
-using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Entities.Shopping;
-using FoodDiary.Domain.Entities.Tracking;
-using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.ShoppingLists.Commands.CreateShoppingList;
@@ -23,19 +12,15 @@ namespace FoodDiary.Application.ShoppingLists.Commands.CreateShoppingList;
 public class CreateShoppingListCommandHandler(
     IShoppingListRepository shoppingListRepository,
     IProductRepository productRepository)
-    : ICommandHandler<CreateShoppingListCommand, Result<ShoppingListResponse>>
-{
+    : ICommandHandler<CreateShoppingListCommand, Result<ShoppingListResponse>> {
     public async Task<Result<ShoppingListResponse>> Handle(
         CreateShoppingListCommand command,
-        CancellationToken cancellationToken)
-    {
-        if (command.UserId is null || command.UserId == UserId.Empty)
-        {
+        CancellationToken cancellationToken) {
+        if (command.UserId is null || command.UserId == UserId.Empty) {
             return Result.Failure<ShoppingListResponse>(Errors.Authentication.InvalidToken);
         }
 
-        if (string.IsNullOrWhiteSpace(command.Name))
-        {
+        if (string.IsNullOrWhiteSpace(command.Name)) {
             return Result.Failure<ShoppingListResponse>(
                 Errors.Validation.Required(nameof(command.Name)));
         }
@@ -46,14 +31,12 @@ public class CreateShoppingListCommandHandler(
             productRepository,
             cancellationToken);
 
-        if (itemsResult.IsFailure)
-        {
+        if (itemsResult.IsFailure) {
             return Result.Failure<ShoppingListResponse>(itemsResult.Error);
         }
 
         var list = ShoppingList.Create(command.UserId.Value, command.Name);
-        foreach (var item in itemsResult.Value)
-        {
+        foreach (var item in itemsResult.Value) {
             list.AddItem(
                 item.Name,
                 item.ProductId,
@@ -67,6 +50,4 @@ public class CreateShoppingListCommandHandler(
         await shoppingListRepository.AddAsync(list);
         return Result.Success(list.ToResponse());
     }
-
 }
-
