@@ -1,25 +1,13 @@
-﻿using System.Collections.Generic;
-using System.Linq;
 using FoodDiary.Contracts.Dashboard;
 using FoodDiary.Contracts.Statistics;
-using FoodDiary.Domain.Entities.Ai;
-using FoodDiary.Domain.Entities.Assets;
-using FoodDiary.Domain.Entities.Content;
-using FoodDiary.Domain.Entities.Meals;
-using FoodDiary.Domain.Entities.Products;
-using FoodDiary.Domain.Entities.Recipes;
-using FoodDiary.Domain.Entities.Shopping;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Dashboard.Services;
 
-public static class DashboardMapping
-{
-    public static DashboardStatisticsDto ToStatisticsDto(AggregatedStatisticsResponse? response, User? user)
-    {
-        if (response is null)
-        {
+public static class DashboardMapping {
+    public static DashboardStatisticsDto ToStatisticsDto(AggregatedStatisticsResponse? response, User? user) {
+        if (response is null) {
             return new DashboardStatisticsDto(0, 0, 0, 0, 0, null, null, null, null);
         }
 
@@ -35,16 +23,14 @@ public static class DashboardMapping
             user?.FiberTarget);
     }
 
-    public static IReadOnlyList<DailyCaloriesDto> ToWeeklyCalories(IReadOnlyList<AggregatedStatisticsResponse> responses)
-    {
+    public static IReadOnlyList<DailyCaloriesDto> ToWeeklyCalories(IReadOnlyList<AggregatedStatisticsResponse> responses) {
         return responses
             .OrderBy(r => r.DateFrom)
             .Select(r => new DailyCaloriesDto(r.DateFrom, r.TotalCalories))
             .ToList();
     }
 
-    public static DashboardWeightDto ToWeightDto(IReadOnlyList<WeightEntry> entries, double? desired)
-    {
+    public static DashboardWeightDto ToWeightDto(IReadOnlyList<WeightEntry> entries, double? desired) {
         var latest = entries.FirstOrDefault();
         var previous = entries.Skip(1).FirstOrDefault();
 
@@ -54,8 +40,7 @@ public static class DashboardMapping
             desired);
     }
 
-    public static DashboardWaistDto ToWaistDto(IReadOnlyList<WaistEntry> entries, double? desired)
-    {
+    public static DashboardWaistDto ToWaistDto(IReadOnlyList<WaistEntry> entries, double? desired) {
         var latest = entries.FirstOrDefault();
         var previous = entries.Skip(1).FirstOrDefault();
 
@@ -65,4 +50,3 @@ public static class DashboardMapping
             desired);
     }
 }
-
