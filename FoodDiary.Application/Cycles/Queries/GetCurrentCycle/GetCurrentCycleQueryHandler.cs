@@ -1,23 +1,19 @@
-using System.Threading;
-using System.Threading.Tasks;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Cycles.Mappings;
 using FoodDiary.Application.Cycles.Services;
 using FoodDiary.Contracts.Cycles;
+using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Cycles.Queries.GetCurrentCycle;
 
 public class GetCurrentCycleQueryHandler(ICycleRepository cycleRepository)
-    : IQueryHandler<GetCurrentCycleQuery, Result<CycleResponse?>>
-{
+    : IQueryHandler<GetCurrentCycleQuery, Result<CycleResponse?>> {
     public async Task<Result<CycleResponse?>> Handle(
         GetCurrentCycleQuery query,
-        CancellationToken cancellationToken)
-    {
-        if (query.UserId is null)
-        {
+        CancellationToken cancellationToken) {
+        if (query.UserId is null || query.UserId == UserId.Empty) {
             return Result.Failure<CycleResponse?>(Errors.User.NotFound());
         }
 
@@ -26,8 +22,7 @@ public class GetCurrentCycleQueryHandler(ICycleRepository cycleRepository)
             includeDays: true,
             cancellationToken: cancellationToken);
 
-        if (cycle is null)
-        {
+        if (cycle is null) {
             return Result.Success<CycleResponse?>(null);
         }
 

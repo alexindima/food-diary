@@ -1,32 +1,20 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using FoodDiary.Application.Common.Abstractions.Messaging;
+﻿using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Cycles.Mappings;
 using FoodDiary.Application.Cycles.Services;
 using FoodDiary.Contracts.Cycles;
-using FoodDiary.Domain.Entities.Ai;
-using FoodDiary.Domain.Entities.Assets;
-using FoodDiary.Domain.Entities.Content;
-using FoodDiary.Domain.Entities.Meals;
-using FoodDiary.Domain.Entities.Products;
-using FoodDiary.Domain.Entities.Recipes;
-using FoodDiary.Domain.Entities.Shopping;
 using FoodDiary.Domain.Entities.Tracking;
-using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Cycles.Commands.CreateCycle;
 
 public class CreateCycleCommandHandler(ICycleRepository cycleRepository)
-    : ICommandHandler<CreateCycleCommand, Result<CycleResponse>>
-{
+    : ICommandHandler<CreateCycleCommand, Result<CycleResponse>> {
     public async Task<Result<CycleResponse>> Handle(
         CreateCycleCommand command,
-        CancellationToken cancellationToken)
-    {
-        if (command.UserId is null)
-        {
+        CancellationToken cancellationToken) {
+        if (command.UserId is null || command.UserId == UserId.Empty) {
             return Result.Failure<CycleResponse>(Errors.User.NotFound());
         }
 
@@ -43,4 +31,3 @@ public class CreateCycleCommandHandler(ICycleRepository cycleRepository)
         return Result.Success(cycle.ToResponse(predictions));
     }
 }
-

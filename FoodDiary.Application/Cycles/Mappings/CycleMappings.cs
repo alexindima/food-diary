@@ -1,21 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Linq;
 using FoodDiary.Contracts.Cycles;
-using FoodDiary.Domain.Entities.Ai;
-using FoodDiary.Domain.Entities.Assets;
-using FoodDiary.Domain.Entities.Content;
-using FoodDiary.Domain.Entities.Meals;
-using FoodDiary.Domain.Entities.Products;
-using FoodDiary.Domain.Entities.Recipes;
-using FoodDiary.Domain.Entities.Shopping;
 using FoodDiary.Domain.Entities.Tracking;
-using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects;
 
 namespace FoodDiary.Application.Cycles.Mappings;
 
-public static class CycleMappings
-{
+public static class CycleMappings {
     public static CycleResponse ToResponse(this Cycle cycle, CyclePredictionsResponse? predictions = null) =>
         new(
             cycle.Id.Value,
@@ -24,7 +13,7 @@ public static class CycleMappings
             cycle.AverageLength,
             cycle.LutealLength,
             cycle.Notes,
-            cycle.Days.Select(d => d.ToResponse()).ToList(),
+            cycle.Days.OrderBy(d => d.Date).Select(d => d.ToResponse()).ToList(),
             predictions);
 
     public static CycleDayResponse ToResponse(this CycleDay day) =>
@@ -56,4 +45,3 @@ public static class CycleMappings
             dto.SleepQuality,
             dto.Libido);
 }
-
