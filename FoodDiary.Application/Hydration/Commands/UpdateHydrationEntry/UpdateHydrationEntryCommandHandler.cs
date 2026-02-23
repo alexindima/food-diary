@@ -4,18 +4,16 @@ using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Hydration.Mappings;
 using FoodDiary.Application.Hydration.Validators;
 using FoodDiary.Contracts.Hydration;
+using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Hydration.Commands.UpdateHydrationEntry;
 
 public class UpdateHydrationEntryCommandHandler(
-    IHydrationEntryRepository repository) : ICommandHandler<UpdateHydrationEntryCommand, Result<HydrationEntryResponse>>
-{
+    IHydrationEntryRepository repository) : ICommandHandler<UpdateHydrationEntryCommand, Result<HydrationEntryResponse>> {
     public async Task<Result<HydrationEntryResponse>> Handle(
         UpdateHydrationEntryCommand command,
-        CancellationToken cancellationToken)
-    {
-        if (command.UserId is null)
-        {
+        CancellationToken cancellationToken) {
+        if (command.UserId is null || command.UserId == UserId.Empty) {
             return Result.Failure<HydrationEntryResponse>(Errors.User.NotFound());
         }
 
@@ -23,16 +21,13 @@ public class UpdateHydrationEntryCommandHandler(
             command.HydrationEntryId,
             asTracking: true,
             cancellationToken: cancellationToken);
-        if (entry is null || entry.UserId != command.UserId.Value)
-        {
+        if (entry is null || entry.UserId != command.UserId.Value) {
             return Result.Failure<HydrationEntryResponse>(Errors.HydrationEntry.NotFound(command.HydrationEntryId.Value));
         }
 
-        if (command.AmountMl.HasValue)
-        {
+        if (command.AmountMl.HasValue) {
             var validation = HydrationValidators.ValidateAmount(command.AmountMl.Value);
-            if (validation.IsFailure)
-            {
+            if (validation.IsFailure) {
                 return Result.Failure<HydrationEntryResponse>(validation.Error);
             }
         }

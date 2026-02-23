@@ -1,10 +1,10 @@
 using FluentValidation;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Hydration.Commands.DeleteHydrationEntry;
+namespace FoodDiary.Application.Hydration.Queries.GetHydrationEntries;
 
-public class DeleteHydrationEntryCommandValidator : AbstractValidator<DeleteHydrationEntryCommand> {
-    public DeleteHydrationEntryCommandValidator() {
+public class GetHydrationEntriesQueryValidator : AbstractValidator<GetHydrationEntriesQuery> {
+    public GetHydrationEntriesQueryValidator() {
         RuleFor(c => c.UserId)
             .Cascade(CascadeMode.Stop)
             .NotNull()
@@ -13,10 +13,5 @@ public class DeleteHydrationEntryCommandValidator : AbstractValidator<DeleteHydr
             .Must(id => id is not null && id.Value != UserId.Empty)
             .WithErrorCode("Validation.Invalid")
             .WithMessage("UserId is invalid.");
-
-        RuleFor(c => c.HydrationEntryId)
-            .NotEqual(HydrationEntryId.Empty)
-            .WithErrorCode("Validation.Invalid")
-            .WithMessage("HydrationEntryId is invalid.");
     }
 }
