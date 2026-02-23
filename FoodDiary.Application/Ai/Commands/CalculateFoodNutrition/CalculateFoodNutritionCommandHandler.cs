@@ -6,14 +6,11 @@ using FoodDiary.Contracts.Ai;
 namespace FoodDiary.Application.Ai.Commands.CalculateFoodNutrition;
 
 public sealed class CalculateFoodNutritionCommandHandler(IOpenAiFoodService openAiFoodService)
-    : IQueryHandler<CalculateFoodNutritionCommand, Result<FoodNutritionResponse>>
-{
+    : IQueryHandler<CalculateFoodNutritionCommand, Result<FoodNutritionResponse>> {
     public async Task<Result<FoodNutritionResponse>> Handle(
         CalculateFoodNutritionCommand query,
-        CancellationToken cancellationToken)
-    {
-        if (query.Items.Count == 0)
-        {
+        CancellationToken cancellationToken) {
+        if (query.Items.Count == 0) {
             return Result.Failure<FoodNutritionResponse>(Errors.Ai.EmptyItems());
         }
 

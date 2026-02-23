@@ -9,15 +9,12 @@ namespace FoodDiary.Application.Ai.Queries.GetUserAiUsageSummary;
 public sealed class GetUserAiUsageSummaryQueryHandler(
     IUserRepository userRepository,
     IAiUsageRepository aiUsageRepository)
-    : IQueryHandler<GetUserAiUsageSummaryQuery, Result<UserAiUsageResponse>>
-{
+    : IQueryHandler<GetUserAiUsageSummaryQuery, Result<UserAiUsageResponse>> {
     public async Task<Result<UserAiUsageResponse>> Handle(
         GetUserAiUsageSummaryQuery query,
-        CancellationToken cancellationToken)
-    {
+        CancellationToken cancellationToken) {
         var user = await userRepository.GetByIdAsync(query.UserId);
-        if (user is null)
-        {
+        if (user is null) {
             return Result.Failure<UserAiUsageResponse>(User.NotFound(query.UserId.Value));
         }
 
@@ -36,8 +33,7 @@ public sealed class GetUserAiUsageSummaryQueryHandler(
             monthEndUtc));
     }
 
-    private static (DateTime StartUtc, DateTime EndUtc) GetMonthBoundsUtc(DateTime nowUtc)
-    {
+    private static (DateTime StartUtc, DateTime EndUtc) GetMonthBoundsUtc(DateTime nowUtc) {
         var start = new DateTime(nowUtc.Year, nowUtc.Month, 1, 0, 0, 0, DateTimeKind.Utc);
         return (start, start.AddMonths(1));
     }
