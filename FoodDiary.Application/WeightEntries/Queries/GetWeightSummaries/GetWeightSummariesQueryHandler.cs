@@ -1,38 +1,33 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Contracts.WeightEntries;
 using FoodDiary.Domain.Entities.Tracking;
-using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.WeightEntries.Queries.GetWeightSummaries;
 
 public class GetWeightSummariesQueryHandler(IWeightEntryRepository weightEntryRepository)
-    : IQueryHandler<GetWeightSummariesQuery, Result<IReadOnlyList<WeightEntrySummaryResponse>>>
-{
+    : IQueryHandler<GetWeightSummariesQuery, Result<IReadOnlyList<WeightEntrySummaryResponse>>> {
     public async Task<Result<IReadOnlyList<WeightEntrySummaryResponse>>> Handle(
         GetWeightSummariesQuery query,
-        CancellationToken cancellationToken)
-    {
-        if (query.UserId is null)
-        {
-            return Result.Failure<IReadOnlyList<WeightEntrySummaryResponse>>(Errors.User.NotFound());
+        CancellationToken cancellationToken) {
+        if (query.UserId is null || query.UserId.Value == UserId.Empty) {
+            return Result.Failure<IReadOnlyList<WeightEntrySummaryResponse>>(Errors.Authentication.InvalidToken);
         }
 
-        if (query.DateFrom > query.DateTo)
-        {
+        if (query.DateFrom > query.DateTo) {
             return Result.Failure<IReadOnlyList<WeightEntrySummaryResponse>>(
-                Errors.Validation.Invalid(nameof(query.DateFrom), "DateFrom must be earlier than DateTo"));
+                Errors.Validation.Invalid(nameof(query.DateFrom), "DateFrom must be earlier than DateTo."));
         }
 
-        var quantizationDays = Math.Clamp(query.QuantizationDays <= 0 ? 1 : query.QuantizationDays, 1, 365);
-        var normalizedFrom = DateTime.SpecifyKind(query.DateFrom, DateTimeKind.Utc).Date;
-        var normalizedTo = DateTime.SpecifyKind(query.DateTo, DateTimeKind.Utc).Date;
+        if (query.QuantizationDays <= 0) {
+            return Result.Failure<IReadOnlyList<WeightEntrySummaryResponse>>(
+                Errors.Validation.Invalid(nameof(query.QuantizationDays), "Value must be greater than zero."));
+        }
+
+        var normalizedFrom = NormalizeUtcDate(query.DateFrom);
+        var normalizedTo = NormalizeUtcDate(query.DateTo);
 
         var entries = await weightEntryRepository.GetByPeriodAsync(
             query.UserId.Value,
@@ -40,25 +35,37 @@ public class GetWeightSummariesQueryHandler(IWeightEntryRepository weightEntryRe
             normalizedTo,
             cancellationToken);
 
-        var buckets = BuildBuckets(normalizedFrom, normalizedTo, quantizationDays);
+        var buckets = BuildBuckets(normalizedFrom, normalizedTo, query.QuantizationDays);
         var response = buckets
-            .Select(bucket => BuildResponse(bucket.Start, bucket.End, entries))
+            .Select(bucket => BuildResponse(bucket.start, bucket.end, entries))
             .ToList();
 
         return Result.Success<IReadOnlyList<WeightEntrySummaryResponse>>(response);
     }
 
+    private static IEnumerable<(DateTime start, DateTime end)> BuildBuckets(DateTime from, DateTime to, int step) {
+        var current = from.Date;
+        var end = to.Date;
+        while (current <= end) {
+            var bucketEnd = current.AddDays(step - 1);
+            if (bucketEnd > end) {
+                bucketEnd = end;
+            }
+
+            yield return (current, bucketEnd);
+            current = bucketEnd.AddDays(1);
+        }
+    }
+
     private static WeightEntrySummaryResponse BuildResponse(
         DateTime start,
         DateTime end,
-        IReadOnlyList<WeightEntry> entries)
-    {
+        IReadOnlyList<WeightEntry> entries) {
         var bucketEntries = entries
             .Where(entry => entry.Date >= start && entry.Date <= end)
             .ToList();
 
-        if (bucketEntries.Count == 0)
-        {
+        if (bucketEntries.Count == 0) {
             return new WeightEntrySummaryResponse(start, end, 0);
         }
 
@@ -66,23 +73,12 @@ public class GetWeightSummariesQueryHandler(IWeightEntryRepository weightEntryRe
         return new WeightEntrySummaryResponse(start, end, Math.Round(avg, 2));
     }
 
-    private static List<(DateTime Start, DateTime End)> BuildBuckets(DateTime from, DateTime to, int quantizationDays)
-    {
-        var buckets = new List<(DateTime, DateTime)>();
-        var currentStart = from;
+    private static DateTime NormalizeUtcDate(DateTime value) {
+        var utc = value.Kind switch {
+            DateTimeKind.Utc => value,
+            _ => value.ToUniversalTime()
+        };
 
-        while (currentStart <= to)
-        {
-            var currentEnd = currentStart.AddDays(quantizationDays).AddTicks(-1);
-            if (currentEnd.Date > to)
-            {
-                currentEnd = to;
-            }
-
-            buckets.Add((currentStart, currentEnd));
-            currentStart = currentEnd.AddTicks(1);
-        }
-
-        return buckets;
+        return DateTime.SpecifyKind(utc.Date, DateTimeKind.Utc);
     }
 }

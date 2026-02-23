@@ -1,14 +1,11 @@
-using System;
 using FoodDiary.Application.WeightEntries.Commands.CreateWeightEntry;
 using FoodDiary.Application.WeightEntries.Commands.UpdateWeightEntry;
 using FoodDiary.Contracts.WeightEntries;
-using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.WeightEntries.Mappings;
 
-public static class WeightEntryRequestMappings
-{
+public static class WeightEntryRequestMappings {
     public static CreateWeightEntryCommand ToCommand(this CreateWeightEntryRequest request, Guid? userId) =>
         new(
             userId.HasValue ? new UserId(userId.Value) : null,

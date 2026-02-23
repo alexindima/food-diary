@@ -1,24 +1,19 @@
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.WeightEntries.Mappings;
 using FoodDiary.Contracts.WeightEntries;
+using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.WeightEntries.Queries.GetLatestWeightEntry;
 
 public class GetLatestWeightEntryQueryHandler(IWeightEntryRepository weightEntryRepository)
-    : IQueryHandler<GetLatestWeightEntryQuery, Result<WeightEntryResponse?>>
-{
+    : IQueryHandler<GetLatestWeightEntryQuery, Result<WeightEntryResponse?>> {
     public async Task<Result<WeightEntryResponse?>> Handle(
         GetLatestWeightEntryQuery query,
-        CancellationToken cancellationToken)
-    {
-        if (query.UserId is null)
-        {
-            return Result.Failure<WeightEntryResponse?>(Errors.User.NotFound());
+        CancellationToken cancellationToken) {
+        if (query.UserId is null || query.UserId.Value == UserId.Empty) {
+            return Result.Failure<WeightEntryResponse?>(Errors.Authentication.InvalidToken);
         }
 
         var entries = await weightEntryRepository.GetEntriesAsync(

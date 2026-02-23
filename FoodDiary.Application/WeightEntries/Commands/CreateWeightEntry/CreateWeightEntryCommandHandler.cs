@@ -1,42 +1,28 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.WeightEntries.Mappings;
 using FoodDiary.Contracts.WeightEntries;
-using FoodDiary.Domain.Entities.Ai;
-using FoodDiary.Domain.Entities.Assets;
-using FoodDiary.Domain.Entities.Content;
-using FoodDiary.Domain.Entities.Meals;
-using FoodDiary.Domain.Entities.Products;
-using FoodDiary.Domain.Entities.Recipes;
-using FoodDiary.Domain.Entities.Shopping;
 using FoodDiary.Domain.Entities.Tracking;
-using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.WeightEntries.Commands.CreateWeightEntry;
 
 public class CreateWeightEntryCommandHandler(IWeightEntryRepository weightEntryRepository)
-    : ICommandHandler<CreateWeightEntryCommand, Result<WeightEntryResponse>>
-{
+    : ICommandHandler<CreateWeightEntryCommand, Result<WeightEntryResponse>> {
     public async Task<Result<WeightEntryResponse>> Handle(
         CreateWeightEntryCommand command,
-        CancellationToken cancellationToken)
-    {
-        if (command.UserId is null)
-        {
-            return Result.Failure<WeightEntryResponse>(Errors.User.NotFound());
+        CancellationToken cancellationToken) {
+        if (command.UserId is null || command.UserId.Value == UserId.Empty) {
+            return Result.Failure<WeightEntryResponse>(Errors.Authentication.InvalidToken);
         }
 
-        var normalizedDate = command.Date.Date;
+        var normalizedDate = NormalizeUtcDate(command.Date);
         var existing = await weightEntryRepository.GetByDateAsync(
             command.UserId.Value,
             normalizedDate,
             cancellationToken);
-        if (existing is not null)
-        {
+        if (existing is not null) {
             return Result.Failure<WeightEntryResponse>(
                 Errors.WeightEntry.AlreadyExists(normalizedDate));
         }
@@ -46,5 +32,13 @@ public class CreateWeightEntryCommandHandler(IWeightEntryRepository weightEntryR
 
         return Result.Success(entry.ToResponse());
     }
-}
 
+    private static DateTime NormalizeUtcDate(DateTime value) {
+        var utc = value.Kind switch {
+            DateTimeKind.Utc => value,
+            _ => value.ToUniversalTime()
+        };
+
+        return DateTime.SpecifyKind(utc.Date, DateTimeKind.Utc);
+    }
+}

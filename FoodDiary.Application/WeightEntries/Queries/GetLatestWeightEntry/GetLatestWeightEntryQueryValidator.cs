@@ -1,11 +1,11 @@
 using FluentValidation;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.WeightEntries.Commands.DeleteWeightEntry;
+namespace FoodDiary.Application.WeightEntries.Queries.GetLatestWeightEntry;
 
-public class DeleteWeightEntryCommandValidator : AbstractValidator<DeleteWeightEntryCommand> {
-    public DeleteWeightEntryCommandValidator() {
-        RuleFor(c => c.UserId)
+public class GetLatestWeightEntryQueryValidator : AbstractValidator<GetLatestWeightEntryQuery> {
+    public GetLatestWeightEntryQueryValidator() {
+        RuleFor(x => x.UserId)
             .Cascade(CascadeMode.Stop)
             .NotNull()
             .WithErrorCode("Authentication.InvalidToken")
@@ -13,10 +13,5 @@ public class DeleteWeightEntryCommandValidator : AbstractValidator<DeleteWeightE
             .Must(userId => userId is not null && userId.Value != UserId.Empty)
             .WithErrorCode("Authentication.InvalidToken")
             .WithMessage("Unable to identify user");
-
-        RuleFor(c => c.WeightEntryId)
-            .NotEqual(WeightEntryId.Empty)
-            .WithErrorCode("Validation.Required")
-            .WithMessage("WeightEntryId is required.");
     }
 }

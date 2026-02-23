@@ -1,22 +1,24 @@
-using System;
 using FluentValidation;
+using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.WeightEntries.Commands.CreateWeightEntry;
 
-public class CreateWeightEntryCommandValidator : AbstractValidator<CreateWeightEntryCommand>
-{
-    public CreateWeightEntryCommandValidator()
-    {
+public class CreateWeightEntryCommandValidator : AbstractValidator<CreateWeightEntryCommand> {
+    public CreateWeightEntryCommandValidator() {
         RuleFor(c => c.UserId)
+            .Cascade(CascadeMode.Stop)
             .NotNull()
-            .WithMessage("UserId is required.");
+            .WithErrorCode("Authentication.InvalidToken")
+            .WithMessage("Unable to identify user")
+            .Must(userId => userId is not null && userId.Value != UserId.Empty)
+            .WithErrorCode("Authentication.InvalidToken")
+            .WithMessage("Unable to identify user");
 
         RuleFor(c => c.Weight)
             .GreaterThan(0)
-            .LessThanOrEqualTo(500);
-
-        RuleFor(c => c.Date)
-            .LessThanOrEqualTo(_ => DateTime.UtcNow.AddDays(1))
-            .WithMessage("Date cannot be in the future.");
+            .LessThanOrEqualTo(DesiredWeight.MaxValue)
+            .WithErrorCode("Validation.Invalid")
+            .WithMessage($"Weight must be in range (0, {DesiredWeight.MaxValue}].");
     }
 }
