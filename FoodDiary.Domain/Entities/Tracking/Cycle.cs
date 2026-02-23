@@ -1,19 +1,14 @@
-﻿using System.Linq;
-using FoodDiary.Domain.Common;
+﻿using FoodDiary.Domain.Common;
 using FoodDiary.Domain.Events;
 using FoodDiary.Domain.ValueObjects;
 
 namespace FoodDiary.Domain.Entities.Tracking;
 
-/// <summary>
-/// Menstrual cycle aggregate.
-/// </summary>
-public sealed class Cycle : AggregateRoot<CycleId>
-{
+public sealed class Cycle : AggregateRoot<CycleId> {
     private const int DefaultCycleLength = 28;
     private const int DefaultLutealLength = 14;
 
-    private readonly List<CycleDay> _days = new();
+    private readonly List<CycleDay> _days = [];
 
     public UserId UserId { get; private set; }
     public DateTime StartDate { get; private set; }
@@ -23,12 +18,10 @@ public sealed class Cycle : AggregateRoot<CycleId>
 
     public IReadOnlyCollection<CycleDay> Days => _days.AsReadOnly();
 
-    private Cycle()
-    {
+    private Cycle() {
     }
 
-    private Cycle(CycleId id) : base(id)
-    {
+    private Cycle(CycleId id) : base(id) {
     }
 
     public static Cycle Create(
@@ -36,10 +29,10 @@ public sealed class Cycle : AggregateRoot<CycleId>
         DateTime startDate,
         int? averageLength = null,
         int? lutealLength = null,
-        string? notes = null)
-    {
-        var cycle = new Cycle(CycleId.New())
-        {
+        string? notes = null) {
+        EnsureUserId(userId);
+
+        var cycle = new Cycle(CycleId.New()) {
             UserId = userId,
             StartDate = NormalizeDate(startDate),
             AverageLength = NormalizeAverageLength(averageLength),
@@ -51,55 +44,73 @@ public sealed class Cycle : AggregateRoot<CycleId>
         return cycle;
     }
 
-    public void UpdateLengths(int? averageLength = null, int? lutealLength = null, string? notes = null)
-    {
-        if (averageLength.HasValue)
-        {
-            AverageLength = NormalizeAverageLength(averageLength);
+    public void UpdateLengths(int? averageLength = null, int? lutealLength = null, string? notes = null) {
+        var changed = false;
+
+        if (averageLength.HasValue) {
+            var normalizedAverageLength = NormalizeAverageLength(averageLength);
+            if (AverageLength != normalizedAverageLength) {
+                AverageLength = normalizedAverageLength;
+                changed = true;
+            }
         }
 
-        if (lutealLength.HasValue)
-        {
-            LutealLength = NormalizeLutealLength(lutealLength);
+        if (lutealLength.HasValue) {
+            var normalizedLutealLength = NormalizeLutealLength(lutealLength);
+            if (LutealLength != normalizedLutealLength) {
+                LutealLength = normalizedLutealLength;
+                changed = true;
+            }
         }
 
-        if (notes is not null)
-        {
-            Notes = NormalizeNotes(notes);
+        if (notes is not null) {
+            var normalizedNotes = NormalizeNotes(notes);
+            if (Notes != normalizedNotes) {
+                Notes = normalizedNotes;
+                changed = true;
+            }
         }
 
-        SetModified();
+        if (changed) {
+            SetModified();
+        }
     }
 
     public CycleDay AddOrUpdateDay(
         DateTime date,
         bool isPeriod,
         DailySymptoms symptoms,
-        string? notes = null)
-    {
+        string? notes = null) {
         var normalizedDate = NormalizeDate(date);
+        var normalizedNotes = NormalizeNotes(notes);
         var existing = _days.FirstOrDefault(d => d.Date == normalizedDate);
-        if (existing is not null)
-        {
-            existing.Update(isPeriod, symptoms, notes);
+        if (existing is not null) {
+            var hasChanges =
+                existing.IsPeriod != isPeriod ||
+                !AreSymptomsEquivalent(existing.Symptoms, symptoms) ||
+                existing.Notes != normalizedNotes;
+
+            if (!hasChanges) {
+                return existing;
+            }
+
+            existing.Update(isPeriod, symptoms, normalizedNotes);
             RaiseDomainEvent(new CycleDayUpsertedDomainEvent(Id, normalizedDate, IsCreated: false));
             SetModified();
             return existing;
         }
 
-        var day = CycleDay.Create(Id, normalizedDate, isPeriod, symptoms, notes);
+        var day = CycleDay.Create(Id, normalizedDate, isPeriod, symptoms, normalizedNotes);
         _days.Add(day);
         RaiseDomainEvent(new CycleDayUpsertedDomainEvent(Id, normalizedDate, IsCreated: true));
         SetModified();
         return day;
     }
 
-    public bool RemoveDay(DateTime date)
-    {
+    public bool RemoveDay(DateTime date) {
         var normalizedDate = NormalizeDate(date);
         var existing = _days.FirstOrDefault(d => d.Date == normalizedDate);
-        if (existing is null)
-        {
+        if (existing is null) {
             return false;
         }
 
@@ -109,34 +120,40 @@ public sealed class Cycle : AggregateRoot<CycleId>
         return true;
     }
 
-    private static DateTime NormalizeDate(DateTime value)
-    {
+    private static DateTime NormalizeDate(DateTime value) {
         var dateOnly = value.Date;
         return dateOnly.Kind == DateTimeKind.Utc
             ? dateOnly
             : DateTime.SpecifyKind(dateOnly, DateTimeKind.Utc);
     }
 
-    private static int NormalizeAverageLength(int? value)
-    {
+    private static int NormalizeAverageLength(int? value) {
         var length = value ?? DefaultCycleLength;
         return Math.Clamp(length, 18, 60);
     }
 
-    private static int NormalizeLutealLength(int? value)
-    {
+    private static int NormalizeLutealLength(int? value) {
         var length = value ?? DefaultLutealLength;
         return Math.Clamp(length, 8, 18);
     }
 
-    private static string? NormalizeNotes(string? value)
-    {
-        if (string.IsNullOrWhiteSpace(value))
-        {
-            return null;
-        }
+    private static string? NormalizeNotes(string? value) {
+        return string.IsNullOrWhiteSpace(value) ? null : value.Trim();
+    }
 
-        return value.Trim();
+    private static void EnsureUserId(UserId userId) {
+        if (userId == UserId.Empty) {
+            throw new ArgumentException("UserId is required.", nameof(userId));
+        }
+    }
+
+    private static bool AreSymptomsEquivalent(DailySymptoms left, DailySymptoms right) {
+        return left.Pain == right.Pain &&
+               left.Mood == right.Mood &&
+               left.Edema == right.Edema &&
+               left.Headache == right.Headache &&
+               left.Energy == right.Energy &&
+               left.SleepQuality == right.SleepQuality &&
+               left.Libido == right.Libido;
     }
 }
-

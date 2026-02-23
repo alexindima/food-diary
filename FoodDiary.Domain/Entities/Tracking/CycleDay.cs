@@ -3,11 +3,7 @@ using FoodDiary.Domain.ValueObjects;
 
 namespace FoodDiary.Domain.Entities.Tracking;
 
-/// <summary>
-/// Specific day of a menstrual cycle with symptom tracking.
-/// </summary>
-public sealed class CycleDay : Entity<CycleDayId>
-{
+public sealed class CycleDay : Entity<CycleDayId> {
     public CycleId CycleId { get; private set; }
     public DateTime Date { get; private set; }
     public bool IsPeriod { get; private set; }
@@ -16,12 +12,10 @@ public sealed class CycleDay : Entity<CycleDayId>
 
     public Cycle Cycle { get; private set; } = null!;
 
-    private CycleDay()
-    {
+    private CycleDay() {
     }
 
-    private CycleDay(CycleDayId id) : base(id)
-    {
+    private CycleDay(CycleDayId id) : base(id) {
     }
 
     public static CycleDay Create(
@@ -29,47 +23,81 @@ public sealed class CycleDay : Entity<CycleDayId>
         DateTime date,
         bool isPeriod,
         DailySymptoms symptoms,
-        string? notes)
-    {
-        var day = new CycleDay(CycleDayId.New())
-        {
+        string? notes) {
+        EnsureCycleId(cycleId);
+        EnsureSymptoms(symptoms);
+
+        var day = new CycleDay(CycleDayId.New()) {
             CycleId = cycleId,
             Date = NormalizeDate(date),
             IsPeriod = isPeriod,
             Symptoms = symptoms,
-            Notes = notes
+            Notes = NormalizeNotes(notes)
         };
 
         day.SetCreated();
         return day;
     }
 
-    public void Update(bool? isPeriod = null, DailySymptoms? symptoms = null, string? notes = null)
-    {
-        if (isPeriod.HasValue)
-        {
-            IsPeriod = isPeriod.Value;
+    public void Update(bool? isPeriod = null, DailySymptoms? symptoms = null, string? notes = null) {
+        var changed = false;
+
+        if (isPeriod.HasValue) {
+            if (IsPeriod != isPeriod.Value) {
+                IsPeriod = isPeriod.Value;
+                changed = true;
+            }
         }
 
-        if (symptoms is not null)
-        {
-            Symptoms = symptoms;
+        if (symptoms is not null) {
+            EnsureSymptoms(symptoms);
+            if (!AreSymptomsEquivalent(Symptoms, symptoms)) {
+                Symptoms = symptoms;
+                changed = true;
+            }
         }
 
-        if (notes is not null)
-        {
-            Notes = notes;
+        if (notes is not null) {
+            var normalizedNotes = NormalizeNotes(notes);
+            if (Notes != normalizedNotes) {
+                Notes = normalizedNotes;
+                changed = true;
+            }
         }
 
-        SetModified();
+        if (changed) {
+            SetModified();
+        }
     }
 
-    private static DateTime NormalizeDate(DateTime value)
-    {
+    private static DateTime NormalizeDate(DateTime value) {
         var dateOnly = value.Date;
         return dateOnly.Kind == DateTimeKind.Utc
             ? dateOnly
             : DateTime.SpecifyKind(dateOnly, DateTimeKind.Utc);
     }
-}
 
+    private static string? NormalizeNotes(string? value) {
+        return string.IsNullOrWhiteSpace(value) ? null : value.Trim();
+    }
+
+    private static void EnsureCycleId(CycleId cycleId) {
+        if (cycleId == CycleId.Empty) {
+            throw new ArgumentException("CycleId is required.", nameof(cycleId));
+        }
+    }
+
+    private static void EnsureSymptoms(DailySymptoms symptoms) {
+        ArgumentNullException.ThrowIfNull(symptoms);
+    }
+
+    private static bool AreSymptomsEquivalent(DailySymptoms left, DailySymptoms right) {
+        return left.Pain == right.Pain &&
+               left.Mood == right.Mood &&
+               left.Edema == right.Edema &&
+               left.Headache == right.Headache &&
+               left.Energy == right.Energy &&
+               left.SleepQuality == right.SleepQuality &&
+               left.Libido == right.Libido;
+    }
+}
