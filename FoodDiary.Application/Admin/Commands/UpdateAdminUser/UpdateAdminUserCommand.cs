@@ -1,7 +1,6 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Contracts.Admin;
-using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Admin.Commands.UpdateAdminUser;
@@ -10,7 +9,7 @@ public sealed record UpdateAdminUserCommand(
     UserId UserId,
     bool? IsActive,
     bool? IsEmailConfirmed,
-    string[] Roles,
+    IReadOnlyList<string>? Roles,
     string? Language,
     long? AiInputTokenLimit,
     long? AiOutputTokenLimit)

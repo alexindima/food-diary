@@ -7,12 +7,10 @@ namespace FoodDiary.Application.Admin.Queries.GetAdminEmailTemplates;
 
 public sealed class GetAdminEmailTemplatesQueryHandler(
     IEmailTemplateRepository repository)
-    : IQueryHandler<GetAdminEmailTemplatesQuery, Result<IReadOnlyList<AdminEmailTemplateResponse>>>
-{
+    : IQueryHandler<GetAdminEmailTemplatesQuery, Result<IReadOnlyList<AdminEmailTemplateResponse>>> {
     public async Task<Result<IReadOnlyList<AdminEmailTemplateResponse>>> Handle(
         GetAdminEmailTemplatesQuery query,
-        CancellationToken cancellationToken)
-    {
+        CancellationToken cancellationToken) {
         var templates = await repository.GetAllAsync(cancellationToken);
         var response = templates
             .Select(t => new AdminEmailTemplateResponse(

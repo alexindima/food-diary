@@ -22,8 +22,16 @@ public class CreateProductCommandHandler(IProductRepository productRepository)
     : ICommandHandler<CreateProductCommand, Result<ProductResponse>> {
     public async Task<Result<ProductResponse>>
         Handle(CreateProductCommand command, CancellationToken cancellationToken) {
-        var baseUnit = Enum.Parse<MeasurementUnit>(command.BaseUnit, true);
-        var visibility = Enum.Parse<Visibility>(command.Visibility, true);
+        if (!Enum.TryParse<MeasurementUnit>(command.BaseUnit, true, out var baseUnit)) {
+            return Result.Failure<ProductResponse>(
+                Errors.Validation.Invalid(nameof(command.BaseUnit), "Unknown measurement unit value."));
+        }
+
+        if (!Enum.TryParse<Visibility>(command.Visibility, true, out var visibility)) {
+            return Result.Failure<ProductResponse>(
+                Errors.Validation.Invalid(nameof(command.Visibility), "Unknown visibility value."));
+        }
+
         var productType = Enum.TryParse<ProductType>(command.ProductType, true, out var parsedType)
             ? parsedType
             : ProductType.Unknown;

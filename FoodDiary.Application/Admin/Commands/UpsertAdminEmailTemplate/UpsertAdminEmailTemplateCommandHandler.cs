@@ -2,17 +2,16 @@ using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Contracts.Admin;
+using FoodDiary.Domain.ValueObjects;
 
 namespace FoodDiary.Application.Admin.Commands.UpsertAdminEmailTemplate;
 
 public sealed class UpsertAdminEmailTemplateCommandHandler(
     IEmailTemplateRepository repository)
-    : ICommandHandler<UpsertAdminEmailTemplateCommand, Result<AdminEmailTemplateResponse>>
-{
+    : ICommandHandler<UpsertAdminEmailTemplateCommand, Result<AdminEmailTemplateResponse>> {
     public async Task<Result<AdminEmailTemplateResponse>> Handle(
         UpsertAdminEmailTemplateCommand command,
-        CancellationToken cancellationToken)
-    {
+        CancellationToken cancellationToken) {
         var key = NormalizeKey(command.Key);
         var locale = NormalizeLocale(command.Locale);
 
@@ -39,20 +38,14 @@ public sealed class UpsertAdminEmailTemplateCommandHandler(
         return Result.Success(response);
     }
 
-    private static string NormalizeKey(string value)
-    {
+    private static string NormalizeKey(string value) {
         var trimmed = value?.Trim() ?? string.Empty;
         return trimmed.ToLowerInvariant();
     }
 
-    private static string NormalizeLocale(string value)
-    {
-        if (string.IsNullOrWhiteSpace(value))
-        {
-            return "en";
-        }
-
-        var lower = value.Trim().ToLowerInvariant();
-        return lower.StartsWith("ru") ? "ru" : "en";
+    private static string NormalizeLocale(string value) {
+        return !LanguageCode.TryParse(value, out var languageCode)
+            ? throw new ArgumentOutOfRangeException(nameof(value), "Locale must be one of the supported codes.")
+            : languageCode.Value;
     }
 }

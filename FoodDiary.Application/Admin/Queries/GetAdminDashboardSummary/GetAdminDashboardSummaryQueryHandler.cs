@@ -7,12 +7,10 @@ using FoodDiary.Contracts.Admin;
 namespace FoodDiary.Application.Admin.Queries.GetAdminDashboardSummary;
 
 public sealed class GetAdminDashboardSummaryQueryHandler(IUserRepository userRepository)
-    : IQueryHandler<GetAdminDashboardSummaryQuery, Result<AdminDashboardSummaryResponse>>
-{
+    : IQueryHandler<GetAdminDashboardSummaryQuery, Result<AdminDashboardSummaryResponse>> {
     public async Task<Result<AdminDashboardSummaryResponse>> Handle(
         GetAdminDashboardSummaryQuery query,
-        CancellationToken cancellationToken)
-    {
+        CancellationToken cancellationToken) {
         var (totalUsers, activeUsers, premiumUsers, deletedUsers, recentUsers) =
             await userRepository.GetAdminDashboardSummaryAsync(query.RecentLimit);
 

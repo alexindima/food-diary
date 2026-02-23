@@ -8,12 +8,10 @@ using FoodDiary.Contracts.Common;
 namespace FoodDiary.Application.Admin.Queries.GetAdminUsers;
 
 public sealed class GetAdminUsersQueryHandler(IUserRepository userRepository)
-    : IQueryHandler<GetAdminUsersQuery, Result<PagedResponse<AdminUserResponse>>>
-{
+    : IQueryHandler<GetAdminUsersQuery, Result<PagedResponse<AdminUserResponse>>> {
     public async Task<Result<PagedResponse<AdminUserResponse>>> Handle(
         GetAdminUsersQuery query,
-        CancellationToken cancellationToken)
-    {
+        CancellationToken cancellationToken) {
         var page = query.Page <= 0 ? 1 : query.Page;
         var limit = query.Limit is > 0 and <= 100 ? query.Limit : 20;
 

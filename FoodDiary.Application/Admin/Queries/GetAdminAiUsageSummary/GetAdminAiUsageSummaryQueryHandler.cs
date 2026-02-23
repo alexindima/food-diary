@@ -7,15 +7,17 @@ using FoodDiary.Contracts.Admin;
 namespace FoodDiary.Application.Admin.Queries.GetAdminAiUsageSummary;
 
 public sealed class GetAdminAiUsageSummaryQueryHandler(IAiUsageRepository aiUsageRepository)
-    : IQueryHandler<GetAdminAiUsageSummaryQuery, Result<AdminAiUsageSummaryResponse>>
-{
+    : IQueryHandler<GetAdminAiUsageSummaryQuery, Result<AdminAiUsageSummaryResponse>> {
     public async Task<Result<AdminAiUsageSummaryResponse>> Handle(
         GetAdminAiUsageSummaryQuery query,
-        CancellationToken cancellationToken)
-    {
+        CancellationToken cancellationToken) {
         var today = DateOnly.FromDateTime(DateTime.UtcNow);
         var from = query.From ?? today.AddDays(-29);
         var to = query.To ?? today.AddDays(1);
+        if (from > to) {
+            return Result.Failure<AdminAiUsageSummaryResponse>(
+                Errors.Validation.Invalid("from/to", "'From' date must be less than or equal to 'To' date."));
+        }
 
         var fromUtc = from.ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc);
         var toUtc = to.ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc);

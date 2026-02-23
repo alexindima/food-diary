@@ -49,7 +49,13 @@ public class UpdateRecipeCommandHandler(
         Visibility? visibility = null;
         if (!string.IsNullOrWhiteSpace(command.Visibility))
         {
-            visibility = Enum.Parse<Visibility>(command.Visibility, true);
+            if (!Enum.TryParse<Visibility>(command.Visibility, true, out var parsedVisibility))
+            {
+                return Result.Failure<RecipeResponse>(
+                    Errors.Validation.Invalid(nameof(command.Visibility), "Unknown visibility value."));
+            }
+
+            visibility = parsedVisibility;
         }
 
         var oldAssetId = recipe.ImageAssetId;

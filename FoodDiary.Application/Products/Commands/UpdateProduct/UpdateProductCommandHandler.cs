@@ -30,12 +30,22 @@ public class UpdateProductCommandHandler(
 
         MeasurementUnit? newUnit = null;
         if (!string.IsNullOrWhiteSpace(command.BaseUnit)) {
-            newUnit = Enum.Parse<MeasurementUnit>(command.BaseUnit, true);
+            if (!Enum.TryParse<MeasurementUnit>(command.BaseUnit, true, out var parsedUnit)) {
+                return Result.Failure<ProductResponse>(
+                    Errors.Validation.Invalid(nameof(command.BaseUnit), "Unknown measurement unit value."));
+            }
+
+            newUnit = parsedUnit;
         }
 
         Visibility? newVisibility = null;
         if (!string.IsNullOrWhiteSpace(command.Visibility)) {
-            newVisibility = Enum.Parse<Visibility>(command.Visibility, true);
+            if (!Enum.TryParse<Visibility>(command.Visibility, true, out var parsedVisibility)) {
+                return Result.Failure<ProductResponse>(
+                    Errors.Validation.Invalid(nameof(command.Visibility), "Unknown visibility value."));
+            }
+
+            newVisibility = parsedVisibility;
         }
 
         ProductType? newProductType = null;

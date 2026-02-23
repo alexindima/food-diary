@@ -21,6 +21,8 @@ Keep namespaces aligned with folder paths.
 ## Domain Interaction
 - Respect strongly typed IDs/value objects.
 - Preserve aggregate invariants; avoid leaking primitives in public contracts.
+- Prefer `Enum.TryParse(..., out ...)` in handlers/services and return validation errors instead of relying on `Enum.Parse` exceptions.
+- Propagate the incoming `CancellationToken` to all async service/repository calls (avoid `CancellationToken.None` in request flow).
 
 ## Commands
 - Build: `dotnet build FoodDiary.Application/FoodDiary.Application.csproj`

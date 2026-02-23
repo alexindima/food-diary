@@ -64,7 +64,7 @@ public class ResendEmailVerificationCommandHandler : ICommandHandler<ResendEmail
         {
             await _emailSender.SendEmailVerificationAsync(
                 new EmailVerificationMessage(user.Email, user.Id.Value.ToString(), emailToken, user.Language),
-                CancellationToken.None);
+                cancellationToken);
         }
         catch (Exception ex)
         {

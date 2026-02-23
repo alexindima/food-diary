@@ -3,14 +3,6 @@ using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Contracts.Admin;
-using FoodDiary.Domain.Entities.Ai;
-using FoodDiary.Domain.Entities.Assets;
-using FoodDiary.Domain.Entities.Content;
-using FoodDiary.Domain.Entities.Meals;
-using FoodDiary.Domain.Entities.Products;
-using FoodDiary.Domain.Entities.Recipes;
-using FoodDiary.Domain.Entities.Shopping;
-using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
@@ -18,78 +10,68 @@ using FoodDiary.Domain.ValueObjects;
 namespace FoodDiary.Application.Admin.Commands.UpdateAdminUser;
 
 public sealed class UpdateAdminUserCommandHandler(IUserRepository userRepository)
-    : ICommandHandler<UpdateAdminUserCommand, Result<AdminUserResponse>>
-{
+    : ICommandHandler<UpdateAdminUserCommand, Result<AdminUserResponse>> {
+    private static readonly HashSet<string> AllowedRoles = new(
+        [RoleNames.Admin, RoleNames.Premium, RoleNames.Support],
+        StringComparer.Ordinal);
+
     public async Task<Result<AdminUserResponse>> Handle(
         UpdateAdminUserCommand command,
-        CancellationToken cancellationToken)
-    {
+        CancellationToken cancellationToken) {
         var user = await userRepository.GetByIdIncludingDeletedAsync(command.UserId);
-        if (user is null)
-        {
+        if (user is null) {
             return Result.Failure<AdminUserResponse>(Errors.User.NotFound(command.UserId.Value));
         }
 
-        if (command.IsActive.HasValue)
-        {
-            if (command.IsActive.Value)
-            {
+        if (command.IsActive.HasValue) {
+            if (command.IsActive.Value) {
                 user.Activate();
-            }
-            else
-            {
+            } else {
                 user.Deactivate();
             }
         }
 
-        if (command.IsEmailConfirmed.HasValue)
-        {
+        if (command.IsEmailConfirmed.HasValue) {
             user.SetEmailConfirmed(command.IsEmailConfirmed.Value);
         }
 
         var languageResult = NormalizeLanguage(command.Language);
-        if (languageResult.IsFailure)
-        {
+        if (languageResult.IsFailure) {
             return Result.Failure<AdminUserResponse>(languageResult.Error);
         }
 
-        if (languageResult.Value is not null)
-        {
+        if (languageResult.Value is not null) {
             user.UpdateProfile(language: languageResult.Value);
         }
 
-        if (command.Roles is not null)
-        {
+        if (command.Roles is not null) {
             var requestedRoles = command.Roles
                 .Where(role => !string.IsNullOrWhiteSpace(role))
                 .Select(role => role.Trim())
                 .Distinct(StringComparer.Ordinal)
                 .ToArray();
 
-            var allowedRoles = new HashSet<string>(
-                new[] { RoleNames.Admin, RoleNames.Premium, RoleNames.Support },
-                StringComparer.Ordinal);
-
-            if (requestedRoles.Any(role => !allowedRoles.Contains(role)))
-            {
+            if (requestedRoles.Any(role => !AllowedRoles.Contains(role))) {
                 return Result.Failure<AdminUserResponse>(
                     Errors.Validation.Invalid("roles", "Unknown role."));
             }
 
             var roleEntities = await userRepository.GetRolesByNamesAsync(requestedRoles);
+            if (roleEntities.Count != requestedRoles.Length) {
+                return Result.Failure<AdminUserResponse>(
+                    Errors.Validation.Invalid("roles", "One or more roles are not configured in the system."));
+            }
+
             UpdateUserRoles(user, roleEntities);
         }
 
-        if (command.AiInputTokenLimit.HasValue || command.AiOutputTokenLimit.HasValue)
-        {
-            if (command.AiInputTokenLimit.HasValue && command.AiInputTokenLimit.Value < 0)
-            {
+        if (command.AiInputTokenLimit.HasValue || command.AiOutputTokenLimit.HasValue) {
+            if (command.AiInputTokenLimit is < 0) {
                 return Result.Failure<AdminUserResponse>(
                     Errors.Validation.Invalid("aiInputTokenLimit", "AI input token limit must be non-negative."));
             }
 
-            if (command.AiOutputTokenLimit.HasValue && command.AiOutputTokenLimit.Value < 0)
-            {
+            if (command.AiOutputTokenLimit is < 0) {
                 return Result.Failure<AdminUserResponse>(
                     Errors.Validation.Invalid("aiOutputTokenLimit", "AI output token limit must be non-negative."));
             }
@@ -101,19 +83,15 @@ public sealed class UpdateAdminUserCommandHandler(IUserRepository userRepository
         return Result.Success(user.ToAdminResponse());
     }
 
-    private static void UpdateUserRoles(User user, IReadOnlyList<Role> roles)
-    {
+    private static void UpdateUserRoles(User user, IReadOnlyList<Role> roles) {
         user.UserRoles.Clear();
-        foreach (var role in roles)
-        {
+        foreach (var role in roles) {
             user.UserRoles.Add(new UserRole(user.Id, role.Id));
         }
     }
 
-    private static Result<string?> NormalizeLanguage(string? value)
-    {
-        if (string.IsNullOrWhiteSpace(value))
-        {
+    private static Result<string?> NormalizeLanguage(string? value) {
+        if (string.IsNullOrWhiteSpace(value)) {
             return Result.Success<string?>(null);
         }
 
@@ -122,5 +100,3 @@ public sealed class UpdateAdminUserCommandHandler(IUserRepository userRepository
             : Result.Failure<string?>(Errors.Validation.Invalid("language", "Invalid language value."));
     }
 }
-
-

@@ -30,7 +30,12 @@ public class CreateRecipeCommandHandler(IRecipeRepository recipeRepository)
     {
         var userId = command.UserId!.Value;
 
-        var visibility = Enum.Parse<Visibility>(command.Visibility, true);
+        if (!Enum.TryParse<Visibility>(command.Visibility, true, out var visibility))
+        {
+            return Result.Failure<RecipeResponse>(
+                Errors.Validation.Invalid(nameof(command.Visibility), "Unknown visibility value."));
+        }
+
         var recipe = Recipe.Create(
             userId,
             command.Name,
