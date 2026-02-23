@@ -26,7 +26,7 @@ npx ng build fd-ui-kit         # Build shared UI component library
 
 ### Backend (from repo root)
 ```bash
-dotnet build FoodDiary.sln                    # Build all projects
+dotnet build FoodDiary.slnx                   # Build all projects
 dotnet run --project FoodDiary.Web.Api        # Start API at localhost:5000
 
 # Database migrations

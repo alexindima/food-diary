@@ -27,7 +27,7 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Verify Russian text rendering after edits (no mojibake / replacement symbols).
 
 ## Build Baseline
-- `dotnet build FoodDiary.sln`
+- `dotnet build FoodDiary.slnx`
 - `cd FoodDiary.Web.Client && npm run build`
 
 ## EF Core Migrations

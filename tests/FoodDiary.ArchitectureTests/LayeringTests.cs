@@ -84,7 +84,7 @@ public class LayeringTests {
     private static string GetRepositoryRoot() {
         var current = new DirectoryInfo(AppContext.BaseDirectory);
         while (current is not null) {
-            var solutionPath = Path.Combine(current.FullName, "FoodDiary.sln");
+            var solutionPath = Path.Combine(current.FullName, "FoodDiary.slnx");
             if (File.Exists(solutionPath)) {
                 return current.FullName;
             }
