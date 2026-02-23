@@ -4,6 +4,7 @@ using FoodDiary.Application.Consumptions.Commands.UpdateConsumption;
 using FoodDiary.Application.Consumptions.Common;
 using FoodDiary.Contracts.Consumptions;
 using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Consumptions.Mappings;
 

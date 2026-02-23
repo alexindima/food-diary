@@ -12,6 +12,7 @@ using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Application.Recipes.Services;
 using FoodDiary.Application.Common.Interfaces.Services;
 using FoodDiary.Application.Common.Interfaces.Persistence;
+using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Recipes.Commands.UpdateRecipe;
 

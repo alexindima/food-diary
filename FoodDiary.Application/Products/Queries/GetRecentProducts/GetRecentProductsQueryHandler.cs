@@ -3,6 +3,7 @@ using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Products.Mappings;
 using FoodDiary.Contracts.Products;
+using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Products.Queries.GetRecentProducts;
 
@@ -15,7 +16,7 @@ public sealed class GetRecentProductsQueryHandler(
         GetRecentProductsQuery query,
         CancellationToken cancellationToken)
     {
-        if (query.UserId is null || query.UserId == Domain.ValueObjects.UserId.Empty)
+        if (query.UserId is null || query.UserId == UserId.Empty)
         {
             return Result.Failure<IReadOnlyList<ProductResponse>>(Errors.Authentication.InvalidToken);
         }

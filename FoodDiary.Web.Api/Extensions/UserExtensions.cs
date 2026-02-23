@@ -1,6 +1,7 @@
 using System;
 using System.Security.Claims;
 using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.WebApi.Extensions;
 

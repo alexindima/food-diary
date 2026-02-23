@@ -8,6 +8,7 @@ using FoodDiary.Application.Consumptions.Queries.GetConsumptionById;
 using FoodDiary.Application.Consumptions.Queries.GetConsumptions;
 using FoodDiary.Contracts.Consumptions;
 using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.WebApi.Controllers;
 using FoodDiary.WebApi.Extensions;
 using MediatR;

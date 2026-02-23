@@ -6,6 +6,7 @@ using FoodDiary.Application.Products.Mappings;
 using FoodDiary.Contracts.Products;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Products.Commands.UpdateProduct;
 

@@ -2,6 +2,7 @@ using FoodDiary.Application.Hydration.Commands.CreateHydrationEntry;
 using FoodDiary.Application.Hydration.Commands.UpdateHydrationEntry;
 using FoodDiary.Contracts.Hydration;
 using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Hydration.Mappings;
 

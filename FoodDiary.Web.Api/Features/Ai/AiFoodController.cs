@@ -3,6 +3,7 @@ using FoodDiary.Application.Ai.Commands.CalculateFoodNutrition;
 using FoodDiary.Contracts.Ai;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.WebApi.Controllers;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;

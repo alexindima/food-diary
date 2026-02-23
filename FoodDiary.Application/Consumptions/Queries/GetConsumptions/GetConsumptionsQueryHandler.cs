@@ -8,6 +8,7 @@ using FoodDiary.Application.Consumptions.Mappings;
 using FoodDiary.Contracts.Common;
 using FoodDiary.Contracts.Consumptions;
 using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Consumptions.Queries.GetConsumptions;
 

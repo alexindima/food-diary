@@ -7,6 +7,7 @@ using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.DailyAdvices.Services;
 using FoodDiary.Contracts.DailyAdvices;
 using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.DailyAdvices.Queries.GetDailyAdvice;
 

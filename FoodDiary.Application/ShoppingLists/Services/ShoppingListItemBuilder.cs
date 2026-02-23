@@ -8,6 +8,7 @@ using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.ShoppingLists.Commands.Common;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.ShoppingLists.Services;
 

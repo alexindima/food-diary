@@ -1,5 +1,6 @@
 using FoodDiary.Application.Common.Interfaces.Services;
 using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.WebApi.Hubs;
 using Microsoft.AspNetCore.SignalR;
 

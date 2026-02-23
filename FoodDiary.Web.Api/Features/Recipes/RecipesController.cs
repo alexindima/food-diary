@@ -11,6 +11,7 @@ using FoodDiary.Application.Recipes.Queries.GetRecipesWithRecent;
 using FoodDiary.Application.Recipes.Queries.GetRecentRecipes;
 using FoodDiary.Contracts.Recipes;
 using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.WebApi.Controllers;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

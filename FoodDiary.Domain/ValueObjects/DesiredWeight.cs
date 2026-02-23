@@ -10,6 +10,10 @@ public readonly record struct DesiredWeight {
     }
 
     public static DesiredWeight Create(double value) {
+        if (double.IsNaN(value) || double.IsInfinity(value)) {
+            throw new ArgumentOutOfRangeException(nameof(value), "Desired weight must be a finite number.");
+        }
+
         return value is <= 0 or > MaxValue
             ? throw new ArgumentOutOfRangeException(nameof(value), $"Desired weight must be in range (0, {MaxValue}].")
             : new DesiredWeight(value);

@@ -9,6 +9,7 @@ using FoodDiary.Application.Products.Queries.GetProductsWithRecent;
 using FoodDiary.Application.Products.Queries.GetRecentProducts;
 using FoodDiary.Contracts.Products;
 using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.WebApi.Controllers;
 using FoodDiary.WebApi.Extensions;
 

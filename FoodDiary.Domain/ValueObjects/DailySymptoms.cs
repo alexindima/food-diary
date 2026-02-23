@@ -1,12 +1,6 @@
-using System;
-
 namespace FoodDiary.Domain.ValueObjects;
 
-/// <summary>
-/// Captures daily symptom scores on a 0-9 scale.
-/// </summary>
-public sealed class DailySymptoms
-{
+public sealed class DailySymptoms : IEquatable<DailySymptoms> {
     public int Pain { get; private set; }
     public int Mood { get; private set; }
     public int Edema { get; private set; }
@@ -15,12 +9,10 @@ public sealed class DailySymptoms
     public int SleepQuality { get; private set; }
     public int Libido { get; private set; }
 
-    private DailySymptoms()
-    {
+    private DailySymptoms() {
     }
 
-    private DailySymptoms(int pain, int mood, int edema, int headache, int energy, int sleepQuality, int libido)
-    {
+    private DailySymptoms(int pain, int mood, int edema, int headache, int energy, int sleepQuality, int libido) {
         Pain = pain;
         Mood = mood;
         Edema = edema;
@@ -37,16 +29,15 @@ public sealed class DailySymptoms
         int headache,
         int energy,
         int sleepQuality,
-        int libido)
-    {
+        int libido) {
         return new DailySymptoms(
-            Clamp(pain),
-            Clamp(mood),
-            Clamp(edema),
-            Clamp(headache),
-            Clamp(energy),
-            Clamp(sleepQuality),
-            Clamp(libido));
+            EnsureInRange(pain, nameof(pain)),
+            EnsureInRange(mood, nameof(mood)),
+            EnsureInRange(edema, nameof(edema)),
+            EnsureInRange(headache, nameof(headache)),
+            EnsureInRange(energy, nameof(energy)),
+            EnsureInRange(sleepQuality, nameof(sleepQuality)),
+            EnsureInRange(libido, nameof(libido)));
     }
 
     public DailySymptoms Update(
@@ -56,8 +47,7 @@ public sealed class DailySymptoms
         int? headache = null,
         int? energy = null,
         int? sleepQuality = null,
-        int? libido = null)
-    {
+        int? libido = null) {
         return Create(
             pain ?? Pain,
             mood ?? Mood,
@@ -68,5 +58,36 @@ public sealed class DailySymptoms
             libido ?? Libido);
     }
 
-    private static int Clamp(int value) => Math.Clamp(value, 0, 9);
+    public bool Equals(DailySymptoms? other) {
+        if (other is null) {
+            return false;
+        }
+
+        if (ReferenceEquals(this, other)) {
+            return true;
+        }
+
+        return Pain == other.Pain
+               && Mood == other.Mood
+               && Edema == other.Edema
+               && Headache == other.Headache
+               && Energy == other.Energy
+               && SleepQuality == other.SleepQuality
+               && Libido == other.Libido;
+    }
+
+    public override bool Equals(object? obj) {
+        return obj is DailySymptoms other && Equals(other);
+    }
+
+    // ReSharper disable NonReadonlyMemberInGetHashCode
+    public override int GetHashCode() {
+        return HashCode.Combine(Pain, Mood, Edema, Headache, Energy, SleepQuality, Libido);
+    }
+
+    private static int EnsureInRange(int value, string paramName) {
+        return value is < 0 or > 9
+            ? throw new ArgumentOutOfRangeException(paramName, "Value must be in range [0, 9].")
+            : value;
+    }
 }

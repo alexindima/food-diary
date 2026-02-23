@@ -3,6 +3,7 @@ using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Recipes.Mappings;
 using FoodDiary.Contracts.Recipes;
+using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Recipes.Queries.GetRecentRecipes;
 
@@ -15,7 +16,7 @@ public sealed class GetRecentRecipesQueryHandler(
         GetRecentRecipesQuery query,
         CancellationToken cancellationToken)
     {
-        if (query.UserId is null || query.UserId == Domain.ValueObjects.UserId.Empty)
+        if (query.UserId is null || query.UserId == UserId.Empty)
         {
             return Result.Failure<IReadOnlyList<RecipeResponse>>(Errors.Authentication.InvalidToken);
         }

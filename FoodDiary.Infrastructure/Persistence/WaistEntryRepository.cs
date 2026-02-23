@@ -14,6 +14,7 @@ using FoodDiary.Domain.Entities.Shopping;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence;

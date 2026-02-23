@@ -22,18 +22,18 @@ public readonly record struct UserActivityGoals(
     }
 
     private static int? EnsureNonNegative(int? value, string paramName) {
-        if (value is < 0) {
-            throw new ArgumentOutOfRangeException(paramName, "Value must be non-negative.");
-        }
-
-        return value;
+        return value is < 0
+            ? throw new ArgumentOutOfRangeException(paramName, "Value must be non-negative.")
+            : value;
     }
 
     private static double? EnsureNonNegative(double? value, string paramName) {
-        if (value is < 0) {
-            throw new ArgumentOutOfRangeException(paramName, "Value must be non-negative.");
+        if (value.HasValue && (double.IsNaN(value.Value) || double.IsInfinity(value.Value))) {
+            throw new ArgumentOutOfRangeException(paramName, "Value must be a finite number.");
         }
 
-        return value;
+        return value is < 0
+            ? throw new ArgumentOutOfRangeException(paramName, "Value must be non-negative.")
+            : value;
     }
 }

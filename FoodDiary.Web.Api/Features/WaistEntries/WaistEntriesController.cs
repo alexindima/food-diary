@@ -9,6 +9,7 @@ using FoodDiary.Application.WaistEntries.Queries.GetWaistEntries;
 using FoodDiary.Application.WaistEntries.Queries.GetWaistSummaries;
 using FoodDiary.Contracts.WaistEntries;
 using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.WebApi.Controllers;
 using FoodDiary.WebApi.Extensions;
 using MediatR;

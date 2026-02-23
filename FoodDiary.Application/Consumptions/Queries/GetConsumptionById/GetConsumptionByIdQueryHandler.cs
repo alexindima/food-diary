@@ -6,6 +6,7 @@ using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Consumptions.Mappings;
 using FoodDiary.Contracts.Consumptions;
 using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Consumptions.Queries.GetConsumptionById;
 

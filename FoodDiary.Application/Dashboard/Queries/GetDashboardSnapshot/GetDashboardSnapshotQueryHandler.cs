@@ -18,6 +18,7 @@ using FoodDiary.Contracts.WeightEntries;
 using FoodDiary.Contracts.Users;
 using System.Text.Json;
 using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Domain.ValueObjects.Ids;
 using MediatR;
 
 namespace FoodDiary.Application.Dashboard.Queries.GetDashboardSnapshot;

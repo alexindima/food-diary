@@ -1,6 +1,7 @@
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Interfaces.Services;
 using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.Extensions.Logging;
 
 namespace FoodDiary.Application.Images.Services;

@@ -4,6 +4,7 @@ using FoodDiary.Application.ShoppingLists.Commands.CreateShoppingList;
 using FoodDiary.Application.ShoppingLists.Commands.UpdateShoppingList;
 using FoodDiary.Contracts.ShoppingLists;
 using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.ShoppingLists.Mappings;
 

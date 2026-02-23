@@ -1,5 +1,6 @@
 using FoodDiary.Domain.Entities.Ai;
 using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.Domain;
 

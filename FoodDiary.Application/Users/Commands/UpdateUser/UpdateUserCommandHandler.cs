@@ -7,6 +7,7 @@ using FoodDiary.Application.Users.Mappings;
 using FoodDiary.Contracts.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Users.Commands.UpdateUser;
 

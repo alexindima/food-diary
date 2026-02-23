@@ -8,6 +8,7 @@ using FoodDiary.Application.Hydration.Queries.GetHydrationDailyTotal;
 using FoodDiary.Application.Hydration.Queries.GetHydrationEntries;
 using FoodDiary.Contracts.Hydration;
 using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.WebApi.Controllers;
 using FoodDiary.WebApi.Extensions;
 

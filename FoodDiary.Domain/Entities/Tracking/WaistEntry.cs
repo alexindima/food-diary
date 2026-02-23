@@ -1,6 +1,7 @@
 ﻿using FoodDiary.Domain.Common;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Domain.Entities.Tracking;
 

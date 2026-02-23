@@ -10,6 +10,7 @@ using FoodDiary.Domain.Entities.Shopping;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Common.Interfaces.Persistence;
 

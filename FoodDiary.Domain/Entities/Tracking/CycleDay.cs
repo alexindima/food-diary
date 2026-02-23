@@ -1,5 +1,6 @@
 ﻿using FoodDiary.Domain.Common;
 using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Domain.Entities.Tracking;
 
@@ -51,7 +52,7 @@ public sealed class CycleDay : Entity<CycleDayId> {
 
         if (symptoms is not null) {
             EnsureSymptoms(symptoms);
-            if (!AreSymptomsEquivalent(Symptoms, symptoms)) {
+            if (!Symptoms.Equals(symptoms)) {
                 Symptoms = symptoms;
                 changed = true;
             }
@@ -93,13 +94,4 @@ public sealed class CycleDay : Entity<CycleDayId> {
         ArgumentNullException.ThrowIfNull(symptoms);
     }
 
-    private static bool AreSymptomsEquivalent(DailySymptoms left, DailySymptoms right) {
-        return left.Pain == right.Pain &&
-               left.Mood == right.Mood &&
-               left.Edema == right.Edema &&
-               left.Headache == right.Headache &&
-               left.Energy == right.Energy &&
-               left.SleepQuality == right.SleepQuality &&
-               left.Libido == right.Libido;
-    }
 }

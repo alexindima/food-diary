@@ -7,6 +7,7 @@ using FoodDiary.Application.ShoppingLists.Queries.GetCurrentShoppingList;
 using FoodDiary.Application.ShoppingLists.Queries.GetShoppingListById;
 using FoodDiary.Contracts.ShoppingLists;
 using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.WebApi.Controllers;
 using FoodDiary.WebApi.Extensions;
 using MediatR;

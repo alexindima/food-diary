@@ -12,6 +12,7 @@ using FoodDiary.Application.Authentication.Commands.RequestPasswordReset;
 using FoodDiary.Application.Authentication.Commands.VerifyEmail;
 using FoodDiary.Contracts.Authentication;
 using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Authentication.Mappings;
 

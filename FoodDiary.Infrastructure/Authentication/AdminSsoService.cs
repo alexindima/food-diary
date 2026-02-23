@@ -1,6 +1,7 @@
 using System.Security.Cryptography;
 using FoodDiary.Application.Common.Interfaces.Authentication;
 using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.Extensions.Caching.Distributed;
 
 namespace FoodDiary.Infrastructure.Authentication;

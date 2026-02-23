@@ -3,6 +3,7 @@ using Amazon.S3;
 using Amazon.S3.Model;
 using FoodDiary.Application.Common.Interfaces.Services;
 using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Options;
 using Microsoft.Extensions.Options;
 

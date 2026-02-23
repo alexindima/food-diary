@@ -3,6 +3,7 @@ using FoodDiary.Domain.Events;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
 using System.Reflection;
+using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.Domain;
 

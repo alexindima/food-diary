@@ -1,6 +1,7 @@
 ﻿using FoodDiary.Domain.Common;
 using FoodDiary.Domain.Events;
 using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Domain.Entities.Tracking;
 
@@ -87,7 +88,7 @@ public sealed class Cycle : AggregateRoot<CycleId> {
         if (existing is not null) {
             var hasChanges =
                 existing.IsPeriod != isPeriod ||
-                !AreSymptomsEquivalent(existing.Symptoms, symptoms) ||
+                !existing.Symptoms.Equals(symptoms) ||
                 existing.Notes != normalizedNotes;
 
             if (!hasChanges) {
@@ -153,13 +154,4 @@ public sealed class Cycle : AggregateRoot<CycleId> {
         }
     }
 
-    private static bool AreSymptomsEquivalent(DailySymptoms left, DailySymptoms right) {
-        return left.Pain == right.Pain &&
-               left.Mood == right.Mood &&
-               left.Edema == right.Edema &&
-               left.Headache == right.Headache &&
-               left.Energy == right.Energy &&
-               left.SleepQuality == right.SleepQuality &&
-               left.Libido == right.Libido;
-    }
 }

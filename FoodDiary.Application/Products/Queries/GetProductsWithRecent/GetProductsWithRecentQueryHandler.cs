@@ -5,6 +5,7 @@ using FoodDiary.Application.Products.Mappings;
 using FoodDiary.Contracts.Common;
 using FoodDiary.Contracts.Products;
 using FoodDiary.Domain.Enums;
+using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Products.Queries.GetProductsWithRecent;
 
@@ -17,7 +18,7 @@ public sealed class GetProductsWithRecentQueryHandler(
         GetProductsWithRecentQuery query,
         CancellationToken cancellationToken)
     {
-        if (query.UserId is null || query.UserId == Domain.ValueObjects.UserId.Empty)
+        if (query.UserId is null || query.UserId == UserId.Empty)
         {
             return Result.Failure<ProductListWithRecentResponse>(Errors.Authentication.InvalidToken);
         }

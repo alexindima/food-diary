@@ -4,6 +4,7 @@ using FoodDiary.Application.Recipes.Common.Validators;
 using FluentValidation;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Recipes.Commands.CreateRecipe;
 

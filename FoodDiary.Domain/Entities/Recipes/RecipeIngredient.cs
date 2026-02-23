@@ -1,6 +1,6 @@
 ﻿using FoodDiary.Domain.Common;
 using FoodDiary.Domain.Entities.Products;
-using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Domain.Entities.Recipes;
 
@@ -81,7 +81,7 @@ public sealed class RecipeIngredient : Entity<RecipeIngredientId> {
     }
 
     private static void EnsureProductId(ProductId productId) {
-        if (productId == global::FoodDiary.Domain.ValueObjects.ProductId.Empty) {
+        if (productId == global::FoodDiary.Domain.ValueObjects.Ids.ProductId.Empty) {
             throw new ArgumentException("ProductId is required.", nameof(productId));
         }
     }

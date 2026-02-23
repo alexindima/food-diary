@@ -2,6 +2,7 @@ using FluentValidation;
 using FluentValidation.Results;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Products.Commands.DeleteProduct;
 

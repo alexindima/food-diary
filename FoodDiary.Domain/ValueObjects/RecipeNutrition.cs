@@ -24,10 +24,12 @@ public readonly record struct RecipeNutrition(
     }
 
     private static double? EnsureNonNegative(double? value, string paramName) {
-        if (value is < 0) {
-            throw new ArgumentOutOfRangeException(paramName, "Value must be non-negative.");
+        if (value.HasValue && (double.IsNaN(value.Value) || double.IsInfinity(value.Value))) {
+            throw new ArgumentOutOfRangeException(paramName, "Value must be a finite number.");
         }
 
-        return value;
+        return value is < 0
+            ? throw new ArgumentOutOfRangeException(paramName, "Value must be non-negative.")
+            : value;
     }
 }

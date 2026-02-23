@@ -9,6 +9,7 @@ using FoodDiary.Application.WeightEntries.Queries.GetWeightEntries;
 using FoodDiary.Application.WeightEntries.Queries.GetWeightSummaries;
 using FoodDiary.Contracts.WeightEntries;
 using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.WebApi.Controllers;
 using FoodDiary.WebApi.Extensions;
 

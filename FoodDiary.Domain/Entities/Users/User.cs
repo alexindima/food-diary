@@ -7,6 +7,7 @@ using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Events;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Domain.ValueObjects.Ids;
 using DesiredWaistValueObject = FoodDiary.Domain.ValueObjects.DesiredWaist;
 using DesiredWeightValueObject = FoodDiary.Domain.ValueObjects.DesiredWeight;
 

@@ -4,6 +4,7 @@ using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Recipes.Common;
 using FoodDiary.Contracts.Recipes;
 using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Recipes.Commands.UpdateRecipe;
 

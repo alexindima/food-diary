@@ -6,6 +6,7 @@ using FoodDiary.Application.Admin.Commands.UpdateAdminUser;
 using FoodDiary.Contracts.Admin;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.WebApi.Controllers;
 using FoodDiary.WebApi.Extensions;
 

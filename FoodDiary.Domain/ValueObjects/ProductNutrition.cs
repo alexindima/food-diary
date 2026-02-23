@@ -53,14 +53,18 @@ public readonly record struct ProductNutrition(
 
     public bool IsCloseTo(ProductNutrition other, double epsilon) {
         return Math.Abs(CaloriesPerBase - other.CaloriesPerBase) <= epsilon
-            && Math.Abs(ProteinsPerBase - other.ProteinsPerBase) <= epsilon
-            && Math.Abs(FatsPerBase - other.FatsPerBase) <= epsilon
-            && Math.Abs(CarbsPerBase - other.CarbsPerBase) <= epsilon
-            && Math.Abs(FiberPerBase - other.FiberPerBase) <= epsilon
-            && Math.Abs(AlcoholPerBase - other.AlcoholPerBase) <= epsilon;
+               && Math.Abs(ProteinsPerBase - other.ProteinsPerBase) <= epsilon
+               && Math.Abs(FatsPerBase - other.FatsPerBase) <= epsilon
+               && Math.Abs(CarbsPerBase - other.CarbsPerBase) <= epsilon
+               && Math.Abs(FiberPerBase - other.FiberPerBase) <= epsilon
+               && Math.Abs(AlcoholPerBase - other.AlcoholPerBase) <= epsilon;
     }
 
     private static double EnsureNonNegative(double value, string paramName) {
+        if (double.IsNaN(value) || double.IsInfinity(value)) {
+            throw new ArgumentOutOfRangeException(paramName, "Value must be a finite number.");
+        }
+
         return value < 0
             ? throw new ArgumentOutOfRangeException(paramName, "Value must be non-negative.")
             : value;

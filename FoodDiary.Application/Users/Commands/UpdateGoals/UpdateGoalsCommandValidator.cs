@@ -1,5 +1,6 @@
 using FluentValidation;
 using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Domain.ValueObjects.Ids;
 using DesiredWaistValueObject = FoodDiary.Domain.ValueObjects.DesiredWaist;
 using DesiredWeightValueObject = FoodDiary.Domain.ValueObjects.DesiredWeight;
 

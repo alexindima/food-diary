@@ -3,6 +3,7 @@ using FoodDiary.Application.Users.Commands.UpdateUser;
 using FoodDiary.Contracts.Users;
 using FoodDiary.Domain.ValueObjects;
 using System.Text.Json;
+using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Users.Mappings;
 
