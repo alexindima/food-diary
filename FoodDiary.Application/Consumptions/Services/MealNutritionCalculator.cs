@@ -1,25 +1,15 @@
-﻿using System.Collections.Generic;
-using FoodDiary.Domain.Entities.Ai;
-using FoodDiary.Domain.Entities.Assets;
-using FoodDiary.Domain.Entities.Content;
-using FoodDiary.Domain.Entities.Meals;
+﻿using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Recipes;
-using FoodDiary.Domain.Entities.Shopping;
-using FoodDiary.Domain.Entities.Tracking;
-using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Consumptions.Services;
 
-public static class MealNutritionCalculator
-{
+public static class MealNutritionCalculator {
     public static MealNutritionSummary Calculate(
         Meal meal,
         IReadOnlyDictionary<ProductId, Product> products,
-        IReadOnlyDictionary<RecipeId, Recipe> recipes)
-    {
+        IReadOnlyDictionary<RecipeId, Recipe> recipes) {
         double calories = 0;
         double proteins = 0;
         double fats = 0;
@@ -27,10 +17,8 @@ public static class MealNutritionCalculator
         double fiber = 0;
         double alcohol = 0;
 
-        foreach (var item in meal.Items)
-        {
-            if (item.ProductId is { } productId && products.TryGetValue(productId, out var product))
-            {
+        foreach (var item in meal.Items) {
+            if (item.ProductId is { } productId && products.TryGetValue(productId, out var product)) {
                 var baseAmount = product.BaseAmount <= 0 ? 1 : product.BaseAmount;
                 var multiplier = item.Amount / baseAmount;
                 calories += product.CaloriesPerBase * multiplier;
@@ -42,23 +30,19 @@ public static class MealNutritionCalculator
                 continue;
             }
 
-            if (item.RecipeId is { } recipeId && recipes.TryGetValue(recipeId, out var recipe) && recipe.Servings > 0)
-            {
-                var servings = recipe.Servings <= 0 ? 1 : recipe.Servings;
-                var servingsMultiplier = item.Amount;
-                calories += ((recipe.TotalCalories ?? 0) / servings) * servingsMultiplier;
-                proteins += ((recipe.TotalProteins ?? 0) / servings) * servingsMultiplier;
-                fats += ((recipe.TotalFats ?? 0) / servings) * servingsMultiplier;
-                carbs += ((recipe.TotalCarbs ?? 0) / servings) * servingsMultiplier;
-                fiber += ((recipe.TotalFiber ?? 0) / servings) * servingsMultiplier;
-                alcohol += ((recipe.TotalAlcohol ?? 0) / servings) * servingsMultiplier;
-            }
+            if (item.RecipeId is not { } recipeId || !recipes.TryGetValue(recipeId, out var recipe)) continue;
+            var servings = recipe.Servings <= 0 ? 1 : recipe.Servings;
+            var servingsMultiplier = item.Amount;
+            calories += ((recipe.TotalCalories ?? 0) / servings) * servingsMultiplier;
+            proteins += ((recipe.TotalProteins ?? 0) / servings) * servingsMultiplier;
+            fats += ((recipe.TotalFats ?? 0) / servings) * servingsMultiplier;
+            carbs += ((recipe.TotalCarbs ?? 0) / servings) * servingsMultiplier;
+            fiber += ((recipe.TotalFiber ?? 0) / servings) * servingsMultiplier;
+            alcohol += ((recipe.TotalAlcohol ?? 0) / servings) * servingsMultiplier;
         }
 
-        foreach (var session in meal.AiSessions)
-        {
-            foreach (var aiItem in session.Items)
-            {
+        foreach (var session in meal.AiSessions) {
+            foreach (var aiItem in session.Items) {
                 calories += aiItem.Calories;
                 proteins += aiItem.Proteins;
                 fats += aiItem.Fats;
@@ -79,4 +63,3 @@ public sealed record MealNutritionSummary(
     double Carbs,
     double Fiber,
     double Alcohol);
-

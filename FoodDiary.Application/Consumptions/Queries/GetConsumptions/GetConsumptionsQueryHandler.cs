@@ -1,24 +1,17 @@
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Consumptions.Mappings;
 using FoodDiary.Contracts.Common;
 using FoodDiary.Contracts.Consumptions;
-using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Consumptions.Queries.GetConsumptions;
 
 public class GetConsumptionsQueryHandler(IMealRepository mealRepository)
-    : IQueryHandler<GetConsumptionsQuery, Result<PagedResponse<ConsumptionResponse>>>
-{
-    public async Task<Result<PagedResponse<ConsumptionResponse>>> Handle(GetConsumptionsQuery request, CancellationToken cancellationToken)
-    {
-        if (request.UserId is null || request.UserId == UserId.Empty)
-        {
+    : IQueryHandler<GetConsumptionsQuery, Result<PagedResponse<ConsumptionResponse>>> {
+    public async Task<Result<PagedResponse<ConsumptionResponse>>> Handle(GetConsumptionsQuery request, CancellationToken cancellationToken) {
+        if (request.UserId is null || request.UserId == UserId.Empty) {
             return Result.Failure<PagedResponse<ConsumptionResponse>>(Errors.Authentication.InvalidToken);
         }
 

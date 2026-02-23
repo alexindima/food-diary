@@ -1,26 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
-using FoodDiary.Application.Consumptions.Common;
+using FoodDiary.Application.Common.Interfaces.Services;
 using FoodDiary.Application.Consumptions.Mappings;
 using FoodDiary.Application.Consumptions.Services;
 using FoodDiary.Contracts.Consumptions;
-using FoodDiary.Domain.Entities.Ai;
-using FoodDiary.Domain.Entities.Assets;
-using FoodDiary.Domain.Entities.Content;
 using FoodDiary.Domain.Entities.Meals;
-using FoodDiary.Domain.Entities.Products;
-using FoodDiary.Domain.Entities.Recipes;
-using FoodDiary.Domain.Entities.Shopping;
-using FoodDiary.Domain.Entities.Tracking;
-using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Consumptions.Commands.CreateConsumption;
@@ -29,26 +15,22 @@ public class CreateConsumptionCommandHandler(
     IMealRepository mealRepository,
     IProductRepository productRepository,
     IRecipeRepository recipeRepository,
-    IRecentItemRepository recentItemRepository)
-    : ICommandHandler<CreateConsumptionCommand, Result<ConsumptionResponse>>
-{
-    public async Task<Result<ConsumptionResponse>> Handle(CreateConsumptionCommand command, CancellationToken cancellationToken)
-    {
-        if (command.UserId is null || command.UserId == UserId.Empty)
-        {
+    IRecentItemRepository recentItemRepository,
+    IDateTimeProvider dateTimeProvider)
+    : ICommandHandler<CreateConsumptionCommand, Result<ConsumptionResponse>> {
+    public async Task<Result<ConsumptionResponse>> Handle(CreateConsumptionCommand command, CancellationToken cancellationToken) {
+        if (command.UserId is null || command.UserId == UserId.Empty) {
             return Result.Failure<ConsumptionResponse>(Errors.Authentication.InvalidToken);
         }
 
         var hasManualItems = command.Items is { Count: > 0 };
         var hasAiItems = command.AiSessions is { Count: > 0 } && command.AiSessions.Any(session => session.Items.Count > 0);
-        if (!hasManualItems && !hasAiItems)
-        {
+        if (!hasManualItems && !hasAiItems) {
             return Result.Failure<ConsumptionResponse>(Errors.Validation.Required("Items"));
         }
 
         var mealTypeResult = ParseMealType(command.MealType);
-        if (mealTypeResult.IsFailure)
-        {
+        if (mealTypeResult.IsFailure) {
             return Result.Failure<ConsumptionResponse>(mealTypeResult.Error);
         }
 
@@ -59,33 +41,26 @@ public class CreateConsumptionCommandHandler(
             command.PreMealSatietyLevel,
             command.PostMealSatietyLevel);
 
-        if (satietyValidation.IsFailure)
-        {
+        if (satietyValidation.IsFailure) {
             return Result.Failure<ConsumptionResponse>(satietyValidation.Error);
         }
 
         meal.UpdateSatietyLevels(command.PreMealSatietyLevel, command.PostMealSatietyLevel);
 
-        foreach (var item in command.Items)
-        {
+        foreach (var item in command.Items) {
             var validation = ConsumptionItemValidator.Validate(item);
-            if (validation.IsFailure)
-            {
+            if (validation.IsFailure) {
                 return Result.Failure<ConsumptionResponse>(validation.Error);
             }
 
-            if (item.ProductId.HasValue)
-            {
+            if (item.ProductId.HasValue) {
                 meal.AddProduct(new ProductId(item.ProductId.Value), item.Amount);
-            }
-            else if (item.RecipeId.HasValue)
-            {
+            } else if (item.RecipeId.HasValue) {
                 meal.AddRecipe(new RecipeId(item.RecipeId.Value), item.Amount);
             }
         }
 
-        foreach (var session in command.AiSessions)
-        {
+        foreach (var session in command.AiSessions) {
             var sessionItems = session.Items
                 .Select(aiItem => MealAiItemData.Create(
                     aiItem.NameEn,
@@ -102,16 +77,14 @@ public class CreateConsumptionCommandHandler(
 
             meal.AddAiSession(
                 session.ImageAssetId.HasValue ? new ImageAssetId(session.ImageAssetId.Value) : null,
-                session.RecognizedAtUtc ?? DateTime.UtcNow,
+                session.RecognizedAtUtc ?? dateTimeProvider.UtcNow,
                 session.Notes,
                 sessionItems);
         }
 
-        if (command.IsNutritionAutoCalculated)
-        {
+        if (command.IsNutritionAutoCalculated) {
             var nutritionResult = await CalculateNutritionAsync(meal, command.UserId.Value, cancellationToken);
-            if (nutritionResult.IsFailure)
-            {
+            if (nutritionResult.IsFailure) {
                 return Result.Failure<ConsumptionResponse>(nutritionResult.Error);
             }
 
@@ -123,9 +96,7 @@ public class CreateConsumptionCommandHandler(
                 nutritionResult.Value.Fiber,
                 nutritionResult.Value.Alcohol,
                 isAutoCalculated: true);
-        }
-        else
-        {
+        } else {
             var manualNutritionResult = ManualNutritionValidator.Validate(
                 command.ManualCalories,
                 command.ManualProteins,
@@ -134,8 +105,7 @@ public class CreateConsumptionCommandHandler(
                 command.ManualFiber,
                 command.ManualAlcohol);
 
-            if (manualNutritionResult.IsFailure)
-            {
+            if (manualNutritionResult.IsFailure) {
                 return Result.Failure<ConsumptionResponse>(manualNutritionResult.Error);
             }
 
@@ -169,18 +139,13 @@ public class CreateConsumptionCommandHandler(
             includeItems: true,
             cancellationToken: cancellationToken);
 
-        if (created is null)
-        {
-            return Result.Failure<ConsumptionResponse>(Errors.Consumption.InvalidData("Failed to load created consumption."));
-        }
-
-        return Result.Success(created.ToResponse());
+        return created is null
+            ? Result.Failure<ConsumptionResponse>(Errors.Consumption.InvalidData("Failed to load created consumption."))
+            : Result.Success(created.ToResponse());
     }
 
-    private static Result<MealType?> ParseMealType(string? mealType)
-    {
-        if (string.IsNullOrWhiteSpace(mealType))
-        {
+    private static Result<MealType?> ParseMealType(string? mealType) {
+        if (string.IsNullOrWhiteSpace(mealType)) {
             return Result.Success<MealType?>(null);
         }
 
@@ -192,8 +157,7 @@ public class CreateConsumptionCommandHandler(
     private async Task<Result<MealNutritionSummary>> CalculateNutritionAsync(
         Meal meal,
         UserId userId,
-        CancellationToken cancellationToken)
-    {
+        CancellationToken cancellationToken) {
         var productIds = meal.Items
             .Where(i => i.ProductId.HasValue)
             .Select(i => i.ProductId!.Value)
@@ -207,15 +171,13 @@ public class CreateConsumptionCommandHandler(
             .ToList();
 
         var products = await productRepository.GetByIdsAsync(productIds, userId, includePublic: true, cancellationToken);
-        if (products.Count != productIds.Count)
-        {
+        if (products.Count != productIds.Count) {
             var missingProduct = productIds.First(id => !products.ContainsKey(id));
             return Result.Failure<MealNutritionSummary>(Errors.Product.NotAccessible(missingProduct.Value));
         }
 
         var recipes = await recipeRepository.GetByIdsAsync(recipeIds, userId, includePublic: true, cancellationToken);
-        if (recipes.Count != recipeIds.Count)
-        {
+        if (recipes.Count != recipeIds.Count) {
             var missingRecipe = recipeIds.First(id => !recipes.ContainsKey(id));
             return Result.Failure<MealNutritionSummary>(Errors.Recipe.NotAccessible(missingRecipe.Value));
         }
@@ -224,5 +186,3 @@ public class CreateConsumptionCommandHandler(
         return Result.Success(summary);
     }
 }
-
-

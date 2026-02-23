@@ -1,24 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using FoodDiary.Contracts.Common;
+﻿using FoodDiary.Contracts.Common;
 using FoodDiary.Contracts.Consumptions;
-using FoodDiary.Domain.Entities.Ai;
-using FoodDiary.Domain.Entities.Assets;
-using FoodDiary.Domain.Entities.Content;
 using FoodDiary.Domain.Entities.Meals;
-using FoodDiary.Domain.Entities.Products;
-using FoodDiary.Domain.Entities.Recipes;
-using FoodDiary.Domain.Entities.Shopping;
-using FoodDiary.Domain.Entities.Tracking;
-using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Consumptions.Mappings;
 
-public static class ConsumptionMappings
-{
-    public static ConsumptionResponse ToResponse(this Meal meal, bool isOwnedByCurrentUser = true)
-    {
+public static class ConsumptionMappings {
+    public static ConsumptionResponse ToResponse(this Meal meal, bool isOwnedByCurrentUser = true) {
         var items = meal.Items
             .OrderBy(i => i.Id.Value)
             .Select(item => new ConsumptionItemResponse(
@@ -102,11 +89,9 @@ public static class ConsumptionMappings
     public static PagedResponse<ConsumptionResponse> ToPagedResponse(
         this (IReadOnlyList<Meal> Items, int TotalItems) pageData,
         int page,
-        int limit)
-    {
+        int limit) {
         var totalPages = (int)Math.Ceiling(pageData.TotalItems / (double)limit);
         var items = pageData.Items.Select(item => item.ToResponse()).ToList();
         return new PagedResponse<ConsumptionResponse>(items, page, limit, totalPages, pageData.TotalItems);
     }
 }
-

@@ -1,5 +1,3 @@
-using System;
-
 namespace FoodDiary.Application.Consumptions.Common;
 
 public record ConsumptionItemInput(

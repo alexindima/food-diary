@@ -7,4 +7,3 @@ public sealed record ManualNutritionInput(
     double Carbs,
     double Fiber,
     double Alcohol);
-

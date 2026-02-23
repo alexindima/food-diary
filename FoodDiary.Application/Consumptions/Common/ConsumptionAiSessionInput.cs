@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-
 namespace FoodDiary.Application.Consumptions.Common;
 
 public record ConsumptionAiSessionInput(
