@@ -4,7 +4,6 @@ using FoodDiary.Application.Hydration.Commands.UpdateHydrationEntry;
 using FoodDiary.Application.Hydration.Queries.GetHydrationDailyTotal;
 using FoodDiary.Application.Hydration.Queries.GetHydrationEntries;
 using FoodDiary.Application.Hydration.Validators;
-using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.Hydration;
 
@@ -22,7 +21,7 @@ public class HydrationFeatureTests {
     [Fact]
     public async Task DeleteHydrationEntryCommandValidator_WithEmptyEntryId_Fails() {
         var validator = new DeleteHydrationEntryCommandValidator();
-        var command = new DeleteHydrationEntryCommand(Guid.NewGuid(), HydrationEntryId.Empty);
+        var command = new DeleteHydrationEntryCommand(Guid.NewGuid(), Guid.Empty);
 
         var result = await validator.ValidateAsync(command);
 
@@ -32,7 +31,7 @@ public class HydrationFeatureTests {
     [Fact]
     public async Task UpdateHydrationEntryCommandValidator_WithInvalidAmount_Fails() {
         var validator = new UpdateHydrationEntryCommandValidator();
-        var command = new UpdateHydrationEntryCommand(Guid.NewGuid(), HydrationEntryId.New(), DateTime.UtcNow, 0);
+        var command = new UpdateHydrationEntryCommand(Guid.NewGuid(), Guid.NewGuid(), DateTime.UtcNow, 0);
 
         var result = await validator.ValidateAsync(command);
 

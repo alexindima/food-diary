@@ -1,6 +1,5 @@
 using FluentValidation;
 using FoodDiary.Domain.ValueObjects;
-using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.WeightEntries.Commands.UpdateWeightEntry;
 
@@ -16,7 +15,7 @@ public class UpdateWeightEntryCommandValidator : AbstractValidator<UpdateWeightE
             .WithMessage("Unable to identify user");
 
         RuleFor(c => c.WeightEntryId)
-            .NotEqual(WeightEntryId.Empty)
+            .NotEqual(Guid.Empty)
             .WithErrorCode("Validation.Required")
             .WithMessage("WeightEntryId is required.");
 

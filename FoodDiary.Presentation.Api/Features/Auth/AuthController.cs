@@ -1,4 +1,4 @@
-using FoodDiary.Domain.Enums;
+using FoodDiary.Presentation.Api.Authorization;
 using FoodDiary.Presentation.Api.Options;
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Extensions;
@@ -123,7 +123,7 @@ public class AuthController(
         return result.ToOkActionResult(this, static value => value.ToHttpResponse());
     }
 
-    [Authorize(Roles = RoleNames.Admin)]
+    [Authorize(Roles = PresentationRoleNames.Admin)]
     [HttpPost("admin-sso/start")]
     public async Task<IActionResult> AdminSsoStart([FromCurrentUser] Guid userId) {
         var command = userId.ToAdminSsoStartCommand();

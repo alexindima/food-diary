@@ -25,7 +25,7 @@ public class UpdateRecipeCommandHandlerTests {
 
         var command = new UpdateRecipeCommand(
             userId.Value,
-            recipeId,
+            recipeId.Value,
             Name: "Updated soup",
             Description: null,
             Comment: null,

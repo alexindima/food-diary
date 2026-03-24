@@ -17,16 +17,17 @@ public class DuplicateRecipeCommandHandler(IRecipeRepository recipeRepository)
         }
 
         var userId = new UserId(command.UserId.Value);
+        var recipeId = new RecipeId(command.RecipeId);
 
         var original = await recipeRepository.GetByIdAsync(
-            command.RecipeId,
+            recipeId,
             userId,
             includePublic: true,
             includeSteps: true,
             cancellationToken: cancellationToken);
 
         if (original is null) {
-            return Result.Failure<RecipeModel>(Errors.Recipe.NotFound(command.RecipeId.Value));
+            return Result.Failure<RecipeModel>(Errors.Recipe.NotFound(command.RecipeId));
         }
 
         var duplicate = Recipe.Create(

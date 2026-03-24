@@ -2,7 +2,6 @@ using FoodDiary.Application.Ai.Commands.AnalyzeFoodImage;
 using FoodDiary.Application.Ai.Commands.CalculateFoodNutrition;
 using FoodDiary.Application.Ai.Models;
 using FoodDiary.Application.Ai.Queries.GetUserAiUsageSummary;
-using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.Ai;
 
@@ -10,7 +9,7 @@ public class AiValidatorsTests {
     [Fact]
     public async Task AnalyzeFoodImageValidator_WithEmptyIds_Fails() {
         var validator = new AnalyzeFoodImageCommandValidator();
-        var command = new AnalyzeFoodImageCommand(Guid.Empty, ImageAssetId.Empty, null);
+        var command = new AnalyzeFoodImageCommand(Guid.Empty, Guid.Empty, null);
 
         var result = await validator.ValidateAsync(command);
 
@@ -20,7 +19,7 @@ public class AiValidatorsTests {
     [Fact]
     public async Task AnalyzeFoodImageValidator_WithTooLongDescription_Fails() {
         var validator = new AnalyzeFoodImageCommandValidator();
-        var command = new AnalyzeFoodImageCommand(Guid.NewGuid(), ImageAssetId.New(), new string('x', 2049));
+        var command = new AnalyzeFoodImageCommand(Guid.NewGuid(), Guid.NewGuid(), new string('x', 2049));
 
         var result = await validator.ValidateAsync(command);
 
@@ -30,7 +29,7 @@ public class AiValidatorsTests {
     [Fact]
     public async Task AnalyzeFoodImageValidator_WithValidData_Passes() {
         var validator = new AnalyzeFoodImageCommandValidator();
-        var command = new AnalyzeFoodImageCommand(Guid.NewGuid(), ImageAssetId.New(), "some context");
+        var command = new AnalyzeFoodImageCommand(Guid.NewGuid(), Guid.NewGuid(), "some context");
 
         var result = await validator.ValidateAsync(command);
 

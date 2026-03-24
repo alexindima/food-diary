@@ -1,6 +1,5 @@
 using FluentValidation;
 using FoodDiary.Application.Cycles.Models;
-using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Cycles.Commands.UpsertCycleDay;
 
@@ -16,7 +15,7 @@ public class UpsertCycleDayCommandValidator : AbstractValidator<UpsertCycleDayCo
             .WithMessage("UserId is invalid.");
 
         RuleFor(x => x.CycleId)
-            .NotEqual(CycleId.Empty)
+            .NotEqual(Guid.Empty)
             .WithErrorCode("Validation.Invalid")
             .WithMessage("CycleId is invalid.");
 

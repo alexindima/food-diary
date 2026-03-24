@@ -26,16 +26,17 @@ public class UpdateConsumptionCommandHandler(
         }
 
         var userId = new UserId(command.UserId.Value);
+        var consumptionId = new MealId(command.ConsumptionId);
 
         var meal = await mealRepository.GetByIdAsync(
-            command.ConsumptionId,
+            consumptionId,
             userId,
             includeItems: true,
             asTracking: true,
             cancellationToken: cancellationToken);
 
         if (meal is null) {
-            return Result.Failure<ConsumptionModel>(Errors.Consumption.NotFound(command.ConsumptionId.Value));
+            return Result.Failure<ConsumptionModel>(Errors.Consumption.NotFound(command.ConsumptionId));
         }
 
         var hasManualItems = command.Items is { Count: > 0 };

@@ -13,16 +13,17 @@ public class DeleteConsumptionCommandHandler(IMealRepository mealRepository)
         }
 
         var userId = new UserId(command.UserId.Value);
+        var consumptionId = new MealId(command.ConsumptionId);
 
         var meal = await mealRepository.GetByIdAsync(
-            command.ConsumptionId,
+            consumptionId,
             userId,
             includeItems: false,
             asTracking: true,
             cancellationToken: cancellationToken);
 
         if (meal is null) {
-            return Result.Failure<bool>(Errors.Consumption.NotFound(command.ConsumptionId.Value));
+            return Result.Failure<bool>(Errors.Consumption.NotFound(command.ConsumptionId));
         }
 
         await mealRepository.DeleteAsync(meal, cancellationToken);

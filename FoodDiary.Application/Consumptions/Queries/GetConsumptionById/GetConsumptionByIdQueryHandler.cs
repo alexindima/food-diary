@@ -15,15 +15,16 @@ public class GetConsumptionByIdQueryHandler(IMealRepository mealRepository)
         }
 
         var userId = new UserId(request.UserId.Value);
+        var consumptionId = new MealId(request.ConsumptionId);
 
         var meal = await mealRepository.GetByIdAsync(
-            request.ConsumptionId,
+            consumptionId,
             userId,
             includeItems: true,
             cancellationToken: cancellationToken);
 
         return meal is null
-            ? Result.Failure<ConsumptionModel>(Errors.Consumption.NotFound(request.ConsumptionId.Value))
+            ? Result.Failure<ConsumptionModel>(Errors.Consumption.NotFound(request.ConsumptionId))
             : Result.Success(meal.ToModel());
     }
 }

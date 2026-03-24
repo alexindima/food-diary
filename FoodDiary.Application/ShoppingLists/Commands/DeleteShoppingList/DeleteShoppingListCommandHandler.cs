@@ -15,16 +15,17 @@ public class DeleteShoppingListCommandHandler(IShoppingListRepository shoppingLi
         }
 
         var userId = new UserId(command.UserId.Value);
+        var shoppingListId = new ShoppingListId(command.ShoppingListId);
 
         var list = await shoppingListRepository.GetByIdAsync(
-            command.ShoppingListId,
+            shoppingListId,
             userId,
             includeItems: true,
             asTracking: true,
             cancellationToken: cancellationToken);
 
         if (list is null) {
-            return Result.Failure<bool>(Errors.ShoppingList.NotFound(command.ShoppingListId.Value));
+            return Result.Failure<bool>(Errors.ShoppingList.NotFound(command.ShoppingListId));
         }
 
         await shoppingListRepository.DeleteAsync(list);

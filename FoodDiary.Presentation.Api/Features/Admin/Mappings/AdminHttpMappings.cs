@@ -1,6 +1,5 @@
 using FoodDiary.Application.Admin.Commands.UpdateAdminUser;
 using FoodDiary.Application.Admin.Commands.UpsertAdminEmailTemplate;
-using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Presentation.Api.Features.Admin.Requests;
 
 namespace FoodDiary.Presentation.Api.Features.Admin.Mappings;
@@ -21,7 +20,7 @@ public static class AdminHttpMappings {
 
     public static UpdateAdminUserCommand ToCommand(this AdminUserUpdateHttpRequest request, Guid userId) {
         return new UpdateAdminUserCommand(
-            new UserId(userId),
+            userId,
             request.IsActive,
             request.IsEmailConfirmed,
             request.Roles ?? [],

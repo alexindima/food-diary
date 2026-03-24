@@ -13,14 +13,15 @@ public class DeleteWaistEntryCommandHandler(IWaistEntryRepository waistEntryRepo
         }
 
         var userId = new UserId(command.UserId.Value);
+        var waistEntryId = new WaistEntryId(command.WaistEntryId);
         var entry = await waistEntryRepository.GetByIdAsync(
-            command.WaistEntryId,
+            waistEntryId,
             userId,
             asTracking: true,
             cancellationToken);
 
         if (entry is null) {
-            return Result.Failure<bool>(Errors.WaistEntry.NotFound(command.WaistEntryId.Value));
+            return Result.Failure<bool>(Errors.WaistEntry.NotFound(command.WaistEntryId));
         }
 
         await waistEntryRepository.DeleteAsync(entry, cancellationToken);

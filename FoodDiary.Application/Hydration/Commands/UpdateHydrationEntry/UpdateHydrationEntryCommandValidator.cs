@@ -1,5 +1,4 @@
 using FluentValidation;
-using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Hydration.Commands.UpdateHydrationEntry;
 
@@ -15,7 +14,7 @@ public class UpdateHydrationEntryCommandValidator : AbstractValidator<UpdateHydr
             .WithMessage("UserId is invalid.");
 
         RuleFor(c => c.HydrationEntryId)
-            .NotEqual(HydrationEntryId.Empty)
+            .NotEqual(Guid.Empty)
             .WithErrorCode("Validation.Invalid")
             .WithMessage("HydrationEntryId is invalid.");
 

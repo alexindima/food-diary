@@ -1,9 +1,8 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
-using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Hydration.Commands.DeleteHydrationEntry;
 
 public record DeleteHydrationEntryCommand(
     Guid? UserId,
-    HydrationEntryId HydrationEntryId) : ICommand<Result<bool>>;
+    Guid HydrationEntryId) : ICommand<Result<bool>>;

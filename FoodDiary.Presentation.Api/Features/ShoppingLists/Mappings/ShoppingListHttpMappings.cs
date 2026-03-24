@@ -5,7 +5,6 @@ using FoodDiary.Application.ShoppingLists.Commands.UpdateShoppingList;
 using FoodDiary.Application.ShoppingLists.Queries.GetCurrentShoppingList;
 using FoodDiary.Application.ShoppingLists.Queries.GetShoppingListById;
 using FoodDiary.Application.ShoppingLists.Queries.GetShoppingLists;
-using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Presentation.Api.Features.ShoppingLists.Requests;
 
 namespace FoodDiary.Presentation.Api.Features.ShoppingLists.Mappings;
@@ -16,10 +15,10 @@ public static class ShoppingListHttpMappings {
     public static GetShoppingListsQuery ToListQuery(this Guid userId) => new(userId);
 
     public static GetShoppingListByIdQuery ToGetByIdQuery(this Guid shoppingListId, Guid userId) =>
-        new(userId, new ShoppingListId(shoppingListId));
+        new(userId, shoppingListId);
 
     public static DeleteShoppingListCommand ToDeleteCommand(this Guid shoppingListId, Guid userId) =>
-        new(userId, new ShoppingListId(shoppingListId));
+        new(userId, shoppingListId);
 
     public static CreateShoppingListCommand ToCommand(this CreateShoppingListHttpRequest request, Guid userId) =>
         new(
@@ -33,7 +32,7 @@ public static class ShoppingListHttpMappings {
         Guid shoppingListId) =>
         new(
             userId,
-            new ShoppingListId(shoppingListId),
+            shoppingListId,
             request.Name,
             request.Items?.Select(ToInput).ToList());
 

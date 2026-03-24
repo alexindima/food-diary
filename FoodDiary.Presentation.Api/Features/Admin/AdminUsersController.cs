@@ -1,4 +1,4 @@
-using FoodDiary.Domain.Enums;
+using FoodDiary.Presentation.Api.Authorization;
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Extensions;
 using FoodDiary.Presentation.Api.Features.Admin.Mappings;
@@ -11,7 +11,7 @@ namespace FoodDiary.Presentation.Api.Features.Admin;
 
 [ApiController]
 [Route("api/admin/users")]
-[Authorize(Roles = RoleNames.Admin)]
+[Authorize(Roles = PresentationRoleNames.Admin)]
 public sealed class AdminUsersController(ISender mediator) : BaseApiController(mediator) {
     [HttpGet]
     public async Task<IActionResult> GetUsers([FromQuery] GetAdminUsersHttpQuery query) {

@@ -1,13 +1,12 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Products.Models;
-using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Products.Commands.UpdateProduct;
 
 public record UpdateProductCommand(
     Guid? UserId,
-    ProductId ProductId,
+    Guid ProductId,
     string? Barcode,
     bool ClearBarcode,
     string? Name,

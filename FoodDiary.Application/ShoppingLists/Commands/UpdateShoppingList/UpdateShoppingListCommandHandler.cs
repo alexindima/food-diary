@@ -26,15 +26,17 @@ public class UpdateShoppingListCommandHandler(
                 Errors.Validation.Required(nameof(command.Items)));
         }
 
+        var shoppingListId = new ShoppingListId(command.ShoppingListId);
+
         var list = await shoppingListRepository.GetByIdAsync(
-            command.ShoppingListId,
+            shoppingListId,
             userId,
             includeItems: true,
             asTracking: true,
             cancellationToken: cancellationToken);
 
         if (list is null) {
-            return Result.Failure<ShoppingListModel>(Errors.ShoppingList.NotFound(command.ShoppingListId.Value));
+            return Result.Failure<ShoppingListModel>(Errors.ShoppingList.NotFound(command.ShoppingListId));
         }
 
         if (!string.IsNullOrWhiteSpace(command.Name)) {

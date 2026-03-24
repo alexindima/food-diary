@@ -13,14 +13,15 @@ public class DeleteWeightEntryCommandHandler(IWeightEntryRepository weightEntryR
         }
 
         var userId = new UserId(command.UserId.Value);
+        var weightEntryId = new WeightEntryId(command.WeightEntryId);
         var entry = await weightEntryRepository.GetByIdAsync(
-            command.WeightEntryId,
+            weightEntryId,
             userId,
             asTracking: true,
             cancellationToken: cancellationToken);
 
         if (entry is null) {
-            return Result.Failure<bool>(Errors.WeightEntry.NotFound(command.WeightEntryId.Value));
+            return Result.Failure<bool>(Errors.WeightEntry.NotFound(command.WeightEntryId));
         }
 
         await weightEntryRepository.DeleteAsync(entry, cancellationToken);

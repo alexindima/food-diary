@@ -1,7 +1,6 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
-using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Consumptions.Commands.DeleteConsumption;
 
-public record DeleteConsumptionCommand(Guid? UserId, MealId ConsumptionId) : ICommand<Result<bool>>;
+public record DeleteConsumptionCommand(Guid? UserId, Guid ConsumptionId) : ICommand<Result<bool>>;

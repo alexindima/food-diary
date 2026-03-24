@@ -22,9 +22,10 @@ public class UpdateRecipeCommandHandler(
         }
 
         var userId = new UserId(command.UserId.Value);
+        var recipeId = new RecipeId(command.RecipeId);
 
         var recipe = await recipeRepository.GetByIdAsync(
-            command.RecipeId,
+            recipeId,
             userId,
             includePublic: false,
             includeSteps: true,
@@ -32,7 +33,7 @@ public class UpdateRecipeCommandHandler(
             cancellationToken: cancellationToken);
 
         if (recipe is null) {
-            return Result.Failure<RecipeModel>(Errors.Recipe.NotAccessible(command.RecipeId.Value));
+            return Result.Failure<RecipeModel>(Errors.Recipe.NotAccessible(command.RecipeId));
         }
 
         var usageCount = recipe.MealItems.Count + recipe.NestedRecipeUsages.Count;

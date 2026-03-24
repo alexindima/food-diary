@@ -17,14 +17,15 @@ public class DeleteProductCommandHandler(
         }
 
         var userId = new UserId(command.UserId.Value);
+        var productId = new ProductId(command.ProductId);
 
         var product = await productRepository.GetByIdAsync(
-            command.ProductId,
+            productId,
             userId,
             includePublic: false,
             cancellationToken: cancellationToken);
         if (product is null) {
-            return Result.Failure<bool>(Errors.Product.NotAccessible(command.ProductId.Value));
+            return Result.Failure<bool>(Errors.Product.NotAccessible(command.ProductId));
         }
 
         var assetId = product.ImageAssetId;

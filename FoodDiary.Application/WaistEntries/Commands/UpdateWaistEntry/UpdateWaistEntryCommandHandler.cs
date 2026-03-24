@@ -17,14 +17,15 @@ public class UpdateWaistEntryCommandHandler(IWaistEntryRepository waistEntryRepo
         }
 
         var userId = new UserId(command.UserId.Value);
+        var waistEntryId = new WaistEntryId(command.WaistEntryId);
         var entry = await waistEntryRepository.GetByIdAsync(
-            command.WaistEntryId,
+            waistEntryId,
             userId,
             asTracking: true,
             cancellationToken);
 
         if (entry is null) {
-            return Result.Failure<WaistEntryModel>(Errors.WaistEntry.NotFound(command.WaistEntryId.Value));
+            return Result.Failure<WaistEntryModel>(Errors.WaistEntry.NotFound(command.WaistEntryId));
         }
 
         var normalizedDate = NormalizeUtcDate(command.Date);

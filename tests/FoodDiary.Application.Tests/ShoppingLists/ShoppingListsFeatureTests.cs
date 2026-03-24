@@ -24,7 +24,7 @@ public class ShoppingListsFeatureTests {
     [Fact]
     public async Task GetShoppingListByIdQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
         var handler = new GetShoppingListByIdQueryHandler(new NoopShoppingListRepository());
-        var result = await handler.Handle(new GetShoppingListByIdQuery(null, ShoppingListId.New()), CancellationToken.None);
+        var result = await handler.Handle(new GetShoppingListByIdQuery(null, Guid.NewGuid()), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);

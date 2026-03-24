@@ -33,7 +33,7 @@ public sealed class GetImageUploadUrlCommandHandler(
             presign.FileUrl,
             presign.ObjectKey,
             presign.ExpirationUtc,
-            asset.Id));
+            asset.Id.Value));
     }
 
     private static Result ValidateRequest(GetImageUploadUrlCommand request) {

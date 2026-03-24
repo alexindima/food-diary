@@ -1,5 +1,4 @@
 using FoodDiary.Application.Common.Abstractions.Result;
-using FoodDiary.Domain.ValueObjects.Ids;
 using MediatR;
 
 namespace FoodDiary.Application.Images.Commands.GetUploadUrl;
@@ -15,4 +14,4 @@ public sealed record GetImageUploadUrlResult(
     string FileUrl,
     string ObjectKey,
     DateTime ExpiresAtUtc,
-    ImageAssetId AssetId);
+    Guid AssetId);

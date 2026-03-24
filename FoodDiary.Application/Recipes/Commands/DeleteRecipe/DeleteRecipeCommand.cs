@@ -1,9 +1,8 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
-using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Recipes.Commands.DeleteRecipe;
 
 public record DeleteRecipeCommand(
     Guid? UserId,
-    RecipeId RecipeId) : ICommand<Result<bool>>;
+    Guid RecipeId) : ICommand<Result<bool>>;

@@ -1,5 +1,4 @@
 using FluentValidation;
-using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.ShoppingLists.Commands.DeleteShoppingList;
 
@@ -12,7 +11,7 @@ public class DeleteShoppingListCommandValidator : AbstractValidator<DeleteShoppi
             .WithErrorCode("Authentication.InvalidToken");
 
         RuleFor(x => x.ShoppingListId)
-            .Must(id => id != ShoppingListId.Empty)
+            .NotEqual(Guid.Empty)
             .WithErrorCode("Validation.Required")
             .WithMessage("ShoppingListId is required");
     }

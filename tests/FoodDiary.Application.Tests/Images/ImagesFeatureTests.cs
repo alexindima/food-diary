@@ -16,7 +16,7 @@ public class ImagesFeatureTests {
             new FakeImageStorageService(),
             new FakeImageAssetRepository());
 
-        var command = new GetImageUploadUrlCommand(UserId.Empty, "file.jpg", "image/jpeg", 100);
+        var command = new GetImageUploadUrlCommand(Guid.Empty, "file.jpg", "image/jpeg", 100);
         var result = await handler.Handle(command, CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -32,7 +32,7 @@ public class ImagesFeatureTests {
         await repo.AddAsync(asset, CancellationToken.None);
 
         var handler = new DeleteImageAssetCommandHandler(repo, new FakeCleanupService());
-        var result = await handler.Handle(new DeleteImageAssetCommand(anotherUser, asset.Id), CancellationToken.None);
+        var result = await handler.Handle(new DeleteImageAssetCommand(anotherUser.Value, asset.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Image.Forbidden", result.Error.Code);

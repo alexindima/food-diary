@@ -2,14 +2,13 @@ using FoodDiary.Application.Consumptions.Commands.CreateConsumption;
 using FoodDiary.Application.Consumptions.Commands.DeleteConsumption;
 using FoodDiary.Application.Consumptions.Commands.UpdateConsumption;
 using FoodDiary.Application.Consumptions.Common;
-using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Presentation.Api.Features.Consumptions.Requests;
 
 namespace FoodDiary.Presentation.Api.Features.Consumptions.Mappings;
 
 public static class ConsumptionHttpMappings {
     public static DeleteConsumptionCommand ToDeleteCommand(this Guid consumptionId, Guid userId) =>
-        new(userId, new MealId(consumptionId));
+        new(userId, consumptionId);
 
     public static CreateConsumptionCommand ToCommand(this CreateConsumptionHttpRequest request, Guid userId) =>
         new(
@@ -34,7 +33,7 @@ public static class ConsumptionHttpMappings {
     public static UpdateConsumptionCommand ToCommand(this UpdateConsumptionHttpRequest request, Guid userId, Guid consumptionId) =>
         new(
             userId,
-            new MealId(consumptionId),
+            consumptionId,
             request.Date,
             request.MealType,
             request.Comment,

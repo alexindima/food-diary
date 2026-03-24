@@ -39,7 +39,7 @@ public sealed class VerifyEmailCommandHandler(
         await userRepository.UpdateAsync(user);
 
         try {
-            await _emailVerificationNotifier.NotifyEmailVerifiedAsync(user.Id, cancellationToken);
+            await _emailVerificationNotifier.NotifyEmailVerifiedAsync(user.Id.Value, cancellationToken);
         } catch {
             // Notification failures shouldn't block verification.
         }

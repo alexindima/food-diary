@@ -1,4 +1,4 @@
-using FoodDiary.Domain.Enums;
+using FoodDiary.Presentation.Api.Authorization;
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Extensions;
 using FoodDiary.Presentation.Api.Features.Ai.Mappings;
@@ -11,7 +11,7 @@ namespace FoodDiary.Presentation.Api.Features.Ai;
 
 [ApiController]
 [Route("api/ai/food")]
-[Authorize(Roles = RoleNames.Premium)]
+[Authorize(Roles = PresentationRoleNames.Premium)]
 public sealed class AiFoodController(ISender mediator) : AuthorizedController(mediator) {
     [HttpPost("vision")]
     public async Task<IActionResult> AnalyzeFood([FromCurrentUser] Guid userId, [FromBody] FoodVisionHttpRequest request) {

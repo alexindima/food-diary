@@ -16,9 +16,10 @@ public sealed class AnalyzeFoodImageCommandHandler(
         AnalyzeFoodImageCommand query,
         CancellationToken cancellationToken) {
         var userId = new UserId(query.UserId);
-        var asset = await imageAssetRepository.GetByIdAsync(query.ImageAssetId, cancellationToken);
+        var imageAssetId = new ImageAssetId(query.ImageAssetId);
+        var asset = await imageAssetRepository.GetByIdAsync(imageAssetId, cancellationToken);
         if (asset is null) {
-            return Result.Failure<FoodVisionModel>(Errors.Ai.ImageNotFound(query.ImageAssetId.Value));
+            return Result.Failure<FoodVisionModel>(Errors.Ai.ImageNotFound(query.ImageAssetId));
         }
 
         if (asset.UserId != userId) {

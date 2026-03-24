@@ -1,10 +1,9 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
-using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.WaistEntries.Commands.DeleteWaistEntry;
 
 public record DeleteWaistEntryCommand(
     Guid? UserId,
-    WaistEntryId WaistEntryId
+    Guid WaistEntryId
 ) : ICommand<Result<bool>>;

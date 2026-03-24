@@ -16,15 +16,16 @@ public class DuplicateProductCommandHandler(IProductRepository productRepository
         }
 
         var userId = new UserId(command.UserId.Value);
+        var productId = new ProductId(command.ProductId);
 
         var original = await productRepository.GetByIdAsync(
-            command.ProductId,
+            productId,
             userId,
             includePublic: true,
             cancellationToken: cancellationToken);
 
         if (original is null) {
-            return Result.Failure<ProductModel>(Errors.Product.NotFound(command.ProductId.Value));
+            return Result.Failure<ProductModel>(Errors.Product.NotFound(command.ProductId));
         }
 
         var duplicate = Product.Create(

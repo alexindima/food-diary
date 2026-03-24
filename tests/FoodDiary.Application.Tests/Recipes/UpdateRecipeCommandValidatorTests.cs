@@ -58,7 +58,7 @@ public class UpdateRecipeCommandValidatorTests {
         IReadOnlyList<RecipeStepInput> steps) {
         return new UpdateRecipeCommand(
             userId,
-            recipeId,
+            recipeId.Value,
             Name: "Updated",
             Description: "Desc",
             Comment: "Comment",

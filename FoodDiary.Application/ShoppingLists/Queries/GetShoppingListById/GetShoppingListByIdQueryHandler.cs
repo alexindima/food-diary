@@ -17,15 +17,16 @@ public class GetShoppingListByIdQueryHandler(IShoppingListRepository shoppingLis
         }
 
         var userId = new UserId(query.UserId.Value);
+        var shoppingListId = new ShoppingListId(query.ShoppingListId);
 
         var list = await shoppingListRepository.GetByIdAsync(
-            query.ShoppingListId,
+            shoppingListId,
             userId,
             includeItems: true,
             cancellationToken: cancellationToken);
 
         return list is null
-            ? Result.Failure<ShoppingListModel>(Errors.ShoppingList.NotFound(query.ShoppingListId.Value))
+            ? Result.Failure<ShoppingListModel>(Errors.ShoppingList.NotFound(query.ShoppingListId))
             : Result.Success(list.ToModel());
     }
 }

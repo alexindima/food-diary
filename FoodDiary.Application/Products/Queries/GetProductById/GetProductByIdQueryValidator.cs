@@ -1,5 +1,4 @@
 using FluentValidation;
-using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Products.Queries.GetProductById;
 
@@ -15,7 +14,7 @@ public class GetProductByIdQueryValidator : AbstractValidator<GetProductByIdQuer
             .WithMessage("Unable to identify user");
 
         RuleFor(x => x.ProductId)
-            .Must(id => id != ProductId.Empty)
+            .NotEqual(Guid.Empty)
             .WithErrorCode("Validation.Required")
             .WithMessage("ProductId is required");
     }

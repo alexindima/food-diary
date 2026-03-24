@@ -18,13 +18,14 @@ public class UpdateHydrationEntryCommandHandler(
         }
 
         var userId = new UserId(command.UserId.Value);
+        var hydrationEntryId = new HydrationEntryId(command.HydrationEntryId);
 
         var entry = await repository.GetByIdAsync(
-            command.HydrationEntryId,
+            hydrationEntryId,
             asTracking: true,
             cancellationToken: cancellationToken);
         if (entry is null || entry.UserId != userId) {
-            return Result.Failure<HydrationEntryModel>(Errors.HydrationEntry.NotFound(command.HydrationEntryId.Value));
+            return Result.Failure<HydrationEntryModel>(Errors.HydrationEntry.NotFound(command.HydrationEntryId));
         }
 
         if (command.AmountMl.HasValue) {

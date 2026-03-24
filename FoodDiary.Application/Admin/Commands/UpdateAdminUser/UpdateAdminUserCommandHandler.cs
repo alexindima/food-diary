@@ -6,6 +6,7 @@ using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Admin.Commands.UpdateAdminUser;
 
@@ -18,9 +19,10 @@ public sealed class UpdateAdminUserCommandHandler(IUserRepository userRepository
     public async Task<Result<AdminUserModel>> Handle(
         UpdateAdminUserCommand command,
         CancellationToken cancellationToken) {
-        var user = await userRepository.GetByIdIncludingDeletedAsync(command.UserId);
+        var userId = new UserId(command.UserId);
+        var user = await userRepository.GetByIdIncludingDeletedAsync(userId);
         if (user is null) {
-            return Result.Failure<AdminUserModel>(Errors.User.NotFound(command.UserId.Value));
+            return Result.Failure<AdminUserModel>(Errors.User.NotFound(command.UserId));
         }
 
         if (command.IsActive.HasValue) {

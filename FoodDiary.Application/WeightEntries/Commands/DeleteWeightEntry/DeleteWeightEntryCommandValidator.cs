@@ -1,5 +1,4 @@
 using FluentValidation;
-using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.WeightEntries.Commands.DeleteWeightEntry;
 
@@ -15,7 +14,7 @@ public class DeleteWeightEntryCommandValidator : AbstractValidator<DeleteWeightE
             .WithMessage("Unable to identify user");
 
         RuleFor(c => c.WeightEntryId)
-            .NotEqual(WeightEntryId.Empty)
+            .NotEqual(Guid.Empty)
             .WithErrorCode("Validation.Required")
             .WithMessage("WeightEntryId is required.");
     }

@@ -18,7 +18,7 @@ public class DeleteProductCommandValidator : AbstractValidator<DeleteProductComm
             .WithMessage("Unable to identify user");
 
         RuleFor(x => x.ProductId)
-            .Must(id => id != ProductId.Empty)
+            .NotEqual(Guid.Empty)
             .WithErrorCode("Validation.Required")
             .WithMessage("ProductId is required");
 
@@ -28,7 +28,7 @@ public class DeleteProductCommandValidator : AbstractValidator<DeleteProductComm
                     return;
                 }
 
-                var product = await productRepository.GetByIdAsync(command.ProductId, new UserId(command.UserId.Value), includePublic: false, cancellationToken: cancellationToken);
+                var product = await productRepository.GetByIdAsync(new ProductId(command.ProductId), new UserId(command.UserId.Value), includePublic: false, cancellationToken: cancellationToken);
                 if (product is null) {
                     context.AddFailure(new ValidationFailure(nameof(command.ProductId), "Product not found or you do not have permission to delete it") {
                         ErrorCode = "Product.NotFound"

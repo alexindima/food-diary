@@ -1,5 +1,4 @@
 using System.Security.Claims;
-using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Presentation.Api.Controllers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -9,29 +8,13 @@ namespace FoodDiary.Presentation.Api.Tests;
 
 public sealed class CurrentUserIdModelBinderTests {
     [Fact]
-    public async Task BindModelAsync_WithValidUserClaim_BindsUserId() {
+    public async Task BindModelAsync_WithValidUserClaim_BindsGuid() {
         var binder = new CurrentUserIdModelBinder();
         var userGuid = Guid.NewGuid();
         var httpContext = new DefaultHttpContext {
             User = new ClaimsPrincipal(new ClaimsIdentity([new Claim(ClaimTypes.NameIdentifier, userGuid.ToString())], "test")),
         };
         var bindingContext = CreateBindingContext(httpContext);
-
-        await binder.BindModelAsync(bindingContext);
-
-        Assert.True(bindingContext.Result.IsModelSet);
-        Assert.Equal(new UserId(userGuid), Assert.IsType<UserId>(bindingContext.Result.Model));
-        Assert.False(httpContext.Items.ContainsKey(CurrentUserIdModelBinder.UnauthorizedItemKey));
-    }
-
-    [Fact]
-    public async Task BindModelAsync_WithGuidModelType_BindsGuid() {
-        var binder = new CurrentUserIdModelBinder();
-        var userGuid = Guid.NewGuid();
-        var httpContext = new DefaultHttpContext {
-            User = new ClaimsPrincipal(new ClaimsIdentity([new Claim(ClaimTypes.NameIdentifier, userGuid.ToString())], "test")),
-        };
-        var bindingContext = CreateBindingContext(httpContext, typeof(Guid));
 
         await binder.BindModelAsync(bindingContext);
 
@@ -56,7 +39,7 @@ public sealed class CurrentUserIdModelBinderTests {
 
     private static DefaultModelBindingContext CreateBindingContext(HttpContext httpContext, Type? modelType = null) {
         var metadataProvider = new EmptyModelMetadataProvider();
-        var effectiveModelType = modelType ?? typeof(UserId);
+        var effectiveModelType = modelType ?? typeof(Guid);
 
         return new DefaultModelBindingContext {
             ActionContext = new Microsoft.AspNetCore.Mvc.ActionContext {

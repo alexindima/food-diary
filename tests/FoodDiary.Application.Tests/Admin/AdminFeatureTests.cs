@@ -13,7 +13,7 @@ public class AdminFeatureTests {
     public async Task UpdateAdminUserValidator_WithInvalidRole_Fails() {
         var validator = new UpdateAdminUserCommandValidator();
         var command = new UpdateAdminUserCommand(
-            UserId.New(),
+            Guid.NewGuid(),
             IsActive: null,
             IsEmailConfirmed: null,
             Roles: ["Unknown"],
@@ -33,7 +33,7 @@ public class AdminFeatureTests {
         var userRepository = new InMemoryUserRepository(user, availableRoles: [RoleNames.Admin]);
         var handler = new UpdateAdminUserCommandHandler(userRepository);
         var command = new UpdateAdminUserCommand(
-            user.Id,
+            user.Id.Value,
             IsActive: null,
             IsEmailConfirmed: null,
             Roles: [RoleNames.Admin, RoleNames.Support],
@@ -59,7 +59,7 @@ public class AdminFeatureTests {
 
         var result = await handler.Handle(
             new UpdateAdminUserCommand(
-                user.Id,
+                user.Id.Value,
                 IsActive: null,
                 IsEmailConfirmed: null,
                 Roles: null,
@@ -84,7 +84,7 @@ public class AdminFeatureTests {
 
         var result = await handler.Handle(
             new UpdateAdminUserCommand(
-                user.Id,
+                user.Id.Value,
                 IsActive: null,
                 IsEmailConfirmed: null,
                 Roles: Array.Empty<string>(),

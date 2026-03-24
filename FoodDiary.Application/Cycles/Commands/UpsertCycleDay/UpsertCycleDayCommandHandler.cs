@@ -17,16 +17,17 @@ public class UpsertCycleDayCommandHandler(ICycleRepository cycleRepository)
         }
 
         var userId = new UserId(command.UserId.Value);
+        var cycleId = new CycleId(command.CycleId);
 
         var cycle = await cycleRepository.GetByIdAsync(
-            command.CycleId,
+            cycleId,
             userId,
             includeDays: true,
             asTracking: true,
             cancellationToken: cancellationToken);
 
         if (cycle is null) {
-            return Result.Failure<CycleDayModel>(Errors.Cycle.NotFound(command.CycleId.Value));
+            return Result.Failure<CycleDayModel>(Errors.Cycle.NotFound(command.CycleId));
         }
 
         var symptoms = command.Symptoms.ToValueObject();

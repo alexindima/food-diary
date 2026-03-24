@@ -17,9 +17,10 @@ public class DeleteRecipeCommandHandler(
         }
 
         var userId = new UserId(command.UserId.Value);
+        var recipeId = new RecipeId(command.RecipeId);
 
         var recipe = await recipeRepository.GetByIdAsync(
-            command.RecipeId,
+            recipeId,
             userId,
             includePublic: false,
             includeSteps: true,
@@ -27,7 +28,7 @@ public class DeleteRecipeCommandHandler(
             cancellationToken: cancellationToken);
 
         if (recipe is null) {
-            return Result.Failure<bool>(Errors.Recipe.NotAccessible(command.RecipeId.Value));
+            return Result.Failure<bool>(Errors.Recipe.NotAccessible(command.RecipeId));
         }
 
         if (recipe.MealItems.Count + recipe.NestedRecipeUsages.Count > 0) {

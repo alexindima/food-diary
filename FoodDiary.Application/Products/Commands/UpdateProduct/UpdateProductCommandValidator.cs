@@ -24,7 +24,7 @@ public class UpdateProductCommandValidator : AbstractValidator<UpdateProductComm
             .WithMessage("Unable to identify user");
 
         RuleFor(x => x.ProductId)
-            .Must(id => id != ProductId.Empty)
+            .NotEqual(Guid.Empty)
             .WithErrorCode("Validation.Required")
             .WithMessage("ProductId is required");
 
@@ -145,7 +145,7 @@ public class UpdateProductCommandValidator : AbstractValidator<UpdateProductComm
                 return;
             }
 
-            product = await _productRepository.GetByIdAsync(command.ProductId, new UserId(command.UserId.Value), includePublic: false, cancellationToken: cancellationToken);
+            product = await _productRepository.GetByIdAsync(new ProductId(command.ProductId), new UserId(command.UserId.Value), includePublic: false, cancellationToken: cancellationToken);
             if (product is not null) {
                 context.RootContextData[ProductContextKey] = product;
             }

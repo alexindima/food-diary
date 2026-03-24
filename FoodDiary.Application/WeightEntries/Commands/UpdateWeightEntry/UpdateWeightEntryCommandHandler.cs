@@ -17,14 +17,15 @@ public class UpdateWeightEntryCommandHandler(IWeightEntryRepository weightEntryR
         }
 
         var userId = new UserId(command.UserId.Value);
+        var weightEntryId = new WeightEntryId(command.WeightEntryId);
         var existingEntry = await weightEntryRepository.GetByIdAsync(
-            command.WeightEntryId,
+            weightEntryId,
             userId,
             asTracking: true,
             cancellationToken: cancellationToken);
 
         if (existingEntry is null) {
-            return Result.Failure<WeightEntryModel>(Errors.WeightEntry.NotFound(command.WeightEntryId.Value));
+            return Result.Failure<WeightEntryModel>(Errors.WeightEntry.NotFound(command.WeightEntryId));
         }
 
         var normalizedDate = NormalizeUtcDate(command.Date);

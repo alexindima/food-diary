@@ -1,4 +1,3 @@
-using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Presentation.Api.Extensions;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
@@ -10,7 +9,7 @@ public sealed class CurrentUserIdModelBinder : IModelBinder {
     public Task BindModelAsync(ModelBindingContext bindingContext) {
         ArgumentNullException.ThrowIfNull(bindingContext);
 
-        if (bindingContext.ModelType != typeof(UserId) && bindingContext.ModelType != typeof(Guid)) {
+        if (bindingContext.ModelType != typeof(Guid)) {
             bindingContext.Result = ModelBindingResult.Failed();
             return Task.CompletedTask;
         }
@@ -23,9 +22,7 @@ public sealed class CurrentUserIdModelBinder : IModelBinder {
             return Task.CompletedTask;
         }
 
-        bindingContext.Result = bindingContext.ModelType == typeof(Guid)
-            ? ModelBindingResult.Success(userId.Value)
-            : ModelBindingResult.Success(new UserId(userId.Value));
+        bindingContext.Result = ModelBindingResult.Success(userId.Value);
         return Task.CompletedTask;
     }
 }

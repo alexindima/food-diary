@@ -1,12 +1,11 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Admin.Models;
-using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Admin.Commands.UpdateAdminUser;
 
 public sealed record UpdateAdminUserCommand(
-    UserId UserId,
+    Guid UserId,
     bool? IsActive,
     bool? IsEmailConfirmed,
     IReadOnlyList<string>? Roles,

@@ -1,9 +1,8 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Consumptions.Models;
-using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Consumptions.Queries.GetConsumptionById;
 
-public record GetConsumptionByIdQuery(Guid? UserId, MealId ConsumptionId)
+public record GetConsumptionByIdQuery(Guid? UserId, Guid ConsumptionId)
     : IQuery<Result<ConsumptionModel>>;

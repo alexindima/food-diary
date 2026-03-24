@@ -17,13 +17,14 @@ public class GetProductByIdQueryHandler(IProductRepository productRepository)
         }
 
         var userId = new UserId(query.UserId.Value);
+        var productId = new ProductId(query.ProductId);
         var product = await productRepository.GetByIdAsync(
-            query.ProductId,
+            productId,
             userId,
             includePublic: false,
             cancellationToken: cancellationToken);
         if (product is null) {
-            return Result.Failure<ProductModel>(Errors.Product.NotAccessible(query.ProductId.Value));
+            return Result.Failure<ProductModel>(Errors.Product.NotAccessible(query.ProductId));
         }
 
         var usageCount = product.MealItems.Count + product.RecipeIngredients.Count;

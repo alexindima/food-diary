@@ -21,14 +21,15 @@ public class UpdateProductCommandHandler(
         }
 
         var userId = new UserId(command.UserId.Value);
+        var productId = new ProductId(command.ProductId);
 
         var product = await productRepository.GetByIdAsync(
-            command.ProductId,
+            productId,
             userId,
             includePublic: false,
             cancellationToken: cancellationToken);
         if (product is null) {
-            return Result.Failure<ProductModel>(Errors.Product.NotAccessible(command.ProductId.Value));
+            return Result.Failure<ProductModel>(Errors.Product.NotAccessible(command.ProductId));
         }
 
         var modifiedOnBefore = product.ModifiedOnUtc;

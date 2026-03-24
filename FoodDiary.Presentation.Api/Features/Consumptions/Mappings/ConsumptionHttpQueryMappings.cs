@@ -1,6 +1,5 @@
 using FoodDiary.Application.Consumptions.Queries.GetConsumptions;
 using FoodDiary.Application.Consumptions.Queries.GetConsumptionById;
-using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Presentation.Api.Features.Consumptions.Requests;
 
 namespace FoodDiary.Presentation.Api.Features.Consumptions.Mappings;
@@ -11,6 +10,6 @@ public static class ConsumptionHttpQueryMappings {
     }
 
     public static GetConsumptionByIdQuery ToQuery(this Guid id, Guid userId) {
-        return new GetConsumptionByIdQuery(userId, new MealId(id));
+        return new GetConsumptionByIdQuery(userId, id);
     }
 }

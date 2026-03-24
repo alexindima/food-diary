@@ -33,11 +33,10 @@ public class LayeringTests {
     }
 
     [Fact]
-    public void PresentationApiProject_ReferencesApplicationContractsAndDomain_ButNotInfrastructure() {
+    public void PresentationApiProject_ReferencesApplication_ButNotInfrastructure() {
         var references = GetProjectReferences("FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj");
 
         Assert.Contains("FoodDiary.Application", references);
-        Assert.Contains("FoodDiary.Domain", references);
         Assert.DoesNotContain("FoodDiary.Web.Api", references);
         Assert.DoesNotContain("FoodDiary.Infrastructure", references);
     }

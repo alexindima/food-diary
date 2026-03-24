@@ -21,7 +21,7 @@ public class DeleteRecipeCommandValidator : AbstractValidator<DeleteRecipeComman
             .WithMessage("Unable to identify user");
 
         RuleFor(x => x.RecipeId)
-            .Must(id => id != RecipeId.Empty)
+            .NotEqual(Guid.Empty)
             .WithErrorCode("Validation.Required")
             .WithMessage("RecipeId is required");
 
@@ -38,7 +38,7 @@ public class DeleteRecipeCommandValidator : AbstractValidator<DeleteRecipeComman
         }
 
         var recipe = await _recipeRepository.GetByIdAsync(
-            command.RecipeId,
+            new RecipeId(command.RecipeId),
             new UserId(command.UserId.Value),
             includePublic: false,
             includeSteps: false,

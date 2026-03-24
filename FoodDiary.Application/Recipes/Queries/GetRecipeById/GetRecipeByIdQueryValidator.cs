@@ -1,5 +1,4 @@
 using FluentValidation;
-using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Recipes.Queries.GetRecipeById;
 
@@ -12,7 +11,7 @@ public class GetRecipeByIdQueryValidator : AbstractValidator<GetRecipeByIdQuery>
             .WithErrorCode("Authentication.InvalidToken");
 
         RuleFor(x => x.RecipeId)
-            .Must(id => id != RecipeId.Empty)
+            .NotEqual(Guid.Empty)
             .WithErrorCode("Validation.Required")
             .WithMessage("RecipeId is required");
     }

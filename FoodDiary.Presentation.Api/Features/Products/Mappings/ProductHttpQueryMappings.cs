@@ -2,7 +2,6 @@ using FoodDiary.Application.Products.Queries.GetProducts;
 using FoodDiary.Application.Products.Queries.GetProductsWithRecent;
 using FoodDiary.Application.Products.Queries.GetProductById;
 using FoodDiary.Application.Products.Queries.GetRecentProducts;
-using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Presentation.Api.Features.Products.Requests;
 
 namespace FoodDiary.Presentation.Api.Features.Products.Mappings;
@@ -34,7 +33,7 @@ public static class ProductHttpQueryMappings {
     }
 
     public static GetProductByIdQuery ToQuery(this Guid id, Guid userId) {
-        return new GetProductByIdQuery(userId, new ProductId(id));
+        return new GetProductByIdQuery(userId, id);
     }
 
     private static string? SanitizeSearch(string? search) {

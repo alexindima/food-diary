@@ -2,17 +2,16 @@ using FoodDiary.Application.Products.Commands.CreateProduct;
 using FoodDiary.Application.Products.Commands.DeleteProduct;
 using FoodDiary.Application.Products.Commands.DuplicateProduct;
 using FoodDiary.Application.Products.Commands.UpdateProduct;
-using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Presentation.Api.Features.Products.Requests;
 
 namespace FoodDiary.Presentation.Api.Features.Products.Mappings;
 
 public static class ProductHttpMappings {
     public static DeleteProductCommand ToDeleteCommand(this Guid productId, Guid userId) =>
-        new(userId, new ProductId(productId));
+        new(userId, productId);
 
     public static DuplicateProductCommand ToDuplicateCommand(this Guid productId, Guid userId) =>
-        new(userId, new ProductId(productId));
+        new(userId, productId);
 
     public static CreateProductCommand ToCommand(this CreateProductHttpRequest request, Guid userIdValue) {
         return new CreateProductCommand(
@@ -42,7 +41,7 @@ public static class ProductHttpMappings {
     public static UpdateProductCommand ToCommand(this UpdateProductHttpRequest request, Guid userIdValue, Guid productId) {
         return new UpdateProductCommand(
             userIdValue,
-            new ProductId(productId),
+            productId,
             request.Barcode,
             request.ClearBarcode,
             request.Name,

@@ -25,7 +25,7 @@ public class CyclesFeatureTests {
         var validator = new UpsertCycleDayCommandValidator();
         var command = new UpsertCycleDayCommand(
             Guid.NewGuid(),
-            CycleId.New(),
+            Guid.NewGuid(),
             DateTime.UtcNow,
             IsPeriod: true,
             Symptoms: new DailySymptomsModel(10, 0, 0, 0, 0, 0, 0),

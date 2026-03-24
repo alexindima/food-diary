@@ -2,7 +2,6 @@ using FoodDiary.Application.Cycles.Commands.CreateCycle;
 using FoodDiary.Application.Cycles.Commands.UpsertCycleDay;
 using FoodDiary.Application.Cycles.Models;
 using FoodDiary.Application.Cycles.Queries.GetCurrentCycle;
-using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Presentation.Api.Features.Cycles.Models;
 using FoodDiary.Presentation.Api.Features.Cycles.Requests;
 
@@ -22,7 +21,7 @@ public static class CycleHttpMappings {
     public static UpsertCycleDayCommand ToCommand(this UpsertCycleDayHttpRequest request, Guid userId, Guid cycleId) =>
         new(
             userId,
-            new CycleId(cycleId),
+            cycleId,
             request.Date,
             request.IsPeriod,
             request.Symptoms.ToModel(),

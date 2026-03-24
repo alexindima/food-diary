@@ -15,16 +15,17 @@ public class GetRecipeByIdQueryHandler(IRecipeRepository recipeRepository)
         }
 
         var userId = new UserId(query.UserId.Value);
+        var recipeId = new RecipeId(query.RecipeId);
 
         var recipe = await recipeRepository.GetByIdAsync(
-            query.RecipeId,
+            recipeId,
             userId,
             includePublic: query.IncludePublic,
             includeSteps: true,
             cancellationToken: cancellationToken);
 
         if (recipe is null) {
-            return Result.Failure<RecipeModel>(Errors.Recipe.NotFound(query.RecipeId.Value));
+            return Result.Failure<RecipeModel>(Errors.Recipe.NotFound(query.RecipeId));
         }
 
         var usageCount = recipe.MealItems.Count + recipe.NestedRecipeUsages.Count;

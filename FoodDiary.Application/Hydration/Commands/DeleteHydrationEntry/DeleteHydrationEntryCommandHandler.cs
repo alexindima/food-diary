@@ -13,10 +13,11 @@ public class DeleteHydrationEntryCommandHandler(IHydrationEntryRepository reposi
         }
 
         var userId = new UserId(command.UserId.Value);
+        var hydrationEntryId = new HydrationEntryId(command.HydrationEntryId);
 
-        var entry = await repository.GetByIdAsync(command.HydrationEntryId, asTracking: true, cancellationToken: cancellationToken);
+        var entry = await repository.GetByIdAsync(hydrationEntryId, asTracking: true, cancellationToken: cancellationToken);
         if (entry is null || entry.UserId != userId) {
-            return Result.Failure<bool>(Errors.HydrationEntry.NotFound(command.HydrationEntryId.Value));
+            return Result.Failure<bool>(Errors.HydrationEntry.NotFound(command.HydrationEntryId));
         }
 
         await repository.DeleteAsync(entry, cancellationToken);
