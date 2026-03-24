@@ -1,6 +1,7 @@
 using FoodDiary.Application.Ai.Commands.AnalyzeFoodImage;
 using FoodDiary.Application.Ai.Commands.CalculateFoodNutrition;
 using FoodDiary.Application.Ai.Models;
+using FoodDiary.Application.Ai.Queries.GetUserAiUsageSummary;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Presentation.Api.Features.Ai.Models;
 using FoodDiary.Presentation.Api.Features.Ai.Requests;
@@ -8,6 +9,8 @@ using FoodDiary.Presentation.Api.Features.Ai.Requests;
 namespace FoodDiary.Presentation.Api.Features.Ai.Mappings;
 
 public static class AiHttpMappings {
+    public static GetUserAiUsageSummaryQuery ToUsageQuery(this UserId userId) => new(userId);
+
     public static AnalyzeFoodImageCommand ToCommand(this FoodVisionHttpRequest request, UserId userId) {
         return new AnalyzeFoodImageCommand(
             userId,

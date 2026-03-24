@@ -1,12 +1,26 @@
 using FoodDiary.Application.ShoppingLists.Commands.Common;
 using FoodDiary.Application.ShoppingLists.Commands.CreateShoppingList;
+using FoodDiary.Application.ShoppingLists.Commands.DeleteShoppingList;
 using FoodDiary.Application.ShoppingLists.Commands.UpdateShoppingList;
+using FoodDiary.Application.ShoppingLists.Queries.GetCurrentShoppingList;
+using FoodDiary.Application.ShoppingLists.Queries.GetShoppingListById;
+using FoodDiary.Application.ShoppingLists.Queries.GetShoppingLists;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Presentation.Api.Features.ShoppingLists.Requests;
 
 namespace FoodDiary.Presentation.Api.Features.ShoppingLists.Mappings;
 
 public static class ShoppingListHttpMappings {
+    public static GetCurrentShoppingListQuery ToCurrentQuery(this UserId userId) => new(userId);
+
+    public static GetShoppingListsQuery ToListQuery(this UserId userId) => new(userId);
+
+    public static GetShoppingListByIdQuery ToGetByIdQuery(this Guid shoppingListId, UserId userId) =>
+        new(userId, new ShoppingListId(shoppingListId));
+
+    public static DeleteShoppingListCommand ToDeleteCommand(this Guid shoppingListId, UserId userId) =>
+        new(userId, new ShoppingListId(shoppingListId));
+
     public static CreateShoppingListCommand ToCommand(this CreateShoppingListHttpRequest request, Guid userId) =>
         new(
             new UserId(userId),

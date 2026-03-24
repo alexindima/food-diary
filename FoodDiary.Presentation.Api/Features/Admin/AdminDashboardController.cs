@@ -16,9 +16,6 @@ public sealed class AdminDashboardController(ISender mediator) : BaseApiControll
     [HttpGet]
     public async Task<IActionResult> GetDashboard([FromQuery] GetAdminDashboardHttpQuery query) {
         var result = await Mediator.Send(query.ToQuery());
-
-        return result.IsSuccess
-            ? Ok(result.Value.ToHttpResponse())
-            : result.ToActionResult();
+        return result.ToOkActionResult(this, static value => value.ToHttpResponse());
     }
 }

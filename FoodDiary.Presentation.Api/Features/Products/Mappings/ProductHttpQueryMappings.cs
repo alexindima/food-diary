@@ -1,5 +1,6 @@
 using FoodDiary.Application.Products.Queries.GetProducts;
 using FoodDiary.Application.Products.Queries.GetProductsWithRecent;
+using FoodDiary.Application.Products.Queries.GetProductById;
 using FoodDiary.Application.Products.Queries.GetRecentProducts;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Presentation.Api.Features.Products.Requests;
@@ -30,6 +31,10 @@ public static class ProductHttpQueryMappings {
 
     public static GetRecentProductsQuery ToQuery(this GetRecentProductsHttpQuery query, UserId userId) {
         return new GetRecentProductsQuery(userId, Math.Clamp(query.Limit, 1, 50), query.IncludePublic);
+    }
+
+    public static GetProductByIdQuery ToQuery(this Guid id, UserId userId) {
+        return new GetProductByIdQuery(userId, new ProductId(id));
     }
 
     private static string? SanitizeSearch(string? search) {

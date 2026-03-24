@@ -1,6 +1,3 @@
-using FoodDiary.Application.Products.Commands.DeleteProduct;
-using FoodDiary.Application.Products.Commands.DuplicateProduct;
-using FoodDiary.Application.Products.Queries.GetProductById;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Extensions;
@@ -17,67 +14,52 @@ public class ProductsController(ISender mediator) : AuthorizedController(mediato
     [HttpGet]
     public async Task<IActionResult> GetAll([FromCurrentUser] UserId userId, [FromQuery] GetProductsHttpQuery query) {
         var result = await Mediator.Send(query.ToQuery(userId));
-        return result.IsSuccess
-            ? Ok(result.Value.ToHttpResponse())
-            : result.ToActionResult();
+        return result.ToOkActionResult(this, static value => value.ToHttpResponse());
     }
 
     [HttpGet("with-recent")]
     public async Task<IActionResult> GetAllWithRecent([FromCurrentUser] UserId userId, [FromQuery] GetProductsWithRecentHttpQuery query) {
         var result = await Mediator.Send(query.ToQuery(userId));
-        return result.IsSuccess
-            ? Ok(result.Value.ToHttpResponse())
-            : result.ToActionResult();
+        return result.ToOkActionResult(this, static value => value.ToHttpResponse());
     }
 
     [HttpGet("recent")]
     public async Task<IActionResult> GetRecent([FromCurrentUser] UserId userId, [FromQuery] GetRecentProductsHttpQuery query) {
         var result = await Mediator.Send(query.ToQuery(userId));
-        return result.IsSuccess
-            ? Ok(result.Value.Select(x => x.ToHttpResponse()).ToList())
-            : result.ToActionResult();
+        return result.ToOkActionResult(this, static value => value.Select(x => x.ToHttpResponse()).ToList());
     }
 
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetById(Guid id, [FromCurrentUser] UserId userId) {
-        var query = new GetProductByIdQuery(userId, new ProductId(id));
-        var result = await Mediator.Send(query);
-        return result.IsSuccess
-            ? Ok(result.Value.ToHttpResponse())
-            : result.ToActionResult();
+        var result = await Mediator.Send(id.ToQuery(userId));
+        return result.ToOkActionResult(this, static value => value.ToHttpResponse());
     }
 
     [HttpPost]
     public async Task<IActionResult> Create([FromCurrentUser] UserId userId, [FromBody] CreateProductHttpRequest request) {
         var command = request.ToCommand(userId.Value);
         var result = await Mediator.Send(command);
-        return result.IsSuccess
-            ? Ok(result.Value.ToHttpResponse())
-            : result.ToActionResult();
+        return result.ToOkActionResult(this, static value => value.ToHttpResponse());
     }
 
     [HttpPatch("{id:guid}")]
     public async Task<IActionResult> Update(Guid id, [FromCurrentUser] UserId userId, [FromBody] UpdateProductHttpRequest request) {
         var command = request.ToCommand(userId.Value, id);
         var result = await Mediator.Send(command);
-        return result.IsSuccess
-            ? Ok(result.Value.ToHttpResponse())
-            : result.ToActionResult();
+        return result.ToOkActionResult(this, static value => value.ToHttpResponse());
     }
 
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> Delete(Guid id, [FromCurrentUser] UserId userId) {
-        var command = new DeleteProductCommand(userId, new ProductId(id));
+        var command = id.ToDeleteCommand(userId);
         var result = await Mediator.Send(command);
-        return result.ToActionResult();
+        return result.ToNoContentActionResult();
     }
 
     [HttpPost("{id:guid}/duplicate")]
     public async Task<IActionResult> Duplicate(Guid id, [FromCurrentUser] UserId userId) {
-        var command = new DuplicateProductCommand(userId, new ProductId(id));
+        var command = id.ToDuplicateCommand(userId);
         var result = await Mediator.Send(command);
-        return result.IsSuccess
-            ? Ok(result.Value.ToHttpResponse())
-            : result.ToActionResult();
+        return result.ToOkActionResult(this, static value => value.ToHttpResponse());
     }
 }

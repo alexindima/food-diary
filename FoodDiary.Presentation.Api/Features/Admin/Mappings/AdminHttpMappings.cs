@@ -24,7 +24,7 @@ public static class AdminHttpMappings {
             new UserId(userId),
             request.IsActive,
             request.IsEmailConfirmed,
-            request.Roles ?? Array.Empty<string>(),
+            request.Roles ?? [],
             request.Language,
             request.AiInputTokenLimit,
             request.AiOutputTokenLimit);

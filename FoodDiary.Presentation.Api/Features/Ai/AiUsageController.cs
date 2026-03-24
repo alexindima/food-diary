@@ -1,4 +1,3 @@
-using FoodDiary.Application.Ai.Queries.GetUserAiUsageSummary;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Extensions;
@@ -15,10 +14,7 @@ namespace FoodDiary.Presentation.Api.Features.Ai;
 public sealed class AiUsageController(ISender mediator) : AuthorizedController(mediator) {
     [HttpGet("me")]
     public async Task<IActionResult> GetMyUsage([FromCurrentUser] UserId userId) {
-        var query = new GetUserAiUsageSummaryQuery(userId);
-        var result = await Mediator.Send(query);
-        return result.IsSuccess
-            ? Ok(result.Value.ToHttpResponse())
-            : result.ToActionResult();
+        var result = await Mediator.Send(userId.ToUsageQuery());
+        return result.ToOkActionResult(this, static value => value.ToHttpResponse());
     }
 }

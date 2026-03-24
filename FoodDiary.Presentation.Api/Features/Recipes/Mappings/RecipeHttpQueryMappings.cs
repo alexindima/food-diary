@@ -1,4 +1,5 @@
 using FoodDiary.Application.Recipes.Queries.GetRecentRecipes;
+using FoodDiary.Application.Recipes.Queries.GetRecipeById;
 using FoodDiary.Application.Recipes.Queries.GetRecipes;
 using FoodDiary.Application.Recipes.Queries.GetRecipesWithRecent;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -23,5 +24,9 @@ public static class RecipeHttpQueryMappings {
 
     public static GetRecentRecipesQuery ToQuery(this GetRecentRecipesHttpQuery query, UserId userId) {
         return new GetRecentRecipesQuery(userId, Math.Clamp(query.Limit, 1, 50), query.IncludePublic);
+    }
+
+    public static GetRecipeByIdQuery ToQuery(this Guid id, UserId userId, bool includePublic) {
+        return new GetRecipeByIdQuery(userId, new RecipeId(id), includePublic);
     }
 }

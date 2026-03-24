@@ -1,4 +1,6 @@
 using FoodDiary.Application.Products.Commands.CreateProduct;
+using FoodDiary.Application.Products.Commands.DeleteProduct;
+using FoodDiary.Application.Products.Commands.DuplicateProduct;
 using FoodDiary.Application.Products.Commands.UpdateProduct;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Presentation.Api.Features.Products.Requests;
@@ -6,6 +8,12 @@ using FoodDiary.Presentation.Api.Features.Products.Requests;
 namespace FoodDiary.Presentation.Api.Features.Products.Mappings;
 
 public static class ProductHttpMappings {
+    public static DeleteProductCommand ToDeleteCommand(this Guid productId, UserId userId) =>
+        new(userId, new ProductId(productId));
+
+    public static DuplicateProductCommand ToDuplicateCommand(this Guid productId, UserId userId) =>
+        new(userId, new ProductId(productId));
+
     public static CreateProductCommand ToCommand(this CreateProductHttpRequest request, Guid userIdValue) {
         return new CreateProductCommand(
             new UserId(userIdValue),

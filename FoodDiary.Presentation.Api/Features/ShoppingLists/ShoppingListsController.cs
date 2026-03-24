@@ -1,7 +1,3 @@
-using FoodDiary.Application.ShoppingLists.Commands.DeleteShoppingList;
-using FoodDiary.Application.ShoppingLists.Queries.GetCurrentShoppingList;
-using FoodDiary.Application.ShoppingLists.Queries.GetShoppingListById;
-using FoodDiary.Application.ShoppingLists.Queries.GetShoppingLists;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Extensions;
@@ -17,53 +13,40 @@ namespace FoodDiary.Presentation.Api.Features.ShoppingLists;
 public class ShoppingListsController(ISender mediator) : AuthorizedController(mediator) {
     [HttpGet("current")]
     public async Task<IActionResult> GetCurrent([FromCurrentUser] UserId userId) {
-        var query = new GetCurrentShoppingListQuery(userId);
-        var result = await Mediator.Send(query);
-        return result.IsSuccess
-            ? Ok(result.Value.ToHttpResponse())
-            : result.ToActionResult();
+        var result = await Mediator.Send(userId.ToCurrentQuery());
+        return result.ToOkActionResult(this, static value => value.ToHttpResponse());
     }
 
     [HttpGet]
     public async Task<IActionResult> GetAll([FromCurrentUser] UserId userId) {
-        var query = new GetShoppingListsQuery(userId);
-        var result = await Mediator.Send(query);
-        return result.IsSuccess
-            ? Ok(result.Value.Select(x => x.ToHttpResponse()).ToList())
-            : result.ToActionResult();
+        var result = await Mediator.Send(userId.ToListQuery());
+        return result.ToOkActionResult(this, static value => value.Select(x => x.ToHttpResponse()).ToList());
     }
 
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetById(Guid id, [FromCurrentUser] UserId userId) {
-        var query = new GetShoppingListByIdQuery(userId, new ShoppingListId(id));
-        var result = await Mediator.Send(query);
-        return result.IsSuccess
-            ? Ok(result.Value.ToHttpResponse())
-            : result.ToActionResult();
+        var result = await Mediator.Send(id.ToGetByIdQuery(userId));
+        return result.ToOkActionResult(this, static value => value.ToHttpResponse());
     }
 
     [HttpPost]
     public async Task<IActionResult> Create([FromCurrentUser] UserId userId, [FromBody] CreateShoppingListHttpRequest request) {
         var command = request.ToCommand(userId.Value);
         var result = await Mediator.Send(command);
-        return result.IsSuccess
-            ? Ok(result.Value.ToHttpResponse())
-            : result.ToActionResult();
+        return result.ToOkActionResult(this, static value => value.ToHttpResponse());
     }
 
     [HttpPatch("{id:guid}")]
     public async Task<IActionResult> Update(Guid id, [FromCurrentUser] UserId userId, [FromBody] UpdateShoppingListHttpRequest request) {
         var command = request.ToCommand(userId.Value, id);
         var result = await Mediator.Send(command);
-        return result.IsSuccess
-            ? Ok(result.Value.ToHttpResponse())
-            : result.ToActionResult();
+        return result.ToOkActionResult(this, static value => value.ToHttpResponse());
     }
 
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> Delete(Guid id, [FromCurrentUser] UserId userId) {
-        var command = new DeleteShoppingListCommand(userId, new ShoppingListId(id));
+        var command = id.ToDeleteCommand(userId);
         var result = await Mediator.Send(command);
-        return result.ToActionResult();
+        return result.ToNoContentActionResult();
     }
 }

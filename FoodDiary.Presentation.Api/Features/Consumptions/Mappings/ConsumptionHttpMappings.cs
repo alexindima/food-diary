@@ -1,4 +1,5 @@
 using FoodDiary.Application.Consumptions.Commands.CreateConsumption;
+using FoodDiary.Application.Consumptions.Commands.DeleteConsumption;
 using FoodDiary.Application.Consumptions.Commands.UpdateConsumption;
 using FoodDiary.Application.Consumptions.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -7,6 +8,9 @@ using FoodDiary.Presentation.Api.Features.Consumptions.Requests;
 namespace FoodDiary.Presentation.Api.Features.Consumptions.Mappings;
 
 public static class ConsumptionHttpMappings {
+    public static DeleteConsumptionCommand ToDeleteCommand(this Guid consumptionId, UserId userId) =>
+        new(userId, new MealId(consumptionId));
+
     public static CreateConsumptionCommand ToCommand(this CreateConsumptionHttpRequest request, Guid userId) =>
         new(
             new UserId(userId),

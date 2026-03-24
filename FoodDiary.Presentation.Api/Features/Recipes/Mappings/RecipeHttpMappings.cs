@@ -1,4 +1,6 @@
 using FoodDiary.Application.Recipes.Commands.CreateRecipe;
+using FoodDiary.Application.Recipes.Commands.DeleteRecipe;
+using FoodDiary.Application.Recipes.Commands.DuplicateRecipe;
 using FoodDiary.Application.Recipes.Commands.UpdateRecipe;
 using FoodDiary.Application.Recipes.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -7,6 +9,12 @@ using FoodDiary.Presentation.Api.Features.Recipes.Requests;
 namespace FoodDiary.Presentation.Api.Features.Recipes.Mappings;
 
 public static class RecipeHttpMappings {
+    public static DeleteRecipeCommand ToDeleteCommand(this Guid recipeId, UserId userId) =>
+        new(userId, new RecipeId(recipeId));
+
+    public static DuplicateRecipeCommand ToDuplicateCommand(this Guid recipeId, UserId userId) =>
+        new(userId, new RecipeId(recipeId));
+
     public static CreateRecipeCommand ToCommand(this CreateRecipeHttpRequest request, Guid userIdValue) {
         return new CreateRecipeCommand(
             new UserId(userIdValue),

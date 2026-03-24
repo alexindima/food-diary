@@ -1,6 +1,3 @@
-using FoodDiary.Application.Hydration.Commands.DeleteHydrationEntry;
-using FoodDiary.Application.Hydration.Queries.GetHydrationDailyTotal;
-using FoodDiary.Application.Hydration.Queries.GetHydrationEntries;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Extensions;
@@ -17,49 +14,33 @@ public class HydrationEntriesController(ISender mediator) : AuthorizedController
     [HttpGet]
     public async Task<IActionResult> GetByDate([FromCurrentUser] UserId userId, [FromQuery] GetHydrationEntriesHttpQuery query) {
         var result = await Mediator.Send(query.ToEntriesQuery(userId));
-        if (result.IsFailure) {
-            return result.ToActionResult();
-        }
-
-        return Ok(result.Value.Select(item => item.ToHttpResponse()).ToList());
+        return result.ToOkActionResult(this, static value => value.Select(item => item.ToHttpResponse()).ToList());
     }
 
     [HttpGet("daily")]
     public async Task<IActionResult> GetDaily([FromCurrentUser] UserId userId, [FromQuery] GetHydrationEntriesHttpQuery query) {
         var result = await Mediator.Send(query.ToDailyQuery(userId));
-        if (result.IsFailure) {
-            return result.ToActionResult();
-        }
-
-        return Ok(result.Value.ToHttpResponse());
+        return result.ToOkActionResult(this, static value => value.ToHttpResponse());
     }
 
     [HttpPost]
     public async Task<IActionResult> Create([FromCurrentUser] UserId userId, [FromBody] CreateHydrationEntryHttpRequest request) {
         var command = request.ToCommand(userId.Value);
         var result = await Mediator.Send(command);
-        if (result.IsFailure) {
-            return result.ToActionResult();
-        }
-
-        return Ok(result.Value.ToHttpResponse());
+        return result.ToOkActionResult(this, static value => value.ToHttpResponse());
     }
 
     [HttpPut("{id:guid}")]
     public async Task<IActionResult> Update(Guid id, [FromCurrentUser] UserId userId, [FromBody] UpdateHydrationEntryHttpRequest request) {
         var command = request.ToCommand(userId.Value, id);
         var result = await Mediator.Send(command);
-        if (result.IsFailure) {
-            return result.ToActionResult();
-        }
-
-        return Ok(result.Value.ToHttpResponse());
+        return result.ToOkActionResult(this, static value => value.ToHttpResponse());
     }
 
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> Delete(Guid id, [FromCurrentUser] UserId userId) {
-        var command = new DeleteHydrationEntryCommand(userId, new HydrationEntryId(id));
+        var command = id.ToDeleteCommand(userId);
         var result = await Mediator.Send(command);
-        return result.ToActionResult();
+        return result.ToNoContentActionResult();
     }
 }

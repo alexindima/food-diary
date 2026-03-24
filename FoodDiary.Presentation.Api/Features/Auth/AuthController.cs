@@ -1,5 +1,3 @@
-using FoodDiary.Application.Authentication.Commands.AdminSsoStart;
-using FoodDiary.Application.Authentication.Commands.ResendEmailVerification;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Presentation.Api.Options;
@@ -27,84 +25,71 @@ public class AuthController(
     public async Task<IActionResult> Register(RegisterHttpRequest request) {
         var command = request.ToCommand();
         var result = await Mediator.Send(command);
-        return result.IsSuccess
-            ? Ok(result.Value.ToHttpResponse())
-            : result.ToActionResult();
+        return result.ToOkActionResult(this, static value => value.ToHttpResponse());
     }
 
     [HttpPost("login")]
     public async Task<IActionResult> Login(LoginHttpRequest request) {
         var command = request.ToCommand();
         var result = await Mediator.Send(command);
-        return result.IsSuccess
-            ? Ok(result.Value.ToHttpResponse())
-            : result.ToActionResult();
+        return result.ToOkActionResult(this, static value => value.ToHttpResponse());
     }
 
     [HttpPost("refresh")]
     public async Task<IActionResult> Refresh(RefreshTokenHttpRequest request) {
         var command = request.ToCommand();
         var result = await Mediator.Send(command);
-
-        return result.IsSuccess ? Ok(new { accessToken = result.Value }) : result.ToActionResult();
+        return result.ToOkActionResult(this, static value => new { accessToken = value });
     }
 
     [HttpPost("restore")]
     public async Task<IActionResult> RestoreAccount(RestoreAccountHttpRequest request) {
         var command = request.ToCommand();
         var result = await Mediator.Send(command);
-        return result.IsSuccess
-            ? Ok(result.Value.ToHttpResponse())
-            : result.ToActionResult();
+        return result.ToOkActionResult(this, static value => value.ToHttpResponse());
     }
 
     [HttpPost("verify-email")]
     public async Task<IActionResult> VerifyEmail(VerifyEmailHttpRequest request) {
         var command = request.ToCommand();
         var result = await Mediator.Send(command);
-        return result.ToActionResult();
+        return result.ToNoContentActionResult();
     }
 
     [Authorize]
     [HttpPost("verify-email/resend")]
     public async Task<IActionResult> ResendVerifyEmail([FromCurrentUser] UserId userId) {
-        var command = new ResendEmailVerificationCommand(userId);
+        var command = userId.ToResendVerificationCommand();
         var result = await Mediator.Send(command);
-        return result.ToActionResult();
+        return result.ToNoContentActionResult();
     }
 
     [HttpPost("password-reset/request")]
     public async Task<IActionResult> RequestPasswordReset(RequestPasswordResetHttpRequest request) {
         var command = request.ToCommand();
         var result = await Mediator.Send(command);
-        return result.ToActionResult();
+        return result.ToNoContentActionResult();
     }
 
     [HttpPost("password-reset/confirm")]
     public async Task<IActionResult> ConfirmPasswordReset(ConfirmPasswordResetHttpRequest request) {
         var command = request.ToCommand();
         var result = await Mediator.Send(command);
-        return result.IsSuccess
-            ? Ok(result.Value.ToHttpResponse())
-            : result.ToActionResult();
+        return result.ToOkActionResult(this, static value => value.ToHttpResponse());
     }
 
     [HttpPost("telegram/verify")]
     public async Task<IActionResult> TelegramVerify(TelegramAuthHttpRequest request) {
         var command = request.ToCommand();
         var result = await Mediator.Send(command);
-        return result.IsSuccess
-            ? Ok(result.Value.ToHttpResponse())
-            : result.ToActionResult();
+        return result.ToOkActionResult(this, static value => value.ToHttpResponse());
     }
 
     [HttpPost("telegram/login-widget")]
     public async Task<IActionResult> TelegramLoginWidget(TelegramLoginWidgetHttpRequest request) {
         var command = request.ToCommand();
         var result = await Mediator.Send(command);
-        return result.IsSuccess
-            ? Ok(result.Value.ToHttpResponse())
-            : result.ToActionResult();
+        return result.ToOkActionResult(this, static value => value.ToHttpResponse());
     }
 
     [Authorize]
@@ -112,9 +97,7 @@ public class AuthController(
     public async Task<IActionResult> LinkTelegram([FromCurrentUser] UserId userId, TelegramAuthHttpRequest request) {
         var command = request.ToLinkCommand(userId);
         var result = await Mediator.Send(command);
-        return result.IsSuccess
-            ? Ok(result.Value.ToHttpResponse())
-            : result.ToActionResult();
+        return result.ToOkActionResult(this, static value => value.ToHttpResponse());
     }
 
     [HttpPost("telegram/bot/auth")]
@@ -138,19 +121,15 @@ public class AuthController(
 
         var command = request.ToCommand();
         var result = await Mediator.Send(command);
-        return result.IsSuccess
-            ? Ok(result.Value.ToHttpResponse())
-            : result.ToActionResult();
+        return result.ToOkActionResult(this, static value => value.ToHttpResponse());
     }
 
     [Authorize(Roles = RoleNames.Admin)]
     [HttpPost("admin-sso/start")]
     public async Task<IActionResult> AdminSsoStart([FromCurrentUser] UserId userId) {
-        var command = new AdminSsoStartCommand(userId);
+        var command = userId.ToAdminSsoStartCommand();
         var result = await Mediator.Send(command);
-        return result.IsSuccess
-            ? Ok(result.Value.ToHttpResponse())
-            : result.ToActionResult();
+        return result.ToOkActionResult(this, static value => value.ToHttpResponse());
     }
 
     [AllowAnonymous]
@@ -158,8 +137,6 @@ public class AuthController(
     public async Task<IActionResult> AdminSsoExchange(AdminSsoExchangeHttpRequest request) {
         var command = request.ToCommand();
         var result = await Mediator.Send(command);
-        return result.IsSuccess
-            ? Ok(result.Value.ToHttpResponse())
-            : result.ToActionResult();
+        return result.ToOkActionResult(this, static value => value.ToHttpResponse());
     }
 }

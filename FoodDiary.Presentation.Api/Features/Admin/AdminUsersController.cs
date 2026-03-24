@@ -1,4 +1,3 @@
-using FoodDiary.Application.Admin.Commands.UpdateAdminUser;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Extensions;
@@ -17,17 +16,13 @@ public sealed class AdminUsersController(ISender mediator) : BaseApiController(m
     [HttpGet]
     public async Task<IActionResult> GetUsers([FromQuery] GetAdminUsersHttpQuery query) {
         var result = await Mediator.Send(query.ToQuery());
-        return result.IsSuccess
-            ? Ok(result.Value.ToHttpResponse())
-            : result.ToActionResult();
+        return result.ToOkActionResult(this, static value => value.ToHttpResponse());
     }
 
     [HttpPatch("{id:guid}")]
     public async Task<IActionResult> UpdateUser(Guid id, [FromBody] AdminUserUpdateHttpRequest request) {
         var command = request.ToCommand(id);
         var result = await Mediator.Send(command);
-        return result.IsSuccess
-            ? Ok(result.Value.ToHttpResponse())
-            : result.ToActionResult();
+        return result.ToOkActionResult(this, static value => value.ToHttpResponse());
     }
 }

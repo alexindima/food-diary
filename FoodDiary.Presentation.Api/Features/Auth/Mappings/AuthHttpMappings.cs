@@ -1,10 +1,12 @@
 using FoodDiary.Application.Authentication.Commands.AdminSsoExchange;
+using FoodDiary.Application.Authentication.Commands.AdminSsoStart;
 using FoodDiary.Application.Authentication.Commands.ConfirmPasswordReset;
 using FoodDiary.Application.Authentication.Commands.LinkTelegram;
 using FoodDiary.Application.Authentication.Commands.Login;
 using FoodDiary.Application.Authentication.Commands.RefreshToken;
 using FoodDiary.Application.Authentication.Commands.Register;
 using FoodDiary.Application.Authentication.Commands.RequestPasswordReset;
+using FoodDiary.Application.Authentication.Commands.ResendEmailVerification;
 using FoodDiary.Application.Authentication.Commands.RestoreAccount;
 using FoodDiary.Application.Authentication.Commands.TelegramBotAuth;
 using FoodDiary.Application.Authentication.Commands.TelegramLoginWidget;
@@ -46,6 +48,14 @@ public static class AuthHttpMappings {
 
     public static AdminSsoExchangeCommand ToCommand(this AdminSsoExchangeHttpRequest request) {
         return new AdminSsoExchangeCommand(request.Code);
+    }
+
+    public static ResendEmailVerificationCommand ToResendVerificationCommand(this UserId userId) {
+        return new ResendEmailVerificationCommand(userId);
+    }
+
+    public static AdminSsoStartCommand ToAdminSsoStartCommand(this UserId userId) {
+        return new AdminSsoStartCommand(userId);
     }
 
     public static VerifyEmailCommand ToCommand(this VerifyEmailHttpRequest request) {

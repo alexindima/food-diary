@@ -1,4 +1,3 @@
-using FoodDiary.Application.Images.Commands.DeleteImageAsset;
 using FoodDiary.Application.Images.Commands.GetUploadUrl;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Presentation.Api.Controllers;
@@ -38,7 +37,7 @@ public sealed class ImagesController(ISender mediator) : AuthorizedController(me
 
     [HttpDelete("{assetId:guid}")]
     public async Task<IActionResult> Delete(Guid assetId, [FromCurrentUser] UserId userId) {
-        var command = new DeleteImageAssetCommand(userId, new(assetId));
+        var command = assetId.ToDeleteCommand(userId);
         var result = await Mediator.Send(command);
 
         if (!result.Deleted) {

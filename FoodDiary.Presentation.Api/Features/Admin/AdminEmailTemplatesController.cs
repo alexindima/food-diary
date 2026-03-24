@@ -1,4 +1,3 @@
-using FoodDiary.Application.Admin.Queries.GetAdminEmailTemplates;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Extensions;
@@ -16,10 +15,8 @@ namespace FoodDiary.Presentation.Api.Features.Admin;
 public sealed class AdminEmailTemplatesController(ISender mediator) : BaseApiController(mediator) {
     [HttpGet]
     public async Task<IActionResult> GetAll() {
-        var result = await Mediator.Send(new GetAdminEmailTemplatesQuery());
-        return result.IsSuccess
-            ? Ok(result.Value.Select(item => item.ToHttpResponse()).ToList())
-            : result.ToActionResult();
+        var result = await Mediator.Send(AdminHttpQueryMappings.ToEmailTemplatesQuery());
+        return result.ToOkActionResult(this, static value => value.Select(item => item.ToHttpResponse()).ToList());
     }
 
     [HttpPut("{key}/{locale}")]
@@ -29,8 +26,6 @@ public sealed class AdminEmailTemplatesController(ISender mediator) : BaseApiCon
         [FromBody] AdminEmailTemplateUpsertHttpRequest request) {
         var command = request.ToCommand(key, locale);
         var result = await Mediator.Send(command);
-        return result.IsSuccess
-            ? Ok(result.Value.ToHttpResponse())
-            : result.ToActionResult();
+        return result.ToOkActionResult(this, static value => value.ToHttpResponse());
     }
 }
