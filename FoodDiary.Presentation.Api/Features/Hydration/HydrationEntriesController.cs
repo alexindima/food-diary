@@ -15,26 +15,22 @@ namespace FoodDiary.Presentation.Api.Features.Hydration;
 [Route("api/hydrations")]
 public class HydrationEntriesController(ISender mediator) : AuthorizedController(mediator) {
     [HttpGet]
-    public async Task<IActionResult> GetByDate([FromQuery] DateTime? dateUtc = null) {
+    public async Task<IActionResult> GetByDate([FromQuery] GetHydrationEntriesHttpQuery query) {
         if (!TryGetCurrentUserId(out var userId)) {
             return Unauthorized();
         }
 
-        var date = dateUtc ?? DateTime.UtcNow;
-        var query = new GetHydrationEntriesQuery(userId, date);
-        var result = await Mediator.Send(query);
+        var result = await Mediator.Send(query.ToEntriesQuery(userId));
         return result.ToActionResult();
     }
 
     [HttpGet("daily")]
-    public async Task<IActionResult> GetDaily([FromQuery] DateTime? dateUtc = null) {
+    public async Task<IActionResult> GetDaily([FromQuery] GetHydrationEntriesHttpQuery query) {
         if (!TryGetCurrentUserId(out var userId)) {
             return Unauthorized();
         }
 
-        var date = dateUtc ?? DateTime.UtcNow;
-        var query = new GetHydrationDailyTotalQuery(userId, date);
-        var result = await Mediator.Send(query);
+        var result = await Mediator.Send(query.ToDailyQuery(userId));
         return result.ToActionResult();
     }
 

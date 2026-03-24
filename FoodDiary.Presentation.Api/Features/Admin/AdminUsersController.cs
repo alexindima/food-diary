@@ -1,5 +1,4 @@
 using FoodDiary.Application.Admin.Commands.UpdateAdminUser;
-using FoodDiary.Application.Admin.Queries.GetAdminUsers;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Extensions;
@@ -16,13 +15,8 @@ namespace FoodDiary.Presentation.Api.Features.Admin;
 [Authorize(Roles = RoleNames.Admin)]
 public sealed class AdminUsersController(ISender mediator) : BaseApiController(mediator) {
     [HttpGet]
-    public async Task<IActionResult> GetUsers(
-        [FromQuery] int page = 1,
-        [FromQuery] int limit = 20,
-        [FromQuery] string? search = null,
-        [FromQuery] bool includeDeleted = false) {
-        var query = new GetAdminUsersQuery(page, limit, search, includeDeleted);
-        var result = await Mediator.Send(query);
+    public async Task<IActionResult> GetUsers([FromQuery] GetAdminUsersHttpQuery query) {
+        var result = await Mediator.Send(query.ToQuery());
         return result.ToActionResult();
     }
 

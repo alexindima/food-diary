@@ -15,17 +15,12 @@ namespace FoodDiary.Presentation.Api.Features.Consumptions;
 [Route("api/[controller]")]
 public class ConsumptionsController(ISender mediator) : AuthorizedController(mediator) {
     [HttpGet]
-    public async Task<IActionResult> GetAll(
-        [FromQuery] int page = 1,
-        [FromQuery] int limit = 10,
-        [FromQuery] DateTime? dateFrom = null,
-        [FromQuery] DateTime? dateTo = null) {
+    public async Task<IActionResult> GetAll([FromQuery] GetConsumptionsHttpQuery query) {
         if (!TryGetCurrentUserId(out var userId)) {
             return Unauthorized();
         }
 
-        var query = new GetConsumptionsQuery(userId, page, limit, dateFrom, dateTo);
-        var result = await Mediator.Send(query);
+        var result = await Mediator.Send(query.ToQuery(userId));
         return result.ToActionResult();
     }
 

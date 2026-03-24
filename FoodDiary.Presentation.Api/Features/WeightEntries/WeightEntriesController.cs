@@ -16,18 +16,12 @@ namespace FoodDiary.Presentation.Api.Features.WeightEntries;
 [Route("api/weight-entries")]
 public class WeightEntriesController(ISender mediator) : AuthorizedController(mediator) {
     [HttpGet]
-    public async Task<IActionResult> GetAll(
-        [FromQuery] DateTime? dateFrom = null,
-        [FromQuery] DateTime? dateTo = null,
-        [FromQuery] int? limit = null,
-        [FromQuery] string sort = "desc") {
+    public async Task<IActionResult> GetAll([FromQuery] GetWeightEntriesHttpQuery query) {
         if (!TryGetCurrentUserId(out var userId)) {
             return Unauthorized();
         }
 
-        var descending = !string.Equals(sort, "asc", StringComparison.OrdinalIgnoreCase);
-        var query = new GetWeightEntriesQuery(userId, dateFrom, dateTo, limit, descending);
-        var result = await Mediator.Send(query);
+        var result = await Mediator.Send(query.ToQuery(userId));
         return result.ToActionResult();
     }
 
@@ -43,16 +37,12 @@ public class WeightEntriesController(ISender mediator) : AuthorizedController(me
     }
 
     [HttpGet("summary")]
-    public async Task<IActionResult> GetSummary(
-        [FromQuery] DateTime dateFrom,
-        [FromQuery] DateTime dateTo,
-        [FromQuery] int quantizationDays = 1) {
+    public async Task<IActionResult> GetSummary([FromQuery] GetWeightSummariesHttpQuery query) {
         if (!TryGetCurrentUserId(out var userId)) {
             return Unauthorized();
         }
 
-        var query = new GetWeightSummariesQuery(userId, dateFrom, dateTo, quantizationDays);
-        var result = await Mediator.Send(query);
+        var result = await Mediator.Send(query.ToQuery(userId));
         return result.ToActionResult();
     }
 

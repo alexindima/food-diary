@@ -1,7 +1,7 @@
-using FoodDiary.Application.DailyAdvices.Queries.GetDailyAdvice;
-using FoodDiary.Application.Dashboard.Queries.GetDashboardSnapshot;
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Extensions;
+using FoodDiary.Presentation.Api.Features.Dashboard.Mappings;
+using FoodDiary.Presentation.Api.Features.Dashboard.Requests;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,31 +11,22 @@ namespace FoodDiary.Presentation.Api.Features.Dashboard;
 [Route("api/dashboard")]
 public class DashboardController(ISender mediator) : AuthorizedController(mediator) {
     [HttpGet]
-    public async Task<IActionResult> Get(
-        [FromQuery] DateTime date,
-        [FromQuery] int page = 1,
-        [FromQuery] int pageSize = 10,
-        [FromQuery] string locale = "en",
-        [FromQuery] int trendDays = 7) {
+    public async Task<IActionResult> Get([FromQuery] GetDashboardSnapshotHttpQuery query) {
         if (!TryGetCurrentUserId(out var userId)) {
             return Unauthorized();
         }
 
-        var query = new GetDashboardSnapshotQuery(userId, date, page, pageSize, locale, trendDays);
-        var result = await Mediator.Send(query);
+        var result = await Mediator.Send(query.ToQuery(userId));
         return result.ToActionResult();
     }
 
     [HttpGet("advice")]
-    public async Task<IActionResult> GetAdvice(
-        [FromQuery] DateTime date,
-        [FromQuery] string locale = "en") {
+    public async Task<IActionResult> GetAdvice([FromQuery] GetDailyAdviceHttpQuery query) {
         if (!TryGetCurrentUserId(out var userId)) {
             return Unauthorized();
         }
 
-        var query = new GetDailyAdviceQuery(userId, date, locale);
-        var result = await Mediator.Send(query);
+        var result = await Mediator.Send(query.ToQuery(userId));
         return result.ToActionResult();
     }
 }
