@@ -47,6 +47,9 @@ public static class ResultExtensions {
             "Ai.Forbidden" => ErrorResult(error, StatusCodes.Status403Forbidden),
             "Ai.QuotaExceeded" => ErrorResult(error, StatusCodes.Status429TooManyRequests),
             "Ai.OpenAiFailed" or "Ai.InvalidResponse" => ErrorResult(error, StatusCodes.Status502BadGateway),
+            "Image.Forbidden" => ErrorResult(error, StatusCodes.Status403Forbidden),
+            "Image.InUse" => ErrorResult(error, StatusCodes.Status409Conflict),
+            "Image.StorageError" => ErrorResult(error, StatusCodes.Status502BadGateway),
             _ when code.StartsWith("Authentication.", StringComparison.Ordinal) =>
                 ErrorResult(error, StatusCodes.Status401Unauthorized),
             _ when code.StartsWith("Validation.", StringComparison.Ordinal) =>

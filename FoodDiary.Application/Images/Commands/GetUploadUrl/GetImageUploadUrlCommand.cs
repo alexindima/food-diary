@@ -1,3 +1,4 @@
+using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Domain.ValueObjects.Ids;
 using MediatR;
 
@@ -7,7 +8,7 @@ public sealed record GetImageUploadUrlCommand(
     UserId UserId,
     string FileName,
     string ContentType,
-    long FileSizeBytes) : IRequest<GetImageUploadUrlResult>;
+    long FileSizeBytes) : IRequest<Result<GetImageUploadUrlResult>>;
 
 public sealed record GetImageUploadUrlResult(
     string UploadUrl,

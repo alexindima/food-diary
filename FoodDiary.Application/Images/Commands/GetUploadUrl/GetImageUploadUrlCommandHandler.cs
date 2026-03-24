@@ -1,3 +1,4 @@
+using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Interfaces.Services;
 using FoodDiary.Domain.Entities.Assets;
@@ -8,9 +9,12 @@ namespace FoodDiary.Application.Images.Commands.GetUploadUrl;
 
 public sealed class GetImageUploadUrlCommandHandler(
     IImageStorageService imageStorageService,
-    IImageAssetRepository imageAssetRepository) : IRequestHandler<GetImageUploadUrlCommand, GetImageUploadUrlResult> {
-    public async Task<GetImageUploadUrlResult> Handle(GetImageUploadUrlCommand request, CancellationToken cancellationToken) {
-        ValidateRequest(request);
+    IImageAssetRepository imageAssetRepository) : IRequestHandler<GetImageUploadUrlCommand, Result<GetImageUploadUrlResult>> {
+    public async Task<Result<GetImageUploadUrlResult>> Handle(GetImageUploadUrlCommand request, CancellationToken cancellationToken) {
+        var validationResult = ValidateRequest(request);
+        if (validationResult.IsFailure) {
+            return Result.Failure<GetImageUploadUrlResult>(validationResult.Error);
+        }
 
         var presign = await imageStorageService.CreatePresignedUploadAsync(
             request.UserId,
@@ -22,29 +26,31 @@ public sealed class GetImageUploadUrlCommandHandler(
         var asset = ImageAsset.Create(request.UserId, presign.ObjectKey, presign.FileUrl);
         asset = await imageAssetRepository.AddAsync(asset, cancellationToken);
 
-        return new GetImageUploadUrlResult(
+        return Result.Success(new GetImageUploadUrlResult(
             presign.UploadUrl,
             presign.FileUrl,
             presign.ObjectKey,
             presign.ExpirationUtc,
-            asset.Id);
+            asset.Id));
     }
 
-    private static void ValidateRequest(GetImageUploadUrlCommand request) {
+    private static Result ValidateRequest(GetImageUploadUrlCommand request) {
         if (request.UserId == UserId.Empty) {
-            throw new ArgumentException("UserId is required.", nameof(request.UserId));
+            return Result.Failure(Errors.Image.InvalidData("UserId is required."));
         }
 
         if (string.IsNullOrWhiteSpace(request.FileName)) {
-            throw new ArgumentException("File name is required.", nameof(request.FileName));
+            return Result.Failure(Errors.Image.InvalidData("File name is required."));
         }
 
         if (string.IsNullOrWhiteSpace(request.ContentType)) {
-            throw new ArgumentException("Content type is required.", nameof(request.ContentType));
+            return Result.Failure(Errors.Image.InvalidData("Content type is required."));
         }
 
         if (request.FileSizeBytes <= 0) {
-            throw new ArgumentOutOfRangeException(nameof(request.FileSizeBytes), "File size must be greater than zero.");
+            return Result.Failure(Errors.Image.InvalidData("File size must be greater than zero."));
         }
+
+        return Result.Success();
     }
 }

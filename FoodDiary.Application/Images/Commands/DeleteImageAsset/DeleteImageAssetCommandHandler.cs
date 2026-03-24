@@ -1,3 +1,4 @@
+using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Interfaces.Services;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -7,21 +8,32 @@ namespace FoodDiary.Application.Images.Commands.DeleteImageAsset;
 
 public sealed class DeleteImageAssetCommandHandler(
     IImageAssetRepository imageAssetRepository,
-    IImageAssetCleanupService cleanupService) : IRequestHandler<DeleteImageAssetCommand, DeleteImageAssetResult> {
-    public async Task<DeleteImageAssetResult> Handle(DeleteImageAssetCommand request, CancellationToken cancellationToken) {
+    IImageAssetCleanupService cleanupService) : IRequestHandler<DeleteImageAssetCommand, Result> {
+    public async Task<Result> Handle(DeleteImageAssetCommand request, CancellationToken cancellationToken) {
         if (request.UserId == UserId.Empty || request.AssetId == ImageAssetId.Empty) {
-            return new DeleteImageAssetResult(false, "invalid");
+            return Result.Failure(Errors.Image.InvalidData("UserId and AssetId are required."));
         }
 
         var asset = await imageAssetRepository.GetByIdAsync(request.AssetId, cancellationToken);
         if (asset is null) {
-            return new DeleteImageAssetResult(false, "not_found");
+            return Result.Failure(Errors.Image.NotFound(request.AssetId.Value));
         }
 
         if (asset.UserId != request.UserId) {
-            return new DeleteImageAssetResult(false, "forbidden");
+            return Result.Failure(Errors.Image.Forbidden());
         }
 
-        return await cleanupService.DeleteIfUnusedAsync(request.AssetId, cancellationToken);
+        var cleanupResult = await cleanupService.DeleteIfUnusedAsync(request.AssetId, cancellationToken);
+        if (cleanupResult.Deleted) {
+            return Result.Success();
+        }
+
+        return cleanupResult.ErrorCode switch {
+            "invalid" => Result.Failure(Errors.Image.InvalidData("AssetId is required.")),
+            "not_found" => Result.Failure(Errors.Image.NotFound(request.AssetId.Value)),
+            "in_use" => Result.Failure(Errors.Image.InUse()),
+            "storage_error" => Result.Failure(Errors.Image.StorageError()),
+            _ => Result.Failure(Errors.Image.InvalidData("Failed to delete image asset."))
+        };
     }
 }

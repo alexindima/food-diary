@@ -202,4 +202,26 @@ public static class Errors {
             "Ai.QuotaExceeded",
             "AI token quota exceeded for the current month.");
     }
+
+    public static class Image {
+        public static Error InvalidData(string message) => new(
+            "Image.InvalidData",
+            message);
+
+        public static Error NotFound(Guid id) => new(
+            "Image.NotFound",
+            $"Image asset with ID {id} was not found.");
+
+        public static Error Forbidden() => new(
+            "Image.Forbidden",
+            "Image asset does not belong to the current user.");
+
+        public static Error InUse() => new(
+            "Image.InUse",
+            "Image asset is already in use.");
+
+        public static Error StorageError() => new(
+            "Image.StorageError",
+            "Failed to remove image from storage.");
+    }
 }

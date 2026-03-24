@@ -11,14 +11,16 @@ namespace FoodDiary.Application.Tests.Images;
 
 public class ImagesFeatureTests {
     [Fact]
-    public async Task GetImageUploadUrlCommandHandler_WithEmptyUserId_Throws() {
+    public async Task GetImageUploadUrlCommandHandler_WithEmptyUserId_ReturnsFailure() {
         var handler = new GetImageUploadUrlCommandHandler(
             new FakeImageStorageService(),
             new FakeImageAssetRepository());
 
         var command = new GetImageUploadUrlCommand(UserId.Empty, "file.jpg", "image/jpeg", 100);
+        var result = await handler.Handle(command, CancellationToken.None);
 
-        await Assert.ThrowsAsync<ArgumentException>(() => handler.Handle(command, CancellationToken.None));
+        Assert.True(result.IsFailure);
+        Assert.Equal("Image.InvalidData", result.Error.Code);
     }
 
     [Fact]
@@ -32,8 +34,8 @@ public class ImagesFeatureTests {
         var handler = new DeleteImageAssetCommandHandler(repo, new FakeCleanupService());
         var result = await handler.Handle(new DeleteImageAssetCommand(anotherUser, asset.Id), CancellationToken.None);
 
-        Assert.False(result.Deleted);
-        Assert.Equal("forbidden", result.ErrorCode);
+        Assert.True(result.IsFailure);
+        Assert.Equal("Image.Forbidden", result.Error.Code);
     }
 
     [Fact]
