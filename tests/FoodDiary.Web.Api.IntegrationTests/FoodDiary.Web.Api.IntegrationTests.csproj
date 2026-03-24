@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\FoodDiary.Presentation.Api\FoodDiary.Presentation.Api.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Web.Api\FoodDiary.Web.Api.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Infrastructure\FoodDiary.Infrastructure.csproj" />
   </ItemGroup>

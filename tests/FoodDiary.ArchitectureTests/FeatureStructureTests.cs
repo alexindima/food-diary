@@ -27,9 +27,9 @@ public class FeatureStructureTests {
     }
 
     [Fact]
-    public void WebApi_FeatureFolders_ContainControllers() {
+    public void PresentationApi_FeatureFolders_ContainControllers() {
         var root = GetRepositoryRoot();
-        var featuresPath = Path.Combine(root, "FoodDiary.Web.Api", "Features");
+        var featuresPath = Path.Combine(root, "FoodDiary.Presentation.Api", "Features");
         var featureDirectories = Directory.GetDirectories(featuresPath);
 
         Assert.NotEmpty(featureDirectories);
@@ -44,10 +44,11 @@ public class FeatureStructureTests {
     [InlineData("FoodDiary.Application", "FoodDiary.Application")]
     [InlineData("FoodDiary.Contracts", "FoodDiary.Contracts")]
     [InlineData("FoodDiary.Domain", "FoodDiary.Domain")]
-    [InlineData("FoodDiary.Infrastructure", "FoodDiary.Infrastructure")]
-    [InlineData("FoodDiary.JobManager", "FoodDiary.JobManager")]
-    [InlineData("FoodDiary.Telegram.Bot", "FoodDiary.Telegram.Bot")]
-    [InlineData("FoodDiary.Web.Api", "FoodDiary.Web.Api")]
+        [InlineData("FoodDiary.Infrastructure", "FoodDiary.Infrastructure")]
+        [InlineData("FoodDiary.JobManager", "FoodDiary.JobManager")]
+        [InlineData("FoodDiary.Presentation.Api", "FoodDiary.Presentation.Api")]
+        [InlineData("FoodDiary.Telegram.Bot", "FoodDiary.Telegram.Bot")]
+        [InlineData("FoodDiary.Web.Api", "FoodDiary.Web.Api")]
     public void Namespaces_Match_ProjectFolderStructure(string projectFolder, string namespaceRoot) {
         var root = GetRepositoryRoot();
         var projectPath = Path.Combine(root, projectFolder);

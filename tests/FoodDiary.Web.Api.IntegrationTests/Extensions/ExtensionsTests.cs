@@ -1,7 +1,7 @@
 using System.Security.Claims;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Web.Api.Extensions;
+using FoodDiary.Presentation.Api.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 

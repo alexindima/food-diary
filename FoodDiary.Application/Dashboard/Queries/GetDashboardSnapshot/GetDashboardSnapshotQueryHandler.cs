@@ -37,59 +37,49 @@ public class GetDashboardSnapshotQueryHandler(
         var trendDays = Math.Clamp(query.TrendDays <= 0 ? 7 : query.TrendDays, 1, 31);
         var trendStart = dayStart.AddDays(-(trendDays - 1));
 
-        var statsTask = sender.Send(new GetStatisticsQuery(
+        var statsResult = await sender.Send(new GetStatisticsQuery(
             userId,
             dayStart,
             dayEnd,
             1), cancellationToken);
-        var weeklyStatsTask = sender.Send(new GetStatisticsQuery(
+        if (statsResult.IsFailure) {
+            return Result.Failure<DashboardSnapshotResponse>(statsResult.Error);
+        }
+
+        var weeklyStatsResult = await sender.Send(new GetStatisticsQuery(
             userId,
             dayStart.AddDays(-6),
             dayEnd,
             1), cancellationToken);
-        var mealsTask = sender.Send(new GetConsumptionsQuery(
+        if (weeklyStatsResult.IsFailure) {
+            return Result.Failure<DashboardSnapshotResponse>(weeklyStatsResult.Error);
+        }
+
+        var mealsResult = await sender.Send(new GetConsumptionsQuery(
             userId,
             query.Page,
             query.PageSize,
             dayStart,
             dayEnd), cancellationToken);
-
-        await Task.WhenAll(statsTask, weeklyStatsTask, mealsTask);
-        var statsResult = await statsTask;
-        if (statsResult.IsFailure) {
-            return Result.Failure<DashboardSnapshotResponse>(statsResult.Error);
-        }
-
-        var weeklyStatsResult = await weeklyStatsTask;
-        if (weeklyStatsResult.IsFailure) {
-            return Result.Failure<DashboardSnapshotResponse>(weeklyStatsResult.Error);
-        }
-
-        var mealsResult = await mealsTask;
         if (mealsResult.IsFailure) {
             return Result.Failure<DashboardSnapshotResponse>(mealsResult.Error);
         }
 
-        var userTask = userRepository.GetByIdAsync(userId);
-        var weightEntriesTask = weightEntryRepository.GetEntriesAsync(
+        var user = await userRepository.GetByIdAsync(userId);
+        var weightEntries = await weightEntryRepository.GetEntriesAsync(
             userId,
             dateFrom: null,
             dateTo: null,
             limit: 2,
             descending: true,
             cancellationToken: cancellationToken);
-        var waistEntriesTask = waistEntryRepository.GetEntriesAsync(
+        var waistEntries = await waistEntryRepository.GetEntriesAsync(
             userId,
             dateFrom: null,
             dateTo: null,
             limit: 2,
             descending: true,
             cancellationToken: cancellationToken);
-        await Task.WhenAll(userTask, weightEntriesTask, waistEntriesTask);
-
-        var user = await userTask;
-        var weightEntries = await weightEntriesTask;
-        var waistEntries = await waistEntriesTask;
 
         var statistics = DashboardMapping.ToStatisticsDto(statsResult.Value.FirstOrDefault(), user);
         var weeklyCalories = DashboardMapping.ToWeeklyCalories(weeklyStatsResult.Value);
@@ -99,27 +89,21 @@ public class GetDashboardSnapshotQueryHandler(
             mealsResult.Value.Data,
             mealsResult.Value.TotalItems);
 
-        var hydrationTask = sender.Send(
+        var hydrationResult = await sender.Send(
             new GetHydrationDailyTotalQuery(userId, dayStart),
             cancellationToken);
 
-        var adviceTask = sender.Send(
+        var adviceResult = await sender.Send(
             new GetDailyAdviceQuery(userId, dayStart, locale),
             cancellationToken);
 
-        var weightTrendTask = sender.Send(
+        var weightTrendResult = await sender.Send(
             new GetWeightSummariesQuery(userId, trendStart, dayStart, 1),
             cancellationToken);
 
-        var waistTrendTask = sender.Send(
+        var waistTrendResult = await sender.Send(
             new GetWaistSummariesQuery(userId, trendStart, dayStart, 1),
             cancellationToken);
-        await Task.WhenAll(hydrationTask, adviceTask, weightTrendTask, waistTrendTask);
-
-        var hydrationResult = await hydrationTask;
-        var adviceResult = await adviceTask;
-        var weightTrendResult = await weightTrendTask;
-        var waistTrendResult = await waistTrendTask;
 
         var dailyGoal = user?.DailyCalorieTarget ?? 0;
         DashboardLayoutSettings? layout = null;

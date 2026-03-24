@@ -10,6 +10,7 @@ public class LayeringTests {
         Assert.DoesNotContain("FoodDiary.Application", references);
         Assert.DoesNotContain("FoodDiary.Infrastructure", references);
         Assert.DoesNotContain("FoodDiary.Web.Api", references);
+        Assert.DoesNotContain("FoodDiary.Presentation.Api", references);
     }
 
     [Fact]
@@ -20,6 +21,7 @@ public class LayeringTests {
         Assert.Contains("FoodDiary.Contracts", references);
         Assert.DoesNotContain("FoodDiary.Infrastructure", references);
         Assert.DoesNotContain("FoodDiary.Web.Api", references);
+        Assert.DoesNotContain("FoodDiary.Presentation.Api", references);
     }
 
     [Fact]
@@ -27,16 +29,29 @@ public class LayeringTests {
         var references = GetProjectReferences("FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj");
 
         Assert.DoesNotContain("FoodDiary.Web.Api", references);
+        Assert.DoesNotContain("FoodDiary.Presentation.Api", references);
         Assert.Contains("FoodDiary.Application", references);
     }
 
     [Fact]
-    public void WebApiProject_DoesNotDirectlyReference_Domain() {
+    public void PresentationApiProject_ReferencesApplicationContractsAndDomain_ButNotInfrastructure() {
+        var references = GetProjectReferences("FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj");
+
+        Assert.Contains("FoodDiary.Application", references);
+        Assert.Contains("FoodDiary.Contracts", references);
+        Assert.Contains("FoodDiary.Domain", references);
+        Assert.DoesNotContain("FoodDiary.Web.Api", references);
+        Assert.DoesNotContain("FoodDiary.Infrastructure", references);
+    }
+
+    [Fact]
+    public void WebApiProject_IsHostAndReferencesPresentationApplicationAndInfrastructure() {
         var references = GetProjectReferences("FoodDiary.Web.Api/FoodDiary.Web.Api.csproj");
 
-        Assert.DoesNotContain("FoodDiary.Domain", references);
         Assert.Contains("FoodDiary.Application", references);
         Assert.Contains("FoodDiary.Infrastructure", references);
+        Assert.Contains("FoodDiary.Presentation.Api", references);
+        Assert.DoesNotContain("FoodDiary.Domain", references);
     }
 
     [Fact]
@@ -44,6 +59,7 @@ public class LayeringTests {
         var references = GetProjectReferences("FoodDiary.JobManager/FoodDiary.JobManager.csproj");
 
         Assert.DoesNotContain("FoodDiary.Web.Api", references);
+        Assert.DoesNotContain("FoodDiary.Presentation.Api", references);
     }
 
     [Fact]
@@ -54,12 +70,13 @@ public class LayeringTests {
         Assert.DoesNotContain("FoodDiary.Application", references);
         Assert.DoesNotContain("FoodDiary.Infrastructure", references);
         Assert.DoesNotContain("FoodDiary.Web.Api", references);
+        Assert.DoesNotContain("FoodDiary.Presentation.Api", references);
     }
 
     [Fact]
-    public void WebApi_OnlyBaseControllersRemainInControllersFolder() {
+    public void PresentationApi_OnlyBaseControllersRemainInControllersFolder() {
         var root = GetRepositoryRoot();
-        var controllerFiles = Directory.GetFiles(Path.Combine(root, "FoodDiary.Web.Api", "Controllers"), "*Controller.cs");
+        var controllerFiles = Directory.GetFiles(Path.Combine(root, "FoodDiary.Presentation.Api", "Controllers"), "*Controller.cs");
         var names = controllerFiles.Select(Path.GetFileNameWithoutExtension).ToArray();
 
         Assert.Contains("BaseApiController", names);

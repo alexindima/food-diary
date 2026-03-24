@@ -1,4 +1,4 @@
-using FoodDiary.Web.Api.Hubs;
+using FoodDiary.Presentation.Api.Extensions;
 
 namespace FoodDiary.Web.Api.Extensions;
 
@@ -15,9 +15,7 @@ public static class ApiApplicationBuilderExtensions {
         app.UseAuthentication();
         app.UseAuthorization();
 
-        app.MapControllers();
-        app.MapHub<EmailVerificationHub>("/hubs/email-verification")
-            .RequireCors(ApiCompositionConstants.CorsPolicyName);
+        app.MapPresentationApi(ApiCompositionConstants.CorsPolicyName);
 
         return app;
     }

@@ -1,10 +1,9 @@
 using System.Text;
 using FoodDiary.Application;
-using FoodDiary.Application.Common.Interfaces.Services;
 using FoodDiary.Infrastructure;
-using FoodDiary.Web.Api.Services;
+using FoodDiary.Presentation.Api.Extensions;
+using FoodDiary.Presentation.Api.Options;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.IdentityModel.Tokens;
 
 namespace FoodDiary.Web.Api.Extensions;
@@ -62,12 +61,10 @@ public static class ApiServiceCollectionExtensions {
             });
 
         services.AddAuthorization();
-        services.AddControllers();
+        services.Configure<TelegramBotAuthOptions>(configuration.GetSection(TelegramBotAuthOptions.SectionName));
+        services.AddPresentationApi();
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
-        services.AddSignalR();
-        services.AddSingleton<IUserIdProvider, UserIdProvider>();
-        services.AddScoped<IEmailVerificationNotifier, EmailVerificationNotifier>();
 
         return services;
     }
