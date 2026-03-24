@@ -4,6 +4,7 @@ using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Interfaces.Services;
 using FoodDiary.Application.Common.Models;
 using FoodDiary.Application.Common.Utilities;
+using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.Extensions.Logging;
 
 namespace FoodDiary.Application.Authentication.Commands.ResendEmailVerification;
@@ -30,7 +31,7 @@ public class ResendEmailVerificationCommandHandler : ICommandHandler<ResendEmail
     }
 
     public async Task<Result<bool>> Handle(ResendEmailVerificationCommand command, CancellationToken cancellationToken) {
-        var user = await _userRepository.GetByIdAsync(command.UserId);
+        var user = await _userRepository.GetByIdAsync(new UserId(command.UserId));
         if (user is null) {
             return Result.Failure<bool>(Errors.User.NotFound());
         }

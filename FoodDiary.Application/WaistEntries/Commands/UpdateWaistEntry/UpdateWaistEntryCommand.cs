@@ -6,7 +6,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.WaistEntries.Commands.UpdateWaistEntry;
 
 public record UpdateWaistEntryCommand(
-    UserId? UserId,
+    Guid? UserId,
     WaistEntryId WaistEntryId,
     DateTime Date,
     double Circumference

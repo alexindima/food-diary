@@ -1,12 +1,11 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Products.Models;
-using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Products.Queries.GetProductsWithRecent;
 
 public sealed record GetProductsWithRecentQuery(
-    UserId? UserId,
+    Guid? UserId,
     int Page,
     int Limit,
     string? Search,

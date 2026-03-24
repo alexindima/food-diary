@@ -4,4 +4,4 @@ using MediatR;
 
 namespace FoodDiary.Application.Images.Commands.DeleteImageAsset;
 
-public sealed record DeleteImageAssetCommand(UserId UserId, ImageAssetId AssetId) : IRequest<Result>;
+public sealed record DeleteImageAssetCommand(Guid UserId, ImageAssetId AssetId) : IRequest<Result>;

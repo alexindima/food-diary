@@ -13,17 +13,19 @@ public class GetHydrationDailyTotalQueryHandler(
     public async Task<Result<HydrationDailyModel>> Handle(
         GetHydrationDailyTotalQuery query,
         CancellationToken cancellationToken) {
-        if (query.UserId is null || query.UserId == UserId.Empty) {
+        if (query.UserId is null || query.UserId == Guid.Empty) {
             return Result.Failure<HydrationDailyModel>(Errors.User.NotFound());
         }
 
-        var user = await userRepository.GetByIdAsync(query.UserId.Value);
+        var userId = new UserId(query.UserId.Value);
+
+        var user = await userRepository.GetByIdAsync(userId);
         if (user is null) {
-            return Result.Failure<HydrationDailyModel>(Errors.User.NotFound(query.UserId.Value.Value));
+            return Result.Failure<HydrationDailyModel>(Errors.User.NotFound(userId.Value));
         }
 
         var dateUtc = NormalizeToUtcDate(query.DateUtc);
-        var total = await repository.GetDailyTotalAsync(query.UserId.Value, dateUtc, cancellationToken);
+        var total = await repository.GetDailyTotalAsync(userId, dateUtc, cancellationToken);
         var goal = user.HydrationGoal ?? user.WaterGoal;
 
         var response = new HydrationDailyModel(dateUtc, total, goal);

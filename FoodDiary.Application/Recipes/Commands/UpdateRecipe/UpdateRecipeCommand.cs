@@ -7,7 +7,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.Recipes.Commands.UpdateRecipe;
 
 public record UpdateRecipeCommand(
-    UserId? UserId,
+    Guid? UserId,
     RecipeId RecipeId,
     string? Name,
     string? Description,

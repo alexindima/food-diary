@@ -8,7 +8,7 @@ using FoodDiary.Presentation.Api.Features.Products.Requests;
 namespace FoodDiary.Presentation.Api.Features.Products.Mappings;
 
 public static class ProductHttpQueryMappings {
-    public static GetProductsQuery ToQuery(this GetProductsHttpQuery query, UserId userId) {
+    public static GetProductsQuery ToQuery(this GetProductsHttpQuery query, Guid userId) {
         return new GetProductsQuery(
             userId,
             Math.Max(query.Page, 1),
@@ -18,7 +18,7 @@ public static class ProductHttpQueryMappings {
             ParseProductTypes(query.ProductTypes));
     }
 
-    public static GetProductsWithRecentQuery ToQuery(this GetProductsWithRecentHttpQuery query, UserId userId) {
+    public static GetProductsWithRecentQuery ToQuery(this GetProductsWithRecentHttpQuery query, Guid userId) {
         return new GetProductsWithRecentQuery(
             userId,
             Math.Max(query.Page, 1),
@@ -29,11 +29,11 @@ public static class ProductHttpQueryMappings {
             ParseProductTypes(query.ProductTypes));
     }
 
-    public static GetRecentProductsQuery ToQuery(this GetRecentProductsHttpQuery query, UserId userId) {
+    public static GetRecentProductsQuery ToQuery(this GetRecentProductsHttpQuery query, Guid userId) {
         return new GetRecentProductsQuery(userId, Math.Clamp(query.Limit, 1, 50), query.IncludePublic);
     }
 
-    public static GetProductByIdQuery ToQuery(this Guid id, UserId userId) {
+    public static GetProductByIdQuery ToQuery(this Guid id, Guid userId) {
         return new GetProductByIdQuery(userId, new ProductId(id));
     }
 

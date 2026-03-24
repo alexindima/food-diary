@@ -12,12 +12,14 @@ public class GetHydrationEntriesQueryHandler(IHydrationEntryRepository repositor
     public async Task<Result<IReadOnlyList<HydrationEntryModel>>> Handle(
         GetHydrationEntriesQuery query,
         CancellationToken cancellationToken) {
-        if (query.UserId is null || query.UserId == UserId.Empty) {
+        if (query.UserId is null || query.UserId == Guid.Empty) {
             return Result.Failure<IReadOnlyList<HydrationEntryModel>>(Errors.User.NotFound());
         }
 
+        var userId = new UserId(query.UserId.Value);
+
         var dateUtc = NormalizeToUtcDate(query.DateUtc);
-        var entries = await repository.GetByDateAsync(query.UserId.Value, dateUtc, cancellationToken);
+        var entries = await repository.GetByDateAsync(userId, dateUtc, cancellationToken);
         var response = entries.Select(e => e.ToModel()).ToList();
         return Result.Success<IReadOnlyList<HydrationEntryModel>>(response);
     }

@@ -13,13 +13,14 @@ public class CreateWaistEntryCommandHandler(IWaistEntryRepository waistEntryRepo
     public async Task<Result<WaistEntryModel>> Handle(
         CreateWaistEntryCommand command,
         CancellationToken cancellationToken) {
-        if (command.UserId is null || command.UserId.Value == UserId.Empty) {
+        if (command.UserId is null || command.UserId.Value == Guid.Empty) {
             return Result.Failure<WaistEntryModel>(Errors.Authentication.InvalidToken);
         }
 
+        var userId = new UserId(command.UserId.Value);
         var normalizedDate = NormalizeUtcDate(command.Date);
         var existing = await waistEntryRepository.GetByDateAsync(
-            command.UserId.Value,
+            userId,
             normalizedDate,
             cancellationToken);
         if (existing is not null) {
@@ -27,7 +28,7 @@ public class CreateWaistEntryCommandHandler(IWaistEntryRepository waistEntryRepo
                 Errors.WaistEntry.AlreadyExists(normalizedDate));
         }
 
-        var entry = WaistEntry.Create(command.UserId.Value, normalizedDate, command.Circumference);
+        var entry = WaistEntry.Create(userId, normalizedDate, command.Circumference);
         entry = await waistEntryRepository.AddAsync(entry, cancellationToken);
         return Result.Success(entry.ToModel());
     }

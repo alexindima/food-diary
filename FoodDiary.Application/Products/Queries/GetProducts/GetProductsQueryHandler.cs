@@ -14,13 +14,13 @@ public class GetProductsQueryHandler(IProductRepository productRepository)
     public async Task<Result<PagedResponse<ProductModel>>> Handle(
         GetProductsQuery query,
         CancellationToken cancellationToken) {
-        if (query.UserId is null || query.UserId == UserId.Empty) {
+        if (query.UserId is null || query.UserId == Guid.Empty) {
             return Result.Failure<PagedResponse<ProductModel>>(Errors.Authentication.InvalidToken);
         }
 
         var pageNumber = Math.Max(query.Page, 1);
         var pageSize = Math.Max(query.Limit, 1);
-        var userId = query.UserId.Value;
+        var userId = new UserId(query.UserId.Value);
         var productTypes = query.ProductTypes?
             .Select(type => Enum.TryParse<ProductType>(type, true, out var parsed) ? parsed : (ProductType?)null)
             .OfType<ProductType>()

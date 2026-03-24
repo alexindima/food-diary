@@ -12,13 +12,14 @@ public class UpdateWeightEntryCommandHandler(IWeightEntryRepository weightEntryR
     public async Task<Result<WeightEntryModel>> Handle(
         UpdateWeightEntryCommand command,
         CancellationToken cancellationToken) {
-        if (command.UserId is null || command.UserId.Value == UserId.Empty) {
+        if (command.UserId is null || command.UserId.Value == Guid.Empty) {
             return Result.Failure<WeightEntryModel>(Errors.Authentication.InvalidToken);
         }
 
+        var userId = new UserId(command.UserId.Value);
         var existingEntry = await weightEntryRepository.GetByIdAsync(
             command.WeightEntryId,
-            command.UserId.Value,
+            userId,
             asTracking: true,
             cancellationToken: cancellationToken);
 
@@ -28,7 +29,7 @@ public class UpdateWeightEntryCommandHandler(IWeightEntryRepository weightEntryR
 
         var normalizedDate = NormalizeUtcDate(command.Date);
         var duplicate = await weightEntryRepository.GetByDateAsync(
-            command.UserId.Value,
+            userId,
             normalizedDate,
             cancellationToken);
 

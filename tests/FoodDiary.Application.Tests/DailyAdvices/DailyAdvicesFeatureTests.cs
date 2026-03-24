@@ -1,7 +1,6 @@
 using System.Reflection;
 using FoodDiary.Application.DailyAdvices.Queries.GetDailyAdvice;
 using FoodDiary.Domain.Entities.Content;
-using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.DailyAdvices;
 
@@ -9,7 +8,7 @@ public class DailyAdvicesFeatureTests {
     [Fact]
     public async Task GetDailyAdviceQueryValidator_WithEmptyUserId_Fails() {
         var validator = new GetDailyAdviceQueryValidator();
-        var query = new GetDailyAdviceQuery(UserId.Empty, DateTime.UtcNow, "en");
+        var query = new GetDailyAdviceQuery(Guid.Empty, DateTime.UtcNow, "en");
 
         var result = await validator.ValidateAsync(query);
 
@@ -19,7 +18,7 @@ public class DailyAdvicesFeatureTests {
     [Fact]
     public async Task GetDailyAdviceQueryValidator_WithValidInput_Passes() {
         var validator = new GetDailyAdviceQueryValidator();
-        var query = new GetDailyAdviceQuery(UserId.New(), DateTime.UtcNow, "ru-RU");
+        var query = new GetDailyAdviceQuery(Guid.NewGuid(), DateTime.UtcNow, "ru-RU");
 
         var result = await validator.ValidateAsync(query);
 

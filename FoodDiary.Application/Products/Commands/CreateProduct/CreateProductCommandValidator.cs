@@ -16,7 +16,7 @@ public class CreateProductCommandValidator : AbstractValidator<CreateProductComm
             .NotNull()
             .WithErrorCode("Authentication.InvalidToken")
             .WithMessage("Unable to identify user")
-            .Must(userId => userId is not null && userId.Value != UserId.Empty)
+            .Must(userId => userId is not null && userId.Value != Guid.Empty)
             .WithErrorCode("Authentication.InvalidToken")
             .WithMessage("Unable to identify user")
             .MustAsync(UserExists)
@@ -93,12 +93,12 @@ public class CreateProductCommandValidator : AbstractValidator<CreateProductComm
         return Enum.TryParse(visibility, ignoreCase: true, out Visibility _);
     }
 
-    private async Task<bool> UserExists(UserId? userId, CancellationToken cancellationToken) {
+    private async Task<bool> UserExists(Guid? userId, CancellationToken cancellationToken) {
         if (userId is null) {
             return false;
         }
 
-        var user = await _userRepository.GetByIdAsync(userId.Value);
+        var user = await _userRepository.GetByIdAsync(new UserId(userId.Value));
         return user is not null;
     }
 }

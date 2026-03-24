@@ -5,6 +5,7 @@ using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Interfaces.Services;
+using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Authentication.Commands.ConfirmPasswordReset;
 
@@ -15,9 +16,10 @@ public sealed class ConfirmPasswordResetCommandHandler(
     IAuthenticationTokenService authenticationTokenService)
     : ICommandHandler<ConfirmPasswordResetCommand, Result<AuthenticationModel>> {
     public async Task<Result<AuthenticationModel>> Handle(ConfirmPasswordResetCommand command, CancellationToken cancellationToken) {
-        var user = await userRepository.GetByIdAsync(command.UserId);
+        var userId = new UserId(command.UserId);
+        var user = await userRepository.GetByIdAsync(userId);
         if (user is null) {
-            return Result.Failure<AuthenticationModel>(Errors.User.NotFound(command.UserId.Value));
+            return Result.Failure<AuthenticationModel>(Errors.User.NotFound(userId));
         }
 
         if (string.IsNullOrWhiteSpace(user.PasswordResetTokenHash) ||

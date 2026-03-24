@@ -6,7 +6,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.Cycles.Commands.UpsertCycleDay;
 
 public record UpsertCycleDayCommand(
-    UserId? UserId,
+    Guid? UserId,
     CycleId CycleId,
     DateTime Date,
     bool IsPeriod,

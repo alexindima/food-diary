@@ -1,5 +1,4 @@
 using FluentValidation;
-using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Products.Queries.GetProducts;
 
@@ -10,7 +9,7 @@ public class GetProductsQueryValidator : AbstractValidator<GetProductsQuery> {
             .NotNull()
             .WithErrorCode("Authentication.InvalidToken")
             .WithMessage("Unable to identify user")
-            .Must(userId => userId is not null && userId.Value != UserId.Empty)
+            .Must(userId => userId is not null && userId.Value != Guid.Empty)
             .WithErrorCode("Authentication.InvalidToken")
             .WithMessage("Unable to identify user");
 

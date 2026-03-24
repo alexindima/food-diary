@@ -10,7 +10,7 @@ public class AiValidatorsTests {
     [Fact]
     public async Task AnalyzeFoodImageValidator_WithEmptyIds_Fails() {
         var validator = new AnalyzeFoodImageCommandValidator();
-        var command = new AnalyzeFoodImageCommand(UserId.Empty, ImageAssetId.Empty, null);
+        var command = new AnalyzeFoodImageCommand(Guid.Empty, ImageAssetId.Empty, null);
 
         var result = await validator.ValidateAsync(command);
 
@@ -20,7 +20,7 @@ public class AiValidatorsTests {
     [Fact]
     public async Task AnalyzeFoodImageValidator_WithTooLongDescription_Fails() {
         var validator = new AnalyzeFoodImageCommandValidator();
-        var command = new AnalyzeFoodImageCommand(UserId.New(), ImageAssetId.New(), new string('x', 2049));
+        var command = new AnalyzeFoodImageCommand(Guid.NewGuid(), ImageAssetId.New(), new string('x', 2049));
 
         var result = await validator.ValidateAsync(command);
 
@@ -30,7 +30,7 @@ public class AiValidatorsTests {
     [Fact]
     public async Task AnalyzeFoodImageValidator_WithValidData_Passes() {
         var validator = new AnalyzeFoodImageCommandValidator();
-        var command = new AnalyzeFoodImageCommand(UserId.New(), ImageAssetId.New(), "some context");
+        var command = new AnalyzeFoodImageCommand(Guid.NewGuid(), ImageAssetId.New(), "some context");
 
         var result = await validator.ValidateAsync(command);
 
@@ -40,7 +40,7 @@ public class AiValidatorsTests {
     [Fact]
     public async Task CalculateFoodNutritionValidator_WithEmptyItems_Fails() {
         var validator = new CalculateFoodNutritionCommandValidator();
-        var command = new CalculateFoodNutritionCommand(UserId.New(), Array.Empty<FoodVisionItemModel>());
+        var command = new CalculateFoodNutritionCommand(Guid.NewGuid(), Array.Empty<FoodVisionItemModel>());
 
         var result = await validator.ValidateAsync(command);
 
@@ -51,7 +51,7 @@ public class AiValidatorsTests {
     public async Task CalculateFoodNutritionValidator_WithInvalidItem_Fails() {
         var validator = new CalculateFoodNutritionCommandValidator();
         var command = new CalculateFoodNutritionCommand(
-            UserId.New(),
+            Guid.NewGuid(),
             [new FoodVisionItemModel("", null, 0, "", -1)]);
 
         var result = await validator.ValidateAsync(command);
@@ -63,7 +63,7 @@ public class AiValidatorsTests {
     public async Task CalculateFoodNutritionValidator_WithValidItems_Passes() {
         var validator = new CalculateFoodNutritionCommandValidator();
         var command = new CalculateFoodNutritionCommand(
-            UserId.New(),
+            Guid.NewGuid(),
             [new FoodVisionItemModel("apple", "apple", 120, "g", 0.95m)]);
 
         var result = await validator.ValidateAsync(command);
@@ -74,7 +74,7 @@ public class AiValidatorsTests {
     [Fact]
     public async Task GetUserAiUsageSummaryValidator_WithEmptyUserId_Fails() {
         var validator = new GetUserAiUsageSummaryQueryValidator();
-        var query = new GetUserAiUsageSummaryQuery(UserId.Empty);
+        var query = new GetUserAiUsageSummaryQuery(Guid.Empty);
 
         var result = await validator.ValidateAsync(query);
 
@@ -84,7 +84,7 @@ public class AiValidatorsTests {
     [Fact]
     public async Task GetUserAiUsageSummaryValidator_WithValidUserId_Passes() {
         var validator = new GetUserAiUsageSummaryQueryValidator();
-        var query = new GetUserAiUsageSummaryQuery(UserId.New());
+        var query = new GetUserAiUsageSummaryQuery(Guid.NewGuid());
 
         var result = await validator.ValidateAsync(query);
 

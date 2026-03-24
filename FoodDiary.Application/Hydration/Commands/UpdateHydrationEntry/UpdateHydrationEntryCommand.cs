@@ -6,7 +6,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.Hydration.Commands.UpdateHydrationEntry;
 
 public record UpdateHydrationEntryCommand(
-    UserId? UserId,
+    Guid? UserId,
     HydrationEntryId HydrationEntryId,
     DateTime? TimestampUtc,
     int? AmountMl) : ICommand<Result<HydrationEntryModel>>;

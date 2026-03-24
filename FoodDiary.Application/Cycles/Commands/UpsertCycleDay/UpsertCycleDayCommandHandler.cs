@@ -12,13 +12,15 @@ public class UpsertCycleDayCommandHandler(ICycleRepository cycleRepository)
     public async Task<Result<CycleDayModel>> Handle(
         UpsertCycleDayCommand command,
         CancellationToken cancellationToken) {
-        if (command.UserId is null || command.UserId == UserId.Empty) {
+        if (command.UserId is null || command.UserId == Guid.Empty) {
             return Result.Failure<CycleDayModel>(Errors.User.NotFound());
         }
 
+        var userId = new UserId(command.UserId.Value);
+
         var cycle = await cycleRepository.GetByIdAsync(
             command.CycleId,
-            command.UserId.Value,
+            userId,
             includeDays: true,
             asTracking: true,
             cancellationToken: cancellationToken);

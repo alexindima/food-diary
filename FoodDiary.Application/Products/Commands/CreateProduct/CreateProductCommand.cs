@@ -1,12 +1,11 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Products.Models;
-using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Products.Commands.CreateProduct;
 
 public record CreateProductCommand(
-    UserId? UserId,
+    Guid? UserId,
     string? Barcode,
     string Name,
     string? Brand,

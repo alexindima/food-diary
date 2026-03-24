@@ -11,7 +11,7 @@ public class WaistEntriesFeatureTests {
     [Fact]
     public async Task CreateWaistEntryCommandValidator_WithEmptyUserId_Fails() {
         var validator = new CreateWaistEntryCommandValidator();
-        var command = new CreateWaistEntryCommand(UserId.Empty, DateTime.UtcNow, 80);
+        var command = new CreateWaistEntryCommand(Guid.Empty, DateTime.UtcNow, 80);
 
         var result = await validator.ValidateAsync(command);
 
@@ -21,7 +21,7 @@ public class WaistEntriesFeatureTests {
     [Fact]
     public async Task GetWaistEntriesQueryValidator_WithInvalidDateRange_Fails() {
         var validator = new GetWaistEntriesQueryValidator();
-        var query = new GetWaistEntriesQuery(UserId.New(), DateTime.UtcNow, DateTime.UtcNow.AddDays(-1), 10, true);
+        var query = new GetWaistEntriesQuery(Guid.NewGuid(), DateTime.UtcNow, DateTime.UtcNow.AddDays(-1), 10, true);
 
         var result = await validator.ValidateAsync(query);
 
@@ -31,7 +31,7 @@ public class WaistEntriesFeatureTests {
     [Fact]
     public async Task GetWaistSummariesQueryValidator_WithNonPositiveQuantization_Fails() {
         var validator = new GetWaistSummariesQueryValidator();
-        var query = new GetWaistSummariesQuery(UserId.New(), DateTime.UtcNow.AddDays(-10), DateTime.UtcNow, 0);
+        var query = new GetWaistSummariesQuery(Guid.NewGuid(), DateTime.UtcNow.AddDays(-10), DateTime.UtcNow, 0);
 
         var result = await validator.ValidateAsync(query);
 
@@ -44,7 +44,7 @@ public class WaistEntriesFeatureTests {
         var handler = new CreateWaistEntryCommandHandler(repository);
 
         var result = await handler.Handle(
-            new CreateWaistEntryCommand(UserId.Empty, DateTime.UtcNow, 82),
+            new CreateWaistEntryCommand(Guid.Empty, DateTime.UtcNow, 82),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -60,7 +60,7 @@ public class WaistEntriesFeatureTests {
         var expectedDate = NormalizeUtcDate(localDate);
 
         var result = await handler.Handle(
-            new CreateWaistEntryCommand(userId, localDate, 82),
+            new CreateWaistEntryCommand(userId.Value, localDate, 82),
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);
@@ -71,7 +71,7 @@ public class WaistEntriesFeatureTests {
     [Fact]
     public async Task GetWaistSummariesQueryHandler_WithDateFromAfterDateTo_ReturnsValidationError() {
         var handler = new GetWaistSummariesQueryHandler(new InMemoryWaistEntryRepository());
-        var query = new GetWaistSummariesQuery(UserId.New(), DateTime.UtcNow, DateTime.UtcNow.AddDays(-1), 7);
+        var query = new GetWaistSummariesQuery(Guid.NewGuid(), DateTime.UtcNow, DateTime.UtcNow.AddDays(-1), 7);
 
         var result = await handler.Handle(query, CancellationToken.None);
 

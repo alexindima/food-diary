@@ -19,7 +19,7 @@ public class UpdateProductCommandValidator : AbstractValidator<UpdateProductComm
             .NotNull()
             .WithErrorCode("Authentication.InvalidToken")
             .WithMessage("Unable to identify user")
-            .Must(userId => userId is not null && userId.Value != UserId.Empty)
+            .Must(userId => userId is not null && userId.Value != Guid.Empty)
             .WithErrorCode("Authentication.InvalidToken")
             .WithMessage("Unable to identify user");
 
@@ -141,11 +141,11 @@ public class UpdateProductCommandValidator : AbstractValidator<UpdateProductComm
         var product = cached as Product;
 
         if (product is null) {
-            if (command.UserId is null || command.UserId.Value == UserId.Empty) {
+            if (command.UserId is null || command.UserId.Value == Guid.Empty) {
                 return;
             }
 
-            product = await _productRepository.GetByIdAsync(command.ProductId, command.UserId.Value, includePublic: false, cancellationToken: cancellationToken);
+            product = await _productRepository.GetByIdAsync(command.ProductId, new UserId(command.UserId.Value), includePublic: false, cancellationToken: cancellationToken);
             if (product is not null) {
                 context.RootContextData[ProductContextKey] = product;
             }

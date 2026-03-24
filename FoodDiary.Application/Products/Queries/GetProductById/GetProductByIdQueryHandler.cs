@@ -12,11 +12,11 @@ public class GetProductByIdQueryHandler(IProductRepository productRepository)
     public async Task<Result<ProductModel>> Handle(
         GetProductByIdQuery query,
         CancellationToken cancellationToken) {
-        if (query.UserId is null || query.UserId == UserId.Empty) {
+        if (query.UserId is null || query.UserId == Guid.Empty) {
             return Result.Failure<ProductModel>(Errors.Authentication.InvalidToken);
         }
 
-        var userId = query.UserId.Value;
+        var userId = new UserId(query.UserId.Value);
         var product = await productRepository.GetByIdAsync(
             query.ProductId,
             userId,

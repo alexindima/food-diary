@@ -8,7 +8,7 @@ public class GetShoppingListByIdQueryValidator : AbstractValidator<GetShoppingLi
         RuleFor(x => x.UserId)
             .NotNull()
             .WithErrorCode("Authentication.InvalidToken")
-            .Must(id => id is not null && id.Value != UserId.Empty)
+            .Must(id => id is not null && id.Value != Guid.Empty)
             .WithErrorCode("Authentication.InvalidToken");
 
         RuleFor(x => x.ShoppingListId)

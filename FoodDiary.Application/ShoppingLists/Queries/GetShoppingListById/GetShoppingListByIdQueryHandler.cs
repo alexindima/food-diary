@@ -12,13 +12,15 @@ public class GetShoppingListByIdQueryHandler(IShoppingListRepository shoppingLis
     public async Task<Result<ShoppingListModel>> Handle(
         GetShoppingListByIdQuery query,
         CancellationToken cancellationToken) {
-        if (query.UserId is null || query.UserId == UserId.Empty) {
+        if (query.UserId is null || query.UserId == Guid.Empty) {
             return Result.Failure<ShoppingListModel>(Errors.Authentication.InvalidToken);
         }
 
+        var userId = new UserId(query.UserId.Value);
+
         var list = await shoppingListRepository.GetByIdAsync(
             query.ShoppingListId,
-            query.UserId.Value,
+            userId,
             includeItems: true,
             cancellationToken: cancellationToken);
 

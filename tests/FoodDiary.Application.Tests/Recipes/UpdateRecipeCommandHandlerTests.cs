@@ -24,7 +24,7 @@ public class UpdateRecipeCommandHandlerTests {
             new NoopImageStorageService());
 
         var command = new UpdateRecipeCommand(
-            userId,
+            userId.Value,
             recipeId,
             Name: "Updated soup",
             Description: null,

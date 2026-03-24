@@ -1,4 +1,3 @@
-using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Extensions;
 using FoodDiary.Presentation.Api.Features.Products.Mappings;
@@ -12,52 +11,52 @@ namespace FoodDiary.Presentation.Api.Features.Products;
 [Route("api/[controller]")]
 public class ProductsController(ISender mediator) : AuthorizedController(mediator) {
     [HttpGet]
-    public async Task<IActionResult> GetAll([FromCurrentUser] UserId userId, [FromQuery] GetProductsHttpQuery query) {
+    public async Task<IActionResult> GetAll([FromCurrentUser] Guid userId, [FromQuery] GetProductsHttpQuery query) {
         var result = await Mediator.Send(query.ToQuery(userId));
         return result.ToOkActionResult(this, static value => value.ToHttpResponse());
     }
 
     [HttpGet("with-recent")]
-    public async Task<IActionResult> GetAllWithRecent([FromCurrentUser] UserId userId, [FromQuery] GetProductsWithRecentHttpQuery query) {
+    public async Task<IActionResult> GetAllWithRecent([FromCurrentUser] Guid userId, [FromQuery] GetProductsWithRecentHttpQuery query) {
         var result = await Mediator.Send(query.ToQuery(userId));
         return result.ToOkActionResult(this, static value => value.ToHttpResponse());
     }
 
     [HttpGet("recent")]
-    public async Task<IActionResult> GetRecent([FromCurrentUser] UserId userId, [FromQuery] GetRecentProductsHttpQuery query) {
+    public async Task<IActionResult> GetRecent([FromCurrentUser] Guid userId, [FromQuery] GetRecentProductsHttpQuery query) {
         var result = await Mediator.Send(query.ToQuery(userId));
         return result.ToOkActionResult(this, static value => value.Select(x => x.ToHttpResponse()).ToList());
     }
 
     [HttpGet("{id:guid}")]
-    public async Task<IActionResult> GetById(Guid id, [FromCurrentUser] UserId userId) {
+    public async Task<IActionResult> GetById(Guid id, [FromCurrentUser] Guid userId) {
         var result = await Mediator.Send(id.ToQuery(userId));
         return result.ToOkActionResult(this, static value => value.ToHttpResponse());
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromCurrentUser] UserId userId, [FromBody] CreateProductHttpRequest request) {
-        var command = request.ToCommand(userId.Value);
+    public async Task<IActionResult> Create([FromCurrentUser] Guid userId, [FromBody] CreateProductHttpRequest request) {
+        var command = request.ToCommand(userId);
         var result = await Mediator.Send(command);
         return result.ToOkActionResult(this, static value => value.ToHttpResponse());
     }
 
     [HttpPatch("{id:guid}")]
-    public async Task<IActionResult> Update(Guid id, [FromCurrentUser] UserId userId, [FromBody] UpdateProductHttpRequest request) {
-        var command = request.ToCommand(userId.Value, id);
+    public async Task<IActionResult> Update(Guid id, [FromCurrentUser] Guid userId, [FromBody] UpdateProductHttpRequest request) {
+        var command = request.ToCommand(userId, id);
         var result = await Mediator.Send(command);
         return result.ToOkActionResult(this, static value => value.ToHttpResponse());
     }
 
     [HttpDelete("{id:guid}")]
-    public async Task<IActionResult> Delete(Guid id, [FromCurrentUser] UserId userId) {
+    public async Task<IActionResult> Delete(Guid id, [FromCurrentUser] Guid userId) {
         var command = id.ToDeleteCommand(userId);
         var result = await Mediator.Send(command);
         return result.ToNoContentActionResult();
     }
 
     [HttpPost("{id:guid}/duplicate")]
-    public async Task<IActionResult> Duplicate(Guid id, [FromCurrentUser] UserId userId) {
+    public async Task<IActionResult> Duplicate(Guid id, [FromCurrentUser] Guid userId) {
         var command = id.ToDuplicateCommand(userId);
         var result = await Mediator.Send(command);
         return result.ToOkActionResult(this, static value => value.ToHttpResponse());

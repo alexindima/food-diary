@@ -9,17 +9,17 @@ using FoodDiary.Presentation.Api.Features.Ai.Requests;
 namespace FoodDiary.Presentation.Api.Features.Ai.Mappings;
 
 public static class AiHttpMappings {
-    public static GetUserAiUsageSummaryQuery ToUsageQuery(this UserId userId) => new(userId);
+    public static GetUserAiUsageSummaryQuery ToUsageQuery(this Guid userId) => new(userId);
 
-    public static AnalyzeFoodImageCommand ToCommand(this FoodVisionHttpRequest request, UserId userId) {
+    public static AnalyzeFoodImageCommand ToCommand(this FoodVisionHttpRequest request, Guid userId) {
         return new AnalyzeFoodImageCommand(
             userId,
             new ImageAssetId(request.ImageAssetId),
             request.Description);
     }
 
-    public static CalculateFoodNutritionCommand ToCommand(this FoodNutritionHttpRequest request, UserId userId) {
-        return new CalculateFoodNutritionCommand(userId, request.Items?.Select(ToModel).ToList() ?? new List<FoodVisionItemModel>());
+    public static CalculateFoodNutritionCommand ToCommand(this FoodNutritionHttpRequest request, Guid userId) {
+        return new CalculateFoodNutritionCommand(userId, request.Items?.Select(ToModel).ToList() ?? []);
     }
 
     private static FoodVisionItemModel ToModel(this FoodVisionItemHttpModel model) {

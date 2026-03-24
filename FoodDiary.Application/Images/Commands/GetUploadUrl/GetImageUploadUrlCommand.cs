@@ -5,7 +5,7 @@ using MediatR;
 namespace FoodDiary.Application.Images.Commands.GetUploadUrl;
 
 public sealed record GetImageUploadUrlCommand(
-    UserId UserId,
+    Guid UserId,
     string FileName,
     string ContentType,
     long FileSizeBytes) : IRequest<Result<GetImageUploadUrlResult>>;

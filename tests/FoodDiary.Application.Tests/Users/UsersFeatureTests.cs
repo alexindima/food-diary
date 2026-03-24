@@ -18,7 +18,7 @@ public class UsersFeatureTests {
             new PassthroughPasswordHasher());
 
         var result = await handler.Handle(
-            new ChangePasswordCommand(UserId.Empty, "old", "new"),
+            new ChangePasswordCommand(Guid.Empty, "old", "new"),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -32,7 +32,7 @@ public class UsersFeatureTests {
             new SingleUserRepository(user),
             new FixedDateTimeProvider(DateTime.UtcNow));
 
-        var result = await handler.Handle(new DeleteUserCommand(UserId.Empty), CancellationToken.None);
+        var result = await handler.Handle(new DeleteUserCommand(Guid.Empty), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
@@ -46,7 +46,7 @@ public class UsersFeatureTests {
             new SingleUserRepository(user),
             new FixedDateTimeProvider(deletedAtUtc));
 
-        var result = await handler.Handle(new DeleteUserCommand(user.Id), CancellationToken.None);
+        var result = await handler.Handle(new DeleteUserCommand(user.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Equal(deletedAtUtc, user.DeletedAt);
@@ -56,7 +56,7 @@ public class UsersFeatureTests {
     [Fact]
     public async Task GetDesiredWaistQueryValidator_WithEmptyUserId_Fails() {
         var validator = new GetDesiredWaistQueryValidator();
-        var result = await validator.ValidateAsync(new GetDesiredWaistQuery(UserId.Empty));
+        var result = await validator.ValidateAsync(new GetDesiredWaistQuery(Guid.Empty));
 
         Assert.False(result.IsValid);
     }
@@ -72,7 +72,7 @@ public class UsersFeatureTests {
     [Fact]
     public async Task GetUserGoalsQueryValidator_WithValidUserId_Passes() {
         var validator = new GetUserGoalsQueryValidator();
-        var result = await validator.ValidateAsync(new GetUserGoalsQuery(UserId.New()));
+        var result = await validator.ValidateAsync(new GetUserGoalsQuery(Guid.NewGuid()));
 
         Assert.True(result.IsValid);
     }

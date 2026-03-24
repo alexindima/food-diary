@@ -13,7 +13,7 @@ public class ProductsFeatureTests {
     [Fact]
     public async Task GetProductsWithRecentQueryValidator_WithEmptyUserId_Fails() {
         var validator = new GetProductsWithRecentQueryValidator();
-        var query = new GetProductsWithRecentQuery(UserId.Empty, 1, 10, null, true);
+        var query = new GetProductsWithRecentQuery(Guid.Empty, 1, 10, null, true);
 
         var result = await validator.ValidateAsync(query);
 
@@ -23,7 +23,7 @@ public class ProductsFeatureTests {
     [Fact]
     public async Task GetRecentProductsQueryValidator_WithValidUserId_Passes() {
         var validator = new GetRecentProductsQueryValidator();
-        var query = new GetRecentProductsQuery(UserId.New(), 10, true);
+        var query = new GetRecentProductsQuery(Guid.NewGuid(), 10, true);
 
         var result = await validator.ValidateAsync(query);
 

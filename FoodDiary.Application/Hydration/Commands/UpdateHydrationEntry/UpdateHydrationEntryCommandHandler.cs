@@ -13,15 +13,17 @@ public class UpdateHydrationEntryCommandHandler(
     public async Task<Result<HydrationEntryModel>> Handle(
         UpdateHydrationEntryCommand command,
         CancellationToken cancellationToken) {
-        if (command.UserId is null || command.UserId == UserId.Empty) {
+        if (command.UserId is null || command.UserId == Guid.Empty) {
             return Result.Failure<HydrationEntryModel>(Errors.User.NotFound());
         }
+
+        var userId = new UserId(command.UserId.Value);
 
         var entry = await repository.GetByIdAsync(
             command.HydrationEntryId,
             asTracking: true,
             cancellationToken: cancellationToken);
-        if (entry is null || entry.UserId != command.UserId.Value) {
+        if (entry is null || entry.UserId != userId) {
             return Result.Failure<HydrationEntryModel>(Errors.HydrationEntry.NotFound(command.HydrationEntryId.Value));
         }
 

@@ -5,7 +5,6 @@ using FoodDiary.Application.Authentication.Commands.ResendEmailVerification;
 using FoodDiary.Application.Authentication.Commands.TelegramBotAuth;
 using FoodDiary.Application.Authentication.Commands.TelegramLoginWidget;
 using FoodDiary.Application.Authentication.Commands.VerifyEmail;
-using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.Authentication;
 
@@ -13,7 +12,7 @@ public class AuthenticationValidatorsTests {
     [Fact]
     public async Task AdminSsoStartValidator_WithEmptyUserId_Fails() {
         var validator = new AdminSsoStartCommandValidator();
-        var command = new AdminSsoStartCommand(UserId.Empty);
+        var command = new AdminSsoStartCommand(Guid.Empty);
 
         var result = await validator.ValidateAsync(command);
 
@@ -23,7 +22,7 @@ public class AuthenticationValidatorsTests {
     [Fact]
     public async Task AdminSsoStartValidator_WithValidUserId_Passes() {
         var validator = new AdminSsoStartCommandValidator();
-        var command = new AdminSsoStartCommand(UserId.New());
+        var command = new AdminSsoStartCommand(Guid.NewGuid());
 
         var result = await validator.ValidateAsync(command);
 
@@ -33,7 +32,7 @@ public class AuthenticationValidatorsTests {
     [Fact]
     public async Task ResendEmailVerificationValidator_WithEmptyUserId_Fails() {
         var validator = new ResendEmailVerificationCommandValidator();
-        var command = new ResendEmailVerificationCommand(UserId.Empty);
+        var command = new ResendEmailVerificationCommand(Guid.Empty);
 
         var result = await validator.ValidateAsync(command);
 
@@ -43,7 +42,7 @@ public class AuthenticationValidatorsTests {
     [Fact]
     public async Task VerifyEmailValidator_WithEmptyToken_Fails() {
         var validator = new VerifyEmailCommandValidator();
-        var command = new VerifyEmailCommand(UserId.New(), string.Empty);
+        var command = new VerifyEmailCommand(Guid.NewGuid(), string.Empty);
 
         var result = await validator.ValidateAsync(command);
 
@@ -53,7 +52,7 @@ public class AuthenticationValidatorsTests {
     [Fact]
     public async Task ConfirmPasswordResetValidator_WithShortPassword_Fails() {
         var validator = new ConfirmPasswordResetCommandValidator();
-        var command = new ConfirmPasswordResetCommand(UserId.New(), "token", "12345");
+        var command = new ConfirmPasswordResetCommand(Guid.NewGuid(), "token", "12345");
 
         var result = await validator.ValidateAsync(command);
 

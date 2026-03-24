@@ -14,11 +14,11 @@ public sealed class GetRecentRecipesQueryHandler(
     public async Task<Result<IReadOnlyList<RecipeModel>>> Handle(
         GetRecentRecipesQuery query,
         CancellationToken cancellationToken) {
-        if (query.UserId is null || query.UserId == UserId.Empty) {
+        if (query.UserId is null || query.UserId == Guid.Empty) {
             return Result.Failure<IReadOnlyList<RecipeModel>>(Errors.Authentication.InvalidToken);
         }
 
-        var userId = query.UserId.Value;
+        var userId = new UserId(query.UserId.Value);
         var recentLimit = Math.Clamp(query.Limit, 1, 50);
 
         var recents = await recentItemRepository.GetRecentRecipesAsync(userId, recentLimit, cancellationToken);

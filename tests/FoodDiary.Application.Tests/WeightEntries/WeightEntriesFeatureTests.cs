@@ -11,7 +11,7 @@ public class WeightEntriesFeatureTests {
     [Fact]
     public async Task CreateWeightEntryCommandValidator_WithEmptyUserId_Fails() {
         var validator = new CreateWeightEntryCommandValidator();
-        var command = new CreateWeightEntryCommand(UserId.Empty, DateTime.UtcNow, 80);
+        var command = new CreateWeightEntryCommand(Guid.Empty, DateTime.UtcNow, 80);
 
         var result = await validator.ValidateAsync(command);
 
@@ -21,7 +21,7 @@ public class WeightEntriesFeatureTests {
     [Fact]
     public async Task GetWeightEntriesQueryValidator_WithInvalidDateRange_Fails() {
         var validator = new GetWeightEntriesQueryValidator();
-        var query = new GetWeightEntriesQuery(UserId.New(), DateTime.UtcNow, DateTime.UtcNow.AddDays(-1), 10, true);
+        var query = new GetWeightEntriesQuery(Guid.NewGuid(), DateTime.UtcNow, DateTime.UtcNow.AddDays(-1), 10, true);
 
         var result = await validator.ValidateAsync(query);
 
@@ -31,7 +31,7 @@ public class WeightEntriesFeatureTests {
     [Fact]
     public async Task GetWeightSummariesQueryValidator_WithNonPositiveQuantization_Fails() {
         var validator = new GetWeightSummariesQueryValidator();
-        var query = new GetWeightSummariesQuery(UserId.New(), DateTime.UtcNow.AddDays(-10), DateTime.UtcNow, 0);
+        var query = new GetWeightSummariesQuery(Guid.NewGuid(), DateTime.UtcNow.AddDays(-10), DateTime.UtcNow, 0);
 
         var result = await validator.ValidateAsync(query);
 
@@ -44,7 +44,7 @@ public class WeightEntriesFeatureTests {
         var handler = new CreateWeightEntryCommandHandler(repository);
 
         var result = await handler.Handle(
-            new CreateWeightEntryCommand(UserId.Empty, DateTime.UtcNow, 82),
+            new CreateWeightEntryCommand(Guid.Empty, DateTime.UtcNow, 82),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -60,7 +60,7 @@ public class WeightEntriesFeatureTests {
         var expectedDate = NormalizeUtcDate(localDate);
 
         var result = await handler.Handle(
-            new CreateWeightEntryCommand(userId, localDate, 82),
+            new CreateWeightEntryCommand(userId.Value, localDate, 82),
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);
@@ -71,7 +71,7 @@ public class WeightEntriesFeatureTests {
     [Fact]
     public async Task GetWeightSummariesQueryHandler_WithDateFromAfterDateTo_ReturnsValidationError() {
         var handler = new GetWeightSummariesQueryHandler(new InMemoryWeightEntryRepository());
-        var query = new GetWeightSummariesQuery(UserId.New(), DateTime.UtcNow, DateTime.UtcNow.AddDays(-1), 7);
+        var query = new GetWeightSummariesQuery(Guid.NewGuid(), DateTime.UtcNow, DateTime.UtcNow.AddDays(-1), 7);
 
         var result = await handler.Handle(query, CancellationToken.None);
 

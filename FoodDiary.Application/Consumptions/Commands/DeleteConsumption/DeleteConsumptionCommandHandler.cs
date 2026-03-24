@@ -8,13 +8,15 @@ namespace FoodDiary.Application.Consumptions.Commands.DeleteConsumption;
 public class DeleteConsumptionCommandHandler(IMealRepository mealRepository)
     : ICommandHandler<DeleteConsumptionCommand, Result<bool>> {
     public async Task<Result<bool>> Handle(DeleteConsumptionCommand command, CancellationToken cancellationToken) {
-        if (command.UserId is null || command.UserId == UserId.Empty) {
+        if (command.UserId is null || command.UserId == Guid.Empty) {
             return Result.Failure<bool>(Errors.Authentication.InvalidToken);
         }
 
+        var userId = new UserId(command.UserId.Value);
+
         var meal = await mealRepository.GetByIdAsync(
             command.ConsumptionId,
-            command.UserId.Value,
+            userId,
             includeItems: false,
             asTracking: true,
             cancellationToken: cancellationToken);

@@ -16,7 +16,7 @@ public class UpdateRecipeCommandValidatorTests {
         var validator = new UpdateRecipeCommandValidator(new StubRecipeRepository(recipeId, userId, recipe));
 
         var command = CreateCommand(
-            userId,
+            userId.Value,
             recipeId,
             [
                 CreateStep(order: 1, "Step 1"),
@@ -40,7 +40,7 @@ public class UpdateRecipeCommandValidatorTests {
         var validator = new UpdateRecipeCommandValidator(new StubRecipeRepository(recipeId, userId, recipe));
 
         var command = CreateCommand(
-            userId,
+            userId.Value,
             recipeId,
             [
                 CreateStep(order: 0, "Step uses index fallback to 1"),
@@ -53,7 +53,7 @@ public class UpdateRecipeCommandValidatorTests {
     }
 
     private static UpdateRecipeCommand CreateCommand(
-        UserId userId,
+        Guid userId,
         RecipeId recipeId,
         IReadOnlyList<RecipeStepInput> steps) {
         return new UpdateRecipeCommand(

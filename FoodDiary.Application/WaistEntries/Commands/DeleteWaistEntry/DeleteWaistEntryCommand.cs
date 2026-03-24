@@ -5,6 +5,6 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.WaistEntries.Commands.DeleteWaistEntry;
 
 public record DeleteWaistEntryCommand(
-    UserId? UserId,
+    Guid? UserId,
     WaistEntryId WaistEntryId
 ) : ICommand<Result<bool>>;

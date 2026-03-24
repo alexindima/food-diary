@@ -1,0 +1,72 @@
+using System.Security.Claims;
+using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Presentation.Api.Controllers;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+
+namespace FoodDiary.Presentation.Api.Tests;
+
+public sealed class CurrentUserIdModelBinderTests {
+    [Fact]
+    public async Task BindModelAsync_WithValidUserClaim_BindsUserId() {
+        var binder = new CurrentUserIdModelBinder();
+        var userGuid = Guid.NewGuid();
+        var httpContext = new DefaultHttpContext {
+            User = new ClaimsPrincipal(new ClaimsIdentity([new Claim(ClaimTypes.NameIdentifier, userGuid.ToString())], "test")),
+        };
+        var bindingContext = CreateBindingContext(httpContext);
+
+        await binder.BindModelAsync(bindingContext);
+
+        Assert.True(bindingContext.Result.IsModelSet);
+        Assert.Equal(new UserId(userGuid), Assert.IsType<UserId>(bindingContext.Result.Model));
+        Assert.False(httpContext.Items.ContainsKey(CurrentUserIdModelBinder.UnauthorizedItemKey));
+    }
+
+    [Fact]
+    public async Task BindModelAsync_WithGuidModelType_BindsGuid() {
+        var binder = new CurrentUserIdModelBinder();
+        var userGuid = Guid.NewGuid();
+        var httpContext = new DefaultHttpContext {
+            User = new ClaimsPrincipal(new ClaimsIdentity([new Claim(ClaimTypes.NameIdentifier, userGuid.ToString())], "test")),
+        };
+        var bindingContext = CreateBindingContext(httpContext, typeof(Guid));
+
+        await binder.BindModelAsync(bindingContext);
+
+        Assert.True(bindingContext.Result.IsModelSet);
+        Assert.Equal(userGuid, Assert.IsType<Guid>(bindingContext.Result.Model));
+        Assert.False(httpContext.Items.ContainsKey(CurrentUserIdModelBinder.UnauthorizedItemKey));
+    }
+
+    [Fact]
+    public async Task BindModelAsync_WithoutCurrentUser_FailsAndMarksRequestAsUnauthorized() {
+        var binder = new CurrentUserIdModelBinder();
+        var httpContext = new DefaultHttpContext();
+        var bindingContext = CreateBindingContext(httpContext);
+
+        await binder.BindModelAsync(bindingContext);
+
+        Assert.False(bindingContext.Result.IsModelSet);
+        Assert.True(httpContext.Items.TryGetValue(CurrentUserIdModelBinder.UnauthorizedItemKey, out var unauthorized));
+        Assert.Equal(true, unauthorized);
+        Assert.Contains(bindingContext.ModelState, pair => pair.Key == bindingContext.ModelName);
+    }
+
+    private static DefaultModelBindingContext CreateBindingContext(HttpContext httpContext, Type? modelType = null) {
+        var metadataProvider = new EmptyModelMetadataProvider();
+        var effectiveModelType = modelType ?? typeof(UserId);
+
+        return new DefaultModelBindingContext {
+            ActionContext = new Microsoft.AspNetCore.Mvc.ActionContext {
+                HttpContext = httpContext,
+            },
+            ModelMetadata = metadataProvider.GetMetadataForType(effectiveModelType),
+            ModelName = "currentUserId",
+            ModelState = new ModelStateDictionary(),
+            ValueProvider = new CompositeValueProvider(),
+            ValidationState = new ValidationStateDictionary(),
+        };
+    }
+}

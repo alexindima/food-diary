@@ -8,12 +8,12 @@ using FoodDiary.Presentation.Api.Features.Consumptions.Requests;
 namespace FoodDiary.Presentation.Api.Features.Consumptions.Mappings;
 
 public static class ConsumptionHttpMappings {
-    public static DeleteConsumptionCommand ToDeleteCommand(this Guid consumptionId, UserId userId) =>
+    public static DeleteConsumptionCommand ToDeleteCommand(this Guid consumptionId, Guid userId) =>
         new(userId, new MealId(consumptionId));
 
     public static CreateConsumptionCommand ToCommand(this CreateConsumptionHttpRequest request, Guid userId) =>
         new(
-            new UserId(userId),
+            userId,
             request.Date,
             request.MealType,
             request.Comment,
@@ -33,7 +33,7 @@ public static class ConsumptionHttpMappings {
 
     public static UpdateConsumptionCommand ToCommand(this UpdateConsumptionHttpRequest request, Guid userId, Guid consumptionId) =>
         new(
-            new UserId(userId),
+            userId,
             new MealId(consumptionId),
             request.Date,
             request.MealType,

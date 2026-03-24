@@ -5,5 +5,5 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.ShoppingLists.Commands.DeleteShoppingList;
 
 public record DeleteShoppingListCommand(
-    UserId? UserId,
+    Guid? UserId,
     ShoppingListId ShoppingListId) : ICommand<Result<bool>>;

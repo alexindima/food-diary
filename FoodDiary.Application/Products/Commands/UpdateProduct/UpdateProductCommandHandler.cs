@@ -16,13 +16,15 @@ public class UpdateProductCommandHandler(
     : ICommandHandler<UpdateProductCommand, Result<ProductModel>> {
     public async Task<Result<ProductModel>>
         Handle(UpdateProductCommand command, CancellationToken cancellationToken) {
-        if (command.UserId is null || command.UserId == UserId.Empty) {
+        if (command.UserId is null || command.UserId == Guid.Empty) {
             return Result.Failure<ProductModel>(Errors.Authentication.InvalidToken);
         }
 
+        var userId = new UserId(command.UserId.Value);
+
         var product = await productRepository.GetByIdAsync(
             command.ProductId,
-            command.UserId.Value,
+            userId,
             includePublic: false,
             cancellationToken: cancellationToken);
         if (product is null) {

@@ -16,9 +16,11 @@ public class CreateShoppingListCommandHandler(
     public async Task<Result<ShoppingListModel>> Handle(
         CreateShoppingListCommand command,
         CancellationToken cancellationToken) {
-        if (command.UserId is null || command.UserId == UserId.Empty) {
+        if (command.UserId is null || command.UserId == Guid.Empty) {
             return Result.Failure<ShoppingListModel>(Errors.Authentication.InvalidToken);
         }
+
+        var userId = new UserId(command.UserId.Value);
 
         if (string.IsNullOrWhiteSpace(command.Name)) {
             return Result.Failure<ShoppingListModel>(
@@ -27,7 +29,7 @@ public class CreateShoppingListCommandHandler(
 
         var itemsResult = await ShoppingListItemBuilder.BuildItemsAsync(
             command.Items,
-            command.UserId.Value,
+            userId,
             productRepository,
             cancellationToken);
 
@@ -35,7 +37,7 @@ public class CreateShoppingListCommandHandler(
             return Result.Failure<ShoppingListModel>(itemsResult.Error);
         }
 
-        var list = ShoppingList.Create(command.UserId.Value, command.Name);
+        var list = ShoppingList.Create(userId, command.Name);
         foreach (var item in itemsResult.Value) {
             list.AddItem(
                 item.Name,

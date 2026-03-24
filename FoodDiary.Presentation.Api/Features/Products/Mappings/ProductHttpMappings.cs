@@ -8,15 +8,15 @@ using FoodDiary.Presentation.Api.Features.Products.Requests;
 namespace FoodDiary.Presentation.Api.Features.Products.Mappings;
 
 public static class ProductHttpMappings {
-    public static DeleteProductCommand ToDeleteCommand(this Guid productId, UserId userId) =>
+    public static DeleteProductCommand ToDeleteCommand(this Guid productId, Guid userId) =>
         new(userId, new ProductId(productId));
 
-    public static DuplicateProductCommand ToDuplicateCommand(this Guid productId, UserId userId) =>
+    public static DuplicateProductCommand ToDuplicateCommand(this Guid productId, Guid userId) =>
         new(userId, new ProductId(productId));
 
     public static CreateProductCommand ToCommand(this CreateProductHttpRequest request, Guid userIdValue) {
         return new CreateProductCommand(
-            new UserId(userIdValue),
+            userIdValue,
             request.Barcode,
             request.Name,
             request.Brand,
@@ -41,7 +41,7 @@ public static class ProductHttpMappings {
 
     public static UpdateProductCommand ToCommand(this UpdateProductHttpRequest request, Guid userIdValue, Guid productId) {
         return new UpdateProductCommand(
-            new UserId(userIdValue),
+            userIdValue,
             new ProductId(productId),
             request.Barcode,
             request.ClearBarcode,

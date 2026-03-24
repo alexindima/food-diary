@@ -5,5 +5,5 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.Recipes.Commands.DeleteRecipe;
 
 public record DeleteRecipeCommand(
-    UserId? UserId,
+    Guid? UserId,
     RecipeId RecipeId) : ICommand<Result<bool>>;

@@ -21,13 +21,15 @@ public class UpdateConsumptionCommandHandler(
     IDateTimeProvider dateTimeProvider)
     : ICommandHandler<UpdateConsumptionCommand, Result<ConsumptionModel>> {
     public async Task<Result<ConsumptionModel>> Handle(UpdateConsumptionCommand command, CancellationToken cancellationToken) {
-        if (command.UserId is null || command.UserId == UserId.Empty) {
+        if (command.UserId is null || command.UserId == Guid.Empty) {
             return Result.Failure<ConsumptionModel>(Errors.Authentication.InvalidToken);
         }
 
+        var userId = new UserId(command.UserId.Value);
+
         var meal = await mealRepository.GetByIdAsync(
             command.ConsumptionId,
-            command.UserId.Value,
+            userId,
             includeItems: true,
             asTracking: true,
             cancellationToken: cancellationToken);
@@ -102,7 +104,7 @@ public class UpdateConsumptionCommandHandler(
         }
 
         if (command.IsNutritionAutoCalculated) {
-            var nutritionResult = await CalculateNutritionAsync(meal, command.UserId.Value, cancellationToken);
+            var nutritionResult = await CalculateNutritionAsync(meal, userId, cancellationToken);
             if (nutritionResult.IsFailure) {
                 return Result.Failure<ConsumptionModel>(nutritionResult.Error);
             }
@@ -147,7 +149,7 @@ public class UpdateConsumptionCommandHandler(
 
         await mealRepository.UpdateAsync(meal, cancellationToken);
         await recentItemRepository.RegisterUsageAsync(
-            command.UserId.Value,
+            userId,
             meal.Items.Where(x => x.ProductId.HasValue).Select(x => x.ProductId!.Value).ToList(),
             meal.Items.Where(x => x.RecipeId.HasValue).Select(x => x.RecipeId!.Value).ToList(),
             cancellationToken);
@@ -158,7 +160,7 @@ public class UpdateConsumptionCommandHandler(
 
         var updated = await mealRepository.GetByIdAsync(
             meal.Id,
-            command.UserId.Value,
+            userId,
             includeItems: true,
             cancellationToken: cancellationToken);
 

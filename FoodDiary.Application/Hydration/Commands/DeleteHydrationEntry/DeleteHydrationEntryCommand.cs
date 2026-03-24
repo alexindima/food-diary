@@ -5,5 +5,5 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.Hydration.Commands.DeleteHydrationEntry;
 
 public record DeleteHydrationEntryCommand(
-    UserId? UserId,
+    Guid? UserId,
     HydrationEntryId HydrationEntryId) : ICommand<Result<bool>>;

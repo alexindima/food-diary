@@ -1,5 +1,4 @@
 using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Extensions;
 using FoodDiary.Presentation.Api.Features.Ai.Mappings;
@@ -15,14 +14,14 @@ namespace FoodDiary.Presentation.Api.Features.Ai;
 [Authorize(Roles = RoleNames.Premium)]
 public sealed class AiFoodController(ISender mediator) : AuthorizedController(mediator) {
     [HttpPost("vision")]
-    public async Task<IActionResult> AnalyzeFood([FromCurrentUser] UserId userId, [FromBody] FoodVisionHttpRequest request) {
+    public async Task<IActionResult> AnalyzeFood([FromCurrentUser] Guid userId, [FromBody] FoodVisionHttpRequest request) {
         var command = request.ToCommand(userId);
         var result = await Mediator.Send(command);
         return result.ToOkActionResult(this, static value => value.ToHttpResponse());
     }
 
     [HttpPost("nutrition")]
-    public async Task<IActionResult> CalculateNutrition([FromCurrentUser] UserId userId, [FromBody] FoodNutritionHttpRequest request) {
+    public async Task<IActionResult> CalculateNutrition([FromCurrentUser] Guid userId, [FromBody] FoodNutritionHttpRequest request) {
         var command = request.ToCommand(userId);
         var result = await Mediator.Send(command);
         return result.ToOkActionResult(this, static value => value.ToHttpResponse());

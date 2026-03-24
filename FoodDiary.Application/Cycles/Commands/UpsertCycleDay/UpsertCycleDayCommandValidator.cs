@@ -11,7 +11,7 @@ public class UpsertCycleDayCommandValidator : AbstractValidator<UpsertCycleDayCo
             .NotNull()
             .WithErrorCode("Validation.Required")
             .WithMessage("UserId is required.")
-            .Must(id => id is not null && id.Value != UserId.Empty)
+            .Must(id => id is not null && id.Value != Guid.Empty)
             .WithErrorCode("Validation.Invalid")
             .WithMessage("UserId is invalid.");
 

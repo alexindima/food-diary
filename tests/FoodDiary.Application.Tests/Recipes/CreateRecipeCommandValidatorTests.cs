@@ -1,7 +1,6 @@
 using FoodDiary.Application.Recipes.Commands.CreateRecipe;
 using FoodDiary.Application.Recipes.Common;
 using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.Recipes;
 
@@ -10,7 +9,7 @@ public class CreateRecipeCommandValidatorTests {
     public async Task ValidateAsync_WithDuplicateStepOrder_ReturnsValidationError() {
         var validator = new CreateRecipeCommandValidator();
         var command = CreateCommand(
-            UserId.New(),
+            Guid.NewGuid(),
             [
                 CreateStep(order: 1, "Step 1"),
                 CreateStep(order: 1, "Step 2 duplicate")
@@ -29,7 +28,7 @@ public class CreateRecipeCommandValidatorTests {
     public async Task ValidateAsync_WithDistinctEffectiveStepOrder_Passes() {
         var validator = new CreateRecipeCommandValidator();
         var command = CreateCommand(
-            UserId.New(),
+            Guid.NewGuid(),
             [
                 CreateStep(order: 0, "Step uses index fallback to 1"),
                 CreateStep(order: 2, "Explicit step 2")
@@ -40,7 +39,7 @@ public class CreateRecipeCommandValidatorTests {
         Assert.True(result.IsValid);
     }
 
-    private static CreateRecipeCommand CreateCommand(UserId userId, IReadOnlyList<RecipeStepInput> steps) {
+    private static CreateRecipeCommand CreateCommand(Guid userId, IReadOnlyList<RecipeStepInput> steps) {
         return new CreateRecipeCommand(
             userId,
             Name: "Soup",

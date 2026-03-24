@@ -14,11 +14,11 @@ public sealed class GetRecentProductsQueryHandler(
     public async Task<Result<IReadOnlyList<ProductModel>>> Handle(
         GetRecentProductsQuery query,
         CancellationToken cancellationToken) {
-        if (query.UserId is null || query.UserId == UserId.Empty) {
+        if (query.UserId is null || query.UserId == Guid.Empty) {
             return Result.Failure<IReadOnlyList<ProductModel>>(Errors.Authentication.InvalidToken);
         }
 
-        var userId = query.UserId.Value;
+        var userId = new UserId(query.UserId.Value);
         var recentLimit = Math.Clamp(query.Limit, 1, 50);
 
         var recents = await recentItemRepository.GetRecentProductsAsync(userId, recentLimit, cancellationToken);

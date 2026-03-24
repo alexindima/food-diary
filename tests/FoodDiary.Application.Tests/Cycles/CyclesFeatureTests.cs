@@ -13,7 +13,7 @@ public class CyclesFeatureTests {
     [Fact]
     public async Task CreateCycleCommandValidator_WithInvalidLength_Fails() {
         var validator = new CreateCycleCommandValidator();
-        var command = new CreateCycleCommand(UserId.New(), DateTime.UtcNow, AverageLength: 10, LutealLength: 20, Notes: null);
+        var command = new CreateCycleCommand(Guid.NewGuid(), DateTime.UtcNow, AverageLength: 10, LutealLength: 20, Notes: null);
 
         var result = await validator.ValidateAsync(command);
 
@@ -24,7 +24,7 @@ public class CyclesFeatureTests {
     public async Task UpsertCycleDayCommandValidator_WithOutOfRangeSymptoms_Fails() {
         var validator = new UpsertCycleDayCommandValidator();
         var command = new UpsertCycleDayCommand(
-            UserId.New(),
+            Guid.NewGuid(),
             CycleId.New(),
             DateTime.UtcNow,
             IsPeriod: true,

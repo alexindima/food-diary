@@ -23,20 +23,20 @@ public class GetDashboardSnapshotQueryHandler(
     IWaistEntryRepository waistEntryRepository)
     : IQueryHandler<GetDashboardSnapshotQuery, Result<DashboardSnapshotModel>> {
     public async Task<Result<DashboardSnapshotModel>> Handle(GetDashboardSnapshotQuery query, CancellationToken cancellationToken) {
-        if (query.UserId is null || query.UserId == UserId.Empty) {
+        if (query.UserId is null || query.UserId == Guid.Empty) {
             return Result.Failure<DashboardSnapshotModel>(Errors.Authentication.InvalidToken);
         }
 
         var date = query.Date;
         var dayStart = NormalizeToUtcDate(date);
         var dayEnd = dayStart.AddDays(1).AddTicks(-1);
-        var userId = query.UserId.Value;
+        var userId = new UserId(query.UserId.Value);
         var locale = string.IsNullOrWhiteSpace(query.Locale) ? "en" : query.Locale;
         var trendDays = Math.Clamp(query.TrendDays <= 0 ? 7 : query.TrendDays, 1, 31);
         var trendStart = dayStart.AddDays(-(trendDays - 1));
 
         var statsResult = await sender.Send(new GetStatisticsQuery(
-            userId,
+            query.UserId,
             dayStart,
             dayEnd,
             1), cancellationToken);
@@ -45,7 +45,7 @@ public class GetDashboardSnapshotQueryHandler(
         }
 
         var weeklyStatsResult = await sender.Send(new GetStatisticsQuery(
-            userId,
+            query.UserId,
             dayStart.AddDays(-6),
             dayEnd,
             1), cancellationToken);
@@ -54,7 +54,7 @@ public class GetDashboardSnapshotQueryHandler(
         }
 
         var mealsResult = await sender.Send(new GetConsumptionsQuery(
-            userId,
+            query.UserId,
             query.Page,
             query.PageSize,
             dayStart,
@@ -88,7 +88,7 @@ public class GetDashboardSnapshotQueryHandler(
             mealsResult.Value.TotalItems);
 
         var hydrationResult = await sender.Send(
-            new GetHydrationDailyTotalQuery(userId, dayStart),
+            new GetHydrationDailyTotalQuery(query.UserId, dayStart),
             cancellationToken);
 
         var adviceResult = await sender.Send(

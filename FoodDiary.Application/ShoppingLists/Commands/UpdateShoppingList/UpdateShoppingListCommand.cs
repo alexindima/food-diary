@@ -7,7 +7,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.ShoppingLists.Commands.UpdateShoppingList;
 
 public record UpdateShoppingListCommand(
-    UserId? UserId,
+    Guid? UserId,
     ShoppingListId ShoppingListId,
     string? Name,
     IReadOnlyList<ShoppingListItemInput>? Items) : ICommand<Result<ShoppingListModel>>;

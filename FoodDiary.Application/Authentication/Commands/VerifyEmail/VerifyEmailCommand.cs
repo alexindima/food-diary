@@ -1,9 +1,8 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
-using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Authentication.Commands.VerifyEmail;
 
 public record VerifyEmailCommand(
-    UserId UserId,
+    Guid UserId,
     string Token) : ICommand<Result<bool>>;

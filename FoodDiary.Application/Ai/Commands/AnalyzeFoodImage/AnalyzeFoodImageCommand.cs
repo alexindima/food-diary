@@ -5,5 +5,5 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Ai.Commands.AnalyzeFoodImage;
 
-public sealed record AnalyzeFoodImageCommand(UserId UserId, ImageAssetId ImageAssetId, string? Description)
+public sealed record AnalyzeFoodImageCommand(Guid UserId, ImageAssetId ImageAssetId, string? Description)
     : IQuery<Result<FoodVisionModel>>;

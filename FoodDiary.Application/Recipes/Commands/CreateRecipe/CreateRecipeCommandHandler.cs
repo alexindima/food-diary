@@ -13,11 +13,11 @@ namespace FoodDiary.Application.Recipes.Commands.CreateRecipe;
 public class CreateRecipeCommandHandler(IRecipeRepository recipeRepository)
     : ICommandHandler<CreateRecipeCommand, Result<RecipeModel>> {
     public async Task<Result<RecipeModel>> Handle(CreateRecipeCommand command, CancellationToken cancellationToken) {
-        if (command.UserId is null || command.UserId == UserId.Empty) {
+        if (command.UserId is null || command.UserId == Guid.Empty) {
             return Result.Failure<RecipeModel>(Errors.Authentication.InvalidToken);
         }
 
-        var userId = command.UserId.Value;
+        var userId = new UserId(command.UserId.Value);
 
         if (!Enum.TryParse<Visibility>(command.Visibility, true, out var visibility)) {
             return Result.Failure<RecipeModel>(

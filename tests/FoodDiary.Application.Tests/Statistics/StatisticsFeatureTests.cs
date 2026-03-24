@@ -9,7 +9,7 @@ public class StatisticsFeatureTests {
     [Fact]
     public async Task GetStatisticsQueryValidator_WithEmptyUserId_Fails() {
         var validator = new GetStatisticsQueryValidator();
-        var query = new GetStatisticsQuery(UserId.Empty, DateTime.UtcNow.AddDays(-1), DateTime.UtcNow, 1);
+        var query = new GetStatisticsQuery(Guid.Empty, DateTime.UtcNow.AddDays(-1), DateTime.UtcNow, 1);
 
         var result = await validator.ValidateAsync(query);
 
@@ -19,7 +19,7 @@ public class StatisticsFeatureTests {
     [Fact]
     public async Task GetStatisticsQueryHandler_WithDateFromAfterDateTo_ReturnsValidationError() {
         var handler = new GetStatisticsQueryHandler(new NoopMealRepository());
-        var query = new GetStatisticsQuery(UserId.New(), DateTime.UtcNow, DateTime.UtcNow.AddDays(-1), 1);
+        var query = new GetStatisticsQuery(Guid.NewGuid(), DateTime.UtcNow, DateTime.UtcNow.AddDays(-1), 1);
 
         var result = await handler.Handle(query, CancellationToken.None);
 
@@ -32,7 +32,7 @@ public class StatisticsFeatureTests {
         var handler = new GetStatisticsQueryHandler(new NoopMealRepository());
         var from = new DateTime(2026, 2, 1, 0, 0, 0, DateTimeKind.Utc);
         var to = new DateTime(2026, 2, 1, 0, 0, 0, DateTimeKind.Utc);
-        var query = new GetStatisticsQuery(UserId.New(), from, to, 1);
+        var query = new GetStatisticsQuery(Guid.NewGuid(), from, to, 1);
 
         var result = await handler.Handle(query, CancellationToken.None);
 

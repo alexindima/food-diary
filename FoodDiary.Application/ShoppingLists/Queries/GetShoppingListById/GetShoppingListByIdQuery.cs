@@ -6,5 +6,5 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.ShoppingLists.Queries.GetShoppingListById;
 
 public record GetShoppingListByIdQuery(
-    UserId? UserId,
+    Guid? UserId,
     ShoppingListId ShoppingListId) : IQuery<Result<ShoppingListModel>>;

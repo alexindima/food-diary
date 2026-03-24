@@ -19,9 +19,11 @@ public class CreateConsumptionCommandHandler(
     IDateTimeProvider dateTimeProvider)
     : ICommandHandler<CreateConsumptionCommand, Result<ConsumptionModel>> {
     public async Task<Result<ConsumptionModel>> Handle(CreateConsumptionCommand command, CancellationToken cancellationToken) {
-        if (command.UserId is null || command.UserId == UserId.Empty) {
+        if (command.UserId is null || command.UserId == Guid.Empty) {
             return Result.Failure<ConsumptionModel>(Errors.Authentication.InvalidToken);
         }
+
+        var userId = new UserId(command.UserId.Value);
 
         var hasManualItems = command.Items is { Count: > 0 };
         var hasAiItems = command.AiSessions is { Count: > 0 } && command.AiSessions.Any(session => session.Items.Count > 0);
@@ -34,7 +36,7 @@ public class CreateConsumptionCommandHandler(
             return Result.Failure<ConsumptionModel>(mealTypeResult.Error);
         }
 
-        var meal = Meal.Create(command.UserId.Value, command.Date, mealTypeResult.Value, command.Comment, command.ImageUrl,
+        var meal = Meal.Create(userId, command.Date, mealTypeResult.Value, command.Comment, command.ImageUrl,
             command.ImageAssetId.HasValue ? new ImageAssetId(command.ImageAssetId.Value) : null);
 
         var satietyValidation = SatietyLevelValidator.Validate(
@@ -83,7 +85,7 @@ public class CreateConsumptionCommandHandler(
         }
 
         if (command.IsNutritionAutoCalculated) {
-            var nutritionResult = await CalculateNutritionAsync(meal, command.UserId.Value, cancellationToken);
+            var nutritionResult = await CalculateNutritionAsync(meal, userId, cancellationToken);
             if (nutritionResult.IsFailure) {
                 return Result.Failure<ConsumptionModel>(nutritionResult.Error);
             }
@@ -128,14 +130,14 @@ public class CreateConsumptionCommandHandler(
 
         await mealRepository.AddAsync(meal, cancellationToken);
         await recentItemRepository.RegisterUsageAsync(
-            command.UserId.Value,
+            userId,
             meal.Items.Where(x => x.ProductId.HasValue).Select(x => x.ProductId!.Value).ToList(),
             meal.Items.Where(x => x.RecipeId.HasValue).Select(x => x.RecipeId!.Value).ToList(),
             cancellationToken);
 
         var created = await mealRepository.GetByIdAsync(
             meal.Id,
-            command.UserId.Value,
+            userId,
             includeItems: true,
             cancellationToken: cancellationToken);
 

@@ -5,4 +5,4 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Products.Queries.GetProductById;
 
-public record GetProductByIdQuery(UserId? UserId, ProductId ProductId) : IQuery<Result<ProductModel>>;
+public record GetProductByIdQuery(Guid? UserId, ProductId ProductId) : IQuery<Result<ProductModel>>;

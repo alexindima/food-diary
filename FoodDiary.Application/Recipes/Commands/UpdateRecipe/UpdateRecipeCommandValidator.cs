@@ -21,7 +21,7 @@ public class UpdateRecipeCommandValidator : AbstractValidator<UpdateRecipeComman
             .NotNull()
             .WithErrorCode("Authentication.InvalidToken")
             .WithMessage("Unable to identify user")
-            .Must(id => id is not null && id.Value != UserId.Empty)
+            .Must(id => id is not null && id.Value != Guid.Empty)
             .WithErrorCode("Authentication.InvalidToken")
             .WithMessage("Unable to identify user");
 
@@ -120,13 +120,13 @@ public class UpdateRecipeCommandValidator : AbstractValidator<UpdateRecipeComman
             return;
         }
 
-        if (command.UserId is null || command.UserId.Value == UserId.Empty) {
+        if (command.UserId is null || command.UserId.Value == Guid.Empty) {
             return;
         }
 
         var existing = await _recipeRepository.GetByIdAsync(
             command.RecipeId,
-            command.UserId.Value,
+            new UserId(command.UserId.Value),
             includePublic: false,
             includeSteps: false,
             cancellationToken: cancellationToken);

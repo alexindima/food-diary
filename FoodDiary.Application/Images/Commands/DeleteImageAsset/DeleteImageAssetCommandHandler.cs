@@ -10,16 +10,18 @@ public sealed class DeleteImageAssetCommandHandler(
     IImageAssetRepository imageAssetRepository,
     IImageAssetCleanupService cleanupService) : IRequestHandler<DeleteImageAssetCommand, Result> {
     public async Task<Result> Handle(DeleteImageAssetCommand request, CancellationToken cancellationToken) {
-        if (request.UserId == UserId.Empty || request.AssetId == ImageAssetId.Empty) {
+        if (request.UserId == Guid.Empty || request.AssetId == ImageAssetId.Empty) {
             return Result.Failure(Errors.Image.InvalidData("UserId and AssetId are required."));
         }
+
+        var userId = new UserId(request.UserId);
 
         var asset = await imageAssetRepository.GetByIdAsync(request.AssetId, cancellationToken);
         if (asset is null) {
             return Result.Failure(Errors.Image.NotFound(request.AssetId.Value));
         }
 
-        if (asset.UserId != request.UserId) {
+        if (asset.UserId != userId) {
             return Result.Failure(Errors.Image.Forbidden());
         }
 

@@ -13,7 +13,7 @@ public class DeleteProductCommandValidator : AbstractValidator<DeleteProductComm
             .NotNull()
             .WithErrorCode("Authentication.InvalidToken")
             .WithMessage("Unable to identify user")
-            .Must(userId => userId is not null && userId.Value != UserId.Empty)
+            .Must(userId => userId is not null && userId.Value != Guid.Empty)
             .WithErrorCode("Authentication.InvalidToken")
             .WithMessage("Unable to identify user");
 
@@ -24,11 +24,11 @@ public class DeleteProductCommandValidator : AbstractValidator<DeleteProductComm
 
         RuleFor(x => x)
             .CustomAsync(async (command, context, cancellationToken) => {
-                if (command.UserId is null || command.UserId.Value == UserId.Empty) {
+                if (command.UserId is null || command.UserId.Value == Guid.Empty) {
                     return;
                 }
 
-                var product = await productRepository.GetByIdAsync(command.ProductId, command.UserId.Value, includePublic: false, cancellationToken: cancellationToken);
+                var product = await productRepository.GetByIdAsync(command.ProductId, new UserId(command.UserId.Value), includePublic: false, cancellationToken: cancellationToken);
                 if (product is null) {
                     context.AddFailure(new ValidationFailure(nameof(command.ProductId), "Product not found or you do not have permission to delete it") {
                         ErrorCode = "Product.NotFound"

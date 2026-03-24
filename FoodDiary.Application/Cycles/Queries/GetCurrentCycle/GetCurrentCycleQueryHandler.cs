@@ -13,12 +13,14 @@ public class GetCurrentCycleQueryHandler(ICycleRepository cycleRepository)
     public async Task<Result<CycleModel?>> Handle(
         GetCurrentCycleQuery query,
         CancellationToken cancellationToken) {
-        if (query.UserId is null || query.UserId == UserId.Empty) {
+        if (query.UserId is null || query.UserId == Guid.Empty) {
             return Result.Failure<CycleModel?>(Errors.User.NotFound());
         }
 
+        var userId = new UserId(query.UserId.Value);
+
         var cycle = await cycleRepository.GetLatestAsync(
-            query.UserId.Value,
+            userId,
             includeDays: true,
             cancellationToken: cancellationToken);
 

@@ -13,9 +13,11 @@ public class CreateProductCommandHandler(IProductRepository productRepository)
     : ICommandHandler<CreateProductCommand, Result<ProductModel>> {
     public async Task<Result<ProductModel>>
         Handle(CreateProductCommand command, CancellationToken cancellationToken) {
-        if (command.UserId is null || command.UserId == UserId.Empty) {
+        if (command.UserId is null || command.UserId == Guid.Empty) {
             return Result.Failure<ProductModel>(Errors.Authentication.InvalidToken);
         }
+
+        var userId = new UserId(command.UserId.Value);
 
         if (!Enum.TryParse<MeasurementUnit>(command.BaseUnit, true, out var baseUnit)) {
             return Result.Failure<ProductModel>(
@@ -32,7 +34,7 @@ public class CreateProductCommandHandler(IProductRepository productRepository)
             : ProductType.Unknown;
 
         var product = Product.Create(
-            userId: command.UserId.Value,
+            userId: userId,
             name: command.Name,
             baseUnit: baseUnit,
             baseAmount: command.BaseAmount,

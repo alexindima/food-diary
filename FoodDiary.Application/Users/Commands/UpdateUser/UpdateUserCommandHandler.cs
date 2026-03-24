@@ -21,9 +21,10 @@ public class UpdateUserCommandHandler(
             return Result.Failure<UserModel>(Errors.Authentication.InvalidToken);
         }
 
-        var user = await userRepository.GetByIdAsync(command.UserId.Value);
+        var userId = new UserId(command.UserId.Value);
+        var user = await userRepository.GetByIdAsync(userId);
         if (user is null) {
-            return Result.Failure<UserModel>(User.NotFound(command.UserId.Value));
+            return Result.Failure<UserModel>(User.NotFound(userId));
         }
 
         var activityLevelResult = ParseActivityLevel(command.ActivityLevel);

@@ -1,5 +1,4 @@
 using FluentValidation;
-using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Cycles.Commands.CreateCycle;
 
@@ -10,7 +9,7 @@ public class CreateCycleCommandValidator : AbstractValidator<CreateCycleCommand>
             .NotNull()
             .WithErrorCode("Validation.Required")
             .WithMessage("UserId is required.")
-            .Must(id => id is not null && id.Value != UserId.Empty)
+            .Must(id => id is not null && id.Value != Guid.Empty)
             .WithErrorCode("Validation.Invalid")
             .WithMessage("UserId is invalid.");
 

@@ -12,12 +12,13 @@ public class GetLatestWeightEntryQueryHandler(IWeightEntryRepository weightEntry
     public async Task<Result<WeightEntryModel?>> Handle(
         GetLatestWeightEntryQuery query,
         CancellationToken cancellationToken) {
-        if (query.UserId is null || query.UserId.Value == UserId.Empty) {
+        if (query.UserId is null || query.UserId.Value == Guid.Empty) {
             return Result.Failure<WeightEntryModel?>(Errors.Authentication.InvalidToken);
         }
 
+        var userId = new UserId(query.UserId.Value);
         var entries = await weightEntryRepository.GetEntriesAsync(
-            query.UserId.Value,
+            userId,
             dateFrom: null,
             dateTo: null,
             limit: 1,

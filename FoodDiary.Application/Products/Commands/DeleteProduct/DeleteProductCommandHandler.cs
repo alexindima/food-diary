@@ -12,13 +12,15 @@ public class DeleteProductCommandHandler(
     IImageStorageService imageStorageService)
     : ICommandHandler<DeleteProductCommand, Result<bool>> {
     public async Task<Result<bool>> Handle(DeleteProductCommand command, CancellationToken cancellationToken) {
-        if (command.UserId is null || command.UserId == UserId.Empty) {
+        if (command.UserId is null || command.UserId == Guid.Empty) {
             return Result.Failure<bool>(Errors.Authentication.InvalidToken);
         }
 
+        var userId = new UserId(command.UserId.Value);
+
         var product = await productRepository.GetByIdAsync(
             command.ProductId,
-            command.UserId.Value,
+            userId,
             includePublic: false,
             cancellationToken: cancellationToken);
         if (product is null) {

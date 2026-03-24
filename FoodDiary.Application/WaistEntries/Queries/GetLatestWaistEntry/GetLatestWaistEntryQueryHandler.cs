@@ -12,12 +12,13 @@ public class GetLatestWaistEntryQueryHandler(IWaistEntryRepository waistEntryRep
     public async Task<Result<WaistEntryModel?>> Handle(
         GetLatestWaistEntryQuery query,
         CancellationToken cancellationToken) {
-        if (query.UserId is null || query.UserId.Value == UserId.Empty) {
+        if (query.UserId is null || query.UserId.Value == Guid.Empty) {
             return Result.Failure<WaistEntryModel?>(Errors.Authentication.InvalidToken);
         }
 
+        var userId = new UserId(query.UserId.Value);
         var entries = await waistEntryRepository.GetEntriesAsync(
-            query.UserId.Value,
+            userId,
             dateFrom: null,
             dateTo: null,
             limit: 1,

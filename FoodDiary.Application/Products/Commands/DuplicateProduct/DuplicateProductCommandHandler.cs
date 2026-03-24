@@ -11,13 +11,15 @@ namespace FoodDiary.Application.Products.Commands.DuplicateProduct;
 public class DuplicateProductCommandHandler(IProductRepository productRepository)
     : ICommandHandler<DuplicateProductCommand, Result<ProductModel>> {
     public async Task<Result<ProductModel>> Handle(DuplicateProductCommand command, CancellationToken cancellationToken) {
-        if (command.UserId is null || command.UserId == UserId.Empty) {
+        if (command.UserId is null || command.UserId == Guid.Empty) {
             return Result.Failure<ProductModel>(Errors.Authentication.InvalidToken);
         }
 
+        var userId = new UserId(command.UserId.Value);
+
         var original = await productRepository.GetByIdAsync(
             command.ProductId,
-            command.UserId.Value,
+            userId,
             includePublic: true,
             cancellationToken: cancellationToken);
 
@@ -26,7 +28,7 @@ public class DuplicateProductCommandHandler(IProductRepository productRepository
         }
 
         var duplicate = Product.Create(
-            command.UserId.Value,
+            userId,
             original.Name,
             original.BaseUnit,
             original.BaseAmount,

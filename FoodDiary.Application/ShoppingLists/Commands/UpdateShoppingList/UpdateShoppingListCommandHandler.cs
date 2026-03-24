@@ -15,9 +15,11 @@ public class UpdateShoppingListCommandHandler(
     public async Task<Result<ShoppingListModel>> Handle(
         UpdateShoppingListCommand command,
         CancellationToken cancellationToken) {
-        if (command.UserId is null || command.UserId == UserId.Empty) {
+        if (command.UserId is null || command.UserId == Guid.Empty) {
             return Result.Failure<ShoppingListModel>(Errors.Authentication.InvalidToken);
         }
+
+        var userId = new UserId(command.UserId.Value);
 
         if (string.IsNullOrWhiteSpace(command.Name) && command.Items is null) {
             return Result.Failure<ShoppingListModel>(
@@ -26,7 +28,7 @@ public class UpdateShoppingListCommandHandler(
 
         var list = await shoppingListRepository.GetByIdAsync(
             command.ShoppingListId,
-            command.UserId.Value,
+            userId,
             includeItems: true,
             asTracking: true,
             cancellationToken: cancellationToken);
@@ -42,7 +44,7 @@ public class UpdateShoppingListCommandHandler(
         if (command.Items is not null) {
             var itemsResult = await ShoppingListItemBuilder.BuildItemsAsync(
                 command.Items,
-                command.UserId.Value,
+                userId,
                 productRepository,
                 cancellationToken);
 

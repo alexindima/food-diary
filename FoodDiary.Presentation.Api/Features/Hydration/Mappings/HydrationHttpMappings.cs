@@ -7,12 +7,12 @@ using FoodDiary.Presentation.Api.Features.Hydration.Requests;
 namespace FoodDiary.Presentation.Api.Features.Hydration.Mappings;
 
 public static class HydrationHttpMappings {
-    public static DeleteHydrationEntryCommand ToDeleteCommand(this Guid id, UserId userId) =>
+    public static DeleteHydrationEntryCommand ToDeleteCommand(this Guid id, Guid userId) =>
         new(userId, new HydrationEntryId(id));
 
     public static CreateHydrationEntryCommand ToCommand(this CreateHydrationEntryHttpRequest request, Guid userId) =>
         new(
-            new UserId(userId),
+            userId,
             request.TimestampUtc,
             request.AmountMl);
 
@@ -21,7 +21,7 @@ public static class HydrationHttpMappings {
         Guid userId,
         Guid entryId) =>
         new(
-            new UserId(userId),
+            userId,
             new HydrationEntryId(entryId),
             request.TimestampUtc,
             request.AmountMl);

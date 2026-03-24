@@ -7,12 +7,12 @@ using FoodDiary.Presentation.Api.Features.WeightEntries.Requests;
 namespace FoodDiary.Presentation.Api.Features.WeightEntries.Mappings;
 
 public static class WeightEntryHttpMappings {
-    public static DeleteWeightEntryCommand ToDeleteCommand(this Guid id, UserId userId) =>
+    public static DeleteWeightEntryCommand ToDeleteCommand(this Guid id, Guid userId) =>
         new(userId, new WeightEntryId(id));
 
     public static CreateWeightEntryCommand ToCommand(this CreateWeightEntryHttpRequest request, Guid userId) =>
         new(
-            new UserId(userId),
+            userId,
             request.Date,
             request.Weight);
 
@@ -21,7 +21,7 @@ public static class WeightEntryHttpMappings {
         Guid userId,
         Guid entryId) =>
         new(
-            new UserId(userId),
+            userId,
             new WeightEntryId(entryId),
             request.Date,
             request.Weight);

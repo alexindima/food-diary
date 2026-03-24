@@ -4,6 +4,7 @@ using FoodDiary.Application.Authentication.Abstractions;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Users.Mappings;
 using FoodDiary.Application.Users.Models;
+using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Authentication.Commands.LinkTelegram;
 
@@ -25,7 +26,7 @@ public sealed class LinkTelegramCommandHandler : ICommandHandler<LinkTelegramCom
         }
 
         var initData = initDataResult.Value;
-        var currentUser = await _userRepository.GetByIdAsync(command.UserId);
+        var currentUser = await _userRepository.GetByIdAsync(new UserId(command.UserId));
         if (currentUser == null) {
             return Result.Failure<UserModel>(Errors.User.NotFound());
         }

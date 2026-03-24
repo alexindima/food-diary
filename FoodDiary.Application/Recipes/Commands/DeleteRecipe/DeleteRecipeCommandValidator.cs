@@ -16,7 +16,7 @@ public class DeleteRecipeCommandValidator : AbstractValidator<DeleteRecipeComman
             .NotNull()
             .WithErrorCode("Authentication.InvalidToken")
             .WithMessage("Unable to identify user")
-            .Must(userId => userId is not null && userId.Value != UserId.Empty)
+            .Must(userId => userId is not null && userId.Value != Guid.Empty)
             .WithErrorCode("Authentication.InvalidToken")
             .WithMessage("Unable to identify user");
 
@@ -33,13 +33,13 @@ public class DeleteRecipeCommandValidator : AbstractValidator<DeleteRecipeComman
         DeleteRecipeCommand command,
         ValidationContext<DeleteRecipeCommand> context,
         CancellationToken cancellationToken) {
-        if (command.UserId is null || command.UserId.Value == UserId.Empty) {
+        if (command.UserId is null || command.UserId.Value == Guid.Empty) {
             return;
         }
 
         var recipe = await _recipeRepository.GetByIdAsync(
             command.RecipeId,
-            command.UserId.Value,
+            new UserId(command.UserId.Value),
             includePublic: false,
             includeSteps: false,
             cancellationToken: cancellationToken);

@@ -4,6 +4,7 @@
     <Project Path="tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj" />
     <Project Path="tests/FoodDiary.Infrastructure.Tests/FoodDiary.Infrastructure.Tests.csproj" />
     <Project Path="tests/FoodDiary.JobManager.Tests/FoodDiary.JobManager.Tests.csproj" />
+    <Project Path="tests/FoodDiary.Presentation.Api.Tests/FoodDiary.Presentation.Api.Tests.csproj" />
     <Project Path="tests/FoodDiary.Telegram.Bot.Tests/FoodDiary.Telegram.Bot.Tests.csproj" />
     <Project Path="tests/FoodDiary.Web.Api.IntegrationTests/FoodDiary.Web.Api.IntegrationTests.csproj" />
   </Folder>

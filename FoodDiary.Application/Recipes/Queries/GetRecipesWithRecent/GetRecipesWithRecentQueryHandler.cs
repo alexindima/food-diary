@@ -15,11 +15,11 @@ public sealed class GetRecipesWithRecentQueryHandler(
     public async Task<Result<RecipeListWithRecentModel>> Handle(
         GetRecipesWithRecentQuery query,
         CancellationToken cancellationToken) {
-        if (query.UserId is null || query.UserId == UserId.Empty) {
+        if (query.UserId is null || query.UserId == Guid.Empty) {
             return Result.Failure<RecipeListWithRecentModel>(Errors.Authentication.InvalidToken);
         }
 
-        var userId = query.UserId.Value;
+        var userId = new UserId(query.UserId.Value);
         var pageNumber = Math.Max(query.Page, 1);
         var pageSize = Math.Max(query.Limit, 1);
         var recentLimit = Math.Clamp(query.RecentLimit, 1, 50);

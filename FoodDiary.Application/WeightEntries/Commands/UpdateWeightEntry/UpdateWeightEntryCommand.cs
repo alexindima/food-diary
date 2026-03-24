@@ -6,7 +6,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.WeightEntries.Commands.UpdateWeightEntry;
 
 public record UpdateWeightEntryCommand(
-    UserId? UserId,
+    Guid? UserId,
     WeightEntryId WeightEntryId,
     DateTime Date,
     double Weight

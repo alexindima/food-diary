@@ -1,6 +1,5 @@
 using System.Security.Claims;
 using FoodDiary.Application.Common.Abstractions.Result;
-using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Presentation.Api.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -74,10 +73,10 @@ public sealed class ExtensionsTests {
         var user = new ClaimsPrincipal(
             new ClaimsIdentity([new Claim(ClaimTypes.NameIdentifier, expectedGuid.ToString())], "test"));
 
-        var userId = user.GetUserId();
+        var userId = user.GetUserGuid();
 
         Assert.NotNull(userId);
-        Assert.Equal(new UserId(expectedGuid), userId.Value);
+        Assert.Equal(expectedGuid, userId.Value);
     }
 
     [Fact]
@@ -85,7 +84,7 @@ public sealed class ExtensionsTests {
         var user = new ClaimsPrincipal(
             new ClaimsIdentity([new Claim(ClaimTypes.NameIdentifier, Guid.Empty.ToString())], "test"));
 
-        var userId = user.GetUserId();
+        var userId = user.GetUserGuid();
 
         Assert.Null(userId);
     }
@@ -95,7 +94,7 @@ public sealed class ExtensionsTests {
         var user = new ClaimsPrincipal(
             new ClaimsIdentity([new Claim(ClaimTypes.NameIdentifier, "not-a-guid")], "test"));
 
-        var userId = user.GetUserId();
+        var userId = user.GetUserGuid();
 
         Assert.Null(userId);
     }

@@ -4,6 +4,11 @@ namespace FoodDiary.Application.Authentication.Commands.ConfirmPasswordReset;
 
 public sealed class ConfirmPasswordResetCommandValidator : AbstractValidator<ConfirmPasswordResetCommand> {
     public ConfirmPasswordResetCommandValidator() {
+        RuleFor(x => x.UserId)
+            .NotEqual(Guid.Empty)
+            .WithErrorCode("Validation.Required")
+            .WithMessage("UserId is required");
+
         RuleFor(x => x.Token)
             .NotEmpty()
             .WithErrorCode("Validation.Required")

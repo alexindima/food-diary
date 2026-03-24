@@ -12,7 +12,6 @@ using FoodDiary.Application.Authentication.Commands.TelegramBotAuth;
 using FoodDiary.Application.Authentication.Commands.TelegramLoginWidget;
 using FoodDiary.Application.Authentication.Commands.TelegramVerify;
 using FoodDiary.Application.Authentication.Commands.VerifyEmail;
-using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Presentation.Api.Features.Auth.Requests;
 
 namespace FoodDiary.Presentation.Api.Features.Auth.Mappings;
@@ -38,7 +37,7 @@ public static class AuthHttpMappings {
         return new TelegramVerifyCommand(request.InitData);
     }
 
-    public static LinkTelegramCommand ToLinkCommand(this TelegramAuthHttpRequest request, UserId userId) {
+    public static LinkTelegramCommand ToLinkCommand(this TelegramAuthHttpRequest request, Guid userId) {
         return new LinkTelegramCommand(userId, request.InitData);
     }
 
@@ -50,16 +49,16 @@ public static class AuthHttpMappings {
         return new AdminSsoExchangeCommand(request.Code);
     }
 
-    public static ResendEmailVerificationCommand ToResendVerificationCommand(this UserId userId) {
+    public static ResendEmailVerificationCommand ToResendVerificationCommand(this Guid userId) {
         return new ResendEmailVerificationCommand(userId);
     }
 
-    public static AdminSsoStartCommand ToAdminSsoStartCommand(this UserId userId) {
+    public static AdminSsoStartCommand ToAdminSsoStartCommand(this Guid userId) {
         return new AdminSsoStartCommand(userId);
     }
 
     public static VerifyEmailCommand ToCommand(this VerifyEmailHttpRequest request) {
-        return new VerifyEmailCommand(new UserId(request.UserId), request.Token);
+        return new VerifyEmailCommand(request.UserId, request.Token);
     }
 
     public static RequestPasswordResetCommand ToCommand(this RequestPasswordResetHttpRequest request) {
@@ -67,7 +66,7 @@ public static class AuthHttpMappings {
     }
 
     public static ConfirmPasswordResetCommand ToCommand(this ConfirmPasswordResetHttpRequest request) {
-        return new ConfirmPasswordResetCommand(new UserId(request.UserId), request.Token, request.NewPassword);
+        return new ConfirmPasswordResetCommand(request.UserId, request.Token, request.NewPassword);
     }
 
     public static TelegramLoginWidgetCommand ToCommand(this TelegramLoginWidgetHttpRequest request) {

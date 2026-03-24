@@ -12,13 +12,14 @@ public class DeleteUserCommandHandler(
     IDateTimeProvider dateTimeProvider)
     : ICommandHandler<DeleteUserCommand, Result<bool>> {
     public async Task<Result<bool>> Handle(DeleteUserCommand command, CancellationToken cancellationToken) {
-        if (command.UserId is null || command.UserId.Value == UserId.Empty) {
+        if (command.UserId is null || command.UserId.Value == Guid.Empty) {
             return Result.Failure<bool>(Errors.Authentication.InvalidToken);
         }
 
-        var user = await userRepository.GetByIdAsync(command.UserId.Value);
+        var userId = new UserId(command.UserId.Value);
+        var user = await userRepository.GetByIdAsync(userId);
         if (user is null) {
-            return Result.Failure<bool>(User.NotFound(command.UserId.Value));
+            return Result.Failure<bool>(User.NotFound(userId));
         }
 
         user.MarkDeleted(dateTimeProvider.UtcNow);

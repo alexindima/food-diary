@@ -4,4 +4,4 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Consumptions.Commands.DeleteConsumption;
 
-public record DeleteConsumptionCommand(UserId? UserId, MealId ConsumptionId) : ICommand<Result<bool>>;
+public record DeleteConsumptionCommand(Guid? UserId, MealId ConsumptionId) : ICommand<Result<bool>>;

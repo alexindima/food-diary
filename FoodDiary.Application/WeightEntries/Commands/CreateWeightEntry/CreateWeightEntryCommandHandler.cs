@@ -13,13 +13,14 @@ public class CreateWeightEntryCommandHandler(IWeightEntryRepository weightEntryR
     public async Task<Result<WeightEntryModel>> Handle(
         CreateWeightEntryCommand command,
         CancellationToken cancellationToken) {
-        if (command.UserId is null || command.UserId.Value == UserId.Empty) {
+        if (command.UserId is null || command.UserId.Value == Guid.Empty) {
             return Result.Failure<WeightEntryModel>(Errors.Authentication.InvalidToken);
         }
 
+        var userId = new UserId(command.UserId.Value);
         var normalizedDate = NormalizeUtcDate(command.Date);
         var existing = await weightEntryRepository.GetByDateAsync(
-            command.UserId.Value,
+            userId,
             normalizedDate,
             cancellationToken);
         if (existing is not null) {
@@ -27,7 +28,7 @@ public class CreateWeightEntryCommandHandler(IWeightEntryRepository weightEntryR
                 Errors.WeightEntry.AlreadyExists(normalizedDate));
         }
 
-        var entry = WeightEntry.Create(command.UserId.Value, normalizedDate, command.Weight);
+        var entry = WeightEntry.Create(userId, normalizedDate, command.Weight);
         entry = await weightEntryRepository.AddAsync(entry, cancellationToken);
 
         return Result.Success(entry.ToModel());

@@ -161,7 +161,7 @@ public sealed class TelegramBotWorker(
     }
 
     private async Task<bool> IsLinkedAsync(long? telegramUserId, CancellationToken cancellationToken) {
-        if (!telegramUserId.HasValue || telegramUserId.Value <= 0) {
+        if (telegramUserId is not > 0) {
             return false;
         }
 

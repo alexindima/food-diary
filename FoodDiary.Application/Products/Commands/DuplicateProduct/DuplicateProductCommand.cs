@@ -6,5 +6,5 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.Products.Commands.DuplicateProduct;
 
 public sealed record DuplicateProductCommand(
-    UserId? UserId,
+    Guid? UserId,
     ProductId ProductId) : ICommand<Result<ProductModel>>;

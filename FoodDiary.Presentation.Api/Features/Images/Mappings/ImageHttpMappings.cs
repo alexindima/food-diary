@@ -6,10 +6,10 @@ using FoodDiary.Presentation.Api.Features.Images.Requests;
 namespace FoodDiary.Presentation.Api.Features.Images.Mappings;
 
 public static class ImageHttpMappings {
-    public static DeleteImageAssetCommand ToDeleteCommand(this Guid assetId, UserId userId) =>
+    public static DeleteImageAssetCommand ToDeleteCommand(this Guid assetId, Guid userId) =>
         new(userId, new ImageAssetId(assetId));
 
-    public static GetImageUploadUrlCommand ToCommand(this GetImageUploadUrlHttpRequest request, UserId userId) {
+    public static GetImageUploadUrlCommand ToCommand(this GetImageUploadUrlHttpRequest request, Guid userId) {
         return new GetImageUploadUrlCommand(
             userId,
             request.FileName,

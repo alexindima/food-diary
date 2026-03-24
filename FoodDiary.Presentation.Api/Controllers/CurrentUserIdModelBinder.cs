@@ -10,20 +10,22 @@ public sealed class CurrentUserIdModelBinder : IModelBinder {
     public Task BindModelAsync(ModelBindingContext bindingContext) {
         ArgumentNullException.ThrowIfNull(bindingContext);
 
-        if (bindingContext.ModelType != typeof(UserId)) {
+        if (bindingContext.ModelType != typeof(UserId) && bindingContext.ModelType != typeof(Guid)) {
             bindingContext.Result = ModelBindingResult.Failed();
             return Task.CompletedTask;
         }
 
-        var userId = bindingContext.HttpContext.User.GetUserId();
-        if (userId is null || userId.Value == UserId.Empty) {
+        var userId = bindingContext.HttpContext.User.GetUserGuid();
+        if (!userId.HasValue || userId.Value == Guid.Empty) {
             bindingContext.HttpContext.Items[UnauthorizedItemKey] = true;
             bindingContext.ModelState.TryAddModelError(bindingContext.ModelName, "Current user is not available.");
             bindingContext.Result = ModelBindingResult.Failed();
             return Task.CompletedTask;
         }
 
-        bindingContext.Result = ModelBindingResult.Success(userId.Value);
+        bindingContext.Result = bindingContext.ModelType == typeof(Guid)
+            ? ModelBindingResult.Success(userId.Value)
+            : ModelBindingResult.Success(new UserId(userId.Value));
         return Task.CompletedTask;
     }
 }

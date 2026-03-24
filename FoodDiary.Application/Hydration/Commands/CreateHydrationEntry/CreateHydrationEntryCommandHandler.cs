@@ -14,16 +14,18 @@ public class CreateHydrationEntryCommandHandler(
     public async Task<Result<HydrationEntryModel>> Handle(
         CreateHydrationEntryCommand command,
         CancellationToken cancellationToken) {
-        if (command.UserId is null || command.UserId == UserId.Empty) {
+        if (command.UserId is null || command.UserId == Guid.Empty) {
             return Result.Failure<HydrationEntryModel>(Errors.User.NotFound());
         }
+
+        var userId = new UserId(command.UserId.Value);
 
         var validation = HydrationValidators.ValidateAmount(command.AmountMl);
         if (validation.IsFailure) {
             return Result.Failure<HydrationEntryModel>(validation.Error);
         }
 
-        var entry = HydrationEntry.Create(command.UserId.Value, command.TimestampUtc, command.AmountMl);
+        var entry = HydrationEntry.Create(userId, command.TimestampUtc, command.AmountMl);
         await repository.AddAsync(entry, cancellationToken);
 
         return Result.Success(entry.ToModel());

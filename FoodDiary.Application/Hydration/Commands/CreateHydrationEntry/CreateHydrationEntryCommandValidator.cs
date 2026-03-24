@@ -1,5 +1,4 @@
 using FluentValidation;
-using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Hydration.Commands.CreateHydrationEntry;
 
@@ -10,7 +9,7 @@ public class CreateHydrationEntryCommandValidator : AbstractValidator<CreateHydr
             .NotNull()
             .WithErrorCode("Validation.Required")
             .WithMessage("UserId is required.")
-            .Must(id => id is not null && id.Value != UserId.Empty)
+            .Must(id => id is not null && id.Value != Guid.Empty)
             .WithErrorCode("Validation.Invalid")
             .WithMessage("UserId is invalid.");
 

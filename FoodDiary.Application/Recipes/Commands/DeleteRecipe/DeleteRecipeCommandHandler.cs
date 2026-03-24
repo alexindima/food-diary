@@ -12,13 +12,15 @@ public class DeleteRecipeCommandHandler(
     IImageStorageService imageStorageService)
     : ICommandHandler<DeleteRecipeCommand, Result<bool>> {
     public async Task<Result<bool>> Handle(DeleteRecipeCommand command, CancellationToken cancellationToken) {
-        if (command.UserId is null || command.UserId == UserId.Empty) {
+        if (command.UserId is null || command.UserId == Guid.Empty) {
             return Result.Failure<bool>(Errors.Authentication.InvalidToken);
         }
 
+        var userId = new UserId(command.UserId.Value);
+
         var recipe = await recipeRepository.GetByIdAsync(
             command.RecipeId,
-            command.UserId.Value,
+            userId,
             includePublic: false,
             includeSteps: true,
             asTracking: true,

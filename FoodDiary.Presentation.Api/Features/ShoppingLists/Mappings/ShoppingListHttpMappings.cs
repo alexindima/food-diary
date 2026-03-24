@@ -11,19 +11,19 @@ using FoodDiary.Presentation.Api.Features.ShoppingLists.Requests;
 namespace FoodDiary.Presentation.Api.Features.ShoppingLists.Mappings;
 
 public static class ShoppingListHttpMappings {
-    public static GetCurrentShoppingListQuery ToCurrentQuery(this UserId userId) => new(userId);
+    public static GetCurrentShoppingListQuery ToCurrentQuery(this Guid userId) => new(userId);
 
-    public static GetShoppingListsQuery ToListQuery(this UserId userId) => new(userId);
+    public static GetShoppingListsQuery ToListQuery(this Guid userId) => new(userId);
 
-    public static GetShoppingListByIdQuery ToGetByIdQuery(this Guid shoppingListId, UserId userId) =>
+    public static GetShoppingListByIdQuery ToGetByIdQuery(this Guid shoppingListId, Guid userId) =>
         new(userId, new ShoppingListId(shoppingListId));
 
-    public static DeleteShoppingListCommand ToDeleteCommand(this Guid shoppingListId, UserId userId) =>
+    public static DeleteShoppingListCommand ToDeleteCommand(this Guid shoppingListId, Guid userId) =>
         new(userId, new ShoppingListId(shoppingListId));
 
     public static CreateShoppingListCommand ToCommand(this CreateShoppingListHttpRequest request, Guid userId) =>
         new(
-            new UserId(userId),
+            userId,
             request.Name,
             request.Items?.Select(ToInput).ToList() ?? new());
 
@@ -32,7 +32,7 @@ public static class ShoppingListHttpMappings {
         Guid userId,
         Guid shoppingListId) =>
         new(
-            new UserId(userId),
+            userId,
             new ShoppingListId(shoppingListId),
             request.Name,
             request.Items?.Select(ToInput).ToList());

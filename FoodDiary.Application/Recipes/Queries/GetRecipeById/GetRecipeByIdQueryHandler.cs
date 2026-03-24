@@ -10,13 +10,15 @@ namespace FoodDiary.Application.Recipes.Queries.GetRecipeById;
 public class GetRecipeByIdQueryHandler(IRecipeRepository recipeRepository)
     : IQueryHandler<GetRecipeByIdQuery, Result<RecipeModel>> {
     public async Task<Result<RecipeModel>> Handle(GetRecipeByIdQuery query, CancellationToken cancellationToken) {
-        if (query.UserId is null || query.UserId == UserId.Empty) {
+        if (query.UserId is null || query.UserId == Guid.Empty) {
             return Result.Failure<RecipeModel>(Errors.Authentication.InvalidToken);
         }
 
+        var userId = new UserId(query.UserId.Value);
+
         var recipe = await recipeRepository.GetByIdAsync(
             query.RecipeId,
-            query.UserId.Value,
+            userId,
             includePublic: query.IncludePublic,
             includeSteps: true,
             cancellationToken: cancellationToken);
@@ -26,7 +28,7 @@ public class GetRecipeByIdQueryHandler(IRecipeRepository recipeRepository)
         }
 
         var usageCount = recipe.MealItems.Count + recipe.NestedRecipeUsages.Count;
-        var isOwner = recipe.UserId == query.UserId.Value;
+        var isOwner = recipe.UserId == userId;
 
         return Result.Success(recipe.ToModel(usageCount, isOwner));
     }

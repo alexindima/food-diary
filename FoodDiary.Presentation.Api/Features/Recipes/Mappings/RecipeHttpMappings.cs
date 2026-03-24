@@ -9,15 +9,15 @@ using FoodDiary.Presentation.Api.Features.Recipes.Requests;
 namespace FoodDiary.Presentation.Api.Features.Recipes.Mappings;
 
 public static class RecipeHttpMappings {
-    public static DeleteRecipeCommand ToDeleteCommand(this Guid recipeId, UserId userId) =>
+    public static DeleteRecipeCommand ToDeleteCommand(this Guid recipeId, Guid userId) =>
         new(userId, new RecipeId(recipeId));
 
-    public static DuplicateRecipeCommand ToDuplicateCommand(this Guid recipeId, UserId userId) =>
+    public static DuplicateRecipeCommand ToDuplicateCommand(this Guid recipeId, Guid userId) =>
         new(userId, new RecipeId(recipeId));
 
     public static CreateRecipeCommand ToCommand(this CreateRecipeHttpRequest request, Guid userIdValue) {
         return new CreateRecipeCommand(
-            new UserId(userIdValue),
+            userIdValue,
             request.Name,
             request.Description,
             request.Comment,
@@ -40,7 +40,7 @@ public static class RecipeHttpMappings {
 
     public static UpdateRecipeCommand ToCommand(this UpdateRecipeHttpRequest request, Guid userIdValue, Guid recipeId) {
         return new UpdateRecipeCommand(
-            new UserId(userIdValue),
+            userIdValue,
             new RecipeId(recipeId),
             request.Name,
             request.Description,

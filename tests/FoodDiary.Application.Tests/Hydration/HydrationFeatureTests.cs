@@ -12,7 +12,7 @@ public class HydrationFeatureTests {
     [Fact]
     public async Task CreateHydrationEntryCommandValidator_WithEmptyUserId_Fails() {
         var validator = new CreateHydrationEntryCommandValidator();
-        var command = new CreateHydrationEntryCommand(UserId.Empty, DateTime.UtcNow, 250);
+        var command = new CreateHydrationEntryCommand(Guid.Empty, DateTime.UtcNow, 250);
 
         var result = await validator.ValidateAsync(command);
 
@@ -22,7 +22,7 @@ public class HydrationFeatureTests {
     [Fact]
     public async Task DeleteHydrationEntryCommandValidator_WithEmptyEntryId_Fails() {
         var validator = new DeleteHydrationEntryCommandValidator();
-        var command = new DeleteHydrationEntryCommand(UserId.New(), HydrationEntryId.Empty);
+        var command = new DeleteHydrationEntryCommand(Guid.NewGuid(), HydrationEntryId.Empty);
 
         var result = await validator.ValidateAsync(command);
 
@@ -32,7 +32,7 @@ public class HydrationFeatureTests {
     [Fact]
     public async Task UpdateHydrationEntryCommandValidator_WithInvalidAmount_Fails() {
         var validator = new UpdateHydrationEntryCommandValidator();
-        var command = new UpdateHydrationEntryCommand(UserId.New(), HydrationEntryId.New(), DateTime.UtcNow, 0);
+        var command = new UpdateHydrationEntryCommand(Guid.NewGuid(), HydrationEntryId.New(), DateTime.UtcNow, 0);
 
         var result = await validator.ValidateAsync(command);
 
@@ -42,7 +42,7 @@ public class HydrationFeatureTests {
     [Fact]
     public async Task GetHydrationDailyTotalQueryValidator_WithValidUserId_Passes() {
         var validator = new GetHydrationDailyTotalQueryValidator();
-        var query = new GetHydrationDailyTotalQuery(UserId.New(), DateTime.UtcNow);
+        var query = new GetHydrationDailyTotalQuery(Guid.NewGuid(), DateTime.UtcNow);
 
         var result = await validator.ValidateAsync(query);
 
@@ -52,7 +52,7 @@ public class HydrationFeatureTests {
     [Fact]
     public async Task GetHydrationEntriesQueryValidator_WithEmptyUserId_Fails() {
         var validator = new GetHydrationEntriesQueryValidator();
-        var query = new GetHydrationEntriesQuery(UserId.Empty, DateTime.UtcNow);
+        var query = new GetHydrationEntriesQuery(Guid.Empty, DateTime.UtcNow);
 
         var result = await validator.ValidateAsync(query);
 

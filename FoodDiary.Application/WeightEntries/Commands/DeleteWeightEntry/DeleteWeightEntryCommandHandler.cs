@@ -8,13 +8,14 @@ namespace FoodDiary.Application.WeightEntries.Commands.DeleteWeightEntry;
 public class DeleteWeightEntryCommandHandler(IWeightEntryRepository weightEntryRepository)
     : ICommandHandler<DeleteWeightEntryCommand, Result<bool>> {
     public async Task<Result<bool>> Handle(DeleteWeightEntryCommand command, CancellationToken cancellationToken) {
-        if (command.UserId is null || command.UserId.Value == UserId.Empty) {
+        if (command.UserId is null || command.UserId.Value == Guid.Empty) {
             return Result.Failure<bool>(Errors.Authentication.InvalidToken);
         }
 
+        var userId = new UserId(command.UserId.Value);
         var entry = await weightEntryRepository.GetByIdAsync(
             command.WeightEntryId,
-            command.UserId.Value,
+            userId,
             asTracking: true,
             cancellationToken: cancellationToken);
 

@@ -5,7 +5,7 @@ namespace FoodDiary.Application.Authentication.Commands.LinkTelegram;
 public sealed class LinkTelegramCommandValidator : AbstractValidator<LinkTelegramCommand> {
     public LinkTelegramCommandValidator() {
         RuleFor(x => x.UserId)
-            .NotNull()
+            .NotEqual(Guid.Empty)
             .WithErrorCode("Validation.Required")
             .WithMessage("userId is required.");
 

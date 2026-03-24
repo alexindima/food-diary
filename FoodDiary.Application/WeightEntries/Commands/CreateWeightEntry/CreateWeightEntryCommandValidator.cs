@@ -1,6 +1,5 @@
 using FluentValidation;
 using FoodDiary.Domain.ValueObjects;
-using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.WeightEntries.Commands.CreateWeightEntry;
 
@@ -11,7 +10,7 @@ public class CreateWeightEntryCommandValidator : AbstractValidator<CreateWeightE
             .NotNull()
             .WithErrorCode("Authentication.InvalidToken")
             .WithMessage("Unable to identify user")
-            .Must(userId => userId is not null && userId.Value != UserId.Empty)
+            .Must(userId => userId.HasValue && userId.Value != Guid.Empty)
             .WithErrorCode("Authentication.InvalidToken")
             .WithMessage("Unable to identify user");
 

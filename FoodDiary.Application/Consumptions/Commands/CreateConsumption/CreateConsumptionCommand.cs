@@ -2,12 +2,11 @@ using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Consumptions.Common;
 using FoodDiary.Application.Consumptions.Models;
-using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Consumptions.Commands.CreateConsumption;
 
 public record CreateConsumptionCommand(
-    UserId? UserId,
+    Guid? UserId,
     DateTime Date,
     string? MealType,
     string? Comment,

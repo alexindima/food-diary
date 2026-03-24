@@ -12,13 +12,15 @@ namespace FoodDiary.Application.Recipes.Commands.DuplicateRecipe;
 public class DuplicateRecipeCommandHandler(IRecipeRepository recipeRepository)
     : ICommandHandler<DuplicateRecipeCommand, Result<RecipeModel>> {
     public async Task<Result<RecipeModel>> Handle(DuplicateRecipeCommand command, CancellationToken cancellationToken) {
-        if (command.UserId is null || command.UserId == UserId.Empty) {
+        if (command.UserId is null || command.UserId == Guid.Empty) {
             return Result.Failure<RecipeModel>(Errors.Authentication.InvalidToken);
         }
 
+        var userId = new UserId(command.UserId.Value);
+
         var original = await recipeRepository.GetByIdAsync(
             command.RecipeId,
-            command.UserId.Value,
+            userId,
             includePublic: true,
             includeSteps: true,
             cancellationToken: cancellationToken);
@@ -28,7 +30,7 @@ public class DuplicateRecipeCommandHandler(IRecipeRepository recipeRepository)
         }
 
         var duplicate = Recipe.Create(
-            command.UserId.Value,
+            userId,
             original.Name,
             original.Servings,
             original.Description,
@@ -58,7 +60,7 @@ public class DuplicateRecipeCommandHandler(IRecipeRepository recipeRepository)
 
         var created = await recipeRepository.GetByIdAsync(
             duplicate.Id,
-            command.UserId.Value,
+            userId,
             includePublic: false,
             includeSteps: true,
             asTracking: true,

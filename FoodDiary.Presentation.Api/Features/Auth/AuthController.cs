@@ -1,5 +1,4 @@
 using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Presentation.Api.Options;
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Extensions;
@@ -58,7 +57,7 @@ public class AuthController(
 
     [Authorize]
     [HttpPost("verify-email/resend")]
-    public async Task<IActionResult> ResendVerifyEmail([FromCurrentUser] UserId userId) {
+    public async Task<IActionResult> ResendVerifyEmail([FromCurrentUser] Guid userId) {
         var command = userId.ToResendVerificationCommand();
         var result = await Mediator.Send(command);
         return result.ToNoContentActionResult();
@@ -94,7 +93,7 @@ public class AuthController(
 
     [Authorize]
     [HttpPost("telegram/link")]
-    public async Task<IActionResult> LinkTelegram([FromCurrentUser] UserId userId, TelegramAuthHttpRequest request) {
+    public async Task<IActionResult> LinkTelegram([FromCurrentUser] Guid userId, TelegramAuthHttpRequest request) {
         var command = request.ToLinkCommand(userId);
         var result = await Mediator.Send(command);
         return result.ToOkActionResult(this, static value => value.ToHttpResponse());
@@ -126,7 +125,7 @@ public class AuthController(
 
     [Authorize(Roles = RoleNames.Admin)]
     [HttpPost("admin-sso/start")]
-    public async Task<IActionResult> AdminSsoStart([FromCurrentUser] UserId userId) {
+    public async Task<IActionResult> AdminSsoStart([FromCurrentUser] Guid userId) {
         var command = userId.ToAdminSsoStartCommand();
         var result = await Mediator.Send(command);
         return result.ToOkActionResult(this, static value => value.ToHttpResponse());

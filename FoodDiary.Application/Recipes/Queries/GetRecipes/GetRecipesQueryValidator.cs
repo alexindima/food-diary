@@ -1,5 +1,4 @@
 using FluentValidation;
-using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Recipes.Queries.GetRecipes;
 
@@ -8,7 +7,7 @@ public class GetRecipesQueryValidator : AbstractValidator<GetRecipesQuery> {
         RuleFor(x => x.UserId)
             .NotNull()
             .WithErrorCode("Authentication.InvalidToken")
-            .Must(id => id is not null && id.Value != UserId.Empty)
+            .Must(id => id is not null && id.Value != Guid.Empty)
             .WithErrorCode("Authentication.InvalidToken");
 
         RuleFor(x => x.Page)

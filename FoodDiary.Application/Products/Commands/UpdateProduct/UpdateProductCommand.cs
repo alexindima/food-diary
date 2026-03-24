@@ -6,7 +6,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.Products.Commands.UpdateProduct;
 
 public record UpdateProductCommand(
-    UserId? UserId,
+    Guid? UserId,
     ProductId ProductId,
     string? Barcode,
     bool ClearBarcode,

@@ -3,6 +3,7 @@ using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Interfaces.Services;
 using FoodDiary.Application.Ai.Models;
+using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Ai.Commands.AnalyzeFoodImage;
 
@@ -14,24 +15,25 @@ public sealed class AnalyzeFoodImageCommandHandler(
     public async Task<Result<FoodVisionModel>> Handle(
         AnalyzeFoodImageCommand query,
         CancellationToken cancellationToken) {
+        var userId = new UserId(query.UserId);
         var asset = await imageAssetRepository.GetByIdAsync(query.ImageAssetId, cancellationToken);
         if (asset is null) {
             return Result.Failure<FoodVisionModel>(Errors.Ai.ImageNotFound(query.ImageAssetId.Value));
         }
 
-        if (asset.UserId != query.UserId) {
+        if (asset.UserId != userId) {
             return Result.Failure<FoodVisionModel>(Errors.Ai.Forbidden());
         }
 
-        var user = await userRepository.GetByIdAsync(query.UserId);
+        var user = await userRepository.GetByIdAsync(userId);
         if (user is null) {
-            return Result.Failure<FoodVisionModel>(Errors.User.NotFound(query.UserId.Value));
+            return Result.Failure<FoodVisionModel>(Errors.User.NotFound(userId));
         }
 
         return await openAiFoodService.AnalyzeFoodImageAsync(
             asset.Url,
             user.Language,
-            query.UserId,
+            userId,
             query.Description,
             cancellationToken);
     }

@@ -12,7 +12,7 @@ public class GetWaistSummariesQueryHandler(IWaistEntryRepository waistEntryRepos
     public async Task<Result<IReadOnlyList<WaistEntrySummaryModel>>> Handle(
         GetWaistSummariesQuery query,
         CancellationToken cancellationToken) {
-        if (query.UserId is null || query.UserId.Value == UserId.Empty) {
+        if (query.UserId is null || query.UserId.Value == Guid.Empty) {
             return Result.Failure<IReadOnlyList<WaistEntrySummaryModel>>(Errors.Authentication.InvalidToken);
         }
 
@@ -26,11 +26,12 @@ public class GetWaistSummariesQueryHandler(IWaistEntryRepository waistEntryRepos
                 Errors.Validation.Invalid(nameof(query.QuantizationDays), "Value must be greater than zero."));
         }
 
+        var userId = new UserId(query.UserId.Value);
         var normalizedFrom = NormalizeUtcDate(query.DateFrom);
         var normalizedTo = NormalizeUtcDate(query.DateTo);
 
         var entries = await waistEntryRepository.GetByPeriodAsync(
-            query.UserId.Value,
+            userId,
             normalizedFrom,
             normalizedTo,
             cancellationToken);

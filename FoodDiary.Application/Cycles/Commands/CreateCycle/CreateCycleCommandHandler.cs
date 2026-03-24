@@ -14,12 +14,14 @@ public class CreateCycleCommandHandler(ICycleRepository cycleRepository)
     public async Task<Result<CycleModel>> Handle(
         CreateCycleCommand command,
         CancellationToken cancellationToken) {
-        if (command.UserId is null || command.UserId == UserId.Empty) {
+        if (command.UserId is null || command.UserId == Guid.Empty) {
             return Result.Failure<CycleModel>(Errors.User.NotFound());
         }
 
+        var userId = new UserId(command.UserId.Value);
+
         var cycle = Cycle.Create(
-            command.UserId.Value,
+            userId,
             command.StartDate,
             command.AverageLength,
             command.LutealLength,

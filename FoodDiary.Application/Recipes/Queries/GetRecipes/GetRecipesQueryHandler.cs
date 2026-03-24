@@ -11,13 +11,13 @@ namespace FoodDiary.Application.Recipes.Queries.GetRecipes;
 public class GetRecipesQueryHandler(IRecipeRepository recipeRepository)
     : IQueryHandler<GetRecipesQuery, Result<PagedResponse<RecipeModel>>> {
     public async Task<Result<PagedResponse<RecipeModel>>> Handle(GetRecipesQuery query, CancellationToken cancellationToken) {
-        if (query.UserId is null || query.UserId == UserId.Empty) {
+        if (query.UserId is null || query.UserId == Guid.Empty) {
             return Result.Failure<PagedResponse<RecipeModel>>(Errors.Authentication.InvalidToken);
         }
 
         var pageNumber = Math.Max(query.Page, 1);
         var pageSize = Math.Max(query.Limit, 1);
-        var userId = query.UserId.Value;
+        var userId = new UserId(query.UserId.Value);
 
         var (items, totalItems) = await recipeRepository.GetPagedAsync(
             userId,

@@ -16,14 +16,16 @@ public sealed class GetImageUploadUrlCommandHandler(
             return Result.Failure<GetImageUploadUrlResult>(validationResult.Error);
         }
 
+        var userId = new UserId(request.UserId);
+
         var presign = await imageStorageService.CreatePresignedUploadAsync(
-            request.UserId,
+            userId,
             request.FileName,
             request.ContentType,
             request.FileSizeBytes,
             cancellationToken);
 
-        var asset = ImageAsset.Create(request.UserId, presign.ObjectKey, presign.FileUrl);
+        var asset = ImageAsset.Create(userId, presign.ObjectKey, presign.FileUrl);
         asset = await imageAssetRepository.AddAsync(asset, cancellationToken);
 
         return Result.Success(new GetImageUploadUrlResult(
@@ -35,7 +37,7 @@ public sealed class GetImageUploadUrlCommandHandler(
     }
 
     private static Result ValidateRequest(GetImageUploadUrlCommand request) {
-        if (request.UserId == UserId.Empty) {
+        if (request.UserId == Guid.Empty) {
             return Result.Failure(Errors.Image.InvalidData("UserId is required."));
         }
 

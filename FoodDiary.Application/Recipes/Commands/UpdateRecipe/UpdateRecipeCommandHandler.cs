@@ -17,11 +17,11 @@ public class UpdateRecipeCommandHandler(
     IImageStorageService imageStorageService)
     : ICommandHandler<UpdateRecipeCommand, Result<RecipeModel>> {
     public async Task<Result<RecipeModel>> Handle(UpdateRecipeCommand command, CancellationToken cancellationToken) {
-        if (command.UserId is null || command.UserId == UserId.Empty) {
+        if (command.UserId is null || command.UserId == Guid.Empty) {
             return Result.Failure<RecipeModel>(Errors.Authentication.InvalidToken);
         }
 
-        var userId = command.UserId.Value;
+        var userId = new UserId(command.UserId.Value);
 
         var recipe = await recipeRepository.GetByIdAsync(
             command.RecipeId,

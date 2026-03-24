@@ -10,13 +10,15 @@ public class DeleteShoppingListCommandHandler(IShoppingListRepository shoppingLi
     public async Task<Result<bool>> Handle(
         DeleteShoppingListCommand command,
         CancellationToken cancellationToken) {
-        if (command.UserId is null || command.UserId == UserId.Empty) {
+        if (command.UserId is null || command.UserId == Guid.Empty) {
             return Result.Failure<bool>(Errors.Authentication.InvalidToken);
         }
 
+        var userId = new UserId(command.UserId.Value);
+
         var list = await shoppingListRepository.GetByIdAsync(
             command.ShoppingListId,
-            command.UserId.Value,
+            userId,
             includeItems: true,
             asTracking: true,
             cancellationToken: cancellationToken);

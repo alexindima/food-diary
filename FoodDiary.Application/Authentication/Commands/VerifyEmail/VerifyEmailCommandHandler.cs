@@ -2,6 +2,7 @@ using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Interfaces.Services;
+using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Authentication.Commands.VerifyEmail;
 
@@ -13,9 +14,10 @@ public sealed class VerifyEmailCommandHandler(
     : ICommandHandler<VerifyEmailCommand, Result<bool>> {
     private readonly IEmailVerificationNotifier _emailVerificationNotifier = emailVerificationNotifier;
     public async Task<Result<bool>> Handle(VerifyEmailCommand command, CancellationToken cancellationToken) {
-        var user = await userRepository.GetByIdAsync(command.UserId);
+        var userId = new UserId(command.UserId);
+        var user = await userRepository.GetByIdAsync(userId);
         if (user is null) {
-            return Result.Failure<bool>(Errors.User.NotFound(command.UserId.Value));
+            return Result.Failure<bool>(Errors.User.NotFound(userId));
         }
 
         if (user.IsEmailConfirmed) {

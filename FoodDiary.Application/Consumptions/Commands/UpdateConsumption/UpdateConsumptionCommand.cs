@@ -7,7 +7,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.Consumptions.Commands.UpdateConsumption;
 
 public record UpdateConsumptionCommand(
-    UserId? UserId,
+    Guid? UserId,
     MealId ConsumptionId,
     DateTime Date,
     string? MealType,
