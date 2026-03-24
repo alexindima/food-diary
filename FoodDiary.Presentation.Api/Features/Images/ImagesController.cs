@@ -1,6 +1,7 @@
 using FoodDiary.Application.Images.Commands.DeleteImageAsset;
 using FoodDiary.Application.Images.Commands.GetUploadUrl;
 using FoodDiary.Contracts.Images;
+using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Features.Images.Mappings;
 using FoodDiary.Presentation.Api.Features.Images.Requests;
@@ -13,11 +14,7 @@ namespace FoodDiary.Presentation.Api.Features.Images;
 [Route("api/[controller]")]
 public sealed class ImagesController(ISender mediator) : AuthorizedController(mediator) {
     [HttpPost("upload-url")]
-    public async Task<ActionResult<GetImageUploadUrlResponse>> GetUploadUrl([FromBody] GetImageUploadUrlHttpRequest request) {
-        if (!TryGetCurrentUserId(out var userId)) {
-            return Unauthorized();
-        }
-
+    public async Task<ActionResult<GetImageUploadUrlResponse>> GetUploadUrl([FromCurrentUser] UserId userId, [FromBody] GetImageUploadUrlHttpRequest request) {
         var command = request.ToCommand(userId);
 
         GetImageUploadUrlResult result;
@@ -40,11 +37,7 @@ public sealed class ImagesController(ISender mediator) : AuthorizedController(me
     }
 
     [HttpDelete("{assetId:guid}")]
-    public async Task<IActionResult> Delete(Guid assetId) {
-        if (!TryGetCurrentUserId(out var userId)) {
-            return Unauthorized();
-        }
-
+    public async Task<IActionResult> Delete(Guid assetId, [FromCurrentUser] UserId userId) {
         var command = new DeleteImageAssetCommand(userId, new(assetId));
         var result = await Mediator.Send(command);
 

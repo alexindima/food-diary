@@ -15,53 +15,33 @@ namespace FoodDiary.Presentation.Api.Features.Hydration;
 [Route("api/hydrations")]
 public class HydrationEntriesController(ISender mediator) : AuthorizedController(mediator) {
     [HttpGet]
-    public async Task<IActionResult> GetByDate([FromQuery] GetHydrationEntriesHttpQuery query) {
-        if (!TryGetCurrentUserId(out var userId)) {
-            return Unauthorized();
-        }
-
+    public async Task<IActionResult> GetByDate([FromCurrentUser] UserId userId, [FromQuery] GetHydrationEntriesHttpQuery query) {
         var result = await Mediator.Send(query.ToEntriesQuery(userId));
         return result.ToActionResult();
     }
 
     [HttpGet("daily")]
-    public async Task<IActionResult> GetDaily([FromQuery] GetHydrationEntriesHttpQuery query) {
-        if (!TryGetCurrentUserId(out var userId)) {
-            return Unauthorized();
-        }
-
+    public async Task<IActionResult> GetDaily([FromCurrentUser] UserId userId, [FromQuery] GetHydrationEntriesHttpQuery query) {
         var result = await Mediator.Send(query.ToDailyQuery(userId));
         return result.ToActionResult();
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] CreateHydrationEntryHttpRequest request) {
-        if (!TryGetCurrentUserId(out var userId)) {
-            return Unauthorized();
-        }
-
+    public async Task<IActionResult> Create([FromCurrentUser] UserId userId, [FromBody] CreateHydrationEntryHttpRequest request) {
         var command = request.ToCommand(userId.Value);
         var result = await Mediator.Send(command);
         return result.ToActionResult();
     }
 
     [HttpPut("{id:guid}")]
-    public async Task<IActionResult> Update(Guid id, [FromBody] UpdateHydrationEntryHttpRequest request) {
-        if (!TryGetCurrentUserId(out var userId)) {
-            return Unauthorized();
-        }
-
+    public async Task<IActionResult> Update(Guid id, [FromCurrentUser] UserId userId, [FromBody] UpdateHydrationEntryHttpRequest request) {
         var command = request.ToCommand(userId.Value, id);
         var result = await Mediator.Send(command);
         return result.ToActionResult();
     }
 
     [HttpDelete("{id:guid}")]
-    public async Task<IActionResult> Delete(Guid id) {
-        if (!TryGetCurrentUserId(out var userId)) {
-            return Unauthorized();
-        }
-
+    public async Task<IActionResult> Delete(Guid id, [FromCurrentUser] UserId userId) {
         var command = new DeleteHydrationEntryCommand(userId, new HydrationEntryId(id));
         var result = await Mediator.Send(command);
         return result.ToActionResult();

@@ -60,11 +60,7 @@ public class AuthController(
 
     [Authorize]
     [HttpPost("verify-email/resend")]
-    public async Task<IActionResult> ResendVerifyEmail() {
-        if (!TryGetAuthenticatedUserId(out var userId)) {
-            return Unauthorized();
-        }
-
+    public async Task<IActionResult> ResendVerifyEmail([FromCurrentUser] UserId userId) {
         var command = new ResendEmailVerificationCommand(userId);
         var result = await Mediator.Send(command);
         return result.ToActionResult();
@@ -100,11 +96,7 @@ public class AuthController(
 
     [Authorize]
     [HttpPost("telegram/link")]
-    public async Task<IActionResult> LinkTelegram(TelegramAuthHttpRequest request) {
-        if (!TryGetAuthenticatedUserId(out var userId)) {
-            return Unauthorized();
-        }
-
+    public async Task<IActionResult> LinkTelegram([FromCurrentUser] UserId userId, TelegramAuthHttpRequest request) {
         var command = request.ToLinkCommand(userId);
         var result = await Mediator.Send(command);
         return result.ToActionResult();
@@ -136,11 +128,7 @@ public class AuthController(
 
     [Authorize(Roles = RoleNames.Admin)]
     [HttpPost("admin-sso/start")]
-    public async Task<IActionResult> AdminSsoStart() {
-        if (!TryGetAuthenticatedUserId(out var userId)) {
-            return Unauthorized();
-        }
-
+    public async Task<IActionResult> AdminSsoStart([FromCurrentUser] UserId userId) {
         var command = new AdminSsoStartCommand(userId);
         var result = await Mediator.Send(command);
         return result.ToActionResult();
@@ -152,16 +140,5 @@ public class AuthController(
         var command = request.ToCommand();
         var result = await Mediator.Send(command);
         return result.ToActionResult();
-    }
-
-    private bool TryGetAuthenticatedUserId(out UserId userId) {
-        var resolved = User.GetUserId();
-        if (resolved is null || resolved.Value == UserId.Empty) {
-            userId = default;
-            return false;
-        }
-
-        userId = resolved.Value;
-        return true;
     }
 }

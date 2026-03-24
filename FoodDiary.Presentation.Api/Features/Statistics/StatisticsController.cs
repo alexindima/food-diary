@@ -1,3 +1,4 @@
+using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Extensions;
 using FoodDiary.Presentation.Api.Features.Statistics.Mappings;
@@ -11,11 +12,7 @@ namespace FoodDiary.Presentation.Api.Features.Statistics;
 [Route("api/[controller]")]
 public class StatisticsController(ISender mediator) : AuthorizedController(mediator) {
     [HttpGet]
-    public async Task<IActionResult> Get([FromQuery] GetStatisticsHttpQuery query) {
-        if (!TryGetCurrentUserId(out var userId)) {
-            return Unauthorized();
-        }
-
+    public async Task<IActionResult> Get([FromCurrentUser] UserId userId, [FromQuery] GetStatisticsHttpQuery query) {
         var result = await Mediator.Send(query.ToQuery(userId));
         return result.ToActionResult();
     }

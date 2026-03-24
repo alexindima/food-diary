@@ -16,64 +16,40 @@ namespace FoodDiary.Presentation.Api.Features.WaistEntries;
 [Route("api/waist-entries")]
 public class WaistEntriesController(ISender mediator) : AuthorizedController(mediator) {
     [HttpGet]
-    public async Task<IActionResult> GetAll([FromQuery] GetWaistEntriesHttpQuery query) {
-        if (!TryGetCurrentUserId(out var userId)) {
-            return Unauthorized();
-        }
-
+    public async Task<IActionResult> GetAll([FromCurrentUser] UserId userId, [FromQuery] GetWaistEntriesHttpQuery query) {
         var result = await Mediator.Send(query.ToQuery(userId));
         return result.ToActionResult();
     }
 
     [HttpGet("latest")]
-    public async Task<IActionResult> GetLatest() {
-        if (!TryGetCurrentUserId(out var userId)) {
-            return Unauthorized();
-        }
-
+    public async Task<IActionResult> GetLatest([FromCurrentUser] UserId userId) {
         var query = new GetLatestWaistEntryQuery(userId);
         var result = await Mediator.Send(query);
         return result.ToActionResult();
     }
 
     [HttpGet("summary")]
-    public async Task<IActionResult> GetSummary([FromQuery] GetWaistSummariesHttpQuery query) {
-        if (!TryGetCurrentUserId(out var userId)) {
-            return Unauthorized();
-        }
-
+    public async Task<IActionResult> GetSummary([FromCurrentUser] UserId userId, [FromQuery] GetWaistSummariesHttpQuery query) {
         var result = await Mediator.Send(query.ToQuery(userId));
         return result.ToActionResult();
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] CreateWaistEntryHttpRequest request) {
-        if (!TryGetCurrentUserId(out var userId)) {
-            return Unauthorized();
-        }
-
+    public async Task<IActionResult> Create([FromCurrentUser] UserId userId, [FromBody] CreateWaistEntryHttpRequest request) {
         var command = request.ToCommand(userId.Value);
         var result = await Mediator.Send(command);
         return result.ToActionResult();
     }
 
     [HttpPut("{id:guid}")]
-    public async Task<IActionResult> Update(Guid id, [FromBody] UpdateWaistEntryHttpRequest request) {
-        if (!TryGetCurrentUserId(out var userId)) {
-            return Unauthorized();
-        }
-
+    public async Task<IActionResult> Update(Guid id, [FromCurrentUser] UserId userId, [FromBody] UpdateWaistEntryHttpRequest request) {
         var command = request.ToCommand(userId.Value, id);
         var result = await Mediator.Send(command);
         return result.ToActionResult();
     }
 
     [HttpDelete("{id:guid}")]
-    public async Task<IActionResult> Delete(Guid id) {
-        if (!TryGetCurrentUserId(out var userId)) {
-            return Unauthorized();
-        }
-
+    public async Task<IActionResult> Delete(Guid id, [FromCurrentUser] UserId userId) {
         var command = new DeleteWaistEntryCommand(
             userId,
             new WaistEntryId(id));

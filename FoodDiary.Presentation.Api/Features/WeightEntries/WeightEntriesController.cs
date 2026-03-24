@@ -16,64 +16,40 @@ namespace FoodDiary.Presentation.Api.Features.WeightEntries;
 [Route("api/weight-entries")]
 public class WeightEntriesController(ISender mediator) : AuthorizedController(mediator) {
     [HttpGet]
-    public async Task<IActionResult> GetAll([FromQuery] GetWeightEntriesHttpQuery query) {
-        if (!TryGetCurrentUserId(out var userId)) {
-            return Unauthorized();
-        }
-
+    public async Task<IActionResult> GetAll([FromCurrentUser] UserId userId, [FromQuery] GetWeightEntriesHttpQuery query) {
         var result = await Mediator.Send(query.ToQuery(userId));
         return result.ToActionResult();
     }
 
     [HttpGet("latest")]
-    public async Task<IActionResult> GetLatest() {
-        if (!TryGetCurrentUserId(out var userId)) {
-            return Unauthorized();
-        }
-
+    public async Task<IActionResult> GetLatest([FromCurrentUser] UserId userId) {
         var query = new GetLatestWeightEntryQuery(userId);
         var result = await Mediator.Send(query);
         return result.ToActionResult();
     }
 
     [HttpGet("summary")]
-    public async Task<IActionResult> GetSummary([FromQuery] GetWeightSummariesHttpQuery query) {
-        if (!TryGetCurrentUserId(out var userId)) {
-            return Unauthorized();
-        }
-
+    public async Task<IActionResult> GetSummary([FromCurrentUser] UserId userId, [FromQuery] GetWeightSummariesHttpQuery query) {
         var result = await Mediator.Send(query.ToQuery(userId));
         return result.ToActionResult();
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] CreateWeightEntryHttpRequest request) {
-        if (!TryGetCurrentUserId(out var userId)) {
-            return Unauthorized();
-        }
-
+    public async Task<IActionResult> Create([FromCurrentUser] UserId userId, [FromBody] CreateWeightEntryHttpRequest request) {
         var command = request.ToCommand(userId.Value);
         var result = await Mediator.Send(command);
         return result.ToActionResult();
     }
 
     [HttpPut("{id:guid}")]
-    public async Task<IActionResult> Update(Guid id, [FromBody] UpdateWeightEntryHttpRequest request) {
-        if (!TryGetCurrentUserId(out var userId)) {
-            return Unauthorized();
-        }
-
+    public async Task<IActionResult> Update(Guid id, [FromCurrentUser] UserId userId, [FromBody] UpdateWeightEntryHttpRequest request) {
         var command = request.ToCommand(userId.Value, id);
         var result = await Mediator.Send(command);
         return result.ToActionResult();
     }
 
     [HttpDelete("{id:guid}")]
-    public async Task<IActionResult> Delete(Guid id) {
-        if (!TryGetCurrentUserId(out var userId)) {
-            return Unauthorized();
-        }
-
+    public async Task<IActionResult> Delete(Guid id, [FromCurrentUser] UserId userId) {
         var command = new DeleteWeightEntryCommand(
             userId,
             new WeightEntryId(id));
