@@ -1,8 +1,8 @@
-using FoodDiary.Application.Users.Mappings;
 using FoodDiary.Application.Users.Queries.GetUserGoals;
-using FoodDiary.Contracts.Goals;
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Extensions;
+using FoodDiary.Presentation.Api.Features.Goals.Mappings;
+using FoodDiary.Presentation.Api.Features.Goals.Requests;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,7 +23,7 @@ public class GoalsController(ISender mediator) : AuthorizedController(mediator) 
     }
 
     [HttpPatch]
-    public async Task<IActionResult> UpdateGoals([FromBody] UpdateGoalsRequest request) {
+    public async Task<IActionResult> UpdateGoals([FromBody] UpdateGoalsHttpRequest request) {
         if (!TryGetCurrentUserId(out var userId)) {
             return Unauthorized();
         }

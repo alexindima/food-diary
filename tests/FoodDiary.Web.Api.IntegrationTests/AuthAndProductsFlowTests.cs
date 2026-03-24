@@ -3,6 +3,7 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
 using FoodDiary.Contracts.Authentication;
+using FoodDiary.Presentation.Api.Features.Auth.Requests;
 using FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
 using Xunit.Abstractions;
 
@@ -18,7 +19,7 @@ public sealed class AuthAndProductsFlowTests(ApiWebApplicationFactory factory, I
     public async Task Register_ReturnsAuthenticationTokens() {
         var client = factory.CreateClient();
         var email = $"api-tests-{Guid.NewGuid():N}@example.com";
-        var request = new RegisterRequest(email, "Password123!", "en");
+        var request = new RegisterHttpRequest(email, "Password123!", "en");
 
         var response = await client.PostAsJsonAsync("/api/auth/register", request);
         var body = await response.Content.ReadAsStringAsync();
@@ -40,12 +41,12 @@ public sealed class AuthAndProductsFlowTests(ApiWebApplicationFactory factory, I
 
         var registerResponse = await client.PostAsJsonAsync(
             "/api/auth/register",
-            new RegisterRequest(email, "Password123!", "en"));
+            new RegisterHttpRequest(email, "Password123!", "en"));
         Assert.Equal(HttpStatusCode.OK, registerResponse.StatusCode);
 
         var loginResponse = await client.PostAsJsonAsync(
             "/api/auth/login",
-            new LoginRequest(email, "WrongPassword123!"));
+            new LoginHttpRequest(email, "WrongPassword123!"));
 
         Assert.Equal(HttpStatusCode.Unauthorized, loginResponse.StatusCode);
     }
@@ -59,7 +60,7 @@ public sealed class AuthAndProductsFlowTests(ApiWebApplicationFactory factory, I
         var email = $"api-tests-{Guid.NewGuid():N}@example.com";
         var registerResponse = await client.PostAsJsonAsync(
             "/api/auth/register",
-            new RegisterRequest(email, "Password123!", "en"));
+            new RegisterHttpRequest(email, "Password123!", "en"));
         Assert.Equal(HttpStatusCode.OK, registerResponse.StatusCode);
 
         var authPayload = await registerResponse.Content.ReadFromJsonAsync<AuthenticationResponse>(JsonOptions);
@@ -81,7 +82,7 @@ public sealed class AuthAndProductsFlowTests(ApiWebApplicationFactory factory, I
         var email = $"api-tests-{Guid.NewGuid():N}@example.com";
         var registerResponse = await client.PostAsJsonAsync(
             "/api/auth/register",
-            new RegisterRequest(email, "Password123!", "en"));
+            new RegisterHttpRequest(email, "Password123!", "en"));
         Assert.Equal(HttpStatusCode.OK, registerResponse.StatusCode);
 
         var authPayload = await registerResponse.Content.ReadFromJsonAsync<AuthenticationResponse>(JsonOptions);

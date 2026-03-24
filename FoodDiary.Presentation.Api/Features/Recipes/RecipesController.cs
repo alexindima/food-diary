@@ -1,14 +1,14 @@
 using FoodDiary.Application.Recipes.Commands.DeleteRecipe;
 using FoodDiary.Application.Recipes.Commands.DuplicateRecipe;
-using FoodDiary.Application.Recipes.Mappings;
 using FoodDiary.Application.Recipes.Queries.GetRecentRecipes;
 using FoodDiary.Application.Recipes.Queries.GetRecipeById;
 using FoodDiary.Application.Recipes.Queries.GetRecipes;
 using FoodDiary.Application.Recipes.Queries.GetRecipesWithRecent;
-using FoodDiary.Contracts.Recipes;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Extensions;
+using FoodDiary.Presentation.Api.Features.Recipes.Mappings;
+using FoodDiary.Presentation.Api.Features.Recipes.Requests;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -86,7 +86,7 @@ public class RecipesController(ISender mediator) : AuthorizedController(mediator
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] CreateRecipeRequest request) {
+    public async Task<IActionResult> Create([FromBody] CreateRecipeHttpRequest request) {
         if (!TryGetCurrentUserId(out var userId)) {
             return Unauthorized();
         }
@@ -97,7 +97,7 @@ public class RecipesController(ISender mediator) : AuthorizedController(mediator
     }
 
     [HttpPatch("{id:guid}")]
-    public async Task<IActionResult> Update(Guid id, [FromBody] UpdateRecipeRequest request) {
+    public async Task<IActionResult> Update(Guid id, [FromBody] UpdateRecipeHttpRequest request) {
         if (!TryGetCurrentUserId(out var userId)) {
             return Unauthorized();
         }

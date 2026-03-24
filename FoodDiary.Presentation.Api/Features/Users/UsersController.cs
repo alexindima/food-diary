@@ -1,13 +1,13 @@
 using FoodDiary.Application.Users.Commands.DeleteUser;
 using FoodDiary.Application.Users.Commands.UpdateDesiredWaist;
 using FoodDiary.Application.Users.Commands.UpdateDesiredWeight;
-using FoodDiary.Application.Users.Mappings;
 using FoodDiary.Application.Users.Queries.GetDesiredWaist;
 using FoodDiary.Application.Users.Queries.GetDesiredWeight;
 using FoodDiary.Application.Users.Queries.GetUserById;
-using FoodDiary.Contracts.Users;
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Extensions;
+using FoodDiary.Presentation.Api.Features.Users.Mappings;
+using FoodDiary.Presentation.Api.Features.Users.Requests;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -28,7 +28,7 @@ public class UsersController(ISender mediator) : AuthorizedController(mediator) 
     }
 
     [HttpPatch("info")]
-    public async Task<IActionResult> UpdateCurrentUser([FromBody] UpdateUserRequest request) {
+    public async Task<IActionResult> UpdateCurrentUser([FromBody] UpdateUserHttpRequest request) {
         if (!TryGetCurrentUserId(out var userId)) {
             return Unauthorized();
         }
@@ -39,7 +39,7 @@ public class UsersController(ISender mediator) : AuthorizedController(mediator) 
     }
 
     [HttpPatch("password")]
-    public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequest request) {
+    public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordHttpRequest request) {
         if (!TryGetCurrentUserId(out var userId)) {
             return Unauthorized();
         }
@@ -61,7 +61,7 @@ public class UsersController(ISender mediator) : AuthorizedController(mediator) 
     }
 
     [HttpPut("desired-weight")]
-    public async Task<IActionResult> UpdateDesiredWeight([FromBody] UpdateDesiredWeightRequest request) {
+    public async Task<IActionResult> UpdateDesiredWeight([FromBody] UpdateDesiredWeightHttpRequest request) {
         if (!TryGetCurrentUserId(out var userId)) {
             return Unauthorized();
         }
@@ -83,7 +83,7 @@ public class UsersController(ISender mediator) : AuthorizedController(mediator) 
     }
 
     [HttpPut("desired-waist")]
-    public async Task<IActionResult> UpdateDesiredWaist([FromBody] UpdateDesiredWaistRequest request) {
+    public async Task<IActionResult> UpdateDesiredWaist([FromBody] UpdateDesiredWaistHttpRequest request) {
         if (!TryGetCurrentUserId(out var userId)) {
             return Unauthorized();
         }

@@ -1,14 +1,14 @@
 using FoodDiary.Application.Products.Commands.DeleteProduct;
 using FoodDiary.Application.Products.Commands.DuplicateProduct;
-using FoodDiary.Application.Products.Mappings;
 using FoodDiary.Application.Products.Queries.GetProductById;
 using FoodDiary.Application.Products.Queries.GetProducts;
 using FoodDiary.Application.Products.Queries.GetProductsWithRecent;
 using FoodDiary.Application.Products.Queries.GetRecentProducts;
-using FoodDiary.Contracts.Products;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Extensions;
+using FoodDiary.Presentation.Api.Features.Products.Mappings;
+using FoodDiary.Presentation.Api.Features.Products.Requests;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -96,7 +96,7 @@ public class ProductsController(ISender mediator) : AuthorizedController(mediato
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] CreateProductRequest request) {
+    public async Task<IActionResult> Create([FromBody] CreateProductHttpRequest request) {
         if (!TryGetCurrentUserId(out var userId)) {
             return Unauthorized();
         }
@@ -107,7 +107,7 @@ public class ProductsController(ISender mediator) : AuthorizedController(mediato
     }
 
     [HttpPatch("{id:guid}")]
-    public async Task<IActionResult> Update(Guid id, [FromBody] UpdateProductRequest request) {
+    public async Task<IActionResult> Update(Guid id, [FromBody] UpdateProductHttpRequest request) {
         if (!TryGetCurrentUserId(out var userId)) {
             return Unauthorized();
         }

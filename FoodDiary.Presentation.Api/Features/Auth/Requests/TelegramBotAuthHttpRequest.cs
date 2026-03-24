@@ -1,0 +1,3 @@
+namespace FoodDiary.Presentation.Api.Features.Auth.Requests;
+
+public sealed record TelegramBotAuthHttpRequest(long TelegramUserId);

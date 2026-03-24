@@ -1,12 +1,12 @@
 using FoodDiary.Application.Authentication.Commands.AdminSsoStart;
 using FoodDiary.Application.Authentication.Commands.ResendEmailVerification;
-using FoodDiary.Application.Authentication.Mappings;
-using FoodDiary.Contracts.Authentication;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Presentation.Api.Options;
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Extensions;
+using FoodDiary.Presentation.Api.Features.Auth.Mappings;
+using FoodDiary.Presentation.Api.Features.Auth.Requests;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -23,21 +23,21 @@ public class AuthController(
     private readonly TelegramBotAuthOptions _telegramBotOptions = telegramBotOptions.Value;
 
     [HttpPost("register")]
-    public async Task<IActionResult> Register(RegisterRequest request) {
+    public async Task<IActionResult> Register(RegisterHttpRequest request) {
         var command = request.ToCommand();
         var result = await Mediator.Send(command);
         return result.ToActionResult();
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> Login(LoginRequest request) {
+    public async Task<IActionResult> Login(LoginHttpRequest request) {
         var command = request.ToCommand();
         var result = await Mediator.Send(command);
         return result.ToActionResult();
     }
 
     [HttpPost("refresh")]
-    public async Task<IActionResult> Refresh(RefreshTokenRequest request) {
+    public async Task<IActionResult> Refresh(RefreshTokenHttpRequest request) {
         var command = request.ToCommand();
         var result = await Mediator.Send(command);
 
@@ -45,14 +45,14 @@ public class AuthController(
     }
 
     [HttpPost("restore")]
-    public async Task<IActionResult> RestoreAccount(RestoreAccountRequest request) {
+    public async Task<IActionResult> RestoreAccount(RestoreAccountHttpRequest request) {
         var command = request.ToCommand();
         var result = await Mediator.Send(command);
         return result.ToActionResult();
     }
 
     [HttpPost("verify-email")]
-    public async Task<IActionResult> VerifyEmail(VerifyEmailRequest request) {
+    public async Task<IActionResult> VerifyEmail(VerifyEmailHttpRequest request) {
         var command = request.ToCommand();
         var result = await Mediator.Send(command);
         return result.ToActionResult();
@@ -71,28 +71,28 @@ public class AuthController(
     }
 
     [HttpPost("password-reset/request")]
-    public async Task<IActionResult> RequestPasswordReset(RequestPasswordResetRequest request) {
+    public async Task<IActionResult> RequestPasswordReset(RequestPasswordResetHttpRequest request) {
         var command = request.ToCommand();
         var result = await Mediator.Send(command);
         return result.ToActionResult();
     }
 
     [HttpPost("password-reset/confirm")]
-    public async Task<IActionResult> ConfirmPasswordReset(ConfirmPasswordResetRequest request) {
+    public async Task<IActionResult> ConfirmPasswordReset(ConfirmPasswordResetHttpRequest request) {
         var command = request.ToCommand();
         var result = await Mediator.Send(command);
         return result.ToActionResult();
     }
 
     [HttpPost("telegram/verify")]
-    public async Task<IActionResult> TelegramVerify(TelegramAuthRequest request) {
+    public async Task<IActionResult> TelegramVerify(TelegramAuthHttpRequest request) {
         var command = request.ToCommand();
         var result = await Mediator.Send(command);
         return result.ToActionResult();
     }
 
     [HttpPost("telegram/login-widget")]
-    public async Task<IActionResult> TelegramLoginWidget(TelegramLoginWidgetRequest request) {
+    public async Task<IActionResult> TelegramLoginWidget(TelegramLoginWidgetHttpRequest request) {
         var command = request.ToCommand();
         var result = await Mediator.Send(command);
         return result.ToActionResult();
@@ -100,7 +100,7 @@ public class AuthController(
 
     [Authorize]
     [HttpPost("telegram/link")]
-    public async Task<IActionResult> LinkTelegram(TelegramAuthRequest request) {
+    public async Task<IActionResult> LinkTelegram(TelegramAuthHttpRequest request) {
         if (!TryGetAuthenticatedUserId(out var userId)) {
             return Unauthorized();
         }
@@ -114,7 +114,7 @@ public class AuthController(
     public async Task<IActionResult> TelegramBotAuth(
         [FromHeader(Name = "X-Telegram-Bot-Secret")]
         string? secret,
-        TelegramBotAuthRequest request) {
+        TelegramBotAuthHttpRequest request) {
         if (string.IsNullOrWhiteSpace(_telegramBotOptions.ApiSecret)) {
             return StatusCode(StatusCodes.Status500InternalServerError, new {
                 error = "Authentication.TelegramBotNotConfigured",
@@ -148,7 +148,7 @@ public class AuthController(
 
     [AllowAnonymous]
     [HttpPost("admin-sso/exchange")]
-    public async Task<IActionResult> AdminSsoExchange(AdminSsoExchangeRequest request) {
+    public async Task<IActionResult> AdminSsoExchange(AdminSsoExchangeHttpRequest request) {
         var command = request.ToCommand();
         var result = await Mediator.Send(command);
         return result.ToActionResult();

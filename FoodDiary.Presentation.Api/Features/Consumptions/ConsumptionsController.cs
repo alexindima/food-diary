@@ -1,11 +1,11 @@
 using FoodDiary.Application.Consumptions.Commands.DeleteConsumption;
-using FoodDiary.Application.Consumptions.Mappings;
 using FoodDiary.Application.Consumptions.Queries.GetConsumptionById;
 using FoodDiary.Application.Consumptions.Queries.GetConsumptions;
-using FoodDiary.Contracts.Consumptions;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Extensions;
+using FoodDiary.Presentation.Api.Features.Consumptions.Mappings;
+using FoodDiary.Presentation.Api.Features.Consumptions.Requests;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -41,7 +41,7 @@ public class ConsumptionsController(ISender mediator) : AuthorizedController(med
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] CreateConsumptionRequest request) {
+    public async Task<IActionResult> Create([FromBody] CreateConsumptionHttpRequest request) {
         if (!TryGetCurrentUserId(out var userId)) {
             return Unauthorized();
         }
@@ -52,7 +52,7 @@ public class ConsumptionsController(ISender mediator) : AuthorizedController(med
     }
 
     [HttpPatch("{id:guid}")]
-    public async Task<IActionResult> Update(Guid id, [FromBody] UpdateConsumptionRequest request) {
+    public async Task<IActionResult> Update(Guid id, [FromBody] UpdateConsumptionHttpRequest request) {
         if (!TryGetCurrentUserId(out var userId)) {
             return Unauthorized();
         }

@@ -1,12 +1,12 @@
 using FoodDiary.Application.WaistEntries.Commands.DeleteWaistEntry;
-using FoodDiary.Application.WaistEntries.Mappings;
 using FoodDiary.Application.WaistEntries.Queries.GetLatestWaistEntry;
 using FoodDiary.Application.WaistEntries.Queries.GetWaistEntries;
 using FoodDiary.Application.WaistEntries.Queries.GetWaistSummaries;
-using FoodDiary.Contracts.WaistEntries;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Extensions;
+using FoodDiary.Presentation.Api.Features.WaistEntries.Mappings;
+using FoodDiary.Presentation.Api.Features.WaistEntries.Requests;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,7 +20,8 @@ public class WaistEntriesController(ISender mediator) : AuthorizedController(med
         [FromQuery] DateTime? dateFrom = null,
         [FromQuery] DateTime? dateTo = null,
         [FromQuery] int? limit = null,
-        [FromQuery] string sort = "desc") {
+        [FromQuery] string sort = "desc"
+    ) {
         if (!TryGetCurrentUserId(out var userId)) {
             return Unauthorized();
         }
@@ -57,7 +58,7 @@ public class WaistEntriesController(ISender mediator) : AuthorizedController(med
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] CreateWaistEntryRequest request) {
+    public async Task<IActionResult> Create([FromBody] CreateWaistEntryHttpRequest request) {
         if (!TryGetCurrentUserId(out var userId)) {
             return Unauthorized();
         }
@@ -68,7 +69,7 @@ public class WaistEntriesController(ISender mediator) : AuthorizedController(med
     }
 
     [HttpPut("{id:guid}")]
-    public async Task<IActionResult> Update(Guid id, [FromBody] UpdateWaistEntryRequest request) {
+    public async Task<IActionResult> Update(Guid id, [FromBody] UpdateWaistEntryHttpRequest request) {
         if (!TryGetCurrentUserId(out var userId)) {
             return Unauthorized();
         }

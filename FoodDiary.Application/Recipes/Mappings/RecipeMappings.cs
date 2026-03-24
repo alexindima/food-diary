@@ -1,10 +1,6 @@
-﻿using FoodDiary.Application.Recipes.Commands.CreateRecipe;
-using FoodDiary.Application.Recipes.Commands.UpdateRecipe;
-using FoodDiary.Application.Recipes.Common;
 using FoodDiary.Application.Recipes.Services;
 using FoodDiary.Contracts.Recipes;
 using FoodDiary.Domain.Entities.Recipes;
-using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Recipes.Mappings;
 
@@ -70,69 +66,6 @@ public static class RecipeMappings {
             isOwnedByCurrentUser,
             steps);
     }
-
-    public static CreateRecipeCommand ToCommand(this CreateRecipeRequest request, Guid? userIdValue) {
-        return new CreateRecipeCommand(
-            userIdValue.HasValue ? new UserId(userIdValue.Value) : null,
-            request.Name,
-            request.Description,
-            request.Comment,
-            request.Category,
-            request.ImageUrl,
-            request.ImageAssetId,
-            request.PrepTime,
-            request.CookTime,
-            request.Servings,
-            request.Visibility,
-            request.CalculateNutritionAutomatically,
-            request.ManualCalories,
-            request.ManualProteins,
-            request.ManualFats,
-            request.ManualCarbs,
-            request.ManualFiber,
-            request.ManualAlcohol,
-            MapSteps(request.Steps));
-    }
-
-    public static UpdateRecipeCommand ToCommand(this UpdateRecipeRequest request, Guid? userIdValue, Guid recipeId) {
-        return new UpdateRecipeCommand(
-            userIdValue.HasValue ? new UserId(userIdValue.Value) : null,
-            new RecipeId(recipeId),
-            request.Name,
-            request.Description,
-            request.Comment,
-            request.Category,
-            request.ImageUrl,
-            request.ImageAssetId,
-            request.PrepTime,
-            request.CookTime,
-            request.Servings,
-            request.Visibility,
-            request.CalculateNutritionAutomatically,
-            request.ManualCalories,
-            request.ManualProteins,
-            request.ManualFats,
-            request.ManualCarbs,
-            request.ManualFiber,
-            request.ManualAlcohol,
-            request.Steps is null ? null : MapSteps(request.Steps));
-    }
-
-    private static IReadOnlyList<RecipeStepInput> MapSteps(IReadOnlyList<RecipeStepRequest> steps) =>
-        steps.Select((step, index) =>
-                new RecipeStepInput(
-                    index + 1,
-                    step.Description,
-                    step.Title,
-                    step.ImageUrl,
-                    step.ImageAssetId,
-                    step.Ingredients
-                        .Select(ingredient => new RecipeIngredientInput(
-                            ingredient.ProductId,
-                            ingredient.NestedRecipeId,
-                            ingredient.Amount))
-                        .ToList()))
-            .ToList();
 
     private static RecipeNutritionSummary BuildNutrition(Recipe recipe) {
         if (!recipe.IsNutritionAutoCalculated) {

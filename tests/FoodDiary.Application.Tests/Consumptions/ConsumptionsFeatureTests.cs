@@ -1,12 +1,12 @@
 using FoodDiary.Application.Consumptions.Common;
-using FoodDiary.Application.Consumptions.Mappings;
 using FoodDiary.Application.Consumptions.Services;
-using FoodDiary.Contracts.Consumptions;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Presentation.Api.Features.Consumptions.Mappings;
+using FoodDiary.Presentation.Api.Features.Consumptions.Requests;
 
 namespace FoodDiary.Application.Tests.Consumptions;
 
@@ -80,8 +80,8 @@ public class ConsumptionsFeatureTests {
     }
 
     [Fact]
-    public void ConsumptionRequestMappings_CreateToCommand_WhenListsAreNull_MapsEmptyCollections() {
-        var request = new CreateConsumptionRequest(
+    public void ConsumptionHttpMappings_CreateToCommand_WhenListsAreNull_MapsEmptyCollections() {
+        var request = new CreateConsumptionHttpRequest(
             DateTime.UtcNow,
             MealType.Breakfast.ToString(),
             Comment: null,
@@ -97,18 +97,18 @@ public class ConsumptionsFeatureTests {
     }
 
     [Fact]
-    public void ConsumptionRequestMappings_UpdateToCommand_WhenAiItemsAreNull_MapsEmptyCollection() {
-        var request = new UpdateConsumptionRequest(
+    public void ConsumptionHttpMappings_UpdateToCommand_WhenAiItemsAreNull_MapsEmptyCollection() {
+        var request = new UpdateConsumptionHttpRequest(
             DateTime.UtcNow,
             MealType.Dinner.ToString(),
             Comment: "ok",
             ImageUrl: null,
             ImageAssetId: null,
             Items: [
-                new ConsumptionItemRequest(ProductId.New().Value, null, 150)
+                new ConsumptionItemHttpRequest(ProductId.New().Value, null, 150)
             ],
             AiSessions: [
-                new ConsumptionAiSessionRequest(
+                new ConsumptionAiSessionHttpRequest(
                     ImageAssetId: null,
                     RecognizedAtUtc: DateTime.UtcNow,
                     Notes: null,

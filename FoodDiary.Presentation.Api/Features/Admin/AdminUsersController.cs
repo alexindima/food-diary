@@ -1,10 +1,10 @@
 using FoodDiary.Application.Admin.Commands.UpdateAdminUser;
 using FoodDiary.Application.Admin.Queries.GetAdminUsers;
-using FoodDiary.Contracts.Admin;
 using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Extensions;
+using FoodDiary.Presentation.Api.Features.Admin.Mappings;
+using FoodDiary.Presentation.Api.Features.Admin.Requests;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -27,15 +27,8 @@ public sealed class AdminUsersController(ISender mediator) : BaseApiController(m
     }
 
     [HttpPatch("{id:guid}")]
-    public async Task<IActionResult> UpdateUser(Guid id, [FromBody] AdminUserUpdateRequest request) {
-        var command = new UpdateAdminUserCommand(
-            new UserId(id),
-            request.IsActive,
-            request.IsEmailConfirmed,
-            request.Roles ?? Array.Empty<string>(),
-            request.Language,
-            request.AiInputTokenLimit,
-            request.AiOutputTokenLimit);
+    public async Task<IActionResult> UpdateUser(Guid id, [FromBody] AdminUserUpdateHttpRequest request) {
+        var command = request.ToCommand(id);
         var result = await Mediator.Send(command);
         return result.ToActionResult();
     }

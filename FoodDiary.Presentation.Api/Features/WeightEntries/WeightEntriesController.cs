@@ -1,12 +1,12 @@
 using FoodDiary.Application.WeightEntries.Commands.DeleteWeightEntry;
-using FoodDiary.Application.WeightEntries.Mappings;
 using FoodDiary.Application.WeightEntries.Queries.GetLatestWeightEntry;
 using FoodDiary.Application.WeightEntries.Queries.GetWeightEntries;
 using FoodDiary.Application.WeightEntries.Queries.GetWeightSummaries;
-using FoodDiary.Contracts.WeightEntries;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Extensions;
+using FoodDiary.Presentation.Api.Features.WeightEntries.Mappings;
+using FoodDiary.Presentation.Api.Features.WeightEntries.Requests;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -57,7 +57,7 @@ public class WeightEntriesController(ISender mediator) : AuthorizedController(me
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] CreateWeightEntryRequest request) {
+    public async Task<IActionResult> Create([FromBody] CreateWeightEntryHttpRequest request) {
         if (!TryGetCurrentUserId(out var userId)) {
             return Unauthorized();
         }
@@ -68,7 +68,7 @@ public class WeightEntriesController(ISender mediator) : AuthorizedController(me
     }
 
     [HttpPut("{id:guid}")]
-    public async Task<IActionResult> Update(Guid id, [FromBody] UpdateWeightEntryRequest request) {
+    public async Task<IActionResult> Update(Guid id, [FromBody] UpdateWeightEntryHttpRequest request) {
         if (!TryGetCurrentUserId(out var userId)) {
             return Unauthorized();
         }

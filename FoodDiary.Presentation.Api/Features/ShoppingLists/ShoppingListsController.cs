@@ -1,12 +1,12 @@
 using FoodDiary.Application.ShoppingLists.Commands.DeleteShoppingList;
-using FoodDiary.Application.ShoppingLists.Mappings;
 using FoodDiary.Application.ShoppingLists.Queries.GetCurrentShoppingList;
 using FoodDiary.Application.ShoppingLists.Queries.GetShoppingListById;
 using FoodDiary.Application.ShoppingLists.Queries.GetShoppingLists;
-using FoodDiary.Contracts.ShoppingLists;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Extensions;
+using FoodDiary.Presentation.Api.Features.ShoppingLists.Mappings;
+using FoodDiary.Presentation.Api.Features.ShoppingLists.Requests;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -49,7 +49,7 @@ public class ShoppingListsController(ISender mediator) : AuthorizedController(me
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] CreateShoppingListRequest request) {
+    public async Task<IActionResult> Create([FromBody] CreateShoppingListHttpRequest request) {
         if (!TryGetCurrentUserId(out var userId)) {
             return Unauthorized();
         }
@@ -60,7 +60,7 @@ public class ShoppingListsController(ISender mediator) : AuthorizedController(me
     }
 
     [HttpPatch("{id:guid}")]
-    public async Task<IActionResult> Update(Guid id, [FromBody] UpdateShoppingListRequest request) {
+    public async Task<IActionResult> Update(Guid id, [FromBody] UpdateShoppingListHttpRequest request) {
         if (!TryGetCurrentUserId(out var userId)) {
             return Unauthorized();
         }

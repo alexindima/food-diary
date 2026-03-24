@@ -1,8 +1,8 @@
-using FoodDiary.Application.Cycles.Mappings;
 using FoodDiary.Application.Cycles.Queries.GetCurrentCycle;
-using FoodDiary.Contracts.Cycles;
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Extensions;
+using FoodDiary.Presentation.Api.Features.Cycles.Mappings;
+using FoodDiary.Presentation.Api.Features.Cycles.Requests;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,7 +23,7 @@ public class CyclesController(ISender mediator) : AuthorizedController(mediator)
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] CreateCycleRequest request) {
+    public async Task<IActionResult> Create([FromBody] CreateCycleHttpRequest request) {
         if (!TryGetCurrentUserId(out var userId)) {
             return Unauthorized();
         }
@@ -34,7 +34,7 @@ public class CyclesController(ISender mediator) : AuthorizedController(mediator)
     }
 
     [HttpPut("{cycleId:guid}/days")]
-    public async Task<IActionResult> UpsertDay(Guid cycleId, [FromBody] UpsertCycleDayRequest request) {
+    public async Task<IActionResult> UpsertDay(Guid cycleId, [FromBody] UpsertCycleDayHttpRequest request) {
         if (!TryGetCurrentUserId(out var userId)) {
             return Unauthorized();
         }

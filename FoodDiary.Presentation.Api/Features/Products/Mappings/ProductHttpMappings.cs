@@ -1,0 +1,65 @@
+using FoodDiary.Application.Products.Commands.CreateProduct;
+using FoodDiary.Application.Products.Commands.UpdateProduct;
+using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Presentation.Api.Features.Products.Requests;
+
+namespace FoodDiary.Presentation.Api.Features.Products.Mappings;
+
+public static class ProductHttpMappings {
+    public static CreateProductCommand ToCommand(this CreateProductHttpRequest request, Guid userIdValue) {
+        return new CreateProductCommand(
+            new UserId(userIdValue),
+            request.Barcode,
+            request.Name,
+            request.Brand,
+            request.ProductType,
+            request.Category,
+            request.Description,
+            request.Comment,
+            request.ImageUrl,
+            request.ImageAssetId,
+            request.BaseUnit,
+            request.BaseAmount,
+            request.DefaultPortionAmount,
+            request.CaloriesPerBase,
+            request.ProteinsPerBase,
+            request.FatsPerBase,
+            request.CarbsPerBase,
+            request.FiberPerBase,
+            request.AlcoholPerBase,
+            request.Visibility
+        );
+    }
+
+    public static UpdateProductCommand ToCommand(this UpdateProductHttpRequest request, Guid userIdValue, Guid productId) {
+        return new UpdateProductCommand(
+            new UserId(userIdValue),
+            new ProductId(productId),
+            request.Barcode,
+            request.ClearBarcode,
+            request.Name,
+            request.Brand,
+            request.ClearBrand,
+            request.ProductType,
+            request.Category,
+            request.ClearCategory,
+            request.Description,
+            request.ClearDescription,
+            request.Comment,
+            request.ClearComment,
+            request.ImageUrl,
+            request.ClearImageUrl,
+            request.ImageAssetId,
+            request.ClearImageAssetId,
+            request.BaseUnit,
+            request.BaseAmount,
+            request.DefaultPortionAmount,
+            request.CaloriesPerBase,
+            request.ProteinsPerBase,
+            request.FatsPerBase,
+            request.CarbsPerBase,
+            request.FiberPerBase,
+            request.AlcoholPerBase,
+            request.Visibility);
+    }
+}

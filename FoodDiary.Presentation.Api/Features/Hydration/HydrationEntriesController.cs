@@ -1,11 +1,11 @@
 using FoodDiary.Application.Hydration.Commands.DeleteHydrationEntry;
-using FoodDiary.Application.Hydration.Mappings;
 using FoodDiary.Application.Hydration.Queries.GetHydrationDailyTotal;
 using FoodDiary.Application.Hydration.Queries.GetHydrationEntries;
-using FoodDiary.Contracts.Hydration;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Extensions;
+using FoodDiary.Presentation.Api.Features.Hydration.Mappings;
+using FoodDiary.Presentation.Api.Features.Hydration.Requests;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -39,7 +39,7 @@ public class HydrationEntriesController(ISender mediator) : AuthorizedController
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] CreateHydrationEntryRequest request) {
+    public async Task<IActionResult> Create([FromBody] CreateHydrationEntryHttpRequest request) {
         if (!TryGetCurrentUserId(out var userId)) {
             return Unauthorized();
         }
@@ -50,7 +50,7 @@ public class HydrationEntriesController(ISender mediator) : AuthorizedController
     }
 
     [HttpPut("{id:guid}")]
-    public async Task<IActionResult> Update(Guid id, [FromBody] UpdateHydrationEntryRequest request) {
+    public async Task<IActionResult> Update(Guid id, [FromBody] UpdateHydrationEntryHttpRequest request) {
         if (!TryGetCurrentUserId(out var userId)) {
             return Unauthorized();
         }

@@ -1,0 +1,82 @@
+using FoodDiary.Application.Consumptions.Commands.CreateConsumption;
+using FoodDiary.Application.Consumptions.Commands.UpdateConsumption;
+using FoodDiary.Application.Consumptions.Common;
+using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Presentation.Api.Features.Consumptions.Requests;
+
+namespace FoodDiary.Presentation.Api.Features.Consumptions.Mappings;
+
+public static class ConsumptionHttpMappings {
+    public static CreateConsumptionCommand ToCommand(this CreateConsumptionHttpRequest request, Guid userId) =>
+        new(
+            new UserId(userId),
+            request.Date,
+            request.MealType,
+            request.Comment,
+            request.ImageUrl,
+            request.ImageAssetId,
+            ToItemInputs(request.Items),
+            ToAiSessionInputs(request.AiSessions),
+            request.IsNutritionAutoCalculated,
+            request.ManualCalories,
+            request.ManualProteins,
+            request.ManualFats,
+            request.ManualCarbs,
+            request.ManualFiber,
+            request.ManualAlcohol,
+            request.PreMealSatietyLevel,
+            request.PostMealSatietyLevel);
+
+    public static UpdateConsumptionCommand ToCommand(this UpdateConsumptionHttpRequest request, Guid userId, Guid consumptionId) =>
+        new(
+            new UserId(userId),
+            new MealId(consumptionId),
+            request.Date,
+            request.MealType,
+            request.Comment,
+            request.ImageUrl,
+            request.ImageAssetId,
+            ToItemInputs(request.Items),
+            ToAiSessionInputs(request.AiSessions),
+            request.IsNutritionAutoCalculated,
+            request.ManualCalories,
+            request.ManualProteins,
+            request.ManualFats,
+            request.ManualCarbs,
+            request.ManualFiber,
+            request.ManualAlcohol,
+            request.PreMealSatietyLevel,
+            request.PostMealSatietyLevel);
+
+    private static ConsumptionItemInput ToInput(ConsumptionItemHttpRequest request) =>
+        new(request.ProductId, request.RecipeId, request.Amount);
+
+    private static ConsumptionAiSessionInput ToInput(ConsumptionAiSessionHttpRequest request) =>
+        new(
+            request.ImageAssetId,
+            request.RecognizedAtUtc,
+            request.Notes,
+            ToAiItemInputs(request.Items));
+
+    private static ConsumptionAiItemInput ToInput(ConsumptionAiItemHttpRequest request) =>
+        new(
+            request.NameEn,
+            request.NameLocal,
+            request.Amount,
+            request.Unit,
+            request.Calories,
+            request.Proteins,
+            request.Fats,
+            request.Carbs,
+            request.Fiber,
+            request.Alcohol);
+
+    private static List<ConsumptionItemInput> ToItemInputs(IReadOnlyList<ConsumptionItemHttpRequest>? requests) =>
+        requests?.Select(ToInput).ToList() ?? [];
+
+    private static List<ConsumptionAiSessionInput> ToAiSessionInputs(IReadOnlyList<ConsumptionAiSessionHttpRequest>? requests) =>
+        requests?.Select(ToInput).ToList() ?? [];
+
+    private static List<ConsumptionAiItemInput> ToAiItemInputs(IReadOnlyList<ConsumptionAiItemHttpRequest>? requests) =>
+        requests?.Select(ToInput).ToList() ?? [];
+}
