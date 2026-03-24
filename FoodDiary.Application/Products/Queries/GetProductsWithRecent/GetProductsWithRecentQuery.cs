@@ -1,6 +1,6 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
-using FoodDiary.Contracts.Products;
+using FoodDiary.Application.Products.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Products.Queries.GetProductsWithRecent;
@@ -13,4 +13,4 @@ public sealed record GetProductsWithRecentQuery(
     bool IncludePublic,
     int RecentLimit = 10,
     IReadOnlyCollection<string>? ProductTypes = null)
-    : IQuery<Result<ProductListWithRecentResponse>>;
+    : IQuery<Result<ProductListWithRecentModel>>;

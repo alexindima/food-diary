@@ -1,19 +1,19 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
-using FoodDiary.Contracts.Admin;
+using FoodDiary.Application.Admin.Models;
 
 namespace FoodDiary.Application.Admin.Queries.GetAdminEmailTemplates;
 
 public sealed class GetAdminEmailTemplatesQueryHandler(
     IEmailTemplateRepository repository)
-    : IQueryHandler<GetAdminEmailTemplatesQuery, Result<IReadOnlyList<AdminEmailTemplateResponse>>> {
-    public async Task<Result<IReadOnlyList<AdminEmailTemplateResponse>>> Handle(
+    : IQueryHandler<GetAdminEmailTemplatesQuery, Result<IReadOnlyList<AdminEmailTemplateModel>>> {
+    public async Task<Result<IReadOnlyList<AdminEmailTemplateModel>>> Handle(
         GetAdminEmailTemplatesQuery query,
         CancellationToken cancellationToken) {
         var templates = await repository.GetAllAsync(cancellationToken);
         var response = templates
-            .Select(t => new AdminEmailTemplateResponse(
+            .Select(t => new AdminEmailTemplateModel(
                 t.Id,
                 t.Key,
                 t.Locale,
@@ -25,6 +25,6 @@ public sealed class GetAdminEmailTemplatesQueryHandler(
                 t.ModifiedOnUtc))
             .ToList();
 
-        return Result.Success<IReadOnlyList<AdminEmailTemplateResponse>>(response);
+        return Result.Success<IReadOnlyList<AdminEmailTemplateModel>>(response);
     }
 }

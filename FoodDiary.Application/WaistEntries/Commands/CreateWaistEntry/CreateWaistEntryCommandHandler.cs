@@ -2,19 +2,19 @@ using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.WaistEntries.Mappings;
-using FoodDiary.Contracts.WaistEntries;
+using FoodDiary.Application.WaistEntries.Models;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.WaistEntries.Commands.CreateWaistEntry;
 
 public class CreateWaistEntryCommandHandler(IWaistEntryRepository waistEntryRepository)
-    : ICommandHandler<CreateWaistEntryCommand, Result<WaistEntryResponse>> {
-    public async Task<Result<WaistEntryResponse>> Handle(
+    : ICommandHandler<CreateWaistEntryCommand, Result<WaistEntryModel>> {
+    public async Task<Result<WaistEntryModel>> Handle(
         CreateWaistEntryCommand command,
         CancellationToken cancellationToken) {
         if (command.UserId is null || command.UserId.Value == UserId.Empty) {
-            return Result.Failure<WaistEntryResponse>(Errors.Authentication.InvalidToken);
+            return Result.Failure<WaistEntryModel>(Errors.Authentication.InvalidToken);
         }
 
         var normalizedDate = NormalizeUtcDate(command.Date);
@@ -23,13 +23,13 @@ public class CreateWaistEntryCommandHandler(IWaistEntryRepository waistEntryRepo
             normalizedDate,
             cancellationToken);
         if (existing is not null) {
-            return Result.Failure<WaistEntryResponse>(
+            return Result.Failure<WaistEntryModel>(
                 Errors.WaistEntry.AlreadyExists(normalizedDate));
         }
 
         var entry = WaistEntry.Create(command.UserId.Value, normalizedDate, command.Circumference);
         entry = await waistEntryRepository.AddAsync(entry, cancellationToken);
-        return Result.Success(entry.ToResponse());
+        return Result.Success(entry.ToModel());
     }
 
     private static DateTime NormalizeUtcDate(DateTime value) {

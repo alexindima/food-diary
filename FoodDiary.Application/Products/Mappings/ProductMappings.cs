@@ -1,11 +1,11 @@
-using FoodDiary.Contracts.Products;
+using FoodDiary.Application.Products.Models;
 using FoodDiary.Domain.Entities.Products;
 
 namespace FoodDiary.Application.Products.Mappings;
 
 public static class ProductMappings {
-    public static ProductResponse ToResponse(this Product product, int usageCount = 0, bool isOwnedByCurrentUser = false) {
-        return new ProductResponse(
+    public static ProductModel ToModel(this Product product, int usageCount = 0, bool isOwnedByCurrentUser = false) {
+        return new ProductModel(
             product.Id.Value,
             product.Barcode,
             product.Name,

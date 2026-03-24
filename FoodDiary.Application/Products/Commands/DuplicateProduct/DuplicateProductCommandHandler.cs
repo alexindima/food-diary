@@ -2,17 +2,17 @@ using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Products.Mappings;
-using FoodDiary.Contracts.Products;
+using FoodDiary.Application.Products.Models;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Products.Commands.DuplicateProduct;
 
 public class DuplicateProductCommandHandler(IProductRepository productRepository)
-    : ICommandHandler<DuplicateProductCommand, Result<ProductResponse>> {
-    public async Task<Result<ProductResponse>> Handle(DuplicateProductCommand command, CancellationToken cancellationToken) {
+    : ICommandHandler<DuplicateProductCommand, Result<ProductModel>> {
+    public async Task<Result<ProductModel>> Handle(DuplicateProductCommand command, CancellationToken cancellationToken) {
         if (command.UserId is null || command.UserId == UserId.Empty) {
-            return Result.Failure<ProductResponse>(Errors.Authentication.InvalidToken);
+            return Result.Failure<ProductModel>(Errors.Authentication.InvalidToken);
         }
 
         var original = await productRepository.GetByIdAsync(
@@ -22,7 +22,7 @@ public class DuplicateProductCommandHandler(IProductRepository productRepository
             cancellationToken: cancellationToken);
 
         if (original is null) {
-            return Result.Failure<ProductResponse>(Errors.Product.NotFound(command.ProductId.Value));
+            return Result.Failure<ProductModel>(Errors.Product.NotFound(command.ProductId.Value));
         }
 
         var duplicate = Product.Create(
@@ -49,6 +49,6 @@ public class DuplicateProductCommandHandler(IProductRepository productRepository
 
         await productRepository.AddAsync(duplicate);
 
-        return Result.Success(duplicate.ToResponse(0, true));
+        return Result.Success(duplicate.ToModel(0, true));
     }
 }

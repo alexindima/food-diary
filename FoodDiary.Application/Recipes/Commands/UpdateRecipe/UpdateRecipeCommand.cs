@@ -1,7 +1,7 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Recipes.Common;
-using FoodDiary.Contracts.Recipes;
+using FoodDiary.Application.Recipes.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Recipes.Commands.UpdateRecipe;
@@ -26,4 +26,4 @@ public record UpdateRecipeCommand(
     double? ManualCarbs,
     double? ManualFiber,
     double? ManualAlcohol,
-    IReadOnlyList<RecipeStepInput>? Steps) : ICommand<Result<RecipeResponse>>;
+    IReadOnlyList<RecipeStepInput>? Steps) : ICommand<Result<RecipeModel>>;

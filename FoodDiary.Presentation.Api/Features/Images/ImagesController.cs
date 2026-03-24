@@ -1,10 +1,10 @@
 using FoodDiary.Application.Images.Commands.DeleteImageAsset;
 using FoodDiary.Application.Images.Commands.GetUploadUrl;
-using FoodDiary.Contracts.Images;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Features.Images.Mappings;
 using FoodDiary.Presentation.Api.Features.Images.Requests;
+using FoodDiary.Presentation.Api.Features.Images.Responses;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,7 +14,7 @@ namespace FoodDiary.Presentation.Api.Features.Images;
 [Route("api/[controller]")]
 public sealed class ImagesController(ISender mediator) : AuthorizedController(mediator) {
     [HttpPost("upload-url")]
-    public async Task<ActionResult<GetImageUploadUrlResponse>> GetUploadUrl([FromCurrentUser] UserId userId, [FromBody] GetImageUploadUrlHttpRequest request) {
+    public async Task<ActionResult<GetImageUploadUrlHttpResponse>> GetUploadUrl([FromCurrentUser] UserId userId, [FromBody] GetImageUploadUrlHttpRequest request) {
         var command = request.ToCommand(userId);
 
         GetImageUploadUrlResult result;
@@ -26,7 +26,7 @@ public sealed class ImagesController(ISender mediator) : AuthorizedController(me
             return BadRequest(ex.Message);
         }
 
-        var response = new GetImageUploadUrlResponse(
+        var response = new GetImageUploadUrlHttpResponse(
             result.UploadUrl,
             result.FileUrl,
             result.ObjectKey,

@@ -1,7 +1,7 @@
 using FoodDiary.Application.Ai.Commands.AnalyzeFoodImage;
 using FoodDiary.Application.Ai.Commands.CalculateFoodNutrition;
+using FoodDiary.Application.Ai.Models;
 using FoodDiary.Application.Ai.Queries.GetUserAiUsageSummary;
-using FoodDiary.Contracts.Ai;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.Ai;
@@ -40,7 +40,7 @@ public class AiValidatorsTests {
     [Fact]
     public async Task CalculateFoodNutritionValidator_WithEmptyItems_Fails() {
         var validator = new CalculateFoodNutritionCommandValidator();
-        var command = new CalculateFoodNutritionCommand(UserId.New(), Array.Empty<FoodVisionItem>());
+        var command = new CalculateFoodNutritionCommand(UserId.New(), Array.Empty<FoodVisionItemModel>());
 
         var result = await validator.ValidateAsync(command);
 
@@ -52,7 +52,7 @@ public class AiValidatorsTests {
         var validator = new CalculateFoodNutritionCommandValidator();
         var command = new CalculateFoodNutritionCommand(
             UserId.New(),
-            [new FoodVisionItem("", null, 0, "", -1)]);
+            [new FoodVisionItemModel("", null, 0, "", -1)]);
 
         var result = await validator.ValidateAsync(command);
 
@@ -64,7 +64,7 @@ public class AiValidatorsTests {
         var validator = new CalculateFoodNutritionCommandValidator();
         var command = new CalculateFoodNutritionCommand(
             UserId.New(),
-            [new FoodVisionItem("apple", "яблоко", 120, "g", 0.95m)]);
+            [new FoodVisionItemModel("apple", "apple", 120, "g", 0.95m)]);
 
         var result = await validator.ValidateAsync(command);
 

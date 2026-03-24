@@ -1,6 +1,6 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
-using FoodDiary.Contracts.Statistics;
+using FoodDiary.Application.Statistics.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Statistics.Queries.GetStatistics;
@@ -10,4 +10,4 @@ public record GetStatisticsQuery(
     DateTime DateFrom,
     DateTime DateTo,
     int QuantizationDays
-) : IQuery<Result<IReadOnlyList<AggregatedStatisticsResponse>>>;
+) : IQuery<Result<IReadOnlyList<AggregatedStatisticsModel>>>;

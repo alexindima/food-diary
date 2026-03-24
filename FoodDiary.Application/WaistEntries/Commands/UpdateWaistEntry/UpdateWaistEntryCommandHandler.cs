@@ -2,18 +2,18 @@ using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.WaistEntries.Mappings;
-using FoodDiary.Contracts.WaistEntries;
+using FoodDiary.Application.WaistEntries.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.WaistEntries.Commands.UpdateWaistEntry;
 
 public class UpdateWaistEntryCommandHandler(IWaistEntryRepository waistEntryRepository)
-    : ICommandHandler<UpdateWaistEntryCommand, Result<WaistEntryResponse>> {
-    public async Task<Result<WaistEntryResponse>> Handle(
+    : ICommandHandler<UpdateWaistEntryCommand, Result<WaistEntryModel>> {
+    public async Task<Result<WaistEntryModel>> Handle(
         UpdateWaistEntryCommand command,
         CancellationToken cancellationToken) {
         if (command.UserId is null || command.UserId.Value == UserId.Empty) {
-            return Result.Failure<WaistEntryResponse>(Errors.Authentication.InvalidToken);
+            return Result.Failure<WaistEntryModel>(Errors.Authentication.InvalidToken);
         }
 
         var entry = await waistEntryRepository.GetByIdAsync(
@@ -23,7 +23,7 @@ public class UpdateWaistEntryCommandHandler(IWaistEntryRepository waistEntryRepo
             cancellationToken);
 
         if (entry is null) {
-            return Result.Failure<WaistEntryResponse>(Errors.WaistEntry.NotFound(command.WaistEntryId.Value));
+            return Result.Failure<WaistEntryModel>(Errors.WaistEntry.NotFound(command.WaistEntryId.Value));
         }
 
         var normalizedDate = NormalizeUtcDate(command.Date);
@@ -33,13 +33,13 @@ public class UpdateWaistEntryCommandHandler(IWaistEntryRepository waistEntryRepo
             cancellationToken);
 
         if (existing is not null && existing.Id != entry.Id) {
-            return Result.Failure<WaistEntryResponse>(
+            return Result.Failure<WaistEntryModel>(
                 Errors.WaistEntry.AlreadyExists(normalizedDate));
         }
 
         entry.Update(command.Circumference, normalizedDate);
         await waistEntryRepository.UpdateAsync(entry, cancellationToken);
-        return Result.Success(entry.ToResponse());
+        return Result.Success(entry.ToModel());
     }
 
     private static DateTime NormalizeUtcDate(DateTime value) {

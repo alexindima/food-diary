@@ -1,8 +1,8 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
+using FoodDiary.Application.DailyAdvices.Models;
 using FoodDiary.Application.DailyAdvices.Services;
-using FoodDiary.Contracts.DailyAdvices;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.DailyAdvices.Queries.GetDailyAdvice;
@@ -10,15 +10,15 @@ namespace FoodDiary.Application.DailyAdvices.Queries.GetDailyAdvice;
 public class GetDailyAdviceQueryHandler(
     IDailyAdviceRepository adviceRepository,
     IUserRepository userRepository)
-    : IQueryHandler<GetDailyAdviceQuery, Result<DailyAdviceResponse>> {
-    public async Task<Result<DailyAdviceResponse>> Handle(GetDailyAdviceQuery query, CancellationToken cancellationToken) {
+    : IQueryHandler<GetDailyAdviceQuery, Result<DailyAdviceModel>> {
+    public async Task<Result<DailyAdviceModel>> Handle(GetDailyAdviceQuery query, CancellationToken cancellationToken) {
         if (query.UserId is null || query.UserId == UserId.Empty) {
-            return Result.Failure<DailyAdviceResponse>(Errors.Authentication.InvalidToken);
+            return Result.Failure<DailyAdviceModel>(Errors.Authentication.InvalidToken);
         }
 
         var user = await userRepository.GetByIdAsync(query.UserId.Value);
         if (user is null) {
-            return Result.Failure<DailyAdviceResponse>(Errors.User.NotFound(query.UserId.Value.Value));
+            return Result.Failure<DailyAdviceModel>(Errors.User.NotFound(query.UserId.Value.Value));
         }
 
         var locale = DailyAdviceSelector.NormalizeLocale(query.Locale);
@@ -30,15 +30,15 @@ public class GetDailyAdviceQueryHandler(
         }
 
         if (advices.Count == 0) {
-            return Result.Failure<DailyAdviceResponse>(Errors.DailyAdvice.NotFound(locale));
+            return Result.Failure<DailyAdviceModel>(Errors.DailyAdvice.NotFound(locale));
         }
 
         var advice = DailyAdviceSelector.SelectForDate(advices, query.Date, locale);
         if (advice is null) {
-            return Result.Failure<DailyAdviceResponse>(Errors.DailyAdvice.NotFound(locale));
+            return Result.Failure<DailyAdviceModel>(Errors.DailyAdvice.NotFound(locale));
         }
 
-        var response = new DailyAdviceResponse(
+        var response = new DailyAdviceModel(
             advice.Id.Value,
             advice.Locale,
             advice.Value,

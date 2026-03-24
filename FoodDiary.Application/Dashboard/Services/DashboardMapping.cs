@@ -1,17 +1,17 @@
-using FoodDiary.Contracts.Dashboard;
-using FoodDiary.Contracts.Statistics;
+using FoodDiary.Application.Dashboard.Models;
+using FoodDiary.Application.Statistics.Models;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Dashboard.Services;
 
 public static class DashboardMapping {
-    public static DashboardStatisticsDto ToStatisticsDto(AggregatedStatisticsResponse? response, User? user) {
+    public static DashboardStatisticsModel ToStatisticsModel(AggregatedStatisticsModel? response, User? user) {
         if (response is null) {
-            return new DashboardStatisticsDto(0, 0, 0, 0, 0, null, null, null, null);
+            return new DashboardStatisticsModel(0, 0, 0, 0, 0, null, null, null, null);
         }
 
-        return new DashboardStatisticsDto(
+        return new DashboardStatisticsModel(
             response.TotalCalories,
             response.AverageProteins,
             response.AverageFats,
@@ -23,30 +23,30 @@ public static class DashboardMapping {
             user?.FiberTarget);
     }
 
-    public static IReadOnlyList<DailyCaloriesDto> ToWeeklyCalories(IReadOnlyList<AggregatedStatisticsResponse> responses) {
+    public static IReadOnlyList<DailyCaloriesModel> ToWeeklyCalories(IReadOnlyList<AggregatedStatisticsModel> responses) {
         return responses
             .OrderBy(r => r.DateFrom)
-            .Select(r => new DailyCaloriesDto(r.DateFrom, r.TotalCalories))
+            .Select(r => new DailyCaloriesModel(r.DateFrom, r.TotalCalories))
             .ToList();
     }
 
-    public static DashboardWeightDto ToWeightDto(IReadOnlyList<WeightEntry> entries, double? desired) {
+    public static DashboardWeightModel ToWeightModel(IReadOnlyList<WeightEntry> entries, double? desired) {
         var latest = entries.FirstOrDefault();
         var previous = entries.Skip(1).FirstOrDefault();
 
-        return new DashboardWeightDto(
-            latest is null ? null : new WeightEntryDto(latest.Date, latest.Weight),
-            previous is null ? null : new WeightEntryDto(previous.Date, previous.Weight),
+        return new DashboardWeightModel(
+            latest is null ? null : new WeightPointModel(latest.Date, latest.Weight),
+            previous is null ? null : new WeightPointModel(previous.Date, previous.Weight),
             desired);
     }
 
-    public static DashboardWaistDto ToWaistDto(IReadOnlyList<WaistEntry> entries, double? desired) {
+    public static DashboardWaistModel ToWaistModel(IReadOnlyList<WaistEntry> entries, double? desired) {
         var latest = entries.FirstOrDefault();
         var previous = entries.Skip(1).FirstOrDefault();
 
-        return new DashboardWaistDto(
-            latest is null ? null : new WaistEntryDto(latest.Date, latest.Circumference),
-            previous is null ? null : new WaistEntryDto(previous.Date, previous.Circumference),
+        return new DashboardWaistModel(
+            latest is null ? null : new WaistPointModel(latest.Date, latest.Circumference),
+            previous is null ? null : new WaistPointModel(previous.Date, previous.Circumference),
             desired);
     }
 }

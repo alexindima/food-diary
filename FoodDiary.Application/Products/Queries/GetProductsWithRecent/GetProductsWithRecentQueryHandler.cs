@@ -1,9 +1,9 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
+using FoodDiary.Application.Common.Models;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Products.Mappings;
-using FoodDiary.Contracts.Common;
-using FoodDiary.Contracts.Products;
+using FoodDiary.Application.Products.Models;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -12,12 +12,12 @@ namespace FoodDiary.Application.Products.Queries.GetProductsWithRecent;
 public sealed class GetProductsWithRecentQueryHandler(
     IProductRepository productRepository,
     IRecentItemRepository recentItemRepository)
-    : IQueryHandler<GetProductsWithRecentQuery, Result<ProductListWithRecentResponse>> {
-    public async Task<Result<ProductListWithRecentResponse>> Handle(
+    : IQueryHandler<GetProductsWithRecentQuery, Result<ProductListWithRecentModel>> {
+    public async Task<Result<ProductListWithRecentModel>> Handle(
         GetProductsWithRecentQuery query,
         CancellationToken cancellationToken) {
         if (query.UserId is null || query.UserId == UserId.Empty) {
-            return Result.Failure<ProductListWithRecentResponse>(Errors.Authentication.InvalidToken);
+            return Result.Failure<ProductListWithRecentModel>(Errors.Authentication.InvalidToken);
         }
 
         var userId = query.UserId.Value;
@@ -47,17 +47,20 @@ public sealed class GetProductsWithRecentQueryHandler(
         }).ToList();
 
         var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
-        var allPaged = new PagedResponse<ProductResponse>(
-            allProducts.Select(x => x.Product.ToResponse(x.UsageCount, x.IsOwner)).ToList(),
+        var allPaged = new PagedResponse<ProductModel>(
+            allProducts.Select(x => x.Product.ToModel(x.UsageCount, x.IsOwner)).ToList(),
             pageNumber,
             pageSize,
             totalPages,
             totalItems);
 
-        var recentResponses = Array.Empty<ProductResponse>();
+        var recentResponses = Array.Empty<ProductModel>();
         if (string.IsNullOrWhiteSpace(query.Search)) {
             var recents = await recentItemRepository.GetRecentProductsAsync(userId, recentLimit, cancellationToken);
-            if (recents.Count <= 0) return Result.Success(new ProductListWithRecentResponse(recentResponses, allPaged));
+            if (recents.Count <= 0) {
+                return Result.Success(new ProductListWithRecentModel(recentResponses, allPaged));
+            }
+
             var recentIds = recents.Select(x => x.ProductId).ToList();
             var productsById = await productRepository.GetByIdsWithUsageAsync(
                 recentIds,
@@ -73,13 +76,13 @@ public sealed class GetProductsWithRecentQueryHandler(
                         return null;
                     }
 
-                    return item.Product.ToResponse(item.UsageCount, item.Product.UserId == userId);
+                    return item.Product.ToModel(item.UsageCount, item.Product.UserId == userId);
                 })
                 .Where(response => response is not null)
                 .Select(response => response!)
                 .ToArray();
         }
 
-        return Result.Success(new ProductListWithRecentResponse(recentResponses, allPaged));
+        return Result.Success(new ProductListWithRecentModel(recentResponses, allPaged));
     }
 }

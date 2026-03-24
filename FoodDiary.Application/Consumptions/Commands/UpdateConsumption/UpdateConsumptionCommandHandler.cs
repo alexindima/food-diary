@@ -3,8 +3,8 @@ using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Interfaces.Services;
 using FoodDiary.Application.Consumptions.Mappings;
+using FoodDiary.Application.Consumptions.Models;
 using FoodDiary.Application.Consumptions.Services;
-using FoodDiary.Contracts.Consumptions;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -19,10 +19,10 @@ public class UpdateConsumptionCommandHandler(
     IImageAssetRepository imageAssetRepository,
     IImageStorageService imageStorageService,
     IDateTimeProvider dateTimeProvider)
-    : ICommandHandler<UpdateConsumptionCommand, Result<ConsumptionResponse>> {
-    public async Task<Result<ConsumptionResponse>> Handle(UpdateConsumptionCommand command, CancellationToken cancellationToken) {
+    : ICommandHandler<UpdateConsumptionCommand, Result<ConsumptionModel>> {
+    public async Task<Result<ConsumptionModel>> Handle(UpdateConsumptionCommand command, CancellationToken cancellationToken) {
         if (command.UserId is null || command.UserId == UserId.Empty) {
-            return Result.Failure<ConsumptionResponse>(Errors.Authentication.InvalidToken);
+            return Result.Failure<ConsumptionModel>(Errors.Authentication.InvalidToken);
         }
 
         var meal = await mealRepository.GetByIdAsync(
@@ -33,18 +33,18 @@ public class UpdateConsumptionCommandHandler(
             cancellationToken: cancellationToken);
 
         if (meal is null) {
-            return Result.Failure<ConsumptionResponse>(Errors.Consumption.NotFound(command.ConsumptionId.Value));
+            return Result.Failure<ConsumptionModel>(Errors.Consumption.NotFound(command.ConsumptionId.Value));
         }
 
         var hasManualItems = command.Items is { Count: > 0 };
         var hasAiItems = command.AiSessions is { Count: > 0 } && command.AiSessions.Any(session => session.Items.Count > 0);
         if (!hasManualItems && !hasAiItems) {
-            return Result.Failure<ConsumptionResponse>(Errors.Validation.Required("Items"));
+            return Result.Failure<ConsumptionModel>(Errors.Validation.Required("Items"));
         }
 
         var mealTypeResult = ParseMealType(command.MealType);
         if (mealTypeResult.IsFailure) {
-            return Result.Failure<ConsumptionResponse>(mealTypeResult.Error);
+            return Result.Failure<ConsumptionModel>(mealTypeResult.Error);
         }
 
         var oldAssetId = meal.ImageAssetId;
@@ -59,7 +59,7 @@ public class UpdateConsumptionCommandHandler(
             command.PostMealSatietyLevel);
 
         if (satietyValidation.IsFailure) {
-            return Result.Failure<ConsumptionResponse>(satietyValidation.Error);
+            return Result.Failure<ConsumptionModel>(satietyValidation.Error);
         }
 
         meal.UpdateSatietyLevels(command.PreMealSatietyLevel, command.PostMealSatietyLevel);
@@ -69,7 +69,7 @@ public class UpdateConsumptionCommandHandler(
         foreach (var item in command.Items) {
             var validation = ConsumptionItemValidator.Validate(item);
             if (validation.IsFailure) {
-                return Result.Failure<ConsumptionResponse>(validation.Error);
+                return Result.Failure<ConsumptionModel>(validation.Error);
             }
 
             if (item.ProductId.HasValue) {
@@ -104,7 +104,7 @@ public class UpdateConsumptionCommandHandler(
         if (command.IsNutritionAutoCalculated) {
             var nutritionResult = await CalculateNutritionAsync(meal, command.UserId.Value, cancellationToken);
             if (nutritionResult.IsFailure) {
-                return Result.Failure<ConsumptionResponse>(nutritionResult.Error);
+                return Result.Failure<ConsumptionModel>(nutritionResult.Error);
             }
 
             meal.ApplyNutrition(
@@ -125,7 +125,7 @@ public class UpdateConsumptionCommandHandler(
                 command.ManualAlcohol);
 
             if (manualNutritionResult.IsFailure) {
-                return Result.Failure<ConsumptionResponse>(manualNutritionResult.Error);
+                return Result.Failure<ConsumptionModel>(manualNutritionResult.Error);
             }
 
             var manual = manualNutritionResult.Value;
@@ -163,8 +163,8 @@ public class UpdateConsumptionCommandHandler(
             cancellationToken: cancellationToken);
 
         return updated is null
-            ? Result.Failure<ConsumptionResponse>(Errors.Consumption.InvalidData("Failed to load updated consumption."))
-            : Result.Success(updated.ToResponse());
+            ? Result.Failure<ConsumptionModel>(Errors.Consumption.InvalidData("Failed to load updated consumption."))
+            : Result.Success(updated.ToModel());
     }
 
     private static async Task TryDeleteAssetAsync(

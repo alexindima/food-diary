@@ -1,6 +1,6 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
-using FoodDiary.Contracts.Hydration;
+using FoodDiary.Application.Hydration.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Hydration.Commands.CreateHydrationEntry;
@@ -8,4 +8,4 @@ namespace FoodDiary.Application.Hydration.Commands.CreateHydrationEntry;
 public record CreateHydrationEntryCommand(
     UserId? UserId,
     DateTime TimestampUtc,
-    int AmountMl) : ICommand<Result<HydrationEntryResponse>>;
+    int AmountMl) : ICommand<Result<HydrationEntryModel>>;

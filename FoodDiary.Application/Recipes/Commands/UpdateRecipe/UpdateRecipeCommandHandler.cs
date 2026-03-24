@@ -4,8 +4,8 @@ using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Interfaces.Services;
 using FoodDiary.Application.Recipes.Common;
 using FoodDiary.Application.Recipes.Mappings;
+using FoodDiary.Application.Recipes.Models;
 using FoodDiary.Application.Recipes.Services;
-using FoodDiary.Contracts.Recipes;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -15,10 +15,10 @@ public class UpdateRecipeCommandHandler(
     IRecipeRepository recipeRepository,
     IImageAssetRepository imageAssetRepository,
     IImageStorageService imageStorageService)
-    : ICommandHandler<UpdateRecipeCommand, Result<RecipeResponse>> {
-    public async Task<Result<RecipeResponse>> Handle(UpdateRecipeCommand command, CancellationToken cancellationToken) {
+    : ICommandHandler<UpdateRecipeCommand, Result<RecipeModel>> {
+    public async Task<Result<RecipeModel>> Handle(UpdateRecipeCommand command, CancellationToken cancellationToken) {
         if (command.UserId is null || command.UserId == UserId.Empty) {
-            return Result.Failure<RecipeResponse>(Errors.Authentication.InvalidToken);
+            return Result.Failure<RecipeModel>(Errors.Authentication.InvalidToken);
         }
 
         var userId = command.UserId.Value;
@@ -32,19 +32,19 @@ public class UpdateRecipeCommandHandler(
             cancellationToken: cancellationToken);
 
         if (recipe is null) {
-            return Result.Failure<RecipeResponse>(Errors.Recipe.NotAccessible(command.RecipeId.Value));
+            return Result.Failure<RecipeModel>(Errors.Recipe.NotAccessible(command.RecipeId.Value));
         }
 
         var usageCount = recipe.MealItems.Count + recipe.NestedRecipeUsages.Count;
         if (usageCount > 0) {
-            return Result.Failure<RecipeResponse>(
+            return Result.Failure<RecipeModel>(
                 Errors.Validation.Invalid("RecipeId", "Recipe is already used and cannot be modified"));
         }
 
         Visibility? visibility = null;
         if (!string.IsNullOrWhiteSpace(command.Visibility)) {
             if (!Enum.TryParse<Visibility>(command.Visibility, true, out var parsedVisibility)) {
-                return Result.Failure<RecipeResponse>(
+                return Result.Failure<RecipeModel>(
                     Errors.Validation.Invalid(nameof(command.Visibility), "Unknown visibility value."));
             }
 
@@ -117,7 +117,7 @@ public class UpdateRecipeCommandHandler(
             cancellationToken: cancellationToken);
 
         if (updated is null) {
-            return Result.Failure<RecipeResponse>(Errors.Recipe.InvalidData("Failed to load updated recipe."));
+            return Result.Failure<RecipeModel>(Errors.Recipe.InvalidData("Failed to load updated recipe."));
         }
 
         await RecipeNutritionUpdater.EnsureNutritionAsync(updated, recipeRepository, cancellationToken);
@@ -140,7 +140,7 @@ public class UpdateRecipeCommandHandler(
             }
         }
 
-        return Result.Success(updated.ToResponse(updated.MealItems.Count + updated.NestedRecipeUsages.Count, true));
+        return Result.Success(updated.ToModel(updated.MealItems.Count + updated.NestedRecipeUsages.Count, true));
     }
 
     private static async Task TryDeleteAssetAsync(

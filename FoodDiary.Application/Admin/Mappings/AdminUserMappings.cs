@@ -1,17 +1,17 @@
-using FoodDiary.Contracts.Admin;
+using FoodDiary.Application.Admin.Models;
 using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Admin.Mappings;
 
 public static class AdminUserMappings {
-    public static AdminUserResponse ToAdminResponse(this User user) {
+    public static AdminUserModel ToAdminModel(this User user) {
         var roles = user.UserRoles
             .Select(role => role.Role.Name)
             .Where(name => !string.IsNullOrWhiteSpace(name))
             .Select(name => name!)
             .ToArray();
 
-        return new AdminUserResponse(
+        return new AdminUserModel(
             user.Id.Value,
             user.Email,
             user.Username,

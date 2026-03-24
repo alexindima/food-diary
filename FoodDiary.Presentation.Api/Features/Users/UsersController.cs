@@ -21,14 +21,18 @@ public class UsersController(ISender mediator) : AuthorizedController(mediator) 
     public async Task<IActionResult> GetCurrentUserInfo([FromCurrentUser] UserId userId) {
         var query = new GetUserByIdQuery(userId);
         var result = await Mediator.Send(query);
-        return result.ToActionResult();
+        return result.IsSuccess
+            ? Ok(result.Value.ToHttpResponse())
+            : result.ToActionResult();
     }
 
     [HttpPatch("info")]
     public async Task<IActionResult> UpdateCurrentUser([FromCurrentUser] UserId userId, [FromBody] UpdateUserHttpRequest request) {
         var command = request.ToCommand(userId);
         var result = await Mediator.Send(command);
-        return result.ToActionResult();
+        return result.IsSuccess
+            ? Ok(result.Value.ToHttpResponse())
+            : result.ToActionResult();
     }
 
     [HttpPatch("password")]
@@ -42,28 +46,36 @@ public class UsersController(ISender mediator) : AuthorizedController(mediator) 
     public async Task<IActionResult> GetDesiredWeight([FromCurrentUser] UserId userId) {
         var query = new GetDesiredWeightQuery(userId);
         var result = await Mediator.Send(query);
-        return result.ToActionResult();
+        return result.IsSuccess
+            ? Ok(result.Value.ToHttpResponse())
+            : result.ToActionResult();
     }
 
     [HttpPut("desired-weight")]
     public async Task<IActionResult> UpdateDesiredWeight([FromCurrentUser] UserId userId, [FromBody] UpdateDesiredWeightHttpRequest request) {
         var command = new UpdateDesiredWeightCommand(userId, request.DesiredWeight);
         var result = await Mediator.Send(command);
-        return result.ToActionResult();
+        return result.IsSuccess
+            ? Ok(result.Value.ToHttpResponse())
+            : result.ToActionResult();
     }
 
     [HttpGet("desired-waist")]
     public async Task<IActionResult> GetDesiredWaist([FromCurrentUser] UserId userId) {
         var query = new GetDesiredWaistQuery(userId);
         var result = await Mediator.Send(query);
-        return result.ToActionResult();
+        return result.IsSuccess
+            ? Ok(result.Value.ToHttpResponse())
+            : result.ToActionResult();
     }
 
     [HttpPut("desired-waist")]
     public async Task<IActionResult> UpdateDesiredWaist([FromCurrentUser] UserId userId, [FromBody] UpdateDesiredWaistHttpRequest request) {
         var command = new UpdateDesiredWaistCommand(userId, request.DesiredWaist);
         var result = await Mediator.Send(command);
-        return result.ToActionResult();
+        return result.IsSuccess
+            ? Ok(result.Value.ToHttpResponse())
+            : result.ToActionResult();
     }
 
     [HttpDelete]

@@ -1,7 +1,7 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
-using FoodDiary.Contracts.Hydration;
+using FoodDiary.Application.Hydration.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Hydration.Queries.GetHydrationDailyTotal;
@@ -9,24 +9,24 @@ namespace FoodDiary.Application.Hydration.Queries.GetHydrationDailyTotal;
 public class GetHydrationDailyTotalQueryHandler(
     IHydrationEntryRepository repository,
     IUserRepository userRepository)
-    : IQueryHandler<GetHydrationDailyTotalQuery, Result<HydrationDailyResponse>> {
-    public async Task<Result<HydrationDailyResponse>> Handle(
+    : IQueryHandler<GetHydrationDailyTotalQuery, Result<HydrationDailyModel>> {
+    public async Task<Result<HydrationDailyModel>> Handle(
         GetHydrationDailyTotalQuery query,
         CancellationToken cancellationToken) {
         if (query.UserId is null || query.UserId == UserId.Empty) {
-            return Result.Failure<HydrationDailyResponse>(Errors.User.NotFound());
+            return Result.Failure<HydrationDailyModel>(Errors.User.NotFound());
         }
 
         var user = await userRepository.GetByIdAsync(query.UserId.Value);
         if (user is null) {
-            return Result.Failure<HydrationDailyResponse>(Errors.User.NotFound(query.UserId.Value.Value));
+            return Result.Failure<HydrationDailyModel>(Errors.User.NotFound(query.UserId.Value.Value));
         }
 
         var dateUtc = NormalizeToUtcDate(query.DateUtc);
         var total = await repository.GetDailyTotalAsync(query.UserId.Value, dateUtc, cancellationToken);
         var goal = user.HydrationGoal ?? user.WaterGoal;
 
-        var response = new HydrationDailyResponse(dateUtc, total, goal);
+        var response = new HydrationDailyModel(dateUtc, total, goal);
         return Result.Success(response);
     }
 

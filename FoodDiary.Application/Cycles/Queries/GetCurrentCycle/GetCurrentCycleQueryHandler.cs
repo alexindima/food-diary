@@ -2,19 +2,19 @@ using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Cycles.Mappings;
+using FoodDiary.Application.Cycles.Models;
 using FoodDiary.Application.Cycles.Services;
-using FoodDiary.Contracts.Cycles;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Cycles.Queries.GetCurrentCycle;
 
 public class GetCurrentCycleQueryHandler(ICycleRepository cycleRepository)
-    : IQueryHandler<GetCurrentCycleQuery, Result<CycleResponse?>> {
-    public async Task<Result<CycleResponse?>> Handle(
+    : IQueryHandler<GetCurrentCycleQuery, Result<CycleModel?>> {
+    public async Task<Result<CycleModel?>> Handle(
         GetCurrentCycleQuery query,
         CancellationToken cancellationToken) {
         if (query.UserId is null || query.UserId == UserId.Empty) {
-            return Result.Failure<CycleResponse?>(Errors.User.NotFound());
+            return Result.Failure<CycleModel?>(Errors.User.NotFound());
         }
 
         var cycle = await cycleRepository.GetLatestAsync(
@@ -23,10 +23,10 @@ public class GetCurrentCycleQueryHandler(ICycleRepository cycleRepository)
             cancellationToken: cancellationToken);
 
         if (cycle is null) {
-            return Result.Success<CycleResponse?>(null);
+            return Result.Success<CycleModel?>(null);
         }
 
         var predictions = CyclePredictionService.CalculatePredictions(cycle);
-        return Result.Success<CycleResponse?>(cycle.ToResponse(predictions));
+        return Result.Success<CycleModel?>(cycle.ToModel(predictions));
     }
 }

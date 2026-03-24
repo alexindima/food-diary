@@ -1,23 +1,22 @@
-﻿using FoodDiary.Contracts.Users;
-using FoodDiary.Contracts.Goals;
+using FoodDiary.Application.Users.Models;
 using FoodDiary.Domain.Entities.Users;
 using System.Text.Json;
 
 namespace FoodDiary.Application.Users.Mappings;
 
 public static class UserMappings {
-    public static UserResponse ToResponse(this User user) {
+    public static UserModel ToModel(this User user) {
         const string defaultLanguage = "en";
-        DashboardLayoutSettings? layout = null;
+        DashboardLayoutModel? layout = null;
         if (!string.IsNullOrWhiteSpace(user.DashboardLayoutJson)) {
             try {
-                layout = JsonSerializer.Deserialize<DashboardLayoutSettings>(user.DashboardLayoutJson);
+                layout = JsonSerializer.Deserialize<DashboardLayoutModel>(user.DashboardLayoutJson);
             } catch (JsonException) {
                 layout = null;
             }
         }
 
-        return new UserResponse(
+        return new UserModel(
             user.Id.Value,
             user.Email,
             user.Username,
@@ -48,8 +47,8 @@ public static class UserMappings {
         );
     }
 
-    public static GoalsResponse ToGoalsResponse(this User user) {
-        return new GoalsResponse(
+    public static GoalsModel ToGoalsModel(this User user) {
+        return new GoalsModel(
             user.DailyCalorieTarget,
             user.ProteinTarget,
             user.FatTarget,

@@ -1,9 +1,9 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
-using FoodDiary.Contracts.Recipes;
+using FoodDiary.Application.Recipes.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Recipes.Queries.GetRecentRecipes;
 
 public sealed record GetRecentRecipesQuery(UserId? UserId, int Limit, bool IncludePublic)
-    : IQuery<Result<IReadOnlyList<RecipeResponse>>>;
+    : IQuery<Result<IReadOnlyList<RecipeModel>>>;

@@ -1,14 +1,14 @@
-﻿using FoodDiary.Contracts.Common;
-using FoodDiary.Contracts.Consumptions;
+using FoodDiary.Application.Common.Models;
+using FoodDiary.Application.Consumptions.Models;
 using FoodDiary.Domain.Entities.Meals;
 
 namespace FoodDiary.Application.Consumptions.Mappings;
 
 public static class ConsumptionMappings {
-    public static ConsumptionResponse ToResponse(this Meal meal, bool isOwnedByCurrentUser = true) {
+    public static ConsumptionModel ToModel(this Meal meal, bool isOwnedByCurrentUser = true) {
         var items = meal.Items
             .OrderBy(i => i.Id.Value)
-            .Select(item => new ConsumptionItemResponse(
+            .Select(item => new ConsumptionItemModel(
                 item.Id.Value,
                 item.MealId.Value,
                 item.Amount,
@@ -35,7 +35,7 @@ public static class ConsumptionMappings {
 
         var aiSessions = meal.AiSessions
             .OrderBy(s => s.RecognizedAtUtc)
-            .Select(session => new ConsumptionAiSessionResponse(
+            .Select(session => new ConsumptionAiSessionModel(
                 session.Id.Value,
                 session.MealId.Value,
                 session.ImageAssetId?.Value,
@@ -44,7 +44,7 @@ public static class ConsumptionMappings {
                 session.Notes,
                 session.Items
                     .OrderBy(i => i.Id.Value)
-                    .Select(aiItem => new ConsumptionAiItemResponse(
+                    .Select(aiItem => new ConsumptionAiItemModel(
                         aiItem.Id.Value,
                         aiItem.MealAiSessionId.Value,
                         aiItem.NameEn,
@@ -60,7 +60,7 @@ public static class ConsumptionMappings {
                     .ToList()))
             .ToList();
 
-        return new ConsumptionResponse(
+        return new ConsumptionModel(
             meal.Id.Value,
             meal.Date,
             meal.MealType?.ToString(),
@@ -86,12 +86,12 @@ public static class ConsumptionMappings {
             aiSessions);
     }
 
-    public static PagedResponse<ConsumptionResponse> ToPagedResponse(
+    public static PagedResponse<ConsumptionModel> ToPagedResponse(
         this (IReadOnlyList<Meal> Items, int TotalItems) pageData,
         int page,
         int limit) {
         var totalPages = (int)Math.Ceiling(pageData.TotalItems / (double)limit);
-        var items = pageData.Items.Select(item => item.ToResponse()).ToList();
-        return new PagedResponse<ConsumptionResponse>(items, page, limit, totalPages, pageData.TotalItems);
+        var items = pageData.Items.Select(item => item.ToModel()).ToList();
+        return new PagedResponse<ConsumptionModel>(items, page, limit, totalPages, pageData.TotalItems);
     }
 }

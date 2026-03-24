@@ -2,7 +2,7 @@ using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Products.Mappings;
-using FoodDiary.Contracts.Products;
+using FoodDiary.Application.Products.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Products.Queries.GetRecentProducts;
@@ -10,12 +10,12 @@ namespace FoodDiary.Application.Products.Queries.GetRecentProducts;
 public sealed class GetRecentProductsQueryHandler(
     IRecentItemRepository recentItemRepository,
     IProductRepository productRepository)
-    : IQueryHandler<GetRecentProductsQuery, Result<IReadOnlyList<ProductResponse>>> {
-    public async Task<Result<IReadOnlyList<ProductResponse>>> Handle(
+    : IQueryHandler<GetRecentProductsQuery, Result<IReadOnlyList<ProductModel>>> {
+    public async Task<Result<IReadOnlyList<ProductModel>>> Handle(
         GetRecentProductsQuery query,
         CancellationToken cancellationToken) {
         if (query.UserId is null || query.UserId == UserId.Empty) {
-            return Result.Failure<IReadOnlyList<ProductResponse>>(Errors.Authentication.InvalidToken);
+            return Result.Failure<IReadOnlyList<ProductModel>>(Errors.Authentication.InvalidToken);
         }
 
         var userId = query.UserId.Value;
@@ -23,7 +23,7 @@ public sealed class GetRecentProductsQueryHandler(
 
         var recents = await recentItemRepository.GetRecentProductsAsync(userId, recentLimit, cancellationToken);
         if (recents.Count == 0) {
-            return Result.Success<IReadOnlyList<ProductResponse>>(Array.Empty<ProductResponse>());
+            return Result.Success<IReadOnlyList<ProductModel>>(Array.Empty<ProductModel>());
         }
 
         var idsInOrder = recents.Select(x => x.ProductId).ToList();
@@ -37,10 +37,10 @@ public sealed class GetRecentProductsQueryHandler(
             .Where(productsById.ContainsKey)
             .Select(id => {
                 var item = productsById[id];
-                return item.Product.ToResponse(item.UsageCount, item.Product.UserId == userId);
+                return item.Product.ToModel(item.UsageCount, item.Product.UserId == userId);
             })
             .ToList();
 
-        return Result.Success<IReadOnlyList<ProductResponse>>(response);
+        return Result.Success<IReadOnlyList<ProductModel>>(response);
     }
 }

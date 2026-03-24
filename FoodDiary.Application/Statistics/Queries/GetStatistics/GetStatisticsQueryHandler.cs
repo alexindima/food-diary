@@ -1,23 +1,23 @@
-﻿using FoodDiary.Application.Common.Abstractions.Messaging;
+using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
-using FoodDiary.Contracts.Statistics;
+using FoodDiary.Application.Statistics.Models;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Statistics.Queries.GetStatistics;
 
 public class GetStatisticsQueryHandler(IMealRepository mealRepository)
-    : IQueryHandler<GetStatisticsQuery, Result<IReadOnlyList<AggregatedStatisticsResponse>>> {
-    public async Task<Result<IReadOnlyList<AggregatedStatisticsResponse>>> Handle(
+    : IQueryHandler<GetStatisticsQuery, Result<IReadOnlyList<AggregatedStatisticsModel>>> {
+    public async Task<Result<IReadOnlyList<AggregatedStatisticsModel>>> Handle(
         GetStatisticsQuery request,
         CancellationToken cancellationToken) {
         if (request.UserId is null || request.UserId == UserId.Empty) {
-            return Result.Failure<IReadOnlyList<AggregatedStatisticsResponse>>(Errors.Authentication.InvalidToken);
+            return Result.Failure<IReadOnlyList<AggregatedStatisticsModel>>(Errors.Authentication.InvalidToken);
         }
 
         if (request.DateFrom > request.DateTo) {
-            return Result.Failure<IReadOnlyList<AggregatedStatisticsResponse>>(
+            return Result.Failure<IReadOnlyList<AggregatedStatisticsModel>>(
                 Errors.Validation.Invalid(nameof(request.DateFrom), "DateFrom must be earlier than DateTo"));
         }
 
@@ -33,7 +33,7 @@ public class GetStatisticsQueryHandler(IMealRepository mealRepository)
             cancellationToken);
 
         var buckets = BuildBuckets(normalizedFrom, normalizedTo, quantizationDays);
-        var responses = new List<AggregatedStatisticsResponse>(buckets.Count);
+        var responses = new List<AggregatedStatisticsModel>(buckets.Count);
 
         foreach (var (bucketStart, bucketEnd) in buckets) {
             var bucketMeals = meals
@@ -43,15 +43,15 @@ public class GetStatisticsQueryHandler(IMealRepository mealRepository)
             responses.Add(BuildResponse(bucketStart, bucketEnd, bucketMeals));
         }
 
-        return Result.Success<IReadOnlyList<AggregatedStatisticsResponse>>(responses);
+        return Result.Success<IReadOnlyList<AggregatedStatisticsModel>>(responses);
     }
 
-    private static AggregatedStatisticsResponse BuildResponse(
+    private static AggregatedStatisticsModel BuildResponse(
         DateTime bucketStart,
         DateTime bucketEnd,
         IReadOnlyCollection<Meal> meals) {
         if (meals.Count == 0) {
-            return new AggregatedStatisticsResponse(bucketStart, bucketEnd, 0, 0, 0, 0, 0);
+            return new AggregatedStatisticsModel(bucketStart, bucketEnd, 0, 0, 0, 0, 0);
         }
 
         var totalCalories = meals.Sum(m => m.TotalCalories);
@@ -62,7 +62,7 @@ public class GetStatisticsQueryHandler(IMealRepository mealRepository)
 
         var effectiveDays = Math.Max(1, (bucketEnd.Date - bucketStart.Date).Days + 1);
 
-        return new AggregatedStatisticsResponse(
+        return new AggregatedStatisticsModel(
             bucketStart,
             bucketEnd,
             Math.Round(totalCalories, 2),

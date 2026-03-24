@@ -1,11 +1,11 @@
-using FoodDiary.Contracts.Cycles;
+using FoodDiary.Application.Cycles.Models;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.ValueObjects;
 
 namespace FoodDiary.Application.Cycles.Mappings;
 
 public static class CycleMappings {
-    public static CycleResponse ToResponse(this Cycle cycle, CyclePredictionsResponse? predictions = null) =>
+    public static CycleModel ToModel(this Cycle cycle, CyclePredictionsModel? predictions = null) =>
         new(
             cycle.Id.Value,
             cycle.UserId.Value,
@@ -13,19 +13,19 @@ public static class CycleMappings {
             cycle.AverageLength,
             cycle.LutealLength,
             cycle.Notes,
-            cycle.Days.OrderBy(d => d.Date).Select(d => d.ToResponse()).ToList(),
+            cycle.Days.OrderBy(d => d.Date).Select(d => d.ToModel()).ToList(),
             predictions);
 
-    public static CycleDayResponse ToResponse(this CycleDay day) =>
+    public static CycleDayModel ToModel(this CycleDay day) =>
         new(
             day.Id.Value,
             day.CycleId.Value,
             day.Date,
             day.IsPeriod,
-            day.Symptoms.ToDto(),
+            day.Symptoms.ToModel(),
             day.Notes);
 
-    public static DailySymptomsDto ToDto(this DailySymptoms symptoms) =>
+    public static DailySymptomsModel ToModel(this DailySymptoms symptoms) =>
         new(
             symptoms.Pain,
             symptoms.Mood,
@@ -35,13 +35,13 @@ public static class CycleMappings {
             symptoms.SleepQuality,
             symptoms.Libido);
 
-    public static DailySymptoms ToValueObject(this DailySymptomsDto dto) =>
+    public static DailySymptoms ToValueObject(this DailySymptomsModel model) =>
         DailySymptoms.Create(
-            dto.Pain,
-            dto.Mood,
-            dto.Edema,
-            dto.Headache,
-            dto.Energy,
-            dto.SleepQuality,
-            dto.Libido);
+            model.Pain,
+            model.Mood,
+            model.Edema,
+            model.Headache,
+            model.Energy,
+            model.SleepQuality,
+            model.Libido);
 }

@@ -1,6 +1,6 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
-using FoodDiary.Contracts.Products;
+using FoodDiary.Application.Products.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Products.Commands.UpdateProduct;
@@ -33,4 +33,4 @@ public record UpdateProductCommand(
     double? CarbsPerBase,
     double? FiberPerBase,
     double? AlcoholPerBase,
-    string? Visibility) : ICommand<Result<ProductResponse>>;
+    string? Visibility) : ICommand<Result<ProductModel>>;

@@ -1,0 +1,25 @@
+namespace FoodDiary.Application.Consumptions.Models;
+
+public sealed record ConsumptionItemModel(
+    Guid Id,
+    Guid ConsumptionId,
+    double Amount,
+    Guid? ProductId,
+    string? ProductName,
+    string? ProductBaseUnit,
+    double? ProductBaseAmount,
+    double? ProductCaloriesPerBase,
+    double? ProductProteinsPerBase,
+    double? ProductFatsPerBase,
+    double? ProductCarbsPerBase,
+    double? ProductFiberPerBase,
+    double? ProductAlcoholPerBase,
+    Guid? RecipeId,
+    string? RecipeName,
+    int? RecipeServings,
+    double? RecipeTotalCalories,
+    double? RecipeTotalProteins,
+    double? RecipeTotalFats,
+    double? RecipeTotalCarbs,
+    double? RecipeTotalFiber,
+    double? RecipeTotalAlcohol);

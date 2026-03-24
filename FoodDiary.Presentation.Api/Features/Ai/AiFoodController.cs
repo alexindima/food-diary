@@ -18,13 +18,17 @@ public sealed class AiFoodController(ISender mediator) : AuthorizedController(me
     public async Task<IActionResult> AnalyzeFood([FromCurrentUser] UserId userId, [FromBody] FoodVisionHttpRequest request) {
         var command = request.ToCommand(userId);
         var result = await Mediator.Send(command);
-        return result.ToActionResult();
+        return result.IsSuccess
+            ? Ok(result.Value.ToHttpResponse())
+            : result.ToActionResult();
     }
 
     [HttpPost("nutrition")]
     public async Task<IActionResult> CalculateNutrition([FromCurrentUser] UserId userId, [FromBody] FoodNutritionHttpRequest request) {
         var command = request.ToCommand(userId);
         var result = await Mediator.Send(command);
-        return result.ToActionResult();
+        return result.IsSuccess
+            ? Ok(result.Value.ToHttpResponse())
+            : result.ToActionResult();
     }
 }

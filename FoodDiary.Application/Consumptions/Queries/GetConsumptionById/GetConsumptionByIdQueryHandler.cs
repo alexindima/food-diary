@@ -2,16 +2,16 @@ using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Consumptions.Mappings;
-using FoodDiary.Contracts.Consumptions;
+using FoodDiary.Application.Consumptions.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Consumptions.Queries.GetConsumptionById;
 
 public class GetConsumptionByIdQueryHandler(IMealRepository mealRepository)
-    : IQueryHandler<GetConsumptionByIdQuery, Result<ConsumptionResponse>> {
-    public async Task<Result<ConsumptionResponse>> Handle(GetConsumptionByIdQuery request, CancellationToken cancellationToken) {
+    : IQueryHandler<GetConsumptionByIdQuery, Result<ConsumptionModel>> {
+    public async Task<Result<ConsumptionModel>> Handle(GetConsumptionByIdQuery request, CancellationToken cancellationToken) {
         if (request.UserId is null || request.UserId == UserId.Empty) {
-            return Result.Failure<ConsumptionResponse>(Errors.Authentication.InvalidToken);
+            return Result.Failure<ConsumptionModel>(Errors.Authentication.InvalidToken);
         }
 
         var meal = await mealRepository.GetByIdAsync(
@@ -21,7 +21,7 @@ public class GetConsumptionByIdQueryHandler(IMealRepository mealRepository)
             cancellationToken: cancellationToken);
 
         return meal is null
-            ? Result.Failure<ConsumptionResponse>(Errors.Consumption.NotFound(request.ConsumptionId.Value))
-            : Result.Success(meal.ToResponse());
+            ? Result.Failure<ConsumptionModel>(Errors.Consumption.NotFound(request.ConsumptionId.Value))
+            : Result.Success(meal.ToModel());
     }
 }

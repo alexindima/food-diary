@@ -2,18 +2,18 @@ using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Cycles.Mappings;
-using FoodDiary.Contracts.Cycles;
+using FoodDiary.Application.Cycles.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Cycles.Commands.UpsertCycleDay;
 
 public class UpsertCycleDayCommandHandler(ICycleRepository cycleRepository)
-    : ICommandHandler<UpsertCycleDayCommand, Result<CycleDayResponse>> {
-    public async Task<Result<CycleDayResponse>> Handle(
+    : ICommandHandler<UpsertCycleDayCommand, Result<CycleDayModel>> {
+    public async Task<Result<CycleDayModel>> Handle(
         UpsertCycleDayCommand command,
         CancellationToken cancellationToken) {
         if (command.UserId is null || command.UserId == UserId.Empty) {
-            return Result.Failure<CycleDayResponse>(Errors.User.NotFound());
+            return Result.Failure<CycleDayModel>(Errors.User.NotFound());
         }
 
         var cycle = await cycleRepository.GetByIdAsync(
@@ -24,13 +24,13 @@ public class UpsertCycleDayCommandHandler(ICycleRepository cycleRepository)
             cancellationToken: cancellationToken);
 
         if (cycle is null) {
-            return Result.Failure<CycleDayResponse>(Errors.Cycle.NotFound(command.CycleId.Value));
+            return Result.Failure<CycleDayModel>(Errors.Cycle.NotFound(command.CycleId.Value));
         }
 
         var symptoms = command.Symptoms.ToValueObject();
         var day = cycle.AddOrUpdateDay(command.Date, command.IsPeriod, symptoms, command.Notes);
 
         await cycleRepository.UpdateAsync(cycle, cancellationToken);
-        return Result.Success(day.ToResponse());
+        return Result.Success(day.ToModel());
     }
 }

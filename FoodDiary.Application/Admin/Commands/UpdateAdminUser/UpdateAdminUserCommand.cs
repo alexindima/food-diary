@@ -1,6 +1,6 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
-using FoodDiary.Contracts.Admin;
+using FoodDiary.Application.Admin.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Admin.Commands.UpdateAdminUser;
@@ -13,4 +13,4 @@ public sealed record UpdateAdminUserCommand(
     string? Language,
     long? AiInputTokenLimit,
     long? AiOutputTokenLimit)
-    : ICommand<Result<AdminUserResponse>>;
+    : ICommand<Result<AdminUserModel>>;

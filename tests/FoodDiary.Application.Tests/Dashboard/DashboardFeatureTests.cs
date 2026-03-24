@@ -1,6 +1,6 @@
 using FoodDiary.Application.Dashboard.Queries.GetDashboardSnapshot;
 using FoodDiary.Application.Dashboard.Services;
-using FoodDiary.Contracts.Statistics;
+using FoodDiary.Application.Statistics.Models;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -43,7 +43,7 @@ public class DashboardFeatureTests {
     public void DashboardMapping_ToWeeklyCalories_OrdersByDateAscending() {
         var day1 = new DateTime(2026, 2, 1, 0, 0, 0, DateTimeKind.Utc);
         var day2 = day1.AddDays(1);
-        var responses = new List<AggregatedStatisticsResponse> {
+        var responses = new List<AggregatedStatisticsModel> {
             new(day2, day2, 2000, 100, 70, 250, 30),
             new(day1, day1, 1800, 90, 60, 220, 25)
         };
@@ -57,7 +57,7 @@ public class DashboardFeatureTests {
     }
 
     [Fact]
-    public void DashboardMapping_ToWeightDto_MapsLatestAndPreviousEntries() {
+    public void DashboardMapping_ToWeightModel_MapsLatestAndPreviousEntries() {
         var userId = UserId.New();
         var latestDate = new DateTime(2026, 2, 20, 0, 0, 0, DateTimeKind.Utc);
         var previousDate = latestDate.AddDays(-1);
@@ -66,7 +66,7 @@ public class DashboardFeatureTests {
             WeightEntry.Create(userId, previousDate, 83)
         };
 
-        var dto = DashboardMapping.ToWeightDto(entries, desired: 80);
+        var dto = DashboardMapping.ToWeightModel(entries, desired: 80);
 
         Assert.NotNull(dto.Latest);
         Assert.NotNull(dto.Previous);
@@ -76,7 +76,7 @@ public class DashboardFeatureTests {
     }
 
     [Fact]
-    public void DashboardMapping_ToWaistDto_MapsLatestAndPreviousEntries() {
+    public void DashboardMapping_ToWaistModel_MapsLatestAndPreviousEntries() {
         var userId = UserId.New();
         var latestDate = new DateTime(2026, 2, 20, 0, 0, 0, DateTimeKind.Utc);
         var previousDate = latestDate.AddDays(-1);
@@ -85,7 +85,7 @@ public class DashboardFeatureTests {
             WaistEntry.Create(userId, previousDate, 92.8)
         };
 
-        var dto = DashboardMapping.ToWaistDto(entries, desired: 90);
+        var dto = DashboardMapping.ToWaistModel(entries, desired: 90);
 
         Assert.NotNull(dto.Latest);
         Assert.NotNull(dto.Previous);

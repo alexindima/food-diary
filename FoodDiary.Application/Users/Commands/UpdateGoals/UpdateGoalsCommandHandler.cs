@@ -3,21 +3,21 @@ using FoodDiary.Application.Common.Abstractions.Result;
 using static FoodDiary.Application.Common.Abstractions.Result.Errors;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Users.Mappings;
-using FoodDiary.Contracts.Goals;
+using FoodDiary.Application.Users.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Users.Commands.UpdateGoals;
 
 public class UpdateGoalsCommandHandler(IUserRepository userRepository)
-    : ICommandHandler<UpdateGoalsCommand, Result<GoalsResponse>> {
-    public async Task<Result<GoalsResponse>> Handle(UpdateGoalsCommand command, CancellationToken cancellationToken) {
+    : ICommandHandler<UpdateGoalsCommand, Result<GoalsModel>> {
+    public async Task<Result<GoalsModel>> Handle(UpdateGoalsCommand command, CancellationToken cancellationToken) {
         if (command.UserId is null || command.UserId.Value == UserId.Empty) {
-            return Result.Failure<GoalsResponse>(Errors.Authentication.InvalidToken);
+            return Result.Failure<GoalsModel>(Errors.Authentication.InvalidToken);
         }
 
         var user = await userRepository.GetByIdAsync(command.UserId.Value);
         if (user is null) {
-            return Result.Failure<GoalsResponse>(User.NotFound(command.UserId.Value));
+            return Result.Failure<GoalsModel>(User.NotFound(command.UserId.Value));
         }
 
         user.UpdateGoals(
@@ -33,6 +33,6 @@ public class UpdateGoalsCommandHandler(IUserRepository userRepository)
 
         await userRepository.UpdateAsync(user);
 
-        return Result.Success(user.ToGoalsResponse());
+        return Result.Success(user.ToGoalsModel());
     }
 }

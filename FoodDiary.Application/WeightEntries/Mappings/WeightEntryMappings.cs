@@ -1,10 +1,10 @@
-﻿using FoodDiary.Contracts.WeightEntries;
+using FoodDiary.Application.WeightEntries.Models;
 using FoodDiary.Domain.Entities.Tracking;
 
 namespace FoodDiary.Application.WeightEntries.Mappings;
 
 public static class WeightEntryMappings {
-    public static WeightEntryResponse ToResponse(this WeightEntry entry) =>
+    public static WeightEntryModel ToModel(this WeightEntry entry) =>
         new(
             entry.Id.Value,
             entry.UserId.Value,

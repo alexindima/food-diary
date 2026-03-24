@@ -1,4 +1,4 @@
-using FoodDiary.Contracts.Users;
+using FoodDiary.Presentation.Api.Features.Users.Models;
 
 namespace FoodDiary.Presentation.Api.Features.Users.Requests;
 
@@ -16,5 +16,5 @@ public sealed record UpdateUserHttpRequest(
     string? Language,
     string? ProfileImage,
     Guid? ProfileImageAssetId,
-    DashboardLayoutSettings? DashboardLayout,
+    DashboardLayoutHttpModel? DashboardLayout,
     bool? IsActive);

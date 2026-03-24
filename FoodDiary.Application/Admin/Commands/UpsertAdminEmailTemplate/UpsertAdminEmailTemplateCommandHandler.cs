@@ -1,15 +1,15 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
-using FoodDiary.Contracts.Admin;
+using FoodDiary.Application.Admin.Models;
 using FoodDiary.Domain.ValueObjects;
 
 namespace FoodDiary.Application.Admin.Commands.UpsertAdminEmailTemplate;
 
 public sealed class UpsertAdminEmailTemplateCommandHandler(
     IEmailTemplateRepository repository)
-    : ICommandHandler<UpsertAdminEmailTemplateCommand, Result<AdminEmailTemplateResponse>> {
-    public async Task<Result<AdminEmailTemplateResponse>> Handle(
+    : ICommandHandler<UpsertAdminEmailTemplateCommand, Result<AdminEmailTemplateModel>> {
+    public async Task<Result<AdminEmailTemplateModel>> Handle(
         UpsertAdminEmailTemplateCommand command,
         CancellationToken cancellationToken) {
         var key = NormalizeKey(command.Key);
@@ -24,7 +24,7 @@ public sealed class UpsertAdminEmailTemplateCommandHandler(
             command.IsActive,
             cancellationToken);
 
-        var response = new AdminEmailTemplateResponse(
+        var response = new AdminEmailTemplateModel(
             template.Id,
             template.Key,
             template.Locale,

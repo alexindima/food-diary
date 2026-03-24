@@ -16,13 +16,17 @@ public class GoalsController(ISender mediator) : AuthorizedController(mediator) 
     public async Task<IActionResult> GetGoals([FromCurrentUser] UserId userId) {
         var query = new GetUserGoalsQuery(userId);
         var result = await Mediator.Send(query);
-        return result.ToActionResult();
+        return result.IsSuccess
+            ? Ok(result.Value.ToHttpResponse())
+            : result.ToActionResult();
     }
 
     [HttpPatch]
     public async Task<IActionResult> UpdateGoals([FromCurrentUser] UserId userId, [FromBody] UpdateGoalsHttpRequest request) {
         var command = request.ToCommand(userId);
         var result = await Mediator.Send(command);
-        return result.ToActionResult();
+        return result.IsSuccess
+            ? Ok(result.Value.ToHttpResponse())
+            : result.ToActionResult();
     }
 }

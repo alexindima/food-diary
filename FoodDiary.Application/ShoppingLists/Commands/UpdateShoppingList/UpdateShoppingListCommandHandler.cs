@@ -2,8 +2,8 @@ using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.ShoppingLists.Mappings;
+using FoodDiary.Application.ShoppingLists.Models;
 using FoodDiary.Application.ShoppingLists.Services;
-using FoodDiary.Contracts.ShoppingLists;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.ShoppingLists.Commands.UpdateShoppingList;
@@ -11,16 +11,16 @@ namespace FoodDiary.Application.ShoppingLists.Commands.UpdateShoppingList;
 public class UpdateShoppingListCommandHandler(
     IShoppingListRepository shoppingListRepository,
     IProductRepository productRepository)
-    : ICommandHandler<UpdateShoppingListCommand, Result<ShoppingListResponse>> {
-    public async Task<Result<ShoppingListResponse>> Handle(
+    : ICommandHandler<UpdateShoppingListCommand, Result<ShoppingListModel>> {
+    public async Task<Result<ShoppingListModel>> Handle(
         UpdateShoppingListCommand command,
         CancellationToken cancellationToken) {
         if (command.UserId is null || command.UserId == UserId.Empty) {
-            return Result.Failure<ShoppingListResponse>(Errors.Authentication.InvalidToken);
+            return Result.Failure<ShoppingListModel>(Errors.Authentication.InvalidToken);
         }
 
         if (string.IsNullOrWhiteSpace(command.Name) && command.Items is null) {
-            return Result.Failure<ShoppingListResponse>(
+            return Result.Failure<ShoppingListModel>(
                 Errors.Validation.Required(nameof(command.Items)));
         }
 
@@ -32,7 +32,7 @@ public class UpdateShoppingListCommandHandler(
             cancellationToken: cancellationToken);
 
         if (list is null) {
-            return Result.Failure<ShoppingListResponse>(Errors.ShoppingList.NotFound(command.ShoppingListId.Value));
+            return Result.Failure<ShoppingListModel>(Errors.ShoppingList.NotFound(command.ShoppingListId.Value));
         }
 
         if (!string.IsNullOrWhiteSpace(command.Name)) {
@@ -47,7 +47,7 @@ public class UpdateShoppingListCommandHandler(
                 cancellationToken);
 
             if (itemsResult.IsFailure) {
-                return Result.Failure<ShoppingListResponse>(itemsResult.Error);
+                return Result.Failure<ShoppingListModel>(itemsResult.Error);
             }
 
             list.ClearItems();
@@ -64,6 +64,6 @@ public class UpdateShoppingListCommandHandler(
         }
 
         await shoppingListRepository.UpdateAsync(list);
-        return Result.Success(list.ToResponse());
+        return Result.Success(list.ToModel());
     }
 }

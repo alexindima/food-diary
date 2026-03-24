@@ -17,40 +17,52 @@ public class RecipesController(ISender mediator) : AuthorizedController(mediator
     [HttpGet]
     public async Task<IActionResult> GetAll([FromCurrentUser] UserId userId, [FromQuery] GetRecipesHttpQuery query) {
         var result = await Mediator.Send(query.ToQuery(userId));
-        return result.ToActionResult();
+        return result.IsSuccess
+            ? Ok(result.Value.ToHttpResponse())
+            : result.ToActionResult();
     }
 
     [HttpGet("with-recent")]
     public async Task<IActionResult> GetAllWithRecent([FromCurrentUser] UserId userId, [FromQuery] GetRecipesWithRecentHttpQuery query) {
         var result = await Mediator.Send(query.ToQuery(userId));
-        return result.ToActionResult();
+        return result.IsSuccess
+            ? Ok(result.Value.ToHttpResponse())
+            : result.ToActionResult();
     }
 
     [HttpGet("recent")]
     public async Task<IActionResult> GetRecent([FromCurrentUser] UserId userId, [FromQuery] GetRecentRecipesHttpQuery query) {
         var result = await Mediator.Send(query.ToQuery(userId));
-        return result.ToActionResult();
+        return result.IsSuccess
+            ? Ok(result.Value.Select(x => x.ToHttpResponse()).ToList())
+            : result.ToActionResult();
     }
 
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetById(Guid id, [FromCurrentUser] UserId userId, [FromQuery] bool includePublic = true) {
         var query = new GetRecipeByIdQuery(userId, new RecipeId(id), includePublic);
         var result = await Mediator.Send(query);
-        return result.ToActionResult();
+        return result.IsSuccess
+            ? Ok(result.Value.ToHttpResponse())
+            : result.ToActionResult();
     }
 
     [HttpPost]
     public async Task<IActionResult> Create([FromCurrentUser] UserId userId, [FromBody] CreateRecipeHttpRequest request) {
         var command = request.ToCommand(userId.Value);
         var result = await Mediator.Send(command);
-        return result.ToActionResult();
+        return result.IsSuccess
+            ? Ok(result.Value.ToHttpResponse())
+            : result.ToActionResult();
     }
 
     [HttpPatch("{id:guid}")]
     public async Task<IActionResult> Update(Guid id, [FromCurrentUser] UserId userId, [FromBody] UpdateRecipeHttpRequest request) {
         var command = request.ToCommand(userId.Value, id);
         var result = await Mediator.Send(command);
-        return result.ToActionResult();
+        return result.IsSuccess
+            ? Ok(result.Value.ToHttpResponse())
+            : result.ToActionResult();
     }
 
     [HttpDelete("{id:guid}")]
@@ -64,6 +76,8 @@ public class RecipesController(ISender mediator) : AuthorizedController(mediator
     public async Task<IActionResult> Duplicate(Guid id, [FromCurrentUser] UserId userId) {
         var command = new DuplicateRecipeCommand(userId, new RecipeId(id));
         var result = await Mediator.Send(command);
-        return result.ToActionResult();
+        return result.IsSuccess
+            ? Ok(result.Value.ToHttpResponse())
+            : result.ToActionResult();
     }
 }

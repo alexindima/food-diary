@@ -1,6 +1,6 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
-using FoodDiary.Contracts.Dashboard;
+using FoodDiary.Application.Dashboard.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Dashboard.Queries.GetDashboardSnapshot;
@@ -11,4 +11,4 @@ public record GetDashboardSnapshotQuery(
     int Page,
     int PageSize,
     string Locale,
-    int TrendDays) : IQuery<Result<DashboardSnapshotResponse>>;
+    int TrendDays) : IQuery<Result<DashboardSnapshotModel>>;

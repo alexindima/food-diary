@@ -16,6 +16,8 @@ public sealed class AdminAiUsageController(ISender mediator) : BaseApiController
     [HttpGet("summary")]
     public async Task<IActionResult> GetSummary([FromQuery] GetAdminAiUsageSummaryHttpQuery query) {
         var result = await Mediator.Send(query.ToQuery());
-        return result.ToActionResult();
+        return result.IsSuccess
+            ? Ok(result.Value.ToHttpResponse())
+            : result.ToActionResult();
     }
 }

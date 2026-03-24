@@ -1,14 +1,14 @@
+using FoodDiary.Application.Recipes.Models;
 using FoodDiary.Application.Recipes.Services;
-using FoodDiary.Contracts.Recipes;
 using FoodDiary.Domain.Entities.Recipes;
 
 namespace FoodDiary.Application.Recipes.Mappings;
 
 public static class RecipeMappings {
-    public static RecipeResponse ToResponse(this Recipe recipe, int usageCount, bool isOwnedByCurrentUser) {
+    public static RecipeModel ToModel(this Recipe recipe, int usageCount, bool isOwnedByCurrentUser) {
         var steps = recipe.Steps
             .OrderBy(s => s.StepNumber)
-            .Select(step => new RecipeStepResponse(
+            .Select(step => new RecipeStepModel(
                 step.Id.Value,
                 step.StepNumber,
                 step.Title,
@@ -16,7 +16,7 @@ public static class RecipeMappings {
                 step.ImageUrl,
                 step.ImageAssetId?.Value,
                 step.Ingredients
-                    .Select(ingredient => new RecipeIngredientResponse(
+                    .Select(ingredient => new RecipeIngredientModel(
                         ingredient.Id.Value,
                         ingredient.Amount,
                         ingredient.ProductId?.Value,
@@ -36,7 +36,7 @@ public static class RecipeMappings {
 
         var nutrition = BuildNutrition(recipe);
 
-        return new RecipeResponse(
+        return new RecipeModel(
             recipe.Id.Value,
             recipe.Name,
             recipe.Description,

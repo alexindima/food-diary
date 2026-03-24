@@ -4,7 +4,7 @@ using static FoodDiary.Application.Common.Abstractions.Result.Errors;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Interfaces.Services;
 using FoodDiary.Application.Users.Mappings;
-using FoodDiary.Contracts.Users;
+using FoodDiary.Application.Users.Models;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -15,30 +15,30 @@ public class UpdateUserCommandHandler(
     IUserRepository userRepository,
     IImageAssetRepository imageAssetRepository,
     IImageStorageService imageStorageService)
-    : ICommandHandler<UpdateUserCommand, Result<UserResponse>> {
-    public async Task<Result<UserResponse>> Handle(UpdateUserCommand command, CancellationToken cancellationToken) {
+    : ICommandHandler<UpdateUserCommand, Result<UserModel>> {
+    public async Task<Result<UserModel>> Handle(UpdateUserCommand command, CancellationToken cancellationToken) {
         if (command.UserId is null || command.UserId.Value == UserId.Empty) {
-            return Result.Failure<UserResponse>(Errors.Authentication.InvalidToken);
+            return Result.Failure<UserModel>(Errors.Authentication.InvalidToken);
         }
 
         var user = await userRepository.GetByIdAsync(command.UserId.Value);
         if (user is null) {
-            return Result.Failure<UserResponse>(User.NotFound(command.UserId.Value));
+            return Result.Failure<UserModel>(User.NotFound(command.UserId.Value));
         }
 
         var activityLevelResult = ParseActivityLevel(command.ActivityLevel);
         if (activityLevelResult.IsFailure) {
-            return Result.Failure<UserResponse>(activityLevelResult.Error);
+            return Result.Failure<UserModel>(activityLevelResult.Error);
         }
 
         var languageResult = NormalizeLanguage(command.Language);
         if (languageResult.IsFailure) {
-            return Result.Failure<UserResponse>(languageResult.Error);
+            return Result.Failure<UserModel>(languageResult.Error);
         }
 
         var genderResult = ParseGender(command.Gender);
         if (genderResult.IsFailure) {
-            return Result.Failure<UserResponse>(genderResult.Error);
+            return Result.Failure<UserModel>(genderResult.Error);
         }
 
         var oldAssetId = user.ProfileImageAssetId;
@@ -77,7 +77,7 @@ public class UpdateUserCommandHandler(
             await TryDeleteAssetAsync(oldAssetId.Value, imageAssetRepository, imageStorageService, cancellationToken);
         }
 
-        return Result.Success(user.ToResponse());
+        return Result.Success(user.ToModel());
     }
 
     private static string? Normalize(string? value) =>

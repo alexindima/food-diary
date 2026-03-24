@@ -17,27 +17,43 @@ public class HydrationEntriesController(ISender mediator) : AuthorizedController
     [HttpGet]
     public async Task<IActionResult> GetByDate([FromCurrentUser] UserId userId, [FromQuery] GetHydrationEntriesHttpQuery query) {
         var result = await Mediator.Send(query.ToEntriesQuery(userId));
-        return result.ToActionResult();
+        if (result.IsFailure) {
+            return result.ToActionResult();
+        }
+
+        return Ok(result.Value.Select(item => item.ToHttpResponse()).ToList());
     }
 
     [HttpGet("daily")]
     public async Task<IActionResult> GetDaily([FromCurrentUser] UserId userId, [FromQuery] GetHydrationEntriesHttpQuery query) {
         var result = await Mediator.Send(query.ToDailyQuery(userId));
-        return result.ToActionResult();
+        if (result.IsFailure) {
+            return result.ToActionResult();
+        }
+
+        return Ok(result.Value.ToHttpResponse());
     }
 
     [HttpPost]
     public async Task<IActionResult> Create([FromCurrentUser] UserId userId, [FromBody] CreateHydrationEntryHttpRequest request) {
         var command = request.ToCommand(userId.Value);
         var result = await Mediator.Send(command);
-        return result.ToActionResult();
+        if (result.IsFailure) {
+            return result.ToActionResult();
+        }
+
+        return Ok(result.Value.ToHttpResponse());
     }
 
     [HttpPut("{id:guid}")]
     public async Task<IActionResult> Update(Guid id, [FromCurrentUser] UserId userId, [FromBody] UpdateHydrationEntryHttpRequest request) {
         var command = request.ToCommand(userId.Value, id);
         var result = await Mediator.Send(command);
-        return result.ToActionResult();
+        if (result.IsFailure) {
+            return result.ToActionResult();
+        }
+
+        return Ok(result.Value.ToHttpResponse());
     }
 
     [HttpDelete("{id:guid}")]

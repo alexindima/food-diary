@@ -1,9 +1,9 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
-using FoodDiary.Contracts.Ai;
+using FoodDiary.Application.Ai.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Ai.Commands.CalculateFoodNutrition;
 
-public sealed record CalculateFoodNutritionCommand(UserId UserId, IReadOnlyList<FoodVisionItem> Items)
-    : IQuery<Result<FoodNutritionResponse>>;
+public sealed record CalculateFoodNutritionCommand(UserId UserId, IReadOnlyList<FoodVisionItemModel> Items)
+    : IQuery<Result<FoodNutritionModel>>;

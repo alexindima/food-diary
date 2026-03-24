@@ -1,7 +1,7 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
-using FoodDiary.Contracts.Common;
-using FoodDiary.Contracts.Products;
+using FoodDiary.Application.Common.Models;
+using FoodDiary.Application.Products.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Products.Queries.GetProducts;
@@ -13,4 +13,4 @@ public record GetProductsQuery(
     string? Search,
     bool IncludePublic,
     IReadOnlyCollection<string>? ProductTypes = null)
-    : IQuery<Result<PagedResponse<ProductResponse>>>;
+    : IQuery<Result<PagedResponse<ProductModel>>>;

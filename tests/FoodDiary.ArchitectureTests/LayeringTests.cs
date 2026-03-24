@@ -18,7 +18,6 @@ public class LayeringTests {
         var references = GetProjectReferences("FoodDiary.Application/FoodDiary.Application.csproj");
 
         Assert.Contains("FoodDiary.Domain", references);
-        Assert.Contains("FoodDiary.Contracts", references);
         Assert.DoesNotContain("FoodDiary.Infrastructure", references);
         Assert.DoesNotContain("FoodDiary.Web.Api", references);
         Assert.DoesNotContain("FoodDiary.Presentation.Api", references);
@@ -38,7 +37,6 @@ public class LayeringTests {
         var references = GetProjectReferences("FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj");
 
         Assert.Contains("FoodDiary.Application", references);
-        Assert.Contains("FoodDiary.Contracts", references);
         Assert.Contains("FoodDiary.Domain", references);
         Assert.DoesNotContain("FoodDiary.Web.Api", references);
         Assert.DoesNotContain("FoodDiary.Infrastructure", references);

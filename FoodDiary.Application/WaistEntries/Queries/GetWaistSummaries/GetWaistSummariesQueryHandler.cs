@@ -1,28 +1,28 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
-using FoodDiary.Contracts.WaistEntries;
+using FoodDiary.Application.WaistEntries.Models;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.WaistEntries.Queries.GetWaistSummaries;
 
 public class GetWaistSummariesQueryHandler(IWaistEntryRepository waistEntryRepository)
-    : IQueryHandler<GetWaistSummariesQuery, Result<IReadOnlyList<WaistEntrySummaryResponse>>> {
-    public async Task<Result<IReadOnlyList<WaistEntrySummaryResponse>>> Handle(
+    : IQueryHandler<GetWaistSummariesQuery, Result<IReadOnlyList<WaistEntrySummaryModel>>> {
+    public async Task<Result<IReadOnlyList<WaistEntrySummaryModel>>> Handle(
         GetWaistSummariesQuery query,
         CancellationToken cancellationToken) {
         if (query.UserId is null || query.UserId.Value == UserId.Empty) {
-            return Result.Failure<IReadOnlyList<WaistEntrySummaryResponse>>(Errors.Authentication.InvalidToken);
+            return Result.Failure<IReadOnlyList<WaistEntrySummaryModel>>(Errors.Authentication.InvalidToken);
         }
 
         if (query.DateFrom > query.DateTo) {
-            return Result.Failure<IReadOnlyList<WaistEntrySummaryResponse>>(
+            return Result.Failure<IReadOnlyList<WaistEntrySummaryModel>>(
                 Errors.Validation.Invalid(nameof(query.DateFrom), "DateFrom must be earlier than DateTo."));
         }
 
         if (query.QuantizationDays <= 0) {
-            return Result.Failure<IReadOnlyList<WaistEntrySummaryResponse>>(
+            return Result.Failure<IReadOnlyList<WaistEntrySummaryModel>>(
                 Errors.Validation.Invalid(nameof(query.QuantizationDays), "Value must be greater than zero."));
         }
 
@@ -40,7 +40,7 @@ public class GetWaistSummariesQueryHandler(IWaistEntryRepository waistEntryRepos
             .Select(bucket => BuildResponse(bucket.start, bucket.end, entries))
             .ToList();
 
-        return Result.Success<IReadOnlyList<WaistEntrySummaryResponse>>(response);
+        return Result.Success<IReadOnlyList<WaistEntrySummaryModel>>(response);
     }
 
     private static IEnumerable<(DateTime start, DateTime end)> BuildBuckets(DateTime from, DateTime to, int step) {
@@ -57,7 +57,7 @@ public class GetWaistSummariesQueryHandler(IWaistEntryRepository waistEntryRepos
         }
     }
 
-    private static WaistEntrySummaryResponse BuildResponse(
+    private static WaistEntrySummaryModel BuildResponse(
         DateTime start,
         DateTime end,
         IReadOnlyList<WaistEntry> entries) {
@@ -66,11 +66,11 @@ public class GetWaistSummariesQueryHandler(IWaistEntryRepository waistEntryRepos
             .ToList();
 
         if (bucketEntries.Count == 0) {
-            return new WaistEntrySummaryResponse(start, end, 0);
+            return new WaistEntrySummaryModel(start, end, 0);
         }
 
         var avg = bucketEntries.Average(entry => entry.Circumference);
-        return new WaistEntrySummaryResponse(start, end, Math.Round(avg, 2));
+        return new WaistEntrySummaryModel(start, end, Math.Round(avg, 2));
     }
 
     private static DateTime NormalizeUtcDate(DateTime value) {

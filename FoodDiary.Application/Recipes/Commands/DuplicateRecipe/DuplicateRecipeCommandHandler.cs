@@ -2,18 +2,18 @@ using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Recipes.Mappings;
+using FoodDiary.Application.Recipes.Models;
 using FoodDiary.Application.Recipes.Services;
-using FoodDiary.Contracts.Recipes;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Recipes.Commands.DuplicateRecipe;
 
 public class DuplicateRecipeCommandHandler(IRecipeRepository recipeRepository)
-    : ICommandHandler<DuplicateRecipeCommand, Result<RecipeResponse>> {
-    public async Task<Result<RecipeResponse>> Handle(DuplicateRecipeCommand command, CancellationToken cancellationToken) {
+    : ICommandHandler<DuplicateRecipeCommand, Result<RecipeModel>> {
+    public async Task<Result<RecipeModel>> Handle(DuplicateRecipeCommand command, CancellationToken cancellationToken) {
         if (command.UserId is null || command.UserId == UserId.Empty) {
-            return Result.Failure<RecipeResponse>(Errors.Authentication.InvalidToken);
+            return Result.Failure<RecipeModel>(Errors.Authentication.InvalidToken);
         }
 
         var original = await recipeRepository.GetByIdAsync(
@@ -24,7 +24,7 @@ public class DuplicateRecipeCommandHandler(IRecipeRepository recipeRepository)
             cancellationToken: cancellationToken);
 
         if (original is null) {
-            return Result.Failure<RecipeResponse>(Errors.Recipe.NotFound(command.RecipeId.Value));
+            return Result.Failure<RecipeModel>(Errors.Recipe.NotFound(command.RecipeId.Value));
         }
 
         var duplicate = Recipe.Create(
@@ -65,12 +65,12 @@ public class DuplicateRecipeCommandHandler(IRecipeRepository recipeRepository)
             cancellationToken: cancellationToken);
 
         if (created is null) {
-            return Result.Failure<RecipeResponse>(Errors.Recipe.InvalidData("Failed to load duplicated recipe."));
+            return Result.Failure<RecipeModel>(Errors.Recipe.InvalidData("Failed to load duplicated recipe."));
         }
 
         await RecipeNutritionUpdater.EnsureNutritionAsync(created, recipeRepository, cancellationToken);
 
-        return Result.Success(created.ToResponse(0, true));
+        return Result.Success(created.ToModel(0, true));
     }
 
     private static void AddStepsFromOriginal(Recipe target, Recipe source) {

@@ -1,14 +1,14 @@
+using FoodDiary.Application.Authentication.Mappings;
+using FoodDiary.Application.Authentication.Models;
+using FoodDiary.Application.Authentication.Services;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
-using FoodDiary.Application.Authentication.Services;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Interfaces.Services;
-using FoodDiary.Application.Users.Mappings;
-using FoodDiary.Contracts.Authentication;
 
 namespace FoodDiary.Application.Authentication.Commands.Login;
 
-public class LoginCommandHandler : ICommandHandler<LoginCommand, Result<AuthenticationResponse>> {
+public class LoginCommandHandler : ICommandHandler<LoginCommand, Result<AuthenticationModel>> {
     private readonly IUserRepository _userRepository;
     private readonly IPasswordHasher _passwordHasher;
     private readonly IAuthenticationTokenService _authenticationTokenService;
@@ -22,24 +22,21 @@ public class LoginCommandHandler : ICommandHandler<LoginCommand, Result<Authenti
         _authenticationTokenService = authenticationTokenService;
     }
 
-    public async Task<Result<AuthenticationResponse>> Handle(LoginCommand command, CancellationToken cancellationToken) {
+    public async Task<Result<AuthenticationModel>> Handle(LoginCommand command, CancellationToken cancellationToken) {
         var user = await _userRepository.GetByEmailIncludingDeletedAsync(command.Email);
         if (user == null || !_passwordHasher.Verify(command.Password, user.Password)) {
-            return Result.Failure<AuthenticationResponse>(Errors.Authentication.InvalidCredentials);
+            return Result.Failure<AuthenticationModel>(Errors.Authentication.InvalidCredentials);
         }
 
         if (user.DeletedAt is not null) {
-            return Result.Failure<AuthenticationResponse>(Errors.Authentication.AccountDeleted);
+            return Result.Failure<AuthenticationModel>(Errors.Authentication.AccountDeleted);
         }
 
         if (!user.IsActive) {
-            return Result.Failure<AuthenticationResponse>(Errors.Authentication.InvalidCredentials);
+            return Result.Failure<AuthenticationModel>(Errors.Authentication.InvalidCredentials);
         }
 
         var tokens = await _authenticationTokenService.IssueAndStoreAsync(user, cancellationToken);
-
-        var userResponse = user.ToResponse();
-        var authResponse = new AuthenticationResponse(tokens.AccessToken, tokens.RefreshToken, userResponse);
-        return Result.Success(authResponse);
+        return Result.Success(user.ToAuthenticationModel(tokens));
     }
 }

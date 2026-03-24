@@ -14,12 +14,16 @@ public class DashboardController(ISender mediator) : AuthorizedController(mediat
     [HttpGet]
     public async Task<IActionResult> Get([FromCurrentUser] UserId userId, [FromQuery] GetDashboardSnapshotHttpQuery query) {
         var result = await Mediator.Send(query.ToQuery(userId));
-        return result.ToActionResult();
+        return result.IsSuccess
+            ? Ok(result.Value.ToHttpResponse())
+            : result.ToActionResult();
     }
 
     [HttpGet("advice")]
     public async Task<IActionResult> GetAdvice([FromCurrentUser] UserId userId, [FromQuery] GetDailyAdviceHttpQuery query) {
         var result = await Mediator.Send(query.ToQuery(userId));
-        return result.ToActionResult();
+        return result.IsSuccess
+            ? Ok(result.Value.ToHttpResponse())
+            : result.ToActionResult();
     }
 }

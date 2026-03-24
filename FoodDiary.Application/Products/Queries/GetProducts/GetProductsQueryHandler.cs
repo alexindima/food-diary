@@ -1,21 +1,21 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
+using FoodDiary.Application.Common.Models;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Products.Mappings;
-using FoodDiary.Contracts.Common;
-using FoodDiary.Contracts.Products;
+using FoodDiary.Application.Products.Models;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Products.Queries.GetProducts;
 
 public class GetProductsQueryHandler(IProductRepository productRepository)
-    : IQueryHandler<GetProductsQuery, Result<PagedResponse<ProductResponse>>> {
-    public async Task<Result<PagedResponse<ProductResponse>>> Handle(
+    : IQueryHandler<GetProductsQuery, Result<PagedResponse<ProductModel>>> {
+    public async Task<Result<PagedResponse<ProductModel>>> Handle(
         GetProductsQuery query,
         CancellationToken cancellationToken) {
         if (query.UserId is null || query.UserId == UserId.Empty) {
-            return Result.Failure<PagedResponse<ProductResponse>>(Errors.Authentication.InvalidToken);
+            return Result.Failure<PagedResponse<ProductModel>>(Errors.Authentication.InvalidToken);
         }
 
         var pageNumber = Math.Max(query.Page, 1);
@@ -43,8 +43,8 @@ public class GetProductsQueryHandler(IProductRepository productRepository)
         }).ToList();
 
         var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
-        var response = new PagedResponse<ProductResponse>(
-            productsWithUsage.Select(p => p.Product.ToResponse(p.UsageCount, p.IsOwner)).ToList(),
+        var response = new PagedResponse<ProductModel>(
+            productsWithUsage.Select(p => p.Product.ToModel(p.UsageCount, p.IsOwner)).ToList(),
             pageNumber,
             pageSize,
             totalPages,

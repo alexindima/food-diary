@@ -2,18 +2,18 @@ using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.WaistEntries.Mappings;
-using FoodDiary.Contracts.WaistEntries;
+using FoodDiary.Application.WaistEntries.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.WaistEntries.Queries.GetWaistEntries;
 
 public class GetWaistEntriesQueryHandler(IWaistEntryRepository waistEntryRepository)
-    : IQueryHandler<GetWaistEntriesQuery, Result<IReadOnlyList<WaistEntryResponse>>> {
-    public async Task<Result<IReadOnlyList<WaistEntryResponse>>> Handle(
+    : IQueryHandler<GetWaistEntriesQuery, Result<IReadOnlyList<WaistEntryModel>>> {
+    public async Task<Result<IReadOnlyList<WaistEntryModel>>> Handle(
         GetWaistEntriesQuery query,
         CancellationToken cancellationToken) {
         if (query.UserId is null || query.UserId.Value == UserId.Empty) {
-            return Result.Failure<IReadOnlyList<WaistEntryResponse>>(Errors.Authentication.InvalidToken);
+            return Result.Failure<IReadOnlyList<WaistEntryModel>>(Errors.Authentication.InvalidToken);
         }
 
         var normalizedFrom = query.DateFrom.HasValue ? (DateTime?)NormalizeUtcDate(query.DateFrom.Value) : null;
@@ -27,8 +27,8 @@ public class GetWaistEntriesQueryHandler(IWaistEntryRepository waistEntryReposit
             query.Descending,
             cancellationToken);
 
-        var response = entries.Select(entry => entry.ToResponse()).ToList();
-        return Result.Success<IReadOnlyList<WaistEntryResponse>>(response);
+        var response = entries.Select(entry => entry.ToModel()).ToList();
+        return Result.Success<IReadOnlyList<WaistEntryModel>>(response);
     }
 
     private static DateTime NormalizeUtcDate(DateTime value) {

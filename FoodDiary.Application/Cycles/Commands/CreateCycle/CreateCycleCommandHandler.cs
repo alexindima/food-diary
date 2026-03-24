@@ -1,21 +1,21 @@
-﻿using FoodDiary.Application.Common.Abstractions.Messaging;
+using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Cycles.Mappings;
+using FoodDiary.Application.Cycles.Models;
 using FoodDiary.Application.Cycles.Services;
-using FoodDiary.Contracts.Cycles;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Cycles.Commands.CreateCycle;
 
 public class CreateCycleCommandHandler(ICycleRepository cycleRepository)
-    : ICommandHandler<CreateCycleCommand, Result<CycleResponse>> {
-    public async Task<Result<CycleResponse>> Handle(
+    : ICommandHandler<CreateCycleCommand, Result<CycleModel>> {
+    public async Task<Result<CycleModel>> Handle(
         CreateCycleCommand command,
         CancellationToken cancellationToken) {
         if (command.UserId is null || command.UserId == UserId.Empty) {
-            return Result.Failure<CycleResponse>(Errors.User.NotFound());
+            return Result.Failure<CycleModel>(Errors.User.NotFound());
         }
 
         var cycle = Cycle.Create(
@@ -28,6 +28,6 @@ public class CreateCycleCommandHandler(ICycleRepository cycleRepository)
         cycle = await cycleRepository.AddAsync(cycle, cancellationToken);
 
         var predictions = CyclePredictionService.CalculatePredictions(cycle);
-        return Result.Success(cycle.ToResponse(predictions));
+        return Result.Success(cycle.ToModel(predictions));
     }
 }

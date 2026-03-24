@@ -1,28 +1,28 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
-using FoodDiary.Contracts.WeightEntries;
+using FoodDiary.Application.WeightEntries.Models;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.WeightEntries.Queries.GetWeightSummaries;
 
 public class GetWeightSummariesQueryHandler(IWeightEntryRepository weightEntryRepository)
-    : IQueryHandler<GetWeightSummariesQuery, Result<IReadOnlyList<WeightEntrySummaryResponse>>> {
-    public async Task<Result<IReadOnlyList<WeightEntrySummaryResponse>>> Handle(
+    : IQueryHandler<GetWeightSummariesQuery, Result<IReadOnlyList<WeightEntrySummaryModel>>> {
+    public async Task<Result<IReadOnlyList<WeightEntrySummaryModel>>> Handle(
         GetWeightSummariesQuery query,
         CancellationToken cancellationToken) {
         if (query.UserId is null || query.UserId.Value == UserId.Empty) {
-            return Result.Failure<IReadOnlyList<WeightEntrySummaryResponse>>(Errors.Authentication.InvalidToken);
+            return Result.Failure<IReadOnlyList<WeightEntrySummaryModel>>(Errors.Authentication.InvalidToken);
         }
 
         if (query.DateFrom > query.DateTo) {
-            return Result.Failure<IReadOnlyList<WeightEntrySummaryResponse>>(
+            return Result.Failure<IReadOnlyList<WeightEntrySummaryModel>>(
                 Errors.Validation.Invalid(nameof(query.DateFrom), "DateFrom must be earlier than DateTo."));
         }
 
         if (query.QuantizationDays <= 0) {
-            return Result.Failure<IReadOnlyList<WeightEntrySummaryResponse>>(
+            return Result.Failure<IReadOnlyList<WeightEntrySummaryModel>>(
                 Errors.Validation.Invalid(nameof(query.QuantizationDays), "Value must be greater than zero."));
         }
 
@@ -40,7 +40,7 @@ public class GetWeightSummariesQueryHandler(IWeightEntryRepository weightEntryRe
             .Select(bucket => BuildResponse(bucket.start, bucket.end, entries))
             .ToList();
 
-        return Result.Success<IReadOnlyList<WeightEntrySummaryResponse>>(response);
+        return Result.Success<IReadOnlyList<WeightEntrySummaryModel>>(response);
     }
 
     private static IEnumerable<(DateTime start, DateTime end)> BuildBuckets(DateTime from, DateTime to, int step) {
@@ -57,7 +57,7 @@ public class GetWeightSummariesQueryHandler(IWeightEntryRepository weightEntryRe
         }
     }
 
-    private static WeightEntrySummaryResponse BuildResponse(
+    private static WeightEntrySummaryModel BuildResponse(
         DateTime start,
         DateTime end,
         IReadOnlyList<WeightEntry> entries) {
@@ -66,11 +66,11 @@ public class GetWeightSummariesQueryHandler(IWeightEntryRepository weightEntryRe
             .ToList();
 
         if (bucketEntries.Count == 0) {
-            return new WeightEntrySummaryResponse(start, end, 0);
+            return new WeightEntrySummaryModel(start, end, 0);
         }
 
         var avg = bucketEntries.Average(entry => entry.Weight);
-        return new WeightEntrySummaryResponse(start, end, Math.Round(avg, 2));
+        return new WeightEntrySummaryModel(start, end, Math.Round(avg, 2));
     }
 
     private static DateTime NormalizeUtcDate(DateTime value) {

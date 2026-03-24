@@ -1,15 +1,15 @@
-﻿using System.Net.Http.Headers;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
+using FoodDiary.Application.Ai.Models;
 using FoodDiary.Application.Common.Abstractions.Result;
-using FoodDiary.Application.Common.Interfaces.Services;
 using FoodDiary.Application.Common.Interfaces.Persistence;
-using FoodDiary.Contracts.Ai;
+using FoodDiary.Application.Common.Interfaces.Services;
+using FoodDiary.Domain.Entities.Ai;
+using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Options;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using FoodDiary.Domain.Entities.Ai;
-using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Infrastructure.Services;
 
@@ -25,7 +25,7 @@ public sealed class OpenAiFoodService(
     private readonly IAiUsageRepository _aiUsageRepository = aiUsageRepository;
     private readonly IUserRepository _userRepository = userRepository;
 
-    public async Task<Result<FoodVisionResponse>> AnalyzeFoodImageAsync(
+    public async Task<Result<FoodVisionModel>> AnalyzeFoodImageAsync(
         string imageUrl,
         string? userLanguage,
         UserId userId,
@@ -33,11 +33,11 @@ public sealed class OpenAiFoodService(
         CancellationToken cancellationToken) {
         var quotaCheck = await EnsureMonthlyQuotaAsync(userId, cancellationToken);
         if (quotaCheck.IsFailure) {
-            return Result.Failure<FoodVisionResponse>(quotaCheck.Error);
+            return Result.Failure<FoodVisionModel>(quotaCheck.Error);
         }
 
         if (string.IsNullOrWhiteSpace(_options.ApiKey)) {
-            return Result.Failure<FoodVisionResponse>(Errors.Ai.OpenAiFailed("OpenAI API key is not configured."));
+            return Result.Failure<FoodVisionModel>(Errors.Ai.OpenAiFailed("OpenAI API key is not configured."));
         }
 
         var requestModel = _options.VisionModel;
@@ -50,7 +50,7 @@ public sealed class OpenAiFoodService(
         }
 
         if (!response.IsSuccess) {
-            return Result.Failure<FoodVisionResponse>(response.Error);
+            return Result.Failure<FoodVisionModel>(response.Error);
         }
 
         var parsed = ParseVisionResponse(response.Json!);
@@ -61,24 +61,24 @@ public sealed class OpenAiFoodService(
         return parsed;
     }
 
-    public async Task<Result<FoodNutritionResponse>> CalculateNutritionAsync(
-        IReadOnlyList<FoodVisionItem> items,
+    public async Task<Result<FoodNutritionModel>> CalculateNutritionAsync(
+        IReadOnlyList<FoodVisionItemModel> items,
         UserId userId,
         CancellationToken cancellationToken) {
         var quotaCheck = await EnsureMonthlyQuotaAsync(userId, cancellationToken);
         if (quotaCheck.IsFailure) {
-            return Result.Failure<FoodNutritionResponse>(quotaCheck.Error);
+            return Result.Failure<FoodNutritionModel>(quotaCheck.Error);
         }
 
         if (string.IsNullOrWhiteSpace(_options.ApiKey)) {
-            return Result.Failure<FoodNutritionResponse>(Errors.Ai.OpenAiFailed("OpenAI API key is not configured."));
+            return Result.Failure<FoodNutritionModel>(Errors.Ai.OpenAiFailed("OpenAI API key is not configured."));
         }
 
         var requestModel = _options.TextModel;
         var request = BuildNutritionRequest(requestModel, items);
         var response = await SendRequestAsync(request, cancellationToken);
         if (!response.IsSuccess) {
-            return Result.Failure<FoodNutritionResponse>(response.Error);
+            return Result.Failure<FoodNutritionModel>(response.Error);
         }
 
         var parsed = ParseNutritionResponse(response.Json!);
@@ -190,7 +190,7 @@ public sealed class OpenAiFoodService(
         };
     }
 
-    private static object BuildNutritionRequest(string model, IReadOnlyList<FoodVisionItem> items) {
+    private static object BuildNutritionRequest(string model, IReadOnlyList<FoodVisionItemModel> items) {
         var mappedItems = items.Select(item => new {
             name = string.IsNullOrWhiteSpace(item.NameEn) ? (item.NameLocal ?? "unknown") : item.NameEn,
             amount = item.Amount,
@@ -263,39 +263,39 @@ public sealed class OpenAiFoodService(
         };
     }
 
-    private static Result<FoodVisionResponse> ParseVisionResponse(JsonDocument json) {
+    private static Result<FoodVisionModel> ParseVisionResponse(JsonDocument json) {
         var text = ExtractOutputText(json);
         if (string.IsNullOrWhiteSpace(text)) {
-            return Result.Failure<FoodVisionResponse>(Errors.Ai.InvalidResponse("Missing output text."));
+            return Result.Failure<FoodVisionModel>(Errors.Ai.InvalidResponse("Missing output text."));
         }
 
         try {
-            var parsed = JsonSerializer.Deserialize<FoodVisionResponse>(text, JsonOptions());
+            var parsed = JsonSerializer.Deserialize<FoodVisionModel>(text, JsonOptions());
             if (parsed is null || parsed.Items is null) {
-                return Result.Failure<FoodVisionResponse>(Errors.Ai.InvalidResponse("Vision response is empty."));
+                return Result.Failure<FoodVisionModel>(Errors.Ai.InvalidResponse("Vision response is empty."));
             }
 
             return Result.Success(parsed);
         } catch (JsonException ex) {
-            return Result.Failure<FoodVisionResponse>(Errors.Ai.InvalidResponse($"Vision JSON invalid: {ex.Message}"));
+            return Result.Failure<FoodVisionModel>(Errors.Ai.InvalidResponse($"Vision JSON invalid: {ex.Message}"));
         }
     }
 
-    private static Result<FoodNutritionResponse> ParseNutritionResponse(JsonDocument json) {
+    private static Result<FoodNutritionModel> ParseNutritionResponse(JsonDocument json) {
         var text = ExtractOutputText(json);
         if (string.IsNullOrWhiteSpace(text)) {
-            return Result.Failure<FoodNutritionResponse>(Errors.Ai.InvalidResponse("Missing output text."));
+            return Result.Failure<FoodNutritionModel>(Errors.Ai.InvalidResponse("Missing output text."));
         }
 
         try {
-            var parsed = JsonSerializer.Deserialize<FoodNutritionResponse>(text, JsonOptions());
+            var parsed = JsonSerializer.Deserialize<FoodNutritionModel>(text, JsonOptions());
             if (parsed is null || parsed.Items is null) {
-                return Result.Failure<FoodNutritionResponse>(Errors.Ai.InvalidResponse("Nutrition response is empty."));
+                return Result.Failure<FoodNutritionModel>(Errors.Ai.InvalidResponse("Nutrition response is empty."));
             }
 
             return Result.Success(parsed);
         } catch (JsonException ex) {
-            return Result.Failure<FoodNutritionResponse>(Errors.Ai.InvalidResponse($"Nutrition JSON invalid: {ex.Message}"));
+            return Result.Failure<FoodNutritionModel>(Errors.Ai.InvalidResponse($"Nutrition JSON invalid: {ex.Message}"));
         }
     }
 

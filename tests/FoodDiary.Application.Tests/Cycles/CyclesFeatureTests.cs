@@ -1,8 +1,8 @@
 using FoodDiary.Application.Cycles.Commands.CreateCycle;
 using FoodDiary.Application.Cycles.Commands.UpsertCycleDay;
 using FoodDiary.Application.Cycles.Mappings;
+using FoodDiary.Application.Cycles.Models;
 using FoodDiary.Application.Cycles.Services;
-using FoodDiary.Contracts.Cycles;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -28,7 +28,7 @@ public class CyclesFeatureTests {
             CycleId.New(),
             DateTime.UtcNow,
             IsPeriod: true,
-            Symptoms: new DailySymptomsDto(10, 0, 0, 0, 0, 0, 0),
+            Symptoms: new DailySymptomsModel(10, 0, 0, 0, 0, 0, 0),
             Notes: null);
 
         var result = await validator.ValidateAsync(command);
@@ -37,12 +37,12 @@ public class CyclesFeatureTests {
     }
 
     [Fact]
-    public void CycleMappings_ToResponse_SortsDaysByDate() {
+    public void CycleMappings_ToModel_SortsDaysByDate() {
         var cycle = Cycle.Create(UserId.New(), DateTime.UtcNow);
         cycle.AddOrUpdateDay(new DateTime(2026, 2, 10, 0, 0, 0, DateTimeKind.Utc), true, DailySymptoms.Create(1, 1, 1, 1, 1, 1, 1));
         cycle.AddOrUpdateDay(new DateTime(2026, 2, 1, 0, 0, 0, DateTimeKind.Utc), false, DailySymptoms.Create(2, 2, 2, 2, 2, 2, 2));
 
-        var response = cycle.ToResponse();
+        var response = cycle.ToModel();
 
         Assert.Collection(
             response.Days,

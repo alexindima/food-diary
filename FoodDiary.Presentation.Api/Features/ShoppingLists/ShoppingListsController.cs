@@ -19,35 +19,45 @@ public class ShoppingListsController(ISender mediator) : AuthorizedController(me
     public async Task<IActionResult> GetCurrent([FromCurrentUser] UserId userId) {
         var query = new GetCurrentShoppingListQuery(userId);
         var result = await Mediator.Send(query);
-        return result.ToActionResult();
+        return result.IsSuccess
+            ? Ok(result.Value.ToHttpResponse())
+            : result.ToActionResult();
     }
 
     [HttpGet]
     public async Task<IActionResult> GetAll([FromCurrentUser] UserId userId) {
         var query = new GetShoppingListsQuery(userId);
         var result = await Mediator.Send(query);
-        return result.ToActionResult();
+        return result.IsSuccess
+            ? Ok(result.Value.Select(x => x.ToHttpResponse()).ToList())
+            : result.ToActionResult();
     }
 
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetById(Guid id, [FromCurrentUser] UserId userId) {
         var query = new GetShoppingListByIdQuery(userId, new ShoppingListId(id));
         var result = await Mediator.Send(query);
-        return result.ToActionResult();
+        return result.IsSuccess
+            ? Ok(result.Value.ToHttpResponse())
+            : result.ToActionResult();
     }
 
     [HttpPost]
     public async Task<IActionResult> Create([FromCurrentUser] UserId userId, [FromBody] CreateShoppingListHttpRequest request) {
         var command = request.ToCommand(userId.Value);
         var result = await Mediator.Send(command);
-        return result.ToActionResult();
+        return result.IsSuccess
+            ? Ok(result.Value.ToHttpResponse())
+            : result.ToActionResult();
     }
 
     [HttpPatch("{id:guid}")]
     public async Task<IActionResult> Update(Guid id, [FromCurrentUser] UserId userId, [FromBody] UpdateShoppingListHttpRequest request) {
         var command = request.ToCommand(userId.Value, id);
         var result = await Mediator.Send(command);
-        return result.ToActionResult();
+        return result.IsSuccess
+            ? Ok(result.Value.ToHttpResponse())
+            : result.ToActionResult();
     }
 
     [HttpDelete("{id:guid}")]

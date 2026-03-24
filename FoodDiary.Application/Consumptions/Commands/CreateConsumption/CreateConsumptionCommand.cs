@@ -1,7 +1,7 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Consumptions.Common;
-using FoodDiary.Contracts.Consumptions;
+using FoodDiary.Application.Consumptions.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Consumptions.Commands.CreateConsumption;
@@ -23,4 +23,4 @@ public record CreateConsumptionCommand(
     double? ManualFiber,
     double? ManualAlcohol,
     int PreMealSatietyLevel,
-    int PostMealSatietyLevel) : ICommand<Result<ConsumptionResponse>>;
+    int PostMealSatietyLevel) : ICommand<Result<ConsumptionModel>>;

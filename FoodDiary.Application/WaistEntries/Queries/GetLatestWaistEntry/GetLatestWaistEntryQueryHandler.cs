@@ -2,18 +2,18 @@ using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.WaistEntries.Mappings;
-using FoodDiary.Contracts.WaistEntries;
+using FoodDiary.Application.WaistEntries.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.WaistEntries.Queries.GetLatestWaistEntry;
 
 public class GetLatestWaistEntryQueryHandler(IWaistEntryRepository waistEntryRepository)
-    : IQueryHandler<GetLatestWaistEntryQuery, Result<WaistEntryResponse?>> {
-    public async Task<Result<WaistEntryResponse?>> Handle(
+    : IQueryHandler<GetLatestWaistEntryQuery, Result<WaistEntryModel?>> {
+    public async Task<Result<WaistEntryModel?>> Handle(
         GetLatestWaistEntryQuery query,
         CancellationToken cancellationToken) {
         if (query.UserId is null || query.UserId.Value == UserId.Empty) {
-            return Result.Failure<WaistEntryResponse?>(Errors.Authentication.InvalidToken);
+            return Result.Failure<WaistEntryModel?>(Errors.Authentication.InvalidToken);
         }
 
         var entries = await waistEntryRepository.GetEntriesAsync(
@@ -25,6 +25,6 @@ public class GetLatestWaistEntryQueryHandler(IWaistEntryRepository waistEntryRep
             cancellationToken: cancellationToken);
 
         var latest = entries.FirstOrDefault();
-        return Result.Success(latest?.ToResponse());
+        return Result.Success(latest?.ToModel());
     }
 }

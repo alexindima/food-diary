@@ -1,6 +1,6 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
-using FoodDiary.Contracts.WeightEntries;
+using FoodDiary.Application.WeightEntries.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.WeightEntries.Queries.GetWeightSummaries;
@@ -10,4 +10,4 @@ public record GetWeightSummariesQuery(
     DateTime DateFrom,
     DateTime DateTo,
     int QuantizationDays
-) : IQuery<Result<IReadOnlyList<WeightEntrySummaryResponse>>>;
+) : IQuery<Result<IReadOnlyList<WeightEntrySummaryModel>>>;

@@ -17,13 +17,17 @@ public sealed class AdminUsersController(ISender mediator) : BaseApiController(m
     [HttpGet]
     public async Task<IActionResult> GetUsers([FromQuery] GetAdminUsersHttpQuery query) {
         var result = await Mediator.Send(query.ToQuery());
-        return result.ToActionResult();
+        return result.IsSuccess
+            ? Ok(result.Value.ToHttpResponse())
+            : result.ToActionResult();
     }
 
     [HttpPatch("{id:guid}")]
     public async Task<IActionResult> UpdateUser(Guid id, [FromBody] AdminUserUpdateHttpRequest request) {
         var command = request.ToCommand(id);
         var result = await Mediator.Send(command);
-        return result.ToActionResult();
+        return result.IsSuccess
+            ? Ok(result.Value.ToHttpResponse())
+            : result.ToActionResult();
     }
 }

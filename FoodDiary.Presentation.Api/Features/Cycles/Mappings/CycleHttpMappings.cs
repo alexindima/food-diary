@@ -1,6 +1,8 @@
 using FoodDiary.Application.Cycles.Commands.CreateCycle;
 using FoodDiary.Application.Cycles.Commands.UpsertCycleDay;
+using FoodDiary.Application.Cycles.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Presentation.Api.Features.Cycles.Models;
 using FoodDiary.Presentation.Api.Features.Cycles.Requests;
 
 namespace FoodDiary.Presentation.Api.Features.Cycles.Mappings;
@@ -20,6 +22,17 @@ public static class CycleHttpMappings {
             new CycleId(cycleId),
             request.Date,
             request.IsPeriod,
-            request.Symptoms,
+            request.Symptoms.ToModel(),
             request.Notes);
+
+    private static DailySymptomsModel ToModel(this DailySymptomsHttpModel model) =>
+        new(
+            model.Pain,
+            model.Mood,
+            model.Edema,
+            model.Headache,
+            model.Energy,
+            model.SleepQuality,
+            model.Libido
+        );
 }

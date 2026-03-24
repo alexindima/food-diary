@@ -1,9 +1,9 @@
-using FoodDiary.Contracts.Cycles;
+using FoodDiary.Presentation.Api.Features.Cycles.Models;
 
 namespace FoodDiary.Presentation.Api.Features.Cycles.Requests;
 
 public sealed record UpsertCycleDayHttpRequest(
     DateTime Date,
     bool IsPeriod,
-    DailySymptomsDto Symptoms,
+    DailySymptomsHttpModel Symptoms,
     string? Notes);

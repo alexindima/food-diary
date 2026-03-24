@@ -1,6 +1,6 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
-using FoodDiary.Contracts.Cycles;
+using FoodDiary.Application.Cycles.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Cycles.Commands.UpsertCycleDay;
@@ -10,6 +10,6 @@ public record UpsertCycleDayCommand(
     CycleId CycleId,
     DateTime Date,
     bool IsPeriod,
-    DailySymptomsDto Symptoms,
+    DailySymptomsModel Symptoms,
     string? Notes
-) : ICommand<Result<CycleDayResponse>>;
+) : ICommand<Result<CycleDayModel>>;

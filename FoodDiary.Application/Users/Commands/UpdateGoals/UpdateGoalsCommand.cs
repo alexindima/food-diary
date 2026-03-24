@@ -1,6 +1,6 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
-using FoodDiary.Contracts.Goals;
+using FoodDiary.Application.Users.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Users.Commands.UpdateGoals;
@@ -15,4 +15,4 @@ public record UpdateGoalsCommand(
     double? WaterGoal,
     double? DesiredWeight,
     double? DesiredWaist
-) : ICommand<Result<GoalsResponse>>;
+) : ICommand<Result<GoalsModel>>;

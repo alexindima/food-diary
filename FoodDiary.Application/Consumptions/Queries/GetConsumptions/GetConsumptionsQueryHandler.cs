@@ -1,18 +1,18 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
+using FoodDiary.Application.Common.Models;
 using FoodDiary.Application.Consumptions.Mappings;
-using FoodDiary.Contracts.Common;
-using FoodDiary.Contracts.Consumptions;
+using FoodDiary.Application.Consumptions.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Consumptions.Queries.GetConsumptions;
 
 public class GetConsumptionsQueryHandler(IMealRepository mealRepository)
-    : IQueryHandler<GetConsumptionsQuery, Result<PagedResponse<ConsumptionResponse>>> {
-    public async Task<Result<PagedResponse<ConsumptionResponse>>> Handle(GetConsumptionsQuery request, CancellationToken cancellationToken) {
+    : IQueryHandler<GetConsumptionsQuery, Result<PagedResponse<ConsumptionModel>>> {
+    public async Task<Result<PagedResponse<ConsumptionModel>>> Handle(GetConsumptionsQuery request, CancellationToken cancellationToken) {
         if (request.UserId is null || request.UserId == UserId.Empty) {
-            return Result.Failure<PagedResponse<ConsumptionResponse>>(Errors.Authentication.InvalidToken);
+            return Result.Failure<PagedResponse<ConsumptionModel>>(Errors.Authentication.InvalidToken);
         }
 
         var sanitizedPage = Math.Max(request.Page, 1);

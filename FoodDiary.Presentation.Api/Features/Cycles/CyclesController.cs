@@ -16,20 +16,26 @@ public class CyclesController(ISender mediator) : AuthorizedController(mediator)
     public async Task<IActionResult> GetCurrent([FromCurrentUser] UserId userId) {
         var query = new GetCurrentCycleQuery(userId);
         var result = await Mediator.Send(query);
-        return result.ToActionResult();
+        return result.IsSuccess
+            ? Ok(result.Value is null ? null : result.Value.ToHttpResponse())
+            : result.ToActionResult();
     }
 
     [HttpPost]
     public async Task<IActionResult> Create([FromCurrentUser] UserId userId, [FromBody] CreateCycleHttpRequest request) {
         var command = request.ToCommand(userId.Value);
         var result = await Mediator.Send(command);
-        return result.ToActionResult();
+        return result.IsSuccess
+            ? Ok(result.Value.ToHttpResponse())
+            : result.ToActionResult();
     }
 
     [HttpPut("{cycleId:guid}/days")]
     public async Task<IActionResult> UpsertDay(Guid cycleId, [FromCurrentUser] UserId userId, [FromBody] UpsertCycleDayHttpRequest request) {
         var command = request.ToCommand(userId.Value, cycleId);
         var result = await Mediator.Send(command);
-        return result.ToActionResult();
+        return result.IsSuccess
+            ? Ok(result.Value.ToHttpResponse())
+            : result.ToActionResult();
     }
 }

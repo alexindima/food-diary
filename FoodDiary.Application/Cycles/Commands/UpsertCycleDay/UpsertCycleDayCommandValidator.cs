@@ -1,5 +1,5 @@
 using FluentValidation;
-using FoodDiary.Contracts.Cycles;
+using FoodDiary.Application.Cycles.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Cycles.Commands.UpsertCycleDay;
@@ -26,11 +26,11 @@ public class UpsertCycleDayCommandValidator : AbstractValidator<UpsertCycleDayCo
             .WithMessage("Symptoms are required.");
 
         RuleFor(x => x.Symptoms)
-            .SetValidator(new DailySymptomsDtoValidator());
+            .SetValidator(new DailySymptomsModelValidator());
     }
 
-    private sealed class DailySymptomsDtoValidator : AbstractValidator<DailySymptomsDto> {
-        public DailySymptomsDtoValidator() {
+    private sealed class DailySymptomsModelValidator : AbstractValidator<DailySymptomsModel> {
+        public DailySymptomsModelValidator() {
             RuleFor(x => x.Pain).InclusiveBetween(0, 9);
             RuleFor(x => x.Mood).InclusiveBetween(0, 9);
             RuleFor(x => x.Edema).InclusiveBetween(0, 9);

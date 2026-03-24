@@ -1,18 +1,18 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
+using FoodDiary.Application.Common.Models;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Recipes.Mappings;
-using FoodDiary.Contracts.Common;
-using FoodDiary.Contracts.Recipes;
+using FoodDiary.Application.Recipes.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Recipes.Queries.GetRecipes;
 
 public class GetRecipesQueryHandler(IRecipeRepository recipeRepository)
-    : IQueryHandler<GetRecipesQuery, Result<PagedResponse<RecipeResponse>>> {
-    public async Task<Result<PagedResponse<RecipeResponse>>> Handle(GetRecipesQuery query, CancellationToken cancellationToken) {
+    : IQueryHandler<GetRecipesQuery, Result<PagedResponse<RecipeModel>>> {
+    public async Task<Result<PagedResponse<RecipeModel>>> Handle(GetRecipesQuery query, CancellationToken cancellationToken) {
         if (query.UserId is null || query.UserId == UserId.Empty) {
-            return Result.Failure<PagedResponse<RecipeResponse>>(Errors.Authentication.InvalidToken);
+            return Result.Failure<PagedResponse<RecipeModel>>(Errors.Authentication.InvalidToken);
         }
 
         var pageNumber = Math.Max(query.Page, 1);
@@ -34,8 +34,8 @@ public class GetRecipesQueryHandler(IRecipeRepository recipeRepository)
         }).ToList();
 
         var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
-        var response = new PagedResponse<RecipeResponse>(
-            recipes.Select(r => r.Recipe.ToResponse(r.UsageCount, r.IsOwner)).ToList(),
+        var response = new PagedResponse<RecipeModel>(
+            recipes.Select(r => r.Recipe.ToModel(r.UsageCount, r.IsOwner)).ToList(),
             pageNumber,
             pageSize,
             totalPages,

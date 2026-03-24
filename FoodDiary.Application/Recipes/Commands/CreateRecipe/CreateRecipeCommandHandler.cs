@@ -1,9 +1,9 @@
-﻿using FoodDiary.Application.Common.Abstractions.Messaging;
+using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Recipes.Mappings;
+using FoodDiary.Application.Recipes.Models;
 using FoodDiary.Application.Recipes.Services;
-using FoodDiary.Contracts.Recipes;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -11,16 +11,16 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.Recipes.Commands.CreateRecipe;
 
 public class CreateRecipeCommandHandler(IRecipeRepository recipeRepository)
-    : ICommandHandler<CreateRecipeCommand, Result<RecipeResponse>> {
-    public async Task<Result<RecipeResponse>> Handle(CreateRecipeCommand command, CancellationToken cancellationToken) {
+    : ICommandHandler<CreateRecipeCommand, Result<RecipeModel>> {
+    public async Task<Result<RecipeModel>> Handle(CreateRecipeCommand command, CancellationToken cancellationToken) {
         if (command.UserId is null || command.UserId == UserId.Empty) {
-            return Result.Failure<RecipeResponse>(Errors.Authentication.InvalidToken);
+            return Result.Failure<RecipeModel>(Errors.Authentication.InvalidToken);
         }
 
         var userId = command.UserId.Value;
 
         if (!Enum.TryParse<Visibility>(command.Visibility, true, out var visibility)) {
-            return Result.Failure<RecipeResponse>(
+            return Result.Failure<RecipeModel>(
                 Errors.Validation.Invalid(nameof(command.Visibility), "Unknown visibility value."));
         }
 
@@ -62,12 +62,12 @@ public class CreateRecipeCommandHandler(IRecipeRepository recipeRepository)
             cancellationToken: cancellationToken);
 
         if (created is null) {
-            return Result.Failure<RecipeResponse>(Errors.Recipe.InvalidData("Failed to load created recipe."));
+            return Result.Failure<RecipeModel>(Errors.Recipe.InvalidData("Failed to load created recipe."));
         }
 
         await RecipeNutritionUpdater.EnsureNutritionAsync(created, recipeRepository, cancellationToken);
 
-        return Result.Success(created.ToResponse(0, true));
+        return Result.Success(created.ToModel(0, true));
     }
 
     private static void AddSteps(Recipe recipe, CreateRecipeCommand command) {

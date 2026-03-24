@@ -1,6 +1,6 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
-using FoodDiary.Contracts.Products;
+using FoodDiary.Application.Products.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Products.Commands.CreateProduct;
@@ -26,4 +26,4 @@ public record CreateProductCommand(
     double FiberPerBase,
     double AlcoholPerBase,
     string Visibility
-) : ICommand<Result<ProductResponse>>;
+) : ICommand<Result<ProductModel>>;

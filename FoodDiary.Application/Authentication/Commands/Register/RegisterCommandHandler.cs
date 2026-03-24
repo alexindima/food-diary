@@ -1,18 +1,18 @@
+using FoodDiary.Application.Authentication.Mappings;
+using FoodDiary.Application.Authentication.Models;
+using FoodDiary.Application.Authentication.Services;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
-using FoodDiary.Application.Authentication.Services;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Interfaces.Services;
 using FoodDiary.Application.Common.Models;
 using FoodDiary.Application.Common.Utilities;
-using FoodDiary.Application.Users.Mappings;
-using FoodDiary.Contracts.Authentication;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects;
 
 namespace FoodDiary.Application.Authentication.Commands.Register;
 
-public class RegisterCommandHandler : ICommandHandler<RegisterCommand, Result<AuthenticationResponse>> {
+public class RegisterCommandHandler : ICommandHandler<RegisterCommand, Result<AuthenticationModel>> {
     private readonly IUserRepository _userRepository;
     private readonly IPasswordHasher _passwordHasher;
     private readonly IEmailSender _emailSender;
@@ -32,7 +32,7 @@ public class RegisterCommandHandler : ICommandHandler<RegisterCommand, Result<Au
         _authenticationTokenService = authenticationTokenService;
     }
 
-    public async Task<Result<AuthenticationResponse>> Handle(RegisterCommand command, CancellationToken cancellationToken) {
+    public async Task<Result<AuthenticationModel>> Handle(RegisterCommand command, CancellationToken cancellationToken) {
         var hashedPassword = _passwordHasher.Hash(command.Password);
         var user = User.Create(command.Email, hashedPassword);
         var normalizedLanguage = LanguageCode.FromPreferred(command.Language).Value;
@@ -61,11 +61,8 @@ public class RegisterCommandHandler : ICommandHandler<RegisterCommand, Result<Au
                 new EmailVerificationMessage(user.Email, user.Id.Value.ToString(), emailToken, user.Language),
                 cancellationToken);
         } catch {
-            // Email failures should not block registration.
         }
 
-        var userResponse = user.ToResponse();
-        var authResponse = new AuthenticationResponse(tokens.AccessToken, tokens.RefreshToken, userResponse);
-        return Result.Success(authResponse);
+        return Result.Success(user.ToAuthenticationModel(tokens));
     }
 }

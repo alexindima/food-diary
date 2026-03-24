@@ -2,7 +2,6 @@ using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
-using FoodDiary.Contracts.Authentication;
 using FoodDiary.Presentation.Api.Features.Auth.Requests;
 using FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
 using Xunit.Abstractions;
@@ -27,7 +26,7 @@ public sealed class AuthAndProductsFlowTests(ApiWebApplicationFactory factory, I
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-        var payload = JsonSerializer.Deserialize<AuthenticationResponse>(body, JsonOptions);
+        var payload = JsonSerializer.Deserialize<AuthPayload>(body, JsonOptions);
         Assert.NotNull(payload);
         Assert.False(string.IsNullOrWhiteSpace(payload.AccessToken));
         Assert.False(string.IsNullOrWhiteSpace(payload.RefreshToken));
@@ -63,7 +62,7 @@ public sealed class AuthAndProductsFlowTests(ApiWebApplicationFactory factory, I
             new RegisterHttpRequest(email, "Password123!", "en"));
         Assert.Equal(HttpStatusCode.OK, registerResponse.StatusCode);
 
-        var authPayload = await registerResponse.Content.ReadFromJsonAsync<AuthenticationResponse>(JsonOptions);
+        var authPayload = await registerResponse.Content.ReadFromJsonAsync<AuthPayload>(JsonOptions);
         Assert.NotNull(authPayload);
         Assert.False(string.IsNullOrWhiteSpace(authPayload.AccessToken));
 
@@ -85,7 +84,7 @@ public sealed class AuthAndProductsFlowTests(ApiWebApplicationFactory factory, I
             new RegisterHttpRequest(email, "Password123!", "en"));
         Assert.Equal(HttpStatusCode.OK, registerResponse.StatusCode);
 
-        var authPayload = await registerResponse.Content.ReadFromJsonAsync<AuthenticationResponse>(JsonOptions);
+        var authPayload = await registerResponse.Content.ReadFromJsonAsync<AuthPayload>(JsonOptions);
         Assert.NotNull(authPayload);
         Assert.False(string.IsNullOrWhiteSpace(authPayload.AccessToken));
 
@@ -94,4 +93,8 @@ public sealed class AuthAndProductsFlowTests(ApiWebApplicationFactory factory, I
 
         Assert.NotEqual(HttpStatusCode.Unauthorized, authorizedResponse.StatusCode);
     }
+
+    private sealed record AuthPayload(string AccessToken, string RefreshToken, AuthUserPayload User);
+
+    private sealed record AuthUserPayload(string Email);
 }

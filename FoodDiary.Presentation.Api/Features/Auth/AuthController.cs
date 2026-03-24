@@ -7,6 +7,7 @@ using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Extensions;
 using FoodDiary.Presentation.Api.Features.Auth.Mappings;
 using FoodDiary.Presentation.Api.Features.Auth.Requests;
+using FoodDiary.Presentation.Api.Features.Users.Mappings;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -26,14 +27,18 @@ public class AuthController(
     public async Task<IActionResult> Register(RegisterHttpRequest request) {
         var command = request.ToCommand();
         var result = await Mediator.Send(command);
-        return result.ToActionResult();
+        return result.IsSuccess
+            ? Ok(result.Value.ToHttpResponse())
+            : result.ToActionResult();
     }
 
     [HttpPost("login")]
     public async Task<IActionResult> Login(LoginHttpRequest request) {
         var command = request.ToCommand();
         var result = await Mediator.Send(command);
-        return result.ToActionResult();
+        return result.IsSuccess
+            ? Ok(result.Value.ToHttpResponse())
+            : result.ToActionResult();
     }
 
     [HttpPost("refresh")]
@@ -48,7 +53,9 @@ public class AuthController(
     public async Task<IActionResult> RestoreAccount(RestoreAccountHttpRequest request) {
         var command = request.ToCommand();
         var result = await Mediator.Send(command);
-        return result.ToActionResult();
+        return result.IsSuccess
+            ? Ok(result.Value.ToHttpResponse())
+            : result.ToActionResult();
     }
 
     [HttpPost("verify-email")]
@@ -77,21 +84,27 @@ public class AuthController(
     public async Task<IActionResult> ConfirmPasswordReset(ConfirmPasswordResetHttpRequest request) {
         var command = request.ToCommand();
         var result = await Mediator.Send(command);
-        return result.ToActionResult();
+        return result.IsSuccess
+            ? Ok(result.Value.ToHttpResponse())
+            : result.ToActionResult();
     }
 
     [HttpPost("telegram/verify")]
     public async Task<IActionResult> TelegramVerify(TelegramAuthHttpRequest request) {
         var command = request.ToCommand();
         var result = await Mediator.Send(command);
-        return result.ToActionResult();
+        return result.IsSuccess
+            ? Ok(result.Value.ToHttpResponse())
+            : result.ToActionResult();
     }
 
     [HttpPost("telegram/login-widget")]
     public async Task<IActionResult> TelegramLoginWidget(TelegramLoginWidgetHttpRequest request) {
         var command = request.ToCommand();
         var result = await Mediator.Send(command);
-        return result.ToActionResult();
+        return result.IsSuccess
+            ? Ok(result.Value.ToHttpResponse())
+            : result.ToActionResult();
     }
 
     [Authorize]
@@ -99,7 +112,9 @@ public class AuthController(
     public async Task<IActionResult> LinkTelegram([FromCurrentUser] UserId userId, TelegramAuthHttpRequest request) {
         var command = request.ToLinkCommand(userId);
         var result = await Mediator.Send(command);
-        return result.ToActionResult();
+        return result.IsSuccess
+            ? Ok(result.Value.ToHttpResponse())
+            : result.ToActionResult();
     }
 
     [HttpPost("telegram/bot/auth")]
@@ -123,7 +138,9 @@ public class AuthController(
 
         var command = request.ToCommand();
         var result = await Mediator.Send(command);
-        return result.ToActionResult();
+        return result.IsSuccess
+            ? Ok(result.Value.ToHttpResponse())
+            : result.ToActionResult();
     }
 
     [Authorize(Roles = RoleNames.Admin)]
@@ -131,7 +148,9 @@ public class AuthController(
     public async Task<IActionResult> AdminSsoStart([FromCurrentUser] UserId userId) {
         var command = new AdminSsoStartCommand(userId);
         var result = await Mediator.Send(command);
-        return result.ToActionResult();
+        return result.IsSuccess
+            ? Ok(result.Value.ToHttpResponse())
+            : result.ToActionResult();
     }
 
     [AllowAnonymous]
@@ -139,6 +158,8 @@ public class AuthController(
     public async Task<IActionResult> AdminSsoExchange(AdminSsoExchangeHttpRequest request) {
         var command = request.ToCommand();
         var result = await Mediator.Send(command);
-        return result.ToActionResult();
+        return result.IsSuccess
+            ? Ok(result.Value.ToHttpResponse())
+            : result.ToActionResult();
     }
 }

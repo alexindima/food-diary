@@ -14,6 +14,8 @@ public class StatisticsController(ISender mediator) : AuthorizedController(media
     [HttpGet]
     public async Task<IActionResult> Get([FromCurrentUser] UserId userId, [FromQuery] GetStatisticsHttpQuery query) {
         var result = await Mediator.Send(query.ToQuery(userId));
-        return result.ToActionResult();
+        return result.IsSuccess
+            ? Ok(result.Value.Select(item => item.ToHttpResponse()).ToList())
+            : result.ToActionResult();
     }
 }

@@ -1,9 +1,9 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
+using FoodDiary.Application.Common.Models;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Recipes.Mappings;
-using FoodDiary.Contracts.Common;
-using FoodDiary.Contracts.Recipes;
+using FoodDiary.Application.Recipes.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Recipes.Queries.GetRecipesWithRecent;
@@ -11,12 +11,12 @@ namespace FoodDiary.Application.Recipes.Queries.GetRecipesWithRecent;
 public sealed class GetRecipesWithRecentQueryHandler(
     IRecipeRepository recipeRepository,
     IRecentItemRepository recentItemRepository)
-    : IQueryHandler<GetRecipesWithRecentQuery, Result<RecipeListWithRecentResponse>> {
-    public async Task<Result<RecipeListWithRecentResponse>> Handle(
+    : IQueryHandler<GetRecipesWithRecentQuery, Result<RecipeListWithRecentModel>> {
+    public async Task<Result<RecipeListWithRecentModel>> Handle(
         GetRecipesWithRecentQuery query,
         CancellationToken cancellationToken) {
         if (query.UserId is null || query.UserId == UserId.Empty) {
-            return Result.Failure<RecipeListWithRecentResponse>(Errors.Authentication.InvalidToken);
+            return Result.Failure<RecipeListWithRecentModel>(Errors.Authentication.InvalidToken);
         }
 
         var userId = query.UserId.Value;
@@ -39,17 +39,20 @@ public sealed class GetRecipesWithRecentQueryHandler(
         }).ToList();
 
         var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
-        var allPaged = new PagedResponse<RecipeResponse>(
-            allRecipes.Select(x => x.Recipe.ToResponse(x.UsageCount, x.IsOwner)).ToList(),
+        var allPaged = new PagedResponse<RecipeModel>(
+            allRecipes.Select(x => x.Recipe.ToModel(x.UsageCount, x.IsOwner)).ToList(),
             pageNumber,
             pageSize,
             totalPages,
             totalItems);
 
-        var recentResponses = Array.Empty<RecipeResponse>();
+        var recentResponses = Array.Empty<RecipeModel>();
         if (string.IsNullOrWhiteSpace(query.Search)) {
             var recents = await recentItemRepository.GetRecentRecipesAsync(userId, recentLimit, cancellationToken);
-            if (recents.Count <= 0) return Result.Success(new RecipeListWithRecentResponse(recentResponses, allPaged));
+            if (recents.Count <= 0) {
+                return Result.Success(new RecipeListWithRecentModel(recentResponses, allPaged));
+            }
+
             var recentIds = recents.Select(x => x.RecipeId).ToList();
             var recipesById = await recipeRepository.GetByIdsWithUsageAsync(
                 recentIds,
@@ -61,11 +64,11 @@ public sealed class GetRecipesWithRecentQueryHandler(
                 .Where(recipesById.ContainsKey)
                 .Select(id => {
                     var item = recipesById[id];
-                    return item.Recipe.ToResponse(item.UsageCount, item.Recipe.UserId == userId);
+                    return item.Recipe.ToModel(item.UsageCount, item.Recipe.UserId == userId);
                 })
                 .ToArray();
         }
 
-        return Result.Success(new RecipeListWithRecentResponse(recentResponses, allPaged));
+        return Result.Success(new RecipeListWithRecentModel(recentResponses, allPaged));
     }
 }

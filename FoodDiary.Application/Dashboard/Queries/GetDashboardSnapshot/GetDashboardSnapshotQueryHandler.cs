@@ -4,15 +4,13 @@ using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Consumptions.Queries.GetConsumptions;
 using FoodDiary.Application.DailyAdvices.Queries.GetDailyAdvice;
+using FoodDiary.Application.Dashboard.Models;
 using FoodDiary.Application.Dashboard.Services;
 using FoodDiary.Application.Hydration.Queries.GetHydrationDailyTotal;
 using FoodDiary.Application.Statistics.Queries.GetStatistics;
+using FoodDiary.Application.Users.Models;
 using FoodDiary.Application.WaistEntries.Queries.GetWaistSummaries;
 using FoodDiary.Application.WeightEntries.Queries.GetWeightSummaries;
-using FoodDiary.Contracts.Dashboard;
-using FoodDiary.Contracts.WaistEntries;
-using FoodDiary.Contracts.WeightEntries;
-using FoodDiary.Contracts.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 using MediatR;
 
@@ -23,10 +21,10 @@ public class GetDashboardSnapshotQueryHandler(
     IUserRepository userRepository,
     IWeightEntryRepository weightEntryRepository,
     IWaistEntryRepository waistEntryRepository)
-    : IQueryHandler<GetDashboardSnapshotQuery, Result<DashboardSnapshotResponse>> {
-    public async Task<Result<DashboardSnapshotResponse>> Handle(GetDashboardSnapshotQuery query, CancellationToken cancellationToken) {
+    : IQueryHandler<GetDashboardSnapshotQuery, Result<DashboardSnapshotModel>> {
+    public async Task<Result<DashboardSnapshotModel>> Handle(GetDashboardSnapshotQuery query, CancellationToken cancellationToken) {
         if (query.UserId is null || query.UserId == UserId.Empty) {
-            return Result.Failure<DashboardSnapshotResponse>(Errors.Authentication.InvalidToken);
+            return Result.Failure<DashboardSnapshotModel>(Errors.Authentication.InvalidToken);
         }
 
         var date = query.Date;
@@ -43,7 +41,7 @@ public class GetDashboardSnapshotQueryHandler(
             dayEnd,
             1), cancellationToken);
         if (statsResult.IsFailure) {
-            return Result.Failure<DashboardSnapshotResponse>(statsResult.Error);
+            return Result.Failure<DashboardSnapshotModel>(statsResult.Error);
         }
 
         var weeklyStatsResult = await sender.Send(new GetStatisticsQuery(
@@ -52,7 +50,7 @@ public class GetDashboardSnapshotQueryHandler(
             dayEnd,
             1), cancellationToken);
         if (weeklyStatsResult.IsFailure) {
-            return Result.Failure<DashboardSnapshotResponse>(weeklyStatsResult.Error);
+            return Result.Failure<DashboardSnapshotModel>(weeklyStatsResult.Error);
         }
 
         var mealsResult = await sender.Send(new GetConsumptionsQuery(
@@ -62,7 +60,7 @@ public class GetDashboardSnapshotQueryHandler(
             dayStart,
             dayEnd), cancellationToken);
         if (mealsResult.IsFailure) {
-            return Result.Failure<DashboardSnapshotResponse>(mealsResult.Error);
+            return Result.Failure<DashboardSnapshotModel>(mealsResult.Error);
         }
 
         var user = await userRepository.GetByIdAsync(userId);
@@ -81,11 +79,11 @@ public class GetDashboardSnapshotQueryHandler(
             descending: true,
             cancellationToken: cancellationToken);
 
-        var statistics = DashboardMapping.ToStatisticsDto(statsResult.Value.FirstOrDefault(), user);
+        var statistics = DashboardMapping.ToStatisticsModel(statsResult.Value.FirstOrDefault(), user);
         var weeklyCalories = DashboardMapping.ToWeeklyCalories(weeklyStatsResult.Value);
-        var weight = DashboardMapping.ToWeightDto(weightEntries, user?.DesiredWeight);
-        var waist = DashboardMapping.ToWaistDto(waistEntries, user?.DesiredWaist);
-        var meals = new DashboardMealsDto(
+        var weight = DashboardMapping.ToWeightModel(weightEntries, user?.DesiredWeight);
+        var waist = DashboardMapping.ToWaistModel(waistEntries, user?.DesiredWaist);
+        var meals = new DashboardMealsModel(
             mealsResult.Value.Data,
             mealsResult.Value.TotalItems);
 
@@ -106,16 +104,16 @@ public class GetDashboardSnapshotQueryHandler(
             cancellationToken);
 
         var dailyGoal = user?.DailyCalorieTarget ?? 0;
-        DashboardLayoutSettings? layout = null;
+        DashboardLayoutModel? layout = null;
         if (!string.IsNullOrWhiteSpace(user?.DashboardLayoutJson)) {
             try {
-                layout = JsonSerializer.Deserialize<DashboardLayoutSettings>(user.DashboardLayoutJson!);
+                layout = JsonSerializer.Deserialize<DashboardLayoutModel>(user.DashboardLayoutJson!);
             } catch (JsonException) {
                 layout = null;
             }
         }
 
-        var response = new DashboardSnapshotResponse(
+        var response = new DashboardSnapshotModel(
             date,
             dailyGoal,
             statistics,
@@ -125,8 +123,8 @@ public class GetDashboardSnapshotQueryHandler(
             meals,
             hydrationResult.IsSuccess ? hydrationResult.Value : null,
             adviceResult.IsSuccess ? adviceResult.Value : null,
-            weightTrendResult.IsSuccess ? weightTrendResult.Value : Array.Empty<WeightEntrySummaryResponse>(),
-            waistTrendResult.IsSuccess ? waistTrendResult.Value : Array.Empty<WaistEntrySummaryResponse>(),
+            weightTrendResult.IsSuccess ? weightTrendResult.Value : Array.Empty<FoodDiary.Application.WeightEntries.Models.WeightEntrySummaryModel>(),
+            waistTrendResult.IsSuccess ? waistTrendResult.Value : Array.Empty<FoodDiary.Application.WaistEntries.Models.WaistEntrySummaryModel>(),
             layout);
 
         return Result.Success(response);

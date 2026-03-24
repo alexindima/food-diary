@@ -1,4 +1,4 @@
-using FoodDiary.Contracts.Cycles;
+using FoodDiary.Application.Cycles.Models;
 using FoodDiary.Domain.Entities.Tracking;
 
 namespace FoodDiary.Application.Cycles.Services;
@@ -6,14 +6,14 @@ namespace FoodDiary.Application.Cycles.Services;
 public static class CyclePredictionService {
     private const int DefaultPmsWindow = 5;
 
-    public static CyclePredictionsResponse CalculatePredictions(Cycle cycle) {
+    public static CyclePredictionsModel CalculatePredictions(Cycle cycle) {
         ArgumentNullException.ThrowIfNull(cycle);
 
         var nextPeriodStart = NormalizeDate(cycle.StartDate.AddDays(cycle.AverageLength));
         var ovulation = NormalizeDate(nextPeriodStart.AddDays(-cycle.LutealLength));
         var pmsStart = NormalizeDate(nextPeriodStart.AddDays(-DefaultPmsWindow));
 
-        return new CyclePredictionsResponse(
+        return new CyclePredictionsModel(
             nextPeriodStart,
             ovulation,
             pmsStart);

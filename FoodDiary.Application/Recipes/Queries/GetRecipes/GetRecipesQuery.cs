@@ -1,7 +1,7 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
-using FoodDiary.Contracts.Common;
-using FoodDiary.Contracts.Recipes;
+using FoodDiary.Application.Common.Models;
+using FoodDiary.Application.Recipes.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Recipes.Queries.GetRecipes;
@@ -11,4 +11,4 @@ public record GetRecipesQuery(
     int Page,
     int Limit,
     string? Search,
-    bool IncludePublic) : IQuery<Result<PagedResponse<RecipeResponse>>>;
+    bool IncludePublic) : IQuery<Result<PagedResponse<RecipeModel>>>;

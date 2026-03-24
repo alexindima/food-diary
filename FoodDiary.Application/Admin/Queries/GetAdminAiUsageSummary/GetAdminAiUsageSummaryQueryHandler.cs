@@ -2,20 +2,19 @@ using FoodDiary.Application.Admin.Models;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
-using FoodDiary.Contracts.Admin;
 
 namespace FoodDiary.Application.Admin.Queries.GetAdminAiUsageSummary;
 
 public sealed class GetAdminAiUsageSummaryQueryHandler(IAiUsageRepository aiUsageRepository)
-    : IQueryHandler<GetAdminAiUsageSummaryQuery, Result<AdminAiUsageSummaryResponse>> {
-    public async Task<Result<AdminAiUsageSummaryResponse>> Handle(
+    : IQueryHandler<GetAdminAiUsageSummaryQuery, Result<AdminAiUsageSummaryModel>> {
+    public async Task<Result<AdminAiUsageSummaryModel>> Handle(
         GetAdminAiUsageSummaryQuery query,
         CancellationToken cancellationToken) {
         var today = DateOnly.FromDateTime(DateTime.UtcNow);
         var from = query.From ?? today.AddDays(-29);
         var to = query.To ?? today.AddDays(1);
         if (from > to) {
-            return Result.Failure<AdminAiUsageSummaryResponse>(
+            return Result.Failure<AdminAiUsageSummaryModel>(
                 Errors.Validation.Invalid("from/to", "'From' date must be less than or equal to 'To' date."));
         }
 
@@ -24,7 +23,7 @@ public sealed class GetAdminAiUsageSummaryQueryHandler(IAiUsageRepository aiUsag
 
         var summary = await aiUsageRepository.GetSummaryAsync(fromUtc, toUtc, cancellationToken);
 
-        var response = new AdminAiUsageSummaryResponse(
+        var response = new AdminAiUsageSummaryModel(
             summary.TotalTokens,
             summary.InputTokens,
             summary.OutputTokens,
@@ -36,12 +35,12 @@ public sealed class GetAdminAiUsageSummaryQueryHandler(IAiUsageRepository aiUsag
         return Result.Success(response);
     }
 
-    private static AdminAiUsageDailyResponse MapDaily(AiUsageDailySummary daily)
+    private static AdminAiUsageDailyModel MapDaily(AiUsageDailySummary daily)
         => new(daily.Date, daily.TotalTokens, daily.InputTokens, daily.OutputTokens);
 
-    private static AdminAiUsageBreakdownResponse MapBreakdown(AiUsageBreakdown breakdown)
+    private static AdminAiUsageBreakdownModel MapBreakdown(AiUsageBreakdown breakdown)
         => new(breakdown.Key, breakdown.TotalTokens, breakdown.InputTokens, breakdown.OutputTokens);
 
-    private static AdminAiUsageUserResponse MapUser(AiUsageUserSummary user)
+    private static AdminAiUsageUserModel MapUser(AiUsageUserSummary user)
         => new(user.UserId.Value, user.Email, user.TotalTokens, user.InputTokens, user.OutputTokens);
 }

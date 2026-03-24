@@ -1,14 +1,14 @@
+using FoodDiary.Application.Authentication.Abstractions;
+using FoodDiary.Application.Authentication.Mappings;
+using FoodDiary.Application.Authentication.Models;
+using FoodDiary.Application.Authentication.Services;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
-using FoodDiary.Application.Authentication.Services;
-using FoodDiary.Application.Authentication.Abstractions;
 using FoodDiary.Application.Common.Interfaces.Persistence;
-using FoodDiary.Application.Users.Mappings;
-using FoodDiary.Contracts.Authentication;
 
 namespace FoodDiary.Application.Authentication.Commands.TelegramVerify;
 
-public sealed class TelegramVerifyCommandHandler : ICommandHandler<TelegramVerifyCommand, Result<AuthenticationResponse>> {
+public sealed class TelegramVerifyCommandHandler : ICommandHandler<TelegramVerifyCommand, Result<AuthenticationModel>> {
     private readonly IUserRepository _userRepository;
     private readonly ITelegramAuthValidator _telegramAuthValidator;
     private readonly IAuthenticationTokenService _authenticationTokenService;
@@ -22,30 +22,27 @@ public sealed class TelegramVerifyCommandHandler : ICommandHandler<TelegramVerif
         _authenticationTokenService = authenticationTokenService;
     }
 
-    public async Task<Result<AuthenticationResponse>> Handle(TelegramVerifyCommand command, CancellationToken cancellationToken) {
+    public async Task<Result<AuthenticationModel>> Handle(TelegramVerifyCommand command, CancellationToken cancellationToken) {
         var initDataResult = _telegramAuthValidator.ValidateInitData(command.InitData);
         if (!initDataResult.IsSuccess) {
-            return Result.Failure<AuthenticationResponse>(initDataResult.Error);
+            return Result.Failure<AuthenticationModel>(initDataResult.Error);
         }
 
         var initData = initDataResult.Value;
         var user = await _userRepository.GetByTelegramUserIdAsync(initData.UserId);
         if (user == null) {
-            return Result.Failure<AuthenticationResponse>(Errors.Authentication.TelegramNotLinked);
+            return Result.Failure<AuthenticationModel>(Errors.Authentication.TelegramNotLinked);
         }
 
         if (user.DeletedAt is not null) {
-            return Result.Failure<AuthenticationResponse>(Errors.Authentication.AccountDeleted);
+            return Result.Failure<AuthenticationModel>(Errors.Authentication.AccountDeleted);
         }
 
         if (!user.IsActive) {
-            return Result.Failure<AuthenticationResponse>(Errors.Authentication.InvalidCredentials);
+            return Result.Failure<AuthenticationModel>(Errors.Authentication.InvalidCredentials);
         }
 
         var tokens = await _authenticationTokenService.IssueAndStoreAsync(user, cancellationToken);
-
-        var userResponse = user.ToResponse();
-        var authResponse = new AuthenticationResponse(tokens.AccessToken, tokens.RefreshToken, userResponse);
-        return Result.Success(authResponse);
+        return Result.Success(user.ToAuthenticationModel(tokens));
     }
 }

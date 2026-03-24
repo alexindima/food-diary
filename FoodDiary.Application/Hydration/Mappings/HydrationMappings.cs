@@ -1,10 +1,10 @@
-using FoodDiary.Contracts.Hydration;
+using FoodDiary.Application.Hydration.Models;
 using FoodDiary.Domain.Entities.Tracking;
 
 namespace FoodDiary.Application.Hydration.Mappings;
 
 public static class HydrationMappings {
-    public static HydrationEntryResponse ToResponse(this HydrationEntry entry) =>
+    public static HydrationEntryModel ToModel(this HydrationEntry entry) =>
         new(
             entry.Id.Value,
             entry.Timestamp,

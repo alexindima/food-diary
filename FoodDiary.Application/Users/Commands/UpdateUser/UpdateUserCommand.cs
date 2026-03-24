@@ -1,6 +1,6 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
-using FoodDiary.Contracts.Users;
+using FoodDiary.Application.Users.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Users.Commands.UpdateUser;
@@ -22,4 +22,4 @@ public record UpdateUserCommand(
     Guid? ProfileImageAssetId,
     string? DashboardLayoutJson,
     bool? IsActive
-) : ICommand<Result<UserResponse>>;
+) : ICommand<Result<UserModel>>;

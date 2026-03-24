@@ -3,7 +3,7 @@ using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Interfaces.Services;
 using FoodDiary.Application.Products.Mappings;
-using FoodDiary.Contracts.Products;
+using FoodDiary.Application.Products.Models;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -13,11 +13,11 @@ public class UpdateProductCommandHandler(
     IProductRepository productRepository,
     IImageAssetRepository imageAssetRepository,
     IImageStorageService imageStorageService)
-    : ICommandHandler<UpdateProductCommand, Result<ProductResponse>> {
-    public async Task<Result<ProductResponse>>
+    : ICommandHandler<UpdateProductCommand, Result<ProductModel>> {
+    public async Task<Result<ProductModel>>
         Handle(UpdateProductCommand command, CancellationToken cancellationToken) {
         if (command.UserId is null || command.UserId == UserId.Empty) {
-            return Result.Failure<ProductResponse>(Errors.Authentication.InvalidToken);
+            return Result.Failure<ProductModel>(Errors.Authentication.InvalidToken);
         }
 
         var product = await productRepository.GetByIdAsync(
@@ -26,7 +26,7 @@ public class UpdateProductCommandHandler(
             includePublic: false,
             cancellationToken: cancellationToken);
         if (product is null) {
-            return Result.Failure<ProductResponse>(Errors.Product.NotAccessible(command.ProductId.Value));
+            return Result.Failure<ProductModel>(Errors.Product.NotAccessible(command.ProductId.Value));
         }
 
         var modifiedOnBefore = product.ModifiedOnUtc;
@@ -34,7 +34,7 @@ public class UpdateProductCommandHandler(
         MeasurementUnit? newUnit = null;
         if (!string.IsNullOrWhiteSpace(command.BaseUnit)) {
             if (!Enum.TryParse<MeasurementUnit>(command.BaseUnit, true, out var parsedUnit)) {
-                return Result.Failure<ProductResponse>(
+                return Result.Failure<ProductModel>(
                     Errors.Validation.Invalid(nameof(command.BaseUnit), "Unknown measurement unit value."));
             }
 
@@ -44,7 +44,7 @@ public class UpdateProductCommandHandler(
         Visibility? newVisibility = null;
         if (!string.IsNullOrWhiteSpace(command.Visibility)) {
             if (!Enum.TryParse<Visibility>(command.Visibility, true, out var parsedVisibility)) {
-                return Result.Failure<ProductResponse>(
+                return Result.Failure<ProductModel>(
                     Errors.Validation.Invalid(nameof(command.Visibility), "Unknown visibility value."));
             }
 
@@ -133,7 +133,7 @@ public class UpdateProductCommandHandler(
         }
 
         var usageCount = product.MealItems.Count + product.RecipeIngredients.Count;
-        return Result.Success(product.ToResponse(usageCount, true));
+        return Result.Success(product.ToModel(usageCount, true));
     }
 
     private static async Task TryDeleteAssetAsync(

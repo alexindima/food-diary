@@ -8,7 +8,6 @@
     <Project Path="tests/FoodDiary.Web.Api.IntegrationTests/FoodDiary.Web.Api.IntegrationTests.csproj" />
   </Folder>
   <Project Path="FoodDiary.Application/FoodDiary.Application.csproj" />
-  <Project Path="FoodDiary.Contracts/FoodDiary.Contracts.csproj" />
   <Project Path="FoodDiary.Domain/FoodDiary.Domain.csproj" />
   <Project Path="FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj" />
   <Project Path="FoodDiary.JobManager/FoodDiary.JobManager.csproj" />

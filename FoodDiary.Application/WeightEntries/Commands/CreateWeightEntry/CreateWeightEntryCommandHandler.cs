@@ -2,19 +2,19 @@ using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.WeightEntries.Mappings;
-using FoodDiary.Contracts.WeightEntries;
+using FoodDiary.Application.WeightEntries.Models;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.WeightEntries.Commands.CreateWeightEntry;
 
 public class CreateWeightEntryCommandHandler(IWeightEntryRepository weightEntryRepository)
-    : ICommandHandler<CreateWeightEntryCommand, Result<WeightEntryResponse>> {
-    public async Task<Result<WeightEntryResponse>> Handle(
+    : ICommandHandler<CreateWeightEntryCommand, Result<WeightEntryModel>> {
+    public async Task<Result<WeightEntryModel>> Handle(
         CreateWeightEntryCommand command,
         CancellationToken cancellationToken) {
         if (command.UserId is null || command.UserId.Value == UserId.Empty) {
-            return Result.Failure<WeightEntryResponse>(Errors.Authentication.InvalidToken);
+            return Result.Failure<WeightEntryModel>(Errors.Authentication.InvalidToken);
         }
 
         var normalizedDate = NormalizeUtcDate(command.Date);
@@ -23,14 +23,14 @@ public class CreateWeightEntryCommandHandler(IWeightEntryRepository weightEntryR
             normalizedDate,
             cancellationToken);
         if (existing is not null) {
-            return Result.Failure<WeightEntryResponse>(
+            return Result.Failure<WeightEntryModel>(
                 Errors.WeightEntry.AlreadyExists(normalizedDate));
         }
 
         var entry = WeightEntry.Create(command.UserId.Value, normalizedDate, command.Weight);
         entry = await weightEntryRepository.AddAsync(entry, cancellationToken);
 
-        return Result.Success(entry.ToResponse());
+        return Result.Success(entry.ToModel());
     }
 
     private static DateTime NormalizeUtcDate(DateTime value) {

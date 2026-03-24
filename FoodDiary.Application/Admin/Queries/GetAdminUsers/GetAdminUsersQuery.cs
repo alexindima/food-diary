@@ -1,7 +1,7 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
-using FoodDiary.Contracts.Admin;
-using FoodDiary.Contracts.Common;
+using FoodDiary.Application.Admin.Models;
+using FoodDiary.Application.Common.Models;
 
 namespace FoodDiary.Application.Admin.Queries.GetAdminUsers;
 
@@ -10,4 +10,4 @@ public sealed record GetAdminUsersQuery(
     int Limit,
     string? Search,
     bool IncludeDeleted)
-    : IQuery<Result<PagedResponse<AdminUserResponse>>>;
+    : IQuery<Result<PagedResponse<AdminUserModel>>>;

@@ -1,6 +1,6 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
-using FoodDiary.Contracts.Cycles;
+using FoodDiary.Application.Cycles.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Cycles.Commands.CreateCycle;
@@ -11,4 +11,4 @@ public record CreateCycleCommand(
     int? AverageLength,
     int? LutealLength,
     string? Notes
-) : ICommand<Result<CycleResponse>>;
+) : ICommand<Result<CycleModel>>;

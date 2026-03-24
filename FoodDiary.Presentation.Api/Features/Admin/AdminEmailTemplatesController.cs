@@ -17,7 +17,9 @@ public sealed class AdminEmailTemplatesController(ISender mediator) : BaseApiCon
     [HttpGet]
     public async Task<IActionResult> GetAll() {
         var result = await Mediator.Send(new GetAdminEmailTemplatesQuery());
-        return result.ToActionResult();
+        return result.IsSuccess
+            ? Ok(result.Value.Select(item => item.ToHttpResponse()).ToList())
+            : result.ToActionResult();
     }
 
     [HttpPut("{key}/{locale}")]
@@ -27,6 +29,8 @@ public sealed class AdminEmailTemplatesController(ISender mediator) : BaseApiCon
         [FromBody] AdminEmailTemplateUpsertHttpRequest request) {
         var command = request.ToCommand(key, locale);
         var result = await Mediator.Send(command);
-        return result.ToActionResult();
+        return result.IsSuccess
+            ? Ok(result.Value.ToHttpResponse())
+            : result.ToActionResult();
     }
 }

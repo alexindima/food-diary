@@ -3,8 +3,8 @@ using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Interfaces.Services;
 using FoodDiary.Application.Consumptions.Mappings;
+using FoodDiary.Application.Consumptions.Models;
 using FoodDiary.Application.Consumptions.Services;
-using FoodDiary.Contracts.Consumptions;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -17,21 +17,21 @@ public class CreateConsumptionCommandHandler(
     IRecipeRepository recipeRepository,
     IRecentItemRepository recentItemRepository,
     IDateTimeProvider dateTimeProvider)
-    : ICommandHandler<CreateConsumptionCommand, Result<ConsumptionResponse>> {
-    public async Task<Result<ConsumptionResponse>> Handle(CreateConsumptionCommand command, CancellationToken cancellationToken) {
+    : ICommandHandler<CreateConsumptionCommand, Result<ConsumptionModel>> {
+    public async Task<Result<ConsumptionModel>> Handle(CreateConsumptionCommand command, CancellationToken cancellationToken) {
         if (command.UserId is null || command.UserId == UserId.Empty) {
-            return Result.Failure<ConsumptionResponse>(Errors.Authentication.InvalidToken);
+            return Result.Failure<ConsumptionModel>(Errors.Authentication.InvalidToken);
         }
 
         var hasManualItems = command.Items is { Count: > 0 };
         var hasAiItems = command.AiSessions is { Count: > 0 } && command.AiSessions.Any(session => session.Items.Count > 0);
         if (!hasManualItems && !hasAiItems) {
-            return Result.Failure<ConsumptionResponse>(Errors.Validation.Required("Items"));
+            return Result.Failure<ConsumptionModel>(Errors.Validation.Required("Items"));
         }
 
         var mealTypeResult = ParseMealType(command.MealType);
         if (mealTypeResult.IsFailure) {
-            return Result.Failure<ConsumptionResponse>(mealTypeResult.Error);
+            return Result.Failure<ConsumptionModel>(mealTypeResult.Error);
         }
 
         var meal = Meal.Create(command.UserId.Value, command.Date, mealTypeResult.Value, command.Comment, command.ImageUrl,
@@ -42,7 +42,7 @@ public class CreateConsumptionCommandHandler(
             command.PostMealSatietyLevel);
 
         if (satietyValidation.IsFailure) {
-            return Result.Failure<ConsumptionResponse>(satietyValidation.Error);
+            return Result.Failure<ConsumptionModel>(satietyValidation.Error);
         }
 
         meal.UpdateSatietyLevels(command.PreMealSatietyLevel, command.PostMealSatietyLevel);
@@ -50,7 +50,7 @@ public class CreateConsumptionCommandHandler(
         foreach (var item in command.Items) {
             var validation = ConsumptionItemValidator.Validate(item);
             if (validation.IsFailure) {
-                return Result.Failure<ConsumptionResponse>(validation.Error);
+                return Result.Failure<ConsumptionModel>(validation.Error);
             }
 
             if (item.ProductId.HasValue) {
@@ -85,7 +85,7 @@ public class CreateConsumptionCommandHandler(
         if (command.IsNutritionAutoCalculated) {
             var nutritionResult = await CalculateNutritionAsync(meal, command.UserId.Value, cancellationToken);
             if (nutritionResult.IsFailure) {
-                return Result.Failure<ConsumptionResponse>(nutritionResult.Error);
+                return Result.Failure<ConsumptionModel>(nutritionResult.Error);
             }
 
             meal.ApplyNutrition(
@@ -106,7 +106,7 @@ public class CreateConsumptionCommandHandler(
                 command.ManualAlcohol);
 
             if (manualNutritionResult.IsFailure) {
-                return Result.Failure<ConsumptionResponse>(manualNutritionResult.Error);
+                return Result.Failure<ConsumptionModel>(manualNutritionResult.Error);
             }
 
             var manual = manualNutritionResult.Value;
@@ -140,8 +140,8 @@ public class CreateConsumptionCommandHandler(
             cancellationToken: cancellationToken);
 
         return created is null
-            ? Result.Failure<ConsumptionResponse>(Errors.Consumption.InvalidData("Failed to load created consumption."))
-            : Result.Success(created.ToResponse());
+            ? Result.Failure<ConsumptionModel>(Errors.Consumption.InvalidData("Failed to load created consumption."))
+            : Result.Success(created.ToModel());
     }
 
     private static Result<MealType?> ParseMealType(string? mealType) {
