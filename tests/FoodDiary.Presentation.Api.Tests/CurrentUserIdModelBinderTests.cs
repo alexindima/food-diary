@@ -37,6 +37,21 @@ public sealed class CurrentUserIdModelBinderTests {
         Assert.Contains(bindingContext.ModelState, pair => pair.Key == bindingContext.ModelName);
     }
 
+    [Fact]
+    public async Task BindModelAsync_WithSubClaim_BindsGuid() {
+        var binder = new CurrentUserIdModelBinder();
+        var userGuid = Guid.NewGuid();
+        var httpContext = new DefaultHttpContext {
+            User = new ClaimsPrincipal(new ClaimsIdentity([new Claim("sub", userGuid.ToString())], "test")),
+        };
+        var bindingContext = CreateBindingContext(httpContext);
+
+        await binder.BindModelAsync(bindingContext);
+
+        Assert.True(bindingContext.Result.IsModelSet);
+        Assert.Equal(userGuid, Assert.IsType<Guid>(bindingContext.Result.Model));
+    }
+
     private static DefaultModelBindingContext CreateBindingContext(HttpContext httpContext, Type? modelType = null) {
         var metadataProvider = new EmptyModelMetadataProvider();
         var effectiveModelType = modelType ?? typeof(Guid);

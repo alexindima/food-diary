@@ -3,8 +3,11 @@ using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Extensions;
 using FoodDiary.Presentation.Api.Features.Ai.Mappings;
 using FoodDiary.Presentation.Api.Features.Ai.Requests;
+using FoodDiary.Presentation.Api.Features.Ai.Responses;
+using FoodDiary.Presentation.Api.Responses;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FoodDiary.Presentation.Api.Features.Ai;
@@ -14,6 +17,13 @@ namespace FoodDiary.Presentation.Api.Features.Ai;
 [Authorize(Roles = PresentationRoleNames.Premium)]
 public sealed class AiFoodController(ISender mediator) : AuthorizedController(mediator) {
     [HttpPost("vision")]
+    [ProducesResponseType<FoodVisionHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status429TooManyRequests)]
+    [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status502BadGateway)]
+    [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> AnalyzeFood([FromCurrentUser] Guid userId, [FromBody] FoodVisionHttpRequest request) {
         var command = request.ToCommand(userId);
         var result = await Mediator.Send(command);
@@ -21,6 +31,13 @@ public sealed class AiFoodController(ISender mediator) : AuthorizedController(me
     }
 
     [HttpPost("nutrition")]
+    [ProducesResponseType<FoodNutritionHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status429TooManyRequests)]
+    [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status502BadGateway)]
+    [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> CalculateNutrition([FromCurrentUser] Guid userId, [FromBody] FoodNutritionHttpRequest request) {
         var command = request.ToCommand(userId);
         var result = await Mediator.Send(command);

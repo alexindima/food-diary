@@ -8,6 +8,7 @@ using FoodDiary.Application.Users.Models;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
+using System.Text.Json;
 
 namespace FoodDiary.Application.Users.Commands.UpdateUser;
 
@@ -48,6 +49,10 @@ public class UpdateUserCommandHandler(
             newAssetId = new ImageAssetId(command.ProfileImageAssetId.Value);
         }
 
+        var dashboardLayoutJson = command.DashboardLayout is null
+            ? null
+            : JsonSerializer.Serialize(command.DashboardLayout);
+
         user.UpdateProfile(
             username: Normalize(command.Username),
             firstName: Normalize(command.FirstName),
@@ -62,7 +67,7 @@ public class UpdateUserCommandHandler(
             language: languageResult.Value,
             profileImage: Normalize(command.ProfileImage),
             profileImageAssetId: newAssetId,
-            dashboardLayoutJson: command.DashboardLayoutJson
+            dashboardLayoutJson: dashboardLayoutJson
         );
 
         if (command.IsActive.HasValue) {

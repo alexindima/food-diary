@@ -1,4 +1,4 @@
-using System.Security.Claims;
+using FoodDiary.Presentation.Api.Extensions;
 using Microsoft.AspNetCore.SignalR;
 
 namespace FoodDiary.Presentation.Api.Services;
@@ -10,14 +10,6 @@ public sealed class UserIdProvider : IUserIdProvider {
             return null;
         }
 
-        var rawUserId = user.FindFirstValue(ClaimTypes.NameIdentifier)
-                        ?? user.FindFirstValue("nameid")
-                        ?? user.FindFirstValue("sub");
-
-        if (!Guid.TryParse(rawUserId, out var userGuid) || userGuid == Guid.Empty) {
-            return null;
-        }
-
-        return userGuid.ToString();
+        return user.GetUserGuid()?.ToString();
     }
 }

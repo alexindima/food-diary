@@ -1,6 +1,7 @@
 using FoodDiary.Application.Admin.Models;
 using FoodDiary.Application.Common.Models;
 using FoodDiary.Presentation.Api.Features.Admin.Responses;
+using FoodDiary.Presentation.Api.Responses;
 
 namespace FoodDiary.Presentation.Api.Features.Admin.Mappings;
 
@@ -60,8 +61,8 @@ public static class AdminHttpResponseMappings {
         );
     }
 
-    public static PagedResponse<AdminUserHttpResponse> ToHttpResponse(this PagedResponse<AdminUserModel> response) {
-        return new PagedResponse<AdminUserHttpResponse>(
+    public static PagedHttpResponse<AdminUserHttpResponse> ToHttpResponse(this PagedResponse<AdminUserModel> response) {
+        return new PagedHttpResponse<AdminUserHttpResponse>(
             response.Data.Select(ToHttpResponse).ToList(),
             response.Page,
             response.Limit,

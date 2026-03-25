@@ -1,6 +1,7 @@
 using FoodDiary.Application.Common.Models;
 using FoodDiary.Application.Consumptions.Models;
 using FoodDiary.Presentation.Api.Features.Consumptions.Responses;
+using FoodDiary.Presentation.Api.Responses;
 
 namespace FoodDiary.Presentation.Api.Features.Consumptions.Mappings;
 
@@ -33,8 +34,8 @@ public static class ConsumptionHttpResponseMappings {
         );
     }
 
-    public static PagedResponse<ConsumptionHttpResponse> ToHttpResponse(this PagedResponse<ConsumptionModel> response) {
-        return new PagedResponse<ConsumptionHttpResponse>(
+    public static PagedHttpResponse<ConsumptionHttpResponse> ToHttpResponse(this PagedResponse<ConsumptionModel> response) {
+        return new PagedHttpResponse<ConsumptionHttpResponse>(
             response.Data.Select(ToHttpResponse).ToList(),
             response.Page,
             response.Limit,

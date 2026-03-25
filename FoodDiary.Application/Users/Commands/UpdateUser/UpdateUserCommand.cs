@@ -19,6 +19,6 @@ public record UpdateUserCommand(
     string? Language,
     string? ProfileImage,
     Guid? ProfileImageAssetId,
-    string? DashboardLayoutJson,
+    DashboardLayoutModel? DashboardLayout,
     bool? IsActive
 ) : ICommand<Result<UserModel>>;

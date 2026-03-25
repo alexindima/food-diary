@@ -1,6 +1,7 @@
 using FoodDiary.Application.Common.Abstractions.Result;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using FoodDiary.Presentation.Api.Responses;
 
 namespace FoodDiary.Presentation.Api.Extensions;
 
@@ -33,6 +34,9 @@ public static class ResultExtensions {
             ? new NoContentResult()
             : ErrorResult(result.Error);
     }
+
+    public static IActionResult ToErrorActionResult(this Error error, int statusCode) =>
+        ErrorResult(error, statusCode);
 
     private static IActionResult ErrorResult(Error error) {
         var code = error.Code;
@@ -67,10 +71,7 @@ public static class ResultExtensions {
     }
 
     private static IActionResult ErrorResult(Error error, int statusCode) =>
-        new ObjectResult(new {
-            error = error.Code,
-            message = error.Message,
-        }) {
+        new ObjectResult(new ApiErrorHttpResponse(error.Code, error.Message)) {
             StatusCode = statusCode,
         };
 }

@@ -8,6 +8,6 @@ public sealed class EmailVerificationNotifier(IHubContext<EmailVerificationHub> 
     : IEmailVerificationNotifier {
     public Task NotifyEmailVerifiedAsync(Guid userId, CancellationToken cancellationToken = default) {
         return hubContext.Clients.User(userId.ToString())
-            .SendAsync("EmailVerified", cancellationToken);
+            .SendAsync(EmailVerificationHubMethods.EmailVerified, cancellationToken);
     }
 }

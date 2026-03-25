@@ -1,4 +1,3 @@
-using System.Text.Json;
 using FoodDiary.Application.Users.Commands.ChangePassword;
 using FoodDiary.Application.Users.Commands.DeleteUser;
 using FoodDiary.Application.Users.Commands.UpdateDesiredWaist;
@@ -7,6 +6,8 @@ using FoodDiary.Application.Users.Commands.UpdateUser;
 using FoodDiary.Application.Users.Queries.GetDesiredWaist;
 using FoodDiary.Application.Users.Queries.GetDesiredWeight;
 using FoodDiary.Application.Users.Queries.GetUserById;
+using FoodDiary.Application.Users.Models;
+using FoodDiary.Presentation.Api.Features.Users.Models;
 using FoodDiary.Presentation.Api.Features.Users.Requests;
 
 namespace FoodDiary.Presentation.Api.Features.Users.Mappings;
@@ -27,10 +28,6 @@ public static class UserHttpMappings {
     public static DeleteUserCommand ToDeleteCommand(this Guid userId) => new(userId);
 
     public static UpdateUserCommand ToCommand(this UpdateUserHttpRequest request, Guid? userId) {
-        var dashboardLayoutJson = request.DashboardLayout is null
-            ? null
-            : JsonSerializer.Serialize(request.DashboardLayout);
-
         return new UpdateUserCommand(
             userId,
             request.Username,
@@ -46,7 +43,7 @@ public static class UserHttpMappings {
             request.Language,
             request.ProfileImage,
             request.ProfileImageAssetId,
-            dashboardLayoutJson,
+            request.DashboardLayout?.ToModel(),
             request.IsActive
         );
     }
@@ -58,4 +55,7 @@ public static class UserHttpMappings {
             request.NewPassword
         );
     }
+
+    private static DashboardLayoutModel ToModel(this DashboardLayoutHttpModel model) =>
+        new(model.Web, model.Mobile);
 }

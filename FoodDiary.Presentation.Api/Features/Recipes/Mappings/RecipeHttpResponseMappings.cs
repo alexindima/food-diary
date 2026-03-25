@@ -1,6 +1,7 @@
 using FoodDiary.Application.Common.Models;
 using FoodDiary.Application.Recipes.Models;
 using FoodDiary.Presentation.Api.Features.Recipes.Responses;
+using FoodDiary.Presentation.Api.Responses;
 
 namespace FoodDiary.Presentation.Api.Features.Recipes.Mappings;
 
@@ -45,8 +46,8 @@ public static class RecipeHttpResponseMappings {
         );
     }
 
-    public static PagedResponse<RecipeHttpResponse> ToHttpResponse(this PagedResponse<RecipeModel> response) {
-        return new PagedResponse<RecipeHttpResponse>(
+    public static PagedHttpResponse<RecipeHttpResponse> ToHttpResponse(this PagedResponse<RecipeModel> response) {
+        return new PagedHttpResponse<RecipeHttpResponse>(
             response.Data.Select(ToHttpResponse).ToList(),
             response.Page,
             response.Limit,
