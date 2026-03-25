@@ -4,17 +4,20 @@ using FoodDiary.Presentation.Api.Extensions;
 using FoodDiary.Presentation.Api.Features.Ai.Mappings;
 using FoodDiary.Presentation.Api.Features.Ai.Requests;
 using FoodDiary.Presentation.Api.Features.Ai.Responses;
+using FoodDiary.Presentation.Api.Policies;
 using FoodDiary.Presentation.Api.Responses;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace FoodDiary.Presentation.Api.Features.Ai;
 
 [ApiController]
 [Route("api/ai/food")]
 [Authorize(Roles = PresentationRoleNames.Premium)]
+[EnableRateLimiting(PresentationPolicyNames.AiRateLimitPolicyName)]
 public sealed class AiFoodController(ISender mediator) : AuthorizedController(mediator) {
     [HttpPost("vision")]
     [ProducesResponseType<FoodVisionHttpResponse>(StatusCodes.Status200OK)]

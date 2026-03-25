@@ -4,11 +4,13 @@ using FoodDiary.Presentation.Api.Extensions;
 using FoodDiary.Presentation.Api.Features.Admin.Mappings;
 using FoodDiary.Presentation.Api.Features.Admin.Requests;
 using FoodDiary.Presentation.Api.Features.Admin.Responses;
+using FoodDiary.Presentation.Api.Policies;
 using FoodDiary.Presentation.Api.Responses;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OutputCaching;
 
 namespace FoodDiary.Presentation.Api.Features.Admin;
 
@@ -21,6 +23,7 @@ public sealed class AdminAiUsageController(ISender mediator) : BaseApiController
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status403Forbidden)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
+    [OutputCache(PolicyName = PresentationPolicyNames.AdminAiUsageCachePolicyName)]
     public async Task<IActionResult> GetSummary([FromQuery] GetAdminAiUsageSummaryHttpQuery query) {
         var result = await Send(query.ToQuery());
         return result.ToOkActionResult(this, static value => value.ToHttpResponse());

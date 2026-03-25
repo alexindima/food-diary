@@ -7,6 +7,7 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 ## Project Guides
 - Frontend app: `FoodDiary.Web.Client/AGENTS.md`
 - UI kit: `FoodDiary.Web.Client/projects/fd-ui-kit/AGENTS.md`
+- Presentation adapter: `FoodDiary.Presentation.Api/AGENTS.md`
 - API host/presentation: `FoodDiary.Web.Api/AGENTS.md`
 - Application layer: `FoodDiary.Application/AGENTS.md`
 - Domain layer: `FoodDiary.Domain/AGENTS.md`

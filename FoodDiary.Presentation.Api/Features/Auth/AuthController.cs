@@ -5,6 +5,7 @@ using FoodDiary.Presentation.Api.Extensions;
 using FoodDiary.Presentation.Api.Features.Auth.Mappings;
 using FoodDiary.Presentation.Api.Features.Auth.Requests;
 using FoodDiary.Presentation.Api.Features.Auth.Responses;
+using FoodDiary.Presentation.Api.Policies;
 using FoodDiary.Presentation.Api.Features.Users.Mappings;
 using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Presentation.Api.Security;
@@ -13,6 +14,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Extensions.Options;
 
 namespace FoodDiary.Presentation.Api.Features.Auth;
@@ -40,6 +42,7 @@ public class AuthController(
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
+    [EnableRateLimiting(PresentationPolicyNames.AuthRateLimitPolicyName)]
     public async Task<IActionResult> Login(LoginHttpRequest request) {
         var command = request.ToCommand();
         var result = await Send(command);
@@ -51,6 +54,7 @@ public class AuthController(
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
+    [EnableRateLimiting(PresentationPolicyNames.AuthRateLimitPolicyName)]
     public async Task<IActionResult> Refresh(RefreshTokenHttpRequest request) {
         var command = request.ToCommand();
         var result = await Send(command);

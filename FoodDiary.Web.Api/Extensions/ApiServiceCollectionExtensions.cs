@@ -1,8 +1,11 @@
 using System.Text;
+using System.Threading.RateLimiting;
 using FoodDiary.Application;
 using FoodDiary.Infrastructure;
 using FoodDiary.Presentation.Api.Extensions;
 using FoodDiary.Presentation.Api.Options;
+using FoodDiary.Presentation.Api.Policies;
+using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Web.Api.Options;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -75,6 +78,44 @@ public static class ApiServiceCollectionExtensions {
         services.AddAuthorization();
         services.AddProblemDetails();
         services.AddExceptionHandler<ApiExceptionHandler>();
+        services.AddRateLimiter(options => {
+            options.OnRejected = async (context, cancellationToken) => {
+                var httpContext = context.HttpContext;
+                httpContext.Response.StatusCode = StatusCodes.Status429TooManyRequests;
+
+                await httpContext.Response.WriteAsJsonAsync(new ApiErrorHttpResponse(
+                    "RateLimit.Exceeded",
+                    "Too many requests. Try again later.",
+                    httpContext.TraceIdentifier), cancellationToken);
+            };
+            options.AddPolicy<string>(PresentationPolicyNames.AuthRateLimitPolicyName, context =>
+                RateLimitPartition.GetFixedWindowLimiter(
+                    partitionKey: $"auth:{GetRateLimitPartitionKey(context)}",
+                    factory: static _ => new FixedWindowRateLimiterOptions {
+                        PermitLimit = 5,
+                        Window = TimeSpan.FromMinutes(1),
+                        QueueLimit = 0,
+                        QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                        AutoReplenishment = true,
+                    }));
+            options.AddPolicy<string>(PresentationPolicyNames.AiRateLimitPolicyName, context =>
+                RateLimitPartition.GetFixedWindowLimiter(
+                    partitionKey: $"ai:{GetRateLimitPartitionKey(context)}",
+                    factory: static _ => new FixedWindowRateLimiterOptions {
+                        PermitLimit = 10,
+                        Window = TimeSpan.FromMinutes(1),
+                        QueueLimit = 0,
+                        QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                        AutoReplenishment = true,
+                    }));
+        });
+        services.AddOutputCache(options => {
+            options.AddPolicy(PresentationPolicyNames.AdminAiUsageCachePolicyName, builder => builder
+                .Cache()
+                .Expire(TimeSpan.FromSeconds(15))
+                .SetVaryByQuery("*")
+                .Tag("admin-ai-usage"));
+        });
         services.AddPresentationApi();
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen(options => {
@@ -96,5 +137,20 @@ public static class ApiServiceCollectionExtensions {
         });
 
         return services;
+    }
+
+    private static string GetRateLimitPartitionKey(HttpContext context) {
+        var userId = context.User.GetUserGuid();
+        if (userId.HasValue && userId.Value != Guid.Empty) {
+            return $"user:{userId.Value:D}";
+        }
+
+        var forwardedFor = context.Request.Headers["X-Forwarded-For"].ToString();
+        if (!string.IsNullOrWhiteSpace(forwardedFor)) {
+            return $"ip:{forwardedFor}";
+        }
+
+        var remoteIp = context.Connection.RemoteIpAddress?.ToString();
+        return $"ip:{remoteIp ?? "unknown"}";
     }
 }

@@ -15,7 +15,9 @@ public static class ApiApplicationBuilderExtensions {
 
         app.UseCors(ApiCompositionConstants.CorsPolicyName);
         app.UseAuthentication();
+        app.UseRateLimiter();
         app.UseAuthorization();
+        app.UseOutputCache();
 
         app.MapPresentationApi(ApiCompositionConstants.CorsPolicyName);
 

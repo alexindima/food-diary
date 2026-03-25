@@ -65,6 +65,23 @@ public sealed class PresentationBoundaryIntegrationTests(
     }
 
     [Fact]
+    public async Task Login_WhenRateLimitExceeded_ReturnsTooManyRequestsContract() {
+        var client = apiFactory.CreateClient();
+        var request = new LoginHttpRequest("missing-user@example.com", "Password123!");
+        HttpResponseMessage? lastResponse = null;
+
+        for (var i = 0; i < 6; i++) {
+            lastResponse = await client.PostAsJsonAsync("/api/auth/login", request);
+        }
+
+        var payload = await lastResponse!.Content.ReadFromJsonAsync<ErrorPayload>(JsonOptions);
+
+        Assert.Equal(HttpStatusCode.TooManyRequests, lastResponse.StatusCode);
+        Assert.NotNull(payload);
+        Assert.Equal("RateLimit.Exceeded", payload.Error);
+    }
+
+    [Fact]
     public async Task AdminDashboard_WithAuthenticatedNonAdminUser_ReturnsForbidden() {
         var client = testAuthFactory.CreateClient();
         client.DefaultRequestHeaders.Add(TestAuthenticationHandler.AuthenticateHeader, "true");
