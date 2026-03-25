@@ -1,6 +1,7 @@
 using FoodDiary.Application.Cycles.Models;
 using FoodDiary.Presentation.Api.Features.Cycles.Models;
 using FoodDiary.Presentation.Api.Features.Cycles.Responses;
+using FoodDiary.Presentation.Api.Responses;
 
 namespace FoodDiary.Presentation.Api.Features.Cycles.Mappings;
 
@@ -13,7 +14,7 @@ public static class CycleHttpResponseMappings {
             model.AverageLength,
             model.LutealLength,
             model.Notes,
-            model.Days.Select(ToHttpResponse).ToList(),
+            model.Days.ToHttpResponseList(ToHttpResponse),
             model.Predictions is null
                 ? null
                 : new CyclePredictionsHttpResponse(

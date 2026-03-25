@@ -45,7 +45,7 @@ public static class AdminHttpResponseMappings {
             model.ActiveUsers,
             model.PremiumUsers,
             model.DeletedUsers,
-            model.RecentUsers.Select(ToHttpResponse).ToList()
+            model.RecentUsers.ToHttpResponseList(ToHttpResponse)
         );
     }
 
@@ -54,21 +54,15 @@ public static class AdminHttpResponseMappings {
             model.TotalTokens,
             model.InputTokens,
             model.OutputTokens,
-            model.ByDay.Select(ToHttpResponse).ToList(),
-            model.ByOperation.Select(ToHttpResponse).ToList(),
-            model.ByModel.Select(ToHttpResponse).ToList(),
-            model.ByUser.Select(ToHttpResponse).ToList()
+            model.ByDay.ToHttpResponseList(ToHttpResponse),
+            model.ByOperation.ToHttpResponseList(ToHttpResponse),
+            model.ByModel.ToHttpResponseList(ToHttpResponse),
+            model.ByUser.ToHttpResponseList(ToHttpResponse)
         );
     }
 
     public static PagedHttpResponse<AdminUserHttpResponse> ToHttpResponse(this PagedResponse<AdminUserModel> response) {
-        return new PagedHttpResponse<AdminUserHttpResponse>(
-            response.Data.Select(ToHttpResponse).ToList(),
-            response.Page,
-            response.Limit,
-            response.TotalPages,
-            response.TotalItems
-        );
+        return response.ToPagedHttpResponse(ToHttpResponse);
     }
 
     private static AdminAiUsageDailyHttpResponse ToHttpResponse(this AdminAiUsageDailyModel model) {

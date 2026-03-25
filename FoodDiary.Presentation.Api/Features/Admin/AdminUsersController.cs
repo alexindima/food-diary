@@ -18,8 +18,6 @@ public sealed class AdminUsersController(ISender mediator) : BaseApiController(m
     [HttpGet]
     [ProducesResponseType<PagedHttpResponse<AdminUserHttpResponse>>(StatusCodes.Status200OK)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status403Forbidden)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
     public Task<IActionResult> GetUsers([FromQuery] GetAdminUsersHttpQuery query) =>
         HandleOk(query.ToQuery(), static value => value.ToHttpResponse());
@@ -27,8 +25,6 @@ public sealed class AdminUsersController(ISender mediator) : BaseApiController(m
     [HttpPatch("{id:guid}")]
     [ProducesResponseType<AdminUserHttpResponse>(StatusCodes.Status200OK)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status403Forbidden)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status404NotFound)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
     public Task<IActionResult> UpdateUser(Guid id, [FromBody] AdminUserUpdateHttpRequest request) =>

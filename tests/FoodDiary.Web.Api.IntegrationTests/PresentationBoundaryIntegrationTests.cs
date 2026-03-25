@@ -255,12 +255,7 @@ public sealed class PresentationBoundaryIntegrationTests(
 
         using var json = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
         var actual = BuildFocusedOpenApiSnapshot(json.RootElement);
-        var snapshotPath = Path.Combine(AppContext.BaseDirectory, "Snapshots", "openapi-focused-contract.json");
-        var expected = await File.ReadAllTextAsync(snapshotPath);
-
-        Assert.Equal(
-            expected.ReplaceLineEndings("\n").TrimEnd(),
-            actual.ReplaceLineEndings("\n").TrimEnd());
+        await AssertSnapshotAsync("openapi-focused-contract.json", actual);
     }
 
     [Fact]
@@ -271,12 +266,18 @@ public sealed class PresentationBoundaryIntegrationTests(
 
         using var json = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
         var actual = BuildAuthAdminOpenApiSnapshot(json.RootElement);
-        var snapshotPath = Path.Combine(AppContext.BaseDirectory, "Snapshots", "openapi-auth-admin-contract.json");
-        var expected = await File.ReadAllTextAsync(snapshotPath);
+        await AssertSnapshotAsync("openapi-auth-admin-contract.json", actual);
+    }
 
-        Assert.Equal(
-            expected.ReplaceLineEndings("\n").TrimEnd(),
-            actual.ReplaceLineEndings("\n").TrimEnd());
+    [Fact]
+    public async Task SwaggerJson_MatchesFullPresentationContractSnapshot() {
+        var client = apiFactory.CreateClient();
+        var response = await client.GetAsync("/swagger/v1/swagger.json");
+        response.EnsureSuccessStatusCode();
+
+        using var json = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
+        var actual = BuildFullOpenApiSnapshot(json.RootElement);
+        await AssertSnapshotAsync("openapi-full-contract.json", actual);
     }
 
     [Fact]
@@ -391,6 +392,22 @@ public sealed class PresentationBoundaryIntegrationTests(
         });
     }
 
+    private static string BuildFullOpenApiSnapshot(JsonElement root) {
+        var paths = root.GetProperty("paths");
+        var endpoints = paths.EnumerateObject()
+            .Select(property => CreateEndpointSnapshot(paths, property.Name))
+            .OrderBy(endpoint => endpoint.Path, StringComparer.Ordinal)
+            .ToArray();
+
+        var snapshot = new OpenApiFocusedSnapshot(
+            root.GetProperty("openapi").GetString() ?? string.Empty,
+            endpoints);
+
+        return JsonSerializer.Serialize(snapshot, new JsonSerializerOptions {
+            WriteIndented = true
+        });
+    }
+
     private static EndpointSnapshot CreateEndpointSnapshot(JsonElement paths, string path) {
         var pathNode = paths.GetProperty(path);
         var operations = pathNode.EnumerateObject()
@@ -422,6 +439,18 @@ public sealed class PresentationBoundaryIntegrationTests(
             serializerOptions);
 
         Assert.NotNull(expected);
+        Assert.Equal(
+            expected.ReplaceLineEndings("\n").TrimEnd(),
+            actual.ReplaceLineEndings("\n").TrimEnd());
+    }
+
+    private static async Task AssertSnapshotAsync(string snapshotFileName, string actual) {
+        var snapshotPath = Path.Combine(AppContext.BaseDirectory, "Snapshots", snapshotFileName);
+        if (string.Equals(Environment.GetEnvironmentVariable("UPDATE_CONTRACT_SNAPSHOTS"), "1", StringComparison.Ordinal)) {
+            await File.WriteAllTextAsync(snapshotPath, actual.ReplaceLineEndings("\n"));
+        }
+
+        var expected = await File.ReadAllTextAsync(snapshotPath);
         Assert.Equal(
             expected.ReplaceLineEndings("\n").TrimEnd(),
             actual.ReplaceLineEndings("\n").TrimEnd());

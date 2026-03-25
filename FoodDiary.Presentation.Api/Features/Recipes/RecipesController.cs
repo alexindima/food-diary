@@ -15,7 +15,6 @@ public class RecipesController(ISender mediator) : AuthorizedController(mediator
     [HttpGet]
     [ProducesResponseType<PagedHttpResponse<RecipeHttpResponse>>(StatusCodes.Status200OK)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
     public Task<IActionResult> GetAll([FromCurrentUser] Guid userId, [FromQuery] GetRecipesHttpQuery query) =>
         HandleOk(query.ToQuery(userId), static value => value.ToHttpResponse());
@@ -23,7 +22,6 @@ public class RecipesController(ISender mediator) : AuthorizedController(mediator
     [HttpGet("with-recent")]
     [ProducesResponseType<RecipeListWithRecentHttpResponse>(StatusCodes.Status200OK)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
     public Task<IActionResult> GetAllWithRecent([FromCurrentUser] Guid userId, [FromQuery] GetRecipesWithRecentHttpQuery query) =>
         HandleOk(query.ToQuery(userId), static value => value.ToHttpResponse());
@@ -31,14 +29,12 @@ public class RecipesController(ISender mediator) : AuthorizedController(mediator
     [HttpGet("recent")]
     [ProducesResponseType<List<RecipeHttpResponse>>(StatusCodes.Status200OK)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
     public Task<IActionResult> GetRecent([FromCurrentUser] Guid userId, [FromQuery] GetRecentRecipesHttpQuery query) =>
         HandleOk(query.ToQuery(userId), static value => value.Select(x => x.ToHttpResponse()).ToList());
 
     [HttpGet("{id:guid}")]
     [ProducesResponseType<RecipeHttpResponse>(StatusCodes.Status200OK)]
-    [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status404NotFound)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
     public Task<IActionResult> GetById(Guid id, [FromCurrentUser] Guid userId, [FromQuery] bool includePublic = true) =>
@@ -47,7 +43,6 @@ public class RecipesController(ISender mediator) : AuthorizedController(mediator
     [HttpPost]
     [ProducesResponseType<RecipeHttpResponse>(StatusCodes.Status201Created)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status409Conflict)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
     public Task<IActionResult> Create([FromCurrentUser] Guid userId, [FromBody] CreateRecipeHttpRequest request) =>
@@ -60,7 +55,6 @@ public class RecipesController(ISender mediator) : AuthorizedController(mediator
     [HttpPatch("{id:guid}")]
     [ProducesResponseType<RecipeHttpResponse>(StatusCodes.Status200OK)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status404NotFound)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status409Conflict)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
@@ -69,7 +63,6 @@ public class RecipesController(ISender mediator) : AuthorizedController(mediator
 
     [HttpDelete("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status404NotFound)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
     public Task<IActionResult> Delete(Guid id, [FromCurrentUser] Guid userId) =>
@@ -77,7 +70,6 @@ public class RecipesController(ISender mediator) : AuthorizedController(mediator
 
     [HttpPost("{id:guid}/duplicate")]
     [ProducesResponseType<RecipeHttpResponse>(StatusCodes.Status200OK)]
-    [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status404NotFound)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
     public Task<IActionResult> Duplicate(Guid id, [FromCurrentUser] Guid userId) =>

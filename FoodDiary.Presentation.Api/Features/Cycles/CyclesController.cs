@@ -1,5 +1,4 @@
 using FoodDiary.Presentation.Api.Controllers;
-using FoodDiary.Presentation.Api.Extensions;
 using FoodDiary.Presentation.Api.Features.Cycles.Mappings;
 using FoodDiary.Presentation.Api.Features.Cycles.Requests;
 using FoodDiary.Presentation.Api.Features.Cycles.Responses;
@@ -15,34 +14,23 @@ namespace FoodDiary.Presentation.Api.Features.Cycles;
 public class CyclesController(ISender mediator) : AuthorizedController(mediator) {
     [HttpGet("current")]
     [ProducesResponseType<CycleHttpResponse>(StatusCodes.Status200OK)]
-    [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> GetCurrent([FromCurrentUser] Guid userId) {
-        var result = await Send(userId.ToCurrentQuery());
-        return result.ToOkActionResult(this, static value => value is null ? null : value.ToHttpResponse());
-    }
+    public Task<IActionResult> GetCurrent([FromCurrentUser] Guid userId) =>
+        HandleOk(userId.ToCurrentQuery(), static value => value is null ? null : value.ToHttpResponse());
 
     [HttpPost]
     [ProducesResponseType<CycleHttpResponse>(StatusCodes.Status200OK)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> Create([FromCurrentUser] Guid userId, [FromBody] CreateCycleHttpRequest request) {
-        var command = request.ToCommand(userId);
-        var result = await Send(command);
-        return result.ToOkActionResult(this, static value => value.ToHttpResponse());
-    }
+    public Task<IActionResult> Create([FromCurrentUser] Guid userId, [FromBody] CreateCycleHttpRequest request) =>
+        HandleOk(request.ToCommand(userId), static value => value.ToHttpResponse());
 
     [HttpPut("{cycleId:guid}/days")]
     [ProducesResponseType<CyclePredictionsHttpResponse>(StatusCodes.Status200OK)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status404NotFound)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> UpsertDay(Guid cycleId, [FromCurrentUser] Guid userId, [FromBody] UpsertCycleDayHttpRequest request) {
-        var command = request.ToCommand(userId, cycleId);
-        var result = await Send(command);
-        return result.ToOkActionResult(this, static value => value.ToHttpResponse());
-    }
+    public Task<IActionResult> UpsertDay(Guid cycleId, [FromCurrentUser] Guid userId, [FromBody] UpsertCycleDayHttpRequest request) =>
+        HandleOk(request.ToCommand(userId, cycleId), static value => value.ToHttpResponse());
 }
 

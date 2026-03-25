@@ -55,6 +55,33 @@ public sealed class ControllerConventionsTests {
     }
 
     [Fact]
+    public void FeatureControllerBodyParameters_UsePresentationHttpRequestTypes() {
+        var violations = GetFeatureControllerTypes()
+            .SelectMany(GetActionMethods)
+            .SelectMany(method => method.GetParameters()
+                .Where(parameter => parameter.GetCustomAttribute<FromBodyAttribute>() is not null)
+                .Where(parameter => !IsPresentationHttpRequestType(parameter.ParameterType))
+                .Select(parameter => $"{FormatMethodName(method)} parameter {parameter.Name}"))
+            .ToArray();
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void FeatureControllerComplexQueryParameters_UsePresentationHttpQueryTypes() {
+        var violations = GetFeatureControllerTypes()
+            .SelectMany(GetActionMethods)
+            .SelectMany(method => method.GetParameters()
+                .Where(parameter => parameter.GetCustomAttribute<FromQueryAttribute>() is not null)
+                .Where(parameter => !IsSimpleTransportScalar(parameter.ParameterType))
+                .Where(parameter => !IsPresentationHttpQueryType(parameter.ParameterType))
+                .Select(parameter => $"{FormatMethodName(method)} parameter {parameter.Name}"))
+            .ToArray();
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void NonAuthFeatureControllers_RequireAuthorizationAtControllerLevel() {
         var violations = GetFeatureControllerTypes()
             .Where(type => type.Namespace != "FoodDiary.Presentation.Api.Features.Auth")
@@ -67,12 +94,11 @@ public sealed class ControllerConventionsTests {
     }
 
     [Fact]
-    public void ActionsDocumentingUnauthorizedOrForbiddenResponses_AreProtected() {
+    public void NonAuthFeatureActions_DoNotDocumentUnauthorizedOrForbiddenResponses_Manually() {
         var violations = GetFeatureControllerTypes()
             .SelectMany(GetActionMethods)
             .Where(method => method.DeclaringType?.Namespace != "FoodDiary.Presentation.Api.Features.Auth")
             .Where(DeclaresProtectedResponses)
-            .Where(method => !IsProtectedAction(method))
             .Select(FormatMethodName)
             .ToArray();
 
@@ -86,6 +112,36 @@ public sealed class ControllerConventionsTests {
             .Where(method => method.GetCustomAttribute<AllowAnonymousAttribute>() is not null)
             .Where(method => method.DeclaringType?.Namespace != "FoodDiary.Presentation.Api.Features.Auth")
             .Select(FormatMethodName)
+            .ToArray();
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void SimpleFeatureControllers_UseBaseControllerHelpers_InsteadOfDirectMediatorSend() {
+        var allowedFiles = new HashSet<string>(StringComparer.OrdinalIgnoreCase) {
+            "AuthController.cs",
+            "AiFoodController.cs",
+            "ImagesController.cs",
+        };
+        var presentationRoot = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "..", "FoodDiary.Presentation.Api"));
+        var violations = Directory.GetFiles(Path.Combine(presentationRoot, "Features"), "*Controller.cs", SearchOption.AllDirectories)
+            .Where(path => !allowedFiles.Contains(Path.GetFileName(path)))
+            .Where(path => File.ReadAllText(path).Contains("await Send(", StringComparison.Ordinal))
+            .Select(Path.GetFileName)
+            .OrderBy(static name => name, StringComparer.Ordinal)
+            .ToArray();
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void FeatureControllers_DoNotReferenceApplicationTypesDirectly() {
+        var presentationRoot = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "..", "FoodDiary.Presentation.Api"));
+        var violations = Directory.GetFiles(Path.Combine(presentationRoot, "Features"), "*Controller.cs", SearchOption.AllDirectories)
+            .Where(static path => File.ReadAllText(path).Contains("FoodDiary.Application", StringComparison.Ordinal))
+            .Select(Path.GetFileName)
+            .OrderBy(static name => name, StringComparer.Ordinal)
             .ToArray();
 
         Assert.Empty(violations);
@@ -107,16 +163,25 @@ public sealed class ControllerConventionsTests {
         method.GetCustomAttributes<ProducesResponseTypeAttribute>()
             .Any(attribute => attribute.StatusCode is 401 or 403);
 
-    private static bool IsProtectedAction(MethodInfo method) {
-        if (method.GetCustomAttributes<AllowAnonymousAttribute>().Any()) {
-            return false;
-        }
+    private static bool IsPresentationHttpRequestType(Type type) =>
+        type.Assembly == PresentationAssembly &&
+        type.Name.EndsWith("HttpRequest", StringComparison.Ordinal);
 
-        if (method.GetCustomAttributes<AuthorizeAttribute>().Any()) {
-            return true;
-        }
+    private static bool IsPresentationHttpQueryType(Type type) =>
+        type.Assembly == PresentationAssembly &&
+        type.Name.EndsWith("HttpQuery", StringComparison.Ordinal);
 
-        return method.DeclaringType?.GetCustomAttributes<AuthorizeAttribute>().Any() is true;
+    private static bool IsSimpleTransportScalar(Type type) {
+        var actualType = Nullable.GetUnderlyingType(type) ?? type;
+        return actualType.IsPrimitive ||
+               actualType.IsEnum ||
+               actualType == typeof(string) ||
+               actualType == typeof(decimal) ||
+               actualType == typeof(Guid) ||
+               actualType == typeof(DateTime) ||
+               actualType == typeof(DateTimeOffset) ||
+               actualType == typeof(DateOnly) ||
+               actualType == typeof(TimeOnly);
     }
 
     private static string FormatMethodName(MethodInfo method) =>

@@ -35,25 +35,19 @@ public static class RecipeHttpResponseMappings {
             model.UsageCount,
             model.CreatedAt,
             model.IsOwnedByCurrentUser,
-            model.Steps.Select(ToHttpResponse).ToList()
+            model.Steps.ToHttpResponseList(ToHttpResponse)
         );
     }
 
     public static RecipeListWithRecentHttpResponse ToHttpResponse(this RecipeListWithRecentModel model) {
         return new RecipeListWithRecentHttpResponse(
-            model.RecentItems.Select(ToHttpResponse).ToList(),
+            model.RecentItems.ToHttpResponseList(ToHttpResponse),
             model.AllRecipes.ToHttpResponse()
         );
     }
 
     public static PagedHttpResponse<RecipeHttpResponse> ToHttpResponse(this PagedResponse<RecipeModel> response) {
-        return new PagedHttpResponse<RecipeHttpResponse>(
-            response.Data.Select(ToHttpResponse).ToList(),
-            response.Page,
-            response.Limit,
-            response.TotalPages,
-            response.TotalItems
-        );
+        return response.ToPagedHttpResponse(ToHttpResponse);
     }
 
     private static RecipeStepHttpResponse ToHttpResponse(this RecipeStepModel model) {
@@ -64,7 +58,7 @@ public static class RecipeHttpResponseMappings {
             model.Instruction,
             model.ImageUrl,
             model.ImageAssetId,
-            model.Ingredients.Select(ToHttpResponse).ToList()
+            model.Ingredients.ToHttpResponseList(ToHttpResponse)
         );
     }
 

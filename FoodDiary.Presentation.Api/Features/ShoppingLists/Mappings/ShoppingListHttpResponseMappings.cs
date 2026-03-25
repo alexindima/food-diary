@@ -1,5 +1,6 @@
 using FoodDiary.Application.ShoppingLists.Models;
 using FoodDiary.Presentation.Api.Features.ShoppingLists.Responses;
+using FoodDiary.Presentation.Api.Responses;
 
 namespace FoodDiary.Presentation.Api.Features.ShoppingLists.Mappings;
 
@@ -9,7 +10,7 @@ public static class ShoppingListHttpResponseMappings {
             model.Id,
             model.Name,
             model.CreatedAt,
-            model.Items.Select(ToHttpResponse).ToList()
+            model.Items.ToHttpResponseList(ToHttpResponse)
         );
     }
 

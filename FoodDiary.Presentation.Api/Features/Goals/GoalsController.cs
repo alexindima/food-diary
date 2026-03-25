@@ -14,7 +14,6 @@ namespace FoodDiary.Presentation.Api.Features.Goals;
 public class GoalsController(ISender mediator) : AuthorizedController(mediator) {
     [HttpGet]
     [ProducesResponseType<GoalsHttpResponse>(StatusCodes.Status200OK)]
-    [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status404NotFound)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
     public Task<IActionResult> GetGoals([FromCurrentUser] Guid userId) =>
@@ -23,7 +22,6 @@ public class GoalsController(ISender mediator) : AuthorizedController(mediator) 
     [HttpPatch]
     [ProducesResponseType<GoalsHttpResponse>(StatusCodes.Status200OK)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status404NotFound)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
     public Task<IActionResult> UpdateGoals([FromCurrentUser] Guid userId, [FromBody] UpdateGoalsHttpRequest request) =>

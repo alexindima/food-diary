@@ -1,13 +1,14 @@
 using FoodDiary.Application.Ai.Models;
 using FoodDiary.Presentation.Api.Features.Ai.Models;
 using FoodDiary.Presentation.Api.Features.Ai.Responses;
+using FoodDiary.Presentation.Api.Responses;
 
 namespace FoodDiary.Presentation.Api.Features.Ai.Mappings;
 
 public static class AiHttpResponseMappings {
     public static FoodVisionHttpResponse ToHttpResponse(this FoodVisionModel model) {
         return new FoodVisionHttpResponse(
-            model.Items.Select(ToHttpModel).ToList(),
+            model.Items.ToHttpResponseList(ToHttpModel),
             model.Notes
         );
     }
@@ -20,7 +21,7 @@ public static class AiHttpResponseMappings {
             model.Carbs,
             model.Fiber,
             model.Alcohol,
-            model.Items.Select(ToHttpResponse).ToList(),
+            model.Items.ToHttpResponseList(ToHttpResponse),
             model.Notes
         );
     }

@@ -15,14 +15,12 @@ public class ConsumptionsController(ISender mediator) : AuthorizedController(med
     [HttpGet]
     [ProducesResponseType<PagedHttpResponse<ConsumptionHttpResponse>>(StatusCodes.Status200OK)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
     public Task<IActionResult> GetAll([FromCurrentUser] Guid userId, [FromQuery] GetConsumptionsHttpQuery query) =>
         HandleOk(query.ToQuery(userId), static value => value.ToHttpResponse());
 
     [HttpGet("{id:guid}")]
     [ProducesResponseType<ConsumptionHttpResponse>(StatusCodes.Status200OK)]
-    [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status404NotFound)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
     public Task<IActionResult> GetById(Guid id, [FromCurrentUser] Guid userId) =>
@@ -31,7 +29,6 @@ public class ConsumptionsController(ISender mediator) : AuthorizedController(med
     [HttpPost]
     [ProducesResponseType<ConsumptionHttpResponse>(StatusCodes.Status201Created)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
     public Task<IActionResult> Create([FromCurrentUser] Guid userId, [FromBody] CreateConsumptionHttpRequest request) =>
         HandleCreated(
@@ -43,7 +40,6 @@ public class ConsumptionsController(ISender mediator) : AuthorizedController(med
     [HttpPatch("{id:guid}")]
     [ProducesResponseType<ConsumptionHttpResponse>(StatusCodes.Status200OK)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status404NotFound)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
     public Task<IActionResult> Update(Guid id, [FromCurrentUser] Guid userId, [FromBody] UpdateConsumptionHttpRequest request) =>
@@ -51,7 +47,6 @@ public class ConsumptionsController(ISender mediator) : AuthorizedController(med
 
     [HttpDelete("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status404NotFound)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
     public Task<IActionResult> Delete(Guid id, [FromCurrentUser] Guid userId) =>

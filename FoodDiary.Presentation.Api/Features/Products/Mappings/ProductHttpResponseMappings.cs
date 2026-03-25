@@ -36,18 +36,12 @@ public static class ProductHttpResponseMappings {
 
     public static ProductListWithRecentHttpResponse ToHttpResponse(this ProductListWithRecentModel model) {
         return new ProductListWithRecentHttpResponse(
-            model.RecentItems.Select(ToHttpResponse).ToList(),
+            model.RecentItems.ToHttpResponseList(ToHttpResponse),
             model.AllProducts.ToHttpResponse()
         );
     }
 
     public static PagedHttpResponse<ProductHttpResponse> ToHttpResponse(this PagedResponse<ProductModel> response) {
-        return new PagedHttpResponse<ProductHttpResponse>(
-            response.Data.Select(ToHttpResponse).ToList(),
-            response.Page,
-            response.Limit,
-            response.TotalPages,
-            response.TotalItems
-        );
+        return response.ToPagedHttpResponse(ToHttpResponse);
     }
 }

@@ -7,6 +7,7 @@ using FoodDiary.Presentation.Api.Options;
 using FoodDiary.Presentation.Api.Policies;
 using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Web.Api.Options;
+using FoodDiary.Web.Api.Swagger;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.IdentityModel.Tokens;
@@ -138,6 +139,7 @@ public static class ApiServiceCollectionExtensions {
                 Title = "FoodDiary API",
                 Version = "v1",
             });
+            options.OperationFilter<StandardErrorResponsesOperationFilter>();
             options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme {
                 Name = "Authorization",
                 Type = SecuritySchemeType.Http,

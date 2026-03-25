@@ -29,19 +29,13 @@ public static class ConsumptionHttpResponseMappings {
             model.ManualAlcohol,
             model.PreMealSatietyLevel,
             model.PostMealSatietyLevel,
-            model.Items.Select(ToHttpResponse).ToList(),
-            model.AiSessions.Select(ToHttpResponse).ToList()
+            model.Items.ToHttpResponseList(ToHttpResponse),
+            model.AiSessions.ToHttpResponseList(ToHttpResponse)
         );
     }
 
     public static PagedHttpResponse<ConsumptionHttpResponse> ToHttpResponse(this PagedResponse<ConsumptionModel> response) {
-        return new PagedHttpResponse<ConsumptionHttpResponse>(
-            response.Data.Select(ToHttpResponse).ToList(),
-            response.Page,
-            response.Limit,
-            response.TotalPages,
-            response.TotalItems
-        );
+        return response.ToPagedHttpResponse(ToHttpResponse);
     }
 
     private static ConsumptionItemHttpResponse ToHttpResponse(this ConsumptionItemModel model) {
@@ -79,7 +73,7 @@ public static class ConsumptionHttpResponseMappings {
             model.ImageUrl,
             model.RecognizedAtUtc,
             model.Notes,
-            model.Items.Select(ToHttpResponse).ToList()
+            model.Items.ToHttpResponseList(ToHttpResponse)
         );
     }
 

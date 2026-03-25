@@ -6,6 +6,7 @@ using FoodDiary.Presentation.Api.Features.Hydration.Mappings;
 using FoodDiary.Presentation.Api.Features.Users.Models;
 using FoodDiary.Presentation.Api.Features.WaistEntries.Mappings;
 using FoodDiary.Presentation.Api.Features.WeightEntries.Mappings;
+using FoodDiary.Presentation.Api.Responses;
 
 namespace FoodDiary.Presentation.Api.Features.Dashboard.Mappings;
 
@@ -15,14 +16,14 @@ public static class DashboardHttpResponseMappings {
             model.Date,
             model.DailyGoal,
             model.Statistics.ToHttpResponse(),
-            model.WeeklyCalories.Select(ToHttpResponse).ToList(),
+            model.WeeklyCalories.ToHttpResponseList(ToHttpResponse),
             model.Weight.ToHttpResponse(),
             model.Waist.ToHttpResponse(),
             model.Meals.ToHttpResponse(),
             model.Hydration?.ToHttpResponse(),
             model.Advice?.ToHttpResponse(),
-            model.WeightTrend?.Select(item => item.ToHttpResponse()).ToList(),
-            model.WaistTrend?.Select(item => item.ToHttpResponse()).ToList(),
+            model.WeightTrend?.ToHttpResponseList(static item => item.ToHttpResponse()),
+            model.WaistTrend?.ToHttpResponseList(static item => item.ToHttpResponse()),
             model.DashboardLayout is null
                 ? null
                 : new DashboardLayoutHttpModel(model.DashboardLayout.Web, model.DashboardLayout.Mobile)
@@ -65,7 +66,7 @@ public static class DashboardHttpResponseMappings {
 
     private static DashboardMealsHttpResponse ToHttpResponse(this DashboardMealsModel model) {
         return new DashboardMealsHttpResponse(
-            model.Items.Select(item => item.ToHttpResponse()).ToList(),
+            model.Items.ToHttpResponseList(static item => item.ToHttpResponse()),
             model.Total
         );
     }

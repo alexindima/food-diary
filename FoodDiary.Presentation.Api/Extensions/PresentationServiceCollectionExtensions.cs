@@ -14,7 +14,6 @@ public static class PresentationServiceCollectionExtensions {
         services
             .AddControllers()
             .ConfigureApiBehaviorOptions(options => {
-                var fallbackFactory = options.InvalidModelStateResponseFactory;
                 options.InvalidModelStateResponseFactory = context => {
                     if (context.HttpContext.Items.TryGetValue(CurrentUserIdModelBinder.UnauthorizedItemKey, out var unauthorized) &&
                         unauthorized is true) {
