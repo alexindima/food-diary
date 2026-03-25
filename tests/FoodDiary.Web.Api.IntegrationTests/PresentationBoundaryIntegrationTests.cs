@@ -155,6 +155,27 @@ public sealed class PresentationBoundaryIntegrationTests(
     }
 
     [Fact]
+    public async Task SwaggerJson_ContainsBearerSecurityScheme() {
+        var client = apiFactory.CreateClient();
+
+        var response = await client.GetAsync("/swagger/v1/swagger.json");
+        using var json = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
+        var securitySchemes = json.RootElement
+            .GetProperty("components")
+            .GetProperty("securitySchemes")
+            .GetProperty("Bearer");
+        var securityRequirement = json.RootElement
+            .GetProperty("security")[0]
+            .GetProperty("Bearer");
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.Equal("http", securitySchemes.GetProperty("type").GetString());
+        Assert.Equal("bearer", securitySchemes.GetProperty("scheme").GetString());
+        Assert.Equal("JWT", securitySchemes.GetProperty("bearerFormat").GetString());
+        Assert.Equal(JsonValueKind.Array, securityRequirement.ValueKind);
+    }
+
+    [Fact]
     public async Task SwaggerJson_MatchesFocusedPresentationContractSnapshot() {
         var client = apiFactory.CreateClient();
         var response = await client.GetAsync("/swagger/v1/swagger.json");
@@ -207,6 +228,21 @@ public sealed class PresentationBoundaryIntegrationTests(
         Assert.NotNull(payload);
         Assert.False(string.IsNullOrWhiteSpace(payload.ConnectionId));
         Assert.False(string.IsNullOrWhiteSpace(payload.ConnectionToken));
+    }
+
+    [Fact]
+    public async Task UnhandledException_ReturnsStandardErrorContractWithTraceId() {
+        var client = apiFactory.CreateClient();
+
+        var response = await client.GetAsync("/test/exceptions/unhandled");
+        using var json = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
+        var root = json.RootElement;
+
+        Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
+        Assert.Equal("Server.Unexpected", root.GetProperty("error").GetString());
+        Assert.Equal("An unexpected error occurred.", root.GetProperty("message").GetString());
+        Assert.True(root.TryGetProperty("traceId", out var traceIdProperty));
+        Assert.False(string.IsNullOrWhiteSpace(traceIdProperty.GetString()));
     }
 
     private static async Task<string> RegisterAndGetAccessTokenAsync(HttpClient client) {

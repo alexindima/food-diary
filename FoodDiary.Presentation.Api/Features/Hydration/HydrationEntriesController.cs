@@ -19,7 +19,7 @@ public class HydrationEntriesController(ISender mediator) : AuthorizedController
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetByDate([FromCurrentUser] Guid userId, [FromQuery] GetHydrationEntriesHttpQuery query) {
-        var result = await Mediator.Send(query.ToEntriesQuery(userId));
+        var result = await Send(query.ToEntriesQuery(userId));
         return result.ToOkActionResult(this, static value => value.Select(item => item.ToHttpResponse()).ToList());
     }
 
@@ -29,7 +29,7 @@ public class HydrationEntriesController(ISender mediator) : AuthorizedController
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetDaily([FromCurrentUser] Guid userId, [FromQuery] GetHydrationEntriesHttpQuery query) {
-        var result = await Mediator.Send(query.ToDailyQuery(userId));
+        var result = await Send(query.ToDailyQuery(userId));
         return result.ToOkActionResult(this, static value => value.ToHttpResponse());
     }
 
@@ -41,7 +41,7 @@ public class HydrationEntriesController(ISender mediator) : AuthorizedController
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Create([FromCurrentUser] Guid userId, [FromBody] CreateHydrationEntryHttpRequest request) {
         var command = request.ToCommand(userId);
-        var result = await Mediator.Send(command);
+        var result = await Send(command);
         return result.ToOkActionResult(this, static value => value.ToHttpResponse());
     }
 
@@ -54,7 +54,7 @@ public class HydrationEntriesController(ISender mediator) : AuthorizedController
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Update(Guid id, [FromCurrentUser] Guid userId, [FromBody] UpdateHydrationEntryHttpRequest request) {
         var command = request.ToCommand(userId, id);
-        var result = await Mediator.Send(command);
+        var result = await Send(command);
         return result.ToOkActionResult(this, static value => value.ToHttpResponse());
     }
 
@@ -65,7 +65,8 @@ public class HydrationEntriesController(ISender mediator) : AuthorizedController
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Delete(Guid id, [FromCurrentUser] Guid userId) {
         var command = id.ToDeleteCommand(userId);
-        var result = await Mediator.Send(command);
+        var result = await Send(command);
         return result.ToNoContentActionResult();
     }
 }
+

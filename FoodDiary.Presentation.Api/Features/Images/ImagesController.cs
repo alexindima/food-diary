@@ -22,7 +22,7 @@ public sealed class ImagesController(ISender mediator) : AuthorizedController(me
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetUploadUrl([FromCurrentUser] Guid userId, [FromBody] GetImageUploadUrlHttpRequest request) {
         var command = request.ToCommand(userId);
-        var result = await Mediator.Send(command);
+        var result = await Send(command);
         return result.ToOkActionResult(this, static value => new GetImageUploadUrlHttpResponse(
             value.UploadUrl,
             value.FileUrl,
@@ -41,7 +41,8 @@ public sealed class ImagesController(ISender mediator) : AuthorizedController(me
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Delete(Guid assetId, [FromCurrentUser] Guid userId) {
         var command = assetId.ToDeleteCommand(userId);
-        var result = await Mediator.Send(command);
+        var result = await Send(command);
         return result.ToNoContentActionResult();
     }
 }
+

@@ -19,7 +19,7 @@ public class WaistEntriesController(ISender mediator) : AuthorizedController(med
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetAll([FromCurrentUser] Guid userId, [FromQuery] GetWaistEntriesHttpQuery query) {
-        var result = await Mediator.Send(query.ToQuery(userId));
+        var result = await Send(query.ToQuery(userId));
         return result.ToOkActionResult(this, static value => value.Select(item => item.ToHttpResponse()).ToList());
     }
 
@@ -28,7 +28,7 @@ public class WaistEntriesController(ISender mediator) : AuthorizedController(med
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetLatest([FromCurrentUser] Guid userId) {
-        var result = await Mediator.Send(userId.ToLatestQuery());
+        var result = await Send(userId.ToLatestQuery());
         return result.ToOkActionResult(this, static value => value?.ToHttpResponse());
     }
 
@@ -38,7 +38,7 @@ public class WaistEntriesController(ISender mediator) : AuthorizedController(med
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetSummary([FromCurrentUser] Guid userId, [FromQuery] GetWaistSummariesHttpQuery query) {
-        var result = await Mediator.Send(query.ToQuery(userId));
+        var result = await Send(query.ToQuery(userId));
         return result.ToOkActionResult(this, static value => value.Select(item => item.ToHttpResponse()).ToList());
     }
 
@@ -50,7 +50,7 @@ public class WaistEntriesController(ISender mediator) : AuthorizedController(med
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Create([FromCurrentUser] Guid userId, [FromBody] CreateWaistEntryHttpRequest request) {
         var command = request.ToCommand(userId);
-        var result = await Mediator.Send(command);
+        var result = await Send(command);
         return result.ToOkActionResult(this, static value => value.ToHttpResponse());
     }
 
@@ -63,7 +63,7 @@ public class WaistEntriesController(ISender mediator) : AuthorizedController(med
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Update(Guid id, [FromCurrentUser] Guid userId, [FromBody] UpdateWaistEntryHttpRequest request) {
         var command = request.ToCommand(userId, id);
-        var result = await Mediator.Send(command);
+        var result = await Send(command);
         return result.ToOkActionResult(this, static value => value.ToHttpResponse());
     }
 
@@ -74,7 +74,8 @@ public class WaistEntriesController(ISender mediator) : AuthorizedController(med
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Delete(Guid id, [FromCurrentUser] Guid userId) {
         var command = id.ToDeleteCommand(userId);
-        var result = await Mediator.Send(command);
+        var result = await Send(command);
         return result.ToNoContentActionResult();
     }
 }
+

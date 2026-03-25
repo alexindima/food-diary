@@ -23,7 +23,7 @@ public sealed class AdminUsersController(ISender mediator) : BaseApiController(m
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status403Forbidden)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetUsers([FromQuery] GetAdminUsersHttpQuery query) {
-        var result = await Mediator.Send(query.ToQuery());
+        var result = await Send(query.ToQuery());
         return result.ToOkActionResult(this, static value => value.ToHttpResponse());
     }
 
@@ -36,7 +36,8 @@ public sealed class AdminUsersController(ISender mediator) : BaseApiController(m
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> UpdateUser(Guid id, [FromBody] AdminUserUpdateHttpRequest request) {
         var command = request.ToCommand(id);
-        var result = await Mediator.Send(command);
+        var result = await Send(command);
         return result.ToOkActionResult(this, static value => value.ToHttpResponse());
     }
 }
+

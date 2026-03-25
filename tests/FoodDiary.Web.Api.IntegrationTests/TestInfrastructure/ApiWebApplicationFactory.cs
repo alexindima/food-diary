@@ -1,6 +1,7 @@
 using FoodDiary.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -23,6 +24,12 @@ public sealed class ApiWebApplicationFactory : WebApplicationFactory<Program> {
 
             services.AddDbContext<FoodDiaryDbContext>(options =>
                 options.UseInMemoryDatabase(_databaseName, _databaseRoot));
+
+            var applicationPartManager = services
+                .Single(service => service.ServiceType == typeof(ApplicationPartManager))
+                .ImplementationInstance as ApplicationPartManager;
+
+            applicationPartManager?.ApplicationParts.Add(new AssemblyPart(typeof(TestExceptionController).Assembly));
         });
     }
 }

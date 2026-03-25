@@ -19,7 +19,7 @@ public class UsersController(ISender mediator) : AuthorizedController(mediator) 
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status404NotFound)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetCurrentUserInfo([FromCurrentUser] Guid userId) {
-        var result = await Mediator.Send(userId.ToUserQuery());
+        var result = await Send(userId.ToUserQuery());
         return result.ToOkActionResult(this, static value => value.ToHttpResponse());
     }
 
@@ -31,7 +31,7 @@ public class UsersController(ISender mediator) : AuthorizedController(mediator) 
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> UpdateCurrentUser([FromCurrentUser] Guid userId, [FromBody] UpdateUserHttpRequest request) {
         var command = request.ToCommand(userId);
-        var result = await Mediator.Send(command);
+        var result = await Send(command);
         return result.ToOkActionResult(this, static value => value.ToHttpResponse());
     }
 
@@ -43,7 +43,7 @@ public class UsersController(ISender mediator) : AuthorizedController(mediator) 
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> ChangePassword([FromCurrentUser] Guid userId, [FromBody] ChangePasswordHttpRequest request) {
         var command = request.ToCommand(userId);
-        var result = await Mediator.Send(command);
+        var result = await Send(command);
         return result.ToNoContentActionResult();
     }
 
@@ -53,7 +53,7 @@ public class UsersController(ISender mediator) : AuthorizedController(mediator) 
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status404NotFound)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetDesiredWeight([FromCurrentUser] Guid userId) {
-        var result = await Mediator.Send(userId.ToDesiredWeightQuery());
+        var result = await Send(userId.ToDesiredWeightQuery());
         return result.ToOkActionResult(this, static value => value.ToHttpResponse());
     }
 
@@ -65,7 +65,7 @@ public class UsersController(ISender mediator) : AuthorizedController(mediator) 
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> UpdateDesiredWeight([FromCurrentUser] Guid userId, [FromBody] UpdateDesiredWeightHttpRequest request) {
         var command = request.ToDesiredWeightCommand(userId);
-        var result = await Mediator.Send(command);
+        var result = await Send(command);
         return result.ToOkActionResult(this, static value => value.ToHttpResponse());
     }
 
@@ -75,7 +75,7 @@ public class UsersController(ISender mediator) : AuthorizedController(mediator) 
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status404NotFound)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetDesiredWaist([FromCurrentUser] Guid userId) {
-        var result = await Mediator.Send(userId.ToDesiredWaistQuery());
+        var result = await Send(userId.ToDesiredWaistQuery());
         return result.ToOkActionResult(this, static value => value.ToHttpResponse());
     }
 
@@ -87,7 +87,7 @@ public class UsersController(ISender mediator) : AuthorizedController(mediator) 
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> UpdateDesiredWaist([FromCurrentUser] Guid userId, [FromBody] UpdateDesiredWaistHttpRequest request) {
         var command = request.ToDesiredWaistCommand(userId);
-        var result = await Mediator.Send(command);
+        var result = await Send(command);
         return result.ToOkActionResult(this, static value => value.ToHttpResponse());
     }
 
@@ -98,7 +98,8 @@ public class UsersController(ISender mediator) : AuthorizedController(mediator) 
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> DeleteCurrentUser([FromCurrentUser] Guid userId) {
         var command = userId.ToDeleteCommand();
-        var result = await Mediator.Send(command);
+        var result = await Send(command);
         return result.ToNoContentActionResult();
     }
 }
+

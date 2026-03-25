@@ -1,6 +1,8 @@
+using System.Diagnostics;
 using System.Security.Claims;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Presentation.Api.Extensions;
+using FoodDiary.Presentation.Api.Responses;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -85,6 +87,29 @@ public sealed class ExtensionsTests {
 
         var objectResult = Assert.IsType<ObjectResult>(actionResult);
         Assert.Equal(StatusCodes.Status429TooManyRequests, objectResult.StatusCode);
+    }
+
+    [Fact]
+    public void ResultExtensions_UnknownError_ReturnsInternalServerError() {
+        var result = Result.Failure<string>(new Error("Something.Unmapped", "Unexpected."));
+
+        var actionResult = result.ToActionResult();
+
+        var objectResult = Assert.IsType<ObjectResult>(actionResult);
+        Assert.Equal(StatusCodes.Status500InternalServerError, objectResult.StatusCode);
+    }
+
+    [Fact]
+    public void ResultExtensions_ErrorResponse_ContainsCurrentActivityTraceId() {
+        using var activity = new Activity("result-extension-test");
+        activity.Start();
+        var result = Result.Failure<string>(new Error("Validation.Invalid", "Invalid field."));
+
+        var actionResult = result.ToActionResult();
+
+        var objectResult = Assert.IsType<ObjectResult>(actionResult);
+        var response = Assert.IsType<ApiErrorHttpResponse>(objectResult.Value);
+        Assert.Equal(activity.Id, response.TraceId);
     }
 
     [Fact]

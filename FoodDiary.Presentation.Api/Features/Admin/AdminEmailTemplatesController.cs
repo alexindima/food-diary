@@ -22,7 +22,7 @@ public sealed class AdminEmailTemplatesController(ISender mediator) : BaseApiCon
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status403Forbidden)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetAll() {
-        var result = await Mediator.Send(AdminHttpQueryMappings.ToEmailTemplatesQuery());
+        var result = await Send(AdminHttpQueryMappings.ToEmailTemplatesQuery());
         return result.ToOkActionResult(this, static value => value.Select(item => item.ToHttpResponse()).ToList());
     }
 
@@ -37,7 +37,8 @@ public sealed class AdminEmailTemplatesController(ISender mediator) : BaseApiCon
         string locale,
         [FromBody] AdminEmailTemplateUpsertHttpRequest request) {
         var command = request.ToCommand(key, locale);
-        var result = await Mediator.Send(command);
+        var result = await Send(command);
         return result.ToOkActionResult(this, static value => value.ToHttpResponse());
     }
 }
+

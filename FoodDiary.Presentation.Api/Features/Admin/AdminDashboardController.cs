@@ -22,7 +22,8 @@ public sealed class AdminDashboardController(ISender mediator) : BaseApiControll
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status403Forbidden)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetDashboard([FromQuery] GetAdminDashboardHttpQuery query) {
-        var result = await Mediator.Send(query.ToQuery());
+        var result = await Send(query.ToQuery());
         return result.ToOkActionResult(this, static value => value.ToHttpResponse());
     }
 }
+

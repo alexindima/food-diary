@@ -3,8 +3,10 @@ using FoodDiary.Application;
 using FoodDiary.Infrastructure;
 using FoodDiary.Presentation.Api.Extensions;
 using FoodDiary.Presentation.Api.Options;
+using FoodDiary.Web.Api.Options;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi;
 
 namespace FoodDiary.Web.Api.Extensions;
 
@@ -13,6 +15,17 @@ public static class ApiServiceCollectionExtensions {
         services.AddApplication();
         services.AddInfrastructure(configuration);
         services.AddDistributedMemoryCache();
+        services
+            .AddOptions<JwtOptions>()
+            .BindConfiguration(JwtOptions.SectionName)
+            .ValidateDataAnnotations()
+            .ValidateOnStart();
+        services
+            .AddOptions<TelegramBotAuthOptions>()
+            .BindConfiguration(TelegramBotAuthOptions.SectionName)
+            .Validate(static options => string.IsNullOrWhiteSpace(options.ApiSecret) || options.ApiSecret.Length >= 16,
+                "TelegramBot:ApiSecret must be empty or at least 16 characters long.")
+            .ValidateOnStart();
 
         var corsOrigins = configuration.GetSection("Cors:Origins").Get<string[]>();
         var allowedOrigins = corsOrigins is { Length: > 0 }
@@ -29,20 +42,19 @@ public static class ApiServiceCollectionExtensions {
             });
         });
 
-        var jwtSettings = configuration.GetSection("JwtSettings");
-        var secretKey = jwtSettings["SecretKey"]
-                        ?? throw new InvalidOperationException("JWT SecretKey is not configured");
+        var jwtOptions = configuration.GetRequiredSection(JwtOptions.SectionName).Get<JwtOptions>()
+                         ?? throw new InvalidOperationException("JWT settings are not configured.");
 
         services
             .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options => {
                 options.TokenValidationParameters = new TokenValidationParameters {
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey)),
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.SecretKey)),
                     ValidateIssuer = true,
-                    ValidIssuer = jwtSettings["Issuer"],
+                    ValidIssuer = jwtOptions.Issuer,
                     ValidateAudience = true,
-                    ValidAudience = jwtSettings["Audience"],
+                    ValidAudience = jwtOptions.Audience,
                     ValidateLifetime = true,
                     ClockSkew = TimeSpan.Zero,
                 };
@@ -61,10 +73,27 @@ public static class ApiServiceCollectionExtensions {
             });
 
         services.AddAuthorization();
-        services.Configure<TelegramBotAuthOptions>(configuration.GetSection(TelegramBotAuthOptions.SectionName));
+        services.AddProblemDetails();
+        services.AddExceptionHandler<ApiExceptionHandler>();
         services.AddPresentationApi();
         services.AddEndpointsApiExplorer();
-        services.AddSwaggerGen();
+        services.AddSwaggerGen(options => {
+            options.SwaggerDoc("v1", new OpenApiInfo {
+                Title = "FoodDiary API",
+                Version = "v1",
+            });
+            options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme {
+                Name = "Authorization",
+                Type = SecuritySchemeType.Http,
+                Scheme = "bearer",
+                BearerFormat = "JWT",
+                In = ParameterLocation.Header,
+                Description = "JWT Authorization header using the Bearer scheme.",
+            });
+            options.AddSecurityRequirement(document => new OpenApiSecurityRequirement {
+                [new OpenApiSecuritySchemeReference("Bearer", document, null)] = []
+            });
+        });
 
         return services;
     }

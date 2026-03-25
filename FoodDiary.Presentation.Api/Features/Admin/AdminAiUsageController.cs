@@ -22,7 +22,7 @@ public sealed class AdminAiUsageController(ISender mediator) : BaseApiController
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status403Forbidden)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetSummary([FromQuery] GetAdminAiUsageSummaryHttpQuery query) {
-        var result = await Mediator.Send(query.ToQuery());
+        var result = await Send(query.ToQuery());
         return result.ToOkActionResult(this, static value => value.ToHttpResponse());
     }
 }

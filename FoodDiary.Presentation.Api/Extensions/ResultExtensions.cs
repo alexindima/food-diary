@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using FoodDiary.Application.Common.Abstractions.Result;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -71,7 +72,7 @@ public static class ResultExtensions {
     }
 
     private static IActionResult ErrorResult(Error error, int statusCode) =>
-        new ObjectResult(new ApiErrorHttpResponse(error.Code, error.Message)) {
+        new ObjectResult(new ApiErrorHttpResponse(error.Code, error.Message, Activity.Current?.Id)) {
             StatusCode = statusCode,
         };
 }

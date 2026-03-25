@@ -19,7 +19,8 @@ public sealed class AiUsageController(ISender mediator) : AuthorizedController(m
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetMyUsage([FromCurrentUser] Guid userId) {
-        var result = await Mediator.Send(userId.ToUsageQuery());
+        var result = await Send(userId.ToUsageQuery());
         return result.ToOkActionResult(this, static value => value.ToHttpResponse());
     }
 }
+

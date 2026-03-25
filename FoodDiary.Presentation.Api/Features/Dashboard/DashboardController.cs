@@ -19,7 +19,7 @@ public class DashboardController(ISender mediator) : AuthorizedController(mediat
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Get([FromCurrentUser] Guid userId, [FromQuery] GetDashboardSnapshotHttpQuery query) {
-        var result = await Mediator.Send(query.ToQuery(userId));
+        var result = await Send(query.ToQuery(userId));
         return result.ToOkActionResult(this, static value => value.ToHttpResponse());
     }
 
@@ -29,7 +29,8 @@ public class DashboardController(ISender mediator) : AuthorizedController(mediat
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetAdvice([FromCurrentUser] Guid userId, [FromQuery] GetDailyAdviceHttpQuery query) {
-        var result = await Mediator.Send(query.ToQuery(userId));
+        var result = await Send(query.ToQuery(userId));
         return result.ToOkActionResult(this, static value => value.ToHttpResponse());
     }
 }
+

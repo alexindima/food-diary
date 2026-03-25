@@ -31,7 +31,7 @@ public class AuthController(
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Register(RegisterHttpRequest request) {
         var command = request.ToCommand();
-        var result = await Mediator.Send(command);
+        var result = await Send(command);
         return result.ToOkActionResult(this, static value => value.ToHttpResponse());
     }
 
@@ -42,7 +42,7 @@ public class AuthController(
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Login(LoginHttpRequest request) {
         var command = request.ToCommand();
-        var result = await Mediator.Send(command);
+        var result = await Send(command);
         return result.ToOkActionResult(this, static value => value.ToHttpResponse());
     }
 
@@ -53,7 +53,7 @@ public class AuthController(
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Refresh(RefreshTokenHttpRequest request) {
         var command = request.ToCommand();
-        var result = await Mediator.Send(command);
+        var result = await Send(command);
         return result.ToOkActionResult(this, static value => value.ToAccessTokenHttpResponse());
     }
 
@@ -64,7 +64,7 @@ public class AuthController(
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> RestoreAccount(RestoreAccountHttpRequest request) {
         var command = request.ToCommand();
-        var result = await Mediator.Send(command);
+        var result = await Send(command);
         return result.ToOkActionResult(this, static value => value.ToHttpResponse());
     }
 
@@ -77,7 +77,7 @@ public class AuthController(
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> VerifyEmail(VerifyEmailHttpRequest request) {
         var command = request.ToCommand();
-        var result = await Mediator.Send(command);
+        var result = await Send(command);
         return result.ToNoContentActionResult();
     }
 
@@ -89,7 +89,7 @@ public class AuthController(
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> ResendVerifyEmail([FromCurrentUser] Guid userId) {
         var command = userId.ToResendVerificationCommand();
-        var result = await Mediator.Send(command);
+        var result = await Send(command);
         return result.ToNoContentActionResult();
     }
 
@@ -99,7 +99,7 @@ public class AuthController(
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> RequestPasswordReset(RequestPasswordResetHttpRequest request) {
         var command = request.ToCommand();
-        var result = await Mediator.Send(command);
+        var result = await Send(command);
         return result.ToNoContentActionResult();
     }
 
@@ -111,7 +111,7 @@ public class AuthController(
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> ConfirmPasswordReset(ConfirmPasswordResetHttpRequest request) {
         var command = request.ToCommand();
-        var result = await Mediator.Send(command);
+        var result = await Send(command);
         return result.ToOkActionResult(this, static value => value.ToHttpResponse());
     }
 
@@ -124,7 +124,7 @@ public class AuthController(
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> TelegramVerify(TelegramAuthHttpRequest request) {
         var command = request.ToCommand();
-        var result = await Mediator.Send(command);
+        var result = await Send(command);
         return result.ToOkActionResult(this, static value => value.ToHttpResponse());
     }
 
@@ -137,7 +137,7 @@ public class AuthController(
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> TelegramLoginWidget(TelegramLoginWidgetHttpRequest request) {
         var command = request.ToCommand();
-        var result = await Mediator.Send(command);
+        var result = await Send(command);
         return result.ToOkActionResult(this, static value => value.ToHttpResponse());
     }
 
@@ -151,7 +151,7 @@ public class AuthController(
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> LinkTelegram([FromCurrentUser] Guid userId, TelegramAuthHttpRequest request) {
         var command = request.ToLinkCommand(userId);
-        var result = await Mediator.Send(command);
+        var result = await Send(command);
         return result.ToOkActionResult(this, static value => value.ToHttpResponse());
     }
 
@@ -179,7 +179,7 @@ public class AuthController(
         }
 
         var command = request.ToCommand();
-        var result = await Mediator.Send(command);
+        var result = await Send(command);
         return result.ToOkActionResult(this, static value => value.ToHttpResponse());
     }
 
@@ -191,7 +191,7 @@ public class AuthController(
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> AdminSsoStart([FromCurrentUser] Guid userId) {
         var command = userId.ToAdminSsoStartCommand();
-        var result = await Mediator.Send(command);
+        var result = await Send(command);
         return result.ToOkActionResult(this, static value => value.ToHttpResponse());
     }
 
@@ -203,7 +203,8 @@ public class AuthController(
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> AdminSsoExchange(AdminSsoExchangeHttpRequest request) {
         var command = request.ToCommand();
-        var result = await Mediator.Send(command);
+        var result = await Send(command);
         return result.ToOkActionResult(this, static value => value.ToHttpResponse());
     }
 }
+

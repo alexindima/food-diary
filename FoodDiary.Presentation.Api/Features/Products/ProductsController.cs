@@ -19,7 +19,7 @@ public class ProductsController(ISender mediator) : AuthorizedController(mediato
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetAll([FromCurrentUser] Guid userId, [FromQuery] GetProductsHttpQuery query) {
-        var result = await Mediator.Send(query.ToQuery(userId));
+        var result = await Send(query.ToQuery(userId));
         return result.ToOkActionResult(this, static value => value.ToHttpResponse());
     }
 
@@ -29,7 +29,7 @@ public class ProductsController(ISender mediator) : AuthorizedController(mediato
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetAllWithRecent([FromCurrentUser] Guid userId, [FromQuery] GetProductsWithRecentHttpQuery query) {
-        var result = await Mediator.Send(query.ToQuery(userId));
+        var result = await Send(query.ToQuery(userId));
         return result.ToOkActionResult(this, static value => value.ToHttpResponse());
     }
 
@@ -39,7 +39,7 @@ public class ProductsController(ISender mediator) : AuthorizedController(mediato
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetRecent([FromCurrentUser] Guid userId, [FromQuery] GetRecentProductsHttpQuery query) {
-        var result = await Mediator.Send(query.ToQuery(userId));
+        var result = await Send(query.ToQuery(userId));
         return result.ToOkActionResult(this, static value => value.Select(x => x.ToHttpResponse()).ToList());
     }
 
@@ -49,7 +49,7 @@ public class ProductsController(ISender mediator) : AuthorizedController(mediato
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status404NotFound)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetById(Guid id, [FromCurrentUser] Guid userId) {
-        var result = await Mediator.Send(id.ToQuery(userId));
+        var result = await Send(id.ToQuery(userId));
         return result.ToOkActionResult(this, static value => value.ToHttpResponse());
     }
 
@@ -61,7 +61,7 @@ public class ProductsController(ISender mediator) : AuthorizedController(mediato
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Create([FromCurrentUser] Guid userId, [FromBody] CreateProductHttpRequest request) {
         var command = request.ToCommand(userId);
-        var result = await Mediator.Send(command);
+        var result = await Send(command);
         return result.ToOkActionResult(this, static value => value.ToHttpResponse());
     }
 
@@ -74,7 +74,7 @@ public class ProductsController(ISender mediator) : AuthorizedController(mediato
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Update(Guid id, [FromCurrentUser] Guid userId, [FromBody] UpdateProductHttpRequest request) {
         var command = request.ToCommand(userId, id);
-        var result = await Mediator.Send(command);
+        var result = await Send(command);
         return result.ToOkActionResult(this, static value => value.ToHttpResponse());
     }
 
@@ -85,7 +85,7 @@ public class ProductsController(ISender mediator) : AuthorizedController(mediato
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Delete(Guid id, [FromCurrentUser] Guid userId) {
         var command = id.ToDeleteCommand(userId);
-        var result = await Mediator.Send(command);
+        var result = await Send(command);
         return result.ToNoContentActionResult();
     }
 
@@ -96,7 +96,8 @@ public class ProductsController(ISender mediator) : AuthorizedController(mediato
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Duplicate(Guid id, [FromCurrentUser] Guid userId) {
         var command = id.ToDuplicateCommand(userId);
-        var result = await Mediator.Send(command);
+        var result = await Send(command);
         return result.ToOkActionResult(this, static value => value.ToHttpResponse());
     }
 }
+

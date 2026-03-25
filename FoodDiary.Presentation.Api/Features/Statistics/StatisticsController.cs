@@ -19,7 +19,8 @@ public class StatisticsController(ISender mediator) : AuthorizedController(media
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Get([FromCurrentUser] Guid userId, [FromQuery] GetStatisticsHttpQuery query) {
-        var result = await Mediator.Send(query.ToQuery(userId));
+        var result = await Send(query.ToQuery(userId));
         return result.ToOkActionResult(this, static value => value.Select(item => item.ToHttpResponse()).ToList());
     }
 }
+

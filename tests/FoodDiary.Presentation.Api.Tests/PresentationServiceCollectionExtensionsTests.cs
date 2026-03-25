@@ -1,6 +1,7 @@
 using FoodDiary.Application.Common.Interfaces.Services;
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Extensions;
+using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Presentation.Api.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -51,6 +52,35 @@ public sealed class PresentationServiceCollectionExtensionsTests {
         var result = apiBehaviorOptions.InvalidModelStateResponseFactory(actionContext);
 
         Assert.IsType<UnauthorizedResult>(result);
+    }
+
+    [Fact]
+    public void AddPresentationApi_ConfiguresInvalidModelStateFactory_ToReturnApiErrorResponse() {
+        var services = new ServiceCollection();
+
+        services.AddLogging();
+        services.AddOptions();
+        services.AddPresentationApi();
+        using var provider = services.BuildServiceProvider();
+
+        var apiBehaviorOptions = provider.GetRequiredService<Microsoft.Extensions.Options.IOptions<ApiBehaviorOptions>>().Value;
+        var httpContext = new DefaultHttpContext {
+            RequestServices = provider,
+            TraceIdentifier = "trace-123",
+        };
+
+        var actionContext = new ActionContext {
+            HttpContext = httpContext,
+        };
+        actionContext.ModelState.AddModelError("email", "Email is required.");
+
+        var result = apiBehaviorOptions.InvalidModelStateResponseFactory(actionContext);
+
+        var badRequest = Assert.IsType<BadRequestObjectResult>(result);
+        var response = Assert.IsType<ApiErrorHttpResponse>(badRequest.Value);
+        Assert.Equal("Validation.Invalid", response.Error);
+        Assert.Equal("Email is required.", response.Message);
+        Assert.Equal("trace-123", response.TraceId);
     }
 
     [Fact]
