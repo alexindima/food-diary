@@ -95,6 +95,84 @@
       ]
     },
     {
+      "Path": "/api/recipes",
+      "Operations": [
+        {
+          "Method": "get",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200",
+            "400",
+            "401",
+            "500"
+          ]
+        },
+        {
+          "Method": "post",
+          "HasRequestBody": true,
+          "ResponseCodes": [
+            "200",
+            "400",
+            "401",
+            "409",
+            "500"
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/recipes/{id}",
+      "Operations": [
+        {
+          "Method": "delete",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "204",
+            "401",
+            "404",
+            "500"
+          ]
+        },
+        {
+          "Method": "get",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200",
+            "401",
+            "404",
+            "500"
+          ]
+        },
+        {
+          "Method": "patch",
+          "HasRequestBody": true,
+          "ResponseCodes": [
+            "200",
+            "400",
+            "401",
+            "404",
+            "409",
+            "500"
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/statistics",
+      "Operations": [
+        {
+          "Method": "get",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200",
+            "400",
+            "401",
+            "500"
+          ]
+        }
+      ]
+    },
+    {
       "Path": "/api/users/info",
       "Operations": [
         {

@@ -2,6 +2,7 @@ using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using FoodDiary.Presentation.Api.Authorization;
 using FoodDiary.Presentation.Api.Features.Auth.Requests;
 using FoodDiary.Presentation.Api.Features.WaistEntries.Requests;
 using FoodDiary.Presentation.Api.Features.WeightEntries.Requests;
@@ -93,6 +94,18 @@ public sealed class PresentationBoundaryIntegrationTests(
     }
 
     [Fact]
+    public async Task AdminDashboard_WithAdminRole_ReturnsOk() {
+        var client = testAuthFactory.CreateClient();
+        client.DefaultRequestHeaders.Add(TestAuthenticationHandler.AuthenticateHeader, "true");
+        client.DefaultRequestHeaders.Add(TestAuthenticationHandler.UserIdHeader, Guid.NewGuid().ToString());
+        client.DefaultRequestHeaders.Add(TestAuthenticationHandler.RoleHeader, PresentationRoleNames.Admin);
+
+        var response = await client.GetAsync("/api/admin/dashboard");
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+    }
+
+    [Fact]
     public async Task GetProductById_WithMissingProduct_ReturnsNotFoundContract() {
         var client = apiFactory.CreateClient();
         var accessToken = await RegisterAndGetAccessTokenAsync(client);
@@ -155,6 +168,36 @@ public sealed class PresentationBoundaryIntegrationTests(
     }
 
     [Fact]
+    public async Task CreateRecipe_WithInvalidBody_ReturnsValidationErrorContract() {
+        var client = apiFactory.CreateClient();
+        var accessToken = await RegisterAndGetAccessTokenAsync(client);
+        client.DefaultRequestHeaders.Authorization =
+            new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
+
+        var response = await client.PostAsJsonAsync("/api/recipes", new { });
+        var payload = await response.Content.ReadFromJsonAsync<ErrorPayload>(JsonOptions);
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.NotNull(payload);
+        Assert.Equal("Validation.Invalid", payload.Error);
+    }
+
+    [Fact]
+    public async Task Statistics_WithInvalidDateRangeQuery_ReturnsValidationErrorContract() {
+        var client = apiFactory.CreateClient();
+        var accessToken = await RegisterAndGetAccessTokenAsync(client);
+        client.DefaultRequestHeaders.Authorization =
+            new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
+
+        var response = await client.GetAsync("/api/statistics?dateFrom=invalid&dateTo=invalid");
+        var payload = await response.Content.ReadFromJsonAsync<ErrorPayload>(JsonOptions);
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.NotNull(payload);
+        Assert.Equal("Validation.Invalid", payload.Error);
+    }
+
+    [Fact]
     public async Task SwaggerJson_ContainsExpectedPresentationRoutes() {
         var client = apiFactory.CreateClient();
 
@@ -168,6 +211,9 @@ public sealed class PresentationBoundaryIntegrationTests(
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.Contains(pathNames, path => string.Equals(path, "/api/products", StringComparison.OrdinalIgnoreCase));
         Assert.Contains(pathNames, path => string.Equals(path, "/api/auth/register", StringComparison.OrdinalIgnoreCase));
+        Assert.Contains(pathNames, path => string.Equals(path, "/api/recipes", StringComparison.OrdinalIgnoreCase));
+        Assert.Contains(pathNames, path => string.Equals(path, "/api/statistics", StringComparison.OrdinalIgnoreCase));
+        Assert.Contains(pathNames, path => string.Equals(path, "/api/admin/dashboard", StringComparison.OrdinalIgnoreCase));
         Assert.True(json.RootElement.TryGetProperty("openapi", out _));
     }
 
@@ -281,6 +327,9 @@ public sealed class PresentationBoundaryIntegrationTests(
             "/api/Auth/login",
             "/api/Products",
             "/api/Products/{id}",
+            "/api/Recipes",
+            "/api/Recipes/{id}",
+            "/api/Statistics",
             "/api/Users/info",
             "/api/weight-entries",
             "/api/waist-entries"

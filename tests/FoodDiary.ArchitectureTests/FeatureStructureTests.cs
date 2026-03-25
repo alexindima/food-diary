@@ -22,7 +22,8 @@ public class FeatureStructureTests {
             var featurePath = Path.Combine(applicationPath, feature);
             var hasCommands = Directory.Exists(Path.Combine(featurePath, "Commands"));
             var hasQueries = Directory.Exists(Path.Combine(featurePath, "Queries"));
-            Assert.True(hasCommands || hasQueries, $"Feature '{feature}' should contain Commands and/or Queries folder.");
+            Assert.True(hasCommands || hasQueries,
+                $"Feature '{feature}' should contain Commands and/or Queries folder.");
         }
     }
 
@@ -43,17 +44,19 @@ public class FeatureStructureTests {
     [Theory]
     [InlineData("FoodDiary.Application", "FoodDiary.Application")]
     [InlineData("FoodDiary.Domain", "FoodDiary.Domain")]
-        [InlineData("FoodDiary.Infrastructure", "FoodDiary.Infrastructure")]
-        [InlineData("FoodDiary.JobManager", "FoodDiary.JobManager")]
-        [InlineData("FoodDiary.Presentation.Api", "FoodDiary.Presentation.Api")]
-        [InlineData("FoodDiary.Telegram.Bot", "FoodDiary.Telegram.Bot")]
-        [InlineData("FoodDiary.Web.Api", "FoodDiary.Web.Api")]
+    [InlineData("FoodDiary.Infrastructure", "FoodDiary.Infrastructure")]
+    [InlineData("FoodDiary.JobManager", "FoodDiary.JobManager")]
+    [InlineData("FoodDiary.Presentation.Api", "FoodDiary.Presentation.Api")]
+    [InlineData("FoodDiary.Telegram.Bot", "FoodDiary.Telegram.Bot")]
+    [InlineData("FoodDiary.Web.Api", "FoodDiary.Web.Api")]
     public void Namespaces_Match_ProjectFolderStructure(string projectFolder, string namespaceRoot) {
         var root = GetRepositoryRoot();
         var projectPath = Path.Combine(root, projectFolder);
         var sourceFiles = Directory.GetFiles(projectPath, "*.cs", SearchOption.AllDirectories)
-            .Where(path => !path.Contains($"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase))
-            .Where(path => !path.Contains($"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase))
+            .Where(path => !path.Contains($"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}",
+                StringComparison.OrdinalIgnoreCase))
+            .Where(path => !path.Contains($"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}",
+                StringComparison.OrdinalIgnoreCase))
             .ToArray();
 
         Assert.NotEmpty(sourceFiles);
@@ -69,10 +72,12 @@ public class FeatureStructureTests {
                     continue;
                 }
 
-                Assert.False(string.IsNullOrWhiteSpace(namespaceFromFile), $"Namespace declaration not found in '{sourceFile}'.");
+                Assert.False(string.IsNullOrWhiteSpace(namespaceFromFile),
+                    $"Namespace declaration not found in '{sourceFile}'.");
             }
 
-            var relativeDirectory = Path.GetDirectoryName(Path.GetRelativePath(projectPath, sourceFile)) ?? string.Empty;
+            var relativeDirectory =
+                Path.GetDirectoryName(Path.GetRelativePath(projectPath, sourceFile)) ?? string.Empty;
             var namespaceSuffix = relativeDirectory
                 .Replace(Path.DirectorySeparatorChar, '.')
                 .Replace(Path.AltDirectorySeparatorChar, '.');

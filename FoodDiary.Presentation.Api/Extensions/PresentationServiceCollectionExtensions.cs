@@ -1,6 +1,7 @@
 using FoodDiary.Application.Common.Interfaces.Services;
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Responses;
+using FoodDiary.Presentation.Api.Security;
 using FoodDiary.Presentation.Api.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
@@ -37,6 +38,7 @@ public static class PresentationServiceCollectionExtensions {
                 };
             });
         services.AddSignalR();
+        services.AddScoped<TelegramBotSecretAuthorizationFilter>();
         services.AddSingleton<IUserIdProvider, UserIdProvider>();
         services.AddScoped<IEmailVerificationNotifier, EmailVerificationNotifier>();
         return services;

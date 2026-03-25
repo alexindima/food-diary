@@ -1,0 +1,177 @@
+{
+  "admin-users-list": {
+    "keys": [
+      "data",
+      "limit",
+      "page",
+      "totalItems",
+      "totalPages"
+    ],
+    "dataCount": 1,
+    "firstUserKeys": [
+      "aiInputTokenLimit",
+      "aiOutputTokenLimit",
+      "createdOnUtc",
+      "deletedAt",
+      "email",
+      "firstName",
+      "id",
+      "isActive",
+      "isEmailConfirmed",
+      "language",
+      "lastLoginAtUtc",
+      "lastName",
+      "roles",
+      "username"
+    ]
+  },
+  "recipe-by-id": {
+    "keys": [
+      "category",
+      "comment",
+      "cookTime",
+      "createdAt",
+      "description",
+      "id",
+      "imageAssetId",
+      "imageUrl",
+      "isNutritionAutoCalculated",
+      "isOwnedByCurrentUser",
+      "manualAlcohol",
+      "manualCalories",
+      "manualCarbs",
+      "manualFats",
+      "manualFiber",
+      "manualProteins",
+      "name",
+      "prepTime",
+      "servings",
+      "steps",
+      "totalAlcohol",
+      "totalCalories",
+      "totalCarbs",
+      "totalFats",
+      "totalFiber",
+      "totalProteins",
+      "usageCount",
+      "visibility"
+    ],
+    "name": "Integration Recipe",
+    "servings": 2,
+    "visibility": "Private",
+    "isOwnedByCurrentUser": true,
+    "stepsCount": 1,
+    "stepKeys": [
+      "id",
+      "imageAssetId",
+      "imageUrl",
+      "ingredients",
+      "instruction",
+      "stepNumber",
+      "title"
+    ],
+    "firstIngredientKeys": [
+      "amount",
+      "id",
+      "nestedRecipeId",
+      "nestedRecipeName",
+      "productAlcoholPerBase",
+      "productBaseAmount",
+      "productBaseUnit",
+      "productCaloriesPerBase",
+      "productCarbsPerBase",
+      "productFatsPerBase",
+      "productFiberPerBase",
+      "productId",
+      "productName",
+      "productProteinsPerBase"
+    ]
+  },
+  "statistics-empty-range": {
+    "isArray": true,
+    "count": 7
+  },
+  "shopping-list-current": {
+    "keys": [
+      "createdAt",
+      "id",
+      "items",
+      "name"
+    ],
+    "name": "Weekend Shopping",
+    "itemsCount": 1,
+    "itemKeys": [
+      "amount",
+      "category",
+      "id",
+      "isChecked",
+      "name",
+      "productId",
+      "shoppingListId",
+      "sortOrder",
+      "unit"
+    ]
+  },
+  "cycle-current": {
+    "keys": [
+      "averageLength",
+      "days",
+      "id",
+      "lutealLength",
+      "notes",
+      "predictions",
+      "startDate",
+      "userId"
+    ],
+    "averageLength": 28,
+    "lutealLength": 14,
+    "daysCount": 0,
+    "predictionKeys": [
+      "nextPeriodStart",
+      "ovulationDate",
+      "pmsStart"
+    ]
+  },
+  "dashboard-snapshot": {
+    "keys": [
+      "advice",
+      "dailyGoal",
+      "dashboardLayout",
+      "date",
+      "hydration",
+      "meals",
+      "statistics",
+      "waist",
+      "waistTrend",
+      "weeklyCalories",
+      "weight",
+      "weightTrend"
+    ],
+    "weeklyCaloriesCount": 7,
+    "statisticsKeys": [
+      "averageCarbs",
+      "averageFats",
+      "averageFiber",
+      "averageProteins",
+      "carbGoal",
+      "fatGoal",
+      "fiberGoal",
+      "proteinGoal",
+      "totalCalories"
+    ],
+    "mealsKeys": [
+      "items",
+      "total"
+    ],
+    "weightKeys": [
+      "desired",
+      "latest",
+      "previous"
+    ],
+    "waistKeys": [
+      "desired",
+      "latest",
+      "previous"
+    ]
+  }
+}
