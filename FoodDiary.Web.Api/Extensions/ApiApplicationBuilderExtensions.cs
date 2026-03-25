@@ -5,6 +5,8 @@ namespace FoodDiary.Web.Api.Extensions;
 public static class ApiApplicationBuilderExtensions {
     public static WebApplication UseApiPipeline(this WebApplication app) {
         app.UseExceptionHandler();
+        app.UseHttpLogging();
+        app.UseMiddleware<RequestObservabilityMiddleware>();
 
         if (app.Environment.IsDevelopment()) {
             app.UseSwagger();

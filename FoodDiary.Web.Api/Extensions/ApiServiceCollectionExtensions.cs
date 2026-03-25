@@ -8,6 +8,7 @@ using FoodDiary.Presentation.Api.Policies;
 using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Web.Api.Options;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 
@@ -76,12 +77,26 @@ public static class ApiServiceCollectionExtensions {
             });
 
         services.AddAuthorization();
+        services.AddHttpLogging(options => {
+            options.LoggingFields = HttpLoggingFields.RequestMethod |
+                                    HttpLoggingFields.RequestPath |
+                                    HttpLoggingFields.RequestQuery |
+                                    HttpLoggingFields.ResponseStatusCode |
+                                    HttpLoggingFields.Duration;
+            options.RequestHeaders.Add("X-Forwarded-For");
+            options.RequestHeaders.Add("X-Correlation-Id");
+            options.MediaTypeOptions.AddText("application/json");
+        });
         services.AddProblemDetails();
         services.AddExceptionHandler<ApiExceptionHandler>();
         services.AddRateLimiter(options => {
             options.OnRejected = async (context, cancellationToken) => {
                 var httpContext = context.HttpContext;
                 httpContext.Response.StatusCode = StatusCodes.Status429TooManyRequests;
+                ApiTelemetry.RateLimitRejectionCounter.Add(
+                    1,
+                    new KeyValuePair<string, object?>("http.request.method", httpContext.Request.Method),
+                    new KeyValuePair<string, object?>("url.path", httpContext.Request.Path.Value));
 
                 await httpContext.Response.WriteAsJsonAsync(new ApiErrorHttpResponse(
                     "RateLimit.Exceeded",
