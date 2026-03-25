@@ -10,6 +10,8 @@ public static class PresentationErrorHttpMapper {
         ["Authentication.TelegramNotLinked"] = StatusCodes.Status404NotFound,
         ["Authentication.TelegramAlreadyLinked"] = StatusCodes.Status409Conflict,
         ["Authentication.TelegramNotConfigured"] = StatusCodes.Status500InternalServerError,
+        ["Authentication.TelegramBotNotConfigured"] = StatusCodes.Status500InternalServerError,
+        ["Authentication.TelegramBotInvalidSecret"] = StatusCodes.Status401Unauthorized,
         ["Authentication.AdminSsoForbidden"] = StatusCodes.Status403Forbidden,
         ["Authentication.AdminSsoInvalidCode"] = StatusCodes.Status401Unauthorized,
         ["Authentication.AccountNotDeleted"] = StatusCodes.Status409Conflict,

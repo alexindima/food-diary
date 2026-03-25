@@ -1,5 +1,4 @@
 using FoodDiary.Presentation.Api.Controllers;
-using FoodDiary.Presentation.Api.Extensions;
 using FoodDiary.Presentation.Api.Features.Ai.Mappings;
 using FoodDiary.Presentation.Api.Features.Ai.Responses;
 using FoodDiary.Presentation.Api.Responses;
@@ -18,9 +17,7 @@ public sealed class AiUsageController(ISender mediator) : AuthorizedController(m
     [ProducesResponseType<UserAiUsageHttpResponse>(StatusCodes.Status200OK)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> GetMyUsage([FromCurrentUser] Guid userId) {
-        var result = await Send(userId.ToUsageQuery());
-        return result.ToOkActionResult(this, static value => value.ToHttpResponse());
-    }
+    public Task<IActionResult> GetMyUsage([FromCurrentUser] Guid userId) =>
+        HandleOk(userId.ToUsageQuery(), static value => value.ToHttpResponse());
 }
 

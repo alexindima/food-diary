@@ -21,6 +21,7 @@ public sealed class TelegramBotSecretAuthorizationFilterTests {
         var payload = Assert.IsType<ApiErrorHttpResponse>(result.Value);
         Assert.Equal(StatusCodes.Status500InternalServerError, result.StatusCode);
         Assert.Equal("Authentication.TelegramBotNotConfigured", payload.Error);
+        Assert.Equal("Telegram bot authentication is not configured.", payload.Message);
     }
 
     [Fact]
@@ -35,6 +36,7 @@ public sealed class TelegramBotSecretAuthorizationFilterTests {
         var payload = Assert.IsType<ApiErrorHttpResponse>(result.Value);
         Assert.Equal(StatusCodes.Status401Unauthorized, result.StatusCode);
         Assert.Equal("Authentication.TelegramBotInvalidSecret", payload.Error);
+        Assert.Equal("Telegram bot secret is invalid.", payload.Message);
     }
 
     [Fact]

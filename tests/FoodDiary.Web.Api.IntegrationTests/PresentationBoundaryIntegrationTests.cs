@@ -40,7 +40,9 @@ public sealed class PresentationBoundaryIntegrationTests(
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.NotNull(payload);
         Assert.Equal("Validation.Invalid", payload.Error);
-        Assert.Contains("email", payload.Message, StringComparison.OrdinalIgnoreCase);
+        Assert.Equal("Invalid email format", payload.Message);
+        Assert.NotNull(payload.Errors);
+        Assert.Contains(payload.Errors.Keys, key => string.Equals(key, "email", StringComparison.Ordinal));
         await AssertErrorContractSnapshotAsync("register-invalid-email", payload);
     }
 
@@ -62,6 +64,8 @@ public sealed class PresentationBoundaryIntegrationTests(
         Assert.Equal(HttpStatusCode.Conflict, duplicateResponse.StatusCode);
         Assert.NotNull(payload);
         Assert.Equal("Validation.Conflict", payload.Error);
+        Assert.NotNull(payload.Errors);
+        Assert.Contains(payload.Errors.Keys, key => string.Equals(key, "email", StringComparison.Ordinal));
         await AssertErrorContractSnapshotAsync("register-duplicate-email", payload);
     }
 
@@ -180,6 +184,8 @@ public sealed class PresentationBoundaryIntegrationTests(
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.NotNull(payload);
         Assert.Equal("Validation.Invalid", payload.Error);
+        Assert.NotNull(payload.Errors);
+        Assert.Contains(payload.Errors.Keys, key => string.Equals(key, "name", StringComparison.Ordinal));
     }
 
     [Fact]
@@ -195,6 +201,9 @@ public sealed class PresentationBoundaryIntegrationTests(
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.NotNull(payload);
         Assert.Equal("Validation.Invalid", payload.Error);
+        Assert.NotNull(payload.Errors);
+        Assert.Contains(payload.Errors.Keys, key => string.Equals(key, "dateFrom", StringComparison.Ordinal));
+        Assert.Contains(payload.Errors.Keys, key => string.Equals(key, "dateTo", StringComparison.Ordinal));
     }
 
     [Fact]
@@ -403,8 +412,14 @@ public sealed class PresentationBoundaryIntegrationTests(
     private static async Task AssertErrorContractSnapshotAsync(string scenario, ErrorPayload payload) {
         var snapshotPath = Path.Combine(AppContext.BaseDirectory, "Snapshots", "error-contract-snapshots.json");
         var snapshotRoot = JsonNode.Parse(await File.ReadAllTextAsync(snapshotPath))!.AsObject();
-        var expected = snapshotRoot[scenario]?.ToJsonString(new JsonSerializerOptions { WriteIndented = true });
-        var actual = JsonSerializer.Serialize(payload, new JsonSerializerOptions { WriteIndented = true });
+        var serializerOptions = new JsonSerializerOptions {
+            WriteIndented = true,
+            DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull,
+        };
+        var expected = snapshotRoot[scenario]?.ToJsonString(serializerOptions);
+        var actual = JsonSerializer.Serialize(
+            new ErrorContractSnapshot(payload.Error, payload.Message, payload.Errors),
+            serializerOptions);
 
         Assert.NotNull(expected);
         Assert.Equal(
@@ -414,7 +429,9 @@ public sealed class PresentationBoundaryIntegrationTests(
 
     private sealed record AuthPayload(string AccessToken);
 
-    private sealed record ErrorPayload(string Error, string Message);
+    private sealed record ErrorPayload(string Error, string Message, string? TraceId = null, IReadOnlyDictionary<string, string[]>? Errors = null);
+
+    private sealed record ErrorContractSnapshot(string Error, string Message, IReadOnlyDictionary<string, string[]>? Errors = null);
 
     private sealed record NegotiatePayload(string ConnectionId, string ConnectionToken);
 

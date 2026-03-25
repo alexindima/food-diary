@@ -103,5 +103,24 @@ public sealed class ResultExtensionsTests {
         Assert.Equal("Custom.Error", response.Error);
     }
 
+    [Fact]
+    public void ToActionResult_ValidationError_MapsStructuredErrors() {
+        var error = new Error(
+            "Validation.Invalid",
+            "Invalid email format",
+            new Dictionary<string, string[]>(StringComparer.Ordinal) {
+                ["Email"] = ["Invalid email format"],
+            });
+        var result = Result.Failure(error);
+
+        var actionResult = result.ToActionResult();
+
+        var objectResult = Assert.IsType<ObjectResult>(actionResult);
+        var response = Assert.IsType<ApiErrorHttpResponse>(objectResult.Value);
+        Assert.NotNull(response.Errors);
+        Assert.True(response.Errors.TryGetValue("email", out var errors));
+        Assert.Equal(["Invalid email format"], errors);
+    }
+
     private sealed class TestController : ControllerBase;
 }

@@ -7,6 +7,8 @@ namespace FoodDiary.Presentation.Api.Tests;
 public sealed class PresentationErrorHttpMapperTests {
     [Theory]
     [InlineData("Authentication.TelegramInvalidData", StatusCodes.Status400BadRequest)]
+    [InlineData("Authentication.TelegramBotNotConfigured", StatusCodes.Status500InternalServerError)]
+    [InlineData("Authentication.TelegramBotInvalidSecret", StatusCodes.Status401Unauthorized)]
     [InlineData("Authentication.AdminSsoForbidden", StatusCodes.Status403Forbidden)]
     [InlineData("Authentication.AccountNotDeleted", StatusCodes.Status409Conflict)]
     [InlineData("Ai.InvalidResponse", StatusCodes.Status502BadGateway)]

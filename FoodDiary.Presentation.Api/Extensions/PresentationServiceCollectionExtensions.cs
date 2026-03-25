@@ -21,20 +21,22 @@ public static class PresentationServiceCollectionExtensions {
                         return new UnauthorizedResult();
                     }
 
-                    var errors = context.ModelState.Values
-                        .SelectMany(static entry => entry.Errors)
-                        .Select(static error => error.ErrorMessage)
-                        .Where(static message => !string.IsNullOrWhiteSpace(message))
-                        .ToArray();
-
-                    var message = errors.Length > 0
-                        ? string.Join("; ", errors)
-                        : "The request is invalid.";
+                    var errors = context.ModelState
+                        .Where(static entry => entry.Value?.Errors.Count > 0)
+                        .ToDictionary(
+                            static entry => ApiErrorDetailsMapper.ToCamelCasePath(string.IsNullOrWhiteSpace(entry.Key) ? "request" : entry.Key),
+                            static entry => entry.Value!.Errors
+                                .Select(static error => error.ErrorMessage)
+                                .Where(static message => !string.IsNullOrWhiteSpace(message))
+                                .DefaultIfEmpty("The value is invalid.")
+                                .ToArray(),
+                            StringComparer.Ordinal);
 
                     return new BadRequestObjectResult(new ApiErrorHttpResponse(
                         "Validation.Invalid",
-                        message,
-                        context.HttpContext.TraceIdentifier));
+                        "One or more validation errors occurred.",
+                        context.HttpContext.TraceIdentifier,
+                        errors.Count > 0 ? errors : null));
                 };
             });
         services.AddSignalR();

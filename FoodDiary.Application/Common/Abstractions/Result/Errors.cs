@@ -102,6 +102,14 @@ public static class Errors {
             "Authentication.TelegramNotConfigured",
             "Telegram authentication is not configured.");
 
+        public static Error TelegramBotNotConfigured => new(
+            "Authentication.TelegramBotNotConfigured",
+            "Telegram bot authentication is not configured.");
+
+        public static Error TelegramBotInvalidSecret => new(
+            "Authentication.TelegramBotInvalidSecret",
+            "Telegram bot secret is invalid.");
+
         public static Error AdminSsoInvalidCode => new(
             "Authentication.AdminSsoInvalidCode",
             "Admin SSO code is invalid or expired.");
@@ -114,11 +122,18 @@ public static class Errors {
     public static class Validation {
         public static Error Required(string field) => new(
             "Validation.Required",
-            $"Field {field} is required.");
+            $"Field {field} is required.",
+            CreateDetails(field, $"Field {field} is required."));
 
         public static Error Invalid(string field, string reason) => new(
             "Validation.Invalid",
-            $"Field {field} is invalid: {reason}");
+            $"Field {field} is invalid: {reason}",
+            CreateDetails(field, $"Field {field} is invalid: {reason}"));
+
+        private static IReadOnlyDictionary<string, string[]> CreateDetails(string field, string message) =>
+            new Dictionary<string, string[]>(StringComparer.Ordinal) {
+                [field] = [message],
+            };
     }
 
     public static class WeightEntry {

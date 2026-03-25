@@ -9,6 +9,7 @@ public sealed class PresentationErrorCatalogTests {
     public void CentralErrorCatalog_HasExpectedHttpCoverage() {
         var internalOnlyCodes = new HashSet<string>(StringComparer.Ordinal) {
             "Authentication.TelegramNotConfigured",
+            "Authentication.TelegramBotNotConfigured",
             "Consumption.InvalidData",
             "Product.InvalidData",
             "Recipe.InvalidData",
@@ -52,6 +53,8 @@ public sealed class PresentationErrorCatalogTests {
         Errors.Authentication.TelegramNotLinked,
         Errors.Authentication.TelegramAlreadyLinked,
         Errors.Authentication.TelegramNotConfigured,
+        Errors.Authentication.TelegramBotNotConfigured,
+        Errors.Authentication.TelegramBotInvalidSecret,
         Errors.Authentication.AdminSsoInvalidCode,
         Errors.Authentication.AdminSsoForbidden,
         Errors.Validation.Required("field"),

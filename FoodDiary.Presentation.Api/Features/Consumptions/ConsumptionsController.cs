@@ -1,5 +1,4 @@
 using FoodDiary.Presentation.Api.Controllers;
-using FoodDiary.Presentation.Api.Extensions;
 using FoodDiary.Presentation.Api.Features.Consumptions.Mappings;
 using FoodDiary.Presentation.Api.Features.Consumptions.Requests;
 using FoodDiary.Presentation.Api.Features.Consumptions.Responses;
@@ -18,31 +17,28 @@ public class ConsumptionsController(ISender mediator) : AuthorizedController(med
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> GetAll([FromCurrentUser] Guid userId, [FromQuery] GetConsumptionsHttpQuery query) {
-        var result = await Send(query.ToQuery(userId));
-        return result.ToOkActionResult(this, static value => value.ToHttpResponse());
-    }
+    public Task<IActionResult> GetAll([FromCurrentUser] Guid userId, [FromQuery] GetConsumptionsHttpQuery query) =>
+        HandleOk(query.ToQuery(userId), static value => value.ToHttpResponse());
 
     [HttpGet("{id:guid}")]
     [ProducesResponseType<ConsumptionHttpResponse>(StatusCodes.Status200OK)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status404NotFound)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> GetById(Guid id, [FromCurrentUser] Guid userId) {
-        var result = await Send(id.ToQuery(userId));
-        return result.ToOkActionResult(this, static value => value.ToHttpResponse());
-    }
+    public Task<IActionResult> GetById(Guid id, [FromCurrentUser] Guid userId) =>
+        HandleOk(id.ToQuery(userId), static value => value.ToHttpResponse());
 
     [HttpPost]
-    [ProducesResponseType<ConsumptionHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ConsumptionHttpResponse>(StatusCodes.Status201Created)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> Create([FromCurrentUser] Guid userId, [FromBody] CreateConsumptionHttpRequest request) {
-        var command = request.ToCommand(userId);
-        var result = await Send(command);
-        return result.ToOkActionResult(this, static value => value.ToHttpResponse());
-    }
+    public Task<IActionResult> Create([FromCurrentUser] Guid userId, [FromBody] CreateConsumptionHttpRequest request) =>
+        HandleCreated(
+            request.ToCommand(userId),
+            nameof(GetById),
+            static value => new { id = value.Id },
+            static value => value.ToHttpResponse());
 
     [HttpPatch("{id:guid}")]
     [ProducesResponseType<ConsumptionHttpResponse>(StatusCodes.Status200OK)]
@@ -50,21 +46,15 @@ public class ConsumptionsController(ISender mediator) : AuthorizedController(med
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status404NotFound)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> Update(Guid id, [FromCurrentUser] Guid userId, [FromBody] UpdateConsumptionHttpRequest request) {
-        var command = request.ToCommand(userId, id);
-        var result = await Send(command);
-        return result.ToOkActionResult(this, static value => value.ToHttpResponse());
-    }
+    public Task<IActionResult> Update(Guid id, [FromCurrentUser] Guid userId, [FromBody] UpdateConsumptionHttpRequest request) =>
+        HandleOk(request.ToCommand(userId, id), static value => value.ToHttpResponse());
 
     [HttpDelete("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status404NotFound)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> Delete(Guid id, [FromCurrentUser] Guid userId) {
-        var command = id.ToDeleteCommand(userId);
-        var result = await Send(command);
-        return result.ToNoContentActionResult();
-    }
+    public Task<IActionResult> Delete(Guid id, [FromCurrentUser] Guid userId) =>
+        HandleNoContent(id.ToDeleteCommand(userId));
 }
 

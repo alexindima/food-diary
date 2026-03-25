@@ -1,5 +1,4 @@
 using FoodDiary.Presentation.Api.Controllers;
-using FoodDiary.Presentation.Api.Extensions;
 using FoodDiary.Presentation.Api.Features.Goals.Mappings;
 using FoodDiary.Presentation.Api.Features.Goals.Requests;
 using FoodDiary.Presentation.Api.Features.Goals.Responses;
@@ -18,10 +17,8 @@ public class GoalsController(ISender mediator) : AuthorizedController(mediator) 
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status404NotFound)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> GetGoals([FromCurrentUser] Guid userId) {
-        var result = await Send(userId.ToQuery());
-        return result.ToOkActionResult(this, static value => value.ToHttpResponse());
-    }
+    public Task<IActionResult> GetGoals([FromCurrentUser] Guid userId) =>
+        HandleOk(userId.ToQuery(), static value => value.ToHttpResponse());
 
     [HttpPatch]
     [ProducesResponseType<GoalsHttpResponse>(StatusCodes.Status200OK)]
@@ -29,10 +26,7 @@ public class GoalsController(ISender mediator) : AuthorizedController(mediator) 
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status404NotFound)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> UpdateGoals([FromCurrentUser] Guid userId, [FromBody] UpdateGoalsHttpRequest request) {
-        var command = request.ToCommand(userId);
-        var result = await Send(command);
-        return result.ToOkActionResult(this, static value => value.ToHttpResponse());
-    }
+    public Task<IActionResult> UpdateGoals([FromCurrentUser] Guid userId, [FromBody] UpdateGoalsHttpRequest request) =>
+        HandleOk(request.ToCommand(userId), static value => value.ToHttpResponse());
 }
 

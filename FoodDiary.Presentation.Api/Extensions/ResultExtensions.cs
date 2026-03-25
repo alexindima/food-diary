@@ -27,6 +27,16 @@ public static class ResultExtensions {
                 ? controller.Ok(map(result.Value))
                 : ErrorResult(result.Error);
         }
+
+        public IActionResult ToCreatedAtActionResult<TResponse>(
+            ControllerBase controller,
+            string actionName,
+            Func<T, object?> routeValues,
+            Func<T, TResponse> map) {
+            return result.IsSuccess
+                ? controller.CreatedAtAction(actionName, routeValues(result.Value), map(result.Value))
+                : ErrorResult(result.Error);
+        }
     }
 
     public static IActionResult ToNoContentActionResult(this Result result) {
@@ -42,7 +52,11 @@ public static class ResultExtensions {
         ErrorResult(error, PresentationErrorHttpMapper.MapStatusCode(error));
 
     private static IActionResult ErrorResult(Error error, int statusCode) =>
-        new ObjectResult(new ApiErrorHttpResponse(error.Code, error.Message, Activity.Current?.Id)) {
+        new ObjectResult(new ApiErrorHttpResponse(
+            error.Code,
+            error.Message,
+            Activity.Current?.Id,
+            ApiErrorDetailsMapper.Normalize(error.Details))) {
             StatusCode = statusCode,
         };
 }

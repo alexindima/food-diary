@@ -74,7 +74,8 @@ public sealed class PresentationPayloadContractIntegrationTests(
                 3,
                 0,
                 "Private"));
-        productResponse.EnsureSuccessStatusCode();
+        Assert.Equal(HttpStatusCode.Created, productResponse.StatusCode);
+        Assert.NotNull(productResponse.Headers.Location);
 
         using var productJson = JsonDocument.Parse(await productResponse.Content.ReadAsStringAsync());
         var productId = productJson.RootElement.GetProperty("id").GetGuid();
@@ -109,7 +110,8 @@ public sealed class PresentationPayloadContractIntegrationTests(
             ]);
 
         var createResponse = await client.PostAsJsonAsync("/api/recipes", createRequest);
-        createResponse.EnsureSuccessStatusCode();
+        Assert.Equal(HttpStatusCode.Created, createResponse.StatusCode);
+        Assert.NotNull(createResponse.Headers.Location);
 
         using var createdJson = JsonDocument.Parse(await createResponse.Content.ReadAsStringAsync());
         var recipeId = createdJson.RootElement.GetProperty("id").GetGuid();
@@ -160,7 +162,8 @@ public sealed class PresentationPayloadContractIntegrationTests(
                         false,
                         1)
                 ]));
-        createResponse.EnsureSuccessStatusCode();
+        Assert.Equal(HttpStatusCode.Created, createResponse.StatusCode);
+        Assert.NotNull(createResponse.Headers.Location);
 
         var currentResponse = await client.GetAsync("/api/shopping-lists/current");
         using var json = JsonDocument.Parse(await currentResponse.Content.ReadAsStringAsync());

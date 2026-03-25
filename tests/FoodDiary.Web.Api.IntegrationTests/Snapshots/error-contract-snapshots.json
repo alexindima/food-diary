@@ -1,11 +1,21 @@
 {
   "register-invalid-email": {
     "Error": "Validation.Invalid",
-    "Message": "Invalid email format"
+    "Message": "Invalid email format",
+    "Errors": {
+      "email": [
+        "Invalid email format"
+      ]
+    }
   },
   "register-duplicate-email": {
     "Error": "Validation.Conflict",
-    "Message": "User with this email already exists."
+    "Message": "User with this email already exists.",
+    "Errors": {
+      "email": [
+        "User with this email already exists."
+      ]
+    }
   },
   "products-missing-by-id": {
     "Error": "Product.NotAccessible",

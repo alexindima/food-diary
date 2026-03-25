@@ -3,6 +3,7 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
 using FoodDiary.Presentation.Api.Features.Auth.Requests;
+using FoodDiary.Presentation.Api.Features.Products.Requests;
 using FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
 using Xunit.Abstractions;
 
@@ -94,7 +95,53 @@ public sealed class AuthAndProductsFlowTests(ApiWebApplicationFactory factory, I
         Assert.NotEqual(HttpStatusCode.Unauthorized, authorizedResponse.StatusCode);
     }
 
+    [Fact]
+    public async Task CreateProduct_ReturnsCreatedAndLocationHeader() {
+        var client = factory.CreateClient();
+        var email = $"api-tests-{Guid.NewGuid():N}@example.com";
+        var registerResponse = await client.PostAsJsonAsync(
+            "/api/auth/register",
+            new RegisterHttpRequest(email, "Password123!", "en"));
+        registerResponse.EnsureSuccessStatusCode();
+
+        var authPayload = await registerResponse.Content.ReadFromJsonAsync<AuthPayload>(JsonOptions);
+        Assert.NotNull(authPayload);
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authPayload.AccessToken);
+
+        var response = await client.PostAsJsonAsync(
+            "/api/products",
+            new CreateProductHttpRequest(
+                null,
+                "Created Product",
+                null,
+                "Unknown",
+                null,
+                null,
+                null,
+                null,
+                null,
+                "G",
+                100,
+                100,
+                120,
+                10,
+                5,
+                20,
+                3,
+                0,
+                "Private"));
+
+        var payload = await response.Content.ReadFromJsonAsync<ProductPayload>(JsonOptions);
+
+        Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+        Assert.NotNull(payload);
+        Assert.NotNull(response.Headers.Location);
+        Assert.EndsWith($"/api/Products/{payload.Id}", response.Headers.Location.ToString(), StringComparison.OrdinalIgnoreCase);
+    }
+
     private sealed record AuthPayload(string AccessToken, string RefreshToken, AuthUserPayload User);
 
     private sealed record AuthUserPayload(string Email);
+
+    private sealed record ProductPayload(Guid Id);
 }

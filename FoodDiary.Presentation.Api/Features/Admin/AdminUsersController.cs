@@ -1,6 +1,5 @@
 using FoodDiary.Presentation.Api.Authorization;
 using FoodDiary.Presentation.Api.Controllers;
-using FoodDiary.Presentation.Api.Extensions;
 using FoodDiary.Presentation.Api.Features.Admin.Mappings;
 using FoodDiary.Presentation.Api.Features.Admin.Requests;
 using FoodDiary.Presentation.Api.Features.Admin.Responses;
@@ -22,10 +21,8 @@ public sealed class AdminUsersController(ISender mediator) : BaseApiController(m
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status403Forbidden)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> GetUsers([FromQuery] GetAdminUsersHttpQuery query) {
-        var result = await Send(query.ToQuery());
-        return result.ToOkActionResult(this, static value => value.ToHttpResponse());
-    }
+    public Task<IActionResult> GetUsers([FromQuery] GetAdminUsersHttpQuery query) =>
+        HandleOk(query.ToQuery(), static value => value.ToHttpResponse());
 
     [HttpPatch("{id:guid}")]
     [ProducesResponseType<AdminUserHttpResponse>(StatusCodes.Status200OK)]
@@ -34,10 +31,7 @@ public sealed class AdminUsersController(ISender mediator) : BaseApiController(m
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status403Forbidden)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status404NotFound)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> UpdateUser(Guid id, [FromBody] AdminUserUpdateHttpRequest request) {
-        var command = request.ToCommand(id);
-        var result = await Send(command);
-        return result.ToOkActionResult(this, static value => value.ToHttpResponse());
-    }
+    public Task<IActionResult> UpdateUser(Guid id, [FromBody] AdminUserUpdateHttpRequest request) =>
+        HandleOk(request.ToCommand(id), static value => value.ToHttpResponse());
 }
 

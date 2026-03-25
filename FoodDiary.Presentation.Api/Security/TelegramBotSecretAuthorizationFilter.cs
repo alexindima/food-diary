@@ -1,6 +1,5 @@
 using FoodDiary.Presentation.Api.Options;
 using FoodDiary.Presentation.Api.Responses;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Options;
@@ -17,9 +16,7 @@ public sealed class TelegramBotSecretAuthorizationFilter(IOptions<TelegramBotAut
         if (string.IsNullOrWhiteSpace(_telegramBotOptions.ApiSecret)) {
             context.Result = CreateErrorResult(
                 context,
-                StatusCodes.Status500InternalServerError,
-                "Authentication.TelegramBotNotConfigured",
-                "Telegram bot authentication is not configured.");
+                FoodDiary.Application.Common.Abstractions.Result.Errors.Authentication.TelegramBotNotConfigured);
             return Task.CompletedTask;
         }
 
@@ -30,18 +27,18 @@ public sealed class TelegramBotSecretAuthorizationFilter(IOptions<TelegramBotAut
 
         context.Result = CreateErrorResult(
             context,
-            StatusCodes.Status401Unauthorized,
-            "Authentication.TelegramBotInvalidSecret",
-            "Telegram bot secret is invalid.");
+            FoodDiary.Application.Common.Abstractions.Result.Errors.Authentication.TelegramBotInvalidSecret);
         return Task.CompletedTask;
     }
 
     private static ObjectResult CreateErrorResult(
         AuthorizationFilterContext context,
-        int statusCode,
-        string errorCode,
-        string message) =>
-        new(new ApiErrorHttpResponse(errorCode, message, context.HttpContext.TraceIdentifier)) {
-            StatusCode = statusCode,
+        FoodDiary.Application.Common.Abstractions.Result.Error error) =>
+        new(new ApiErrorHttpResponse(
+            error.Code,
+            error.Message,
+            context.HttpContext.TraceIdentifier,
+            ApiErrorDetailsMapper.Normalize(error.Details))) {
+            StatusCode = PresentationErrorHttpMapper.MapStatusCode(error),
         };
 }

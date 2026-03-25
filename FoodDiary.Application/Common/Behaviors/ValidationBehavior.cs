@@ -29,17 +29,38 @@ public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TReques
         var errors = validationResults
             .Where(r => !r.IsValid)
             .SelectMany(r => r.Errors)
-            .Select(f => new Error(
-                string.IsNullOrWhiteSpace(f.ErrorCode) ? "Validation.Invalid" : f.ErrorCode,
-                f.ErrorMessage))
             .ToArray();
 
         if (errors.Length == 0) {
             return await next(cancellationToken);
         }
 
+        var groupedDetails = errors
+            .Where(static error => !string.IsNullOrWhiteSpace(error.PropertyName))
+            .GroupBy(
+                static error => error.PropertyName,
+                StringComparer.Ordinal)
+            .ToDictionary(
+                static group => group.Key,
+                static group => group
+                    .Select(static error => error.ErrorMessage)
+                    .Where(static message => !string.IsNullOrWhiteSpace(message))
+                    .Distinct(StringComparer.Ordinal)
+                    .ToArray(),
+                StringComparer.Ordinal);
+
+        var firstError = errors[0];
+        var errorCode = string.IsNullOrWhiteSpace(firstError.ErrorCode) ? "Validation.Invalid" : firstError.ErrorCode;
+        var errorMessage = groupedDetails.Count > 1 || groupedDetails.Values.Any(static messages => messages.Length > 1)
+            ? "One or more validation errors occurred."
+            : firstError.ErrorMessage;
+        var error = new Error(
+            errorCode,
+            errorMessage,
+            groupedDetails.Count > 0 ? groupedDetails : null);
+
         if (typeof(TResponse) == typeof(Result)) {
-            return (TResponse)(object)Result.Failure(errors[0]);
+            return (TResponse)(object)Result.Failure(error);
         }
 
         var resultType = typeof(TResponse);
@@ -50,6 +71,6 @@ public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TReques
 
         if (failureMethod is null) throw new InvalidOperationException($"Unable to create failure result for type {typeof(TResponse).Name}.");
         var genericFailureMethod = failureMethod.MakeGenericMethod(valueType);
-        return (TResponse)genericFailureMethod.Invoke(null, [errors[0]])!;
+        return (TResponse)genericFailureMethod.Invoke(null, [error])!;
     }
 }

@@ -79,8 +79,11 @@ public sealed class PresentationServiceCollectionExtensionsTests {
         var badRequest = Assert.IsType<BadRequestObjectResult>(result);
         var response = Assert.IsType<ApiErrorHttpResponse>(badRequest.Value);
         Assert.Equal("Validation.Invalid", response.Error);
-        Assert.Equal("Email is required.", response.Message);
+        Assert.Equal("One or more validation errors occurred.", response.Message);
         Assert.Equal("trace-123", response.TraceId);
+        Assert.NotNull(response.Errors);
+        Assert.True(response.Errors.TryGetValue("email", out var errors));
+        Assert.Equal(["Email is required."], errors);
     }
 
     [Fact]
