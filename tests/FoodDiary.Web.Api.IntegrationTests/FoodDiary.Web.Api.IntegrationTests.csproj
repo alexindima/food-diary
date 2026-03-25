@@ -21,6 +21,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Snapshots\*.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>Snapshots\%(Filename)%(Extension)</TargetPath>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\FoodDiary.Presentation.Api\FoodDiary.Presentation.Api.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Web.Api\FoodDiary.Web.Api.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Infrastructure\FoodDiary.Infrastructure.csproj" />

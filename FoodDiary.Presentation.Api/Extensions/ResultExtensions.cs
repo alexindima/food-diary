@@ -52,8 +52,12 @@ public static class ResultExtensions {
             "Image.StorageError" => ErrorResult(error, StatusCodes.Status502BadGateway),
             _ when code.StartsWith("Authentication.", StringComparison.Ordinal) =>
                 ErrorResult(error, StatusCodes.Status401Unauthorized),
+            _ when string.Equals(code, "Validation.Conflict", StringComparison.Ordinal) =>
+                ErrorResult(error, StatusCodes.Status409Conflict),
             _ when code.StartsWith("Validation.", StringComparison.Ordinal) =>
                 ErrorResult(error, StatusCodes.Status400BadRequest),
+            _ when code.EndsWith(".NotAccessible", StringComparison.Ordinal) =>
+                ErrorResult(error, StatusCodes.Status404NotFound),
             _ when code.EndsWith(".AlreadyExists", StringComparison.Ordinal) =>
                 ErrorResult(error, StatusCodes.Status409Conflict),
             _ when code.EndsWith(".NotFound", StringComparison.Ordinal) =>

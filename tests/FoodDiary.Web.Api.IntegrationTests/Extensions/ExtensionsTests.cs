@@ -38,8 +38,28 @@ public sealed class ExtensionsTests {
     }
 
     [Fact]
+    public void ResultExtensions_ValidationConflict_ReturnsConflict() {
+        var result = Result.Failure<string>(new Error("Validation.Conflict", "Conflict."));
+
+        var actionResult = result.ToActionResult();
+
+        var conflict = Assert.IsType<ObjectResult>(actionResult);
+        Assert.Equal(StatusCodes.Status409Conflict, conflict.StatusCode);
+    }
+
+    [Fact]
     public void ResultExtensions_NotFoundError_ReturnsNotFound() {
         var result = Result.Failure<string>(new Error("User.NotFound", "Not found."));
+
+        var actionResult = result.ToActionResult();
+
+        var notFound = Assert.IsType<ObjectResult>(actionResult);
+        Assert.Equal(StatusCodes.Status404NotFound, notFound.StatusCode);
+    }
+
+    [Fact]
+    public void ResultExtensions_NotAccessibleError_ReturnsNotFound() {
+        var result = Result.Failure<string>(new Error("Product.NotAccessible", "Not accessible."));
 
         var actionResult = result.ToActionResult();
 

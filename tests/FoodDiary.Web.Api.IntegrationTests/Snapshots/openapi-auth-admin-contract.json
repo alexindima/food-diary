@@ -1,0 +1,161 @@
+{
+  "OpenApi": "3.0.4",
+  "Endpoints": [
+    {
+      "Path": "/api/admin/ai-usage/summary",
+      "Operations": [
+        {
+          "Method": "get",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200"
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/admin/dashboard",
+      "Operations": [
+        {
+          "Method": "get",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200"
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/admin/email-templates",
+      "Operations": [
+        {
+          "Method": "get",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200"
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/admin/email-templates/{key}/{locale}",
+      "Operations": [
+        {
+          "Method": "put",
+          "HasRequestBody": true,
+          "ResponseCodes": [
+            "200"
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/admin/users",
+      "Operations": [
+        {
+          "Method": "get",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200"
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/admin/users/{id}",
+      "Operations": [
+        {
+          "Method": "patch",
+          "HasRequestBody": true,
+          "ResponseCodes": [
+            "200"
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/auth/admin-sso/exchange",
+      "Operations": [
+        {
+          "Method": "post",
+          "HasRequestBody": true,
+          "ResponseCodes": [
+            "200"
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/auth/admin-sso/start",
+      "Operations": [
+        {
+          "Method": "post",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200"
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/auth/login",
+      "Operations": [
+        {
+          "Method": "post",
+          "HasRequestBody": true,
+          "ResponseCodes": [
+            "200"
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/auth/refresh",
+      "Operations": [
+        {
+          "Method": "post",
+          "HasRequestBody": true,
+          "ResponseCodes": [
+            "200"
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/auth/register",
+      "Operations": [
+        {
+          "Method": "post",
+          "HasRequestBody": true,
+          "ResponseCodes": [
+            "200"
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/auth/verify-email",
+      "Operations": [
+        {
+          "Method": "post",
+          "HasRequestBody": true,
+          "ResponseCodes": [
+            "200"
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/auth/verify-email/resend",
+      "Operations": [
+        {
+          "Method": "post",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200"
+          ]
+        }
+      ]
+    }
+  ]
+}

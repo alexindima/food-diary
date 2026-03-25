@@ -1,0 +1,131 @@
+{
+  "OpenApi": "3.0.4",
+  "Endpoints": [
+    {
+      "Path": "/api/auth/login",
+      "Operations": [
+        {
+          "Method": "post",
+          "HasRequestBody": true,
+          "ResponseCodes": [
+            "200"
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/auth/register",
+      "Operations": [
+        {
+          "Method": "post",
+          "HasRequestBody": true,
+          "ResponseCodes": [
+            "200"
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/products",
+      "Operations": [
+        {
+          "Method": "get",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200"
+          ]
+        },
+        {
+          "Method": "post",
+          "HasRequestBody": true,
+          "ResponseCodes": [
+            "200"
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/products/{id}",
+      "Operations": [
+        {
+          "Method": "delete",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200"
+          ]
+        },
+        {
+          "Method": "get",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200"
+          ]
+        },
+        {
+          "Method": "patch",
+          "HasRequestBody": true,
+          "ResponseCodes": [
+            "200"
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/users/info",
+      "Operations": [
+        {
+          "Method": "get",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200"
+          ]
+        },
+        {
+          "Method": "patch",
+          "HasRequestBody": true,
+          "ResponseCodes": [
+            "200"
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/waist-entries",
+      "Operations": [
+        {
+          "Method": "get",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200"
+          ]
+        },
+        {
+          "Method": "post",
+          "HasRequestBody": true,
+          "ResponseCodes": [
+            "200"
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/weight-entries",
+      "Operations": [
+        {
+          "Method": "get",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200"
+          ]
+        },
+        {
+          "Method": "post",
+          "HasRequestBody": true,
+          "ResponseCodes": [
+            "200"
+          ]
+        }
+      ]
+    }
+  ]
+}

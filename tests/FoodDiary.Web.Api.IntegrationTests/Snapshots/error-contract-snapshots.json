@@ -1,0 +1,22 @@
+{
+  "register-invalid-email": {
+    "Error": "Validation.Invalid",
+    "Message": "Invalid email format"
+  },
+  "register-duplicate-email": {
+    "Error": "Validation.Conflict",
+    "Message": "User with this email already exists."
+  },
+  "products-missing-by-id": {
+    "Error": "Product.NotAccessible",
+    "Message": "Product with ID 11111111-1111-1111-1111-111111111111 does not belong to the current user or was not found."
+  },
+  "weight-entry-duplicate-date": {
+    "Error": "WeightEntry.AlreadyExists",
+    "Message": "Weight entry for 2026-03-25 already exists."
+  },
+  "waist-entry-duplicate-date": {
+    "Error": "WaistEntry.AlreadyExists",
+    "Message": "Waist entry for 2026-03-25 already exists."
+  }
+}
