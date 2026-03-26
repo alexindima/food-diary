@@ -538,10 +538,10 @@ export class RecipeManageComponent implements OnInit {
         this.updateNutrientSummary(recipeData);
         this.isFormReady = true;
         if (
-            recipeData.totalCalories == null &&
-            recipeData.totalProteins == null &&
-            recipeData.totalFats == null &&
-            recipeData.totalCarbs == null
+            (recipeData.totalCalories === null || recipeData.totalCalories === undefined) &&
+            (recipeData.totalProteins === null || recipeData.totalProteins === undefined) &&
+            (recipeData.totalFats === null || recipeData.totalFats === undefined) &&
+            (recipeData.totalCarbs === null || recipeData.totalCarbs === undefined)
         ) {
             this.recalculateNutrientsFromForm();
         } else {

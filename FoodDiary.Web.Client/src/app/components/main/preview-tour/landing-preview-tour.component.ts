@@ -191,7 +191,7 @@ export class LandingPreviewTourComponent implements OnInit {
     }
 
     private buildMacroSparkline(): Record<string, ChartConfiguration<'line'>['data']> {
-        const template = (color: string) => ({
+        const template = (color: string): ChartConfiguration<'line'>['data'] => ({
             labels: this.getWeekdayLabels(),
             datasets: [
                 {

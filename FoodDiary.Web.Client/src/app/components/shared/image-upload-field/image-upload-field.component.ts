@@ -270,12 +270,12 @@ export class ImageUploadFieldComponent implements ControlValueAccessor, OnInit {
     private startCropping(file: File): void {
         this.originalFile = file;
         const reader = new FileReader();
-        reader.onload = () => {
+        reader.onload = (): void => {
             this.cropPreviewUrl = typeof reader.result === 'string' ? reader.result : null;
             this.isCropping = !!this.cropPreviewUrl;
             this.cdr.markForCheck();
         };
-        reader.onerror = () => {
+        reader.onerror = (): void => {
             this.error = this.translateService.instant('IMAGE_UPLOAD_FIELD.ERRORS.READ_FAILED');
             this.cdr.markForCheck();
         };

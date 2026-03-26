@@ -143,7 +143,7 @@ export class DashboardSummaryCardComponent {
         const startTime = performance.now();
         const duration = Math.max(target, 1) * 10; // 10 ms на 1% → 1.3s для 130%
 
-        const step = () => {
+        const step = (): void => {
             const elapsed = performance.now() - startTime;
             const progress = Math.min(elapsed / duration, 1);
             const current = target * progress;
@@ -224,7 +224,7 @@ export class DashboardSummaryCardComponent {
     private lerpColor(hexA: string, hexB: string, t: number): string {
         const [r1, g1, b1] = this.hexToRgb(hexA);
         const [r2, g2, b2] = this.hexToRgb(hexB);
-        const lerp = (a: number, b: number) => Math.round(a + (b - a) * t);
+        const lerp = (a: number, b: number): number => Math.round(a + (b - a) * t);
         const r = lerp(r1, r2);
         const g = lerp(g1, g2);
         const b = lerp(b1, b2);
@@ -262,13 +262,13 @@ export class DashboardSummaryCardComponent {
 
     private mixWithWhite(color: string, ratio: number): string {
         const [r, g, b] = this.parseColor(color);
-        const mix = (c: number) => Math.round(c + (255 - c) * ratio);
+        const mix = (c: number): number => Math.round(c + (255 - c) * ratio);
         return `rgb(${mix(r)}, ${mix(g)}, ${mix(b)})`;
     }
 
     private mixWithDark(color: string, ratio: number): string {
         const [r, g, b] = this.parseColor(color);
-        const mix = (c: number) => Math.round(c * (1 - ratio));
+        const mix = (c: number): number => Math.round(c * (1 - ratio));
         return `rgb(${mix(r)}, ${mix(g)}, ${mix(b)})`;
     }
 

@@ -13,7 +13,7 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ChartConfiguration, ChartOptions, ChartTypeRegistry, TooltipItem } from 'chart.js';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { map, finalize, Observable, forkJoin, distinctUntilChanged, startWith } from 'rxjs';
+import { finalize, forkJoin, distinctUntilChanged, startWith } from 'rxjs';
 
 import { FdUiTab } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
 import { StatisticsService } from '../../services/statistics.service';
@@ -154,7 +154,11 @@ export class StatisticsComponent implements OnInit {
         const labels = stats?.date.map(date => this.formatDateLabel(date)) ?? [];
         const nutrients = stats?.nutrientsStatistic;
 
-        const buildData = (series: number[] | undefined, color: string, fillAlpha = 0.16) => ({
+        const buildData = (
+            series: number[] | undefined,
+            color: string,
+            fillAlpha = 0.16,
+        ): ChartConfiguration<'line'>['data'] => ({
             labels,
             datasets: [
                 {

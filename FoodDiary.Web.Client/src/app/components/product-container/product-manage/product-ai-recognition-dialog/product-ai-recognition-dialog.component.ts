@@ -263,8 +263,6 @@ export class ProductAiRecognitionDialogComponent {
         const primary = items[0];
         const name = this.capitalizeName(primary?.nameLocal?.trim() || primary?.nameEn?.trim() || '');
         const baseUnit = this.resolveUnit(primary?.unit);
-        const baseAmount = this.getDefaultBaseAmount(baseUnit);
-
         this.resultForm.patchValue({
             name,
             baseUnit,

@@ -15,7 +15,7 @@ import { FdUiTabsComponent, FdUiTab } from 'fd-ui-kit/tabs/fd-ui-tabs.component'
 import { FdUiAccentSurfaceComponent } from 'fd-ui-kit/accent-surface/fd-ui-accent-surface.component';
 import { CHART_COLORS } from '../../../constants/chart-colors';
 import { BaseChartDirective } from 'ng2-charts';
-import { ChartData, ChartOptions } from 'chart.js';
+import { ChartData, ChartOptions, TooltipItem } from 'chart.js';
 
 @Component({
     selector: 'fd-recipe-detail',
@@ -104,7 +104,7 @@ export class RecipeDetailComponent {
                 },
             ],
         };
-        const tooltipLabel = (label: string, value: number) =>
+        const tooltipLabel = (label: string, value: number): string =>
             `${label}: ${value.toFixed(2)} ${this.translateService.instant('STATISTICS.GRAMS')}`;
         this.pieChartOptions = {
             responsive: true,
@@ -112,7 +112,7 @@ export class RecipeDetailComponent {
                 legend: { display: false },
                 tooltip: {
                     callbacks: {
-                        label: ctx => tooltipLabel(ctx.label ?? '', Number(ctx.raw) || 0),
+                        label: (ctx: TooltipItem<'pie'>): string => tooltipLabel(ctx.label ?? '', Number(ctx.raw) || 0),
                     },
                 },
             },
@@ -127,7 +127,7 @@ export class RecipeDetailComponent {
                 legend: { display: false },
                 tooltip: {
                     callbacks: {
-                        label: ctx => tooltipLabel(ctx.label ?? '', Number(ctx.raw) || 0),
+                        label: (ctx: TooltipItem<'bar'>): string => tooltipLabel(ctx.label ?? '', Number(ctx.raw) || 0),
                     },
                 },
             },

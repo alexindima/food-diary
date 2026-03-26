@@ -1,12 +1,12 @@
 import { CanDeactivateFn } from '@angular/router';
 import { inject } from '@angular/core';
-import { from, isObservable, of } from 'rxjs';
+import { from, isObservable, Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { UnsavedChangesService } from '../services/unsaved-changes.service';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { UnsavedChangesDialogComponent, UnsavedChangesDialogResult } from '../components/shared/unsaved-changes-dialog/unsaved-changes-dialog.component';
 
-const toObservable = (value: unknown) => {
+const toObservable = (value: unknown): Observable<unknown> => {
     if (isObservable(value)) {
         return value;
     }

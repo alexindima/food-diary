@@ -16,7 +16,13 @@ import { ChartConfiguration } from 'chart.js';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { distinctUntilChanged, startWith } from 'rxjs';
 import { WeightEntriesService } from '../../services/weight-entries.service';
-import { WeightEntry, WeightEntryFilters, WeightEntrySummaryFilters, WeightEntrySummaryPoint } from '../../types/weight-entry.data';
+import {
+    CreateWeightEntryPayload,
+    WeightEntry,
+    WeightEntryFilters,
+    WeightEntrySummaryFilters,
+    WeightEntrySummaryPoint,
+} from '../../types/weight-entry.data';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDateInputComponent } from 'fd-ui-kit/date-input/fd-ui-date-input.component';
@@ -461,7 +467,7 @@ export class WeightHistoryPageComponent implements OnInit {
             });
     }
 
-    private buildPayload() {
+    private buildPayload(): CreateWeightEntryPayload | null {
         const rawDate = this.form.value.date;
         const rawWeight = this.form.value.weight;
         if (!rawDate || rawWeight === null || rawWeight === undefined) {

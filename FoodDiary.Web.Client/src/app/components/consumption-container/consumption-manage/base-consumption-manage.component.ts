@@ -823,7 +823,7 @@ export class BaseConsumptionManageComponent implements OnInit {
 
         const mappedItems: ConsumptionItemManageDto[] = [];
 
-        formItems.forEach((item, index) => {
+        formItems.forEach(item => {
             const amountValue = Number(item.amount) || 0;
             const sourceType = item.sourceType ?? (item.recipe ? ConsumptionSourceType.Recipe : ConsumptionSourceType.Product);
 
@@ -1247,7 +1247,7 @@ export class BaseConsumptionManageComponent implements OnInit {
         }
     }
 
-    private handleSubmitError(error?: HttpErrorResponse): void {
+    private handleSubmitError(_error?: HttpErrorResponse): void {
         this.setGlobalError('FORM_ERRORS.UNKNOWN');
     }
 
@@ -1366,7 +1366,7 @@ export class BaseConsumptionManageComponent implements OnInit {
         }
 
         this.loadRecipeServingWeight(recipe).subscribe(servingWeight => {
-            if (!servingWeight || servingsAmount == null) {
+            if (!servingWeight) {
                 return;
             }
 

@@ -8,7 +8,7 @@
     signal,
 } from '@angular/core';
 import { NgIf } from '@angular/common';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FormGroupControls } from '../../types/common.data';
 import { UserService } from '../../services/user.service';

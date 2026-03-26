@@ -97,11 +97,11 @@ export class GoogleIdentityService {
                 script.src = this.scriptUrl;
                 script.async = true;
                 script.defer = true;
-                script.onload = () => {
+                script.onload = (): void => {
                     this.scriptLoaded.set(true);
                     resolve();
                 };
-                script.onerror = () => reject(new Error('Failed to load Google Identity script'));
+                script.onerror = (): void => reject(new Error('Failed to load Google Identity script'));
                 document.head.appendChild(script);
             });
         }

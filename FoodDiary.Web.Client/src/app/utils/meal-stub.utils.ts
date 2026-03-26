@@ -1,5 +1,3 @@
-import { Consumption, ConsumptionSourceType } from '../types/consumption.data';
-
 const MEAL_STUBS: Record<string, string> = {
     BREAKFAST: 'assets/images/stubs/meals/breakfast.svg',
     LUNCH: 'assets/images/stubs/meals/lunch.svg',

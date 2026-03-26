@@ -280,7 +280,7 @@ export class AuthComponent implements OnInit, AfterViewInit {
         }
         this.telegramLoginEnabled.set(true);
         (window as { fdTelegramAuth?: (user: TelegramLoginWidgetUser) => void }).fdTelegramAuth =
-            user => this.onTelegramAuth(user);
+            (user: TelegramLoginWidgetUser): void => this.onTelegramAuth(user);
         this.renderTelegramWidget();
     }
 
