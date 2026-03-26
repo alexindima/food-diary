@@ -21,7 +21,7 @@ public sealed class ExtensionsTests {
 
     [Fact]
     public void ResultExtensions_AuthenticationError_ReturnsUnauthorized() {
-        var result = Result.Failure<string>(new Error("Authentication.InvalidToken", "Invalid authorization token."));
+        var result = Result.Failure<string>(CreateError("Authentication.InvalidToken", "Invalid authorization token."));
 
         var actionResult = result.ToActionResult();
 
@@ -31,7 +31,7 @@ public sealed class ExtensionsTests {
 
     [Fact]
     public void ResultExtensions_ValidationError_ReturnsBadRequest() {
-        var result = Result.Failure<string>(new Error("Validation.Invalid", "Invalid field."));
+        var result = Result.Failure<string>(CreateError("Validation.Invalid", "Invalid field."));
 
         var actionResult = result.ToActionResult();
 
@@ -41,7 +41,7 @@ public sealed class ExtensionsTests {
 
     [Fact]
     public void ResultExtensions_ValidationConflict_ReturnsConflict() {
-        var result = Result.Failure<string>(new Error("Validation.Conflict", "Conflict."));
+        var result = Result.Failure<string>(CreateError("Validation.Conflict", "Conflict."));
 
         var actionResult = result.ToActionResult();
 
@@ -51,7 +51,7 @@ public sealed class ExtensionsTests {
 
     [Fact]
     public void ResultExtensions_NotFoundError_ReturnsNotFound() {
-        var result = Result.Failure<string>(new Error("User.NotFound", "Not found."));
+        var result = Result.Failure<string>(CreateError("User.NotFound", "Not found."));
 
         var actionResult = result.ToActionResult();
 
@@ -61,7 +61,7 @@ public sealed class ExtensionsTests {
 
     [Fact]
     public void ResultExtensions_NotAccessibleError_ReturnsNotFound() {
-        var result = Result.Failure<string>(new Error("Product.NotAccessible", "Not accessible."));
+        var result = Result.Failure<string>(CreateError("Product.NotAccessible", "Not accessible."));
 
         var actionResult = result.ToActionResult();
 
@@ -71,7 +71,7 @@ public sealed class ExtensionsTests {
 
     [Fact]
     public void ResultExtensions_AlreadyExistsError_ReturnsConflict() {
-        var result = Result.Failure<string>(new Error("Product.AlreadyExists", "Already exists."));
+        var result = Result.Failure<string>(CreateError("Product.AlreadyExists", "Already exists."));
 
         var actionResult = result.ToActionResult();
 
@@ -81,7 +81,7 @@ public sealed class ExtensionsTests {
 
     [Fact]
     public void ResultExtensions_AiQuotaExceeded_ReturnsTooManyRequests() {
-        var result = Result.Failure<string>(new Error("Ai.QuotaExceeded", "Quota exceeded."));
+        var result = Result.Failure<string>(CreateError("Ai.QuotaExceeded", "Quota exceeded."));
 
         var actionResult = result.ToActionResult();
 
@@ -91,7 +91,7 @@ public sealed class ExtensionsTests {
 
     [Fact]
     public void ResultExtensions_UnknownError_ReturnsInternalServerError() {
-        var result = Result.Failure<string>(new Error("Something.Unmapped", "Unexpected."));
+        var result = Result.Failure<string>(CreateError("Something.Unmapped", "Unexpected."));
 
         var actionResult = result.ToActionResult();
 
@@ -103,7 +103,7 @@ public sealed class ExtensionsTests {
     public void ResultExtensions_ErrorResponse_ContainsCurrentActivityTraceId() {
         using var activity = new Activity("result-extension-test");
         activity.Start();
-        var result = Result.Failure<string>(new Error("Validation.Invalid", "Invalid field."));
+        var result = Result.Failure<string>(CreateError("Validation.Invalid", "Invalid field."));
 
         var actionResult = result.ToActionResult();
 
@@ -143,4 +143,7 @@ public sealed class ExtensionsTests {
 
         Assert.Null(userId);
     }
+
+    private static Error CreateError(string errorCode, string message) =>
+        new(errorCode, message, kind: ErrorKindResolver.Resolve(errorCode));
 }

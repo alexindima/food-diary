@@ -19,7 +19,7 @@ namespace FoodDiary.Presentation.Api.Features.Admin;
 public sealed class AdminAiUsageController(ISender mediator) : BaseApiController(mediator) {
     [HttpGet("summary")]
     [ProducesResponseType<AdminAiUsageSummaryHttpResponse>(StatusCodes.Status200OK)]
-    [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
+    [ProducesApiErrorResponse(StatusCodes.Status500InternalServerError)]
     [OutputCache(PolicyName = PresentationPolicyNames.AdminAiUsageCachePolicyName)]
     public Task<IActionResult> GetSummary([FromQuery] GetAdminAiUsageSummaryHttpQuery query) =>
         HandleOk(query.ToQuery(), static value => value.ToHttpResponse());

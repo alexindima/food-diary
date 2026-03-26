@@ -1,5 +1,4 @@
 using FoodDiary.Application.Common.Interfaces.Services;
-using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Presentation.Api.Security;
 using FoodDiary.Presentation.Api.Services;
@@ -15,11 +14,6 @@ public static class PresentationServiceCollectionExtensions {
             .AddControllers()
             .ConfigureApiBehaviorOptions(options => {
                 options.InvalidModelStateResponseFactory = context => {
-                    if (context.HttpContext.Items.TryGetValue(CurrentUserIdModelBinder.UnauthorizedItemKey, out var unauthorized) &&
-                        unauthorized is true) {
-                        return new UnauthorizedResult();
-                    }
-
                     var errors = context.ModelState
                         .Where(static entry => entry.Value?.Errors.Count > 0)
                         .ToDictionary(

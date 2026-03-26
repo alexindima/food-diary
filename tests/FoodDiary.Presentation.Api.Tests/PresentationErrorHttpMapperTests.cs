@@ -6,31 +6,77 @@ namespace FoodDiary.Presentation.Api.Tests;
 
 public sealed class PresentationErrorHttpMapperTests {
     [Theory]
-    [InlineData("Authentication.TelegramInvalidData", StatusCodes.Status400BadRequest)]
-    [InlineData("Authentication.TelegramBotNotConfigured", StatusCodes.Status500InternalServerError)]
-    [InlineData("Authentication.TelegramBotInvalidSecret", StatusCodes.Status401Unauthorized)]
-    [InlineData("Authentication.AdminSsoForbidden", StatusCodes.Status403Forbidden)]
-    [InlineData("Authentication.AccountNotDeleted", StatusCodes.Status409Conflict)]
-    [InlineData("Ai.InvalidResponse", StatusCodes.Status502BadGateway)]
-    [InlineData("Ai.ImageNotFound", StatusCodes.Status404NotFound)]
-    [InlineData("Ai.EmptyItems", StatusCodes.Status400BadRequest)]
-    [InlineData("Image.InvalidData", StatusCodes.Status400BadRequest)]
-    [InlineData("Image.InUse", StatusCodes.Status409Conflict)]
-    [InlineData("User.InvalidPassword", StatusCodes.Status401Unauthorized)]
-    [InlineData("User.InvalidCredentials", StatusCodes.Status401Unauthorized)]
-    [InlineData("User.EmailAlreadyExists", StatusCodes.Status409Conflict)]
-    [InlineData("Validation.Conflict", StatusCodes.Status409Conflict)]
-    [InlineData("Authentication.InvalidToken", StatusCodes.Status401Unauthorized)]
-    [InlineData("Validation.Required", StatusCodes.Status400BadRequest)]
-    [InlineData("Product.NotAccessible", StatusCodes.Status404NotFound)]
-    [InlineData("Recipe.AlreadyExists", StatusCodes.Status409Conflict)]
-    [InlineData("User.NotFound", StatusCodes.Status404NotFound)]
-    [InlineData("Unknown.Error", StatusCodes.Status500InternalServerError)]
-    public void MapStatusCode_ReturnsExpectedStatusCode(string errorCode, int expectedStatusCode) {
-        var error = new Error(errorCode, "Failure");
+    [InlineData(nameof(CreateTelegramInvalidData), StatusCodes.Status400BadRequest)]
+    [InlineData(nameof(CreateTelegramBotNotConfigured), StatusCodes.Status500InternalServerError)]
+    [InlineData(nameof(CreateTelegramBotInvalidSecret), StatusCodes.Status401Unauthorized)]
+    [InlineData(nameof(CreateAdminSsoForbidden), StatusCodes.Status403Forbidden)]
+    [InlineData(nameof(CreateAccountNotDeleted), StatusCodes.Status409Conflict)]
+    [InlineData(nameof(CreateAiInvalidResponse), StatusCodes.Status502BadGateway)]
+    [InlineData(nameof(CreateAiImageNotFound), StatusCodes.Status404NotFound)]
+    [InlineData(nameof(CreateAiEmptyItems), StatusCodes.Status400BadRequest)]
+    [InlineData(nameof(CreateImageInvalidData), StatusCodes.Status400BadRequest)]
+    [InlineData(nameof(CreateImageInUse), StatusCodes.Status409Conflict)]
+    [InlineData(nameof(CreateUserInvalidPassword), StatusCodes.Status401Unauthorized)]
+    [InlineData(nameof(CreateUserInvalidCredentials), StatusCodes.Status401Unauthorized)]
+    [InlineData(nameof(CreateUserEmailAlreadyExists), StatusCodes.Status409Conflict)]
+    [InlineData(nameof(CreateValidationConflict), StatusCodes.Status409Conflict)]
+    [InlineData(nameof(CreateAuthenticationInvalidToken), StatusCodes.Status401Unauthorized)]
+    [InlineData(nameof(CreateValidationRequired), StatusCodes.Status400BadRequest)]
+    [InlineData(nameof(CreateProductNotAccessible), StatusCodes.Status404NotFound)]
+    [InlineData(nameof(CreateRecipeAlreadyExistsLegacy), StatusCodes.Status409Conflict)]
+    [InlineData(nameof(CreateUserNotFound), StatusCodes.Status404NotFound)]
+    [InlineData(nameof(CreateUnknownError), StatusCodes.Status500InternalServerError)]
+    public void MapStatusCode_ReturnsExpectedStatusCode(string factoryName, int expectedStatusCode) {
+        var error = CreateError(factoryName);
 
         var actual = PresentationErrorHttpMapper.MapStatusCode(error);
 
         Assert.Equal(expectedStatusCode, actual);
     }
+
+    private static Error CreateError(string factoryName) =>
+        factoryName switch {
+            nameof(CreateTelegramInvalidData) => CreateTelegramInvalidData(),
+            nameof(CreateTelegramBotNotConfigured) => CreateTelegramBotNotConfigured(),
+            nameof(CreateTelegramBotInvalidSecret) => CreateTelegramBotInvalidSecret(),
+            nameof(CreateAdminSsoForbidden) => CreateAdminSsoForbidden(),
+            nameof(CreateAccountNotDeleted) => CreateAccountNotDeleted(),
+            nameof(CreateAiInvalidResponse) => CreateAiInvalidResponse(),
+            nameof(CreateAiImageNotFound) => CreateAiImageNotFound(),
+            nameof(CreateAiEmptyItems) => CreateAiEmptyItems(),
+            nameof(CreateImageInvalidData) => CreateImageInvalidData(),
+            nameof(CreateImageInUse) => CreateImageInUse(),
+            nameof(CreateUserInvalidPassword) => CreateUserInvalidPassword(),
+            nameof(CreateUserInvalidCredentials) => CreateUserInvalidCredentials(),
+            nameof(CreateUserEmailAlreadyExists) => CreateUserEmailAlreadyExists(),
+            nameof(CreateValidationConflict) => CreateValidationConflict(),
+            nameof(CreateAuthenticationInvalidToken) => CreateAuthenticationInvalidToken(),
+            nameof(CreateValidationRequired) => CreateValidationRequired(),
+            nameof(CreateProductNotAccessible) => CreateProductNotAccessible(),
+            nameof(CreateRecipeAlreadyExistsLegacy) => CreateRecipeAlreadyExistsLegacy(),
+            nameof(CreateUserNotFound) => CreateUserNotFound(),
+            nameof(CreateUnknownError) => CreateUnknownError(),
+            _ => throw new InvalidOperationException($"Unknown test factory: {factoryName}")
+        };
+
+    private static Error CreateTelegramInvalidData() => Errors.Authentication.TelegramInvalidData;
+    private static Error CreateTelegramBotNotConfigured() => Errors.Authentication.TelegramBotNotConfigured;
+    private static Error CreateTelegramBotInvalidSecret() => Errors.Authentication.TelegramBotInvalidSecret;
+    private static Error CreateAdminSsoForbidden() => Errors.Authentication.AdminSsoForbidden;
+    private static Error CreateAccountNotDeleted() => Errors.Authentication.AccountNotDeleted;
+    private static Error CreateAiInvalidResponse() => Errors.Ai.InvalidResponse("bad response");
+    private static Error CreateAiImageNotFound() => Errors.Ai.ImageNotFound(Guid.Empty);
+    private static Error CreateAiEmptyItems() => Errors.Ai.EmptyItems();
+    private static Error CreateImageInvalidData() => Errors.Image.InvalidData("invalid");
+    private static Error CreateImageInUse() => Errors.Image.InUse();
+    private static Error CreateUserInvalidPassword() => Errors.User.InvalidPassword;
+    private static Error CreateUserInvalidCredentials() => Errors.User.InvalidCredentials;
+    private static Error CreateUserEmailAlreadyExists() => Errors.User.EmailAlreadyExists;
+    private static Error CreateValidationConflict() => new("Validation.Conflict", "Failure", kind: ErrorKindResolver.Resolve("Validation.Conflict"));
+    private static Error CreateAuthenticationInvalidToken() => Errors.Authentication.InvalidToken;
+    private static Error CreateValidationRequired() => Errors.Validation.Required("field");
+    private static Error CreateProductNotAccessible() => Errors.Product.NotAccessible(Guid.Empty);
+    private static Error CreateRecipeAlreadyExistsLegacy() => new("Recipe.AlreadyExists", "Failure", kind: ErrorKindResolver.Resolve("Recipe.AlreadyExists"));
+    private static Error CreateUserNotFound() => Errors.User.NotFound();
+    private static Error CreateUnknownError() => new("Unknown.Error", "Failure");
 }

@@ -15,7 +15,7 @@ namespace FoodDiary.Presentation.Api.Features.Ai;
 public sealed class AiUsageController(ISender mediator) : AuthorizedController(mediator) {
     [HttpGet("me")]
     [ProducesResponseType<UserAiUsageHttpResponse>(StatusCodes.Status200OK)]
-    [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
+    [ProducesApiErrorResponse(StatusCodes.Status500InternalServerError)]
     public Task<IActionResult> GetMyUsage([FromCurrentUser] Guid userId) =>
         HandleOk(userId.ToUsageQuery(), static value => value.ToHttpResponse());
 }

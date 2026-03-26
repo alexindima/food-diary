@@ -14,8 +14,8 @@ namespace FoodDiary.Presentation.Api.Features.Statistics;
 public class StatisticsController(ISender mediator) : AuthorizedController(mediator) {
     [HttpGet]
     [ProducesResponseType<List<AggregatedStatisticsHttpResponse>>(StatusCodes.Status200OK)]
-    [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [ProducesApiErrorResponse(StatusCodes.Status500InternalServerError)]
     public Task<IActionResult> Get([FromCurrentUser] Guid userId, [FromQuery] GetStatisticsHttpQuery query) =>
         HandleOk(query.ToQuery(userId), static value => value.Select(item => item.ToHttpResponse()).ToList());
 }

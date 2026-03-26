@@ -29,7 +29,7 @@ public sealed class ResultExtensionsTests {
     [InlineData("Image.StorageError", StatusCodes.Status502BadGateway)]
     [InlineData("Unhandled.Custom", StatusCodes.Status500InternalServerError)]
     public void ToActionResult_FailedResult_MapsExpectedStatusCode(string errorCode, int expectedStatusCode) {
-        var result = Result.Failure(new Error(errorCode, "Failure"));
+        var result = Result.Failure(CreateError(errorCode, "Failure"));
 
         var actionResult = result.ToActionResult();
 
@@ -50,7 +50,7 @@ public sealed class ResultExtensionsTests {
 
     [Fact]
     public void ToOkActionResult_FailedGenericResult_ReturnsStandardApiErrorResponse() {
-        var result = Result.Failure<string>(new Error("Image.StorageError", "Storage failed"));
+        var result = Result.Failure<string>(CreateError("Image.StorageError", "Storage failed"));
         var controller = new TestController();
 
         var actionResult = result.ToOkActionResult(controller);
@@ -110,7 +110,8 @@ public sealed class ResultExtensionsTests {
             "Invalid email format",
             new Dictionary<string, string[]>(StringComparer.Ordinal) {
                 ["Email"] = ["Invalid email format"],
-            });
+            },
+            ErrorKindResolver.Resolve("Validation.Invalid"));
         var result = Result.Failure(error);
 
         var actionResult = result.ToActionResult();
@@ -121,6 +122,9 @@ public sealed class ResultExtensionsTests {
         Assert.True(response.Errors.TryGetValue("email", out var errors));
         Assert.Equal(["Invalid email format"], errors);
     }
+
+    private static Error CreateError(string errorCode, string message) =>
+        new(errorCode, message, kind: ErrorKindResolver.Resolve(errorCode));
 
     private sealed class TestController : ControllerBase;
 }

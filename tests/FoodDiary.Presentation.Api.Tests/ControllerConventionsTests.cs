@@ -1,6 +1,10 @@
 using System.Reflection;
 using FoodDiary.Presentation.Api.Responses;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
 
@@ -119,10 +123,12 @@ public sealed class ControllerConventionsTests {
 
     [Fact]
     public void SimpleFeatureControllers_UseBaseControllerHelpers_InsteadOfDirectMediatorSend() {
-        var presentationRoot = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "..", "FoodDiary.Presentation.Api"));
-        var violations = Directory.GetFiles(Path.Combine(presentationRoot, "Features"), "*Controller.cs", SearchOption.AllDirectories)
-            .Where(path => File.ReadAllText(path).Contains("await Send(", StringComparison.Ordinal))
-            .Select(Path.GetFileName)
+        var violations = GetControllerSyntaxTrees()
+            .Where(tree => tree.GetRoot()
+                .DescendantNodes()
+                .OfType<InvocationExpressionSyntax>()
+                .Any(static invocation => invocation.Expression is IdentifierNameSyntax { Identifier.ValueText: "Send" }))
+            .Select(static tree => Path.GetFileName(tree.FilePath))
             .OrderBy(static name => name, StringComparer.Ordinal)
             .ToArray();
 
@@ -140,16 +146,82 @@ public sealed class ControllerConventionsTests {
     }
 
     [Fact]
+    public void HttpGetActions_DoNotDeclareCreatedResponses() {
+        var violations = GetFeatureControllerTypes()
+            .SelectMany(GetActionMethods)
+            .Where(method => method.GetCustomAttributes<HttpGetAttribute>().Any())
+            .Where(method => method.GetCustomAttributes<ProducesResponseTypeAttribute>()
+                .Any(attribute => attribute.StatusCode == StatusCodes.Status201Created))
+            .Select(FormatMethodName)
+            .ToArray();
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void HandleCreatedActions_DeclareCreatedResponses() {
+        var violations = GetControllerSyntaxTrees()
+            .SelectMany(tree => GetHandleCreatedMethods(tree)
+                .Select(methodName => (tree, methodName)))
+            .Where(tuple => {
+                var controllerType = PresentationAssembly.GetTypes()
+                    .FirstOrDefault(type => string.Equals(Path.GetFileName(tuple.tree.FilePath), $"{type.Name}.cs", StringComparison.Ordinal));
+
+                if (controllerType is null) {
+                    return true;
+                }
+
+                var method = GetActionMethods(controllerType)
+                    .SingleOrDefault(candidate => string.Equals(candidate.Name, tuple.methodName, StringComparison.Ordinal));
+
+                return method is null || method.GetCustomAttributes<ProducesResponseTypeAttribute>()
+                    .All(attribute => attribute.StatusCode != StatusCodes.Status201Created);
+            })
+            .Select(tuple => $"{Path.GetFileNameWithoutExtension(tuple.tree.FilePath)}.{tuple.methodName}")
+            .ToArray();
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void FeatureControllers_DoNotReferenceApplicationTypesDirectly() {
-        var presentationRoot = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "..", "FoodDiary.Presentation.Api"));
-        var violations = Directory.GetFiles(Path.Combine(presentationRoot, "Features"), "*Controller.cs", SearchOption.AllDirectories)
-            .Where(static path => File.ReadAllText(path).Contains("FoodDiary.Application", StringComparison.Ordinal))
-            .Select(Path.GetFileName)
+        var violations = GetControllerSyntaxTrees()
+            .Where(static tree => ReferencesApplicationTypes(tree))
+            .Select(static tree => Path.GetFileName(tree.FilePath))
             .OrderBy(static name => name, StringComparer.Ordinal)
             .ToArray();
 
         Assert.Empty(violations);
     }
+
+    private static IEnumerable<SyntaxTree> GetControllerSyntaxTrees() {
+        var presentationRoot = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "..", "FoodDiary.Presentation.Api"));
+        return Directory.GetFiles(Path.Combine(presentationRoot, "Features"), "*Controller.cs", SearchOption.AllDirectories)
+            .Select(static path => CSharpSyntaxTree.ParseText(File.ReadAllText(path), path: path));
+    }
+
+    private static bool ReferencesApplicationTypes(SyntaxTree tree) {
+        var root = tree.GetRoot();
+
+        if (root.DescendantNodes()
+            .OfType<UsingDirectiveSyntax>()
+            .Any(static directive => directive.Name?.ToString().StartsWith("FoodDiary.Application", StringComparison.Ordinal) is true)) {
+            return true;
+        }
+
+        return root.DescendantNodes()
+            .OfType<QualifiedNameSyntax>()
+            .Any(static name => name.ToString().StartsWith("FoodDiary.Application.", StringComparison.Ordinal));
+    }
+
+    private static IEnumerable<string> GetHandleCreatedMethods(SyntaxTree tree) =>
+        tree.GetRoot()
+            .DescendantNodes()
+            .OfType<MethodDeclarationSyntax>()
+            .Where(static method => method.DescendantNodes()
+                .OfType<InvocationExpressionSyntax>()
+                .Any(invocation => invocation.Expression is IdentifierNameSyntax { Identifier.ValueText: "HandleCreated" }))
+            .Select(static method => method.Identifier.ValueText);
 
     private static Type[] GetFeatureControllerTypes() =>
         PresentationAssembly.GetTypes()

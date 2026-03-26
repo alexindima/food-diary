@@ -20,21 +20,15 @@ public sealed class CurrentUserIdModelBinderTests {
 
         Assert.True(bindingContext.Result.IsModelSet);
         Assert.Equal(userGuid, Assert.IsType<Guid>(bindingContext.Result.Model));
-        Assert.False(httpContext.Items.ContainsKey(CurrentUserIdModelBinder.UnauthorizedItemKey));
     }
 
     [Fact]
-    public async Task BindModelAsync_WithoutCurrentUser_FailsAndMarksRequestAsUnauthorized() {
+    public async Task BindModelAsync_WithoutCurrentUser_ThrowsCurrentUserUnavailableException() {
         var binder = new CurrentUserIdModelBinder();
         var httpContext = new DefaultHttpContext();
         var bindingContext = CreateBindingContext(httpContext);
 
-        await binder.BindModelAsync(bindingContext);
-
-        Assert.False(bindingContext.Result.IsModelSet);
-        Assert.True(httpContext.Items.TryGetValue(CurrentUserIdModelBinder.UnauthorizedItemKey, out var unauthorized));
-        Assert.Equal(true, unauthorized);
-        Assert.Contains(bindingContext.ModelState, pair => pair.Key == bindingContext.ModelName);
+        await Assert.ThrowsAsync<CurrentUserUnavailableException>(() => binder.BindModelAsync(bindingContext));
     }
 
     [Fact]

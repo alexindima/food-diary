@@ -17,14 +17,14 @@ namespace FoodDiary.Presentation.Api.Features.Admin;
 public sealed class AdminEmailTemplatesController(ISender mediator) : BaseApiController(mediator) {
     [HttpGet]
     [ProducesResponseType<List<AdminEmailTemplateHttpResponse>>(StatusCodes.Status200OK)]
-    [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
+    [ProducesApiErrorResponse(StatusCodes.Status500InternalServerError)]
     public Task<IActionResult> GetAll() =>
         HandleOk(AdminHttpQueryMappings.ToEmailTemplatesQuery(), static value => value.Select(item => item.ToHttpResponse()).ToList());
 
     [HttpPut("{key}/{locale}")]
     [ProducesResponseType<AdminEmailTemplateHttpResponse>(StatusCodes.Status200OK)]
-    [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [ProducesApiErrorResponse(StatusCodes.Status500InternalServerError)]
     public Task<IActionResult> Upsert(
         string key,
         string locale,

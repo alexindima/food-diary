@@ -14,22 +14,22 @@ namespace FoodDiary.Presentation.Api.Features.Cycles;
 public class CyclesController(ISender mediator) : AuthorizedController(mediator) {
     [HttpGet("current")]
     [ProducesResponseType<CycleHttpResponse>(StatusCodes.Status200OK)]
-    [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
+    [ProducesApiErrorResponse(StatusCodes.Status500InternalServerError)]
     public Task<IActionResult> GetCurrent([FromCurrentUser] Guid userId) =>
         HandleOk(userId.ToCurrentQuery(), static value => value is null ? null : value.ToHttpResponse());
 
     [HttpPost]
     [ProducesResponseType<CycleHttpResponse>(StatusCodes.Status200OK)]
-    [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [ProducesApiErrorResponse(StatusCodes.Status500InternalServerError)]
     public Task<IActionResult> Create([FromCurrentUser] Guid userId, [FromBody] CreateCycleHttpRequest request) =>
         HandleOk(request.ToCommand(userId), static value => value.ToHttpResponse());
 
     [HttpPut("{cycleId:guid}/days")]
     [ProducesResponseType<CyclePredictionsHttpResponse>(StatusCodes.Status200OK)]
-    [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status404NotFound)]
-    [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
+    [ProducesApiErrorResponse(StatusCodes.Status500InternalServerError)]
     public Task<IActionResult> UpsertDay(Guid cycleId, [FromCurrentUser] Guid userId, [FromBody] UpsertCycleDayHttpRequest request) =>
         HandleOk(request.ToCommand(userId, cycleId), static value => value.ToHttpResponse());
 }

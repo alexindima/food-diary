@@ -17,16 +17,16 @@ namespace FoodDiary.Presentation.Api.Features.Admin;
 public sealed class AdminUsersController(ISender mediator) : BaseApiController(mediator) {
     [HttpGet]
     [ProducesResponseType<PagedHttpResponse<AdminUserHttpResponse>>(StatusCodes.Status200OK)]
-    [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [ProducesApiErrorResponse(StatusCodes.Status500InternalServerError)]
     public Task<IActionResult> GetUsers([FromQuery] GetAdminUsersHttpQuery query) =>
         HandleOk(query.ToQuery(), static value => value.ToHttpResponse());
 
     [HttpPatch("{id:guid}")]
     [ProducesResponseType<AdminUserHttpResponse>(StatusCodes.Status200OK)]
-    [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status404NotFound)]
-    [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
+    [ProducesApiErrorResponse(StatusCodes.Status500InternalServerError)]
     public Task<IActionResult> UpdateUser(Guid id, [FromBody] AdminUserUpdateHttpRequest request) =>
         HandleOk(request.ToCommand(id), static value => value.ToHttpResponse());
 }

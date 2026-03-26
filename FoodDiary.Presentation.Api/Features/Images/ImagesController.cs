@@ -14,18 +14,18 @@ namespace FoodDiary.Presentation.Api.Features.Images;
 public sealed class ImagesController(ISender mediator) : AuthorizedController(mediator) {
     [HttpPost("upload-url")]
     [ProducesResponseType<GetImageUploadUrlHttpResponse>(StatusCodes.Status200OK)]
-    [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status502BadGateway)]
-    [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [ProducesApiErrorResponse(StatusCodes.Status502BadGateway)]
+    [ProducesApiErrorResponse(StatusCodes.Status500InternalServerError)]
     public Task<IActionResult> GetUploadUrl([FromCurrentUser] Guid userId, [FromBody] GetImageUploadUrlHttpRequest request) =>
         HandleOk(request.ToCommand(userId), static value => value.ToHttpResponse());
 
     [HttpDelete("{assetId:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status404NotFound)]
-    [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status409Conflict)]
-    [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status502BadGateway)]
-    [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
+    [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
+    [ProducesApiErrorResponse(StatusCodes.Status409Conflict)]
+    [ProducesApiErrorResponse(StatusCodes.Status502BadGateway)]
+    [ProducesApiErrorResponse(StatusCodes.Status500InternalServerError)]
     public Task<IActionResult> Delete(Guid assetId, [FromCurrentUser] Guid userId) =>
         HandleNoContent(assetId.ToDeleteCommand(userId));
 }

@@ -17,7 +17,7 @@ namespace FoodDiary.Presentation.Api.Features.Admin;
 public sealed class AdminDashboardController(ISender mediator) : BaseApiController(mediator) {
     [HttpGet]
     [ProducesResponseType<AdminDashboardSummaryHttpResponse>(StatusCodes.Status200OK)]
-    [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
+    [ProducesApiErrorResponse(StatusCodes.Status500InternalServerError)]
     public Task<IActionResult> GetDashboard([FromQuery] GetAdminDashboardHttpQuery query) =>
         HandleOk(query.ToQuery(), static value => value.ToHttpResponse());
 }

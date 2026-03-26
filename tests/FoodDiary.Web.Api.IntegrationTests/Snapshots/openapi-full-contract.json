@@ -858,7 +858,7 @@
           "Method": "post",
           "HasRequestBody": true,
           "ResponseCodes": [
-            "200",
+            "201",
             "400",
             "401",
             "500"
@@ -897,7 +897,7 @@
           "Method": "get",
           "HasRequestBody": false,
           "ResponseCodes": [
-            "201",
+            "200",
             "401",
             "404",
             "500"

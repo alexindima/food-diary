@@ -57,7 +57,8 @@ public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TReques
         var error = new Error(
             errorCode,
             errorMessage,
-            groupedDetails.Count > 0 ? groupedDetails : null);
+            groupedDetails.Count > 0 ? groupedDetails : null,
+            ErrorKindResolver.Resolve(errorCode));
 
         if (typeof(TResponse) == typeof(Result)) {
             return (TResponse)(object)Result.Failure(error);
