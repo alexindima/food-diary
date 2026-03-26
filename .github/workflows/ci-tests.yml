@@ -37,7 +37,8 @@ jobs:
           set -e
           if [ "$status" -ne 0 ]; then
             {
-              echo "FAILED_TEST_PROJECT=Restore"
+              echo "FAILED_AREA=dotnet"
+              echo "FAILED_TARGET=Restore"
               echo "FAILED_LOG_FILE=$log_file"
             } > "${RUNNER_TEMP}/ci-test-logs/failure-meta.env"
             exit "$status"
@@ -54,7 +55,8 @@ jobs:
           set -e
           if [ "$status" -ne 0 ]; then
             {
-              echo "FAILED_TEST_PROJECT=Build"
+              echo "FAILED_AREA=dotnet"
+              echo "FAILED_TARGET=Build"
               echo "FAILED_LOG_FILE=$log_file"
             } > "${RUNNER_TEMP}/ci-test-logs/failure-meta.env"
             exit "$status"
@@ -81,62 +83,19 @@ jobs:
             set -e
             if [ "$status" -ne 0 ]; then
               {
-                echo "FAILED_TEST_PROJECT=$project"
+                echo "FAILED_AREA=dotnet"
+                echo "FAILED_TARGET=$project"
                 echo "FAILED_LOG_FILE=$log_file"
               } > "${RUNNER_TEMP}/ci-test-logs/failure-meta.env"
               exit "$status"
             fi
           done
 
-      - name: Notify Telegram (failure)
-        if: failure()
-        env:
-          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-        run: |
-          if [ -z "${TELEGRAM_BOT_TOKEN}" ] || [ -z "${TELEGRAM_CHAT_ID}" ]; then
-            echo "Skipping Telegram notification: missing secrets."
-            exit 0
-          fi
-
-          FAILED_PROJECT_NAME="unknown"
-          FAILED_LOG_FILE=""
-          if [ -f "${RUNNER_TEMP}/ci-test-logs/failure-meta.env" ]; then
-            parsed_project=$(grep '^FAILED_TEST_PROJECT=' "${RUNNER_TEMP}/ci-test-logs/failure-meta.env" | head -n 1 | cut -d= -f2-)
-            parsed_log=$(grep '^FAILED_LOG_FILE=' "${RUNNER_TEMP}/ci-test-logs/failure-meta.env" | head -n 1 | cut -d= -f2-)
-            if [ -n "${parsed_project}" ]; then
-              FAILED_PROJECT_NAME="${parsed_project}"
-            fi
-            if [ -n "${parsed_log}" ]; then
-              FAILED_LOG_FILE="${parsed_log}"
-            fi
-          fi
-          if [ -z "${FAILED_LOG_FILE}" ]; then
-            FAILED_LOG_FILE=$(find "${RUNNER_TEMP}/ci-test-logs" -maxdepth 1 -type f -name '*.log' | sort | tail -n 1)
-          fi
-          MESSAGE=$'CI tests failed\nRepo: '"${GITHUB_REPOSITORY}"$'\nBranch: '"${GITHUB_REF_NAME}"$'\nCommit: '"${GITHUB_SHA::8}"$'\nActor: '"${GITHUB_ACTOR}"$'\nProject: '"${FAILED_PROJECT_NAME}"$'\nRun: '"${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
-          curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
-            -d chat_id="${TELEGRAM_CHAT_ID}" \
-            --data-urlencode text="${MESSAGE}" >/dev/null
-          if [ -n "${FAILED_LOG_FILE}" ] && [ -f "${FAILED_LOG_FILE}" ]; then
-            response=$(curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendDocument" \
-              -F chat_id="${TELEGRAM_CHAT_ID}" \
-              -F caption="CI failure log: ${FAILED_PROJECT_NAME}" \
-              -F document=@"${FAILED_LOG_FILE};type=text/plain")
-            if ! echo "${response}" | grep -q '"ok":true'; then
-              tail_excerpt=$(tail -n 40 "${FAILED_LOG_FILE}")
-              FALLBACK_MESSAGE=$'CI failure log tail\nProject: '"${FAILED_PROJECT_NAME}"$'\n\n'"${tail_excerpt}"
-              curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
-                -d chat_id="${TELEGRAM_CHAT_ID}" \
-                --data-urlencode text="${FALLBACK_MESSAGE}" >/dev/null
-            fi
-          fi
-
       - name: Upload CI failure logs
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: ci-failure-logs
+          name: ci-failure-logs-dotnet
           path: ${{ runner.temp }}/ci-test-logs/
           if-no-files-found: ignore
 
@@ -148,6 +107,11 @@ jobs:
         working-directory: FoodDiary.Web.Client
 
     steps:
+      - name: Initialize frontend diagnostics
+        run: |
+          mkdir -p "${RUNNER_TEMP}/frontend-checks-logs"
+          : > "${RUNNER_TEMP}/frontend-checks-logs/failure-meta.env"
+
       - name: Checkout code
         uses: actions/checkout@v6
 
@@ -159,16 +123,185 @@ jobs:
           cache-dependency-path: FoodDiary.Web.Client/package-lock.json
 
       - name: Install frontend dependencies
-        run: npm ci
+        shell: bash
+        run: |
+          set -euo pipefail
+          log_file="${RUNNER_TEMP}/frontend-checks-logs/npm-ci.log"
+          set +e
+          npm ci 2>&1 | tee "$log_file"
+          status=${PIPESTATUS[0]}
+          set -e
+          if [ "$status" -ne 0 ]; then
+            {
+              echo "FAILED_AREA=frontend"
+              echo "FAILED_TARGET=Install frontend dependencies"
+              echo "FAILED_LOG_FILE=$log_file"
+            } > "${RUNNER_TEMP}/frontend-checks-logs/failure-meta.env"
+            exit "$status"
+          fi
 
       - name: Lint frontend
-        run: npm run lint
+        shell: bash
+        run: |
+          set -euo pipefail
+          log_file="${RUNNER_TEMP}/frontend-checks-logs/lint.log"
+          set +e
+          npm run lint 2>&1 | tee "$log_file"
+          status=${PIPESTATUS[0]}
+          set -e
+          if [ "$status" -ne 0 ]; then
+            {
+              echo "FAILED_AREA=frontend"
+              echo "FAILED_TARGET=Lint frontend"
+              echo "FAILED_LOG_FILE=$log_file"
+            } > "${RUNNER_TEMP}/frontend-checks-logs/failure-meta.env"
+            exit "$status"
+          fi
 
       - name: Lint styles
-        run: npm run stylelint
+        shell: bash
+        run: |
+          set -euo pipefail
+          log_file="${RUNNER_TEMP}/frontend-checks-logs/stylelint.log"
+          set +e
+          npm run stylelint 2>&1 | tee "$log_file"
+          status=${PIPESTATUS[0]}
+          set -e
+          if [ "$status" -ne 0 ]; then
+            {
+              echo "FAILED_AREA=frontend"
+              echo "FAILED_TARGET=Lint styles"
+              echo "FAILED_LOG_FILE=$log_file"
+            } > "${RUNNER_TEMP}/frontend-checks-logs/failure-meta.env"
+            exit "$status"
+          fi
 
       - name: Build frontend
-        run: npm run build:prod
+        shell: bash
+        run: |
+          set -euo pipefail
+          log_file="${RUNNER_TEMP}/frontend-checks-logs/build-frontend.log"
+          set +e
+          npm run build:prod 2>&1 | tee "$log_file"
+          status=${PIPESTATUS[0]}
+          set -e
+          if [ "$status" -ne 0 ]; then
+            {
+              echo "FAILED_AREA=frontend"
+              echo "FAILED_TARGET=Build frontend"
+              echo "FAILED_LOG_FILE=$log_file"
+            } > "${RUNNER_TEMP}/frontend-checks-logs/failure-meta.env"
+            exit "$status"
+          fi
 
       - name: Build admin frontend
-        run: npm run build:admin
+        shell: bash
+        run: |
+          set -euo pipefail
+          log_file="${RUNNER_TEMP}/frontend-checks-logs/build-admin-frontend.log"
+          set +e
+          npm run build:admin 2>&1 | tee "$log_file"
+          status=${PIPESTATUS[0]}
+          set -e
+          if [ "$status" -ne 0 ]; then
+            {
+              echo "FAILED_AREA=frontend"
+              echo "FAILED_TARGET=Build admin frontend"
+              echo "FAILED_LOG_FILE=$log_file"
+            } > "${RUNNER_TEMP}/frontend-checks-logs/failure-meta.env"
+            exit "$status"
+          fi
+
+      - name: Upload frontend failure logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ci-failure-logs-frontend
+          path: ${{ runner.temp }}/frontend-checks-logs/
+          if-no-files-found: ignore
+
+  notify-ci-failure:
+    if: always() && (needs.dotnet-tests.result == 'failure' || needs.frontend-checks.result == 'failure')
+    needs:
+      - dotnet-tests
+      - frontend-checks
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download dotnet failure logs
+        if: needs.dotnet-tests.result == 'failure'
+        uses: actions/download-artifact@v4
+        with:
+          name: ci-failure-logs-dotnet
+          path: ${{ runner.temp }}/ci-test-logs
+        continue-on-error: true
+
+      - name: Download frontend failure logs
+        if: needs.frontend-checks.result == 'failure'
+        uses: actions/download-artifact@v4
+        with:
+          name: ci-failure-logs-frontend
+          path: ${{ runner.temp }}/frontend-checks-logs
+        continue-on-error: true
+
+      - name: Notify Telegram (failure)
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        shell: bash
+        run: |
+          if [ -z "${TELEGRAM_BOT_TOKEN}" ] || [ -z "${TELEGRAM_CHAT_ID}" ]; then
+            echo "Skipping Telegram notification: missing secrets."
+            exit 0
+          fi
+
+          FAILED_AREA="unknown"
+          FAILED_TARGET="unknown"
+          FAILED_LOG_FILE=""
+          META_FILE=""
+
+          if [ "${{ needs.dotnet-tests.result }}" = "failure" ] && [ -f "${RUNNER_TEMP}/ci-test-logs/failure-meta.env" ]; then
+            META_FILE="${RUNNER_TEMP}/ci-test-logs/failure-meta.env"
+          fi
+
+          if [ -z "${META_FILE}" ] && [ "${{ needs.frontend-checks.result }}" = "failure" ] && [ -f "${RUNNER_TEMP}/frontend-checks-logs/failure-meta.env" ]; then
+            META_FILE="${RUNNER_TEMP}/frontend-checks-logs/failure-meta.env"
+          fi
+
+          if [ -n "${META_FILE}" ]; then
+            parsed_area=$(grep '^FAILED_AREA=' "${META_FILE}" | head -n 1 | cut -d= -f2-)
+            parsed_target=$(grep '^FAILED_TARGET=' "${META_FILE}" | head -n 1 | cut -d= -f2-)
+            parsed_log=$(grep '^FAILED_LOG_FILE=' "${META_FILE}" | head -n 1 | cut -d= -f2-)
+            if [ -n "${parsed_area}" ]; then
+              FAILED_AREA="${parsed_area}"
+            fi
+            if [ -n "${parsed_target}" ]; then
+              FAILED_TARGET="${parsed_target}"
+            fi
+            if [ -n "${parsed_log}" ]; then
+              FAILED_LOG_FILE="${parsed_log}"
+            fi
+          fi
+
+          if [ -z "${FAILED_LOG_FILE}" ] || [ ! -f "${FAILED_LOG_FILE}" ]; then
+            FAILED_LOG_FILE=$(find "${RUNNER_TEMP}" -maxdepth 2 -type f -name '*.log' | sort | tail -n 1)
+          fi
+
+          MESSAGE=$'CI failed\nRepo: '"${GITHUB_REPOSITORY}"$'\nBranch: '"${GITHUB_REF_NAME}"$'\nCommit: '"${GITHUB_SHA::8}"$'\nActor: '"${GITHUB_ACTOR}"$'\nArea: '"${FAILED_AREA}"$'\nTarget: '"${FAILED_TARGET}"$'\nRun: '"${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
+            -d chat_id="${TELEGRAM_CHAT_ID}" \
+            --data-urlencode text="${MESSAGE}" >/dev/null
+
+          if [ -n "${FAILED_LOG_FILE}" ] && [ -f "${FAILED_LOG_FILE}" ]; then
+            response=$(curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendDocument" \
+              -F chat_id="${TELEGRAM_CHAT_ID}" \
+              -F caption="CI failure log: ${FAILED_AREA} / ${FAILED_TARGET}" \
+              -F document=@"${FAILED_LOG_FILE};type=text/plain")
+            if ! echo "${response}" | grep -q '"ok":true'; then
+              tail_excerpt=$(tail -n 40 "${FAILED_LOG_FILE}")
+              FALLBACK_MESSAGE=$'CI failure log tail\nArea: '"${FAILED_AREA}"$'\nTarget: '"${FAILED_TARGET}"$'\n\n'"${tail_excerpt}"
+              curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
+                -d chat_id="${TELEGRAM_CHAT_ID}" \
+                --data-urlencode text="${FALLBACK_MESSAGE}" >/dev/null
+            fi
+          fi
