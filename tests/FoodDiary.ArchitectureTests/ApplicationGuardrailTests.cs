@@ -68,6 +68,41 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void ApplicationSourceFiles_DoNotReferencePresentationOrAspNetTransportTypes() {
+        var root = GetRepositoryRoot();
+        var applicationRoot = Path.Combine(root, "FoodDiary.Application");
+        var forbiddenPatterns = new[] {
+            "FoodDiary.Presentation.Api",
+            "Microsoft.AspNetCore",
+            "IActionResult",
+            "ControllerBase",
+            "HttpContext",
+            "HttpRequest",
+            "HttpResponse",
+        };
+
+        var violations = Directory.GetFiles(applicationRoot, "*.cs", SearchOption.AllDirectories)
+            .Where(static path => path.Contains($"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase) is false)
+            .Where(static path => path.Contains($"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase) is false)
+            .SelectMany(path => File.ReadAllLines(path)
+                .Select((line, index) => new { path, index, line }))
+            .Where(entry => forbiddenPatterns.Any(pattern => entry.line.Contains(pattern, StringComparison.Ordinal)))
+            .Select(entry => $"{Path.GetRelativePath(root, entry.path)}:{entry.index + 1}")
+            .ToArray();
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void ApplicationProject_DoesNotReferencePresentationProject() {
+        var root = GetRepositoryRoot();
+        var projectPath = Path.Combine(root, "FoodDiary.Application", "FoodDiary.Application.csproj");
+        var content = File.ReadAllText(projectPath);
+
+        Assert.DoesNotContain("FoodDiary.Presentation.Api", content, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void ApplicationSourceFiles_DoNotUseCancellationTokenNone() {
         var root = GetRepositoryRoot();
         var applicationRoot = Path.Combine(root, "FoodDiary.Application");

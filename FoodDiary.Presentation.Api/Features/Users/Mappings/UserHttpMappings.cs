@@ -29,30 +29,30 @@ public static class UserHttpMappings {
 
     public static UpdateUserCommand ToCommand(this UpdateUserHttpRequest request, Guid? userId) {
         return new UpdateUserCommand(
-            userId,
-            request.Username,
-            request.FirstName,
-            request.LastName,
-            request.BirthDate,
-            request.Gender,
-            request.Weight,
-            request.Height,
-            request.ActivityLevel,
-            request.StepGoal,
-            request.HydrationGoal,
-            request.Language,
-            request.ProfileImage,
-            request.ProfileImageAssetId,
-            request.DashboardLayout?.ToModel(),
-            request.IsActive
+            UserId: userId,
+            Username: request.Username,
+            FirstName: request.FirstName,
+            LastName: request.LastName,
+            BirthDate: request.BirthDate,
+            Gender: request.Gender,
+            Weight: request.Weight,
+            Height: request.Height,
+            ActivityLevel: request.ActivityLevel,
+            StepGoal: request.StepGoal,
+            HydrationGoal: request.HydrationGoal,
+            Language: request.Language,
+            ProfileImage: request.ProfileImage,
+            ProfileImageAssetId: request.ProfileImageAssetId,
+            DashboardLayout: request.DashboardLayout?.ToModel(),
+            IsActive: request.IsActive
         );
     }
 
     public static ChangePasswordCommand ToCommand(this ChangePasswordHttpRequest request, Guid? userId) {
         return new ChangePasswordCommand(
-            userId,
-            request.CurrentPassword,
-            request.NewPassword
+            UserId: userId,
+            CurrentPassword: request.CurrentPassword,
+            NewPassword: request.NewPassword
         );
     }
 

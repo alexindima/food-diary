@@ -25,7 +25,8 @@
       "Bash(dir:*)",
       "Bash(npm run build:*)",
       "Bash(netstat:*)",
-      "Bash(findstr:*)"
+      "Bash(findstr:*)",
+      "Bash(grep -E \"Features/[^/]+$\")"
     ],
     "deny": [],
     "ask": []

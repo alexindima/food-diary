@@ -12,13 +12,15 @@ public static class AiHttpMappings {
 
     public static AnalyzeFoodImageCommand ToCommand(this FoodVisionHttpRequest request, Guid userId) {
         return new AnalyzeFoodImageCommand(
-            userId,
-            request.ImageAssetId,
-            request.Description);
+            UserId: userId,
+            ImageAssetId: request.ImageAssetId,
+            Description: request.Description);
     }
 
     public static CalculateFoodNutritionCommand ToCommand(this FoodNutritionHttpRequest request, Guid userId) {
-        return new CalculateFoodNutritionCommand(userId, request.Items?.Select(ToModel).ToList() ?? []);
+        return new CalculateFoodNutritionCommand(
+            UserId: userId,
+            Items: request.Items?.Select(ToModel).ToList() ?? []);
     }
 
     private static FoodVisionItemModel ToModel(this FoodVisionItemHttpModel model) {

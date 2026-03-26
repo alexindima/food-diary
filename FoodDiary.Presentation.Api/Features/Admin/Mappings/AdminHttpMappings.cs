@@ -10,22 +10,22 @@ public static class AdminHttpMappings {
         string key,
         string locale) {
         return new UpsertAdminEmailTemplateCommand(
-            key,
-            locale,
-            request.Subject,
-            request.HtmlBody,
-            request.TextBody,
-            request.IsActive);
+            Key: key,
+            Locale: locale,
+            Subject: request.Subject,
+            HtmlBody: request.HtmlBody,
+            TextBody: request.TextBody,
+            IsActive: request.IsActive);
     }
 
     public static UpdateAdminUserCommand ToCommand(this AdminUserUpdateHttpRequest request, Guid userId) {
         return new UpdateAdminUserCommand(
-            userId,
-            request.IsActive,
-            request.IsEmailConfirmed,
-            request.Roles ?? [],
-            request.Language,
-            request.AiInputTokenLimit,
-            request.AiOutputTokenLimit);
+            UserId: userId,
+            IsActive: request.IsActive,
+            IsEmailConfirmed: request.IsEmailConfirmed,
+            Roles: request.Roles ?? [],
+            Language: request.Language,
+            AiInputTokenLimit: request.AiInputTokenLimit,
+            AiOutputTokenLimit: request.AiOutputTokenLimit);
     }
 }
