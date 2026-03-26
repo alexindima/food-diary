@@ -514,8 +514,29 @@ jobs:
             -d chat_id="${TELEGRAM_CHAT_ID}" \
             --data-urlencode text="${MESSAGE}" >/dev/null
 
-      - name: Notify Telegram (failure)
+      - name: Upload deploy failure logs
         if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: deploy-failure-logs
+          path: ${{ runner.temp }}/deploy-logs/
+          if-no-files-found: ignore
+
+  notify-deploy-failure:
+    if: always() && needs.deploy.result == 'failure'
+    needs:
+      - deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download deploy failure logs
+        uses: actions/download-artifact@v4
+        with:
+          name: deploy-failure-logs
+          path: ${{ runner.temp }}/deploy-logs
+        continue-on-error: true
+
+      - name: Notify Telegram (failure)
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
@@ -528,16 +549,24 @@ jobs:
 
           FAILED_STEP_NAME="unknown"
           FAILED_LOG_FILE=""
-          if [ -f "${RUNNER_TEMP}/deploy-logs/failure-meta.env" ]; then
+          META_FILE="${RUNNER_TEMP}/deploy-logs/failure-meta.env"
+          if [ -f "${META_FILE}" ]; then
             # shellcheck disable=SC1091
-            source "${RUNNER_TEMP}/deploy-logs/failure-meta.env"
+            source "${META_FILE}"
             FAILED_STEP_NAME="${FAILED_STEP:-unknown}"
+            FAILED_LOG_FILE="${FAILED_LOG_FILE:-}"
           fi
-          if [ -z "${FAILED_LOG_FILE}" ]; then
+
+          if [ -z "${FAILED_LOG_FILE}" ] || [ ! -f "${FAILED_LOG_FILE}" ]; then
             FAILED_LOG_FILE=$(find "${RUNNER_TEMP}/deploy-logs" -maxdepth 1 -type f -name '*.log' | sort | tail -n 1)
           fi
 
-          MESSAGE=$'Deploy failed\nRepo: '"${GITHUB_REPOSITORY}"$'\nBranch: '"${GITHUB_REF_NAME}"$'\nCommit: '"${GITHUB_SHA::8}"$'\nActor: '"${GITHUB_ACTOR}"$'\nStep: '"${FAILED_STEP_NAME}"$'\nRun: '"${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          REF_NAME="${GITHUB_REF_NAME}"
+          if [ -z "${REF_NAME}" ] && [ "${GITHUB_EVENT_NAME}" = "workflow_run" ]; then
+            REF_NAME="${{ github.event.workflow_run.head_branch }}"
+          fi
+
+          MESSAGE=$'Deploy failed\nRepo: '"${GITHUB_REPOSITORY}"$'\nBranch: '"${REF_NAME}"$'\nCommit: '"${GITHUB_SHA::8}"$'\nActor: '"${GITHUB_ACTOR}"$'\nStep: '"${FAILED_STEP_NAME}"$'\nRun: '"${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
           curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
             -d chat_id="${TELEGRAM_CHAT_ID}" \
             --data-urlencode text="${MESSAGE}" >/dev/null
@@ -555,11 +584,3 @@ jobs:
                 --data-urlencode text="${FALLBACK_MESSAGE}" >/dev/null
             fi
           fi
-
-      - name: Upload deploy failure logs
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: deploy-failure-logs
-          path: ${{ runner.temp }}/deploy-logs/
-          if-no-files-found: ignore
