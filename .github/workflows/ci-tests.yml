@@ -313,10 +313,14 @@ jobs:
 
           if [ -n "${FAILED_LOG_FILE}" ] && [ -f "${FAILED_LOG_FILE}" ]; then
             echo "Sending log file: ${FAILED_LOG_FILE}"
+            safe_area=$(printf '%s' "${FAILED_AREA}" | tr -cs '[:alnum:]' '-')
+            safe_target=$(printf '%s' "${FAILED_TARGET}" | tr -cs '[:alnum:]' '-')
+            telegram_log_file="${RUNNER_TEMP}/ci-${safe_area}-${safe_target}.txt"
+            cp "${FAILED_LOG_FILE}" "${telegram_log_file}"
             response=$(curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendDocument" \
               -F chat_id="${TELEGRAM_CHAT_ID}" \
               -F caption="CI failure log: ${FAILED_AREA} / ${FAILED_TARGET}" \
-              -F document=@"${FAILED_LOG_FILE};type=text/plain")
+              -F document=@"${telegram_log_file}")
             if ! echo "${response}" | grep -q '"ok":true'; then
               tail_excerpt=$(tail -n 40 "${FAILED_LOG_FILE}")
               FALLBACK_MESSAGE=$'CI failure log tail\nArea: '"${FAILED_AREA}"$'\nTarget: '"${FAILED_TARGET}"$'\n\n'"${tail_excerpt}"
