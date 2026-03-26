@@ -139,3 +139,36 @@ jobs:
           name: ci-failure-logs
           path: ${{ runner.temp }}/ci-test-logs/
           if-no-files-found: ignore
+
+  frontend-checks:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: FoodDiary.Web.Client
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: FoodDiary.Web.Client/package-lock.json
+
+      - name: Install frontend dependencies
+        run: npm ci
+
+      - name: Lint frontend
+        run: npm run lint
+
+      - name: Lint styles
+        run: npm run stylelint
+
+      - name: Build frontend
+        run: npm run build:prod
+
+      - name: Build admin frontend
+        run: npm run build:admin
