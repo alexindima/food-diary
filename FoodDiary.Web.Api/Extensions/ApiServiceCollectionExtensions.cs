@@ -2,6 +2,7 @@ using System.Text;
 using System.Threading.RateLimiting;
 using FoodDiary.Application;
 using FoodDiary.Infrastructure;
+using FoodDiary.Infrastructure.Options;
 using FoodDiary.Presentation.Api.Extensions;
 using FoodDiary.Presentation.Api.Options;
 using FoodDiary.Presentation.Api.Policies;
@@ -26,11 +27,6 @@ public static class ApiServiceCollectionExtensions {
         services
             .AddOptions<OpenTelemetryOptions>()
             .BindConfiguration(OpenTelemetryOptions.SectionName);
-        services
-            .AddOptions<JwtOptions>()
-            .BindConfiguration(JwtOptions.SectionName)
-            .ValidateDataAnnotations()
-            .ValidateOnStart();
         services
             .AddOptions<TelegramBotAuthOptions>()
             .BindConfiguration(TelegramBotAuthOptions.SectionName)

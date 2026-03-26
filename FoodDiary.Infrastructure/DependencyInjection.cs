@@ -20,8 +20,20 @@ public static class DependencyInjection
             options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
 
         services.Configure<S3Options>(configuration.GetSection(S3Options.SectionName));
+        services.AddOptions<JwtOptions>()
+            .Bind(configuration.GetSection(JwtOptions.SectionName))
+            .Validate(static options => !string.IsNullOrWhiteSpace(options.SecretKey) && options.SecretKey.Length >= 32,
+                "JwtSettings:SecretKey must be at least 32 characters long.")
+            .Validate(static options => !string.IsNullOrWhiteSpace(options.Issuer),
+                "JwtSettings:Issuer is required.")
+            .Validate(static options => !string.IsNullOrWhiteSpace(options.Audience),
+                "JwtSettings:Audience is required.")
+            .Validate(static options => options.ExpirationMinutes > 0,
+                "JwtSettings:ExpirationMinutes must be greater than zero.")
+            .Validate(static options => options.RefreshTokenExpirationDays > 0,
+                "JwtSettings:RefreshTokenExpirationDays must be greater than zero.")
+            .ValidateOnStart();
         services.Configure<TelegramAuthOptions>(configuration.GetSection(TelegramAuthOptions.SectionName));
-        services.Configure<TelegramBotOptions>(configuration.GetSection(TelegramBotOptions.SectionName));
         services.Configure<OpenAiOptions>(configuration.GetSection(OpenAiOptions.SectionName));
         services.Configure<EmailOptions>(configuration.GetSection(EmailOptions.SectionName));
 

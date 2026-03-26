@@ -1,10 +1,11 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
 using FoodDiary.Application.Authentication.Abstractions;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Infrastructure.Options;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 
 namespace FoodDiary.Infrastructure.Authentication;
 
@@ -15,26 +16,27 @@ public class JwtTokenGenerator : IJwtTokenGenerator {
     private readonly int _accessTokenExpirationMinutes;
     private readonly int _refreshTokenExpirationMinutes;
 
-    public JwtTokenGenerator(IConfiguration configuration) {
-        var secretKey = configuration["JwtSettings:SecretKey"];
-        _issuer = configuration["JwtSettings:Issuer"] ?? string.Empty;
-        _audience = configuration["JwtSettings:Audience"] ?? string.Empty;
+    public JwtTokenGenerator(IOptions<JwtOptions> options) {
+        var jwtOptions = options.Value;
+        var secretKey = jwtOptions.SecretKey;
+        _issuer = jwtOptions.Issuer;
+        _audience = jwtOptions.Audience;
 
         if (string.IsNullOrWhiteSpace(secretKey)) {
-            throw new InvalidOperationException("JwtSettings:SecretKey is not configured.");
+            throw new InvalidOperationException($"{JwtOptions.SectionName}:SecretKey is not configured.");
         }
 
         if (string.IsNullOrWhiteSpace(_issuer)) {
-            throw new InvalidOperationException("JwtSettings:Issuer is not configured.");
+            throw new InvalidOperationException($"{JwtOptions.SectionName}:Issuer is not configured.");
         }
 
         if (string.IsNullOrWhiteSpace(_audience)) {
-            throw new InvalidOperationException("JwtSettings:Audience is not configured.");
+            throw new InvalidOperationException($"{JwtOptions.SectionName}:Audience is not configured.");
         }
 
         _signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
-        _accessTokenExpirationMinutes = ParsePositiveInt(configuration["JwtSettings:ExpirationMinutes"], 60);
-        var refreshDays = ParsePositiveInt(configuration["JwtSettings:RefreshTokenExpirationDays"], 7);
+        _accessTokenExpirationMinutes = jwtOptions.ExpirationMinutes > 0 ? jwtOptions.ExpirationMinutes : 60;
+        var refreshDays = jwtOptions.RefreshTokenExpirationDays > 0 ? jwtOptions.RefreshTokenExpirationDays : 7;
         _refreshTokenExpirationMinutes = refreshDays * 1440;
     }
 
@@ -89,13 +91,5 @@ public class JwtTokenGenerator : IJwtTokenGenerator {
             signingCredentials: credentials);
 
         return new JwtSecurityTokenHandler().WriteToken(token);
-    }
-
-    private static int ParsePositiveInt(string? rawValue, int fallback) {
-        if (int.TryParse(rawValue, out var parsed) && parsed > 0) {
-            return parsed;
-        }
-
-        return fallback;
     }
 }

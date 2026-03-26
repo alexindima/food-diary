@@ -175,7 +175,7 @@ public sealed class SmtpEmailSender(
                             </tr>
                             <tr>
                               <td style="padding:16px 28px;background:#f8fafc;color:#94a3b8;font-family:Segoe UI,Arial,sans-serif;font-size:12px;">
-                                If the button doesn’t work, copy and paste this link into your browser:<br>
+                                If the button doesn't work, copy and paste this link into your browser:<br>
                                 <span style="word-break:break-all;color:#64748b;">{ctaLink}</span>
                               </td>
                             </tr>
