@@ -34,6 +34,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Initialize deploy diagnostics
+        run: |
+          mkdir -p "${RUNNER_TEMP}/deploy-logs"
+          echo "FAILED_STEP=" >> "${GITHUB_ENV}"
+          echo "FAILED_LOG_FILE=" >> "${GITHUB_ENV}"
+
       - name: Checkout code
         uses: actions/checkout@v6
         with:
@@ -51,42 +57,92 @@ jobs:
 
       - name: Build Angular frontend
         run: |
-          cd ${{ env.FRONTEND_DIR }}
-          BUILD_VERSION="${GITHUB_SHA::8}"
-          sed -i "s/__BUILD_VERSION__/${BUILD_VERSION}/g" src/environments/environment.prod.ts
-          sed -i "s/__BUILD_VERSION__/${BUILD_VERSION}/g" src/environments/environment.staging.ts
-          npm install
-          npm run build:prod
-          npm run build:admin
-          echo "Frontend build completed."
+          set -o pipefail
+          LOG_FILE="${RUNNER_TEMP}/deploy-logs/build-angular-frontend.log"
+          (
+            cd ${{ env.FRONTEND_DIR }}
+            BUILD_VERSION="${GITHUB_SHA::8}"
+            sed -i "s/__BUILD_VERSION__/${BUILD_VERSION}/g" src/environments/environment.prod.ts
+            sed -i "s/__BUILD_VERSION__/${BUILD_VERSION}/g" src/environments/environment.staging.ts
+            npm install
+            npm run build:prod
+            npm run build:admin
+            echo "Frontend build completed."
+          ) 2>&1 | tee "${LOG_FILE}"
+          status=${PIPESTATUS[0]}
+          if [ "${status}" -ne 0 ]; then
+            echo "FAILED_STEP=Build Angular frontend" >> "${GITHUB_ENV}"
+            echo "FAILED_LOG_FILE=${LOG_FILE}" >> "${GITHUB_ENV}"
+            exit "${status}"
+          fi
 
       - name: Publish .NET backend
         run: |
-          dotnet restore ${{ env.BACKEND_PROJECT }}
-          dotnet publish ${{ env.BACKEND_PROJECT }} -c Release -o ${{ env.BACKEND_PUBLISH_DIR }}
-          echo "Backend publish completed."
+          set -o pipefail
+          LOG_FILE="${RUNNER_TEMP}/deploy-logs/publish-backend.log"
+          (
+            dotnet restore ${{ env.BACKEND_PROJECT }}
+            dotnet publish ${{ env.BACKEND_PROJECT }} -c Release -o ${{ env.BACKEND_PUBLISH_DIR }}
+            echo "Backend publish completed."
+          ) 2>&1 | tee "${LOG_FILE}"
+          status=${PIPESTATUS[0]}
+          if [ "${status}" -ne 0 ]; then
+            echo "FAILED_STEP=Publish .NET backend" >> "${GITHUB_ENV}"
+            echo "FAILED_LOG_FILE=${LOG_FILE}" >> "${GITHUB_ENV}"
+            exit "${status}"
+          fi
 
       - name: Publish Telegram bot
         run: |
-          dotnet restore ${{ env.BOT_PROJECT }}
-          dotnet publish ${{ env.BOT_PROJECT }} -c Release -o ${{ env.BOT_PUBLISH_DIR }}
-          echo "Telegram bot publish completed."
+          set -o pipefail
+          LOG_FILE="${RUNNER_TEMP}/deploy-logs/publish-telegram-bot.log"
+          (
+            dotnet restore ${{ env.BOT_PROJECT }}
+            dotnet publish ${{ env.BOT_PROJECT }} -c Release -o ${{ env.BOT_PUBLISH_DIR }}
+            echo "Telegram bot publish completed."
+          ) 2>&1 | tee "${LOG_FILE}"
+          status=${PIPESTATUS[0]}
+          if [ "${status}" -ne 0 ]; then
+            echo "FAILED_STEP=Publish Telegram bot" >> "${GITHUB_ENV}"
+            echo "FAILED_LOG_FILE=${LOG_FILE}" >> "${GITHUB_ENV}"
+            exit "${status}"
+          fi
 
       - name: Publish JobManager
         if: env.ENABLE_JOBMANAGER == 'true'
         run: |
-          dotnet restore ${{ env.JOBMANAGER_PROJECT }}
-          dotnet publish ${{ env.JOBMANAGER_PROJECT }} -c Release -o ${{ env.JOBMANAGER_PUBLISH_DIR }}
-          echo "JobManager publish completed."
+          set -o pipefail
+          LOG_FILE="${RUNNER_TEMP}/deploy-logs/publish-jobmanager.log"
+          (
+            dotnet restore ${{ env.JOBMANAGER_PROJECT }}
+            dotnet publish ${{ env.JOBMANAGER_PROJECT }} -c Release -o ${{ env.JOBMANAGER_PUBLISH_DIR }}
+            echo "JobManager publish completed."
+          ) 2>&1 | tee "${LOG_FILE}"
+          status=${PIPESTATUS[0]}
+          if [ "${status}" -ne 0 ]; then
+            echo "FAILED_STEP=Publish JobManager" >> "${GITHUB_ENV}"
+            echo "FAILED_LOG_FILE=${LOG_FILE}" >> "${GITHUB_ENV}"
+            exit "${status}"
+          fi
 
       - name: Build EF Core migration bundle
         run: |
-          dotnet tool restore
-          dotnet ef migrations bundle \
-            --project ${{ env.BACKEND_PROJECT }} \
-            --startup-project ${{ env.BACKEND_PROJECT }} \
-            --configuration Release \
-            --output ${{ env.BACKEND_PUBLISH_DIR }}/migrate
+          set -o pipefail
+          LOG_FILE="${RUNNER_TEMP}/deploy-logs/build-migration-bundle.log"
+          (
+            dotnet tool restore
+            dotnet ef migrations bundle \
+              --project ${{ env.BACKEND_PROJECT }} \
+              --startup-project ${{ env.BACKEND_PROJECT }} \
+              --configuration Release \
+              --output ${{ env.BACKEND_PUBLISH_DIR }}/migrate
+          ) 2>&1 | tee "${LOG_FILE}"
+          status=${PIPESTATUS[0]}
+          if [ "${status}" -ne 0 ]; then
+            echo "FAILED_STEP=Build EF Core migration bundle" >> "${GITHUB_ENV}"
+            echo "FAILED_LOG_FILE=${LOG_FILE}" >> "${GITHUB_ENV}"
+            exit "${status}"
+          fi
 
       - name: Setting up SSH
         env:
@@ -99,43 +155,50 @@ jobs:
 
       - name: Creating directories on the server
         run: |
-          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no root@${{ env.SERVER_IP }} << EOF
-          rm -rf "${{ env.FRONTEND_DEPLOY_DIR }}"
-          rm -rf "${{ env.ADMIN_FRONTEND_DEPLOY_DIR }}"
-          rm -rf "${{ env.BACKEND_DEPLOY_DIR }}"
-          rm -rf "${{ env.BOT_DEPLOY_DIR }}"
-          if [ "${ENABLE_JOBMANAGER}" = "true" ]; then
-            rm -rf "${{ env.JOBMANAGER_DEPLOY_DIR }}"
-          fi
-          mkdir -p "${{ env.FRONTEND_DEPLOY_DIR }}"
-          mkdir -p "${{ env.ADMIN_FRONTEND_DEPLOY_DIR }}"
-          mkdir -p "${{ env.BACKEND_DEPLOY_DIR }}"
-          mkdir -p "${{ env.BOT_DEPLOY_DIR }}"
-          if [ "${ENABLE_JOBMANAGER}" = "true" ]; then
-            mkdir -p "${{ env.JOBMANAGER_DEPLOY_DIR }}"
-          fi
-          chmod -R 755 "${{ env.FRONTEND_DEPLOY_DIR }}"
-          chmod -R 755 "${{ env.ADMIN_FRONTEND_DEPLOY_DIR }}"
-          chmod -R 755 "${{ env.BACKEND_DEPLOY_DIR }}"
-          chmod -R 755 "${{ env.BOT_DEPLOY_DIR }}"
-          if [ "${ENABLE_JOBMANAGER}" = "true" ]; then
-            chmod -R 755 "${{ env.JOBMANAGER_DEPLOY_DIR }}"
-          fi
-          chown -R www-data:www-data "${{ env.FRONTEND_DEPLOY_DIR }}"
-          chown -R www-data:www-data "${{ env.ADMIN_FRONTEND_DEPLOY_DIR }}"
-          chown -R www-data:www-data "${{ env.BACKEND_DEPLOY_DIR }}"
-          chown -R www-data:www-data "${{ env.BOT_DEPLOY_DIR }}"
-          if [ "${ENABLE_JOBMANAGER}" = "true" ]; then
-            chown -R www-data:www-data "${{ env.JOBMANAGER_DEPLOY_DIR }}"
-          fi
-          echo "Directories created, cleaned, and permissions set."
+          set -o pipefail
+          LOG_FILE="${RUNNER_TEMP}/deploy-logs/create-server-directories.log"
+          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no root@${{ env.SERVER_IP }} << EOF 2>&1 | tee "${LOG_FILE}"
+            rm -rf "${{ env.FRONTEND_DEPLOY_DIR }}"
+            rm -rf "${{ env.ADMIN_FRONTEND_DEPLOY_DIR }}"
+            rm -rf "${{ env.BACKEND_DEPLOY_DIR }}"
+            rm -rf "${{ env.BOT_DEPLOY_DIR }}"
+            if [ "${ENABLE_JOBMANAGER}" = "true" ]; then
+              rm -rf "${{ env.JOBMANAGER_DEPLOY_DIR }}"
+            fi
+            mkdir -p "${{ env.FRONTEND_DEPLOY_DIR }}"
+            mkdir -p "${{ env.ADMIN_FRONTEND_DEPLOY_DIR }}"
+            mkdir -p "${{ env.BACKEND_DEPLOY_DIR }}"
+            mkdir -p "${{ env.BOT_DEPLOY_DIR }}"
+            if [ "${ENABLE_JOBMANAGER}" = "true" ]; then
+              mkdir -p "${{ env.JOBMANAGER_DEPLOY_DIR }}"
+            fi
+            chmod -R 755 "${{ env.FRONTEND_DEPLOY_DIR }}"
+            chmod -R 755 "${{ env.ADMIN_FRONTEND_DEPLOY_DIR }}"
+            chmod -R 755 "${{ env.BACKEND_DEPLOY_DIR }}"
+            chmod -R 755 "${{ env.BOT_DEPLOY_DIR }}"
+            if [ "${ENABLE_JOBMANAGER}" = "true" ]; then
+              chmod -R 755 "${{ env.JOBMANAGER_DEPLOY_DIR }}"
+            fi
+            chown -R www-data:www-data "${{ env.FRONTEND_DEPLOY_DIR }}"
+            chown -R www-data:www-data "${{ env.ADMIN_FRONTEND_DEPLOY_DIR }}"
+            chown -R www-data:www-data "${{ env.BACKEND_DEPLOY_DIR }}"
+            chown -R www-data:www-data "${{ env.BOT_DEPLOY_DIR }}"
+            if [ "${ENABLE_JOBMANAGER}" = "true" ]; then
+              chown -R www-data:www-data "${{ env.JOBMANAGER_DEPLOY_DIR }}"
+            fi
+            echo "Directories created, cleaned, and permissions set."
           EOF
+          status=${PIPESTATUS[0]}
+          if [ "${status}" -ne 0 ]; then
+            echo "FAILED_STEP=Creating directories on the server" >> "${GITHUB_ENV}"
+            echo "FAILED_LOG_FILE=${LOG_FILE}" >> "${GITHUB_ENV}"
+            exit "${status}"
+          fi
 
       - name: Install .NET runtime and configure systemd service
         run: |
           ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no root@${{ env.SERVER_IP }} << 'EOF'
             set -e
-            # Install ASP.NET Core Runtime 10.0 if missing
             if ! command -v dotnet >/dev/null 2>&1 || ! dotnet --list-runtimes | grep -q "Microsoft.AspNetCore.App 10"; then
               wget https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
               dpkg -i packages-microsoft-prod.deb
@@ -144,7 +207,6 @@ jobs:
               apt-get install -y aspnetcore-runtime-10.0
             fi
 
-            # Write/refresh systemd unit
             printf "%s\n" \
               "[Unit]" \
               "Description=FoodDiary API" \
@@ -249,7 +311,9 @@ jobs:
         env:
           CONNECTION_STRING: ${{ secrets.PROD_CONNECTION_STRING }}
         run: |
-          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no root@${{ env.SERVER_IP }} << EOF
+          set -o pipefail
+          LOG_FILE="${RUNNER_TEMP}/deploy-logs/run-migration-bundle.log"
+          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no root@${{ env.SERVER_IP }} << EOF 2>&1 | tee "${LOG_FILE}"
             set -e
             if [ -z "${CONNECTION_STRING}" ]; then
               echo "Missing CONNECTION_STRING env for migrations" >&2
@@ -263,19 +327,33 @@ jobs:
             ./migrate
             echo "Migrations applied by bundle."
           EOF
+          status=${PIPESTATUS[0]}
+          if [ "${status}" -ne 0 ]; then
+            echo "FAILED_STEP=Run migration bundle on server" >> "${GITHUB_ENV}"
+            echo "FAILED_LOG_FILE=${LOG_FILE}" >> "${GITHUB_ENV}"
+            exit "${status}"
+          fi
 
       - name: Restart backend service
         run: |
-          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no root@${{ env.SERVER_IP }} << EOF
-          systemctl restart food-diary-api
-          systemctl status food-diary-api --no-pager -n 20 || true
-          systemctl restart food-diary-telegram-bot
-          systemctl status food-diary-telegram-bot --no-pager -n 20 || true
-          if [ "${ENABLE_JOBMANAGER}" = "true" ]; then
-            systemctl restart food-diary-jobs
-            systemctl status food-diary-jobs --no-pager -n 20 || true
-          fi
+          set -o pipefail
+          LOG_FILE="${RUNNER_TEMP}/deploy-logs/restart-backend-service.log"
+          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no root@${{ env.SERVER_IP }} << EOF 2>&1 | tee "${LOG_FILE}"
+            systemctl restart food-diary-api
+            systemctl status food-diary-api --no-pager -n 20 || true
+            systemctl restart food-diary-telegram-bot
+            systemctl status food-diary-telegram-bot --no-pager -n 20 || true
+            if [ "${ENABLE_JOBMANAGER}" = "true" ]; then
+              systemctl restart food-diary-jobs
+              systemctl status food-diary-jobs --no-pager -n 20 || true
+            fi
           EOF
+          status=${PIPESTATUS[0]}
+          if [ "${status}" -ne 0 ]; then
+            echo "FAILED_STEP=Restart backend service" >> "${GITHUB_ENV}"
+            echo "FAILED_LOG_FILE=${LOG_FILE}" >> "${GITHUB_ENV}"
+            exit "${status}"
+          fi
 
       - name: Confirm deployment completion
         run: |
@@ -293,10 +371,11 @@ jobs:
             echo "Skipping Telegram notification: missing secrets."
             exit 0
           fi
-          MESSAGE=$'✅ Deploy success\nRepo: '"${GITHUB_REPOSITORY}"$'\nBranch: '"${GITHUB_REF_NAME}"$'\nCommit: '"${GITHUB_SHA::8}"$'\nActor: '"${GITHUB_ACTOR}"$'\nRun: '"${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          MESSAGE=$'Deploy success\nRepo: '"${GITHUB_REPOSITORY}"$'\nBranch: '"${GITHUB_REF_NAME}"$'\nCommit: '"${GITHUB_SHA::8}"$'\nActor: '"${GITHUB_ACTOR}"$'\nRun: '"${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
           curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
             -d chat_id="${TELEGRAM_CHAT_ID}" \
             --data-urlencode text="${MESSAGE}" >/dev/null
+
       - name: Notify Telegram (failure)
         if: failure()
         env:
@@ -307,7 +386,14 @@ jobs:
             echo "Skipping Telegram notification: missing secrets."
             exit 0
           fi
-          MESSAGE=$'❌ Deploy failed\nRepo: '"${GITHUB_REPOSITORY}"$'\nBranch: '"${GITHUB_REF_NAME}"$'\nCommit: '"${GITHUB_SHA::8}"$'\nActor: '"${GITHUB_ACTOR}"$'\nRun: '"${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          FAILED_STEP_NAME="${FAILED_STEP:-unknown}"
+          MESSAGE=$'Deploy failed\nRepo: '"${GITHUB_REPOSITORY}"$'\nBranch: '"${GITHUB_REF_NAME}"$'\nCommit: '"${GITHUB_SHA::8}"$'\nActor: '"${GITHUB_ACTOR}"$'\nStep: '"${FAILED_STEP_NAME}"$'\nRun: '"${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
           curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
             -d chat_id="${TELEGRAM_CHAT_ID}" \
             --data-urlencode text="${MESSAGE}" >/dev/null
+          if [ -n "${FAILED_LOG_FILE}" ] && [ -f "${FAILED_LOG_FILE}" ]; then
+            curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendDocument" \
+              -F chat_id="${TELEGRAM_CHAT_ID}" \
+              -F caption="Deploy failure log: ${FAILED_STEP_NAME}" \
+              -F document=@"${FAILED_LOG_FILE}" >/dev/null
+          fi
