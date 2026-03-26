@@ -19,7 +19,15 @@ public static class DependencyInjection
         services.AddDbContext<FoodDiaryDbContext>(options =>
             options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
 
-        services.Configure<S3Options>(configuration.GetSection(S3Options.SectionName));
+        services.AddOptions<S3Options>()
+            .Bind(configuration.GetSection(S3Options.SectionName))
+            .Validate(static options => options.MaxUploadSizeBytes > 0,
+                "S3:MaxUploadSizeBytes must be greater than zero.")
+            .Validate(static options => string.IsNullOrWhiteSpace(options.PublicBaseUrl) || Uri.IsWellFormedUriString(options.PublicBaseUrl, UriKind.Absolute),
+                "S3:PublicBaseUrl must be an absolute URL when provided.")
+            .Validate(static options => string.IsNullOrWhiteSpace(options.ServiceUrl) || Uri.IsWellFormedUriString(options.ServiceUrl, UriKind.Absolute),
+                "S3:ServiceUrl must be an absolute URL when provided.")
+            .ValidateOnStart();
         services.AddOptions<JwtOptions>()
             .Bind(configuration.GetSection(JwtOptions.SectionName))
             .Validate(static options => !string.IsNullOrWhiteSpace(options.SecretKey) && options.SecretKey.Length >= 32,
@@ -33,9 +41,28 @@ public static class DependencyInjection
             .Validate(static options => options.RefreshTokenExpirationDays > 0,
                 "JwtSettings:RefreshTokenExpirationDays must be greater than zero.")
             .ValidateOnStart();
-        services.Configure<TelegramAuthOptions>(configuration.GetSection(TelegramAuthOptions.SectionName));
-        services.Configure<OpenAiOptions>(configuration.GetSection(OpenAiOptions.SectionName));
-        services.Configure<EmailOptions>(configuration.GetSection(EmailOptions.SectionName));
+        services.AddOptions<TelegramAuthOptions>()
+            .Bind(configuration.GetSection(TelegramAuthOptions.SectionName));
+        services.AddOptions<OpenAiOptions>()
+            .Bind(configuration.GetSection(OpenAiOptions.SectionName))
+            .Validate(static options => string.IsNullOrWhiteSpace(options.VisionModel) || !string.IsNullOrWhiteSpace(options.VisionFallbackModel),
+                "OpenAi:VisionFallbackModel is required when VisionModel is configured.")
+            .Validate(static options => string.IsNullOrWhiteSpace(options.ApiKey) || !string.IsNullOrWhiteSpace(options.TextModel),
+                "OpenAi:TextModel is required when ApiKey is configured.")
+            .Validate(static options => string.IsNullOrWhiteSpace(options.ApiKey) || !string.IsNullOrWhiteSpace(options.VisionModel),
+                "OpenAi:VisionModel is required when ApiKey is configured.")
+            .ValidateOnStart();
+        services.AddOptions<EmailOptions>()
+            .Bind(configuration.GetSection(EmailOptions.SectionName))
+            .Validate(static options => options.SmtpPort > 0,
+                "Email:SmtpPort must be greater than zero.")
+            .Validate(static options => string.IsNullOrWhiteSpace(options.FrontendBaseUrl) || Uri.IsWellFormedUriString(options.FrontendBaseUrl, UriKind.Absolute),
+                "Email:FrontendBaseUrl must be an absolute URL when provided.")
+            .Validate(static options => !string.IsNullOrWhiteSpace(options.VerificationPath),
+                "Email:VerificationPath is required.")
+            .Validate(static options => !string.IsNullOrWhiteSpace(options.PasswordResetPath),
+                "Email:PasswordResetPath is required.")
+            .ValidateOnStart();
 
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IProductRepository, ProductRepository>();
@@ -60,7 +87,9 @@ public static class DependencyInjection
         services.AddScoped<IUserCleanupService, UserCleanupService>();
         services.AddSingleton<IEmailTemplateProvider, EmailTemplateProvider>();
         services.AddSingleton<IEmailSender, SmtpEmailSender>();
-        services.AddHttpClient<IOpenAiFoodService, OpenAiFoodService>();
+        services.AddHttpClient<IOpenAiFoodService, OpenAiFoodService>(client => {
+            client.Timeout = TimeSpan.FromSeconds(60);
+        });
 
         return services;
     }

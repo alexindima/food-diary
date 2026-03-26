@@ -14,6 +14,10 @@ public sealed class UserCleanupService(
         int batchSize,
         Guid? reassignUserId,
         CancellationToken cancellationToken = default) {
+        if (batchSize <= 0) {
+            throw new ArgumentOutOfRangeException(nameof(batchSize), "Batch size must be greater than zero.");
+        }
+
         UserId? reassignTarget = null;
         if (reassignUserId.HasValue) {
             var candidate = await dbContext.Users
@@ -26,14 +30,22 @@ public sealed class UserCleanupService(
             }
         }
 
+        var thresholdUtc = olderThanUtc.Kind switch {
+            DateTimeKind.Utc => olderThanUtc,
+            DateTimeKind.Local => olderThanUtc.ToUniversalTime(),
+            _ => DateTime.SpecifyKind(olderThanUtc, DateTimeKind.Utc)
+        };
+
         var userIds = await dbContext.Users
-            .Where(u => u.DeletedAt != null && u.DeletedAt <= olderThanUtc)
+            .Where(u => u.DeletedAt != null && u.DeletedAt <= thresholdUtc)
             .OrderBy(u => u.DeletedAt)
             .Select(u => u.Id)
             .Take(batchSize)
             .ToListAsync(cancellationToken);
 
         var removed = 0;
+
+        await using var transaction = await dbContext.Database.BeginTransactionAsync(cancellationToken);
 
         foreach (var userId in userIds) {
             if (reassignTarget is not null) {
@@ -89,6 +101,14 @@ public sealed class UserCleanupService(
                 .Where(meal => meal.UserId == userId)
                 .ExecuteDeleteAsync(cancellationToken);
 
+            await dbContext.ShoppingLists
+                .Where(list => list.UserId == userId)
+                .ExecuteDeleteAsync(cancellationToken);
+
+            await dbContext.RecentItems
+                .Where(item => item.UserId == userId)
+                .ExecuteDeleteAsync(cancellationToken);
+
             await dbContext.HydrationEntries
                 .Where(entry => entry.UserId == userId)
                 .ExecuteDeleteAsync(cancellationToken);
@@ -113,6 +133,14 @@ public sealed class UserCleanupService(
                 .Where(asset => asset.UserId == userId)
                 .ExecuteDeleteAsync(cancellationToken);
 
+            await dbContext.AiUsages
+                .Where(usage => usage.UserId == userId)
+                .ExecuteDeleteAsync(cancellationToken);
+
+            await dbContext.UserRoles
+                .Where(role => role.UserId == userId)
+                .ExecuteDeleteAsync(cancellationToken);
+
             await dbContext.Users
                 .Where(u => u.Id == userId)
                 .ExecuteDeleteAsync(cancellationToken);
@@ -120,6 +148,7 @@ public sealed class UserCleanupService(
             removed++;
         }
 
+        await transaction.CommitAsync(cancellationToken);
         return removed;
     }
 }

@@ -1,3 +1,4 @@
+using System.Net;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
@@ -20,6 +21,12 @@ public sealed class OpenAiFoodService(
     IAiUsageRepository aiUsageRepository,
     IUserRepository userRepository)
     : IOpenAiFoodService {
+    private const int MaxTransientRetries = 2;
+    private static readonly TimeSpan[] RetryDelays = [
+        TimeSpan.FromMilliseconds(250),
+        TimeSpan.FromMilliseconds(750)
+    ];
+
     private readonly OpenAiOptions _options = options.Value;
     private readonly ILogger<OpenAiFoodService> _logger = logger;
     private readonly IAiUsageRepository _aiUsageRepository = aiUsageRepository;
@@ -92,45 +99,70 @@ public sealed class OpenAiFoodService(
     private async Task<(bool IsSuccess, JsonDocument? Json, Error Error)> SendRequestAsync(
         object payload,
         CancellationToken cancellationToken) {
-        using var request = new HttpRequestMessage(HttpMethod.Post, "https://api.openai.com/v1/responses");
-        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _options.ApiKey);
-        request.Content = new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json");
+        var requestBody = JsonSerializer.Serialize(payload);
 
-        HttpResponseMessage response;
-        try {
-            response = await httpClient.SendAsync(request, cancellationToken);
-        } catch (HttpRequestException ex) {
-            _logger.LogWarning(ex, "OpenAI request failed due to transport error.");
-            return (false, null, Errors.Ai.OpenAiFailed($"OpenAI transport error: {ex.Message}"));
-        } catch (TaskCanceledException ex) when (!cancellationToken.IsCancellationRequested) {
-            _logger.LogWarning(ex, "OpenAI request timed out.");
-            return (false, null, Errors.Ai.OpenAiFailed("OpenAI request timed out."));
+        for (var attempt = 0; attempt <= MaxTransientRetries; attempt++) {
+            using var request = new HttpRequestMessage(HttpMethod.Post, "https://api.openai.com/v1/responses");
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _options.ApiKey);
+            request.Content = new StringContent(requestBody, Encoding.UTF8, "application/json");
+
+            HttpResponseMessage response;
+            try {
+                response = await httpClient.SendAsync(request, cancellationToken);
+            } catch (HttpRequestException ex) when (attempt < MaxTransientRetries) {
+                _logger.LogWarning(ex, "OpenAI transport error on attempt {Attempt}. Retrying.", attempt + 1);
+                await Task.Delay(RetryDelays[attempt], cancellationToken);
+                continue;
+            } catch (HttpRequestException ex) {
+                _logger.LogWarning(ex, "OpenAI request failed due to transport error.");
+                return (false, null, Errors.Ai.OpenAiFailed($"OpenAI transport error: {ex.Message}"));
+            } catch (TaskCanceledException ex) when (!cancellationToken.IsCancellationRequested && attempt < MaxTransientRetries) {
+                _logger.LogWarning(ex, "OpenAI request timed out on attempt {Attempt}. Retrying.", attempt + 1);
+                await Task.Delay(RetryDelays[attempt], cancellationToken);
+                continue;
+            } catch (TaskCanceledException ex) when (!cancellationToken.IsCancellationRequested) {
+                _logger.LogWarning(ex, "OpenAI request timed out.");
+                return (false, null, Errors.Ai.OpenAiFailed("OpenAI request timed out."));
+            }
+
+            using var _ = response;
+            var responseBody = await response.Content.ReadAsStringAsync(cancellationToken);
+
+            if (!response.IsSuccessStatusCode) {
+                var statusCode = (int)response.StatusCode;
+                var requestId = response.Headers.TryGetValues("x-request-id", out var values)
+                    ? string.Join(",", values)
+                    : null;
+
+                if (attempt < MaxTransientRetries && IsTransientStatusCode(response.StatusCode)) {
+                    _logger.LogWarning(
+                        "OpenAI transient failure on attempt {Attempt}. Status={Status} RequestId={RequestId} Summary={Summary}. Retrying.",
+                        attempt + 1,
+                        statusCode,
+                        requestId ?? "n/a",
+                        SummarizeBody(responseBody));
+                    await Task.Delay(RetryDelays[attempt], cancellationToken);
+                    continue;
+                }
+
+                _logger.LogWarning(
+                    "OpenAI request failed. Status={Status} RequestId={RequestId} Summary={Summary}",
+                    statusCode,
+                    requestId ?? "n/a",
+                    SummarizeBody(responseBody));
+
+                return (false, null, Errors.Ai.OpenAiFailed($"OpenAI error {response.StatusCode}: {SummarizeBody(responseBody)}"));
+            }
+
+            try {
+                var json = JsonDocument.Parse(responseBody);
+                return (true, json, Error.None);
+            } catch (JsonException ex) {
+                return (false, null, Errors.Ai.InvalidResponse($"Invalid JSON response: {ex.Message}"));
+            }
         }
 
-        using var _ = response;
-        var responseBody = await response.Content.ReadAsStringAsync(cancellationToken);
-
-        if (!response.IsSuccessStatusCode) {
-            var statusCode = (int)response.StatusCode;
-            var requestId = response.Headers.TryGetValues("x-request-id", out var values)
-                ? string.Join(",", values)
-                : null;
-
-            _logger.LogWarning(
-                "OpenAI request failed. Status={Status} RequestId={RequestId} Body={Body}",
-                statusCode,
-                requestId ?? "n/a",
-                responseBody);
-
-            return (false, null, Errors.Ai.OpenAiFailed($"OpenAI error {response.StatusCode}: {responseBody}"));
-        }
-
-        try {
-            var json = JsonDocument.Parse(responseBody);
-            return (true, json, Error.None);
-        } catch (JsonException ex) {
-            return (false, null, Errors.Ai.InvalidResponse($"Invalid JSON response: {ex.Message}"));
-        }
+        return (false, null, Errors.Ai.OpenAiFailed("OpenAI request failed after retries."));
     }
 
     private static object BuildVisionRequest(
@@ -386,6 +418,21 @@ public sealed class OpenAiFoodService(
         var total = usage.TryGetProperty("total_tokens", out var totalTokens) ? totalTokens.GetInt32() : input + output;
 
         return new UsageTokens(input, output, total);
+    }
+
+    private static bool IsTransientStatusCode(HttpStatusCode statusCode) {
+        return statusCode is HttpStatusCode.RequestTimeout or HttpStatusCode.TooManyRequests or
+               HttpStatusCode.BadGateway or HttpStatusCode.ServiceUnavailable or HttpStatusCode.GatewayTimeout or
+               HttpStatusCode.InternalServerError;
+    }
+
+    private static string SummarizeBody(string responseBody) {
+        if (string.IsNullOrWhiteSpace(responseBody)) {
+            return "empty";
+        }
+
+        var compact = responseBody.ReplaceLineEndings(" ").Trim();
+        return compact.Length <= 300 ? compact : compact[..300];
     }
 
     private readonly record struct UsageTokens(int InputTokens, int OutputTokens, int TotalTokens);

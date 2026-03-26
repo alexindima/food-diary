@@ -7,6 +7,8 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Infrastructure.Persistence;
 
 public class UserRepository(FoodDiaryDbContext context) : IUserRepository {
+    private const string LikeEscapeCharacter = "\\";
+
     private IQueryable<User> UsersWithRoles() =>
         context.Users
             .Include(u => u.UserRoles)
@@ -39,6 +41,8 @@ public class UserRepository(FoodDiaryDbContext context) : IUserRepository {
         int limit,
         bool includeDeleted,
         CancellationToken cancellationToken = default) {
+        var pageNumber = Math.Max(page, 1);
+        var pageSize = Math.Max(limit, 1);
         var query = UsersWithRoles().AsQueryable();
 
         if (!includeDeleted) {
@@ -46,19 +50,19 @@ public class UserRepository(FoodDiaryDbContext context) : IUserRepository {
         }
 
         if (!string.IsNullOrWhiteSpace(search)) {
-            var term = search.Trim().ToLower();
+            var term = $"%{EscapeLikePattern(search.Trim())}%";
             query = query.Where(u =>
-                u.Email.ToLower().Contains(term) ||
-                (u.Username ?? string.Empty).ToLower().Contains(term) ||
-                (u.FirstName ?? string.Empty).ToLower().Contains(term) ||
-                (u.LastName ?? string.Empty).ToLower().Contains(term));
+                EF.Functions.ILike(u.Email, term, LikeEscapeCharacter) ||
+                EF.Functions.ILike(u.Username ?? string.Empty, term, LikeEscapeCharacter) ||
+                EF.Functions.ILike(u.FirstName ?? string.Empty, term, LikeEscapeCharacter) ||
+                EF.Functions.ILike(u.LastName ?? string.Empty, term, LikeEscapeCharacter));
         }
 
         var total = await query.CountAsync(cancellationToken);
         var items = await query
             .OrderByDescending(u => u.CreatedOnUtc)
-            .Skip((page - 1) * limit)
-            .Take(limit)
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
             .ToListAsync(cancellationToken);
 
         return (items, total);
@@ -99,5 +103,12 @@ public class UserRepository(FoodDiaryDbContext context) : IUserRepository {
     public async Task UpdateAsync(User user, CancellationToken cancellationToken = default) {
         context.Users.Update(user);
         await context.SaveChangesAsync(cancellationToken);
+    }
+
+    private static string EscapeLikePattern(string value) {
+        return value
+            .Replace("\\", "\\\\", StringComparison.Ordinal)
+            .Replace("%", "\\%", StringComparison.Ordinal)
+            .Replace("_", "\\_", StringComparison.Ordinal);
     }
 }

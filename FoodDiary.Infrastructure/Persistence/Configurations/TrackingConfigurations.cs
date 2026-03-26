@@ -73,6 +73,11 @@ internal sealed class CycleConfiguration : IEntityTypeConfiguration<Cycle> {
         entity.Property(e => e.Notes)
             .HasMaxLength(1024);
 
+        entity.HasOne<global::FoodDiary.Domain.Entities.Users.User>()
+            .WithMany(u => u.Cycles)
+            .HasForeignKey(e => e.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
         entity.HasMany(e => e.Days)
             .WithOne(d => d.Cycle)
             .HasForeignKey(d => d.CycleId)
@@ -179,6 +184,11 @@ internal sealed class AiUsageConfiguration : IEntityTypeConfiguration<AiUsage> {
         entity.Property(e => e.Model)
             .IsRequired()
             .HasMaxLength(64);
+
+        entity.HasOne<global::FoodDiary.Domain.Entities.Users.User>()
+            .WithMany()
+            .HasForeignKey(e => e.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         entity.HasIndex(e => e.UserId);
         entity.HasIndex(e => e.CreatedOnUtc);

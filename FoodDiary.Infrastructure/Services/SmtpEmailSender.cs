@@ -12,6 +12,21 @@ namespace FoodDiary.Infrastructure.Services;
 public sealed class SmtpEmailSender(
     IOptions<EmailOptions> options,
     IEmailTemplateProvider templateProvider) : IEmailSender {
+    private const string EmailVerificationSubjectRu =
+        "\u041f\u043e\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u0435 email";
+    private const string EmailVerificationIntroRu =
+        "\u0421\u043f\u0430\u0441\u0438\u0431\u043e \u0437\u0430 \u0440\u0435\u0433\u0438\u0441\u0442\u0440\u0430\u0446\u0438\u044e \u0432 FoodDiary.";
+    private const string EmailVerificationCtaRu =
+        "\u041f\u043e\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u044c email";
+    private const string PasswordResetSubjectRu =
+        "\u0421\u0431\u0440\u043e\u0441 \u043f\u0430\u0440\u043e\u043b\u044f";
+    private const string PasswordResetIntroRu =
+        "\u041c\u044b \u043f\u043e\u043b\u0443\u0447\u0438\u043b\u0438 \u0437\u0430\u043f\u0440\u043e\u0441 \u043d\u0430 \u0441\u043c\u0435\u043d\u0443 \u043f\u0430\u0440\u043e\u043b\u044f FoodDiary.";
+    private const string PasswordResetCtaRu =
+        "\u0421\u0431\u0440\u043e\u0441\u0438\u0442\u044c \u043f\u0430\u0440\u043e\u043b\u044c";
+    private const string IgnoreEmailFooterRu =
+        "\u0415\u0441\u043b\u0438 \u0432\u044b \u043d\u0435 \u0437\u0430\u043f\u0440\u0430\u0448\u0438\u0432\u0430\u043b\u0438 \u044d\u0442\u043e, \u043f\u0440\u043e\u0441\u0442\u043e \u043f\u0440\u043e\u0438\u0433\u043d\u043e\u0440\u0438\u0440\u0443\u0439\u0442\u0435 \u043f\u0438\u0441\u044c\u043c\u043e.";
+
     private readonly EmailOptions _options = options.Value;
     private readonly IEmailTemplateProvider _templateProvider = templateProvider;
 
@@ -22,14 +37,14 @@ public sealed class SmtpEmailSender(
             message.ToEmail,
             locale,
             key: "email_verification",
-            subjectFallback: locale == "ru" ? "Подтвердите email" : "Confirm your email",
+            subjectFallback: locale == "ru" ? EmailVerificationSubjectRu : "Confirm your email",
             htmlFallback: locale == "ru"
                 ? BuildTemplate(
-                    title: "Подтвердите email",
-                    intro: "Спасибо за регистрацию в FoodDiary.",
-                    ctaLabel: "Подтвердить email",
+                    title: EmailVerificationSubjectRu,
+                    intro: EmailVerificationIntroRu,
+                    ctaLabel: EmailVerificationCtaRu,
                     ctaLink: link,
-                    footer: "Если вы не запрашивали это, просто проигнорируйте письмо.")
+                    footer: IgnoreEmailFooterRu)
                 : BuildTemplate(
                     title: "Confirm your email",
                     intro: "Thanks for registering in FoodDiary.",
@@ -37,11 +52,11 @@ public sealed class SmtpEmailSender(
                     ctaLink: link,
                     footer: "If you did not request this, you can ignore this email."),
             textFallback: locale == "ru"
-                ? $"""
-                   Спасибо за регистрацию в FoodDiary.
-                   Подтвердите email: {link}
-                   Если вы не запрашивали это, просто проигнорируйте письмо.
-                   """
+                ? $$"""
+                  {{EmailVerificationIntroRu}}
+                  {{EmailVerificationSubjectRu}}: {{link}}
+                  {{IgnoreEmailFooterRu}}
+                  """
                 : $"""
                    Thanks for registering in FoodDiary.
                    Please confirm your email: {link}
@@ -58,14 +73,14 @@ public sealed class SmtpEmailSender(
             message.ToEmail,
             locale,
             key: "password_reset",
-            subjectFallback: locale == "ru" ? "Сброс пароля" : "Reset your password",
+            subjectFallback: locale == "ru" ? PasswordResetSubjectRu : "Reset your password",
             htmlFallback: locale == "ru"
                 ? BuildTemplate(
-                    title: "Сброс пароля",
-                    intro: "Мы получили запрос на смену пароля FoodDiary.",
-                    ctaLabel: "Сбросить пароль",
+                    title: PasswordResetSubjectRu,
+                    intro: PasswordResetIntroRu,
+                    ctaLabel: PasswordResetCtaRu,
                     ctaLink: link,
-                    footer: "Если вы не запрашивали это, просто проигнорируйте письмо.")
+                    footer: IgnoreEmailFooterRu)
                 : BuildTemplate(
                     title: "Reset your password",
                     intro: "We received a request to reset your FoodDiary password.",
@@ -73,11 +88,11 @@ public sealed class SmtpEmailSender(
                     ctaLink: link,
                     footer: "If you did not request this, you can ignore this email."),
             textFallback: locale == "ru"
-                ? $"""
-                   Мы получили запрос на смену пароля FoodDiary.
-                   Сбросить пароль: {link}
-                   Если вы не запрашивали это, просто проигнорируйте письмо.
-                   """
+                ? $$"""
+                  {{PasswordResetIntroRu}}
+                  {{PasswordResetCtaRu}}: {{link}}
+                  {{IgnoreEmailFooterRu}}
+                  """
                 : $"""
                    We received a request to reset your FoodDiary password.
                    Reset your password: {link}
