@@ -494,7 +494,7 @@ public sealed class PresentationPayloadContractIntegrationTests(
     }
 
     private static async Task AssertPayloadSnapshotAsync(string scenario, string actual) {
-        var snapshotPath = Path.Combine(AppContext.BaseDirectory, "Snapshots", "payload-contract-snapshots.json");
+        var snapshotPath = SnapshotPathResolver.GetPath("payload-contract-snapshots.json");
         var snapshotRoot = JsonNode.Parse(await File.ReadAllTextAsync(snapshotPath))!.AsObject();
         if (string.Equals(Environment.GetEnvironmentVariable("UPDATE_CONTRACT_SNAPSHOTS"), "1", StringComparison.Ordinal)) {
             snapshotRoot[scenario] = JsonNode.Parse(actual);

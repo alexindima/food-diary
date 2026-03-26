@@ -519,7 +519,7 @@ public sealed class PresentationBoundaryIntegrationTests(
     }
 
     private static async Task AssertErrorContractSnapshotAsync(string scenario, ErrorPayload payload) {
-        var snapshotPath = Path.Combine(AppContext.BaseDirectory, "Snapshots", "error-contract-snapshots.json");
+        var snapshotPath = SnapshotPathResolver.GetPath("error-contract-snapshots.json");
         var snapshotRoot = JsonNode.Parse(await File.ReadAllTextAsync(snapshotPath))!.AsObject();
         var serializerOptions = new JsonSerializerOptions {
             WriteIndented = true,
@@ -537,7 +537,7 @@ public sealed class PresentationBoundaryIntegrationTests(
     }
 
     private static async Task AssertSnapshotAsync(string snapshotFileName, string actual) {
-        var snapshotPath = Path.Combine(AppContext.BaseDirectory, "Snapshots", snapshotFileName);
+        var snapshotPath = SnapshotPathResolver.GetPath(snapshotFileName);
         if (string.Equals(Environment.GetEnvironmentVariable("UPDATE_CONTRACT_SNAPSHOTS"), "1", StringComparison.Ordinal)) {
             await File.WriteAllTextAsync(snapshotPath, actual.ReplaceLineEndings("\n"));
         }

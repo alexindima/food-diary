@@ -173,5 +173,93 @@
       "latest",
       "previous"
     ]
+  },
+  "ai-usage-me": {
+    "keys": [
+      "inputLimit",
+      "inputUsed",
+      "outputLimit",
+      "outputUsed",
+      "resetAtUtc"
+    ],
+    "inputLimit": 5000000,
+    "outputLimit": 1000000,
+    "inputUsed": 0,
+    "outputUsed": 0,
+    "hasResetAtUtc": true
+  },
+  "hydration-daily": {
+    "keys": [
+      "dateUtc",
+      "goalMl",
+      "totalMl"
+    ],
+    "dateUtc": "2026-03-26T00:00:00.0000000Z",
+    "totalMl": 450,
+    "hasGoalMl": true
+  },
+  "desired-waist": {
+    "keys": [
+      "desiredWaist"
+    ],
+    "desiredWaist": 81.5
+  },
+  "desired-weight": {
+    "keys": [
+      "desiredWeight"
+    ],
+    "desiredWeight": 72.5
+  },
+  "user-info": {
+    "keys": [
+      "activityLevel",
+      "birthDate",
+      "carbTarget",
+      "dailyCalorieTarget",
+      "dashboardLayout",
+      "desiredWaist",
+      "desiredWeight",
+      "email",
+      "fatTarget",
+      "fiberTarget",
+      "firstName",
+      "gender",
+      "height",
+      "hydrationGoal",
+      "id",
+      "isActive",
+      "isEmailConfirmed",
+      "language",
+      "lastLoginAtUtc",
+      "lastName",
+      "profileImage",
+      "profileImageAssetId",
+      "proteinTarget",
+      "stepGoal",
+      "username",
+      "waterGoal",
+      "weight"
+    ],
+    "emailDomain": "example.com",
+    "language": "en",
+    "isActive": true,
+    "isEmailConfirmed": false,
+    "dashboardLayoutKeys": []
+  },
+  "image-upload-url": {
+    "keys": [
+      "assetId",
+      "expiresAtUtc",
+      "fileUrl",
+      "objectKey",
+      "uploadUrl"
+    ],
+    "uploadUrlHost": "s3.test.local",
+    "uploadUrlHasSignature": false,
+    "fileUrlHost": "cdn.test.local",
+    "objectKeySegmentCount": 4,
+    "objectKeyStartsWithUsers": true,
+    "objectKeyContainsImagesSegment": true,
+    "assetIdIsGuid": true
   }
 }
