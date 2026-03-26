@@ -18,7 +18,6 @@ public sealed class AdminUsersController(ISender mediator) : BaseApiController(m
     [HttpGet]
     [ProducesResponseType<PagedHttpResponse<AdminUserHttpResponse>>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
-    [ProducesApiErrorResponse(StatusCodes.Status500InternalServerError)]
     public Task<IActionResult> GetUsers([FromQuery] GetAdminUsersHttpQuery query) =>
         HandleOk(query.ToQuery(), static value => value.ToHttpResponse());
 
@@ -26,7 +25,6 @@ public sealed class AdminUsersController(ISender mediator) : BaseApiController(m
     [ProducesResponseType<AdminUserHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
-    [ProducesApiErrorResponse(StatusCodes.Status500InternalServerError)]
     public Task<IActionResult> UpdateUser(Guid id, [FromBody] AdminUserUpdateHttpRequest request) =>
         HandleOk(request.ToCommand(id), static value => value.ToHttpResponse());
 }

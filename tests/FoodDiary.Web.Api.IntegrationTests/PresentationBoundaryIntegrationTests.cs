@@ -28,8 +28,12 @@ public sealed class PresentationBoundaryIntegrationTests(
         client.DefaultRequestHeaders.Add(TestAuthenticationHandler.AuthenticateHeader, "true");
 
         var response = await client.GetAsync("/api/users/info");
+        var payload = await response.Content.ReadFromJsonAsync<ErrorPayload>(JsonOptions);
 
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+        Assert.NotNull(payload);
+        Assert.Equal("Authentication.Unauthorized", payload.Error);
+        Assert.False(string.IsNullOrWhiteSpace(payload.TraceId));
     }
 
     [Fact]
@@ -87,6 +91,22 @@ public sealed class PresentationBoundaryIntegrationTests(
         Assert.Equal(HttpStatusCode.TooManyRequests, lastResponse.StatusCode);
         Assert.NotNull(payload);
         Assert.Equal("RateLimit.Exceeded", payload.Error);
+        Assert.False(string.IsNullOrWhiteSpace(payload.TraceId));
+    }
+
+    [Fact]
+    public async Task TelegramBotAuth_WithoutConfiguredSecret_ReturnsInternalServerErrorContractWithTraceId() {
+        var client = apiFactory.CreateClient();
+
+        var response = await client.PostAsJsonAsync(
+            "/api/auth/telegram/bot/auth",
+            new TelegramBotAuthHttpRequest(123456789));
+        var payload = await response.Content.ReadFromJsonAsync<ErrorPayload>(JsonOptions);
+
+        Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
+        Assert.NotNull(payload);
+        Assert.Equal("Authentication.TelegramBotNotConfigured", payload.Error);
+        Assert.False(string.IsNullOrWhiteSpace(payload.TraceId));
     }
 
     [Fact]

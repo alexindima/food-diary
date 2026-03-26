@@ -31,6 +31,17 @@ public sealed class PresentationErrorCatalogTests {
     }
 
     [Fact]
+    public void CentralErrorCatalog_DefinesErrorKind_ForAllPublishedErrors() {
+        var missingKinds = GetCatalogErrors()
+            .Where(static error => error.Kind is null)
+            .Select(static error => error.Code)
+            .Distinct(StringComparer.Ordinal)
+            .ToArray();
+
+        Assert.Empty(missingKinds);
+    }
+
+    [Fact]
     public void CentralErrorCatalog_CanBeEnumeratedWithoutDuplicatesOrMissingCodes() {
         var duplicates = GetCatalogErrors()
             .GroupBy(static error => error.Code, StringComparer.Ordinal)

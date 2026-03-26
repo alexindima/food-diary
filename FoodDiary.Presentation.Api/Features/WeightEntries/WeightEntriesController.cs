@@ -15,20 +15,17 @@ public class WeightEntriesController(ISender mediator) : AuthorizedController(me
     [HttpGet]
     [ProducesResponseType<List<WeightEntryHttpResponse>>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
-    [ProducesApiErrorResponse(StatusCodes.Status500InternalServerError)]
     public Task<IActionResult> GetAll([FromCurrentUser] Guid userId, [FromQuery] GetWeightEntriesHttpQuery query) =>
         HandleOk(query.ToQuery(userId), static value => value.Select(item => item.ToHttpResponse()).ToList());
 
     [HttpGet("latest")]
     [ProducesResponseType<WeightEntryHttpResponse>(StatusCodes.Status200OK)]
-    [ProducesApiErrorResponse(StatusCodes.Status500InternalServerError)]
     public Task<IActionResult> GetLatest([FromCurrentUser] Guid userId) =>
         HandleOk(userId.ToLatestQuery(), static value => value?.ToHttpResponse());
 
     [HttpGet("summary")]
     [ProducesResponseType<List<WeightEntrySummaryHttpResponse>>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
-    [ProducesApiErrorResponse(StatusCodes.Status500InternalServerError)]
     public Task<IActionResult> GetSummary([FromCurrentUser] Guid userId, [FromQuery] GetWeightSummariesHttpQuery query) =>
         HandleOk(query.ToQuery(userId), static value => value.Select(item => item.ToHttpResponse()).ToList());
 
@@ -36,7 +33,6 @@ public class WeightEntriesController(ISender mediator) : AuthorizedController(me
     [ProducesResponseType<WeightEntryHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesApiErrorResponse(StatusCodes.Status409Conflict)]
-    [ProducesApiErrorResponse(StatusCodes.Status500InternalServerError)]
     public Task<IActionResult> Create([FromCurrentUser] Guid userId, [FromBody] CreateWeightEntryHttpRequest request) =>
         HandleOk(request.ToCommand(userId), static value => value.ToHttpResponse());
 
@@ -45,14 +41,12 @@ public class WeightEntriesController(ISender mediator) : AuthorizedController(me
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
     [ProducesApiErrorResponse(StatusCodes.Status409Conflict)]
-    [ProducesApiErrorResponse(StatusCodes.Status500InternalServerError)]
     public Task<IActionResult> Update(Guid id, [FromCurrentUser] Guid userId, [FromBody] UpdateWeightEntryHttpRequest request) =>
         HandleOk(request.ToCommand(userId, id), static value => value.ToHttpResponse());
 
     [HttpDelete("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
-    [ProducesApiErrorResponse(StatusCodes.Status500InternalServerError)]
     public Task<IActionResult> Delete(Guid id, [FromCurrentUser] Guid userId) =>
         HandleNoContent(id.ToDeleteCommand(userId));
 }

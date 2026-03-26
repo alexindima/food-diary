@@ -65,6 +65,7 @@ public sealed class BaseApiControllerTests {
         Assert.Equal(StatusCodes.Status400BadRequest, objectResult.StatusCode);
         Assert.NotNull(payload.Errors);
         Assert.Contains("email", payload.Errors.Keys);
+        Assert.Equal("trace-base-controller", payload.TraceId);
     }
 
     private static TestController CreateController(ISender mediator) {
@@ -73,6 +74,7 @@ public sealed class BaseApiControllerTests {
                 HttpContext = new DefaultHttpContext(),
             },
         };
+        controller.ControllerContext.HttpContext.TraceIdentifier = "trace-base-controller";
 
         return controller;
     }

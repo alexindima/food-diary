@@ -22,34 +22,30 @@ public class AuthController(ISender mediator) : BaseApiController(mediator) {
     [ProducesResponseType<AuthenticationHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesApiErrorResponse(StatusCodes.Status409Conflict)]
-    [ProducesApiErrorResponse(StatusCodes.Status500InternalServerError)]
-    public Task<IActionResult> Register(RegisterHttpRequest request) =>
+    public Task<IActionResult> Register([FromBody] RegisterHttpRequest request) =>
         HandleOk(request.ToCommand(), static value => value.ToHttpResponse());
 
     [HttpPost("login")]
     [ProducesResponseType<AuthenticationHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesApiErrorResponse(StatusCodes.Status401Unauthorized)]
-    [ProducesApiErrorResponse(StatusCodes.Status500InternalServerError)]
     [EnableRateLimiting(PresentationPolicyNames.AuthRateLimitPolicyName)]
-    public Task<IActionResult> Login(LoginHttpRequest request) =>
+    public Task<IActionResult> Login([FromBody] LoginHttpRequest request) =>
         HandleOk(request.ToCommand(), static value => value.ToHttpResponse());
 
     [HttpPost("refresh")]
     [ProducesResponseType<AccessTokenHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesApiErrorResponse(StatusCodes.Status401Unauthorized)]
-    [ProducesApiErrorResponse(StatusCodes.Status500InternalServerError)]
     [EnableRateLimiting(PresentationPolicyNames.AuthRateLimitPolicyName)]
-    public Task<IActionResult> Refresh(RefreshTokenHttpRequest request) =>
+    public Task<IActionResult> Refresh([FromBody] RefreshTokenHttpRequest request) =>
         HandleOk(request.ToCommand(), static value => value.ToAccessTokenHttpResponse());
 
     [HttpPost("restore")]
     [ProducesResponseType<AuthenticationHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesApiErrorResponse(StatusCodes.Status401Unauthorized)]
-    [ProducesApiErrorResponse(StatusCodes.Status500InternalServerError)]
-    public Task<IActionResult> RestoreAccount(RestoreAccountHttpRequest request) =>
+    public Task<IActionResult> RestoreAccount([FromBody] RestoreAccountHttpRequest request) =>
         HandleOk(request.ToCommand(), static value => value.ToHttpResponse());
 
     [HttpPost("verify-email")]
@@ -58,24 +54,20 @@ public class AuthController(ISender mediator) : BaseApiController(mediator) {
     [ProducesApiErrorResponse(StatusCodes.Status401Unauthorized)]
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
     [ProducesApiErrorResponse(StatusCodes.Status409Conflict)]
-    [ProducesApiErrorResponse(StatusCodes.Status500InternalServerError)]
-    public Task<IActionResult> VerifyEmail(VerifyEmailHttpRequest request) =>
+    public Task<IActionResult> VerifyEmail([FromBody] VerifyEmailHttpRequest request) =>
         HandleNoContent(request.ToCommand());
 
     [Authorize]
     [HttpPost("verify-email/resend")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesApiErrorResponse(StatusCodes.Status401Unauthorized)]
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
-    [ProducesApiErrorResponse(StatusCodes.Status500InternalServerError)]
     public Task<IActionResult> ResendVerifyEmail([FromCurrentUser] Guid userId) =>
         HandleNoContent(userId.ToResendVerificationCommand());
 
     [HttpPost("password-reset/request")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
-    [ProducesApiErrorResponse(StatusCodes.Status500InternalServerError)]
-    public Task<IActionResult> RequestPasswordReset(RequestPasswordResetHttpRequest request) =>
+    public Task<IActionResult> RequestPasswordReset([FromBody] RequestPasswordResetHttpRequest request) =>
         HandleNoContent(request.ToCommand());
 
     [HttpPost("password-reset/confirm")]
@@ -83,8 +75,7 @@ public class AuthController(ISender mediator) : BaseApiController(mediator) {
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesApiErrorResponse(StatusCodes.Status401Unauthorized)]
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
-    [ProducesApiErrorResponse(StatusCodes.Status500InternalServerError)]
-    public Task<IActionResult> ConfirmPasswordReset(ConfirmPasswordResetHttpRequest request) =>
+    public Task<IActionResult> ConfirmPasswordReset([FromBody] ConfirmPasswordResetHttpRequest request) =>
         HandleOk(request.ToCommand(), static value => value.ToHttpResponse());
 
     [HttpPost("telegram/verify")]
@@ -93,8 +84,7 @@ public class AuthController(ISender mediator) : BaseApiController(mediator) {
     [ProducesApiErrorResponse(StatusCodes.Status401Unauthorized)]
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
     [ProducesApiErrorResponse(StatusCodes.Status409Conflict)]
-    [ProducesApiErrorResponse(StatusCodes.Status500InternalServerError)]
-    public Task<IActionResult> TelegramVerify(TelegramAuthHttpRequest request) =>
+    public Task<IActionResult> TelegramVerify([FromBody] TelegramAuthHttpRequest request) =>
         HandleOk(request.ToCommand(), static value => value.ToHttpResponse());
 
     [HttpPost("telegram/login-widget")]
@@ -103,19 +93,16 @@ public class AuthController(ISender mediator) : BaseApiController(mediator) {
     [ProducesApiErrorResponse(StatusCodes.Status401Unauthorized)]
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
     [ProducesApiErrorResponse(StatusCodes.Status409Conflict)]
-    [ProducesApiErrorResponse(StatusCodes.Status500InternalServerError)]
-    public Task<IActionResult> TelegramLoginWidget(TelegramLoginWidgetHttpRequest request) =>
+    public Task<IActionResult> TelegramLoginWidget([FromBody] TelegramLoginWidgetHttpRequest request) =>
         HandleOk(request.ToCommand(), static value => value.ToHttpResponse());
 
     [Authorize]
     [HttpPost("telegram/link")]
     [ProducesResponseType<AuthenticationHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
-    [ProducesApiErrorResponse(StatusCodes.Status401Unauthorized)]
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
     [ProducesApiErrorResponse(StatusCodes.Status409Conflict)]
-    [ProducesApiErrorResponse(StatusCodes.Status500InternalServerError)]
-    public Task<IActionResult> LinkTelegram([FromCurrentUser] Guid userId, TelegramAuthHttpRequest request) =>
+    public Task<IActionResult> LinkTelegram([FromCurrentUser] Guid userId, [FromBody] TelegramAuthHttpRequest request) =>
         HandleOk(request.ToLinkCommand(userId), static value => value.ToHttpResponse());
 
     [HttpPost("telegram/bot/auth")]
@@ -123,16 +110,12 @@ public class AuthController(ISender mediator) : BaseApiController(mediator) {
     [ProducesResponseType<AuthenticationHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesApiErrorResponse(StatusCodes.Status401Unauthorized)]
-    [ProducesApiErrorResponse(StatusCodes.Status500InternalServerError)]
-    public Task<IActionResult> TelegramBotAuth(TelegramBotAuthHttpRequest request) =>
+    public Task<IActionResult> TelegramBotAuth([FromBody] TelegramBotAuthHttpRequest request) =>
         HandleOk(request.ToCommand(), static value => value.ToHttpResponse());
 
     [Authorize(Roles = PresentationRoleNames.Admin)]
     [HttpPost("admin-sso/start")]
     [ProducesResponseType<AdminSsoStartHttpResponse>(StatusCodes.Status200OK)]
-    [ProducesApiErrorResponse(StatusCodes.Status401Unauthorized)]
-    [ProducesApiErrorResponse(StatusCodes.Status403Forbidden)]
-    [ProducesApiErrorResponse(StatusCodes.Status500InternalServerError)]
     public Task<IActionResult> AdminSsoStart([FromCurrentUser] Guid userId) =>
         HandleOk(userId.ToAdminSsoStartCommand(), static value => value.ToHttpResponse());
 
@@ -141,8 +124,7 @@ public class AuthController(ISender mediator) : BaseApiController(mediator) {
     [ProducesResponseType<AuthenticationHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesApiErrorResponse(StatusCodes.Status401Unauthorized)]
-    [ProducesApiErrorResponse(StatusCodes.Status500InternalServerError)]
-    public Task<IActionResult> AdminSsoExchange(AdminSsoExchangeHttpRequest request) =>
+    public Task<IActionResult> AdminSsoExchange([FromBody] AdminSsoExchangeHttpRequest request) =>
         HandleOk(request.ToCommand(), static value => value.ToHttpResponse());
 }
 

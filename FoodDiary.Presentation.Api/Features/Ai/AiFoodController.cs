@@ -23,7 +23,6 @@ public sealed class AiFoodController(ISender mediator) : AuthorizedController(me
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesApiErrorResponse(StatusCodes.Status429TooManyRequests)]
     [ProducesApiErrorResponse(StatusCodes.Status502BadGateway)]
-    [ProducesApiErrorResponse(StatusCodes.Status500InternalServerError)]
     public Task<IActionResult> AnalyzeFood([FromCurrentUser] Guid userId, [FromBody] FoodVisionHttpRequest request) =>
         HandleOk(request.ToCommand(userId), static value => value.ToHttpResponse());
 
@@ -32,7 +31,6 @@ public sealed class AiFoodController(ISender mediator) : AuthorizedController(me
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesApiErrorResponse(StatusCodes.Status429TooManyRequests)]
     [ProducesApiErrorResponse(StatusCodes.Status502BadGateway)]
-    [ProducesApiErrorResponse(StatusCodes.Status500InternalServerError)]
     public Task<IActionResult> CalculateNutrition([FromCurrentUser] Guid userId, [FromBody] FoodNutritionHttpRequest request) =>
         HandleOk(request.ToCommand(userId), static value => value.ToHttpResponse());
 }

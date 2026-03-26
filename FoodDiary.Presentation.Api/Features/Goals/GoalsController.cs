@@ -15,7 +15,6 @@ public class GoalsController(ISender mediator) : AuthorizedController(mediator) 
     [HttpGet]
     [ProducesResponseType<GoalsHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
-    [ProducesApiErrorResponse(StatusCodes.Status500InternalServerError)]
     public Task<IActionResult> GetGoals([FromCurrentUser] Guid userId) =>
         HandleOk(userId.ToQuery(), static value => value.ToHttpResponse());
 
@@ -23,7 +22,6 @@ public class GoalsController(ISender mediator) : AuthorizedController(mediator) 
     [ProducesResponseType<GoalsHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
-    [ProducesApiErrorResponse(StatusCodes.Status500InternalServerError)]
     public Task<IActionResult> UpdateGoals([FromCurrentUser] Guid userId, [FromBody] UpdateGoalsHttpRequest request) =>
         HandleOk(request.ToCommand(userId), static value => value.ToHttpResponse());
 }

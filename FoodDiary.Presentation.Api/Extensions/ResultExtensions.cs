@@ -18,14 +18,14 @@ public static class ResultExtensions {
         public IActionResult ToOkActionResult(ControllerBase controller) {
             return result.IsSuccess
                 ? controller.Ok(result.Value)
-                : ErrorResult(result.Error);
+                : ErrorResult(result.Error, controller.HttpContext.TraceIdentifier);
         }
 
         public IActionResult ToOkActionResult<TResponse>(ControllerBase controller,
             Func<T, TResponse> map) {
             return result.IsSuccess
                 ? controller.Ok(map(result.Value))
-                : ErrorResult(result.Error);
+                : ErrorResult(result.Error, controller.HttpContext.TraceIdentifier);
         }
 
         public IActionResult ToCreatedAtActionResult<TResponse>(
@@ -35,14 +35,14 @@ public static class ResultExtensions {
             Func<T, TResponse> map) {
             return result.IsSuccess
                 ? controller.CreatedAtAction(actionName, routeValues(result.Value), map(result.Value))
-                : ErrorResult(result.Error);
+                : ErrorResult(result.Error, controller.HttpContext.TraceIdentifier);
         }
     }
 
-    public static IActionResult ToNoContentActionResult(this Result result) {
+    public static IActionResult ToNoContentActionResult(this Result result, ControllerBase controller) {
         return result.IsSuccess
             ? new NoContentResult()
-            : ErrorResult(result.Error);
+            : ErrorResult(result.Error, controller.HttpContext.TraceIdentifier);
     }
 
     public static IActionResult ToErrorActionResult(this Error error, int statusCode) =>
@@ -52,10 +52,16 @@ public static class ResultExtensions {
         ErrorResult(error, PresentationErrorHttpMapper.MapStatusCode(error));
 
     private static IActionResult ErrorResult(Error error, int statusCode) =>
+        ErrorResult(error, statusCode, Activity.Current?.Id);
+
+    private static IActionResult ErrorResult(Error error, string? traceId) =>
+        ErrorResult(error, PresentationErrorHttpMapper.MapStatusCode(error), traceId);
+
+    private static IActionResult ErrorResult(Error error, int statusCode, string? traceId) =>
         new ObjectResult(new ApiErrorHttpResponse(
             error.Code,
             error.Message,
-            Activity.Current?.Id,
+            traceId,
             ApiErrorDetailsMapper.Normalize(error.Details))) {
             StatusCode = statusCode,
         };

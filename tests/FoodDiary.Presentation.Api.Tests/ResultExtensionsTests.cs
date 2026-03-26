@@ -51,7 +51,7 @@ public sealed class ResultExtensionsTests {
     [Fact]
     public void ToOkActionResult_FailedGenericResult_ReturnsStandardApiErrorResponse() {
         var result = Result.Failure<string>(CreateError("Image.StorageError", "Storage failed"));
-        var controller = new TestController();
+        var controller = CreateController("trace-ok-failure");
 
         var actionResult = result.ToOkActionResult(controller);
 
@@ -59,6 +59,7 @@ public sealed class ResultExtensionsTests {
         var response = Assert.IsType<ApiErrorHttpResponse>(objectResult.Value);
         Assert.Equal(StatusCodes.Status502BadGateway, objectResult.StatusCode);
         Assert.Equal("Image.StorageError", response.Error);
+        Assert.Equal("trace-ok-failure", response.TraceId);
     }
 
     [Fact]
@@ -74,7 +75,7 @@ public sealed class ResultExtensionsTests {
     [Fact]
     public void ToOkActionResult_WithMap_MapsSuccessfulValue() {
         var result = Result.Success("value");
-        var controller = new TestController();
+        var controller = CreateController("trace-success");
 
         var actionResult = result.ToOkActionResult(controller, value => value.ToUpperInvariant());
 
@@ -85,10 +86,23 @@ public sealed class ResultExtensionsTests {
     [Fact]
     public void ToNoContentActionResult_SuccessfulResult_ReturnsNoContent() {
         var result = Result.Success();
+        var controller = CreateController("trace-no-content");
 
-        var actionResult = result.ToNoContentActionResult();
+        var actionResult = result.ToNoContentActionResult(controller);
 
         Assert.IsType<NoContentResult>(actionResult);
+    }
+
+    [Fact]
+    public void ToNoContentActionResult_FailedResult_UsesControllerTraceIdentifier() {
+        var result = Result.Failure(CreateError("Validation.Invalid", "Failure"));
+        var controller = CreateController("trace-no-content-failure");
+
+        var actionResult = result.ToNoContentActionResult(controller);
+
+        var objectResult = Assert.IsType<ObjectResult>(actionResult);
+        var response = Assert.IsType<ApiErrorHttpResponse>(objectResult.Value);
+        Assert.Equal("trace-no-content-failure", response.TraceId);
     }
 
     [Fact]
@@ -125,6 +139,15 @@ public sealed class ResultExtensionsTests {
 
     private static Error CreateError(string errorCode, string message) =>
         new(errorCode, message, kind: ErrorKindResolver.Resolve(errorCode));
+
+    private static TestController CreateController(string traceIdentifier) =>
+        new() {
+            ControllerContext = new ControllerContext {
+                HttpContext = new DefaultHttpContext {
+                    TraceIdentifier = traceIdentifier,
+                },
+            },
+        };
 
     private sealed class TestController : ControllerBase;
 }

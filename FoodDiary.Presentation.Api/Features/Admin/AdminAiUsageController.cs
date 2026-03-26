@@ -4,7 +4,6 @@ using FoodDiary.Presentation.Api.Features.Admin.Mappings;
 using FoodDiary.Presentation.Api.Features.Admin.Requests;
 using FoodDiary.Presentation.Api.Features.Admin.Responses;
 using FoodDiary.Presentation.Api.Policies;
-using FoodDiary.Presentation.Api.Responses;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -19,7 +18,6 @@ namespace FoodDiary.Presentation.Api.Features.Admin;
 public sealed class AdminAiUsageController(ISender mediator) : BaseApiController(mediator) {
     [HttpGet("summary")]
     [ProducesResponseType<AdminAiUsageSummaryHttpResponse>(StatusCodes.Status200OK)]
-    [ProducesApiErrorResponse(StatusCodes.Status500InternalServerError)]
     [OutputCache(PolicyName = PresentationPolicyNames.AdminAiUsageCachePolicyName)]
     public Task<IActionResult> GetSummary([FromQuery] GetAdminAiUsageSummaryHttpQuery query) =>
         HandleOk(query.ToQuery(), static value => value.ToHttpResponse());

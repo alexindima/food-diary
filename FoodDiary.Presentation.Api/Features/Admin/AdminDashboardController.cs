@@ -3,7 +3,6 @@ using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Features.Admin.Mappings;
 using FoodDiary.Presentation.Api.Features.Admin.Requests;
 using FoodDiary.Presentation.Api.Features.Admin.Responses;
-using FoodDiary.Presentation.Api.Responses;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -17,7 +16,6 @@ namespace FoodDiary.Presentation.Api.Features.Admin;
 public sealed class AdminDashboardController(ISender mediator) : BaseApiController(mediator) {
     [HttpGet]
     [ProducesResponseType<AdminDashboardSummaryHttpResponse>(StatusCodes.Status200OK)]
-    [ProducesApiErrorResponse(StatusCodes.Status500InternalServerError)]
     public Task<IActionResult> GetDashboard([FromQuery] GetAdminDashboardHttpQuery query) =>
         HandleOk(query.ToQuery(), static value => value.ToHttpResponse());
 }

@@ -34,6 +34,6 @@ public abstract class BaseApiController(ISender mediator) : ControllerBase {
 
     protected async Task<IActionResult> HandleNoContent(IRequest<Result> request) {
         var result = await Send(request);
-        return result.ToNoContentActionResult();
+        return result.ToNoContentActionResult(this);
     }
 }

@@ -46,13 +46,14 @@ public sealed class ControllerConventionsTests {
     }
 
     [Fact]
-    public void FeatureControllerActions_DeclareStandardApiErrorContract() {
+    public void FeatureControllerActions_UseStandardApiErrorContract_ForExplicitErrorResponses() {
         var violations = GetFeatureControllerTypes()
             .SelectMany(GetActionMethods)
-            .Where(method => method.GetCustomAttributes<ProducesResponseTypeAttribute>()
+            .SelectMany(method => method.GetCustomAttributes<ProducesResponseTypeAttribute>()
                 .Where(attribute => attribute.StatusCode >= 400)
-                .Any(attribute => attribute.Type == typeof(ApiErrorHttpResponse)) is false)
-            .Select(FormatMethodName)
+                .Where(attribute => attribute.Type != typeof(ApiErrorHttpResponse))
+                .Select(_ => FormatMethodName(method)))
+            .Distinct(StringComparer.Ordinal)
             .ToArray();
 
         Assert.Empty(violations);
@@ -65,6 +66,19 @@ public sealed class ControllerConventionsTests {
             .SelectMany(method => method.GetParameters()
                 .Where(parameter => parameter.GetCustomAttribute<FromBodyAttribute>() is not null)
                 .Where(parameter => !IsPresentationHttpRequestType(parameter.ParameterType))
+                .Select(parameter => $"{FormatMethodName(method)} parameter {parameter.Name}"))
+            .ToArray();
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void FeatureControllerHttpRequestParameters_ExplicitlyUseFromBody() {
+        var violations = GetFeatureControllerTypes()
+            .SelectMany(GetActionMethods)
+            .SelectMany(method => method.GetParameters()
+                .Where(parameter => IsPresentationHttpRequestType(parameter.ParameterType))
+                .Where(parameter => parameter.GetCustomAttribute<FromBodyAttribute>() is null)
                 .Select(parameter => $"{FormatMethodName(method)} parameter {parameter.Name}"))
             .ToArray();
 
@@ -184,6 +198,18 @@ public sealed class ControllerConventionsTests {
     }
 
     [Fact]
+    public void FeatureControllerActions_DoNotDocumentInternalServerError_Manually() {
+        var violations = GetFeatureControllerTypes()
+            .SelectMany(GetActionMethods)
+            .Where(method => method.GetCustomAttributes<ProducesResponseTypeAttribute>()
+                .Any(attribute => attribute.StatusCode == StatusCodes.Status500InternalServerError))
+            .Select(FormatMethodName)
+            .ToArray();
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void FeatureControllers_DoNotReferenceApplicationTypesDirectly() {
         var violations = GetControllerSyntaxTrees()
             .Where(static tree => ReferencesApplicationTypes(tree))
@@ -194,11 +220,60 @@ public sealed class ControllerConventionsTests {
         Assert.Empty(violations);
     }
 
+    [Theory]
+    [InlineData("*HttpRequest.cs", "Requests")]
+    [InlineData("*HttpQuery.cs", "Requests")]
+    [InlineData("*HttpResponse.cs", "Responses")]
+    [InlineData("*HttpMappings.cs", "Mappings")]
+    [InlineData("*HttpQueryMappings.cs", "Mappings")]
+    [InlineData("*HttpResponseMappings.cs", "Mappings")]
+    public void FeatureTransportFiles_LiveInExpectedFolders(string filePattern, string expectedFolderName) {
+        var presentationRoot = GetPresentationRoot();
+        var violations = Directory.GetFiles(Path.Combine(presentationRoot, "Features"), filePattern, SearchOption.AllDirectories)
+            .Where(path => string.Equals(Path.GetFileName(Path.GetDirectoryName(path)), expectedFolderName, StringComparison.Ordinal) is false)
+            .Select(static path => Path.GetRelativePath(GetPresentationRoot(), path))
+            .OrderBy(static path => path, StringComparer.Ordinal)
+            .ToArray();
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void FeatureTransportFiles_DoNotLiveOutsideFeaturesFolder() {
+        var presentationRoot = GetPresentationRoot();
+        var patterns = new[] {
+            "*HttpRequest.cs",
+            "*HttpQuery.cs",
+            "*HttpResponse.cs",
+            "*HttpMappings.cs",
+            "*HttpQueryMappings.cs",
+            "*HttpResponseMappings.cs",
+        };
+
+        var violations = patterns
+            .SelectMany(pattern => Directory.GetFiles(presentationRoot, pattern, SearchOption.AllDirectories))
+            .Where(path => path.Contains($"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}", StringComparison.Ordinal) is false)
+            .Where(path => path.Contains($"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}", StringComparison.Ordinal) is false)
+            .Where(path => path.Contains($"{Path.DirectorySeparatorChar}Features{Path.DirectorySeparatorChar}", StringComparison.Ordinal) is false)
+            .Where(path => Path.GetFileName(path) is not nameof(ApiErrorHttpResponse) + ".cs"
+                and not "PagedHttpResponse.cs"
+                and not "PagedHttpResponseMappings.cs"
+                and not "EnumerableHttpResponseMappings.cs")
+            .Select(path => Path.GetRelativePath(presentationRoot, path))
+            .OrderBy(static path => path, StringComparer.Ordinal)
+            .ToArray();
+
+        Assert.Empty(violations);
+    }
+
     private static IEnumerable<SyntaxTree> GetControllerSyntaxTrees() {
-        var presentationRoot = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "..", "FoodDiary.Presentation.Api"));
+        var presentationRoot = GetPresentationRoot();
         return Directory.GetFiles(Path.Combine(presentationRoot, "Features"), "*Controller.cs", SearchOption.AllDirectories)
             .Select(static path => CSharpSyntaxTree.ParseText(File.ReadAllText(path), path: path));
     }
+
+    private static string GetPresentationRoot() =>
+        Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "..", "FoodDiary.Presentation.Api"));
 
     private static bool ReferencesApplicationTypes(SyntaxTree tree) {
         var root = tree.GetRoot();

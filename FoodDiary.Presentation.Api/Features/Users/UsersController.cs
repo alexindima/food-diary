@@ -15,7 +15,6 @@ public class UsersController(ISender mediator) : AuthorizedController(mediator) 
     [HttpGet("info")]
     [ProducesResponseType<UserHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
-    [ProducesApiErrorResponse(StatusCodes.Status500InternalServerError)]
     public Task<IActionResult> GetCurrentUserInfo([FromCurrentUser] Guid userId) =>
         HandleOk(userId.ToUserQuery(), static value => value.ToHttpResponse());
 
@@ -23,7 +22,6 @@ public class UsersController(ISender mediator) : AuthorizedController(mediator) 
     [ProducesResponseType<UserHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
-    [ProducesApiErrorResponse(StatusCodes.Status500InternalServerError)]
     public Task<IActionResult> UpdateCurrentUser([FromCurrentUser] Guid userId, [FromBody] UpdateUserHttpRequest request) =>
         HandleOk(request.ToCommand(userId), static value => value.ToHttpResponse());
 
@@ -31,14 +29,12 @@ public class UsersController(ISender mediator) : AuthorizedController(mediator) 
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
-    [ProducesApiErrorResponse(StatusCodes.Status500InternalServerError)]
     public Task<IActionResult> ChangePassword([FromCurrentUser] Guid userId, [FromBody] ChangePasswordHttpRequest request) =>
         HandleNoContent(request.ToCommand(userId));
 
     [HttpGet("desired-weight")]
     [ProducesResponseType<UserDesiredWeightHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
-    [ProducesApiErrorResponse(StatusCodes.Status500InternalServerError)]
     public Task<IActionResult> GetDesiredWeight([FromCurrentUser] Guid userId) =>
         HandleOk(userId.ToDesiredWeightQuery(), static value => value.ToHttpResponse());
 
@@ -46,14 +42,12 @@ public class UsersController(ISender mediator) : AuthorizedController(mediator) 
     [ProducesResponseType<UserDesiredWeightHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
-    [ProducesApiErrorResponse(StatusCodes.Status500InternalServerError)]
     public Task<IActionResult> UpdateDesiredWeight([FromCurrentUser] Guid userId, [FromBody] UpdateDesiredWeightHttpRequest request) =>
         HandleOk(request.ToDesiredWeightCommand(userId), static value => value.ToHttpResponse());
 
     [HttpGet("desired-waist")]
     [ProducesResponseType<UserDesiredWaistHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
-    [ProducesApiErrorResponse(StatusCodes.Status500InternalServerError)]
     public Task<IActionResult> GetDesiredWaist([FromCurrentUser] Guid userId) =>
         HandleOk(userId.ToDesiredWaistQuery(), static value => value.ToHttpResponse());
 
@@ -61,14 +55,12 @@ public class UsersController(ISender mediator) : AuthorizedController(mediator) 
     [ProducesResponseType<UserDesiredWaistHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
-    [ProducesApiErrorResponse(StatusCodes.Status500InternalServerError)]
     public Task<IActionResult> UpdateDesiredWaist([FromCurrentUser] Guid userId, [FromBody] UpdateDesiredWaistHttpRequest request) =>
         HandleOk(request.ToDesiredWaistCommand(userId), static value => value.ToHttpResponse());
 
     [HttpDelete]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
-    [ProducesApiErrorResponse(StatusCodes.Status500InternalServerError)]
     public Task<IActionResult> DeleteCurrentUser([FromCurrentUser] Guid userId) =>
         HandleNoContent(userId.ToDeleteCommand());
 }

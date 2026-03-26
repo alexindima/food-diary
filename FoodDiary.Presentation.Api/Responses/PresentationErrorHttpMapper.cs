@@ -4,23 +4,13 @@ using Microsoft.AspNetCore.Http;
 namespace FoodDiary.Presentation.Api.Responses;
 
 public static class PresentationErrorHttpMapper {
-    private static readonly Rule[] ConventionRules = [
-        new(static code => code.StartsWith("Authentication.", StringComparison.Ordinal), StatusCodes.Status401Unauthorized),
-        new(static code => code.StartsWith("Validation.", StringComparison.Ordinal), StatusCodes.Status400BadRequest),
-        new(static code => code.EndsWith(".NotAccessible", StringComparison.Ordinal), StatusCodes.Status404NotFound),
-        new(static code => code.EndsWith(".AlreadyExists", StringComparison.Ordinal), StatusCodes.Status409Conflict),
-        new(static code => code.EndsWith(".NotFound", StringComparison.Ordinal), StatusCodes.Status404NotFound),
-    ];
-
     public static int MapStatusCode(Error error) {
         if (error.Kind is { } kind) {
             return MapStatusCode(kind);
         }
 
-        foreach (var rule in ConventionRules) {
-            if (rule.Matches(error.Code)) {
-                return rule.StatusCode;
-            }
+        if (ErrorKindResolver.Resolve(error.Code) is { } resolvedKind) {
+            return MapStatusCode(resolvedKind);
         }
 
         return StatusCodes.Status500InternalServerError;
@@ -38,6 +28,4 @@ public static class PresentationErrorHttpMapper {
             ErrorKind.Internal => StatusCodes.Status500InternalServerError,
             _ => StatusCodes.Status500InternalServerError,
         };
-
-    private sealed record Rule(Func<string, bool> Matches, int StatusCode);
 }
