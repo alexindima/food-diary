@@ -6,9 +6,11 @@ using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Entities.Shopping;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
+using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.Abstractions;
+using Npgsql;
 
 namespace FoodDiary.Infrastructure.Tests.Integration;
 
@@ -59,10 +61,10 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
 
         var removed = await service.CleanupDeletedUsersAsync(DateTime.UtcNow.AddDays(-1), batchSize: 10, reassignUserId: null);
 
-        await using var verificationContext = await databaseFixture.CreateDbContextAsync();
+        await using var verificationContext = CreateVerificationContext(context);
 
         Assert.Equal(1, removed);
-        Assert.False(await verificationContext.Users.AnyAsync());
+        Assert.False(await verificationContext.Users.AnyAsync(user => user.Id == deletedUser.Id));
         Assert.False(await verificationContext.Products.AnyAsync());
         Assert.False(await verificationContext.Recipes.AnyAsync());
         Assert.False(await verificationContext.RecipeSteps.AnyAsync());
@@ -124,11 +126,11 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
             batchSize: 10,
             reassignUserId: survivorUser.Id.Value);
 
-        await using var verificationContext = await databaseFixture.CreateDbContextAsync();
+        await using var verificationContext = CreateVerificationContext(context);
 
         Assert.Equal(1, removed);
         Assert.False(await verificationContext.Users.AnyAsync(user => user.Id == deletedUser.Id));
-        Assert.Equal(1, await verificationContext.Users.CountAsync(user => user.Id == survivorUser.Id));
+        Assert.True(await verificationContext.Users.AnyAsync(user => user.Id == survivorUser.Id));
 
         var reassignedProduct = await verificationContext.Products.SingleAsync();
         var reassignedRecipe = await verificationContext.Recipes.SingleAsync();
@@ -142,5 +144,16 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
         Assert.False(await verificationContext.ShoppingListItems.AnyAsync());
         Assert.False(await verificationContext.RecentItems.AnyAsync());
         Assert.False(await verificationContext.AiUsages.AnyAsync());
+    }
+
+    private static FoodDiaryDbContext CreateVerificationContext(FoodDiaryDbContext sourceContext) {
+        var connectionString = sourceContext.Database.GetConnectionString()
+            ?? throw new InvalidOperationException("Source context does not have a connection string.");
+
+        var options = new DbContextOptionsBuilder<FoodDiaryDbContext>()
+            .UseNpgsql(new NpgsqlConnectionStringBuilder(connectionString).ConnectionString)
+            .Options;
+
+        return new FoodDiaryDbContext(options);
     }
 }

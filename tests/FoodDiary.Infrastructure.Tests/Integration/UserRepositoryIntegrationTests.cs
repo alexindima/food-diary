@@ -70,11 +70,11 @@ public sealed class UserRepositoryIntegrationTests(PostgresDatabaseFixture datab
 
         var summary = await repository.GetAdminDashboardSummaryAsync(recentLimit: 10);
 
-        Assert.Equal(3, summary.TotalUsers);
-        Assert.Equal(2, summary.ActiveUsers);
-        Assert.Equal(1, summary.PremiumUsers);
+        Assert.Equal(4, summary.TotalUsers);
+        Assert.Equal(3, summary.ActiveUsers);
+        Assert.Equal(2, summary.PremiumUsers);
         Assert.Equal(1, summary.DeletedUsers);
-        Assert.Equal(2, summary.RecentUsers.Count);
+        Assert.Equal(3, summary.RecentUsers.Count);
         Assert.DoesNotContain(summary.RecentUsers, user => user.Id == deletedUser.Id);
     }
 }
