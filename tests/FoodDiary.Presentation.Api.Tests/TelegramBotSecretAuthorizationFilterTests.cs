@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
@@ -55,7 +56,7 @@ public sealed class TelegramBotSecretAuthorizationFilterTests {
             ApiSecret = apiSecret,
         });
 
-        return new TelegramBotSecretAuthorizationFilter(options);
+        return new TelegramBotSecretAuthorizationFilter(options, NullLogger<TelegramBotSecretAuthorizationFilter>.Instance);
     }
 
     private static AuthorizationFilterContext CreateContext() {

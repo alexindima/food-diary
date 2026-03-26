@@ -35,6 +35,20 @@ public sealed class ControllerConventionsTests {
     }
 
     [Fact]
+    public void FeatureControllers_DoNotExposeMoreThanEightActions() {
+        var violations = GetFeatureControllerTypes()
+            .Select(type => new {
+                Type = type,
+                ActionCount = GetActionMethods(type).Length,
+            })
+            .Where(static entry => entry.ActionCount > 8)
+            .Select(entry => $"{entry.Type.FullName} ({entry.ActionCount} actions)")
+            .ToArray();
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void FeatureControllerActions_DeclareProducesResponseTypes() {
         var violations = GetFeatureControllerTypes()
             .SelectMany(GetActionMethods)
@@ -57,6 +71,28 @@ public sealed class ControllerConventionsTests {
             .ToArray();
 
         Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void AuthFeatureControllers_UseExpectedRoutePrefixes() {
+        var expectedRoutes = new Dictionary<string, string>(StringComparer.Ordinal) {
+            ["AdminSsoController"] = "api/auth/admin-sso",
+            ["AuthPasswordController"] = "api/auth/password-reset",
+            ["AuthSessionController"] = "api/auth",
+            ["AuthTelegramController"] = "api/auth/telegram",
+        };
+
+        var authControllers = GetFeatureControllerTypes()
+            .Where(type => type.Namespace == "FoodDiary.Presentation.Api.Features.Auth")
+            .OrderBy(type => type.Name, StringComparer.Ordinal)
+            .ToArray();
+
+        var actualRoutes = authControllers.ToDictionary(
+            type => type.Name,
+            type => type.GetCustomAttribute<RouteAttribute>()?.Template ?? string.Empty,
+            StringComparer.Ordinal);
+
+        Assert.Equal(expectedRoutes, actualRoutes);
     }
 
     [Fact]

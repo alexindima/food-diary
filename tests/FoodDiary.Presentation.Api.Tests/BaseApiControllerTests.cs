@@ -1,9 +1,14 @@
+using System.Diagnostics;
+using System.Collections.Concurrent;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Presentation.Api.Controllers;
+using FoodDiary.Presentation.Api.Extensions;
 using FoodDiary.Presentation.Api.Responses;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
@@ -68,6 +73,23 @@ public sealed class BaseApiControllerTests {
         Assert.Equal("trace-base-controller", payload.TraceId);
     }
 
+    [Fact]
+    public async Task HandleObservedOk_CreatesPresentationActivity() {
+        var request = new TestOkRequest();
+        var mediator = new StubSender()
+            .Register(request, Result.Success("value"));
+        var controller = CreateController(mediator);
+        using var listener = new TestActivityListener(PresentationApiTelemetry.TelemetryName);
+
+        _ = await controller.HandleObservedOkPublic(request, static value => value.ToUpperInvariant(), NullLogger.Instance, "test.operation", Guid.Parse("33333333-3333-3333-3333-333333333333"));
+
+        var activity = Assert.Single(listener.CompletedActivitiesSnapshot, static item => item.OperationName == "test.operation");
+        Assert.Equal("test.operation", activity.OperationName);
+        Assert.Equal("TestController", activity.GetTagItem("fooddiary.presentation.controller"));
+        Assert.Equal("Unknown", activity.GetTagItem("fooddiary.presentation.feature"));
+        Assert.Equal("success", activity.GetTagItem("fooddiary.presentation.outcome"));
+    }
+
     private static TestController CreateController(ISender mediator) {
         var controller = new TestController(mediator) {
             ControllerContext = new ControllerContext {
@@ -94,6 +116,14 @@ public sealed class BaseApiControllerTests {
 
         public Task<IActionResult> HandleNoContentPublic(IRequest<Result> request) =>
             HandleNoContent(request);
+
+        public Task<IActionResult> HandleObservedOkPublic<TResponse, THttpResponse>(
+            IRequest<Result<TResponse>> request,
+            Func<TResponse, THttpResponse> map,
+            ILogger logger,
+            string operationName,
+            Guid? userId = null) =>
+            HandleObservedOk(request, map, logger, operationName, userId);
     }
 
     private sealed record CreatedModel(Guid Id);
@@ -135,6 +165,27 @@ public sealed class BaseApiControllerTests {
             object request,
             CancellationToken cancellationToken = default) {
             throw new NotSupportedException();
+        }
+    }
+
+    private sealed class TestActivityListener : IDisposable {
+        private readonly ActivityListener _listener;
+
+        public TestActivityListener(string sourceName) {
+            _listener = new ActivityListener {
+                ShouldListenTo = source => string.Equals(source.Name, sourceName, StringComparison.Ordinal),
+                Sample = static (ref ActivityCreationOptions<ActivityContext> _) => ActivitySamplingResult.AllDataAndRecorded,
+                ActivityStopped = activity => _completedActivities.Enqueue(activity),
+            };
+            ActivitySource.AddActivityListener(_listener);
+        }
+
+        private readonly ConcurrentQueue<Activity> _completedActivities = new();
+
+        public Activity[] CompletedActivitiesSnapshot => _completedActivities.ToArray();
+
+        public void Dispose() {
+            _listener.Dispose();
         }
     }
 }

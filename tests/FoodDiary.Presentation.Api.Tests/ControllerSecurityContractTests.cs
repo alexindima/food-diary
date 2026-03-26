@@ -30,20 +30,20 @@ public sealed class ControllerSecurityContractTests {
 
     [Fact]
     public void AuthController_LoginAndRefresh_UseAuthRateLimitPolicy() {
-        AssertActionRateLimit(nameof(AuthController.Login), PresentationPolicyNames.AuthRateLimitPolicyName);
-        AssertActionRateLimit(nameof(AuthController.Refresh), PresentationPolicyNames.AuthRateLimitPolicyName);
+        AssertActionRateLimit(typeof(AuthSessionController), nameof(AuthSessionController.Login), PresentationPolicyNames.AuthRateLimitPolicyName);
+        AssertActionRateLimit(typeof(AuthSessionController), nameof(AuthSessionController.Refresh), PresentationPolicyNames.AuthRateLimitPolicyName);
     }
 
     [Fact]
     public void AuthController_TelegramBotAuth_RequiresTelegramBotSecret() {
-        var method = GetAction(typeof(AuthController), nameof(AuthController.TelegramBotAuth));
+        var method = GetAction(typeof(AuthTelegramController), nameof(AuthTelegramController.TelegramBotAuth));
 
         Assert.NotNull(method.GetCustomAttribute<RequireTelegramBotSecretAttribute>());
     }
 
     [Fact]
     public void AuthController_AdminSsoStart_RequiresAdminRole() {
-        var method = GetAction(typeof(AuthController), nameof(AuthController.AdminSsoStart));
+        var method = GetAction(typeof(AdminSsoController), nameof(AdminSsoController.AdminSsoStart));
         var authorize = AssertSingleAttribute<AuthorizeAttribute>(method);
 
         Assert.Equal(PresentationRoleNames.Admin, authorize.Roles);
@@ -51,7 +51,7 @@ public sealed class ControllerSecurityContractTests {
 
     [Fact]
     public void AuthController_AdminSsoExchange_AllowsAnonymous() {
-        var method = GetAction(typeof(AuthController), nameof(AuthController.AdminSsoExchange));
+        var method = GetAction(typeof(AdminSsoController), nameof(AdminSsoController.AdminSsoExchange));
 
         Assert.NotNull(method.GetCustomAttribute<AllowAnonymousAttribute>());
     }
@@ -62,8 +62,8 @@ public sealed class ControllerSecurityContractTests {
         AssertHasFromCurrentUserParameter(typeof(ImagesController), nameof(ImagesController.Delete));
     }
 
-    private static void AssertActionRateLimit(string actionName, string expectedPolicyName) {
-        var method = GetAction(typeof(AuthController), actionName);
+    private static void AssertActionRateLimit(Type controllerType, string actionName, string expectedPolicyName) {
+        var method = GetAction(controllerType, actionName);
         var attribute = AssertSingleAttribute<EnableRateLimitingAttribute>(method);
 
         Assert.Equal(expectedPolicyName, attribute.PolicyName);

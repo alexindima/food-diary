@@ -5,16 +5,19 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace FoodDiary.Presentation.Api.Features.Ai;
 
 [ApiController]
 [Route("api/ai/usage")]
 [Authorize]
-public sealed class AiUsageController(ISender mediator) : AuthorizedController(mediator) {
+public sealed class AiUsageController(ISender mediator, ILogger<AiUsageController> logger) : AuthorizedController(mediator) {
+    private readonly ILogger<AiUsageController> _logger = logger;
+
     [HttpGet("me")]
     [ProducesResponseType<UserAiUsageHttpResponse>(StatusCodes.Status200OK)]
     public Task<IActionResult> GetMyUsage([FromCurrentUser] Guid userId) =>
-        HandleOk(userId.ToUsageQuery(), static value => value.ToHttpResponse());
+        HandleObservedOk(userId.ToUsageQuery(), static value => value.ToHttpResponse(), _logger, "ai.usage.me", userId);
 }
 

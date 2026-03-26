@@ -6,18 +6,21 @@ using FoodDiary.Presentation.Api.Responses;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace FoodDiary.Presentation.Api.Features.Images;
 
 [ApiController]
 [Route("api/images")]
-public sealed class ImagesController(ISender mediator) : AuthorizedController(mediator) {
+public sealed class ImagesController(ISender mediator, ILogger<ImagesController> logger) : AuthorizedController(mediator) {
+    private readonly ILogger<ImagesController> _logger = logger;
+
     [HttpPost("upload-url")]
     [ProducesResponseType<GetImageUploadUrlHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesApiErrorResponse(StatusCodes.Status502BadGateway)]
     public Task<IActionResult> GetUploadUrl([FromCurrentUser] Guid userId, [FromBody] GetImageUploadUrlHttpRequest request) =>
-        HandleOk(request.ToCommand(userId), static value => value.ToHttpResponse());
+        HandleObservedOk(request.ToCommand(userId), static value => value.ToHttpResponse(), _logger, "images.upload-url", userId);
 
     [HttpDelete("{assetId:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -25,6 +28,6 @@ public sealed class ImagesController(ISender mediator) : AuthorizedController(me
     [ProducesApiErrorResponse(StatusCodes.Status409Conflict)]
     [ProducesApiErrorResponse(StatusCodes.Status502BadGateway)]
     public Task<IActionResult> Delete(Guid assetId, [FromCurrentUser] Guid userId) =>
-        HandleNoContent(assetId.ToDeleteCommand(userId));
+        HandleObservedNoContent(assetId.ToDeleteCommand(userId), _logger, "images.delete", userId);
 }
 
