@@ -31,7 +31,7 @@ public class RefreshTokenCommandHandler : ICommandHandler<RefreshTokenCommand, R
         }
 
         var (userId, _) = validationResult.Value;
-        var user = await _userRepository.GetByIdAsync(userId);
+        var user = await _userRepository.GetByIdAsync(userId, cancellationToken);
 
         if (user?.RefreshToken is null || !_passwordHasher.Verify(command.RefreshToken, user.RefreshToken)) {
             return Result.Failure<string>(Errors.Authentication.InvalidToken);

@@ -7,9 +7,9 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Infrastructure.Persistence;
 
 public class ProductRepository(FoodDiaryDbContext context) : IProductRepository {
-    public async Task<Product> AddAsync(Product product) {
+    public async Task<Product> AddAsync(Product product, CancellationToken cancellationToken = default) {
         context.Products.Add(product);
-        await context.SaveChangesAsync();
+        await context.SaveChangesAsync(cancellationToken);
         return product;
     }
 
@@ -118,13 +118,13 @@ public class ProductRepository(FoodDiaryDbContext context) : IProductRepository 
         return items.ToDictionary(x => x.Product.Id, x => (x.Product, x.UsageCount));
     }
 
-    public async Task UpdateAsync(Product product) {
+    public async Task UpdateAsync(Product product, CancellationToken cancellationToken = default) {
         context.Products.Update(product);
-        await context.SaveChangesAsync();
+        await context.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task DeleteAsync(Product product) {
+    public async Task DeleteAsync(Product product, CancellationToken cancellationToken = default) {
         context.Products.Remove(product);
-        await context.SaveChangesAsync();
+        await context.SaveChangesAsync(cancellationToken);
     }
 }

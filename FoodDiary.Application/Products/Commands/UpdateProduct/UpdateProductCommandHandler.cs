@@ -124,7 +124,7 @@ public class UpdateProductCommandHandler(
 
         var hasChanges = product.ModifiedOnUtc != modifiedOnBefore;
         if (hasChanges) {
-            await productRepository.UpdateAsync(product);
+            await productRepository.UpdateAsync(product, cancellationToken);
         }
 
         var imageAssetChanged = command.ClearImageAssetId ||

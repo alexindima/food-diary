@@ -106,7 +106,7 @@ public class UpdateRecipeCommandHandler(
                 command.ManualAlcohol ?? 0);
         }
 
-        await recipeRepository.UpdateAsync(recipe);
+        await recipeRepository.UpdateAsync(recipe, cancellationToken);
 
         var updated = await recipeRepository.GetByIdAsync(
             recipe.Id,

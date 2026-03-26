@@ -4,7 +4,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.Common.Interfaces.Persistence;
 
 public interface IShoppingListRepository {
-    Task<ShoppingList> AddAsync(ShoppingList list);
+    Task<ShoppingList> AddAsync(ShoppingList list, CancellationToken cancellationToken = default);
 
     Task<ShoppingList?> GetByIdAsync(
         ShoppingListId id,
@@ -24,7 +24,7 @@ public interface IShoppingListRepository {
         bool includeItems = false,
         CancellationToken cancellationToken = default);
 
-    Task UpdateAsync(ShoppingList list);
+    Task UpdateAsync(ShoppingList list, CancellationToken cancellationToken = default);
 
-    Task DeleteAsync(ShoppingList list);
+    Task DeleteAsync(ShoppingList list, CancellationToken cancellationToken = default);
 }

@@ -51,7 +51,7 @@ public class CreateRecipeCommandHandler(IRecipeRepository recipeRepository)
                 command.ManualAlcohol ?? 0);
         }
 
-        await recipeRepository.AddAsync(recipe);
+        await recipeRepository.AddAsync(recipe, cancellationToken);
 
         var created = await recipeRepository.GetByIdAsync(
             recipe.Id,

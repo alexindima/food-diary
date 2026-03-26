@@ -17,14 +17,14 @@ public class DeleteUserCommandHandler(
         }
 
         var userId = new UserId(command.UserId.Value);
-        var user = await userRepository.GetByIdAsync(userId);
+        var user = await userRepository.GetByIdAsync(userId, cancellationToken);
         if (user is null) {
             return Result.Failure<bool>(User.NotFound(userId));
         }
 
         user.MarkDeleted(dateTimeProvider.UtcNow);
         user.UpdateRefreshToken(null);
-        await userRepository.UpdateAsync(user);
+        await userRepository.UpdateAsync(user, cancellationToken);
 
         return Result.Success(true);
     }

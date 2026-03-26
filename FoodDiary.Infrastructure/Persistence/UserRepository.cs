@@ -12,32 +12,33 @@ public class UserRepository(FoodDiaryDbContext context) : IUserRepository {
             .Include(u => u.UserRoles)
             .ThenInclude(ur => ur.Role);
 
-    public async Task<User?> GetByEmailAsync(string email) =>
+    public async Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) =>
         await UsersWithRoles().FirstOrDefaultAsync(u =>
-            u.Email == email && u.IsActive && u.DeletedAt == null);
+            u.Email == email && u.IsActive && u.DeletedAt == null, cancellationToken);
 
-    public async Task<User?> GetByEmailIncludingDeletedAsync(string email) =>
-        await UsersWithRoles().FirstOrDefaultAsync(u => u.Email == email);
+    public async Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) =>
+        await UsersWithRoles().FirstOrDefaultAsync(u => u.Email == email, cancellationToken);
 
-    public async Task<User?> GetByIdAsync(UserId id) =>
+    public async Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) =>
         await UsersWithRoles().FirstOrDefaultAsync(u =>
-            u.Id == id && u.IsActive && u.DeletedAt == null);
+            u.Id == id && u.IsActive && u.DeletedAt == null, cancellationToken);
 
-    public async Task<User?> GetByIdIncludingDeletedAsync(UserId id) =>
-        await UsersWithRoles().FirstOrDefaultAsync(u => u.Id == id);
+    public async Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) =>
+        await UsersWithRoles().FirstOrDefaultAsync(u => u.Id == id, cancellationToken);
 
-    public async Task<User?> GetByTelegramUserIdAsync(long telegramUserId) =>
+    public async Task<User?> GetByTelegramUserIdAsync(long telegramUserId, CancellationToken cancellationToken = default) =>
         await UsersWithRoles().FirstOrDefaultAsync(u =>
-            u.TelegramUserId == telegramUserId && u.IsActive && u.DeletedAt == null);
+            u.TelegramUserId == telegramUserId && u.IsActive && u.DeletedAt == null, cancellationToken);
 
-    public async Task<User?> GetByTelegramUserIdIncludingDeletedAsync(long telegramUserId) =>
-        await UsersWithRoles().FirstOrDefaultAsync(u => u.TelegramUserId == telegramUserId);
+    public async Task<User?> GetByTelegramUserIdIncludingDeletedAsync(long telegramUserId, CancellationToken cancellationToken = default) =>
+        await UsersWithRoles().FirstOrDefaultAsync(u => u.TelegramUserId == telegramUserId, cancellationToken);
 
     public async Task<(IReadOnlyList<User> Items, int TotalItems)> GetPagedAsync(
         string? search,
         int page,
         int limit,
-        bool includeDeleted) {
+        bool includeDeleted,
+        CancellationToken cancellationToken = default) {
         var query = UsersWithRoles().AsQueryable();
 
         if (!includeDeleted) {
@@ -53,50 +54,50 @@ public class UserRepository(FoodDiaryDbContext context) : IUserRepository {
                 (u.LastName ?? string.Empty).ToLower().Contains(term));
         }
 
-        var total = await query.CountAsync();
+        var total = await query.CountAsync(cancellationToken);
         var items = await query
             .OrderByDescending(u => u.CreatedOnUtc)
             .Skip((page - 1) * limit)
             .Take(limit)
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
 
         return (items, total);
     }
 
     public async Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers)>
-        GetAdminDashboardSummaryAsync(int recentLimit) {
-        var totalUsers = await context.Users.CountAsync();
-        var activeUsers = await context.Users.CountAsync(u => u.IsActive && u.DeletedAt == null);
-        var deletedUsers = await context.Users.CountAsync(u => u.DeletedAt != null);
+        GetAdminDashboardSummaryAsync(int recentLimit, CancellationToken cancellationToken = default) {
+        var totalUsers = await context.Users.CountAsync(cancellationToken);
+        var activeUsers = await context.Users.CountAsync(u => u.IsActive && u.DeletedAt == null, cancellationToken);
+        var deletedUsers = await context.Users.CountAsync(u => u.DeletedAt != null, cancellationToken);
         var premiumUsers = await context.UserRoles
             .Where(ur => ur.Role.Name == RoleNames.Premium)
             .Select(ur => ur.UserId)
             .Distinct()
-            .CountAsync();
+            .CountAsync(cancellationToken);
 
         var recentUsers = await UsersWithRoles()
             .Where(u => u.DeletedAt == null)
             .OrderByDescending(u => u.CreatedOnUtc)
             .Take(recentLimit)
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
 
         return (totalUsers, activeUsers, premiumUsers, deletedUsers, recentUsers);
     }
 
-    public async Task<IReadOnlyList<Role>> GetRolesByNamesAsync(IReadOnlyList<string> names) {
+    public async Task<IReadOnlyList<Role>> GetRolesByNamesAsync(IReadOnlyList<string> names, CancellationToken cancellationToken = default) {
         return await context.Roles
             .Where(role => names.Contains(role.Name))
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
     }
 
-    public async Task<User> AddAsync(User user) {
+    public async Task<User> AddAsync(User user, CancellationToken cancellationToken = default) {
         context.Users.Add(user);
-        await context.SaveChangesAsync();
+        await context.SaveChangesAsync(cancellationToken);
         return user;
     }
 
-    public async Task UpdateAsync(User user) {
+    public async Task UpdateAsync(User user, CancellationToken cancellationToken = default) {
         context.Users.Update(user);
-        await context.SaveChangesAsync();
+        await context.SaveChangesAsync(cancellationToken);
     }
 }

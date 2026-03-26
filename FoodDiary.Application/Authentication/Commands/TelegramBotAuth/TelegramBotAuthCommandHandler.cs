@@ -19,7 +19,7 @@ public sealed class TelegramBotAuthCommandHandler : ICommandHandler<TelegramBotA
     }
 
     public async Task<Result<AuthenticationModel>> Handle(TelegramBotAuthCommand command, CancellationToken cancellationToken) {
-        var user = await _userRepository.GetByTelegramUserIdAsync(command.TelegramUserId);
+        var user = await _userRepository.GetByTelegramUserIdAsync(command.TelegramUserId, cancellationToken);
         if (user == null) {
             return Result.Failure<AuthenticationModel>(Errors.Authentication.TelegramNotLinked);
         }

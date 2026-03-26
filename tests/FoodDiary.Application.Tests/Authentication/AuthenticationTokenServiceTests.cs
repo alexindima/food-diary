@@ -61,21 +61,21 @@ public class AuthenticationTokenServiceTests {
     private sealed class InMemoryUserRepository(User user) : IUserRepository {
         public bool Updated { get; private set; }
 
-        public Task<User?> GetByEmailAsync(string email) => Task.FromResult<User?>(null);
-        public Task<User?> GetByEmailIncludingDeletedAsync(string email) => Task.FromResult<User?>(null);
-        public Task<User?> GetByIdAsync(UserId id) => Task.FromResult<User?>(user.Id == id ? user : null);
-        public Task<User?> GetByIdIncludingDeletedAsync(UserId id) => Task.FromResult<User?>(user.Id == id ? user : null);
-        public Task<User?> GetByTelegramUserIdAsync(long telegramUserId) => Task.FromResult<User?>(null);
-        public Task<User?> GetByTelegramUserIdIncludingDeletedAsync(long telegramUserId) => Task.FromResult<User?>(null);
-        public Task<(IReadOnlyList<User> Items, int TotalItems)> GetPagedAsync(string? search, int page, int limit, bool includeDeleted) =>
+        public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => Task.FromResult<User?>(null);
+        public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => Task.FromResult<User?>(null);
+        public Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult<User?>(user.Id == id ? user : null);
+        public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult<User?>(user.Id == id ? user : null);
+        public Task<User?> GetByTelegramUserIdAsync(long telegramUserId, CancellationToken cancellationToken = default) => Task.FromResult<User?>(null);
+        public Task<User?> GetByTelegramUserIdIncludingDeletedAsync(long telegramUserId, CancellationToken cancellationToken = default) => Task.FromResult<User?>(null);
+        public Task<(IReadOnlyList<User> Items, int TotalItems)> GetPagedAsync(string? search, int page, int limit, bool includeDeleted, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
-        public Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers)> GetAdminDashboardSummaryAsync(int recentLimit) =>
+        public Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers)> GetAdminDashboardSummaryAsync(int recentLimit, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
-        public Task<IReadOnlyList<Role>> GetRolesByNamesAsync(IReadOnlyList<string> names) =>
+        public Task<IReadOnlyList<Role>> GetRolesByNamesAsync(IReadOnlyList<string> names, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
-        public Task<User> AddAsync(User addedUser) => Task.FromResult(addedUser);
+        public Task<User> AddAsync(User addedUser, CancellationToken cancellationToken = default) => Task.FromResult(addedUser);
 
-        public Task UpdateAsync(User updatedUser) {
+        public Task UpdateAsync(User updatedUser, CancellationToken cancellationToken = default) {
             Updated = true;
             return Task.CompletedTask;
         }

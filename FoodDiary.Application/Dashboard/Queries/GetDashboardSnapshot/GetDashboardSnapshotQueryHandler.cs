@@ -63,7 +63,7 @@ public class GetDashboardSnapshotQueryHandler(
             return Result.Failure<DashboardSnapshotModel>(mealsResult.Error);
         }
 
-        var user = await userRepository.GetByIdAsync(userId);
+        var user = await userRepository.GetByIdAsync(userId, cancellationToken);
         var weightEntries = await weightEntryRepository.GetEntriesAsync(
             userId,
             dateFrom: null,

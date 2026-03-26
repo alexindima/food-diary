@@ -209,7 +209,7 @@ public class ConsumptionsFeatureTests {
     }
 
     private sealed class NoopProductRepository : IProductRepository {
-        public Task<Product> AddAsync(Product product) => throw new NotSupportedException();
+        public Task<Product> AddAsync(Product product, CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
         public Task<(IReadOnlyList<(Product Product, int UsageCount)> Items, int TotalItems)> GetPagedAsync(
             UserId userId,
@@ -239,12 +239,12 @@ public class ConsumptionsFeatureTests {
             bool includePublic = true,
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
-        public Task UpdateAsync(Product product) => throw new NotSupportedException();
-        public Task DeleteAsync(Product product) => throw new NotSupportedException();
+        public Task UpdateAsync(Product product, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task DeleteAsync(Product product, CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 
     private sealed class NoopRecipeRepository : IRecipeRepository {
-        public Task<Recipe> AddAsync(Recipe recipe) => throw new NotSupportedException();
+        public Task<Recipe> AddAsync(Recipe recipe, CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
         public Task<(IReadOnlyList<(Recipe Recipe, int UsageCount)> Items, int TotalItems)> GetPagedAsync(
             UserId userId,
@@ -275,8 +275,8 @@ public class ConsumptionsFeatureTests {
             bool includePublic = true,
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
-        public Task UpdateAsync(Recipe recipe) => throw new NotSupportedException();
-        public Task DeleteAsync(Recipe recipe) => throw new NotSupportedException();
+        public Task UpdateAsync(Recipe recipe, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task DeleteAsync(Recipe recipe, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task UpdateNutritionAsync(Recipe recipe, CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 

@@ -56,7 +56,7 @@ public class CreateProductCommandHandler(IProductRepository productRepository)
             visibility: visibility
         );
 
-        product = await productRepository.AddAsync(product);
+        product = await productRepository.AddAsync(product, cancellationToken);
 
         return Result.Success(product.ToModel(isOwnedByCurrentUser: true));
     }

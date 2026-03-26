@@ -5,7 +5,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.Common.Interfaces.Persistence;
 
 public interface IProductRepository {
-    Task<Product> AddAsync(Product product);
+    Task<Product> AddAsync(Product product, CancellationToken cancellationToken = default);
 
     Task<(IReadOnlyList<(Product Product, int UsageCount)> Items, int TotalItems)> GetPagedAsync(
         UserId userId,
@@ -34,7 +34,7 @@ public interface IProductRepository {
         bool includePublic = true,
         CancellationToken cancellationToken = default);
 
-    Task UpdateAsync(Product product);
+    Task UpdateAsync(Product product, CancellationToken cancellationToken = default);
 
-    Task DeleteAsync(Product product);
+    Task DeleteAsync(Product product, CancellationToken cancellationToken = default);
 }

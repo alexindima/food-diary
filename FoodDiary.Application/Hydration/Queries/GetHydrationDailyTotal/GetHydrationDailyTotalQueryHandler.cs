@@ -19,7 +19,7 @@ public class GetHydrationDailyTotalQueryHandler(
 
         var userId = new UserId(query.UserId.Value);
 
-        var user = await userRepository.GetByIdAsync(userId);
+        var user = await userRepository.GetByIdAsync(userId, cancellationToken);
         if (user is null) {
             return Result.Failure<HydrationDailyModel>(Errors.User.NotFound(userId.Value));
         }

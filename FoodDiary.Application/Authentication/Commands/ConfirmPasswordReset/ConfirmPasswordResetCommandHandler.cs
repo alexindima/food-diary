@@ -17,7 +17,7 @@ public sealed class ConfirmPasswordResetCommandHandler(
     : ICommandHandler<ConfirmPasswordResetCommand, Result<AuthenticationModel>> {
     public async Task<Result<AuthenticationModel>> Handle(ConfirmPasswordResetCommand command, CancellationToken cancellationToken) {
         var userId = new UserId(command.UserId);
-        var user = await userRepository.GetByIdAsync(userId);
+        var user = await userRepository.GetByIdAsync(userId, cancellationToken);
         if (user is null) {
             return Result.Failure<AuthenticationModel>(Errors.User.NotFound(userId));
         }

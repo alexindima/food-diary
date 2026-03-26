@@ -23,7 +23,7 @@ public class LoginCommandHandler : ICommandHandler<LoginCommand, Result<Authenti
     }
 
     public async Task<Result<AuthenticationModel>> Handle(LoginCommand command, CancellationToken cancellationToken) {
-        var user = await _userRepository.GetByEmailIncludingDeletedAsync(command.Email);
+        var user = await _userRepository.GetByEmailIncludingDeletedAsync(command.Email, cancellationToken);
         if (user == null || !_passwordHasher.Verify(command.Password, user.Password)) {
             return Result.Failure<AuthenticationModel>(Errors.Authentication.InvalidCredentials);
         }

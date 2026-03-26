@@ -57,7 +57,7 @@ public class DuplicateRecipeCommandHandler(IRecipeRepository recipeRepository)
                 original.ManualAlcohol ?? original.TotalAlcohol);
         }
 
-        await recipeRepository.AddAsync(duplicate);
+        await recipeRepository.AddAsync(duplicate, cancellationToken);
 
         var created = await recipeRepository.GetByIdAsync(
             duplicate.Id,

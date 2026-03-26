@@ -67,7 +67,7 @@ public class UpdateShoppingListCommandHandler(
             }
         }
 
-        await shoppingListRepository.UpdateAsync(list);
+        await shoppingListRepository.UpdateAsync(list, cancellationToken);
         return Result.Success(list.ToModel());
     }
 }

@@ -7,9 +7,9 @@ using Microsoft.EntityFrameworkCore;
 namespace FoodDiary.Infrastructure.Persistence;
 
 public class RecipeRepository(FoodDiaryDbContext context) : IRecipeRepository {
-    public async Task<Recipe> AddAsync(Recipe recipe) {
+    public async Task<Recipe> AddAsync(Recipe recipe, CancellationToken cancellationToken = default) {
         context.Recipes.Add(recipe);
-        await context.SaveChangesAsync();
+        await context.SaveChangesAsync(cancellationToken);
         return recipe;
     }
 
@@ -93,14 +93,14 @@ public class RecipeRepository(FoodDiaryDbContext context) : IRecipeRepository {
             cancellationToken);
     }
 
-    public async Task UpdateAsync(Recipe recipe) {
+    public async Task UpdateAsync(Recipe recipe, CancellationToken cancellationToken = default) {
         context.Recipes.Update(recipe);
-        await context.SaveChangesAsync();
+        await context.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task DeleteAsync(Recipe recipe) {
+    public async Task DeleteAsync(Recipe recipe, CancellationToken cancellationToken = default) {
         context.Recipes.Remove(recipe);
-        await context.SaveChangesAsync();
+        await context.SaveChangesAsync(cancellationToken);
     }
 
     public async Task UpdateNutritionAsync(Recipe recipe, CancellationToken cancellationToken = default) {

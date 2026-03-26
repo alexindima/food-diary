@@ -58,7 +58,7 @@ public class RecipesFeatureTests {
     private sealed class SingleRecipeRepository(Recipe recipe) : IRecipeRepository {
         public bool DeleteCalled { get; private set; }
 
-        public Task<Recipe> AddAsync(Recipe recipe) => throw new NotSupportedException();
+        public Task<Recipe> AddAsync(Recipe recipe, CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
         public Task<(IReadOnlyList<(Recipe Recipe, int UsageCount)> Items, int TotalItems)> GetPagedAsync(
             UserId userId,
@@ -89,9 +89,9 @@ public class RecipesFeatureTests {
             bool includePublic = true,
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
-        public Task UpdateAsync(Recipe recipe) => throw new NotSupportedException();
+        public Task UpdateAsync(Recipe recipe, CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
-        public Task DeleteAsync(Recipe recipe) {
+        public Task DeleteAsync(Recipe recipe, CancellationToken cancellationToken = default) {
             DeleteCalled = true;
             return Task.CompletedTask;
         }

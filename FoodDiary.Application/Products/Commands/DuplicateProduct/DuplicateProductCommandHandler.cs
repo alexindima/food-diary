@@ -50,7 +50,7 @@ public class DuplicateProductCommandHandler(IProductRepository productRepository
             null,
             original.Visibility);
 
-        await productRepository.AddAsync(duplicate);
+        await productRepository.AddAsync(duplicate, cancellationToken);
 
         return Result.Success(duplicate.ToModel(0, true));
     }

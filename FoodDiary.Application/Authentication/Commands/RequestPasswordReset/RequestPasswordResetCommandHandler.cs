@@ -19,7 +19,7 @@ public sealed class RequestPasswordResetCommandHandler(
     private static readonly TimeSpan TokenLifetime = TimeSpan.FromHours(1);
 
     public async Task<Result<bool>> Handle(RequestPasswordResetCommand command, CancellationToken cancellationToken) {
-        var user = await userRepository.GetByEmailIncludingDeletedAsync(command.Email);
+        var user = await userRepository.GetByEmailIncludingDeletedAsync(command.Email, cancellationToken);
         if (user is null || !user.IsActive) {
             return Result.Success(true);
         }
@@ -38,7 +38,7 @@ public sealed class RequestPasswordResetCommandHandler(
         var expiresAtUtc = nowUtc.Add(TokenLifetime);
 
         user.SetPasswordResetToken(tokenHash, expiresAtUtc);
-        await userRepository.UpdateAsync(user);
+        await userRepository.UpdateAsync(user, cancellationToken);
 
         try {
             await emailSender.SendPasswordResetAsync(

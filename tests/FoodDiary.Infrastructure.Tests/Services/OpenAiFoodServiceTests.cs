@@ -48,19 +48,19 @@ public sealed class OpenAiFoodServiceTests {
     }
 
     private sealed class StubUserRepository : IUserRepository {
-        public Task<User?> GetByEmailAsync(string email) => throw new NotSupportedException();
-        public Task<User?> GetByEmailIncludingDeletedAsync(string email) => throw new NotSupportedException();
-        public Task<User?> GetByIdAsync(UserId id) {
+        public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) {
             var user = User.Create("ai-tests@example.com", "hash");
             return Task.FromResult<User?>(user);
         }
-        public Task<User?> GetByIdIncludingDeletedAsync(UserId id) => throw new NotSupportedException();
-        public Task<User?> GetByTelegramUserIdAsync(long telegramUserId) => throw new NotSupportedException();
-        public Task<User?> GetByTelegramUserIdIncludingDeletedAsync(long telegramUserId) => throw new NotSupportedException();
-        public Task<(IReadOnlyList<User> Items, int TotalItems)> GetPagedAsync(string? search, int page, int limit, bool includeDeleted) => throw new NotSupportedException();
-        public Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers)> GetAdminDashboardSummaryAsync(int recentLimit) => throw new NotSupportedException();
-        public Task<IReadOnlyList<Role>> GetRolesByNamesAsync(IReadOnlyList<string> names) => throw new NotSupportedException();
-        public Task<User> AddAsync(User user) => throw new NotSupportedException();
-        public Task UpdateAsync(User user) => throw new NotSupportedException();
+        public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User?> GetByTelegramUserIdAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User?> GetByTelegramUserIdIncludingDeletedAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<(IReadOnlyList<User> Items, int TotalItems)> GetPagedAsync(string? search, int page, int limit, bool includeDeleted, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers)> GetAdminDashboardSummaryAsync(int recentLimit, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<IReadOnlyList<Role>> GetRolesByNamesAsync(IReadOnlyList<string> names, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User> AddAsync(User user, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task UpdateAsync(User user, CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 }

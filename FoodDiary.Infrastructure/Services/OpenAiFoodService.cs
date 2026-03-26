@@ -336,7 +336,7 @@ public sealed class OpenAiFoodService(
         => new() { PropertyNameCaseInsensitive = true };
 
     private async Task<Result> EnsureMonthlyQuotaAsync(UserId userId, CancellationToken cancellationToken) {
-        var user = await _userRepository.GetByIdAsync(userId);
+        var user = await _userRepository.GetByIdAsync(userId, cancellationToken);
         if (user is null) {
             return Result.Failure(Errors.User.NotFound(userId.Value));
         }

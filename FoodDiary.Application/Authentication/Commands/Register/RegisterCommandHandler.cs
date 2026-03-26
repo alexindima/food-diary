@@ -48,7 +48,7 @@ public class RegisterCommandHandler : ICommandHandler<RegisterCommand, Result<Au
             language: normalizedLanguage
         );
 
-        user = await _userRepository.AddAsync(user);
+        user = await _userRepository.AddAsync(user, cancellationToken);
 
         var emailToken = SecurityTokenGenerator.GenerateUrlSafeToken();
         var emailTokenHash = _passwordHasher.Hash(emailToken);

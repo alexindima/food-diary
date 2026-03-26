@@ -37,7 +37,7 @@ public sealed class TelegramLoginWidgetCommandHandler : ICommandHandler<Telegram
             return Result.Failure<AuthenticationModel>(validationResult.Error);
         }
 
-        var user = await _userRepository.GetByTelegramUserIdAsync(validationResult.Value.UserId);
+        var user = await _userRepository.GetByTelegramUserIdAsync(validationResult.Value.UserId, cancellationToken);
         if (user == null) {
             return Result.Failure<AuthenticationModel>(Errors.Authentication.TelegramNotLinked);
         }

@@ -12,7 +12,7 @@ public sealed class GetAdminDashboardSummaryQueryHandler(IUserRepository userRep
         GetAdminDashboardSummaryQuery query,
         CancellationToken cancellationToken) {
         var (totalUsers, activeUsers, premiumUsers, deletedUsers, recentUsers) =
-            await userRepository.GetAdminDashboardSummaryAsync(query.RecentLimit);
+            await userRepository.GetAdminDashboardSummaryAsync(query.RecentLimit, cancellationToken);
 
         var response = new AdminDashboardSummaryModel(
             totalUsers,

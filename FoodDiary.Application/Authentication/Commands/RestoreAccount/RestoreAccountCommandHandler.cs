@@ -14,7 +14,7 @@ public class RestoreAccountCommandHandler(
     IAuthenticationTokenService authenticationTokenService)
     : ICommandHandler<RestoreAccountCommand, Result<AuthenticationModel>> {
     public async Task<Result<AuthenticationModel>> Handle(RestoreAccountCommand command, CancellationToken cancellationToken) {
-        var user = await userRepository.GetByEmailIncludingDeletedAsync(command.Email);
+        var user = await userRepository.GetByEmailIncludingDeletedAsync(command.Email, cancellationToken);
         if (user is null || !passwordHasher.Verify(command.Password, user.Password)) {
             return Result.Failure<AuthenticationModel>(Errors.Authentication.InvalidCredentials);
         }

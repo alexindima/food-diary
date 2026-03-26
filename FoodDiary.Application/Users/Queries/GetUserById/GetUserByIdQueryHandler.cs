@@ -15,7 +15,7 @@ public class GetUserByIdQueryHandler(IUserRepository userRepository) : IQueryHan
         }
 
         var userId = new UserId(query.UserId.Value);
-        var user = await userRepository.GetByIdAsync(userId);
+        var user = await userRepository.GetByIdAsync(userId, cancellationToken);
         return user is null
             ? Result.Failure<UserModel>(User.NotFound(userId))
             : Result.Success(user.ToModel());

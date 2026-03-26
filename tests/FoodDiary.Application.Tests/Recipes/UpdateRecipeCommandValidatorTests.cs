@@ -100,7 +100,7 @@ public class UpdateRecipeCommandValidatorTests {
             _recipe = recipe;
         }
 
-        public Task<Recipe> AddAsync(Recipe recipe) => throw new NotSupportedException();
+        public Task<Recipe> AddAsync(Recipe recipe, CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
         public Task<(IReadOnlyList<(Recipe Recipe, int UsageCount)> Items, int TotalItems)> GetPagedAsync(
             UserId userId,
@@ -136,9 +136,9 @@ public class UpdateRecipeCommandValidatorTests {
             bool includePublic = true,
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
-        public Task UpdateAsync(Recipe recipe) => Task.CompletedTask;
+        public Task UpdateAsync(Recipe recipe, CancellationToken cancellationToken = default) => Task.CompletedTask;
 
-        public Task DeleteAsync(Recipe recipe) => throw new NotSupportedException();
+        public Task DeleteAsync(Recipe recipe, CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
         public Task UpdateNutritionAsync(Recipe recipe, CancellationToken cancellationToken = default) => Task.CompletedTask;
     }

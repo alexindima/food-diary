@@ -6,9 +6,9 @@ using Microsoft.EntityFrameworkCore;
 namespace FoodDiary.Infrastructure.Persistence;
 
 public class ShoppingListRepository(FoodDiaryDbContext context) : IShoppingListRepository {
-    public async Task<ShoppingList> AddAsync(ShoppingList list) {
+    public async Task<ShoppingList> AddAsync(ShoppingList list, CancellationToken cancellationToken = default) {
         context.ShoppingLists.Add(list);
-        await context.SaveChangesAsync();
+        await context.SaveChangesAsync(cancellationToken);
         return list;
     }
 
@@ -70,13 +70,13 @@ public class ShoppingListRepository(FoodDiaryDbContext context) : IShoppingListR
             .ToListAsync(cancellationToken);
     }
 
-    public async Task UpdateAsync(ShoppingList list) {
+    public async Task UpdateAsync(ShoppingList list, CancellationToken cancellationToken = default) {
         context.ShoppingLists.Update(list);
-        await context.SaveChangesAsync();
+        await context.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task DeleteAsync(ShoppingList list) {
+    public async Task DeleteAsync(ShoppingList list, CancellationToken cancellationToken = default) {
         context.ShoppingLists.Remove(list);
-        await context.SaveChangesAsync();
+        await context.SaveChangesAsync(cancellationToken);
     }
 }

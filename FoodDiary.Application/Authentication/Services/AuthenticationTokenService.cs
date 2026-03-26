@@ -17,7 +17,7 @@ public sealed class AuthenticationTokenService(
 
         var hashedRefreshToken = passwordHasher.Hash(refreshToken);
         user.UpdateRefreshToken(hashedRefreshToken);
-        await userRepository.UpdateAsync(user);
+        await userRepository.UpdateAsync(user, cancellationToken);
 
         return new IssuedAuthenticationTokens(accessToken, refreshToken);
     }

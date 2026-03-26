@@ -31,7 +31,7 @@ public class ResendEmailVerificationCommandHandler : ICommandHandler<ResendEmail
     }
 
     public async Task<Result<bool>> Handle(ResendEmailVerificationCommand command, CancellationToken cancellationToken) {
-        var user = await _userRepository.GetByIdAsync(new UserId(command.UserId));
+        var user = await _userRepository.GetByIdAsync(new UserId(command.UserId), cancellationToken);
         if (user is null) {
             return Result.Failure<bool>(Errors.User.NotFound());
         }
@@ -53,7 +53,7 @@ public class ResendEmailVerificationCommandHandler : ICommandHandler<ResendEmail
         var emailToken = SecurityTokenGenerator.GenerateUrlSafeToken();
         var emailTokenHash = _passwordHasher.Hash(emailToken);
         user.SetEmailConfirmationToken(emailTokenHash, _dateTimeProvider.UtcNow.AddHours(24));
-        await _userRepository.UpdateAsync(user);
+        await _userRepository.UpdateAsync(user, cancellationToken);
 
         try {
             await _emailSender.SendEmailVerificationAsync(

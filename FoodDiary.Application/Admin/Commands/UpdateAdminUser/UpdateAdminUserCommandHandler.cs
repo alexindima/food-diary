@@ -20,7 +20,7 @@ public sealed class UpdateAdminUserCommandHandler(IUserRepository userRepository
         UpdateAdminUserCommand command,
         CancellationToken cancellationToken) {
         var userId = new UserId(command.UserId);
-        var user = await userRepository.GetByIdIncludingDeletedAsync(userId);
+        var user = await userRepository.GetByIdIncludingDeletedAsync(userId, cancellationToken);
         if (user is null) {
             return Result.Failure<AdminUserModel>(Errors.User.NotFound(command.UserId));
         }
@@ -58,7 +58,7 @@ public sealed class UpdateAdminUserCommandHandler(IUserRepository userRepository
                     Errors.Validation.Invalid("roles", "Unknown role."));
             }
 
-            var roleEntities = await userRepository.GetRolesByNamesAsync(requestedRoles);
+            var roleEntities = await userRepository.GetRolesByNamesAsync(requestedRoles, cancellationToken);
             if (roleEntities.Count != requestedRoles.Length) {
                 return Result.Failure<AdminUserModel>(
                     Errors.Validation.Invalid("roles", "One or more roles are not configured in the system."));
@@ -81,7 +81,7 @@ public sealed class UpdateAdminUserCommandHandler(IUserRepository userRepository
             user.UpdateAiTokenLimits(command.AiInputTokenLimit, command.AiOutputTokenLimit);
         }
 
-        await userRepository.UpdateAsync(user);
+        await userRepository.UpdateAsync(user, cancellationToken);
         return Result.Success(user.ToAdminModel());
     }
 

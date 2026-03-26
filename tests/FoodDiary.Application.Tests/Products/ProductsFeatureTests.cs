@@ -169,7 +169,7 @@ public class ProductsFeatureTests {
     }
 
     private sealed class NoopProductRepository : IProductRepository {
-        public Task<Product> AddAsync(Product product) => Task.FromResult(product);
+        public Task<Product> AddAsync(Product product, CancellationToken cancellationToken = default) => Task.FromResult(product);
 
         public Task<(IReadOnlyList<(Product Product, int UsageCount)> Items, int TotalItems)> GetPagedAsync(
             UserId userId,
@@ -202,15 +202,15 @@ public class ProductsFeatureTests {
             CancellationToken cancellationToken = default) =>
             Task.FromResult<IReadOnlyDictionary<ProductId, (Product Product, int UsageCount)>>(new Dictionary<ProductId, (Product Product, int UsageCount)>());
 
-        public Task UpdateAsync(Product product) => Task.CompletedTask;
-        public Task DeleteAsync(Product product) => Task.CompletedTask;
+        public Task UpdateAsync(Product product, CancellationToken cancellationToken = default) => Task.CompletedTask;
+        public Task DeleteAsync(Product product, CancellationToken cancellationToken = default) => Task.CompletedTask;
     }
 
     private sealed class SingleProductRepository(Product product) : IProductRepository {
         public bool DeleteCalled { get; private set; }
         public bool UpdateCalled { get; private set; }
 
-        public Task<Product> AddAsync(Product product) => throw new NotSupportedException();
+        public Task<Product> AddAsync(Product product, CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
         public Task<(IReadOnlyList<(Product Product, int UsageCount)> Items, int TotalItems)> GetPagedAsync(
             UserId userId,
@@ -240,12 +240,12 @@ public class ProductsFeatureTests {
             bool includePublic = true,
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
-        public Task UpdateAsync(Product product) {
+        public Task UpdateAsync(Product product, CancellationToken cancellationToken = default) {
             UpdateCalled = true;
             return Task.CompletedTask;
         }
 
-        public Task DeleteAsync(Product product) {
+        public Task DeleteAsync(Product product, CancellationToken cancellationToken = default) {
             DeleteCalled = true;
             return Task.CompletedTask;
         }

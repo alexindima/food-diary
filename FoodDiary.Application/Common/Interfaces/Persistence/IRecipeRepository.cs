@@ -4,7 +4,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.Common.Interfaces.Persistence;
 
 public interface IRecipeRepository {
-    Task<Recipe> AddAsync(Recipe recipe);
+    Task<Recipe> AddAsync(Recipe recipe, CancellationToken cancellationToken = default);
 
     Task<(IReadOnlyList<(Recipe Recipe, int UsageCount)> Items, int TotalItems)> GetPagedAsync(
         UserId userId,
@@ -34,9 +34,9 @@ public interface IRecipeRepository {
         bool includePublic = true,
         CancellationToken cancellationToken = default);
 
-    Task UpdateAsync(Recipe recipe);
+    Task UpdateAsync(Recipe recipe, CancellationToken cancellationToken = default);
 
-    Task DeleteAsync(Recipe recipe);
+    Task DeleteAsync(Recipe recipe, CancellationToken cancellationToken = default);
 
     Task UpdateNutritionAsync(Recipe recipe, CancellationToken cancellationToken = default);
 }

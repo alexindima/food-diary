@@ -15,7 +15,7 @@ public sealed class GetAdminUsersQueryHandler(IUserRepository userRepository)
         var page = query.Page <= 0 ? 1 : query.Page;
         var limit = query.Limit is > 0 and <= 100 ? query.Limit : 20;
 
-        var pageData = await userRepository.GetPagedAsync(query.Search, page, limit, query.IncludeDeleted);
+        var pageData = await userRepository.GetPagedAsync(query.Search, page, limit, query.IncludeDeleted, cancellationToken);
         var users = pageData.Items.Select(user => user.ToAdminModel()).ToList();
         var totalPages = (int)Math.Ceiling(pageData.TotalItems / (double)limit);
         var response = new PagedResponse<AdminUserModel>(users, page, limit, totalPages, pageData.TotalItems);

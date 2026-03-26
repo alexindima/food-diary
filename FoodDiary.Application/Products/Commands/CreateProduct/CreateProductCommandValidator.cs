@@ -20,7 +20,7 @@ public class CreateProductCommandValidator : AbstractValidator<CreateProductComm
             .WithErrorCode("Authentication.InvalidToken")
             .WithMessage("Unable to identify user")
             .MustAsync(UserExists)
-            .WithErrorCode("Validation.NotFound")
+            .WithErrorCode("User.NotFound")
             .WithMessage("User not found");
 
         RuleFor(x => x.Name)
@@ -98,7 +98,7 @@ public class CreateProductCommandValidator : AbstractValidator<CreateProductComm
             return false;
         }
 
-        var user = await _userRepository.GetByIdAsync(new UserId(userId.Value));
+        var user = await _userRepository.GetByIdAsync(new UserId(userId.Value), cancellationToken);
         return user is not null;
     }
 }

@@ -26,7 +26,7 @@ public sealed class AnalyzeFoodImageCommandHandler(
             return Result.Failure<FoodVisionModel>(Errors.Ai.Forbidden());
         }
 
-        var user = await userRepository.GetByIdAsync(userId);
+        var user = await userRepository.GetByIdAsync(userId, cancellationToken);
         if (user is null) {
             return Result.Failure<FoodVisionModel>(Errors.User.NotFound(userId));
         }

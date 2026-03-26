@@ -15,7 +15,7 @@ public sealed class VerifyEmailCommandHandler(
     private readonly IEmailVerificationNotifier _emailVerificationNotifier = emailVerificationNotifier;
     public async Task<Result<bool>> Handle(VerifyEmailCommand command, CancellationToken cancellationToken) {
         var userId = new UserId(command.UserId);
-        var user = await userRepository.GetByIdAsync(userId);
+        var user = await userRepository.GetByIdAsync(userId, cancellationToken);
         if (user is null) {
             return Result.Failure<bool>(Errors.User.NotFound(userId));
         }
@@ -36,7 +36,7 @@ public sealed class VerifyEmailCommandHandler(
         }
 
         user.ConfirmEmail();
-        await userRepository.UpdateAsync(user);
+        await userRepository.UpdateAsync(user, cancellationToken);
 
         try {
             await _emailVerificationNotifier.NotifyEmailVerifiedAsync(user.Id.Value, cancellationToken);

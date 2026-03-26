@@ -28,7 +28,7 @@ public class DeleteShoppingListCommandHandler(IShoppingListRepository shoppingLi
             return Result.Failure<bool>(Errors.ShoppingList.NotFound(command.ShoppingListId));
         }
 
-        await shoppingListRepository.DeleteAsync(list);
+        await shoppingListRepository.DeleteAsync(list, cancellationToken);
         return Result.Success(true);
     }
 }

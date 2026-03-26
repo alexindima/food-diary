@@ -16,7 +16,7 @@ public class UpdateGoalsCommandHandler(IUserRepository userRepository)
         }
 
         var userId = new UserId(command.UserId.Value);
-        var user = await userRepository.GetByIdAsync(userId);
+        var user = await userRepository.GetByIdAsync(userId, cancellationToken);
         if (user is null) {
             return Result.Failure<GoalsModel>(User.NotFound(userId));
         }
@@ -32,7 +32,7 @@ public class UpdateGoalsCommandHandler(IUserRepository userRepository)
             desiredWaist: command.DesiredWaist
         );
 
-        await userRepository.UpdateAsync(user);
+        await userRepository.UpdateAsync(user, cancellationToken);
 
         return Result.Success(user.ToGoalsModel());
     }

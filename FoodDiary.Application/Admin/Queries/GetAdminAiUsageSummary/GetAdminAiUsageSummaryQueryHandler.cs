@@ -2,15 +2,18 @@ using FoodDiary.Application.Admin.Models;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
+using FoodDiary.Application.Common.Interfaces.Services;
 
 namespace FoodDiary.Application.Admin.Queries.GetAdminAiUsageSummary;
 
-public sealed class GetAdminAiUsageSummaryQueryHandler(IAiUsageRepository aiUsageRepository)
+public sealed class GetAdminAiUsageSummaryQueryHandler(
+    IAiUsageRepository aiUsageRepository,
+    IDateTimeProvider dateTimeProvider)
     : IQueryHandler<GetAdminAiUsageSummaryQuery, Result<AdminAiUsageSummaryModel>> {
     public async Task<Result<AdminAiUsageSummaryModel>> Handle(
         GetAdminAiUsageSummaryQuery query,
         CancellationToken cancellationToken) {
-        var today = DateOnly.FromDateTime(DateTime.UtcNow);
+        var today = DateOnly.FromDateTime(dateTimeProvider.UtcNow);
         var from = query.From ?? today.AddDays(-29);
         var to = query.To ?? today.AddDays(1);
         if (from > to) {

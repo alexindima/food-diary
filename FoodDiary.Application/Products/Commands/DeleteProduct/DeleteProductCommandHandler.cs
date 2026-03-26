@@ -28,7 +28,7 @@ public class DeleteProductCommandHandler(
         }
 
         var assetId = product.ImageAssetId;
-        await productRepository.DeleteAsync(product);
+        await productRepository.DeleteAsync(product, cancellationToken);
 
         if (assetId.HasValue) {
             await imageAssetCleanupService.DeleteIfUnusedAsync(assetId.Value, cancellationToken);

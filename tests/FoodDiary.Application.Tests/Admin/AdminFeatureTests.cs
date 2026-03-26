@@ -1,6 +1,7 @@
 using FoodDiary.Application.Admin.Commands.UpdateAdminUser;
 using FoodDiary.Application.Admin.Commands.UpsertAdminEmailTemplate;
 using FoodDiary.Application.Admin.Queries.GetAdminAiUsageSummary;
+using FoodDiary.Application.Common.Interfaces.Services;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
@@ -139,6 +140,19 @@ public class AdminFeatureTests {
         Assert.True(result.IsValid);
     }
 
+    [Fact]
+    public async Task GetAdminAiUsageSummaryQueryHandler_UsesDateTimeProviderForDefaultRange() {
+        var dateTimeProvider = new FixedDateTimeProvider(new DateTime(2026, 3, 26, 10, 0, 0, DateTimeKind.Utc));
+        var aiUsageRepository = new RecordingAiUsageRepository();
+        var handler = new GetAdminAiUsageSummaryQueryHandler(aiUsageRepository, dateTimeProvider);
+
+        var result = await handler.Handle(new GetAdminAiUsageSummaryQuery(null, null), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(new DateTime(2026, 2, 25, 0, 0, 0, DateTimeKind.Utc), aiUsageRepository.LastFromUtc);
+        Assert.Equal(new DateTime(2026, 3, 27, 0, 0, 0, DateTimeKind.Utc), aiUsageRepository.LastToUtc);
+    }
+
     private static User CreateUserWithRoles(string email, IReadOnlyList<string> roleNames) {
         var user = User.Create(email, "hash");
         var roles = roleNames.Select(name => Role.Create(name)).ToArray();
@@ -166,31 +180,67 @@ public class AdminFeatureTests {
             _roles = availableRoles.ToDictionary(name => name, Role.Create, StringComparer.Ordinal);
         }
 
-        public Task<User?> GetByEmailAsync(string email) => throw new NotSupportedException();
+        public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
-        public Task<User?> GetByEmailIncludingDeletedAsync(string email) => throw new NotSupportedException();
+        public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
-        public Task<User?> GetByIdAsync(UserId id) => Task.FromResult<User?>(_user.Id == id ? _user : null);
+        public Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult<User?>(_user.Id == id ? _user : null);
 
-        public Task<User?> GetByIdIncludingDeletedAsync(UserId id) => Task.FromResult<User?>(_user.Id == id ? _user : null);
+        public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult<User?>(_user.Id == id ? _user : null);
 
-        public Task<User?> GetByTelegramUserIdAsync(long telegramUserId) => throw new NotSupportedException();
+        public Task<User?> GetByTelegramUserIdAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
-        public Task<User?> GetByTelegramUserIdIncludingDeletedAsync(long telegramUserId) => throw new NotSupportedException();
+        public Task<User?> GetByTelegramUserIdIncludingDeletedAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
-        public Task<(IReadOnlyList<User> Items, int TotalItems)> GetPagedAsync(string? search, int page, int limit, bool includeDeleted) =>
+        public Task<(IReadOnlyList<User> Items, int TotalItems)> GetPagedAsync(string? search, int page, int limit, bool includeDeleted, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
 
-        public Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers)> GetAdminDashboardSummaryAsync(int recentLimit) =>
+        public Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers)> GetAdminDashboardSummaryAsync(int recentLimit, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
 
-        public Task<IReadOnlyList<Role>> GetRolesByNamesAsync(IReadOnlyList<string> names) {
+        public Task<IReadOnlyList<Role>> GetRolesByNamesAsync(IReadOnlyList<string> names, CancellationToken cancellationToken = default) {
             var found = names.Where(name => _roles.ContainsKey(name)).Select(name => _roles[name]).ToList();
             return Task.FromResult<IReadOnlyList<Role>>(found);
         }
 
-        public Task<User> AddAsync(User user) => throw new NotSupportedException();
+        public Task<User> AddAsync(User user, CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
-        public Task UpdateAsync(User user) => Task.CompletedTask;
+        public Task UpdateAsync(User user, CancellationToken cancellationToken = default) => Task.CompletedTask;
+    }
+
+    private sealed class RecordingAiUsageRepository : IAiUsageRepository {
+        public DateTime LastFromUtc { get; private set; }
+        public DateTime LastToUtc { get; private set; }
+
+        public Task AddAsync(FoodDiary.Domain.Entities.Ai.AiUsage usage, CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+
+        public Task<FoodDiary.Application.Admin.Models.AiUsageSummary> GetSummaryAsync(
+            DateTime fromUtc,
+            DateTime toUtc,
+            CancellationToken cancellationToken = default) {
+            LastFromUtc = fromUtc;
+            LastToUtc = toUtc;
+
+            return Task.FromResult(new FoodDiary.Application.Admin.Models.AiUsageSummary(
+                0,
+                0,
+                0,
+                [],
+                [],
+                [],
+                []));
+        }
+
+        public Task<FoodDiary.Application.Common.Models.AiUsageTotals> GetUserTotalsAsync(
+            UserId userId,
+            DateTime fromUtc,
+            DateTime toUtc,
+            CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+    }
+
+    private sealed class FixedDateTimeProvider(DateTime utcNow) : IDateTimeProvider {
+        public DateTime UtcNow => utcNow;
     }
 }

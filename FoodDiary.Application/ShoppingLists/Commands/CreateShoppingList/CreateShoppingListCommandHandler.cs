@@ -49,7 +49,7 @@ public class CreateShoppingListCommandHandler(
                 item.SortOrder);
         }
 
-        await shoppingListRepository.AddAsync(list);
+        await shoppingListRepository.AddAsync(list, cancellationToken);
         return Result.Success(list.ToModel());
     }
 }

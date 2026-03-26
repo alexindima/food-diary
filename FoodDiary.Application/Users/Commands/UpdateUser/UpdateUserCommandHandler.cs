@@ -22,7 +22,7 @@ public class UpdateUserCommandHandler(
         }
 
         var userId = new UserId(command.UserId.Value);
-        var user = await userRepository.GetByIdAsync(userId);
+        var user = await userRepository.GetByIdAsync(userId, cancellationToken);
         if (user is null) {
             return Result.Failure<UserModel>(User.NotFound(userId));
         }
@@ -76,7 +76,7 @@ public class UpdateUserCommandHandler(
                 user.Deactivate();
         }
 
-        await userRepository.UpdateAsync(user);
+        await userRepository.UpdateAsync(user, cancellationToken);
 
         if (oldAssetId.HasValue && (!newAssetId.HasValue || oldAssetId.Value.Value != newAssetId.Value.Value)) {
             await imageAssetCleanupService.DeleteIfUnusedAsync(oldAssetId.Value, cancellationToken);

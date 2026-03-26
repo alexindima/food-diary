@@ -16,13 +16,13 @@ public class UpdateDesiredWeightCommandHandler(IUserRepository userRepository)
         }
 
         var userId = new UserId(command.UserId.Value);
-        var user = await userRepository.GetByIdAsync(userId);
+        var user = await userRepository.GetByIdAsync(userId, cancellationToken);
         if (user is null) {
             return Result.Failure<UserDesiredWeightModel>(Errors.User.NotFound(userId));
         }
 
         user.UpdateDesiredWeight(command.DesiredWeight);
-        await userRepository.UpdateAsync(user);
+        await userRepository.UpdateAsync(user, cancellationToken);
 
         return Result.Success(new UserDesiredWeightModel(user.DesiredWeight));
     }

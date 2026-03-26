@@ -29,7 +29,7 @@ public sealed class TelegramVerifyCommandHandler : ICommandHandler<TelegramVerif
         }
 
         var initData = initDataResult.Value;
-        var user = await _userRepository.GetByTelegramUserIdAsync(initData.UserId);
+        var user = await _userRepository.GetByTelegramUserIdAsync(initData.UserId, cancellationToken);
         if (user == null) {
             return Result.Failure<AuthenticationModel>(Errors.Authentication.TelegramNotLinked);
         }

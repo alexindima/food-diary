@@ -45,6 +45,31 @@ public class CommonAbstractionsTests {
     }
 
     [Fact]
+    public void ApplicationLayer_StringErrorCodes_UseKnownCatalogCodes() {
+        var applicationRoot = Path.GetFullPath(Path.Combine(
+            AppContext.BaseDirectory,
+            "..", "..", "..", "..", "..", "FoodDiary.Application"));
+        var allowedFiles = new HashSet<string>(StringComparer.OrdinalIgnoreCase) {
+            Path.Combine(applicationRoot, "Common", "Abstractions", "Result", "Errors.cs"),
+            Path.Combine(applicationRoot, "Common", "Abstractions", "Result", "ErrorKindResolver.cs"),
+        };
+
+        var knownCodes = GetKnownErrorCodes();
+
+        var violations = Directory.GetFiles(applicationRoot, "*.cs", SearchOption.AllDirectories)
+            .Where(static path => path.Contains($"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase) is false)
+            .Where(static path => path.Contains($"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase) is false)
+            .Where(path => allowedFiles.Contains(path) is false)
+            .SelectMany(path => GetReferencedStringErrorCodes(path)
+                .Where(code => knownCodes.Contains(code) is false)
+                .Select(code => $"{Path.GetRelativePath(applicationRoot, path)}: {code}"))
+            .OrderBy(static value => value, StringComparer.Ordinal)
+            .ToArray();
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void ResultFailure_WithGenericType_ThrowsOnValueAccess() {
         var result = Result.Failure<string>(Errors.Validation.Required("name"));
 
@@ -119,6 +144,35 @@ public class CommonAbstractionsTests {
         var content = File.ReadAllText(path);
         return content.Contains("new Error(", StringComparison.Ordinal) ||
                content.Contains("new Error (", StringComparison.Ordinal);
+    }
+
+    private static HashSet<string> GetKnownErrorCodes() {
+        var publishedCodes = typeof(Errors)
+            .GetNestedTypes(BindingFlags.Public)
+            .SelectMany(GetErrorsFromType)
+            .Select(static error => error.Code);
+
+        var resolverCodes = typeof(ErrorKindResolver)
+            .GetField("ExactMappings", BindingFlags.NonPublic | BindingFlags.Static)?
+            .GetValue(null) is IReadOnlyDictionary<string, ErrorKind> mappings
+            ? mappings.Keys
+            : [];
+
+        return publishedCodes
+            .Concat(resolverCodes)
+            .ToHashSet(StringComparer.Ordinal);
+    }
+
+    private static IEnumerable<string> GetReferencedStringErrorCodes(string path) {
+        var content = File.ReadAllText(path);
+        var matches = System.Text.RegularExpressions.Regex.Matches(
+            content,
+            @"(?:WithErrorCode\(|ErrorCode\s*=\s*)""(?<code>[A-Za-z]+\.[A-Za-z]+)""",
+            System.Text.RegularExpressions.RegexOptions.CultureInvariant);
+
+        return matches
+            .Select(match => match.Groups["code"].Value)
+            .Distinct(StringComparer.Ordinal);
     }
 
     private static IEnumerable<Error> GetErrorsFromType(Type type) {

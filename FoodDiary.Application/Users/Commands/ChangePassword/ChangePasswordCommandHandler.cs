@@ -17,7 +17,7 @@ public class ChangePasswordCommandHandler(
         }
 
         var userId = new UserId(command.UserId.Value);
-        var user = await userRepository.GetByIdAsync(userId);
+        var user = await userRepository.GetByIdAsync(userId, cancellationToken);
         if (user is null) {
             return Result.Failure<bool>(User.NotFound(userId));
         }
@@ -30,7 +30,7 @@ public class ChangePasswordCommandHandler(
         var hashedPassword = passwordHasher.Hash(command.NewPassword);
         user.UpdatePassword(hashedPassword);
 
-        await userRepository.UpdateAsync(user);
+        await userRepository.UpdateAsync(user, cancellationToken);
 
         return Result.Success(true);
     }

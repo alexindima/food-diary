@@ -23,7 +23,7 @@ public sealed class AdminSsoExchangeCommandHandler(
             return Result.Failure<AuthenticationModel>(Errors.Authentication.AdminSsoInvalidCode);
         }
 
-        var user = await userRepository.GetByIdAsync(userId.Value);
+        var user = await userRepository.GetByIdAsync(userId.Value, cancellationToken);
         if (user is null) {
             return Result.Failure<AuthenticationModel>(Errors.User.NotFound());
         }

@@ -16,7 +16,7 @@ public class GetDesiredWaistQueryHandler(IUserRepository userRepository)
         }
 
         var userId = new UserId(query.UserId.Value);
-        var user = await userRepository.GetByIdAsync(userId);
+        var user = await userRepository.GetByIdAsync(userId, cancellationToken);
         return user is null
             ? Result.Failure<UserDesiredWaistModel>(Errors.User.NotFound(userId))
             : Result.Success(new UserDesiredWaistModel(user.DesiredWaist));

@@ -42,7 +42,7 @@ public class DeleteRecipeCommandHandler(
             .Select(id => id!.Value)
             .Distinct()
             .ToList();
-        await recipeRepository.DeleteAsync(recipe);
+        await recipeRepository.DeleteAsync(recipe, cancellationToken);
 
         if (assetId.HasValue) {
             await imageAssetCleanupService.DeleteIfUnusedAsync(assetId.Value, cancellationToken);
