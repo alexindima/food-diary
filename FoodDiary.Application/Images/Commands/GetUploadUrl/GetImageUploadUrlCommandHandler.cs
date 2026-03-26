@@ -18,12 +18,17 @@ public sealed class GetImageUploadUrlCommandHandler(
 
         var userId = new UserId(request.UserId);
 
-        var presign = await imageStorageService.CreatePresignedUploadAsync(
-            userId,
-            request.FileName,
-            request.ContentType,
-            request.FileSizeBytes,
-            cancellationToken);
+        PresignedUpload presign;
+        try {
+            presign = await imageStorageService.CreatePresignedUploadAsync(
+                userId,
+                request.FileName,
+                request.ContentType,
+                request.FileSizeBytes,
+                cancellationToken);
+        } catch (Exception ex) when (ex is ArgumentException or ArgumentOutOfRangeException or InvalidOperationException) {
+            return Result.Failure<GetImageUploadUrlResult>(Errors.Image.InvalidData(ex.Message));
+        }
 
         var asset = ImageAsset.Create(userId, presign.ObjectKey, presign.FileUrl);
         asset = await imageAssetRepository.AddAsync(asset, cancellationToken);

@@ -119,17 +119,21 @@ public sealed class ControllerConventionsTests {
 
     [Fact]
     public void SimpleFeatureControllers_UseBaseControllerHelpers_InsteadOfDirectMediatorSend() {
-        var allowedFiles = new HashSet<string>(StringComparer.OrdinalIgnoreCase) {
-            "AuthController.cs",
-            "AiFoodController.cs",
-            "ImagesController.cs",
-        };
         var presentationRoot = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "..", "FoodDiary.Presentation.Api"));
         var violations = Directory.GetFiles(Path.Combine(presentationRoot, "Features"), "*Controller.cs", SearchOption.AllDirectories)
-            .Where(path => !allowedFiles.Contains(Path.GetFileName(path)))
             .Where(path => File.ReadAllText(path).Contains("await Send(", StringComparison.Ordinal))
             .Select(Path.GetFileName)
             .OrderBy(static name => name, StringComparer.Ordinal)
+            .ToArray();
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void FeatureControllers_DoNotUseControllerTokenInRoutes() {
+        var violations = GetFeatureControllerTypes()
+            .Where(type => type.GetCustomAttribute<RouteAttribute>()?.Template?.Contains("[controller]", StringComparison.OrdinalIgnoreCase) is true)
+            .Select(type => type.FullName)
             .ToArray();
 
         Assert.Empty(violations);

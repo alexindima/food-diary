@@ -11,8 +11,7 @@ namespace FoodDiary.Application.Products.Commands.UpdateProduct;
 
 public class UpdateProductCommandHandler(
     IProductRepository productRepository,
-    IImageAssetRepository imageAssetRepository,
-    IImageStorageService imageStorageService)
+    IImageAssetCleanupService imageAssetCleanupService)
     : ICommandHandler<UpdateProductCommand, Result<ProductModel>> {
     public async Task<Result<ProductModel>>
         Handle(UpdateProductCommand command, CancellationToken cancellationToken) {
@@ -132,29 +131,10 @@ public class UpdateProductCommandHandler(
                                 (command.ImageAssetId.HasValue && oldAssetId.HasValue && oldAssetId.Value.Value != command.ImageAssetId.Value);
 
         if (hasChanges && oldAssetId.HasValue && imageAssetChanged) {
-            await TryDeleteAssetAsync(oldAssetId.Value, imageAssetRepository, imageStorageService, cancellationToken);
+            await imageAssetCleanupService.DeleteIfUnusedAsync(oldAssetId.Value, cancellationToken);
         }
 
         var usageCount = product.MealItems.Count + product.RecipeIngredients.Count;
         return Result.Success(product.ToModel(usageCount, true));
-    }
-
-    private static async Task TryDeleteAssetAsync(
-        ImageAssetId assetId,
-        IImageAssetRepository imageAssetRepository,
-        IImageStorageService storageService,
-        CancellationToken cancellationToken) {
-        var asset = await imageAssetRepository.GetByIdAsync(assetId, cancellationToken);
-        if (asset is null) {
-            return;
-        }
-
-        var inUse = await imageAssetRepository.IsAssetInUse(assetId, cancellationToken);
-        if (inUse) {
-            return;
-        }
-
-        await storageService.DeleteAsync(asset.ObjectKey, cancellationToken);
-        await imageAssetRepository.DeleteAsync(asset, cancellationToken);
     }
 }

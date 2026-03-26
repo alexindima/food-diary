@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace FoodDiary.Presentation.Api.Features.Statistics;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/statistics")]
 public class StatisticsController(ISender mediator) : AuthorizedController(mediator) {
     [HttpGet]
     [ProducesResponseType<List<AggregatedStatisticsHttpResponse>>(StatusCodes.Status200OK)]

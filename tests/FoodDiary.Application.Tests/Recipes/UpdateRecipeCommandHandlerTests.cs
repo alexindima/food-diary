@@ -2,7 +2,6 @@ using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Interfaces.Services;
 using FoodDiary.Application.Recipes.Commands.UpdateRecipe;
 using FoodDiary.Application.Recipes.Common;
-using FoodDiary.Domain.Entities.Assets;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -20,8 +19,7 @@ public class UpdateRecipeCommandHandlerTests {
         var repository = new StubRecipeRepository(recipeId, userId, recipe);
         var handler = new UpdateRecipeCommandHandler(
             repository,
-            new NoopImageAssetRepository(),
-            new NoopImageStorageService());
+            new NoopImageAssetCleanupService());
 
         var command = new UpdateRecipeCommand(
             userId.Value,
@@ -115,43 +113,11 @@ public class UpdateRecipeCommandHandlerTests {
         public Task UpdateNutritionAsync(Recipe recipe, CancellationToken cancellationToken = default) => Task.CompletedTask;
     }
 
-    private sealed class NoopImageAssetRepository : IImageAssetRepository {
-        public Task<ImageAsset> AddAsync(ImageAsset asset, CancellationToken cancellationToken = default) {
-            throw new NotSupportedException();
-        }
+    private sealed class NoopImageAssetCleanupService : IImageAssetCleanupService {
+        public Task<DeleteImageAssetResult> DeleteIfUnusedAsync(ImageAssetId assetId, CancellationToken cancellationToken = default) =>
+            Task.FromResult(new DeleteImageAssetResult(true));
 
-        public Task<ImageAsset?> GetByIdAsync(ImageAssetId id, CancellationToken cancellationToken = default) {
-            return Task.FromResult<ImageAsset?>(null);
-        }
-
-        public Task DeleteAsync(ImageAsset asset, CancellationToken cancellationToken = default) {
-            return Task.CompletedTask;
-        }
-
-        public Task<bool> IsAssetInUse(ImageAssetId assetId, CancellationToken cancellationToken = default) {
-            return Task.FromResult(false);
-        }
-
-        public Task<IReadOnlyList<ImageAsset>> GetUnusedOlderThanAsync(
-            DateTime olderThanUtc,
-            int batchSize,
-            CancellationToken cancellationToken = default) {
-            throw new NotSupportedException();
-        }
-    }
-
-    private sealed class NoopImageStorageService : IImageStorageService {
-        public Task<PresignedUpload> CreatePresignedUploadAsync(
-            UserId userId,
-            string fileName,
-            string contentType,
-            long fileSizeBytes,
-            CancellationToken cancellationToken) {
-            throw new NotSupportedException();
-        }
-
-        public Task DeleteAsync(string objectKey, CancellationToken cancellationToken) {
-            return Task.CompletedTask;
-        }
+        public Task<int> CleanupOrphansAsync(DateTime olderThanUtc, int batchSize, CancellationToken cancellationToken = default) =>
+            Task.FromResult(0);
     }
 }

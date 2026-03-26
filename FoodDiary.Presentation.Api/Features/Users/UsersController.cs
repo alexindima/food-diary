@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace FoodDiary.Presentation.Api.Features.Users;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/users")]
 public class UsersController(ISender mediator) : AuthorizedController(mediator) {
     [HttpGet("info")]
     [ProducesResponseType<UserHttpResponse>(StatusCodes.Status200OK)]

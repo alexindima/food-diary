@@ -1,6 +1,5 @@
 using FoodDiary.Presentation.Api.Authorization;
 using FoodDiary.Presentation.Api.Controllers;
-using FoodDiary.Presentation.Api.Extensions;
 using FoodDiary.Presentation.Api.Features.Ai.Mappings;
 using FoodDiary.Presentation.Api.Features.Ai.Requests;
 using FoodDiary.Presentation.Api.Features.Ai.Responses;
@@ -25,11 +24,8 @@ public sealed class AiFoodController(ISender mediator) : AuthorizedController(me
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status429TooManyRequests)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status502BadGateway)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> AnalyzeFood([FromCurrentUser] Guid userId, [FromBody] FoodVisionHttpRequest request) {
-        var command = request.ToCommand(userId);
-        var result = await Send(command);
-        return result.ToOkActionResult(this, static value => value.ToHttpResponse());
-    }
+    public Task<IActionResult> AnalyzeFood([FromCurrentUser] Guid userId, [FromBody] FoodVisionHttpRequest request) =>
+        HandleOk(request.ToCommand(userId), static value => value.ToHttpResponse());
 
     [HttpPost("nutrition")]
     [ProducesResponseType<FoodNutritionHttpResponse>(StatusCodes.Status200OK)]
@@ -37,10 +33,7 @@ public sealed class AiFoodController(ISender mediator) : AuthorizedController(me
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status429TooManyRequests)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status502BadGateway)]
     [ProducesResponseType<ApiErrorHttpResponse>(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> CalculateNutrition([FromCurrentUser] Guid userId, [FromBody] FoodNutritionHttpRequest request) {
-        var command = request.ToCommand(userId);
-        var result = await Send(command);
-        return result.ToOkActionResult(this, static value => value.ToHttpResponse());
-    }
+    public Task<IActionResult> CalculateNutrition([FromCurrentUser] Guid userId, [FromBody] FoodNutritionHttpRequest request) =>
+        HandleOk(request.ToCommand(userId), static value => value.ToHttpResponse());
 }
 

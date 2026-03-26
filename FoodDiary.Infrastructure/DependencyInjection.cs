@@ -1,10 +1,6 @@
-using Amazon.S3;
-using Amazon;
-using Amazon.Runtime;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using FoodDiary.Application.Authentication.Abstractions;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Interfaces.Services;
@@ -43,28 +39,6 @@ public static class DependencyInjection
         services.AddScoped<IImageAssetRepository, ImageAssetRepository>();
         services.AddScoped<IAiUsageRepository, AiUsageRepository>();
         services.AddScoped<IEmailTemplateRepository, EmailTemplateRepository>();
-        services.AddSingleton<IAmazonS3>(provider =>
-        {
-            var s3Options = provider.GetRequiredService<IOptions<S3Options>>().Value;
-            var credentials = new BasicAWSCredentials(s3Options.AccessKeyId, s3Options.SecretAccessKey);
-            var regionValue = s3Options.Region?.Trim();
-            RegionEndpoint? regionEndpoint = null;
-            if (!string.IsNullOrWhiteSpace(regionValue))
-            {
-                regionEndpoint = RegionEndpoint.GetBySystemName(regionValue);
-            }
-            regionEndpoint ??= RegionEndpoint.USEast1;
-
-            var config = new AmazonS3Config
-            {
-                RegionEndpoint = regionEndpoint,
-                AuthenticationRegion = regionEndpoint.SystemName,
-                ServiceURL = s3Options.ServiceUrl,
-                ForcePathStyle = !string.IsNullOrWhiteSpace(s3Options.ServiceUrl)
-            };
-
-            return new AmazonS3Client(credentials, config);
-        });
         services.AddSingleton<IImageStorageService, S3ImageStorageService>();
         services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
         services.AddSingleton<IPasswordHasher, PasswordHasher>();

@@ -1,3 +1,6 @@
+using FoodDiary.Application.Common.Interfaces.Persistence;
+using FoodDiary.Application.Common.Interfaces.Services;
+using FoodDiary.Application.Consumptions.Commands.UpdateConsumption;
 using FoodDiary.Application.Consumptions.Common;
 using FoodDiary.Application.Consumptions.Services;
 using FoodDiary.Domain.Entities.Meals;
@@ -119,5 +122,197 @@ public class ConsumptionsFeatureTests {
 
         var aiSession = Assert.Single(command.AiSessions);
         Assert.Empty(aiSession.Items);
+    }
+
+    [Fact]
+    public async Task UpdateConsumptionCommandHandler_WhenCleanupFails_StillReturnsSuccessAndUpdatesMeal() {
+        var userId = UserId.New();
+        var oldAssetId = ImageAssetId.New();
+        var newAssetId = ImageAssetId.New();
+        var meal = Meal.Create(
+            userId,
+            new DateTime(2026, 3, 26, 12, 0, 0, DateTimeKind.Utc),
+            MealType.Lunch,
+            imageAssetId: oldAssetId);
+
+        var mealRepository = new SingleMealRepository(meal);
+        var cleanup = new RecordingCleanupService("storage_error");
+        var handler = new UpdateConsumptionCommandHandler(
+            mealRepository,
+            new NoopProductRepository(),
+            new NoopRecipeRepository(),
+            new RecordingRecentItemRepository(),
+            cleanup,
+            new StubDateTimeProvider());
+
+        var command = new UpdateConsumptionCommand(
+            userId.Value,
+            meal.Id.Value,
+            new DateTime(2026, 3, 26, 18, 0, 0, DateTimeKind.Utc),
+            MealType.Dinner.ToString(),
+            "Updated",
+            null,
+            newAssetId.Value,
+            [new ConsumptionItemInput(ProductId.New().Value, null, 150)],
+            [],
+            false,
+            600,
+            30,
+            20,
+            50,
+            5,
+            0,
+            3,
+            7);
+
+        var result = await handler.Handle(command, CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.True(mealRepository.UpdateCalled);
+        Assert.Equal(newAssetId, meal.ImageAssetId);
+        Assert.Equal([oldAssetId], cleanup.RequestedAssetIds);
+    }
+
+    private sealed class SingleMealRepository(Meal meal) : IMealRepository {
+        public bool UpdateCalled { get; private set; }
+
+        public Task<Meal> AddAsync(Meal meal, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task UpdateAsync(Meal meal, CancellationToken cancellationToken = default) {
+            UpdateCalled = true;
+            return Task.CompletedTask;
+        }
+
+        public Task DeleteAsync(Meal meal, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<Meal?> GetByIdAsync(
+            MealId id,
+            UserId userId,
+            bool includeItems = false,
+            bool asTracking = false,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult<Meal?>(id == meal.Id && userId == meal.UserId ? meal : null);
+
+        public Task<(IReadOnlyList<Meal> Items, int TotalItems)> GetPagedAsync(
+            UserId userId,
+            int page,
+            int limit,
+            DateTime? dateFrom,
+            DateTime? dateTo,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<IReadOnlyList<Meal>> GetByPeriodAsync(
+            UserId userId,
+            DateTime dateFrom,
+            DateTime dateTo,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+    }
+
+    private sealed class NoopProductRepository : IProductRepository {
+        public Task<Product> AddAsync(Product product) => throw new NotSupportedException();
+
+        public Task<(IReadOnlyList<(Product Product, int UsageCount)> Items, int TotalItems)> GetPagedAsync(
+            UserId userId,
+            bool includePublic,
+            int page,
+            int limit,
+            string? search,
+            IReadOnlyCollection<ProductType>? productTypes = null,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<Product?> GetByIdAsync(
+            ProductId id,
+            UserId userId,
+            bool includePublic = true,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<IReadOnlyDictionary<ProductId, Product>> GetByIdsAsync(
+            IEnumerable<ProductId> ids,
+            UserId userId,
+            bool includePublic = true,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyDictionary<ProductId, Product>>(new Dictionary<ProductId, Product>());
+
+        public Task<IReadOnlyDictionary<ProductId, (Product Product, int UsageCount)>> GetByIdsWithUsageAsync(
+            IEnumerable<ProductId> ids,
+            UserId userId,
+            bool includePublic = true,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task UpdateAsync(Product product) => throw new NotSupportedException();
+        public Task DeleteAsync(Product product) => throw new NotSupportedException();
+    }
+
+    private sealed class NoopRecipeRepository : IRecipeRepository {
+        public Task<Recipe> AddAsync(Recipe recipe) => throw new NotSupportedException();
+
+        public Task<(IReadOnlyList<(Recipe Recipe, int UsageCount)> Items, int TotalItems)> GetPagedAsync(
+            UserId userId,
+            bool includePublic,
+            int page,
+            int limit,
+            string? search,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<Recipe?> GetByIdAsync(
+            RecipeId id,
+            UserId userId,
+            bool includePublic = true,
+            bool includeSteps = false,
+            bool asTracking = false,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<IReadOnlyDictionary<RecipeId, Recipe>> GetByIdsAsync(
+            IEnumerable<RecipeId> ids,
+            UserId userId,
+            bool includePublic = true,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyDictionary<RecipeId, Recipe>>(new Dictionary<RecipeId, Recipe>());
+
+        public Task<IReadOnlyDictionary<RecipeId, (Recipe Recipe, int UsageCount)>> GetByIdsWithUsageAsync(
+            IEnumerable<RecipeId> ids,
+            UserId userId,
+            bool includePublic = true,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task UpdateAsync(Recipe recipe) => throw new NotSupportedException();
+        public Task DeleteAsync(Recipe recipe) => throw new NotSupportedException();
+        public Task UpdateNutritionAsync(Recipe recipe, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+    }
+
+    private sealed class RecordingRecentItemRepository : IRecentItemRepository {
+        public Task RegisterUsageAsync(
+            UserId userId,
+            IReadOnlyCollection<ProductId> productIds,
+            IReadOnlyCollection<RecipeId> recipeIds,
+            CancellationToken cancellationToken = default) => Task.CompletedTask;
+
+        public Task<IReadOnlyList<RecentProductUsage>> GetRecentProductsAsync(
+            UserId userId,
+            int limit,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<IReadOnlyList<RecentRecipeUsage>> GetRecentRecipesAsync(
+            UserId userId,
+            int limit,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+    }
+
+    private sealed class RecordingCleanupService(string? errorCode = null) : IImageAssetCleanupService {
+        public List<ImageAssetId> RequestedAssetIds { get; } = [];
+
+        public Task<DeleteImageAssetResult> DeleteIfUnusedAsync(ImageAssetId assetId, CancellationToken cancellationToken = default) {
+            RequestedAssetIds.Add(assetId);
+            return Task.FromResult(errorCode is null
+                ? new DeleteImageAssetResult(true)
+                : new DeleteImageAssetResult(false, errorCode));
+        }
+
+        public Task<int> CleanupOrphansAsync(DateTime olderThanUtc, int batchSize, CancellationToken cancellationToken = default) =>
+            Task.FromResult(0);
+    }
+
+    private sealed class StubDateTimeProvider : IDateTimeProvider {
+        public DateTime UtcNow => new(2026, 3, 26, 18, 0, 0, DateTimeKind.Utc);
     }
 }

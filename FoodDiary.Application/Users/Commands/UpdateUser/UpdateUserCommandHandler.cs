@@ -14,8 +14,7 @@ namespace FoodDiary.Application.Users.Commands.UpdateUser;
 
 public class UpdateUserCommandHandler(
     IUserRepository userRepository,
-    IImageAssetRepository imageAssetRepository,
-    IImageStorageService imageStorageService)
+    IImageAssetCleanupService imageAssetCleanupService)
     : ICommandHandler<UpdateUserCommand, Result<UserModel>> {
     public async Task<Result<UserModel>> Handle(UpdateUserCommand command, CancellationToken cancellationToken) {
         if (command.UserId is null || command.UserId.Value == UserId.Empty) {
@@ -80,7 +79,7 @@ public class UpdateUserCommandHandler(
         await userRepository.UpdateAsync(user);
 
         if (oldAssetId.HasValue && (!newAssetId.HasValue || oldAssetId.Value.Value != newAssetId.Value.Value)) {
-            await TryDeleteAssetAsync(oldAssetId.Value, imageAssetRepository, imageStorageService, cancellationToken);
+            await imageAssetCleanupService.DeleteIfUnusedAsync(oldAssetId.Value, cancellationToken);
         }
 
         return Result.Success(user.ToModel());
@@ -119,22 +118,4 @@ public class UpdateUserCommandHandler(
             : Result.Failure<string?>(Validation.Invalid(nameof(UpdateUserCommand.Gender), "Invalid gender value."));
     }
 
-    private static async Task TryDeleteAssetAsync(
-        ImageAssetId assetId,
-        IImageAssetRepository imageAssetRepository,
-        IImageStorageService storageService,
-        CancellationToken cancellationToken) {
-        var asset = await imageAssetRepository.GetByIdAsync(assetId, cancellationToken);
-        if (asset is null) {
-            return;
-        }
-
-        var inUse = await imageAssetRepository.IsAssetInUse(assetId, cancellationToken);
-        if (inUse) {
-            return;
-        }
-
-        await storageService.DeleteAsync(asset.ObjectKey, cancellationToken);
-        await imageAssetRepository.DeleteAsync(asset, cancellationToken);
-    }
 }

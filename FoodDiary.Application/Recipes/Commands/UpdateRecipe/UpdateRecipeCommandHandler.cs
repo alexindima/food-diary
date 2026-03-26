@@ -13,8 +13,7 @@ namespace FoodDiary.Application.Recipes.Commands.UpdateRecipe;
 
 public class UpdateRecipeCommandHandler(
     IRecipeRepository recipeRepository,
-    IImageAssetRepository imageAssetRepository,
-    IImageStorageService imageStorageService)
+    IImageAssetCleanupService imageAssetCleanupService)
     : ICommandHandler<UpdateRecipeCommand, Result<RecipeModel>> {
     public async Task<Result<RecipeModel>> Handle(UpdateRecipeCommand command, CancellationToken cancellationToken) {
         if (command.UserId is null || command.UserId == Guid.Empty) {
@@ -124,7 +123,7 @@ public class UpdateRecipeCommandHandler(
         await RecipeNutritionUpdater.EnsureNutritionAsync(updated, recipeRepository, cancellationToken);
 
         if (oldAssetId.HasValue && (!command.ImageAssetId.HasValue || oldAssetId.Value.Value != command.ImageAssetId.Value)) {
-            await TryDeleteAssetAsync(oldAssetId.Value, imageAssetRepository, imageStorageService, cancellationToken);
+            await imageAssetCleanupService.DeleteIfUnusedAsync(oldAssetId.Value, cancellationToken);
         }
 
         if (oldStepAssetIds.Count > 0) {
@@ -136,30 +135,11 @@ public class UpdateRecipeCommandHandler(
 
             foreach (var assetId in oldStepAssetIds) {
                 if (!newStepAssetIds.Contains(assetId)) {
-                    await TryDeleteAssetAsync(assetId, imageAssetRepository, imageStorageService, cancellationToken);
+                    await imageAssetCleanupService.DeleteIfUnusedAsync(assetId, cancellationToken);
                 }
             }
         }
 
         return Result.Success(updated.ToModel(updated.MealItems.Count + updated.NestedRecipeUsages.Count, true));
-    }
-
-    private static async Task TryDeleteAssetAsync(
-        ImageAssetId assetId,
-        IImageAssetRepository imageAssetRepository,
-        IImageStorageService storageService,
-        CancellationToken cancellationToken) {
-        var asset = await imageAssetRepository.GetByIdAsync(assetId, cancellationToken);
-        if (asset is null) {
-            return;
-        }
-
-        var inUse = await imageAssetRepository.IsAssetInUse(assetId, cancellationToken);
-        if (inUse) {
-            return;
-        }
-
-        await storageService.DeleteAsync(asset.ObjectKey, cancellationToken);
-        await imageAssetRepository.DeleteAsync(asset, cancellationToken);
     }
 }

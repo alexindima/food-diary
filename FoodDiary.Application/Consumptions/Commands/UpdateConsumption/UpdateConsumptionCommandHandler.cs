@@ -16,8 +16,7 @@ public class UpdateConsumptionCommandHandler(
     IProductRepository productRepository,
     IRecipeRepository recipeRepository,
     IRecentItemRepository recentItemRepository,
-    IImageAssetRepository imageAssetRepository,
-    IImageStorageService imageStorageService,
+    IImageAssetCleanupService imageAssetCleanupService,
     IDateTimeProvider dateTimeProvider)
     : ICommandHandler<UpdateConsumptionCommand, Result<ConsumptionModel>> {
     public async Task<Result<ConsumptionModel>> Handle(UpdateConsumptionCommand command, CancellationToken cancellationToken) {
@@ -156,7 +155,7 @@ public class UpdateConsumptionCommandHandler(
             cancellationToken);
 
         if (oldAssetId.HasValue && (!command.ImageAssetId.HasValue || oldAssetId.Value.Value != command.ImageAssetId.Value)) {
-            await TryDeleteAssetAsync(oldAssetId.Value, imageAssetRepository, imageStorageService, cancellationToken);
+            await imageAssetCleanupService.DeleteIfUnusedAsync(oldAssetId.Value, cancellationToken);
         }
 
         var updated = await mealRepository.GetByIdAsync(
@@ -168,25 +167,6 @@ public class UpdateConsumptionCommandHandler(
         return updated is null
             ? Result.Failure<ConsumptionModel>(Errors.Consumption.InvalidData("Failed to load updated consumption."))
             : Result.Success(updated.ToModel());
-    }
-
-    private static async Task TryDeleteAssetAsync(
-        ImageAssetId assetId,
-        IImageAssetRepository imageAssetRepository,
-        IImageStorageService storageService,
-        CancellationToken cancellationToken) {
-        var asset = await imageAssetRepository.GetByIdAsync(assetId, cancellationToken);
-        if (asset is null) {
-            return;
-        }
-
-        var inUse = await imageAssetRepository.IsAssetInUse(assetId, cancellationToken);
-        if (inUse) {
-            return;
-        }
-
-        await storageService.DeleteAsync(asset.ObjectKey, cancellationToken);
-        await imageAssetRepository.DeleteAsync(asset, cancellationToken);
     }
 
     private static Result<MealType?> ParseMealType(string? mealType) {

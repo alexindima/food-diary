@@ -96,7 +96,18 @@ public sealed class OpenAiFoodService(
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _options.ApiKey);
         request.Content = new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json");
 
-        using var response = await httpClient.SendAsync(request, cancellationToken);
+        HttpResponseMessage response;
+        try {
+            response = await httpClient.SendAsync(request, cancellationToken);
+        } catch (HttpRequestException ex) {
+            _logger.LogWarning(ex, "OpenAI request failed due to transport error.");
+            return (false, null, Errors.Ai.OpenAiFailed($"OpenAI transport error: {ex.Message}"));
+        } catch (TaskCanceledException ex) when (!cancellationToken.IsCancellationRequested) {
+            _logger.LogWarning(ex, "OpenAI request timed out.");
+            return (false, null, Errors.Ai.OpenAiFailed("OpenAI request timed out."));
+        }
+
+        using var _ = response;
         var responseBody = await response.Content.ReadAsStringAsync(cancellationToken);
 
         if (!response.IsSuccessStatusCode) {

@@ -16,7 +16,11 @@ public class UpdateDesiredWeightCommandValidator : AbstractValidator<UpdateDesir
 
         RuleFor(c => c.DesiredWeight)
             .GreaterThan(0)
+            .WithErrorCode("Validation.Invalid")
+            .WithMessage($"DesiredWeight must be in range (0, {DesiredWeightValueObject.MaxValue}]")
             .LessThanOrEqualTo(DesiredWeightValueObject.MaxValue)
+            .WithErrorCode("Validation.Invalid")
+            .WithMessage($"DesiredWeight must be in range (0, {DesiredWeightValueObject.MaxValue}]")
             .When(c => c.DesiredWeight.HasValue);
     }
 }

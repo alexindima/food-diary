@@ -3,7 +3,6 @@ using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Interfaces.Services;
 using FoodDiary.Application.Users.Commands.UpdateUser;
 using FoodDiary.Application.Users.Models;
-using FoodDiary.Domain.Entities.Assets;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -16,8 +15,7 @@ public sealed class UpdateUserCommandHandlerTests {
         var userRepository = new SingleUserRepository(user);
         var handler = new UpdateUserCommandHandler(
             userRepository,
-            new StubImageAssetRepository(),
-            new StubImageStorageService());
+            new StubImageAssetCleanupService());
 
         var layout = new DashboardLayoutModel(["summary", "goals"], ["water", "weight"]);
         var command = new UpdateUserCommand(
@@ -48,6 +46,43 @@ public sealed class UpdateUserCommandHandlerTests {
         Assert.Equal(layout.Mobile, deserialized.Mobile);
     }
 
+    [Fact]
+    public async Task Handle_WhenProfileImageCleanupFails_StillReturnsSuccessAndUpdatesUser() {
+        var user = User.Create("user@example.com", "hash");
+        var oldAssetId = ImageAssetId.New();
+        user.UpdateProfile(profileImageAssetId: oldAssetId);
+
+        var cleanup = new StubImageAssetCleanupService("storage_error");
+        var handler = new UpdateUserCommandHandler(
+            new SingleUserRepository(user),
+            cleanup);
+
+        var newAssetId = ImageAssetId.New();
+        var command = new UpdateUserCommand(
+            user.Id.Value,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            newAssetId.Value,
+            null,
+            null);
+
+        var result = await handler.Handle(command, CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(newAssetId, user.ProfileImageAssetId);
+        Assert.Equal([oldAssetId], cleanup.RequestedAssetIds);
+    }
+
     private sealed class SingleUserRepository(User user) : IUserRepository {
         public Task<User?> GetByEmailAsync(string email) => throw new NotSupportedException();
         public Task<User?> GetByEmailIncludingDeletedAsync(string email) => throw new NotSupportedException();
@@ -62,19 +97,17 @@ public sealed class UpdateUserCommandHandlerTests {
         public Task UpdateAsync(User userToUpdate) => Task.CompletedTask;
     }
 
-    private sealed class StubImageAssetRepository : IImageAssetRepository {
-        public Task<ImageAsset?> GetByIdAsync(ImageAssetId id, CancellationToken cancellationToken = default) => Task.FromResult<ImageAsset?>(null);
-        public Task<ImageAsset> AddAsync(ImageAsset asset, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task DeleteAsync(ImageAsset asset, CancellationToken cancellationToken = default) => Task.CompletedTask;
-        public Task<bool> IsAssetInUse(ImageAssetId id, CancellationToken cancellationToken = default) => Task.FromResult(false);
-        public Task<IReadOnlyList<ImageAsset>> GetUnusedOlderThanAsync(DateTime olderThanUtc, int batchSize, CancellationToken cancellationToken = default) =>
-            Task.FromResult<IReadOnlyList<ImageAsset>>([]);
-    }
+    private sealed class StubImageAssetCleanupService(string? errorCode = null) : IImageAssetCleanupService {
+        public List<ImageAssetId> RequestedAssetIds { get; } = [];
 
-    private sealed class StubImageStorageService : IImageStorageService {
-        public Task<PresignedUpload> CreatePresignedUploadAsync(UserId userId, string fileName, string contentType, long fileSizeBytes, CancellationToken cancellationToken) =>
-            throw new NotSupportedException();
+        public Task<DeleteImageAssetResult> DeleteIfUnusedAsync(ImageAssetId assetId, CancellationToken cancellationToken = default) {
+            RequestedAssetIds.Add(assetId);
+            return Task.FromResult(errorCode is null
+                ? new DeleteImageAssetResult(true)
+                : new DeleteImageAssetResult(false, errorCode));
+        }
 
-        public Task DeleteAsync(string objectKey, CancellationToken cancellationToken = default) => Task.CompletedTask;
+        public Task<int> CleanupOrphansAsync(DateTime olderThanUtc, int batchSize, CancellationToken cancellationToken = default) =>
+            Task.FromResult(0);
     }
 }

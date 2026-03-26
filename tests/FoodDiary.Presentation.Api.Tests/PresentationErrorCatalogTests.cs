@@ -1,6 +1,7 @@
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Presentation.Api.Responses;
 using Microsoft.AspNetCore.Http;
+using System.Reflection;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
@@ -29,56 +30,76 @@ public sealed class PresentationErrorCatalogTests {
         }
     }
 
-    private static IReadOnlyList<Error> GetCatalogErrors() => [
-        Errors.Product.NotFound(Guid.Empty),
-        Errors.Product.NotAccessible(Guid.Empty),
-        Errors.Product.AlreadyExists("123"),
-        Errors.Product.InvalidData("invalid"),
-        Errors.Recipe.NotFound(Guid.Empty),
-        Errors.Recipe.NotAccessible(Guid.Empty),
-        Errors.Recipe.InvalidData("invalid"),
-        Errors.Consumption.NotFound(Guid.Empty),
-        Errors.Consumption.InvalidData("invalid"),
-        Errors.User.NotFound(Guid.Empty),
-        Errors.User.NotFound(),
-        Errors.User.InvalidPassword,
-        Errors.User.InvalidCredentials,
-        Errors.User.EmailAlreadyExists,
-        Errors.Authentication.InvalidCredentials,
-        Errors.Authentication.InvalidToken,
-        Errors.Authentication.AccountDeleted,
-        Errors.Authentication.AccountNotDeleted,
-        Errors.Authentication.TelegramInvalidData,
-        Errors.Authentication.TelegramAuthExpired,
-        Errors.Authentication.TelegramNotLinked,
-        Errors.Authentication.TelegramAlreadyLinked,
-        Errors.Authentication.TelegramNotConfigured,
-        Errors.Authentication.TelegramBotNotConfigured,
-        Errors.Authentication.TelegramBotInvalidSecret,
-        Errors.Authentication.AdminSsoInvalidCode,
-        Errors.Authentication.AdminSsoForbidden,
-        Errors.Validation.Required("field"),
-        Errors.Validation.Invalid("field", "reason"),
-        Errors.WeightEntry.NotFound(Guid.Empty),
-        Errors.WeightEntry.AlreadyExists(DateTime.UnixEpoch),
-        Errors.WaistEntry.NotFound(Guid.Empty),
-        Errors.WaistEntry.AlreadyExists(DateTime.UnixEpoch),
-        Errors.HydrationEntry.NotFound(Guid.Empty),
-        Errors.DailyAdvice.NotFound(),
-        Errors.ShoppingList.NotFound(Guid.Empty),
-        Errors.ShoppingList.CurrentNotFound(),
-        Errors.Cycle.NotFound(Guid.Empty),
-        Errors.CycleDay.NotFound(DateTime.UnixEpoch),
-        Errors.Ai.ImageNotFound(Guid.Empty),
-        Errors.Ai.Forbidden(),
-        Errors.Ai.EmptyItems(),
-        Errors.Ai.OpenAiFailed("failed"),
-        Errors.Ai.InvalidResponse("invalid"),
-        Errors.Ai.QuotaExceeded(),
-        Errors.Image.InvalidData("invalid"),
-        Errors.Image.NotFound(Guid.Empty),
-        Errors.Image.Forbidden(),
-        Errors.Image.InUse(),
-        Errors.Image.StorageError(),
-    ];
+    [Fact]
+    public void CentralErrorCatalog_CanBeEnumeratedWithoutDuplicatesOrMissingCodes() {
+        var duplicates = GetCatalogErrors()
+            .GroupBy(static error => error.Code, StringComparer.Ordinal)
+            .Where(group => group.Count() > 1)
+            .Where(group => group.Key is not "User.NotFound" and not "ShoppingList.NotFound")
+            .Select(group => group.Key)
+            .ToArray();
+
+        Assert.Empty(duplicates);
+    }
+
+    private static IReadOnlyList<Error> GetCatalogErrors() {
+        return typeof(Errors)
+            .GetNestedTypes(BindingFlags.Public)
+            .SelectMany(GetErrorsFromType)
+            .OrderBy(static error => error.Code, StringComparer.Ordinal)
+            .ToArray();
+    }
+
+    private static IEnumerable<Error> GetErrorsFromType(Type type) {
+        foreach (var property in type.GetProperties(BindingFlags.Public | BindingFlags.Static)) {
+            if (property.PropertyType != typeof(Error) || property.GetIndexParameters().Length > 0) {
+                continue;
+            }
+
+            if (property.GetValue(null) is Error error) {
+                yield return error;
+            }
+        }
+
+        foreach (var method in type.GetMethods(BindingFlags.Public | BindingFlags.Static)) {
+            if (method.ReturnType != typeof(Error)) {
+                continue;
+            }
+
+            if (method.IsSpecialName) {
+                continue;
+            }
+
+            var arguments = method.GetParameters()
+                .Select(CreateSampleArgument)
+                .ToArray();
+
+            if (method.Invoke(null, arguments) is Error error) {
+                yield return error;
+            }
+        }
+    }
+
+    private static object? CreateSampleArgument(ParameterInfo parameter) {
+        var parameterType = Nullable.GetUnderlyingType(parameter.ParameterType) ?? parameter.ParameterType;
+
+        if (parameterType == typeof(Guid)) {
+            return Guid.Empty;
+        }
+
+        if (parameterType == typeof(DateTime)) {
+            return DateTime.UnixEpoch;
+        }
+
+        if (parameterType == typeof(string)) {
+            return parameter.Name switch {
+                "field" => "field",
+                "reason" => "reason",
+                "locale" => "en",
+                _ => "sample",
+            };
+        }
+
+        throw new InvalidOperationException($"Unsupported error catalog parameter type: {parameter.ParameterType.FullName}");
+    }
 }

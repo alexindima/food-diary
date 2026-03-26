@@ -3,7 +3,10 @@ using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using FoodDiary.Presentation.Api.Authorization;
+using FoodDiary.Presentation.Api.Features.Ai.Requests;
 using FoodDiary.Presentation.Api.Features.Auth.Requests;
+using FoodDiary.Presentation.Api.Features.Images.Requests;
+using FoodDiary.Presentation.Api.Features.Users.Requests;
 using FoodDiary.Presentation.Api.Features.WaistEntries.Requests;
 using FoodDiary.Presentation.Api.Features.WeightEntries.Requests;
 using FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
@@ -189,6 +192,76 @@ public sealed class PresentationBoundaryIntegrationTests(
     }
 
     [Fact]
+    public async Task ImageUploadUrl_WithInvalidPayload_ReturnsImageValidationContract() {
+        var client = testAuthFactory.CreateClient();
+        client.DefaultRequestHeaders.Add(TestAuthenticationHandler.AuthenticateHeader, "true");
+        client.DefaultRequestHeaders.Add(TestAuthenticationHandler.UserIdHeader, Guid.NewGuid().ToString());
+
+        var response = await client.PostAsJsonAsync(
+            "/api/images/upload-url",
+            new GetImageUploadUrlHttpRequest("photo.txt", "text/plain", 128));
+        var payload = await response.Content.ReadFromJsonAsync<ErrorPayload>(JsonOptions);
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.NotNull(payload);
+        Assert.Equal("Image.InvalidData", payload.Error);
+        Assert.Equal("Unsupported content type: text/plain.", payload.Message);
+    }
+
+    [Fact]
+    public async Task DeleteImageAsset_AfterUploadUrl_ReturnsNoContent() {
+        var client = testAuthFactory.CreateClient();
+        client.DefaultRequestHeaders.Add(TestAuthenticationHandler.AuthenticateHeader, "true");
+        client.DefaultRequestHeaders.Add(TestAuthenticationHandler.UserIdHeader, Guid.NewGuid().ToString());
+
+        var uploadResponse = await client.PostAsJsonAsync(
+            "/api/images/upload-url",
+            new GetImageUploadUrlHttpRequest("photo.jpg", "image/jpeg", 1024));
+        uploadResponse.EnsureSuccessStatusCode();
+
+        using var uploadJson = JsonDocument.Parse(await uploadResponse.Content.ReadAsStringAsync());
+        var assetId = uploadJson.RootElement.GetProperty("assetId").GetGuid();
+
+        var deleteResponse = await client.DeleteAsync($"/api/images/{assetId}");
+
+        Assert.Equal(HttpStatusCode.NoContent, deleteResponse.StatusCode);
+    }
+
+    [Fact]
+    public async Task DeleteImageAsset_WithMissingAsset_ReturnsNotFoundContract() {
+        var client = testAuthFactory.CreateClient();
+        client.DefaultRequestHeaders.Add(TestAuthenticationHandler.AuthenticateHeader, "true");
+        client.DefaultRequestHeaders.Add(TestAuthenticationHandler.UserIdHeader, Guid.NewGuid().ToString());
+
+        var missingAssetId = Guid.Parse("22222222-2222-2222-2222-222222222222");
+        var response = await client.DeleteAsync($"/api/images/{missingAssetId}");
+        var payload = await response.Content.ReadFromJsonAsync<ErrorPayload>(JsonOptions);
+
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        Assert.NotNull(payload);
+        Assert.Equal("Image.NotFound", payload.Error);
+    }
+
+    [Fact]
+    public async Task AiNutrition_WithEmptyItems_ReturnsValidationContract() {
+        var client = testAuthFactory.CreateClient();
+        client.DefaultRequestHeaders.Add(TestAuthenticationHandler.AuthenticateHeader, "true");
+        client.DefaultRequestHeaders.Add(TestAuthenticationHandler.UserIdHeader, Guid.NewGuid().ToString());
+        client.DefaultRequestHeaders.Add(TestAuthenticationHandler.RoleHeader, PresentationRoleNames.Premium);
+
+        var response = await client.PostAsJsonAsync(
+            "/api/ai/food/nutrition",
+            new FoodNutritionHttpRequest([]));
+        var payload = await response.Content.ReadFromJsonAsync<ErrorPayload>(JsonOptions);
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.NotNull(payload);
+        Assert.Equal("Validation.Required", payload.Error);
+        Assert.NotNull(payload.Errors);
+        Assert.Contains(payload.Errors.Keys, key => string.Equals(key, "items", StringComparison.Ordinal));
+    }
+
+    [Fact]
     public async Task Statistics_WithInvalidDateRangeQuery_ReturnsValidationErrorContract() {
         var client = apiFactory.CreateClient();
         var accessToken = await RegisterAndGetAccessTokenAsync(client);
@@ -204,6 +277,25 @@ public sealed class PresentationBoundaryIntegrationTests(
         Assert.NotNull(payload.Errors);
         Assert.Contains(payload.Errors.Keys, key => string.Equals(key, "dateFrom", StringComparison.Ordinal));
         Assert.Contains(payload.Errors.Keys, key => string.Equals(key, "dateTo", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public async Task UpdateDesiredWeight_WithInvalidValue_ReturnsValidationErrorContract() {
+        var client = apiFactory.CreateClient();
+        var accessToken = await RegisterAndGetAccessTokenAsync(client);
+        client.DefaultRequestHeaders.Authorization =
+            new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
+
+        var response = await client.PutAsJsonAsync(
+            "/api/users/desired-weight",
+            new UpdateDesiredWeightHttpRequest(-1));
+        var payload = await response.Content.ReadFromJsonAsync<ErrorPayload>(JsonOptions);
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.NotNull(payload);
+        Assert.Equal("Validation.Invalid", payload.Error);
+        Assert.NotNull(payload.Errors);
+        Assert.Contains(payload.Errors.Keys, key => string.Equals(key, "desiredWeight", StringComparison.Ordinal));
     }
 
     [Fact]
@@ -333,14 +425,14 @@ public sealed class PresentationBoundaryIntegrationTests(
 
     private static string BuildFocusedOpenApiSnapshot(JsonElement root) {
         var selectedPaths = new[] {
-            "/api/Auth/register",
-            "/api/Auth/login",
-            "/api/Products",
-            "/api/Products/{id}",
-            "/api/Recipes",
-            "/api/Recipes/{id}",
-            "/api/Statistics",
-            "/api/Users/info",
+            "/api/auth/register",
+            "/api/auth/login",
+            "/api/products",
+            "/api/products/{id}",
+            "/api/recipes",
+            "/api/recipes/{id}",
+            "/api/statistics",
+            "/api/users/info",
             "/api/weight-entries",
             "/api/waist-entries"
         };
@@ -362,13 +454,13 @@ public sealed class PresentationBoundaryIntegrationTests(
 
     private static string BuildAuthAdminOpenApiSnapshot(JsonElement root) {
         var selectedPaths = new[] {
-            "/api/Auth/register",
-            "/api/Auth/login",
-            "/api/Auth/refresh",
-            "/api/Auth/verify-email",
-            "/api/Auth/verify-email/resend",
-            "/api/Auth/admin-sso/start",
-            "/api/Auth/admin-sso/exchange",
+            "/api/auth/register",
+            "/api/auth/login",
+            "/api/auth/refresh",
+            "/api/auth/verify-email",
+            "/api/auth/verify-email/resend",
+            "/api/auth/admin-sso/start",
+            "/api/auth/admin-sso/exchange",
             "/api/admin/dashboard",
             "/api/admin/users",
             "/api/admin/users/{id}",
