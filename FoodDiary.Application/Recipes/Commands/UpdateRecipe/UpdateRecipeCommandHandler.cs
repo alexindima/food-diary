@@ -59,17 +59,22 @@ public class UpdateRecipeCommandHandler(
             .Distinct()
             .ToList();
 
-        recipe.Update(
+        recipe.UpdateIdentity(
             name: command.Name,
             description: command.Description,
             comment: command.Comment,
-            category: command.Category,
+            category: command.Category);
+        recipe.UpdateMedia(
             imageUrl: command.ImageUrl,
-            imageAssetId: command.ImageAssetId.HasValue ? new ImageAssetId(command.ImageAssetId.Value) : null,
+            imageAssetId: command.ImageAssetId.HasValue ? new ImageAssetId(command.ImageAssetId.Value) : null);
+        recipe.UpdateTimingAndServings(
             prepTime: command.PrepTime ?? 0,
             cookTime: command.CookTime,
-            servings: command.Servings,
-            visibility: visibility);
+            servings: command.Servings);
+
+        if (visibility.HasValue) {
+            recipe.ChangeVisibility(visibility.Value);
+        }
 
         recipe.ClearSteps();
         var steps = command.Steps ?? Array.Empty<RecipeStepInput>();

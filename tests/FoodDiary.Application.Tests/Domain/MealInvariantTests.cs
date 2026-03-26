@@ -2,6 +2,7 @@ using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Events;
 using FoodDiary.Domain.Enums;
 using System.Reflection;
+using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.Domain;
@@ -160,21 +161,21 @@ public class MealInvariantTests {
     public void ApplyNutrition_WithNegativeTotal_Throws() {
         var meal = Meal.Create(UserId.New(), DateTime.UtcNow, MealType.Breakfast);
 
-        Assert.Throws<ArgumentOutOfRangeException>(() => meal.ApplyNutrition(
-            totalCalories: -1,
-            totalProteins: 10,
-            totalFats: 10,
-            totalCarbs: 10,
-            totalFiber: 1,
-            totalAlcohol: 0,
-            isAutoCalculated: true));
+        Assert.Throws<ArgumentOutOfRangeException>(() => meal.ApplyNutrition(new MealNutritionUpdate(
+            TotalCalories: -1,
+            TotalProteins: 10,
+            TotalFats: 10,
+            TotalCarbs: 10,
+            TotalFiber: 1,
+            TotalAlcohol: 0,
+            IsAutoCalculated: true)));
     }
 
     [Fact]
     public void ApplyNutrition_WithDefaultAutoValues_DoesNotSetModifiedOrEvent() {
         var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
 
-        meal.ApplyNutrition(0, 0, 0, 0, 0, 0, isAutoCalculated: true);
+        meal.ApplyNutrition(new MealNutritionUpdate(0, 0, 0, 0, 0, 0, true));
 
         Assert.Null(meal.ModifiedOnUtc);
         Assert.Empty(meal.DomainEvents);
@@ -184,20 +185,20 @@ public class MealInvariantTests {
     public void ApplyNutrition_WithManualMode_SetsManualValuesAndRaisesEvent() {
         var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
 
-        meal.ApplyNutrition(
-            totalCalories: 500.123,
-            totalProteins: 30.567,
-            totalFats: 20.333,
-            totalCarbs: 40.999,
-            totalFiber: 8.111,
-            totalAlcohol: 0,
-            isAutoCalculated: false,
-            manualCalories: 510,
-            manualProteins: 31,
-            manualFats: 21,
-            manualCarbs: 41,
-            manualFiber: 9,
-            manualAlcohol: 0);
+        meal.ApplyNutrition(new MealNutritionUpdate(
+            TotalCalories: 500.123,
+            TotalProteins: 30.567,
+            TotalFats: 20.333,
+            TotalCarbs: 40.999,
+            TotalFiber: 8.111,
+            TotalAlcohol: 0,
+            IsAutoCalculated: false,
+            ManualCalories: 510,
+            ManualProteins: 31,
+            ManualFats: 21,
+            ManualCarbs: 41,
+            ManualFiber: 9,
+            ManualAlcohol: 0));
 
         Assert.False(meal.IsNutritionAutoCalculated);
         Assert.Equal(500.12, meal.TotalCalories);
@@ -210,11 +211,11 @@ public class MealInvariantTests {
     [Fact]
     public void ApplyNutrition_WithSameValues_DoesNotRaiseDuplicateEvent() {
         var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
-        meal.ApplyNutrition(500, 30, 20, 40, 8, 0, isAutoCalculated: true);
+        meal.ApplyNutrition(new MealNutritionUpdate(500, 30, 20, 40, 8, 0, true));
         var eventCount = meal.DomainEvents.Count;
         var modified = meal.ModifiedOnUtc;
 
-        meal.ApplyNutrition(500, 30, 20, 40, 8, 0, isAutoCalculated: true);
+        meal.ApplyNutrition(new MealNutritionUpdate(500, 30, 20, 40, 8, 0, true));
 
         Assert.Equal(eventCount, meal.DomainEvents.Count);
         Assert.Equal(modified, meal.ModifiedOnUtc);
@@ -223,30 +224,30 @@ public class MealInvariantTests {
     [Fact]
     public void ApplyNutrition_ManualThenAuto_ClearsManualValuesAndRaisesEvent() {
         var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
-        meal.ApplyNutrition(
-            totalCalories: 500,
-            totalProteins: 30,
-            totalFats: 20,
-            totalCarbs: 40,
-            totalFiber: 8,
-            totalAlcohol: 0,
-            isAutoCalculated: false,
-            manualCalories: 510,
-            manualProteins: 31,
-            manualFats: 21,
-            manualCarbs: 41,
-            manualFiber: 9,
-            manualAlcohol: 0);
+        meal.ApplyNutrition(new MealNutritionUpdate(
+            TotalCalories: 500,
+            TotalProteins: 30,
+            TotalFats: 20,
+            TotalCarbs: 40,
+            TotalFiber: 8,
+            TotalAlcohol: 0,
+            IsAutoCalculated: false,
+            ManualCalories: 510,
+            ManualProteins: 31,
+            ManualFats: 21,
+            ManualCarbs: 41,
+            ManualFiber: 9,
+            ManualAlcohol: 0));
         meal.ClearDomainEvents();
 
-        meal.ApplyNutrition(
-            totalCalories: 500,
-            totalProteins: 30,
-            totalFats: 20,
-            totalCarbs: 40,
-            totalFiber: 8,
-            totalAlcohol: 0,
-            isAutoCalculated: true);
+        meal.ApplyNutrition(new MealNutritionUpdate(
+            TotalCalories: 500,
+            TotalProteins: 30,
+            TotalFats: 20,
+            TotalCarbs: 40,
+            TotalFiber: 8,
+            TotalAlcohol: 0,
+            IsAutoCalculated: true));
 
         Assert.True(meal.IsNutritionAutoCalculated);
         Assert.Null(meal.ManualCalories);
@@ -262,25 +263,25 @@ public class MealInvariantTests {
     [Fact]
     public void ApplyNutrition_WithOnlyRoundingDifference_DoesNotRaiseDuplicateEvent() {
         var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
-        meal.ApplyNutrition(
-            totalCalories: 100.004,
-            totalProteins: 30.004,
-            totalFats: 20.004,
-            totalCarbs: 40.004,
-            totalFiber: 8.004,
-            totalAlcohol: 0.004,
-            isAutoCalculated: true);
+        meal.ApplyNutrition(new MealNutritionUpdate(
+            TotalCalories: 100.004,
+            TotalProteins: 30.004,
+            TotalFats: 20.004,
+            TotalCarbs: 40.004,
+            TotalFiber: 8.004,
+            TotalAlcohol: 0.004,
+            IsAutoCalculated: true));
         var eventCount = meal.DomainEvents.Count;
         var modified = meal.ModifiedOnUtc;
 
-        meal.ApplyNutrition(
-            totalCalories: 100.003,
-            totalProteins: 30.003,
-            totalFats: 20.003,
-            totalCarbs: 40.003,
-            totalFiber: 8.003,
-            totalAlcohol: 0.003,
-            isAutoCalculated: true);
+        meal.ApplyNutrition(new MealNutritionUpdate(
+            TotalCalories: 100.003,
+            TotalProteins: 30.003,
+            TotalFats: 20.003,
+            TotalCarbs: 40.003,
+            TotalFiber: 8.003,
+            TotalAlcohol: 0.003,
+            IsAutoCalculated: true));
 
         Assert.Equal(eventCount, meal.DomainEvents.Count);
         Assert.Equal(modified, meal.ModifiedOnUtc);

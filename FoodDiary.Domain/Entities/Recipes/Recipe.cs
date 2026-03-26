@@ -67,40 +67,32 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
         var recipe = new Recipe {
             Id = RecipeId.New(),
             UserId = userId,
-            Name = NormalizeRequiredName(name),
-            Servings = RequirePositive(servings, nameof(servings)),
-            Description = NormalizeOptionalText(description, DescriptionMaxLength, nameof(description)),
-            Comment = NormalizeOptionalText(comment, CommentMaxLength, nameof(comment)),
-            Category = NormalizeOptionalText(category, CategoryMaxLength, nameof(category)),
-            ImageUrl = NormalizeOptionalText(imageUrl, ImageUrlMaxLength, nameof(imageUrl)),
-            ImageAssetId = imageAssetId,
-            PrepTime = NormalizeOptionalNonNegative(prepTime, nameof(prepTime)),
-            CookTime = NormalizeOptionalNonNegative(cookTime, nameof(cookTime)),
-            Visibility = visibility
         };
+        recipe.ApplyDetailsState(new RecipeDetailsState(
+            Name: NormalizeRequiredName(name),
+            Description: NormalizeOptionalText(description, DescriptionMaxLength, nameof(description)),
+            Comment: NormalizeOptionalText(comment, CommentMaxLength, nameof(comment)),
+            Category: NormalizeOptionalText(category, CategoryMaxLength, nameof(category)),
+            ImageUrl: NormalizeOptionalText(imageUrl, ImageUrlMaxLength, nameof(imageUrl)),
+            ImageAssetId: imageAssetId,
+            PrepTime: NormalizeOptionalNonNegative(prepTime, nameof(prepTime)),
+            CookTime: NormalizeOptionalNonNegative(cookTime, nameof(cookTime)),
+            Servings: RequirePositive(servings, nameof(servings)),
+            Visibility: visibility));
+        recipe.ApplyNutritionState(RecipeNutritionState.CreateInitial());
 
         recipe.SetCreated();
         return recipe;
     }
 
-    public void Update(
-        string? name = null,
-        string? description = null,
-        string? comment = null,
-        string? category = null,
-        string? imageUrl = null,
-        ImageAssetId? imageAssetId = null,
-        int? prepTime = null,
-        int? cookTime = null,
-        int? servings = null,
-        Visibility? visibility = null) {
+    public void Update(RecipeUpdate update) {
         var changed = false;
-        changed |= ApplyIdentityUpdates(name, description, comment, category);
-        changed |= ApplyMediaUpdates(imageUrl, imageAssetId);
-        changed |= ApplyTimingAndServingsUpdates(prepTime, cookTime, servings);
+        changed |= ApplyIdentityUpdates(update.Name, update.Description, update.Comment, update.Category);
+        changed |= ApplyMediaUpdates(update.ImageUrl, update.ImageAssetId);
+        changed |= ApplyTimingAndServingsUpdates(update.PrepTime, update.CookTime, update.Servings);
 
-        if (visibility.HasValue && Visibility != visibility.Value) {
-            Visibility = visibility.Value;
+        if (update.Visibility.HasValue && Visibility != update.Visibility.Value) {
+            Visibility = update.Visibility.Value;
             changed = true;
         }
 
@@ -236,83 +228,103 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
         string? description,
         string? comment,
         string? category) {
+        var state = GetDetailsState();
         var changed = false;
 
         if (name is not null) {
             var normalizedName = NormalizeRequiredName(name);
-            if (!string.Equals(Name, normalizedName, StringComparison.Ordinal)) {
-                Name = normalizedName;
+            if (!string.Equals(state.Name, normalizedName, StringComparison.Ordinal)) {
+                state = state with { Name = normalizedName };
                 changed = true;
             }
         }
 
         if (description is not null) {
             var normalizedDescription = NormalizeOptionalText(description, DescriptionMaxLength, nameof(description));
-            if (!string.Equals(Description, normalizedDescription, StringComparison.Ordinal)) {
-                Description = normalizedDescription;
+            if (!string.Equals(state.Description, normalizedDescription, StringComparison.Ordinal)) {
+                state = state with { Description = normalizedDescription };
                 changed = true;
             }
         }
 
         if (comment is not null) {
             var normalizedComment = NormalizeOptionalText(comment, CommentMaxLength, nameof(comment));
-            if (!string.Equals(Comment, normalizedComment, StringComparison.Ordinal)) {
-                Comment = normalizedComment;
+            if (!string.Equals(state.Comment, normalizedComment, StringComparison.Ordinal)) {
+                state = state with { Comment = normalizedComment };
                 changed = true;
             }
         }
 
-        if (category is null) return changed;
-        var normalizedCategory = NormalizeOptionalText(category, CategoryMaxLength, nameof(category));
-        if (string.Equals(Category, normalizedCategory, StringComparison.Ordinal)) return changed;
-        Category = normalizedCategory;
-        changed = true;
+        if (category is not null) {
+            var normalizedCategory = NormalizeOptionalText(category, CategoryMaxLength, nameof(category));
+            if (!string.Equals(state.Category, normalizedCategory, StringComparison.Ordinal)) {
+                state = state with { Category = normalizedCategory };
+                changed = true;
+            }
+        }
+
+        if (changed) {
+            ApplyDetailsState(state);
+        }
 
         return changed;
     }
 
     private bool ApplyMediaUpdates(string? imageUrl, ImageAssetId? imageAssetId) {
+        var state = GetDetailsState();
         var changed = false;
 
         if (imageUrl is not null) {
             var normalizedImageUrl = NormalizeOptionalText(imageUrl, ImageUrlMaxLength, nameof(imageUrl));
-            if (!string.Equals(ImageUrl, normalizedImageUrl, StringComparison.Ordinal)) {
-                ImageUrl = normalizedImageUrl;
+            if (!string.Equals(state.ImageUrl, normalizedImageUrl, StringComparison.Ordinal)) {
+                state = state with { ImageUrl = normalizedImageUrl };
                 changed = true;
             }
         }
 
-        if (!imageAssetId.HasValue || ImageAssetId == imageAssetId) return changed;
-        ImageAssetId = imageAssetId;
-        changed = true;
+        if (imageAssetId.HasValue && state.ImageAssetId != imageAssetId) {
+            state = state with { ImageAssetId = imageAssetId };
+            changed = true;
+        }
+
+        if (changed) {
+            ApplyDetailsState(state);
+        }
 
         return changed;
     }
 
     private bool ApplyTimingAndServingsUpdates(int? prepTime, int? cookTime, int? servings) {
+        var state = GetDetailsState();
         var changed = false;
 
         if (prepTime.HasValue) {
             var normalizedPrepTime = NormalizeOptionalNonNegative(prepTime, nameof(prepTime));
-            if (PrepTime != normalizedPrepTime) {
-                PrepTime = normalizedPrepTime;
+            if (state.PrepTime != normalizedPrepTime) {
+                state = state with { PrepTime = normalizedPrepTime };
                 changed = true;
             }
         }
 
         if (cookTime.HasValue) {
             var normalizedCookTime = NormalizeOptionalNonNegative(cookTime, nameof(cookTime));
-            if (CookTime != normalizedCookTime) {
-                CookTime = normalizedCookTime;
+            if (state.CookTime != normalizedCookTime) {
+                state = state with { CookTime = normalizedCookTime };
                 changed = true;
             }
         }
 
-        if (!servings.HasValue) return changed;
-        var normalizedServings = RequirePositive(servings.Value, nameof(servings));
-        if (Servings == normalizedServings) return changed;
-        Servings = normalizedServings;
-        changed = true;
+        if (servings.HasValue) {
+            var normalizedServings = RequirePositive(servings.Value, nameof(servings));
+            if (state.Servings != normalizedServings) {
+                state = state with { Servings = normalizedServings };
+                changed = true;
+            }
+        }
+
+        if (changed) {
+            ApplyDetailsState(state);
+        }
 
         return changed;
     }
@@ -338,21 +350,87 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
     }
 
     private void ApplyManualNutrition(RecipeNutrition nutrition) {
-        ManualCalories = nutrition.Calories;
-        ManualProteins = nutrition.Proteins;
-        ManualFats = nutrition.Fats;
-        ManualCarbs = nutrition.Carbs;
-        ManualFiber = nutrition.Fiber;
-        ManualAlcohol = nutrition.Alcohol;
+        var state = GetNutritionState() with {
+            ManualCalories = nutrition.Calories,
+            ManualProteins = nutrition.Proteins,
+            ManualFats = nutrition.Fats,
+            ManualCarbs = nutrition.Carbs,
+            ManualFiber = nutrition.Fiber,
+            ManualAlcohol = nutrition.Alcohol
+        };
+        ApplyNutritionState(state);
     }
 
     private void ApplyTotalNutrition(RecipeNutrition nutrition) {
-        TotalCalories = nutrition.Calories;
-        TotalProteins = nutrition.Proteins;
-        TotalFats = nutrition.Fats;
-        TotalCarbs = nutrition.Carbs;
-        TotalFiber = nutrition.Fiber;
-        TotalAlcohol = nutrition.Alcohol;
+        var state = GetNutritionState() with {
+            TotalCalories = nutrition.Calories,
+            TotalProteins = nutrition.Proteins,
+            TotalFats = nutrition.Fats,
+            TotalCarbs = nutrition.Carbs,
+            TotalFiber = nutrition.Fiber,
+            TotalAlcohol = nutrition.Alcohol
+        };
+        ApplyNutritionState(state);
+    }
+
+    private RecipeDetailsState GetDetailsState() {
+        return new RecipeDetailsState(
+            Name,
+            Description,
+            Comment,
+            Category,
+            ImageUrl,
+            ImageAssetId,
+            PrepTime,
+            CookTime,
+            Servings,
+            Visibility);
+    }
+
+    private void ApplyDetailsState(RecipeDetailsState state) {
+        Name = state.Name;
+        Description = state.Description;
+        Comment = state.Comment;
+        Category = state.Category;
+        ImageUrl = state.ImageUrl;
+        ImageAssetId = state.ImageAssetId;
+        PrepTime = state.PrepTime;
+        CookTime = state.CookTime;
+        Servings = state.Servings;
+        Visibility = state.Visibility;
+    }
+
+    private RecipeNutritionState GetNutritionState() {
+        return new RecipeNutritionState(
+            TotalCalories,
+            TotalProteins,
+            TotalFats,
+            TotalCarbs,
+            TotalFiber,
+            TotalAlcohol,
+            IsNutritionAutoCalculated,
+            ManualCalories,
+            ManualProteins,
+            ManualFats,
+            ManualCarbs,
+            ManualFiber,
+            ManualAlcohol);
+    }
+
+    private void ApplyNutritionState(RecipeNutritionState state) {
+        TotalCalories = state.TotalCalories;
+        TotalProteins = state.TotalProteins;
+        TotalFats = state.TotalFats;
+        TotalCarbs = state.TotalCarbs;
+        TotalFiber = state.TotalFiber;
+        TotalAlcohol = state.TotalAlcohol;
+        IsNutritionAutoCalculated = state.IsNutritionAutoCalculated;
+        ManualCalories = state.ManualCalories;
+        ManualProteins = state.ManualProteins;
+        ManualFats = state.ManualFats;
+        ManualCarbs = state.ManualCarbs;
+        ManualFiber = state.ManualFiber;
+        ManualAlcohol = state.ManualAlcohol;
     }
 
     private static string NormalizeRequiredName(string value) {

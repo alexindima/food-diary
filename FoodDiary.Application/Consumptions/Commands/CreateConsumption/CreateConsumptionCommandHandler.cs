@@ -7,6 +7,7 @@ using FoodDiary.Application.Consumptions.Models;
 using FoodDiary.Application.Consumptions.Services;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Enums;
+using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Consumptions.Commands.CreateConsumption;
@@ -90,14 +91,14 @@ public class CreateConsumptionCommandHandler(
                 return Result.Failure<ConsumptionModel>(nutritionResult.Error);
             }
 
-            meal.ApplyNutrition(
+            meal.ApplyNutrition(new MealNutritionUpdate(
                 nutritionResult.Value.Calories,
                 nutritionResult.Value.Proteins,
                 nutritionResult.Value.Fats,
                 nutritionResult.Value.Carbs,
                 nutritionResult.Value.Fiber,
                 nutritionResult.Value.Alcohol,
-                isAutoCalculated: true);
+                IsAutoCalculated: true));
         } else {
             var manualNutritionResult = ManualNutritionValidator.Validate(
                 command.ManualCalories,
@@ -112,20 +113,20 @@ public class CreateConsumptionCommandHandler(
             }
 
             var manual = manualNutritionResult.Value;
-            meal.ApplyNutrition(
+            meal.ApplyNutrition(new MealNutritionUpdate(
                 manual.Calories,
                 manual.Proteins,
                 manual.Fats,
                 manual.Carbs,
                 manual.Fiber,
                 manual.Alcohol,
-                isAutoCalculated: false,
-                manual.Calories,
-                manual.Proteins,
-                manual.Fats,
-                manual.Carbs,
-                manual.Fiber,
-                manual.Alcohol);
+                IsAutoCalculated: false,
+                ManualCalories: manual.Calories,
+                ManualProteins: manual.Proteins,
+                ManualFats: manual.Fats,
+                ManualCarbs: manual.Carbs,
+                ManualFiber: manual.Fiber,
+                ManualAlcohol: manual.Alcohol));
         }
 
         await mealRepository.AddAsync(meal, cancellationToken);

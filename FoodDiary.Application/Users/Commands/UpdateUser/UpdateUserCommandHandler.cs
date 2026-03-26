@@ -52,22 +52,24 @@ public class UpdateUserCommandHandler(
             ? null
             : JsonSerializer.Serialize(command.DashboardLayout);
 
-        user.UpdateProfile(
+        user.UpdatePersonalInfo(
             username: Normalize(command.Username),
             firstName: Normalize(command.FirstName),
             lastName: Normalize(command.LastName),
             birthDate: command.BirthDate,
             gender: genderResult.Value,
             weight: command.Weight,
-            height: command.Height,
+            height: command.Height);
+        user.UpdateActivity(
             activityLevel: activityLevelResult.Value,
             stepGoal: command.StepGoal,
-            hydrationGoal: command.HydrationGoal,
+            hydrationGoal: command.HydrationGoal);
+        user.UpdatePreferences(
             language: languageResult.Value,
+            dashboardLayoutJson: dashboardLayoutJson);
+        user.UpdateProfileMedia(
             profileImage: Normalize(command.ProfileImage),
-            profileImageAssetId: newAssetId,
-            dashboardLayoutJson: dashboardLayoutJson
-        );
+            profileImageAssetId: newAssetId);
 
         if (command.IsActive.HasValue) {
             if (command.IsActive.Value)

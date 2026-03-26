@@ -2,6 +2,7 @@
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Events;
 using FoodDiary.Domain.Enums;
+using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.Domain;
@@ -22,14 +23,14 @@ public class DomainEventsTests {
     public void Meal_ApplyNutrition_RaisesDomainEvent() {
         var meal = Meal.Create(UserId.New(), DateTime.UtcNow, MealType.Dinner);
 
-        meal.ApplyNutrition(
-            totalCalories: 400,
-            totalProteins: 20,
-            totalFats: 10,
-            totalCarbs: 40,
-            totalFiber: 5,
-            totalAlcohol: 0,
-            isAutoCalculated: true);
+        meal.ApplyNutrition(new MealNutritionUpdate(
+            TotalCalories: 400,
+            TotalProteins: 20,
+            TotalFats: 10,
+            TotalCarbs: 40,
+            TotalFiber: 5,
+            TotalAlcohol: 0,
+            IsAutoCalculated: true));
 
         var evt = Assert.Single(meal.DomainEvents.OfType<MealNutritionAppliedDomainEvent>());
         Assert.Equal(meal.Id, evt.MealId);
@@ -39,7 +40,7 @@ public class DomainEventsTests {
     [Fact]
     public void AggregateRoot_ClearDomainEvents_EmptiesCollection() {
         var meal = Meal.Create(UserId.New(), DateTime.UtcNow, MealType.Lunch);
-        meal.ApplyNutrition(200, 10, 5, 20, 3, 0, true);
+        meal.ApplyNutrition(new MealNutritionUpdate(200, 10, 5, 20, 3, 0, true));
         Assert.NotEmpty(meal.DomainEvents);
 
         meal.ClearDomainEvents();

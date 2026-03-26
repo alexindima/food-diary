@@ -66,20 +66,23 @@ public class UpdateProductCommandHandler(
             command.ClearBarcode ||
             command.Brand is not null ||
             command.ClearBrand ||
-            newProductType.HasValue ||
-            command.Category is not null ||
-            command.ClearCategory ||
-            command.Description is not null ||
-            command.ClearDescription ||
-            command.Comment is not null ||
-            command.ClearComment) {
-            product.UpdateIdentity(
+            newProductType.HasValue) {
+            product.UpdateCoreIdentity(
                 name: command.Name,
                 barcode: command.Barcode,
                 clearBarcode: command.ClearBarcode,
                 brand: command.Brand,
                 clearBrand: command.ClearBrand,
-                productType: newProductType,
+                productType: newProductType);
+        }
+
+        if (command.Category is not null ||
+            command.ClearCategory ||
+            command.Description is not null ||
+            command.ClearDescription ||
+            command.Comment is not null ||
+            command.ClearComment) {
+            product.UpdateDescriptiveIdentity(
                 category: command.Category,
                 clearCategory: command.ClearCategory,
                 description: command.Description,

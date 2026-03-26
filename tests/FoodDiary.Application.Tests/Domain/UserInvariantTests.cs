@@ -1,5 +1,6 @@
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Events;
+using FoodDiary.Domain.ValueObjects;
 
 namespace FoodDiary.Application.Tests.Domain;
 
@@ -127,7 +128,7 @@ public class UserInvariantTests {
         var user = User.Create("test@example.com", "hash");
 
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            user.UpdateProfile(birthDate: DateTime.UtcNow.AddDays(1)));
+            user.UpdateProfile(new UserProfileUpdate(BirthDate: DateTime.UtcNow.AddDays(1))));
     }
 
     [Fact]
@@ -135,7 +136,7 @@ public class UserInvariantTests {
         var user = User.Create("test@example.com", "hash");
 
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            user.UpdateProfile(stepGoal: -1));
+            user.UpdateProfile(new UserProfileUpdate(StepGoal: -1)));
     }
 
     [Fact]
@@ -143,15 +144,26 @@ public class UserInvariantTests {
         var user = User.Create("test@example.com", "hash");
 
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            user.UpdateProfile(hydrationGoal: -0.1));
+            user.UpdateProfile(new UserProfileUpdate(HydrationGoal: -0.1)));
     }
 
     [Fact]
     public void UpdateProfile_WithPartialActivityGoalUpdate_PreservesOtherValue() {
         var user = User.Create("test@example.com", "hash");
-        user.UpdateProfile(stepGoal: 8000, hydrationGoal: 2.2);
+        user.UpdateProfile(new UserProfileUpdate(StepGoal: 8000, HydrationGoal: 2.2));
 
-        user.UpdateProfile(stepGoal: 10000);
+        user.UpdateProfile(new UserProfileUpdate(StepGoal: 10000));
+
+        Assert.Equal(10000, user.StepGoal);
+        Assert.Equal(2.2, user.HydrationGoal);
+    }
+
+    [Fact]
+    public void UpdateActivity_WithPartialUpdate_PreservesOtherValue() {
+        var user = User.Create("test@example.com", "hash");
+        user.UpdateActivity(stepGoal: 8000, hydrationGoal: 2.2);
+
+        user.UpdateActivity(stepGoal: 10000);
 
         Assert.Equal(10000, user.StepGoal);
         Assert.Equal(2.2, user.HydrationGoal);
@@ -303,14 +315,23 @@ public class UserInvariantTests {
         var user = User.Create("test@example.com", "hash");
 
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            user.UpdateProfile(language: "de"));
+            user.UpdateProfile(new UserProfileUpdate(Language: "de")));
     }
 
     [Fact]
     public void UpdateProfile_WithSupportedLanguage_UpdatesValue() {
         var user = User.Create("test@example.com", "hash");
 
-        user.UpdateProfile(language: "ru");
+        user.UpdateProfile(new UserProfileUpdate(Language: "ru"));
+
+        Assert.Equal("ru", user.Language);
+    }
+
+    [Fact]
+    public void UpdatePreferences_WithSupportedLanguage_UpdatesValue() {
+        var user = User.Create("test@example.com", "hash");
+
+        user.UpdatePreferences(language: "ru");
 
         Assert.Equal("ru", user.Language);
     }
@@ -320,16 +341,36 @@ public class UserInvariantTests {
         var user = User.Create("test@example.com", "hash");
 
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            user.UpdateProfile(gender: "X"));
+            user.UpdateProfile(new UserProfileUpdate(Gender: "X")));
     }
 
     [Fact]
     public void UpdateProfile_WithSupportedGender_NormalizesToCanonicalCode() {
         var user = User.Create("test@example.com", "hash");
 
-        user.UpdateProfile(gender: "f");
+        user.UpdateProfile(new UserProfileUpdate(Gender: "f"));
 
         Assert.Equal("F", user.Gender);
+    }
+
+    [Fact]
+    public void UpdatePersonalInfo_WithSupportedGender_NormalizesToCanonicalCode() {
+        var user = User.Create("test@example.com", "hash");
+
+        user.UpdatePersonalInfo(gender: "f");
+
+        Assert.Equal("F", user.Gender);
+    }
+
+    [Fact]
+    public void UpdateProfileMedia_WithValues_UpdatesImageFields() {
+        var user = User.Create("test@example.com", "hash");
+        var assetId = FoodDiary.Domain.ValueObjects.Ids.ImageAssetId.New();
+
+        user.UpdateProfileMedia(profileImage: " https://cdn.example.com/avatar.webp ", profileImageAssetId: assetId);
+
+        Assert.Equal("https://cdn.example.com/avatar.webp", user.ProfileImage);
+        Assert.Equal(assetId, user.ProfileImageAssetId);
     }
 
     [Fact]

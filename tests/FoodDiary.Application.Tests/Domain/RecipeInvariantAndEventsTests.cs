@@ -1,6 +1,7 @@
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Events;
 using FoodDiary.Domain.Enums;
+using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.Domain;
@@ -106,16 +107,16 @@ public class RecipeInvariantAndEventsTests {
             cookTime: 20,
             visibility: Visibility.Public);
 
-        recipe.Update(
-            name: " Soup ",
-            description: "Desc",
-            comment: "Comment",
-            category: "Category",
-            imageUrl: " https://img ",
-            prepTime: 10,
-            cookTime: 20,
-            servings: 2,
-            visibility: Visibility.Public);
+        recipe.Update(new RecipeUpdate(
+            Name: " Soup ",
+            Description: "Desc",
+            Comment: "Comment",
+            Category: "Category",
+            ImageUrl: " https://img ",
+            PrepTime: 10,
+            CookTime: 20,
+            Servings: 2,
+            Visibility: Visibility.Public));
 
         Assert.Null(recipe.ModifiedOnUtc);
     }

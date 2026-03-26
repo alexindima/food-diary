@@ -82,17 +82,17 @@ public sealed class User : AggregateRoot<UserId> {
             AiOutputTokenLimit = DefaultAiOutputTokenLimit,
             IsEmailConfirmed = false
         };
+        user.ApplyCredentialState(UserCredentialState.CreateInitial());
+        user.ApplyProfileState(UserProfileState.CreateInitial());
+        user.ApplyGoalState(UserGoalState.CreateInitial());
         user.SetCreated();
         return user;
     }
 
     public void UpdateRefreshToken(string? refreshToken) {
         var normalizedRefreshToken = NormalizeOptionalToken(refreshToken);
-        RefreshToken = normalizedRefreshToken;
-
-        if (normalizedRefreshToken is not null) {
-            LastLoginAtUtc = DateTime.UtcNow;
-        }
+        var nextState = GetCredentialState().WithRefreshToken(normalizedRefreshToken, DateTime.UtcNow);
+        ApplyCredentialState(nextState);
 
         SetModified();
     }
@@ -113,10 +113,10 @@ public sealed class User : AggregateRoot<UserId> {
     }
 
     public void SetEmailConfirmationToken(string tokenHash, DateTime expiresAtUtc) {
-        EmailConfirmationTokenHash = NormalizeRequiredTokenHash(tokenHash, nameof(tokenHash));
+        var normalizedTokenHash = NormalizeRequiredTokenHash(tokenHash, nameof(tokenHash));
         EnsureFutureUtc(expiresAtUtc, nameof(expiresAtUtc));
-        EmailConfirmationTokenExpiresAtUtc = expiresAtUtc;
-        EmailConfirmationSentAtUtc = DateTime.UtcNow;
+        var nextState = GetCredentialState().WithEmailConfirmationToken(normalizedTokenHash, expiresAtUtc, DateTime.UtcNow);
+        ApplyCredentialState(nextState);
         SetModified();
     }
 
@@ -125,130 +125,79 @@ public sealed class User : AggregateRoot<UserId> {
     }
 
     public void SetEmailConfirmed(bool isConfirmed) {
-        IsEmailConfirmed = isConfirmed;
-        EmailConfirmationTokenHash = null;
-        EmailConfirmationTokenExpiresAtUtc = null;
-        EmailConfirmationSentAtUtc = null;
+        ApplyCredentialState(GetCredentialState().AsEmailConfirmed(isConfirmed));
         SetModified();
     }
 
     public void SetPasswordResetToken(string tokenHash, DateTime expiresAtUtc) {
-        PasswordResetTokenHash = NormalizeRequiredTokenHash(tokenHash, nameof(tokenHash));
+        var normalizedTokenHash = NormalizeRequiredTokenHash(tokenHash, nameof(tokenHash));
         EnsureFutureUtc(expiresAtUtc, nameof(expiresAtUtc));
-        PasswordResetTokenExpiresAtUtc = expiresAtUtc;
-        PasswordResetSentAtUtc = DateTime.UtcNow;
+        var nextState = GetCredentialState().WithPasswordResetToken(normalizedTokenHash, expiresAtUtc, DateTime.UtcNow);
+        ApplyCredentialState(nextState);
         SetModified();
     }
 
     public void ClearPasswordResetToken() {
-        PasswordResetTokenHash = null;
-        PasswordResetTokenExpiresAtUtc = null;
-        PasswordResetSentAtUtc = null;
+        ApplyCredentialState(GetCredentialState().WithoutPasswordResetToken());
         SetModified();
     }
 
-    public void UpdateProfile(
+    public void UpdateProfile(UserProfileUpdate update) {
+        var changed = false;
+        changed |= ApplyPersonalInfoChanges(
+            update.Username,
+            update.FirstName,
+            update.LastName,
+            update.BirthDate,
+            update.Gender,
+            update.Weight,
+            update.Height);
+        changed |= ApplyActivityChanges(update.ActivityLevel, update.StepGoal, update.HydrationGoal);
+        changed |= ApplyMediaAndPreferencesChanges(
+            update.ProfileImage,
+            update.ProfileImageAssetId,
+            update.DashboardLayoutJson,
+            update.Language);
+
+        if (changed) {
+            SetModified();
+        }
+    }
+
+    public void UpdatePersonalInfo(
         string? username = null,
         string? firstName = null,
         string? lastName = null,
         DateTime? birthDate = null,
         string? gender = null,
         double? weight = null,
-        double? height = null,
+        double? height = null) {
+        if (ApplyPersonalInfoChanges(username, firstName, lastName, birthDate, gender, weight, height)) {
+            SetModified();
+        }
+    }
+
+    public void UpdateActivity(
         ActivityLevel? activityLevel = null,
         int? stepGoal = null,
-        double? hydrationGoal = null,
-        string? profileImage = null,
-        ImageAssetId? profileImageAssetId = null,
+        double? hydrationGoal = null) {
+        if (ApplyActivityChanges(activityLevel, stepGoal, hydrationGoal)) {
+            SetModified();
+        }
+    }
+
+    public void UpdatePreferences(
         string? dashboardLayoutJson = null,
         string? language = null) {
-        var normalizedUsername = NormalizeOptionalProfileText(username);
-        var normalizedFirstName = NormalizeOptionalProfileText(firstName);
-        var normalizedLastName = NormalizeOptionalProfileText(lastName);
-        var normalizedProfileImage = NormalizeOptionalProfileText(profileImage);
-        var normalizedDashboardLayoutJson = NormalizeOptionalProfileText(dashboardLayoutJson);
-        var normalizedLanguage = NormalizeOptionalLanguage(language, nameof(language));
-        var updatedActivityGoals = GetActivityGoals().With(
-            stepGoal: stepGoal,
-            hydrationGoal: hydrationGoal);
-
-        EnsureBirthDateIsNotFuture(birthDate);
-        EnsurePositive(weight, nameof(weight));
-        EnsurePositive(height, nameof(height));
-        EnsureGender(gender, nameof(gender));
-        EnsureLanguage(language, nameof(language));
-
-        var changed = false;
-
-        if (username is not null && Username != normalizedUsername) {
-            Username = normalizedUsername;
-            changed = true;
+        if (ApplyPreferencesChanges(dashboardLayoutJson, language)) {
+            SetModified();
         }
+    }
 
-        if (firstName is not null && FirstName != normalizedFirstName) {
-            FirstName = normalizedFirstName;
-            changed = true;
-        }
-
-        if (lastName is not null && LastName != normalizedLastName) {
-            LastName = normalizedLastName;
-            changed = true;
-        }
-
-        if (birthDate.HasValue && BirthDate != birthDate) {
-            BirthDate = birthDate;
-            changed = true;
-        }
-
-        if (gender is not null) {
-            var normalizedGender = NormalizeRequiredGender(gender, nameof(gender));
-            if (Gender != normalizedGender) {
-                Gender = normalizedGender;
-                changed = true;
-            }
-        }
-
-        if (weight.HasValue && !NullableAreClose(Weight, weight.Value)) {
-            Weight = weight;
-            changed = true;
-        }
-
-        if (height.HasValue && !NullableAreClose(Height, height.Value)) {
-            Height = height;
-            changed = true;
-        }
-
-        if (activityLevel.HasValue && ActivityLevel != activityLevel.Value) {
-            ActivityLevel = activityLevel.Value;
-            changed = true;
-        }
-
-        if (StepGoal != updatedActivityGoals.StepGoal || !NullableAreClose(HydrationGoal, updatedActivityGoals.HydrationGoal)) {
-            ApplyActivityGoals(updatedActivityGoals);
-            changed = true;
-        }
-
-        if (profileImage is not null && ProfileImage != normalizedProfileImage) {
-            ProfileImage = normalizedProfileImage;
-            changed = true;
-        }
-
-        if (profileImageAssetId.HasValue && ProfileImageAssetId != profileImageAssetId) {
-            ProfileImageAssetId = profileImageAssetId;
-            changed = true;
-        }
-
-        if (dashboardLayoutJson is not null && DashboardLayoutJson != normalizedDashboardLayoutJson) {
-            DashboardLayoutJson = normalizedDashboardLayoutJson;
-            changed = true;
-        }
-
-        if (language is not null && Language != normalizedLanguage) {
-            Language = normalizedLanguage;
-            changed = true;
-        }
-
-        if (changed) {
+    public void UpdateProfileMedia(
+        string? profileImage = null,
+        ImageAssetId? profileImageAssetId = null) {
+        if (ApplyProfileMediaChanges(profileImage, profileImageAssetId)) {
             SetModified();
         }
     }
@@ -273,9 +222,18 @@ public sealed class User : AggregateRoot<UserId> {
         EnsureDesiredWeight(desiredWeight, nameof(desiredWeight));
         EnsureDesiredWaist(desiredWaist, nameof(desiredWaist));
 
-        ApplyNutritionGoals(updatedGoals);
-        if (desiredWeight.HasValue) DesiredWeight = desiredWeight;
-        if (desiredWaist.HasValue) DesiredWaist = desiredWaist;
+        var state = GetGoalState() with {
+            DailyCalorieTarget = updatedGoals.DailyCalorieTarget,
+            ProteinTarget = updatedGoals.ProteinTarget,
+            FatTarget = updatedGoals.FatTarget,
+            CarbTarget = updatedGoals.CarbTarget,
+            FiberTarget = updatedGoals.FiberTarget,
+            WaterGoal = updatedGoals.WaterGoal,
+            DesiredWeight = desiredWeight.HasValue ? desiredWeight : DesiredWeight,
+            DesiredWaist = desiredWaist.HasValue ? desiredWaist : DesiredWaist
+        };
+
+        ApplyGoalState(state);
 
         SetModified();
     }
@@ -302,13 +260,13 @@ public sealed class User : AggregateRoot<UserId> {
 
     public void UpdateDesiredWeight(double? desiredWeight) {
         EnsureDesiredWeight(desiredWeight, nameof(desiredWeight));
-        DesiredWeight = desiredWeight;
+        ApplyGoalState(GetGoalState() with { DesiredWeight = desiredWeight });
         SetModified();
     }
 
     public void UpdateDesiredWaist(double? desiredWaist) {
         EnsureDesiredWaist(desiredWaist, nameof(desiredWaist));
-        DesiredWaist = desiredWaist;
+        ApplyGoalState(GetGoalState() with { DesiredWaist = desiredWaist });
         SetModified();
     }
 
@@ -349,11 +307,7 @@ public sealed class User : AggregateRoot<UserId> {
     }
 
     private static string NormalizeRequiredEmail(string value) {
-        if (string.IsNullOrWhiteSpace(value)) {
-            throw new ArgumentException("Email is required.", nameof(value));
-        }
-
-        return value.Trim();
+        return EmailAddress.Create(value).Value;
     }
 
     private static string NormalizeRequiredPasswordHash(string value) {
@@ -415,6 +369,29 @@ public sealed class User : AggregateRoot<UserId> {
         WaterGoal = goals.WaterGoal;
     }
 
+    private UserGoalState GetGoalState() {
+        return new UserGoalState(
+            DailyCalorieTarget,
+            ProteinTarget,
+            FatTarget,
+            CarbTarget,
+            FiberTarget,
+            WaterGoal,
+            DesiredWeight,
+            DesiredWaist);
+    }
+
+    private void ApplyGoalState(UserGoalState state) {
+        DailyCalorieTarget = state.DailyCalorieTarget;
+        ProteinTarget = state.ProteinTarget;
+        FatTarget = state.FatTarget;
+        CarbTarget = state.CarbTarget;
+        FiberTarget = state.FiberTarget;
+        WaterGoal = state.WaterGoal;
+        DesiredWeight = state.DesiredWeight;
+        DesiredWaist = state.DesiredWaist;
+    }
+
     private UserActivityGoals GetActivityGoals() {
         return UserActivityGoals.Create(StepGoal, HydrationGoal);
     }
@@ -422,6 +399,214 @@ public sealed class User : AggregateRoot<UserId> {
     private void ApplyActivityGoals(UserActivityGoals goals) {
         StepGoal = goals.StepGoal;
         HydrationGoal = goals.HydrationGoal;
+    }
+
+    private UserProfileState GetProfileState() {
+        return new UserProfileState(
+            Username,
+            FirstName,
+            LastName,
+            BirthDate,
+            Gender,
+            Weight,
+            Height,
+            ActivityLevel,
+            ProfileImage,
+            ProfileImageAssetId,
+            DashboardLayoutJson,
+            Language);
+    }
+
+    private void ApplyProfileState(UserProfileState state) {
+        Username = state.Username;
+        FirstName = state.FirstName;
+        LastName = state.LastName;
+        BirthDate = state.BirthDate;
+        Gender = state.Gender;
+        Weight = state.Weight;
+        Height = state.Height;
+        ActivityLevel = state.ActivityLevel;
+        ProfileImage = state.ProfileImage;
+        ProfileImageAssetId = state.ProfileImageAssetId;
+        DashboardLayoutJson = state.DashboardLayoutJson;
+        Language = state.Language;
+    }
+
+    private UserCredentialState GetCredentialState() {
+        return new UserCredentialState(
+            RefreshToken,
+            IsEmailConfirmed,
+            EmailConfirmationTokenHash,
+            EmailConfirmationTokenExpiresAtUtc,
+            EmailConfirmationSentAtUtc,
+            PasswordResetTokenHash,
+            PasswordResetTokenExpiresAtUtc,
+            PasswordResetSentAtUtc,
+            LastLoginAtUtc);
+    }
+
+    private void ApplyCredentialState(UserCredentialState state) {
+        RefreshToken = state.RefreshToken;
+        IsEmailConfirmed = state.IsEmailConfirmed;
+        EmailConfirmationTokenHash = state.EmailConfirmationTokenHash;
+        EmailConfirmationTokenExpiresAtUtc = state.EmailConfirmationTokenExpiresAtUtc;
+        EmailConfirmationSentAtUtc = state.EmailConfirmationSentAtUtc;
+        PasswordResetTokenHash = state.PasswordResetTokenHash;
+        PasswordResetTokenExpiresAtUtc = state.PasswordResetTokenExpiresAtUtc;
+        PasswordResetSentAtUtc = state.PasswordResetSentAtUtc;
+        LastLoginAtUtc = state.LastLoginAtUtc;
+    }
+
+    private bool ApplyPersonalInfoChanges(
+        string? username,
+        string? firstName,
+        string? lastName,
+        DateTime? birthDate,
+        string? gender,
+        double? weight,
+        double? height) {
+        var normalizedUsername = NormalizeOptionalProfileText(username);
+        var normalizedFirstName = NormalizeOptionalProfileText(firstName);
+        var normalizedLastName = NormalizeOptionalProfileText(lastName);
+
+        EnsureBirthDateIsNotFuture(birthDate);
+        EnsurePositive(weight, nameof(weight));
+        EnsurePositive(height, nameof(height));
+        EnsureGender(gender, nameof(gender));
+
+        var state = GetProfileState();
+        var changed = false;
+
+        if (username is not null && state.Username != normalizedUsername) {
+            state = state with { Username = normalizedUsername };
+            changed = true;
+        }
+
+        if (firstName is not null && state.FirstName != normalizedFirstName) {
+            state = state with { FirstName = normalizedFirstName };
+            changed = true;
+        }
+
+        if (lastName is not null && state.LastName != normalizedLastName) {
+            state = state with { LastName = normalizedLastName };
+            changed = true;
+        }
+
+        if (birthDate.HasValue && state.BirthDate != birthDate) {
+            state = state with { BirthDate = birthDate };
+            changed = true;
+        }
+
+        if (gender is not null) {
+            var normalizedGender = NormalizeRequiredGender(gender, nameof(gender));
+            if (state.Gender != normalizedGender) {
+                state = state with { Gender = normalizedGender };
+                changed = true;
+            }
+        }
+
+        if (weight.HasValue && !NullableAreClose(state.Weight, weight.Value)) {
+            state = state with { Weight = weight };
+            changed = true;
+        }
+
+        if (height.HasValue && !NullableAreClose(state.Height, height.Value)) {
+            state = state with { Height = height };
+            changed = true;
+        }
+
+        if (changed) {
+            ApplyProfileState(state);
+        }
+
+        return changed;
+    }
+
+    private bool ApplyActivityChanges(
+        ActivityLevel? activityLevel,
+        int? stepGoal,
+        double? hydrationGoal) {
+        var updatedActivityGoals = GetActivityGoals().With(
+            stepGoal: stepGoal,
+            hydrationGoal: hydrationGoal);
+        var state = GetProfileState();
+
+        var changed = false;
+
+        if (activityLevel.HasValue && state.ActivityLevel != activityLevel.Value) {
+            state = state with { ActivityLevel = activityLevel.Value };
+            changed = true;
+        }
+
+        if (StepGoal != updatedActivityGoals.StepGoal || !NullableAreClose(HydrationGoal, updatedActivityGoals.HydrationGoal)) {
+            ApplyActivityGoals(updatedActivityGoals);
+            changed = true;
+        }
+
+        if (changed) {
+            ApplyProfileState(state);
+        }
+
+        return changed;
+    }
+
+    private bool ApplyMediaAndPreferencesChanges(
+        string? profileImage,
+        ImageAssetId? profileImageAssetId,
+        string? dashboardLayoutJson,
+        string? language) {
+        var changed = false;
+        changed |= ApplyProfileMediaChanges(profileImage, profileImageAssetId);
+        changed |= ApplyPreferencesChanges(dashboardLayoutJson, language);
+        return changed;
+    }
+
+    private bool ApplyProfileMediaChanges(string? profileImage, ImageAssetId? profileImageAssetId) {
+        var normalizedProfileImage = NormalizeOptionalProfileText(profileImage);
+        var state = GetProfileState();
+        var changed = false;
+
+        if (profileImage is not null && state.ProfileImage != normalizedProfileImage) {
+            state = state with { ProfileImage = normalizedProfileImage };
+            changed = true;
+        }
+
+        if (profileImageAssetId.HasValue && state.ProfileImageAssetId != profileImageAssetId) {
+            state = state with { ProfileImageAssetId = profileImageAssetId };
+            changed = true;
+        }
+
+        if (changed) {
+            ApplyProfileState(state);
+        }
+
+        return changed;
+    }
+
+    private bool ApplyPreferencesChanges(string? dashboardLayoutJson, string? language) {
+        var normalizedDashboardLayoutJson = NormalizeOptionalProfileText(dashboardLayoutJson);
+        var normalizedLanguage = NormalizeOptionalLanguage(language, nameof(language));
+        var state = GetProfileState();
+
+        EnsureLanguage(language, nameof(language));
+
+        var changed = false;
+
+        if (dashboardLayoutJson is not null && state.DashboardLayoutJson != normalizedDashboardLayoutJson) {
+            state = state with { DashboardLayoutJson = normalizedDashboardLayoutJson };
+            changed = true;
+        }
+
+        if (language is not null && state.Language != normalizedLanguage) {
+            state = state with { Language = normalizedLanguage };
+            changed = true;
+        }
+
+        if (changed) {
+            ApplyProfileState(state);
+        }
+
+        return changed;
     }
 
     private static void EnsureLanguage(string? value, string paramName) {

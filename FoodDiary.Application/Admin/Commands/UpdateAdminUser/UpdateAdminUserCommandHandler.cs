@@ -43,7 +43,7 @@ public sealed class UpdateAdminUserCommandHandler(IUserRepository userRepository
         }
 
         if (languageResult.Value is not null) {
-            user.UpdateProfile(language: languageResult.Value);
+            user.UpdatePreferences(language: languageResult.Value);
         }
 
         if (command.Roles is not null) {

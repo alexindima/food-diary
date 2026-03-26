@@ -44,9 +44,7 @@ public class RegisterCommandHandler : ICommandHandler<RegisterCommand, Result<Au
             fiberTarget: 28,
             waterGoal: 2000
         );
-        user.UpdateProfile(
-            language: normalizedLanguage
-        );
+        user.UpdatePreferences(language: normalizedLanguage);
 
         user = await _userRepository.AddAsync(user, cancellationToken);
 

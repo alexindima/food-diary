@@ -1,5 +1,6 @@
 ﻿using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Enums;
+using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.Domain;
@@ -163,7 +164,7 @@ public class ProductInvariantTests {
             alcoholPerBase: 0,
             brand: "Brand");
 
-        product.UpdateIdentity(clearBrand: true);
+        product.UpdateIdentity(new ProductIdentityUpdate(ClearBrand: true));
 
         Assert.Null(product.Brand);
     }
@@ -183,7 +184,7 @@ public class ProductInvariantTests {
             fiberPerBase: 2.4,
             alcoholPerBase: 0);
 
-        product.UpdateIdentity(brand: "  Brand  ");
+        product.UpdateIdentity(new ProductIdentityUpdate(Brand: "  Brand  "));
 
         Assert.Equal("Brand", product.Brand);
     }
@@ -204,7 +205,7 @@ public class ProductInvariantTests {
             alcoholPerBase: 0);
 
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            product.UpdateIdentity(brand: new string('b', 129)));
+            product.UpdateIdentity(new ProductIdentityUpdate(Brand: new string('b', 129))));
     }
 
     [Fact]
@@ -223,9 +224,43 @@ public class ProductInvariantTests {
             alcoholPerBase: 0,
             brand: "Brand");
 
-        product.UpdateIdentity(brand: " Brand ");
+        product.UpdateIdentity(new ProductIdentityUpdate(Brand: " Brand "));
 
         Assert.Null(product.ModifiedOnUtc);
+    }
+
+    [Fact]
+    public void UpdateCoreIdentity_WithPaddedNameAndBrand_NormalizesValues() {
+        var product = CreateValidProduct();
+
+        product.UpdateCoreIdentity(name: "  Green Apple  ", brand: "  Farm  ");
+
+        Assert.Equal("Green Apple", product.Name);
+        Assert.Equal("Farm", product.Brand);
+    }
+
+    [Fact]
+    public void UpdateDescriptiveIdentity_WithPartialUpdate_PreservesOtherFields() {
+        var product = Product.Create(
+            UserId.New(),
+            name: "Apple",
+            baseUnit: MeasurementUnit.G,
+            baseAmount: 100,
+            defaultPortionAmount: 100,
+            caloriesPerBase: 52,
+            proteinsPerBase: 0.3,
+            fatsPerBase: 0.2,
+            carbsPerBase: 14,
+            fiberPerBase: 2.4,
+            alcoholPerBase: 0,
+            category: "Fruit",
+            description: "Fresh");
+
+        product.UpdateDescriptiveIdentity(comment: " seasonal ");
+
+        Assert.Equal("Fruit", product.Category);
+        Assert.Equal("Fresh", product.Description);
+        Assert.Equal("seasonal", product.Comment);
     }
 
     [Fact]

@@ -89,128 +89,122 @@ public sealed class Product : AggregateRoot<ProductId> {
         var product = new Product {
             Id = ProductId.New(),
             UserId = userId,
-            Name = normalizedName,
             BaseUnit = baseUnit,
             BaseAmount = normalizedBaseAmount,
             DefaultPortionAmount = normalizedDefaultPortionAmount,
-            CaloriesPerBase = nutrition.CaloriesPerBase,
-            ProteinsPerBase = nutrition.ProteinsPerBase,
-            FatsPerBase = nutrition.FatsPerBase,
-            CarbsPerBase = nutrition.CarbsPerBase,
-            FiberPerBase = nutrition.FiberPerBase,
-            AlcoholPerBase = nutrition.AlcoholPerBase,
-            Barcode = normalizedBarcode,
-            Brand = normalizedBrand,
-            ProductType = productType,
-            Category = normalizedCategory,
-            Description = normalizedDescription,
-            Comment = normalizedComment,
             ImageUrl = normalizedImageUrl,
             ImageAssetId = imageAssetId,
             Visibility = visibility
         };
+        product.ApplyIdentityState(new ProductIdentityState(
+            normalizedName,
+            normalizedBarcode,
+            normalizedBrand,
+            normalizedCategory,
+            productType,
+            normalizedDescription,
+            normalizedComment));
+        product.ApplyNutrition(nutrition);
         product.SetCreated();
         return product;
     }
 
-    public void UpdateIdentity(
+    public void UpdateCoreIdentity(
         string? name = null,
         string? barcode = null,
         bool clearBarcode = false,
         string? brand = null,
         bool clearBrand = false,
+        ProductType? productType = null) {
+        var normalizedBarcode = NormalizeOptionalText(barcode, BarcodeMaxLength, nameof(barcode));
+        var normalizedBrand = NormalizeOptionalText(brand, BrandMaxLength, nameof(brand));
+
+        EnsureClearConflict(clearBarcode, normalizedBarcode, nameof(clearBarcode), nameof(barcode));
+        EnsureClearConflict(clearBrand, normalizedBrand, nameof(clearBrand), nameof(brand));
+
+        var state = GetIdentityState();
+
+        if (name is not null) {
+            state = state with { Name = NormalizeRequiredName(name) };
+        }
+
+        if (clearBarcode) {
+            state = state with { Barcode = null };
+        }
+        else if (barcode is not null) {
+            state = state with { Barcode = normalizedBarcode };
+        }
+
+        if (clearBrand) {
+            state = state with { Brand = null };
+        }
+        else if (brand is not null) {
+            state = state with { Brand = normalizedBrand };
+        }
+
+        if (productType.HasValue) {
+            state = state with { ProductType = productType.Value };
+        }
+
+        ApplyIdentityStateIfChanged(state);
+    }
+
+    public void UpdateDescriptiveIdentity(
         string? category = null,
         bool clearCategory = false,
-        ProductType? productType = null,
         string? description = null,
         bool clearDescription = false,
         string? comment = null,
         bool clearComment = false) {
-        var normalizedBarcode = NormalizeOptionalText(barcode, BarcodeMaxLength, nameof(barcode));
-        var normalizedBrand = NormalizeOptionalText(brand, BrandMaxLength, nameof(brand));
         var normalizedCategory = NormalizeOptionalText(category, CategoryMaxLength, nameof(category));
         var normalizedDescription = NormalizeOptionalText(description, DescriptionMaxLength, nameof(description));
         var normalizedComment = NormalizeOptionalText(comment, CommentMaxLength, nameof(comment));
 
-        EnsureClearConflict(clearBarcode, normalizedBarcode, nameof(clearBarcode), nameof(barcode));
-        EnsureClearConflict(clearBrand, normalizedBrand, nameof(clearBrand), nameof(brand));
         EnsureClearConflict(clearCategory, normalizedCategory, nameof(clearCategory), nameof(category));
         EnsureClearConflict(clearDescription, normalizedDescription, nameof(clearDescription), nameof(description));
         EnsureClearConflict(clearComment, normalizedComment, nameof(clearComment), nameof(comment));
 
-        var changed = false;
-
-        if (name is not null) {
-            var normalizedName = NormalizeRequiredName(name);
-            if (!string.Equals(Name, normalizedName, StringComparison.Ordinal)) {
-                Name = normalizedName;
-                changed = true;
-            }
-        }
-
-        if (clearBarcode) {
-            if (Barcode is not null) {
-                Barcode = null;
-                changed = true;
-            }
-        }
-        else if (barcode is not null && !string.Equals(Barcode, normalizedBarcode, StringComparison.Ordinal)) {
-            Barcode = normalizedBarcode;
-            changed = true;
-        }
-
-        if (clearBrand) {
-            if (Brand is not null) {
-                Brand = null;
-                changed = true;
-            }
-        }
-        else if (brand is not null && !string.Equals(Brand, normalizedBrand, StringComparison.Ordinal)) {
-            Brand = normalizedBrand;
-            changed = true;
-        }
-
-        if (productType.HasValue && ProductType != productType.Value) {
-            ProductType = productType.Value;
-            changed = true;
-        }
+        var state = GetIdentityState();
 
         if (clearCategory) {
-            if (Category is not null) {
-                Category = null;
-                changed = true;
-            }
+            state = state with { Category = null };
         }
-        else if (category is not null && !string.Equals(Category, normalizedCategory, StringComparison.Ordinal)) {
-            Category = normalizedCategory;
-            changed = true;
+        else if (category is not null) {
+            state = state with { Category = normalizedCategory };
         }
 
         if (clearDescription) {
-            if (Description is not null) {
-                Description = null;
-                changed = true;
-            }
+            state = state with { Description = null };
         }
-        else if (description is not null && !string.Equals(Description, normalizedDescription, StringComparison.Ordinal)) {
-            Description = normalizedDescription;
-            changed = true;
+        else if (description is not null) {
+            state = state with { Description = normalizedDescription };
         }
 
         if (clearComment) {
-            if (Comment is not null) {
-                Comment = null;
-                changed = true;
-            }
+            state = state with { Comment = null };
         }
-        else if (comment is not null && !string.Equals(Comment, normalizedComment, StringComparison.Ordinal)) {
-            Comment = normalizedComment;
-            changed = true;
+        else if (comment is not null) {
+            state = state with { Comment = normalizedComment };
         }
 
-        if (changed) {
-            SetModified();
-        }
+        ApplyIdentityStateIfChanged(state);
+    }
+
+    public void UpdateIdentity(ProductIdentityUpdate update) {
+        UpdateCoreIdentity(
+            update.Name,
+            update.Barcode,
+            update.ClearBarcode,
+            update.Brand,
+            update.ClearBrand,
+            update.ProductType);
+        UpdateDescriptiveIdentity(
+            update.Category,
+            update.ClearCategory,
+            update.Description,
+            update.ClearDescription,
+            update.Comment,
+            update.ClearComment);
     }
 
     public void UpdateMeasurement(
@@ -374,6 +368,36 @@ public sealed class Product : AggregateRoot<ProductId> {
             CarbsPerBase,
             FiberPerBase,
             AlcoholPerBase);
+    }
+
+    private ProductIdentityState GetIdentityState() {
+        return new ProductIdentityState(
+            Name,
+            Barcode,
+            Brand,
+            Category,
+            ProductType,
+            Description,
+            Comment);
+    }
+
+    private void ApplyIdentityStateIfChanged(ProductIdentityState updatedState) {
+        if (GetIdentityState() == updatedState) {
+            return;
+        }
+
+        ApplyIdentityState(updatedState);
+        SetModified();
+    }
+
+    private void ApplyIdentityState(ProductIdentityState state) {
+        Name = state.Name;
+        Barcode = state.Barcode;
+        Brand = state.Brand;
+        Category = state.Category;
+        ProductType = state.ProductType;
+        Description = state.Description;
+        Comment = state.Comment;
     }
 
     private void ApplyNutrition(ProductNutrition nutrition) {

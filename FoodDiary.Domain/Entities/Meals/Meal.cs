@@ -2,6 +2,7 @@ using FoodDiary.Domain.Common;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Events;
 using FoodDiary.Domain.Enums;
+using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Domain.Entities.Meals;
@@ -55,39 +56,43 @@ public sealed class Meal : AggregateRoot<MealId> {
 
         var meal = new Meal {
             Id = MealId.New(),
-            UserId = userId,
-            Date = NormalizeDate(date),
-            MealType = mealType,
-            Comment = NormalizeOptionalText(comment, CommentMaxLength, nameof(comment)),
-            ImageUrl = NormalizeOptionalText(imageUrl, ImageUrlMaxLength, nameof(imageUrl)),
-            ImageAssetId = imageAssetId,
-            PreMealSatietyLevel = NormalizeSatietyLevel(preMealSatietyLevel),
-            PostMealSatietyLevel = NormalizeSatietyLevel(postMealSatietyLevel)
+            UserId = userId
         };
+        meal.ApplyDetailsState(new MealDetailsState(
+            Date: NormalizeDate(date),
+            MealType: mealType,
+            Comment: NormalizeOptionalText(comment, CommentMaxLength, nameof(comment)),
+            ImageUrl: NormalizeOptionalText(imageUrl, ImageUrlMaxLength, nameof(imageUrl)),
+            ImageAssetId: imageAssetId,
+            PreMealSatietyLevel: NormalizeSatietyLevel(preMealSatietyLevel),
+            PostMealSatietyLevel: NormalizeSatietyLevel(postMealSatietyLevel)));
+        meal.ApplyNutritionState(MealNutritionState.CreateInitial());
         meal.SetCreated();
         return meal;
     }
 
     public void UpdateComment(string? comment) {
         var normalizedComment = NormalizeOptionalText(comment, CommentMaxLength, nameof(comment));
-        if (string.Equals(Comment, normalizedComment, StringComparison.Ordinal)) {
+        var state = GetDetailsState();
+        if (string.Equals(state.Comment, normalizedComment, StringComparison.Ordinal)) {
             return;
         }
 
-        Comment = normalizedComment;
+        ApplyDetailsState(state with { Comment = normalizedComment });
         SetModified();
     }
 
     public void UpdateImage(string? imageUrl, ImageAssetId? imageAssetId = null) {
+        var state = GetDetailsState();
         var changed = false;
         var normalizedImageUrl = NormalizeOptionalText(imageUrl, ImageUrlMaxLength, nameof(imageUrl));
-        if (!string.Equals(ImageUrl, normalizedImageUrl, StringComparison.Ordinal)) {
-            ImageUrl = normalizedImageUrl;
+        if (!string.Equals(state.ImageUrl, normalizedImageUrl, StringComparison.Ordinal)) {
+            state = state with { ImageUrl = normalizedImageUrl };
             changed = true;
         }
 
-        if (imageAssetId.HasValue && ImageAssetId != imageAssetId) {
-            ImageAssetId = imageAssetId;
+        if (imageAssetId.HasValue && state.ImageAssetId != imageAssetId) {
+            state = state with { ImageAssetId = imageAssetId };
             changed = true;
         }
 
@@ -95,25 +100,28 @@ public sealed class Meal : AggregateRoot<MealId> {
             return;
         }
 
+        ApplyDetailsState(state);
         SetModified();
     }
 
     public void UpdateDate(DateTime date) {
         var normalizedDate = NormalizeDate(date);
-        if (Date == normalizedDate) {
+        var state = GetDetailsState();
+        if (state.Date == normalizedDate) {
             return;
         }
 
-        Date = normalizedDate;
+        ApplyDetailsState(state with { Date = normalizedDate });
         SetModified();
     }
 
     public void UpdateMealType(MealType? mealType) {
-        if (MealType == mealType) {
+        var state = GetDetailsState();
+        if (state.MealType == mealType) {
             return;
         }
 
-        MealType = mealType;
+        ApplyDetailsState(state with { MealType = mealType });
         SetModified();
     }
 
@@ -192,26 +200,13 @@ public sealed class Meal : AggregateRoot<MealId> {
         SetModified();
     }
 
-    public void ApplyNutrition(
-        double totalCalories,
-        double totalProteins,
-        double totalFats,
-        double totalCarbs,
-        double totalFiber,
-        double totalAlcohol,
-        bool isAutoCalculated,
-        double? manualCalories = null,
-        double? manualProteins = null,
-        double? manualFats = null,
-        double? manualCarbs = null,
-        double? manualFiber = null,
-        double? manualAlcohol = null) {
-        var normalizedTotalCalories = RequireNonNegative(totalCalories, nameof(totalCalories));
-        var normalizedTotalProteins = RequireNonNegative(totalProteins, nameof(totalProteins));
-        var normalizedTotalFats = RequireNonNegative(totalFats, nameof(totalFats));
-        var normalizedTotalCarbs = RequireNonNegative(totalCarbs, nameof(totalCarbs));
-        var normalizedTotalFiber = RequireNonNegative(totalFiber, nameof(totalFiber));
-        var normalizedTotalAlcohol = RequireNonNegative(totalAlcohol, nameof(totalAlcohol));
+    public void ApplyNutrition(MealNutritionUpdate update) {
+        var normalizedTotalCalories = RequireNonNegative(update.TotalCalories, nameof(update.TotalCalories));
+        var normalizedTotalProteins = RequireNonNegative(update.TotalProteins, nameof(update.TotalProteins));
+        var normalizedTotalFats = RequireNonNegative(update.TotalFats, nameof(update.TotalFats));
+        var normalizedTotalCarbs = RequireNonNegative(update.TotalCarbs, nameof(update.TotalCarbs));
+        var normalizedTotalFiber = RequireNonNegative(update.TotalFiber, nameof(update.TotalFiber));
+        var normalizedTotalAlcohol = RequireNonNegative(update.TotalAlcohol, nameof(update.TotalAlcohol));
 
         var nextTotalCalories = Math.Round(normalizedTotalCalories, 2);
         var nextTotalProteins = Math.Round(normalizedTotalProteins, 2);
@@ -220,66 +215,69 @@ public sealed class Meal : AggregateRoot<MealId> {
         var nextTotalFiber = Math.Round(normalizedTotalFiber, 2);
         var nextTotalAlcohol = Math.Round(normalizedTotalAlcohol, 2);
 
-        var nextManualCalories = isAutoCalculated
+        var nextManualCalories = update.IsAutoCalculated
             ? (double?)null
-            : manualCalories.HasValue
-                ? Math.Round(RequireNonNegative(manualCalories.Value, nameof(manualCalories)), 2)
+            : update.ManualCalories.HasValue
+                ? Math.Round(RequireNonNegative(update.ManualCalories.Value, nameof(update.ManualCalories)), 2)
                 : nextTotalCalories;
-        var nextManualProteins = isAutoCalculated
+        var nextManualProteins = update.IsAutoCalculated
             ? (double?)null
-            : manualProteins.HasValue
-                ? Math.Round(RequireNonNegative(manualProteins.Value, nameof(manualProteins)), 2)
+            : update.ManualProteins.HasValue
+                ? Math.Round(RequireNonNegative(update.ManualProteins.Value, nameof(update.ManualProteins)), 2)
                 : nextTotalProteins;
-        var nextManualFats = isAutoCalculated
+        var nextManualFats = update.IsAutoCalculated
             ? (double?)null
-            : manualFats.HasValue
-                ? Math.Round(RequireNonNegative(manualFats.Value, nameof(manualFats)), 2)
+            : update.ManualFats.HasValue
+                ? Math.Round(RequireNonNegative(update.ManualFats.Value, nameof(update.ManualFats)), 2)
                 : nextTotalFats;
-        var nextManualCarbs = isAutoCalculated
+        var nextManualCarbs = update.IsAutoCalculated
             ? (double?)null
-            : manualCarbs.HasValue
-                ? Math.Round(RequireNonNegative(manualCarbs.Value, nameof(manualCarbs)), 2)
+            : update.ManualCarbs.HasValue
+                ? Math.Round(RequireNonNegative(update.ManualCarbs.Value, nameof(update.ManualCarbs)), 2)
                 : nextTotalCarbs;
-        var nextManualFiber = isAutoCalculated
+        var nextManualFiber = update.IsAutoCalculated
             ? (double?)null
-            : manualFiber.HasValue
-                ? Math.Round(RequireNonNegative(manualFiber.Value, nameof(manualFiber)), 2)
+            : update.ManualFiber.HasValue
+                ? Math.Round(RequireNonNegative(update.ManualFiber.Value, nameof(update.ManualFiber)), 2)
                 : nextTotalFiber;
-        var nextManualAlcohol = isAutoCalculated
+        var nextManualAlcohol = update.IsAutoCalculated
             ? (double?)null
-            : manualAlcohol.HasValue
-                ? Math.Round(RequireNonNegative(manualAlcohol.Value, nameof(manualAlcohol)), 2)
+            : update.ManualAlcohol.HasValue
+                ? Math.Round(RequireNonNegative(update.ManualAlcohol.Value, nameof(update.ManualAlcohol)), 2)
                 : nextTotalAlcohol;
 
-        if (AreClose(TotalCalories, nextTotalCalories)
-            && AreClose(TotalProteins, nextTotalProteins)
-            && AreClose(TotalFats, nextTotalFats)
-            && AreClose(TotalCarbs, nextTotalCarbs)
-            && AreClose(TotalFiber, nextTotalFiber)
-            && AreClose(TotalAlcohol, nextTotalAlcohol)
-            && IsNutritionAutoCalculated == isAutoCalculated
-            && NullableAreClose(ManualCalories, nextManualCalories)
-            && NullableAreClose(ManualProteins, nextManualProteins)
-            && NullableAreClose(ManualFats, nextManualFats)
-            && NullableAreClose(ManualCarbs, nextManualCarbs)
-            && NullableAreClose(ManualFiber, nextManualFiber)
-            && NullableAreClose(ManualAlcohol, nextManualAlcohol)) {
+        var currentState = GetNutritionState();
+        if (AreClose(currentState.TotalCalories, nextTotalCalories)
+            && AreClose(currentState.TotalProteins, nextTotalProteins)
+            && AreClose(currentState.TotalFats, nextTotalFats)
+            && AreClose(currentState.TotalCarbs, nextTotalCarbs)
+            && AreClose(currentState.TotalFiber, nextTotalFiber)
+            && AreClose(currentState.TotalAlcohol, nextTotalAlcohol)
+            && currentState.IsNutritionAutoCalculated == update.IsAutoCalculated
+            && NullableAreClose(currentState.ManualCalories, nextManualCalories)
+            && NullableAreClose(currentState.ManualProteins, nextManualProteins)
+            && NullableAreClose(currentState.ManualFats, nextManualFats)
+            && NullableAreClose(currentState.ManualCarbs, nextManualCarbs)
+            && NullableAreClose(currentState.ManualFiber, nextManualFiber)
+            && NullableAreClose(currentState.ManualAlcohol, nextManualAlcohol)) {
             return;
         }
 
-        TotalCalories = nextTotalCalories;
-        TotalProteins = nextTotalProteins;
-        TotalFats = nextTotalFats;
-        TotalCarbs = nextTotalCarbs;
-        TotalFiber = nextTotalFiber;
-        TotalAlcohol = nextTotalAlcohol;
-        IsNutritionAutoCalculated = isAutoCalculated;
-        ManualCalories = nextManualCalories;
-        ManualProteins = nextManualProteins;
-        ManualFats = nextManualFats;
-        ManualCarbs = nextManualCarbs;
-        ManualFiber = nextManualFiber;
-        ManualAlcohol = nextManualAlcohol;
+        ApplyNutritionState(currentState with {
+            TotalCalories = nextTotalCalories,
+            TotalProteins = nextTotalProteins,
+            TotalFats = nextTotalFats,
+            TotalCarbs = nextTotalCarbs,
+            TotalFiber = nextTotalFiber,
+            TotalAlcohol = nextTotalAlcohol,
+            IsNutritionAutoCalculated = update.IsAutoCalculated,
+            ManualCalories = nextManualCalories,
+            ManualProteins = nextManualProteins,
+            ManualFats = nextManualFats,
+            ManualCarbs = nextManualCarbs,
+            ManualFiber = nextManualFiber,
+            ManualAlcohol = nextManualAlcohol
+        });
 
         RaiseDomainEvent(new MealNutritionAppliedDomainEvent(
             Id,
@@ -297,14 +295,71 @@ public sealed class Meal : AggregateRoot<MealId> {
     public void UpdateSatietyLevels(int? preMealLevel, int? postMealLevel) {
         var normalizedPre = NormalizeSatietyLevel(preMealLevel ?? 0);
         var normalizedPost = NormalizeSatietyLevel(postMealLevel ?? 0);
+        var state = GetDetailsState();
 
-        if (PreMealSatietyLevel == normalizedPre && PostMealSatietyLevel == normalizedPost) {
+        if (state.PreMealSatietyLevel == normalizedPre && state.PostMealSatietyLevel == normalizedPost) {
             return;
         }
 
-        PreMealSatietyLevel = normalizedPre;
-        PostMealSatietyLevel = normalizedPost;
+        ApplyDetailsState(state with {
+            PreMealSatietyLevel = normalizedPre,
+            PostMealSatietyLevel = normalizedPost
+        });
         SetModified();
+    }
+
+    private MealDetailsState GetDetailsState() {
+        return new MealDetailsState(
+            Date,
+            MealType,
+            Comment,
+            ImageUrl,
+            ImageAssetId,
+            PreMealSatietyLevel,
+            PostMealSatietyLevel);
+    }
+
+    private void ApplyDetailsState(MealDetailsState state) {
+        Date = state.Date;
+        MealType = state.MealType;
+        Comment = state.Comment;
+        ImageUrl = state.ImageUrl;
+        ImageAssetId = state.ImageAssetId;
+        PreMealSatietyLevel = state.PreMealSatietyLevel;
+        PostMealSatietyLevel = state.PostMealSatietyLevel;
+    }
+
+    private MealNutritionState GetNutritionState() {
+        return new MealNutritionState(
+            TotalCalories,
+            TotalProteins,
+            TotalFats,
+            TotalCarbs,
+            TotalFiber,
+            TotalAlcohol,
+            IsNutritionAutoCalculated,
+            ManualCalories,
+            ManualProteins,
+            ManualFats,
+            ManualCarbs,
+            ManualFiber,
+            ManualAlcohol);
+    }
+
+    private void ApplyNutritionState(MealNutritionState state) {
+        TotalCalories = state.TotalCalories;
+        TotalProteins = state.TotalProteins;
+        TotalFats = state.TotalFats;
+        TotalCarbs = state.TotalCarbs;
+        TotalFiber = state.TotalFiber;
+        TotalAlcohol = state.TotalAlcohol;
+        IsNutritionAutoCalculated = state.IsNutritionAutoCalculated;
+        ManualCalories = state.ManualCalories;
+        ManualProteins = state.ManualProteins;
+        ManualFats = state.ManualFats;
+        ManualCarbs = state.ManualCarbs;
+        ManualFiber = state.ManualFiber;
+        ManualAlcohol = state.ManualAlcohol;
     }
 
     private static int NormalizeSatietyLevel(int level) {
