@@ -7,6 +7,7 @@
 }
 
 .detail-dialog-shell {
+
     ::ng-deep .cdk-overlay-backdrop {
         background: rgba(0, 0, 0, 0.25);
         opacity: 0;
@@ -29,6 +30,7 @@
     }
 
     @media (max-width: 520px) {
+
         ::ng-deep .fd-ui-dialog__content {
             padding: 28px 20px 32px;
         }
@@ -144,10 +146,12 @@
 }
 
 @keyframes detailDialogIn {
+
     from {
         opacity: 0;
         transform: scale(0.97);
     }
+
     to {
         opacity: 1;
         transform: scale(1);
@@ -155,9 +159,11 @@
 }
 
 @keyframes detailBackdrop {
+
     from {
         opacity: 0;
     }
+
     to {
         opacity: 1;
     }

@@ -1,10 +1,11 @@
-﻿@use 'variables' as variables;
+@use 'variables' as variables;
 
 :host {
     display: block;
 }
 
 .landing-section {
+
     &__inner {
         max-width: 1180px;
         margin: 0 auto;

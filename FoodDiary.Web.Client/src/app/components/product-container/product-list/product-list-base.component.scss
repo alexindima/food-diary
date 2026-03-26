@@ -1,4 +1,4 @@
-﻿@use 'variables' as variables;
+@use 'variables' as variables;
 
 .product-list {
     margin: 0 auto;
@@ -61,6 +61,16 @@
     &__filter-button {
         flex: 0 0 auto;
         min-width: auto;
+
+        &--active {
+
+            ::ng-deep .fd-ui-button,
+            ::ng-deep button {
+                border-color: #0ea5e9;
+                background: rgba(14, 165, 233, 0.12);
+                color: #0369a1;
+            }
+        }
     }
 
     &__icon-button {
@@ -79,6 +89,7 @@
         }
 
         &--primary {
+
             ::ng-deep .fd-ui-button,
             ::ng-deep button {
                 border: none;
@@ -89,17 +100,6 @@
 
             ::ng-deep .material-icons {
                 color: #ffffff;
-            }
-        }
-    }
-
-    &__filter-button {
-        &--active {
-            ::ng-deep .fd-ui-button,
-            ::ng-deep button {
-                border-color: #0ea5e9;
-                background: rgba(14, 165, 233, 0.12);
-                color: #0369a1;
             }
         }
     }
@@ -144,6 +144,7 @@
     }
 
     @media (max-width: 360px) {
+
         &__add-button {
             --fd-button-padding-x: 10px;
             font-size: 0;
@@ -172,6 +173,7 @@
         }
 
         &--active {
+
             ::ng-deep button,
             ::ng-deep .fd-ui-button {
                 border-color: #0ea5e9;
@@ -315,6 +317,7 @@
     }
 
     @media (max-width: 900px) {
+
         &__controls {
             grid-template-columns: 1fr;
         }
@@ -361,6 +364,7 @@
     }
 
     @media (max-width: 360px) {
+
         &__controls .product-list__pill {
             flex: 0 0 auto;
             min-width: 44px;
@@ -569,6 +573,7 @@
     }
 
     @media #{variables.$media-mobile} {
+
         &__container {
             padding: 16px;
         }
@@ -593,6 +598,7 @@
 }
 
 @container (min-width: 420px) {
+
     .product-card__container {
         max-width: 360px;
         margin: 0 auto;

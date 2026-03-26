@@ -1,4 +1,4 @@
-﻿@use 'variables' as variables;
+@use 'variables' as variables;
 
 :host {
     display: block;
@@ -6,6 +6,7 @@
 }
 
 .landing-section {
+
     &__inner {
         max-width: 1180px;
         margin: 0 auto;
@@ -135,11 +136,13 @@
     }
 
     @media (max-width: 1024px) {
+
         &__item {
             grid-template-columns: 1fr;
         }
 
         &__item--reverse {
+
             .landing-preview__copy,
             .landing-preview__card {
                 order: initial;
@@ -229,6 +232,7 @@
 }
 
 @media (max-width: 768px) {
+
     :host {
         --fd-layout-page-horizontal-padding: 16px;
     }
@@ -239,6 +243,7 @@
 }
 
 @media (max-width: 420px) {
+
     .landing-tour__cards {
         grid-template-columns: 1fr;
     }
@@ -251,6 +256,7 @@
 }
 
 @media (max-width: 480px) {
+
     .landing-tour__cards {
         grid-template-columns: 1fr;
     }

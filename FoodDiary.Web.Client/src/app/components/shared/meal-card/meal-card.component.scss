@@ -1,4 +1,4 @@
-﻿@use 'variables' as variables;
+@use 'variables' as variables;
 
 :host {
     display: block;
@@ -135,6 +135,7 @@
 }
 
 @container (max-width: 620px) {
+
     .meal-card {
         grid-template-columns: 56px minmax(0, 1fr);
         align-items: center;
@@ -215,6 +216,7 @@
 }
 
 @container (max-width: 420px) {
+
     .meal-card__time {
         display: none;
     }

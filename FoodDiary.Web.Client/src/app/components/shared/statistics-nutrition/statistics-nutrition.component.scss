@@ -1,4 +1,4 @@
-﻿@use 'variables' as variables;
+@use 'variables' as variables;
 
 :host {
     display: block;
@@ -79,12 +79,14 @@
 }
 
 @media (max-width: 540px) {
+
     .stats-nutrition-card__distribution-grid {
         grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
     }
 }
 
 @media (max-width: 420px) {
+
     .stats-nutrition-card__distribution-grid {
         grid-template-columns: 1fr;
     }

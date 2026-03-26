@@ -1,4 +1,4 @@
-﻿@use 'variables' as variables;
+@use 'variables' as variables;
 
 :host {
     display: block;
@@ -210,6 +210,7 @@
 }
 
 @media #{variables.$media-mobile} {
+
     .product-card {
         grid-template-columns: 48px minmax(0, 1fr) auto;
         align-items: center;

@@ -1,4 +1,4 @@
-﻿@use 'variables' as variables;
+@use 'variables' as variables;
 
 .hero {
     position: relative;
@@ -91,6 +91,7 @@
     }
 
     &__cta--primary {
+
         ::ng-deep button {
             background: linear-gradient(135deg, #4dabff, #2563eb);
             color: #fff;
@@ -110,6 +111,7 @@
     }
 
     &__cta--secondary {
+
         ::ng-deep button {
             background: linear-gradient(135deg, rgba(77, 171, 255, 0.08), rgba(37, 99, 235, 0.04));
             color: #2563eb;
@@ -169,6 +171,7 @@
     }
 
     @media (max-width: 1200px) {
+
         &__visual {
             justify-content: center;
             padding-top: 0;
@@ -288,6 +291,7 @@
 
     @media (max-width: 768px) {
         --fd-layout-page-horizontal-padding: 16px;
+
         &__top {
             padding: 0 var(--fd-layout-page-horizontal-padding, 24px);
             justify-content: center;

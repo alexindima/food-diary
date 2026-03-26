@@ -1,4 +1,4 @@
-﻿@use 'mixins' as *;
+@use 'mixins' as *;
 @use 'variables' as variables;
 
 :host {
@@ -34,6 +34,7 @@
     }
 
     &__card {
+
         &--summary {
             display: flex;
             flex-direction: column;
@@ -59,6 +60,7 @@
         flex-wrap: wrap;
 
         &--top {
+
             > * {
                 min-width: 240px;
             }
@@ -201,6 +203,7 @@
     }
 
     @media #{variables.$media-mobile} {
+
         &__header {
             align-items: flex-start;
         }

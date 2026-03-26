@@ -6,7 +6,6 @@
     --fd-button-height: 40px;
     --fd-button-padding-x: 0.75rem;
     --fd-button-text-padding-x: 0.375rem;
-
     appearance: none;
     background-color: var(--fd-button-background-default);
     border: 1px solid var(--fd-button-border-default);
@@ -97,6 +96,7 @@
 }
 
 /* Primary solid */
+
 .fd-ui-button--primary.fd-ui-button--solid {
     background: linear-gradient(135deg, #4dabff, #2563eb);
     border: none;
@@ -121,6 +121,7 @@
 }
 
 /* Primary outline */
+
 .fd-ui-button--primary.fd-ui-button--outline,
 .fd-ui-button--outline {
     --fd-button-background-default: var(--fd-button-outline-background-default);
@@ -136,6 +137,7 @@
 }
 
 /* Primary text / ghost */
+
 .fd-ui-button--primary.fd-ui-button--text,
 .fd-ui-button--ghost {
     --fd-button-background-default: var(--fd-button-ghost-background-default);
@@ -151,6 +153,7 @@
 }
 
 /* Secondary buttons (solid + outline) */
+
 .fd-ui-button--secondary:not(.fd-ui-button--text) {
     --fd-button-background-default: var(--fd-button-secondary-background-default);
     --fd-button-background-hover: var(--fd-button-secondary-background-hover);
@@ -165,6 +168,7 @@
 }
 
 /* Secondary text */
+
 .fd-ui-button--secondary.fd-ui-button--text {
     --fd-button-background-default: var(--fd-button-secondary-text-background-default);
     --fd-button-background-hover: var(--fd-button-secondary-text-background-hover);
@@ -179,6 +183,7 @@
 }
 
 /* Info solid */
+
 .fd-ui-button--info:not(.fd-ui-button--text) {
     --fd-button-background-default: var(--fd-button-info-background-default);
     --fd-button-background-hover: var(--fd-button-info-background-hover);
@@ -193,6 +198,7 @@
 }
 
 /* Info text */
+
 .fd-ui-button--info.fd-ui-button--text {
     --fd-button-background-default: var(--fd-button-info-text-background-default);
     --fd-button-background-hover: var(--fd-button-info-text-background-hover);
@@ -207,6 +213,7 @@
 }
 
 /* Danger solid */
+
 .fd-ui-button--danger:not(.fd-ui-button--text) {
     --fd-button-background-default: var(--fd-button-danger-background-default);
     --fd-button-background-hover: var(--fd-button-danger-background-hover);
@@ -221,6 +228,7 @@
 }
 
 /* Danger text */
+
 .fd-ui-button--danger.fd-ui-button--text {
     --fd-button-background-default: var(--fd-button-danger-ghost-background-default);
     --fd-button-background-hover: var(--fd-button-danger-ghost-background-hover);
@@ -235,6 +243,7 @@
 }
 
 /* Size modifiers */
+
 .fd-ui-button--size-sm {
     --fd-button-height: 32px;
     --fd-button-padding-x: 0.5rem;

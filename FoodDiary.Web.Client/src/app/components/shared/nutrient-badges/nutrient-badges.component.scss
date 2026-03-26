@@ -1,4 +1,4 @@
-﻿@use 'variables' as variables;
+@use 'variables' as variables;
 
 :host {
     display: block;
@@ -71,6 +71,7 @@
 }
 
 @container (max-width: 480px) {
+
     .nutrient-badges {
         gap: 0;
         padding: 6px 8px;

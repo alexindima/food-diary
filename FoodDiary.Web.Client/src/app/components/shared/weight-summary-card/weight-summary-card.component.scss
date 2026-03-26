@@ -35,6 +35,7 @@
 
 .weight-summary-card__trend {
     color: var(--fd-text-secondary);
+
     &.weight-summary-card__trend--positive {
         color: var(--fd-color-success, #50e3c2);
     }

@@ -1,4 +1,4 @@
-﻿@use 'variables' as variables;
+@use 'variables' as variables;
 
 :host {
     display: block;
@@ -76,6 +76,7 @@
 }
 
 /* Keep icon and input vertically centered even when label floats */
+
 .fd-ui-date-input--floating .fd-ui-date-input__segment {
     padding-top: 0;
     padding-bottom: 0;
@@ -127,6 +128,7 @@
 }
 
 /* No extra padding when label floats to avoid shifting suffix */
+
 .fd-ui-date-input--floating .fd-ui-date-input__control-wrap {
     padding-top: 0;
     padding-bottom: 0;

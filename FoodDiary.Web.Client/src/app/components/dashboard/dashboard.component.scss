@@ -1,4 +1,4 @@
-﻿@use 'variables' as variables;
+@use 'variables' as variables;
 
 :host {
     display: flex;
@@ -70,6 +70,7 @@ variables.$color-primary: #2563eb;
     }
 
     @media (max-width: 420px) {
+
         &__primary-action {
             --fd-button-padding-x: 14px;
             --fd-button-padding-y: 8px;
@@ -84,6 +85,7 @@ variables.$color-primary: #2563eb;
     }
 
     @media (max-width: 360px) {
+
         &__primary-action {
             --fd-button-padding-x: 10px;
             --fd-button-padding-y: 8px;
@@ -137,6 +139,7 @@ variables.$color-primary: #2563eb;
     }
 
     &--editing {
+
         .dashboard__date-button,
         .dashboard__primary-action {
             pointer-events: none;
@@ -190,6 +193,7 @@ variables.$color-primary: #2563eb;
     }
 
     &__grid--editing {
+
         .dashboard__block {
             cursor: pointer;
         }
@@ -285,6 +289,7 @@ variables.$color-primary: #2563eb;
         }
 
         &--ring {
+
             > .fd-ui-card {
                 min-height: 340px;
             }
@@ -299,6 +304,7 @@ variables.$color-primary: #2563eb;
         }
 
         &--advice {
+
             > fd-daily-advice-card {
                 width: 100%;
             }
@@ -524,12 +530,14 @@ variables.$color-primary: #2563eb;
     }
 
     @media (max-width: 1100px) {
+
         &__grid {
             grid-template-columns: 1fr;
         }
     }
 
     @media #{variables.$media-mobile} {
+
         &__header {
             padding: 10px 12px 8px;
             margin: 0;

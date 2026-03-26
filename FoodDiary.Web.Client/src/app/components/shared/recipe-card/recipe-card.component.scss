@@ -1,4 +1,4 @@
-﻿@use 'variables' as variables;
+@use 'variables' as variables;
 
 :host {
     display: block;
@@ -169,6 +169,7 @@
 }
 
 @container (max-width: 620px) {
+
     .recipe-card {
         grid-template-columns: 56px minmax(0, 1fr) auto;
         gap: 10px;
@@ -258,6 +259,7 @@
 }
 
 @container (max-width: 420px) {
+
     .recipe-card__meta-divider,
     .recipe-card__meta-item--time {
         display: none;

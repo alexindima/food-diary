@@ -16,7 +16,7 @@
 .dynamic-progress-bar-line {
     height: 100%;
     text-align: center;
-    color: white;
+    color: #fff;
     line-height: 25px;
     font-weight: bold;
     transition: background-color 0.3s ease, width 0.3s ease;
@@ -53,7 +53,7 @@
     text-align: center;
     transform: translateX(-100%);
     width: max-content;
-    color: black;
+    color: #000;
     font-size: 12px;
     font-weight: bold;
     transition: left 0.3s ease, width 0.3s ease;

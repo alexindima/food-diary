@@ -1,4 +1,4 @@
-﻿@use 'variables' as variables;
+@use 'variables' as variables;
 
 .quick-consumption {
     position: fixed;
@@ -178,6 +178,7 @@
 }
 
 @media (max-width: 640px) {
+
     .quick-consumption {
         left: 12px;
         right: 12px;

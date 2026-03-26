@@ -1,4 +1,4 @@
-﻿@use 'variables' as variables;
+@use 'variables' as variables;
 
 .nutrition-editor {
     display: flex;
@@ -63,6 +63,7 @@
 }
 
 @container (max-width: 359px) {
+
     .nutrition-editor__grid {
         grid-template-columns: 1fr;
     }

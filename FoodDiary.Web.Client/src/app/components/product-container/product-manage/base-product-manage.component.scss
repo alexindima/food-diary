@@ -1,4 +1,4 @@
-﻿@use 'variables' as variables;
+@use 'variables' as variables;
 
 .product-manage {
     --fd-layout-page-background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 45%, #eef2f7 100%);
@@ -28,6 +28,7 @@
     }
 
     &__delete-button {
+
         ::ng-deep .fd-ui-button {
             border-color: variables.$color-no-results;
             color: variables.$color-no-results;
@@ -86,6 +87,7 @@
     }
 
     &__column--primary {
+
         ::ng-deep .fd-ui-card__content {
             gap: 28px;
         }
@@ -141,6 +143,7 @@
     }
 
     &__card--tracking {
+
         ::ng-deep .fd-ui-card {
             padding-bottom: variables.$gap-l;
         }
@@ -409,6 +412,7 @@
     }
 
     @media #{variables.$media-tablet} {
+
         &__form {
             padding: 10px 12px 12px;
         }
@@ -419,6 +423,7 @@
     }
 
     @media #{variables.$media-mobile} {
+
         &__hero {
             grid-template-columns: 1fr;
             grid-template-rows: auto;

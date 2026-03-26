@@ -1,4 +1,4 @@
-﻿@use 'variables' as variables;
+@use 'variables' as variables;
 
 .fd-root {
     display: grid;
@@ -66,8 +66,9 @@ html.cdk-global-scrollblock .fd-root__sidebar {
 .fd-root--no-sidebar {
     grid-template-columns: 1fr;
     --fd-layout-sidebar-width: 0px;
+
     .fd-root__main {
-        grid-column: 1 / span 1;
+        grid-column: 1 / -1;
         padding-left: 0;
         padding-right: 0;
     }
@@ -78,11 +79,8 @@ html.cdk-global-scrollblock .fd-root__sidebar {
     grid-column: 2 / span 1;
 }
 
-.fd-root--no-sidebar .fd-root__main {
-    grid-column: 1 / -1;
-}
-
 @media (max-width: 768px) {
+
     .fd-root {
         display: block;
         height: auto;

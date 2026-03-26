@@ -1,4 +1,4 @@
-﻿@use 'variables' as variables;
+@use 'variables' as variables;
 
 .recipe-manage {
     --fd-layout-page-background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 45%, #eef2f7 100%);
@@ -68,6 +68,7 @@
     }
 
     &__column--primary {
+
         ::ng-deep .fd-ui-card__content {
             gap: 28px;
         }
@@ -118,6 +119,7 @@
         }
 
         &--tracking {
+
             ::ng-deep .fd-ui-card {
                 padding-bottom: variables.$gap-l;
             }
@@ -228,6 +230,7 @@
     }
 
     @media #{variables.$media-tablet} {
+
         &__form {
             padding: 10px 12px 12px;
         }
@@ -265,6 +268,7 @@
     }
 
     @media #{variables.$media-mobile} {
+
         &__footer-actions {
             grid-template-columns: 1fr;
         }
@@ -372,6 +376,7 @@
         gap: variables.$gap-xs;
     }
     @media #{variables.$media-mobile} {
+
         &__hero {
             grid-template-columns: 1fr;
         }
@@ -491,6 +496,7 @@
 }
 
 .recipe-step-card {
+
     ::ng-deep .fd-ui-card {
         overflow: hidden;
         padding-bottom: variables.$gap-l;

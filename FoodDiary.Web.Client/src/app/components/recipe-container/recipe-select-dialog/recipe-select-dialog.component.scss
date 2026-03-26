@@ -1,4 +1,4 @@
-﻿@use 'variables' as variables;
+@use 'variables' as variables;
 
 .recipe-select {
     display: flex;
@@ -52,6 +52,7 @@
         }
 
         &--active {
+
             ::ng-deep button,
             ::ng-deep .fd-ui-button {
                 border-color: #0ea5e9;

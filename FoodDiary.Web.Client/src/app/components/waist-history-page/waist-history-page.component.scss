@@ -1,4 +1,4 @@
-﻿@use 'mixins' as *;
+@use 'mixins' as *;
 @use 'variables' as variables;
 
 .waist-history-page {
@@ -297,6 +297,7 @@
     }
 
     @media (max-width: 640px) {
+
         &__entry {
             grid-template-columns: 1fr;
             text-align: left;
@@ -306,10 +307,5 @@
             justify-content: flex-start;
         }
     }
-}
-.waist-history-page__card--wht {
-    display: flex;
-    flex-direction: column;
-    gap: variables.$gap-m;
 }
 

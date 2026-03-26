@@ -1,4 +1,4 @@
-﻿@use 'variables' as variables;
+@use 'variables' as variables;
 
 :host {
     display: flex;
@@ -12,6 +12,7 @@
 }
 
 .landing-section {
+
     &__inner {
         max-width: 1180px;
         margin: 0 auto;
@@ -67,6 +68,7 @@
     &--preview {
         padding: clamp(28px, 3vw, 48px) 0;
     }
+
     &--steps {
         padding: clamp(28px, 3vw, 48px) 0;
         background: #fff;
@@ -211,6 +213,7 @@
 }
 
 .auth-dialog {
+
     ::ng-deep .fd-ui-dialog__content {
         padding-top: variables.$gap-m;
     }

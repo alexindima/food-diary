@@ -78,14 +78,17 @@
 }
 
 @keyframes photo-ai-scan {
+
     0% {
         top: 12px;
         opacity: 0.6;
     }
+
     50% {
         top: calc(100% - 24px);
         opacity: 1;
     }
+
     100% {
         top: 12px;
         opacity: 0.6;
@@ -397,14 +400,17 @@
 }
 
 @keyframes nutrition-progress {
+
     0% {
         left: -30%;
         opacity: 0.5;
     }
+
     50% {
         left: 85%;
         opacity: 1;
     }
+
     100% {
         left: -30%;
         opacity: 0.5;
@@ -439,6 +445,7 @@
 }
 
 @media (max-width: 640px) {
+
     .photo-ai-dialog__table-head,
     .photo-ai-dialog__table-row {
         grid-template-columns: minmax(0, 1.6fr) minmax(0, 0.8fr);

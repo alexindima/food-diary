@@ -1,4 +1,4 @@
-﻿@use 'variables' as variables;
+@use 'variables' as variables;
 
 .consumption-list {
     margin: 0 auto;
@@ -85,6 +85,7 @@
         }
 
         &--primary {
+
             ::ng-deep .fd-ui-button,
             ::ng-deep button {
                 border: none;
@@ -100,7 +101,9 @@
     }
 
     &__filter-button {
+
         &--active {
+
             ::ng-deep .fd-ui-button,
             ::ng-deep button {
                 border-color: #0ea5e9;

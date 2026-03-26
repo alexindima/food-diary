@@ -3,6 +3,7 @@
 }
 
 .fd-ui-entity-card {
+
     &__body {
         display: flex;
         gap: var(--fd-spacing-md);
@@ -79,6 +80,7 @@
 }
 
 @media (max-width: 640px) {
+
     .fd-ui-entity-card__body {
         flex-direction: column;
     }

@@ -4,6 +4,7 @@
 }
 
 @media (max-width: 768px) {
+
     :host {
         position: sticky;
         top: 0;
@@ -45,6 +46,7 @@
 }
 
 @media (max-width: 768px) {
+
     .fd-page-header {
         display: grid;
         grid-template-columns: minmax(0, 1fr) auto;

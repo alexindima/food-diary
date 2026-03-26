@@ -43,13 +43,7 @@
     --fd-button-border-radius: 12px;
     --fd-button-padding-x: 0;
     --fd-button-padding-y: 0;
-}
 
-:host(.fd-manage-header--mobile-back-only) .fd-manage-header__back {
-    display: none;
-}
-
-.fd-manage-header__back {
     ::ng-deep .fd-ui-button,
     ::ng-deep button {
         width: 36px;
@@ -73,7 +67,12 @@
     }
 }
 
+:host(.fd-manage-header--mobile-back-only) .fd-manage-header__back {
+    display: none;
+}
+
 @media #{variables.$media-tablet} {
+
     .fd-manage-header {
         align-items: flex-start;
         padding: 10px 12px 8px;

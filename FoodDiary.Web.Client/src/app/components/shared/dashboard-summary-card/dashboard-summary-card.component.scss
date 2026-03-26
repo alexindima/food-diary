@@ -1,4 +1,4 @@
-﻿@use 'variables' as variables;
+@use 'variables' as variables;
 
 :host {
     display: block;
@@ -40,9 +40,11 @@
         max-width: 100%;
 
         &.is-daily-hovered {
+
             .dashboard-summary-card__center {
                 transform: translateY(4px) scale(1.12);
             }
+
             .dashboard-summary-card__secondary-line {
                 transform: scale(0.9);
                 opacity: 0.75;
@@ -50,6 +52,7 @@
         }
 
         &.is-weekly-hovered {
+
             .dashboard-summary-card__secondary-line {
                 transform: scale(1.12);
                 opacity: 1;
@@ -58,6 +61,7 @@
         }
 
         &.is-goal-missing {
+
             .dashboard-summary-card__secondary-line,
             .dashboard-summary-card__percent,
             .dashboard-summary-card__primary-line {
@@ -256,7 +260,9 @@
 }
 
 @container (max-width: 520px) {
+
     .dashboard-summary-card {
+
         &__layout {
             grid-template-columns: 1fr;
             gap: 16px;

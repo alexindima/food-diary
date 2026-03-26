@@ -1,4 +1,4 @@
-﻿@use 'variables' as variables;
+@use 'variables' as variables;
 
 :host {
     display: block;
@@ -124,6 +124,7 @@
 }
 
 @media (max-width: 540px) {
+
     .stats-summary-card__row--top {
         flex-direction: column;
     }

@@ -1,4 +1,5 @@
 /* Global styles piggyback on design tokens */
+
 *,
 *::before,
 *::after {
@@ -52,6 +53,7 @@ body {
 }
 
 @media (max-width: 768px) {
+
     :root {
         --fd-layout-page-top-padding: 0px;
     }

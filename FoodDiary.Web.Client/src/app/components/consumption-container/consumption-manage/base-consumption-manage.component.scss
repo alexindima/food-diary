@@ -1,4 +1,4 @@
-﻿@use 'sass:color';
+@use 'sass:color';
 @use 'variables' as variables;
 
 .consumption-manage {
@@ -51,22 +51,9 @@
 
     &__column--secondary {
         overflow: visible;
-    }
 
-    &__column--secondary {
         ::ng-deep .fd-ui-card__content {
             gap: 28px;
-        }
-    }
-
-    &__card {
-        display: flex;
-        flex-direction: column;
-        gap: variables.$gap-m;
-
-        &--sticky {
-            position: sticky;
-            top: variables.$gap-xl;
         }
     }
 
@@ -132,6 +119,7 @@
     }
 
     &__card--items {
+
         ::ng-deep .fd-ui-card {
             padding-bottom: variables.$gap-s;
         }
@@ -142,6 +130,7 @@
     }
 
     &__card--items-ai {
+
         ::ng-deep .fd-ui-card__content {
             gap: variables.$gap-s;
         }
@@ -160,6 +149,11 @@
         border: 1px solid rgba(15, 23, 42, 0.06);
         border-radius: var(--fd-radius-lg);
         overflow: hidden;
+
+        &--sticky {
+            position: sticky;
+            top: variables.$gap-xl;
+        }
 
         ::ng-deep .fd-ui-card__header {
             margin-bottom: variables.$gap-s;
@@ -260,6 +254,7 @@
     }
 
     @media #{variables.$media-mobile} {
+
         &__image {
             width: 100%;
             height: auto;
@@ -358,6 +353,7 @@
     }
 
     @media #{variables.$media-tablet} {
+
         &__form {
             padding: 10px 12px 12px;
         }
@@ -368,6 +364,7 @@
     }
 
     @media #{variables.$media-mobile} {
+
         &__footer-actions {
             grid-template-columns: 1fr;
             align-items: stretch;

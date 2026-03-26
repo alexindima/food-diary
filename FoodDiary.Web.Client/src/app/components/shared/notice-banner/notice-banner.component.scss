@@ -1,11 +1,10 @@
-﻿.fd-notice {
+.fd-notice {
     --fd-notice-bg: rgba(219, 234, 254, 0.7);
     --fd-notice-border: rgba(59, 130, 246, 0.18);
     --fd-notice-text: #1e3a8a;
     --fd-notice-icon-bg: #3b82f6;
     --fd-notice-icon-fg: #ffffff;
     --fd-notice-action: #2563eb;
-
     display: flex;
     align-items: center;
     flex-wrap: wrap;
@@ -90,6 +89,7 @@
 }
 
 @media (max-width: 520px) {
+
     .fd-notice__action {
         flex-basis: 100%;
         text-align: left;

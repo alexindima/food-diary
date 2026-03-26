@@ -68,7 +68,7 @@
 }
 
 .fd-ui-nutrient-input__control::placeholder {
-    color: color-mix(in srgb, var(--fd-nutrient-text-color) 45%, white);
+    color: color-mix(in srgb, var(--fd-nutrient-text-color) 45%, #fff);
 }
 
 input.fd-ui-nutrient-input__control[type='number'] {
@@ -109,6 +109,7 @@ input.fd-ui-nutrient-input__control[type='number']::-webkit-inner-spin-button {
 }
 
 .fd-ui-nutrient-input--readonly {
+
     .fd-ui-nutrient-input__control {
         cursor: default;
     }
@@ -153,7 +154,7 @@ input.fd-ui-nutrient-input__control[type='number']::-webkit-inner-spin-button {
 .fd-ui-nutrient-input__unit {
     font-size: 1em;
     font-weight: 700;
-    color: color-mix(in srgb, var(--fd-nutrient-text-color) 70%, white);
+    color: color-mix(in srgb, var(--fd-nutrient-text-color) 70%, #fff);
     letter-spacing: 0.02em;
     text-transform: lowercase;
     flex: 0 0 auto;

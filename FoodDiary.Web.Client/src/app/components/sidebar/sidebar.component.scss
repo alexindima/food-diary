@@ -1,4 +1,4 @@
-﻿@use 'variables' as variables;
+@use 'variables' as variables;
 
 .sidebar {
     position: sticky;
@@ -463,6 +463,7 @@
 }
 
 @media (max-width: 768px) {
+
     .sidebar {
         display: none;
     }
@@ -473,6 +474,7 @@
 }
 
 @media (max-width: 640px) {
+
     .sidebar-mobile__label {
         display: none;
     }

@@ -1,4 +1,4 @@
-﻿@use 'variables' as variables;
+@use 'variables' as variables;
 
 :host {
     --user-card-radius: 24px;
@@ -13,6 +13,7 @@
     padding-bottom: 24px;
 
     &__header {
+
         .fd-page-header {
             align-items: flex-start;
         }
@@ -216,7 +217,7 @@
     }
 
     &__error {
-        color: red;
+        color: #f00;
         font-size: 0.95rem;
         text-align: center;
         margin-top: 4px;
@@ -229,7 +230,9 @@
     }
 
     @media #{variables.$media-mobile} {
+
         &__card {
+
             ::ng-deep .fd-ui-card {
                 padding: 16px;
             }
