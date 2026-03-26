@@ -13,6 +13,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Initialize test diagnostics
+        run: |
+          mkdir -p "${RUNNER_TEMP}/ci-test-logs"
+          echo "FAILED_TEST_PROJECT=" >> "${GITHUB_ENV}"
+          echo "FAILED_LOG_FILE=" >> "${GITHUB_ENV}"
+
       - name: Checkout code
         uses: actions/checkout@v6
 
@@ -39,7 +45,18 @@ jobs:
           fi
           for project in "${projects[@]}"; do
             echo "Running tests: $project"
-            dotnet test "$project" --configuration Release --no-restore
+            safe_name="${project//\//_}"
+            safe_name="${safe_name//\\/_}"
+            log_file="${RUNNER_TEMP}/ci-test-logs/${safe_name}.log"
+            set +e
+            dotnet test "$project" --configuration Release --no-restore 2>&1 | tee "$log_file"
+            status=${PIPESTATUS[0]}
+            set -e
+            if [ "$status" -ne 0 ]; then
+              echo "FAILED_TEST_PROJECT=$project" >> "${GITHUB_ENV}"
+              echo "FAILED_LOG_FILE=$log_file" >> "${GITHUB_ENV}"
+              exit "$status"
+            fi
           done
 
       - name: Notify Telegram (failure)
@@ -53,7 +70,14 @@ jobs:
             exit 0
           fi
 
-          MESSAGE=$'CI tests failed\nRepo: '"${GITHUB_REPOSITORY}"$'\nBranch: '"${GITHUB_REF_NAME}"$'\nCommit: '"${GITHUB_SHA::8}"$'\nActor: '"${GITHUB_ACTOR}"$'\nRun: '"${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          FAILED_PROJECT_NAME="${FAILED_TEST_PROJECT:-unknown}"
+          MESSAGE=$'CI tests failed\nRepo: '"${GITHUB_REPOSITORY}"$'\nBranch: '"${GITHUB_REF_NAME}"$'\nCommit: '"${GITHUB_SHA::8}"$'\nActor: '"${GITHUB_ACTOR}"$'\nProject: '"${FAILED_PROJECT_NAME}"$'\nRun: '"${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
           curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
             -d chat_id="${TELEGRAM_CHAT_ID}" \
             --data-urlencode text="${MESSAGE}" >/dev/null
+          if [ -n "${FAILED_LOG_FILE}" ] && [ -f "${FAILED_LOG_FILE}" ]; then
+            curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendDocument" \
+              -F chat_id="${TELEGRAM_CHAT_ID}" \
+              -F caption="CI failure log: ${FAILED_PROJECT_NAME}" \
+              -F document=@"${FAILED_LOG_FILE}" >/dev/null
+          fi
