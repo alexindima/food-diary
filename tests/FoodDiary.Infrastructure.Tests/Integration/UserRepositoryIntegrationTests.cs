@@ -1,7 +1,6 @@
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Infrastructure.Persistence;
-using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Tests.Integration;
 
