@@ -59,16 +59,18 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
 
         var removed = await service.CleanupDeletedUsersAsync(DateTime.UtcNow.AddDays(-1), batchSize: 10, reassignUserId: null);
 
+        await using var verificationContext = await databaseFixture.CreateDbContextAsync();
+
         Assert.Equal(1, removed);
-        Assert.False(await context.Users.AnyAsync());
-        Assert.False(await context.Products.AnyAsync());
-        Assert.False(await context.Recipes.AnyAsync());
-        Assert.False(await context.RecipeSteps.AnyAsync());
-        Assert.False(await context.ImageAssets.AnyAsync());
-        Assert.False(await context.ShoppingLists.AnyAsync());
-        Assert.False(await context.ShoppingListItems.AnyAsync());
-        Assert.False(await context.RecentItems.AnyAsync());
-        Assert.False(await context.AiUsages.AnyAsync());
+        Assert.False(await verificationContext.Users.AnyAsync());
+        Assert.False(await verificationContext.Products.AnyAsync());
+        Assert.False(await verificationContext.Recipes.AnyAsync());
+        Assert.False(await verificationContext.RecipeSteps.AnyAsync());
+        Assert.False(await verificationContext.ImageAssets.AnyAsync());
+        Assert.False(await verificationContext.ShoppingLists.AnyAsync());
+        Assert.False(await verificationContext.ShoppingListItems.AnyAsync());
+        Assert.False(await verificationContext.RecentItems.AnyAsync());
+        Assert.False(await verificationContext.AiUsages.AnyAsync());
     }
 
     [RequiresDockerFact]
@@ -122,21 +124,23 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
             batchSize: 10,
             reassignUserId: survivorUser.Id.Value);
 
-        Assert.Equal(1, removed);
-        Assert.False(await context.Users.AnyAsync(user => user.Id == deletedUser.Id));
-        Assert.Equal(1, await context.Users.CountAsync(user => user.Id == survivorUser.Id));
+        await using var verificationContext = await databaseFixture.CreateDbContextAsync();
 
-        var reassignedProduct = await context.Products.SingleAsync();
-        var reassignedRecipe = await context.Recipes.SingleAsync();
-        var reassignedAssets = await context.ImageAssets.OrderBy(asset => asset.ObjectKey).ToListAsync();
+        Assert.Equal(1, removed);
+        Assert.False(await verificationContext.Users.AnyAsync(user => user.Id == deletedUser.Id));
+        Assert.Equal(1, await verificationContext.Users.CountAsync(user => user.Id == survivorUser.Id));
+
+        var reassignedProduct = await verificationContext.Products.SingleAsync();
+        var reassignedRecipe = await verificationContext.Recipes.SingleAsync();
+        var reassignedAssets = await verificationContext.ImageAssets.OrderBy(asset => asset.ObjectKey).ToListAsync();
 
         Assert.Equal(survivorUser.Id, reassignedProduct.UserId);
         Assert.Equal(survivorUser.Id, reassignedRecipe.UserId);
         Assert.All(reassignedAssets, asset => Assert.Equal(survivorUser.Id, asset.UserId));
-        Assert.Single(await context.RecipeSteps.ToListAsync());
-        Assert.False(await context.ShoppingLists.AnyAsync());
-        Assert.False(await context.ShoppingListItems.AnyAsync());
-        Assert.False(await context.RecentItems.AnyAsync());
-        Assert.False(await context.AiUsages.AnyAsync());
+        Assert.Single(await verificationContext.RecipeSteps.ToListAsync());
+        Assert.False(await verificationContext.ShoppingLists.AnyAsync());
+        Assert.False(await verificationContext.ShoppingListItems.AnyAsync());
+        Assert.False(await verificationContext.RecentItems.AnyAsync());
+        Assert.False(await verificationContext.AiUsages.AnyAsync());
     }
 }

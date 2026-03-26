@@ -1,6 +1,7 @@
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Tests.Integration;
 
@@ -9,10 +10,9 @@ public sealed class UserRepositoryIntegrationTests(PostgresDatabaseFixture datab
     [RequiresDockerFact]
     public async Task GetByEmailAsync_ReturnsActiveNonDeletedUserWithRoles() {
         await using var context = await databaseFixture.CreateDbContextAsync();
-        var premiumRole = Role.Create(RoleNames.Premium);
-        var supportRole = Role.Create(RoleNames.Support);
+        var premiumRole = await context.Roles.SingleAsync(role => role.Name == RoleNames.Premium);
+        var supportRole = await context.Roles.SingleAsync(role => role.Name == RoleNames.Support);
         var activeUser = User.Create("active@example.com", "hash");
-        context.Roles.AddRange(premiumRole, supportRole);
         context.Users.Add(activeUser);
         context.UserRoles.AddRange(
             new UserRole(activeUser.Id, premiumRole.Id),
@@ -56,13 +56,12 @@ public sealed class UserRepositoryIntegrationTests(PostgresDatabaseFixture datab
     [RequiresDockerFact]
     public async Task GetAdminDashboardSummaryAsync_CountsPremiumAndSkipsDeletedInRecentUsers() {
         await using var context = await databaseFixture.CreateDbContextAsync();
-        var premiumRole = Role.Create(RoleNames.Premium);
+        var premiumRole = await context.Roles.SingleAsync(role => role.Name == RoleNames.Premium);
         var firstUser = User.Create("first@example.com", "hash");
         var premiumUser = User.Create("premium@example.com", "hash");
         var deletedUser = User.Create("deleted@example.com", "hash");
         deletedUser.MarkDeleted(DateTime.UtcNow);
 
-        context.Roles.Add(premiumRole);
         context.Users.AddRange(firstUser, premiumUser, deletedUser);
         context.UserRoles.Add(new UserRole(premiumUser.Id, premiumRole.Id));
         await context.SaveChangesAsync();
