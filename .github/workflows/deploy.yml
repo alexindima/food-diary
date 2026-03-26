@@ -199,7 +199,7 @@ jobs:
           set -euo pipefail
           LOG_FILE="${RUNNER_TEMP}/deploy-logs/create-server-directories.log"
           set +e
-          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no root@${{ env.SERVER_IP }} << EOF 2>&1 | tee "${LOG_FILE}"
+          ssh -T -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no root@${{ env.SERVER_IP }} << EOF 2>&1 | tee "${LOG_FILE}"
             rm -rf "${{ env.FRONTEND_DEPLOY_DIR }}"
             rm -rf "${{ env.ADMIN_FRONTEND_DEPLOY_DIR }}"
             rm -rf "${{ env.BACKEND_DEPLOY_DIR }}"
@@ -246,7 +246,7 @@ jobs:
           set -euo pipefail
           LOG_FILE="${RUNNER_TEMP}/deploy-logs/install-runtime-and-configure-systemd.log"
           set +e
-          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no root@${{ env.SERVER_IP }} << 'EOF' 2>&1 | tee "${LOG_FILE}"
+          ssh -T -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no root@${{ env.SERVER_IP }} << 'EOF' 2>&1 | tee "${LOG_FILE}"
             set -e
             if ! command -v dotnet >/dev/null 2>&1 || ! dotnet --list-runtimes | grep -q "Microsoft.AspNetCore.App 10"; then
               wget https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
@@ -441,9 +441,12 @@ jobs:
         run: |
           set -euo pipefail
           LOG_FILE="${RUNNER_TEMP}/deploy-logs/run-migration-bundle.log"
+          CONNECTION_STRING_B64="$(printf '%s' "${CONNECTION_STRING}" | base64 -w 0)"
           set +e
-          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no root@${{ env.SERVER_IP }} << EOF 2>&1 | tee "${LOG_FILE}"
+          ssh -T -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no root@${{ env.SERVER_IP }} "CONNECTION_STRING_B64='${CONNECTION_STRING_B64}' bash -s" << 'EOF' 2>&1 | tee "${LOG_FILE}"
             set -e
+            CONNECTION_STRING="$(printf '%s' "${CONNECTION_STRING_B64}" | base64 -d)"
+
             if [ -z "${CONNECTION_STRING}" ]; then
               echo "Missing CONNECTION_STRING env for migrations" >&2
               exit 1
@@ -452,6 +455,7 @@ jobs:
             chmod +x ./migrate
 
             export ConnectionStrings__DefaultConnection="${CONNECTION_STRING}"
+            export FOODDIARY_CONNECTION_STRING="${CONNECTION_STRING}"
 
             ./migrate
             echo "Migrations applied by bundle."
@@ -472,7 +476,7 @@ jobs:
           set -euo pipefail
           LOG_FILE="${RUNNER_TEMP}/deploy-logs/restart-backend-service.log"
           set +e
-          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no root@${{ env.SERVER_IP }} << EOF 2>&1 | tee "${LOG_FILE}"
+          ssh -T -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no root@${{ env.SERVER_IP }} << EOF 2>&1 | tee "${LOG_FILE}"
             systemctl restart food-diary-api
             systemctl status food-diary-api --no-pager -n 20 || true
             systemctl restart food-diary-telegram-bot
