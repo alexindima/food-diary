@@ -39,7 +39,7 @@ jobs:
             {
               echo "FAILED_AREA=dotnet"
               echo "FAILED_TARGET=Restore"
-              echo "FAILED_LOG_FILE=$log_file"
+              echo "FAILED_LOG_FILE_NAME=$(basename "$log_file")"
             } > "${RUNNER_TEMP}/ci-test-logs/failure-meta.env"
             exit "$status"
           fi
@@ -57,7 +57,7 @@ jobs:
             {
               echo "FAILED_AREA=dotnet"
               echo "FAILED_TARGET=Build"
-              echo "FAILED_LOG_FILE=$log_file"
+              echo "FAILED_LOG_FILE_NAME=$(basename "$log_file")"
             } > "${RUNNER_TEMP}/ci-test-logs/failure-meta.env"
             exit "$status"
           fi
@@ -85,7 +85,7 @@ jobs:
               {
                 echo "FAILED_AREA=dotnet"
                 echo "FAILED_TARGET=$project"
-                echo "FAILED_LOG_FILE=$log_file"
+                echo "FAILED_LOG_FILE_NAME=$(basename "$log_file")"
               } > "${RUNNER_TEMP}/ci-test-logs/failure-meta.env"
               exit "$status"
             fi
@@ -135,7 +135,7 @@ jobs:
             {
               echo "FAILED_AREA=frontend"
               echo "FAILED_TARGET=Install frontend dependencies"
-              echo "FAILED_LOG_FILE=$log_file"
+              echo "FAILED_LOG_FILE_NAME=$(basename "$log_file")"
             } > "${RUNNER_TEMP}/frontend-checks-logs/failure-meta.env"
             exit "$status"
           fi
@@ -153,7 +153,7 @@ jobs:
             {
               echo "FAILED_AREA=frontend"
               echo "FAILED_TARGET=Lint frontend"
-              echo "FAILED_LOG_FILE=$log_file"
+              echo "FAILED_LOG_FILE_NAME=$(basename "$log_file")"
             } > "${RUNNER_TEMP}/frontend-checks-logs/failure-meta.env"
             exit "$status"
           fi
@@ -171,7 +171,7 @@ jobs:
             {
               echo "FAILED_AREA=frontend"
               echo "FAILED_TARGET=Lint styles"
-              echo "FAILED_LOG_FILE=$log_file"
+              echo "FAILED_LOG_FILE_NAME=$(basename "$log_file")"
             } > "${RUNNER_TEMP}/frontend-checks-logs/failure-meta.env"
             exit "$status"
           fi
@@ -189,7 +189,7 @@ jobs:
             {
               echo "FAILED_AREA=frontend"
               echo "FAILED_TARGET=Build frontend"
-              echo "FAILED_LOG_FILE=$log_file"
+              echo "FAILED_LOG_FILE_NAME=$(basename "$log_file")"
             } > "${RUNNER_TEMP}/frontend-checks-logs/failure-meta.env"
             exit "$status"
           fi
@@ -207,7 +207,7 @@ jobs:
             {
               echo "FAILED_AREA=frontend"
               echo "FAILED_TARGET=Build admin frontend"
-              echo "FAILED_LOG_FILE=$log_file"
+              echo "FAILED_LOG_FILE_NAME=$(basename "$log_file")"
             } > "${RUNNER_TEMP}/frontend-checks-logs/failure-meta.env"
             exit "$status"
           fi
@@ -258,6 +258,7 @@ jobs:
           FAILED_AREA="unknown"
           FAILED_TARGET="unknown"
           FAILED_LOG_FILE=""
+          FAILED_LOG_FILE_NAME=""
           META_FILE=""
 
           if [ "${{ needs.dotnet-tests.result }}" = "failure" ] && [ -f "${RUNNER_TEMP}/ci-test-logs/failure-meta.env" ]; then
@@ -271,15 +272,25 @@ jobs:
           if [ -n "${META_FILE}" ]; then
             parsed_area=$(grep '^FAILED_AREA=' "${META_FILE}" | head -n 1 | cut -d= -f2-)
             parsed_target=$(grep '^FAILED_TARGET=' "${META_FILE}" | head -n 1 | cut -d= -f2-)
-            parsed_log=$(grep '^FAILED_LOG_FILE=' "${META_FILE}" | head -n 1 | cut -d= -f2-)
+            parsed_log_name=$(grep '^FAILED_LOG_FILE_NAME=' "${META_FILE}" | head -n 1 | cut -d= -f2-)
             if [ -n "${parsed_area}" ]; then
               FAILED_AREA="${parsed_area}"
             fi
             if [ -n "${parsed_target}" ]; then
               FAILED_TARGET="${parsed_target}"
             fi
-            if [ -n "${parsed_log}" ]; then
-              FAILED_LOG_FILE="${parsed_log}"
+            if [ -n "${parsed_log_name}" ]; then
+              FAILED_LOG_FILE_NAME="${parsed_log_name}"
+            fi
+          fi
+
+          if [ -n "${FAILED_LOG_FILE_NAME}" ]; then
+            dotnet_candidate="${RUNNER_TEMP}/ci-test-logs/${FAILED_LOG_FILE_NAME}"
+            frontend_candidate="${RUNNER_TEMP}/frontend-checks-logs/${FAILED_LOG_FILE_NAME}"
+            if [ -f "${dotnet_candidate}" ]; then
+              FAILED_LOG_FILE="${dotnet_candidate}"
+            elif [ -f "${frontend_candidate}" ]; then
+              FAILED_LOG_FILE="${frontend_candidate}"
             fi
           fi
 
