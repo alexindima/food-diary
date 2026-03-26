@@ -308,7 +308,7 @@ jobs:
             fi
           fi
 
-          MESSAGE=$'CI failed\nRepo: '"${GITHUB_REPOSITORY}"$'\nBranch: '"${GITHUB_REF_NAME}"$'\nCommit: '"${GITHUB_SHA::8}"$'\nActor: '"${GITHUB_ACTOR}"$'\nArea: '"${FAILED_AREA}"$'\nTarget: '"${FAILED_TARGET}"$'\nRun: '"${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          MESSAGE=$'❌ CI failed\nRepo: '"${GITHUB_REPOSITORY}"$'\nBranch: '"${GITHUB_REF_NAME}"$'\nCommit: '"${GITHUB_SHA::8}"$'\nActor: '"${GITHUB_ACTOR}"$'\nArea: '"${FAILED_AREA}"$'\nTarget: '"${FAILED_TARGET}"$'\nRun: '"${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
           curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
             -d chat_id="${TELEGRAM_CHAT_ID}" \
             --data-urlencode text="${MESSAGE}" >/dev/null
@@ -321,17 +321,17 @@ jobs:
             cp "${FAILED_LOG_FILE}" "${telegram_log_file}"
             response=$(curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendDocument" \
               -F chat_id="${TELEGRAM_CHAT_ID}" \
-              -F caption="CI failure log: ${FAILED_AREA} / ${FAILED_TARGET}" \
+              -F caption="❌ CI failure log: ${FAILED_AREA} / ${FAILED_TARGET}" \
               -F document=@"${telegram_log_file}")
             if ! echo "${response}" | grep -q '"ok":true'; then
               tail_excerpt=$(tail -n 40 "${FAILED_LOG_FILE}")
-              FALLBACK_MESSAGE=$'CI failure log tail\nArea: '"${FAILED_AREA}"$'\nTarget: '"${FAILED_TARGET}"$'\n\n'"${tail_excerpt}"
+              FALLBACK_MESSAGE=$'❌ CI failure log tail\nArea: '"${FAILED_AREA}"$'\nTarget: '"${FAILED_TARGET}"$'\n\n'"${tail_excerpt}"
               curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
                 -d chat_id="${TELEGRAM_CHAT_ID}" \
                 --data-urlencode text="${FALLBACK_MESSAGE}" >/dev/null
             fi
           else
-            FALLBACK_MESSAGE=$'CI failure log unavailable\nArea: '"${FAILED_AREA}"$'\nTarget: '"${FAILED_TARGET}"$'\nLog file was not found in downloaded artifacts.'
+            FALLBACK_MESSAGE=$'❌ CI failure log unavailable\nArea: '"${FAILED_AREA}"$'\nTarget: '"${FAILED_TARGET}"$'\nLog file was not found in downloaded artifacts.'
             curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
               -d chat_id="${TELEGRAM_CHAT_ID}" \
               --data-urlencode text="${FALLBACK_MESSAGE}" >/dev/null
