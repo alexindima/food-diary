@@ -12,6 +12,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 
 namespace FoodDiary.Web.Api.Extensions;
 
@@ -20,6 +23,9 @@ public static class ApiServiceCollectionExtensions {
         services.AddApplication();
         services.AddInfrastructure(configuration);
         services.AddDistributedMemoryCache();
+        services
+            .AddOptions<OpenTelemetryOptions>()
+            .BindConfiguration(OpenTelemetryOptions.SectionName);
         services
             .AddOptions<JwtOptions>()
             .BindConfiguration(JwtOptions.SectionName)
@@ -81,7 +87,6 @@ public static class ApiServiceCollectionExtensions {
         services.AddHttpLogging(options => {
             options.LoggingFields = HttpLoggingFields.RequestMethod |
                                     HttpLoggingFields.RequestPath |
-                                    HttpLoggingFields.RequestQuery |
                                     HttpLoggingFields.ResponseStatusCode |
                                     HttpLoggingFields.Duration;
             options.RequestHeaders.Add("X-Forwarded-For");
@@ -152,6 +157,31 @@ public static class ApiServiceCollectionExtensions {
                 [new OpenApiSecuritySchemeReference("Bearer", document, null)] = []
             });
         });
+        services.AddConfiguredOpenTelemetry(configuration);
+
+        return services;
+    }
+
+    private static IServiceCollection AddConfiguredOpenTelemetry(this IServiceCollection services, IConfiguration configuration) {
+        var otlpEndpoint = configuration[$"{OpenTelemetryOptions.SectionName}:Otlp:Endpoint"];
+        if (string.IsNullOrWhiteSpace(otlpEndpoint)) {
+            return services;
+        }
+
+        if (!Uri.TryCreate(otlpEndpoint, UriKind.Absolute, out var endpointUri)) {
+            throw new InvalidOperationException("OpenTelemetry:Otlp:Endpoint must be a valid absolute URI.");
+        }
+
+        services.AddOpenTelemetry()
+            .ConfigureResource(resource => resource.AddService("FoodDiary.Web.Api"))
+            .WithTracing(tracing => tracing
+                .AddSource(ApiTelemetry.TelemetryName)
+                .AddSource(PresentationApiTelemetry.TelemetryName)
+                .AddOtlpExporter(options => options.Endpoint = endpointUri))
+            .WithMetrics(metrics => metrics
+                .AddMeter(ApiTelemetry.TelemetryName)
+                .AddMeter(PresentationApiTelemetry.TelemetryName)
+                .AddOtlpExporter(options => options.Endpoint = endpointUri));
 
         return services;
     }
