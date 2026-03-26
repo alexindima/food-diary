@@ -5,6 +5,6 @@ import { Directive, TemplateRef, inject } from '@angular/core';
     standalone: true,
 })
 export class FdUiEntityCardHeaderDirective {
-    readonly templateRef = inject<TemplateRef<unknown>>(TemplateRef);
+    public readonly templateRef = inject<TemplateRef<unknown>>(TemplateRef);
 }
 

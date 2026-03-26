@@ -25,7 +25,7 @@ export class HydrationCardComponent {
 
     public readonly hasGoal = computed(() => !!this.goal() && this.goal()! > 0);
     public readonly percent = computed(() => {
-        if (!this.hasGoal()) return 0;
+        if (!this.hasGoal()) {return 0;}
         const value = (this.total() / (this.goal() ?? 1)) * 100;
         return Math.max(0, Math.min(value, 200)); // allow slight overflow visualization
     });

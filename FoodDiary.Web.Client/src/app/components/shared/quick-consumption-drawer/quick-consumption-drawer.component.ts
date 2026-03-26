@@ -21,8 +21,8 @@ export class QuickConsumptionDrawerComponent {
     private readonly quickService = inject(QuickConsumptionService);
     private readonly fallbackImage = 'assets/images/stubs/receipt.png';
 
-    @Input() forceShow = false;
-    @Input() layout: 'fixed' | 'inline' = 'fixed';
+    @Input() public forceShow = false;
+    @Input() public layout: 'fixed' | 'inline' = 'fixed';
 
     public readonly items = this.quickService.items;
     public readonly hasItems = this.quickService.hasItems;

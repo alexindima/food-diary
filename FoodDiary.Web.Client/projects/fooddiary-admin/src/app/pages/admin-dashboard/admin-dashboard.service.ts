@@ -60,7 +60,7 @@ export class AdminDashboardService {
   private readonly baseUrl = `${environment.apiUrls.auth.replace(/\/auth$/, '')}/admin/dashboard`;
   private readonly aiUsageUrl = `${environment.apiUrls.auth.replace(/\/auth$/, '')}/admin/ai-usage/summary`;
 
-  constructor(private readonly http: HttpClient) {}
+  public constructor(private readonly http: HttpClient) {}
 
   public getSummary(): Observable<AdminDashboardSummary> {
     return this.http.get<AdminDashboardSummary>(this.baseUrl);

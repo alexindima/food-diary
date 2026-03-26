@@ -30,7 +30,7 @@ export interface SatietyLevelDialogData {
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SatietyLevelDialogComponent {
-    readonly data = inject<SatietyLevelDialogData>(FD_UI_DIALOG_DATA);
+    public readonly data = inject<SatietyLevelDialogData>(FD_UI_DIALOG_DATA);
     private readonly dialogRef = inject<FdUiDialogRef<SatietyLevelDialogComponent>>(FdUiDialogRef);
     private readonly translateService = inject(TranslateService);
 

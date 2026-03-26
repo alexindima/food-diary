@@ -15,10 +15,10 @@ import { NutrientBadgesComponent } from '../nutrient-badges/nutrient-badges.comp
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductCardComponent {
-    @Input({ required: true }) product!: Product;
-    @Input() imageUrl?: string;
-    @Output() open = new EventEmitter<void>();
-    @Output() addToMeal = new EventEmitter<Product>();
+    @Input({ required: true }) public product!: Product;
+    @Input() public imageUrl?: string;
+    @Output() public open = new EventEmitter<void>();
+    @Output() public addToMeal = new EventEmitter<Product>();
 
     public handleOpen(): void {
         this.open.emit();

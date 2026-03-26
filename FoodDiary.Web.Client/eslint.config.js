@@ -5,7 +5,22 @@ import eslintConfigPrettier from 'eslint-config-prettier';
 
 export default [
     {
-        ignores: ['node_modules/', 'dist/', '*.min.js', '.angular/**/*'],
+        ignores: [
+            '**/node_modules/**',
+            '**/dist/**',
+            '**/dist-admin/**',
+            '**/.angular/**',
+            '**/*.min.js',
+        ],
+    },
+    {
+        ignores: [
+            '**/node_modules/**',
+            '**/dist/**',
+            '**/dist-admin/**',
+            '**/.angular/**',
+            '**/*.min.js',
+        ],
         files: ['**/*.js', '**/*.ts'],
         languageOptions: {
             parser,

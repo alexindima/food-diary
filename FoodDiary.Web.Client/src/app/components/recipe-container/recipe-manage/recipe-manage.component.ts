@@ -555,7 +555,6 @@ export class RecipeManageComponent implements OnInit {
         }
     }
 
-
     private createStepGroup(step?: StepFormValues): FormGroup<StepFormData> {
         const ingredientValues = step?.ingredients?.length
             ? step.ingredients
@@ -593,7 +592,6 @@ export class RecipeManageComponent implements OnInit {
         const trimmedTitle = typeof titleValue === 'string' ? titleValue.trim() : '';
         titleControl.setValue(trimmedTitle.length > 0 ? trimmedTitle : null);
     }
-
 
     private createIngredientGroup(
         food: Product | null = null,

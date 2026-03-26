@@ -14,7 +14,7 @@ describe('AppComponent', () => {
         expect(app).toBeTruthy();
     });
 
-    it(`should have the 'food-diary-web-client' title`, () => {
+    it('should have the \'food-diary-web-client\' title', () => {
         const fixture = TestBed.createComponent(AppComponent);
         const app = fixture.componentInstance;
         expect(app.title).toEqual('food-diary-web-client');

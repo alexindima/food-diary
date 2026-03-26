@@ -1,7 +1,6 @@
 import { provideAnimations } from '@angular/platform-browser/animations';
 import {
     ApplicationConfig,
-    ErrorHandler,
     importProvidersFrom,
     inject,
     isDevMode,
@@ -16,7 +15,6 @@ import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import { LocalizationService } from './services/localization.service';
 import { AuthService } from './services/auth.service';
 import { AuthInterceptor } from './interceptor/auth.interceptor';
-import { GlobalErrorHandler } from './services/error-handler.service';
 import { LoggingApiService } from './services/logging-api.service';
 import { provideServiceWorker } from '@angular/service-worker';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
@@ -27,10 +25,6 @@ import { environment } from '../environments/environment';
 
 export const appConfig: ApplicationConfig = {
     providers: [
-        /*{
-            provide: ErrorHandler,
-            useClass: GlobalErrorHandler,
-        },*/
         {
             provide: HTTP_INTERCEPTORS,
             useClass: AuthInterceptor,

@@ -59,22 +59,24 @@ export class AdminEmailTemplatesComponent {
   }
 
   public openCreate(): void {
+    const dialogData: AdminEmailTemplate & { isNew: boolean } = {
+      id: '',
+      key: 'email_verification',
+      locale: 'en',
+      subject: '',
+      htmlBody: '',
+      textBody: '',
+      isActive: true,
+      createdOnUtc: new Date().toISOString(),
+      updatedOnUtc: null,
+      isNew: true,
+    };
+
     this.dialogService
       .open(AdminEmailTemplateEditDialogComponent, {
         size: 'lg',
         panelClass: ['fd-admin-email-template-dialog', 'fd-admin-email-template-dialog--fullscreen'],
-        data: {
-          id: '',
-          key: 'email_verification',
-          locale: 'en',
-          subject: '',
-          htmlBody: '',
-          textBody: '',
-          isActive: true,
-          createdOnUtc: new Date().toISOString(),
-          updatedOnUtc: null,
-          isNew: true,
-        } as AdminEmailTemplate & { isNew: boolean },
+        data: dialogData,
       })
       .afterClosed()
       .subscribe(updated => {

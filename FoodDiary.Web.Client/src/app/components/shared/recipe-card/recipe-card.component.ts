@@ -15,10 +15,10 @@ import { NutrientBadgesComponent } from '../nutrient-badges/nutrient-badges.comp
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RecipeCardComponent {
-    @Input({ required: true }) recipe!: Recipe;
-    @Input() imageUrl?: string;
-    @Output() open = new EventEmitter<void>();
-    @Output() addToMeal = new EventEmitter<Recipe>();
+    @Input({ required: true }) public recipe!: Recipe;
+    @Input() public imageUrl?: string;
+    @Output() public open = new EventEmitter<void>();
+    @Output() public addToMeal = new EventEmitter<Recipe>();
 
     public handleOpen(): void {
         this.open.emit();

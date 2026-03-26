@@ -34,9 +34,8 @@ export type ConsumptionManageRedirectAction = 'Home' | 'ConsumptionList';
     imports: [TranslateModule, FdUiDialogComponent, FdUiDialogFooterDirective, FdUiButtonComponent],
 })
 export class ConsumptionManageSuccessDialogComponent {
-    readonly data = inject<ConsumptionManageSuccessDialogData>(FD_UI_DIALOG_DATA);
+    public readonly data = inject<ConsumptionManageSuccessDialogData>(FD_UI_DIALOG_DATA);
     private readonly dialogRef = inject<FdUiDialogRef<ConsumptionManageSuccessDialogComponent, ConsumptionManageRedirectAction>>(FdUiDialogRef);
-
 
     public close(action: ConsumptionManageRedirectAction): void {
         this.dialogRef.close(action);

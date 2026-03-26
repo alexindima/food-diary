@@ -1,4 +1,3 @@
-
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, InjectionToken, effect, inject, input } from '@angular/core';
 import { AbstractControl } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -13,16 +12,16 @@ export type FdValidationErrors = Record<string, (error?: unknown) => FdValidatio
 
 export const FD_VALIDATION_ERRORS = new InjectionToken<FdValidationErrors>('FD_VALIDATION_ERRORS', {
     providedIn: 'root',
-    factory: () => ({
-        required: () => 'FORM_ERRORS.REQUIRED',
-        requiredTrue: () => 'FORM_ERRORS.REQUIRED',
-        email: () => 'FORM_ERRORS.EMAIL',
-        minlength: (error?: unknown) => ({
+    factory: (): FdValidationErrors => ({
+        required: (): string => 'FORM_ERRORS.REQUIRED',
+        requiredTrue: (): string => 'FORM_ERRORS.REQUIRED',
+        email: (): string => 'FORM_ERRORS.EMAIL',
+        minlength: (error?: unknown): FdValidationErrorConfig => ({
             key: 'FORM_ERRORS.PASSWORD.MIN_LENGTH',
             params: { requiredLength: (error as { requiredLength?: number } | undefined)?.requiredLength },
         }),
-        userExists: () => 'FORM_ERRORS.USER_EXISTS',
-        matchField: () => 'FORM_ERRORS.PASSWORD.MATCH',
+        userExists: (): string => 'FORM_ERRORS.USER_EXISTS',
+        matchField: (): string => 'FORM_ERRORS.PASSWORD.MATCH',
     }),
 });
 
@@ -47,7 +46,7 @@ export class FdUiFormErrorComponent {
     public readonly error = input<string | null>();
     public readonly context = input<Record<string, unknown>>();
     public readonly showOnDirty = input(false);
-    private readonly controlSubscription = effect(onCleanup => {
+    private readonly controlSubscription = effect((onCleanup): void => {
         const control = this.control();
         if (!control) {
             return;
@@ -56,7 +55,7 @@ export class FdUiFormErrorComponent {
         const subscription = merge(control.statusChanges, control.valueChanges)
             .subscribe(() => this.cdr.markForCheck());
 
-        onCleanup(() => subscription.unsubscribe());
+        onCleanup((): void => subscription.unsubscribe());
     });
 
     public get message(): string | null {

@@ -24,11 +24,11 @@ import { ChangePasswordDialogComponent } from './dialogs/change-password-dialog/
 import { PasswordSuccessDialogComponent } from './dialogs/password-success-dialog/password-success-dialog.component';
 import { UpdateSuccessDialogComponent } from './dialogs/update-success-dialog/update-success-dialog.component';
 import { PageHeaderComponent } from '../shared/page-header/page-header.component';
-import { PageBodyComponent } from "../shared/page-body/page-body.component";
-import { FdPageContainerDirective } from "../../directives/layout/page-container.directive";
+import { PageBodyComponent } from '../shared/page-body/page-body.component';
+import { FdPageContainerDirective } from '../../directives/layout/page-container.directive';
 import { ImageUploadFieldComponent } from '../shared/image-upload-field/image-upload-field.component';
 import { ImageSelection } from '../../types/image-upload.data';
-import { ImageUploadService } from "../../services/image-upload.service";
+import { ImageUploadService } from '../../services/image-upload.service';
 import {
     ConfirmDeleteDialogComponent,
     ConfirmDeleteDialogData,

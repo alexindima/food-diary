@@ -45,7 +45,7 @@ export type PagedResponse<T> = {
 export class AdminUsersService {
   private readonly baseUrl = `${environment.apiUrls.auth.replace(/\/auth$/, '')}/admin/users`;
 
-  constructor(private readonly http: HttpClient) {}
+  public constructor(private readonly http: HttpClient) {}
 
   public getUsers(
     page: number,

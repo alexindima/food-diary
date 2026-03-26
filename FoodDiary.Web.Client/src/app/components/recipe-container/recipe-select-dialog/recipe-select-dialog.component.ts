@@ -67,7 +67,6 @@ export class RecipeSelectDialogComponent implements OnInit {
 
     private readonly container = viewChild.required<ElementRef<HTMLElement>>('container');
 
-
     public ngOnInit(): void {
         this.loadRecipes(1).subscribe();
 
