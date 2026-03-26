@@ -35,10 +35,10 @@ jobs:
 
     steps:
       - name: Initialize deploy diagnostics
+        shell: bash
         run: |
           mkdir -p "${RUNNER_TEMP}/deploy-logs"
-          echo "FAILED_STEP=" >> "${GITHUB_ENV}"
-          echo "FAILED_LOG_FILE=" >> "${GITHUB_ENV}"
+          : > "${RUNNER_TEMP}/deploy-logs/failure-meta.env"
 
       - name: Checkout code
         uses: actions/checkout@v6
@@ -56,9 +56,11 @@ jobs:
           dotnet-version: 10.0.x
 
       - name: Build Angular frontend
+        shell: bash
         run: |
-          set -o pipefail
+          set -euo pipefail
           LOG_FILE="${RUNNER_TEMP}/deploy-logs/build-angular-frontend.log"
+          set +e
           (
             cd ${{ env.FRONTEND_DIR }}
             BUILD_VERSION="${GITHUB_SHA::8}"
@@ -70,65 +72,85 @@ jobs:
             echo "Frontend build completed."
           ) 2>&1 | tee "${LOG_FILE}"
           status=${PIPESTATUS[0]}
+          set -e
           if [ "${status}" -ne 0 ]; then
-            echo "FAILED_STEP=Build Angular frontend" >> "${GITHUB_ENV}"
-            echo "FAILED_LOG_FILE=${LOG_FILE}" >> "${GITHUB_ENV}"
+            {
+              echo "FAILED_STEP=Build Angular frontend"
+              echo "FAILED_LOG_FILE=${LOG_FILE}"
+            } > "${RUNNER_TEMP}/deploy-logs/failure-meta.env"
             exit "${status}"
           fi
 
       - name: Publish .NET backend
+        shell: bash
         run: |
-          set -o pipefail
+          set -euo pipefail
           LOG_FILE="${RUNNER_TEMP}/deploy-logs/publish-backend.log"
+          set +e
           (
             dotnet restore ${{ env.BACKEND_PROJECT }}
             dotnet publish ${{ env.BACKEND_PROJECT }} -c Release -o ${{ env.BACKEND_PUBLISH_DIR }}
             echo "Backend publish completed."
           ) 2>&1 | tee "${LOG_FILE}"
           status=${PIPESTATUS[0]}
+          set -e
           if [ "${status}" -ne 0 ]; then
-            echo "FAILED_STEP=Publish .NET backend" >> "${GITHUB_ENV}"
-            echo "FAILED_LOG_FILE=${LOG_FILE}" >> "${GITHUB_ENV}"
+            {
+              echo "FAILED_STEP=Publish .NET backend"
+              echo "FAILED_LOG_FILE=${LOG_FILE}"
+            } > "${RUNNER_TEMP}/deploy-logs/failure-meta.env"
             exit "${status}"
           fi
 
       - name: Publish Telegram bot
+        shell: bash
         run: |
-          set -o pipefail
+          set -euo pipefail
           LOG_FILE="${RUNNER_TEMP}/deploy-logs/publish-telegram-bot.log"
+          set +e
           (
             dotnet restore ${{ env.BOT_PROJECT }}
             dotnet publish ${{ env.BOT_PROJECT }} -c Release -o ${{ env.BOT_PUBLISH_DIR }}
             echo "Telegram bot publish completed."
           ) 2>&1 | tee "${LOG_FILE}"
           status=${PIPESTATUS[0]}
+          set -e
           if [ "${status}" -ne 0 ]; then
-            echo "FAILED_STEP=Publish Telegram bot" >> "${GITHUB_ENV}"
-            echo "FAILED_LOG_FILE=${LOG_FILE}" >> "${GITHUB_ENV}"
+            {
+              echo "FAILED_STEP=Publish Telegram bot"
+              echo "FAILED_LOG_FILE=${LOG_FILE}"
+            } > "${RUNNER_TEMP}/deploy-logs/failure-meta.env"
             exit "${status}"
           fi
 
       - name: Publish JobManager
         if: env.ENABLE_JOBMANAGER == 'true'
+        shell: bash
         run: |
-          set -o pipefail
+          set -euo pipefail
           LOG_FILE="${RUNNER_TEMP}/deploy-logs/publish-jobmanager.log"
+          set +e
           (
             dotnet restore ${{ env.JOBMANAGER_PROJECT }}
             dotnet publish ${{ env.JOBMANAGER_PROJECT }} -c Release -o ${{ env.JOBMANAGER_PUBLISH_DIR }}
             echo "JobManager publish completed."
           ) 2>&1 | tee "${LOG_FILE}"
           status=${PIPESTATUS[0]}
+          set -e
           if [ "${status}" -ne 0 ]; then
-            echo "FAILED_STEP=Publish JobManager" >> "${GITHUB_ENV}"
-            echo "FAILED_LOG_FILE=${LOG_FILE}" >> "${GITHUB_ENV}"
+            {
+              echo "FAILED_STEP=Publish JobManager"
+              echo "FAILED_LOG_FILE=${LOG_FILE}"
+            } > "${RUNNER_TEMP}/deploy-logs/failure-meta.env"
             exit "${status}"
           fi
 
       - name: Build EF Core migration bundle
+        shell: bash
         run: |
-          set -o pipefail
+          set -euo pipefail
           LOG_FILE="${RUNNER_TEMP}/deploy-logs/build-migration-bundle.log"
+          set +e
           (
             dotnet tool restore
             dotnet ef migrations bundle \
@@ -138,25 +160,45 @@ jobs:
               --output ${{ env.BACKEND_PUBLISH_DIR }}/migrate
           ) 2>&1 | tee "${LOG_FILE}"
           status=${PIPESTATUS[0]}
+          set -e
           if [ "${status}" -ne 0 ]; then
-            echo "FAILED_STEP=Build EF Core migration bundle" >> "${GITHUB_ENV}"
-            echo "FAILED_LOG_FILE=${LOG_FILE}" >> "${GITHUB_ENV}"
+            {
+              echo "FAILED_STEP=Build EF Core migration bundle"
+              echo "FAILED_LOG_FILE=${LOG_FILE}"
+            } > "${RUNNER_TEMP}/deploy-logs/failure-meta.env"
             exit "${status}"
           fi
 
       - name: Setting up SSH
         env:
           SSH_KEY: ${{ secrets.SSH_KEY }}
+        shell: bash
         run: |
-          mkdir -p ~/.ssh
-          echo "${SSH_KEY}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          echo "SSH setup completed."
+          set -euo pipefail
+          LOG_FILE="${RUNNER_TEMP}/deploy-logs/setup-ssh.log"
+          set +e
+          (
+            mkdir -p ~/.ssh
+            echo "${SSH_KEY}" > ~/.ssh/id_rsa
+            chmod 600 ~/.ssh/id_rsa
+            echo "SSH setup completed."
+          ) 2>&1 | tee "${LOG_FILE}"
+          status=${PIPESTATUS[0]}
+          set -e
+          if [ "${status}" -ne 0 ]; then
+            {
+              echo "FAILED_STEP=Setting up SSH"
+              echo "FAILED_LOG_FILE=${LOG_FILE}"
+            } > "${RUNNER_TEMP}/deploy-logs/failure-meta.env"
+            exit "${status}"
+          fi
 
       - name: Creating directories on the server
+        shell: bash
         run: |
-          set -o pipefail
+          set -euo pipefail
           LOG_FILE="${RUNNER_TEMP}/deploy-logs/create-server-directories.log"
+          set +e
           ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no root@${{ env.SERVER_IP }} << EOF 2>&1 | tee "${LOG_FILE}"
             rm -rf "${{ env.FRONTEND_DEPLOY_DIR }}"
             rm -rf "${{ env.ADMIN_FRONTEND_DEPLOY_DIR }}"
@@ -189,15 +231,22 @@ jobs:
             echo "Directories created, cleaned, and permissions set."
           EOF
           status=${PIPESTATUS[0]}
+          set -e
           if [ "${status}" -ne 0 ]; then
-            echo "FAILED_STEP=Creating directories on the server" >> "${GITHUB_ENV}"
-            echo "FAILED_LOG_FILE=${LOG_FILE}" >> "${GITHUB_ENV}"
+            {
+              echo "FAILED_STEP=Creating directories on the server"
+              echo "FAILED_LOG_FILE=${LOG_FILE}"
+            } > "${RUNNER_TEMP}/deploy-logs/failure-meta.env"
             exit "${status}"
           fi
 
       - name: Install .NET runtime and configure systemd service
+        shell: bash
         run: |
-          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no root@${{ env.SERVER_IP }} << 'EOF'
+          set -euo pipefail
+          LOG_FILE="${RUNNER_TEMP}/deploy-logs/install-runtime-and-configure-systemd.log"
+          set +e
+          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no root@${{ env.SERVER_IP }} << 'EOF' 2>&1 | tee "${LOG_FILE}"
             set -e
             if ! command -v dotnet >/dev/null 2>&1 || ! dotnet --list-runtimes | grep -q "Microsoft.AspNetCore.App 10"; then
               wget https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
@@ -270,49 +319,129 @@ jobs:
             systemctl enable food-diary-api
             systemctl enable food-diary-telegram-bot
           EOF
+          status=${PIPESTATUS[0]}
+          set -e
+          if [ "${status}" -ne 0 ]; then
+            {
+              echo "FAILED_STEP=Install .NET runtime and configure systemd service"
+              echo "FAILED_LOG_FILE=${LOG_FILE}"
+            } > "${RUNNER_TEMP}/deploy-logs/failure-meta.env"
+            exit "${status}"
+          fi
 
       - name: Uploading frontend files
+        shell: bash
         run: |
-          START_TIME=$(date +%s)
-          NUM_FILES=$(find ${{ env.FRONTEND_DIR }}/dist -type f | wc -l)
-          echo "$NUM_FILES files to upload."
-          rsync -az --quiet --human-readable -e "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no" \
-            ${{ env.FRONTEND_DIR }}/dist/ root@${{ env.SERVER_IP }}:${{ env.FRONTEND_DEPLOY_DIR }}/
-          END_TIME=$(date +%s)
-          echo "Uploaded $NUM_FILES files in $(($END_TIME - $START_TIME)) seconds."
+          set -euo pipefail
+          LOG_FILE="${RUNNER_TEMP}/deploy-logs/upload-frontend-files.log"
+          set +e
+          (
+            START_TIME=$(date +%s)
+            NUM_FILES=$(find ${{ env.FRONTEND_DIR }}/dist -type f | wc -l)
+            echo "$NUM_FILES files to upload."
+            rsync -az --quiet --human-readable -e "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no" \
+              ${{ env.FRONTEND_DIR }}/dist/ root@${{ env.SERVER_IP }}:${{ env.FRONTEND_DEPLOY_DIR }}/
+            END_TIME=$(date +%s)
+            echo "Uploaded $NUM_FILES files in $(($END_TIME - $START_TIME)) seconds."
+          ) 2>&1 | tee "${LOG_FILE}"
+          status=${PIPESTATUS[0]}
+          set -e
+          if [ "${status}" -ne 0 ]; then
+            {
+              echo "FAILED_STEP=Uploading frontend files"
+              echo "FAILED_LOG_FILE=${LOG_FILE}"
+            } > "${RUNNER_TEMP}/deploy-logs/failure-meta.env"
+            exit "${status}"
+          fi
 
       - name: Uploading admin frontend files
+        shell: bash
         run: |
-          START_TIME=$(date +%s)
-          NUM_FILES=$(find ${{ env.ADMIN_FRONTEND_BUILD_DIR }} -type f | wc -l)
-          echo "$NUM_FILES admin files to upload."
-          rsync -az --quiet --human-readable -e "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no" \
-            ${{ env.ADMIN_FRONTEND_BUILD_DIR }}/ root@${{ env.SERVER_IP }}:${{ env.ADMIN_FRONTEND_DEPLOY_DIR }}/
-          END_TIME=$(date +%s)
-          echo "Uploaded $NUM_FILES admin files in $(($END_TIME - $START_TIME)) seconds."
+          set -euo pipefail
+          LOG_FILE="${RUNNER_TEMP}/deploy-logs/upload-admin-frontend-files.log"
+          set +e
+          (
+            START_TIME=$(date +%s)
+            NUM_FILES=$(find ${{ env.ADMIN_FRONTEND_BUILD_DIR }} -type f | wc -l)
+            echo "$NUM_FILES admin files to upload."
+            rsync -az --quiet --human-readable -e "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no" \
+              ${{ env.ADMIN_FRONTEND_BUILD_DIR }}/ root@${{ env.SERVER_IP }}:${{ env.ADMIN_FRONTEND_DEPLOY_DIR }}/
+            END_TIME=$(date +%s)
+            echo "Uploaded $NUM_FILES admin files in $(($END_TIME - $START_TIME)) seconds."
+          ) 2>&1 | tee "${LOG_FILE}"
+          status=${PIPESTATUS[0]}
+          set -e
+          if [ "${status}" -ne 0 ]; then
+            {
+              echo "FAILED_STEP=Uploading admin frontend files"
+              echo "FAILED_LOG_FILE=${LOG_FILE}"
+            } > "${RUNNER_TEMP}/deploy-logs/failure-meta.env"
+            exit "${status}"
+          fi
 
       - name: Uploading backend files
+        shell: bash
         run: |
+          set -euo pipefail
+          LOG_FILE="${RUNNER_TEMP}/deploy-logs/upload-backend-files.log"
+          set +e
           rsync -az --quiet --human-readable -e "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no" \
-            ${{ env.BACKEND_PUBLISH_DIR }}/ root@${{ env.SERVER_IP }}:${{ env.BACKEND_DEPLOY_DIR }}/
+            ${{ env.BACKEND_PUBLISH_DIR }}/ root@${{ env.SERVER_IP }}:${{ env.BACKEND_DEPLOY_DIR }}/ 2>&1 | tee "${LOG_FILE}"
+          status=${PIPESTATUS[0]}
+          set -e
+          if [ "${status}" -ne 0 ]; then
+            {
+              echo "FAILED_STEP=Uploading backend files"
+              echo "FAILED_LOG_FILE=${LOG_FILE}"
+            } > "${RUNNER_TEMP}/deploy-logs/failure-meta.env"
+            exit "${status}"
+          fi
 
       - name: Uploading telegram bot files
+        shell: bash
         run: |
+          set -euo pipefail
+          LOG_FILE="${RUNNER_TEMP}/deploy-logs/upload-telegram-bot-files.log"
+          set +e
           rsync -az --quiet --human-readable -e "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no" \
-            ${{ env.BOT_PUBLISH_DIR }}/ root@${{ env.SERVER_IP }}:${{ env.BOT_DEPLOY_DIR }}/
+            ${{ env.BOT_PUBLISH_DIR }}/ root@${{ env.SERVER_IP }}:${{ env.BOT_DEPLOY_DIR }}/ 2>&1 | tee "${LOG_FILE}"
+          status=${PIPESTATUS[0]}
+          set -e
+          if [ "${status}" -ne 0 ]; then
+            {
+              echo "FAILED_STEP=Uploading telegram bot files"
+              echo "FAILED_LOG_FILE=${LOG_FILE}"
+            } > "${RUNNER_TEMP}/deploy-logs/failure-meta.env"
+            exit "${status}"
+          fi
 
       - name: Uploading job manager files
         if: env.ENABLE_JOBMANAGER == 'true'
+        shell: bash
         run: |
+          set -euo pipefail
+          LOG_FILE="${RUNNER_TEMP}/deploy-logs/upload-jobmanager-files.log"
+          set +e
           rsync -az --quiet --human-readable -e "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no" \
-            ${{ env.JOBMANAGER_PUBLISH_DIR }}/ root@${{ env.SERVER_IP }}:${{ env.JOBMANAGER_DEPLOY_DIR }}/
+            ${{ env.JOBMANAGER_PUBLISH_DIR }}/ root@${{ env.SERVER_IP }}:${{ env.JOBMANAGER_DEPLOY_DIR }}/ 2>&1 | tee "${LOG_FILE}"
+          status=${PIPESTATUS[0]}
+          set -e
+          if [ "${status}" -ne 0 ]; then
+            {
+              echo "FAILED_STEP=Uploading job manager files"
+              echo "FAILED_LOG_FILE=${LOG_FILE}"
+            } > "${RUNNER_TEMP}/deploy-logs/failure-meta.env"
+            exit "${status}"
+          fi
 
       - name: Run migration bundle on server
         env:
           CONNECTION_STRING: ${{ secrets.PROD_CONNECTION_STRING }}
+        shell: bash
         run: |
-          set -o pipefail
+          set -euo pipefail
           LOG_FILE="${RUNNER_TEMP}/deploy-logs/run-migration-bundle.log"
+          set +e
           ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no root@${{ env.SERVER_IP }} << EOF 2>&1 | tee "${LOG_FILE}"
             set -e
             if [ -z "${CONNECTION_STRING}" ]; then
@@ -328,16 +457,21 @@ jobs:
             echo "Migrations applied by bundle."
           EOF
           status=${PIPESTATUS[0]}
+          set -e
           if [ "${status}" -ne 0 ]; then
-            echo "FAILED_STEP=Run migration bundle on server" >> "${GITHUB_ENV}"
-            echo "FAILED_LOG_FILE=${LOG_FILE}" >> "${GITHUB_ENV}"
+            {
+              echo "FAILED_STEP=Run migration bundle on server"
+              echo "FAILED_LOG_FILE=${LOG_FILE}"
+            } > "${RUNNER_TEMP}/deploy-logs/failure-meta.env"
             exit "${status}"
           fi
 
       - name: Restart backend service
+        shell: bash
         run: |
-          set -o pipefail
+          set -euo pipefail
           LOG_FILE="${RUNNER_TEMP}/deploy-logs/restart-backend-service.log"
+          set +e
           ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no root@${{ env.SERVER_IP }} << EOF 2>&1 | tee "${LOG_FILE}"
             systemctl restart food-diary-api
             systemctl status food-diary-api --no-pager -n 20 || true
@@ -349,9 +483,12 @@ jobs:
             fi
           EOF
           status=${PIPESTATUS[0]}
+          set -e
           if [ "${status}" -ne 0 ]; then
-            echo "FAILED_STEP=Restart backend service" >> "${GITHUB_ENV}"
-            echo "FAILED_LOG_FILE=${LOG_FILE}" >> "${GITHUB_ENV}"
+            {
+              echo "FAILED_STEP=Restart backend service"
+              echo "FAILED_LOG_FILE=${LOG_FILE}"
+            } > "${RUNNER_TEMP}/deploy-logs/failure-meta.env"
             exit "${status}"
           fi
 
@@ -366,6 +503,7 @@ jobs:
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        shell: bash
         run: |
           if [ -z "${TELEGRAM_BOT_TOKEN}" ] || [ -z "${TELEGRAM_CHAT_ID}" ]; then
             echo "Skipping Telegram notification: missing secrets."
@@ -381,19 +519,47 @@ jobs:
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        shell: bash
         run: |
           if [ -z "${TELEGRAM_BOT_TOKEN}" ] || [ -z "${TELEGRAM_CHAT_ID}" ]; then
             echo "Skipping Telegram notification: missing secrets."
             exit 0
           fi
-          FAILED_STEP_NAME="${FAILED_STEP:-unknown}"
+
+          FAILED_STEP_NAME="unknown"
+          FAILED_LOG_FILE=""
+          if [ -f "${RUNNER_TEMP}/deploy-logs/failure-meta.env" ]; then
+            # shellcheck disable=SC1091
+            source "${RUNNER_TEMP}/deploy-logs/failure-meta.env"
+            FAILED_STEP_NAME="${FAILED_STEP:-unknown}"
+          fi
+          if [ -z "${FAILED_LOG_FILE}" ]; then
+            FAILED_LOG_FILE=$(find "${RUNNER_TEMP}/deploy-logs" -maxdepth 1 -type f -name '*.log' | sort | tail -n 1)
+          fi
+
           MESSAGE=$'Deploy failed\nRepo: '"${GITHUB_REPOSITORY}"$'\nBranch: '"${GITHUB_REF_NAME}"$'\nCommit: '"${GITHUB_SHA::8}"$'\nActor: '"${GITHUB_ACTOR}"$'\nStep: '"${FAILED_STEP_NAME}"$'\nRun: '"${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
           curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
             -d chat_id="${TELEGRAM_CHAT_ID}" \
             --data-urlencode text="${MESSAGE}" >/dev/null
+
           if [ -n "${FAILED_LOG_FILE}" ] && [ -f "${FAILED_LOG_FILE}" ]; then
-            curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendDocument" \
+            response=$(curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendDocument" \
               -F chat_id="${TELEGRAM_CHAT_ID}" \
               -F caption="Deploy failure log: ${FAILED_STEP_NAME}" \
-              -F document=@"${FAILED_LOG_FILE}" >/dev/null
+              -F document=@"${FAILED_LOG_FILE};type=text/plain")
+            if ! echo "${response}" | grep -q '"ok":true'; then
+              tail_excerpt=$(tail -n 40 "${FAILED_LOG_FILE}")
+              FALLBACK_MESSAGE=$'Deploy failure log tail\nStep: '"${FAILED_STEP_NAME}"$'\n\n'"${tail_excerpt}"
+              curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
+                -d chat_id="${TELEGRAM_CHAT_ID}" \
+                --data-urlencode text="${FALLBACK_MESSAGE}" >/dev/null
+            fi
           fi
+
+      - name: Upload deploy failure logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: deploy-failure-logs
+          path: ${{ runner.temp }}/deploy-logs/
+          if-no-files-found: ignore
