@@ -102,9 +102,14 @@ jobs:
           FAILED_PROJECT_NAME="unknown"
           FAILED_LOG_FILE=""
           if [ -f "${RUNNER_TEMP}/ci-test-logs/failure-meta.env" ]; then
-            # shellcheck disable=SC1091
-            source "${RUNNER_TEMP}/ci-test-logs/failure-meta.env"
-            FAILED_PROJECT_NAME="${FAILED_TEST_PROJECT:-unknown}"
+            parsed_project=$(grep '^FAILED_TEST_PROJECT=' "${RUNNER_TEMP}/ci-test-logs/failure-meta.env" | head -n 1 | cut -d= -f2-)
+            parsed_log=$(grep '^FAILED_LOG_FILE=' "${RUNNER_TEMP}/ci-test-logs/failure-meta.env" | head -n 1 | cut -d= -f2-)
+            if [ -n "${parsed_project}" ]; then
+              FAILED_PROJECT_NAME="${parsed_project}"
+            fi
+            if [ -n "${parsed_log}" ]; then
+              FAILED_LOG_FILE="${parsed_log}"
+            fi
           fi
           if [ -z "${FAILED_LOG_FILE}" ]; then
             FAILED_LOG_FILE=$(find "${RUNNER_TEMP}/ci-test-logs" -maxdepth 1 -type f -name '*.log' | sort | tail -n 1)

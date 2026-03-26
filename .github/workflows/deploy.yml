@@ -551,10 +551,14 @@ jobs:
           FAILED_LOG_FILE=""
           META_FILE="${RUNNER_TEMP}/deploy-logs/failure-meta.env"
           if [ -f "${META_FILE}" ]; then
-            # shellcheck disable=SC1091
-            source "${META_FILE}"
-            FAILED_STEP_NAME="${FAILED_STEP:-unknown}"
-            FAILED_LOG_FILE="${FAILED_LOG_FILE:-}"
+            parsed_step=$(grep '^FAILED_STEP=' "${META_FILE}" | head -n 1 | cut -d= -f2-)
+            parsed_log=$(grep '^FAILED_LOG_FILE=' "${META_FILE}" | head -n 1 | cut -d= -f2-)
+            if [ -n "${parsed_step}" ]; then
+              FAILED_STEP_NAME="${parsed_step}"
+            fi
+            if [ -n "${parsed_log}" ]; then
+              FAILED_LOG_FILE="${parsed_log}"
+            fi
           fi
 
           if [ -z "${FAILED_LOG_FILE}" ] || [ ! -f "${FAILED_LOG_FILE}" ]; then
