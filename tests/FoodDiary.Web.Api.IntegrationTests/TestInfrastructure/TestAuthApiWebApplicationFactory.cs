@@ -1,4 +1,4 @@
-using FoodDiary.Application.Common.Interfaces.Services;
+using FoodDiary.Application.Images.Common;
 using FoodDiary.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;

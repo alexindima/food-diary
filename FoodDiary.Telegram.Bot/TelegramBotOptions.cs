@@ -8,15 +8,17 @@ public sealed class TelegramBotOptions {
     public string ApiBaseUrl { get; init; } = string.Empty;
     public string ApiSecret { get; init; } = string.Empty;
 
-    public static bool HasValidWebAppUrl(string? value) {
-        return string.IsNullOrWhiteSpace(value) || Uri.IsWellFormedUriString(value, UriKind.Absolute);
+    public static bool HasValidWebAppUrl(TelegramBotOptions options) {
+        return string.IsNullOrWhiteSpace(options.WebAppUrl) ||
+               Uri.IsWellFormedUriString(options.WebAppUrl, UriKind.Absolute);
     }
 
-    public static bool HasValidApiBaseUrl(string? value) {
-        return string.IsNullOrWhiteSpace(value) || Uri.IsWellFormedUriString(value, UriKind.Absolute);
+    public static bool HasValidApiBaseUrl(TelegramBotOptions options) {
+        return string.IsNullOrWhiteSpace(options.ApiBaseUrl) ||
+               Uri.IsWellFormedUriString(options.ApiBaseUrl, UriKind.Absolute);
     }
 
-    public static bool HasValidApiSecret(string? value) {
-        return string.IsNullOrWhiteSpace(value) || value.Length >= 16;
+    public static bool HasValidApiSecret(TelegramBotOptions options) {
+        return string.IsNullOrWhiteSpace(options.ApiSecret) || options.ApiSecret.Length >= 16;
     }
 }

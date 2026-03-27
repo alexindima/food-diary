@@ -35,7 +35,8 @@ public class GetHydrationDailyTotalQueryHandler(
     private static DateTime NormalizeToUtcDate(DateTime value) {
         var utc = value.Kind switch {
             DateTimeKind.Utc => value,
-            _ => value.ToUniversalTime()
+            DateTimeKind.Local => value.ToUniversalTime(),
+            _ => DateTime.SpecifyKind(value, DateTimeKind.Utc),
         };
 
         return DateTime.SpecifyKind(utc.Date, DateTimeKind.Utc);

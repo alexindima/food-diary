@@ -1,16 +1,14 @@
 using System.Text;
-using System.Threading.RateLimiting;
 using FoodDiary.Application;
 using FoodDiary.Infrastructure;
 using FoodDiary.Infrastructure.Options;
 using FoodDiary.Presentation.Api.Extensions;
 using FoodDiary.Presentation.Api.Options;
-using FoodDiary.Presentation.Api.Policies;
-using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Web.Api.Options;
 using FoodDiary.Web.Api.Swagger;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.HttpLogging;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 using OpenTelemetry.Metrics;
@@ -25,36 +23,48 @@ public static class ApiServiceCollectionExtensions {
         services.AddInfrastructure(configuration);
         services.AddDistributedMemoryCache();
         services
+            .AddOptions<ApiCorsOptions>()
+            .BindConfiguration(ApiCorsOptions.SectionName)
+            .Validate(ApiCorsOptions.HasValidOrigins,
+                "Cors:Origins must contain at least one absolute origin URL.")
+            .ValidateOnStart();
+        services
+            .AddOptions<ApiRateLimitingOptions>()
+            .BindConfiguration(ApiRateLimitingOptions.SectionName)
+            .Validate(ApiRateLimitingOptions.HasValidAuth,
+                "RateLimiting:Auth requires positive PermitLimit/WindowSeconds and non-negative QueueLimit.")
+            .Validate(ApiRateLimitingOptions.HasValidAi,
+                "RateLimiting:Ai requires positive PermitLimit/WindowSeconds and non-negative QueueLimit.")
+            .ValidateOnStart();
+        services
+            .AddOptions<ApiOutputCacheOptions>()
+            .BindConfiguration(ApiOutputCacheOptions.SectionName)
+            .Validate(ApiOutputCacheOptions.HasValidAdminAiUsage,
+                "OutputCache:AdminAiUsage:ExpirationSeconds must be greater than zero.")
+            .ValidateOnStart();
+        services
             .AddOptions<OpenTelemetryOptions>()
-            .BindConfiguration(OpenTelemetryOptions.SectionName);
+            .BindConfiguration(OpenTelemetryOptions.SectionName)
+            .Validate(OpenTelemetryOptions.HasValidOtlpEndpoint,
+                "OpenTelemetry:Otlp:Endpoint must be a valid absolute URI when provided.")
+            .ValidateOnStart();
         services
             .AddOptions<TelegramBotAuthOptions>()
             .BindConfiguration(TelegramBotAuthOptions.SectionName)
-            .Validate(static options => string.IsNullOrWhiteSpace(options.ApiSecret) || options.ApiSecret.Length >= 16,
+            .Validate(TelegramBotAuthOptions.HasValidApiSecret,
                 "TelegramBot:ApiSecret must be empty or at least 16 characters long.")
             .ValidateOnStart();
-
-        var corsOrigins = configuration.GetSection("Cors:Origins").Get<string[]>();
-        var allowedOrigins = corsOrigins is { Length: > 0 }
-            ? corsOrigins
-            : ["http://localhost:4200", "http://localhost:4300"];
-
-        services.AddCors(options => {
-            options.AddPolicy(ApiCompositionConstants.CorsPolicyName, policy => {
-                policy
-                    .WithOrigins(allowedOrigins)
-                    .AllowAnyMethod()
-                    .AllowAnyHeader()
-                    .AllowCredentials();
-            });
-        });
-
-        var jwtOptions = configuration.GetRequiredSection(JwtOptions.SectionName).Get<JwtOptions>()
-                         ?? throw new InvalidOperationException("JWT settings are not configured.");
+        services.AddSingleton<IConfigureOptions<Microsoft.AspNetCore.Cors.Infrastructure.CorsOptions>, CorsOptionsSetup>();
+        services.AddSingleton<IConfigureOptions<Microsoft.AspNetCore.RateLimiting.RateLimiterOptions>, RateLimiterOptionsSetup>();
+        services.AddSingleton<IConfigureOptions<Microsoft.AspNetCore.OutputCaching.OutputCacheOptions>, OutputCacheOptionsSetup>();
+        services.AddCors(static _ => { });
 
         services
             .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            .AddJwtBearer(options => {
+            .AddJwtBearer();
+        services.AddOptions<JwtBearerOptions>(JwtBearerDefaults.AuthenticationScheme)
+            .Configure<IOptions<JwtOptions>>((options, jwtOptionsAccessor) => {
+                var jwtOptions = jwtOptionsAccessor.Value;
                 options.TokenValidationParameters = new TokenValidationParameters {
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.SecretKey)),
@@ -91,48 +101,8 @@ public static class ApiServiceCollectionExtensions {
         });
         services.AddProblemDetails();
         services.AddExceptionHandler<ApiExceptionHandler>();
-        services.AddRateLimiter(options => {
-            options.OnRejected = async (context, cancellationToken) => {
-                var httpContext = context.HttpContext;
-                httpContext.Response.StatusCode = StatusCodes.Status429TooManyRequests;
-                ApiTelemetry.RateLimitRejectionCounter.Add(
-                    1,
-                    new KeyValuePair<string, object?>("http.request.method", httpContext.Request.Method),
-                    new KeyValuePair<string, object?>("url.path", httpContext.Request.Path.Value));
-
-                await httpContext.Response.WriteAsJsonAsync(new ApiErrorHttpResponse(
-                    "RateLimit.Exceeded",
-                    "Too many requests. Try again later.",
-                    httpContext.TraceIdentifier), cancellationToken);
-            };
-            options.AddPolicy<string>(PresentationPolicyNames.AuthRateLimitPolicyName, context =>
-                RateLimitPartition.GetFixedWindowLimiter(
-                    partitionKey: $"auth:{GetRateLimitPartitionKey(context)}",
-                    factory: static _ => new FixedWindowRateLimiterOptions {
-                        PermitLimit = 5,
-                        Window = TimeSpan.FromMinutes(1),
-                        QueueLimit = 0,
-                        QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
-                        AutoReplenishment = true,
-                    }));
-            options.AddPolicy<string>(PresentationPolicyNames.AiRateLimitPolicyName, context =>
-                RateLimitPartition.GetFixedWindowLimiter(
-                    partitionKey: $"ai:{GetRateLimitPartitionKey(context)}",
-                    factory: static _ => new FixedWindowRateLimiterOptions {
-                        PermitLimit = 10,
-                        Window = TimeSpan.FromMinutes(1),
-                        QueueLimit = 0,
-                        QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
-                        AutoReplenishment = true,
-                    }));
-        });
-        services.AddOutputCache(options => {
-            options.AddPolicy(PresentationPolicyNames.AdminAiUsageCachePolicyName, builder => builder
-                .Cache()
-                .Expire(TimeSpan.FromSeconds(15))
-                .SetVaryByQuery("*")
-                .Tag("admin-ai-usage"));
-        });
+        services.AddRateLimiter(static _ => { });
+        services.AddOutputCache(static _ => { });
         services.AddPresentationApi();
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen(options => {
@@ -159,14 +129,18 @@ public static class ApiServiceCollectionExtensions {
     }
 
     private static IServiceCollection AddConfiguredOpenTelemetry(this IServiceCollection services, IConfiguration configuration) {
-        var otlpEndpoint = configuration[$"{OpenTelemetryOptions.SectionName}:Otlp:Endpoint"];
-        if (string.IsNullOrWhiteSpace(otlpEndpoint)) {
+        var openTelemetryOptions = new OpenTelemetryOptions();
+        configuration.GetSection(OpenTelemetryOptions.SectionName).Bind(openTelemetryOptions);
+
+        if (string.IsNullOrWhiteSpace(openTelemetryOptions.Otlp.Endpoint)) {
             return services;
         }
 
-        if (!Uri.TryCreate(otlpEndpoint, UriKind.Absolute, out var endpointUri)) {
+        if (!OpenTelemetryOptions.HasValidOtlpEndpoint(openTelemetryOptions)) {
             throw new InvalidOperationException("OpenTelemetry:Otlp:Endpoint must be a valid absolute URI.");
         }
+
+        var endpointUri = new Uri(openTelemetryOptions.Otlp.Endpoint, UriKind.Absolute);
 
         services.AddOpenTelemetry()
             .ConfigureResource(resource => resource.AddService("FoodDiary.Web.Api"))
@@ -180,20 +154,5 @@ public static class ApiServiceCollectionExtensions {
                 .AddOtlpExporter(options => options.Endpoint = endpointUri));
 
         return services;
-    }
-
-    private static string GetRateLimitPartitionKey(HttpContext context) {
-        var userId = context.User.GetUserGuid();
-        if (userId.HasValue && userId.Value != Guid.Empty) {
-            return $"user:{userId.Value:D}";
-        }
-
-        var forwardedFor = context.Request.Headers["X-Forwarded-For"].ToString();
-        if (!string.IsNullOrWhiteSpace(forwardedFor)) {
-            return $"ip:{forwardedFor}";
-        }
-
-        var remoteIp = context.Connection.RemoteIpAddress?.ToString();
-        return $"ip:{remoteIp ?? "unknown"}";
     }
 }

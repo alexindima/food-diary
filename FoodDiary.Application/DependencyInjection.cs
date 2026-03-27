@@ -3,6 +3,7 @@ using FoodDiary.Application.Authentication.Services;
 using FoodDiary.Application.Common.Behaviors;
 using FoodDiary.Application.Common.Interfaces.Services;
 using FoodDiary.Application.Common.Services;
+using FoodDiary.Application.Images.Common;
 using FoodDiary.Application.Images.Services;
 using FluentValidation;
 using System.Reflection;

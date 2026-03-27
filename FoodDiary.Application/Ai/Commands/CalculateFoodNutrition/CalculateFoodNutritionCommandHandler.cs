@@ -1,6 +1,6 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
-using FoodDiary.Application.Common.Interfaces.Services;
+using FoodDiary.Application.Ai.Common;
 using FoodDiary.Application.Ai.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 

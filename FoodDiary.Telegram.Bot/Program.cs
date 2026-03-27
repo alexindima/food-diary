@@ -6,11 +6,11 @@ var builder = Host.CreateApplicationBuilder(args);
 
 builder.Services.AddOptions<TelegramBotOptions>()
     .Bind(builder.Configuration.GetSection(TelegramBotOptions.SectionName))
-    .Validate(static options => TelegramBotOptions.HasValidWebAppUrl(options.WebAppUrl),
+    .Validate(TelegramBotOptions.HasValidWebAppUrl,
         "TelegramBot:WebAppUrl must be empty or an absolute URL.")
-    .Validate(static options => TelegramBotOptions.HasValidApiBaseUrl(options.ApiBaseUrl),
+    .Validate(TelegramBotOptions.HasValidApiBaseUrl,
         "TelegramBot:ApiBaseUrl must be empty or an absolute URL.")
-    .Validate(static options => TelegramBotOptions.HasValidApiSecret(options.ApiSecret),
+    .Validate(TelegramBotOptions.HasValidApiSecret,
         "TelegramBot:ApiSecret must be empty or at least 16 characters long.")
     .ValidateOnStart();
 

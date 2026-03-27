@@ -1,4 +1,5 @@
 using FoodDiary.Application.Common.Interfaces.Services;
+using FoodDiary.Application.Images.Common;
 using Microsoft.Extensions.Options;
 
 namespace FoodDiary.JobManager.Services;

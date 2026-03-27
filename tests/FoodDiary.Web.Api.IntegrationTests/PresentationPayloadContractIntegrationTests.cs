@@ -248,7 +248,7 @@ public sealed class PresentationPayloadContractIntegrationTests(
                 450));
         createResponse.EnsureSuccessStatusCode();
 
-        var response = await client.GetAsync("/api/hydrations/daily?date=2026-03-26");
+        var response = await client.GetAsync("/api/hydrations/daily?dateUtc=2026-03-26");
         using var json = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
         var actual = JsonSerializer.Serialize(
             BuildHydrationDailySnapshot(json.RootElement),

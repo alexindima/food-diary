@@ -4,6 +4,10 @@ using FoodDiary.Application.Hydration.Commands.UpdateHydrationEntry;
 using FoodDiary.Application.Hydration.Queries.GetHydrationDailyTotal;
 using FoodDiary.Application.Hydration.Queries.GetHydrationEntries;
 using FoodDiary.Application.Hydration.Validators;
+using FoodDiary.Application.Common.Interfaces.Persistence;
+using FoodDiary.Domain.Entities.Tracking;
+using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.Hydration;
 
@@ -74,5 +78,60 @@ public class HydrationFeatureTests {
         var result = HydrationValidators.ValidateAmount(500);
 
         Assert.True(result.IsSuccess);
+    }
+
+    [Fact]
+    public async Task GetHydrationDailyTotalQueryHandler_WithUnspecifiedDate_PreservesCalendarDayAsUtc() {
+        var user = User.Create("user@example.com", "hash");
+        var repository = new RecordingHydrationEntryRepository();
+        var userRepository = new StubUserRepository(user);
+        var handler = new GetHydrationDailyTotalQueryHandler(repository, userRepository);
+        var queryDate = new DateTime(2026, 3, 26, 0, 0, 0, DateTimeKind.Unspecified);
+
+        var result = await handler.Handle(
+            new GetHydrationDailyTotalQuery(user.Id.Value, queryDate),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(new DateTime(2026, 3, 26, 0, 0, 0, DateTimeKind.Utc), repository.LastDailyTotalDateUtc);
+        Assert.Equal(new DateTime(2026, 3, 26, 0, 0, 0, DateTimeKind.Utc), result.Value.DateUtc);
+    }
+
+    private sealed class RecordingHydrationEntryRepository : IHydrationEntryRepository {
+        public DateTime? LastDailyTotalDateUtc { get; private set; }
+
+        public Task<HydrationEntry> AddAsync(HydrationEntry entry, CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+
+        public Task UpdateAsync(HydrationEntry entry, CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+
+        public Task DeleteAsync(HydrationEntry entry, CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+
+        public Task<HydrationEntry?> GetByIdAsync(HydrationEntryId id, bool asTracking = false, CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+
+        public Task<IReadOnlyList<HydrationEntry>> GetByDateAsync(UserId userId, DateTime dateUtc, CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<HydrationEntry>>([]);
+
+        public Task<int> GetDailyTotalAsync(UserId userId, DateTime dateUtc, CancellationToken cancellationToken = default) {
+            LastDailyTotalDateUtc = dateUtc;
+            return Task.FromResult(0);
+        }
+    }
+
+    private sealed class StubUserRepository(User user) : IUserRepository {
+        public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult<User?>(user.Id == id ? user : null);
+        public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult<User?>(user.Id == id ? user : null);
+        public Task<User?> GetByTelegramUserIdAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User?> GetByTelegramUserIdIncludingDeletedAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<(IReadOnlyList<User> Items, int TotalItems)> GetPagedAsync(string? search, int page, int limit, bool includeDeleted, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers)> GetAdminDashboardSummaryAsync(int recentLimit, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<IReadOnlyList<Role>> GetRolesByNamesAsync(IReadOnlyList<string> names, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User> AddAsync(User addedUser, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task UpdateAsync(User updatedUser, CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 }

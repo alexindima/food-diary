@@ -68,6 +68,22 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void ApplicationCommonServiceInterfaces_StayLimitedToTrueCrossCuttingAbstractions() {
+        var root = GetRepositoryRoot();
+        var servicesRoot = Path.Combine(root, "FoodDiary.Application", "Common", "Interfaces", "Services");
+        var allowedFiles = new[] {
+            "IDateTimeProvider.cs",
+        };
+
+        var actualFiles = Directory.GetFiles(servicesRoot, "*.cs", SearchOption.TopDirectoryOnly)
+            .Select(Path.GetFileName)
+            .OrderBy(static name => name, StringComparer.Ordinal)
+            .ToArray();
+
+        Assert.Equal(allowedFiles, actualFiles);
+    }
+
+    [Fact]
     public void ApplicationSourceFiles_DoNotReferencePresentationOrAspNetTransportTypes() {
         var root = GetRepositoryRoot();
         var applicationRoot = Path.Combine(root, "FoodDiary.Application");
@@ -113,6 +129,31 @@ public sealed class ApplicationGuardrailTests {
             .SelectMany(path => File.ReadAllLines(path)
                 .Select((line, index) => new { path, index, line }))
             .Where(static entry => entry.line.Contains("CancellationToken.None", StringComparison.Ordinal))
+            .Select(entry => $"{Path.GetRelativePath(root, entry.path)}:{entry.index + 1}")
+            .ToArray();
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void ApplicationSourceFiles_DoNotDependOnOptionsOrConfiguration() {
+        var root = GetRepositoryRoot();
+        var applicationRoot = Path.Combine(root, "FoodDiary.Application");
+        var forbiddenPatterns = new[] {
+            "IOptions<",
+            "IOptionsMonitor<",
+            "IOptionsSnapshot<",
+            "IConfiguration",
+            "using Microsoft.Extensions.Options",
+            "using Microsoft.Extensions.Configuration",
+        };
+
+        var violations = Directory.GetFiles(applicationRoot, "*.cs", SearchOption.AllDirectories)
+            .Where(static path => path.Contains($"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase) is false)
+            .Where(static path => path.Contains($"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase) is false)
+            .SelectMany(path => File.ReadAllLines(path)
+                .Select((line, index) => new { path, index, line }))
+            .Where(entry => forbiddenPatterns.Any(pattern => entry.line.Contains(pattern, StringComparison.Ordinal)))
             .Select(entry => $"{Path.GetRelativePath(root, entry.path)}:{entry.index + 1}")
             .ToArray();
 
