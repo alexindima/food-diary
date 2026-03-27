@@ -9,10 +9,10 @@ namespace FoodDiary.Application.Products.Commands.DeleteProduct;
 public class DeleteProductCommandHandler(
     IProductRepository productRepository,
     IImageAssetCleanupService imageAssetCleanupService)
-    : ICommandHandler<DeleteProductCommand, Result<bool>> {
-    public async Task<Result<bool>> Handle(DeleteProductCommand command, CancellationToken cancellationToken) {
+    : ICommandHandler<DeleteProductCommand, Result> {
+    public async Task<Result> Handle(DeleteProductCommand command, CancellationToken cancellationToken) {
         if (command.UserId is null || command.UserId == Guid.Empty) {
-            return Result.Failure<bool>(Errors.Authentication.InvalidToken);
+            return Result.Failure(Errors.Authentication.InvalidToken);
         }
 
         var userId = new UserId(command.UserId.Value);
@@ -24,7 +24,7 @@ public class DeleteProductCommandHandler(
             includePublic: false,
             cancellationToken: cancellationToken);
         if (product is null) {
-            return Result.Failure<bool>(Errors.Product.NotAccessible(command.ProductId));
+            return Result.Failure(Errors.Product.NotAccessible(command.ProductId));
         }
 
         var assetId = product.ImageAssetId;
@@ -34,6 +34,6 @@ public class DeleteProductCommandHandler(
             await imageAssetCleanupService.DeleteIfUnusedAsync(assetId.Value, cancellationToken);
         }
 
-        return Result.Success(true);
+        return Result.Success();
     }
 }

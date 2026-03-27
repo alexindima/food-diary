@@ -9,10 +9,10 @@ namespace FoodDiary.Application.Recipes.Commands.DeleteRecipe;
 public class DeleteRecipeCommandHandler(
     IRecipeRepository recipeRepository,
     IImageAssetCleanupService imageAssetCleanupService)
-    : ICommandHandler<DeleteRecipeCommand, Result<bool>> {
-    public async Task<Result<bool>> Handle(DeleteRecipeCommand command, CancellationToken cancellationToken) {
+    : ICommandHandler<DeleteRecipeCommand, Result> {
+    public async Task<Result> Handle(DeleteRecipeCommand command, CancellationToken cancellationToken) {
         if (command.UserId is null || command.UserId == Guid.Empty) {
-            return Result.Failure<bool>(Errors.Authentication.InvalidToken);
+            return Result.Failure(Errors.Authentication.InvalidToken);
         }
 
         var userId = new UserId(command.UserId.Value);
@@ -27,11 +27,11 @@ public class DeleteRecipeCommandHandler(
             cancellationToken: cancellationToken);
 
         if (recipe is null) {
-            return Result.Failure<bool>(Errors.Recipe.NotAccessible(command.RecipeId));
+            return Result.Failure(Errors.Recipe.NotAccessible(command.RecipeId));
         }
 
         if (recipe.MealItems.Count + recipe.NestedRecipeUsages.Count > 0) {
-            return Result.Failure<bool>(Errors.Validation.Invalid("RecipeId",
+            return Result.Failure(Errors.Validation.Invalid("RecipeId",
                 "Recipe is already used and cannot be deleted"));
         }
 
@@ -52,6 +52,6 @@ public class DeleteRecipeCommandHandler(
             await imageAssetCleanupService.DeleteIfUnusedAsync(stepAssetId, cancellationToken);
         }
 
-        return Result.Success(true);
+        return Result.Success();
     }
 }

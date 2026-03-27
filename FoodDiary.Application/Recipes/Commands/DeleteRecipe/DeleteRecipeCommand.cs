@@ -5,4 +5,4 @@ namespace FoodDiary.Application.Recipes.Commands.DeleteRecipe;
 
 public record DeleteRecipeCommand(
     Guid? UserId,
-    Guid RecipeId) : ICommand<Result<bool>>;
+    Guid RecipeId) : ICommand<Result>;
