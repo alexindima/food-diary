@@ -21,7 +21,7 @@
                         variant="primary"
                         fill="solid"
                         [ariaLabel]="'CONSUMPTION_LIST.ADD_CONSUMPTION_BUTTON' | translate"
-                        (click)="goToConsumptionAdd()"
+                        (click)="goToMealAdd()"
                     />
                 </div>
             } @else {
@@ -43,7 +43,7 @@
                             variant="primary"
                             fill="solid"
                             [ariaLabel]="'CONSUMPTION_LIST.ADD_CONSUMPTION_BUTTON' | translate"
-                            (click)="goToConsumptionAdd()"
+                            (click)="goToMealAdd()"
                         >
                             {{ 'CONSUMPTION_LIST.ADD_CONSUMPTION_BUTTON' | translate }}
                         </fd-ui-button>
@@ -93,7 +93,7 @@
                                 <fd-meal-card
                                     class="consumption-card"
                                     [meal]="consumption"
-                                    (open)="openConsumptionDetails(consumption)"
+                                    (open)="openMealDetails(consumption)"
                                 />
                             }
                         </div>

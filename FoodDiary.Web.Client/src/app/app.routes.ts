@@ -1,12 +1,6 @@
 import { Routes } from '@angular/router';
 import { MainComponent } from './components/main/main.component';
-import { ConsumptionContainerComponent } from './components/consumption-container/consumption-container.component';
-import { ConsumptionListComponent } from './components/consumption-container/consumption-list/consumption-list.component';
-import { ConsumptionAddComponent } from './components/consumption-container/consumption-manage/consumption-add/consumption-add.component';
-import { ConsumptionEditComponent } from './components/consumption-container/consumption-manage/consumption-edit/consumption-edit.component';
-import { consumptionResolver } from './resolvers/consumption.resolver';
 import { loggedInGuard } from './guards/logged-in.guard';
-import { authGuard } from './guards/auth.guard';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { unsavedChangesGuard } from './guards/unsaved-changes.guard';
 import { EmailVerificationPendingComponent } from './components/auth/email-verification-pending/email-verification-pending.component';
@@ -22,6 +16,7 @@ import { waistHistoryRoutes } from './features/waist-history/waist-history.route
 import { cycleTrackingRoutes } from './features/cycle-tracking/cycle-tracking.routes';
 import { premiumRoutes } from './features/premium/premium.routes';
 import { profileRoutes } from './features/profile/profile.routes';
+import { mealRoutes } from './features/meals/meals.routes';
 
 export const routes: Routes = [
     { path: '', component: MainComponent, canDeactivate: [unsavedChangesGuard] },
@@ -50,20 +45,7 @@ export const routes: Routes = [
         component: PasswordResetComponent,
     },
     ...productRoutes,
-    {
-        path: 'meals',
-        component: ConsumptionContainerComponent,
-        canActivate: [authGuard],
-        children: [
-            { path: '', component: ConsumptionListComponent },
-            { path: 'add', component: ConsumptionAddComponent },
-            {
-                path: ':id/edit',
-                component: ConsumptionEditComponent,
-                resolve: { consumption: consumptionResolver },
-            },
-        ],
-    },
+    ...mealRoutes,
     ...recipeRoutes,
     ...shoppingListRoutes,
     ...goalsRoutes,

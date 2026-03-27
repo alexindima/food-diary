@@ -1,7 +1,7 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
-import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, computed, inject, OnInit, signal, viewChild } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, OnInit, computed, inject, signal, viewChild } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiDateRangeInputComponent, FdUiDateRangeValue } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
@@ -9,23 +9,24 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiIconModule } from 'fd-ui-kit/material';
 import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.component';
-import { catchError, debounceTime, distinctUntilChanged, map, Observable, of, startWith, switchMap } from 'rxjs';
-import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
-import { ConsumptionService } from '../../../services/consumption.service';
-import { NavigationService } from '../../../services/navigation.service';
-import { FormGroupControls } from '../../../types/common.data';
-import { Consumption, ConsumptionFilters } from '../../../types/consumption.data';
-import { PagedData } from '../../../types/paged-data.data';
-import { LocalizedDatePipe } from '../../../pipes/localized-date.pipe';
-import { MealCardComponent } from '../../shared/meal-card/meal-card.component';
-import { PageBodyComponent } from '../../shared/page-body/page-body.component';
-import { PageHeaderComponent } from '../../shared/page-header/page-header.component';
-import { ConsumptionDetailActionResult, ConsumptionDetailComponent } from '../consumption-detail/consumption-detail.component';
+import { Observable, catchError, debounceTime, distinctUntilChanged, map, of, startWith, switchMap } from 'rxjs';
+
+import { MealDetailActionResult, MealDetailComponent } from '../../components/detail/meal-detail.component';
+import { MealCardComponent } from '../../../../components/shared/meal-card/meal-card.component';
+import { PageBodyComponent } from '../../../../components/shared/page-body/page-body.component';
+import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header.component';
+import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
+import { LocalizedDatePipe } from '../../../../pipes/localized-date.pipe';
+import { ConsumptionService } from '../../../../services/consumption.service';
+import { NavigationService } from '../../../../services/navigation.service';
+import { FormGroupControls } from '../../../../types/common.data';
+import { Consumption, ConsumptionFilters } from '../../../../types/consumption.data';
+import { PagedData } from '../../../../types/paged-data.data';
 
 @Component({
-    selector: 'fd-consumption-list',
-    templateUrl: './consumption-list.component.html',
-    styleUrls: ['./consumption-list.component.scss'],
+    selector: 'fd-meal-list',
+    templateUrl: './meal-list.component.html',
+    styleUrls: ['./meal-list.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         ReactiveFormsModule,
@@ -42,7 +43,7 @@ import { ConsumptionDetailActionResult, ConsumptionDetailComponent } from '../co
         LocalizedDatePipe,
     ],
 })
-export class ConsumptionListComponent implements OnInit {
+export class MealListComponent implements OnInit {
     private readonly consumptionService = inject(ConsumptionService);
     private readonly navigationService = inject(NavigationService);
     private readonly destroyRef = inject(DestroyRef);
@@ -55,7 +56,6 @@ export class ConsumptionListComponent implements OnInit {
     public readonly groupedConsumptions = computed(() => this.groupByDate(this.consumptionData.items()));
     public readonly isMobileView = signal<boolean>(window.matchMedia('(max-width: 768px)').matches);
     private readonly isMobileDateFilterOpen = signal(false);
-
     private readonly container = viewChild.required<ElementRef<HTMLElement>>('container');
 
     public constructor() {
@@ -118,9 +118,9 @@ export class ConsumptionListComponent implements OnInit {
         this.loadConsumptions(pageIndex + 1).subscribe();
     }
 
-    public async openConsumptionDetails(consumption: Consumption): Promise<void> {
+    public async openMealDetails(consumption: Consumption): Promise<void> {
         this.fdDialogService
-            .open<ConsumptionDetailComponent, Consumption, ConsumptionDetailActionResult>(ConsumptionDetailComponent, {
+            .open<MealDetailComponent, Consumption, MealDetailActionResult>(MealDetailComponent, {
                 size: 'lg',
                 data: consumption,
             })
@@ -143,7 +143,7 @@ export class ConsumptionListComponent implements OnInit {
             });
     }
 
-    public async goToConsumptionAdd(): Promise<void> {
+    public async goToMealAdd(): Promise<void> {
         await this.navigationService.navigateToConsumptionAdd();
     }
 

@@ -14,10 +14,10 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { MeasurementUnit, Product, ProductVisibility, ProductType } from '../../../products/models/product.data';
 import { nonEmptyArrayValidator } from '../../../../validators/non-empty-array.validator';
 import {
-    ConsumptionItemSelectDialogComponent,
-    ConsumptionItemSelection,
-    ConsumptionItemSelectDialogData,
-} from '../../../../components/consumption-container/consumption-item-select-dialog/consumption-item-select-dialog.component';
+    ItemSelectDialogComponent,
+    ItemSelection,
+    ItemSelectDialogData,
+} from '../../../../components/shared/item-select-dialog/item-select-dialog.component';
 import { NutrientData } from '../../../../types/charts.data';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Recipe, RecipeDto, RecipeVisibility, RecipeIngredient } from '../../models/recipe.data';
@@ -434,8 +434,8 @@ export class RecipeManageComponent implements OnInit {
         this.selectedStepIndex = stepIndex;
         this.selectedIngredientIndex = ingredientIndex;
         this.fdDialogService
-            .open<ConsumptionItemSelectDialogComponent, ConsumptionItemSelectDialogData, ConsumptionItemSelection | null>(
-                ConsumptionItemSelectDialogComponent,
+            .open<ItemSelectDialogComponent, ItemSelectDialogData, ItemSelection | null>(
+                ItemSelectDialogComponent,
                 {
                     size: 'lg',
                     data: { initialTab: 'Product' },

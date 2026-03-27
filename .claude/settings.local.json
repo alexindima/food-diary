@@ -29,7 +29,16 @@
       "Bash(grep -E \"Features/[^/]+$\")",
       "Bash(grep \"\\\\.cs$\")",
       "Bash(grep -v \"^d.*\\\\.$\")",
-      "Bash(xargs grep:*)"
+      "Bash(xargs grep:*)",
+      "Bash(find /c/Users/alexi/OneDrive/Документы/GitHub/food-diary/tests -name \"*.cs\" -type f ! -path \"*/obj/*\" -exec grep -l \"^\\\\s*\\\\[Fact\\\\]\" {})",
+      "Bash(xargs wc:*)",
+      "Bash(grep -r \"coverlet\\\\|coverage\\\\|CodeCoverage\" /c/Users/alexi/OneDrive/Документы/GitHub/food-diary --include=*.csproj --include=*.yml --include=*.yaml)",
+      "Bash(grep -v \"^Domain$\")",
+      "Bash(grep -v \"^Common$\")",
+      "Bash(grep -v \"^bin$\")",
+      "Bash(grep -v \"^obj$\")",
+      "Bash(/tmp/test_summary.txt:*)",
+      "Read(//tmp/**)"
     ],
     "deny": [],
     "ask": []

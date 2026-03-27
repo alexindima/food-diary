@@ -1,0 +1,19 @@
+:host ::ng-deep .satiety-scale--vertical .satiety-scale__list {
+    grid-template-columns: 1fr;
+    gap: 6px;
+    max-width: 100%;
+    width: 100%;
+    align-items: stretch;
+}
+
+:host ::ng-deep .satiety-scale--vertical .satiety-scale__option {
+    padding: 6px 10px;
+    min-height: auto;
+    width: 100%;
+    max-width: none;
+}
+
+:host ::ng-deep .satiety-scale--vertical .satiety-scale__list,
+:host ::ng-deep .satiety-scale--vertical .satiety-scale__option {
+    max-width: none !important;
+}

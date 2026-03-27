@@ -14,19 +14,19 @@ import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.
 import { ProductAddDialogComponent } from '../../../features/products/dialogs/product-add-dialog.component';
 import { RecipeManageComponent } from '../../../features/recipes/components/manage/recipe-manage.component';
 
-export type ConsumptionItemSelection =
+export type ItemSelection =
     | { type: 'Product'; product: Product }
     | { type: 'Recipe'; recipe: Recipe };
 
-export type ConsumptionItemSelectDialogData = {
+export type ItemSelectDialogData = {
     initialTab?: 'Product' | 'Recipe';
 };
 
 @Component({
-    selector: 'fd-consumption-item-select-dialog',
+    selector: 'fd-item-select-dialog',
     standalone: true,
-    templateUrl: './consumption-item-select-dialog.component.html',
-    styleUrls: ['./consumption-item-select-dialog.component.scss'],
+    templateUrl: './item-select-dialog.component.html',
+    styleUrls: ['./item-select-dialog.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         FdUiTabsComponent,
@@ -38,8 +38,8 @@ export type ConsumptionItemSelectDialogData = {
         FdUiDialogFooterDirective,
     ],
 })
-export class ConsumptionItemSelectDialogComponent implements OnInit {
-    private readonly dialogData = inject<ConsumptionItemSelectDialogData | null>(FD_UI_DIALOG_DATA, { optional: true });
+export class ItemSelectDialogComponent implements OnInit {
+    private readonly dialogData = inject<ItemSelectDialogData | null>(FD_UI_DIALOG_DATA, { optional: true });
     private readonly fdDialogService = inject(FdUiDialogService);
 
     public readonly embedded = input<boolean>(false);
@@ -58,7 +58,7 @@ export class ConsumptionItemSelectDialogComponent implements OnInit {
     ];
     public activeTab: 'Product' | 'Recipe' = 'Product';
     private readonly dialogRef = inject(
-        FdUiDialogRef<ConsumptionItemSelectDialogComponent, ConsumptionItemSelection | null>,
+        FdUiDialogRef<ItemSelectDialogComponent, ItemSelection | null>,
         { optional: true },
     );
 
@@ -111,7 +111,7 @@ export class ConsumptionItemSelectDialogComponent implements OnInit {
             });
     }
 
-    private completeWith(selection: ConsumptionItemSelection | null): void {
+    private completeWith(selection: ItemSelection | null): void {
         if (!this.embedded() && this.dialogRef) {
             this.dialogRef.close(selection);
             return;

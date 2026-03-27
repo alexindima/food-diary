@@ -12,13 +12,13 @@
 import { AbstractControl, FormArray, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { NavigationService } from '../../../services/navigation.service';
-import { RecipeService } from '../../../features/recipes/api/recipe.service';
+import { NavigationService } from '../../../../services/navigation.service';
+import { RecipeService } from '../../../recipes/api/recipe.service';
 import {
     ItemSelectDialogComponent,
     ItemSelectDialogData,
     ItemSelection,
-} from '../../../shared/item-select-dialog/item-select-dialog.component';
+} from '../../../../components/shared/item-select-dialog/item-select-dialog.component';
 import {
     Consumption,
     ConsumptionAiItemManageDto,
@@ -26,16 +26,16 @@ import {
     ConsumptionItemManageDto,
     ConsumptionManageDto,
     ConsumptionSourceType,
-} from '../../../types/consumption.data';
-import { ConsumptionService } from '../../../services/consumption.service';
-import { FormGroupControls } from '../../../types/common.data';
-import { Product, MeasurementUnit } from '../../../features/products/models/product.data';
-import { Recipe, RecipeIngredient } from '../../../features/recipes/models/recipe.data';
+} from '../../../../types/consumption.data';
+import { ConsumptionService } from '../../../../services/consumption.service';
+import { FormGroupControls } from '../../../../types/common.data';
+import { Product, MeasurementUnit } from '../../../products/models/product.data';
+import { Recipe, RecipeIngredient } from '../../../recipes/models/recipe.data';
 import { HttpErrorResponse } from '@angular/common/http';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { NutrientData } from '../../../types/charts.data';
+import { NutrientData } from '../../../../types/charts.data';
 import {
-} from '../../shared/nutrients-summary/nutrients-summary.component';
+} from '../../../../components/shared/nutrients-summary/nutrients-summary.component';
 import { FdUiFormErrorComponent, FD_VALIDATION_ERRORS, FdValidationErrors } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
@@ -50,29 +50,29 @@ import { FdUiTimeInputComponent } from 'fd-ui-kit/time-input/fd-ui-time-input.co
 import { FdUiSelectComponent } from 'fd-ui-kit/select/fd-ui-select.component';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea.component';
 import {
-    SatietyLevelDialogComponent,
+    MealSatietyLevelDialogComponent,
     SatietyLevelDialogData,
-} from '../satiety-level-dialog/satiety-level-dialog.component';
+} from '../../dialogs/satiety-level-dialog/meal-satiety-level-dialog.component';
 import { DEFAULT_SATIETY_LEVELS } from 'fd-ui-kit/satiety-scale/fd-ui-satiety-scale.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import {
     ConsumptionManageRedirectAction,
-    ConsumptionManageSuccessDialogComponent,
+    MealManageSuccessDialogComponent,
     ConsumptionManageSuccessDialogData,
-} from './success-dialog/consumption-manage-success-dialog.component';
-import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
-import { ImageUploadFieldComponent } from '../../shared/image-upload-field/image-upload-field.component';
-import { ImageSelection } from '../../../types/image-upload.data';
+} from '../../dialogs/manage-success-dialog/meal-manage-success-dialog.component';
+import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
+import { ImageUploadFieldComponent } from '../../../../components/shared/image-upload-field/image-upload-field.component';
+import { ImageSelection } from '../../../../types/image-upload.data';
 import { ActivatedRoute, Router } from '@angular/router';
-import { QuickConsumptionItem } from '../../../services/quick-consumption.service';
-import { ConsumptionPhotoRecognitionDialogComponent } from '../consumption-photo-recognition-dialog/consumption-photo-recognition-dialog.component';
-import { AiFoodService } from '../../../services/ai-food.service';
-import { UserAiUsageResponse } from '../../../types/ai.data';
-import { AuthService } from '../../../services/auth.service';
-import { PremiumRequiredDialogComponent } from '../../shared/premium-required-dialog/premium-required-dialog.component';
-import { NutritionCalculationService } from '../../../services/nutrition-calculation.service';
-import { NutritionEditorComponent } from '../../shared/nutrition-editor/nutrition-editor.component';
-import { ManageHeaderComponent } from '../../shared/manage-header/manage-header.component';
+import { QuickConsumptionItem } from '../../../../services/quick-consumption.service';
+import { MealPhotoRecognitionDialogComponent } from '../../dialogs/photo-recognition-dialog/meal-photo-recognition-dialog.component';
+import { AiFoodService } from '../../../../services/ai-food.service';
+import { UserAiUsageResponse } from '../../../../types/ai.data';
+import { AuthService } from '../../../../services/auth.service';
+import { PremiumRequiredDialogComponent } from '../../../../components/shared/premium-required-dialog/premium-required-dialog.component';
+import { NutritionCalculationService } from '../../../../services/nutrition-calculation.service';
+import { NutritionEditorComponent } from '../../../../components/shared/nutrition-editor/nutrition-editor.component';
+import { ManageHeaderComponent } from '../../../../components/shared/manage-header/manage-header.component';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: FD_VALIDATION_ERRORS,
@@ -87,9 +87,9 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
 };
 
 @Component({
-    selector: 'fd-base-consumption-manage',
-    templateUrl: './base-consumption-manage.component.html',
-    styleUrls: ['./base-consumption-manage.component.scss'],
+    selector: 'fd-base-meal-manage',
+    templateUrl: './base-meal-manage.component.html',
+    styleUrls: ['./base-meal-manage.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [VALIDATION_ERRORS_PROVIDER],
     imports: [
@@ -112,7 +112,7 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
         NutritionEditorComponent,
     ],
 })
-export class BaseConsumptionManageComponent implements OnInit {
+export class BaseMealManageComponent implements OnInit {
     private readonly consumptionService = inject(ConsumptionService);
     private readonly translateService = inject(TranslateService);
     private readonly navigationService = inject(NavigationService);
@@ -429,8 +429,8 @@ export class BaseConsumptionManageComponent implements OnInit {
         }
 
         this.fdDialogService
-            .open<ConsumptionPhotoRecognitionDialogComponent, never, ConsumptionAiSessionManageDto | null>(
-                ConsumptionPhotoRecognitionDialogComponent,
+            .open<MealPhotoRecognitionDialogComponent, never, ConsumptionAiSessionManageDto | null>(
+                MealPhotoRecognitionDialogComponent,
                 { size: 'lg' },
             )
             .afterClosed()
@@ -464,11 +464,11 @@ export class BaseConsumptionManageComponent implements OnInit {
 
         this.fdDialogService
             .open<
-                ConsumptionPhotoRecognitionDialogComponent,
+                MealPhotoRecognitionDialogComponent,
                 { initialSelection: ImageSelection | null; initialSession: ConsumptionAiSessionManageDto | null; mode: 'edit' },
                 ConsumptionAiSessionManageDto | null
             >(
-                ConsumptionPhotoRecognitionDialogComponent,
+                MealPhotoRecognitionDialogComponent,
                 { size: 'lg', data: { initialSelection: selection, initialSession: session ?? null, mode: 'edit' } },
             )
             .afterClosed()
@@ -744,8 +744,8 @@ export class BaseConsumptionManageComponent implements OnInit {
                 ? 'CONSUMPTION_MANAGE.HUNGER_BEFORE_DIALOG_TITLE'
                 : 'CONSUMPTION_MANAGE.HUNGER_AFTER_DIALOG_TITLE';
 
-        const dialogRef = this.fdDialogService.open<SatietyLevelDialogComponent, SatietyLevelDialogData, number>(
-            SatietyLevelDialogComponent,
+        const dialogRef = this.fdDialogService.open<MealSatietyLevelDialogComponent, SatietyLevelDialogData, number>(
+            MealSatietyLevelDialogComponent,
             {
                 size: 'lg',
                 data: {
@@ -1262,10 +1262,10 @@ export class BaseConsumptionManageComponent implements OnInit {
     private showConfirmDialog(): void {
         this.fdDialogService
             .open<
-                ConsumptionManageSuccessDialogComponent,
+                MealManageSuccessDialogComponent,
                 ConsumptionManageSuccessDialogData,
                 ConsumptionManageRedirectAction
-            >(ConsumptionManageSuccessDialogComponent, {
+            >(MealManageSuccessDialogComponent, {
                 size: 'sm',
                 data: {
                     isEdit: Boolean(this.consumption()),
