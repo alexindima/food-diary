@@ -1,5 +1,5 @@
 import { Product, MeasurementUnit, ProductType, ProductVisibility } from '../features/products/models/product.data';
-import { Recipe, RecipeVisibility } from './recipe.data';
+import { Recipe, RecipeVisibility } from '../features/recipes/models/recipe.data';
 
 export interface Consumption {
     id: string;

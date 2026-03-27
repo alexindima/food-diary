@@ -15,7 +15,7 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { AuthDialogComponent } from '../../auth/auth-dialog.component';
 import { FdUiTab } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
 import { Product, MeasurementUnit, ProductType, ProductVisibility } from '../../../features/products/models/product.data';
-import { Recipe, RecipeVisibility } from '../../../types/recipe.data';
+import { Recipe, RecipeVisibility } from '../../../features/recipes/models/recipe.data';
 import { QuickConsumptionItem, QuickConsumptionService } from '../../../services/quick-consumption.service';
 
 @Component({

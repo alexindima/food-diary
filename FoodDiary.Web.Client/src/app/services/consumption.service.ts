@@ -17,7 +17,7 @@ import {
 import { catchError, map, Observable, of } from 'rxjs';
 import { PageOf } from '../types/page-of.data';
 import { Product, MeasurementUnit } from '../features/products/models/product.data';
-import { Recipe } from '../types/recipe.data';
+import { Recipe } from '../features/recipes/models/recipe.data';
 
 @Injectable({
     providedIn: 'root',

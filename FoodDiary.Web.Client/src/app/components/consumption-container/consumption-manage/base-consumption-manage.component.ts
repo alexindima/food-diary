@@ -13,7 +13,7 @@ import { AbstractControl, FormArray, FormControl, FormGroup, ReactiveFormsModule
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { NavigationService } from '../../../services/navigation.service';
-import { RecipeService } from '../../../services/recipe.service';
+import { RecipeService } from '../../../features/recipes/api/recipe.service';
 import {
     ConsumptionItemSelectDialogComponent,
     ConsumptionItemSelectDialogData,
@@ -30,7 +30,7 @@ import {
 import { ConsumptionService } from '../../../services/consumption.service';
 import { FormGroupControls } from '../../../types/common.data';
 import { Product, MeasurementUnit } from '../../../features/products/models/product.data';
-import { Recipe, RecipeIngredient } from '../../../types/recipe.data';
+import { Recipe, RecipeIngredient } from '../../../features/recipes/models/recipe.data';
 import { HttpErrorResponse } from '@angular/common/http';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NutrientData } from '../../../types/charts.data';
