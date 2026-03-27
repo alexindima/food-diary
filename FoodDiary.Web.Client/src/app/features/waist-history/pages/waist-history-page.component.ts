@@ -1,4 +1,4 @@
-﻿import { CommonModule } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -9,19 +9,25 @@ import {
     inject,
     signal,
 } from '@angular/core';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration } from 'chart.js';
-import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { distinctUntilChanged, startWith } from 'rxjs';
-import { FdUiTab } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
-import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
+import { BaseChartDirective } from 'ng2-charts';
+
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
+import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiDateInputComponent } from 'fd-ui-kit/date-input/fd-ui-date-input.component';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
-import { WaistEntriesService } from '../../services/waist-entries.service';
-import { NavigationService } from '../../services/navigation.service';
+import { FdUiTab } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
+import { PageBodyComponent } from '../../../components/shared/page-body/page-body.component';
+import { PageHeaderComponent } from '../../../components/shared/page-header/page-header.component';
+import { PeriodFilterComponent } from '../../../components/shared/period-filter/period-filter.component';
+import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
+import { NavigationService } from '../../../services/navigation.service';
+import { UserService } from '../../../services/user.service';
+import { WaistEntriesService } from '../../../services/waist-entries.service';
 import {
     CreateWaistEntryPayload,
     UpdateWaistEntryPayload,
@@ -29,12 +35,7 @@ import {
     WaistEntryFilters,
     WaistEntrySummaryFilters,
     WaistEntrySummaryPoint,
-} from '../../types/waist-entry.data';
-import { UserService } from '../../services/user.service';
-import { PageHeaderComponent } from '../shared/page-header/page-header.component';
-import { PageBodyComponent } from '../shared/page-body/page-body.component';
-import { FdPageContainerDirective } from '../../directives/layout/page-container.directive';
-import { PeriodFilterComponent } from '../shared/period-filter/period-filter.component';
+} from '../../../types/waist-entry.data';
 
 @Component({
     selector: 'fd-waist-history-page',
@@ -64,10 +65,12 @@ export class WaistHistoryPageComponent implements OnInit {
     private readonly destroyRef = inject(DestroyRef);
     private readonly translate = inject(TranslateService);
     private readonly fb = inject(FormBuilder);
-
     private readonly defaultRange: WaistHistoryRange = 'month';
     private readonly whtScaleMax = 0.8;
     private readonly pointerPaddingPercent = 1;
+    private readonly editingEntryId = signal<string | null>(null);
+    private readonly userHeightCm = signal<number | null>(null);
+    private lastLoadedRangeKey: string | null = null;
 
     public readonly selectedRange = signal<WaistHistoryRange>(this.defaultRange);
     public readonly currentRange = computed<{ start: Date; end: Date }>(() =>
@@ -83,9 +86,6 @@ export class WaistHistoryPageComponent implements OnInit {
     public readonly desiredWaist = signal<number | null>(null);
     public readonly isDesiredWaistSaving = signal(false);
     public readonly desiredWaistControl = new FormControl<string>('');
-    private readonly editingEntryId = signal<string | null>(null);
-    private lastLoadedRangeKey: string | null = null;
-    private readonly userHeightCm = signal<number | null>(null);
 
     public readonly entriesDescending = computed(() =>
         [...this.entries()].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()),
@@ -95,13 +95,13 @@ export class WaistHistoryPageComponent implements OnInit {
         const ordered = [...this.summaryPoints()].sort(
             (a, b) => new Date(a.dateFrom).getTime() - new Date(b.dateFrom).getTime(),
         );
-
         const label = this.translate.instant('WAIST_HISTORY.CHART_LABEL');
+
         return {
             labels: ordered.map(point => this.formatDateLabel(point.dateFrom)),
             datasets: [
                 {
-                    data: ordered.map(point => (point.averageCircumference > 0 ? point.averageCircumference : null)),
+                    data: ordered.map(point => point.averageCircumference > 0 ? point.averageCircumference : null),
                     label,
                     borderColor: '#0ea5e9',
                     backgroundColor: 'transparent',
@@ -167,6 +167,7 @@ export class WaistHistoryPageComponent implements OnInit {
         if (!height || !waist || height <= 0) {
             return null;
         }
+
         const ratio = waist / height;
         return Math.round(ratio * 100) / 100;
     });
@@ -176,6 +177,7 @@ export class WaistHistoryPageComponent implements OnInit {
         if (ratio === null) {
             return '0%';
         }
+
         const rawPercent = (ratio / this.whtScaleMax) * 100;
         const clamped = Math.max(
             this.pointerPaddingPercent,
@@ -356,6 +358,7 @@ export class WaistHistoryPageComponent implements OnInit {
         if (!isWaistHistoryRange(value) || value === this.selectedRange()) {
             return;
         }
+
         this.selectedRange.set(value);
 
         if (value === 'custom') {
@@ -369,8 +372,6 @@ export class WaistHistoryPageComponent implements OnInit {
         } else {
             this.customRangeControl.setValue(null, { emitEvent: false });
         }
-
-        // rangeEffect will trigger loading when inputs change
     }
 
     public getSegmentWidth(segment: WhtSegment): string {
@@ -386,7 +387,6 @@ export class WaistHistoryPageComponent implements OnInit {
         }
 
         this.lastLoadedRangeKey = rangeKey;
-
         this.isLoading.set(true);
 
         if (initializeRange && this.selectedRange() === 'custom') {
@@ -456,6 +456,7 @@ export class WaistHistoryPageComponent implements OnInit {
         const date = typeof rawDate === 'string' ? new Date(rawDate) : rawDate;
         const utcDate = this.normalizeStartOfDay(date);
         const circumference = Number(rawCircumference);
+
         return {
             date: utcDate.toISOString(),
             circumference,
@@ -476,7 +477,6 @@ export class WaistHistoryPageComponent implements OnInit {
         rangeKey: string;
     } {
         const { start, end } = this.calculateRangeDates(range);
-
         const normalizedStart = this.normalizeStartOfDay(start);
         const normalizedEnd = this.normalizeEndOfDay(end);
         const totalDays = Math.max(1, Math.ceil((normalizedEnd.getTime() - normalizedStart.getTime()) / MS_IN_DAY));
@@ -524,19 +524,18 @@ export class WaistHistoryPageComponent implements OnInit {
             }
         }
 
-        return {
-            start,
-            end,
-        };
+        return { start, end };
     }
 
     private getQuantizationDays(range: WaistHistoryRange, totalDays: number): number {
         if (range === 'week') {
             return 1;
         }
+
         if (range === 'month') {
             return 3;
         }
+
         if (range === 'year') {
             return 14;
         }
@@ -589,4 +588,3 @@ interface WhtStatusInfo {
 function isWaistHistoryRange(value: string): value is WaistHistoryRange {
     return value === 'week' || value === 'month' || value === 'year' || value === 'custom';
 }
-

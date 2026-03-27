@@ -9,7 +9,6 @@ import { UserManageComponent } from './components/user-manage/user-manage.compon
 import { loggedInGuard } from './guards/logged-in.guard';
 import { authGuard } from './guards/auth.guard';
 import { NotFoundComponent } from './components/not-found/not-found.component';
-import { WaistHistoryPageComponent } from './components/waist-history-page/waist-history-page.component';
 import { CycleTrackingPageComponent } from './components/cycle-tracking-page/cycle-tracking-page.component';
 import { unsavedChangesGuard } from './guards/unsaved-changes.guard';
 import { EmailVerificationPendingComponent } from './components/auth/email-verification-pending/email-verification-pending.component';
@@ -22,6 +21,7 @@ import { shoppingListRoutes } from './features/shopping-lists/shopping-list.rout
 import { goalsRoutes } from './features/goals/goals.routes';
 import { statisticsRoutes } from './features/statistics/statistics.routes';
 import { weightHistoryRoutes } from './features/weight-history/weight-history.routes';
+import { waistHistoryRoutes } from './features/waist-history/waist-history.routes';
 
 export const routes: Routes = [
     { path: '', component: MainComponent, canDeactivate: [unsavedChangesGuard] },
@@ -69,6 +69,7 @@ export const routes: Routes = [
     ...goalsRoutes,
     ...statisticsRoutes,
     ...weightHistoryRoutes,
+    ...waistHistoryRoutes,
     {
         path: 'profile',
         component: UserManageComponent,
@@ -77,11 +78,6 @@ export const routes: Routes = [
     {
         path: 'premium',
         component: PremiumAccessPageComponent,
-        canActivate: [authGuard],
-    },
-    {
-        path: 'waist-history',
-        component: WaistHistoryPageComponent,
         canActivate: [authGuard],
     },
     {
