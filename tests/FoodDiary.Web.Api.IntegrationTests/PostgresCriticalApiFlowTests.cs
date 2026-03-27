@@ -89,7 +89,7 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
                 "Private"));
         var product = await createProductResponse.Content.ReadFromJsonAsync<ProductPayload>(JsonOptions);
 
-        Assert.Equal(HttpStatusCode.Created, createProductResponse.StatusCode);
+        await AssertStatusCodeAsync(HttpStatusCode.Created, createProductResponse);
         Assert.NotNull(product);
 
         var createShoppingListResponse = await client.PostAsJsonAsync(
@@ -107,14 +107,14 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
                         0)
                 ]));
 
-        Assert.Equal(HttpStatusCode.Created, createShoppingListResponse.StatusCode);
+        await AssertStatusCodeAsync(HttpStatusCode.Created, createShoppingListResponse);
 
         var deleteProductResponse = await client.DeleteAsync($"/api/products/{product.Id}");
         var currentShoppingListResponse = await client.GetAsync("/api/shopping-lists/current");
         var currentShoppingList = await currentShoppingListResponse.Content.ReadFromJsonAsync<ShoppingListPayload>(JsonOptions);
 
-        Assert.Equal(HttpStatusCode.NoContent, deleteProductResponse.StatusCode);
-        Assert.Equal(HttpStatusCode.OK, currentShoppingListResponse.StatusCode);
+        await AssertStatusCodeAsync(HttpStatusCode.NoContent, deleteProductResponse);
+        await AssertStatusCodeAsync(HttpStatusCode.OK, currentShoppingListResponse);
         Assert.NotNull(currentShoppingList);
 
         var item = Assert.Single(currentShoppingList.Items);
@@ -161,7 +161,7 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
                 ]));
         var recipe = await createRecipeResponse.Content.ReadFromJsonAsync<RecipePayload>(JsonOptions);
 
-        Assert.Equal(HttpStatusCode.Created, createRecipeResponse.StatusCode);
+        await AssertStatusCodeAsync(HttpStatusCode.Created, createRecipeResponse);
         Assert.NotNull(recipe);
 
         var deleteRecipeAssetWhileInUse = await client.DeleteAsync($"/api/images/{recipeAsset.AssetId}");
@@ -169,8 +169,8 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
         var recipeAssetError = await deleteRecipeAssetWhileInUse.Content.ReadFromJsonAsync<ErrorPayload>(JsonOptions);
         var stepAssetError = await deleteStepAssetWhileInUse.Content.ReadFromJsonAsync<ErrorPayload>(JsonOptions);
 
-        Assert.Equal(HttpStatusCode.Conflict, deleteRecipeAssetWhileInUse.StatusCode);
-        Assert.Equal(HttpStatusCode.Conflict, deleteStepAssetWhileInUse.StatusCode);
+        await AssertStatusCodeAsync(HttpStatusCode.Conflict, deleteRecipeAssetWhileInUse);
+        await AssertStatusCodeAsync(HttpStatusCode.Conflict, deleteStepAssetWhileInUse);
         Assert.NotNull(recipeAssetError);
         Assert.NotNull(stepAssetError);
         Assert.Equal("Image.InUse", recipeAssetError.Error);
@@ -180,9 +180,19 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
         var deleteRecipeAssetAfterRecipeDeletion = await client.DeleteAsync($"/api/images/{recipeAsset.AssetId}");
         var deleteStepAssetAfterRecipeDeletion = await client.DeleteAsync($"/api/images/{stepAsset.AssetId}");
 
-        Assert.Equal(HttpStatusCode.NoContent, deleteRecipeResponse.StatusCode);
-        Assert.Equal(HttpStatusCode.NoContent, deleteRecipeAssetAfterRecipeDeletion.StatusCode);
-        Assert.Equal(HttpStatusCode.NoContent, deleteStepAssetAfterRecipeDeletion.StatusCode);
+        await AssertStatusCodeAsync(HttpStatusCode.NoContent, deleteRecipeResponse);
+        await AssertStatusCodeAsync(HttpStatusCode.NoContent, deleteRecipeAssetAfterRecipeDeletion);
+        await AssertStatusCodeAsync(HttpStatusCode.NoContent, deleteStepAssetAfterRecipeDeletion);
+    }
+
+    private static async Task AssertStatusCodeAsync(HttpStatusCode expected, HttpResponseMessage response) {
+        if (response.StatusCode == expected) {
+            return;
+        }
+
+        var body = await response.Content.ReadAsStringAsync();
+        Assert.Fail(
+            $"Expected status {(int)expected} ({expected}), got {(int)response.StatusCode} ({response.StatusCode}). Body: {body}");
     }
 
     private static async Task<string> RegisterAndGetAccessTokenAsync(HttpClient client) {
