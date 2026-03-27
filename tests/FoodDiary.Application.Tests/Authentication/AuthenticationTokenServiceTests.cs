@@ -46,11 +46,18 @@ public class AuthenticationTokenServiceTests {
             var role = Role.Create(roleName);
             var userRole = new UserRole(user.Id, role.Id);
             user.UserRoles.Add(userRole);
-            role.UserRoles.Add(userRole);
+            AddRoleLink(role, userRole);
             SetNavigation(userRole, user, role);
         }
 
         return user;
+    }
+
+    private static void AddRoleLink(Role role, UserRole userRole) {
+        var userRoles = (List<UserRole>)typeof(Role)
+            .GetField("_userRoles", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!
+            .GetValue(role)!;
+        userRoles.Add(userRole);
     }
 
     private static void SetNavigation(UserRole userRole, User user, Role role) {

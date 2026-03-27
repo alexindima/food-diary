@@ -29,11 +29,30 @@ public class CyclesFeatureTests {
             DateTime.UtcNow,
             IsPeriod: true,
             Symptoms: new DailySymptomsModel(10, 0, 0, 0, 0, 0, 0),
-            Notes: null);
+            Notes: null,
+            ClearNotes: false);
 
         var result = await validator.ValidateAsync(command);
 
         Assert.False(result.IsValid);
+    }
+
+    [Fact]
+    public async Task UpsertCycleDayCommandValidator_WithClearNotesAndValue_Fails() {
+        var validator = new UpsertCycleDayCommandValidator();
+        var command = new UpsertCycleDayCommand(
+            Guid.NewGuid(),
+            Guid.NewGuid(),
+            DateTime.UtcNow,
+            IsPeriod: true,
+            Symptoms: new DailySymptomsModel(1, 1, 1, 1, 1, 1, 1),
+            Notes: "note",
+            ClearNotes: true);
+
+        var result = await validator.ValidateAsync(command);
+
+        Assert.False(result.IsValid);
+        Assert.Contains(result.Errors, e => e.ErrorMessage == "Notes cannot be provided when ClearNotes is true.");
     }
 
     [Fact]

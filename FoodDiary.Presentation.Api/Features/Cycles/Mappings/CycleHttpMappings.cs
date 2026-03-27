@@ -25,7 +25,8 @@ public static class CycleHttpMappings {
             request.Date,
             request.IsPeriod,
             request.Symptoms.ToModel(),
-            request.Notes);
+            request.Notes,
+            request.ClearNotes);
 
     private static DailySymptomsModel ToModel(this DailySymptomsHttpModel model) =>
         new(

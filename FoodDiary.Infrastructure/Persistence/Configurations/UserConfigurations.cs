@@ -85,6 +85,9 @@ internal sealed class RoleConfiguration : IEntityTypeConfiguration<Role> {
 
         entity.HasIndex(e => e.Name)
             .IsUnique();
+
+        entity.Metadata.FindNavigation(nameof(Role.UserRoles))!
+            .SetPropertyAccessMode(PropertyAccessMode.Field);
     }
 }
 

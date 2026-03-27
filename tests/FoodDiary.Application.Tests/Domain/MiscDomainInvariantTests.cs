@@ -15,6 +15,14 @@ public class MiscDomainInvariantTests {
     }
 
     [Fact]
+    public void Role_UserRoles_AreExposedAsReadOnly() {
+        var role = Role.Create("admin");
+        var userRoles = Assert.IsAssignableFrom<ICollection<UserRole>>(role.UserRoles);
+
+        Assert.True(userRoles.IsReadOnly);
+    }
+
+    [Fact]
     public void ImageAsset_Create_TrimsValues() {
         var asset = ImageAsset.Create(UserId.New(), "  images/a.png  ", "  https://cdn/a.png  ");
 
@@ -74,6 +82,32 @@ public class MiscDomainInvariantTests {
 
         Assert.Equal(int.MaxValue, recentItem.UsageCount);
         Assert.NotNull(recentItem.ModifiedOnUtc);
+    }
+
+    [Fact]
+    public void RecentItem_Create_WithLocalTimestamp_NormalizesToUtc() {
+        var localTimestamp = new DateTime(2026, 3, 27, 12, 30, 0, DateTimeKind.Local);
+
+        var recentItem = RecentItem.Create(UserId.New(), RecentItemType.Product, Guid.NewGuid(), localTimestamp);
+
+        Assert.Equal(localTimestamp.ToUniversalTime(), recentItem.LastUsedAtUtc);
+        Assert.Equal(DateTimeKind.Utc, recentItem.LastUsedAtUtc.Kind);
+    }
+
+    [Fact]
+    public void RecentItem_Create_WithUnspecifiedTimestamp_Throws() {
+        var unspecifiedTimestamp = new DateTime(2026, 3, 27, 12, 30, 0, DateTimeKind.Unspecified);
+
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+            RecentItem.Create(UserId.New(), RecentItemType.Product, Guid.NewGuid(), unspecifiedTimestamp));
+    }
+
+    [Fact]
+    public void RecentItem_Touch_WithUnspecifiedTimestamp_Throws() {
+        var recentItem = RecentItem.Create(UserId.New(), RecentItemType.Product, Guid.NewGuid(), DateTime.UtcNow);
+        var unspecifiedTimestamp = new DateTime(2026, 3, 27, 12, 30, 0, DateTimeKind.Unspecified);
+
+        Assert.Throws<ArgumentOutOfRangeException>(() => recentItem.Touch(unspecifiedTimestamp));
     }
 
     [Fact]

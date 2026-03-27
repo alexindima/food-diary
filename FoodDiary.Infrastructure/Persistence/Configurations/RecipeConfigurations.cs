@@ -34,6 +34,15 @@ internal sealed class RecipeConfiguration : IEntityTypeConfiguration<Recipe> {
             .HasForeignKey(mi => mi.RecipeId)
             .IsRequired(false);
 
+        entity.Metadata.FindNavigation(nameof(Recipe.Steps))!
+            .SetPropertyAccessMode(PropertyAccessMode.Field);
+
+        entity.Metadata.FindNavigation(nameof(Recipe.MealItems))!
+            .SetPropertyAccessMode(PropertyAccessMode.Field);
+
+        entity.Metadata.FindNavigation(nameof(Recipe.NestedRecipeUsages))!
+            .SetPropertyAccessMode(PropertyAccessMode.Field);
+
         entity.HasOne<ImageAsset>()
             .WithMany()
             .HasForeignKey(e => e.ImageAssetId)

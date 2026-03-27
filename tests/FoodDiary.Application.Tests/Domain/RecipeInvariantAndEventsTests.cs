@@ -138,6 +138,31 @@ public class RecipeInvariantAndEventsTests {
     }
 
     [Fact]
+    public void UpdateIdentity_WithClearFlags_ClearsOptionalFields() {
+        var recipe = Recipe.Create(
+            UserId.New(),
+            "Soup",
+            2,
+            description: "Desc",
+            comment: "Comment",
+            category: "Main");
+
+        recipe.UpdateIdentity(clearDescription: true, clearComment: true, clearCategory: true);
+
+        Assert.Null(recipe.Description);
+        Assert.Null(recipe.Comment);
+        Assert.Null(recipe.Category);
+    }
+
+    [Fact]
+    public void UpdateIdentity_WithClearFlagAndValue_Throws() {
+        var recipe = Recipe.Create(UserId.New(), "Soup", 2);
+
+        Assert.Throws<ArgumentException>(() =>
+            recipe.UpdateIdentity(description: "Desc", clearDescription: true));
+    }
+
+    [Fact]
     public void UpdateMedia_WithImageUrlOnly_PreservesImageAssetId() {
         var recipe = Recipe.Create(UserId.New(), "Soup", 2, imageAssetId: ImageAssetId.New());
         var initialAssetId = recipe.ImageAssetId;
@@ -146,6 +171,29 @@ public class RecipeInvariantAndEventsTests {
 
         Assert.Equal("https://img", recipe.ImageUrl);
         Assert.Equal(initialAssetId, recipe.ImageAssetId);
+    }
+
+    [Fact]
+    public void UpdateMedia_WithClearFlags_ClearsOptionalFields() {
+        var recipe = Recipe.Create(
+            UserId.New(),
+            "Soup",
+            2,
+            imageUrl: "https://img",
+            imageAssetId: ImageAssetId.New());
+
+        recipe.UpdateMedia(clearImageUrl: true, clearImageAssetId: true);
+
+        Assert.Null(recipe.ImageUrl);
+        Assert.Null(recipe.ImageAssetId);
+    }
+
+    [Fact]
+    public void UpdateMedia_WithClearImageAssetIdAndValue_Throws() {
+        var recipe = Recipe.Create(UserId.New(), "Soup", 2);
+
+        Assert.Throws<ArgumentException>(() =>
+            recipe.UpdateMedia(imageAssetId: ImageAssetId.New(), clearImageAssetId: true));
     }
 
     [Fact]
@@ -395,5 +443,18 @@ public class RecipeInvariantAndEventsTests {
 
         Assert.Contains(recipe.DomainEvents, e => e is RecipeManualNutritionSetDomainEvent);
         Assert.Contains(recipe.DomainEvents, e => e is RecipeAutoNutritionEnabledDomainEvent);
+    }
+
+    [Fact]
+    public void NavigationCollections_AreExposedAsReadOnly() {
+        var recipe = Recipe.Create(UserId.New(), "Soup", 2);
+
+        var mealItems = Assert.IsAssignableFrom<ICollection<FoodDiary.Domain.Entities.Meals.MealItem>>(recipe.MealItems);
+        var nestedRecipeUsages = Assert.IsAssignableFrom<ICollection<RecipeIngredient>>(recipe.NestedRecipeUsages);
+        var steps = Assert.IsAssignableFrom<ICollection<RecipeStep>>(recipe.Steps);
+
+        Assert.True(mealItems.IsReadOnly);
+        Assert.True(nestedRecipeUsages.IsReadOnly);
+        Assert.True(steps.IsReadOnly);
     }
 }

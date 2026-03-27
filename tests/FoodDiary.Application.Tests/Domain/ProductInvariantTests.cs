@@ -421,4 +421,15 @@ public class ProductInvariantTests {
         Assert.Equal(Visibility.Private, product.Visibility);
         Assert.NotNull(product.ModifiedOnUtc);
     }
+
+    [Fact]
+    public void NavigationCollections_AreExposedAsReadOnly() {
+        var product = CreateValidProduct();
+
+        var mealItems = Assert.IsAssignableFrom<ICollection<FoodDiary.Domain.Entities.Meals.MealItem>>(product.MealItems);
+        var recipeIngredients = Assert.IsAssignableFrom<ICollection<FoodDiary.Domain.Entities.Recipes.RecipeIngredient>>(product.RecipeIngredients);
+
+        Assert.True(mealItems.IsReadOnly);
+        Assert.True(recipeIngredients.IsReadOnly);
+    }
 }

@@ -6,4 +6,5 @@ public sealed record UpsertCycleDayHttpRequest(
     DateTime Date,
     bool IsPeriod,
     DailySymptomsHttpModel Symptoms,
-    string? Notes);
+    string? Notes,
+    bool ClearNotes);

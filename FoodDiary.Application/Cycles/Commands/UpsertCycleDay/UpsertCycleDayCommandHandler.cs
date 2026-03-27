@@ -31,7 +31,7 @@ public class UpsertCycleDayCommandHandler(ICycleRepository cycleRepository)
         }
 
         var symptoms = command.Symptoms.ToValueObject();
-        var day = cycle.AddOrUpdateDay(command.Date, command.IsPeriod, symptoms, command.Notes);
+        var day = cycle.AddOrUpdateDay(command.Date, command.IsPeriod, symptoms, command.Notes, command.ClearNotes);
 
         await cycleRepository.UpdateAsync(cycle, cancellationToken);
         return Result.Success(day.ToModel());

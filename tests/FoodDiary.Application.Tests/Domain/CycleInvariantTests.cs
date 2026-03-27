@@ -50,4 +50,24 @@ public class CycleInvariantTests {
 
         Assert.Null(day.ModifiedOnUtc);
     }
+
+    [Fact]
+    public void AddOrUpdateDay_WithClearNotes_ClearsExistingNotes() {
+        var cycle = Cycle.Create(UserId.New(), DateTime.UtcNow);
+        var symptoms = DailySymptoms.Create(1, 2, 3, 4, 5, 6, 7);
+        var date = DateTime.UtcNow.Date;
+        cycle.AddOrUpdateDay(date, isPeriod: true, symptoms, notes: "note");
+
+        var day = cycle.AddOrUpdateDay(date, isPeriod: true, symptoms, clearNotes: true);
+
+        Assert.Null(day.Notes);
+    }
+
+    [Fact]
+    public void CycleDay_Update_WithClearNotesAndValue_Throws() {
+        var symptoms = DailySymptoms.Create(1, 1, 1, 1, 1, 1, 1);
+        var day = CycleDay.Create(CycleId.New(), DateTime.UtcNow, true, symptoms, "note");
+
+        Assert.Throws<ArgumentException>(() => day.Update(notes: "next", clearNotes: true));
+    }
 }

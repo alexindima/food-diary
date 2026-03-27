@@ -41,8 +41,10 @@ public sealed class Product : AggregateRoot<ProductId> {
 
     public UserId UserId { get; private set; }
     public User User { get; private set; } = null!;
-    public ICollection<MealItem> MealItems { get; private set; } = new List<MealItem>();
-    public ICollection<RecipeIngredient> RecipeIngredients { get; private set; } = new List<RecipeIngredient>();
+    private readonly List<MealItem> _mealItems = [];
+    private readonly List<RecipeIngredient> _recipeIngredients = [];
+    public IReadOnlyCollection<MealItem> MealItems => _mealItems.AsReadOnly();
+    public IReadOnlyCollection<RecipeIngredient> RecipeIngredients => _recipeIngredients.AsReadOnly();
 
     private Product() {
     }

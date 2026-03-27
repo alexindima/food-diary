@@ -40,8 +40,11 @@ public sealed class CycleDay : Entity<CycleDayId> {
         return day;
     }
 
-    public void Update(bool? isPeriod = null, DailySymptoms? symptoms = null, string? notes = null) {
+    public void Update(bool? isPeriod = null, DailySymptoms? symptoms = null, string? notes = null, bool clearNotes = false) {
         var changed = false;
+        var normalizedNotes = NormalizeNotes(notes);
+
+        EnsureClearConflict(clearNotes, normalizedNotes, nameof(clearNotes), nameof(notes));
 
         if (isPeriod.HasValue) {
             if (IsPeriod != isPeriod.Value) {
@@ -58,8 +61,13 @@ public sealed class CycleDay : Entity<CycleDayId> {
             }
         }
 
-        if (notes is not null) {
-            var normalizedNotes = NormalizeNotes(notes);
+        if (clearNotes) {
+            if (Notes is not null) {
+                Notes = null;
+                changed = true;
+            }
+        }
+        else if (notes is not null) {
             if (Notes != normalizedNotes) {
                 Notes = normalizedNotes;
                 changed = true;
@@ -92,6 +100,13 @@ public sealed class CycleDay : Entity<CycleDayId> {
 
     private static void EnsureSymptoms(DailySymptoms symptoms) {
         ArgumentNullException.ThrowIfNull(symptoms);
+    }
+
+    private static void EnsureClearConflict<T>(bool clear, T? value, string clearParamName, string valueParamName)
+        where T : class {
+        if (clear && value is not null) {
+            throw new ArgumentException($"{clearParamName} cannot be true when {valueParamName} is provided.", clearParamName);
+        }
     }
 
 }

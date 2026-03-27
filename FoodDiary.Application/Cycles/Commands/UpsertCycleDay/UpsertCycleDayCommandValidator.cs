@@ -26,6 +26,11 @@ public class UpsertCycleDayCommandValidator : AbstractValidator<UpsertCycleDayCo
 
         RuleFor(x => x.Symptoms)
             .SetValidator(new DailySymptomsModelValidator());
+
+        RuleFor(x => x)
+            .Must(x => !(x.ClearNotes && !string.IsNullOrWhiteSpace(x.Notes)))
+            .WithErrorCode("Validation.Invalid")
+            .WithMessage("Notes cannot be provided when ClearNotes is true.");
     }
 
     private sealed class DailySymptomsModelValidator : AbstractValidator<DailySymptomsModel> {

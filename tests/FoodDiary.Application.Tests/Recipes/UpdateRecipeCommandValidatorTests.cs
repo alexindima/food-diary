@@ -61,10 +61,15 @@ public class UpdateRecipeCommandValidatorTests {
             recipeId.Value,
             Name: "Updated",
             Description: "Desc",
+            ClearDescription: false,
             Comment: "Comment",
+            ClearComment: false,
             Category: "Category",
+            ClearCategory: false,
             ImageUrl: null,
+            ClearImageUrl: false,
             ImageAssetId: null,
+            ClearImageAssetId: false,
             PrepTime: 10,
             CookTime: 20,
             Servings: 2,
@@ -77,6 +82,23 @@ public class UpdateRecipeCommandValidatorTests {
             ManualFiber: null,
             ManualAlcohol: null,
             Steps: steps);
+    }
+
+    [Fact]
+    public async Task ValidateAsync_WithClearDescriptionAndValue_ReturnsValidationError() {
+        var userId = UserId.New();
+        var recipeId = RecipeId.New();
+        var recipe = Recipe.Create(userId, "Soup", servings: 2);
+        var validator = new UpdateRecipeCommandValidator(new StubRecipeRepository(recipeId, userId, recipe));
+
+        var command = CreateCommand(userId.Value, recipeId, [CreateStep(order: 1, "Step 1")]) with {
+            ClearDescription = true
+        };
+
+        var result = await validator.ValidateAsync(command);
+
+        Assert.False(result.IsValid);
+        Assert.Contains(result.Errors, e => e.ErrorMessage == "Description cannot be provided when ClearDescription is true");
     }
 
     private static RecipeStepInput CreateStep(int order, string description) {

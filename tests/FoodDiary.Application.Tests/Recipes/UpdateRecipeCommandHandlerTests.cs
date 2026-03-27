@@ -26,10 +26,15 @@ public class UpdateRecipeCommandHandlerTests {
             recipeId.Value,
             Name: "Updated soup",
             Description: null,
+            ClearDescription: false,
             Comment: null,
+            ClearComment: false,
             Category: null,
+            ClearCategory: false,
             ImageUrl: null,
+            ClearImageUrl: false,
             ImageAssetId: null,
+            ClearImageAssetId: false,
             PrepTime: 10,
             CookTime: 20,
             Servings: 2,
@@ -47,6 +52,52 @@ public class UpdateRecipeCommandHandlerTests {
             ]);
 
         await Assert.ThrowsAsync<ArgumentException>(() => handler.Handle(command, CancellationToken.None));
+    }
+
+    [Fact]
+    public async Task Handle_WithClearImageFlags_ClearsRecipeMedia() {
+        var userId = UserId.New();
+        var recipeId = RecipeId.New();
+        var imageAssetId = ImageAssetId.New();
+        var recipe = Recipe.Create(userId, "Soup", servings: 2, imageUrl: "https://img", imageAssetId: imageAssetId);
+        recipe.AddStep(1, "Initial step");
+
+        var repository = new StubRecipeRepository(recipeId, userId, recipe);
+        var handler = new UpdateRecipeCommandHandler(
+            repository,
+            new NoopImageAssetCleanupService());
+
+        var command = new UpdateRecipeCommand(
+            userId.Value,
+            recipeId.Value,
+            Name: "Soup",
+            Description: null,
+            ClearDescription: false,
+            Comment: null,
+            ClearComment: false,
+            Category: null,
+            ClearCategory: false,
+            ImageUrl: null,
+            ClearImageUrl: true,
+            ImageAssetId: null,
+            ClearImageAssetId: true,
+            PrepTime: 0,
+            CookTime: 20,
+            Servings: 2,
+            Visibility: Visibility.Public.ToString(),
+            CalculateNutritionAutomatically: true,
+            ManualCalories: null,
+            ManualProteins: null,
+            ManualFats: null,
+            ManualCarbs: null,
+            ManualFiber: null,
+            ManualAlcohol: null,
+            Steps: [CreateStep(order: 1, "Initial step")]);
+
+        await handler.Handle(command, CancellationToken.None);
+
+        Assert.Null(recipe.ImageUrl);
+        Assert.Null(recipe.ImageAssetId);
     }
 
     private static RecipeStepInput CreateStep(int order, string description) {

@@ -81,27 +81,29 @@ public sealed class Cycle : AggregateRoot<CycleId> {
         DateTime date,
         bool isPeriod,
         DailySymptoms symptoms,
-        string? notes = null) {
+        string? notes = null,
+        bool clearNotes = false) {
         var normalizedDate = NormalizeDate(date);
         var normalizedNotes = NormalizeNotes(notes);
+        EnsureClearConflict(clearNotes, normalizedNotes, nameof(clearNotes), nameof(notes));
         var existing = _days.FirstOrDefault(d => d.Date == normalizedDate);
         if (existing is not null) {
             var hasChanges =
                 existing.IsPeriod != isPeriod ||
                 !existing.Symptoms.Equals(symptoms) ||
-                existing.Notes != normalizedNotes;
+                existing.Notes != (clearNotes ? null : normalizedNotes);
 
             if (!hasChanges) {
                 return existing;
             }
 
-            existing.Update(isPeriod, symptoms, normalizedNotes);
+            existing.Update(isPeriod, symptoms, normalizedNotes, clearNotes);
             RaiseDomainEvent(new CycleDayUpsertedDomainEvent(Id, normalizedDate, IsCreated: false));
             SetModified();
             return existing;
         }
 
-        var day = CycleDay.Create(Id, normalizedDate, isPeriod, symptoms, normalizedNotes);
+        var day = CycleDay.Create(Id, normalizedDate, isPeriod, symptoms, clearNotes ? null : normalizedNotes);
         _days.Add(day);
         RaiseDomainEvent(new CycleDayUpsertedDomainEvent(Id, normalizedDate, IsCreated: true));
         SetModified();
@@ -151,6 +153,13 @@ public sealed class Cycle : AggregateRoot<CycleId> {
     private static void EnsureUserId(UserId userId) {
         if (userId == UserId.Empty) {
             throw new ArgumentException("UserId is required.", nameof(userId));
+        }
+    }
+
+    private static void EnsureClearConflict<T>(bool clear, T? value, string clearParamName, string valueParamName)
+        where T : class {
+        if (clear && value is not null) {
+            throw new ArgumentException($"{clearParamName} cannot be true when {valueParamName} is provided.", clearParamName);
         }
     }
 

@@ -62,11 +62,16 @@ public class UpdateRecipeCommandHandler(
         recipe.UpdateIdentity(
             name: command.Name,
             description: command.Description,
+            clearDescription: command.ClearDescription,
             comment: command.Comment,
-            category: command.Category);
+            clearComment: command.ClearComment,
+            category: command.Category,
+            clearCategory: command.ClearCategory);
         recipe.UpdateMedia(
             imageUrl: command.ImageUrl,
-            imageAssetId: command.ImageAssetId.HasValue ? new ImageAssetId(command.ImageAssetId.Value) : null);
+            clearImageUrl: command.ClearImageUrl,
+            imageAssetId: command.ImageAssetId.HasValue ? new ImageAssetId(command.ImageAssetId.Value) : null,
+            clearImageAssetId: command.ClearImageAssetId);
         recipe.UpdateTimingAndServings(
             prepTime: command.PrepTime ?? 0,
             cookTime: command.CookTime,
@@ -127,7 +132,7 @@ public class UpdateRecipeCommandHandler(
 
         await RecipeNutritionUpdater.EnsureNutritionAsync(updated, recipeRepository, cancellationToken);
 
-        if (oldAssetId.HasValue && (!command.ImageAssetId.HasValue || oldAssetId.Value.Value != command.ImageAssetId.Value)) {
+        if (oldAssetId.HasValue && (command.ClearImageAssetId || !command.ImageAssetId.HasValue || oldAssetId.Value.Value != command.ImageAssetId.Value)) {
             await imageAssetCleanupService.DeleteIfUnusedAsync(oldAssetId.Value, cancellationToken);
         }
 

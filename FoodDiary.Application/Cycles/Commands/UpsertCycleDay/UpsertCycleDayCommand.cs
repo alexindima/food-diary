@@ -10,5 +10,6 @@ public record UpsertCycleDayCommand(
     DateTime Date,
     bool IsPeriod,
     DailySymptomsModel Symptoms,
-    string? Notes
+    string? Notes,
+    bool ClearNotes
 ) : ICommand<Result<CycleDayModel>>;

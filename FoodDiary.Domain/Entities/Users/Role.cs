@@ -7,8 +7,8 @@ public sealed class Role : AggregateRoot<RoleId> {
     private const int NameMaxLength = 64;
 
     public string Name { get; private set; } = string.Empty;
-
-    public ICollection<UserRole> UserRoles { get; private set; } = new List<UserRole>();
+    private readonly List<UserRole> _userRoles = [];
+    public IReadOnlyCollection<UserRole> UserRoles => _userRoles.AsReadOnly();
 
     private Role() {
     }

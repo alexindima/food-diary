@@ -43,9 +43,11 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
     public UserId UserId { get; private set; }
     public User User { get; private set; } = null!;
     private readonly List<RecipeStep> _steps = [];
+    private readonly List<MealItem> _mealItems = [];
+    private readonly List<RecipeIngredient> _nestedRecipeUsages = [];
     public IReadOnlyCollection<RecipeStep> Steps => _steps.AsReadOnly();
-    public ICollection<MealItem> MealItems { get; private set; } = new List<MealItem>();
-    public ICollection<RecipeIngredient> NestedRecipeUsages { get; private set; } = new List<RecipeIngredient>();
+    public IReadOnlyCollection<MealItem> MealItems => _mealItems.AsReadOnly();
+    public IReadOnlyCollection<RecipeIngredient> NestedRecipeUsages => _nestedRecipeUsages.AsReadOnly();
 
     private Recipe() {
     }
@@ -87,8 +89,19 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
 
     public void Update(RecipeUpdate update) {
         var changed = false;
-        changed |= ApplyIdentityUpdates(update.Name, update.Description, update.Comment, update.Category);
-        changed |= ApplyMediaUpdates(update.ImageUrl, update.ImageAssetId);
+        changed |= ApplyIdentityUpdates(
+            update.Name,
+            update.Description,
+            update.ClearDescription,
+            update.Comment,
+            update.ClearComment,
+            update.Category,
+            update.ClearCategory);
+        changed |= ApplyMediaUpdates(
+            update.ImageUrl,
+            update.ClearImageUrl,
+            update.ImageAssetId,
+            update.ClearImageAssetId);
         changed |= ApplyTimingAndServingsUpdates(update.PrepTime, update.CookTime, update.Servings);
 
         if (update.Visibility.HasValue && Visibility != update.Visibility.Value) {
@@ -104,15 +117,22 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
     public void UpdateIdentity(
         string? name = null,
         string? description = null,
+        bool clearDescription = false,
         string? comment = null,
-        string? category = null) {
-        if (ApplyIdentityUpdates(name, description, comment, category)) {
+        bool clearComment = false,
+        string? category = null,
+        bool clearCategory = false) {
+        if (ApplyIdentityUpdates(name, description, clearDescription, comment, clearComment, category, clearCategory)) {
             SetModified();
         }
     }
 
-    public void UpdateMedia(string? imageUrl = null, ImageAssetId? imageAssetId = null) {
-        if (ApplyMediaUpdates(imageUrl, imageAssetId)) {
+    public void UpdateMedia(
+        string? imageUrl = null,
+        bool clearImageUrl = false,
+        ImageAssetId? imageAssetId = null,
+        bool clearImageAssetId = false) {
+        if (ApplyMediaUpdates(imageUrl, clearImageUrl, imageAssetId, clearImageAssetId)) {
             SetModified();
         }
     }
@@ -226,10 +246,20 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
     private bool ApplyIdentityUpdates(
         string? name,
         string? description,
+        bool clearDescription,
         string? comment,
-        string? category) {
+        bool clearComment,
+        string? category,
+        bool clearCategory) {
         var state = GetDetailsState();
         var changed = false;
+        var normalizedDescription = NormalizeOptionalText(description, DescriptionMaxLength, nameof(description));
+        var normalizedComment = NormalizeOptionalText(comment, CommentMaxLength, nameof(comment));
+        var normalizedCategory = NormalizeOptionalText(category, CategoryMaxLength, nameof(category));
+
+        EnsureClearConflict(clearDescription, normalizedDescription, nameof(clearDescription), nameof(description));
+        EnsureClearConflict(clearComment, normalizedComment, nameof(clearComment), nameof(comment));
+        EnsureClearConflict(clearCategory, normalizedCategory, nameof(clearCategory), nameof(category));
 
         if (name is not null) {
             var normalizedName = NormalizeRequiredName(name);
@@ -239,24 +269,39 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
             }
         }
 
-        if (description is not null) {
-            var normalizedDescription = NormalizeOptionalText(description, DescriptionMaxLength, nameof(description));
+        if (clearDescription) {
+            if (state.Description is not null) {
+                state = state with { Description = null };
+                changed = true;
+            }
+        }
+        else if (description is not null) {
             if (!string.Equals(state.Description, normalizedDescription, StringComparison.Ordinal)) {
                 state = state with { Description = normalizedDescription };
                 changed = true;
             }
         }
 
-        if (comment is not null) {
-            var normalizedComment = NormalizeOptionalText(comment, CommentMaxLength, nameof(comment));
+        if (clearComment) {
+            if (state.Comment is not null) {
+                state = state with { Comment = null };
+                changed = true;
+            }
+        }
+        else if (comment is not null) {
             if (!string.Equals(state.Comment, normalizedComment, StringComparison.Ordinal)) {
                 state = state with { Comment = normalizedComment };
                 changed = true;
             }
         }
 
-        if (category is not null) {
-            var normalizedCategory = NormalizeOptionalText(category, CategoryMaxLength, nameof(category));
+        if (clearCategory) {
+            if (state.Category is not null) {
+                state = state with { Category = null };
+                changed = true;
+            }
+        }
+        else if (category is not null) {
             if (!string.Equals(state.Category, normalizedCategory, StringComparison.Ordinal)) {
                 state = state with { Category = normalizedCategory };
                 changed = true;
@@ -270,19 +315,38 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
         return changed;
     }
 
-    private bool ApplyMediaUpdates(string? imageUrl, ImageAssetId? imageAssetId) {
+    private bool ApplyMediaUpdates(
+        string? imageUrl,
+        bool clearImageUrl,
+        ImageAssetId? imageAssetId,
+        bool clearImageAssetId) {
         var state = GetDetailsState();
         var changed = false;
+        var normalizedImageUrl = NormalizeOptionalText(imageUrl, ImageUrlMaxLength, nameof(imageUrl));
 
-        if (imageUrl is not null) {
-            var normalizedImageUrl = NormalizeOptionalText(imageUrl, ImageUrlMaxLength, nameof(imageUrl));
+        EnsureClearConflict(clearImageUrl, normalizedImageUrl, nameof(clearImageUrl), nameof(imageUrl));
+        EnsureClearConflict(clearImageAssetId, imageAssetId, nameof(clearImageAssetId), nameof(imageAssetId));
+
+        if (clearImageUrl) {
+            if (state.ImageUrl is not null) {
+                state = state with { ImageUrl = null };
+                changed = true;
+            }
+        }
+        else if (imageUrl is not null) {
             if (!string.Equals(state.ImageUrl, normalizedImageUrl, StringComparison.Ordinal)) {
                 state = state with { ImageUrl = normalizedImageUrl };
                 changed = true;
             }
         }
 
-        if (imageAssetId.HasValue && state.ImageAssetId != imageAssetId) {
+        if (clearImageAssetId) {
+            if (state.ImageAssetId is not null) {
+                state = state with { ImageAssetId = null };
+                changed = true;
+            }
+        }
+        else if (imageAssetId.HasValue && state.ImageAssetId != imageAssetId) {
             state = state with { ImageAssetId = imageAssetId };
             changed = true;
         }
@@ -474,6 +538,20 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
     private static void EnsureUserId(UserId userId) {
         if (userId == UserId.Empty) {
             throw new ArgumentException("UserId is required.", nameof(userId));
+        }
+    }
+
+    private static void EnsureClearConflict<T>(bool clear, T? value, string clearParamName, string valueParamName)
+        where T : class {
+        if (clear && value is not null) {
+            throw new ArgumentException($"{clearParamName} cannot be true when {valueParamName} is provided.", clearParamName);
+        }
+    }
+
+    private static void EnsureClearConflict<T>(bool clear, T? value, string clearParamName, string valueParamName)
+        where T : struct {
+        if (clear && value.HasValue) {
+            throw new ArgumentException($"{clearParamName} cannot be true when {valueParamName} is provided.", clearParamName);
         }
     }
 }

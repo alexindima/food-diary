@@ -88,10 +88,15 @@ public sealed class RecipeHttpMappingsTests {
         var request = new UpdateRecipeHttpRequest(
             Name: "Updated Soup",
             Description: "Updated description",
+            ClearDescription: true,
             Comment: "Updated comment",
+            ClearComment: false,
             Category: "Dinner",
+            ClearCategory: true,
             ImageUrl: "https://cdn.example/updated-soup.png",
+            ClearImageUrl: false,
             ImageAssetId: imageAssetId,
+            ClearImageAssetId: true,
             PrepTime: 10,
             CookTime: 25,
             Servings: 2,
@@ -111,10 +116,15 @@ public sealed class RecipeHttpMappingsTests {
         Assert.Equal(recipeId, command.RecipeId);
         Assert.Equal(request.Name, command.Name);
         Assert.Equal(request.Description, command.Description);
+        Assert.Equal(request.ClearDescription, command.ClearDescription);
         Assert.Equal(request.Comment, command.Comment);
+        Assert.Equal(request.ClearComment, command.ClearComment);
         Assert.Equal(request.Category, command.Category);
+        Assert.Equal(request.ClearCategory, command.ClearCategory);
         Assert.Equal(request.ImageUrl, command.ImageUrl);
+        Assert.Equal(request.ClearImageUrl, command.ClearImageUrl);
         Assert.Equal(request.ImageAssetId, command.ImageAssetId);
+        Assert.Equal(request.ClearImageAssetId, command.ClearImageAssetId);
         Assert.Equal(request.PrepTime, command.PrepTime);
         Assert.Equal(request.CookTime, command.CookTime);
         Assert.Equal(request.Servings, command.Servings);

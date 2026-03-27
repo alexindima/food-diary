@@ -13,7 +13,7 @@ public sealed class Meal : AggregateRoot<MealId> {
     private const int ImageUrlMaxLength = 2048;
 
     public UserId UserId { get; private set; }
-    public DateTime Date { get; private set; } = DateTime.UtcNow;
+    public DateTime Date { get; private set; }
     public MealType? MealType { get; private set; }
     public string? Comment { get; private set; }
     public string? ImageUrl { get; private set; }
@@ -369,10 +369,12 @@ public sealed class Meal : AggregateRoot<MealId> {
     }
 
     private static DateTime NormalizeDate(DateTime value) {
-        return value.Kind switch {
-            DateTimeKind.Utc => value,
-            _ => value.ToUniversalTime()
-        };
+        if (value.Kind == DateTimeKind.Unspecified) {
+            return DateTime.SpecifyKind(value.Date, DateTimeKind.Utc);
+        }
+
+        var utc = value.ToUniversalTime();
+        return DateTime.SpecifyKind(utc.Date, DateTimeKind.Utc);
     }
 
     private static double RequireNonNegative(double value, string paramName) {

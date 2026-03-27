@@ -54,6 +54,31 @@ public class UpdateRecipeCommandValidator : AbstractValidator<UpdateRecipeComman
             .WithErrorCode("Validation.Invalid")
             .WithMessage("Invalid visibility level");
 
+        RuleFor(x => x)
+            .Must(x => !(x.ClearDescription && !string.IsNullOrWhiteSpace(x.Description)))
+            .WithErrorCode("Validation.Invalid")
+            .WithMessage("Description cannot be provided when ClearDescription is true");
+
+        RuleFor(x => x)
+            .Must(x => !(x.ClearComment && !string.IsNullOrWhiteSpace(x.Comment)))
+            .WithErrorCode("Validation.Invalid")
+            .WithMessage("Comment cannot be provided when ClearComment is true");
+
+        RuleFor(x => x)
+            .Must(x => !(x.ClearCategory && !string.IsNullOrWhiteSpace(x.Category)))
+            .WithErrorCode("Validation.Invalid")
+            .WithMessage("Category cannot be provided when ClearCategory is true");
+
+        RuleFor(x => x)
+            .Must(x => !(x.ClearImageUrl && !string.IsNullOrWhiteSpace(x.ImageUrl)))
+            .WithErrorCode("Validation.Invalid")
+            .WithMessage("ImageUrl cannot be provided when ClearImageUrl is true");
+
+        RuleFor(x => x)
+            .Must(x => !(x.ClearImageAssetId && x.ImageAssetId.HasValue))
+            .WithErrorCode("Validation.Invalid")
+            .WithMessage("ImageAssetId cannot be provided when ClearImageAssetId is true");
+
         RuleFor(x => x.Steps)
             .NotNull()
             .WithErrorCode("Validation.Required")
