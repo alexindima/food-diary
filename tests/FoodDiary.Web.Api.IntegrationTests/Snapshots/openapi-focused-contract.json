@@ -241,7 +241,7 @@
           "Method": "post",
           "HasRequestBody": true,
           "ResponseCodes": [
-            "200",
+            "201",
             "400",
             "401",
             "409",
