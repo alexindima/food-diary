@@ -21,6 +21,11 @@ public sealed class TestAuthApiWebApplicationFactory : WebApplicationFactory<Pro
         builder.UseEnvironment("Development");
         builder.ConfigureAppConfiguration((_, configBuilder) => {
             configBuilder.AddInMemoryCollection(new Dictionary<string, string?> {
+                ["Jwt:SecretKey"] = "integration-tests-jwt-secret-key-123",
+                ["Jwt:Issuer"] = "fooddiary-tests",
+                ["Jwt:Audience"] = "fooddiary-tests",
+                ["Jwt:ExpirationMinutes"] = "60",
+                ["Jwt:RefreshTokenExpirationDays"] = "30",
                 ["S3:AccessKeyId"] = "test-access-key",
                 ["S3:SecretAccessKey"] = "test-secret-key",
                 ["S3:Region"] = "us-east-1",
