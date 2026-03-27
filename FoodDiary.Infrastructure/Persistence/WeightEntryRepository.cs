@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using FoodDiary.Application.Common.Interfaces.Persistence;
+using FoodDiary.Application.WeightEntries.Common;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.ValueObjects.Ids;
 

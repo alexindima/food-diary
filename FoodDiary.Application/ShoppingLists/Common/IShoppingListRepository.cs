@@ -1,7 +1,7 @@
 using FoodDiary.Domain.Entities.Shopping;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Common.Interfaces.Persistence;
+namespace FoodDiary.Application.ShoppingLists.Common;
 
 public interface IShoppingListRepository {
     Task<ShoppingList> AddAsync(ShoppingList list, CancellationToken cancellationToken = default);

@@ -1,6 +1,6 @@
 using FoodDiary.Domain.Entities.Content;
 
-namespace FoodDiary.Application.Common.Interfaces.Persistence;
+namespace FoodDiary.Application.Admin.Common;
 
 public interface IEmailTemplateRepository {
     Task<IReadOnlyList<EmailTemplate>> GetAllAsync(CancellationToken cancellationToken = default);

@@ -22,8 +22,9 @@ public class FeatureStructureTests {
             var featurePath = Path.Combine(applicationPath, feature);
             var hasCommands = Directory.Exists(Path.Combine(featurePath, "Commands"));
             var hasQueries = Directory.Exists(Path.Combine(featurePath, "Queries"));
-            Assert.True(hasCommands || hasQueries,
-                $"Feature '{feature}' should contain Commands and/or Queries folder.");
+            var hasCommon = Directory.Exists(Path.Combine(featurePath, "Common"));
+            Assert.True(hasCommands || hasQueries || hasCommon,
+                $"Feature '{feature}' should contain Commands, Queries, and/or Common folder.");
         }
     }
 

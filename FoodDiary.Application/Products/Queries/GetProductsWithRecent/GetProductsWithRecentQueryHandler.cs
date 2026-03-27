@@ -4,6 +4,7 @@ using FoodDiary.Application.Common.Models;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Products.Mappings;
 using FoodDiary.Application.Products.Models;
+using FoodDiary.Application.RecentItems.Common;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 

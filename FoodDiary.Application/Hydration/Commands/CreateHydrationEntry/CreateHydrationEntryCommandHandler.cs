@@ -1,6 +1,6 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
-using FoodDiary.Application.Common.Interfaces.Persistence;
+using FoodDiary.Application.Hydration.Common;
 using FoodDiary.Application.Hydration.Mappings;
 using FoodDiary.Application.Hydration.Validators;
 using FoodDiary.Application.Hydration.Models;

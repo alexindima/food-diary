@@ -1,7 +1,7 @@
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Common.Interfaces.Persistence;
+namespace FoodDiary.Application.Meals.Common;
 
 public interface IMealRepository {
     Task<Meal> AddAsync(Meal meal, CancellationToken cancellationToken = default);

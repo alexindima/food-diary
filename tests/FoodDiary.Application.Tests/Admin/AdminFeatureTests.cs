@@ -1,6 +1,7 @@
 using FoodDiary.Application.Admin.Commands.UpdateAdminUser;
 using FoodDiary.Application.Admin.Commands.UpsertAdminEmailTemplate;
 using FoodDiary.Application.Admin.Queries.GetAdminAiUsageSummary;
+using FoodDiary.Application.Ai.Common;
 using FoodDiary.Application.Common.Interfaces.Services;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Domain.Entities.Users;
@@ -232,7 +233,7 @@ public class AdminFeatureTests {
                 []));
         }
 
-        public Task<FoodDiary.Application.Common.Models.AiUsageTotals> GetUserTotalsAsync(
+        public Task<AiUsageTotals> GetUserTotalsAsync(
             UserId userId,
             DateTime fromUtc,
             DateTime toUtc,

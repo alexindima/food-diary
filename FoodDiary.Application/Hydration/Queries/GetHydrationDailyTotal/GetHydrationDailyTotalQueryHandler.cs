@@ -1,6 +1,7 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
+using FoodDiary.Application.Hydration.Common;
 using FoodDiary.Application.Hydration.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 

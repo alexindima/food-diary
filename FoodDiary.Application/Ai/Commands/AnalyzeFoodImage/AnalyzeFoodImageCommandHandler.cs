@@ -3,6 +3,7 @@ using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Ai.Common;
 using FoodDiary.Application.Ai.Models;
+using FoodDiary.Application.Images.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Ai.Commands.AnalyzeFoodImage;

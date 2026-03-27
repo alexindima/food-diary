@@ -1,4 +1,4 @@
-﻿using FoodDiary.Application.Common.Interfaces.Persistence;
+using FoodDiary.Application.Meals.Common;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;

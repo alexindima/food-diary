@@ -1,4 +1,4 @@
-﻿using FoodDiary.Application.Common.Interfaces.Persistence;
+using FoodDiary.Application.RecentItems.Common;
 using FoodDiary.Domain.Entities.Recents;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;

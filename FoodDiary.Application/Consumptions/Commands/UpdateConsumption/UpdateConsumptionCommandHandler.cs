@@ -1,8 +1,10 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
+using FoodDiary.Application.Meals.Common;
 using FoodDiary.Application.Common.Interfaces.Services;
 using FoodDiary.Application.Images.Common;
+using FoodDiary.Application.RecentItems.Common;
 using FoodDiary.Application.Consumptions.Mappings;
 using FoodDiary.Application.Consumptions.Models;
 using FoodDiary.Application.Consumptions.Services;

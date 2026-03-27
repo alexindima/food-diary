@@ -1,8 +1,8 @@
 using System.Net;
 using FoodDiary.Application.Admin.Models;
+using FoodDiary.Application.Ai.Common;
 using FoodDiary.Application.Ai.Models;
 using FoodDiary.Application.Common.Interfaces.Persistence;
-using FoodDiary.Application.Common.Models;
 using FoodDiary.Domain.Entities.Ai;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;

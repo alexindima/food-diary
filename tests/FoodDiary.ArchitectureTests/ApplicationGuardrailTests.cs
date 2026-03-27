@@ -84,6 +84,54 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void ApplicationCommonPersistenceInterfaces_DoNotRegrowMovedFeatureSpecificContracts() {
+        var root = GetRepositoryRoot();
+        var persistenceRoot = Path.Combine(root, "FoodDiary.Application", "Common", "Interfaces", "Persistence");
+        var forbiddenFiles = new[] {
+            "IAiUsageRepository.cs",
+            "ICycleRepository.cs",
+            "IDailyAdviceRepository.cs",
+            "IEmailTemplateRepository.cs",
+            "IHydrationEntryRepository.cs",
+            "IImageAssetRepository.cs",
+            "IMealRepository.cs",
+            "IRecentItemRepository.cs",
+            "IShoppingListRepository.cs",
+            "IWaistEntryRepository.cs",
+            "IWeightEntryRepository.cs",
+        };
+
+        var actualFiles = Directory.GetFiles(persistenceRoot, "*.cs", SearchOption.TopDirectoryOnly)
+            .Select(Path.GetFileName)
+            .ToHashSet(StringComparer.Ordinal);
+
+        var violations = forbiddenFiles
+            .Where(actualFiles.Contains)
+            .OrderBy(static name => name, StringComparer.Ordinal)
+            .ToArray();
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void ApplicationCommonPersistenceInterfaces_StayLimitedToCurrentCrossFeatureContracts() {
+        var root = GetRepositoryRoot();
+        var persistenceRoot = Path.Combine(root, "FoodDiary.Application", "Common", "Interfaces", "Persistence");
+        var allowedFiles = new[] {
+            "IProductRepository.cs",
+            "IRecipeRepository.cs",
+            "IUserRepository.cs",
+        };
+
+        var actualFiles = Directory.GetFiles(persistenceRoot, "*.cs", SearchOption.TopDirectoryOnly)
+            .Select(Path.GetFileName)
+            .OrderBy(static name => name, StringComparer.Ordinal)
+            .ToArray();
+
+        Assert.Equal(allowedFiles, actualFiles);
+    }
+
+    [Fact]
     public void ApplicationSourceFiles_DoNotReferencePresentationOrAspNetTransportTypes() {
         var root = GetRepositoryRoot();
         var applicationRoot = Path.Combine(root, "FoodDiary.Application");

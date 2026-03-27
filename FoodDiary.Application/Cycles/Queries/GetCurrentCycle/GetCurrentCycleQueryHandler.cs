@@ -1,6 +1,6 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
-using FoodDiary.Application.Common.Interfaces.Persistence;
+using FoodDiary.Application.Cycles.Common;
 using FoodDiary.Application.Cycles.Mappings;
 using FoodDiary.Application.Cycles.Models;
 using FoodDiary.Application.Cycles.Services;

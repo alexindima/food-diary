@@ -1,5 +1,5 @@
-using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.WeightEntries.Commands.CreateWeightEntry;
+using FoodDiary.Application.WeightEntries.Common;
 using FoodDiary.Application.WeightEntries.Queries.GetWeightEntries;
 using FoodDiary.Application.WeightEntries.Queries.GetWeightSummaries;
 using FoodDiary.Domain.Entities.Tracking;

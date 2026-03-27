@@ -1,10 +1,10 @@
 using FoodDiary.Application.Ai.Commands.AnalyzeFoodImage;
 using FoodDiary.Application.Ai.Commands.CalculateFoodNutrition;
+using FoodDiary.Application.Ai.Common;
 using FoodDiary.Application.Ai.Models;
 using FoodDiary.Application.Ai.Queries.GetUserAiUsageSummary;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Interfaces.Services;
-using FoodDiary.Application.Common.Models;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 

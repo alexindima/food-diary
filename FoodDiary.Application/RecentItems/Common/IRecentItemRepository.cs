@@ -1,6 +1,6 @@
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Common.Interfaces.Persistence;
+namespace FoodDiary.Application.RecentItems.Common;
 
 public interface IRecentItemRepository {
     Task RegisterUsageAsync(

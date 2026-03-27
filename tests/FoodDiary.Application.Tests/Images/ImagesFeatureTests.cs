@@ -1,4 +1,3 @@
-using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Images.Common;
 using FoodDiary.Application.Images.Commands.DeleteImageAsset;
 using FoodDiary.Application.Images.Commands.GetUploadUrl;

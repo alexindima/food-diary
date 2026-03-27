@@ -1,4 +1,4 @@
-﻿using FoodDiary.Application.Common.Interfaces.Persistence;
+using FoodDiary.Application.WaistEntries.Common;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;

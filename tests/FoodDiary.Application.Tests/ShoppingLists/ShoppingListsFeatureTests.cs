@@ -1,5 +1,6 @@
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.ShoppingLists.Commands.Common;
+using FoodDiary.Application.ShoppingLists.Common;
 using FoodDiary.Application.ShoppingLists.Queries.GetCurrentShoppingList;
 using FoodDiary.Application.ShoppingLists.Queries.GetShoppingListById;
 using FoodDiary.Application.ShoppingLists.Queries.GetShoppingLists;
