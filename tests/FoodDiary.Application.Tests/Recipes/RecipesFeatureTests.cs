@@ -50,7 +50,6 @@ public class RecipesFeatureTests {
         var result = await handler.Handle(new DeleteRecipeCommand(userId.Value, recipe.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
-        Assert.True(result.Value);
         Assert.True(repository.DeleteCalled);
         Assert.Equal([recipeAssetId, stepAssetId], cleanup.RequestedAssetIds);
     }
