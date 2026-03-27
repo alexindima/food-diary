@@ -1,27 +1,26 @@
-﻿import { BreakpointObserver } from '@angular/cdk/layout';
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
-import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
-import { FdUiSelectComponent, FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
-import { FdUiCheckboxComponent } from 'fd-ui-kit/checkbox/fd-ui-checkbox.component';
-import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
-import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
-import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { FormsModule } from '@angular/forms';
-import { MatIconModule } from '@angular/material/icon';
-import { PageHeaderComponent } from '../shared/page-header/page-header.component';
-import { PageBodyComponent } from '../shared/page-body/page-body.component';
-import { FdPageContainerDirective } from '../../directives/layout/page-container.directive';
-import { ConfirmDeleteDialogComponent, ConfirmDeleteDialogData } from '../shared/confirm-delete-dialog/confirm-delete-dialog.component';
-import { MeasurementUnit } from '../../features/products/models/product.data';
-import { ShoppingList, ShoppingListItem, ShoppingListItemDto, ShoppingListSummary } from '../../types/shopping-list.data';
-import { ShoppingListService } from '../../services/shopping-list.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { FormGroupControls } from '../../types/common.data';
+import { BreakpointObserver } from '@angular/cdk/layout';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { MatIconModule } from '@angular/material/icon';
 import { Subject, debounceTime, distinctUntilChanged, map } from 'rxjs';
+import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
+import { FdUiCheckboxComponent } from 'fd-ui-kit/checkbox/fd-ui-checkbox.component';
+import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
+import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
+import { FdUiSelectComponent, FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
+import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
+import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
+import { ConfirmDeleteDialogComponent, ConfirmDeleteDialogData } from '../../../components/shared/confirm-delete-dialog/confirm-delete-dialog.component';
+import { PageBodyComponent } from '../../../components/shared/page-body/page-body.component';
+import { PageHeaderComponent } from '../../../components/shared/page-header/page-header.component';
+import { FormGroupControls } from '../../../types/common.data';
+import { MeasurementUnit } from '../../products/models/product.data';
+import { ShoppingList, ShoppingListItem, ShoppingListItemDto, ShoppingListSummary } from '../models/shopping-list.data';
+import { ShoppingListService } from '../api/shopping-list.service';
 
 @Component({
     selector: 'fd-shopping-list-page',
@@ -191,6 +190,7 @@ export class ShoppingListPageComponent implements OnInit {
     public get isMobileManageVisible(): boolean {
         return this.isMobileManageOpen();
     }
+
     public get canDeleteList(): boolean {
         return this.lists().length > 1 && !!this.list() && !this.isSaving() && !this.isLoading();
     }
@@ -562,4 +562,3 @@ interface ShoppingListItemFormValues {
 }
 
 type ShoppingListItemFormGroup = FormGroupControls<ShoppingListItemFormValues>;
-

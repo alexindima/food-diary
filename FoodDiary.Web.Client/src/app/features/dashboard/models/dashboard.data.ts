@@ -1,9 +1,9 @@
-import { Consumption } from './consumption.data';
-import { DailyAdvice } from './daily-advice.data';
-import { HydrationDaily } from './hydration.data';
-import { DashboardLayoutSettings } from './user.data';
-import { WaistEntrySummaryPoint } from './waist-entry.data';
-import { WeightEntrySummaryPoint } from './weight-entry.data';
+import { HydrationDaily } from '../../hydration/models/hydration.data';
+import { Consumption } from '../../../types/consumption.data';
+import { DailyAdvice } from '../../../types/daily-advice.data';
+import { DashboardLayoutSettings } from '../../../types/user.data';
+import { WaistEntrySummaryPoint } from '../../../types/waist-entry.data';
+import { WeightEntrySummaryPoint } from '../../../types/weight-entry.data';
 
 export interface DashboardSnapshot {
     date: string;

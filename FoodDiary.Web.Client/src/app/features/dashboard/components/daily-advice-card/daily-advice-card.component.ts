@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FdUiIconModule } from 'fd-ui-kit/material';
 import { TranslatePipe } from '@ngx-translate/core';
-import { DailyAdvice } from '../../../types/daily-advice.data';
-import { FdCardHoverDirective } from '../../../directives/card-hover.directive';
+import { DailyAdvice } from '../../../../types/daily-advice.data';
+import { FdCardHoverDirective } from '../../../../directives/card-hover.directive';
 
 @Component({
     selector: 'fd-daily-advice-card',

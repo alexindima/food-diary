@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
-import { environment } from '../../environments/environment';
-import { catchError, Observable, throwError } from 'rxjs';
-import { ApiService } from './api.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { ShoppingList, ShoppingListCreateDto, ShoppingListSummary, ShoppingListUpdateDto } from '../types/shopping-list.data';
+import { Injectable } from '@angular/core';
+import { catchError, Observable, throwError } from 'rxjs';
+import { environment } from '../../../../environments/environment';
+import { ApiService } from '../../../services/api.service';
+import { ShoppingList, ShoppingListCreateDto, ShoppingListSummary, ShoppingListUpdateDto } from '../models/shopping-list.data';
 
 @Injectable({
     providedIn: 'root',

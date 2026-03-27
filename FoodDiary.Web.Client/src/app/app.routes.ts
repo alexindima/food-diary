@@ -18,10 +18,10 @@ import { unsavedChangesGuard } from './guards/unsaved-changes.guard';
 import { EmailVerificationPendingComponent } from './components/auth/email-verification-pending/email-verification-pending.component';
 import { EmailVerificationComponent } from './components/auth/email-verification/email-verification.component';
 import { PasswordResetComponent } from './components/auth/password-reset/password-reset.component';
-import { ShoppingListPageComponent } from './components/shopping-list-page/shopping-list-page.component';
 import { PremiumAccessPageComponent } from './components/premium-access-page/premium-access-page.component';
 import { productRoutes } from './features/products/product.routes';
 import { recipeRoutes } from './features/recipes/recipe.routes';
+import { shoppingListRoutes } from './features/shopping-lists/shopping-list.routes';
 
 export const routes: Routes = [
     { path: '', component: MainComponent, canDeactivate: [unsavedChangesGuard] },
@@ -65,11 +65,7 @@ export const routes: Routes = [
         ],
     },
     ...recipeRoutes,
-    {
-        path: 'shopping-lists',
-        component: ShoppingListPageComponent,
-        canActivate: [authGuard],
-    },
+    ...shoppingListRoutes,
     {
         path: 'statistics',
         component: StatisticsComponent,

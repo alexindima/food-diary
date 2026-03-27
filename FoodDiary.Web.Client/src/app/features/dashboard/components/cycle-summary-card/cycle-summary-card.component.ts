@@ -1,9 +1,9 @@
 ﻿import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { NoticeBannerComponent } from '../notice-banner/notice-banner.component';
-import { CyclePredictions } from '../../../types/cycle.data';
-import { FdCardHoverDirective } from '../../../directives/card-hover.directive';
+import { NoticeBannerComponent } from '../../../../components/shared/notice-banner/notice-banner.component';
+import { CyclePredictions } from '../../../../types/cycle.data';
+import { FdCardHoverDirective } from '../../../../directives/card-hover.directive';
 
 @Component({
     selector: 'fd-cycle-summary-card',

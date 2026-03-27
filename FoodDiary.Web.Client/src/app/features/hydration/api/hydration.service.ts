@@ -1,9 +1,9 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, catchError, of, tap } from 'rxjs';
-import { HttpErrorResponse } from '@angular/common/http';
-import { ApiService } from './api.service';
-import { environment } from '../../environments/environment';
-import { CreateHydrationEntryPayload, HydrationDaily, HydrationEntry } from '../types/hydration.data';
+import { environment } from '../../../../environments/environment';
+import { ApiService } from '../../../services/api.service';
+import { CreateHydrationEntryPayload, HydrationDaily, HydrationEntry } from '../models/hydration.data';
 
 @Injectable({
     providedIn: 'root',
@@ -21,7 +21,7 @@ export class HydrationService extends ApiService {
                     totalMl: 0,
                     goalMl: null,
                 });
-            })
+            }),
         );
     }
 
@@ -31,7 +31,7 @@ export class HydrationService extends ApiService {
             catchError((error: HttpErrorResponse) => {
                 console.error('Hydration entries fetch error', error);
                 return of([]);
-            })
+            }),
         );
     }
 
@@ -48,7 +48,7 @@ export class HydrationService extends ApiService {
             catchError((error: HttpErrorResponse) => {
                 console.error('Create hydration entry error', error);
                 throw error;
-            })
+            }),
         );
     }
 }

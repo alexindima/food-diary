@@ -5,7 +5,7 @@ import { AuthDialogComponent } from '../auth/auth-dialog.component';
 import { AuthService } from '../../services/auth.service';
 import { HeroComponent } from '../hero/hero.component';
 import { FeaturesComponent } from '../features/features.component';
-import { DashboardComponent } from '../dashboard/dashboard.component';
+import { DashboardComponent } from '../../features/dashboard/pages/dashboard.component';
 import { LandingPreviewTourComponent } from './preview-tour/landing-preview-tour.component';
 import { LandingStepsComponent } from './steps/landing-steps.component';
 import { LandingCtaComponent } from './cta/landing-cta.component';

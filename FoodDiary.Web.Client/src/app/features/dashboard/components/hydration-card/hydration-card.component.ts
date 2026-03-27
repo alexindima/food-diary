@@ -2,8 +2,8 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
-import { NoticeBannerComponent } from '../notice-banner/notice-banner.component';
-import { FdCardHoverDirective } from '../../../directives/card-hover.directive';
+import { NoticeBannerComponent } from '../../../../components/shared/notice-banner/notice-banner.component';
+import { FdCardHoverDirective } from '../../../../directives/card-hover.directive';
 
 @Component({
     selector: 'fd-hydration-card',

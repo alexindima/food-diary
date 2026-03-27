@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable, catchError, of } from 'rxjs';
-import { ApiService } from './api.service';
-import { DashboardSnapshot } from '../types/dashboard.data';
-import { environment } from '../../environments/environment';
+import { environment } from '../../../../environments/environment';
+import { ApiService } from '../../../services/api.service';
+import { DashboardSnapshot } from '../models/dashboard.data';
 
 @Injectable({
     providedIn: 'root',

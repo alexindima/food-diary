@@ -11,7 +11,7 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { UnsavedChangesService } from '../../services/unsaved-changes.service';
 import { UnsavedChangesDialogComponent, UnsavedChangesDialogResult } from '../shared/unsaved-changes-dialog/unsaved-changes-dialog.component';
 import { firstValueFrom } from 'rxjs';
-import { DashboardService } from '../../services/dashboard.service';
+import { DashboardService } from '../../features/dashboard/api/dashboard.service';
 
 @Component({
     selector: 'fd-sidebar',

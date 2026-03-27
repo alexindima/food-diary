@@ -11,39 +11,39 @@ import {
 } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
-import { NavigationService } from '../../services/navigation.service';
+import { NavigationService } from '../../../services/navigation.service';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
-import { Consumption } from '../../types/consumption.data';
+import { Consumption } from '../../../types/consumption.data';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FdUiDatepicker, FdUiDatepickerInputEvent, FdUiDatepickerModule } from 'fd-ui-kit/material';
 import { FdUiInputFieldModule } from 'fd-ui-kit/material';
 import { FdUiFormFieldModule } from 'fd-ui-kit/material';
 import { FdUiNativeDateModule } from 'fd-ui-kit/material';
 import { FdUiIconModule } from 'fd-ui-kit/material';
-import { PageBodyComponent } from '../shared/page-body/page-body.component';
-import { FdPageContainerDirective } from '../../directives/layout/page-container.directive';
-import { LocalizedDatePipe } from '../../pipes/localized-date.pipe';
-import { DashboardService } from '../../services/dashboard.service';
-import { DashboardSnapshot } from '../../types/dashboard.data';
+import { PageBodyComponent } from '../../../components/shared/page-body/page-body.component';
+import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
+import { LocalizedDatePipe } from '../../../pipes/localized-date.pipe';
+import { DashboardService } from '../api/dashboard.service';
+import { DashboardSnapshot } from '../models/dashboard.data';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { CalorieGoalDialogComponent } from './dialogs/calorie-goal-dialog/calorie-goal-dialog.component';
+import { CalorieGoalDialogComponent } from '../dialogs/calorie-goal-dialog/calorie-goal-dialog.component';
 import {
     DashboardSummaryCardComponent,
     NutrientBar
-} from '../shared/dashboard-summary-card/dashboard-summary-card.component';
-import { HydrationService } from '../../services/hydration.service';
-import { HydrationCardComponent } from '../shared/hydration-card/hydration-card.component';
-import { WeightTrendCardComponent, WeightTrendPoint } from '../shared/weight-trend-card/weight-trend-card.component';
-import { DailyAdviceCardComponent } from '../shared/daily-advice-card/daily-advice-card.component';
-import { MealsPreviewComponent, MealPreviewEntry } from '../shared/meals-preview/meals-preview.component';
-import { CycleSummaryCardComponent } from '../shared/cycle-summary-card/cycle-summary-card.component';
-import { CyclesService } from '../../services/cycles.service';
-import { CycleResponse } from '../../types/cycle.data';
-import { UserService } from '../../services/user.service';
-import { DashboardLayoutSettings } from '../../types/user.data';
-import { NoticeBannerComponent } from '../shared/notice-banner/notice-banner.component';
+} from '../../../components/shared/dashboard-summary-card/dashboard-summary-card.component';
+import { HydrationService } from '../../hydration/api/hydration.service';
+import { HydrationCardComponent } from '../components/hydration-card/hydration-card.component';
+import { WeightTrendCardComponent, WeightTrendPoint } from '../components/weight-trend-card/weight-trend-card.component';
+import { DailyAdviceCardComponent } from '../components/daily-advice-card/daily-advice-card.component';
+import { MealsPreviewComponent, MealPreviewEntry } from '../../../components/shared/meals-preview/meals-preview.component';
+import { CycleSummaryCardComponent } from '../components/cycle-summary-card/cycle-summary-card.component';
+import { CyclesService } from '../../../services/cycles.service';
+import { CycleResponse } from '../../../types/cycle.data';
+import { UserService } from '../../../services/user.service';
+import { DashboardLayoutSettings } from '../../../types/user.data';
+import { NoticeBannerComponent } from '../../../components/shared/notice-banner/notice-banner.component';
 import { fromEvent } from 'rxjs';
-import { UnsavedChangesService, UnsavedChangesHandler } from '../../services/unsaved-changes.service';
+import { UnsavedChangesService, UnsavedChangesHandler } from '../../../services/unsaved-changes.service';
 
 type MealSlot = 'BREAKFAST' | 'LUNCH' | 'DINNER';
 
