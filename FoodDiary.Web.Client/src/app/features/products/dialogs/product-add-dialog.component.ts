@@ -19,11 +19,8 @@ import { ManageHeaderComponent } from '../../../components/shared/manage-header/
 
 @Component({
     selector: 'fd-product-add-dialog',
-    templateUrl: '../../../components/product-container/product-manage/base-product-manage.component.html',
-    styleUrls: [
-        '../../../components/product-container/product-manage/product-add-dialog/product-add-dialog.component.scss',
-        '../../../components/product-container/product-manage/base-product-manage.component.scss',
-    ],
+    templateUrl: '../components/manage/base-product-manage.component.html',
+    styleUrls: ['./product-add-dialog.component.scss', '../components/manage/base-product-manage.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         ReactiveFormsModule,

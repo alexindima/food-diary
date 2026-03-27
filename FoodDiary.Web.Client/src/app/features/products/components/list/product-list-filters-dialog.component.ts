@@ -19,8 +19,8 @@ export interface ProductListFiltersDialogResult {
 
 @Component({
     selector: 'fd-product-list-filters-dialog',
-    templateUrl: '../../../../components/product-container/product-list/product-list-filters-dialog/product-list-filters-dialog.component.html',
-    styleUrls: ['../../../../components/product-container/product-list/product-list-filters-dialog/product-list-filters-dialog.component.scss'],
+    templateUrl: './product-list-filters-dialog.component.html',
+    styleUrls: ['./product-list-filters-dialog.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         TranslatePipe,

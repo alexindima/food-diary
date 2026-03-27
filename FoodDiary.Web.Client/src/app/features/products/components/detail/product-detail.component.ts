@@ -22,8 +22,8 @@ import {
 @Component({
     selector: 'fd-product-detail',
     standalone: true,
-    templateUrl: '../../../../components/product-container/product-detail/product-detail.component.html',
-    styleUrls: ['../../../../components/product-container/product-detail/product-detail.component.scss'],
+    templateUrl: './product-detail.component.html',
+    styleUrls: ['./product-detail.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         TranslatePipe,

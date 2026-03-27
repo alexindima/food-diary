@@ -33,8 +33,8 @@ import {
 @Component({
     selector: 'fd-product-list-base',
     standalone: true,
-    templateUrl: '../../../../components/product-container/product-list/product-list-base.component.html',
-    styleUrls: ['../../../../components/product-container/product-list/product-list-base.component.scss'],
+    templateUrl: './product-list-base.component.html',
+    styleUrls: ['./product-list-base.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         CommonModule,

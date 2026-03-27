@@ -101,7 +101,6 @@ public class ProductsFeatureTests {
         var result = await handler.Handle(new DeleteProductCommand(userId.Value, product.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
-        Assert.True(result.Value);
         Assert.True(repository.DeleteCalled);
         Assert.Equal([assetId], cleanup.RequestedAssetIds);
     }

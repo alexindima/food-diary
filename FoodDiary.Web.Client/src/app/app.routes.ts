@@ -10,11 +10,6 @@ import { UserManageComponent } from './components/user-manage/user-manage.compon
 import { loggedInGuard } from './guards/logged-in.guard';
 import { authGuard } from './guards/auth.guard';
 import { NotFoundComponent } from './components/not-found/not-found.component';
-import { RecipeContainerComponent } from './components/recipe-container/recipe-container.component';
-import { RecipeAddComponent } from './components/recipe-container/recipe-manage/recipe-add/recipe-add.component';
-import { RecipeListComponent } from './components/recipe-container/recipe-list/recipe-list.component';
-import { RecipeEditComponent } from './components/recipe-container/recipe-manage/recipe-edit/recipe-edit.component';
-import { recipeResolver } from './resolvers/recipe.resolver';
 import { WeightHistoryPageComponent } from './components/weight-history-page/weight-history-page.component';
 import { WaistHistoryPageComponent } from './components/waist-history-page/waist-history-page.component';
 import { CycleTrackingPageComponent } from './components/cycle-tracking-page/cycle-tracking-page.component';
@@ -26,6 +21,7 @@ import { PasswordResetComponent } from './components/auth/password-reset/passwor
 import { ShoppingListPageComponent } from './components/shopping-list-page/shopping-list-page.component';
 import { PremiumAccessPageComponent } from './components/premium-access-page/premium-access-page.component';
 import { productRoutes } from './features/products/product.routes';
+import { recipeRoutes } from './features/recipes/recipe.routes';
 
 export const routes: Routes = [
     { path: '', component: MainComponent, canDeactivate: [unsavedChangesGuard] },
@@ -68,20 +64,7 @@ export const routes: Routes = [
             },
         ],
     },
-    {
-        path: 'recipes',
-        component: RecipeContainerComponent,
-        canActivate: [authGuard],
-        children: [
-            { path: '', component: RecipeListComponent },
-            { path: 'add', component: RecipeAddComponent },
-            {
-                path: ':id/edit',
-                component: RecipeEditComponent,
-                resolve: { recipe: recipeResolver },
-            },
-        ],
-    },
+    ...recipeRoutes,
     {
         path: 'shopping-lists',
         component: ShoppingListPageComponent,

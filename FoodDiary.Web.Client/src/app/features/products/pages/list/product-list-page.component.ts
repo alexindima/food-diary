@@ -18,8 +18,8 @@ import { Product } from '../../models/product.data';
 
 @Component({
     selector: 'fd-product-list-page',
-    templateUrl: '../../../../components/product-container/product-list/product-list-base.component.html',
-    styleUrls: ['./product-list-page.component.scss', '../../../../components/product-container/product-list/product-list-base.component.scss'],
+    templateUrl: '../../components/list/product-list-base.component.html',
+    styleUrls: ['./product-list-page.component.scss', '../../components/list/product-list-base.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         ReactiveFormsModule,

@@ -37,8 +37,8 @@ export type ProductAiRecognitionResult = {
 @Component({
     selector: 'fd-product-ai-recognition-dialog',
     standalone: true,
-    templateUrl: '../../../../components/product-container/product-manage/product-ai-recognition-dialog/product-ai-recognition-dialog.component.html',
-    styleUrls: ['../../../../components/product-container/product-manage/product-ai-recognition-dialog/product-ai-recognition-dialog.component.scss'],
+    templateUrl: './product-ai-recognition-dialog.component.html',
+    styleUrls: ['./product-ai-recognition-dialog.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         CommonModule,
