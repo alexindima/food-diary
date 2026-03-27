@@ -100,6 +100,30 @@ public class AdminFeatureTests {
     }
 
     [Fact]
+    public async Task UpdateAdminUserHandler_WithSameRoles_DoesNotSetModifiedOnUtc() {
+        var user = CreateUserWithRoles("admin@example.com", [RoleNames.Admin, RoleNames.Premium]);
+        var userRepository = new InMemoryUserRepository(
+            user,
+            availableRoles: [RoleNames.Admin, RoleNames.Premium, RoleNames.Support]);
+        var handler = new UpdateAdminUserCommandHandler(userRepository);
+        var modifiedBefore = user.ModifiedOnUtc;
+
+        var result = await handler.Handle(
+            new UpdateAdminUserCommand(
+                user.Id.Value,
+                IsActive: null,
+                IsEmailConfirmed: null,
+                Roles: [RoleNames.Premium, RoleNames.Admin],
+                Language: null,
+                AiInputTokenLimit: null,
+                AiOutputTokenLimit: null),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(modifiedBefore, user.ModifiedOnUtc);
+    }
+
+    [Fact]
     public async Task UpsertAdminEmailTemplateValidator_WithInvalidLocale_Fails() {
         var validator = new UpsertAdminEmailTemplateCommandValidator();
         var command = new UpsertAdminEmailTemplateCommand(
@@ -157,26 +181,8 @@ public class AdminFeatureTests {
     private static User CreateUserWithRoles(string email, IReadOnlyList<string> roleNames) {
         var user = User.Create(email, "hash");
         var roles = roleNames.Select(name => Role.Create(name)).ToArray();
-        foreach (var role in roles) {
-            var userRole = new UserRole(user.Id, role.Id);
-            user.UserRoles.Add(userRole);
-            AddRoleLink(role, userRole);
-            SetNavigation(userRole, user, role);
-        }
-
+        user.ReplaceRoles(roles);
         return user;
-    }
-
-    private static void AddRoleLink(Role role, UserRole userRole) {
-        var userRoles = (List<UserRole>)typeof(Role)
-            .GetField("_userRoles", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!
-            .GetValue(role)!;
-        userRoles.Add(userRole);
-    }
-
-    private static void SetNavigation(UserRole userRole, User user, Role role) {
-        typeof(UserRole).GetProperty(nameof(UserRole.User))!.SetValue(userRole, user);
-        typeof(UserRole).GetProperty(nameof(UserRole.Role))!.SetValue(userRole, role);
     }
 
     private sealed class InMemoryUserRepository : IUserRepository {
@@ -185,7 +191,13 @@ public class AdminFeatureTests {
 
         public InMemoryUserRepository(User user, IEnumerable<string> availableRoles) {
             _user = user;
-            _roles = availableRoles.ToDictionary(name => name, Role.Create, StringComparer.Ordinal);
+            _roles = availableRoles.ToDictionary(
+                name => name,
+                name => user.UserRoles
+                    .Select(userRole => userRole.Role)
+                    .FirstOrDefault(role => string.Equals(role.Name, name, StringComparison.Ordinal))
+                    ?? Role.Create(name),
+                StringComparer.Ordinal);
         }
 
         public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();

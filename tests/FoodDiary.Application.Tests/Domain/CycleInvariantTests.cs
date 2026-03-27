@@ -20,6 +20,23 @@ public class CycleInvariantTests {
     }
 
     [Fact]
+    public void UpdateLengths_WithClearNotes_ClearsNotes() {
+        var cycle = Cycle.Create(UserId.New(), DateTime.UtcNow, averageLength: 28, lutealLength: 14, notes: "notes");
+
+        cycle.UpdateLengths(clearNotes: true);
+
+        Assert.Null(cycle.Notes);
+        Assert.NotNull(cycle.ModifiedOnUtc);
+    }
+
+    [Fact]
+    public void UpdateLengths_WithClearNotesAndValue_Throws() {
+        var cycle = Cycle.Create(UserId.New(), DateTime.UtcNow, averageLength: 28, lutealLength: 14, notes: "notes");
+
+        Assert.Throws<ArgumentException>(() => cycle.UpdateLengths(notes: "next", clearNotes: true));
+    }
+
+    [Fact]
     public void AddOrUpdateDay_WithSameValues_DoesNotRaiseDuplicateEvent() {
         var cycle = Cycle.Create(UserId.New(), DateTime.UtcNow);
         var symptoms = DailySymptoms.Create(1, 2, 3, 4, 5, 6, 7);
@@ -69,5 +86,21 @@ public class CycleInvariantTests {
         var day = CycleDay.Create(CycleId.New(), DateTime.UtcNow, true, symptoms, "note");
 
         Assert.Throws<ArgumentException>(() => day.Update(notes: "next", clearNotes: true));
+    }
+
+    [Fact]
+    public void Create_WithUnspecifiedStartDate_TreatsItAsUtcDateOnly() {
+        var cycle = Cycle.Create(UserId.New(), new DateTime(2026, 3, 27, 18, 45, 0, DateTimeKind.Unspecified));
+
+        Assert.Equal(new DateTime(2026, 3, 27, 0, 0, 0, DateTimeKind.Utc), cycle.StartDate);
+    }
+
+    [Fact]
+    public void CycleDay_Create_WithUnspecifiedDate_TreatsItAsUtcDateOnly() {
+        var symptoms = DailySymptoms.Create(1, 1, 1, 1, 1, 1, 1);
+
+        var day = CycleDay.Create(CycleId.New(), new DateTime(2026, 3, 27, 18, 45, 0, DateTimeKind.Unspecified), true, symptoms, null);
+
+        Assert.Equal(new DateTime(2026, 3, 27, 0, 0, 0, DateTimeKind.Utc), day.Date);
     }
 }

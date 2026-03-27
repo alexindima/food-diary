@@ -70,6 +70,25 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User> {
 
         entity.HasIndex(e => e.TelegramUserId)
             .IsUnique();
+
+        entity.Metadata.FindNavigation(nameof(User.Meals))!
+            .SetPropertyAccessMode(PropertyAccessMode.Field);
+        entity.Metadata.FindNavigation(nameof(User.Products))!
+            .SetPropertyAccessMode(PropertyAccessMode.Field);
+        entity.Metadata.FindNavigation(nameof(User.Recipes))!
+            .SetPropertyAccessMode(PropertyAccessMode.Field);
+        entity.Metadata.FindNavigation(nameof(User.WeightEntries))!
+            .SetPropertyAccessMode(PropertyAccessMode.Field);
+        entity.Metadata.FindNavigation(nameof(User.WaistEntries))!
+            .SetPropertyAccessMode(PropertyAccessMode.Field);
+        entity.Metadata.FindNavigation(nameof(User.Cycles))!
+            .SetPropertyAccessMode(PropertyAccessMode.Field);
+        entity.Metadata.FindNavigation(nameof(User.HydrationEntries))!
+            .SetPropertyAccessMode(PropertyAccessMode.Field);
+        entity.Metadata.FindNavigation(nameof(User.ShoppingLists))!
+            .SetPropertyAccessMode(PropertyAccessMode.Field);
+        entity.Metadata.FindNavigation(nameof(User.UserRoles))!
+            .SetPropertyAccessMode(PropertyAccessMode.Field);
     }
 }
 

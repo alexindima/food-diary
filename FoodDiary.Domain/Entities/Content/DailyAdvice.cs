@@ -41,8 +41,11 @@ public sealed class DailyAdvice : AggregateRoot<DailyAdviceId> {
         return advice;
     }
 
-    public void Update(string? value = null, string? locale = null, int? weight = null, string? tag = null) {
+    public void Update(string? value = null, string? locale = null, int? weight = null, string? tag = null, bool clearTag = false) {
         var changed = false;
+        var normalizedTag = NormalizeOptional(tag, nameof(tag), TagMaxLength);
+
+        EnsureClearConflict(clearTag, normalizedTag, nameof(clearTag), nameof(tag));
 
         if (value is not null) {
             var normalizedValue = NormalizeRequired(
@@ -73,8 +76,13 @@ public sealed class DailyAdvice : AggregateRoot<DailyAdviceId> {
             }
         }
 
-        if (tag is not null) {
-            var normalizedTag = NormalizeOptional(tag, nameof(tag), TagMaxLength);
+        if (clearTag) {
+            if (Tag is not null) {
+                Tag = null;
+                changed = true;
+            }
+        }
+        else if (tag is not null) {
             if (Tag != normalizedTag) {
                 Tag = normalizedTag;
                 changed = true;
@@ -121,5 +129,12 @@ public sealed class DailyAdvice : AggregateRoot<DailyAdviceId> {
         return normalized.Length > maxLength
             ? throw new ArgumentOutOfRangeException(paramName, $"Value must be at most {maxLength} characters.")
             : normalized;
+    }
+
+    private static void EnsureClearConflict<T>(bool clear, T? value, string clearParamName, string valueParamName)
+        where T : class {
+        if (clear && value is not null) {
+            throw new ArgumentException($"{clearParamName} cannot be true when {valueParamName} is provided.", clearParamName);
+        }
     }
 }

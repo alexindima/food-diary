@@ -59,7 +59,7 @@ public class ResendEmailVerificationCommandHandler : ICommandHandler<ResendEmail
                 new EmailVerificationMessage(user.Email, user.Id.Value.ToString(), emailToken, user.Language),
                 cancellationToken);
         } catch (Exception ex) {
-            _logger.LogError(ex, "Failed to send email verification for user {UserId}.", user.Id.Value);
+            _logger.LogError(ex, "Email verification dispatch failed.");
             return Result.Failure<bool>(
                 Errors.Validation.Invalid(
                     "EmailVerification",

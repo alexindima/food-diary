@@ -453,6 +453,17 @@ public class MealInvariantTests {
     }
 
     [Fact]
+    public void AddAiSession_WithUnspecifiedRecognizedAt_Throws() {
+        var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
+
+        Assert.Throws<ArgumentOutOfRangeException>(() => meal.AddAiSession(
+            imageAssetId: null,
+            recognizedAtUtc: new DateTime(2026, 3, 27, 18, 45, 0, DateTimeKind.Unspecified),
+            notes: null,
+            items: []));
+    }
+
+    [Fact]
     public void AddAiSession_WithItems_SetsSessionModifiedOnUtc() {
         var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
 

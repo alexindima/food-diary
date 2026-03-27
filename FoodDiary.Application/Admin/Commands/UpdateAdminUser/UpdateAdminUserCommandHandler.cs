@@ -86,10 +86,7 @@ public sealed class UpdateAdminUserCommandHandler(IUserRepository userRepository
     }
 
     private static void UpdateUserRoles(User user, IReadOnlyList<Role> roles) {
-        user.UserRoles.Clear();
-        foreach (var role in roles) {
-            user.UserRoles.Add(new UserRole(user.Id, role.Id));
-        }
+        user.ReplaceRoles(roles);
     }
 
     private static Result<string?> NormalizeLanguage(string? value) {

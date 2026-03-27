@@ -56,15 +56,24 @@ public sealed partial class User : AggregateRoot<UserId> {
     public bool IsActive { get; private set; } = true;
     public DateTime? DeletedAt { get; private set; }
 
-    public ICollection<Meal> Meals { get; private set; } = new List<Meal>();
-    public ICollection<Product> Products { get; private set; } = new List<Product>();
-    public ICollection<Recipe> Recipes { get; private set; } = new List<Recipe>();
-    public ICollection<WeightEntry> WeightEntries { get; private set; } = new List<WeightEntry>();
-    public ICollection<WaistEntry> WaistEntries { get; private set; } = new List<WaistEntry>();
-    public ICollection<Cycle> Cycles { get; private set; } = new List<Cycle>();
-    public ICollection<HydrationEntry> HydrationEntries { get; private set; } = new List<HydrationEntry>();
-    public ICollection<ShoppingList> ShoppingLists { get; private set; } = new List<ShoppingList>();
-    public ICollection<UserRole> UserRoles { get; private set; } = new List<UserRole>();
+    private readonly List<Meal> _meals = [];
+    private readonly List<Product> _products = [];
+    private readonly List<Recipe> _recipes = [];
+    private readonly List<WeightEntry> _weightEntries = [];
+    private readonly List<WaistEntry> _waistEntries = [];
+    private readonly List<Cycle> _cycles = [];
+    private readonly List<HydrationEntry> _hydrationEntries = [];
+    private readonly List<ShoppingList> _shoppingLists = [];
+    private readonly List<UserRole> _userRoles = [];
+    public IReadOnlyCollection<Meal> Meals => _meals.AsReadOnly();
+    public IReadOnlyCollection<Product> Products => _products.AsReadOnly();
+    public IReadOnlyCollection<Recipe> Recipes => _recipes.AsReadOnly();
+    public IReadOnlyCollection<WeightEntry> WeightEntries => _weightEntries.AsReadOnly();
+    public IReadOnlyCollection<WaistEntry> WaistEntries => _waistEntries.AsReadOnly();
+    public IReadOnlyCollection<Cycle> Cycles => _cycles.AsReadOnly();
+    public IReadOnlyCollection<HydrationEntry> HydrationEntries => _hydrationEntries.AsReadOnly();
+    public IReadOnlyCollection<ShoppingList> ShoppingLists => _shoppingLists.AsReadOnly();
+    public IReadOnlyCollection<UserRole> UserRoles => _userRoles.AsReadOnly();
 
     private User() {
     }
@@ -328,5 +337,32 @@ public sealed partial class User : AggregateRoot<UserId> {
 
     private static bool NullableAreClose(double? left, double right) {
         return left.HasValue && Math.Abs(left.Value - right) <= ComparisonEpsilon;
+    }
+
+    public void ReplaceRoles(IReadOnlyCollection<Role> roles) {
+        ArgumentNullException.ThrowIfNull(roles);
+        EnsureNotDeleted();
+
+        var requestedRoleIds = roles
+            .Select(role => role.Id)
+            .OrderBy(id => id.Value)
+            .ToArray();
+        var currentRoleIds = _userRoles
+            .Select(role => role.RoleId)
+            .OrderBy(id => id.Value)
+            .ToArray();
+
+        if (requestedRoleIds.SequenceEqual(currentRoleIds)) {
+            return;
+        }
+
+        var nextRoles = roles
+            .Select(role => UserRole.Create(this, role))
+            .ToList();
+
+        _userRoles.Clear();
+        _userRoles.AddRange(nextRoles);
+
+        SetModified();
     }
 }

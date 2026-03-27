@@ -26,9 +26,7 @@ public sealed class RequestPasswordResetCommandHandler(
         var nowUtc = dateTimeProvider.UtcNow;
         if (user.PasswordResetSentAtUtc.HasValue &&
             nowUtc - user.PasswordResetSentAtUtc.Value < Cooldown) {
-            logger.LogInformation(
-                "Password reset requested too soon for user {UserId}. Cooldown active.",
-                user.Id.Value);
+            logger.LogInformation("Password reset request throttled by cooldown.");
             return Result.Success(true);
         }
 
@@ -43,9 +41,9 @@ public sealed class RequestPasswordResetCommandHandler(
             await emailSender.SendPasswordResetAsync(
                 new PasswordResetMessage(user.Email, user.Id.Value.ToString(), token, user.Language),
                 cancellationToken);
-            logger.LogInformation("Password reset email sent for user {UserId}.", user.Id.Value);
+            logger.LogInformation("Password reset email dispatch completed.");
         } catch (Exception ex) {
-            logger.LogWarning(ex, "Failed to send password reset email for user {UserId}.", user.Id.Value);
+            logger.LogWarning(ex, "Password reset email dispatch failed.");
             // Intentionally ignore to avoid leaking account existence via email failures.
         }
 

@@ -145,6 +145,22 @@ public class MiscDomainInvariantTests {
     }
 
     [Fact]
+    public void DailyAdvice_Update_WithClearTag_ClearsTag() {
+        var advice = DailyAdvice.Create("Hydrate", "en", weight: 1, tag: "water");
+
+        advice.Update(clearTag: true);
+
+        Assert.Null(advice.Tag);
+    }
+
+    [Fact]
+    public void DailyAdvice_Update_WithClearTagAndValue_Throws() {
+        var advice = DailyAdvice.Create("Hydrate", "en", weight: 1, tag: "water");
+
+        Assert.Throws<ArgumentException>(() => advice.Update(tag: "sleep", clearTag: true));
+    }
+
+    [Fact]
     public void DailyAdvice_Create_WithTooLongValue_Throws() {
         Assert.Throws<ArgumentOutOfRangeException>(() =>
             DailyAdvice.Create(new string('a', 513), "en"));

@@ -24,4 +24,16 @@ public sealed class UserRole {
         UserId = userId;
         RoleId = roleId;
     }
+
+    internal static UserRole Create(User user, Role role) {
+        ArgumentNullException.ThrowIfNull(user);
+        ArgumentNullException.ThrowIfNull(role);
+
+        var userRole = new UserRole(user.Id, role.Id) {
+            User = user,
+            Role = role
+        };
+
+        return userRole;
+    }
 }

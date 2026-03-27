@@ -2,6 +2,7 @@ using System.Net;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using FoodDiary.Application.Ai.Common;
 using FoodDiary.Application.Ai.Models;
 using FoodDiary.Application.Common.Abstractions.Result;
@@ -140,7 +141,7 @@ public sealed class OpenAiFoodService(
                         attempt + 1,
                         statusCode,
                         requestId ?? "n/a",
-                        SummarizeBody(responseBody));
+                        SummarizeErrorBody(responseBody));
                     await Task.Delay(RetryDelays[attempt], cancellationToken);
                     continue;
                 }
@@ -149,9 +150,9 @@ public sealed class OpenAiFoodService(
                     "OpenAI request failed. Status={Status} RequestId={RequestId} Summary={Summary}",
                     statusCode,
                     requestId ?? "n/a",
-                    SummarizeBody(responseBody));
+                    SummarizeErrorBody(responseBody));
 
-                return (false, null, Errors.Ai.OpenAiFailed($"OpenAI error {response.StatusCode}: {SummarizeBody(responseBody)}"));
+                return (false, null, Errors.Ai.OpenAiFailed($"OpenAI error {response.StatusCode}: {SummarizeErrorBody(responseBody)}"));
             }
 
             try {
@@ -426,13 +427,49 @@ public sealed class OpenAiFoodService(
                HttpStatusCode.InternalServerError;
     }
 
-    private static string SummarizeBody(string responseBody) {
+    private static string SummarizeErrorBody(string responseBody) {
         if (string.IsNullOrWhiteSpace(responseBody)) {
             return "empty";
         }
 
-        var compact = responseBody.ReplaceLineEndings(" ").Trim();
-        return compact.Length <= 300 ? compact : compact[..300];
+        try {
+            var root = JsonNode.Parse(responseBody);
+            var errorNode = root?["error"];
+            if (errorNode is JsonValue errorValue && errorValue.TryGetValue<string>(out var errorText)) {
+                return TrimSummary(errorText);
+            }
+
+            if (errorNode is JsonObject errorObject) {
+                var parts = new List<string>();
+                if (errorObject["type"] is JsonValue typeValue && typeValue.TryGetValue<string>(out var errorType) &&
+                    !string.IsNullOrWhiteSpace(errorType)) {
+                    parts.Add(errorType.Trim());
+                }
+
+                if (errorObject["code"] is JsonValue codeValue && codeValue.TryGetValue<string>(out var errorCode) &&
+                    !string.IsNullOrWhiteSpace(errorCode)) {
+                    parts.Add(errorCode.Trim());
+                }
+
+                if (errorObject["message"] is JsonValue messageValue &&
+                    messageValue.TryGetValue<string>(out var errorMessage) &&
+                    !string.IsNullOrWhiteSpace(errorMessage)) {
+                    parts.Add(errorMessage.Trim());
+                }
+
+                if (parts.Count > 0) {
+                    return TrimSummary(string.Join(": ", parts));
+                }
+            }
+        } catch (JsonException) {
+        }
+
+        return "response body unavailable";
+    }
+
+    private static string TrimSummary(string value) {
+        var compact = value.ReplaceLineEndings(" ").Trim();
+        return compact.Length <= 200 ? compact : compact[..200];
     }
 
     private readonly record struct UsageTokens(int InputTokens, int OutputTokens, int TotalTokens);

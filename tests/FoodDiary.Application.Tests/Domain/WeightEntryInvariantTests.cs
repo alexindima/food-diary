@@ -31,6 +31,13 @@ public class WeightEntryInvariantTests {
     }
 
     [Fact]
+    public void Create_WithUnspecifiedDate_TreatsItAsUtcDateOnly() {
+        var entry = WeightEntry.Create(UserId.New(), new DateTime(2026, 3, 27, 18, 45, 0, DateTimeKind.Unspecified), 72);
+
+        Assert.Equal(new DateTime(2026, 3, 27, 0, 0, 0, DateTimeKind.Utc), entry.Date);
+    }
+
+    [Fact]
     public void Update_WithSameValues_DoesNotSetModifiedOnUtc() {
         var date = DateTime.UtcNow.Date;
         var entry = WeightEntry.Create(UserId.New(), date, 72);

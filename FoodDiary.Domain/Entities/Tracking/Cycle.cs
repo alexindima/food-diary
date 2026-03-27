@@ -45,8 +45,11 @@ public sealed class Cycle : AggregateRoot<CycleId> {
         return cycle;
     }
 
-    public void UpdateLengths(int? averageLength = null, int? lutealLength = null, string? notes = null) {
+    public void UpdateLengths(int? averageLength = null, int? lutealLength = null, string? notes = null, bool clearNotes = false) {
         var changed = false;
+        var normalizedNotes = NormalizeNotes(notes);
+
+        EnsureClearConflict(clearNotes, normalizedNotes, nameof(clearNotes), nameof(notes));
 
         if (averageLength.HasValue) {
             var normalizedAverageLength = NormalizeAverageLength(averageLength);
@@ -64,8 +67,13 @@ public sealed class Cycle : AggregateRoot<CycleId> {
             }
         }
 
-        if (notes is not null) {
-            var normalizedNotes = NormalizeNotes(notes);
+        if (clearNotes) {
+            if (Notes is not null) {
+                Notes = null;
+                changed = true;
+            }
+        }
+        else if (notes is not null) {
             if (Notes != normalizedNotes) {
                 Notes = normalizedNotes;
                 changed = true;
@@ -124,10 +132,11 @@ public sealed class Cycle : AggregateRoot<CycleId> {
     }
 
     private static DateTime NormalizeDate(DateTime value) {
-        var utc = value.Kind switch {
-            DateTimeKind.Utc => value,
-            _ => value.ToUniversalTime()
-        };
+        if (value.Kind == DateTimeKind.Unspecified) {
+            return DateTime.SpecifyKind(value.Date, DateTimeKind.Utc);
+        }
+
+        var utc = value.ToUniversalTime();
 
         return DateTime.SpecifyKind(utc.Date, DateTimeKind.Utc);
     }

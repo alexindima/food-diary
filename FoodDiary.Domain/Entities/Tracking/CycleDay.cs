@@ -80,10 +80,11 @@ public sealed class CycleDay : Entity<CycleDayId> {
     }
 
     private static DateTime NormalizeDate(DateTime value) {
-        var utc = value.Kind switch {
-            DateTimeKind.Utc => value,
-            _ => value.ToUniversalTime()
-        };
+        if (value.Kind == DateTimeKind.Unspecified) {
+            return DateTime.SpecifyKind(value.Date, DateTimeKind.Utc);
+        }
+
+        var utc = value.ToUniversalTime();
 
         return DateTime.SpecifyKind(utc.Date, DateTimeKind.Utc);
     }

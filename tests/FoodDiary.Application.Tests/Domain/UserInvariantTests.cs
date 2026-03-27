@@ -16,6 +16,41 @@ public class UserInvariantTests {
     }
 
     [Fact]
+    public void NavigationCollections_AreExposedAsReadOnly() {
+        var user = User.Create("test@example.com", "hash");
+
+        Assert.True(Assert.IsAssignableFrom<ICollection<FoodDiary.Domain.Entities.Meals.Meal>>(user.Meals).IsReadOnly);
+        Assert.True(Assert.IsAssignableFrom<ICollection<FoodDiary.Domain.Entities.Products.Product>>(user.Products).IsReadOnly);
+        Assert.True(Assert.IsAssignableFrom<ICollection<FoodDiary.Domain.Entities.Recipes.Recipe>>(user.Recipes).IsReadOnly);
+        Assert.True(Assert.IsAssignableFrom<ICollection<FoodDiary.Domain.Entities.Tracking.WeightEntry>>(user.WeightEntries).IsReadOnly);
+        Assert.True(Assert.IsAssignableFrom<ICollection<FoodDiary.Domain.Entities.Tracking.WaistEntry>>(user.WaistEntries).IsReadOnly);
+        Assert.True(Assert.IsAssignableFrom<ICollection<FoodDiary.Domain.Entities.Tracking.Cycle>>(user.Cycles).IsReadOnly);
+        Assert.True(Assert.IsAssignableFrom<ICollection<FoodDiary.Domain.Entities.Tracking.HydrationEntry>>(user.HydrationEntries).IsReadOnly);
+        Assert.True(Assert.IsAssignableFrom<ICollection<FoodDiary.Domain.Entities.Shopping.ShoppingList>>(user.ShoppingLists).IsReadOnly);
+        Assert.True(Assert.IsAssignableFrom<ICollection<UserRole>>(user.UserRoles).IsReadOnly);
+    }
+
+    [Fact]
+    public void ReplaceRoles_AssignsRoleNavigations() {
+        var user = User.Create("test@example.com", "hash");
+        var adminRole = Role.Create("Admin");
+        var supportRole = Role.Create("Support");
+
+        user.ReplaceRoles([adminRole, supportRole]);
+
+        Assert.Collection(
+            user.UserRoles.OrderBy(role => role.Role.Name),
+            role => {
+                Assert.Equal(user.Id, role.UserId);
+                Assert.Equal("Admin", role.Role.Name);
+            },
+            role => {
+                Assert.Equal(user.Id, role.UserId);
+                Assert.Equal("Support", role.Role.Name);
+            });
+    }
+
+    [Fact]
     public void UpdateAiTokenLimits_WithNegativeInput_Throws() {
         var user = User.Create("test@example.com", "hash");
 

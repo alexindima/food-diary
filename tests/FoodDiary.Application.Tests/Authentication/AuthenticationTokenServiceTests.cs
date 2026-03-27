@@ -4,7 +4,6 @@ using FoodDiary.Application.Authentication.Common;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
-
 namespace FoodDiary.Application.Tests.Authentication;
 
 public class AuthenticationTokenServiceTests {
@@ -42,27 +41,9 @@ public class AuthenticationTokenServiceTests {
 
     private static User CreateUser(string email, params string[] roles) {
         var user = User.Create(email, "password-hash");
-        foreach (var roleName in roles) {
-            var role = Role.Create(roleName);
-            var userRole = new UserRole(user.Id, role.Id);
-            user.UserRoles.Add(userRole);
-            AddRoleLink(role, userRole);
-            SetNavigation(userRole, user, role);
-        }
-
+        var roleEntities = roles.Select(Role.Create).ToArray();
+        user.ReplaceRoles(roleEntities);
         return user;
-    }
-
-    private static void AddRoleLink(Role role, UserRole userRole) {
-        var userRoles = (List<UserRole>)typeof(Role)
-            .GetField("_userRoles", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!
-            .GetValue(role)!;
-        userRoles.Add(userRole);
-    }
-
-    private static void SetNavigation(UserRole userRole, User user, Role role) {
-        typeof(UserRole).GetProperty(nameof(UserRole.User))!.SetValue(userRole, user);
-        typeof(UserRole).GetProperty(nameof(UserRole.Role))!.SetValue(userRole, role);
     }
 
     private sealed class InMemoryUserRepository(User user) : IUserRepository {

@@ -147,6 +147,40 @@ public sealed class OpenAiFoodServiceTests {
         Assert.Equal("Ai.InvalidResponse", result.Error.Code);
     }
 
+    [Fact]
+    public async Task CalculateNutritionAsync_WhenErrorResponseContainsPromptData_DoesNotExposeRawBodyInErrorMessage() {
+        using var httpClient = new HttpClient(new SequenceHttpMessageHandler(new Queue<HttpResponseMessage>(new HttpResponseMessage[] {
+            new(HttpStatusCode.BadRequest) {
+                Content = new StringContent("""
+                    {
+                      "error": {
+                        "type": "invalid_request_error",
+                        "message": "Request rejected."
+                      },
+                      "debugPrompt": "user uploaded salmon salad with private note"
+                    }
+                    """)
+            }
+        })));
+        var service = new OpenAiFoodService(
+            httpClient,
+            Microsoft.Extensions.Options.Options.Create(new OpenAiOptions { ApiKey = "test-key", TextModel = "test-model" }),
+            NullLogger<OpenAiFoodService>.Instance,
+            new StubAiUsageRepository(),
+            new StubUserRepository());
+
+        var result = await service.CalculateNutritionAsync(
+            [new FoodVisionItemModel("Apple", null, 100m, "g", 0.9m)],
+            UserId.New(),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Ai.OpenAiFailed", result.Error.Code);
+        Assert.Contains("Request rejected.", result.Error.Message, StringComparison.Ordinal);
+        Assert.DoesNotContain("salmon salad", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("debugPrompt", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
     private sealed class ThrowingHttpMessageHandler(Exception exception) : HttpMessageHandler {
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken) =>
             Task.FromException<HttpResponseMessage>(exception);
