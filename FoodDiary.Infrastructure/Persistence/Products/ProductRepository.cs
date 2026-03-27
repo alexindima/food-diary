@@ -1,10 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Infrastructure.Persistence;
+namespace FoodDiary.Infrastructure.Persistence.Products;
 
 public class ProductRepository(FoodDiaryDbContext context) : IProductRepository {
     public async Task<Product> AddAsync(Product product, CancellationToken cancellationToken = default) {

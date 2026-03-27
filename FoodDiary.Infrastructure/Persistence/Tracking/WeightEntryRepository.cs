@@ -3,7 +3,7 @@ using FoodDiary.Application.WeightEntries.Common;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Infrastructure.Persistence;
+namespace FoodDiary.Infrastructure.Persistence.Tracking;
 
 public class WeightEntryRepository(FoodDiaryDbContext context) : IWeightEntryRepository {
     public async Task<WeightEntry> AddAsync(WeightEntry entry, CancellationToken cancellationToken = default) {

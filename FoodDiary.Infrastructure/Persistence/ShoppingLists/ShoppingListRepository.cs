@@ -3,7 +3,7 @@ using FoodDiary.Domain.Entities.Shopping;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.Persistence;
+namespace FoodDiary.Infrastructure.Persistence.ShoppingLists;
 
 public class ShoppingListRepository(FoodDiaryDbContext context) : IShoppingListRepository {
     public async Task<ShoppingList> AddAsync(ShoppingList list, CancellationToken cancellationToken = default) {

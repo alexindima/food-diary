@@ -1,6 +1,6 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
-using FoodDiary.Application.Common.Interfaces.Persistence;
+using FoodDiary.Application.Products.Common;
 using FoodDiary.Application.ShoppingLists.Common;
 using FoodDiary.Application.ShoppingLists.Mappings;
 using FoodDiary.Application.ShoppingLists.Models;
@@ -12,7 +12,7 @@ namespace FoodDiary.Application.ShoppingLists.Commands.CreateShoppingList;
 
 public class CreateShoppingListCommandHandler(
     IShoppingListRepository shoppingListRepository,
-    IProductRepository productRepository)
+    IProductLookupService productLookupService)
     : ICommandHandler<CreateShoppingListCommand, Result<ShoppingListModel>> {
     public async Task<Result<ShoppingListModel>> Handle(
         CreateShoppingListCommand command,
@@ -31,7 +31,7 @@ public class CreateShoppingListCommandHandler(
         var itemsResult = await ShoppingListItemBuilder.BuildItemsAsync(
             command.Items,
             userId,
-            productRepository,
+            productLookupService,
             cancellationToken);
 
         if (itemsResult.IsFailure) {

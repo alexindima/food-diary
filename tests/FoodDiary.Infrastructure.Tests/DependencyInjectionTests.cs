@@ -14,11 +14,11 @@ public sealed class DependencyInjectionTests {
         var services = new ServiceCollection();
         var configuration = CreateConfiguration(new Dictionary<string, string?> {
             ["ConnectionStrings:DefaultConnection"] = "Host=localhost;Database=food_diary;Username=test;Password=test",
-            ["JwtSettings:SecretKey"] = "super-secret-key-for-tests-only-123456789",
-            ["JwtSettings:Issuer"] = "FoodDiary",
-            ["JwtSettings:Audience"] = "FoodDiaryClients",
-            ["JwtSettings:ExpirationMinutes"] = "60",
-            ["JwtSettings:RefreshTokenExpirationDays"] = "7",
+            ["Jwt:SecretKey"] = "super-secret-key-for-tests-only-123456789",
+            ["Jwt:Issuer"] = "FoodDiary",
+            ["Jwt:Audience"] = "FoodDiaryClients",
+            ["Jwt:ExpirationMinutes"] = "60",
+            ["Jwt:RefreshTokenExpirationDays"] = "7",
             ["Email:FrontendBaseUrl"] = "not-a-url"
         });
 
@@ -34,11 +34,11 @@ public sealed class DependencyInjectionTests {
         var services = new ServiceCollection();
         var configuration = CreateConfiguration(new Dictionary<string, string?> {
             ["ConnectionStrings:DefaultConnection"] = "Host=localhost;Database=food_diary;Username=test;Password=test",
-            ["JwtSettings:SecretKey"] = "super-secret-key-for-tests-only-123456789",
-            ["JwtSettings:Issuer"] = "FoodDiary",
-            ["JwtSettings:Audience"] = "FoodDiaryClients",
-            ["JwtSettings:ExpirationMinutes"] = "60",
-            ["JwtSettings:RefreshTokenExpirationDays"] = "7",
+            ["Jwt:SecretKey"] = "super-secret-key-for-tests-only-123456789",
+            ["Jwt:Issuer"] = "FoodDiary",
+            ["Jwt:Audience"] = "FoodDiaryClients",
+            ["Jwt:ExpirationMinutes"] = "60",
+            ["Jwt:RefreshTokenExpirationDays"] = "7",
             ["S3:ServiceUrl"] = "invalid-url"
         });
 

@@ -1,10 +1,10 @@
-﻿using FoodDiary.Application.Common.Interfaces.Persistence;
+using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.Persistence;
+namespace FoodDiary.Infrastructure.Persistence.Recipes;
 
 public class RecipeRepository(FoodDiaryDbContext context) : IRecipeRepository {
     public async Task<Recipe> AddAsync(Recipe recipe, CancellationToken cancellationToken = default) {

@@ -1,6 +1,7 @@
 using FoodDiary.Web.Api.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
 
@@ -13,6 +14,7 @@ public sealed class OpenTelemetryConfigurationTests {
         var configuration = CreateConfiguration(otlpEndpoint: null);
 
         services.AddLogging();
+        services.AddSingleton<IConfiguration>(configuration);
         services.AddApiServices(configuration);
         using var provider = services.BuildServiceProvider();
 
@@ -26,6 +28,7 @@ public sealed class OpenTelemetryConfigurationTests {
         var configuration = CreateConfiguration("http://localhost:4317");
 
         services.AddLogging();
+        services.AddSingleton<IConfiguration>(configuration);
         services.AddApiServices(configuration);
         using var provider = services.BuildServiceProvider();
 
@@ -39,19 +42,22 @@ public sealed class OpenTelemetryConfigurationTests {
         var configuration = CreateConfiguration("not-a-uri");
 
         services.AddLogging();
+        services.AddSingleton<IConfiguration>(configuration);
+        services.AddApiServices(configuration);
+        using var provider = services.BuildServiceProvider();
 
-        var exception = Assert.Throws<InvalidOperationException>(() => services.AddApiServices(configuration));
-        Assert.Equal("OpenTelemetry:Otlp:Endpoint must be a valid absolute URI.", exception.Message);
+        var exception = Assert.Throws<OptionsValidationException>(() => provider.GetRequiredService<TracerProvider>());
+        Assert.Contains(exception.Failures, failure => failure.Contains("OpenTelemetry:Otlp:Endpoint", StringComparison.Ordinal));
     }
 
     private static IConfiguration CreateConfiguration(string? otlpEndpoint) {
         var values = new Dictionary<string, string?> {
             ["ConnectionStrings:DefaultConnection"] = "Host=localhost;Database=fooddiary;Username=postgres;Password=test",
-            ["JwtSettings:SecretKey"] = "change-me-local-jwt-secret-min-32",
-            ["JwtSettings:Issuer"] = "FoodDiaryApi",
-            ["JwtSettings:Audience"] = "FoodDiaryClient",
-            ["JwtSettings:ExpirationMinutes"] = "60",
-            ["JwtSettings:RefreshTokenExpirationDays"] = "7",
+            ["Jwt:SecretKey"] = "change-me-local-jwt-secret-min-32",
+            ["Jwt:Issuer"] = "FoodDiaryApi",
+            ["Jwt:Audience"] = "FoodDiaryClient",
+            ["Jwt:ExpirationMinutes"] = "60",
+            ["Jwt:RefreshTokenExpirationDays"] = "7",
             ["TelegramBot:ApiSecret"] = "",
             ["OpenTelemetry:Otlp:Endpoint"] = otlpEndpoint,
         };

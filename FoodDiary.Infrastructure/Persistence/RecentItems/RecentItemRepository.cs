@@ -4,7 +4,7 @@ using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.Persistence;
+namespace FoodDiary.Infrastructure.Persistence.RecentItems;
 
 public class RecentItemRepository(FoodDiaryDbContext context) : IRecentItemRepository {
     private const int MaxStoredPerType = 100;

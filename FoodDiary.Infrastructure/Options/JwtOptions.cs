@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 namespace FoodDiary.Infrastructure.Options;
 
 public sealed class JwtOptions {
-    public const string SectionName = "JwtSettings";
+    public const string SectionName = "Jwt";
 
     [Required]
     [MinLength(32)]

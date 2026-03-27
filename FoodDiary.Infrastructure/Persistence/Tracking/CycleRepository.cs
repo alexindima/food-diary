@@ -3,7 +3,7 @@ using FoodDiary.Application.Cycles.Common;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Infrastructure.Persistence;
+namespace FoodDiary.Infrastructure.Persistence.Tracking;
 
 public class CycleRepository(FoodDiaryDbContext context) : ICycleRepository {
     public async Task<Cycle> AddAsync(Cycle cycle, CancellationToken cancellationToken = default) {

@@ -11,13 +11,25 @@ using FoodDiary.Application.DailyAdvices.Common;
 using FoodDiary.Application.Hydration.Common;
 using FoodDiary.Application.Images.Common;
 using FoodDiary.Application.Meals.Common;
+using FoodDiary.Application.Products.Common;
 using FoodDiary.Application.RecentItems.Common;
+using FoodDiary.Application.Recipes.Common;
 using FoodDiary.Application.ShoppingLists.Common;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.WaistEntries.Common;
 using FoodDiary.Application.WeightEntries.Common;
 using FoodDiary.Infrastructure.Authentication;
+using FoodDiary.Infrastructure.Persistence.Admin;
+using FoodDiary.Infrastructure.Persistence.Ai;
+using FoodDiary.Infrastructure.Persistence.Images;
+using FoodDiary.Infrastructure.Persistence.Meals;
 using FoodDiary.Infrastructure.Persistence;
+using FoodDiary.Infrastructure.Persistence.Products;
+using FoodDiary.Infrastructure.Persistence.RecentItems;
+using FoodDiary.Infrastructure.Persistence.Recipes;
+using FoodDiary.Infrastructure.Persistence.ShoppingLists;
+using FoodDiary.Infrastructure.Persistence.Tracking;
+using FoodDiary.Infrastructure.Persistence.Users;
 using FoodDiary.Infrastructure.Options;
 using FoodDiary.Infrastructure.Services;
 
@@ -43,15 +55,15 @@ public static class DependencyInjection
         services.AddOptions<JwtOptions>()
             .Bind(configuration.GetSection(JwtOptions.SectionName))
             .Validate(static options => !string.IsNullOrWhiteSpace(options.SecretKey) && options.SecretKey.Length >= 32,
-                "JwtSettings:SecretKey must be at least 32 characters long.")
+                $"{JwtOptions.SectionName}:SecretKey must be at least 32 characters long.")
             .Validate(static options => !string.IsNullOrWhiteSpace(options.Issuer),
-                "JwtSettings:Issuer is required.")
+                $"{JwtOptions.SectionName}:Issuer is required.")
             .Validate(static options => !string.IsNullOrWhiteSpace(options.Audience),
-                "JwtSettings:Audience is required.")
+                $"{JwtOptions.SectionName}:Audience is required.")
             .Validate(static options => options.ExpirationMinutes > 0,
-                "JwtSettings:ExpirationMinutes must be greater than zero.")
+                $"{JwtOptions.SectionName}:ExpirationMinutes must be greater than zero.")
             .Validate(static options => options.RefreshTokenExpirationDays > 0,
-                "JwtSettings:RefreshTokenExpirationDays must be greater than zero.")
+                $"{JwtOptions.SectionName}:RefreshTokenExpirationDays must be greater than zero.")
             .ValidateOnStart();
         services.AddOptions<TelegramAuthOptions>()
             .Bind(configuration.GetSection(TelegramAuthOptions.SectionName));
@@ -78,7 +90,9 @@ public static class DependencyInjection
 
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IProductRepository, ProductRepository>();
+        services.AddScoped<IProductLookupService, ProductLookupService>();
         services.AddScoped<IRecipeRepository, RecipeRepository>();
+        services.AddScoped<IRecipeLookupService, RecipeLookupService>();
         services.AddScoped<IRecentItemRepository, RecentItemRepository>();
         services.AddScoped<IMealRepository, MealRepository>();
         services.AddScoped<IShoppingListRepository, ShoppingListRepository>();

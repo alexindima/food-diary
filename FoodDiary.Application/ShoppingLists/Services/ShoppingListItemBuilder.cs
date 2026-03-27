@@ -1,5 +1,5 @@
 using FoodDiary.Application.Common.Abstractions.Result;
-using FoodDiary.Application.Common.Interfaces.Persistence;
+using FoodDiary.Application.Products.Common;
 using FoodDiary.Application.ShoppingLists.Commands.Common;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -10,7 +10,7 @@ public static class ShoppingListItemBuilder {
     public static async Task<Result<IReadOnlyList<ShoppingListItemData>>> BuildItemsAsync(
         IReadOnlyList<ShoppingListItemInput> items,
         UserId userId,
-        IProductRepository productRepository,
+        IProductLookupService productLookupService,
         CancellationToken cancellationToken) {
         if (items.Count == 0) {
             return Result.Success<IReadOnlyList<ShoppingListItemData>>([]);
@@ -22,7 +22,7 @@ public static class ShoppingListItemBuilder {
             .Distinct()
             .ToList();
 
-        var products = await productRepository.GetByIdsAsync(productIds, userId, includePublic: true, cancellationToken);
+        var products = await productLookupService.GetAccessibleByIdsAsync(productIds, userId, cancellationToken);
         if (products.Count != productIds.Count) {
             var missing = productIds.First(id => !products.ContainsKey(id));
             return Result.Failure<IReadOnlyList<ShoppingListItemData>>(Errors.Product.NotAccessible(missing.Value));

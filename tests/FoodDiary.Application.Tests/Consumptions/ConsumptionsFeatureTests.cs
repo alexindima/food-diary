@@ -1,8 +1,9 @@
 using FoodDiary.Application.Meals.Common;
 using FoodDiary.Application.Common.Interfaces.Services;
-using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Images.Common;
+using FoodDiary.Application.Products.Common;
 using FoodDiary.Application.RecentItems.Common;
+using FoodDiary.Application.Recipes.Common;
 using FoodDiary.Application.Consumptions.Commands.UpdateConsumption;
 using FoodDiary.Application.Consumptions.Common;
 using FoodDiary.Application.Consumptions.Services;
@@ -142,8 +143,8 @@ public class ConsumptionsFeatureTests {
         var cleanup = new RecordingCleanupService("storage_error");
         var handler = new UpdateConsumptionCommandHandler(
             mealRepository,
-            new NoopProductRepository(),
-            new NoopRecipeRepository(),
+            new NoopProductLookupService(),
+            new NoopRecipeLookupService(),
             new RecordingRecentItemRepository(),
             cleanup,
             new StubDateTimeProvider());
@@ -211,76 +212,20 @@ public class ConsumptionsFeatureTests {
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 
-    private sealed class NoopProductRepository : IProductRepository {
-        public Task<Product> AddAsync(Product product, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-
-        public Task<(IReadOnlyList<(Product Product, int UsageCount)> Items, int TotalItems)> GetPagedAsync(
-            UserId userId,
-            bool includePublic,
-            int page,
-            int limit,
-            string? search,
-            IReadOnlyCollection<ProductType>? productTypes = null,
-            CancellationToken cancellationToken = default) => throw new NotSupportedException();
-
-        public Task<Product?> GetByIdAsync(
-            ProductId id,
-            UserId userId,
-            bool includePublic = true,
-            CancellationToken cancellationToken = default) => throw new NotSupportedException();
-
-        public Task<IReadOnlyDictionary<ProductId, Product>> GetByIdsAsync(
+    private sealed class NoopProductLookupService : IProductLookupService {
+        public Task<IReadOnlyDictionary<ProductId, Product>> GetAccessibleByIdsAsync(
             IEnumerable<ProductId> ids,
             UserId userId,
-            bool includePublic = true,
             CancellationToken cancellationToken = default) =>
             Task.FromResult<IReadOnlyDictionary<ProductId, Product>>(new Dictionary<ProductId, Product>());
-
-        public Task<IReadOnlyDictionary<ProductId, (Product Product, int UsageCount)>> GetByIdsWithUsageAsync(
-            IEnumerable<ProductId> ids,
-            UserId userId,
-            bool includePublic = true,
-            CancellationToken cancellationToken = default) => throw new NotSupportedException();
-
-        public Task UpdateAsync(Product product, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task DeleteAsync(Product product, CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 
-    private sealed class NoopRecipeRepository : IRecipeRepository {
-        public Task<Recipe> AddAsync(Recipe recipe, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-
-        public Task<(IReadOnlyList<(Recipe Recipe, int UsageCount)> Items, int TotalItems)> GetPagedAsync(
-            UserId userId,
-            bool includePublic,
-            int page,
-            int limit,
-            string? search,
-            CancellationToken cancellationToken = default) => throw new NotSupportedException();
-
-        public Task<Recipe?> GetByIdAsync(
-            RecipeId id,
-            UserId userId,
-            bool includePublic = true,
-            bool includeSteps = false,
-            bool asTracking = false,
-            CancellationToken cancellationToken = default) => throw new NotSupportedException();
-
-        public Task<IReadOnlyDictionary<RecipeId, Recipe>> GetByIdsAsync(
+    private sealed class NoopRecipeLookupService : IRecipeLookupService {
+        public Task<IReadOnlyDictionary<RecipeId, Recipe>> GetAccessibleByIdsAsync(
             IEnumerable<RecipeId> ids,
             UserId userId,
-            bool includePublic = true,
             CancellationToken cancellationToken = default) =>
             Task.FromResult<IReadOnlyDictionary<RecipeId, Recipe>>(new Dictionary<RecipeId, Recipe>());
-
-        public Task<IReadOnlyDictionary<RecipeId, (Recipe Recipe, int UsageCount)>> GetByIdsWithUsageAsync(
-            IEnumerable<RecipeId> ids,
-            UserId userId,
-            bool includePublic = true,
-            CancellationToken cancellationToken = default) => throw new NotSupportedException();
-
-        public Task UpdateAsync(Recipe recipe, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task DeleteAsync(Recipe recipe, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task UpdateNutritionAsync(Recipe recipe, CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 
     private sealed class RecordingRecentItemRepository : IRecentItemRepository {

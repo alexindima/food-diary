@@ -2,7 +2,7 @@ using FoodDiary.Application.Admin.Common;
 using FoodDiary.Domain.Entities.Content;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.Persistence;
+namespace FoodDiary.Infrastructure.Persistence.Admin;
 
 public sealed class EmailTemplateRepository(FoodDiaryDbContext context) : IEmailTemplateRepository {
     public async Task<IReadOnlyList<EmailTemplate>> GetAllAsync(CancellationToken cancellationToken = default) {

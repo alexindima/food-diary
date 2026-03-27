@@ -132,6 +132,59 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void ApplicationSourceFiles_UseFullProductRepositoryOnlyInsideProductsSlice() {
+        var root = GetRepositoryRoot();
+        var applicationRoot = Path.Combine(root, "FoodDiary.Application");
+        var allowedDirectories = new[] {
+            Path.Combine(applicationRoot, "Common", "Interfaces", "Persistence"),
+            Path.Combine(applicationRoot, "Products"),
+        };
+
+        var violations = FindRepositoryReferenceViolations(
+            root,
+            applicationRoot,
+            "IProductRepository",
+            allowedDirectories);
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void ApplicationSourceFiles_UseFullRecipeRepositoryOnlyInsideRecipesSlice() {
+        var root = GetRepositoryRoot();
+        var applicationRoot = Path.Combine(root, "FoodDiary.Application");
+        var allowedDirectories = new[] {
+            Path.Combine(applicationRoot, "Common", "Interfaces", "Persistence"),
+            Path.Combine(applicationRoot, "Recipes"),
+        };
+
+        var violations = FindRepositoryReferenceViolations(
+            root,
+            applicationRoot,
+            "IRecipeRepository",
+            allowedDirectories);
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void InfrastructurePersistenceRoot_StayLimitedToSharedEfInfrastructureFiles() {
+        var root = GetRepositoryRoot();
+        var persistenceRoot = Path.Combine(root, "FoodDiary.Infrastructure", "Persistence");
+        var allowedFiles = new[] {
+            "FoodDiaryDbContext.cs",
+            "FoodDiaryDbContextFactory.cs",
+        };
+
+        var actualFiles = Directory.GetFiles(persistenceRoot, "*.cs", SearchOption.TopDirectoryOnly)
+            .Select(Path.GetFileName)
+            .OrderBy(static name => name, StringComparer.Ordinal)
+            .ToArray();
+
+        Assert.Equal(allowedFiles, actualFiles);
+    }
+
+    [Fact]
     public void ApplicationSourceFiles_DoNotReferencePresentationOrAspNetTransportTypes() {
         var root = GetRepositoryRoot();
         var applicationRoot = Path.Combine(root, "FoodDiary.Application");
@@ -233,5 +286,21 @@ public sealed class ApplicationGuardrailTests {
         foreach (System.Text.RegularExpressions.Match match in matches) {
             yield return match.Value.ReplaceLineEndings(" ").Replace('\n', ' ').Trim();
         }
+    }
+
+    private static string[] FindRepositoryReferenceViolations(
+        string repositoryRoot,
+        string applicationRoot,
+        string typeName,
+        IReadOnlyCollection<string> allowedDirectories) {
+        return Directory.GetFiles(applicationRoot, "*.cs", SearchOption.AllDirectories)
+            .Where(static path => path.Contains($"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase) is false)
+            .Where(static path => path.Contains($"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase) is false)
+            .Where(path => allowedDirectories.Any(directory => path.StartsWith(directory, StringComparison.OrdinalIgnoreCase)) is false)
+            .SelectMany(path => File.ReadAllLines(path)
+                .Select((line, index) => new { path, index, line }))
+            .Where(entry => entry.line.Contains(typeName, StringComparison.Ordinal))
+            .Select(entry => $"{Path.GetRelativePath(repositoryRoot, entry.path)}:{entry.index + 1}")
+            .ToArray();
     }
 }

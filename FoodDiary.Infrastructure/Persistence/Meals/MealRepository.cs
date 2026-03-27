@@ -3,7 +3,7 @@ using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.Persistence;
+namespace FoodDiary.Infrastructure.Persistence.Meals;
 
 public class MealRepository(FoodDiaryDbContext context) : IMealRepository {
     public async Task<Meal> AddAsync(Meal meal, CancellationToken cancellationToken = default) {

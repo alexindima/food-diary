@@ -1,4 +1,4 @@
-using FoodDiary.Application.Common.Interfaces.Persistence;
+using FoodDiary.Application.Products.Common;
 using FoodDiary.Application.ShoppingLists.Commands.Common;
 using FoodDiary.Application.ShoppingLists.Common;
 using FoodDiary.Application.ShoppingLists.Queries.GetCurrentShoppingList;
@@ -7,7 +7,6 @@ using FoodDiary.Application.ShoppingLists.Queries.GetShoppingLists;
 using FoodDiary.Application.ShoppingLists.Services;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Shopping;
-using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.ShoppingLists;
@@ -49,7 +48,7 @@ public class ShoppingListsFeatureTests {
         var result = await ShoppingListItemBuilder.BuildItemsAsync(
             items,
             UserId.New(),
-            new NoopProductRepository(),
+            new NoopProductLookupService(),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -65,7 +64,7 @@ public class ShoppingListsFeatureTests {
         var result = await ShoppingListItemBuilder.BuildItemsAsync(
             items,
             UserId.New(),
-            new NoopProductRepository(),
+            new NoopProductLookupService(),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -97,40 +96,11 @@ public class ShoppingListsFeatureTests {
         public Task DeleteAsync(ShoppingList list, CancellationToken cancellationToken = default) => Task.CompletedTask;
     }
 
-    private sealed class NoopProductRepository : IProductRepository {
-        public Task<Product> AddAsync(Product product, CancellationToken cancellationToken = default) => Task.FromResult(product);
-
-        public Task<(IReadOnlyList<(Product Product, int UsageCount)> Items, int TotalItems)> GetPagedAsync(
-            UserId userId,
-            bool includePublic,
-            int page,
-            int limit,
-            string? search,
-            IReadOnlyCollection<ProductType>? productTypes = null,
-            CancellationToken cancellationToken = default) =>
-            Task.FromResult((Items: (IReadOnlyList<(Product Product, int UsageCount)>)Array.Empty<(Product Product, int UsageCount)>(), TotalItems: 0));
-
-        public Task<Product?> GetByIdAsync(
-            ProductId id,
-            UserId userId,
-            bool includePublic = true,
-            CancellationToken cancellationToken = default) => Task.FromResult<Product?>(null);
-
-        public Task<IReadOnlyDictionary<ProductId, Product>> GetByIdsAsync(
+    private sealed class NoopProductLookupService : IProductLookupService {
+        public Task<IReadOnlyDictionary<ProductId, Product>> GetAccessibleByIdsAsync(
             IEnumerable<ProductId> ids,
             UserId userId,
-            bool includePublic = true,
             CancellationToken cancellationToken = default) =>
             Task.FromResult<IReadOnlyDictionary<ProductId, Product>>(new Dictionary<ProductId, Product>());
-
-        public Task<IReadOnlyDictionary<ProductId, (Product Product, int UsageCount)>> GetByIdsWithUsageAsync(
-            IEnumerable<ProductId> ids,
-            UserId userId,
-            bool includePublic = true,
-            CancellationToken cancellationToken = default) =>
-            Task.FromResult<IReadOnlyDictionary<ProductId, (Product Product, int UsageCount)>>(new Dictionary<ProductId, (Product Product, int UsageCount)>());
-
-        public Task UpdateAsync(Product product, CancellationToken cancellationToken = default) => Task.CompletedTask;
-        public Task DeleteAsync(Product product, CancellationToken cancellationToken = default) => Task.CompletedTask;
     }
 }

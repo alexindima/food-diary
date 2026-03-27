@@ -5,6 +5,7 @@ using FoodDiary.Infrastructure.Options;
 using FoodDiary.Presentation.Api.Extensions;
 using FoodDiary.Presentation.Api.Options;
 using FoodDiary.Web.Api.Options;
+using OpenTelemetry;
 using FoodDiary.Web.Api.Swagger;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.HttpLogging;
@@ -123,35 +124,42 @@ public static class ApiServiceCollectionExtensions {
                 [new OpenApiSecuritySchemeReference("Bearer", document, null)] = []
             });
         });
-        services.AddConfiguredOpenTelemetry(configuration);
+        services.AddConfiguredOpenTelemetry();
 
         return services;
     }
 
-    private static IServiceCollection AddConfiguredOpenTelemetry(this IServiceCollection services, IConfiguration configuration) {
-        var openTelemetryOptions = new OpenTelemetryOptions();
-        configuration.GetSection(OpenTelemetryOptions.SectionName).Bind(openTelemetryOptions);
+    private static IServiceCollection AddConfiguredOpenTelemetry(this IServiceCollection services) {
+        services.AddSingleton<TracerProvider>(static serviceProvider => {
+            var options = serviceProvider.GetRequiredService<IOptions<OpenTelemetryOptions>>().Value;
+            if (string.IsNullOrWhiteSpace(options.Otlp.Endpoint)) {
+                return null!;
+            }
 
-        if (string.IsNullOrWhiteSpace(openTelemetryOptions.Otlp.Endpoint)) {
-            return services;
-        }
+            var endpointUri = new Uri(options.Otlp.Endpoint, UriKind.Absolute);
 
-        if (!OpenTelemetryOptions.HasValidOtlpEndpoint(openTelemetryOptions)) {
-            throw new InvalidOperationException("OpenTelemetry:Otlp:Endpoint must be a valid absolute URI.");
-        }
-
-        var endpointUri = new Uri(openTelemetryOptions.Otlp.Endpoint, UriKind.Absolute);
-
-        services.AddOpenTelemetry()
-            .ConfigureResource(resource => resource.AddService("FoodDiary.Web.Api"))
-            .WithTracing(tracing => tracing
+            return Sdk.CreateTracerProviderBuilder()
+                .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("FoodDiary.Web.Api"))
                 .AddSource(ApiTelemetry.TelemetryName)
                 .AddSource(PresentationApiTelemetry.TelemetryName)
-                .AddOtlpExporter(options => options.Endpoint = endpointUri))
-            .WithMetrics(metrics => metrics
+                .AddOtlpExporter(exporterOptions => exporterOptions.Endpoint = endpointUri)
+                .Build();
+        });
+        services.AddSingleton<MeterProvider>(static serviceProvider => {
+            var options = serviceProvider.GetRequiredService<IOptions<OpenTelemetryOptions>>().Value;
+            if (string.IsNullOrWhiteSpace(options.Otlp.Endpoint)) {
+                return null!;
+            }
+
+            var endpointUri = new Uri(options.Otlp.Endpoint, UriKind.Absolute);
+
+            return Sdk.CreateMeterProviderBuilder()
+                .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("FoodDiary.Web.Api"))
                 .AddMeter(ApiTelemetry.TelemetryName)
                 .AddMeter(PresentationApiTelemetry.TelemetryName)
-                .AddOtlpExporter(options => options.Endpoint = endpointUri));
+                .AddOtlpExporter(exporterOptions => exporterOptions.Endpoint = endpointUri)
+                .Build();
+        });
 
         return services;
     }

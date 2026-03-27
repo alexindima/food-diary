@@ -3,7 +3,7 @@ using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.Persistence;
+namespace FoodDiary.Infrastructure.Persistence.Tracking;
 
 public class HydrationEntryRepository(FoodDiaryDbContext context) : IHydrationEntryRepository {
     public async Task<HydrationEntry> AddAsync(HydrationEntry entry, CancellationToken cancellationToken = default) {

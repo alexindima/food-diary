@@ -3,7 +3,7 @@ using FoodDiary.Domain.Entities.Assets;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.Persistence;
+namespace FoodDiary.Infrastructure.Persistence.Images;
 
 public class ImageAssetRepository(FoodDiaryDbContext context) : IImageAssetRepository {
     public async Task<ImageAsset> AddAsync(ImageAsset asset, CancellationToken cancellationToken = default) {

@@ -83,7 +83,7 @@ Minimum local setup:
 ```bash
 cd FoodDiary.Web.Api
 dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Host=localhost;Database=fooddiary;Username=postgres;Password=your-local-password"
-dotnet user-secrets set "JwtSettings:SecretKey" "your-very-long-local-development-secret"
+dotnet user-secrets set "Jwt:SecretKey" "your-very-long-local-development-secret"
 ```
 
 ## Deployment Notes

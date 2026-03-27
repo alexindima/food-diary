@@ -13,11 +13,11 @@ public sealed class ApiHostOptionsConfigurationTests {
         var configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(new Dictionary<string, string?> {
                 ["ConnectionStrings:DefaultConnection"] = "Host=localhost;Database=fooddiary;Username=postgres;Password=test",
-                ["JwtSettings:SecretKey"] = "change-me-local-jwt-secret-min-32",
-                ["JwtSettings:Issuer"] = "FoodDiaryApi",
-                ["JwtSettings:Audience"] = "FoodDiaryClient",
-                ["JwtSettings:ExpirationMinutes"] = "60",
-                ["JwtSettings:RefreshTokenExpirationDays"] = "7",
+            ["Jwt:SecretKey"] = "change-me-local-jwt-secret-min-32",
+            ["Jwt:Issuer"] = "FoodDiaryApi",
+            ["Jwt:Audience"] = "FoodDiaryClient",
+            ["Jwt:ExpirationMinutes"] = "60",
+            ["Jwt:RefreshTokenExpirationDays"] = "7",
                 ["TelegramBot:ApiSecret"] = "",
                 ["Cors:Origins:0"] = "http://localhost:4200",
                 ["RateLimiting:Auth:PermitLimit"] = "7",

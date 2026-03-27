@@ -4,7 +4,7 @@ using FoodDiary.Domain.Entities.Ai;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.Persistence;
+namespace FoodDiary.Infrastructure.Persistence.Ai;
 
 public sealed class AiUsageRepository(FoodDiaryDbContext context) : IAiUsageRepository {
     public async Task AddAsync(AiUsage usage, CancellationToken cancellationToken = default) {

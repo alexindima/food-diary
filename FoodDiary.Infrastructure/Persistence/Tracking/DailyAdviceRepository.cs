@@ -2,7 +2,7 @@ using FoodDiary.Application.DailyAdvices.Common;
 using FoodDiary.Domain.Entities.Content;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.Persistence;
+namespace FoodDiary.Infrastructure.Persistence.Tracking;
 
 public class DailyAdviceRepository(FoodDiaryDbContext context) : IDailyAdviceRepository {
     public async Task<IReadOnlyList<DailyAdvice>> GetByLocaleAsync(
