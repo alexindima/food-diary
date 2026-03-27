@@ -1,28 +1,25 @@
-﻿import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { ProductListBaseComponent } from '../product-list-base.component';
-import { Product } from '../../../../types/product.data';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import {
-    ProductDetailComponent,
-    ProductDetailActionResult,
-} from '../../product-detail/product-detail.component';
-import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
-import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { finalize } from 'rxjs';
+import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
+import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
-import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.component';
 import { FdUiIconModule } from 'fd-ui-kit/material';
+import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.component';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
-import { PageHeaderComponent } from '../../../shared/page-header/page-header.component';
-import { PageBodyComponent } from '../../../shared/page-body/page-body.component';
+import { ProductDetailComponent, ProductDetailActionResult } from '../../components/detail/product-detail.component';
+import { ProductListBaseComponent } from '../../components/list/product-list-base.component';
+import { PageBodyComponent } from '../../../../components/shared/page-body/page-body.component';
+import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header.component';
+import { ProductCardComponent } from '../../../../components/shared/product-card/product-card.component';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
-import { ProductCardComponent } from '../../../shared/product-card/product-card.component';
+import { Product } from '../../models/product.data';
 
 @Component({
     selector: 'fd-product-list-page',
-    templateUrl: '../product-list-base.component.html',
-    styleUrls: ['./product-list-page.component.scss', '../product-list-base.component.scss'],
+    templateUrl: '../../../../components/product-container/product-list/product-list-base.component.html',
+    styleUrls: ['./product-list-page.component.scss', '../../../../components/product-container/product-list/product-list-base.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         ReactiveFormsModule,
@@ -91,4 +88,3 @@ export class ProductListPageComponent extends ProductListBaseComponent implement
             });
     }
 }
-

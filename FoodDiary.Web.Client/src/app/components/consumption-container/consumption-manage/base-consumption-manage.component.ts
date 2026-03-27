@@ -29,7 +29,7 @@ import {
 } from '../../../types/consumption.data';
 import { ConsumptionService } from '../../../services/consumption.service';
 import { FormGroupControls } from '../../../types/common.data';
-import { Product, MeasurementUnit } from '../../../types/product.data';
+import { Product, MeasurementUnit } from '../../../features/products/models/product.data';
 import { Recipe, RecipeIngredient } from '../../../types/recipe.data';
 import { HttpErrorResponse } from '@angular/common/http';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';

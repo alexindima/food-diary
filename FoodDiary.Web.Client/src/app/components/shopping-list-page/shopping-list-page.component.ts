@@ -16,7 +16,7 @@ import { PageHeaderComponent } from '../shared/page-header/page-header.component
 import { PageBodyComponent } from '../shared/page-body/page-body.component';
 import { FdPageContainerDirective } from '../../directives/layout/page-container.directive';
 import { ConfirmDeleteDialogComponent, ConfirmDeleteDialogData } from '../shared/confirm-delete-dialog/confirm-delete-dialog.component';
-import { MeasurementUnit } from '../../types/product.data';
+import { MeasurementUnit } from '../../features/products/models/product.data';
 import { ShoppingList, ShoppingListItem, ShoppingListItemDto, ShoppingListSummary } from '../../types/shopping-list.data';
 import { ShoppingListService } from '../../services/shopping-list.service';
 import { HttpErrorResponse } from '@angular/common/http';

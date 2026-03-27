@@ -27,7 +27,9 @@
       "Bash(netstat:*)",
       "Bash(findstr:*)",
       "Bash(grep -E \"Features/[^/]+$\")",
-      "Bash(grep \"\\\\.cs$\")"
+      "Bash(grep \"\\\\.cs$\")",
+      "Bash(grep -v \"^d.*\\\\.$\")",
+      "Bash(xargs grep:*)"
     ],
     "deny": [],
     "ask": []

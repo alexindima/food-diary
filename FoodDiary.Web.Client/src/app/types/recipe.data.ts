@@ -1,5 +1,5 @@
 import { NutrientData } from './charts.data';
-import { MeasurementUnit } from './product.data';
+import { MeasurementUnit } from '../features/products/models/product.data';
 import { PageOf } from './page-of.data';
 
 export enum RecipeVisibility {

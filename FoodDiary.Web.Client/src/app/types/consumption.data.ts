@@ -1,4 +1,4 @@
-import { Product, MeasurementUnit, ProductType, ProductVisibility } from './product.data';
+import { Product, MeasurementUnit, ProductType, ProductVisibility } from '../features/products/models/product.data';
 import { Recipe, RecipeVisibility } from './recipe.data';
 
 export interface Consumption {

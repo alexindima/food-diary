@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { FD_UI_DIALOG_DATA, FdUiDialogRef } from 'fd-ui-kit/material';
+import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog.component';
 import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
-import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
+import { FD_UI_DIALOG_DATA, FdUiDialogRef } from 'fd-ui-kit/material';
 import { FdUiSegmentedToggleComponent, FdUiSegmentedToggleOption } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle.component';
-import { ProductType } from '../../../../types/product.data';
+import { ProductType } from '../../models/product.data';
 
 export interface ProductListFiltersDialogData {
     onlyMine: boolean;
@@ -19,8 +19,8 @@ export interface ProductListFiltersDialogResult {
 
 @Component({
     selector: 'fd-product-list-filters-dialog',
-    templateUrl: './product-list-filters-dialog.component.html',
-    styleUrls: ['./product-list-filters-dialog.component.scss'],
+    templateUrl: '../../../../components/product-container/product-list/product-list-filters-dialog/product-list-filters-dialog.component.html',
+    styleUrls: ['../../../../components/product-container/product-list/product-list-filters-dialog/product-list-filters-dialog.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         TranslatePipe,

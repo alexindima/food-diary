@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, OnInit, inject, input, output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { Product } from '../../../types/product.data';
+import { Product } from '../../../features/products/models/product.data';
 import { Recipe } from '../../../types/recipe.data';
-import { ProductListDialogComponent } from '../../product-container/product-list/product-list-dialog/product-list-dialog.component';
+import { ProductListDialogComponent } from '../../../features/products/dialogs/product-list-dialog.component';
 import { RecipeSelectDialogComponent } from '../../recipe-container/recipe-select-dialog/recipe-select-dialog.component';
 import { FD_UI_DIALOG_DATA, FdUiDialogRef } from 'fd-ui-kit/material';
 
@@ -11,7 +11,7 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog.component';
 import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
-import { ProductAddDialogComponent } from '../../product-container/product-manage/product-add-dialog/product-add-dialog.component';
+import { ProductAddDialogComponent } from '../../../features/products/dialogs/product-add-dialog.component';
 import { RecipeManageComponent } from '../../recipe-container/recipe-manage/recipe-manage.component';
 
 export type ConsumptionItemSelection =

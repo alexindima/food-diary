@@ -9,12 +9,12 @@ import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiSelectComponent, FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea.component';
 import { FD_UI_DIALOG_DATA, FdUiDialogRef } from 'fd-ui-kit/material';
-import { ImageUploadFieldComponent } from '../../../shared/image-upload-field/image-upload-field.component';
+import { ImageUploadFieldComponent } from '../../../../components/shared/image-upload-field/image-upload-field.component';
 import { AiFoodService } from '../../../../services/ai-food.service';
 import { ImageUploadService } from '../../../../services/image-upload.service';
 import { FoodNutritionResponse, FoodVisionItem } from '../../../../types/ai.data';
 import { ImageSelection } from '../../../../types/image-upload.data';
-import { MeasurementUnit } from '../../../../types/product.data';
+import { MeasurementUnit } from '../../models/product.data';
 import { catchError, of } from 'rxjs';
 
 type ProductAiDialogData = {
@@ -37,8 +37,8 @@ export type ProductAiRecognitionResult = {
 @Component({
     selector: 'fd-product-ai-recognition-dialog',
     standalone: true,
-    templateUrl: './product-ai-recognition-dialog.component.html',
-    styleUrls: ['./product-ai-recognition-dialog.component.scss'],
+    templateUrl: '../../../../components/product-container/product-manage/product-ai-recognition-dialog/product-ai-recognition-dialog.component.html',
+    styleUrls: ['../../../../components/product-container/product-manage/product-ai-recognition-dialog/product-ai-recognition-dialog.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         CommonModule,

@@ -1,29 +1,29 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { Product } from '../../../types/product.data';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { NutrientData } from '../../../types/charts.data';
-import { ProductService } from '../../../services/product.service';
-import { buildProductTypeTranslationKey } from '../../../utils/product-type.utils';
-import { FD_UI_DIALOG_DATA, FdUiDialogRef } from 'fd-ui-kit/material';
-import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog.component';
-import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
-import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
-import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { FdUiTabsComponent, FdUiTab } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
-import { FdUiAccentSurfaceComponent } from 'fd-ui-kit/accent-surface/fd-ui-accent-surface.component';
-import { CHART_COLORS } from '../../../constants/chart-colors';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartData, ChartOptions, TooltipItem } from 'chart.js';
+import { FdUiAccentSurfaceComponent } from 'fd-ui-kit/accent-surface/fd-ui-accent-surface.component';
+import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
+import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog.component';
+import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
+import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { FD_UI_DIALOG_DATA, FdUiDialogRef } from 'fd-ui-kit/material';
+import { FdUiTab, FdUiTabsComponent } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
+import { CHART_COLORS } from '../../../../constants/chart-colors';
+import { ProductService } from '../../api/product.service';
+import { Product } from '../../models/product.data';
+import { buildProductTypeTranslationKey } from '../../../../utils/product-type.utils';
+import { NutrientData } from '../../../../types/charts.data';
 import {
     ConfirmDeleteDialogComponent,
     ConfirmDeleteDialogData,
-} from '../../shared/confirm-delete-dialog/confirm-delete-dialog.component';
+} from '../../../../components/shared/confirm-delete-dialog/confirm-delete-dialog.component';
 
 @Component({
     selector: 'fd-product-detail',
     standalone: true,
-    templateUrl: './product-detail.component.html',
-    styleUrls: ['./product-detail.component.scss'],
+    templateUrl: '../../../../components/product-container/product-detail/product-detail.component.html',
+    styleUrls: ['../../../../components/product-container/product-detail/product-detail.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         TranslatePipe,

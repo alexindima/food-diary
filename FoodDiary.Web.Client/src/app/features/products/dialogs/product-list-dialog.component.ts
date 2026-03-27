@@ -1,9 +1,9 @@
 ﻿import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { ProductListBaseComponent } from '../product-list-base.component';
-import { Product } from '../../../../types/product.data';
+import { ProductListBaseComponent } from '../components/list/product-list-base.component';
+import { Product } from '../models/product.data';
 import { TranslatePipe } from '@ngx-translate/core';
-import { ProductAddDialogComponent } from '../../product-manage/product-add-dialog/product-add-dialog.component';
+import { ProductAddDialogComponent } from './product-add-dialog.component';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
@@ -14,8 +14,8 @@ import { FdUiIconModule } from 'fd-ui-kit/material';
 @Component({
     selector: 'fd-product-list-dialog',
     standalone: true,
-    templateUrl: './product-list-dialog.component.html',
-    styleUrls: ['./product-list-dialog.component.scss'],
+    templateUrl: '../../../components/product-container/product-list/product-list-dialog/product-list-dialog.component.html',
+    styleUrls: ['../../../components/product-container/product-list/product-list-dialog/product-list-dialog.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         ReactiveFormsModule,

@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
-import { MeasurementUnit } from '../types/product.data';
+import { MeasurementUnit } from '../features/products/models/product.data';
 
 @Injectable()
 export class LocalizationService {

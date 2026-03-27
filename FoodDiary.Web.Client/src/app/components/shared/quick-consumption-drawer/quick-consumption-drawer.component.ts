@@ -6,7 +6,7 @@ import { FdUiIconModule } from 'fd-ui-kit/material';
 import { QuickConsumptionService } from '../../../services/quick-consumption.service';
 import { resolveProductImageUrl } from '../../../utils/product-stub.utils';
 import { resolveRecipeImageUrl } from '../../../utils/recipe-stub.utils';
-import { ProductType } from '../../../types/product.data';
+import { ProductType } from '../../../features/products/models/product.data';
 import { QuickConsumptionItem } from '../../../services/quick-consumption.service';
 
 @Component({

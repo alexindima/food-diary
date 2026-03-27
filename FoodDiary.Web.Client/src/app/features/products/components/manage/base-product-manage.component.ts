@@ -9,17 +9,16 @@
     OnInit,
     signal,
 } from '@angular/core';
-import { Product, CreateProductRequest, UpdateProductRequest, MeasurementUnit, ProductVisibility, ProductType } from '../../../types/product.data';
+import { CreateProductRequest, MeasurementUnit, Product, ProductType, ProductVisibility, UpdateProductRequest } from '../../models/product.data';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { ProductService } from '../../../services/product.service';
-import { NavigationService } from '../../../services/navigation.service';
+import { NavigationService } from '../../../../services/navigation.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormGroupControls } from '../../../types/common.data';
+import { FormGroupControls } from '../../../../types/common.data';
 import { firstValueFrom } from 'rxjs';
 import { ZXingScannerModule } from '@zxing/ngx-scanner';
-import { BarcodeScannerComponent } from '../../shared/barcode-scanner/barcode-scanner.component';
+import { BarcodeScannerComponent } from '../../../../components/shared/barcode-scanner/barcode-scanner.component';
 import { FdUiFormErrorComponent, FD_VALIDATION_ERRORS, FdValidationErrors } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea.component';
@@ -28,28 +27,29 @@ import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiSegmentedToggleComponent, FdUiSegmentedToggleOption } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle.component';
-import { normalizeProductType as normalizeProductTypeValue } from '../../../utils/product-type.utils';
+import { normalizeProductType as normalizeProductTypeValue } from '../../../../utils/product-type.utils';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import {
     ProductSaveSuccessDialogComponent,
     ProductSaveSuccessDialogData,
-} from './product-save-success-dialog.component';
-import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
-import { NutritionCalculationService } from '../../../services/nutrition-calculation.service';
+} from '../../dialogs/product-save-success-dialog.component';
+import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
+import { NutritionCalculationService } from '../../../../services/nutrition-calculation.service';
 import {
     ConfirmDeleteDialogComponent,
     ConfirmDeleteDialogData,
-} from '../../shared/confirm-delete-dialog/confirm-delete-dialog.component';
-import { ImageUploadFieldComponent } from '../../shared/image-upload-field/image-upload-field.component';
-import { ImageSelection } from '../../../types/image-upload.data';
+} from '../../../../components/shared/confirm-delete-dialog/confirm-delete-dialog.component';
+import { ImageUploadFieldComponent } from '../../../../components/shared/image-upload-field/image-upload-field.component';
+import { ImageSelection } from '../../../../types/image-upload.data';
 import {
     ProductAiRecognitionDialogComponent,
     ProductAiRecognitionResult,
-} from './product-ai-recognition-dialog/product-ai-recognition-dialog.component';
-import { AuthService } from '../../../services/auth.service';
-import { PremiumRequiredDialogComponent } from '../../shared/premium-required-dialog/premium-required-dialog.component';
-import { NutritionEditorComponent } from '../../shared/nutrition-editor/nutrition-editor.component';
-import { ManageHeaderComponent } from '../../shared/manage-header/manage-header.component';
+} from '../../dialogs/product-ai-recognition-dialog/product-ai-recognition-dialog.component';
+import { AuthService } from '../../../../services/auth.service';
+import { PremiumRequiredDialogComponent } from '../../../../components/shared/premium-required-dialog/premium-required-dialog.component';
+import { NutritionEditorComponent } from '../../../../components/shared/nutrition-editor/nutrition-editor.component';
+import { ManageHeaderComponent } from '../../../../components/shared/manage-header/manage-header.component';
+import { ProductService } from '../../api/product.service';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: FD_VALIDATION_ERRORS,
@@ -64,8 +64,8 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
 
 @Component({
     selector: 'fd-base-product-manage',
-    templateUrl: './base-product-manage.component.html',
-    styleUrls: ['./base-product-manage.component.scss'],
+    templateUrl: '../../../../components/product-container/product-manage/base-product-manage.component.html',
+    styleUrls: ['../../../../components/product-container/product-manage/base-product-manage.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [VALIDATION_ERRORS_PROVIDER],
     imports: [

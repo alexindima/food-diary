@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FD_UI_DIALOG_DATA, FdUiDialogRef } from 'fd-ui-kit/material';
-import { ProductDetailComponent } from './product-detail.component';
+import { ProductDetailComponent } from '../../../features/products/components/detail/product-detail.component';
 
 describe('ProductDetailComponent', () => {
     let component: ProductDetailComponent;

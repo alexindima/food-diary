@@ -16,7 +16,7 @@ import {
 } from '../types/consumption.data';
 import { catchError, map, Observable, of } from 'rxjs';
 import { PageOf } from '../types/page-of.data';
-import { Product, MeasurementUnit } from '../types/product.data';
+import { Product, MeasurementUnit } from '../features/products/models/product.data';
 import { Recipe } from '../types/recipe.data';
 
 @Injectable({

@@ -1,10 +1,5 @@
 import { Routes } from '@angular/router';
 import { MainComponent } from './components/main/main.component';
-import { ProductContainerComponent } from './components/product-container/product-container.component';
-import { ProductListPageComponent } from './components/product-container/product-list/product-list-page/product-list-page.component';
-import { ProductAddComponent } from './components/product-container/product-manage/product-add/product-add.component';
-import { ProductEditComponent } from './components/product-container/product-manage/product-edit/product-edit.component';
-import { productResolver } from './resolvers/product.resolver';
 import { ConsumptionContainerComponent } from './components/consumption-container/consumption-container.component';
 import { ConsumptionListComponent } from './components/consumption-container/consumption-list/consumption-list.component';
 import { ConsumptionAddComponent } from './components/consumption-container/consumption-manage/consumption-add/consumption-add.component';
@@ -30,6 +25,7 @@ import { EmailVerificationComponent } from './components/auth/email-verification
 import { PasswordResetComponent } from './components/auth/password-reset/password-reset.component';
 import { ShoppingListPageComponent } from './components/shopping-list-page/shopping-list-page.component';
 import { PremiumAccessPageComponent } from './components/premium-access-page/premium-access-page.component';
+import { productRoutes } from './features/products/product.routes';
 
 export const routes: Routes = [
     { path: '', component: MainComponent, canDeactivate: [unsavedChangesGuard] },
@@ -57,20 +53,7 @@ export const routes: Routes = [
         path: 'reset-password',
         component: PasswordResetComponent,
     },
-    {
-        path: 'products',
-        component: ProductContainerComponent,
-        canActivate: [authGuard],
-        children: [
-            { path: '', component: ProductListPageComponent },
-            { path: 'add', component: ProductAddComponent },
-            {
-                path: ':id/edit',
-                component: ProductEditComponent,
-                resolve: { product: productResolver },
-            },
-        ],
-    },
+    ...productRoutes,
     {
         path: 'meals',
         component: ConsumptionContainerComponent,

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiIconModule } from 'fd-ui-kit/material';
-import { Product } from '../../../types/product.data';
+import { Product } from '../../../features/products/models/product.data';
 import { NutrientBadgesComponent } from '../nutrient-badges/nutrient-badges.component';
 
 @Component({

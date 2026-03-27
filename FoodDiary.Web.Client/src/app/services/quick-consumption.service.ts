@@ -1,6 +1,6 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { ConsumptionManageDto, ConsumptionSourceType } from '../types/consumption.data';
-import { Product } from '../types/product.data';
+import { Product } from '../features/products/models/product.data';
 import { Recipe } from '../types/recipe.data';
 import { ConsumptionService } from './consumption.service';
 import { NavigationService } from './navigation.service';

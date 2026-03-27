@@ -1,4 +1,4 @@
-import { PageOf } from './page-of.data';
+import { PageOf } from '../../../types/page-of.data';
 
 export interface Product {
     id: string; // Guid

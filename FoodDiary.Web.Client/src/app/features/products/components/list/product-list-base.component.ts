@@ -1,40 +1,40 @@
+import { BreakpointObserver } from '@angular/cdk/layout';
+import { CommonModule } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, inject, OnInit, signal, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { BreakpointObserver } from '@angular/cdk/layout';
 import { TranslatePipe } from '@ngx-translate/core';
-import { ProductService } from '../../../services/product.service';
-import { NavigationService } from '../../../services/navigation.service';
-import { PagedData } from '../../../types/paged-data.data';
-import { Product, ProductFilters, ProductType } from '../../../types/product.data';
 import { catchError, debounceTime, distinctUntilChanged, finalize, map, Observable, of, switchMap, tap } from 'rxjs';
-import { HttpErrorResponse } from '@angular/common/http';
-import { FormGroupControls } from '../../../types/common.data';
-import { BarcodeScannerComponent } from '../../shared/barcode-scanner/barcode-scanner.component';
-import { PageHeaderComponent } from '../../shared/page-header/page-header.component';
-import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
-import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
-import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.component';
-import { buildProductTypeTranslationKey } from '../../../utils/product-type.utils';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
+import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
 import { FdUiIconModule } from 'fd-ui-kit/material';
-import { PageBodyComponent } from '../../shared/page-body/page-body.component';
-import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
-import { resolveProductImageUrl } from '../../../utils/product-stub.utils';
-import { ProductCardComponent } from '../../shared/product-card/product-card.component';
-import { QuickConsumptionService } from '../../../services/quick-consumption.service';
+import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.component';
+import { BarcodeScannerComponent } from '../../../../components/shared/barcode-scanner/barcode-scanner.component';
+import { PageBodyComponent } from '../../../../components/shared/page-body/page-body.component';
+import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header.component';
+import { ProductCardComponent } from '../../../../components/shared/product-card/product-card.component';
+import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
+import { ProductService } from '../../api/product.service';
+import { Product, ProductFilters, ProductType } from '../../models/product.data';
+import { NavigationService } from '../../../../services/navigation.service';
+import { QuickConsumptionService } from '../../../../services/quick-consumption.service';
+import { FormGroupControls } from '../../../../types/common.data';
+import { PagedData } from '../../../../types/paged-data.data';
+import { buildProductTypeTranslationKey } from '../../../../utils/product-type.utils';
+import { resolveProductImageUrl } from '../../../../utils/product-stub.utils';
 import {
     ProductListFiltersDialogComponent,
     ProductListFiltersDialogResult,
-} from './product-list-filters-dialog/product-list-filters-dialog.component';
+} from './product-list-filters-dialog.component';
 
 @Component({
     selector: 'fd-product-list-base',
     standalone: true,
-    templateUrl: './product-list-base.component.html',
-    styleUrls: ['./product-list-base.component.scss'],
+    templateUrl: '../../../../components/product-container/product-list/product-list-base.component.html',
+    styleUrls: ['../../../../components/product-container/product-list/product-list-base.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         CommonModule,

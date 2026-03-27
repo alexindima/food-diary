@@ -3,7 +3,7 @@ import { FD_UI_DIALOG_DATA, FdUiDialogRef } from 'fd-ui-kit/material';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { TranslatePipe } from '@ngx-translate/core';
-import { RedirectAction } from './base-product-manage.component';
+import { RedirectAction } from '../components/manage/base-product-manage.component';
 
 export interface ProductSaveSuccessDialogData {
     isEdit: boolean;

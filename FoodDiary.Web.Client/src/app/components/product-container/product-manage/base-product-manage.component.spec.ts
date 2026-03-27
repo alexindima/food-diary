@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { BaseProductManageComponent } from './base-product-manage.component';
+import { BaseProductManageComponent } from '../../../features/products/components/manage/base-product-manage.component';
 
 describe('BaseProductManageComponent', () => {
     let component: BaseProductManageComponent;

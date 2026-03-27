@@ -11,7 +11,7 @@
 import { AbstractControl, FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormGroupControls } from '../../../types/common.data';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { MeasurementUnit, Product, ProductVisibility, ProductType } from '../../../types/product.data';
+import { MeasurementUnit, Product, ProductVisibility, ProductType } from '../../../features/products/models/product.data';
 import { nonEmptyArrayValidator } from '../../../validators/non-empty-array.validator';
 import {
     ConsumptionItemSelectDialogComponent,

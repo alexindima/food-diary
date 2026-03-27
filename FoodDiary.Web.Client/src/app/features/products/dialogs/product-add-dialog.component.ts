@@ -1,6 +1,6 @@
 ﻿import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { BaseProductManageComponent } from '../base-product-manage.component';
-import { Product } from '../../../../types/product.data';
+import { BaseProductManageComponent } from '../components/manage/base-product-manage.component';
+import { Product } from '../models/product.data';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import { ZXingScannerModule } from '@zxing/ngx-scanner';
@@ -12,15 +12,18 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiSegmentedToggleComponent } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle.component';
 import { FD_UI_DIALOG_DATA, FdUiDialogRef } from 'fd-ui-kit/material';
 import { FdUiFormErrorComponent } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
-import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
-import { ImageUploadFieldComponent } from '../../../shared/image-upload-field/image-upload-field.component';
-import { NutritionEditorComponent } from '../../../shared/nutrition-editor/nutrition-editor.component';
-import { ManageHeaderComponent } from '../../../shared/manage-header/manage-header.component';
+import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
+import { ImageUploadFieldComponent } from '../../../components/shared/image-upload-field/image-upload-field.component';
+import { NutritionEditorComponent } from '../../../components/shared/nutrition-editor/nutrition-editor.component';
+import { ManageHeaderComponent } from '../../../components/shared/manage-header/manage-header.component';
 
 @Component({
     selector: 'fd-product-add-dialog',
-    templateUrl: '../base-product-manage.component.html',
-    styleUrls: ['./product-add-dialog.component.scss', '../base-product-manage.component.scss'],
+    templateUrl: '../../../components/product-container/product-manage/base-product-manage.component.html',
+    styleUrls: [
+        '../../../components/product-container/product-manage/product-add-dialog/product-add-dialog.component.scss',
+        '../../../components/product-container/product-manage/base-product-manage.component.scss',
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         ReactiveFormsModule,
