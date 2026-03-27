@@ -128,6 +128,33 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
         var accessToken = await RegisterAndGetAccessTokenAsync(client);
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
+        var createProductResponse = await client.PostAsJsonAsync(
+            "/api/products",
+            new CreateProductHttpRequest(
+                null,
+                "Recipe Asset Product",
+                null,
+                "Unknown",
+                null,
+                null,
+                null,
+                null,
+                null,
+                "G",
+                100,
+                100,
+                120,
+                10,
+                5,
+                20,
+                3,
+                0,
+                "Private"));
+        var product = await createProductResponse.Content.ReadFromJsonAsync<ProductPayload>(JsonOptions);
+
+        await AssertStatusCodeAsync(HttpStatusCode.Created, createProductResponse);
+        Assert.NotNull(product);
+
         var recipeAsset = await CreateImageAssetAsync(client, "recipe-photo.jpg");
         var stepAsset = await CreateImageAssetAsync(client, "step-photo.jpg");
 
@@ -155,7 +182,9 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
                     new RecipeStepHttpRequest(
                         "Step 1",
                         "Use the uploaded image.",
-                        [],
+                        [
+                            new RecipeIngredientHttpRequest(product.Id, null, 1)
+                        ],
                         stepAsset.FileUrl,
                         stepAsset.AssetId)
                 ]));

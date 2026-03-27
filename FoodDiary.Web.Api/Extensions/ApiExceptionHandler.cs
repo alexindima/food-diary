@@ -5,7 +5,8 @@ using Microsoft.AspNetCore.Diagnostics;
 namespace FoodDiary.Web.Api.Extensions;
 
 public sealed class ApiExceptionHandler(
-    ILogger<ApiExceptionHandler> logger) : IExceptionHandler {
+    ILogger<ApiExceptionHandler> logger,
+    IHostEnvironment environment) : IExceptionHandler {
     public async ValueTask<bool> TryHandleAsync(
         HttpContext httpContext,
         Exception exception,
@@ -30,7 +31,9 @@ public sealed class ApiExceptionHandler(
 
         var response = new ApiErrorHttpResponse(
             "Server.Unexpected",
-            "An unexpected error occurred.",
+            environment.IsDevelopment()
+                ? $"{exception.GetType().Name}: {exception.Message}"
+                : "An unexpected error occurred.",
             httpContext.TraceIdentifier);
 
         await httpContext.Response.WriteAsJsonAsync(response, cancellationToken);
