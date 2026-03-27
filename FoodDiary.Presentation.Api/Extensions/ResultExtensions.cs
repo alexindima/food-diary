@@ -37,6 +37,14 @@ public static class ResultExtensions {
                 ? controller.CreatedAtAction(actionName, routeValues(result.Value), map(result.Value))
                 : ErrorResult(result.Error, controller.HttpContext.TraceIdentifier);
         }
+
+        public IActionResult ToCreatedActionResult<TResponse>(
+            ControllerBase controller,
+            Func<T, TResponse> map) {
+            return result.IsSuccess
+                ? controller.Created(string.Empty, map(result.Value))
+                : ErrorResult(result.Error, controller.HttpContext.TraceIdentifier);
+        }
     }
 
     public static IActionResult ToNoContentActionResult(this Result result, ControllerBase controller) {
