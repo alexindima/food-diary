@@ -1,4 +1,4 @@
-﻿import { CommonModule } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -9,31 +9,32 @@ import {
     inject,
     signal,
 } from '@angular/core';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
-import { BaseChartDirective } from 'ng2-charts';
-import { ChartConfiguration } from 'chart.js';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { ChartConfiguration } from 'chart.js';
 import { distinctUntilChanged, startWith } from 'rxjs';
-import { WeightEntriesService } from '../../services/weight-entries.service';
+import { BaseChartDirective } from 'ng2-charts';
+
+import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
+import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
+import { FdUiDateInputComponent } from 'fd-ui-kit/date-input/fd-ui-date-input.component';
+import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
+import { FdUiTab } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
+import { PageBodyComponent } from '../../../components/shared/page-body/page-body.component';
+import { PageHeaderComponent } from '../../../components/shared/page-header/page-header.component';
+import { PeriodFilterComponent } from '../../../components/shared/period-filter/period-filter.component';
+import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
+import { NavigationService } from '../../../services/navigation.service';
+import { UserService } from '../../../services/user.service';
+import { WeightEntriesService } from '../../../services/weight-entries.service';
 import {
     CreateWeightEntryPayload,
     WeightEntry,
     WeightEntryFilters,
     WeightEntrySummaryFilters,
     WeightEntrySummaryPoint,
-} from '../../types/weight-entry.data';
-import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
-import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
-import { FdUiDateInputComponent } from 'fd-ui-kit/date-input/fd-ui-date-input.component';
-import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
-import { FdUiTab } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
-import { UserService } from '../../services/user.service';
-import { NavigationService } from '../../services/navigation.service';
-import { PageHeaderComponent } from '../shared/page-header/page-header.component';
-import { PageBodyComponent } from '../shared/page-body/page-body.component';
-import { FdPageContainerDirective } from '../../directives/layout/page-container.directive';
-import { PeriodFilterComponent } from '../shared/period-filter/period-filter.component';
+} from '../../../types/weight-entry.data';
 
 @Component({
     selector: 'fd-weight-history-page',
@@ -63,16 +64,17 @@ export class WeightHistoryPageComponent implements OnInit {
     private readonly destroyRef = inject(DestroyRef);
     private readonly translate = inject(TranslateService);
     private readonly fb = inject(FormBuilder);
-
     private readonly userHeightCm = signal<number | null>(null);
     private readonly bmiScaleMax = 40;
-
     private readonly defaultRange: WeightHistoryRange = 'month';
+    private readonly editingEntryId = signal<string | null>(null);
+    private readonly bmiPointerPaddingPercent = 1;
+    private lastLoadedRangeKey: string | null = null;
+
     public readonly selectedRange = signal<WeightHistoryRange>(this.defaultRange);
     public readonly currentRange = computed<{ start: Date; end: Date }>(() =>
         this.calculateRangeDates(this.selectedRange()),
     );
-
     public readonly entries = signal<WeightEntry[]>([]);
     public readonly isLoading = signal<boolean>(false);
     public readonly isSaving = signal<boolean>(false);
@@ -82,30 +84,22 @@ export class WeightHistoryPageComponent implements OnInit {
     public readonly summaryPoints = signal<WeightEntrySummaryPoint[]>([]);
     public readonly isSummaryLoading = signal<boolean>(false);
     public readonly customRangeControl = new FormControl<{ start: Date | null; end: Date | null } | null>(null);
-    private readonly editingEntryId = signal<string | null>(null);
-    private lastLoadedRangeKey: string | null = null;
 
     public readonly entriesDescending = computed(() =>
-        [...this.entries()].sort(
-            (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
-        ),
+        [...this.entries()].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()),
     );
 
     public readonly chartData = computed<ChartConfiguration<'line'>['data']>(() => {
         const ordered = [...this.summaryPoints()].sort(
             (a, b) => new Date(a.dateFrom).getTime() - new Date(b.dateFrom).getTime(),
         );
-
         const label = this.translate.instant('WEIGHT_HISTORY.CHART_LABEL');
+
         return {
-            labels: ordered.map(point =>
-                this.formatDateLabel(point.dateFrom),
-            ),
+            labels: ordered.map(point => this.formatDateLabel(point.dateFrom)),
             datasets: [
                 {
-                    data: ordered.map(point =>
-                        point.averageWeight > 0 ? point.averageWeight : null,
-                    ),
+                    data: ordered.map(point => point.averageWeight > 0 ? point.averageWeight : null),
                     label,
                     borderColor: '#2563eb',
                     backgroundColor: 'transparent',
@@ -162,10 +156,7 @@ export class WeightHistoryPageComponent implements OnInit {
 
     public readonly latestWeight = computed<number | null>(() => {
         const entries = this.entriesDescending();
-        if (entries.length > 0) {
-            return entries[0].weight;
-        }
-        return null;
+        return entries.length > 0 ? entries[0].weight : null;
     });
 
     public readonly bmiValue = computed<number | null>(() => {
@@ -174,21 +165,22 @@ export class WeightHistoryPageComponent implements OnInit {
         if (!heightCm || !latest) {
             return null;
         }
+
         const heightMeters = heightCm / 100;
         if (!heightMeters) {
             return null;
         }
+
         const bmi = latest / (heightMeters * heightMeters);
         return Math.round(bmi * 10) / 10;
     });
-
-    private readonly bmiPointerPaddingPercent = 1;
 
     public readonly bmiPointerPosition = computed(() => {
         const bmi = this.bmiValue();
         if (bmi === null) {
             return '0%';
         }
+
         const rawPercent = (bmi / this.bmiScaleMax) * 100;
         const percent = Math.max(this.bmiPointerPaddingPercent, Math.min(100 - this.bmiPointerPaddingPercent, rawPercent));
         return `${percent}%`;
@@ -207,6 +199,7 @@ export class WeightHistoryPageComponent implements OnInit {
                 class: 'weight-history-page__bmi-status--under',
             };
         }
+
         if (bmi < 25) {
             return {
                 labelKey: 'WEIGHT_HISTORY.BMI_STATUS.NORMAL',
@@ -214,6 +207,7 @@ export class WeightHistoryPageComponent implements OnInit {
                 class: 'weight-history-page__bmi-status--normal',
             };
         }
+
         if (bmi < 30) {
             return {
                 labelKey: 'WEIGHT_HISTORY.BMI_STATUS.OVER',
@@ -221,6 +215,7 @@ export class WeightHistoryPageComponent implements OnInit {
                 class: 'weight-history-page__bmi-status--over',
             };
         }
+
         return {
             labelKey: 'WEIGHT_HISTORY.BMI_STATUS.OBESE',
             descriptionKey: 'WEIGHT_HISTORY.BMI_STATUS_DESC.OBESE',
@@ -367,6 +362,7 @@ export class WeightHistoryPageComponent implements OnInit {
         if (!isWeightHistoryRange(value) || value === this.selectedRange()) {
             return;
         }
+
         this.selectedRange.set(value);
 
         if (value === 'custom') {
@@ -375,19 +371,16 @@ export class WeightHistoryPageComponent implements OnInit {
                 const end = new Date();
                 const start = new Date(end);
                 start.setMonth(start.getMonth() - 1);
-                this.customRangeControl.setValue(
-                    {
-                        start,
-                        end,
-                    },
-                    { emitEvent: true },
-                );
+                this.customRangeControl.setValue({ start, end }, { emitEvent: true });
             }
         } else {
             this.customRangeControl.setValue(null, { emitEvent: false });
         }
+    }
 
-        // rangeEffect will handle loading once range/custom dates are set
+    public getBmiSegmentWidth(segment: BmiSegment): string {
+        const width = ((segment.to - segment.from) / this.bmiScaleMax) * 100;
+        return `${width}%`;
     }
 
     private loadEntries(showLoader = true, force = false): void {
@@ -446,11 +439,6 @@ export class WeightHistoryPageComponent implements OnInit {
             });
     }
 
-    public getBmiSegmentWidth(segment: BmiSegment): string {
-        const width = ((segment.to - segment.from) / this.bmiScaleMax) * 100;
-        return `${width}%`;
-    }
-
     private loadSummary(filters: WeightEntrySummaryFilters): void {
         this.isSummaryLoading.set(true);
         this.weightEntriesService
@@ -477,6 +465,7 @@ export class WeightHistoryPageComponent implements OnInit {
         const date = typeof rawDate === 'string' ? new Date(rawDate) : rawDate;
         const utcDate = this.normalizeStartOfDay(date);
         const weight = Number(rawWeight);
+
         return {
             date: utcDate.toISOString(),
             weight,
@@ -497,7 +486,6 @@ export class WeightHistoryPageComponent implements OnInit {
         rangeKey: string;
     } {
         const { start, end } = this.calculateRangeDates(range);
-
         const normalizedStart = this.normalizeStartOfDay(start);
         const normalizedEnd = this.normalizeEndOfDay(end);
         const totalDays = Math.max(1, Math.ceil((normalizedEnd.getTime() - normalizedStart.getTime()) / MS_IN_DAY));
@@ -539,15 +527,13 @@ export class WeightHistoryPageComponent implements OnInit {
             } else {
                 start.setMonth(start.getMonth() - 1);
             }
+
             if (custom?.end) {
                 end = new Date(custom.end);
             }
         }
 
-        return {
-            start,
-            end,
-        };
+        return { start, end };
     }
 
     private normalizeStartOfDay(date: Date): Date {
@@ -569,9 +555,11 @@ export class WeightHistoryPageComponent implements OnInit {
         if (range === 'week') {
             return 1;
         }
+
         if (range === 'month') {
             return 3;
         }
+
         if (range === 'year') {
             return 14;
         }
@@ -609,4 +597,3 @@ interface BmiStatusInfo {
 function isWeightHistoryRange(value: string): value is WeightHistoryRange {
     return value === 'week' || value === 'month' || value === 'year' || value === 'custom';
 }
-

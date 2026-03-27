@@ -1,13 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit, computed, effect, inject, signal } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
+import { finalize } from 'rxjs';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
-import { PageHeaderComponent } from '../shared/page-header/page-header.component';
-import { PageBodyComponent } from '../shared/page-body/page-body.component';
-import { FdPageContainerDirective } from '../../directives/layout/page-container.directive';
-import { GoalsService } from '../../services/goals.service';
-import { finalize } from 'rxjs';
+import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
+import { PageBodyComponent } from '../../../components/shared/page-body/page-body.component';
+import { PageHeaderComponent } from '../../../components/shared/page-header/page-header.component';
+import { GoalsService } from '../api/goals.service';
 
 type MacroKey = 'protein' | 'fats' | 'carbs' | 'fiber';
 
@@ -232,7 +232,6 @@ export class GoalsPageComponent implements OnInit {
             .getGoals()
             .pipe(finalize(() => this.isLoadingGoals.set(false)))
             .subscribe(goals => {
-                // prevent preset effect from overriding loaded values
                 this.selectedPreset.set('custom');
 
                 if (goals?.dailyCalorieTarget !== undefined && goals?.dailyCalorieTarget !== null) {
@@ -500,7 +499,7 @@ export class GoalsPageComponent implements OnInit {
         const dy = event.clientY - centerY;
         const radians = Math.atan2(dy, dx);
         const degrees = (radians * 180) / Math.PI;
-        const normalized = (degrees + 450) % 360; // start from top, clockwise
+        const normalized = (degrees + 450) % 360;
         const ratio = normalized / 360;
         const value = this.minCalories + ratio * (this.maxCalories - this.minCalories);
         this.updateCalories(Math.round(value));

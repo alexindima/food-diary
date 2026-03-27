@@ -6,7 +6,7 @@ import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
 import { UserService } from '../../../../services/user.service';
-import { GoalsService } from '../../../../services/goals.service';
+import { GoalsService } from '../../../../features/goals/api/goals.service';
 import { FormGroupControls } from '../../../../types/common.data';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { UpdateUserDto } from '../../../../types/user.data';

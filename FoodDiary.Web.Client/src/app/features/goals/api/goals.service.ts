@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { ApiService } from './api.service';
-import { environment } from '../../environments/environment';
 import { catchError, Observable, of } from 'rxjs';
-import { GoalsResponse, UpdateGoalsRequest } from '../types/goals.data';
+import { environment } from '../../../../environments/environment';
+import { ApiService } from '../../../services/api.service';
+import { GoalsResponse, UpdateGoalsRequest } from '../models/goals.data';
 
 @Injectable({
     providedIn: 'root',

@@ -5,15 +5,12 @@ import { ConsumptionListComponent } from './components/consumption-container/con
 import { ConsumptionAddComponent } from './components/consumption-container/consumption-manage/consumption-add/consumption-add.component';
 import { ConsumptionEditComponent } from './components/consumption-container/consumption-manage/consumption-edit/consumption-edit.component';
 import { consumptionResolver } from './resolvers/consumption.resolver';
-import { StatisticsComponent } from './components/statistics/statistics.component';
 import { UserManageComponent } from './components/user-manage/user-manage.component';
 import { loggedInGuard } from './guards/logged-in.guard';
 import { authGuard } from './guards/auth.guard';
 import { NotFoundComponent } from './components/not-found/not-found.component';
-import { WeightHistoryPageComponent } from './components/weight-history-page/weight-history-page.component';
 import { WaistHistoryPageComponent } from './components/waist-history-page/waist-history-page.component';
 import { CycleTrackingPageComponent } from './components/cycle-tracking-page/cycle-tracking-page.component';
-import { GoalsPageComponent } from './components/goals-page/goals-page.component';
 import { unsavedChangesGuard } from './guards/unsaved-changes.guard';
 import { EmailVerificationPendingComponent } from './components/auth/email-verification-pending/email-verification-pending.component';
 import { EmailVerificationComponent } from './components/auth/email-verification/email-verification.component';
@@ -22,6 +19,9 @@ import { PremiumAccessPageComponent } from './components/premium-access-page/pre
 import { productRoutes } from './features/products/product.routes';
 import { recipeRoutes } from './features/recipes/recipe.routes';
 import { shoppingListRoutes } from './features/shopping-lists/shopping-list.routes';
+import { goalsRoutes } from './features/goals/goals.routes';
+import { statisticsRoutes } from './features/statistics/statistics.routes';
+import { weightHistoryRoutes } from './features/weight-history/weight-history.routes';
 
 export const routes: Routes = [
     { path: '', component: MainComponent, canDeactivate: [unsavedChangesGuard] },
@@ -66,11 +66,9 @@ export const routes: Routes = [
     },
     ...recipeRoutes,
     ...shoppingListRoutes,
-    {
-        path: 'statistics',
-        component: StatisticsComponent,
-        canActivate: [authGuard],
-    },
+    ...goalsRoutes,
+    ...statisticsRoutes,
+    ...weightHistoryRoutes,
     {
         path: 'profile',
         component: UserManageComponent,
@@ -79,16 +77,6 @@ export const routes: Routes = [
     {
         path: 'premium',
         component: PremiumAccessPageComponent,
-        canActivate: [authGuard],
-    },
-    {
-        path: 'goals',
-        component: GoalsPageComponent,
-        canActivate: [authGuard],
-    },
-    {
-        path: 'weight-history',
-        component: WeightHistoryPageComponent,
         canActivate: [authGuard],
     },
     {

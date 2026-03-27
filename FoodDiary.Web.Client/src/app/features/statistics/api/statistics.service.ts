@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { ApiService } from './api.service';
-import { environment } from '../../environments/environment';
-import { AggregatedStatistics, GetStatisticsDto } from '../types/statistics.data';
 import { catchError, Observable, of } from 'rxjs';
+
+import { environment } from '../../../../environments/environment';
+import { ApiService } from '../../../services/api.service';
+import { AggregatedStatistics, GetStatisticsDto } from '../models/statistics.data';
 
 @Injectable({
     providedIn: 'root',

@@ -6,7 +6,7 @@ import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { GoalsService } from '../../../../services/goals.service';
+import { GoalsService } from '../../../goals/api/goals.service';
 
 export interface CalorieGoalDialogData {
     dailyCalorieTarget?: number | null;

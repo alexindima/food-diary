@@ -9,28 +9,28 @@ import {
     inject,
     signal,
 } from '@angular/core';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ChartConfiguration, ChartOptions, ChartTypeRegistry, TooltipItem } from 'chart.js';
-import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { finalize, forkJoin, distinctUntilChanged, startWith } from 'rxjs';
 
 import { FdUiTab } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
-import { StatisticsService } from '../../services/statistics.service';
-import { MappedStatistics, StatisticsMapper } from '../../types/statistics.data';
-import { CHART_COLORS } from '../../constants/chart-colors';
-import { WeightEntriesService } from '../../services/weight-entries.service';
-import { WaistEntriesService } from '../../services/waist-entries.service';
-import { WeightEntrySummaryPoint } from '../../types/weight-entry.data';
-import { WaistEntrySummaryPoint } from '../../types/waist-entry.data';
-import { UserService } from '../../services/user.service';
-import { PageHeaderComponent } from '../shared/page-header/page-header.component';
-import { PageBodyComponent } from '../shared/page-body/page-body.component';
-import { FdPageContainerDirective } from '../../directives/layout/page-container.directive';
-import { PeriodFilterComponent } from '../shared/period-filter/period-filter.component';
-import { StatisticsSummaryComponent, SummaryMetrics } from '../shared/statistics-summary/statistics-summary.component';
-import { StatisticsNutritionComponent } from '../shared/statistics-nutrition/statistics-nutrition.component';
-import { StatisticsBodyComponent } from '../shared/statistics-body/statistics-body.component';
+import { PageBodyComponent } from '../../../components/shared/page-body/page-body.component';
+import { PageHeaderComponent } from '../../../components/shared/page-header/page-header.component';
+import { PeriodFilterComponent } from '../../../components/shared/period-filter/period-filter.component';
+import { StatisticsBodyComponent } from '../../../components/shared/statistics-body/statistics-body.component';
+import { StatisticsNutritionComponent } from '../../../components/shared/statistics-nutrition/statistics-nutrition.component';
+import { StatisticsSummaryComponent, SummaryMetrics } from '../../../components/shared/statistics-summary/statistics-summary.component';
+import { CHART_COLORS } from '../../../constants/chart-colors';
+import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
+import { UserService } from '../../../services/user.service';
+import { WaistEntriesService } from '../../../services/waist-entries.service';
+import { WeightEntriesService } from '../../../services/weight-entries.service';
+import { WaistEntrySummaryPoint } from '../../../types/waist-entry.data';
+import { WeightEntrySummaryPoint } from '../../../types/weight-entry.data';
+import { StatisticsService } from '../api/statistics.service';
+import { MappedStatistics, StatisticsMapper } from '../models/statistics.data';
 
 type StatisticsRange = 'week' | 'month' | 'year' | 'custom';
 type NutritionChartTab = 'calories' | 'macros' | 'distribution';
@@ -69,6 +69,8 @@ export class StatisticsComponent implements OnInit {
     private readonly translateService = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
     private dateLabelFormatterCache: { locale: string; formatter: Intl.DateTimeFormat } | null = null;
+    private lastLoadedRangeKey: string | null = null;
+
     public readonly currentRange = computed<DateRange>(() => this.getCurrentDateRange());
     public readonly rangeTabs: FdUiTab[] = [
         { value: 'week', labelKey: 'STATISTICS.RANGES.WEEK' },
@@ -99,7 +101,6 @@ export class StatisticsComponent implements OnInit {
     public readonly weightSummaryPoints = signal<WeightEntrySummaryPoint[]>([]);
     public readonly waistSummaryPoints = signal<WaistEntrySummaryPoint[]>([]);
     public readonly userHeightCm = signal<number | null>(null);
-    private lastLoadedRangeKey: string | null = null;
 
     public readonly summaryMetrics = computed<SummaryMetrics | null>(() => {
         const stats = this.chartStatisticsData();
@@ -370,6 +371,7 @@ export class StatisticsComponent implements OnInit {
             if (!heightCm || heightCm <= 0) {
                 return null;
             }
+
             const heightM = heightCm / 100;
             return this.createBodyChartDataset(this.weightSummaryPoints(), point =>
                 point.averageWeight / (heightM * heightM),
@@ -381,6 +383,7 @@ export class StatisticsComponent implements OnInit {
             if (!heightCm || heightCm <= 0) {
                 return null;
             }
+
             return this.createBodyChartDataset(this.waistSummaryPoints(), point =>
                 point.averageCircumference / heightCm,
             );
@@ -540,6 +543,7 @@ export class StatisticsComponent implements OnInit {
         if (!isStatisticsRange(value) || value === this.selectedRange()) {
             return;
         }
+
         this.selectedRange.set(value);
 
         const current = this.customRangeControl.value;
