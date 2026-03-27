@@ -2,8 +2,7 @@ using System.Net;
 using System.Net.Mail;
 using System.Net.Mime;
 using System.Text;
-using FoodDiary.Application.Common.Interfaces.Services;
-using FoodDiary.Application.Common.Models;
+using FoodDiary.Application.Authentication.Common;
 using FoodDiary.Infrastructure.Options;
 using Microsoft.Extensions.Options;
 

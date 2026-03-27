@@ -1,4 +1,4 @@
-using FoodDiary.Application.Common.Interfaces.Services;
+using FoodDiary.Application.Authentication.Common;
 using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Presentation.Api.Security;
 using FoodDiary.Presentation.Api.Services;

@@ -1,3 +1,4 @@
+using FoodDiary.Application.Authentication.Common;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Interfaces.Services;
 using FoodDiary.Application.Users.Commands.ChangePassword;

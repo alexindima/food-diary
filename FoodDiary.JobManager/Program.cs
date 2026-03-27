@@ -9,8 +9,16 @@ var builder = Host.CreateApplicationBuilder(args);
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 
-builder.Services.Configure<ImageCleanupOptions>(builder.Configuration.GetSection(ImageCleanupOptions.SectionName));
-builder.Services.Configure<UserCleanupOptions>(builder.Configuration.GetSection(UserCleanupOptions.SectionName));
+builder.Services.AddOptions<ImageCleanupOptions>()
+    .Bind(builder.Configuration.GetSection(ImageCleanupOptions.SectionName))
+    .Validate(ImageCleanupOptions.HasValidConfiguration,
+        "ImageCleanup configuration requires positive OlderThanHours/BatchSize and a non-empty Cron.")
+    .ValidateOnStart();
+builder.Services.AddOptions<UserCleanupOptions>()
+    .Bind(builder.Configuration.GetSection(UserCleanupOptions.SectionName))
+    .Validate(UserCleanupOptions.HasValidConfiguration,
+        "UserCleanup configuration requires positive RetentionDays/BatchSize, a non-empty Cron, and a valid optional ReassignUserId GUID.")
+    .ValidateOnStart();
 
 builder.Services.AddHangfire((sp, config) =>
 {

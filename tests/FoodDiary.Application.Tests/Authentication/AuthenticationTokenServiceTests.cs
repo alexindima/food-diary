@@ -1,7 +1,7 @@
 using FoodDiary.Application.Authentication.Services;
 using FoodDiary.Application.Authentication.Abstractions;
+using FoodDiary.Application.Authentication.Common;
 using FoodDiary.Application.Common.Interfaces.Persistence;
-using FoodDiary.Application.Common.Interfaces.Services;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 

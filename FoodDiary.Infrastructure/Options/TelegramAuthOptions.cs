@@ -6,4 +6,6 @@ public sealed class TelegramAuthOptions
 
     public string BotToken { get; init; } = string.Empty;
     public int AuthTtlSeconds { get; init; } = 86400;
+
+    public static bool HasValidAuthTtl(TelegramAuthOptions options) => options.AuthTtlSeconds > 0;
 }

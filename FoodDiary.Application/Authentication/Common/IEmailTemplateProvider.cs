@@ -1,6 +1,4 @@
-using FoodDiary.Application.Common.Models;
-
-namespace FoodDiary.Application.Common.Interfaces.Services;
+namespace FoodDiary.Application.Authentication.Common;
 
 public interface IEmailTemplateProvider {
     Task<EmailTemplateContent?> GetActiveTemplateAsync(string key, string locale, CancellationToken cancellationToken = default);

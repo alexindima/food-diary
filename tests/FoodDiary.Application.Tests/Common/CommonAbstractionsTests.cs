@@ -1,9 +1,9 @@
 using FluentValidation;
 using FluentValidation.Results;
+using FoodDiary.Application.Authentication.Common;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Behaviors;
-using FoodDiary.Application.Common.Utilities;
 using System.Reflection;
 
 namespace FoodDiary.Application.Tests.Common;

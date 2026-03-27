@@ -87,6 +87,26 @@ public class UserInvariantTests {
     }
 
     [Fact]
+    public void SetEmailConfirmationToken_WithLocalExpiry_NormalizesToUtc() {
+        var user = User.Create("test@example.com", "hash");
+        var expiresAtLocal = DateTime.Now.AddMinutes(30);
+
+        user.SetEmailConfirmationToken("token-hash", expiresAtLocal);
+
+        Assert.Equal(expiresAtLocal.ToUniversalTime(), user.EmailConfirmationTokenExpiresAtUtc);
+        Assert.Equal(DateTimeKind.Utc, user.EmailConfirmationTokenExpiresAtUtc!.Value.Kind);
+    }
+
+    [Fact]
+    public void SetEmailConfirmationToken_WithUnspecifiedExpiry_Throws() {
+        var user = User.Create("test@example.com", "hash");
+        var expiresAtUnspecified = DateTime.SpecifyKind(DateTime.UtcNow.AddMinutes(30), DateTimeKind.Unspecified);
+
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+            user.SetEmailConfirmationToken("token-hash", expiresAtUnspecified));
+    }
+
+    [Fact]
     public void ConfirmEmail_ClearsEmailConfirmationTokenFields() {
         var user = User.Create("test@example.com", "hash");
         user.SetEmailConfirmationToken("token-hash", DateTime.UtcNow.AddMinutes(30));
@@ -109,6 +129,26 @@ public class UserInvariantTests {
         Assert.Equal("reset-hash", user.PasswordResetTokenHash);
         Assert.Equal(expiresAtUtc, user.PasswordResetTokenExpiresAtUtc);
         Assert.NotNull(user.PasswordResetSentAtUtc);
+    }
+
+    [Fact]
+    public void SetPasswordResetToken_WithLocalExpiry_NormalizesToUtc() {
+        var user = User.Create("test@example.com", "hash");
+        var expiresAtLocal = DateTime.Now.AddMinutes(30);
+
+        user.SetPasswordResetToken("reset-hash", expiresAtLocal);
+
+        Assert.Equal(expiresAtLocal.ToUniversalTime(), user.PasswordResetTokenExpiresAtUtc);
+        Assert.Equal(DateTimeKind.Utc, user.PasswordResetTokenExpiresAtUtc!.Value.Kind);
+    }
+
+    [Fact]
+    public void SetPasswordResetToken_WithUnspecifiedExpiry_Throws() {
+        var user = User.Create("test@example.com", "hash");
+        var expiresAtUnspecified = DateTime.SpecifyKind(DateTime.UtcNow.AddMinutes(30), DateTimeKind.Unspecified);
+
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+            user.SetPasswordResetToken("reset-hash", expiresAtUnspecified));
     }
 
     [Fact]
@@ -145,6 +185,28 @@ public class UserInvariantTests {
 
         Assert.Throws<ArgumentOutOfRangeException>(() =>
             user.UpdateProfile(new UserProfileUpdate(HydrationGoal: -0.1)));
+    }
+
+    [Theory]
+    [InlineData(double.NaN)]
+    [InlineData(double.PositiveInfinity)]
+    [InlineData(double.NegativeInfinity)]
+    public void UpdateProfile_WithNonFiniteWeight_Throws(double weight) {
+        var user = User.Create("test@example.com", "hash");
+
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+            user.UpdateProfile(new UserProfileUpdate(Weight: weight)));
+    }
+
+    [Theory]
+    [InlineData(double.NaN)]
+    [InlineData(double.PositiveInfinity)]
+    [InlineData(double.NegativeInfinity)]
+    public void UpdateProfile_WithNonFiniteHeight_Throws(double height) {
+        var user = User.Create("test@example.com", "hash");
+
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+            user.UpdateProfile(new UserProfileUpdate(Height: height)));
     }
 
     [Fact]
@@ -387,6 +449,26 @@ public class UserInvariantTests {
     }
 
     [Fact]
+    public void MarkDeleted_WithLocalTimestamp_NormalizesToUtc() {
+        var user = User.Create("test@example.com", "hash");
+        var deletedAtLocal = DateTime.Now;
+
+        user.MarkDeleted(deletedAtLocal);
+
+        Assert.Equal(deletedAtLocal.ToUniversalTime(), user.DeletedAt);
+        Assert.Equal(DateTimeKind.Utc, user.DeletedAt!.Value.Kind);
+        Assert.Equal(deletedAtLocal.ToUniversalTime(), ((UserDeletedDomainEvent)user.DomainEvents[0]).DeletedAtUtc);
+    }
+
+    [Fact]
+    public void MarkDeleted_WithUnspecifiedTimestamp_Throws() {
+        var user = User.Create("test@example.com", "hash");
+        var deletedAtUnspecified = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified);
+
+        Assert.Throws<ArgumentOutOfRangeException>(() => user.MarkDeleted(deletedAtUnspecified));
+    }
+
+    [Fact]
     public void MarkDeleted_WhenAlreadyDeletedAndInactive_IsIdempotent() {
         var user = User.Create("test@example.com", "hash");
         user.MarkDeleted(DateTime.UtcNow);
@@ -420,5 +502,31 @@ public class UserInvariantTests {
         Assert.Empty(user.DomainEvents);
         Assert.True(user.IsActive);
         Assert.Null(user.DeletedAt);
+    }
+
+    [Fact]
+    public void UpdatePassword_WhenDeleted_Throws() {
+        var user = User.Create("test@example.com", "hash");
+        user.MarkDeleted(DateTime.UtcNow);
+
+        Assert.Throws<InvalidOperationException>(() => user.UpdatePassword("new-hash"));
+    }
+
+    [Fact]
+    public void UpdateProfile_WhenDeleted_Throws() {
+        var user = User.Create("test@example.com", "hash");
+        user.MarkDeleted(DateTime.UtcNow);
+
+        Assert.Throws<InvalidOperationException>(() =>
+            user.UpdateProfile(new UserProfileUpdate(FirstName: "Alex")));
+    }
+
+    [Fact]
+    public void SetPasswordResetToken_WhenDeleted_Throws() {
+        var user = User.Create("test@example.com", "hash");
+        user.MarkDeleted(DateTime.UtcNow);
+
+        Assert.Throws<InvalidOperationException>(() =>
+            user.SetPasswordResetToken("reset-hash", DateTime.UtcNow.AddMinutes(30)));
     }
 }

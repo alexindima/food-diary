@@ -1,6 +1,6 @@
 using FoodDiary.Application.Authentication.Abstractions;
+using FoodDiary.Application.Authentication.Common;
 using FoodDiary.Application.Common.Interfaces.Persistence;
-using FoodDiary.Application.Common.Interfaces.Services;
 using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Authentication.Services;

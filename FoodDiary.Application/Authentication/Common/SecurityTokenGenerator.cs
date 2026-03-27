@@ -1,6 +1,6 @@
 using System.Security.Cryptography;
 
-namespace FoodDiary.Application.Common.Utilities;
+namespace FoodDiary.Application.Authentication.Common;
 
 public static class SecurityTokenGenerator {
     public static string GenerateUrlSafeToken(int byteLength = 32) {

@@ -1,9 +1,8 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
+using FoodDiary.Application.Authentication.Common;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Interfaces.Services;
-using FoodDiary.Application.Common.Models;
-using FoodDiary.Application.Common.Utilities;
 using Microsoft.Extensions.Logging;
 
 namespace FoodDiary.Application.Authentication.Commands.RequestPasswordReset;

@@ -1,6 +1,4 @@
-using FoodDiary.Application.Common.Models;
-
-namespace FoodDiary.Application.Common.Interfaces.Services;
+namespace FoodDiary.Application.Authentication.Common;
 
 public interface IEmailSender {
     Task SendEmailVerificationAsync(EmailVerificationMessage message, CancellationToken cancellationToken);

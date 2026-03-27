@@ -4,8 +4,15 @@ using Telegram.Bot;
 
 var builder = Host.CreateApplicationBuilder(args);
 
-builder.Services.Configure<TelegramBotOptions>(
-    builder.Configuration.GetSection(TelegramBotOptions.SectionName));
+builder.Services.AddOptions<TelegramBotOptions>()
+    .Bind(builder.Configuration.GetSection(TelegramBotOptions.SectionName))
+    .Validate(static options => TelegramBotOptions.HasValidWebAppUrl(options.WebAppUrl),
+        "TelegramBot:WebAppUrl must be empty or an absolute URL.")
+    .Validate(static options => TelegramBotOptions.HasValidApiBaseUrl(options.ApiBaseUrl),
+        "TelegramBot:ApiBaseUrl must be empty or an absolute URL.")
+    .Validate(static options => TelegramBotOptions.HasValidApiSecret(options.ApiSecret),
+        "TelegramBot:ApiSecret must be empty or at least 16 characters long.")
+    .ValidateOnStart();
 
 builder.Services.AddHttpClient();
 

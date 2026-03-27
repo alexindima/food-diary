@@ -69,6 +69,23 @@ npm run build:prod
 npm run build:admin
 ```
 
+## Configuration
+
+Repository-tracked `appsettings*.json` files should contain only safe bootstrap values.
+
+- Keep real secrets out of git.
+- Use `.NET user-secrets`, environment variables, or deployment secret stores for real values.
+- Treat tracked connection strings and JWT secrets as placeholders only.
+- Override environment-specific public URLs outside the repository when possible.
+
+Minimum local setup:
+
+```bash
+cd FoodDiary.Web.Api
+dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Host=localhost;Database=fooddiary;Username=postgres;Password=your-local-password"
+dotnet user-secrets set "JwtSettings:SecretKey" "your-very-long-local-development-secret"
+```
+
 ## Deployment Notes
 
 - CI runs .NET validation and Telegram failure notifications.

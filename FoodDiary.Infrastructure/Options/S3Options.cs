@@ -38,4 +38,16 @@ public sealed class S3Options
     /// Upload size limit in bytes.
     /// </summary>
     public long MaxUploadSizeBytes { get; init; } = 20 * 1024 * 1024; // 20 MB
+
+    public static bool HasValidMaxUploadSize(S3Options options) => options.MaxUploadSizeBytes > 0;
+
+    public static bool HasValidPublicBaseUrl(S3Options options) {
+        return string.IsNullOrWhiteSpace(options.PublicBaseUrl) ||
+               Uri.IsWellFormedUriString(options.PublicBaseUrl, UriKind.Absolute);
+    }
+
+    public static bool HasValidServiceUrl(S3Options options) {
+        return string.IsNullOrWhiteSpace(options.ServiceUrl) ||
+               Uri.IsWellFormedUriString(options.ServiceUrl, UriKind.Absolute);
+    }
 }

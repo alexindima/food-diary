@@ -4,7 +4,6 @@ using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Entities.Shopping;
 using FoodDiary.Domain.Entities.Tracking;
-using FoodDiary.Domain.Events;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -13,7 +12,7 @@ using DesiredWeightValueObject = FoodDiary.Domain.ValueObjects.DesiredWeight;
 
 namespace FoodDiary.Domain.Entities.Users;
 
-public sealed class User : AggregateRoot<UserId> {
+public sealed partial class User : AggregateRoot<UserId> {
     private const long DefaultAiInputTokenLimit = 5_000_000;
     private const long DefaultAiOutputTokenLimit = 1_000_000;
     private const double ComparisonEpsilon = 0.000001d;
@@ -89,223 +88,6 @@ public sealed class User : AggregateRoot<UserId> {
         return user;
     }
 
-    public void UpdateRefreshToken(string? refreshToken) {
-        var normalizedRefreshToken = NormalizeOptionalToken(refreshToken);
-        var nextState = GetCredentialState().WithRefreshToken(normalizedRefreshToken, DateTime.UtcNow);
-        ApplyCredentialState(nextState);
-
-        SetModified();
-    }
-
-    public void LinkTelegram(long telegramUserId) {
-        TelegramUserId = telegramUserId;
-        SetModified();
-    }
-
-    public void UnlinkTelegram() {
-        TelegramUserId = null;
-        SetModified();
-    }
-
-    public void UpdatePassword(string hashedPassword) {
-        Password = NormalizeRequiredPasswordHash(hashedPassword);
-        SetModified();
-    }
-
-    public void SetEmailConfirmationToken(string tokenHash, DateTime expiresAtUtc) {
-        var normalizedTokenHash = NormalizeRequiredTokenHash(tokenHash, nameof(tokenHash));
-        EnsureFutureUtc(expiresAtUtc, nameof(expiresAtUtc));
-        var nextState = GetCredentialState().WithEmailConfirmationToken(normalizedTokenHash, expiresAtUtc, DateTime.UtcNow);
-        ApplyCredentialState(nextState);
-        SetModified();
-    }
-
-    public void ConfirmEmail() {
-        SetEmailConfirmed(true);
-    }
-
-    public void SetEmailConfirmed(bool isConfirmed) {
-        ApplyCredentialState(GetCredentialState().AsEmailConfirmed(isConfirmed));
-        SetModified();
-    }
-
-    public void SetPasswordResetToken(string tokenHash, DateTime expiresAtUtc) {
-        var normalizedTokenHash = NormalizeRequiredTokenHash(tokenHash, nameof(tokenHash));
-        EnsureFutureUtc(expiresAtUtc, nameof(expiresAtUtc));
-        var nextState = GetCredentialState().WithPasswordResetToken(normalizedTokenHash, expiresAtUtc, DateTime.UtcNow);
-        ApplyCredentialState(nextState);
-        SetModified();
-    }
-
-    public void ClearPasswordResetToken() {
-        ApplyCredentialState(GetCredentialState().WithoutPasswordResetToken());
-        SetModified();
-    }
-
-    public void UpdateProfile(UserProfileUpdate update) {
-        var changed = false;
-        changed |= ApplyPersonalInfoChanges(
-            update.Username,
-            update.FirstName,
-            update.LastName,
-            update.BirthDate,
-            update.Gender,
-            update.Weight,
-            update.Height);
-        changed |= ApplyActivityChanges(update.ActivityLevel, update.StepGoal, update.HydrationGoal);
-        changed |= ApplyMediaAndPreferencesChanges(
-            update.ProfileImage,
-            update.ProfileImageAssetId,
-            update.DashboardLayoutJson,
-            update.Language);
-
-        if (changed) {
-            SetModified();
-        }
-    }
-
-    public void UpdatePersonalInfo(
-        string? username = null,
-        string? firstName = null,
-        string? lastName = null,
-        DateTime? birthDate = null,
-        string? gender = null,
-        double? weight = null,
-        double? height = null) {
-        if (ApplyPersonalInfoChanges(username, firstName, lastName, birthDate, gender, weight, height)) {
-            SetModified();
-        }
-    }
-
-    public void UpdateActivity(
-        ActivityLevel? activityLevel = null,
-        int? stepGoal = null,
-        double? hydrationGoal = null) {
-        if (ApplyActivityChanges(activityLevel, stepGoal, hydrationGoal)) {
-            SetModified();
-        }
-    }
-
-    public void UpdatePreferences(
-        string? dashboardLayoutJson = null,
-        string? language = null) {
-        if (ApplyPreferencesChanges(dashboardLayoutJson, language)) {
-            SetModified();
-        }
-    }
-
-    public void UpdateProfileMedia(
-        string? profileImage = null,
-        ImageAssetId? profileImageAssetId = null) {
-        if (ApplyProfileMediaChanges(profileImage, profileImageAssetId)) {
-            SetModified();
-        }
-    }
-
-    public void UpdateGoals(
-        double? dailyCalorieTarget = null,
-        double? proteinTarget = null,
-        double? fatTarget = null,
-        double? carbTarget = null,
-        double? fiberTarget = null,
-        double? waterGoal = null,
-        double? desiredWeight = null,
-        double? desiredWaist = null) {
-        var updatedGoals = GetNutritionGoals().With(
-            dailyCalorieTarget: dailyCalorieTarget,
-            proteinTarget: proteinTarget,
-            fatTarget: fatTarget,
-            carbTarget: carbTarget,
-            fiberTarget: fiberTarget,
-            waterGoal: waterGoal);
-
-        EnsureDesiredWeight(desiredWeight, nameof(desiredWeight));
-        EnsureDesiredWaist(desiredWaist, nameof(desiredWaist));
-
-        var state = GetGoalState() with {
-            DailyCalorieTarget = updatedGoals.DailyCalorieTarget,
-            ProteinTarget = updatedGoals.ProteinTarget,
-            FatTarget = updatedGoals.FatTarget,
-            CarbTarget = updatedGoals.CarbTarget,
-            FiberTarget = updatedGoals.FiberTarget,
-            WaterGoal = updatedGoals.WaterGoal,
-            DesiredWeight = desiredWeight.HasValue ? desiredWeight : DesiredWeight,
-            DesiredWaist = desiredWaist.HasValue ? desiredWaist : DesiredWaist
-        };
-
-        ApplyGoalState(state);
-
-        SetModified();
-    }
-
-    public void UpdateAiTokenLimits(long? inputLimit, long? outputLimit) {
-        if (inputLimit.HasValue) {
-            if (inputLimit.Value < 0) {
-                throw new ArgumentOutOfRangeException(nameof(inputLimit), "Input limit must be non-negative.");
-            }
-
-            AiInputTokenLimit = inputLimit.Value;
-        }
-
-        if (outputLimit.HasValue) {
-            if (outputLimit.Value < 0) {
-                throw new ArgumentOutOfRangeException(nameof(outputLimit), "Output limit must be non-negative.");
-            }
-
-            AiOutputTokenLimit = outputLimit.Value;
-        }
-
-        SetModified();
-    }
-
-    public void UpdateDesiredWeight(double? desiredWeight) {
-        EnsureDesiredWeight(desiredWeight, nameof(desiredWeight));
-        ApplyGoalState(GetGoalState() with { DesiredWeight = desiredWeight });
-        SetModified();
-    }
-
-    public void UpdateDesiredWaist(double? desiredWaist) {
-        EnsureDesiredWaist(desiredWaist, nameof(desiredWaist));
-        ApplyGoalState(GetGoalState() with { DesiredWaist = desiredWaist });
-        SetModified();
-    }
-
-    public void Deactivate() {
-        IsActive = false;
-        SetModified();
-    }
-
-    public void Activate() {
-        if (DeletedAt is not null) {
-            throw new InvalidOperationException("Deleted user cannot be activated directly. Use Restore().");
-        }
-
-        IsActive = true;
-        SetModified();
-    }
-
-    public void MarkDeleted(DateTime deletedAtUtc) {
-        if (DeletedAt is not null && !IsActive) {
-            return;
-        }
-
-        DeletedAt = deletedAtUtc;
-        IsActive = false;
-        RaiseDomainEvent(new UserDeletedDomainEvent(Id, deletedAtUtc));
-        SetModified();
-    }
-
-    public void Restore() {
-        if (DeletedAt is null && IsActive) {
-            return;
-        }
-
-        DeletedAt = null;
-        IsActive = true;
-        RaiseDomainEvent(new UserRestoredDomainEvent(Id));
-        SetModified();
-    }
-
     private static string NormalizeRequiredEmail(string value) {
         return EmailAddress.Create(value).Value;
     }
@@ -332,6 +114,14 @@ public sealed class User : AggregateRoot<UserId> {
             : value.Trim();
     }
 
+    private static DateTime NormalizeUtcTimestamp(DateTime value, string paramName) {
+        if (value.Kind == DateTimeKind.Unspecified) {
+            throw new ArgumentOutOfRangeException(paramName, "UTC timestamp kind must be specified.");
+        }
+
+        return value.ToUniversalTime();
+    }
+
     private static void EnsureFutureUtc(DateTime value, string paramName) {
         if (value <= DateTime.UtcNow) {
             throw new ArgumentOutOfRangeException(paramName, "Date must be in the future (UTC).");
@@ -345,8 +135,18 @@ public sealed class User : AggregateRoot<UserId> {
     }
 
     private static void EnsurePositive(double? value, string paramName) {
+        if (value.HasValue && (double.IsNaN(value.Value) || double.IsInfinity(value.Value))) {
+            throw new ArgumentOutOfRangeException(paramName, "Value must be a finite number.");
+        }
+
         if (value is <= 0) {
             throw new ArgumentOutOfRangeException(paramName, "Value must be positive.");
+        }
+    }
+
+    private void EnsureNotDeleted() {
+        if (DeletedAt is not null) {
+            throw new InvalidOperationException("Deleted user cannot be mutated. Use Restore() first.");
         }
     }
 
@@ -358,15 +158,6 @@ public sealed class User : AggregateRoot<UserId> {
             CarbTarget,
             FiberTarget,
             WaterGoal);
-    }
-
-    private void ApplyNutritionGoals(UserNutritionGoals goals) {
-        DailyCalorieTarget = goals.DailyCalorieTarget;
-        ProteinTarget = goals.ProteinTarget;
-        FatTarget = goals.FatTarget;
-        CarbTarget = goals.CarbTarget;
-        FiberTarget = goals.FiberTarget;
-        WaterGoal = goals.WaterGoal;
     }
 
     private UserGoalState GetGoalState() {
@@ -455,158 +246,6 @@ public sealed class User : AggregateRoot<UserId> {
         PasswordResetTokenExpiresAtUtc = state.PasswordResetTokenExpiresAtUtc;
         PasswordResetSentAtUtc = state.PasswordResetSentAtUtc;
         LastLoginAtUtc = state.LastLoginAtUtc;
-    }
-
-    private bool ApplyPersonalInfoChanges(
-        string? username,
-        string? firstName,
-        string? lastName,
-        DateTime? birthDate,
-        string? gender,
-        double? weight,
-        double? height) {
-        var normalizedUsername = NormalizeOptionalProfileText(username);
-        var normalizedFirstName = NormalizeOptionalProfileText(firstName);
-        var normalizedLastName = NormalizeOptionalProfileText(lastName);
-
-        EnsureBirthDateIsNotFuture(birthDate);
-        EnsurePositive(weight, nameof(weight));
-        EnsurePositive(height, nameof(height));
-        EnsureGender(gender, nameof(gender));
-
-        var state = GetProfileState();
-        var changed = false;
-
-        if (username is not null && state.Username != normalizedUsername) {
-            state = state with { Username = normalizedUsername };
-            changed = true;
-        }
-
-        if (firstName is not null && state.FirstName != normalizedFirstName) {
-            state = state with { FirstName = normalizedFirstName };
-            changed = true;
-        }
-
-        if (lastName is not null && state.LastName != normalizedLastName) {
-            state = state with { LastName = normalizedLastName };
-            changed = true;
-        }
-
-        if (birthDate.HasValue && state.BirthDate != birthDate) {
-            state = state with { BirthDate = birthDate };
-            changed = true;
-        }
-
-        if (gender is not null) {
-            var normalizedGender = NormalizeRequiredGender(gender, nameof(gender));
-            if (state.Gender != normalizedGender) {
-                state = state with { Gender = normalizedGender };
-                changed = true;
-            }
-        }
-
-        if (weight.HasValue && !NullableAreClose(state.Weight, weight.Value)) {
-            state = state with { Weight = weight };
-            changed = true;
-        }
-
-        if (height.HasValue && !NullableAreClose(state.Height, height.Value)) {
-            state = state with { Height = height };
-            changed = true;
-        }
-
-        if (changed) {
-            ApplyProfileState(state);
-        }
-
-        return changed;
-    }
-
-    private bool ApplyActivityChanges(
-        ActivityLevel? activityLevel,
-        int? stepGoal,
-        double? hydrationGoal) {
-        var updatedActivityGoals = GetActivityGoals().With(
-            stepGoal: stepGoal,
-            hydrationGoal: hydrationGoal);
-        var state = GetProfileState();
-
-        var changed = false;
-
-        if (activityLevel.HasValue && state.ActivityLevel != activityLevel.Value) {
-            state = state with { ActivityLevel = activityLevel.Value };
-            changed = true;
-        }
-
-        if (StepGoal != updatedActivityGoals.StepGoal || !NullableAreClose(HydrationGoal, updatedActivityGoals.HydrationGoal)) {
-            ApplyActivityGoals(updatedActivityGoals);
-            changed = true;
-        }
-
-        if (changed) {
-            ApplyProfileState(state);
-        }
-
-        return changed;
-    }
-
-    private bool ApplyMediaAndPreferencesChanges(
-        string? profileImage,
-        ImageAssetId? profileImageAssetId,
-        string? dashboardLayoutJson,
-        string? language) {
-        var changed = false;
-        changed |= ApplyProfileMediaChanges(profileImage, profileImageAssetId);
-        changed |= ApplyPreferencesChanges(dashboardLayoutJson, language);
-        return changed;
-    }
-
-    private bool ApplyProfileMediaChanges(string? profileImage, ImageAssetId? profileImageAssetId) {
-        var normalizedProfileImage = NormalizeOptionalProfileText(profileImage);
-        var state = GetProfileState();
-        var changed = false;
-
-        if (profileImage is not null && state.ProfileImage != normalizedProfileImage) {
-            state = state with { ProfileImage = normalizedProfileImage };
-            changed = true;
-        }
-
-        if (profileImageAssetId.HasValue && state.ProfileImageAssetId != profileImageAssetId) {
-            state = state with { ProfileImageAssetId = profileImageAssetId };
-            changed = true;
-        }
-
-        if (changed) {
-            ApplyProfileState(state);
-        }
-
-        return changed;
-    }
-
-    private bool ApplyPreferencesChanges(string? dashboardLayoutJson, string? language) {
-        var normalizedDashboardLayoutJson = NormalizeOptionalProfileText(dashboardLayoutJson);
-        var normalizedLanguage = NormalizeOptionalLanguage(language, nameof(language));
-        var state = GetProfileState();
-
-        EnsureLanguage(language, nameof(language));
-
-        var changed = false;
-
-        if (dashboardLayoutJson is not null && state.DashboardLayoutJson != normalizedDashboardLayoutJson) {
-            state = state with { DashboardLayoutJson = normalizedDashboardLayoutJson };
-            changed = true;
-        }
-
-        if (language is not null && state.Language != normalizedLanguage) {
-            state = state with { Language = normalizedLanguage };
-            changed = true;
-        }
-
-        if (changed) {
-            ApplyProfileState(state);
-        }
-
-        return changed;
     }
 
     private static void EnsureLanguage(string? value, string paramName) {

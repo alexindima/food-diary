@@ -1,5 +1,4 @@
-using FoodDiary.Application.Common.Interfaces.Services;
-using FoodDiary.Application.Common.Models;
+using FoodDiary.Application.Authentication.Common;
 using FoodDiary.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;

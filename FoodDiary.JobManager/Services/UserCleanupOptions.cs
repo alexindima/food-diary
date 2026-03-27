@@ -7,4 +7,11 @@ public sealed class UserCleanupOptions {
     public int BatchSize { get; set; } = 50;
     public string Cron { get; set; } = "0 3 * * *";
     public string? ReassignUserId { get; set; }
+
+    public static bool HasValidConfiguration(UserCleanupOptions options) {
+        return options.RetentionDays > 0 &&
+               options.BatchSize > 0 &&
+               !string.IsNullOrWhiteSpace(options.Cron) &&
+               (string.IsNullOrWhiteSpace(options.ReassignUserId) || Guid.TryParse(options.ReassignUserId, out _));
+    }
 }

@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Common.Interfaces.Services;
+namespace FoodDiary.Application.Authentication.Common;
 
 public interface IPasswordHasher {
     string Hash(string password);
