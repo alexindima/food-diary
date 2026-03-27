@@ -123,7 +123,7 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
     }
 
     [RequiresDockerFact]
-    public async Task DeleteImageAsset_BlocksReferencedRecipeAssets_ThenSucceedsAfterRecipeDeletionAgainstPostgres() {
+    public async Task DeleteImageAsset_BlocksReferencedRecipeAssets_ThenReturnsNotFoundAfterRecipeDeletionAgainstPostgres() {
         var client = factory.CreateClient();
         var accessToken = await RegisterAndGetAccessTokenAsync(client);
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
@@ -208,10 +208,16 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
         var deleteRecipeResponse = await client.DeleteAsync($"/api/recipes/{recipe.Id}");
         var deleteRecipeAssetAfterRecipeDeletion = await client.DeleteAsync($"/api/images/{recipeAsset.AssetId}");
         var deleteStepAssetAfterRecipeDeletion = await client.DeleteAsync($"/api/images/{stepAsset.AssetId}");
+        var deletedRecipeAssetError = await deleteRecipeAssetAfterRecipeDeletion.Content.ReadFromJsonAsync<ErrorPayload>(JsonOptions);
+        var deletedStepAssetError = await deleteStepAssetAfterRecipeDeletion.Content.ReadFromJsonAsync<ErrorPayload>(JsonOptions);
 
         await AssertStatusCodeAsync(HttpStatusCode.NoContent, deleteRecipeResponse);
-        await AssertStatusCodeAsync(HttpStatusCode.NoContent, deleteRecipeAssetAfterRecipeDeletion);
-        await AssertStatusCodeAsync(HttpStatusCode.NoContent, deleteStepAssetAfterRecipeDeletion);
+        await AssertStatusCodeAsync(HttpStatusCode.NotFound, deleteRecipeAssetAfterRecipeDeletion);
+        await AssertStatusCodeAsync(HttpStatusCode.NotFound, deleteStepAssetAfterRecipeDeletion);
+        Assert.NotNull(deletedRecipeAssetError);
+        Assert.NotNull(deletedStepAssetError);
+        Assert.Equal("Image.NotFound", deletedRecipeAssetError.Error);
+        Assert.Equal("Image.NotFound", deletedStepAssetError.Error);
     }
 
     private static async Task AssertStatusCodeAsync(HttpStatusCode expected, HttpResponseMessage response) {
