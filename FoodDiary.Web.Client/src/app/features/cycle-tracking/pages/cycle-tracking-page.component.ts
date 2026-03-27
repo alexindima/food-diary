@@ -1,4 +1,4 @@
-﻿import { CommonModule } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -8,26 +8,27 @@ import {
     inject,
     signal,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { PageHeaderComponent } from '../shared/page-header/page-header.component';
-import { PageBodyComponent } from '../shared/page-body/page-body.component';
-import { FdPageContainerDirective } from '../../directives/layout/page-container.directive';
-import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
+
+import { FdUiAccentSurfaceComponent } from 'fd-ui-kit/accent-surface/fd-ui-accent-surface.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
-import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
-import { FdUiDateInputComponent } from 'fd-ui-kit/date-input/fd-ui-date-input.component';
+import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiCheckboxComponent } from 'fd-ui-kit/checkbox/fd-ui-checkbox.component';
-import { CyclesService } from '../../services/cycles.service';
+import { FdUiDateInputComponent } from 'fd-ui-kit/date-input/fd-ui-date-input.component';
+import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
+import { PageBodyComponent } from '../../../components/shared/page-body/page-body.component';
+import { PageHeaderComponent } from '../../../components/shared/page-header/page-header.component';
+import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
+import { CyclesService } from '../../../services/cycles.service';
 import {
+    CreateCyclePayload,
     CycleDay,
     CyclePredictions,
     CycleResponse,
     DailySymptoms,
-    CreateCyclePayload,
-} from '../../types/cycle.data';
-import { FdUiAccentSurfaceComponent } from 'fd-ui-kit/accent-surface/fd-ui-accent-surface.component';
+} from '../../../types/cycle.data';
 
 @Component({
     selector: 'fd-cycle-tracking-page',
@@ -96,10 +97,7 @@ export class CycleTrackingPageComponent implements OnInit {
     });
     public readonly currentCycleTitle = computed(() => {
         const cycle = this.cycle();
-        if (!cycle) {
-            return 'CYCLE_TRACKING.NO_CYCLE';
-        }
-        return 'CYCLE_TRACKING.CURRENT_CYCLE';
+        return cycle ? 'CYCLE_TRACKING.CURRENT_CYCLE' : 'CYCLE_TRACKING.NO_CYCLE';
     });
 
     public ngOnInit(): void {
@@ -179,6 +177,7 @@ export class CycleTrackingPageComponent implements OnInit {
                     if (!current) {
                         return;
                     }
+
                     const filtered = current.days.filter(d => d.id !== day.id && d.date !== day.date);
                     this.cycle.set({
                         ...current,
@@ -210,6 +209,7 @@ export class CycleTrackingPageComponent implements OnInit {
         if (value === null || value === undefined || Number.isNaN(value)) {
             return 0;
         }
+
         return Math.min(9, Math.max(0, value));
     }
 
@@ -220,4 +220,3 @@ export class CycleTrackingPageComponent implements OnInit {
         return `${year}-${month}-${day}`;
     }
 }
-

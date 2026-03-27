@@ -1,4 +1,4 @@
-﻿import {
+import {
     ChangeDetectionStrategy,
     Component,
     DestroyRef,
@@ -10,35 +10,36 @@
 import { NgIf } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { FormGroupControls } from '../../types/common.data';
-import { UserService } from '../../services/user.service';
-import { ActivityLevelOption, Gender, UpdateUserDto, User } from '../../types/user.data';
-import { NavigationService } from '../../services/navigation.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
-import { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
+
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
+import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { FdUiFormErrorComponent, FD_VALIDATION_ERRORS, FdValidationErrors } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
-import { ChangePasswordDialogComponent } from './dialogs/change-password-dialog/change-password-dialog.component';
-import { PasswordSuccessDialogComponent } from './dialogs/password-success-dialog/password-success-dialog.component';
-import { UpdateSuccessDialogComponent } from './dialogs/update-success-dialog/update-success-dialog.component';
-import { PageHeaderComponent } from '../shared/page-header/page-header.component';
-import { PageBodyComponent } from '../shared/page-body/page-body.component';
-import { FdPageContainerDirective } from '../../directives/layout/page-container.directive';
-import { ImageUploadFieldComponent } from '../shared/image-upload-field/image-upload-field.component';
-import { ImageSelection } from '../../types/image-upload.data';
-import { ImageUploadService } from '../../services/image-upload.service';
 import {
-    ConfirmDeleteDialogComponent,
-    ConfirmDeleteDialogData,
-} from '../shared/confirm-delete-dialog/confirm-delete-dialog.component';
-import { AuthService } from '../../services/auth.service';
-import { LocalizationService } from '../../services/localization.service';
-import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
-import { FdUiSelectComponent } from 'fd-ui-kit/select/fd-ui-select.component';
+    FdUiFormErrorComponent,
+    FD_VALIDATION_ERRORS,
+    FdValidationErrors,
+} from 'fd-ui-kit/form-error/fd-ui-form-error.component';
 import { FdUiDateInputComponent } from 'fd-ui-kit/date-input/fd-ui-date-input.component';
-import { environment } from '../../../environments/environment';
+import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
+import { FdUiSelectComponent, FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
+import { PageBodyComponent } from '../../../components/shared/page-body/page-body.component';
+import { ConfirmDeleteDialogComponent, ConfirmDeleteDialogData } from '../../../components/shared/confirm-delete-dialog/confirm-delete-dialog.component';
+import { ImageUploadFieldComponent } from '../../../components/shared/image-upload-field/image-upload-field.component';
+import { PageHeaderComponent } from '../../../components/shared/page-header/page-header.component';
+import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
+import { AuthService } from '../../../services/auth.service';
+import { ImageUploadService } from '../../../services/image-upload.service';
+import { LocalizationService } from '../../../services/localization.service';
+import { NavigationService } from '../../../services/navigation.service';
+import { UserService } from '../../../services/user.service';
+import { ImageSelection } from '../../../types/image-upload.data';
+import { FormGroupControls } from '../../../types/common.data';
+import { ActivityLevelOption, Gender, UpdateUserDto, User } from '../../../types/user.data';
+import { environment } from '../../../../environments/environment';
+import { ChangePasswordDialogComponent } from '../dialogs/change-password-dialog/change-password-dialog.component';
+import { PasswordSuccessDialogComponent } from '../dialogs/password-success-dialog/password-success-dialog.component';
+import { UpdateSuccessDialogComponent } from '../dialogs/update-success-dialog/update-success-dialog.component';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: FD_VALIDATION_ERRORS,
@@ -72,7 +73,7 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     templateUrl: './user-manage.component.html',
     styleUrl: './user-manage.component.scss',
     providers: [VALIDATION_ERRORS_PROVIDER],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserManageComponent implements OnInit {
     private readonly userService = inject(UserService);
@@ -91,7 +92,6 @@ export class UserManageComponent implements OnInit {
     public genderOptions: FdUiSelectOption<Gender | null>[] = [];
     public activityLevelOptions: FdUiSelectOption<ActivityLevelOption | null>[] = [];
     public languageOptions: FdUiSelectOption<string | null>[] = [];
-
     public userForm: FormGroup<UserFormData>;
     public globalError = signal<string | null>(null);
     public isDeleting = signal<boolean>(false);
@@ -125,34 +125,11 @@ export class UserManageComponent implements OnInit {
                 if (!this.userForm.controls.language.dirty) {
                     return;
                 }
+
                 this.applyLanguagePreference(language ?? null);
             });
 
         this.loadUserData();
-    }
-
-    private loadUserData(): void {
-        this.userService.getInfo().subscribe({
-            next: user => {
-                if (user) {
-                    const userData = this.mapUserToForm(user);
-                    this.lastUserData = userData;
-                    this.applyUserData(userData);
-                    this.applyLanguagePreference(user.language ?? null);
-                } else {
-                    this.setGlobalError('USER_MANAGE.LOAD_ERROR');
-                }
-            },
-            error: () => {
-                this.setGlobalError('USER_MANAGE.LOAD_ERROR');
-            },
-        });
-    }
-
-    private applyUserData(userData: Partial<UserFormValues>): void {
-        this.userForm.patchValue(userData);
-        this.userForm.markAsPristine();
-        this.userForm.markAsUntouched();
     }
 
     public async onSubmit(): Promise<void> {
@@ -195,6 +172,7 @@ export class UserManageComponent implements OnInit {
                 },
             });
         }
+
         if (this.lastUserData) {
             this.applyUserData(this.lastUserData);
         } else {
@@ -204,19 +182,13 @@ export class UserManageComponent implements OnInit {
 
     public openChangePasswordDialog(): void {
         this.fdDialogService
-            .open(ChangePasswordDialogComponent, {
-                size: 'sm',
-            })
+            .open(ChangePasswordDialogComponent, { size: 'sm' })
             .afterClosed()
             .subscribe(success => {
                 if (success) {
                     this.openPasswordSuccessDialog();
                 }
             });
-    }
-
-    private openPasswordSuccessDialog(): void {
-        this.fdDialogService.open(PasswordSuccessDialogComponent, { size: 'sm' }).afterClosed().subscribe();
     }
 
     public onDeleteAccount(): void {
@@ -261,17 +233,64 @@ export class UserManageComponent implements OnInit {
             });
     }
 
+    public isAdminUser(): boolean {
+        return this.authService.isAdmin();
+    }
+
+    public openAdminPanel(): void {
+        if (!environment.adminAppUrl) {
+            return;
+        }
+
+        this.authService.startAdminSso().subscribe({
+            next: response => {
+                const url = new URL('/', environment.adminAppUrl);
+                url.searchParams.set('code', response.code);
+                window.location.href = url.toString();
+            },
+            error: () => {
+                this.setGlobalError('USER_MANAGE.ADMIN_SSO_ERROR');
+            },
+        });
+    }
+
     protected showSuccessDialog(): void {
         this.fdDialogService
-            .open(UpdateSuccessDialogComponent, {
-                size: 'sm',
-            })
+            .open(UpdateSuccessDialogComponent, { size: 'sm' })
             .afterClosed()
             .subscribe(goToHome => {
                 if (goToHome) {
                     this.navigationService.navigateToHome();
                 }
             });
+    }
+
+    private loadUserData(): void {
+        this.userService.getInfo().subscribe({
+            next: user => {
+                if (user) {
+                    const userData = this.mapUserToForm(user);
+                    this.lastUserData = userData;
+                    this.applyUserData(userData);
+                    this.applyLanguagePreference(user.language ?? null);
+                } else {
+                    this.setGlobalError('USER_MANAGE.LOAD_ERROR');
+                }
+            },
+            error: () => {
+                this.setGlobalError('USER_MANAGE.LOAD_ERROR');
+            },
+        });
+    }
+
+    private applyUserData(userData: Partial<UserFormValues>): void {
+        this.userForm.patchValue(userData);
+        this.userForm.markAsPristine();
+        this.userForm.markAsUntouched();
+    }
+
+    private openPasswordSuccessDialog(): void {
+        this.fdDialogService.open(PasswordSuccessDialogComponent, { size: 'sm' }).afterClosed().subscribe();
     }
 
     private setGlobalError(errorKey: string): void {
@@ -301,27 +320,6 @@ export class UserManageComponent implements OnInit {
 
     private applyLanguagePreference(language: string | null): void {
         void this.localizationService.applyLanguagePreference(language);
-    }
-
-    public isAdminUser(): boolean {
-        return this.authService.isAdmin();
-    }
-
-    public openAdminPanel(): void {
-        if (!environment.adminAppUrl) {
-            return;
-        }
-
-        this.authService.startAdminSso().subscribe({
-            next: response => {
-                const url = new URL('/', environment.adminAppUrl);
-                url.searchParams.set('code', response.code);
-                window.location.href = url.toString();
-            },
-            error: () => {
-                this.setGlobalError('USER_MANAGE.ADMIN_SSO_ERROR');
-            },
-        });
     }
 
     private normalizeLanguage(value: string | null | undefined): string | null {
@@ -377,4 +375,3 @@ export interface UserFormValues {
 }
 
 export type UserFormData = FormGroupControls<UserFormValues>;
-

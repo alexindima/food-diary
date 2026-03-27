@@ -1,8 +1,9 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { FdPageContainerDirective } from '../../directives/layout/page-container.directive';
-import { PageHeaderComponent } from '../shared/page-header/page-header.component';
-import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { TranslatePipe } from '@ngx-translate/core';
+
+import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
+import { PageHeaderComponent } from '../../../components/shared/page-header/page-header.component';
+import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
 
 @Component({
     selector: 'fd-premium-access-page',

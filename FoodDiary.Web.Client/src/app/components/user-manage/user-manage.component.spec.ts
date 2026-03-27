@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { UserManageComponent } from './user-manage.component';
+import { UserManageComponent } from '../../../features/profile/pages/user-manage.component';
 
 describe('UserManageComponent', () => {
   let component: UserManageComponent;

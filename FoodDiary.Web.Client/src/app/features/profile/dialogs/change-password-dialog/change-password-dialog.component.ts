@@ -1,15 +1,15 @@
-﻿
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators, AbstractControl } from '@angular/forms';
-import { FdUiDialogRef } from 'fd-ui-kit/material';
+import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+
+import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog.component';
 import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
-import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
+import { FdUiDialogRef } from 'fd-ui-kit/material';
+import { UserService } from '../../../../services/user.service';
 import { FormGroupControls } from '../../../../types/common.data';
 import { ChangePasswordRequest } from '../../../../types/user.data';
-import { UserService } from '../../../../services/user.service';
 import { matchFieldValidator } from '../../../../validators/match-field.validator';
 
 @Component({
@@ -19,13 +19,13 @@ import { matchFieldValidator } from '../../../../validators/match-field.validato
     styleUrls: ['./change-password-dialog.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-    ReactiveFormsModule,
-    TranslateModule,
-    FdUiDialogComponent,
-    FdUiDialogFooterDirective,
-    FdUiInputComponent,
-    FdUiButtonComponent
-],
+        ReactiveFormsModule,
+        TranslateModule,
+        FdUiDialogComponent,
+        FdUiDialogFooterDirective,
+        FdUiInputComponent,
+        FdUiButtonComponent,
+    ],
 })
 export class ChangePasswordDialogComponent {
     private readonly dialogRef = inject(FdUiDialogRef<ChangePasswordDialogComponent, boolean>);
@@ -51,6 +51,7 @@ export class ChangePasswordDialogComponent {
         if (this.isSubmitting()) {
             return;
         }
+
         this.dialogRef.close(false);
     }
 
@@ -76,6 +77,7 @@ export class ChangePasswordDialogComponent {
                     this.dialogRef.close(true);
                     return;
                 }
+
                 this.setPasswordError('USER_MANAGE.CHANGE_PASSWORD_ERROR');
             },
             error: () => {
@@ -105,9 +107,7 @@ export class ChangePasswordDialogComponent {
 
         if (control.errors?.['minlength']) {
             const requiredLength = control.errors['minlength'].requiredLength;
-            return this.translateService.instant('FORM_ERRORS.PASSWORD.MIN_LENGTH', {
-                requiredLength,
-            });
+            return this.translateService.instant('FORM_ERRORS.PASSWORD.MIN_LENGTH', { requiredLength });
         }
 
         if (control.errors?.['matchField']) {
@@ -125,4 +125,3 @@ interface ChangePasswordFormValues {
 }
 
 type ChangePasswordFormData = FormGroupControls<ChangePasswordFormValues>;
-

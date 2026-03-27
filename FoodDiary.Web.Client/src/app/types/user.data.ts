@@ -1,4 +1,4 @@
-import { UserFormValues } from '../components/user-manage/user-manage.component';
+import type { UserFormValues } from '../features/profile/pages/user-manage.component';
 import { ImageSelection } from './image-upload.data';
 
 export type ActivityLevelOption = 'MINIMAL' | 'LIGHT' | 'MODERATE' | 'HIGH' | 'EXTREME';
