@@ -38,7 +38,8 @@
       "Bash(grep -v \"^bin$\")",
       "Bash(grep -v \"^obj$\")",
       "Bash(/tmp/test_summary.txt:*)",
-      "Read(//tmp/**)"
+      "Read(//tmp/**)",
+      "Bash(dotnet test:*)"
     ],
     "deny": [],
     "ask": []

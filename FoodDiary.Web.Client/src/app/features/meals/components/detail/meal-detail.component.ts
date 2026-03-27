@@ -2,7 +2,7 @@ import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FD_UI_DIALOG_DATA, FdUiDialogRef } from 'fd-ui-kit/material';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { Consumption } from '../../../../types/consumption.data';
+import { Meal } from '../../models/meal.data';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog.component';
 import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
@@ -40,7 +40,7 @@ export class MealDetailComponent {
     private readonly datePipe = inject(DatePipe);
     private readonly translate = inject(TranslateService);
 
-    public readonly consumption: Consumption;
+    public readonly consumption: Meal;
     public readonly calories: number;
     public readonly proteins: number;
     public readonly fats: number;
@@ -68,7 +68,7 @@ export class MealDetailComponent {
     }[];
 
     public constructor() {
-        const data = inject<Consumption>(FD_UI_DIALOG_DATA);
+        const data = inject<Meal>(FD_UI_DIALOG_DATA);
 
         this.consumption = data;
         this.calories = data.totalCalories ?? 0;

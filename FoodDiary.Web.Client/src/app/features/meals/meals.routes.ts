@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 
 import { authGuard } from '../../guards/auth.guard';
-import { consumptionResolver } from '../../resolvers/consumption.resolver';
+import { mealResolver } from './resolvers/meal.resolver';
 import { MealAddComponent } from './pages/manage/meal-add.component';
 import { MealEditComponent } from './pages/manage/meal-edit.component';
 import { MealContainerComponent } from './pages/container/meal-container.component';
@@ -18,7 +18,7 @@ export const mealRoutes: Routes = [
             {
                 path: ':id/edit',
                 component: MealEditComponent,
-                resolve: { consumption: consumptionResolver },
+                resolve: { consumption: mealResolver },
             },
         ],
     },

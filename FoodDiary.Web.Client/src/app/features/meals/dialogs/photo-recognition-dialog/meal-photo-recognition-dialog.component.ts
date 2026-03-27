@@ -9,13 +9,13 @@ import { ImageUploadFieldComponent } from '../../../../components/shared/image-u
 import { ImageSelection } from '../../../../types/image-upload.data';
 import { AiFoodService } from '../../../../services/ai-food.service';
 import { FoodNutritionResponse, FoodVisionItem } from '../../../../types/ai.data';
-import { ConsumptionAiSessionManageDto } from '../../../../types/consumption.data';
+import { MealAiSessionManageDto } from '../../models/meal.data';
 import { FD_UI_DIALOG_DATA, FdUiDialogRef, FdUiIconModule } from 'fd-ui-kit/material';
 import { catchError, of } from 'rxjs';
 
 type PhotoAiDialogData = {
     initialSelection?: ImageSelection | null;
-    initialSession?: ConsumptionAiSessionManageDto | null;
+    initialSession?: MealAiSessionManageDto | null;
     mode?: 'edit' | 'create';
 };
 
@@ -42,7 +42,7 @@ export class MealPhotoRecognitionDialogComponent {
     private readonly aiFoodService = inject(AiFoodService);
     private readonly translateService = inject(TranslateService);
     private readonly dialogRef = inject(
-        FdUiDialogRef<MealPhotoRecognitionDialogComponent, ConsumptionAiSessionManageDto | null>,
+        FdUiDialogRef<MealPhotoRecognitionDialogComponent, MealAiSessionManageDto | null>,
         { optional: true },
     );
 
@@ -186,7 +186,7 @@ export class MealPhotoRecognitionDialogComponent {
         this.dialogRef?.close(null);
     }
 
-    private buildSessionPayload(): ConsumptionAiSessionManageDto | null {
+    private buildSessionPayload(): MealAiSessionManageDto | null {
         const nutrition = this.nutrition();
         if (!nutrition) {
             return null;
@@ -414,7 +414,7 @@ export class MealPhotoRecognitionDialogComponent {
         return (crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random()}`);
     }
 
-    private applyInitialSession(session: ConsumptionAiSessionManageDto): void {
+    private applyInitialSession(session: MealAiSessionManageDto): void {
         this.selection.set(session.imageUrl || session.imageAssetId ? {
             url: session.imageUrl ?? null,
             assetId: session.imageAssetId ?? null,
@@ -434,7 +434,7 @@ export class MealPhotoRecognitionDialogComponent {
         this.nutrition.set(this.buildNutritionFromSession(session.items));
     }
 
-    private buildNutritionFromSession(items: ConsumptionAiSessionManageDto['items']): FoodNutritionResponse {
+    private buildNutritionFromSession(items: MealAiSessionManageDto['items']): FoodNutritionResponse {
         const totals = items.reduce(
             (acc, item) => ({
                 calories: acc.calories + (item.calories ?? 0),

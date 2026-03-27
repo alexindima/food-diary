@@ -11,16 +11,16 @@ import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.component';
 import { Observable, catchError, debounceTime, distinctUntilChanged, map, of, startWith, switchMap } from 'rxjs';
 
+import { MealService } from '../../api/meal.service';
 import { MealDetailActionResult, MealDetailComponent } from '../../components/detail/meal-detail.component';
+import { Meal, MealFilters } from '../../models/meal.data';
 import { MealCardComponent } from '../../../../components/shared/meal-card/meal-card.component';
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body.component';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header.component';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
 import { LocalizedDatePipe } from '../../../../pipes/localized-date.pipe';
-import { ConsumptionService } from '../../../../services/consumption.service';
 import { NavigationService } from '../../../../services/navigation.service';
 import { FormGroupControls } from '../../../../types/common.data';
-import { Consumption, ConsumptionFilters } from '../../../../types/consumption.data';
 import { PagedData } from '../../../../types/paged-data.data';
 
 @Component({
@@ -44,14 +44,14 @@ import { PagedData } from '../../../../types/paged-data.data';
     ],
 })
 export class MealListComponent implements OnInit {
-    private readonly consumptionService = inject(ConsumptionService);
+    private readonly mealService = inject(MealService);
     private readonly navigationService = inject(NavigationService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly fdDialogService = inject(FdUiDialogService);
     private readonly breakpointObserver = inject(BreakpointObserver);
 
     public searchForm: FormGroup<SearchFormGroup>;
-    public consumptionData: PagedData<Consumption> = new PagedData<Consumption>();
+    public consumptionData: PagedData<Meal> = new PagedData<Meal>();
     public currentPageIndex = 0;
     public readonly groupedConsumptions = computed(() => this.groupByDate(this.consumptionData.items()));
     public readonly isMobileView = signal<boolean>(window.matchMedia('(max-width: 768px)').matches);
@@ -93,12 +93,12 @@ export class MealListComponent implements OnInit {
         this.consumptionData.setLoading(true);
         const dateRange = this.searchForm.controls.dateRange.value;
 
-        const filters: ConsumptionFilters = {
+        const filters: MealFilters = {
             dateFrom: this.toIsoDate(dateRange?.start ?? null),
             dateTo: this.toIsoDate(dateRange?.end ?? null),
         };
 
-        return this.consumptionService.query(page, 10, filters).pipe(
+        return this.mealService.query(page, 10, filters).pipe(
             map(pageData => {
                 this.consumptionData.setData(pageData);
                 this.currentPageIndex = pageData.page - 1;
@@ -118,9 +118,9 @@ export class MealListComponent implements OnInit {
         this.loadConsumptions(pageIndex + 1).subscribe();
     }
 
-    public async openMealDetails(consumption: Consumption): Promise<void> {
+    public async openMealDetails(consumption: Meal): Promise<void> {
         this.fdDialogService
-            .open<MealDetailComponent, Consumption, MealDetailActionResult>(MealDetailComponent, {
+            .open<MealDetailComponent, Meal, MealDetailActionResult>(MealDetailComponent, {
                 size: 'lg',
                 data: consumption,
             })
@@ -133,7 +133,7 @@ export class MealListComponent implements OnInit {
                 if (data.action === 'Edit') {
                     this.navigationService.navigateToConsumptionEdit(data.id);
                 } else if (data.action === 'Delete') {
-                    this.consumptionService.deleteById(data.id).subscribe({
+                    this.mealService.deleteById(data.id).subscribe({
                         next: () => {
                             this.scrollToTop();
                             this.loadConsumptions(this.currentPageIndex + 1).subscribe();
@@ -173,8 +173,8 @@ export class MealListComponent implements OnInit {
         return normalized.toISOString();
     }
 
-    private groupByDate(items: Consumption[]): { date: Date; items: Consumption[] }[] {
-        const buckets = new Map<string, { date: Date; items: Consumption[] }>();
+    private groupByDate(items: Meal[]): { date: Date; items: Meal[] }[] {
+        const buckets = new Map<string, { date: Date; items: Meal[] }>();
 
         for (const item of items) {
             const date = new Date(item.date);

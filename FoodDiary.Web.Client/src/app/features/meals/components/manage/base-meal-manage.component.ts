@@ -26,8 +26,8 @@ import {
     ConsumptionItemManageDto,
     ConsumptionManageDto,
     ConsumptionSourceType,
-} from '../../../../types/consumption.data';
-import { ConsumptionService } from '../../../../services/consumption.service';
+} from '../../models/meal.data';
+import { MealService } from '../../api/meal.service';
 import { FormGroupControls } from '../../../../types/common.data';
 import { Product, MeasurementUnit } from '../../../products/models/product.data';
 import { Recipe, RecipeIngredient } from '../../../recipes/models/recipe.data';
@@ -113,7 +113,7 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     ],
 })
 export class BaseMealManageComponent implements OnInit {
-    private readonly consumptionService = inject(ConsumptionService);
+    private readonly mealService = inject(MealService);
     private readonly translateService = inject(TranslateService);
     private readonly navigationService = inject(NavigationService);
     private readonly destroyRef = inject(DestroyRef);
@@ -1207,14 +1207,14 @@ export class BaseMealManageComponent implements OnInit {
     }
 
     private async addConsumption(consumptionData: ConsumptionManageDto): Promise<void> {
-        this.consumptionService.create(consumptionData).subscribe({
+        this.mealService.create(consumptionData).subscribe({
             next: response => this.handleSubmitResponse(response),
             error: error => this.handleSubmitError(error),
         });
     }
 
     private async updateConsumption(id: string, consumptionData: ConsumptionManageDto): Promise<void> {
-        this.consumptionService.update(id, consumptionData).subscribe({
+        this.mealService.update(id, consumptionData).subscribe({
             next: response => this.handleSubmitResponse(response),
             error: error => this.handleSubmitError(error),
         });
