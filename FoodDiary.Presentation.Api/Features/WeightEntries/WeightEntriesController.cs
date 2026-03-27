@@ -2,6 +2,7 @@ using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Features.WeightEntries.Mappings;
 using FoodDiary.Presentation.Api.Features.WeightEntries.Requests;
 using FoodDiary.Presentation.Api.Features.WeightEntries.Responses;
+using FoodDiary.Presentation.Api.Extensions;
 using FoodDiary.Presentation.Api.Responses;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -30,11 +31,15 @@ public class WeightEntriesController(ISender mediator) : AuthorizedController(me
         HandleOk(query.ToQuery(userId), static value => value.Select(item => item.ToHttpResponse()).ToList());
 
     [HttpPost]
-    [ProducesResponseType<WeightEntryHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesResponseType<WeightEntryHttpResponse>(StatusCodes.Status201Created)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesApiErrorResponse(StatusCodes.Status409Conflict)]
-    public Task<IActionResult> Create([FromCurrentUser] Guid userId, [FromBody] CreateWeightEntryHttpRequest request) =>
-        HandleOk(request.ToCommand(userId), static value => value.ToHttpResponse());
+    public async Task<IActionResult> Create([FromCurrentUser] Guid userId, [FromBody] CreateWeightEntryHttpRequest request) {
+        var result = await Send(request.ToCommand(userId));
+        return result.IsSuccess
+            ? StatusCode(StatusCodes.Status201Created, result.Value.ToHttpResponse())
+            : result.Error.ToErrorActionResult(PresentationErrorHttpMapper.MapStatusCode(result.Error));
+    }
 
     [HttpPut("{id:guid}")]
     [ProducesResponseType<WeightEntryHttpResponse>(StatusCodes.Status200OK)]

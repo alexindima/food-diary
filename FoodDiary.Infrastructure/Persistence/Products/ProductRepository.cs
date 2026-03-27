@@ -124,7 +124,8 @@ public class ProductRepository(FoodDiaryDbContext context) : IProductRepository 
     }
 
     public async Task DeleteAsync(Product product, CancellationToken cancellationToken = default) {
-        context.Products.Remove(product);
-        await context.SaveChangesAsync(cancellationToken);
+        await context.Products
+            .Where(p => p.Id == product.Id)
+            .ExecuteDeleteAsync(cancellationToken);
     }
 }

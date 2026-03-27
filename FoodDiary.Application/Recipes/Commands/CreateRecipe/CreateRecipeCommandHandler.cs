@@ -52,22 +52,19 @@ public class CreateRecipeCommandHandler(IRecipeRepository recipeRepository)
         }
 
         await recipeRepository.AddAsync(recipe, cancellationToken);
+        await RecipeNutritionUpdater.EnsureNutritionAsync(recipe, recipeRepository, cancellationToken);
 
         var created = await recipeRepository.GetByIdAsync(
             recipe.Id,
             userId,
             includePublic: false,
             includeSteps: true,
-            asTracking: true,
+            asTracking: false,
             cancellationToken: cancellationToken);
 
-        if (created is null) {
-            return Result.Failure<RecipeModel>(Errors.Recipe.InvalidData("Failed to load created recipe."));
-        }
-
-        await RecipeNutritionUpdater.EnsureNutritionAsync(created, recipeRepository, cancellationToken);
-
-        return Result.Success(created.ToModel(0, true));
+        return created is null
+            ? Result.Failure<RecipeModel>(Errors.Recipe.InvalidData("Failed to load created recipe."))
+            : Result.Success(created.ToModel(0, true));
     }
 
     private static void AddSteps(Recipe recipe, CreateRecipeCommand command) {

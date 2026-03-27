@@ -160,7 +160,7 @@ public sealed class PresentationBoundaryIntegrationTests(
             80.5);
 
         var firstResponse = await client.PostAsJsonAsync("/api/weight-entries", request);
-        firstResponse.EnsureSuccessStatusCode();
+        Assert.Equal(HttpStatusCode.Created, firstResponse.StatusCode);
 
         var duplicateResponse = await client.PostAsJsonAsync("/api/weight-entries", request);
         var payload = await duplicateResponse.Content.ReadFromJsonAsync<ErrorPayload>(JsonOptions);
