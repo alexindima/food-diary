@@ -25,12 +25,12 @@ public class CreateConsumptionCommandHandler(
         }
 
         var userId = new UserId(command.UserId!.Value);
+        var mealTypeResult = ParseMealType(command.MealType);
+        if (mealTypeResult.IsFailure) {
+            return Result.Failure<ConsumptionModel>(mealTypeResult.Error);
+        }
 
-        var mealType = string.IsNullOrWhiteSpace(command.MealType)
-            ? (MealType?)null
-            : Enum.Parse<MealType>(command.MealType, true);
-
-        var meal = Meal.Create(userId, command.Date, mealType, command.Comment, command.ImageUrl,
+        var meal = Meal.Create(userId, command.Date, mealTypeResult.Value, command.Comment, command.ImageUrl,
             command.ImageAssetId.HasValue ? new ImageAssetId(command.ImageAssetId.Value) : null);
 
         meal.UpdateSatietyLevels(command.PreMealSatietyLevel, command.PostMealSatietyLevel);
@@ -80,20 +80,33 @@ public class CreateConsumptionCommandHandler(
                 nutritionResult.Value.Alcohol,
                 IsAutoCalculated: true));
         } else {
+            var manualNutritionResult = ManualNutritionValidator.Validate(
+                command.ManualCalories,
+                command.ManualProteins,
+                command.ManualFats,
+                command.ManualCarbs,
+                command.ManualFiber,
+                command.ManualAlcohol);
+
+            if (manualNutritionResult.IsFailure) {
+                return Result.Failure<ConsumptionModel>(manualNutritionResult.Error);
+            }
+
+            var manual = manualNutritionResult.Value;
             meal.ApplyNutrition(new MealNutritionUpdate(
-                command.ManualCalories!.Value,
-                command.ManualProteins!.Value,
-                command.ManualFats!.Value,
-                command.ManualCarbs!.Value,
-                command.ManualFiber!.Value,
-                command.ManualAlcohol ?? 0,
+                manual.Calories,
+                manual.Proteins,
+                manual.Fats,
+                manual.Carbs,
+                manual.Fiber,
+                manual.Alcohol,
                 IsAutoCalculated: false,
-                ManualCalories: command.ManualCalories.Value,
-                ManualProteins: command.ManualProteins.Value,
-                ManualFats: command.ManualFats.Value,
-                ManualCarbs: command.ManualCarbs.Value,
-                ManualFiber: command.ManualFiber.Value,
-                ManualAlcohol: command.ManualAlcohol ?? 0));
+                ManualCalories: manual.Calories,
+                ManualProteins: manual.Proteins,
+                ManualFats: manual.Fats,
+                ManualCarbs: manual.Carbs,
+                ManualFiber: manual.Fiber,
+                ManualAlcohol: manual.Alcohol));
         }
 
         await mealRepository.AddAsync(meal, cancellationToken);
@@ -114,4 +127,13 @@ public class CreateConsumptionCommandHandler(
             : Result.Success(created.ToModel());
     }
 
+    private static Result<MealType?> ParseMealType(string? mealType) {
+        if (string.IsNullOrWhiteSpace(mealType)) {
+            return Result.Success<MealType?>(null);
+        }
+
+        return Enum.TryParse<MealType>(mealType, true, out var parsed)
+            ? Result.Success<MealType?>(parsed)
+            : Result.Failure<MealType?>(Errors.Validation.Invalid(nameof(mealType), "Unknown meal type value."));
+    }
 }

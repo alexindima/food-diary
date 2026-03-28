@@ -63,7 +63,11 @@
       "Bash(npm ls:*)",
       "Bash(npx tsc:*)",
       "Bash(npm run:*)",
-      "Bash(grep \"\\\\.ts$\")"
+      "Bash(grep \"\\\\.ts$\")",
+      "Bash(npx source-map-explorer:*)",
+      "Bash(ls -lhS dist/browser/*.js)",
+      "Bash(node -e \":*)",
+      "Bash(node -e \"const s = require\\(''./dist/stats.json''\\); console.log\\(Object.keys\\(s\\)\\); console.log\\(Object.keys\\(s\\).map\\(k => typeof s[k]\\).join\\('', ''\\)\\)\")"
     ],
     "deny": [],
     "ask": []

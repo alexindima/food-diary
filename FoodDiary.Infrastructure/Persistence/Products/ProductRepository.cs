@@ -45,8 +45,8 @@ public class ProductRepository(FoodDiaryDbContext context) : IProductRepository 
             query = query.Where(p => productTypes.Contains(p.ProductType));
         }
 
+        var totalItems = await query.CountAsync(cancellationToken);
         var orderedQuery = query.OrderByDescending(p => p.CreatedOnUtc);
-        var totalItems = await orderedQuery.CountAsync(cancellationToken);
         var skip = (pageNumber - 1) * pageSize;
         var items = await orderedQuery
             .Skip(skip)

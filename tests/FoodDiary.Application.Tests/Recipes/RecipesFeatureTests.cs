@@ -1,6 +1,8 @@
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Images.Common;
+using FoodDiary.Application.Recipes.Commands.CreateRecipe;
 using FoodDiary.Application.Recipes.Commands.DeleteRecipe;
+using FoodDiary.Application.Recipes.Common;
 using FoodDiary.Application.Recipes.Queries.GetRecentRecipes;
 using FoodDiary.Application.Recipes.Queries.GetRecipesWithRecent;
 using FoodDiary.Domain.Entities.Recipes;
@@ -54,6 +56,50 @@ public class RecipesFeatureTests {
         Assert.Equal([recipeAssetId, stepAssetId], cleanup.RequestedAssetIds);
     }
 
+    [Fact]
+    public async Task CreateRecipeCommandHandler_WhenManualNutritionMissing_ReturnsValidationFailure() {
+        var userId = UserId.New();
+        var repository = new SingleRecipeRepositoryForCreate();
+        var handler = new CreateRecipeCommandHandler(repository);
+
+        var result = await handler.Handle(
+            new CreateRecipeCommand(
+                userId.Value,
+                Name: "Soup",
+                Description: null,
+                Comment: null,
+                Category: null,
+                ImageUrl: null,
+                ImageAssetId: null,
+                PrepTime: 10,
+                CookTime: 20,
+                Servings: 2,
+                Visibility: Visibility.Private.ToString(),
+                CalculateNutritionAutomatically: false,
+                ManualCalories: null,
+                ManualProteins: 10,
+                ManualFats: 4,
+                ManualCarbs: 20,
+                ManualFiber: 2,
+                ManualAlcohol: 0,
+                Steps: [CreateRecipeCreateStep(order: 1, "Step 1")]),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Required", result.Error.Code);
+        Assert.Contains("calories", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static RecipeStepInput CreateRecipeCreateStep(int order, string description) {
+        return new RecipeStepInput(
+            Order: order,
+            Description: description,
+            Title: null,
+            ImageUrl: null,
+            ImageAssetId: null,
+            Ingredients: [new RecipeIngredientInput(ProductId: Guid.NewGuid(), NestedRecipeId: null, Amount: 100)]);
+    }
+
     private sealed class SingleRecipeRepository(Recipe recipe) : IRecipeRepository {
         public bool DeleteCalled { get; private set; }
 
@@ -97,6 +143,44 @@ public class RecipesFeatureTests {
 
         public Task UpdateNutritionAsync(Recipe recipe, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
+    }
+
+    private sealed class SingleRecipeRepositoryForCreate : IRecipeRepository {
+        public Task<Recipe> AddAsync(Recipe recipe, CancellationToken cancellationToken = default) => Task.FromResult(recipe);
+
+        public Task<(IReadOnlyList<(Recipe Recipe, int UsageCount)> Items, int TotalItems)> GetPagedAsync(
+            UserId userId,
+            bool includePublic,
+            int page,
+            int limit,
+            string? search,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<Recipe?> GetByIdAsync(
+            RecipeId id,
+            UserId userId,
+            bool includePublic = true,
+            bool includeSteps = false,
+            bool asTracking = false,
+            CancellationToken cancellationToken = default) => Task.FromResult<Recipe?>(null);
+
+        public Task<IReadOnlyDictionary<RecipeId, Recipe>> GetByIdsAsync(
+            IEnumerable<RecipeId> ids,
+            UserId userId,
+            bool includePublic = true,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<IReadOnlyDictionary<RecipeId, (Recipe Recipe, int UsageCount)>> GetByIdsWithUsageAsync(
+            IEnumerable<RecipeId> ids,
+            UserId userId,
+            bool includePublic = true,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task UpdateAsync(Recipe recipe, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task DeleteAsync(Recipe recipe, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task UpdateNutritionAsync(Recipe recipe, CancellationToken cancellationToken = default) => Task.CompletedTask;
     }
 
     private sealed class RecordingCleanupService(string? errorCode = null) : IImageAssetCleanupService {

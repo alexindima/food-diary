@@ -14,7 +14,6 @@
         [matDatepicker]="picker"
         [formControl]="dateControl"
         [attr.placeholder]="shouldShowPlaceholder ? (placeholder() ?? null) : null"
-        [disabled]="disabled"
         [attr.aria-describedby]="error() ? id() + '-error' : null"
         [attr.aria-invalid]="error() ? 'true' : null"
         />

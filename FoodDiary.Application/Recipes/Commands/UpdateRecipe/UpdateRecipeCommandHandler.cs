@@ -107,13 +107,26 @@ public class UpdateRecipeCommandHandler(
         if (command.CalculateNutritionAutomatically) {
             recipe.EnableAutoNutrition();
         } else {
+            var manualNutritionResult = ValidateManualNutrition(
+                command.ManualCalories,
+                command.ManualProteins,
+                command.ManualFats,
+                command.ManualCarbs,
+                command.ManualFiber,
+                command.ManualAlcohol);
+
+            if (manualNutritionResult.IsFailure) {
+                return Result.Failure<RecipeModel>(manualNutritionResult.Error);
+            }
+
+            var manual = manualNutritionResult.Value;
             recipe.SetManualNutrition(
-                command.ManualCalories ?? 0,
-                command.ManualProteins ?? 0,
-                command.ManualFats ?? 0,
-                command.ManualCarbs ?? 0,
-                command.ManualFiber ?? 0,
-                command.ManualAlcohol ?? 0);
+                manual.Calories,
+                manual.Proteins,
+                manual.Fats,
+                manual.Carbs,
+                manual.Fiber,
+                manual.Alcohol);
         }
 
         await recipeRepository.UpdateAsync(recipe, cancellationToken);
@@ -151,5 +164,40 @@ public class UpdateRecipeCommandHandler(
         }
 
         return Result.Success(updated.ToModel(updated.MealItems.Count + updated.NestedRecipeUsages.Count, true));
+    }
+
+    private static Result<(double Calories, double Proteins, double Fats, double Carbs, double Fiber, double Alcohol)> ValidateManualNutrition(
+        double? calories,
+        double? proteins,
+        double? fats,
+        double? carbs,
+        double? fiber,
+        double? alcohol) {
+        if (calories is null) {
+            return Result.Failure<(double, double, double, double, double, double)>(Errors.Validation.Required(nameof(calories)));
+        }
+
+        if (proteins is null) {
+            return Result.Failure<(double, double, double, double, double, double)>(Errors.Validation.Required(nameof(proteins)));
+        }
+
+        if (fats is null) {
+            return Result.Failure<(double, double, double, double, double, double)>(Errors.Validation.Required(nameof(fats)));
+        }
+
+        if (carbs is null) {
+            return Result.Failure<(double, double, double, double, double, double)>(Errors.Validation.Required(nameof(carbs)));
+        }
+
+        if (fiber is null) {
+            return Result.Failure<(double, double, double, double, double, double)>(Errors.Validation.Required(nameof(fiber)));
+        }
+
+        if (calories < 0 || proteins < 0 || fats < 0 || carbs < 0 || fiber < 0 || alcohol < 0) {
+            return Result.Failure<(double, double, double, double, double, double)>(
+                Errors.Validation.Invalid("ManualNutrition", "Manual nutrition values must be greater than or equal to 0."));
+        }
+
+        return Result.Success((calories.Value, proteins.Value, fats.Value, carbs.Value, fiber.Value, alcohol ?? 0));
     }
 }

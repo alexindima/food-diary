@@ -59,21 +59,39 @@ public class UserRepository(FoodDiaryDbContext context) : IUserRepository {
         }
 
         var total = await filteredQuery.CountAsync(cancellationToken);
-        var items = await UsersWithRoles()
-            .Where(u => filteredQuery.Select(x => x.Id).Contains(u.Id))
+        var pageIds = await filteredQuery
             .OrderByDescending(u => u.CreatedOnUtc)
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
+            .Select(u => u.Id)
             .ToListAsync(cancellationToken);
+
+        if (pageIds.Count == 0) {
+            return ([], total);
+        }
+
+        var usersById = await UsersWithRoles()
+            .Where(u => pageIds.Contains(u.Id))
+            .ToDictionaryAsync(u => u.Id, cancellationToken);
+
+        var items = pageIds
+            .Select(id => usersById[id])
+            .ToList();
 
         return (items, total);
     }
 
     public async Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers)>
         GetAdminDashboardSummaryAsync(int recentLimit, CancellationToken cancellationToken = default) {
-        var totalUsers = await context.Users.CountAsync(cancellationToken);
-        var activeUsers = await context.Users.CountAsync(u => u.IsActive && u.DeletedAt == null, cancellationToken);
-        var deletedUsers = await context.Users.CountAsync(u => u.DeletedAt != null, cancellationToken);
+        var userCounts = await context.Users
+            .GroupBy(_ => 1)
+            .Select(group => new {
+                TotalUsers = group.Count(),
+                ActiveUsers = group.Count(u => u.IsActive && u.DeletedAt == null),
+                DeletedUsers = group.Count(u => u.DeletedAt != null)
+            })
+            .SingleOrDefaultAsync(cancellationToken);
+
         var premiumUsers = await context.UserRoles
             .Where(ur => ur.Role.Name == RoleNames.Premium)
             .Select(ur => ur.UserId)
@@ -86,7 +104,12 @@ public class UserRepository(FoodDiaryDbContext context) : IUserRepository {
             .Take(recentLimit)
             .ToListAsync(cancellationToken);
 
-        return (totalUsers, activeUsers, premiumUsers, deletedUsers, recentUsers);
+        return (
+            userCounts?.TotalUsers ?? 0,
+            userCounts?.ActiveUsers ?? 0,
+            premiumUsers,
+            userCounts?.DeletedUsers ?? 0,
+            recentUsers);
     }
 
     public async Task<IReadOnlyList<Role>> GetRolesByNamesAsync(IReadOnlyList<string> names, CancellationToken cancellationToken = default) {

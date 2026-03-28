@@ -100,6 +100,52 @@ public class UpdateRecipeCommandHandlerTests {
         Assert.Null(recipe.ImageAssetId);
     }
 
+    [Fact]
+    public async Task Handle_WhenManualNutritionMissing_ReturnsValidationFailure() {
+        var userId = UserId.New();
+        var recipeId = RecipeId.New();
+        var recipe = Recipe.Create(userId, "Soup", servings: 2);
+        recipe.AddStep(1, "Initial step");
+
+        var repository = new StubRecipeRepository(recipeId, userId, recipe);
+        var handler = new UpdateRecipeCommandHandler(
+            repository,
+            new NoopImageAssetCleanupService());
+
+        var result = await handler.Handle(
+            new UpdateRecipeCommand(
+                userId.Value,
+                recipeId.Value,
+                Name: "Soup",
+                Description: null,
+                ClearDescription: false,
+                Comment: null,
+                ClearComment: false,
+                Category: null,
+                ClearCategory: false,
+                ImageUrl: null,
+                ClearImageUrl: false,
+                ImageAssetId: null,
+                ClearImageAssetId: false,
+                PrepTime: 0,
+                CookTime: 20,
+                Servings: 2,
+                Visibility: Visibility.Public.ToString(),
+                CalculateNutritionAutomatically: false,
+                ManualCalories: null,
+                ManualProteins: 10,
+                ManualFats: 4,
+                ManualCarbs: 20,
+                ManualFiber: 2,
+                ManualAlcohol: 0,
+                Steps: [CreateStep(order: 1, "Initial step")]),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Required", result.Error.Code);
+        Assert.Contains("calories", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
     private static RecipeStepInput CreateStep(int order, string description) {
         return new RecipeStepInput(
             Order: order,

@@ -13,11 +13,14 @@ public sealed class UpsertAdminEmailTemplateCommandHandler(
         UpsertAdminEmailTemplateCommand command,
         CancellationToken cancellationToken) {
         var key = NormalizeKey(command.Key);
-        var locale = NormalizeLocale(command.Locale);
+        var localeResult = NormalizeLocale(command.Locale);
+        if (localeResult.IsFailure) {
+            return Result.Failure<AdminEmailTemplateModel>(localeResult.Error);
+        }
 
         var template = await repository.UpsertAsync(
             key,
-            locale,
+            localeResult.Value,
             command.Subject,
             command.HtmlBody,
             command.TextBody,
@@ -43,9 +46,9 @@ public sealed class UpsertAdminEmailTemplateCommandHandler(
         return trimmed.ToLowerInvariant();
     }
 
-    private static string NormalizeLocale(string value) {
-        return !LanguageCode.TryParse(value, out var languageCode)
-            ? throw new ArgumentOutOfRangeException(nameof(value), "Locale must be one of the supported codes.")
-            : languageCode.Value;
+    private static Result<string> NormalizeLocale(string value) {
+        return LanguageCode.TryParse(value, out var languageCode)
+            ? Result.Success(languageCode.Value)
+            : Result.Failure<string>(Errors.Validation.Invalid(nameof(value), "Locale must be one of the supported codes."));
     }
 }

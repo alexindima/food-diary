@@ -1,9 +1,11 @@
 using FoodDiary.Application.Admin.Commands.UpdateAdminUser;
 using FoodDiary.Application.Admin.Commands.UpsertAdminEmailTemplate;
+using FoodDiary.Application.Admin.Common;
 using FoodDiary.Application.Admin.Queries.GetAdminAiUsageSummary;
 using FoodDiary.Application.Ai.Common;
 using FoodDiary.Application.Common.Interfaces.Services;
 using FoodDiary.Application.Common.Interfaces.Persistence;
+using FoodDiary.Domain.Entities.Content;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -170,6 +172,25 @@ public class AdminFeatureTests {
     }
 
     [Fact]
+    public async Task UpsertAdminEmailTemplateHandler_WithInvalidLocale_ReturnsValidationFailure() {
+        var handler = new UpsertAdminEmailTemplateCommandHandler(new InMemoryEmailTemplateRepository());
+
+        var result = await handler.Handle(
+            new UpsertAdminEmailTemplateCommand(
+                Key: "verify_email",
+                Locale: "de",
+                Subject: "Subject",
+                HtmlBody: "<b>Body</b>",
+                TextBody: "Body",
+                IsActive: true),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("supported codes", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
     public async Task GetAdminAiUsageSummaryQueryValidator_WithInvalidRange_Fails() {
         var validator = new GetAdminAiUsageSummaryQueryValidator();
 
@@ -291,5 +312,32 @@ public class AdminFeatureTests {
 
     private sealed class FixedDateTimeProvider(DateTime utcNow) : IDateTimeProvider {
         public DateTime UtcNow => utcNow;
+    }
+
+    private sealed class InMemoryEmailTemplateRepository : IEmailTemplateRepository {
+        public Task<EmailTemplate> UpsertAsync(
+            string key,
+            string locale,
+            string subject,
+            string htmlBody,
+            string textBody,
+            bool isActive,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult(EmailTemplate.Create(
+                key,
+                locale,
+                subject,
+                htmlBody,
+                textBody,
+                isActive));
+
+        public Task<IReadOnlyList<EmailTemplate>> GetAllAsync(CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<EmailTemplate>>([]);
+
+        public Task<EmailTemplate?> GetByKeyAsync(
+            string key,
+            string locale,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult<EmailTemplate?>(null);
     }
 }

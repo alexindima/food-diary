@@ -39,8 +39,8 @@ public class RecipeRepository(FoodDiaryDbContext context) : IRecipeRepository {
                 EF.Functions.ILike(r.Description ?? string.Empty, normalized, LikeEscapeCharacter));
         }
 
+        var totalItems = await query.CountAsync(cancellationToken);
         var orderedQuery = query.OrderByDescending(r => r.CreatedOnUtc);
-        var totalItems = await orderedQuery.CountAsync(cancellationToken);
         var skip = (pageNumber - 1) * pageSize;
 
         var items = await orderedQuery

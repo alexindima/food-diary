@@ -6,6 +6,7 @@ using FoodDiary.Application.Products.Common;
 using FoodDiary.Application.RecentItems.Common;
 using FoodDiary.Application.Recipes.Common;
 using FoodDiary.Application.Consumptions.Commands.UpdateConsumption;
+using FoodDiary.Application.Consumptions.Commands.CreateConsumption;
 using FoodDiary.Application.Consumptions.Common;
 using FoodDiary.Application.Consumptions.Services;
 using FoodDiary.Domain.Entities.Meals;
@@ -177,6 +178,78 @@ public class ConsumptionsFeatureTests {
         Assert.Equal([oldAssetId], cleanup.RequestedAssetIds);
     }
 
+    [Fact]
+    public async Task CreateConsumptionCommandHandler_WhenMealTypeInvalid_ReturnsValidationFailure() {
+        var userId = UserId.New();
+        var repository = new CreatingMealRepository();
+        var handler = new CreateConsumptionCommandHandler(
+            repository,
+            new NoopMealNutritionService(),
+            new RecordingRecentItemRepository(),
+            new StubDateTimeProvider());
+
+        var command = new CreateConsumptionCommand(
+            userId.Value,
+            new DateTime(2026, 3, 26, 18, 0, 0, DateTimeKind.Utc),
+            "NotARealMealType",
+            "Created",
+            null,
+            null,
+            [new ConsumptionItemInput(ProductId.New().Value, null, 150)],
+            [],
+            false,
+            600,
+            30,
+            20,
+            50,
+            5,
+            0,
+            3,
+            7);
+
+        var result = await handler.Handle(command, CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("Unknown meal type value.", result.Error.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task CreateConsumptionCommandHandler_WhenManualNutritionMissing_ReturnsValidationFailure() {
+        var userId = UserId.New();
+        var repository = new CreatingMealRepository();
+        var handler = new CreateConsumptionCommandHandler(
+            repository,
+            new NoopMealNutritionService(),
+            new RecordingRecentItemRepository(),
+            new StubDateTimeProvider());
+
+        var result = await handler.Handle(
+            new CreateConsumptionCommand(
+                userId.Value,
+                new DateTime(2026, 3, 26, 18, 0, 0, DateTimeKind.Utc),
+                MealType.Dinner.ToString(),
+                "Created",
+                null,
+                null,
+                [new ConsumptionItemInput(ProductId.New().Value, null, 150)],
+                [],
+                false,
+                ManualCalories: null,
+                ManualProteins: 30,
+                ManualFats: 20,
+                ManualCarbs: 50,
+                ManualFiber: 5,
+                ManualAlcohol: 0,
+                PreMealSatietyLevel: 3,
+                PostMealSatietyLevel: 7),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Required", result.Error.Code);
+        Assert.Contains("ManualCalories", result.Error.Message, StringComparison.Ordinal);
+    }
+
     private sealed class SingleMealRepository(Meal meal) : IMealRepository {
         public bool UpdateCalled { get; private set; }
 
@@ -196,6 +269,41 @@ public class ConsumptionsFeatureTests {
             bool asTracking = false,
             CancellationToken cancellationToken = default) =>
             Task.FromResult<Meal?>(id == meal.Id && userId == meal.UserId ? meal : null);
+
+        public Task<(IReadOnlyList<Meal> Items, int TotalItems)> GetPagedAsync(
+            UserId userId,
+            int page,
+            int limit,
+            DateTime? dateFrom,
+            DateTime? dateTo,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<IReadOnlyList<Meal>> GetByPeriodAsync(
+            UserId userId,
+            DateTime dateFrom,
+            DateTime dateTo,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+    }
+
+    private sealed class CreatingMealRepository : IMealRepository {
+        private Meal? _storedMeal;
+
+        public Task<Meal> AddAsync(Meal meal, CancellationToken cancellationToken = default) {
+            _storedMeal = meal;
+            return Task.FromResult(meal);
+        }
+
+        public Task UpdateAsync(Meal meal, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task DeleteAsync(Meal meal, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<Meal?> GetByIdAsync(
+            MealId id,
+            UserId userId,
+            bool includeItems = false,
+            bool asTracking = false,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult<Meal?>(_storedMeal is not null && _storedMeal.Id == id && _storedMeal.UserId == userId ? _storedMeal : null);
 
         public Task<(IReadOnlyList<Meal> Items, int TotalItems)> GetPagedAsync(
             UserId userId,
