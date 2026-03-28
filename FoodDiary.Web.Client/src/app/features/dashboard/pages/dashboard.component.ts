@@ -25,7 +25,7 @@ import { LocalizedDatePipe } from '../../../pipes/localized-date.pipe';
 import { DashboardService } from '../api/dashboard.service';
 import { DashboardSnapshot } from '../models/dashboard.data';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { CalorieGoalDialogComponent } from '../dialogs/calorie-goal-dialog/calorie-goal-dialog.component';
+import { CalorieGoalDialogComponent } from '../../goals/dialogs/calorie-goal-dialog/calorie-goal-dialog.component';
 import {
     DashboardSummaryCardComponent,
     NutrientBar
@@ -406,7 +406,7 @@ export class DashboardComponent implements OnInit {
         }));
     }
 
-    public openConsumption(consumption: Meal): void {
+    public openConsumption(consumption: { id: string }): void {
         void this.navigationService.navigateToConsumptionEdit(consumption.id);
     }
 

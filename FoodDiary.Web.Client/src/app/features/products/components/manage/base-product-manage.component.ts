@@ -34,7 +34,7 @@ import {
     ProductSaveSuccessDialogData,
 } from '../../dialogs/product-save-success-dialog.component';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
-import { NutritionCalculationService } from '../../../../services/nutrition-calculation.service';
+import { NutritionCalculationService } from '../../../../shared/lib/nutrition-calculation.service';
 import {
     ConfirmDeleteDialogComponent,
     ConfirmDeleteDialogData,

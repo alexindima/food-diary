@@ -1,12 +1,12 @@
-﻿import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { TranslatePipe } from '@ngx-translate/core';
-import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog.component';
-import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
-import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
-import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { GoalsService } from '../../../goals/api/goals.service';
+import { TranslatePipe } from '@ngx-translate/core';
+import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
+import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog.component';
+import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
+import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
+import { GoalsService } from '../../api/goals.service';
 
 export interface CalorieGoalDialogData {
     dailyCalorieTarget?: number | null;
@@ -62,4 +62,3 @@ export class CalorieGoalDialogComponent {
         this.dialogRef.close(false);
     }
 }
-

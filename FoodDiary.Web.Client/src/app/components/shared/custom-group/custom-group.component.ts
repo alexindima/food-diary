@@ -1,5 +1,4 @@
 import { Component, computed, input, output, signal } from '@angular/core';
-import { DragHandleDirective } from '../../../directives/drag-handle.directive';
 import { NgStyle } from '@angular/common';
 
 /**
@@ -8,7 +7,6 @@ import { NgStyle } from '@angular/common';
 @Component({
   selector: 'fd-custom-group',
     imports: [
-        DragHandleDirective,
         NgStyle
     ],
   templateUrl: './custom-group.component.html',

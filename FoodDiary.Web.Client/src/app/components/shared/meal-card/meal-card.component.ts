@@ -1,9 +1,23 @@
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
-import { Meal } from '../../../features/meals/models/meal.data';
 import { resolveMealImageUrl } from '../../../utils/meal-stub.utils';
 import { NutrientBadgesComponent } from '../nutrient-badges/nutrient-badges.component';
+
+export interface MealCardItem {
+    id: string;
+    date: string | Date;
+    mealType?: string | null;
+    imageUrl?: string | null;
+    totalCalories: number;
+    totalProteins: number;
+    totalFats: number;
+    totalCarbs: number;
+    totalFiber: number;
+    totalAlcohol: number;
+    items?: Array<unknown> | null;
+    aiSessions?: Array<{ items?: Array<unknown> | null } | null> | null;
+}
 
 @Component({
     selector: 'fd-meal-card',
@@ -14,8 +28,8 @@ import { NutrientBadgesComponent } from '../nutrient-badges/nutrient-badges.comp
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MealCardComponent {
-    public readonly meal = input.required<Meal>();
-    public readonly open = output<Meal>();
+    public readonly meal = input.required<MealCardItem>();
+    public readonly open = output<void>();
     private readonly fallbackMealImage = 'assets/images/stubs/meals/other.svg';
 
     public readonly coverImage = computed(() => {
@@ -27,11 +41,11 @@ export class MealCardComponent {
     public readonly itemCount = computed(() => {
         const meal = this.meal();
         const manualCount = meal.items?.length ?? 0;
-        const aiCount = meal.aiSessions?.reduce((total, session) => total + (session.items?.length ?? 0), 0) ?? 0;
+        const aiCount = meal.aiSessions?.reduce((total, session) => total + (session?.items?.length ?? 0), 0) ?? 0;
         return manualCount + aiCount;
     });
 
     public handleOpen(): void {
-        this.open.emit(this.meal());
+        this.open.emit();
     }
 }

@@ -39,7 +39,7 @@ import { FdUiDialogRef } from 'fd-ui-kit/material';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
 import { ImageUploadFieldComponent } from '../../../../components/shared/image-upload-field/image-upload-field.component';
 import { ImageSelection } from '../../../../shared/models/image-upload.data';
-import { NutritionCalculationService } from '../../../../services/nutrition-calculation.service';
+import { NutritionCalculationService } from '../../../../shared/lib/nutrition-calculation.service';
 import { NutritionEditorComponent } from '../../../../components/shared/nutrition-editor/nutrition-editor.component';
 import { ManageHeaderComponent } from '../../../../components/shared/manage-header/manage-header.component';
 

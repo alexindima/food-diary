@@ -3,8 +3,20 @@ import { CommonModule } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiIconModule } from 'fd-ui-kit/material';
-import { Product } from '../../../features/products/models/product.data';
 import { NutrientBadgesComponent } from '../nutrient-badges/nutrient-badges.component';
+
+export interface ProductCardItem {
+    name: string;
+    brand?: string | null;
+    barcode?: string | null;
+    isOwnedByCurrentUser: boolean;
+    proteinsPerBase: number;
+    fatsPerBase: number;
+    carbsPerBase: number;
+    fiberPerBase: number;
+    alcoholPerBase: number;
+    caloriesPerBase: number;
+}
 
 @Component({
     selector: 'fd-product-card',
@@ -15,10 +27,10 @@ import { NutrientBadgesComponent } from '../nutrient-badges/nutrient-badges.comp
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductCardComponent {
-    @Input({ required: true }) public product!: Product;
+    @Input({ required: true }) public product!: ProductCardItem;
     @Input() public imageUrl?: string;
     @Output() public open = new EventEmitter<void>();
-    @Output() public addToMeal = new EventEmitter<Product>();
+    @Output() public addToMeal = new EventEmitter<void>();
 
     public handleOpen(): void {
         this.open.emit();
@@ -26,6 +38,6 @@ export class ProductCardComponent {
 
     public handleAdd(event: Event): void {
         event.stopPropagation();
-        this.addToMeal.emit(this.product);
+        this.addToMeal.emit();
     }
 }

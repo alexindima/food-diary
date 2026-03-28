@@ -3,8 +3,26 @@ import { CommonModule } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiIconModule } from 'fd-ui-kit/material';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
-import { Recipe } from '../../../features/recipes/models/recipe.data';
 import { NutrientBadgesComponent } from '../nutrient-badges/nutrient-badges.component';
+
+export interface RecipeCardStep {
+    ingredients?: Array<unknown> | null;
+}
+
+export interface RecipeCardItem {
+    name: string;
+    imageUrl?: string | null;
+    isOwnedByCurrentUser: boolean;
+    prepTime?: number | null;
+    cookTime?: number | null;
+    totalProteins?: number | null;
+    totalFats?: number | null;
+    totalCarbs?: number | null;
+    totalFiber?: number | null;
+    totalAlcohol?: number | null;
+    totalCalories?: number | null;
+    steps?: RecipeCardStep[] | null;
+}
 
 @Component({
     selector: 'fd-recipe-card',
@@ -15,10 +33,10 @@ import { NutrientBadgesComponent } from '../nutrient-badges/nutrient-badges.comp
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RecipeCardComponent {
-    @Input({ required: true }) public recipe!: Recipe;
+    @Input({ required: true }) public recipe!: RecipeCardItem;
     @Input() public imageUrl?: string;
     @Output() public open = new EventEmitter<void>();
-    @Output() public addToMeal = new EventEmitter<Recipe>();
+    @Output() public addToMeal = new EventEmitter<void>();
 
     public handleOpen(): void {
         this.open.emit();
@@ -26,7 +44,7 @@ export class RecipeCardComponent {
 
     public handleAdd(event: Event): void {
         event.stopPropagation();
-        this.addToMeal.emit(this.recipe);
+        this.addToMeal.emit();
     }
 
     public getTotalTime(): number | null {

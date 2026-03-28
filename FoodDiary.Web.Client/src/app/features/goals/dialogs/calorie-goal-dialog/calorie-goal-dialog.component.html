@@ -1,4 +1,4 @@
-﻿<fd-ui-dialog class="calorie-goal-dialog" [title]="'USER_MANAGE.DAILY_CALORIES' | translate">
+<fd-ui-dialog class="calorie-goal-dialog" [title]="'USER_MANAGE.DAILY_CALORIES' | translate">
     <form [formGroup]="form" (ngSubmit)="save()" id="calorieGoalForm">
         <fd-ui-input
             formControlName="dailyCalorieTarget"
@@ -22,4 +22,3 @@
         </fd-ui-button>
     </div>
 </fd-ui-dialog>
-

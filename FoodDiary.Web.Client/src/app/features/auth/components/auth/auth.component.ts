@@ -33,7 +33,7 @@ import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiCheckboxComponent } from 'fd-ui-kit/checkbox/fd-ui-checkbox.component';
 import { FdUiFormErrorComponent, FD_VALIDATION_ERRORS, FdValidationErrors } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
-import { GoogleIdentityService } from '../../../../services/google-identity.service';
+import { GoogleIdentityService } from '../../lib/google-identity.service';
 import { LocalizationService } from '../../../../services/localization.service';
 import { environment } from '../../../../../environments/environment';
 import { GoogleLoginRequest } from '../../../../types/google-auth.data';

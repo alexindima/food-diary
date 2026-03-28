@@ -3,11 +3,10 @@ import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { MatIconModule } from '@angular/material/icon';
-import { MealCardComponent } from '../meal-card/meal-card.component';
-import { Meal } from '../../../features/meals/models/meal.data';
+import { MealCardComponent, MealCardItem } from '../meal-card/meal-card.component';
 
 export interface MealPreviewEntry {
-    meal?: Meal | null;
+    meal?: MealCardItem | null;
     slot?: string | null;
     icon?: string;
     labelKey?: string;
@@ -33,5 +32,5 @@ export class MealsPreviewComponent {
 
     public readonly viewAll = output<void>();
     public readonly add = output<string | null | undefined>();
-    public readonly open = output<Meal>();
+    public readonly open = output<MealCardItem>();
 }

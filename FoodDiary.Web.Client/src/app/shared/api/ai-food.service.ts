@@ -1,14 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { environment } from '../../environments/environment';
+import { environment } from '../../../environments/environment';
 import {
     FoodNutritionRequest,
     FoodNutritionResponse,
     FoodVisionRequest,
     FoodVisionResponse,
     UserAiUsageResponse,
-} from '../types/ai.data';
+} from '../models/ai.data';
 
 @Injectable({ providedIn: 'root' })
 export class AiFoodService {

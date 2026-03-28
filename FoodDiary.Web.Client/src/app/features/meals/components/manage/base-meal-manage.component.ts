@@ -13,7 +13,6 @@ import { AbstractControl, FormArray, FormControl, FormGroup, ReactiveFormsModule
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { NavigationService } from '../../../../services/navigation.service';
-import { RecipeService } from '../../../recipes/api/recipe.service';
 import {
     ItemSelectDialogComponent,
     ItemSelectDialogData,
@@ -31,6 +30,8 @@ import { MealService } from '../../api/meal.service';
 import { FormGroupControls } from '../../../../types/common.data';
 import { Product, MeasurementUnit } from '../../../products/models/product.data';
 import { Recipe, RecipeIngredient } from '../../../recipes/models/recipe.data';
+import { RecipeLookupService } from '../../../../shared/api/recipe-lookup.service';
+import { RecipeLookup, RecipeLookupIngredient } from '../../../../shared/models/recipe-lookup.data';
 import { HttpErrorResponse } from '@angular/common/http';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NutrientData } from '../../../../types/charts.data';
@@ -66,11 +67,11 @@ import { ImageSelection } from '../../../../shared/models/image-upload.data';
 import { ActivatedRoute, Router } from '@angular/router';
 import { QuickMealItem } from '../../lib/quick-meal.service';
 import { MealPhotoRecognitionDialogComponent } from '../../dialogs/photo-recognition-dialog/meal-photo-recognition-dialog.component';
-import { AiFoodService } from '../../../../services/ai-food.service';
-import { UserAiUsageResponse } from '../../../../types/ai.data';
+import { AiFoodService } from '../../../../shared/api/ai-food.service';
+import { UserAiUsageResponse } from '../../../../shared/models/ai.data';
 import { AuthService } from '../../../../services/auth.service';
 import { PremiumRequiredDialogComponent } from '../../../../components/shared/premium-required-dialog/premium-required-dialog.component';
-import { NutritionCalculationService } from '../../../../services/nutrition-calculation.service';
+import { NutritionCalculationService } from '../../../../shared/lib/nutrition-calculation.service';
 import { NutritionEditorComponent } from '../../../../components/shared/nutrition-editor/nutrition-editor.component';
 import { ManageHeaderComponent } from '../../../../components/shared/manage-header/manage-header.component';
 
@@ -117,7 +118,7 @@ export class BaseMealManageComponent implements OnInit {
     private readonly translateService = inject(TranslateService);
     private readonly navigationService = inject(NavigationService);
     private readonly destroyRef = inject(DestroyRef);
-    private readonly recipeService = inject(RecipeService);
+    private readonly recipeLookupService = inject(RecipeLookupService);
     private readonly fdDialogService = inject(FdUiDialogService);
     private readonly aiFoodService = inject(AiFoodService);
     private readonly authService = inject(AuthService);
@@ -1447,7 +1448,7 @@ export class BaseMealManageComponent implements OnInit {
             return of(servingWeight);
         }
 
-        return this.recipeService.getById(recipe.id).pipe(
+        return this.recipeLookupService.getById(recipe.id).pipe(
             map(fullRecipe => {
                 const computedWeight = this.calculateRecipeWeight(fullRecipe);
                 if (computedWeight && fullRecipe.servings > 0) {
@@ -1465,7 +1466,7 @@ export class BaseMealManageComponent implements OnInit {
         );
     }
 
-    private calculateRecipeWeight(recipe: Recipe): number | null {
+    private calculateRecipeWeight(recipe: Recipe | RecipeLookup): number | null {
         if (!recipe.steps || recipe.steps.length === 0) {
             return null;
         }
@@ -1483,7 +1484,7 @@ export class BaseMealManageComponent implements OnInit {
         return total > 0 ? total : null;
     }
 
-    private calculateIngredientWeight(ingredient: RecipeIngredient): number | null {
+    private calculateIngredientWeight(ingredient: RecipeIngredient | RecipeLookupIngredient): number | null {
         const amount = ingredient.amount ?? 0;
         if (amount <= 0) {
             return null;

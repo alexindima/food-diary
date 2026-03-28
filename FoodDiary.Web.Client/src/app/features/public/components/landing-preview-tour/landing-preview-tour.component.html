@@ -103,7 +103,7 @@
                                     <fd-product-card
                                         class="landing-tour__card"
                                         [product]="product"
-                                        (addToMeal)="addPreviewProduct($event)"
+                                        (addToMeal)="addPreviewProduct(product)"
                                         (open)="openAuthDialog('login')"
                                     />
                                 }
@@ -116,7 +116,7 @@
                                     <fd-recipe-card
                                         class="landing-tour__card"
                                         [recipe]="recipe"
-                                        (addToMeal)="addPreviewRecipe($event)"
+                                        (addToMeal)="addPreviewRecipe(recipe)"
                                         (open)="openAuthDialog('login')"
                                     />
                                 }

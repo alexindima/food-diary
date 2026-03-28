@@ -6,7 +6,7 @@ import { UserService } from '../../../../shared/api/user.service';
 import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { EmailVerificationRealtimeService } from '../../../../services/email-verification-realtime.service';
+import { EmailVerificationRealtimeService } from '../../lib/email-verification-realtime.service';
 
 @Component({
     selector: 'fd-email-verification-pending',
