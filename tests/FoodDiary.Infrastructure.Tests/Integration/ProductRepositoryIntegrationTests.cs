@@ -1,6 +1,6 @@
 using FoodDiary.Domain.Entities.Products;
+using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Persistence.Products;
 
 namespace FoodDiary.Infrastructure.Tests.Integration;
@@ -10,7 +10,11 @@ public sealed class ProductRepositoryIntegrationTests(PostgresDatabaseFixture da
     [RequiresDockerFact]
     public async Task GetPagedAsync_EscapesLikePatternAndReturnsExactProductMatch() {
         await using var context = await databaseFixture.CreateDbContextAsync();
-        var userId = UserId.New();
+        var user = User.Create($"products-{Guid.NewGuid():N}@example.com", "hash");
+        context.Users.Add(user);
+        await context.SaveChangesAsync();
+
+        var userId = user.Id;
         var matchingProduct = Product.Create(
             userId,
             "100% Cocoa",

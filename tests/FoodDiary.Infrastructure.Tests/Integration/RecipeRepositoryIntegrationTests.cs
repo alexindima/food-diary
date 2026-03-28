@@ -1,5 +1,5 @@
 using FoodDiary.Domain.Entities.Recipes;
-using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Infrastructure.Persistence.Recipes;
 
 namespace FoodDiary.Infrastructure.Tests.Integration;
@@ -9,7 +9,11 @@ public sealed class RecipeRepositoryIntegrationTests(PostgresDatabaseFixture dat
     [RequiresDockerFact]
     public async Task GetPagedAsync_EscapesLikePatternAndReturnsExactRecipeMatch() {
         await using var context = await databaseFixture.CreateDbContextAsync();
-        var userId = UserId.New();
+        var user = User.Create($"recipes-{Guid.NewGuid():N}@example.com", "hash");
+        context.Users.Add(user);
+        await context.SaveChangesAsync();
+
+        var userId = user.Id;
         var matchingRecipe = Recipe.Create(
             userId,
             "100% Soup",
