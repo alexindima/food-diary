@@ -1,7 +1,7 @@
 import { HydrationDaily } from '../../hydration/models/hydration.data';
 import { Meal } from '../../meals/models/meal.data';
 import { DailyAdvice } from '../../../types/daily-advice.data';
-import { DashboardLayoutSettings } from '../../../types/user.data';
+import { DashboardLayoutSettings } from '../../../shared/models/user.data';
 import { WaistEntrySummaryPoint } from '../../waist-history/models/waist-entry.data';
 import { WeightEntrySummaryPoint } from '../../weight-history/models/weight-entry.data';
 

@@ -1,3 +1,4 @@
+using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Meals.Common;
 using FoodDiary.Application.Common.Interfaces.Services;
 using FoodDiary.Application.Images.Common;
@@ -143,8 +144,7 @@ public class ConsumptionsFeatureTests {
         var cleanup = new RecordingCleanupService("storage_error");
         var handler = new UpdateConsumptionCommandHandler(
             mealRepository,
-            new NoopProductLookupService(),
-            new NoopRecipeLookupService(),
+            new NoopMealNutritionService(),
             new RecordingRecentItemRepository(),
             cleanup,
             new StubDateTimeProvider());
@@ -226,6 +226,14 @@ public class ConsumptionsFeatureTests {
             UserId userId,
             CancellationToken cancellationToken = default) =>
             Task.FromResult<IReadOnlyDictionary<RecipeId, Recipe>>(new Dictionary<RecipeId, Recipe>());
+    }
+
+    private sealed class NoopMealNutritionService : IMealNutritionService {
+        public Task<Result<MealNutritionSummary>> CalculateAsync(
+            Meal meal,
+            UserId userId,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult(Result.Success(new MealNutritionSummary(0, 0, 0, 0, 0, 0)));
     }
 
     private sealed class RecordingRecentItemRepository : IRecentItemRepository {

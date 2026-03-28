@@ -40,7 +40,7 @@ import {
     ConfirmDeleteDialogData,
 } from '../../../../components/shared/confirm-delete-dialog/confirm-delete-dialog.component';
 import { ImageUploadFieldComponent } from '../../../../components/shared/image-upload-field/image-upload-field.component';
-import { ImageSelection } from '../../../../types/image-upload.data';
+import { ImageSelection } from '../../../../shared/models/image-upload.data';
 import {
     ProductAiRecognitionDialogComponent,
     ProductAiRecognitionResult,

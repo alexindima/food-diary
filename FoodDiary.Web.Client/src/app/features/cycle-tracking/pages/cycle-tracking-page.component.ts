@@ -21,14 +21,14 @@ import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { PageBodyComponent } from '../../../components/shared/page-body/page-body.component';
 import { PageHeaderComponent } from '../../../components/shared/page-header/page-header.component';
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
-import { CyclesService } from '../../../services/cycles.service';
+import { CyclesService } from '../api/cycles.service';
 import {
     CreateCyclePayload,
     CycleDay,
     CyclePredictions,
     CycleResponse,
     DailySymptoms,
-} from '../../../types/cycle.data';
+} from '../models/cycle.data';
 
 @Component({
     selector: 'fd-cycle-tracking-page',

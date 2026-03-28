@@ -6,7 +6,7 @@ import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog.component';
 import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { ImageUploadFieldComponent } from '../../../../components/shared/image-upload-field/image-upload-field.component';
-import { ImageSelection } from '../../../../types/image-upload.data';
+import { ImageSelection } from '../../../../shared/models/image-upload.data';
 import { AiFoodService } from '../../../../services/ai-food.service';
 import { FoodNutritionResponse, FoodVisionItem } from '../../../../types/ai.data';
 import { MealAiSessionManageDto } from '../../models/meal.data';

@@ -29,13 +29,13 @@ import { ImageUploadFieldComponent } from '../../../components/shared/image-uplo
 import { PageHeaderComponent } from '../../../components/shared/page-header/page-header.component';
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
 import { AuthService } from '../../../services/auth.service';
-import { ImageUploadService } from '../../../services/image-upload.service';
+import { ImageUploadService } from '../../../shared/api/image-upload.service';
 import { LocalizationService } from '../../../services/localization.service';
 import { NavigationService } from '../../../services/navigation.service';
-import { UserService } from '../../../services/user.service';
-import { ImageSelection } from '../../../types/image-upload.data';
+import { UserService } from '../../../shared/api/user.service';
+import { ImageSelection } from '../../../shared/models/image-upload.data';
 import { FormGroupControls } from '../../../types/common.data';
-import { ActivityLevelOption, Gender, UpdateUserDto, User } from '../../../types/user.data';
+import { ActivityLevelOption, Gender, UpdateUserDto, User } from '../../../shared/models/user.data';
 import { environment } from '../../../../environments/environment';
 import { ChangePasswordDialogComponent } from '../dialogs/change-password-dialog/change-password-dialog.component';
 import { PasswordSuccessDialogComponent } from '../dialogs/password-success-dialog/password-success-dialog.component';

@@ -2,7 +2,7 @@
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { NoticeBannerComponent } from '../../../../components/shared/notice-banner/notice-banner.component';
-import { CyclePredictions } from '../../../../types/cycle.data';
+import { CyclePredictions } from '../../../cycle-tracking/models/cycle.data';
 import { FdCardHoverDirective } from '../../../../directives/card-hover.directive';
 
 @Component({

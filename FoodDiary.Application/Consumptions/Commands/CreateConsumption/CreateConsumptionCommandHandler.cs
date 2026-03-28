@@ -1,9 +1,7 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Meals.Common;
-using FoodDiary.Application.Products.Common;
 using FoodDiary.Application.RecentItems.Common;
-using FoodDiary.Application.Recipes.Common;
 using FoodDiary.Application.Common.Interfaces.Services;
 using FoodDiary.Application.Consumptions.Mappings;
 using FoodDiary.Application.Consumptions.Models;
@@ -17,8 +15,7 @@ namespace FoodDiary.Application.Consumptions.Commands.CreateConsumption;
 
 public class CreateConsumptionCommandHandler(
     IMealRepository mealRepository,
-    IProductLookupService productLookupService,
-    IRecipeLookupService recipeLookupService,
+    IMealNutritionService mealNutritionService,
     IRecentItemRepository recentItemRepository,
     IDateTimeProvider dateTimeProvider)
     : ICommandHandler<CreateConsumptionCommand, Result<ConsumptionModel>> {
@@ -69,7 +66,7 @@ public class CreateConsumptionCommandHandler(
         }
 
         if (command.IsNutritionAutoCalculated) {
-            var nutritionResult = await CalculateNutritionAsync(meal, userId, cancellationToken);
+            var nutritionResult = await mealNutritionService.CalculateAsync(meal, userId, cancellationToken);
             if (nutritionResult.IsFailure) {
                 return Result.Failure<ConsumptionModel>(nutritionResult.Error);
             }
@@ -117,35 +114,4 @@ public class CreateConsumptionCommandHandler(
             : Result.Success(created.ToModel());
     }
 
-    private async Task<Result<MealNutritionSummary>> CalculateNutritionAsync(
-        Meal meal,
-        UserId userId,
-        CancellationToken cancellationToken) {
-        var productIds = meal.Items
-            .Where(i => i.ProductId.HasValue)
-            .Select(i => i.ProductId!.Value)
-            .Distinct()
-            .ToList();
-
-        var recipeIds = meal.Items
-            .Where(i => i.RecipeId.HasValue)
-            .Select(i => i.RecipeId!.Value)
-            .Distinct()
-            .ToList();
-
-        var products = await productLookupService.GetAccessibleByIdsAsync(productIds, userId, cancellationToken);
-        if (products.Count != productIds.Count) {
-            var missingProduct = productIds.First(id => !products.ContainsKey(id));
-            return Result.Failure<MealNutritionSummary>(Errors.Product.NotAccessible(missingProduct.Value));
-        }
-
-        var recipes = await recipeLookupService.GetAccessibleByIdsAsync(recipeIds, userId, cancellationToken);
-        if (recipes.Count != recipeIds.Count) {
-            var missingRecipe = recipeIds.First(id => !recipes.ContainsKey(id));
-            return Result.Failure<MealNutritionSummary>(Errors.Recipe.NotAccessible(missingRecipe.Value));
-        }
-
-        var summary = MealNutritionCalculator.Calculate(meal, products, recipes);
-        return Result.Success(summary);
-    }
 }

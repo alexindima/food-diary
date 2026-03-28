@@ -11,9 +11,9 @@ import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea.compone
 import { FD_UI_DIALOG_DATA, FdUiDialogRef } from 'fd-ui-kit/material';
 import { ImageUploadFieldComponent } from '../../../../components/shared/image-upload-field/image-upload-field.component';
 import { AiFoodService } from '../../../../services/ai-food.service';
-import { ImageUploadService } from '../../../../services/image-upload.service';
+import { ImageUploadService } from '../../../../shared/api/image-upload.service';
 import { FoodNutritionResponse, FoodVisionItem } from '../../../../types/ai.data';
-import { ImageSelection } from '../../../../types/image-upload.data';
+import { ImageSelection } from '../../../../shared/models/image-upload.data';
 import { MeasurementUnit } from '../../models/product.data';
 import { catchError, of } from 'rxjs';
 

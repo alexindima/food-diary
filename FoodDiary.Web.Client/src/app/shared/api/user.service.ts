@@ -1,7 +1,8 @@
 import { Injectable, signal } from '@angular/core';
-import { ApiService } from './api.service';
-import { environment } from '../../environments/environment';
 import { catchError, map, Observable, of, tap } from 'rxjs';
+
+import { environment } from '../../../environments/environment';
+import { ApiService } from '../../services/api.service';
 import {
     ChangePasswordRequest,
     DashboardLayoutSettings,
@@ -9,7 +10,7 @@ import {
     DesiredWeightResponse,
     UpdateUserDto,
     User,
-} from '../types/user.data';
+} from '../models/user.data';
 
 @Injectable({
     providedIn: 'root',

@@ -3,6 +3,8 @@ using FoodDiary.Application.Authentication.Services;
 using FoodDiary.Application.Common.Behaviors;
 using FoodDiary.Application.Common.Interfaces.Services;
 using FoodDiary.Application.Common.Services;
+using FoodDiary.Application.Consumptions.Services;
+using FoodDiary.Application.Dashboard.Services;
 using FoodDiary.Application.Images.Common;
 using FoodDiary.Application.Images.Services;
 using FluentValidation;
@@ -23,6 +25,8 @@ public static class DependencyInjection {
 
         services.AddValidatorsFromAssembly(assembly, includeInternalTypes: true);
 
+        services.AddScoped<IMealNutritionService, MealNutritionService>();
+        services.AddScoped<IDashboardSnapshotBuilder, DashboardSnapshotBuilder>();
         services.AddScoped<IImageAssetCleanupService, ImageAssetCleanupService>();
         services.AddSingleton<IDateTimeProvider, SystemDateTimeProvider>();
         services.AddScoped<IAuthenticationTokenService, AuthenticationTokenService>();

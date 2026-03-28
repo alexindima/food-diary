@@ -15,8 +15,8 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { finalize, map, switchMap } from 'rxjs/operators';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { ImageUploadService } from '../../../services/image-upload.service';
-import { ImageSelection } from '../../../types/image-upload.data';
+import { ImageUploadService } from '../../../shared/api/image-upload.service';
+import { ImageSelection } from '../../../shared/models/image-upload.data';
 import Cropper from 'cropperjs';
 
 @Component({

@@ -7,9 +7,9 @@ import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog.component';
 import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiDialogRef } from 'fd-ui-kit/material';
-import { UserService } from '../../../../services/user.service';
+import { UserService } from '../../../../shared/api/user.service';
 import { FormGroupControls } from '../../../../types/common.data';
-import { ChangePasswordRequest } from '../../../../types/user.data';
+import { ChangePasswordRequest } from '../../../../shared/models/user.data';
 import { matchFieldValidator } from '../../../../validators/match-field.validator';
 
 @Component({

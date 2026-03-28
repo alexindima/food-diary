@@ -62,7 +62,7 @@ import {
 } from '../../dialogs/manage-success-dialog/meal-manage-success-dialog.component';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
 import { ImageUploadFieldComponent } from '../../../../components/shared/image-upload-field/image-upload-field.component';
-import { ImageSelection } from '../../../../types/image-upload.data';
+import { ImageSelection } from '../../../../shared/models/image-upload.data';
 import { ActivatedRoute, Router } from '@angular/router';
 import { QuickMealItem } from '../../lib/quick-meal.service';
 import { MealPhotoRecognitionDialogComponent } from '../../dialogs/photo-recognition-dialog/meal-photo-recognition-dialog.component';

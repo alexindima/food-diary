@@ -1,9 +1,10 @@
 import { HttpClient, HttpContext, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { catchError, map, Observable, throwError } from 'rxjs';
-import { environment } from '../../environments/environment';
-import { ImageUploadUrlResponse } from '../types/image-upload.data';
-import { SKIP_AUTH } from '../constants/http-context.tokens';
+
+import { environment } from '../../../environments/environment';
+import { SKIP_AUTH } from '../../constants/http-context.tokens';
+import { ImageUploadUrlResponse } from '../models/image-upload.data';
 
 @Injectable({
     providedIn: 'root',

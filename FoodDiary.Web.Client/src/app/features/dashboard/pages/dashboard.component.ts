@@ -37,10 +37,10 @@ import { DailyAdviceCardComponent } from '../components/daily-advice-card/daily-
 import { MealsPreviewComponent, MealPreviewEntry } from '../../../components/shared/meals-preview/meals-preview.component';
 import { CycleSummaryCardComponent } from '../components/cycle-summary-card/cycle-summary-card.component';
 import { Meal } from '../../meals/models/meal.data';
-import { CyclesService } from '../../../services/cycles.service';
-import { CycleResponse } from '../../../types/cycle.data';
-import { UserService } from '../../../services/user.service';
-import { DashboardLayoutSettings } from '../../../types/user.data';
+import { CyclesService } from '../../cycle-tracking/api/cycles.service';
+import { CycleResponse } from '../../cycle-tracking/models/cycle.data';
+import { UserService } from '../../../shared/api/user.service';
+import { DashboardLayoutSettings } from '../../../shared/models/user.data';
 import { NoticeBannerComponent } from '../../../components/shared/notice-banner/notice-banner.component';
 import { fromEvent } from 'rxjs';
 import { UnsavedChangesService, UnsavedChangesHandler } from '../../../services/unsaved-changes.service';

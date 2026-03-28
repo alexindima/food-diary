@@ -24,7 +24,7 @@ import { StatisticsNutritionComponent } from '../../../components/shared/statist
 import { StatisticsSummaryComponent, SummaryMetrics } from '../../../components/shared/statistics-summary/statistics-summary.component';
 import { CHART_COLORS } from '../../../constants/chart-colors';
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
-import { UserService } from '../../../services/user.service';
+import { UserService } from '../../../shared/api/user.service';
 import { WaistEntriesService } from '../../waist-history/api/waist-entries.service';
 import { WeightEntriesService } from '../../weight-history/api/weight-entries.service';
 import { WaistEntrySummaryPoint } from '../../waist-history/models/waist-entry.data';

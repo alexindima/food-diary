@@ -19,7 +19,7 @@ import { LoggingApiService } from './services/logging-api.service';
 import { provideServiceWorker } from '@angular/service-worker';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import { FdUiSnackBarModule } from 'fd-ui-kit/material';
-import { UserService } from './services/user.service';
+import { UserService } from './shared/api/user.service';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../environments/environment';
 

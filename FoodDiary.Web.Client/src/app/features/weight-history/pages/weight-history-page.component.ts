@@ -26,7 +26,7 @@ import { PageHeaderComponent } from '../../../components/shared/page-header/page
 import { PeriodFilterComponent } from '../../../components/shared/period-filter/period-filter.component';
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
 import { NavigationService } from '../../../services/navigation.service';
-import { UserService } from '../../../services/user.service';
+import { UserService } from '../../../shared/api/user.service';
 import { WeightEntriesService } from '../api/weight-entries.service';
 import {
     CreateWeightEntryPayload,

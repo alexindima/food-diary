@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
-import { Observable, map, catchError, of } from 'rxjs';
-import { ApiService } from './api.service';
+import { Observable, catchError, map, of } from 'rxjs';
+
+import { environment } from '../../../../environments/environment';
+import { ApiService } from '../../../services/api.service';
 import {
-    CycleResponse,
     CreateCyclePayload,
-    UpsertCycleDayPayload,
     CycleDay,
-} from '../types/cycle.data';
-import { environment } from '../../environments/environment';
+    CycleResponse,
+    UpsertCycleDayPayload,
+} from '../models/cycle.data';
 
 @Injectable({
     providedIn: 'root',

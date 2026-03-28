@@ -1,4 +1,3 @@
-import type { UserFormValues } from '../features/profile/pages/user-manage.component';
 import { ImageSelection } from './image-upload.data';
 
 export type ActivityLevelOption = 'MINIMAL' | 'LIGHT' | 'MODERATE' | 'HIGH' | 'EXTREME';
@@ -9,7 +8,7 @@ export interface DashboardLayoutSettings {
 }
 
 export interface User {
-    id: string; // User ID (Guid)
+    id: string;
     email: string;
     username?: string;
     firstName?: string;
@@ -36,7 +35,21 @@ export interface User {
     isActive: boolean;
     isEmailConfirmed: boolean;
     lastLoginAtUtc?: string | null;
-    calories?: number; // Local field, not from backend
+    calories?: number;
+}
+
+export interface UpdateUserFormValues {
+    username: string | null;
+    firstName: string | null;
+    lastName: string | null;
+    birthDate: Date | string | null;
+    gender: string | null;
+    language: string | null;
+    height: number | null;
+    activityLevel: ActivityLevelOption | null;
+    stepGoal: number | null;
+    hydrationGoal?: number | null;
+    profileImage: ImageSelection | string | null;
 }
 
 export class UpdateUserDto {
@@ -55,7 +68,7 @@ export class UpdateUserDto {
     public dashboardLayout?: DashboardLayoutSettings | null;
     public isActive?: boolean;
 
-    public constructor(formValues: Partial<UserFormValues>) {
+    public constructor(formValues: Partial<UpdateUserFormValues>) {
         this.username = normalizeString(formValues.username);
         this.firstName = normalizeString(formValues.firstName);
         this.lastName = normalizeString(formValues.lastName);
@@ -64,9 +77,11 @@ export class UpdateUserDto {
         this.height = normalizeNumber(formValues.height);
         this.activityLevel = normalizeActivityLevel(formValues.activityLevel);
         this.stepGoal = normalizeInteger(formValues.stepGoal);
-        this.hydrationGoal = normalizeNumber((formValues as any).hydrationGoal);
-        this.language = normalizeLanguage((formValues as any).language);
-        const normalizedImage = normalizeProfileImage(formValues.profileImage as ImageSelection | string | null | undefined);
+        this.hydrationGoal = normalizeNumber((formValues as { hydrationGoal?: number | null }).hydrationGoal);
+        this.language = normalizeLanguage((formValues as { language?: string | null }).language);
+        const normalizedImage = normalizeProfileImage(
+            formValues.profileImage as ImageSelection | string | null | undefined,
+        );
         this.profileImage = normalizedImage?.url;
         this.profileImageAssetId = normalizedImage?.assetId;
     }
