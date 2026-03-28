@@ -1,0 +1,22 @@
+.email-template-edit-dialog {
+  display: grid;
+  gap: 1rem;
+}
+
+.preview-mode,
+.actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.preview {
+  min-height: 12rem;
+  padding: 1rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  background: #fff;
+}
+
+.preview--text {
+  white-space: pre-wrap;
+}

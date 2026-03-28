@@ -1,0 +1,24 @@
+<div class="email-template-edit-dialog" [formGroup]="form">
+  <fd-ui-input formControlName="key" label="Key" />
+  <fd-ui-input formControlName="locale" label="Locale" />
+  <fd-ui-input formControlName="subject" label="Subject" />
+  <fd-ui-textarea formControlName="htmlBody" label="HTML body" />
+  <fd-ui-textarea formControlName="textBody" label="Text body" />
+  <fd-ui-checkbox formControlName="isActive">Active</fd-ui-checkbox>
+
+  <div class="preview-mode">
+    <fd-ui-button type="button" variant="secondary" (click)="setPreviewMode('html')">HTML</fd-ui-button>
+    <fd-ui-button type="button" variant="secondary" (click)="setPreviewMode('text')">Text</fd-ui-button>
+  </div>
+
+  @if (previewMode() === 'html') {
+    <div class="preview" [innerHTML]="previewHtml()"></div>
+  } @else {
+    <pre class="preview preview--text">{{ previewText() }}</pre>
+  }
+
+  <div class="actions">
+    <fd-ui-button type="button" variant="secondary" (click)="onCancel()">Cancel</fd-ui-button>
+    <fd-ui-button type="button" [disabled]="form.invalid || isSaving()" (click)="onSave()">Save</fd-ui-button>
+  </div>
+</div>

@@ -281,4 +281,51 @@ export default [
             ],
         },
     },
+    {
+        files: ['projects/fooddiary-admin/src/app/features/**/*.ts'],
+        ignores: ['projects/fooddiary-admin/src/app/features/**/*.routes.ts'],
+        rules: {
+            'no-restricted-imports': [
+                'error',
+                {
+                    patterns: [
+                        {
+                            group: [
+                                '../**/*.routes',
+                                '../../**/*.routes',
+                                '../../../**/*.routes',
+                                '../../../../**/*.routes',
+                            ],
+                            message: 'Admin feature code should depend on feature-local API/models/components, not on route files.',
+                        },
+                    ],
+                },
+            ],
+        },
+    },
+    {
+        files: ['projects/fooddiary-admin/src/app/features/**/*.ts'],
+        ignores: [
+            'projects/fooddiary-admin/src/app/features/**/*.routes.ts',
+            'projects/fooddiary-admin/src/app/features/admin-public/**/*.ts',
+            'projects/fooddiary-admin/src/app/**/*.spec.ts',
+        ],
+        rules: {
+            'no-restricted-imports': [
+                'error',
+                {
+                    patterns: [
+                        {
+                            group: [
+                                '../../*/pages/**',
+                                '../../../*/pages/**',
+                                '../../../../*/pages/**',
+                            ],
+                            message: 'Admin features should import another feature API/models/components instead of a page.',
+                        },
+                    ],
+                },
+            ],
+        },
+    },
 ];

@@ -1,0 +1,32 @@
+.admin-users {
+  display: grid;
+  gap: 1rem;
+}
+
+.toolbar {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.summary {
+  font-weight: 600;
+}
+
+.users-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.users-table th,
+.users-table td {
+  padding: 0.75rem;
+  border-bottom: 1px solid #e5e7eb;
+  text-align: left;
+}
+
+.pagination {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}

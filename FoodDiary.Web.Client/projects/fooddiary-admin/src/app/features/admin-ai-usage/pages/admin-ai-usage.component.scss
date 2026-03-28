@@ -1,0 +1,20 @@
+.admin-ai-usage {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.stat {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.stat__label {
+  color: #6b7280;
+  font-size: 0.875rem;
+}
+
+.stat__value {
+  font-size: 1.5rem;
+  font-weight: 700;
+}

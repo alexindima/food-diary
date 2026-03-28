@@ -1,0 +1,37 @@
+<fd-ui-dialog title="Edit user">
+  <div class="admin-user-edit-dialog" [formGroup]="form">
+    <label>
+      <input type="checkbox" formControlName="isActive" />
+      Active
+    </label>
+
+    <label>
+      <input type="checkbox" formControlName="isEmailConfirmed" />
+      Email confirmed
+    </label>
+
+    <div class="roles">
+      <div class="roles__title">Roles</div>
+      @for (role of roles; track role) {
+        <label>
+          <input type="checkbox" [checked]="hasRole(role)" (change)="toggleRole(role)" />
+          {{ role }}
+        </label>
+      }
+    </div>
+
+    <label>
+      Language
+      <select formControlName="language">
+        @for (language of languages; track language.value) {
+          <option [value]="language.value">{{ language.label }}</option>
+        }
+      </select>
+    </label>
+  </div>
+
+  <div fdUiDialogFooter>
+    <fd-ui-button type="button" variant="secondary" (click)="close()">Cancel</fd-ui-button>
+    <fd-ui-button type="button" (click)="save()">Save</fd-ui-button>
+  </div>
+</fd-ui-dialog>

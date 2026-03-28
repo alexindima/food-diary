@@ -1,0 +1,35 @@
+<div class="admin-dashboard">
+  @if (isLoading()) {
+    <p>Loading dashboard...</p>
+  } @else {
+    <div class="admin-dashboard__grid">
+      <fd-ui-card>
+        <div class="admin-dashboard__stat">
+          <div class="admin-dashboard__label">Total users</div>
+          <div class="admin-dashboard__value">{{ summary()?.totalUsers ?? 0 }}</div>
+        </div>
+      </fd-ui-card>
+
+      <fd-ui-card>
+        <div class="admin-dashboard__stat">
+          <div class="admin-dashboard__label">Active users</div>
+          <div class="admin-dashboard__value">{{ summary()?.activeUsers ?? 0 }}</div>
+        </div>
+      </fd-ui-card>
+
+      <fd-ui-card>
+        <div class="admin-dashboard__stat">
+          <div class="admin-dashboard__label">Premium users</div>
+          <div class="admin-dashboard__value">{{ summary()?.premiumUsers ?? 0 }}</div>
+        </div>
+      </fd-ui-card>
+
+      <fd-ui-card>
+        <div class="admin-dashboard__stat">
+          <div class="admin-dashboard__label">AI total tokens</div>
+          <div class="admin-dashboard__value">{{ aiUsage()?.totalTokens ?? 0 }}</div>
+        </div>
+      </fd-ui-card>
+    </div>
+  }
+</div>

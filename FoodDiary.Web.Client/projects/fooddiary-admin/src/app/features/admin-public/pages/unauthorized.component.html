@@ -1,0 +1,11 @@
+<section class="unauthorized">
+  <h1>Access denied</h1>
+  <p>
+    @if (reason === 'unauthenticated') {
+      Your admin session is missing or expired.
+    } @else {
+      You do not have permission to access this area.
+    }
+  </p>
+  <fd-ui-button type="button" (click)="goToLogin()">Go to login</fd-ui-button>
+</section>

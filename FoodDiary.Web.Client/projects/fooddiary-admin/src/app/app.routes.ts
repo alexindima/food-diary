@@ -1,35 +1,30 @@
 import { Routes } from '@angular/router';
-import { AdminDashboardComponent } from './pages/admin-dashboard/admin-dashboard.component';
-import { AdminUsersComponent } from './pages/admin-users/admin-users.component';
-import { UnauthorizedComponent } from './pages/unauthorized/unauthorized.component';
-import { adminAuthGuard } from './guards/admin-auth.guard';
-import { AdminAiUsageComponent } from './pages/admin-ai-usage/admin-ai-usage.component';
-import { AdminEmailTemplatesComponent } from './pages/admin-email-templates/admin-email-templates.component';
+import { adminAiUsageRoutes } from './features/admin-ai-usage/admin-ai-usage.routes';
+import { adminDashboardRoutes } from './features/admin-dashboard/admin-dashboard.routes';
+import { adminEmailTemplatesRoutes } from './features/admin-email-templates/admin-email-templates.routes';
+import { adminPublicRoutes } from './features/admin-public/admin-public.routes';
+import { adminUsersRoutes } from './features/admin-users/admin-users.routes';
 
 export const routes: Routes = [
   {
     path: '',
-    component: AdminDashboardComponent,
-    canActivate: [adminAuthGuard],
+    children: adminDashboardRoutes,
   },
   {
     path: 'users',
-    component: AdminUsersComponent,
-    canActivate: [adminAuthGuard],
+    children: adminUsersRoutes,
   },
   {
     path: 'ai-usage',
-    component: AdminAiUsageComponent,
-    canActivate: [adminAuthGuard],
+    children: adminAiUsageRoutes,
   },
   {
     path: 'email-templates',
-    component: AdminEmailTemplatesComponent,
-    canActivate: [adminAuthGuard],
+    children: adminEmailTemplatesRoutes,
   },
   {
-    path: 'unauthorized',
-    component: UnauthorizedComponent,
+    path: '',
+    children: adminPublicRoutes,
   },
   {
     path: '**',

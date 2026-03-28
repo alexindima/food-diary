@@ -1,0 +1,21 @@
+.admin-email-templates {
+  display: grid;
+  gap: 1rem;
+}
+
+.toolbar {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.templates-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.templates-table th,
+.templates-table td {
+  padding: 0.75rem;
+  border-bottom: 1px solid #e5e7eb;
+  text-align: left;
+}
