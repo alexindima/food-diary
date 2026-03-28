@@ -10,7 +10,7 @@ using Microsoft.Extensions.Options;
 namespace FoodDiary.Infrastructure.Services;
 
 public sealed class S3ImageStorageService(
-    IAmazonS3 s3Client,
+    IObjectStorageClient storageClient,
     IOptions<S3Options> options,
     IDateTimeProvider dateTimeProvider) : IImageStorageService {
     private static readonly HashSet<string> AllowedContentTypes = new(StringComparer.OrdinalIgnoreCase) {
@@ -28,38 +28,47 @@ public sealed class S3ImageStorageService(
         string contentType,
         long fileSizeBytes,
         CancellationToken cancellationToken) {
-        ArgumentException.ThrowIfNullOrWhiteSpace(fileName);
-        ArgumentException.ThrowIfNullOrWhiteSpace(contentType);
-        if (fileSizeBytes <= 0) {
-            throw new ArgumentOutOfRangeException(nameof(fileSizeBytes), "File size must be greater than zero.");
+        try {
+            ArgumentException.ThrowIfNullOrWhiteSpace(fileName);
+            ArgumentException.ThrowIfNullOrWhiteSpace(contentType);
+            if (fileSizeBytes <= 0) {
+                throw new ArgumentOutOfRangeException(nameof(fileSizeBytes), "File size must be greater than zero.");
+            }
+
+            if (fileSizeBytes > _options.MaxUploadSizeBytes) {
+                throw new InvalidOperationException(
+                    $"File is too large. Max allowed size: {_options.MaxUploadSizeBytes} bytes.");
+            }
+
+            if (!AllowedContentTypes.Contains(contentType)) {
+                throw new InvalidOperationException($"Unsupported content type: {contentType}.");
+            }
+
+            var normalizedName = NormalizeFileName(fileName);
+            var key = $"users/{userId.Value:D}/images/{Guid.NewGuid():N}-{normalizedName}";
+
+            var expiresAt = dateTimeProvider.UtcNow.AddMinutes(15);
+            var presignedRequest = new GetPreSignedUrlRequest {
+                BucketName = _options.Bucket,
+                Key = key,
+                Verb = HttpVerb.PUT,
+                Expires = expiresAt,
+                ContentType = contentType
+            };
+
+            var uploadUrl = storageClient.GetPreSignedUrl(presignedRequest);
+            var fileUrl = BuildPublicUrl(key);
+
+            InfrastructureTelemetry.RecordStorageOperation("presign", "success");
+            var result = new PresignedUpload(uploadUrl, fileUrl, key, expiresAt);
+            return Task.FromResult(result);
+        } catch (Exception ex) {
+            InfrastructureTelemetry.RecordStorageOperation(
+                "presign",
+                ex is ArgumentException or InvalidOperationException ? "validation_error" : "failure",
+                ex.GetType().Name);
+            throw;
         }
-
-        if (fileSizeBytes > _options.MaxUploadSizeBytes) {
-            throw new InvalidOperationException(
-                $"File is too large. Max allowed size: {_options.MaxUploadSizeBytes} bytes.");
-        }
-
-        if (!AllowedContentTypes.Contains(contentType)) {
-            throw new InvalidOperationException($"Unsupported content type: {contentType}.");
-        }
-
-        var normalizedName = NormalizeFileName(fileName);
-        var key = $"users/{userId.Value:D}/images/{Guid.NewGuid():N}-{normalizedName}";
-
-        var expiresAt = dateTimeProvider.UtcNow.AddMinutes(15);
-        var presignedRequest = new GetPreSignedUrlRequest {
-            BucketName = _options.Bucket,
-            Key = key,
-            Verb = HttpVerb.PUT,
-            Expires = expiresAt,
-            ContentType = contentType
-        };
-
-        var uploadUrl = s3Client.GetPreSignedURL(presignedRequest);
-        var fileUrl = BuildPublicUrl(key);
-
-        var result = new PresignedUpload(uploadUrl, fileUrl, key, expiresAt);
-        return Task.FromResult(result);
     }
 
     public async Task DeleteAsync(string objectKey, CancellationToken cancellationToken) {
@@ -72,7 +81,13 @@ public sealed class S3ImageStorageService(
             Key = objectKey
         };
 
-        await s3Client.DeleteObjectAsync(request, cancellationToken);
+        try {
+            await storageClient.DeleteObjectAsync(request, cancellationToken);
+            InfrastructureTelemetry.RecordStorageOperation("delete", "success");
+        } catch (Exception ex) {
+            InfrastructureTelemetry.RecordStorageOperation("delete", "failure", ex.GetType().Name);
+            throw;
+        }
     }
 
     private static string NormalizeFileName(string fileName) {

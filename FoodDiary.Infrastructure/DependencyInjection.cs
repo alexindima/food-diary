@@ -145,6 +145,7 @@ public static class DependencyInjection
             };
             return new AmazonS3Client(credentials, config);
         });
+        services.AddSingleton<IObjectStorageClient, S3ObjectStorageClient>();
         services.AddSingleton<IImageStorageService, S3ImageStorageService>();
         services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
         services.AddSingleton<IPasswordHasher, PasswordHasher>();
@@ -153,6 +154,7 @@ public static class DependencyInjection
         services.AddSingleton<IAdminSsoService, AdminSsoService>();
         services.AddScoped<IUserCleanupService, UserCleanupService>();
         services.AddSingleton<IEmailTemplateProvider, EmailTemplateProvider>();
+        services.AddSingleton<IEmailTransport, SmtpClientEmailTransport>();
         services.AddSingleton<IEmailSender, SmtpEmailSender>();
         services.AddHttpClient<IOpenAiFoodService, OpenAiFoodService>(client => {
             client.Timeout = TimeSpan.FromSeconds(60);

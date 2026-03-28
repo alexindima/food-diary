@@ -1,4 +1,3 @@
-using System.Net;
 using System.Net.Mail;
 using System.Net.Mime;
 using System.Text;
@@ -10,7 +9,8 @@ namespace FoodDiary.Infrastructure.Services;
 
 public sealed class SmtpEmailSender(
     IOptions<EmailOptions> options,
-    IEmailTemplateProvider templateProvider) : IEmailSender {
+    IEmailTemplateProvider templateProvider,
+    IEmailTransport emailTransport) : IEmailSender {
     private const string EmailVerificationSubjectRu =
         "\u041f\u043e\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u0435 email";
     private const string EmailVerificationIntroRu =
@@ -28,76 +28,77 @@ public sealed class SmtpEmailSender(
 
     private readonly EmailOptions _options = options.Value;
     private readonly IEmailTemplateProvider _templateProvider = templateProvider;
+    private readonly IEmailTransport _emailTransport = emailTransport;
 
     public Task SendEmailVerificationAsync(EmailVerificationMessage message, CancellationToken cancellationToken) {
-        var link = BuildLink(_options.VerificationPath, message.UserId, message.Token);
         var locale = NormalizeLanguage(message.Language);
-        return SendWithTemplateAsync(
-            message.ToEmail,
-            locale,
-            key: "email_verification",
-            subjectFallback: locale == "ru" ? EmailVerificationSubjectRu : "Confirm your email",
-            htmlFallback: locale == "ru"
-                ? BuildTemplate(
-                    title: EmailVerificationSubjectRu,
-                    intro: EmailVerificationIntroRu,
-                    ctaLabel: EmailVerificationCtaRu,
-                    ctaLink: link,
-                    footer: IgnoreEmailFooterRu)
-                : BuildTemplate(
-                    title: "Confirm your email",
-                    intro: "Thanks for registering in FoodDiary.",
-                    ctaLabel: "Confirm email",
-                    ctaLink: link,
-                    footer: "If you did not request this, you can ignore this email."),
-            textFallback: locale == "ru"
-                ? $$"""
-                  {{EmailVerificationIntroRu}}
-                  {{EmailVerificationSubjectRu}}: {{link}}
-                  {{IgnoreEmailFooterRu}}
-                  """
-                : $"""
-                   Thanks for registering in FoodDiary.
-                   Please confirm your email: {link}
-                   If you did not request this, you can ignore this email.
-                   """,
-            link: link,
+        return SendEmailCoreAsync(
+            templateKey: "email_verification",
+            locale: locale,
+            toEmail: message.ToEmail,
+            buildLink: () => BuildLink(_options.VerificationPath, message.UserId, message.Token),
+            createFallbackContent: link => (
+                Subject: locale == "ru" ? EmailVerificationSubjectRu : "Confirm your email",
+                Html: locale == "ru"
+                    ? BuildTemplate(
+                        title: EmailVerificationSubjectRu,
+                        intro: EmailVerificationIntroRu,
+                        ctaLabel: EmailVerificationCtaRu,
+                        ctaLink: link,
+                        footer: IgnoreEmailFooterRu)
+                    : BuildTemplate(
+                        title: "Confirm your email",
+                        intro: "Thanks for registering in FoodDiary.",
+                        ctaLabel: "Confirm email",
+                        ctaLink: link,
+                        footer: "If you did not request this, you can ignore this email."),
+                Text: locale == "ru"
+                    ? $$"""
+                      {{EmailVerificationIntroRu}}
+                      {{EmailVerificationSubjectRu}}: {{link}}
+                      {{IgnoreEmailFooterRu}}
+                      """
+                    : $"""
+                       Thanks for registering in FoodDiary.
+                       Please confirm your email: {link}
+                       If you did not request this, you can ignore this email.
+                       """),
             cancellationToken: cancellationToken);
     }
 
     public Task SendPasswordResetAsync(PasswordResetMessage message, CancellationToken cancellationToken) {
-        var link = BuildLink(_options.PasswordResetPath, message.UserId, message.Token);
         var locale = NormalizeLanguage(message.Language);
-        return SendWithTemplateAsync(
-            message.ToEmail,
-            locale,
-            key: "password_reset",
-            subjectFallback: locale == "ru" ? PasswordResetSubjectRu : "Reset your password",
-            htmlFallback: locale == "ru"
-                ? BuildTemplate(
-                    title: PasswordResetSubjectRu,
-                    intro: PasswordResetIntroRu,
-                    ctaLabel: PasswordResetCtaRu,
-                    ctaLink: link,
-                    footer: IgnoreEmailFooterRu)
-                : BuildTemplate(
-                    title: "Reset your password",
-                    intro: "We received a request to reset your FoodDiary password.",
-                    ctaLabel: "Reset password",
-                    ctaLink: link,
-                    footer: "If you did not request this, you can ignore this email."),
-            textFallback: locale == "ru"
-                ? $$"""
-                  {{PasswordResetIntroRu}}
-                  {{PasswordResetCtaRu}}: {{link}}
-                  {{IgnoreEmailFooterRu}}
-                  """
-                : $"""
-                   We received a request to reset your FoodDiary password.
-                   Reset your password: {link}
-                   If you did not request this, you can ignore this email.
-                   """,
-            link: link,
+        return SendEmailCoreAsync(
+            templateKey: "password_reset",
+            locale: locale,
+            toEmail: message.ToEmail,
+            buildLink: () => BuildLink(_options.PasswordResetPath, message.UserId, message.Token),
+            createFallbackContent: link => (
+                Subject: locale == "ru" ? PasswordResetSubjectRu : "Reset your password",
+                Html: locale == "ru"
+                    ? BuildTemplate(
+                        title: PasswordResetSubjectRu,
+                        intro: PasswordResetIntroRu,
+                        ctaLabel: PasswordResetCtaRu,
+                        ctaLink: link,
+                        footer: IgnoreEmailFooterRu)
+                    : BuildTemplate(
+                        title: "Reset your password",
+                        intro: "We received a request to reset your FoodDiary password.",
+                        ctaLabel: "Reset password",
+                        ctaLink: link,
+                        footer: "If you did not request this, you can ignore this email."),
+                Text: locale == "ru"
+                    ? $$"""
+                      {{PasswordResetIntroRu}}
+                      {{PasswordResetCtaRu}}: {{link}}
+                      {{IgnoreEmailFooterRu}}
+                      """
+                    : $"""
+                       We received a request to reset your FoodDiary password.
+                       Reset your password: {link}
+                       If you did not request this, you can ignore this email.
+                       """),
             cancellationToken: cancellationToken);
     }
 
@@ -120,29 +121,35 @@ public sealed class SmtpEmailSender(
         return lower.StartsWith("ru") ? "ru" : "en";
     }
 
-    private async Task SendWithTemplateAsync(
-        string toEmail,
+    private async Task SendEmailCoreAsync(
+        string templateKey,
         string locale,
-        string key,
-        string subjectFallback,
-        string htmlFallback,
-        string textFallback,
-        string link,
+        string toEmail,
+        Func<string> buildLink,
+        Func<string, (string Subject, string Html, string Text)> createFallbackContent,
         CancellationToken cancellationToken) {
-        var template = await _templateProvider.GetActiveTemplateAsync(key, locale, cancellationToken);
-        var brand = string.IsNullOrWhiteSpace(_options.FromName) ? "FoodDiary" : _options.FromName;
+        try {
+            var link = buildLink();
+            var template = await _templateProvider.GetActiveTemplateAsync(templateKey, locale, cancellationToken);
+            var brand = string.IsNullOrWhiteSpace(_options.FromName) ? "FoodDiary" : _options.FromName;
+            var fallback = createFallbackContent(link);
 
-        var subject = template is null
-            ? subjectFallback
-            : ApplyTemplateTokens(template.Subject, link, brand);
-        var htmlBody = template is null || string.IsNullOrWhiteSpace(template.HtmlBody)
-            ? htmlFallback
-            : ApplyTemplateTokens(template.HtmlBody, link, brand);
-        var textBody = template is null || string.IsNullOrWhiteSpace(template.TextBody)
-            ? textFallback
-            : ApplyTemplateTokens(template.TextBody, link, brand);
+            var subject = template is null
+                ? fallback.Subject
+                : ApplyTemplateTokens(template.Subject, link, brand);
+            var htmlBody = template is null || string.IsNullOrWhiteSpace(template.HtmlBody)
+                ? fallback.Html
+                : ApplyTemplateTokens(template.HtmlBody, link, brand);
+            var textBody = template is null || string.IsNullOrWhiteSpace(template.TextBody)
+                ? fallback.Text
+                : ApplyTemplateTokens(template.TextBody, link, brand);
 
-        await SendAsync(toEmail, subject, htmlBody, textBody, cancellationToken);
+            await SendAsync(toEmail, subject, htmlBody, textBody, cancellationToken);
+            InfrastructureTelemetry.RecordEmailDispatch(templateKey, locale, "success");
+        } catch (Exception ex) {
+            InfrastructureTelemetry.RecordEmailDispatch(templateKey, locale, "failure", ex.GetType().Name);
+            throw;
+        }
     }
 
     private static string ApplyTemplateTokens(string value, string link, string brand) {
@@ -223,11 +230,13 @@ public sealed class SmtpEmailSender(
 
         message.AlternateViews.Add(AlternateView.CreateAlternateViewFromString(htmlBody, Encoding.UTF8, MediaTypeNames.Text.Html));
 
-        using var client = new SmtpClient(_options.SmtpHost, _options.SmtpPort) {
-            EnableSsl = _options.UseSsl,
-            Credentials = new NetworkCredential(_options.SmtpUser, _options.SmtpPassword)
-        };
-
-        await client.SendMailAsync(message, cancellationToken);
+        await _emailTransport.SendAsync(
+            message,
+            _options.SmtpHost,
+            _options.SmtpPort,
+            _options.UseSsl,
+            _options.SmtpUser,
+            _options.SmtpPassword,
+            cancellationToken);
     }
 }

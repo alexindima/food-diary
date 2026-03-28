@@ -1,5 +1,5 @@
 ﻿<div class="fd-ui-select" [ngClass]="[sizeClass, error() ? 'fd-ui-select--has-error' : '', shouldFloatLabel ? 'fd-ui-select--floating' : '']">
-  <div class="fd-ui-select__control-wrap" [style.background]="fillColor() || null" (click)="openMenu($event, control)">
+  <div class="fd-ui-select__control-wrap" [style.background]="fillColor() || null" (click)="openMenu($event, control)" role="presentation">
     @if (label()) {
       <label class="fd-ui-select__label" [attr.for]="id()">
         <span class="fd-ui-select__label-text">{{ label() }}</span>@if (required()) {<span class="fd-ui-select__required">*</span>}

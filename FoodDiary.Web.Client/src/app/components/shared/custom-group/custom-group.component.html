@@ -13,7 +13,7 @@
             </button>
         }
         @if (showCloseButton()) {
-            <div class="custom-group__button" (click)="onCloseButtonClick()">X</div>
+            <button type="button" class="custom-group__button" (click)="onCloseButtonClick()">X</button>
         }
         @if (!forceCollapse()) {
             @if (isOpen() || !isAccordion()) {

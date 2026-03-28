@@ -59,14 +59,23 @@ public sealed class UpdateAdminUserCommandHandler(IUserRepository userRepository
             }
         }
 
-        user.ApplyAdminUpdate(new UserAdminUpdate(
-            IsActive: command.IsActive,
-            Account: new UserAdminAccountUpdate(
-                IsEmailConfirmed: command.IsEmailConfirmed,
-                Language: languageResult.Value,
-                AiInputTokenLimit: command.AiInputTokenLimit,
-                AiOutputTokenLimit: command.AiOutputTokenLimit),
-            Roles: roleEntities));
+        if (command.IsActive.HasValue) {
+            if (command.IsActive.Value) {
+                user.Activate();
+            } else {
+                user.Deactivate();
+            }
+        }
+
+        user.UpdateAdminAccount(new UserAdminAccountUpdate(
+            IsEmailConfirmed: command.IsEmailConfirmed,
+            Language: languageResult.Value,
+            AiInputTokenLimit: command.AiInputTokenLimit,
+            AiOutputTokenLimit: command.AiOutputTokenLimit));
+
+        if (roleEntities is not null) {
+            user.ReplaceRoles(roleEntities);
+        }
 
         await userRepository.UpdateAsync(user, cancellationToken);
         return Result.Success(user.ToAdminModel());

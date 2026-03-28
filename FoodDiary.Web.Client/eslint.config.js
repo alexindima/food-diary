@@ -2,6 +2,8 @@ import parser from '@typescript-eslint/parser';
 import tsPlugin from '@typescript-eslint/eslint-plugin';
 import prettierPlugin from 'eslint-plugin-prettier';
 import eslintConfigPrettier from 'eslint-config-prettier';
+import templateParser from '@angular-eslint/template-parser';
+import templatePlugin from '@angular-eslint/eslint-plugin-template';
 
 export default [
     {
@@ -433,6 +435,28 @@ export default [
                     ],
                 },
             ],
+        },
+    },
+
+    // Angular template accessibility rules
+    {
+        files: ['**/*.html'],
+        languageOptions: {
+            parser: templateParser,
+        },
+        plugins: {
+            '@angular-eslint/template': templatePlugin,
+        },
+        rules: {
+            '@angular-eslint/template/alt-text': 'error',
+            '@angular-eslint/template/elements-content': 'error',
+            '@angular-eslint/template/click-events-have-key-events': 'error',
+            '@angular-eslint/template/interactive-supports-focus': 'error',
+            '@angular-eslint/template/valid-aria': 'error',
+            '@angular-eslint/template/role-has-required-aria': 'error',
+            '@angular-eslint/template/no-positive-tabindex': 'error',
+            '@angular-eslint/template/label-has-associated-control': 'warn',
+            '@angular-eslint/template/no-autofocus': 'warn',
         },
     },
 ];

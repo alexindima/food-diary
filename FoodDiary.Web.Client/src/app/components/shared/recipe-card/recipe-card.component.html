@@ -1,4 +1,4 @@
-﻿<div class="recipe-card" (click)="handleOpen()">
+﻿<div class="recipe-card" role="button" tabindex="0" (click)="handleOpen()" (keydown.enter)="handleOpen()" (keydown.space)="handleOpen(); $event.preventDefault()">
     <div class="recipe-card__thumb">
         @if (imageUrl()) {
             <img [src]="imageUrl()" [alt]="recipe().name" />

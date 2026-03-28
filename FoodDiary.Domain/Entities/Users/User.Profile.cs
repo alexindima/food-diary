@@ -24,29 +24,6 @@ public sealed partial class User {
         SetModified();
     }
 
-    public void UpdateProfile(UserProfileUpdate update) {
-        EnsureNotDeleted();
-        var changed = false;
-        changed |= ApplyPersonalInfoChanges(
-            update.Username,
-            update.FirstName,
-            update.LastName,
-            update.BirthDate,
-            update.Gender,
-            update.Weight,
-            update.Height);
-        changed |= ApplyActivityChanges(update.ActivityLevel, update.StepGoal, update.HydrationGoal);
-        changed |= ApplyMediaAndPreferencesChanges(
-            update.ProfileImage,
-            update.ProfileImageAssetId,
-            update.DashboardLayoutJson,
-            update.Language);
-
-        if (changed) {
-            SetModified();
-        }
-    }
-
     public void UpdatePersonalInfo(
         string? username = null,
         string? firstName = null,
@@ -209,17 +186,6 @@ public sealed partial class User {
             ApplyProfileState(state);
         }
 
-        return changed;
-    }
-
-    private bool ApplyMediaAndPreferencesChanges(
-        string? profileImage,
-        ImageAssetId? profileImageAssetId,
-        string? dashboardLayoutJson,
-        string? language) {
-        var changed = false;
-        changed |= ApplyProfileMediaChanges(profileImage, profileImageAssetId);
-        changed |= ApplyPreferencesChanges(dashboardLayoutJson, language);
         return changed;
     }
 

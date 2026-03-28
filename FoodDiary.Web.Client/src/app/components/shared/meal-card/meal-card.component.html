@@ -1,6 +1,6 @@
-<div class="meal-card" (click)="handleOpen()">
+<div class="meal-card" role="button" tabindex="0" (click)="handleOpen()" (keydown.enter)="handleOpen()" (keydown.space)="handleOpen(); $event.preventDefault()">
     <div class="meal-card__thumb">
-        <img [ngSrc]="coverImage()" width="96" height="96" alt="" loading="lazy" />
+        <img [ngSrc]="coverImage()" width="96" height="96" [alt]="meal().mealType ? (('MEAL_CARD.MEAL_TYPES.' + meal().mealType) | translate) : ('MEAL_CARD.MEAL_TYPES.OTHER' | translate)" loading="lazy" />
     </div>
 
     <div class="meal-card__content">

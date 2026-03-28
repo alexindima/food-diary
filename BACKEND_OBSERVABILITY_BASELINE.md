@@ -145,6 +145,60 @@ Current diagnostic value:
 - read-path, write-path, and migration-related query failures become easier to separate
 - repeated provider exceptions can be correlated quickly with deploy, schema, or infrastructure changes
 
+## Added Email Delivery Signals
+
+The infrastructure layer now also emits a stable counter for SMTP-backed auth email delivery.
+
+Metric:
+
+- `fooddiary.email.dispatch.events`
+
+Current tagged dimensions:
+
+- template:
+  - `email_verification`
+  - `password_reset`
+- locale:
+  - `en`
+  - `ru`
+- outcome:
+  - `success`
+  - `failure`
+- error type:
+  - exception type when delivery fails
+
+Current diagnostic value:
+
+- auth recovery incidents become easier to separate into token-generation success versus mail-delivery failure
+- localized template or SMTP failures become measurable without relying only on logs
+- registration, verification resend, and password reset now have an observable dependency boundary
+
+## Added Storage Boundary Signals
+
+The infrastructure layer now also emits storage-operation telemetry for S3-compatible image handling.
+
+Metric:
+
+- `fooddiary.storage.operations`
+
+Current tagged dimensions:
+
+- operation:
+  - `presign`
+  - `delete`
+- outcome:
+  - `success`
+  - `failure`
+  - `validation_error`
+- error type:
+  - exception type when an operation fails
+
+Current diagnostic value:
+
+- upload-link generation failures become separable from downstream client upload issues
+- delete failures during cleanup or explicit asset removal are visible without relying only on logs
+- validation/config errors and provider failures can be distinguished on the storage boundary
+
 ## Why This First
 
 This baseline gives immediately useful production signals without scattering telemetry logic across many handlers:
@@ -177,6 +231,8 @@ At minimum, the backend dashboard should expose these panels:
 - cleanup deleted-item volume by `fooddiary.job.name`
 - cleanup job duration p95 by `fooddiary.job.name`
 - database command failures by `fooddiary.db.operation`, `fooddiary.db.source`, and `error.type`
+- email dispatch outcome by `fooddiary.email.template`, `fooddiary.email.locale`, and `fooddiary.email.outcome`
+- storage presign/delete outcomes by `fooddiary.storage.operation` and `fooddiary.storage.outcome`
 
 ## First Alert Suggestions
 
@@ -200,6 +256,10 @@ Use these as the first production alert baseline and tune them with real traffic
   trigger when cleanup jobs stop emitting successful executions on their expected schedule plus grace period.
 - Database failure spike:
   trigger when `fooddiary.db.command.failures` becomes non-zero for 5 minutes on production or spikes materially after a deploy.
+- Email delivery failure:
+  trigger when `fooddiary.email.dispatch.events` reports repeated `failure` outcomes for `email_verification` or `password_reset` over 5-10 minutes.
+- Storage boundary failure:
+  trigger when `fooddiary.storage.operations` reports repeated `failure` outcomes for `presign` or `delete`, or when `validation_error` spikes after a deploy.
 - Request latency regression:
   trigger when p95 or p99 request duration on high-value routes regresses materially versus the previous release baseline.
 
@@ -211,6 +271,8 @@ When an alert fires, jump to these runbooks first:
 - AI degradation or quota exhaustion -> `BACKEND_RUNBOOKS.md` / `Unavailable AI Provider`
 - cleanup job failures -> `BACKEND_RUNBOOKS.md` / `Unavailable PostgreSQL` or `Unavailable S3-Compatible Storage`, depending on the failing dependency
 - database failure spike -> `BACKEND_RUNBOOKS.md` / `Unavailable PostgreSQL`
+- email delivery failure -> `BACKEND_RUNBOOKS.md` / `Authentication Incident`
+- storage boundary failure -> `BACKEND_RUNBOOKS.md` / `Unavailable S3-Compatible Storage`
 - cache hit-ratio regression -> check vary-by, auth, query-shape, and route metadata before treating it as a pure performance issue
 - missing traces/metrics -> `BACKEND_RUNBOOKS.md` / `Telemetry Or Exporter Outage`
 

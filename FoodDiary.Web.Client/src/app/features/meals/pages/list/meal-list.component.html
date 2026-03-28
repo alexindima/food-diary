@@ -89,7 +89,7 @@
                             <span class="consumption-list__day-line"></span>
                         </div>
                         <div class="consumption-list__grid">
-                            @for (consumption of group.items; track consumption) {
+                            @for (consumption of group.items; track consumption.id) {
                                 <fd-meal-card
                                     class="consumption-card"
                                     [meal]="consumption"

@@ -5,6 +5,7 @@
     [class.fd-ui-input__control-wrap--date]="isDateInput"
     [style.background]="fillColor() || null"
     (click)="focusControl($event, control)"
+    role="presentation"
   >
     @if (label()) {
       <label class="fd-ui-input__label" [attr.for]="id()">

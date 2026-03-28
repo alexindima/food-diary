@@ -1,0 +1,67 @@
+<div class="consumption-manage__sticky-stack">
+    <fd-ui-card
+        class="consumption-manage__card consumption-manage__card--nutrition"
+        appearance="entry"
+        [title]="'PRODUCT_MANAGE.NUTRITION_VALUE' | translate"
+    >
+        <div class="consumption-manage__nutrition">
+            <fd-nutrition-editor
+                [formGroup]="consumptionForm()"
+                [controlNames]="nutritionControlNames()"
+                [macroState]="macroBarState()"
+                [readonly]="consumptionForm().controls.isNutritionAutoCalculated.value"
+                [caloriesError]="caloriesError()"
+                [macrosError]="macrosError()"
+                [showManualHint]="!consumptionForm().controls.isNutritionAutoCalculated.value"
+                [manualHintKey]="'CONSUMPTION_MANAGE.MANUAL_NUTRITION_HINT'"
+                [warning]="nutritionWarning()"
+            >
+                <fd-ui-segmented-toggle
+                    nutrition-before
+                    class="consumption-manage__nutrition-toggle"
+                    [options]="nutritionModeOptions()"
+                    [selectedValue]="nutritionMode()"
+                    (selectedValueChange)="onNutritionModeChange($event)"
+                    [ariaLabel]="'CONSUMPTION_MANAGE.NUTRITION_MODE.ARIA' | translate"
+                />
+            </fd-nutrition-editor>
+        </div>
+    </fd-ui-card>
+
+    <div class="consumption-manage__actions-panel">
+        <div class="consumption-manage__footer-actions">
+            <fd-ui-button
+                type="button"
+                class="consumption-manage__cancel-button"
+                fill="outline"
+                variant="primary"
+                icon="arrow_back"
+                (click)="onCancel()"
+            >
+                {{ 'PRODUCT_MANAGE.CANCEL_BUTTON' | translate }}
+            </fd-ui-button>
+            @if (consumption()) {
+                <fd-ui-button
+                    type="submit"
+                    class="consumption-manage__action-button"
+                    icon="save"
+                    [fullWidth]="true"
+                >
+                    {{ 'CONSUMPTION_MANAGE.SAVE_BUTTON' | translate }}
+                </fd-ui-button>
+            } @else {
+                <fd-ui-button
+                    type="submit"
+                    class="consumption-manage__action-button consumption-manage__action-button--add"
+                    icon="add"
+                    [fullWidth]="true"
+                >
+                    {{ 'CONSUMPTION_MANAGE.ADD_BUTTON' | translate }}
+                </fd-ui-button>
+            }
+        </div>
+        @if (globalError()) {
+            <fd-ui-form-error class="consumption-manage__footer-error" [error]="globalError()" />
+        }
+    </div>
+</div>

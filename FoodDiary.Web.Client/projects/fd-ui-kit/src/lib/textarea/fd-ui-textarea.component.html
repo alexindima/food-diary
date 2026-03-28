@@ -1,5 +1,5 @@
 ﻿<div class="fd-ui-textarea" [ngClass]="[sizeClass, error() ? 'fd-ui-textarea--has-error' : '', shouldFloatLabel ? 'fd-ui-textarea--floating' : '']">
-  <div class="fd-ui-textarea__control-wrap" [style.background]="fillColor() || null" (click)="focusControl(control)">
+  <div class="fd-ui-textarea__control-wrap" [style.background]="fillColor() || null" (click)="focusControl(control)" role="presentation">
     @if (label()) {
       <label class="fd-ui-textarea__label" [attr.for]="id()">
         <span class="fd-ui-textarea__label-text">{{ label() }}</span>@if (required()) {<span class="fd-ui-textarea__required">*</span>}

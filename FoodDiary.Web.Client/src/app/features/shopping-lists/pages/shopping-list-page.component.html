@@ -181,7 +181,7 @@
                                         <div class="shopping-list__item-meta">{{ formatItemMeta(item) }}</div>
                                     }
                                 </div>
-                                <button type="button" class="shopping-list__item-remove" (click)="removeItem(item.id)">
+                                <button type="button" class="shopping-list__item-remove" [attr.aria-label]="'SHOPPING_LIST.REMOVE_ITEM' | translate" (click)="removeItem(item.id)">
                                     <mat-icon>close</mat-icon>
                                 </button>
                             </div>

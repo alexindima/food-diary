@@ -1,4 +1,4 @@
-﻿<div class="product-manage" fdPageContainer>
+<div class="product-manage" fdPageContainer>
     <fd-manage-header
         class="product-manage__header"
         [title]="product() ? ('PRODUCT_MANAGE.EDIT_TITLE' | translate) : ('PRODUCT_MANAGE.ADD_TITLE' | translate)"
@@ -10,158 +10,31 @@
     <form class="product-manage__form" [formGroup]="productForm" (ngSubmit)="onSubmit()">
         <div class="product-manage__grid">
             <div class="product-manage__column product-manage__column--primary">
-                <fd-ui-card
-                    class="product-manage__card product-manage__card--basic"
-                    appearance="entry"
-                    [title]="'PRODUCT_MANAGE.BASIC_INFO' | translate"
-                >
-                    <div class="product-manage__hero">
-                        <div class="product-manage__image">
-                            <fd-image-upload-field
-                                formControlName="imageUrl"
-                                [description]="'PRODUCT_MANAGE.IMAGE_DESCRIPTION' | translate"
-                                [recommendedSize]="'512 x 512'"
-                                [cropEnabled]="true"
-                                [cropSize]="512"
-                                [cropAspectRatio]="1"
-                            />
-                        </div>
-                        <div class="product-manage__hero-field">
-                            <fd-ui-input formControlName="name"
-                                size="lg"
-                                [label]="'PRODUCT_MANAGE.NAME' | translate"
-                                [placeholder]="'PRODUCT_MANAGE.NAME_PLACEHOLDER' | translate"
-                                [required]="true"
-                                [error]="getControlError('name')"
-                             />
-                        </div>
-                        <div class="product-manage__hero-field">
-                            <fd-ui-input formControlName="brand"
-                                size="lg"
-                                [label]="'PRODUCT_MANAGE.BRAND' | translate"
-                                [placeholder]="'PRODUCT_MANAGE.BRAND_PLACEHOLDER' | translate"
-                             />
-                        </div>
-                        <div class="product-manage__hero-field">
-                            <fd-ui-input formControlName="barcode"
-                                size="lg"
-                                [label]="'PRODUCT_MANAGE.BARCODE' | translate"
-                                [placeholder]="'PRODUCT_MANAGE.BARCODE_PLACEHOLDER' | translate"
-                                [suffixButtonIcon]="'qr_code_scanner'"
-                                [suffixButtonAriaLabel]="'PRODUCT_MANAGE.SCAN_BARCODE' | translate"
-                                (suffixButtonClicked)="openBarcodeScanner()"
-                             />
-                        </div>
-                    </div>
-                    <div class="product-manage__basic-grid">
-                        <div class="product-manage__field product-manage__field--full">
-                            <fd-ui-select formControlName="productType"
-                                [label]="'PRODUCT_MANAGE.PRODUCT_TYPE' | translate"
-                                [placeholder]="'PRODUCT_MANAGE.PRODUCT_TYPE_PLACEHOLDER' | translate"
-                                [options]="productTypeSelectOptions"
-                                [error]="getControlError('productType')"
-                             />
-                        </div>
-                        <div class="product-manage__field product-manage__field--full">
-                            <fd-ui-textarea
-                                formControlName="description"
-                                [label]="'PRODUCT_MANAGE.DESCRIPTION' | translate"
-                                [placeholder]="'PRODUCT_MANAGE.DESCRIPTION_PLACEHOLDER' | translate"
-                                [rows]="3"
-                            />
-                        </div>
-                        <div class="product-manage__serving-row product-manage__field--full">
-                            <div class="product-manage__serving-part">
-                                <fd-ui-input formControlName="defaultPortionAmount"
-                                    type="number"
-                                    [label]="'PRODUCT_MANAGE.DEFAULT_PORTION_AMOUNT' | translate"
-                                    [placeholder]="'PRODUCT_MANAGE.DEFAULT_PORTION_PLACEHOLDER' | translate"
-                                    [required]="true"
-                                    [error]="getControlError('defaultPortionAmount')"
-                                 />
-                            </div>
-                            <div class="product-manage__serving-part">
-                                <fd-ui-select formControlName="baseUnit"
-                                    [label]="'PRODUCT_MANAGE.DEFAULT_SERVING_UNIT' | translate"
-                                    [options]="unitOptions"
-                                    [error]="getControlError('baseUnit')"
-                                 />
-                            </div>
-                        </div>
-                    </div>
-                </fd-ui-card>
-
-                <fd-ui-card
-                    class="product-manage__card product-manage__card--basic product-manage__card--tracking"
-                    appearance="entry"
-                    [title]="'PRODUCT_MANAGE.TRACKING_PREFERENCES' | translate"
-                >
-                    <div class="product-manage__basic-grid">
-                        <div class="product-manage__field product-manage__field--full">
-                            <fd-ui-select formControlName="visibility"
-                                [label]="'PRODUCT_MANAGE.VISIBILITY' | translate"
-                                [options]="visibilitySelectOptions"
-                                [error]="getControlError('visibility')"
-                             />
-                        </div>
-                        <div class="product-manage__field product-manage__field--full">
-                            <fd-ui-textarea formControlName="comment"
-                                [label]="'PRODUCT_MANAGE.COMMENT' | translate"
-                                [placeholder]="'PRODUCT_MANAGE.COMMENT_PLACEHOLDER' | translate"
-                                [rows]="4"
-                             />
-                        </div>
-                    </div>
-                </fd-ui-card>
+                <fd-product-basic-info
+                    [formGroup]="productForm"
+                    [unitOptions]="unitOptions"
+                    [productTypeOptions]="productTypeSelectOptions"
+                    [visibilityOptions]="visibilitySelectOptions"
+                    [getControlError]="getControlErrorFn"
+                    (openBarcodeScanner)="openBarcodeScanner()"
+                    (openAiRecognition)="openAiRecognitionDialog()"
+                />
             </div>
 
             <div class="product-manage__column product-manage__column--secondary">
                 <div class="product-manage__sticky-stack">
-                    <fd-ui-card
-                        class="product-manage__card product-manage__card--nutrition"
-                        appearance="entry"
-                        [title]="'PRODUCT_MANAGE.NUTRITION_VALUE' | translate"
-                    >
-                        <div class="product-manage__nutrition">
-                            <div class="product-manage__ai">
-                                <div class="product-manage__ai-text">
-                                    <div class="product-manage__ai-title">
-                                        {{ 'PRODUCT_MANAGE.AI_TITLE' | translate }}
-                                    </div>
-                                    <div class="product-manage__ai-subtitle">
-                                        {{ 'PRODUCT_MANAGE.AI_SUBTITLE' | translate }}
-                                    </div>
-                                </div>
-                                <fd-ui-button
-                                    type="button"
-                                    variant="primary"
-                                    fill="outline"
-                                    icon="auto_awesome"
-                                    [fullWidth]="true"
-                                    (click)="openAiRecognitionDialog()"
-                                >
-                                    {{ 'PRODUCT_MANAGE.AI_BUTTON' | translate }}
-                                </fd-ui-button>
-                            </div>
-                            <fd-nutrition-editor
-                                [formGroup]="productForm"
-                                [controlNames]="nutritionControlNames"
-                                [macroState]="macroBarState()"
-                                [caloriesError]="caloriesError()"
-                                [macrosError]="macrosError()"
-                                [warning]="nutritionWarning()"
-                            >
-                                <fd-ui-segmented-toggle
-                                    nutrition-before
-                                    class="product-manage__nutrition-toggle"
-                                    [options]="nutritionModeOptions"
-                                    [selectedValue]="nutritionMode"
-                                    (selectedValueChange)="onNutritionModeChange($event)"
-                                    [ariaLabel]="'PRODUCT_MANAGE.NUTRITION_MODE.ARIA' | translate"
-                                />
-                            </fd-nutrition-editor>
-                        </div>
-                    </fd-ui-card>
+                    <fd-product-nutrition-editor
+                        [formGroup]="productForm"
+                        [nutritionMode]="nutritionMode"
+                        [nutritionModeOptions]="nutritionModeOptions"
+                        [macroBarState]="macroBarState()"
+                        [nutritionWarning]="nutritionWarning()"
+                        [caloriesError]="caloriesError()"
+                        [macrosError]="macrosError()"
+                        [nutritionControlNames]="nutritionControlNames"
+                        (nutritionModeChange)="onNutritionModeChange($event)"
+                        (openAiRecognition)="openAiRecognitionDialog()"
+                    />
 
                     <div class="product-manage__actions-panel">
                         <div class="product-manage__footer-actions">
@@ -215,4 +88,3 @@
         </div>
     </form>
 </div>
-

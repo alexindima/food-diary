@@ -1,0 +1,169 @@
+@use 'variables' as variables;
+
+:host {
+    display: contents;
+}
+
+.recipe-basic-info {
+
+    &__card {
+        --fd-ui-card-border-color: rgba(15, 23, 42, 0.08);
+        --fd-ui-card-title-color: #0f172a;
+        --fd-ui-card-meta-color: #94a3b8;
+        --fd-shadow-sm: 0 20px 45px rgba(15, 23, 42, 0.08);
+        --fd-radius-lg: 22px;
+        --fd-color-surface: #ffffff;
+        display: flex;
+        flex-direction: column;
+        gap: variables.$gap-m;
+        border: 1px solid rgba(15, 23, 42, 0.06);
+        border-radius: var(--fd-radius-lg);
+        overflow: hidden;
+
+        &--basic {
+            --fd-ui-card-border-color: rgba(37, 99, 235, 0.16);
+
+            ::ng-deep .fd-ui-card {
+                padding-bottom: variables.$gap-l;
+            }
+        }
+
+        &--tracking {
+
+            ::ng-deep .fd-ui-card {
+                padding-bottom: variables.$gap-l;
+            }
+        }
+
+        ::ng-deep .fd-ui-card__header {
+            margin-bottom: variables.$gap-s;
+            align-items: center;
+        }
+
+        ::ng-deep .fd-ui-card__title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            text-transform: none;
+            letter-spacing: normal;
+        }
+
+        ::ng-deep .fd-ui-card__meta {
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        ::ng-deep .fd-ui-card__content {
+            gap: 28px;
+        }
+    }
+
+    &__basic-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: variables.$gap-l;
+
+        @media #{variables.$media-mobile} {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    &__field--full {
+        grid-column: 1 / -1;
+    }
+
+    &__field {
+        display: flex;
+        flex-direction: column;
+        gap: variables.$gap-xs;
+    }
+
+    &__hero {
+        --fd-recipe-input-height: 48px;
+        --fd-recipe-input-subscript: 18px;
+        --fd-recipe-image-size: calc(
+            (var(--fd-recipe-input-height) + var(--fd-recipe-input-subscript)) * 3 + #{variables.$gap-l * 2}
+        );
+        display: grid;
+        grid-template-columns: var(--fd-recipe-image-size) minmax(0, 1fr);
+        grid-template-rows: repeat(3, minmax(0, auto));
+        gap: variables.$gap-l;
+        align-items: stretch;
+    }
+
+    &__image {
+        grid-row: 1 / span 3;
+        width: var(--fd-recipe-image-size);
+        height: var(--fd-recipe-image-size);
+        aspect-ratio: 1 / 1;
+        align-self: start;
+        justify-self: start;
+        display: flex;
+
+        > fd-image-upload-field {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        ::ng-deep .image-upload-field {
+            width: 100%;
+            height: 100%;
+        }
+
+        ::ng-deep .image-upload-field__dropzone {
+            width: 100%;
+            height: 100%;
+            min-height: 0;
+        }
+
+        ::ng-deep .image-upload-field__placeholder {
+            padding: 20px 12px;
+            gap: 8px;
+        }
+
+        ::ng-deep .image-upload-field__icon {
+            font-size: 28px;
+            width: auto;
+            height: auto;
+        }
+
+        ::ng-deep .image-upload-field__main-text {
+            font-size: 0.95rem;
+        }
+
+        ::ng-deep .image-upload-field__sub-text--plain {
+            display: block;
+            font-size: 0.8rem;
+        }
+
+        ::ng-deep .image-upload-field__sub-text:not(.image-upload-field__sub-text--plain) {
+            display: block;
+            font-size: 0.72rem;
+            color: #64748b;
+        }
+
+        ::ng-deep .image-upload-field__hint {
+            display: block;
+            font-size: 0.68rem;
+            color: #94a3b8;
+        }
+    }
+
+    &__hero-field {
+        display: flex;
+        flex-direction: column;
+        gap: variables.$gap-xs;
+    }
+
+    @media #{variables.$media-mobile} {
+
+        &__hero {
+            grid-template-columns: 1fr;
+        }
+
+        &__image {
+            width: 100%;
+            height: auto;
+        }
+    }
+}

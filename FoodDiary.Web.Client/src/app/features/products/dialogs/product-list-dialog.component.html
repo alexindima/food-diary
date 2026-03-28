@@ -34,7 +34,7 @@
     } @else {
         @if (productData.items().length > 0) {
             <div class="product-select__list">
-                @for (product of productData.items(); track product) {
+                @for (product of productData.items(); track product.id) {
                     <button type="button" class="product-select__item" (click)="onProductClick(product)">
                         <div class="product-select__thumb">
                             @if (resolveImage(product)) {

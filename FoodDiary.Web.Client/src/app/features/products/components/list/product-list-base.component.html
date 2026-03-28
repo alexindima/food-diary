@@ -104,7 +104,7 @@
                                 <span class="product-list__section-line"></span>
                             </div>
                             <div class="product-list__section-grid">
-                                @for (product of recentProducts; track product) {
+                                @for (product of recentProducts; track product.id) {
                                     <fd-product-card
                                         [product]="product"
                                         [imageUrl]="resolveImage(product)"
@@ -125,7 +125,7 @@
                                 <span class="product-list__section-line"></span>
                             </div>
                             <div class="product-list__section-grid">
-                                @for (product of allProductsSectionItems; track product) {
+                                @for (product of allProductsSectionItems; track product.id) {
                                     <fd-product-card
                                         [product]="product"
                                         [imageUrl]="resolveImage(product)"

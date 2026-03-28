@@ -1,0 +1,55 @@
+import {
+    ChangeDetectionStrategy,
+    Component,
+    input,
+    output,
+} from '@angular/core';
+import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { TranslatePipe } from '@ngx-translate/core';
+import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
+import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
+import { FdUiSegmentedToggleComponent, FdUiSegmentedToggleOption } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle.component';
+import { FdUiFormErrorComponent } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
+import { NutritionEditorComponent, NutritionControlNames } from '../../../../../components/shared/nutrition-editor/nutrition-editor.component';
+import { MacroBarState, CalorieMismatchWarning, NutritionMode, ConsumptionFormData } from '../base-meal-manage.types';
+import { Consumption } from '../../../models/meal.data';
+
+@Component({
+    selector: 'fd-meal-nutrition-sidebar',
+    templateUrl: './meal-nutrition-sidebar.component.html',
+    styleUrls: ['../base-meal-manage.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        ReactiveFormsModule,
+        TranslatePipe,
+        FdUiCardComponent,
+        FdUiButtonComponent,
+        FdUiSegmentedToggleComponent,
+        FdUiFormErrorComponent,
+        NutritionEditorComponent,
+    ],
+})
+export class MealNutritionSidebarComponent {
+    public readonly consumptionForm = input.required<FormGroup<ConsumptionFormData>>();
+    public readonly nutritionControlNames = input.required<NutritionControlNames>();
+    public readonly macroBarState = input.required<MacroBarState>();
+    public readonly nutritionMode = input.required<NutritionMode>();
+    public readonly nutritionModeOptions = input.required<FdUiSegmentedToggleOption[]>();
+    public readonly nutritionWarning = input<CalorieMismatchWarning | null>(null);
+    public readonly caloriesError = input<string | null>(null);
+    public readonly macrosError = input<string | null>(null);
+    public readonly consumption = input<Consumption | null>(null);
+    public readonly globalError = input<string | null>(null);
+
+    public readonly nutritionModeChange = output<string>();
+    public readonly cancel = output<void>();
+    public readonly submit = output<void>();
+
+    public onNutritionModeChange(nextMode: string): void {
+        this.nutritionModeChange.emit(nextMode);
+    }
+
+    public onCancel(): void {
+        this.cancel.emit();
+    }
+}

@@ -1,4 +1,4 @@
-﻿import {
+import {
     ChangeDetectionStrategy,
     Component,
     DestroyRef,
@@ -10,7 +10,6 @@
     signal,
 } from '@angular/core';
 import { AbstractControl, FormArray, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
-import { FormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { NavigationService } from '../../../../services/navigation.service';
 import {
@@ -20,14 +19,12 @@ import {
 } from '../../../../shared/dialogs/item-select-dialog/item-select-dialog.component';
 import {
     Consumption,
-    ConsumptionAiItemManageDto,
     ConsumptionAiSessionManageDto,
     ConsumptionItemManageDto,
     ConsumptionManageDto,
     ConsumptionSourceType,
 } from '../../models/meal.data';
 import { MealService } from '../../api/meal.service';
-import { FormGroupControls } from '../../../../shared/lib/common.data';
 import { Product, MeasurementUnit } from '../../../products/models/product.data';
 import { Recipe, RecipeIngredient } from '../../../recipes/models/recipe.data';
 import { RecipeLookupService } from '../../../../shared/api/recipe-lookup.service';
@@ -35,16 +32,12 @@ import { RecipeLookup, RecipeLookupIngredient } from '../../../../shared/models/
 import { HttpErrorResponse } from '@angular/common/http';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NutrientData } from '../../../../shared/models/charts.data';
-import {
-} from '../../../../components/shared/nutrients-summary/nutrients-summary.component';
-import { FdUiFormErrorComponent, FD_VALIDATION_ERRORS, FdValidationErrors } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
+import { FD_VALIDATION_ERRORS, FdValidationErrors } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
-import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
-import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
-import { FdUiSegmentedToggleComponent, FdUiSegmentedToggleOption } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle.component';
+import { FdUiSegmentedToggleOption } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle.component';
 import { FdUiIconModule } from 'fd-ui-kit/material';
 import { FdUiDateInputComponent } from 'fd-ui-kit/date-input/fd-ui-date-input.component';
 import { FdUiTimeInputComponent } from 'fd-ui-kit/time-input/fd-ui-time-input.component';
@@ -72,8 +65,22 @@ import { UserAiUsageResponse } from '../../../../shared/models/ai.data';
 import { AuthService } from '../../../../services/auth.service';
 import { PremiumRequiredDialogComponent } from '../../../../components/shared/premium-required-dialog/premium-required-dialog.component';
 import { NutritionCalculationService } from '../../../../shared/lib/nutrition-calculation.service';
-import { NutritionEditorComponent } from '../../../../components/shared/nutrition-editor/nutrition-editor.component';
 import { ManageHeaderComponent } from '../../../../components/shared/manage-header/manage-header.component';
+import { MealItemsListComponent } from './meal-items-list/meal-items-list.component';
+import { MealAiSessionsComponent } from './meal-ai-sessions/meal-ai-sessions.component';
+import { MealNutritionSidebarComponent } from './meal-nutrition-sidebar/meal-nutrition-sidebar.component';
+import {
+    ConsumptionFormData,
+    ConsumptionItemFormData,
+    ConsumptionItemFormValues,
+    NutritionTotals,
+    NutritionMode,
+    MacroBarState,
+    MacroKey,
+    CalorieMismatchWarning,
+} from './base-meal-manage.types';
+
+export type { ConsumptionFormData, ConsumptionItemFormData } from './base-meal-manage.types';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: FD_VALIDATION_ERRORS,
@@ -95,22 +102,19 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     providers: [VALIDATION_ERRORS_PROVIDER],
     imports: [
         ReactiveFormsModule,
-        FormsModule,
         TranslatePipe,
         FdUiCardComponent,
-        FdUiInputComponent,
-        FdUiButtonComponent,
-        FdUiSegmentedToggleComponent,
         FdUiDateInputComponent,
         FdUiTimeInputComponent,
         FdUiSelectComponent,
         FdUiTextareaComponent,
         FdUiIconModule,
-        FdUiFormErrorComponent,
         ManageHeaderComponent,
         FdPageContainerDirective,
         ImageUploadFieldComponent,
-        NutritionEditorComponent,
+        MealItemsListComponent,
+        MealAiSessionsComponent,
+        MealNutritionSidebarComponent,
     ],
 })
 export class BaseMealManageComponent implements OnInit {
@@ -127,6 +131,7 @@ export class BaseMealManageComponent implements OnInit {
     private readonly route = inject(ActivatedRoute);
     private readonly recipeServingWeightCache = new Map<string, number | null>();
     private readonly calorieMismatchThreshold = 0.2;
+
     public readonly nutritionControlNames = {
         calories: 'manualCalories',
         proteins: 'manualProteins',
@@ -151,6 +156,7 @@ export class BaseMealManageComponent implements OnInit {
     public nutritionMode: NutritionMode = 'auto';
     public nutritionModeOptions: FdUiSegmentedToggleOption[] = [];
     public nutritionWarning = signal<CalorieMismatchWarning | null>(null);
+
     public readonly macroBarState = computed<MacroBarState>(() => {
         const nutrients = this.nutrientChartData();
         const entries: Array<{ key: MacroKey; value: number }> = [
@@ -172,6 +178,7 @@ export class BaseMealManageComponent implements OnInit {
             })),
         };
     });
+
     public aiQuotaExceeded = computed(() => {
         const usage = this.aiUsage();
         if (!usage) {
@@ -280,6 +287,283 @@ export class BaseMealManageComponent implements OnInit {
         return this.consumptionForm.controls.items;
     }
 
+    // --- Item management (delegated from MealItemsListComponent events) ---
+
+    public addConsumptionItem(): void {
+        this.items.push(this.createConsumptionItem());
+        const newIndex = this.items.length - 1;
+        queueMicrotask(() => this.onItemSourceClick(newIndex));
+    }
+
+    public removeItem(index: number): void {
+        this.items.removeAt(index);
+    }
+
+    public onItemSourceClick(index: number): void {
+        const group = this.items.at(index);
+        const initialType = group.controls.sourceType.value ?? ConsumptionSourceType.Product;
+        this.openItemSelectDialog(index, initialType === ConsumptionSourceType.Recipe ? 'Recipe' : 'Product');
+    }
+
+    // --- AI session management (delegated from MealAiSessionsComponent events) ---
+
+    public onAddConsumptionFromPhoto(): void {
+        if (!this.ensurePremiumAccess()) {
+            return;
+        }
+
+        if (this.aiQuotaExceeded()) {
+            return;
+        }
+
+        this.fdDialogService
+            .open<MealPhotoRecognitionDialogComponent, never, ConsumptionAiSessionManageDto | null>(
+                MealPhotoRecognitionDialogComponent,
+                { size: 'lg' },
+            )
+            .afterClosed()
+            .subscribe(session => {
+                if (!session) {
+                    return;
+                }
+                this.aiSessions.update(current => [...current, session]);
+                this.items.updateValueAndValidity({ emitEvent: false });
+                this.updateItemValidationRules();
+                this.updateSummary();
+            });
+    }
+
+    public onDeleteAiSession(index: number): void {
+        this.aiSessions.update(current => current.filter((_, currentIndex) => currentIndex !== index));
+        this.items.updateValueAndValidity({ emitEvent: false });
+        this.updateItemValidationRules();
+        this.updateSummary();
+    }
+
+    public onEditAiSession(index: number): void {
+        if (!this.ensurePremiumAccess()) {
+            return;
+        }
+
+        const session = this.aiSessions()[index];
+        const selection: ImageSelection | null = session?.imageUrl
+            ? { url: session.imageUrl ?? null, assetId: session.imageAssetId ?? null }
+            : null;
+
+        this.fdDialogService
+            .open<
+                MealPhotoRecognitionDialogComponent,
+                { initialSelection: ImageSelection | null; initialSession: ConsumptionAiSessionManageDto | null; mode: 'edit' },
+                ConsumptionAiSessionManageDto | null
+            >(
+                MealPhotoRecognitionDialogComponent,
+                { size: 'lg', data: { initialSelection: selection, initialSession: session ?? null, mode: 'edit' } },
+            )
+            .afterClosed()
+            .subscribe(updated => {
+                if (!updated) {
+                    return;
+                }
+                this.aiSessions.update(current =>
+                    current.map((item, currentIndex) => (currentIndex === index ? updated : item))
+                );
+                this.items.updateValueAndValidity({ emitEvent: false });
+                this.updateItemValidationRules();
+                this.updateSummary();
+            });
+    }
+
+    // --- Nutrition mode (delegated from MealNutritionSidebarComponent events) ---
+
+    public onNutritionModeChange(nextMode: string): void {
+        const resolvedMode: NutritionMode = nextMode === 'manual' ? 'manual' : 'auto';
+        if (this.nutritionMode === resolvedMode) {
+            return;
+        }
+
+        this.nutritionMode = resolvedMode;
+        this.consumptionForm.controls.isNutritionAutoCalculated.setValue(resolvedMode === 'auto');
+    }
+
+    public caloriesError(): string | null {
+        if (this.consumptionForm.controls.isNutritionAutoCalculated.value) {
+            return null;
+        }
+
+        const control = this.consumptionForm.controls.manualCalories;
+        if (!control.touched && !control.dirty) {
+            return null;
+        }
+
+        const calories = this.getControlNumericValue(control);
+        return calories <= 0
+            ? this.translateService.instant('PRODUCT_MANAGE.NUTRITION_ERRORS.CALORIES_REQUIRED')
+            : null;
+    }
+
+    public macrosError(): string | null {
+        if (this.consumptionForm.controls.isNutritionAutoCalculated.value) {
+            return null;
+        }
+
+        const controls = [
+            this.consumptionForm.controls.manualProteins,
+            this.consumptionForm.controls.manualFats,
+            this.consumptionForm.controls.manualCarbs,
+            this.consumptionForm.controls.manualAlcohol,
+        ];
+        const shouldShow = controls.some(control => control.touched || control.dirty);
+        if (!shouldShow) {
+            return null;
+        }
+
+        const proteins = this.getControlNumericValue(this.consumptionForm.controls.manualProteins);
+        const fats = this.getControlNumericValue(this.consumptionForm.controls.manualFats);
+        const carbs = this.getControlNumericValue(this.consumptionForm.controls.manualCarbs);
+        const alcohol = this.getControlNumericValue(this.consumptionForm.controls.manualAlcohol);
+
+        return proteins <= 0 && fats <= 0 && carbs <= 0 && alcohol <= 0
+            ? this.translateService.instant('PRODUCT_MANAGE.NUTRITION_ERRORS.MACROS_REQUIRED')
+            : null;
+    }
+
+    // --- Satiety ---
+
+    public getSatietyLevelMeta(value: number | null): { label: string; description: string; gradient: string } {
+        if (!value) {
+            return {
+                label: this.translateService.instant('CONSUMPTION_MANAGE.SATIETY_PLACEHOLDER_TITLE'),
+                description: this.translateService.instant('CONSUMPTION_MANAGE.SATIETY_PLACEHOLDER_DESCRIPTION'),
+                gradient: 'linear-gradient(135deg, #e2e8f0, #cbd5f5)',
+            };
+        }
+
+        const config = DEFAULT_SATIETY_LEVELS.find(level => level.value === value);
+        return {
+            label: `${value} - ${this.translateService.instant(config?.titleKey ?? '')}`,
+            description: this.translateService.instant(config?.descriptionKey ?? ''),
+            gradient: config?.gradient ?? 'linear-gradient(135deg, #e2e8f0, #cbd5f5)',
+        };
+    }
+
+    public openSatietyDialog(controlName: 'preMealSatietyLevel' | 'postMealSatietyLevel'): void {
+        const control = this.consumptionForm.controls[controlName];
+        if (!control) {
+            return;
+        }
+
+        const titleKey =
+            controlName === 'preMealSatietyLevel'
+                ? 'CONSUMPTION_MANAGE.HUNGER_BEFORE_DIALOG_TITLE'
+                : 'CONSUMPTION_MANAGE.HUNGER_AFTER_DIALOG_TITLE';
+
+        const dialogRef = this.fdDialogService.open<MealSatietyLevelDialogComponent, SatietyLevelDialogData, number>(
+            MealSatietyLevelDialogComponent,
+            {
+                size: 'lg',
+                data: {
+                    titleKey,
+                    subtitleKey: 'CONSUMPTION_MANAGE.SATIETY_DIALOG_HINT',
+                    value: control.value ?? null,
+                },
+            },
+        );
+
+        dialogRef
+            .afterClosed()
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(value => {
+                if (typeof value === 'number') {
+                    control.setValue(value);
+                    control.markAsDirty();
+                    control.markAsTouched();
+                }
+            });
+    }
+
+    // --- Form control helpers ---
+
+    public getControlError(controlName: keyof ConsumptionFormData): string | null {
+        return this.resolveControlError(this.consumptionForm.controls[controlName]);
+    }
+
+    // --- Submit ---
+
+    public onSubmit(): void {
+        this.markFormGroupTouched(this.consumptionForm);
+
+        if (this.macrosError()) {
+            return;
+        }
+
+        if (this.consumptionForm.invalid) {
+            this.setGlobalError('FORM_ERRORS.UNKNOWN');
+            return;
+        }
+
+        const mealType = this.consumptionForm.controls.mealType.value;
+        const comment = this.consumptionForm.controls.comment.value;
+        const formItems = this.consumptionForm.controls.items.value;
+        const consumptionDate = this.buildDateTime();
+
+        const mappedItems: ConsumptionItemManageDto[] = [];
+
+        formItems.forEach(item => {
+            const amountValue = Number(item.amount) || 0;
+            const sourceType = item.sourceType ?? (item.recipe ? ConsumptionSourceType.Recipe : ConsumptionSourceType.Product);
+
+            if (sourceType === ConsumptionSourceType.Product && item.product) {
+                mappedItems.push({
+                    productId: item.product.id,
+                    recipeId: null,
+                    amount: amountValue,
+                });
+                return;
+            }
+
+            if (sourceType === ConsumptionSourceType.Recipe && item.recipe) {
+                const servingsAmount = this.convertRecipeGramsToServings(item.recipe, amountValue);
+                mappedItems.push({
+                    recipeId: item.recipe.id,
+                    productId: null,
+                    amount: servingsAmount,
+                });
+            }
+        });
+
+        const isNutritionAutoCalculated = this.consumptionForm.controls.isNutritionAutoCalculated.value;
+        const manualTotals = this.getManualNutritionTotals();
+        const preMealSatietyLevel = this.consumptionForm.controls.preMealSatietyLevel.value;
+        const postMealSatietyLevel = this.consumptionForm.controls.postMealSatietyLevel.value;
+        const image = this.consumptionForm.controls.imageUrl.value;
+
+        const consumptionData: ConsumptionManageDto = {
+            date: consumptionDate,
+            mealType: mealType ?? undefined,
+            comment: comment ?? undefined,
+            imageUrl: image?.url ?? undefined,
+            imageAssetId: image?.assetId ?? undefined,
+            items: mappedItems,
+            aiSessions: this.aiSessions(),
+            isNutritionAutoCalculated,
+            manualCalories: isNutritionAutoCalculated ? undefined : manualTotals.calories,
+            manualProteins: isNutritionAutoCalculated ? undefined : manualTotals.proteins,
+            manualFats: isNutritionAutoCalculated ? undefined : manualTotals.fats,
+            manualCarbs: isNutritionAutoCalculated ? undefined : manualTotals.carbs,
+            manualFiber: isNutritionAutoCalculated ? undefined : manualTotals.fiber,
+            manualAlcohol: isNutritionAutoCalculated ? undefined : manualTotals.alcohol,
+            preMealSatietyLevel: preMealSatietyLevel ?? undefined,
+            postMealSatietyLevel: postMealSatietyLevel ?? undefined,
+        };
+
+        const consumption = this.consumption();
+        consumption
+            ? this.updateConsumption(consumption.id, consumptionData)
+            : this.addConsumption(consumptionData);
+    }
+
+    // --- Private methods ---
+
     private resolvePresetMealType(): string | null {
         const stateMealType = (this.router.getCurrentNavigation()?.extras.state as { mealType?: string } | undefined)
             ?.mealType;
@@ -364,411 +648,6 @@ export class BaseMealManageComponent implements OnInit {
         this.updateSummary();
     }
 
-    public stringifyMealType = (value: string | null): string =>
-        value ? this.translateService.instant('MEAL_TYPES.' + value) : '';
-
-    public isProductItem(index: number): boolean {
-        return this.items.at(index).controls.sourceType.value === ConsumptionSourceType.Product;
-    }
-
-    public isRecipeItem(index: number): boolean {
-        return this.items.at(index).controls.sourceType.value === ConsumptionSourceType.Recipe;
-    }
-
-    public getProductName(index: number): string {
-        const control = this.items.at(index).controls.product;
-        return control.value?.name || '';
-    }
-
-    public getRecipeName(index: number): string {
-        const control = this.items.at(index).controls.recipe;
-        return control.value?.name || '';
-    }
-
-    public getAmountUnitLabel(index: number): string | null {
-        if (this.isProductItem(index)) {
-            const unit = this.items.at(index).controls.product.value?.baseUnit;
-            return unit ? this.translateService.instant('PRODUCT_AMOUNT_UNITS.' + unit.toUpperCase()) : null;
-        }
-
-        if (this.isRecipeItem(index)) {
-            return this.translateService.instant('PRODUCT_AMOUNT_UNITS.G');
-        }
-
-        return null;
-    }
-
-    public isProductInvalid(index: number): boolean {
-        if (!this.isProductItem(index)) {
-            return false;
-        }
-        const control = this.items.at(index).controls.product;
-        return control.invalid && control.touched;
-    }
-
-    public isRecipeInvalid(index: number): boolean {
-        if (!this.isRecipeItem(index)) {
-            return false;
-        }
-        const control = this.items.at(index).controls.recipe;
-        return control.invalid && control.touched;
-    }
-
-    public addConsumptionItem(): void {
-        this.items.push(this.createConsumptionItem());
-        const newIndex = this.items.length - 1;
-        queueMicrotask(() => this.onItemSourceClick(newIndex));
-    }
-
-    public onAddConsumptionFromPhoto(): void {
-        if (!this.ensurePremiumAccess()) {
-            return;
-        }
-
-        if (this.aiQuotaExceeded()) {
-            return;
-        }
-
-        this.fdDialogService
-            .open<MealPhotoRecognitionDialogComponent, never, ConsumptionAiSessionManageDto | null>(
-                MealPhotoRecognitionDialogComponent,
-                { size: 'lg' },
-            )
-            .afterClosed()
-            .subscribe(session => {
-                if (!session) {
-                    return;
-                }
-                this.aiSessions.update(current => [...current, session]);
-                this.items.updateValueAndValidity({ emitEvent: false });
-                this.updateItemValidationRules();
-                this.updateSummary();
-            });
-    }
-
-    public onDeleteAiSession(index: number): void {
-        this.aiSessions.update(current => current.filter((_, currentIndex) => currentIndex !== index));
-        this.items.updateValueAndValidity({ emitEvent: false });
-        this.updateItemValidationRules();
-        this.updateSummary();
-    }
-
-    public onEditAiSession(index: number): void {
-        if (!this.ensurePremiumAccess()) {
-            return;
-        }
-
-        const session = this.aiSessions()[index];
-        const selection: ImageSelection | null = session?.imageUrl
-            ? { url: session.imageUrl ?? null, assetId: session.imageAssetId ?? null }
-            : null;
-
-        this.fdDialogService
-            .open<
-                MealPhotoRecognitionDialogComponent,
-                { initialSelection: ImageSelection | null; initialSession: ConsumptionAiSessionManageDto | null; mode: 'edit' },
-                ConsumptionAiSessionManageDto | null
-            >(
-                MealPhotoRecognitionDialogComponent,
-                { size: 'lg', data: { initialSelection: selection, initialSession: session ?? null, mode: 'edit' } },
-            )
-            .afterClosed()
-            .subscribe(updated => {
-                if (!updated) {
-                    return;
-                }
-                this.aiSessions.update(current =>
-                    current.map((item, currentIndex) => (currentIndex === index ? updated : item))
-                );
-                this.items.updateValueAndValidity({ emitEvent: false });
-                this.updateItemValidationRules();
-                this.updateSummary();
-            });
-    }
-
-    public formatAiAmount(amount: number, unit: string): string {
-        const normalized = unit?.trim().toLowerCase();
-        const unitMap: Record<string, string> = {
-            g: 'GENERAL.UNITS.G',
-            gram: 'GENERAL.UNITS.G',
-            grams: 'GENERAL.UNITS.G',
-            gr: 'GENERAL.UNITS.G',
-            ml: 'GENERAL.UNITS.ML',
-            l: 'GENERAL.UNITS.ML',
-            pcs: 'GENERAL.UNITS.PCS',
-            pc: 'GENERAL.UNITS.PCS',
-            piece: 'GENERAL.UNITS.PCS',
-            pieces: 'GENERAL.UNITS.PCS',
-            kcal: 'GENERAL.UNITS.KCAL',
-        };
-
-        const unitKey = normalized ? unitMap[normalized] : null;
-        const unitLabel = unitKey ? this.translateService.instant(unitKey) : unit;
-        return unitLabel ? `${amount} ${unitLabel}`.trim() : `${amount}`.trim();
-    }
-
-    public formatAiName(name?: string | null): string {
-        if (!name) {
-            return '';
-        }
-
-        const trimmed = name.trim();
-        if (!trimmed) {
-            return '';
-        }
-
-        const [first, ...rest] = trimmed;
-        return `${first.toLocaleUpperCase()}${rest.join('')}`;
-    }
-
-    public visibleAiItems(
-        items: ConsumptionAiItemManageDto[],
-        maxVisible: number,
-    ): ConsumptionAiItemManageDto[] {
-        return items.slice(0, Math.max(0, maxVisible));
-    }
-
-    public getHiddenAiItemsCount(items: ConsumptionAiItemManageDto[], maxVisible: number): number {
-        return Math.max(0, items.length - Math.max(0, maxVisible));
-    }
-
-    public getAiSessionLabel(index: number): string {
-        return this.translateService.instant('CONSUMPTION_MANAGE.ITEMS_AI_PHOTO_LABEL', { index: index + 1 });
-    }
-
-    public getAiSessionTotals(session: ConsumptionAiSessionManageDto): NutritionTotals {
-        return session.items.reduce(
-            (totals, item) => ({
-                calories: totals.calories + (item.calories ?? 0),
-                proteins: totals.proteins + (item.proteins ?? 0),
-                fats: totals.fats + (item.fats ?? 0),
-                carbs: totals.carbs + (item.carbs ?? 0),
-                fiber: totals.fiber + (item.fiber ?? 0),
-                alcohol: totals.alcohol + (item.alcohol ?? 0),
-            }),
-            { calories: 0, proteins: 0, fats: 0, carbs: 0, fiber: 0, alcohol: 0 }
-        );
-    }
-
-    public readonly aiPreviewMaxItems = 2;
-    public readonly expandedAiSessions = signal<Set<number>>(new Set());
-
-    public isAiSessionExpanded(index: number): boolean {
-        return this.expandedAiSessions().has(index);
-    }
-
-    public toggleAiSessionExpanded(index: number): void {
-        this.expandedAiSessions.update(current => {
-            const next = new Set(current);
-            if (next.has(index)) {
-                next.delete(index);
-            } else {
-                next.add(index);
-            }
-            return next;
-        });
-    }
-
-    public formatAiMacro(value: number, unitKey: string): string {
-        const locale = this.translateService.currentLang || this.translateService.defaultLang || 'en';
-        const hasFraction = Math.abs(value % 1) > 0.01;
-        const formatter = new Intl.NumberFormat(locale, {
-            maximumFractionDigits: hasFraction ? 1 : 0,
-            minimumFractionDigits: hasFraction ? 1 : 0,
-        });
-        const unitLabel = this.translateService.instant(unitKey);
-        return `${formatter.format(value)} ${unitLabel}`.trim();
-    }
-
-    private loadAiUsage(): void {
-        this.aiFoodService.getUsageSummary().subscribe({
-            next: usage => this.aiUsage.set(usage),
-            error: error => console.error('Failed to load AI usage summary', error),
-        });
-    }
-
-    public removeItem(index: number): void {
-        this.items.removeAt(index);
-    }
-
-    public onItemSourceClick(index: number): void {
-        const group = this.items.at(index);
-        const initialType = group.controls.sourceType.value ?? ConsumptionSourceType.Product;
-        this.openItemSelectDialog(index, initialType === ConsumptionSourceType.Recipe ? 'Recipe' : 'Product');
-    }
-
-    public getItemSourceName(index: number): string {
-        if (this.isRecipeItem(index)) {
-            return this.getRecipeName(index);
-        }
-        return this.getProductName(index);
-    }
-
-    public getItemSourceIcon(index: number): string {
-        if (this.isRecipeItem(index) && this.items.at(index).controls.recipe.value) {
-            return 'menu_book';
-        }
-        if (this.isProductItem(index) && this.items.at(index).controls.product.value) {
-            return 'restaurant';
-        }
-        return 'search';
-    }
-
-    public getItemCardTitle(index: number): string {
-        return this.translateService.instant('CONSUMPTION_MANAGE.ITEM_CARD_PLACEHOLDER', {
-            index: index + 1,
-        });
-    }
-
-    public getItemCardMeta(index: number): string | null {
-        const group = this.items.at(index);
-        if (group.controls.product.value) {
-            return this.translateService.instant('CONSUMPTION_MANAGE.ITEM_CARD_META.PRODUCT');
-        }
-
-        if (group.controls.recipe.value) {
-            return this.translateService.instant('CONSUMPTION_MANAGE.ITEM_CARD_META.RECIPE');
-        }
-
-        return null;
-    }
-
-    public getAmountPlaceholder(index: number): string {
-        return this.isRecipeItem(index)
-            ? 'CONSUMPTION_MANAGE.AMOUNT_PLACEHOLDER_RECIPE'
-            : 'CONSUMPTION_MANAGE.AMOUNT_PLACEHOLDER_PRODUCT';
-    }
-
-    public getControlError(controlName: keyof ConsumptionFormData): string | null {
-        return this.resolveControlError(this.consumptionForm.controls[controlName]);
-    }
-
-    public onNutritionModeChange(nextMode: string): void {
-        const resolvedMode: NutritionMode = nextMode === 'manual' ? 'manual' : 'auto';
-        if (this.nutritionMode === resolvedMode) {
-            return;
-        }
-
-        this.nutritionMode = resolvedMode;
-        this.consumptionForm.controls.isNutritionAutoCalculated.setValue(resolvedMode === 'auto');
-    }
-
-    public caloriesError(): string | null {
-        if (this.consumptionForm.controls.isNutritionAutoCalculated.value) {
-            return null;
-        }
-
-        const control = this.consumptionForm.controls.manualCalories;
-        if (!control.touched && !control.dirty) {
-            return null;
-        }
-
-        const calories = this.getControlNumericValue(control);
-        return calories <= 0
-            ? this.translateService.instant('PRODUCT_MANAGE.NUTRITION_ERRORS.CALORIES_REQUIRED')
-            : null;
-    }
-
-    public macrosError(): string | null {
-        if (this.consumptionForm.controls.isNutritionAutoCalculated.value) {
-            return null;
-        }
-
-        const controls = [
-            this.consumptionForm.controls.manualProteins,
-            this.consumptionForm.controls.manualFats,
-            this.consumptionForm.controls.manualCarbs,
-            this.consumptionForm.controls.manualAlcohol,
-        ];
-        const shouldShow = controls.some(control => control.touched || control.dirty);
-        if (!shouldShow) {
-            return null;
-        }
-
-        const proteins = this.getControlNumericValue(this.consumptionForm.controls.manualProteins);
-        const fats = this.getControlNumericValue(this.consumptionForm.controls.manualFats);
-        const carbs = this.getControlNumericValue(this.consumptionForm.controls.manualCarbs);
-        const alcohol = this.getControlNumericValue(this.consumptionForm.controls.manualAlcohol);
-
-        return proteins <= 0 && fats <= 0 && carbs <= 0 && alcohol <= 0
-            ? this.translateService.instant('PRODUCT_MANAGE.NUTRITION_ERRORS.MACROS_REQUIRED')
-            : null;
-    }
-
-    public getAmountControlError(index: number): string | null {
-        return this.resolveControlError(this.items.at(index)?.controls.amount ?? null);
-    }
-
-    public isItemSourceInvalid(index: number): boolean {
-        return this.isProductInvalid(index) || this.isRecipeInvalid(index);
-    }
-
-    public getItemSourceError(index: number): string | null {
-        return this.isItemSourceInvalid(index)
-            ? this.translateService.instant('CONSUMPTION_MANAGE.ITEM_SOURCE_ERROR')
-            : null;
-    }
-
-    public getSatietyLevelLabel(value: number | null): string {
-        if (!value) {
-            return this.translateService.instant('CONSUMPTION_MANAGE.SATIETY_NOT_SELECTED');
-        }
-        const title = this.translateService.instant(`HUNGER_SCALE.LEVEL_${value}.TITLE`);
-        return `${value} - ${title}`;
-    }
-
-    public getSatietyLevelMeta(value: number | null): { label: string; description: string; gradient: string } {
-        if (!value) {
-            return {
-                label: this.translateService.instant('CONSUMPTION_MANAGE.SATIETY_PLACEHOLDER_TITLE'),
-                description: this.translateService.instant('CONSUMPTION_MANAGE.SATIETY_PLACEHOLDER_DESCRIPTION'),
-                gradient: 'linear-gradient(135deg, #e2e8f0, #cbd5f5)',
-            };
-        }
-
-        const config = DEFAULT_SATIETY_LEVELS.find(level => level.value === value);
-        return {
-            label: `${value} - ${this.translateService.instant(config?.titleKey ?? '')}`,
-            description: this.translateService.instant(config?.descriptionKey ?? ''),
-            gradient: config?.gradient ?? 'linear-gradient(135deg, #e2e8f0, #cbd5f5)',
-        };
-    }
-
-    public openSatietyDialog(controlName: 'preMealSatietyLevel' | 'postMealSatietyLevel'): void {
-        const control = this.consumptionForm.controls[controlName];
-        if (!control) {
-            return;
-        }
-
-        const titleKey =
-            controlName === 'preMealSatietyLevel'
-                ? 'CONSUMPTION_MANAGE.HUNGER_BEFORE_DIALOG_TITLE'
-                : 'CONSUMPTION_MANAGE.HUNGER_AFTER_DIALOG_TITLE';
-
-        const dialogRef = this.fdDialogService.open<MealSatietyLevelDialogComponent, SatietyLevelDialogData, number>(
-            MealSatietyLevelDialogComponent,
-            {
-                size: 'lg',
-                data: {
-                    titleKey,
-                    subtitleKey: 'CONSUMPTION_MANAGE.SATIETY_DIALOG_HINT',
-                    value: control.value ?? null,
-                },
-            },
-        );
-
-        dialogRef
-            .afterClosed()
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(value => {
-                if (typeof value === 'number') {
-                    control.setValue(value);
-                    control.markAsDirty();
-                    control.markAsTouched();
-                }
-            });
-    }
-
     private openItemSelectDialog(index: number, initialTab: 'Product' | 'Recipe'): void {
         this.fdDialogService
             .open<ItemSelectDialogComponent, ItemSelectDialogData, ItemSelection | null>(
@@ -796,86 +675,12 @@ export class BaseMealManageComponent implements OnInit {
                 }
 
                 this.loadRecipeServingWeight(selection.recipe).subscribe();
-
                 group.patchValue({
                     recipe: selection.recipe,
                     product: null,
                 });
                 this.configureItemType(group, ConsumptionSourceType.Recipe);
             });
-    }
-
-    public onSubmit(): void {
-        this.markFormGroupTouched(this.consumptionForm);
-
-        if (this.macrosError()) {
-            return;
-        }
-
-        if (this.consumptionForm.invalid) {
-            this.setGlobalError('FORM_ERRORS.UNKNOWN');
-            return;
-        }
-
-        const mealType = this.consumptionForm.controls.mealType.value;
-        const comment = this.consumptionForm.controls.comment.value;
-        const formItems = this.consumptionForm.controls.items.value;
-        const consumptionDate = this.buildDateTime();
-
-        const mappedItems: ConsumptionItemManageDto[] = [];
-
-        formItems.forEach(item => {
-            const amountValue = Number(item.amount) || 0;
-            const sourceType = item.sourceType ?? (item.recipe ? ConsumptionSourceType.Recipe : ConsumptionSourceType.Product);
-
-            if (sourceType === ConsumptionSourceType.Product && item.product) {
-                mappedItems.push({
-                    productId: item.product.id,
-                    recipeId: null,
-                    amount: amountValue,
-                });
-                return;
-            }
-
-            if (sourceType === ConsumptionSourceType.Recipe && item.recipe) {
-                const servingsAmount = this.convertRecipeGramsToServings(item.recipe, amountValue);
-                mappedItems.push({
-                    recipeId: item.recipe.id,
-                    productId: null,
-                    amount: servingsAmount,
-                });
-            }
-        });
-
-        const isNutritionAutoCalculated = this.consumptionForm.controls.isNutritionAutoCalculated.value;
-        const manualTotals = this.getManualNutritionTotals();
-        const preMealSatietyLevel = this.consumptionForm.controls.preMealSatietyLevel.value;
-        const postMealSatietyLevel = this.consumptionForm.controls.postMealSatietyLevel.value;
-        const image = this.consumptionForm.controls.imageUrl.value;
-
-        const consumptionData: ConsumptionManageDto = {
-            date: consumptionDate,
-            mealType: mealType ?? undefined,
-            comment: comment ?? undefined,
-            imageUrl: image?.url ?? undefined,
-            imageAssetId: image?.assetId ?? undefined,
-            items: mappedItems,
-            aiSessions: this.aiSessions(),
-            isNutritionAutoCalculated,
-            manualCalories: isNutritionAutoCalculated ? undefined : manualTotals.calories,
-            manualProteins: isNutritionAutoCalculated ? undefined : manualTotals.proteins,
-            manualFats: isNutritionAutoCalculated ? undefined : manualTotals.fats,
-            manualCarbs: isNutritionAutoCalculated ? undefined : manualTotals.carbs,
-            manualFiber: isNutritionAutoCalculated ? undefined : manualTotals.fiber,
-            manualAlcohol: isNutritionAutoCalculated ? undefined : manualTotals.alcohol,
-            preMealSatietyLevel: preMealSatietyLevel ?? undefined,
-            postMealSatietyLevel: postMealSatietyLevel ?? undefined,
-        };
-
-        const consumption = this.consumption();
-        consumption
-            ? this.updateConsumption(consumption.id, consumptionData)
-            : this.addConsumption(consumptionData);
     }
 
     private markFormGroupTouched(formGroup: FormGroup | FormArray): void {
@@ -1522,61 +1327,11 @@ export class BaseMealManageComponent implements OnInit {
 
         return this.translateService.instant('FORM_ERRORS.UNKNOWN');
     }
+
+    private loadAiUsage(): void {
+        this.aiFoodService.getUsageSummary().subscribe({
+            next: usage => this.aiUsage.set(usage),
+            error: error => console.error('Failed to load AI usage summary', error),
+        });
+    }
 }
-
-type ConsumptionFormValues = {
-    date: string;
-    time: string;
-    mealType: string | null;
-    items: ConsumptionItemFormValues[];
-    comment: string | null;
-    imageUrl: ImageSelection | null;
-    isNutritionAutoCalculated: boolean;
-    manualCalories: number | null;
-    manualProteins: number | null;
-    manualFats: number | null;
-    manualCarbs: number | null;
-    manualFiber: number | null;
-    manualAlcohol: number | null;
-    preMealSatietyLevel: number | null;
-    postMealSatietyLevel: number | null;
-};
-
-type ConsumptionItemFormValues = {
-    sourceType: ConsumptionSourceType;
-    product: Product | null;
-    recipe: Recipe | null;
-    amount: number | null;
-};
-
-type ConsumptionFormData = FormGroupControls<ConsumptionFormValues>;
-
-type ConsumptionItemFormData = FormGroupControls<ConsumptionItemFormValues>;
-
-type NutritionTotals = {
-    calories: number;
-    proteins: number;
-    fats: number;
-    carbs: number;
-    fiber: number;
-    alcohol: number;
-};
-
-type NutritionMode = 'auto' | 'manual';
-type MacroKey = 'proteins' | 'fats' | 'carbs';
-
-interface MacroBarSegment {
-    key: MacroKey;
-    percent: number;
-}
-
-interface MacroBarState {
-    isEmpty: boolean;
-    segments: MacroBarSegment[];
-}
-
-interface CalorieMismatchWarning {
-    expectedCalories: number;
-    actualCalories: number;
-}
-

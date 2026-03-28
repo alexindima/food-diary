@@ -86,6 +86,9 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
         var survivorUser = User.Create("survivor@example.com", "hash");
         survivorUser.UpdateProfileMedia(profileImageAssetId: null);
 
+        context.Users.AddRange(deletedUser, survivorUser);
+        await context.SaveChangesAsync();
+
         var productAsset = ImageAsset.Create(deletedUser.Id, "users/deleted/product.webp", "https://cdn.example.com/product.webp");
         var recipeAsset = ImageAsset.Create(deletedUser.Id, "users/deleted/recipe.webp", "https://cdn.example.com/recipe.webp");
         var stepAsset = ImageAsset.Create(deletedUser.Id, "users/deleted/step.webp", "https://cdn.example.com/step.webp");
@@ -116,10 +119,7 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
         shoppingList.AddItem("Bread", product.Id, 2, MeasurementUnit.Pcs, "Bakery", false, 0);
         var recentItem = RecentItem.Create(deletedUser.Id, RecentItemType.Recipe, recipe.Id.Value);
         var aiUsage = AiUsage.Create(deletedUser.Id, "nutrition", "gpt-4.1-mini", 15, 25, 40);
-        deletedUser.UpdateProfileMedia(profileImageAssetId: profileAsset.Id);
-        deletedUser.MarkDeleted(DateTime.UtcNow.AddDays(-10));
 
-        context.Users.AddRange(deletedUser, survivorUser);
         context.ImageAssets.AddRange(productAsset, recipeAsset, stepAsset, profileAsset, mealAsset);
         context.Products.Add(product);
         context.Recipes.Add(recipe);
@@ -127,6 +127,10 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
         context.ShoppingLists.Add(shoppingList);
         context.RecentItems.Add(recentItem);
         context.AiUsages.Add(aiUsage);
+        await context.SaveChangesAsync();
+
+        deletedUser.UpdateProfileMedia(profileImageAssetId: profileAsset.Id);
+        deletedUser.MarkDeleted(DateTime.UtcNow.AddDays(-10));
         await context.SaveChangesAsync();
 
         var storage = new RecordingImageStorageService();

@@ -1,0 +1,45 @@
+<fd-ui-card
+    class="product-manage__card product-manage__card--nutrition"
+    appearance="entry"
+    [title]="'PRODUCT_MANAGE.NUTRITION_VALUE' | translate"
+>
+    <div class="product-manage__nutrition">
+        <div class="product-manage__ai">
+            <div class="product-manage__ai-text">
+                <div class="product-manage__ai-title">
+                    {{ 'PRODUCT_MANAGE.AI_TITLE' | translate }}
+                </div>
+                <div class="product-manage__ai-subtitle">
+                    {{ 'PRODUCT_MANAGE.AI_SUBTITLE' | translate }}
+                </div>
+            </div>
+            <fd-ui-button
+                type="button"
+                variant="primary"
+                fill="outline"
+                icon="auto_awesome"
+                [fullWidth]="true"
+                (click)="openAiRecognition.emit()"
+            >
+                {{ 'PRODUCT_MANAGE.AI_BUTTON' | translate }}
+            </fd-ui-button>
+        </div>
+        <fd-nutrition-editor
+            [formGroup]="formGroup()"
+            [controlNames]="nutritionControlNames()"
+            [macroState]="macroBarState()"
+            [caloriesError]="caloriesError()"
+            [macrosError]="macrosError()"
+            [warning]="nutritionWarning()"
+        >
+            <fd-ui-segmented-toggle
+                nutrition-before
+                class="product-manage__nutrition-toggle"
+                [options]="nutritionModeOptions()"
+                [selectedValue]="nutritionMode()"
+                (selectedValueChange)="nutritionModeChange.emit($event)"
+                [ariaLabel]="'PRODUCT_MANAGE.NUTRITION_MODE.ARIA' | translate"
+            />
+        </fd-nutrition-editor>
+    </div>
+</fd-ui-card>

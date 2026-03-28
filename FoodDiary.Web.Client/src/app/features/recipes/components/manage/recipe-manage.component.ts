@@ -1,4 +1,4 @@
-﻿import {
+import {
     ChangeDetectionStrategy,
     Component,
     computed,
@@ -8,7 +8,7 @@
     OnInit,
     signal
 } from '@angular/core';
-import { AbstractControl, FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormGroupControls } from '../../../../shared/lib/common.data';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { MeasurementUnit, Product, ProductVisibility, ProductType } from '../../../products/models/product.data';
@@ -22,44 +22,49 @@ import { NutrientData } from '../../../../shared/models/charts.data';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Recipe, RecipeDto, RecipeVisibility, RecipeIngredient } from '../../models/recipe.data';
 import { RecipeService } from '../../api/recipe.service';
-import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 import { NavigationService } from '../../../../services/navigation.service';
 import { finalize } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
-import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
-import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea.component';
-import { FdUiSelectComponent } from 'fd-ui-kit/select/fd-ui-select.component';
 import { FdUiSegmentedToggleComponent, FdUiSegmentedToggleOption } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle.component';
-import { CommonModule } from '@angular/common';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiDialogRef } from 'fd-ui-kit/material';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
-import { ImageUploadFieldComponent } from '../../../../components/shared/image-upload-field/image-upload-field.component';
 import { ImageSelection } from '../../../../shared/models/image-upload.data';
 import { NutritionCalculationService } from '../../../../shared/lib/nutrition-calculation.service';
 import { NutritionEditorComponent } from '../../../../components/shared/nutrition-editor/nutrition-editor.component';
 import { ManageHeaderComponent } from '../../../../components/shared/manage-header/manage-header.component';
+import { RecipeBasicInfoComponent } from './recipe-basic-info/recipe-basic-info.component';
+import { RecipeStepsListComponent, StepIngredientEvent } from './recipe-steps-list/recipe-steps-list.component';
+import {
+    RecipeFormData,
+    RecipeFormValues,
+    StepFormData,
+    StepFormValues,
+    IngredientFormData,
+    IngredientFormValues,
+    CalorieMismatchWarning,
+    NutritionMode,
+    NutritionScaleMode,
+    MacroKey,
+    MacroBarState,
+} from './recipe-manage.types';
 
 @Component({
     selector: 'fd-recipe-manage',
     imports: [
-        CommonModule,
         ReactiveFormsModule,
         TranslatePipe,
-        DragDropModule,
         FdUiCardComponent,
         FdUiButtonComponent,
-        FdUiInputComponent,
-        FdUiTextareaComponent,
-        FdUiSelectComponent,
         FdUiSegmentedToggleComponent,
         ManageHeaderComponent,
         FdPageContainerDirective,
-        ImageUploadFieldComponent,
         NutritionEditorComponent,
+        RecipeBasicInfoComponent,
+        RecipeStepsListComponent,
     ],
     templateUrl: './recipe-manage.component.html',
     styleUrls: ['./recipe-manage.component.scss'],
@@ -70,7 +75,6 @@ export class RecipeManageComponent implements OnInit {
     private readonly translateService = inject(TranslateService);
     private readonly navigationService = inject(NavigationService);
     private readonly nutritionCalculationService = inject(NutritionCalculationService);
-    private readonly editingStepTitles = new Set<number>();
     private readonly expandedSteps = new Set<number>();
     private lastRecipeId: string | null = null;
 
@@ -120,9 +124,6 @@ export class RecipeManageComponent implements OnInit {
     });
 
     public recipeForm: FormGroup<RecipeFormData>;
-    public selectedStepIndex: number = 0;
-    public selectedIngredientIndex: number = 0;
-    public visibilityOptions = Object.values(RecipeVisibility);
     public visibilitySelectOptions: FdUiSelectOption<RecipeVisibility>[] = [];
     public nutritionMode: NutritionMode = 'auto';
     public nutritionModeOptions: FdUiSegmentedToggleOption[] = [];
@@ -199,20 +200,18 @@ export class RecipeManageComponent implements OnInit {
             }
         });
     }
-    public getStepCollapsedHint(stepIndex: number): string | null {
-        const descriptionControl = this.steps.at(stepIndex)?.controls.description;
-        const text = descriptionControl?.value?.trim();
-        if (!text) {
-            return null;
-        }
-        return text.length > 80 ? `${text.slice(0, 77)}...` : text;
-    }
 
     public ngOnInit(): void {}
 
     public get steps(): FormArray<FormGroup<FormGroupControls<StepFormValues>>> {
         return this.recipeForm.controls.steps;
     }
+
+    public get expandedStepsSet(): Set<number> {
+        return this.expandedSteps;
+    }
+
+    // -- Step management (delegated from steps-list) --
 
     public addStep(): void {
         this.steps.push(this.createStepGroup());
@@ -232,103 +231,60 @@ export class RecipeManageComponent implements OnInit {
         nextExpanded.forEach(stepIndex => this.expandedSteps.add(stepIndex));
     }
 
-    public getStepIngredients(stepIndex: number):  FormArray<FormGroup<FormGroupControls<IngredientFormValues>>> {
+    public addIngredientToStep(stepIndex: number): void {
         const step = this.steps.at(stepIndex);
-        return step.controls.ingredients;
+        step.controls.ingredients.push(this.createIngredientGroup());
     }
 
-    public getIngredientName(stepIndex: number, ingredientIndex: number): string {
-        const ingredientsArray = this.getStepIngredients(stepIndex);
-        const ingredient = ingredientsArray.at(ingredientIndex);
-        return (
-            ingredient.controls.food.value?.name ??
-            ingredient.controls.nestedRecipeName.value ??
-            this.translateService.instant('RECIPE_MANAGE.SELECT_INGREDIENT')
-        );
+    public removeIngredientFromStep(event: StepIngredientEvent): void {
+        const step = this.steps.at(event.stepIndex);
+        step.controls.ingredients.removeAt(event.ingredientIndex);
     }
 
-    public getProductUnit(stepIndex: number, ingredientIndex: number): string | null {
-        const ingredientsArray = this.getStepIngredients(stepIndex);
-        const foodControl = ingredientsArray.at(ingredientIndex).controls.food;
-        const unit = foodControl.value?.baseUnit;
-        return unit
-            ? this.translateService.instant('PRODUCT_AMOUNT_UNITS.' + unit.toUpperCase())
-            : null;
+    public onProductSelectClick(event: StepIngredientEvent): void {
+        const { stepIndex, ingredientIndex } = event;
+        this.fdDialogService
+            .open<ItemSelectDialogComponent, ItemSelectDialogData, ItemSelection | null>(
+                ItemSelectDialogComponent,
+                {
+                    size: 'lg',
+                    data: { initialTab: 'Product' },
+                },
+            )
+            .afterClosed()
+            .subscribe(selection => {
+                if (!selection) {
+                    return;
+                }
+                const ingredientsArray = this.steps.at(stepIndex).controls.ingredients;
+                const foodGroup = ingredientsArray.at(ingredientIndex);
+                if (selection.type === 'Product') {
+                    const food = selection.product;
+                    const defaultAmount = food.defaultPortionAmount ?? food.baseAmount ?? 0;
+                    foodGroup.patchValue({
+                        food,
+                        foodName: food.name,
+                        nestedRecipeId: null,
+                        nestedRecipeName: null,
+                        amount: defaultAmount,
+                    });
+                } else {
+                    const recipe = selection.recipe;
+                    foodGroup.patchValue({
+                        food: null,
+                        foodName: recipe.name,
+                        nestedRecipeId: recipe.id,
+                        nestedRecipeName: recipe.name,
+                        amount: 1,
+                    });
+                }
+                if (this.recipeForm.controls.calculateNutritionAutomatically.value) {
+                    this.recalculateNutrientsFromForm();
+                }
+            });
     }
 
-    public getIngredientAmountLabel(stepIndex: number, ingredientIndex: number): string {
-        const ingredientsArray = this.getStepIngredients(stepIndex);
-        const ingredient = ingredientsArray.at(ingredientIndex);
-        if (ingredient.controls.nestedRecipeId.value) {
-            return this.translateService.instant('RECIPE_SELECT_DIALOG.SERVINGS');
-        }
-        const baseLabel = this.translateService.instant('RECIPE_MANAGE.INGREDIENT_AMOUNT');
-        const unit = this.getProductUnit(stepIndex, ingredientIndex);
-        return unit ? `${baseLabel} (${unit})` : baseLabel;
-    }
-
-    public getIngredientIcon(stepIndex: number, ingredientIndex: number): string {
-        const ingredientsArray = this.getStepIngredients(stepIndex);
-        const ingredient = ingredientsArray.at(ingredientIndex);
-        if (ingredient.controls.nestedRecipeId.value) {
-            return 'menu_book';
-        }
-        if (ingredient.controls.food.value) {
-            return 'restaurant';
-        }
-        return 'search';
-    }
-
-    public getFieldError(controlName: keyof RecipeFormData): string | null {
-        return this.resolveControlError(this.recipeForm.controls[controlName]);
-    }
-
-    public isStepTitleEditing(stepIndex: number): boolean {
-        return this.editingStepTitles.has(stepIndex);
-    }
-
-    public toggleStepTitleEdit(stepIndex: number): void {
-        if (this.editingStepTitles.has(stepIndex)) {
-            this.commitStepTitle(stepIndex);
-            this.editingStepTitles.delete(stepIndex);
-            return;
-        }
-
-        this.editingStepTitles.add(stepIndex);
-    }
-
-    public onStepTitleBlur(stepIndex: number): void {
-        this.commitStepTitle(stepIndex);
-        this.editingStepTitles.delete(stepIndex);
-    }
-
-    public getStepTitleDisplay(stepIndex: number): string {
-        const step = this.steps.at(stepIndex);
-        const titleValue = step?.controls.title.value;
-        const trimmedTitle = typeof titleValue === 'string' ? titleValue.trim() : '';
-        if (trimmedTitle.length > 0) {
-            return trimmedTitle;
-        }
-
-        return this.translateService.instant('RECIPE_MANAGE.STEP_TITLE', { index: stepIndex + 1 });
-    }
-
-    public getStepDescriptionError(stepIndex: number): string | null {
-        const step = this.steps.at(stepIndex);
-        return this.resolveControlError(step.controls.description);
-    }
-
-    public isStepExpanded(stepIndex: number): boolean {
-        return this.expandedSteps.has(stepIndex);
-    }
-
-    public toggleStepExpanded(stepIndex: number): void {
-        if (this.expandedSteps.has(stepIndex)) {
-            this.expandedSteps.delete(stepIndex);
-        } else {
-            this.expandedSteps.add(stepIndex);
-        }
-    }
+    // -- Nutrition mode --
 
     public onNutritionModeChange(nextMode: string): void {
         const resolvedMode: NutritionMode = nextMode === 'manual' ? 'manual' : 'auto';
@@ -396,95 +352,140 @@ export class RecipeManageComponent implements OnInit {
             : null;
     }
 
-    public getStepIngredientsCount(stepIndex: number): number {
-        const step = this.steps.at(stepIndex);
-        return step?.controls.ingredients.length ?? 0;
-    }
+    // -- Form submission --
 
-    public getStepDescriptionSummary(stepIndex: number): string {
-        const step = this.steps.at(stepIndex);
-        const description = step?.controls.description.value?.trim() ?? '';
-        if (!description) {
-            return this.translateService.instant('RECIPE_MANAGE.STEP_NO_DESCRIPTION');
-        }
+    public onSubmit(): void {
+        this.markFormGroupTouched(this.recipeForm);
 
-        return description;
-    }
-
-    public onStepDrop(event: CdkDragDrop<FormGroup<StepFormData>[]>): void {
-        if (event.previousIndex === event.currentIndex) {
+        if (this.macrosError()) {
             return;
         }
 
-        moveItemInArray(this.steps.controls, event.previousIndex, event.currentIndex);
-        this.steps.updateValueAndValidity();
-        this.steps.markAsDirty();
+        if (!this.recipeForm.valid) {
+            this.setGlobalError('FORM_ERRORS.UNKNOWN');
+            return;
+        }
+
+        const recipeData = this.prepareRecipeDto();
+        const existingRecipe = this.recipe();
+
+        this.clearGlobalError();
+
+        if (existingRecipe) {
+            this.updateRecipe(existingRecipe.id, recipeData);
+        } else {
+            this.addRecipe(recipeData);
+        }
     }
 
-    public getIngredientControlError(
-        stepIndex: number,
-        ingredientIndex: number,
-        controlName: 'food' | 'foodName' | 'amount',
-    ): string | null {
-        const ingredient = this.getStepIngredients(stepIndex).at(ingredientIndex);
-        return this.resolveControlError(ingredient.controls[controlName]);
+    public async onCancel(): Promise<void> {
+        if (this.dialogRef) {
+            this.dialogRef.close(null);
+            return;
+        }
+        await this.navigationService.navigateToRecipeList();
     }
 
-    public async onProductSelectClick(stepIndex: number, ingredientIndex: number): Promise<void> {
-        this.selectedStepIndex = stepIndex;
-        this.selectedIngredientIndex = ingredientIndex;
-        this.fdDialogService
-            .open<ItemSelectDialogComponent, ItemSelectDialogData, ItemSelection | null>(
-                ItemSelectDialogComponent,
-                {
-                    size: 'lg',
-                    data: { initialTab: 'Product' },
-                },
-            )
-            .afterClosed()
-            .subscribe(selection => {
-                if (!selection) {
-                    return;
-                }
-                const ingredientsArray = this.getStepIngredients(stepIndex);
-                const foodGroup = ingredientsArray.at(ingredientIndex);
-                if (selection.type === 'Product') {
-                    const food = selection.product;
-                    const defaultAmount = food.defaultPortionAmount ?? food.baseAmount ?? 0;
-                    foodGroup.patchValue({
-                        food,
-                        foodName: food.name,
-                        nestedRecipeId: null,
-                        nestedRecipeName: null,
-                        amount: defaultAmount,
-                    });
-                } else {
-                    const recipe = selection.recipe;
-                    foodGroup.patchValue({
-                        food: null,
-                        foodName: recipe.name,
-                        nestedRecipeId: recipe.id,
-                        nestedRecipeName: recipe.name,
-                        amount: 1,
-                    });
-                }
-                if (this.recipeForm.controls.calculateNutritionAutomatically.value) {
-                    this.recalculateNutrientsFromForm();
-                }
+    // -- Private methods --
+
+    private addRecipe(recipeData: RecipeDto): void {
+        this.isSubmitting.set(true);
+        this.recipeService
+            .create(recipeData)
+            .pipe(finalize(() => this.isSubmitting.set(false)))
+            .subscribe({
+                next: recipe => this.handleSubmitResponse(recipe),
+                error: error => this.handleSubmitError(error),
             });
     }
 
-    public addIngredientToStep(stepIndex: number): void {
-        const step = this.steps.at(stepIndex);
-        const ingredients = step.controls.ingredients;
-
-        ingredients.push(this.createIngredientGroup());
+    private updateRecipe(id: string, recipeData: RecipeDto): void {
+        this.isSubmitting.set(true);
+        this.recipeService
+            .update(id, recipeData)
+            .pipe(finalize(() => this.isSubmitting.set(false)))
+            .subscribe({
+                next: recipe => this.handleSubmitResponse(recipe),
+                error: error => this.handleSubmitError(error),
+            });
     }
 
-    public removeIngredientFromStep(stepIndex: number, ingredientIndex: number): void {
-        const step = this.steps.at(stepIndex);
-        const ingredients = step.controls.ingredients;
-        ingredients.removeAt(ingredientIndex);
+    private async handleSubmitResponse(_response: Recipe): Promise<void> {
+        this.clearGlobalError();
+        if (this.dialogRef) {
+            this.dialogRef.close(_response);
+            return;
+        }
+        await this.navigationService.navigateToRecipeList();
+    }
+
+    private markFormGroupTouched(formGroup: FormGroup | FormArray): void {
+        Object.values(formGroup.controls).forEach(control => {
+            if (control instanceof FormGroup || control instanceof FormArray) {
+                this.markFormGroupTouched(control);
+            } else {
+                control.markAllAsTouched();
+                control.updateValueAndValidity();
+            }
+        });
+    }
+
+    private handleSubmitError(error?: HttpErrorResponse): void {
+        const message = error?.error?.message ?? this.translateService.instant('FORM_ERRORS.UNKNOWN');
+        this.setGlobalError(message, false);
+    }
+
+    private setGlobalError(message: string, translate: boolean = true): void {
+        this.globalError.set(translate ? this.translateService.instant(message) : message);
+    }
+
+    private clearGlobalError(): void {
+        this.globalError.set(null);
+    }
+
+    private prepareRecipeDto(): RecipeDto {
+        const formValue = this.recipeForm.value as RecipeFormValues;
+
+        const steps = formValue.steps
+            .map(step => {
+                const ingredients = step.ingredients
+                    .filter(ingredient => !!ingredient.food || !!ingredient.nestedRecipeId)
+                    .map(ingredient => ({
+                        productId: ingredient.food?.id,
+                        nestedRecipeId: ingredient.nestedRecipeId ?? undefined,
+                        amount: ingredient.amount ?? 0,
+                    }));
+
+                return {
+                    title: step.title || null,
+                    imageUrl: step.imageUrl?.url || null,
+                    imageAssetId: step.imageUrl?.assetId || null,
+                    description: step.description,
+                    ingredients,
+                };
+            })
+            .filter(step => step.ingredients.length > 0);
+
+        return {
+            name: formValue.name,
+            description: formValue.description || null,
+            comment: formValue.comment || null,
+            category: formValue.category || null,
+            imageUrl: formValue.imageUrl?.url || null,
+            imageAssetId: formValue.imageUrl?.assetId || null,
+            prepTime: formValue.prepTime ?? 0,
+            cookTime: formValue.cookTime ?? 0,
+            servings: formValue.servings,
+            visibility: formValue.visibility ?? RecipeVisibility.Private,
+            calculateNutritionAutomatically: formValue.calculateNutritionAutomatically,
+            manualCalories: formValue.calculateNutritionAutomatically ? null : this.toRecipeTotal(formValue.manualCalories),
+            manualProteins: formValue.calculateNutritionAutomatically ? null : this.toRecipeTotal(formValue.manualProteins),
+            manualFats: formValue.calculateNutritionAutomatically ? null : this.toRecipeTotal(formValue.manualFats),
+            manualCarbs: formValue.calculateNutritionAutomatically ? null : this.toRecipeTotal(formValue.manualCarbs),
+            manualFiber: formValue.calculateNutritionAutomatically ? null : this.toRecipeTotal(formValue.manualFiber),
+            manualAlcohol: formValue.calculateNutritionAutomatically ? null : this.toRecipeTotal(formValue.manualAlcohol),
+            steps,
+        };
     }
 
     private populateForm(recipeData: Recipe): void {
@@ -581,18 +582,6 @@ export class RecipeManageComponent implements OnInit {
         });
     }
 
-    private commitStepTitle(stepIndex: number): void {
-        const step = this.steps.at(stepIndex);
-        const titleControl = step?.controls.title;
-        if (!titleControl) {
-            return;
-        }
-
-        const titleValue = titleControl.value;
-        const trimmedTitle = typeof titleValue === 'string' ? titleValue.trim() : '';
-        titleControl.setValue(trimmedTitle.length > 0 ? trimmedTitle : null);
-    }
-
     private createIngredientGroup(
         food: Product | null = null,
         amount: number | null = null,
@@ -643,7 +632,7 @@ export class RecipeManageComponent implements OnInit {
             : MeasurementUnit.G;
 
         const baseAmount = ingredient.productBaseAmount ?? 100;
-        const product: Product = {
+        return {
             id: ingredient.productId,
             name: ingredient.productName ?? this.translateService.instant('RECIPE_MANAGE.UNKNOWN_PRODUCT'),
             baseUnit: unit,
@@ -666,141 +655,9 @@ export class RecipeManageComponent implements OnInit {
             createdAt: new Date(),
             isOwnedByCurrentUser: true,
         };
-
-        return product;
     }
 
-    public onSubmit(): void {
-        this.markFormGroupTouched(this.recipeForm);
-
-        if (this.macrosError()) {
-            return;
-        }
-
-        if (!this.recipeForm.valid) {
-            this.setGlobalError('FORM_ERRORS.UNKNOWN');
-            return;
-        }
-
-        const recipeData = this.prepareRecipeDto();
-        const existingRecipe = this.recipe();
-
-        this.clearGlobalError();
-
-        if (existingRecipe) {
-            this.updateRecipe(existingRecipe.id, recipeData);
-        } else {
-            this.addRecipe(recipeData);
-        }
-    }
-
-    private addRecipe(recipeData: RecipeDto): void {
-        this.isSubmitting.set(true);
-        this.recipeService
-            .create(recipeData)
-            .pipe(finalize(() => this.isSubmitting.set(false)))
-            .subscribe({
-                next: recipe => this.handleSubmitResponse(recipe),
-                error: error => this.handleSubmitError(error),
-            });
-    }
-
-    private updateRecipe(id: string, recipeData: RecipeDto): void {
-        this.isSubmitting.set(true);
-        this.recipeService
-            .update(id, recipeData)
-            .pipe(finalize(() => this.isSubmitting.set(false)))
-            .subscribe({
-                next: recipe => this.handleSubmitResponse(recipe),
-                error: error => this.handleSubmitError(error),
-            });
-    }
-
-    public async onCancel(): Promise<void> {
-        if (this.dialogRef) {
-            this.dialogRef.close(null);
-            return;
-        }
-        await this.navigationService.navigateToRecipeList();
-    }
-
-    private async handleSubmitResponse(_response: Recipe): Promise<void> {
-        this.clearGlobalError();
-        if (this.dialogRef) {
-            this.dialogRef.close(_response);
-            return;
-        }
-        await this.navigationService.navigateToRecipeList();
-    }
-
-    private markFormGroupTouched(formGroup: FormGroup | FormArray): void {
-        Object.values(formGroup.controls).forEach(control => {
-            if (control instanceof FormGroup || control instanceof FormArray) {
-                this.markFormGroupTouched(control);
-            } else {
-                control.markAllAsTouched();
-                control.updateValueAndValidity();
-            }
-        });
-    }
-
-    private handleSubmitError(error?: HttpErrorResponse): void {
-        const message = error?.error?.message ?? this.translateService.instant('FORM_ERRORS.UNKNOWN');
-        this.setGlobalError(message, false);
-    }
-
-    private setGlobalError(message: string, translate: boolean = true): void {
-        this.globalError.set(translate ? this.translateService.instant(message) : message);
-    }
-
-    private clearGlobalError(): void {
-        this.globalError.set(null);
-    }
-
-    private prepareRecipeDto(): RecipeDto {
-        const formValue = this.recipeForm.value as RecipeFormValues;
-
-        const steps = formValue.steps
-            .map(step => {
-                const ingredients = step.ingredients
-                    .filter(ingredient => !!ingredient.food || !!ingredient.nestedRecipeId)
-                    .map(ingredient => ({
-                        productId: ingredient.food?.id,
-                        nestedRecipeId: ingredient.nestedRecipeId ?? undefined,
-                        amount: ingredient.amount ?? 0,
-                    }));
-
-                return {
-                    title: step.title || null,
-                    imageUrl: step.imageUrl?.url || null,
-                    imageAssetId: step.imageUrl?.assetId || null,
-                    description: step.description,
-                    ingredients,
-                };
-            })
-            .filter(step => step.ingredients.length > 0);
-
-        return {
-            name: formValue.name,
-            description: formValue.description || null,
-            comment: formValue.comment || null,
-            category: formValue.category || null,
-            imageUrl: formValue.imageUrl?.url || null,
-            imageAssetId: formValue.imageUrl?.assetId || null,
-            prepTime: formValue.prepTime ?? 0,
-            cookTime: formValue.cookTime ?? 0,
-            servings: formValue.servings,
-            visibility: formValue.visibility ?? RecipeVisibility.Private,
-            calculateNutritionAutomatically: formValue.calculateNutritionAutomatically,
-            manualCalories: formValue.calculateNutritionAutomatically ? null : this.toRecipeTotal(formValue.manualCalories),
-            manualProteins: formValue.calculateNutritionAutomatically ? null : this.toRecipeTotal(formValue.manualProteins),
-            manualFats: formValue.calculateNutritionAutomatically ? null : this.toRecipeTotal(formValue.manualFats),
-            manualCarbs: formValue.calculateNutritionAutomatically ? null : this.toRecipeTotal(formValue.manualCarbs),
-            manualFiber: formValue.calculateNutritionAutomatically ? null : this.toRecipeTotal(formValue.manualFiber),
-            manualAlcohol: formValue.calculateNutritionAutomatically ? null : this.toRecipeTotal(formValue.manualAlcohol),
-            steps,
-        };
-    }
+    // -- Nutrition calculation --
 
     private setupFormValueChangeTracking(): void {
         this.recipeForm.valueChanges
@@ -868,36 +725,6 @@ export class RecipeManageComponent implements OnInit {
             manualFiber: this.fromRecipeTotal(this.totalFiber()),
             manualAlcohol: this.fromRecipeTotal(this.totalAlcohol()),
         }, { emitEvent: false });
-    }
-
-    private resolveControlError(control: AbstractControl | null): string | null {
-        if (!control) {
-            return null;
-        }
-
-        if (!control.touched && !control.dirty) {
-            return null;
-        }
-
-        const errors = control.errors;
-        if (!errors) {
-            return null;
-        }
-
-        if (errors['required']) {
-            return this.translateService.instant('FORM_ERRORS.REQUIRED');
-        }
-
-        if (errors['min']) {
-            const min = errors['min'].min ?? 0;
-            return this.translateService.instant('FORM_ERRORS.INVALID_MIN_AMOUNT_MUST_BE_MORE_ZERO', { min });
-        }
-
-        if (errors['nonEmptyArray']) {
-            return this.translateService.instant('FORM_ERRORS.NON_EMPTY_ARRAY');
-        }
-
-        return this.translateService.instant('FORM_ERRORS.UNKNOWN');
     }
 
     private recalculateNutrientsFromForm(): void {
@@ -1093,7 +920,7 @@ export class RecipeManageComponent implements OnInit {
     }
 
     private buildVisibilityOptions(): void {
-        this.visibilitySelectOptions = this.visibilityOptions.map(option => ({
+        this.visibilitySelectOptions = Object.values(RecipeVisibility).map(option => ({
             value: option,
             label: this.translateService.instant(`RECIPE_VISIBILITY.${option}`),
         }));
@@ -1135,64 +962,4 @@ export class RecipeManageComponent implements OnInit {
             ? RecipeVisibility.Private
             : RecipeVisibility.Public;
     }
-
 }
-
-interface RecipeFormValues {
-    name: string;
-    description: string | null;
-    comment: string | null;
-    category: string | null;
-    imageUrl: ImageSelection | null;
-    prepTime: number | null;
-    cookTime: number | null;
-    servings: number;
-    visibility: RecipeVisibility;
-    calculateNutritionAutomatically: boolean;
-    manualCalories: number | null;
-    manualProteins: number | null;
-    manualFats: number | null;
-    manualCarbs: number | null;
-    manualFiber: number | null;
-    manualAlcohol: number | null;
-    steps: StepFormValues[];
-}
-
-interface StepFormValues {
-    title: string | null;
-    imageUrl: ImageSelection | null;
-    description: string;
-    ingredients: IngredientFormValues[];
-}
-
-interface IngredientFormValues {
-    food: Product | null;
-    amount: number | null;
-    foodName: string | null;
-    nestedRecipeId: string | null;
-    nestedRecipeName: string | null;
-}
-
-type RecipeFormData = FormGroupControls<RecipeFormValues>;
-type StepFormData = FormGroupControls<StepFormValues>;
-type IngredientFormData = FormGroupControls<IngredientFormValues>;
-
-interface CalorieMismatchWarning {
-    expectedCalories: number;
-    actualCalories: number;
-}
-
-type NutritionMode = 'auto' | 'manual';
-type NutritionScaleMode = 'recipe' | 'portion';
-type MacroKey = 'proteins' | 'fats' | 'carbs';
-
-interface MacroBarSegment {
-    key: MacroKey;
-    percent: number;
-}
-
-interface MacroBarState {
-    isEmpty: boolean;
-    segments: MacroBarSegment[];
-}
-

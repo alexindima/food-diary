@@ -1,4 +1,4 @@
-﻿<div class="consumption-manage" fdPageContainer>
+<div class="consumption-manage" fdPageContainer>
     <fd-manage-header
         class="consumption-manage__header"
         [title]="consumption() ? ('CONSUMPTION_MANAGE.EDIT_TITLE' | translate) : ('CONSUMPTION_MANAGE.ADD_TITLE' | translate)"
@@ -138,259 +138,41 @@
                         </h2>
                     </div>
                     <div class="consumption-manage__items-grid">
-                        <fd-ui-card class="consumption-manage__card consumption-manage__card--items"
-                            [title]="'CONSUMPTION_MANAGE.ITEMS_ADDED_TITLE' | translate"
-                        >
-                            <div class="consumption-items" formArrayName="items">
-                                @for (item of items.controls; track item; let i = $index; let first = $first) {
-                                    <div class="consumption-item-card" [formGroupName]="i">
-                                        <div class="consumption-item__fields">
-                                            <div class="consumption-item__row consumption-item__row--with-remove">
-                                                <div class="consumption-item__field consumption-item__field--source">
-                                                    <fd-ui-input
-                                                        class="consumption-item__selector-input"
-                                                        [ngModel]="getItemSourceName(i)"
-                                                        [ngModelOptions]="{ standalone: true }"
-                                                        [label]="'CONSUMPTION_MANAGE.ITEM_SOURCE_LABEL' | translate"
-                                                        [placeholder]="'CONSUMPTION_MANAGE.ITEM_SOURCE_PLACEHOLDER' | translate"
-                                                        [readonly]="true"
-                                                        [prefixIcon]="getItemSourceIcon(i)"
-                                                        [error]="getItemSourceError(i)"
-                                                        (click)="onItemSourceClick(i)"
-                                                    />
-                                                </div>
-                                                <div class="consumption-item__field consumption-item__field--amount">
-                                                    <fd-ui-input formControlName="amount"
-                                                        type="number"
-                                                        [step]="0.01"
-                                                        [label]="'CONSUMPTION_MANAGE.ADD_ITEM_ROW.AMOUNT' | translate"
-                                                        [placeholder]="(getAmountPlaceholder(i) | translate)"
-                                                        [required]="true"
-                                                        [error]="getAmountControlError(i)"
-                                                        [readonly]="!items.at(i).controls.product.value && !items.at(i).controls.recipe.value"
-                                                     />
-                                                </div>
-                                                <fd-ui-button
-                                                    type="button"
-                                                    variant="danger"
-                                                    fill="text"
-                                                    icon="close"
-                                                    [ariaLabel]="'CONSUMPTION_MANAGE.REMOVE_ITEM' | translate"
-                                                    class="consumption-item__remove consumption-item__remove--inline"
-                                                    [disabled]="first"
-                                                    (click)="removeItem(i)"
-                                                >
-                                                    {{ 'CONSUMPTION_MANAGE.REMOVE_ITEM' | translate }}
-                                                </fd-ui-button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                }
-                            </div>
-                            <div class="consumption-item__actions consumption-item__actions--stack">
-                                <fd-ui-button
-                                    type="button"
-                                    icon="add"
-                                    class="consumption-item__add"
-                                    variant="secondary"
-                                    fill="outline"
-                                    (click)="addConsumptionItem()"
-                                >
-                                    {{ 'CONSUMPTION_MANAGE.ADD_ITEM' | translate }}
-                                </fd-ui-button>
-                            </div>
-                            <fd-ui-form-error class="consumption-item__error"
-                                [error]="items.touched && items.errors?.['nonEmptyArray'] ? ('FORM_ERRORS.NON_EMPTY_ARRAY' | translate) : null"
-                             />
-                        </fd-ui-card>
+                        <fd-meal-items-list
+                            [formArray]="items"
+                            [isEditMode]="!!consumption()"
+                            (addItem)="addConsumptionItem()"
+                            (removeItemEvent)="removeItem($event)"
+                            (openItemSelect)="onItemSourceClick($event)"
+                        />
 
-                        <fd-ui-card class="consumption-manage__card consumption-manage__card--items-ai"
-                            [title]="'CONSUMPTION_MANAGE.ITEMS_AI_TITLE' | translate"
-                        >
-                            <p class="consumption-manage__items-hint">
-                                {{ 'CONSUMPTION_MANAGE.ITEMS_AI_HINT' | translate }}
-                            </p>
-                            @if (aiSessions().length) {
-                                <div class="consumption-manage__ai-summary-listing">
-                                    @for (session of aiSessions(); track session; let idx = $index) {
-                                        @let totals = getAiSessionTotals(session);
-                                        <div class="consumption-manage__ai-summary">
-                                            <div class="consumption-manage__ai-summary-header">
-                                                <div class="consumption-manage__ai-summary-image">
-                                                    @if (session.imageUrl) {
-                                                        <img [src]="session.imageUrl" alt="" loading="lazy" />
-                                                    } @else {
-                                                        <mat-icon fontIcon="photo_camera"></mat-icon>
-                                                    }
-                                                </div>
-                                                <div class="consumption-manage__ai-summary-heading">
-                                                    <div class="consumption-manage__ai-summary-title">
-                                                        {{ 'CONSUMPTION_MANAGE.ITEMS_AI_SUMMARY' | translate:{ count: session.items.length } }}
-                                                    </div>
-                                                    <div class="consumption-manage__ai-summary-stats">
-                                                        <div class="consumption-manage__ai-summary-calories">
-                                                            <span class="consumption-manage__ai-summary-label">
-                                                                {{ 'GENERAL.NUTRIENTS.CALORIES' | translate }}:
-                                                            </span>
-                                                            <span>{{ formatAiMacro(totals.calories, 'GENERAL.UNITS.KCAL') }}</span>
-                                                        </div>
-                                                        <div class="consumption-manage__ai-summary-nutrients">
-                                                            <span>
-                                                                {{ 'GENERAL.NUTRIENTS.PROTEIN' | translate }}:
-                                                                {{ formatAiMacro(totals.proteins, 'GENERAL.UNITS.G') }}
-                                                            </span>
-                                                            <span>
-                                                                {{ 'GENERAL.NUTRIENTS.FAT' | translate }}:
-                                                                {{ formatAiMacro(totals.fats, 'GENERAL.UNITS.G') }}
-                                                            </span>
-                                                            <span>
-                                                                {{ 'GENERAL.NUTRIENTS.CARB' | translate }}:
-                                                                {{ formatAiMacro(totals.carbs, 'GENERAL.UNITS.G') }}
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="consumption-manage__ai-summary-actions">
-                                                    <button
-                                                        type="button"
-                                                        class="consumption-manage__ai-summary-action"
-                                                        [attr.aria-label]="'CONSUMPTION_MANAGE.ITEMS_AI_EDIT' | translate"
-                                                        (click)="onEditAiSession(idx)"
-                                                    >
-                                                        <mat-icon fontIcon="edit"></mat-icon>
-                                                    </button>
-                                                    <button
-                                                        type="button"
-                                                        class="consumption-manage__ai-summary-action consumption-manage__ai-summary-action--danger"
-                                                        [attr.aria-label]="'CONSUMPTION_MANAGE.ITEMS_AI_DELETE' | translate"
-                                                        (click)="onDeleteAiSession(idx)"
-                                                    >
-                                                        <mat-icon fontIcon="delete"></mat-icon>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                            <div class="consumption-manage__ai-summary-body">
-                                                <div class="consumption-manage__ai-summary-list">
-                                                    @for (aiItem of (isAiSessionExpanded(idx) ? session.items : visibleAiItems(session.items, aiPreviewMaxItems)); track aiItem; let itemIdx = $index) {
-                                                        <div class="consumption-manage__ai-summary-row">
-                                                            <span class="consumption-manage__ai-summary-name">
-                                                                {{ formatAiName(aiItem.nameLocal || aiItem.nameEn) }}
-                                                            </span>
-                                                            <span class="consumption-manage__ai-summary-amount">
-                                                                {{ formatAiAmount(aiItem.amount, aiItem.unit) }}
-                                                            </span>
-                                                        </div>
-                                                    }
-                                                    @if (getHiddenAiItemsCount(session.items, aiPreviewMaxItems) > 0) {
-                                                        <button
-                                                            type="button"
-                                                            class="consumption-manage__ai-summary-more"
-                                                            (click)="toggleAiSessionExpanded(idx)"
-                                                        >
-                                                            @if (isAiSessionExpanded(idx)) {
-                                                                {{ 'CONSUMPTION_MANAGE.ITEMS_AI_HIDE' | translate }}
-                                                            } @else {
-                                                                {{ 'CONSUMPTION_MANAGE.ITEMS_AI_MORE' | translate:{
-                                                                    count: getHiddenAiItemsCount(session.items, aiPreviewMaxItems)
-                                                                } }}
-                                                            }
-                                                        </button>
-                                                    }
-                                                </div>
-                                            </div>
-                                        </div>
-                                    }
-                                </div>
-                            }
-                            <div class="consumption-item__actions consumption-item__actions--stack">
-                                <fd-ui-button
-                                    type="button"
-                                    icon="photo_camera"
-                                    class="consumption-item__add"
-                                    variant="secondary"
-                                    fill="outline"
-                                    [disabled]="aiQuotaExceeded()"
-                                    (click)="onAddConsumptionFromPhoto()"
-                                >
-                                    {{ 'CONSUMPTION_MANAGE.ADD_ITEM_FROM_PHOTO' | translate }}
-                                </fd-ui-button>
-                            </div>
-                        </fd-ui-card>
+                        <fd-meal-ai-sessions
+                            [aiSessions]="aiSessions()"
+                            [aiQuotaExceeded]="aiQuotaExceeded()"
+                            (addFromPhoto)="onAddConsumptionFromPhoto()"
+                            (editSession)="onEditAiSession($event)"
+                            (deleteSession)="onDeleteAiSession($event)"
+                        />
                     </div>
                 </div>
             </div>
 
             <div class="consumption-manage__column consumption-manage__column--secondary">
-                <div class="consumption-manage__sticky-stack">
-                    <fd-ui-card
-                        class="consumption-manage__card consumption-manage__card--nutrition"
-                        appearance="entry"
-                        [title]="'PRODUCT_MANAGE.NUTRITION_VALUE' | translate"
-                    >
-                        <div class="consumption-manage__nutrition">
-                            <fd-nutrition-editor
-                                [formGroup]="consumptionForm"
-                                [controlNames]="nutritionControlNames"
-                                [macroState]="macroBarState()"
-                                [readonly]="consumptionForm.controls.isNutritionAutoCalculated.value"
-                                [caloriesError]="caloriesError()"
-                                [macrosError]="macrosError()"
-                                [showManualHint]="!consumptionForm.controls.isNutritionAutoCalculated.value"
-                                [manualHintKey]="'CONSUMPTION_MANAGE.MANUAL_NUTRITION_HINT'"
-                                [warning]="nutritionWarning()"
-                            >
-                                <fd-ui-segmented-toggle
-                                    nutrition-before
-                                    class="consumption-manage__nutrition-toggle"
-                                    [options]="nutritionModeOptions"
-                                    [selectedValue]="nutritionMode"
-                                    (selectedValueChange)="onNutritionModeChange($event)"
-                                    [ariaLabel]="'CONSUMPTION_MANAGE.NUTRITION_MODE.ARIA' | translate"
-                                />
-                            </fd-nutrition-editor>
-                        </div>
-                    </fd-ui-card>
-
-                    <div class="consumption-manage__actions-panel">
-                        <div class="consumption-manage__footer-actions">
-                            <fd-ui-button
-                                type="button"
-                                class="consumption-manage__cancel-button"
-                                fill="outline"
-                                variant="primary"
-                                icon="arrow_back"
-                                (click)="onCancel()"
-                            >
-                                {{ 'PRODUCT_MANAGE.CANCEL_BUTTON' | translate }}
-                            </fd-ui-button>
-                            @if (consumption()) {
-                                <fd-ui-button
-                                    type="submit"
-                                    class="consumption-manage__action-button"
-                                    icon="save"
-                                    [fullWidth]="true"
-                                >
-                                    {{ 'CONSUMPTION_MANAGE.SAVE_BUTTON' | translate }}
-                                </fd-ui-button>
-                            } @else {
-                                <fd-ui-button
-                                    type="submit"
-                                    class="consumption-manage__action-button consumption-manage__action-button--add"
-                                    icon="add"
-                                    [fullWidth]="true"
-                                >
-                                    {{ 'CONSUMPTION_MANAGE.ADD_BUTTON' | translate }}
-                                </fd-ui-button>
-                            }
-                        </div>
-                        @if (globalError()) {
-                            <fd-ui-form-error class="consumption-manage__footer-error" [error]="globalError()" />
-                        }
-                    </div>
-                </div>
+                <fd-meal-nutrition-sidebar
+                    [consumptionForm]="consumptionForm"
+                    [nutritionControlNames]="nutritionControlNames"
+                    [macroBarState]="macroBarState()"
+                    [nutritionMode]="nutritionMode"
+                    [nutritionModeOptions]="nutritionModeOptions"
+                    [nutritionWarning]="nutritionWarning()"
+                    [caloriesError]="caloriesError()"
+                    [macrosError]="macrosError()"
+                    [consumption]="consumption() ?? null"
+                    [globalError]="globalError()"
+                    (nutritionModeChange)="onNutritionModeChange($event)"
+                    (cancel)="onCancel()"
+                />
             </div>
         </div>
     </form>
 </div>
-
-

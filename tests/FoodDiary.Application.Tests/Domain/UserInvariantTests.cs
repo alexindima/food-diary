@@ -532,19 +532,18 @@ public class UserInvariantTests {
     }
 
     [Fact]
-    public void ApplyAdminUpdate_WithRolesAndAccountChanges_UpdatesAdminControlledState() {
+    public void AdminNarrowOperations_WithRolesAndAccountChanges_UpdateAdminControlledState() {
         var user = User.Create("test@example.com", "hash");
         var adminRole = Role.Create("Admin");
         var supportRole = Role.Create("Support");
 
-        user.ApplyAdminUpdate(new UserAdminUpdate(
-            IsActive: false,
-            Account: new UserAdminAccountUpdate(
-                IsEmailConfirmed: true,
-                Language: "ru",
-                AiInputTokenLimit: 123,
-                AiOutputTokenLimit: 456),
-            Roles: [adminRole, supportRole]));
+        user.Deactivate();
+        user.UpdateAdminAccount(new UserAdminAccountUpdate(
+            IsEmailConfirmed: true,
+            Language: "ru",
+            AiInputTokenLimit: 123,
+            AiOutputTokenLimit: 456));
+        user.ReplaceRoles([adminRole, supportRole]);
 
         Assert.False(user.IsActive);
         Assert.True(user.IsEmailConfirmed);

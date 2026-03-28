@@ -296,6 +296,7 @@ Diagnosis:
 - Confirm whether failures are client errors, token validation failures, or internal server errors.
 - Compare:
   - `fooddiary.api.business_flow.events` for the affected auth flow
+  - `fooddiary.email.dispatch.events` for `email_verification` and `password_reset` when the incident involves email-based recovery
   - request latency and request exception counters on matching routes
   - recent deploy time versus the first failure spike
 

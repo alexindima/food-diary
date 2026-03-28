@@ -1,0 +1,52 @@
+<div class="recipe-steps-list__block">
+  <div class="recipe-steps-list__title">
+    {{ 'RECIPE_MANAGE.STEPS_SECTION_TITLE' | translate }}
+  </div>
+  <section class="recipe-steps-list__section">
+    <div
+      class="recipe-steps-list__steps"
+      cdkDropList
+      #dragBoundary
+      [cdkDropListData]="stepsFormArray().controls"
+      (cdkDropListDropped)="onStepDrop($event)"
+    >
+      @for (step of stepsFormArray().controls; track step; let index = $index; let first = $first) {
+        <div
+          class="recipe-step"
+          cdkDrag
+          [cdkDragDisabled]="stepsFormArray().length <= 1"
+          [cdkDragBoundary]="dragBoundary"
+          cdkDragLockAxis="y"
+        >
+          <fd-recipe-step-card
+            [stepFormGroup]="step"
+            [stepIndex]="index"
+            [isExpanded]="isStepExpanded(index)"
+            [isFirst]="first"
+            [dragDisabled]="stepsFormArray().length <= 1"
+            (toggleExpanded)="toggleStepExpanded(index)"
+            (removeStep)="onRemoveStep(index)"
+            (addIngredient)="onAddIngredient(index)"
+            (removeIngredient)="onRemoveIngredient(index, $event)"
+            (selectProduct)="onSelectProduct(index, $event)"
+          />
+        </div>
+      }
+    </div>
+    <fd-ui-button
+      type="button"
+      icon="add"
+      class="recipe-steps-list__add-step"
+      variant="secondary"
+      fill="outline"
+      (click)="onAddStep()"
+    >
+      {{ 'RECIPE_MANAGE.ADD_STEP' | translate }}
+    </fd-ui-button>
+    @if (stepsFormArray().invalid && stepsFormArray().touched) {
+      <div class="recipe-steps-list__array-error">
+        {{ 'FORM_ERRORS.NON_EMPTY_ARRAY' | translate }}
+      </div>
+    }
+  </section>
+</div>

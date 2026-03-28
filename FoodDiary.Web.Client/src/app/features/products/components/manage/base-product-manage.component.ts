@@ -1,4 +1,4 @@
-﻿import {
+import {
     ChangeDetectionStrategy,
     Component,
     DestroyRef,
@@ -19,13 +19,8 @@ import { FormGroupControls } from '../../../../shared/lib/common.data';
 import { firstValueFrom } from 'rxjs';
 import { BarcodeScannerComponent } from '../../../../components/shared/barcode-scanner/barcode-scanner.component';
 import { FdUiFormErrorComponent, FD_VALIDATION_ERRORS, FdValidationErrors } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
-import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
-import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea.component';
-import { FdUiSelectComponent } from 'fd-ui-kit/select/fd-ui-select.component';
-import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
-import { FdUiSegmentedToggleComponent, FdUiSegmentedToggleOption } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle.component';
 import { normalizeProductType as normalizeProductTypeValue } from '../../lib/product-type.utils';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import {
@@ -38,7 +33,6 @@ import {
     ConfirmDeleteDialogComponent,
     ConfirmDeleteDialogData,
 } from '../../../../components/shared/confirm-delete-dialog/confirm-delete-dialog.component';
-import { ImageUploadFieldComponent } from '../../../../components/shared/image-upload-field/image-upload-field.component';
 import { ImageSelection } from '../../../../shared/models/image-upload.data';
 import {
     ProductAiRecognitionDialogComponent,
@@ -46,9 +40,11 @@ import {
 } from '../../dialogs/product-ai-recognition-dialog/product-ai-recognition-dialog.component';
 import { AuthService } from '../../../../services/auth.service';
 import { PremiumRequiredDialogComponent } from '../../../../components/shared/premium-required-dialog/premium-required-dialog.component';
-import { NutritionEditorComponent } from '../../../../components/shared/nutrition-editor/nutrition-editor.component';
 import { ManageHeaderComponent } from '../../../../components/shared/manage-header/manage-header.component';
 import { ProductService } from '../../api/product.service';
+import { ProductBasicInfoComponent } from './product-basic-info/product-basic-info.component';
+import { ProductNutritionEditorComponent } from './product-nutrition-editor/product-nutrition-editor.component';
+import { FdUiSegmentedToggleOption } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle.component';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: FD_VALIDATION_ERRORS,
@@ -70,17 +66,12 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     imports: [
         ReactiveFormsModule,
         TranslatePipe,
-        FdUiInputComponent,
-        FdUiTextareaComponent,
-        FdUiSelectComponent,
-        FdUiCardComponent,
         FdUiButtonComponent,
-        FdUiSegmentedToggleComponent,
         FdUiFormErrorComponent,
         FdPageContainerDirective,
-        ImageUploadFieldComponent,
-        NutritionEditorComponent,
         ManageHeaderComponent,
+        ProductBasicInfoComponent,
+        ProductNutritionEditorComponent,
     ],
 })
 export class BaseProductManageComponent implements OnInit {
@@ -102,11 +93,8 @@ export class BaseProductManageComponent implements OnInit {
 
     protected skipConfirmDialog = false;
     public productForm: FormGroup<ProductFormData>;
-    public units = Object.values(MeasurementUnit) as MeasurementUnit[];
     public unitOptions: FdUiSelectOption<MeasurementUnit>[] = [];
-    public productTypes = Object.values(ProductType) as ProductType[];
     public productTypeSelectOptions: FdUiSelectOption<ProductType>[] = [];
-    public visibilityOptions = Object.values(ProductVisibility) as ProductVisibility[];
     public visibilitySelectOptions: FdUiSelectOption<ProductVisibility>[] = [];
     public nutritionMode: NutritionMode = 'base';
     public nutritionModeOptions: FdUiSegmentedToggleOption[] = [];
@@ -118,6 +106,11 @@ export class BaseProductManageComponent implements OnInit {
         fiber: 'fiberPerBase',
         alcohol: 'alcoholPerBase',
     };
+
+    public readonly getControlErrorFn = (controlName: keyof ProductFormData): string | null => {
+        return this.getControlError(controlName);
+    };
+
     public constructor() {
         this.productForm = new FormGroup<ProductFormData>({
             name: new FormControl('', { nonNullable: true, validators: Validators.required }),
@@ -177,19 +170,7 @@ export class BaseProductManageComponent implements OnInit {
             this.updateCalorieWarning();
             this.updateMacroDistribution();
         });
-
     }
-
-    public stringifyUnits = (unit: MeasurementUnit): string => {
-        return this.translateService.instant(`PRODUCT_MANAGE.DEFAULT_SERVING_UNITS.${MeasurementUnit[unit]}`);
-    };
-
-    public stringifyVisibility = (visibility: ProductVisibility): string => {
-        return this.translateService.instant(`PRODUCT_MANAGE.VISIBILITY_OPTIONS.${visibility.toUpperCase()}`);
-    };
-
-    public readonly Unit = MeasurementUnit;
-    public readonly Visibility = ProductVisibility;
 
     public get canShowDeleteButton(): boolean {
         const currentProduct = this.product();
@@ -345,10 +326,6 @@ export class BaseProductManageComponent implements OnInit {
         return null;
     }
 
-    public get baseUnitLabel(): string {
-        return this.getUnitLabel(this.productForm.controls.baseUnit.value);
-    }
-
     public onNutritionModeChange(nextMode: string): void {
         const resolvedMode: NutritionMode = nextMode === 'portion' ? 'portion' : 'base';
         if (resolvedMode === this.nutritionMode) {
@@ -399,6 +376,32 @@ export class BaseProductManageComponent implements OnInit {
         return proteins <= 0 && fats <= 0 && carbs <= 0 && alcohol <= 0
             ? this.translateService.instant('PRODUCT_MANAGE.NUTRITION_ERRORS.MACROS_REQUIRED')
             : null;
+    }
+
+    public getControlError(controlName: keyof ProductFormData): string | null {
+        const control = this.productForm.controls[controlName];
+
+        if (!control || (!control.touched && !control.dirty)) {
+            return null;
+        }
+
+        const errors = control.errors;
+
+        if (!errors) {
+            return null;
+        }
+
+        if (errors['required']) {
+            return this.translateService.instant('FORM_ERRORS.REQUIRED');
+        }
+
+        if (errors['min']) {
+            return this.translateService.instant('FORM_ERRORS.INVALID_MIN_AMOUNT_MUST_BE_MORE_ZERO', {
+                min: errors['min'].min,
+            });
+        }
+
+        return null;
     }
 
     private updateCalorieWarning(): void {
@@ -526,30 +529,15 @@ export class BaseProductManageComponent implements OnInit {
         return unit === MeasurementUnit.PCS ? 1 : 100;
     }
 
-    public getControlError(controlName: keyof ProductFormData): string | null {
-        const control = this.productForm.controls[controlName];
-
-        if (!control || (!control.touched && !control.dirty)) {
-            return null;
+    private getNumberValue(control: FormControl<number | string | null>): number {
+        const value = control.value as unknown;
+        if (value === null || value === undefined || value === '') {
+            return 0;
         }
-
-        const errors = control.errors;
-
-        if (!errors) {
-            return null;
-        }
-
-        if (errors['required']) {
-            return this.translateService.instant('FORM_ERRORS.REQUIRED');
-        }
-
-        if (errors['min']) {
-            return this.translateService.instant('FORM_ERRORS.INVALID_MIN_AMOUNT_MUST_BE_MORE_ZERO', {
-                min: errors['min'].min,
-            });
-        }
-
-        return null;
+        const raw = String(value).replace(',', '.').replace(/[^0-9.-]/g, '');
+        const match = raw.match(/-?\d+(\.\d+)?/);
+        const parsed = match ? Number(match[0]) : NaN;
+        return Number.isFinite(parsed) ? parsed : 0;
     }
 
     private populateForm(product: Product): void {
@@ -700,33 +688,22 @@ export class BaseProductManageComponent implements OnInit {
         this.globalError.set(null);
     }
 
-    private getNumberValue(control: FormControl<number | string | null>): number {
-        const value = control.value as unknown;
-        if (value === null || value === undefined || value === '') {
-            return 0;
-        }
-        const raw = String(value).replace(',', '.').replace(/[^0-9.-]/g, '');
-        const match = raw.match(/-?\d+(\.\d+)?/);
-        const parsed = match ? Number(match[0]) : NaN;
-        return Number.isFinite(parsed) ? parsed : 0;
-    }
-
     private buildVisibilityOptions(): void {
-        this.visibilitySelectOptions = this.visibilityOptions.map(option => ({
+        this.visibilitySelectOptions = (Object.values(ProductVisibility) as ProductVisibility[]).map(option => ({
             value: option,
             label: this.translateService.instant(`PRODUCT_MANAGE.VISIBILITY_OPTIONS.${option.toUpperCase()}`),
         }));
     }
 
     private buildUnitOptions(): void {
-        this.unitOptions = this.units.map(unit => ({
+        this.unitOptions = (Object.values(MeasurementUnit) as MeasurementUnit[]).map(unit => ({
             value: unit,
             label: this.translateService.instant(`PRODUCT_AMOUNT_UNITS.${MeasurementUnit[unit]}`),
         }));
     }
 
     private buildProductTypeOptions(): void {
-        this.productTypeSelectOptions = this.productTypes.map(type => ({
+        this.productTypeSelectOptions = (Object.values(ProductType) as ProductType[]).map(type => ({
             value: type,
             label: this.translateService.instant(`PRODUCT_MANAGE.PRODUCT_TYPE_OPTIONS.${type.toUpperCase()}`),
         }));
@@ -823,7 +800,6 @@ export class BaseProductManageComponent implements OnInit {
 
     protected readonly MeasurementUnit = MeasurementUnit;
     protected readonly ProductType = ProductType;
-
 }
 
 export interface ProductFormValues {
@@ -846,7 +822,7 @@ export interface ProductFormValues {
     visibility: ProductVisibility;
 }
 
-type NutritionMode = 'base' | 'portion';
+export type NutritionMode = 'base' | 'portion';
 
 interface NutritionValues {
     caloriesPerBase: number | null;
@@ -869,7 +845,7 @@ interface MacroBarState {
     segments: MacroBarSegment[];
 }
 
-type ProductFormData = FormGroupControls<ProductFormValues>;
+export type ProductFormData = FormGroupControls<ProductFormValues>;
 
 interface CalorieMismatchWarning {
     expectedCalories: number;
@@ -877,4 +853,3 @@ interface CalorieMismatchWarning {
 }
 
 export type RedirectAction = 'Home' | 'ProductList';
-

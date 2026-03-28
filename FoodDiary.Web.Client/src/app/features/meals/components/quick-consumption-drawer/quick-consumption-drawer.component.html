@@ -7,7 +7,7 @@
                     {{ items().length }} {{ 'QUICK_CONSUMPTION.ITEMS' | translate }}
                 </div>
             </div>
-            <button class="quick-consumption__clear" type="button" (click)="clear()">
+            <button class="quick-consumption__clear" type="button" [attr.aria-label]="'QUICK_CONSUMPTION.CLEAR' | translate" (click)="clear()">
                 <mat-icon fontIcon="close"></mat-icon>
             </button>
         </div>
@@ -34,7 +34,7 @@
                                 }
                             </div>
                         </div>
-                        <button class="quick-consumption__remove" type="button" (click)="remove(item.key)">
+                        <button class="quick-consumption__remove" type="button" [attr.aria-label]="'QUICK_CONSUMPTION.REMOVE_ITEM' | translate" (click)="remove(item.key)">
                             <mat-icon fontIcon="delete"></mat-icon>
                         </button>
                     </div>

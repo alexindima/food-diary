@@ -9,15 +9,6 @@ public sealed partial class User {
         MarkDeleted(normalizedDeletedAtUtc);
     }
 
-    public void SetActive(bool isActive, DateTime? changedAtUtc = null) {
-        if (isActive) {
-            Activate(changedAtUtc);
-            return;
-        }
-
-        Deactivate(changedAtUtc);
-    }
-
     public void Deactivate(DateTime? changedAtUtc = null) {
         EnsureNotDeleted();
         var effectiveChangedAtUtc = NormalizeOptionalAuditTimestamp(changedAtUtc, nameof(changedAtUtc));

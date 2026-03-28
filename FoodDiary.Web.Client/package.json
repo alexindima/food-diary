@@ -51,6 +51,8 @@
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^21.2.5",
+    "@angular-eslint/eslint-plugin-template": "^21.3.1",
+    "@angular-eslint/template-parser": "^21.3.1",
     "@angular/build": "^21.2.5",
     "@angular/cli": "^21.2.5",
     "@angular/compiler-cli": "^21.2.6",
@@ -60,6 +62,7 @@
     "@storybook/angular": "^10.3.3",
     "@typescript-eslint/eslint-plugin": "^8.57.2",
     "@typescript-eslint/parser": "^8.57.2",
+    "angular-eslint": "^21.3.1",
     "baseline-browser-mapping": "^2.10.12",
     "eslint": "^10.1.0",
     "eslint-config-prettier": "^10.1.8",

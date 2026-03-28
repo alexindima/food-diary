@@ -19,12 +19,35 @@ internal static class InfrastructureTelemetry {
     public static readonly Counter<long> DatabaseCommandFailureCounter = Meter.CreateCounter<long>(
         "fooddiary.db.command.failures");
 
+    public static readonly Counter<long> EmailDispatchCounter = Meter.CreateCounter<long>(
+        "fooddiary.email.dispatch.events");
+
+    public static readonly Counter<long> StorageOperationCounter = Meter.CreateCounter<long>(
+        "fooddiary.storage.operations");
+
     internal static void RecordDatabaseCommandFailure(string operation, string source, string errorType) {
         DatabaseCommandFailureCounter.Add(
             1,
             new KeyValuePair<string, object?>("db.system", "postgresql"),
             new KeyValuePair<string, object?>("fooddiary.db.operation", operation),
             new KeyValuePair<string, object?>("fooddiary.db.source", source),
+            new KeyValuePair<string, object?>("error.type", errorType));
+    }
+
+    internal static void RecordEmailDispatch(string template, string locale, string outcome, string? errorType = null) {
+        EmailDispatchCounter.Add(
+            1,
+            new KeyValuePair<string, object?>("fooddiary.email.template", template),
+            new KeyValuePair<string, object?>("fooddiary.email.locale", locale),
+            new KeyValuePair<string, object?>("fooddiary.email.outcome", outcome),
+            new KeyValuePair<string, object?>("error.type", errorType));
+    }
+
+    internal static void RecordStorageOperation(string operation, string outcome, string? errorType = null) {
+        StorageOperationCounter.Add(
+            1,
+            new KeyValuePair<string, object?>("fooddiary.storage.operation", operation),
+            new KeyValuePair<string, object?>("fooddiary.storage.outcome", outcome),
             new KeyValuePair<string, object?>("error.type", errorType));
     }
 }
