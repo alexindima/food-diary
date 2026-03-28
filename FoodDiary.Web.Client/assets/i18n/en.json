@@ -1608,5 +1608,21 @@
             "CARD_LINE_ONE": "Purchases in the app are currently unavailable.",
             "CARD_LINE_TWO": "To get AI access, email"
         }
+    },
+    "SEO": {
+        "DEFAULT_DESCRIPTION": "Food diary - manage your nutrition!",
+        "LANDING_DESCRIPTION": "Track your meals, manage nutrition, and reach your health goals with Food Diary.",
+        "PRODUCTS": "Products",
+        "MEALS": "Meals",
+        "RECIPES": "Recipes",
+        "SHOPPING_LISTS": "Shopping Lists",
+        "GOALS": "Goals",
+        "STATISTICS": "Statistics",
+        "WEIGHT_HISTORY": "Weight History",
+        "WAIST_HISTORY": "Waist History",
+        "CYCLE_TRACKING": "Cycle Tracking",
+        "PREMIUM": "Premium",
+        "PROFILE": "Profile",
+        "NOT_FOUND": "Page Not Found"
     }
 }

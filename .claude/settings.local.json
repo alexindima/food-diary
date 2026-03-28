@@ -97,7 +97,13 @@
       "Bash(find src/app projects -name \"*.html\" -exec grep -H '<button' {})",
       "Bash(grep -l \"aria-label\\\\|ariaLabel\" src/app/**/*.html projects/**/*.html)",
       "Bash(find src/app projects -name \"*.html\" -exec grep -H 'mat-icon' {})",
-      "Bash(find src/app projects -name \"*.html\" -exec grep -n '<button' {} +)"
+      "Bash(find src/app projects -name \"*.html\" -exec grep -n '<button' {} +)",
+      "Bash(cmd.exe /c \"rmdir /s /q node_modules\")",
+      "Bash(echo \"Exit: $?\")",
+      "Bash(npx --yes rimraf node_modules)",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(json.dumps\\(list\\(d.keys\\(\\)\\)[:20]\\)\\)\")",
+      "Bash(node -e \"const d=require\\(''''./assets/i18n/en.json''''\\); console.log\\(Object.keys\\(d\\).slice\\(0,20\\)\\)\")",
+      "Bash(node -e \"const d=require\\(''./assets/i18n/en.json''\\); console.log\\(JSON.stringify\\(d[''SEO''] || ''NO SEO KEY''\\)\\)\")"
     ],
     "deny": [],
     "ask": []
