@@ -55,8 +55,26 @@ public sealed partial class User {
         string? gender = null,
         double? weight = null,
         double? height = null) {
+        UpdatePersonalInfo(new UserPersonalInfoUpdate(
+            Username: username,
+            FirstName: firstName,
+            LastName: lastName,
+            BirthDate: birthDate,
+            Gender: gender,
+            Weight: weight,
+            Height: height));
+    }
+
+    public void UpdatePersonalInfo(UserPersonalInfoUpdate update) {
         EnsureNotDeleted();
-        if (ApplyPersonalInfoChanges(username, firstName, lastName, birthDate, gender, weight, height)) {
+        if (ApplyPersonalInfoChanges(
+            update.Username,
+            update.FirstName,
+            update.LastName,
+            update.BirthDate,
+            update.Gender,
+            update.Weight,
+            update.Height)) {
             SetModified();
         }
     }
@@ -65,8 +83,12 @@ public sealed partial class User {
         ActivityLevel? activityLevel = null,
         int? stepGoal = null,
         double? hydrationGoal = null) {
+        UpdateActivity(new UserActivityUpdate(activityLevel, stepGoal, hydrationGoal));
+    }
+
+    public void UpdateActivity(UserActivityUpdate update) {
         EnsureNotDeleted();
-        if (ApplyActivityChanges(activityLevel, stepGoal, hydrationGoal)) {
+        if (ApplyActivityChanges(update.ActivityLevel, update.StepGoal, update.HydrationGoal)) {
             SetModified();
         }
     }
@@ -74,8 +96,12 @@ public sealed partial class User {
     public void UpdatePreferences(
         string? dashboardLayoutJson = null,
         string? language = null) {
+        UpdatePreferences(new UserPreferenceUpdate(dashboardLayoutJson, language));
+    }
+
+    public void UpdatePreferences(UserPreferenceUpdate update) {
         EnsureNotDeleted();
-        if (ApplyPreferencesChanges(dashboardLayoutJson, language)) {
+        if (ApplyPreferencesChanges(update.DashboardLayoutJson, update.Language)) {
             SetModified();
         }
     }
@@ -83,8 +109,12 @@ public sealed partial class User {
     public void UpdateProfileMedia(
         string? profileImage = null,
         ImageAssetId? profileImageAssetId = null) {
+        UpdateProfileMedia(new UserProfileMediaUpdate(profileImage, profileImageAssetId));
+    }
+
+    public void UpdateProfileMedia(UserProfileMediaUpdate update) {
         EnsureNotDeleted();
-        if (ApplyProfileMediaChanges(profileImage, profileImageAssetId)) {
+        if (ApplyProfileMediaChanges(update.ProfileImage, update.ProfileImageAssetId)) {
             SetModified();
         }
     }

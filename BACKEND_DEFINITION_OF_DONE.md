@@ -35,6 +35,7 @@ Mark each item deliberately for every backend PR or local task.
 - [ ] If the change touches secrets or options, tracked config remains sanitized and local/deploy setup is still clear.
 - [ ] If the change touches migrations, both migration files are included and migration safety was reviewed.
 - [ ] If the change affects logs, metrics, tracing, background work, or operational diagnosis, telemetry/runbook impact was reviewed.
+- [ ] If new telemetry was added, dashboard/alert and runbook impact was reviewed explicitly.
 - [ ] The change does not silently weaken validation, authorization, or security boundaries.
 - [ ] Dependency/audit checks remain green for the affected backend projects.
 - [ ] Any deferred gap is written down explicitly, with reason and next step.

@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Security.Claims;
+using Microsoft.AspNetCore.OutputCaching;
 
 namespace FoodDiary.Web.Api.Extensions;
 
@@ -47,6 +48,14 @@ public sealed class RequestObservabilityMiddleware(RequestDelegate next, ILogger
                     1,
                     new KeyValuePair<string, object?>("fooddiary.business_flow", businessFlow.Value.FlowName),
                     new KeyValuePair<string, object?>("fooddiary.business_outcome", ResolveOutcome(context.Response.StatusCode)),
+                    new KeyValuePair<string, object?>("http.response.status_code", context.Response.StatusCode));
+            }
+            var outputCacheObservation = OutputCacheObservation.From(context);
+            if (outputCacheObservation is not null) {
+                ApiTelemetry.OutputCacheCounter.Add(
+                    1,
+                    new KeyValuePair<string, object?>("fooddiary.output_cache.policy", outputCacheObservation.Value.PolicyName),
+                    new KeyValuePair<string, object?>("fooddiary.output_cache.outcome", outputCacheObservation.Value.Outcome),
                     new KeyValuePair<string, object?>("http.response.status_code", context.Response.StatusCode));
             }
             ApiTelemetry.RequestCounter.Add(
@@ -145,6 +154,23 @@ public sealed class RequestObservabilityMiddleware(RequestDelegate next, ILogger
             }
 
             return null;
+        }
+    }
+
+    private readonly record struct OutputCacheObservation(string PolicyName, string Outcome) {
+        public static OutputCacheObservation? From(HttpContext context) {
+            var endpoint = context.GetEndpoint();
+            var outputCache = endpoint?.Metadata.GetMetadata<OutputCacheAttribute>();
+            if (outputCache?.PolicyName is null) {
+                return null;
+            }
+
+            var policyName = outputCache.PolicyName;
+            var outcome = context.Response.Headers.ContainsKey("Age")
+                ? "hit"
+                : "miss";
+
+            return new OutputCacheObservation(policyName, outcome);
         }
     }
 }

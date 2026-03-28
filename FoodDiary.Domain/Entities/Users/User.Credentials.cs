@@ -1,3 +1,5 @@
+using FoodDiary.Domain.ValueObjects;
+
 namespace FoodDiary.Domain.Entities.Users;
 
 public sealed partial class User {
@@ -9,9 +11,13 @@ public sealed partial class User {
     }
 
     public void UpdateRefreshToken(string? refreshToken, DateTime? changedAtUtc = null) {
+        UpdateRefreshToken(new UserRefreshTokenUpdate(refreshToken, changedAtUtc));
+    }
+
+    public void UpdateRefreshToken(UserRefreshTokenUpdate update) {
         EnsureNotDeleted();
-        var normalizedRefreshToken = NormalizeOptionalToken(refreshToken);
-        var effectiveChangedAtUtc = NormalizeOptionalAuditTimestamp(changedAtUtc, nameof(changedAtUtc));
+        var normalizedRefreshToken = NormalizeOptionalToken(update.RefreshToken);
+        var effectiveChangedAtUtc = NormalizeOptionalAuditTimestamp(update.ChangedAtUtc, nameof(update.ChangedAtUtc));
         var nextState = GetCredentialState().WithRefreshToken(normalizedRefreshToken, effectiveChangedAtUtc);
         ApplyCredentialState(nextState);
 
@@ -25,11 +31,15 @@ public sealed partial class User {
     }
 
     public void SetEmailConfirmationToken(string tokenHash, DateTime expiresAtUtc, DateTime? issuedAtUtc = null) {
+        SetEmailConfirmationToken(new UserTokenIssue(tokenHash, expiresAtUtc, issuedAtUtc));
+    }
+
+    public void SetEmailConfirmationToken(UserTokenIssue issue) {
         EnsureNotDeleted();
-        var normalizedTokenHash = NormalizeRequiredTokenHash(tokenHash, nameof(tokenHash));
-        var normalizedExpiresAtUtc = NormalizeUtcTimestamp(expiresAtUtc, nameof(expiresAtUtc));
-        var normalizedIssuedAtUtc = NormalizeOptionalAuditTimestamp(issuedAtUtc, nameof(issuedAtUtc));
-        EnsureFutureUtc(normalizedExpiresAtUtc, nameof(expiresAtUtc));
+        var normalizedTokenHash = NormalizeRequiredTokenHash(issue.TokenHash, nameof(issue.TokenHash));
+        var normalizedExpiresAtUtc = NormalizeUtcTimestamp(issue.ExpiresAtUtc, nameof(issue.ExpiresAtUtc));
+        var normalizedIssuedAtUtc = NormalizeOptionalAuditTimestamp(issue.IssuedAtUtc, nameof(issue.IssuedAtUtc));
+        EnsureFutureUtc(normalizedExpiresAtUtc, nameof(issue.ExpiresAtUtc));
         var nextState = GetCredentialState().WithEmailConfirmationToken(normalizedTokenHash, normalizedExpiresAtUtc, normalizedIssuedAtUtc);
         ApplyCredentialState(nextState);
         SetModified(normalizedIssuedAtUtc);
@@ -46,11 +56,15 @@ public sealed partial class User {
     }
 
     public void SetPasswordResetToken(string tokenHash, DateTime expiresAtUtc, DateTime? issuedAtUtc = null) {
+        SetPasswordResetToken(new UserTokenIssue(tokenHash, expiresAtUtc, issuedAtUtc));
+    }
+
+    public void SetPasswordResetToken(UserTokenIssue issue) {
         EnsureNotDeleted();
-        var normalizedTokenHash = NormalizeRequiredTokenHash(tokenHash, nameof(tokenHash));
-        var normalizedExpiresAtUtc = NormalizeUtcTimestamp(expiresAtUtc, nameof(expiresAtUtc));
-        var normalizedIssuedAtUtc = NormalizeOptionalAuditTimestamp(issuedAtUtc, nameof(issuedAtUtc));
-        EnsureFutureUtc(normalizedExpiresAtUtc, nameof(expiresAtUtc));
+        var normalizedTokenHash = NormalizeRequiredTokenHash(issue.TokenHash, nameof(issue.TokenHash));
+        var normalizedExpiresAtUtc = NormalizeUtcTimestamp(issue.ExpiresAtUtc, nameof(issue.ExpiresAtUtc));
+        var normalizedIssuedAtUtc = NormalizeOptionalAuditTimestamp(issue.IssuedAtUtc, nameof(issue.IssuedAtUtc));
+        EnsureFutureUtc(normalizedExpiresAtUtc, nameof(issue.ExpiresAtUtc));
         var nextState = GetCredentialState().WithPasswordResetToken(normalizedTokenHash, normalizedExpiresAtUtc, normalizedIssuedAtUtc);
         ApplyCredentialState(nextState);
         SetModified(normalizedIssuedAtUtc);

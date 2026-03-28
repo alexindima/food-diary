@@ -50,7 +50,7 @@ public sealed class UpdateUserCommandHandlerTests {
     public async Task Handle_WhenProfileImageCleanupFails_StillReturnsSuccessAndUpdatesUser() {
         var user = User.Create("user@example.com", "hash");
         var oldAssetId = ImageAssetId.New();
-        user.UpdateProfile(new FoodDiary.Domain.ValueObjects.UserProfileUpdate(ProfileImageAssetId: oldAssetId));
+        user.UpdateProfileMedia(new FoodDiary.Domain.ValueObjects.UserProfileMediaUpdate(ProfileImageAssetId: oldAssetId));
 
         var cleanup = new StubImageAssetCleanupService("storage_error");
         var handler = new UpdateUserCommandHandler(

@@ -1,0 +1,178 @@
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideNoopAnimations } from '@angular/platform-browser/animations';
+import { TranslateModule } from '@ngx-translate/core';
+import { BreakpointObserver } from '@angular/cdk/layout';
+import { of } from 'rxjs';
+
+import { MealListComponent } from './meal-list.component';
+import { MealService } from '../../api/meal.service';
+import { NavigationService } from '../../../../services/navigation.service';
+import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { Meal } from '../../models/meal.data';
+import { PageOf } from '../../../../shared/models/page-of.data';
+
+function createMockMeal(overrides: Partial<Meal> = {}): Meal {
+    return {
+        id: '1',
+        date: '2024-03-15T10:00:00Z',
+        mealType: 'breakfast',
+        comment: null,
+        imageUrl: null,
+        imageAssetId: null,
+        totalCalories: 500,
+        totalProteins: 30,
+        totalFats: 20,
+        totalCarbs: 50,
+        totalFiber: 5,
+        totalAlcohol: 0,
+        isNutritionAutoCalculated: true,
+        preMealSatietyLevel: null,
+        postMealSatietyLevel: null,
+        items: [],
+        aiSessions: [],
+        ...overrides,
+    };
+}
+
+function createPageOf(meals: Meal[], page = 1): PageOf<Meal> {
+    return {
+        data: meals,
+        page,
+        limit: 10,
+        totalPages: 1,
+        totalItems: meals.length,
+    };
+}
+
+describe('MealListComponent', () => {
+    let component: MealListComponent;
+    let fixture: ComponentFixture<MealListComponent>;
+
+    const mockMealService = {
+        query: vi.fn().mockReturnValue(of(createPageOf([]))),
+        deleteById: vi.fn().mockReturnValue(of(void 0)),
+    };
+
+    const mockNavigationService = {
+        navigateToConsumptionAdd: vi.fn().mockResolvedValue(true),
+        navigateToConsumptionEdit: vi.fn().mockResolvedValue(true),
+    };
+
+    const mockDialogRef = {
+        afterClosed: vi.fn().mockReturnValue(of(undefined)),
+    };
+
+    const mockFdDialogService = {
+        open: vi.fn().mockReturnValue(mockDialogRef),
+    };
+
+    const mockBreakpointObserver = {
+        observe: vi.fn().mockReturnValue(of({ matches: false, breakpoints: {} })),
+    };
+
+    beforeEach(async () => {
+        vi.clearAllMocks();
+        mockMealService.query.mockReturnValue(of(createPageOf([])));
+
+        // Mock window.matchMedia for the component constructor
+        Object.defineProperty(window, 'matchMedia', {
+            writable: true,
+            value: vi.fn().mockImplementation((query: string) => ({
+                matches: false,
+                media: query,
+                onchange: null,
+                addListener: vi.fn(),
+                removeListener: vi.fn(),
+                addEventListener: vi.fn(),
+                removeEventListener: vi.fn(),
+                dispatchEvent: vi.fn(),
+            })),
+        });
+
+        await TestBed.configureTestingModule({
+            imports: [MealListComponent, TranslateModule.forRoot()],
+            providers: [
+                provideHttpClient(),
+                provideHttpClientTesting(),
+                provideNoopAnimations(),
+                { provide: MealService, useValue: mockMealService },
+                { provide: NavigationService, useValue: mockNavigationService },
+                { provide: FdUiDialogService, useValue: mockFdDialogService },
+                { provide: BreakpointObserver, useValue: mockBreakpointObserver },
+            ],
+        }).compileComponents();
+
+        fixture = TestBed.createComponent(MealListComponent);
+        component = fixture.componentInstance;
+    });
+
+    it('should create', () => {
+        expect(component).toBeTruthy();
+    });
+
+    it('should load consumptions on init', () => {
+        const meals = [createMockMeal()];
+        mockMealService.query.mockReturnValue(of(createPageOf(meals)));
+
+        // ngOnInit triggers searchForm.valueChanges with startWith which calls loadConsumptions synchronously via switchMap
+        // Since we use of() (synchronous), the subscription completes immediately
+        fixture.detectChanges();
+
+        expect(mockMealService.query).toHaveBeenCalled();
+    });
+
+    it('should navigate to add meal', async () => {
+        await component.goToMealAdd();
+
+        expect(mockNavigationService.navigateToConsumptionAdd).toHaveBeenCalled();
+    });
+
+    it('should handle page change', () => {
+        // detectChanges to resolve viewChild #container
+        fixture.detectChanges();
+
+        // Mock scrollIntoView on the container element
+        const containerEl = fixture.nativeElement.querySelector('[fdpagecontainer]') as HTMLElement;
+        if (containerEl) {
+            containerEl.scrollIntoView = vi.fn();
+        }
+
+        const meals = [createMockMeal()];
+        mockMealService.query.mockReturnValue(of(createPageOf(meals, 2)));
+
+        component.onPageChange(1);
+
+        expect(component.currentPageIndex).toBe(1);
+        expect(mockMealService.query).toHaveBeenCalledWith(2, 10, expect.any(Object));
+    });
+
+    it('should group consumptions by date', () => {
+        const meal1 = createMockMeal({ id: '1', date: '2024-03-15T10:00:00Z' });
+        const meal2 = createMockMeal({ id: '2', date: '2024-03-15T14:00:00Z' });
+        const meal3 = createMockMeal({ id: '3', date: '2024-03-16T10:00:00Z' });
+
+        // Directly call loadConsumptions to avoid debounceTime issues
+        mockMealService.query.mockReturnValue(of(createPageOf([meal1, meal2, meal3])));
+        component.loadConsumptions(1).subscribe();
+
+        const grouped = component.groupedConsumptions();
+        expect(grouped.length).toBe(2);
+
+        const march16Group = grouped.find(g => g.date.toISOString().startsWith('2024-03-16'));
+        const march15Group = grouped.find(g => g.date.toISOString().startsWith('2024-03-15'));
+        expect(march16Group).toBeDefined();
+        expect(march15Group).toBeDefined();
+        expect(march15Group!.items.length).toBe(2);
+        expect(march16Group!.items.length).toBe(1);
+    });
+
+    it('should open meal details dialog', () => {
+        const meal = createMockMeal();
+
+        component.openMealDetails(meal);
+
+        expect(mockFdDialogService.open).toHaveBeenCalled();
+    });
+});

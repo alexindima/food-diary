@@ -3,6 +3,7 @@ using System.Diagnostics.Metrics;
 using System.Security.Claims;
 using FoodDiary.Web.Api.Extensions;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.OutputCaching;
 using Microsoft.Extensions.Logging.Abstractions;
 
 namespace FoodDiary.Web.Api.IntegrationTests.Extensions;
@@ -179,6 +180,95 @@ public sealed class RequestObservabilityMiddlewareTests {
         Assert.Equal(1, measurement);
         Assert.Equal("images.upload-url", flow);
         Assert.Equal("client_error", outcome);
+    }
+
+    [Fact]
+    public async Task Middleware_RecordsOutputCacheMetric_ForCacheHit() {
+        long? measurement = null;
+        string? policy = null;
+        string? outcome = null;
+
+        using var listener = new MeterListener();
+        listener.InstrumentPublished = (instrument, meterListener) => {
+            if (instrument.Meter.Name == ApiTelemetry.TelemetryName &&
+                instrument.Name == "fooddiary.api.output_cache.events") {
+                meterListener.EnableMeasurementEvents(instrument);
+            }
+        };
+        listener.SetMeasurementEventCallback<long>((_, value, tags, _) => {
+            measurement = value;
+            policy = GetTagValue(tags, "fooddiary.output_cache.policy");
+            outcome = GetTagValue(tags, "fooddiary.output_cache.outcome");
+        });
+        listener.Start();
+
+        var middleware = new RequestObservabilityMiddleware(
+            next: context => {
+                context.Response.StatusCode = StatusCodes.Status200OK;
+                context.Response.Headers.Append("Age", "5");
+                return Task.CompletedTask;
+            },
+            logger: NullLogger<RequestObservabilityMiddleware>.Instance);
+
+        var httpContext = new DefaultHttpContext();
+        httpContext.Request.Method = HttpMethods.Get;
+        httpContext.Request.Path = "/api/dashboard";
+        httpContext.SetEndpoint(new Endpoint(
+            static _ => Task.CompletedTask,
+            new EndpointMetadataCollection(new OutputCacheAttribute {
+                PolicyName = "PresentationUserScopedCache"
+            }),
+            "dashboard"));
+
+        await middleware.InvokeAsync(httpContext);
+
+        Assert.Equal(1, measurement);
+        Assert.Equal("PresentationUserScopedCache", policy);
+        Assert.Equal("hit", outcome);
+    }
+
+    [Fact]
+    public async Task Middleware_RecordsOutputCacheMetric_ForCacheMiss() {
+        long? measurement = null;
+        string? policy = null;
+        string? outcome = null;
+
+        using var listener = new MeterListener();
+        listener.InstrumentPublished = (instrument, meterListener) => {
+            if (instrument.Meter.Name == ApiTelemetry.TelemetryName &&
+                instrument.Name == "fooddiary.api.output_cache.events") {
+                meterListener.EnableMeasurementEvents(instrument);
+            }
+        };
+        listener.SetMeasurementEventCallback<long>((_, value, tags, _) => {
+            measurement = value;
+            policy = GetTagValue(tags, "fooddiary.output_cache.policy");
+            outcome = GetTagValue(tags, "fooddiary.output_cache.outcome");
+        });
+        listener.Start();
+
+        var middleware = new RequestObservabilityMiddleware(
+            next: context => {
+                context.Response.StatusCode = StatusCodes.Status200OK;
+                return Task.CompletedTask;
+            },
+            logger: NullLogger<RequestObservabilityMiddleware>.Instance);
+
+        var httpContext = new DefaultHttpContext();
+        httpContext.Request.Method = HttpMethods.Get;
+        httpContext.Request.Path = "/api/admin/ai-usage";
+        httpContext.SetEndpoint(new Endpoint(
+            static _ => Task.CompletedTask,
+            new EndpointMetadataCollection(new OutputCacheAttribute {
+                PolicyName = "PresentationAdminAiUsageCache"
+            }),
+            "admin-ai-usage"));
+
+        await middleware.InvokeAsync(httpContext);
+
+        Assert.Equal(1, measurement);
+        Assert.Equal("PresentationAdminAiUsageCache", policy);
+        Assert.Equal("miss", outcome);
     }
 
     private static string? GetTagValue(ReadOnlySpan<KeyValuePair<string, object?>> tags, string key) {

@@ -44,6 +44,10 @@ During diagnosis, use these signals first:
 - business-flow counters documented in `BACKEND_OBSERVABILITY_BASELINE.md`
 - auth and security expectations documented in `BACKEND_SECURITY_HARDENING.md`
 
+Operational shortcut:
+
+- if an alert already points to one of the dashboard panels or metric names from `BACKEND_OBSERVABILITY_BASELINE.md`, start there before broad log search
+
 ## Failed Deployment
 
 Symptoms:
@@ -68,6 +72,7 @@ Diagnosis:
 - If failure happened after migration execution, inspect database state before rolling back binaries.
 - If failure happened during app startup, inspect host logs for missing config, secret, binding, or dependency errors.
 - If failure happened only in health checks, compare environment-specific URLs, proxy headers, and secret injection with the previous healthy deployment.
+- Compare cache hit ratio and auth business-flow outcomes before and after the deploy when the incident looks like a performance-only regression.
 
 Recovery:
 
@@ -153,6 +158,15 @@ Diagnosis:
 - Check whether the database host is reachable from the API runtime.
 - Inspect PostgreSQL server health, disk space, max connections, and recent restarts.
 - Inspect application logs for authentication failure versus transport failure versus timeout patterns.
+- Check these metrics first:
+  - `fooddiary.db.command.failures`
+  - `fooddiary.api.business_flow.events`
+  - `fooddiary.job.execution.events`
+- Distinguish between:
+  - read-path failures dominated by `fooddiary.db.operation=reader`
+  - write-path failures dominated by `fooddiary.db.operation=non_query`
+  - background or persistence-source failures via `fooddiary.db.source`
+  - timeout/canceled/provider-exception patterns via `error.type`
 
 Recovery:
 
@@ -162,12 +176,15 @@ Recovery:
   recover the PostgreSQL instance or fail over according to the environment policy.
 - Connection saturation:
   reduce load, investigate long-running queries, and restart only if saturation is not self-healing.
+- Short transient transport issue:
+  verify whether configured EF Core retries are masking brief failures, then fix the underlying instability instead of raising retry counts blindly.
 
 Validation after recovery:
 
 - one read path and one write path succeed
 - auth refresh or login succeeds
 - error rate returns to normal
+- `fooddiary.db.command.failures` returns to the normal baseline
 
 ## Unavailable S3-Compatible Storage
 
@@ -224,6 +241,16 @@ Diagnosis:
 - Check current `OpenAi:ApiKey` or equivalent provider secret source.
 - Inspect host logs for auth failures, quota failures, and timeout patterns.
 - Confirm whether the issue affects one environment or all environments.
+- Check these metrics first:
+  - `fooddiary.ai.requests`
+  - `fooddiary.ai.quota_rejections`
+  - `fooddiary.ai.fallbacks`
+- Distinguish between:
+  - quota exhaustion
+  - transport failure
+  - timeout
+  - repeated `http_5xx`
+  - repeated fallback activation on the primary vision model
 
 Recovery:
 
@@ -238,6 +265,8 @@ Validation after recovery:
 
 - a known AI-backed request succeeds
 - non-AI flows remain healthy during and after mitigation
+- AI request outcomes return to mostly `success`
+- fallback and quota-rejection rates return to the normal baseline
 
 ## Authentication Incident
 
@@ -265,6 +294,10 @@ Diagnosis:
 - Check JWT, Telegram, SMTP, and SSO-related secrets depending on the failing flow.
 - Verify trusted proxy configuration if rate limiting or client IP behavior changed.
 - Confirm whether failures are client errors, token validation failures, or internal server errors.
+- Compare:
+  - `fooddiary.api.business_flow.events` for the affected auth flow
+  - request latency and request exception counters on matching routes
+  - recent deploy time versus the first failure spike
 
 Recovery:
 
@@ -283,6 +316,7 @@ Validation after recovery:
 - refresh succeeds
 - one email-based recovery flow succeeds
 - no unexpected spike remains in auth rate-limit rejections
+- auth business-flow counters return to expected success/error ratios
 
 ## Telemetry Or Exporter Outage
 
@@ -316,6 +350,54 @@ Validation after recovery:
 
 - traces or metrics resume
 - backend request latency and error rate stay normal during recovery
+- at least one auth flow, one AI flow, and one cleanup job metric appears again in the backend dashboard
+- output-cache hit/miss events appear again for cache-enabled routes after representative traffic
+
+## Cleanup Job Incident
+
+Symptoms:
+
+- scheduled cleanup job stops running
+- cleanup job failure alert fires
+- deleted-item backlog grows unexpectedly
+
+Immediate actions:
+
+1. Identify the failing job:
+   - `images.cleanup`
+   - `users.cleanup`
+2. Check whether the latest execution failed or whether the scheduler stopped enqueuing entirely.
+3. Do not rerun the job repeatedly until the failing dependency is understood.
+
+Diagnosis:
+
+- Check:
+  - `fooddiary.job.execution.events`
+  - `fooddiary.job.deleted_items`
+  - `fooddiary.job.execution.duration`
+- Distinguish between:
+  - scheduler issue in `FoodDiary.JobManager`
+  - PostgreSQL dependency issue
+  - S3 delete issue
+  - data-volume regression causing long runtimes
+- Review the last successful execution time and compare it with the configured cron schedule.
+
+Recovery:
+
+- Scheduler not enqueuing:
+  restore Hangfire/host execution and confirm recurring job registration.
+- Database failure:
+  switch to `Unavailable PostgreSQL`.
+- Storage delete issue during image or user cleanup:
+  switch to `Unavailable S3-Compatible Storage`.
+- Runtime regression:
+  reduce batch size temporarily or pause the affected cleanup path until the data-path issue is understood.
+
+Validation after recovery:
+
+- the affected cleanup job emits a successful execution event
+- deleted-item count moves again in the expected direction
+- execution duration is back within the normal operating range
 
 ## Post-Incident Template
 

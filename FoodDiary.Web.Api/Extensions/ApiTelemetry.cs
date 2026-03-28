@@ -28,4 +28,8 @@ public static class ApiTelemetry {
         "fooddiary.api.business_flow.events",
         unit: "{event}",
         description: "Total number of high-value backend business flow events by route group and outcome.");
+    public static readonly Counter<long> OutputCacheCounter = Meter.CreateCounter<long>(
+        "fooddiary.api.output_cache.events",
+        unit: "{event}",
+        description: "Total number of output-cache observations by policy and outcome.");
 }

@@ -10,12 +10,25 @@ using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Options;
 using FoodDiary.Infrastructure.Services;
 using Microsoft.Extensions.Logging.Abstractions;
+using System.Diagnostics.Metrics;
 
 namespace FoodDiary.Infrastructure.Tests.Services;
 
 public sealed class OpenAiFoodServiceTests {
+    private const string InfrastructureMeterName = "FoodDiary.Infrastructure";
+
     [Fact]
     public async Task CalculateNutritionAsync_WhenTransportFails_ReturnsOpenAiFailedError() {
+        long? requestCount = null;
+        string? outcome = null;
+        using var listener = CreateInfrastructureListener(
+            onRequest: (value, tags) => {
+                requestCount = value;
+                outcome = GetTagValue(tags, "fooddiary.ai.outcome");
+            },
+            onQuotaRejection: null,
+            onFallback: null);
+
         using var httpClient = new HttpClient(new ThrowingHttpMessageHandler(new HttpRequestException("boom")));
         var service = new OpenAiFoodService(
             httpClient,
@@ -33,6 +46,8 @@ public sealed class OpenAiFoodServiceTests {
         Assert.True(result.IsFailure);
         Assert.Equal("Ai.OpenAiFailed", result.Error.Code);
         Assert.Contains("transport error", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+        Assert.Equal(1, requestCount);
+        Assert.Equal("transport_error", outcome);
     }
 
     [Fact]
@@ -94,7 +109,75 @@ public sealed class OpenAiFoodServiceTests {
     }
 
     [Fact]
+    public async Task AnalyzeFoodImageAsync_WhenPrimaryFails_UsesFallbackAndRecordsMetric() {
+        long? fallbackCount = null;
+        using var listener = CreateInfrastructureListener(
+            onRequest: null,
+            onQuotaRejection: null,
+            onFallback: (value, _) => fallbackCount = value);
+
+        var responses = new Queue<HttpResponseMessage>(new HttpResponseMessage[] {
+            new(HttpStatusCode.BadRequest) {
+                Content = new StringContent("{\"error\":\"bad request\"}")
+            },
+            new(HttpStatusCode.OK) {
+                Content = new StringContent("""
+                    {
+                      "output": [
+                        {
+                          "content": [
+                            {
+                              "type": "output_text",
+                              "text": "{\"items\":[{\"nameEn\":\"Apple\",\"nameLocal\":null,\"amount\":100,\"unit\":\"g\",\"confidence\":0.97}]}"
+                            }
+                          ]
+                        }
+                      ],
+                      "usage": {
+                        "input_tokens": 11,
+                        "output_tokens": 7,
+                        "total_tokens": 18
+                      }
+                    }
+                    """)
+            }
+        });
+
+        using var httpClient = new HttpClient(new SequenceHttpMessageHandler(responses));
+        var usageRepository = new RecordingAiUsageRepository();
+        var service = new OpenAiFoodService(
+            httpClient,
+            Microsoft.Extensions.Options.Options.Create(new OpenAiOptions {
+                ApiKey = "test-key",
+                VisionModel = "vision-primary",
+                VisionFallbackModel = "vision-fallback"
+            }),
+            NullLogger<OpenAiFoodService>.Instance,
+            usageRepository,
+            new StubUserRepository(),
+            new StubDateTimeProvider());
+
+        var result = await service.AnalyzeFoodImageAsync(
+            "https://cdn.example.com/meal.webp",
+            "en",
+            UserId.New(),
+            null,
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        var usage = Assert.Single(usageRepository.Items);
+        Assert.Equal("vision-fallback", usage.Model);
+        Assert.Equal(1, fallbackCount);
+    }
+
+    [Fact]
     public async Task CalculateNutritionAsync_WhenQuotaExceeded_ReturnsQuotaErrorWithoutCallingOpenAi() {
+        long? quotaRejectionCount = null;
+        using var listener = CreateInfrastructureListener(
+            onRequest: null,
+            onQuotaRejection: (value, _) => quotaRejectionCount = value,
+            onFallback: null);
+
         var handler = new CountingHttpMessageHandler(_ => new HttpResponseMessage(HttpStatusCode.OK));
         using var httpClient = new HttpClient(handler);
         var service = new OpenAiFoodService(
@@ -113,6 +196,7 @@ public sealed class OpenAiFoodServiceTests {
         Assert.True(result.IsFailure);
         Assert.Equal("Ai.QuotaExceeded", result.Error.Code);
         Assert.Equal(0, handler.CallCount);
+        Assert.Equal(1, quotaRejectionCount);
     }
 
     [Fact]
@@ -190,6 +274,47 @@ public sealed class OpenAiFoodServiceTests {
     private sealed class ThrowingHttpMessageHandler(Exception exception) : HttpMessageHandler {
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken) =>
             Task.FromException<HttpResponseMessage>(exception);
+    }
+
+    private static MeterListener CreateInfrastructureListener(
+        Action<long, ReadOnlySpan<KeyValuePair<string, object?>>>? onRequest,
+        Action<long, ReadOnlySpan<KeyValuePair<string, object?>>>? onQuotaRejection,
+        Action<long, ReadOnlySpan<KeyValuePair<string, object?>>>? onFallback) {
+        var listener = new MeterListener();
+        listener.InstrumentPublished = (instrument, meterListener) => {
+            if (instrument.Meter.Name != InfrastructureMeterName) {
+                return;
+            }
+
+            if (instrument.Name is "fooddiary.ai.requests" or "fooddiary.ai.quota_rejections" or "fooddiary.ai.fallbacks") {
+                meterListener.EnableMeasurementEvents(instrument);
+            }
+        };
+        listener.SetMeasurementEventCallback<long>((instrument, value, tags, _) => {
+            switch (instrument.Name) {
+                case "fooddiary.ai.requests":
+                    onRequest?.Invoke(value, tags);
+                    break;
+                case "fooddiary.ai.quota_rejections":
+                    onQuotaRejection?.Invoke(value, tags);
+                    break;
+                case "fooddiary.ai.fallbacks":
+                    onFallback?.Invoke(value, tags);
+                    break;
+            }
+        });
+        listener.Start();
+        return listener;
+    }
+
+    private static string? GetTagValue(ReadOnlySpan<KeyValuePair<string, object?>> tags, string key) {
+        foreach (var tag in tags) {
+            if (string.Equals(tag.Key, key, StringComparison.Ordinal)) {
+                return tag.Value?.ToString();
+            }
+        }
+
+        return null;
     }
 
     private sealed class SequenceHttpMessageHandler(Queue<HttpResponseMessage> responses) : HttpMessageHandler {

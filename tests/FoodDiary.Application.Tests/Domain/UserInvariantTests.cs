@@ -83,6 +83,15 @@ public class UserInvariantTests {
     }
 
     [Fact]
+    public void UpdateRefreshToken_WithTypedUpdate_SetsLastLogin() {
+        var user = User.Create("test@example.com", "hash");
+
+        user.UpdateRefreshToken(new UserRefreshTokenUpdate("token"));
+
+        Assert.NotNull(user.LastLoginAtUtc);
+    }
+
+    [Fact]
     public void Activate_WhenDeleted_Throws() {
         var user = User.Create("test@example.com", "hash");
         user.MarkDeleted(DateTime.UtcNow);
@@ -115,6 +124,18 @@ public class UserInvariantTests {
         var expiresAtUtc = DateTime.UtcNow.AddMinutes(30);
 
         user.SetEmailConfirmationToken(" token-hash ", expiresAtUtc);
+
+        Assert.Equal("token-hash", user.EmailConfirmationTokenHash);
+        Assert.Equal(expiresAtUtc, user.EmailConfirmationTokenExpiresAtUtc);
+        Assert.NotNull(user.EmailConfirmationSentAtUtc);
+    }
+
+    [Fact]
+    public void SetEmailConfirmationToken_WithTypedIssue_UpdatesFields() {
+        var user = User.Create("test@example.com", "hash");
+        var expiresAtUtc = DateTime.UtcNow.AddMinutes(30);
+
+        user.SetEmailConfirmationToken(new UserTokenIssue(" token-hash ", expiresAtUtc));
 
         Assert.Equal("token-hash", user.EmailConfirmationTokenHash);
         Assert.Equal(expiresAtUtc, user.EmailConfirmationTokenExpiresAtUtc);
@@ -167,6 +188,18 @@ public class UserInvariantTests {
     }
 
     [Fact]
+    public void SetPasswordResetToken_WithTypedIssue_UpdatesFields() {
+        var user = User.Create("test@example.com", "hash");
+        var expiresAtUtc = DateTime.UtcNow.AddMinutes(30);
+
+        user.SetPasswordResetToken(new UserTokenIssue(" reset-hash ", expiresAtUtc));
+
+        Assert.Equal("reset-hash", user.PasswordResetTokenHash);
+        Assert.Equal(expiresAtUtc, user.PasswordResetTokenExpiresAtUtc);
+        Assert.NotNull(user.PasswordResetSentAtUtc);
+    }
+
+    [Fact]
     public void SetPasswordResetToken_WithLocalExpiry_NormalizesToUtc() {
         var user = User.Create("test@example.com", "hash");
         var expiresAtLocal = DateTime.Now.AddMinutes(30);
@@ -204,7 +237,7 @@ public class UserInvariantTests {
         var user = User.Create("test@example.com", "hash");
 
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            user.UpdateProfile(new UserProfileUpdate(BirthDate: DateTime.UtcNow.AddDays(1))));
+            user.UpdatePersonalInfo(new UserPersonalInfoUpdate(BirthDate: DateTime.UtcNow.AddDays(1))));
     }
 
     [Fact]
@@ -212,7 +245,7 @@ public class UserInvariantTests {
         var user = User.Create("test@example.com", "hash");
 
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            user.UpdateProfile(new UserProfileUpdate(StepGoal: -1)));
+            user.UpdateActivity(new UserActivityUpdate(StepGoal: -1)));
     }
 
     [Fact]
@@ -220,7 +253,7 @@ public class UserInvariantTests {
         var user = User.Create("test@example.com", "hash");
 
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            user.UpdateProfile(new UserProfileUpdate(HydrationGoal: -0.1)));
+            user.UpdateActivity(new UserActivityUpdate(HydrationGoal: -0.1)));
     }
 
     [Theory]
@@ -231,7 +264,7 @@ public class UserInvariantTests {
         var user = User.Create("test@example.com", "hash");
 
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            user.UpdateProfile(new UserProfileUpdate(Weight: weight)));
+            user.UpdatePersonalInfo(new UserPersonalInfoUpdate(Weight: weight)));
     }
 
     [Theory]
@@ -242,15 +275,15 @@ public class UserInvariantTests {
         var user = User.Create("test@example.com", "hash");
 
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            user.UpdateProfile(new UserProfileUpdate(Height: height)));
+            user.UpdatePersonalInfo(new UserPersonalInfoUpdate(Height: height)));
     }
 
     [Fact]
     public void UpdateProfile_WithPartialActivityGoalUpdate_PreservesOtherValue() {
         var user = User.Create("test@example.com", "hash");
-        user.UpdateProfile(new UserProfileUpdate(StepGoal: 8000, HydrationGoal: 2.2));
+        user.UpdateActivity(new UserActivityUpdate(StepGoal: 8000, HydrationGoal: 2.2));
 
-        user.UpdateProfile(new UserProfileUpdate(StepGoal: 10000));
+        user.UpdateActivity(new UserActivityUpdate(StepGoal: 10000));
 
         Assert.Equal(10000, user.StepGoal);
         Assert.Equal(2.2, user.HydrationGoal);
@@ -262,6 +295,17 @@ public class UserInvariantTests {
         user.UpdateActivity(stepGoal: 8000, hydrationGoal: 2.2);
 
         user.UpdateActivity(stepGoal: 10000);
+
+        Assert.Equal(10000, user.StepGoal);
+        Assert.Equal(2.2, user.HydrationGoal);
+    }
+
+    [Fact]
+    public void UpdateActivity_WithTypedUpdate_PreservesOtherValue() {
+        var user = User.Create("test@example.com", "hash");
+        user.UpdateActivity(new UserActivityUpdate(StepGoal: 8000, HydrationGoal: 2.2));
+
+        user.UpdateActivity(new UserActivityUpdate(StepGoal: 10000));
 
         Assert.Equal(10000, user.StepGoal);
         Assert.Equal(2.2, user.HydrationGoal);
@@ -413,14 +457,14 @@ public class UserInvariantTests {
         var user = User.Create("test@example.com", "hash");
 
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            user.UpdateProfile(new UserProfileUpdate(Language: "de")));
+            user.UpdatePreferences(new UserPreferenceUpdate(Language: "de")));
     }
 
     [Fact]
     public void UpdateProfile_WithSupportedLanguage_UpdatesValue() {
         var user = User.Create("test@example.com", "hash");
 
-        user.UpdateProfile(new UserProfileUpdate(Language: "ru"));
+        user.UpdatePreferences(new UserPreferenceUpdate(Language: "ru"));
 
         Assert.Equal("ru", user.Language);
     }
@@ -431,6 +475,18 @@ public class UserInvariantTests {
 
         user.UpdatePreferences(language: "ru");
 
+        Assert.Equal("ru", user.Language);
+    }
+
+    [Fact]
+    public void UpdatePreferences_WithTypedUpdate_UpdatesDashboardLayoutAndLanguage() {
+        var user = User.Create("test@example.com", "hash");
+
+        user.UpdatePreferences(new UserPreferenceUpdate(
+            DashboardLayoutJson: "{\"layout\":\"compact\"}",
+            Language: "ru"));
+
+        Assert.Equal("{\"layout\":\"compact\"}", user.DashboardLayoutJson);
         Assert.Equal("ru", user.Language);
     }
 
@@ -503,14 +559,14 @@ public class UserInvariantTests {
         var user = User.Create("test@example.com", "hash");
 
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            user.UpdateProfile(new UserProfileUpdate(Gender: "X")));
+            user.UpdatePersonalInfo(new UserPersonalInfoUpdate(Gender: "X")));
     }
 
     [Fact]
     public void UpdateProfile_WithSupportedGender_NormalizesToCanonicalCode() {
         var user = User.Create("test@example.com", "hash");
 
-        user.UpdateProfile(new UserProfileUpdate(Gender: "f"));
+        user.UpdatePersonalInfo(new UserPersonalInfoUpdate(Gender: "f"));
 
         Assert.Equal("F", user.Gender);
     }
@@ -525,6 +581,20 @@ public class UserInvariantTests {
     }
 
     [Fact]
+    public void UpdatePersonalInfo_WithTypedUpdate_NormalizesGenderAndProfileText() {
+        var user = User.Create("test@example.com", "hash");
+
+        user.UpdatePersonalInfo(new UserPersonalInfoUpdate(
+            Username: " alex ",
+            FirstName: " Alexey ",
+            Gender: "f"));
+
+        Assert.Equal("alex", user.Username);
+        Assert.Equal("Alexey", user.FirstName);
+        Assert.Equal("F", user.Gender);
+    }
+
+    [Fact]
     public void UpdateProfileMedia_WithValues_UpdatesImageFields() {
         var user = User.Create("test@example.com", "hash");
         var assetId = FoodDiary.Domain.ValueObjects.Ids.ImageAssetId.New();
@@ -532,6 +602,19 @@ public class UserInvariantTests {
         user.UpdateProfileMedia(profileImage: " https://cdn.example.com/avatar.webp ", profileImageAssetId: assetId);
 
         Assert.Equal("https://cdn.example.com/avatar.webp", user.ProfileImage);
+        Assert.Equal(assetId, user.ProfileImageAssetId);
+    }
+
+    [Fact]
+    public void UpdateProfileMedia_WithTypedUpdate_UpdatesImageFields() {
+        var user = User.Create("test@example.com", "hash");
+        var assetId = FoodDiary.Domain.ValueObjects.Ids.ImageAssetId.New();
+
+        user.UpdateProfileMedia(new UserProfileMediaUpdate(
+            ProfileImage: " https://cdn.example.com/avatar-2.webp ",
+            ProfileImageAssetId: assetId));
+
+        Assert.Equal("https://cdn.example.com/avatar-2.webp", user.ProfileImage);
         Assert.Equal(assetId, user.ProfileImageAssetId);
     }
 
@@ -634,7 +717,7 @@ public class UserInvariantTests {
         user.MarkDeleted(DateTime.UtcNow);
 
         Assert.Throws<InvalidOperationException>(() =>
-            user.UpdateProfile(new UserProfileUpdate(FirstName: "Alex")));
+            user.UpdatePersonalInfo(new UserPersonalInfoUpdate(FirstName: "Alex")));
     }
 
     [Fact]

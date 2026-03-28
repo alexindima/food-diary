@@ -43,10 +43,15 @@ public sealed class AiUsageRepositoryIntegrationTests(PostgresDatabaseFixture da
     }
 
     private static void SetCreatedOnUtc(AiUsage usage, DateTime createdOnUtc) {
-        var property = typeof(AiUsage)
-            .GetProperty("CreatedOnUtc", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic)
-            ?? throw new InvalidOperationException("CreatedOnUtc property was not found.");
+        var method = typeof(AiUsage).BaseType?
+            .GetMethod(
+                "SetCreated",
+                System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic,
+                binder: null,
+                [typeof(DateTime)],
+                modifiers: null)
+            ?? throw new InvalidOperationException("SetCreated(DateTime) method was not found.");
 
-        property.SetValue(usage, createdOnUtc);
+        method.Invoke(usage, [createdOnUtc]);
     }
 }

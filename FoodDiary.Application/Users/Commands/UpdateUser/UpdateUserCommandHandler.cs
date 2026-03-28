@@ -7,6 +7,7 @@ using FoodDiary.Application.Images.Common;
 using FoodDiary.Application.Users.Mappings;
 using FoodDiary.Application.Users.Models;
 using FoodDiary.Domain.Enums;
+using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 using System.Text.Json;
 
@@ -63,24 +64,24 @@ public class UpdateUserCommandHandler(
             ? null
             : JsonSerializer.Serialize(command.DashboardLayout);
 
-        user.UpdatePersonalInfo(
-            username: Normalize(command.Username),
-            firstName: Normalize(command.FirstName),
-            lastName: Normalize(command.LastName),
-            birthDate: command.BirthDate,
-            gender: genderResult.Value,
-            weight: command.Weight,
-            height: command.Height);
-        user.UpdateActivity(
-            activityLevel: activityLevelResult.Value,
-            stepGoal: command.StepGoal,
-            hydrationGoal: command.HydrationGoal);
-        user.UpdatePreferences(
-            language: languageResult.Value,
-            dashboardLayoutJson: dashboardLayoutJson);
-        user.UpdateProfileMedia(
-            profileImage: Normalize(command.ProfileImage),
-            profileImageAssetId: newAssetId);
+        user.UpdatePersonalInfo(new UserPersonalInfoUpdate(
+            Username: Normalize(command.Username),
+            FirstName: Normalize(command.FirstName),
+            LastName: Normalize(command.LastName),
+            BirthDate: command.BirthDate,
+            Gender: genderResult.Value,
+            Weight: command.Weight,
+            Height: command.Height));
+        user.UpdateActivity(new UserActivityUpdate(
+            ActivityLevel: activityLevelResult.Value,
+            StepGoal: command.StepGoal,
+            HydrationGoal: command.HydrationGoal));
+        user.UpdatePreferences(new UserPreferenceUpdate(
+            DashboardLayoutJson: dashboardLayoutJson,
+            Language: languageResult.Value));
+        user.UpdateProfileMedia(new UserProfileMediaUpdate(
+            ProfileImage: Normalize(command.ProfileImage),
+            ProfileImageAssetId: newAssetId));
 
         if (command.IsActive.HasValue) {
             user.SetActive(command.IsActive.Value);

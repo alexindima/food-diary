@@ -3,6 +3,7 @@ using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Authentication.Common;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Interfaces.Services;
+using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.Extensions.Logging;
 
@@ -56,7 +57,10 @@ public class ResendEmailVerificationCommandHandler : ICommandHandler<ResendEmail
 
         var emailToken = SecurityTokenGenerator.GenerateUrlSafeToken();
         var emailTokenHash = _passwordHasher.Hash(emailToken);
-        user.SetEmailConfirmationToken(emailTokenHash, _dateTimeProvider.UtcNow.AddHours(24), _dateTimeProvider.UtcNow);
+        user.SetEmailConfirmationToken(new UserTokenIssue(
+            TokenHash: emailTokenHash,
+            ExpiresAtUtc: _dateTimeProvider.UtcNow.AddHours(24),
+            IssuedAtUtc: _dateTimeProvider.UtcNow));
         await _userRepository.UpdateAsync(user, cancellationToken);
 
         try {

@@ -1,6 +1,8 @@
 using FoodDiary.Domain.Entities.Ai;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Infrastructure.Options;
 using FoodDiary.Infrastructure.Persistence;
+using FoodDiary.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -47,6 +49,72 @@ public sealed class DependencyInjectionTests {
 
         var ex = Assert.Throws<OptionsValidationException>(() => provider.GetRequiredService<IOptions<FoodDiary.Infrastructure.Options.S3Options>>().Value);
         Assert.Contains("ServiceUrl", ex.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public void AddInfrastructure_RegistersDatabaseCommandTelemetryInterceptor() {
+        var services = new ServiceCollection();
+        var configuration = CreateConfiguration(new Dictionary<string, string?> {
+            ["ConnectionStrings:DefaultConnection"] = "Host=localhost;Database=food_diary;Username=test;Password=test",
+            ["Jwt:SecretKey"] = "super-secret-key-for-tests-only-123456789",
+            ["Jwt:Issuer"] = "FoodDiary",
+            ["Jwt:Audience"] = "FoodDiaryClients",
+            ["Jwt:ExpirationMinutes"] = "60",
+            ["Jwt:RefreshTokenExpirationDays"] = "7"
+        });
+
+        services.AddInfrastructure(configuration);
+
+        var interceptorDescriptor = Assert.Single(
+            services,
+            static descriptor => descriptor.ServiceType == typeof(DatabaseCommandTelemetryInterceptor));
+        Assert.Equal(ServiceLifetime.Singleton, interceptorDescriptor.Lifetime);
+    }
+
+    [Fact]
+    public void AddInfrastructure_WithInvalidDatabaseRetryCount_FailsOptionsValidation() {
+        var services = new ServiceCollection();
+        var configuration = CreateConfiguration(new Dictionary<string, string?> {
+            ["ConnectionStrings:DefaultConnection"] = "Host=localhost;Database=food_diary;Username=test;Password=test",
+            ["Jwt:SecretKey"] = "super-secret-key-for-tests-only-123456789",
+            ["Jwt:Issuer"] = "FoodDiary",
+            ["Jwt:Audience"] = "FoodDiaryClients",
+            ["Jwt:ExpirationMinutes"] = "60",
+            ["Jwt:RefreshTokenExpirationDays"] = "7",
+            ["Database:EnableRetries"] = "true",
+            ["Database:MaxRetryCount"] = "0"
+        });
+
+        services.AddInfrastructure(configuration);
+        using var provider = services.BuildServiceProvider();
+
+        var ex = Assert.Throws<OptionsValidationException>(() => provider.GetRequiredService<IOptions<DatabaseOptions>>().Value);
+        Assert.Contains("MaxRetryCount", ex.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public void AddInfrastructure_WithRetriesEnabled_ConfiguresRetryingExecutionStrategy() {
+        var services = new ServiceCollection();
+        var configuration = CreateConfiguration(new Dictionary<string, string?> {
+            ["ConnectionStrings:DefaultConnection"] = "Host=localhost;Database=food_diary;Username=test;Password=test",
+            ["Jwt:SecretKey"] = "super-secret-key-for-tests-only-123456789",
+            ["Jwt:Issuer"] = "FoodDiary",
+            ["Jwt:Audience"] = "FoodDiaryClients",
+            ["Jwt:ExpirationMinutes"] = "60",
+            ["Jwt:RefreshTokenExpirationDays"] = "7",
+            ["Database:EnableRetries"] = "true",
+            ["Database:MaxRetryCount"] = "4",
+            ["Database:MaxRetryDelaySeconds"] = "7"
+        });
+
+        services.AddInfrastructure(configuration);
+        using var provider = services.BuildServiceProvider();
+        using var scope = provider.CreateScope();
+        using var context = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
+
+        var strategy = context.Database.CreateExecutionStrategy();
+
+        Assert.Contains("Retry", strategy.GetType().Name, StringComparison.OrdinalIgnoreCase);
     }
 
     [Fact]

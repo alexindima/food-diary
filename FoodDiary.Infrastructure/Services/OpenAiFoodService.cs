@@ -41,7 +41,8 @@ public sealed class OpenAiFoodService(
         UserId userId,
         string? description,
         CancellationToken cancellationToken) {
-        var quotaCheck = await EnsureMonthlyQuotaAsync(userId, cancellationToken);
+        const string operation = "vision";
+        var quotaCheck = await EnsureMonthlyQuotaAsync(userId, operation, cancellationToken);
         if (quotaCheck.IsFailure) {
             return Result.Failure<FoodVisionModel>(quotaCheck.Error);
         }
@@ -52,11 +53,16 @@ public sealed class OpenAiFoodService(
 
         var requestModel = _options.VisionModel;
         var request = BuildVisionRequest(requestModel, imageUrl, userLanguage, description);
-        var response = await SendRequestAsync(request, cancellationToken);
+        var response = await SendRequestAsync(request, operation, requestModel, cancellationToken);
         if (!response.IsSuccess) {
+            InfrastructureTelemetry.AiFallbackCounter.Add(
+                1,
+                new KeyValuePair<string, object?>("fooddiary.ai.operation", operation),
+                new KeyValuePair<string, object?>("fooddiary.ai.from_model", requestModel),
+                new KeyValuePair<string, object?>("fooddiary.ai.to_model", _options.VisionFallbackModel));
             requestModel = _options.VisionFallbackModel;
             var fallback = BuildVisionRequest(requestModel, imageUrl, userLanguage, description);
-            response = await SendRequestAsync(fallback, cancellationToken);
+            response = await SendRequestAsync(fallback, operation, requestModel, cancellationToken);
         }
 
         if (!response.IsSuccess) {
@@ -75,7 +81,8 @@ public sealed class OpenAiFoodService(
         IReadOnlyList<FoodVisionItemModel> items,
         UserId userId,
         CancellationToken cancellationToken) {
-        var quotaCheck = await EnsureMonthlyQuotaAsync(userId, cancellationToken);
+        const string operation = "nutrition";
+        var quotaCheck = await EnsureMonthlyQuotaAsync(userId, operation, cancellationToken);
         if (quotaCheck.IsFailure) {
             return Result.Failure<FoodNutritionModel>(quotaCheck.Error);
         }
@@ -86,7 +93,7 @@ public sealed class OpenAiFoodService(
 
         var requestModel = _options.TextModel;
         var request = BuildNutritionRequest(requestModel, items);
-        var response = await SendRequestAsync(request, cancellationToken);
+        var response = await SendRequestAsync(request, operation, requestModel, cancellationToken);
         if (!response.IsSuccess) {
             return Result.Failure<FoodNutritionModel>(response.Error);
         }
@@ -101,6 +108,8 @@ public sealed class OpenAiFoodService(
 
     private async Task<(bool IsSuccess, JsonDocument? Json, Error Error)> SendRequestAsync(
         object payload,
+        string operation,
+        string model,
         CancellationToken cancellationToken) {
         var requestBody = JsonSerializer.Serialize(payload);
 
@@ -118,6 +127,7 @@ public sealed class OpenAiFoodService(
                 continue;
             } catch (HttpRequestException ex) {
                 _logger.LogWarning(ex, "OpenAI request failed due to transport error.");
+                RecordAiRequest(operation, model, "transport_error");
                 return (false, null, Errors.Ai.OpenAiFailed($"OpenAI transport error: {ex.Message}"));
             } catch (TaskCanceledException ex) when (!cancellationToken.IsCancellationRequested && attempt < MaxTransientRetries) {
                 _logger.LogWarning(ex, "OpenAI request timed out on attempt {Attempt}. Retrying.", attempt + 1);
@@ -125,6 +135,7 @@ public sealed class OpenAiFoodService(
                 continue;
             } catch (TaskCanceledException ex) when (!cancellationToken.IsCancellationRequested) {
                 _logger.LogWarning(ex, "OpenAI request timed out.");
+                RecordAiRequest(operation, model, "timeout");
                 return (false, null, Errors.Ai.OpenAiFailed("OpenAI request timed out."));
             }
 
@@ -154,17 +165,21 @@ public sealed class OpenAiFoodService(
                     requestId ?? "n/a",
                     SummarizeErrorBody(responseBody));
 
+                RecordAiRequest(operation, model, $"http_{statusCode}");
                 return (false, null, Errors.Ai.OpenAiFailed($"OpenAI error {response.StatusCode}: {SummarizeErrorBody(responseBody)}"));
             }
 
             try {
                 var json = JsonDocument.Parse(responseBody);
+                RecordAiRequest(operation, model, "success");
                 return (true, json, Error.None);
             } catch (JsonException ex) {
+                RecordAiRequest(operation, model, "invalid_json");
                 return (false, null, Errors.Ai.InvalidResponse($"Invalid JSON response: {ex.Message}"));
             }
         }
 
+        RecordAiRequest(operation, model, "retry_exhausted");
         return (false, null, Errors.Ai.OpenAiFailed("OpenAI request failed after retries."));
     }
 
@@ -370,7 +385,7 @@ public sealed class OpenAiFoodService(
     private static JsonSerializerOptions JsonOptions()
         => new() { PropertyNameCaseInsensitive = true };
 
-    private async Task<Result> EnsureMonthlyQuotaAsync(UserId userId, CancellationToken cancellationToken) {
+    private async Task<Result> EnsureMonthlyQuotaAsync(UserId userId, string operation, CancellationToken cancellationToken) {
         var user = await _userRepository.GetByIdAsync(userId, cancellationToken);
         if (user is null) {
             return Result.Failure(Errors.User.NotFound(userId.Value));
@@ -382,10 +397,21 @@ public sealed class OpenAiFoodService(
         var totals = await _aiUsageRepository.GetUserTotalsAsync(userId, monthStartUtc, monthEndUtc, cancellationToken);
 
         if (totals.InputTokens >= user.AiInputTokenLimit || totals.OutputTokens >= user.AiOutputTokenLimit) {
+            InfrastructureTelemetry.AiQuotaRejectionCounter.Add(
+                1,
+                new KeyValuePair<string, object?>("fooddiary.ai.operation", operation));
             return Result.Failure(Errors.Ai.QuotaExceeded());
         }
 
         return Result.Success();
+    }
+
+    private static void RecordAiRequest(string operation, string model, string outcome) {
+        InfrastructureTelemetry.AiRequestCounter.Add(
+            1,
+            new KeyValuePair<string, object?>("fooddiary.ai.operation", operation),
+            new KeyValuePair<string, object?>("fooddiary.ai.model", model),
+            new KeyValuePair<string, object?>("fooddiary.ai.outcome", outcome));
     }
 
     private async Task SaveUsageAsync(

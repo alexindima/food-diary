@@ -34,9 +34,9 @@ public sealed class UserRepositoryIntegrationTests(PostgresDatabaseFixture datab
     public async Task GetPagedAsync_NormalizesPagingAndEscapesLikePattern() {
         await using var context = await databaseFixture.CreateDbContextAsync();
         var matchingUser = User.Create("100%real@example.com", "hash");
-        matchingUser.UpdateProfile(new FoodDiary.Domain.ValueObjects.UserProfileUpdate(Username: "special_user"));
+        matchingUser.UpdatePersonalInfo(new FoodDiary.Domain.ValueObjects.UserPersonalInfoUpdate(Username: "special_user"));
         var otherUser = User.Create("1000real@example.com", "hash");
-        otherUser.UpdateProfile(new FoodDiary.Domain.ValueObjects.UserProfileUpdate(Username: "plain_user"));
+        otherUser.UpdatePersonalInfo(new FoodDiary.Domain.ValueObjects.UserPersonalInfoUpdate(Username: "plain_user"));
         context.Users.AddRange(matchingUser, otherUser);
         await context.SaveChangesAsync();
 

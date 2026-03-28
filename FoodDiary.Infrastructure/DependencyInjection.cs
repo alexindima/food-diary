@@ -35,6 +35,7 @@ using Amazon.Runtime;
 using Amazon.S3;
 using FoodDiary.Infrastructure.Options;
 using FoodDiary.Infrastructure.Services;
+using Microsoft.Extensions.Options;
 
 namespace FoodDiary.Infrastructure;
 
@@ -43,8 +44,30 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddMemoryCache();
-        services.AddDbContext<FoodDiaryDbContext>(options =>
-            options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
+        services.AddOptions<DatabaseOptions>()
+            .Bind(configuration.GetSection(DatabaseOptions.SectionName))
+            .Validate(static options => !options.EnableRetries || options.MaxRetryCount > 0,
+                "Database:MaxRetryCount must be greater than zero when retries are enabled.")
+            .Validate(static options => !options.EnableRetries || options.MaxRetryDelaySeconds > 0,
+                "Database:MaxRetryDelaySeconds must be greater than zero when retries are enabled.")
+            .ValidateOnStart();
+        services.AddSingleton<DatabaseCommandTelemetryInterceptor>();
+        services.AddDbContext<FoodDiaryDbContext>((sp, options) =>
+        {
+            var databaseOptions = sp.GetRequiredService<IOptions<DatabaseOptions>>().Value;
+            options
+                .UseNpgsql(
+                    configuration.GetConnectionString("DefaultConnection"),
+                    npgsqlOptions => {
+                        if (databaseOptions.EnableRetries) {
+                            npgsqlOptions.EnableRetryOnFailure(
+                                databaseOptions.MaxRetryCount,
+                                TimeSpan.FromSeconds(databaseOptions.MaxRetryDelaySeconds),
+                                errorCodesToAdd: null);
+                        }
+                    })
+                .AddInterceptors(sp.GetRequiredService<DatabaseCommandTelemetryInterceptor>());
+        });
 
         services.AddOptions<S3Options>()
             .Bind(configuration.GetSection(S3Options.SectionName))

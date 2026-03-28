@@ -38,7 +38,10 @@ public class RegisterCommandHandler(
 
         var emailToken = SecurityTokenGenerator.GenerateUrlSafeToken();
         var emailTokenHash = passwordHasher.Hash(emailToken);
-        user.SetEmailConfirmationToken(emailTokenHash, dateTimeProvider.UtcNow.AddHours(24), dateTimeProvider.UtcNow);
+        user.SetEmailConfirmationToken(new UserTokenIssue(
+            TokenHash: emailTokenHash,
+            ExpiresAtUtc: dateTimeProvider.UtcNow.AddHours(24),
+            IssuedAtUtc: dateTimeProvider.UtcNow));
 
         var tokens = await authenticationTokenService.IssueAndStoreAsync(user, cancellationToken);
 

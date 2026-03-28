@@ -3,6 +3,7 @@ using FoodDiary.Application.Authentication.Common;
 using FoodDiary.Application.Common.Interfaces.Services;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Domain.ValueObjects;
 
 namespace FoodDiary.Application.Authentication.Services;
 
@@ -18,7 +19,9 @@ public sealed class AuthenticationTokenService(
         var refreshToken = jwtTokenGenerator.GenerateRefreshToken(user.Id, user.Email, roles);
 
         var hashedRefreshToken = passwordHasher.Hash(SecurityTokenGenerator.NormalizeForSecureHashing(refreshToken));
-        user.UpdateRefreshToken(hashedRefreshToken, dateTimeProvider.UtcNow);
+        user.UpdateRefreshToken(new UserRefreshTokenUpdate(
+            RefreshToken: hashedRefreshToken,
+            ChangedAtUtc: dateTimeProvider.UtcNow));
         await userRepository.UpdateAsync(user, cancellationToken);
 
         return new IssuedAuthenticationTokens(accessToken, refreshToken);

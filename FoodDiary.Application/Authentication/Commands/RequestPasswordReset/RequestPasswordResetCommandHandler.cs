@@ -3,6 +3,7 @@ using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Authentication.Common;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Interfaces.Services;
+using FoodDiary.Domain.ValueObjects;
 using Microsoft.Extensions.Logging;
 
 namespace FoodDiary.Application.Authentication.Commands.RequestPasswordReset;
@@ -34,7 +35,10 @@ public sealed class RequestPasswordResetCommandHandler(
         var tokenHash = passwordHasher.Hash(token);
         var expiresAtUtc = nowUtc.Add(TokenLifetime);
 
-        user.SetPasswordResetToken(tokenHash, expiresAtUtc, nowUtc);
+        user.SetPasswordResetToken(new UserTokenIssue(
+            TokenHash: tokenHash,
+            ExpiresAtUtc: expiresAtUtc,
+            IssuedAtUtc: nowUtc));
         await userRepository.UpdateAsync(user, cancellationToken);
 
         try {

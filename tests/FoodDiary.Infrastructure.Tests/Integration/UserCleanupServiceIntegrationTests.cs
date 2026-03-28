@@ -83,7 +83,6 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
     public async Task CleanupDeletedUsersAsync_WithReassign_ReassignsContentAssetsAndDeletesUser() {
         await using var context = await databaseFixture.CreateDbContextAsync();
         var deletedUser = User.Create("deleted@example.com", "hash");
-        deletedUser.MarkDeleted(DateTime.UtcNow.AddDays(-10));
         var survivorUser = User.Create("survivor@example.com", "hash");
         survivorUser.UpdateProfileMedia(profileImageAssetId: null);
 
@@ -118,6 +117,7 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
         var recentItem = RecentItem.Create(deletedUser.Id, RecentItemType.Recipe, recipe.Id.Value);
         var aiUsage = AiUsage.Create(deletedUser.Id, "nutrition", "gpt-4.1-mini", 15, 25, 40);
         deletedUser.UpdateProfileMedia(profileImageAssetId: profileAsset.Id);
+        deletedUser.MarkDeleted(DateTime.UtcNow.AddDays(-10));
 
         context.Users.AddRange(deletedUser, survivorUser);
         context.ImageAssets.AddRange(productAsset, recipeAsset, stepAsset, profileAsset, mealAsset);
