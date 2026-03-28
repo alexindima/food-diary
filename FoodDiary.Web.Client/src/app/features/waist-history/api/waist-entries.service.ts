@@ -1,24 +1,25 @@
 import { Injectable } from '@angular/core';
 import { Observable, catchError, of } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
-import { ApiService } from './api.service';
-import { environment } from '../../environments/environment';
+
+import { ApiService } from '../../../services/api.service';
+import { environment } from '../../../../environments/environment';
 import {
-    CreateWeightEntryPayload,
-    UpdateWeightEntryPayload,
-    WeightEntry,
-    WeightEntryFilters,
-    WeightEntrySummaryFilters,
-    WeightEntrySummaryPoint,
-} from '../types/weight-entry.data';
+    CreateWaistEntryPayload,
+    UpdateWaistEntryPayload,
+    WaistEntry,
+    WaistEntryFilters,
+    WaistEntrySummaryFilters,
+    WaistEntrySummaryPoint,
+} from '../models/waist-entry.data';
 
 @Injectable({
     providedIn: 'root',
 })
-export class WeightEntriesService extends ApiService {
-    protected readonly baseUrl = environment.apiUrls.weights;
+export class WaistEntriesService extends ApiService {
+    protected readonly baseUrl = environment.apiUrls.waists;
 
-    public getEntries(filters?: WeightEntryFilters): Observable<WeightEntry[]> {
+    public getEntries(filters?: WaistEntryFilters): Observable<WaistEntry[]> {
         const params: Record<string, string | number> = {};
 
         if (filters?.dateFrom) {
@@ -34,36 +35,36 @@ export class WeightEntriesService extends ApiService {
             params['sort'] = filters.sort;
         }
 
-        return this.get<WeightEntry[]>('', params).pipe(
+        return this.get<WaistEntry[]>('', params).pipe(
             catchError((error: HttpErrorResponse) => {
-                console.error('Weight entries fetch error', error);
+                console.error('Waist entries fetch error', error);
                 return of([]);
             }),
         );
     }
 
-    public getLatest(): Observable<WeightEntry | null> {
-        return this.get<WeightEntry | null>('latest').pipe(
+    public getLatest(): Observable<WaistEntry | null> {
+        return this.get<WaistEntry | null>('latest').pipe(
             catchError((error: HttpErrorResponse) => {
-                console.error('Weight latest fetch error', error);
+                console.error('Waist latest fetch error', error);
                 return of(null);
             }),
         );
     }
 
-    public create(payload: CreateWeightEntryPayload): Observable<WeightEntry> {
-        return this.post<WeightEntry>('', payload).pipe(
+    public create(payload: CreateWaistEntryPayload): Observable<WaistEntry> {
+        return this.post<WaistEntry>('', payload).pipe(
             catchError((error: HttpErrorResponse) => {
-                console.error('Create weight entry error', error);
+                console.error('Create waist entry error', error);
                 throw error;
             }),
         );
     }
 
-    public update(id: string, payload: UpdateWeightEntryPayload): Observable<WeightEntry> {
-        return this.put<WeightEntry>(`${id}`, payload).pipe(
+    public update(id: string, payload: UpdateWaistEntryPayload): Observable<WaistEntry> {
+        return this.put<WaistEntry>(`${id}`, payload).pipe(
             catchError((error: HttpErrorResponse) => {
-                console.error('Update weight entry error', error);
+                console.error('Update waist entry error', error);
                 throw error;
             }),
         );
@@ -72,22 +73,22 @@ export class WeightEntriesService extends ApiService {
     public remove(id: string): Observable<void> {
         return super.delete<void>(`${id}`).pipe(
             catchError((error: HttpErrorResponse) => {
-                console.error('Delete weight entry error', error);
+                console.error('Delete waist entry error', error);
                 throw error;
             }),
         );
     }
 
-    public getSummary(filters: WeightEntrySummaryFilters): Observable<WeightEntrySummaryPoint[]> {
+    public getSummary(filters: WaistEntrySummaryFilters): Observable<WaistEntrySummaryPoint[]> {
         const params: Record<string, string | number> = {
             dateFrom: filters.dateFrom,
             dateTo: filters.dateTo,
             quantizationDays: filters.quantizationDays,
         };
 
-        return this.get<WeightEntrySummaryPoint[]>('summary', params).pipe(
+        return this.get<WaistEntrySummaryPoint[]>('summary', params).pipe(
             catchError((error: HttpErrorResponse) => {
-                console.error('Weight summary fetch error', error);
+                console.error('Waist summary fetch error', error);
                 return of([]);
             }),
         );

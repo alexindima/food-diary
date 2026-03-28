@@ -27,7 +27,7 @@ import { PeriodFilterComponent } from '../../../components/shared/period-filter/
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
 import { NavigationService } from '../../../services/navigation.service';
 import { UserService } from '../../../services/user.service';
-import { WaistEntriesService } from '../../../services/waist-entries.service';
+import { WaistEntriesService } from '../api/waist-entries.service';
 import {
     CreateWaistEntryPayload,
     UpdateWaistEntryPayload,
@@ -35,7 +35,7 @@ import {
     WaistEntryFilters,
     WaistEntrySummaryFilters,
     WaistEntrySummaryPoint,
-} from '../../../types/waist-entry.data';
+} from '../models/waist-entry.data';
 
 @Component({
     selector: 'fd-waist-history-page',

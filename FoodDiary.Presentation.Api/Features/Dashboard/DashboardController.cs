@@ -2,10 +2,12 @@ using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Features.Dashboard.Mappings;
 using FoodDiary.Presentation.Api.Features.Dashboard.Requests;
 using FoodDiary.Presentation.Api.Features.Dashboard.Responses;
+using FoodDiary.Presentation.Api.Policies;
 using FoodDiary.Presentation.Api.Responses;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OutputCaching;
 
 namespace FoodDiary.Presentation.Api.Features.Dashboard;
 
@@ -13,6 +15,7 @@ namespace FoodDiary.Presentation.Api.Features.Dashboard;
 [Route("api/dashboard")]
 public class DashboardController(ISender mediator) : AuthorizedController(mediator) {
     [HttpGet]
+    [OutputCache(PolicyName = PresentationPolicyNames.UserScopedCachePolicyName)]
     [ProducesResponseType<DashboardSnapshotHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     public Task<IActionResult> Get([FromCurrentUser] Guid userId, [FromQuery] GetDashboardSnapshotHttpQuery query) =>

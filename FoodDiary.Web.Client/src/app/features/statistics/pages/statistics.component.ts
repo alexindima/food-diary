@@ -25,10 +25,10 @@ import { StatisticsSummaryComponent, SummaryMetrics } from '../../../components/
 import { CHART_COLORS } from '../../../constants/chart-colors';
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
 import { UserService } from '../../../services/user.service';
-import { WaistEntriesService } from '../../../services/waist-entries.service';
-import { WeightEntriesService } from '../../../services/weight-entries.service';
-import { WaistEntrySummaryPoint } from '../../../types/waist-entry.data';
-import { WeightEntrySummaryPoint } from '../../../types/weight-entry.data';
+import { WaistEntriesService } from '../../waist-history/api/waist-entries.service';
+import { WeightEntriesService } from '../../weight-history/api/weight-entries.service';
+import { WaistEntrySummaryPoint } from '../../waist-history/models/waist-entry.data';
+import { WeightEntrySummaryPoint } from '../../weight-history/models/weight-entry.data';
 import { StatisticsService } from '../api/statistics.service';
 import { MappedStatistics, StatisticsMapper } from '../models/statistics.data';
 

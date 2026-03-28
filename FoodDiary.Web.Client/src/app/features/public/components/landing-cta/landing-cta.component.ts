@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { AuthDialogComponent } from '../../../features/auth/dialogs/auth-dialog/auth-dialog.component';
+import { AuthDialogComponent } from '../../../auth/dialogs/auth-dialog/auth-dialog.component';
 import { inject } from '@angular/core';
 
 @Component({

@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
-import { MainComponent } from './components/main/main.component';
-import { NotFoundComponent } from './components/not-found/not-found.component';
+import { MainComponent } from './features/public/pages/landing/main.component';
+import { NotFoundComponent } from './features/public/pages/not-found/not-found.component';
 import { unsavedChangesGuard } from './guards/unsaved-changes.guard';
 import { authRoutes } from './features/auth/auth.routes';
 import { productRoutes } from './features/products/product.routes';

@@ -13,5 +13,11 @@ public sealed class OutputCacheOptionsSetup(IOptions<ApiOutputCacheOptions> outp
             .Expire(TimeSpan.FromSeconds(settings.AdminAiUsage.ExpirationSeconds))
             .SetVaryByQuery("*")
             .Tag("admin-ai-usage"));
+        options.AddPolicy(PresentationPolicyNames.UserScopedCachePolicyName, builder => builder
+            .Cache()
+            .Expire(TimeSpan.FromSeconds(settings.UserScoped.ExpirationSeconds))
+            .SetVaryByQuery("*")
+            .SetVaryByHeader("Authorization")
+            .Tag("user-scoped"));
     }
 }

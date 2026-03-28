@@ -2,21 +2,21 @@ import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, effect, inject 
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ChartConfiguration, ChartOptions } from 'chart.js';
-import { MealsPreviewComponent, MealPreviewEntry } from '../../shared/meals-preview/meals-preview.component';
-import { StatisticsSummaryComponent, SummaryMetrics } from '../../shared/statistics-summary/statistics-summary.component';
-import { StatisticsNutritionComponent } from '../../shared/statistics-nutrition/statistics-nutrition.component';
-import { StatisticsBodyComponent } from '../../shared/statistics-body/statistics-body.component';
-import { ProductCardComponent } from '../../shared/product-card/product-card.component';
-import { RecipeCardComponent } from '../../shared/recipe-card/recipe-card.component';
-import { QuickConsumptionDrawerComponent } from '../../shared/quick-consumption-drawer/quick-consumption-drawer.component';
-import { AuthService } from '../../../services/auth.service';
+import { MealsPreviewComponent, MealPreviewEntry } from '../../../../components/shared/meals-preview/meals-preview.component';
+import { StatisticsSummaryComponent, SummaryMetrics } from '../../../../components/shared/statistics-summary/statistics-summary.component';
+import { StatisticsNutritionComponent } from '../../../../components/shared/statistics-nutrition/statistics-nutrition.component';
+import { StatisticsBodyComponent } from '../../../../components/shared/statistics-body/statistics-body.component';
+import { ProductCardComponent } from '../../../../components/shared/product-card/product-card.component';
+import { RecipeCardComponent } from '../../../../components/shared/recipe-card/recipe-card.component';
+import { QuickConsumptionDrawerComponent } from '../../../../components/shared/quick-consumption-drawer/quick-consumption-drawer.component';
+import { AuthService } from '../../../../services/auth.service';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { AuthDialogComponent } from '../../../features/auth/dialogs/auth-dialog/auth-dialog.component';
+import { AuthDialogComponent } from '../../../auth/dialogs/auth-dialog/auth-dialog.component';
 import { FdUiTab } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
-import { Product, MeasurementUnit, ProductType, ProductVisibility } from '../../../features/products/models/product.data';
-import { Recipe, RecipeVisibility } from '../../../features/recipes/models/recipe.data';
-import { Meal } from '../../../features/meals/models/meal.data';
-import { QuickMealItem, QuickMealService } from '../../../features/meals/lib/quick-meal.service';
+import { Product, MeasurementUnit, ProductType, ProductVisibility } from '../../../products/models/product.data';
+import { Recipe, RecipeVisibility } from '../../../recipes/models/recipe.data';
+import { Meal } from '../../../meals/models/meal.data';
+import { QuickMealItem, QuickMealService } from '../../../meals/lib/quick-meal.service';
 
 @Component({
     selector: 'fd-landing-preview-tour',

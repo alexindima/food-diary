@@ -1,14 +1,14 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { AuthDialogComponent } from '../../features/auth/dialogs/auth-dialog/auth-dialog.component';
-import { AuthService } from '../../services/auth.service';
-import { HeroComponent } from '../hero/hero.component';
-import { FeaturesComponent } from '../features/features.component';
-import { DashboardComponent } from '../../features/dashboard/pages/dashboard.component';
-import { LandingPreviewTourComponent } from './preview-tour/landing-preview-tour.component';
-import { LandingStepsComponent } from './steps/landing-steps.component';
-import { LandingCtaComponent } from './cta/landing-cta.component';
+import { AuthDialogComponent } from '../../../auth/dialogs/auth-dialog/auth-dialog.component';
+import { AuthService } from '../../../../services/auth.service';
+import { HeroComponent } from '../../components/hero/hero.component';
+import { FeaturesComponent } from '../../components/features/features.component';
+import { DashboardComponent } from '../../../dashboard/pages/dashboard.component';
+import { LandingPreviewTourComponent } from '../../components/landing-preview-tour/landing-preview-tour.component';
+import { LandingStepsComponent } from '../../components/landing-steps/landing-steps.component';
+import { LandingCtaComponent } from '../../components/landing-cta/landing-cta.component';
 
 @Component({
     selector: 'fd-main',

@@ -4,10 +4,10 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiSegmentedToggleComponent, FdUiSegmentedToggleOption } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle.component';
-import { DashboardSummaryCardComponent, NutrientBar } from '../shared/dashboard-summary-card/dashboard-summary-card.component';
+import { DashboardSummaryCardComponent, NutrientBar } from '../../../../components/shared/dashboard-summary-card/dashboard-summary-card.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { AuthDialogComponent } from '../../features/auth/dialogs/auth-dialog/auth-dialog.component';
-import { LocalizationService } from '../../services/localization.service';
+import { AuthDialogComponent } from '../../../auth/dialogs/auth-dialog/auth-dialog.component';
+import { LocalizationService } from '../../../../services/localization.service';
 
 @Component({
     selector: 'fd-hero',

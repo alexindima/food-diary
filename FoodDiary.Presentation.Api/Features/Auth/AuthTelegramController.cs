@@ -3,12 +3,14 @@ using FoodDiary.Presentation.Api.Features.Auth.Mappings;
 using FoodDiary.Presentation.Api.Features.Auth.Requests;
 using FoodDiary.Presentation.Api.Features.Auth.Responses;
 using FoodDiary.Presentation.Api.Features.Users.Mappings;
+using FoodDiary.Presentation.Api.Policies;
 using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Presentation.Api.Security;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Extensions.Logging;
 
 namespace FoodDiary.Presentation.Api.Features.Auth;
@@ -19,6 +21,7 @@ public sealed class AuthTelegramController(ISender mediator, ILogger<AuthTelegra
     private readonly ILogger<AuthTelegramController> _logger = logger;
 
     [HttpPost("verify")]
+    [EnableRateLimiting(PresentationPolicyNames.AuthRateLimitPolicyName)]
     [ProducesResponseType<AuthenticationHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesApiErrorResponse(StatusCodes.Status401Unauthorized)]
@@ -28,6 +31,7 @@ public sealed class AuthTelegramController(ISender mediator, ILogger<AuthTelegra
         HandleObservedOk(request.ToCommand(), static value => value.ToHttpResponse(), _logger, "auth.telegram.verify");
 
     [HttpPost("login-widget")]
+    [EnableRateLimiting(PresentationPolicyNames.AuthRateLimitPolicyName)]
     [ProducesResponseType<AuthenticationHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesApiErrorResponse(StatusCodes.Status401Unauthorized)]

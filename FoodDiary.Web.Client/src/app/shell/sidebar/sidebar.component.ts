@@ -9,7 +9,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SlicePipe, UpperCasePipe } from '@angular/common';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { UnsavedChangesService } from '../../services/unsaved-changes.service';
-import { UnsavedChangesDialogComponent, UnsavedChangesDialogResult } from '../shared/unsaved-changes-dialog/unsaved-changes-dialog.component';
+import { UnsavedChangesDialogComponent, UnsavedChangesDialogResult } from '../../components/shared/unsaved-changes-dialog/unsaved-changes-dialog.component';
 import { firstValueFrom } from 'rxjs';
 import { DashboardService } from '../../features/dashboard/api/dashboard.service';
 

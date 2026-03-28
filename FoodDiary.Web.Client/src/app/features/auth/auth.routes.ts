@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { MainComponent } from '../../components/main/main.component';
+import { MainComponent } from '../public/pages/landing/main.component';
 import { loggedInGuard } from '../../guards/logged-in.guard';
 import { EmailVerificationPendingComponent } from './pages/email-verification-pending/email-verification-pending.component';
 import { EmailVerificationComponent } from './pages/email-verification/email-verification.component';

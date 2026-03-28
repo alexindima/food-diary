@@ -2,16 +2,19 @@ using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Features.Auth.Mappings;
 using FoodDiary.Presentation.Api.Features.Auth.Requests;
 using FoodDiary.Presentation.Api.Features.Auth.Responses;
+using FoodDiary.Presentation.Api.Policies;
 using FoodDiary.Presentation.Api.Responses;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Extensions.Logging;
 
 namespace FoodDiary.Presentation.Api.Features.Auth;
 
 [ApiController]
 [Route("api/auth/password-reset")]
+[EnableRateLimiting(PresentationPolicyNames.AuthRateLimitPolicyName)]
 public sealed class AuthPasswordController(ISender mediator, ILogger<AuthPasswordController> logger) : BaseApiController(mediator) {
     private readonly ILogger<AuthPasswordController> _logger = logger;
 

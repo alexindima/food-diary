@@ -27,14 +27,14 @@ import { PeriodFilterComponent } from '../../../components/shared/period-filter/
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
 import { NavigationService } from '../../../services/navigation.service';
 import { UserService } from '../../../services/user.service';
-import { WeightEntriesService } from '../../../services/weight-entries.service';
+import { WeightEntriesService } from '../api/weight-entries.service';
 import {
     CreateWeightEntryPayload,
     WeightEntry,
     WeightEntryFilters,
     WeightEntrySummaryFilters,
     WeightEntrySummaryPoint,
-} from '../../../types/weight-entry.data';
+} from '../models/weight-entry.data';
 
 @Component({
     selector: 'fd-weight-history-page',
