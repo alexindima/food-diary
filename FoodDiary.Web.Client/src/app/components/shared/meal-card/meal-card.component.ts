@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
-import { resolveMealImageUrl } from '../../../utils/meal-stub.utils';
+import { resolveMealImageUrl } from '../../../shared/lib/meal-image.util';
 import { NutrientBadgesComponent } from '../nutrient-badges/nutrient-badges.component';
 
 export interface MealCardItem {

@@ -3,7 +3,7 @@ import { catchError, map, Observable, of } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
-import { PageOf } from '../../../types/page-of.data';
+import { PageOf } from '../../../shared/models/page-of.data';
 import { MeasurementUnit, Product } from '../../products/models/product.data';
 import { Recipe } from '../../recipes/models/recipe.data';
 import {

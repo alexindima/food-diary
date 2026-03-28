@@ -20,8 +20,8 @@ import { PageHeaderComponent } from '../../../../components/shared/page-header/p
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
 import { LocalizedDatePipe } from '../../../../pipes/localized-date.pipe';
 import { NavigationService } from '../../../../services/navigation.service';
-import { FormGroupControls } from '../../../../types/common.data';
-import { PagedData } from '../../../../types/paged-data.data';
+import { FormGroupControls } from '../../../../shared/lib/common.data';
+import { PagedData } from '../../../../shared/lib/paged-data.data';
 
 @Component({
     selector: 'fd-meal-list',

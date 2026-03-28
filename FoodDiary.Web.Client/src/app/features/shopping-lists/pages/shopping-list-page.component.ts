@@ -17,7 +17,7 @@ import { FdPageContainerDirective } from '../../../directives/layout/page-contai
 import { ConfirmDeleteDialogComponent, ConfirmDeleteDialogData } from '../../../components/shared/confirm-delete-dialog/confirm-delete-dialog.component';
 import { PageBodyComponent } from '../../../components/shared/page-body/page-body.component';
 import { PageHeaderComponent } from '../../../components/shared/page-header/page-header.component';
-import { FormGroupControls } from '../../../types/common.data';
+import { FormGroupControls } from '../../../shared/lib/common.data';
 import { MeasurementUnit } from '../../products/models/product.data';
 import { ShoppingList, ShoppingListItem, ShoppingListItemDto, ShoppingListSummary } from '../models/shopping-list.data';
 import { ShoppingListService } from '../api/shopping-list.service';

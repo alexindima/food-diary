@@ -1,4 +1,4 @@
-import { ProductType } from '../features/products/models/product.data';
+import { ProductType } from '../models/product.data';
 
 const PRODUCT_TYPE_ALIASES: Record<string, ProductType> = {
     VEGETABLES: ProductType.Vegetable,

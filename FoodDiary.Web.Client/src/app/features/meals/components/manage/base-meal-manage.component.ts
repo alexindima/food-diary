@@ -27,14 +27,14 @@ import {
     ConsumptionSourceType,
 } from '../../models/meal.data';
 import { MealService } from '../../api/meal.service';
-import { FormGroupControls } from '../../../../types/common.data';
+import { FormGroupControls } from '../../../../shared/lib/common.data';
 import { Product, MeasurementUnit } from '../../../products/models/product.data';
 import { Recipe, RecipeIngredient } from '../../../recipes/models/recipe.data';
 import { RecipeLookupService } from '../../../../shared/api/recipe-lookup.service';
 import { RecipeLookup, RecipeLookupIngredient } from '../../../../shared/models/recipe-lookup.data';
 import { HttpErrorResponse } from '@angular/common/http';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { NutrientData } from '../../../../types/charts.data';
+import { NutrientData } from '../../../../shared/models/charts.data';
 import {
 } from '../../../../components/shared/nutrients-summary/nutrients-summary.component';
 import { FdUiFormErrorComponent, FD_VALIDATION_ERRORS, FdValidationErrors } from 'fd-ui-kit/form-error/fd-ui-form-error.component';

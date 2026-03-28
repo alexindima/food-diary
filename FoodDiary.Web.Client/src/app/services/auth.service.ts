@@ -2,19 +2,19 @@ import { computed, inject, Injectable, signal } from '@angular/core';
 import { catchError, map, Observable, of, tap, throwError } from 'rxjs';
 import {
     AuthResponse,
+    ConfirmPasswordResetRequest,
     LoginRequest,
+    PasswordResetRequest,
     RegisterRequest,
     RestoreAccountRequest,
-    TelegramLoginWidgetRequest,
     TelegramAuthRequest,
-    PasswordResetRequest,
-    ConfirmPasswordResetRequest,
-} from '../types/auth.data';
+    TelegramLoginWidgetRequest,
+} from '../features/auth/models/auth.data';
 import { environment } from '../../environments/environment';
 import { ApiService } from './api.service';
 import { NavigationService } from './navigation.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { GoogleLoginRequest } from '../types/google-auth.data';
+import { GoogleLoginRequest } from '../features/auth/models/google-auth.data';
 import { QuickMealService } from '../features/meals/lib/quick-meal.service';
 import { LocalizationService } from './localization.service';
 

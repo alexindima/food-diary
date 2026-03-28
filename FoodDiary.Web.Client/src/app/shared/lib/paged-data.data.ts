@@ -1,5 +1,5 @@
 import { signal } from '@angular/core';
-import { PageOf } from './page-of.data';
+import { PageOf } from '../models/page-of.data';
 
 export class PagedData<T> {
     public items = signal<T[]>([]);

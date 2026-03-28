@@ -34,7 +34,7 @@ import { LocalizationService } from '../../../services/localization.service';
 import { NavigationService } from '../../../services/navigation.service';
 import { UserService } from '../../../shared/api/user.service';
 import { ImageSelection } from '../../../shared/models/image-upload.data';
-import { FormGroupControls } from '../../../types/common.data';
+import { FormGroupControls } from '../../../shared/lib/common.data';
 import { ActivityLevelOption, Gender, UpdateUserDto, User } from '../../../shared/models/user.data';
 import { environment } from '../../../../environments/environment';
 import { ChangePasswordDialogComponent } from '../dialogs/change-password-dialog/change-password-dialog.component';

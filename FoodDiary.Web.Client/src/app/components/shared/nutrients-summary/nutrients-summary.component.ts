@@ -11,8 +11,8 @@ import { DecimalPipe, NgStyle, NgTemplateOutlet } from '@angular/common';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ChartData, ChartOptions, ChartTypeRegistry, TooltipItem } from 'chart.js';
 import { CHART_COLORS } from '../../../constants/chart-colors';
-import { NutrientData } from '../../../types/charts.data';
-import { RecursivePartial } from '../../../types/common.data';
+import { NutrientData } from '../../../shared/models/charts.data';
+import { RecursivePartial } from '../../../shared/lib/common.data';
 import { CustomGroupComponent } from '../custom-group/custom-group.component';
 
 @Component({

@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { Observable } from 'rxjs';
-import { HttpRequestParams } from '../types/http-request.params';
+import { HttpRequestParams } from '../shared/models/http-request.params';
 
 export abstract class ApiService {
     private readonly http = inject(HttpClient);

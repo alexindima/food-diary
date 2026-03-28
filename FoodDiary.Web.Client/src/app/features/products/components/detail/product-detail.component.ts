@@ -12,8 +12,8 @@ import { FdUiTab, FdUiTabsComponent } from 'fd-ui-kit/tabs/fd-ui-tabs.component'
 import { CHART_COLORS } from '../../../../constants/chart-colors';
 import { ProductService } from '../../api/product.service';
 import { Product } from '../../models/product.data';
-import { buildProductTypeTranslationKey } from '../../../../utils/product-type.utils';
-import { NutrientData } from '../../../../types/charts.data';
+import { buildProductTypeTranslationKey } from '../../lib/product-type.utils';
+import { NutrientData } from '../../../../shared/models/charts.data';
 import {
     ConfirmDeleteDialogComponent,
     ConfirmDeleteDialogData,

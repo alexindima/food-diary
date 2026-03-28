@@ -1,4 +1,4 @@
-import { User } from '../shared/models/user.data';
+import { User } from '../../../shared/models/user.data';
 
 export type AuthMode = 'login' | 'register';
 

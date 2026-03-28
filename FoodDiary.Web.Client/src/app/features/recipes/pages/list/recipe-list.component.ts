@@ -15,9 +15,9 @@ import { catchError, debounceTime, distinctUntilChanged, finalize, map, Observab
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
 import { NavigationService } from '../../../../services/navigation.service';
 import { QuickMealService } from '../../../../features/meals/lib/quick-meal.service';
-import { FormGroupControls } from '../../../../types/common.data';
-import { PagedData } from '../../../../types/paged-data.data';
-import { resolveRecipeImageUrl } from '../../../../utils/recipe-stub.utils';
+import { FormGroupControls } from '../../../../shared/lib/common.data';
+import { PagedData } from '../../../../shared/lib/paged-data.data';
+import { resolveRecipeImageUrl } from '../../lib/recipe-image.util';
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body.component';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header.component';
 import { RecipeCardComponent } from '../../../../components/shared/recipe-card/recipe-card.component';

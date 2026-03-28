@@ -21,10 +21,10 @@ import { ProductService } from '../../api/product.service';
 import { Product, ProductFilters, ProductType } from '../../models/product.data';
 import { NavigationService } from '../../../../services/navigation.service';
 import { QuickMealService } from '../../../../features/meals/lib/quick-meal.service';
-import { FormGroupControls } from '../../../../types/common.data';
-import { PagedData } from '../../../../types/paged-data.data';
-import { buildProductTypeTranslationKey } from '../../../../utils/product-type.utils';
-import { resolveProductImageUrl } from '../../../../utils/product-stub.utils';
+import { FormGroupControls } from '../../../../shared/lib/common.data';
+import { PagedData } from '../../../../shared/lib/paged-data.data';
+import { buildProductTypeTranslationKey } from '../../lib/product-type.utils';
+import { resolveProductImageUrl } from '../../lib/product-image.util';
 import {
     ProductListFiltersDialogComponent,
     ProductListFiltersDialogResult,

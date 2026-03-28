@@ -49,12 +49,12 @@ public sealed class PostgresUserFlowTests(PostgresApiWebApplicationFactory facto
         var client = await CreateAuthenticatedClientAsync();
         var now = DateTime.UtcNow;
 
-        var response1 = await client.PostAsJsonAsync("/api/hydration", new CreateHydrationEntryHttpRequest(now, 250));
-        var response2 = await client.PostAsJsonAsync("/api/hydration", new CreateHydrationEntryHttpRequest(now.AddMinutes(30), 500));
-        await AssertStatusCodeAsync(HttpStatusCode.Created, response1);
-        await AssertStatusCodeAsync(HttpStatusCode.Created, response2);
+        var response1 = await client.PostAsJsonAsync("/api/hydrations", new CreateHydrationEntryHttpRequest(now, 250));
+        var response2 = await client.PostAsJsonAsync("/api/hydrations", new CreateHydrationEntryHttpRequest(now.AddMinutes(30), 500));
+        await AssertStatusCodeAsync(HttpStatusCode.OK, response1);
+        await AssertStatusCodeAsync(HttpStatusCode.OK, response2);
 
-        var totalResponse = await client.GetAsync($"/api/hydration/daily-total?date={now:yyyy-MM-dd}");
+        var totalResponse = await client.GetAsync($"/api/hydrations/daily?date={now:yyyy-MM-dd}");
         await AssertStatusCodeAsync(HttpStatusCode.OK, totalResponse);
         var total = await totalResponse.Content.ReadFromJsonAsync<HydrationDailyTotalPayload>(JsonOptions);
 
@@ -72,7 +72,7 @@ public sealed class PostgresUserFlowTests(PostgresApiWebApplicationFactory facto
         var duplicate = await client.PostAsJsonAsync("/api/waist-entries", request);
         var payload = await duplicate.Content.ReadFromJsonAsync<ErrorPayload>(JsonOptions);
 
-        await AssertStatusCodeAsync(HttpStatusCode.Created, first);
+        await AssertStatusCodeAsync(HttpStatusCode.OK, first);
         Assert.Equal(HttpStatusCode.Conflict, duplicate.StatusCode);
         Assert.NotNull(payload);
         Assert.Equal("WaistEntry.AlreadyExists", payload.Error);
@@ -99,7 +99,7 @@ public sealed class PostgresUserFlowTests(PostgresApiWebApplicationFactory facto
         Assert.NotNull(recipe);
 
         var duplicateResponse = await client.PostAsJsonAsync($"/api/recipes/{recipe.Id}/duplicate", new { });
-        await AssertStatusCodeAsync(HttpStatusCode.Created, duplicateResponse);
+        await AssertStatusCodeAsync(HttpStatusCode.OK, duplicateResponse);
         var duplicated = await duplicateResponse.Content.ReadFromJsonAsync<IdPayload>(JsonOptions);
         Assert.NotNull(duplicated);
         Assert.NotEqual(recipe.Id, duplicated.Id);

@@ -1,4 +1,4 @@
-import { ProductType } from '../features/products/models/product.data';
+import { ProductType } from '../models/product.data';
 
 const PRODUCT_STUBS: Record<ProductType, string> = {
     [ProductType.Unknown]: 'assets/images/stubs/products/other.png',

@@ -15,15 +15,15 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { Recipe, RecipeFilters } from '../models/recipe.data';
 import { RecipeService } from '../api/recipe.service';
 import { catchError, debounceTime, distinctUntilChanged, finalize, map, Observable, of, switchMap, tap } from 'rxjs';
-import { PagedData } from '../../../types/paged-data.data';
-import { FormGroupControls } from '../../../types/common.data';
+import { PagedData } from '../../../shared/lib/paged-data.data';
+import { FormGroupControls } from '../../../shared/lib/common.data';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FdUiDialogRef } from 'fd-ui-kit/material';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.component';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
-import { resolveRecipeImageUrl } from '../../../utils/recipe-stub.utils';
+import { resolveRecipeImageUrl } from '../lib/recipe-image.util';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { RecipeManageComponent } from '../components/manage/recipe-manage.component';
 

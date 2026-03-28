@@ -1,6 +1,6 @@
-import { NutrientData } from '../../../types/charts.data';
+import { NutrientData } from '../../../shared/models/charts.data';
 import { MeasurementUnit } from '../../products/models/product.data';
-import { PageOf } from '../../../types/page-of.data';
+import { PageOf } from '../../../shared/models/page-of.data';
 
 export enum RecipeVisibility {
     Private = 'Private',

@@ -19,14 +19,14 @@ import { AuthService } from '../../../../services/auth.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { matchFieldValidator } from '../../../../validators/match-field.validator';
 import { NavigationService } from '../../../../services/navigation.service';
-import { FormGroupControls } from '../../../../types/common.data';
+import { FormGroupControls } from '../../../../shared/lib/common.data';
 import {
     LoginRequest,
     RegisterRequest,
     RestoreAccountRequest,
     TelegramLoginWidgetRequest,
     PasswordResetRequest,
-} from '../../../../types/auth.data';
+} from '../../models/auth.data';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
@@ -36,7 +36,7 @@ import { FdUiFormErrorComponent, FD_VALIDATION_ERRORS, FdValidationErrors } from
 import { GoogleIdentityService } from '../../lib/google-identity.service';
 import { LocalizationService } from '../../../../services/localization.service';
 import { environment } from '../../../../../environments/environment';
-import { GoogleLoginRequest } from '../../../../types/google-auth.data';
+import { GoogleLoginRequest } from '../../models/google-auth.data';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: FD_VALIDATION_ERRORS,

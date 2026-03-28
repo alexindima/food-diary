@@ -3,7 +3,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { catchError, Observable, throwError } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
-import { PageOf } from '../../../types/page-of.data';
+import { PageOf } from '../../../shared/models/page-of.data';
 import { Recipe, RecipeDto, RecipeFilters, RecipeListWithRecent } from '../models/recipe.data';
 
 @Injectable({

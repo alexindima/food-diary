@@ -9,7 +9,7 @@
     signal
 } from '@angular/core';
 import { AbstractControl, FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { FormGroupControls } from '../../../../types/common.data';
+import { FormGroupControls } from '../../../../shared/lib/common.data';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { MeasurementUnit, Product, ProductVisibility, ProductType } from '../../../products/models/product.data';
 import { nonEmptyArrayValidator } from '../../../../validators/non-empty-array.validator';
@@ -18,7 +18,7 @@ import {
     ItemSelection,
     ItemSelectDialogData,
 } from '../../../../shared/dialogs/item-select-dialog/item-select-dialog.component';
-import { NutrientData } from '../../../../types/charts.data';
+import { NutrientData } from '../../../../shared/models/charts.data';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Recipe, RecipeDto, RecipeVisibility, RecipeIngredient } from '../../models/recipe.data';
 import { RecipeService } from '../../api/recipe.service';

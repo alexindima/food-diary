@@ -11,8 +11,8 @@ import { FD_VALIDATION_ERRORS, FdUiFormErrorComponent, FdValidationErrors } from
 import { matchFieldValidator } from '../../../../validators/match-field.validator';
 import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
-import { ConfirmPasswordResetRequest } from '../../../../types/auth.data';
-import { FormGroupControls } from '../../../../types/common.data';
+import { ConfirmPasswordResetRequest } from '../../models/auth.data';
+import { FormGroupControls } from '../../../../shared/lib/common.data';
 
 type ResetState = 'ready' | 'invalid' | 'error';
 

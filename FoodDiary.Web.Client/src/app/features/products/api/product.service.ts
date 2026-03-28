@@ -10,7 +10,7 @@ import {
     ProductListWithRecent,
     UpdateProductRequest,
 } from '../models/product.data';
-import { PageOf } from '../../../types/page-of.data';
+import { PageOf } from '../../../shared/models/page-of.data';
 
 @Injectable({
     providedIn: 'root',

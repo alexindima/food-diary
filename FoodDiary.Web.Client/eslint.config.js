@@ -84,4 +84,201 @@ export default [
             ],
         },
     },
+    {
+        files: ['src/app/shared/models/**/*.ts'],
+        rules: {
+            'no-restricted-imports': [
+                'error',
+                {
+                    patterns: [
+                        {
+                            group: [
+                                '../api/**',
+                                '../../components/shared/**',
+                                '../../features/**',
+                                'src/app/components/shared/**',
+                                'src/app/features/**',
+                            ],
+                            message: 'shared/models must stay pure and must not depend on API, UI, or feature-local code.',
+                        },
+                    ],
+                },
+            ],
+        },
+    },
+    {
+        files: ['src/app/shared/api/**/*.ts'],
+        rules: {
+            'no-restricted-imports': [
+                'error',
+                {
+                    patterns: [
+                        {
+                            group: [
+                                '../../components/shared/**',
+                                '../../features/**',
+                                'src/app/components/shared/**',
+                                'src/app/features/**',
+                            ],
+                            message: 'shared/api must not depend on UI or feature-local code.',
+                        },
+                    ],
+                },
+            ],
+        },
+    },
+    {
+        files: ['src/app/components/shared/**/*.ts'],
+        rules: {
+            'no-restricted-imports': [
+                'error',
+                {
+                    patterns: [
+                        {
+                            group: [
+                                '../../features/**',
+                                '../../../features/**',
+                                '../../../../features/**',
+                                'src/app/features/**',
+                            ],
+                            message: 'components/shared should stay feature-agnostic shared UI.',
+                        },
+                    ],
+                },
+            ],
+        },
+    },
+    {
+        files: ['src/app/features/**/*.ts'],
+        ignores: ['src/app/features/**/*.routes.ts'],
+        rules: {
+            'no-restricted-imports': [
+                'error',
+                {
+                    patterns: [
+                        {
+                            group: [
+                                '../**/*.routes',
+                                '../../**/*.routes',
+                                '../../../**/*.routes',
+                                '../../../../**/*.routes',
+                            ],
+                            message: 'Feature code should depend on feature-local API/models/components, not on route configuration files.',
+                        },
+                    ],
+                },
+            ],
+        },
+    },
+    {
+        files: ['src/app/features/**/*.ts'],
+        ignores: [
+            'src/app/features/**/*.routes.ts',
+            'src/app/features/public/**/*.ts',
+            'src/app/features/**/*.spec.ts',
+        ],
+        rules: {
+            'no-restricted-imports': [
+                'error',
+                {
+                    patterns: [
+                        {
+                            group: [
+                                '../../*/pages/**',
+                                '../../../*/pages/**',
+                                '../../../../*/pages/**',
+                            ],
+                            message: 'Import feature-local models/api/components instead of another feature page.',
+                        },
+                    ],
+                },
+            ],
+        },
+    },
+    {
+        files: ['src/app/features/**/dialogs/**/*.ts'],
+        rules: {
+            'no-restricted-imports': [
+                'error',
+                {
+                    patterns: [
+                        {
+                            group: [
+                                '../../../!(shared)/api/**',
+                                '../../../../!(shared)/api/**',
+                                '../../../../../!(shared)/api/**',
+                            ],
+                            message: 'Feature dialogs should use shared APIs or same-feature APIs, not reach into another feature API directly.',
+                        },
+                    ],
+                },
+            ],
+        },
+    },
+    {
+        files: ['src/app/features/**/components/**/*.ts'],
+        rules: {
+            'no-restricted-imports': [
+                'error',
+                {
+                    patterns: [
+                        {
+                            group: [
+                                '../../../!(shared)/api/**',
+                                '../../../../!(shared)/api/**',
+                                '../../../../../!(shared)/api/**',
+                            ],
+                            message: 'Feature components should use shared APIs or same-feature APIs, not reach into another feature API directly.',
+                        },
+                    ],
+                },
+            ],
+        },
+    },
+    {
+        files: ['src/app/features/**/lib/**/*.ts', 'src/app/features/**/resolvers/**/*.ts'],
+        rules: {
+            'no-restricted-imports': [
+                'error',
+                {
+                    patterns: [
+                        {
+                            group: [
+                                '../../!(shared)/api/**',
+                                '../../../!(shared)/api/**',
+                                '../../../../!(shared)/api/**',
+                            ],
+                            message: 'Feature lib and resolver code should stay within shared APIs or same-feature APIs.',
+                        },
+                    ],
+                },
+            ],
+        },
+    },
+    {
+        files: ['src/app/**/*.ts'],
+        ignores: [
+            'src/app/app.routes.ts',
+            'src/app/features/**/*.routes.ts',
+            'src/app/**/*.spec.ts',
+        ],
+        rules: {
+            'no-restricted-imports': [
+                'error',
+                {
+                    patterns: [
+                        {
+                            group: [
+                                '../guards/**',
+                                '../../guards/**',
+                                '../../../guards/**',
+                                'src/app/guards/**',
+                            ],
+                            message: 'Guards belong to the routing layer and should only be imported from app.routes.ts or feature *.routes.ts files.',
+                        },
+                    ],
+                },
+            ],
+        },
+    },
 ];
