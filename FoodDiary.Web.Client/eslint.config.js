@@ -328,4 +328,58 @@ export default [
             ],
         },
     },
+    {
+        files: ['projects/fooddiary-admin/src/app/**/*.ts'],
+        ignores: [
+            'projects/fooddiary-admin/src/app/app.routes.ts',
+            'projects/fooddiary-admin/src/app/features/**/*.routes.ts',
+            'projects/fooddiary-admin/src/app/**/*.spec.ts',
+        ],
+        rules: {
+            'no-restricted-imports': [
+                'error',
+                {
+                    patterns: [
+                        {
+                            group: [
+                                '../pages/**',
+                                '../../pages/**',
+                                '../../../pages/**',
+                                '../services/**',
+                                '../../services/**',
+                                '../../../services/**',
+                            ],
+                            message: 'Admin code should use feature-local routes/pages/api or the explicit admin-auth boundary, not legacy global pages/services buckets.',
+                        },
+                    ],
+                },
+            ],
+        },
+    },
+    {
+        files: ['projects/fooddiary-admin/src/app/**/*.ts'],
+        ignores: [
+            'projects/fooddiary-admin/src/app/app.routes.ts',
+            'projects/fooddiary-admin/src/app/features/**/*.routes.ts',
+            'projects/fooddiary-admin/src/app/**/*.spec.ts',
+        ],
+        rules: {
+            'no-restricted-imports': [
+                'error',
+                {
+                    patterns: [
+                        {
+                            group: [
+                                '../guards/**',
+                                '../../guards/**',
+                                '../../../guards/**',
+                                'projects/fooddiary-admin/src/app/guards/**',
+                            ],
+                            message: 'Admin guards belong to the routing layer and should only be imported from app.routes.ts or admin feature *.routes.ts files.',
+                        },
+                    ],
+                },
+            ],
+        },
+    },
 ];
