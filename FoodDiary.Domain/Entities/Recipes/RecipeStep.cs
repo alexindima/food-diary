@@ -6,7 +6,7 @@ namespace FoodDiary.Domain.Entities.Recipes;
 public sealed class RecipeStep : Entity<RecipeStepId> {
     private const int TitleMaxLength = 256;
     private const int InstructionMaxLength = 4000;
-    private const int ImageUrlMaxLength = 2048;
+    private const int ImageUrlMaxLength = DomainConstants.ImageUrlMaxLength;
 
     public RecipeId RecipeId { get; private set; }
     public int StepNumber { get; private set; }

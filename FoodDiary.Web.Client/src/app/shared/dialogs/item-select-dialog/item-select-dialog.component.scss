@@ -1,4 +1,4 @@
-﻿@use 'variables' as variables;
+@use 'variables' as variables;
 
 .consumption-item-select {
     display: flex;
@@ -22,4 +22,3 @@
         padding-top: variables.$gap-s;
     }
 }
-

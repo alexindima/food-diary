@@ -1,8 +1,9 @@
 import { Component, ViewEncapsulation, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { SidebarComponent } from './sidebar/sidebar.component';
+
 import { AuthService } from '../services/auth.service';
-import { QuickConsumptionDrawerComponent } from '../components/shared/quick-consumption-drawer/quick-consumption-drawer.component';
+import { QuickConsumptionDrawerComponent } from '../features/meals/components/quick-consumption-drawer/quick-consumption-drawer.component';
+import { SidebarComponent } from './sidebar/sidebar.component';
 
 @Component({
     selector: 'fd-root',

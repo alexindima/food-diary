@@ -3,7 +3,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Domain.Entities.Ai;
 
-public sealed class AiUsage : Entity<Guid> {
+public sealed class AiUsage : Entity<AiUsageId> {
     private const int OperationMaxLength = 32;
     private const int ModelMaxLength = 64;
 
@@ -33,7 +33,7 @@ public sealed class AiUsage : Entity<Guid> {
         EnsureTotalTokensConsistency(normalizedInputTokens, normalizedOutputTokens, normalizedTotalTokens);
 
         var usage = new AiUsage {
-            Id = Guid.NewGuid(),
+            Id = AiUsageId.New(),
             UserId = userId,
             Operation = normalizedOperation,
             Model = normalizedModel,

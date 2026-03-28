@@ -15,8 +15,8 @@ public sealed class Product : AggregateRoot<ProductId> {
     private const int BrandMaxLength = 128;
     private const int CategoryMaxLength = 128;
     private const int DescriptionMaxLength = 2048;
-    private const int CommentMaxLength = 2048;
-    private const int ImageUrlMaxLength = 2048;
+    private const int CommentMaxLength = DomainConstants.CommentMaxLength;
+    private const int ImageUrlMaxLength = DomainConstants.ImageUrlMaxLength;
 
     public string? Barcode { get; private set; }
     public string Name { get; private set; } = string.Empty;

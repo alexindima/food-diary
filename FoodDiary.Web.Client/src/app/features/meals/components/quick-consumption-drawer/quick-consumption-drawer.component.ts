@@ -1,12 +1,13 @@
 import { ChangeDetectionStrategy, Component, inject, Input } from '@angular/core';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
+
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiIconModule } from 'fd-ui-kit/material';
-import { QuickMealItem, QuickMealService } from '../../../features/meals/lib/quick-meal.service';
-import { resolveProductImageUrl } from '../../../utils/product-stub.utils';
-import { resolveRecipeImageUrl } from '../../../utils/recipe-stub.utils';
-import { ProductType } from '../../../features/products/models/product.data';
+import { ProductType } from '../../../products/models/product.data';
+import { resolveProductImageUrl } from '../../../../utils/product-stub.utils';
+import { resolveRecipeImageUrl } from '../../../../utils/recipe-stub.utils';
+import { QuickMealItem, QuickMealService } from '../../lib/quick-meal.service';
 
 @Component({
     selector: 'fd-quick-consumption-drawer',

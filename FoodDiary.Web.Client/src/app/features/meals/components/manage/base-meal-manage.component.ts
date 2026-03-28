@@ -18,7 +18,7 @@ import {
     ItemSelectDialogComponent,
     ItemSelectDialogData,
     ItemSelection,
-} from '../../../../components/shared/item-select-dialog/item-select-dialog.component';
+} from '../../../../shared/dialogs/item-select-dialog/item-select-dialog.component';
 import {
     Consumption,
     ConsumptionAiItemManageDto,

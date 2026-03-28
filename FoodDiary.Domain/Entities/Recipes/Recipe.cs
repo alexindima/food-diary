@@ -12,8 +12,8 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
     private const int NameMaxLength = 256;
     private const int CategoryMaxLength = 128;
     private const int DescriptionMaxLength = 2048;
-    private const int CommentMaxLength = 2048;
-    private const int ImageUrlMaxLength = 2048;
+    private const int CommentMaxLength = DomainConstants.CommentMaxLength;
+    private const int ImageUrlMaxLength = DomainConstants.ImageUrlMaxLength;
 
     public string Name { get; private set; } = string.Empty;
     public string? Description { get; private set; }

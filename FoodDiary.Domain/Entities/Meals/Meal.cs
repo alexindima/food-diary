@@ -9,8 +9,8 @@ namespace FoodDiary.Domain.Entities.Meals;
 
 public sealed class Meal : AggregateRoot<MealId> {
     private const double ComparisonEpsilon = 0.000001d;
-    private const int CommentMaxLength = 2048;
-    private const int ImageUrlMaxLength = 2048;
+    private const int CommentMaxLength = DomainConstants.CommentMaxLength;
+    private const int ImageUrlMaxLength = DomainConstants.ImageUrlMaxLength;
 
     public UserId UserId { get; private set; }
     public DateTime Date { get; private set; }

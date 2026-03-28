@@ -1,7 +1,5 @@
 using System.Net.Mime;
 using Amazon.S3;
-using Amazon;
-using Amazon.Runtime;
 using Amazon.S3.Model;
 using FoodDiary.Application.Images.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -11,6 +9,7 @@ using Microsoft.Extensions.Options;
 namespace FoodDiary.Infrastructure.Services;
 
 public sealed class S3ImageStorageService(
+    IAmazonS3 s3Client,
     IOptions<S3Options> options) : IImageStorageService {
     private static readonly HashSet<string> AllowedContentTypes = new(StringComparer.OrdinalIgnoreCase) {
         MediaTypeNames.Image.Jpeg,
@@ -54,7 +53,6 @@ public sealed class S3ImageStorageService(
             ContentType = contentType
         };
 
-        using var s3Client = CreateClient();
         var uploadUrl = s3Client.GetPreSignedURL(presignedRequest);
         var fileUrl = BuildPublicUrl(key);
 
@@ -72,28 +70,7 @@ public sealed class S3ImageStorageService(
             Key = objectKey
         };
 
-        using var s3Client = CreateClient();
         await s3Client.DeleteObjectAsync(request, cancellationToken);
-    }
-
-    private IAmazonS3 CreateClient() {
-        var credentials = new BasicAWSCredentials(_options.AccessKeyId, _options.SecretAccessKey);
-        var regionValue = _options.Region?.Trim();
-        RegionEndpoint? regionEndpoint = null;
-        if (!string.IsNullOrWhiteSpace(regionValue)) {
-            regionEndpoint = RegionEndpoint.GetBySystemName(regionValue);
-        }
-
-        regionEndpoint ??= RegionEndpoint.USEast1;
-
-        var config = new AmazonS3Config {
-            RegionEndpoint = regionEndpoint,
-            AuthenticationRegion = regionEndpoint.SystemName,
-            ServiceURL = string.IsNullOrWhiteSpace(_options.ServiceUrl) ? null : _options.ServiceUrl,
-            ForcePathStyle = !string.IsNullOrWhiteSpace(_options.ServiceUrl)
-        };
-
-        return new AmazonS3Client(credentials, config);
     }
 
     private static string NormalizeFileName(string fileName) {

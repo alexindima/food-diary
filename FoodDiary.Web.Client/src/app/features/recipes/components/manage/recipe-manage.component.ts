@@ -17,7 +17,7 @@ import {
     ItemSelectDialogComponent,
     ItemSelection,
     ItemSelectDialogData,
-} from '../../../../components/shared/item-select-dialog/item-select-dialog.component';
+} from '../../../../shared/dialogs/item-select-dialog/item-select-dialog.component';
 import { NutrientData } from '../../../../types/charts.data';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Recipe, RecipeDto, RecipeVisibility, RecipeIngredient } from '../../models/recipe.data';

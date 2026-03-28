@@ -173,6 +173,10 @@ internal sealed class DailyAdviceConfiguration : IEntityTypeConfiguration<DailyA
 
 internal sealed class AiUsageConfiguration : IEntityTypeConfiguration<AiUsage> {
     public void Configure(EntityTypeBuilder<AiUsage> entity) {
+        entity.Property(e => e.Id)
+            .HasConversion(id => id.Value, value => new AiUsageId(value))
+            .ValueGeneratedNever();
+
         entity.Property(e => e.UserId).HasConversion(
             id => id.Value,
             value => new UserId(value));

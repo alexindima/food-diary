@@ -20,7 +20,7 @@ public sealed class AdminEmailTemplatesController(ISender mediator) : BaseApiCon
     public Task<IActionResult> GetAll() =>
         HandleOk(AdminHttpQueryMappings.ToEmailTemplatesQuery(), static value => value.Select(item => item.ToHttpResponse()).ToList());
 
-    [HttpPut("{key}/{locale}")]
+    [HttpPut("{key:maxlength(64)}/{locale:maxlength(10)}")]
     [ProducesResponseType<AdminEmailTemplateHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     public Task<IActionResult> Upsert(
