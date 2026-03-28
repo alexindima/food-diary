@@ -1,17 +1,14 @@
 import { Routes } from '@angular/router';
-
-import { authGuard } from '../../guards/auth.guard';
-import { mealResolver } from './resolvers/meal.resolver';
-import { MealAddComponent } from './pages/manage/meal-add.component';
-import { MealEditComponent } from './pages/manage/meal-edit.component';
 import { MealContainerComponent } from './pages/container/meal-container.component';
 import { MealListComponent } from './pages/list/meal-list.component';
+import { MealAddComponent } from './pages/manage/meal-add.component';
+import { MealEditComponent } from './pages/manage/meal-edit.component';
+import { mealResolver } from './resolvers/meal.resolver';
 
-export const mealRoutes: Routes = [
+const routes: Routes = [
     {
-        path: 'meals',
+        path: '',
         component: MealContainerComponent,
-        canActivate: [authGuard],
         children: [
             { path: '', component: MealListComponent },
             { path: 'add', component: MealAddComponent },
@@ -23,3 +20,5 @@ export const mealRoutes: Routes = [
         ],
     },
 ];
+
+export default routes;

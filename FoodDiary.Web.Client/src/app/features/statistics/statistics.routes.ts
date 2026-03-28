@@ -1,12 +1,11 @@
 import { Routes } from '@angular/router';
-
-import { authGuard } from '../../guards/auth.guard';
 import { StatisticsComponent } from './pages/statistics.component';
 
-export const statisticsRoutes: Routes = [
+const routes: Routes = [
     {
-        path: 'statistics',
+        path: '',
         component: StatisticsComponent,
-        canActivate: [authGuard],
     },
 ];
+
+export default routes;

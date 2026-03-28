@@ -90,6 +90,120 @@ public class RecipesFeatureTests {
         Assert.Contains("calories", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
 
+    [Fact]
+    public async Task CreateRecipeCommandHandler_WithEmptyImageAssetId_ReturnsValidationFailure() {
+        var userId = UserId.New();
+        var repository = new SingleRecipeRepositoryForCreate();
+        var handler = new CreateRecipeCommandHandler(repository);
+
+        var result = await handler.Handle(
+            new CreateRecipeCommand(
+                userId.Value,
+                Name: "Soup",
+                Description: null,
+                Comment: null,
+                Category: null,
+                ImageUrl: null,
+                ImageAssetId: Guid.Empty,
+                PrepTime: 10,
+                CookTime: 20,
+                Servings: 2,
+                Visibility: Visibility.Private.ToString(),
+                CalculateNutritionAutomatically: true,
+                ManualCalories: null,
+                ManualProteins: null,
+                ManualFats: null,
+                ManualCarbs: null,
+                ManualFiber: null,
+                ManualAlcohol: null,
+                Steps: [CreateRecipeCreateStep(order: 1, "Step 1")]),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("ImageAssetId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task CreateRecipeCommandHandler_WithEmptyStepImageAssetId_ReturnsValidationFailure() {
+        var userId = UserId.New();
+        var repository = new SingleRecipeRepositoryForCreate();
+        var handler = new CreateRecipeCommandHandler(repository);
+
+        var result = await handler.Handle(
+            new CreateRecipeCommand(
+                userId.Value,
+                Name: "Soup",
+                Description: null,
+                Comment: null,
+                Category: null,
+                ImageUrl: null,
+                ImageAssetId: null,
+                PrepTime: 10,
+                CookTime: 20,
+                Servings: 2,
+                Visibility: Visibility.Private.ToString(),
+                CalculateNutritionAutomatically: true,
+                ManualCalories: null,
+                ManualProteins: null,
+                ManualFats: null,
+                ManualCarbs: null,
+                ManualFiber: null,
+                ManualAlcohol: null,
+                Steps: [new RecipeStepInput(
+                    Order: 1,
+                    Description: "Step 1",
+                    Title: null,
+                    ImageUrl: null,
+                    ImageAssetId: Guid.Empty,
+                    Ingredients: [new RecipeIngredientInput(ProductId: Guid.NewGuid(), NestedRecipeId: null, Amount: 100)])]),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("ImageAssetId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task CreateRecipeCommandHandler_WithEmptyIngredientProductId_ReturnsValidationFailure() {
+        var userId = UserId.New();
+        var repository = new SingleRecipeRepositoryForCreate();
+        var handler = new CreateRecipeCommandHandler(repository);
+
+        var result = await handler.Handle(
+            new CreateRecipeCommand(
+                userId.Value,
+                Name: "Soup",
+                Description: null,
+                Comment: null,
+                Category: null,
+                ImageUrl: null,
+                ImageAssetId: null,
+                PrepTime: 10,
+                CookTime: 20,
+                Servings: 2,
+                Visibility: Visibility.Private.ToString(),
+                CalculateNutritionAutomatically: true,
+                ManualCalories: null,
+                ManualProteins: null,
+                ManualFats: null,
+                ManualCarbs: null,
+                ManualFiber: null,
+                ManualAlcohol: null,
+                Steps: [new RecipeStepInput(
+                    Order: 1,
+                    Description: "Step 1",
+                    Title: null,
+                    ImageUrl: null,
+                    ImageAssetId: null,
+                    Ingredients: [new RecipeIngredientInput(ProductId: Guid.Empty, NestedRecipeId: null, Amount: 100)])]),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("ProductId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
     private static RecipeStepInput CreateRecipeCreateStep(int order, string description) {
         return new RecipeStepInput(
             Order: order,

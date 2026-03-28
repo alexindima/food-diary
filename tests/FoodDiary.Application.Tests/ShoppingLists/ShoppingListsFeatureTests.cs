@@ -71,6 +71,23 @@ public class ShoppingListsFeatureTests {
         Assert.Equal("Validation.Invalid", result.Error.Code);
     }
 
+    [Fact]
+    public async Task ShoppingListItemBuilder_WithEmptyProductId_FailsWithValidationError() {
+        var items = new[] {
+            new ShoppingListItemInput(Guid.Empty, null, 1, null, null, false, 1)
+        };
+
+        var result = await ShoppingListItemBuilder.BuildItemsAsync(
+            items,
+            UserId.New(),
+            new NoopProductLookupService(),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("ProductId", result.Error.Message, StringComparison.Ordinal);
+    }
+
     private sealed class NoopShoppingListRepository : IShoppingListRepository {
         public Task<ShoppingList> AddAsync(ShoppingList list, CancellationToken cancellationToken = default) => Task.FromResult(list);
 

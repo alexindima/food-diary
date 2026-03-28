@@ -37,16 +37,18 @@ public class UpdateUserCommandHandler(
             return Result.Failure<UserModel>(languageResult.Error);
         }
 
+        var profileImageAssetIdResult = NormalizeImageAssetId(command.ProfileImageAssetId, nameof(command.ProfileImageAssetId));
+        if (profileImageAssetIdResult.IsFailure) {
+            return Result.Failure<UserModel>(profileImageAssetIdResult.Error);
+        }
+
         var genderResult = ParseGender(command.Gender);
         if (genderResult.IsFailure) {
             return Result.Failure<UserModel>(genderResult.Error);
         }
 
         var oldAssetId = user.ProfileImageAssetId;
-        ImageAssetId? newAssetId = null;
-        if (command.ProfileImageAssetId.HasValue) {
-            newAssetId = new ImageAssetId(command.ProfileImageAssetId.Value);
-        }
+        var newAssetId = profileImageAssetIdResult.Value;
 
         var dashboardLayoutJson = command.DashboardLayout is null
             ? null
@@ -117,4 +119,13 @@ public class UpdateUserCommandHandler(
             : Result.Failure<string?>(Validation.Invalid(nameof(UpdateUserCommand.Gender), "Invalid gender value."));
     }
 
+    private static Result<ImageAssetId?> NormalizeImageAssetId(Guid? value, string fieldName) {
+        if (!value.HasValue) {
+            return Result.Success<ImageAssetId?>(null);
+        }
+
+        return value.Value == Guid.Empty
+            ? Result.Failure<ImageAssetId?>(Validation.Invalid(fieldName, "Image asset id must not be empty."))
+            : Result.Success<ImageAssetId?>(new ImageAssetId(value.Value));
+    }
 }

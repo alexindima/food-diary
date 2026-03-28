@@ -1,12 +1,11 @@
 import { Routes } from '@angular/router';
-
-import { authGuard } from '../../guards/auth.guard';
 import { WeightHistoryPageComponent } from './pages/weight-history-page.component';
 
-export const weightHistoryRoutes: Routes = [
+const routes: Routes = [
     {
-        path: 'weight-history',
+        path: '',
         component: WeightHistoryPageComponent,
-        canActivate: [authGuard],
     },
 ];
+
+export default routes;

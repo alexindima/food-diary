@@ -83,6 +83,38 @@ public sealed class UpdateUserCommandHandlerTests {
         Assert.Equal([oldAssetId], cleanup.RequestedAssetIds);
     }
 
+    [Fact]
+    public async Task Handle_WithEmptyProfileImageAssetId_ReturnsValidationFailure() {
+        var user = User.Create("user@example.com", "hash");
+        var handler = new UpdateUserCommandHandler(
+            new SingleUserRepository(user),
+            new StubImageAssetCleanupService());
+
+        var result = await handler.Handle(
+            new UpdateUserCommand(
+                user.Id.Value,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                Guid.Empty,
+                null,
+                null),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("ProfileImageAssetId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
     private sealed class SingleUserRepository(User user) : IUserRepository {
         public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();

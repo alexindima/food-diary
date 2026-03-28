@@ -1,12 +1,11 @@
 import { Routes } from '@angular/router';
-
-import { authGuard } from '../../guards/auth.guard';
 import { CycleTrackingPageComponent } from './pages/cycle-tracking-page.component';
 
-export const cycleTrackingRoutes: Routes = [
+const routes: Routes = [
     {
-        path: 'cycle-tracking',
+        path: '',
         component: CycleTrackingPageComponent,
-        canActivate: [authGuard],
     },
 ];
+
+export default routes;

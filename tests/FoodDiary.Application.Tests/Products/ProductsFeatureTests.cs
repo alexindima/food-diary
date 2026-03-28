@@ -76,6 +76,38 @@ public class ProductsFeatureTests {
     }
 
     [Fact]
+    public async Task CreateProductCommandHandler_WithEmptyImageAssetId_ReturnsValidationFailure() {
+        var handler = new CreateProductCommandHandler(new NoopProductRepository());
+        var command = new CreateProductCommand(
+            UserId: Guid.NewGuid(),
+            Barcode: null,
+            Name: "Apple",
+            Brand: null,
+            ProductType: "Unknown",
+            Category: null,
+            Description: null,
+            Comment: null,
+            ImageUrl: null,
+            ImageAssetId: Guid.Empty,
+            BaseUnit: "G",
+            BaseAmount: 100,
+            DefaultPortionAmount: 100,
+            CaloriesPerBase: 52,
+            ProteinsPerBase: 0.3,
+            FatsPerBase: 0.2,
+            CarbsPerBase: 14,
+            FiberPerBase: 2.4,
+            AlcoholPerBase: 0,
+            Visibility: "Private");
+
+        var result = await handler.Handle(command, CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("ImageAssetId", result.Error.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public async Task DeleteProductCommandHandler_WhenCleanupFails_StillDeletesProductAndReturnsSuccess() {
         var userId = UserId.New();
         var assetId = ImageAssetId.New();
@@ -165,6 +197,63 @@ public class ProductsFeatureTests {
         Assert.True(repository.UpdateCalled);
         Assert.Equal(newAssetId, product.ImageAssetId);
         Assert.Equal([oldAssetId], cleanup.RequestedAssetIds);
+    }
+
+    [Fact]
+    public async Task UpdateProductCommandHandler_WithEmptyImageAssetId_ReturnsValidationFailure() {
+        var userId = UserId.New();
+        var product = Product.Create(
+            userId,
+            name: "Apple",
+            baseUnit: MeasurementUnit.G,
+            baseAmount: 100,
+            defaultPortionAmount: 100,
+            caloriesPerBase: 52,
+            proteinsPerBase: 0.3,
+            fatsPerBase: 0.2,
+            carbsPerBase: 14,
+            fiberPerBase: 2.4,
+            alcoholPerBase: 0,
+            visibility: Visibility.Private);
+
+        var repository = new SingleProductRepository(product);
+        var handler = new UpdateProductCommandHandler(repository, new RecordingCleanupService());
+
+        var result = await handler.Handle(
+            new UpdateProductCommand(
+                userId.Value,
+                product.Id.Value,
+                Barcode: null,
+                ClearBarcode: false,
+                Name: null,
+                Brand: null,
+                ClearBrand: false,
+                ProductType: null,
+                Category: null,
+                ClearCategory: false,
+                Description: null,
+                ClearDescription: false,
+                Comment: null,
+                ClearComment: false,
+                ImageUrl: null,
+                ClearImageUrl: false,
+                ImageAssetId: Guid.Empty,
+                ClearImageAssetId: false,
+                BaseUnit: null,
+                BaseAmount: null,
+                DefaultPortionAmount: null,
+                CaloriesPerBase: null,
+                ProteinsPerBase: null,
+                FatsPerBase: null,
+                CarbsPerBase: null,
+                FiberPerBase: null,
+                AlcoholPerBase: null,
+                Visibility: null),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("ImageAssetId", result.Error.Message, StringComparison.Ordinal);
     }
 
     private sealed class NoopProductRepository : IProductRepository {

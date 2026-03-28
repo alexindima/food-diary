@@ -5,6 +5,7 @@ using FoodDiary.Application.RecentItems.Common;
 using FoodDiary.Application.Common.Interfaces.Services;
 using FoodDiary.Application.Consumptions.Mappings;
 using FoodDiary.Application.Consumptions.Models;
+using FoodDiary.Application.Consumptions.Common;
 using FoodDiary.Application.Consumptions.Services;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Enums;
@@ -24,6 +25,11 @@ public class CreateConsumptionCommandHandler(
             return Result.Failure<ConsumptionModel>(Errors.Authentication.InvalidToken);
         }
 
+        var imageAssetIdResult = NormalizeImageAssetId(command.ImageAssetId, nameof(command.ImageAssetId));
+        if (imageAssetIdResult.IsFailure) {
+            return Result.Failure<ConsumptionModel>(imageAssetIdResult.Error);
+        }
+
         var userId = new UserId(command.UserId!.Value);
         var mealTypeResult = ParseMealType(command.MealType);
         if (mealTypeResult.IsFailure) {
@@ -31,11 +37,16 @@ public class CreateConsumptionCommandHandler(
         }
 
         var meal = Meal.Create(userId, command.Date, mealTypeResult.Value, command.Comment, command.ImageUrl,
-            command.ImageAssetId.HasValue ? new ImageAssetId(command.ImageAssetId.Value) : null);
+            imageAssetIdResult.Value);
 
         meal.UpdateSatietyLevels(command.PreMealSatietyLevel, command.PostMealSatietyLevel);
 
         foreach (var item in command.Items) {
+            var itemIdValidation = ValidateItemIdentifiers(item);
+            if (itemIdValidation.IsFailure) {
+                return Result.Failure<ConsumptionModel>(itemIdValidation.Error);
+            }
+
             if (item.ProductId.HasValue) {
                 meal.AddProduct(new ProductId(item.ProductId.Value), item.Amount);
             } else if (item.RecipeId.HasValue) {
@@ -44,6 +55,11 @@ public class CreateConsumptionCommandHandler(
         }
 
         foreach (var session in command.AiSessions) {
+            var sessionImageAssetIdResult = NormalizeImageAssetId(session.ImageAssetId, nameof(session.ImageAssetId));
+            if (sessionImageAssetIdResult.IsFailure) {
+                return Result.Failure<ConsumptionModel>(sessionImageAssetIdResult.Error);
+            }
+
             var sessionItems = session.Items
                 .Select(aiItem => MealAiItemData.Create(
                     aiItem.NameEn,
@@ -59,7 +75,7 @@ public class CreateConsumptionCommandHandler(
                 .ToList();
 
             meal.AddAiSession(
-                session.ImageAssetId.HasValue ? new ImageAssetId(session.ImageAssetId.Value) : null,
+                sessionImageAssetIdResult.Value,
                 session.RecognizedAtUtc ?? dateTimeProvider.UtcNow,
                 session.Notes,
                 sessionItems);
@@ -135,5 +151,27 @@ public class CreateConsumptionCommandHandler(
         return Enum.TryParse<MealType>(mealType, true, out var parsed)
             ? Result.Success<MealType?>(parsed)
             : Result.Failure<MealType?>(Errors.Validation.Invalid(nameof(mealType), "Unknown meal type value."));
+    }
+
+    private static Result ValidateItemIdentifiers(ConsumptionItemInput item) {
+        if (item.ProductId == Guid.Empty) {
+            return Result.Failure(Errors.Validation.Invalid(nameof(item.ProductId), "Product id must not be empty."));
+        }
+
+        if (item.RecipeId == Guid.Empty) {
+            return Result.Failure(Errors.Validation.Invalid(nameof(item.RecipeId), "Recipe id must not be empty."));
+        }
+
+        return Result.Success();
+    }
+
+    private static Result<ImageAssetId?> NormalizeImageAssetId(Guid? value, string fieldName) {
+        if (!value.HasValue) {
+            return Result.Success<ImageAssetId?>(null);
+        }
+
+        return value.Value == Guid.Empty
+            ? Result.Failure<ImageAssetId?>(Errors.Validation.Invalid(fieldName, "Image asset id must not be empty."))
+            : Result.Success<ImageAssetId?>(new ImageAssetId(value.Value));
     }
 }

@@ -59,6 +59,11 @@ public class UpdateProductCommandHandler(
             newProductType = parsedProductType;
         }
 
+        var imageAssetIdResult = NormalizeImageAssetId(command.ImageAssetId);
+        if (imageAssetIdResult.IsFailure) {
+            return Result.Failure<ProductModel>(imageAssetIdResult.Error);
+        }
+
         var oldAssetId = product.ImageAssetId;
 
         if (command.Name is not null ||
@@ -117,7 +122,7 @@ public class UpdateProductCommandHandler(
             product.UpdateMedia(
                 imageUrl: command.ImageUrl,
                 clearImageUrl: command.ClearImageUrl,
-                imageAssetId: command.ImageAssetId.HasValue ? new ImageAssetId(command.ImageAssetId.Value) : null,
+                imageAssetId: imageAssetIdResult.Value,
                 clearImageAssetId: command.ClearImageAssetId);
         }
 
@@ -139,5 +144,15 @@ public class UpdateProductCommandHandler(
 
         var usageCount = product.MealItems.Count + product.RecipeIngredients.Count;
         return Result.Success(product.ToModel(usageCount, true));
+    }
+
+    private static Result<ImageAssetId?> NormalizeImageAssetId(Guid? value) {
+        if (!value.HasValue) {
+            return Result.Success<ImageAssetId?>(null);
+        }
+
+        return value.Value == Guid.Empty
+            ? Result.Failure<ImageAssetId?>(Errors.Validation.Invalid(nameof(value), "ImageAssetId must not be empty."))
+            : Result.Success<ImageAssetId?>(new ImageAssetId(value.Value));
     }
 }

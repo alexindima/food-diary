@@ -1,11 +1,11 @@
 import { Routes } from '@angular/router';
-import { authGuard } from '../../guards/auth.guard';
 import { GoalsPageComponent } from './pages/goals-page.component';
 
-export const goalsRoutes: Routes = [
+const routes: Routes = [
     {
-        path: 'goals',
+        path: '',
         component: GoalsPageComponent,
-        canActivate: [authGuard],
     },
 ];
+
+export default routes;

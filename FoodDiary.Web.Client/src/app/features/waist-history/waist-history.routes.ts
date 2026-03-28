@@ -1,12 +1,11 @@
 import { Routes } from '@angular/router';
-
-import { authGuard } from '../../guards/auth.guard';
 import { WaistHistoryPageComponent } from './pages/waist-history-page.component';
 
-export const waistHistoryRoutes: Routes = [
+const routes: Routes = [
     {
-        path: 'waist-history',
+        path: '',
         component: WaistHistoryPageComponent,
-        canActivate: [authGuard],
     },
 ];
+
+export default routes;

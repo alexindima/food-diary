@@ -52,6 +52,18 @@ public class ImagesFeatureTests {
     }
 
     [Fact]
+    public async Task DeleteImageAssetCommandHandler_WithEmptyAssetId_ReturnsInvalidDataFailure() {
+        var handler = new DeleteImageAssetCommandHandler(
+            new FakeImageAssetRepository(),
+            new FakeCleanupService());
+
+        var result = await handler.Handle(new DeleteImageAssetCommand(Guid.NewGuid(), Guid.Empty), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Image.InvalidData", result.Error.Code);
+    }
+
+    [Fact]
     public async Task ImageAssetCleanupService_CleanupOrphans_WithNonPositiveBatch_ReturnsZero() {
         var service = new ImageAssetCleanupService(
             new FakeImageAssetRepository(),

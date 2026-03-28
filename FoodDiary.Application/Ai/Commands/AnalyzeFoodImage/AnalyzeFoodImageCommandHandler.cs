@@ -16,6 +16,16 @@ public sealed class AnalyzeFoodImageCommandHandler(
     public async Task<Result<FoodVisionModel>> Handle(
         AnalyzeFoodImageCommand query,
         CancellationToken cancellationToken) {
+        if (query.UserId == Guid.Empty) {
+            return Result.Failure<FoodVisionModel>(
+                Errors.Validation.Invalid(nameof(query.UserId), "User id must not be empty."));
+        }
+
+        if (query.ImageAssetId == Guid.Empty) {
+            return Result.Failure<FoodVisionModel>(
+                Errors.Validation.Invalid(nameof(query.ImageAssetId), "Image asset id must not be empty."));
+        }
+
         var userId = new UserId(query.UserId);
         var imageAssetId = new ImageAssetId(query.ImageAssetId);
         var asset = await imageAssetRepository.GetByIdAsync(imageAssetId, cancellationToken);

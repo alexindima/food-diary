@@ -32,6 +32,10 @@ public class CreateProductCommandHandler(IProductRepository productRepository)
         var productType = Enum.TryParse<ProductType>(command.ProductType, true, out var parsedType)
             ? parsedType
             : ProductType.Unknown;
+        var imageAssetIdResult = NormalizeImageAssetId(command.ImageAssetId);
+        if (imageAssetIdResult.IsFailure) {
+            return Result.Failure<ProductModel>(imageAssetIdResult.Error);
+        }
 
         var product = Product.Create(
             userId: userId,
@@ -52,12 +56,22 @@ public class CreateProductCommandHandler(IProductRepository productRepository)
             description: command.Description,
             comment: command.Comment,
             imageUrl: command.ImageUrl,
-            imageAssetId: command.ImageAssetId.HasValue ? new ImageAssetId(command.ImageAssetId.Value) : null,
+            imageAssetId: imageAssetIdResult.Value,
             visibility: visibility
         );
 
         product = await productRepository.AddAsync(product, cancellationToken);
 
         return Result.Success(product.ToModel(isOwnedByCurrentUser: true));
+    }
+
+    private static Result<ImageAssetId?> NormalizeImageAssetId(Guid? value) {
+        if (!value.HasValue) {
+            return Result.Success<ImageAssetId?>(null);
+        }
+
+        return value.Value == Guid.Empty
+            ? Result.Failure<ImageAssetId?>(Errors.Validation.Invalid(nameof(value), "ImageAssetId must not be empty."))
+            : Result.Success<ImageAssetId?>(new ImageAssetId(value.Value));
     }
 }

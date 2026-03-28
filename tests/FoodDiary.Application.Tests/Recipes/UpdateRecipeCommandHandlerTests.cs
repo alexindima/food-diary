@@ -146,6 +146,104 @@ public class UpdateRecipeCommandHandlerTests {
         Assert.Contains("calories", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
 
+    [Fact]
+    public async Task Handle_WithEmptyImageAssetId_ReturnsValidationFailure() {
+        var userId = UserId.New();
+        var recipeId = RecipeId.New();
+        var recipe = Recipe.Create(userId, "Soup", servings: 2);
+        recipe.AddStep(1, "Initial step");
+
+        var repository = new StubRecipeRepository(recipeId, userId, recipe);
+        var handler = new UpdateRecipeCommandHandler(
+            repository,
+            new NoopImageAssetCleanupService());
+
+        var result = await handler.Handle(
+            new UpdateRecipeCommand(
+                userId.Value,
+                recipeId.Value,
+                Name: "Soup",
+                Description: null,
+                ClearDescription: false,
+                Comment: null,
+                ClearComment: false,
+                Category: null,
+                ClearCategory: false,
+                ImageUrl: null,
+                ClearImageUrl: false,
+                ImageAssetId: Guid.Empty,
+                ClearImageAssetId: false,
+                PrepTime: 0,
+                CookTime: 20,
+                Servings: 2,
+                Visibility: Visibility.Public.ToString(),
+                CalculateNutritionAutomatically: true,
+                ManualCalories: null,
+                ManualProteins: null,
+                ManualFats: null,
+                ManualCarbs: null,
+                ManualFiber: null,
+                ManualAlcohol: null,
+                Steps: [CreateStep(order: 1, "Initial step")]),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("ImageAssetId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task Handle_WithEmptyNestedRecipeId_ReturnsValidationFailure() {
+        var userId = UserId.New();
+        var recipeId = RecipeId.New();
+        var recipe = Recipe.Create(userId, "Soup", servings: 2);
+        recipe.AddStep(1, "Initial step");
+
+        var repository = new StubRecipeRepository(recipeId, userId, recipe);
+        var handler = new UpdateRecipeCommandHandler(
+            repository,
+            new NoopImageAssetCleanupService());
+
+        var result = await handler.Handle(
+            new UpdateRecipeCommand(
+                userId.Value,
+                recipeId.Value,
+                Name: "Soup",
+                Description: null,
+                ClearDescription: false,
+                Comment: null,
+                ClearComment: false,
+                Category: null,
+                ClearCategory: false,
+                ImageUrl: null,
+                ClearImageUrl: false,
+                ImageAssetId: null,
+                ClearImageAssetId: false,
+                PrepTime: 0,
+                CookTime: 20,
+                Servings: 2,
+                Visibility: Visibility.Public.ToString(),
+                CalculateNutritionAutomatically: true,
+                ManualCalories: null,
+                ManualProteins: null,
+                ManualFats: null,
+                ManualCarbs: null,
+                ManualFiber: null,
+                ManualAlcohol: null,
+                Steps: [new RecipeStepInput(
+                    Order: 1,
+                    Description: "Initial step",
+                    Title: null,
+                    ImageUrl: null,
+                    ImageAssetId: null,
+                    Ingredients: [new RecipeIngredientInput(ProductId: null, NestedRecipeId: Guid.Empty, Amount: 100)])]),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("NestedRecipeId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
     private static RecipeStepInput CreateStep(int order, string description) {
         return new RecipeStepInput(
             Order: order,

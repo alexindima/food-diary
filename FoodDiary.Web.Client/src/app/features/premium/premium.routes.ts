@@ -1,12 +1,11 @@
 import { Routes } from '@angular/router';
-
-import { authGuard } from '../../guards/auth.guard';
 import { PremiumAccessPageComponent } from './pages/premium-access-page.component';
 
-export const premiumRoutes: Routes = [
+const routes: Routes = [
     {
-        path: 'premium',
+        path: '',
         component: PremiumAccessPageComponent,
-        canActivate: [authGuard],
     },
 ];
+
+export default routes;

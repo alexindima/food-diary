@@ -2,9 +2,12 @@ using FoodDiary.Application.Ai.Commands.AnalyzeFoodImage;
 using FoodDiary.Application.Ai.Commands.CalculateFoodNutrition;
 using FoodDiary.Application.Ai.Common;
 using FoodDiary.Application.Ai.Models;
+using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Ai.Queries.GetUserAiUsageSummary;
+using FoodDiary.Application.Images.Common;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Interfaces.Services;
+using FoodDiary.Domain.Entities.Assets;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -39,6 +42,23 @@ public class AiValidatorsTests {
         var result = await validator.ValidateAsync(command);
 
         Assert.True(result.IsValid);
+    }
+
+    [Fact]
+    public async Task AnalyzeFoodImageHandler_WithEmptyImageAssetId_ReturnsValidationFailure() {
+        var user = User.Create("ai-handler@example.com", "hash");
+        var handler = new AnalyzeFoodImageCommandHandler(
+            new StubImageAssetRepository(),
+            new StubUserRepository(user),
+            new StubOpenAiFoodService());
+
+        var result = await handler.Handle(
+            new AnalyzeFoodImageCommand(user.Id.Value, Guid.Empty, null),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("ImageAssetId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
 
     [Fact]
@@ -123,6 +143,42 @@ public class AiValidatorsTests {
         public Task<IReadOnlyList<Role>> GetRolesByNamesAsync(IReadOnlyList<string> names, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User> AddAsync(User user, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task UpdateAsync(User user, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+    }
+
+    private sealed class StubImageAssetRepository : IImageAssetRepository {
+        public Task<ImageAsset> AddAsync(ImageAsset asset, CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+
+        public Task<ImageAsset?> GetByIdAsync(ImageAssetId id, CancellationToken cancellationToken = default) =>
+            Task.FromResult<ImageAsset?>(null);
+
+        public Task DeleteAsync(ImageAsset asset, CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+
+        public Task<bool> IsAssetInUse(ImageAssetId assetId, CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+
+        public Task<IReadOnlyList<ImageAsset>> GetUnusedOlderThanAsync(
+            DateTime olderThanUtc,
+            int batchSize,
+            CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+    }
+
+    private sealed class StubOpenAiFoodService : IOpenAiFoodService {
+        public Task<Result<FoodVisionModel>> AnalyzeFoodImageAsync(
+            string imageUrl,
+            string? userLanguage,
+            UserId userId,
+            string? description,
+            CancellationToken cancellationToken) =>
+            throw new NotSupportedException();
+
+        public Task<Result<FoodNutritionModel>> CalculateNutritionAsync(
+            IReadOnlyList<FoodVisionItemModel> items,
+            UserId userId,
+            CancellationToken cancellationToken) =>
+            throw new NotSupportedException();
     }
 
     private sealed class RecordingAiUsageRepository : IAiUsageRepository {

@@ -18,13 +18,22 @@ public static class ShoppingListItemBuilder {
 
         var productIds = items
             .Where(item => item.ProductId.HasValue)
-            .Select(item => new ProductId(item.ProductId!.Value))
+            .Select(item => item.ProductId!.Value)
+            .ToList();
+
+        if (productIds.Any(id => id == Guid.Empty)) {
+            return Result.Failure<IReadOnlyList<ShoppingListItemData>>(
+                Errors.Validation.Invalid(nameof(ShoppingListItemInput.ProductId), "ProductId must not be empty."));
+        }
+
+        var normalizedProductIds = productIds
+            .Select(id => new ProductId(id))
             .Distinct()
             .ToList();
 
-        var products = await productLookupService.GetAccessibleByIdsAsync(productIds, userId, cancellationToken);
-        if (products.Count != productIds.Count) {
-            var missing = productIds.First(id => !products.ContainsKey(id));
+        var products = await productLookupService.GetAccessibleByIdsAsync(normalizedProductIds, userId, cancellationToken);
+        if (products.Count != normalizedProductIds.Count) {
+            var missing = normalizedProductIds.First(id => !products.ContainsKey(id));
             return Result.Failure<IReadOnlyList<ShoppingListItemData>>(Errors.Product.NotAccessible(missing.Value));
         }
 

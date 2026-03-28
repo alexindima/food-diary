@@ -20,6 +20,11 @@ public class UpdateRecipeCommandHandler(
             return Result.Failure<RecipeModel>(Errors.Authentication.InvalidToken);
         }
 
+        var imageAssetIdResult = NormalizeImageAssetId(command.ImageAssetId, nameof(command.ImageAssetId));
+        if (imageAssetIdResult.IsFailure) {
+            return Result.Failure<RecipeModel>(imageAssetIdResult.Error);
+        }
+
         var userId = new UserId(command.UserId!.Value);
         var recipeId = new RecipeId(command.RecipeId);
 
@@ -70,7 +75,7 @@ public class UpdateRecipeCommandHandler(
         recipe.UpdateMedia(
             imageUrl: command.ImageUrl,
             clearImageUrl: command.ClearImageUrl,
-            imageAssetId: command.ImageAssetId.HasValue ? new ImageAssetId(command.ImageAssetId.Value) : null,
+            imageAssetId: imageAssetIdResult.Value,
             clearImageAssetId: command.ClearImageAssetId);
         recipe.UpdateTimingAndServings(
             prepTime: command.PrepTime ?? 0,
@@ -89,13 +94,23 @@ public class UpdateRecipeCommandHandler(
             .ToList();
 
         foreach (var entry in orderedSteps) {
+            var stepImageAssetIdResult = NormalizeImageAssetId(entry.Step.ImageAssetId, nameof(entry.Step.ImageAssetId));
+            if (stepImageAssetIdResult.IsFailure) {
+                return Result.Failure<RecipeModel>(stepImageAssetIdResult.Error);
+            }
+
             var step = recipe.AddStep(
                 entry.Order,
                 entry.Step.Description,
                 entry.Step.Title,
                 entry.Step.ImageUrl,
-                entry.Step.ImageAssetId.HasValue ? new ImageAssetId(entry.Step.ImageAssetId.Value) : null);
+                stepImageAssetIdResult.Value);
             foreach (var ingredient in entry.Step.Ingredients) {
+                var ingredientIdResult = ValidateIngredientIdentifiers(ingredient);
+                if (ingredientIdResult.IsFailure) {
+                    return Result.Failure<RecipeModel>(ingredientIdResult.Error);
+                }
+
                 if (ingredient.ProductId.HasValue) {
                     step.AddProductIngredient(new ProductId(ingredient.ProductId.Value), ingredient.Amount);
                 } else if (ingredient.NestedRecipeId.HasValue) {
@@ -199,5 +214,27 @@ public class UpdateRecipeCommandHandler(
         }
 
         return Result.Success((calories.Value, proteins.Value, fats.Value, carbs.Value, fiber.Value, alcohol ?? 0));
+    }
+
+    private static Result<ImageAssetId?> NormalizeImageAssetId(Guid? value, string fieldName) {
+        if (!value.HasValue) {
+            return Result.Success<ImageAssetId?>(null);
+        }
+
+        return value.Value == Guid.Empty
+            ? Result.Failure<ImageAssetId?>(Errors.Validation.Invalid(fieldName, "Image asset id must not be empty."))
+            : Result.Success<ImageAssetId?>(new ImageAssetId(value.Value));
+    }
+
+    private static Result ValidateIngredientIdentifiers(RecipeIngredientInput ingredient) {
+        if (ingredient.ProductId == Guid.Empty) {
+            return Result.Failure(Errors.Validation.Invalid(nameof(ingredient.ProductId), "Product id must not be empty."));
+        }
+
+        if (ingredient.NestedRecipeId == Guid.Empty) {
+            return Result.Failure(Errors.Validation.Invalid(nameof(ingredient.NestedRecipeId), "Nested recipe id must not be empty."));
+        }
+
+        return Result.Success();
     }
 }
