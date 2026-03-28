@@ -13,6 +13,7 @@ public sealed record ShoppingListItemAddedDomainEvent(
     MeasurementUnit? Unit,
     string? Category,
     bool IsChecked,
-    int SortOrder) : IDomainEvent {
-    public DateTime OccurredOnUtc { get; } = DateTime.UtcNow;
+    int SortOrder,
+    DateTime? OccurredOnUtcOverride = null) : IDomainEvent {
+    public DateTime OccurredOnUtc { get; } = OccurredOnUtcOverride ?? Common.DomainTime.UtcNow;
 }

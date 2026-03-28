@@ -22,7 +22,7 @@ public class DeleteUserCommandHandler(
             return Result.Failure<bool>(User.NotFound(userId));
         }
 
-        user.UpdateRefreshToken(null);
+        user.UpdateRefreshToken(null, dateTimeProvider.UtcNow);
         user.MarkDeleted(dateTimeProvider.UtcNow);
         await userRepository.UpdateAsync(user, cancellationToken);
 

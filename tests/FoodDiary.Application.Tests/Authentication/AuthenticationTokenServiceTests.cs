@@ -1,6 +1,7 @@
 using FoodDiary.Application.Authentication.Services;
 using FoodDiary.Application.Authentication.Abstractions;
 using FoodDiary.Application.Authentication.Common;
+using FoodDiary.Application.Common.Interfaces.Services;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -13,7 +14,7 @@ public class AuthenticationTokenServiceTests {
         var repository = new InMemoryUserRepository(user);
         var jwt = new FakeJwtTokenGenerator();
         var hasher = new FakePasswordHasher();
-        var service = new AuthenticationTokenService(repository, jwt, hasher);
+        var service = new AuthenticationTokenService(repository, jwt, hasher, new StubDateTimeProvider());
 
         var result = await service.IssueAndStoreAsync(user, CancellationToken.None);
 
@@ -29,7 +30,7 @@ public class AuthenticationTokenServiceTests {
         var repository = new InMemoryUserRepository(user);
         var jwt = new FakeJwtTokenGenerator();
         var hasher = new FakePasswordHasher();
-        var service = new AuthenticationTokenService(repository, jwt, hasher);
+        var service = new AuthenticationTokenService(repository, jwt, hasher, new StubDateTimeProvider());
 
         var token = service.IssueAccessToken(user);
 
@@ -91,5 +92,9 @@ public class AuthenticationTokenServiceTests {
         }
 
         public (UserId userId, string email)? ValidateToken(string token) => null;
+    }
+
+    private sealed class StubDateTimeProvider : IDateTimeProvider {
+        public DateTime UtcNow { get; } = new(2030, 3, 28, 12, 0, 0, DateTimeKind.Utc);
     }
 }

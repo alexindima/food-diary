@@ -51,7 +51,7 @@ public class ResendEmailVerificationCommandHandler : ICommandHandler<ResendEmail
 
         var emailToken = SecurityTokenGenerator.GenerateUrlSafeToken();
         var emailTokenHash = _passwordHasher.Hash(emailToken);
-        user.SetEmailConfirmationToken(emailTokenHash, _dateTimeProvider.UtcNow.AddHours(24));
+        user.SetEmailConfirmationToken(emailTokenHash, _dateTimeProvider.UtcNow.AddHours(24), _dateTimeProvider.UtcNow);
         await _userRepository.UpdateAsync(user, cancellationToken);
 
         try {

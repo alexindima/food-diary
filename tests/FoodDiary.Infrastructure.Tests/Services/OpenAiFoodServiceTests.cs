@@ -3,6 +3,7 @@ using FoodDiary.Application.Admin.Models;
 using FoodDiary.Application.Ai.Common;
 using FoodDiary.Application.Ai.Models;
 using FoodDiary.Application.Common.Interfaces.Persistence;
+using FoodDiary.Application.Common.Interfaces.Services;
 using FoodDiary.Domain.Entities.Ai;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -21,7 +22,8 @@ public sealed class OpenAiFoodServiceTests {
             Microsoft.Extensions.Options.Options.Create(new OpenAiOptions { ApiKey = "test-key", TextModel = "test-model" }),
             NullLogger<OpenAiFoodService>.Instance,
             new StubAiUsageRepository(),
-            new StubUserRepository());
+            new StubUserRepository(),
+            new StubDateTimeProvider());
 
         var result = await service.CalculateNutritionAsync(
             [new FoodVisionItemModel("Apple", null, 100m, "g", 0.9m)],
@@ -73,7 +75,8 @@ public sealed class OpenAiFoodServiceTests {
             }),
             NullLogger<OpenAiFoodService>.Instance,
             usageRepository,
-            new StubUserRepository());
+            new StubUserRepository(),
+            new StubDateTimeProvider());
 
         var result = await service.AnalyzeFoodImageAsync(
             "https://cdn.example.com/meal.webp",
@@ -99,7 +102,8 @@ public sealed class OpenAiFoodServiceTests {
             Microsoft.Extensions.Options.Options.Create(new OpenAiOptions { ApiKey = "test-key", TextModel = "test-model" }),
             NullLogger<OpenAiFoodService>.Instance,
             new StubAiUsageRepository(new AiUsageTotals(5_000_000, 0)),
-            new StubUserRepository());
+            new StubUserRepository(),
+            new StubDateTimeProvider());
 
         var result = await service.CalculateNutritionAsync(
             [new FoodVisionItemModel("Apple", null, 100m, "g", 0.9m)],
@@ -136,7 +140,8 @@ public sealed class OpenAiFoodServiceTests {
             Microsoft.Extensions.Options.Options.Create(new OpenAiOptions { ApiKey = "test-key", TextModel = "test-model" }),
             NullLogger<OpenAiFoodService>.Instance,
             new StubAiUsageRepository(),
-            new StubUserRepository());
+            new StubUserRepository(),
+            new StubDateTimeProvider());
 
         var result = await service.CalculateNutritionAsync(
             [new FoodVisionItemModel("Apple", null, 100m, "g", 0.9m)],
@@ -167,7 +172,8 @@ public sealed class OpenAiFoodServiceTests {
             Microsoft.Extensions.Options.Options.Create(new OpenAiOptions { ApiKey = "test-key", TextModel = "test-model" }),
             NullLogger<OpenAiFoodService>.Instance,
             new StubAiUsageRepository(),
-            new StubUserRepository());
+            new StubUserRepository(),
+            new StubDateTimeProvider());
 
         var result = await service.CalculateNutritionAsync(
             [new FoodVisionItemModel("Apple", null, 100m, "g", 0.9m)],
@@ -245,5 +251,9 @@ public sealed class OpenAiFoodServiceTests {
         public Task<IReadOnlyList<Role>> GetRolesByNamesAsync(IReadOnlyList<string> names, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User> AddAsync(User user, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task UpdateAsync(User user, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+    }
+
+    private sealed class StubDateTimeProvider : IDateTimeProvider {
+        public DateTime UtcNow { get; } = new(2026, 3, 28, 12, 0, 0, DateTimeKind.Utc);
     }
 }

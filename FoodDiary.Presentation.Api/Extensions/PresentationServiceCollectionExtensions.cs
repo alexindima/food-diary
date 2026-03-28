@@ -40,6 +40,7 @@ public static class PresentationServiceCollectionExtensions {
         services.AddScoped<TelegramBotSecretAuthorizationFilter>();
         services.AddSingleton<IUserIdProvider, UserIdProvider>();
         services.AddScoped<IEmailVerificationNotifier, EmailVerificationNotifier>();
+        services.AddScoped<IPresentationClock, PresentationClock>();
         return services;
     }
 }

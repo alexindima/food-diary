@@ -1,4 +1,5 @@
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Application.Common.Interfaces.Services;
 using FoodDiary.Infrastructure.Authentication;
 using FoodDiary.Infrastructure.Options;
 using Microsoft.Extensions.Options;
@@ -8,7 +9,7 @@ namespace FoodDiary.Infrastructure.Tests.Authentication;
 public sealed class JwtTokenGeneratorTests {
     [Fact]
     public void GenerateAndValidateToken_RoundTrip_Succeeds() {
-        var generator = new JwtTokenGenerator(CreateOptions());
+        var generator = new JwtTokenGenerator(CreateOptions(), new StubDateTimeProvider());
         var userId = UserId.New();
         const string email = "user@example.com";
 
@@ -22,7 +23,7 @@ public sealed class JwtTokenGeneratorTests {
 
     [Fact]
     public void ValidateToken_WithInvalidToken_ReturnsNull() {
-        var generator = new JwtTokenGenerator(CreateOptions());
+        var generator = new JwtTokenGenerator(CreateOptions(), new StubDateTimeProvider());
 
         var validated = generator.ValidateToken("not-a-jwt-token");
 
@@ -31,7 +32,7 @@ public sealed class JwtTokenGeneratorTests {
 
     [Fact]
     public void GenerateAccessToken_WithInvalidExpirationValues_UsesFallbacks() {
-        var generator = new JwtTokenGenerator(CreateOptions(expirationMinutes: -1, refreshDays: 0));
+        var generator = new JwtTokenGenerator(CreateOptions(expirationMinutes: -1, refreshDays: 0), new StubDateTimeProvider());
         var userId = UserId.New();
 
         var token = generator.GenerateAccessToken(userId, "fallback@example.com", []);
@@ -45,7 +46,7 @@ public sealed class JwtTokenGeneratorTests {
     public void Constructor_WithoutSecretKey_Throws() {
         var options = CreateOptions(includeSecret: false);
 
-        var ex = Assert.Throws<InvalidOperationException>(() => new JwtTokenGenerator(options));
+        var ex = Assert.Throws<InvalidOperationException>(() => new JwtTokenGenerator(options, new StubDateTimeProvider()));
         Assert.Contains("SecretKey", ex.Message, StringComparison.OrdinalIgnoreCase);
     }
 
@@ -60,5 +61,9 @@ public sealed class JwtTokenGeneratorTests {
             ExpirationMinutes = expirationMinutes,
             RefreshTokenExpirationDays = refreshDays,
         });
+    }
+
+    private sealed class StubDateTimeProvider : IDateTimeProvider {
+        public DateTime UtcNow { get; } = new(2030, 3, 28, 12, 0, 0, DateTimeKind.Utc);
     }
 }

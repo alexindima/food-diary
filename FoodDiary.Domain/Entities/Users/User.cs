@@ -131,14 +131,20 @@ public sealed partial class User : AggregateRoot<UserId> {
         return value.ToUniversalTime();
     }
 
+    private static DateTime NormalizeOptionalAuditTimestamp(DateTime? value, string paramName) {
+        return value.HasValue
+            ? NormalizeUtcTimestamp(value.Value, paramName)
+            : DomainTime.UtcNow;
+    }
+
     private static void EnsureFutureUtc(DateTime value, string paramName) {
-        if (value <= DateTime.UtcNow) {
+        if (value <= DomainTime.UtcNow) {
             throw new ArgumentOutOfRangeException(paramName, "Date must be in the future (UTC).");
         }
     }
 
     private static void EnsureBirthDateIsNotFuture(DateTime? birthDate) {
-        if (birthDate.HasValue && birthDate.Value.Date > DateTime.UtcNow.Date) {
+        if (birthDate.HasValue && birthDate.Value.Date > DomainTime.UtcNow.Date) {
             throw new ArgumentOutOfRangeException(nameof(birthDate), "Birth date cannot be in the future.");
         }
     }

@@ -26,7 +26,7 @@ public sealed class RecentItem : Entity<RecentItemId> {
             throw new ArgumentException("ItemId cannot be empty.", nameof(itemId));
         }
 
-        var now = NormalizeUtc(usedAtUtc ?? DateTime.UtcNow);
+        var now = NormalizeUtc(usedAtUtc ?? DomainTime.UtcNow);
 
         var recentItem = new RecentItem {
             Id = RecentItemId.New(),
@@ -42,7 +42,7 @@ public sealed class RecentItem : Entity<RecentItemId> {
     }
 
     public void Touch(DateTime? usedAtUtc = null) {
-        LastUsedAtUtc = NormalizeUtc(usedAtUtc ?? DateTime.UtcNow);
+        LastUsedAtUtc = NormalizeUtc(usedAtUtc ?? DomainTime.UtcNow);
         if (UsageCount < int.MaxValue) {
             UsageCount += 1;
         }

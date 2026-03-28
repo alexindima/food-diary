@@ -39,7 +39,7 @@ public class RegisterCommandHandler(
 
         var emailToken = SecurityTokenGenerator.GenerateUrlSafeToken();
         var emailTokenHash = passwordHasher.Hash(emailToken);
-        user.SetEmailConfirmationToken(emailTokenHash, dateTimeProvider.UtcNow.AddHours(24));
+        user.SetEmailConfirmationToken(emailTokenHash, dateTimeProvider.UtcNow.AddHours(24), dateTimeProvider.UtcNow);
 
         var tokens = await authenticationTokenService.IssueAndStoreAsync(user, cancellationToken);
 

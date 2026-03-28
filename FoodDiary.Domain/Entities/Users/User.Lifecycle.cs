@@ -3,19 +3,21 @@ using FoodDiary.Domain.Events;
 namespace FoodDiary.Domain.Entities.Users;
 
 public sealed partial class User {
-    public void Deactivate() {
+    public void Deactivate(DateTime? changedAtUtc = null) {
         EnsureNotDeleted();
+        var effectiveChangedAtUtc = NormalizeOptionalAuditTimestamp(changedAtUtc, nameof(changedAtUtc));
         IsActive = false;
-        SetModified();
+        SetModified(effectiveChangedAtUtc);
     }
 
-    public void Activate() {
+    public void Activate(DateTime? changedAtUtc = null) {
         if (DeletedAt is not null) {
             throw new InvalidOperationException("Deleted user cannot be activated directly. Use Restore().");
         }
 
+        var effectiveChangedAtUtc = NormalizeOptionalAuditTimestamp(changedAtUtc, nameof(changedAtUtc));
         IsActive = true;
-        SetModified();
+        SetModified(effectiveChangedAtUtc);
     }
 
     public void MarkDeleted(DateTime deletedAtUtc) {
@@ -27,18 +29,19 @@ public sealed partial class User {
 
         DeletedAt = normalizedDeletedAtUtc;
         IsActive = false;
-        RaiseDomainEvent(new UserDeletedDomainEvent(Id, normalizedDeletedAtUtc));
-        SetModified();
+        RaiseDomainEvent(new UserDeletedDomainEvent(Id, normalizedDeletedAtUtc, normalizedDeletedAtUtc));
+        SetModified(normalizedDeletedAtUtc);
     }
 
-    public void Restore() {
+    public void Restore(DateTime? restoredAtUtc = null) {
         if (DeletedAt is null && IsActive) {
             return;
         }
 
+        var normalizedRestoredAtUtc = NormalizeOptionalAuditTimestamp(restoredAtUtc, nameof(restoredAtUtc));
         DeletedAt = null;
         IsActive = true;
-        RaiseDomainEvent(new UserRestoredDomainEvent(Id));
-        SetModified();
+        RaiseDomainEvent(new UserRestoredDomainEvent(Id, normalizedRestoredAtUtc));
+        SetModified(normalizedRestoredAtUtc);
     }
 }

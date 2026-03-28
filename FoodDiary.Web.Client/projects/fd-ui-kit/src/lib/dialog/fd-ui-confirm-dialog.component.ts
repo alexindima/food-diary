@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { TranslateModule } from '@ngx-translate/core';
 import { FdUiDialogComponent } from './fd-ui-dialog.component';
+import { FdUiDialogFooterDirective } from './fd-ui-dialog-footer.directive';
 import { FdUiButtonComponent } from '../button/fd-ui-button.component';
 
 export interface FdUiConfirmDialogData {
@@ -16,7 +17,7 @@ export interface FdUiConfirmDialogData {
 @Component({
     selector: 'fd-ui-confirm-dialog',
     standalone: true,
-    imports: [TranslateModule, FdUiDialogComponent, FdUiButtonComponent],
+    imports: [TranslateModule, FdUiDialogComponent, FdUiDialogFooterDirective, FdUiButtonComponent],
     template: `
         <fd-ui-dialog [title]="data.title" size="sm" [dismissible]="false">
             <p class="fd-ui-confirm-dialog__message">{{ data.message }}</p>

@@ -167,7 +167,13 @@
               "builder": "@angular/build:karma",
               "options": {
                 "tsConfig": "projects/fd-ui-kit/tsconfig.spec.json",
-                "polyfills": []
+                "polyfills": [],
+                "stylePreprocessorOptions": {
+                  "includePaths": [
+                    "src/styles",
+                    "projects/fd-ui-kit/src/lib"
+                  ]
+                }
               }
             }
           }

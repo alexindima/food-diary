@@ -29,11 +29,27 @@ public abstract class Entity<TId> : IAuditableEntity, IEquatable<Entity<TId>>
     }
 
     protected void SetCreated() {
-        CreatedOnUtc = DateTime.UtcNow;
+        SetCreated(DomainTime.UtcNow);
+    }
+
+    protected void SetCreated(DateTime createdOnUtc) {
+        CreatedOnUtc = NormalizeUtc(createdOnUtc, nameof(createdOnUtc));
     }
 
     protected void SetModified() {
-        ModifiedOnUtc = DateTime.UtcNow;
+        SetModified(DomainTime.UtcNow);
+    }
+
+    protected void SetModified(DateTime modifiedOnUtc) {
+        ModifiedOnUtc = NormalizeUtc(modifiedOnUtc, nameof(modifiedOnUtc));
+    }
+
+    private static DateTime NormalizeUtc(DateTime value, string paramName) {
+        if (value.Kind == DateTimeKind.Unspecified) {
+            throw new ArgumentOutOfRangeException(paramName, "UTC timestamp kind must be specified.");
+        }
+
+        return value.ToUniversalTime();
     }
 
     #region Equality

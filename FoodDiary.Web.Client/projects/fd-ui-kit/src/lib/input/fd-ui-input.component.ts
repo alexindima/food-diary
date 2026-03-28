@@ -1,4 +1,4 @@
-﻿import { ChangeDetectionStrategy, Component, forwardRef, input, output } from '@angular/core';
+﻿import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, inject, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
@@ -22,6 +22,8 @@ let uniqueId = 0;
     ],
 })
 export class FdUiInputComponent implements ControlValueAccessor {
+    private readonly cdr = inject(ChangeDetectorRef);
+
     public readonly id = input(`fd-ui-input-${uniqueId++}`);
     public readonly label = input<string>();
     public readonly placeholder = input<string>();
@@ -57,6 +59,7 @@ export class FdUiInputComponent implements ControlValueAccessor {
 
     public writeValue(value: string | number | null): void {
         this.internalValue = value ?? '';
+        this.cdr.markForCheck();
     }
 
     public registerOnChange(fn: (value: string) => void): void {
@@ -69,6 +72,7 @@ export class FdUiInputComponent implements ControlValueAccessor {
 
     public setDisabledState(isDisabled: boolean): void {
         this.disabled = isDisabled;
+        this.cdr.markForCheck();
     }
 
     protected onInput(value: string): void {

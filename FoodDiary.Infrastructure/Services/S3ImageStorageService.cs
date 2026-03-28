@@ -1,6 +1,7 @@
 using System.Net.Mime;
 using Amazon.S3;
 using Amazon.S3.Model;
+using FoodDiary.Application.Common.Interfaces.Services;
 using FoodDiary.Application.Images.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Options;
@@ -10,7 +11,8 @@ namespace FoodDiary.Infrastructure.Services;
 
 public sealed class S3ImageStorageService(
     IAmazonS3 s3Client,
-    IOptions<S3Options> options) : IImageStorageService {
+    IOptions<S3Options> options,
+    IDateTimeProvider dateTimeProvider) : IImageStorageService {
     private static readonly HashSet<string> AllowedContentTypes = new(StringComparer.OrdinalIgnoreCase) {
         MediaTypeNames.Image.Jpeg,
         "image/png",
@@ -44,7 +46,7 @@ public sealed class S3ImageStorageService(
         var normalizedName = NormalizeFileName(fileName);
         var key = $"users/{userId.Value:D}/images/{Guid.NewGuid():N}-{normalizedName}";
 
-        var expiresAt = DateTime.UtcNow.AddMinutes(15);
+        var expiresAt = dateTimeProvider.UtcNow.AddMinutes(15);
         var presignedRequest = new GetPreSignedUrlRequest {
             BucketName = _options.Bucket,
             Key = key,

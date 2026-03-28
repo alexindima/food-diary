@@ -2,12 +2,13 @@ using System.Security.Cryptography;
 using System.Text;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Authentication.Abstractions;
+using FoodDiary.Application.Common.Interfaces.Services;
 using FoodDiary.Infrastructure.Options;
 using Microsoft.Extensions.Options;
 
 namespace FoodDiary.Infrastructure.Authentication;
 
-public sealed class TelegramLoginWidgetValidator(IOptions<TelegramAuthOptions> options) : ITelegramLoginWidgetValidator {
+public sealed class TelegramLoginWidgetValidator(IOptions<TelegramAuthOptions> options, IDateTimeProvider dateTimeProvider) : ITelegramLoginWidgetValidator {
     private readonly TelegramAuthOptions _options = options.Value;
 
     public Result<TelegramInitData> ValidateLoginWidget(TelegramLoginWidgetData data) {
@@ -27,7 +28,7 @@ public sealed class TelegramLoginWidgetValidator(IOptions<TelegramAuthOptions> o
         var authDateUtc = DateTimeOffset.FromUnixTimeSeconds(data.AuthDate).UtcDateTime;
         if (_options.AuthTtlSeconds > 0) {
             var expiresAt = authDateUtc.AddSeconds(_options.AuthTtlSeconds);
-            if (DateTime.UtcNow > expiresAt) {
+            if (dateTimeProvider.UtcNow > expiresAt) {
                 return Result.Failure<TelegramInitData>(Errors.Authentication.TelegramAuthExpired);
             }
         }

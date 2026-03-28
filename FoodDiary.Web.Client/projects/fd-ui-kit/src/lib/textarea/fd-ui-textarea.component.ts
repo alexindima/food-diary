@@ -1,4 +1,4 @@
-﻿import { ChangeDetectionStrategy, Component, forwardRef, input } from '@angular/core';
+﻿import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, inject, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { FdUiFieldSize } from '../types/field-size.type';
@@ -21,6 +21,8 @@ let uniqueId = 0;
     ],
 })
 export class FdUiTextareaComponent implements ControlValueAccessor {
+    private readonly cdr = inject(ChangeDetectorRef);
+
     public readonly id = input(`fd-ui-textarea-${uniqueId++}`);
     public readonly label = input<string>();
     public readonly placeholder = input<string>();
@@ -45,6 +47,7 @@ export class FdUiTextareaComponent implements ControlValueAccessor {
 
     public writeValue(value: string | number | null): void {
         this.internalValue = value === null || value === undefined ? '' : String(value);
+        this.cdr.markForCheck();
     }
 
     public registerOnChange(fn: (value: string) => void): void {
@@ -57,6 +60,7 @@ export class FdUiTextareaComponent implements ControlValueAccessor {
 
     public setDisabledState(isDisabled: boolean): void {
         this.disabled = isDisabled;
+        this.cdr.markForCheck();
     }
 
     protected onInput(value: string): void {

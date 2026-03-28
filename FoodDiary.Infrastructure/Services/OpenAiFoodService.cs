@@ -6,6 +6,7 @@ using System.Text.Json.Nodes;
 using FoodDiary.Application.Ai.Common;
 using FoodDiary.Application.Ai.Models;
 using FoodDiary.Application.Common.Abstractions.Result;
+using FoodDiary.Application.Common.Interfaces.Services;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Domain.Entities.Ai;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -20,7 +21,8 @@ public sealed class OpenAiFoodService(
     IOptions<OpenAiOptions> options,
     ILogger<OpenAiFoodService> logger,
     IAiUsageRepository aiUsageRepository,
-    IUserRepository userRepository)
+    IUserRepository userRepository,
+    IDateTimeProvider dateTimeProvider)
     : IOpenAiFoodService {
     private const int MaxTransientRetries = 2;
     private static readonly TimeSpan[] RetryDelays = [
@@ -374,7 +376,7 @@ public sealed class OpenAiFoodService(
             return Result.Failure(Errors.User.NotFound(userId.Value));
         }
 
-        var nowUtc = DateTime.UtcNow;
+        var nowUtc = dateTimeProvider.UtcNow;
         var monthStartUtc = new DateTime(nowUtc.Year, nowUtc.Month, 1, 0, 0, 0, DateTimeKind.Utc);
         var monthEndUtc = monthStartUtc.AddMonths(1);
         var totals = await _aiUsageRepository.GetUserTotalsAsync(userId, monthStartUtc, monthEndUtc, cancellationToken);

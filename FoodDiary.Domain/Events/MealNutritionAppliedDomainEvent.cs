@@ -11,6 +11,7 @@ public sealed record MealNutritionAppliedDomainEvent(
     double TotalFats,
     double TotalCarbs,
     double TotalFiber,
-    double TotalAlcohol) : IDomainEvent {
-    public DateTime OccurredOnUtc { get; } = DateTime.UtcNow;
+    double TotalAlcohol,
+    DateTime? OccurredOnUtcOverride = null) : IDomainEvent {
+    public DateTime OccurredOnUtc { get; } = OccurredOnUtcOverride ?? Common.DomainTime.UtcNow;
 }

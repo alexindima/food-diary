@@ -34,7 +34,7 @@ public sealed class RequestPasswordResetCommandHandler(
         var tokenHash = passwordHasher.Hash(token);
         var expiresAtUtc = nowUtc.Add(TokenLifetime);
 
-        user.SetPasswordResetToken(tokenHash, expiresAtUtc);
+        user.SetPasswordResetToken(tokenHash, expiresAtUtc, nowUtc);
         await userRepository.UpdateAsync(user, cancellationToken);
 
         try {

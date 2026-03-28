@@ -5,13 +5,15 @@ using FoodDiary.Application.Authentication.Common;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
+using FoodDiary.Application.Common.Interfaces.Services;
 
 namespace FoodDiary.Application.Authentication.Commands.RestoreAccount;
 
 public class RestoreAccountCommandHandler(
     IUserRepository userRepository,
     IPasswordHasher passwordHasher,
-    IAuthenticationTokenService authenticationTokenService)
+    IAuthenticationTokenService authenticationTokenService,
+    IDateTimeProvider dateTimeProvider)
     : ICommandHandler<RestoreAccountCommand, Result<AuthenticationModel>> {
     public async Task<Result<AuthenticationModel>> Handle(RestoreAccountCommand command, CancellationToken cancellationToken) {
         var user = await userRepository.GetByEmailIncludingDeletedAsync(command.Email, cancellationToken);
@@ -23,7 +25,7 @@ public class RestoreAccountCommandHandler(
             return Result.Failure<AuthenticationModel>(Errors.Authentication.AccountNotDeleted);
         }
 
-        user.Restore();
+        user.Restore(dateTimeProvider.UtcNow);
 
         var tokens = await authenticationTokenService.IssueAndStoreAsync(user, cancellationToken);
         return Result.Success(user.ToAuthenticationModel(tokens));

@@ -3,6 +3,7 @@ using FoodDiary.Presentation.Api.Features.Hydration.Mappings;
 using FoodDiary.Presentation.Api.Features.Hydration.Requests;
 using FoodDiary.Presentation.Api.Features.Hydration.Responses;
 using FoodDiary.Presentation.Api.Responses;
+using FoodDiary.Presentation.Api.Services;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,18 +12,18 @@ namespace FoodDiary.Presentation.Api.Features.Hydration;
 
 [ApiController]
 [Route("api/hydrations")]
-public class HydrationEntriesController(ISender mediator) : AuthorizedController(mediator) {
+public class HydrationEntriesController(ISender mediator, IPresentationClock clock) : AuthorizedController(mediator) {
     [HttpGet]
     [ProducesResponseType<List<HydrationEntryHttpResponse>>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     public Task<IActionResult> GetByDate([FromCurrentUser] Guid userId, [FromQuery] GetHydrationEntriesHttpQuery query) =>
-        HandleOk(query.ToEntriesQuery(userId), static value => value.Select(item => item.ToHttpResponse()).ToList());
+        HandleOk(query.ToEntriesQuery(userId, clock.UtcNow), static value => value.Select(item => item.ToHttpResponse()).ToList());
 
     [HttpGet("daily")]
     [ProducesResponseType<HydrationDailyHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     public Task<IActionResult> GetDaily([FromCurrentUser] Guid userId, [FromQuery] GetHydrationEntriesHttpQuery query) =>
-        HandleOk(query.ToDailyQuery(userId), static value => value.ToHttpResponse());
+        HandleOk(query.ToDailyQuery(userId, clock.UtcNow), static value => value.ToHttpResponse());
 
     [HttpPost]
     [ProducesResponseType<HydrationEntryHttpResponse>(StatusCodes.Status200OK)]

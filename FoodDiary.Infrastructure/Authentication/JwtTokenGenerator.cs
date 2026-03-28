@@ -2,6 +2,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using FoodDiary.Application.Authentication.Abstractions;
+using FoodDiary.Application.Common.Interfaces.Services;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Options;
 using Microsoft.Extensions.Options;
@@ -10,14 +11,16 @@ using Microsoft.IdentityModel.Tokens;
 namespace FoodDiary.Infrastructure.Authentication;
 
 public class JwtTokenGenerator : IJwtTokenGenerator {
+    private readonly IDateTimeProvider _dateTimeProvider;
     private readonly string _issuer;
     private readonly string _audience;
     private readonly SymmetricSecurityKey _signingKey;
     private readonly int _accessTokenExpirationMinutes;
     private readonly int _refreshTokenExpirationMinutes;
 
-    public JwtTokenGenerator(IOptions<JwtOptions> options) {
+    public JwtTokenGenerator(IOptions<JwtOptions> options, IDateTimeProvider dateTimeProvider) {
         var jwtOptions = options.Value;
+        _dateTimeProvider = dateTimeProvider;
         var secretKey = jwtOptions.SecretKey;
         _issuer = jwtOptions.Issuer;
         _audience = jwtOptions.Audience;
@@ -87,7 +90,7 @@ public class JwtTokenGenerator : IJwtTokenGenerator {
             issuer: _issuer,
             audience: _audience,
             claims: claims,
-            expires: DateTime.UtcNow.AddMinutes(expirationMinutes),
+            expires: _dateTimeProvider.UtcNow.AddMinutes(expirationMinutes),
             signingCredentials: credentials);
 
         return new JwtSecurityTokenHandler().WriteToken(token);

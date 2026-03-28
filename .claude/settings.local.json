@@ -41,7 +41,11 @@
       "Read(//tmp/**)",
       "Bash(dotnet test:*)",
       "Bash(while read:*)",
-      "Bash(do sed:*)"
+      "Bash(do sed:*)",
+      "Bash(grep -r \"lazy\\\\|loadChildren\" FoodDiary.Web.Client/src/app/*.ts)",
+      "Bash(wc -l FoodDiary.Web.Client/src/app/**/*.ts)",
+      "Bash(find /c/Users/alexi/OneDrive/Документы/GitHub/food-diary/FoodDiary.Web.Client -maxdepth 1 -name *.json -type f)",
+      "Bash(npx ng:*)"
     ],
     "deny": [],
     "ask": []
