@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 
 namespace FoodDiary.Application.Authentication.Commands.ResendEmailVerification;
 
-public class ResendEmailVerificationCommandHandler : ICommandHandler<ResendEmailVerificationCommand, Result<bool>> {
+public class ResendEmailVerificationCommandHandler : ICommandHandler<ResendEmailVerificationCommand, Result> {
     private static readonly TimeSpan ResendCooldown = TimeSpan.FromMinutes(1);
     private readonly IUserRepository _userRepository;
     private readonly IPasswordHasher _passwordHasher;
@@ -29,20 +29,20 @@ public class ResendEmailVerificationCommandHandler : ICommandHandler<ResendEmail
         _logger = logger;
     }
 
-    public async Task<Result<bool>> Handle(ResendEmailVerificationCommand command, CancellationToken cancellationToken) {
+    public async Task<Result> Handle(ResendEmailVerificationCommand command, CancellationToken cancellationToken) {
         var user = await _userRepository.GetByIdAsync(new UserId(command.UserId), cancellationToken);
         if (user is null) {
-            return Result.Failure<bool>(Errors.User.NotFound());
+            return Result.Failure(Errors.User.NotFound());
         }
 
         if (user.IsEmailConfirmed) {
-            return Result.Success(true);
+            return Result.Success();
         }
 
         if (user.EmailConfirmationSentAtUtc.HasValue) {
             var elapsed = _dateTimeProvider.UtcNow - user.EmailConfirmationSentAtUtc.Value;
             if (elapsed < ResendCooldown) {
-                return Result.Failure<bool>(
+                return Result.Failure(
                     Errors.Validation.Invalid(
                         "EmailVerification",
                         "Verification email was sent recently. Please wait before requesting a new one."));
@@ -60,12 +60,12 @@ public class ResendEmailVerificationCommandHandler : ICommandHandler<ResendEmail
                 cancellationToken);
         } catch (Exception ex) {
             _logger.LogError(ex, "Email verification dispatch failed.");
-            return Result.Failure<bool>(
+            return Result.Failure(
                 Errors.Validation.Invalid(
                     "EmailVerification",
                     "Failed to send verification email."));
         }
 
-        return Result.Success(true);
+        return Result.Success();
     }
 }

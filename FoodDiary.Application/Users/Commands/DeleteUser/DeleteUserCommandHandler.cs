@@ -10,22 +10,22 @@ namespace FoodDiary.Application.Users.Commands.DeleteUser;
 public class DeleteUserCommandHandler(
     IUserRepository userRepository,
     IDateTimeProvider dateTimeProvider)
-    : ICommandHandler<DeleteUserCommand, Result<bool>> {
-    public async Task<Result<bool>> Handle(DeleteUserCommand command, CancellationToken cancellationToken) {
+    : ICommandHandler<DeleteUserCommand, Result> {
+    public async Task<Result> Handle(DeleteUserCommand command, CancellationToken cancellationToken) {
         if (command.UserId is null || command.UserId == Guid.Empty) {
-            return Result.Failure<bool>(Errors.Authentication.InvalidToken);
+            return Result.Failure(Errors.Authentication.InvalidToken);
         }
 
         var userId = new UserId(command.UserId!.Value);
         var user = await userRepository.GetByIdAsync(userId, cancellationToken);
         if (user is null) {
-            return Result.Failure<bool>(User.NotFound(userId));
+            return Result.Failure(User.NotFound(userId));
         }
 
         user.UpdateRefreshToken(null, dateTimeProvider.UtcNow);
         user.MarkDeleted(dateTimeProvider.UtcNow);
         await userRepository.UpdateAsync(user, cancellationToken);
 
-        return Result.Success(true);
+        return Result.Success();
     }
 }

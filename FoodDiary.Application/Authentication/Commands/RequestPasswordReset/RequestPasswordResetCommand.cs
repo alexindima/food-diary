@@ -3,4 +3,4 @@ using FoodDiary.Application.Common.Abstractions.Result;
 
 namespace FoodDiary.Application.Authentication.Commands.RequestPasswordReset;
 
-public record RequestPasswordResetCommand(string Email) : ICommand<Result<bool>>;
+public record RequestPasswordResetCommand(string Email) : ICommand<Result>;

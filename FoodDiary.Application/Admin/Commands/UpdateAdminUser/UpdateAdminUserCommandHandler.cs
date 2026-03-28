@@ -26,11 +26,7 @@ public sealed class UpdateAdminUserCommandHandler(IUserRepository userRepository
         }
 
         if (command.IsActive.HasValue) {
-            if (command.IsActive.Value) {
-                user.Activate();
-            } else {
-                user.Deactivate();
-            }
+            user.SetActive(command.IsActive.Value);
         }
 
         if (command.IsEmailConfirmed.HasValue) {
@@ -43,7 +39,7 @@ public sealed class UpdateAdminUserCommandHandler(IUserRepository userRepository
         }
 
         if (languageResult.Value is not null) {
-            user.UpdatePreferences(language: languageResult.Value);
+            user.SetLanguage(languageResult.Value);
         }
 
         if (command.Roles is not null) {
@@ -68,17 +64,9 @@ public sealed class UpdateAdminUserCommandHandler(IUserRepository userRepository
         }
 
         if (command.AiInputTokenLimit.HasValue || command.AiOutputTokenLimit.HasValue) {
-            if (command.AiInputTokenLimit is < 0) {
-                return Result.Failure<AdminUserModel>(
-                    Errors.Validation.Invalid("aiInputTokenLimit", "AI input token limit must be non-negative."));
-            }
-
-            if (command.AiOutputTokenLimit is < 0) {
-                return Result.Failure<AdminUserModel>(
-                    Errors.Validation.Invalid("aiOutputTokenLimit", "AI output token limit must be non-negative."));
-            }
-
-            user.UpdateAiTokenLimits(command.AiInputTokenLimit, command.AiOutputTokenLimit);
+            user.UpdateAiTokenLimits(new UserAiTokenLimitUpdate(
+                InputLimit: command.AiInputTokenLimit,
+                OutputLimit: command.AiOutputTokenLimit));
         }
 
         await userRepository.UpdateAsync(user, cancellationToken);

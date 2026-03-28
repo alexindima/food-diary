@@ -73,7 +73,7 @@ describe('ImageUploadService', () => {
         service.uploadToPresignedUrl(presignedUrl, file).subscribe();
 
         const req = httpMock.expectOne(presignedUrl);
-        expect(req.request.context.get(SKIP_AUTH)).toBeTrue();
+        expect(req.request.context.get(SKIP_AUTH)).toBe(true);
         req.flush('', { status: 200, statusText: 'OK' });
     });
 

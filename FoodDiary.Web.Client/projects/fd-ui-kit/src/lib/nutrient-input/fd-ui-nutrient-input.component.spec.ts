@@ -40,7 +40,7 @@ describe('FdUiNutrientInputComponent', () => {
     });
 
     it('should emit onChange on input', () => {
-        const onChangeSpy = jasmine.createSpy('onChange');
+        const onChangeSpy = vi.fn();
         component.registerOnChange(onChangeSpy);
 
         const inputEl = fixture.nativeElement.querySelector('input') as HTMLInputElement;
@@ -52,7 +52,7 @@ describe('FdUiNutrientInputComponent', () => {
 
     it('should sanitize non-numeric characters for number type', () => {
         component.type = 'number';
-        const onChangeSpy = jasmine.createSpy('onChange');
+        const onChangeSpy = vi.fn();
         component.registerOnChange(onChangeSpy);
 
         const inputEl = fixture.nativeElement.querySelector('input') as HTMLInputElement;
@@ -65,7 +65,7 @@ describe('FdUiNutrientInputComponent', () => {
 
     it('should replace comma with dot in number type', () => {
         component.type = 'number';
-        const onChangeSpy = jasmine.createSpy('onChange');
+        const onChangeSpy = vi.fn();
         component.registerOnChange(onChangeSpy);
 
         const inputEl = fixture.nativeElement.querySelector('input') as HTMLInputElement;
@@ -77,7 +77,7 @@ describe('FdUiNutrientInputComponent', () => {
 
     it('should not sanitize text type input', () => {
         component.type = 'text';
-        const onChangeSpy = jasmine.createSpy('onChange');
+        const onChangeSpy = vi.fn();
         component.registerOnChange(onChangeSpy);
 
         const inputEl = fixture.nativeElement.querySelector('input') as HTMLInputElement;
@@ -89,18 +89,18 @@ describe('FdUiNutrientInputComponent', () => {
     });
 
     it('should set disabled state', () => {
-        expect(component.disabled).toBeFalse();
+        expect(component.disabled).toBe(false);
 
         component.setDisabledState(true);
         fixture.detectChanges();
 
-        expect(component.disabled).toBeTrue();
+        expect(component.disabled).toBe(true);
         const inputEl = fixture.nativeElement.querySelector('input') as HTMLInputElement;
-        expect(inputEl.disabled).toBeTrue();
+        expect(inputEl.disabled).toBe(true);
     });
 
     it('should call onTouched on blur', () => {
-        const onTouchedSpy = jasmine.createSpy('onTouched');
+        const onTouchedSpy = vi.fn();
         component.registerOnTouched(onTouchedSpy);
 
         const inputEl = fixture.nativeElement.querySelector('input') as HTMLInputElement;

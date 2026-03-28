@@ -10,21 +10,21 @@ namespace FoodDiary.Application.Users.Commands.ChangePassword;
 public class ChangePasswordCommandHandler(
     IUserRepository userRepository,
     IPasswordHasher passwordHasher)
-    : ICommandHandler<ChangePasswordCommand, Result<bool>> {
-    public async Task<Result<bool>> Handle(ChangePasswordCommand command, CancellationToken cancellationToken) {
+    : ICommandHandler<ChangePasswordCommand, Result> {
+    public async Task<Result> Handle(ChangePasswordCommand command, CancellationToken cancellationToken) {
         if (command.UserId is null || command.UserId == Guid.Empty) {
-            return Result.Failure<bool>(Errors.Authentication.InvalidToken);
+            return Result.Failure(Errors.Authentication.InvalidToken);
         }
 
         var userId = new UserId(command.UserId!.Value);
         var user = await userRepository.GetByIdAsync(userId, cancellationToken);
         if (user is null) {
-            return Result.Failure<bool>(User.NotFound(userId));
+            return Result.Failure(User.NotFound(userId));
         }
 
         var isCurrentPasswordValid = passwordHasher.Verify(command.CurrentPassword, user.Password);
         if (!isCurrentPasswordValid) {
-            return Result.Failure<bool>(User.InvalidPassword);
+            return Result.Failure(User.InvalidPassword);
         }
 
         var hashedPassword = passwordHasher.Hash(command.NewPassword);
@@ -32,6 +32,6 @@ public class ChangePasswordCommandHandler(
 
         await userRepository.UpdateAsync(user, cancellationToken);
 
-        return Result.Success(true);
+        return Result.Success();
     }
 }

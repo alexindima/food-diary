@@ -81,7 +81,7 @@ describe('ProductService', () => {
         service.query(1, 10, filters).subscribe();
 
         const req = httpMock.expectOne(r => r.url === `${baseUrl}/` && r.method === 'GET');
-        expect(req.request.params.has('search')).toBeFalse();
+        expect(req.request.params.has('search')).toBe(false);
         req.flush(mockPage);
     });
 

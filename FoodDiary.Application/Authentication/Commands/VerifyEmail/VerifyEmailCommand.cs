@@ -5,4 +5,4 @@ namespace FoodDiary.Application.Authentication.Commands.VerifyEmail;
 
 public record VerifyEmailCommand(
     Guid UserId,
-    string Token) : ICommand<Result<bool>>;
+    string Token) : ICommand<Result>;

@@ -10,10 +10,11 @@ describe('LocalizedDatePipe', () => {
     beforeEach(() => {
         onLangChange = new Subject<LangChangeEvent>();
 
-        const translateSpy = jasmine.createSpyObj('TranslateService', ['getCurrentLang'], {
+        const translateSpy = {
+            getCurrentLang: vi.fn(),
             onLangChange: onLangChange.asObservable(),
-        });
-        translateSpy.getCurrentLang.and.returnValue('en');
+        } as any;
+        translateSpy.getCurrentLang.mockReturnValue('en');
 
         TestBed.configureTestingModule({
             providers: [

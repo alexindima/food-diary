@@ -76,7 +76,7 @@ describe('FdUiTextareaComponent', () => {
     });
 
     it('should call onChange on input', () => {
-        const onChangeSpy = jasmine.createSpy('onChange');
+        const onChangeSpy = vi.fn();
         component.registerOnChange(onChangeSpy);
 
         const textarea = el.querySelector<HTMLTextAreaElement>('.fd-ui-textarea__control')!;
@@ -87,7 +87,7 @@ describe('FdUiTextareaComponent', () => {
     });
 
     it('should call onTouched on blur', () => {
-        const onTouchedSpy = jasmine.createSpy('onTouched');
+        const onTouchedSpy = vi.fn();
         component.registerOnTouched(onTouchedSpy);
 
         const textarea = el.querySelector<HTMLTextAreaElement>('.fd-ui-textarea__control')!;
@@ -101,11 +101,11 @@ describe('FdUiTextareaComponent', () => {
         fixture.detectChanges();
 
         const textarea = el.querySelector<HTMLTextAreaElement>('.fd-ui-textarea__control')!;
-        expect(textarea.disabled).toBeTrue();
+        expect(textarea.disabled).toBe(true);
     });
 
     it('should not process input when disabled', () => {
-        const onChangeSpy = jasmine.createSpy('onChange');
+        const onChangeSpy = vi.fn();
         component.registerOnChange(onChangeSpy);
         component.setDisabledState(true);
 
@@ -190,13 +190,13 @@ describe('FdUiTextareaComponent', () => {
         });
 
         it('should mark control as touched on blur', () => {
-            expect(hostComponent.ctrl.touched).toBeFalse();
+            expect(hostComponent.ctrl.touched).toBe(false);
 
             const textarea = (hostFixture.nativeElement as HTMLElement).querySelector<HTMLTextAreaElement>('.fd-ui-textarea__control')!;
             textarea.dispatchEvent(new Event('blur'));
             hostFixture.detectChanges();
 
-            expect(hostComponent.ctrl.touched).toBeTrue();
+            expect(hostComponent.ctrl.touched).toBe(true);
         });
 
         it('should disable textarea when FormControl is disabled', () => {
@@ -204,7 +204,7 @@ describe('FdUiTextareaComponent', () => {
             hostFixture.detectChanges();
 
             const textarea = (hostFixture.nativeElement as HTMLElement).querySelector<HTMLTextAreaElement>('.fd-ui-textarea__control')!;
-            expect(textarea.disabled).toBeTrue();
+            expect(textarea.disabled).toBe(true);
         });
     });
 });

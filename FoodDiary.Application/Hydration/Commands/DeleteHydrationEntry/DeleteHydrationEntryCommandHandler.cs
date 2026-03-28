@@ -6,10 +6,10 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.Hydration.Commands.DeleteHydrationEntry;
 
 public class DeleteHydrationEntryCommandHandler(IHydrationEntryRepository repository)
-    : ICommandHandler<DeleteHydrationEntryCommand, Result<bool>> {
-    public async Task<Result<bool>> Handle(DeleteHydrationEntryCommand command, CancellationToken cancellationToken) {
+    : ICommandHandler<DeleteHydrationEntryCommand, Result> {
+    public async Task<Result> Handle(DeleteHydrationEntryCommand command, CancellationToken cancellationToken) {
         if (command.UserId is null || command.UserId == Guid.Empty) {
-            return Result.Failure<bool>(Errors.Authentication.InvalidToken);
+            return Result.Failure(Errors.Authentication.InvalidToken);
         }
 
         var userId = new UserId(command.UserId!.Value);
@@ -17,10 +17,10 @@ public class DeleteHydrationEntryCommandHandler(IHydrationEntryRepository reposi
 
         var entry = await repository.GetByIdAsync(hydrationEntryId, asTracking: true, cancellationToken: cancellationToken);
         if (entry is null || entry.UserId != userId) {
-            return Result.Failure<bool>(Errors.HydrationEntry.NotFound(command.HydrationEntryId));
+            return Result.Failure(Errors.HydrationEntry.NotFound(command.HydrationEntryId));
         }
 
         await repository.DeleteAsync(entry, cancellationToken);
-        return Result.Success(true);
+        return Result.Success();
     }
 }

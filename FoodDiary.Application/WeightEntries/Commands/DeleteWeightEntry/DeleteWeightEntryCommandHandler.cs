@@ -6,10 +6,10 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.WeightEntries.Commands.DeleteWeightEntry;
 
 public class DeleteWeightEntryCommandHandler(IWeightEntryRepository weightEntryRepository)
-    : ICommandHandler<DeleteWeightEntryCommand, Result<bool>> {
-    public async Task<Result<bool>> Handle(DeleteWeightEntryCommand command, CancellationToken cancellationToken) {
+    : ICommandHandler<DeleteWeightEntryCommand, Result> {
+    public async Task<Result> Handle(DeleteWeightEntryCommand command, CancellationToken cancellationToken) {
         if (command.UserId is null || command.UserId == Guid.Empty) {
-            return Result.Failure<bool>(Errors.Authentication.InvalidToken);
+            return Result.Failure(Errors.Authentication.InvalidToken);
         }
 
         var userId = new UserId(command.UserId!.Value);
@@ -21,10 +21,10 @@ public class DeleteWeightEntryCommandHandler(IWeightEntryRepository weightEntryR
             cancellationToken: cancellationToken);
 
         if (entry is null) {
-            return Result.Failure<bool>(Errors.WeightEntry.NotFound(command.WeightEntryId));
+            return Result.Failure(Errors.WeightEntry.NotFound(command.WeightEntryId));
         }
 
         await weightEntryRepository.DeleteAsync(entry, cancellationToken);
-        return Result.Success(true);
+        return Result.Success();
     }
 }

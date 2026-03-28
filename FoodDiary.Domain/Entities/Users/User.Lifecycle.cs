@@ -3,6 +3,15 @@ using FoodDiary.Domain.Events;
 namespace FoodDiary.Domain.Entities.Users;
 
 public sealed partial class User {
+    public void SetActive(bool isActive, DateTime? changedAtUtc = null) {
+        if (isActive) {
+            Activate(changedAtUtc);
+            return;
+        }
+
+        Deactivate(changedAtUtc);
+    }
+
     public void Deactivate(DateTime? changedAtUtc = null) {
         EnsureNotDeleted();
         var effectiveChangedAtUtc = NormalizeOptionalAuditTimestamp(changedAtUtc, nameof(changedAtUtc));

@@ -183,7 +183,7 @@ jobs:
           set -euo pipefail
           log_file="${RUNNER_TEMP}/frontend-checks-logs/unit-tests.log"
           set +e
-          npx ng test --no-watch --browsers=ChromeHeadless 2>&1 | tee "$log_file"
+          npx ng test 2>&1 | tee "$log_file"
           status=${PIPESTATUS[0]}
           set -e
           if [ "$status" -ne 0 ]; then
@@ -202,7 +202,7 @@ jobs:
           set -euo pipefail
           log_file="${RUNNER_TEMP}/frontend-checks-logs/fd-ui-kit-tests.log"
           set +e
-          npx ng test fd-ui-kit --no-watch --browsers=ChromeHeadless 2>&1 | tee "$log_file"
+          npx ng test fd-ui-kit 2>&1 | tee "$log_file"
           status=${PIPESTATUS[0]}
           set -e
           if [ "$status" -ne 0 ]; then

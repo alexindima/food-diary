@@ -6,10 +6,10 @@ import { FdUiDialogComponent, FdUiDialogData } from './fd-ui-dialog.component';
 describe('FdUiDialogComponent', () => {
     let component: FdUiDialogComponent;
     let fixture: ComponentFixture<FdUiDialogComponent>;
-    let dialogRefSpy: jasmine.SpyObj<MatDialogRef<FdUiDialogComponent>>;
+    let dialogRefSpy: { close: ReturnType<typeof vi.fn> };
 
     function createComponent(data: FdUiDialogData): void {
-        dialogRefSpy = jasmine.createSpyObj('MatDialogRef', ['close']);
+        dialogRefSpy = { close: vi.fn() } as any;
 
         TestBed.configureTestingModule({
             imports: [FdUiDialogComponent],

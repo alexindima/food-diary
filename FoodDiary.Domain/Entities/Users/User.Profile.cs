@@ -5,6 +5,13 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Domain.Entities.Users;
 
 public sealed partial class User {
+    public void SetLanguage(string language) {
+        EnsureNotDeleted();
+        if (ApplyPreferencesChanges(dashboardLayoutJson: null, language: language)) {
+            SetModified();
+        }
+    }
+
     public void LinkTelegram(long telegramUserId) {
         EnsureNotDeleted();
         TelegramUserId = telegramUserId;

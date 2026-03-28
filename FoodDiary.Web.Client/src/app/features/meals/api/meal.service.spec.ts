@@ -90,7 +90,7 @@ describe('MealService', () => {
             const meal = result.data[0];
             expect(meal.totalCalories).toBe(500);
             expect(meal.totalAlcohol).toBe(0);
-            expect(meal.isNutritionAutoCalculated).toBeTrue();
+            expect(meal.isNutritionAutoCalculated).toBe(true);
             expect(meal.preMealSatietyLevel).toBe(3);
             expect(meal.postMealSatietyLevel).toBe(7);
             expect(meal.items).toEqual([]);

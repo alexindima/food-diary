@@ -9,13 +9,13 @@ import { UserService } from '../../../../shared/api/user.service';
 describe('ChangePasswordDialogComponent', () => {
     let component: ChangePasswordDialogComponent;
     let fixture: ComponentFixture<ChangePasswordDialogComponent>;
-    let userServiceSpy: jasmine.SpyObj<UserService>;
-    let dialogRefSpy: jasmine.SpyObj<MatDialogRef<ChangePasswordDialogComponent, boolean>>;
+    let userServiceSpy: any;
+    let dialogRefSpy: any;
     let translateServiceSpy: TranslateService;
 
     beforeEach(() => {
-        userServiceSpy = jasmine.createSpyObj('UserService', ['changePassword']);
-        dialogRefSpy = jasmine.createSpyObj('MatDialogRef', ['close']);
+        userServiceSpy = { changePassword: vi.fn() } as any;
+        dialogRefSpy = { close: vi.fn() } as any;
 
         TestBed.configureTestingModule({
             imports: [ChangePasswordDialogComponent, TranslateModule.forRoot()],
@@ -27,7 +27,7 @@ describe('ChangePasswordDialogComponent', () => {
         });
 
         translateServiceSpy = TestBed.inject(TranslateService);
-        spyOn(translateServiceSpy, 'instant').and.callFake(((key: string | string[]) => key as string) as any);
+        vi.spyOn(translateServiceSpy, 'instant').mockImplementation(((key: string | string[]) => key as string) as any);
 
         fixture = TestBed.createComponent(ChangePasswordDialogComponent);
         component = fixture.componentInstance;
@@ -45,19 +45,19 @@ describe('ChangePasswordDialogComponent', () => {
         newPassword.markAsTouched();
         confirmPassword.markAsTouched();
 
-        expect(currentPassword.hasError('required')).toBeTrue();
-        expect(newPassword.hasError('required')).toBeTrue();
-        expect(confirmPassword.hasError('required')).toBeTrue();
+        expect(currentPassword.hasError('required')).toBe(true);
+        expect(newPassword.hasError('required')).toBe(true);
+        expect(confirmPassword.hasError('required')).toBe(true);
     });
 
     it('should validate newPassword minimum length', () => {
         const control = component.form.controls.newPassword;
         control.setValue('abc');
         control.markAsTouched();
-        expect(control.hasError('minlength')).toBeTrue();
+        expect(control.hasError('minlength')).toBe(true);
 
         control.setValue('abcdef');
-        expect(control.hasError('minlength')).toBeFalse();
+        expect(control.hasError('minlength')).toBe(false);
     });
 
     it('should validate password match', () => {
@@ -65,14 +65,14 @@ describe('ChangePasswordDialogComponent', () => {
         component.form.controls.confirmPassword.setValue('differentPass');
         component.form.controls.confirmPassword.markAsTouched();
 
-        expect(component.form.controls.confirmPassword.hasError('matchField')).toBeTrue();
+        expect(component.form.controls.confirmPassword.hasError('matchField')).toBe(true);
 
         component.form.controls.confirmPassword.setValue('validPass1');
-        expect(component.form.controls.confirmPassword.hasError('matchField')).toBeFalse();
+        expect(component.form.controls.confirmPassword.hasError('matchField')).toBe(false);
     });
 
     it('should call changePassword on submit', () => {
-        userServiceSpy.changePassword.and.returnValue(of(true));
+        userServiceSpy.changePassword.mockReturnValue(of(true));
 
         component.form.controls.currentPassword.setValue('oldPass');
         component.form.controls.newPassword.setValue('newPass123');
@@ -86,7 +86,7 @@ describe('ChangePasswordDialogComponent', () => {
     });
 
     it('should close dialog on success', () => {
-        userServiceSpy.changePassword.and.returnValue(of(true));
+        userServiceSpy.changePassword.mockReturnValue(of(true));
 
         component.form.controls.currentPassword.setValue('oldPass');
         component.form.controls.newPassword.setValue('newPass123');
@@ -94,11 +94,11 @@ describe('ChangePasswordDialogComponent', () => {
         component.onSubmit();
 
         expect(dialogRefSpy.close).toHaveBeenCalledWith(true);
-        expect(component.isSubmitting()).toBeFalse();
+        expect(component.isSubmitting()).toBe(false);
     });
 
     it('should handle error response from service returning false', () => {
-        userServiceSpy.changePassword.and.returnValue(of(false));
+        userServiceSpy.changePassword.mockReturnValue(of(false));
 
         component.form.controls.currentPassword.setValue('oldPass');
         component.form.controls.newPassword.setValue('newPass123');
@@ -107,11 +107,11 @@ describe('ChangePasswordDialogComponent', () => {
 
         expect(dialogRefSpy.close).not.toHaveBeenCalled();
         expect(component.passwordError()).toBe('USER_MANAGE.CHANGE_PASSWORD_ERROR');
-        expect(component.isSubmitting()).toBeFalse();
+        expect(component.isSubmitting()).toBe(false);
     });
 
     it('should handle error response from service throwing', () => {
-        userServiceSpy.changePassword.and.returnValue(throwError(() => new Error('network error')));
+        userServiceSpy.changePassword.mockReturnValue(throwError(() => new Error('network error')));
 
         component.form.controls.currentPassword.setValue('oldPass');
         component.form.controls.newPassword.setValue('newPass123');
@@ -119,7 +119,7 @@ describe('ChangePasswordDialogComponent', () => {
         component.onSubmit();
 
         expect(component.passwordError()).toBe('USER_MANAGE.CHANGE_PASSWORD_ERROR');
-        expect(component.isSubmitting()).toBeFalse();
+        expect(component.isSubmitting()).toBe(false);
     });
 
     it('should not submit when form is invalid', () => {

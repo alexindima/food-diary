@@ -5,11 +5,11 @@ import { LoggingApiService } from './logging-api.service';
 
 describe('GlobalErrorHandler', () => {
     let handler: GlobalErrorHandler;
-    let loggingSpy: jasmine.SpyObj<LoggingApiService>;
+    let loggingSpy: any;
 
     beforeEach(() => {
-        loggingSpy = jasmine.createSpyObj('LoggingApiService', ['logError']);
-        loggingSpy.logError.and.returnValue(of(undefined));
+        loggingSpy = { logError: vi.fn() } as any;
+        loggingSpy.logError.mockReturnValue(of(undefined));
 
         TestBed.configureTestingModule({
             providers: [GlobalErrorHandler, { provide: LoggingApiService, useValue: loggingSpy }],
@@ -23,7 +23,7 @@ describe('GlobalErrorHandler', () => {
         handler.handleError(error);
 
         expect(loggingSpy.logError).toHaveBeenCalledTimes(1);
-        const payload = loggingSpy.logError.calls.mostRecent().args[0] as Record<string, unknown>;
+        const payload = loggingSpy.logError.mock.calls.at(-1)![0] as Record<string, unknown>;
         expect(payload['level']).toBe('error');
         expect(payload['timestamp']).toBeDefined();
         expect(payload['location']).toBeDefined();
@@ -33,14 +33,14 @@ describe('GlobalErrorHandler', () => {
         const error = new Error('Something went wrong');
         handler.handleError(error);
 
-        const payload = loggingSpy.logError.calls.mostRecent().args[0] as Record<string, unknown>;
+        const payload = loggingSpy.logError.mock.calls.at(-1)![0] as Record<string, unknown>;
         expect(payload['message']).toBe('Something went wrong');
     });
 
     it("should use 'Unknown error' when no message", () => {
         handler.handleError({});
 
-        const payload = loggingSpy.logError.calls.mostRecent().args[0] as Record<string, unknown>;
+        const payload = loggingSpy.logError.mock.calls.at(-1)![0] as Record<string, unknown>;
         expect(payload['message']).toBe('Unknown error');
     });
 
@@ -48,16 +48,16 @@ describe('GlobalErrorHandler', () => {
         const error = new Error('With stack');
         handler.handleError(error);
 
-        const payload = loggingSpy.logError.calls.mostRecent().args[0] as Record<string, unknown>;
+        const payload = loggingSpy.logError.mock.calls.at(-1)![0] as Record<string, unknown>;
         expect(payload['stack']).toBeTruthy();
         expect((payload['stack'] as string).length).toBeGreaterThan(0);
     });
 
     it('should handle logging failure gracefully', () => {
-        loggingSpy.logError.and.returnValue(throwError(() => new Error('Network error')));
-        spyOn(console, 'error');
+        loggingSpy.logError.mockReturnValue(throwError(() => new Error('Network error')));
+        vi.spyOn(console, 'error');
 
         expect(() => handler.handleError(new Error('Test'))).not.toThrow();
-        expect(console.error).toHaveBeenCalledWith('Failed to send log to backend:', jasmine.any(Error));
+        expect(console.error).toHaveBeenCalledWith('Failed to send log to backend:', expect.any(Error));
     });
 });

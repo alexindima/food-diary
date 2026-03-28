@@ -6,11 +6,8 @@ import { NavigationService } from '../services/navigation.service';
 import { signal } from '@angular/core';
 
 describe('authGuard', () => {
-    let authServiceMock: jasmine.SpyObj<AuthService> & {
-        isAuthenticated: ReturnType<typeof signal<boolean>>;
-        isEmailConfirmed: ReturnType<typeof signal<boolean>>;
-    };
-    let navigationServiceMock: jasmine.SpyObj<NavigationService>;
+    let authServiceMock: any;
+    let navigationServiceMock: any;
     let route: ActivatedRouteSnapshot;
     let state: RouterStateSnapshot;
 
@@ -19,17 +16,17 @@ describe('authGuard', () => {
         const isEmailConfirmed = signal(true);
 
         authServiceMock = {
-            ...jasmine.createSpyObj('AuthService', ['getToken']),
+            getToken: vi.fn(),
             isAuthenticated,
             isEmailConfirmed,
-        } as unknown as typeof authServiceMock;
+        } as any;
 
-        navigationServiceMock = jasmine.createSpyObj('NavigationService', [
-            'navigateToAuth',
-            'navigateToEmailVerificationPending',
-        ]);
-        navigationServiceMock.navigateToAuth.and.returnValue(Promise.resolve());
-        navigationServiceMock.navigateToEmailVerificationPending.and.returnValue(Promise.resolve());
+        navigationServiceMock = {
+            navigateToAuth: vi.fn(),
+            navigateToEmailVerificationPending: vi.fn(),
+        } as any;
+        navigationServiceMock.navigateToAuth.mockReturnValue(Promise.resolve());
+        navigationServiceMock.navigateToEmailVerificationPending.mockReturnValue(Promise.resolve());
 
         TestBed.configureTestingModule({
             providers: [
@@ -48,7 +45,7 @@ describe('authGuard', () => {
 
         const result = await TestBed.runInInjectionContext(() => authGuard(route, state));
 
-        expect(result).toBeTrue();
+        expect(result).toBe(true);
         expect(navigationServiceMock.navigateToAuth).not.toHaveBeenCalled();
         expect(navigationServiceMock.navigateToEmailVerificationPending).not.toHaveBeenCalled();
     });
@@ -59,7 +56,7 @@ describe('authGuard', () => {
 
         const result = await TestBed.runInInjectionContext(() => authGuard(route, state));
 
-        expect(result).toBeFalse();
+        expect(result).toBe(false);
         expect(navigationServiceMock.navigateToEmailVerificationPending).toHaveBeenCalled();
     });
 
@@ -68,7 +65,7 @@ describe('authGuard', () => {
 
         const result = await TestBed.runInInjectionContext(() => authGuard(route, state));
 
-        expect(result).toBeFalse();
+        expect(result).toBe(false);
         expect(navigationServiceMock.navigateToAuth).toHaveBeenCalledWith('login', '/products');
     });
 
@@ -78,7 +75,7 @@ describe('authGuard', () => {
 
         const result = await TestBed.runInInjectionContext(() => authGuard(route, state));
 
-        expect(result).toBeFalse();
+        expect(result).toBe(false);
         expect(navigationServiceMock.navigateToAuth).toHaveBeenCalledWith('login', '/recipes/add');
     });
 });

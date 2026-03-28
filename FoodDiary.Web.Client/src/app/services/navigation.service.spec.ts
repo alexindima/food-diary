@@ -5,12 +5,12 @@ import { AuthMode } from '../features/auth/models/auth.data';
 
 describe('NavigationService', () => {
     let service: NavigationService;
-    let routerSpy: jasmine.SpyObj<Router>;
+    let routerSpy: any;
 
     beforeEach(() => {
-        routerSpy = jasmine.createSpyObj('Router', ['navigate', 'navigateByUrl']);
-        routerSpy.navigate.and.returnValue(Promise.resolve(true));
-        routerSpy.navigateByUrl.and.returnValue(Promise.resolve(true));
+        routerSpy = { navigate: vi.fn(), navigateByUrl: vi.fn() } as any;
+        routerSpy.navigate.mockReturnValue(Promise.resolve(true));
+        routerSpy.navigateByUrl.mockReturnValue(Promise.resolve(true));
 
         TestBed.configureTestingModule({
             providers: [NavigationService, { provide: Router, useValue: routerSpy }],

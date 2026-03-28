@@ -72,7 +72,7 @@ describe('FdUiInputComponent', () => {
         fixture.componentRef.setInput('suffixButtonIcon', 'visibility');
         fixture.detectChanges();
 
-        const spy = spyOn(component.suffixButtonClicked, 'emit');
+        const spy = vi.spyOn(component.suffixButtonClicked, 'emit');
         const button = el.querySelector<HTMLButtonElement>('.fd-ui-input__suffix')!;
         button.click();
 
@@ -84,7 +84,7 @@ describe('FdUiInputComponent', () => {
         component.setDisabledState(true);
         fixture.detectChanges();
 
-        const spy = spyOn(component.suffixButtonClicked, 'emit');
+        const spy = vi.spyOn(component.suffixButtonClicked, 'emit');
         const button = el.querySelector<HTMLButtonElement>('.fd-ui-input__suffix')!;
         button.click();
 
@@ -100,7 +100,7 @@ describe('FdUiInputComponent', () => {
     });
 
     it('should call onChange on input event', () => {
-        const onChangeSpy = jasmine.createSpy('onChange');
+        const onChangeSpy = vi.fn();
         component.registerOnChange(onChangeSpy);
 
         const input = el.querySelector<HTMLInputElement>('.fd-ui-input__control')!;
@@ -111,7 +111,7 @@ describe('FdUiInputComponent', () => {
     });
 
     it('should call onTouched on blur', () => {
-        const onTouchedSpy = jasmine.createSpy('onTouched');
+        const onTouchedSpy = vi.fn();
         component.registerOnTouched(onTouchedSpy);
 
         const input = el.querySelector<HTMLInputElement>('.fd-ui-input__control')!;
@@ -125,11 +125,11 @@ describe('FdUiInputComponent', () => {
         fixture.detectChanges();
 
         const input = el.querySelector<HTMLInputElement>('.fd-ui-input__control')!;
-        expect(input.disabled).toBeTrue();
+        expect(input.disabled).toBe(true);
     });
 
     it('should not process input when disabled', () => {
-        const onChangeSpy = jasmine.createSpy('onChange');
+        const onChangeSpy = vi.fn();
         component.registerOnChange(onChangeSpy);
         component.setDisabledState(true);
 
@@ -234,13 +234,13 @@ describe('FdUiInputComponent', () => {
         });
 
         it('should mark control as touched on blur', () => {
-            expect(hostComponent.ctrl.touched).toBeFalse();
+            expect(hostComponent.ctrl.touched).toBe(false);
 
             const input = (hostFixture.nativeElement as HTMLElement).querySelector<HTMLInputElement>('.fd-ui-input__control')!;
             input.dispatchEvent(new Event('blur'));
             hostFixture.detectChanges();
 
-            expect(hostComponent.ctrl.touched).toBeTrue();
+            expect(hostComponent.ctrl.touched).toBe(true);
         });
 
         it('should disable input when FormControl is disabled', () => {
@@ -248,7 +248,7 @@ describe('FdUiInputComponent', () => {
             hostFixture.detectChanges();
 
             const input = (hostFixture.nativeElement as HTMLElement).querySelector<HTMLInputElement>('.fd-ui-input__control')!;
-            expect(input.disabled).toBeTrue();
+            expect(input.disabled).toBe(true);
         });
     });
 });

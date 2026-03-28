@@ -41,34 +41,34 @@ describe('FdUiCheckboxComponent', () => {
 
     it('should write value via CVA (true/false/null)', () => {
         component.writeValue(true);
-        expect(component['checked']).toBeTrue();
+        expect(component['checked']).toBe(true);
 
         component.writeValue(false);
-        expect(component['checked']).toBeFalse();
+        expect(component['checked']).toBe(false);
 
         component.writeValue(null);
-        expect(component['checked']).toBeFalse();
+        expect(component['checked']).toBe(false);
     });
 
     it('should call onChange when checkbox changes', () => {
-        const onChangeSpy = jasmine.createSpy('onChange');
+        const onChangeSpy = vi.fn();
         component.registerOnChange(onChangeSpy);
 
         const changeEvent = { checked: true, source: {} } as MatCheckboxChange;
         component['handleChange'](changeEvent);
 
-        expect(component['checked']).toBeTrue();
+        expect(component['checked']).toBe(true);
         expect(onChangeSpy).toHaveBeenCalledWith(true);
 
         const uncheckEvent = { checked: false, source: {} } as MatCheckboxChange;
         component['handleChange'](uncheckEvent);
 
-        expect(component['checked']).toBeFalse();
+        expect(component['checked']).toBe(false);
         expect(onChangeSpy).toHaveBeenCalledWith(false);
     });
 
     it('should call onTouched on blur', () => {
-        const onTouchedSpy = jasmine.createSpy('onTouched');
+        const onTouchedSpy = vi.fn();
         component.registerOnTouched(onTouchedSpy);
 
         component['handleBlur']();
@@ -80,19 +80,19 @@ describe('FdUiCheckboxComponent', () => {
         component.setDisabledState(true);
         fixture.detectChanges();
 
-        expect(component.disabled()).toBeTrue();
+        expect(component.disabled()).toBe(true);
 
         component.setDisabledState(false);
         fixture.detectChanges();
 
-        expect(component.disabled()).toBeFalse();
+        expect(component.disabled()).toBe(false);
     });
 
     it('should handle null writeValue as false', () => {
         component.writeValue(true);
-        expect(component['checked']).toBeTrue();
+        expect(component['checked']).toBe(true);
 
         component.writeValue(null);
-        expect(component['checked']).toBeFalse();
+        expect(component['checked']).toBe(false);
     });
 });

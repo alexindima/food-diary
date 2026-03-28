@@ -1,4 +1,5 @@
 using System.Security.Cryptography;
+using System.Text;
 
 namespace FoodDiary.Application.Authentication.Common;
 
@@ -17,5 +18,15 @@ public static class SecurityTokenGenerator {
             .Replace("+", "-")
             .Replace("/", "_")
             .TrimEnd('=');
+    }
+
+    public static string NormalizeForSecureHashing(string token) {
+        if (string.IsNullOrWhiteSpace(token)) {
+            throw new ArgumentException("Token is required.", nameof(token));
+        }
+
+        var normalizedToken = token.Trim();
+        var digest = SHA256.HashData(Encoding.UTF8.GetBytes(normalizedToken));
+        return Convert.ToHexString(digest);
     }
 }

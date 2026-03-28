@@ -6,7 +6,7 @@ import { LocalizationService } from './localization.service';
 
 describe('LocalizationService', () => {
     let service: LocalizationService;
-    let translateSpy: jasmine.SpyObj<TranslateService>;
+    let translateSpy: any;
     let langChangeSubject: Subject<LangChangeEvent>;
     let mockDocument: Document;
     let currentLangValue: string;
@@ -15,14 +15,14 @@ describe('LocalizationService', () => {
         langChangeSubject = new Subject<LangChangeEvent>();
         currentLangValue = 'en';
 
-        translateSpy = jasmine.createSpyObj('TranslateService', [
-            'addLangs',
-            'setDefaultLang',
-            'use',
-            'getBrowserLang',
-            'getDefaultLang',
-            'instant',
-        ]);
+        translateSpy = {
+            addLangs: vi.fn(),
+            setDefaultLang: vi.fn(),
+            use: vi.fn(),
+            getBrowserLang: vi.fn(),
+            getDefaultLang: vi.fn(),
+            instant: vi.fn(),
+        } as any;
 
         Object.defineProperty(translateSpy, 'onLangChange', {
             get: () => langChangeSubject.asObservable(),
@@ -37,9 +37,9 @@ describe('LocalizationService', () => {
             configurable: true,
         });
 
-        translateSpy.use.and.returnValue(of({} as any));
-        translateSpy.getDefaultLang.and.returnValue('en');
-        translateSpy.getBrowserLang.and.returnValue('en');
+        translateSpy.use.mockReturnValue(of({} as any));
+        translateSpy.getDefaultLang.mockReturnValue('en');
+        translateSpy.getBrowserLang.mockReturnValue('en');
 
         mockDocument = document;
 
@@ -75,7 +75,7 @@ describe('LocalizationService', () => {
     });
 
     it("should normalize unknown language to 'en'", async () => {
-        translateSpy.getBrowserLang.and.returnValue('fr');
+        translateSpy.getBrowserLang.mockReturnValue('fr');
 
         await service.initializeLocalization();
 
@@ -83,7 +83,7 @@ describe('LocalizationService', () => {
     });
 
     it("should normalize 'ru' correctly", async () => {
-        translateSpy.getBrowserLang.and.returnValue('ru');
+        translateSpy.getBrowserLang.mockReturnValue('ru');
 
         await service.initializeLocalization();
 
@@ -92,7 +92,7 @@ describe('LocalizationService', () => {
 
     it('should apply language preference', async () => {
         currentLangValue = 'en';
-        translateSpy.getDefaultLang.and.returnValue('en');
+        translateSpy.getDefaultLang.mockReturnValue('en');
 
         await service.applyLanguagePreference('ru');
 
@@ -101,8 +101,8 @@ describe('LocalizationService', () => {
 
     it('should not call use() if language is already set', async () => {
         currentLangValue = 'en';
-        translateSpy.getDefaultLang.and.returnValue('en');
-        translateSpy.use.calls.reset();
+        translateSpy.getDefaultLang.mockReturnValue('en');
+        translateSpy.use.mockClear();
 
         await service.applyLanguagePreference('en');
 

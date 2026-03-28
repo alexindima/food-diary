@@ -13,21 +13,21 @@ public sealed class RequestPasswordResetCommandHandler(
     IEmailSender emailSender,
     IDateTimeProvider dateTimeProvider,
     ILogger<RequestPasswordResetCommandHandler> logger)
-    : ICommandHandler<RequestPasswordResetCommand, Result<bool>> {
+    : ICommandHandler<RequestPasswordResetCommand, Result> {
     private static readonly TimeSpan Cooldown = TimeSpan.FromMinutes(1);
     private static readonly TimeSpan TokenLifetime = TimeSpan.FromHours(1);
 
-    public async Task<Result<bool>> Handle(RequestPasswordResetCommand command, CancellationToken cancellationToken) {
+    public async Task<Result> Handle(RequestPasswordResetCommand command, CancellationToken cancellationToken) {
         var user = await userRepository.GetByEmailIncludingDeletedAsync(command.Email, cancellationToken);
         if (user is null || !user.IsActive) {
-            return Result.Success(true);
+            return Result.Success();
         }
 
         var nowUtc = dateTimeProvider.UtcNow;
         if (user.PasswordResetSentAtUtc.HasValue &&
             nowUtc - user.PasswordResetSentAtUtc.Value < Cooldown) {
             logger.LogInformation("Password reset request throttled by cooldown.");
-            return Result.Success(true);
+            return Result.Success();
         }
 
         var token = SecurityTokenGenerator.GenerateUrlSafeToken();
@@ -47,6 +47,6 @@ public sealed class RequestPasswordResetCommandHandler(
             // Intentionally ignore to avoid leaking account existence via email failures.
         }
 
-        return Result.Success(true);
+        return Result.Success();
     }
 }

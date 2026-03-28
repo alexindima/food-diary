@@ -6,10 +6,10 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.Consumptions.Commands.DeleteConsumption;
 
 public class DeleteConsumptionCommandHandler(IMealRepository mealRepository)
-    : ICommandHandler<DeleteConsumptionCommand, Result<bool>> {
-    public async Task<Result<bool>> Handle(DeleteConsumptionCommand command, CancellationToken cancellationToken) {
+    : ICommandHandler<DeleteConsumptionCommand, Result> {
+    public async Task<Result> Handle(DeleteConsumptionCommand command, CancellationToken cancellationToken) {
         if (command.UserId is null || command.UserId == Guid.Empty) {
-            return Result.Failure<bool>(Errors.Authentication.InvalidToken);
+            return Result.Failure(Errors.Authentication.InvalidToken);
         }
 
         var userId = new UserId(command.UserId!.Value);
@@ -23,10 +23,10 @@ public class DeleteConsumptionCommandHandler(IMealRepository mealRepository)
             cancellationToken: cancellationToken);
 
         if (meal is null) {
-            return Result.Failure<bool>(Errors.Consumption.NotFound(command.ConsumptionId));
+            return Result.Failure(Errors.Consumption.NotFound(command.ConsumptionId));
         }
 
         await mealRepository.DeleteAsync(meal, cancellationToken);
-        return Result.Success(true);
+        return Result.Success();
     }
 }

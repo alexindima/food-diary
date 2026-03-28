@@ -38,7 +38,7 @@ describe('FdUiSatietyScaleComponent', () => {
     });
 
     it('should select level on click', () => {
-        const onChangeSpy = jasmine.createSpy('onChange');
+        const onChangeSpy = vi.fn();
         component.registerOnChange(onChangeSpy);
 
         const buttons = fixture.nativeElement.querySelectorAll('.satiety-scale__option');
@@ -64,7 +64,7 @@ describe('FdUiSatietyScaleComponent', () => {
     });
 
     it('should not select when disabled', () => {
-        const onChangeSpy = jasmine.createSpy('onChange');
+        const onChangeSpy = vi.fn();
         component.registerOnChange(onChangeSpy);
         component.setDisabledState(true);
         fixture.detectChanges();
@@ -93,7 +93,7 @@ describe('FdUiSatietyScaleComponent', () => {
     });
 
     it('should call onTouched when level is selected', () => {
-        const onTouchedSpy = jasmine.createSpy('onTouched');
+        const onTouchedSpy = vi.fn();
         component.registerOnTouched(onTouchedSpy);
 
         const buttons = fixture.nativeElement.querySelectorAll('.satiety-scale__option');
@@ -103,7 +103,7 @@ describe('FdUiSatietyScaleComponent', () => {
     });
 
     it('should emit levelSelected output on click', () => {
-        const emitSpy = spyOn(component['levelSelected'], 'emit');
+        const emitSpy = vi.spyOn(component['levelSelected'], 'emit');
 
         const buttons = fixture.nativeElement.querySelectorAll('.satiety-scale__option');
         (buttons[4] as HTMLButtonElement).click();

@@ -87,7 +87,7 @@ describe('FdUiButtonComponent', () => {
         fixture.detectChanges();
 
         const button = fixture.debugElement.query(By.css('button'));
-        expect(button.nativeElement.disabled).toBeTrue();
+        expect(button.nativeElement.disabled).toBe(true);
     });
 
     it('should set aria-label attribute', () => {

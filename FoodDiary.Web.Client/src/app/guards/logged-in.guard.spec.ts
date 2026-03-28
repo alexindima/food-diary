@@ -6,10 +6,8 @@ import { NavigationService } from '../services/navigation.service';
 import { signal } from '@angular/core';
 
 describe('loggedInGuard', () => {
-    let authServiceMock: jasmine.SpyObj<AuthService> & {
-        isAuthenticated: ReturnType<typeof signal<boolean>>;
-    };
-    let navigationServiceMock: jasmine.SpyObj<NavigationService>;
+    let authServiceMock: any;
+    let navigationServiceMock: any;
     let route: ActivatedRouteSnapshot;
     let state: RouterStateSnapshot;
 
@@ -17,12 +15,12 @@ describe('loggedInGuard', () => {
         const isAuthenticated = signal(false);
 
         authServiceMock = {
-            ...jasmine.createSpyObj('AuthService', ['getToken']),
+            getToken: vi.fn(),
             isAuthenticated,
-        } as unknown as typeof authServiceMock;
+        } as any;
 
-        navigationServiceMock = jasmine.createSpyObj('NavigationService', ['navigateToHome']);
-        navigationServiceMock.navigateToHome.and.returnValue(Promise.resolve());
+        navigationServiceMock = { navigateToHome: vi.fn() } as any;
+        navigationServiceMock.navigateToHome.mockReturnValue(Promise.resolve());
 
         TestBed.configureTestingModule({
             providers: [
@@ -40,7 +38,7 @@ describe('loggedInGuard', () => {
 
         const result = await TestBed.runInInjectionContext(() => loggedInGuard(route, state));
 
-        expect(result).toBeTrue();
+        expect(result).toBe(true);
         expect(navigationServiceMock.navigateToHome).not.toHaveBeenCalled();
     });
 
@@ -49,7 +47,7 @@ describe('loggedInGuard', () => {
 
         const result = await TestBed.runInInjectionContext(() => loggedInGuard(route, state));
 
-        expect(result).toBeFalse();
+        expect(result).toBe(false);
         expect(navigationServiceMock.navigateToHome).toHaveBeenCalled();
     });
 });

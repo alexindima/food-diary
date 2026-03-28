@@ -63,7 +63,7 @@ describe('FdUiRadioGroupComponent', () => {
         fixture.componentRef.setInput('options', testOptions);
         fixture.detectChanges();
 
-        const onChangeSpy = jasmine.createSpy('onChange');
+        const onChangeSpy = vi.fn();
         component.registerOnChange(onChangeSpy);
 
         component['control'].setValue('a');
@@ -76,7 +76,7 @@ describe('FdUiRadioGroupComponent', () => {
         fixture.componentRef.setInput('options', testOptions);
         fixture.detectChanges();
 
-        const onTouchedSpy = jasmine.createSpy('onTouched');
+        const onTouchedSpy = vi.fn();
         component.registerOnTouched(onTouchedSpy);
 
         const radioGroup = fixture.debugElement.query(By.css('mat-radio-group'));
@@ -93,14 +93,14 @@ describe('FdUiRadioGroupComponent', () => {
         component.setDisabledState(true);
         fixture.detectChanges();
 
-        expect(component['disabled']).toBeTrue();
-        expect(component['control'].disabled).toBeTrue();
+        expect(component['disabled']).toBe(true);
+        expect(component['control'].disabled).toBe(true);
 
         component.setDisabledState(false);
         fixture.detectChanges();
 
-        expect(component['disabled']).toBeFalse();
-        expect(component['control'].enabled).toBeTrue();
+        expect(component['disabled']).toBe(false);
+        expect(component['control'].enabled).toBe(true);
     });
 
     it('should display error message', () => {

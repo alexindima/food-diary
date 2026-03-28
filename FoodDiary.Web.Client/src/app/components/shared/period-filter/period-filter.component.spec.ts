@@ -82,13 +82,13 @@ describe('PeriodFilterComponent', () => {
         host.selectedValue.set('week');
         hostFixture.detectChanges();
 
-        expect(host.rangeControl.disabled).toBeTrue();
+        expect(host.rangeControl.disabled).toBe(true);
     });
 
     it('should enable range control when custom is selected', () => {
         host.selectedValue.set('custom');
         hostFixture.detectChanges();
 
-        expect(host.rangeControl.enabled).toBeTrue();
+        expect(host.rangeControl.enabled).toBe(true);
     });
 });

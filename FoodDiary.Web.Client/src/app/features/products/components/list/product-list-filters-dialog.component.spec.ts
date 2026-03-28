@@ -10,7 +10,7 @@ import { ProductType } from '../../models/product.data';
 
 describe('ProductListFiltersDialogComponent', () => {
     let component: ProductListFiltersDialogComponent;
-    let dialogRefSpy: jasmine.SpyObj<MatDialogRef<ProductListFiltersDialogComponent>>;
+    let dialogRefSpy: any;
 
     const defaultData: ProductListFiltersDialogData = {
         onlyMine: false,
@@ -18,7 +18,7 @@ describe('ProductListFiltersDialogComponent', () => {
     };
 
     function createComponent(data: ProductListFiltersDialogData = defaultData): void {
-        dialogRefSpy = jasmine.createSpyObj('MatDialogRef', ['close']);
+        dialogRefSpy = { close: vi.fn() } as any;
 
         TestBed.configureTestingModule({
             imports: [ProductListFiltersDialogComponent, TranslateModule.forRoot()],
@@ -43,20 +43,20 @@ describe('ProductListFiltersDialogComponent', () => {
         createComponent({ onlyMine: true, productTypes: [ProductType.Dairy] });
 
         expect(component.visibilityValue).toBe('mine');
-        expect(component.isTypeSelected(ProductType.Dairy)).toBeTrue();
-        expect(component.isTypeSelected(ProductType.Meat)).toBeFalse();
+        expect(component.isTypeSelected(ProductType.Dairy)).toBe(true);
+        expect(component.isTypeSelected(ProductType.Meat)).toBe(false);
     });
 
     it('should toggle product type selection', () => {
         createComponent();
 
-        expect(component.isTypeSelected(ProductType.Meat)).toBeTrue();
+        expect(component.isTypeSelected(ProductType.Meat)).toBe(true);
 
         component.toggleType(ProductType.Meat);
-        expect(component.isTypeSelected(ProductType.Meat)).toBeFalse();
+        expect(component.isTypeSelected(ProductType.Meat)).toBe(false);
 
         component.toggleType(ProductType.Grain);
-        expect(component.isTypeSelected(ProductType.Grain)).toBeTrue();
+        expect(component.isTypeSelected(ProductType.Grain)).toBe(true);
     });
 
     it('should apply filters on submit', () => {
@@ -67,9 +67,9 @@ describe('ProductListFiltersDialogComponent', () => {
         component.onApply();
 
         expect(dialogRefSpy.close).toHaveBeenCalledWith(
-            jasmine.objectContaining({
+            expect.objectContaining({
                 onlyMine: true,
-                productTypes: jasmine.arrayContaining([ProductType.Seafood]),
+                productTypes: expect.arrayContaining([ProductType.Seafood]),
             }),
         );
     });

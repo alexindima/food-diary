@@ -72,10 +72,7 @@ public class UpdateUserCommandHandler(
             profileImageAssetId: newAssetId);
 
         if (command.IsActive.HasValue) {
-            if (command.IsActive.Value)
-                user.Activate();
-            else
-                user.Deactivate();
+            user.SetActive(command.IsActive.Value);
         }
 
         await userRepository.UpdateAsync(user, cancellationToken);

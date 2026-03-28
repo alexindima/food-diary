@@ -7,10 +7,10 @@ import { FdUiConfirmDialogComponent, FdUiConfirmDialogData } from './fd-ui-confi
 describe('FdUiConfirmDialogComponent', () => {
     let component: FdUiConfirmDialogComponent;
     let fixture: ComponentFixture<FdUiConfirmDialogComponent>;
-    let dialogRefSpy: jasmine.SpyObj<MatDialogRef<FdUiConfirmDialogComponent>>;
+    let dialogRefSpy: { close: ReturnType<typeof vi.fn> };
 
     function createComponent(data: FdUiConfirmDialogData): void {
-        dialogRefSpy = jasmine.createSpyObj('MatDialogRef', ['close']);
+        dialogRefSpy = { close: vi.fn() } as any;
 
         TestBed.configureTestingModule({
             imports: [FdUiConfirmDialogComponent, TranslateModule.forRoot()],

@@ -6,12 +6,12 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.ShoppingLists.Commands.DeleteShoppingList;
 
 public class DeleteShoppingListCommandHandler(IShoppingListRepository shoppingListRepository)
-    : ICommandHandler<DeleteShoppingListCommand, Result<bool>> {
-    public async Task<Result<bool>> Handle(
+    : ICommandHandler<DeleteShoppingListCommand, Result> {
+    public async Task<Result> Handle(
         DeleteShoppingListCommand command,
         CancellationToken cancellationToken) {
         if (command.UserId is null || command.UserId == Guid.Empty) {
-            return Result.Failure<bool>(Errors.Authentication.InvalidToken);
+            return Result.Failure(Errors.Authentication.InvalidToken);
         }
 
         var userId = new UserId(command.UserId!.Value);
@@ -25,10 +25,10 @@ public class DeleteShoppingListCommandHandler(IShoppingListRepository shoppingLi
             cancellationToken: cancellationToken);
 
         if (list is null) {
-            return Result.Failure<bool>(Errors.ShoppingList.NotFound(command.ShoppingListId));
+            return Result.Failure(Errors.ShoppingList.NotFound(command.ShoppingListId));
         }
 
         await shoppingListRepository.DeleteAsync(list, cancellationToken);
-        return Result.Success(true);
+        return Result.Success();
     }
 }

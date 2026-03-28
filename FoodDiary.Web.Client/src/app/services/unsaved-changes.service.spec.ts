@@ -5,9 +5,9 @@ describe('UnsavedChangesService', () => {
     let service: UnsavedChangesService;
 
     const createMockHandler = (): UnsavedChangesHandler => ({
-        hasChanges: jasmine.createSpy('hasChanges').and.returnValue(true),
-        save: jasmine.createSpy('save'),
-        discard: jasmine.createSpy('discard'),
+        hasChanges: vi.fn().mockReturnValue(true),
+        save: vi.fn(),
+        discard: vi.fn(),
     });
 
     beforeEach(() => {

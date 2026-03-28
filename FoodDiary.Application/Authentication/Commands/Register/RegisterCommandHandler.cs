@@ -32,7 +32,7 @@ public class RegisterCommandHandler(
             CarbTarget: 200,
             FiberTarget: 28,
             WaterGoal: 2000));
-        user.UpdatePreferences(language: normalizedLanguage);
+        user.SetLanguage(normalizedLanguage);
 
         user = await userRepository.AddAsync(user, cancellationToken);
 

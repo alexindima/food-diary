@@ -12,7 +12,7 @@ public sealed class RefreshTokenCommandHandlerTests {
     [Fact]
     public async Task Handle_WithStoredRefreshToken_RotatesTokens() {
         var user = CreateUser("refresh@example.com");
-        user.UpdateRefreshToken("hashed:current-refresh-token");
+        user.UpdateRefreshToken($"hashed:{SecurityTokenGenerator.NormalizeForSecureHashing("current-refresh-token")}");
         var repository = new InMemoryUserRepository(user);
         var jwt = new FakeJwtTokenGenerator(user.Id, user.Email);
         var hasher = new FakePasswordHasher();
@@ -31,7 +31,7 @@ public sealed class RefreshTokenCommandHandlerTests {
     [Fact]
     public async Task Handle_WithMismatchedStoredRefreshToken_ReturnsInvalidToken() {
         var user = CreateUser("refresh@example.com");
-        user.UpdateRefreshToken("hashed:other-refresh-token");
+        user.UpdateRefreshToken($"hashed:{SecurityTokenGenerator.NormalizeForSecureHashing("other-refresh-token")}");
         var repository = new InMemoryUserRepository(user);
         var jwt = new FakeJwtTokenGenerator(user.Id, user.Email);
         var hasher = new FakePasswordHasher();

@@ -69,8 +69,8 @@ describe('FdUiSelectComponent', () => {
         fixture.componentRef.setInput('options', testOptions);
         fixture.detectChanges();
 
-        const onChangeSpy = jasmine.createSpy('onChange');
-        const onTouchedSpy = jasmine.createSpy('onTouched');
+        const onChangeSpy = vi.fn();
+        const onTouchedSpy = vi.fn();
         component.registerOnChange(onChangeSpy);
         component.registerOnTouched(onTouchedSpy);
 
@@ -86,7 +86,7 @@ describe('FdUiSelectComponent', () => {
         fixture.componentRef.setInput('options', testOptions);
         fixture.detectChanges();
 
-        const onChangeSpy = jasmine.createSpy('onChange');
+        const onChangeSpy = vi.fn();
         component.registerOnChange(onChangeSpy);
         component.setDisabledState(true);
 
@@ -112,11 +112,11 @@ describe('FdUiSelectComponent', () => {
         fixture.componentRef.setInput('options', testOptions);
         fixture.detectChanges();
 
-        expect(component['shouldFloatLabel']).toBeFalse();
+        expect(component['shouldFloatLabel']).toBe(false);
 
         component.writeValue('apple');
 
-        expect(component['shouldFloatLabel']).toBeTrue();
+        expect(component['shouldFloatLabel']).toBe(true);
     });
 
     it('should apply size class', () => {
@@ -130,6 +130,6 @@ describe('FdUiSelectComponent', () => {
     it('should set disabled state via CVA', () => {
         component.setDisabledState(true);
 
-        expect(component['disabled']).toBeTrue();
+        expect(component['disabled']).toBe(true);
     });
 });

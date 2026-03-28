@@ -434,6 +434,15 @@ public class UserInvariantTests {
     }
 
     [Fact]
+    public void SetLanguage_WithSupportedLanguage_UpdatesValue() {
+        var user = User.Create("test@example.com", "hash");
+
+        user.SetLanguage("ru");
+
+        Assert.Equal("ru", user.Language);
+    }
+
+    [Fact]
     public void UpdateProfile_WithUnsupportedGender_Throws() {
         var user = User.Create("test@example.com", "hash");
 

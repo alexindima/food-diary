@@ -51,7 +51,10 @@
       "Bash(find /c/Users/alexi/OneDrive/Документы/GitHub/food-diary/FoodDiary.Web.Client/src/app/features -name *.component.ts ! -name *.spec.ts)",
       "Bash(find /c/Users/alexi/OneDrive/Документы/GitHub/food-diary/FoodDiary.Web.Client/src/app/components/shared -name *.component.ts ! -name *.spec.ts)",
       "Bash(find /c/Users/alexi/OneDrive/Документы/GitHub/food-diary/FoodDiary.Web.Client/src/app/shell -name *.component.ts ! -name *.spec.ts)",
-      "Bash(find /c/Users/alexi/OneDrive/Документы/GitHub/food-diary/FoodDiary.Web.Client/src/app/validators /c/Users/alexi/OneDrive/Документы/GitHub/food-diary/FoodDiary.Web.Client/src/app/pipes -type f -name *.ts ! -name *.spec.ts)"
+      "Bash(find /c/Users/alexi/OneDrive/Документы/GitHub/food-diary/FoodDiary.Web.Client/src/app/validators /c/Users/alexi/OneDrive/Документы/GitHub/food-diary/FoodDiary.Web.Client/src/app/pipes -type f -name *.ts ! -name *.spec.ts)",
+      "Bash(find C:/Users/alexi/OneDrive/Документы/GitHub/food-diary/FoodDiary.Web.Client/src/app/features/ -name *.spec.ts)",
+      "Bash(find C:/Users/alexi/OneDrive/Документы/GitHub/food-diary/FoodDiary.Web.Client/src/app/components/shared/ -name *.spec.ts)",
+      "Bash(cd:*)"
     ],
     "deny": [],
     "ask": []

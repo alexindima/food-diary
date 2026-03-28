@@ -118,11 +118,11 @@ describe('FdUiDateInputComponent', () => {
         component.setDisabledState(true);
         fixture.detectChanges();
 
-        expect(component['disabled']).toBeTrue();
-        expect(component['dateControl'].disabled).toBeTrue();
+        expect(component['disabled']).toBe(true);
+        expect(component['dateControl'].disabled).toBe(true);
 
         const inputEl = fixture.nativeElement.querySelector('.fd-ui-date-input__control') as HTMLInputElement;
-        expect(inputEl.disabled).toBeTrue();
+        expect(inputEl.disabled).toBe(true);
     });
 
     it('should re-enable after being disabled', () => {
@@ -130,12 +130,12 @@ describe('FdUiDateInputComponent', () => {
         component.setDisabledState(false);
         fixture.detectChanges();
 
-        expect(component['disabled']).toBeFalse();
-        expect(component['dateControl'].enabled).toBeTrue();
+        expect(component['disabled']).toBe(false);
+        expect(component['dateControl'].enabled).toBe(true);
     });
 
     it('should call onChange with formatted date string when dateControl value changes', () => {
-        const onChangeSpy = jasmine.createSpy('onChange');
+        const onChangeSpy = vi.fn();
         component.registerOnChange(onChangeSpy);
 
         component['dateControl'].setValue(new Date(2025, 2, 15));
@@ -144,11 +144,11 @@ describe('FdUiDateInputComponent', () => {
     });
 
     it('should call onChange with null when dateControl is cleared', () => {
-        const onChangeSpy = jasmine.createSpy('onChange');
+        const onChangeSpy = vi.fn();
         component.registerOnChange(onChangeSpy);
 
         component['dateControl'].setValue(new Date(2025, 0, 1));
-        onChangeSpy.calls.reset();
+        onChangeSpy.mockClear();
 
         component['dateControl'].setValue(null);
 

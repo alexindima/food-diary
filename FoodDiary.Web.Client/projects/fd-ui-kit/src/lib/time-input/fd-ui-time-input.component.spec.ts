@@ -78,7 +78,7 @@ describe('FdUiTimeInputComponent', () => {
     it('should set disabled state', () => {
         component.setDisabledState(true);
 
-        expect(component['disabled']).toBeTrue();
+        expect(component['disabled']).toBe(true);
     });
 
     it('should re-enable after being disabled', () => {
@@ -86,7 +86,7 @@ describe('FdUiTimeInputComponent', () => {
         component.setDisabledState(false);
         fixture.detectChanges();
 
-        expect(component['disabled']).toBeFalse();
+        expect(component['disabled']).toBe(false);
     });
 
     it('should apply size class', () => {
@@ -103,7 +103,7 @@ describe('FdUiTimeInputComponent', () => {
     });
 
     it('should call onChange with formatted time on valid input', () => {
-        const onChangeSpy = jasmine.createSpy('onChange');
+        const onChangeSpy = vi.fn();
         component.registerOnChange(onChangeSpy);
 
         component['onInput']('14:30');
@@ -113,7 +113,7 @@ describe('FdUiTimeInputComponent', () => {
     });
 
     it('should call onChange with null on empty input', () => {
-        const onChangeSpy = jasmine.createSpy('onChange');
+        const onChangeSpy = vi.fn();
         component.registerOnChange(onChangeSpy);
 
         component['onInput']('');
@@ -123,7 +123,7 @@ describe('FdUiTimeInputComponent', () => {
     });
 
     it('should not call onChange on invalid time input', () => {
-        const onChangeSpy = jasmine.createSpy('onChange');
+        const onChangeSpy = vi.fn();
         component.registerOnChange(onChangeSpy);
 
         component['onInput']('abc');
@@ -133,7 +133,7 @@ describe('FdUiTimeInputComponent', () => {
     });
 
     it('should not process input when disabled', () => {
-        const onChangeSpy = jasmine.createSpy('onChange');
+        const onChangeSpy = vi.fn();
         component.registerOnChange(onChangeSpy);
         component.setDisabledState(true);
 
@@ -143,7 +143,7 @@ describe('FdUiTimeInputComponent', () => {
     });
 
     it('should call onTouched on blur', () => {
-        const onTouchedSpy = jasmine.createSpy('onTouched');
+        const onTouchedSpy = vi.fn();
         component.registerOnTouched(onTouchedSpy);
 
         component['onBlur']();
@@ -152,7 +152,7 @@ describe('FdUiTimeInputComponent', () => {
     });
 
     it('should pad single-digit hours and minutes', () => {
-        const onChangeSpy = jasmine.createSpy('onChange');
+        const onChangeSpy = vi.fn();
         component.registerOnChange(onChangeSpy);
 
         component['onInput']('9:05');
@@ -162,7 +162,7 @@ describe('FdUiTimeInputComponent', () => {
     });
 
     it('should reject hours above 23', () => {
-        const onChangeSpy = jasmine.createSpy('onChange');
+        const onChangeSpy = vi.fn();
         component.registerOnChange(onChangeSpy);
 
         component['onInput']('25:00');
@@ -171,7 +171,7 @@ describe('FdUiTimeInputComponent', () => {
     });
 
     it('should reject minutes above 59', () => {
-        const onChangeSpy = jasmine.createSpy('onChange');
+        const onChangeSpy = vi.fn();
         component.registerOnChange(onChangeSpy);
 
         component['onInput']('12:60');

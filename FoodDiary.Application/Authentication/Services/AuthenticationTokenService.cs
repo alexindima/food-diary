@@ -17,7 +17,7 @@ public sealed class AuthenticationTokenService(
         var accessToken = jwtTokenGenerator.GenerateAccessToken(user.Id, user.Email, roles);
         var refreshToken = jwtTokenGenerator.GenerateRefreshToken(user.Id, user.Email, roles);
 
-        var hashedRefreshToken = passwordHasher.Hash(refreshToken);
+        var hashedRefreshToken = passwordHasher.Hash(SecurityTokenGenerator.NormalizeForSecureHashing(refreshToken));
         user.UpdateRefreshToken(hashedRefreshToken, dateTimeProvider.UtcNow);
         await userRepository.UpdateAsync(user, cancellationToken);
 

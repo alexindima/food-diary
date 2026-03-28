@@ -89,7 +89,7 @@ describe('UserService', () => {
         const request = { currentPassword: 'old', newPassword: 'new' };
 
         service.changePassword(request as any).subscribe(result => {
-            expect(result).toBeTrue();
+            expect(result).toBe(true);
         });
 
         const req = httpMock.expectOne(`${baseUrl}/password`);
@@ -102,7 +102,7 @@ describe('UserService', () => {
         const request = { currentPassword: 'old', newPassword: 'new' };
 
         service.changePassword(request as any).subscribe(result => {
-            expect(result).toBeFalse();
+            expect(result).toBe(false);
         });
 
         const req = httpMock.expectOne(`${baseUrl}/password`);
@@ -118,7 +118,7 @@ describe('UserService', () => {
 
         // Delete
         service.deleteCurrentUser().subscribe(result => {
-            expect(result).toBeTrue();
+            expect(result).toBe(true);
         });
 
         const req = httpMock.expectOne(`${baseUrl}/`);

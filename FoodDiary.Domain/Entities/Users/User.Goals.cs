@@ -3,6 +3,10 @@ using FoodDiary.Domain.ValueObjects;
 namespace FoodDiary.Domain.Entities.Users;
 
 public sealed partial class User {
+    public void UpdateAiTokenLimits(UserAiTokenLimitUpdate update) {
+        UpdateAiTokenLimits(update.InputLimit, update.OutputLimit);
+    }
+
     public void UpdateGoals(
         double? dailyCalorieTarget = null,
         double? proteinTarget = null,

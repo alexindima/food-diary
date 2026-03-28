@@ -20,7 +20,9 @@ public class AuthenticationTokenServiceTests {
 
         Assert.Equal("access-token", result.AccessToken);
         Assert.Equal("refresh-token", result.RefreshToken);
-        Assert.Equal("hashed:refresh-token", user.RefreshToken);
+        Assert.Equal(
+            $"hashed:{SecurityTokenGenerator.NormalizeForSecureHashing("refresh-token")}",
+            user.RefreshToken);
         Assert.True(repository.Updated);
     }
 

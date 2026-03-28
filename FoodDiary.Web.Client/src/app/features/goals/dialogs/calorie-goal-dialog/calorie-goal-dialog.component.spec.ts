@@ -9,12 +9,12 @@ import { GoalsService } from '../../api/goals.service';
 describe('CalorieGoalDialogComponent', () => {
     let component: CalorieGoalDialogComponent;
     let fixture: ComponentFixture<CalorieGoalDialogComponent>;
-    let goalsServiceSpy: jasmine.SpyObj<GoalsService>;
-    let dialogRefSpy: jasmine.SpyObj<MatDialogRef<CalorieGoalDialogComponent>>;
+    let goalsServiceSpy: any;
+    let dialogRefSpy: any;
 
     function createComponent(data: CalorieGoalDialogData | null = { dailyCalorieTarget: 2000 }): void {
-        goalsServiceSpy = jasmine.createSpyObj('GoalsService', ['updateGoals']);
-        dialogRefSpy = jasmine.createSpyObj('MatDialogRef', ['close']);
+        goalsServiceSpy = { updateGoals: vi.fn() } as any;
+        dialogRefSpy = { close: vi.fn() } as any;
 
         TestBed.configureTestingModule({
             imports: [CalorieGoalDialogComponent, TranslateModule.forRoot()],
@@ -51,15 +51,15 @@ describe('CalorieGoalDialogComponent', () => {
         const control = component.form.controls.dailyCalorieTarget;
         control.setValue(-100);
         control.markAsTouched();
-        expect(control.hasError('min')).toBeTrue();
+        expect(control.hasError('min')).toBe(true);
 
         control.setValue(0);
-        expect(control.hasError('min')).toBeFalse();
+        expect(control.hasError('min')).toBe(false);
     });
 
     it('should submit updated goal', () => {
         createComponent();
-        goalsServiceSpy.updateGoals.and.returnValue(of({ dailyCalorieTarget: 1800 } as any));
+        goalsServiceSpy.updateGoals.mockReturnValue(of({ dailyCalorieTarget: 1800 } as any));
 
         component.form.controls.dailyCalorieTarget.setValue(1800);
         component.save();
@@ -70,7 +70,7 @@ describe('CalorieGoalDialogComponent', () => {
 
     it('should close dialog with false on update error', () => {
         createComponent();
-        goalsServiceSpy.updateGoals.and.returnValue(throwError(() => new Error('fail')));
+        goalsServiceSpy.updateGoals.mockReturnValue(throwError(() => new Error('fail')));
 
         component.form.controls.dailyCalorieTarget.setValue(1800);
         component.save();
@@ -93,7 +93,7 @@ describe('CalorieGoalDialogComponent', () => {
 
     it('should submit null when calorie target is cleared', () => {
         createComponent();
-        goalsServiceSpy.updateGoals.and.returnValue(of({ dailyCalorieTarget: null } as any));
+        goalsServiceSpy.updateGoals.mockReturnValue(of({ dailyCalorieTarget: null } as any));
 
         component.form.controls.dailyCalorieTarget.setValue(null);
         component.save();

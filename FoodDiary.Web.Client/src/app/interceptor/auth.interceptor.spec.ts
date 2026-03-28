@@ -16,11 +16,11 @@ import { SKIP_AUTH } from '../constants/http-context.tokens';
 describe('AuthInterceptor', () => {
     let http: HttpClient;
     let httpTesting: HttpTestingController;
-    let authServiceSpy: jasmine.SpyObj<AuthService>;
+    let authServiceSpy: any;
 
     beforeEach(() => {
-        authServiceSpy = jasmine.createSpyObj('AuthService', ['getToken', 'refreshToken', 'onLogout']);
-        authServiceSpy.onLogout.and.returnValue(Promise.resolve());
+        authServiceSpy = { getToken: vi.fn(), refreshToken: vi.fn(), onLogout: vi.fn() } as any;
+        authServiceSpy.onLogout.mockReturnValue(Promise.resolve());
 
         TestBed.configureTestingModule({
             providers: [
@@ -40,7 +40,7 @@ describe('AuthInterceptor', () => {
     });
 
     it('should add Authorization header when token exists', () => {
-        authServiceSpy.getToken.and.returnValue('test-token');
+        authServiceSpy.getToken.mockReturnValue('test-token');
 
         http.get('/api/data').subscribe();
 
@@ -50,27 +50,27 @@ describe('AuthInterceptor', () => {
     });
 
     it('should not add Authorization header when no token', () => {
-        authServiceSpy.getToken.and.returnValue(null);
+        authServiceSpy.getToken.mockReturnValue(null);
 
         http.get('/api/data').subscribe();
 
         const req = httpTesting.expectOne('/api/data');
-        expect(req.request.headers.has('Authorization')).toBeFalse();
+        expect(req.request.headers.has('Authorization')).toBe(false);
         req.flush({});
     });
 
     it('should skip auth header when SKIP_AUTH context is true', () => {
-        authServiceSpy.getToken.and.returnValue('test-token');
+        authServiceSpy.getToken.mockReturnValue('test-token');
 
         http.get('/api/upload', { context: new HttpContext().set(SKIP_AUTH, true) }).subscribe();
 
         const req = httpTesting.expectOne('/api/upload');
-        expect(req.request.headers.has('Authorization')).toBeFalse();
+        expect(req.request.headers.has('Authorization')).toBe(false);
         req.flush({});
     });
 
     it('should pass through request on success', () => {
-        authServiceSpy.getToken.and.returnValue('test-token');
+        authServiceSpy.getToken.mockReturnValue('test-token');
         const responseData = { id: 1, name: 'Test' };
 
         http.get<{ id: number; name: string }>('/api/data').subscribe(data => {
@@ -82,8 +82,8 @@ describe('AuthInterceptor', () => {
     });
 
     it('should attempt token refresh on 401 error', () => {
-        authServiceSpy.getToken.and.returnValue('expired-token');
-        authServiceSpy.refreshToken.and.returnValue(of('new-token'));
+        authServiceSpy.getToken.mockReturnValue('expired-token');
+        authServiceSpy.refreshToken.mockReturnValue(of('new-token'));
 
         http.get('/api/data').subscribe();
 
@@ -98,8 +98,8 @@ describe('AuthInterceptor', () => {
     });
 
     it('should retry original request with new token after successful refresh', () => {
-        authServiceSpy.getToken.and.returnValue('expired-token');
-        authServiceSpy.refreshToken.and.returnValue(of('refreshed-token'));
+        authServiceSpy.getToken.mockReturnValue('expired-token');
+        authServiceSpy.refreshToken.mockReturnValue(of('refreshed-token'));
         const responseData = { success: true };
 
         http.get<{ success: boolean }>('/api/data').subscribe(data => {
@@ -115,8 +115,8 @@ describe('AuthInterceptor', () => {
     });
 
     it('should logout on refresh failure', () => {
-        authServiceSpy.getToken.and.returnValue('expired-token');
-        authServiceSpy.refreshToken.and.returnValue(throwError(() => new Error('Refresh failed')));
+        authServiceSpy.getToken.mockReturnValue('expired-token');
+        authServiceSpy.refreshToken.mockReturnValue(throwError(() => new Error('Refresh failed')));
 
         http.get('/api/data').subscribe({
             error: (error: Error) => {
@@ -131,8 +131,8 @@ describe('AuthInterceptor', () => {
     });
 
     it('should logout when refresh returns null token', () => {
-        authServiceSpy.getToken.and.returnValue('expired-token');
-        authServiceSpy.refreshToken.and.returnValue(of(null));
+        authServiceSpy.getToken.mockReturnValue('expired-token');
+        authServiceSpy.refreshToken.mockReturnValue(of(null));
 
         http.get('/api/data').subscribe({
             error: (error: HttpErrorResponse) => {
@@ -147,7 +147,7 @@ describe('AuthInterceptor', () => {
     });
 
     it('should not refresh for auth requests (URL contains /auth/)', () => {
-        authServiceSpy.getToken.and.returnValue('some-token');
+        authServiceSpy.getToken.mockReturnValue('some-token');
 
         http.get('/api/auth/login').subscribe({
             error: (error: HttpErrorResponse) => {
@@ -163,7 +163,7 @@ describe('AuthInterceptor', () => {
     });
 
     it('should propagate non-401 errors without refresh attempt', () => {
-        authServiceSpy.getToken.and.returnValue('test-token');
+        authServiceSpy.getToken.mockReturnValue('test-token');
 
         http.get('/api/data').subscribe({
             error: (error: HttpErrorResponse) => {

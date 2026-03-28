@@ -117,31 +117,7 @@
                     "builder": "@angular/build:extract-i18n"
                 },
                 "test": {
-                    "builder": "@angular/build:karma",
-                    "options": {
-                        "polyfills": [],
-                        "tsConfig": "tsconfig.spec.json",
-                        "inlineStyleLanguage": "scss",
-                        "stylePreprocessorOptions": {
-                            "includePaths": [
-                                "src/styles",
-                                "projects/fd-ui-kit/src/lib"
-                            ]
-                        },
-                        "assets": [
-                            {
-                                "glob": "**/*",
-                                "input": "assets",
-                                "output": "/assets"
-                            }
-                        ],
-                        "styles": [
-                            "src/styles/design-tokens.global.scss",
-                            "src/styles/material-theme.scss",
-                            "src/styles.scss"
-                        ],
-                        "scripts": []
-                    }
+                    "builder": "@angular/build:unit-test"
                 }
             }
         },
@@ -164,17 +140,7 @@
               "defaultConfiguration": "production"
             },
             "test": {
-              "builder": "@angular/build:karma",
-              "options": {
-                "tsConfig": "projects/fd-ui-kit/tsconfig.spec.json",
-                "polyfills": [],
-                "stylePreprocessorOptions": {
-                  "includePaths": [
-                    "src/styles",
-                    "projects/fd-ui-kit/src/lib"
-                  ]
-                }
-              }
+              "builder": "@angular/build:unit-test"
             }
           }
         },

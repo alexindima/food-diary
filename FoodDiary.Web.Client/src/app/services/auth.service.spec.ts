@@ -18,9 +18,9 @@ function createFakeJwt(payload: Record<string, unknown>): string {
 describe('AuthService', () => {
     let service: AuthService;
     let httpMock: HttpTestingController;
-    let navigationServiceSpy: jasmine.SpyObj<NavigationService>;
-    let localizationServiceSpy: jasmine.SpyObj<LocalizationService>;
-    let quickMealServiceSpy: jasmine.SpyObj<QuickMealService>;
+    let navigationServiceSpy: any;
+    let localizationServiceSpy: any;
+    let quickMealServiceSpy: any;
 
     const authBaseUrl = environment.apiUrls.auth;
 
@@ -28,20 +28,20 @@ describe('AuthService', () => {
         localStorage.clear();
         sessionStorage.clear();
 
-        navigationServiceSpy = jasmine.createSpyObj('NavigationService', [
-            'navigateToAuth',
-            'navigateToHome',
-        ]);
-        navigationServiceSpy.navigateToAuth.and.returnValue(Promise.resolve());
-        navigationServiceSpy.navigateToHome.and.returnValue(Promise.resolve());
+        navigationServiceSpy = {
+            navigateToAuth: vi.fn(),
+            navigateToHome: vi.fn(),
+        } as any;
+        navigationServiceSpy.navigateToAuth.mockReturnValue(Promise.resolve());
+        navigationServiceSpy.navigateToHome.mockReturnValue(Promise.resolve());
 
-        localizationServiceSpy = jasmine.createSpyObj('LocalizationService', [
-            'applyLanguagePreference',
-            'clearStoredLanguage',
-        ]);
-        localizationServiceSpy.applyLanguagePreference.and.returnValue(Promise.resolve());
+        localizationServiceSpy = {
+            applyLanguagePreference: vi.fn(),
+            clearStoredLanguage: vi.fn(),
+        } as any;
+        localizationServiceSpy.applyLanguagePreference.mockReturnValue(Promise.resolve());
 
-        quickMealServiceSpy = jasmine.createSpyObj('QuickMealService', ['exitPreview']);
+        quickMealServiceSpy = { exitPreview: vi.fn() } as any;
 
         TestBed.configureTestingModule({
             providers: [
@@ -157,7 +157,7 @@ describe('AuthService', () => {
             const req = httpMock.expectOne(`${authBaseUrl}/login`);
             req.flush(authResponse);
 
-            expect(service.isAuthenticated()).toBeTrue();
+            expect(service.isAuthenticated()).toBe(true);
         });
 
         it('should extract userId from response and store it', () => {
@@ -213,7 +213,7 @@ describe('AuthService', () => {
             const req = httpMock.expectOne(`${authBaseUrl}/login`);
             req.flush(responseUnconfirmed);
 
-            expect(service.isEmailConfirmed()).toBeFalse();
+            expect(service.isEmailConfirmed()).toBe(false);
         });
     });
 
@@ -251,7 +251,7 @@ describe('AuthService', () => {
             const req = httpMock.expectOne(`${authBaseUrl}/register`);
             req.flush(authResponse);
 
-            expect(service.isAuthenticated()).toBeTrue();
+            expect(service.isAuthenticated()).toBe(true);
             expect(service.getUserId()).toBe('new-user-456');
         });
 
@@ -297,7 +297,7 @@ describe('AuthService', () => {
                 user: { id: 'user-1', email: 'test@example.com', isActive: true, isEmailConfirmed: true },
             });
 
-            expect(service.isAuthenticated()).toBeTrue();
+            expect(service.isAuthenticated()).toBe(true);
         });
 
         it('should rotate stored refresh token on success', () => {
@@ -372,11 +372,11 @@ describe('AuthService', () => {
         it('should set isAuthenticated to false', async () => {
             // First, ensure authenticated state via signal
             service.initializeAuth();
-            expect(service.isAuthenticated()).toBeTrue();
+            expect(service.isAuthenticated()).toBe(true);
 
             await service.onLogout(false);
 
-            expect(service.isAuthenticated()).toBeFalse();
+            expect(service.isAuthenticated()).toBe(false);
         });
 
         it('should clear stored language', async () => {
@@ -450,7 +450,7 @@ describe('AuthService', () => {
 
             const freshService = TestBed.inject(AuthService);
             freshService.initializeAuth();
-            expect(freshService.isAdmin()).toBeTrue();
+            expect(freshService.isAdmin()).toBe(true);
         });
 
         it('should detect Premium role', () => {
@@ -459,12 +459,12 @@ describe('AuthService', () => {
 
             const freshService = TestBed.inject(AuthService);
             freshService.initializeAuth();
-            expect(freshService.isPremium()).toBeTrue();
+            expect(freshService.isPremium()).toBe(true);
         });
 
         it('should return false when no token', () => {
-            expect(service.isAdmin()).toBeFalse();
-            expect(service.isPremium()).toBeFalse();
+            expect(service.isAdmin()).toBe(false);
+            expect(service.isPremium()).toBe(false);
         });
 
         it('should handle array of roles', () => {
@@ -473,8 +473,8 @@ describe('AuthService', () => {
 
             const freshService = TestBed.inject(AuthService);
             freshService.initializeAuth();
-            expect(freshService.isAdmin()).toBeTrue();
-            expect(freshService.isPremium()).toBeTrue();
+            expect(freshService.isAdmin()).toBe(true);
+            expect(freshService.isPremium()).toBe(true);
         });
 
         it('should handle single role string', () => {
@@ -483,8 +483,8 @@ describe('AuthService', () => {
 
             const freshService = TestBed.inject(AuthService);
             freshService.initializeAuth();
-            expect(freshService.isAdmin()).toBeFalse();
-            expect(freshService.isPremium()).toBeFalse();
+            expect(freshService.isAdmin()).toBe(false);
+            expect(freshService.isPremium()).toBe(false);
         });
 
         it('should handle roles from Microsoft claims schema', () => {
@@ -496,7 +496,7 @@ describe('AuthService', () => {
 
             const freshService = TestBed.inject(AuthService);
             freshService.initializeAuth();
-            expect(freshService.isAdmin()).toBeTrue();
+            expect(freshService.isAdmin()).toBe(true);
         });
 
         it('should return false when token has no role claims', () => {
@@ -505,25 +505,25 @@ describe('AuthService', () => {
 
             const freshService = TestBed.inject(AuthService);
             freshService.initializeAuth();
-            expect(freshService.isAdmin()).toBeFalse();
-            expect(freshService.isPremium()).toBeFalse();
+            expect(freshService.isAdmin()).toBe(false);
+            expect(freshService.isPremium()).toBe(false);
         });
     });
 
     describe('computed signals', () => {
         it('should be not authenticated initially when no token exists', () => {
-            expect(service.isAuthenticated()).toBeFalse();
+            expect(service.isAuthenticated()).toBe(false);
         });
 
         it('should compute isEmailConfirmed as true when null (default)', () => {
             // When emailConfirmed is not stored, loadEmailConfirmed returns null,
             // and the computed signal defaults to true via ?? true
-            expect(service.isEmailConfirmed()).toBeTrue();
+            expect(service.isEmailConfirmed()).toBe(true);
         });
 
         it('should compute isEmailConfirmed as false when set to false', () => {
             service.setEmailConfirmed(false);
-            expect(service.isEmailConfirmed()).toBeFalse();
+            expect(service.isEmailConfirmed()).toBe(false);
         });
 
         it('should compute isAuthenticated as true when token exists in localStorage', () => {
@@ -531,7 +531,7 @@ describe('AuthService', () => {
             localStorage.setItem('authToken', token);
 
             service.initializeAuth();
-            expect(service.isAuthenticated()).toBeTrue();
+            expect(service.isAuthenticated()).toBe(true);
         });
 
         it('should compute isAuthenticated as true when token exists in sessionStorage', () => {
@@ -539,7 +539,7 @@ describe('AuthService', () => {
             sessionStorage.setItem('authToken', token);
 
             service.initializeAuth();
-            expect(service.isAuthenticated()).toBeTrue();
+            expect(service.isAuthenticated()).toBe(true);
         });
     });
 
@@ -550,7 +550,7 @@ describe('AuthService', () => {
 
             service.initializeAuth();
 
-            expect(service.isAuthenticated()).toBeTrue();
+            expect(service.isAuthenticated()).toBe(true);
             expect(service.getUserId()).toBe('init-user');
         });
 
@@ -590,7 +590,7 @@ describe('AuthService', () => {
             const req = httpMock.expectOne(`${authBaseUrl}/verify-email`);
             req.flush(true);
 
-            expect(service.isEmailConfirmed()).toBeTrue();
+            expect(service.isEmailConfirmed()).toBe(true);
         });
     });
 
@@ -599,14 +599,14 @@ describe('AuthService', () => {
             service.setEmailConfirmed(true);
 
             expect(localStorage.getItem('emailConfirmed')).toBe('true');
-            expect(service.isEmailConfirmed()).toBeTrue();
+            expect(service.isEmailConfirmed()).toBe(true);
         });
 
         it('should persist emailConfirmed as false', () => {
             service.setEmailConfirmed(false);
 
             expect(localStorage.getItem('emailConfirmed')).toBe('false');
-            expect(service.isEmailConfirmed()).toBeFalse();
+            expect(service.isEmailConfirmed()).toBe(false);
         });
     });
 });
