@@ -20,6 +20,11 @@ public class UpdateShoppingListCommandHandler(
             return Result.Failure<ShoppingListModel>(Errors.Authentication.InvalidToken);
         }
 
+        if (command.ShoppingListId == Guid.Empty) {
+            return Result.Failure<ShoppingListModel>(
+                Errors.Validation.Invalid(nameof(command.ShoppingListId), "Shopping list id must not be empty."));
+        }
+
         var userId = new UserId(command.UserId!.Value);
 
         if (string.IsNullOrWhiteSpace(command.Name) && command.Items is null) {

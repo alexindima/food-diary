@@ -10,7 +10,7 @@ interface DetectedBarcode {
 }
 
 declare class BarcodeDetector {
-    constructor(options?: BarcodeDetectorOptions);
-    detect(source: ImageBitmapSource): Promise<DetectedBarcode[]>;
-    static getSupportedFormats(): Promise<string[]>;
+    public constructor(options?: BarcodeDetectorOptions);
+    public detect(source: ImageBitmapSource): Promise<DetectedBarcode[]>;
+    public static getSupportedFormats(): Promise<string[]>;
 }

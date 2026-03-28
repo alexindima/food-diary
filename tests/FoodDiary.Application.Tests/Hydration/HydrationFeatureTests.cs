@@ -98,6 +98,46 @@ public class HydrationFeatureTests {
         Assert.Equal(new DateTime(2026, 3, 26, 0, 0, 0, DateTimeKind.Utc), result.Value.DateUtc);
     }
 
+    [Fact]
+    public async Task GetHydrationDailyTotalQueryHandler_WithEmptyUserId_ReturnsInvalidToken() {
+        var handler = new GetHydrationDailyTotalQueryHandler(
+            new RecordingHydrationEntryRepository(),
+            new StubUserRepository(User.Create("user@example.com", "hash")));
+
+        var result = await handler.Handle(
+            new GetHydrationDailyTotalQuery(Guid.Empty, DateTime.UtcNow),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task DeleteHydrationEntryCommandHandler_WithEmptyHydrationEntryId_ReturnsValidationFailure() {
+        var handler = new DeleteHydrationEntryCommandHandler(new InMemoryHydrationEntryRepository());
+
+        var result = await handler.Handle(
+            new DeleteHydrationEntryCommand(Guid.NewGuid(), Guid.Empty),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("HydrationEntryId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task UpdateHydrationEntryCommandHandler_WithEmptyHydrationEntryId_ReturnsValidationFailure() {
+        var handler = new UpdateHydrationEntryCommandHandler(new InMemoryHydrationEntryRepository());
+
+        var result = await handler.Handle(
+            new UpdateHydrationEntryCommand(Guid.NewGuid(), Guid.Empty, DateTime.UtcNow, 250),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("HydrationEntryId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
     private sealed class RecordingHydrationEntryRepository : IHydrationEntryRepository {
         public DateTime? LastDailyTotalDateUtc { get; private set; }
 
@@ -134,5 +174,25 @@ public class HydrationFeatureTests {
         public Task<IReadOnlyList<Role>> GetRolesByNamesAsync(IReadOnlyList<string> names, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User> AddAsync(User addedUser, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task UpdateAsync(User updatedUser, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+    }
+
+    private sealed class InMemoryHydrationEntryRepository : IHydrationEntryRepository {
+        public Task<HydrationEntry> AddAsync(HydrationEntry entry, CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+
+        public Task UpdateAsync(HydrationEntry entry, CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+
+        public Task DeleteAsync(HydrationEntry entry, CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+
+        public Task<HydrationEntry?> GetByIdAsync(HydrationEntryId id, bool asTracking = false, CancellationToken cancellationToken = default) =>
+            Task.FromResult<HydrationEntry?>(null);
+
+        public Task<IReadOnlyList<HydrationEntry>> GetByDateAsync(UserId userId, DateTime dateUtc, CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<HydrationEntry>>([]);
+
+        public Task<int> GetDailyTotalAsync(UserId userId, DateTime dateUtc, CancellationToken cancellationToken = default) =>
+            Task.FromResult(0);
     }
 }

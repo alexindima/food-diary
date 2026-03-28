@@ -1,4 +1,6 @@
 using FoodDiary.Application.WaistEntries.Commands.CreateWaistEntry;
+using FoodDiary.Application.WaistEntries.Commands.DeleteWaistEntry;
+using FoodDiary.Application.WaistEntries.Commands.UpdateWaistEntry;
 using FoodDiary.Application.WaistEntries.Common;
 using FoodDiary.Application.WaistEntries.Queries.GetWaistEntries;
 using FoodDiary.Application.WaistEntries.Queries.GetWaistSummaries;
@@ -77,6 +79,32 @@ public class WaistEntriesFeatureTests {
 
         Assert.True(result.IsFailure);
         Assert.Equal("Validation.Invalid", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task DeleteWaistEntryCommandHandler_WithEmptyWaistEntryId_ReturnsValidationFailure() {
+        var handler = new DeleteWaistEntryCommandHandler(new InMemoryWaistEntryRepository());
+
+        var result = await handler.Handle(
+            new DeleteWaistEntryCommand(Guid.NewGuid(), Guid.Empty),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("WaistEntryId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task UpdateWaistEntryCommandHandler_WithEmptyWaistEntryId_ReturnsValidationFailure() {
+        var handler = new UpdateWaistEntryCommandHandler(new InMemoryWaistEntryRepository());
+
+        var result = await handler.Handle(
+            new UpdateWaistEntryCommand(Guid.NewGuid(), Guid.Empty, DateTime.UtcNow, 82),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("WaistEntryId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
 
     private static DateTime NormalizeUtcDate(DateTime value) {

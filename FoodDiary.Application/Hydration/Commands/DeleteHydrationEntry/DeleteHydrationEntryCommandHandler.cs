@@ -12,6 +12,10 @@ public class DeleteHydrationEntryCommandHandler(IHydrationEntryRepository reposi
             return Result.Failure(Errors.Authentication.InvalidToken);
         }
 
+        if (command.HydrationEntryId == Guid.Empty) {
+            return Result.Failure(Errors.Validation.Invalid(nameof(command.HydrationEntryId), "Hydration entry id must not be empty."));
+        }
+
         var userId = new UserId(command.UserId!.Value);
         var hydrationEntryId = new HydrationEntryId(command.HydrationEntryId);
 

@@ -16,6 +16,11 @@ public class UpdateWeightEntryCommandHandler(IWeightEntryRepository weightEntryR
             return Result.Failure<WeightEntryModel>(Errors.Authentication.InvalidToken);
         }
 
+        if (command.WeightEntryId == Guid.Empty) {
+            return Result.Failure<WeightEntryModel>(
+                Errors.Validation.Invalid(nameof(command.WeightEntryId), "Weight entry id must not be empty."));
+        }
+
         var userId = new UserId(command.UserId!.Value);
         var weightEntryId = new WeightEntryId(command.WeightEntryId);
         var existingEntry = await weightEntryRepository.GetByIdAsync(

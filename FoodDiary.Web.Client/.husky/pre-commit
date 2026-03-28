@@ -1,0 +1,18 @@
+cd FoodDiary.Web.Client
+
+echo "=== Running ESLint ==="
+npm run lint || exit 1
+
+echo "=== Running Stylelint ==="
+npm run stylelint || exit 1
+
+echo "=== Running frontend tests ==="
+npm run test || exit 1
+
+cd ..
+
+echo "=== Running backend tests ==="
+dotnet test tests/FoodDiary.Application.Tests/FoodDiary.Application.Tests.csproj --no-restore || exit 1
+dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj --no-restore || exit 1
+dotnet test tests/FoodDiary.Infrastructure.Tests/FoodDiary.Infrastructure.Tests.csproj --no-restore || exit 1
+dotnet test tests/FoodDiary.Presentation.Api.Tests/FoodDiary.Presentation.Api.Tests.csproj --no-restore || exit 1

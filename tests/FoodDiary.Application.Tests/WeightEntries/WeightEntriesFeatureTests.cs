@@ -1,4 +1,6 @@
 using FoodDiary.Application.WeightEntries.Commands.CreateWeightEntry;
+using FoodDiary.Application.WeightEntries.Commands.DeleteWeightEntry;
+using FoodDiary.Application.WeightEntries.Commands.UpdateWeightEntry;
 using FoodDiary.Application.WeightEntries.Common;
 using FoodDiary.Application.WeightEntries.Queries.GetWeightEntries;
 using FoodDiary.Application.WeightEntries.Queries.GetWeightSummaries;
@@ -77,6 +79,44 @@ public class WeightEntriesFeatureTests {
 
         Assert.True(result.IsFailure);
         Assert.Equal("Validation.Invalid", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task GetWeightEntriesQueryHandler_WithEmptyUserId_ReturnsInvalidToken() {
+        var handler = new GetWeightEntriesQueryHandler(new InMemoryWeightEntryRepository());
+
+        var result = await handler.Handle(
+            new GetWeightEntriesQuery(Guid.Empty, null, null, 10, true),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task DeleteWeightEntryCommandHandler_WithEmptyWeightEntryId_ReturnsValidationFailure() {
+        var handler = new DeleteWeightEntryCommandHandler(new InMemoryWeightEntryRepository());
+
+        var result = await handler.Handle(
+            new DeleteWeightEntryCommand(Guid.NewGuid(), Guid.Empty),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("WeightEntryId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task UpdateWeightEntryCommandHandler_WithEmptyWeightEntryId_ReturnsValidationFailure() {
+        var handler = new UpdateWeightEntryCommandHandler(new InMemoryWeightEntryRepository());
+
+        var result = await handler.Handle(
+            new UpdateWeightEntryCommand(Guid.NewGuid(), Guid.Empty, DateTime.UtcNow, 82),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("WeightEntryId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
 
     private static DateTime NormalizeUtcDate(DateTime value) {

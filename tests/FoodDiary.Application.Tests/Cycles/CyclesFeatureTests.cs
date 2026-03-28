@@ -1,5 +1,6 @@
 using FoodDiary.Application.Cycles.Commands.CreateCycle;
 using FoodDiary.Application.Cycles.Commands.UpsertCycleDay;
+using FoodDiary.Application.Cycles.Common;
 using FoodDiary.Application.Cycles.Mappings;
 using FoodDiary.Application.Cycles.Models;
 using FoodDiary.Application.Cycles.Services;
@@ -56,6 +57,26 @@ public class CyclesFeatureTests {
     }
 
     [Fact]
+    public async Task UpsertCycleDayCommandHandler_WithEmptyCycleId_ReturnsValidationFailure() {
+        var handler = new UpsertCycleDayCommandHandler(new NoopCycleRepository());
+
+        var result = await handler.Handle(
+            new UpsertCycleDayCommand(
+                Guid.NewGuid(),
+                Guid.Empty,
+                DateTime.UtcNow,
+                IsPeriod: true,
+                Symptoms: new DailySymptomsModel(1, 1, 1, 1, 1, 1, 1),
+                Notes: null,
+                ClearNotes: false),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("CycleId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
     public void CycleMappings_ToModel_SortsDaysByDate() {
         var cycle = Cycle.Create(UserId.New(), DateTime.UtcNow);
         cycle.AddOrUpdateDay(new DateTime(2026, 2, 10, 0, 0, 0, DateTimeKind.Utc), true, DailySymptoms.Create(1, 1, 1, 1, 1, 1, 1));
@@ -87,5 +108,13 @@ public class CyclesFeatureTests {
     [Fact]
     public void CyclePredictionService_CalculatePredictions_WithNullCycle_Throws() {
         Assert.Throws<ArgumentNullException>(() => CyclePredictionService.CalculatePredictions(null!));
+    }
+
+    private sealed class NoopCycleRepository : ICycleRepository {
+        public Task<Cycle> AddAsync(Cycle cycle, CancellationToken cancellationToken = default) => Task.FromResult(cycle);
+        public Task UpdateAsync(Cycle cycle, CancellationToken cancellationToken = default) => Task.CompletedTask;
+        public Task<Cycle?> GetByIdAsync(CycleId id, UserId userId, bool includeDays = false, bool asTracking = false, CancellationToken cancellationToken = default) => Task.FromResult<Cycle?>(null);
+        public Task<Cycle?> GetLatestAsync(UserId userId, bool includeDays = false, CancellationToken cancellationToken = default) => Task.FromResult<Cycle?>(null);
+        public Task<IReadOnlyList<Cycle>> GetByUserAsync(UserId userId, bool includeDays = false, CancellationToken cancellationToken = default) => Task.FromResult<IReadOnlyList<Cycle>>([]);
     }
 }

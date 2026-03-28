@@ -14,6 +14,10 @@ public class DeleteShoppingListCommandHandler(IShoppingListRepository shoppingLi
             return Result.Failure(Errors.Authentication.InvalidToken);
         }
 
+        if (command.ShoppingListId == Guid.Empty) {
+            return Result.Failure(Errors.Validation.Invalid(nameof(command.ShoppingListId), "Shopping list id must not be empty."));
+        }
+
         var userId = new UserId(command.UserId!.Value);
         var shoppingListId = new ShoppingListId(command.ShoppingListId);
 

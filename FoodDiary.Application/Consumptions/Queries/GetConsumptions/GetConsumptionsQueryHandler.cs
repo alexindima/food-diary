@@ -11,6 +11,9 @@ namespace FoodDiary.Application.Consumptions.Queries.GetConsumptions;
 public class GetConsumptionsQueryHandler(IMealRepository mealRepository)
     : IQueryHandler<GetConsumptionsQuery, Result<PagedResponse<ConsumptionModel>>> {
     public async Task<Result<PagedResponse<ConsumptionModel>>> Handle(GetConsumptionsQuery request, CancellationToken cancellationToken) {
+        if (request.UserId is null || request.UserId == Guid.Empty) {
+            return Result.Failure<PagedResponse<ConsumptionModel>>(Errors.Authentication.InvalidToken);
+        }
 
         var userId = new UserId(request.UserId!.Value);
 

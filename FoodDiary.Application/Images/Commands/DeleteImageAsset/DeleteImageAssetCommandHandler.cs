@@ -9,8 +9,12 @@ public sealed class DeleteImageAssetCommandHandler(
     IImageAssetRepository imageAssetRepository,
     IImageAssetCleanupService cleanupService) : IRequestHandler<DeleteImageAssetCommand, Result> {
     public async Task<Result> Handle(DeleteImageAssetCommand request, CancellationToken cancellationToken) {
-        if (request.UserId == Guid.Empty || request.AssetId == Guid.Empty) {
-            return Result.Failure(Errors.Image.InvalidData("UserId and AssetId are required."));
+        if (request.UserId == Guid.Empty) {
+            return Result.Failure(Errors.Image.InvalidData("UserId is required."));
+        }
+
+        if (request.AssetId == Guid.Empty) {
+            return Result.Failure(Errors.Image.InvalidData("AssetId is required."));
         }
 
         var userId = new UserId(request.UserId);

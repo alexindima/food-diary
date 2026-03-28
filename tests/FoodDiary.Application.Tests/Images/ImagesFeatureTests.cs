@@ -61,6 +61,20 @@ public class ImagesFeatureTests {
 
         Assert.True(result.IsFailure);
         Assert.Equal("Image.InvalidData", result.Error.Code);
+        Assert.Contains("AssetId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task DeleteImageAssetCommandHandler_WithEmptyUserId_ReturnsInvalidDataFailure() {
+        var handler = new DeleteImageAssetCommandHandler(
+            new FakeImageAssetRepository(),
+            new FakeCleanupService());
+
+        var result = await handler.Handle(new DeleteImageAssetCommand(Guid.Empty, Guid.NewGuid()), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Image.InvalidData", result.Error.Code);
+        Assert.Contains("UserId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
 
     [Fact]

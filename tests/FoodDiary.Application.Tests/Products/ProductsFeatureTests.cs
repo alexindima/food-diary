@@ -2,6 +2,7 @@ using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Images.Common;
 using FoodDiary.Application.Products.Commands.DeleteProduct;
 using FoodDiary.Application.Products.Commands.CreateProduct;
+using FoodDiary.Application.Products.Commands.DuplicateProduct;
 using FoodDiary.Application.Products.Commands.UpdateProduct;
 using FoodDiary.Application.Products.Queries.GetProductById;
 using FoodDiary.Application.Products.Queries.GetProducts;
@@ -165,6 +166,19 @@ public class ProductsFeatureTests {
     }
 
     [Fact]
+    public async Task DuplicateProductCommandHandler_WithEmptyProductId_ReturnsValidationFailure() {
+        var handler = new DuplicateProductCommandHandler(new NoopProductRepository());
+
+        var result = await handler.Handle(
+            new DuplicateProductCommand(Guid.NewGuid(), Guid.Empty),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("ProductId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
     public async Task UpdateProductCommandHandler_WhenCleanupFails_StillReturnsSuccessAndUpdatesProduct() {
         var userId = UserId.New();
         var oldAssetId = ImageAssetId.New();
@@ -281,6 +295,47 @@ public class ProductsFeatureTests {
         Assert.True(result.IsFailure);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("ImageAssetId", result.Error.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task UpdateProductCommandHandler_WithEmptyProductId_ReturnsValidationFailure() {
+        var handler = new UpdateProductCommandHandler(new NoopProductRepository(), new RecordingCleanupService());
+
+        var result = await handler.Handle(
+            new UpdateProductCommand(
+                Guid.NewGuid(),
+                Guid.Empty,
+                Barcode: null,
+                ClearBarcode: false,
+                Name: null,
+                Brand: null,
+                ClearBrand: false,
+                ProductType: null,
+                Category: null,
+                ClearCategory: false,
+                Description: null,
+                ClearDescription: false,
+                Comment: null,
+                ClearComment: false,
+                ImageUrl: null,
+                ClearImageUrl: false,
+                ImageAssetId: null,
+                ClearImageAssetId: false,
+                BaseUnit: null,
+                BaseAmount: null,
+                DefaultPortionAmount: null,
+                CaloriesPerBase: null,
+                ProteinsPerBase: null,
+                FatsPerBase: null,
+                CarbsPerBase: null,
+                FiberPerBase: null,
+                AlcoholPerBase: null,
+                Visibility: null),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("ProductId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
 
     private sealed class NoopProductRepository : IProductRepository {

@@ -12,6 +12,10 @@ public class DeleteConsumptionCommandHandler(IMealRepository mealRepository)
             return Result.Failure(Errors.Authentication.InvalidToken);
         }
 
+        if (command.ConsumptionId == Guid.Empty) {
+            return Result.Failure(Errors.Validation.Invalid(nameof(command.ConsumptionId), "Consumption id must not be empty."));
+        }
+
         var userId = new UserId(command.UserId!.Value);
         var consumptionId = new MealId(command.ConsumptionId);
 

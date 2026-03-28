@@ -53,6 +53,30 @@ public class AdminFeatureTests {
     }
 
     [Fact]
+    public async Task UpdateAdminUserHandler_WithEmptyUserId_ReturnsValidationFailure() {
+        var user = CreateUserWithRoles("admin@example.com", [RoleNames.Admin]);
+        var userRepository = new InMemoryUserRepository(
+            user,
+            availableRoles: [RoleNames.Admin, RoleNames.Premium, RoleNames.Support]);
+        var handler = new UpdateAdminUserCommandHandler(userRepository);
+
+        var result = await handler.Handle(
+            new UpdateAdminUserCommand(
+                Guid.Empty,
+                IsActive: null,
+                IsEmailConfirmed: null,
+                Roles: null,
+                Language: null,
+                AiInputTokenLimit: null,
+                AiOutputTokenLimit: null),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("UserId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
     public async Task UpdateAdminUserHandler_WithNullRoles_DoesNotChangeRoles() {
         var user = CreateUserWithRoles("admin@example.com", [RoleNames.Admin, RoleNames.Premium]);
         var userRepository = new InMemoryUserRepository(

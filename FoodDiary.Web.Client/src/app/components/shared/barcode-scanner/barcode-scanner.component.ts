@@ -68,7 +68,9 @@ export class BarcodeScannerComponent implements OnInit, OnDestroy {
 
     private scanLoop(): void {
         const video = this.videoRef()?.nativeElement;
-        if (!video || !this.detector) return;
+        if (!video || !this.detector) {
+            return;
+        }
 
         this.animationFrameId = requestAnimationFrame(async () => {
             if (video.readyState === video.HAVE_ENOUGH_DATA) {

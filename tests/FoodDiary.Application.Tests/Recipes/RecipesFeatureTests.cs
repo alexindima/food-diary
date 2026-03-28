@@ -2,6 +2,7 @@ using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Images.Common;
 using FoodDiary.Application.Recipes.Commands.CreateRecipe;
 using FoodDiary.Application.Recipes.Commands.DeleteRecipe;
+using FoodDiary.Application.Recipes.Commands.DuplicateRecipe;
 using FoodDiary.Application.Recipes.Common;
 using FoodDiary.Application.Recipes.Queries.GetRecipeById;
 using FoodDiary.Application.Recipes.Queries.GetRecentRecipes;
@@ -112,6 +113,19 @@ public class RecipesFeatureTests {
 
         var result = await handler.Handle(
             new GetRecipeByIdQuery(Guid.NewGuid(), Guid.Empty, false),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("RecipeId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task DuplicateRecipeCommandHandler_WithEmptyRecipeId_ReturnsValidationFailure() {
+        var handler = new DuplicateRecipeCommandHandler(new SingleRecipeRepositoryForCreate());
+
+        var result = await handler.Handle(
+            new DuplicateRecipeCommand(Guid.NewGuid(), Guid.Empty),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);

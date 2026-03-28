@@ -28,6 +28,17 @@ public class StatisticsFeatureTests {
     }
 
     [Fact]
+    public async Task GetStatisticsQueryHandler_WithEmptyUserId_ReturnsInvalidToken() {
+        var handler = new GetStatisticsQueryHandler(new NoopMealRepository());
+        var query = new GetStatisticsQuery(Guid.Empty, DateTime.UtcNow.AddDays(-1), DateTime.UtcNow, 1);
+
+        var result = await handler.Handle(query, CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
     public async Task GetStatisticsQueryHandler_WithEmptyMeals_ReturnsSingleZeroBucket() {
         var handler = new GetStatisticsQueryHandler(new NoopMealRepository());
         var from = new DateTime(2026, 2, 1, 0, 0, 0, DateTimeKind.Utc);

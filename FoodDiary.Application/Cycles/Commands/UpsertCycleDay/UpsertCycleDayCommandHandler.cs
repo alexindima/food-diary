@@ -16,6 +16,11 @@ public class UpsertCycleDayCommandHandler(ICycleRepository cycleRepository)
             return Result.Failure<CycleDayModel>(Errors.Authentication.InvalidToken);
         }
 
+        if (command.CycleId == Guid.Empty) {
+            return Result.Failure<CycleDayModel>(
+                Errors.Validation.Invalid(nameof(command.CycleId), "Cycle id must not be empty."));
+        }
+
         var userId = new UserId(command.UserId!.Value);
         var cycleId = new CycleId(command.CycleId);
 

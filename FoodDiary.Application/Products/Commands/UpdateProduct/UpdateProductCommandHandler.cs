@@ -19,6 +19,10 @@ public class UpdateProductCommandHandler(
             return Result.Failure<ProductModel>(Errors.Authentication.InvalidToken);
         }
 
+        if (command.ProductId == Guid.Empty) {
+            return Result.Failure<ProductModel>(Errors.Validation.Invalid(nameof(command.ProductId), "Product id must not be empty."));
+        }
+
         var userId = new UserId(command.UserId!.Value);
         var productId = new ProductId(command.ProductId);
 

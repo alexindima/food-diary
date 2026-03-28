@@ -7,7 +7,7 @@ import {
     provideAppInitializer,
     provideZonelessChangeDetection
 } from '@angular/core';
-import { provideRouter, withComponentInputBinding } from '@angular/router';
+import { PreloadAllModules, provideRouter, withComponentInputBinding, withPreloading } from '@angular/router';
 import { routes } from './app.routes';
 import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -48,7 +48,7 @@ export const appConfig: ApplicationConfig = {
         }),
         provideAnimations(),
         provideZonelessChangeDetection(),
-        provideRouter(routes, withComponentInputBinding()),
+        provideRouter(routes, withComponentInputBinding(), withPreloading(PreloadAllModules)),
         provideHttpClient(withInterceptorsFromDi()),
         importProvidersFrom(
             TranslateModule.forRoot(),

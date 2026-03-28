@@ -16,6 +16,11 @@ public class UpdateWaistEntryCommandHandler(IWaistEntryRepository waistEntryRepo
             return Result.Failure<WaistEntryModel>(Errors.Authentication.InvalidToken);
         }
 
+        if (command.WaistEntryId == Guid.Empty) {
+            return Result.Failure<WaistEntryModel>(
+                Errors.Validation.Invalid(nameof(command.WaistEntryId), "Waist entry id must not be empty."));
+        }
+
         var userId = new UserId(command.UserId!.Value);
         var waistEntryId = new WaistEntryId(command.WaistEntryId);
         var entry = await waistEntryRepository.GetByIdAsync(

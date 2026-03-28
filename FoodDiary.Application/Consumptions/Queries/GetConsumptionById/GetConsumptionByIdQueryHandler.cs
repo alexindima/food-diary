@@ -10,6 +10,14 @@ namespace FoodDiary.Application.Consumptions.Queries.GetConsumptionById;
 public class GetConsumptionByIdQueryHandler(IMealRepository mealRepository)
     : IQueryHandler<GetConsumptionByIdQuery, Result<ConsumptionModel>> {
     public async Task<Result<ConsumptionModel>> Handle(GetConsumptionByIdQuery request, CancellationToken cancellationToken) {
+        if (request.UserId is null || request.UserId == Guid.Empty) {
+            return Result.Failure<ConsumptionModel>(Errors.Authentication.InvalidToken);
+        }
+
+        if (request.ConsumptionId == Guid.Empty) {
+            return Result.Failure<ConsumptionModel>(
+                Errors.Validation.Invalid(nameof(request.ConsumptionId), "Consumption id must not be empty."));
+        }
 
         var userId = new UserId(request.UserId!.Value);
         var consumptionId = new MealId(request.ConsumptionId);

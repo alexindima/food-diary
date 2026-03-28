@@ -5,8 +5,11 @@ using FoodDiary.Application.Images.Common;
 using FoodDiary.Application.Products.Common;
 using FoodDiary.Application.RecentItems.Common;
 using FoodDiary.Application.Recipes.Common;
+using FoodDiary.Application.Consumptions.Commands.DeleteConsumption;
 using FoodDiary.Application.Consumptions.Commands.UpdateConsumption;
 using FoodDiary.Application.Consumptions.Commands.CreateConsumption;
+using FoodDiary.Application.Consumptions.Queries.GetConsumptionById;
+using FoodDiary.Application.Consumptions.Queries.GetConsumptions;
 using FoodDiary.Application.Consumptions.Common;
 using FoodDiary.Application.Consumptions.Services;
 using FoodDiary.Domain.Entities.Meals;
@@ -404,6 +407,86 @@ public class ConsumptionsFeatureTests {
         Assert.True(result.IsFailure);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("RecipeId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task DeleteConsumptionCommandHandler_WithEmptyConsumptionId_ReturnsValidationFailure() {
+        var handler = new DeleteConsumptionCommandHandler(new CreatingMealRepository());
+
+        var result = await handler.Handle(
+            new DeleteConsumptionCommand(Guid.NewGuid(), Guid.Empty),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("ConsumptionId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task UpdateConsumptionCommandHandler_WithEmptyConsumptionId_ReturnsValidationFailure() {
+        var handler = new UpdateConsumptionCommandHandler(
+            new CreatingMealRepository(),
+            new NoopMealNutritionService(),
+            new RecordingRecentItemRepository(),
+            new RecordingCleanupService(),
+            new StubDateTimeProvider());
+
+        var result = await handler.Handle(
+            new UpdateConsumptionCommand(
+                Guid.NewGuid(),
+                Guid.Empty,
+                new DateTime(2026, 3, 26, 18, 0, 0, DateTimeKind.Utc),
+                MealType.Dinner.ToString(),
+                "Updated",
+                null,
+                null,
+                [new ConsumptionItemInput(ProductId.New().Value, null, 150)],
+                [],
+                true,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                3,
+                7),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("ConsumptionId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task GetConsumptionByIdQueryHandler_WithEmptyConsumptionId_ReturnsValidationFailure() {
+        var userId = UserId.New();
+        var meal = Meal.Create(
+            userId,
+            new DateTime(2026, 3, 26, 12, 0, 0, DateTimeKind.Utc),
+            MealType.Lunch);
+
+        var handler = new GetConsumptionByIdQueryHandler(new SingleMealRepository(meal));
+
+        var result = await handler.Handle(
+            new GetConsumptionByIdQuery(userId.Value, Guid.Empty),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("ConsumptionId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task GetConsumptionsQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
+        var handler = new GetConsumptionsQueryHandler(new CreatingMealRepository());
+
+        var result = await handler.Handle(
+            new GetConsumptionsQuery(null, 1, 10, null, null),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
     private sealed class SingleMealRepository(Meal meal) : IMealRepository {

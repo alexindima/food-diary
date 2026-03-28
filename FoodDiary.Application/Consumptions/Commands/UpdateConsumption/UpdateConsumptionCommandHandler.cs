@@ -27,6 +27,11 @@ public class UpdateConsumptionCommandHandler(
             return Result.Failure<ConsumptionModel>(Errors.Authentication.InvalidToken);
         }
 
+        if (command.ConsumptionId == Guid.Empty) {
+            return Result.Failure<ConsumptionModel>(
+                Errors.Validation.Invalid(nameof(command.ConsumptionId), "Consumption id must not be empty."));
+        }
+
         var imageAssetIdResult = NormalizeImageAssetId(command.ImageAssetId, nameof(command.ImageAssetId));
         if (imageAssetIdResult.IsFailure) {
             return Result.Failure<ConsumptionModel>(imageAssetIdResult.Error);

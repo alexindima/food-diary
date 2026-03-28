@@ -1,5 +1,7 @@
 using FoodDiary.Application.Products.Common;
 using FoodDiary.Application.ShoppingLists.Commands.Common;
+using FoodDiary.Application.ShoppingLists.Commands.DeleteShoppingList;
+using FoodDiary.Application.ShoppingLists.Commands.UpdateShoppingList;
 using FoodDiary.Application.ShoppingLists.Common;
 using FoodDiary.Application.ShoppingLists.Queries.GetCurrentShoppingList;
 using FoodDiary.Application.ShoppingLists.Queries.GetShoppingListById;
@@ -31,12 +33,44 @@ public class ShoppingListsFeatureTests {
     }
 
     [Fact]
+    public async Task GetShoppingListByIdQueryHandler_WithEmptyShoppingListId_ReturnsValidationFailure() {
+        var handler = new GetShoppingListByIdQueryHandler(new NoopShoppingListRepository());
+        var result = await handler.Handle(new GetShoppingListByIdQuery(Guid.NewGuid(), Guid.Empty), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("ShoppingListId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
     public async Task GetShoppingListsQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
         var handler = new GetShoppingListsQueryHandler(new NoopShoppingListRepository());
         var result = await handler.Handle(new GetShoppingListsQuery(null), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task DeleteShoppingListCommandHandler_WithEmptyShoppingListId_ReturnsValidationFailure() {
+        var handler = new DeleteShoppingListCommandHandler(new NoopShoppingListRepository());
+        var result = await handler.Handle(new DeleteShoppingListCommand(Guid.NewGuid(), Guid.Empty), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("ShoppingListId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task UpdateShoppingListCommandHandler_WithEmptyShoppingListId_ReturnsValidationFailure() {
+        var handler = new UpdateShoppingListCommandHandler(new NoopShoppingListRepository(), new NoopProductLookupService());
+        var result = await handler.Handle(
+            new UpdateShoppingListCommand(Guid.NewGuid(), Guid.Empty, "Weekly", null),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("ShoppingListId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
 
     [Fact]

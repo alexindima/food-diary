@@ -12,6 +12,9 @@ public class GetStatisticsQueryHandler(IMealRepository mealRepository)
     public async Task<Result<IReadOnlyList<AggregatedStatisticsModel>>> Handle(
         GetStatisticsQuery request,
         CancellationToken cancellationToken) {
+        if (request.UserId is null || request.UserId == Guid.Empty) {
+            return Result.Failure<IReadOnlyList<AggregatedStatisticsModel>>(Errors.Authentication.InvalidToken);
+        }
 
         if (request.DateFrom > request.DateTo) {
             return Result.Failure<IReadOnlyList<AggregatedStatisticsModel>>(

@@ -20,6 +20,10 @@ public class UpdateRecipeCommandHandler(
             return Result.Failure<RecipeModel>(Errors.Authentication.InvalidToken);
         }
 
+        if (command.RecipeId == Guid.Empty) {
+            return Result.Failure<RecipeModel>(Errors.Validation.Invalid(nameof(command.RecipeId), "Recipe id must not be empty."));
+        }
+
         var imageAssetIdResult = NormalizeImageAssetId(command.ImageAssetId, nameof(command.ImageAssetId));
         if (imageAssetIdResult.IsFailure) {
             return Result.Failure<RecipeModel>(imageAssetIdResult.Error);

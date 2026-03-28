@@ -70,7 +70,14 @@
       "Bash(node -e \"const s = require\\(''./dist/stats.json''\\); console.log\\(Object.keys\\(s\\)\\); console.log\\(Object.keys\\(s\\).map\\(k => typeof s[k]\\).join\\('', ''\\)\\)\")",
       "Bash(xargs ls:*)",
       "Bash(grep -E \"\\\\.\\(ts|html\\)$\")",
-      "Bash(xargs du:*)"
+      "Bash(xargs du:*)",
+      "Bash(npx husky:*)",
+      "Bash(npx --prefix FoodDiary.Web.Client husky init)",
+      "Bash(\"C:/Users/alexi/OneDrive/Документы/GitHub/food-diary/FoodDiary.Web.Client/.husky/pre-commit\":*)",
+      "Bash(npx --prefix FoodDiary.Web.Client husky FoodDiary.Web.Client/.husky)",
+      "Bash(node -e \"process.chdir\\(''..''\\); require\\(''child_process''\\).execSync\\(''npx husky FoodDiary.Web.Client/.husky'', {stdio: ''inherit''}\\)\")",
+      "Bash(grep -A5 '\"\"scripts\"\"' \"C:/Users/alexi/OneDrive/Документы/GitHub/food-diary/FoodDiary.Web.Client/node_modules/husky/package.json\")",
+      "Bash(npm pkg:*)"
     ],
     "deny": [],
     "ask": []

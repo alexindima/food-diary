@@ -244,6 +244,49 @@ public class UpdateRecipeCommandHandlerTests {
         Assert.Contains("NestedRecipeId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
 
+    [Fact]
+    public async Task Handle_WithEmptyRecipeId_ReturnsValidationFailure() {
+        var userId = UserId.New();
+        var recipe = Recipe.Create(userId, "Soup", servings: 2);
+
+        var handler = new UpdateRecipeCommandHandler(
+            new StubRecipeRepository(RecipeId.New(), userId, recipe),
+            new NoopImageAssetCleanupService());
+
+        var result = await handler.Handle(
+            new UpdateRecipeCommand(
+                userId.Value,
+                Guid.Empty,
+                Name: "Soup",
+                Description: null,
+                ClearDescription: false,
+                Comment: null,
+                ClearComment: false,
+                Category: null,
+                ClearCategory: false,
+                ImageUrl: null,
+                ClearImageUrl: false,
+                ImageAssetId: null,
+                ClearImageAssetId: false,
+                PrepTime: 0,
+                CookTime: 20,
+                Servings: 2,
+                Visibility: Visibility.Public.ToString(),
+                CalculateNutritionAutomatically: true,
+                ManualCalories: null,
+                ManualProteins: null,
+                ManualFats: null,
+                ManualCarbs: null,
+                ManualFiber: null,
+                ManualAlcohol: null,
+                Steps: [CreateStep(order: 1, "Initial step")]),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("RecipeId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
     private static RecipeStepInput CreateStep(int order, string description) {
         return new RecipeStepInput(
             Order: order,

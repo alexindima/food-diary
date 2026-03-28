@@ -16,6 +16,11 @@ public class GetShoppingListByIdQueryHandler(IShoppingListRepository shoppingLis
             return Result.Failure<ShoppingListModel>(Errors.Authentication.InvalidToken);
         }
 
+        if (query.ShoppingListId == Guid.Empty) {
+            return Result.Failure<ShoppingListModel>(
+                Errors.Validation.Invalid(nameof(query.ShoppingListId), "Shopping list id must not be empty."));
+        }
+
         var userId = new UserId(query.UserId!.Value);
         var shoppingListId = new ShoppingListId(query.ShoppingListId);
 

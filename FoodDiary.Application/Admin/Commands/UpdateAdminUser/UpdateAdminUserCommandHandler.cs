@@ -19,6 +19,11 @@ public sealed class UpdateAdminUserCommandHandler(IUserRepository userRepository
     public async Task<Result<AdminUserModel>> Handle(
         UpdateAdminUserCommand command,
         CancellationToken cancellationToken) {
+        if (command.UserId == Guid.Empty) {
+            return Result.Failure<AdminUserModel>(
+                Errors.Validation.Invalid(nameof(command.UserId), "User id must not be empty."));
+        }
+
         var userId = new UserId(command.UserId);
         var user = await userRepository.GetByIdIncludingDeletedAsync(userId, cancellationToken);
         if (user is null) {
