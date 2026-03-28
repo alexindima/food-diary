@@ -29,18 +29,16 @@ public sealed class UpdateAdminUserCommandHandler(IUserRepository userRepository
             user.SetActive(command.IsActive.Value);
         }
 
-        if (command.IsEmailConfirmed.HasValue) {
-            user.SetEmailConfirmed(command.IsEmailConfirmed.Value);
-        }
-
         var languageResult = NormalizeLanguage(command.Language);
         if (languageResult.IsFailure) {
             return Result.Failure<AdminUserModel>(languageResult.Error);
         }
 
-        if (languageResult.Value is not null) {
-            user.SetLanguage(languageResult.Value);
-        }
+        user.UpdateAdminAccount(new UserAdminAccountUpdate(
+            IsEmailConfirmed: command.IsEmailConfirmed,
+            Language: languageResult.Value,
+            AiInputTokenLimit: command.AiInputTokenLimit,
+            AiOutputTokenLimit: command.AiOutputTokenLimit));
 
         if (command.Roles is not null) {
             var requestedRoles = command.Roles
@@ -61,12 +59,6 @@ public sealed class UpdateAdminUserCommandHandler(IUserRepository userRepository
             }
 
             UpdateUserRoles(user, roleEntities);
-        }
-
-        if (command.AiInputTokenLimit.HasValue || command.AiOutputTokenLimit.HasValue) {
-            user.UpdateAiTokenLimits(new UserAiTokenLimitUpdate(
-                InputLimit: command.AiInputTokenLimit,
-                OutputLimit: command.AiOutputTokenLimit));
         }
 
         await userRepository.UpdateAsync(user, cancellationToken);

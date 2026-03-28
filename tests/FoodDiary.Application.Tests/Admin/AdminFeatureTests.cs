@@ -124,6 +124,35 @@ public class AdminFeatureTests {
     }
 
     [Fact]
+    public async Task UpdateAdminUserHandler_WithUnchangedAdminAccountFields_DoesNotSetModifiedOnUtc() {
+        var user = CreateUserWithRoles("admin@example.com", [RoleNames.Admin]);
+        user.SetEmailConfirmed(true);
+        user.SetLanguage("en");
+        user.UpdateAiTokenLimits(new FoodDiary.Domain.ValueObjects.UserAiTokenLimitUpdate(
+            InputLimit: 123,
+            OutputLimit: 456));
+        var modifiedBefore = user.ModifiedOnUtc;
+        var userRepository = new InMemoryUserRepository(
+            user,
+            availableRoles: [RoleNames.Admin, RoleNames.Premium, RoleNames.Support]);
+        var handler = new UpdateAdminUserCommandHandler(userRepository);
+
+        var result = await handler.Handle(
+            new UpdateAdminUserCommand(
+                user.Id.Value,
+                IsActive: null,
+                IsEmailConfirmed: true,
+                Roles: null,
+                Language: "en",
+                AiInputTokenLimit: 123,
+                AiOutputTokenLimit: 456),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(modifiedBefore, user.ModifiedOnUtc);
+    }
+
+    [Fact]
     public async Task UpsertAdminEmailTemplateValidator_WithInvalidLocale_Fails() {
         var validator = new UpsertAdminEmailTemplateCommandValidator();
         var command = new UpsertAdminEmailTemplateCommand(

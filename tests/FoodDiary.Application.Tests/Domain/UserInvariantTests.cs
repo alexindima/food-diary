@@ -443,6 +443,30 @@ public class UserInvariantTests {
     }
 
     [Fact]
+    public void UpdateAdminAccount_WithValidValues_UpdatesAdminControlledFields() {
+        var user = User.Create("test@example.com", "hash");
+
+        user.UpdateAdminAccount(new UserAdminAccountUpdate(
+            IsEmailConfirmed: true,
+            Language: "ru",
+            AiInputTokenLimit: 123,
+            AiOutputTokenLimit: 456));
+
+        Assert.True(user.IsEmailConfirmed);
+        Assert.Equal("ru", user.Language);
+        Assert.Equal(123, user.AiInputTokenLimit);
+        Assert.Equal(456, user.AiOutputTokenLimit);
+    }
+
+    [Fact]
+    public void UpdateAdminAccount_WithNegativeInputLimit_Throws() {
+        var user = User.Create("test@example.com", "hash");
+
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+            user.UpdateAdminAccount(new UserAdminAccountUpdate(AiInputTokenLimit: -1)));
+    }
+
+    [Fact]
     public void UpdateProfile_WithUnsupportedGender_Throws() {
         var user = User.Create("test@example.com", "hash");
 
