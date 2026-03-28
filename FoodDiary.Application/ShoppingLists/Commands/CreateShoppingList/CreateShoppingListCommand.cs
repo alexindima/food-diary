@@ -8,4 +8,4 @@ namespace FoodDiary.Application.ShoppingLists.Commands.CreateShoppingList;
 public record CreateShoppingListCommand(
     Guid? UserId,
     string Name,
-    IReadOnlyList<ShoppingListItemInput> Items) : ICommand<Result<ShoppingListModel>>;
+    IReadOnlyList<ShoppingListItemInput> Items) : ICommand<Result<ShoppingListModel>>, IUserRequest;

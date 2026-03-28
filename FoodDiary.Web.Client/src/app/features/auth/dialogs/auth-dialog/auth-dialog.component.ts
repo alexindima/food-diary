@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/material';
 import { FdUiDialogShellComponent } from 'fd-ui-kit/dialog-shell/fd-ui-dialog-shell.component';
-import { AuthComponent } from './auth.component';
+import { AuthComponent } from '../../components/auth/auth.component';
 
 @Component({
     selector: 'fd-auth-dialog',

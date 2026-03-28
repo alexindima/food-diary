@@ -8,31 +8,21 @@ using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Interfaces.Services;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects;
+using Microsoft.Extensions.Logging;
 
 namespace FoodDiary.Application.Authentication.Commands.Register;
 
-public class RegisterCommandHandler : ICommandHandler<RegisterCommand, Result<AuthenticationModel>> {
-    private readonly IUserRepository _userRepository;
-    private readonly IPasswordHasher _passwordHasher;
-    private readonly IEmailSender _emailSender;
-    private readonly IDateTimeProvider _dateTimeProvider;
-    private readonly IAuthenticationTokenService _authenticationTokenService;
-
-    public RegisterCommandHandler(
-        IUserRepository userRepository,
-        IPasswordHasher passwordHasher,
-        IEmailSender emailSender,
-        IDateTimeProvider dateTimeProvider,
-        IAuthenticationTokenService authenticationTokenService) {
-        _userRepository = userRepository;
-        _passwordHasher = passwordHasher;
-        _emailSender = emailSender;
-        _dateTimeProvider = dateTimeProvider;
-        _authenticationTokenService = authenticationTokenService;
-    }
+public class RegisterCommandHandler(
+    IUserRepository userRepository,
+    IPasswordHasher passwordHasher,
+    IEmailSender emailSender,
+    IDateTimeProvider dateTimeProvider,
+    IAuthenticationTokenService authenticationTokenService,
+    ILogger<RegisterCommandHandler> logger)
+    : ICommandHandler<RegisterCommand, Result<AuthenticationModel>> {
 
     public async Task<Result<AuthenticationModel>> Handle(RegisterCommand command, CancellationToken cancellationToken) {
-        var hashedPassword = _passwordHasher.Hash(command.Password);
+        var hashedPassword = passwordHasher.Hash(command.Password);
         var user = User.Create(command.Email, hashedPassword);
         var normalizedLanguage = LanguageCode.FromPreferred(command.Language).Value;
         user.UpdateGoals(
@@ -45,19 +35,20 @@ public class RegisterCommandHandler : ICommandHandler<RegisterCommand, Result<Au
         );
         user.UpdatePreferences(language: normalizedLanguage);
 
-        user = await _userRepository.AddAsync(user, cancellationToken);
+        user = await userRepository.AddAsync(user, cancellationToken);
 
         var emailToken = SecurityTokenGenerator.GenerateUrlSafeToken();
-        var emailTokenHash = _passwordHasher.Hash(emailToken);
-        user.SetEmailConfirmationToken(emailTokenHash, _dateTimeProvider.UtcNow.AddHours(24));
+        var emailTokenHash = passwordHasher.Hash(emailToken);
+        user.SetEmailConfirmationToken(emailTokenHash, dateTimeProvider.UtcNow.AddHours(24));
 
-        var tokens = await _authenticationTokenService.IssueAndStoreAsync(user, cancellationToken);
+        var tokens = await authenticationTokenService.IssueAndStoreAsync(user, cancellationToken);
 
         try {
-            await _emailSender.SendEmailVerificationAsync(
+            await emailSender.SendEmailVerificationAsync(
                 new EmailVerificationMessage(user.Email, user.Id.Value.ToString(), emailToken, user.Language),
                 cancellationToken);
-        } catch {
+        } catch (Exception ex) {
+            logger.LogWarning(ex, "Email verification dispatch failed during registration for {Email}", command.Email);
         }
 
         return Result.Success(user.ToAuthenticationModel(tokens));

@@ -17,7 +17,7 @@ public class CreateProductCommandHandler(IProductRepository productRepository)
             return Result.Failure<ProductModel>(Errors.Authentication.InvalidToken);
         }
 
-        var userId = new UserId(command.UserId.Value);
+        var userId = new UserId(command.UserId!.Value);
 
         if (!Enum.TryParse<MeasurementUnit>(command.BaseUnit, true, out var baseUnit)) {
             return Result.Failure<ProductModel>(

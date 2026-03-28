@@ -15,28 +15,28 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
+import { AuthService } from '../../../../services/auth.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { matchFieldValidator } from '../../validators/match-field.validator';
-import { NavigationService } from '../../services/navigation.service';
-import { FormGroupControls } from '../../types/common.data';
+import { matchFieldValidator } from '../../../../validators/match-field.validator';
+import { NavigationService } from '../../../../services/navigation.service';
+import { FormGroupControls } from '../../../../types/common.data';
 import {
     LoginRequest,
     RegisterRequest,
     RestoreAccountRequest,
     TelegramLoginWidgetRequest,
     PasswordResetRequest,
-} from '../../types/auth.data';
+} from '../../../../types/auth.data';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiCheckboxComponent } from 'fd-ui-kit/checkbox/fd-ui-checkbox.component';
 import { FdUiFormErrorComponent, FD_VALIDATION_ERRORS, FdValidationErrors } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
-import { GoogleIdentityService } from '../../services/google-identity.service';
-import { LocalizationService } from '../../services/localization.service';
-import { environment } from '../../../environments/environment';
-import { GoogleLoginRequest } from '../../types/google-auth.data';
+import { GoogleIdentityService } from '../../../../services/google-identity.service';
+import { LocalizationService } from '../../../../services/localization.service';
+import { environment } from '../../../../../environments/environment';
+import { GoogleLoginRequest } from '../../../../types/google-auth.data';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: FD_VALIDATION_ERRORS,

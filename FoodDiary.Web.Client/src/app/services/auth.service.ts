@@ -15,7 +15,7 @@ import { ApiService } from './api.service';
 import { NavigationService } from './navigation.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { GoogleLoginRequest } from '../types/google-auth.data';
-import { QuickConsumptionService } from './quick-consumption.service';
+import { QuickMealService } from '../features/meals/lib/quick-meal.service';
 import { LocalizationService } from './localization.service';
 
 @Injectable({
@@ -23,7 +23,7 @@ import { LocalizationService } from './localization.service';
 })
 export class AuthService extends ApiService {
     private readonly navigationService = inject(NavigationService);
-    private readonly quickConsumptionService = inject(QuickConsumptionService);
+    private readonly quickConsumptionService = inject(QuickMealService);
     private readonly localizationService = inject(LocalizationService);
     protected readonly baseUrl = environment.apiUrls.auth;
 

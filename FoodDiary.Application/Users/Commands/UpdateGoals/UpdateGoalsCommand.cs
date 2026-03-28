@@ -14,4 +14,4 @@ public record UpdateGoalsCommand(
     double? WaterGoal,
     double? DesiredWeight,
     double? DesiredWaist
-) : ICommand<Result<GoalsModel>>;
+) : ICommand<Result<GoalsModel>>, IUserRequest;

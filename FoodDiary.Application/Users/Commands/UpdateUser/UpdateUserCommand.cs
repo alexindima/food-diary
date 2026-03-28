@@ -21,4 +21,4 @@ public record UpdateUserCommand(
     Guid? ProfileImageAssetId,
     DashboardLayoutModel? DashboardLayout,
     bool? IsActive
-) : ICommand<Result<UserModel>>;
+) : ICommand<Result<UserModel>>, IUserRequest;

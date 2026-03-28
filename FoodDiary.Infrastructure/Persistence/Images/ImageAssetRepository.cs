@@ -23,20 +23,15 @@ public class ImageAssetRepository(FoodDiaryDbContext context) : IImageAssetRepos
     }
 
     public async Task<bool> IsAssetInUse(ImageAssetId assetId, CancellationToken cancellationToken = default) {
-        var productUse = await context.Products.AnyAsync(p => p.ImageAssetId == assetId, cancellationToken);
-        if (productUse) return true;
-
-        var recipeUse = await context.Recipes.AnyAsync(r => r.ImageAssetId == assetId, cancellationToken);
-        if (recipeUse) return true;
-
-        var stepUse = await context.RecipeSteps.AnyAsync(s => s.ImageAssetId == assetId, cancellationToken);
-        if (stepUse) return true;
-
-        var mealUse = await context.Meals.AnyAsync(m => m.ImageAssetId == assetId, cancellationToken);
-        if (mealUse) return true;
-
-        var userUse = await context.Users.AnyAsync(u => u.ProfileImageAssetId == assetId, cancellationToken);
-        return userUse;
+        return await context.ImageAssets
+            .Where(a => a.Id == assetId)
+            .Select(_ =>
+                context.Products.Any(p => p.ImageAssetId == assetId) ||
+                context.Recipes.Any(r => r.ImageAssetId == assetId) ||
+                context.RecipeSteps.Any(s => s.ImageAssetId == assetId) ||
+                context.Meals.Any(m => m.ImageAssetId == assetId) ||
+                context.Users.Any(u => u.ProfileImageAssetId == assetId))
+            .FirstOrDefaultAsync(cancellationToken);
     }
 
     public async Task<IReadOnlyList<ImageAsset>> GetUnusedOlderThanAsync(

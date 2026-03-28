@@ -9,4 +9,4 @@ public record GetStatisticsQuery(
     DateTime DateFrom,
     DateTime DateTo,
     int QuantizationDays
-) : IQuery<Result<IReadOnlyList<AggregatedStatisticsModel>>>;
+) : IQuery<Result<IReadOnlyList<AggregatedStatisticsModel>>>, IUserRequest;

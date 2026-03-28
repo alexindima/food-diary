@@ -7,4 +7,4 @@ public record ChangePasswordCommand(
     Guid? UserId,
     string CurrentPassword,
     string NewPassword
-) : ICommand<Result<bool>>;
+) : ICommand<Result<bool>>, IUserRequest;

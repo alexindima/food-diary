@@ -2,11 +2,11 @@ import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
-import { UserService } from '../../../services/user.service';
-import { AuthService } from '../../../services/auth.service';
-import { NavigationService } from '../../../services/navigation.service';
+import { UserService } from '../../../../services/user.service';
+import { AuthService } from '../../../../services/auth.service';
+import { NavigationService } from '../../../../services/navigation.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { EmailVerificationRealtimeService } from '../../../services/email-verification-realtime.service';
+import { EmailVerificationRealtimeService } from '../../../../services/email-verification-realtime.service';
 
 @Component({
     selector: 'fd-email-verification-pending',

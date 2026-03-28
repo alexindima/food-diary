@@ -58,9 +58,9 @@ namespace FoodDiary.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CreatedOnUtc");
-
                     b.HasIndex("UserId");
+
+                    b.HasIndex("UserId", "CreatedOnUtc");
 
                     b.ToTable("AiUsages");
                 });

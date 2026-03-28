@@ -12,11 +12,11 @@ public class ChangePasswordCommandHandler(
     IPasswordHasher passwordHasher)
     : ICommandHandler<ChangePasswordCommand, Result<bool>> {
     public async Task<Result<bool>> Handle(ChangePasswordCommand command, CancellationToken cancellationToken) {
-        if (command.UserId is null || command.UserId.Value == Guid.Empty) {
+        if (command.UserId is null || command.UserId == Guid.Empty) {
             return Result.Failure<bool>(Errors.Authentication.InvalidToken);
         }
 
-        var userId = new UserId(command.UserId.Value);
+        var userId = new UserId(command.UserId!.Value);
         var user = await userRepository.GetByIdAsync(userId, cancellationToken);
         if (user is null) {
             return Result.Failure<bool>(User.NotFound(userId));

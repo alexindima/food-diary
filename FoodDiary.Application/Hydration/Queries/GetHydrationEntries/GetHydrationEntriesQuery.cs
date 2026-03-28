@@ -6,4 +6,4 @@ namespace FoodDiary.Application.Hydration.Queries.GetHydrationEntries;
 
 public record GetHydrationEntriesQuery(
     Guid? UserId,
-    DateTime DateUtc) : IQuery<Result<IReadOnlyList<HydrationEntryModel>>>;
+    DateTime DateUtc) : IQuery<Result<IReadOnlyList<HydrationEntryModel>>>, IUserRequest;

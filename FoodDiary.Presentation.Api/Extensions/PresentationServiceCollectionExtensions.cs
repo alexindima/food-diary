@@ -1,4 +1,5 @@
 using FoodDiary.Application.Authentication.Common;
+using FoodDiary.Presentation.Api.Filters;
 using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Presentation.Api.Security;
 using FoodDiary.Presentation.Api.Services;
@@ -10,8 +11,11 @@ namespace FoodDiary.Presentation.Api.Extensions;
 
 public static class PresentationServiceCollectionExtensions {
     public static IServiceCollection AddPresentationApi(this IServiceCollection services) {
+        services.AddScoped<TelemetryActionFilter>();
         services
-            .AddControllers()
+            .AddControllers(options => {
+                options.Filters.AddService<TelemetryActionFilter>();
+            })
             .ConfigureApiBehaviorOptions(options => {
                 options.InvalidModelStateResponseFactory = context => {
                     var errors = context.ModelState

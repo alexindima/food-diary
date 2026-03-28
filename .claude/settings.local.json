@@ -39,7 +39,9 @@
       "Bash(grep -v \"^obj$\")",
       "Bash(/tmp/test_summary.txt:*)",
       "Read(//tmp/**)",
-      "Bash(dotnet test:*)"
+      "Bash(dotnet test:*)",
+      "Bash(while read:*)",
+      "Bash(do sed:*)"
     ],
     "deny": [],
     "ask": []

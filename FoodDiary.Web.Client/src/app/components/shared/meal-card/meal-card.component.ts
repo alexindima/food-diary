@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
-import { Consumption } from '../../../types/consumption.data';
+import { Meal } from '../../../features/meals/models/meal.data';
 import { resolveMealImageUrl } from '../../../utils/meal-stub.utils';
 import { NutrientBadgesComponent } from '../nutrient-badges/nutrient-badges.component';
 
@@ -14,8 +14,8 @@ import { NutrientBadgesComponent } from '../nutrient-badges/nutrient-badges.comp
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MealCardComponent {
-    public readonly meal = input.required<Consumption>();
-    public readonly open = output<Consumption>();
+    public readonly meal = input.required<Meal>();
+    public readonly open = output<Meal>();
     private readonly fallbackMealImage = 'assets/images/stubs/meals/other.svg';
 
     public readonly coverImage = computed(() => {

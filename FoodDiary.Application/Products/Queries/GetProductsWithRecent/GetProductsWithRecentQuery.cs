@@ -12,4 +12,4 @@ public sealed record GetProductsWithRecentQuery(
     bool IncludePublic,
     int RecentLimit = 10,
     IReadOnlyCollection<string>? ProductTypes = null)
-    : IQuery<Result<ProductListWithRecentModel>>;
+    : IQuery<Result<ProductListWithRecentModel>>, IUserRequest;

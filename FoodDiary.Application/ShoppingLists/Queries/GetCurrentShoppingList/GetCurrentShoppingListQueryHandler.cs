@@ -16,7 +16,7 @@ public class GetCurrentShoppingListQueryHandler(IShoppingListRepository shopping
             return Result.Failure<ShoppingListModel>(Errors.Authentication.InvalidToken);
         }
 
-        var userId = new UserId(query.UserId.Value);
+        var userId = new UserId(query.UserId!.Value);
 
         var list = await shoppingListRepository.GetCurrentAsync(
             userId,

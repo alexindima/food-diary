@@ -6,4 +6,4 @@ namespace FoodDiary.Application.Products.Commands.DuplicateProduct;
 
 public sealed record DuplicateProductCommand(
     Guid? UserId,
-    Guid ProductId) : ICommand<Result<ProductModel>>;
+    Guid ProductId) : ICommand<Result<ProductModel>>, IUserRequest;

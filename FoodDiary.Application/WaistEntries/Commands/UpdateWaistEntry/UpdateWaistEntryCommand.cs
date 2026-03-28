@@ -9,4 +9,4 @@ public record UpdateWaistEntryCommand(
     Guid WaistEntryId,
     DateTime Date,
     double Circumference
-) : ICommand<Result<WaistEntryModel>>;
+) : ICommand<Result<WaistEntryModel>>, IUserRequest;

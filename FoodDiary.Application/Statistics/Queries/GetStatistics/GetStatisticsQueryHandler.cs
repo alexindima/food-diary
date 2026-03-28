@@ -12,16 +12,13 @@ public class GetStatisticsQueryHandler(IMealRepository mealRepository)
     public async Task<Result<IReadOnlyList<AggregatedStatisticsModel>>> Handle(
         GetStatisticsQuery request,
         CancellationToken cancellationToken) {
-        if (request.UserId is null || request.UserId == Guid.Empty) {
-            return Result.Failure<IReadOnlyList<AggregatedStatisticsModel>>(Errors.Authentication.InvalidToken);
-        }
 
         if (request.DateFrom > request.DateTo) {
             return Result.Failure<IReadOnlyList<AggregatedStatisticsModel>>(
                 Errors.Validation.Invalid(nameof(request.DateFrom), "DateFrom must be earlier than DateTo"));
         }
 
-        var userId = new UserId(request.UserId.Value);
+        var userId = new UserId(request.UserId!.Value);
 
         var quantizationDays = Math.Clamp(request.QuantizationDays <= 0 ? 1 : request.QuantizationDays, 1, 365);
 

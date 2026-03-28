@@ -25,12 +25,6 @@ public class RecipeRepository(FoodDiaryDbContext context) : IRecipeRepository {
 
         var query = context.Recipes
             .AsNoTracking()
-            .Include(r => r.Steps)
-            .ThenInclude(s => s.Ingredients)
-            .ThenInclude(i => i.Product)
-            .Include(r => r.Steps)
-            .ThenInclude(s => s.Ingredients)
-            .ThenInclude(i => i.NestedRecipe)
             .Where(includePublic
                 ? r => r.UserId == userId || r.Visibility == Visibility.Public
                 : r => r.UserId == userId);
@@ -71,6 +65,8 @@ public class RecipeRepository(FoodDiaryDbContext context) : IRecipeRepository {
         if (!asTracking) {
             query = query.AsNoTracking();
         }
+
+        query = query.AsSplitQuery();
 
         if (includeSteps) {
             query = query
@@ -151,12 +147,6 @@ public class RecipeRepository(FoodDiaryDbContext context) : IRecipeRepository {
 
         var items = await context.Recipes
             .AsNoTracking()
-            .Include(r => r.Steps)
-            .ThenInclude(s => s.Ingredients)
-            .ThenInclude(i => i.Product)
-            .Include(r => r.Steps)
-            .ThenInclude(s => s.Ingredients)
-            .ThenInclude(i => i.NestedRecipe)
             .Where(r => recipeIds.Contains(r.Id) && (includePublic
                 ? r.UserId == userId || r.Visibility == Visibility.Public
                 : r.UserId == userId))

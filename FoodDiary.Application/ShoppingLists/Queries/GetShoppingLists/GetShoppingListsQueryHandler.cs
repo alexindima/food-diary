@@ -16,7 +16,7 @@ public class GetShoppingListsQueryHandler(IShoppingListRepository shoppingListRe
             return Result.Failure<IReadOnlyList<ShoppingListSummaryModel>>(Errors.Authentication.InvalidToken);
         }
 
-        var userId = new UserId(query.UserId.Value);
+        var userId = new UserId(query.UserId!.Value);
 
         var lists = await shoppingListRepository.GetAllAsync(
             userId,

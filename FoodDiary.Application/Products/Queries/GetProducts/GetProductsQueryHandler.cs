@@ -20,7 +20,7 @@ public class GetProductsQueryHandler(IProductRepository productRepository)
 
         var pageNumber = Math.Max(query.Page, 1);
         var pageSize = Math.Max(query.Limit, 1);
-        var userId = new UserId(query.UserId.Value);
+        var userId = new UserId(query.UserId!.Value);
         var productTypes = query.ProductTypes?
             .Select(type => Enum.TryParse<ProductType>(type, true, out var parsed) ? parsed : (ProductType?)null)
             .OfType<ProductType>()

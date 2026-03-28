@@ -5,4 +5,4 @@ using FoodDiary.Application.Users.Models;
 namespace FoodDiary.Application.Users.Queries.GetDesiredWeight;
 
 public record GetDesiredWeightQuery(Guid? UserId)
-    : IQuery<Result<UserDesiredWeightModel>>;
+    : IQuery<Result<UserDesiredWeightModel>>, IUserRequest;

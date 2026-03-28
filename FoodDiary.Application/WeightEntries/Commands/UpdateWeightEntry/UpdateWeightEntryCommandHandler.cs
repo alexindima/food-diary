@@ -12,11 +12,11 @@ public class UpdateWeightEntryCommandHandler(IWeightEntryRepository weightEntryR
     public async Task<Result<WeightEntryModel>> Handle(
         UpdateWeightEntryCommand command,
         CancellationToken cancellationToken) {
-        if (command.UserId is null || command.UserId.Value == Guid.Empty) {
+        if (command.UserId is null || command.UserId == Guid.Empty) {
             return Result.Failure<WeightEntryModel>(Errors.Authentication.InvalidToken);
         }
 
-        var userId = new UserId(command.UserId.Value);
+        var userId = new UserId(command.UserId!.Value);
         var weightEntryId = new WeightEntryId(command.WeightEntryId);
         var existingEntry = await weightEntryRepository.GetByIdAsync(
             weightEntryId,

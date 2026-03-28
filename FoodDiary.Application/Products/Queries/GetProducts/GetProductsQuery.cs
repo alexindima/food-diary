@@ -12,4 +12,4 @@ public record GetProductsQuery(
     string? Search,
     bool IncludePublic,
     IReadOnlyCollection<string>? ProductTypes = null)
-    : IQuery<Result<PagedResponse<ProductModel>>>;
+    : IQuery<Result<PagedResponse<ProductModel>>>, IUserRequest;

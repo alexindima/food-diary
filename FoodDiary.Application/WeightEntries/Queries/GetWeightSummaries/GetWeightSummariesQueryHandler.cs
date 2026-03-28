@@ -12,7 +12,7 @@ public class GetWeightSummariesQueryHandler(IWeightEntryRepository weightEntryRe
     public async Task<Result<IReadOnlyList<WeightEntrySummaryModel>>> Handle(
         GetWeightSummariesQuery query,
         CancellationToken cancellationToken) {
-        if (query.UserId is null || query.UserId.Value == Guid.Empty) {
+        if (query.UserId is null || query.UserId == Guid.Empty) {
             return Result.Failure<IReadOnlyList<WeightEntrySummaryModel>>(Errors.Authentication.InvalidToken);
         }
 
@@ -26,7 +26,7 @@ public class GetWeightSummariesQueryHandler(IWeightEntryRepository weightEntryRe
                 Errors.Validation.Invalid(nameof(query.QuantizationDays), "Value must be greater than zero."));
         }
 
-        var userId = new UserId(query.UserId.Value);
+        var userId = new UserId(query.UserId!.Value);
         var normalizedFrom = NormalizeUtcDate(query.DateFrom);
         var normalizedTo = NormalizeUtcDate(query.DateTo);
 

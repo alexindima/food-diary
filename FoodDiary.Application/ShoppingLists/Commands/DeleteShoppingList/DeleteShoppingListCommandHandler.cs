@@ -14,7 +14,7 @@ public class DeleteShoppingListCommandHandler(IShoppingListRepository shoppingLi
             return Result.Failure<bool>(Errors.Authentication.InvalidToken);
         }
 
-        var userId = new UserId(command.UserId.Value);
+        var userId = new UserId(command.UserId!.Value);
         var shoppingListId = new ShoppingListId(command.ShoppingListId);
 
         var list = await shoppingListRepository.GetByIdAsync(

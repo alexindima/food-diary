@@ -8,4 +8,4 @@ public record CreateWeightEntryCommand(
     Guid? UserId,
     DateTime Date,
     double Weight
-) : ICommand<Result<WeightEntryModel>>;
+) : ICommand<Result<WeightEntryModel>>, IUserRequest;

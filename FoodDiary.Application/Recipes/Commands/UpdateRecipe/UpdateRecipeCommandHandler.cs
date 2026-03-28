@@ -20,7 +20,7 @@ public class UpdateRecipeCommandHandler(
             return Result.Failure<RecipeModel>(Errors.Authentication.InvalidToken);
         }
 
-        var userId = new UserId(command.UserId.Value);
+        var userId = new UserId(command.UserId!.Value);
         var recipeId = new RecipeId(command.RecipeId);
 
         var recipe = await recipeRepository.GetByIdAsync(

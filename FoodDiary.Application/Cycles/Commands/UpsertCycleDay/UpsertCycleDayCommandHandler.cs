@@ -13,10 +13,10 @@ public class UpsertCycleDayCommandHandler(ICycleRepository cycleRepository)
         UpsertCycleDayCommand command,
         CancellationToken cancellationToken) {
         if (command.UserId is null || command.UserId == Guid.Empty) {
-            return Result.Failure<CycleDayModel>(Errors.User.NotFound());
+            return Result.Failure<CycleDayModel>(Errors.Authentication.InvalidToken);
         }
 
-        var userId = new UserId(command.UserId.Value);
+        var userId = new UserId(command.UserId!.Value);
         var cycleId = new CycleId(command.CycleId);
 
         var cycle = await cycleRepository.GetByIdAsync(

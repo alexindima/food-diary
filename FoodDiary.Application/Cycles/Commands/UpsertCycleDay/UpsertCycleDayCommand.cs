@@ -12,4 +12,4 @@ public record UpsertCycleDayCommand(
     DailySymptomsModel Symptoms,
     string? Notes,
     bool ClearNotes
-) : ICommand<Result<CycleDayModel>>;
+) : ICommand<Result<CycleDayModel>>, IUserRequest;

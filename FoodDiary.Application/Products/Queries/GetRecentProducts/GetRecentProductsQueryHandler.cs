@@ -19,7 +19,7 @@ public sealed class GetRecentProductsQueryHandler(
             return Result.Failure<IReadOnlyList<ProductModel>>(Errors.Authentication.InvalidToken);
         }
 
-        var userId = new UserId(query.UserId.Value);
+        var userId = new UserId(query.UserId!.Value);
         var recentLimit = Math.Clamp(query.Limit, 1, 50);
 
         var recents = await recentItemRepository.GetRecentProductsAsync(userId, recentLimit, cancellationToken);

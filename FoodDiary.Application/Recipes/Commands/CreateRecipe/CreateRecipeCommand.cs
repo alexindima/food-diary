@@ -24,4 +24,4 @@ public record CreateRecipeCommand(
     double? ManualCarbs,
     double? ManualFiber,
     double? ManualAlcohol,
-    IReadOnlyList<RecipeStepInput> Steps) : ICommand<Result<RecipeModel>>;
+    IReadOnlyList<RecipeStepInput> Steps) : ICommand<Result<RecipeModel>>, IUserRequest;

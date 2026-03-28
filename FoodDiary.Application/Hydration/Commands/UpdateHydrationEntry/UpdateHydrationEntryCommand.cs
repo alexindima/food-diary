@@ -8,4 +8,4 @@ public record UpdateHydrationEntryCommand(
     Guid? UserId,
     Guid HydrationEntryId,
     DateTime? TimestampUtc,
-    int? AmountMl) : ICommand<Result<HydrationEntryModel>>;
+    int? AmountMl) : ICommand<Result<HydrationEntryModel>>, IUserRequest;

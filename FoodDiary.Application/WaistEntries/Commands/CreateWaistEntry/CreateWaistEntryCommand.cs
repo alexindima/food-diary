@@ -8,4 +8,4 @@ public record CreateWaistEntryCommand(
     Guid? UserId,
     DateTime Date,
     double Circumference
-) : ICommand<Result<WaistEntryModel>>;
+) : ICommand<Result<WaistEntryModel>>, IUserRequest;

@@ -17,7 +17,7 @@ public class GetDailyAdviceQueryHandler(
             return Result.Failure<DailyAdviceModel>(Errors.Authentication.InvalidToken);
         }
 
-        var userId = new UserId(query.UserId.Value);
+        var userId = new UserId(query.UserId!.Value);
         var user = await userRepository.GetByIdAsync(userId, cancellationToken);
         if (user is null) {
             return Result.Failure<DailyAdviceModel>(Errors.User.NotFound(userId.Value));

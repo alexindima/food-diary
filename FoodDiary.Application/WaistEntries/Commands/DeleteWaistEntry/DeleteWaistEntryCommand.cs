@@ -6,4 +6,4 @@ namespace FoodDiary.Application.WaistEntries.Commands.DeleteWaistEntry;
 public record DeleteWaistEntryCommand(
     Guid? UserId,
     Guid WaistEntryId
-) : ICommand<Result<bool>>;
+) : ICommand<Result<bool>>, IUserRequest;

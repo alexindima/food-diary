@@ -6,4 +6,4 @@ namespace FoodDiary.Application.WaistEntries.Queries.GetLatestWaistEntry;
 
 public record GetLatestWaistEntryQuery(
     Guid? UserId
-) : IQuery<Result<WaistEntryModel?>>;
+) : IQuery<Result<WaistEntryModel?>>, IUserRequest;

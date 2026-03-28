@@ -15,7 +15,7 @@ public class DeleteProductCommandHandler(
             return Result.Failure(Errors.Authentication.InvalidToken);
         }
 
-        var userId = new UserId(command.UserId.Value);
+        var userId = new UserId(command.UserId!.Value);
         var productId = new ProductId(command.ProductId);
 
         var product = await productRepository.GetByIdAsync(

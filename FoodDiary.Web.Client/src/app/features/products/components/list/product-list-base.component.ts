@@ -20,7 +20,7 @@ import { FdPageContainerDirective } from '../../../../directives/layout/page-con
 import { ProductService } from '../../api/product.service';
 import { Product, ProductFilters, ProductType } from '../../models/product.data';
 import { NavigationService } from '../../../../services/navigation.service';
-import { QuickConsumptionService } from '../../../../services/quick-consumption.service';
+import { QuickMealService } from '../../../../features/meals/lib/quick-meal.service';
 import { FormGroupControls } from '../../../../types/common.data';
 import { PagedData } from '../../../../types/paged-data.data';
 import { buildProductTypeTranslationKey } from '../../../../utils/product-type.utils';
@@ -56,7 +56,7 @@ export class ProductListBaseComponent implements OnInit {
     protected readonly navigationService = inject(NavigationService);
     protected readonly pageSize = 10;
     protected readonly fdDialogService = inject(FdUiDialogService);
-    protected readonly quickConsumptionService = inject(QuickConsumptionService);
+    protected readonly quickConsumptionService = inject(QuickMealService);
     private readonly breakpointObserver = inject(BreakpointObserver);
     private readonly destroyRef = inject(DestroyRef);
 

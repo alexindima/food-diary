@@ -30,4 +30,4 @@ public record UpdateRecipeCommand(
     double? ManualCarbs,
     double? ManualFiber,
     double? ManualAlcohol,
-    IReadOnlyList<RecipeStepInput>? Steps) : ICommand<Result<RecipeModel>>;
+    IReadOnlyList<RecipeStepInput>? Steps) : ICommand<Result<RecipeModel>>, IUserRequest;

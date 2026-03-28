@@ -9,14 +9,14 @@ import { StatisticsBodyComponent } from '../../shared/statistics-body/statistics
 import { ProductCardComponent } from '../../shared/product-card/product-card.component';
 import { RecipeCardComponent } from '../../shared/recipe-card/recipe-card.component';
 import { QuickConsumptionDrawerComponent } from '../../shared/quick-consumption-drawer/quick-consumption-drawer.component';
-import { Consumption } from '../../../types/consumption.data';
 import { AuthService } from '../../../services/auth.service';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { AuthDialogComponent } from '../../auth/auth-dialog.component';
+import { AuthDialogComponent } from '../../../features/auth/dialogs/auth-dialog/auth-dialog.component';
 import { FdUiTab } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
 import { Product, MeasurementUnit, ProductType, ProductVisibility } from '../../../features/products/models/product.data';
 import { Recipe, RecipeVisibility } from '../../../features/recipes/models/recipe.data';
-import { QuickConsumptionItem, QuickConsumptionService } from '../../../services/quick-consumption.service';
+import { Meal } from '../../../features/meals/models/meal.data';
+import { QuickMealItem, QuickMealService } from '../../../features/meals/lib/quick-meal.service';
 
 @Component({
     selector: 'fd-landing-preview-tour',
@@ -38,7 +38,7 @@ import { QuickConsumptionItem, QuickConsumptionService } from '../../../services
 export class LandingPreviewTourComponent implements OnInit {
     private readonly authService = inject(AuthService);
     private readonly fdDialogService = inject(FdUiDialogService);
-    private readonly quickConsumptionService = inject(QuickConsumptionService);
+    private readonly quickConsumptionService = inject(QuickMealService);
     private readonly translateService = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
 
@@ -80,7 +80,7 @@ export class LandingPreviewTourComponent implements OnInit {
     };
     public previewProducts: Product[] = [];
     public previewRecipes: Recipe[] = [];
-    public previewQuickItems: QuickConsumptionItem[] = [];
+    public previewQuickItems: QuickMealItem[] = [];
     public lineOptions: ChartConfiguration['options'] = {
         responsive: true,
         maintainAspectRatio: false,
@@ -128,7 +128,7 @@ export class LandingPreviewTourComponent implements OnInit {
 
     private buildGuestMeals(): MealPreviewEntry[] {
         const comment = this.translateService.instant('LANDING_PREVIEW_TOUR.PREVIEW_DATA.MEAL_COMMENT');
-        const lunch: Consumption = {
+        const lunch: Meal = {
             id: 'guest-lunch',
             date: new Date().toISOString(),
             mealType: 'LUNCH',
@@ -449,7 +449,7 @@ export class LandingPreviewTourComponent implements OnInit {
         ];
     }
 
-    private buildPreviewQuickItems(): QuickConsumptionItem[] {
+    private buildPreviewQuickItems(): QuickMealItem[] {
         const products = this.previewProducts;
         const recipes = this.previewRecipes;
 

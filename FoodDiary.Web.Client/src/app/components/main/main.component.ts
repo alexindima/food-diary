@@ -1,7 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { AuthDialogComponent } from '../auth/auth-dialog.component';
+import { AuthDialogComponent } from '../../features/auth/dialogs/auth-dialog/auth-dialog.component';
 import { AuthService } from '../../services/auth.service';
 import { HeroComponent } from '../hero/hero.component';
 import { FeaturesComponent } from '../features/features.component';

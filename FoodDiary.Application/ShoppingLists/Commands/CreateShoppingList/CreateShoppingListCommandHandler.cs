@@ -21,7 +21,7 @@ public class CreateShoppingListCommandHandler(
             return Result.Failure<ShoppingListModel>(Errors.Authentication.InvalidToken);
         }
 
-        var userId = new UserId(command.UserId.Value);
+        var userId = new UserId(command.UserId!.Value);
 
         if (string.IsNullOrWhiteSpace(command.Name)) {
             return Result.Failure<ShoppingListModel>(

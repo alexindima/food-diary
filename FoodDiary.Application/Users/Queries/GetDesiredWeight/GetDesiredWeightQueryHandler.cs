@@ -11,11 +11,11 @@ public class GetDesiredWeightQueryHandler(IUserRepository userRepository)
     public async Task<Result<UserDesiredWeightModel>> Handle(
         GetDesiredWeightQuery query,
         CancellationToken cancellationToken) {
-        if (query.UserId is null || query.UserId.Value == Guid.Empty) {
+        if (query.UserId is null || query.UserId == Guid.Empty) {
             return Result.Failure<UserDesiredWeightModel>(Errors.Authentication.InvalidToken);
         }
 
-        var userId = new UserId(query.UserId.Value);
+        var userId = new UserId(query.UserId!.Value);
         var user = await userRepository.GetByIdAsync(userId, cancellationToken);
         return user is null
             ? Result.Failure<UserDesiredWeightModel>(Errors.User.NotFound(userId))

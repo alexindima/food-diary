@@ -13,7 +13,6 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 import { NavigationService } from '../../../services/navigation.service';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
-import { Consumption } from '../../../types/consumption.data';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FdUiDatepicker, FdUiDatepickerInputEvent, FdUiDatepickerModule } from 'fd-ui-kit/material';
 import { FdUiInputFieldModule } from 'fd-ui-kit/material';
@@ -37,6 +36,7 @@ import { WeightTrendCardComponent, WeightTrendPoint } from '../components/weight
 import { DailyAdviceCardComponent } from '../components/daily-advice-card/daily-advice-card.component';
 import { MealsPreviewComponent, MealPreviewEntry } from '../../../components/shared/meals-preview/meals-preview.component';
 import { CycleSummaryCardComponent } from '../components/cycle-summary-card/cycle-summary-card.component';
+import { Meal } from '../../meals/models/meal.data';
 import { CyclesService } from '../../../services/cycles.service';
 import { CycleResponse } from '../../../types/cycle.data';
 import { UserService } from '../../../services/user.service';
@@ -96,7 +96,7 @@ export class DashboardComponent implements OnInit {
 
     public readonly dailyGoal = computed(() => this.snapshot()?.dailyGoal ?? 0);
     public readonly todayCalories = computed(() => this.snapshot()?.statistics.totalCalories ?? 0);
-    public readonly meals = computed<Consumption[]>(() => this.snapshot()?.meals.items ?? []);
+    public readonly meals = computed<Meal[]>(() => this.snapshot()?.meals.items ?? []);
     public readonly latestWeight = computed(() => this.snapshot()?.weight.latest?.weight ?? null);
     public readonly previousWeight = computed(() => this.snapshot()?.weight.previous?.weight ?? null);
     public readonly desiredWeight = computed(() => this.snapshot()?.weight.desired ?? null);
@@ -160,7 +160,7 @@ export class DashboardComponent implements OnInit {
             }));
         }
 
-        const result: { meal: Consumption | null; slot?: MealSlot }[] = [];
+        const result: { meal: Meal | null; slot?: MealSlot }[] = [];
 
         for (const slot of this.mealSlots) {
             const index = meals.findIndex(m => (m.mealType ?? '').toUpperCase() === slot);
@@ -406,7 +406,7 @@ export class DashboardComponent implements OnInit {
         }));
     }
 
-    public openConsumption(consumption: Consumption): void {
+    public openConsumption(consumption: Meal): void {
         void this.navigationService.navigateToConsumptionEdit(consumption.id);
     }
 

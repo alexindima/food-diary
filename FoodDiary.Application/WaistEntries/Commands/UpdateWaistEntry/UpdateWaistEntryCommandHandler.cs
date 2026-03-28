@@ -12,11 +12,11 @@ public class UpdateWaistEntryCommandHandler(IWaistEntryRepository waistEntryRepo
     public async Task<Result<WaistEntryModel>> Handle(
         UpdateWaistEntryCommand command,
         CancellationToken cancellationToken) {
-        if (command.UserId is null || command.UserId.Value == Guid.Empty) {
+        if (command.UserId is null || command.UserId == Guid.Empty) {
             return Result.Failure<WaistEntryModel>(Errors.Authentication.InvalidToken);
         }
 
-        var userId = new UserId(command.UserId.Value);
+        var userId = new UserId(command.UserId!.Value);
         var waistEntryId = new WaistEntryId(command.WaistEntryId);
         var entry = await waistEntryRepository.GetByIdAsync(
             waistEntryId,

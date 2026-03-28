@@ -5,4 +5,4 @@ namespace FoodDiary.Application.Users.Commands.DeleteUser;
 
 public record DeleteUserCommand(
     Guid? UserId
-) : ICommand<Result<bool>>;
+) : ICommand<Result<bool>>, IUserRequest;

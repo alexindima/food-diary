@@ -23,4 +23,4 @@ public record UpdateConsumptionCommand(
     double? ManualFiber,
     double? ManualAlcohol,
     int PreMealSatietyLevel,
-    int PostMealSatietyLevel) : ICommand<Result<ConsumptionModel>>;
+    int PostMealSatietyLevel) : ICommand<Result<ConsumptionModel>>, IUserRequest;

@@ -15,6 +15,7 @@ using FoodDiary.Application.WeightEntries.Common;
 using FoodDiary.Application.WeightEntries.Queries.GetWeightSummaries;
 using FoodDiary.Domain.ValueObjects.Ids;
 using MediatR;
+using Microsoft.Extensions.Logging;
 
 namespace FoodDiary.Application.Dashboard.Queries.GetDashboardSnapshot;
 
@@ -22,7 +23,8 @@ public class GetDashboardSnapshotQueryHandler(
     ISender sender,
     IUserRepository userRepository,
     IWeightEntryRepository weightEntryRepository,
-    IWaistEntryRepository waistEntryRepository)
+    IWaistEntryRepository waistEntryRepository,
+    ILogger<GetDashboardSnapshotQueryHandler> logger)
     : IQueryHandler<GetDashboardSnapshotQuery, Result<DashboardSnapshotModel>> {
     public async Task<Result<DashboardSnapshotModel>> Handle(GetDashboardSnapshotQuery query, CancellationToken cancellationToken) {
         if (query.UserId is null || query.UserId == Guid.Empty) {
@@ -32,7 +34,7 @@ public class GetDashboardSnapshotQueryHandler(
         var date = query.Date;
         var dayStart = NormalizeToUtcDate(date);
         var dayEnd = dayStart.AddDays(1).AddTicks(-1);
-        var userId = new UserId(query.UserId.Value);
+        var userId = new UserId(query.UserId!.Value);
         var locale = string.IsNullOrWhiteSpace(query.Locale) ? "en" : query.Locale;
         var trendDays = Math.Clamp(query.TrendDays <= 0 ? 7 : query.TrendDays, 1, 31);
         var trendStart = dayStart.AddDays(-(trendDays - 1));
@@ -110,7 +112,8 @@ public class GetDashboardSnapshotQueryHandler(
         if (!string.IsNullOrWhiteSpace(user?.DashboardLayoutJson)) {
             try {
                 layout = JsonSerializer.Deserialize<DashboardLayoutModel>(user.DashboardLayoutJson!);
-            } catch (JsonException) {
+            } catch (JsonException ex) {
+                logger.LogWarning(ex, "Failed to deserialize dashboard layout JSON for user {UserId}", userId);
                 layout = null;
             }
         }

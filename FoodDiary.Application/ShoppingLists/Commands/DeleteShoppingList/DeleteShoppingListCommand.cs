@@ -5,4 +5,4 @@ namespace FoodDiary.Application.ShoppingLists.Commands.DeleteShoppingList;
 
 public record DeleteShoppingListCommand(
     Guid? UserId,
-    Guid ShoppingListId) : ICommand<Result<bool>>;
+    Guid ShoppingListId) : ICommand<Result<bool>>, IUserRequest;

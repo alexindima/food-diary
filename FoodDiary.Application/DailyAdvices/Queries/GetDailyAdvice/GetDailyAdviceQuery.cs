@@ -7,4 +7,4 @@ namespace FoodDiary.Application.DailyAdvices.Queries.GetDailyAdvice;
 public record GetDailyAdviceQuery(
     Guid? UserId,
     DateTime Date,
-    string Locale) : IQuery<Result<DailyAdviceModel>>;
+    string Locale) : IQuery<Result<DailyAdviceModel>>, IUserRequest;

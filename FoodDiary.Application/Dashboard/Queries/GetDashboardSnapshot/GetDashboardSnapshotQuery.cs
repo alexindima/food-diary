@@ -10,4 +10,4 @@ public record GetDashboardSnapshotQuery(
     int Page,
     int PageSize,
     string Locale,
-    int TrendDays) : IQuery<Result<DashboardSnapshotModel>>;
+    int TrendDays) : IQuery<Result<DashboardSnapshotModel>>, IUserRequest;

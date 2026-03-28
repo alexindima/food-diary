@@ -14,7 +14,7 @@ import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { catchError, debounceTime, distinctUntilChanged, finalize, map, Observable, of, switchMap, tap } from 'rxjs';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
 import { NavigationService } from '../../../../services/navigation.service';
-import { QuickConsumptionService } from '../../../../services/quick-consumption.service';
+import { QuickMealService } from '../../../../features/meals/lib/quick-meal.service';
 import { FormGroupControls } from '../../../../types/common.data';
 import { PagedData } from '../../../../types/paged-data.data';
 import { resolveRecipeImageUrl } from '../../../../utils/recipe-stub.utils';
@@ -54,7 +54,7 @@ export class RecipeListComponent implements OnInit {
     private readonly translateService = inject(TranslateService);
     private readonly fdDialogService = inject(FdUiDialogService);
     private readonly toastService = inject(FdUiToastService);
-    private readonly quickConsumptionService = inject(QuickConsumptionService);
+    private readonly quickConsumptionService = inject(QuickMealService);
     private readonly breakpointObserver = inject(BreakpointObserver);
     private readonly destroyRef = inject(DestroyRef);
 

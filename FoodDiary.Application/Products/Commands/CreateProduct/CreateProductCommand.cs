@@ -25,4 +25,4 @@ public record CreateProductCommand(
     double FiberPerBase,
     double AlcoholPerBase,
     string Visibility
-) : ICommand<Result<ProductModel>>;
+) : ICommand<Result<ProductModel>>, IUserRequest;

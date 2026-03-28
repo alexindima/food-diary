@@ -12,11 +12,11 @@ public class GetWaistEntriesQueryHandler(IWaistEntryRepository waistEntryReposit
     public async Task<Result<IReadOnlyList<WaistEntryModel>>> Handle(
         GetWaistEntriesQuery query,
         CancellationToken cancellationToken) {
-        if (query.UserId is null || query.UserId.Value == Guid.Empty) {
+        if (query.UserId is null || query.UserId == Guid.Empty) {
             return Result.Failure<IReadOnlyList<WaistEntryModel>>(Errors.Authentication.InvalidToken);
         }
 
-        var userId = new UserId(query.UserId.Value);
+        var userId = new UserId(query.UserId!.Value);
         var normalizedFrom = query.DateFrom.HasValue ? (DateTime?)NormalizeUtcDate(query.DateFrom.Value) : null;
         var normalizedTo = query.DateTo.HasValue ? (DateTime?)NormalizeUtcDate(query.DateTo.Value) : null;
 

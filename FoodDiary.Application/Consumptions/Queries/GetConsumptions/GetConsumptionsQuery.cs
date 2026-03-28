@@ -10,4 +10,4 @@ public record GetConsumptionsQuery(
     int Page,
     int Limit,
     DateTime? DateFrom,
-    DateTime? DateTo) : IQuery<Result<PagedResponse<ConsumptionModel>>>;
+    DateTime? DateTo) : IQuery<Result<PagedResponse<ConsumptionModel>>>, IUserRequest;

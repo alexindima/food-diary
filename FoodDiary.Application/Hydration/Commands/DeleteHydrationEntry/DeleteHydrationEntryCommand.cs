@@ -5,4 +5,4 @@ namespace FoodDiary.Application.Hydration.Commands.DeleteHydrationEntry;
 
 public record DeleteHydrationEntryCommand(
     Guid? UserId,
-    Guid HydrationEntryId) : ICommand<Result<bool>>;
+    Guid HydrationEntryId) : ICommand<Result<bool>>, IUserRequest;

@@ -9,4 +9,4 @@ public record GetWaistSummariesQuery(
     DateTime DateFrom,
     DateTime DateTo,
     int QuantizationDays
-) : IQuery<Result<IReadOnlyList<WaistEntrySummaryModel>>>;
+) : IQuery<Result<IReadOnlyList<WaistEntrySummaryModel>>>, IUserRequest;

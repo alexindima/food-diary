@@ -14,7 +14,7 @@ public class GetRecipeByIdQueryHandler(IRecipeRepository recipeRepository)
             return Result.Failure<RecipeModel>(Errors.Authentication.InvalidToken);
         }
 
-        var userId = new UserId(query.UserId.Value);
+        var userId = new UserId(query.UserId!.Value);
         var recipeId = new RecipeId(query.RecipeId);
 
         var recipe = await recipeRepository.GetByIdAsync(

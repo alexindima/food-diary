@@ -9,10 +9,10 @@ public class DeleteHydrationEntryCommandHandler(IHydrationEntryRepository reposi
     : ICommandHandler<DeleteHydrationEntryCommand, Result<bool>> {
     public async Task<Result<bool>> Handle(DeleteHydrationEntryCommand command, CancellationToken cancellationToken) {
         if (command.UserId is null || command.UserId == Guid.Empty) {
-            return Result.Failure<bool>(Errors.User.NotFound());
+            return Result.Failure<bool>(Errors.Authentication.InvalidToken);
         }
 
-        var userId = new UserId(command.UserId.Value);
+        var userId = new UserId(command.UserId!.Value);
         var hydrationEntryId = new HydrationEntryId(command.HydrationEntryId);
 
         var entry = await repository.GetByIdAsync(hydrationEntryId, asTracking: true, cancellationToken: cancellationToken);

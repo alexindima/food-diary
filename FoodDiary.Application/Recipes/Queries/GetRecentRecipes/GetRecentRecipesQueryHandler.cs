@@ -19,7 +19,7 @@ public sealed class GetRecentRecipesQueryHandler(
             return Result.Failure<IReadOnlyList<RecipeModel>>(Errors.Authentication.InvalidToken);
         }
 
-        var userId = new UserId(query.UserId.Value);
+        var userId = new UserId(query.UserId!.Value);
         var recentLimit = Math.Clamp(query.Limit, 1, 50);
 
         var recents = await recentItemRepository.GetRecentRecipesAsync(userId, recentLimit, cancellationToken);

@@ -32,6 +32,7 @@ public class MealRepository(FoodDiaryDbContext context) : IMealRepository {
 
         if (includeItems) {
             query = query
+                .AsSplitQuery()
                 .Include(m => m.Items)
                 .ThenInclude(i => i.Product)
                 .Include(m => m.Items)
@@ -63,6 +64,7 @@ public class MealRepository(FoodDiaryDbContext context) : IMealRepository {
 
         var query = context.Meals
             .AsNoTracking()
+            .AsSplitQuery()
             .Include(m => m.Items)
             .ThenInclude(i => i.Product)
             .Include(m => m.Items)

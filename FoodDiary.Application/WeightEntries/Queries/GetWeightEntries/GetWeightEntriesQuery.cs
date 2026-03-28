@@ -10,4 +10,4 @@ public record GetWeightEntriesQuery(
     DateTime? DateTo,
     int? Limit,
     bool Descending
-) : IQuery<Result<IReadOnlyList<WeightEntryModel>>>;
+) : IQuery<Result<IReadOnlyList<WeightEntryModel>>>, IUserRequest;

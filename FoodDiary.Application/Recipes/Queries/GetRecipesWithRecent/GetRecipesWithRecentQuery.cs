@@ -11,4 +11,4 @@ public sealed record GetRecipesWithRecentQuery(
     string? Search,
     bool IncludePublic,
     int RecentLimit = 10)
-    : IQuery<Result<RecipeListWithRecentModel>>;
+    : IQuery<Result<RecipeListWithRecentModel>>, IUserRequest;

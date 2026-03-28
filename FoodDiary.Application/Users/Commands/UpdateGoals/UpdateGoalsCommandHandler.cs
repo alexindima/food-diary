@@ -11,11 +11,11 @@ namespace FoodDiary.Application.Users.Commands.UpdateGoals;
 public class UpdateGoalsCommandHandler(IUserRepository userRepository)
     : ICommandHandler<UpdateGoalsCommand, Result<GoalsModel>> {
     public async Task<Result<GoalsModel>> Handle(UpdateGoalsCommand command, CancellationToken cancellationToken) {
-        if (command.UserId is null || command.UserId.Value == Guid.Empty) {
+        if (command.UserId is null || command.UserId == Guid.Empty) {
             return Result.Failure<GoalsModel>(Errors.Authentication.InvalidToken);
         }
 
-        var userId = new UserId(command.UserId.Value);
+        var userId = new UserId(command.UserId!.Value);
         var user = await userRepository.GetByIdAsync(userId, cancellationToken);
         if (user is null) {
             return Result.Failure<GoalsModel>(User.NotFound(userId));

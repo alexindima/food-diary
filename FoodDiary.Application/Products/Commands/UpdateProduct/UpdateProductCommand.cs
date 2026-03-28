@@ -32,4 +32,4 @@ public record UpdateProductCommand(
     double? CarbsPerBase,
     double? FiberPerBase,
     double? AlcoholPerBase,
-    string? Visibility) : ICommand<Result<ProductModel>>;
+    string? Visibility) : ICommand<Result<ProductModel>>, IUserRequest;

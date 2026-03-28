@@ -13,10 +13,10 @@ public class GetHydrationEntriesQueryHandler(IHydrationEntryRepository repositor
         GetHydrationEntriesQuery query,
         CancellationToken cancellationToken) {
         if (query.UserId is null || query.UserId == Guid.Empty) {
-            return Result.Failure<IReadOnlyList<HydrationEntryModel>>(Errors.User.NotFound());
+            return Result.Failure<IReadOnlyList<HydrationEntryModel>>(Errors.Authentication.InvalidToken);
         }
 
-        var userId = new UserId(query.UserId.Value);
+        var userId = new UserId(query.UserId!.Value);
 
         var dateUtc = NormalizeToUtcDate(query.DateUtc);
         var entries = await repository.GetByDateAsync(userId, dateUtc, cancellationToken);

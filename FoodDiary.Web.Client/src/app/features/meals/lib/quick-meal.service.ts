@@ -1,17 +1,18 @@
-import { Injectable, computed, inject, signal } from '@angular/core';
-import { ConsumptionManageDto, ConsumptionSourceType } from '../types/consumption.data';
-import { Product } from '../features/products/models/product.data';
-import { Recipe } from '../features/recipes/models/recipe.data';
-import { ConsumptionService } from './consumption.service';
-import { NavigationService } from './navigation.service';
-import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 
-export type QuickConsumptionItemType = 'product' | 'recipe';
+import { NavigationService } from '../../../services/navigation.service';
+import { Product } from '../../products/models/product.data';
+import { Recipe } from '../../recipes/models/recipe.data';
+import { MealManageDto, MealSourceType } from '../models/meal.data';
+import { MealService } from '../api/meal.service';
 
-export interface QuickConsumptionItem {
+export type QuickMealItemType = 'product' | 'recipe';
+
+export interface QuickMealItem {
     key: string;
-    type: QuickConsumptionItemType;
+    type: QuickMealItemType;
     product?: Product;
     recipe?: Recipe;
     amount: number;
@@ -20,13 +21,13 @@ export interface QuickConsumptionItem {
 @Injectable({
     providedIn: 'root',
 })
-export class QuickConsumptionService {
-    private readonly consumptionService = inject(ConsumptionService);
+export class QuickMealService {
+    private readonly mealService = inject(MealService);
     private readonly navigationService = inject(NavigationService);
     private readonly toastService = inject(FdUiToastService);
     private readonly translateService = inject(TranslateService);
 
-    private readonly itemsSignal = signal<QuickConsumptionItem[]>([]);
+    private readonly itemsSignal = signal<QuickMealItem[]>([]);
     private readonly isSavingSignal = signal(false);
     private isPreviewMode = false;
 
@@ -108,9 +109,9 @@ export class QuickConsumptionService {
             return;
         }
 
-        const payload = this.toConsumptionDto(items);
+        const payload = this.toMealDto(items);
         this.isSavingSignal.set(true);
-        this.consumptionService.create(payload).subscribe({
+        this.mealService.create(payload).subscribe({
             next: () => {
                 this.isSavingSignal.set(false);
                 this.toastService.open(this.translateService.instant('QUICK_CONSUMPTION.SAVE_SUCCESS'), {
@@ -127,11 +128,11 @@ export class QuickConsumptionService {
         });
     }
 
-    public getPrefillItems(): QuickConsumptionItem[] {
+    public getPrefillItems(): QuickMealItem[] {
         return this.itemsSignal();
     }
 
-    public setPreviewItems(items: QuickConsumptionItem[]): void {
+    public setPreviewItems(items: QuickMealItem[]): void {
         this.isPreviewMode = true;
         this.isSavingSignal.set(false);
         this.itemsSignal.set(items);
@@ -146,13 +147,13 @@ export class QuickConsumptionService {
         this.isPreviewMode = false;
     }
 
-    private consumeItems(): QuickConsumptionItem[] {
+    private consumeItems(): QuickMealItem[] {
         const items = this.itemsSignal();
         this.clear();
         return items;
     }
 
-    private upsertItem(newItem: QuickConsumptionItem): void {
+    private upsertItem(newItem: QuickMealItem): void {
         this.itemsSignal.update(items => {
             const existingIndex = items.findIndex(item => item.key === newItem.key);
             if (existingIndex >= 0) {
@@ -168,12 +169,12 @@ export class QuickConsumptionService {
         });
     }
 
-    private toConsumptionDto(items: QuickConsumptionItem[]): ConsumptionManageDto {
+    private toMealDto(items: QuickMealItem[]): MealManageDto {
         const mappedItems = items
             .map(item => {
                 if (item.type === 'product' && item.product) {
                     return {
-                        sourceType: ConsumptionSourceType.Product,
+                        sourceType: MealSourceType.Product,
                         productId: item.product.id,
                         recipeId: null,
                         amount: item.amount,
@@ -182,7 +183,7 @@ export class QuickConsumptionService {
 
                 if (item.type === 'recipe' && item.recipe) {
                     return {
-                        sourceType: ConsumptionSourceType.Recipe,
+                        sourceType: MealSourceType.Recipe,
                         recipeId: item.recipe.id,
                         productId: null,
                         amount: item.amount,
@@ -191,7 +192,7 @@ export class QuickConsumptionService {
 
                 return null;
             })
-            .filter(Boolean) as ConsumptionManageDto['items'];
+            .filter(Boolean) as MealManageDto['items'];
 
         return {
             date: new Date(),

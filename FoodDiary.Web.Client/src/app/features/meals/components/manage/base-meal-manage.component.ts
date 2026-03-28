@@ -64,7 +64,7 @@ import { FdPageContainerDirective } from '../../../../directives/layout/page-con
 import { ImageUploadFieldComponent } from '../../../../components/shared/image-upload-field/image-upload-field.component';
 import { ImageSelection } from '../../../../types/image-upload.data';
 import { ActivatedRoute, Router } from '@angular/router';
-import { QuickConsumptionItem } from '../../../../services/quick-consumption.service';
+import { QuickMealItem } from '../../lib/quick-meal.service';
 import { MealPhotoRecognitionDialogComponent } from '../../dialogs/photo-recognition-dialog/meal-photo-recognition-dialog.component';
 import { AiFoodService } from '../../../../services/ai-food.service';
 import { UserAiUsageResponse } from '../../../../types/ai.data';
@@ -328,9 +328,9 @@ export class BaseMealManageComponent implements OnInit {
             return;
         }
 
-        const navigationState = (this.router.getCurrentNavigation()?.extras.state as { quickConsumptionItems?: QuickConsumptionItem[] } | undefined)
+        const navigationState = (this.router.getCurrentNavigation()?.extras.state as { quickConsumptionItems?: QuickMealItem[] } | undefined)
             ?.quickConsumptionItems;
-        const historyState = (window.history.state as { quickConsumptionItems?: QuickConsumptionItem[] } | undefined)
+        const historyState = (window.history.state as { quickConsumptionItems?: QuickMealItem[] } | undefined)
             ?.quickConsumptionItems;
         const draftItems = navigationState ?? historyState;
 

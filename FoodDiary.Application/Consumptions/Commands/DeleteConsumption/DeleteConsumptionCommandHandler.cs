@@ -12,7 +12,7 @@ public class DeleteConsumptionCommandHandler(IMealRepository mealRepository)
             return Result.Failure<bool>(Errors.Authentication.InvalidToken);
         }
 
-        var userId = new UserId(command.UserId.Value);
+        var userId = new UserId(command.UserId!.Value);
         var consumptionId = new MealId(command.ConsumptionId);
 
         var meal = await mealRepository.GetByIdAsync(

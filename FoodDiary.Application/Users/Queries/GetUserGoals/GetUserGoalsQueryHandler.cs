@@ -10,11 +10,11 @@ namespace FoodDiary.Application.Users.Queries.GetUserGoals;
 
 public class GetUserGoalsQueryHandler(IUserRepository userRepository) : IQueryHandler<GetUserGoalsQuery, Result<GoalsModel>> {
     public async Task<Result<GoalsModel>> Handle(GetUserGoalsQuery query, CancellationToken cancellationToken) {
-        if (query.UserId is null || query.UserId.Value == Guid.Empty) {
+        if (query.UserId is null || query.UserId == Guid.Empty) {
             return Result.Failure<GoalsModel>(Errors.Authentication.InvalidToken);
         }
 
-        var userId = new UserId(query.UserId.Value);
+        var userId = new UserId(query.UserId!.Value);
         var user = await userRepository.GetByIdAsync(userId, cancellationToken);
         return user is null
             ? Result.Failure<GoalsModel>(User.NotFound(userId))

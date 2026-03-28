@@ -15,10 +15,10 @@ public class CreateCycleCommandHandler(ICycleRepository cycleRepository)
         CreateCycleCommand command,
         CancellationToken cancellationToken) {
         if (command.UserId is null || command.UserId == Guid.Empty) {
-            return Result.Failure<CycleModel>(Errors.User.NotFound());
+            return Result.Failure<CycleModel>(Errors.Authentication.InvalidToken);
         }
 
-        var userId = new UserId(command.UserId.Value);
+        var userId = new UserId(command.UserId!.Value);
 
         var cycle = Cycle.Create(
             userId,

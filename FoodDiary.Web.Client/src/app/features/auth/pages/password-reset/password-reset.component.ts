@@ -8,11 +8,11 @@ import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FD_VALIDATION_ERRORS, FdUiFormErrorComponent, FdValidationErrors } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
-import { matchFieldValidator } from '../../../validators/match-field.validator';
-import { AuthService } from '../../../services/auth.service';
-import { NavigationService } from '../../../services/navigation.service';
-import { ConfirmPasswordResetRequest } from '../../../types/auth.data';
-import { FormGroupControls } from '../../../types/common.data';
+import { matchFieldValidator } from '../../../../validators/match-field.validator';
+import { AuthService } from '../../../../services/auth.service';
+import { NavigationService } from '../../../../services/navigation.service';
+import { ConfirmPasswordResetRequest } from '../../../../types/auth.data';
+import { FormGroupControls } from '../../../../types/common.data';
 
 type ResetState = 'ready' | 'invalid' | 'error';
 

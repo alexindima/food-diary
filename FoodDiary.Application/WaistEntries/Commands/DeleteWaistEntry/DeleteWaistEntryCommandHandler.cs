@@ -8,11 +8,11 @@ namespace FoodDiary.Application.WaistEntries.Commands.DeleteWaistEntry;
 public class DeleteWaistEntryCommandHandler(IWaistEntryRepository waistEntryRepository)
     : ICommandHandler<DeleteWaistEntryCommand, Result<bool>> {
     public async Task<Result<bool>> Handle(DeleteWaistEntryCommand command, CancellationToken cancellationToken) {
-        if (command.UserId is null || command.UserId.Value == Guid.Empty) {
+        if (command.UserId is null || command.UserId == Guid.Empty) {
             return Result.Failure<bool>(Errors.Authentication.InvalidToken);
         }
 
-        var userId = new UserId(command.UserId.Value);
+        var userId = new UserId(command.UserId!.Value);
         var waistEntryId = new WaistEntryId(command.WaistEntryId);
         var entry = await waistEntryRepository.GetByIdAsync(
             waistEntryId,

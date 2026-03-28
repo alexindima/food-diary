@@ -10,4 +10,4 @@ public record GetWaistEntriesQuery(
     DateTime? DateTo,
     int? Limit,
     bool Descending
-) : IQuery<Result<IReadOnlyList<WaistEntryModel>>>;
+) : IQuery<Result<IReadOnlyList<WaistEntryModel>>>, IUserRequest;

@@ -9,4 +9,4 @@ public record UpdateShoppingListCommand(
     Guid? UserId,
     Guid ShoppingListId,
     string? Name,
-    IReadOnlyList<ShoppingListItemInput>? Items) : ICommand<Result<ShoppingListModel>>;
+    IReadOnlyList<ShoppingListItemInput>? Items) : ICommand<Result<ShoppingListModel>>, IUserRequest;

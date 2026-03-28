@@ -9,4 +9,4 @@ public record UpdateWeightEntryCommand(
     Guid WeightEntryId,
     DateTime Date,
     double Weight
-) : ICommand<Result<WeightEntryModel>>;
+) : ICommand<Result<WeightEntryModel>>, IUserRequest;

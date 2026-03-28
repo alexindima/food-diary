@@ -14,10 +14,10 @@ public class GetCurrentCycleQueryHandler(ICycleRepository cycleRepository)
         GetCurrentCycleQuery query,
         CancellationToken cancellationToken) {
         if (query.UserId is null || query.UserId == Guid.Empty) {
-            return Result.Failure<CycleModel?>(Errors.User.NotFound());
+            return Result.Failure<CycleModel?>(Errors.Authentication.InvalidToken);
         }
 
-        var userId = new UserId(query.UserId.Value);
+        var userId = new UserId(query.UserId!.Value);
 
         var cycle = await cycleRepository.GetLatestAsync(
             userId,

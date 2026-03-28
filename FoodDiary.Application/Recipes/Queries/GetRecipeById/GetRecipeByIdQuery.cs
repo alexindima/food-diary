@@ -7,4 +7,4 @@ namespace FoodDiary.Application.Recipes.Queries.GetRecipeById;
 public record GetRecipeByIdQuery(
     Guid? UserId,
     Guid RecipeId,
-    bool IncludePublic) : IQuery<Result<RecipeModel>>;
+    bool IncludePublic) : IQuery<Result<RecipeModel>>, IUserRequest;

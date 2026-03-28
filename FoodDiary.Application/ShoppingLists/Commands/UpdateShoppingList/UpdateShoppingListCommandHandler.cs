@@ -20,7 +20,7 @@ public class UpdateShoppingListCommandHandler(
             return Result.Failure<ShoppingListModel>(Errors.Authentication.InvalidToken);
         }
 
-        var userId = new UserId(command.UserId.Value);
+        var userId = new UserId(command.UserId!.Value);
 
         if (string.IsNullOrWhiteSpace(command.Name) && command.Items is null) {
             return Result.Failure<ShoppingListModel>(

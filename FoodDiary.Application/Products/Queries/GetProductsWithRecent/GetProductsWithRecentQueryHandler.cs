@@ -21,7 +21,7 @@ public sealed class GetProductsWithRecentQueryHandler(
             return Result.Failure<ProductListWithRecentModel>(Errors.Authentication.InvalidToken);
         }
 
-        var userId = new UserId(query.UserId.Value);
+        var userId = new UserId(query.UserId!.Value);
         var pageNumber = Math.Max(query.Page, 1);
         var pageSize = Math.Max(query.Limit, 1);
         var recentLimit = Math.Clamp(query.RecentLimit, 1, 50);

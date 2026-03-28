@@ -6,4 +6,4 @@ namespace FoodDiary.Application.Users.Queries.GetUserGoals;
 
 public record GetUserGoalsQuery(
     Guid? UserId
-) : IQuery<Result<GoalsModel>>;
+) : IQuery<Result<GoalsModel>>, IUserRequest;

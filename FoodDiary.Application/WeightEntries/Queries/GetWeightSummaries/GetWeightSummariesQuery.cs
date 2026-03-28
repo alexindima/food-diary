@@ -9,4 +9,4 @@ public record GetWeightSummariesQuery(
     DateTime DateFrom,
     DateTime DateTo,
     int QuantizationDays
-) : IQuery<Result<IReadOnlyList<WeightEntrySummaryModel>>>;
+) : IQuery<Result<IReadOnlyList<WeightEntrySummaryModel>>>, IUserRequest;

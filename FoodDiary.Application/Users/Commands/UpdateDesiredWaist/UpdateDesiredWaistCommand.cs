@@ -7,4 +7,4 @@ namespace FoodDiary.Application.Users.Commands.UpdateDesiredWaist;
 public record UpdateDesiredWaistCommand(
     Guid? UserId,
     double? DesiredWaist
-) : ICommand<Result<UserDesiredWaistModel>>;
+) : ICommand<Result<UserDesiredWaistModel>>, IUserRequest;

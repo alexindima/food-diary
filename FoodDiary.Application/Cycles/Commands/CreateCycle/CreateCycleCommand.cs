@@ -10,4 +10,4 @@ public record CreateCycleCommand(
     int? AverageLength,
     int? LutealLength,
     string? Notes
-) : ICommand<Result<CycleModel>>;
+) : ICommand<Result<CycleModel>>, IUserRequest;

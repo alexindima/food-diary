@@ -27,38 +27,18 @@ public class CreateConsumptionCommandHandler(
             return Result.Failure<ConsumptionModel>(Errors.Authentication.InvalidToken);
         }
 
-        var userId = new UserId(command.UserId.Value);
+        var userId = new UserId(command.UserId!.Value);
 
-        var hasManualItems = command.Items is { Count: > 0 };
-        var hasAiItems = command.AiSessions is { Count: > 0 } && command.AiSessions.Any(session => session.Items.Count > 0);
-        if (!hasManualItems && !hasAiItems) {
-            return Result.Failure<ConsumptionModel>(Errors.Validation.Required("Items"));
-        }
+        var mealType = string.IsNullOrWhiteSpace(command.MealType)
+            ? (MealType?)null
+            : Enum.Parse<MealType>(command.MealType, true);
 
-        var mealTypeResult = ParseMealType(command.MealType);
-        if (mealTypeResult.IsFailure) {
-            return Result.Failure<ConsumptionModel>(mealTypeResult.Error);
-        }
-
-        var meal = Meal.Create(userId, command.Date, mealTypeResult.Value, command.Comment, command.ImageUrl,
+        var meal = Meal.Create(userId, command.Date, mealType, command.Comment, command.ImageUrl,
             command.ImageAssetId.HasValue ? new ImageAssetId(command.ImageAssetId.Value) : null);
-
-        var satietyValidation = SatietyLevelValidator.Validate(
-            command.PreMealSatietyLevel,
-            command.PostMealSatietyLevel);
-
-        if (satietyValidation.IsFailure) {
-            return Result.Failure<ConsumptionModel>(satietyValidation.Error);
-        }
 
         meal.UpdateSatietyLevels(command.PreMealSatietyLevel, command.PostMealSatietyLevel);
 
         foreach (var item in command.Items) {
-            var validation = ConsumptionItemValidator.Validate(item);
-            if (validation.IsFailure) {
-                return Result.Failure<ConsumptionModel>(validation.Error);
-            }
-
             if (item.ProductId.HasValue) {
                 meal.AddProduct(new ProductId(item.ProductId.Value), item.Amount);
             } else if (item.RecipeId.HasValue) {
@@ -103,33 +83,20 @@ public class CreateConsumptionCommandHandler(
                 nutritionResult.Value.Alcohol,
                 IsAutoCalculated: true));
         } else {
-            var manualNutritionResult = ManualNutritionValidator.Validate(
-                command.ManualCalories,
-                command.ManualProteins,
-                command.ManualFats,
-                command.ManualCarbs,
-                command.ManualFiber,
-                command.ManualAlcohol);
-
-            if (manualNutritionResult.IsFailure) {
-                return Result.Failure<ConsumptionModel>(manualNutritionResult.Error);
-            }
-
-            var manual = manualNutritionResult.Value;
             meal.ApplyNutrition(new MealNutritionUpdate(
-                manual.Calories,
-                manual.Proteins,
-                manual.Fats,
-                manual.Carbs,
-                manual.Fiber,
-                manual.Alcohol,
+                command.ManualCalories!.Value,
+                command.ManualProteins!.Value,
+                command.ManualFats!.Value,
+                command.ManualCarbs!.Value,
+                command.ManualFiber!.Value,
+                command.ManualAlcohol ?? 0,
                 IsAutoCalculated: false,
-                ManualCalories: manual.Calories,
-                ManualProteins: manual.Proteins,
-                ManualFats: manual.Fats,
-                ManualCarbs: manual.Carbs,
-                ManualFiber: manual.Fiber,
-                ManualAlcohol: manual.Alcohol));
+                ManualCalories: command.ManualCalories.Value,
+                ManualProteins: command.ManualProteins.Value,
+                ManualFats: command.ManualFats.Value,
+                ManualCarbs: command.ManualCarbs.Value,
+                ManualFiber: command.ManualFiber.Value,
+                ManualAlcohol: command.ManualAlcohol ?? 0));
         }
 
         await mealRepository.AddAsync(meal, cancellationToken);
@@ -148,16 +115,6 @@ public class CreateConsumptionCommandHandler(
         return created is null
             ? Result.Failure<ConsumptionModel>(Errors.Consumption.InvalidData("Failed to load created consumption."))
             : Result.Success(created.ToModel());
-    }
-
-    private static Result<MealType?> ParseMealType(string? mealType) {
-        if (string.IsNullOrWhiteSpace(mealType)) {
-            return Result.Success<MealType?>(null);
-        }
-
-        return Enum.TryParse<MealType>(mealType, true, out var parsed)
-            ? Result.Success<MealType?>(parsed)
-            : Result.Failure<MealType?>(Errors.Validation.Invalid(nameof(mealType), "Unknown meal type value."));
     }
 
     private async Task<Result<MealNutritionSummary>> CalculateNutritionAsync(

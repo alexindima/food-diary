@@ -6,4 +6,4 @@ namespace FoodDiary.Application.ShoppingLists.Queries.GetShoppingListById;
 
 public record GetShoppingListByIdQuery(
     Guid? UserId,
-    Guid ShoppingListId) : IQuery<Result<ShoppingListModel>>;
+    Guid ShoppingListId) : IQuery<Result<ShoppingListModel>>, IUserRequest;

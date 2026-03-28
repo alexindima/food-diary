@@ -14,10 +14,10 @@ public class UpdateHydrationEntryCommandHandler(
         UpdateHydrationEntryCommand command,
         CancellationToken cancellationToken) {
         if (command.UserId is null || command.UserId == Guid.Empty) {
-            return Result.Failure<HydrationEntryModel>(Errors.User.NotFound());
+            return Result.Failure<HydrationEntryModel>(Errors.Authentication.InvalidToken);
         }
 
-        var userId = new UserId(command.UserId.Value);
+        var userId = new UserId(command.UserId!.Value);
         var hydrationEntryId = new HydrationEntryId(command.HydrationEntryId);
 
         var entry = await repository.GetByIdAsync(

@@ -3,11 +3,10 @@ import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiIconModule } from 'fd-ui-kit/material';
-import { QuickConsumptionService } from '../../../services/quick-consumption.service';
+import { QuickMealItem, QuickMealService } from '../../../features/meals/lib/quick-meal.service';
 import { resolveProductImageUrl } from '../../../utils/product-stub.utils';
 import { resolveRecipeImageUrl } from '../../../utils/recipe-stub.utils';
 import { ProductType } from '../../../features/products/models/product.data';
-import { QuickConsumptionItem } from '../../../services/quick-consumption.service';
 
 @Component({
     selector: 'fd-quick-consumption-drawer',
@@ -18,7 +17,7 @@ import { QuickConsumptionItem } from '../../../services/quick-consumption.servic
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class QuickConsumptionDrawerComponent {
-    private readonly quickService = inject(QuickConsumptionService);
+    private readonly quickService = inject(QuickMealService);
     private readonly fallbackImage = 'assets/images/stubs/receipt.png';
 
     @Input() public forceShow = false;
@@ -36,7 +35,7 @@ export class QuickConsumptionDrawerComponent {
         return this.layout === 'inline';
     }
 
-    public imageFor(item: QuickConsumptionItem): string {
+    public imageFor(item: QuickMealItem): string {
         if (item.type === 'product' && item.product) {
             const type = (item.product.productType as ProductType | undefined) ?? ProductType.Unknown;
             return resolveProductImageUrl(item.product.imageUrl ?? undefined, type) ?? this.fallbackImage;

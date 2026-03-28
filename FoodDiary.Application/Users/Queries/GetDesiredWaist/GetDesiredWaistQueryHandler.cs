@@ -11,11 +11,11 @@ public class GetDesiredWaistQueryHandler(IUserRepository userRepository)
     public async Task<Result<UserDesiredWaistModel>> Handle(
         GetDesiredWaistQuery query,
         CancellationToken cancellationToken) {
-        if (query.UserId is null || query.UserId.Value == Guid.Empty) {
+        if (query.UserId is null || query.UserId == Guid.Empty) {
             return Result.Failure<UserDesiredWaistModel>(Errors.Authentication.InvalidToken);
         }
 
-        var userId = new UserId(query.UserId.Value);
+        var userId = new UserId(query.UserId!.Value);
         var user = await userRepository.GetByIdAsync(userId, cancellationToken);
         return user is null
             ? Result.Failure<UserDesiredWaistModel>(Errors.User.NotFound(userId))

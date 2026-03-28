@@ -1,11 +1,8 @@
 import { Routes } from '@angular/router';
 import { MainComponent } from './components/main/main.component';
-import { loggedInGuard } from './guards/logged-in.guard';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { unsavedChangesGuard } from './guards/unsaved-changes.guard';
-import { EmailVerificationPendingComponent } from './components/auth/email-verification-pending/email-verification-pending.component';
-import { EmailVerificationComponent } from './components/auth/email-verification/email-verification.component';
-import { PasswordResetComponent } from './components/auth/password-reset/password-reset.component';
+import { authRoutes } from './features/auth/auth.routes';
 import { productRoutes } from './features/products/product.routes';
 import { recipeRoutes } from './features/recipes/recipe.routes';
 import { shoppingListRoutes } from './features/shopping-lists/shopping-list.routes';
@@ -20,30 +17,7 @@ import { mealRoutes } from './features/meals/meals.routes';
 
 export const routes: Routes = [
     { path: '', component: MainComponent, canDeactivate: [unsavedChangesGuard] },
-    {
-        path: 'auth',
-        component: MainComponent,
-        data: { openAuth: true },
-        canActivate: [loggedInGuard],
-    },
-    {
-        path: 'auth/:mode',
-        component: MainComponent,
-        data: { openAuth: true },
-        canActivate: [loggedInGuard],
-    },
-    {
-        path: 'verify-pending',
-        component: EmailVerificationPendingComponent,
-    },
-    {
-        path: 'verify-email',
-        component: EmailVerificationComponent,
-    },
-    {
-        path: 'reset-password',
-        component: PasswordResetComponent,
-    },
+    ...authRoutes,
     ...productRoutes,
     ...mealRoutes,
     ...recipeRoutes,

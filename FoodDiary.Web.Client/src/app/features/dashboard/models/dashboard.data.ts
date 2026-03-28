@@ -1,5 +1,5 @@
 import { HydrationDaily } from '../../hydration/models/hydration.data';
-import { Consumption } from '../../../types/consumption.data';
+import { Meal } from '../../meals/models/meal.data';
 import { DailyAdvice } from '../../../types/daily-advice.data';
 import { DashboardLayoutSettings } from '../../../types/user.data';
 import { WaistEntrySummaryPoint } from '../../../types/waist-entry.data';
@@ -50,7 +50,7 @@ export interface DashboardWaist {
 }
 
 export interface DashboardMeals {
-    items: Consumption[];
+    items: Meal[];
     total: number;
 }
 

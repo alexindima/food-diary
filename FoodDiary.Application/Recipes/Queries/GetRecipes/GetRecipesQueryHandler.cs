@@ -17,7 +17,7 @@ public class GetRecipesQueryHandler(IRecipeRepository recipeRepository)
 
         var pageNumber = Math.Max(query.Page, 1);
         var pageSize = Math.Max(query.Limit, 1);
-        var userId = new UserId(query.UserId.Value);
+        var userId = new UserId(query.UserId!.Value);
 
         var (items, totalItems) = await recipeRepository.GetPagedAsync(
             userId,

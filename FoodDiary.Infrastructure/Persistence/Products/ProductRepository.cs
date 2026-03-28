@@ -67,6 +67,7 @@ public class ProductRepository(FoodDiaryDbContext context) : IProductRepository 
         CancellationToken cancellationToken = default) =>
         await context.Products
             .AsNoTracking()
+            .AsSplitQuery()
             .Include(p => p.MealItems)
             .Include(p => p.RecipeIngredients)
             .FirstOrDefaultAsync(

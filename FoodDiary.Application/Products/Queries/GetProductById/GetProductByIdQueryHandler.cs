@@ -16,7 +16,7 @@ public class GetProductByIdQueryHandler(IProductRepository productRepository)
             return Result.Failure<ProductModel>(Errors.Authentication.InvalidToken);
         }
 
-        var userId = new UserId(query.UserId.Value);
+        var userId = new UserId(query.UserId!.Value);
         var productId = new ProductId(query.ProductId);
         var product = await productRepository.GetByIdAsync(
             productId,

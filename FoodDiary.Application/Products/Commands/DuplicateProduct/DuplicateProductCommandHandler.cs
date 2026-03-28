@@ -15,7 +15,7 @@ public class DuplicateProductCommandHandler(IProductRepository productRepository
             return Result.Failure<ProductModel>(Errors.Authentication.InvalidToken);
         }
 
-        var userId = new UserId(command.UserId.Value);
+        var userId = new UserId(command.UserId!.Value);
         var productId = new ProductId(command.ProductId);
 
         var original = await productRepository.GetByIdAsync(

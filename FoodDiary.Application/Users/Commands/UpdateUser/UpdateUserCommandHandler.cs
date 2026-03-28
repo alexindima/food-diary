@@ -17,11 +17,11 @@ public class UpdateUserCommandHandler(
     IImageAssetCleanupService imageAssetCleanupService)
     : ICommandHandler<UpdateUserCommand, Result<UserModel>> {
     public async Task<Result<UserModel>> Handle(UpdateUserCommand command, CancellationToken cancellationToken) {
-        if (command.UserId is null || command.UserId.Value == UserId.Empty) {
+        if (command.UserId is null || command.UserId == Guid.Empty) {
             return Result.Failure<UserModel>(Errors.Authentication.InvalidToken);
         }
 
-        var userId = new UserId(command.UserId.Value);
+        var userId = new UserId(command.UserId!.Value);
         var user = await userRepository.GetByIdAsync(userId, cancellationToken);
         if (user is null) {
             return Result.Failure<UserModel>(User.NotFound(userId));

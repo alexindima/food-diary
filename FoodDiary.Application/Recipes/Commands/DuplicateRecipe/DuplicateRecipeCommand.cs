@@ -6,4 +6,4 @@ namespace FoodDiary.Application.Recipes.Commands.DuplicateRecipe;
 
 public sealed record DuplicateRecipeCommand(
     Guid? UserId,
-    Guid RecipeId) : ICommand<Result<RecipeModel>>;
+    Guid RecipeId) : ICommand<Result<RecipeModel>>, IUserRequest;

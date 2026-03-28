@@ -17,7 +17,7 @@ public class CreateRecipeCommandHandler(IRecipeRepository recipeRepository)
             return Result.Failure<RecipeModel>(Errors.Authentication.InvalidToken);
         }
 
-        var userId = new UserId(command.UserId.Value);
+        var userId = new UserId(command.UserId!.Value);
 
         if (!Enum.TryParse<Visibility>(command.Visibility, true, out var visibility)) {
             return Result.Failure<RecipeModel>(

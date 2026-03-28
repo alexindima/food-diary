@@ -7,4 +7,4 @@ namespace FoodDiary.Application.Hydration.Commands.CreateHydrationEntry;
 public record CreateHydrationEntryCommand(
     Guid? UserId,
     DateTime TimestampUtc,
-    int AmountMl) : ICommand<Result<HydrationEntryModel>>;
+    int AmountMl) : ICommand<Result<HydrationEntryModel>>, IUserRequest;

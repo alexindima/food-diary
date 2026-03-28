@@ -15,10 +15,10 @@ public class GetHydrationDailyTotalQueryHandler(
         GetHydrationDailyTotalQuery query,
         CancellationToken cancellationToken) {
         if (query.UserId is null || query.UserId == Guid.Empty) {
-            return Result.Failure<HydrationDailyModel>(Errors.User.NotFound());
+            return Result.Failure<HydrationDailyModel>(Errors.Authentication.InvalidToken);
         }
 
-        var userId = new UserId(query.UserId.Value);
+        var userId = new UserId(query.UserId!.Value);
 
         var user = await userRepository.GetByIdAsync(userId, cancellationToken);
         if (user is null) {
