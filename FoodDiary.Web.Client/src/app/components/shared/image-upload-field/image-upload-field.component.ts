@@ -155,17 +155,14 @@ export class ImageUploadFieldComponent implements ControlValueAccessor, OnInit {
 
     public onCropperImageLoaded(img: HTMLImageElement): void {
         this.destroyCropper();
+        this.cropper = new Cropper(img, {});
+
+        const selection = this.cropper.getCropperSelection();
         const aspectRatio = this.cropAspectRatio();
-        this.cropper = new Cropper(img, {
-            aspectRatio: aspectRatio ?? NaN,
-            viewMode: 1,
-            background: false,
-            autoCropArea: 1,
-            movable: true,
-            scalable: false,
-            zoomable: true,
-            rotatable: false,
-        });
+        if (selection && aspectRatio) {
+            selection.aspectRatio = aspectRatio;
+            selection.initialAspectRatio = aspectRatio;
+        }
     }
 
     public cancelCrop(): void {
@@ -176,55 +173,7 @@ export class ImageUploadFieldComponent implements ControlValueAccessor, OnInit {
     }
 
     public confirmCrop(): void {
-        if (!this.cropper) {
-            return;
-        }
-
-        const fixedSize = this.cropSize();
-        let canvas = fixedSize
-            ? this.cropper.getCroppedCanvas({
-                  width: fixedSize,
-                  height: fixedSize,
-                  fillColor: '#fff',
-              })
-            : this.cropper.getCroppedCanvas({
-                  fillColor: '#fff',
-              });
-
-        if (!fixedSize) {
-            const maxSize = this.cropMaxSize();
-            if (maxSize > 0 && (canvas.width > maxSize || canvas.height > maxSize)) {
-                const scale = Math.min(maxSize / canvas.width, maxSize / canvas.height);
-                const targetWidth = Math.max(1, Math.round(canvas.width * scale));
-                const targetHeight = Math.max(1, Math.round(canvas.height * scale));
-                const resized = document.createElement('canvas');
-                resized.width = targetWidth;
-                resized.height = targetHeight;
-                const ctx = resized.getContext('2d');
-                if (!ctx) {
-                    this.error = this.translateService.instant('IMAGE_UPLOAD_FIELD.ERRORS.PROCESSING_FAILED');
-                    this.cdr.markForCheck();
-                    return;
-                }
-                ctx.drawImage(canvas, 0, 0, targetWidth, targetHeight);
-                canvas = resized;
-            }
-        }
-
-        canvas.toBlob(blob => {
-            if (!blob) {
-                this.error = this.translateService.instant('IMAGE_UPLOAD_FIELD.ERRORS.PROCESSING_FAILED');
-                this.cdr.markForCheck();
-                return;
-            }
-
-            const fileName = this.originalFile?.name ?? 'avatar.png';
-            const croppedFile = new File([blob], fileName, { type: this.originalFile?.type || 'image/png' });
-            this.isCropping = false;
-            this.destroyCropper();
-            this.clearCropState();
-            this.uploadFile(croppedFile);
-        }, this.originalFile?.type || 'image/png');
+        void this.confirmCropAsync();
     }
 
     public onZoneClick(fileInput: HTMLInputElement): void {
@@ -325,6 +274,66 @@ export class ImageUploadFieldComponent implements ControlValueAccessor, OnInit {
             this.cropper.destroy();
             this.cropper = null;
         }
+    }
+
+    private async confirmCropAsync(): Promise<void> {
+        if (!this.cropper) {
+            return;
+        }
+
+        const selection = this.cropper.getCropperSelection();
+        if (!selection) {
+            this.error = this.translateService.instant('IMAGE_UPLOAD_FIELD.ERRORS.PROCESSING_FAILED');
+            this.cdr.markForCheck();
+            return;
+        }
+
+        const fixedSize = this.cropSize();
+        let canvas = await selection.$toCanvas(
+            fixedSize
+                ? {
+                    width: fixedSize,
+                    height: fixedSize,
+                }
+                : undefined,
+        );
+
+        if (!fixedSize) {
+            const maxSize = this.cropMaxSize();
+            if (maxSize > 0 && (canvas.width > maxSize || canvas.height > maxSize)) {
+                const scale = Math.min(maxSize / canvas.width, maxSize / canvas.height);
+                const targetWidth = Math.max(1, Math.round(canvas.width * scale));
+                const targetHeight = Math.max(1, Math.round(canvas.height * scale));
+                const resized = document.createElement('canvas');
+                resized.width = targetWidth;
+                resized.height = targetHeight;
+                const ctx = resized.getContext('2d');
+                if (!ctx) {
+                    this.error = this.translateService.instant('IMAGE_UPLOAD_FIELD.ERRORS.PROCESSING_FAILED');
+                    this.cdr.markForCheck();
+                    return;
+                }
+                ctx.fillStyle = '#fff';
+                ctx.fillRect(0, 0, targetWidth, targetHeight);
+                ctx.drawImage(canvas, 0, 0, targetWidth, targetHeight);
+                canvas = resized;
+            }
+        }
+
+        canvas.toBlob((blob: Blob | null) => {
+            if (!blob) {
+                this.error = this.translateService.instant('IMAGE_UPLOAD_FIELD.ERRORS.PROCESSING_FAILED');
+                this.cdr.markForCheck();
+                return;
+            }
+
+            const fileName = this.originalFile?.name ?? 'avatar.png';
+            const croppedFile = new File([blob], fileName, { type: this.originalFile?.type || 'image/png' });
+            this.isCropping = false;
+            this.destroyCropper();
+            this.clearCropState();
+            this.uploadFile(croppedFile);
+        }, this.originalFile?.type || 'image/png');
     }
 
     private clearCropState(): void {

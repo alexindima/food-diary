@@ -12,9 +12,9 @@ import { FdUiEntityCardComponent } from './fd-ui-entity-card.component';
     `,
 })
 class TestHostComponent {
-    title = 'Test Title';
-    meta: string | undefined;
-    imageUrl: string | null = null;
+    public title = 'Test Title';
+    public meta: string | undefined;
+    public imageUrl: string | null = null;
 }
 
 describe('FdUiEntityCardComponent', () => {

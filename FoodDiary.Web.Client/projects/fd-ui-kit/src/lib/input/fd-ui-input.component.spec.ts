@@ -1,16 +1,15 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
 import { FdUiInputComponent } from './fd-ui-input.component';
 
 @Component({
-    template: `<fd-ui-input [formControl]="ctrl" />`,
+    template: '<fd-ui-input [formControl]="ctrl" />',
     standalone: true,
     imports: [FdUiInputComponent, ReactiveFormsModule],
 })
 class TestHostComponent {
-    ctrl = new FormControl('');
+    public ctrl = new FormControl('');
 }
 
 describe('FdUiInputComponent', () => {

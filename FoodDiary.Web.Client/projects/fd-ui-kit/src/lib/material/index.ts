@@ -1,3 +1,5 @@
+export * from '@angular/material/datepicker';
+
 export {
     MatIconModule as FdUiIconModule,
     MatIcon as FdUiIcon,
@@ -14,7 +16,10 @@ export {
 } from '@angular/material/snack-bar';
 
 export {
+    MatCalendarBody as FdUiCalendarBody,
     MatDatepickerModule as FdUiDatepickerModule,
+    MatCalendar as FdUiCalendar,
+    MatDatepickerContent as FdUiDatepickerContent,
     MatDatepicker as FdUiDatepicker,
     MatDatepickerInput as FdUiDatepickerInput,
     MatDatepickerInputEvent as FdUiDatepickerInputEvent,

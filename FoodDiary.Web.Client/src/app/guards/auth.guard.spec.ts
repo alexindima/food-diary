@@ -6,8 +6,11 @@ import { NavigationService } from '../services/navigation.service';
 import { signal } from '@angular/core';
 
 describe('authGuard', () => {
-    let authServiceMock: any;
-    let navigationServiceMock: any;
+    let authServiceMock: { getToken: ReturnType<typeof vi.fn>; isAuthenticated: ReturnType<typeof signal>; isEmailConfirmed: ReturnType<typeof signal> };
+    let navigationServiceMock: {
+        navigateToAuth: ReturnType<typeof vi.fn>;
+        navigateToEmailVerificationPending: ReturnType<typeof vi.fn>;
+    };
     let route: ActivatedRouteSnapshot;
     let state: RouterStateSnapshot;
 
@@ -19,12 +22,12 @@ describe('authGuard', () => {
             getToken: vi.fn(),
             isAuthenticated,
             isEmailConfirmed,
-        } as any;
+        };
 
         navigationServiceMock = {
             navigateToAuth: vi.fn(),
             navigateToEmailVerificationPending: vi.fn(),
-        } as any;
+        };
         navigationServiceMock.navigateToAuth.mockReturnValue(Promise.resolve());
         navigationServiceMock.navigateToEmailVerificationPending.mockReturnValue(Promise.resolve());
 
@@ -35,8 +38,10 @@ describe('authGuard', () => {
             ],
         });
 
-        route = {} as ActivatedRouteSnapshot;
-        state = { url: '/products' } as RouterStateSnapshot;
+        const routeStub = {};
+        const stateStub = { url: '/products' };
+        route = routeStub as ActivatedRouteSnapshot;
+        state = stateStub as RouterStateSnapshot;
     });
 
     it('should allow access when authenticated and email confirmed', async () => {
@@ -71,7 +76,8 @@ describe('authGuard', () => {
 
     it('should include returnUrl in login redirect', async () => {
         authServiceMock.isAuthenticated.set(false);
-        state = { url: '/recipes/add' } as RouterStateSnapshot;
+        const stateStub = { url: '/recipes/add' };
+        state = stateStub as RouterStateSnapshot;
 
         const result = await TestBed.runInInjectionContext(() => authGuard(route, state));
 

@@ -4,12 +4,12 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { FdUiTextareaComponent } from './fd-ui-textarea.component';
 
 @Component({
-    template: `<fd-ui-textarea [formControl]="ctrl" />`,
+    template: '<fd-ui-textarea [formControl]="ctrl" />',
     standalone: true,
     imports: [FdUiTextareaComponent, ReactiveFormsModule],
 })
 class TestHostComponent {
-    ctrl = new FormControl('');
+    public ctrl = new FormControl('');
 }
 
 describe('FdUiTextareaComponent', () => {

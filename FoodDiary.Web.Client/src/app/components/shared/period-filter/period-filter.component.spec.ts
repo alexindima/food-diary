@@ -19,17 +19,17 @@ import { FdUiTab } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
     `,
 })
 class TestHostComponent {
-    readonly tabs: FdUiTab[] = [
+    public readonly tabs: FdUiTab[] = [
         { value: 'week', label: 'Week' },
         { value: 'month', label: 'Month' },
         { value: 'custom', label: 'Custom' },
     ];
 
-    readonly selectedValue = signal('week');
-    readonly rangeControl = new FormControl<{ start: Date | null; end: Date | null } | null>(null);
-    lastEmittedValue: string | null = null;
+    public readonly selectedValue = signal('week');
+    public readonly rangeControl = new FormControl<{ start: Date | null; end: Date | null } | null>(null);
+    public lastEmittedValue: string | null = null;
 
-    onRangeChange(value: string): void {
+    public onRangeChange(value: string): void {
         this.lastEmittedValue = value;
     }
 }

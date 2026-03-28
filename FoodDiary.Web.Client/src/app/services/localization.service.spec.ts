@@ -58,7 +58,7 @@ describe('LocalizationService', () => {
         localStorage.removeItem('fd_language');
     });
 
-    it("should initialize with default language 'en'", async () => {
+    it('should initialize with default language \'en\'', async () => {
         await service.initializeLocalization();
 
         expect(translateSpy.addLangs).toHaveBeenCalledWith(['en', 'ru']);
@@ -74,7 +74,7 @@ describe('LocalizationService', () => {
         expect(translateSpy.use).toHaveBeenCalledWith('ru');
     });
 
-    it("should normalize unknown language to 'en'", async () => {
+    it('should normalize unknown language to \'en\'', async () => {
         translateSpy.getBrowserLang.mockReturnValue('fr');
 
         await service.initializeLocalization();
@@ -82,7 +82,7 @@ describe('LocalizationService', () => {
         expect(translateSpy.use).toHaveBeenCalledWith('en');
     });
 
-    it("should normalize 'ru' correctly", async () => {
+    it('should normalize \'ru\' correctly', async () => {
         translateSpy.getBrowserLang.mockReturnValue('ru');
 
         await service.initializeLocalization();

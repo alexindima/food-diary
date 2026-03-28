@@ -3,7 +3,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
 import { RecipeService } from './recipe.service';
 import { PageOf } from '../../../shared/models/page-of.data';
-import { Recipe } from '../models/recipe.data';
+import { Recipe, RecipeVisibility } from '../models/recipe.data';
 
 describe('RecipeService', () => {
     let service: RecipeService;
@@ -13,14 +13,27 @@ describe('RecipeService', () => {
     const mockRecipe: Recipe = {
         id: 'r1',
         name: 'Grilled Chicken Salad',
+        description: null,
+        comment: null,
+        category: null,
+        imageUrl: null,
+        imageAssetId: null,
+        prepTime: null,
+        cookTime: null,
         servings: 2,
+        visibility: RecipeVisibility.Private,
+        usageCount: 0,
+        createdAt: '2026-01-01',
+        isOwnedByCurrentUser: true,
         totalCalories: 350,
         totalProteins: 40,
         totalFats: 12,
         totalCarbs: 15,
         totalFiber: 4,
         totalAlcohol: 0,
-    } as Recipe;
+        isNutritionAutoCalculated: true,
+        steps: [],
+    };
 
     const mockPage: PageOf<Recipe> = {
         data: [mockRecipe],

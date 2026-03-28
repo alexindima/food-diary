@@ -54,13 +54,13 @@ describe('FdUiCheckboxComponent', () => {
         const onChangeSpy = vi.fn();
         component.registerOnChange(onChangeSpy);
 
-        const changeEvent = { checked: true, source: {} } as MatCheckboxChange;
+        const changeEvent: MatCheckboxChange = { checked: true, source: undefined as never };
         component['handleChange'](changeEvent);
 
         expect(component['checked']).toBe(true);
         expect(onChangeSpy).toHaveBeenCalledWith(true);
 
-        const uncheckEvent = { checked: false, source: {} } as MatCheckboxChange;
+        const uncheckEvent: MatCheckboxChange = { checked: false, source: undefined as never };
         component['handleChange'](uncheckEvent);
 
         expect(component['checked']).toBe(false);

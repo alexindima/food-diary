@@ -37,7 +37,7 @@ describe('GlobalErrorHandler', () => {
         expect(payload['message']).toBe('Something went wrong');
     });
 
-    it("should use 'Unknown error' when no message", () => {
+    it('should use \'Unknown error\' when no message', () => {
         handler.handleError({});
 
         const payload = loggingSpy.logError.mock.calls.at(-1)![0] as Record<string, unknown>;

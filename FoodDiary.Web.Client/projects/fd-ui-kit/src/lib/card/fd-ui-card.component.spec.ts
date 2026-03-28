@@ -6,7 +6,7 @@ import { FdUiCardComponent } from './fd-ui-card.component';
 @Component({
     standalone: true,
     imports: [FdUiCardComponent],
-    template: `<fd-ui-card><p class="projected">Projected content</p></fd-ui-card>`,
+    template: '<fd-ui-card><p class="projected">Projected content</p></fd-ui-card>',
 })
 class CardWithContentHostComponent {}
 

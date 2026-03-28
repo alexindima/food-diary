@@ -3,7 +3,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { WeightEntriesService } from './weight-entries.service';
 import { environment } from '../../../../environments/environment';
-import { WeightEntry, WeightEntrySummaryPoint } from '../models/weight-entry.data';
+import { WeightEntry } from '../models/weight-entry.data';
 
 describe('WeightEntriesService', () => {
     let service: WeightEntriesService;

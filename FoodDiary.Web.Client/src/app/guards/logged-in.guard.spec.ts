@@ -6,8 +6,8 @@ import { NavigationService } from '../services/navigation.service';
 import { signal } from '@angular/core';
 
 describe('loggedInGuard', () => {
-    let authServiceMock: any;
-    let navigationServiceMock: any;
+    let authServiceMock: { getToken: ReturnType<typeof vi.fn>; isAuthenticated: ReturnType<typeof signal> };
+    let navigationServiceMock: { navigateToHome: ReturnType<typeof vi.fn> };
     let route: ActivatedRouteSnapshot;
     let state: RouterStateSnapshot;
 
@@ -17,9 +17,9 @@ describe('loggedInGuard', () => {
         authServiceMock = {
             getToken: vi.fn(),
             isAuthenticated,
-        } as any;
+        };
 
-        navigationServiceMock = { navigateToHome: vi.fn() } as any;
+        navigationServiceMock = { navigateToHome: vi.fn() };
         navigationServiceMock.navigateToHome.mockReturnValue(Promise.resolve());
 
         TestBed.configureTestingModule({
@@ -29,8 +29,10 @@ describe('loggedInGuard', () => {
             ],
         });
 
-        route = {} as ActivatedRouteSnapshot;
-        state = { url: '/auth/login' } as RouterStateSnapshot;
+        const routeStub = {};
+        const stateStub = { url: '/auth/login' };
+        route = routeStub as ActivatedRouteSnapshot;
+        state = stateStub as RouterStateSnapshot;
     });
 
     it('should allow access when not authenticated', async () => {

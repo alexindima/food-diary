@@ -3,7 +3,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
 import { ProductService } from './product.service';
 import { PageOf } from '../../../shared/models/page-of.data';
-import { Product, ProductType } from '../models/product.data';
+import { MeasurementUnit, Product, ProductType, ProductVisibility } from '../models/product.data';
 
 describe('ProductService', () => {
     let service: ProductService;
@@ -13,13 +13,28 @@ describe('ProductService', () => {
     const mockProduct: Product = {
         id: 'p1',
         name: 'Chicken Breast',
+        barcode: null,
+        brand: null,
+        productType: ProductType.Meat,
+        category: null,
+        description: null,
+        comment: null,
+        imageUrl: null,
+        imageAssetId: null,
+        baseUnit: MeasurementUnit.G,
+        baseAmount: 100,
+        defaultPortionAmount: 100,
         caloriesPerBase: 165,
         proteinsPerBase: 31,
         fatsPerBase: 3.6,
         carbsPerBase: 0,
         fiberPerBase: 0,
         alcoholPerBase: 0,
-    } as Product;
+        usageCount: 0,
+        visibility: ProductVisibility.Private,
+        createdAt: new Date('2026-01-01'),
+        isOwnedByCurrentUser: true,
+    };
 
     const mockPage: PageOf<Product> = {
         data: [mockProduct],

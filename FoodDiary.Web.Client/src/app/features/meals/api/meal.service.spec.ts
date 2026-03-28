@@ -3,7 +3,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
 import { MealService } from './meal.service';
 import { PageOf } from '../../../shared/models/page-of.data';
-import { ConsumptionResponseDto, Meal, MealFilters } from '../models/meal.data';
+import { ConsumptionManageDto, ConsumptionResponseDto, MealFilters } from '../models/meal.data';
 
 describe('MealService', () => {
     let service: MealService;
@@ -34,7 +34,7 @@ describe('MealService', () => {
         postMealSatietyLevel: 7,
         items: [],
         aiSessions: [],
-    } as ConsumptionResponseDto;
+    };
 
     const mockPageDto: PageOf<ConsumptionResponseDto> = {
         data: [mockConsumptionDto],
@@ -137,10 +137,12 @@ describe('MealService', () => {
     });
 
     it('should create meal', () => {
-        const createData = {
+        const createData: ConsumptionManageDto = {
             date: new Date('2026-03-28'),
             mealType: 'lunch',
-        } as any;
+            items: [],
+            isNutritionAutoCalculated: true,
+        };
 
         service.create(createData).subscribe(result => {
             expect(result).not.toBeNull();
@@ -154,7 +156,12 @@ describe('MealService', () => {
     });
 
     it('should return null on create error', () => {
-        const createData = { date: new Date(), mealType: 'lunch' } as any;
+        const createData: ConsumptionManageDto = {
+            date: new Date(),
+            mealType: 'lunch',
+            items: [],
+            isNutritionAutoCalculated: true,
+        };
 
         service.create(createData).subscribe(result => {
             expect(result).toBeNull();
@@ -165,7 +172,12 @@ describe('MealService', () => {
     });
 
     it('should update meal via PATCH', () => {
-        const updateData = { date: new Date('2026-03-28'), comment: 'Updated' } as any;
+        const updateData: ConsumptionManageDto = {
+            date: new Date('2026-03-28'),
+            comment: 'Updated',
+            items: [],
+            isNutritionAutoCalculated: true,
+        };
 
         service.update('m1', updateData).subscribe(result => {
             expect(result).not.toBeNull();
@@ -179,7 +191,12 @@ describe('MealService', () => {
     });
 
     it('should return null on update error', () => {
-        const updateData = { date: new Date(), comment: 'fail' } as any;
+        const updateData: ConsumptionManageDto = {
+            date: new Date(),
+            comment: 'fail',
+            items: [],
+            isNutritionAutoCalculated: true,
+        };
 
         service.update('m1', updateData).subscribe(result => {
             expect(result).toBeNull();

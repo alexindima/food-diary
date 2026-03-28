@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import {
     ProductListFiltersDialogComponent,
@@ -10,7 +10,7 @@ import { ProductType } from '../../models/product.data';
 
 describe('ProductListFiltersDialogComponent', () => {
     let component: ProductListFiltersDialogComponent;
-    let dialogRefSpy: any;
+    let dialogRefSpy: { close: ReturnType<typeof vi.fn> };
 
     const defaultData: ProductListFiltersDialogData = {
         onlyMine: false,
@@ -18,13 +18,13 @@ describe('ProductListFiltersDialogComponent', () => {
     };
 
     function createComponent(data: ProductListFiltersDialogData = defaultData): void {
-        dialogRefSpy = { close: vi.fn() } as any;
+        dialogRefSpy = { close: vi.fn() };
 
         TestBed.configureTestingModule({
             imports: [ProductListFiltersDialogComponent, TranslateModule.forRoot()],
             providers: [
                 provideNoopAnimations(),
-                { provide: MatDialogRef, useValue: dialogRefSpy },
+                { provide: MatDialogRef, useValue: dialogRefSpy as Partial<MatDialogRef<ProductListFiltersDialogComponent>> },
                 { provide: MAT_DIALOG_DATA, useValue: data },
             ],
         });
