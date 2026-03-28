@@ -1,6 +1,7 @@
 using System.Text.Json;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
+using FoodDiary.Application.Common.Time;
 using FoodDiary.Application.WaistEntries.Common;
 using FoodDiary.Application.WeightEntries.Common;
 using FoodDiary.Application.Consumptions.Queries.GetConsumptions;
@@ -46,7 +47,7 @@ public class DashboardSnapshotBuilder(
                 Errors.Validation.Invalid(nameof(request.UserId), "User id must not be empty."));
         }
 
-        var dayStart = NormalizeToUtcDate(request.Date);
+        var dayStart = UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(request.Date);
         var dayEnd = dayStart.AddDays(1).AddTicks(-1);
         var userId = new UserId(request.UserId);
         var locale = string.IsNullOrWhiteSpace(request.Locale) ? "en" : request.Locale;
@@ -114,14 +115,5 @@ public class DashboardSnapshotBuilder(
             logger.LogWarning(ex, "Failed to deserialize dashboard layout JSON for user {UserId}", userId);
             return null;
         }
-    }
-
-    private static DateTime NormalizeToUtcDate(DateTime value) {
-        var utc = value.Kind switch {
-            DateTimeKind.Utc => value,
-            DateTimeKind.Local => value.ToUniversalTime(),
-            _ => DateTime.SpecifyKind(value, DateTimeKind.Utc),
-        };
-        return DateTime.SpecifyKind(utc.Date, DateTimeKind.Utc);
     }
 }

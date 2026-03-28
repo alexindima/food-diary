@@ -2,11 +2,11 @@ using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using static FoodDiary.Application.Common.Abstractions.Result.Errors;
 using FoodDiary.Application.Common.Interfaces.Persistence;
+using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Images.Common;
 using FoodDiary.Application.Users.Mappings;
 using FoodDiary.Application.Users.Models;
 using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 using System.Text.Json;
 
@@ -27,22 +27,31 @@ public class UpdateUserCommandHandler(
             return Result.Failure<UserModel>(User.NotFound(userId));
         }
 
-        var activityLevelResult = ParseActivityLevel(command.ActivityLevel);
+        var activityLevelResult = EnumValueParser.ParseOptional<ActivityLevel>(
+            command.ActivityLevel,
+            nameof(UpdateUserCommand.ActivityLevel),
+            "Invalid activity level value.");
         if (activityLevelResult.IsFailure) {
             return Result.Failure<UserModel>(activityLevelResult.Error);
         }
 
-        var languageResult = NormalizeLanguage(command.Language);
+        var languageResult = StringCodeParser.ParseOptionalLanguage(
+            command.Language,
+            nameof(UpdateUserCommand.Language),
+            "Invalid language value.");
         if (languageResult.IsFailure) {
             return Result.Failure<UserModel>(languageResult.Error);
         }
 
-        var profileImageAssetIdResult = NormalizeImageAssetId(command.ProfileImageAssetId, nameof(command.ProfileImageAssetId));
+        var profileImageAssetIdResult = ImageAssetIdParser.ParseOptional(command.ProfileImageAssetId, nameof(command.ProfileImageAssetId));
         if (profileImageAssetIdResult.IsFailure) {
             return Result.Failure<UserModel>(profileImageAssetIdResult.Error);
         }
 
-        var genderResult = ParseGender(command.Gender);
+        var genderResult = StringCodeParser.ParseOptionalGender(
+            command.Gender,
+            nameof(UpdateUserCommand.Gender),
+            "Invalid gender value.");
         if (genderResult.IsFailure) {
             return Result.Failure<UserModel>(genderResult.Error);
         }
@@ -89,43 +98,4 @@ public class UpdateUserCommandHandler(
     private static string? Normalize(string? value) =>
         string.IsNullOrWhiteSpace(value) ? null : value.Trim();
 
-    private static Result<ActivityLevel?> ParseActivityLevel(string? value) {
-        if (string.IsNullOrWhiteSpace(value)) {
-            return Result.Success<ActivityLevel?>(null);
-        }
-
-        return Enum.TryParse<ActivityLevel>(value, true, out var parsed)
-            ? Result.Success<ActivityLevel?>(parsed)
-            : Result.Failure<ActivityLevel?>(Validation.Invalid(nameof(UpdateUserCommand.ActivityLevel), "Invalid activity level value."));
-    }
-
-    private static Result<string?> NormalizeLanguage(string? value) {
-        if (string.IsNullOrWhiteSpace(value)) {
-            return Result.Success<string?>(null);
-        }
-
-        return LanguageCode.TryParse(value, out var language)
-            ? Result.Success<string?>(language.Value)
-            : Result.Failure<string?>(Validation.Invalid(nameof(UpdateUserCommand.Language), "Invalid language value."));
-    }
-
-    private static Result<string?> ParseGender(string? value) {
-        if (string.IsNullOrWhiteSpace(value)) {
-            return Result.Success<string?>(null);
-        }
-
-        return GenderCode.TryParse(value, out var gender)
-            ? Result.Success<string?>(gender.Value)
-            : Result.Failure<string?>(Validation.Invalid(nameof(UpdateUserCommand.Gender), "Invalid gender value."));
-    }
-
-    private static Result<ImageAssetId?> NormalizeImageAssetId(Guid? value, string fieldName) {
-        if (!value.HasValue) {
-            return Result.Success<ImageAssetId?>(null);
-        }
-
-        return value.Value == Guid.Empty
-            ? Result.Failure<ImageAssetId?>(Validation.Invalid(fieldName, "Image asset id must not be empty."))
-            : Result.Success<ImageAssetId?>(new ImageAssetId(value.Value));
-    }
 }

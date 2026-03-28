@@ -22,6 +22,7 @@ Keep namespaces aligned with folder paths.
 - Respect strongly typed IDs/value objects.
 - Preserve aggregate invariants; avoid leaking primitives in public contracts.
 - Prefer `Enum.TryParse(..., out ...)` in handlers/services and return validation errors instead of relying on `Enum.Parse` exceptions.
+- Do not rely only on FluentValidation for request safety when a handler/service constructs value objects or parses enums; guard invalid or empty IDs in the handler/service path and return a normal failure instead of letting exceptions define control flow.
 - Propagate the incoming `CancellationToken` to all async service/repository calls (avoid `CancellationToken.None` in request flow).
 - For time-dependent logic in handlers/services, prefer `IDateTimeProvider` over direct `DateTime.UtcNow`.
 - For authentication flows, centralize token issuance/refresh-token persistence via `IAuthenticationTokenService` instead of duplicating token code in each handler.

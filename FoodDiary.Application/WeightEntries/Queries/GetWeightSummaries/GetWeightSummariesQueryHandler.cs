@@ -1,9 +1,10 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
+using FoodDiary.Application.Common.Time;
+using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.WeightEntries.Common;
 using FoodDiary.Application.WeightEntries.Models;
 using FoodDiary.Domain.Entities.Tracking;
-using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.WeightEntries.Queries.GetWeightSummaries;
 
@@ -12,8 +13,9 @@ public class GetWeightSummariesQueryHandler(IWeightEntryRepository weightEntryRe
     public async Task<Result<IReadOnlyList<WeightEntrySummaryModel>>> Handle(
         GetWeightSummariesQuery query,
         CancellationToken cancellationToken) {
-        if (query.UserId is null || query.UserId == Guid.Empty) {
-            return Result.Failure<IReadOnlyList<WeightEntrySummaryModel>>(Errors.Authentication.InvalidToken);
+        var userIdResult = UserIdParser.Parse(query.UserId);
+        if (userIdResult.IsFailure) {
+            return Result.Failure<IReadOnlyList<WeightEntrySummaryModel>>(userIdResult.Error);
         }
 
         if (query.DateFrom > query.DateTo) {
@@ -26,9 +28,9 @@ public class GetWeightSummariesQueryHandler(IWeightEntryRepository weightEntryRe
                 Errors.Validation.Invalid(nameof(query.QuantizationDays), "Value must be greater than zero."));
         }
 
-        var userId = new UserId(query.UserId!.Value);
-        var normalizedFrom = NormalizeUtcDate(query.DateFrom);
-        var normalizedTo = NormalizeUtcDate(query.DateTo);
+        var userId = userIdResult.Value;
+        var normalizedFrom = UtcDateNormalizer.NormalizeDateUsingLocalFallback(query.DateFrom);
+        var normalizedTo = UtcDateNormalizer.NormalizeDateUsingLocalFallback(query.DateTo);
 
         var entries = await weightEntryRepository.GetByPeriodAsync(
             userId,
@@ -72,14 +74,5 @@ public class GetWeightSummariesQueryHandler(IWeightEntryRepository weightEntryRe
 
         var avg = bucketEntries.Average(entry => entry.Weight);
         return new WeightEntrySummaryModel(start, end, Math.Round(avg, 2));
-    }
-
-    private static DateTime NormalizeUtcDate(DateTime value) {
-        var utc = value.Kind switch {
-            DateTimeKind.Utc => value,
-            _ => value.ToUniversalTime()
-        };
-
-        return DateTime.SpecifyKind(utc.Date, DateTimeKind.Utc);
     }
 }

@@ -33,15 +33,21 @@ public class RecentItemRepository(FoodDiaryDbContext context, IDateTimeProvider 
 
         if (distinctProductIds.Count > 0) {
             await TouchItemsAsync(userId, RecentItemType.Product, distinctProductIds, now, cancellationToken);
-            await TrimOverflowAsync(userId, RecentItemType.Product, cancellationToken);
         }
 
         if (distinctRecipeIds.Count > 0) {
             await TouchItemsAsync(userId, RecentItemType.Recipe, distinctRecipeIds, now, cancellationToken);
-            await TrimOverflowAsync(userId, RecentItemType.Recipe, cancellationToken);
         }
 
         await context.SaveChangesAsync(cancellationToken);
+
+        if (distinctProductIds.Count > 0) {
+            await TrimOverflowAsync(userId, RecentItemType.Product, cancellationToken);
+        }
+
+        if (distinctRecipeIds.Count > 0) {
+            await TrimOverflowAsync(userId, RecentItemType.Recipe, cancellationToken);
+        }
     }
 
     public async Task<IReadOnlyList<RecentProductUsage>> GetRecentProductsAsync(
@@ -100,14 +106,18 @@ public class RecentItemRepository(FoodDiaryDbContext context, IDateTimeProvider 
         UserId userId,
         RecentItemType itemType,
         CancellationToken cancellationToken) {
-        var overflowItems = await context.RecentItems
+        var overflowItemIds = await context.RecentItems
             .Where(x => x.UserId == userId && x.ItemType == itemType)
             .OrderByDescending(x => x.LastUsedAtUtc)
+            .ThenByDescending(x => x.CreatedOnUtc)
             .Skip(MaxStoredPerType)
+            .Select(x => x.Id)
             .ToListAsync(cancellationToken);
 
-        if (overflowItems.Count > 0) {
-            context.RecentItems.RemoveRange(overflowItems);
+        if (overflowItemIds.Count > 0) {
+            await context.RecentItems
+                .Where(x => overflowItemIds.Contains(x.Id))
+                .ExecuteDeleteAsync(cancellationToken);
         }
     }
 }

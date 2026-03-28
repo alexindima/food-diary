@@ -20,9 +20,14 @@ public sealed class AiUsageRepository(FoodDiaryDbContext context) : IAiUsageRepo
             .AsNoTracking()
             .Where(x => x.CreatedOnUtc >= fromUtc && x.CreatedOnUtc < toUtc);
 
-        var totalTokens = await query.SumAsync(x => x.TotalTokens, cancellationToken);
-        var inputTokens = await query.SumAsync(x => x.InputTokens, cancellationToken);
-        var outputTokens = await query.SumAsync(x => x.OutputTokens, cancellationToken);
+        var totals = await query
+            .GroupBy(_ => 1)
+            .Select(group => new {
+                TotalTokens = group.Sum(x => x.TotalTokens),
+                InputTokens = group.Sum(x => x.InputTokens),
+                OutputTokens = group.Sum(x => x.OutputTokens)
+            })
+            .SingleOrDefaultAsync(cancellationToken);
 
         var byDay = await query
             .GroupBy(x => x.CreatedOnUtc.Date)
@@ -95,9 +100,9 @@ public sealed class AiUsageRepository(FoodDiaryDbContext context) : IAiUsageRepo
             .ToList();
 
         return new AiUsageSummary(
-            totalTokens,
-            inputTokens,
-            outputTokens,
+            totals?.TotalTokens ?? 0,
+            totals?.InputTokens ?? 0,
+            totals?.OutputTokens ?? 0,
             daily,
             byOperation,
             byModel,

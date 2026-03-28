@@ -1,10 +1,10 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
+using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.DailyAdvices.Common;
 using FoodDiary.Application.DailyAdvices.Models;
 using FoodDiary.Application.DailyAdvices.Services;
-using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.DailyAdvices.Queries.GetDailyAdvice;
 
@@ -13,11 +13,12 @@ public class GetDailyAdviceQueryHandler(
     IUserRepository userRepository)
     : IQueryHandler<GetDailyAdviceQuery, Result<DailyAdviceModel>> {
     public async Task<Result<DailyAdviceModel>> Handle(GetDailyAdviceQuery query, CancellationToken cancellationToken) {
-        if (query.UserId is null || query.UserId == Guid.Empty) {
-            return Result.Failure<DailyAdviceModel>(Errors.Authentication.InvalidToken);
+        var userIdResult = UserIdParser.Parse(query.UserId);
+        if (userIdResult.IsFailure) {
+            return Result.Failure<DailyAdviceModel>(userIdResult.Error);
         }
 
-        var userId = new UserId(query.UserId!.Value);
+        var userId = userIdResult.Value;
         var user = await userRepository.GetByIdAsync(userId, cancellationToken);
         if (user is null) {
             return Result.Failure<DailyAdviceModel>(Errors.User.NotFound(userId.Value));

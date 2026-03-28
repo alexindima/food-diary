@@ -1,6 +1,7 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
+using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Recipes.Common;
 using FoodDiary.Application.Recipes.Mappings;
 using FoodDiary.Application.Recipes.Models;
@@ -18,16 +19,19 @@ public class CreateRecipeCommandHandler(IRecipeRepository recipeRepository)
             return Result.Failure<RecipeModel>(Errors.Authentication.InvalidToken);
         }
 
-        var imageAssetIdResult = NormalizeImageAssetId(command.ImageAssetId, nameof(command.ImageAssetId));
+        var imageAssetIdResult = ImageAssetIdParser.ParseOptional(command.ImageAssetId, nameof(command.ImageAssetId));
         if (imageAssetIdResult.IsFailure) {
             return Result.Failure<RecipeModel>(imageAssetIdResult.Error);
         }
 
         var userId = new UserId(command.UserId!.Value);
 
-        if (!Enum.TryParse<Visibility>(command.Visibility, true, out var visibility)) {
-            return Result.Failure<RecipeModel>(
-                Errors.Validation.Invalid(nameof(command.Visibility), "Unknown visibility value."));
+        var visibilityResult = EnumValueParser.ParseRequired<Visibility>(
+            command.Visibility,
+            nameof(command.Visibility),
+            "Unknown visibility value.");
+        if (visibilityResult.IsFailure) {
+            return Result.Failure<RecipeModel>(visibilityResult.Error);
         }
 
         var recipe = Recipe.Create(
@@ -41,7 +45,7 @@ public class CreateRecipeCommandHandler(IRecipeRepository recipeRepository)
             imageAssetIdResult.Value,
             command.PrepTime ?? 0,
             command.CookTime,
-            visibility);
+            visibilityResult.Value);
 
         var addStepsResult = AddSteps(recipe, command);
         if (addStepsResult.IsFailure) {
@@ -95,7 +99,7 @@ public class CreateRecipeCommandHandler(IRecipeRepository recipeRepository)
             .OrderBy(x => x.Order);
 
         foreach (var entry in orderedSteps) {
-            var stepImageAssetIdResult = NormalizeImageAssetId(entry.Step.ImageAssetId, nameof(entry.Step.ImageAssetId));
+            var stepImageAssetIdResult = ImageAssetIdParser.ParseOptional(entry.Step.ImageAssetId, nameof(entry.Step.ImageAssetId));
             if (stepImageAssetIdResult.IsFailure) {
                 return stepImageAssetIdResult;
             }
@@ -158,23 +162,18 @@ public class CreateRecipeCommandHandler(IRecipeRepository recipeRepository)
         return Result.Success((calories.Value, proteins.Value, fats.Value, carbs.Value, fiber.Value, alcohol ?? 0));
     }
 
-    private static Result<ImageAssetId?> NormalizeImageAssetId(Guid? value, string fieldName) {
-        if (!value.HasValue) {
-            return Result.Success<ImageAssetId?>(null);
-        }
-
-        return value.Value == Guid.Empty
-            ? Result.Failure<ImageAssetId?>(Errors.Validation.Invalid(fieldName, "Image asset id must not be empty."))
-            : Result.Success<ImageAssetId?>(new ImageAssetId(value.Value));
-    }
-
     private static Result ValidateIngredientIdentifiers(RecipeIngredientInput ingredient) {
-        if (ingredient.ProductId == Guid.Empty) {
-            return Result.Failure(Errors.Validation.Invalid(nameof(ingredient.ProductId), "Product id must not be empty."));
+        var productIdResult = OptionalEntityIdValidator.EnsureNotEmpty(ingredient.ProductId, nameof(ingredient.ProductId), "Product id");
+        if (productIdResult.IsFailure) {
+            return productIdResult;
         }
 
-        if (ingredient.NestedRecipeId == Guid.Empty) {
-            return Result.Failure(Errors.Validation.Invalid(nameof(ingredient.NestedRecipeId), "Nested recipe id must not be empty."));
+        var nestedRecipeIdResult = OptionalEntityIdValidator.EnsureNotEmpty(
+            ingredient.NestedRecipeId,
+            nameof(ingredient.NestedRecipeId),
+            "Nested recipe id");
+        if (nestedRecipeIdResult.IsFailure) {
+            return nestedRecipeIdResult;
         }
 
         return Result.Success();

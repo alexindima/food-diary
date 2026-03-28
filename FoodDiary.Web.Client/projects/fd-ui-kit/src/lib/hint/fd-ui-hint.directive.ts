@@ -1,4 +1,4 @@
-import { Directive, ElementRef, HostListener, ViewContainerRef, input, inject } from '@angular/core';
+import { DestroyRef, Directive, ElementRef, HostListener, ViewContainerRef, input, inject } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ConnectedPosition, Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal, TemplatePortal } from '@angular/cdk/portal';
@@ -24,9 +24,17 @@ export class FdUiHintDirective {
     private readonly elementRef = inject(ElementRef<HTMLElement>);
     private readonly viewContainerRef = inject(ViewContainerRef);
     private readonly sanitizer = inject(DomSanitizer);
+    private readonly destroyRef = inject(DestroyRef);
     private overlayRef: OverlayRef | null = null;
     private showTimeoutId: number | null = null;
     private hideTimeoutId: number | null = null;
+
+    public constructor() {
+        this.destroyRef.onDestroy(() => {
+            this.clearTimers();
+            this.destroyOverlay();
+        });
+    }
 
     @HostListener('mouseenter')
     public onMouseEnter(): void {
@@ -51,11 +59,6 @@ export class FdUiHintDirective {
     @HostListener('click')
     public onClick(): void {
         this.hide();
-    }
-
-    public ngOnDestroy(): void {
-        this.clearTimers();
-        this.destroyOverlay();
     }
 
     private queueShow(): void {

@@ -1,6 +1,7 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
+using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Images.Common;
 using FoodDiary.Application.Recipes.Common;
 using FoodDiary.Application.Recipes.Mappings;
@@ -24,7 +25,7 @@ public class UpdateRecipeCommandHandler(
             return Result.Failure<RecipeModel>(Errors.Validation.Invalid(nameof(command.RecipeId), "Recipe id must not be empty."));
         }
 
-        var imageAssetIdResult = NormalizeImageAssetId(command.ImageAssetId, nameof(command.ImageAssetId));
+        var imageAssetIdResult = ImageAssetIdParser.ParseOptional(command.ImageAssetId, nameof(command.ImageAssetId));
         if (imageAssetIdResult.IsFailure) {
             return Result.Failure<RecipeModel>(imageAssetIdResult.Error);
         }
@@ -52,12 +53,15 @@ public class UpdateRecipeCommandHandler(
 
         Visibility? visibility = null;
         if (!string.IsNullOrWhiteSpace(command.Visibility)) {
-            if (!Enum.TryParse<Visibility>(command.Visibility, true, out var parsedVisibility)) {
-                return Result.Failure<RecipeModel>(
-                    Errors.Validation.Invalid(nameof(command.Visibility), "Unknown visibility value."));
+            var parsedVisibilityResult = EnumValueParser.ParseOptional<Visibility>(
+                command.Visibility,
+                nameof(command.Visibility),
+                "Unknown visibility value.");
+            if (parsedVisibilityResult.IsFailure) {
+                return Result.Failure<RecipeModel>(parsedVisibilityResult.Error);
             }
 
-            visibility = parsedVisibility;
+            visibility = parsedVisibilityResult.Value;
         }
 
         var oldAssetId = recipe.ImageAssetId;
@@ -98,7 +102,7 @@ public class UpdateRecipeCommandHandler(
             .ToList();
 
         foreach (var entry in orderedSteps) {
-            var stepImageAssetIdResult = NormalizeImageAssetId(entry.Step.ImageAssetId, nameof(entry.Step.ImageAssetId));
+            var stepImageAssetIdResult = ImageAssetIdParser.ParseOptional(entry.Step.ImageAssetId, nameof(entry.Step.ImageAssetId));
             if (stepImageAssetIdResult.IsFailure) {
                 return Result.Failure<RecipeModel>(stepImageAssetIdResult.Error);
             }
@@ -220,23 +224,18 @@ public class UpdateRecipeCommandHandler(
         return Result.Success((calories.Value, proteins.Value, fats.Value, carbs.Value, fiber.Value, alcohol ?? 0));
     }
 
-    private static Result<ImageAssetId?> NormalizeImageAssetId(Guid? value, string fieldName) {
-        if (!value.HasValue) {
-            return Result.Success<ImageAssetId?>(null);
-        }
-
-        return value.Value == Guid.Empty
-            ? Result.Failure<ImageAssetId?>(Errors.Validation.Invalid(fieldName, "Image asset id must not be empty."))
-            : Result.Success<ImageAssetId?>(new ImageAssetId(value.Value));
-    }
-
     private static Result ValidateIngredientIdentifiers(RecipeIngredientInput ingredient) {
-        if (ingredient.ProductId == Guid.Empty) {
-            return Result.Failure(Errors.Validation.Invalid(nameof(ingredient.ProductId), "Product id must not be empty."));
+        var productIdResult = OptionalEntityIdValidator.EnsureNotEmpty(ingredient.ProductId, nameof(ingredient.ProductId), "Product id");
+        if (productIdResult.IsFailure) {
+            return productIdResult;
         }
 
-        if (ingredient.NestedRecipeId == Guid.Empty) {
-            return Result.Failure(Errors.Validation.Invalid(nameof(ingredient.NestedRecipeId), "Nested recipe id must not be empty."));
+        var nestedRecipeIdResult = OptionalEntityIdValidator.EnsureNotEmpty(
+            ingredient.NestedRecipeId,
+            nameof(ingredient.NestedRecipeId),
+            "Nested recipe id");
+        if (nestedRecipeIdResult.IsFailure) {
+            return nestedRecipeIdResult;
         }
 
         return Result.Success();

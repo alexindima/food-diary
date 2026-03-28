@@ -1,3 +1,4 @@
+using FoodDiary.Application.Images.Common;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Persistence;
@@ -8,6 +9,7 @@ namespace FoodDiary.Infrastructure.Services;
 
 public sealed class UserCleanupService(
     FoodDiaryDbContext dbContext,
+    IImageStorageService imageStorageService,
     ILogger<UserCleanupService> logger) : IUserCleanupService {
     public async Task<int> CleanupDeletedUsersAsync(
         DateTime olderThanUtc,
@@ -128,6 +130,19 @@ public sealed class UserCleanupService(
             await dbContext.Cycles
                 .Where(cycle => cycle.UserId == userId)
                 .ExecuteDeleteAsync(cancellationToken);
+
+            var deletedImageObjectKeys = await dbContext.ImageAssets
+                .Where(asset => asset.UserId == userId)
+                .Select(asset => asset.ObjectKey)
+                .ToListAsync(cancellationToken);
+
+            foreach (var objectKey in deletedImageObjectKeys) {
+                try {
+                    await imageStorageService.DeleteAsync(objectKey, cancellationToken);
+                } catch (Exception ex) {
+                    logger.LogWarning(ex, "Failed to delete image object {ObjectKey} during deleted user cleanup.", objectKey);
+                }
+            }
 
             await dbContext.ImageAssets
                 .Where(asset => asset.UserId == userId)

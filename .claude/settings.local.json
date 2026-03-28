@@ -77,7 +77,14 @@
       "Bash(npx --prefix FoodDiary.Web.Client husky FoodDiary.Web.Client/.husky)",
       "Bash(node -e \"process.chdir\\(''..''\\); require\\(''child_process''\\).execSync\\(''npx husky FoodDiary.Web.Client/.husky'', {stdio: ''inherit''}\\)\")",
       "Bash(grep -A5 '\"\"scripts\"\"' \"C:/Users/alexi/OneDrive/Документы/GitHub/food-diary/FoodDiary.Web.Client/node_modules/husky/package.json\")",
-      "Bash(npm pkg:*)"
+      "Bash(npm pkg:*)",
+      "Bash(find C:UsersalexiOneDriveДокументыGitHubfood-diaryFoodDiary.Web.Client -type f -name eslint.config.js -o -name tsconfig.json -o -name tsconfig.app.json -o -name karma.conf.js -o -name .stylelintrc*)",
+      "Bash(find C:UsersalexiOneDriveДокументыGitHubfood-diaryFoodDiary.Web.Client -maxdepth 2 -type f -name .stylelintrc* -o -name package.json)",
+      "Bash(wc -l /c/Users/alexi/OneDrive/Документы/GitHub/food-diary/FoodDiary.Web.Client/src/app/**/*.component.ts)",
+      "Bash(find /c/Users/alexi/OneDrive/Документы/GitHub/food-diary/FoodDiary.Web.Client/src/app -name \"*.component.ts\" -exec wc -l {} +)",
+      "Bash(grep -r \"standalone: false\\\\|changeDetection: ChangeDetectionStrategy.Default\\\\|@Input\\(\\)\\\\|@Output\\(\\)\\\\|@ViewChild\\\\|@ContentChild\\\\|@NgModule\" C:UsersalexiOneDriveДокументыGitHubfood-diaryFoodDiary.Web.Clientsrcapp --include=*.ts --exclude=*.spec.ts)",
+      "Bash(grep -r anyb C:UsersalexiOneDriveДокументыGitHubfood-diaryFoodDiary.Web.Clientsrcapp --include=*.ts --exclude=*.spec.ts)",
+      "Bash(grep -r banyb C:UsersalexiOneDriveДокументыGitHubfood-diaryFoodDiary.Web.Clientsrcapp --include=*.ts --exclude=*.spec.ts)"
     ],
     "deny": [],
     "ask": []

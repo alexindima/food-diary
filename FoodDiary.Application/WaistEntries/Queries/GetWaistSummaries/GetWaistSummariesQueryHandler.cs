@@ -1,9 +1,10 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
+using FoodDiary.Application.Common.Time;
+using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.WaistEntries.Common;
 using FoodDiary.Application.WaistEntries.Models;
 using FoodDiary.Domain.Entities.Tracking;
-using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.WaistEntries.Queries.GetWaistSummaries;
 
@@ -12,8 +13,9 @@ public class GetWaistSummariesQueryHandler(IWaistEntryRepository waistEntryRepos
     public async Task<Result<IReadOnlyList<WaistEntrySummaryModel>>> Handle(
         GetWaistSummariesQuery query,
         CancellationToken cancellationToken) {
-        if (query.UserId is null || query.UserId == Guid.Empty) {
-            return Result.Failure<IReadOnlyList<WaistEntrySummaryModel>>(Errors.Authentication.InvalidToken);
+        var userIdResult = UserIdParser.Parse(query.UserId);
+        if (userIdResult.IsFailure) {
+            return Result.Failure<IReadOnlyList<WaistEntrySummaryModel>>(userIdResult.Error);
         }
 
         if (query.DateFrom > query.DateTo) {
@@ -26,9 +28,9 @@ public class GetWaistSummariesQueryHandler(IWaistEntryRepository waistEntryRepos
                 Errors.Validation.Invalid(nameof(query.QuantizationDays), "Value must be greater than zero."));
         }
 
-        var userId = new UserId(query.UserId!.Value);
-        var normalizedFrom = NormalizeUtcDate(query.DateFrom);
-        var normalizedTo = NormalizeUtcDate(query.DateTo);
+        var userId = userIdResult.Value;
+        var normalizedFrom = UtcDateNormalizer.NormalizeDateUsingLocalFallback(query.DateFrom);
+        var normalizedTo = UtcDateNormalizer.NormalizeDateUsingLocalFallback(query.DateTo);
 
         var entries = await waistEntryRepository.GetByPeriodAsync(
             userId,
@@ -72,14 +74,5 @@ public class GetWaistSummariesQueryHandler(IWaistEntryRepository waistEntryRepos
 
         var avg = bucketEntries.Average(entry => entry.Circumference);
         return new WaistEntrySummaryModel(start, end, Math.Round(avg, 2));
-    }
-
-    private static DateTime NormalizeUtcDate(DateTime value) {
-        var utc = value.Kind switch {
-            DateTimeKind.Utc => value,
-            _ => value.ToUniversalTime()
-        };
-
-        return DateTime.SpecifyKind(utc.Date, DateTimeKind.Utc);
     }
 }

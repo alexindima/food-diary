@@ -3,6 +3,7 @@ using FoodDiary.Application.Admin.Models;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
+using FoodDiary.Application.Common.Validation;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
@@ -30,7 +31,10 @@ public sealed class UpdateAdminUserCommandHandler(IUserRepository userRepository
             return Result.Failure<AdminUserModel>(Errors.User.NotFound(command.UserId));
         }
 
-        var languageResult = NormalizeLanguage(command.Language);
+        var languageResult = StringCodeParser.ParseOptionalLanguage(
+            command.Language,
+            "language",
+            "Invalid language value.");
         if (languageResult.IsFailure) {
             return Result.Failure<AdminUserModel>(languageResult.Error);
         }
@@ -66,15 +70,5 @@ public sealed class UpdateAdminUserCommandHandler(IUserRepository userRepository
 
         await userRepository.UpdateAsync(user, cancellationToken);
         return Result.Success(user.ToAdminModel());
-    }
-
-    private static Result<string?> NormalizeLanguage(string? value) {
-        if (string.IsNullOrWhiteSpace(value)) {
-            return Result.Success<string?>(null);
-        }
-
-        return LanguageCode.TryParse(value, out var language)
-            ? Result.Success<string?>(language.Value)
-            : Result.Failure<string?>(Errors.Validation.Invalid("language", "Invalid language value."));
     }
 }

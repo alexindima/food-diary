@@ -1,5 +1,6 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
+using FoodDiary.Application.Common.Time;
 using FoodDiary.Application.WeightEntries.Common;
 using FoodDiary.Application.WeightEntries.Mappings;
 using FoodDiary.Application.WeightEntries.Models;
@@ -18,7 +19,7 @@ public class CreateWeightEntryCommandHandler(IWeightEntryRepository weightEntryR
         }
 
         var userId = new UserId(command.UserId!.Value);
-        var normalizedDate = NormalizeUtcDate(command.Date);
+        var normalizedDate = UtcDateNormalizer.NormalizeDateUsingLocalFallback(command.Date);
         var existing = await weightEntryRepository.GetByDateAsync(
             userId,
             normalizedDate,
@@ -32,14 +33,5 @@ public class CreateWeightEntryCommandHandler(IWeightEntryRepository weightEntryR
         entry = await weightEntryRepository.AddAsync(entry, cancellationToken);
 
         return Result.Success(entry.ToModel());
-    }
-
-    private static DateTime NormalizeUtcDate(DateTime value) {
-        var utc = value.Kind switch {
-            DateTimeKind.Utc => value,
-            _ => value.ToUniversalTime()
-        };
-
-        return DateTime.SpecifyKind(utc.Date, DateTimeKind.Utc);
     }
 }

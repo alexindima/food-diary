@@ -1,6 +1,7 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
+using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Products.Mappings;
 using FoodDiary.Application.Products.Models;
 using FoodDiary.Domain.Entities.Products;
@@ -19,20 +20,26 @@ public class CreateProductCommandHandler(IProductRepository productRepository)
 
         var userId = new UserId(command.UserId!.Value);
 
-        if (!Enum.TryParse<MeasurementUnit>(command.BaseUnit, true, out var baseUnit)) {
-            return Result.Failure<ProductModel>(
-                Errors.Validation.Invalid(nameof(command.BaseUnit), "Unknown measurement unit value."));
+        var baseUnitResult = EnumValueParser.ParseRequired<MeasurementUnit>(
+            command.BaseUnit,
+            nameof(command.BaseUnit),
+            "Unknown measurement unit value.");
+        if (baseUnitResult.IsFailure) {
+            return Result.Failure<ProductModel>(baseUnitResult.Error);
         }
 
-        if (!Enum.TryParse<Visibility>(command.Visibility, true, out var visibility)) {
-            return Result.Failure<ProductModel>(
-                Errors.Validation.Invalid(nameof(command.Visibility), "Unknown visibility value."));
+        var visibilityResult = EnumValueParser.ParseRequired<Visibility>(
+            command.Visibility,
+            nameof(command.Visibility),
+            "Unknown visibility value.");
+        if (visibilityResult.IsFailure) {
+            return Result.Failure<ProductModel>(visibilityResult.Error);
         }
 
         var productType = Enum.TryParse<ProductType>(command.ProductType, true, out var parsedType)
             ? parsedType
             : ProductType.Unknown;
-        var imageAssetIdResult = NormalizeImageAssetId(command.ImageAssetId);
+        var imageAssetIdResult = ImageAssetIdParser.ParseOptional(command.ImageAssetId, nameof(command.ImageAssetId));
         if (imageAssetIdResult.IsFailure) {
             return Result.Failure<ProductModel>(imageAssetIdResult.Error);
         }
@@ -40,7 +47,7 @@ public class CreateProductCommandHandler(IProductRepository productRepository)
         var product = Product.Create(
             userId: userId,
             name: command.Name,
-            baseUnit: baseUnit,
+            baseUnit: baseUnitResult.Value,
             baseAmount: command.BaseAmount,
             defaultPortionAmount: command.DefaultPortionAmount,
             caloriesPerBase: command.CaloriesPerBase,
@@ -57,21 +64,11 @@ public class CreateProductCommandHandler(IProductRepository productRepository)
             comment: command.Comment,
             imageUrl: command.ImageUrl,
             imageAssetId: imageAssetIdResult.Value,
-            visibility: visibility
+            visibility: visibilityResult.Value
         );
 
         product = await productRepository.AddAsync(product, cancellationToken);
 
         return Result.Success(product.ToModel(isOwnedByCurrentUser: true));
-    }
-
-    private static Result<ImageAssetId?> NormalizeImageAssetId(Guid? value) {
-        if (!value.HasValue) {
-            return Result.Success<ImageAssetId?>(null);
-        }
-
-        return value.Value == Guid.Empty
-            ? Result.Failure<ImageAssetId?>(Errors.Validation.Invalid(nameof(value), "ImageAssetId must not be empty."))
-            : Result.Success<ImageAssetId?>(new ImageAssetId(value.Value));
     }
 }

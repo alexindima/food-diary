@@ -1,9 +1,10 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
+using FoodDiary.Application.Common.Time;
+using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Meals.Common;
 using FoodDiary.Application.Statistics.Models;
 using FoodDiary.Domain.Entities.Meals;
-using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Statistics.Queries.GetStatistics;
 
@@ -12,8 +13,9 @@ public class GetStatisticsQueryHandler(IMealRepository mealRepository)
     public async Task<Result<IReadOnlyList<AggregatedStatisticsModel>>> Handle(
         GetStatisticsQuery request,
         CancellationToken cancellationToken) {
-        if (request.UserId is null || request.UserId == Guid.Empty) {
-            return Result.Failure<IReadOnlyList<AggregatedStatisticsModel>>(Errors.Authentication.InvalidToken);
+        var userIdResult = UserIdParser.Parse(request.UserId);
+        if (userIdResult.IsFailure) {
+            return Result.Failure<IReadOnlyList<AggregatedStatisticsModel>>(userIdResult.Error);
         }
 
         if (request.DateFrom > request.DateTo) {
@@ -21,12 +23,12 @@ public class GetStatisticsQueryHandler(IMealRepository mealRepository)
                 Errors.Validation.Invalid(nameof(request.DateFrom), "DateFrom must be earlier than DateTo"));
         }
 
-        var userId = new UserId(request.UserId!.Value);
+        var userId = userIdResult.Value;
 
         var quantizationDays = Math.Clamp(request.QuantizationDays <= 0 ? 1 : request.QuantizationDays, 1, 365);
 
-        var normalizedFrom = NormalizeToUtcDateStart(request.DateFrom);
-        var normalizedTo = NormalizeToUtcDateEnd(request.DateTo);
+        var normalizedFrom = UtcDateNormalizer.NormalizeDateUsingLocalFallback(request.DateFrom);
+        var normalizedTo = UtcDateNormalizer.NormalizeDateEndUsingLocalFallback(request.DateTo);
 
         var meals = await mealRepository.GetByPeriodAsync(
             userId,
@@ -92,23 +94,5 @@ public class GetStatisticsQueryHandler(IMealRepository mealRepository)
         }
 
         return buckets;
-    }
-
-    private static DateTime NormalizeToUtcDateStart(DateTime value) {
-        var utc = value.Kind switch {
-            DateTimeKind.Utc => value,
-            _ => value.ToUniversalTime()
-        };
-
-        return DateTime.SpecifyKind(utc.Date, DateTimeKind.Utc);
-    }
-
-    private static DateTime NormalizeToUtcDateEnd(DateTime value) {
-        var utc = value.Kind switch {
-            DateTimeKind.Utc => value,
-            _ => value.ToUniversalTime()
-        };
-
-        return DateTime.SpecifyKind(utc.Date.AddDays(1).AddTicks(-1), DateTimeKind.Utc);
     }
 }

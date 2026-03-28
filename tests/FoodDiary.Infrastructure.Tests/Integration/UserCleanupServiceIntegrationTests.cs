@@ -6,6 +6,8 @@ using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Entities.Shopping;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
+using FoodDiary.Application.Images.Common;
+using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
@@ -57,7 +59,8 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
         context.AiUsages.Add(aiUsage);
         await context.SaveChangesAsync();
 
-        var service = new UserCleanupService(context, NullLogger<UserCleanupService>.Instance);
+        var storage = new RecordingImageStorageService();
+        var service = new UserCleanupService(context, storage, NullLogger<UserCleanupService>.Instance);
 
         var removed = await service.CleanupDeletedUsersAsync(DateTime.UtcNow.AddDays(-1), batchSize: 10, reassignUserId: null);
 
@@ -73,6 +76,7 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
         Assert.False(await verificationContext.ShoppingListItems.AnyAsync());
         Assert.False(await verificationContext.RecentItems.AnyAsync());
         Assert.False(await verificationContext.AiUsages.AnyAsync());
+        Assert.Equal(["users/deleted/image-1.webp"], storage.DeletedObjectKeys);
     }
 
     [RequiresDockerFact]
@@ -81,10 +85,13 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
         var deletedUser = User.Create("deleted@example.com", "hash");
         deletedUser.MarkDeleted(DateTime.UtcNow.AddDays(-10));
         var survivorUser = User.Create("survivor@example.com", "hash");
+        survivorUser.UpdateProfileMedia(profileImageAssetId: null);
 
         var productAsset = ImageAsset.Create(deletedUser.Id, "users/deleted/product.webp", "https://cdn.example.com/product.webp");
         var recipeAsset = ImageAsset.Create(deletedUser.Id, "users/deleted/recipe.webp", "https://cdn.example.com/recipe.webp");
         var stepAsset = ImageAsset.Create(deletedUser.Id, "users/deleted/step.webp", "https://cdn.example.com/step.webp");
+        var profileAsset = ImageAsset.Create(deletedUser.Id, "users/deleted/profile.webp", "https://cdn.example.com/profile.webp");
+        var mealAsset = ImageAsset.Create(deletedUser.Id, "users/deleted/meal.webp", "https://cdn.example.com/meal.webp");
 
         var product = Product.Create(
             deletedUser.Id,
@@ -105,21 +112,25 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
             servings: 1,
             imageAssetId: recipeAsset.Id);
         recipe.AddStep(1, "Toast bread", imageAssetId: stepAsset.Id);
+        var meal = FoodDiary.Domain.Entities.Meals.Meal.Create(deletedUser.Id, new DateTime(2026, 3, 29, 0, 0, 0, DateTimeKind.Utc), imageAssetId: mealAsset.Id);
         var shoppingList = ShoppingList.Create(deletedUser.Id, "Temporary");
         shoppingList.AddItem("Bread", product.Id, 2, MeasurementUnit.Pcs, "Bakery", false, 0);
         var recentItem = RecentItem.Create(deletedUser.Id, RecentItemType.Recipe, recipe.Id.Value);
         var aiUsage = AiUsage.Create(deletedUser.Id, "nutrition", "gpt-4.1-mini", 15, 25, 40);
+        deletedUser.UpdateProfileMedia(profileImageAssetId: profileAsset.Id);
 
         context.Users.AddRange(deletedUser, survivorUser);
-        context.ImageAssets.AddRange(productAsset, recipeAsset, stepAsset);
+        context.ImageAssets.AddRange(productAsset, recipeAsset, stepAsset, profileAsset, mealAsset);
         context.Products.Add(product);
         context.Recipes.Add(recipe);
+        context.Meals.Add(meal);
         context.ShoppingLists.Add(shoppingList);
         context.RecentItems.Add(recentItem);
         context.AiUsages.Add(aiUsage);
         await context.SaveChangesAsync();
 
-        var service = new UserCleanupService(context, NullLogger<UserCleanupService>.Instance);
+        var storage = new RecordingImageStorageService();
+        var service = new UserCleanupService(context, storage, NullLogger<UserCleanupService>.Instance);
 
         var removed = await service.CleanupDeletedUsersAsync(
             DateTime.UtcNow.AddDays(-1),
@@ -140,10 +151,14 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
         Assert.Equal(survivorUser.Id, reassignedRecipe.UserId);
         Assert.All(reassignedAssets, asset => Assert.Equal(survivorUser.Id, asset.UserId));
         Assert.Single(await verificationContext.RecipeSteps.ToListAsync());
+        Assert.False(await verificationContext.Meals.AnyAsync());
         Assert.False(await verificationContext.ShoppingLists.AnyAsync());
         Assert.False(await verificationContext.ShoppingListItems.AnyAsync());
         Assert.False(await verificationContext.RecentItems.AnyAsync());
         Assert.False(await verificationContext.AiUsages.AnyAsync());
+        Assert.Equal(
+            ["users/deleted/meal.webp", "users/deleted/profile.webp"],
+            storage.DeletedObjectKeys.OrderBy(static key => key).ToArray());
     }
 
     private static FoodDiaryDbContext CreateVerificationContext(FoodDiaryDbContext sourceContext) {
@@ -155,5 +170,22 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
             .Options;
 
         return new FoodDiaryDbContext(options);
+    }
+
+    private sealed class RecordingImageStorageService : IImageStorageService {
+        public List<string> DeletedObjectKeys { get; } = [];
+
+        public Task<PresignedUpload> CreatePresignedUploadAsync(
+            UserId userId,
+            string fileName,
+            string contentType,
+            long fileSizeBytes,
+            CancellationToken cancellationToken) =>
+            throw new NotSupportedException();
+
+        public Task DeleteAsync(string objectKey, CancellationToken cancellationToken) {
+            DeletedObjectKeys.Add(objectKey);
+            return Task.CompletedTask;
+        }
     }
 }

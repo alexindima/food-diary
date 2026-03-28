@@ -2,7 +2,7 @@ using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Admin.Common;
 using FoodDiary.Application.Admin.Models;
-using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Application.Common.Validation;
 
 namespace FoodDiary.Application.Admin.Commands.UpsertAdminEmailTemplate;
 
@@ -13,7 +13,10 @@ public sealed class UpsertAdminEmailTemplateCommandHandler(
         UpsertAdminEmailTemplateCommand command,
         CancellationToken cancellationToken) {
         var key = NormalizeKey(command.Key);
-        var localeResult = NormalizeLocale(command.Locale);
+        var localeResult = StringCodeParser.ParseRequiredLanguage(
+            command.Locale,
+            nameof(command.Locale),
+            "Locale must be one of the supported codes.");
         if (localeResult.IsFailure) {
             return Result.Failure<AdminEmailTemplateModel>(localeResult.Error);
         }
@@ -44,11 +47,5 @@ public sealed class UpsertAdminEmailTemplateCommandHandler(
     private static string NormalizeKey(string value) {
         var trimmed = value?.Trim() ?? string.Empty;
         return trimmed.ToLowerInvariant();
-    }
-
-    private static Result<string> NormalizeLocale(string value) {
-        return LanguageCode.TryParse(value, out var languageCode)
-            ? Result.Success(languageCode.Value)
-            : Result.Failure<string>(Errors.Validation.Invalid(nameof(value), "Locale must be one of the supported codes."));
     }
 }

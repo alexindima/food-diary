@@ -1,9 +1,10 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
+using FoodDiary.Application.Common.Time;
+using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.WaistEntries.Common;
 using FoodDiary.Application.WaistEntries.Mappings;
 using FoodDiary.Application.WaistEntries.Models;
-using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.WaistEntries.Queries.GetWaistEntries;
 
@@ -12,13 +13,14 @@ public class GetWaistEntriesQueryHandler(IWaistEntryRepository waistEntryReposit
     public async Task<Result<IReadOnlyList<WaistEntryModel>>> Handle(
         GetWaistEntriesQuery query,
         CancellationToken cancellationToken) {
-        if (query.UserId is null || query.UserId == Guid.Empty) {
-            return Result.Failure<IReadOnlyList<WaistEntryModel>>(Errors.Authentication.InvalidToken);
+        var userIdResult = UserIdParser.Parse(query.UserId);
+        if (userIdResult.IsFailure) {
+            return Result.Failure<IReadOnlyList<WaistEntryModel>>(userIdResult.Error);
         }
 
-        var userId = new UserId(query.UserId!.Value);
-        var normalizedFrom = query.DateFrom.HasValue ? (DateTime?)NormalizeUtcDate(query.DateFrom.Value) : null;
-        var normalizedTo = query.DateTo.HasValue ? (DateTime?)NormalizeUtcDate(query.DateTo.Value) : null;
+        var userId = userIdResult.Value;
+        var normalizedFrom = query.DateFrom.HasValue ? (DateTime?)UtcDateNormalizer.NormalizeDateUsingLocalFallback(query.DateFrom.Value) : null;
+        var normalizedTo = query.DateTo.HasValue ? (DateTime?)UtcDateNormalizer.NormalizeDateUsingLocalFallback(query.DateTo.Value) : null;
 
         var entries = await waistEntryRepository.GetEntriesAsync(
             userId,
@@ -30,14 +32,5 @@ public class GetWaistEntriesQueryHandler(IWaistEntryRepository waistEntryReposit
 
         var response = entries.Select(entry => entry.ToModel()).ToList();
         return Result.Success<IReadOnlyList<WaistEntryModel>>(response);
-    }
-
-    private static DateTime NormalizeUtcDate(DateTime value) {
-        var utc = value.Kind switch {
-            DateTimeKind.Utc => value,
-            _ => value.ToUniversalTime()
-        };
-
-        return DateTime.SpecifyKind(utc.Date, DateTimeKind.Utc);
     }
 }

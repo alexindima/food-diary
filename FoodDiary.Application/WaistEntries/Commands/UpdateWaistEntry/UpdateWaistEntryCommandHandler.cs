@@ -1,5 +1,6 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
+using FoodDiary.Application.Common.Time;
 using FoodDiary.Application.WaistEntries.Common;
 using FoodDiary.Application.WaistEntries.Mappings;
 using FoodDiary.Application.WaistEntries.Models;
@@ -33,7 +34,7 @@ public class UpdateWaistEntryCommandHandler(IWaistEntryRepository waistEntryRepo
             return Result.Failure<WaistEntryModel>(Errors.WaistEntry.NotFound(command.WaistEntryId));
         }
 
-        var normalizedDate = NormalizeUtcDate(command.Date);
+        var normalizedDate = UtcDateNormalizer.NormalizeDateUsingLocalFallback(command.Date);
         var existing = await waistEntryRepository.GetByDateAsync(
             userId,
             normalizedDate,
@@ -47,14 +48,5 @@ public class UpdateWaistEntryCommandHandler(IWaistEntryRepository waistEntryRepo
         entry.Update(command.Circumference, normalizedDate);
         await waistEntryRepository.UpdateAsync(entry, cancellationToken);
         return Result.Success(entry.ToModel());
-    }
-
-    private static DateTime NormalizeUtcDate(DateTime value) {
-        var utc = value.Kind switch {
-            DateTimeKind.Utc => value,
-            _ => value.ToUniversalTime()
-        };
-
-        return DateTime.SpecifyKind(utc.Date, DateTimeKind.Utc);
     }
 }

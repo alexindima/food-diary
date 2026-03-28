@@ -1,6 +1,7 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
+using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Images.Common;
 using FoodDiary.Application.Products.Mappings;
 using FoodDiary.Application.Products.Models;
@@ -39,22 +40,28 @@ public class UpdateProductCommandHandler(
 
         MeasurementUnit? newUnit = null;
         if (!string.IsNullOrWhiteSpace(command.BaseUnit)) {
-            if (!Enum.TryParse<MeasurementUnit>(command.BaseUnit, true, out var parsedUnit)) {
-                return Result.Failure<ProductModel>(
-                    Errors.Validation.Invalid(nameof(command.BaseUnit), "Unknown measurement unit value."));
+            var parsedUnitResult = EnumValueParser.ParseOptional<MeasurementUnit>(
+                command.BaseUnit,
+                nameof(command.BaseUnit),
+                "Unknown measurement unit value.");
+            if (parsedUnitResult.IsFailure) {
+                return Result.Failure<ProductModel>(parsedUnitResult.Error);
             }
 
-            newUnit = parsedUnit;
+            newUnit = parsedUnitResult.Value;
         }
 
         Visibility? newVisibility = null;
         if (!string.IsNullOrWhiteSpace(command.Visibility)) {
-            if (!Enum.TryParse<Visibility>(command.Visibility, true, out var parsedVisibility)) {
-                return Result.Failure<ProductModel>(
-                    Errors.Validation.Invalid(nameof(command.Visibility), "Unknown visibility value."));
+            var parsedVisibilityResult = EnumValueParser.ParseOptional<Visibility>(
+                command.Visibility,
+                nameof(command.Visibility),
+                "Unknown visibility value.");
+            if (parsedVisibilityResult.IsFailure) {
+                return Result.Failure<ProductModel>(parsedVisibilityResult.Error);
             }
 
-            newVisibility = parsedVisibility;
+            newVisibility = parsedVisibilityResult.Value;
         }
 
         ProductType? newProductType = null;
@@ -63,7 +70,7 @@ public class UpdateProductCommandHandler(
             newProductType = parsedProductType;
         }
 
-        var imageAssetIdResult = NormalizeImageAssetId(command.ImageAssetId);
+        var imageAssetIdResult = ImageAssetIdParser.ParseOptional(command.ImageAssetId, nameof(command.ImageAssetId));
         if (imageAssetIdResult.IsFailure) {
             return Result.Failure<ProductModel>(imageAssetIdResult.Error);
         }
@@ -148,15 +155,5 @@ public class UpdateProductCommandHandler(
 
         var usageCount = product.MealItems.Count + product.RecipeIngredients.Count;
         return Result.Success(product.ToModel(usageCount, true));
-    }
-
-    private static Result<ImageAssetId?> NormalizeImageAssetId(Guid? value) {
-        if (!value.HasValue) {
-            return Result.Success<ImageAssetId?>(null);
-        }
-
-        return value.Value == Guid.Empty
-            ? Result.Failure<ImageAssetId?>(Errors.Validation.Invalid(nameof(value), "ImageAssetId must not be empty."))
-            : Result.Success<ImageAssetId?>(new ImageAssetId(value.Value));
     }
 }

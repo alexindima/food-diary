@@ -30,6 +30,7 @@ Rules for `FoodDiary.Web.Api/`.
 - New host configuration sections should use typed options in `Options/` and validate on startup when practical.
 - Do not commit real secrets or local passwords to `appsettings*.json`; keep repository config as safe placeholders only.
 - Avoid logging sensitive query values. If auth tokens must travel in query for transport reasons, do not enable global query-string logging without explicit redaction.
+- Do not trust raw `X-Forwarded-*` headers directly in rate limiting, auth, or logging decisions; only honor forwarded client metadata after explicit trusted proxy/network configuration.
 
 ## Migration Guidance
 - If host logic grows, split it by composition concern under `Extensions/`, `Options/`, or `Swagger/` instead of introducing feature transport code here.

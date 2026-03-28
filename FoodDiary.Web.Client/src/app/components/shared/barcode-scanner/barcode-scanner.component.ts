@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ElementRef, inject, signal, viewChild, OnInit, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, inject, signal, viewChild, OnInit } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiDialogRef } from 'fd-ui-kit/material';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog.component';
@@ -13,8 +13,9 @@ import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
     styleUrl: './barcode-scanner.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BarcodeScannerComponent implements OnInit, OnDestroy {
+export class BarcodeScannerComponent implements OnInit {
     private readonly dialogRef = inject(FdUiDialogRef<BarcodeScannerComponent, string | null>);
+    private readonly destroyRef = inject(DestroyRef);
     private readonly videoRef = viewChild<ElementRef<HTMLVideoElement>>('video');
 
     public readonly isCameraReady = signal(false);
@@ -35,10 +36,7 @@ export class BarcodeScannerComponent implements OnInit, OnDestroy {
                        'codabar', 'itf', 'qr_code', 'data_matrix', 'pdf417', 'aztec'],
         });
         this.startCamera();
-    }
-
-    public ngOnDestroy(): void {
-        this.stopCamera();
+        this.destroyRef.onDestroy(() => this.stopCamera());
     }
 
     public close(): void {

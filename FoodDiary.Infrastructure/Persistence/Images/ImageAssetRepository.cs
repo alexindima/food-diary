@@ -30,6 +30,7 @@ public class ImageAssetRepository(FoodDiaryDbContext context) : IImageAssetRepos
                 context.Recipes.Any(r => r.ImageAssetId == assetId) ||
                 context.RecipeSteps.Any(s => s.ImageAssetId == assetId) ||
                 context.Meals.Any(m => m.ImageAssetId == assetId) ||
+                context.MealAiSessions.Any(s => s.ImageAssetId == assetId) ||
                 context.Users.Any(u => u.ProfileImageAssetId == assetId))
             .FirstOrDefaultAsync(cancellationToken);
     }
@@ -46,6 +47,7 @@ public class ImageAssetRepository(FoodDiaryDbContext context) : IImageAssetRepos
                 !context.Recipes.Any(r => r.ImageAssetId == asset.Id) &&
                 !context.RecipeSteps.Any(s => s.ImageAssetId == asset.Id) &&
                 !context.Meals.Any(m => m.ImageAssetId == asset.Id) &&
+                !context.MealAiSessions.Any(s => s.ImageAssetId == asset.Id) &&
                 !context.Users.Any(u => u.ProfileImageAssetId == asset.Id))
             .OrderBy(asset => asset.CreatedOnUtc)
             .Take(batchSize)

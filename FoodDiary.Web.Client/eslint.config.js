@@ -111,6 +111,26 @@ export default [
                     message: 'Use contentChild() signal query instead of @ContentChild(). See: https://angular.dev/guide/signals/queries',
                 },
                 {
+                    selector: 'Decorator[expression.callee.name="NgModule"]',
+                    message: 'Use standalone components instead of NgModules.',
+                },
+                {
+                    selector: 'PropertyAssignment[key.name="standalone"][value.value=false]',
+                    message: 'Components must be standalone. Remove standalone: false.',
+                },
+                {
+                    selector: 'PropertyAssignment[key.name="changeDetection"][value.property.name="Default"]',
+                    message: 'Use ChangeDetectionStrategy.OnPush instead of Default.',
+                },
+                {
+                    selector: 'MethodDefinition[key.name="ngOnDestroy"]',
+                    message: 'Use DestroyRef.onDestroy() instead of ngOnDestroy. See: https://angular.dev/api/core/DestroyRef',
+                },
+                {
+                    selector: 'MethodDefinition[key.name="ngOnChanges"]',
+                    message: 'Use signal inputs with effect() or computed() instead of ngOnChanges.',
+                },
+                {
                     selector: 'Decorator[expression.callee.name="ContentChildren"]',
                     message: 'Use contentChildren() signal query instead of @ContentChildren(). See: https://angular.dev/guide/signals/queries',
                 },
