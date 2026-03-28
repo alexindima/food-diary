@@ -25,14 +25,13 @@ public class RegisterCommandHandler(
         var hashedPassword = passwordHasher.Hash(command.Password);
         var user = User.Create(command.Email, hashedPassword);
         var normalizedLanguage = LanguageCode.FromPreferred(command.Language).Value;
-        user.UpdateGoals(
-            dailyCalorieTarget: 2000,
-            proteinTarget: 150,
-            fatTarget: 65,
-            carbTarget: 200,
-            fiberTarget: 28,
-            waterGoal: 2000
-        );
+        user.UpdateGoals(new UserGoalUpdate(
+            DailyCalorieTarget: 2000,
+            ProteinTarget: 150,
+            FatTarget: 65,
+            CarbTarget: 200,
+            FiberTarget: 28,
+            WaterGoal: 2000));
         user.UpdatePreferences(language: normalizedLanguage);
 
         user = await userRepository.AddAsync(user, cancellationToken);

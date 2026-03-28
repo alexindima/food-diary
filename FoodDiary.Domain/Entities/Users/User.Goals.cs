@@ -1,3 +1,5 @@
+using FoodDiary.Domain.ValueObjects;
+
 namespace FoodDiary.Domain.Entities.Users;
 
 public sealed partial class User {
@@ -10,17 +12,29 @@ public sealed partial class User {
         double? waterGoal = null,
         double? desiredWeight = null,
         double? desiredWaist = null) {
+        UpdateGoals(new UserGoalUpdate(
+            DailyCalorieTarget: dailyCalorieTarget,
+            ProteinTarget: proteinTarget,
+            FatTarget: fatTarget,
+            CarbTarget: carbTarget,
+            FiberTarget: fiberTarget,
+            WaterGoal: waterGoal,
+            DesiredWeight: desiredWeight,
+            DesiredWaist: desiredWaist));
+    }
+
+    public void UpdateGoals(UserGoalUpdate update) {
         EnsureNotDeleted();
         var updatedGoals = GetNutritionGoals().With(
-            dailyCalorieTarget: dailyCalorieTarget,
-            proteinTarget: proteinTarget,
-            fatTarget: fatTarget,
-            carbTarget: carbTarget,
-            fiberTarget: fiberTarget,
-            waterGoal: waterGoal);
+            dailyCalorieTarget: update.DailyCalorieTarget,
+            proteinTarget: update.ProteinTarget,
+            fatTarget: update.FatTarget,
+            carbTarget: update.CarbTarget,
+            fiberTarget: update.FiberTarget,
+            waterGoal: update.WaterGoal);
 
-        EnsureDesiredWeight(desiredWeight, nameof(desiredWeight));
-        EnsureDesiredWaist(desiredWaist, nameof(desiredWaist));
+        EnsureDesiredWeight(update.DesiredWeight, nameof(update.DesiredWeight));
+        EnsureDesiredWaist(update.DesiredWaist, nameof(update.DesiredWaist));
 
         var state = GetGoalState() with {
             DailyCalorieTarget = updatedGoals.DailyCalorieTarget,
@@ -29,8 +43,8 @@ public sealed partial class User {
             CarbTarget = updatedGoals.CarbTarget,
             FiberTarget = updatedGoals.FiberTarget,
             WaterGoal = updatedGoals.WaterGoal,
-            DesiredWeight = desiredWeight.HasValue ? desiredWeight : DesiredWeight,
-            DesiredWaist = desiredWaist.HasValue ? desiredWaist : DesiredWaist
+            DesiredWeight = update.DesiredWeight.HasValue ? update.DesiredWeight : DesiredWeight,
+            DesiredWaist = update.DesiredWaist.HasValue ? update.DesiredWaist : DesiredWaist
         };
 
         ApplyGoalState(state);
