@@ -1,5 +1,4 @@
 ﻿export * from './design-tokens';
-export * from './fd-ui-kit.module';
 export * from './types/field-size.type';
 
 export * from './input/fd-ui-input.component';

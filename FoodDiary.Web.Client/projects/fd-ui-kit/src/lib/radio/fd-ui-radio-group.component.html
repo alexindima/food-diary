@@ -10,7 +10,8 @@
 <mat-radio-group
   class="fd-ui-radio-group__control"
   [formControl]="control"
-  [disabled]="disabled"
+  [attr.aria-describedby]="error() ? id() + '-error' : null"
+  [attr.aria-invalid]="error() ? 'true' : null"
   (blur)="handleBlur()"
   >
   @for (option of options(); track trackByValue($index, option)) {
@@ -34,6 +35,6 @@
   <p class="fd-ui-radio-group__hint">{{ hint() }}</p>
 }
 @if (error()) {
-  <p class="fd-ui-radio-group__error">{{ error() }}</p>
+  <p class="fd-ui-radio-group__error" [id]="id() + '-error'" role="alert">{{ error() }}</p>
 }
 </div>

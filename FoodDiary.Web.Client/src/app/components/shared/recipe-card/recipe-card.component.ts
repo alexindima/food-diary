@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiIconModule } from 'fd-ui-kit/material';
@@ -33,10 +33,10 @@ export interface RecipeCardItem {
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RecipeCardComponent {
-    @Input({ required: true }) public recipe!: RecipeCardItem;
-    @Input() public imageUrl?: string;
-    @Output() public open = new EventEmitter<void>();
-    @Output() public addToMeal = new EventEmitter<void>();
+    public readonly recipe = input.required<RecipeCardItem>();
+    public readonly imageUrl = input<string>();
+    public readonly open = output<void>();
+    public readonly addToMeal = output<void>();
 
     public handleOpen(): void {
         this.open.emit();
@@ -48,17 +48,19 @@ export class RecipeCardComponent {
     }
 
     public getTotalTime(): number | null {
-        const prep = this.recipe?.prepTime ?? 0;
-        const cook = this.recipe?.cookTime ?? 0;
+        const r = this.recipe();
+        const prep = r?.prepTime ?? 0;
+        const cook = r?.cookTime ?? 0;
         const total = prep + cook;
         return total > 0 ? total : null;
     }
 
     public getIngredientCount(): number {
-        if (!this.recipe?.steps?.length) {
+        const r = this.recipe();
+        if (!r?.steps?.length) {
             return 0;
         }
 
-        return this.recipe.steps.reduce((total, step) => total + (step.ingredients?.length ?? 0), 0);
+        return r.steps.reduce((total, step) => total + (step.ingredients?.length ?? 0), 0);
     }
 }

@@ -3,6 +3,12 @@ using FoodDiary.Domain.Events;
 namespace FoodDiary.Domain.Entities.Users;
 
 public sealed partial class User {
+    public void DeleteAccount(DateTime deletedAtUtc) {
+        var normalizedDeletedAtUtc = NormalizeUtcTimestamp(deletedAtUtc, nameof(deletedAtUtc));
+        UpdateRefreshToken(null, normalizedDeletedAtUtc);
+        MarkDeleted(normalizedDeletedAtUtc);
+    }
+
     public void SetActive(bool isActive, DateTime? changedAtUtc = null) {
         if (isActive) {
             Activate(changedAtUtc);

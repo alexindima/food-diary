@@ -15,6 +15,8 @@
         [formControl]="dateControl"
         [attr.placeholder]="shouldShowPlaceholder ? (placeholder() ?? null) : null"
         [disabled]="disabled"
+        [attr.aria-describedby]="error() ? id() + '-error' : null"
+        [attr.aria-invalid]="error() ? 'true' : null"
         />
       <button
         type="button"
@@ -28,7 +30,7 @@
   </div>
 
   @if (error()) {
-    <div class="fd-ui-date-input__error">{{ error() }}</div>
+    <div class="fd-ui-date-input__error" [id]="id() + '-error'" role="alert">{{ error() }}</div>
   }
 </div>
 <mat-datepicker #picker (closed)="dateControl.markAsTouched()" />

@@ -1,5 +1,23 @@
 @use 'variables' as variables;
 
+.fd-skip-nav {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: var(--fd-color-primary-600, #4f46e5);
+    color: #fff;
+    padding: 8px 16px;
+    z-index: 10000;
+    transition: top 0.2s;
+    text-decoration: none;
+    font-weight: 500;
+    border-radius: 0 0 4px 0;
+
+    &:focus {
+        top: 0;
+    }
+}
+
 .fd-root {
     display: grid;
     grid-template-columns: 260px 1fr;

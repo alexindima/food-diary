@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, Input, ViewEncapsulation, inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, ViewEncapsulation, inject, input } from '@angular/core';
 import { NgClass } from '@angular/common';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
@@ -21,24 +21,25 @@ import { MatIconModule } from '@angular/material/icon';
 })
 export class FdUiNutrientInputComponent implements ControlValueAccessor {
     private readonly cdr = inject(ChangeDetectorRef);
-    @Input() public label: string = '';
-    @Input() public icon?: string;
-    @Input() public placeholder: string = '0';
-    @Input() public name?: string;
-    @Input() public type: 'text' | 'number' = 'number';
-    @Input() public step?: string | number;
-    @Input() public min?: string | number;
-    @Input() public max?: string | number;
-    @Input() public required = false;
-    @Input() public readonly = false;
-    @Input() public error?: string | null;
-    @Input() public tintColor?: string;
-    @Input() public textColor?: string;
-    @Input() public size: 'sm' | 'md' | 'lg' = 'md';
-    @Input() public variant: 'tinted' | 'outline' = 'tinted';
-    @Input() public labelUppercase = true;
-    @Input() public valueAlign: 'center' | 'left' = 'center';
-    @Input() public unitLabel?: string;
+
+    public readonly label = input('');
+    public readonly icon = input<string>();
+    public readonly placeholder = input('0');
+    public readonly name = input<string>();
+    public readonly type = input<'text' | 'number'>('number');
+    public readonly step = input<string | number>();
+    public readonly min = input<string | number>();
+    public readonly max = input<string | number>();
+    public readonly required = input(false);
+    public readonly readonly = input(false);
+    public readonly error = input<string | null>();
+    public readonly tintColor = input<string>();
+    public readonly textColor = input<string>();
+    public readonly size = input<'sm' | 'md' | 'lg'>('md');
+    public readonly variant = input<'tinted' | 'outline'>('tinted');
+    public readonly labelUppercase = input(true);
+    public readonly valueAlign = input<'center' | 'left'>('center');
+    public readonly unitLabel = input<string>();
 
     public disabled = false;
     public value = '';
@@ -72,7 +73,7 @@ export class FdUiNutrientInputComponent implements ControlValueAccessor {
         const target = event.target as HTMLInputElement;
         const rawValue = target.value;
 
-        if (this.type === 'number') {
+        if (this.type() === 'number') {
             const sanitized = this.sanitizeDecimalInput(rawValue);
             this.value = sanitized;
             target.value = sanitized;

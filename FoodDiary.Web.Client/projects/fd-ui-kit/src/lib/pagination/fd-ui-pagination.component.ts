@@ -1,5 +1,5 @@
 
-import { Component, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 
 @Component({
@@ -16,6 +16,7 @@ import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
          />
     `,
     styleUrls: ['./fd-ui-pagination.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FdUiPaginationComponent {
     public readonly length = input(0);

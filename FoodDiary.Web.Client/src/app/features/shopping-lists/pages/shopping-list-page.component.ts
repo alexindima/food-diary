@@ -388,7 +388,9 @@ export class ShoppingListPageComponent implements OnInit {
             .subscribe({
                 next: list => {
                     this.isLoading.set(false);
-                    this.applyList(list);
+                    if (list) {
+                        this.applyList(list);
+                    }
                 },
                 error: (error: HttpErrorResponse) => {
                     this.isLoading.set(false);

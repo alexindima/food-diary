@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, Observable, throwError } from 'rxjs';
+import { catchError, Observable, of, throwError } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
 import { ShoppingList, ShoppingListCreateDto, ShoppingListSummary, ShoppingListUpdateDto } from '../models/shopping-list.data';
@@ -11,11 +11,11 @@ import { ShoppingList, ShoppingListCreateDto, ShoppingListSummary, ShoppingListU
 export class ShoppingListService extends ApiService {
     protected readonly baseUrl = environment.apiUrls.shoppingLists;
 
-    public getCurrent(): Observable<ShoppingList> {
+    public getCurrent(): Observable<ShoppingList | null> {
         return this.get<ShoppingList>('current').pipe(
             catchError((error: HttpErrorResponse) => {
                 console.error('Get current shopping list error', error);
-                return throwError(() => error);
+                return of(null);
             }),
         );
     }
@@ -24,16 +24,16 @@ export class ShoppingListService extends ApiService {
         return this.get<ShoppingListSummary[]>('').pipe(
             catchError((error: HttpErrorResponse) => {
                 console.error('Get shopping lists error', error);
-                return throwError(() => error);
+                return of([]);
             }),
         );
     }
 
-    public getById(id: string): Observable<ShoppingList> {
+    public getById(id: string): Observable<ShoppingList | null> {
         return this.get<ShoppingList>(`${id}`).pipe(
             catchError((error: HttpErrorResponse) => {
                 console.error('Get shopping list error', error);
-                return throwError(() => error);
+                return of(null);
             }),
         );
     }

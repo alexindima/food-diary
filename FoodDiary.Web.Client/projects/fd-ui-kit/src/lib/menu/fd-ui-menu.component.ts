@@ -1,5 +1,5 @@
 
-import { Component, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, viewChild } from '@angular/core';
 import { MatMenuModule, MatMenu } from '@angular/material/menu';
 
 @Component({
@@ -9,6 +9,7 @@ import { MatMenuModule, MatMenu } from '@angular/material/menu';
     templateUrl: './fd-ui-menu.component.html',
     styleUrls: ['./fd-ui-menu.component.scss'],
     exportAs: 'fdUiMenu',
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FdUiMenuComponent {
     private readonly matMenuRef = viewChild.required(MatMenu);

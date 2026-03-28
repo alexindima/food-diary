@@ -27,6 +27,7 @@ export interface FdUiRadioOption<T = unknown> {
 export class FdUiRadioGroupComponent<T = unknown> implements ControlValueAccessor {
     private readonly cdr = inject(ChangeDetectorRef);
 
+    public readonly id = input('fd-radio-' + Math.random().toString(36).slice(2, 8));
     public readonly label = input<string>();
     public readonly hint = input<string>();
     public readonly error = input<string | null>();

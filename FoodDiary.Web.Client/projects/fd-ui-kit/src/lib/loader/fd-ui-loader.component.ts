@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
@@ -11,5 +11,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
         </div>
     `,
     styleUrls: ['./fd-ui-loader.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FdUiLoaderComponent {}

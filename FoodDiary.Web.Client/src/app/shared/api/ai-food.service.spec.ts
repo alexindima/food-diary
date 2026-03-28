@@ -104,13 +104,22 @@ describe('AiFoodService', () => {
         };
 
         service.getUsageSummary().subscribe(response => {
-            expect(response.inputLimit).toBe(10000);
-            expect(response.inputUsed).toBe(2500);
-            expect(response.resetAtUtc).toBe('2026-04-01T00:00:00Z');
+            expect(response!.inputLimit).toBe(10000);
+            expect(response!.inputUsed).toBe(2500);
+            expect(response!.resetAtUtc).toBe('2026-04-01T00:00:00Z');
         });
 
         const req = httpMock.expectOne(`${baseUrl}/usage/me`);
         expect(req.request.method).toBe('GET');
         req.flush(mockResponse);
+    });
+
+    it('should return null when getUsageSummary fails', () => {
+        service.getUsageSummary().subscribe(response => {
+            expect(response).toBeNull();
+        });
+
+        const req = httpMock.expectOne(`${baseUrl}/usage/me`);
+        req.flush('Server error', { status: 500, statusText: 'Internal Server Error' });
     });
 });

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
@@ -27,10 +27,10 @@ export interface ProductCardItem {
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductCardComponent {
-    @Input({ required: true }) public product!: ProductCardItem;
-    @Input() public imageUrl?: string;
-    @Output() public open = new EventEmitter<void>();
-    @Output() public addToMeal = new EventEmitter<void>();
+    public readonly product = input.required<ProductCardItem>();
+    public readonly imageUrl = input<string>();
+    public readonly open = output<void>();
+    public readonly addToMeal = output<void>();
 
     public handleOpen(): void {
         this.open.emit();

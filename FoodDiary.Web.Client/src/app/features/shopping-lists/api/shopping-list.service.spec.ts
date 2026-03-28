@@ -105,4 +105,31 @@ describe('ShoppingListService', () => {
         expect(req.request.method).toBe('DELETE');
         req.flush(null);
     });
+
+    it('should return null on getCurrent failure', () => {
+        service.getCurrent().subscribe(result => {
+            expect(result).toBeNull();
+        });
+
+        const req = httpMock.expectOne(`${baseUrl}/current`);
+        req.flush('Server Error', { status: 500, statusText: 'Internal Server Error' });
+    });
+
+    it('should return empty array on getAll failure', () => {
+        service.getAll().subscribe(result => {
+            expect(result).toEqual([]);
+        });
+
+        const req = httpMock.expectOne(`${baseUrl}/`);
+        req.flush('Server Error', { status: 500, statusText: 'Internal Server Error' });
+    });
+
+    it('should return null on getById failure', () => {
+        service.getById('abc-123').subscribe(result => {
+            expect(result).toBeNull();
+        });
+
+        const req = httpMock.expectOne(`${baseUrl}/abc-123`);
+        req.flush('Not Found', { status: 404, statusText: 'Not Found' });
+    });
 });

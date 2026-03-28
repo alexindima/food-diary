@@ -54,6 +54,31 @@ public sealed class UserRepositoryIntegrationTests(PostgresDatabaseFixture datab
     }
 
     [RequiresDockerFact]
+    public async Task GetPagedAsync_ReturnsPagedUsersWithRolesLoaded() {
+        await using var context = await databaseFixture.CreateDbContextAsync();
+        var premiumRole = await context.Roles.SingleAsync(role => role.Name == RoleNames.Premium);
+        var user = User.Create($"paged-{Guid.NewGuid():N}@example.com", "hash");
+        context.Users.Add(user);
+        await context.SaveChangesAsync();
+
+        context.UserRoles.Add(new UserRole(user.Id, premiumRole.Id));
+        await context.SaveChangesAsync();
+
+        var repository = new UserRepository(context);
+
+        var (items, totalItems) = await repository.GetPagedAsync(
+            search: user.Email,
+            page: 1,
+            limit: 10,
+            includeDeleted: false);
+
+        var item = Assert.Single(items);
+        Assert.Equal(1, totalItems);
+        Assert.Single(item.UserRoles);
+        Assert.Equal(RoleNames.Premium, item.UserRoles.Single().Role.Name);
+    }
+
+    [RequiresDockerFact]
     public async Task GetAdminDashboardSummaryAsync_CountsPremiumAndSkipsDeletedInRecentUsers() {
         await using var context = await databaseFixture.CreateDbContextAsync();
         var premiumRole = await context.Roles.SingleAsync(role => role.Name == RoleNames.Premium);

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, catchError, map, of } from 'rxjs';
+import { Observable, catchError, map, of, throwError } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
@@ -26,7 +26,12 @@ export class CyclesService extends ApiService {
     }
 
     public create(payload: CreateCyclePayload): Observable<CycleResponse> {
-        return this.post<CycleResponse>('', payload);
+        return this.post<CycleResponse>('', payload).pipe(
+            catchError(error => {
+                console.error('Cycle create error', error);
+                return throwError(() => error);
+            }),
+        );
     }
 
     public upsertDay(cycleId: string, payload: UpsertCycleDayPayload): Observable<CycleDay> {
@@ -35,6 +40,10 @@ export class CyclesService extends ApiService {
                 ...day,
                 date: day.date,
             })),
+            catchError(error => {
+                console.error('Cycle day upsert error', error);
+                return throwError(() => error);
+            }),
         );
     }
 }

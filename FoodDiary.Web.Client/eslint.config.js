@@ -85,6 +85,39 @@ export default [
         },
     },
     {
+        files: ['**/*.ts'],
+        ignores: ['**/*.spec.ts'],
+        rules: {
+            'no-restricted-syntax': [
+                'error',
+                {
+                    selector: 'Decorator[expression.callee.name="Input"]',
+                    message: 'Use signal-based input() instead of @Input(). See: https://angular.dev/guide/signals/inputs',
+                },
+                {
+                    selector: 'Decorator[expression.callee.name="Output"]',
+                    message: 'Use output() instead of @Output(). See: https://angular.dev/guide/components/output-function',
+                },
+                {
+                    selector: 'Decorator[expression.callee.name="ViewChild"]',
+                    message: 'Use viewChild() signal query instead of @ViewChild(). See: https://angular.dev/guide/signals/queries',
+                },
+                {
+                    selector: 'Decorator[expression.callee.name="ViewChildren"]',
+                    message: 'Use viewChildren() signal query instead of @ViewChildren(). See: https://angular.dev/guide/signals/queries',
+                },
+                {
+                    selector: 'Decorator[expression.callee.name="ContentChild"]',
+                    message: 'Use contentChild() signal query instead of @ContentChild(). See: https://angular.dev/guide/signals/queries',
+                },
+                {
+                    selector: 'Decorator[expression.callee.name="ContentChildren"]',
+                    message: 'Use contentChildren() signal query instead of @ContentChildren(). See: https://angular.dev/guide/signals/queries',
+                },
+            ],
+        },
+    },
+    {
         files: ['src/app/shared/models/**/*.ts'],
         rules: {
             'no-restricted-imports': [

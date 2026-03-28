@@ -3,6 +3,18 @@ using FoodDiary.Domain.ValueObjects;
 namespace FoodDiary.Domain.Entities.Users;
 
 public sealed partial class User {
+    public void ApplyAdminUpdate(UserAdminUpdate update) {
+        if (update.IsActive.HasValue) {
+            SetActive(update.IsActive.Value);
+        }
+
+        UpdateAdminAccount(update.Account);
+
+        if (update.Roles is not null) {
+            ReplaceRoles(update.Roles);
+        }
+    }
+
     public void UpdateAdminAccount(UserAdminAccountUpdate update) {
         EnsureNotDeleted();
 

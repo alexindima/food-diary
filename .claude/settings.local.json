@@ -62,7 +62,8 @@
       "Bash(npm install:*)",
       "Bash(npm ls:*)",
       "Bash(npx tsc:*)",
-      "Bash(npm run:*)"
+      "Bash(npm run:*)",
+      "Bash(grep \"\\\\.ts$\")"
     ],
     "deny": [],
     "ask": []

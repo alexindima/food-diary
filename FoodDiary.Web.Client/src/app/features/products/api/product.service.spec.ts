@@ -177,14 +177,30 @@ describe('ProductService', () => {
         req.flush([]);
     });
 
-    it('should re-throw error on query failure', () => {
-        service.query(1, 10).subscribe({
-            error: err => {
-                expect(err.status).toBe(500);
-            },
+    it('should return empty PageOf on query failure', () => {
+        service.query(1, 10).subscribe(result => {
+            expect(result).toEqual({ data: [], page: 1, limit: 10, totalPages: 0, totalItems: 0 });
         });
 
         const req = httpMock.expectOne(r => r.url === `${baseUrl}/` && r.method === 'GET');
+        req.flush('Server Error', { status: 500, statusText: 'Internal Server Error' });
+    });
+
+    it('should return null on getById failure', () => {
+        service.getById('p1').subscribe(result => {
+            expect(result).toBeNull();
+        });
+
+        const req = httpMock.expectOne(`${baseUrl}/p1`);
+        req.flush('Not Found', { status: 404, statusText: 'Not Found' });
+    });
+
+    it('should return empty array on getRecent failure', () => {
+        service.getRecent().subscribe(result => {
+            expect(result).toEqual([]);
+        });
+
+        const req = httpMock.expectOne(r => r.url === `${baseUrl}/recent` && r.method === 'GET');
         req.flush('Server Error', { status: 500, statusText: 'Internal Server Error' });
     });
 });

@@ -16,6 +16,8 @@
         [value]="internalValue"
         [attr.placeholder]="shouldShowPlaceholder ? (placeholder() ?? 'HH:mm') : null"
         [disabled]="disabled"
+        [attr.aria-describedby]="error() ? id() + '-error' : null"
+        [attr.aria-invalid]="error() ? 'true' : null"
         (focus)="onFocus()"
         (input)="onInput($any($event.target).value)"
         (blur)="onBlur()"
@@ -32,7 +34,7 @@
   </div>
 
   @if (error()) {
-    <div class="fd-ui-time-input__error">{{ error() }}</div>
+    <div class="fd-ui-time-input__error" [id]="id() + '-error'" role="alert">{{ error() }}</div>
   }
 </div>
 

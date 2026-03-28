@@ -13,6 +13,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FdUiDialogFooterDirective } from './fd-ui-dialog-footer.directive';
 
+let nextDialogId = 0;
+
 export type FdUiDialogSize = 'sm' | 'md' | 'lg';
 
 export interface FdUiDialogData {
@@ -34,6 +36,8 @@ export interface FdUiDialogData {
 export class FdUiDialogComponent {
     private readonly dialogRef = inject(MatDialogRef<FdUiDialogComponent>, { optional: true });
     private readonly injectedData = inject(MAT_DIALOG_DATA, { optional: true }) as FdUiDialogData | null;
+
+    public readonly dialogTitleId = `fd-dialog-title-${nextDialogId++}`;
 
     private readonly footerSlot = contentChild(FdUiDialogFooterDirective, { descendants: true });
 

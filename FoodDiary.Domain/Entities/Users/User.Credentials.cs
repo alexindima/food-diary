@@ -1,6 +1,13 @@
 namespace FoodDiary.Domain.Entities.Users;
 
 public sealed partial class User {
+    public void CompletePasswordReset(string hashedPassword) {
+        EnsureNotDeleted();
+        Password = NormalizeRequiredPasswordHash(hashedPassword);
+        ApplyCredentialState(GetCredentialState().WithoutPasswordResetToken());
+        SetModified();
+    }
+
     public void UpdateRefreshToken(string? refreshToken, DateTime? changedAtUtc = null) {
         EnsureNotDeleted();
         var normalizedRefreshToken = NormalizeOptionalToken(refreshToken);
@@ -28,7 +35,7 @@ public sealed partial class User {
         SetModified(normalizedIssuedAtUtc);
     }
 
-    public void ConfirmEmail() {
+    public void CompleteEmailVerification() {
         SetEmailConfirmed(true);
     }
 
@@ -47,11 +54,5 @@ public sealed partial class User {
         var nextState = GetCredentialState().WithPasswordResetToken(normalizedTokenHash, normalizedExpiresAtUtc, normalizedIssuedAtUtc);
         ApplyCredentialState(nextState);
         SetModified(normalizedIssuedAtUtc);
-    }
-
-    public void ClearPasswordResetToken() {
-        EnsureNotDeleted();
-        ApplyCredentialState(GetCredentialState().WithoutPasswordResetToken());
-        SetModified();
     }
 }

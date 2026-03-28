@@ -35,8 +35,7 @@ public sealed class ConfirmPasswordResetCommandHandler(
         }
 
         var hashedPassword = passwordHasher.Hash(command.NewPassword);
-        user.UpdatePassword(hashedPassword);
-        user.ClearPasswordResetToken();
+        user.CompletePasswordReset(hashedPassword);
 
         var tokens = await authenticationTokenService.IssueAndStoreAsync(user, cancellationToken);
         return Result.Success(user.ToAuthenticationModel(tokens));

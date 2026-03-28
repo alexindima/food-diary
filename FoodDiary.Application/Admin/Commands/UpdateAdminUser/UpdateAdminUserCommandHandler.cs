@@ -25,21 +25,12 @@ public sealed class UpdateAdminUserCommandHandler(IUserRepository userRepository
             return Result.Failure<AdminUserModel>(Errors.User.NotFound(command.UserId));
         }
 
-        if (command.IsActive.HasValue) {
-            user.SetActive(command.IsActive.Value);
-        }
-
         var languageResult = NormalizeLanguage(command.Language);
         if (languageResult.IsFailure) {
             return Result.Failure<AdminUserModel>(languageResult.Error);
         }
 
-        user.UpdateAdminAccount(new UserAdminAccountUpdate(
-            IsEmailConfirmed: command.IsEmailConfirmed,
-            Language: languageResult.Value,
-            AiInputTokenLimit: command.AiInputTokenLimit,
-            AiOutputTokenLimit: command.AiOutputTokenLimit));
-
+        IReadOnlyList<Role>? roleEntities = null;
         if (command.Roles is not null) {
             var requestedRoles = command.Roles
                 .Where(role => !string.IsNullOrWhiteSpace(role))
@@ -52,21 +43,24 @@ public sealed class UpdateAdminUserCommandHandler(IUserRepository userRepository
                     Errors.Validation.Invalid("roles", "Unknown role."));
             }
 
-            var roleEntities = await userRepository.GetRolesByNamesAsync(requestedRoles, cancellationToken);
+            roleEntities = await userRepository.GetRolesByNamesAsync(requestedRoles, cancellationToken);
             if (roleEntities.Count != requestedRoles.Length) {
                 return Result.Failure<AdminUserModel>(
                     Errors.Validation.Invalid("roles", "One or more roles are not configured in the system."));
             }
-
-            UpdateUserRoles(user, roleEntities);
         }
+
+        user.ApplyAdminUpdate(new UserAdminUpdate(
+            IsActive: command.IsActive,
+            Account: new UserAdminAccountUpdate(
+                IsEmailConfirmed: command.IsEmailConfirmed,
+                Language: languageResult.Value,
+                AiInputTokenLimit: command.AiInputTokenLimit,
+                AiOutputTokenLimit: command.AiOutputTokenLimit),
+            Roles: roleEntities));
 
         await userRepository.UpdateAsync(user, cancellationToken);
         return Result.Success(user.ToAdminModel());
-    }
-
-    private static void UpdateUserRoles(User user, IReadOnlyList<Role> roles) {
-        user.ReplaceRoles(roles);
     }
 
     private static Result<string?> NormalizeLanguage(string? value) {

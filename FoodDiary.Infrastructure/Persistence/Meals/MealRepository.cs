@@ -62,8 +62,22 @@ public class MealRepository(FoodDiaryDbContext context) : IMealRepository {
         var pageNumber = Math.Max(page, 1);
         var pageSize = Math.Max(limit, 1);
 
-        var query = context.Meals
+        var filteredQuery = context.Meals
             .AsNoTracking()
+            .Where(m => m.UserId == userId);
+
+        if (dateFrom.HasValue) {
+            filteredQuery = filteredQuery.Where(m => m.Date >= dateFrom.Value);
+        }
+
+        if (dateTo.HasValue) {
+            filteredQuery = filteredQuery.Where(m => m.Date <= dateTo.Value);
+        }
+
+        var totalItems = await filteredQuery.CountAsync(cancellationToken);
+        var skip = (pageNumber - 1) * pageSize;
+
+        var itemsQuery = filteredQuery
             .AsSplitQuery()
             .Include(m => m.Items)
             .ThenInclude(i => i.Product)
@@ -73,24 +87,10 @@ public class MealRepository(FoodDiaryDbContext context) : IMealRepository {
             .ThenInclude(s => s.Items)
             .Include(m => m.AiSessions)
             .ThenInclude(s => s.ImageAsset)
-            .Where(m => m.UserId == userId);
-
-        if (dateFrom.HasValue) {
-            query = query.Where(m => m.Date >= dateFrom.Value);
-        }
-
-        if (dateTo.HasValue) {
-            query = query.Where(m => m.Date <= dateTo.Value);
-        }
-
-        var orderedQuery = query
             .OrderByDescending(m => m.Date)
             .ThenByDescending(m => m.CreatedOnUtc);
 
-        var totalItems = await orderedQuery.CountAsync(cancellationToken);
-        var skip = (pageNumber - 1) * pageSize;
-
-        var items = await orderedQuery
+        var items = await itemsQuery
             .Skip(skip)
             .Take(pageSize)
             .ToListAsync(cancellationToken);

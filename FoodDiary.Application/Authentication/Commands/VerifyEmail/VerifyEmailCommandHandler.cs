@@ -36,7 +36,7 @@ public sealed class VerifyEmailCommandHandler(
             return Result.Failure(Errors.Authentication.InvalidToken);
         }
 
-        user.ConfirmEmail();
+        user.CompleteEmailVerification();
         await userRepository.UpdateAsync(user, cancellationToken);
 
         try {

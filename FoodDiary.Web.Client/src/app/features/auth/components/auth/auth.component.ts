@@ -3,10 +3,10 @@
     Component,
     DestroyRef,
     FactoryProvider,
-    Input,
+    input,
     AfterViewInit,
     ElementRef,
-    ViewChild,
+    viewChild,
     OnInit,
     inject,
     signal,
@@ -62,11 +62,11 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     imports: [TranslateModule, ReactiveFormsModule, FdUiInputComponent, FdUiButtonComponent, FdUiCheckboxComponent, FdUiFormErrorComponent]
 })
 export class AuthComponent implements OnInit, AfterViewInit {
-    @Input() public useRouting = true;
-    @Input() public initialMode: 'login' | 'register' = 'login';
-    @ViewChild('googleLoginButton') private googleLoginButton?: ElementRef<HTMLElement>;
-    @ViewChild('googleRegisterButton') private googleRegisterButton?: ElementRef<HTMLElement>;
-    @ViewChild('telegramLoginButton') private telegramLoginButton?: ElementRef<HTMLElement>;
+    public readonly useRouting = input(true);
+    public readonly initialMode = input<'login' | 'register'>('login');
+    private readonly googleLoginButton = viewChild<ElementRef<HTMLElement>>('googleLoginButton');
+    private readonly googleRegisterButton = viewChild<ElementRef<HTMLElement>>('googleRegisterButton');
+    private readonly telegramLoginButton = viewChild<ElementRef<HTMLElement>>('telegramLoginButton');
 
     private readonly route = inject(ActivatedRoute, { optional: true });
     private readonly router = inject(Router, { optional: true });
@@ -153,8 +153,8 @@ export class AuthComponent implements OnInit, AfterViewInit {
 
     public ngOnInit(): void {
         const routeMode = this.route?.snapshot.params['mode'] === 'register' ? 'register' : 'login';
-        this.authMode = this.useRouting ? routeMode : this.initialMode;
-        this.returnUrl = this.useRouting ? this.route?.snapshot.queryParams['returnUrl'] || null : null;
+        this.authMode = this.useRouting() ? routeMode : this.initialMode();
+        this.returnUrl = this.useRouting() ? this.route?.snapshot.queryParams['returnUrl'] || null : null;
     }
 
     public async ngAfterViewInit(): Promise<void> {
@@ -188,7 +188,7 @@ export class AuthComponent implements OnInit, AfterViewInit {
         });
         this.showPasswordReset.set(false);
         this.passwordResetSent.set(false);
-        if (this.useRouting && this.router) {
+        if (this.useRouting() && this.router) {
             await this.router.navigate(['/auth', mode]);
         }
         this.renderGoogleButton();
@@ -288,8 +288,8 @@ export class AuthComponent implements OnInit, AfterViewInit {
         if (!this.googleReady()) {
             return;
         }
-        const target = this.authMode === 'login' ? this.googleLoginButton?.nativeElement : this.googleRegisterButton?.nativeElement;
-        [this.googleLoginButton, this.googleRegisterButton].forEach(ref => {
+        const target = this.authMode === 'login' ? this.googleLoginButton()?.nativeElement : this.googleRegisterButton()?.nativeElement;
+        [this.googleLoginButton(), this.googleRegisterButton()].forEach(ref => {
             if (ref?.nativeElement) {
                 ref.nativeElement.innerHTML = '';
             }
@@ -304,7 +304,7 @@ export class AuthComponent implements OnInit, AfterViewInit {
             return;
         }
 
-        const target = this.telegramLoginButton?.nativeElement;
+        const target = this.telegramLoginButton()?.nativeElement;
         if (!target || !environment.telegramBotUsername) {
             return;
         }

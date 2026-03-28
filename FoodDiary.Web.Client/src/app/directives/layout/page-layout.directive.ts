@@ -1,4 +1,4 @@
-import { Directive, HostBinding, Input } from '@angular/core';
+import { computed, Directive, input } from '@angular/core';
 
 const DEFAULT_BACKGROUND = 'var(--fd-layout-page-background)';
 const DEFAULT_PADDING =
@@ -7,30 +7,23 @@ const DEFAULT_PADDING =
 @Directive({
     selector: '[fdLayoutPage]',
     standalone: true,
+    host: {
+        'class': 'fd-layout-page',
+        '[style.background]': 'backgroundStyle()',
+        '[style.padding]': 'paddingStyle()',
+    },
 })
 export class FdLayoutPageDirective {
-    @HostBinding('class.fd-layout-page')
-    protected readonly layoutClass = true;
-
-    @HostBinding('style.background')
-    protected backgroundStyle = DEFAULT_BACKGROUND;
-
-    @HostBinding('style.padding')
-    protected paddingStyle = DEFAULT_PADDING;
-
     /**
      * Override the page background if needed; falls back to design token.
      */
-    @Input()
-    public set fdLayoutPageBackground(value: string | undefined | null) {
-        this.backgroundStyle = value ?? DEFAULT_BACKGROUND;
-    }
+    public readonly fdLayoutPageBackground = input<string | undefined | null>();
 
     /**
      * Allow custom padding while keeping layout token defaults.
      */
-    @Input()
-    public set fdLayoutPagePadding(value: string | undefined | null) {
-        this.paddingStyle = value ?? DEFAULT_PADDING;
-    }
+    public readonly fdLayoutPagePadding = input<string | undefined | null>();
+
+    protected readonly backgroundStyle = computed(() => this.fdLayoutPageBackground() ?? DEFAULT_BACKGROUND);
+    protected readonly paddingStyle = computed(() => this.fdLayoutPagePadding() ?? DEFAULT_PADDING);
 }

@@ -51,7 +51,7 @@ describe('FdUiNutrientInputComponent', () => {
     });
 
     it('should sanitize non-numeric characters for number type', () => {
-        component.type = 'number';
+        fixture.componentRef.setInput('type', 'number');
         const onChangeSpy = vi.fn();
         component.registerOnChange(onChangeSpy);
 
@@ -64,7 +64,7 @@ describe('FdUiNutrientInputComponent', () => {
     });
 
     it('should replace comma with dot in number type', () => {
-        component.type = 'number';
+        fixture.componentRef.setInput('type', 'number');
         const onChangeSpy = vi.fn();
         component.registerOnChange(onChangeSpy);
 
@@ -76,7 +76,7 @@ describe('FdUiNutrientInputComponent', () => {
     });
 
     it('should not sanitize text type input', () => {
-        component.type = 'text';
+        fixture.componentRef.setInput('type', 'text');
         const onChangeSpy = vi.fn();
         component.registerOnChange(onChangeSpy);
 

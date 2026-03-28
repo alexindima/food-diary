@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
-import { catchError, Observable, throwError } from 'rxjs';
+import { catchError, Observable, of, throwError } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
 import {
@@ -31,16 +31,16 @@ export class ProductService extends ApiService {
         return this.get<PageOf<Product>>('', params).pipe(
             catchError((error: HttpErrorResponse) => {
                 console.error('Query products error', error);
-                return throwError(() => error);
+                return of({ data: [], page, limit, totalPages: 0, totalItems: 0 });
             }),
         );
     }
 
-    public getById(id: string): Observable<Product> {
+    public getById(id: string): Observable<Product | null> {
         return this.get<Product>(`${id}`).pipe(
             catchError((error: HttpErrorResponse) => {
                 console.error('Get product error', error);
-                return throwError(() => error);
+                return of(null);
             }),
         );
     }
@@ -63,7 +63,7 @@ export class ProductService extends ApiService {
         return this.get<ProductListWithRecent>('with-recent', params).pipe(
             catchError((error: HttpErrorResponse) => {
                 console.error('Query products with recent error', error);
-                return throwError(() => error);
+                return of({ recentItems: [], allProducts: { data: [], page, limit, totalPages: 0, totalItems: 0 } });
             }),
         );
     }
@@ -73,7 +73,7 @@ export class ProductService extends ApiService {
         return this.get<Product[]>('recent', params).pipe(
             catchError((error: HttpErrorResponse) => {
                 console.error('Get recent products error', error);
-                return throwError(() => error);
+                return of([]);
             }),
         );
     }

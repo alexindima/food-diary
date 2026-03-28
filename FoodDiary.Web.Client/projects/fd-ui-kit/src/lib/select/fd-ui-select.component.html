@@ -14,6 +14,8 @@
       [matMenuTriggerFor]="optionsMenu"
       [disabled]="disabled"
       [class.fd-ui-select__control--placeholder]="!hasValue"
+      [attr.aria-describedby]="error() ? id() + '-error' : null"
+      [attr.aria-invalid]="error() ? 'true' : null"
       (focus)="onFocus()"
       (blur)="onBlur()"
       (menuOpened)="onMenuOpened()"
@@ -42,7 +44,7 @@
   </div>
 
   @if (error()) {
-    <div class="fd-ui-select__error">{{ error() }}</div>
+    <div class="fd-ui-select__error" [id]="id() + '-error'" role="alert">{{ error() }}</div>
   }
 </div>
 

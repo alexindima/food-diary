@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
 
@@ -21,20 +21,15 @@ export class QuickConsumptionDrawerComponent {
     private readonly quickService = inject(QuickMealService);
     private readonly fallbackImage = 'assets/images/stubs/receipt.png';
 
-    @Input() public forceShow = false;
-    @Input() public layout: 'fixed' | 'inline' = 'fixed';
+    public readonly forceShow = input(false);
+    public readonly layout = input<'fixed' | 'inline'>('fixed');
 
     public readonly items = this.quickService.items;
     public readonly hasItems = this.quickService.hasItems;
     public readonly isSaving = this.quickService.isSaving;
 
-    public get shouldRender(): boolean {
-        return this.forceShow || this.hasItems();
-    }
-
-    public get isInline(): boolean {
-        return this.layout === 'inline';
-    }
+    public readonly shouldRender = computed(() => this.forceShow() || this.hasItems());
+    public readonly isInline = computed(() => this.layout() === 'inline');
 
     public imageFor(item: QuickMealItem): string {
         if (item.type === 'product' && item.product) {

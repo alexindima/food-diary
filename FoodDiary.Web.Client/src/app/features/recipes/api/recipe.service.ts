@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
-import { catchError, Observable, throwError } from 'rxjs';
+import { catchError, Observable, of, throwError } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
 import { PageOf } from '../../../shared/models/page-of.data';
@@ -27,17 +27,17 @@ export class RecipeService extends ApiService {
         return this.get<PageOf<Recipe>>('', params).pipe(
             catchError((error: HttpErrorResponse) => {
                 console.error('Query recipes error', error);
-                return throwError(() => error);
+                return of({ data: [], page, limit, totalPages: 0, totalItems: 0 });
             }),
         );
     }
 
-    public getById(id: string, includePublic = true): Observable<Recipe> {
+    public getById(id: string, includePublic = true): Observable<Recipe | null> {
         const params = { includePublic };
         return this.get<Recipe>(`${id}`, params).pipe(
             catchError((error: HttpErrorResponse) => {
                 console.error('Get recipe error', error);
-                return throwError(() => error);
+                return of(null);
             }),
         );
     }
@@ -47,7 +47,7 @@ export class RecipeService extends ApiService {
         return this.get<Recipe[]>('recent', params).pipe(
             catchError((error: HttpErrorResponse) => {
                 console.error('Get recent recipes error', error);
-                return throwError(() => error);
+                return of([]);
             }),
         );
     }
@@ -67,7 +67,7 @@ export class RecipeService extends ApiService {
         return this.get<RecipeListWithRecent>('with-recent', params).pipe(
             catchError((error: HttpErrorResponse) => {
                 console.error('Query recipes with recent error', error);
-                return throwError(() => error);
+                return of({ recentItems: [], allRecipes: { data: [], page, limit, totalPages: 0, totalItems: 0 } });
             }),
         );
     }

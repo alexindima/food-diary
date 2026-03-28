@@ -1,9 +1,9 @@
-<div class="fd-ui-dialog" [ngClass]="['fd-ui-dialog--size-' + size(), hasFooter ? 'fd-ui-dialog--has-footer' : '']">
+<div class="fd-ui-dialog" role="dialog" aria-modal="true" [attr.aria-labelledby]="title() ? dialogTitleId : null" [ngClass]="['fd-ui-dialog--size-' + size(), hasFooter ? 'fd-ui-dialog--has-footer' : '']">
   @if (showHeader()) {
     <header class="fd-ui-dialog__header">
       <div class="fd-ui-dialog__heading">
         @if (title(); as titleValue) {
-          <h2 class="fd-ui-dialog__title">{{ titleValue }}</h2>
+          <h2 class="fd-ui-dialog__title" [id]="dialogTitleId">{{ titleValue }}</h2>
         }
         @if (subtitle(); as subtitleValue) {
           <p class="fd-ui-dialog__subtitle">{{ subtitleValue }}</p>

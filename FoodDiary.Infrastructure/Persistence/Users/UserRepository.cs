@@ -43,23 +43,24 @@ public class UserRepository(FoodDiaryDbContext context) : IUserRepository {
         CancellationToken cancellationToken = default) {
         var pageNumber = Math.Max(page, 1);
         var pageSize = Math.Max(limit, 1);
-        var query = UsersWithRoles().AsQueryable();
+        var filteredQuery = context.Users.AsQueryable();
 
         if (!includeDeleted) {
-            query = query.Where(u => u.DeletedAt == null);
+            filteredQuery = filteredQuery.Where(u => u.DeletedAt == null);
         }
 
         if (!string.IsNullOrWhiteSpace(search)) {
             var term = $"%{EscapeLikePattern(search.Trim())}%";
-            query = query.Where(u =>
+            filteredQuery = filteredQuery.Where(u =>
                 EF.Functions.ILike(u.Email, term, LikeEscapeCharacter) ||
                 EF.Functions.ILike(u.Username ?? string.Empty, term, LikeEscapeCharacter) ||
                 EF.Functions.ILike(u.FirstName ?? string.Empty, term, LikeEscapeCharacter) ||
                 EF.Functions.ILike(u.LastName ?? string.Empty, term, LikeEscapeCharacter));
         }
 
-        var total = await query.CountAsync(cancellationToken);
-        var items = await query
+        var total = await filteredQuery.CountAsync(cancellationToken);
+        var items = await UsersWithRoles()
+            .Where(u => filteredQuery.Select(x => x.Id).Contains(u.Id))
             .OrderByDescending(u => u.CreatedOnUtc)
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)

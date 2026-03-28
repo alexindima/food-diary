@@ -99,6 +99,7 @@ Backend work should follow these repository documents:
 - `BACKEND_PERFORMANCE_REVIEW.md`
 - `BACKEND_MIGRATION_SAFETY.md`
 - `BACKEND_SECURITY_HARDENING.md`
+- `BACKEND_RUNBOOKS.md`
 
 ## Deployment Notes
 

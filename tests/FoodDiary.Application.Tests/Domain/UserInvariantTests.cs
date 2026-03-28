@@ -142,11 +142,11 @@ public class UserInvariantTests {
     }
 
     [Fact]
-    public void ConfirmEmail_ClearsEmailConfirmationTokenFields() {
+    public void CompleteEmailVerification_ClearsEmailConfirmationTokenFields() {
         var user = User.Create("test@example.com", "hash");
         user.SetEmailConfirmationToken("token-hash", DateTime.UtcNow.AddMinutes(30));
 
-        user.ConfirmEmail();
+        user.CompleteEmailVerification();
 
         Assert.True(user.IsEmailConfirmed);
         Assert.Null(user.EmailConfirmationTokenHash);
@@ -187,12 +187,13 @@ public class UserInvariantTests {
     }
 
     [Fact]
-    public void ClearPasswordResetToken_ClearsFields() {
-        var user = User.Create("test@example.com", "hash");
+    public void CompletePasswordReset_UpdatesPasswordAndClearsResetFields() {
+        var user = User.Create("test@example.com", "old-hash");
         user.SetPasswordResetToken("reset-hash", DateTime.UtcNow.AddMinutes(30));
 
-        user.ClearPasswordResetToken();
+        user.CompletePasswordReset("new-hash");
 
+        Assert.Equal("new-hash", user.Password);
         Assert.Null(user.PasswordResetTokenHash);
         Assert.Null(user.PasswordResetTokenExpiresAtUtc);
         Assert.Null(user.PasswordResetSentAtUtc);
@@ -467,6 +468,29 @@ public class UserInvariantTests {
     }
 
     [Fact]
+    public void ApplyAdminUpdate_WithRolesAndAccountChanges_UpdatesAdminControlledState() {
+        var user = User.Create("test@example.com", "hash");
+        var adminRole = Role.Create("Admin");
+        var supportRole = Role.Create("Support");
+
+        user.ApplyAdminUpdate(new UserAdminUpdate(
+            IsActive: false,
+            Account: new UserAdminAccountUpdate(
+                IsEmailConfirmed: true,
+                Language: "ru",
+                AiInputTokenLimit: 123,
+                AiOutputTokenLimit: 456),
+            Roles: [adminRole, supportRole]));
+
+        Assert.False(user.IsActive);
+        Assert.True(user.IsEmailConfirmed);
+        Assert.Equal("ru", user.Language);
+        Assert.Equal(123, user.AiInputTokenLimit);
+        Assert.Equal(456, user.AiOutputTokenLimit);
+        Assert.Equal(["Admin", "Support"], user.UserRoles.Select(role => role.Role.Name).OrderBy(name => name).ToArray());
+    }
+
+    [Fact]
     public void UpdateProfile_WithUnsupportedGender_Throws() {
         var user = User.Create("test@example.com", "hash");
 
@@ -559,6 +583,22 @@ public class UserInvariantTests {
         Assert.Null(user.DeletedAt);
         Assert.Single(user.DomainEvents);
         Assert.IsType<UserRestoredDomainEvent>(user.DomainEvents[0]);
+    }
+
+    [Fact]
+    public void DeleteAccount_ClearsRefreshTokenAndMarksDeleted() {
+        var user = User.Create("test@example.com", "hash");
+        user.UpdateRefreshToken("refresh-token", DateTime.UtcNow.AddMinutes(-5));
+        user.ClearDomainEvents();
+        var deletedAtUtc = DateTime.UtcNow;
+
+        user.DeleteAccount(deletedAtUtc);
+
+        Assert.Null(user.RefreshToken);
+        Assert.Equal(deletedAtUtc, user.DeletedAt);
+        Assert.False(user.IsActive);
+        Assert.Single(user.DomainEvents);
+        Assert.IsType<UserDeletedDomainEvent>(user.DomainEvents[0]);
     }
 
     [Fact]
