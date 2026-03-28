@@ -2,6 +2,7 @@ using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
+using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Presentation.Api.Features.Auth.Requests;
 using FoodDiary.Presentation.Api.Features.Images.Requests;
 using FoodDiary.Presentation.Api.Features.Products.Requests;
@@ -9,6 +10,7 @@ using FoodDiary.Presentation.Api.Features.Recipes.Requests;
 using FoodDiary.Presentation.Api.Features.ShoppingLists.Requests;
 using FoodDiary.Presentation.Api.Features.WeightEntries.Requests;
 using FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace FoodDiary.Web.Api.IntegrationTests;
 
@@ -37,6 +39,106 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
         var usersInfoResponse = await client.GetAsync("/api/users/info");
 
         Assert.Equal(HttpStatusCode.OK, usersInfoResponse.StatusCode);
+    }
+
+    [RequiresDockerFact]
+    public async Task Refresh_WithIssuedRefreshToken_ReturnsNewAccessTokenAgainstPostgres() {
+        var client = factory.CreateClient();
+        var email = $"postgres-refresh-tests-{Guid.NewGuid():N}@example.com";
+
+        var registerResponse = await client.PostAsJsonAsync(
+            "/api/auth/register",
+            new RegisterHttpRequest(email, "Password123!", "en"));
+        var registerPayload = await registerResponse.Content.ReadFromJsonAsync<AuthPayload>(JsonOptions);
+
+        Assert.Equal(HttpStatusCode.OK, registerResponse.StatusCode);
+        Assert.NotNull(registerPayload);
+        Assert.False(string.IsNullOrWhiteSpace(registerPayload.RefreshToken));
+
+        var originalRefreshToken = registerPayload.RefreshToken;
+        var refreshResponse = await client.PostAsJsonAsync(
+            "/api/auth/refresh",
+            new RefreshTokenHttpRequest(originalRefreshToken));
+        var refreshPayload = await refreshResponse.Content.ReadFromJsonAsync<AuthPayload>(JsonOptions);
+
+        Assert.Equal(HttpStatusCode.OK, refreshResponse.StatusCode);
+        Assert.NotNull(refreshPayload);
+        Assert.False(string.IsNullOrWhiteSpace(refreshPayload.AccessToken));
+        Assert.False(string.IsNullOrWhiteSpace(refreshPayload.RefreshToken));
+        Assert.NotEqual(originalRefreshToken, refreshPayload.RefreshToken);
+
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", refreshPayload.AccessToken);
+        var usersInfoResponse = await client.GetAsync("/api/users/info");
+
+        Assert.Equal(HttpStatusCode.OK, usersInfoResponse.StatusCode);
+
+        var replayResponse = await client.PostAsJsonAsync(
+            "/api/auth/refresh",
+            new RefreshTokenHttpRequest(originalRefreshToken));
+
+        Assert.Equal(HttpStatusCode.Unauthorized, replayResponse.StatusCode);
+    }
+
+    [RequiresDockerFact]
+    public async Task DeleteUser_ThenRestoreAccount_ReturnsFreshTokensAgainstPostgres() {
+        var client = factory.CreateClient();
+        var email = $"postgres-restore-tests-{Guid.NewGuid():N}@example.com";
+        const string password = "Password123!";
+
+        var registerResponse = await client.PostAsJsonAsync(
+            "/api/auth/register",
+            new RegisterHttpRequest(email, password, "en"));
+        var registerPayload = await registerResponse.Content.ReadFromJsonAsync<AuthPayload>(JsonOptions);
+
+        Assert.Equal(HttpStatusCode.OK, registerResponse.StatusCode);
+        Assert.NotNull(registerPayload);
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", registerPayload.AccessToken);
+
+        var deleteResponse = await client.DeleteAsync("/api/users");
+        Assert.Equal(HttpStatusCode.NoContent, deleteResponse.StatusCode);
+
+        client.DefaultRequestHeaders.Authorization = null;
+
+        var restoreResponse = await client.PostAsJsonAsync(
+            "/api/auth/restore",
+            new RestoreAccountHttpRequest(email, password));
+        var restorePayload = await restoreResponse.Content.ReadFromJsonAsync<AuthPayload>(JsonOptions);
+
+        Assert.Equal(HttpStatusCode.OK, restoreResponse.StatusCode);
+        Assert.NotNull(restorePayload);
+        Assert.False(string.IsNullOrWhiteSpace(restorePayload.AccessToken));
+        Assert.False(string.IsNullOrWhiteSpace(restorePayload.RefreshToken));
+
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", restorePayload.AccessToken);
+        var usersInfoResponse = await client.GetAsync("/api/users/info");
+
+        Assert.Equal(HttpStatusCode.OK, usersInfoResponse.StatusCode);
+    }
+
+    [RequiresDockerFact]
+    public async Task RequestPasswordReset_PersistsResetTokenAgainstPostgres() {
+        var client = factory.CreateClient();
+        var email = $"postgres-password-reset-tests-{Guid.NewGuid():N}@example.com";
+
+        var registerResponse = await client.PostAsJsonAsync(
+            "/api/auth/register",
+            new RegisterHttpRequest(email, "Password123!", "en"));
+
+        Assert.Equal(HttpStatusCode.OK, registerResponse.StatusCode);
+
+        var passwordResetResponse = await client.PostAsJsonAsync(
+            "/api/auth/password-reset/request",
+            new RequestPasswordResetHttpRequest(email));
+
+        Assert.Equal(HttpStatusCode.NoContent, passwordResetResponse.StatusCode);
+
+        using var scope = factory.Services.CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
+        var user = dbContext.Users.Single(u => u.Email == email);
+
+        Assert.False(string.IsNullOrWhiteSpace(user.PasswordResetTokenHash));
+        Assert.NotNull(user.PasswordResetTokenExpiresAtUtc);
+        Assert.NotNull(user.PasswordResetSentAtUtc);
     }
 
     [RequiresDockerFact]
@@ -257,7 +359,7 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
         return payload;
     }
 
-    private sealed record AuthPayload(string AccessToken, AuthUserPayload User);
+    private sealed record AuthPayload(string AccessToken, string RefreshToken, AuthUserPayload User);
 
     private sealed record AuthUserPayload(string Email);
 

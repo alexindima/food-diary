@@ -10,6 +10,7 @@ using FoodDiary.Presentation.Api.Features.Users.Requests;
 using FoodDiary.Presentation.Api.Features.WaistEntries.Requests;
 using FoodDiary.Presentation.Api.Features.WeightEntries.Requests;
 using FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
+using Microsoft.Extensions.Configuration;
 
 namespace FoodDiary.Web.Api.IntegrationTests;
 
@@ -78,7 +79,15 @@ public sealed class PresentationBoundaryIntegrationTests(
 
     [Fact]
     public async Task Login_WhenRateLimitExceeded_ReturnsTooManyRequestsContract() {
-        var client = apiFactory.CreateClient();
+        using var limitedFactory = apiFactory.WithWebHostBuilder(builder => {
+            builder.ConfigureAppConfiguration((_, configBuilder) => {
+                configBuilder.AddInMemoryCollection(new Dictionary<string, string?> {
+                    ["RateLimiting:Auth:PermitLimit"] = "5",
+                    ["RateLimiting:Auth:WindowSeconds"] = "60",
+                });
+            });
+        });
+        var client = limitedFactory.CreateClient();
         var request = new LoginHttpRequest("missing-user@example.com", "Password123!");
         HttpResponseMessage? lastResponse = null;
 
@@ -477,8 +486,11 @@ public sealed class PresentationBoundaryIntegrationTests(
             "/api/auth/register",
             "/api/auth/login",
             "/api/auth/refresh",
+            "/api/auth/restore",
             "/api/auth/verify-email",
             "/api/auth/verify-email/resend",
+            "/api/auth/password-reset/request",
+            "/api/auth/password-reset/confirm",
             "/api/auth/admin-sso/start",
             "/api/auth/admin-sso/exchange",
             "/api/admin/dashboard",

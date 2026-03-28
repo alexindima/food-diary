@@ -24,4 +24,8 @@ public static class ApiTelemetry {
         "fooddiary.api.rate_limit.rejections",
         unit: "{rejection}",
         description: "Total number of API requests rejected by rate limiting.");
+    public static readonly Counter<long> BusinessFlowCounter = Meter.CreateCounter<long>(
+        "fooddiary.api.business_flow.events",
+        unit: "{event}",
+        description: "Total number of high-value backend business flow events by route group and outcome.");
 }

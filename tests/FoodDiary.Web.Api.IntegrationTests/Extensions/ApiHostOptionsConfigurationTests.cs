@@ -20,6 +20,9 @@ public sealed class ApiHostOptionsConfigurationTests {
             ["Jwt:RefreshTokenExpirationDays"] = "7",
                 ["TelegramBot:ApiSecret"] = "",
                 ["Cors:Origins:0"] = "http://localhost:4200",
+                ["ForwardedHeaders:ForwardLimit"] = "2",
+                ["ForwardedHeaders:KnownProxies:0"] = "10.0.0.10",
+                ["ForwardedHeaders:KnownNetworks:0"] = "10.0.0.0/24",
                 ["RateLimiting:Auth:PermitLimit"] = "7",
                 ["RateLimiting:Auth:WindowSeconds"] = "90",
                 ["RateLimiting:Ai:PermitLimit"] = "11",
@@ -34,14 +37,22 @@ public sealed class ApiHostOptionsConfigurationTests {
         using var provider = services.BuildServiceProvider();
 
         var cors = provider.GetRequiredService<IOptions<ApiCorsOptions>>().Value;
+        var forwardedHeaders = provider.GetRequiredService<IOptions<ApiForwardedHeadersOptions>>().Value;
         var rateLimiting = provider.GetRequiredService<IOptions<ApiRateLimitingOptions>>().Value;
         var outputCache = provider.GetRequiredService<IOptions<ApiOutputCacheOptions>>().Value;
+        var forwardedHeadersOptions = provider.GetRequiredService<IOptions<Microsoft.AspNetCore.Builder.ForwardedHeadersOptions>>().Value;
 
         Assert.Equal(["http://localhost:4200"], cors.Origins);
+        Assert.Equal(2, forwardedHeaders.ForwardLimit);
+        Assert.Equal(["10.0.0.10"], forwardedHeaders.KnownProxies);
+        Assert.Equal(["10.0.0.0/24"], forwardedHeaders.KnownNetworks);
         Assert.Equal(7, rateLimiting.Auth.PermitLimit);
         Assert.Equal(90, rateLimiting.Auth.WindowSeconds);
         Assert.Equal(11, rateLimiting.Ai.PermitLimit);
         Assert.Equal(120, rateLimiting.Ai.WindowSeconds);
         Assert.Equal(30, outputCache.AdminAiUsage.ExpirationSeconds);
+        Assert.Equal(2, forwardedHeadersOptions.ForwardLimit);
+        Assert.Contains(forwardedHeadersOptions.KnownProxies, ip => ip.ToString() == "10.0.0.10");
+        Assert.Contains(forwardedHeadersOptions.KnownIPNetworks, network => network.BaseAddress.ToString() == "10.0.0.0" && network.PrefixLength == 24);
     }
 }

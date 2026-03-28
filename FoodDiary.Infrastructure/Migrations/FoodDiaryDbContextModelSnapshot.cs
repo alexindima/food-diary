@@ -25,7 +25,6 @@ namespace FoodDiary.Infrastructure.Migrations
             modelBuilder.Entity("FoodDiary.Domain.Entities.Ai.AiUsage", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedOnUtc")
@@ -259,7 +258,7 @@ namespace FoodDiary.Infrastructure.Migrations
 
                     b.HasIndex("ImageAssetId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId", "Date", "CreatedOnUtc");
 
                     b.ToTable("Meals");
                 });
@@ -467,7 +466,9 @@ namespace FoodDiary.Infrastructure.Migrations
 
                     b.HasIndex("ImageAssetId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId", "CreatedOnUtc");
+
+                    b.HasIndex("Visibility", "CreatedOnUtc");
 
                     b.ToTable("Products");
                 });
@@ -602,7 +603,9 @@ namespace FoodDiary.Infrastructure.Migrations
 
                     b.HasIndex("ImageAssetId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId", "CreatedOnUtc");
+
+                    b.HasIndex("Visibility", "CreatedOnUtc");
 
                     b.ToTable("Recipes");
                 });

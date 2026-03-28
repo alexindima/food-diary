@@ -86,6 +86,20 @@ dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Host=localhost;Da
 dotnet user-secrets set "Jwt:SecretKey" "your-very-long-local-development-secret"
 ```
 
+## Backend Quality Gates
+
+Backend work should follow these repository documents:
+
+- `BACKEND_10_OF_10_PLAN.md`
+- `BACKEND_TIME_POLICY.md`
+- `BACKEND_CRITICAL_FLOW_MATRIX.md`
+- `BACKEND_DEFINITION_OF_DONE.md`
+- `BACKEND_API_CONTRACT_GOVERNANCE.md`
+- `BACKEND_OBSERVABILITY_BASELINE.md`
+- `BACKEND_PERFORMANCE_REVIEW.md`
+- `BACKEND_MIGRATION_SAFETY.md`
+- `BACKEND_SECURITY_HARDENING.md`
+
 ## Deployment Notes
 
 - CI runs .NET validation and Telegram failure notifications.

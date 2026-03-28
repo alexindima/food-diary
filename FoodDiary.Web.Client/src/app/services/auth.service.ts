@@ -175,11 +175,12 @@ export class AuthService extends ApiService {
             return of(null);
         }
 
-        return this.post<{ accessToken: string }>('refresh', { refreshToken }).pipe(
+        return this.post<AuthResponse>('refresh', { refreshToken }).pipe(
             map(response => {
                 const accessToken = response?.accessToken ?? null;
                 if (accessToken) {
                     this.setToken(accessToken);
+                    this.setRefreshToken(response.refreshToken);
                     this.authTokenSignal.set(accessToken);
                 }
                 return accessToken;

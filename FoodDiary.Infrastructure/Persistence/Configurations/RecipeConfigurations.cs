@@ -29,6 +29,9 @@ internal sealed class RecipeConfiguration : IEntityTypeConfiguration<Recipe> {
             .WithMany(u => u.Recipes)
             .HasForeignKey(e => e.UserId);
 
+        entity.HasIndex(e => new { e.UserId, e.CreatedOnUtc });
+        entity.HasIndex(e => new { e.Visibility, e.CreatedOnUtc });
+
         entity.HasMany(e => e.MealItems)
             .WithOne(mi => mi.Recipe)
             .HasForeignKey(mi => mi.RecipeId)

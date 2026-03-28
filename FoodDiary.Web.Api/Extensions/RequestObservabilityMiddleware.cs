@@ -41,6 +41,14 @@ public sealed class RequestObservabilityMiddleware(RequestDelegate next, ILogger
             stopwatch.Stop();
             var elapsedMs = stopwatch.Elapsed.TotalMilliseconds;
             activity?.SetTag("http.response.status_code", context.Response.StatusCode);
+            var businessFlow = BusinessFlow.From(request.Method, request.Path);
+            if (businessFlow is not null) {
+                ApiTelemetry.BusinessFlowCounter.Add(
+                    1,
+                    new KeyValuePair<string, object?>("fooddiary.business_flow", businessFlow.Value.FlowName),
+                    new KeyValuePair<string, object?>("fooddiary.business_outcome", ResolveOutcome(context.Response.StatusCode)),
+                    new KeyValuePair<string, object?>("http.response.status_code", context.Response.StatusCode));
+            }
             ApiTelemetry.RequestCounter.Add(
                 1,
                 new KeyValuePair<string, object?>("http.request.method", request.Method),
@@ -58,6 +66,14 @@ public sealed class RequestObservabilityMiddleware(RequestDelegate next, ILogger
                 context.Response.StatusCode,
                 elapsedMs);
         }
+    }
+
+    private static string ResolveOutcome(int statusCode) {
+        return statusCode switch {
+            >= 200 and < 400 => "success",
+            >= 400 and < 500 => "client_error",
+            _ => "server_error"
+        };
     }
 
     private readonly record struct RequestSensitivity(string PathLabel, string ScopeLabel, bool IncludeUserIdInTelemetry) {
@@ -79,6 +95,56 @@ public sealed class RequestObservabilityMiddleware(RequestDelegate next, ILogger
             }
 
             return new RequestSensitivity(path.Value ?? "/", "standard", true);
+        }
+    }
+
+    private readonly record struct BusinessFlow(string FlowName) {
+        public static BusinessFlow? From(string method, PathString path) {
+            if (HttpMethods.IsPost(method) && path.Equals("/api/auth/register", StringComparison.OrdinalIgnoreCase)) {
+                return new BusinessFlow("auth.register");
+            }
+
+            if (HttpMethods.IsPost(method) && path.Equals("/api/auth/login", StringComparison.OrdinalIgnoreCase)) {
+                return new BusinessFlow("auth.login");
+            }
+
+            if (HttpMethods.IsPost(method) && path.Equals("/api/auth/refresh", StringComparison.OrdinalIgnoreCase)) {
+                return new BusinessFlow("auth.refresh");
+            }
+
+            if (HttpMethods.IsPost(method) && path.Equals("/api/auth/restore", StringComparison.OrdinalIgnoreCase)) {
+                return new BusinessFlow("auth.restore");
+            }
+
+            if (HttpMethods.IsPost(method) && path.Equals("/api/auth/password-reset/request", StringComparison.OrdinalIgnoreCase)) {
+                return new BusinessFlow("auth.password-reset.request");
+            }
+
+            if (HttpMethods.IsPost(method) && path.Equals("/api/auth/password-reset/confirm", StringComparison.OrdinalIgnoreCase)) {
+                return new BusinessFlow("auth.password-reset.confirm");
+            }
+
+            if (HttpMethods.IsPost(method) && path.Equals("/api/auth/verify-email", StringComparison.OrdinalIgnoreCase)) {
+                return new BusinessFlow("auth.verify-email");
+            }
+
+            if (HttpMethods.IsPost(method) && path.Equals("/api/auth/verify-email/resend", StringComparison.OrdinalIgnoreCase)) {
+                return new BusinessFlow("auth.verify-email.resend");
+            }
+
+            if (HttpMethods.IsPost(method) && path.Equals("/api/images/upload-url", StringComparison.OrdinalIgnoreCase)) {
+                return new BusinessFlow("images.upload-url");
+            }
+
+            if (HttpMethods.IsDelete(method) && path.StartsWithSegments("/api/images", StringComparison.OrdinalIgnoreCase)) {
+                return new BusinessFlow("images.delete");
+            }
+
+            if (HttpMethods.IsDelete(method) && path.Equals("/api/users", StringComparison.OrdinalIgnoreCase)) {
+                return new BusinessFlow("users.delete");
+            }
+
+            return null;
         }
     }
 }

@@ -3,11 +3,13 @@ using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Authentication.Services;
 using FoodDiary.Application.Authentication.Abstractions;
 using FoodDiary.Application.Authentication.Common;
+using FoodDiary.Application.Authentication.Mappings;
+using FoodDiary.Application.Authentication.Models;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 
 namespace FoodDiary.Application.Authentication.Commands.RefreshToken;
 
-public class RefreshTokenCommandHandler : ICommandHandler<RefreshTokenCommand, Result<string>> {
+public class RefreshTokenCommandHandler : ICommandHandler<RefreshTokenCommand, Result<AuthenticationModel>> {
     private readonly IUserRepository _userRepository;
     private readonly IJwtTokenGenerator _jwtTokenGenerator;
     private readonly IPasswordHasher _passwordHasher;
@@ -24,20 +26,20 @@ public class RefreshTokenCommandHandler : ICommandHandler<RefreshTokenCommand, R
         _authenticationTokenService = authenticationTokenService;
     }
 
-    public async Task<Result<string>> Handle(RefreshTokenCommand command, CancellationToken cancellationToken) {
+    public async Task<Result<AuthenticationModel>> Handle(RefreshTokenCommand command, CancellationToken cancellationToken) {
         var validationResult = _jwtTokenGenerator.ValidateToken(command.RefreshToken);
         if (validationResult == null) {
-            return Result.Failure<string>(Errors.Authentication.InvalidToken);
+            return Result.Failure<AuthenticationModel>(Errors.Authentication.InvalidToken);
         }
 
         var (userId, _) = validationResult.Value;
         var user = await _userRepository.GetByIdAsync(userId, cancellationToken);
 
         if (user?.RefreshToken is null || !_passwordHasher.Verify(command.RefreshToken, user.RefreshToken)) {
-            return Result.Failure<string>(Errors.Authentication.InvalidToken);
+            return Result.Failure<AuthenticationModel>(Errors.Authentication.InvalidToken);
         }
 
-        var newAccessToken = _authenticationTokenService.IssueAccessToken(user);
-        return Result.Success(newAccessToken);
+        var tokens = await _authenticationTokenService.IssueAndStoreAsync(user, cancellationToken);
+        return Result.Success(user.ToAuthenticationModel(tokens));
     }
 }

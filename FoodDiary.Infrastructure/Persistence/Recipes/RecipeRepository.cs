@@ -7,6 +7,8 @@ using Microsoft.EntityFrameworkCore;
 namespace FoodDiary.Infrastructure.Persistence.Recipes;
 
 public class RecipeRepository(FoodDiaryDbContext context) : IRecipeRepository {
+    private const string LikeEscapeCharacter = "\\";
+
     public async Task<Recipe> AddAsync(Recipe recipe, CancellationToken cancellationToken = default) {
         context.Recipes.Add(recipe);
         await context.SaveChangesAsync(cancellationToken);
@@ -30,11 +32,11 @@ public class RecipeRepository(FoodDiaryDbContext context) : IRecipeRepository {
                 : r => r.UserId == userId);
 
         if (!string.IsNullOrWhiteSpace(search)) {
-            var normalized = search.Trim().ToLower();
+            var normalized = $"%{EscapeLikePattern(search.Trim())}%";
             query = query.Where(r =>
-                r.Name.ToLower().Contains(normalized) ||
-                (r.Category != null && r.Category.ToLower().Contains(normalized)) ||
-                (r.Description != null && r.Description.ToLower().Contains(normalized)));
+                EF.Functions.ILike(r.Name, normalized, LikeEscapeCharacter) ||
+                EF.Functions.ILike(r.Category ?? string.Empty, normalized, LikeEscapeCharacter) ||
+                EF.Functions.ILike(r.Description ?? string.Empty, normalized, LikeEscapeCharacter));
         }
 
         var orderedQuery = query.OrderByDescending(r => r.CreatedOnUtc);
@@ -157,5 +159,12 @@ public class RecipeRepository(FoodDiaryDbContext context) : IRecipeRepository {
             .ToListAsync(cancellationToken);
 
         return items.ToDictionary(x => x.Recipe.Id, x => (x.Recipe, x.UsageCount));
+    }
+
+    private static string EscapeLikePattern(string value) {
+        return value
+            .Replace("\\", "\\\\", StringComparison.Ordinal)
+            .Replace("%", "\\%", StringComparison.Ordinal)
+            .Replace("_", "\\_", StringComparison.Ordinal);
     }
 }

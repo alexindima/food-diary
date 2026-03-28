@@ -7,6 +7,8 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Infrastructure.Persistence.Products;
 
 public class ProductRepository(FoodDiaryDbContext context) : IProductRepository {
+    private const string LikeEscapeCharacter = "\\";
+
     public async Task<Product> AddAsync(Product product, CancellationToken cancellationToken = default) {
         context.Products.Add(product);
         await context.SaveChangesAsync(cancellationToken);
@@ -31,12 +33,12 @@ public class ProductRepository(FoodDiaryDbContext context) : IProductRepository 
                 : p => p.UserId == userId);
 
         if (!string.IsNullOrWhiteSpace(search)) {
-            var normalizedSearch = search.Trim().ToLower();
+            var normalizedSearch = $"%{EscapeLikePattern(search.Trim())}%";
             query = query.Where(p =>
-                p.Name.ToLower().Contains(normalizedSearch) ||
-                (p.Brand != null && p.Brand.ToLower().Contains(normalizedSearch)) ||
-                (p.Category != null && p.Category.ToLower().Contains(normalizedSearch)) ||
-                (p.Barcode != null && p.Barcode.ToLower().Contains(normalizedSearch)));
+                EF.Functions.ILike(p.Name, normalizedSearch, LikeEscapeCharacter) ||
+                EF.Functions.ILike(p.Brand ?? string.Empty, normalizedSearch, LikeEscapeCharacter) ||
+                EF.Functions.ILike(p.Category ?? string.Empty, normalizedSearch, LikeEscapeCharacter) ||
+                EF.Functions.ILike(p.Barcode ?? string.Empty, normalizedSearch, LikeEscapeCharacter));
         }
 
         if (productTypes is { Count: > 0 }) {
@@ -127,5 +129,12 @@ public class ProductRepository(FoodDiaryDbContext context) : IProductRepository 
     public async Task DeleteAsync(Product product, CancellationToken cancellationToken = default) {
         context.Products.Remove(product);
         await context.SaveChangesAsync(cancellationToken);
+    }
+
+    private static string EscapeLikePattern(string value) {
+        return value
+            .Replace("\\", "\\\\", StringComparison.Ordinal)
+            .Replace("%", "\\%", StringComparison.Ordinal)
+            .Replace("_", "\\_", StringComparison.Ordinal);
     }
 }

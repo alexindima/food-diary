@@ -56,6 +56,10 @@ public sealed class PostgresApiWebApplicationFactory : WebApplicationFactory<Pro
                 ["S3:Bucket"] = "fooddiary-integration-tests",
                 ["S3:ServiceUrl"] = "https://s3.test.local",
                 ["S3:PublicBaseUrl"] = "https://cdn.test.local",
+                ["RateLimiting:Auth:PermitLimit"] = "1000",
+                ["RateLimiting:Auth:WindowSeconds"] = "60",
+                ["RateLimiting:Ai:PermitLimit"] = "1000",
+                ["RateLimiting:Ai:WindowSeconds"] = "60",
             });
         });
 

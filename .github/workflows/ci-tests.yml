@@ -176,6 +176,44 @@ jobs:
             exit "$status"
           fi
 
+      - name: Run frontend unit tests
+        shell: bash
+        working-directory: FoodDiary.Web.Client
+        run: |
+          set -euo pipefail
+          log_file="${RUNNER_TEMP}/frontend-checks-logs/unit-tests.log"
+          set +e
+          npx ng test --no-watch --browsers=ChromeHeadless 2>&1 | tee "$log_file"
+          status=${PIPESTATUS[0]}
+          set -e
+          if [ "$status" -ne 0 ]; then
+            {
+              echo "FAILED_AREA=frontend"
+              echo "FAILED_TARGET=Run frontend unit tests"
+              echo "FAILED_LOG_FILE_NAME=$(basename "$log_file")"
+            } > "${RUNNER_TEMP}/frontend-checks-logs/failure-meta.env"
+            exit "$status"
+          fi
+
+      - name: Run fd-ui-kit unit tests
+        shell: bash
+        working-directory: FoodDiary.Web.Client
+        run: |
+          set -euo pipefail
+          log_file="${RUNNER_TEMP}/frontend-checks-logs/fd-ui-kit-tests.log"
+          set +e
+          npx ng test fd-ui-kit --no-watch --browsers=ChromeHeadless 2>&1 | tee "$log_file"
+          status=${PIPESTATUS[0]}
+          set -e
+          if [ "$status" -ne 0 ]; then
+            {
+              echo "FAILED_AREA=frontend"
+              echo "FAILED_TARGET=Run fd-ui-kit unit tests"
+              echo "FAILED_LOG_FILE_NAME=$(basename "$log_file")"
+            } > "${RUNNER_TEMP}/frontend-checks-logs/failure-meta.env"
+            exit "$status"
+          fi
+
       - name: Build frontend
         shell: bash
         working-directory: FoodDiary.Web.Client

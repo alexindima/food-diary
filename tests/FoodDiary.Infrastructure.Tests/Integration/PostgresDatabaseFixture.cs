@@ -30,6 +30,12 @@ public sealed class PostgresDatabaseFixture : IAsyncLifetime {
     }
 
     public async Task<FoodDiaryDbContext> CreateDbContextAsync() {
+        var context = CreateDbContext(await CreateIsolatedDatabaseAsync());
+        await context.Database.MigrateAsync();
+        return context;
+    }
+
+    public async Task<string> CreateIsolatedDatabaseAsync() {
         EnsureAvailable();
 
         var databaseName = $"fooddiary_test_{Guid.NewGuid():N}";
@@ -39,13 +45,15 @@ public sealed class PostgresDatabaseFixture : IAsyncLifetime {
             Database = databaseName
         };
 
+        return connectionStringBuilder.ConnectionString;
+    }
+
+    public FoodDiaryDbContext CreateDbContext(string connectionString) {
         var options = new DbContextOptionsBuilder<FoodDiaryDbContext>()
-            .UseNpgsql(connectionStringBuilder.ConnectionString)
+            .UseNpgsql(connectionString)
             .Options;
 
-        var context = new FoodDiaryDbContext(options);
-        await context.Database.MigrateAsync();
-        return context;
+        return new FoodDiaryDbContext(options);
     }
 
     private async Task CreateDatabaseAsync(string databaseName) {

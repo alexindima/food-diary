@@ -53,12 +53,7 @@ public sealed class RateLimiterOptionsSetup(IOptions<ApiRateLimitingOptions> rat
             return $"user:{userId.Value:D}";
         }
 
-        var forwardedFor = context.Request.Headers["X-Forwarded-For"].ToString();
-        if (!string.IsNullOrWhiteSpace(forwardedFor)) {
-            return $"ip:{forwardedFor}";
-        }
-
-        var remoteIp = context.Connection.RemoteIpAddress?.ToString();
+        var remoteIp = context.Connection.RemoteIpAddress?.MapToIPv4().ToString();
         return $"ip:{remoteIp ?? "unknown"}";
     }
 }

@@ -29,9 +29,15 @@ public sealed class ControllerSecurityContractTests {
     }
 
     [Fact]
-    public void AuthController_LoginAndRefresh_UseAuthRateLimitPolicy() {
+    public void AuthController_SensitiveActions_UseAuthRateLimitPolicy() {
+        AssertActionRateLimit(typeof(AuthSessionController), nameof(AuthSessionController.Register), PresentationPolicyNames.AuthRateLimitPolicyName);
         AssertActionRateLimit(typeof(AuthSessionController), nameof(AuthSessionController.Login), PresentationPolicyNames.AuthRateLimitPolicyName);
         AssertActionRateLimit(typeof(AuthSessionController), nameof(AuthSessionController.Refresh), PresentationPolicyNames.AuthRateLimitPolicyName);
+        AssertActionRateLimit(typeof(AuthSessionController), nameof(AuthSessionController.RestoreAccount), PresentationPolicyNames.AuthRateLimitPolicyName);
+        AssertActionRateLimit(typeof(AuthSessionController), nameof(AuthSessionController.VerifyEmail), PresentationPolicyNames.AuthRateLimitPolicyName);
+        AssertActionRateLimit(typeof(AuthSessionController), nameof(AuthSessionController.ResendVerifyEmail), PresentationPolicyNames.AuthRateLimitPolicyName);
+        AssertActionRateLimit(typeof(AdminSsoController), nameof(AdminSsoController.AdminSsoExchange), PresentationPolicyNames.AuthRateLimitPolicyName);
+        AssertActionRateLimit(typeof(AuthTelegramController), nameof(AuthTelegramController.TelegramBotAuth), PresentationPolicyNames.AuthRateLimitPolicyName);
     }
 
     [Fact]
@@ -60,6 +66,11 @@ public sealed class ControllerSecurityContractTests {
     public void ImagesController_Actions_RequireCurrentUserBinding() {
         AssertHasFromCurrentUserParameter(typeof(ImagesController), nameof(ImagesController.GetUploadUrl));
         AssertHasFromCurrentUserParameter(typeof(ImagesController), nameof(ImagesController.Delete));
+    }
+
+    [Fact]
+    public void ImagesController_GetUploadUrl_UsesAuthRateLimitPolicy() {
+        AssertActionRateLimit(typeof(ImagesController), nameof(ImagesController.GetUploadUrl), PresentationPolicyNames.AuthRateLimitPolicyName);
     }
 
     private static void AssertActionRateLimit(Type controllerType, string actionName, string expectedPolicyName) {

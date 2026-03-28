@@ -30,6 +30,16 @@ public static class ApiServiceCollectionExtensions {
                 "Cors:Origins must contain at least one absolute origin URL.")
             .ValidateOnStart();
         services
+            .AddOptions<ApiForwardedHeadersOptions>()
+            .BindConfiguration(ApiForwardedHeadersOptions.SectionName)
+            .Validate(ApiForwardedHeadersOptions.HasValidForwardLimit,
+                "ForwardedHeaders:ForwardLimit must be greater than zero.")
+            .Validate(ApiForwardedHeadersOptions.HasValidKnownProxies,
+                "ForwardedHeaders:KnownProxies must contain valid IP addresses.")
+            .Validate(ApiForwardedHeadersOptions.HasValidKnownNetworks,
+                "ForwardedHeaders:KnownNetworks must contain valid CIDR entries.")
+            .ValidateOnStart();
+        services
             .AddOptions<ApiRateLimitingOptions>()
             .BindConfiguration(ApiRateLimitingOptions.SectionName)
             .Validate(ApiRateLimitingOptions.HasValidAuth,
@@ -56,6 +66,7 @@ public static class ApiServiceCollectionExtensions {
                 "TelegramBot:ApiSecret must be empty or at least 16 characters long.")
             .ValidateOnStart();
         services.AddSingleton<IConfigureOptions<Microsoft.AspNetCore.Cors.Infrastructure.CorsOptions>, CorsOptionsSetup>();
+        services.AddSingleton<IConfigureOptions<ForwardedHeadersOptions>, ForwardedHeadersOptionsSetup>();
         services.AddSingleton<IConfigureOptions<Microsoft.AspNetCore.RateLimiting.RateLimiterOptions>, RateLimiterOptionsSetup>();
         services.AddSingleton<IConfigureOptions<Microsoft.AspNetCore.OutputCaching.OutputCacheOptions>, OutputCacheOptionsSetup>();
         services.AddCors(static _ => { });
@@ -96,7 +107,6 @@ public static class ApiServiceCollectionExtensions {
                                     HttpLoggingFields.RequestPath |
                                     HttpLoggingFields.ResponseStatusCode |
                                     HttpLoggingFields.Duration;
-            options.RequestHeaders.Add("X-Forwarded-For");
             options.RequestHeaders.Add("X-Correlation-Id");
             options.MediaTypeOptions.AddText("application/json");
         });

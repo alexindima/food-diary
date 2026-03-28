@@ -5,9 +5,6 @@ using FoodDiary.Presentation.Api.Features.Users.Mappings;
 namespace FoodDiary.Presentation.Api.Features.Auth.Mappings;
 
 public static class AuthHttpResponseMappings {
-    public static AccessTokenHttpResponse ToAccessTokenHttpResponse(this string accessToken) =>
-        new(accessToken);
-
     public static AuthenticationHttpResponse ToHttpResponse(this AuthenticationModel model) {
         return new AuthenticationHttpResponse(
             model.AccessToken,

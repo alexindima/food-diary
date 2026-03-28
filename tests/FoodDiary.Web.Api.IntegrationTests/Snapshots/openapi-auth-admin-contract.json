@@ -105,6 +105,7 @@
             "200",
             "400",
             "401",
+            "429",
             "500"
           ]
         }
@@ -141,6 +142,36 @@
       ]
     },
     {
+      "Path": "/api/auth/password-reset/confirm",
+      "Operations": [
+        {
+          "Method": "post",
+          "HasRequestBody": true,
+          "ResponseCodes": [
+            "200",
+            "400",
+            "401",
+            "404",
+            "500"
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/auth/password-reset/request",
+      "Operations": [
+        {
+          "Method": "post",
+          "HasRequestBody": true,
+          "ResponseCodes": [
+            "204",
+            "400",
+            "500"
+          ]
+        }
+      ]
+    },
+    {
       "Path": "/api/auth/refresh",
       "Operations": [
         {
@@ -165,6 +196,23 @@
             "200",
             "400",
             "409",
+            "429",
+            "500"
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/auth/restore",
+      "Operations": [
+        {
+          "Method": "post",
+          "HasRequestBody": true,
+          "ResponseCodes": [
+            "200",
+            "400",
+            "401",
+            "429",
             "500"
           ]
         }
@@ -182,6 +230,7 @@
             "401",
             "404",
             "409",
+            "429",
             "500"
           ]
         }
@@ -197,6 +246,7 @@
             "204",
             "401",
             "404",
+            "429",
             "500"
           ]
         }

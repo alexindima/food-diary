@@ -51,9 +51,11 @@ public sealed class AuthTelegramController(ISender mediator, ILogger<AuthTelegra
 
     [HttpPost("bot/auth")]
     [RequireTelegramBotSecret]
+    [EnableRateLimiting(PresentationPolicyNames.AuthRateLimitPolicyName)]
     [ProducesResponseType<AuthenticationHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesApiErrorResponse(StatusCodes.Status401Unauthorized)]
+    [ProducesApiErrorResponse(StatusCodes.Status429TooManyRequests)]
     public Task<IActionResult> TelegramBotAuth([FromBody] TelegramBotAuthHttpRequest request) =>
         HandleObservedOk(request.ToCommand(), static value => value.ToHttpResponse(), _logger, "auth.telegram.bot-auth");
 }

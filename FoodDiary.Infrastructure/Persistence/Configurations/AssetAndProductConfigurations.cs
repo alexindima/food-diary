@@ -56,6 +56,9 @@ internal sealed class ProductConfiguration : IEntityTypeConfiguration<Product> {
             .WithMany(u => u.Products)
             .HasForeignKey(e => e.UserId);
 
+        entity.HasIndex(e => new { e.UserId, e.CreatedOnUtc });
+        entity.HasIndex(e => new { e.Visibility, e.CreatedOnUtc });
+
         entity.Metadata.FindNavigation(nameof(Product.MealItems))!
             .SetPropertyAccessMode(PropertyAccessMode.Field);
 
