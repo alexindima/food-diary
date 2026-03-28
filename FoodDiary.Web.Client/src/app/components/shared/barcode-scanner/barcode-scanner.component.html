@@ -1,34 +1,26 @@
-<fd-ui-dialog
-    [title]="'BARCODE_SCANNER.TITLE' | translate"
-    size="lg"
-    [dismissible]="true"
->
-    <div class="scanner-popup">
-        <div class="scanner-popup__scanner-wrapper">
-            <zxing-scanner [formats]="allowedScannerFormats"
-                (camerasFound)="onCamerasFound($event)"
-                (scanSuccess)="onScanSuccess($event)"
-             />
+<fd-ui-dialog [title]="'BARCODE_SCANNER.TITLE' | translate" [dismissible]="true" (close)="close()">
+    <div class="barcode-scanner">
+        @if (isUnsupported()) {
+            <div class="barcode-scanner__message">
+                <p>{{ 'BARCODE_SCANNER.UNSUPPORTED' | translate }}</p>
+                <fd-ui-button variant="secondary" (click)="close()">
+                    {{ 'COMMON.CLOSE' | translate }}
+                </fd-ui-button>
+            </div>
+        } @else if (isCameraError()) {
+            <div class="barcode-scanner__message">
+                <p>{{ 'BARCODE_SCANNER.CAMERA_ERROR' | translate }}</p>
+                <fd-ui-button variant="secondary" (click)="close()">
+                    {{ 'COMMON.CLOSE' | translate }}
+                </fd-ui-button>
+            </div>
+        } @else {
             @if (!isCameraReady()) {
-                <div class="scanner-popup__loader-overlay">
-                    @if (isCameraError()) {
-                        <p class="scanner-popup__loader-error">
-                            {{ 'BARCODE_SCANNER.CAMERA_ERROR' | translate }}
-                        </p>
-                    } @else {
-                        <fd-ui-loader />
-                        <p class="scanner-popup__loader-info">
-                            {{ 'BARCODE_SCANNER.CAMERA_INITIALIZING' | translate }}
-                        </p>
-                    }
+                <div class="barcode-scanner__loading">
+                    <fd-ui-loader />
                 </div>
             }
-        </div>
-    </div>
-
-    <div fdUiDialogFooter>
-        <fd-ui-button variant="secondary" fill="text" size="sm" (click)="close()">
-            {{ 'COMMON.CANCEL' | translate }}
-        </fd-ui-button>
+            <video #video class="barcode-scanner__video" [class.barcode-scanner__video--hidden]="!isCameraReady()" autoplay playsinline muted></video>
+        }
     </div>
 </fd-ui-dialog>

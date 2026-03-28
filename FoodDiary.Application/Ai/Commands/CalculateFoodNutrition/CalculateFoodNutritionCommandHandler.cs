@@ -11,6 +11,11 @@ public sealed class CalculateFoodNutritionCommandHandler(IOpenAiFoodService open
     public async Task<Result<FoodNutritionModel>> Handle(
         CalculateFoodNutritionCommand query,
         CancellationToken cancellationToken) {
+        if (query.UserId == Guid.Empty) {
+            return Result.Failure<FoodNutritionModel>(
+                Errors.Validation.Invalid(nameof(query.UserId), "User id must not be empty."));
+        }
+
         if (query.Items.Count == 0) {
             return Result.Failure<FoodNutritionModel>(Errors.Ai.EmptyItems());
         }

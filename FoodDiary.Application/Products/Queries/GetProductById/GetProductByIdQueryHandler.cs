@@ -16,6 +16,10 @@ public class GetProductByIdQueryHandler(IProductRepository productRepository)
             return Result.Failure<ProductModel>(Errors.Authentication.InvalidToken);
         }
 
+        if (query.ProductId == Guid.Empty) {
+            return Result.Failure<ProductModel>(Errors.Validation.Invalid(nameof(query.ProductId), "Product id must not be empty."));
+        }
+
         var userId = new UserId(query.UserId!.Value);
         var productId = new ProductId(query.ProductId);
         var product = await productRepository.GetByIdAsync(

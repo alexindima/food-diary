@@ -3,7 +3,6 @@ import { BaseProductManageComponent } from '../components/manage/base-product-ma
 import { Product } from '../models/product.data';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
-import { ZXingScannerModule } from '@zxing/ngx-scanner';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea.component';
 import { FdUiSelectComponent } from 'fd-ui-kit/select/fd-ui-select.component';
@@ -25,7 +24,6 @@ import { ManageHeaderComponent } from '../../../components/shared/manage-header/
     imports: [
         ReactiveFormsModule,
         TranslatePipe,
-        ZXingScannerModule,
         FdUiInputComponent,
         FdUiTextareaComponent,
         FdUiSelectComponent,

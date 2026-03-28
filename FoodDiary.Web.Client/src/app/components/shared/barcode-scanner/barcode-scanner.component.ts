@@ -1,6 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { BarcodeFormat } from '@zxing/library';
-import { ZXingScannerModule } from '@zxing/ngx-scanner';
+import { ChangeDetectionStrategy, Component, ElementRef, inject, signal, viewChild, OnInit, OnDestroy } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiDialogRef } from 'fd-ui-kit/material';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog.component';
@@ -10,56 +8,86 @@ import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
 @Component({
     selector: 'fd-barcode-scanner',
     standalone: true,
-    imports: [
-        ZXingScannerModule,
-        TranslatePipe,
-        FdUiDialogComponent,
-        FdUiButtonComponent,
-        FdUiLoaderComponent,
-    ],
+    imports: [TranslatePipe, FdUiDialogComponent, FdUiButtonComponent, FdUiLoaderComponent],
     templateUrl: './barcode-scanner.component.html',
     styleUrl: './barcode-scanner.component.scss',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BarcodeScannerComponent {
+export class BarcodeScannerComponent implements OnInit, OnDestroy {
     private readonly dialogRef = inject(FdUiDialogRef<BarcodeScannerComponent, string | null>);
+    private readonly videoRef = viewChild<ElementRef<HTMLVideoElement>>('video');
 
-    public allowedScannerFormats = [
-        BarcodeFormat.AZTEC,
-        BarcodeFormat.CODABAR,
-        BarcodeFormat.CODE_39,
-        BarcodeFormat.CODE_93,
-        BarcodeFormat.CODE_128,
-        BarcodeFormat.DATA_MATRIX,
-        BarcodeFormat.EAN_8,
-        BarcodeFormat.EAN_13,
-        BarcodeFormat.ITF,
-        BarcodeFormat.MAXICODE,
-        BarcodeFormat.PDF_417,
-        BarcodeFormat.QR_CODE,
-        BarcodeFormat.RSS_14,
-        BarcodeFormat.RSS_EXPANDED,
-        BarcodeFormat.UPC_A,
-        BarcodeFormat.UPC_E,
-        BarcodeFormat.UPC_EAN_EXTENSION
-    ];
+    public readonly isCameraReady = signal(false);
+    public readonly isCameraError = signal(false);
+    public readonly isUnsupported = signal(false);
 
-    public isCameraReady = signal<boolean>(false);
-    public isCameraError = signal<boolean>(false);
+    private stream: MediaStream | null = null;
+    private animationFrameId = 0;
+    private detector: BarcodeDetector | null = null;
 
-    public onCamerasFound(devices: MediaDeviceInfo[]): void {
-        if (devices && devices.length > 0) {
-            this.isCameraReady.set(true);
-        } else {
+    public ngOnInit(): void {
+        if (!('BarcodeDetector' in window)) {
+            this.isUnsupported.set(true);
+            return;
+        }
+        this.detector = new BarcodeDetector({
+            formats: ['ean_13', 'ean_8', 'upc_a', 'upc_e', 'code_128', 'code_39', 'code_93',
+                       'codabar', 'itf', 'qr_code', 'data_matrix', 'pdf417', 'aztec'],
+        });
+        this.startCamera();
+    }
+
+    public ngOnDestroy(): void {
+        this.stopCamera();
+    }
+
+    public close(): void {
+        this.stopCamera();
+        this.dialogRef.close(null);
+    }
+
+    private async startCamera(): Promise<void> {
+        try {
+            this.stream = await navigator.mediaDevices.getUserMedia({
+                video: { facingMode: 'environment' },
+            });
+            // Wait for next tick so viewChild is available
+            setTimeout(() => {
+                const video = this.videoRef()?.nativeElement;
+                if (video) {
+                    video.srcObject = this.stream;
+                    video.play();
+                    this.isCameraReady.set(true);
+                    this.scanLoop();
+                }
+            });
+        } catch {
             this.isCameraError.set(true);
         }
     }
 
-    public onScanSuccess(barcode: string): void {
-        this.dialogRef.close(barcode);
+    private scanLoop(): void {
+        const video = this.videoRef()?.nativeElement;
+        if (!video || !this.detector) return;
+
+        this.animationFrameId = requestAnimationFrame(async () => {
+            if (video.readyState === video.HAVE_ENOUGH_DATA) {
+                try {
+                    const barcodes = await this.detector!.detect(video);
+                    if (barcodes.length > 0) {
+                        this.stopCamera();
+                        this.dialogRef.close(barcodes[0].rawValue);
+                        return;
+                    }
+                } catch { /* ignore detection errors */ }
+            }
+            this.scanLoop();
+        });
     }
 
-    public close(): void {
-        this.dialogRef.close(null);
+    private stopCamera(): void {
+        cancelAnimationFrame(this.animationFrameId);
+        this.stream?.getTracks().forEach(track => track.stop());
+        this.stream = null;
     }
 }

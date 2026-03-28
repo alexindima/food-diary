@@ -116,6 +116,35 @@ public class AiValidatorsTests {
     }
 
     [Fact]
+    public async Task GetUserAiUsageSummaryQueryHandler_WithEmptyUserId_ReturnsValidationFailure() {
+        var handler = new GetUserAiUsageSummaryQueryHandler(
+            new StubUserRepository(User.Create("ai-empty-user@example.com", "hash")),
+            new RecordingAiUsageRepository(),
+            new FixedDateTimeProvider(new DateTime(2026, 3, 26, 15, 30, 0, DateTimeKind.Utc)));
+
+        var result = await handler.Handle(new GetUserAiUsageSummaryQuery(Guid.Empty), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("UserId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task CalculateFoodNutritionHandler_WithEmptyUserId_ReturnsValidationFailure() {
+        var handler = new CalculateFoodNutritionCommandHandler(new StubOpenAiFoodService());
+
+        var result = await handler.Handle(
+            new CalculateFoodNutritionCommand(
+                Guid.Empty,
+                [new FoodVisionItemModel("apple", "apple", 120, "g", 0.95m)]),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("UserId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
     public async Task GetUserAiUsageSummaryQueryHandler_UsesDateTimeProviderForMonthBounds() {
         var user = User.Create("ai-usage@example.com", "hash");
         var userRepository = new StubUserRepository(user);

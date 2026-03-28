@@ -26,14 +26,20 @@
                 </div>
             } @else {
                 @if (summaryPoints().length > 0) {
-                    <canvas
-                        baseChart
-                        class="waist-history-page__chart-canvas"
-                        [type]="'line'"
-                        [data]="chartData()"
-                        [options]="chartOptions"
-                        [legend]="false"
-                    ></canvas>
+                    @defer (when summaryPoints().length > 0) {
+                        <canvas
+                            baseChart
+                            class="waist-history-page__chart-canvas"
+                            [type]="'line'"
+                            [data]="chartData()"
+                            [options]="chartOptions"
+                            [legend]="false"
+                        ></canvas>
+                    } @placeholder {
+                        <fd-ui-loader />
+                    } @loading (minimum 300ms) {
+                        <fd-ui-loader />
+                    }
                 } @else {
                     <p class="waist-history-page__empty-chart">
                         {{ 'WAIST_HISTORY.NO_DATA_FOR_CHART' | translate }}
@@ -42,52 +48,56 @@
             }
         </fd-ui-card>
 
-        <fd-ui-card class="waist-history-page__card waist-history-page__card--wht" [title]="'WAIST_HISTORY.WHT_CARD_TITLE' | translate">
-            @if (whtrValue() !== null) {
-                @if (whtrStatusInfo(); as status) {
-                    <div class="waist-history-page__wht-top">
-                        <p class="waist-history-page__wht-note">
-                            {{ 'WAIST_HISTORY.WHT_NOTE' | translate }}
-                        </p>
-                        <div class="waist-history-page__wht-scale">
-                            <div class="waist-history-page__wht-segments">
-                                @for (segment of whtSegments; track segment.labelKey) {
-                                    <div
-                                        class="waist-history-page__wht-segment"
-                                        [ngClass]="segment.class"
-                                        [style.width]="getSegmentWidth(segment)"
-                                    >
-                                        <span>{{ segment.labelKey | translate }}</span>
-                                    </div>
-                                }
-                            </div>
-                            <div class="waist-history-page__wht-pointer" [style.left]="whtrPointerPosition()">
-                                <div class="waist-history-page__wht-pointer-dot"></div>
-                                <span>{{ whtrValue() }}</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="waist-history-page__wht-bottom">
-                        <div class="waist-history-page__wht-footer">
-                            <div class="waist-history-page__wht-value">
-                                {{ 'WAIST_HISTORY.WHT_CURRENT' | translate }}:
-                                <strong>{{ whtrValue() }}</strong>
-                            </div>
-                            <div class="waist-history-page__wht-status" [ngClass]="status.class">
-                                {{ status.labelKey | translate }}
+        @defer (on viewport) {
+            <fd-ui-card class="waist-history-page__card waist-history-page__card--wht" [title]="'WAIST_HISTORY.WHT_CARD_TITLE' | translate">
+                @if (whtrValue() !== null) {
+                    @if (whtrStatusInfo(); as status) {
+                        <div class="waist-history-page__wht-top">
+                            <p class="waist-history-page__wht-note">
+                                {{ 'WAIST_HISTORY.WHT_NOTE' | translate }}
+                            </p>
+                            <div class="waist-history-page__wht-scale">
+                                <div class="waist-history-page__wht-segments">
+                                    @for (segment of whtSegments; track segment.labelKey) {
+                                        <div
+                                            class="waist-history-page__wht-segment"
+                                            [ngClass]="segment.class"
+                                            [style.width]="getSegmentWidth(segment)"
+                                        >
+                                            <span>{{ segment.labelKey | translate }}</span>
+                                        </div>
+                                    }
+                                </div>
+                                <div class="waist-history-page__wht-pointer" [style.left]="whtrPointerPosition()">
+                                    <div class="waist-history-page__wht-pointer-dot"></div>
+                                    <span>{{ whtrValue() }}</span>
+                                </div>
                             </div>
                         </div>
-                        <p class="waist-history-page__wht-description">
-                            {{ status.descriptionKey | translate }}
-                        </p>
-                    </div>
+                        <div class="waist-history-page__wht-bottom">
+                            <div class="waist-history-page__wht-footer">
+                                <div class="waist-history-page__wht-value">
+                                    {{ 'WAIST_HISTORY.WHT_CURRENT' | translate }}:
+                                    <strong>{{ whtrValue() }}</strong>
+                                </div>
+                                <div class="waist-history-page__wht-status" [ngClass]="status.class">
+                                    {{ status.labelKey | translate }}
+                                </div>
+                            </div>
+                            <p class="waist-history-page__wht-description">
+                                {{ status.descriptionKey | translate }}
+                            </p>
+                        </div>
+                    }
+                } @else {
+                    <p class="waist-history-page__empty">
+                        {{ 'WAIST_HISTORY.WHT_NO_DATA' | translate }}
+                    </p>
                 }
-            } @else {
-                <p class="waist-history-page__empty">
-                    {{ 'WAIST_HISTORY.WHT_NO_DATA' | translate }}
-                </p>
-            }
-        </fd-ui-card>
+            </fd-ui-card>
+        } @placeholder {
+            <div style="height: 200px"></div>
+        }
 
         <div class="waist-history-page__content waist-history-page__content--form">
             <fd-ui-card class="waist-history-page__card waist-history-page__card--form" [title]="'WAIST_HISTORY.ADD_ENTRY_TITLE' | translate">
@@ -156,54 +166,58 @@
             </fd-ui-card>
         </div>
 
-        <div class="waist-history-page__content waist-history-page__content--full">
-            <fd-ui-card class="waist-history-page__card waist-history-page__card--entries" [title]="'WAIST_HISTORY.HISTORY_TITLE' | translate">
-                @if (isLoading()) {
-                    <div class="waist-history-page__loader">
-                        {{ 'WAIST_HISTORY.LOADING' | translate }}
-                    </div>
-                } @else {
-                    @if (entriesDescending().length === 0) {
-                        <div class="waist-history-page__empty">
-                            {{ 'WAIST_HISTORY.NO_ENTRIES' | translate }}
+        @defer (on viewport) {
+            <div class="waist-history-page__content waist-history-page__content--full">
+                <fd-ui-card class="waist-history-page__card waist-history-page__card--entries" [title]="'WAIST_HISTORY.HISTORY_TITLE' | translate">
+                    @if (isLoading()) {
+                        <div class="waist-history-page__loader">
+                            {{ 'WAIST_HISTORY.LOADING' | translate }}
                         </div>
                     } @else {
-                        <div class="waist-history-page__entries">
-                            @for (entry of entriesDescending(); track entry.id) {
-                                <div class="waist-history-page__entry">
-                                    <div class="waist-history-page__entry-date">
-                                        {{ entry.date | date:'dd.MM.yyyy' }}
+                        @if (entriesDescending().length === 0) {
+                            <div class="waist-history-page__empty">
+                                {{ 'WAIST_HISTORY.NO_ENTRIES' | translate }}
+                            </div>
+                        } @else {
+                            <div class="waist-history-page__entries">
+                                @for (entry of entriesDescending(); track entry.id) {
+                                    <div class="waist-history-page__entry">
+                                        <div class="waist-history-page__entry-date">
+                                            {{ entry.date | date:'dd.MM.yyyy' }}
+                                        </div>
+                                        <div class="waist-history-page__entry-value">
+                                            {{ entry.circumference | number: '1.0-2' }}
+                                            {{ 'WAIST_HISTORY.CM' | translate }}
+                                        </div>
+                                        <div class="waist-history-page__entry-actions">
+                                            <fd-ui-button
+                                                type="button"
+                                                fill="text"
+                                                variant="secondary"
+                                                icon="edit"
+                                                (click)="startEdit(entry)"
+                                            >
+                                                {{ 'WAIST_HISTORY.EDIT' | translate }}
+                                            </fd-ui-button>
+                                            <fd-ui-button
+                                                type="button"
+                                                fill="text"
+                                                variant="danger"
+                                                icon="delete"
+                                                (click)="deleteEntry(entry)"
+                                            >
+                                                {{ 'WAIST_HISTORY.DELETE' | translate }}
+                                            </fd-ui-button>
+                                        </div>
                                     </div>
-                                    <div class="waist-history-page__entry-value">
-                                        {{ entry.circumference | number: '1.0-2' }}
-                                        {{ 'WAIST_HISTORY.CM' | translate }}
-                                    </div>
-                                    <div class="waist-history-page__entry-actions">
-                                        <fd-ui-button
-                                            type="button"
-                                            fill="text"
-                                            variant="secondary"
-                                            icon="edit"
-                                            (click)="startEdit(entry)"
-                                        >
-                                            {{ 'WAIST_HISTORY.EDIT' | translate }}
-                                        </fd-ui-button>
-                                        <fd-ui-button
-                                            type="button"
-                                            fill="text"
-                                            variant="danger"
-                                            icon="delete"
-                                            (click)="deleteEntry(entry)"
-                                        >
-                                            {{ 'WAIST_HISTORY.DELETE' | translate }}
-                                        </fd-ui-button>
-                                    </div>
-                                </div>
-                            }
-                        </div>
+                                }
+                            </div>
+                        }
                     }
-                }
-            </fd-ui-card>
-        </div>
+                </fd-ui-card>
+            </div>
+        } @placeholder {
+            <div style="height: 200px"></div>
+        }
     </fd-page-body>
 </div>

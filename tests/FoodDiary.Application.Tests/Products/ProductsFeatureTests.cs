@@ -3,6 +3,7 @@ using FoodDiary.Application.Images.Common;
 using FoodDiary.Application.Products.Commands.DeleteProduct;
 using FoodDiary.Application.Products.Commands.CreateProduct;
 using FoodDiary.Application.Products.Commands.UpdateProduct;
+using FoodDiary.Application.Products.Queries.GetProductById;
 using FoodDiary.Application.Products.Queries.GetProducts;
 using FoodDiary.Application.Products.Queries.GetProductsWithRecent;
 using FoodDiary.Application.Products.Queries.GetRecentProducts;
@@ -135,6 +136,32 @@ public class ProductsFeatureTests {
         Assert.True(result.IsSuccess);
         Assert.True(repository.DeleteCalled);
         Assert.Equal([assetId], cleanup.RequestedAssetIds);
+    }
+
+    [Fact]
+    public async Task DeleteProductCommandHandler_WithEmptyProductId_ReturnsValidationFailure() {
+        var handler = new DeleteProductCommandHandler(new NoopProductRepository(), new RecordingCleanupService());
+
+        var result = await handler.Handle(
+            new DeleteProductCommand(Guid.NewGuid(), Guid.Empty),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("ProductId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task GetProductByIdQueryHandler_WithEmptyProductId_ReturnsValidationFailure() {
+        var handler = new GetProductByIdQueryHandler(new NoopProductRepository());
+
+        var result = await handler.Handle(
+            new GetProductByIdQuery(Guid.NewGuid(), Guid.Empty),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("ProductId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
 
     [Fact]

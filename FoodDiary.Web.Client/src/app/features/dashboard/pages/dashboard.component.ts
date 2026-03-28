@@ -42,6 +42,7 @@ import { CycleResponse } from '../../cycle-tracking/models/cycle.data';
 import { UserService } from '../../../shared/api/user.service';
 import { DashboardLayoutSettings } from '../../../shared/models/user.data';
 import { NoticeBannerComponent } from '../../../components/shared/notice-banner/notice-banner.component';
+import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
 import { fromEvent } from 'rxjs';
 import { UnsavedChangesService, UnsavedChangesHandler } from '../../../services/unsaved-changes.service';
 
@@ -67,7 +68,8 @@ type MealSlot = 'BREAKFAST' | 'LUNCH' | 'DINNER';
     DailyAdviceCardComponent,
     CycleSummaryCardComponent,
     MealsPreviewComponent,
-    NoticeBannerComponent
+    NoticeBannerComponent,
+    FdUiLoaderComponent
 ],
     templateUrl: './dashboard.component.html',
     styleUrl: './dashboard.component.scss',

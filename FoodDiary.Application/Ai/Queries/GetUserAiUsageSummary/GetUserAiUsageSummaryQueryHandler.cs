@@ -17,6 +17,11 @@ public sealed class GetUserAiUsageSummaryQueryHandler(
     public async Task<Result<UserAiUsageModel>> Handle(
         GetUserAiUsageSummaryQuery query,
         CancellationToken cancellationToken) {
+        if (query.UserId == Guid.Empty) {
+            return Result.Failure<UserAiUsageModel>(
+                Errors.Validation.Invalid(nameof(query.UserId), "User id must not be empty."));
+        }
+
         var userId = new UserId(query.UserId);
         var user = await userRepository.GetByIdAsync(userId, cancellationToken);
         if (user is null) {

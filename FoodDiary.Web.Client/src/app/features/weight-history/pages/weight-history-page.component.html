@@ -26,14 +26,20 @@
                 </div>
             } @else {
                 @if (summaryPoints().length > 0) {
-                    <canvas
-                        baseChart
-                        class="weight-history-page__chart-canvas"
-                        [type]="'line'"
-                        [data]="chartData()"
-                        [options]="chartOptions"
-                        [legend]="false"
-                    ></canvas>
+                    @defer (when summaryPoints().length > 0) {
+                        <canvas
+                            baseChart
+                            class="weight-history-page__chart-canvas"
+                            [type]="'line'"
+                            [data]="chartData()"
+                            [options]="chartOptions"
+                            [legend]="false"
+                        ></canvas>
+                    } @placeholder {
+                        <fd-ui-loader />
+                    } @loading (minimum 300ms) {
+                        <fd-ui-loader />
+                    }
                 } @else {
                     <p class="weight-history-page__empty-chart">
                         {{ 'WEIGHT_HISTORY.NO_DATA_FOR_CHART' | translate }}
@@ -42,53 +48,57 @@
             }
         </fd-ui-card>
 
-        <fd-ui-card class="weight-history-page__card weight-history-page__card--bmi" [title]="'WEIGHT_HISTORY.BMI_CARD_TITLE' | translate">
-            @if (bmiValue() !== null) {
-                @if (bmiStatusInfo(); as bmiInfo) {
-                    <div class="weight-history-page__bmi-top">
-                        <p class="weight-history-page__bmi-note">
-                            {{ 'WEIGHT_HISTORY.BMI_NOTE' | translate }}
-                        </p>
-                        <div class="weight-history-page__bmi-scale">
-                            <div class="weight-history-page__bmi-segments">
-                                @for (segment of bmiSegments; track segment.labelKey) {
-                                    <div
-                                        class="weight-history-page__bmi-segment"
-                                        [ngClass]="segment.class"
-                                        [style.width]="getBmiSegmentWidth(segment)"
-                                    >
-                                        <span>{{ segment.labelKey | translate }}</span>
-                                    </div>
-                                }
-                            </div>
-                            <div class="weight-history-page__bmi-pointer" [style.left]="bmiPointerPosition()">
-                                <div class="weight-history-page__bmi-pointer-dot"></div>
-                                <span>{{ bmiValue() }}</span>
+        @defer (on viewport) {
+            <fd-ui-card class="weight-history-page__card weight-history-page__card--bmi" [title]="'WEIGHT_HISTORY.BMI_CARD_TITLE' | translate">
+                @if (bmiValue() !== null) {
+                    @if (bmiStatusInfo(); as bmiInfo) {
+                        <div class="weight-history-page__bmi-top">
+                            <p class="weight-history-page__bmi-note">
+                                {{ 'WEIGHT_HISTORY.BMI_NOTE' | translate }}
+                            </p>
+                            <div class="weight-history-page__bmi-scale">
+                                <div class="weight-history-page__bmi-segments">
+                                    @for (segment of bmiSegments; track segment.labelKey) {
+                                        <div
+                                            class="weight-history-page__bmi-segment"
+                                            [ngClass]="segment.class"
+                                            [style.width]="getBmiSegmentWidth(segment)"
+                                        >
+                                            <span>{{ segment.labelKey | translate }}</span>
+                                        </div>
+                                    }
+                                </div>
+                                <div class="weight-history-page__bmi-pointer" [style.left]="bmiPointerPosition()">
+                                    <div class="weight-history-page__bmi-pointer-dot"></div>
+                                    <span>{{ bmiValue() }}</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="weight-history-page__bmi-bottom">
-                        <div class="weight-history-page__bmi-footer">
-                            <div class="weight-history-page__bmi-value">
-                                {{ 'WEIGHT_HISTORY.BMI_CURRENT' | translate }}:
-                                <strong>{{ bmiValue() }}</strong>
+                        <div class="weight-history-page__bmi-bottom">
+                            <div class="weight-history-page__bmi-footer">
+                                <div class="weight-history-page__bmi-value">
+                                    {{ 'WEIGHT_HISTORY.BMI_CURRENT' | translate }}:
+                                    <strong>{{ bmiValue() }}</strong>
+                                </div>
+                                <div class="weight-history-page__bmi-status" [ngClass]="bmiInfo.class">
+                                    {{ bmiInfo.labelKey | translate }}
+                                </div>
                             </div>
-                            <div class="weight-history-page__bmi-status" [ngClass]="bmiInfo.class">
-                                {{ bmiInfo.labelKey | translate }}
-                            </div>
+                            <p class="weight-history-page__bmi-description">
+                                {{ bmiInfo.descriptionKey | translate }}
+                            </p>
                         </div>
-                        <p class="weight-history-page__bmi-description">
-                            {{ bmiInfo.descriptionKey | translate }}
-                        </p>
-                    </div>
+                    }
+                } @else {
+                    <p class="weight-history-page__empty">
+                        {{ 'WEIGHT_HISTORY.BMI_NO_DATA' | translate }}
+                    </p>
                 }
-            } @else {
-                <p class="weight-history-page__empty">
-                    {{ 'WEIGHT_HISTORY.BMI_NO_DATA' | translate }}
-                </p>
-            }
-        </fd-ui-card>
+            </fd-ui-card>
+        } @placeholder {
+            <div style="height: 200px"></div>
+        }
 
         <div class="weight-history-page__content weight-history-page__content--form">
             <fd-ui-card class="weight-history-page__card weight-history-page__card--form" [title]="'WEIGHT_HISTORY.ADD_ENTRY_TITLE' | translate">
@@ -157,54 +167,58 @@
             </fd-ui-card>
         </div>
 
-        <div class="weight-history-page__content weight-history-page__content--full">
-            <fd-ui-card class="weight-history-page__card weight-history-page__card--entries" [title]="'WEIGHT_HISTORY.HISTORY_TITLE' | translate">
-                @if (isLoading()) {
-                    <div class="weight-history-page__loader">
-                        {{ 'WEIGHT_HISTORY.LOADING' | translate }}
-                    </div>
-                } @else {
-                    @if (entriesDescending().length === 0) {
-                        <div class="weight-history-page__empty">
-                            {{ 'WEIGHT_HISTORY.NO_ENTRIES' | translate }}
+        @defer (on viewport) {
+            <div class="weight-history-page__content weight-history-page__content--full">
+                <fd-ui-card class="weight-history-page__card weight-history-page__card--entries" [title]="'WEIGHT_HISTORY.HISTORY_TITLE' | translate">
+                    @if (isLoading()) {
+                        <div class="weight-history-page__loader">
+                            {{ 'WEIGHT_HISTORY.LOADING' | translate }}
                         </div>
                     } @else {
-                        <div class="weight-history-page__entries">
-                            @for (entry of entriesDescending(); track entry.id) {
-                                <div class="weight-history-page__entry">
-                                    <div class="weight-history-page__entry-date">
-                                        {{ entry.date | date:'dd.MM.yyyy' }}
+                        @if (entriesDescending().length === 0) {
+                            <div class="weight-history-page__empty">
+                                {{ 'WEIGHT_HISTORY.NO_ENTRIES' | translate }}
+                            </div>
+                        } @else {
+                            <div class="weight-history-page__entries">
+                                @for (entry of entriesDescending(); track entry.id) {
+                                    <div class="weight-history-page__entry">
+                                        <div class="weight-history-page__entry-date">
+                                            {{ entry.date | date:'dd.MM.yyyy' }}
+                                        </div>
+                                        <div class="weight-history-page__entry-weight">
+                                            {{ entry.weight | number: '1.0-2' }}
+                                            {{ 'DASHBOARD.KG' | translate }}
+                                        </div>
+                                        <div class="weight-history-page__entry-actions">
+                                            <fd-ui-button
+                                                type="button"
+                                                fill="text"
+                                                variant="secondary"
+                                                icon="edit"
+                                                (click)="startEdit(entry)"
+                                            >
+                                                {{ 'WEIGHT_HISTORY.EDIT' | translate }}
+                                            </fd-ui-button>
+                                            <fd-ui-button
+                                                type="button"
+                                                fill="text"
+                                                variant="danger"
+                                                icon="delete"
+                                                (click)="deleteEntry(entry)"
+                                            >
+                                                {{ 'WEIGHT_HISTORY.DELETE' | translate }}
+                                            </fd-ui-button>
+                                        </div>
                                     </div>
-                                    <div class="weight-history-page__entry-weight">
-                                        {{ entry.weight | number: '1.0-2' }}
-                                        {{ 'DASHBOARD.KG' | translate }}
-                                    </div>
-                                    <div class="weight-history-page__entry-actions">
-                                        <fd-ui-button
-                                            type="button"
-                                            fill="text"
-                                            variant="secondary"
-                                            icon="edit"
-                                            (click)="startEdit(entry)"
-                                        >
-                                            {{ 'WEIGHT_HISTORY.EDIT' | translate }}
-                                        </fd-ui-button>
-                                        <fd-ui-button
-                                            type="button"
-                                            fill="text"
-                                            variant="danger"
-                                            icon="delete"
-                                            (click)="deleteEntry(entry)"
-                                        >
-                                            {{ 'WEIGHT_HISTORY.DELETE' | translate }}
-                                        </fd-ui-button>
-                                    </div>
-                                </div>
-                            }
-                        </div>
+                                }
+                            </div>
+                        }
                     }
-                }
-            </fd-ui-card>
-        </div>
+                </fd-ui-card>
+            </div>
+        } @placeholder {
+            <div style="height: 200px"></div>
+        }
     </fd-page-body>
 </div>

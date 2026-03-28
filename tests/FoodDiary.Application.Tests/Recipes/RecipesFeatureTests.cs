@@ -3,6 +3,7 @@ using FoodDiary.Application.Images.Common;
 using FoodDiary.Application.Recipes.Commands.CreateRecipe;
 using FoodDiary.Application.Recipes.Commands.DeleteRecipe;
 using FoodDiary.Application.Recipes.Common;
+using FoodDiary.Application.Recipes.Queries.GetRecipeById;
 using FoodDiary.Application.Recipes.Queries.GetRecentRecipes;
 using FoodDiary.Application.Recipes.Queries.GetRecipesWithRecent;
 using FoodDiary.Domain.Entities.Recipes;
@@ -57,6 +58,21 @@ public class RecipesFeatureTests {
     }
 
     [Fact]
+    public async Task DeleteRecipeCommandHandler_WithEmptyRecipeId_ReturnsValidationFailure() {
+        var handler = new DeleteRecipeCommandHandler(
+            new SingleRecipeRepository(Recipe.Create(UserId.New(), "Soup", servings: 2)),
+            new RecordingCleanupService());
+
+        var result = await handler.Handle(
+            new DeleteRecipeCommand(Guid.NewGuid(), Guid.Empty),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("RecipeId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
     public async Task CreateRecipeCommandHandler_WhenManualNutritionMissing_ReturnsValidationFailure() {
         var userId = UserId.New();
         var repository = new SingleRecipeRepositoryForCreate();
@@ -88,6 +104,19 @@ public class RecipesFeatureTests {
         Assert.True(result.IsFailure);
         Assert.Equal("Validation.Required", result.Error.Code);
         Assert.Contains("calories", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task GetRecipeByIdQueryHandler_WithEmptyRecipeId_ReturnsValidationFailure() {
+        var handler = new GetRecipeByIdQueryHandler(new SingleRecipeRepositoryForCreate());
+
+        var result = await handler.Handle(
+            new GetRecipeByIdQuery(Guid.NewGuid(), Guid.Empty, false),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("RecipeId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
 
     [Fact]

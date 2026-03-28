@@ -1,36 +1,44 @@
-﻿@use 'variables' as variables;
+@use 'variables' as variables;
 
-.scanner-popup__scanner-wrapper {
+.barcode-scanner {
     position: relative;
     width: 100%;
-    height: 100%;
-    background: #D9D9D9;
+    min-height: 300px;
+    background: #000;
 }
 
-.scanner-popup__description {
-    font-size: variables.$gap-l;
-}
-
-.scanner-popup__loader-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
+.barcode-scanner__video {
+    display: block;
     width: 100%;
-    height: 100%;
+    height: auto;
+}
+
+.barcode-scanner__video--hidden {
+    display: none;
+}
+
+.barcode-scanner__message {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background: rgba(255, 255, 255, 0.8);
-    z-index: 10;
+    padding: variables.$gap-l;
+    gap: variables.$gap-m;
+    background: #fff;
+    text-align: center;
+
+    p {
+        margin: 0;
+        font-size: variables.$font-size-main;
+        color: #a94442;
+    }
 }
 
-.scanner-popup__loader-overlay p {
-    margin-top: variables.$gap-xs;
-    font-size: variables.$font-size-main;
+.barcode-scanner__loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: variables.$gap-l;
+    background: #fff;
 }
-
-.scanner-popup__loader-error {
-    color: #a94442;
-}
-

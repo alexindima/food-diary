@@ -17,6 +17,11 @@ public sealed class ConfirmPasswordResetCommandHandler(
     IAuthenticationTokenService authenticationTokenService)
     : ICommandHandler<ConfirmPasswordResetCommand, Result<AuthenticationModel>> {
     public async Task<Result<AuthenticationModel>> Handle(ConfirmPasswordResetCommand command, CancellationToken cancellationToken) {
+        if (command.UserId == Guid.Empty) {
+            return Result.Failure<AuthenticationModel>(
+                Errors.Validation.Invalid(nameof(command.UserId), "User id must not be empty."));
+        }
+
         var userId = new UserId(command.UserId);
         var user = await userRepository.GetByIdAsync(userId, cancellationToken);
         if (user is null) {

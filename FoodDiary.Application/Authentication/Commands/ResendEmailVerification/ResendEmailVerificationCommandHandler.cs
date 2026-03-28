@@ -30,6 +30,11 @@ public class ResendEmailVerificationCommandHandler : ICommandHandler<ResendEmail
     }
 
     public async Task<Result> Handle(ResendEmailVerificationCommand command, CancellationToken cancellationToken) {
+        if (command.UserId == Guid.Empty) {
+            return Result.Failure(
+                Errors.Validation.Invalid(nameof(command.UserId), "User id must not be empty."));
+        }
+
         var user = await _userRepository.GetByIdAsync(new UserId(command.UserId), cancellationToken);
         if (user is null) {
             return Result.Failure(Errors.User.NotFound());

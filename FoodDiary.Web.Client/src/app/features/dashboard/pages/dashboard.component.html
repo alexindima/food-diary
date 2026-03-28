@@ -151,15 +151,21 @@
                             (click)="toggleBlock('hydration')"
                             (keydown.enter)="toggleBlock('hydration')"
                         >
-                            <fd-hydration-card
-                                class="dashboard__card dashboard__card--hydration"
-                                [total]="hydration()?.totalMl ?? 0"
-                                [goal]="hydration()?.goalMl ?? null"
-                                [isLoading]="isHydrationLoading()"
-                                [canAdd]="isTodaySelected()"
-                                (addClick)="addHydration($event)"
-                                (goalAction)="openGoals()"
-                            />
+                            @defer (on viewport) {
+                                <fd-hydration-card
+                                    class="dashboard__card dashboard__card--hydration"
+                                    [total]="hydration()?.totalMl ?? 0"
+                                    [goal]="hydration()?.goalMl ?? null"
+                                    [isLoading]="isHydrationLoading()"
+                                    [canAdd]="isTodaySelected()"
+                                    (addClick)="addHydration($event)"
+                                    (goalAction)="openGoals()"
+                                />
+                            } @placeholder {
+                                <fd-ui-loader />
+                            } @loading (minimum 300ms) {
+                                <fd-ui-loader />
+                            }
                         </div>
                     }
                     @if (shouldRenderBlock('cycle')) {
@@ -172,14 +178,20 @@
                             (click)="toggleBlock('cycle')"
                             (keydown.enter)="toggleBlock('cycle')"
                         >
-                            <fd-cycle-summary-card
-                                class="dashboard__card dashboard__card--cycle"
-                                [startDate]="cycle()?.startDate ?? null"
-                                [predictions]="cycle()?.predictions ?? null"
-                                [referenceDate]="selectedDate()"
-                                [isLoading]="isCycleLoading()"
-                                (setupAction)="openCycleTracking()"
-                            />
+                            @defer (on viewport) {
+                                <fd-cycle-summary-card
+                                    class="dashboard__card dashboard__card--cycle"
+                                    [startDate]="cycle()?.startDate ?? null"
+                                    [predictions]="cycle()?.predictions ?? null"
+                                    [referenceDate]="selectedDate()"
+                                    [isLoading]="isCycleLoading()"
+                                    (setupAction)="openCycleTracking()"
+                                />
+                            } @placeholder {
+                                <fd-ui-loader />
+                            } @loading (minimum 300ms) {
+                                <fd-ui-loader />
+                            }
                         </div>
                     }
                     @if (shouldRenderBlock('weight')) {
@@ -192,14 +204,20 @@
                             (click)="toggleBlock('weight')"
                             (keydown.enter)="toggleBlock('weight')"
                         >
-                            <fd-weight-trend-card
-                                class="dashboard__card dashboard__card--weight-trend"
-                                [currentWeight]="weightTrendCurrent()"
-                                [change]="weightTrendChange()"
-                                [points]="weightTrendSeries()"
-                                [timeframeLabel]="'WEIGHT_TREND_CARD.LAST_7_DAYS' | translate"
-                                [isLoading]="isWeightTrendLoading()"
-                            />
+                            @defer (on viewport) {
+                                <fd-weight-trend-card
+                                    class="dashboard__card dashboard__card--weight-trend"
+                                    [currentWeight]="weightTrendCurrent()"
+                                    [change]="weightTrendChange()"
+                                    [points]="weightTrendSeries()"
+                                    [timeframeLabel]="'WEIGHT_TREND_CARD.LAST_7_DAYS' | translate"
+                                    [isLoading]="isWeightTrendLoading()"
+                                />
+                            } @placeholder {
+                                <fd-ui-loader />
+                            } @loading (minimum 300ms) {
+                                <fd-ui-loader />
+                            }
                         </div>
                     }
                     @if (shouldRenderBlock('waist')) {
@@ -212,19 +230,25 @@
                             (click)="toggleBlock('waist')"
                             (keydown.enter)="toggleBlock('waist')"
                         >
-                            <fd-weight-trend-card
-                                class="dashboard__card dashboard__card--waist-trend"
-                                [title]="'WAIST_CARD.TITLE'"
-                                [currentWeight]="waistTrendCurrent()"
-                                [change]="waistTrendChange()"
-                                [points]="waistTrendSeries()"
-                                [timeframeLabel]="'WEIGHT_TREND_CARD.LAST_7_DAYS' | translate"
-                                [unitKey]="'WAIST_CARD.CM'"
-                                [iconLabel]="'WS'"
-                                [accentColor]="'#0ea5e9'"
-                                [iconGradient]="'linear-gradient(135deg, #22c55e, #10b981)'"
-                                [isLoading]="isWaistTrendLoading()"
-                            />
+                            @defer (on viewport) {
+                                <fd-weight-trend-card
+                                    class="dashboard__card dashboard__card--waist-trend"
+                                    [title]="'WAIST_CARD.TITLE'"
+                                    [currentWeight]="waistTrendCurrent()"
+                                    [change]="waistTrendChange()"
+                                    [points]="waistTrendSeries()"
+                                    [timeframeLabel]="'WEIGHT_TREND_CARD.LAST_7_DAYS' | translate"
+                                    [unitKey]="'WAIST_CARD.CM'"
+                                    [iconLabel]="'WS'"
+                                    [accentColor]="'#0ea5e9'"
+                                    [iconGradient]="'linear-gradient(135deg, #22c55e, #10b981)'"
+                                    [isLoading]="isWaistTrendLoading()"
+                                />
+                            } @placeholder {
+                                <fd-ui-loader />
+                            } @loading (minimum 300ms) {
+                                <fd-ui-loader />
+                            }
                         </div>
                     }
                     @if (shouldRenderBlock('advice')) {
@@ -237,11 +261,17 @@
                             (click)="toggleBlock('advice')"
                             (keydown.enter)="toggleBlock('advice')"
                         >
-                            <fd-daily-advice-card
-                                class="dashboard__card dashboard__card--advice"
-                                [advice]="dailyAdvice()"
-                                [isLoading]="isAdviceLoading()"
-                            />
+                            @defer (on viewport) {
+                                <fd-daily-advice-card
+                                    class="dashboard__card dashboard__card--advice"
+                                    [advice]="dailyAdvice()"
+                                    [isLoading]="isAdviceLoading()"
+                                />
+                            } @placeholder {
+                                <fd-ui-loader />
+                            } @loading (minimum 300ms) {
+                                <fd-ui-loader />
+                            }
                         </div>
                     }
 

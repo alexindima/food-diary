@@ -14,6 +14,10 @@ public class GetRecipeByIdQueryHandler(IRecipeRepository recipeRepository)
             return Result.Failure<RecipeModel>(Errors.Authentication.InvalidToken);
         }
 
+        if (query.RecipeId == Guid.Empty) {
+            return Result.Failure<RecipeModel>(Errors.Validation.Invalid(nameof(query.RecipeId), "Recipe id must not be empty."));
+        }
+
         var userId = new UserId(query.UserId!.Value);
         var recipeId = new RecipeId(query.RecipeId);
 

@@ -15,6 +15,11 @@ public sealed class VerifyEmailCommandHandler(
     : ICommandHandler<VerifyEmailCommand, Result> {
     private readonly IEmailVerificationNotifier _emailVerificationNotifier = emailVerificationNotifier;
     public async Task<Result> Handle(VerifyEmailCommand command, CancellationToken cancellationToken) {
+        if (command.UserId == Guid.Empty) {
+            return Result.Failure(
+                Errors.Validation.Invalid(nameof(command.UserId), "User id must not be empty."));
+        }
+
         var userId = new UserId(command.UserId);
         var user = await userRepository.GetByIdAsync(userId, cancellationToken);
         if (user is null) {

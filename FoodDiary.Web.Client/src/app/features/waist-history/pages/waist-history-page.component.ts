@@ -18,6 +18,7 @@ import { BaseChartDirective } from 'ng2-charts';
 
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
+import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
 import { FdUiDateInputComponent } from 'fd-ui-kit/date-input/fd-ui-date-input.component';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiTab } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
@@ -49,6 +50,7 @@ import {
         FdUiButtonComponent,
         FdUiDateInputComponent,
         FdUiInputComponent,
+        FdUiLoaderComponent,
         PageHeaderComponent,
         PageBodyComponent,
         FdPageContainerDirective,

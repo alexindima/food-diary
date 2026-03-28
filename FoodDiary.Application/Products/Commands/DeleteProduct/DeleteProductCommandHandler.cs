@@ -15,6 +15,10 @@ public class DeleteProductCommandHandler(
             return Result.Failure(Errors.Authentication.InvalidToken);
         }
 
+        if (command.ProductId == Guid.Empty) {
+            return Result.Failure(Errors.Validation.Invalid(nameof(command.ProductId), "Product id must not be empty."));
+        }
+
         var userId = new UserId(command.UserId!.Value);
         var productId = new ProductId(command.ProductId);
 

@@ -68,7 +68,9 @@
       "Bash(ls -lhS dist/browser/*.js)",
       "Bash(node -e \":*)",
       "Bash(node -e \"const s = require\\(''./dist/stats.json''\\); console.log\\(Object.keys\\(s\\)\\); console.log\\(Object.keys\\(s\\).map\\(k => typeof s[k]\\).join\\('', ''\\)\\)\")",
-      "Bash(xargs ls:*)"
+      "Bash(xargs ls:*)",
+      "Bash(grep -E \"\\\\.\\(ts|html\\)$\")",
+      "Bash(xargs du:*)"
     ],
     "deny": [],
     "ask": []

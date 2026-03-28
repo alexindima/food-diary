@@ -15,6 +15,10 @@ public class DeleteRecipeCommandHandler(
             return Result.Failure(Errors.Authentication.InvalidToken);
         }
 
+        if (command.RecipeId == Guid.Empty) {
+            return Result.Failure(Errors.Validation.Invalid(nameof(command.RecipeId), "Recipe id must not be empty."));
+        }
+
         var userId = new UserId(command.UserId!.Value);
         var recipeId = new RecipeId(command.RecipeId);
 

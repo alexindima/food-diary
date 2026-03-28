@@ -17,7 +17,6 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormGroupControls } from '../../../../shared/lib/common.data';
 import { firstValueFrom } from 'rxjs';
-import { ZXingScannerModule } from '@zxing/ngx-scanner';
 import { BarcodeScannerComponent } from '../../../../components/shared/barcode-scanner/barcode-scanner.component';
 import { FdUiFormErrorComponent, FD_VALIDATION_ERRORS, FdValidationErrors } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
@@ -71,7 +70,6 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     imports: [
         ReactiveFormsModule,
         TranslatePipe,
-        ZXingScannerModule,
         FdUiInputComponent,
         FdUiTextareaComponent,
         FdUiSelectComponent,

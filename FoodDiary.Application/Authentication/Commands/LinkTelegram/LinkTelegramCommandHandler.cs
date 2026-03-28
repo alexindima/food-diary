@@ -20,6 +20,11 @@ public sealed class LinkTelegramCommandHandler : ICommandHandler<LinkTelegramCom
     }
 
     public async Task<Result<UserModel>> Handle(LinkTelegramCommand command, CancellationToken cancellationToken) {
+        if (command.UserId == Guid.Empty) {
+            return Result.Failure<UserModel>(
+                Errors.Validation.Invalid(nameof(command.UserId), "User id must not be empty."));
+        }
+
         var initDataResult = _telegramAuthValidator.ValidateInitData(command.InitData);
         if (!initDataResult.IsSuccess) {
             return Result.Failure<UserModel>(initDataResult.Error);

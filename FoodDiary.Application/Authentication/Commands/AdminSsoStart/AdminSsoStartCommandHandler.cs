@@ -11,6 +11,11 @@ public sealed class AdminSsoStartCommandHandler(IAdminSsoService adminSsoService
     public async Task<Result<AdminSsoStartModel>> Handle(
         AdminSsoStartCommand command,
         CancellationToken cancellationToken) {
+        if (command.UserId == Guid.Empty) {
+            return Result.Failure<AdminSsoStartModel>(
+                Errors.Validation.Invalid(nameof(command.UserId), "User id must not be empty."));
+        }
+
         var code = await adminSsoService.CreateCodeAsync(new UserId(command.UserId), cancellationToken);
         var response = new AdminSsoStartModel(code.Code, code.ExpiresAtUtc);
         return Result.Success(response);

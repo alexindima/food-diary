@@ -1497,7 +1497,8 @@
     "BARCODE_SCANNER": {
         "TITLE": "Scan the barcode",
         "CAMERA_INITIALIZING": "Initializing camera, please wait...",
-        "CAMERA_ERROR": "Camera initialization failed. Please check your camera settings."
+        "CAMERA_ERROR": "Camera initialization failed. Please check your camera settings.",
+        "UNSUPPORTED": "Barcode scanning is not supported in this browser. Please use Chrome or Edge."
     },
     "WEIGHT_CARD": {
         "TITLE": "Weight trend",

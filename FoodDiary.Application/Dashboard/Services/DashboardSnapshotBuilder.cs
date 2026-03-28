@@ -41,6 +41,11 @@ public class DashboardSnapshotBuilder(
     public async Task<Result<DashboardSnapshotModel>> BuildAsync(
         DashboardSnapshotRequest request,
         CancellationToken cancellationToken = default) {
+        if (request.UserId == Guid.Empty) {
+            return Result.Failure<DashboardSnapshotModel>(
+                Errors.Validation.Invalid(nameof(request.UserId), "User id must not be empty."));
+        }
+
         var dayStart = NormalizeToUtcDate(request.Date);
         var dayEnd = dayStart.AddDays(1).AddTicks(-1);
         var userId = new UserId(request.UserId);
