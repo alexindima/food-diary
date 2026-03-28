@@ -141,6 +141,46 @@
             },
             "test": {
               "builder": "@angular/build:unit-test"
+            },
+            "storybook": {
+              "builder": "@storybook/angular:start-storybook",
+              "options": {
+                "configDir": ".storybook",
+                "browserTarget": "fd-ui-kit:build",
+                "port": 6006,
+                "styles": [
+                  "src/styles/design-tokens.global.scss",
+                  "src/styles/material-theme.scss",
+                  "src/styles.scss"
+                ],
+                "stylePreprocessorOptions": {
+                  "includePaths": [
+                    "src/styles",
+                    "projects/fd-ui-kit/src/lib"
+                  ]
+                },
+                "compodoc": false
+              }
+            },
+            "build-storybook": {
+              "builder": "@storybook/angular:build-storybook",
+              "options": {
+                "configDir": ".storybook",
+                "browserTarget": "fd-ui-kit:build",
+                "outputDir": "dist-storybook",
+                "styles": [
+                  "src/styles/design-tokens.global.scss",
+                  "src/styles/material-theme.scss",
+                  "src/styles.scss"
+                ],
+                "stylePreprocessorOptions": {
+                  "includePaths": [
+                    "src/styles",
+                    "projects/fd-ui-kit/src/lib"
+                  ]
+                },
+                "compodoc": false
+              }
             }
           }
         },

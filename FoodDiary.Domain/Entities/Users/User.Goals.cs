@@ -4,7 +4,10 @@ namespace FoodDiary.Domain.Entities.Users;
 
 public sealed partial class User {
     public void UpdateAiTokenLimits(UserAiTokenLimitUpdate update) {
-        UpdateAiTokenLimits(update.InputLimit, update.OutputLimit);
+        EnsureNotDeleted();
+        if (ApplyAiTokenLimitChanges(update)) {
+            SetModified();
+        }
     }
 
     public void UpdateGoals(
@@ -58,31 +61,7 @@ public sealed partial class User {
 
     public void UpdateAiTokenLimits(long? inputLimit, long? outputLimit) {
         EnsureNotDeleted();
-        var changed = false;
-
-        if (inputLimit.HasValue) {
-            if (inputLimit.Value < 0) {
-                throw new ArgumentOutOfRangeException(nameof(inputLimit), "Input limit must be non-negative.");
-            }
-
-            if (AiInputTokenLimit != inputLimit.Value) {
-                AiInputTokenLimit = inputLimit.Value;
-                changed = true;
-            }
-        }
-
-        if (outputLimit.HasValue) {
-            if (outputLimit.Value < 0) {
-                throw new ArgumentOutOfRangeException(nameof(outputLimit), "Output limit must be non-negative.");
-            }
-
-            if (AiOutputTokenLimit != outputLimit.Value) {
-                AiOutputTokenLimit = outputLimit.Value;
-                changed = true;
-            }
-        }
-
-        if (changed) {
+        if (ApplyAiTokenLimitChanges(new UserAiTokenLimitUpdate(inputLimit, outputLimit))) {
             SetModified();
         }
     }
@@ -99,5 +78,33 @@ public sealed partial class User {
         EnsureDesiredWaist(desiredWaist, nameof(desiredWaist));
         ApplyGoalState(GetGoalState() with { DesiredWaist = desiredWaist });
         SetModified();
+    }
+
+    private bool ApplyAiTokenLimitChanges(UserAiTokenLimitUpdate update) {
+        var changed = false;
+
+        if (update.InputLimit.HasValue) {
+            if (update.InputLimit.Value < 0) {
+                throw new ArgumentOutOfRangeException(nameof(update.InputLimit), "Input limit must be non-negative.");
+            }
+
+            if (AiInputTokenLimit != update.InputLimit.Value) {
+                AiInputTokenLimit = update.InputLimit.Value;
+                changed = true;
+            }
+        }
+
+        if (update.OutputLimit.HasValue) {
+            if (update.OutputLimit.Value < 0) {
+                throw new ArgumentOutOfRangeException(nameof(update.OutputLimit), "Output limit must be non-negative.");
+            }
+
+            if (AiOutputTokenLimit != update.OutputLimit.Value) {
+                AiOutputTokenLimit = update.OutputLimit.Value;
+                changed = true;
+            }
+        }
+
+        return changed;
     }
 }

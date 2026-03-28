@@ -4,10 +4,76 @@ using FoodDiary.Application.Users.Common;
 using FoodDiary.JobManager.Services;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
+using System.Diagnostics.Metrics;
 
 namespace FoodDiary.JobManager.Tests;
 
 public sealed class JobsTests {
+    private const string JobManagerMeterName = "FoodDiary.JobManager";
+
+    [Fact]
+    public async Task ImageCleanupJob_RecordsSuccessMetrics() {
+        long? executionCount = null;
+        string? outcome = null;
+        long? deletedItems = null;
+        double? duration = null;
+
+        using var listener = CreateJobManagerListener(
+            onExecution: (value, tags) => {
+                executionCount = value;
+                outcome = GetTagValue(tags, "fooddiary.job.outcome");
+            },
+            onDeletedItems: (value, _) => deletedItems = value,
+            onDuration: (value, _) => duration = value);
+
+        var cleanupService = new RecordingImageCleanupService([2, 0]);
+        var options = Options.Create(new ImageCleanupOptions { BatchSize = 2, OlderThanHours = 12 });
+        var now = new DateTime(2026, 2, 23, 12, 0, 0, DateTimeKind.Utc);
+        var job = new ImageCleanupJob(
+            cleanupService,
+            options,
+            new FixedDateTimeProvider(now),
+            NullLogger<ImageCleanupJob>.Instance);
+
+        await job.Execute();
+
+        Assert.Equal(1, executionCount);
+        Assert.Equal("success", outcome);
+        Assert.Equal(2, deletedItems);
+        Assert.NotNull(duration);
+        Assert.True(duration >= 0);
+    }
+
+    [Fact]
+    public async Task UserCleanupJob_RecordsFailureMetric_AndRethrows() {
+        long? executionCount = null;
+        string? outcome = null;
+        double? duration = null;
+
+        using var listener = CreateJobManagerListener(
+            onExecution: (value, tags) => {
+                executionCount = value;
+                outcome = GetTagValue(tags, "fooddiary.job.outcome");
+            },
+            onDeletedItems: null,
+            onDuration: (value, _) => duration = value);
+
+        var cleanupService = new ThrowingUserCleanupService();
+        var options = Options.Create(new UserCleanupOptions { BatchSize = 10, RetentionDays = 30 });
+        var now = new DateTime(2026, 2, 23, 12, 0, 0, DateTimeKind.Utc);
+        var job = new UserCleanupJob(
+            cleanupService,
+            options,
+            new FixedDateTimeProvider(now),
+            NullLogger<UserCleanupJob>.Instance);
+
+        await Assert.ThrowsAsync<InvalidOperationException>(() => job.Execute());
+        Assert.Equal(1, executionCount);
+        Assert.Equal("failure", outcome);
+        Assert.NotNull(duration);
+        Assert.True(duration >= 0);
+    }
+
     [Fact]
     public async Task ImageCleanupJob_WithNonPositiveBatchSize_UsesOne() {
         var cleanupService = new RecordingImageCleanupService([1, 0]);
@@ -110,6 +176,46 @@ public sealed class JobsTests {
         public DateTime UtcNow { get; } = utcNow;
     }
 
+    private static MeterListener CreateJobManagerListener(
+        Action<long, ReadOnlySpan<KeyValuePair<string, object?>>>? onExecution,
+        Action<long, ReadOnlySpan<KeyValuePair<string, object?>>>? onDeletedItems,
+        Action<double, ReadOnlySpan<KeyValuePair<string, object?>>>? onDuration) {
+        var listener = new MeterListener();
+        listener.InstrumentPublished = (instrument, meterListener) => {
+            if (instrument.Meter.Name != JobManagerMeterName) {
+                return;
+            }
+
+            if (instrument.Name is "fooddiary.job.execution.events" or "fooddiary.job.deleted_items" or "fooddiary.job.execution.duration") {
+                meterListener.EnableMeasurementEvents(instrument);
+            }
+        };
+        listener.SetMeasurementEventCallback<long>((instrument, value, tags, _) => {
+            if (instrument.Name == "fooddiary.job.execution.events") {
+                onExecution?.Invoke(value, tags);
+            } else if (instrument.Name == "fooddiary.job.deleted_items") {
+                onDeletedItems?.Invoke(value, tags);
+            }
+        });
+        listener.SetMeasurementEventCallback<double>((instrument, value, tags, _) => {
+            if (instrument.Name == "fooddiary.job.execution.duration") {
+                onDuration?.Invoke(value, tags);
+            }
+        });
+        listener.Start();
+        return listener;
+    }
+
+    private static string? GetTagValue(ReadOnlySpan<KeyValuePair<string, object?>> tags, string key) {
+        foreach (var tag in tags) {
+            if (string.Equals(tag.Key, key, StringComparison.Ordinal)) {
+                return tag.Value?.ToString();
+            }
+        }
+
+        return null;
+    }
+
     private sealed class RecordingImageCleanupService(IEnumerable<int> results) : IImageAssetCleanupService {
         private readonly Queue<int> _results = new(results);
 
@@ -145,5 +251,14 @@ public sealed class JobsTests {
             var value = _results.Count > 0 ? _results.Dequeue() : 0;
             return Task.FromResult(value);
         }
+    }
+
+    private sealed class ThrowingUserCleanupService : IUserCleanupService {
+        public Task<int> CleanupDeletedUsersAsync(
+            DateTime olderThanUtc,
+            int batchSize,
+            Guid? reassignUserId,
+            CancellationToken cancellationToken = default) =>
+            throw new InvalidOperationException("cleanup failed");
     }
 }

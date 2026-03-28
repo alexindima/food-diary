@@ -468,6 +468,14 @@ public class UserInvariantTests {
     }
 
     [Fact]
+    public void UpdateAdminAccount_WithNegativeOutputLimit_Throws() {
+        var user = User.Create("test@example.com", "hash");
+
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+            user.UpdateAdminAccount(new UserAdminAccountUpdate(AiOutputTokenLimit: -1)));
+    }
+
+    [Fact]
     public void ApplyAdminUpdate_WithRolesAndAccountChanges_UpdatesAdminControlledState() {
         var user = User.Create("test@example.com", "hash");
         var adminRole = Role.Create("Admin");

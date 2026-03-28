@@ -30,11 +30,17 @@ This document captures the current backend security baseline for `B09`.
 - For anonymous callers, the limiter uses `RemoteIpAddress`.
 - Raw `X-Forwarded-For` is not trusted directly for rate limiting, because client-controlled forwarded headers can be used to evade throttling if proxy trust is not configured explicitly.
 - Trusted reverse proxies and networks must be configured through `ForwardedHeaders` host options before forwarded client IPs are honored.
+- The backend test suite now includes smoke coverage for both sides of this boundary:
+  - spoofed forwarded headers are ignored by rate-limit partitioning
+  - forwarded client IP/proto are only applied when the immediate proxy is explicitly trusted
 
 ## Dependency Posture
 
-- `dotnet list package --vulnerable --include-transitive` was run for `FoodDiary.Web.Api` and `FoodDiary.Infrastructure`.
-- No currently known vulnerable NuGet packages were reported from the configured sources during this pass.
+- Backend CI now runs `dotnet list package --vulnerable --include-transitive` for:
+  - `FoodDiary.Web.Api`
+  - `FoodDiary.Infrastructure`
+  - `FoodDiary.Application`
+- Local verification on the current baseline reports no known vulnerable NuGet packages from the configured sources.
 
 ## Upload Flow Expectations
 
@@ -165,5 +171,5 @@ Operational note:
 
 ## Remaining B09 Follow-Ups
 
-- Review dependency versions and vulnerability posture as a dedicated pass.
+- Keep dependency audit green in CI and review any new advisory before merge.
 - Add content-scanning or stricter post-upload validation if untrusted public image ingestion expands.

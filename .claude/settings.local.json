@@ -84,7 +84,14 @@
       "Bash(find /c/Users/alexi/OneDrive/Документы/GitHub/food-diary/FoodDiary.Web.Client/src/app -name \"*.component.ts\" -exec wc -l {} +)",
       "Bash(grep -r \"standalone: false\\\\|changeDetection: ChangeDetectionStrategy.Default\\\\|@Input\\(\\)\\\\|@Output\\(\\)\\\\|@ViewChild\\\\|@ContentChild\\\\|@NgModule\" C:UsersalexiOneDriveДокументыGitHubfood-diaryFoodDiary.Web.Clientsrcapp --include=*.ts --exclude=*.spec.ts)",
       "Bash(grep -r anyb C:UsersalexiOneDriveДокументыGitHubfood-diaryFoodDiary.Web.Clientsrcapp --include=*.ts --exclude=*.spec.ts)",
-      "Bash(grep -r banyb C:UsersalexiOneDriveДокументыGitHubfood-diaryFoodDiary.Web.Clientsrcapp --include=*.ts --exclude=*.spec.ts)"
+      "Bash(grep -r banyb C:UsersalexiOneDriveДокументыGitHubfood-diaryFoodDiary.Web.Clientsrcapp --include=*.ts --exclude=*.spec.ts)",
+      "Bash(npx storybook@latest init --type angular --skip-install --no-dev)",
+      "Bash(npx storybook:*)",
+      "Bash(node -e \"const p=require\\(''./package.json''\\); Object.keys\\(p.devDependencies\\).filter\\(k=>k.includes\\(''storybook''\\)\\).forEach\\(k=>console.log\\(k, p.devDependencies[k]\\)\\)\")",
+      "Bash(npm view:*)",
+      "Bash(node -e \"const fs=require\\(''fs''\\); const c=fs.readFileSync\\(''node_modules/@storybook/angular/dist/server/framework-preset-angular-cli.js'',''utf8''\\); const m=c.match\\(/checkForLegacyBuildOptions[\\\\s\\\\S]{0,800}/\\); console.log\\(m?m[0].substring\\(0,800\\):''not found''\\)\")",
+      "Bash(node -e \"const fs=require\\(''fs''\\); const c=fs.readFileSync\\(''node_modules/@storybook/angular/dist/server/framework-preset-angular-cli.js'',''utf8''\\); const idx=c.indexOf\\(''function checkForLegacyBuildOptions''\\); const chunk=c.substring\\(idx, idx+600\\); console.log\\(chunk\\)\")",
+      "Bash(npx eslint:*)"
     ],
     "deny": [],
     "ask": []

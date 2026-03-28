@@ -1,0 +1,40 @@
+[01:13:05.733] [INFO] storybook v10.3.3
+[01:13:07.010] [DEBUG] Getting package.json info for C:/Users/alexi/OneDrive/Документы/GitHub/food-diary/FoodDiary.Web.Client/package.json...
+[01:13:07.013] [WARN] You are currently using Storybook [1m10.3.3[22m but you have packages which are incompatible with it:
+
+- @storybook/addon-essentials@8.6.14 which depends on 8.6.14
+ Repo: https://github.com/storybookjs/storybook/tree/next/code/addons/essentials
+- @storybook/addon-interactions@8.6.14 which depends on 8.6.14
+ Repo: https://github.com/storybookjs/storybook/tree/next/code/addons/interactions
+- @storybook/blocks@8.6.14 which depends on ^8.6.14
+ Repo: https://github.com/storybookjs/storybook/tree/next/code/lib/blocks
+- @storybook/test@8.6.15 which depends on 8.6.15
+ Repo: https://github.com/storybookjs/storybook/tree/next/code/lib/test
+
+Please consider updating your packages or contacting the maintainers for compatibility details.
+
+For more details on compatibility guidance, see:
+https://github.com/storybookjs/storybook/issues/32836
+[01:13:07.675] [DEBUG] Serving static files from [36mFoodDiary.Web.Client/assets[39m at [36m/[39m
+[01:13:07.677] [INFO] Starting...
+[01:13:08.110] [ERROR] [38;2;241;97;97mSB_CORE-SERVER_0004 (NoMatchingExportError): There was an exports mismatch error when trying to build Storybook.
+Please check whether the versions of your Storybook packages match whenever possible, as this might be the cause.
+
+Problematic example:
+{ "@storybook/react": "7.5.3", "@storybook/react-vite": "7.4.5", "storybook": "7.3.0" }
+
+Correct example:
+{ "@storybook/react": "7.5.3", "@storybook/react-vite": "7.5.3", "storybook": "7.5.3" }
+
+Please run `npx storybook doctor` for guidance on how to fix this issue.
+
+More info: 
+[39m
+    at buildOrThrow (file:///C:/Users/alexi/OneDrive/%D0%94%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D1%8B/GitHub/food-diary/FoodDiary.Web.Client/node_modules/storybook/dist/core-server/index.js:4513:9)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async buildDevStandalone (file:///C:/Users/alexi/OneDrive/%D0%94%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D1%8B/GitHub/food-diary/FoodDiary.Web.Client/node_modules/storybook/dist/core-server/index.js:8029:41)
+    at async withTelemetry (file:///C:/Users/alexi/OneDrive/%D0%94%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D1%8B/GitHub/food-diary/FoodDiary.Web.Client/node_modules/storybook/dist/_node-chunks/chunk-6PADJQ3N.js:218:12)
+    at async dev (file:///C:/Users/alexi/OneDrive/%D0%94%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D1%8B/GitHub/food-diary/FoodDiary.Web.Client/node_modules/storybook/dist/bin/core.js:2736:3)
+    at async _Command.<anonymous> (file:///C:/Users/alexi/OneDrive/%D0%94%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D1%8B/GitHub/food-diary/FoodDiary.Web.Client/node_modules/storybook/dist/bin/core.js:2806:92)
+[01:13:08.113] [WARN] Broken build, fix the error above.
+You may need to refresh the browser.

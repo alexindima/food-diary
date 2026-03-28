@@ -1,4 +1,5 @@
 using FoodDiary.Application.Images.Common;
+using FoodDiary.Application.Authentication.Common;
 using FoodDiary.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -16,6 +17,9 @@ namespace FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
 public sealed class PostgresApiWebApplicationFactory : WebApplicationFactory<Program>, IAsyncLifetime {
     private PostgreSqlContainer? _container;
     private string? _connectionString;
+    private readonly TestEmailSender _testEmailSender = new();
+
+    public TestEmailSender EmailSender => _testEmailSender;
 
     public async Task InitializeAsync() {
         _container = new PostgreSqlBuilder("postgres:17-alpine")
@@ -35,6 +39,7 @@ public sealed class PostgresApiWebApplicationFactory : WebApplicationFactory<Pro
     }
 
     public new async Task DisposeAsync() {
+        _testEmailSender.Clear();
         base.Dispose();
         if (_container is not null) {
             await _container.DisposeAsync().AsTask();
@@ -68,10 +73,14 @@ public sealed class PostgresApiWebApplicationFactory : WebApplicationFactory<Pro
             services.RemoveAll<FoodDiaryDbContext>();
             services.RemoveAll<IDbContextOptionsConfiguration<FoodDiaryDbContext>>();
             services.RemoveAll<IImageStorageService>();
+            services.RemoveAll<IEmailSender>();
+            services.RemoveAll<TestEmailSender>();
 
             services.AddDbContext<FoodDiaryDbContext>(options =>
                 options.UseNpgsql(GetRequiredConnectionString()));
             services.AddSingleton<IImageStorageService, TestImageStorageService>();
+            services.AddSingleton(_testEmailSender);
+            services.AddSingleton<IEmailSender>(_testEmailSender);
         });
     }
 

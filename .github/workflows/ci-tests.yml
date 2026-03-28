@@ -99,6 +99,193 @@ jobs:
           path: ${{ runner.temp }}/ci-test-logs/
           if-no-files-found: ignore
 
+  backend-postgres-critical-flows:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Initialize PostgreSQL critical-flow diagnostics
+        shell: bash
+        run: |
+          mkdir -p "${RUNNER_TEMP}/postgres-critical-flow-logs"
+          : > "${RUNNER_TEMP}/postgres-critical-flow-logs/failure-meta.env"
+
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Verify Docker availability
+        shell: bash
+        run: |
+          set -euo pipefail
+          log_file="${RUNNER_TEMP}/postgres-critical-flow-logs/docker-version.log"
+          set +e
+          docker version 2>&1 | tee "$log_file"
+          status=${PIPESTATUS[0]}
+          set -e
+          if [ "$status" -ne 0 ]; then
+            {
+              echo "FAILED_AREA=dotnet"
+              echo "FAILED_TARGET=Verify Docker availability for PostgreSQL critical flows"
+              echo "FAILED_LOG_FILE_NAME=$(basename "$log_file")"
+            } > "${RUNNER_TEMP}/postgres-critical-flow-logs/failure-meta.env"
+            exit "$status"
+          fi
+
+      - name: Restore
+        shell: bash
+        run: |
+          set -euo pipefail
+          log_file="${RUNNER_TEMP}/postgres-critical-flow-logs/restore.log"
+          set +e
+          dotnet restore FoodDiary.slnx 2>&1 | tee "$log_file"
+          status=${PIPESTATUS[0]}
+          set -e
+          if [ "$status" -ne 0 ]; then
+            {
+              echo "FAILED_AREA=dotnet"
+              echo "FAILED_TARGET=Restore PostgreSQL critical flows"
+              echo "FAILED_LOG_FILE_NAME=$(basename "$log_file")"
+            } > "${RUNNER_TEMP}/postgres-critical-flow-logs/failure-meta.env"
+            exit "$status"
+          fi
+
+      - name: Run PostgreSQL API critical flows
+        shell: bash
+        run: |
+          set -euo pipefail
+          log_file="${RUNNER_TEMP}/postgres-critical-flow-logs/web-api-critical-flows.log"
+          set +e
+          dotnet test tests/FoodDiary.Web.Api.IntegrationTests/FoodDiary.Web.Api.IntegrationTests.csproj \
+            --configuration Release \
+            --no-restore \
+            --filter "FullyQualifiedName~PostgresCriticalApiFlowTests|FullyQualifiedName~PostgresUserFlowTests" \
+            2>&1 | tee "$log_file"
+          status=${PIPESTATUS[0]}
+          set -e
+          if [ "$status" -ne 0 ]; then
+            {
+              echo "FAILED_AREA=dotnet"
+              echo "FAILED_TARGET=Run PostgreSQL API critical flows"
+              echo "FAILED_LOG_FILE_NAME=$(basename "$log_file")"
+            } > "${RUNNER_TEMP}/postgres-critical-flow-logs/failure-meta.env"
+            exit "$status"
+          fi
+
+      - name: Run PostgreSQL infrastructure critical flows
+        shell: bash
+        run: |
+          set -euo pipefail
+          log_file="${RUNNER_TEMP}/postgres-critical-flow-logs/infrastructure-critical-flows.log"
+          set +e
+          dotnet test tests/FoodDiary.Infrastructure.Tests/FoodDiary.Infrastructure.Tests.csproj \
+            --configuration Release \
+            --no-restore \
+            --filter "FullyQualifiedName~UserRepositoryIntegrationTests|FullyQualifiedName~UserCleanupServiceIntegrationTests" \
+            2>&1 | tee "$log_file"
+          status=${PIPESTATUS[0]}
+          set -e
+          if [ "$status" -ne 0 ]; then
+            {
+              echo "FAILED_AREA=dotnet"
+              echo "FAILED_TARGET=Run PostgreSQL infrastructure critical flows"
+              echo "FAILED_LOG_FILE_NAME=$(basename "$log_file")"
+            } > "${RUNNER_TEMP}/postgres-critical-flow-logs/failure-meta.env"
+            exit "$status"
+          fi
+
+      - name: Upload PostgreSQL critical-flow failure logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ci-failure-logs-postgres-critical-flows
+          path: ${{ runner.temp }}/postgres-critical-flow-logs/
+          if-no-files-found: ignore
+
+  backend-dependency-audit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Initialize dependency audit diagnostics
+        shell: bash
+        run: |
+          mkdir -p "${RUNNER_TEMP}/dependency-audit-logs"
+          : > "${RUNNER_TEMP}/dependency-audit-logs/failure-meta.env"
+
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Restore
+        shell: bash
+        run: |
+          set -euo pipefail
+          log_file="${RUNNER_TEMP}/dependency-audit-logs/restore.log"
+          set +e
+          dotnet restore FoodDiary.slnx 2>&1 | tee "$log_file"
+          status=${PIPESTATUS[0]}
+          set -e
+          if [ "$status" -ne 0 ]; then
+            {
+              echo "FAILED_AREA=dotnet"
+              echo "FAILED_TARGET=Restore dependency audit"
+              echo "FAILED_LOG_FILE_NAME=$(basename "$log_file")"
+            } > "${RUNNER_TEMP}/dependency-audit-logs/failure-meta.env"
+            exit "$status"
+          fi
+
+      - name: Audit backend dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          projects=(
+            "FoodDiary.Web.Api/FoodDiary.Web.Api.csproj"
+            "FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj"
+            "FoodDiary.Application/FoodDiary.Application.csproj"
+          )
+
+          for project in "${projects[@]}"; do
+            safe_name="${project//\//_}"
+            safe_name="${safe_name//\\/_}"
+            log_file="${RUNNER_TEMP}/dependency-audit-logs/${safe_name}.log"
+            set +e
+            dotnet list "$project" package --vulnerable --include-transitive 2>&1 | tee "$log_file"
+            status=${PIPESTATUS[0]}
+            set -e
+            if [ "$status" -ne 0 ]; then
+              {
+                echo "FAILED_AREA=dotnet"
+                echo "FAILED_TARGET=Audit dependencies for $project"
+                echo "FAILED_LOG_FILE_NAME=$(basename "$log_file")"
+              } > "${RUNNER_TEMP}/dependency-audit-logs/failure-meta.env"
+              exit "$status"
+            fi
+
+            if grep -qE 'has the following vulnerable packages|severity:[[:space:]]*(Critical|High|Moderate|Low)' "$log_file"; then
+              {
+                echo "FAILED_AREA=dotnet"
+                echo "FAILED_TARGET=Vulnerable dependencies detected in $project"
+                echo "FAILED_LOG_FILE_NAME=$(basename "$log_file")"
+              } > "${RUNNER_TEMP}/dependency-audit-logs/failure-meta.env"
+              exit 1
+            fi
+          done
+
+      - name: Upload dependency audit failure logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ci-failure-logs-dependency-audit
+          path: ${{ runner.temp }}/dependency-audit-logs/
+          if-no-files-found: ignore
+
   frontend-checks:
     runs-on: ubuntu-latest
 
@@ -261,9 +448,11 @@ jobs:
           if-no-files-found: ignore
 
   notify-ci-failure:
-    if: always() && (needs.dotnet-tests.result == 'failure' || needs.frontend-checks.result == 'failure')
+    if: always() && (needs.dotnet-tests.result == 'failure' || needs.backend-postgres-critical-flows.result == 'failure' || needs.backend-dependency-audit.result == 'failure' || needs.frontend-checks.result == 'failure')
     needs:
       - dotnet-tests
+      - backend-postgres-critical-flows
+      - backend-dependency-audit
       - frontend-checks
     runs-on: ubuntu-latest
 
@@ -274,6 +463,22 @@ jobs:
         with:
           name: ci-failure-logs-dotnet
           path: ${{ runner.temp }}/ci-test-logs
+        continue-on-error: true
+
+      - name: Download PostgreSQL critical-flow failure logs
+        if: needs.backend-postgres-critical-flows.result == 'failure'
+        uses: actions/download-artifact@v4
+        with:
+          name: ci-failure-logs-postgres-critical-flows
+          path: ${{ runner.temp }}/postgres-critical-flow-logs
+        continue-on-error: true
+
+      - name: Download dependency audit failure logs
+        if: needs.backend-dependency-audit.result == 'failure'
+        uses: actions/download-artifact@v4
+        with:
+          name: ci-failure-logs-dependency-audit
+          path: ${{ runner.temp }}/dependency-audit-logs
         continue-on-error: true
 
       - name: Download frontend failure logs
@@ -307,6 +512,14 @@ jobs:
             META_FILE="${RUNNER_TEMP}/ci-test-logs/failure-meta.env"
           fi
 
+          if [ -z "${META_FILE}" ] && [ "${{ needs.backend-postgres-critical-flows.result }}" = "failure" ] && [ -f "${RUNNER_TEMP}/postgres-critical-flow-logs/failure-meta.env" ]; then
+            META_FILE="${RUNNER_TEMP}/postgres-critical-flow-logs/failure-meta.env"
+          fi
+
+          if [ -z "${META_FILE}" ] && [ "${{ needs.backend-dependency-audit.result }}" = "failure" ] && [ -f "${RUNNER_TEMP}/dependency-audit-logs/failure-meta.env" ]; then
+            META_FILE="${RUNNER_TEMP}/dependency-audit-logs/failure-meta.env"
+          fi
+
           if [ -z "${META_FILE}" ] && [ "${{ needs.frontend-checks.result }}" = "failure" ] && [ -f "${RUNNER_TEMP}/frontend-checks-logs/failure-meta.env" ]; then
             META_FILE="${RUNNER_TEMP}/frontend-checks-logs/failure-meta.env"
           fi
@@ -328,9 +541,15 @@ jobs:
 
           if [ -n "${FAILED_LOG_FILE_NAME}" ]; then
             dotnet_candidate="${RUNNER_TEMP}/ci-test-logs/${FAILED_LOG_FILE_NAME}"
+            postgres_candidate="${RUNNER_TEMP}/postgres-critical-flow-logs/${FAILED_LOG_FILE_NAME}"
+            dependency_audit_candidate="${RUNNER_TEMP}/dependency-audit-logs/${FAILED_LOG_FILE_NAME}"
             frontend_candidate="${RUNNER_TEMP}/frontend-checks-logs/${FAILED_LOG_FILE_NAME}"
             if [ -f "${dotnet_candidate}" ]; then
               FAILED_LOG_FILE="${dotnet_candidate}"
+            elif [ -f "${postgres_candidate}" ]; then
+              FAILED_LOG_FILE="${postgres_candidate}"
+            elif [ -f "${dependency_audit_candidate}" ]; then
+              FAILED_LOG_FILE="${dependency_audit_candidate}"
             elif [ -f "${frontend_candidate}" ]; then
               FAILED_LOG_FILE="${frontend_candidate}"
             fi
@@ -340,7 +559,7 @@ jobs:
             if [ "${FAILED_AREA}" = "frontend" ]; then
               FAILED_LOG_FILE=$(find "${RUNNER_TEMP}/frontend-checks-logs" -maxdepth 1 -type f -name '*.log' | sort | tail -n 1 || true)
             elif [ "${FAILED_AREA}" = "dotnet" ]; then
-              FAILED_LOG_FILE=$(find "${RUNNER_TEMP}/ci-test-logs" -maxdepth 1 -type f -name '*.log' | sort | tail -n 1 || true)
+              FAILED_LOG_FILE=$(find "${RUNNER_TEMP}/ci-test-logs" "${RUNNER_TEMP}/postgres-critical-flow-logs" "${RUNNER_TEMP}/dependency-audit-logs" -maxdepth 1 -type f -name '*.log' | sort | tail -n 1 || true)
             else
               FAILED_LOG_FILE=$(find "${RUNNER_TEMP}" -maxdepth 2 -type f -name '*.log' | sort | tail -n 1 || true)
             fi

@@ -1,7 +1,6 @@
 using FoodDiary.Domain.Entities.Ai;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Infrastructure.Persistence.Ai;
-using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Tests.Integration;
 

@@ -47,6 +47,26 @@ Current outcome tags:
 - `client_error`
 - `server_error`
 
+## Added Background Job Signals
+
+The observability baseline now also includes stable metrics for recurring cleanup jobs in `FoodDiary.JobManager`.
+
+Metrics:
+
+- `fooddiary.job.execution.events`
+- `fooddiary.job.deleted_items`
+- `fooddiary.job.execution.duration`
+
+Current tagged jobs:
+
+- `images.cleanup`
+- `users.cleanup`
+
+Current outcome tags:
+
+- `success`
+- `failure`
+
 ## Why This First
 
 This baseline gives immediately useful production signals without scattering telemetry logic across many handlers:
@@ -67,7 +87,6 @@ When a backend change touches one of the listed flows:
 ## Next Observability Candidates
 
 - AI quota rejections and model fallback counts
-- cleanup job outcomes and removed-item counts
 - cache hit/miss metrics for cached admin and user-scoped endpoints
 - database retry/failure counters
 - dashboard-level alert suggestions and runbook links

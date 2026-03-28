@@ -2,6 +2,7 @@
 /FoodDiary.Web.Client/node_modules_old/
 /FoodDiary.Web.Client/.angular/
 /FoodDiary.Web.Client/dist/
+/FoodDiary.Web.Client/dist-storybook/
 /backend/food-diary.web.api/node_modules/
 /backend/food-diary.web.api/dist/
 /backend/food-diary.web.api/logs/

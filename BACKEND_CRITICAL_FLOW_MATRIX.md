@@ -23,7 +23,7 @@ It is the execution artifact for `B03` in `BACKEND_10_OF_10_PLAN.md`.
 | CF01 | Register and access protected endpoint | API + Postgres | covered | `tests/FoodDiary.Web.Api.IntegrationTests/PostgresCriticalApiFlowTests.cs` |
 | CF02 | Refresh token exchange | API + Postgres | covered | `tests/FoodDiary.Web.Api.IntegrationTests/PostgresCriticalApiFlowTests.cs` |
 | CF03 | Request password reset persists reset state | API + Postgres | covered | `tests/FoodDiary.Web.Api.IntegrationTests/PostgresCriticalApiFlowTests.cs` |
-| CF04 | Confirm password reset returns fresh authentication | API + Postgres | deferred | No test sender/captured token in current API integration harness |
+| CF04 | Confirm password reset returns fresh authentication | API + Postgres | covered | `tests/FoodDiary.Web.Api.IntegrationTests/PostgresCriticalApiFlowTests.cs` |
 | CF05 | Delete user then restore account | API + Postgres | covered | `tests/FoodDiary.Web.Api.IntegrationTests/PostgresCriticalApiFlowTests.cs` |
 | CF06 | Weight entry duplicate date conflict | API + Postgres | covered | `tests/FoodDiary.Web.Api.IntegrationTests/PostgresCriticalApiFlowTests.cs` |
 | CF07 | Waist entry duplicate date conflict | API + Postgres | covered | `tests/FoodDiary.Web.Api.IntegrationTests/PostgresUserFlowTests.cs` |
@@ -42,9 +42,7 @@ It is the execution artifact for `B03` in `BACKEND_10_OF_10_PLAN.md`.
 
 ### Deferred
 
-- `CF04` Confirm password reset
-  Reason: the API integration harness does not yet expose or capture the generated reset token from the email dispatch path.
-  Next step: replace `IEmailSender` in a PostgreSQL API factory with a test sender that records password-reset tokens for end-to-end confirmation.
+- None at the moment.
 
 ## CI Expectation
 
@@ -53,7 +51,8 @@ At minimum, backend CI should continue running:
 - architecture tests
 - application tests
 - infrastructure tests
-- PostgreSQL-backed Web API integration tests for critical paths when Docker is available
+- mandatory PostgreSQL critical-flow job with explicit Docker availability check
+- PostgreSQL-backed Web API and infrastructure critical-flow integration tests inside that dedicated job
 
 ## Change Guidance
 

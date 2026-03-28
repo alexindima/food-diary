@@ -142,6 +142,52 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
     }
 
     [RequiresDockerFact]
+    public async Task ConfirmPasswordReset_ReturnsFreshAuthenticationAgainstPostgres() {
+        var client = factory.CreateClient();
+        var email = $"postgres-password-reset-confirm-tests-{Guid.NewGuid():N}@example.com";
+        const string oldPassword = "Password123!";
+        const string newPassword = "Password456!";
+
+        factory.EmailSender.Clear();
+
+        var registerResponse = await client.PostAsJsonAsync(
+            "/api/auth/register",
+            new RegisterHttpRequest(email, oldPassword, "en"));
+
+        Assert.Equal(HttpStatusCode.OK, registerResponse.StatusCode);
+
+        var passwordResetRequestResponse = await client.PostAsJsonAsync(
+            "/api/auth/password-reset/request",
+            new RequestPasswordResetHttpRequest(email));
+
+        Assert.Equal(HttpStatusCode.NoContent, passwordResetRequestResponse.StatusCode);
+
+        var resetMessage = factory.EmailSender.GetRequiredPasswordResetMessage(email);
+        var confirmResponse = await client.PostAsJsonAsync(
+            "/api/auth/password-reset/confirm",
+            new ConfirmPasswordResetHttpRequest(Guid.Parse(resetMessage.UserId), resetMessage.Token, newPassword));
+        var confirmPayload = await confirmResponse.Content.ReadFromJsonAsync<AuthPayload>(JsonOptions);
+
+        Assert.Equal(HttpStatusCode.OK, confirmResponse.StatusCode);
+        Assert.NotNull(confirmPayload);
+        Assert.False(string.IsNullOrWhiteSpace(confirmPayload.AccessToken));
+        Assert.False(string.IsNullOrWhiteSpace(confirmPayload.RefreshToken));
+        Assert.Equal(email, confirmPayload.User.Email);
+
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", confirmPayload.AccessToken);
+        var usersInfoResponse = await client.GetAsync("/api/users/info");
+        Assert.Equal(HttpStatusCode.OK, usersInfoResponse.StatusCode);
+
+        using var scope = factory.Services.CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
+        var user = dbContext.Users.Single(u => u.Email == email);
+
+        Assert.Null(user.PasswordResetTokenHash);
+        Assert.Null(user.PasswordResetTokenExpiresAtUtc);
+        Assert.NotNull(user.LastLoginAtUtc);
+    }
+
+    [RequiresDockerFact]
     public async Task CreateWeightEntry_WithDuplicateDate_ReturnsConflictAgainstPostgres() {
         var client = factory.CreateClient();
         var accessToken = await RegisterAndGetAccessTokenAsync(client);

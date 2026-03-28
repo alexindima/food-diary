@@ -36,27 +36,9 @@ public sealed partial class User {
             }
         }
 
-        if (update.AiInputTokenLimit.HasValue) {
-            if (update.AiInputTokenLimit.Value < 0) {
-                throw new ArgumentOutOfRangeException(nameof(update.AiInputTokenLimit), "Input limit must be non-negative.");
-            }
-
-            if (AiInputTokenLimit != update.AiInputTokenLimit.Value) {
-                AiInputTokenLimit = update.AiInputTokenLimit.Value;
-                changed = true;
-            }
-        }
-
-        if (update.AiOutputTokenLimit.HasValue) {
-            if (update.AiOutputTokenLimit.Value < 0) {
-                throw new ArgumentOutOfRangeException(nameof(update.AiOutputTokenLimit), "Output limit must be non-negative.");
-            }
-
-            if (AiOutputTokenLimit != update.AiOutputTokenLimit.Value) {
-                AiOutputTokenLimit = update.AiOutputTokenLimit.Value;
-                changed = true;
-            }
-        }
+        changed |= ApplyAiTokenLimitChanges(new UserAiTokenLimitUpdate(
+            InputLimit: update.AiInputTokenLimit,
+            OutputLimit: update.AiOutputTokenLimit));
 
         if (!changed) {
             return;
