@@ -127,9 +127,11 @@ public class ProductRepository(FoodDiaryDbContext context) : IProductRepository 
     }
 
     public async Task DeleteAsync(Product product, CancellationToken cancellationToken = default) {
-        await context.Products
-            .Where(p => p.Id == product.Id)
-            .ExecuteDeleteAsync(cancellationToken);
+        var tracked = await context.Products.FindAsync([product.Id], cancellationToken);
+        if (tracked is not null) {
+            context.Products.Remove(tracked);
+            await context.SaveChangesAsync(cancellationToken);
+        }
     }
 
     private static string EscapeLikePattern(string value) {

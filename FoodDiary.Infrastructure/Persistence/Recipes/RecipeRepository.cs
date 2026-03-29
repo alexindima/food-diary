@@ -97,9 +97,11 @@ public class RecipeRepository(FoodDiaryDbContext context) : IRecipeRepository {
     }
 
     public async Task DeleteAsync(Recipe recipe, CancellationToken cancellationToken = default) {
-        await context.Recipes
-            .Where(r => r.Id == recipe.Id)
-            .ExecuteDeleteAsync(cancellationToken);
+        var tracked = await context.Recipes.FindAsync([recipe.Id], cancellationToken);
+        if (tracked is not null) {
+            context.Recipes.Remove(tracked);
+            await context.SaveChangesAsync(cancellationToken);
+        }
     }
 
     public async Task UpdateNutritionAsync(Recipe recipe, CancellationToken cancellationToken = default) {

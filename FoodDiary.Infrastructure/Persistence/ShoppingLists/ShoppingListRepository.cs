@@ -76,8 +76,10 @@ public class ShoppingListRepository(FoodDiaryDbContext context) : IShoppingListR
     }
 
     public async Task DeleteAsync(ShoppingList list, CancellationToken cancellationToken = default) {
-        await context.ShoppingLists
-            .Where(sl => sl.Id == list.Id)
-            .ExecuteDeleteAsync(cancellationToken);
+        var tracked = await context.ShoppingLists.FindAsync([list.Id], cancellationToken);
+        if (tracked is not null) {
+            context.ShoppingLists.Remove(tracked);
+            await context.SaveChangesAsync(cancellationToken);
+        }
     }
 }

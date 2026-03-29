@@ -18,9 +18,11 @@ public class MealRepository(FoodDiaryDbContext context) : IMealRepository {
     }
 
     public async Task DeleteAsync(Meal meal, CancellationToken cancellationToken = default) {
-        await context.Meals
-            .Where(m => m.Id == meal.Id)
-            .ExecuteDeleteAsync(cancellationToken);
+        var tracked = await context.Meals.FindAsync([meal.Id], cancellationToken);
+        if (tracked is not null) {
+            context.Meals.Remove(tracked);
+            await context.SaveChangesAsync(cancellationToken);
+        }
     }
 
     public async Task<Meal?> GetByIdAsync(
