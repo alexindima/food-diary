@@ -97,8 +97,9 @@ public class RecipeRepository(FoodDiaryDbContext context) : IRecipeRepository {
     }
 
     public async Task DeleteAsync(Recipe recipe, CancellationToken cancellationToken = default) {
-        context.Recipes.Remove(recipe);
-        await context.SaveChangesAsync(cancellationToken);
+        await context.Recipes
+            .Where(r => r.Id == recipe.Id)
+            .ExecuteDeleteAsync(cancellationToken);
     }
 
     public async Task UpdateNutritionAsync(Recipe recipe, CancellationToken cancellationToken = default) {
