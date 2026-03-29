@@ -93,7 +93,7 @@ public sealed class RequestObservabilityMiddlewareTests {
 
         var httpContext = new DefaultHttpContext();
         httpContext.Request.Method = HttpMethods.Post;
-        httpContext.Request.Path = "/api/v1/v1/auth/login";
+        httpContext.Request.Path = "/api/v1/auth/login";
         httpContext.User = new ClaimsPrincipal(new ClaimsIdentity([
             new Claim(ClaimTypes.NameIdentifier, Guid.NewGuid().ToString())
         ], "test"));
@@ -101,7 +101,7 @@ public sealed class RequestObservabilityMiddlewareTests {
         await middleware.InvokeAsync(httpContext);
 
         Assert.NotNull(capturedActivity);
-        Assert.Equal("/api/v1/v1/auth/*", capturedActivity!.GetTagItem("url.path"));
+        Assert.Equal("/api/v1/auth/*", capturedActivity!.GetTagItem("url.path"));
         Assert.Equal("auth", capturedActivity.GetTagItem("fooddiary.request.sensitivity"));
         Assert.Null(capturedActivity.GetTagItem("enduser.id"));
     }
@@ -135,7 +135,7 @@ public sealed class RequestObservabilityMiddlewareTests {
 
         var httpContext = new DefaultHttpContext();
         httpContext.Request.Method = HttpMethods.Post;
-        httpContext.Request.Path = "/api/v1/v1/auth/register";
+        httpContext.Request.Path = "/api/v1/auth/register";
 
         await middleware.InvokeAsync(httpContext);
 
@@ -173,7 +173,7 @@ public sealed class RequestObservabilityMiddlewareTests {
 
         var httpContext = new DefaultHttpContext();
         httpContext.Request.Method = HttpMethods.Post;
-        httpContext.Request.Path = "/api/v1/v1/images/upload-url";
+        httpContext.Request.Path = "/api/v1/images/upload-url";
 
         await middleware.InvokeAsync(httpContext);
 
@@ -212,7 +212,7 @@ public sealed class RequestObservabilityMiddlewareTests {
 
         var httpContext = new DefaultHttpContext();
         httpContext.Request.Method = HttpMethods.Get;
-        httpContext.Request.Path = "/api/v1/v1/dashboard";
+        httpContext.Request.Path = "/api/v1/dashboard";
         httpContext.SetEndpoint(new Endpoint(
             static _ => Task.CompletedTask,
             new EndpointMetadataCollection(new OutputCacheAttribute {
@@ -256,7 +256,7 @@ public sealed class RequestObservabilityMiddlewareTests {
 
         var httpContext = new DefaultHttpContext();
         httpContext.Request.Method = HttpMethods.Get;
-        httpContext.Request.Path = "/api/v1/v1/admin/ai-usage";
+        httpContext.Request.Path = "/api/v1/admin/ai-usage";
         httpContext.SetEndpoint(new Endpoint(
             static _ => Task.CompletedTask,
             new EndpointMetadataCollection(new OutputCacheAttribute {

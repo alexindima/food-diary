@@ -21,7 +21,7 @@ public static class PresentationServiceCollectionExtensions {
             options.ApiVersionReader = ApiVersionReader.Combine(
                 new UrlSegmentApiVersionReader(),
                 new HeaderApiVersionReader("X-Api-Version"));
-        });
+        }).AddMvc();
         services
             .AddControllers(options => {
                 options.Filters.AddService<TelemetryActionFilter>();

@@ -2,7 +2,7 @@
   "OpenApi": "3.0.4",
   "Endpoints": [
     {
-      "Path": "/api/v1/admin/ai-usage/summary",
+      "Path": "/api/v{version}/admin/ai-usage/summary",
       "Operations": [
         {
           "Method": "get",
@@ -17,7 +17,7 @@
       ]
     },
     {
-      "Path": "/api/v1/admin/dashboard",
+      "Path": "/api/v{version}/admin/dashboard",
       "Operations": [
         {
           "Method": "get",
@@ -32,7 +32,7 @@
       ]
     },
     {
-      "Path": "/api/v1/admin/email-templates",
+      "Path": "/api/v{version}/admin/email-templates",
       "Operations": [
         {
           "Method": "get",
@@ -47,7 +47,7 @@
       ]
     },
     {
-      "Path": "/api/v1/admin/email-templates/{key}/{locale}",
+      "Path": "/api/v{version}/admin/email-templates/{key}/{locale}",
       "Operations": [
         {
           "Method": "put",
@@ -63,7 +63,7 @@
       ]
     },
     {
-      "Path": "/api/v1/admin/users",
+      "Path": "/api/v{version}/admin/users",
       "Operations": [
         {
           "Method": "get",
@@ -79,7 +79,7 @@
       ]
     },
     {
-      "Path": "/api/v1/admin/users/{id}",
+      "Path": "/api/v{version}/admin/users/{id}",
       "Operations": [
         {
           "Method": "patch",
@@ -96,7 +96,7 @@
       ]
     },
     {
-      "Path": "/api/v1/auth/admin-sso/exchange",
+      "Path": "/api/v{version}/auth/admin-sso/exchange",
       "Operations": [
         {
           "Method": "post",
@@ -112,7 +112,7 @@
       ]
     },
     {
-      "Path": "/api/v1/auth/admin-sso/start",
+      "Path": "/api/v{version}/auth/admin-sso/start",
       "Operations": [
         {
           "Method": "post",
@@ -127,7 +127,7 @@
       ]
     },
     {
-      "Path": "/api/v1/auth/login",
+      "Path": "/api/v{version}/auth/login",
       "Operations": [
         {
           "Method": "post",
@@ -142,7 +142,7 @@
       ]
     },
     {
-      "Path": "/api/v1/auth/password-reset/confirm",
+      "Path": "/api/v{version}/auth/password-reset/confirm",
       "Operations": [
         {
           "Method": "post",
@@ -158,7 +158,7 @@
       ]
     },
     {
-      "Path": "/api/v1/auth/password-reset/request",
+      "Path": "/api/v{version}/auth/password-reset/request",
       "Operations": [
         {
           "Method": "post",
@@ -172,7 +172,7 @@
       ]
     },
     {
-      "Path": "/api/v1/auth/refresh",
+      "Path": "/api/v{version}/auth/refresh",
       "Operations": [
         {
           "Method": "post",
@@ -187,7 +187,7 @@
       ]
     },
     {
-      "Path": "/api/v1/auth/register",
+      "Path": "/api/v{version}/auth/register",
       "Operations": [
         {
           "Method": "post",
@@ -203,7 +203,7 @@
       ]
     },
     {
-      "Path": "/api/v1/auth/restore",
+      "Path": "/api/v{version}/auth/restore",
       "Operations": [
         {
           "Method": "post",
@@ -219,7 +219,7 @@
       ]
     },
     {
-      "Path": "/api/v1/auth/verify-email",
+      "Path": "/api/v{version}/auth/verify-email",
       "Operations": [
         {
           "Method": "post",
@@ -237,7 +237,7 @@
       ]
     },
     {
-      "Path": "/api/v1/auth/verify-email/resend",
+      "Path": "/api/v{version}/auth/verify-email/resend",
       "Operations": [
         {
           "Method": "post",

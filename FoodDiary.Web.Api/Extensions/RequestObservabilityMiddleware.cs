@@ -87,16 +87,16 @@ public sealed class RequestObservabilityMiddleware(RequestDelegate next, ILogger
 
     private readonly record struct RequestSensitivity(string PathLabel, string ScopeLabel, bool IncludeUserIdInTelemetry) {
         public static RequestSensitivity From(PathString path) {
-            if (path.StartsWithSegments("/api/auth/admin-sso", StringComparison.OrdinalIgnoreCase)) {
-                return new RequestSensitivity("/api/auth/admin-sso/*", "auth-admin-sso", false);
+            if (path.StartsWithSegments("/api/v1/auth/admin-sso", StringComparison.OrdinalIgnoreCase)) {
+                return new RequestSensitivity("/api/v1/auth/admin-sso/*", "auth-admin-sso", false);
             }
 
-            if (path.StartsWithSegments("/api/auth/telegram", StringComparison.OrdinalIgnoreCase)) {
-                return new RequestSensitivity("/api/auth/telegram/*", "auth-telegram", false);
+            if (path.StartsWithSegments("/api/v1/auth/telegram", StringComparison.OrdinalIgnoreCase)) {
+                return new RequestSensitivity("/api/v1/auth/telegram/*", "auth-telegram", false);
             }
 
-            if (path.StartsWithSegments("/api/auth", StringComparison.OrdinalIgnoreCase)) {
-                return new RequestSensitivity("/api/auth/*", "auth", false);
+            if (path.StartsWithSegments("/api/v1/auth", StringComparison.OrdinalIgnoreCase)) {
+                return new RequestSensitivity("/api/v1/auth/*", "auth", false);
             }
 
             if (path.StartsWithSegments("/hubs/email-verification", StringComparison.OrdinalIgnoreCase)) {
@@ -109,47 +109,47 @@ public sealed class RequestObservabilityMiddleware(RequestDelegate next, ILogger
 
     private readonly record struct BusinessFlow(string FlowName) {
         public static BusinessFlow? From(string method, PathString path) {
-            if (HttpMethods.IsPost(method) && path.Equals("/api/auth/register", StringComparison.OrdinalIgnoreCase)) {
+            if (HttpMethods.IsPost(method) && path.Equals("/api/v1/auth/register", StringComparison.OrdinalIgnoreCase)) {
                 return new BusinessFlow("auth.register");
             }
 
-            if (HttpMethods.IsPost(method) && path.Equals("/api/auth/login", StringComparison.OrdinalIgnoreCase)) {
+            if (HttpMethods.IsPost(method) && path.Equals("/api/v1/auth/login", StringComparison.OrdinalIgnoreCase)) {
                 return new BusinessFlow("auth.login");
             }
 
-            if (HttpMethods.IsPost(method) && path.Equals("/api/auth/refresh", StringComparison.OrdinalIgnoreCase)) {
+            if (HttpMethods.IsPost(method) && path.Equals("/api/v1/auth/refresh", StringComparison.OrdinalIgnoreCase)) {
                 return new BusinessFlow("auth.refresh");
             }
 
-            if (HttpMethods.IsPost(method) && path.Equals("/api/auth/restore", StringComparison.OrdinalIgnoreCase)) {
+            if (HttpMethods.IsPost(method) && path.Equals("/api/v1/auth/restore", StringComparison.OrdinalIgnoreCase)) {
                 return new BusinessFlow("auth.restore");
             }
 
-            if (HttpMethods.IsPost(method) && path.Equals("/api/auth/password-reset/request", StringComparison.OrdinalIgnoreCase)) {
+            if (HttpMethods.IsPost(method) && path.Equals("/api/v1/auth/password-reset/request", StringComparison.OrdinalIgnoreCase)) {
                 return new BusinessFlow("auth.password-reset.request");
             }
 
-            if (HttpMethods.IsPost(method) && path.Equals("/api/auth/password-reset/confirm", StringComparison.OrdinalIgnoreCase)) {
+            if (HttpMethods.IsPost(method) && path.Equals("/api/v1/auth/password-reset/confirm", StringComparison.OrdinalIgnoreCase)) {
                 return new BusinessFlow("auth.password-reset.confirm");
             }
 
-            if (HttpMethods.IsPost(method) && path.Equals("/api/auth/verify-email", StringComparison.OrdinalIgnoreCase)) {
+            if (HttpMethods.IsPost(method) && path.Equals("/api/v1/auth/verify-email", StringComparison.OrdinalIgnoreCase)) {
                 return new BusinessFlow("auth.verify-email");
             }
 
-            if (HttpMethods.IsPost(method) && path.Equals("/api/auth/verify-email/resend", StringComparison.OrdinalIgnoreCase)) {
+            if (HttpMethods.IsPost(method) && path.Equals("/api/v1/auth/verify-email/resend", StringComparison.OrdinalIgnoreCase)) {
                 return new BusinessFlow("auth.verify-email.resend");
             }
 
-            if (HttpMethods.IsPost(method) && path.Equals("/api/images/upload-url", StringComparison.OrdinalIgnoreCase)) {
+            if (HttpMethods.IsPost(method) && path.Equals("/api/v1/images/upload-url", StringComparison.OrdinalIgnoreCase)) {
                 return new BusinessFlow("images.upload-url");
             }
 
-            if (HttpMethods.IsDelete(method) && path.StartsWithSegments("/api/images", StringComparison.OrdinalIgnoreCase)) {
+            if (HttpMethods.IsDelete(method) && path.StartsWithSegments("/api/v1/images", StringComparison.OrdinalIgnoreCase)) {
                 return new BusinessFlow("images.delete");
             }
 
-            if (HttpMethods.IsDelete(method) && path.Equals("/api/users", StringComparison.OrdinalIgnoreCase)) {
+            if (HttpMethods.IsDelete(method) && path.Equals("/api/v1/users", StringComparison.OrdinalIgnoreCase)) {
                 return new BusinessFlow("users.delete");
             }
 

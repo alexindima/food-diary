@@ -2,7 +2,7 @@
   "OpenApi": "3.0.4",
   "Endpoints": [
     {
-      "Path": "/api/v1/auth/login",
+      "Path": "/api/v{version}/auth/login",
       "Operations": [
         {
           "Method": "post",
@@ -17,7 +17,7 @@
       ]
     },
     {
-      "Path": "/api/v1/auth/register",
+      "Path": "/api/v{version}/auth/register",
       "Operations": [
         {
           "Method": "post",
@@ -33,7 +33,7 @@
       ]
     },
     {
-      "Path": "/api/v1/products",
+      "Path": "/api/v{version}/products",
       "Operations": [
         {
           "Method": "get",
@@ -59,7 +59,7 @@
       ]
     },
     {
-      "Path": "/api/v1/products/{id}",
+      "Path": "/api/v{version}/products/{id}",
       "Operations": [
         {
           "Method": "delete",
@@ -96,7 +96,7 @@
       ]
     },
     {
-      "Path": "/api/v1/recipes",
+      "Path": "/api/v{version}/recipes",
       "Operations": [
         {
           "Method": "get",
@@ -122,7 +122,7 @@
       ]
     },
     {
-      "Path": "/api/v1/recipes/{id}",
+      "Path": "/api/v{version}/recipes/{id}",
       "Operations": [
         {
           "Method": "delete",
@@ -159,7 +159,7 @@
       ]
     },
     {
-      "Path": "/api/v1/statistics",
+      "Path": "/api/v{version}/statistics",
       "Operations": [
         {
           "Method": "get",
@@ -174,7 +174,7 @@
       ]
     },
     {
-      "Path": "/api/v1/users/info",
+      "Path": "/api/v{version}/users/info",
       "Operations": [
         {
           "Method": "get",
@@ -200,7 +200,7 @@
       ]
     },
     {
-      "Path": "/api/v1/waist-entries",
+      "Path": "/api/v{version}/waist-entries",
       "Operations": [
         {
           "Method": "get",
@@ -226,7 +226,7 @@
       ]
     },
     {
-      "Path": "/api/v1/weight-entries",
+      "Path": "/api/v{version}/weight-entries",
       "Operations": [
         {
           "Method": "get",
