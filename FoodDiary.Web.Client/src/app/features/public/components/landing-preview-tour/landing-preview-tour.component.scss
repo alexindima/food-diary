@@ -135,7 +135,7 @@
         width: min(680px, 100%);
     }
 
-    @media (max-width: 1024px) {
+    @media #{variables.$media-desktop} {
 
         &__item {
             grid-template-columns: 1fr;
@@ -173,7 +173,7 @@
         margin-top: 0;
     }
 
-    @media (max-width: 1024px) {
+    @media #{variables.$media-desktop} {
         grid-template-columns: 1fr;
     }
 }
@@ -231,7 +231,7 @@
     }
 }
 
-@media (max-width: 768px) {
+@media #{variables.$media-tablet} {
 
     :host {
         --fd-layout-page-horizontal-padding: 16px;
@@ -242,7 +242,7 @@
     }
 }
 
-@media (max-width: 420px) {
+@media #{variables.$media-sm} {
 
     .landing-tour__cards {
         grid-template-columns: 1fr;
@@ -255,7 +255,7 @@
     }
 }
 
-@media (max-width: 480px) {
+@media #{variables.$media-mobile} {
 
     .landing-tour__cards {
         grid-template-columns: 1fr;

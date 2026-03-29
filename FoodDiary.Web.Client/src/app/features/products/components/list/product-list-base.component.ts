@@ -9,7 +9,8 @@ import { catchError, debounceTime, distinctUntilChanged, finalize, map, Observab
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
-import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
+import { ErrorStateComponent } from '../../../../components/shared/error-state/error-state.component';
+import { SkeletonCardComponent } from '../../../../components/shared/skeleton-card/skeleton-card.component';
 import { FdUiIconModule } from 'fd-ui-kit/material';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.component';
 import { BarcodeScannerComponent } from '../../../../components/shared/barcode-scanner/barcode-scanner.component';
@@ -42,8 +43,9 @@ import {
         TranslatePipe,
         FdUiInputComponent,
         FdUiButtonComponent,
-        FdUiLoaderComponent,
         FdUiPaginationComponent,
+        SkeletonCardComponent,
+        ErrorStateComponent,
         FdUiIconModule,
         PageHeaderComponent,
         PageBodyComponent,
@@ -66,6 +68,7 @@ export class ProductListBaseComponent implements OnInit {
     public productData: PagedData<Product> = new PagedData<Product>();
     public currentPageIndex = 0;
     public recentProducts: Product[] = [];
+    public readonly errorKey = signal<string | null>(null);
     public readonly isMobileView = signal<boolean>(window.matchMedia('(max-width: 768px)').matches);
     private readonly isMobileSearchOpen = signal(false);
     private readonly selectedProductTypes = signal<ProductType[]>([]);
@@ -115,6 +118,10 @@ export class ProductListBaseComponent implements OnInit {
                 switchMap(() => this.loadProducts(1, this.pageSize, this.searchForm.controls.search.value)),
             )
             .subscribe();
+    }
+
+    public retryLoad(): void {
+        this.loadProducts(1, this.pageSize, this.searchForm.controls.search.value).subscribe();
     }
 
     public onPageChange(pageIndex: number): void {
@@ -201,12 +208,14 @@ export class ProductListBaseComponent implements OnInit {
                 this.productData.setData(data.allProducts);
                 this.recentProducts = data.recentItems;
                 this.currentPageIndex = data.allProducts.page - 1;
+                this.errorKey.set(null);
             }),
             map(() => void 0),
             catchError((error: HttpErrorResponse) => {
                 console.error('Error loading products:', error);
                 this.productData.clearData();
                 this.recentProducts = [];
+                this.errorKey.set('ERRORS.LOAD_FAILED_TITLE');
                 return of(void 0);
             }),
             finalize(() => this.productData.setLoading(false)),

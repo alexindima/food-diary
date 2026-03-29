@@ -170,7 +170,7 @@
         padding: 0;
     }
 
-    @media (max-width: 1200px) {
+    @media #{variables.$media-desktop} {
 
         &__visual {
             justify-content: center;
@@ -289,7 +289,7 @@
         font-size: 0.95rem;
     }
 
-    @media (max-width: 768px) {
+    @media #{variables.$media-tablet} {
         --fd-layout-page-horizontal-padding: 16px;
 
         &__top {

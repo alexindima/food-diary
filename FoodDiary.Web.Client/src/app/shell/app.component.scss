@@ -97,7 +97,7 @@ html.cdk-global-scrollblock .fd-root__sidebar {
     grid-column: 2 / span 1;
 }
 
-@media (max-width: 768px) {
+@media #{variables.$media-tablet} {
 
     .fd-root {
         display: block;

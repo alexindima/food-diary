@@ -1,0 +1,32 @@
+@use 'variables' as variables;
+
+.fd-error-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: variables.$gap-xxl variables.$gap-m;
+    gap: variables.$gap-xs;
+}
+
+.fd-error-state__icon {
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+    color: variables.$color-text-additional;
+    margin-bottom: variables.$gap-xs;
+}
+
+.fd-error-state__title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: variables.$color-text-main;
+}
+
+.fd-error-state__message {
+    font-size: 0.9rem;
+    color: variables.$color-text-additional;
+    max-width: 320px;
+    margin-bottom: variables.$gap-xs;
+}

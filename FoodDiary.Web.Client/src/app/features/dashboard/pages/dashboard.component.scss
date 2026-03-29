@@ -69,7 +69,7 @@ variables.$color-primary: #2563eb;
         --fd-button-border-radius: 14px;
     }
 
-    @media (max-width: 420px) {
+    @media #{variables.$media-sm} {
 
         &__primary-action {
             --fd-button-padding-x: 14px;
@@ -84,7 +84,7 @@ variables.$color-primary: #2563eb;
         }
     }
 
-    @media (max-width: 360px) {
+    @media #{variables.$media-xs} {
 
         &__primary-action {
             --fd-button-padding-x: 10px;
@@ -529,7 +529,7 @@ variables.$color-primary: #2563eb;
         }
     }
 
-    @media (max-width: 1100px) {
+    @media #{variables.$media-desktop} {
 
         &__grid {
             grid-template-columns: 1fr;

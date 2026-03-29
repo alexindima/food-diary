@@ -48,7 +48,7 @@
         gap: variables.$gap-s;
         align-items: center;
 
-        @media (max-width: 768px) {
+        @media #{variables.$media-tablet} {
             flex-direction: column;
             align-items: flex-start;
         }

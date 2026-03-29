@@ -25,5 +25,12 @@ $gap-l: 20px;
 $gap-xl: 24px;
 $gap-xxl: 36px;
 
-$media-mobile: '(max-width: 480px)';
-$media-tablet: '(max-width: 768px)';
+// Breakpoints (mobile-first scale)
+$media-xs: '(max-width: 360px)';       // small phones
+$media-sm: '(max-width: 420px)';       // compact mobile
+$media-mobile: '(max-width: 480px)';   // standard mobile (legacy alias)
+$media-compact: '(max-width: 520px)';  // large mobile / small phablet
+$media-phablet: '(max-width: 640px)';  // phablet
+$media-tablet: '(max-width: 768px)';   // tablet portrait
+$media-desktop-sm: '(max-width: 900px)';  // small desktop / tablet landscape
+$media-desktop: '(max-width: 1100px)';    // standard desktop

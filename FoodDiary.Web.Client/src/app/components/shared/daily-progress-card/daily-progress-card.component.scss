@@ -1,3 +1,5 @@
+@use 'variables';
+
 .daily-progress-card {
     height: 100%;
 
@@ -145,7 +147,7 @@
         letter-spacing: 0.08em;
     }
 
-    @media (max-width: 600px) {
+    @media #{variables.$media-phablet} {
 
         &__percent {
             font-size: 1.8rem;

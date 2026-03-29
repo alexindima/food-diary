@@ -78,14 +78,14 @@
     display: block;
 }
 
-@media (max-width: 540px) {
+@media #{variables.$media-compact} {
 
     .stats-nutrition-card__distribution-grid {
         grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
     }
 }
 
-@media (max-width: 420px) {
+@media #{variables.$media-sm} {
 
     .stats-nutrition-card__distribution-grid {
         grid-template-columns: 1fr;

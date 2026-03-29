@@ -69,8 +69,14 @@
     </fd-page-header>
 
     <fd-page-body>
-        @if (consumptionData.isLoading()) {
-            <fd-ui-loader class="consumption-list__loader" />
+        @if (errorKey()) {
+            <fd-error-state (retry)="loadConsumptions(1)" />
+        } @else if (consumptionData.isLoading()) {
+            <div class="consumption-list__grid">
+                <fd-skeleton-card />
+                <fd-skeleton-card />
+                <fd-skeleton-card />
+            </div>
         } @else {
             @if (consumptionData.items().length === 0) {
                 <div class="consumption-list__no-results">

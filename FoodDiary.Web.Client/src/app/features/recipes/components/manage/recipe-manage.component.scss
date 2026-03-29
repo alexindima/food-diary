@@ -9,7 +9,7 @@
     box-sizing: border-box;
     padding: 0 !important;
 
-    @media (max-width: 1100px) {
+    @media #{variables.$media-desktop} {
         --fd-layout-page-content-max-width: 100%;
         max-width: 100% !important;
     }
@@ -52,7 +52,7 @@
         gap: variables.$gap-xl;
         align-items: stretch;
 
-        @media (max-width: 1100px) {
+        @media #{variables.$media-desktop} {
             grid-template-columns: 1fr;
         }
 

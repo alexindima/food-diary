@@ -529,7 +529,7 @@
         }
     }
 
-    @media (max-width: 1100px) {
+    @media #{variables.$media-desktop} {
 
         &__grid {
             grid-template-columns: 1fr;
@@ -544,7 +544,7 @@
         }
     }
 
-    @media (max-width: 640px) {
+    @media #{variables.$media-phablet} {
 
         &__macro {
             grid-template-columns: minmax(0, 1fr);

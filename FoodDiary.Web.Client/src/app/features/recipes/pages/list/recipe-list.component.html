@@ -89,8 +89,14 @@
     </fd-page-header>
 
     <fd-page-body>
-        @if (recipeData.isLoading()) {
-            <fd-ui-loader class="recipe-list__loader" />
+        @if (errorKey()) {
+            <fd-error-state (retry)="retryLoad()" />
+        } @else if (recipeData.isLoading()) {
+            <div class="recipe-list__section-grid">
+                <fd-skeleton-card />
+                <fd-skeleton-card />
+                <fd-skeleton-card />
+            </div>
         } @else {
             @if (hasVisibleRecipes) {
                 <div class="recipe-list__groups">

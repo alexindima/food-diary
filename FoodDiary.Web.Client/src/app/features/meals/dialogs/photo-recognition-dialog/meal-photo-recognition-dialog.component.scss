@@ -1,3 +1,5 @@
+@use 'variables';
+
 .photo-ai-dialog {
     display: flex;
     flex-direction: column;
@@ -444,7 +446,7 @@
     background: #f8fafc;
 }
 
-@media (max-width: 640px) {
+@media #{variables.$media-phablet} {
 
     .photo-ai-dialog__table-head,
     .photo-ai-dialog__table-row {

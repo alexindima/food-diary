@@ -1,3 +1,5 @@
+@use 'variables';
+
 /* Global styles piggyback on design tokens */
 
 *,
@@ -52,7 +54,7 @@ body {
     background: var(--fd-layout-page-background);
 }
 
-@media (max-width: 768px) {
+@media #{variables.$media-tablet} {
 
     :root {
         --fd-layout-page-top-padding: 0px;

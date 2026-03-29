@@ -1,3 +1,5 @@
+@use 'variables';
+
 .product-list-filters-dialog {
 
     &__visibility {
@@ -48,7 +50,7 @@
         gap: 8px;
     }
 
-    @media (max-width: 480px) {
+    @media #{variables.$media-mobile} {
 
         &__types {
             grid-template-columns: 1fr;

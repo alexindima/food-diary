@@ -177,7 +177,7 @@
     text-align: center;
 }
 
-@media (max-width: 640px) {
+@media #{variables.$media-phablet} {
 
     .quick-consumption {
         left: 12px;

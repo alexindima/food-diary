@@ -8,7 +8,8 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiIconModule } from 'fd-ui-kit/material';
-import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
+import { ErrorStateComponent } from '../../../../components/shared/error-state/error-state.component';
+import { SkeletonCardComponent } from '../../../../components/shared/skeleton-card/skeleton-card.component';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.component';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { catchError, debounceTime, distinctUntilChanged, finalize, map, Observable, of, switchMap, tap } from 'rxjs';
@@ -39,8 +40,9 @@ import { Recipe, RecipeFilters, RecipeVisibility } from '../../models/recipe.dat
         TranslatePipe,
         FdUiInputComponent,
         FdUiButtonComponent,
-        FdUiLoaderComponent,
         FdUiPaginationComponent,
+        SkeletonCardComponent,
+        ErrorStateComponent,
         FdUiIconModule,
         PageHeaderComponent,
         PageBodyComponent,
@@ -64,6 +66,7 @@ export class RecipeListComponent implements OnInit {
     public recipeData: PagedData<Recipe> = new PagedData<Recipe>();
     public currentPageIndex = 0;
     public recentRecipes: Recipe[] = [];
+    public readonly errorKey = signal<string | null>(null);
     public readonly isMobileView = signal<boolean>(window.matchMedia('(max-width: 768px)').matches);
     private readonly isMobileSearchOpen = signal(false);
     public searchForm: FormGroup<RecipeSearchFormGroup>;
@@ -111,6 +114,10 @@ export class RecipeListComponent implements OnInit {
                 switchMap(() => this.loadRecipes(1, this.pageSize, this.searchForm.controls.search.value)),
             )
             .subscribe();
+    }
+
+    public retryLoad(): void {
+        this.loadRecipes(1, this.pageSize, this.searchForm.controls.search.value).subscribe();
     }
 
     public async onAddRecipeClick(): Promise<void> {
@@ -260,12 +267,14 @@ export class RecipeListComponent implements OnInit {
                 this.recipeData.setData(data.allRecipes);
                 this.recentRecipes = data.recentItems;
                 this.currentPageIndex = data.allRecipes.page - 1;
+                this.errorKey.set(null);
             }),
             map(() => void 0),
             catchError((error: HttpErrorResponse) => {
                 console.error('Error loading recipes:', error);
                 this.recipeData.clearData();
                 this.recentRecipes = [];
+                this.errorKey.set('ERRORS.LOAD_FAILED_TITLE');
                 return of(void 0);
             }),
             finalize(() => this.recipeData.setLoading(false)),

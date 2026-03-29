@@ -462,7 +462,7 @@
     }
 }
 
-@media (max-width: 768px) {
+@media #{variables.$media-tablet} {
 
     .sidebar {
         display: none;
@@ -473,7 +473,7 @@
     }
 }
 
-@media (max-width: 640px) {
+@media #{variables.$media-phablet} {
 
     .sidebar-mobile__label {
         display: none;

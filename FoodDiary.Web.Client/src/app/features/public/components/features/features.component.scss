@@ -98,7 +98,7 @@
         font-size: 0.97rem;
     }
 
-    @media (max-width: 640px) {
+    @media #{variables.$media-phablet} {
         --fd-layout-page-horizontal-padding: 16px;
 
         &__item {

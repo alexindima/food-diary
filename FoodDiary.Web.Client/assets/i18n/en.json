@@ -1624,5 +1624,12 @@
         "PREMIUM": "Premium",
         "PROFILE": "Profile",
         "NOT_FOUND": "Page Not Found"
+    },
+    "ERRORS": {
+        "LOAD_FAILED_TITLE": "Something went wrong",
+        "LOAD_FAILED_MESSAGE": "We couldn't load the data. Please try again.",
+        "RETRY": "Try again",
+        "NETWORK_ERROR": "No internet connection",
+        "SERVER_ERROR": "Server error. Please try again later."
     }
 }

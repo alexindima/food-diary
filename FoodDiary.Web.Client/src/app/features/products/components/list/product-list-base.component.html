@@ -90,8 +90,14 @@
     </fd-page-header>
 
     <fd-page-body>
-        @if (productData.isLoading()) {
-            <fd-ui-loader class="product-list__loader" />
+        @if (errorKey()) {
+            <fd-error-state (retry)="retryLoad()" />
+        } @else if (productData.isLoading()) {
+            <div class="product-list__section-grid">
+                <fd-skeleton-card />
+                <fd-skeleton-card />
+                <fd-skeleton-card />
+            </div>
         } @else {
             @if (hasVisibleProducts) {
                 <div class="product-list__groups">

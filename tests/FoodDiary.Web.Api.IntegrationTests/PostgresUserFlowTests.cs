@@ -47,7 +47,7 @@ public sealed class PostgresUserFlowTests(PostgresApiWebApplicationFactory facto
     [RequiresDockerFact]
     public async Task CreateHydrationEntries_ThenGetDailyTotal_ReturnsAggregatedAmount() {
         var client = await CreateAuthenticatedClientAsync();
-        var now = DateTime.UtcNow;
+        var now = DateTime.UtcNow.Date.AddHours(12);
 
         var response1 = await client.PostAsJsonAsync("/api/hydrations", new CreateHydrationEntryHttpRequest(now, 250));
         var response2 = await client.PostAsJsonAsync("/api/hydrations", new CreateHydrationEntryHttpRequest(now.AddMinutes(30), 500));

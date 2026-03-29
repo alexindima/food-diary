@@ -117,7 +117,7 @@
     }
 }
 
-@media (max-width: 640px) {
+@media #{variables.$media-phablet} {
 
     .product-ai-dialog__upload ::ng-deep .image-upload-field__dropzone {
         height: 210px;

@@ -142,7 +142,7 @@
         }
     }
 
-    @media (max-width: 360px) {
+    @media #{variables.$media-xs} {
 
         &__add-button {
             --fd-button-padding-x: 10px;
@@ -284,7 +284,7 @@
         }
     }
 
-    @media (max-width: 900px) {
+    @media #{variables.$media-desktop-sm} {
 
         &__controls {
             grid-template-columns: 1fr;

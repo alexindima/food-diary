@@ -14,6 +14,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import { LocalizationService } from './services/localization.service';
 import { AuthService } from './services/auth.service';
+import { RetryInterceptor } from './interceptor/retry.interceptor';
 import { AuthInterceptor } from './interceptor/auth.interceptor';
 import { LoggingApiService } from './services/logging-api.service';
 import { provideServiceWorker } from '@angular/service-worker';
@@ -25,6 +26,11 @@ import { environment } from '../environments/environment';
 
 export const appConfig: ApplicationConfig = {
     providers: [
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: RetryInterceptor,
+            multi: true,
+        },
         {
             provide: HTTP_INTERCEPTORS,
             useClass: AuthInterceptor,

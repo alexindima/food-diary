@@ -7,7 +7,8 @@ import { FdUiDateRangeInputComponent, FdUiDateRangeValue } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiIconModule } from 'fd-ui-kit/material';
-import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
+import { ErrorStateComponent } from '../../../../components/shared/error-state/error-state.component';
+import { SkeletonCardComponent } from '../../../../components/shared/skeleton-card/skeleton-card.component';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.component';
 import { Observable, catchError, debounceTime, distinctUntilChanged, map, of, startWith, switchMap } from 'rxjs';
 
@@ -33,8 +34,9 @@ import { PagedData } from '../../../../shared/lib/paged-data.data';
         TranslatePipe,
         FdUiButtonComponent,
         FdUiDateRangeInputComponent,
-        FdUiLoaderComponent,
         FdUiPaginationComponent,
+        SkeletonCardComponent,
+        ErrorStateComponent,
         FdUiIconModule,
         PageHeaderComponent,
         PageBodyComponent,
@@ -54,6 +56,7 @@ export class MealListComponent implements OnInit {
     public consumptionData: PagedData<Meal> = new PagedData<Meal>();
     public currentPageIndex = 0;
     public readonly groupedConsumptions = computed(() => this.groupByDate(this.consumptionData.items()));
+    public readonly errorKey = signal<string | null>(null);
     public readonly isMobileView = signal<boolean>(window.matchMedia('(max-width: 768px)').matches);
     private readonly isMobileDateFilterOpen = signal(false);
     private readonly container = viewChild.required<ElementRef<HTMLElement>>('container');
@@ -103,10 +106,12 @@ export class MealListComponent implements OnInit {
                 this.consumptionData.setData(pageData);
                 this.currentPageIndex = pageData.page - 1;
                 this.consumptionData.setLoading(false);
+                this.errorKey.set(null);
             }),
             catchError(() => {
                 this.consumptionData.clearData();
                 this.consumptionData.setLoading(false);
+                this.errorKey.set('ERRORS.LOAD_FAILED_TITLE');
                 return of();
             }),
         );

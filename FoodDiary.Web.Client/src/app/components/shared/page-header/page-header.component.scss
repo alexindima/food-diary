@@ -1,9 +1,11 @@
+@use 'variables';
+
 :host {
     display: block;
     width: 100%;
 }
 
-@media (max-width: 768px) {
+@media #{variables.$media-tablet} {
 
     :host {
         position: sticky;
@@ -45,7 +47,7 @@
     }
 }
 
-@media (max-width: 768px) {
+@media #{variables.$media-tablet} {
 
     .fd-page-header {
         display: grid;

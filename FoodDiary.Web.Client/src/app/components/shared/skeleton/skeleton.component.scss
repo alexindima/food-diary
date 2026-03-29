@@ -1,0 +1,19 @@
+.fd-skeleton {
+    background: #e0e0e0;
+    animation: fd-skeleton-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes fd-skeleton-pulse {
+
+    0% {
+        opacity: 0.4;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0.4;
+    }
+}

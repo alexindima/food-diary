@@ -1,0 +1,19 @@
+@use 'variables' as variables;
+
+.fd-skeleton-card {
+    border: 1px solid variables.$color-border;
+    border-radius: variables.$border-radius-m;
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: variables.$gap-m;
+    display: flex;
+    flex-direction: column;
+    gap: variables.$gap-xs;
+    box-shadow: 0 4px 8px variables.$color-box-shadow;
+}
+
+.fd-skeleton-card__content {
+    display: flex;
+    flex-direction: column;
+    gap: variables.$gap-xxs;
+    margin-top: variables.$gap-xs;
+}

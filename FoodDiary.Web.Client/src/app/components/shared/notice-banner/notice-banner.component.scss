@@ -1,3 +1,5 @@
+@use 'variables';
+
 .fd-notice {
     --fd-notice-bg: rgba(219, 234, 254, 0.7);
     --fd-notice-border: rgba(59, 130, 246, 0.18);
@@ -88,7 +90,7 @@
     --fd-notice-action: #b91c1c;
 }
 
-@media (max-width: 520px) {
+@media #{variables.$media-compact} {
 
     .fd-notice__action {
         flex-basis: 100%;

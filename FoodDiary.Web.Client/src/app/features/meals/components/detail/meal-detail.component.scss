@@ -1,3 +1,5 @@
+@use 'variables';
+
 :host {
     --fd-dialog-header-border: none;
     --fd-dialog-header-margin-bottom: 0;
@@ -29,7 +31,7 @@
         grid-template-rows: 1fr;
     }
 
-    @media (max-width: 520px) {
+    @media #{variables.$media-compact} {
 
         ::ng-deep .fd-ui-dialog__content {
             padding: 28px 20px 32px;
