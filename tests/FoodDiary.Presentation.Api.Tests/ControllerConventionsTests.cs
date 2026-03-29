@@ -76,10 +76,10 @@ public sealed class ControllerConventionsTests {
     [Fact]
     public void AuthFeatureControllers_UseExpectedRoutePrefixes() {
         var expectedRoutes = new Dictionary<string, string>(StringComparer.Ordinal) {
-            ["AdminSsoController"] = "api/auth/admin-sso",
-            ["AuthPasswordController"] = "api/auth/password-reset",
-            ["AuthSessionController"] = "api/auth",
-            ["AuthTelegramController"] = "api/auth/telegram",
+            ["AdminSsoController"] = "api/v{version:apiVersion}/auth/admin-sso",
+            ["AuthPasswordController"] = "api/v{version:apiVersion}/auth/password-reset",
+            ["AuthSessionController"] = "api/v{version:apiVersion}/auth",
+            ["AuthTelegramController"] = "api/v{version:apiVersion}/auth/telegram",
         };
 
         var authControllers = GetFeatureControllerTypes()

@@ -13,7 +13,7 @@ using Microsoft.Extensions.Logging;
 namespace FoodDiary.Presentation.Api.Features.Images;
 
 [ApiController]
-[Route("api/images")]
+[Route("api/v{version:apiVersion}/images")]
 public sealed class ImagesController(ISender mediator, ILogger<ImagesController> logger) : AuthorizedController(mediator) {
     private readonly ILogger<ImagesController> _logger = logger;
 

@@ -2,6 +2,7 @@ using FoodDiary.Application.Authentication.Mappings;
 using FoodDiary.Application.Authentication.Models;
 using FoodDiary.Application.Authentication.Services;
 using FoodDiary.Application.Authentication.Common;
+using FoodDiary.Application.Common.Abstractions.Audit;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
@@ -14,7 +15,8 @@ public sealed class ConfirmPasswordResetCommandHandler(
     IUserRepository userRepository,
     IPasswordHasher passwordHasher,
     IDateTimeProvider dateTimeProvider,
-    IAuthenticationTokenService authenticationTokenService)
+    IAuthenticationTokenService authenticationTokenService,
+    IAuditLogger auditLogger)
     : ICommandHandler<ConfirmPasswordResetCommand, Result<AuthenticationModel>> {
     public async Task<Result<AuthenticationModel>> Handle(ConfirmPasswordResetCommand command, CancellationToken cancellationToken) {
         if (command.UserId == Guid.Empty) {
@@ -43,6 +45,9 @@ public sealed class ConfirmPasswordResetCommandHandler(
         user.CompletePasswordReset(hashedPassword);
 
         var tokens = await authenticationTokenService.IssueAndStoreAsync(user, cancellationToken);
+
+        auditLogger.Log("auth.password-reset.confirm", userId, "User", userId.Value.ToString());
+
         return Result.Success(user.ToAuthenticationModel(tokens));
     }
 }

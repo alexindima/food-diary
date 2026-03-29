@@ -1,4 +1,5 @@
 using FoodDiary.Presentation.Api.Extensions;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 
 namespace FoodDiary.Web.Api.Extensions;
 
@@ -22,6 +23,12 @@ public static class ApiApplicationBuilderExtensions {
         app.UseAuthorization();
         app.UseOutputCache();
 
+        app.MapHealthChecks("/health/live", new HealthCheckOptions {
+            Predicate = _ => false,
+        });
+        app.MapHealthChecks("/health/ready", new HealthCheckOptions {
+            Predicate = check => check.Tags.Contains("ready"),
+        });
         app.MapPresentationApi(ApiCompositionConstants.CorsPolicyName);
 
         return app;

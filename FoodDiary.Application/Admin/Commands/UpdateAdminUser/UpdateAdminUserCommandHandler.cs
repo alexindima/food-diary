@@ -1,5 +1,6 @@
 using FoodDiary.Application.Admin.Mappings;
 using FoodDiary.Application.Admin.Models;
+using FoodDiary.Application.Common.Abstractions.Audit;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
@@ -11,7 +12,9 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Admin.Commands.UpdateAdminUser;
 
-public sealed class UpdateAdminUserCommandHandler(IUserRepository userRepository)
+public sealed class UpdateAdminUserCommandHandler(
+    IUserRepository userRepository,
+    IAuditLogger auditLogger)
     : ICommandHandler<UpdateAdminUserCommand, Result<AdminUserModel>> {
     private static readonly HashSet<string> AllowedRoles = new(
         [RoleNames.Admin, RoleNames.Premium, RoleNames.Support],
@@ -78,6 +81,14 @@ public sealed class UpdateAdminUserCommandHandler(IUserRepository userRepository
         }
 
         await userRepository.UpdateAsync(user, cancellationToken);
+
+        auditLogger.Log(
+            "admin.user.update",
+            new UserId(command.UserId),
+            "User",
+            command.UserId.ToString(),
+            $"roles={command.Roles?.Count.ToString() ?? "unchanged"} isActive={command.IsActive?.ToString() ?? "unchanged"}");
+
         return Result.Success(user.ToAdminModel());
     }
 }

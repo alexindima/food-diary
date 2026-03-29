@@ -1,3 +1,4 @@
+using Asp.Versioning;
 using FoodDiary.Application.Authentication.Common;
 using FoodDiary.Presentation.Api.Filters;
 using FoodDiary.Presentation.Api.Responses;
@@ -12,9 +13,19 @@ namespace FoodDiary.Presentation.Api.Extensions;
 public static class PresentationServiceCollectionExtensions {
     public static IServiceCollection AddPresentationApi(this IServiceCollection services) {
         services.AddScoped<TelemetryActionFilter>();
+        services.AddScoped<IdempotencyFilter>();
+        services.AddApiVersioning(options => {
+            options.DefaultApiVersion = new ApiVersion(1, 0);
+            options.AssumeDefaultVersionWhenUnspecified = true;
+            options.ReportApiVersions = true;
+            options.ApiVersionReader = ApiVersionReader.Combine(
+                new UrlSegmentApiVersionReader(),
+                new HeaderApiVersionReader("X-Api-Version"));
+        });
         services
             .AddControllers(options => {
                 options.Filters.AddService<TelemetryActionFilter>();
+                options.Filters.AddService<IdempotencyFilter>();
             })
             .ConfigureApiBehaviorOptions(options => {
                 options.InvalidModelStateResponseFactory = context => {

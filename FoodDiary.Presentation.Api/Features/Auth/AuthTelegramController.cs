@@ -16,7 +16,7 @@ using Microsoft.Extensions.Logging;
 namespace FoodDiary.Presentation.Api.Features.Auth;
 
 [ApiController]
-[Route("api/auth/telegram")]
+[Route("api/v{version:apiVersion}/auth/telegram")]
 public sealed class AuthTelegramController(ISender mediator, ILogger<AuthTelegramController> logger) : BaseApiController(mediator) {
     private readonly ILogger<AuthTelegramController> _logger = logger;
 

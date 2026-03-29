@@ -14,7 +14,7 @@ using Microsoft.Extensions.Logging;
 namespace FoodDiary.Presentation.Api.Features.Auth;
 
 [ApiController]
-[Route("api/auth")]
+[Route("api/v{version:apiVersion}/auth")]
 public sealed class AuthSessionController(ISender mediator, ILogger<AuthSessionController> logger) : BaseApiController(mediator) {
     private readonly ILogger<AuthSessionController> _logger = logger;
 

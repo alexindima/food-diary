@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.OutputCaching;
 namespace FoodDiary.Presentation.Api.Features.Statistics;
 
 [ApiController]
-[Route("api/statistics")]
+[Route("api/v{version:apiVersion}/statistics")]
 public class StatisticsController(ISender mediator) : AuthorizedController(mediator) {
     [HttpGet]
     [OutputCache(PolicyName = PresentationPolicyNames.UserScopedCachePolicyName)]

@@ -2,7 +2,7 @@
   "OpenApi": "3.0.4",
   "Endpoints": [
     {
-      "Path": "/api/admin/ai-usage/summary",
+      "Path": "/api/v1/admin/ai-usage/summary",
       "Operations": [
         {
           "Method": "get",
@@ -17,7 +17,7 @@
       ]
     },
     {
-      "Path": "/api/admin/dashboard",
+      "Path": "/api/v1/admin/dashboard",
       "Operations": [
         {
           "Method": "get",
@@ -32,7 +32,7 @@
       ]
     },
     {
-      "Path": "/api/admin/email-templates",
+      "Path": "/api/v1/admin/email-templates",
       "Operations": [
         {
           "Method": "get",
@@ -47,7 +47,7 @@
       ]
     },
     {
-      "Path": "/api/admin/email-templates/{key}/{locale}",
+      "Path": "/api/v1/admin/email-templates/{key}/{locale}",
       "Operations": [
         {
           "Method": "put",
@@ -63,7 +63,7 @@
       ]
     },
     {
-      "Path": "/api/admin/users",
+      "Path": "/api/v1/admin/users",
       "Operations": [
         {
           "Method": "get",
@@ -79,7 +79,7 @@
       ]
     },
     {
-      "Path": "/api/admin/users/{id}",
+      "Path": "/api/v1/admin/users/{id}",
       "Operations": [
         {
           "Method": "patch",
@@ -96,7 +96,7 @@
       ]
     },
     {
-      "Path": "/api/ai/food/nutrition",
+      "Path": "/api/v1/ai/food/nutrition",
       "Operations": [
         {
           "Method": "post",
@@ -114,7 +114,7 @@
       ]
     },
     {
-      "Path": "/api/ai/food/vision",
+      "Path": "/api/v1/ai/food/vision",
       "Operations": [
         {
           "Method": "post",
@@ -132,7 +132,7 @@
       ]
     },
     {
-      "Path": "/api/ai/usage/me",
+      "Path": "/api/v1/ai/usage/me",
       "Operations": [
         {
           "Method": "get",
@@ -146,7 +146,7 @@
       ]
     },
     {
-      "Path": "/api/auth/admin-sso/exchange",
+      "Path": "/api/v1/auth/admin-sso/exchange",
       "Operations": [
         {
           "Method": "post",
@@ -162,7 +162,7 @@
       ]
     },
     {
-      "Path": "/api/auth/admin-sso/start",
+      "Path": "/api/v1/auth/admin-sso/start",
       "Operations": [
         {
           "Method": "post",
@@ -177,7 +177,7 @@
       ]
     },
     {
-      "Path": "/api/auth/login",
+      "Path": "/api/v1/auth/login",
       "Operations": [
         {
           "Method": "post",
@@ -192,7 +192,7 @@
       ]
     },
     {
-      "Path": "/api/auth/password-reset/confirm",
+      "Path": "/api/v1/auth/password-reset/confirm",
       "Operations": [
         {
           "Method": "post",
@@ -208,7 +208,7 @@
       ]
     },
     {
-      "Path": "/api/auth/password-reset/request",
+      "Path": "/api/v1/auth/password-reset/request",
       "Operations": [
         {
           "Method": "post",
@@ -222,7 +222,7 @@
       ]
     },
     {
-      "Path": "/api/auth/refresh",
+      "Path": "/api/v1/auth/refresh",
       "Operations": [
         {
           "Method": "post",
@@ -237,7 +237,7 @@
       ]
     },
     {
-      "Path": "/api/auth/register",
+      "Path": "/api/v1/auth/register",
       "Operations": [
         {
           "Method": "post",
@@ -253,7 +253,7 @@
       ]
     },
     {
-      "Path": "/api/auth/restore",
+      "Path": "/api/v1/auth/restore",
       "Operations": [
         {
           "Method": "post",
@@ -269,7 +269,7 @@
       ]
     },
     {
-      "Path": "/api/auth/telegram/bot/auth",
+      "Path": "/api/v1/auth/telegram/bot/auth",
       "Operations": [
         {
           "Method": "post",
@@ -285,7 +285,7 @@
       ]
     },
     {
-      "Path": "/api/auth/telegram/link",
+      "Path": "/api/v1/auth/telegram/link",
       "Operations": [
         {
           "Method": "post",
@@ -302,7 +302,7 @@
       ]
     },
     {
-      "Path": "/api/auth/telegram/login-widget",
+      "Path": "/api/v1/auth/telegram/login-widget",
       "Operations": [
         {
           "Method": "post",
@@ -319,7 +319,7 @@
       ]
     },
     {
-      "Path": "/api/auth/telegram/verify",
+      "Path": "/api/v1/auth/telegram/verify",
       "Operations": [
         {
           "Method": "post",
@@ -336,7 +336,7 @@
       ]
     },
     {
-      "Path": "/api/auth/verify-email",
+      "Path": "/api/v1/auth/verify-email",
       "Operations": [
         {
           "Method": "post",
@@ -354,7 +354,7 @@
       ]
     },
     {
-      "Path": "/api/auth/verify-email/resend",
+      "Path": "/api/v1/auth/verify-email/resend",
       "Operations": [
         {
           "Method": "post",
@@ -370,7 +370,7 @@
       ]
     },
     {
-      "Path": "/api/consumptions",
+      "Path": "/api/v1/consumptions",
       "Operations": [
         {
           "Method": "get",
@@ -395,7 +395,7 @@
       ]
     },
     {
-      "Path": "/api/consumptions/{id}",
+      "Path": "/api/v1/consumptions/{id}",
       "Operations": [
         {
           "Method": "delete",
@@ -431,7 +431,7 @@
       ]
     },
     {
-      "Path": "/api/cycles",
+      "Path": "/api/v1/cycles",
       "Operations": [
         {
           "Method": "post",
@@ -446,7 +446,7 @@
       ]
     },
     {
-      "Path": "/api/cycles/current",
+      "Path": "/api/v1/cycles/current",
       "Operations": [
         {
           "Method": "get",
@@ -460,7 +460,7 @@
       ]
     },
     {
-      "Path": "/api/cycles/{cycleid}/days",
+      "Path": "/api/v1/cycles/{cycleid}/days",
       "Operations": [
         {
           "Method": "put",
@@ -476,7 +476,7 @@
       ]
     },
     {
-      "Path": "/api/dashboard",
+      "Path": "/api/v1/dashboard",
       "Operations": [
         {
           "Method": "get",
@@ -491,7 +491,7 @@
       ]
     },
     {
-      "Path": "/api/dashboard/advice",
+      "Path": "/api/v1/dashboard/advice",
       "Operations": [
         {
           "Method": "get",
@@ -506,7 +506,7 @@
       ]
     },
     {
-      "Path": "/api/goals",
+      "Path": "/api/v1/goals",
       "Operations": [
         {
           "Method": "get",
@@ -532,7 +532,7 @@
       ]
     },
     {
-      "Path": "/api/hydrations",
+      "Path": "/api/v1/hydrations",
       "Operations": [
         {
           "Method": "get",
@@ -558,7 +558,7 @@
       ]
     },
     {
-      "Path": "/api/hydrations/daily",
+      "Path": "/api/v1/hydrations/daily",
       "Operations": [
         {
           "Method": "get",
@@ -573,7 +573,7 @@
       ]
     },
     {
-      "Path": "/api/hydrations/{id}",
+      "Path": "/api/v1/hydrations/{id}",
       "Operations": [
         {
           "Method": "delete",
@@ -600,7 +600,7 @@
       ]
     },
     {
-      "Path": "/api/images/upload-url",
+      "Path": "/api/v1/images/upload-url",
       "Operations": [
         {
           "Method": "post",
@@ -617,7 +617,7 @@
       ]
     },
     {
-      "Path": "/api/images/{assetid}",
+      "Path": "/api/v1/images/{assetid}",
       "Operations": [
         {
           "Method": "delete",
@@ -634,7 +634,7 @@
       ]
     },
     {
-      "Path": "/api/products",
+      "Path": "/api/v1/products",
       "Operations": [
         {
           "Method": "get",
@@ -660,7 +660,7 @@
       ]
     },
     {
-      "Path": "/api/products/recent",
+      "Path": "/api/v1/products/recent",
       "Operations": [
         {
           "Method": "get",
@@ -675,7 +675,7 @@
       ]
     },
     {
-      "Path": "/api/products/with-recent",
+      "Path": "/api/v1/products/with-recent",
       "Operations": [
         {
           "Method": "get",
@@ -690,7 +690,7 @@
       ]
     },
     {
-      "Path": "/api/products/{id}",
+      "Path": "/api/v1/products/{id}",
       "Operations": [
         {
           "Method": "delete",
@@ -727,7 +727,7 @@
       ]
     },
     {
-      "Path": "/api/products/{id}/duplicate",
+      "Path": "/api/v1/products/{id}/duplicate",
       "Operations": [
         {
           "Method": "post",
@@ -742,7 +742,7 @@
       ]
     },
     {
-      "Path": "/api/recipes",
+      "Path": "/api/v1/recipes",
       "Operations": [
         {
           "Method": "get",
@@ -768,7 +768,7 @@
       ]
     },
     {
-      "Path": "/api/recipes/recent",
+      "Path": "/api/v1/recipes/recent",
       "Operations": [
         {
           "Method": "get",
@@ -783,7 +783,7 @@
       ]
     },
     {
-      "Path": "/api/recipes/with-recent",
+      "Path": "/api/v1/recipes/with-recent",
       "Operations": [
         {
           "Method": "get",
@@ -798,7 +798,7 @@
       ]
     },
     {
-      "Path": "/api/recipes/{id}",
+      "Path": "/api/v1/recipes/{id}",
       "Operations": [
         {
           "Method": "delete",
@@ -835,7 +835,7 @@
       ]
     },
     {
-      "Path": "/api/recipes/{id}/duplicate",
+      "Path": "/api/v1/recipes/{id}/duplicate",
       "Operations": [
         {
           "Method": "post",
@@ -850,7 +850,7 @@
       ]
     },
     {
-      "Path": "/api/shopping-lists",
+      "Path": "/api/v1/shopping-lists",
       "Operations": [
         {
           "Method": "get",
@@ -874,7 +874,7 @@
       ]
     },
     {
-      "Path": "/api/shopping-lists/current",
+      "Path": "/api/v1/shopping-lists/current",
       "Operations": [
         {
           "Method": "get",
@@ -888,7 +888,7 @@
       ]
     },
     {
-      "Path": "/api/shopping-lists/{id}",
+      "Path": "/api/v1/shopping-lists/{id}",
       "Operations": [
         {
           "Method": "delete",
@@ -924,7 +924,7 @@
       ]
     },
     {
-      "Path": "/api/statistics",
+      "Path": "/api/v1/statistics",
       "Operations": [
         {
           "Method": "get",
@@ -939,7 +939,7 @@
       ]
     },
     {
-      "Path": "/api/users",
+      "Path": "/api/v1/users",
       "Operations": [
         {
           "Method": "delete",
@@ -954,7 +954,7 @@
       ]
     },
     {
-      "Path": "/api/users/desired-waist",
+      "Path": "/api/v1/users/desired-waist",
       "Operations": [
         {
           "Method": "get",
@@ -980,7 +980,7 @@
       ]
     },
     {
-      "Path": "/api/users/desired-weight",
+      "Path": "/api/v1/users/desired-weight",
       "Operations": [
         {
           "Method": "get",
@@ -1006,7 +1006,7 @@
       ]
     },
     {
-      "Path": "/api/users/info",
+      "Path": "/api/v1/users/info",
       "Operations": [
         {
           "Method": "get",
@@ -1032,7 +1032,7 @@
       ]
     },
     {
-      "Path": "/api/users/password",
+      "Path": "/api/v1/users/password",
       "Operations": [
         {
           "Method": "patch",
@@ -1048,7 +1048,7 @@
       ]
     },
     {
-      "Path": "/api/waist-entries",
+      "Path": "/api/v1/waist-entries",
       "Operations": [
         {
           "Method": "get",
@@ -1074,7 +1074,7 @@
       ]
     },
     {
-      "Path": "/api/waist-entries/latest",
+      "Path": "/api/v1/waist-entries/latest",
       "Operations": [
         {
           "Method": "get",
@@ -1088,7 +1088,7 @@
       ]
     },
     {
-      "Path": "/api/waist-entries/summary",
+      "Path": "/api/v1/waist-entries/summary",
       "Operations": [
         {
           "Method": "get",
@@ -1103,7 +1103,7 @@
       ]
     },
     {
-      "Path": "/api/waist-entries/{id}",
+      "Path": "/api/v1/waist-entries/{id}",
       "Operations": [
         {
           "Method": "delete",
@@ -1130,7 +1130,7 @@
       ]
     },
     {
-      "Path": "/api/weight-entries",
+      "Path": "/api/v1/weight-entries",
       "Operations": [
         {
           "Method": "get",
@@ -1156,7 +1156,7 @@
       ]
     },
     {
-      "Path": "/api/weight-entries/latest",
+      "Path": "/api/v1/weight-entries/latest",
       "Operations": [
         {
           "Method": "get",
@@ -1170,7 +1170,7 @@
       ]
     },
     {
-      "Path": "/api/weight-entries/summary",
+      "Path": "/api/v1/weight-entries/summary",
       "Operations": [
         {
           "Method": "get",
@@ -1185,7 +1185,7 @@
       ]
     },
     {
-      "Path": "/api/weight-entries/{id}",
+      "Path": "/api/v1/weight-entries/{id}",
       "Operations": [
         {
           "Method": "delete",

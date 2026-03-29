@@ -15,7 +15,7 @@ using Microsoft.Extensions.Logging;
 namespace FoodDiary.Presentation.Api.Features.Ai;
 
 [ApiController]
-[Route("api/ai/food")]
+[Route("api/v{version:apiVersion}/ai/food")]
 [Authorize(Roles = PresentationRoleNames.Premium)]
 [EnableRateLimiting(PresentationPolicyNames.AiRateLimitPolicyName)]
 public sealed class AiFoodController(ISender mediator, ILogger<AiFoodController> logger) : AuthorizedController(mediator) {

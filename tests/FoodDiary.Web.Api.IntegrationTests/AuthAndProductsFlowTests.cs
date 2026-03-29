@@ -21,7 +21,7 @@ public sealed class AuthAndProductsFlowTests(ApiWebApplicationFactory factory, I
         var email = $"api-tests-{Guid.NewGuid():N}@example.com";
         var request = new RegisterHttpRequest(email, "Password123!", "en");
 
-        var response = await client.PostAsJsonAsync("/api/auth/register", request);
+        var response = await client.PostAsJsonAsync("/api/v1/v1/auth/register", request);
         var body = await response.Content.ReadAsStringAsync();
         output.WriteLine(body);
 
@@ -40,12 +40,12 @@ public sealed class AuthAndProductsFlowTests(ApiWebApplicationFactory factory, I
         var email = $"api-tests-{Guid.NewGuid():N}@example.com";
 
         var registerResponse = await client.PostAsJsonAsync(
-            "/api/auth/register",
+            "/api/v1/v1/auth/register",
             new RegisterHttpRequest(email, "Password123!", "en"));
         Assert.Equal(HttpStatusCode.OK, registerResponse.StatusCode);
 
         var loginResponse = await client.PostAsJsonAsync(
-            "/api/auth/login",
+            "/api/v1/v1/auth/login",
             new LoginHttpRequest(email, "WrongPassword123!"));
 
         Assert.Equal(HttpStatusCode.Unauthorized, loginResponse.StatusCode);
@@ -54,12 +54,12 @@ public sealed class AuthAndProductsFlowTests(ApiWebApplicationFactory factory, I
     [Fact]
     public async Task Products_RequiresAuth_AndReturnsOkWithBearerToken() {
         var client = factory.CreateClient();
-        var anonymousResponse = await client.GetAsync("/api/products");
+        var anonymousResponse = await client.GetAsync("/api/v1/v1/products");
         Assert.Equal(HttpStatusCode.Unauthorized, anonymousResponse.StatusCode);
 
         var email = $"api-tests-{Guid.NewGuid():N}@example.com";
         var registerResponse = await client.PostAsJsonAsync(
-            "/api/auth/register",
+            "/api/v1/v1/auth/register",
             new RegisterHttpRequest(email, "Password123!", "en"));
         Assert.Equal(HttpStatusCode.OK, registerResponse.StatusCode);
 
@@ -68,7 +68,7 @@ public sealed class AuthAndProductsFlowTests(ApiWebApplicationFactory factory, I
         Assert.False(string.IsNullOrWhiteSpace(authPayload.AccessToken));
 
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authPayload.AccessToken);
-        var authorizedResponse = await client.GetAsync("/api/products");
+        var authorizedResponse = await client.GetAsync("/api/v1/v1/products");
 
         Assert.Equal(HttpStatusCode.OK, authorizedResponse.StatusCode);
     }
@@ -76,12 +76,12 @@ public sealed class AuthAndProductsFlowTests(ApiWebApplicationFactory factory, I
     [Fact]
     public async Task UsersInfo_RequiresAuth_AndReturnsOkWithBearerToken() {
         var client = factory.CreateClient();
-        var anonymousResponse = await client.GetAsync("/api/users/info");
+        var anonymousResponse = await client.GetAsync("/api/v1/v1/users/info");
         Assert.Equal(HttpStatusCode.Unauthorized, anonymousResponse.StatusCode);
 
         var email = $"api-tests-{Guid.NewGuid():N}@example.com";
         var registerResponse = await client.PostAsJsonAsync(
-            "/api/auth/register",
+            "/api/v1/v1/auth/register",
             new RegisterHttpRequest(email, "Password123!", "en"));
         Assert.Equal(HttpStatusCode.OK, registerResponse.StatusCode);
 
@@ -90,7 +90,7 @@ public sealed class AuthAndProductsFlowTests(ApiWebApplicationFactory factory, I
         Assert.False(string.IsNullOrWhiteSpace(authPayload.AccessToken));
 
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authPayload.AccessToken);
-        var authorizedResponse = await client.GetAsync("/api/users/info");
+        var authorizedResponse = await client.GetAsync("/api/v1/v1/users/info");
 
         Assert.NotEqual(HttpStatusCode.Unauthorized, authorizedResponse.StatusCode);
     }
@@ -100,7 +100,7 @@ public sealed class AuthAndProductsFlowTests(ApiWebApplicationFactory factory, I
         var client = factory.CreateClient();
         var email = $"api-tests-{Guid.NewGuid():N}@example.com";
         var registerResponse = await client.PostAsJsonAsync(
-            "/api/auth/register",
+            "/api/v1/v1/auth/register",
             new RegisterHttpRequest(email, "Password123!", "en"));
         registerResponse.EnsureSuccessStatusCode();
 
@@ -109,7 +109,7 @@ public sealed class AuthAndProductsFlowTests(ApiWebApplicationFactory factory, I
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authPayload.AccessToken);
 
         var response = await client.PostAsJsonAsync(
-            "/api/products",
+            "/api/v1/v1/products",
             new CreateProductHttpRequest(
                 null,
                 "Created Product",
@@ -136,7 +136,7 @@ public sealed class AuthAndProductsFlowTests(ApiWebApplicationFactory factory, I
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
         Assert.NotNull(payload);
         Assert.NotNull(response.Headers.Location);
-        Assert.EndsWith($"/api/Products/{payload.Id}", response.Headers.Location.ToString(), StringComparison.OrdinalIgnoreCase);
+        Assert.EndsWith($"/api/v1/v1/Products/{payload.Id}", response.Headers.Location.ToString(), StringComparison.OrdinalIgnoreCase);
     }
 
     private sealed record AuthPayload(string AccessToken, string RefreshToken, AuthUserPayload User);

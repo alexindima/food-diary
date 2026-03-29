@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace FoodDiary.Presentation.Api.Features.Goals;
 
 [ApiController]
-[Route("api/goals")]
+[Route("api/v{version:apiVersion}/goals")]
 public class GoalsController(ISender mediator) : AuthorizedController(mediator) {
     [HttpGet]
     [ProducesResponseType<GoalsHttpResponse>(StatusCodes.Status200OK)]

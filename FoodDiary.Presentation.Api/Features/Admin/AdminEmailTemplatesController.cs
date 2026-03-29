@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace FoodDiary.Presentation.Api.Features.Admin;
 
 [ApiController]
-[Route("api/admin/email-templates")]
+[Route("api/v{version:apiVersion}/admin/email-templates")]
 [Authorize(Roles = PresentationRoleNames.Admin)]
 public sealed class AdminEmailTemplatesController(ISender mediator) : BaseApiController(mediator) {
     [HttpGet]

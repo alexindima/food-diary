@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace FoodDiary.Presentation.Api.Features.Admin;
 
 [ApiController]
-[Route("api/admin/dashboard")]
+[Route("api/v{version:apiVersion}/admin/dashboard")]
 [Authorize(Roles = PresentationRoleNames.Admin)]
 public sealed class AdminDashboardController(ISender mediator) : BaseApiController(mediator) {
     [HttpGet]

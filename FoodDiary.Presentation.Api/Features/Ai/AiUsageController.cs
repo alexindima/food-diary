@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 namespace FoodDiary.Presentation.Api.Features.Ai;
 
 [ApiController]
-[Route("api/ai/usage")]
+[Route("api/v{version:apiVersion}/ai/usage")]
 [Authorize]
 public sealed class AiUsageController(ISender mediator, ILogger<AiUsageController> logger) : AuthorizedController(mediator) {
     private readonly ILogger<AiUsageController> _logger = logger;

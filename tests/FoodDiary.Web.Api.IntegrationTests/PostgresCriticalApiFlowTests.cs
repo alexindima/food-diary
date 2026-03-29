@@ -26,7 +26,7 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
         var email = $"postgres-api-tests-{Guid.NewGuid():N}@example.com";
 
         var registerResponse = await client.PostAsJsonAsync(
-            "/api/auth/register",
+            "/api/v1/v1/auth/register",
             new RegisterHttpRequest(email, "Password123!", "en"));
         var authPayload = await registerResponse.Content.ReadFromJsonAsync<AuthPayload>(JsonOptions);
 
@@ -36,7 +36,7 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
         Assert.Equal(email, authPayload.User.Email);
 
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authPayload.AccessToken);
-        var usersInfoResponse = await client.GetAsync("/api/users/info");
+        var usersInfoResponse = await client.GetAsync("/api/v1/v1/users/info");
 
         Assert.Equal(HttpStatusCode.OK, usersInfoResponse.StatusCode);
     }
@@ -47,7 +47,7 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
         var email = $"postgres-refresh-tests-{Guid.NewGuid():N}@example.com";
 
         var registerResponse = await client.PostAsJsonAsync(
-            "/api/auth/register",
+            "/api/v1/v1/auth/register",
             new RegisterHttpRequest(email, "Password123!", "en"));
         var registerPayload = await registerResponse.Content.ReadFromJsonAsync<AuthPayload>(JsonOptions);
 
@@ -57,7 +57,7 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
 
         var originalRefreshToken = registerPayload.RefreshToken;
         var refreshResponse = await client.PostAsJsonAsync(
-            "/api/auth/refresh",
+            "/api/v1/v1/auth/refresh",
             new RefreshTokenHttpRequest(originalRefreshToken));
         var refreshPayload = await refreshResponse.Content.ReadFromJsonAsync<AuthPayload>(JsonOptions);
 
@@ -68,12 +68,12 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
         Assert.NotEqual(originalRefreshToken, refreshPayload.RefreshToken);
 
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", refreshPayload.AccessToken);
-        var usersInfoResponse = await client.GetAsync("/api/users/info");
+        var usersInfoResponse = await client.GetAsync("/api/v1/v1/users/info");
 
         Assert.Equal(HttpStatusCode.OK, usersInfoResponse.StatusCode);
 
         var replayResponse = await client.PostAsJsonAsync(
-            "/api/auth/refresh",
+            "/api/v1/v1/auth/refresh",
             new RefreshTokenHttpRequest(originalRefreshToken));
 
         Assert.Equal(HttpStatusCode.Unauthorized, replayResponse.StatusCode);
@@ -86,7 +86,7 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
         const string password = "Password123!";
 
         var registerResponse = await client.PostAsJsonAsync(
-            "/api/auth/register",
+            "/api/v1/v1/auth/register",
             new RegisterHttpRequest(email, password, "en"));
         var registerPayload = await registerResponse.Content.ReadFromJsonAsync<AuthPayload>(JsonOptions);
 
@@ -94,13 +94,13 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
         Assert.NotNull(registerPayload);
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", registerPayload.AccessToken);
 
-        var deleteResponse = await client.DeleteAsync("/api/users");
+        var deleteResponse = await client.DeleteAsync("/api/v1/v1/users");
         Assert.Equal(HttpStatusCode.NoContent, deleteResponse.StatusCode);
 
         client.DefaultRequestHeaders.Authorization = null;
 
         var restoreResponse = await client.PostAsJsonAsync(
-            "/api/auth/restore",
+            "/api/v1/v1/auth/restore",
             new RestoreAccountHttpRequest(email, password));
         var restorePayload = await restoreResponse.Content.ReadFromJsonAsync<AuthPayload>(JsonOptions);
 
@@ -110,7 +110,7 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
         Assert.False(string.IsNullOrWhiteSpace(restorePayload.RefreshToken));
 
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", restorePayload.AccessToken);
-        var usersInfoResponse = await client.GetAsync("/api/users/info");
+        var usersInfoResponse = await client.GetAsync("/api/v1/v1/users/info");
 
         Assert.Equal(HttpStatusCode.OK, usersInfoResponse.StatusCode);
     }
@@ -121,13 +121,13 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
         var email = $"postgres-password-reset-tests-{Guid.NewGuid():N}@example.com";
 
         var registerResponse = await client.PostAsJsonAsync(
-            "/api/auth/register",
+            "/api/v1/v1/auth/register",
             new RegisterHttpRequest(email, "Password123!", "en"));
 
         Assert.Equal(HttpStatusCode.OK, registerResponse.StatusCode);
 
         var passwordResetResponse = await client.PostAsJsonAsync(
-            "/api/auth/password-reset/request",
+            "/api/v1/v1/auth/password-reset/request",
             new RequestPasswordResetHttpRequest(email));
 
         Assert.Equal(HttpStatusCode.NoContent, passwordResetResponse.StatusCode);
@@ -151,20 +151,20 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
         factory.EmailSender.Clear();
 
         var registerResponse = await client.PostAsJsonAsync(
-            "/api/auth/register",
+            "/api/v1/v1/auth/register",
             new RegisterHttpRequest(email, oldPassword, "en"));
 
         Assert.Equal(HttpStatusCode.OK, registerResponse.StatusCode);
 
         var passwordResetRequestResponse = await client.PostAsJsonAsync(
-            "/api/auth/password-reset/request",
+            "/api/v1/v1/auth/password-reset/request",
             new RequestPasswordResetHttpRequest(email));
 
         Assert.Equal(HttpStatusCode.NoContent, passwordResetRequestResponse.StatusCode);
 
         var resetMessage = factory.EmailSender.GetRequiredPasswordResetMessage(email);
         var confirmResponse = await client.PostAsJsonAsync(
-            "/api/auth/password-reset/confirm",
+            "/api/v1/v1/auth/password-reset/confirm",
             new ConfirmPasswordResetHttpRequest(Guid.Parse(resetMessage.UserId), resetMessage.Token, newPassword));
         var confirmPayload = await confirmResponse.Content.ReadFromJsonAsync<AuthPayload>(JsonOptions);
 
@@ -175,7 +175,7 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
         Assert.Equal(email, confirmPayload.User.Email);
 
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", confirmPayload.AccessToken);
-        var usersInfoResponse = await client.GetAsync("/api/users/info");
+        var usersInfoResponse = await client.GetAsync("/api/v1/v1/users/info");
         Assert.Equal(HttpStatusCode.OK, usersInfoResponse.StatusCode);
 
         using var scope = factory.Services.CreateScope();
@@ -197,8 +197,8 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
             new DateTime(2026, 3, 27, 18, 45, 0, DateTimeKind.Unspecified),
             80.5);
 
-        var firstResponse = await client.PostAsJsonAsync("/api/weight-entries", request);
-        var duplicateResponse = await client.PostAsJsonAsync("/api/weight-entries", request);
+        var firstResponse = await client.PostAsJsonAsync("/api/v1/v1/weight-entries", request);
+        var duplicateResponse = await client.PostAsJsonAsync("/api/v1/v1/weight-entries", request);
         var payload = await duplicateResponse.Content.ReadFromJsonAsync<ErrorPayload>(JsonOptions);
 
         Assert.Equal(HttpStatusCode.Created, firstResponse.StatusCode);
@@ -214,7 +214,7 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
         var createProductResponse = await client.PostAsJsonAsync(
-            "/api/products",
+            "/api/v1/v1/products",
             new CreateProductHttpRequest(
                 null,
                 "Relational Product",
@@ -241,7 +241,7 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
         Assert.NotNull(product);
 
         var createShoppingListResponse = await client.PostAsJsonAsync(
-            "/api/shopping-lists",
+            "/api/v1/v1/shopping-lists",
             new CreateShoppingListHttpRequest(
                 "Postgres relational list",
                 [
@@ -257,8 +257,8 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
 
         await AssertStatusCodeAsync(HttpStatusCode.Created, createShoppingListResponse);
 
-        var deleteProductResponse = await client.DeleteAsync($"/api/products/{product.Id}");
-        var currentShoppingListResponse = await client.GetAsync("/api/shopping-lists/current");
+        var deleteProductResponse = await client.DeleteAsync($"/api/v1/v1/products/{product.Id}");
+        var currentShoppingListResponse = await client.GetAsync("/api/v1/v1/shopping-lists/current");
         var currentShoppingList = await currentShoppingListResponse.Content.ReadFromJsonAsync<ShoppingListPayload>(JsonOptions);
 
         await AssertStatusCodeAsync(HttpStatusCode.NoContent, deleteProductResponse);
@@ -277,7 +277,7 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
         var createProductResponse = await client.PostAsJsonAsync(
-            "/api/products",
+            "/api/v1/v1/products",
             new CreateProductHttpRequest(
                 null,
                 "Recipe Asset Product",
@@ -307,7 +307,7 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
         var stepAsset = await CreateImageAssetAsync(client, "step-photo.jpg");
 
         var createRecipeResponse = await client.PostAsJsonAsync(
-            "/api/recipes",
+            "/api/v1/v1/recipes",
             new CreateRecipeHttpRequest(
                 "Recipe With Assets",
                 "Relational image usage",
@@ -341,8 +341,8 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
         await AssertStatusCodeAsync(HttpStatusCode.Created, createRecipeResponse);
         Assert.NotNull(recipe);
 
-        var deleteRecipeAssetWhileInUse = await client.DeleteAsync($"/api/images/{recipeAsset.AssetId}");
-        var deleteStepAssetWhileInUse = await client.DeleteAsync($"/api/images/{stepAsset.AssetId}");
+        var deleteRecipeAssetWhileInUse = await client.DeleteAsync($"/api/v1/v1/images/{recipeAsset.AssetId}");
+        var deleteStepAssetWhileInUse = await client.DeleteAsync($"/api/v1/v1/images/{stepAsset.AssetId}");
         var recipeAssetError = await deleteRecipeAssetWhileInUse.Content.ReadFromJsonAsync<ErrorPayload>(JsonOptions);
         var stepAssetError = await deleteStepAssetWhileInUse.Content.ReadFromJsonAsync<ErrorPayload>(JsonOptions);
 
@@ -353,9 +353,9 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
         Assert.Equal("Image.InUse", recipeAssetError.Error);
         Assert.Equal("Image.InUse", stepAssetError.Error);
 
-        var deleteRecipeResponse = await client.DeleteAsync($"/api/recipes/{recipe.Id}");
-        var deleteRecipeAssetAfterRecipeDeletion = await client.DeleteAsync($"/api/images/{recipeAsset.AssetId}");
-        var deleteStepAssetAfterRecipeDeletion = await client.DeleteAsync($"/api/images/{stepAsset.AssetId}");
+        var deleteRecipeResponse = await client.DeleteAsync($"/api/v1/v1/recipes/{recipe.Id}");
+        var deleteRecipeAssetAfterRecipeDeletion = await client.DeleteAsync($"/api/v1/v1/images/{recipeAsset.AssetId}");
+        var deleteStepAssetAfterRecipeDeletion = await client.DeleteAsync($"/api/v1/v1/images/{stepAsset.AssetId}");
         var deletedRecipeAssetError = await deleteRecipeAssetAfterRecipeDeletion.Content.ReadFromJsonAsync<ErrorPayload>(JsonOptions);
         var deletedStepAssetError = await deleteStepAssetAfterRecipeDeletion.Content.ReadFromJsonAsync<ErrorPayload>(JsonOptions);
 
@@ -381,7 +381,7 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
     private static async Task<string> RegisterAndGetAccessTokenAsync(HttpClient client) {
         var email = $"postgres-api-tests-{Guid.NewGuid():N}@example.com";
         var response = await client.PostAsJsonAsync(
-            "/api/auth/register",
+            "/api/v1/v1/auth/register",
             new RegisterHttpRequest(email, "Password123!", "en"));
 
         response.EnsureSuccessStatusCode();
@@ -394,7 +394,7 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
 
     private static async Task<ImageUploadPayload> CreateImageAssetAsync(HttpClient client, string fileName) {
         var response = await client.PostAsJsonAsync(
-            "/api/images/upload-url",
+            "/api/v1/v1/images/upload-url",
             new GetImageUploadUrlHttpRequest(fileName, "image/jpeg", 4096));
 
         response.EnsureSuccessStatusCode();

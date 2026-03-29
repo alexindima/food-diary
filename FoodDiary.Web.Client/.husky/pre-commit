@@ -1,18 +1,41 @@
+STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACMR)
+
+HAS_TS=$(echo "$STAGED_FILES" | grep -c '\.ts$' || true)
+HAS_SCSS=$(echo "$STAGED_FILES" | grep -c '\.scss$' || true)
+HAS_FRONTEND=$(echo "$STAGED_FILES" | grep -c '^FoodDiary\.Web\.Client/' || true)
+HAS_CS=$(echo "$STAGED_FILES" | grep -c '\.cs$' || true)
+
 cd FoodDiary.Web.Client
 
-echo "=== Running ESLint ==="
-npm run lint || exit 1
+if [ "$HAS_TS" -gt 0 ]; then
+  echo "=== Running ESLint ==="
+  npm run lint || exit 1
+else
+  echo "=== Skipping ESLint (no .ts files changed) ==="
+fi
 
-echo "=== Running Stylelint ==="
-npm run stylelint || exit 1
+if [ "$HAS_SCSS" -gt 0 ]; then
+  echo "=== Running Stylelint ==="
+  npm run stylelint || exit 1
+else
+  echo "=== Skipping Stylelint (no .scss files changed) ==="
+fi
 
-echo "=== Running frontend tests ==="
-npm run test || exit 1
+if [ "$HAS_FRONTEND" -gt 0 ]; then
+  echo "=== Running frontend tests ==="
+  npm run test || exit 1
+else
+  echo "=== Skipping frontend tests (no frontend files changed) ==="
+fi
 
 cd ..
 
-echo "=== Running backend tests ==="
-dotnet test tests/FoodDiary.Application.Tests/FoodDiary.Application.Tests.csproj --no-restore || exit 1
-dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj --no-restore || exit 1
-dotnet test tests/FoodDiary.Infrastructure.Tests/FoodDiary.Infrastructure.Tests.csproj --no-restore || exit 1
-dotnet test tests/FoodDiary.Presentation.Api.Tests/FoodDiary.Presentation.Api.Tests.csproj --no-restore || exit 1
+if [ "$HAS_CS" -gt 0 ]; then
+  echo "=== Running backend tests ==="
+  dotnet test tests/FoodDiary.Application.Tests/FoodDiary.Application.Tests.csproj --no-restore || exit 1
+  dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj --no-restore || exit 1
+  dotnet test tests/FoodDiary.Infrastructure.Tests/FoodDiary.Infrastructure.Tests.csproj --no-restore || exit 1
+  dotnet test tests/FoodDiary.Presentation.Api.Tests/FoodDiary.Presentation.Api.Tests.csproj --no-restore || exit 1
+else
+  echo "=== Skipping backend tests (no .cs files changed) ==="
+fi

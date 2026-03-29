@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace FoodDiary.Presentation.Api.Features.WaistEntries;
 
 [ApiController]
-[Route("api/waist-entries")]
+[Route("api/v{version:apiVersion}/waist-entries")]
 public class WaistEntriesController(ISender mediator) : AuthorizedController(mediator) {
     [HttpGet]
     [ProducesResponseType<List<WaistEntryHttpResponse>>(StatusCodes.Status200OK)]

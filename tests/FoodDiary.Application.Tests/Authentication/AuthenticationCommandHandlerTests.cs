@@ -6,6 +6,7 @@ using FoodDiary.Application.Authentication.Commands.ResendEmailVerification;
 using FoodDiary.Application.Authentication.Commands.VerifyEmail;
 using FoodDiary.Application.Authentication.Common;
 using FoodDiary.Application.Authentication.Services;
+using FoodDiary.Application.Common.Abstractions.Audit;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Interfaces.Services;
 using FoodDiary.Domain.Entities.Users;
@@ -31,7 +32,8 @@ public sealed class AuthenticationCommandHandlerTests {
             new StubUserRepository(),
             new StubPasswordHasher(),
             new StubDateTimeProvider(),
-            new StubAuthenticationTokenService());
+            new StubAuthenticationTokenService(),
+            new NullAuditLogger());
 
         var result = await handler.Handle(
             new ConfirmPasswordResetCommand(Guid.Empty, "token", "StrongPass123"),
@@ -90,6 +92,10 @@ public sealed class AuthenticationCommandHandlerTests {
         Assert.True(result.IsFailure);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("UserId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    private sealed class NullAuditLogger : IAuditLogger {
+        public void Log(string action, UserId actorId, string? targetType, string? targetId, string? details) { }
     }
 
     private sealed class StubAdminSsoService : IAdminSsoService {

@@ -8,7 +8,7 @@ import { Recipe, RecipeVisibility } from '../models/recipe.data';
 describe('RecipeService', () => {
     let service: RecipeService;
     let httpMock: HttpTestingController;
-    const baseUrl = 'http://localhost:5300/api/recipes';
+    const baseUrl = 'http://localhost:5300/api/v1/recipes';
 
     const mockRecipe: Recipe = {
         id: 'r1',

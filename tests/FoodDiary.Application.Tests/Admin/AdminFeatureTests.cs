@@ -3,6 +3,7 @@ using FoodDiary.Application.Admin.Commands.UpsertAdminEmailTemplate;
 using FoodDiary.Application.Admin.Common;
 using FoodDiary.Application.Admin.Queries.GetAdminAiUsageSummary;
 using FoodDiary.Application.Ai.Common;
+using FoodDiary.Application.Common.Abstractions.Audit;
 using FoodDiary.Application.Common.Interfaces.Services;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Domain.Entities.Content;
@@ -35,7 +36,7 @@ public class AdminFeatureTests {
     public async Task UpdateAdminUserHandler_WithUnknownRoleFromRepository_Fails() {
         var user = CreateUserWithRoles("admin@example.com", [RoleNames.Admin]);
         var userRepository = new InMemoryUserRepository(user, availableRoles: [RoleNames.Admin]);
-        var handler = new UpdateAdminUserCommandHandler(userRepository);
+        var handler = new UpdateAdminUserCommandHandler(userRepository, new NullAuditLogger());
         var command = new UpdateAdminUserCommand(
             user.Id.Value,
             IsActive: null,
@@ -58,7 +59,7 @@ public class AdminFeatureTests {
         var userRepository = new InMemoryUserRepository(
             user,
             availableRoles: [RoleNames.Admin, RoleNames.Premium, RoleNames.Support]);
-        var handler = new UpdateAdminUserCommandHandler(userRepository);
+        var handler = new UpdateAdminUserCommandHandler(userRepository, new NullAuditLogger());
 
         var result = await handler.Handle(
             new UpdateAdminUserCommand(
@@ -82,7 +83,7 @@ public class AdminFeatureTests {
         var userRepository = new InMemoryUserRepository(
             user,
             availableRoles: [RoleNames.Admin, RoleNames.Premium, RoleNames.Support]);
-        var handler = new UpdateAdminUserCommandHandler(userRepository);
+        var handler = new UpdateAdminUserCommandHandler(userRepository, new NullAuditLogger());
         var beforeRoles = user.UserRoles.Select(r => r.Role.Name).OrderBy(x => x).ToArray();
 
         var result = await handler.Handle(
@@ -108,7 +109,7 @@ public class AdminFeatureTests {
         var userRepository = new InMemoryUserRepository(
             user,
             availableRoles: [RoleNames.Admin, RoleNames.Premium, RoleNames.Support]);
-        var handler = new UpdateAdminUserCommandHandler(userRepository);
+        var handler = new UpdateAdminUserCommandHandler(userRepository, new NullAuditLogger());
 
         var result = await handler.Handle(
             new UpdateAdminUserCommand(
@@ -131,7 +132,7 @@ public class AdminFeatureTests {
         var userRepository = new InMemoryUserRepository(
             user,
             availableRoles: [RoleNames.Admin, RoleNames.Premium, RoleNames.Support]);
-        var handler = new UpdateAdminUserCommandHandler(userRepository);
+        var handler = new UpdateAdminUserCommandHandler(userRepository, new NullAuditLogger());
         var modifiedBefore = user.ModifiedOnUtc;
 
         var result = await handler.Handle(
@@ -161,7 +162,7 @@ public class AdminFeatureTests {
         var userRepository = new InMemoryUserRepository(
             user,
             availableRoles: [RoleNames.Admin, RoleNames.Premium, RoleNames.Support]);
-        var handler = new UpdateAdminUserCommandHandler(userRepository);
+        var handler = new UpdateAdminUserCommandHandler(userRepository, new NullAuditLogger());
 
         var result = await handler.Handle(
             new UpdateAdminUserCommand(
@@ -257,6 +258,10 @@ public class AdminFeatureTests {
         var roles = roleNames.Select(name => Role.Create(name)).ToArray();
         user.ReplaceRoles(roles);
         return user;
+    }
+
+    private sealed class NullAuditLogger : IAuditLogger {
+        public void Log(string action, UserId actorId, string? targetType, string? targetId, string? details) { }
     }
 
     private sealed class InMemoryUserRepository : IUserRepository {

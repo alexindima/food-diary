@@ -15,7 +15,7 @@ using Microsoft.Extensions.Logging;
 namespace FoodDiary.Presentation.Api.Features.Auth;
 
 [ApiController]
-[Route("api/auth/admin-sso")]
+[Route("api/v{version:apiVersion}/auth/admin-sso")]
 public sealed class AdminSsoController(ISender mediator, ILogger<AdminSsoController> logger) : BaseApiController(mediator) {
     private readonly ILogger<AdminSsoController> _logger = logger;
 

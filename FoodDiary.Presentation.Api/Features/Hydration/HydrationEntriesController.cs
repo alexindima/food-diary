@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace FoodDiary.Presentation.Api.Features.Hydration;
 
 [ApiController]
-[Route("api/hydrations")]
+[Route("api/v{version:apiVersion}/hydrations")]
 public class HydrationEntriesController(ISender mediator, IPresentationClock clock) : AuthorizedController(mediator) {
     [HttpGet]
     [ProducesResponseType<List<HydrationEntryHttpResponse>>(StatusCodes.Status200OK)]

@@ -28,7 +28,7 @@ public sealed class PresentationBoundaryIntegrationTests(
         var client = testAuthFactory.CreateClient();
         client.DefaultRequestHeaders.Add(TestAuthenticationHandler.AuthenticateHeader, "true");
 
-        var response = await client.GetAsync("/api/users/info");
+        var response = await client.GetAsync("/api/v1/v1/users/info");
         var payload = await response.Content.ReadFromJsonAsync<ErrorPayload>(JsonOptions);
 
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
@@ -41,7 +41,7 @@ public sealed class PresentationBoundaryIntegrationTests(
     public async Task Register_WithInvalidEmail_ReturnsValidationErrorContract() {
         var client = apiFactory.CreateClient();
         var response = await client.PostAsJsonAsync(
-            "/api/auth/register",
+            "/api/v1/v1/auth/register",
             new RegisterHttpRequest("not-an-email", "Password123!", "en"));
         var payload = await response.Content.ReadFromJsonAsync<ErrorPayload>(JsonOptions);
 
@@ -60,12 +60,12 @@ public sealed class PresentationBoundaryIntegrationTests(
         var email = $"api-tests-{Guid.NewGuid():N}@example.com";
 
         var firstResponse = await client.PostAsJsonAsync(
-            "/api/auth/register",
+            "/api/v1/v1/auth/register",
             new RegisterHttpRequest(email, "Password123!", "en"));
         firstResponse.EnsureSuccessStatusCode();
 
         var duplicateResponse = await client.PostAsJsonAsync(
-            "/api/auth/register",
+            "/api/v1/v1/auth/register",
             new RegisterHttpRequest(email, "Password123!", "en"));
         var payload = await duplicateResponse.Content.ReadFromJsonAsync<ErrorPayload>(JsonOptions);
 
@@ -92,7 +92,7 @@ public sealed class PresentationBoundaryIntegrationTests(
         HttpResponseMessage? lastResponse = null;
 
         for (var i = 0; i < 6; i++) {
-            lastResponse = await client.PostAsJsonAsync("/api/auth/login", request);
+            lastResponse = await client.PostAsJsonAsync("/api/v1/v1/auth/login", request);
         }
 
         var payload = await lastResponse!.Content.ReadFromJsonAsync<ErrorPayload>(JsonOptions);
@@ -108,7 +108,7 @@ public sealed class PresentationBoundaryIntegrationTests(
         var client = apiFactory.CreateClient();
 
         var response = await client.PostAsJsonAsync(
-            "/api/auth/telegram/bot/auth",
+            "/api/v1/v1/auth/telegram/bot/auth",
             new TelegramBotAuthHttpRequest(123456789));
         var payload = await response.Content.ReadFromJsonAsync<ErrorPayload>(JsonOptions);
 
@@ -124,7 +124,7 @@ public sealed class PresentationBoundaryIntegrationTests(
         client.DefaultRequestHeaders.Add(TestAuthenticationHandler.AuthenticateHeader, "true");
         client.DefaultRequestHeaders.Add(TestAuthenticationHandler.UserIdHeader, Guid.NewGuid().ToString());
 
-        var response = await client.GetAsync("/api/admin/dashboard");
+        var response = await client.GetAsync("/api/v1/v1/admin/dashboard");
 
         Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
     }
@@ -136,7 +136,7 @@ public sealed class PresentationBoundaryIntegrationTests(
         client.DefaultRequestHeaders.Add(TestAuthenticationHandler.UserIdHeader, Guid.NewGuid().ToString());
         client.DefaultRequestHeaders.Add(TestAuthenticationHandler.RoleHeader, PresentationRoleNames.Admin);
 
-        var response = await client.GetAsync("/api/admin/dashboard");
+        var response = await client.GetAsync("/api/v1/v1/admin/dashboard");
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
     }
@@ -148,7 +148,7 @@ public sealed class PresentationBoundaryIntegrationTests(
         client.DefaultRequestHeaders.Authorization =
             new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
 
-        var response = await client.GetAsync($"/api/products/{MissingProductId}");
+        var response = await client.GetAsync($"/api/v1/v1/products/{MissingProductId}");
         var payload = await response.Content.ReadFromJsonAsync<ErrorPayload>(JsonOptions);
 
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
@@ -168,10 +168,10 @@ public sealed class PresentationBoundaryIntegrationTests(
             new DateTime(2026, 3, 25, 12, 0, 0, DateTimeKind.Utc),
             80.5);
 
-        var firstResponse = await client.PostAsJsonAsync("/api/weight-entries", request);
+        var firstResponse = await client.PostAsJsonAsync("/api/v1/v1/weight-entries", request);
         Assert.Equal(HttpStatusCode.Created, firstResponse.StatusCode);
 
-        var duplicateResponse = await client.PostAsJsonAsync("/api/weight-entries", request);
+        var duplicateResponse = await client.PostAsJsonAsync("/api/v1/v1/weight-entries", request);
         var payload = await duplicateResponse.Content.ReadFromJsonAsync<ErrorPayload>(JsonOptions);
 
         Assert.Equal(HttpStatusCode.Conflict, duplicateResponse.StatusCode);
@@ -191,10 +191,10 @@ public sealed class PresentationBoundaryIntegrationTests(
             new DateTime(2026, 3, 25, 12, 0, 0, DateTimeKind.Utc),
             72.3);
 
-        var firstResponse = await client.PostAsJsonAsync("/api/waist-entries", request);
+        var firstResponse = await client.PostAsJsonAsync("/api/v1/v1/waist-entries", request);
         firstResponse.EnsureSuccessStatusCode();
 
-        var duplicateResponse = await client.PostAsJsonAsync("/api/waist-entries", request);
+        var duplicateResponse = await client.PostAsJsonAsync("/api/v1/v1/waist-entries", request);
         var payload = await duplicateResponse.Content.ReadFromJsonAsync<ErrorPayload>(JsonOptions);
 
         Assert.Equal(HttpStatusCode.Conflict, duplicateResponse.StatusCode);
@@ -210,7 +210,7 @@ public sealed class PresentationBoundaryIntegrationTests(
         client.DefaultRequestHeaders.Authorization =
             new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
 
-        var response = await client.PostAsJsonAsync("/api/recipes", new { });
+        var response = await client.PostAsJsonAsync("/api/v1/v1/recipes", new { });
         var payload = await response.Content.ReadFromJsonAsync<ErrorPayload>(JsonOptions);
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
@@ -227,7 +227,7 @@ public sealed class PresentationBoundaryIntegrationTests(
         client.DefaultRequestHeaders.Add(TestAuthenticationHandler.UserIdHeader, Guid.NewGuid().ToString());
 
         var response = await client.PostAsJsonAsync(
-            "/api/images/upload-url",
+            "/api/v1/v1/images/upload-url",
             new GetImageUploadUrlHttpRequest("photo.txt", "text/plain", 128));
         var payload = await response.Content.ReadFromJsonAsync<ErrorPayload>(JsonOptions);
 
@@ -244,14 +244,14 @@ public sealed class PresentationBoundaryIntegrationTests(
         client.DefaultRequestHeaders.Add(TestAuthenticationHandler.UserIdHeader, Guid.NewGuid().ToString());
 
         var uploadResponse = await client.PostAsJsonAsync(
-            "/api/images/upload-url",
+            "/api/v1/v1/images/upload-url",
             new GetImageUploadUrlHttpRequest("photo.jpg", "image/jpeg", 1024));
         uploadResponse.EnsureSuccessStatusCode();
 
         using var uploadJson = JsonDocument.Parse(await uploadResponse.Content.ReadAsStringAsync());
         var assetId = uploadJson.RootElement.GetProperty("assetId").GetGuid();
 
-        var deleteResponse = await client.DeleteAsync($"/api/images/{assetId}");
+        var deleteResponse = await client.DeleteAsync($"/api/v1/v1/images/{assetId}");
 
         Assert.Equal(HttpStatusCode.NoContent, deleteResponse.StatusCode);
     }
@@ -263,7 +263,7 @@ public sealed class PresentationBoundaryIntegrationTests(
         client.DefaultRequestHeaders.Add(TestAuthenticationHandler.UserIdHeader, Guid.NewGuid().ToString());
 
         var missingAssetId = Guid.Parse("22222222-2222-2222-2222-222222222222");
-        var response = await client.DeleteAsync($"/api/images/{missingAssetId}");
+        var response = await client.DeleteAsync($"/api/v1/v1/images/{missingAssetId}");
         var payload = await response.Content.ReadFromJsonAsync<ErrorPayload>(JsonOptions);
 
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
@@ -279,7 +279,7 @@ public sealed class PresentationBoundaryIntegrationTests(
         client.DefaultRequestHeaders.Add(TestAuthenticationHandler.RoleHeader, PresentationRoleNames.Premium);
 
         var response = await client.PostAsJsonAsync(
-            "/api/ai/food/nutrition",
+            "/api/v1/v1/ai/food/nutrition",
             new FoodNutritionHttpRequest([]));
         var payload = await response.Content.ReadFromJsonAsync<ErrorPayload>(JsonOptions);
 
@@ -297,7 +297,7 @@ public sealed class PresentationBoundaryIntegrationTests(
         client.DefaultRequestHeaders.Authorization =
             new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
 
-        var response = await client.GetAsync("/api/statistics?dateFrom=invalid&dateTo=invalid");
+        var response = await client.GetAsync("/api/v1/v1/statistics?dateFrom=invalid&dateTo=invalid");
         var payload = await response.Content.ReadFromJsonAsync<ErrorPayload>(JsonOptions);
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
@@ -316,7 +316,7 @@ public sealed class PresentationBoundaryIntegrationTests(
             new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
 
         var response = await client.PutAsJsonAsync(
-            "/api/users/desired-weight",
+            "/api/v1/v1/users/desired-weight",
             new UpdateDesiredWeightHttpRequest(-1));
         var payload = await response.Content.ReadFromJsonAsync<ErrorPayload>(JsonOptions);
 
@@ -339,11 +339,11 @@ public sealed class PresentationBoundaryIntegrationTests(
             .ToArray();
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        Assert.Contains(pathNames, path => string.Equals(path, "/api/products", StringComparison.OrdinalIgnoreCase));
-        Assert.Contains(pathNames, path => string.Equals(path, "/api/auth/register", StringComparison.OrdinalIgnoreCase));
-        Assert.Contains(pathNames, path => string.Equals(path, "/api/recipes", StringComparison.OrdinalIgnoreCase));
-        Assert.Contains(pathNames, path => string.Equals(path, "/api/statistics", StringComparison.OrdinalIgnoreCase));
-        Assert.Contains(pathNames, path => string.Equals(path, "/api/admin/dashboard", StringComparison.OrdinalIgnoreCase));
+        Assert.Contains(pathNames, path => string.Equals(path, "/api/v1/v1/products", StringComparison.OrdinalIgnoreCase));
+        Assert.Contains(pathNames, path => string.Equals(path, "/api/v1/v1/auth/register", StringComparison.OrdinalIgnoreCase));
+        Assert.Contains(pathNames, path => string.Equals(path, "/api/v1/v1/recipes", StringComparison.OrdinalIgnoreCase));
+        Assert.Contains(pathNames, path => string.Equals(path, "/api/v1/v1/statistics", StringComparison.OrdinalIgnoreCase));
+        Assert.Contains(pathNames, path => string.Equals(path, "/api/v1/v1/admin/dashboard", StringComparison.OrdinalIgnoreCase));
         Assert.True(json.RootElement.TryGetProperty("openapi", out _));
     }
 
@@ -442,7 +442,7 @@ public sealed class PresentationBoundaryIntegrationTests(
     private static async Task<string> RegisterAndGetAccessTokenAsync(HttpClient client) {
         var email = $"api-tests-{Guid.NewGuid():N}@example.com";
         var response = await client.PostAsJsonAsync(
-            "/api/auth/register",
+            "/api/v1/v1/auth/register",
             new RegisterHttpRequest(email, "Password123!", "en"));
         response.EnsureSuccessStatusCode();
 
@@ -454,16 +454,16 @@ public sealed class PresentationBoundaryIntegrationTests(
 
     private static string BuildFocusedOpenApiSnapshot(JsonElement root) {
         var selectedPaths = new[] {
-            "/api/auth/register",
-            "/api/auth/login",
-            "/api/products",
-            "/api/products/{id}",
-            "/api/recipes",
-            "/api/recipes/{id}",
-            "/api/statistics",
-            "/api/users/info",
-            "/api/weight-entries",
-            "/api/waist-entries"
+            "/api/v1/v1/auth/register",
+            "/api/v1/v1/auth/login",
+            "/api/v1/v1/products",
+            "/api/v1/v1/products/{id}",
+            "/api/v1/v1/recipes",
+            "/api/v1/v1/recipes/{id}",
+            "/api/v1/v1/statistics",
+            "/api/v1/v1/users/info",
+            "/api/v1/v1/weight-entries",
+            "/api/v1/v1/waist-entries"
         };
 
         var paths = root.GetProperty("paths");
@@ -483,22 +483,22 @@ public sealed class PresentationBoundaryIntegrationTests(
 
     private static string BuildAuthAdminOpenApiSnapshot(JsonElement root) {
         var selectedPaths = new[] {
-            "/api/auth/register",
-            "/api/auth/login",
-            "/api/auth/refresh",
-            "/api/auth/restore",
-            "/api/auth/verify-email",
-            "/api/auth/verify-email/resend",
-            "/api/auth/password-reset/request",
-            "/api/auth/password-reset/confirm",
-            "/api/auth/admin-sso/start",
-            "/api/auth/admin-sso/exchange",
-            "/api/admin/dashboard",
-            "/api/admin/users",
-            "/api/admin/users/{id}",
-            "/api/admin/email-templates",
-            "/api/admin/email-templates/{key}/{locale}",
-            "/api/admin/ai-usage/summary"
+            "/api/v1/v1/auth/register",
+            "/api/v1/v1/auth/login",
+            "/api/v1/v1/auth/refresh",
+            "/api/v1/v1/auth/restore",
+            "/api/v1/v1/auth/verify-email",
+            "/api/v1/v1/auth/verify-email/resend",
+            "/api/v1/v1/auth/password-reset/request",
+            "/api/v1/v1/auth/password-reset/confirm",
+            "/api/v1/v1/auth/admin-sso/start",
+            "/api/v1/v1/auth/admin-sso/exchange",
+            "/api/v1/v1/admin/dashboard",
+            "/api/v1/v1/admin/users",
+            "/api/v1/v1/admin/users/{id}",
+            "/api/v1/v1/admin/email-templates",
+            "/api/v1/v1/admin/email-templates/{key}/{locale}",
+            "/api/v1/v1/admin/ai-usage/summary"
         };
 
         var paths = root.GetProperty("paths");

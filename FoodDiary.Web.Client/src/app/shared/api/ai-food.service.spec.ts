@@ -28,7 +28,7 @@ describe('AiFoodService', () => {
         expect(service).toBeTruthy();
     });
 
-    it('should analyze food image (POST /api/ai/food/vision)', () => {
+    it('should analyze food image (POST /api/v1/ai/food/vision)', () => {
         const request: FoodVisionRequest = {
             imageAssetId: 'asset-123',
             description: 'A bowl of salad',
@@ -54,7 +54,7 @@ describe('AiFoodService', () => {
         req.flush(mockResponse);
     });
 
-    it('should calculate nutrition (POST /api/ai/food/nutrition)', () => {
+    it('should calculate nutrition (POST /api/v1/ai/food/nutrition)', () => {
         const request: FoodNutritionRequest = {
             items: [{ nameEn: 'Chicken breast', amount: 200, unit: 'g', confidence: 0.95 }],
         };
@@ -94,7 +94,7 @@ describe('AiFoodService', () => {
         req.flush(mockResponse);
     });
 
-    it('should get usage summary (GET /api/ai/usage/me)', () => {
+    it('should get usage summary (GET /api/v1/ai/usage/me)', () => {
         const mockResponse = {
             inputLimit: 10000,
             outputLimit: 5000,

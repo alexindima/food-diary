@@ -2,8 +2,10 @@ using System.Text;
 using FoodDiary.Application;
 using FoodDiary.Infrastructure;
 using FoodDiary.Infrastructure.Options;
+using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Presentation.Api.Extensions;
 using FoodDiary.Presentation.Api.Options;
+using FoodDiary.Web.Api.HealthChecks;
 using FoodDiary.Web.Api.Options;
 using OpenTelemetry;
 using FoodDiary.Web.Api.Swagger;
@@ -135,6 +137,17 @@ public static class ApiServiceCollectionExtensions {
             });
         });
         services.AddConfiguredOpenTelemetry();
+        services.AddApiHealthChecks();
+
+        return services;
+    }
+
+    private static IServiceCollection AddApiHealthChecks(this IServiceCollection services) {
+        services
+            .AddHealthChecks()
+            .AddDbContextCheck<FoodDiaryDbContext>("postgresql", tags: ["ready"])
+            .AddCheck<S3HealthCheck>("s3", tags: ["ready"])
+            .AddCheck<SmtpHealthCheck>("smtp", tags: ["ready"]);
 
         return services;
     }

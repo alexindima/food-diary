@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.OutputCaching;
 namespace FoodDiary.Presentation.Api.Features.Admin;
 
 [ApiController]
-[Route("api/admin/ai-usage")]
+[Route("api/v{version:apiVersion}/admin/ai-usage")]
 [Authorize(Roles = PresentationRoleNames.Admin)]
 public sealed class AdminAiUsageController(ISender mediator) : BaseApiController(mediator) {
     [HttpGet("summary")]

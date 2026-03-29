@@ -13,7 +13,7 @@ using Microsoft.Extensions.Logging;
 namespace FoodDiary.Presentation.Api.Features.Auth;
 
 [ApiController]
-[Route("api/auth/password-reset")]
+[Route("api/v{version:apiVersion}/auth/password-reset")]
 [EnableRateLimiting(PresentationPolicyNames.AuthRateLimitPolicyName)]
 public sealed class AuthPasswordController(ISender mediator, ILogger<AuthPasswordController> logger) : BaseApiController(mediator) {
     private readonly ILogger<AuthPasswordController> _logger = logger;

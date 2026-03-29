@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using FoodDiary.Application.Authentication.Abstractions;
 using FoodDiary.Application.Authentication.Common;
 using FoodDiary.Application.Admin.Common;
+using FoodDiary.Application.Common.Abstractions.Audit;
 using FoodDiary.Application.Ai.Common;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Cycles.Common;
@@ -35,7 +36,9 @@ using Amazon.Runtime;
 using Amazon.S3;
 using FoodDiary.Infrastructure.Options;
 using FoodDiary.Infrastructure.Services;
+using Microsoft.Extensions.Http.Resilience;
 using Microsoft.Extensions.Options;
+using Polly;
 
 namespace FoodDiary.Infrastructure;
 
@@ -156,8 +159,17 @@ public static class DependencyInjection
         services.AddSingleton<IEmailTemplateProvider, EmailTemplateProvider>();
         services.AddSingleton<IEmailTransport, SmtpClientEmailTransport>();
         services.AddSingleton<IEmailSender, SmtpEmailSender>();
+        services.AddSingleton<IAuditLogger, StructuredAuditLogger>();
         services.AddHttpClient<IOpenAiFoodService, OpenAiFoodService>(client => {
             client.Timeout = TimeSpan.FromSeconds(60);
+        })
+        .AddResilienceHandler("openai-circuit-breaker", builder => {
+            builder.AddCircuitBreaker(new HttpCircuitBreakerStrategyOptions {
+                FailureRatio = 0.5,
+                SamplingDuration = TimeSpan.FromSeconds(30),
+                MinimumThroughput = 3,
+                BreakDuration = TimeSpan.FromSeconds(30),
+            });
         });
 
         return services;

@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace FoodDiary.Presentation.Api.Features.Admin;
 
 [ApiController]
-[Route("api/admin/users")]
+[Route("api/v{version:apiVersion}/admin/users")]
 [Authorize(Roles = PresentationRoleNames.Admin)]
 public sealed class AdminUsersController(ISender mediator) : BaseApiController(mediator) {
     [HttpGet]

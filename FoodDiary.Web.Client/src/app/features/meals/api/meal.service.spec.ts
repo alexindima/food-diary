@@ -8,7 +8,7 @@ import { ConsumptionManageDto, ConsumptionResponseDto, MealFilters } from '../mo
 describe('MealService', () => {
     let service: MealService;
     let httpMock: HttpTestingController;
-    const baseUrl = 'http://localhost:5300/api/consumptions';
+    const baseUrl = 'http://localhost:5300/api/v1/consumptions';
 
     const mockConsumptionDto: ConsumptionResponseDto = {
         id: 'm1',

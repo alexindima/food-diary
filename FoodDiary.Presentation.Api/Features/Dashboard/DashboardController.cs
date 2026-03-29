@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.OutputCaching;
 namespace FoodDiary.Presentation.Api.Features.Dashboard;
 
 [ApiController]
-[Route("api/dashboard")]
+[Route("api/v{version:apiVersion}/dashboard")]
 public class DashboardController(ISender mediator) : AuthorizedController(mediator) {
     [HttpGet]
     [OutputCache(PolicyName = PresentationPolicyNames.UserScopedCachePolicyName)]

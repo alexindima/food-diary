@@ -117,7 +117,7 @@ describe('AuthService', () => {
             },
         };
 
-        it('should POST to /api/auth/login', () => {
+        it('should POST to /api/v1/auth/login', () => {
             service.login(loginRequest).subscribe();
 
             const req = httpMock.expectOne(`${authBaseUrl}/login`);
@@ -237,7 +237,7 @@ describe('AuthService', () => {
             },
         };
 
-        it('should POST to /api/auth/register', () => {
+        it('should POST to /api/v1/auth/register', () => {
             service.register(registerRequest).subscribe();
 
             const req = httpMock.expectOne(`${authBaseUrl}/register`);
@@ -267,7 +267,7 @@ describe('AuthService', () => {
     });
 
     describe('refreshToken', () => {
-        it('should POST to /api/auth/refresh with refresh token', () => {
+        it('should POST to /api/v1/auth/refresh with refresh token', () => {
             localStorage.setItem('refreshToken', 'existing-refresh-token');
 
             service.refreshToken().subscribe();
@@ -575,7 +575,7 @@ describe('AuthService', () => {
     });
 
     describe('verifyEmail', () => {
-        it('should POST to /api/auth/verify-email', () => {
+        it('should POST to /api/v1/auth/verify-email', () => {
             service.verifyEmail('user-1', 'verify-token').subscribe();
 
             const req = httpMock.expectOne(`${authBaseUrl}/verify-email`);

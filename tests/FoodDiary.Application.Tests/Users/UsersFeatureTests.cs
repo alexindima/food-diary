@@ -1,4 +1,5 @@
 using FoodDiary.Application.Authentication.Common;
+using FoodDiary.Application.Common.Abstractions.Audit;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Interfaces.Services;
 using FoodDiary.Application.Users.Commands.ChangePassword;
@@ -31,7 +32,8 @@ public class UsersFeatureTests {
         var user = User.Create("user@example.com", "hash");
         var handler = new DeleteUserCommandHandler(
             new SingleUserRepository(user),
-            new FixedDateTimeProvider(DateTime.UtcNow));
+            new FixedDateTimeProvider(DateTime.UtcNow),
+            new NullAuditLogger());
 
         var result = await handler.Handle(new DeleteUserCommand(Guid.Empty), CancellationToken.None);
 
@@ -45,7 +47,8 @@ public class UsersFeatureTests {
         var deletedAtUtc = new DateTime(2026, 2, 23, 10, 30, 0, DateTimeKind.Utc);
         var handler = new DeleteUserCommandHandler(
             new SingleUserRepository(user),
-            new FixedDateTimeProvider(deletedAtUtc));
+            new FixedDateTimeProvider(deletedAtUtc),
+            new NullAuditLogger());
 
         var result = await handler.Handle(new DeleteUserCommand(user.Id.Value), CancellationToken.None);
 
@@ -85,6 +88,10 @@ public class UsersFeatureTests {
     private sealed class PassthroughPasswordHasher : IPasswordHasher {
         public string Hash(string password) => password;
         public bool Verify(string password, string hashedPassword) => password == hashedPassword;
+    }
+
+    private sealed class NullAuditLogger : IAuditLogger {
+        public void Log(string action, UserId actorId, string? targetType, string? targetId, string? details) { }
     }
 
     private sealed class SingleUserRepository(User user) : IUserRepository {

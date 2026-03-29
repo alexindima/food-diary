@@ -8,7 +8,7 @@ import { MeasurementUnit, Product, ProductType, ProductVisibility } from '../mod
 describe('ProductService', () => {
     let service: ProductService;
     let httpMock: HttpTestingController;
-    const baseUrl = 'http://localhost:5300/api/products';
+    const baseUrl = 'http://localhost:5300/api/v1/products';
 
     const mockProduct: Product = {
         id: 'p1',

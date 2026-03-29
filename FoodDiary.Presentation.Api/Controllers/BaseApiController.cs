@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using Asp.Versioning;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Presentation.Api.Extensions;
 using MediatR;
@@ -8,6 +9,7 @@ using Microsoft.Extensions.Logging;
 
 namespace FoodDiary.Presentation.Api.Controllers;
 
+[ApiVersion("1.0")]
 public abstract class BaseApiController(ISender mediator) : ControllerBase {
     protected ISender Mediator { get; } = mediator;
 
