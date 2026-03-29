@@ -102,7 +102,7 @@ export const DESIGN_TOKEN_VALUES = {
                 default: COLOR_PRIMARY['500'],
                 hover: COLOR_PRIMARY['600'],
                 active: COLOR_PRIMARY['700'],
-                disabled: COLOR_PRIMARY['300'],
+                disabled: '#6B8FE0',
             },
             border: {
                 default: 'transparent',
@@ -112,7 +112,7 @@ export const DESIGN_TOKEN_VALUES = {
             },
             text: {
                 default: '#FFFFFF',
-                disabled: '#FFFFFFA0',
+                disabled: '#FFFFFF',
             },
         },
         secondary: {
@@ -148,7 +148,7 @@ export const DESIGN_TOKEN_VALUES = {
             },
             text: {
                 default: COLOR_PRIMARY['500'],
-                disabled: COLOR_GRAY['400'],
+                disabled: COLOR_GRAY['500'],
             },
         },
         ghost: {
@@ -166,7 +166,7 @@ export const DESIGN_TOKEN_VALUES = {
             },
             text: {
                 default: COLOR_PRIMARY['500'],
-                disabled: COLOR_GRAY['400'],
+                disabled: COLOR_GRAY['500'],
             },
         },
         danger: {
@@ -174,7 +174,7 @@ export const DESIGN_TOKEN_VALUES = {
                 default: COLOR_SEMANTIC.danger,
                 hover: '#E03535',
                 active: '#C42F2F',
-                disabled: '#FFB3B3',
+                disabled: '#E08080',
             },
             border: {
                 default: 'transparent',
@@ -184,7 +184,79 @@ export const DESIGN_TOKEN_VALUES = {
             },
             text: {
                 default: '#FFFFFF',
-                disabled: '#FFFFFFA0',
+                disabled: '#FFFFFF',
+            },
+        },
+        'secondary-text': {
+            background: {
+                default: 'transparent',
+                hover: COLOR_GRAY['100'],
+                active: COLOR_GRAY['200'],
+                disabled: 'transparent',
+            },
+            border: {
+                default: 'transparent',
+                hover: 'transparent',
+                active: 'transparent',
+                disabled: 'transparent',
+            },
+            text: {
+                default: COLOR_GRAY['600'],
+                disabled: COLOR_GRAY['500'],
+            },
+        },
+        'danger-ghost': {
+            background: {
+                default: 'transparent',
+                hover: '#FFF0F0',
+                active: '#FFE0E0',
+                disabled: 'transparent',
+            },
+            border: {
+                default: 'transparent',
+                hover: 'transparent',
+                active: 'transparent',
+                disabled: 'transparent',
+            },
+            text: {
+                default: COLOR_SEMANTIC.danger,
+                disabled: '#CC6666',
+            },
+        },
+        info: {
+            background: {
+                default: COLOR_SEMANTIC.info,
+                hover: '#276BC8',
+                active: '#1F56A3',
+                disabled: '#D0E0FF',
+            },
+            border: {
+                default: 'transparent',
+                hover: 'transparent',
+                active: 'transparent',
+                disabled: 'transparent',
+            },
+            text: {
+                default: '#FFFFFF',
+                disabled: '#4A6FA5',
+            },
+        },
+        'info-text': {
+            background: {
+                default: 'transparent',
+                hover: '#EEF4FF',
+                active: '#D0E0FF',
+                disabled: 'transparent',
+            },
+            border: {
+                default: 'transparent',
+                hover: 'transparent',
+                active: 'transparent',
+                disabled: 'transparent',
+            },
+            text: {
+                default: COLOR_SEMANTIC.info,
+                disabled: '#4A6FA5',
             },
         },
     },
@@ -397,6 +469,42 @@ export const DESIGN_TOKEN_CSS_VARIABLES = {
             text: {
                 default: '--fd-button-danger-ghost-text-default',
                 disabled: '--fd-button-danger-ghost-text-disabled',
+            },
+        },
+        info: {
+            background: {
+                default: '--fd-button-info-background-default',
+                hover: '--fd-button-info-background-hover',
+                active: '--fd-button-info-background-active',
+                disabled: '--fd-button-info-background-disabled',
+            },
+            border: {
+                default: '--fd-button-info-border-default',
+                hover: '--fd-button-info-border-hover',
+                active: '--fd-button-info-border-active',
+                disabled: '--fd-button-info-border-disabled',
+            },
+            text: {
+                default: '--fd-button-info-text-default',
+                disabled: '--fd-button-info-text-disabled',
+            },
+        },
+        'info-text': {
+            background: {
+                default: '--fd-button-info-text-background-default',
+                hover: '--fd-button-info-text-background-hover',
+                active: '--fd-button-info-text-background-active',
+                disabled: '--fd-button-info-text-background-disabled',
+            },
+            border: {
+                default: '--fd-button-info-text-border-default',
+                hover: '--fd-button-info-text-border-hover',
+                active: '--fd-button-info-text-border-active',
+                disabled: '--fd-button-info-text-border-disabled',
+            },
+            text: {
+                default: '--fd-button-info-text-text-default',
+                disabled: '--fd-button-info-text-text-disabled',
             },
         },
     },

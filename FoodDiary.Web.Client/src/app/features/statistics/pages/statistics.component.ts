@@ -12,7 +12,7 @@ import {
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { ChartConfiguration, ChartOptions, ChartTypeRegistry, TooltipItem } from 'chart.js';
+import { ChartConfiguration } from 'chart.js';
 import { finalize, forkJoin, distinctUntilChanged, startWith } from 'rxjs';
 
 import { FdUiTab } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
@@ -21,8 +21,7 @@ import { PageHeaderComponent } from '../../../components/shared/page-header/page
 import { PeriodFilterComponent } from '../../../components/shared/period-filter/period-filter.component';
 import { StatisticsBodyComponent } from '../../../components/shared/statistics-body/statistics-body.component';
 import { StatisticsNutritionComponent } from '../../../components/shared/statistics-nutrition/statistics-nutrition.component';
-import { StatisticsSummaryComponent, SummaryMetrics } from '../../../components/shared/statistics-summary/statistics-summary.component';
-import { CHART_COLORS } from '../../../constants/chart-colors';
+import { StatisticsSummaryComponent } from '../../../components/shared/statistics-summary/statistics-summary.component';
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
 import { UserService } from '../../../shared/api/user.service';
 import { WaistEntriesService } from '../../waist-history/api/waist-entries.service';
@@ -30,17 +29,38 @@ import { WeightEntriesService } from '../../weight-history/api/weight-entries.se
 import { WaistEntrySummaryPoint } from '../../waist-history/models/waist-entry.data';
 import { WeightEntrySummaryPoint } from '../../weight-history/models/weight-entry.data';
 import { StatisticsService } from '../api/statistics.service';
+import {
+    createCaloriesLineChartOptions,
+    createPieChartOptions,
+    nutrientsLineChartOptions,
+    radarChartOptions,
+    barChartOptions,
+    bodyChartOptions,
+    summarySparklineOptions,
+} from '../lib/statistics-chart-config';
+import {
+    type StatisticsRange,
+    type NutritionChartTab,
+    type BodyChartTab,
+    type DateRange,
+    isStatisticsRange,
+    isNutritionTab,
+    isBodyTab,
+    getQuantizationDays,
+    normalizeStartOfDay,
+    normalizeEndOfDay,
+    getCurrentDateRange,
+    buildCaloriesLineChartData,
+    buildNutrientsLineChartData,
+    buildNutrientsPieChartData,
+    buildNutrientsRadarChartData,
+    buildNutrientsBarChartData,
+    buildBodyChartData,
+    buildSummaryMetrics,
+    buildMacroSparklineData,
+    buildSummarySparklineData,
+} from '../lib/statistics-data-mapper';
 import { MappedStatistics, StatisticsMapper } from '../models/statistics.data';
-
-type StatisticsRange = 'week' | 'month' | 'year' | 'custom';
-type NutritionChartTab = 'calories' | 'macros' | 'distribution';
-type BodyChartTab = 'weight' | 'bmi' | 'waist' | 'whtr';
-type MacroKey = 'proteins' | 'fats' | 'carbs' | 'fiber';
-
-interface DateRange {
-    start: Date;
-    end: Date;
-}
 
 @Component({
     selector: 'fd-statistics',
@@ -71,7 +91,8 @@ export class StatisticsComponent implements OnInit {
     private dateLabelFormatterCache: { locale: string; formatter: Intl.DateTimeFormat } | null = null;
     private lastLoadedRangeKey: string | null = null;
 
-    public readonly currentRange = computed<DateRange>(() => this.getCurrentDateRange());
+    // ── Tab definitions ────────────────────────────────────────────────
+
     public readonly rangeTabs: FdUiTab[] = [
         { value: 'week', labelKey: 'STATISTICS.RANGES.WEEK' },
         { value: 'month', labelKey: 'STATISTICS.RANGES.MONTH' },
@@ -90,6 +111,8 @@ export class StatisticsComponent implements OnInit {
         { value: 'whtr', labelKey: 'STATISTICS.BODY_TABS.WHTR' },
     ];
 
+    // ── State signals ──────────────────────────────────────────────────
+
     public readonly selectedRange = signal<StatisticsRange>('month');
     public readonly selectedNutritionTab = signal<NutritionChartTab>('calories');
     public readonly selectedBodyTab = signal<BodyChartTab>('weight');
@@ -102,268 +125,76 @@ export class StatisticsComponent implements OnInit {
     public readonly waistSummaryPoints = signal<WaistEntrySummaryPoint[]>([]);
     public readonly userHeightCm = signal<number | null>(null);
 
-    public readonly summaryMetrics = computed<SummaryMetrics | null>(() => {
-        const stats = this.chartStatisticsData();
-        if (!stats) {
-            return null;
-        }
+    // ── Chart options (static or tooltip-bound) ────────────────────────
 
-        const totalCalories = stats.calories.reduce((sum, value) => sum + value, 0);
-        const entries = stats.calories.length || 1;
-        const averageCalories = totalCalories / entries;
-        const aggregated = stats.aggregatedNutrients;
+    public readonly caloriesLineChartOptions = createCaloriesLineChartOptions(
+        (label, value) => `${label}: ${parseFloat(value.toFixed(2))} ${this.translateService.instant('GENERAL.UNITS.KCAL')}`,
+    );
+    public readonly nutrientsLineChartOptions = nutrientsLineChartOptions;
+    public readonly pieChartOptions = createPieChartOptions(
+        (label, value) => `${label}: ${parseFloat(value.toFixed(2))} ${this.translateService.instant('GENERAL.UNITS.G')}`,
+    );
+    public readonly radarChartOptions = radarChartOptions;
+    public readonly barChartOptions = barChartOptions;
+    public readonly bodyChartOptions = bodyChartOptions;
+    public readonly summarySparklineOptions = summarySparklineOptions;
 
-        return {
-            totalCalories,
-            averageCalories,
-            averageCard: {
-                consumption: averageCalories,
-                steps: 6420,
-                burned: 215,
-            },
-            macros: [
-                {
-                    key: 'proteins' as const,
-                    labelKey: 'GENERAL.NUTRIENTS.PROTEIN',
-                    value: aggregated?.proteins ?? 0,
-                    color: CHART_COLORS.proteins,
-                },
-                {
-                    key: 'fats' as const,
-                    labelKey: 'GENERAL.NUTRIENTS.FAT',
-                    value: aggregated?.fats ?? 0,
-                    color: CHART_COLORS.fats,
-                },
-                {
-                    key: 'carbs' as const,
-                    labelKey: 'GENERAL.NUTRIENTS.CARB',
-                    value: aggregated?.carbs ?? 0,
-                    color: CHART_COLORS.carbs,
-                },
-                {
-                    key: 'fiber' as const,
-                    labelKey: 'SHARED.NUTRIENTS_SUMMARY.FIBER',
-                    value: aggregated?.fiber ?? 0,
-                    color: CHART_COLORS.fiber,
-                },
-            ],
-        };
-    });
+    // ── Computed signals ───────────────────────────────────────────────
 
-    public readonly macroSparklineData = computed<Record<MacroKey, ChartConfiguration<'line'>['data']>>(() => {
-        const stats = this.chartStatisticsData();
-        const labels = stats?.date.map(date => this.formatDateLabel(date)) ?? [];
-        const nutrients = stats?.nutrientsStatistic;
+    public readonly currentRange = computed<DateRange>(() =>
+        getCurrentDateRange(this.selectedRange(), this.customRangeControl.value),
+    );
 
-        const buildData = (
-            series: number[] | undefined,
-            color: string,
-            fillAlpha = 0.16,
-        ): ChartConfiguration<'line'>['data'] => ({
-            labels,
-            datasets: [
-                {
-                    data: series ?? [],
-                    borderColor: color,
-                    backgroundColor: this.applyAlpha(color, fillAlpha),
-                    tension: 0.35,
-                    borderWidth: 2,
-                    fill: true,
-                    pointRadius: 0,
-                    spanGaps: true,
-                },
-            ],
-        });
+    public readonly summaryMetrics = computed(() =>
+        buildSummaryMetrics(this.chartStatisticsData()),
+    );
 
-        return {
-            proteins: buildData(nutrients?.proteins, CHART_COLORS.proteins, 0.18),
-            fats: buildData(nutrients?.fats, CHART_COLORS.fats, 0.18),
-            carbs: buildData(nutrients?.carbs, CHART_COLORS.carbs, 0.18),
-            fiber: buildData(nutrients?.fiber, CHART_COLORS.fiber, 0.18),
-        };
-    });
+    public readonly macroSparklineData = computed(() =>
+        buildMacroSparklineData(this.chartStatisticsData(), date => this.formatDateLabel(date)),
+    );
 
-    public readonly hasStatisticsData = computed(() => (this.chartStatisticsData()?.calories.length ?? 0) > 0);
+    public readonly hasStatisticsData = computed(() =>
+        (this.chartStatisticsData()?.calories.length ?? 0) > 0,
+    );
 
-    public readonly caloriesLineChartData = computed<ChartConfiguration<'line'>['data']>(() => {
-        const stats = this.chartStatisticsData();
+    public readonly caloriesLineChartData = computed(() =>
+        buildCaloriesLineChartData(this.chartStatisticsData(), date => this.formatDateLabel(date)),
+    );
 
-        return {
-            labels: stats?.date.map(date => this.formatDateLabel(date)) ?? [],
-            datasets: [
-                {
-                    data: stats?.calories ?? [],
-                    borderColor: CHART_COLORS.primaryLine,
-                    backgroundColor: 'transparent',
-                    tension: 0.35,
-                    pointRadius: 4,
-                    pointHoverRadius: 5,
-                    borderWidth: 2,
-                    fill: false,
-                    spanGaps: true,
-                    pointBackgroundColor: '#ffffff',
-                    pointBorderColor: CHART_COLORS.primaryLine,
-                    pointBorderWidth: 2,
-                },
-            ],
-        };
-    });
+    public readonly nutrientsLineChartData = computed(() =>
+        buildNutrientsLineChartData(
+            this.chartStatisticsData(),
+            date => this.formatDateLabel(date),
+            key => this.translateService.instant(key),
+        ),
+    );
 
-    public readonly nutrientsLineChartData = computed<ChartConfiguration<'line'>['data']>(() => {
-        const stats = this.chartStatisticsData();
-        const nutrients = stats?.nutrientsStatistic;
+    public readonly summarySparklineData = computed(() =>
+        buildSummarySparklineData(this.chartStatisticsData(), date => this.formatDateLabel(date)),
+    );
 
-        return {
-            labels: stats?.date.map(date => this.formatDateLabel(date)) ?? [],
-            datasets: [
-                {
-                    data: nutrients?.proteins ?? [],
-                    label: this.translateService.instant('NUTRIENTS.PROTEINS'),
-                    borderColor: CHART_COLORS.proteins,
-                    backgroundColor: CHART_COLORS.proteins,
-                    tension: 0.3,
-                    fill: false,
-                    spanGaps: true,
-                    pointBackgroundColor: '#ffffff',
-                    pointBorderColor: CHART_COLORS.proteins,
-                    pointBorderWidth: 2,
-                    pointRadius: 4,
-                },
-                {
-                    data: nutrients?.fats ?? [],
-                    label: this.translateService.instant('NUTRIENTS.FATS'),
-                    borderColor: CHART_COLORS.fats,
-                    backgroundColor: CHART_COLORS.fats,
-                    tension: 0.3,
-                    fill: false,
-                    spanGaps: true,
-                    pointBackgroundColor: '#ffffff',
-                    pointBorderColor: CHART_COLORS.fats,
-                    pointBorderWidth: 2,
-                    pointRadius: 4,
-                },
-                {
-                    data: nutrients?.carbs ?? [],
-                    label: this.translateService.instant('NUTRIENTS.CARBS'),
-                    borderColor: CHART_COLORS.carbs,
-                    backgroundColor: CHART_COLORS.carbs,
-                    tension: 0.3,
-                    fill: false,
-                    spanGaps: true,
-                    pointBackgroundColor: '#ffffff',
-                    pointBorderColor: CHART_COLORS.carbs,
-                    pointBorderWidth: 2,
-                    pointRadius: 4,
-                },
-            ],
-        };
-    });
+    public readonly nutrientsPieChartData = computed(() =>
+        buildNutrientsPieChartData(this.chartStatisticsData(), key => this.translateService.instant(key)),
+    );
 
-    public readonly summarySparklineData = computed<ChartConfiguration<'line'>['data']>(() => {
-        const stats = this.chartStatisticsData();
-        return {
-            labels: stats?.date.map(date => this.formatDateLabel(date)) ?? [],
-            datasets: [
-                {
-                    data: stats?.calories ?? [],
-                    borderColor: CHART_COLORS.primaryLine,
-                    backgroundColor: 'rgba(37, 99, 235, 0.15)',
-                    tension: 0.3,
-                    borderWidth: 2,
-                    fill: true,
-                    pointRadius: 0,
-                    spanGaps: true,
-                },
-            ],
-        };
-    });
+    public readonly nutrientsRadarChartData = computed(() =>
+        buildNutrientsRadarChartData(this.chartStatisticsData(), key => this.translateService.instant(key)),
+    );
 
-    public readonly nutrientsPieChartData = computed<ChartConfiguration<'pie'>['data']>(() => {
-        const aggregated = this.chartStatisticsData()?.aggregatedNutrients;
-
-        return {
-            labels: [
-                this.translateService.instant('NUTRIENTS.PROTEINS'),
-                this.translateService.instant('NUTRIENTS.FATS'),
-                this.translateService.instant('NUTRIENTS.CARBS'),
-            ],
-            datasets: [
-                {
-                    data: [
-                        aggregated?.proteins ?? 0,
-                        aggregated?.fats ?? 0,
-                        aggregated?.carbs ?? 0,
-                    ],
-                    backgroundColor: [CHART_COLORS.proteins, CHART_COLORS.fats, CHART_COLORS.carbs],
-                    borderWidth: 0,
-                },
-            ],
-        };
-    });
-
-    public readonly nutrientsRadarChartData = computed<ChartConfiguration<'radar'>['data']>(() => {
-        const aggregated = this.chartStatisticsData()?.aggregatedNutrients;
-
-        return {
-            labels: [
-                this.translateService.instant('NUTRIENTS.PROTEINS'),
-                this.translateService.instant('NUTRIENTS.FATS'),
-                this.translateService.instant('NUTRIENTS.CARBS'),
-            ],
-            datasets: [
-                {
-                    data: [
-                        aggregated?.proteins ?? 0,
-                        aggregated?.fats ?? 0,
-                        aggregated?.carbs ?? 0,
-                    ],
-                    backgroundColor: CHART_COLORS.radarBackground,
-                    borderColor: CHART_COLORS.radarBorder,
-                    borderWidth: 2,
-                    pointBackgroundColor: CHART_COLORS.primaryLine,
-                },
-            ],
-        };
-    });
-
-    public readonly nutrientsBarChartData = computed<ChartConfiguration<'bar'>['data']>(() => {
-        const aggregated = this.chartStatisticsData()?.aggregatedNutrients;
-
-        return {
-            labels: [
-                this.translateService.instant('NUTRIENTS.PROTEINS'),
-                this.translateService.instant('NUTRIENTS.FATS'),
-                this.translateService.instant('NUTRIENTS.CARBS'),
-                this.translateService.instant('SHARED.NUTRIENTS_SUMMARY.FIBER'),
-            ],
-            datasets: [
-                {
-                    data: [
-                        aggregated?.proteins ?? 0,
-                        aggregated?.fats ?? 0,
-                        aggregated?.carbs ?? 0,
-                        aggregated?.fiber ?? 0,
-                    ],
-                    backgroundColor: [
-                        CHART_COLORS.proteins,
-                        CHART_COLORS.fats,
-                        CHART_COLORS.carbs,
-                        CHART_COLORS.fiber,
-                    ],
-                    borderRadius: 6,
-                },
-            ],
-        };
-    });
+    public readonly nutrientsBarChartData = computed(() =>
+        buildNutrientsBarChartData(this.chartStatisticsData(), key => this.translateService.instant(key)),
+    );
 
     public readonly bodyChartData = computed<ChartConfiguration<'line'>['data'] | null>(() => {
         const selectedTab = this.selectedBodyTab();
+        const formatLabel = (dateString: string): string => this.formatSummaryLabel(dateString);
+
         if (selectedTab === 'weight') {
-            return this.createBodyChartDataset(this.weightSummaryPoints(), point => point.averageWeight);
+            return buildBodyChartData(this.weightSummaryPoints(), point => point.averageWeight, formatLabel);
         }
 
         if (selectedTab === 'waist') {
-            return this.createBodyChartDataset(this.waistSummaryPoints(), point => point.averageCircumference);
+            return buildBodyChartData(this.waistSummaryPoints(), point => point.averageCircumference, formatLabel);
         }
 
         if (selectedTab === 'bmi') {
@@ -373,8 +204,10 @@ export class StatisticsComponent implements OnInit {
             }
 
             const heightM = heightCm / 100;
-            return this.createBodyChartDataset(this.weightSummaryPoints(), point =>
-                point.averageWeight / (heightM * heightM),
+            return buildBodyChartData(
+                this.weightSummaryPoints(),
+                point => point.averageWeight / (heightM * heightM),
+                formatLabel,
             );
         }
 
@@ -384,8 +217,10 @@ export class StatisticsComponent implements OnInit {
                 return null;
             }
 
-            return this.createBodyChartDataset(this.waistSummaryPoints(), point =>
-                point.averageCircumference / heightCm,
+            return buildBodyChartData(
+                this.waistSummaryPoints(),
+                point => point.averageCircumference / heightCm,
+                formatLabel,
             );
         }
 
@@ -398,114 +233,7 @@ export class StatisticsComponent implements OnInit {
             (this.bodyChartData()!.datasets[0].data as (number | null)[]).some(value => value !== null),
     );
 
-    public readonly caloriesLineChartOptions: ChartConfiguration['options'] = {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-            legend: { display: false },
-            tooltip: {
-                callbacks: {
-                    label: context => this.getFormattedTooltip(context, 'GENERAL.UNITS.KCAL'),
-                },
-            },
-        },
-        scales: {
-            y: {
-                beginAtZero: true,
-                ticks: {
-                    color: '#475569',
-                },
-            },
-            x: {
-                ticks: {
-                    color: '#475569',
-                    maxRotation: 0,
-                },
-            },
-        },
-    };
-
-    public readonly nutrientsLineChartOptions: ChartConfiguration['options'] = {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-            legend: {
-                position: 'bottom',
-            },
-        },
-        scales: {
-            y: {
-                beginAtZero: true,
-                ticks: { color: '#475569' },
-            },
-            x: {
-                ticks: { color: '#475569', maxRotation: 0 },
-            },
-        },
-    };
-
-    public readonly pieChartOptions: ChartOptions<'pie'> = {
-        plugins: {
-            tooltip: {
-                callbacks: {
-                    label: context => this.getFormattedTooltip(context, 'GENERAL.UNITS.G'),
-                },
-            },
-        },
-    };
-
-    public readonly radarChartOptions: ChartOptions<'radar'> = {
-        scales: {
-            r: {
-                beginAtZero: true,
-                angleLines: { color: '#cbd5f5' },
-                grid: { color: '#e2e8f0' },
-                ticks: { showLabelBackdrop: false },
-            },
-        },
-    };
-
-    public readonly barChartOptions: ChartOptions<'bar'> = {
-        responsive: true,
-        scales: {
-            y: {
-                beginAtZero: true,
-            },
-        },
-        plugins: {
-            legend: { display: false },
-        },
-    };
-
-    public readonly bodyChartOptions: ChartConfiguration['options'] = {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-            legend: { display: false },
-        },
-        scales: {
-            y: { beginAtZero: false, ticks: { color: '#475569' } },
-            x: { ticks: { color: '#475569', maxRotation: 0 } },
-        },
-    };
-
-    public readonly summarySparklineOptions: ChartConfiguration['options'] = {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-            legend: { display: false },
-            tooltip: {
-                enabled: false,
-            },
-        },
-        elements: {
-            line: { borderJoinStyle: 'round' },
-        },
-        scales: {
-            x: { display: false },
-            y: { display: false },
-        },
-    };
+    // ── Reactive plumbing ──────────────────────────────────────────────
 
     private readonly customRangeValue = toSignal(
         this.customRangeControl.valueChanges.pipe(
@@ -534,10 +262,14 @@ export class StatisticsComponent implements OnInit {
         }
     });
 
+    // ── Lifecycle ──────────────────────────────────────────────────────
+
     public ngOnInit(): void {
         this.initializeCustomRange();
         this.loadUserProfile();
     }
+
+    // ── Public handlers ────────────────────────────────────────────────
 
     public changeRange(value: unknown): void {
         if (!isStatisticsRange(value) || value === this.selectedRange()) {
@@ -567,10 +299,12 @@ export class StatisticsComponent implements OnInit {
         }
     }
 
+    // ── Private data loading ───────────────────────────────────────────
+
     private loadAllData(): void {
-        const range = this.getCurrentDateRange();
-        const normalizedStart = this.normalizeStartOfDay(range.start);
-        const normalizedEnd = this.normalizeEndOfDay(range.end);
+        const range = getCurrentDateRange(this.selectedRange(), this.customRangeControl.value);
+        const normalizedStart = normalizeStartOfDay(range.start);
+        const normalizedEnd = normalizeEndOfDay(range.end);
         const rangeKey = `${normalizedStart.toISOString()}_${normalizedEnd.toISOString()}`;
 
         if (rangeKey === this.lastLoadedRangeKey) {
@@ -585,9 +319,9 @@ export class StatisticsComponent implements OnInit {
 
     private loadStatistics(range: DateRange): void {
         this.isLoading.set(true);
-        const normalizedStart = this.normalizeStartOfDay(range.start);
-        const normalizedEnd = this.normalizeEndOfDay(range.end);
-        const quantizationDays = this.getQuantizationDays(normalizedStart, normalizedEnd);
+        const normalizedStart = normalizeStartOfDay(range.start);
+        const normalizedEnd = normalizeEndOfDay(range.end);
+        const quantizationDays = getQuantizationDays(normalizedStart, normalizedEnd);
 
         this.statisticsService
             .getAggregatedStatistics({
@@ -609,9 +343,9 @@ export class StatisticsComponent implements OnInit {
 
     private loadBodySummaries(range: DateRange): void {
         this.isBodyLoading.set(true);
-        const normalizedStart = this.normalizeStartOfDay(range.start).toISOString();
-        const normalizedEnd = this.normalizeEndOfDay(range.end).toISOString();
-        const quantizationDays = this.getQuantizationDays(range.start, range.end);
+        const normalizedStart = normalizeStartOfDay(range.start).toISOString();
+        const normalizedEnd = normalizeEndOfDay(range.end).toISOString();
+        const quantizationDays = getQuantizationDays(range.start, range.end);
 
         forkJoin({
             weight: this.weightEntriesService.getSummary({
@@ -650,69 +384,13 @@ export class StatisticsComponent implements OnInit {
             });
     }
 
+    // ── Private helpers ────────────────────────────────────────────────
+
     private initializeCustomRange(): void {
         const end = new Date();
         const start = new Date(end);
         start.setMonth(start.getMonth() - 1);
         this.customRangeControl.setValue({ start, end }, { emitEvent: false });
-    }
-
-    private getCurrentDateRange(): DateRange {
-        const range = this.selectedRange();
-        const end = new Date();
-        const start = new Date(end);
-
-        if (range === 'week') {
-            start.setDate(end.getDate() - 7);
-            return { start, end };
-        }
-
-        if (range === 'month') {
-            start.setMonth(end.getMonth() - 1);
-            return { start, end };
-        }
-
-        if (range === 'year') {
-            start.setFullYear(end.getFullYear() - 1);
-            return { start, end };
-        }
-
-        const custom = this.customRangeControl.value;
-        if (custom?.start && custom?.end) {
-            return { start: custom.start, end: custom.end };
-        }
-
-        return { start, end };
-    }
-
-    private getQuantizationDays(start: Date, end: Date): number {
-        const totalDays = Math.max(1, Math.round((end.getTime() - start.getTime()) / MS_IN_DAY));
-
-        if (totalDays > 180) {
-            return 30;
-        }
-
-        if (totalDays > 120) {
-            return 21;
-        }
-
-        if (totalDays > 90) {
-            return 14;
-        }
-
-        if (totalDays > 60) {
-            return 7;
-        }
-
-        if (totalDays > 30) {
-            return 3;
-        }
-
-        if (totalDays > 14) {
-            return 2;
-        }
-
-        return 1;
     }
 
     private formatDateLabel(date: Date): string {
@@ -735,98 +413,8 @@ export class StatisticsComponent implements OnInit {
         return this.translateService.currentLang || this.translateService.defaultLang || 'en-US';
     }
 
-    private createBodyChartDataset<T extends { dateFrom: string }>(
-        points: T[],
-        getValue: (point: T) => number | null | undefined,
-    ): ChartConfiguration<'line'>['data'] | null {
-        if (!points.length) {
-            return null;
-        }
-
-        const labels: string[] = [];
-        const data: (number | null)[] = [];
-
-        points.forEach(point => {
-            labels.push(this.formatSummaryLabel(point.dateFrom));
-            const value = getValue(point);
-            if (value === undefined || value === null || Number.isNaN(value)) {
-                data.push(null);
-            } else {
-                data.push(Number(value.toFixed(2)));
-            }
-        });
-
-        if (data.every(value => value === null)) {
-            return null;
-        }
-
-        return {
-            labels,
-            datasets: [
-                {
-                    data,
-                    borderColor: CHART_COLORS.primaryLine,
-                    backgroundColor: 'transparent',
-                    tension: 0.3,
-                    pointRadius: 4,
-                    borderWidth: 2,
-                    spanGaps: true,
-                    fill: false,
-                    pointBackgroundColor: '#ffffff',
-                    pointBorderColor: CHART_COLORS.primaryLine,
-                    pointBorderWidth: 2,
-                },
-            ],
-        };
-    }
-
     private formatSummaryLabel(dateString: string): string {
         const date = new Date(dateString);
         return date.toLocaleDateString(this.getCurrentLocale());
     }
-
-    private applyAlpha(hexColor: string, alpha: number): string {
-        const match = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hexColor);
-        if (!match) {
-            return hexColor;
-        }
-
-        const r = parseInt(match[1], 16);
-        const g = parseInt(match[2], 16);
-        const b = parseInt(match[3], 16);
-        return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-    }
-
-    private normalizeStartOfDay(date: Date): Date {
-        return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
-    }
-
-    private normalizeEndOfDay(date: Date): Date {
-        return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59, 999));
-    }
-
-    private getFormattedTooltip<T extends keyof ChartTypeRegistry>(
-        context: TooltipItem<T>,
-        key: string,
-    ): string | string[] {
-        const label = context.label || '';
-        const value = Number(context.raw) || 0;
-        const formattedValue = parseFloat(value.toFixed(2));
-
-        return `${label}: ${formattedValue} ${this.translateService.instant(key)}`;
-    }
-}
-
-const MS_IN_DAY = 24 * 60 * 60 * 1000;
-
-function isStatisticsRange(value: unknown): value is StatisticsRange {
-    return value === 'week' || value === 'month' || value === 'year' || value === 'custom';
-}
-
-function isNutritionTab(value: unknown): value is NutritionChartTab {
-    return value === 'calories' || value === 'macros' || value === 'distribution';
-}
-
-function isBodyTab(value: unknown): value is BodyChartTab {
-    return value === 'weight' || value === 'bmi' || value === 'waist' || value === 'whtr';
 }
