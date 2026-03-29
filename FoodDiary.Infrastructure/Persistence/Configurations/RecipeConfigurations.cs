@@ -9,6 +9,8 @@ namespace FoodDiary.Infrastructure.Persistence.Configurations;
 
 internal sealed class RecipeConfiguration : IEntityTypeConfiguration<Recipe> {
     public void Configure(EntityTypeBuilder<Recipe> entity) {
+        entity.Property<uint>("xmin").IsRowVersion();
+
         entity.Property(e => e.Id).HasConversion(
             id => id.Value,
             value => new RecipeId(value));

@@ -7,6 +7,8 @@ namespace FoodDiary.Infrastructure.Persistence.Configurations;
 
 internal sealed class ShoppingListConfiguration : IEntityTypeConfiguration<ShoppingList> {
     public void Configure(EntityTypeBuilder<ShoppingList> entity) {
+        entity.Property<uint>("xmin").IsRowVersion();
+
         entity.Property(e => e.Id)
             .HasConversion(
                 id => id.Value,

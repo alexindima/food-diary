@@ -7,6 +7,7 @@ public static class ApiApplicationBuilderExtensions {
     public static WebApplication UseApiPipeline(this WebApplication app) {
         app.UseExceptionHandler();
         app.UseForwardedHeaders();
+        app.UseMiddleware<SecurityHeadersMiddleware>();
         app.UseHttpLogging();
         app.UseMiddleware<RequestObservabilityMiddleware>();
 
@@ -14,6 +15,7 @@ public static class ApiApplicationBuilderExtensions {
             app.UseSwagger();
             app.UseSwaggerUI();
         } else {
+            app.UseHsts();
             app.UseHttpsRedirection();
         }
 

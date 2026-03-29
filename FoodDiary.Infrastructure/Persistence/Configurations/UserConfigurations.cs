@@ -9,6 +9,8 @@ namespace FoodDiary.Infrastructure.Persistence.Configurations;
 
 internal sealed class UserConfiguration : IEntityTypeConfiguration<User> {
     public void Configure(EntityTypeBuilder<User> entity) {
+        entity.Property<uint>("xmin").IsRowVersion();
+
         entity.Property(e => e.Id).HasConversion(
             id => id.Value,
             value => new UserId(value));

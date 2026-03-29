@@ -30,6 +30,8 @@ internal sealed class ImageAssetConfiguration : IEntityTypeConfiguration<ImageAs
 
 internal sealed class ProductConfiguration : IEntityTypeConfiguration<Product> {
     public void Configure(EntityTypeBuilder<Product> entity) {
+        entity.Property<uint>("xmin").IsRowVersion();
+
         entity.Property(e => e.Id).HasConversion(
             id => id.Value,
             value => new ProductId(value));

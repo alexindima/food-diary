@@ -25,6 +25,7 @@ using FoodDiary.Infrastructure.Persistence.Ai;
 using FoodDiary.Infrastructure.Persistence.Images;
 using FoodDiary.Infrastructure.Persistence.Meals;
 using FoodDiary.Infrastructure.Persistence;
+using FoodDiary.Infrastructure.Persistence.Interceptors;
 using FoodDiary.Infrastructure.Persistence.Products;
 using FoodDiary.Infrastructure.Persistence.RecentItems;
 using FoodDiary.Infrastructure.Persistence.Recipes;
@@ -55,6 +56,7 @@ public static class DependencyInjection
                 "Database:MaxRetryDelaySeconds must be greater than zero when retries are enabled.")
             .ValidateOnStart();
         services.AddSingleton<DatabaseCommandTelemetryInterceptor>();
+        services.AddScoped<DomainEventDispatchInterceptor>();
         services.AddDbContext<FoodDiaryDbContext>((sp, options) =>
         {
             var databaseOptions = sp.GetRequiredService<IOptions<DatabaseOptions>>().Value;
@@ -69,7 +71,9 @@ public static class DependencyInjection
                                 errorCodesToAdd: null);
                         }
                     })
-                .AddInterceptors(sp.GetRequiredService<DatabaseCommandTelemetryInterceptor>());
+                .AddInterceptors(
+                    sp.GetRequiredService<DatabaseCommandTelemetryInterceptor>(),
+                    sp.GetRequiredService<DomainEventDispatchInterceptor>());
         });
 
         services.AddOptions<S3Options>()

@@ -8,6 +8,8 @@ namespace FoodDiary.Infrastructure.Persistence.Configurations;
 
 internal sealed class MealConfiguration : IEntityTypeConfiguration<Meal> {
     public void Configure(EntityTypeBuilder<Meal> entity) {
+        entity.Property<uint>("xmin").IsRowVersion();
+
         entity.Property(e => e.Id)
             .HasConversion(
                 id => id.Value,

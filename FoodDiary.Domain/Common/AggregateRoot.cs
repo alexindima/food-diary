@@ -1,6 +1,11 @@
 namespace FoodDiary.Domain.Common;
 
-public abstract class AggregateRoot<TId> : Entity<TId>
+public interface IAggregateWithEvents {
+    IReadOnlyList<IDomainEvent> DomainEvents { get; }
+    void ClearDomainEvents();
+}
+
+public abstract class AggregateRoot<TId> : Entity<TId>, IAggregateWithEvents
     where TId : notnull {
     private readonly List<IDomainEvent> _domainEvents = new();
 

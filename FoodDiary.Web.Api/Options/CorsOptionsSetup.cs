@@ -14,8 +14,9 @@ public sealed class CorsOptionsSetup(IOptions<ApiCorsOptions> apiCorsOptions) : 
         options.AddPolicy(ApiCompositionConstants.CorsPolicyName, policy => {
             policy
                 .WithOrigins(origins)
-                .AllowAnyMethod()
-                .AllowAnyHeader()
+                .WithMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
+                .WithHeaders("Content-Type", "Authorization", "Idempotency-Key", "X-Api-Version", "X-Correlation-Id")
+                .WithExposedHeaders("X-Correlation-Id", "Location")
                 .AllowCredentials();
         });
     }
