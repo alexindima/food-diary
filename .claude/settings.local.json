@@ -108,7 +108,12 @@
       "Bash(find /c/Users/alexi/OneDrive/Документы/GitHub/food-diary/FoodDiary.Web.Client/projects -type f -name *.scss)",
       "Bash(grep -rn \"@media.*$media\" /c/Users/alexi/OneDrive/Документы/GitHub/food-diary/FoodDiary.Web.Client/src --include=\"*.scss\")",
       "Bash(grep -v \"$media\")",
-      "Bash(find /c/Users/alexi/OneDrive/Документы/GitHub/food-diary/FoodDiary.Web.Client/src/app -name \"*.component.scss\" -type f -exec grep -l \"@media\\\\|@container\" {})"
+      "Bash(find /c/Users/alexi/OneDrive/Документы/GitHub/food-diary/FoodDiary.Web.Client/src/app -name \"*.component.scss\" -type f -exec grep -l \"@media\\\\|@container\" {})",
+      "WebSearch",
+      "Bash(claude plugin:*)",
+      "Read(//c/Users/alexi/.claude/plugins/installed/**)",
+      "Read(//c/Users/alexi/.claude/plugins/installed/rpiv-next@codemasters-claude-code-marketplace/**)",
+      "Read(//c/Users/alexi/.claude/plugins/**)"
     ],
     "deny": [],
     "ask": []

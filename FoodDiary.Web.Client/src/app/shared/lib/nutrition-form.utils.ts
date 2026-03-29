@@ -106,3 +106,57 @@ function normalizeMacroValue(value: number | null | undefined): number {
     }
     return Math.max(0, value);
 }
+
+/**
+ * Extract a non-negative numeric value from a form control.
+ * Handles null, undefined, NaN, and negative values gracefully.
+ */
+export function getControlNumericValue(control: { value: number | string | null }): number {
+    const raw = control.value;
+    if (raw === null || raw === undefined || raw === '') {
+        return 0;
+    }
+    const value = typeof raw === 'string'
+        ? Number(raw.replace(',', '.').replace(/[^0-9.-]/g, ''))
+        : Number(raw);
+    return Number.isFinite(value) ? Math.max(0, value) : 0;
+}
+
+/**
+ * Round a nutrient value to 2 decimal places.
+ */
+export function roundNutrient(value: number): number {
+    return Math.round(value * 100) / 100;
+}
+
+/**
+ * Check whether a manual calories error should be shown.
+ * Returns a translation key or null.
+ */
+export function checkCaloriesError(
+    control: { value: number | null; touched: boolean; dirty: boolean },
+): boolean {
+    if (!control.touched && !control.dirty) {
+        return false;
+    }
+
+    const value = Number(control.value);
+    return !Number.isFinite(value) || value <= 0;
+}
+
+/**
+ * Check whether a manual macros error should be shown (all macros are zero).
+ */
+export function checkMacrosError(
+    controls: Array<{ value: number | null; touched: boolean; dirty: boolean }>,
+): boolean {
+    const shouldShow = controls.some(c => c.touched || c.dirty);
+    if (!shouldShow) {
+        return false;
+    }
+
+    return controls.every(c => {
+        const value = Number(c.value);
+        return !Number.isFinite(value) || value <= 0;
+    });
+}

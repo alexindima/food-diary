@@ -34,6 +34,11 @@ import { FdUiDialogRef } from 'fd-ui-kit/material';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
 import { ImageSelection } from '../../../../shared/models/image-upload.data';
 import { NutritionCalculationService } from '../../../../shared/lib/nutrition-calculation.service';
+import {
+    calculateCalorieMismatchWarning,
+    checkCaloriesError,
+    checkMacrosError,
+} from '../../../../shared/lib/nutrition-form.utils';
 import { NutritionEditorComponent } from '../../../../components/shared/nutrition-editor/nutrition-editor.component';
 import { ManageHeaderComponent } from '../../../../components/shared/manage-header/manage-header.component';
 import { RecipeBasicInfoComponent } from './recipe-basic-info/recipe-basic-info.component';
@@ -314,13 +319,7 @@ export class RecipeManageComponent implements OnInit {
             return null;
         }
 
-        const control = this.recipeForm.controls.manualCalories;
-        if (!control.touched && !control.dirty) {
-            return null;
-        }
-
-        const calories = this.getControlNumericValue(control);
-        return calories <= 0
+        return checkCaloriesError(this.recipeForm.controls.manualCalories)
             ? this.translateService.instant('PRODUCT_MANAGE.NUTRITION_ERRORS.CALORIES_REQUIRED')
             : null;
     }
@@ -330,24 +329,12 @@ export class RecipeManageComponent implements OnInit {
             return null;
         }
 
-        const controls = [
+        return checkMacrosError([
             this.recipeForm.controls.manualProteins,
             this.recipeForm.controls.manualFats,
             this.recipeForm.controls.manualCarbs,
             this.recipeForm.controls.manualAlcohol,
-        ];
-
-        const shouldShow = controls.some(control => control.touched || control.dirty);
-        if (!shouldShow) {
-            return null;
-        }
-
-        const proteins = this.getControlNumericValue(this.recipeForm.controls.manualProteins);
-        const fats = this.getControlNumericValue(this.recipeForm.controls.manualFats);
-        const carbs = this.getControlNumericValue(this.recipeForm.controls.manualCarbs);
-        const alcohol = this.getControlNumericValue(this.recipeForm.controls.manualAlcohol);
-
-        return proteins <= 0 && fats <= 0 && carbs <= 0 && alcohol <= 0
+        ])
             ? this.translateService.instant('PRODUCT_MANAGE.NUTRITION_ERRORS.MACROS_REQUIRED')
             : null;
     }
@@ -832,23 +819,9 @@ export class RecipeManageComponent implements OnInit {
         const fats = this.getControlNumericValue(this.recipeForm.controls.manualFats);
         const carbs = this.getControlNumericValue(this.recipeForm.controls.manualCarbs);
         const alcohol = this.getControlNumericValue(this.recipeForm.controls.manualAlcohol);
-        const expectedCalories = this.nutritionCalculationService.calculateCaloriesFromMacros(proteins, fats, carbs, alcohol);
-
-        if (expectedCalories <= 0 || calories <= 0) {
-            this.nutritionWarning.set(null);
-            return;
-        }
-
-        const deviation = Math.abs(calories - expectedCalories) / expectedCalories;
-        if (deviation <= this.calorieMismatchThreshold) {
-            this.nutritionWarning.set(null);
-            return;
-        }
-
-        this.nutritionWarning.set({
-            expectedCalories: Math.round(expectedCalories),
-            actualCalories: Math.round(calories),
-        });
+        this.nutritionWarning.set(
+            calculateCalorieMismatchWarning(calories, proteins, fats, carbs, alcohol, this.calorieMismatchThreshold),
+        );
     }
 
     private getControlNumericValue(control: FormControl<number | null>): number {

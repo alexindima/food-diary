@@ -17,6 +17,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { GoogleLoginRequest } from '../features/auth/models/google-auth.data';
 import { QuickMealService } from '../features/meals/lib/quick-meal.service';
 import { LocalizationService } from './localization.service';
+import { TokenStorageService } from './token-storage.service';
+import { JwtDecoderService } from './jwt-decoder.service';
 
 @Injectable({
     providedIn: 'root',
@@ -25,11 +27,13 @@ export class AuthService extends ApiService {
     private readonly navigationService = inject(NavigationService);
     private readonly quickConsumptionService = inject(QuickMealService);
     private readonly localizationService = inject(LocalizationService);
+    private readonly tokenStorage = inject(TokenStorageService);
+    private readonly jwtDecoder = inject(JwtDecoderService);
     protected readonly baseUrl = environment.apiUrls.auth;
 
-    private authTokenSignal = signal<string | null>(this.getToken());
-    private userSignal = signal<string | null>(this.loadUserId());
-    private emailConfirmedSignal = signal<boolean | null>(this.loadEmailConfirmed());
+    private authTokenSignal = signal<string | null>(this.tokenStorage.getToken());
+    private userSignal = signal<string | null>(this.tokenStorage.loadUserId());
+    private emailConfirmedSignal = signal<boolean | null>(this.tokenStorage.loadEmailConfirmed());
 
     public readonly isAuthenticated = computed(() => this.authTokenSignal() !== null);
     public readonly isEmailConfirmed = computed(() => this.emailConfirmedSignal() ?? true);
@@ -37,22 +41,22 @@ export class AuthService extends ApiService {
     public readonly isPremium = computed(() => this.hasRole('Premium'));
 
     public initializeAuth(): void {
-        const token = this.getToken();
+        const token = this.tokenStorage.getToken();
         if (!token) {
-            this.clearUserId();
+            this.tokenStorage.clearUserId();
             return;
         }
 
         this.authTokenSignal.set(token);
         if (!this.userSignal()) {
-            const resolvedUserId = this.extractUserIdFromToken(token);
+            const resolvedUserId = this.jwtDecoder.extractUserId(token);
             if (resolvedUserId) {
-                this.setUserId(resolvedUserId);
+                this.tokenStorage.setUserId(resolvedUserId);
                 this.userSignal.set(resolvedUserId);
             }
         }
         if (this.emailConfirmedSignal() === null) {
-            const stored = this.loadEmailConfirmed();
+            const stored = this.tokenStorage.loadEmailConfirmed();
             this.emailConfirmedSignal.set(stored ?? true);
         }
 
@@ -169,7 +173,7 @@ export class AuthService extends ApiService {
     }
 
     public refreshToken(): Observable<string | null> {
-        const refreshToken = this.getRefreshToken();
+        const refreshToken = this.tokenStorage.getRefreshToken();
         if (!refreshToken) {
             void this.onLogout(true);
             return of(null);
@@ -179,8 +183,8 @@ export class AuthService extends ApiService {
             map(response => {
                 const accessToken = response?.accessToken ?? null;
                 if (accessToken) {
-                    this.setToken(accessToken);
-                    this.setRefreshToken(response.refreshToken);
+                    this.tokenStorage.setToken(accessToken);
+                    this.tokenStorage.setRefreshToken(response.refreshToken);
                     this.authTokenSignal.set(accessToken);
                 }
                 return accessToken;
@@ -197,10 +201,7 @@ export class AuthService extends ApiService {
         this.authTokenSignal.set(null);
         this.userSignal.set(null);
         this.emailConfirmedSignal.set(null);
-        this.clearToken();
-        this.clearUserId();
-        this.clearRefreshToken();
-        this.clearEmailConfirmed();
+        this.tokenStorage.clearAll();
         this.localizationService.clearStoredLanguage();
         if (redirectToAuth) {
             await this.navigationService.navigateToAuth('login');
@@ -209,10 +210,23 @@ export class AuthService extends ApiService {
         await this.navigationService.navigateToHome();
     }
 
+    public getToken(): string | null {
+        return this.tokenStorage.getToken();
+    }
+
+    public getUserId(): string | null {
+        return this.userSignal();
+    }
+
+    public setEmailConfirmed(value: boolean): void {
+        this.emailConfirmedSignal.set(value);
+        this.tokenStorage.setEmailConfirmed(value);
+    }
+
     private onLogin(authResponse: AuthResponse, rememberMe: boolean): void {
         this.quickConsumptionService.exitPreview();
-        this.setToken(authResponse.accessToken, rememberMe);
-        this.setRefreshToken(authResponse.refreshToken);
+        this.tokenStorage.setToken(authResponse.accessToken, rememberMe);
+        this.tokenStorage.setRefreshToken(authResponse.refreshToken);
         this.authTokenSignal.set(authResponse.accessToken);
 
         const preferredLanguage = authResponse.user?.language;
@@ -226,13 +240,13 @@ export class AuthService extends ApiService {
             this.setEmailConfirmed(true);
         }
 
-        const userId = authResponse.user?.id ?? this.extractUserIdFromToken(authResponse.accessToken);
+        const userId = authResponse.user?.id ?? this.jwtDecoder.extractUserId(authResponse.accessToken);
         if (userId) {
-            this.setUserId(userId);
+            this.tokenStorage.setUserId(userId);
             this.userSignal.set(userId);
         } else {
             console.warn('Auth response did not include user ID');
-            this.clearUserId();
+            this.tokenStorage.clearUserId();
             this.userSignal.set(null);
         }
 
@@ -267,173 +281,13 @@ export class AuthService extends ApiService {
         return trimmed.length > 0 ? trimmed : null;
     }
 
-    public getToken(): string | null {
-        return localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
-    }
-
-    private setToken(token: string, rememberMe?: boolean): void {
-        if (rememberMe !== undefined) {
-            if (rememberMe) {
-                localStorage.setItem('authToken', token);
-                sessionStorage.removeItem('authToken');
-            } else {
-                sessionStorage.setItem('authToken', token);
-                localStorage.removeItem('authToken');
-            }
-        } else {
-            if (localStorage.getItem('authToken') !== null) {
-                localStorage.setItem('authToken', token);
-            } else {
-                sessionStorage.setItem('authToken', token);
-            }
-        }
-    }
-
-    private clearToken(): void {
-        localStorage.removeItem('authToken');
-        sessionStorage.removeItem('authToken');
-    }
-
-    private setRefreshToken(token: string | null | undefined): void {
-        if (!token) {
-            this.clearRefreshToken();
-            return;
-        }
-        localStorage.setItem('refreshToken', token);
-    }
-
-    private getRefreshToken(): string | null {
-        const token = localStorage.getItem('refreshToken');
-        if (!token || token === 'undefined' || token === 'null') {
-            this.clearRefreshToken();
-            return null;
-        }
-        return token;
-    }
-
-    private clearRefreshToken(): void {
-        localStorage.removeItem('refreshToken');
-    }
-
-    public getUserId(): string | null {
-        return this.userSignal();
-    }
-
-    private setUserId(userId: string | null): void {
-        if (userId) {
-            localStorage.setItem('userId', userId);
-        } else {
-            localStorage.removeItem('userId');
-        }
-    }
-
-    private loadUserId(): string | null {
-        const storedId = localStorage.getItem('userId');
-        if (!storedId || storedId === 'undefined') {
-            return null;
-        }
-        return storedId;
-    }
-
-    private clearUserId(): void {
-        localStorage.removeItem('userId');
-        sessionStorage.removeItem('userId');
-    }
-
-    public setEmailConfirmed(value: boolean): void {
-        this.emailConfirmedSignal.set(value);
-        localStorage.setItem('emailConfirmed', value ? 'true' : 'false');
-    }
-
-    private loadEmailConfirmed(): boolean | null {
-        const stored = localStorage.getItem('emailConfirmed');
-        if (stored === 'true') {
-            return true;
-        }
-        if (stored === 'false') {
-            return false;
-        }
-        return null;
-    }
-
-    private clearEmailConfirmed(): void {
-        localStorage.removeItem('emailConfirmed');
-    }
-
-    private extractUserIdFromToken(token: string | null): string | null {
-        if (!token) {
-            return null;
-        }
-
-        const [, payloadSegment] = token.split('.');
-        if (!payloadSegment) {
-            return null;
-        }
-
-        try {
-            const normalized = payloadSegment.replace(/-/g, '+').replace(/_/g, '/');
-            const padLength = (4 - (normalized.length % 4 || 4)) % 4;
-            const padded = normalized.padEnd(normalized.length + padLength, '=');
-            const decoded = atob(padded);
-            const payload = JSON.parse(decoded);
-            return (
-                payload['nameid'] ||
-                payload['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'] ||
-                payload['sub'] ||
-                null
-            );
-        } catch {
-            return null;
-        }
-    }
-
     private hasRole(role: string): boolean {
         const token = this.authTokenSignal();
         if (!token) {
             return false;
         }
 
-        return this.extractRolesFromToken(token).includes(role);
-    }
-
-    private extractRolesFromToken(token: string): string[] {
-        const payload = this.decodePayload(token);
-        if (!payload) {
-            return [];
-        }
-
-        const roleClaim =
-            payload['role'] ??
-            payload['roles'] ??
-            payload['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] ??
-            payload['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/role'];
-
-        if (Array.isArray(roleClaim)) {
-            return roleClaim.filter((value): value is string => typeof value === 'string');
-        }
-
-        if (typeof roleClaim === 'string') {
-            return [roleClaim];
-        }
-
-        return [];
-    }
-
-    private decodePayload(token: string): Record<string, unknown> | null {
-        const [, payloadSegment] = token.split('.');
-        if (!payloadSegment) {
-            return null;
-        }
-
-        try {
-            const normalized = payloadSegment.replace(/-/g, '+').replace(/_/g, '/');
-            const padLength = (4 - (normalized.length % 4 || 4)) % 4;
-            const padded = normalized.padEnd(normalized.length + padLength, '=');
-            const decoded = atob(padded);
-            return JSON.parse(decoded) as Record<string, unknown>;
-        } catch {
-            return null;
-        }
+        return this.jwtDecoder.extractRoles(token).includes(role);
     }
 }
 

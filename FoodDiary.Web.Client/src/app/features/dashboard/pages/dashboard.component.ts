@@ -28,25 +28,30 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { CalorieGoalDialogComponent } from '../../goals/dialogs/calorie-goal-dialog/calorie-goal-dialog.component';
 import {
     DashboardSummaryCardComponent,
-    NutrientBar
 } from '../../../components/shared/dashboard-summary-card/dashboard-summary-card.component';
 import { HydrationService } from '../../hydration/api/hydration.service';
 import { HydrationCardComponent } from '../components/hydration-card/hydration-card.component';
-import { WeightTrendCardComponent, WeightTrendPoint } from '../components/weight-trend-card/weight-trend-card.component';
+import { WeightTrendCardComponent } from '../components/weight-trend-card/weight-trend-card.component';
 import { DailyAdviceCardComponent } from '../components/daily-advice-card/daily-advice-card.component';
-import { MealsPreviewComponent, MealPreviewEntry } from '../../../components/shared/meals-preview/meals-preview.component';
+import { MealsPreviewComponent } from '../../../components/shared/meals-preview/meals-preview.component';
 import { CycleSummaryCardComponent } from '../components/cycle-summary-card/cycle-summary-card.component';
 import { Meal } from '../../meals/models/meal.data';
 import { CyclesService } from '../../cycle-tracking/api/cycles.service';
 import { CycleResponse } from '../../cycle-tracking/models/cycle.data';
-import { UserService } from '../../../shared/api/user.service';
-import { DashboardLayoutSettings } from '../../../shared/models/user.data';
 import { NoticeBannerComponent } from '../../../components/shared/notice-banner/notice-banner.component';
 import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
 import { fromEvent } from 'rxjs';
 import { UnsavedChangesService, UnsavedChangesHandler } from '../../../services/unsaved-changes.service';
-
-type MealSlot = 'BREAKFAST' | 'LUNCH' | 'DINNER';
+import { DashboardLayoutService } from '../lib/dashboard-layout.service';
+import { normalizeDate, getDashboardDateUtc, getHydrationDateUtc } from '../lib/dashboard-date.utils';
+import { createWeightTrendSignals, createWaistTrendSignals } from '../lib/dashboard-trend.utils';
+import {
+    createNutrientBarsSignal,
+    createConsumptionRingSignal,
+    createMealPreviewSignal,
+    placeholderIcon,
+    placeholderLabel,
+} from '../lib/dashboard-nutrition.utils';
 
 @Component({
     selector: 'fd-dashboard',
@@ -71,6 +76,7 @@ type MealSlot = 'BREAKFAST' | 'LUNCH' | 'DINNER';
     NoticeBannerComponent,
     FdUiLoaderComponent
 ],
+    providers: [DashboardLayoutService],
     templateUrl: './dashboard.component.html',
     styleUrl: './dashboard.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -82,15 +88,15 @@ export class DashboardComponent implements OnInit {
     private readonly dialogService = inject(FdUiDialogService);
     private readonly hydrationService = inject(HydrationService);
     private readonly cyclesService = inject(CyclesService);
-    private readonly userService = inject(UserService);
     private readonly translateService = inject(TranslateService);
     private readonly unsavedChangesService = inject(UnsavedChangesService);
+    public readonly layout = inject(DashboardLayoutService);
 
     private readonly headerDatePicker = viewChild<FdUiDatepicker<Date>>('headerDatePicker');
 
-    public selectedDate = signal<Date>(this.normalizeDate(new Date()));
+    public selectedDate = signal<Date>(normalizeDate(new Date()));
     public readonly isTodaySelected = computed(() => {
-        const today = this.normalizeDate(new Date());
+        const today = normalizeDate(new Date());
         return this.selectedDate().getTime() === today.getTime();
     });
     public snapshot = signal<DashboardSnapshot | null>(null);
@@ -120,180 +126,32 @@ export class DashboardComponent implements OnInit {
     public readonly isAdviceLoading = computed(() => this.isLoading());
     public readonly cycle = signal<CycleResponse | null>(null);
     public readonly isCycleLoading = signal<boolean>(false);
-    public readonly isEditingLayout = signal<boolean>(false);
-    private readonly layoutInitialized = signal<boolean>(false);
-    private readonly layoutSnapshot = signal<DashboardLayoutSettings | null>(null);
-    private readonly defaultLayout: DashboardLayoutSettings = {
-        web: ['summary', 'meals', 'hydration', 'cycle', 'weight', 'waist', 'advice'],
-        mobile: ['summary', 'meals', 'hydration', 'cycle', 'weight', 'waist', 'advice'],
-    };
-    private readonly viewportWidth = signal<number>(
-        typeof window === 'undefined' ? 1024 : window.innerWidth,
+
+    // Trend signals
+    public readonly weightTrend = createWeightTrendSignals(
+        this.weightTrendPoints, this.latestWeight, this.selectedDate, this.trendDays,
     );
-    private readonly layoutSettings = signal<DashboardLayoutSettings>({
-        web: [...this.defaultLayout.web!],
-        mobile: [...this.defaultLayout.mobile!],
-    });
-    public readonly layoutKey = computed<'web' | 'mobile'>(() => (this.viewportWidth() < 768 ? 'mobile' : 'web'));
-    public readonly visibleBlocks = computed(() => this.getLayoutForKey(this.layoutKey()));
-    public readonly hasAsideBlocks = computed(() => {
-        const blocks = this.visibleBlocks();
-        return blocks.some(block => ['hydration', 'cycle', 'weight', 'waist', 'advice'].includes(block));
-    });
-    public readonly hasLayoutChanges = computed(() => {
-        if (!this.isEditingLayout()) {
-            return false;
-        }
-        const previous = this.layoutSnapshot();
-        if (!previous) {
-            return false;
-        }
-        const current = this.normalizeLayout(this.layoutSettings());
-        return !this.areLayoutsEqual(previous, current);
-    });
-    private readonly mealSlots: MealSlot[] = ['BREAKFAST', 'LUNCH', 'DINNER'];
-    public readonly mealPreviewEntries = computed<MealPreviewEntry[]>(() => {
-        const meals = [...(this.meals() ?? [])];
-
-        if (!this.isTodaySelected()) {
-            return meals.map(meal => ({
-                meal,
-                slot: meal.mealType ?? undefined,
-            }));
-        }
-
-        const result: { meal: Meal | null; slot?: MealSlot }[] = [];
-
-        for (const slot of this.mealSlots) {
-            const index = meals.findIndex(m => (m.mealType ?? '').toUpperCase() === slot);
-            if (index >= 0) {
-                result.push({ meal: meals[index], slot });
-                meals.splice(index, 1);
-            } else {
-                result.push({ meal: null, slot });
-            }
-        }
-
-        for (const meal of meals) {
-            result.push({ meal, slot: (meal.mealType ?? '').toUpperCase() as MealSlot | undefined });
-        }
-
-        return result.map(entry => ({
-            meal: entry.meal ?? null,
-            slot: entry.slot,
-            icon: this.placeholderIcon(entry.slot),
-            labelKey: this.placeholderLabel(entry.slot),
-        }));
-    });
-
-    public readonly nutrientBars = computed<NutrientBar[]>(() => {
-        const snapshot = this.snapshot();
-
-        if (!snapshot) {
-            return [];
-        }
-
-        return [
-            {
-                id: 'protein',
-                label: 'Protein',
-                labelKey: 'GENERAL.NUTRIENTS.PROTEIN',
-                current: snapshot.statistics.averageProteins ?? 0,
-                target: snapshot.statistics.proteinGoal ?? 0,
-                unit: 'g',
-                unitKey: 'GENERAL.UNITS.G',
-                colorStart: '#4dabff',
-                colorEnd: '#2563eb',
-            },
-            {
-                id: 'carbs',
-                label: 'Carbs',
-                labelKey: 'GENERAL.NUTRIENTS.CARB',
-                current: snapshot.statistics.averageCarbs ?? 0,
-                target: snapshot.statistics.carbGoal ?? 0,
-                unit: 'g',
-                unitKey: 'GENERAL.UNITS.G',
-                colorStart: '#2dd4bf',
-                colorEnd: '#0ea5e9',
-            },
-            {
-                id: 'fats',
-                label: 'Fats',
-                labelKey: 'GENERAL.NUTRIENTS.FAT',
-                current: snapshot.statistics.averageFats ?? 0,
-                target: snapshot.statistics.fatGoal ?? 0,
-                unit: 'g',
-                unitKey: 'GENERAL.UNITS.G',
-                colorStart: '#fbbf24',
-                colorEnd: '#f97316',
-            },
-            {
-                id: 'fiber',
-                label: 'Fiber',
-                labelKey: 'SHARED.NUTRIENTS_SUMMARY.FIBER',
-                current: snapshot.statistics.averageFiber ?? 0,
-                target: snapshot.statistics.fiberGoal ?? 0,
-                unit: 'g',
-                unitKey: 'GENERAL.UNITS.G',
-                colorStart: '#fb7185',
-                colorEnd: '#ec4899',
-            },
-        ];
-    });
-    public readonly consumptionRingData = computed(() => {
-        const snapshot = this.snapshot();
-        const dailyGoal = snapshot?.dailyGoal ?? 0;
-        const consumedToday = snapshot?.statistics.totalCalories ?? 0;
-        const weeklyConsumed = this.weeklyConsumed();
-
-        return {
-            dailyGoal,
-            dailyConsumed: consumedToday,
-            weeklyConsumed,
-            weeklyGoal: dailyGoal > 0 ? dailyGoal * 7 : 0,
-            nutrientBars: this.nutrientBars(),
-        };
-    });
-    public readonly weightTrendSeries = computed<WeightTrendPoint[]>(() =>
-        this.weightTrendPoints().map(point => ({
-            date: point.dateFrom,
-            value: point.averageWeight > 0 ? point.averageWeight : null,
-        })).length
-            ? this.weightTrendPoints().map(point => ({
-                  date: point.dateFrom,
-                  value: point.averageWeight > 0 ? point.averageWeight : null,
-              }))
-            : this.buildFallbackWeightTrend(),
+    public readonly waistTrend = createWaistTrendSignals(
+        this.waistTrendPoints, this.latestWaist, this.selectedDate, this.trendDays,
     );
-    public readonly weightTrendChange = computed(() => {
-        const ordered = [...this.weightTrendSeries()].sort(
-            (a, b) => new Date(a.date as string).getTime() - new Date(b.date as string).getTime(),
-        );
-        const first = ordered.find(point => point.value !== null && point.value !== undefined);
-        const last = [...ordered].reverse().find(point => point.value !== null && point.value !== undefined);
 
-        if (!first || !last) {
-            return null;
-        }
+    // Nutrition signals
+    public readonly nutrientBars = createNutrientBarsSignal(this.snapshot);
+    public readonly consumptionRingData = createConsumptionRingSignal(
+        this.snapshot, this.weeklyConsumed, this.nutrientBars,
+    );
+    public readonly mealPreviewEntries = createMealPreviewSignal(this.meals, this.isTodaySelected);
 
-        const diff = (last.value ?? 0) - (first.value ?? 0);
-        return Math.round(diff * 10) / 10;
-    });
-    public readonly weightTrendCurrent = computed(() => {
-        const ordered = [...this.weightTrendSeries()].sort(
-            (a, b) => new Date(a.date as string).getTime() - new Date(b.date as string).getTime(),
-        );
-        const last = [...ordered].reverse().find(point => point.value !== null && point.value !== undefined);
-        return last?.value ?? this.latestWeight() ?? null;
-    });
+    public readonly placeholderIcon = placeholderIcon;
+    public readonly placeholderLabel = placeholderLabel;
 
     public ngOnInit(): void {
         this.loadDashboardSnapshot();
         this.loadCycle();
         const handler: UnsavedChangesHandler = {
-            hasChanges: () => this.hasLayoutChanges(),
-            save: () => this.saveDashboardLayout(),
-            discard: () => this.discardDashboardLayoutChanges(),
+            hasChanges: () => this.layout.hasLayoutChanges(),
+            save: () => this.layout.save(),
+            discard: () => this.layout.discard(),
         };
         this.unsavedChangesService.register(handler);
         this.destroyRef.onDestroy(() => this.unsavedChangesService.clear(handler));
@@ -301,7 +159,7 @@ export class DashboardComponent implements OnInit {
         if (typeof window !== 'undefined') {
             fromEvent(window, 'resize')
                 .pipe(takeUntilDestroyed(this.destroyRef))
-                .subscribe(() => this.viewportWidth.set(window.innerWidth));
+                .subscribe(() => this.layout.updateViewportWidth(window.innerWidth));
         }
 
         this.translateService.onLangChange
@@ -318,11 +176,11 @@ export class DashboardComponent implements OnInit {
             return;
         }
 
-        const normalized = this.normalizeDate(event.value);
+        const normalized = normalizeDate(event.value);
 
         if (normalized.getTime() !== this.selectedDate().getTime()) {
             this.selectedDate.set(normalized);
-            this.fetchDashboardData();
+            this.loadDashboardSnapshot();
         }
     }
 
@@ -342,76 +200,6 @@ export class DashboardComponent implements OnInit {
         await this.navigationService.navigateToGoals();
     }
 
-    public openDashboardSettings(): void {
-        const next = !this.isEditingLayout();
-        this.isEditingLayout.set(next);
-        if (!next) {
-            this.persistLayoutIfChanged();
-            this.layoutSnapshot.set(null);
-        } else {
-            this.layoutSnapshot.set(this.normalizeLayout(this.layoutSettings()));
-        }
-    }
-
-    public saveDashboardLayout(): void {
-        if (!this.isEditingLayout()) {
-            return;
-        }
-
-        this.isEditingLayout.set(false);
-        this.persistLayoutIfChanged();
-        this.layoutSnapshot.set(null);
-    }
-
-    public discardDashboardLayoutChanges(): void {
-        if (!this.isEditingLayout()) {
-            return;
-        }
-
-        const snapshot = this.layoutSnapshot();
-        if (snapshot) {
-            this.layoutSettings.set(this.normalizeLayout(snapshot));
-        }
-        this.isEditingLayout.set(false);
-        this.layoutSnapshot.set(null);
-    }
-
-    public shouldRenderBlock(blockId: string): boolean {
-        return this.isEditingLayout() || this.isBlockVisible(blockId);
-    }
-
-    public isBlockVisible(blockId: string): boolean {
-        return this.visibleBlocks().includes(blockId);
-    }
-
-    public canToggleBlock(blockId: string): boolean {
-        return blockId !== 'summary';
-    }
-
-    public toggleBlock(blockId: string): void {
-        if (!this.isEditingLayout() || !this.canToggleBlock(blockId)) {
-            return;
-        }
-
-        const key = this.layoutKey();
-        const baseOrder = this.defaultLayout[key] ?? [];
-        const current = this.getLayoutForKey(key);
-        const isVisible = current.includes(blockId);
-
-        const next = isVisible
-            ? current.filter(item => item !== blockId)
-            : baseOrder.filter(item => item === blockId || current.includes(item));
-
-        this.layoutSettings.update(layout => ({
-            ...layout,
-            [key]: this.ensureSummary(next, baseOrder),
-        }));
-    }
-
-    public openConsumption(consumption: { id: string }): void {
-        void this.navigationService.navigateToConsumptionEdit(consumption.id);
-    }
-
     public openCalorieGoalDialog(): void {
         this.dialogService
             .open(CalorieGoalDialogComponent, {
@@ -429,12 +217,32 @@ export class DashboardComponent implements OnInit {
             });
     }
 
-    private fetchDashboardData(): void {
-        this.loadDashboardSnapshot();
+    public async addConsumption(mealType?: string | null): Promise<void> {
+        await this.navigationService.navigateToConsumptionAdd(mealType ?? undefined);
+    }
+
+    public async manageConsumptions(): Promise<void> {
+        await this.navigationService.navigateToConsumptionList();
+    }
+
+    public openConsumption(consumption: { id: string }): void {
+        void this.navigationService.navigateToConsumptionEdit(consumption.id);
+    }
+
+    public addHydration(amount: number): void {
+        this.isHydrationUpdating.set(true);
+        const targetDate = getHydrationDateUtc(this.selectedDate());
+        this.hydrationService
+            .addEntry(amount, targetDate)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe({
+                next: () => this.loadDashboardSnapshot(false, true),
+                error: () => this.isHydrationUpdating.set(false),
+            });
     }
 
     private loadDashboardSnapshot(showLoader = true, clearHydrationUpdate = false): void {
-        const targetDate = this.getDashboardDateUtc(this.selectedDate());
+        const targetDate = getDashboardDateUtc(this.selectedDate());
         const locale = this.getCurrentLocale();
 
         if (showLoader) {
@@ -447,7 +255,7 @@ export class DashboardComponent implements OnInit {
             .subscribe({
                 next: snapshot => {
                     this.snapshot.set(snapshot);
-                    this.initializeLayout(snapshot?.dashboardLayout ?? null);
+                    this.layout.initializeLayout(snapshot?.dashboardLayout ?? null);
                     this.isLoading.set(false);
                     if (clearHydrationUpdate) {
                         this.isHydrationUpdating.set(false);
@@ -455,108 +263,13 @@ export class DashboardComponent implements OnInit {
                 },
                 error: () => {
                     this.snapshot.set(null);
-                    this.initializeLayout(null);
+                    this.layout.initializeLayout(null);
                     this.isLoading.set(false);
                     if (clearHydrationUpdate) {
                         this.isHydrationUpdating.set(false);
                     }
                 },
             });
-    }
-
-    private initializeLayout(layout: DashboardLayoutSettings | null): void {
-        if (this.layoutInitialized()) {
-            return;
-        }
-
-        const normalized = this.normalizeLayout(layout);
-        this.layoutSettings.set(normalized);
-        this.layoutInitialized.set(true);
-    }
-
-    private normalizeLayout(layout: DashboardLayoutSettings | null): DashboardLayoutSettings {
-        return {
-            web: this.normalizeLayoutList(layout?.web, this.defaultLayout.web ?? []),
-            mobile: this.normalizeLayoutList(layout?.mobile, this.defaultLayout.mobile ?? []),
-        };
-    }
-
-    private normalizeLayoutList(values: string[] | null | undefined, fallback: string[]): string[] {
-        const allowed = new Set(fallback);
-        const source = values && values.length ? values : fallback;
-        const filtered: string[] = [];
-        for (const item of source) {
-            if (allowed.has(item) && !filtered.includes(item)) {
-                filtered.push(item);
-            }
-        }
-        return this.ensureSummary(filtered, fallback);
-    }
-
-    private ensureSummary(values: string[], fallback: string[]): string[] {
-        if (values.includes('summary')) {
-            return values;
-        }
-        return ['summary', ...values.filter(item => item !== 'summary' && fallback.includes(item))];
-    }
-
-    private getLayoutForKey(key: 'web' | 'mobile'): string[] {
-        const layout = this.layoutSettings();
-        const fallback = this.defaultLayout[key] ?? [];
-        const values = layout[key] && layout[key]?.length ? layout[key]! : fallback;
-        return this.ensureSummary(values, fallback);
-    }
-
-    private normalizeDate(date: Date): Date {
-        const normalized = new Date(date);
-        normalized.setHours(0, 0, 0, 0);
-        return normalized;
-    }
-
-    public async addConsumption(mealType?: string | null): Promise<void> {
-        await this.navigationService.navigateToConsumptionAdd(mealType ?? undefined);
-    }
-
-    public async manageConsumptions(): Promise<void> {
-        await this.navigationService.navigateToConsumptionList();
-    }
-
-    public addHydration(amount: number): void {
-        this.isHydrationUpdating.set(true);
-        const targetDate = this.getHydrationDateUtc(this.selectedDate());
-        this.hydrationService
-            .addEntry(amount, targetDate)
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: () => this.loadDashboardSnapshot(false, true),
-                error: () => this.isHydrationUpdating.set(false),
-            });
-    }
-    private getWeightTrendRange(): { start: Date; end: Date } {
-        const end = this.selectedDate();
-        const start = new Date(end);
-        start.setDate(start.getDate() - (this.trendDays - 1));
-
-        return {
-            start: this.normalizeStartOfDayUtc(start),
-            end: this.normalizeEndOfDayUtc(end),
-        };
-    }
-
-    private normalizeStartOfDayUtc(date: Date): Date {
-        return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
-    }
-
-    private normalizeEndOfDayUtc(date: Date): Date {
-        return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59, 999));
-    }
-
-    private getDashboardDateUtc(date: Date): Date {
-        return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
-    }
-
-    private getHydrationDateUtc(date: Date): Date {
-        return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 12, 0, 0));
     }
 
     private getCurrentLocale(): string {
@@ -579,138 +292,5 @@ export class DashboardComponent implements OnInit {
                     this.isCycleLoading.set(false);
                 },
             });
-    }
-
-    private buildFallbackWeightTrend(): WeightTrendPoint[] {
-        const latest = this.latestWeight();
-        if (!latest) {
-            return [];
-        }
-
-        const { start } = this.getWeightTrendRange();
-        const points: WeightTrendPoint[] = [];
-
-        for (let i = 0; i < 7; i++) {
-            const date = new Date(start);
-            date.setDate(start.getDate() + i);
-            points.push({
-                date: date.toISOString(),
-                value: latest,
-            });
-        }
-
-        return points;
-    }
-
-    public readonly waistTrendSeries = computed<WeightTrendPoint[]>(() =>
-        this.waistTrendPoints().map(point => ({
-            date: point.dateFrom,
-            value: point.averageCircumference > 0 ? point.averageCircumference : null,
-        })).length
-            ? this.waistTrendPoints().map(point => ({
-                  date: point.dateFrom,
-                  value: point.averageCircumference > 0 ? point.averageCircumference : null,
-              }))
-            : this.buildFallbackWaistTrend(),
-    );
-    public readonly waistTrendChange = computed(() => {
-        const ordered = [...this.waistTrendSeries()].sort(
-            (a, b) => new Date(a.date as string).getTime() - new Date(b.date as string).getTime(),
-        );
-        const first = ordered.find(point => point.value !== null && point.value !== undefined);
-        const last = [...ordered].reverse().find(point => point.value !== null && point.value !== undefined);
-
-        if (!first || !last) {
-            return null;
-        }
-
-        const diff = (last.value ?? 0) - (first.value ?? 0);
-        return Math.round(diff * 10) / 10;
-    });
-    public readonly waistTrendCurrent = computed(() => {
-        const ordered = [...this.waistTrendSeries()].sort(
-            (a, b) => new Date(a.date as string).getTime() - new Date(b.date as string).getTime(),
-        );
-        const last = [...ordered].reverse().find(point => point.value !== null && point.value !== undefined);
-        return last?.value ?? this.latestWaist() ?? null;
-    });
-
-    private buildFallbackWaistTrend(): WeightTrendPoint[] {
-        const latest = this.latestWaist();
-        if (!latest) {
-            return [];
-        }
-
-        const { start } = this.getWeightTrendRange();
-        const points: WeightTrendPoint[] = [];
-
-        for (let i = 0; i < 7; i++) {
-            const date = new Date(start);
-            date.setDate(start.getDate() + i);
-            points.push({
-                date: date.toISOString(),
-                value: latest,
-            });
-        }
-
-        return points;
-    }
-
-    private persistLayout(): void {
-        const layout = this.normalizeLayout(this.layoutSettings());
-        this.userService
-            .updateDashboardLayout(layout)
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(user => {
-                if (user?.dashboardLayout) {
-                    this.layoutSettings.set(this.normalizeLayout(user.dashboardLayout));
-                } else {
-                    this.layoutSettings.set(layout);
-                }
-            });
-    }
-
-    private persistLayoutIfChanged(): void {
-        const current = this.normalizeLayout(this.layoutSettings());
-        const previous = this.layoutSnapshot();
-        if (previous && this.areLayoutsEqual(previous, current)) {
-            return;
-        }
-
-        this.persistLayout();
-    }
-
-    private areLayoutsEqual(a: DashboardLayoutSettings, b: DashboardLayoutSettings): boolean {
-        return this.layoutToKey(a) === this.layoutToKey(b);
-    }
-
-    private layoutToKey(layout: DashboardLayoutSettings): string {
-        const web = (layout.web ?? []).join('|');
-        const mobile = (layout.mobile ?? []).join('|');
-        return `${web}::${mobile}`;
-    }
-
-    public placeholderIcon(slot?: MealSlot | string): string {
-        switch (slot) {
-            case 'BREAKFAST':
-                return 'wb_sunny';
-            case 'LUNCH':
-                return 'lunch_dining';
-            case 'DINNER':
-                return 'nights_stay';
-            case 'SNACK':
-                return 'cookie';
-            case 'OTHER':
-                return 'more_horiz';
-            default:
-                return 'restaurant_menu';
-        }
-    }
-
-    public placeholderLabel(slot?: MealSlot | string): string {
-        if (!slot) {
-            return 'MEAL_CARD.MEAL_TYPES.OTHER';
-        }
-        return `MEAL_CARD.MEAL_TYPES.${slot}`;
     }
 }

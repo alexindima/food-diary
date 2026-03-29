@@ -25,16 +25,13 @@ import {
     ConsumptionSourceType,
 } from '../../models/meal.data';
 import { MealService } from '../../api/meal.service';
-import { Product, MeasurementUnit } from '../../../products/models/product.data';
-import { Recipe, RecipeIngredient } from '../../../recipes/models/recipe.data';
-import { RecipeLookupService } from '../../../../shared/api/recipe-lookup.service';
-import { RecipeLookup, RecipeLookupIngredient } from '../../../../shared/models/recipe-lookup.data';
+import { Product } from '../../../products/models/product.data';
+import { Recipe } from '../../../recipes/models/recipe.data';
+import { RecipeServingWeightService } from '../../lib/recipe-serving-weight.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NutrientData } from '../../../../shared/models/charts.data';
 import { FD_VALIDATION_ERRORS, FdValidationErrors } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
-import { Observable, of } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
 import { FdUiSegmentedToggleOption } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle.component';
@@ -65,6 +62,11 @@ import { UserAiUsageResponse } from '../../../../shared/models/ai.data';
 import { AuthService } from '../../../../services/auth.service';
 import { PremiumRequiredDialogComponent } from '../../../../components/shared/premium-required-dialog/premium-required-dialog.component';
 import { NutritionCalculationService } from '../../../../shared/lib/nutrition-calculation.service';
+import {
+    calculateCalorieMismatchWarning,
+    checkCaloriesError,
+    checkMacrosError,
+} from '../../../../shared/lib/nutrition-form.utils';
 import { ManageHeaderComponent } from '../../../../components/shared/manage-header/manage-header.component';
 import { MealItemsListComponent } from './meal-items-list/meal-items-list.component';
 import { MealAiSessionsComponent } from './meal-ai-sessions/meal-ai-sessions.component';
@@ -122,14 +124,13 @@ export class BaseMealManageComponent implements OnInit {
     private readonly translateService = inject(TranslateService);
     private readonly navigationService = inject(NavigationService);
     private readonly destroyRef = inject(DestroyRef);
-    private readonly recipeLookupService = inject(RecipeLookupService);
+    private readonly recipeWeight = inject(RecipeServingWeightService);
     private readonly fdDialogService = inject(FdUiDialogService);
     private readonly aiFoodService = inject(AiFoodService);
     private readonly authService = inject(AuthService);
     private readonly nutritionCalculationService = inject(NutritionCalculationService);
     private readonly router = inject(Router);
     private readonly route = inject(ActivatedRoute);
-    private readonly recipeServingWeightCache = new Map<string, number | null>();
     private readonly calorieMismatchThreshold = 0.2;
 
     public readonly nutritionControlNames = {
@@ -390,13 +391,7 @@ export class BaseMealManageComponent implements OnInit {
             return null;
         }
 
-        const control = this.consumptionForm.controls.manualCalories;
-        if (!control.touched && !control.dirty) {
-            return null;
-        }
-
-        const calories = this.getControlNumericValue(control);
-        return calories <= 0
+        return checkCaloriesError(this.consumptionForm.controls.manualCalories)
             ? this.translateService.instant('PRODUCT_MANAGE.NUTRITION_ERRORS.CALORIES_REQUIRED')
             : null;
     }
@@ -406,23 +401,12 @@ export class BaseMealManageComponent implements OnInit {
             return null;
         }
 
-        const controls = [
+        return checkMacrosError([
             this.consumptionForm.controls.manualProteins,
             this.consumptionForm.controls.manualFats,
             this.consumptionForm.controls.manualCarbs,
             this.consumptionForm.controls.manualAlcohol,
-        ];
-        const shouldShow = controls.some(control => control.touched || control.dirty);
-        if (!shouldShow) {
-            return null;
-        }
-
-        const proteins = this.getControlNumericValue(this.consumptionForm.controls.manualProteins);
-        const fats = this.getControlNumericValue(this.consumptionForm.controls.manualFats);
-        const carbs = this.getControlNumericValue(this.consumptionForm.controls.manualCarbs);
-        const alcohol = this.getControlNumericValue(this.consumptionForm.controls.manualAlcohol);
-
-        return proteins <= 0 && fats <= 0 && carbs <= 0 && alcohol <= 0
+        ])
             ? this.translateService.instant('PRODUCT_MANAGE.NUTRITION_ERRORS.MACROS_REQUIRED')
             : null;
     }
@@ -522,7 +506,7 @@ export class BaseMealManageComponent implements OnInit {
             }
 
             if (sourceType === ConsumptionSourceType.Recipe && item.recipe) {
-                const servingsAmount = this.convertRecipeGramsToServings(item.recipe, amountValue);
+                const servingsAmount = this.recipeWeight.convertGramsToServings(item.recipe, amountValue);
                 mappedItems.push({
                     recipeId: item.recipe.id,
                     productId: null,
@@ -674,7 +658,7 @@ export class BaseMealManageComponent implements OnInit {
                     return;
                 }
 
-                this.loadRecipeServingWeight(selection.recipe).subscribe();
+                this.recipeWeight.loadServingWeight(selection.recipe).subscribe();
                 group.patchValue({
                     recipe: selection.recipe,
                     product: null,
@@ -730,7 +714,7 @@ export class BaseMealManageComponent implements OnInit {
             const sourceType = item.sourceType ?? (item.recipe ? ConsumptionSourceType.Recipe : ConsumptionSourceType.Product);
             const initialAmount =
                 sourceType === ConsumptionSourceType.Recipe
-                    ? this.convertRecipeServingsToGrams(item.recipe ?? null, item.amount ?? 0)
+                    ? this.recipeWeight.convertServingsToGrams(item.recipe ?? null, item.amount ?? 0)
                     : item.amount;
 
             itemsArray.push(this.createConsumptionItem(
@@ -799,7 +783,7 @@ export class BaseMealManageComponent implements OnInit {
                     const carbsPerServing = (recipe.totalCarbs ?? 0) / servings;
                     const fiberPerServing = (recipe.totalFiber ?? 0) / servings;
                     const alcoholPerServing = (recipe.totalAlcohol ?? 0) / servings;
-                    const servingsAmount = this.convertRecipeGramsToServings(recipe, amount);
+                    const servingsAmount = this.recipeWeight.convertGramsToServings(recipe, amount);
 
                     totals.calories += caloriesPerServing * servingsAmount;
                     totals.proteins += proteinsPerServing * servingsAmount;
@@ -915,23 +899,9 @@ export class BaseMealManageComponent implements OnInit {
         const fats = this.getControlNumericValue(this.consumptionForm.controls.manualFats);
         const carbs = this.getControlNumericValue(this.consumptionForm.controls.manualCarbs);
         const alcohol = this.getControlNumericValue(this.consumptionForm.controls.manualAlcohol);
-        const expectedCalories = this.nutritionCalculationService.calculateCaloriesFromMacros(proteins, fats, carbs, alcohol);
-
-        if (expectedCalories <= 0 || calories <= 0) {
-            this.nutritionWarning.set(null);
-            return;
-        }
-
-        const deviation = Math.abs(calories - expectedCalories) / expectedCalories;
-        if (deviation <= this.calorieMismatchThreshold) {
-            this.nutritionWarning.set(null);
-            return;
-        }
-
-        this.nutritionWarning.set({
-            expectedCalories: Math.round(expectedCalories),
-            actualCalories: Math.round(calories),
-        });
+        this.nutritionWarning.set(
+            calculateCalorieMismatchWarning(calories, proteins, fats, carbs, alcohol, this.calorieMismatchThreshold),
+        );
     }
 
     private buildItemsValidator(): ValidatorFn {
@@ -1171,7 +1141,7 @@ export class BaseMealManageComponent implements OnInit {
             return;
         }
 
-        this.loadRecipeServingWeight(recipe).subscribe(servingWeight => {
+        this.recipeWeight.loadServingWeight(recipe).subscribe(servingWeight => {
             if (!servingWeight) {
                 return;
             }
@@ -1180,22 +1150,6 @@ export class BaseMealManageComponent implements OnInit {
             const group = this.items.at(index);
             group.controls.amount.setValue(grams);
         });
-    }
-
-    private convertRecipeServingsToGrams(recipe: Recipe | null, servingsAmount: number): number {
-        const servingWeight = recipe?.id ? this.recipeServingWeightCache.get(recipe.id) : null;
-        if (servingWeight && servingWeight > 0) {
-            return servingsAmount * servingWeight;
-        }
-        return servingsAmount;
-    }
-
-    private convertRecipeGramsToServings(recipe: Recipe | null, grams: number): number {
-        const servingWeight = recipe?.id ? this.recipeServingWeightCache.get(recipe.id) : null;
-        if (servingWeight && servingWeight > 0) {
-            return grams / servingWeight;
-        }
-        return grams;
     }
 
     private buildMealTypeOptions(): void {
@@ -1234,81 +1188,6 @@ export class BaseMealManageComponent implements OnInit {
 
     private roundNutrient(value: number): number {
         return Math.round(value * 100) / 100;
-    }
-
-    private loadRecipeServingWeight(recipe: Recipe | null): Observable<number | null> {
-        if (!recipe || !recipe.id) {
-            return of(null);
-        }
-
-        const cached = this.recipeServingWeightCache.get(recipe.id);
-        if (cached !== undefined) {
-            return of(cached);
-        }
-
-        const immediateWeight = this.calculateRecipeWeight(recipe);
-        if (immediateWeight && recipe.servings > 0) {
-            const servingWeight = immediateWeight / recipe.servings;
-            this.recipeServingWeightCache.set(recipe.id, servingWeight);
-            return of(servingWeight);
-        }
-
-        return this.recipeLookupService.getById(recipe.id).pipe(
-            map(fullRecipe => {
-                const computedWeight = this.calculateRecipeWeight(fullRecipe);
-                if (computedWeight && fullRecipe.servings > 0) {
-                    const servingWeight = computedWeight / fullRecipe.servings;
-                    this.recipeServingWeightCache.set(recipe.id, servingWeight);
-                    return servingWeight;
-                }
-                this.recipeServingWeightCache.set(recipe.id, null);
-                return null;
-            }),
-            catchError(() => {
-                this.recipeServingWeightCache.set(recipe.id, null);
-                return of(null);
-            }),
-        );
-    }
-
-    private calculateRecipeWeight(recipe: Recipe | RecipeLookup): number | null {
-        if (!recipe.steps || recipe.steps.length === 0) {
-            return null;
-        }
-
-        let total = 0;
-        recipe.steps.forEach(step => {
-            step.ingredients?.forEach(ingredient => {
-                const weight = this.calculateIngredientWeight(ingredient);
-                if (weight) {
-                    total += weight;
-                }
-            });
-        });
-
-        return total > 0 ? total : null;
-    }
-
-    private calculateIngredientWeight(ingredient: RecipeIngredient | RecipeLookupIngredient): number | null {
-        const amount = ingredient.amount ?? 0;
-        if (amount <= 0) {
-            return null;
-        }
-
-        const unitRaw = ingredient.productBaseUnit?.toString().toUpperCase();
-        if (!unitRaw) {
-            return null;
-        }
-
-        if (unitRaw === MeasurementUnit.G) {
-            return amount;
-        }
-
-        if (unitRaw === MeasurementUnit.ML) {
-            return amount;
-        }
-
-        return null;
     }
 
     private resolveControlError(control: AbstractControl | null): string | null {

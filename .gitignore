@@ -52,3 +52,4 @@ appsettings.*.json
 .DS_Store
 Thumbs.db
 /FoodDiary.Web.Client/dist-admin/
+/coverage-results/

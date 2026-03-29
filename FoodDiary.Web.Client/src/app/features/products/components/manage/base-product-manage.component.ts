@@ -30,6 +30,13 @@ import {
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
 import { NutritionCalculationService } from '../../../../shared/lib/nutrition-calculation.service';
 import {
+    calculateCalorieMismatchWarning,
+    calculateMacroBarState,
+    checkCaloriesError,
+    checkMacrosError,
+    getControlNumericValue,
+} from '../../../../shared/lib/nutrition-form.utils';
+import {
     ConfirmDeleteDialogComponent,
     ConfirmDeleteDialogData,
 } from '../../../../components/shared/confirm-delete-dialog/confirm-delete-dialog.component';
@@ -345,12 +352,7 @@ export class BaseProductManageComponent implements OnInit {
 
     public caloriesError(): string | null {
         const control = this.productForm.controls.caloriesPerBase;
-        if (!control.touched && !control.dirty) {
-            return null;
-        }
-
-        const calories = this.getNumberValue(control);
-        return calories <= 0
+        return checkCaloriesError(control)
             ? this.translateService.instant('PRODUCT_MANAGE.NUTRITION_ERRORS.CALORIES_REQUIRED')
             : null;
     }
@@ -363,17 +365,7 @@ export class BaseProductManageComponent implements OnInit {
             this.productForm.controls.alcoholPerBase,
         ];
 
-        const shouldShow = controls.some(control => control.touched || control.dirty);
-        if (!shouldShow) {
-            return null;
-        }
-
-        const proteins = this.getNumberValue(this.productForm.controls.proteinsPerBase);
-        const fats = this.getNumberValue(this.productForm.controls.fatsPerBase);
-        const carbs = this.getNumberValue(this.productForm.controls.carbsPerBase);
-        const alcohol = this.getNumberValue(this.productForm.controls.alcoholPerBase);
-
-        return proteins <= 0 && fats <= 0 && carbs <= 0 && alcohol <= 0
+        return checkMacrosError(controls)
             ? this.translateService.instant('PRODUCT_MANAGE.NUTRITION_ERRORS.MACROS_REQUIRED')
             : null;
     }
@@ -410,51 +402,16 @@ export class BaseProductManageComponent implements OnInit {
         const fats = this.getNumberValue(this.productForm.controls.fatsPerBase);
         const carbs = this.getNumberValue(this.productForm.controls.carbsPerBase);
         const alcohol = this.getNumberValue(this.productForm.controls.alcoholPerBase);
-        const expectedCalories = this.nutritionCalculationService.calculateCaloriesFromMacros(proteins, fats, carbs, alcohol);
-
-        if (expectedCalories <= 0 || calories <= 0) {
-            this.nutritionWarning.set(null);
-            return;
-        }
-
-        const deviation = Math.abs(calories - expectedCalories) / expectedCalories;
-        if (deviation > this.calorieMismatchThreshold) {
-            this.nutritionWarning.set({
-                expectedCalories: Math.round(expectedCalories),
-                actualCalories: Math.round(calories),
-            });
-            return;
-        }
-
-        this.nutritionWarning.set(null);
+        this.nutritionWarning.set(
+            calculateCalorieMismatchWarning(calories, proteins, fats, carbs, alcohol, this.calorieMismatchThreshold),
+        );
     }
 
     private updateMacroDistribution(): void {
-        const controls = {
-            proteins: this.productForm.controls.proteinsPerBase,
-            fats: this.productForm.controls.fatsPerBase,
-            carbs: this.productForm.controls.carbsPerBase,
-        };
-
-        const entries = (Object.keys(controls) as MacroKey[]).map(key => ({
-            key,
-            value: this.getNumberValue(controls[key]),
-        }));
-
-        const positive = entries.filter(entry => entry.value > 0);
-        if (positive.length === 0) {
-            this.macroBarState.set({ isEmpty: true, segments: [] });
-            return;
-        }
-
-        const total = positive.reduce((sum, entry) => sum + entry.value, 0);
-        this.macroBarState.set({
-            isEmpty: false,
-            segments: positive.map(entry => ({
-                key: entry.key,
-                percent: (entry.value / total) * 100,
-            })),
-        });
+        const proteins = this.getNumberValue(this.productForm.controls.proteinsPerBase);
+        const fats = this.getNumberValue(this.productForm.controls.fatsPerBase);
+        const carbs = this.getNumberValue(this.productForm.controls.carbsPerBase);
+        this.macroBarState.set(calculateMacroBarState(proteins, fats, carbs));
     }
 
     private convertNutritionControls(factor: number): void {
@@ -530,14 +487,7 @@ export class BaseProductManageComponent implements OnInit {
     }
 
     private getNumberValue(control: FormControl<number | string | null>): number {
-        const value = control.value as unknown;
-        if (value === null || value === undefined || value === '') {
-            return 0;
-        }
-        const raw = String(value).replace(',', '.').replace(/[^0-9.-]/g, '');
-        const match = raw.match(/-?\d+(\.\d+)?/);
-        const parsed = match ? Number(match[0]) : NaN;
-        return Number.isFinite(parsed) ? parsed : 0;
+        return getControlNumericValue(control);
     }
 
     private populateForm(product: Product): void {
