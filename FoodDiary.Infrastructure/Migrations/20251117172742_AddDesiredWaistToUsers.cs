@@ -1,15 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace FoodDiary.Infrastructure.Migrations
-{
+namespace FoodDiary.Infrastructure.Migrations {
     /// <inheritdoc />
-    public partial class AddDesiredWaistToUsers : Migration
-    {
+    public partial class AddDesiredWaistToUsers : Migration {
         /// <inheritdoc />
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
+        protected override void Up(MigrationBuilder migrationBuilder) {
             migrationBuilder.AddColumn<double>(
                 name: "DesiredWaist",
                 table: "Users",
@@ -18,8 +15,7 @@ namespace FoodDiary.Infrastructure.Migrations
         }
 
         /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
+        protected override void Down(MigrationBuilder migrationBuilder) {
             migrationBuilder.DropColumn(
                 name: "DesiredWaist",
                 table: "Users");

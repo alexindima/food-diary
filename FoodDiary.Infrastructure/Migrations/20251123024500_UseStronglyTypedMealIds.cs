@@ -2,14 +2,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace FoodDiary.Infrastructure.Migrations
-{
+namespace FoodDiary.Infrastructure.Migrations {
     /// <inheritdoc />
-    public partial class UseStronglyTypedMealIds : Migration
-    {
+    public partial class UseStronglyTypedMealIds : Migration {
         /// <inheritdoc />
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
+        protected override void Up(MigrationBuilder migrationBuilder) {
             migrationBuilder.DropForeignKey(
                 name: "FK_MealItems_Meals_MealId",
                 table: "MealItems");
@@ -62,8 +59,7 @@ ALTER TABLE "MealItems" ALTER COLUMN "MealId" TYPE uuid USING (md5("MealId"::tex
         }
 
         /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
+        protected override void Down(MigrationBuilder migrationBuilder) {
             migrationBuilder.DropForeignKey(
                 name: "FK_MealItems_Meals_MealId",
                 table: "MealItems");

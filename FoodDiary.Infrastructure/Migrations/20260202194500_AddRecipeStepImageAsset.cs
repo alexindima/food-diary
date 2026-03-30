@@ -4,10 +4,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace FoodDiary.Infrastructure.Migrations;
 
-public partial class AddRecipeStepImageAsset : Migration
-{
-    protected override void Up(MigrationBuilder migrationBuilder)
-    {
+public partial class AddRecipeStepImageAsset : Migration {
+    protected override void Up(MigrationBuilder migrationBuilder) {
         migrationBuilder.AddColumn<Guid>(
             name: "ImageAssetId",
             table: "RecipeSteps",
@@ -28,8 +26,7 @@ public partial class AddRecipeStepImageAsset : Migration
             onDelete: ReferentialAction.SetNull);
     }
 
-    protected override void Down(MigrationBuilder migrationBuilder)
-    {
+    protected override void Down(MigrationBuilder migrationBuilder) {
         migrationBuilder.DropForeignKey(
             name: "FK_RecipeSteps_ImageAssets_ImageAssetId",
             table: "RecipeSteps");

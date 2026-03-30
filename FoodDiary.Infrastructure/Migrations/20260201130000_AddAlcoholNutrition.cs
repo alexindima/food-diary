@@ -4,10 +4,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace FoodDiary.Infrastructure.Migrations;
 
-public partial class AddAlcoholNutrition : Migration
-{
-    protected override void Up(MigrationBuilder migrationBuilder)
-    {
+public partial class AddAlcoholNutrition : Migration {
+    protected override void Up(MigrationBuilder migrationBuilder) {
         migrationBuilder.AddColumn<double>(
             name: "AlcoholPerBase",
             table: "Products",
@@ -41,8 +39,7 @@ public partial class AddAlcoholNutrition : Migration
             nullable: true);
     }
 
-    protected override void Down(MigrationBuilder migrationBuilder)
-    {
+    protected override void Down(MigrationBuilder migrationBuilder) {
         migrationBuilder.DropColumn(
             name: "AlcoholPerBase",
             table: "Products");

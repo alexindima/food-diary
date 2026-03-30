@@ -1,4 +1,4 @@
-﻿using FoodDiary.Application.Recipes.Services;
+using FoodDiary.Application.Recipes.Services;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.ValueObjects.Ids;
 using System.Reflection;

@@ -46,10 +46,8 @@ using Polly;
 
 namespace FoodDiary.Infrastructure;
 
-public static class DependencyInjection
-{
-    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
-    {
+public static class DependencyInjection {
+    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration) {
         services.AddMemoryCache();
         services.AddOptions<DatabaseOptions>()
             .Bind(configuration.GetSection(DatabaseOptions.SectionName))
@@ -62,8 +60,7 @@ public static class DependencyInjection
         services.AddScoped<IUnitOfWork, EfUnitOfWork>();
         services.AddScoped<IDomainEventPublisher, MediatRDomainEventPublisher>();
         services.AddScoped<DomainEventDispatchInterceptor>();
-        services.AddDbContext<FoodDiaryDbContext>((sp, options) =>
-        {
+        services.AddDbContext<FoodDiaryDbContext>((sp, options) => {
             var databaseOptions = sp.GetRequiredService<IOptions<DatabaseOptions>>().Value;
             options
                 .UseNpgsql(

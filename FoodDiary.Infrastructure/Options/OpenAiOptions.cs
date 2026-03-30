@@ -1,7 +1,6 @@
 namespace FoodDiary.Infrastructure.Options;
 
-public sealed class OpenAiOptions
-{
+public sealed class OpenAiOptions {
     public const string SectionName = "OpenAi";
 
     public string ApiKey { get; init; } = string.Empty;

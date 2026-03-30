@@ -1,19 +1,15 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace FoodDiary.Infrastructure.Migrations
-{
+namespace FoodDiary.Infrastructure.Migrations {
     /// <inheritdoc />
-    public partial class AddCycles : Migration
-    {
+    public partial class AddCycles : Migration {
         /// <inheritdoc />
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
+        protected override void Up(MigrationBuilder migrationBuilder) {
             migrationBuilder.CreateTable(
                 name: "Cycles",
-                columns: table => new
-                {
+                columns: table => new {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     UserId = table.Column<Guid>(type: "uuid", nullable: false),
                     StartDate = table.Column<DateTime>(type: "date", nullable: false),
@@ -23,8 +19,7 @@ namespace FoodDiary.Infrastructure.Migrations
                     CreatedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
-                constraints: table =>
-                {
+                constraints: table => {
                     table.PrimaryKey("PK_Cycles", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Cycles_Users_UserId",
@@ -36,8 +31,7 @@ namespace FoodDiary.Infrastructure.Migrations
 
             migrationBuilder.CreateTable(
                 name: "CycleDays",
-                columns: table => new
-                {
+                columns: table => new {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     CycleId = table.Column<Guid>(type: "uuid", nullable: false),
                     Date = table.Column<DateTime>(type: "date", nullable: false),
@@ -53,8 +47,7 @@ namespace FoodDiary.Infrastructure.Migrations
                     CreatedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
-                constraints: table =>
-                {
+                constraints: table => {
                     table.PrimaryKey("PK_CycleDays", x => x.Id);
                     table.ForeignKey(
                         name: "FK_CycleDays_Cycles_CycleId",
@@ -77,8 +70,7 @@ namespace FoodDiary.Infrastructure.Migrations
         }
 
         /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
+        protected override void Down(MigrationBuilder migrationBuilder) {
             migrationBuilder.DropTable(
                 name: "CycleDays");
 

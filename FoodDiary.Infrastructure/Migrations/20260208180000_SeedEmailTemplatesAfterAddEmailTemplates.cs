@@ -2,14 +2,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace FoodDiary.Infrastructure.Migrations
-{
+namespace FoodDiary.Infrastructure.Migrations {
     /// <inheritdoc />
-    public partial class SeedEmailTemplatesAfterAddEmailTemplates : Migration
-    {
+    public partial class SeedEmailTemplatesAfterAddEmailTemplates : Migration {
         /// <inheritdoc />
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
+        protected override void Up(MigrationBuilder migrationBuilder) {
             migrationBuilder.Sql(
                 """
                 DO $seed$
@@ -268,8 +265,7 @@ namespace FoodDiary.Infrastructure.Migrations
         }
 
         /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
+        protected override void Down(MigrationBuilder migrationBuilder) {
             migrationBuilder.Sql(
                 """
                 DELETE FROM "EmailTemplates"

@@ -1,4 +1,4 @@
-﻿using FoodDiary.Domain.Common;
+using FoodDiary.Domain.Common;
 
 namespace FoodDiary.Domain.ValueObjects.Ids;
 

@@ -1,4 +1,4 @@
-﻿using FoodDiary.Domain.Entities.Meals;
+using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Events;
 using FoodDiary.Domain.Enums;

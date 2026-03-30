@@ -1,15 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace FoodDiary.Infrastructure.Migrations
-{
+namespace FoodDiary.Infrastructure.Migrations {
     /// <inheritdoc />
-    public partial class AddCompositeIndexOnAiUsage : Migration
-    {
+    public partial class AddCompositeIndexOnAiUsage : Migration {
         /// <inheritdoc />
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
+        protected override void Up(MigrationBuilder migrationBuilder) {
             migrationBuilder.DropIndex(
                 name: "IX_AiUsages_CreatedOnUtc",
                 table: "AiUsages");
@@ -21,8 +18,7 @@ namespace FoodDiary.Infrastructure.Migrations
         }
 
         /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
+        protected override void Down(MigrationBuilder migrationBuilder) {
             migrationBuilder.DropIndex(
                 name: "IX_AiUsages_UserId_CreatedOnUtc",
                 table: "AiUsages");

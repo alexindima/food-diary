@@ -4,10 +4,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace FoodDiary.Infrastructure.Migrations;
 
-public partial class AddDashboardLayoutToUsers : Migration
-{
-    protected override void Up(MigrationBuilder migrationBuilder)
-    {
+public partial class AddDashboardLayoutToUsers : Migration {
+    protected override void Up(MigrationBuilder migrationBuilder) {
         migrationBuilder.AddColumn<string>(
             name: "DashboardLayout",
             table: "Users",
@@ -15,8 +13,7 @@ public partial class AddDashboardLayoutToUsers : Migration
             nullable: true);
     }
 
-    protected override void Down(MigrationBuilder migrationBuilder)
-    {
+    protected override void Down(MigrationBuilder migrationBuilder) {
         migrationBuilder.DropColumn(
             name: "DashboardLayout",
             table: "Users");

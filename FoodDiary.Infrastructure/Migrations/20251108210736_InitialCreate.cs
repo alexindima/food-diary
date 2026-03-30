@@ -1,20 +1,16 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace FoodDiary.Infrastructure.Migrations
-{
+namespace FoodDiary.Infrastructure.Migrations {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
-    {
+    public partial class InitialCreate : Migration {
         /// <inheritdoc />
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
+        protected override void Up(MigrationBuilder migrationBuilder) {
             migrationBuilder.CreateTable(
                 name: "Users",
-                columns: table => new
-                {
+                columns: table => new {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Email = table.Column<string>(type: "text", nullable: false),
                     Password = table.Column<string>(type: "text", nullable: false),
@@ -31,15 +27,13 @@ namespace FoodDiary.Infrastructure.Migrations
                     CreatedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
-                constraints: table =>
-                {
+                constraints: table => {
                     table.PrimaryKey("PK_Users", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Meals",
-                columns: table => new
-                {
+                columns: table => new {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     UserId = table.Column<Guid>(type: "uuid", nullable: false),
@@ -49,8 +43,7 @@ namespace FoodDiary.Infrastructure.Migrations
                     CreatedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
-                constraints: table =>
-                {
+                constraints: table => {
                     table.PrimaryKey("PK_Meals", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Meals_Users_UserId",
@@ -62,8 +55,7 @@ namespace FoodDiary.Infrastructure.Migrations
 
             migrationBuilder.CreateTable(
                 name: "Products",
-                columns: table => new
-                {
+                columns: table => new {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Barcode = table.Column<string>(type: "text", nullable: true),
                     Name = table.Column<string>(type: "text", nullable: false),
@@ -83,8 +75,7 @@ namespace FoodDiary.Infrastructure.Migrations
                     CreatedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
-                constraints: table =>
-                {
+                constraints: table => {
                     table.PrimaryKey("PK_Products", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Products_Users_UserId",
@@ -96,8 +87,7 @@ namespace FoodDiary.Infrastructure.Migrations
 
             migrationBuilder.CreateTable(
                 name: "Recipes",
-                columns: table => new
-                {
+                columns: table => new {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "text", nullable: false),
@@ -115,8 +105,7 @@ namespace FoodDiary.Infrastructure.Migrations
                     CreatedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
-                constraints: table =>
-                {
+                constraints: table => {
                     table.PrimaryKey("PK_Recipes", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Recipes_Users_UserId",
@@ -128,8 +117,7 @@ namespace FoodDiary.Infrastructure.Migrations
 
             migrationBuilder.CreateTable(
                 name: "MealItems",
-                columns: table => new
-                {
+                columns: table => new {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     MealId = table.Column<int>(type: "integer", nullable: false),
@@ -139,8 +127,7 @@ namespace FoodDiary.Infrastructure.Migrations
                     CreatedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
-                constraints: table =>
-                {
+                constraints: table => {
                     table.PrimaryKey("PK_MealItems", x => x.Id);
                     table.ForeignKey(
                         name: "FK_MealItems_Meals_MealId",
@@ -162,8 +149,7 @@ namespace FoodDiary.Infrastructure.Migrations
 
             migrationBuilder.CreateTable(
                 name: "RecipeIngredients",
-                columns: table => new
-                {
+                columns: table => new {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     RecipeId = table.Column<int>(type: "integer", nullable: false),
@@ -173,8 +159,7 @@ namespace FoodDiary.Infrastructure.Migrations
                     CreatedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
-                constraints: table =>
-                {
+                constraints: table => {
                     table.PrimaryKey("PK_RecipeIngredients", x => x.Id);
                     table.ForeignKey(
                         name: "FK_RecipeIngredients_Products_ProductId",
@@ -197,8 +182,7 @@ namespace FoodDiary.Infrastructure.Migrations
 
             migrationBuilder.CreateTable(
                 name: "RecipeSteps",
-                columns: table => new
-                {
+                columns: table => new {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     RecipeId = table.Column<int>(type: "integer", nullable: false),
@@ -208,8 +192,7 @@ namespace FoodDiary.Infrastructure.Migrations
                     CreatedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
-                constraints: table =>
-                {
+                constraints: table => {
                     table.PrimaryKey("PK_RecipeSteps", x => x.Id);
                     table.ForeignKey(
                         name: "FK_RecipeSteps_Recipes_RecipeId",
@@ -277,8 +260,7 @@ namespace FoodDiary.Infrastructure.Migrations
         }
 
         /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
+        protected override void Down(MigrationBuilder migrationBuilder) {
             migrationBuilder.DropTable(
                 name: "MealItems");
 

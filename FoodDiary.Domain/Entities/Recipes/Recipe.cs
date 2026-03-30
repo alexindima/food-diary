@@ -274,8 +274,7 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
                 state = state with { Description = null };
                 changed = true;
             }
-        }
-        else if (description is not null) {
+        } else if (description is not null) {
             if (!string.Equals(state.Description, normalizedDescription, StringComparison.Ordinal)) {
                 state = state with { Description = normalizedDescription };
                 changed = true;
@@ -287,8 +286,7 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
                 state = state with { Comment = null };
                 changed = true;
             }
-        }
-        else if (comment is not null) {
+        } else if (comment is not null) {
             if (!string.Equals(state.Comment, normalizedComment, StringComparison.Ordinal)) {
                 state = state with { Comment = normalizedComment };
                 changed = true;
@@ -300,8 +298,7 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
                 state = state with { Category = null };
                 changed = true;
             }
-        }
-        else if (category is not null) {
+        } else if (category is not null) {
             if (!string.Equals(state.Category, normalizedCategory, StringComparison.Ordinal)) {
                 state = state with { Category = normalizedCategory };
                 changed = true;
@@ -332,8 +329,7 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
                 state = state with { ImageUrl = null };
                 changed = true;
             }
-        }
-        else if (imageUrl is not null) {
+        } else if (imageUrl is not null) {
             if (!string.Equals(state.ImageUrl, normalizedImageUrl, StringComparison.Ordinal)) {
                 state = state with { ImageUrl = normalizedImageUrl };
                 changed = true;
@@ -345,8 +341,7 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
                 state = state with { ImageAssetId = null };
                 changed = true;
             }
-        }
-        else if (imageAssetId.HasValue && state.ImageAssetId != imageAssetId) {
+        } else if (imageAssetId.HasValue && state.ImageAssetId != imageAssetId) {
             state = state with { ImageAssetId = imageAssetId };
             changed = true;
         }

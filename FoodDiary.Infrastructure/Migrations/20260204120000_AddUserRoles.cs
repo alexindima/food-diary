@@ -4,33 +4,27 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace FoodDiary.Infrastructure.Migrations;
 
-public partial class AddUserRoles : Migration
-{
-    protected override void Up(MigrationBuilder migrationBuilder)
-    {
+public partial class AddUserRoles : Migration {
+    protected override void Up(MigrationBuilder migrationBuilder) {
         migrationBuilder.CreateTable(
             name: "Roles",
-            columns: table => new
-            {
+            columns: table => new {
                 Id = table.Column<Guid>(type: "uuid", nullable: false),
                 Name = table.Column<string>(type: "character varying(64)", maxLength: 64, nullable: false),
                 CreatedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                 ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
             },
-            constraints: table =>
-            {
+            constraints: table => {
                 table.PrimaryKey("PK_Roles", x => x.Id);
             });
 
         migrationBuilder.CreateTable(
             name: "UserRoles",
-            columns: table => new
-            {
+            columns: table => new {
                 UserId = table.Column<Guid>(type: "uuid", nullable: false),
                 RoleId = table.Column<Guid>(type: "uuid", nullable: false)
             },
-            constraints: table =>
-            {
+            constraints: table => {
                 table.PrimaryKey("PK_UserRoles", x => new { x.UserId, x.RoleId });
                 table.ForeignKey(
                     name: "FK_UserRoles_Roles_RoleId",
@@ -81,8 +75,7 @@ ON CONFLICT DO NOTHING;
 ");
     }
 
-    protected override void Down(MigrationBuilder migrationBuilder)
-    {
+    protected override void Down(MigrationBuilder migrationBuilder) {
         migrationBuilder.DropTable(
             name: "UserRoles");
 

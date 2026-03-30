@@ -4,10 +4,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace FoodDiary.Infrastructure.Migrations;
 
-public partial class AddLanguageToUsers : Migration
-{
-    protected override void Up(MigrationBuilder migrationBuilder)
-    {
+public partial class AddLanguageToUsers : Migration {
+    protected override void Up(MigrationBuilder migrationBuilder) {
         migrationBuilder.AddColumn<string>(
             name: "Language",
             table: "Users",
@@ -15,8 +13,7 @@ public partial class AddLanguageToUsers : Migration
             nullable: true);
     }
 
-    protected override void Down(MigrationBuilder migrationBuilder)
-    {
+    protected override void Down(MigrationBuilder migrationBuilder) {
         migrationBuilder.DropColumn(
             name: "Language",
             table: "Users");

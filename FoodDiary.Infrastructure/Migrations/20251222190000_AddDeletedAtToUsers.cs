@@ -4,10 +4,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace FoodDiary.Infrastructure.Migrations;
 
-public partial class AddDeletedAtToUsers : Migration
-{
-    protected override void Up(MigrationBuilder migrationBuilder)
-    {
+public partial class AddDeletedAtToUsers : Migration {
+    protected override void Up(MigrationBuilder migrationBuilder) {
         migrationBuilder.AddColumn<DateTime>(
             name: "DeletedAt",
             table: "Users",
@@ -15,8 +13,7 @@ public partial class AddDeletedAtToUsers : Migration
             nullable: true);
     }
 
-    protected override void Down(MigrationBuilder migrationBuilder)
-    {
+    protected override void Down(MigrationBuilder migrationBuilder) {
         migrationBuilder.DropColumn(
             name: "DeletedAt",
             table: "Users");

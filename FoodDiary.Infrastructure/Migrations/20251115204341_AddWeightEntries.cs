@@ -1,19 +1,15 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace FoodDiary.Infrastructure.Migrations
-{
+namespace FoodDiary.Infrastructure.Migrations {
     /// <inheritdoc />
-    public partial class AddWeightEntries : Migration
-    {
+    public partial class AddWeightEntries : Migration {
         /// <inheritdoc />
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
+        protected override void Up(MigrationBuilder migrationBuilder) {
             migrationBuilder.CreateTable(
                 name: "WeightEntries",
-                columns: table => new
-                {
+                columns: table => new {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     UserId = table.Column<Guid>(type: "uuid", nullable: false),
                     Date = table.Column<DateTime>(type: "date", nullable: false),
@@ -21,8 +17,7 @@ namespace FoodDiary.Infrastructure.Migrations
                     CreatedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
-                constraints: table =>
-                {
+                constraints: table => {
                     table.PrimaryKey("PK_WeightEntries", x => x.Id);
                     table.ForeignKey(
                         name: "FK_WeightEntries_Users_UserId",
@@ -40,8 +35,7 @@ namespace FoodDiary.Infrastructure.Migrations
         }
 
         /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
+        protected override void Down(MigrationBuilder migrationBuilder) {
             migrationBuilder.DropTable(
                 name: "WeightEntries");
         }

@@ -1,21 +1,17 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace FoodDiary.Infrastructure.Migrations
-{
+namespace FoodDiary.Infrastructure.Migrations {
     /// <inheritdoc />
-    public partial class AddDailyAdvices : Migration
-    {
+    public partial class AddDailyAdvices : Migration {
         /// <inheritdoc />
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
+        protected override void Up(MigrationBuilder migrationBuilder) {
             var createdOn = new DateTime(2025, 12, 12, 0, 0, 0, DateTimeKind.Utc);
 
             migrationBuilder.CreateTable(
                 name: "DailyAdvices",
-                columns: table => new
-                {
+                columns: table => new {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Value = table.Column<string>(type: "character varying(512)", maxLength: 512, nullable: false),
                     Locale = table.Column<string>(type: "character varying(10)", maxLength: 10, nullable: false),
@@ -24,8 +20,7 @@ namespace FoodDiary.Infrastructure.Migrations
                     CreatedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
-                constraints: table =>
-                {
+                constraints: table => {
                     table.PrimaryKey("PK_DailyAdvices", x => x.Id);
                 });
 
@@ -56,8 +51,7 @@ namespace FoodDiary.Infrastructure.Migrations
         }
 
         /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
+        protected override void Down(MigrationBuilder migrationBuilder) {
             migrationBuilder.DropTable(
                 name: "DailyAdvices");
         }

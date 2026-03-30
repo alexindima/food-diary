@@ -1,4 +1,4 @@
-﻿using FoodDiary.Domain.Entities.Meals;
+using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.ValueObjects.Ids;

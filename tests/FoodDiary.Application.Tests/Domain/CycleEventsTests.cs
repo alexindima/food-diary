@@ -1,4 +1,4 @@
-﻿using FoodDiary.Domain.Entities.Tracking;
+using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Events;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;

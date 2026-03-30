@@ -1,4 +1,4 @@
-﻿using FoodDiary.Domain.Entities.Assets;
+using FoodDiary.Domain.Entities.Assets;
 using FoodDiary.Domain.Entities.Content;
 using FoodDiary.Domain.Entities.Recents;
 using FoodDiary.Domain.Entities.Users;

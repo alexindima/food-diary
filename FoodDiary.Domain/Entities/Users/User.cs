@@ -1,4 +1,4 @@
-﻿using FoodDiary.Domain.Common;
+using FoodDiary.Domain.Common;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Recipes;

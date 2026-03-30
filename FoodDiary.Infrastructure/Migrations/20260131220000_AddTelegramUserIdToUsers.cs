@@ -4,10 +4,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace FoodDiary.Infrastructure.Migrations;
 
-public partial class AddTelegramUserIdToUsers : Migration
-{
-    protected override void Up(MigrationBuilder migrationBuilder)
-    {
+public partial class AddTelegramUserIdToUsers : Migration {
+    protected override void Up(MigrationBuilder migrationBuilder) {
         migrationBuilder.AddColumn<long>(
             name: "TelegramUserId",
             table: "Users",
@@ -21,8 +19,7 @@ public partial class AddTelegramUserIdToUsers : Migration
             unique: true);
     }
 
-    protected override void Down(MigrationBuilder migrationBuilder)
-    {
+    protected override void Down(MigrationBuilder migrationBuilder) {
         migrationBuilder.DropIndex(
             name: "IX_Users_TelegramUserId",
             table: "Users");

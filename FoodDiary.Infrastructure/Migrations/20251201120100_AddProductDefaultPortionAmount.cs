@@ -2,14 +2,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace FoodDiary.Infrastructure.Migrations
-{
+namespace FoodDiary.Infrastructure.Migrations {
     /// <inheritdoc />
-    public partial class AddProductDefaultPortionAmount : Migration
-    {
+    public partial class AddProductDefaultPortionAmount : Migration {
         /// <inheritdoc />
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
+        protected override void Up(MigrationBuilder migrationBuilder) {
             migrationBuilder.AddColumn<double>(
                 name: "DefaultPortionAmount",
                 table: "Products",
@@ -23,8 +20,7 @@ UPDATE "Products" SET "DefaultPortionAmount" = "BaseAmount" WHERE "DefaultPortio
         }
 
         /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
+        protected override void Down(MigrationBuilder migrationBuilder) {
             migrationBuilder.DropColumn(
                 name: "DefaultPortionAmount",
                 table: "Products");

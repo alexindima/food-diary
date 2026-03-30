@@ -20,8 +20,7 @@ builder.Services.AddOptions<UserCleanupOptions>()
         "UserCleanup configuration requires positive RetentionDays/BatchSize, a non-empty Cron, and a valid optional ReassignUserId GUID.")
     .ValidateOnStart();
 
-builder.Services.AddHangfire((sp, config) =>
-{
+builder.Services.AddHangfire((sp, config) => {
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
                            ?? throw new InvalidOperationException("DefaultConnection is not configured.");
 

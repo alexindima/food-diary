@@ -1,7 +1,6 @@
 namespace FoodDiary.Infrastructure.Options;
 
-public sealed class TelegramAuthOptions
-{
+public sealed class TelegramAuthOptions {
     public const string SectionName = "TelegramAuth";
 
     public string BotToken { get; init; } = string.Empty;

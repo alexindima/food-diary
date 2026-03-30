@@ -1,15 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace FoodDiary.Infrastructure.Migrations
-{
+namespace FoodDiary.Infrastructure.Migrations {
     /// <inheritdoc />
-    public partial class MoveIngredientsToSteps : Migration
-    {
+    public partial class MoveIngredientsToSteps : Migration {
         /// <inheritdoc />
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
+        protected override void Up(MigrationBuilder migrationBuilder) {
             migrationBuilder.DropForeignKey(
                 name: "FK_RecipeIngredients_Recipes_RecipeId",
                 table: "RecipeIngredients");
@@ -34,8 +31,7 @@ namespace FoodDiary.Infrastructure.Migrations
         }
 
         /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
+        protected override void Down(MigrationBuilder migrationBuilder) {
             migrationBuilder.DropForeignKey(
                 name: "FK_RecipeIngredients_RecipeSteps_RecipeStepId",
                 table: "RecipeIngredients");

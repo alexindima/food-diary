@@ -1,4 +1,4 @@
-﻿using FoodDiary.Domain.Entities.Shopping;
+using FoodDiary.Domain.Entities.Shopping;
 using FoodDiary.Domain.Events;
 using FoodDiary.Domain.ValueObjects.Ids;
 

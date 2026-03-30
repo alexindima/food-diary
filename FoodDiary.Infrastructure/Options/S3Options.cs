@@ -1,7 +1,6 @@
 namespace FoodDiary.Infrastructure.Options;
 
-public sealed class S3Options
-{
+public sealed class S3Options {
     public const string SectionName = "S3";
 
     /// <summary>

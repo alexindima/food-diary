@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using FluentValidation.Results;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Recipes.Common;

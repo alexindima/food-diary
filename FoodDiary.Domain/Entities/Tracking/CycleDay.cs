@@ -1,4 +1,4 @@
-﻿using FoodDiary.Domain.Common;
+using FoodDiary.Domain.Common;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -66,8 +66,7 @@ public sealed class CycleDay : Entity<CycleDayId> {
                 Notes = null;
                 changed = true;
             }
-        }
-        else if (notes is not null) {
+        } else if (notes is not null) {
             if (Notes != normalizedNotes) {
                 Notes = normalizedNotes;
                 changed = true;

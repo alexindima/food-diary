@@ -1,15 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace FoodDiary.Infrastructure.Migrations
-{
+namespace FoodDiary.Infrastructure.Migrations {
     /// <inheritdoc />
-    public partial class AddMealAiSessionImageAssetRelation : Migration
-    {
+    public partial class AddMealAiSessionImageAssetRelation : Migration {
         /// <inheritdoc />
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
+        protected override void Up(MigrationBuilder migrationBuilder) {
             migrationBuilder.CreateIndex(
                 name: "IX_MealAiSessions_ImageAssetId",
                 table: "MealAiSessions",
@@ -25,8 +22,7 @@ namespace FoodDiary.Infrastructure.Migrations
         }
 
         /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
+        protected override void Down(MigrationBuilder migrationBuilder) {
             migrationBuilder.DropForeignKey(
                 name: "FK_MealAiSessions_ImageAssets_ImageAssetId",
                 table: "MealAiSessions");

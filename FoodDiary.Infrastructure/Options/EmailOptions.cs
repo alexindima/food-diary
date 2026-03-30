@@ -1,7 +1,6 @@
 namespace FoodDiary.Infrastructure.Options;
 
-public sealed class EmailOptions
-{
+public sealed class EmailOptions {
     public const string SectionName = "Email";
 
     public string SmtpHost { get; init; } = string.Empty;

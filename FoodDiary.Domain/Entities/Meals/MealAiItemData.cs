@@ -55,8 +55,7 @@ public sealed record MealAiItemData(
             data = Create(nameEn, nameLocal, amount, unit, calories, proteins, fats, carbs, fiber, alcohol);
             error = null;
             return true;
-        }
-        catch (Exception ex) when (ex is ArgumentException or ArgumentOutOfRangeException) {
+        } catch (Exception ex) when (ex is ArgumentException or ArgumentOutOfRangeException) {
             data = null;
             error = ex.Message;
             return false;

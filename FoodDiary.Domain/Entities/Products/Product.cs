@@ -1,4 +1,4 @@
-﻿using FoodDiary.Domain.Common;
+using FoodDiary.Domain.Common;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Entities.Users;
@@ -132,15 +132,13 @@ public sealed class Product : AggregateRoot<ProductId> {
 
         if (clearBarcode) {
             state = state with { Barcode = null };
-        }
-        else if (barcode is not null) {
+        } else if (barcode is not null) {
             state = state with { Barcode = normalizedBarcode };
         }
 
         if (clearBrand) {
             state = state with { Brand = null };
-        }
-        else if (brand is not null) {
+        } else if (brand is not null) {
             state = state with { Brand = normalizedBrand };
         }
 
@@ -170,22 +168,19 @@ public sealed class Product : AggregateRoot<ProductId> {
 
         if (clearCategory) {
             state = state with { Category = null };
-        }
-        else if (category is not null) {
+        } else if (category is not null) {
             state = state with { Category = normalizedCategory };
         }
 
         if (clearDescription) {
             state = state with { Description = null };
-        }
-        else if (description is not null) {
+        } else if (description is not null) {
             state = state with { Description = normalizedDescription };
         }
 
         if (clearComment) {
             state = state with { Comment = null };
-        }
-        else if (comment is not null) {
+        } else if (comment is not null) {
             state = state with { Comment = normalizedComment };
         }
 
@@ -219,8 +214,7 @@ public sealed class Product : AggregateRoot<ProductId> {
 
         if (baseAmount.HasValue) {
             targetBaseAmount = NormalizeBaseAmount(targetUnit, baseAmount.Value, nameof(baseAmount));
-        }
-        else if (baseUnit.HasValue) {
+        } else if (baseUnit.HasValue) {
             targetBaseAmount = GetCanonicalBaseAmount(targetUnit);
         }
 
@@ -286,8 +280,7 @@ public sealed class Product : AggregateRoot<ProductId> {
                 ImageUrl = null;
                 changed = true;
             }
-        }
-        else if (imageUrl is not null && !string.Equals(ImageUrl, normalizedImageUrl, StringComparison.Ordinal)) {
+        } else if (imageUrl is not null && !string.Equals(ImageUrl, normalizedImageUrl, StringComparison.Ordinal)) {
             ImageUrl = normalizedImageUrl;
             changed = true;
         }
@@ -297,8 +290,7 @@ public sealed class Product : AggregateRoot<ProductId> {
                 ImageAssetId = null;
                 changed = true;
             }
-        }
-        else if (imageAssetId.HasValue && ImageAssetId != imageAssetId) {
+        } else if (imageAssetId.HasValue && ImageAssetId != imageAssetId) {
             ImageAssetId = imageAssetId;
             changed = true;
         }

@@ -1,4 +1,4 @@
-﻿using FoodDiary.Domain.Common;
+using FoodDiary.Domain.Common;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;

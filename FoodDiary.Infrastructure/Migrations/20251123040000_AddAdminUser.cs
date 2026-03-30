@@ -2,12 +2,9 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace FoodDiary.Infrastructure.Migrations
-{
-    public partial class AddAdminUser : Migration
-    {
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
+namespace FoodDiary.Infrastructure.Migrations {
+    public partial class AddAdminUser : Migration {
+        protected override void Up(MigrationBuilder migrationBuilder) {
             const string email = "admin@fooddiary.club";
             var adminId = Guid.Parse("9a5f9b2b-f50b-4e2d-8a4a-8d1a58c7a901");
             var passwordHash = BCrypt.Net.BCrypt.HashPassword("123456");
@@ -25,8 +22,7 @@ $$;
 ");
         }
 
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
+        protected override void Down(MigrationBuilder migrationBuilder) {
             migrationBuilder.Sql(@"DELETE FROM ""Users"" WHERE ""Email"" = 'admin@fooddiary.club';");
         }
     }

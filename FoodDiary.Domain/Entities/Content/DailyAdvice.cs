@@ -81,8 +81,7 @@ public sealed class DailyAdvice : AggregateRoot<DailyAdviceId> {
                 Tag = null;
                 changed = true;
             }
-        }
-        else if (tag is not null) {
+        } else if (tag is not null) {
             if (Tag != normalizedTag) {
                 Tag = normalizedTag;
                 changed = true;
