@@ -8,7 +8,6 @@ namespace FoodDiary.Infrastructure.Persistence.ShoppingLists;
 public class ShoppingListRepository(FoodDiaryDbContext context) : IShoppingListRepository {
     public async Task<ShoppingList> AddAsync(ShoppingList list, CancellationToken cancellationToken = default) {
         context.ShoppingLists.Add(list);
-        await context.SaveChangesAsync(cancellationToken);
         return list;
     }
 
@@ -72,14 +71,12 @@ public class ShoppingListRepository(FoodDiaryDbContext context) : IShoppingListR
 
     public async Task UpdateAsync(ShoppingList list, CancellationToken cancellationToken = default) {
         context.ShoppingLists.Update(list);
-        await context.SaveChangesAsync(cancellationToken);
     }
 
     public async Task DeleteAsync(ShoppingList list, CancellationToken cancellationToken = default) {
         var tracked = await context.ShoppingLists.FindAsync([list.Id], cancellationToken);
         if (tracked is not null) {
             context.ShoppingLists.Remove(tracked);
-            await context.SaveChangesAsync(cancellationToken);
         }
     }
 }

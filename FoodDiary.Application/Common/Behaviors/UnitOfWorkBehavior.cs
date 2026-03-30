@@ -1,0 +1,18 @@
+using FoodDiary.Application.Common.Abstractions.Messaging;
+using FoodDiary.Application.Common.Abstractions.Persistence;
+using MediatR;
+
+namespace FoodDiary.Application.Common.Behaviors;
+
+internal sealed class UnitOfWorkBehavior<TRequest, TResponse>(IUnitOfWork unitOfWork)
+    : IPipelineBehavior<TRequest, TResponse>
+    where TRequest : ICommand<TResponse> {
+    public async Task<TResponse> Handle(
+        TRequest request,
+        RequestHandlerDelegate<TResponse> next,
+        CancellationToken cancellationToken) {
+        var response = await next(cancellationToken);
+        await unitOfWork.SaveChangesAsync(cancellationToken);
+        return response;
+    }
+}

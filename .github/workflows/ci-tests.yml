@@ -44,6 +44,24 @@ jobs:
             exit "$status"
           fi
 
+      - name: Check formatting
+        shell: bash
+        run: |
+          set -euo pipefail
+          log_file="${RUNNER_TEMP}/ci-test-logs/dotnet-format.log"
+          set +e
+          dotnet format FoodDiary.slnx --verify-no-changes --no-restore 2>&1 | tee "$log_file"
+          status=${PIPESTATUS[0]}
+          set -e
+          if [ "$status" -ne 0 ]; then
+            {
+              echo "FAILED_AREA=dotnet"
+              echo "FAILED_TARGET=Check formatting"
+              echo "FAILED_LOG_FILE_NAME=$(basename "$log_file")"
+            } > "${RUNNER_TEMP}/ci-test-logs/failure-meta.env"
+            exit "$status"
+          fi
+
       - name: Build
         shell: bash
         run: |

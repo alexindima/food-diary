@@ -11,7 +11,6 @@ public class RecipeRepository(FoodDiaryDbContext context) : IRecipeRepository {
 
     public async Task<Recipe> AddAsync(Recipe recipe, CancellationToken cancellationToken = default) {
         context.Recipes.Add(recipe);
-        await context.SaveChangesAsync(cancellationToken);
         return recipe;
     }
 
@@ -93,14 +92,12 @@ public class RecipeRepository(FoodDiaryDbContext context) : IRecipeRepository {
 
     public async Task UpdateAsync(Recipe recipe, CancellationToken cancellationToken = default) {
         context.Recipes.Update(recipe);
-        await context.SaveChangesAsync(cancellationToken);
     }
 
     public async Task DeleteAsync(Recipe recipe, CancellationToken cancellationToken = default) {
         var tracked = await context.Recipes.FindAsync([recipe.Id], cancellationToken);
         if (tracked is not null) {
             context.Recipes.Remove(tracked);
-            await context.SaveChangesAsync(cancellationToken);
         }
     }
 
@@ -118,7 +115,6 @@ public class RecipeRepository(FoodDiaryDbContext context) : IRecipeRepository {
         entry.Property(r => r.TotalFiber).IsModified = true;
         entry.Property(r => r.TotalAlcohol).IsModified = true;
 
-        await context.SaveChangesAsync(cancellationToken);
     }
 
     public async Task<IReadOnlyDictionary<RecipeId, Recipe>> GetByIdsAsync(

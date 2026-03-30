@@ -8,20 +8,17 @@ namespace FoodDiary.Infrastructure.Persistence.Meals;
 public class MealRepository(FoodDiaryDbContext context) : IMealRepository {
     public async Task<Meal> AddAsync(Meal meal, CancellationToken cancellationToken = default) {
         await context.Meals.AddAsync(meal, cancellationToken);
-        await context.SaveChangesAsync(cancellationToken);
         return meal;
     }
 
     public async Task UpdateAsync(Meal meal, CancellationToken cancellationToken = default) {
         context.Meals.Update(meal);
-        await context.SaveChangesAsync(cancellationToken);
     }
 
     public async Task DeleteAsync(Meal meal, CancellationToken cancellationToken = default) {
         var tracked = await context.Meals.FindAsync([meal.Id], cancellationToken);
         if (tracked is not null) {
             context.Meals.Remove(tracked);
-            await context.SaveChangesAsync(cancellationToken);
         }
     }
 

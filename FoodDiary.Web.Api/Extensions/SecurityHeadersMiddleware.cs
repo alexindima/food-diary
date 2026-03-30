@@ -8,6 +8,7 @@ public sealed class SecurityHeadersMiddleware(RequestDelegate next) {
         headers["Referrer-Policy"] = "strict-origin-when-cross-origin";
         headers["X-Permitted-Cross-Domain-Policies"] = "none";
         headers["Permissions-Policy"] = "camera=(), microphone=(), geolocation=()";
+        headers["Content-Security-Policy"] = "default-src 'none'; frame-ancestors 'none'";
         return next(context);
     }
 }

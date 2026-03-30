@@ -1,27 +1,17 @@
 using FluentValidation;
-using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Products.Commands.CreateProduct;
 
 public class CreateProductCommandValidator : AbstractValidator<CreateProductCommand> {
-    private readonly IUserRepository _userRepository;
-
-    public CreateProductCommandValidator(IUserRepository userRepository) {
-        _userRepository = userRepository;
-
+    public CreateProductCommandValidator() {
         RuleFor(x => x.UserId)
-            .Cascade(CascadeMode.Stop)
             .NotNull()
             .WithErrorCode("Authentication.InvalidToken")
             .WithMessage("Unable to identify user")
             .Must(userId => userId is not null && userId.Value != Guid.Empty)
             .WithErrorCode("Authentication.InvalidToken")
-            .WithMessage("Unable to identify user")
-            .MustAsync(UserExists)
-            .WithErrorCode("User.NotFound")
-            .WithMessage("User not found");
+            .WithMessage("Unable to identify user");
 
         RuleFor(x => x.Name)
             .NotEmpty()
@@ -93,12 +83,4 @@ public class CreateProductCommandValidator : AbstractValidator<CreateProductComm
         return Enum.TryParse(visibility, ignoreCase: true, out Visibility _);
     }
 
-    private async Task<bool> UserExists(Guid? userId, CancellationToken cancellationToken) {
-        if (userId is null) {
-            return false;
-        }
-
-        var user = await _userRepository.GetByIdAsync(new UserId(userId.Value), cancellationToken);
-        return user is not null;
-    }
 }

@@ -39,7 +39,6 @@ public class RecentItemRepository(FoodDiaryDbContext context, IDateTimeProvider 
             await TouchItemsAsync(userId, RecentItemType.Recipe, distinctRecipeIds, now, cancellationToken);
         }
 
-        await context.SaveChangesAsync(cancellationToken);
 
         if (distinctProductIds.Count > 0) {
             await TrimOverflowAsync(userId, RecentItemType.Product, cancellationToken);

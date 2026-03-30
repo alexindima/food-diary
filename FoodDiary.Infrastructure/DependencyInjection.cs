@@ -36,7 +36,10 @@ using Amazon;
 using Amazon.Runtime;
 using Amazon.S3;
 using FoodDiary.Infrastructure.Options;
+using FoodDiary.Infrastructure.Events;
 using FoodDiary.Infrastructure.Services;
+using FoodDiary.Application.Common.Abstractions.Events;
+using FoodDiary.Application.Common.Abstractions.Persistence;
 using Microsoft.Extensions.Http.Resilience;
 using Microsoft.Extensions.Options;
 using Polly;
@@ -56,6 +59,8 @@ public static class DependencyInjection
                 "Database:MaxRetryDelaySeconds must be greater than zero when retries are enabled.")
             .ValidateOnStart();
         services.AddSingleton<DatabaseCommandTelemetryInterceptor>();
+        services.AddScoped<IUnitOfWork, EfUnitOfWork>();
+        services.AddScoped<IDomainEventPublisher, MediatRDomainEventPublisher>();
         services.AddScoped<DomainEventDispatchInterceptor>();
         services.AddDbContext<FoodDiaryDbContext>((sp, options) =>
         {

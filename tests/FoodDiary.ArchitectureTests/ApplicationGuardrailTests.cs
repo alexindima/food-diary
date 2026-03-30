@@ -172,6 +172,7 @@ public sealed class ApplicationGuardrailTests {
         var root = GetRepositoryRoot();
         var persistenceRoot = Path.Combine(root, "FoodDiary.Infrastructure", "Persistence");
         var allowedFiles = new[] {
+            "EfUnitOfWork.cs",
             "FoodDiaryDbContext.cs",
             "FoodDiaryDbContextFactory.cs",
         };

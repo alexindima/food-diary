@@ -3,6 +3,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Options;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Services;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -107,6 +108,7 @@ public sealed class DependencyInjectionTests {
             ["Database:MaxRetryDelaySeconds"] = "7"
         });
 
+        services.AddSingleton<IPublisher>(new NullPublisher());
         services.AddInfrastructure(configuration);
         using var provider = services.BuildServiceProvider();
         using var scope = provider.CreateScope();
@@ -167,5 +169,10 @@ public sealed class DependencyInjectionTests {
         return foreignKey.DeleteBehavior != DeleteBehavior.Cascade
             ? $"{clrType.FullName}: expected DeleteBehavior.Cascade, got {foreignKey.DeleteBehavior}."
             : null;
+    }
+
+    private sealed class NullPublisher : IPublisher {
+        public Task Publish(object notification, CancellationToken cancellationToken = default) => Task.CompletedTask;
+        public Task Publish<TNotification>(TNotification notification, CancellationToken cancellationToken = default) where TNotification : INotification => Task.CompletedTask;
     }
 }

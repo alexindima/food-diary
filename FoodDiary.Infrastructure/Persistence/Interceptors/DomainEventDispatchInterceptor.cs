@@ -1,3 +1,4 @@
+using FoodDiary.Application.Common.Abstractions.Events;
 using FoodDiary.Domain.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
@@ -6,19 +7,20 @@ using Microsoft.Extensions.Logging;
 namespace FoodDiary.Infrastructure.Persistence.Interceptors;
 
 internal sealed class DomainEventDispatchInterceptor(
+    IDomainEventPublisher publisher,
     ILogger<DomainEventDispatchInterceptor> logger) : SaveChangesInterceptor {
     public override async ValueTask<InterceptionResult<int>> SavingChangesAsync(
         DbContextEventData eventData,
         InterceptionResult<int> result,
         CancellationToken cancellationToken = default) {
         if (eventData.Context is not null) {
-            DispatchDomainEvents(eventData.Context);
+            await DispatchDomainEventsAsync(eventData.Context, cancellationToken);
         }
 
         return await base.SavingChangesAsync(eventData, result, cancellationToken);
     }
 
-    private void DispatchDomainEvents(DbContext context) {
+    private async Task DispatchDomainEventsAsync(DbContext context, CancellationToken cancellationToken) {
         var aggregates = context.ChangeTracker
             .Entries<IAggregateWithEvents>()
             .Where(e => e.Entity.DomainEvents.Count > 0)
@@ -35,9 +37,11 @@ internal sealed class DomainEventDispatchInterceptor(
 
         foreach (var domainEvent in events) {
             logger.LogInformation(
-                "Domain event dispatched: {EventType} at {OccurredOnUtc}",
+                "Dispatching domain event: {EventType} at {OccurredOnUtc}",
                 domainEvent.GetType().Name,
                 domainEvent.OccurredOnUtc.ToString("O"));
+
+            await publisher.PublishAsync(domainEvent, cancellationToken);
         }
     }
 }
