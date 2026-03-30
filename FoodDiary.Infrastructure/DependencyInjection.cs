@@ -124,7 +124,8 @@ public static class DependencyInjection {
             .ValidateOnStart();
 
         services.AddScoped<IUserRepository, UserRepository>();
-        services.AddScoped<IProductRepository, ProductRepository>();
+        services.AddScoped<ProductRepository>();
+        services.AddScoped<IProductRepository, CachedProductRepository>();
         services.AddScoped<IProductLookupService, ProductLookupService>();
         services.AddScoped<IRecipeRepository, RecipeRepository>();
         services.AddScoped<IRecipeLookupService, RecipeLookupService>();

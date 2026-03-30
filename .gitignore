@@ -47,6 +47,7 @@ appsettings.*.json
 !appsettings.json
 !appsettings.Development.json
 .env*
+!*.env.example
 
 # OS junk
 .DS_Store
