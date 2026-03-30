@@ -42,8 +42,6 @@ public sealed class RecentItemRepositoryIntegrationTests(PostgresDatabaseFixture
             [],
             CancellationToken.None);
 
-        await context.SaveChangesAsync();
-
         await using var verificationContext = CreateVerificationContext(context);
 
         var storedItems = await verificationContext.RecentItems
