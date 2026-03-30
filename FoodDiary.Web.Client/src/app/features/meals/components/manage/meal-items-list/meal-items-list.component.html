@@ -2,7 +2,7 @@
     [title]="'CONSUMPTION_MANAGE.ITEMS_ADDED_TITLE' | translate"
 >
     <div class="consumption-items">
-        @for (item of formArray().controls; track item; let i = $index; let first = $first) {
+        @for (item of formArray().controls; track $index; let i = $index; let first = $first) {
             <div class="consumption-item-card" [formGroup]="item">
                 <div class="consumption-item__fields">
                     <div class="consumption-item__row consumption-item__row--with-remove">

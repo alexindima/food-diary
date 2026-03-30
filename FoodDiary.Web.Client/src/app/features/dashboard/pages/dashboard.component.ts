@@ -40,7 +40,7 @@ import { CyclesService } from '../../cycle-tracking/api/cycles.service';
 import { CycleResponse } from '../../cycle-tracking/models/cycle.data';
 import { NoticeBannerComponent } from '../../../components/shared/notice-banner/notice-banner.component';
 import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
-import { fromEvent } from 'rxjs';
+import { auditTime, fromEvent } from 'rxjs';
 import { UnsavedChangesService, UnsavedChangesHandler } from '../../../services/unsaved-changes.service';
 import { DashboardLayoutService } from '../lib/dashboard-layout.service';
 import { normalizeDate, getDashboardDateUtc, getHydrationDateUtc } from '../lib/dashboard-date.utils';
@@ -158,7 +158,7 @@ export class DashboardComponent implements OnInit {
 
         if (typeof window !== 'undefined') {
             fromEvent(window, 'resize')
-                .pipe(takeUntilDestroyed(this.destroyRef))
+                .pipe(auditTime(150), takeUntilDestroyed(this.destroyRef))
                 .subscribe(() => this.layout.updateViewportWidth(window.innerWidth));
         }
 

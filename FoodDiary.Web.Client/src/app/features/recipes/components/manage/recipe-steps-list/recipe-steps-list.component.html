@@ -10,7 +10,7 @@
       [cdkDropListData]="stepsFormArray().controls"
       (cdkDropListDropped)="onStepDrop($event)"
     >
-      @for (step of stepsFormArray().controls; track step; let index = $index; let first = $first) {
+      @for (step of stepsFormArray().controls; track $index; let index = $index; let first = $first) {
         <div
           class="recipe-step"
           cdkDrag

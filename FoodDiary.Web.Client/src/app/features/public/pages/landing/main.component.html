@@ -2,7 +2,11 @@
     <fd-dashboard />
 } @else {
     <fd-hero />
-    <fd-landing-preview-tour />
+    @defer (on viewport) {
+        <fd-landing-preview-tour />
+    } @placeholder {
+        <div style="min-height: 400px"></div>
+    }
     <fd-features />
     <fd-landing-steps />
     <fd-landing-cta />

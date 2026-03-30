@@ -6,7 +6,7 @@
     </p>
     @if (aiSessions().length) {
         <div class="consumption-manage__ai-summary-listing">
-            @for (session of aiSessions(); track session; let idx = $index) {
+            @for (session of aiSessions(); track $index; let idx = $index) {
                 @let totals = getAiSessionTotals(session);
                 <div class="consumption-manage__ai-summary">
                     <div class="consumption-manage__ai-summary-header">
@@ -65,7 +65,7 @@
                     </div>
                     <div class="consumption-manage__ai-summary-body">
                         <div class="consumption-manage__ai-summary-list">
-                            @for (aiItem of (isAiSessionExpanded(idx) ? session.items : visibleAiItems(session.items, aiPreviewMaxItems)); track aiItem; let itemIdx = $index) {
+                            @for (aiItem of (isAiSessionExpanded(idx) ? session.items : visibleAiItems(session.items, aiPreviewMaxItems)); track $index; let itemIdx = $index) {
                                 <div class="consumption-manage__ai-summary-row">
                                     <span class="consumption-manage__ai-summary-name">
                                         {{ formatAiName(aiItem.nameLocal || aiItem.nameEn) }}

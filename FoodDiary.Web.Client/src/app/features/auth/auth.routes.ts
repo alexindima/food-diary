@@ -9,25 +9,28 @@ export const authRoutes: Routes = [
     {
         path: 'auth',
         component: MainComponent,
-        data: { openAuth: true },
+        data: { openAuth: true, seo: { titleKey: 'SEO.AUTH_LOGIN', descriptionKey: 'SEO.AUTH_DESCRIPTION' } },
         canActivate: [loggedInGuard],
     },
     {
         path: 'auth/:mode',
         component: MainComponent,
-        data: { openAuth: true },
+        data: { openAuth: true, seo: { titleKey: 'SEO.AUTH_LOGIN', descriptionKey: 'SEO.AUTH_DESCRIPTION' } },
         canActivate: [loggedInGuard],
     },
     {
         path: 'verify-pending',
         component: EmailVerificationPendingComponent,
+        data: { seo: { titleKey: 'SEO.VERIFY_PENDING', noIndex: true } },
     },
     {
         path: 'verify-email',
         component: EmailVerificationComponent,
+        data: { seo: { titleKey: 'SEO.VERIFY_EMAIL', noIndex: true } },
     },
     {
         path: 'reset-password',
         component: PasswordResetComponent,
+        data: { seo: { titleKey: 'SEO.RESET_PASSWORD', descriptionKey: 'SEO.RESET_PASSWORD_DESCRIPTION' } },
     },
 ];

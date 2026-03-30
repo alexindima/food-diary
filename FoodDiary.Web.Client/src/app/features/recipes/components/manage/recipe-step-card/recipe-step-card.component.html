@@ -93,7 +93,7 @@
         <div class="recipe-step-card__subtitle">
           {{ 'RECIPE_MANAGE.INGREDIENTS' | translate }}
         </div>
-        @for (ingredient of ingredients.controls; track ingredient; let ingredientIndex = $index; let firstIngredient = $first) {
+        @for (ingredient of ingredients.controls; track $index; let ingredientIndex = $index; let firstIngredient = $first) {
           <div class="recipe-ingredient" [formGroupName]="ingredientIndex">
               <input type="hidden" formControlName="food" />
               <input type="hidden" formControlName="nestedRecipeId" />

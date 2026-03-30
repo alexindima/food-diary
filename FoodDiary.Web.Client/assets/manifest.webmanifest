@@ -1,11 +1,12 @@
 {
   "name": "Food Diary",
   "short_name": "Food Diary",
+  "id": "/",
   "theme_color": "#1976d2",
   "background_color": "#fafafa",
   "display": "standalone",
-  "scope": "../",
-  "start_url": "../",
+  "scope": "/",
+  "start_url": "/",
   "screenshots": [
     {
       "src": "/assets/pwa/screenshot-1299x1111.png",
