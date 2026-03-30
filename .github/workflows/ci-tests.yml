@@ -1,4 +1,4 @@
-﻿name: CI Tests
+name: CI Tests
 
 on:
   pull_request:
@@ -93,7 +93,7 @@ jobs:
 
       - name: Upload CI failure logs
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ci-failure-logs-dotnet
           path: ${{ runner.temp }}/ci-test-logs/
@@ -199,7 +199,7 @@ jobs:
 
       - name: Upload PostgreSQL critical-flow failure logs
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ci-failure-logs-postgres-critical-flows
           path: ${{ runner.temp }}/postgres-critical-flow-logs/
@@ -280,7 +280,7 @@ jobs:
 
       - name: Upload dependency audit failure logs
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ci-failure-logs-dependency-audit
           path: ${{ runner.temp }}/dependency-audit-logs/
@@ -460,7 +460,7 @@ jobs:
 
       - name: Upload frontend failure logs
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ci-failure-logs-frontend
           path: ${{ runner.temp }}/frontend-checks-logs/
