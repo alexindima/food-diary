@@ -1,10 +1,14 @@
 using FoodDiary.Presentation.Api.Extensions;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Trace;
 
 namespace FoodDiary.Web.Api.Extensions;
 
 public static class ApiApplicationBuilderExtensions {
     public static WebApplication UseApiPipeline(this WebApplication app) {
+        app.Services.GetService<TracerProvider>();
+        app.Services.GetService<MeterProvider>();
         app.UseExceptionHandler();
         app.UseForwardedHeaders();
         app.UseMiddleware<SecurityHeadersMiddleware>();
