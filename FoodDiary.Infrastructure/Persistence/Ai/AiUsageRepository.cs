@@ -9,6 +9,7 @@ namespace FoodDiary.Infrastructure.Persistence.Ai;
 public sealed class AiUsageRepository(FoodDiaryDbContext context) : IAiUsageRepository {
     public async Task AddAsync(AiUsage usage, CancellationToken cancellationToken = default) {
         await context.AiUsages.AddAsync(usage, cancellationToken);
+        await context.SaveChangesAsync(cancellationToken);
     }
 
     public async Task<AiUsageSummary> GetSummaryAsync(

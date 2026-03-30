@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using FoodDiary.Application.WeightEntries.Common;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -8,15 +8,18 @@ namespace FoodDiary.Infrastructure.Persistence.Tracking;
 public class WeightEntryRepository(FoodDiaryDbContext context) : IWeightEntryRepository {
     public async Task<WeightEntry> AddAsync(WeightEntry entry, CancellationToken cancellationToken = default) {
         await context.WeightEntries.AddAsync(entry, cancellationToken);
+        await context.SaveChangesAsync(cancellationToken);
         return entry;
     }
 
     public async Task UpdateAsync(WeightEntry entry, CancellationToken cancellationToken = default) {
         context.WeightEntries.Update(entry);
+        await context.SaveChangesAsync(cancellationToken);
     }
 
     public async Task DeleteAsync(WeightEntry entry, CancellationToken cancellationToken = default) {
         context.WeightEntries.Remove(entry);
+        await context.SaveChangesAsync(cancellationToken);
     }
 
     public async Task<WeightEntry?> GetByIdAsync(

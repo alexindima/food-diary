@@ -33,10 +33,12 @@ public sealed class EmailTemplateRepository(FoodDiaryDbContext context) : IEmail
         if (existing is null) {
             var template = EmailTemplate.Create(key, locale, subject, htmlBody, textBody, isActive);
             await context.EmailTemplates.AddAsync(template, cancellationToken);
+            await context.SaveChangesAsync(cancellationToken);
             return template;
         }
 
         existing.Update(subject, htmlBody, textBody, isActive);
+        await context.SaveChangesAsync(cancellationToken);
         return existing;
     }
 }

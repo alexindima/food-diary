@@ -12,7 +12,10 @@ internal sealed class UnitOfWorkBehavior<TRequest, TResponse>(IUnitOfWork unitOf
         RequestHandlerDelegate<TResponse> next,
         CancellationToken cancellationToken) {
         var response = await next(cancellationToken);
-        await unitOfWork.SaveChangesAsync(cancellationToken);
+        if (unitOfWork.HasPendingChanges) {
+            await unitOfWork.SaveChangesAsync(cancellationToken);
+        }
+
         return response;
     }
 }

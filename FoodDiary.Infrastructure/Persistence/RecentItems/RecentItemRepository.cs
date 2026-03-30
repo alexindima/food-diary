@@ -39,8 +39,6 @@ public class RecentItemRepository(FoodDiaryDbContext context, IDateTimeProvider 
             await TouchItemsAsync(userId, RecentItemType.Recipe, distinctRecipeIds, now, cancellationToken);
         }
 
-
-        // Flush tracked changes so TrimOverflowAsync can see new items in the database
         await context.SaveChangesAsync(cancellationToken);
 
         if (distinctProductIds.Count > 0) {

@@ -120,11 +120,13 @@ public class UserRepository(FoodDiaryDbContext context) : IUserRepository {
 
     public async Task<User> AddAsync(User user, CancellationToken cancellationToken = default) {
         context.Users.Add(user);
+        await context.SaveChangesAsync(cancellationToken);
         return user;
     }
 
     public async Task UpdateAsync(User user, CancellationToken cancellationToken = default) {
         context.Users.Update(user);
+        await context.SaveChangesAsync(cancellationToken);
     }
 
     private static string EscapeLikePattern(string value) {

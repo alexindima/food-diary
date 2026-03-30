@@ -8,6 +8,7 @@ namespace FoodDiary.Infrastructure.Persistence.Images;
 public class ImageAssetRepository(FoodDiaryDbContext context) : IImageAssetRepository {
     public async Task<ImageAsset> AddAsync(ImageAsset asset, CancellationToken cancellationToken = default) {
         context.ImageAssets.Add(asset);
+        await context.SaveChangesAsync(cancellationToken);
         return asset;
     }
 
@@ -18,6 +19,7 @@ public class ImageAssetRepository(FoodDiaryDbContext context) : IImageAssetRepos
     public async Task DeleteAsync(ImageAsset asset, CancellationToken cancellationToken = default) {
         context.ImageAssets.Attach(asset);
         context.ImageAssets.Remove(asset);
+        await context.SaveChangesAsync(cancellationToken);
     }
 
     public async Task<bool> IsAssetInUse(ImageAssetId assetId, CancellationToken cancellationToken = default) {

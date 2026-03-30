@@ -8,11 +8,13 @@ namespace FoodDiary.Infrastructure.Persistence.Tracking;
 public class CycleRepository(FoodDiaryDbContext context) : ICycleRepository {
     public async Task<Cycle> AddAsync(Cycle cycle, CancellationToken cancellationToken = default) {
         await context.Cycles.AddAsync(cycle, cancellationToken);
+        await context.SaveChangesAsync(cancellationToken);
         return cycle;
     }
 
     public async Task UpdateAsync(Cycle cycle, CancellationToken cancellationToken = default) {
         context.Cycles.Update(cycle);
+        await context.SaveChangesAsync(cancellationToken);
     }
 
     public async Task<Cycle?> GetByIdAsync(
