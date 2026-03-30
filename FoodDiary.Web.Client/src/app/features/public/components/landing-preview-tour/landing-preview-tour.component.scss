@@ -260,7 +260,6 @@
     .landing-tour__cards {
         grid-template-columns: 1fr;
     }
-
 }
 
 :host ::ng-deep .landing-tour__card .product-card,
@@ -268,4 +267,3 @@
     width: 100%;
     max-width: 100%;
 }
-

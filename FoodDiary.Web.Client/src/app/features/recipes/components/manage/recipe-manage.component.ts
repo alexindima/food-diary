@@ -1,13 +1,4 @@
-import {
-    ChangeDetectionStrategy,
-    Component,
-    computed,
-    effect,
-    inject,
-    input,
-    OnInit,
-    signal
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, input, OnInit, signal } from '@angular/core';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormGroupControls } from '../../../../shared/lib/common.data';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -34,11 +25,7 @@ import { FdUiDialogRef } from 'fd-ui-kit/material';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
 import { ImageSelection } from '../../../../shared/models/image-upload.data';
 import { NutritionCalculationService } from '../../../../shared/lib/nutrition-calculation.service';
-import {
-    calculateCalorieMismatchWarning,
-    checkCaloriesError,
-    checkMacrosError,
-} from '../../../../shared/lib/nutrition-form.utils';
+import { calculateCalorieMismatchWarning, checkCaloriesError, checkMacrosError } from '../../../../shared/lib/nutrition-form.utils';
 import { NutritionEditorComponent } from '../../../../components/shared/nutrition-editor/nutrition-editor.component';
 import { ManageHeaderComponent } from '../../../../components/shared/manage-header/manage-header.component';
 import { RecipeBasicInfoComponent } from './recipe-basic-info/recipe-basic-info.component';
@@ -73,7 +60,7 @@ import {
     ],
     templateUrl: './recipe-manage.component.html',
     styleUrls: ['./recipe-manage.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RecipeManageComponent implements OnInit {
     private readonly recipeService = inject(RecipeService);
@@ -164,13 +151,11 @@ export class RecipeManageComponent implements OnInit {
         this.buildNutritionModeOptions();
         this.buildNutritionScaleModeOptions();
         this.nutritionMode = this.recipeForm.controls.calculateNutritionAutomatically.value ? 'auto' : 'manual';
-        this.translateService.onLangChange
-            .pipe(takeUntilDestroyed())
-            .subscribe(() => {
-                this.buildVisibilityOptions();
-                this.buildNutritionModeOptions();
-                this.buildNutritionScaleModeOptions();
-            });
+        this.translateService.onLangChange.pipe(takeUntilDestroyed()).subscribe(() => {
+            this.buildVisibilityOptions();
+            this.buildNutritionModeOptions();
+            this.buildNutritionScaleModeOptions();
+        });
 
         this.addStep();
         this.setupFormValueChangeTracking();
@@ -178,20 +163,18 @@ export class RecipeManageComponent implements OnInit {
         this.updateManualNutritionValidators(this.recipeForm.controls.calculateNutritionAutomatically.value);
         this.updateCalorieWarning();
 
-        this.recipeForm.controls.calculateNutritionAutomatically.valueChanges
-            .pipe(takeUntilDestroyed())
-            .subscribe(isAuto => {
-                this.nutritionMode = isAuto ? 'auto' : 'manual';
-                if (!this.isFormReady) {
-                    return;
-                }
-                if (!isAuto) {
-                    this.populateManualNutritionFromCurrentSummary();
-                }
-                this.updateManualNutritionValidators(isAuto);
-                this.updateSummaryFromForm();
-                this.updateCalorieWarning();
-            });
+        this.recipeForm.controls.calculateNutritionAutomatically.valueChanges.pipe(takeUntilDestroyed()).subscribe(isAuto => {
+            this.nutritionMode = isAuto ? 'auto' : 'manual';
+            if (!this.isFormReady) {
+                return;
+            }
+            if (!isAuto) {
+                this.populateManualNutritionFromCurrentSummary();
+            }
+            this.updateManualNutritionValidators(isAuto);
+            this.updateSummaryFromForm();
+            this.updateCalorieWarning();
+        });
         effect(() => {
             const recipe = this.recipe();
             if (recipe) {
@@ -249,13 +232,10 @@ export class RecipeManageComponent implements OnInit {
     public onProductSelectClick(event: StepIngredientEvent): void {
         const { stepIndex, ingredientIndex } = event;
         this.fdDialogService
-            .open<ItemSelectDialogComponent, ItemSelectDialogData, ItemSelection | null>(
-                ItemSelectDialogComponent,
-                {
-                    size: 'lg',
-                    data: { initialTab: 'Product' },
-                },
-            )
+            .open<ItemSelectDialogComponent, ItemSelectDialogData, ItemSelection | null>(ItemSelectDialogComponent, {
+                size: 'lg',
+                data: { initialTab: 'Product' },
+            })
             .afterClosed()
             .subscribe(selection => {
                 if (!selection) {
@@ -557,12 +537,7 @@ export class RecipeManageComponent implements OnInit {
             }),
             ingredients: new FormArray<FormGroup<IngredientFormData>>(
                 ingredientValues.map(ingredient =>
-                    this.createIngredientGroup(
-                        ingredient.food,
-                        ingredient.amount,
-                        ingredient.nestedRecipeId,
-                        ingredient.nestedRecipeName,
-                    ),
+                    this.createIngredientGroup(ingredient.food, ingredient.amount, ingredient.nestedRecipeId, ingredient.nestedRecipeName),
                 ),
                 nonEmptyArrayValidator(),
             ),
@@ -614,9 +589,7 @@ export class RecipeManageComponent implements OnInit {
         }
 
         const rawUnit = ingredient.productBaseUnit as MeasurementUnit | string | undefined;
-        const unit = Object.values(MeasurementUnit).includes(rawUnit as MeasurementUnit)
-            ? (rawUnit as MeasurementUnit)
-            : MeasurementUnit.G;
+        const unit = Object.values(MeasurementUnit).includes(rawUnit as MeasurementUnit) ? (rawUnit as MeasurementUnit) : MeasurementUnit.G;
 
         const baseAmount = ingredient.productBaseAmount ?? 100;
         return {
@@ -647,26 +620,22 @@ export class RecipeManageComponent implements OnInit {
     // -- Nutrition calculation --
 
     private setupFormValueChangeTracking(): void {
-        this.recipeForm.valueChanges
-            .pipe(takeUntilDestroyed())
-            .subscribe(() => {
-                if (!this.isFormReady) {
-                    return;
-                }
-                this.updateSummaryFromForm();
-                this.updateCalorieWarning();
-            });
+        this.recipeForm.valueChanges.pipe(takeUntilDestroyed()).subscribe(() => {
+            if (!this.isFormReady) {
+                return;
+            }
+            this.updateSummaryFromForm();
+            this.updateCalorieWarning();
+        });
 
-        this.recipeForm.controls.steps.valueChanges
-            .pipe(takeUntilDestroyed())
-            .subscribe(() => {
-                if (!this.isFormReady) {
-                    return;
-                }
-                if (this.recipeForm.controls.calculateNutritionAutomatically.value) {
-                    this.recalculateNutrientsFromForm();
-                }
-            });
+        this.recipeForm.controls.steps.valueChanges.pipe(takeUntilDestroyed()).subscribe(() => {
+            if (!this.isFormReady) {
+                return;
+            }
+            if (this.recipeForm.controls.calculateNutritionAutomatically.value) {
+                this.recalculateNutrientsFromForm();
+            }
+        });
     }
 
     private updateNutrientSummary(recipeData: Recipe | null): void {
@@ -704,14 +673,17 @@ export class RecipeManageComponent implements OnInit {
     }
 
     private populateManualNutritionFromCurrentSummary(): void {
-        this.recipeForm.patchValue({
-            manualCalories: this.fromRecipeTotal(this.totalCalories()),
-            manualProteins: this.fromRecipeTotal(this.nutrientChartData().proteins),
-            manualFats: this.fromRecipeTotal(this.nutrientChartData().fats),
-            manualCarbs: this.fromRecipeTotal(this.nutrientChartData().carbs),
-            manualFiber: this.fromRecipeTotal(this.totalFiber()),
-            manualAlcohol: this.fromRecipeTotal(this.totalAlcohol()),
-        }, { emitEvent: false });
+        this.recipeForm.patchValue(
+            {
+                manualCalories: this.fromRecipeTotal(this.totalCalories()),
+                manualProteins: this.fromRecipeTotal(this.nutrientChartData().proteins),
+                manualFats: this.fromRecipeTotal(this.nutrientChartData().fats),
+                manualCarbs: this.fromRecipeTotal(this.nutrientChartData().carbs),
+                manualFiber: this.fromRecipeTotal(this.totalFiber()),
+                manualAlcohol: this.fromRecipeTotal(this.totalAlcohol()),
+            },
+            { emitEvent: false },
+        );
     }
 
     private recalculateNutrientsFromForm(): void {
@@ -760,14 +732,7 @@ export class RecipeManageComponent implements OnInit {
         );
     }
 
-    private setNutrientSummary(
-        calories: number,
-        proteins: number,
-        fats: number,
-        carbs: number,
-        fiber: number,
-        alcohol: number,
-    ): void {
+    private setNutrientSummary(calories: number, proteins: number, fats: number, carbs: number, fiber: number, alcohol: number): void {
         this.totalCalories.set(this.roundNutrient(calories));
         this.totalFiber.set(this.roundNutrient(fiber));
         this.totalAlcohol.set(this.roundNutrient(alcohol));
@@ -787,14 +752,17 @@ export class RecipeManageComponent implements OnInit {
     }
 
     private syncManualControlsWithSummary(): void {
-        this.recipeForm.patchValue({
-            manualCalories: this.fromRecipeTotal(this.totalCalories()),
-            manualProteins: this.fromRecipeTotal(this.nutrientChartData().proteins),
-            manualFats: this.fromRecipeTotal(this.nutrientChartData().fats),
-            manualCarbs: this.fromRecipeTotal(this.nutrientChartData().carbs),
-            manualFiber: this.fromRecipeTotal(this.totalFiber()),
-            manualAlcohol: this.fromRecipeTotal(this.totalAlcohol()),
-        }, { emitEvent: false });
+        this.recipeForm.patchValue(
+            {
+                manualCalories: this.fromRecipeTotal(this.totalCalories()),
+                manualProteins: this.fromRecipeTotal(this.nutrientChartData().proteins),
+                manualFats: this.fromRecipeTotal(this.nutrientChartData().fats),
+                manualCarbs: this.fromRecipeTotal(this.nutrientChartData().carbs),
+                manualFiber: this.fromRecipeTotal(this.totalFiber()),
+                manualAlcohol: this.fromRecipeTotal(this.totalAlcohol()),
+            },
+            { emitEvent: false },
+        );
     }
 
     private updateManualNutritionValidators(isAuto: boolean): void {
@@ -819,9 +787,7 @@ export class RecipeManageComponent implements OnInit {
         const fats = this.getControlNumericValue(this.recipeForm.controls.manualFats);
         const carbs = this.getControlNumericValue(this.recipeForm.controls.manualCarbs);
         const alcohol = this.getControlNumericValue(this.recipeForm.controls.manualAlcohol);
-        this.nutritionWarning.set(
-            calculateCalorieMismatchWarning(calories, proteins, fats, carbs, alcohol, this.calorieMismatchThreshold),
-        );
+        this.nutritionWarning.set(calculateCalorieMismatchWarning(calories, proteins, fats, carbs, alcohol, this.calorieMismatchThreshold));
     }
 
     private getControlNumericValue(control: FormControl<number | null>): number {
@@ -861,14 +827,12 @@ export class RecipeManageComponent implements OnInit {
     }
 
     private convertManualNutritionControls(factor: number): void {
-        const fields: Array<keyof Pick<RecipeFormValues, 'manualCalories' | 'manualProteins' | 'manualFats' | 'manualCarbs' | 'manualFiber' | 'manualAlcohol'>> = [
-            'manualCalories',
-            'manualProteins',
-            'manualFats',
-            'manualCarbs',
-            'manualFiber',
-            'manualAlcohol',
-        ];
+        const fields: Array<
+            keyof Pick<
+                RecipeFormValues,
+                'manualCalories' | 'manualProteins' | 'manualFats' | 'manualCarbs' | 'manualFiber' | 'manualAlcohol'
+            >
+        > = ['manualCalories', 'manualProteins', 'manualFats', 'manualCarbs', 'manualFiber', 'manualAlcohol'];
         const patch: Partial<RecipeFormValues> = {};
 
         fields.forEach(field => {
@@ -931,8 +895,6 @@ export class RecipeManageComponent implements OnInit {
         }
 
         const upper = value.toString().toUpperCase();
-        return upper === RecipeVisibility.Private.toUpperCase()
-            ? RecipeVisibility.Private
-            : RecipeVisibility.Public;
+        return upper === RecipeVisibility.Private.toUpperCase() ? RecipeVisibility.Private : RecipeVisibility.Public;
     }
 }

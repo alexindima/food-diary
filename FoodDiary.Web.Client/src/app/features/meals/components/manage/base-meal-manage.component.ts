@@ -1,15 +1,14 @@
+import { ChangeDetectionStrategy, Component, DestroyRef, FactoryProvider, computed, inject, input, OnInit, signal } from '@angular/core';
 import {
-    ChangeDetectionStrategy,
-    Component,
-    DestroyRef,
-    FactoryProvider,
-    computed,
-    inject,
-    input,
-    OnInit,
-    signal,
-} from '@angular/core';
-import { AbstractControl, FormArray, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+    AbstractControl,
+    FormArray,
+    FormControl,
+    FormGroup,
+    ReactiveFormsModule,
+    ValidationErrors,
+    ValidatorFn,
+    Validators,
+} from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { NavigationService } from '../../../../services/navigation.service';
 import {
@@ -62,11 +61,7 @@ import { UserAiUsageResponse } from '../../../../shared/models/ai.data';
 import { AuthService } from '../../../../services/auth.service';
 import { PremiumRequiredDialogComponent } from '../../../../components/shared/premium-required-dialog/premium-required-dialog.component';
 import { NutritionCalculationService } from '../../../../shared/lib/nutrition-calculation.service';
-import {
-    calculateCalorieMismatchWarning,
-    checkCaloriesError,
-    checkMacrosError,
-} from '../../../../shared/lib/nutrition-form.utils';
+import { calculateCalorieMismatchWarning, checkCaloriesError, checkMacrosError } from '../../../../shared/lib/nutrition-form.utils';
 import { ManageHeaderComponent } from '../../../../components/shared/manage-header/manage-header.component';
 import { MealItemsListComponent } from './meal-items-list/meal-items-list.component';
 import { MealAiSessionsComponent } from './meal-ai-sessions/meal-ai-sessions.component';
@@ -203,10 +198,7 @@ export class BaseMealManageComponent implements OnInit {
                 validators: Validators.required,
             }),
             mealType: new FormControl<string | null>(null),
-            items: new FormArray<FormGroup<ConsumptionItemFormData>>(
-                [this.createConsumptionItem()],
-                this.buildItemsValidator()
-            ),
+            items: new FormArray<FormGroup<ConsumptionItemFormData>>([this.createConsumptionItem()], this.buildItemsValidator()),
             comment: new FormControl<string | null>(null),
             imageUrl: new FormControl<ImageSelection | null>(null),
             isNutritionAutoCalculated: new FormControl<boolean>(true, { nonNullable: true }),
@@ -230,16 +222,14 @@ export class BaseMealManageComponent implements OnInit {
 
         this.updateManualNutritionValidators(true);
         this.updateItemValidationRules();
-        this.consumptionForm.controls.isNutritionAutoCalculated.valueChanges
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(isAuto => {
-                this.nutritionMode = isAuto ? 'auto' : 'manual';
-                this.updateManualNutritionValidators(isAuto);
-                if (!isAuto) {
-                    this.populateManualNutritionFromCurrentSummary();
-                }
-                this.updateSummary();
-            });
+        this.consumptionForm.controls.isNutritionAutoCalculated.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(isAuto => {
+            this.nutritionMode = isAuto ? 'auto' : 'manual';
+            this.updateManualNutritionValidators(isAuto);
+            if (!isAuto) {
+                this.populateManualNutritionFromCurrentSummary();
+            }
+            this.updateSummary();
+        });
     }
 
     public ngOnInit(): void {
@@ -261,16 +251,12 @@ export class BaseMealManageComponent implements OnInit {
         }
 
         if (!presetMealType && !this.consumption()) {
-            this.consumptionForm.controls.date.valueChanges
-                .pipe(takeUntilDestroyed(this.destroyRef))
-                .subscribe(() => {
-                    this.setAutoMealTypeFromDate();
-                });
-            this.consumptionForm.controls.time.valueChanges
-                .pipe(takeUntilDestroyed(this.destroyRef))
-                .subscribe(() => {
-                    this.setAutoMealTypeFromDate();
-                });
+            this.consumptionForm.controls.date.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+                this.setAutoMealTypeFromDate();
+            });
+            this.consumptionForm.controls.time.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+                this.setAutoMealTypeFromDate();
+            });
         }
 
         this.consumptionForm.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
@@ -318,10 +304,9 @@ export class BaseMealManageComponent implements OnInit {
         }
 
         this.fdDialogService
-            .open<MealPhotoRecognitionDialogComponent, never, ConsumptionAiSessionManageDto | null>(
-                MealPhotoRecognitionDialogComponent,
-                { size: 'lg' },
-            )
+            .open<MealPhotoRecognitionDialogComponent, never, ConsumptionAiSessionManageDto | null>(MealPhotoRecognitionDialogComponent, {
+                size: 'lg',
+            })
             .afterClosed()
             .subscribe(session => {
                 if (!session) {
@@ -356,18 +341,16 @@ export class BaseMealManageComponent implements OnInit {
                 MealPhotoRecognitionDialogComponent,
                 { initialSelection: ImageSelection | null; initialSession: ConsumptionAiSessionManageDto | null; mode: 'edit' },
                 ConsumptionAiSessionManageDto | null
-            >(
-                MealPhotoRecognitionDialogComponent,
-                { size: 'lg', data: { initialSelection: selection, initialSession: session ?? null, mode: 'edit' } },
-            )
+            >(MealPhotoRecognitionDialogComponent, {
+                size: 'lg',
+                data: { initialSelection: selection, initialSession: session ?? null, mode: 'edit' },
+            })
             .afterClosed()
             .subscribe(updated => {
                 if (!updated) {
                     return;
                 }
-                this.aiSessions.update(current =>
-                    current.map((item, currentIndex) => (currentIndex === index ? updated : item))
-                );
+                this.aiSessions.update(current => current.map((item, currentIndex) => (currentIndex === index ? updated : item)));
                 this.items.updateValueAndValidity({ emitEvent: false });
                 this.updateItemValidationRules();
                 this.updateSummary();
@@ -541,16 +524,13 @@ export class BaseMealManageComponent implements OnInit {
         };
 
         const consumption = this.consumption();
-        consumption
-            ? this.updateConsumption(consumption.id, consumptionData)
-            : this.addConsumption(consumptionData);
+        consumption ? this.updateConsumption(consumption.id, consumptionData) : this.addConsumption(consumptionData);
     }
 
     // --- Private methods ---
 
     private resolvePresetMealType(): string | null {
-        const stateMealType = (this.router.getCurrentNavigation()?.extras.state as { mealType?: string } | undefined)
-            ?.mealType;
+        const stateMealType = (this.router.getCurrentNavigation()?.extras.state as { mealType?: string } | undefined)?.mealType;
         const queryMealType = this.route.snapshot.queryParamMap.get('mealType');
         const raw = (stateMealType ?? queryMealType)?.toUpperCase();
         if (!raw) {
@@ -597,10 +577,10 @@ export class BaseMealManageComponent implements OnInit {
             return;
         }
 
-        const navigationState = (this.router.getCurrentNavigation()?.extras.state as { quickConsumptionItems?: QuickMealItem[] } | undefined)
-            ?.quickConsumptionItems;
-        const historyState = (window.history.state as { quickConsumptionItems?: QuickMealItem[] } | undefined)
-            ?.quickConsumptionItems;
+        const navigationState = (
+            this.router.getCurrentNavigation()?.extras.state as { quickConsumptionItems?: QuickMealItem[] } | undefined
+        )?.quickConsumptionItems;
+        const historyState = (window.history.state as { quickConsumptionItems?: QuickMealItem[] } | undefined)?.quickConsumptionItems;
         const draftItems = navigationState ?? historyState;
 
         if (!draftItems?.length) {
@@ -611,12 +591,14 @@ export class BaseMealManageComponent implements OnInit {
         draftItems.forEach(item => {
             const sourceType = item.type === 'recipe' ? ConsumptionSourceType.Recipe : ConsumptionSourceType.Product;
             const amount = item.amount ?? 0;
-            this.items.push(this.createConsumptionItem(
-                sourceType === ConsumptionSourceType.Product ? item.product ?? null : null,
-                sourceType === ConsumptionSourceType.Recipe ? item.recipe ?? null : null,
-                amount,
-                sourceType,
-            ));
+            this.items.push(
+                this.createConsumptionItem(
+                    sourceType === ConsumptionSourceType.Product ? (item.product ?? null) : null,
+                    sourceType === ConsumptionSourceType.Recipe ? (item.recipe ?? null) : null,
+                    amount,
+                    sourceType,
+                ),
+            );
 
             if (sourceType === ConsumptionSourceType.Recipe) {
                 const currentIndex = this.items.length - 1;
@@ -634,13 +616,10 @@ export class BaseMealManageComponent implements OnInit {
 
     private openItemSelectDialog(index: number, initialTab: 'Product' | 'Recipe'): void {
         this.fdDialogService
-            .open<ItemSelectDialogComponent, ItemSelectDialogData, ItemSelection | null>(
-                ItemSelectDialogComponent,
-                {
-                    size: 'lg',
-                    data: { initialTab },
-                },
-            )
+            .open<ItemSelectDialogComponent, ItemSelectDialogData, ItemSelection | null>(ItemSelectDialogComponent, {
+                size: 'lg',
+                data: { initialTab },
+            })
             .afterClosed()
             .subscribe(selection => {
                 if (!selection) {
@@ -717,12 +696,14 @@ export class BaseMealManageComponent implements OnInit {
                     ? this.recipeWeight.convertServingsToGrams(item.recipe ?? null, item.amount ?? 0)
                     : item.amount;
 
-            itemsArray.push(this.createConsumptionItem(
-                sourceType === ConsumptionSourceType.Product ? item.product ?? null : null,
-                sourceType === ConsumptionSourceType.Recipe ? item.recipe ?? null : null,
-                initialAmount,
-                sourceType,
-            ));
+            itemsArray.push(
+                this.createConsumptionItem(
+                    sourceType === ConsumptionSourceType.Product ? (item.product ?? null) : null,
+                    sourceType === ConsumptionSourceType.Recipe ? (item.recipe ?? null) : null,
+                    initialAmount,
+                    sourceType,
+                ),
+            );
 
             if (sourceType === ConsumptionSourceType.Recipe) {
                 const currentIndex = itemsArray.length - 1;
@@ -795,23 +776,24 @@ export class BaseMealManageComponent implements OnInit {
 
                 return totals;
             },
-            { ...aiTotals }
+            { ...aiTotals },
         );
     }
 
     private getAiNutritionTotals(): NutritionTotals {
         return this.aiSessions().reduce(
-            (totals, session) => session.items.reduce(
-                (sessionTotals, item) => ({
-                    calories: sessionTotals.calories + (item.calories ?? 0),
-                    proteins: sessionTotals.proteins + (item.proteins ?? 0),
-                    fats: sessionTotals.fats + (item.fats ?? 0),
-                    carbs: sessionTotals.carbs + (item.carbs ?? 0),
-                    fiber: sessionTotals.fiber + (item.fiber ?? 0),
-                    alcohol: sessionTotals.alcohol + (item.alcohol ?? 0),
-                }),
-                totals,
-            ),
+            (totals, session) =>
+                session.items.reduce(
+                    (sessionTotals, item) => ({
+                        calories: sessionTotals.calories + (item.calories ?? 0),
+                        proteins: sessionTotals.proteins + (item.proteins ?? 0),
+                        fats: sessionTotals.fats + (item.fats ?? 0),
+                        carbs: sessionTotals.carbs + (item.carbs ?? 0),
+                        fiber: sessionTotals.fiber + (item.fiber ?? 0),
+                        alcohol: sessionTotals.alcohol + (item.alcohol ?? 0),
+                    }),
+                    totals,
+                ),
             { calories: 0, proteins: 0, fats: 0, carbs: 0, fiber: 0, alcohol: 0 },
         );
     }
@@ -856,25 +838,31 @@ export class BaseMealManageComponent implements OnInit {
 
     private populateManualNutritionFromCurrentSummary(): void {
         const totals = this.calculateAutoNutritionTotals();
-        this.consumptionForm.patchValue({
-            manualCalories: this.roundNutrient(totals.calories),
-            manualProteins: this.roundNutrient(totals.proteins),
-            manualFats: this.roundNutrient(totals.fats),
-            manualCarbs: this.roundNutrient(totals.carbs),
-            manualFiber: this.roundNutrient(totals.fiber),
-            manualAlcohol: this.roundNutrient(totals.alcohol),
-        }, { emitEvent: false });
+        this.consumptionForm.patchValue(
+            {
+                manualCalories: this.roundNutrient(totals.calories),
+                manualProteins: this.roundNutrient(totals.proteins),
+                manualFats: this.roundNutrient(totals.fats),
+                manualCarbs: this.roundNutrient(totals.carbs),
+                manualFiber: this.roundNutrient(totals.fiber),
+                manualAlcohol: this.roundNutrient(totals.alcohol),
+            },
+            { emitEvent: false },
+        );
     }
 
     private syncManualControlsWithSummary(totals: NutritionTotals): void {
-        this.consumptionForm.patchValue({
-            manualCalories: this.roundNutrient(totals.calories),
-            manualProteins: this.roundNutrient(totals.proteins),
-            manualFats: this.roundNutrient(totals.fats),
-            manualCarbs: this.roundNutrient(totals.carbs),
-            manualFiber: this.roundNutrient(totals.fiber),
-            manualAlcohol: this.roundNutrient(totals.alcohol),
-        }, { emitEvent: false });
+        this.consumptionForm.patchValue(
+            {
+                manualCalories: this.roundNutrient(totals.calories),
+                manualProteins: this.roundNutrient(totals.proteins),
+                manualFats: this.roundNutrient(totals.fats),
+                manualCarbs: this.roundNutrient(totals.carbs),
+                manualFiber: this.roundNutrient(totals.fiber),
+                manualAlcohol: this.roundNutrient(totals.alcohol),
+            },
+            { emitEvent: false },
+        );
     }
 
     private updateManualNutritionValidators(isAuto: boolean): void {
@@ -899,17 +887,13 @@ export class BaseMealManageComponent implements OnInit {
         const fats = this.getControlNumericValue(this.consumptionForm.controls.manualFats);
         const carbs = this.getControlNumericValue(this.consumptionForm.controls.manualCarbs);
         const alcohol = this.getControlNumericValue(this.consumptionForm.controls.manualAlcohol);
-        this.nutritionWarning.set(
-            calculateCalorieMismatchWarning(calories, proteins, fats, carbs, alcohol, this.calorieMismatchThreshold),
-        );
+        this.nutritionWarning.set(calculateCalorieMismatchWarning(calories, proteins, fats, carbs, alcohol, this.calorieMismatchThreshold));
     }
 
     private buildItemsValidator(): ValidatorFn {
         return (control: AbstractControl): ValidationErrors | null => {
             const value = control.value as ConsumptionItemFormValues[] | null;
-            const hasManualItems = Array.isArray(value)
-                ? value.some(item => Boolean(item?.product) || Boolean(item?.recipe))
-                : false;
+            const hasManualItems = Array.isArray(value) ? value.some(item => Boolean(item?.product) || Boolean(item?.recipe)) : false;
             const hasAiItems = this.aiSessions().length > 0;
             return hasManualItems || hasAiItems ? null : { nonEmptyArray: true };
         };
@@ -998,25 +982,25 @@ export class BaseMealManageComponent implements OnInit {
 
     private async handleSubmitResponse(response: Consumption | null): Promise<void> {
         if (response) {
-                if (!this.consumption()) {
-                    this.consumptionForm.reset({
-                        date: this.getDateInputValue(new Date()),
-                        time: this.getTimeInputValue(new Date()),
-                        mealType: null,
-                        comment: null,
-                        isNutritionAutoCalculated: true,
-                        manualCalories: null,
-                        manualProteins: null,
-                        manualFats: null,
-                        manualCarbs: null,
-                        manualFiber: null,
-                        manualAlcohol: null,
-                    });
-                    this.items.clear();
-                    this.items.push(this.createConsumptionItem());
-                    this.aiSessions.set([]);
-                    this.updateSummary();
-                }
+            if (!this.consumption()) {
+                this.consumptionForm.reset({
+                    date: this.getDateInputValue(new Date()),
+                    time: this.getTimeInputValue(new Date()),
+                    mealType: null,
+                    comment: null,
+                    isNutritionAutoCalculated: true,
+                    manualCalories: null,
+                    manualProteins: null,
+                    manualFats: null,
+                    manualCarbs: null,
+                    manualFiber: null,
+                    manualAlcohol: null,
+                });
+                this.items.clear();
+                this.items.push(this.createConsumptionItem());
+                this.aiSessions.set([]);
+                this.updateSummary();
+            }
             await this.showConfirmDialog();
         } else {
             this.handleSubmitError();
@@ -1037,16 +1021,15 @@ export class BaseMealManageComponent implements OnInit {
 
     private showConfirmDialog(): void {
         this.fdDialogService
-            .open<
+            .open<MealManageSuccessDialogComponent, ConsumptionManageSuccessDialogData, ConsumptionManageRedirectAction>(
                 MealManageSuccessDialogComponent,
-                ConsumptionManageSuccessDialogData,
-                ConsumptionManageRedirectAction
-            >(MealManageSuccessDialogComponent, {
-                size: 'sm',
-                data: {
-                    isEdit: Boolean(this.consumption()),
+                {
+                    size: 'sm',
+                    data: {
+                        isEdit: Boolean(this.consumption()),
+                    },
                 },
-            })
+            )
             .afterClosed()
             .subscribe(redirectAction => {
                 if (redirectAction === 'Home') {
@@ -1113,10 +1096,10 @@ export class BaseMealManageComponent implements OnInit {
         sourceType: ConsumptionSourceType = ConsumptionSourceType.Product,
     ): FormGroup<ConsumptionItemFormData> {
         const group = new FormGroup<ConsumptionItemFormData>({
-        sourceType: new FormControl<ConsumptionSourceType>(sourceType, { nonNullable: true }),
-        product: new FormControl<Product | null>(product),
-        recipe: new FormControl<Recipe | null>(recipe),
-        amount: new FormControl<number | null>(amount, [Validators.required, Validators.min(0.01)]),
+            sourceType: new FormControl<ConsumptionSourceType>(sourceType, { nonNullable: true }),
+            product: new FormControl<Product | null>(product),
+            recipe: new FormControl<Recipe | null>(recipe),
+            amount: new FormControl<number | null>(amount, [Validators.required, Validators.min(0.01)]),
         });
 
         this.configureItemType(group, sourceType);

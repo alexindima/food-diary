@@ -12,11 +12,7 @@ describe('GoalsService', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [
-                GoalsService,
-                provideHttpClient(),
-                provideHttpClientTesting(),
-            ],
+            providers: [GoalsService, provideHttpClient(), provideHttpClientTesting()],
         });
 
         service = TestBed.inject(GoalsService);

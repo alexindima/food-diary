@@ -52,8 +52,7 @@ export class FdUiFormErrorComponent {
             return;
         }
 
-        const subscription = merge(control.statusChanges, control.valueChanges)
-            .subscribe(() => this.cdr.markForCheck());
+        const subscription = merge(control.statusChanges, control.valueChanges).subscribe(() => this.cdr.markForCheck());
 
         onCleanup((): void => subscription.unsubscribe());
     });

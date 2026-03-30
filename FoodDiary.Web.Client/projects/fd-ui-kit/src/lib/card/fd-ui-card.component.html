@@ -1,27 +1,25 @@
-<div
-  [class]="cardClass()"
-  >
-  @if (title() || meta() || headerActions()) {
-    <header class="fd-ui-card__header">
-      @if (title() || meta()) {
-        <div class="fd-ui-card__title-row">
-          @if (title()) {
-            <p class="fd-ui-card__title">{{ title() }}</p>
-          }
-          @if (meta()) {
-            <span class="fd-ui-card__meta">{{ meta() }}</span>
-          }
-        </div>
-      }
-      @if (headerActions()) {
-        <div class="fd-ui-card__actions">
-          <ng-content select="[fdUiCardActions]" />
-        </div>
-      }
-    </header>
-  }
+<div [class]="cardClass()">
+    @if (title() || meta() || headerActions()) {
+        <header class="fd-ui-card__header">
+            @if (title() || meta()) {
+                <div class="fd-ui-card__title-row">
+                    @if (title()) {
+                        <p class="fd-ui-card__title">{{ title() }}</p>
+                    }
+                    @if (meta()) {
+                        <span class="fd-ui-card__meta">{{ meta() }}</span>
+                    }
+                </div>
+            }
+            @if (headerActions()) {
+                <div class="fd-ui-card__actions">
+                    <ng-content select="[fdUiCardActions]" />
+                </div>
+            }
+        </header>
+    }
 
-  <div class="fd-ui-card__content">
-    <ng-content />
-  </div>
+    <div class="fd-ui-card__content">
+        <ng-content />
+    </div>
 </div>

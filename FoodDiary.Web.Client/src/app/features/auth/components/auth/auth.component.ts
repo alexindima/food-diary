@@ -59,7 +59,7 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     styleUrls: ['./auth.component.scss'],
     providers: [VALIDATION_ERRORS_PROVIDER],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [TranslateModule, ReactiveFormsModule, FdUiInputComponent, FdUiButtonComponent, FdUiCheckboxComponent, FdUiFormErrorComponent]
+    imports: [TranslateModule, ReactiveFormsModule, FdUiInputComponent, FdUiButtonComponent, FdUiCheckboxComponent, FdUiFormErrorComponent],
 })
 export class AuthComponent implements OnInit, AfterViewInit {
     public readonly useRouting = input(true);
@@ -95,11 +95,7 @@ export class AuthComponent implements OnInit, AfterViewInit {
     public passwordResetSent = signal<boolean>(false);
     public passwordResetCooldownSeconds = signal<number>(0);
     private passwordResetCooldownTimerId: number | null = null;
-    public authBenefits: string[] = [
-        'AUTH.INFO.HIGHLIGHTS.SYNC',
-        'AUTH.INFO.HIGHLIGHTS.INSIGHTS',
-        'AUTH.INFO.HIGHLIGHTS.LIBRARY',
-    ];
+    public authBenefits: string[] = ['AUTH.INFO.HIGHLIGHTS.SYNC', 'AUTH.INFO.HIGHLIGHTS.INSIGHTS', 'AUTH.INFO.HIGHLIGHTS.LIBRARY'];
 
     private returnUrl: string | null = null;
 
@@ -124,27 +120,21 @@ export class AuthComponent implements OnInit, AfterViewInit {
             email: new FormControl<string>('', { nonNullable: true, validators: [Validators.required, Validators.email] }),
         });
 
-        this.loginForm.valueChanges
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => {
-                this.clearGlobalError();
-                this.markDirtyControlsTouched(this.loginForm);
-                this.cdr.markForCheck();
-            });
-        this.registerForm.valueChanges
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => {
-                this.clearGlobalError();
-                this.markDirtyControlsTouched(this.registerForm);
-                this.cdr.markForCheck();
-            });
-        this.passwordResetForm.valueChanges
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => {
-                this.clearGlobalError();
-                this.markDirtyControlsTouched(this.passwordResetForm);
-                this.cdr.markForCheck();
-            });
+        this.loginForm.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            this.clearGlobalError();
+            this.markDirtyControlsTouched(this.loginForm);
+            this.cdr.markForCheck();
+        });
+        this.registerForm.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            this.clearGlobalError();
+            this.markDirtyControlsTouched(this.registerForm);
+            this.cdr.markForCheck();
+        });
+        this.passwordResetForm.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            this.clearGlobalError();
+            this.markDirtyControlsTouched(this.passwordResetForm);
+            this.cdr.markForCheck();
+        });
 
         this.registerForm.controls.password.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.registerForm.controls.confirmPassword.updateValueAndValidity();
@@ -279,8 +269,8 @@ export class AuthComponent implements OnInit, AfterViewInit {
             return;
         }
         this.telegramLoginEnabled.set(true);
-        (window as { fdTelegramAuth?: (user: TelegramLoginWidgetUser) => void }).fdTelegramAuth =
-            (user: TelegramLoginWidgetUser): void => this.onTelegramAuth(user);
+        (window as { fdTelegramAuth?: (user: TelegramLoginWidgetUser) => void }).fdTelegramAuth = (user: TelegramLoginWidgetUser): void =>
+            this.onTelegramAuth(user);
         this.renderTelegramWidget();
     }
 
@@ -552,4 +542,3 @@ interface PasswordResetFormValues {
 }
 
 type PasswordResetFormGroup = FormGroupControls<PasswordResetFormValues>;
-

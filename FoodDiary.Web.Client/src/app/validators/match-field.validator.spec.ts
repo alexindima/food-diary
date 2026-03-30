@@ -12,7 +12,7 @@ describe('matchFieldValidator', () => {
         expect(result).toBeNull();
     });
 
-    it('should return error when fields don\'t match', () => {
+    it("should return error when fields don't match", () => {
         const group = new FormGroup({
             password: new FormControl('secret'),
             confirmPassword: new FormControl('different', matchFieldValidator('password')),

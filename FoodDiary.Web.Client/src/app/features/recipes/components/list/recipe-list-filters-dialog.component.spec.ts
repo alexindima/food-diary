@@ -2,10 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { TranslateModule } from '@ngx-translate/core';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
-import {
-    RecipeListFiltersDialogComponent,
-    RecipeListFiltersDialogData,
-} from './recipe-list-filters-dialog.component';
+import { RecipeListFiltersDialogComponent, RecipeListFiltersDialogData } from './recipe-list-filters-dialog.component';
 
 describe('RecipeListFiltersDialogComponent', () => {
     let component: RecipeListFiltersDialogComponent;

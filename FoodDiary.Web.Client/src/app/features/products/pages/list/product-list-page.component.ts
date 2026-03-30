@@ -35,7 +35,7 @@ import { Product } from '../../models/product.data';
         PageBodyComponent,
         FdPageContainerDirective,
         ProductCardComponent,
-    ]
+    ],
 })
 export class ProductListPageComponent extends ProductListBaseComponent implements OnInit {
     private readonly translateService = inject(TranslateService);
@@ -80,10 +80,9 @@ export class ProductListPageComponent extends ProductListBaseComponent implement
                             error: error => {
                                 console.error('Delete product error', error);
                                 this.productData.setLoading(false);
-                                this.toastService.open(
-                                    this.translateService.instant('PRODUCT_LIST.DELETE_ERROR'),
-                                    { appearance: 'negative' },
-                                );
+                                this.toastService.open(this.translateService.instant('PRODUCT_LIST.DELETE_ERROR'), {
+                                    appearance: 'negative',
+                                });
                             },
                         });
                 }

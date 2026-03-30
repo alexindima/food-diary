@@ -25,7 +25,7 @@ import { FdUiIconModule } from 'fd-ui-kit/material';
         FdUiLoaderComponent,
         FdUiPaginationComponent,
         FdUiIconModule,
-    ]
+    ],
 })
 export class ProductListDialogComponent extends ProductListBaseComponent {
     public readonly embedded = input<boolean>(false);
@@ -60,4 +60,3 @@ export class ProductListDialogComponent extends ProductListBaseComponent {
         }
     }
 }
-

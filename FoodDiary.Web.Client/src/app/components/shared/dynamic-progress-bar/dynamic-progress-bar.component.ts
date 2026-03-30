@@ -3,13 +3,10 @@ import { NgClass, NgStyle } from '@angular/common';
 
 @Component({
     selector: 'fd-dynamic-progress-bar',
-    imports: [
-        NgStyle,
-        NgClass
-    ],
+    imports: [NgStyle, NgClass],
     templateUrl: './dynamic-progress-bar.component.html',
     styleUrls: ['./dynamic-progress-bar.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DynamicProgressBarComponent {
     public readonly current = input.required<number>();
@@ -40,9 +37,9 @@ export class DynamicProgressBarComponent {
         if (this.max() <= 0) {
             position = 50;
         } else if (this.progress() < 50) {
-            position = 100 - ((100 - this.progress()) / 2);
+            position = 100 - (100 - this.progress()) / 2;
         } else if (this.progress() > 200) {
-            position = 100 - ((100 - (this.max() / this.current()) * 100 ) / 2) ;
+            position = 100 - (100 - (this.max() / this.current()) * 100) / 2;
         } else if (this.progress() > 100) {
             position = this.maxPosition() / 2;
         } else {
@@ -50,7 +47,7 @@ export class DynamicProgressBarComponent {
         }
 
         return position + '%';
-    })
+    });
     public barColor = computed(() => {
         if (this.progress() <= 100) {
             const greenIntensity = Math.round((this.progress() / 100) * 100);
@@ -62,8 +59,6 @@ export class DynamicProgressBarComponent {
             const redIntensity = Math.min(255, Math.round(((this.progress() - 125) / 50) * 255));
             return `rgb(255, ${100 - redIntensity}, ${80 - redIntensity / 2})`;
         }
-    })
-    public textColorClass = computed(() =>
-        this.progress() < 100 * 0.5 ? 'text-black' : 'text-white'
-    );
+    });
+    public textColorClass = computed(() => (this.progress() < 100 * 0.5 ? 'text-black' : 'text-white'));
 }

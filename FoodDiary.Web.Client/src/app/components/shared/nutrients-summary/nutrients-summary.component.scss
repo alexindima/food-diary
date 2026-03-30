@@ -46,9 +46,9 @@
     gap: variables.$gap-xs;
 
     .nutrient {
-    display: flex;
-    align-items: center;
-    color: variables.$color-text-main;
+        display: flex;
+        align-items: center;
+        color: variables.$color-text-main;
 
         .nutrient-color {
             margin-right: variables.$gap-xs;
@@ -57,4 +57,3 @@
         }
     }
 }
-

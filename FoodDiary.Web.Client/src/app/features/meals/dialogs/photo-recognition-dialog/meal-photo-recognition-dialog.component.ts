@@ -37,14 +37,12 @@ type PhotoAiDialogData = {
     ],
 })
 export class MealPhotoRecognitionDialogComponent {
-    private readonly dialogData =
-        inject<PhotoAiDialogData>(FD_UI_DIALOG_DATA, { optional: true }) ?? {};
+    private readonly dialogData = inject<PhotoAiDialogData>(FD_UI_DIALOG_DATA, { optional: true }) ?? {};
     private readonly aiFoodService = inject(AiFoodService);
     private readonly translateService = inject(TranslateService);
-    private readonly dialogRef = inject(
-        FdUiDialogRef<MealPhotoRecognitionDialogComponent, MealAiSessionManageDto | null>,
-        { optional: true },
-    );
+    private readonly dialogRef = inject(FdUiDialogRef<MealPhotoRecognitionDialogComponent, MealAiSessionManageDto | null>, {
+        optional: true,
+    });
 
     public readonly isLoading = signal(false);
     public readonly errorKey = signal<string | null>(null);
@@ -193,21 +191,22 @@ export class MealPhotoRecognitionDialogComponent {
         }
 
         const assetId = this.selection()?.assetId ?? null;
-        const items = nutrition.items?.map(item => {
-            const match = this.findVisionMatch(item.name);
-            return {
-                nameEn: match?.nameEn ?? item.name,
-                nameLocal: match?.nameLocal ?? null,
-                amount: item.amount,
-                unit: item.unit,
-                calories: item.calories,
-                proteins: item.protein,
-                fats: item.fat,
-                carbs: item.carbs,
-                fiber: item.fiber,
-                alcohol: item.alcohol,
-            };
-        }) ?? [];
+        const items =
+            nutrition.items?.map(item => {
+                const match = this.findVisionMatch(item.name);
+                return {
+                    nameEn: match?.nameEn ?? item.name,
+                    nameLocal: match?.nameLocal ?? null,
+                    amount: item.amount,
+                    unit: item.unit,
+                    calories: item.calories,
+                    proteins: item.protein,
+                    fats: item.fat,
+                    carbs: item.carbs,
+                    fiber: item.fiber,
+                    alcohol: item.alcohol,
+                };
+            }) ?? [];
 
         return {
             imageAssetId: assetId,
@@ -224,10 +223,11 @@ export class MealPhotoRecognitionDialogComponent {
         }
 
         const normalized = name.trim().toLowerCase();
-        return this.results().find(item =>
-            item.nameEn?.trim().toLowerCase() === normalized
-            || item.nameLocal?.trim().toLowerCase() === normalized
-        ) ?? null;
+        return (
+            this.results().find(
+                item => item.nameEn?.trim().toLowerCase() === normalized || item.nameLocal?.trim().toLowerCase() === normalized,
+            ) ?? null
+        );
     }
 
     private runAnalysis(assetId: string): void {
@@ -273,7 +273,7 @@ export class MealPhotoRecognitionDialogComponent {
                     if (err?.status === 429) {
                         this.nutritionErrorKey.set('CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ERROR_QUOTA');
                     } else {
-                    this.nutritionErrorKey.set('CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.NUTRITION_ERROR');
+                        this.nutritionErrorKey.set('CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.NUTRITION_ERROR');
                     }
                     return of(null);
                 }),
@@ -301,13 +301,13 @@ export class MealPhotoRecognitionDialogComponent {
     public startEditing(): void {
         const items = this.results().length
             ? this.results()
-            : this.nutrition()?.items?.map(item => ({
-                nameEn: item.name,
-                nameLocal: null,
-                amount: item.amount,
-                unit: item.unit,
-                confidence: 1,
-            })) ?? [];
+            : (this.nutrition()?.items?.map(item => ({
+                  nameEn: item.name,
+                  nameLocal: null,
+                  amount: item.amount,
+                  unit: item.unit,
+                  confidence: 1,
+              })) ?? []);
 
         const editable = items.map(item => ({
             id: this.createEditId(),
@@ -323,8 +323,7 @@ export class MealPhotoRecognitionDialogComponent {
     }
 
     public applyEditing(): void {
-        const edited = this.editItems()
-            .filter(item => item.name.trim().length > 0 && item.amount > 0);
+        const edited = this.editItems().filter(item => item.name.trim().length > 0 && item.amount > 0);
         const normalized = edited.map(item => ({
             nameEn: item.nameEn?.trim() || item.name.trim(),
             nameLocal: item.nameLocal && item.nameLocal.trim().length ? item.nameLocal.trim() : null,
@@ -365,11 +364,7 @@ export class MealPhotoRecognitionDialogComponent {
         this.editItems.set(items);
     }
 
-    public updateEditItem(
-        index: number,
-        field: 'name' | 'amount' | 'unit',
-        value: string,
-    ): void {
+    public updateEditItem(index: number, field: 'name' | 'amount' | 'unit', value: string): void {
         this.editItems.update(items =>
             items.map((item, idx) => {
                 if (idx !== index) {
@@ -395,10 +390,7 @@ export class MealPhotoRecognitionDialogComponent {
     }
 
     public addEditItem(): void {
-        this.editItems.update(items => ([
-            ...items,
-            { id: this.createEditId(), name: '', nameEn: '', nameLocal: '', amount: 0, unit: 'g' },
-        ]));
+        this.editItems.update(items => [...items, { id: this.createEditId(), name: '', nameEn: '', nameLocal: '', amount: 0, unit: 'g' }]);
     }
 
     public getUnitOptions(): readonly string[] {
@@ -411,21 +403,27 @@ export class MealPhotoRecognitionDialogComponent {
     }
 
     private createEditId(): string {
-        return (crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random()}`);
+        return crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random()}`;
     }
 
     private applyInitialSession(session: MealAiSessionManageDto): void {
-        this.selection.set(session.imageUrl || session.imageAssetId ? {
-            url: session.imageUrl ?? null,
-            assetId: session.imageAssetId ?? null,
-        } : null);
-        this.results.set(session.items.map(item => ({
-            nameEn: item.nameEn,
-            nameLocal: item.nameLocal ?? null,
-            amount: item.amount,
-            unit: item.unit,
-            confidence: 1,
-        })));
+        this.selection.set(
+            session.imageUrl || session.imageAssetId
+                ? {
+                      url: session.imageUrl ?? null,
+                      assetId: session.imageAssetId ?? null,
+                  }
+                : null,
+        );
+        this.results.set(
+            session.items.map(item => ({
+                nameEn: item.nameEn,
+                nameLocal: item.nameLocal ?? null,
+                amount: item.amount,
+                unit: item.unit,
+                confidence: 1,
+            })),
+        );
         this.hasAnalyzed.set(true);
         this.isLoading.set(false);
         this.errorKey.set(null);
@@ -463,10 +461,7 @@ export class MealPhotoRecognitionDialogComponent {
         };
     }
 
-    private analyzeEditChanges(
-        source: EditableAiItem[],
-        edited: EditableAiItem[],
-    ): EditChangeSummary {
+    private analyzeEditChanges(source: EditableAiItem[], edited: EditableAiItem[]): EditChangeSummary {
         const sourceById = new Map(source.map(item => [item.id, item]));
         const editedById = new Map(edited.map(item => [item.id, item]));
         const removedIds = source.filter(item => !editedById.has(item.id)).map(item => item.id);
@@ -504,41 +499,38 @@ export class MealPhotoRecognitionDialogComponent {
         };
     }
 
-    private recalculateNutritionFromLocal(
-        changes: EditChangeSummary,
-        edited: EditableAiItem[],
-    ): FoodNutritionResponse | null {
+    private recalculateNutritionFromLocal(changes: EditChangeSummary, edited: EditableAiItem[]): FoodNutritionResponse | null {
         const nutrition = this.nutrition();
         if (!nutrition) {
             return null;
         }
 
-        const nutritionById = new Map(
-            nutrition.items.map(item => [this.normalizeName(item.name), item]),
-        );
+        const nutritionById = new Map(nutrition.items.map(item => [this.normalizeName(item.name), item]));
         const source = this.sourceItems();
 
-        const updatedItems = edited.map(item => {
-            const base = source.find(sourceItem => sourceItem.id === item.id);
-            const originalName = base?.nameEn ?? base?.name ?? item.name;
-            const originalNutrition = nutritionById.get(this.normalizeName(originalName));
-            if (!originalNutrition) {
-                return null;
-            }
+        const updatedItems = edited
+            .map(item => {
+                const base = source.find(sourceItem => sourceItem.id === item.id);
+                const originalName = base?.nameEn ?? base?.name ?? item.name;
+                const originalNutrition = nutritionById.get(this.normalizeName(originalName));
+                if (!originalNutrition) {
+                    return null;
+                }
 
-            const ratio = base && base.amount > 0 ? item.amount / base.amount : 1;
-            return {
-                name: item.name,
-                amount: item.amount,
-                unit: item.unit,
-                calories: originalNutrition.calories * ratio,
-                protein: originalNutrition.protein * ratio,
-                fat: originalNutrition.fat * ratio,
-                carbs: originalNutrition.carbs * ratio,
-                fiber: originalNutrition.fiber * ratio,
-                alcohol: originalNutrition.alcohol * ratio,
-            };
-        }).filter((item): item is FoodNutritionResponse['items'][number] => item !== null);
+                const ratio = base && base.amount > 0 ? item.amount / base.amount : 1;
+                return {
+                    name: item.name,
+                    amount: item.amount,
+                    unit: item.unit,
+                    calories: originalNutrition.calories * ratio,
+                    protein: originalNutrition.protein * ratio,
+                    fat: originalNutrition.fat * ratio,
+                    carbs: originalNutrition.carbs * ratio,
+                    fiber: originalNutrition.fiber * ratio,
+                    alcohol: originalNutrition.alcohol * ratio,
+                };
+            })
+            .filter((item): item is FoodNutritionResponse['items'][number] => item !== null);
 
         if (updatedItems.length !== edited.length) {
             return null;

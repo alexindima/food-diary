@@ -14,11 +14,7 @@ export interface ProductSaveSuccessDialogData {
     standalone: true,
     imports: [FdUiDialogComponent, FdUiButtonComponent, TranslatePipe],
     template: `
-        <fd-ui-dialog
-            [title]="titleKey | translate"
-            size="sm"
-            [dismissible]="false"
-        >
+        <fd-ui-dialog [title]="titleKey | translate" size="sm" [dismissible]="false">
             <div class="product-manage__dialog">
                 <p class="product-manage__dialog-title">{{ titleKey | translate }}</p>
                 <div class="product-manage__dialog-buttons">

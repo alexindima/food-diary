@@ -6,10 +6,10 @@ import { AdminAiUsageSummary } from '../models/admin-ai-usage.data';
 
 @Injectable({ providedIn: 'root' })
 export class AdminAiUsageService {
-  private readonly http = inject(HttpClient);
-  private readonly aiUsageUrl = `${environment.apiUrls.auth.replace(/\/auth$/, '')}/admin/ai-usage/summary`;
+    private readonly http = inject(HttpClient);
+    private readonly aiUsageUrl = `${environment.apiUrls.auth.replace(/\/auth$/, '')}/admin/ai-usage/summary`;
 
-  public getSummary(): Observable<AdminAiUsageSummary> {
-    return this.http.get<AdminAiUsageSummary>(this.aiUsageUrl);
-  }
+    public getSummary(): Observable<AdminAiUsageSummary> {
+        return this.http.get<AdminAiUsageSummary>(this.aiUsageUrl);
+    }
 }

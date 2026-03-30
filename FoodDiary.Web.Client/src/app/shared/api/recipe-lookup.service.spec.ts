@@ -65,9 +65,7 @@ describe('RecipeLookupService', () => {
             expect(response.id).toBe(recipeId);
         });
 
-        const req = httpMock.expectOne(
-            r => r.url === `${baseUrl}/${recipeId}` && r.params.get('includePublic') === 'false',
-        );
+        const req = httpMock.expectOne(r => r.url === `${baseUrl}/${recipeId}` && r.params.get('includePublic') === 'false');
         expect(req.request.method).toBe('GET');
         expect(req.request.params.get('includePublic')).toBe('false');
         req.flush(mockResponse);

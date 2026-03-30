@@ -13,7 +13,9 @@
 
 :host(.dashboard__card--clickable) fd-ui-card {
     cursor: pointer;
-    transition: box-shadow 0.2s ease, transform 0.2s ease;
+    transition:
+        box-shadow 0.2s ease,
+        transform 0.2s ease;
 }
 
 :host(.dashboard__card--clickable) fd-ui-card:hover {

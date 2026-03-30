@@ -14,9 +14,7 @@ const PRODUCT_TYPE_ALIASES: Record<string, ProductType> = {
     OTHERS: ProductType.Other,
 };
 
-export function normalizeProductType(
-    value?: ProductType | string | null,
-): ProductType | null {
+export function normalizeProductType(value?: ProductType | string | null): ProductType | null {
     if (!value) {
         return null;
     }
@@ -27,9 +25,7 @@ export function normalizeProductType(
         return alias;
     }
 
-    const match = Object.values(ProductType).find(
-        type => type.toUpperCase() === upper,
-    );
+    const match = Object.values(ProductType).find(type => type.toUpperCase() === upper);
 
     return match ?? null;
 }

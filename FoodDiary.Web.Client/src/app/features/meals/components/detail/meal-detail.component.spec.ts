@@ -99,18 +99,14 @@ describe('MealDetailComponent', () => {
     it('should close dialog with edit action on onEdit', () => {
         component.onEdit();
 
-        expect(mockDialogRef.close).toHaveBeenCalledWith(
-            expect.objectContaining({ id: '1', action: 'Edit' }),
-        );
+        expect(mockDialogRef.close).toHaveBeenCalledWith(expect.objectContaining({ id: '1', action: 'Edit' }));
     });
 
     it('should open confirm dialog on delete and close with delete action', () => {
         component.onDelete();
 
         expect(mockFdDialogService.open).toHaveBeenCalled();
-        expect(mockDialogRef.close).toHaveBeenCalledWith(
-            expect.objectContaining({ id: '1', action: 'Delete' }),
-        );
+        expect(mockDialogRef.close).toHaveBeenCalledWith(expect.objectContaining({ id: '1', action: 'Delete' }));
     });
 
     it('should store the consumption data', () => {

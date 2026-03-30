@@ -1,11 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  HostListener,
-  inject,
-  input,
-  OnInit
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostListener, inject, input, OnInit } from '@angular/core';
 import { BaseChartDirective } from 'ng2-charts';
 import { DecimalPipe, NgStyle, NgTemplateOutlet } from '@angular/common';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -17,17 +10,10 @@ import { CustomGroupComponent } from '../custom-group/custom-group.component';
 
 @Component({
     selector: 'fd-nutrients-summary',
-    imports: [
-        BaseChartDirective,
-        DecimalPipe,
-        TranslatePipe,
-        NgStyle,
-        CustomGroupComponent,
-        NgTemplateOutlet,
-    ],
+    imports: [BaseChartDirective, DecimalPipe, TranslatePipe, NgStyle, CustomGroupComponent, NgTemplateOutlet],
     templateUrl: './nutrients-summary.component.html',
     styleUrl: './nutrients-summary.component.scss',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NutrientsSummaryComponent implements OnInit {
     public readonly CHART_COLORS = CHART_COLORS;
@@ -66,11 +52,9 @@ export class NutrientsSummaryComponent implements OnInit {
     }
 
     public get summaryWrapperStyles(): object {
-        const gapValue = this.isColumnLayout
-            ? this.mergedConfig.styles.common.infoBreakpoints.gap
-            : this.mergedConfig.styles.common.gap;
+        const gapValue = this.isColumnLayout ? this.mergedConfig.styles.common.infoBreakpoints.gap : this.mergedConfig.styles.common.gap;
 
-        return { gap: `${gapValue}px`};
+        return { gap: `${gapValue}px` };
     }
 
     public get nutrientStyles(): object {
@@ -90,9 +74,7 @@ export class NutrientsSummaryComponent implements OnInit {
     }
 
     public get chartsWrapperStyles(): object {
-        const gapValue = this.isColumnLayout
-            ? this.mergedConfig.styles.charts.breakpoints.gap
-            : this.mergedConfig.styles.charts.gap;
+        const gapValue = this.isColumnLayout ? this.mergedConfig.styles.charts.breakpoints.gap : this.mergedConfig.styles.charts.gap;
 
         return {
             gap: `${gapValue}px`,
@@ -103,8 +85,8 @@ export class NutrientsSummaryComponent implements OnInit {
         return this.areChartsBelowInfo
             ? this.mergedConfig.styles.common.infoBreakpoints.chartBlockSize
             : this.isColumnLayout
-                ? this.mergedConfig.styles.charts.breakpoints.chartBlockSize
-                : this.mergedConfig.styles.charts.chartBlockSize;
+              ? this.mergedConfig.styles.charts.breakpoints.chartBlockSize
+              : this.mergedConfig.styles.charts.chartBlockSize;
     }
 
     public get chartStyles(): object {
@@ -176,16 +158,8 @@ export class NutrientsSummaryComponent implements OnInit {
             ],
             datasets: [
                 {
-                    data: [
-                        this.nutrientChartData().proteins,
-                        this.nutrientChartData().fats,
-                        this.nutrientChartData().carbs,
-                    ],
-                    backgroundColor: [
-                        CHART_COLORS.proteins,
-                        CHART_COLORS.fats,
-                        CHART_COLORS.carbs,
-                    ],
+                    data: [this.nutrientChartData().proteins, this.nutrientChartData().fats, this.nutrientChartData().carbs],
+                    backgroundColor: [CHART_COLORS.proteins, CHART_COLORS.fats, CHART_COLORS.carbs],
                 },
             ],
         };
@@ -200,16 +174,8 @@ export class NutrientsSummaryComponent implements OnInit {
             ],
             datasets: [
                 {
-                    data: [
-                        this.nutrientChartData().proteins,
-                        this.nutrientChartData().fats,
-                        this.nutrientChartData().carbs,
-                    ],
-                    backgroundColor: [
-                        CHART_COLORS.proteins,
-                        CHART_COLORS.fats,
-                        CHART_COLORS.carbs,
-                    ],
+                    data: [this.nutrientChartData().proteins, this.nutrientChartData().fats, this.nutrientChartData().carbs],
+                    backgroundColor: [CHART_COLORS.proteins, CHART_COLORS.fats, CHART_COLORS.carbs],
                 },
             ],
         };
@@ -221,18 +187,18 @@ export class NutrientsSummaryComponent implements OnInit {
             tooltip: {
                 callbacks: {
                     label: (context: TooltipItem<any>): string => this.getFormattedTooltip(context),
-                }
-            }
-        }
+                },
+            },
+        },
     };
 
     public pieChartOptions: ChartOptions<'pie'> = {
-        ...this.baseNutrientsChartOptions
+        ...this.baseNutrientsChartOptions,
     };
 
     public barChartOptions: ChartOptions<'bar'> = {
-        ...this.baseNutrientsChartOptions
-    }
+        ...this.baseNutrientsChartOptions,
+    };
 
     private getFormattedTooltip<T extends keyof ChartTypeRegistry>(context: TooltipItem<T>): string {
         const label = context.label || '';
@@ -246,13 +212,13 @@ export class NutrientsSummaryComponent implements OnInit {
 interface NutrientsSummaryConfigInternal {
     styles: {
         common: {
-            gap: 16,
+            gap: 16;
             infoBreakpoints: {
                 columnLayout: number;
                 chartBlockSize: number;
                 gap: number;
             };
-        },
+        };
         charts: {
             chartBlockSize: number;
             gap: number;
@@ -261,7 +227,7 @@ interface NutrientsSummaryConfigInternal {
                 chartBlockSize: number;
                 gap: number;
             };
-        },
+        };
         info: {
             lineStyles: {
                 nutrients: {

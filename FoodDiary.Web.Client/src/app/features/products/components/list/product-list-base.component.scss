@@ -538,10 +538,21 @@
         display: inline-block;
         grid-row: span 2;
 
-        &--protein { background: #8b5cf6; }
-        &--carb { background: #22c55e; }
-        &--fat { background: #f59e0b; }
-        &--fiber { background: #94a3b8; }
+        &--protein {
+            background: #8b5cf6;
+        }
+
+        &--carb {
+            background: #22c55e;
+        }
+
+        &--fat {
+            background: #f59e0b;
+        }
+
+        &--fiber {
+            background: #94a3b8;
+        }
     }
 
     &__macro-value {
@@ -604,5 +615,3 @@
         margin: 0 auto;
     }
 }
-
-

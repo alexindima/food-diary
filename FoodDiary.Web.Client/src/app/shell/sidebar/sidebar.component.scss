@@ -62,7 +62,9 @@
         color: #475569;
         text-decoration: none;
         font-weight: 600;
-        transition: background 0.2s ease, color 0.2s ease;
+        transition:
+            background 0.2s ease,
+            color 0.2s ease;
 
         mat-icon {
             font-size: 20px;
@@ -183,7 +185,9 @@
         box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
         cursor: pointer;
         text-align: left;
-        transition: box-shadow 0.2s ease, transform 0.15s ease;
+        transition:
+            box-shadow 0.2s ease,
+            transform 0.15s ease;
 
         &:hover {
             box-shadow: 0 10px 24px rgba(15, 23, 42, 0.12);
@@ -267,7 +271,10 @@
         color: #0f172a;
         font-weight: 700;
         text-decoration: none;
-        transition: background 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+        transition:
+            background 0.15s ease,
+            transform 0.15s ease,
+            box-shadow 0.15s ease;
 
         mat-icon {
             font-size: 18px;
@@ -304,7 +311,9 @@
         color: #b91c1c;
         font-weight: 700;
         cursor: pointer;
-        transition: background 0.15s ease, transform 0.15s ease;
+        transition:
+            background 0.15s ease,
+            transform 0.15s ease;
 
         mat-icon {
             font-size: 18px;
@@ -394,7 +403,10 @@
         padding: 6px 4px;
         border-radius: 12px;
         text-decoration: none;
-        transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+        transition:
+            background 0.2s ease,
+            color 0.2s ease,
+            transform 0.2s ease;
 
         mat-icon {
             font-size: 22px;
@@ -479,4 +491,3 @@
         display: none;
     }
 }
-

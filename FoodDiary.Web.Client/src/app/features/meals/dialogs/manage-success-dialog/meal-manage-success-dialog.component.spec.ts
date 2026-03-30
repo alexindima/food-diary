@@ -2,10 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { TranslateModule } from '@ngx-translate/core';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
-import {
-    MealManageSuccessDialogComponent,
-    ConsumptionManageSuccessDialogData,
-} from './meal-manage-success-dialog.component';
+import { MealManageSuccessDialogComponent, ConsumptionManageSuccessDialogData } from './meal-manage-success-dialog.component';
 
 describe('MealManageSuccessDialogComponent', () => {
     let component: MealManageSuccessDialogComponent;

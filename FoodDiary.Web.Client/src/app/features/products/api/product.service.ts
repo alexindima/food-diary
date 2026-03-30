@@ -3,13 +3,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { catchError, Observable, of, throwError } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
-import {
-    CreateProductRequest,
-    Product,
-    ProductFilters,
-    ProductListWithRecent,
-    UpdateProductRequest,
-} from '../models/product.data';
+import { CreateProductRequest, Product, ProductFilters, ProductListWithRecent, UpdateProductRequest } from '../models/product.data';
 import { PageOf } from '../../../shared/models/page-of.data';
 
 @Injectable({
@@ -50,7 +44,8 @@ export class ProductService extends ApiService {
         limit: number,
         filters?: ProductFilters,
         includePublic = true,
-        recentLimit = 10): Observable<ProductListWithRecent> {
+        recentLimit = 10,
+    ): Observable<ProductListWithRecent> {
         const params: Record<string, string | number | boolean> = { page, limit, includePublic, recentLimit };
         const search = filters?.search?.trim();
         if (search) {

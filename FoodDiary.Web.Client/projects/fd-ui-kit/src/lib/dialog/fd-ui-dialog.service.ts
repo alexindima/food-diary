@@ -13,10 +13,7 @@ export interface FdUiDialogConfig<D = unknown> extends MatDialogConfig<D> {
 export class FdUiDialogService {
     private readonly matDialog = inject(MatDialog);
 
-    public open<T, D = unknown, R = unknown>(
-        component: ComponentType<T>,
-        config: FdUiDialogConfig<D> = {},
-    ): MatDialogRef<T, R> {
+    public open<T, D = unknown, R = unknown>(component: ComponentType<T>, config: FdUiDialogConfig<D> = {}): MatDialogRef<T, R> {
         const size = config.size ?? 'md';
         const providedPanelClasses = this.asArray(config.panelClass);
         const isFullscreen = providedPanelClasses.includes('fd-ui-dialog-panel--fullscreen');
@@ -36,10 +33,7 @@ export class FdUiDialogService {
         });
     }
 
-    private mergeClasses(
-        provided: string | string[] | undefined,
-        base: string[],
-    ): string[] {
+    private mergeClasses(provided: string | string[] | undefined, base: string[]): string[] {
         const providedArray = this.asArray(provided);
         if (providedArray.length === 0) {
             return base;

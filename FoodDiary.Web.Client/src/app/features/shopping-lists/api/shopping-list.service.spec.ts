@@ -12,11 +12,7 @@ describe('ShoppingListService', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [
-                ShoppingListService,
-                provideHttpClient(),
-                provideHttpClientTesting(),
-            ],
+            providers: [ShoppingListService, provideHttpClient(), provideHttpClientTesting()],
         });
 
         service = TestBed.inject(ShoppingListService);

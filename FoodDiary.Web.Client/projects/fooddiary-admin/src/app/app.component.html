@@ -1,30 +1,31 @@
 <div class="admin-shell">
-  <aside class="admin-shell__sidebar">
-    <div class="admin-shell__brand">
-      <div class="admin-shell__logo">FD</div>
-      <div>
-        <div class="admin-shell__title">FoodDiary</div>
-        <div class="admin-shell__subtitle">Admin</div>
-      </div>
-    </div>
+    <aside class="admin-shell__sidebar">
+        <div class="admin-shell__brand">
+            <div class="admin-shell__logo">FD</div>
+            <div>
+                <div class="admin-shell__title">FoodDiary</div>
+                <div class="admin-shell__subtitle">Admin</div>
+            </div>
+        </div>
 
-    <nav class="admin-shell__nav">
-      <a class="admin-shell__nav-item" routerLink="/" routerLinkActive="admin-shell__nav-item--active" [routerLinkActiveOptions]="{ exact: true }">
-        Dashboard
-      </a>
-      <a class="admin-shell__nav-item" routerLink="/users" routerLinkActive="admin-shell__nav-item--active">
-        Users
-      </a>
-      <a class="admin-shell__nav-item" routerLink="/ai-usage" routerLinkActive="admin-shell__nav-item--active">
-        AI Logs
-      </a>
-      <a class="admin-shell__nav-item" routerLink="/email-templates" routerLinkActive="admin-shell__nav-item--active">
-        Email templates
-      </a>
-    </nav>
-  </aside>
+        <nav class="admin-shell__nav">
+            <a
+                class="admin-shell__nav-item"
+                routerLink="/"
+                routerLinkActive="admin-shell__nav-item--active"
+                [routerLinkActiveOptions]="{ exact: true }"
+            >
+                Dashboard
+            </a>
+            <a class="admin-shell__nav-item" routerLink="/users" routerLinkActive="admin-shell__nav-item--active"> Users </a>
+            <a class="admin-shell__nav-item" routerLink="/ai-usage" routerLinkActive="admin-shell__nav-item--active"> AI Logs </a>
+            <a class="admin-shell__nav-item" routerLink="/email-templates" routerLinkActive="admin-shell__nav-item--active">
+                Email templates
+            </a>
+        </nav>
+    </aside>
 
-  <main class="admin-shell__content">
-    <router-outlet />
-  </main>
+    <main class="admin-shell__content">
+        <router-outlet />
+    </main>
 </div>

@@ -1,4 +1,3 @@
-
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, inject, input, output } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
@@ -142,4 +141,3 @@ export class FdUiSatietyScaleComponent implements ControlValueAccessor {
         return this.value === level;
     }
 }
-

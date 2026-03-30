@@ -18,10 +18,7 @@ describe('SeoService', () => {
         };
 
         TestBed.configureTestingModule({
-            providers: [
-                SeoService,
-                { provide: TranslateService, useValue: translateService },
-            ],
+            providers: [SeoService, { provide: TranslateService, useValue: translateService }],
         });
 
         service = TestBed.inject(SeoService);
@@ -32,9 +29,7 @@ describe('SeoService', () => {
 
     describe('update', () => {
         it('should set page title with suffix when titleKey provided', () => {
-            translateService.instant.mockImplementation((key: string) =>
-                key === 'SEO.PRODUCTS' ? 'Products' : key,
-            );
+            translateService.instant.mockImplementation((key: string) => (key === 'SEO.PRODUCTS' ? 'Products' : key));
 
             service.update({ titleKey: 'SEO.PRODUCTS' });
             expect(titleService.getTitle()).toBe('Products | Food Diary');
@@ -51,9 +46,7 @@ describe('SeoService', () => {
         });
 
         it('should set meta description from descriptionKey', () => {
-            translateService.instant.mockImplementation((key: string) =>
-                key === 'SEO.LANDING_DESCRIPTION' ? 'Track your meals' : key,
-            );
+            translateService.instant.mockImplementation((key: string) => (key === 'SEO.LANDING_DESCRIPTION' ? 'Track your meals' : key));
 
             service.update({ descriptionKey: 'SEO.LANDING_DESCRIPTION' });
 
@@ -62,9 +55,7 @@ describe('SeoService', () => {
         });
 
         it('should use default description when descriptionKey is absent', () => {
-            translateService.instant.mockImplementation((key: string) =>
-                key === 'SEO.DEFAULT_DESCRIPTION' ? 'Default description' : key,
-            );
+            translateService.instant.mockImplementation((key: string) => (key === 'SEO.DEFAULT_DESCRIPTION' ? 'Default description' : key));
 
             service.update({});
 
@@ -73,9 +64,7 @@ describe('SeoService', () => {
         });
 
         it('should update OG tags', () => {
-            translateService.instant.mockImplementation((key: string) =>
-                key === 'SEO.MEALS' ? 'Meals' : 'Default',
-            );
+            translateService.instant.mockImplementation((key: string) => (key === 'SEO.MEALS' ? 'Meals' : 'Default'));
 
             service.update({ titleKey: 'SEO.MEALS', path: '/meals' });
 

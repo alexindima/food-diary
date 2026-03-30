@@ -7,4 +7,3 @@ import { Directive, TemplateRef, inject } from '@angular/core';
 export class FdUiEntityCardHeaderDirective {
     public readonly templateRef = inject<TemplateRef<unknown>>(TemplateRef);
 }
-

@@ -9,22 +9,18 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SlicePipe, UpperCasePipe } from '@angular/common';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { UnsavedChangesService } from '../../services/unsaved-changes.service';
-import { UnsavedChangesDialogComponent, UnsavedChangesDialogResult } from '../../components/shared/unsaved-changes-dialog/unsaved-changes-dialog.component';
+import {
+    UnsavedChangesDialogComponent,
+    UnsavedChangesDialogResult,
+} from '../../components/shared/unsaved-changes-dialog/unsaved-changes-dialog.component';
 import { firstValueFrom } from 'rxjs';
 import { DashboardService } from '../../features/dashboard/api/dashboard.service';
 
 @Component({
     selector: 'fd-sidebar',
-    imports: [
-        TranslateModule,
-        RouterModule,
-        FdUiIconModule,
-        MatIconModule,
-        SlicePipe,
-        UpperCasePipe,
-    ],
+    imports: [TranslateModule, RouterModule, FdUiIconModule, MatIconModule, SlicePipe, UpperCasePipe],
     templateUrl: './sidebar.component.html',
-    styleUrls: ['./sidebar.component.scss']
+    styleUrls: ['./sidebar.component.scss'],
 })
 export class SidebarComponent {
     protected readonly Math = Math;
@@ -45,8 +41,8 @@ export class SidebarComponent {
     protected isMobileBodyOpen = signal(false);
     protected isMobileReportsOpen = signal(false);
     protected isMobileUserOpen = signal(false);
-    protected readonly isMobileSheetOpen = computed(() =>
-        this.isMobileFoodOpen() || this.isMobileBodyOpen() || this.isMobileReportsOpen() || this.isMobileUserOpen(),
+    protected readonly isMobileSheetOpen = computed(
+        () => this.isMobileFoodOpen() || this.isMobileBodyOpen() || this.isMobileReportsOpen() || this.isMobileUserOpen(),
     );
     protected readonly dailyConsumedKcal = signal(0);
     protected readonly dailyGoalKcal = signal(0);
@@ -65,10 +61,7 @@ export class SidebarComponent {
             return;
         }
 
-        const subscription = this.userService
-            .getInfo()
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe();
+        const subscription = this.userService.getInfo().pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
 
         onCleanup(() => subscription.unsubscribe());
     });
@@ -80,12 +73,10 @@ export class SidebarComponent {
             return;
         }
 
-        const subscription = this.dashboardService
-            .getSnapshot(new Date(), 1, 1)
-            .subscribe(snapshot => {
-                this.dailyConsumedKcal.set(snapshot?.statistics?.totalCalories ?? 0);
-                this.dailyGoalKcal.set(snapshot?.dailyGoal ?? 0);
-            });
+        const subscription = this.dashboardService.getSnapshot(new Date(), 1, 1).subscribe(snapshot => {
+            this.dailyConsumedKcal.set(snapshot?.statistics?.totalCalories ?? 0);
+            this.dailyGoalKcal.set(snapshot?.dailyGoal ?? 0);
+        });
 
         onCleanup(() => subscription.unsubscribe());
     });

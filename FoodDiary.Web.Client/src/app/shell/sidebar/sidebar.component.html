@@ -88,7 +88,7 @@
                     </div>
                 } @else {
                     <div class="sidebar__avatar">
-                        {{ (user.username || user.email || 'U') | slice:0:1 | uppercase }}
+                        {{ user.username || user.email || 'U' | slice: 0 : 1 | uppercase }}
                     </div>
                 }
                 <div class="sidebar__user-meta">

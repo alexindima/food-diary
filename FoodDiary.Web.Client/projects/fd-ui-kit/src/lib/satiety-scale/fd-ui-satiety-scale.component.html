@@ -1,8 +1,4 @@
-<div
-    class="satiety-scale"
-    [class.satiety-scale--grid]="layout() === 'grid'"
-    [class.satiety-scale--vertical]="layout() === 'vertical'"
->
+<div class="satiety-scale" [class.satiety-scale--grid]="layout() === 'grid'" [class.satiety-scale--vertical]="layout() === 'vertical'">
     @if (label()) {
         <label class="satiety-scale__label">
             {{ label() }}

@@ -1,9 +1,10 @@
 <fd-ui-card class="stats-nutrition-card" [title]="'STATISTICS.NUTRITION_CHARTS_TITLE' | translate">
-    <fd-ui-tabs class="stats-nutrition-card__tabs"
+    <fd-ui-tabs
+        class="stats-nutrition-card__tabs"
         [tabs]="tabs()"
         [selectedValue]="selectedTab()"
         (selectedValueChange)="onTabChange($event)"
-     />
+    />
 
     @if (!hasData()) {
         <p class="stats-nutrition-card__empty">{{ 'STATISTICS.NO_DATA' | translate }}</p>

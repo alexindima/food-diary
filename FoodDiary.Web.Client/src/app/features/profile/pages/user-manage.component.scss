@@ -31,7 +31,10 @@
             color: #fff;
             border: none;
             box-shadow: 0 12px 26px rgba(37, 99, 235, 0.26);
-            transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+            transition:
+                transform 0.15s ease,
+                box-shadow 0.15s ease,
+                filter 0.15s ease;
 
             &:hover {
                 transform: translateY(-1px);

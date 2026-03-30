@@ -1,11 +1,7 @@
 <div class="custom-group-wrapper">
     <div class="custom-group">
-        <div
-            class="custom-group__title"
-            [ngStyle]="{ left: titleLeftOffset()}"
-        >
+        <div class="custom-group__title" [ngStyle]="{ left: titleLeftOffset() }">
             <span>{{ title() }}</span>
-
         </div>
         @if (isAccordion()) {
             <button type="button" class="custom-group__toggle" (click)="toggleAccordion()">

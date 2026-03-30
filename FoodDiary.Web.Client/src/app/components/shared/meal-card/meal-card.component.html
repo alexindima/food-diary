@@ -1,6 +1,19 @@
-<div class="meal-card" role="button" tabindex="0" (click)="handleOpen()" (keydown.enter)="handleOpen()" (keydown.space)="handleOpen(); $event.preventDefault()">
+<div
+    class="meal-card"
+    role="button"
+    tabindex="0"
+    (click)="handleOpen()"
+    (keydown.enter)="handleOpen()"
+    (keydown.space)="handleOpen(); $event.preventDefault()"
+>
     <div class="meal-card__thumb">
-        <img [ngSrc]="coverImage()" width="96" height="96" [alt]="meal().mealType ? (('MEAL_CARD.MEAL_TYPES.' + meal().mealType) | translate) : ('MEAL_CARD.MEAL_TYPES.OTHER' | translate)" loading="lazy" />
+        <img
+            [ngSrc]="coverImage()"
+            width="96"
+            height="96"
+            [alt]="meal().mealType ? ('MEAL_CARD.MEAL_TYPES.' + meal().mealType | translate) : ('MEAL_CARD.MEAL_TYPES.OTHER' | translate)"
+            loading="lazy"
+        />
     </div>
 
     <div class="meal-card__content">
@@ -8,23 +21,21 @@
             <div class="meal-card__title-row">
                 <div class="meal-card__title">
                     @if (meal().mealType) {
-                        {{ ('MEAL_CARD.MEAL_TYPES.' + meal().mealType) | translate }}
+                        {{ 'MEAL_CARD.MEAL_TYPES.' + meal().mealType | translate }}
                     } @else {
                         {{ 'MEAL_CARD.MEAL_TYPES.OTHER' | translate }}
                     }
                 </div>
                 <div class="meal-card__time">
-                    {{ meal().date | date:'HH:mm' }}
+                    {{ meal().date | date: 'HH:mm' }}
                 </div>
             </div>
-            <div class="meal-card__items">
-                {{ 'MEAL_CARD.ITEM_COUNT' | translate }}: {{ itemCount() }}
-            </div>
+            <div class="meal-card__items">{{ 'MEAL_CARD.ITEM_COUNT' | translate }}: {{ itemCount() }}</div>
         </div>
 
         <div class="meal-card__calories">
             <span class="meal-card__calories-value">
-                {{ meal().totalCalories | number:'1.0-0' }}
+                {{ meal().totalCalories | number: '1.0-0' }}
             </span>
             <span class="meal-card__calories-unit">{{ 'MEAL_CARD.KCAL' | translate }}</span>
         </div>

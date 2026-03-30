@@ -1,4 +1,3 @@
-
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
 export type FdUiAccentSide = 'top' | 'right' | 'bottom' | 'left';

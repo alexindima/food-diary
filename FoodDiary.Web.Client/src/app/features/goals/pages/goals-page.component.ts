@@ -302,9 +302,7 @@ export class GoalsPageComponent implements OnInit {
         return { ...cfg, value, percent, accent, gradient, shortfall, inRange };
     });
 
-    protected readonly coreMacroStates = computed(() =>
-        this.macroStates().filter(macro => macro.key !== 'fiber'),
-    );
+    protected readonly coreMacroStates = computed(() => this.macroStates().filter(macro => macro.key !== 'fiber'));
 
     protected readonly fiberMacroState = computed(() => this.macroStates().find(m => m.key === 'fiber'));
     protected readonly currentBodyTargets = computed(() =>
@@ -506,7 +504,10 @@ export class GoalsPageComponent implements OnInit {
         this.reapplyPresetIfNeeded();
     }
 
-    private calculateRingDistances(event: PointerEvent, ring: HTMLElement): {
+    private calculateRingDistances(
+        event: PointerEvent,
+        ring: HTMLElement,
+    ): {
         rect: DOMRect;
         centerX: number;
         centerY: number;

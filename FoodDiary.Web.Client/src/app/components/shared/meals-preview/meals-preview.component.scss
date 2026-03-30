@@ -47,7 +47,11 @@
     background: rgba(37, 99, 235, 0.03);
     color: variables.$color-text-main;
     cursor: pointer;
-    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+    transition:
+        transform 0.15s ease,
+        box-shadow 0.15s ease,
+        border-color 0.15s ease,
+        background 0.15s ease;
     width: 100%;
     text-align: left;
 
@@ -104,4 +108,3 @@
 .meals-preview__meal-card {
     width: 100%;
 }
-

@@ -7,7 +7,8 @@
         <ng-container fdPageHeaderActions>
             @if (isMobileView()) {
                 <div class="product-list__mobile-toolbar">
-                    <fd-ui-button class="product-list__icon-button product-list__filter-button"
+                    <fd-ui-button
+                        class="product-list__icon-button product-list__filter-button"
                         variant="secondary"
                         fill="outline"
                         icon="filter_alt"
@@ -35,7 +36,8 @@
             } @else {
                 <div class="product-list__controls">
                     <form class="product-list__search-form" [formGroup]="searchForm">
-                        <fd-ui-input class="product-list__search-input"
+                        <fd-ui-input
+                            class="product-list__search-input"
                             formControlName="search"
                             size="md"
                             [label]="'PRODUCT_LIST.SEARCH_LABEL' | translate"
@@ -44,11 +46,12 @@
                             [suffixButtonIcon]="'qr_code_scanner'"
                             [suffixButtonAriaLabel]="'PRODUCT_LIST.SCAN_BARCODE' | translate"
                             (suffixButtonClicked)="openBarcodeScanner()"
-                         />
+                        />
                     </form>
 
                     <div class="product-list__filters">
-                        <fd-ui-button class="product-list__icon-button product-list__filter-button"
+                        <fd-ui-button
+                            class="product-list__icon-button product-list__filter-button"
                             variant="secondary"
                             fill="outline"
                             icon="filter_alt"
@@ -71,10 +74,10 @@
             }
         </ng-container>
         @if (isMobileView()) {
-            <div fdPageHeaderExtra class="product-list__mobile-search"
-                [class.product-list__mobile-search--open]="isMobileSearchVisible">
+            <div fdPageHeaderExtra class="product-list__mobile-search" [class.product-list__mobile-search--open]="isMobileSearchVisible">
                 <form class="product-list__search-form product-list__search-form--mobile" [formGroup]="searchForm">
-                    <fd-ui-input class="product-list__search-input"
+                    <fd-ui-input
+                        class="product-list__search-input"
                         formControlName="search"
                         size="md"
                         [label]="'PRODUCT_LIST.SEARCH_LABEL' | translate"
@@ -152,13 +155,13 @@
         }
 
         @if (productData.totalPages > 1) {
-            <fd-ui-pagination class="product-list__pagination"
+            <fd-ui-pagination
+                class="product-list__pagination"
                 [length]="productData.totalItems"
                 [pageSize]="pageSize"
                 [pageIndex]="currentPageIndex"
                 (pageIndexChange)="onPageChange($event)"
-             />
+            />
         }
     </fd-page-body>
 </div>
-

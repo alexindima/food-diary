@@ -1,8 +1,4 @@
-<fd-ui-card
-    class="product-manage__card product-manage__card--basic"
-    appearance="entry"
-    [title]="'PRODUCT_MANAGE.BASIC_INFO' | translate"
->
+<fd-ui-card class="product-manage__card product-manage__card--basic" appearance="entry" [title]="'PRODUCT_MANAGE.BASIC_INFO' | translate">
     <div class="product-manage__hero">
         <div class="product-manage__image">
             <fd-image-upload-field
@@ -15,40 +11,44 @@
             />
         </div>
         <div class="product-manage__hero-field">
-            <fd-ui-input [formControl]="formGroup().controls.name"
+            <fd-ui-input
+                [formControl]="formGroup().controls.name"
                 size="lg"
                 [label]="'PRODUCT_MANAGE.NAME' | translate"
                 [placeholder]="'PRODUCT_MANAGE.NAME_PLACEHOLDER' | translate"
                 [required]="true"
                 [error]="getControlError()('name')"
-             />
+            />
         </div>
         <div class="product-manage__hero-field">
-            <fd-ui-input [formControl]="formGroup().controls.brand"
+            <fd-ui-input
+                [formControl]="formGroup().controls.brand"
                 size="lg"
                 [label]="'PRODUCT_MANAGE.BRAND' | translate"
                 [placeholder]="'PRODUCT_MANAGE.BRAND_PLACEHOLDER' | translate"
-             />
+            />
         </div>
         <div class="product-manage__hero-field">
-            <fd-ui-input [formControl]="formGroup().controls.barcode"
+            <fd-ui-input
+                [formControl]="formGroup().controls.barcode"
                 size="lg"
                 [label]="'PRODUCT_MANAGE.BARCODE' | translate"
                 [placeholder]="'PRODUCT_MANAGE.BARCODE_PLACEHOLDER' | translate"
                 [suffixButtonIcon]="'qr_code_scanner'"
                 [suffixButtonAriaLabel]="'PRODUCT_MANAGE.SCAN_BARCODE' | translate"
                 (suffixButtonClicked)="openBarcodeScanner.emit()"
-             />
+            />
         </div>
     </div>
     <div class="product-manage__basic-grid">
         <div class="product-manage__field product-manage__field--full">
-            <fd-ui-select [formControl]="formGroup().controls.productType"
+            <fd-ui-select
+                [formControl]="formGroup().controls.productType"
                 [label]="'PRODUCT_MANAGE.PRODUCT_TYPE' | translate"
                 [placeholder]="'PRODUCT_MANAGE.PRODUCT_TYPE_PLACEHOLDER' | translate"
                 [options]="productTypeOptions()"
                 [error]="getControlError()('productType')"
-             />
+            />
         </div>
         <div class="product-manage__field product-manage__field--full">
             <fd-ui-textarea
@@ -60,20 +60,22 @@
         </div>
         <div class="product-manage__serving-row product-manage__field--full">
             <div class="product-manage__serving-part">
-                <fd-ui-input [formControl]="formGroup().controls.defaultPortionAmount"
+                <fd-ui-input
+                    [formControl]="formGroup().controls.defaultPortionAmount"
                     type="number"
                     [label]="'PRODUCT_MANAGE.DEFAULT_PORTION_AMOUNT' | translate"
                     [placeholder]="'PRODUCT_MANAGE.DEFAULT_PORTION_PLACEHOLDER' | translate"
                     [required]="true"
                     [error]="getControlError()('defaultPortionAmount')"
-                 />
+                />
             </div>
             <div class="product-manage__serving-part">
-                <fd-ui-select [formControl]="formGroup().controls.baseUnit"
+                <fd-ui-select
+                    [formControl]="formGroup().controls.baseUnit"
                     [label]="'PRODUCT_MANAGE.DEFAULT_SERVING_UNIT' | translate"
                     [options]="unitOptions()"
                     [error]="getControlError()('baseUnit')"
-                 />
+                />
             </div>
         </div>
     </div>
@@ -86,18 +88,20 @@
 >
     <div class="product-manage__basic-grid">
         <div class="product-manage__field product-manage__field--full">
-            <fd-ui-select [formControl]="formGroup().controls.visibility"
+            <fd-ui-select
+                [formControl]="formGroup().controls.visibility"
                 [label]="'PRODUCT_MANAGE.VISIBILITY' | translate"
                 [options]="visibilityOptions()"
                 [error]="getControlError()('visibility')"
-             />
+            />
         </div>
         <div class="product-manage__field product-manage__field--full">
-            <fd-ui-textarea [formControl]="formGroup().controls.comment"
+            <fd-ui-textarea
+                [formControl]="formGroup().controls.comment"
                 [label]="'PRODUCT_MANAGE.COMMENT' | translate"
                 [placeholder]="'PRODUCT_MANAGE.COMMENT_PLACEHOLDER' | translate"
                 [rows]="4"
-             />
+            />
         </div>
     </div>
 </fd-ui-card>

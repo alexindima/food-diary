@@ -27,9 +27,9 @@ export class AppComponent implements OnInit {
     public ngOnInit(): void {
         this.router.events
             .pipe(
-                filter((event) => event instanceof NavigationEnd),
+                filter(event => event instanceof NavigationEnd),
                 map(() => this.getDeepestRoute(this.activatedRoute)),
-                mergeMap((route) => route.data.pipe(map((data) => ({ data, url: this.router.url })))),
+                mergeMap(route => route.data.pipe(map(data => ({ data, url: this.router.url })))),
                 takeUntilDestroyed(this.destroyRef),
             )
             .subscribe(({ data, url }) => {

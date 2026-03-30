@@ -140,9 +140,7 @@ export class RecipeStepCardComponent {
     private getProductUnit(ingredientIndex: number): string | null {
         const foodControl = this.ingredients.at(ingredientIndex).controls.food;
         const unit = foodControl.value?.baseUnit;
-        return unit
-            ? this.translateService.instant('PRODUCT_AMOUNT_UNITS.' + unit.toUpperCase())
-            : null;
+        return unit ? this.translateService.instant('PRODUCT_AMOUNT_UNITS.' + unit.toUpperCase()) : null;
     }
 
     private commitStepTitle(): void {

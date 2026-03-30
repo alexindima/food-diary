@@ -2,9 +2,15 @@
     <div class="fd-notice__main">
         <div class="fd-notice__icon" aria-hidden="true">
             @switch (type()) {
-                @case ('warning') { ! }
-                @case ('error') { x }
-                @default { i }
+                @case ('warning') {
+                    !
+                }
+                @case ('error') {
+                    x
+                }
+                @default {
+                    i
+                }
             }
         </div>
         <div class="fd-notice__text">

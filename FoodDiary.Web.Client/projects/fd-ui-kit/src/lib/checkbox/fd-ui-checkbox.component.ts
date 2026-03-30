@@ -1,10 +1,4 @@
-
-import {
-    ChangeDetectionStrategy,
-    Component,
-    forwardRef,
-    input, model
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, forwardRef, input, model } from '@angular/core';
 import { MatCheckboxChange, MatCheckboxModule } from '@angular/material/checkbox';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 

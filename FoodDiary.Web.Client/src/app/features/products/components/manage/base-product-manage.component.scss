@@ -178,9 +178,7 @@
     &__hero {
         --fd-product-input-height: 48px;
         --fd-product-input-subscript: 18px;
-        --fd-product-image-size: calc(
-            (var(--fd-product-input-height) + var(--fd-product-input-subscript)) * 3 + #{variables.$gap-l * 2}
-        );
+        --fd-product-image-size: calc((var(--fd-product-input-height) + var(--fd-product-input-subscript)) * 3 + #{variables.$gap-l * 2});
         display: grid;
         grid-template-columns: var(--fd-product-image-size) minmax(0, 1fr);
         grid-template-rows: repeat(3, minmax(0, auto));
@@ -470,4 +468,3 @@
         }
     }
 }
-

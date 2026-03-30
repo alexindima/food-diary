@@ -15,14 +15,7 @@ export interface CalorieGoalDialogData {
 @Component({
     selector: 'fd-calorie-goal-dialog',
     standalone: true,
-    imports: [
-        ReactiveFormsModule,
-        TranslatePipe,
-        FdUiDialogComponent,
-        FdUiInputComponent,
-        FdUiButtonComponent,
-        FdUiDialogFooterDirective,
-    ],
+    imports: [ReactiveFormsModule, TranslatePipe, FdUiDialogComponent, FdUiInputComponent, FdUiButtonComponent, FdUiDialogFooterDirective],
     templateUrl: './calorie-goal-dialog.component.html',
     styleUrls: ['./calorie-goal-dialog.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,

@@ -17,9 +17,7 @@ export function applyAlpha(hexColor: string, alpha: number): string {
 
 export const TICK_COLOR = '#475569';
 
-export function createCaloriesLineChartOptions(
-    formatTooltip: (label: string, value: number) => string,
-): ChartConfiguration['options'] {
+export function createCaloriesLineChartOptions(formatTooltip: (label: string, value: number) => string): ChartConfiguration['options'] {
     return {
         responsive: true,
         maintainAspectRatio: false,
@@ -66,9 +64,7 @@ export const nutrientsLineChartOptions: ChartConfiguration['options'] = {
     },
 };
 
-export function createPieChartOptions(
-    formatTooltip: (label: string, value: number) => string,
-): ChartOptions<'pie'> {
+export function createPieChartOptions(formatTooltip: (label: string, value: number) => string): ChartOptions<'pie'> {
     return {
         plugins: {
             tooltip: {

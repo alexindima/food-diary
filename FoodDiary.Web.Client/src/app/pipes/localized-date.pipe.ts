@@ -11,7 +11,7 @@ export class LocalizedDatePipe implements PipeTransform {
     private locale = this.translateService.getCurrentLang() ?? 'en-US';
 
     public constructor() {
-        this.translateService.onLangChange.subscribe(e => this.locale = e.lang);
+        this.translateService.onLangChange.subscribe(e => (this.locale = e.lang));
     }
 
     public transform(value: Date | string | number | null | undefined, pattern = 'mediumDate'): string | undefined {

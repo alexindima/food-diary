@@ -42,7 +42,8 @@ export const TwoOptions: Story = {
                 ],
                 selected,
             },
-            template: '<fd-ui-segmented-toggle [options]="options" [(selectedValue)]="selected" ariaLabel="Unit system"></fd-ui-segmented-toggle>',
+            template:
+                '<fd-ui-segmented-toggle [options]="options" [(selectedValue)]="selected" ariaLabel="Unit system"></fd-ui-segmented-toggle>',
         };
     },
 };
@@ -60,7 +61,8 @@ export const FourOptions: Story = {
                 ],
                 selected,
             },
-            template: '<fd-ui-segmented-toggle [options]="options" [(selectedValue)]="selected" ariaLabel="Meal filter"></fd-ui-segmented-toggle>',
+            template:
+                '<fd-ui-segmented-toggle [options]="options" [(selectedValue)]="selected" ariaLabel="Meal filter"></fd-ui-segmented-toggle>',
         };
     },
 };

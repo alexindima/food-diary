@@ -65,7 +65,10 @@
         cursor: pointer;
         text-align: left;
         box-shadow: 0 4px 18px rgba(15, 23, 42, 0.08);
-        transition: transform 0.25s ease, box-shadow 0.25s ease, border 0.25s ease;
+        transition:
+            transform 0.25s ease,
+            box-shadow 0.25s ease,
+            border 0.25s ease;
         border: 1px solid rgba(15, 23, 42, 0.05);
 
         &:hover:not(:disabled) {
@@ -97,7 +100,9 @@
         font-weight: 600;
         color: #0f172a;
         flex-shrink: 0;
-        transition: background 0.25s ease, color 0.25s ease;
+        transition:
+            background 0.25s ease,
+            color 0.25s ease;
     }
 
     &__number {

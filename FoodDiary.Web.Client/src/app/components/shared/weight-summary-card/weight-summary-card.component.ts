@@ -51,9 +51,7 @@ export class WeightSummaryCardComponent {
 
         let status: TrendStatus = 'neutral';
         if (desired !== null && desired !== undefined) {
-            const isImproving =
-                (diff < 0 && latest > desired) ||
-                (diff > 0 && latest < desired);
+            const isImproving = (diff < 0 && latest > desired) || (diff > 0 && latest < desired);
             status = isImproving ? 'positive' : 'negative';
         }
 

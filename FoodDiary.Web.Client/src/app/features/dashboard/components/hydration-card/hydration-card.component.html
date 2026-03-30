@@ -7,14 +7,7 @@
     <div class="hydration-card__header">
         <div class="hydration-card__title">{{ title() | translate }}</div>
         @if (canAdd()) {
-            <fd-ui-button
-                size="sm"
-                variant="primary"
-                fill="solid"
-                class="hydration-card__add"
-                [disabled]="isLoading()"
-                (click)="onAdd()"
-            >
+            <fd-ui-button size="sm" variant="primary" fill="solid" class="hydration-card__add" [disabled]="isLoading()" (click)="onAdd()">
                 +{{ addStep() }} {{ 'GENERAL.UNITS.ML' | translate }}
             </fd-ui-button>
         }

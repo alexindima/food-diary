@@ -49,7 +49,9 @@
     border: none;
     border-radius: variables.$border-radius-s;
     cursor: pointer;
-    transition: background-color 0.2s, transform 0.2s;
+    transition:
+        background-color 0.2s,
+        transform 0.2s;
 }
 
 .not-found__button--primary {
@@ -76,4 +78,3 @@
 .not-found__button:active {
     transform: scale(1);
 }
-

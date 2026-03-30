@@ -12,11 +12,7 @@ describe('DashboardService', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [
-                DashboardService,
-                provideHttpClient(),
-                provideHttpClientTesting(),
-            ],
+            providers: [DashboardService, provideHttpClient(), provideHttpClientTesting()],
         });
 
         service = TestBed.inject(DashboardService);
@@ -39,11 +35,12 @@ describe('DashboardService', () => {
             expect(result).toEqual(mockSnapshot as any);
         });
 
-        const req = httpMock.expectOne(r =>
-            r.url === `${baseUrl}/` &&
-            r.params.get('date') === date.toISOString() &&
-            r.params.get('page') === '1' &&
-            r.params.get('pageSize') === '10',
+        const req = httpMock.expectOne(
+            r =>
+                r.url === `${baseUrl}/` &&
+                r.params.get('date') === date.toISOString() &&
+                r.params.get('page') === '1' &&
+                r.params.get('pageSize') === '10',
         );
         expect(req.request.method).toBe('GET');
         req.flush(mockSnapshot);
@@ -57,13 +54,14 @@ describe('DashboardService', () => {
             expect(result).toEqual(mockSnapshot as any);
         });
 
-        const req = httpMock.expectOne(r =>
-            r.url === `${baseUrl}/` &&
-            r.params.get('date') === date.toISOString() &&
-            r.params.get('page') === '2' &&
-            r.params.get('pageSize') === '20' &&
-            r.params.get('locale') === 'en' &&
-            r.params.get('trendDays') === '7',
+        const req = httpMock.expectOne(
+            r =>
+                r.url === `${baseUrl}/` &&
+                r.params.get('date') === date.toISOString() &&
+                r.params.get('page') === '2' &&
+                r.params.get('pageSize') === '20' &&
+                r.params.get('locale') === 'en' &&
+                r.params.get('trendDays') === '7',
         );
         expect(req.request.method).toBe('GET');
         req.flush(mockSnapshot);

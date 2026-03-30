@@ -1,25 +1,25 @@
 .admin-dashboard {
-  display: grid;
-  gap: 1rem;
+    display: grid;
+    gap: 1rem;
 }
 
 .admin-dashboard__grid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 1rem;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1rem;
 }
 
 .admin-dashboard__stat {
-  display: grid;
-  gap: 0.25rem;
+    display: grid;
+    gap: 0.25rem;
 }
 
 .admin-dashboard__label {
-  color: #6b7280;
-  font-size: 0.875rem;
+    color: #6b7280;
+    font-size: 0.875rem;
 }
 
 .admin-dashboard__value {
-  font-size: 1.5rem;
-  font-weight: 700;
+    font-size: 1.5rem;
+    font-weight: 700;
 }

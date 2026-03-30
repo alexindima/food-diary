@@ -1,14 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-    ChangeDetectionStrategy,
-    Component,
-    DestroyRef,
-    OnInit,
-    computed,
-    effect,
-    inject,
-    signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, computed, effect, inject, signal } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -141,21 +132,15 @@ export class StatisticsComponent implements OnInit {
 
     // ── Computed signals ───────────────────────────────────────────────
 
-    public readonly currentRange = computed<DateRange>(() =>
-        getCurrentDateRange(this.selectedRange(), this.customRangeControl.value),
-    );
+    public readonly currentRange = computed<DateRange>(() => getCurrentDateRange(this.selectedRange(), this.customRangeControl.value));
 
-    public readonly summaryMetrics = computed(() =>
-        buildSummaryMetrics(this.chartStatisticsData()),
-    );
+    public readonly summaryMetrics = computed(() => buildSummaryMetrics(this.chartStatisticsData()));
 
     public readonly macroSparklineData = computed(() =>
         buildMacroSparklineData(this.chartStatisticsData(), date => this.formatDateLabel(date)),
     );
 
-    public readonly hasStatisticsData = computed(() =>
-        (this.chartStatisticsData()?.calories.length ?? 0) > 0,
-    );
+    public readonly hasStatisticsData = computed(() => (this.chartStatisticsData()?.calories.length ?? 0) > 0);
 
     public readonly caloriesLineChartData = computed(() =>
         buildCaloriesLineChartData(this.chartStatisticsData(), date => this.formatDateLabel(date)),
@@ -204,11 +189,7 @@ export class StatisticsComponent implements OnInit {
             }
 
             const heightM = heightCm / 100;
-            return buildBodyChartData(
-                this.weightSummaryPoints(),
-                point => point.averageWeight / (heightM * heightM),
-                formatLabel,
-            );
+            return buildBodyChartData(this.weightSummaryPoints(), point => point.averageWeight / (heightM * heightM), formatLabel);
         }
 
         if (selectedTab === 'whtr') {
@@ -217,20 +198,14 @@ export class StatisticsComponent implements OnInit {
                 return null;
             }
 
-            return buildBodyChartData(
-                this.waistSummaryPoints(),
-                point => point.averageCircumference / heightCm,
-                formatLabel,
-            );
+            return buildBodyChartData(this.waistSummaryPoints(), point => point.averageCircumference / heightCm, formatLabel);
         }
 
         return null;
     });
 
     public readonly hasBodyData = computed(
-        () =>
-            !!this.bodyChartData() &&
-            (this.bodyChartData()!.datasets[0].data as (number | null)[]).some(value => value !== null),
+        () => !!this.bodyChartData() && (this.bodyChartData()!.datasets[0].data as (number | null)[]).some(value => value !== null),
     );
 
     // ── Reactive plumbing ──────────────────────────────────────────────

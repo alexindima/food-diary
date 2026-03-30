@@ -3,7 +3,7 @@
         class="image-upload-field__dropzone"
         role="button"
         tabindex="0"
-        [attr.aria-label]="('IMAGE_UPLOAD_FIELD.SELECT_FILE' | translate)"
+        [attr.aria-label]="'IMAGE_UPLOAD_FIELD.SELECT_FILE' | translate"
         [class.image-upload-field__dropzone--dragging]="isDragging"
         [class.image-upload-field__dropzone--uploading]="isUploading"
         [class.image-upload-field__dropzone--has-image]="!!selection.url"
@@ -49,10 +49,10 @@
                     {{ 'IMAGE_UPLOAD_FIELD.DROP_HERE' | translate }}
                 </div>
                 <div class="image-upload-field__sub-text">
-                    {{ description() || ( 'IMAGE_UPLOAD_FIELD.DEFAULT_DESCRIPTION' | translate:{ maxSizeMb: maxSizeMb() } ) }}
+                    {{ description() || ('IMAGE_UPLOAD_FIELD.DEFAULT_DESCRIPTION' | translate: { maxSizeMb: maxSizeMb() }) }}
                 </div>
                 <div class="image-upload-field__hint">
-                    {{ 'IMAGE_UPLOAD_FIELD.RECOMMENDED' | translate:{ size: recommendedSize() } }}
+                    {{ 'IMAGE_UPLOAD_FIELD.RECOMMENDED' | translate: { size: recommendedSize() } }}
                 </div>
             </div>
         }
@@ -85,7 +85,9 @@
                         />
                     </div>
                     <div class="image-upload-field__cropper-actions">
-                        <fd-ui-button type="button" variant="secondary" fill="ghost" (click)="cancelCrop()">{{ 'COMMON.CANCEL' | translate }}</fd-ui-button>
+                        <fd-ui-button type="button" variant="secondary" fill="ghost" (click)="cancelCrop()">{{
+                            'COMMON.CANCEL' | translate
+                        }}</fd-ui-button>
                         <fd-ui-button type="button" variant="primary" icon="check" (click)="confirmCrop()">
                             {{ 'IMAGE_UPLOAD_FIELD.APPLY' | translate }}
                         </fd-ui-button>

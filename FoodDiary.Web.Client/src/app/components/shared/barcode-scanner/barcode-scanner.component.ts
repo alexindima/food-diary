@@ -32,8 +32,21 @@ export class BarcodeScannerComponent implements OnInit {
             return;
         }
         this.detector = new BarcodeDetector({
-            formats: ['ean_13', 'ean_8', 'upc_a', 'upc_e', 'code_128', 'code_39', 'code_93',
-                       'codabar', 'itf', 'qr_code', 'data_matrix', 'pdf417', 'aztec'],
+            formats: [
+                'ean_13',
+                'ean_8',
+                'upc_a',
+                'upc_e',
+                'code_128',
+                'code_39',
+                'code_93',
+                'codabar',
+                'itf',
+                'qr_code',
+                'data_matrix',
+                'pdf417',
+                'aztec',
+            ],
         });
         this.startCamera();
         this.destroyRef.onDestroy(() => this.stopCamera());
@@ -79,7 +92,9 @@ export class BarcodeScannerComponent implements OnInit {
                         this.dialogRef.close(barcodes[0].rawValue);
                         return;
                     }
-                } catch { /* ignore detection errors */ }
+                } catch {
+                    /* ignore detection errors */
+                }
             }
             this.scanLoop();
         });

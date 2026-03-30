@@ -363,6 +363,25 @@ jobs:
             exit "$status"
           fi
 
+      - name: Check formatting
+        shell: bash
+        working-directory: FoodDiary.Web.Client
+        run: |
+          set -euo pipefail
+          log_file="${RUNNER_TEMP}/frontend-checks-logs/prettier.log"
+          set +e
+          npx prettier --check "src/**/*.{ts,html}" "projects/**/*.{ts,html}" 2>&1 | tee "$log_file"
+          status=${PIPESTATUS[0]}
+          set -e
+          if [ "$status" -ne 0 ]; then
+            {
+              echo "FAILED_AREA=frontend"
+              echo "FAILED_TARGET=Check formatting"
+              echo "FAILED_LOG_FILE_NAME=$(basename "$log_file")"
+            } > "${RUNNER_TEMP}/frontend-checks-logs/failure-meta.env"
+            exit "$status"
+          fi
+
       - name: Run frontend unit tests
         shell: bash
         working-directory: FoodDiary.Web.Client

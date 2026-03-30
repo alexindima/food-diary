@@ -1,14 +1,4 @@
-
-import {
-    ChangeDetectionStrategy,
-    Component,
-    DestroyRef,
-    OnInit,
-    computed,
-    inject,
-    signal,
-    viewChild
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, computed, inject, signal, viewChild } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 import { NavigationService } from '../../../services/navigation.service';
@@ -26,9 +16,7 @@ import { DashboardService } from '../api/dashboard.service';
 import { DashboardSnapshot } from '../models/dashboard.data';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { CalorieGoalDialogComponent } from '../../goals/dialogs/calorie-goal-dialog/calorie-goal-dialog.component';
-import {
-    DashboardSummaryCardComponent,
-} from '../../../components/shared/dashboard-summary-card/dashboard-summary-card.component';
+import { DashboardSummaryCardComponent } from '../../../components/shared/dashboard-summary-card/dashboard-summary-card.component';
 import { HydrationService } from '../../hydration/api/hydration.service';
 import { HydrationCardComponent } from '../components/hydration-card/hydration-card.component';
 import { WeightTrendCardComponent } from '../components/weight-trend-card/weight-trend-card.component';
@@ -57,25 +45,25 @@ import {
     selector: 'fd-dashboard',
     standalone: true,
     imports: [
-    TranslatePipe,
-    FdUiButtonComponent,
-    FdUiDatepickerModule,
-    FdUiInputFieldModule,
-    FdUiFormFieldModule,
-    FdUiNativeDateModule,
-    FdUiIconModule,
-    PageBodyComponent,
-    FdPageContainerDirective,
-    LocalizedDatePipe,
-    DashboardSummaryCardComponent,
-    HydrationCardComponent,
-    WeightTrendCardComponent,
-    DailyAdviceCardComponent,
-    CycleSummaryCardComponent,
-    MealsPreviewComponent,
-    NoticeBannerComponent,
-    FdUiLoaderComponent
-],
+        TranslatePipe,
+        FdUiButtonComponent,
+        FdUiDatepickerModule,
+        FdUiInputFieldModule,
+        FdUiFormFieldModule,
+        FdUiNativeDateModule,
+        FdUiIconModule,
+        PageBodyComponent,
+        FdPageContainerDirective,
+        LocalizedDatePipe,
+        DashboardSummaryCardComponent,
+        HydrationCardComponent,
+        WeightTrendCardComponent,
+        DailyAdviceCardComponent,
+        CycleSummaryCardComponent,
+        MealsPreviewComponent,
+        NoticeBannerComponent,
+        FdUiLoaderComponent,
+    ],
     providers: [DashboardLayoutService],
     templateUrl: './dashboard.component.html',
     styleUrl: './dashboard.component.scss',
@@ -112,7 +100,7 @@ export class DashboardComponent implements OnInit {
     public readonly previousWaist = computed(() => this.snapshot()?.waist.previous?.circumference ?? null);
     public readonly desiredWaist = computed(() => this.snapshot()?.waist.desired ?? null);
     public readonly weeklyConsumed = computed(() =>
-        (this.snapshot()?.weeklyCalories ?? []).reduce((sum, point) => sum + (point?.calories ?? 0), 0)
+        (this.snapshot()?.weeklyCalories ?? []).reduce((sum, point) => sum + (point?.calories ?? 0), 0),
     );
     private readonly isHydrationUpdating = signal<boolean>(false);
     private readonly trendDays = 7;
@@ -128,18 +116,12 @@ export class DashboardComponent implements OnInit {
     public readonly isCycleLoading = signal<boolean>(false);
 
     // Trend signals
-    public readonly weightTrend = createWeightTrendSignals(
-        this.weightTrendPoints, this.latestWeight, this.selectedDate, this.trendDays,
-    );
-    public readonly waistTrend = createWaistTrendSignals(
-        this.waistTrendPoints, this.latestWaist, this.selectedDate, this.trendDays,
-    );
+    public readonly weightTrend = createWeightTrendSignals(this.weightTrendPoints, this.latestWeight, this.selectedDate, this.trendDays);
+    public readonly waistTrend = createWaistTrendSignals(this.waistTrendPoints, this.latestWaist, this.selectedDate, this.trendDays);
 
     // Nutrition signals
     public readonly nutrientBars = createNutrientBarsSignal(this.snapshot);
-    public readonly consumptionRingData = createConsumptionRingSignal(
-        this.snapshot, this.weeklyConsumed, this.nutrientBars,
-    );
+    public readonly consumptionRingData = createConsumptionRingSignal(this.snapshot, this.weeklyConsumed, this.nutrientBars);
     public readonly mealPreviewEntries = createMealPreviewSignal(this.meals, this.isTodaySelected);
 
     public readonly placeholderIcon = placeholderIcon;
@@ -162,9 +144,7 @@ export class DashboardComponent implements OnInit {
                 .subscribe(() => this.layout.updateViewportWidth(window.innerWidth));
         }
 
-        this.translateService.onLangChange
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => this.loadDashboardSnapshot(false));
+        this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.loadDashboardSnapshot(false));
     }
 
     public openDatePicker(): void {

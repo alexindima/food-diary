@@ -244,9 +244,7 @@ export class RecipeListComponent implements OnInit {
     }
 
     public get allRecipesSectionLabelKey(): string {
-        return this.hasSearchValue(this.searchForm.controls.search.value)
-            ? 'RECIPE_LIST.SEARCH_RESULTS'
-            : 'RECIPE_LIST.ALL_RECIPES';
+        return this.hasSearchValue(this.searchForm.controls.search.value) ? 'RECIPE_LIST.SEARCH_RESULTS' : 'RECIPE_LIST.ALL_RECIPES';
     }
 
     public get isMobileSearchVisible(): boolean {

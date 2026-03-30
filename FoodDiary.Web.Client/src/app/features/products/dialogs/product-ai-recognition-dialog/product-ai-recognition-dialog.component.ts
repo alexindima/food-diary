@@ -54,12 +54,10 @@ export type ProductAiRecognitionResult = {
     ],
 })
 export class ProductAiRecognitionDialogComponent {
-    private readonly dialogData =
-        inject<ProductAiDialogData>(FD_UI_DIALOG_DATA, { optional: true }) ?? {};
-    private readonly dialogRef = inject(
-        FdUiDialogRef<ProductAiRecognitionDialogComponent, ProductAiRecognitionResult | null>,
-        { optional: true },
-    );
+    private readonly dialogData = inject<ProductAiDialogData>(FD_UI_DIALOG_DATA, { optional: true }) ?? {};
+    private readonly dialogRef = inject(FdUiDialogRef<ProductAiRecognitionDialogComponent, ProductAiRecognitionResult | null>, {
+        optional: true,
+    });
     private readonly aiFoodService = inject(AiFoodService);
     private readonly imageUploadService = inject(ImageUploadService);
     private readonly translateService = inject(TranslateService);
@@ -72,10 +70,7 @@ export class ProductAiRecognitionDialogComponent {
     public readonly selection = signal<ImageSelection | null>(null);
     public readonly results = signal<FoodVisionItem[]>([]);
     public readonly nutrition = signal<FoodNutritionResponse | null>(null);
-    public readonly descriptionControl = new FormControl(
-        this.dialogData.initialDescription ?? '',
-        { nonNullable: true },
-    );
+    public readonly descriptionControl = new FormControl(this.dialogData.initialDescription ?? '', { nonNullable: true });
     public readonly resultForm = new FormGroup({
         name: new FormControl('', { nonNullable: true }),
         baseUnit: new FormControl(MeasurementUnit.G, { nonNullable: true }),
@@ -301,11 +296,7 @@ export class ProductAiRecognitionDialogComponent {
         return items.map(item => {
             const baseUnit = this.resolveUnit(item.unit);
             const normalizedUnit = baseUnit === MeasurementUnit.PCS ? 'pcs' : baseUnit.toLowerCase();
-            const normalizedAmount = baseUnit === MeasurementUnit.PCS
-                ? 1
-                : isSingleItem
-                    ? 100
-                    : item.amount;
+            const normalizedAmount = baseUnit === MeasurementUnit.PCS ? 1 : isSingleItem ? 100 : item.amount;
 
             return {
                 ...item,

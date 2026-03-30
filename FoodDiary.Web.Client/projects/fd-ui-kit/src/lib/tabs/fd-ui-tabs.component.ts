@@ -1,10 +1,4 @@
-
-import {
-  ChangeDetectionStrategy,
-  Component,
-  input, model,
-  output
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, model, output } from '@angular/core';
 import { MatTabsModule } from '@angular/material/tabs';
 import { TranslateModule } from '@ngx-translate/core';
 

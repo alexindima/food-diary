@@ -40,37 +40,43 @@ export class EmailVerificationPendingComponent {
 
     public onRefreshStatus(): void {
         this.isChecking.set(true);
-        this.userService.getInfo().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(user => {
-            this.isChecking.set(false);
-            if (!user) {
-                this.statusMessage.set(this.translateService.instant('AUTH.VERIFY_PENDING.ERROR'));
-                return;
-            }
-            this.email.set(user.email);
-            this.authService.setEmailConfirmed(user.isEmailConfirmed);
-            if (user.isEmailConfirmed) {
-                this.statusMessage.set(this.translateService.instant('AUTH.VERIFY_PENDING.SUCCESS'));
-                void this.navigationService.navigateToHome();
-            } else {
-                this.statusMessage.set(this.translateService.instant('AUTH.VERIFY_PENDING.NOT_CONFIRMED'));
-            }
-        });
+        this.userService
+            .getInfo()
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(user => {
+                this.isChecking.set(false);
+                if (!user) {
+                    this.statusMessage.set(this.translateService.instant('AUTH.VERIFY_PENDING.ERROR'));
+                    return;
+                }
+                this.email.set(user.email);
+                this.authService.setEmailConfirmed(user.isEmailConfirmed);
+                if (user.isEmailConfirmed) {
+                    this.statusMessage.set(this.translateService.instant('AUTH.VERIFY_PENDING.SUCCESS'));
+                    void this.navigationService.navigateToHome();
+                } else {
+                    this.statusMessage.set(this.translateService.instant('AUTH.VERIFY_PENDING.NOT_CONFIRMED'));
+                }
+            });
     }
 
     public onResendEmail(): void {
         this.isSending.set(true);
         this.statusMessage.set(null);
-        this.authService.resendEmailVerification().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-            next: () => {
-                this.isSending.set(false);
-                this.statusMessage.set(this.translateService.instant('AUTH.VERIFY_PENDING.RESENT'));
-                this.startResendCooldown();
-            },
-            error: () => {
-                this.isSending.set(false);
-                this.statusMessage.set(this.translateService.instant('AUTH.VERIFY_PENDING.RESEND_ERROR'));
-            },
-        });
+        this.authService
+            .resendEmailVerification()
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe({
+                next: () => {
+                    this.isSending.set(false);
+                    this.statusMessage.set(this.translateService.instant('AUTH.VERIFY_PENDING.RESENT'));
+                    this.startResendCooldown();
+                },
+                error: () => {
+                    this.isSending.set(false);
+                    this.statusMessage.set(this.translateService.instant('AUTH.VERIFY_PENDING.RESEND_ERROR'));
+                },
+            });
     }
 
     private startResendCooldown(seconds = 60): void {
@@ -91,18 +97,21 @@ export class EmailVerificationPendingComponent {
     }
 
     private loadCurrentUser(): void {
-        this.userService.getInfo().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(user => {
-            if (!user) {
-                return;
-            }
-            this.email.set(user.email);
-            this.authService.setEmailConfirmed(user.isEmailConfirmed);
-            if (user.isEmailConfirmed) {
-                void this.navigationService.navigateToHome();
-            } else {
-                this.statusMessage.set(this.translateService.instant('AUTH.VERIFY_PENDING.INITIAL'));
-            }
-        });
+        this.userService
+            .getInfo()
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(user => {
+                if (!user) {
+                    return;
+                }
+                this.email.set(user.email);
+                this.authService.setEmailConfirmed(user.isEmailConfirmed);
+                if (user.isEmailConfirmed) {
+                    void this.navigationService.navigateToHome();
+                } else {
+                    this.statusMessage.set(this.translateService.instant('AUTH.VERIFY_PENDING.INITIAL'));
+                }
+            });
     }
 
     private startRealtime(): void {

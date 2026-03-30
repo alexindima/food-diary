@@ -1,107 +1,108 @@
 <ng-container [formGroup]="formGroup()">
-  <fd-ui-card
-    class="recipe-basic-info__card recipe-basic-info__card--basic"
-    appearance="entry"
-    [title]="'RECIPE_MANAGE.GENERAL_GROUP_TITLE' | translate"
-  >
-    <div class="recipe-basic-info__hero">
-      <div class="recipe-basic-info__image">
-        <fd-image-upload-field
-          formControlName="imageUrl"
-          [description]="'RECIPE_MANAGE.IMAGE_HINT' | translate"
-          [recommendedSize]="'512 x 512'"
-          [maxSizeMb]="10"
-          [acceptedTypes]="'image/png,image/jpeg,image/webp'"
-          [cropEnabled]="true"
-          [cropSize]="512"
-          [cropAspectRatio]="1"
-        />
-      </div>
-      <div class="recipe-basic-info__hero-field">
-        <fd-ui-input
-          formControlName="name"
-          size="lg"
-          [label]="'RECIPE_MANAGE.NAME' | translate"
-          [placeholder]="'RECIPE_MANAGE.NAME_PLACEHOLDER' | translate"
-          [required]="true"
-          [error]="getFieldError('name')"
-         />
-      </div>
-      <div class="recipe-basic-info__hero-field">
-        <fd-ui-input
-          formControlName="category"
-          size="lg"
-          [label]="'RECIPE_MANAGE.CATEGORY' | translate"
-          [placeholder]="'RECIPE_MANAGE.CATEGORY_PLACEHOLDER' | translate"
-         />
-      </div>
-      <div class="recipe-basic-info__hero-field">
-        <fd-ui-input
-          formControlName="cookTime"
-          type="number"
-          [step]="1"
-          size="lg"
-          [label]="'RECIPE_MANAGE.COOK_TIME' | translate"
-          [required]="true"
-          [error]="getFieldError('cookTime')"
-         />
-      </div>
-    </div>
+    <fd-ui-card
+        class="recipe-basic-info__card recipe-basic-info__card--basic"
+        appearance="entry"
+        [title]="'RECIPE_MANAGE.GENERAL_GROUP_TITLE' | translate"
+    >
+        <div class="recipe-basic-info__hero">
+            <div class="recipe-basic-info__image">
+                <fd-image-upload-field
+                    formControlName="imageUrl"
+                    [description]="'RECIPE_MANAGE.IMAGE_HINT' | translate"
+                    [recommendedSize]="'512 x 512'"
+                    [maxSizeMb]="10"
+                    [acceptedTypes]="'image/png,image/jpeg,image/webp'"
+                    [cropEnabled]="true"
+                    [cropSize]="512"
+                    [cropAspectRatio]="1"
+                />
+            </div>
+            <div class="recipe-basic-info__hero-field">
+                <fd-ui-input
+                    formControlName="name"
+                    size="lg"
+                    [label]="'RECIPE_MANAGE.NAME' | translate"
+                    [placeholder]="'RECIPE_MANAGE.NAME_PLACEHOLDER' | translate"
+                    [required]="true"
+                    [error]="getFieldError('name')"
+                />
+            </div>
+            <div class="recipe-basic-info__hero-field">
+                <fd-ui-input
+                    formControlName="category"
+                    size="lg"
+                    [label]="'RECIPE_MANAGE.CATEGORY' | translate"
+                    [placeholder]="'RECIPE_MANAGE.CATEGORY_PLACEHOLDER' | translate"
+                />
+            </div>
+            <div class="recipe-basic-info__hero-field">
+                <fd-ui-input
+                    formControlName="cookTime"
+                    type="number"
+                    [step]="1"
+                    size="lg"
+                    [label]="'RECIPE_MANAGE.COOK_TIME' | translate"
+                    [required]="true"
+                    [error]="getFieldError('cookTime')"
+                />
+            </div>
+        </div>
 
-    <div class="recipe-basic-info__basic-grid">
-      <fd-ui-input
-        formControlName="prepTime"
-        type="number"
-        [step]="1"
-        [label]="'RECIPE_MANAGE.PREP_TIME' | translate"
-        [error]="getFieldError('prepTime')"
-       />
+        <div class="recipe-basic-info__basic-grid">
+            <fd-ui-input
+                formControlName="prepTime"
+                type="number"
+                [step]="1"
+                [label]="'RECIPE_MANAGE.PREP_TIME' | translate"
+                [error]="getFieldError('prepTime')"
+            />
 
-      <fd-ui-input
-        formControlName="servings"
-        type="number"
-        [step]="1"
-        [label]="'RECIPE_MANAGE.SERVINGS' | translate"
-        [required]="true"
-        [error]="getFieldError('servings')"
-       />
+            <fd-ui-input
+                formControlName="servings"
+                type="number"
+                [step]="1"
+                [label]="'RECIPE_MANAGE.SERVINGS' | translate"
+                [required]="true"
+                [error]="getFieldError('servings')"
+            />
 
-      <fd-ui-textarea class="recipe-basic-info__field--full"
-        formControlName="description"
-        [label]="'RECIPE_MANAGE.DESCRIPTION' | translate"
-        [placeholder]="'RECIPE_MANAGE.DESCRIPTION_PLACEHOLDER' | translate"
-        [rows]="3"
-        [maxlength]="1000"
-        [error]="getFieldError('description')"
-       />
-    </div>
-  </fd-ui-card>
+            <fd-ui-textarea
+                class="recipe-basic-info__field--full"
+                formControlName="description"
+                [label]="'RECIPE_MANAGE.DESCRIPTION' | translate"
+                [placeholder]="'RECIPE_MANAGE.DESCRIPTION_PLACEHOLDER' | translate"
+                [rows]="3"
+                [maxlength]="1000"
+                [error]="getFieldError('description')"
+            />
+        </div>
+    </fd-ui-card>
 
-  <fd-ui-card
-    class="recipe-basic-info__card recipe-basic-info__card--basic recipe-basic-info__card--tracking"
-    appearance="entry"
-    [title]="'RECIPE_MANAGE.TRACKING_PREFERENCES' | translate"
-  >
-    <div class="recipe-basic-info__basic-grid">
-      <div class="recipe-basic-info__field recipe-basic-info__field--full">
-        <fd-ui-select
-          formControlName="visibility"
-          [label]="'RECIPE_MANAGE.VISIBILITY' | translate"
-          [required]="true"
-          [options]="visibilitySelectOptions()"
-          [error]="getFieldError('visibility')"
-         />
-      </div>
-      <div class="recipe-basic-info__field recipe-basic-info__field--full">
-        <fd-ui-textarea
-          formControlName="comment"
-          [label]="'RECIPE_MANAGE.COMMENT' | translate"
-          [placeholder]="'RECIPE_MANAGE.COMMENT_PLACEHOLDER' | translate"
-          [rows]="4"
-          [maxlength]="1000"
-          [error]="getFieldError('comment')"
-         />
-      </div>
-    </div>
-  </fd-ui-card>
+    <fd-ui-card
+        class="recipe-basic-info__card recipe-basic-info__card--basic recipe-basic-info__card--tracking"
+        appearance="entry"
+        [title]="'RECIPE_MANAGE.TRACKING_PREFERENCES' | translate"
+    >
+        <div class="recipe-basic-info__basic-grid">
+            <div class="recipe-basic-info__field recipe-basic-info__field--full">
+                <fd-ui-select
+                    formControlName="visibility"
+                    [label]="'RECIPE_MANAGE.VISIBILITY' | translate"
+                    [required]="true"
+                    [options]="visibilitySelectOptions()"
+                    [error]="getFieldError('visibility')"
+                />
+            </div>
+            <div class="recipe-basic-info__field recipe-basic-info__field--full">
+                <fd-ui-textarea
+                    formControlName="comment"
+                    [label]="'RECIPE_MANAGE.COMMENT' | translate"
+                    [placeholder]="'RECIPE_MANAGE.COMMENT_PLACEHOLDER' | translate"
+                    [rows]="4"
+                    [maxlength]="1000"
+                    [error]="getFieldError('comment')"
+                />
+            </div>
+        </div>
+    </fd-ui-card>
 </ng-container>

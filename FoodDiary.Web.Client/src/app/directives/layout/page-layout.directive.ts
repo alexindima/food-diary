@@ -1,14 +1,13 @@
 import { computed, Directive, input } from '@angular/core';
 
 const DEFAULT_BACKGROUND = 'var(--fd-layout-page-background)';
-const DEFAULT_PADDING =
-    'var(--fd-layout-page-vertical-padding) var(--fd-layout-page-horizontal-padding)';
+const DEFAULT_PADDING = 'var(--fd-layout-page-vertical-padding) var(--fd-layout-page-horizontal-padding)';
 
 @Directive({
     selector: '[fdLayoutPage]',
     standalone: true,
     host: {
-        'class': 'fd-layout-page',
+        class: 'fd-layout-page',
         '[style.background]': 'backgroundStyle()',
         '[style.padding]': 'paddingStyle()',
     },

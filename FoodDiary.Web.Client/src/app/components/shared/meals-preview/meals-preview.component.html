@@ -18,17 +18,9 @@
         } @else {
             @for (entry of entries(); track entry.meal?.id ?? entry.slot ?? $index) {
                 @if (entry.meal) {
-                    <fd-meal-card
-                        class="meals-preview__meal-card"
-                        [meal]="entry.meal"
-                        (open)="open.emit(entry.meal!)"
-                    />
+                    <fd-meal-card class="meals-preview__meal-card" [meal]="entry.meal" (open)="open.emit(entry.meal!)" />
                 } @else if (showAddButtons()) {
-                    <button
-                        class="meals-preview__placeholder"
-                        type="button"
-                        (click)="add.emit(entry.slot)"
-                    >
+                    <button class="meals-preview__placeholder" type="button" (click)="add.emit(entry.slot)">
                         <div class="meals-preview__placeholder-left">
                             <div class="meals-preview__placeholder-icon">
                                 <mat-icon>{{ entry.icon || 'restaurant_menu' }}</mat-icon>

@@ -80,9 +80,7 @@
     &__hero {
         --fd-recipe-input-height: 48px;
         --fd-recipe-input-subscript: 18px;
-        --fd-recipe-image-size: calc(
-            (var(--fd-recipe-input-height) + var(--fd-recipe-input-subscript)) * 3 + #{variables.$gap-l * 2}
-        );
+        --fd-recipe-image-size: calc((var(--fd-recipe-input-height) + var(--fd-recipe-input-subscript)) * 3 + #{variables.$gap-l * 2});
         display: grid;
         grid-template-columns: var(--fd-recipe-image-size) minmax(0, 1fr);
         grid-template-rows: repeat(3, minmax(0, auto));

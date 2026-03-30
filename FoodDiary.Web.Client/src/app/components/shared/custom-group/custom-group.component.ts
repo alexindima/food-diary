@@ -5,12 +5,10 @@ import { NgStyle } from '@angular/common';
  * A custom group component that can behave as an accordion or a simple container.
  */
 @Component({
-  selector: 'fd-custom-group',
-    imports: [
-        NgStyle
-    ],
-  templateUrl: './custom-group.component.html',
-  styleUrl: './custom-group.component.scss'
+    selector: 'fd-custom-group',
+    imports: [NgStyle],
+    templateUrl: './custom-group.component.html',
+    styleUrl: './custom-group.component.scss',
 })
 export class CustomGroupComponent {
     /**

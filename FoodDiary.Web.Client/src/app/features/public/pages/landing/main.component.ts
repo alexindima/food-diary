@@ -12,9 +12,16 @@ import { LandingCtaComponent } from '../../components/landing-cta/landing-cta.co
 
 @Component({
     selector: 'fd-main',
-    imports: [HeroComponent, FeaturesComponent, DashboardComponent, LandingPreviewTourComponent, LandingStepsComponent, LandingCtaComponent],
+    imports: [
+        HeroComponent,
+        FeaturesComponent,
+        DashboardComponent,
+        LandingPreviewTourComponent,
+        LandingStepsComponent,
+        LandingCtaComponent,
+    ],
     templateUrl: './main.component.html',
-    styleUrls: ['./main.component.scss']
+    styleUrls: ['./main.component.scss'],
 })
 export class MainComponent implements OnInit {
     private readonly authService = inject(AuthService);

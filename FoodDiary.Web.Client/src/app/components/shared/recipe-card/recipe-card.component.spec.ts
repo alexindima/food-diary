@@ -17,10 +17,7 @@ describe('RecipeCardComponent', () => {
         totalFiber: 6,
         totalAlcohol: 0,
         totalCalories: 368,
-        steps: [
-            { ingredients: [{}, {}, {}] },
-            { ingredients: [{}, {}] },
-        ],
+        steps: [{ ingredients: [{}, {}, {}] }, { ingredients: [{}, {}] }],
     };
 
     beforeEach(async () => {

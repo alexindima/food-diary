@@ -1,15 +1,15 @@
-$color-border: #E0E0E0;
-$color-background: #FFFFFF;
+$color-border: #e0e0e0;
+$color-background: #ffffff;
 $color-box-shadow: rgba(0, 0, 0, 0.1);
-$color-tabs-bg: #F5F5F5;
+$color-tabs-bg: #f5f5f5;
 $color-text-main: #333333;
 $color-text-additional: #757575;
-$color-no-results: #FF6B6B;
-$color-primary: #2563EB;
-$color-calories: #FF6384;
-$color-proteins: #4A90E2;
-$color-fats: #50E3C2;
-$color-carbs: #F5A623;
+$color-no-results: #ff6b6b;
+$color-primary: #2563eb;
+$color-calories: #ff6384;
+$color-proteins: #4a90e2;
+$color-fats: #50e3c2;
+$color-carbs: #f5a623;
 
 $border-radius-s: 4px;
 $border-radius-m: 8px;
@@ -26,11 +26,11 @@ $gap-xl: 24px;
 $gap-xxl: 36px;
 
 // Breakpoints (mobile-first scale)
-$media-xs: '(max-width: 360px)';       // small phones
-$media-sm: '(max-width: 420px)';       // compact mobile
-$media-mobile: '(max-width: 480px)';   // standard mobile (legacy alias)
-$media-compact: '(max-width: 520px)';  // large mobile / small phablet
-$media-phablet: '(max-width: 640px)';  // phablet
-$media-tablet: '(max-width: 768px)';   // tablet portrait
-$media-desktop-sm: '(max-width: 900px)';  // small desktop / tablet landscape
-$media-desktop: '(max-width: 1100px)';    // standard desktop
+$media-xs: '(max-width: 360px)'; // small phones
+$media-sm: '(max-width: 420px)'; // compact mobile
+$media-mobile: '(max-width: 480px)'; // standard mobile (legacy alias)
+$media-compact: '(max-width: 520px)'; // large mobile / small phablet
+$media-phablet: '(max-width: 640px)'; // phablet
+$media-tablet: '(max-width: 768px)'; // tablet portrait
+$media-desktop-sm: '(max-width: 900px)'; // small desktop / tablet landscape
+$media-desktop: '(max-width: 1100px)'; // standard desktop

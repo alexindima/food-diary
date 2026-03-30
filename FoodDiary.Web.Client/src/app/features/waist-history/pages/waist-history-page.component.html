@@ -100,29 +100,31 @@
         }
 
         <div class="waist-history-page__content waist-history-page__content--form">
-            <fd-ui-card class="waist-history-page__card waist-history-page__card--form" [title]="'WAIST_HISTORY.ADD_ENTRY_TITLE' | translate">
+            <fd-ui-card
+                class="waist-history-page__card waist-history-page__card--form"
+                [title]="'WAIST_HISTORY.ADD_ENTRY_TITLE' | translate"
+            >
                 <form class="waist-history-page__form" [formGroup]="form" (ngSubmit)="submit()">
                     <div class="waist-history-page__form-row">
-                        <fd-ui-date-input class="waist-history-page__form-control"
+                        <fd-ui-date-input
+                            class="waist-history-page__form-control"
                             formControlName="date"
                             [label]="'WAIST_HISTORY.DATE_LABEL' | translate"
                             [placeholder]="'WAIST_HISTORY.DATE_PLACEHOLDER' | translate"
-                         />
+                        />
 
-                        <fd-ui-input class="waist-history-page__form-control"
+                        <fd-ui-input
+                            class="waist-history-page__form-control"
                             formControlName="circumference"
                             type="number"
                             [step]="0.1"
                             [label]="'WAIST_HISTORY.CIRCUMFERENCE_LABEL' | translate"
                             [placeholder]="'WAIST_HISTORY.CIRCUMFERENCE_PLACEHOLDER' | translate"
-                         />
+                        />
                     </div>
 
                     <div class="waist-history-page__form-actions">
-                        <fd-ui-button
-                            [disabled]="isSaving()"
-                            type="submit"
-                        >
+                        <fd-ui-button [disabled]="isSaving()" type="submit">
                             @if (isEditing()) {
                                 {{ 'WAIST_HISTORY.UPDATE' | translate }}
                             } @else {
@@ -130,12 +132,7 @@
                             }
                         </fd-ui-button>
                         @if (isEditing()) {
-                            <fd-ui-button
-                                type="button"
-                                variant="secondary"
-                                fill="text"
-                                (click)="cancelEdit()"
-                            >
+                            <fd-ui-button type="button" variant="secondary" fill="text" (click)="cancelEdit()">
                                 {{ 'WAIST_HISTORY.CANCEL_EDIT' | translate }}
                             </fd-ui-button>
                         }
@@ -143,22 +140,22 @@
                 </form>
             </fd-ui-card>
 
-            <fd-ui-card class="waist-history-page__card waist-history-page__card--goal" [title]="'WAIST_HISTORY.GOAL_CARD_TITLE' | translate">
+            <fd-ui-card
+                class="waist-history-page__card waist-history-page__card--goal"
+                [title]="'WAIST_HISTORY.GOAL_CARD_TITLE' | translate"
+            >
                 <div class="waist-history-page__goal-body">
-                    <fd-ui-input class="waist-history-page__goal-input"
+                    <fd-ui-input
+                        class="waist-history-page__goal-input"
                         type="number"
                         [step]="0.1"
                         [placeholder]="'WAIST_HISTORY.GOAL_PLACEHOLDER' | translate"
                         [suffixButtonIcon]="desiredWaistControl.value ? 'backspace' : undefined"
                         (suffixButtonClicked)="desiredWaistControl.setValue('')"
                         [formControl]="desiredWaistControl"
-                     />
+                    />
                     <div class="waist-history-page__goal-actions">
-                        <fd-ui-button
-                            type="button"
-                            (click)="saveDesiredWaist()"
-                            [disabled]="isDesiredWaistSaving()"
-                        >
+                        <fd-ui-button type="button" (click)="saveDesiredWaist()" [disabled]="isDesiredWaistSaving()">
                             {{ 'WAIST_HISTORY.SAVE_GOAL' | translate }}
                         </fd-ui-button>
                     </div>
@@ -168,7 +165,10 @@
 
         @defer (on viewport) {
             <div class="waist-history-page__content waist-history-page__content--full">
-                <fd-ui-card class="waist-history-page__card waist-history-page__card--entries" [title]="'WAIST_HISTORY.HISTORY_TITLE' | translate">
+                <fd-ui-card
+                    class="waist-history-page__card waist-history-page__card--entries"
+                    [title]="'WAIST_HISTORY.HISTORY_TITLE' | translate"
+                >
                     @if (isLoading()) {
                         <div class="waist-history-page__loader">
                             {{ 'WAIST_HISTORY.LOADING' | translate }}
@@ -183,7 +183,7 @@
                                 @for (entry of entriesDescending(); track entry.id) {
                                     <div class="waist-history-page__entry">
                                         <div class="waist-history-page__entry-date">
-                                            {{ entry.date | date:'dd.MM.yyyy' }}
+                                            {{ entry.date | date: 'dd.MM.yyyy' }}
                                         </div>
                                         <div class="waist-history-page__entry-value">
                                             {{ entry.circumference | number: '1.0-2' }}

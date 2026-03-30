@@ -1,34 +1,27 @@
-<fd-ui-card
-  class="fd-ui-entity-card"
-  [appearance]="appearance()"
-  >
-  <div class="fd-ui-entity-card__body">
-    <div class="fd-ui-entity-card__media">
-      <img
-        [src]="resolvedImage"
-        [alt]="title() || 'entity image'"
-        (error)="handleImageError()"
-        />
-    </div>
-    <div class="fd-ui-entity-card__content">
-      @if (title() || meta() || headerTemplate()) {
-        <div class="fd-ui-entity-card__header">
-          <div class="fd-ui-entity-card__title-block">
-            @if (title()) {
-              <p class="fd-ui-entity-card__title">{{ title() }}</p>
-            }
-            @if (meta()) {
-              <span class="fd-ui-entity-card__meta">{{ meta() }}</span>
-            }
-          </div>
-          @if (headerTemplate()) {
-            <div class="fd-ui-entity-card__header-extra">
-              <ng-container [ngTemplateOutlet]="headerTemplate()?.templateRef" />
-            </div>
-          }
+<fd-ui-card class="fd-ui-entity-card" [appearance]="appearance()">
+    <div class="fd-ui-entity-card__body">
+        <div class="fd-ui-entity-card__media">
+            <img [src]="resolvedImage" [alt]="title() || 'entity image'" (error)="handleImageError()" />
         </div>
-      }
-      <ng-content />
+        <div class="fd-ui-entity-card__content">
+            @if (title() || meta() || headerTemplate()) {
+                <div class="fd-ui-entity-card__header">
+                    <div class="fd-ui-entity-card__title-block">
+                        @if (title()) {
+                            <p class="fd-ui-entity-card__title">{{ title() }}</p>
+                        }
+                        @if (meta()) {
+                            <span class="fd-ui-entity-card__meta">{{ meta() }}</span>
+                        }
+                    </div>
+                    @if (headerTemplate()) {
+                        <div class="fd-ui-entity-card__header-extra">
+                            <ng-container [ngTemplateOutlet]="headerTemplate()?.templateRef" />
+                        </div>
+                    }
+                </div>
+            }
+            <ng-content />
+        </div>
     </div>
-  </div>
 </fd-ui-card>

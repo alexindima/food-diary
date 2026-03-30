@@ -1,40 +1,40 @@
 <div class="admin-email-templates">
-  <div class="toolbar">
-    <fd-ui-button type="button" (click)="openCreate()">Create template</fd-ui-button>
-  </div>
+    <div class="toolbar">
+        <fd-ui-button type="button" (click)="openCreate()">Create template</fd-ui-button>
+    </div>
 
-  @if (isLoading()) {
-    <p>Loading templates...</p>
-  } @else {
-    <table class="templates-table">
-      <thead>
-        <tr>
-          <th>Key</th>
-          <th>Locale</th>
-          <th>Subject</th>
-          <th>Active</th>
-          <th>Updated</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (template of templates(); track template.id) {
-          <tr>
-            <td>{{ template.key }}</td>
-            <td>{{ template.locale }}</td>
-            <td>{{ template.subject }}</td>
-            <td>{{ template.isActive ? 'Yes' : 'No' }}</td>
-            <td>{{ template.updatedOnUtc || template.createdOnUtc }}</td>
-            <td>
-              <fd-ui-button type="button" variant="secondary" (click)="openEdit(template)">Edit</fd-ui-button>
-            </td>
-          </tr>
-        } @empty {
-          <tr>
-            <td colspan="6">No email templates found.</td>
-          </tr>
-        }
-      </tbody>
-    </table>
-  }
+    @if (isLoading()) {
+        <p>Loading templates...</p>
+    } @else {
+        <table class="templates-table">
+            <thead>
+                <tr>
+                    <th>Key</th>
+                    <th>Locale</th>
+                    <th>Subject</th>
+                    <th>Active</th>
+                    <th>Updated</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (template of templates(); track template.id) {
+                    <tr>
+                        <td>{{ template.key }}</td>
+                        <td>{{ template.locale }}</td>
+                        <td>{{ template.subject }}</td>
+                        <td>{{ template.isActive ? 'Yes' : 'No' }}</td>
+                        <td>{{ template.updatedOnUtc || template.createdOnUtc }}</td>
+                        <td>
+                            <fd-ui-button type="button" variant="secondary" (click)="openEdit(template)">Edit</fd-ui-button>
+                        </td>
+                    </tr>
+                } @empty {
+                    <tr>
+                        <td colspan="6">No email templates found.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
 </div>

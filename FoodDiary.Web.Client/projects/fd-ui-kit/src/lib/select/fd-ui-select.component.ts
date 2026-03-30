@@ -133,4 +133,3 @@ export class FdUiSelectComponent<T = unknown> implements ControlValueAccessor {
         control.focus();
     }
 }
-

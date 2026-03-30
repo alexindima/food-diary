@@ -1,34 +1,35 @@
-<div class="fd-ui-dialog" role="dialog" aria-modal="true" [attr.aria-labelledby]="title() ? dialogTitleId : null" [ngClass]="['fd-ui-dialog--size-' + size(), hasFooter ? 'fd-ui-dialog--has-footer' : '']">
-  @if (showHeader()) {
-    <header class="fd-ui-dialog__header">
-      <div class="fd-ui-dialog__heading">
-        @if (title(); as titleValue) {
-          <h2 class="fd-ui-dialog__title" [id]="dialogTitleId">{{ titleValue }}</h2>
-        }
-        @if (subtitle(); as subtitleValue) {
-          <p class="fd-ui-dialog__subtitle">{{ subtitleValue }}</p>
-        }
-      </div>
-      @if (dismissible()) {
-        <button
-          type="button"
-          class="fd-ui-dialog__close-button"
-          (click)="close()"
-          aria-label="Close dialog"
-          >
-          <mat-icon>close</mat-icon>
-        </button>
-      }
-    </header>
-  }
+<div
+    class="fd-ui-dialog"
+    role="dialog"
+    aria-modal="true"
+    [attr.aria-labelledby]="title() ? dialogTitleId : null"
+    [ngClass]="['fd-ui-dialog--size-' + size(), hasFooter ? 'fd-ui-dialog--has-footer' : '']"
+>
+    @if (showHeader()) {
+        <header class="fd-ui-dialog__header">
+            <div class="fd-ui-dialog__heading">
+                @if (title(); as titleValue) {
+                    <h2 class="fd-ui-dialog__title" [id]="dialogTitleId">{{ titleValue }}</h2>
+                }
+                @if (subtitle(); as subtitleValue) {
+                    <p class="fd-ui-dialog__subtitle">{{ subtitleValue }}</p>
+                }
+            </div>
+            @if (dismissible()) {
+                <button type="button" class="fd-ui-dialog__close-button" (click)="close()" aria-label="Close dialog">
+                    <mat-icon>close</mat-icon>
+                </button>
+            }
+        </header>
+    }
 
-  <section class="fd-ui-dialog__body">
-    <ng-content />
-  </section>
+    <section class="fd-ui-dialog__body">
+        <ng-content />
+    </section>
 
-  @if (hasFooter) {
-    <footer class="fd-ui-dialog__footer">
-      <ng-content select="[fdUiDialogFooter]" />
-    </footer>
-  }
+    @if (hasFooter) {
+        <footer class="fd-ui-dialog__footer">
+            <ng-content select="[fdUiDialogFooter]" />
+        </footer>
+    }
 </div>

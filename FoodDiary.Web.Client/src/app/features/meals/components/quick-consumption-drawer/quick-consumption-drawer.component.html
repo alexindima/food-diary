@@ -3,11 +3,14 @@
         <div class="quick-consumption__header">
             <div>
                 <div class="quick-consumption__title">{{ 'QUICK_CONSUMPTION.TITLE' | translate }}</div>
-                <div class="quick-consumption__subtitle">
-                    {{ items().length }} {{ 'QUICK_CONSUMPTION.ITEMS' | translate }}
-                </div>
+                <div class="quick-consumption__subtitle">{{ items().length }} {{ 'QUICK_CONSUMPTION.ITEMS' | translate }}</div>
             </div>
-            <button class="quick-consumption__clear" type="button" [attr.aria-label]="'QUICK_CONSUMPTION.CLEAR' | translate" (click)="clear()">
+            <button
+                class="quick-consumption__clear"
+                type="button"
+                [attr.aria-label]="'QUICK_CONSUMPTION.CLEAR' | translate"
+                (click)="clear()"
+            >
                 <mat-icon fontIcon="close"></mat-icon>
             </button>
         </div>
@@ -26,15 +29,20 @@
                             <div class="quick-consumption__meta">
                                 {{ 'QUICK_CONSUMPTION.AMOUNT' | translate }}:
                                 @if (item.type === 'product') {
-                                    {{ item.amount | number:'1.0-1' }}
-                                    {{ ('GENERAL.UNITS.' + (item.product?.baseUnit ?? 'G')) | translate }}
+                                    {{ item.amount | number: '1.0-1' }}
+                                    {{ 'GENERAL.UNITS.' + (item.product?.baseUnit ?? 'G') | translate }}
                                 } @else {
-                                    {{ item.amount | number:'1.0-1' }}
+                                    {{ item.amount | number: '1.0-1' }}
                                     {{ 'QUICK_CONSUMPTION.SERVINGS' | translate }}
                                 }
                             </div>
                         </div>
-                        <button class="quick-consumption__remove" type="button" [attr.aria-label]="'QUICK_CONSUMPTION.REMOVE_ITEM' | translate" (click)="remove(item.key)">
+                        <button
+                            class="quick-consumption__remove"
+                            type="button"
+                            [attr.aria-label]="'QUICK_CONSUMPTION.REMOVE_ITEM' | translate"
+                            (click)="remove(item.key)"
+                        >
                             <mat-icon fontIcon="delete"></mat-icon>
                         </button>
                     </div>

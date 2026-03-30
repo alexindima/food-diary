@@ -10,13 +10,7 @@ import { DashboardSnapshot } from '../models/dashboard.data';
 export class DashboardService extends ApiService {
     protected readonly baseUrl = environment.apiUrls.dashboard;
 
-    public getSnapshot(
-        date: Date,
-        page = 1,
-        pageSize = 10,
-        locale?: string,
-        trendDays?: number,
-    ): Observable<DashboardSnapshot | null> {
+    public getSnapshot(date: Date, page = 1, pageSize = 10, locale?: string, trendDays?: number): Observable<DashboardSnapshot | null> {
         const params: Record<string, string | number> = {
             date: date.toISOString(),
             page,

@@ -9,7 +9,9 @@ import {
 } from './dashboard-nutrition.utils';
 import { DashboardSnapshot, DashboardStatistics } from '../models/dashboard.data';
 
-function buildSnapshot(overrides: { statistics: Partial<DashboardStatistics> } & Partial<Omit<DashboardSnapshot, 'statistics'>>): DashboardSnapshot {
+function buildSnapshot(
+    overrides: { statistics: Partial<DashboardStatistics> } & Partial<Omit<DashboardSnapshot, 'statistics'>>,
+): DashboardSnapshot {
     const { statistics: statsOverrides, ...rest } = overrides;
     const stats: DashboardStatistics = {
         totalCalories: 0,
@@ -85,19 +87,21 @@ describe('dashboard-nutrition.utils', () => {
         });
 
         it('should return 4 nutrient bars from snapshot', () => {
-            const snapshot = signal<DashboardSnapshot | null>(buildSnapshot({
-                statistics: {
-                    totalCalories: 2000,
-                    averageProteins: 100,
-                    averageFats: 70,
-                    averageCarbs: 250,
-                    averageFiber: 25,
-                    proteinGoal: 120,
-                    fatGoal: 80,
-                    carbGoal: 300,
-                    fiberGoal: 30,
-                },
-            }));
+            const snapshot = signal<DashboardSnapshot | null>(
+                buildSnapshot({
+                    statistics: {
+                        totalCalories: 2000,
+                        averageProteins: 100,
+                        averageFats: 70,
+                        averageCarbs: 250,
+                        averageFiber: 25,
+                        proteinGoal: 120,
+                        fatGoal: 80,
+                        carbGoal: 300,
+                        fiberGoal: 30,
+                    },
+                }),
+            );
 
             const bars = createNutrientBarsSignal(snapshot);
             const result = bars();
@@ -114,10 +118,12 @@ describe('dashboard-nutrition.utils', () => {
 
     describe('createConsumptionRingSignal', () => {
         it('should compute ring data from snapshot', () => {
-            const snapshot = signal<DashboardSnapshot | null>(buildSnapshot({
-                dailyGoal: 2000,
-                statistics: { totalCalories: 1500 },
-            }));
+            const snapshot = signal<DashboardSnapshot | null>(
+                buildSnapshot({
+                    dailyGoal: 2000,
+                    statistics: { totalCalories: 1500 },
+                }),
+            );
             const weeklyConsumed = signal(10000);
             const nutrientBars = signal([]);
 
@@ -154,9 +160,7 @@ describe('dashboard-nutrition.utils', () => {
         });
 
         it('should fill empty slots when today is selected', () => {
-            const meals = signal([
-                { id: '1', mealType: 'LUNCH' },
-            ] as never[]);
+            const meals = signal([{ id: '1', mealType: 'LUNCH' }] as never[]);
             const isTodaySelected = signal(true);
 
             const preview = createMealPreviewSignal(meals, isTodaySelected);

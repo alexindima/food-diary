@@ -12,12 +12,7 @@ const meta: Meta<FdUiMenuComponent> = {
     tags: ['autodocs'],
     decorators: [
         moduleMetadata({
-            imports: [
-                FdUiMenuItemComponent,
-                FdUiMenuDividerComponent,
-                FdUiMenuTriggerDirective,
-                FdUiButtonComponent,
-            ],
+            imports: [FdUiMenuItemComponent, FdUiMenuDividerComponent, FdUiMenuTriggerDirective, FdUiButtonComponent],
         }),
     ],
 };

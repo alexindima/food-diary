@@ -5,7 +5,7 @@ import { TranslateModule } from '@ngx-translate/core';
     selector: 'fd-features',
     imports: [TranslateModule],
     templateUrl: './features.component.html',
-    styleUrl: './features.component.scss'
+    styleUrl: './features.component.scss',
 })
 export class FeaturesComponent {
     public features: Feature[] = [

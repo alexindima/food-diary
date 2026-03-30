@@ -1,142 +1,139 @@
 <ng-container [formGroup]="stepFormGroup()">
-  <fd-ui-card class="recipe-step-card">
-    <div class="recipe-step-card__header">
-      <div class="recipe-step-card__header-left">
-        <span
-          class="recipe-step-card__drag"
-          cdkDragHandle
-          [class.recipe-step-card__drag--disabled]="dragDisabled()"
-          aria-hidden="true"
-        ></span>
-        @if (isStepTitleEditing) {
-          <fd-ui-input
-            class="recipe-step-card__title-input"
-            formControlName="title"
-            [placeholder]="titleDisplay"
-            (blur)="onStepTitleBlur()"
-           />
-        } @else {
-          <span class="recipe-step-card__title">
-            {{ titleDisplay }}
-          </span>
-        }
-        <fd-ui-button
-          type="button"
-          variant="secondary"
-          fill="text"
-          icon="edit"
-          class="recipe-step-card__edit"
-          [attr.aria-label]="'RECIPE_MANAGE.EDIT_STEP_TITLE' | translate"
-          (click)="toggleStepTitleEdit()"
-        >
-        </fd-ui-button>
-      </div>
-      <div class="recipe-step-card__header-actions">
-        <fd-ui-button
-          type="button"
-          variant="secondary"
-          fill="text"
-          [icon]="isExpanded() ? 'expand_less' : 'expand_more'"
-          [attr.aria-label]="'RECIPE_MANAGE.TOGGLE_STEP' | translate"
-          (click)="onToggleExpanded()"
-        >
-        </fd-ui-button>
-        <fd-ui-button
-          type="button"
-          variant="danger"
-          fill="text"
-          icon="delete"
-          [disabled]="isFirst()"
-          (click)="onRemoveStep()"
-        >
-          {{ 'RECIPE_MANAGE.REMOVE_STEP' | translate }}
-        </fd-ui-button>
-      </div>
-    </div>
-
-    @if (!isExpanded()) {
-      <div class="recipe-step-card__summary">
-        <div class="recipe-step-card__summary-description">
-          {{ descriptionSummary }}
-        </div>
-        <div class="recipe-step-card__summary-meta">
-          {{ 'RECIPE_MANAGE.STEP_INGREDIENTS_COUNT' | translate: { count: ingredientsCount } }}
-        </div>
-      </div>
-    }
-
-    @if (isExpanded()) {
-      <div class="recipe-step-card__content">
-        <div class="recipe-step-card__image">
-          <fd-image-upload-field
-            formControlName="imageUrl"
-            [description]="'RECIPE_MANAGE.STEP_IMAGE_HINT' | translate"
-            [recommendedSize]="'512 x 512'"
-            [maxSizeMb]="10"
-            [acceptedTypes]="'image/png,image/jpeg,image/webp'"
-            [cropEnabled]="true"
-            [cropSize]="512"
-            [cropAspectRatio]="1"
-          />
-        </div>
-        <div class="recipe-step-card__description">
-          <fd-ui-textarea formControlName="description"
-            [rows]="3"
-            [label]="'RECIPE_MANAGE.STEP_DESCRIPTION' | translate"
-            [placeholder]="'RECIPE_MANAGE.STEP_DESCRIPTION_PLACEHOLDER' | translate"
-            [error]="descriptionError"
-           />
-        </div>
-      </div>
-
-      <div class="recipe-step-card__ingredients" formArrayName="ingredients">
-        <div class="recipe-step-card__subtitle">
-          {{ 'RECIPE_MANAGE.INGREDIENTS' | translate }}
-        </div>
-        @for (ingredient of ingredients.controls; track $index; let ingredientIndex = $index; let firstIngredient = $first) {
-          <div class="recipe-ingredient" [formGroupName]="ingredientIndex">
-              <input type="hidden" formControlName="food" />
-              <input type="hidden" formControlName="nestedRecipeId" />
-              <fd-ui-input class="recipe-ingredient__name"
-                formControlName="foodName"
-                [label]="'RECIPE_MANAGE.INGREDIENT_NAME' | translate"
-                [placeholder]="'RECIPE_MANAGE.INGREDIENT_NAME_PLACEHOLDER' | translate"
-                [readonly]="true"
-                [prefixIcon]="getIngredientIcon(ingredientIndex)"
-                [ariaLabel]="'RECIPE_MANAGE.SELECT_INGREDIENT' | translate"
-                (click)="onProductSelectClick(ingredientIndex)"
-                [error]="getIngredientControlError(ingredientIndex, 'foodName')"
-               />
-
-            <div class="recipe-ingredient__amount">
-              <fd-ui-input formControlName="amount"
-                type="number"
-                [step]="0.01"
-                [label]="getIngredientAmountLabel(ingredientIndex)"
-                [error]="getIngredientControlError(ingredientIndex, 'amount')"
-               />
-              <fd-ui-button type="button"
-                variant="danger"
-                fill="text"
-                icon="delete"
-                [disabled]="firstIngredient"
-                (click)="onRemoveIngredient(ingredientIndex)"
-               />
+    <fd-ui-card class="recipe-step-card">
+        <div class="recipe-step-card__header">
+            <div class="recipe-step-card__header-left">
+                <span
+                    class="recipe-step-card__drag"
+                    cdkDragHandle
+                    [class.recipe-step-card__drag--disabled]="dragDisabled()"
+                    aria-hidden="true"
+                ></span>
+                @if (isStepTitleEditing) {
+                    <fd-ui-input
+                        class="recipe-step-card__title-input"
+                        formControlName="title"
+                        [placeholder]="titleDisplay"
+                        (blur)="onStepTitleBlur()"
+                    />
+                } @else {
+                    <span class="recipe-step-card__title">
+                        {{ titleDisplay }}
+                    </span>
+                }
+                <fd-ui-button
+                    type="button"
+                    variant="secondary"
+                    fill="text"
+                    icon="edit"
+                    class="recipe-step-card__edit"
+                    [attr.aria-label]="'RECIPE_MANAGE.EDIT_STEP_TITLE' | translate"
+                    (click)="toggleStepTitleEdit()"
+                >
+                </fd-ui-button>
             </div>
-          </div>
+            <div class="recipe-step-card__header-actions">
+                <fd-ui-button
+                    type="button"
+                    variant="secondary"
+                    fill="text"
+                    [icon]="isExpanded() ? 'expand_less' : 'expand_more'"
+                    [attr.aria-label]="'RECIPE_MANAGE.TOGGLE_STEP' | translate"
+                    (click)="onToggleExpanded()"
+                >
+                </fd-ui-button>
+                <fd-ui-button type="button" variant="danger" fill="text" icon="delete" [disabled]="isFirst()" (click)="onRemoveStep()">
+                    {{ 'RECIPE_MANAGE.REMOVE_STEP' | translate }}
+                </fd-ui-button>
+            </div>
+        </div>
+
+        @if (!isExpanded()) {
+            <div class="recipe-step-card__summary">
+                <div class="recipe-step-card__summary-description">
+                    {{ descriptionSummary }}
+                </div>
+                <div class="recipe-step-card__summary-meta">
+                    {{ 'RECIPE_MANAGE.STEP_INGREDIENTS_COUNT' | translate: { count: ingredientsCount } }}
+                </div>
+            </div>
         }
 
-        <fd-ui-button
-          type="button"
-          icon="add"
-          class="recipe-step-card__add-ingredient"
-          variant="secondary"
-          fill="outline"
-          (click)="onAddIngredient()"
-        >
-          {{ 'RECIPE_MANAGE.ADD_INGREDIENT' | translate }}
-        </fd-ui-button>
-      </div>
-    }
-  </fd-ui-card>
+        @if (isExpanded()) {
+            <div class="recipe-step-card__content">
+                <div class="recipe-step-card__image">
+                    <fd-image-upload-field
+                        formControlName="imageUrl"
+                        [description]="'RECIPE_MANAGE.STEP_IMAGE_HINT' | translate"
+                        [recommendedSize]="'512 x 512'"
+                        [maxSizeMb]="10"
+                        [acceptedTypes]="'image/png,image/jpeg,image/webp'"
+                        [cropEnabled]="true"
+                        [cropSize]="512"
+                        [cropAspectRatio]="1"
+                    />
+                </div>
+                <div class="recipe-step-card__description">
+                    <fd-ui-textarea
+                        formControlName="description"
+                        [rows]="3"
+                        [label]="'RECIPE_MANAGE.STEP_DESCRIPTION' | translate"
+                        [placeholder]="'RECIPE_MANAGE.STEP_DESCRIPTION_PLACEHOLDER' | translate"
+                        [error]="descriptionError"
+                    />
+                </div>
+            </div>
+
+            <div class="recipe-step-card__ingredients" formArrayName="ingredients">
+                <div class="recipe-step-card__subtitle">
+                    {{ 'RECIPE_MANAGE.INGREDIENTS' | translate }}
+                </div>
+                @for (ingredient of ingredients.controls; track $index; let ingredientIndex = $index; let firstIngredient = $first) {
+                    <div class="recipe-ingredient" [formGroupName]="ingredientIndex">
+                        <input type="hidden" formControlName="food" />
+                        <input type="hidden" formControlName="nestedRecipeId" />
+                        <fd-ui-input
+                            class="recipe-ingredient__name"
+                            formControlName="foodName"
+                            [label]="'RECIPE_MANAGE.INGREDIENT_NAME' | translate"
+                            [placeholder]="'RECIPE_MANAGE.INGREDIENT_NAME_PLACEHOLDER' | translate"
+                            [readonly]="true"
+                            [prefixIcon]="getIngredientIcon(ingredientIndex)"
+                            [ariaLabel]="'RECIPE_MANAGE.SELECT_INGREDIENT' | translate"
+                            (click)="onProductSelectClick(ingredientIndex)"
+                            [error]="getIngredientControlError(ingredientIndex, 'foodName')"
+                        />
+
+                        <div class="recipe-ingredient__amount">
+                            <fd-ui-input
+                                formControlName="amount"
+                                type="number"
+                                [step]="0.01"
+                                [label]="getIngredientAmountLabel(ingredientIndex)"
+                                [error]="getIngredientControlError(ingredientIndex, 'amount')"
+                            />
+                            <fd-ui-button
+                                type="button"
+                                variant="danger"
+                                fill="text"
+                                icon="delete"
+                                [disabled]="firstIngredient"
+                                (click)="onRemoveIngredient(ingredientIndex)"
+                            />
+                        </div>
+                    </div>
+                }
+
+                <fd-ui-button
+                    type="button"
+                    icon="add"
+                    class="recipe-step-card__add-ingredient"
+                    variant="secondary"
+                    fill="outline"
+                    (click)="onAddIngredient()"
+                >
+                    {{ 'RECIPE_MANAGE.ADD_INGREDIENT' | translate }}
+                </fd-ui-button>
+            </div>
+        }
+    </fd-ui-card>
 </ng-container>

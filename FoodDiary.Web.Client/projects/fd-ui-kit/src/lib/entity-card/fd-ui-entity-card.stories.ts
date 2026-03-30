@@ -15,7 +15,7 @@ const meta: Meta<FdUiEntityCardComponent> = {
             options: ['default', 'product', 'recipe', 'info', 'general', 'entry'],
         },
     },
-    render: (args) => ({
+    render: args => ({
         props: args,
         template: `
             <fd-ui-entity-card [title]="title" [meta]="meta" [imageUrl]="imageUrl" [appearance]="appearance">

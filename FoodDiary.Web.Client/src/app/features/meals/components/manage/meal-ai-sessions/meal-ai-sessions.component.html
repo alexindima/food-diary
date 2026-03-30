@@ -1,6 +1,4 @@
-<fd-ui-card class="consumption-manage__card consumption-manage__card--items-ai"
-    [title]="'CONSUMPTION_MANAGE.ITEMS_AI_TITLE' | translate"
->
+<fd-ui-card class="consumption-manage__card consumption-manage__card--items-ai" [title]="'CONSUMPTION_MANAGE.ITEMS_AI_TITLE' | translate">
     <p class="consumption-manage__items-hint">
         {{ 'CONSUMPTION_MANAGE.ITEMS_AI_HINT' | translate }}
     </p>
@@ -19,7 +17,7 @@
                         </div>
                         <div class="consumption-manage__ai-summary-heading">
                             <div class="consumption-manage__ai-summary-title">
-                                {{ 'CONSUMPTION_MANAGE.ITEMS_AI_SUMMARY' | translate:{ count: session.items.length } }}
+                                {{ 'CONSUMPTION_MANAGE.ITEMS_AI_SUMMARY' | translate: { count: session.items.length } }}
                             </div>
                             <div class="consumption-manage__ai-summary-stats">
                                 <div class="consumption-manage__ai-summary-calories">
@@ -65,7 +63,11 @@
                     </div>
                     <div class="consumption-manage__ai-summary-body">
                         <div class="consumption-manage__ai-summary-list">
-                            @for (aiItem of (isAiSessionExpanded(idx) ? session.items : visibleAiItems(session.items, aiPreviewMaxItems)); track $index; let itemIdx = $index) {
+                            @for (
+                                aiItem of isAiSessionExpanded(idx) ? session.items : visibleAiItems(session.items, aiPreviewMaxItems);
+                                track $index;
+                                let itemIdx = $index
+                            ) {
                                 <div class="consumption-manage__ai-summary-row">
                                     <span class="consumption-manage__ai-summary-name">
                                         {{ formatAiName(aiItem.nameLocal || aiItem.nameEn) }}
@@ -76,17 +78,17 @@
                                 </div>
                             }
                             @if (getHiddenAiItemsCount(session.items, aiPreviewMaxItems) > 0) {
-                                <button
-                                    type="button"
-                                    class="consumption-manage__ai-summary-more"
-                                    (click)="toggleAiSessionExpanded(idx)"
-                                >
+                                <button type="button" class="consumption-manage__ai-summary-more" (click)="toggleAiSessionExpanded(idx)">
                                     @if (isAiSessionExpanded(idx)) {
                                         {{ 'CONSUMPTION_MANAGE.ITEMS_AI_HIDE' | translate }}
                                     } @else {
-                                        {{ 'CONSUMPTION_MANAGE.ITEMS_AI_MORE' | translate:{
-                                            count: getHiddenAiItemsCount(session.items, aiPreviewMaxItems)
-                                        } }}
+                                        {{
+                                            'CONSUMPTION_MANAGE.ITEMS_AI_MORE'
+                                                | translate
+                                                    : {
+                                                          count: getHiddenAiItemsCount(session.items, aiPreviewMaxItems),
+                                                      }
+                                        }}
                                     }
                                 </button>
                             }

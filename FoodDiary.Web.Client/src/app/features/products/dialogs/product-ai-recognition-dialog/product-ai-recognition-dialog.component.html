@@ -105,44 +105,16 @@
                         [label]="'PRODUCT_AI_DIALOG.NAME' | translate"
                         [placeholder]="'PRODUCT_AI_DIALOG.NAME_PLACEHOLDER' | translate"
                     />
-                    <fd-ui-select
-                        formControlName="baseUnit"
-                        [label]="'PRODUCT_AI_DIALOG.BASE_UNIT' | translate"
-                        [options]="unitOptions"
-                    />
+                    <fd-ui-select formControlName="baseUnit" [label]="'PRODUCT_AI_DIALOG.BASE_UNIT' | translate" [options]="unitOptions" />
                 </div>
 
                 <div class="product-ai-dialog__nutrition-grid">
-                    <fd-ui-input
-                        formControlName="caloriesPerBase"
-                        type="number"
-                        [label]="'PRODUCT_MANAGE.CALORIES' | translate"
-                    />
-                    <fd-ui-input
-                        formControlName="proteinsPerBase"
-                        type="number"
-                        [label]="'PRODUCT_MANAGE.PROTEINS' | translate"
-                    />
-                    <fd-ui-input
-                        formControlName="fatsPerBase"
-                        type="number"
-                        [label]="'PRODUCT_MANAGE.FATS' | translate"
-                    />
-                    <fd-ui-input
-                        formControlName="carbsPerBase"
-                        type="number"
-                        [label]="'PRODUCT_MANAGE.CARBS' | translate"
-                    />
-                    <fd-ui-input
-                        formControlName="fiberPerBase"
-                        type="number"
-                        [label]="'PRODUCT_MANAGE.FIBER' | translate"
-                    />
-                    <fd-ui-input
-                        formControlName="alcoholPerBase"
-                        type="number"
-                        [label]="'PRODUCT_MANAGE.ALCOHOL' | translate"
-                    />
+                    <fd-ui-input formControlName="caloriesPerBase" type="number" [label]="'PRODUCT_MANAGE.CALORIES' | translate" />
+                    <fd-ui-input formControlName="proteinsPerBase" type="number" [label]="'PRODUCT_MANAGE.PROTEINS' | translate" />
+                    <fd-ui-input formControlName="fatsPerBase" type="number" [label]="'PRODUCT_MANAGE.FATS' | translate" />
+                    <fd-ui-input formControlName="carbsPerBase" type="number" [label]="'PRODUCT_MANAGE.CARBS' | translate" />
+                    <fd-ui-input formControlName="fiberPerBase" type="number" [label]="'PRODUCT_MANAGE.FIBER' | translate" />
+                    <fd-ui-input formControlName="alcoholPerBase" type="number" [label]="'PRODUCT_MANAGE.ALCOHOL' | translate" />
                 </div>
             </div>
         }
@@ -153,13 +125,7 @@
             <fd-ui-button type="button" variant="primary" fill="outline" (click)="close()">
                 {{ 'PRODUCT_AI_DIALOG.CANCEL' | translate }}
             </fd-ui-button>
-            <fd-ui-button
-                type="button"
-                variant="primary"
-                icon="check"
-                [disabled]="!canApply()"
-                (click)="apply()"
-            >
+            <fd-ui-button type="button" variant="primary" icon="check" [disabled]="!canApply()" (click)="apply()">
                 {{ 'PRODUCT_AI_DIALOG.APPLY' | translate }}
             </fd-ui-button>
         </div>

@@ -1,14 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-    ChangeDetectionStrategy,
-    Component,
-    DestroyRef,
-    OnInit,
-    computed,
-    effect,
-    inject,
-    signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, computed, effect, inject, signal } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -74,9 +65,7 @@ export class WeightHistoryPageComponent implements OnInit {
     private lastLoadedRangeKey: string | null = null;
 
     public readonly selectedRange = signal<WeightHistoryRange>(this.defaultRange);
-    public readonly currentRange = computed<{ start: Date; end: Date }>(() =>
-        this.calculateRangeDates(this.selectedRange()),
-    );
+    public readonly currentRange = computed<{ start: Date; end: Date }>(() => this.calculateRangeDates(this.selectedRange()));
     public readonly entries = signal<WeightEntry[]>([]);
     public readonly isLoading = signal<boolean>(false);
     public readonly isSaving = signal<boolean>(false);
@@ -92,16 +81,14 @@ export class WeightHistoryPageComponent implements OnInit {
     );
 
     public readonly chartData = computed<ChartConfiguration<'line'>['data']>(() => {
-        const ordered = [...this.summaryPoints()].sort(
-            (a, b) => new Date(a.dateFrom).getTime() - new Date(b.dateFrom).getTime(),
-        );
+        const ordered = [...this.summaryPoints()].sort((a, b) => new Date(a.dateFrom).getTime() - new Date(b.dateFrom).getTime());
         const label = this.translate.instant('WEIGHT_HISTORY.CHART_LABEL');
 
         return {
             labels: ordered.map(point => this.formatDateLabel(point.dateFrom)),
             datasets: [
                 {
-                    data: ordered.map(point => point.averageWeight > 0 ? point.averageWeight : null),
+                    data: ordered.map(point => (point.averageWeight > 0 ? point.averageWeight : null)),
                     label,
                     borderColor: '#2563eb',
                     backgroundColor: 'transparent',
@@ -274,26 +261,22 @@ export class WeightHistoryPageComponent implements OnInit {
 
         this.isSaving.set(true);
         const editingId = this.editingEntryId();
-        const request$ = editingId
-            ? this.weightEntriesService.update(editingId, payload)
-            : this.weightEntriesService.create(payload);
+        const request$ = editingId ? this.weightEntriesService.update(editingId, payload) : this.weightEntriesService.create(payload);
 
-        request$
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: () => {
-                    this.isSaving.set(false);
-                    this.loadEntries(false, true);
-                    if (editingId) {
-                        this.resetEditingState();
-                    } else {
-                        this.form.controls.weight.setValue(payload.weight.toString());
-                    }
-                },
-                error: () => {
-                    this.isSaving.set(false);
-                },
-            });
+        request$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+            next: () => {
+                this.isSaving.set(false);
+                this.loadEntries(false, true);
+                if (editingId) {
+                    this.resetEditingState();
+                } else {
+                    this.form.controls.weight.setValue(payload.weight.toString());
+                }
+            },
+            error: () => {
+                this.isSaving.set(false);
+            },
+        });
     }
 
     public startEdit(entry: WeightEntry): void {
@@ -406,9 +389,7 @@ export class WeightHistoryPageComponent implements OnInit {
                     this.entries.set(entries);
                     this.isLoading.set(false);
                     if (!this.isEditing() && entries.length > 0) {
-                        const latest = [...entries].sort(
-                            (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
-                        )[0];
+                        const latest = [...entries].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())[0];
                         this.form.patchValue({
                             weight: latest.weight.toString(),
                         });

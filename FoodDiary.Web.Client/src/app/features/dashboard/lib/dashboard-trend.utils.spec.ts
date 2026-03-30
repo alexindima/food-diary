@@ -22,9 +22,7 @@ describe('dashboard-trend.utils', () => {
         });
 
         it('should set value to null for zero averageWeight', () => {
-            const points = signal([
-                { dateFrom: '2026-03-10', dateTo: '2026-03-10', averageWeight: 0 },
-            ]);
+            const points = signal([{ dateFrom: '2026-03-10', dateTo: '2026-03-10', averageWeight: 0 }]);
             const { weightTrendSeries } = createWeightTrendSignals(points, signal(null), signal(new Date()), 7);
             expect(weightTrendSeries()[0].value).toBeNull();
         });
@@ -57,9 +55,7 @@ describe('dashboard-trend.utils', () => {
         });
 
         it('should return null for trend change when no valid points', () => {
-            const points = signal([
-                { dateFrom: '2026-03-10', dateTo: '2026-03-10', averageWeight: 0 },
-            ]);
+            const points = signal([{ dateFrom: '2026-03-10', dateTo: '2026-03-10', averageWeight: 0 }]);
             const { weightTrendChange } = createWeightTrendSignals(points, signal(null), signal(new Date()), 7);
             expect(weightTrendChange()).toBeNull();
         });
@@ -82,9 +78,7 @@ describe('dashboard-trend.utils', () => {
 
     describe('createWaistTrendSignals', () => {
         it('should map waist trend points', () => {
-            const points = signal([
-                { dateFrom: '2026-03-10', dateTo: '2026-03-10', averageCircumference: 85 },
-            ]);
+            const points = signal([{ dateFrom: '2026-03-10', dateTo: '2026-03-10', averageCircumference: 85 }]);
             const { waistTrendSeries } = createWaistTrendSignals(points, signal(null), signal(new Date()), 7);
             expect(waistTrendSeries()[0].value).toBe(85);
         });

@@ -23,8 +23,7 @@ export type PremiumRequiredDialogData = {
 })
 export class PremiumRequiredDialogComponent {
     private readonly dialogRef = inject(FdUiDialogRef<PremiumRequiredDialogComponent, boolean>);
-    public readonly data =
-        inject<PremiumRequiredDialogData>(FD_UI_DIALOG_DATA, { optional: true }) ?? {};
+    public readonly data = inject<PremiumRequiredDialogData>(FD_UI_DIALOG_DATA, { optional: true }) ?? {};
 
     public onConfirm(): void {
         this.dialogRef.close(true);

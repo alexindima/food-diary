@@ -1,10 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import {
-    MatSnackBar,
-    MatSnackBarConfig,
-    MatSnackBarRef,
-    SimpleSnackBar,
-} from '@angular/material/snack-bar';
+import { MatSnackBar, MatSnackBarConfig, MatSnackBarRef, SimpleSnackBar } from '@angular/material/snack-bar';
 
 export type FdUiToastAppearance = 'default' | 'positive' | 'negative' | 'warning' | 'info';
 
@@ -32,10 +27,7 @@ export class FdUiToastService {
         });
     }
 
-    private mergePanelClasses(
-        provided: MatSnackBarConfig['panelClass'],
-        appearance: FdUiToastAppearance,
-    ): string[] {
+    private mergePanelClasses(provided: MatSnackBarConfig['panelClass'], appearance: FdUiToastAppearance): string[] {
         const appearanceClass = `fd-ui-toast--${appearance}`;
         const baseClasses = ['fd-ui-toast', appearanceClass];
         if (!provided) {

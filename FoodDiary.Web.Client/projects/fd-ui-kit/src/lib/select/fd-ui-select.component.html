@@ -1,50 +1,60 @@
-﻿<div class="fd-ui-select" [ngClass]="[sizeClass, error() ? 'fd-ui-select--has-error' : '', shouldFloatLabel ? 'fd-ui-select--floating' : '']">
-  <div class="fd-ui-select__control-wrap" [style.background]="fillColor() || null" (click)="openMenu($event, control)" role="presentation">
-    @if (label()) {
-      <label class="fd-ui-select__label" [attr.for]="id()">
-        <span class="fd-ui-select__label-text">{{ label() }}</span>@if (required()) {<span class="fd-ui-select__required">*</span>}
-      </label>
-    }
-
-    <button
-      #control
-      class="fd-ui-select__control"
-      type="button"
-      [id]="id()"
-      [matMenuTriggerFor]="optionsMenu"
-      [disabled]="disabled"
-      [class.fd-ui-select__control--placeholder]="!hasValue"
-      [attr.aria-describedby]="error() ? id() + '-error' : null"
-      [attr.aria-invalid]="error() ? 'true' : null"
-      (focus)="onFocus()"
-      (blur)="onBlur()"
-      (menuOpened)="onMenuOpened()"
-      (menuClosed)="onMenuClosed()"
+﻿<div
+    class="fd-ui-select"
+    [ngClass]="[sizeClass, error() ? 'fd-ui-select--has-error' : '', shouldFloatLabel ? 'fd-ui-select--floating' : '']"
+>
+    <div
+        class="fd-ui-select__control-wrap"
+        [style.background]="fillColor() || null"
+        (click)="openMenu($event, control)"
+        role="presentation"
     >
-      {{ selectedLabel }}
-    </button>
+        @if (label()) {
+            <label class="fd-ui-select__label" [attr.for]="id()">
+                <span class="fd-ui-select__label-text">{{ label() }}</span>
+                @if (required()) {
+                    <span class="fd-ui-select__required">*</span>
+                }
+            </label>
+        }
 
-    <mat-menu #optionsMenu="matMenu" class="fd-ui-select__menu" panelClass="fd-ui-select-menu">
-      @for (option of options(); track option.value) {
         <button
-          mat-menu-item
-          type="button"
-          class="fd-ui-select__menu-item"
-          [class.fd-ui-select__menu-item--selected]="isEqual(option.value, internalValue)"
-          (click)="onOptionSelect(option)"
+            #control
+            class="fd-ui-select__control"
+            type="button"
+            [id]="id()"
+            [matMenuTriggerFor]="optionsMenu"
+            [disabled]="disabled"
+            [class.fd-ui-select__control--placeholder]="!hasValue"
+            [attr.aria-describedby]="error() ? id() + '-error' : null"
+            [attr.aria-invalid]="error() ? 'true' : null"
+            (focus)="onFocus()"
+            (blur)="onBlur()"
+            (menuOpened)="onMenuOpened()"
+            (menuClosed)="onMenuClosed()"
         >
-          <span>{{ option.label }}</span>
+            {{ selectedLabel }}
         </button>
-      }
-    </mat-menu>
 
-    <span class="fd-ui-select__suffix" [class.fd-ui-select__suffix--open]="isOpen" aria-hidden="true">
-      <mat-icon>expand_more</mat-icon>
-    </span>
-  </div>
+        <mat-menu #optionsMenu="matMenu" class="fd-ui-select__menu" panelClass="fd-ui-select-menu">
+            @for (option of options(); track option.value) {
+                <button
+                    mat-menu-item
+                    type="button"
+                    class="fd-ui-select__menu-item"
+                    [class.fd-ui-select__menu-item--selected]="isEqual(option.value, internalValue)"
+                    (click)="onOptionSelect(option)"
+                >
+                    <span>{{ option.label }}</span>
+                </button>
+            }
+        </mat-menu>
 
-  @if (error()) {
-    <div class="fd-ui-select__error" [id]="id() + '-error'" role="alert">{{ error() }}</div>
-  }
+        <span class="fd-ui-select__suffix" [class.fd-ui-select__suffix--open]="isOpen" aria-hidden="true">
+            <mat-icon>expand_more</mat-icon>
+        </span>
+    </div>
+
+    @if (error()) {
+        <div class="fd-ui-select__error" [id]="id() + '-error'" role="alert">{{ error() }}</div>
+    }
 </div>
-

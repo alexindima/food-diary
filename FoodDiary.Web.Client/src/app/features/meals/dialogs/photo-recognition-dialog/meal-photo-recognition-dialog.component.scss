@@ -61,7 +61,9 @@
         rgba(59, 130, 246, 1),
         rgba(59, 130, 246, 0)
     );
-    box-shadow: 0 0 22px rgba(59, 130, 246, 0.8), 0 0 40px rgba(96, 165, 250, 0.6);
+    box-shadow:
+        0 0 22px rgba(59, 130, 246, 0.8),
+        0 0 40px rgba(96, 165, 250, 0.6);
     filter: drop-shadow(0 0 8px rgba(96, 165, 250, 0.9));
     animation: photo-ai-scan 4s ease-in-out infinite;
 }
@@ -75,7 +77,9 @@
         rgba(34, 197, 94, 1),
         rgba(34, 197, 94, 0)
     );
-    box-shadow: 0 0 22px rgba(34, 197, 94, 0.75), 0 0 40px rgba(74, 222, 128, 0.6);
+    box-shadow:
+        0 0 22px rgba(34, 197, 94, 0.75),
+        0 0 40px rgba(74, 222, 128, 0.6);
     filter: drop-shadow(0 0 8px rgba(74, 222, 128, 0.9));
 }
 
@@ -114,7 +118,7 @@
 
 .photo-ai-dialog__results-title {
     font-weight: 600;
-    color: var(--fd-color-gray-800, #1F2937);
+    color: var(--fd-color-gray-800, #1f2937);
     display: inline-flex;
     align-items: center;
     gap: 8px;
@@ -127,7 +131,6 @@
     gap: 8px;
 }
 
-
 .photo-ai-dialog__edit-header {
     display: flex;
     align-items: center;
@@ -137,7 +140,7 @@
 
 .photo-ai-dialog__edit-title {
     font-weight: 600;
-    color: var(--fd-color-gray-800, #1F2937);
+    color: var(--fd-color-gray-800, #1f2937);
 }
 
 .photo-ai-dialog__edit-done ::ng-deep button,
@@ -228,7 +231,6 @@
     padding-left: 4px;
     margin-left: auto;
 }
-
 
 .photo-ai-dialog__edit-toggle ::ng-deep button,
 .photo-ai-dialog__edit-toggle ::ng-deep .fd-ui-button {

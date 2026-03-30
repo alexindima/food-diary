@@ -5,6 +5,6 @@ import { RecipeManageComponent } from '../../components/manage/recipe-manage.com
     selector: 'app-recipe-add',
     templateUrl: './recipe-add.component.html',
     styleUrls: ['./recipe-add.component.scss'],
-    imports: [RecipeManageComponent]
+    imports: [RecipeManageComponent],
 })
 export class RecipeAddComponent extends RecipeManageComponent {}

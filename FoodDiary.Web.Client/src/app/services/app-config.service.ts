@@ -4,7 +4,7 @@ import { AppConfig } from '../types/app.data';
 import { Injectable } from '@angular/core';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class AppConfigService {
     private config: AppConfig | null = null;
@@ -16,10 +16,10 @@ export class AppConfigService {
             tap((config: AppConfig) => {
                 this.config = config;
             }),
-            catchError((error) => {
+            catchError(error => {
                 console.error('Failed to load app config', error);
                 return throwError(() => new Error(error));
-            })
+            }),
         );
     }
 

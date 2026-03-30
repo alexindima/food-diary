@@ -14,9 +14,7 @@ import { RecipeManageComponent } from '../../../features/recipes/components/mana
 import { RecipeSelectDialogComponent } from '../../../features/recipes/dialogs/recipe-select-dialog.component';
 import { Recipe } from '../../../features/recipes/models/recipe.data';
 
-export type ItemSelection =
-    | { type: 'Product'; product: Product }
-    | { type: 'Recipe'; recipe: Recipe };
+export type ItemSelection = { type: 'Product'; product: Product } | { type: 'Recipe'; recipe: Recipe };
 
 export type ItemSelectDialogData = {
     initialTab?: 'Product' | 'Recipe';
@@ -41,10 +39,7 @@ export type ItemSelectDialogData = {
 export class ItemSelectDialogComponent implements OnInit {
     private readonly dialogData = inject<ItemSelectDialogData | null>(FD_UI_DIALOG_DATA, { optional: true });
     private readonly fdDialogService = inject(FdUiDialogService);
-    private readonly dialogRef = inject(
-        FdUiDialogRef<ItemSelectDialogComponent, ItemSelection | null>,
-        { optional: true },
-    );
+    private readonly dialogRef = inject(FdUiDialogRef<ItemSelectDialogComponent, ItemSelection | null>, { optional: true });
 
     public readonly embedded = input<boolean>(false);
     public readonly productSelected = output<Product>();

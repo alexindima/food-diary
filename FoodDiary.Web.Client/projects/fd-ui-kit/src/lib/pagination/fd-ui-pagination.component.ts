@@ -1,4 +1,3 @@
-
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 
@@ -7,13 +6,14 @@ import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
     standalone: true,
     imports: [MatPaginatorModule],
     template: `
-        <mat-paginator class="fd-ui-pagination"
+        <mat-paginator
+            class="fd-ui-pagination"
             [length]="length()"
             [pageSize]="pageSize()"
             [hidePageSize]="true"
             [pageIndex]="pageIndex()"
             (page)="onPage($event)"
-         />
+        />
     `,
     styleUrls: ['./fd-ui-pagination.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,

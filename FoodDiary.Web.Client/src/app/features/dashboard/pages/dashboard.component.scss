@@ -105,7 +105,10 @@ variables.$color-primary: #2563eb;
         box-shadow: 0 12px 26px rgba(37, 99, 235, 0.28);
         border: none;
         font-weight: 700;
-        transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+        transition:
+            transform 0.15s ease,
+            box-shadow 0.15s ease,
+            filter 0.15s ease;
 
         &:hover {
             transform: translateY(-1px);
@@ -222,8 +225,7 @@ variables.$color-primary: #2563eb;
     &__body {
         position: relative;
         z-index: 2;
-        padding: var(--fd-layout-page-top-padding, 10px) var(--fd-layout-page-horizontal-padding)
-            var(--fd-layout-page-vertical-padding);
+        padding: var(--fd-layout-page-top-padding, 10px) var(--fd-layout-page-horizontal-padding) var(--fd-layout-page-vertical-padding);
     }
 
     &__body > fd-page-body {
@@ -279,7 +281,9 @@ variables.$color-primary: #2563eb;
             cursor: pointer;
 
             > .fd-ui-card {
-                transition: box-shadow 0.2s ease, transform 0.2s ease;
+                transition:
+                    box-shadow 0.2s ease,
+                    transform 0.2s ease;
 
                 &:hover {
                     box-shadow: 0 12px 24px rgba(15, 23, 42, 0.15);
@@ -452,7 +456,11 @@ variables.$color-primary: #2563eb;
         background: rgba(37, 99, 235, 0.03);
         color: variables.$color-text-main;
         cursor: pointer;
-        transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+        transition:
+            transform 0.15s ease,
+            box-shadow 0.15s ease,
+            border-color 0.15s ease,
+            background 0.15s ease;
 
         &:hover {
             transform: translateY(-1px);
@@ -617,5 +625,3 @@ variables.$color-primary: #2563eb;
         }
     }
 }
-
-

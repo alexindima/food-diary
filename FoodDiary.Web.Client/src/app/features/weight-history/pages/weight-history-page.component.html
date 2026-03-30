@@ -49,7 +49,10 @@
         </fd-ui-card>
 
         @defer (on viewport) {
-            <fd-ui-card class="weight-history-page__card weight-history-page__card--bmi" [title]="'WEIGHT_HISTORY.BMI_CARD_TITLE' | translate">
+            <fd-ui-card
+                class="weight-history-page__card weight-history-page__card--bmi"
+                [title]="'WEIGHT_HISTORY.BMI_CARD_TITLE' | translate"
+            >
                 @if (bmiValue() !== null) {
                     @if (bmiStatusInfo(); as bmiInfo) {
                         <div class="weight-history-page__bmi-top">
@@ -101,29 +104,31 @@
         }
 
         <div class="weight-history-page__content weight-history-page__content--form">
-            <fd-ui-card class="weight-history-page__card weight-history-page__card--form" [title]="'WEIGHT_HISTORY.ADD_ENTRY_TITLE' | translate">
+            <fd-ui-card
+                class="weight-history-page__card weight-history-page__card--form"
+                [title]="'WEIGHT_HISTORY.ADD_ENTRY_TITLE' | translate"
+            >
                 <form class="weight-history-page__form" [formGroup]="form" (ngSubmit)="submit()">
                     <div class="weight-history-page__form-row">
-                        <fd-ui-date-input class="weight-history-page__form-control"
+                        <fd-ui-date-input
+                            class="weight-history-page__form-control"
                             formControlName="date"
                             [label]="'WEIGHT_HISTORY.DATE_LABEL' | translate"
                             [placeholder]="'WEIGHT_HISTORY.DATE_PLACEHOLDER' | translate"
-                         />
+                        />
 
-                        <fd-ui-input class="weight-history-page__form-control"
+                        <fd-ui-input
+                            class="weight-history-page__form-control"
                             formControlName="weight"
                             type="number"
                             [step]="0.1"
                             [label]="'WEIGHT_HISTORY.WEIGHT_LABEL' | translate"
                             [placeholder]="'WEIGHT_HISTORY.WEIGHT_PLACEHOLDER' | translate"
-                         />
+                        />
                     </div>
 
                     <div class="weight-history-page__form-actions">
-                        <fd-ui-button
-                            [disabled]="isSaving()"
-                            type="submit"
-                        >
+                        <fd-ui-button [disabled]="isSaving()" type="submit">
                             @if (isEditing()) {
                                 {{ 'WEIGHT_HISTORY.UPDATE' | translate }}
                             } @else {
@@ -131,12 +136,7 @@
                             }
                         </fd-ui-button>
                         @if (isEditing()) {
-                            <fd-ui-button
-                                type="button"
-                                variant="secondary"
-                                fill="text"
-                                (click)="cancelEdit()"
-                            >
+                            <fd-ui-button type="button" variant="secondary" fill="text" (click)="cancelEdit()">
                                 {{ 'WEIGHT_HISTORY.CANCEL_EDIT' | translate }}
                             </fd-ui-button>
                         }
@@ -144,22 +144,22 @@
                 </form>
             </fd-ui-card>
 
-            <fd-ui-card class="weight-history-page__card weight-history-page__card--goal" [title]="'WEIGHT_HISTORY.GOAL_CARD_TITLE' | translate">
+            <fd-ui-card
+                class="weight-history-page__card weight-history-page__card--goal"
+                [title]="'WEIGHT_HISTORY.GOAL_CARD_TITLE' | translate"
+            >
                 <div class="weight-history-page__goal-body">
-                    <fd-ui-input class="weight-history-page__goal-input"
+                    <fd-ui-input
+                        class="weight-history-page__goal-input"
                         type="number"
                         [step]="0.1"
                         [placeholder]="'WEIGHT_HISTORY.GOAL_PLACEHOLDER' | translate"
                         [suffixButtonIcon]="desiredWeightControl.value ? 'backspace' : undefined"
                         (suffixButtonClicked)="desiredWeightControl.setValue('')"
                         [formControl]="desiredWeightControl"
-                     />
+                    />
                     <div class="weight-history-page__goal-actions">
-                        <fd-ui-button
-                            type="button"
-                            (click)="saveDesiredWeight()"
-                            [disabled]="isDesiredWeightSaving()"
-                        >
+                        <fd-ui-button type="button" (click)="saveDesiredWeight()" [disabled]="isDesiredWeightSaving()">
                             {{ 'WEIGHT_HISTORY.SAVE_GOAL' | translate }}
                         </fd-ui-button>
                     </div>
@@ -169,7 +169,10 @@
 
         @defer (on viewport) {
             <div class="weight-history-page__content weight-history-page__content--full">
-                <fd-ui-card class="weight-history-page__card weight-history-page__card--entries" [title]="'WEIGHT_HISTORY.HISTORY_TITLE' | translate">
+                <fd-ui-card
+                    class="weight-history-page__card weight-history-page__card--entries"
+                    [title]="'WEIGHT_HISTORY.HISTORY_TITLE' | translate"
+                >
                     @if (isLoading()) {
                         <div class="weight-history-page__loader">
                             {{ 'WEIGHT_HISTORY.LOADING' | translate }}
@@ -184,7 +187,7 @@
                                 @for (entry of entriesDescending(); track entry.id) {
                                     <div class="weight-history-page__entry">
                                         <div class="weight-history-page__entry-date">
-                                            {{ entry.date | date:'dd.MM.yyyy' }}
+                                            {{ entry.date | date: 'dd.MM.yyyy' }}
                                         </div>
                                         <div class="weight-history-page__entry-weight">
                                             {{ entry.weight | number: '1.0-2' }}

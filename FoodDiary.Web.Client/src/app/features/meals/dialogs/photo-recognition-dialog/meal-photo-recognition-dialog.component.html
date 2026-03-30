@@ -61,16 +61,17 @@
                                 class="photo-ai-dialog__edit-toggle"
                                 (click)="isEditing() ? applyEditing() : startEditing()"
                             >
-                                {{ (isEditing() ? 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.SAVE' : 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.EDIT_BUTTON') | translate }}
+                                {{
+                                    (isEditing()
+                                        ? 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.SAVE'
+                                        : 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.EDIT_BUTTON'
+                                    ) | translate
+                                }}
                             </fd-ui-button>
                         </span>
                     </div>
                     @if (isEditing()) {
-                        <div
-                            class="photo-ai-dialog__edit-list"
-                            cdkDropList
-                            (cdkDropListDropped)="onEditItemDrop($event)"
-                        >
+                        <div class="photo-ai-dialog__edit-list" cdkDropList (cdkDropListDropped)="onEditItemDrop($event)">
                             @for (item of editItems(); track item.id; let i = $index) {
                                 <div class="photo-ai-dialog__edit-row" cdkDrag>
                                     <div class="photo-ai-dialog__edit-handle" cdkDragHandle>
@@ -111,11 +112,7 @@
                                 </div>
                             }
                         </div>
-                        <button
-                            type="button"
-                            class="photo-ai-dialog__edit-add"
-                            (click)="addEditItem()"
-                        >
+                        <button type="button" class="photo-ai-dialog__edit-add" (click)="addEditItem()">
                             + {{ 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ADD_ITEM' | translate }}
                         </button>
                     } @else {
@@ -222,7 +219,10 @@
                 [disabled]="!nutrition() || isLoading() || isNutritionLoading()"
                 (click)="addToMeal()"
             >
-                {{ (isEditMode() ? 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.SAVE' : 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ADD_TO_MEAL') | translate }}
+                {{
+                    (isEditMode() ? 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.SAVE' : 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ADD_TO_MEAL')
+                        | translate
+                }}
             </fd-ui-button>
         }
     </div>

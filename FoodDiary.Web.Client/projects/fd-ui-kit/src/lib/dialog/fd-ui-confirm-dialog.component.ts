@@ -1,4 +1,3 @@
-
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { TranslateModule } from '@ngx-translate/core';
@@ -26,11 +25,7 @@ export interface FdUiConfirmDialogData {
                 <fd-ui-button variant="secondary" fill="text" size="sm" (click)="onCancel()">
                     {{ data.cancelLabel || ('COMMON.CANCEL' | translate) }}
                 </fd-ui-button>
-                <fd-ui-button
-                    size="sm"
-                    [variant]="data.danger ? 'danger' : 'primary'"
-                    (click)="onConfirm()"
-                >
+                <fd-ui-button size="sm" [variant]="data.danger ? 'danger' : 'primary'" (click)="onConfirm()">
                     {{ data.confirmLabel || ('COMMON.CONFIRM' | translate) }}
                 </fd-ui-button>
             </div>

@@ -6,12 +6,12 @@
 
     @if (hasCycle()) {
         <div class="cycle-summary-card__day">
-            {{ 'CYCLE_CARD.DAY_LABEL' | translate:{ day: cycleDay() } }}
+            {{ 'CYCLE_CARD.DAY_LABEL' | translate: { day: cycleDay() } }}
         </div>
         @if (statusKey()) {
             <div class="cycle-summary-card__status">
                 @if (statusDays() !== null) {
-                    {{ statusKey() | translate:{ days: statusDays() } }}
+                    {{ statusKey() | translate: { days: statusDays() } }}
                 } @else {
                     {{ statusKey() | translate }}
                 }

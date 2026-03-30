@@ -1,10 +1,4 @@
-import {
-    ChangeDetectionStrategy,
-    Component,
-    inject,
-    input,
-    output,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
 import { FormArray, FormGroup, ReactiveFormsModule, AbstractControl } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -92,9 +86,7 @@ export class MealItemsListComponent {
     }
 
     public getItemSourceError(index: number): string | null {
-        return this.isItemSourceInvalid(index)
-            ? this.translateService.instant('CONSUMPTION_MANAGE.ITEM_SOURCE_ERROR')
-            : null;
+        return this.isItemSourceInvalid(index) ? this.translateService.instant('CONSUMPTION_MANAGE.ITEM_SOURCE_ERROR') : null;
     }
 
     public getItemSourceName(index: number): string {
@@ -115,9 +107,7 @@ export class MealItemsListComponent {
     }
 
     public getAmountPlaceholder(index: number): string {
-        return this.isRecipeItem(index)
-            ? 'CONSUMPTION_MANAGE.AMOUNT_PLACEHOLDER_RECIPE'
-            : 'CONSUMPTION_MANAGE.AMOUNT_PLACEHOLDER_PRODUCT';
+        return this.isRecipeItem(index) ? 'CONSUMPTION_MANAGE.AMOUNT_PLACEHOLDER_RECIPE' : 'CONSUMPTION_MANAGE.AMOUNT_PLACEHOLDER_PRODUCT';
     }
 
     public getAmountControlError(index: number): string | null {

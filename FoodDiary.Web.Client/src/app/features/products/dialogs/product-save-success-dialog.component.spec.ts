@@ -2,10 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { TranslateModule } from '@ngx-translate/core';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
-import {
-    ProductSaveSuccessDialogComponent,
-    ProductSaveSuccessDialogData,
-} from './product-save-success-dialog.component';
+import { ProductSaveSuccessDialogComponent, ProductSaveSuccessDialogData } from './product-save-success-dialog.component';
 
 describe('ProductSaveSuccessDialogComponent', () => {
     let component: ProductSaveSuccessDialogComponent;

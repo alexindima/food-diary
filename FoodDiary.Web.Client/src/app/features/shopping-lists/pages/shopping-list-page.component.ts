@@ -14,7 +14,10 @@ import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
 import { FdUiSelectComponent, FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
-import { ConfirmDeleteDialogComponent, ConfirmDeleteDialogData } from '../../../components/shared/confirm-delete-dialog/confirm-delete-dialog.component';
+import {
+    ConfirmDeleteDialogComponent,
+    ConfirmDeleteDialogData,
+} from '../../../components/shared/confirm-delete-dialog/confirm-delete-dialog.component';
 import { PageBodyComponent } from '../../../components/shared/page-body/page-body.component';
 import { PageHeaderComponent } from '../../../components/shared/page-header/page-header.component';
 import { FormGroupControls } from '../../../shared/lib/common.data';
@@ -82,16 +85,9 @@ export class ShoppingListPageComponent implements OnInit {
             this.buildUnitOptions();
         });
 
-        this.listNameControl.valueChanges
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => this.scheduleSave());
+        this.listNameControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.scheduleSave());
 
-        this.saveQueue
-            .pipe(
-                debounceTime(500),
-                takeUntilDestroyed(this.destroyRef),
-            )
-            .subscribe(() => this.persistList());
+        this.saveQueue.pipe(debounceTime(500), takeUntilDestroyed(this.destroyRef)).subscribe(() => this.persistList());
     }
 
     public ngOnInit(): void {
@@ -111,14 +107,12 @@ export class ShoppingListPageComponent implements OnInit {
 
         this.loadLists();
 
-        this.listSelectControl.valueChanges
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(id => {
-                if (!id || id === this.lastLoadedListId) {
-                    return;
-                }
-                this.loadListById(id);
-            });
+        this.listSelectControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(id => {
+            if (!id || id === this.lastLoadedListId) {
+                return;
+            }
+            this.loadListById(id);
+        });
     }
 
     public addItem(): void {
@@ -135,17 +129,20 @@ export class ShoppingListPageComponent implements OnInit {
         const amount = this.normalizeAmount(this.itemForm.controls.amount.value);
         const unit = this.itemForm.controls.unit.value ?? null;
         const category = this.itemForm.controls.category.value?.trim() || null;
-        const nextItems = [...this.items(), {
-            id: this.createTempId(),
-            shoppingListId: this.list()?.id ?? '',
-            name,
-            amount,
-            unit,
-            category,
-            productId: null,
-            isChecked: false,
-            sortOrder: this.items().length + 1,
-        }];
+        const nextItems = [
+            ...this.items(),
+            {
+                id: this.createTempId(),
+                shoppingListId: this.list()?.id ?? '',
+                name,
+                amount,
+                unit,
+                category,
+                productId: null,
+                isChecked: false,
+                sortOrder: this.items().length + 1,
+            },
+        ];
 
         this.items.set(nextItems);
         this.scheduleSave();
@@ -164,9 +161,7 @@ export class ShoppingListPageComponent implements OnInit {
     }
 
     public toggleItemChecked(item: ShoppingListItem, checked: boolean): void {
-        const nextItems = this.items().map(entry =>
-            entry.id === item.id ? { ...entry, isChecked: checked } : entry,
-        );
+        const nextItems = this.items().map(entry => (entry.id === item.id ? { ...entry, isChecked: checked } : entry));
         this.items.set(nextItems);
         this.scheduleSave();
     }
@@ -196,11 +191,7 @@ export class ShoppingListPageComponent implements OnInit {
     }
 
     public get canClearList(): boolean {
-        return this.lists().length === 1
-            && (this.items().length > 0)
-            && !!this.list()
-            && !this.isSaving()
-            && !this.isLoading();
+        return this.lists().length === 1 && this.items().length > 0 && !!this.list() && !this.isSaving() && !this.isLoading();
     }
 
     public deleteCurrentList(): void {
@@ -277,10 +268,7 @@ export class ShoppingListPageComponent implements OnInit {
                 },
                 error: (error: HttpErrorResponse) => {
                     this.isLoading.set(false);
-                    this.toastService.open(
-                        this.translateService.instant('SHOPPING_LIST.CREATE_ERROR'),
-                        { appearance: 'negative' },
-                    );
+                    this.toastService.open(this.translateService.instant('SHOPPING_LIST.CREATE_ERROR'), { appearance: 'negative' });
                     console.error('Create shopping list error', error);
                 },
             });
@@ -302,18 +290,14 @@ export class ShoppingListPageComponent implements OnInit {
                     this.lists.set(lists);
                     this.buildListOptions();
                     const currentSelection = this.listSelectControl.value;
-                    const selectedId = currentSelection && lists.some(list => list.id === currentSelection)
-                        ? currentSelection
-                        : lists[0].id;
+                    const selectedId =
+                        currentSelection && lists.some(list => list.id === currentSelection) ? currentSelection : lists[0].id;
                     this.listSelectControl.setValue(selectedId, { emitEvent: false });
                     this.loadListById(selectedId);
                 },
                 error: (error: HttpErrorResponse) => {
                     this.isLoading.set(false);
-                    this.toastService.open(
-                        this.translateService.instant('SHOPPING_LIST.LOAD_ERROR'),
-                        { appearance: 'negative' },
-                    );
+                    this.toastService.open(this.translateService.instant('SHOPPING_LIST.LOAD_ERROR'), { appearance: 'negative' });
                     console.error('Load shopping list error', error);
                 },
             });
@@ -332,10 +316,7 @@ export class ShoppingListPageComponent implements OnInit {
                 },
                 error: (error: HttpErrorResponse) => {
                     this.isLoading.set(false);
-                    this.toastService.open(
-                        this.translateService.instant('SHOPPING_LIST.CREATE_ERROR'),
-                        { appearance: 'negative' },
-                    );
+                    this.toastService.open(this.translateService.instant('SHOPPING_LIST.CREATE_ERROR'), { appearance: 'negative' });
                     console.error('Create shopping list error', error);
                 },
             });
@@ -394,10 +375,7 @@ export class ShoppingListPageComponent implements OnInit {
                 },
                 error: (error: HttpErrorResponse) => {
                     this.isLoading.set(false);
-                    this.toastService.open(
-                        this.translateService.instant('SHOPPING_LIST.LOAD_ERROR'),
-                        { appearance: 'negative' },
-                    );
+                    this.toastService.open(this.translateService.instant('SHOPPING_LIST.LOAD_ERROR'), { appearance: 'negative' });
                     console.error('Load shopping list error', error);
                 },
             });
@@ -412,9 +390,7 @@ export class ShoppingListPageComponent implements OnInit {
 
     private updateListSummary(list: ShoppingList): void {
         const next = this.lists().map(entry =>
-            entry.id === list.id
-                ? { ...entry, name: list.name, itemsCount: list.items.length }
-                : entry,
+            entry.id === list.id ? { ...entry, name: list.name, itemsCount: list.items.length } : entry,
         );
         this.lists.set(next);
         this.buildListOptions();
@@ -470,10 +446,7 @@ export class ShoppingListPageComponent implements OnInit {
                 },
                 error: (error: HttpErrorResponse) => {
                     this.isSaving.set(false);
-                    this.toastService.open(
-                        this.translateService.instant('SHOPPING_LIST.SAVE_ERROR'),
-                        { appearance: 'negative' },
-                    );
+                    this.toastService.open(this.translateService.instant('SHOPPING_LIST.SAVE_ERROR'), { appearance: 'negative' });
                     console.error('Update shopping list error', error);
                 },
             });
@@ -492,10 +465,7 @@ export class ShoppingListPageComponent implements OnInit {
                 },
                 error: (error: HttpErrorResponse) => {
                     this.isSaving.set(false);
-                    this.toastService.open(
-                        this.translateService.instant('SHOPPING_LIST.CLEAR_ERROR'),
-                        { appearance: 'negative' },
-                    );
+                    this.toastService.open(this.translateService.instant('SHOPPING_LIST.CLEAR_ERROR'), { appearance: 'negative' });
                     console.error('Clear shopping list error', error);
                 },
             });
@@ -521,10 +491,7 @@ export class ShoppingListPageComponent implements OnInit {
                 error: (error: HttpErrorResponse) => {
                     this.isSaving.set(false);
                     this.suppressAutosave = false;
-                    this.toastService.open(
-                        this.translateService.instant('SHOPPING_LIST.DELETE_ERROR'),
-                        { appearance: 'negative' },
-                    );
+                    this.toastService.open(this.translateService.instant('SHOPPING_LIST.DELETE_ERROR'), { appearance: 'negative' });
                     console.error('Delete shopping list error', error);
                 },
             });

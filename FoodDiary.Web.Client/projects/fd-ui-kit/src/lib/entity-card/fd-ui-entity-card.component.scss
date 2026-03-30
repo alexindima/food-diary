@@ -71,7 +71,9 @@
 
 :host(.fd-ui-entity-card--hoverable) .fd-ui-entity-card {
     cursor: pointer;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
 
     &:hover {
         transform: translateY(-4px) scale(1.01);

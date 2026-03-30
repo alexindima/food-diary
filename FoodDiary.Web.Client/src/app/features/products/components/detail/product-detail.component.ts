@@ -86,9 +86,7 @@ export class ProductDetailComponent {
             return null;
         }
 
-        return this.product.isOwnedByCurrentUser
-            ? 'PRODUCT_DETAIL.WARNING_MESSAGE'
-            : 'PRODUCT_DETAIL.WARNING_NOT_OWNER';
+        return this.product.isOwnedByCurrentUser ? 'PRODUCT_DETAIL.WARNING_MESSAGE' : 'PRODUCT_DETAIL.WARNING_NOT_OWNER';
     }
 
     public constructor() {
@@ -108,11 +106,7 @@ export class ProductDetailComponent {
             this.translate.instant('GENERAL.NUTRIENTS.FAT'),
             this.translate.instant('GENERAL.NUTRIENTS.CARB'),
         ];
-        const datasetValues = [
-            this.product.proteinsPerBase,
-            this.product.fatsPerBase,
-            this.product.carbsPerBase,
-        ];
+        const datasetValues = [this.product.proteinsPerBase, this.product.fatsPerBase, this.product.carbsPerBase];
         const colors = [CHART_COLORS.proteins, CHART_COLORS.fats, CHART_COLORS.carbs];
         this.pieChartData = {
             labels,

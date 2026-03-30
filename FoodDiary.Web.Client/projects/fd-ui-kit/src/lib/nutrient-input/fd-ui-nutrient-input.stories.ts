@@ -126,7 +126,8 @@ export const WithError: Story = {
 
 export const Readonly: Story = {
     render: () => ({
-        template: '<fd-ui-nutrient-input label="Total" [ngModel]="350" unitLabel="kcal" [readonly]="true" tintColor="#ff6b35" textColor="#ff6b35"></fd-ui-nutrient-input>',
+        template:
+            '<fd-ui-nutrient-input label="Total" [ngModel]="350" unitLabel="kcal" [readonly]="true" tintColor="#ff6b35" textColor="#ff6b35"></fd-ui-nutrient-input>',
     }),
 };
 

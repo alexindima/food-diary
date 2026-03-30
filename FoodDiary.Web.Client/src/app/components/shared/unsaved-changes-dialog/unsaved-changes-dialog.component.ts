@@ -25,9 +25,7 @@ export interface UnsavedChangesDialogData {
 })
 export class UnsavedChangesDialogComponent {
     public readonly data = inject<UnsavedChangesDialogData | null>(FD_UI_DIALOG_DATA, { optional: true });
-    private readonly dialogRef = inject<FdUiDialogRef<UnsavedChangesDialogComponent, UnsavedChangesDialogResult>>(
-        FdUiDialogRef,
-    );
+    private readonly dialogRef = inject<FdUiDialogRef<UnsavedChangesDialogComponent, UnsavedChangesDialogResult>>(FdUiDialogRef);
 
     public onSave(): void {
         this.dialogRef.close('save');

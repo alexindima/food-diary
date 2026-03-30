@@ -1,14 +1,4 @@
-﻿import {
-  ChangeDetectionStrategy,
-  Component,
-  DestroyRef,
-  ElementRef,
-  OnInit,
-  inject,
-  input,
-  output,
-  viewChild
-} from '@angular/core';
+﻿import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, OnInit, inject, input, output, viewChild } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { FdUiIconModule } from 'fd-ui-kit/material';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -160,4 +150,3 @@ interface RecipeSearchFormValues {
 }
 
 type RecipeSearchFormGroup = FormGroupControls<RecipeSearchFormValues>;
-

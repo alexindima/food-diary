@@ -3,23 +3,25 @@
 
 @include mat.core();
 
-$fd-theme: mat.define-theme((
-    color: (
-        theme-type: light,
-        primary: mat.$blue-palette,
-        tertiary: mat.$orange-palette,
-    ),
-    typography: (
-        plain-family: design-tokens.fd-token(typography, font-family),
-        brand-family: design-tokens.fd-token(typography, font-family),
-        bold-weight: design-tokens.fd-token(typography, font-weight-bold),
-        medium-weight: design-tokens.fd-token(typography, font-weight-medium),
-        regular-weight: design-tokens.fd-token(typography, font-weight-regular),
-    ),
-    density: (
-        scale: 0,
-    ),
-));
+$fd-theme: mat.define-theme(
+    (
+        color: (
+            theme-type: light,
+            primary: mat.$blue-palette,
+            tertiary: mat.$orange-palette,
+        ),
+        typography: (
+            plain-family: design-tokens.fd-token(typography, font-family),
+            brand-family: design-tokens.fd-token(typography, font-family),
+            bold-weight: design-tokens.fd-token(typography, font-weight-bold),
+            medium-weight: design-tokens.fd-token(typography, font-weight-medium),
+            regular-weight: design-tokens.fd-token(typography, font-weight-regular),
+        ),
+        density: (
+            scale: 0,
+        ),
+    )
+);
 
 :root {
     @include mat.all-component-themes($fd-theme);
@@ -29,4 +31,3 @@ $fd-theme: mat.define-theme((
     --mdc-outlined-text-field-container-height: 40px;
     --mat-form-field-container-height: 40px;
 }
-

@@ -57,7 +57,8 @@ export class RecipeService extends ApiService {
         limit: number,
         filters?: RecipeFilters,
         includePublic = true,
-        recentLimit = 10): Observable<RecipeListWithRecent> {
+        recentLimit = 10,
+    ): Observable<RecipeListWithRecent> {
         const params: Record<string, string | number | boolean> = { page, limit, includePublic, recentLimit };
         const search = filters?.search?.trim();
         if (search) {

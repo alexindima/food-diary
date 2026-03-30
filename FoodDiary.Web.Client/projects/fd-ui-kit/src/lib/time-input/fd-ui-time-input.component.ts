@@ -140,4 +140,3 @@ export class FdUiTimeInputComponent implements ControlValueAccessor {
         return value.toString().padStart(2, '0');
     }
 }
-

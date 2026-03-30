@@ -515,12 +515,17 @@ export type DesignTokenCssVariables = typeof DESIGN_TOKEN_CSS_VARIABLES;
 export const getColorCssVariable = <
     Palette extends keyof DesignTokenCssVariables['color'],
     Shade extends keyof DesignTokenCssVariables['color'][Palette],
->(palette: Palette, shade: Shade): string =>
-    `var(${DESIGN_TOKEN_CSS_VARIABLES.color[palette][shade]})`;
+>(
+    palette: Palette,
+    shade: Shade,
+): string => `var(${DESIGN_TOKEN_CSS_VARIABLES.color[palette][shade]})`;
 
 export const getButtonCssVariable = <
     Variant extends keyof DesignTokenCssVariables['button'],
     Property extends keyof DesignTokenCssVariables['button'][Variant],
     State extends keyof DesignTokenCssVariables['button'][Variant][Property],
->(variant: Variant, property: Property, state: State): string =>
-    `var(${DESIGN_TOKEN_CSS_VARIABLES.button[variant][property][state]})`;
+>(
+    variant: Variant,
+    property: Property,
+    state: State,
+): string => `var(${DESIGN_TOKEN_CSS_VARIABLES.button[variant][property][state]})`;

@@ -1,11 +1,19 @@
 STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACMR)
 
 HAS_TS=$(echo "$STAGED_FILES" | grep -c '\.ts$' || true)
+HAS_HTML=$(echo "$STAGED_FILES" | grep -c '\.html$' || true)
 HAS_SCSS=$(echo "$STAGED_FILES" | grep -c '\.scss$' || true)
 HAS_FRONTEND=$(echo "$STAGED_FILES" | grep -c '^FoodDiary\.Web\.Client/' || true)
 HAS_CS=$(echo "$STAGED_FILES" | grep -c '\.cs$' || true)
 
 cd FoodDiary.Web.Client
+
+if [ "$HAS_TS" -gt 0 ] || [ "$HAS_HTML" -gt 0 ]; then
+  echo "=== Running Prettier ==="
+  npx prettier --check "src/**/*.{ts,html}" "projects/**/*.{ts,html}" || exit 1
+else
+  echo "=== Skipping Prettier (no formattable files changed) ==="
+fi
 
 if [ "$HAS_TS" -gt 0 ]; then
   echo "=== Running ESLint ==="

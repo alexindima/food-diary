@@ -94,10 +94,7 @@ export function createBreakpointObserverSpy(matches = false): {
 /**
  * Helper to set multiple signal inputs on a component fixture.
  */
-export function setInputs<T>(
-    fixture: ComponentFixture<T>,
-    inputs: Record<string, unknown>,
-): void {
+export function setInputs<T>(fixture: ComponentFixture<T>, inputs: Record<string, unknown>): void {
     for (const [key, value] of Object.entries(inputs)) {
         fixture.componentRef.setInput(key, value);
     }
@@ -108,11 +105,7 @@ export function setInputs<T>(
  * Creates a mock service that returns observables.
  * Pass method names and their default return values.
  */
-export function createServiceSpy<T extends Record<string, unknown>>(
-    methods: T,
-): { [K in keyof T]: ReturnType<typeof vi.fn> } {
-    const spy = Object.fromEntries(
-        Object.entries(methods).map(([key, value]) => [key, vi.fn().mockReturnValue(value)]),
-    );
+export function createServiceSpy<T extends Record<string, unknown>>(methods: T): { [K in keyof T]: ReturnType<typeof vi.fn> } {
+    const spy = Object.fromEntries(Object.entries(methods).map(([key, value]) => [key, vi.fn().mockReturnValue(value)]));
     return spy as { [K in keyof T]: ReturnType<typeof vi.fn> };
 }

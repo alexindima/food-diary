@@ -13,7 +13,10 @@ import { DESIGN_TOKEN_VALUES } from './design-tokens';
             <div style="display: flex; gap: 4px; flex-wrap: wrap;">
                 @for (shade of primaryShades; track shade.name) {
                     <div style="text-align: center;">
-                        <div [style.background]="shade.value" style="width: 64px; height: 48px; border-radius: 6px; border: 1px solid #e0e0e0;"></div>
+                        <div
+                            [style.background]="shade.value"
+                            style="width: 64px; height: 48px; border-radius: 6px; border: 1px solid #e0e0e0;"
+                        ></div>
                         <div style="font-size: 11px; margin-top: 4px; color: #666;">{{ shade.name }}</div>
                     </div>
                 }
@@ -23,7 +26,10 @@ import { DESIGN_TOKEN_VALUES } from './design-tokens';
             <div style="display: flex; gap: 4px; flex-wrap: wrap;">
                 @for (shade of secondaryShades; track shade.name) {
                     <div style="text-align: center;">
-                        <div [style.background]="shade.value" style="width: 64px; height: 48px; border-radius: 6px; border: 1px solid #e0e0e0;"></div>
+                        <div
+                            [style.background]="shade.value"
+                            style="width: 64px; height: 48px; border-radius: 6px; border: 1px solid #e0e0e0;"
+                        ></div>
                         <div style="font-size: 11px; margin-top: 4px; color: #666;">{{ shade.name }}</div>
                     </div>
                 }
@@ -33,7 +39,10 @@ import { DESIGN_TOKEN_VALUES } from './design-tokens';
             <div style="display: flex; gap: 4px; flex-wrap: wrap;">
                 @for (shade of grayShades; track shade.name) {
                     <div style="text-align: center;">
-                        <div [style.background]="shade.value" style="width: 64px; height: 48px; border-radius: 6px; border: 1px solid #e0e0e0;"></div>
+                        <div
+                            [style.background]="shade.value"
+                            style="width: 64px; height: 48px; border-radius: 6px; border: 1px solid #e0e0e0;"
+                        ></div>
                         <div style="font-size: 11px; margin-top: 4px; color: #666;">{{ shade.name }}</div>
                     </div>
                 }
@@ -43,7 +52,10 @@ import { DESIGN_TOKEN_VALUES } from './design-tokens';
             <div style="display: flex; gap: 4px; flex-wrap: wrap;">
                 @for (color of semanticColors; track color.name) {
                     <div style="text-align: center;">
-                        <div [style.background]="color.value" style="width: 80px; height: 48px; border-radius: 6px; border: 1px solid #e0e0e0;"></div>
+                        <div
+                            [style.background]="color.value"
+                            style="width: 80px; height: 48px; border-radius: 6px; border: 1px solid #e0e0e0;"
+                        ></div>
                         <div style="font-size: 11px; margin-top: 4px; color: #666;">{{ color.name }}</div>
                     </div>
                 }
@@ -53,7 +65,10 @@ import { DESIGN_TOKEN_VALUES } from './design-tokens';
             <div style="display: flex; gap: 4px; flex-wrap: wrap;">
                 @for (color of chartColors; track color.name) {
                     <div style="text-align: center;">
-                        <div [style.background]="color.value" style="width: 80px; height: 48px; border-radius: 6px; border: 1px solid #e0e0e0;"></div>
+                        <div
+                            [style.background]="color.value"
+                            style="width: 80px; height: 48px; border-radius: 6px; border: 1px solid #e0e0e0;"
+                        ></div>
                         <div style="font-size: 11px; margin-top: 4px; color: #666;">{{ color.name }}</div>
                     </div>
                 }
@@ -70,7 +85,9 @@ import { DESIGN_TOKEN_VALUES } from './design-tokens';
                 <tbody>
                     @for (token of layoutTokens; track token.name) {
                         <tr>
-                            <td style="padding: 8px; border-bottom: 1px solid #f0f0f0; font-family: monospace; font-size: 13px;">{{ token.name }}</td>
+                            <td style="padding: 8px; border-bottom: 1px solid #f0f0f0; font-family: monospace; font-size: 13px;">
+                                {{ token.name }}
+                            </td>
                             <td style="padding: 8px; border-bottom: 1px solid #f0f0f0;">{{ token.value }}</td>
                         </tr>
                     }
@@ -84,13 +101,9 @@ class DesignTokensDocsComponent {
     protected readonly secondaryShades = this.extractShades(DESIGN_TOKEN_VALUES.color.secondary);
     protected readonly grayShades = this.extractShades(DESIGN_TOKEN_VALUES.color.gray);
 
-    protected readonly semanticColors = Object.entries(DESIGN_TOKEN_VALUES.color.semantic).map(
-        ([name, value]) => ({ name, value }),
-    );
+    protected readonly semanticColors = Object.entries(DESIGN_TOKEN_VALUES.color.semantic).map(([name, value]) => ({ name, value }));
 
-    protected readonly chartColors = Object.entries(DESIGN_TOKEN_VALUES.color.chart).map(
-        ([name, value]) => ({ name, value }),
-    );
+    protected readonly chartColors = Object.entries(DESIGN_TOKEN_VALUES.color.chart).map(([name, value]) => ({ name, value }));
 
     protected readonly layoutTokens = [
         { name: 'page.background', value: DESIGN_TOKEN_VALUES.layout.page.background },

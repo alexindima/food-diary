@@ -1,14 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-    ChangeDetectionStrategy,
-    Component,
-    DestroyRef,
-    OnInit,
-    computed,
-    effect,
-    inject,
-    signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, computed, effect, inject, signal } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -75,9 +66,7 @@ export class WaistHistoryPageComponent implements OnInit {
     private lastLoadedRangeKey: string | null = null;
 
     public readonly selectedRange = signal<WaistHistoryRange>(this.defaultRange);
-    public readonly currentRange = computed<{ start: Date; end: Date }>(() =>
-        this.calculateRangeDates(this.selectedRange()),
-    );
+    public readonly currentRange = computed<{ start: Date; end: Date }>(() => this.calculateRangeDates(this.selectedRange()));
     public readonly entries = signal<WaistEntry[]>([]);
     public readonly isLoading = signal(false);
     public readonly isSaving = signal(false);
@@ -94,16 +83,14 @@ export class WaistHistoryPageComponent implements OnInit {
     );
 
     public readonly chartData = computed<ChartConfiguration<'line'>['data']>(() => {
-        const ordered = [...this.summaryPoints()].sort(
-            (a, b) => new Date(a.dateFrom).getTime() - new Date(b.dateFrom).getTime(),
-        );
+        const ordered = [...this.summaryPoints()].sort((a, b) => new Date(a.dateFrom).getTime() - new Date(b.dateFrom).getTime());
         const label = this.translate.instant('WAIST_HISTORY.CHART_LABEL');
 
         return {
             labels: ordered.map(point => this.formatDateLabel(point.dateFrom)),
             datasets: [
                 {
-                    data: ordered.map(point => point.averageCircumference > 0 ? point.averageCircumference : null),
+                    data: ordered.map(point => (point.averageCircumference > 0 ? point.averageCircumference : null)),
                     label,
                     borderColor: '#0ea5e9',
                     backgroundColor: 'transparent',
@@ -181,10 +168,7 @@ export class WaistHistoryPageComponent implements OnInit {
         }
 
         const rawPercent = (ratio / this.whtScaleMax) * 100;
-        const clamped = Math.max(
-            this.pointerPaddingPercent,
-            Math.min(100 - this.pointerPaddingPercent, rawPercent),
-        );
+        const clamped = Math.max(this.pointerPaddingPercent, Math.min(100 - this.pointerPaddingPercent, rawPercent));
         return `${clamped}%`;
     });
 
@@ -270,26 +254,22 @@ export class WaistHistoryPageComponent implements OnInit {
 
         this.isSaving.set(true);
         const editingId = this.editingEntryId();
-        const request$ = editingId
-            ? this.waistEntriesService.update(editingId, payload)
-            : this.waistEntriesService.create(payload);
+        const request$ = editingId ? this.waistEntriesService.update(editingId, payload) : this.waistEntriesService.create(payload);
 
-        request$
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: () => {
-                    this.isSaving.set(false);
-                    this.loadEntries(false, true);
-                    if (editingId) {
-                        this.resetEditingState();
-                    } else {
-                        this.form.controls.circumference.setValue(payload.circumference.toString());
-                    }
-                },
-                error: () => {
-                    this.isSaving.set(false);
-                },
-            });
+        request$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+            next: () => {
+                this.isSaving.set(false);
+                this.loadEntries(false, true);
+                if (editingId) {
+                    this.resetEditingState();
+                } else {
+                    this.form.controls.circumference.setValue(payload.circumference.toString());
+                }
+            },
+            error: () => {
+                this.isSaving.set(false);
+            },
+        });
     }
 
     public startEdit(entry: WaistEntry): void {

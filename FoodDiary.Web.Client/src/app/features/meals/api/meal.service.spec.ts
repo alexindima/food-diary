@@ -51,11 +51,7 @@ describe('MealService', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [
-                MealService,
-                provideHttpClient(),
-                provideHttpClientTesting(),
-            ],
+            providers: [MealService, provideHttpClient(), provideHttpClientTesting()],
         });
         service = TestBed.inject(MealService);
         httpMock = TestBed.inject(HttpTestingController);

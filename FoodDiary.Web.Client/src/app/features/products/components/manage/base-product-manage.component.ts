@@ -1,15 +1,12 @@
+import { ChangeDetectionStrategy, Component, DestroyRef, FactoryProvider, effect, inject, input, OnInit, signal } from '@angular/core';
 import {
-    ChangeDetectionStrategy,
-    Component,
-    DestroyRef,
-    FactoryProvider,
-    effect,
-    inject,
-    input,
-    OnInit,
-    signal,
-} from '@angular/core';
-import { CreateProductRequest, MeasurementUnit, Product, ProductType, ProductVisibility, UpdateProductRequest } from '../../models/product.data';
+    CreateProductRequest,
+    MeasurementUnit,
+    Product,
+    ProductType,
+    ProductVisibility,
+    UpdateProductRequest,
+} from '../../models/product.data';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { NavigationService } from '../../../../services/navigation.service';
@@ -23,10 +20,7 @@ import { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { normalizeProductType as normalizeProductTypeValue } from '../../lib/product-type.utils';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import {
-    ProductSaveSuccessDialogComponent,
-    ProductSaveSuccessDialogData,
-} from '../../dialogs/product-save-success-dialog.component';
+import { ProductSaveSuccessDialogComponent, ProductSaveSuccessDialogData } from '../../dialogs/product-save-success-dialog.component';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
 import { NutritionCalculationService } from '../../../../shared/lib/nutrition-calculation.service';
 import {
@@ -146,15 +140,13 @@ export class BaseProductManageComponent implements OnInit {
         this.buildProductTypeOptions();
         this.buildVisibilityOptions();
         this.buildNutritionModeOptions();
-        this.productForm.controls.baseUnit.valueChanges
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(unit => {
-                if (!unit) {
-                    return;
-                }
-                this.productForm.controls.baseAmount.setValue(this.getDefaultBaseAmount(unit));
-                this.buildNutritionModeOptions();
-            });
+        this.productForm.controls.baseUnit.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(unit => {
+            if (!unit) {
+                return;
+            }
+            this.productForm.controls.baseAmount.setValue(this.getDefaultBaseAmount(unit));
+            this.buildNutritionModeOptions();
+        });
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.buildUnitOptions();
             this.buildProductTypeOptions();
@@ -249,9 +241,7 @@ export class BaseProductManageComponent implements OnInit {
             cancelLabel: this.translateService.instant('CONFIRM_DELETE.CANCEL'),
         };
 
-        const confirmed = await firstValueFrom(
-            this.fdDialogService.open(ConfirmDeleteDialogComponent, { data, size: 'sm' }).afterClosed(),
-        );
+        const confirmed = await firstValueFrom(this.fdDialogService.open(ConfirmDeleteDialogComponent, { data, size: 'sm' }).afterClosed());
 
         if (!confirmed) {
             return;
@@ -279,28 +269,13 @@ export class BaseProductManageComponent implements OnInit {
         if (this.productForm.valid) {
             const baseAmount = this.getDefaultBaseAmount(this.productForm.controls.baseUnit.value);
             const defaultPortionAmount = this.getNumberValue(this.productForm.controls.defaultPortionAmount);
-            const normalizeFactor =
-                this.nutritionMode === 'portion' && defaultPortionAmount > 0
-                    ? baseAmount / defaultPortionAmount
-                    : 1;
-            const caloriesPerBase = this.roundValue(
-                this.getNumberValue(this.productForm.controls.caloriesPerBase) * normalizeFactor,
-            );
-            const proteinsPerBase = this.roundValue(
-                this.getNumberValue(this.productForm.controls.proteinsPerBase) * normalizeFactor,
-            );
-            const fatsPerBase = this.roundValue(
-                this.getNumberValue(this.productForm.controls.fatsPerBase) * normalizeFactor,
-            );
-            const carbsPerBase = this.roundValue(
-                this.getNumberValue(this.productForm.controls.carbsPerBase) * normalizeFactor,
-            );
-            const fiberPerBase = this.roundValue(
-                this.getNumberValue(this.productForm.controls.fiberPerBase) * normalizeFactor,
-            );
-            const alcoholPerBase = this.roundValue(
-                this.getNumberValue(this.productForm.controls.alcoholPerBase) * normalizeFactor,
-            );
+            const normalizeFactor = this.nutritionMode === 'portion' && defaultPortionAmount > 0 ? baseAmount / defaultPortionAmount : 1;
+            const caloriesPerBase = this.roundValue(this.getNumberValue(this.productForm.controls.caloriesPerBase) * normalizeFactor);
+            const proteinsPerBase = this.roundValue(this.getNumberValue(this.productForm.controls.proteinsPerBase) * normalizeFactor);
+            const fatsPerBase = this.roundValue(this.getNumberValue(this.productForm.controls.fatsPerBase) * normalizeFactor);
+            const carbsPerBase = this.roundValue(this.getNumberValue(this.productForm.controls.carbsPerBase) * normalizeFactor);
+            const fiberPerBase = this.roundValue(this.getNumberValue(this.productForm.controls.fiberPerBase) * normalizeFactor);
+            const alcoholPerBase = this.roundValue(this.getNumberValue(this.productForm.controls.alcoholPerBase) * normalizeFactor);
 
             const productData: CreateProductRequest = {
                 name: this.productForm.value.name!,
@@ -352,9 +327,7 @@ export class BaseProductManageComponent implements OnInit {
 
     public caloriesError(): string | null {
         const control = this.productForm.controls.caloriesPerBase;
-        return checkCaloriesError(control)
-            ? this.translateService.instant('PRODUCT_MANAGE.NUTRITION_ERRORS.CALORIES_REQUIRED')
-            : null;
+        return checkCaloriesError(control) ? this.translateService.instant('PRODUCT_MANAGE.NUTRITION_ERRORS.CALORIES_REQUIRED') : null;
     }
 
     public macrosError(): string | null {
@@ -365,9 +338,7 @@ export class BaseProductManageComponent implements OnInit {
             this.productForm.controls.alcoholPerBase,
         ];
 
-        return checkMacrosError(controls)
-            ? this.translateService.instant('PRODUCT_MANAGE.NUTRITION_ERRORS.MACROS_REQUIRED')
-            : null;
+        return checkMacrosError(controls) ? this.translateService.instant('PRODUCT_MANAGE.NUTRITION_ERRORS.MACROS_REQUIRED') : null;
     }
 
     public getControlError(controlName: keyof ProductFormData): string | null {
@@ -402,9 +373,7 @@ export class BaseProductManageComponent implements OnInit {
         const fats = this.getNumberValue(this.productForm.controls.fatsPerBase);
         const carbs = this.getNumberValue(this.productForm.controls.carbsPerBase);
         const alcohol = this.getNumberValue(this.productForm.controls.alcoholPerBase);
-        this.nutritionWarning.set(
-            calculateCalorieMismatchWarning(calories, proteins, fats, carbs, alcohol, this.calorieMismatchThreshold),
-        );
+        this.nutritionWarning.set(calculateCalorieMismatchWarning(calories, proteins, fats, carbs, alcohol, this.calorieMismatchThreshold));
     }
 
     private updateMacroDistribution(): void {
@@ -416,17 +385,12 @@ export class BaseProductManageComponent implements OnInit {
 
     private convertNutritionControls(factor: number): void {
         const patch: Partial<ProductFormValues> = {};
-        const fields: Array<keyof Pick<
-            ProductFormValues,
-            'caloriesPerBase' | 'proteinsPerBase' | 'fatsPerBase' | 'carbsPerBase' | 'fiberPerBase' | 'alcoholPerBase'
-        >> = [
-            'caloriesPerBase',
-            'proteinsPerBase',
-            'fatsPerBase',
-            'carbsPerBase',
-            'fiberPerBase',
-            'alcoholPerBase',
-        ];
+        const fields: Array<
+            keyof Pick<
+                ProductFormValues,
+                'caloriesPerBase' | 'proteinsPerBase' | 'fatsPerBase' | 'carbsPerBase' | 'fiberPerBase' | 'alcoholPerBase'
+            >
+        > = ['caloriesPerBase', 'proteinsPerBase', 'fatsPerBase', 'carbsPerBase', 'fiberPerBase', 'alcoholPerBase'];
 
         fields.forEach(field => {
             const control = this.productForm.controls[field];
@@ -443,11 +407,7 @@ export class BaseProductManageComponent implements OnInit {
         }
     }
 
-    private normalizeNutritionValues(
-        values: NutritionValues,
-        sourceAmount: number | null,
-        targetAmount: number,
-    ): NutritionValues {
+    private normalizeNutritionValues(values: NutritionValues, sourceAmount: number | null, targetAmount: number): NutritionValues {
         if (!sourceAmount || sourceAmount <= 0 || sourceAmount === targetAmount) {
             return values;
         }
@@ -492,8 +452,7 @@ export class BaseProductManageComponent implements OnInit {
 
     private populateForm(product: Product): void {
         const normalizedVisibility = this.normalizeVisibility(product.visibility);
-        const normalizedProductType =
-            normalizeProductTypeValue(product.productType ?? product.category ?? null) ?? ProductType.Unknown;
+        const normalizedProductType = normalizeProductTypeValue(product.productType ?? product.category ?? null) ?? ProductType.Unknown;
         const targetBaseAmount = this.getDefaultBaseAmount(product.baseUnit);
         const normalizedNutrition = this.normalizeNutritionValues(
             {
@@ -542,7 +501,8 @@ export class BaseProductManageComponent implements OnInit {
         const defaultPortionControl = this.productForm.controls.defaultPortionAmount;
         const targetBaseAmount = this.getDefaultBaseAmount(result.baseUnit);
         const shouldUpdatePortion =
-            defaultPortionControl.pristine || defaultPortionControl.value === this.getDefaultBaseAmount(this.productForm.controls.baseUnit.value);
+            defaultPortionControl.pristine ||
+            defaultPortionControl.value === this.getDefaultBaseAmount(this.productForm.controls.baseUnit.value);
         const normalizedNutrition = this.normalizeNutritionValues(
             {
                 caloriesPerBase: result.caloriesPerBase,
@@ -694,10 +654,10 @@ export class BaseProductManageComponent implements OnInit {
         };
 
         this.fdDialogService
-            .open<ProductSaveSuccessDialogComponent, ProductSaveSuccessDialogData, RedirectAction>(
-                ProductSaveSuccessDialogComponent,
-                { size: 'sm', data },
-            )
+            .open<ProductSaveSuccessDialogComponent, ProductSaveSuccessDialogData, RedirectAction>(ProductSaveSuccessDialogComponent, {
+                size: 'sm',
+                data,
+            })
             .afterClosed()
             .subscribe(redirectAction => {
                 if (redirectAction === 'Home') {

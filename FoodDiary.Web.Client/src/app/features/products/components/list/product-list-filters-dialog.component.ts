@@ -22,13 +22,7 @@ export interface ProductListFiltersDialogResult {
     templateUrl: './product-list-filters-dialog.component.html',
     styleUrls: ['./product-list-filters-dialog.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [
-        TranslatePipe,
-        FdUiDialogComponent,
-        FdUiDialogFooterDirective,
-        FdUiButtonComponent,
-        FdUiSegmentedToggleComponent,
-    ],
+    imports: [TranslatePipe, FdUiDialogComponent, FdUiDialogFooterDirective, FdUiButtonComponent, FdUiSegmentedToggleComponent],
 })
 export class ProductListFiltersDialogComponent {
     private readonly dialogRef = inject(FdUiDialogRef<ProductListFiltersDialogComponent, ProductListFiltersDialogResult | null>);
@@ -43,8 +37,9 @@ export class ProductListFiltersDialogComponent {
     public visibilityValue: 'all' | 'mine' = this.data.onlyMine ? 'mine' : 'all';
     public selectedTypes = new Set<ProductType>(this.data.productTypes ?? []);
 
-    public readonly productTypes: ProductType[] = (Object.values(ProductType) as ProductType[])
-        .filter(type => type !== ProductType.Unknown);
+    public readonly productTypes: ProductType[] = (Object.values(ProductType) as ProductType[]).filter(
+        type => type !== ProductType.Unknown,
+    );
 
     public onVisibilityChange(value: string): void {
         this.visibilityValue = value === 'mine' ? 'mine' : 'all';

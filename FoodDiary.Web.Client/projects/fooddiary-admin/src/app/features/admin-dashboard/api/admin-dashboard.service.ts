@@ -6,10 +6,10 @@ import { AdminDashboardSummary } from '../models/admin-dashboard.data';
 
 @Injectable({ providedIn: 'root' })
 export class AdminDashboardService {
-  private readonly http = inject(HttpClient);
-  private readonly baseUrl = `${environment.apiUrls.auth.replace(/\/auth$/, '')}/admin/dashboard`;
+    private readonly http = inject(HttpClient);
+    private readonly baseUrl = `${environment.apiUrls.auth.replace(/\/auth$/, '')}/admin/dashboard`;
 
-  public getSummary(): Observable<AdminDashboardSummary> {
-    return this.http.get<AdminDashboardSummary>(this.baseUrl);
-  }
+    public getSummary(): Observable<AdminDashboardSummary> {
+        return this.http.get<AdminDashboardSummary>(this.baseUrl);
+    }
 }

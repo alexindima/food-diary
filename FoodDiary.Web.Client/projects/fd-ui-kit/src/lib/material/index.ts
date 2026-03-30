@@ -1,9 +1,6 @@
 export * from '@angular/material/datepicker';
 
-export {
-    MatIconModule as FdUiIconModule,
-    MatIcon as FdUiIcon,
-} from '@angular/material/icon';
+export { MatIconModule as FdUiIconModule, MatIcon as FdUiIcon } from '@angular/material/icon';
 
 export {
     MatDialogModule as FdUiDialogModule,
@@ -11,9 +8,7 @@ export {
     MAT_DIALOG_DATA as FD_UI_DIALOG_DATA,
 } from '@angular/material/dialog';
 
-export {
-    MatSnackBarModule as FdUiSnackBarModule,
-} from '@angular/material/snack-bar';
+export { MatSnackBarModule as FdUiSnackBarModule } from '@angular/material/snack-bar';
 
 export {
     MatCalendarBody as FdUiCalendarBody,
@@ -27,10 +22,7 @@ export {
     MatDatepickerToggleIcon as FdUiDatepickerToggleIcon,
 } from '@angular/material/datepicker';
 
-export {
-    MatInputModule as FdUiInputFieldModule,
-    MatInput as FdUiInput,
-} from '@angular/material/input';
+export { MatInputModule as FdUiInputFieldModule, MatInput as FdUiInput } from '@angular/material/input';
 
 export {
     MatFormFieldModule as FdUiFormFieldModule,
@@ -42,6 +34,4 @@ export {
     MatSuffix as FdUiSuffix,
 } from '@angular/material/form-field';
 
-export {
-    MatNativeDateModule as FdUiNativeDateModule,
-} from '@angular/material/core';
+export { MatNativeDateModule as FdUiNativeDateModule } from '@angular/material/core';

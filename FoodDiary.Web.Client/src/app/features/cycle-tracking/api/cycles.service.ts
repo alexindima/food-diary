@@ -3,12 +3,7 @@ import { Observable, catchError, map, of, throwError } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
-import {
-    CreateCyclePayload,
-    CycleDay,
-    CycleResponse,
-    UpsertCycleDayPayload,
-} from '../models/cycle.data';
+import { CreateCyclePayload, CycleDay, CycleResponse, UpsertCycleDayPayload } from '../models/cycle.data';
 
 @Injectable({
     providedIn: 'root',

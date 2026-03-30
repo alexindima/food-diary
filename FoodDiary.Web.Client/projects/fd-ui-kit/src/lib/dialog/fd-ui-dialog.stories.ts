@@ -12,7 +12,7 @@ const meta: Meta<FdUiDialogShellComponent> = {
         dismissible: { control: 'boolean' },
         flush: { control: 'boolean' },
     },
-    render: (args) => ({
+    render: args => ({
         props: args,
         template: `
             <fd-ui-dialog-shell [title]="title" [subtitle]="subtitle" [size]="size" [dismissible]="dismissible" [flush]="flush">

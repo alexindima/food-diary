@@ -35,7 +35,8 @@ export const Default: Story = {
 
 export const WithValue: Story = {
     render: () => ({
-        template: '<fd-ui-textarea label="Notes" [ngModel]="\'This is a pre-filled textarea with some content.\'" [rows]="4"></fd-ui-textarea>',
+        template:
+            '<fd-ui-textarea label="Notes" [ngModel]="\'This is a pre-filled textarea with some content.\'" [rows]="4"></fd-ui-textarea>',
     }),
 };
 
@@ -71,6 +72,7 @@ export const WithMaxLength: Story = {
 
 export const Readonly: Story = {
     render: () => ({
-        template: '<fd-ui-textarea label="Readonly" [ngModel]="\'This content cannot be edited.\'" [readonly]="true" [rows]="3"></fd-ui-textarea>',
+        template:
+            '<fd-ui-textarea label="Readonly" [ngModel]="\'This content cannot be edited.\'" [readonly]="true" [rows]="3"></fd-ui-textarea>',
     }),
 };

@@ -95,7 +95,10 @@
         stroke: #e8eef9;
         opacity: 0.9;
         stroke-linecap: round;
-        transition: stroke 0.2s ease, filter 0.2s ease, transform 0.2s ease;
+        transition:
+            stroke 0.2s ease,
+            filter 0.2s ease,
+            transform 0.2s ease;
         transform-box: fill-box;
         transform-origin: center;
 
@@ -106,12 +109,16 @@
         &--weekly {
             stroke-width: 10;
         }
-
     }
 
     &__progress {
         stroke-linecap: round;
-        transition: stroke-dasharray 0s, stroke 0.8s linear, opacity 0.35s ease-in-out, transform 0.2s ease, filter 0.2s ease;
+        transition:
+            stroke-dasharray 0s,
+            stroke 0.8s linear,
+            opacity 0.35s ease-in-out,
+            transform 0.2s ease,
+            filter 0.2s ease;
         transform-box: fill-box;
         transform-origin: center;
 
@@ -122,7 +129,6 @@
         &--weekly {
             stroke-width: 10;
         }
-
     }
 
     &__center {
@@ -136,7 +142,9 @@
         gap: 6px;
         padding: 12px;
         color: variables.$color-text-main;
-        transition: transform 0.2s ease, opacity 0.2s ease;
+        transition:
+            transform 0.2s ease,
+            opacity 0.2s ease;
         pointer-events: none;
 
         &.is-daily-hovered .dashboard-summary-card__secondary-line {
@@ -162,7 +170,9 @@
         font-weight: 800;
         line-height: 1;
         color: #0f172a;
-        transition: transform 0.25s ease, opacity 0.25s ease;
+        transition:
+            transform 0.25s ease,
+            opacity 0.25s ease;
         padding-left: 6px;
     }
 
@@ -179,7 +189,9 @@
     &__primary-line {
         font-size: clamp(0.95rem, 2.4vw, 1rem);
         font-weight: 600;
-        transition: transform 0.25s ease, opacity 0.25s ease;
+        transition:
+            transform 0.25s ease,
+            opacity 0.25s ease;
 
         &--solo {
             font-size: clamp(1.4rem, 3vw, 1.9rem);
@@ -191,7 +203,10 @@
     &__secondary-line {
         font-size: clamp(0.9rem, 2.2vw, 0.95rem);
         color: variables.$color-text-additional;
-        transition: transform 0.2s ease, color 0.2s ease, opacity 0.2s ease;
+        transition:
+            transform 0.2s ease,
+            color 0.2s ease,
+            opacity 0.2s ease;
     }
 
     &__legend {
@@ -208,7 +223,9 @@
         display: flex;
         flex-direction: column;
         gap: 6px;
-        transition: transform 0.2s ease, filter 0.2s ease;
+        transition:
+            transform 0.2s ease,
+            filter 0.2s ease;
 
         &:hover {
             transform: translateY(-2px) scale(1.02);
@@ -283,4 +300,3 @@
         }
     }
 }
-

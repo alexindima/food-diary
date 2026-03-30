@@ -5,19 +5,10 @@
         {{ 'NOT_FOUND.DESCRIPTION' | translate }}
     </p>
     <div class="not-found__actions">
-        <fd-ui-button
-            routerLink="/"
-            class="not-found__button not-found__button--primary"
-            variant="primary"
-        >
+        <fd-ui-button routerLink="/" class="not-found__button not-found__button--primary" variant="primary">
             {{ 'NOT_FOUND.GO_HOME' | translate }}
         </fd-ui-button>
-        <fd-ui-button
-            routerLink="/products"
-            class="not-found__button not-found__button--secondary"
-            variant="secondary"
-            fill="outline"
-        >
+        <fd-ui-button routerLink="/products" class="not-found__button not-found__button--secondary" variant="secondary" fill="outline">
             {{ 'NOT_FOUND.VIEW_PRODUCTS' | translate }}
         </fd-ui-button>
     </div>

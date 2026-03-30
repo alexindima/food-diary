@@ -5,7 +5,7 @@ import {
     inject,
     isDevMode,
     provideAppInitializer,
-    provideZonelessChangeDetection
+    provideZonelessChangeDetection,
 } from '@angular/core';
 import { PreloadAllModules, provideRouter, withComponentInputBinding, withPreloading } from '@angular/router';
 import { routes } from './app.routes';
@@ -56,10 +56,7 @@ export const appConfig: ApplicationConfig = {
         provideZonelessChangeDetection(),
         provideRouter(routes, withComponentInputBinding(), withPreloading(PreloadAllModules)),
         provideHttpClient(withInterceptorsFromDi()),
-        importProvidersFrom(
-            TranslateModule.forRoot(),
-            FdUiSnackBarModule,
-        ),
+        importProvidersFrom(TranslateModule.forRoot(), FdUiSnackBarModule),
         provideTranslateHttpLoader({
             prefix: './assets/i18n/',
             suffix: `.json?v=${environment.buildVersion ?? 'dev'}`,
@@ -67,7 +64,7 @@ export const appConfig: ApplicationConfig = {
         provideCharts(withDefaultRegisterables()),
         provideServiceWorker('ngsw-worker.js', {
             enabled: !isDevMode(),
-            registrationStrategy: 'registerWhenStable:30000'
+            registrationStrategy: 'registerWhenStable:30000',
         }),
         TranslateService,
         LocalizationService,

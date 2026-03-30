@@ -43,7 +43,7 @@ export default [
             'object-shorthand': ['error', 'always'],
             curly: ['error', 'all'],
             'no-redeclare': 'error',
-            quotes: ['error', 'single'],
+            quotes: ['error', 'single', { avoidEscape: true }],
             'keyword-spacing': ['error', { after: true }],
             'prefer-const': 'error',
             eqeqeq: ['error', 'always'],

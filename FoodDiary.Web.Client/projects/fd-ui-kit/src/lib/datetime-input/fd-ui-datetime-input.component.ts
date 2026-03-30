@@ -1,20 +1,6 @@
 ﻿import { CommonModule } from '@angular/common';
-import {
-    ChangeDetectionStrategy,
-    Component,
-    DestroyRef,
-    ElementRef,
-    forwardRef,
-    inject,
-    input,
-    ViewEncapsulation,
-} from '@angular/core';
-import {
-    ControlValueAccessor,
-    FormControl,
-    NG_VALUE_ACCESSOR,
-    ReactiveFormsModule,
-} from '@angular/forms';
+import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, forwardRef, inject, input, ViewEncapsulation } from '@angular/core';
+import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 import { MatDatepicker, MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
@@ -27,14 +13,7 @@ let uniqueId = 0;
 @Component({
     selector: 'fd-ui-datetime-input',
     standalone: true,
-    imports: [
-        CommonModule,
-        ReactiveFormsModule,
-        MatDatepickerModule,
-        MatNativeDateModule,
-        MatInputModule,
-        MatIconModule,
-    ],
+    imports: [CommonModule, ReactiveFormsModule, MatDatepickerModule, MatNativeDateModule, MatInputModule, MatIconModule],
     templateUrl: './fd-ui-datetime-input.component.html',
     styleUrls: ['./fd-ui-datetime-input.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -68,9 +47,7 @@ export class FdUiDatetimeInputComponent implements ControlValueAccessor {
     private lastValidTime = '00:00';
 
     public constructor() {
-        this.dateControl.valueChanges
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(date => this.emitValue(date));
+        this.dateControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(date => this.emitValue(date));
     }
 
     protected get sizeClass(): string {
@@ -187,11 +164,10 @@ export class FdUiDatetimeInputComponent implements ControlValueAccessor {
 
         const time = this.parseTime(this.timeValue) ?? this.parseTime(this.lastValidTime) ?? { hours: 0, minutes: 0 };
         const value = new Date(date.getFullYear(), date.getMonth(), date.getDate(), time.hours, time.minutes);
-        const formatted = [
-            value.getFullYear(),
-            this.padNumber(value.getMonth() + 1),
-            this.padNumber(value.getDate()),
-        ].join('-') + 'T' + `${this.padNumber(time.hours)}:${this.padNumber(time.minutes)}`;
+        const formatted =
+            [value.getFullYear(), this.padNumber(value.getMonth() + 1), this.padNumber(value.getDate())].join('-') +
+            'T' +
+            `${this.padNumber(time.hours)}:${this.padNumber(time.minutes)}`;
         this.onChange(formatted);
     }
 
@@ -229,4 +205,3 @@ export class FdUiDatetimeInputComponent implements ControlValueAccessor {
         return value.toString().padStart(2, '0');
     }
 }
-

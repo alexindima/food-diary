@@ -3,9 +3,9 @@
 :host {
     display: flex;
     flex-direction: column;
-    background: radial-gradient(circle at 10% 10%, rgba(147, 197, 253, 0.08), transparent 22%),
-        radial-gradient(circle at 80% 0%, rgba(16, 185, 129, 0.04), transparent 25%),
-        #f9fafb;
+    background:
+        radial-gradient(circle at 10% 10%, rgba(147, 197, 253, 0.08), transparent 22%),
+        radial-gradient(circle at 80% 0%, rgba(16, 185, 129, 0.04), transparent 25%), #f9fafb;
     --tui-chart-categorical-00: variables.$color-proteins;
     --tui-chart-categorical-01: variables.$color-fats;
     --tui-chart-categorical-02: variables.$color-carbs;
@@ -218,4 +218,3 @@
         padding-top: variables.$gap-m;
     }
 }
-

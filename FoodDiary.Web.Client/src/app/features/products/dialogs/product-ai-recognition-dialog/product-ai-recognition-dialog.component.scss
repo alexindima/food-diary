@@ -81,7 +81,9 @@
         rgba(59, 130, 246, 1),
         rgba(59, 130, 246, 0)
     );
-    box-shadow: 0 0 22px rgba(59, 130, 246, 0.8), 0 0 40px rgba(96, 165, 250, 0.6);
+    box-shadow:
+        0 0 22px rgba(59, 130, 246, 0.8),
+        0 0 40px rgba(96, 165, 250, 0.6);
     filter: drop-shadow(0 0 8px rgba(96, 165, 250, 0.9));
     animation: product-ai-scan 4s ease-in-out infinite;
 }
@@ -95,7 +97,9 @@
         rgba(34, 197, 94, 1),
         rgba(34, 197, 94, 0)
     );
-    box-shadow: 0 0 22px rgba(34, 197, 94, 0.75), 0 0 40px rgba(74, 222, 128, 0.6);
+    box-shadow:
+        0 0 22px rgba(34, 197, 94, 0.75),
+        0 0 40px rgba(74, 222, 128, 0.6);
     filter: drop-shadow(0 0 8px rgba(74, 222, 128, 0.9));
 }
 
@@ -202,4 +206,3 @@
     justify-content: flex-end;
     flex-wrap: wrap;
 }
-

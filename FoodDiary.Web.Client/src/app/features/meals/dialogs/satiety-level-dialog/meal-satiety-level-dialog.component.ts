@@ -18,14 +18,7 @@ export interface SatietyLevelDialogData {
     standalone: true,
     templateUrl: './meal-satiety-level-dialog.component.html',
     styleUrls: ['./meal-satiety-level-dialog.component.scss'],
-    imports: [
-        FormsModule,
-        TranslateModule,
-        FdUiSatietyScaleComponent,
-        FdUiButtonComponent,
-        FdUiDialogComponent,
-        FdUiDialogFooterDirective,
-    ],
+    imports: [FormsModule, TranslateModule, FdUiSatietyScaleComponent, FdUiButtonComponent, FdUiDialogComponent, FdUiDialogFooterDirective],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MealSatietyLevelDialogComponent {

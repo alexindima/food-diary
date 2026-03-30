@@ -1,17 +1,9 @@
 ﻿<div class="auth">
     <div class="auth__tabs">
-        <button type="button"
-            class="auth__tab"
-            [class.auth__tab--active]="authMode === 'login'"
-            (click)="handleTabChange('login')"
-        >
+        <button type="button" class="auth__tab" [class.auth__tab--active]="authMode === 'login'" (click)="handleTabChange('login')">
             {{ 'AUTH.LOGIN.TITLE' | translate }}
         </button>
-        <button type="button"
-            class="auth__tab"
-            [class.auth__tab--active]="authMode === 'register'"
-            (click)="handleTabChange('register')"
-        >
+        <button type="button" class="auth__tab" [class.auth__tab--active]="authMode === 'register'" (click)="handleTabChange('register')">
             {{ 'AUTH.REGISTER.TITLE' | translate }}
         </button>
     </div>
@@ -29,13 +21,14 @@
             @if (showPasswordReset()) {
                 <form [formGroup]="passwordResetForm" (ngSubmit)="onPasswordResetSubmit()" class="auth__form">
                     <div class="auth__field">
-                        <fd-ui-input formControlName="email"
+                        <fd-ui-input
+                            formControlName="email"
                             type="email"
                             [label]="'AUTH.RESET.EMAIL' | translate"
                             [placeholder]="'AUTH.RESET.EMAIL_PLACEHOLDER' | translate"
                             autocomplete="email"
                             [error]="getControlError(passwordResetForm.controls.email)"
-                         />
+                        />
                     </div>
 
                     <div class="auth__actions">
@@ -56,13 +49,7 @@
                                 {{ 'AUTH.RESET.RESEND_COOLDOWN' | translate: { seconds: passwordResetCooldownSeconds() } }}
                             </p>
                         }
-                        <fd-ui-button
-                            type="button"
-                            variant="secondary"
-                            fill="outline"
-                            [fullWidth]="true"
-                            (click)="onPasswordResetClose()"
-                        >
+                        <fd-ui-button type="button" variant="secondary" fill="outline" [fullWidth]="true" (click)="onPasswordResetClose()">
                             {{ 'AUTH.RESET.BACK' | translate }}
                         </fd-ui-button>
                     </div>
@@ -70,40 +57,35 @@
             } @else {
                 <form [formGroup]="loginForm" (ngSubmit)="onLoginSubmit()" class="auth__form">
                     <div class="auth__field">
-                        <fd-ui-input formControlName="email"
+                        <fd-ui-input
+                            formControlName="email"
                             type="email"
                             [label]="'AUTH.LOGIN.EMAIL' | translate"
                             [placeholder]="'AUTH.LOGIN.EMAIL_PLACEHOLDER' | translate"
                             autocomplete="email"
                             [error]="getControlError(loginForm.controls.email)"
-                         />
+                        />
                     </div>
 
                     <div class="auth__field">
-                        <fd-ui-input formControlName="password"
+                        <fd-ui-input
+                            formControlName="password"
                             type="password"
                             [label]="'AUTH.LOGIN.PASSWORD' | translate"
                             [placeholder]="'AUTH.LOGIN.PASSWORD_PLACEHOLDER' | translate"
                             autocomplete="current-password"
                             [error]="getControlError(loginForm.controls.password)"
-                         />
+                        />
                     </div>
 
-                    <fd-ui-checkbox formControlName="rememberMe"
-                        [label]="'AUTH.LOGIN.REMEMBER_ME' | translate"
-                     />
+                    <fd-ui-checkbox formControlName="rememberMe" [label]="'AUTH.LOGIN.REMEMBER_ME' | translate" />
 
                     <button type="button" class="auth__link" (click)="onPasswordResetOpen()">
                         {{ 'AUTH.LOGIN.FORGOT_PASSWORD' | translate }}
                     </button>
 
                     <div class="auth__actions">
-                        <fd-ui-button
-                            type="submit"
-                            variant="primary"
-                            [disabled]="loginForm.invalid"
-                            [fullWidth]="true"
-                        >
+                        <fd-ui-button type="submit" variant="primary" [disabled]="loginForm.invalid" [fullWidth]="true">
                             {{ 'AUTH.LOGIN.LOGIN' | translate }}
                         </fd-ui-button>
                         <fd-ui-form-error [error]="globalError()" />
@@ -139,50 +121,46 @@
         } @else {
             <form [formGroup]="registerForm" (ngSubmit)="onRegisterSubmit()" class="auth__form">
                 <div class="auth__field">
-                    <fd-ui-input formControlName="email"
+                    <fd-ui-input
+                        formControlName="email"
                         type="email"
                         [label]="'AUTH.REGISTER.EMAIL' | translate"
                         [placeholder]="'AUTH.REGISTER.EMAIL_PLACEHOLDER' | translate"
                         autocomplete="email"
                         [error]="getControlError(registerForm.controls.email)"
-                     />
+                    />
                 </div>
                 <div class="auth__field">
-                    <fd-ui-input formControlName="password"
+                    <fd-ui-input
+                        formControlName="password"
                         type="password"
                         [label]="'AUTH.REGISTER.PASSWORD' | translate"
                         [placeholder]="'AUTH.REGISTER.PASSWORD_PLACEHOLDER' | translate"
                         autocomplete="new-password"
                         [error]="getControlError(registerForm.controls.password)"
-                     />
+                    />
                 </div>
                 <div class="auth__field">
-                    <fd-ui-input formControlName="confirmPassword"
+                    <fd-ui-input
+                        formControlName="confirmPassword"
                         type="password"
                         [label]="'AUTH.REGISTER.CONFIRM_PASSWORD' | translate"
                         [placeholder]="'AUTH.REGISTER.CONFIRM_PASSWORD_PLACEHOLDER' | translate"
                         autocomplete="new-password"
                         [error]="getControlError(registerForm.controls.confirmPassword)"
-                     />
+                    />
                 </div>
 
                 <div class="auth__checkbox-row">
-                    <fd-ui-checkbox formControlName="agreeTerms"
-                        label=""
-                     />
+                    <fd-ui-checkbox formControlName="agreeTerms" label="" />
                     <div
                         class="auth__checkbox-text"
-                        [innerHTML]="'AUTH.REGISTER.AGREE_TO_TERMS' | translate: { termsUrl: '/terms', privacyUrl: '/privacy'}"
+                        [innerHTML]="'AUTH.REGISTER.AGREE_TO_TERMS' | translate: { termsUrl: '/terms', privacyUrl: '/privacy' }"
                     ></div>
                 </div>
 
                 <div class="auth__actions">
-                    <fd-ui-button
-                        type="submit"
-                        variant="primary"
-                        [disabled]="registerForm.invalid"
-                        [fullWidth]="true"
-                    >
+                    <fd-ui-button type="submit" variant="primary" [disabled]="registerForm.invalid" [fullWidth]="true">
                         {{ 'AUTH.REGISTER.REGISTER' | translate }}
                     </fd-ui-button>
                     <fd-ui-form-error [error]="globalError()" />
@@ -193,7 +171,11 @@
                 </div>
 
                 <div class="auth__social">
-                    <div #googleRegisterButton class="auth__google-button" aria-label="{{ 'AUTH.GOOGLE.REGISTER_BUTTON' | translate }}"></div>
+                    <div
+                        #googleRegisterButton
+                        class="auth__google-button"
+                        aria-label="{{ 'AUTH.GOOGLE.REGISTER_BUTTON' | translate }}"
+                    ></div>
                     @if (!googleReady()) {
                         <div class="auth__google-hint">{{ 'AUTH.GOOGLE.UNAVAILABLE' | translate }}</div>
                     }
@@ -202,4 +184,3 @@
         }
     </div>
 </div>
-

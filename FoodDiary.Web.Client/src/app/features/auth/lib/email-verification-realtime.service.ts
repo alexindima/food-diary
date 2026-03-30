@@ -1,5 +1,5 @@
 import { Injectable, signal } from '@angular/core';
-import { HubConnection, HubConnectionBuilder, LogLevel } from '@microsoft/signalr';
+import type { HubConnection } from '@microsoft/signalr';
 import { environment } from '../../../../environments/environment';
 import { AuthService } from '../../../services/auth.service';
 
@@ -20,6 +20,8 @@ export class EmailVerificationRealtimeService {
         if (!token) {
             return;
         }
+
+        const { HubConnectionBuilder, LogLevel } = await import('@microsoft/signalr');
 
         const baseUrl = environment.apiUrls.auth.replace(/\/api\/auth$/, '');
         this.connection = new HubConnectionBuilder()

@@ -1,40 +1,38 @@
 <div class="fd-ui-radio-group" [class.fd-ui-radio-group--horizontal]="orientation() === 'horizontal'">
-  @if (label()) {
-    <label class="fd-ui-radio-group__label">
-      {{ label() }}@if (required()) {
-      <span aria-hidden="true">*</span>
+    @if (label()) {
+        <label class="fd-ui-radio-group__label">
+            {{ label() }}
+            @if (required()) {
+                <span aria-hidden="true">*</span>
+            }
+        </label>
     }
-  </label>
-}
 
-<mat-radio-group
-  class="fd-ui-radio-group__control"
-  [formControl]="control"
-  [attr.aria-describedby]="error() ? id() + '-error' : null"
-  [attr.aria-invalid]="error() ? 'true' : null"
-  (blur)="handleBlur()"
-  >
-  @for (option of options(); track trackByValue($index, option)) {
-    <mat-radio-button
-      class="fd-ui-radio"
-      [value]="option.value"
-      >
-      <span class="fd-ui-radio__text">
-        {{ option.label }}
-        @if (option.description) {
-          <small class="fd-ui-radio__description">
-            {{ option.description }}
-          </small>
+    <mat-radio-group
+        class="fd-ui-radio-group__control"
+        [formControl]="control"
+        [attr.aria-describedby]="error() ? id() + '-error' : null"
+        [attr.aria-invalid]="error() ? 'true' : null"
+        (blur)="handleBlur()"
+    >
+        @for (option of options(); track trackByValue($index, option)) {
+            <mat-radio-button class="fd-ui-radio" [value]="option.value">
+                <span class="fd-ui-radio__text">
+                    {{ option.label }}
+                    @if (option.description) {
+                        <small class="fd-ui-radio__description">
+                            {{ option.description }}
+                        </small>
+                    }
+                </span>
+            </mat-radio-button>
         }
-      </span>
-    </mat-radio-button>
-  }
-</mat-radio-group>
+    </mat-radio-group>
 
-@if (hint() && !error()) {
-  <p class="fd-ui-radio-group__hint">{{ hint() }}</p>
-}
-@if (error()) {
-  <p class="fd-ui-radio-group__error" [id]="id() + '-error'" role="alert">{{ error() }}</p>
-}
+    @if (hint() && !error()) {
+        <p class="fd-ui-radio-group__hint">{{ hint() }}</p>
+    }
+    @if (error()) {
+        <p class="fd-ui-radio-group__error" [id]="id() + '-error'" role="alert">{{ error() }}</p>
+    }
 </div>

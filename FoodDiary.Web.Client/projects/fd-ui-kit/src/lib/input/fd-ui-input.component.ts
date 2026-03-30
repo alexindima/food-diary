@@ -124,4 +124,3 @@ export class FdUiInputComponent implements ControlValueAccessor {
         control.focus();
     }
 }
-

@@ -79,9 +79,7 @@ export class UpdateUserDto {
         this.stepGoal = normalizeInteger(formValues.stepGoal);
         this.hydrationGoal = normalizeNumber((formValues as { hydrationGoal?: number | null }).hydrationGoal);
         this.language = normalizeLanguage((formValues as { language?: string | null }).language);
-        const normalizedImage = normalizeProfileImage(
-            formValues.profileImage as ImageSelection | string | null | undefined,
-        );
+        const normalizedImage = normalizeProfileImage(formValues.profileImage as ImageSelection | string | null | undefined);
         this.profileImage = normalizedImage?.url;
         this.profileImageAssetId = normalizedImage?.assetId;
     }
@@ -131,9 +129,7 @@ const normalizeLanguage = (value: string | null | undefined): string | undefined
     return normalized ? normalized : undefined;
 };
 
-const normalizeProfileImage = (
-    value: ImageSelection | string | null | undefined,
-): { url: string; assetId?: string } | undefined => {
+const normalizeProfileImage = (value: ImageSelection | string | null | undefined): { url: string; assetId?: string } | undefined => {
     if (!value) {
         return undefined;
     }

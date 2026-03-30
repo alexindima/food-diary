@@ -187,9 +187,7 @@ export class RecipeDetailComponent {
             return null;
         }
 
-        return this.recipe.isOwnedByCurrentUser
-            ? 'RECIPE_DETAIL.WARNING_IN_USE'
-            : 'RECIPE_DETAIL.WARNING_NOT_OWNER';
+        return this.recipe.isOwnedByCurrentUser ? 'RECIPE_DETAIL.WARNING_IN_USE' : 'RECIPE_DETAIL.WARNING_NOT_OWNER';
     }
 
     public get fiberValueComputed(): number {

@@ -1,19 +1,6 @@
 ﻿import { CommonModule } from '@angular/common';
-import {
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    forwardRef,
-    input,
-    ViewEncapsulation,
-} from '@angular/core';
-import {
-    ControlValueAccessor,
-    FormControl,
-    FormGroup,
-    NG_VALUE_ACCESSOR,
-    ReactiveFormsModule,
-} from '@angular/forms';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, input, ViewEncapsulation } from '@angular/core';
+import { ControlValueAccessor, FormControl, FormGroup, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 import { DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FdUiFieldSize } from '../types/field-size.type';
@@ -60,14 +47,12 @@ export class FdUiDateRangeInputComponent implements ControlValueAccessor {
     private onTouched: () => void = () => undefined;
 
     public constructor() {
-        this.rangeGroup.valueChanges
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(value => {
-                this.onChange({
-                    start: this.toDateValue(value.start),
-                    end: this.toDateValue(value.end),
-                });
+        this.rangeGroup.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(value => {
+            this.onChange({
+                start: this.toDateValue(value.start),
+                end: this.toDateValue(value.end),
             });
+        });
     }
 
     public writeValue(value: FdUiDateRangeValue | null): void {
@@ -138,4 +123,3 @@ export class FdUiDateRangeInputComponent implements ControlValueAccessor {
         return `${year}-${month}-${day}`;
     }
 }
-

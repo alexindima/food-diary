@@ -38,7 +38,10 @@
     top: 50%;
     left: 14px;
     transform: translateY(-50%);
-    transition: transform 0.15s ease, top 0.15s ease, font-size 0.15s ease;
+    transition:
+        transform 0.15s ease,
+        top 0.15s ease,
+        font-size 0.15s ease;
     background: var(--fd-date-label-bg);
     padding: 0 4px;
     pointer-events: none;
@@ -143,6 +146,3 @@
     white-space: normal;
     overflow-wrap: anywhere;
 }
-
-
-

@@ -30,10 +30,12 @@ export function calculateCaloriesFromMacros(
     carbs: number | null | undefined,
     alcohol: number | null | undefined = 0,
 ): number {
-    return normalizeMacroValue(proteins) * 4
-        + normalizeMacroValue(fats) * 9
-        + normalizeMacroValue(carbs) * 4
-        + normalizeMacroValue(alcohol) * 7;
+    return (
+        normalizeMacroValue(proteins) * 4 +
+        normalizeMacroValue(fats) * 9 +
+        normalizeMacroValue(carbs) * 4 +
+        normalizeMacroValue(alcohol) * 7
+    );
 }
 
 /**
@@ -74,11 +76,7 @@ export function calculateCalorieMismatchWarning(
  * Only macros with a positive value produce a segment. When every value is zero
  * (or negative) the returned state is `{ isEmpty: true, segments: [] }`.
  */
-export function calculateMacroBarState(
-    proteins: number,
-    fats: number,
-    carbs: number,
-): MacroBarState {
+export function calculateMacroBarState(proteins: number, fats: number, carbs: number): MacroBarState {
     const entries: Array<{ key: MacroKey; value: number }> = [
         { key: 'proteins', value: proteins },
         { key: 'fats', value: fats },
@@ -116,9 +114,7 @@ export function getControlNumericValue(control: { value: number | string | null 
     if (raw === null || raw === undefined || raw === '') {
         return 0;
     }
-    const value = typeof raw === 'string'
-        ? Number(raw.replace(',', '.').replace(/[^0-9.-]/g, ''))
-        : Number(raw);
+    const value = typeof raw === 'string' ? Number(raw.replace(',', '.').replace(/[^0-9.-]/g, '')) : Number(raw);
     return Number.isFinite(value) ? Math.max(0, value) : 0;
 }
 
@@ -133,9 +129,7 @@ export function roundNutrient(value: number): number {
  * Check whether a manual calories error should be shown.
  * Returns a translation key or null.
  */
-export function checkCaloriesError(
-    control: { value: number | null; touched: boolean; dirty: boolean },
-): boolean {
+export function checkCaloriesError(control: { value: number | null; touched: boolean; dirty: boolean }): boolean {
     if (!control.touched && !control.dirty) {
         return false;
     }
@@ -147,9 +141,7 @@ export function checkCaloriesError(
 /**
  * Check whether a manual macros error should be shown (all macros are zero).
  */
-export function checkMacrosError(
-    controls: Array<{ value: number | null; touched: boolean; dirty: boolean }>,
-): boolean {
+export function checkMacrosError(controls: Array<{ value: number | null; touched: boolean; dirty: boolean }>): boolean {
     const shouldShow = controls.some(c => c.touched || c.dirty);
     if (!shouldShow) {
         return false;

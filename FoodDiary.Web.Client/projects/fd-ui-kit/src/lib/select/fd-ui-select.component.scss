@@ -39,7 +39,10 @@
     top: 50%;
     left: 14px;
     transform: translateY(-50%);
-    transition: transform 0.15s ease, top 0.15s ease, font-size 0.15s ease;
+    transition:
+        transform 0.15s ease,
+        top 0.15s ease,
+        font-size 0.15s ease;
     background: var(--fd-select-label-bg);
     padding: 0 4px;
     pointer-events: none;
@@ -101,7 +104,9 @@
     height: 32px;
     color: #94a3b8;
     pointer-events: none;
-    transition: transform 0.15s ease, color 0.15s ease;
+    transition:
+        transform 0.15s ease,
+        color 0.15s ease;
 }
 
 .fd-ui-select__suffix--open {
@@ -152,4 +157,3 @@
     color: #1d4ed8;
     font-weight: 700;
 }
-

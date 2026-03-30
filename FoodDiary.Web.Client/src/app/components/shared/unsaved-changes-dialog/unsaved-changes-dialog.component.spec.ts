@@ -1,10 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { TranslateModule } from '@ngx-translate/core';
-import {
-    UnsavedChangesDialogComponent,
-    UnsavedChangesDialogData,
-} from './unsaved-changes-dialog.component';
+import { UnsavedChangesDialogComponent, UnsavedChangesDialogData } from './unsaved-changes-dialog.component';
 
 describe('UnsavedChangesDialogComponent', () => {
     let component: UnsavedChangesDialogComponent;

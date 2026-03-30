@@ -6,15 +6,15 @@
                 noticeVariant() === 'none'
                     ? ('DASHBOARD_SUMMARY.GOALS_TITLE' | translate)
                     : noticeVariant() === 'macros'
-                        ? ('DASHBOARD_SUMMARY.MACROS_TITLE' | translate)
-                        : ('DASHBOARD_SUMMARY.CALORIES_TITLE' | translate)
+                      ? ('DASHBOARD_SUMMARY.MACROS_TITLE' | translate)
+                      : ('DASHBOARD_SUMMARY.CALORIES_TITLE' | translate)
             "
             [message]="
                 noticeVariant() === 'none'
                     ? ('DASHBOARD_SUMMARY.GOALS_BODY' | translate)
                     : noticeVariant() === 'macros'
-                        ? ('DASHBOARD_SUMMARY.MACROS_BODY' | translate)
-                        : ('DASHBOARD_SUMMARY.CALORIES_BODY' | translate)
+                      ? ('DASHBOARD_SUMMARY.MACROS_BODY' | translate)
+                      : ('DASHBOARD_SUMMARY.CALORIES_BODY' | translate)
             "
             [actionLabel]="'DASHBOARD_SUMMARY.GOALS_ACTION' | translate"
             (action)="onGoalAction()"
@@ -27,29 +27,13 @@
             [class.is-weekly-hovered]="isWeeklyHovered()"
             [class.is-goal-missing]="normalizedDailyGoal() <= 0"
         >
-            <svg
-                class="dashboard-summary-card__svg"
-                viewBox="-5 -5 270 270"
-                aria-hidden="true"
-            >
+            <svg class="dashboard-summary-card__svg" viewBox="-5 -5 270 270" aria-hidden="true">
                 <defs>
-                    <linearGradient
-                        [id]="dailyGradientId"
-                        x1="0%"
-                        y1="0%"
-                        x2="100%"
-                        y2="100%"
-                    >
+                    <linearGradient [id]="dailyGradientId" x1="0%" y1="0%" x2="100%" y2="100%">
                         <stop offset="0%" [attr.stop-color]="dailyGradientStart()" />
                         <stop offset="100%" [attr.stop-color]="dailyGradientEnd()" />
                     </linearGradient>
-                    <linearGradient
-                        [id]="weeklyGradientId"
-                        x1="0%"
-                        y1="0%"
-                        x2="100%"
-                        y2="100%"
-                    >
+                    <linearGradient [id]="weeklyGradientId" x1="0%" y1="0%" x2="100%" y2="100%">
                         <stop offset="0%" [attr.stop-color]="weeklyGradientStart()" />
                         <stop offset="100%" [attr.stop-color]="weeklyGradientEnd()" />
                     </linearGradient>
@@ -126,9 +110,9 @@
                     class="dashboard-summary-card__primary-line"
                     [class.dashboard-summary-card__primary-line--solo]="normalizedDailyGoal() <= 0"
                 >
-                    {{ dailyConsumed() | number:'1.0-0' }}
+                    {{ dailyConsumed() | number: '1.0-0' }}
                     @if (normalizedDailyGoal() > 0) {
-                        / {{ normalizedDailyGoal() | number:'1.0-0' }}
+                        / {{ normalizedDailyGoal() | number: '1.0-0' }}
                     }
                     {{ 'CONSUMPTION_RING.UNIT' | translate }}
                 </div>
@@ -147,13 +131,10 @@
                         <span class="dashboard-summary-card__bar-label">
                             {{ bar.labelKey ? (bar.labelKey | translate) : bar.label }}
                         </span>
-                        <span
-                            class="dashboard-summary-card__bar-value"
-                            [style.color]="getBarColor(bar)"
-                        >
-                            {{ bar.current | number:'1.0-0' }}
+                        <span class="dashboard-summary-card__bar-value" [style.color]="getBarColor(bar)">
+                            {{ bar.current | number: '1.0-0' }}
                             @if (bar.target > 0) {
-                                / {{ bar.target | number:'1.0-0' }}
+                                / {{ bar.target | number: '1.0-0' }}
                             }
                             {{ bar.unitKey ? (bar.unitKey | translate) : bar.unit }}
                         </span>
@@ -162,9 +143,7 @@
                         <div
                             class="dashboard-summary-card__bar-fill"
                             [style.background]="
-                                bar.target > 0
-                                    ? 'linear-gradient(90deg, ' + bar.colorStart + ' 0%, ' + bar.colorEnd + ' 100%)'
-                                    : '#d1d5db'
+                                bar.target > 0 ? 'linear-gradient(90deg, ' + bar.colorStart + ' 0%, ' + bar.colorEnd + ' 100%)' : '#d1d5db'
                             "
                             [style.width.%]="bar.target > 0 ? clampPercent((bar.current / bar.target) * 100) : 100"
                         ></div>

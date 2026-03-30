@@ -6,7 +6,9 @@
         </div>
         <div class="landing-section__actions">
             <fd-ui-button size="lg" variant="primary" (click)="openAuth('register')">{{ 'LANDING_CTA.REGISTER' | translate }}</fd-ui-button>
-            <fd-ui-button size="lg" variant="secondary" fill="outline" (click)="openAuth('login')">{{ 'LANDING_CTA.LOGIN' | translate }}</fd-ui-button>
+            <fd-ui-button size="lg" variant="secondary" fill="outline" (click)="openAuth('login')">{{
+                'LANDING_CTA.LOGIN' | translate
+            }}</fd-ui-button>
         </div>
     </div>
 </section>

@@ -20,7 +20,14 @@
                     <fd-ui-loader />
                 </div>
             }
-            <video #video class="barcode-scanner__video" [class.barcode-scanner__video--hidden]="!isCameraReady()" autoplay playsinline muted></video>
+            <video
+                #video
+                class="barcode-scanner__video"
+                [class.barcode-scanner__video--hidden]="!isCameraReady()"
+                autoplay
+                playsinline
+                muted
+            ></video>
         }
     </div>
 </fd-ui-dialog>

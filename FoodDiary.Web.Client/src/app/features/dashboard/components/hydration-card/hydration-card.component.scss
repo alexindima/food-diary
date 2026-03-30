@@ -105,14 +105,14 @@
         color: rgba(255, 255, 255, 0.95);
     }
 
-
     &__watermark {
         position: absolute;
         right: -26px;
         bottom: -36px;
         width: 180px;
         height: 180px;
-        background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.35), transparent 55%),
+        background:
+            radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.35), transparent 55%),
             radial-gradient(circle at 60% 60%, rgba(255, 255, 255, 0.25), transparent 55%);
         opacity: 0.35;
         filter: blur(0.2px);

@@ -19,13 +19,7 @@ export interface RecipeListFiltersDialogResult {
     templateUrl: './recipe-list-filters-dialog.component.html',
     styleUrls: ['./recipe-list-filters-dialog.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [
-        TranslatePipe,
-        FdUiDialogComponent,
-        FdUiDialogFooterDirective,
-        FdUiButtonComponent,
-        FdUiSegmentedToggleComponent,
-    ],
+    imports: [TranslatePipe, FdUiDialogComponent, FdUiDialogFooterDirective, FdUiButtonComponent, FdUiSegmentedToggleComponent],
 })
 export class RecipeListFiltersDialogComponent {
     private readonly dialogRef = inject(FdUiDialogRef<RecipeListFiltersDialogComponent, RecipeListFiltersDialogResult | null>);

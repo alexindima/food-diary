@@ -18,9 +18,7 @@ export class StatisticsService extends ApiService {
             dateTo: this.toIsoString(params.dateTo),
         };
 
-        return this.get<AggregatedStatistics[]>('', queryParams).pipe(
-            catchError(() => of([])),
-        );
+        return this.get<AggregatedStatistics[]>('', queryParams).pipe(catchError(() => of([])));
     }
 
     private toIsoString(value: Date | string): string {

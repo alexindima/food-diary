@@ -25,7 +25,7 @@ import { ProductNutritionEditorComponent } from '../components/manage/product-nu
         ManageHeaderComponent,
         ProductBasicInfoComponent,
         ProductNutritionEditorComponent,
-    ]
+    ],
 })
 export class ProductAddDialogComponent extends BaseProductManageComponent {
     private readonly dialogRef = inject(FdUiDialogRef<ProductAddDialogComponent, Product | null>);

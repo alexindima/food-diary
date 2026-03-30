@@ -1,10 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { TranslateModule } from '@ngx-translate/core';
-import {
-    PremiumRequiredDialogComponent,
-    PremiumRequiredDialogData,
-} from './premium-required-dialog.component';
+import { PremiumRequiredDialogComponent, PremiumRequiredDialogData } from './premium-required-dialog.component';
 
 describe('PremiumRequiredDialogComponent', () => {
     let component: PremiumRequiredDialogComponent;

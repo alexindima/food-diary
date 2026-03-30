@@ -4,8 +4,14 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiSegmentedToggleComponent, FdUiSegmentedToggleOption } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle.component';
-import { NutritionEditorComponent, NutritionControlNames } from '../../../../../components/shared/nutrition-editor/nutrition-editor.component';
-import { NutritionMacroState, NutritionMismatchWarning } from '../../../../../components/shared/nutrition-editor/nutrition-editor.component';
+import {
+    NutritionEditorComponent,
+    NutritionControlNames,
+} from '../../../../../components/shared/nutrition-editor/nutrition-editor.component';
+import {
+    NutritionMacroState,
+    NutritionMismatchWarning,
+} from '../../../../../components/shared/nutrition-editor/nutrition-editor.component';
 import { ProductFormData, NutritionMode } from '../base-product-manage.component';
 
 @Component({

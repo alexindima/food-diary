@@ -32,7 +32,10 @@
     color: #475569;
     border: 1px solid rgba(15, 23, 42, 0.08);
     box-shadow: none;
-    transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+    transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        box-shadow 0.2s ease;
 }
 
 :host ::ng-deep .unsaved-changes-dialog__action button:hover,
@@ -54,4 +57,3 @@
     background: linear-gradient(135deg, #5ab5ff, #2d6df0);
     color: #fff;
 }
-

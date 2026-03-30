@@ -1,4 +1,3 @@
-
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -17,7 +16,7 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ImageUploadService } from '../../../shared/api/image-upload.service';
 import { ImageSelection } from '../../../shared/models/image-upload.data';
-import Cropper from 'cropperjs';
+import type Cropper from 'cropperjs';
 
 @Component({
     selector: 'fd-image-upload-field',
@@ -153,9 +152,10 @@ export class ImageUploadFieldComponent implements ControlValueAccessor, OnInit {
         }
     }
 
-    public onCropperImageLoaded(img: HTMLImageElement): void {
+    public async onCropperImageLoaded(img: HTMLImageElement): Promise<void> {
         this.destroyCropper();
-        this.cropper = new Cropper(img, {});
+        const { default: CropperClass } = await import('cropperjs');
+        this.cropper = new CropperClass(img, {});
 
         const selection = this.cropper.getCropperSelection();
         const aspectRatio = this.cropAspectRatio();
@@ -245,9 +245,9 @@ export class ImageUploadFieldComponent implements ControlValueAccessor, OnInit {
             .requestUploadUrl(file)
             .pipe(
                 switchMap(presign =>
-                    this.imageUploadService.uploadToPresignedUrl(presign.uploadUrl, file).pipe(
-                        map(() => ({ url: presign.fileUrl, assetId: presign.assetId })),
-                    ),
+                    this.imageUploadService
+                        .uploadToPresignedUrl(presign.uploadUrl, file)
+                        .pipe(map(() => ({ url: presign.fileUrl, assetId: presign.assetId }))),
                 ),
                 finalize(() => {
                     this.isUploading = false;
@@ -292,9 +292,9 @@ export class ImageUploadFieldComponent implements ControlValueAccessor, OnInit {
         let canvas = await selection.$toCanvas(
             fixedSize
                 ? {
-                    width: fixedSize,
-                    height: fixedSize,
-                }
+                      width: fixedSize,
+                      height: fixedSize,
+                  }
                 : undefined,
         );
 

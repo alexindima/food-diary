@@ -6,7 +6,11 @@ import { NavigationService } from '../services/navigation.service';
 import { signal } from '@angular/core';
 
 describe('authGuard', () => {
-    let authServiceMock: { getToken: ReturnType<typeof vi.fn>; isAuthenticated: ReturnType<typeof signal>; isEmailConfirmed: ReturnType<typeof signal> };
+    let authServiceMock: {
+        getToken: ReturnType<typeof vi.fn>;
+        isAuthenticated: ReturnType<typeof signal>;
+        isEmailConfirmed: ReturnType<typeof signal>;
+    };
     let navigationServiceMock: {
         navigateToAuth: ReturnType<typeof vi.fn>;
         navigateToEmailVerificationPending: ReturnType<typeof vi.fn>;

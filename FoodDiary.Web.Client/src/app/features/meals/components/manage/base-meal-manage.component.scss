@@ -422,7 +422,9 @@
         box-shadow: 0 8px 20px fade(variables.$color-text-main, 8%);
         position: relative;
         overflow: hidden;
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        transition:
+            transform 0.2s ease,
+            box-shadow 0.2s ease;
 
         &::before {
             content: '';
@@ -676,8 +678,6 @@
     &__ai-summary-more:hover {
         color: variables.$color-text-main;
     }
-
-
 }
 
 .consumption-items {
@@ -856,4 +856,3 @@
         gap: variables.$gap-m;
     }
 }
-

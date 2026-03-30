@@ -15,9 +15,7 @@ export class DashboardLayoutService {
 
     private readonly layoutInitialized = signal<boolean>(false);
     private readonly layoutSnapshot = signal<DashboardLayoutSettings | null>(null);
-    private readonly viewportWidth = signal<number>(
-        typeof window === 'undefined' ? 1024 : window.innerWidth,
-    );
+    private readonly viewportWidth = signal<number>(typeof window === 'undefined' ? 1024 : window.innerWidth);
 
     public readonly layoutSettings = signal<DashboardLayoutSettings>({
         web: [...DEFAULT_LAYOUT.web!],
@@ -26,9 +24,7 @@ export class DashboardLayoutService {
 
     public readonly isEditingLayout = signal<boolean>(false);
 
-    public readonly layoutKey = computed<'web' | 'mobile'>(() =>
-        this.viewportWidth() < 768 ? 'mobile' : 'web',
-    );
+    public readonly layoutKey = computed<'web' | 'mobile'>(() => (this.viewportWidth() < 768 ? 'mobile' : 'web'));
 
     public readonly visibleBlocks = computed(() => this.getLayoutForKey(this.layoutKey()));
 

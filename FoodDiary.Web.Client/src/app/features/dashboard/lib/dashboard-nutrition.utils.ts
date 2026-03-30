@@ -114,10 +114,7 @@ export function createConsumptionRingSignal(
     });
 }
 
-export function createMealPreviewSignal(
-    meals: Signal<Meal[]>,
-    isTodaySelected: Signal<boolean>,
-): Signal<MealPreviewEntry[]> {
+export function createMealPreviewSignal(meals: Signal<Meal[]>, isTodaySelected: Signal<boolean>): Signal<MealPreviewEntry[]> {
     return computed<MealPreviewEntry[]>(() => {
         const mealList = [...(meals() ?? [])];
 

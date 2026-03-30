@@ -6,14 +6,14 @@ import { AdminEmailTemplate, AdminEmailTemplateUpsertRequest } from '../models/a
 
 @Injectable({ providedIn: 'root' })
 export class AdminEmailTemplatesService {
-  private readonly http = inject(HttpClient);
-  private readonly baseUrl = `${environment.apiUrls.auth.replace(/\/auth$/, '')}/admin/email-templates`;
+    private readonly http = inject(HttpClient);
+    private readonly baseUrl = `${environment.apiUrls.auth.replace(/\/auth$/, '')}/admin/email-templates`;
 
-  public getAll(): Observable<AdminEmailTemplate[]> {
-    return this.http.get<AdminEmailTemplate[]>(this.baseUrl);
-  }
+    public getAll(): Observable<AdminEmailTemplate[]> {
+        return this.http.get<AdminEmailTemplate[]>(this.baseUrl);
+    }
 
-  public upsert(key: string, locale: string, request: AdminEmailTemplateUpsertRequest): Observable<AdminEmailTemplate> {
-    return this.http.put<AdminEmailTemplate>(`${this.baseUrl}/${key}/${locale}`, request);
-  }
+    public upsert(key: string, locale: string, request: AdminEmailTemplateUpsertRequest): Observable<AdminEmailTemplate> {
+        return this.http.put<AdminEmailTemplate>(`${this.baseUrl}/${key}/${locale}`, request);
+    }
 }

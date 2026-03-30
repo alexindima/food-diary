@@ -1,12 +1,4 @@
-import {
-    ChangeDetectionStrategy,
-    Component,
-    DestroyRef,
-    FactoryProvider,
-    inject,
-    OnInit,
-    signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, FactoryProvider, inject, OnInit, signal } from '@angular/core';
 import { NgIf } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -15,16 +7,15 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import {
-    FdUiFormErrorComponent,
-    FD_VALIDATION_ERRORS,
-    FdValidationErrors,
-} from 'fd-ui-kit/form-error/fd-ui-form-error.component';
+import { FdUiFormErrorComponent, FD_VALIDATION_ERRORS, FdValidationErrors } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
 import { FdUiDateInputComponent } from 'fd-ui-kit/date-input/fd-ui-date-input.component';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiSelectComponent, FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
 import { PageBodyComponent } from '../../../components/shared/page-body/page-body.component';
-import { ConfirmDeleteDialogComponent, ConfirmDeleteDialogData } from '../../../components/shared/confirm-delete-dialog/confirm-delete-dialog.component';
+import {
+    ConfirmDeleteDialogComponent,
+    ConfirmDeleteDialogData,
+} from '../../../components/shared/confirm-delete-dialog/confirm-delete-dialog.component';
 import { ImageUploadFieldComponent } from '../../../components/shared/image-upload-field/image-upload-field.component';
 import { PageHeaderComponent } from '../../../components/shared/page-header/page-header.component';
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
@@ -112,22 +103,18 @@ export class UserManageComponent implements OnInit {
         });
 
         this.buildSelectOptions();
-        this.translateService.onLangChange
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => this.buildSelectOptions());
+        this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.buildSelectOptions());
     }
 
     public ngOnInit(): void {
         this.userForm.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.clearGlobalError());
-        this.userForm.controls.language.valueChanges
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(language => {
-                if (!this.userForm.controls.language.dirty) {
-                    return;
-                }
+        this.userForm.controls.language.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(language => {
+            if (!this.userForm.controls.language.dirty) {
+                return;
+            }
 
-                this.applyLanguagePreference(language ?? null);
-            });
+            this.applyLanguagePreference(language ?? null);
+        });
 
         this.loadUserData();
     }

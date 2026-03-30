@@ -1,4 +1,11 @@
-<div class="product-card" role="button" tabindex="0" (click)="handleOpen()" (keydown.enter)="handleOpen()" (keydown.space)="handleOpen(); $event.preventDefault()">
+<div
+    class="product-card"
+    role="button"
+    tabindex="0"
+    (click)="handleOpen()"
+    (keydown.enter)="handleOpen()"
+    (keydown.space)="handleOpen(); $event.preventDefault()"
+>
     <div class="product-card__thumb">
         @if (imageUrl()) {
             <img [src]="imageUrl()" [alt]="product().name" />
@@ -39,7 +46,7 @@
     <div class="product-card__action-group">
         <div class="product-card__calories-inline">
             <span class="product-card__calories-value">
-                {{ product().caloriesPerBase | number:'1.0-0' }}
+                {{ product().caloriesPerBase | number: '1.0-0' }}
             </span>
             <span class="product-card__calories-unit">{{ 'GENERAL.UNITS.KCAL' | translate }}</span>
         </div>

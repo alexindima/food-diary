@@ -1,31 +1,36 @@
-﻿<div class="fd-ui-textarea" [ngClass]="[sizeClass, error() ? 'fd-ui-textarea--has-error' : '', shouldFloatLabel ? 'fd-ui-textarea--floating' : '']">
-  <div class="fd-ui-textarea__control-wrap" [style.background]="fillColor() || null" (click)="focusControl(control)" role="presentation">
-    @if (label()) {
-      <label class="fd-ui-textarea__label" [attr.for]="id()">
-        <span class="fd-ui-textarea__label-text">{{ label() }}</span>@if (required()) {<span class="fd-ui-textarea__required">*</span>}
-      </label>
+﻿<div
+    class="fd-ui-textarea"
+    [ngClass]="[sizeClass, error() ? 'fd-ui-textarea--has-error' : '', shouldFloatLabel ? 'fd-ui-textarea--floating' : '']"
+>
+    <div class="fd-ui-textarea__control-wrap" [style.background]="fillColor() || null" (click)="focusControl(control)" role="presentation">
+        @if (label()) {
+            <label class="fd-ui-textarea__label" [attr.for]="id()">
+                <span class="fd-ui-textarea__label-text">{{ label() }}</span>
+                @if (required()) {
+                    <span class="fd-ui-textarea__required">*</span>
+                }
+            </label>
+        }
+        <textarea
+            #control
+            class="fd-ui-textarea__control"
+            [id]="id()"
+            [value]="internalValue"
+            [required]="required()"
+            [readonly]="readonly()"
+            [disabled]="disabled"
+            [attr.placeholder]="shouldShowPlaceholder ? (placeholder() ?? null) : null"
+            [attr.maxlength]="maxLength() ?? null"
+            [attr.rows]="rows()"
+            [attr.aria-describedby]="error() ? id() + '-error' : null"
+            [attr.aria-invalid]="error() ? 'true' : null"
+            (input)="onInput($any($event.target).value)"
+            (focus)="onFocus()"
+            (blur)="onBlur()"
+        ></textarea>
+    </div>
+
+    @if (error()) {
+        <div class="fd-ui-textarea__error" [id]="id() + '-error'" role="alert">{{ error() }}</div>
     }
-    <textarea
-      #control
-      class="fd-ui-textarea__control"
-      [id]="id()"
-      [value]="internalValue"
-      [required]="required()"
-      [readonly]="readonly()"
-      [disabled]="disabled"
-      [attr.placeholder]="shouldShowPlaceholder ? (placeholder() ?? null) : null"
-      [attr.maxlength]="maxLength() ?? null"
-      [attr.rows]="rows()"
-      [attr.aria-describedby]="error() ? id() + '-error' : null"
-      [attr.aria-invalid]="error() ? 'true' : null"
-      (input)="onInput($any($event.target).value)"
-      (focus)="onFocus()"
-      (blur)="onBlur()"
-    ></textarea>
-  </div>
-
-  @if (error()) {
-    <div class="fd-ui-textarea__error" [id]="id() + '-error'" role="alert">{{ error() }}</div>
-  }
 </div>
-

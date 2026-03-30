@@ -1,23 +1,13 @@
 <div class="goals" fdPageContainer>
-    <fd-page-header
-        class="goals__header"
-        [title]="'GOALS_PAGE.TITLE' | translate"
-        [subtitle]="'GOALS_PAGE.SUBTITLE' | translate"
-    >
+    <fd-page-header class="goals__header" [title]="'GOALS_PAGE.TITLE' | translate" [subtitle]="'GOALS_PAGE.SUBTITLE' | translate">
         <ng-container fdPageHeaderActions>
-            <fd-ui-button
-                class="goals__primary-action"
-                icon="save"
-                [disabled]="isSavingGoals() || isLoadingGoals()"
-                (click)="saveGoals()"
-            >
+            <fd-ui-button class="goals__primary-action" icon="save" [disabled]="isSavingGoals() || isLoadingGoals()" (click)="saveGoals()">
                 {{ 'GOALS_PAGE.SAVE_BUTTON' | translate }}
             </fd-ui-button>
         </ng-container>
     </fd-page-header>
 
     <fd-page-body>
-
         <div class="goals__grid">
             <div class="goals__column goals__column--main">
                 <div class="goals__main-grid">
@@ -74,14 +64,14 @@
                                                 <input
                                                     type="number"
                                                     class="goals__macro-input"
-                                                [min]="0"
-                                                [max]="water.max"
-                                                [value]="water.value"
-                                                (input)="onWaterInputChange($event)"
-                                            />
-                                            <span class="goals__macro-unit">{{ water.unit }}</span>
+                                                    [min]="0"
+                                                    [max]="water.max"
+                                                    [value]="water.value"
+                                                    (input)="onWaterInputChange($event)"
+                                                />
+                                                <span class="goals__macro-unit">{{ water.unit }}</span>
+                                            </div>
                                         </div>
-                                    </div>
 
                                         <div
                                             class="goals__macro-slider"
@@ -138,14 +128,14 @@
                                                 <input
                                                     type="number"
                                                     class="goals__macro-input"
-                                                [min]="0"
-                                                [max]="macro.max"
-                                                [value]="macro.value"
-                                                (input)="onMacroInputChange(macro.key, $event)"
-                                            />
-                                            <span class="goals__macro-unit">{{ macro.unit }}</span>
+                                                    [min]="0"
+                                                    [max]="macro.max"
+                                                    [value]="macro.value"
+                                                    (input)="onMacroInputChange(macro.key, $event)"
+                                                />
+                                                <span class="goals__macro-unit">{{ macro.unit }}</span>
+                                            </div>
                                         </div>
-                                    </div>
 
                                         <div
                                             class="goals__macro-slider"
@@ -183,13 +173,13 @@
                                                 <input
                                                     type="number"
                                                     class="goals__macro-input"
-                                                [min]="0"
-                                                [max]="fiber.max"
-                                                [value]="fiber.value"
-                                                (input)="onMacroInputChange(fiber.key, $event)"
-                                            />
-                                            <span class="goals__macro-unit">{{ fiber.unit }}</span>
-                                        </div>
+                                                    [min]="0"
+                                                    [max]="fiber.max"
+                                                    [value]="fiber.value"
+                                                    (input)="onMacroInputChange(fiber.key, $event)"
+                                                />
+                                                <span class="goals__macro-unit">{{ fiber.unit }}</span>
+                                            </div>
                                         </div>
                                         <div
                                             class="goals__macro-slider"
@@ -237,7 +227,7 @@
                                 <div class="goals__target-meta">
                                     @if (target.current && target.delta) {
                                         <span class="goals__meta-label">
-                                            {{ 'GOALS_PAGE.CURRENT_LABEL' | translate:{ value: target.current, unit: target.unit } }}
+                                            {{ 'GOALS_PAGE.CURRENT_LABEL' | translate: { value: target.current, unit: target.unit } }}
                                         </span>
                                         <span class="goals__delta goals__delta--positive">
                                             {{ target.delta }} {{ 'GOALS_PAGE.TO_GO' | translate }}

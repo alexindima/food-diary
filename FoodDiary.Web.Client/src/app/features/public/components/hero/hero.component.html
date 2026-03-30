@@ -15,21 +15,10 @@
             <p class="hero__subtitle">{{ 'LANDING_HERO.SUBTITLE' | translate }}</p>
 
             <div class="hero__actions">
-                <fd-ui-button
-                    class="hero__cta hero__cta--primary"
-                    size="lg"
-                    variant="primary"
-                    (click)="goToRegister()"
-                >
+                <fd-ui-button class="hero__cta hero__cta--primary" size="lg" variant="primary" (click)="goToRegister()">
                     {{ 'LANDING_HERO.REGISTER' | translate }}
                 </fd-ui-button>
-                <fd-ui-button
-                    class="hero__cta hero__cta--secondary"
-                    size="lg"
-                    variant="secondary"
-                    fill="outline"
-                    (click)="goToLogin()"
-                >
+                <fd-ui-button class="hero__cta hero__cta--secondary" size="lg" variant="secondary" fill="outline" (click)="goToLogin()">
                     {{ 'LANDING_HERO.LOGIN' | translate }}
                 </fd-ui-button>
             </div>

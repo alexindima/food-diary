@@ -1,8 +1,4 @@
-import {
-    calculateCaloriesFromMacros,
-    calculateCalorieMismatchWarning,
-    calculateMacroBarState,
-} from './nutrition-form.utils';
+import { calculateCaloriesFromMacros, calculateCalorieMismatchWarning, calculateMacroBarState } from './nutrition-form.utils';
 
 describe('nutrition-form.utils', () => {
     describe('calculateCaloriesFromMacros', () => {
@@ -174,17 +170,13 @@ describe('nutrition-form.utils', () => {
         it('should handle single positive macro', () => {
             const result = calculateMacroBarState(0, 10, 0);
             expect(result.isEmpty).toBe(false);
-            expect(result.segments).toEqual([
-                { key: 'fats', percent: 100 },
-            ]);
+            expect(result.segments).toEqual([{ key: 'fats', percent: 100 }]);
         });
 
         it('should exclude negative values from segments', () => {
             const result = calculateMacroBarState(-5, 10, 0);
             expect(result.isEmpty).toBe(false);
-            expect(result.segments).toEqual([
-                { key: 'fats', percent: 100 },
-            ]);
+            expect(result.segments).toEqual([{ key: 'fats', percent: 100 }]);
         });
 
         it('should calculate correct percentages for realistic macros', () => {

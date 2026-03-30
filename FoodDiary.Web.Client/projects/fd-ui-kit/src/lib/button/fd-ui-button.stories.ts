@@ -37,7 +37,7 @@ const meta: Meta<FdUiButtonComponent> = {
         fullWidth: { control: 'boolean' },
         ariaLabel: { control: 'text' },
     },
-    render: (args) => ({
+    render: args => ({
         props: args,
         template: `<fd-ui-button
             [variant]="variant"
@@ -118,7 +118,7 @@ export const IconOnly: Story = {
         icon: 'edit',
         ariaLabel: 'Edit',
     },
-    render: (args) => ({
+    render: args => ({
         props: args,
         template: `<fd-ui-button
             [variant]="variant"

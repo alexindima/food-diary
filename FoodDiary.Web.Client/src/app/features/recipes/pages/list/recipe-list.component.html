@@ -1,13 +1,10 @@
 <div class="recipe-list" fdPageContainer #container>
-    <fd-page-header
-        class="recipe-list__header"
-        [title]="'RECIPE_LIST.TITLE' | translate"
-        [subtitle]="'RECIPE_LIST.SUBTITLE' | translate"
-    >
+    <fd-page-header class="recipe-list__header" [title]="'RECIPE_LIST.TITLE' | translate" [subtitle]="'RECIPE_LIST.SUBTITLE' | translate">
         <ng-container fdPageHeaderActions>
             @if (isMobileView()) {
                 <div class="recipe-list__mobile-toolbar">
-                    <fd-ui-button class="recipe-list__icon-button recipe-list__filter-button"
+                    <fd-ui-button
+                        class="recipe-list__icon-button recipe-list__filter-button"
                         variant="secondary"
                         fill="outline"
                         icon="filter_alt"
@@ -35,7 +32,8 @@
             } @else {
                 <div class="recipe-list__controls">
                     <form class="recipe-list__search-form" [formGroup]="searchForm">
-                        <fd-ui-input class="recipe-list__search-input"
+                        <fd-ui-input
+                            class="recipe-list__search-input"
                             formControlName="search"
                             [label]="'RECIPE_LIST.SEARCH_LABEL' | translate"
                             [prefixIcon]="'search'"
@@ -47,7 +45,8 @@
                     </form>
 
                     <div class="recipe-list__filters">
-                        <fd-ui-button class="recipe-list__icon-button recipe-list__filter-button"
+                        <fd-ui-button
+                            class="recipe-list__icon-button recipe-list__filter-button"
                             variant="secondary"
                             fill="outline"
                             icon="filter_alt"
@@ -71,10 +70,10 @@
         </ng-container>
 
         @if (isMobileView()) {
-            <div fdPageHeaderExtra class="recipe-list__mobile-search"
-                [class.recipe-list__mobile-search--open]="isMobileSearchVisible">
+            <div fdPageHeaderExtra class="recipe-list__mobile-search" [class.recipe-list__mobile-search--open]="isMobileSearchVisible">
                 <form class="recipe-list__search-form recipe-list__search-form--mobile" [formGroup]="searchForm">
-                    <fd-ui-input class="recipe-list__search-input"
+                    <fd-ui-input
+                        class="recipe-list__search-input"
                         formControlName="search"
                         [label]="'RECIPE_LIST.SEARCH_LABEL' | translate"
                         [prefixIcon]="'search'"
@@ -151,7 +150,8 @@
         }
 
         @if (recipeData.totalPages > 1) {
-            <fd-ui-pagination class="recipe-list__pagination"
+            <fd-ui-pagination
+                class="recipe-list__pagination"
                 [length]="recipeData.totalItems"
                 [pageSize]="pageSize"
                 [pageIndex]="currentPageIndex"

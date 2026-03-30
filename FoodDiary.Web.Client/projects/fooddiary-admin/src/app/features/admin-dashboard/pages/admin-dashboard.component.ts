@@ -8,48 +8,48 @@ import { AdminDashboardService } from '../api/admin-dashboard.service';
 import { AdminDashboardSummary } from '../models/admin-dashboard.data';
 
 @Component({
-  selector: 'fd-admin-dashboard',
-  standalone: true,
-  imports: [CommonModule, FdUiCardComponent],
-  templateUrl: './admin-dashboard.component.html',
-  styleUrl: './admin-dashboard.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'fd-admin-dashboard',
+    standalone: true,
+    imports: [CommonModule, FdUiCardComponent],
+    templateUrl: './admin-dashboard.component.html',
+    styleUrl: './admin-dashboard.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminDashboardComponent {
-  private readonly dashboardService = inject(AdminDashboardService);
-  private readonly aiUsageService = inject(AdminAiUsageService);
-  private readonly destroyRef = inject(DestroyRef);
+    private readonly dashboardService = inject(AdminDashboardService);
+    private readonly aiUsageService = inject(AdminAiUsageService);
+    private readonly destroyRef = inject(DestroyRef);
 
-  public readonly summary = signal<AdminDashboardSummary | null>(null);
-  public readonly aiUsage = signal<AdminAiUsageSummary | null>(null);
-  public readonly isLoading = signal(false);
+    public readonly summary = signal<AdminDashboardSummary | null>(null);
+    public readonly aiUsage = signal<AdminAiUsageSummary | null>(null);
+    public readonly isLoading = signal(false);
 
-  public constructor() {
-    this.loadSummary();
-  }
+    public constructor() {
+        this.loadSummary();
+    }
 
-  public loadSummary(): void {
-    this.isLoading.set(true);
-    this.dashboardService
-      .getSummary()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: response => {
-          this.summary.set(response);
-          this.isLoading.set(false);
-        },
-        error: () => {
-          this.summary.set(null);
-          this.isLoading.set(false);
-        },
-      });
+    public loadSummary(): void {
+        this.isLoading.set(true);
+        this.dashboardService
+            .getSummary()
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe({
+                next: response => {
+                    this.summary.set(response);
+                    this.isLoading.set(false);
+                },
+                error: () => {
+                    this.summary.set(null);
+                    this.isLoading.set(false);
+                },
+            });
 
-    this.aiUsageService
-      .getSummary()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: response => this.aiUsage.set(response),
-        error: () => this.aiUsage.set(null),
-      });
-  }
+        this.aiUsageService
+            .getSummary()
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe({
+                next: response => this.aiUsage.set(response),
+                error: () => this.aiUsage.set(null),
+            });
+    }
 }

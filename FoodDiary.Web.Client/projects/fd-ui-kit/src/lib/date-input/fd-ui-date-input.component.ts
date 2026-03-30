@@ -1,14 +1,5 @@
 ﻿import { CommonModule } from '@angular/common';
-import {
-    ChangeDetectionStrategy,
-    Component,
-    DestroyRef,
-    ElementRef,
-    forwardRef,
-    inject,
-    input,
-    ViewEncapsulation,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, forwardRef, inject, input, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 import { MatDatepicker, MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
@@ -22,14 +13,7 @@ let uniqueId = 0;
 @Component({
     selector: 'fd-ui-date-input',
     standalone: true,
-    imports: [
-        CommonModule,
-        ReactiveFormsModule,
-        MatDatepickerModule,
-        MatNativeDateModule,
-        MatInputModule,
-        MatIconModule,
-    ],
+    imports: [CommonModule, ReactiveFormsModule, MatDatepickerModule, MatNativeDateModule, MatInputModule, MatIconModule],
     templateUrl: './fd-ui-date-input.component.html',
     styleUrls: ['./fd-ui-date-input.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -61,9 +45,7 @@ export class FdUiDateInputComponent implements ControlValueAccessor {
     private onTouched: () => void = () => undefined;
 
     public constructor() {
-        this.dateControl.valueChanges
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(date => this.emitValue(date));
+        this.dateControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(date => this.emitValue(date));
     }
 
     protected get sizeClass(): string {
@@ -136,11 +118,7 @@ export class FdUiDateInputComponent implements ControlValueAccessor {
             return;
         }
 
-        const formatted = [
-            date.getFullYear(),
-            this.padNumber(date.getMonth() + 1),
-            this.padNumber(date.getDate()),
-        ].join('-');
+        const formatted = [date.getFullYear(), this.padNumber(date.getMonth() + 1), this.padNumber(date.getDate())].join('-');
         this.onChange(formatted);
     }
 
@@ -160,4 +138,3 @@ export class FdUiDateInputComponent implements ControlValueAccessor {
         return value.toString().padStart(2, '0');
     }
 }
-

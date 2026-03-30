@@ -100,18 +100,14 @@ describe('ProductDetailComponent', () => {
     it('should emit edit action', () => {
         component.onEdit();
 
-        expect(mockDialogRef.close).toHaveBeenCalledWith(
-            expect.objectContaining({ id: '1', action: 'Edit' }),
-        );
+        expect(mockDialogRef.close).toHaveBeenCalledWith(expect.objectContaining({ id: '1', action: 'Edit' }));
     });
 
     it('should emit delete action after confirmation', () => {
         component.onDelete();
 
         expect(mockFdDialogService.open).toHaveBeenCalled();
-        expect(mockDialogRef.close).toHaveBeenCalledWith(
-            expect.objectContaining({ id: '1', action: 'Delete' }),
-        );
+        expect(mockDialogRef.close).toHaveBeenCalledWith(expect.objectContaining({ id: '1', action: 'Delete' }));
     });
 
     it('should detect if user can modify (owned, no usage)', () => {
@@ -230,9 +226,7 @@ describe('ProductDetailComponent', () => {
         component.onDuplicate();
 
         expect(mockProductService.duplicate).toHaveBeenCalledWith('1');
-        expect(mockDialogRef.close).toHaveBeenCalledWith(
-            expect.objectContaining({ id: '2', action: 'Duplicate' }),
-        );
+        expect(mockDialogRef.close).toHaveBeenCalledWith(expect.objectContaining({ id: '2', action: 'Duplicate' }));
     });
 
     it('should build macro blocks with correct values', () => {

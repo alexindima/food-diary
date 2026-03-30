@@ -16,6 +16,7 @@ import { AuthComponent } from '../../components/auth/auth.component';
     imports: [FdUiDialogShellComponent, AuthComponent],
 })
 export class AuthDialogComponent {
-    public readonly data: { mode: 'login' | 'register' } =
-        inject<{ mode: 'login' | 'register' }>(FD_UI_DIALOG_DATA, { optional: true }) ?? { mode: 'login' };
+    public readonly data: { mode: 'login' | 'register' } = inject<{ mode: 'login' | 'register' }>(FD_UI_DIALOG_DATA, {
+        optional: true,
+    }) ?? { mode: 'login' };
 }

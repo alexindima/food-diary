@@ -17,10 +17,7 @@ describe('LocalizedDatePipe', () => {
         translateSpy.getCurrentLang.mockReturnValue('en');
 
         TestBed.configureTestingModule({
-            providers: [
-                LocalizedDatePipe,
-                { provide: TranslateService, useValue: translateSpy },
-            ],
+            providers: [LocalizedDatePipe, { provide: TranslateService, useValue: translateSpy }],
         });
 
         pipe = TestBed.inject(LocalizedDatePipe);
@@ -44,7 +41,7 @@ describe('LocalizedDatePipe', () => {
         expect(result).toBeUndefined();
     });
 
-    it('should use default pattern \'mediumDate\'', () => {
+    it("should use default pattern 'mediumDate'", () => {
         const date = new Date(2026, 0, 15);
         const defaultResult = pipe.transform(date);
         const explicitResult = pipe.transform(date, 'mediumDate');

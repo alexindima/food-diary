@@ -65,9 +65,7 @@ export class DashboardSummaryCardComponent {
     public readonly safeWeeklyConsumed = computed(() => Math.max(this.weeklyConsumed(), 0));
 
     public readonly dailyPercent = computed(() => this.calculatePercent(this.dailyConsumed(), this.normalizedDailyGoal()));
-    public readonly weeklyPercent = computed(() =>
-        this.calculatePercent(this.safeWeeklyConsumed(), this.normalizedWeeklyGoal())
-    );
+    public readonly weeklyPercent = computed(() => this.calculatePercent(this.safeWeeklyConsumed(), this.normalizedWeeklyGoal()));
 
     private readonly animatedDailyPercent = signal(0);
     private readonly animatedWeeklyPercent = signal(0);
@@ -233,7 +231,13 @@ export class DashboardSummaryCardComponent {
 
     private hexToRgb(hex: string): [number, number, number] {
         const normalized = hex.replace('#', '');
-        const value = normalized.length === 3 ? normalized.split('').map(ch => ch + ch).join('') : normalized;
+        const value =
+            normalized.length === 3
+                ? normalized
+                      .split('')
+                      .map(ch => ch + ch)
+                      .join('')
+                : normalized;
         const num = parseInt(value, 16);
         const r = (num >> 16) & 0xff;
         const g = (num >> 8) & 0xff;
@@ -282,10 +286,50 @@ export class DashboardSummaryCardComponent {
 
     private buildDefaultNutrientBars(): NutrientBar[] {
         return [
-            { id: 'protein', label: 'Protein', labelKey: 'GENERAL.NUTRIENTS.PROTEIN', current: 110, target: 140, unit: 'g', unitKey: 'GENERAL.UNITS.G', colorStart: '#4dabff', colorEnd: '#2563eb' },
-            { id: 'carbs', label: 'Carbs', labelKey: 'GENERAL.NUTRIENTS.CARB', current: 180, target: 250, unit: 'g', unitKey: 'GENERAL.UNITS.G', colorStart: '#2dd4bf', colorEnd: '#0ea5e9' },
-            { id: 'fats', label: 'Fats', labelKey: 'GENERAL.NUTRIENTS.FAT', current: 45, target: 70, unit: 'g', unitKey: 'GENERAL.UNITS.G', colorStart: '#fbbf24', colorEnd: '#f97316' },
-            { id: 'fiber', label: 'Fiber', labelKey: 'SHARED.NUTRIENTS_SUMMARY.FIBER', current: 18, target: 30, unit: 'g', unitKey: 'GENERAL.UNITS.G', colorStart: '#fb7185', colorEnd: '#ec4899' },
+            {
+                id: 'protein',
+                label: 'Protein',
+                labelKey: 'GENERAL.NUTRIENTS.PROTEIN',
+                current: 110,
+                target: 140,
+                unit: 'g',
+                unitKey: 'GENERAL.UNITS.G',
+                colorStart: '#4dabff',
+                colorEnd: '#2563eb',
+            },
+            {
+                id: 'carbs',
+                label: 'Carbs',
+                labelKey: 'GENERAL.NUTRIENTS.CARB',
+                current: 180,
+                target: 250,
+                unit: 'g',
+                unitKey: 'GENERAL.UNITS.G',
+                colorStart: '#2dd4bf',
+                colorEnd: '#0ea5e9',
+            },
+            {
+                id: 'fats',
+                label: 'Fats',
+                labelKey: 'GENERAL.NUTRIENTS.FAT',
+                current: 45,
+                target: 70,
+                unit: 'g',
+                unitKey: 'GENERAL.UNITS.G',
+                colorStart: '#fbbf24',
+                colorEnd: '#f97316',
+            },
+            {
+                id: 'fiber',
+                label: 'Fiber',
+                labelKey: 'SHARED.NUTRIENTS_SUMMARY.FIBER',
+                current: 18,
+                target: 30,
+                unit: 'g',
+                unitKey: 'GENERAL.UNITS.G',
+                colorStart: '#fb7185',
+                colorEnd: '#ec4899',
+            },
         ];
     }
 

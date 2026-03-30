@@ -31,19 +31,15 @@ export class WeightTrendCardComponent {
     public readonly iconGradient = input<string>('linear-gradient(135deg, #ff4f85, #ff7e9c)');
 
     public readonly chartData = computed<ChartConfiguration<'line'>['data'] | null>(() => {
-        const ordered = [...this.points()].sort(
-            (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
-        );
-        const values = ordered.map(point => (point.value ?? null));
+        const ordered = [...this.points()].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+        const values = ordered.map(point => point.value ?? null);
         const hasValue = values.some(value => value !== null && !isNaN(value as number));
         if (!hasValue) {
             return null;
         }
 
         const labels = ordered.map(() => '');
-        const lastIndexFromEnd = [...values]
-            .reverse()
-            .findIndex(value => value !== null && !isNaN(value as number));
+        const lastIndexFromEnd = [...values].reverse().findIndex(value => value !== null && !isNaN(value as number));
         const lastIndex = lastIndexFromEnd === -1 ? -1 : values.length - 1 - lastIndexFromEnd;
 
         return {

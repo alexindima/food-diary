@@ -10,10 +10,7 @@ describe('FdUiToastService', () => {
         snackBarSpy = { open: vi.fn() } as any;
 
         TestBed.configureTestingModule({
-            providers: [
-                FdUiToastService,
-                { provide: MatSnackBar, useValue: snackBarSpy },
-            ],
+            providers: [FdUiToastService, { provide: MatSnackBar, useValue: snackBarSpy }],
         });
 
         service = TestBed.inject(FdUiToastService);

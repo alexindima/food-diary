@@ -97,7 +97,11 @@ export class LandingPreviewTourComponent implements OnInit {
     };
     public pieOptions: ChartOptions<'pie'> = {};
     public radarOptions: ChartOptions<'radar'> = { scales: { r: { beginAtZero: true } } };
-    public barOptions: ChartOptions<'bar'> = { plugins: { legend: { display: false } }, responsive: true, scales: { y: { beginAtZero: true } } };
+    public barOptions: ChartOptions<'bar'> = {
+        plugins: { legend: { display: false } },
+        responsive: true,
+        scales: { y: { beginAtZero: true } },
+    };
 
     private readonly clearPreviewOnAuth = effect(() => {
         if (this.isAuthenticated()) {
@@ -107,9 +111,7 @@ export class LandingPreviewTourComponent implements OnInit {
 
     public ngOnInit(): void {
         this.refreshPreviewContent();
-        this.translateService.onLangChange
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => this.refreshPreviewContent());
+        this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.refreshPreviewContent());
     }
 
     public addPreviewProduct(product: Product): void {
@@ -236,9 +238,21 @@ export class LandingPreviewTourComponent implements OnInit {
         return {
             labels: this.getWeekdayLabels(),
             datasets: [
-                { data: [110, 120, 130, 125, 140, 135, 138], label: nutrientLabels.proteins, borderColor: '#36A2EB', tension: 0.35, borderWidth: 2 },
+                {
+                    data: [110, 120, 130, 125, 140, 135, 138],
+                    label: nutrientLabels.proteins,
+                    borderColor: '#36A2EB',
+                    tension: 0.35,
+                    borderWidth: 2,
+                },
                 { data: [40, 42, 45, 44, 46, 48, 47], label: nutrientLabels.fats, borderColor: '#FFCE56', tension: 0.35, borderWidth: 2 },
-                { data: [160, 170, 180, 175, 185, 190, 195], label: nutrientLabels.carbs, borderColor: '#4BC0C0', tension: 0.35, borderWidth: 2 },
+                {
+                    data: [160, 170, 180, 175, 185, 190, 195],
+                    label: nutrientLabels.carbs,
+                    borderColor: '#4BC0C0',
+                    tension: 0.35,
+                    borderWidth: 2,
+                },
             ],
         };
     }

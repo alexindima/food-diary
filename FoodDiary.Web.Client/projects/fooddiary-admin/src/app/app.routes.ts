@@ -6,28 +6,28 @@ import { adminPublicRoutes } from './features/admin-public/admin-public.routes';
 import { adminUsersRoutes } from './features/admin-users/admin-users.routes';
 
 export const routes: Routes = [
-  {
-    path: '',
-    children: adminDashboardRoutes,
-  },
-  {
-    path: 'users',
-    children: adminUsersRoutes,
-  },
-  {
-    path: 'ai-usage',
-    children: adminAiUsageRoutes,
-  },
-  {
-    path: 'email-templates',
-    children: adminEmailTemplatesRoutes,
-  },
-  {
-    path: '',
-    children: adminPublicRoutes,
-  },
-  {
-    path: '**',
-    redirectTo: '',
-  },
+    {
+        path: '',
+        children: adminDashboardRoutes,
+    },
+    {
+        path: 'users',
+        children: adminUsersRoutes,
+    },
+    {
+        path: 'ai-usage',
+        children: adminAiUsageRoutes,
+    },
+    {
+        path: 'email-templates',
+        children: adminEmailTemplatesRoutes,
+    },
+    {
+        path: '',
+        children: adminPublicRoutes,
+    },
+    {
+        path: '**',
+        redirectTo: '',
+    },
 ];

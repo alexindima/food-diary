@@ -27,7 +27,7 @@
                                         [label]="'CONSUMPTION_MANAGE.CHOOSE_DATE' | translate"
                                         [required]="true"
                                         [error]="getControlError('date')"
-                                     />
+                                    />
                                 </div>
                                 <div class="consumption-manage__field">
                                     <fd-ui-time-input
@@ -36,7 +36,7 @@
                                         [label]="'CONSUMPTION_MANAGE.CHOOSE_TIME' | translate"
                                         [required]="true"
                                         [error]="getControlError('time')"
-                                     />
+                                    />
                                 </div>
                             </div>
                             <div class="consumption-manage__field">
@@ -47,7 +47,7 @@
                                     [placeholder]="'CONSUMPTION_MANAGE.MEAL_TYPE_PLACEHOLDER' | translate"
                                     [options]="mealTypeSelectOptions"
                                     [error]="getControlError('mealType')"
-                                 />
+                                />
                             </div>
                         </div>
                     </div>
@@ -58,14 +58,11 @@
                             [label]="'CONSUMPTION_MANAGE.COMMENT' | translate"
                             [placeholder]="'CONSUMPTION_MANAGE.COMMENT_PLACEHOLDER' | translate"
                             [rows]="3"
-                         />
+                        />
                     </div>
                 </fd-ui-card>
 
-                <fd-ui-card
-                    class="consumption-manage__card"
-                    [title]="'CONSUMPTION_MANAGE.SATIETY_SECTION_TITLE' | translate"
-                >
+                <fd-ui-card class="consumption-manage__card" [title]="'CONSUMPTION_MANAGE.SATIETY_SECTION_TITLE' | translate">
                     <p class="consumption-manage__satiety-note">
                         {{ 'CONSUMPTION_MANAGE.SATIETY_SECTION_HINT' | translate }}
                     </p>

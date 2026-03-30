@@ -22,14 +22,15 @@
     min-height: var(--fd-button-height, 40px);
     padding: 0 var(--fd-button-padding-x, 1rem);
     text-transform: none;
-    transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease,
-        box-shadow 0.15s ease, transform 0.15s ease;
+    transition:
+        background-color 0.15s ease,
+        border-color 0.15s ease,
+        color 0.15s ease,
+        box-shadow 0.15s ease,
+        transform 0.15s ease;
 
     &:hover:not(:disabled) {
-        background-color: var(
-            --fd-button-background-hover,
-            var(--fd-button-background-default)
-        );
+        background-color: var(--fd-button-background-hover, var(--fd-button-background-default));
         border-color: var(--fd-button-border-hover, var(--fd-button-border-default));
         color: var(--fd-button-text-hover, var(--fd-button-text-default));
         box-shadow: 0 8px 20px rgba(15, 23, 42, 0.15);
@@ -37,10 +38,7 @@
     }
 
     &:active:not(:disabled) {
-        background-color: var(
-            --fd-button-background-active,
-            var(--fd-button-background-hover)
-        );
+        background-color: var(--fd-button-background-active, var(--fd-button-background-hover));
         border-color: var(--fd-button-border-active, var(--fd-button-border-hover));
         color: var(--fd-button-text-active, var(--fd-button-text-hover, var(--fd-button-text-default)));
         box-shadow: none;
@@ -48,10 +46,7 @@
     }
 
     &:disabled {
-        background-color: var(
-            --fd-button-background-disabled,
-            var(--fd-button-background-default)
-        );
+        background-color: var(--fd-button-background-disabled, var(--fd-button-background-default));
         border-color: var(--fd-button-border-disabled, var(--fd-button-border-default));
         color: var(--fd-button-text-disabled, var(--fd-button-text-default));
         box-shadow: none;

@@ -14,7 +14,7 @@ const meta: Meta<FdUiAccentSurfaceComponent> = {
         active: { control: 'boolean' },
         tinted: { control: 'boolean' },
     },
-    render: (args) => ({
+    render: args => ({
         props: args,
         template: `
             <fd-ui-accent-surface

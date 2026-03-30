@@ -26,10 +26,7 @@ import { FormGroupControls } from '../../../../shared/lib/common.data';
 import { PagedData } from '../../../../shared/lib/paged-data.data';
 import { buildProductTypeTranslationKey } from '../../lib/product-type.utils';
 import { resolveProductImageUrl } from '../../lib/product-image.util';
-import {
-    ProductListFiltersDialogComponent,
-    ProductListFiltersDialogResult,
-} from './product-list-filters-dialog.component';
+import { ProductListFiltersDialogComponent, ProductListFiltersDialogResult } from './product-list-filters-dialog.component';
 
 @Component({
     selector: 'fd-product-list-base',
@@ -162,10 +159,14 @@ export class ProductListBaseComponent implements OnInit {
         const currentTypes = this.selectedProductTypes();
 
         this.fdDialogService
-            .open<ProductListFiltersDialogComponent, {
-                onlyMine: boolean;
-                productTypes: ProductType[];
-            }, ProductListFiltersDialogResult | null>(ProductListFiltersDialogComponent, {
+            .open<
+                ProductListFiltersDialogComponent,
+                {
+                    onlyMine: boolean;
+                    productTypes: ProductType[];
+                },
+                ProductListFiltersDialogResult | null
+            >(ProductListFiltersDialogComponent, {
                 size: 'sm',
                 data: {
                     onlyMine: currentOnlyMine,
@@ -263,9 +264,7 @@ export class ProductListBaseComponent implements OnInit {
     }
 
     public get allProductsSectionLabelKey(): string {
-        return this.hasSearchValue(this.searchForm.controls.search.value)
-            ? 'PRODUCT_LIST.SEARCH_RESULTS'
-            : 'PRODUCT_LIST.ALL_PRODUCTS';
+        return this.hasSearchValue(this.searchForm.controls.search.value) ? 'PRODUCT_LIST.SEARCH_RESULTS' : 'PRODUCT_LIST.ALL_PRODUCTS';
     }
 
     public get isMobileSearchVisible(): boolean {

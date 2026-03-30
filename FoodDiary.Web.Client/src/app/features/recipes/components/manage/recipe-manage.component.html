@@ -1,101 +1,98 @@
 <div class="recipe-manage" fdPageContainer>
-  <fd-manage-header
-    class="recipe-manage__header"
-    [title]="recipe() ? ('RECIPE_MANAGE.EDIT_TITLE' | translate) : ('RECIPE_MANAGE.ADD_TITLE' | translate)"
-    [subtitle]="'RECIPE_MANAGE.SUBTITLE' | translate"
-    [backAriaLabel]="'PRODUCT_MANAGE.CANCEL_BUTTON' | translate"
-    (back)="onCancel()"
-  />
+    <fd-manage-header
+        class="recipe-manage__header"
+        [title]="recipe() ? ('RECIPE_MANAGE.EDIT_TITLE' | translate) : ('RECIPE_MANAGE.ADD_TITLE' | translate)"
+        [subtitle]="'RECIPE_MANAGE.SUBTITLE' | translate"
+        [backAriaLabel]="'PRODUCT_MANAGE.CANCEL_BUTTON' | translate"
+        (back)="onCancel()"
+    />
 
-  <form class="recipe-manage__form" [formGroup]="recipeForm" (ngSubmit)="onSubmit()">
-    @if (globalError()) {
-      <div class="recipe-manage__error">
-        {{ globalError() }}
-      </div>
-    }
-
-    <div class="recipe-manage__grid">
-      <div class="recipe-manage__column recipe-manage__column--primary">
-        <fd-recipe-basic-info
-          [formGroup]="recipeForm"
-          [visibilitySelectOptions]="visibilitySelectOptions"
-        />
-
-        <fd-recipe-steps-list
-          [stepsFormArray]="steps"
-          [expandedSteps]="expandedStepsSet"
-          (addStep)="addStep()"
-          (removeStep)="removeStep($event)"
-          (addIngredient)="addIngredientToStep($event)"
-          (removeIngredient)="removeIngredientFromStep($event)"
-          (selectProduct)="onProductSelectClick($event)"
-        />
-      </div>
-
-      <div class="recipe-manage__column recipe-manage__column--secondary">
-        <div class="recipe-manage__sticky-stack">
-          <fd-ui-card
-            class="recipe-manage__card recipe-manage__card--facts"
-            appearance="entry"
-            [title]="'RECIPE_MANAGE.NUTRITION_GROUP_TITLE' | translate"
-          >
-            <div class="recipe-manage__nutrition">
-              <fd-nutrition-editor
-                [formGroup]="recipeForm"
-                [controlNames]="nutritionControlNames"
-                [macroState]="macroBarState()"
-                [readonly]="recipeForm.controls.calculateNutritionAutomatically.value"
-                [caloriesError]="caloriesError()"
-                [macrosError]="macrosError()"
-                [showManualHint]="!recipeForm.controls.calculateNutritionAutomatically.value"
-                [manualHintKey]="'RECIPE_MANAGE.MANUAL_NUTRITION_HINT'"
-                [warning]="nutritionWarning()"
-              >
-                <fd-ui-segmented-toggle
-                  nutrition-before
-                  class="recipe-manage__nutrition-toggle"
-                  [options]="nutritionModeOptions"
-                  [selectedValue]="nutritionMode"
-                  (selectedValueChange)="onNutritionModeChange($event)"
-                  [ariaLabel]="'RECIPE_MANAGE.NUTRITION_MODE.ARIA' | translate"
-                />
-                <fd-ui-segmented-toggle
-                  nutrition-before
-                  class="recipe-manage__nutrition-toggle"
-                  [options]="nutritionScaleModeOptions"
-                  [selectedValue]="nutritionScaleMode"
-                  (selectedValueChange)="onNutritionScaleModeChange($event)"
-                  [ariaLabel]="'RECIPE_MANAGE.NUTRITION_SCALE_MODE.ARIA' | translate"
-                />
-              </fd-nutrition-editor>
+    <form class="recipe-manage__form" [formGroup]="recipeForm" (ngSubmit)="onSubmit()">
+        @if (globalError()) {
+            <div class="recipe-manage__error">
+                {{ globalError() }}
             </div>
-          </fd-ui-card>
+        }
 
-          <div class="recipe-manage__actions-panel">
-            <div class="recipe-manage__footer-actions">
-              <fd-ui-button
-                type="button"
-                class="recipe-manage__cancel-button"
-                variant="secondary"
-                fill="outline"
-                icon="arrow_back"
-                (click)="onCancel()"
-                >
-                {{ 'PRODUCT_MANAGE.CANCEL_BUTTON' | translate }}
-              </fd-ui-button>
-              <fd-ui-button
-                type="submit"
-                class="recipe-manage__action-button recipe-manage__action-button--add"
-                icon="save"
-                [fullWidth]="true"
-                [disabled]="recipeForm.invalid || isSubmitting()"
-                >
-                {{ recipe() ? ('RECIPE_MANAGE.SAVE_BUTTON' | translate) : ('RECIPE_MANAGE.ADD_BUTTON' | translate) }}
-              </fd-ui-button>
+        <div class="recipe-manage__grid">
+            <div class="recipe-manage__column recipe-manage__column--primary">
+                <fd-recipe-basic-info [formGroup]="recipeForm" [visibilitySelectOptions]="visibilitySelectOptions" />
+
+                <fd-recipe-steps-list
+                    [stepsFormArray]="steps"
+                    [expandedSteps]="expandedStepsSet"
+                    (addStep)="addStep()"
+                    (removeStep)="removeStep($event)"
+                    (addIngredient)="addIngredientToStep($event)"
+                    (removeIngredient)="removeIngredientFromStep($event)"
+                    (selectProduct)="onProductSelectClick($event)"
+                />
             </div>
-          </div>
+
+            <div class="recipe-manage__column recipe-manage__column--secondary">
+                <div class="recipe-manage__sticky-stack">
+                    <fd-ui-card
+                        class="recipe-manage__card recipe-manage__card--facts"
+                        appearance="entry"
+                        [title]="'RECIPE_MANAGE.NUTRITION_GROUP_TITLE' | translate"
+                    >
+                        <div class="recipe-manage__nutrition">
+                            <fd-nutrition-editor
+                                [formGroup]="recipeForm"
+                                [controlNames]="nutritionControlNames"
+                                [macroState]="macroBarState()"
+                                [readonly]="recipeForm.controls.calculateNutritionAutomatically.value"
+                                [caloriesError]="caloriesError()"
+                                [macrosError]="macrosError()"
+                                [showManualHint]="!recipeForm.controls.calculateNutritionAutomatically.value"
+                                [manualHintKey]="'RECIPE_MANAGE.MANUAL_NUTRITION_HINT'"
+                                [warning]="nutritionWarning()"
+                            >
+                                <fd-ui-segmented-toggle
+                                    nutrition-before
+                                    class="recipe-manage__nutrition-toggle"
+                                    [options]="nutritionModeOptions"
+                                    [selectedValue]="nutritionMode"
+                                    (selectedValueChange)="onNutritionModeChange($event)"
+                                    [ariaLabel]="'RECIPE_MANAGE.NUTRITION_MODE.ARIA' | translate"
+                                />
+                                <fd-ui-segmented-toggle
+                                    nutrition-before
+                                    class="recipe-manage__nutrition-toggle"
+                                    [options]="nutritionScaleModeOptions"
+                                    [selectedValue]="nutritionScaleMode"
+                                    (selectedValueChange)="onNutritionScaleModeChange($event)"
+                                    [ariaLabel]="'RECIPE_MANAGE.NUTRITION_SCALE_MODE.ARIA' | translate"
+                                />
+                            </fd-nutrition-editor>
+                        </div>
+                    </fd-ui-card>
+
+                    <div class="recipe-manage__actions-panel">
+                        <div class="recipe-manage__footer-actions">
+                            <fd-ui-button
+                                type="button"
+                                class="recipe-manage__cancel-button"
+                                variant="secondary"
+                                fill="outline"
+                                icon="arrow_back"
+                                (click)="onCancel()"
+                            >
+                                {{ 'PRODUCT_MANAGE.CANCEL_BUTTON' | translate }}
+                            </fd-ui-button>
+                            <fd-ui-button
+                                type="submit"
+                                class="recipe-manage__action-button recipe-manage__action-button--add"
+                                icon="save"
+                                [fullWidth]="true"
+                                [disabled]="recipeForm.invalid || isSubmitting()"
+                            >
+                                {{ recipe() ? ('RECIPE_MANAGE.SAVE_BUTTON' | translate) : ('RECIPE_MANAGE.ADD_BUTTON' | translate) }}
+                            </fd-ui-button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  </form>
+    </form>
 </div>

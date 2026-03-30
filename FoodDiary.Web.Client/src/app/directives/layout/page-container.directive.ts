@@ -35,5 +35,4 @@ export class FdPageContainerDirective {
     @HostBinding('style.padding')
     protected readonly padding =
         'var(--fd-layout-page-top-padding, 10px) var(--fd-layout-page-horizontal-padding) var(--fd-layout-page-vertical-padding)';
-
 }

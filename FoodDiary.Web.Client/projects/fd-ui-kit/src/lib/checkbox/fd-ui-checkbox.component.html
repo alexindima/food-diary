@@ -1,13 +1,8 @@
 <div class="fd-ui-checkbox">
-  <mat-checkbox
-    [checked]="checked"
-    [disabled]="disabled()"
-    (change)="handleChange($event)"
-    (blur)="handleBlur()"
-    >
-    {{ label() }}
-  </mat-checkbox>
-  @if (hint()) {
-    <div class="fd-ui-checkbox__hint">{{ hint() }}</div>
-  }
+    <mat-checkbox [checked]="checked" [disabled]="disabled()" (change)="handleChange($event)" (blur)="handleBlur()">
+        {{ label() }}
+    </mat-checkbox>
+    @if (hint()) {
+        <div class="fd-ui-checkbox__hint">{{ hint() }}</div>
+    }
 </div>

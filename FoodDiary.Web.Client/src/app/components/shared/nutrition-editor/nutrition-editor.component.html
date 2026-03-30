@@ -118,10 +118,14 @@
 
     @if (warning(); as warningData) {
         <div class="nutrition-editor__warning">
-            {{ 'NUTRITION_EDITOR.CALORIES_MISMATCH_WARNING' | translate: {
-                expected: warningData.expectedCalories,
-                actual: warningData.actualCalories
-            } }}
+            {{
+                'NUTRITION_EDITOR.CALORIES_MISMATCH_WARNING'
+                    | translate
+                        : {
+                              expected: warningData.expectedCalories,
+                              actual: warningData.actualCalories,
+                          }
+            }}
         </div>
     }
 </div>

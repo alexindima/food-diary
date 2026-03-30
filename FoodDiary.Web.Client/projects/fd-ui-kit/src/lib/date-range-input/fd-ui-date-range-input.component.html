@@ -1,18 +1,11 @@
 ﻿<div class="fd-ui-date-range-input" [formGroup]="rangeGroup">
-  <fd-ui-date-input
-    formControlName="start"
-    [label]="startLabel()"
-    [size]="size()"
-    [placeholder]="startPlaceholder()"
-    (blur)="handleBlur()"
-  />
-  <span class="fd-ui-date-range-input__divider" aria-hidden="true">&mdash;</span>
-  <fd-ui-date-input
-    formControlName="end"
-    [label]="endLabel()"
-    [size]="size()"
-    [placeholder]="endPlaceholder()"
-    (blur)="handleBlur()"
-  />
+    <fd-ui-date-input
+        formControlName="start"
+        [label]="startLabel()"
+        [size]="size()"
+        [placeholder]="startPlaceholder()"
+        (blur)="handleBlur()"
+    />
+    <span class="fd-ui-date-range-input__divider" aria-hidden="true">&mdash;</span>
+    <fd-ui-date-input formControlName="end" [label]="endLabel()" [size]="size()" [placeholder]="endPlaceholder()" (blur)="handleBlur()" />
 </div>
-

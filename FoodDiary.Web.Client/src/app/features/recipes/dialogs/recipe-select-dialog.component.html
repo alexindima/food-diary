@@ -47,9 +47,11 @@
                         <div class="recipe-select__info">
                             <div class="recipe-select__name">{{ recipe.name }}</div>
                             <div class="recipe-select__meta">
-                                @if (recipe.category) { {{ recipe.category }} · }
-                                {{ recipe.totalCalories ?? 0 }} {{ 'SHARED.NUTRIENTS_SUMMARY.KKAL' | translate }} ·
-                                {{ recipe.servings }} {{ 'RECIPE_SELECT_DIALOG.SERVINGS' | translate }}
+                                @if (recipe.category) {
+                                    {{ recipe.category }} ·
+                                }
+                                {{ recipe.totalCalories ?? 0 }} {{ 'SHARED.NUTRIENTS_SUMMARY.KKAL' | translate }} · {{ recipe.servings }}
+                                {{ 'RECIPE_SELECT_DIALOG.SERVINGS' | translate }}
                             </div>
                         </div>
                         <span class="recipe-select__action">
@@ -67,22 +69,18 @@
     }
 
     @if (recipeData.totalPages > 1) {
-        <fd-ui-pagination class="recipe-select__pagination"
+        <fd-ui-pagination
+            class="recipe-select__pagination"
             [length]="recipeData.totalItems"
             [pageSize]="10"
             [pageIndex]="currentPageIndex"
             (pageIndexChange)="onPageChange($event)"
-         />
+        />
     }
 
     @if (!embedded()) {
         <div class="recipe-select__footer">
-            <fd-ui-button
-                variant="primary"
-                fill="solid"
-                icon="add"
-                (click)="onCreateRecipeClick()"
-            >
+            <fd-ui-button variant="primary" fill="solid" icon="add" (click)="onCreateRecipeClick()">
                 {{ 'RECIPE_SELECT_DIALOG.ADD_RECIPE_BUTTON' | translate }}
             </fd-ui-button>
         </div>

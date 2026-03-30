@@ -189,18 +189,10 @@ export function buildNutrientsPieChartData(
     const aggregated = stats?.aggregatedNutrients;
 
     return {
-        labels: [
-            translate('NUTRIENTS.PROTEINS'),
-            translate('NUTRIENTS.FATS'),
-            translate('NUTRIENTS.CARBS'),
-        ],
+        labels: [translate('NUTRIENTS.PROTEINS'), translate('NUTRIENTS.FATS'), translate('NUTRIENTS.CARBS')],
         datasets: [
             {
-                data: [
-                    aggregated?.proteins ?? 0,
-                    aggregated?.fats ?? 0,
-                    aggregated?.carbs ?? 0,
-                ],
+                data: [aggregated?.proteins ?? 0, aggregated?.fats ?? 0, aggregated?.carbs ?? 0],
                 backgroundColor: [CHART_COLORS.proteins, CHART_COLORS.fats, CHART_COLORS.carbs],
                 borderWidth: 0,
             },
@@ -215,18 +207,10 @@ export function buildNutrientsRadarChartData(
     const aggregated = stats?.aggregatedNutrients;
 
     return {
-        labels: [
-            translate('NUTRIENTS.PROTEINS'),
-            translate('NUTRIENTS.FATS'),
-            translate('NUTRIENTS.CARBS'),
-        ],
+        labels: [translate('NUTRIENTS.PROTEINS'), translate('NUTRIENTS.FATS'), translate('NUTRIENTS.CARBS')],
         datasets: [
             {
-                data: [
-                    aggregated?.proteins ?? 0,
-                    aggregated?.fats ?? 0,
-                    aggregated?.carbs ?? 0,
-                ],
+                data: [aggregated?.proteins ?? 0, aggregated?.fats ?? 0, aggregated?.carbs ?? 0],
                 backgroundColor: CHART_COLORS.radarBackground,
                 borderColor: CHART_COLORS.radarBorder,
                 borderWidth: 2,
@@ -251,18 +235,8 @@ export function buildNutrientsBarChartData(
         ],
         datasets: [
             {
-                data: [
-                    aggregated?.proteins ?? 0,
-                    aggregated?.fats ?? 0,
-                    aggregated?.carbs ?? 0,
-                    aggregated?.fiber ?? 0,
-                ],
-                backgroundColor: [
-                    CHART_COLORS.proteins,
-                    CHART_COLORS.fats,
-                    CHART_COLORS.carbs,
-                    CHART_COLORS.fiber,
-                ],
+                data: [aggregated?.proteins ?? 0, aggregated?.fats ?? 0, aggregated?.carbs ?? 0, aggregated?.fiber ?? 0],
+                backgroundColor: [CHART_COLORS.proteins, CHART_COLORS.fats, CHART_COLORS.carbs, CHART_COLORS.fiber],
                 borderRadius: 6,
             },
         ],
@@ -368,11 +342,7 @@ export function buildMacroSparklineData(
     const labels = stats?.date.map(date => formatLabel(date)) ?? [];
     const nutrients = stats?.nutrientsStatistic;
 
-    const buildData = (
-        series: number[] | undefined,
-        color: string,
-        fillAlpha = 0.16,
-    ): ChartConfiguration<'line'>['data'] => ({
+    const buildData = (series: number[] | undefined, color: string, fillAlpha = 0.16): ChartConfiguration<'line'>['data'] => ({
         labels,
         datasets: [
             {

@@ -97,4 +97,3 @@ export class FdUiTextareaComponent implements ControlValueAccessor {
         control.focus();
     }
 }
-

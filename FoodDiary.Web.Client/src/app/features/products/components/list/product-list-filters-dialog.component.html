@@ -17,7 +17,7 @@
                     [class.product-list-filters-dialog__type--selected]="isTypeSelected(type)"
                     (click)="toggleType(type)"
                 >
-                    {{ ('PRODUCT_MANAGE.PRODUCT_TYPE_OPTIONS.' + type.toUpperCase()) | translate }}
+                    {{ 'PRODUCT_MANAGE.PRODUCT_TYPE_OPTIONS.' + type.toUpperCase() | translate }}
                 </button>
             }
         </div>

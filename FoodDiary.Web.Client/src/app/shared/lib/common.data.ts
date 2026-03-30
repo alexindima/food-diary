@@ -8,12 +8,10 @@ export type FormGroupControls<T> = {
             ? FormControl<T[K]>
             : FormArray<FormGroup<FormGroupControls<U>>>
         : T[K] extends object
-            ? FormGroup<FormGroupControls<T[K]>>
-            : FormControl<T[K]>;
+          ? FormGroup<FormGroupControls<T[K]>>
+          : FormControl<T[K]>;
 };
 
 export type RecursivePartial<T> = {
-    [P in keyof T]?: T[P] extends object
-        ? RecursivePartial<T[P]>
-        : T[P];
+    [P in keyof T]?: T[P] extends object ? RecursivePartial<T[P]> : T[P];
 };

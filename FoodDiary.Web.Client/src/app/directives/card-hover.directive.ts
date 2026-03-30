@@ -1,12 +1,4 @@
-import {
-    Directive,
-    DestroyRef,
-    ElementRef,
-    OnInit,
-    Renderer2,
-    inject,
-    input,
-} from '@angular/core';
+import { Directive, DestroyRef, ElementRef, OnInit, Renderer2, inject, input } from '@angular/core';
 
 @Directive({
     selector: '[fdCardHover]',

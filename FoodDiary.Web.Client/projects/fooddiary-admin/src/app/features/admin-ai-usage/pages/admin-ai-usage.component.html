@@ -1,28 +1,28 @@
 @if (isLoading()) {
-  <p>Loading AI usage...</p>
+    <p>Loading AI usage...</p>
 } @else if (usage(); as data) {
-  <div class="admin-ai-usage">
-    <fd-ui-card>
-      <div class="stat">
-        <div class="stat__label">Total tokens</div>
-        <div class="stat__value">{{ data.totalTokens }}</div>
-      </div>
-    </fd-ui-card>
+    <div class="admin-ai-usage">
+        <fd-ui-card>
+            <div class="stat">
+                <div class="stat__label">Total tokens</div>
+                <div class="stat__value">{{ data.totalTokens }}</div>
+            </div>
+        </fd-ui-card>
 
-    <fd-ui-card>
-      <div class="stat">
-        <div class="stat__label">Input tokens</div>
-        <div class="stat__value">{{ data.inputTokens }}</div>
-      </div>
-    </fd-ui-card>
+        <fd-ui-card>
+            <div class="stat">
+                <div class="stat__label">Input tokens</div>
+                <div class="stat__value">{{ data.inputTokens }}</div>
+            </div>
+        </fd-ui-card>
 
-    <fd-ui-card>
-      <div class="stat">
-        <div class="stat__label">Output tokens</div>
-        <div class="stat__value">{{ data.outputTokens }}</div>
-      </div>
-    </fd-ui-card>
-  </div>
+        <fd-ui-card>
+            <div class="stat">
+                <div class="stat__label">Output tokens</div>
+                <div class="stat__value">{{ data.outputTokens }}</div>
+            </div>
+        </fd-ui-card>
+    </div>
 } @else {
-  <p>No AI usage data available.</p>
+    <p>No AI usage data available.</p>
 }

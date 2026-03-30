@@ -5,74 +5,74 @@ import { environment } from '../../../../environments/environment';
 import { AdminAuthService } from '../../admin-auth/lib/admin-auth.service';
 
 @Component({
-  selector: 'fd-admin-unauthorized',
-  standalone: true,
-  imports: [FdUiButtonComponent],
-  templateUrl: './unauthorized.component.html',
-  styleUrl: './unauthorized.component.scss',
+    selector: 'fd-admin-unauthorized',
+    standalone: true,
+    imports: [FdUiButtonComponent],
+    templateUrl: './unauthorized.component.html',
+    styleUrl: './unauthorized.component.scss',
 })
 export class UnauthorizedComponent implements OnInit {
-  private readonly route = inject(ActivatedRoute);
-  private readonly router = inject(Router);
-  private readonly authService = inject(AdminAuthService);
+    private readonly route = inject(ActivatedRoute);
+    private readonly router = inject(Router);
+    private readonly authService = inject(AdminAuthService);
 
-  public get reason(): string | null {
-    return this.route.snapshot.queryParamMap.get('reason');
-  }
-
-  public get returnUrl(): string {
-    return this.route.snapshot.queryParamMap.get('returnUrl') ?? '/';
-  }
-
-  public ngOnInit(): void {
-    if (this.reason !== 'unauthenticated') {
-      return;
+    public get reason(): string | null {
+        return this.route.snapshot.queryParamMap.get('reason');
     }
 
-    const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
-    if (!returnUrl) {
-      return;
+    public get returnUrl(): string {
+        return this.route.snapshot.queryParamMap.get('returnUrl') ?? '/';
     }
 
-    void this.tryRecoverFromSso(returnUrl);
-  }
+    public ngOnInit(): void {
+        if (this.reason !== 'unauthenticated') {
+            return;
+        }
 
-  public goToLogin(): void {
-    const url = new URL('/auth/login', environment.mainAppUrl);
-    const returnUrl = this.normalizeReturnUrl(this.returnUrl);
-    if (returnUrl) {
-      url.searchParams.set('returnUrl', returnUrl);
-    }
-    window.location.href = url.toString();
-  }
+        const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
+        if (!returnUrl) {
+            return;
+        }
 
-  private async tryRecoverFromSso(returnUrl: string): Promise<void> {
-    const cleanedUrl = await this.authService.tryApplySsoFromReturnUrl(returnUrl);
-    if (!cleanedUrl) {
-      return;
+        void this.tryRecoverFromSso(returnUrl);
     }
 
-    await this.router.navigateByUrl(cleanedUrl, { replaceUrl: true });
-  }
-
-  private normalizeReturnUrl(value: string): string {
-    if (!value) {
-      return '/';
+    public goToLogin(): void {
+        const url = new URL('/auth/login', environment.mainAppUrl);
+        const returnUrl = this.normalizeReturnUrl(this.returnUrl);
+        if (returnUrl) {
+            url.searchParams.set('returnUrl', returnUrl);
+        }
+        window.location.href = url.toString();
     }
 
-    const decoded = this.safeDecode(value);
-    if (decoded.includes('returnUrl=')) {
-      return '/';
+    private async tryRecoverFromSso(returnUrl: string): Promise<void> {
+        const cleanedUrl = await this.authService.tryApplySsoFromReturnUrl(returnUrl);
+        if (!cleanedUrl) {
+            return;
+        }
+
+        await this.router.navigateByUrl(cleanedUrl, { replaceUrl: true });
     }
 
-    return decoded.startsWith('/') ? decoded : '/';
-  }
+    private normalizeReturnUrl(value: string): string {
+        if (!value) {
+            return '/';
+        }
 
-  private safeDecode(value: string): string {
-    try {
-      return decodeURIComponent(value);
-    } catch {
-      return value;
+        const decoded = this.safeDecode(value);
+        if (decoded.includes('returnUrl=')) {
+            return '/';
+        }
+
+        return decoded.startsWith('/') ? decoded : '/';
     }
-  }
+
+    private safeDecode(value: string): string {
+        try {
+            return decodeURIComponent(value);
+        } catch {
+            return value;
+        }
+    }
 }

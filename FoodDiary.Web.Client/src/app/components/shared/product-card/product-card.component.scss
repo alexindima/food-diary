@@ -16,7 +16,9 @@
     box-shadow: 0 14px 32px rgba(15, 23, 42, 0.12);
     border: 1px solid rgba(15, 23, 42, 0.04);
     cursor: pointer;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
     width: 100%;
     max-width: 100%;
     margin: 0;
@@ -206,7 +208,6 @@
             display: none;
         }
     }
-
 }
 
 @media #{variables.$media-mobile} {
@@ -335,4 +336,3 @@
         display: none;
     }
 }
-

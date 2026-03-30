@@ -1,56 +1,58 @@
 ﻿<div class="fd-ui-input" [ngClass]="[sizeClass, error() ? 'fd-ui-input--has-error' : '', shouldFloatLabel ? 'fd-ui-input--floating' : '']">
-  <div
-    class="fd-ui-input__control-wrap"
-    [class.fd-ui-input__control-wrap--with-prefix]="prefixIcon()"
-    [class.fd-ui-input__control-wrap--date]="isDateInput"
-    [style.background]="fillColor() || null"
-    (click)="focusControl($event, control)"
-    role="presentation"
-  >
-    @if (label()) {
-      <label class="fd-ui-input__label" [attr.for]="id()">
-        <span class="fd-ui-input__label-text">{{ label() }}</span>@if (required()) {<span class="fd-ui-input__required">*</span>}
-      </label>
-    }
-    @if (prefixIcon()) {
-      <span class="fd-ui-input__prefix" aria-hidden="true">
-        <mat-icon>{{ prefixIcon() }}</mat-icon>
-      </span>
-    }
-    <input
-      #control
-      class="fd-ui-input__control"
-      [id]="id()"
-      [attr.type]="type()"
-      [value]="internalValue"
-      [required]="required()"
-      [readonly]="readonly()"
-      [disabled]="disabled"
-      [attr.placeholder]="shouldShowPlaceholder ? (placeholder() ?? null) : null"
-      [attr.maxlength]="maxLength() ?? null"
-      [attr.step]="step() ?? null"
-      [attr.aria-describedby]="error() ? id() + '-error' : null"
-      [attr.aria-invalid]="error() ? 'true' : null"
-      (input)="onInput($any($event.target).value)"
-      (focus)="onFocus()"
-      (blur)="onBlur()"
-    />
+    <div
+        class="fd-ui-input__control-wrap"
+        [class.fd-ui-input__control-wrap--with-prefix]="prefixIcon()"
+        [class.fd-ui-input__control-wrap--date]="isDateInput"
+        [style.background]="fillColor() || null"
+        (click)="focusControl($event, control)"
+        role="presentation"
+    >
+        @if (label()) {
+            <label class="fd-ui-input__label" [attr.for]="id()">
+                <span class="fd-ui-input__label-text">{{ label() }}</span>
+                @if (required()) {
+                    <span class="fd-ui-input__required">*</span>
+                }
+            </label>
+        }
+        @if (prefixIcon()) {
+            <span class="fd-ui-input__prefix" aria-hidden="true">
+                <mat-icon>{{ prefixIcon() }}</mat-icon>
+            </span>
+        }
+        <input
+            #control
+            class="fd-ui-input__control"
+            [id]="id()"
+            [attr.type]="type()"
+            [value]="internalValue"
+            [required]="required()"
+            [readonly]="readonly()"
+            [disabled]="disabled"
+            [attr.placeholder]="shouldShowPlaceholder ? (placeholder() ?? null) : null"
+            [attr.maxlength]="maxLength() ?? null"
+            [attr.step]="step() ?? null"
+            [attr.aria-describedby]="error() ? id() + '-error' : null"
+            [attr.aria-invalid]="error() ? 'true' : null"
+            (input)="onInput($any($event.target).value)"
+            (focus)="onFocus()"
+            (blur)="onBlur()"
+        />
 
-    @if (suffixButtonIcon()) {
-      <button
-        class="fd-ui-input__suffix"
-        type="button"
-        [attr.aria-label]="suffixButtonAriaLabel() || suffixButtonIcon()"
-        [disabled]="disabled"
-        (click)="triggerSuffixButton()"
-      >
-        <mat-icon>{{ suffixButtonIcon() }}</mat-icon>
-      </button>
-    }
-  </div>
+        @if (suffixButtonIcon()) {
+            <button
+                class="fd-ui-input__suffix"
+                type="button"
+                [attr.aria-label]="suffixButtonAriaLabel() || suffixButtonIcon()"
+                [disabled]="disabled"
+                (click)="triggerSuffixButton()"
+            >
+                <mat-icon>{{ suffixButtonIcon() }}</mat-icon>
+            </button>
+        }
+    </div>
 
-  @if (error()) {
-    <div class="fd-ui-input__error" [id]="id() + '-error'" role="alert">{{ error() }}</div>
-  }
+    @if (error()) {
+        <div class="fd-ui-input__error" [id]="id() + '-error'" role="alert">{{ error() }}</div>
+    }
 </div>
-

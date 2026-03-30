@@ -65,14 +65,14 @@
                                     size="lg"
                                     [label]="'USER_MANAGE.EMAIL' | translate"
                                     [placeholder]="'USER_MANAGE.EMAIL_PLACEHOLDER' | translate"
-                                 />
+                                />
                                 <fd-ui-input
                                     class="user-manage__account-row-field"
                                     formControlName="username"
                                     size="lg"
                                     [label]="'USER_MANAGE.USERNAME' | translate"
                                     [placeholder]="'USER_MANAGE.USERNAME_PLACEHOLDER' | translate"
-                                 />
+                                />
                             </div>
                             <div class="user-manage__account-row">
                                 <fd-ui-input
@@ -81,14 +81,14 @@
                                     size="lg"
                                     [label]="'USER_MANAGE.FIRST_NAME' | translate"
                                     [placeholder]="'USER_MANAGE.FIRST_NAME_PLACEHOLDER' | translate"
-                                 />
+                                />
                                 <fd-ui-input
                                     class="user-manage__account-row-field"
                                     formControlName="lastName"
                                     size="lg"
                                     [label]="'USER_MANAGE.LAST_NAME' | translate"
                                     [placeholder]="'USER_MANAGE.LAST_NAME_PLACEHOLDER' | translate"
-                                 />
+                                />
                             </div>
                             <div class="user-manage__account-row">
                                 <fd-ui-date-input
@@ -97,7 +97,7 @@
                                     size="lg"
                                     [label]="'USER_MANAGE.BIRTH_DATE' | translate"
                                     [placeholder]="'USER_MANAGE.BIRTH_DATE_PLACEHOLDER' | translate"
-                                 />
+                                />
                                 <fd-ui-select
                                     class="user-manage__account-row-field"
                                     formControlName="gender"
@@ -105,7 +105,7 @@
                                     [label]="'USER_MANAGE.GENDER' | translate"
                                     [placeholder]="'USER_MANAGE.SELECT_GENDER' | translate"
                                     [options]="genderOptions"
-                                 />
+                                />
                             </div>
                             <div class="user-manage__account-row">
                                 <fd-ui-select
@@ -115,7 +115,7 @@
                                     [label]="'USER_MANAGE.LANGUAGE' | translate"
                                     [placeholder]="'USER_MANAGE.LANGUAGE_PLACEHOLDER' | translate"
                                     [options]="languageOptions"
-                                 />
+                                />
                                 <div class="user-manage__link-button">
                                     <fd-ui-button
                                         type="button"
@@ -130,11 +130,7 @@
                             </div>
                             <div class="user-manage__account-row" *ngIf="isAdminUser()">
                                 <div class="user-manage__link-button user-manage__link-button--admin">
-                                    <fd-ui-button
-                                        type="button"
-                                        icon="shield"
-                                        (click)="openAdminPanel()"
-                                    >
+                                    <fd-ui-button type="button" icon="shield" (click)="openAdminPanel()">
                                         {{ 'USER_MANAGE.ADMIN_PANEL' | translate }}
                                     </fd-ui-button>
                                 </div>
@@ -157,14 +153,14 @@
                             size="lg"
                             [label]="'USER_MANAGE.HEIGHT' | translate"
                             [placeholder]="'USER_MANAGE.HEIGHT_PLACEHOLDER' | translate"
-                         />
+                        />
                         <fd-ui-select
                             formControlName="activityLevel"
                             size="lg"
                             [label]="'USER_MANAGE.ACTIVITY_LEVEL' | translate"
                             [placeholder]="'USER_MANAGE.SELECT_ACTIVITY_LEVEL' | translate"
                             [options]="activityLevelOptions"
-                         />
+                        />
                     </div>
                 </fd-ui-card>
             </div>

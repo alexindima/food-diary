@@ -1,19 +1,9 @@
-import {
-    ChangeDetectionStrategy,
-    Component,
-    inject,
-    input,
-    output,
-    signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, output, signal } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiIconModule } from 'fd-ui-kit/material';
-import {
-    ConsumptionAiItemManageDto,
-    ConsumptionAiSessionManageDto,
-} from '../../../models/meal.data';
+import { ConsumptionAiItemManageDto, ConsumptionAiSessionManageDto } from '../../../models/meal.data';
 import { NutritionTotals } from '../base-meal-manage.types';
 
 @Component({
@@ -21,12 +11,7 @@ import { NutritionTotals } from '../base-meal-manage.types';
     templateUrl: './meal-ai-sessions.component.html',
     styleUrls: ['../base-meal-manage.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [
-        TranslatePipe,
-        FdUiCardComponent,
-        FdUiButtonComponent,
-        FdUiIconModule,
-    ],
+    imports: [TranslatePipe, FdUiCardComponent, FdUiButtonComponent, FdUiIconModule],
 })
 export class MealAiSessionsComponent {
     private readonly translateService = inject(TranslateService);
@@ -101,7 +86,7 @@ export class MealAiSessionsComponent {
                 fiber: totals.fiber + (item.fiber ?? 0),
                 alcohol: totals.alcohol + (item.alcohol ?? 0),
             }),
-            { calories: 0, proteins: 0, fats: 0, carbs: 0, fiber: 0, alcohol: 0 }
+            { calories: 0, proteins: 0, fats: 0, carbs: 0, fiber: 0, alcohol: 0 },
         );
     }
 
@@ -121,10 +106,7 @@ export class MealAiSessionsComponent {
         });
     }
 
-    public visibleAiItems(
-        items: ConsumptionAiItemManageDto[],
-        maxVisible: number,
-    ): ConsumptionAiItemManageDto[] {
+    public visibleAiItems(items: ConsumptionAiItemManageDto[], maxVisible: number): ConsumptionAiItemManageDto[] {
         return items.slice(0, Math.max(0, maxVisible));
     }
 
