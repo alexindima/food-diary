@@ -180,6 +180,7 @@ public static class ApiServiceCollectionExtensions {
                 .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("FoodDiary.Web.Api"))
                 .AddMeter(ApiTelemetry.TelemetryName)
                 .AddMeter(PresentationApiTelemetry.TelemetryName)
+                .AddMeter("FoodDiary.Infrastructure")
                 .AddOtlpExporter(exporterOptions => exporterOptions.Endpoint = endpointUri)
                 .Build();
         });
