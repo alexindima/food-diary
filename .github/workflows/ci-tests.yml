@@ -496,7 +496,7 @@ jobs:
     steps:
       - name: Download dotnet failure logs
         if: needs.dotnet-tests.result == 'failure'
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: ci-failure-logs-dotnet
           path: ${{ runner.temp }}/ci-test-logs
@@ -504,7 +504,7 @@ jobs:
 
       - name: Download PostgreSQL critical-flow failure logs
         if: needs.backend-postgres-critical-flows.result == 'failure'
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: ci-failure-logs-postgres-critical-flows
           path: ${{ runner.temp }}/postgres-critical-flow-logs
@@ -512,7 +512,7 @@ jobs:
 
       - name: Download dependency audit failure logs
         if: needs.backend-dependency-audit.result == 'failure'
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: ci-failure-logs-dependency-audit
           path: ${{ runner.temp }}/dependency-audit-logs
@@ -520,7 +520,7 @@ jobs:
 
       - name: Download frontend failure logs
         if: needs.frontend-checks.result == 'failure'
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: ci-failure-logs-frontend
           path: ${{ runner.temp }}/frontend-checks-logs
