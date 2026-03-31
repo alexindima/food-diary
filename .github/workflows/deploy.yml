@@ -44,6 +44,7 @@ jobs:
           context: .
           file: FoodDiary.Web.Api/Dockerfile
           push: true
+          provenance: false
           tags: |
             ${{ env.IMAGE_PREFIX }}/api:latest
             ${{ env.IMAGE_PREFIX }}/api:sha-${{ github.sha }}
@@ -54,6 +55,7 @@ jobs:
           context: .
           file: FoodDiary.Telegram.Bot/Dockerfile
           push: true
+          provenance: false
           tags: |
             ${{ env.IMAGE_PREFIX }}/telegram-bot:latest
             ${{ env.IMAGE_PREFIX }}/telegram-bot:sha-${{ github.sha }}
@@ -64,6 +66,7 @@ jobs:
           context: .
           file: FoodDiary.Initializer/Dockerfile
           push: true
+          provenance: false
           tags: |
             ${{ env.IMAGE_PREFIX }}/initializer:latest
             ${{ env.IMAGE_PREFIX }}/initializer:sha-${{ github.sha }}
@@ -74,6 +77,7 @@ jobs:
           context: FoodDiary.Web.Client
           file: FoodDiary.Web.Client/Dockerfile
           push: true
+          provenance: false
           tags: |
             ${{ env.IMAGE_PREFIX }}/client:latest
             ${{ env.IMAGE_PREFIX }}/client:sha-${{ github.sha }}
