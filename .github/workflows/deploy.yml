@@ -103,7 +103,7 @@ jobs:
             docker compose pull
             docker pull ghcr.io/alexindima/food-diary/client:latest
 
-            docker compose --profile tools run --rm initializer dotnet FoodDiary.Initializer.dll update
+            docker compose --profile tools run --rm initializer update
 
             docker compose up -d
 
