@@ -4,6 +4,7 @@ HAS_TS=$(echo "$STAGED_FILES" | grep -c '\.ts$' || true)
 HAS_HTML=$(echo "$STAGED_FILES" | grep -c '\.html$' || true)
 HAS_SCSS=$(echo "$STAGED_FILES" | grep -c '\.scss$' || true)
 HAS_FRONTEND=$(echo "$STAGED_FILES" | grep -c '^FoodDiary\.Web\.Client/' || true)
+HAS_I18N=$(echo "$STAGED_FILES" | grep -Ec '^FoodDiary\.Web\.Client/(assets/i18n/.*\.json|scripts/check-i18n\.mjs|package\.json)$' || true)
 HAS_CS=$(echo "$STAGED_FILES" | grep -c '\.cs$' || true)
 
 cd FoodDiary.Web.Client
@@ -27,6 +28,13 @@ if [ "$HAS_SCSS" -gt 0 ]; then
   npm run stylelint || exit 1
 else
   echo "=== Skipping Stylelint (no .scss files changed) ==="
+fi
+
+if [ "$HAS_I18N" -gt 0 ]; then
+  echo "=== Running i18n consistency check ==="
+  npm run check:i18n || exit 1
+else
+  echo "=== Skipping i18n consistency check (no locale files changed) ==="
 fi
 
 if [ "$HAS_FRONTEND" -gt 0 ]; then

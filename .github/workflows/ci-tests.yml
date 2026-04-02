@@ -343,6 +343,25 @@ jobs:
             exit "$status"
           fi
 
+      - name: Check i18n consistency
+        shell: bash
+        working-directory: FoodDiary.Web.Client
+        run: |
+          set -euo pipefail
+          log_file="${RUNNER_TEMP}/frontend-checks-logs/i18n-check.log"
+          set +e
+          npm run check:i18n 2>&1 | tee "$log_file"
+          status=${PIPESTATUS[0]}
+          set -e
+          if [ "$status" -ne 0 ]; then
+            {
+              echo "FAILED_AREA=frontend"
+              echo "FAILED_TARGET=Check i18n consistency"
+              echo "FAILED_LOG_FILE_NAME=$(basename "$log_file")"
+            } > "${RUNNER_TEMP}/frontend-checks-logs/failure-meta.env"
+            exit "$status"
+          fi
+
       - name: Lint frontend
         shell: bash
         working-directory: FoodDiary.Web.Client
