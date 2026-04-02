@@ -232,6 +232,14 @@ export class MealManageFacade {
         });
     }
 
+    public convertRecipeGramsToServings(recipe: Recipe | null, grams: number): number {
+        return this.recipeWeight.convertGramsToServings(recipe, grams);
+    }
+
+    public convertRecipeServingsToGrams(recipe: Recipe | null, servings: number): number {
+        return this.recipeWeight.convertServingsToGrams(recipe, servings);
+    }
+
     public createItemsValidator(getAiSessions: () => ConsumptionAiSessionManageDto[]): ValidatorFn {
         return (control: AbstractControl): ValidationErrors | null => {
             const value = control.value as ConsumptionItemFormValues[] | null;

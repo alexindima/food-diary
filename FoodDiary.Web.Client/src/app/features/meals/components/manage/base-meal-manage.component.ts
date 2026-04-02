@@ -450,7 +450,7 @@ export class BaseMealManageComponent implements OnInit {
             }
 
             if (sourceType === ConsumptionSourceType.Recipe && item.recipe) {
-                const servingsAmount = this.recipeWeight.convertGramsToServings(item.recipe, amountValue);
+                const servingsAmount = this.mealManageFacade.convertRecipeGramsToServings(item.recipe, amountValue);
                 mappedItems.push({
                     recipeId: item.recipe.id,
                     productId: null,
@@ -622,7 +622,7 @@ export class BaseMealManageComponent implements OnInit {
             const sourceType = item.sourceType ?? (item.recipe ? ConsumptionSourceType.Recipe : ConsumptionSourceType.Product);
             const initialAmount =
                 sourceType === ConsumptionSourceType.Recipe
-                    ? this.recipeWeight.convertServingsToGrams(item.recipe ?? null, item.amount ?? 0)
+                    ? this.mealManageFacade.convertRecipeServingsToGrams(item.recipe ?? null, item.amount ?? 0)
                     : item.amount;
 
             itemsArray.push(
