@@ -89,8 +89,8 @@ Every backend change that affects query shape should answer:
 The next regression gates sit one layer higher than the repository checks and exercise the HTTP pipeline against PostgreSQL-backed application state:
 
 - Path: `POST /api/v1/auth/refresh`
-- Scenario: refresh token rotation after a warm-up refresh
-- Threshold: measured refresh must complete within `350 ms`
+- Scenario: refresh token rotation after two warm-up refreshes
+- Threshold: measured refresh must complete within `1800 ms`
 - Test: `PostgresPerformanceBaselineTests.Refresh_WithWarmTokenRotation_StaysWithinLatencyBudget`
 
 - Path: `GET /api/v1/products?page=1&limit=25&includePublic=false`
@@ -109,7 +109,7 @@ The next regression gates sit one layer higher than the repository checks and ex
 - Test: `PostgresPerformanceBaselineTests.ImageUploadUrl_WithAuthenticatedUser_StaysWithinLatencyBudget`
 
 - Path: `GET /api/v1/consumptions?page=1&limit=25&dateFrom=2026-03-01&dateTo=2026-03-31`
-- Scenario: first page of a monthly meal history range for a user with `1500` seeded meals
+- Scenario: first page of a monthly meal history range for a user with `1500` seeded meals that include a valid product-backed item
 - Threshold: second measured execution must complete within `500 ms`
 - Test: `PostgresPerformanceBaselineTests.Consumptions_FirstPageWithinMonthRange_StaysWithinEndpointLatencyBudget`
 

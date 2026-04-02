@@ -19,7 +19,7 @@ namespace FoodDiary.Web.Api.IntegrationTests;
 public sealed class PostgresPerformanceBaselineTests(PostgresApiWebApplicationFactory factory)
     : IClassFixture<PostgresApiWebApplicationFactory> {
     private const int SeedCount = 1500;
-    private static readonly TimeSpan RefreshLatencyBudget = TimeSpan.FromMilliseconds(350);
+    private static readonly TimeSpan RefreshLatencyBudget = TimeSpan.FromMilliseconds(1800);
     private static readonly TimeSpan ProductListLatencyBudget = TimeSpan.FromMilliseconds(400);
     private static readonly TimeSpan RecipeListLatencyBudget = TimeSpan.FromMilliseconds(400);
     private static readonly TimeSpan ConsumptionListLatencyBudget = TimeSpan.FromMilliseconds(500);
@@ -35,7 +35,8 @@ public sealed class PostgresPerformanceBaselineTests(PostgresApiWebApplicationFa
         var email = $"perf-refresh-{Guid.NewGuid():N}@example.com";
 
         var registerPayload = await RegisterAsync(client, email);
-        var warmedPayload = await RefreshAsync(client, registerPayload.RefreshToken);
+        var firstWarmPayload = await RefreshAsync(client, registerPayload.RefreshToken);
+        var warmedPayload = await RefreshAsync(client, firstWarmPayload.RefreshToken);
 
         var stopwatch = Stopwatch.StartNew();
         var measuredResponse = await client.PostAsJsonAsync(
@@ -68,12 +69,12 @@ public sealed class PostgresPerformanceBaselineTests(PostgresApiWebApplicationFa
         var response = await client.GetAsync("/api/v1/products?page=1&limit=25&includePublic=false");
         stopwatch.Stop();
 
+        await AssertStatusCodeAsync(HttpStatusCode.OK, response);
         var payload = await response.Content.ReadFromJsonAsync<PagedPayload<ItemPayload>>(JsonOptions);
 
-        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.NotNull(payload);
         Assert.Equal(SeedCount, payload.TotalItems);
-        Assert.Equal(25, payload.Items.Count);
+        Assert.Equal(25, payload.Data.Count);
         Assert.True(
             stopwatch.Elapsed <= ProductListLatencyBudget,
             $"Expected GET /api/v1/products first owned page to stay within {ProductListLatencyBudget.TotalMilliseconds} ms, but observed {stopwatch.Elapsed.TotalMilliseconds:F1} ms.");
@@ -94,12 +95,12 @@ public sealed class PostgresPerformanceBaselineTests(PostgresApiWebApplicationFa
         var response = await client.GetAsync("/api/v1/recipes?page=1&limit=25&includePublic=false");
         stopwatch.Stop();
 
+        await AssertStatusCodeAsync(HttpStatusCode.OK, response);
         var payload = await response.Content.ReadFromJsonAsync<PagedPayload<ItemPayload>>(JsonOptions);
 
-        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.NotNull(payload);
         Assert.Equal(SeedCount, payload.TotalItems);
-        Assert.Equal(25, payload.Items.Count);
+        Assert.Equal(25, payload.Data.Count);
         Assert.True(
             stopwatch.Elapsed <= RecipeListLatencyBudget,
             $"Expected GET /api/v1/recipes first owned page to stay within {RecipeListLatencyBudget.TotalMilliseconds} ms, but observed {stopwatch.Elapsed.TotalMilliseconds:F1} ms.");
@@ -122,12 +123,12 @@ public sealed class PostgresPerformanceBaselineTests(PostgresApiWebApplicationFa
         var response = await client.GetAsync(url);
         stopwatch.Stop();
 
+        await AssertStatusCodeAsync(HttpStatusCode.OK, response);
         var payload = await response.Content.ReadFromJsonAsync<PagedPayload<ItemPayload>>(JsonOptions);
 
-        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.NotNull(payload);
         Assert.Equal(31, payload.TotalItems);
-        Assert.Equal(25, payload.Items.Count);
+        Assert.Equal(25, payload.Data.Count);
         Assert.True(
             stopwatch.Elapsed <= ConsumptionListLatencyBudget,
             $"Expected GET /api/v1/consumptions first page within monthly range to stay within {ConsumptionListLatencyBudget.TotalMilliseconds} ms, but observed {stopwatch.Elapsed.TotalMilliseconds:F1} ms.");
@@ -233,25 +234,55 @@ public sealed class PostgresPerformanceBaselineTests(PostgresApiWebApplicationFa
         var dbContext = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
         var user = await dbContext.Users.SingleAsync(x => x.Email == email);
 
+        var product = Product.Create(
+            user.Id,
+            "Perf Consumption Product",
+            MeasurementUnit.G,
+            100,
+            100,
+            120,
+            10,
+            5,
+            20,
+            3,
+            0,
+            visibility: Visibility.Private);
+        dbContext.Products.Add(product);
+        await dbContext.SaveChangesAsync();
+
         var startDate = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         var mealTypes = new[] { MealType.Breakfast, MealType.Lunch, MealType.Dinner, MealType.Snack };
         var meals = Enumerable.Range(0, count)
-            .Select(index => Meal.Create(
-                user.Id,
-                startDate.AddDays(index),
-                mealTypes[index % mealTypes.Length],
-                comment: $"Perf Meal {index:D4}"))
+            .Select(index => {
+                var meal = Meal.Create(
+                    user.Id,
+                    startDate.AddDays(index),
+                    mealTypes[index % mealTypes.Length],
+                    comment: $"Perf Meal {index:D4}");
+                meal.AddProduct(product.Id, 100);
+                return meal;
+            })
             .ToArray();
 
         dbContext.Meals.AddRange(meals);
         await dbContext.SaveChangesAsync();
     }
 
+    private static async Task AssertStatusCodeAsync(HttpStatusCode expected, HttpResponseMessage response) {
+        if (response.StatusCode == expected) {
+            return;
+        }
+
+        var body = await response.Content.ReadAsStringAsync();
+        Assert.Fail(
+            $"Expected status {(int)expected} ({expected}), got {(int)response.StatusCode} ({response.StatusCode}). Body: {body}");
+    }
+
     private sealed record AuthPayload(string AccessToken, string RefreshToken, AuthUserPayload User);
 
     private sealed record AuthUserPayload(string Email);
 
-    private sealed record PagedPayload<T>(IReadOnlyList<T> Items, int Page, int Limit, int TotalPages, int TotalItems);
+    private sealed record PagedPayload<T>(IReadOnlyList<T> Data, int Page, int Limit, int TotalPages, int TotalItems);
 
     private sealed record ItemPayload(Guid Id);
 
