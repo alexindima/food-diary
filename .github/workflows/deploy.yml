@@ -182,6 +182,29 @@ jobs:
             echo "FAILED_TARGET=Setup SSH"
           } > "${RUNNER_TEMP}/deploy-logs/failure-meta.env"
 
+      - name: Prepare server env file
+        id: prepare_server_env
+        shell: bash
+        env:
+          SERVER_ENV_FILE: ${{ secrets.SERVER_ENV_FILE }}
+        run: |
+          set -euo pipefail
+          if [ -z "${SERVER_ENV_FILE}" ]; then
+            echo "SERVER_ENV_FILE secret is required for deploy."
+            exit 1
+          fi
+
+          printf '%s\n' "${SERVER_ENV_FILE}" > "${RUNNER_TEMP}/fooddiary.env"
+
+      - name: Record failure step
+        if: always() && steps.prepare_server_env.outcome == 'failure'
+        shell: bash
+        run: |
+          {
+            echo "FAILED_AREA=deploy"
+            echo "FAILED_TARGET=Prepare server env file"
+          } > "${RUNNER_TEMP}/deploy-logs/failure-meta.env"
+
       - name: Deploy to server
         id: deploy_server
         run: |
@@ -191,6 +214,7 @@ jobs:
           echo "${{ secrets.GITHUB_TOKEN }}" | $SSH_CMD "docker login ghcr.io -u ${{ github.actor }} --password-stdin"
           $SSH_CMD "mkdir -p /opt/fooddiary"
           $SCP_CMD docker-compose.yml root@${{ env.SERVER_IP }}:/opt/fooddiary/docker-compose.yml
+          $SCP_CMD "${RUNNER_TEMP}/fooddiary.env" root@${{ env.SERVER_IP }}:/opt/fooddiary/.env
 
           $SSH_CMD << 'DEPLOY_EOF'
             set -e
