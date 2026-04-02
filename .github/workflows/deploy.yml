@@ -201,7 +201,8 @@ jobs:
 
             docker compose --profile backend run --rm db-init update
 
-            docker compose up -d
+            docker compose --profile backend up -d api
+            docker compose --profile full up -d telegram-bot
 
             id=$(docker create ghcr.io/alexindima/food-diary/client:latest)
             rm -rf /var/www/fooddiary.club/*
