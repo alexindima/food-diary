@@ -44,6 +44,12 @@ services:
       ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT:-Production}
     env_file:
       - .env
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:5000/health/ready >/dev/null || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 20s
     depends_on:
       db-init:
         condition: service_completed_successfully
@@ -61,7 +67,7 @@ services:
       - .env
     depends_on:
       api:
-        condition: service_started
+        condition: service_healthy
     profiles:
       - full
 
@@ -91,7 +97,7 @@ services:
       - "${CLIENT_PORT:-4200}:80"
     depends_on:
       api:
-        condition: service_started
+        condition: service_healthy
     profiles:
       - full
 
