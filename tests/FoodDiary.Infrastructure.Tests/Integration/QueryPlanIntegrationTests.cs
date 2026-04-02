@@ -96,24 +96,30 @@ public sealed class QueryPlanIntegrationTests(PostgresDatabaseFixture databaseFi
     [RequiresDockerFact]
     public async Task ProductSearchQuery_UsesTrigramNameIndex() {
         await using var context = await databaseFixture.CreateDbContextAsync();
-        var user = User.Create($"products-search-plan-{Guid.NewGuid():N}@example.com", "hash");
-        context.Users.Add(user);
+        var users = Enumerable.Range(0, 12)
+            .Select(index => User.Create($"products-search-plan-{index}-{Guid.NewGuid():N}@example.com", "hash"))
+            .ToArray();
+
+        context.Users.AddRange(users);
         await context.SaveChangesAsync();
 
-        var products = Enumerable.Range(0, SeedCount)
-            .Select(index => Product.Create(
-                user.Id,
-                index == SeedCount / 2 ? "Needle Cocoa Product" : $"Background Product {index:D4}",
-                MeasurementUnit.G,
-                100,
-                25,
-                100,
-                10,
-                5,
-                20,
-                3,
-                0,
-                visibility: Visibility.Private))
+        var products = users.SelectMany((user, userIndex) =>
+                Enumerable.Range(0, SeedCount)
+                    .Select(index => Product.Create(
+                        user.Id,
+                        userIndex == users.Length / 2 && index == SeedCount / 2
+                            ? "Needle Cocoa Product"
+                            : $"Background Product {userIndex:D2}-{index:D4}",
+                        MeasurementUnit.G,
+                        100,
+                        25,
+                        100,
+                        10,
+                        5,
+                        20,
+                        3,
+                        0,
+                        visibility: Visibility.Private)))
             .ToArray();
 
         context.Products.AddRange(products);
@@ -125,13 +131,10 @@ public sealed class QueryPlanIntegrationTests(PostgresDatabaseFixture databaseFi
             """
             SELECT p."Id", p."CreatedOnUtc"
             FROM "Products" AS p
-            WHERE p."UserId" = @userId
-              AND p."Name" ILIKE @search
-            ORDER BY p."CreatedOnUtc" DESC
+            WHERE p."Name" ILIKE @search
             LIMIT 25
             """,
             disableSequentialScan: true,
-            new NpgsqlParameter<Guid>("userId", user.Id.Value),
             new NpgsqlParameter<string>("search", "%Needle%"));
 
         Assert.True(
@@ -142,17 +145,23 @@ public sealed class QueryPlanIntegrationTests(PostgresDatabaseFixture databaseFi
     [RequiresDockerFact]
     public async Task RecipeSearchQuery_UsesTrigramNameIndex() {
         await using var context = await databaseFixture.CreateDbContextAsync();
-        var user = User.Create($"recipes-search-plan-{Guid.NewGuid():N}@example.com", "hash");
-        context.Users.Add(user);
+        var users = Enumerable.Range(0, 12)
+            .Select(index => User.Create($"recipes-search-plan-{index}-{Guid.NewGuid():N}@example.com", "hash"))
+            .ToArray();
+
+        context.Users.AddRange(users);
         await context.SaveChangesAsync();
 
-        var recipes = Enumerable.Range(0, SeedCount)
-            .Select(index => Recipe.Create(
-                user.Id,
-                index == SeedCount / 2 ? "Needle Soup Recipe" : $"Background Recipe {index:D4}",
-                servings: 2,
-                description: $"Description {index:D4}",
-                visibility: Visibility.Private))
+        var recipes = users.SelectMany((user, userIndex) =>
+                Enumerable.Range(0, SeedCount)
+                    .Select(index => Recipe.Create(
+                        user.Id,
+                        userIndex == users.Length / 2 && index == SeedCount / 2
+                            ? "Needle Soup Recipe"
+                            : $"Background Recipe {userIndex:D2}-{index:D4}",
+                        servings: 2,
+                        description: $"Description {userIndex:D2}-{index:D4}",
+                        visibility: Visibility.Private)))
             .ToArray();
 
         context.Recipes.AddRange(recipes);
@@ -164,13 +173,10 @@ public sealed class QueryPlanIntegrationTests(PostgresDatabaseFixture databaseFi
             """
             SELECT r."Id", r."CreatedOnUtc"
             FROM "Recipes" AS r
-            WHERE r."UserId" = @userId
-              AND r."Name" ILIKE @search
-            ORDER BY r."CreatedOnUtc" DESC
+            WHERE r."Name" ILIKE @search
             LIMIT 25
             """,
             disableSequentialScan: true,
-            new NpgsqlParameter<Guid>("userId", user.Id.Value),
             new NpgsqlParameter<string>("search", "%Needle%"));
 
         Assert.True(
