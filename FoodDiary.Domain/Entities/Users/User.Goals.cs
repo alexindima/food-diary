@@ -81,30 +81,13 @@ public sealed partial class User {
     }
 
     private bool ApplyAiTokenLimitChanges(UserAiTokenLimitUpdate update) {
-        var changed = false;
-
-        if (update.InputLimit.HasValue) {
-            if (update.InputLimit.Value < 0) {
-                throw new ArgumentOutOfRangeException(nameof(update.InputLimit), "Input limit must be non-negative.");
-            }
-
-            if (AiInputTokenLimit != update.InputLimit.Value) {
-                AiInputTokenLimit = update.InputLimit.Value;
-                changed = true;
-            }
+        var currentState = GetAccountState();
+        var nextState = currentState.WithAiTokenLimits(update.InputLimit, update.OutputLimit);
+        if (nextState == currentState) {
+            return false;
         }
 
-        if (update.OutputLimit.HasValue) {
-            if (update.OutputLimit.Value < 0) {
-                throw new ArgumentOutOfRangeException(nameof(update.OutputLimit), "Output limit must be non-negative.");
-            }
-
-            if (AiOutputTokenLimit != update.OutputLimit.Value) {
-                AiOutputTokenLimit = update.OutputLimit.Value;
-                changed = true;
-            }
-        }
-
-        return changed;
+        ApplyAccountState(nextState);
+        return true;
     }
 }

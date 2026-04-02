@@ -86,13 +86,12 @@ public sealed partial class User : AggregateRoot<UserId> {
             Id = UserId.New(),
             Email = normalizedEmail,
             Password = normalizedPassword,
-            AiInputTokenLimit = DefaultAiInputTokenLimit,
-            AiOutputTokenLimit = DefaultAiOutputTokenLimit,
             IsEmailConfirmed = false
         };
         user.ApplyCredentialState(UserCredentialState.CreateInitial());
         user.ApplyProfileState(UserProfileState.CreateInitial());
         user.ApplyGoalState(UserGoalState.CreateInitial());
+        user.ApplyAccountState(UserAccountState.CreateInitial(DefaultAiInputTokenLimit, DefaultAiOutputTokenLimit));
         user.SetCreated();
         return user;
     }
@@ -261,6 +260,23 @@ public sealed partial class User : AggregateRoot<UserId> {
         PasswordResetTokenExpiresAtUtc = state.PasswordResetTokenExpiresAtUtc;
         PasswordResetSentAtUtc = state.PasswordResetSentAtUtc;
         LastLoginAtUtc = state.LastLoginAtUtc;
+    }
+
+    private UserAccountState GetAccountState() {
+        return new UserAccountState(
+            TelegramUserId,
+            AiInputTokenLimit,
+            AiOutputTokenLimit,
+            IsActive,
+            DeletedAt);
+    }
+
+    private void ApplyAccountState(UserAccountState state) {
+        TelegramUserId = state.TelegramUserId;
+        AiInputTokenLimit = state.AiInputTokenLimit;
+        AiOutputTokenLimit = state.AiOutputTokenLimit;
+        IsActive = state.IsActive;
+        DeletedAt = state.DeletedAt;
     }
 
     private static void EnsureLanguage(string? value, string paramName) {

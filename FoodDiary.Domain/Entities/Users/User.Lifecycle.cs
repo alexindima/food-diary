@@ -12,7 +12,7 @@ public sealed partial class User {
     public void Deactivate(DateTime? changedAtUtc = null) {
         EnsureNotDeleted();
         var effectiveChangedAtUtc = NormalizeOptionalAuditTimestamp(changedAtUtc, nameof(changedAtUtc));
-        IsActive = false;
+        ApplyAccountState(GetAccountState().Deactivate());
         SetModified(effectiveChangedAtUtc);
     }
 
@@ -22,7 +22,7 @@ public sealed partial class User {
         }
 
         var effectiveChangedAtUtc = NormalizeOptionalAuditTimestamp(changedAtUtc, nameof(changedAtUtc));
-        IsActive = true;
+        ApplyAccountState(GetAccountState().Activate());
         SetModified(effectiveChangedAtUtc);
     }
 
@@ -33,8 +33,7 @@ public sealed partial class User {
 
         var normalizedDeletedAtUtc = NormalizeUtcTimestamp(deletedAtUtc, nameof(deletedAtUtc));
 
-        DeletedAt = normalizedDeletedAtUtc;
-        IsActive = false;
+        ApplyAccountState(GetAccountState().MarkDeleted(normalizedDeletedAtUtc));
         RaiseDomainEvent(new UserDeletedDomainEvent(Id, normalizedDeletedAtUtc, normalizedDeletedAtUtc));
         SetModified(normalizedDeletedAtUtc);
     }
@@ -45,8 +44,7 @@ public sealed partial class User {
         }
 
         var normalizedRestoredAtUtc = NormalizeOptionalAuditTimestamp(restoredAtUtc, nameof(restoredAtUtc));
-        DeletedAt = null;
-        IsActive = true;
+        ApplyAccountState(GetAccountState().Restore());
         RaiseDomainEvent(new UserRestoredDomainEvent(Id, normalizedRestoredAtUtc));
         SetModified(normalizedRestoredAtUtc);
     }

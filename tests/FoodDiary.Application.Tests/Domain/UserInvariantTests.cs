@@ -92,6 +92,17 @@ public class UserInvariantTests {
     }
 
     [Fact]
+    public void LinkTelegram_AndUnlinkTelegram_UpdateAccountLinkState() {
+        var user = User.Create("test@example.com", "hash");
+
+        user.LinkTelegram(123456789);
+        Assert.Equal(123456789, user.TelegramUserId);
+
+        user.UnlinkTelegram();
+        Assert.Null(user.TelegramUserId);
+    }
+
+    [Fact]
     public void Activate_WhenDeleted_Throws() {
         var user = User.Create("test@example.com", "hash");
         user.MarkDeleted(DateTime.UtcNow);

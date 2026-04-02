@@ -14,13 +14,13 @@ public sealed partial class User {
 
     public void LinkTelegram(long telegramUserId) {
         EnsureNotDeleted();
-        TelegramUserId = telegramUserId;
+        ApplyAccountState(GetAccountState().WithTelegram(telegramUserId));
         SetModified();
     }
 
     public void UnlinkTelegram() {
         EnsureNotDeleted();
-        TelegramUserId = null;
+        ApplyAccountState(GetAccountState().WithTelegram(null));
         SetModified();
     }
 
