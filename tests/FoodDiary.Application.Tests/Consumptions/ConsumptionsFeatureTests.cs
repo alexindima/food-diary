@@ -489,6 +489,34 @@ public class ConsumptionsFeatureTests {
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
+    [Fact]
+    public async Task GetConsumptionsQueryHandler_NormalizesDateRangeToUtcForRepositoryQuery() {
+        var repository = new RecordingMealPageRepository();
+        var handler = new GetConsumptionsQueryHandler(repository);
+        var userId = UserId.New();
+        var localFrom = new DateTime(2026, 3, 1, 0, 0, 0, DateTimeKind.Local);
+        var localTo = new DateTime(2026, 3, 31, 0, 0, 0, DateTimeKind.Local);
+
+        var result = await handler.Handle(
+            new GetConsumptionsQuery(userId.Value, 1, 25, localFrom, localTo),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(NormalizeUtcDate(localFrom), repository.LastDateFrom);
+        Assert.Equal(NormalizeUtcDate(localTo), repository.LastDateTo);
+        Assert.Equal(DateTimeKind.Utc, repository.LastDateFrom!.Value.Kind);
+        Assert.Equal(DateTimeKind.Utc, repository.LastDateTo!.Value.Kind);
+    }
+
+    private static DateTime NormalizeUtcDate(DateTime value) {
+        var utc = value.Kind switch {
+            DateTimeKind.Utc => value,
+            _ => value.ToUniversalTime()
+        };
+
+        return DateTime.SpecifyKind(utc.Date, DateTimeKind.Utc);
+    }
+
     private sealed class SingleMealRepository(Meal meal) : IMealRepository {
         public bool UpdateCalled { get; private set; }
 
@@ -551,6 +579,42 @@ public class ConsumptionsFeatureTests {
             DateTime? dateFrom,
             DateTime? dateTo,
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<IReadOnlyList<Meal>> GetByPeriodAsync(
+            UserId userId,
+            DateTime dateFrom,
+            DateTime dateTo,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+    }
+
+    private sealed class RecordingMealPageRepository : IMealRepository {
+        public DateTime? LastDateFrom { get; private set; }
+        public DateTime? LastDateTo { get; private set; }
+
+        public Task<Meal> AddAsync(Meal meal, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task UpdateAsync(Meal meal, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task DeleteAsync(Meal meal, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<Meal?> GetByIdAsync(
+            MealId id,
+            UserId userId,
+            bool includeItems = false,
+            bool asTracking = false,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<(IReadOnlyList<Meal> Items, int TotalItems)> GetPagedAsync(
+            UserId userId,
+            int page,
+            int limit,
+            DateTime? dateFrom,
+            DateTime? dateTo,
+            CancellationToken cancellationToken = default) {
+            LastDateFrom = dateFrom;
+            LastDateTo = dateTo;
+            return Task.FromResult(((IReadOnlyList<Meal>)[], 0));
+        }
 
         public Task<IReadOnlyList<Meal>> GetByPeriodAsync(
             UserId userId,
