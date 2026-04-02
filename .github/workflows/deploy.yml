@@ -55,7 +55,7 @@ jobs:
         uses: docker/setup-buildx-action@v3
 
       - name: Build and push API
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: .
           file: FoodDiary.Web.Api/Dockerfile
@@ -66,7 +66,7 @@ jobs:
             ${{ env.IMAGE_PREFIX }}/api:sha-${{ github.sha }}
 
       - name: Build and push Telegram Bot
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: .
           file: FoodDiary.Telegram.Bot/Dockerfile
@@ -77,7 +77,7 @@ jobs:
             ${{ env.IMAGE_PREFIX }}/telegram-bot:sha-${{ github.sha }}
 
       - name: Build and push Initializer
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: .
           file: FoodDiary.Initializer/Dockerfile
@@ -88,7 +88,7 @@ jobs:
             ${{ env.IMAGE_PREFIX }}/initializer:sha-${{ github.sha }}
 
       - name: Build and push Client
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: FoodDiary.Web.Client
           file: FoodDiary.Web.Client/Dockerfile
