@@ -45,6 +45,42 @@ public sealed class RefreshTokenCommandHandlerTests {
         Assert.Equal(0, authTokenService.IssueAndStoreCallCount);
     }
 
+    [Fact]
+    public async Task Handle_WithInactiveUser_ReturnsInvalidToken() {
+        var user = CreateUser("refresh@example.com");
+        user.UpdateRefreshToken($"hashed:{SecurityTokenGenerator.NormalizeForSecureHashing("current-refresh-token")}");
+        user.Deactivate();
+        var repository = new InMemoryUserRepository(user);
+        var jwt = new FakeJwtTokenGenerator(user.Id, user.Email);
+        var hasher = new FakePasswordHasher();
+        var authTokenService = new FakeAuthenticationTokenService();
+        var handler = new RefreshTokenCommandHandler(repository, jwt, hasher, authTokenService);
+
+        var result = await handler.Handle(new RefreshTokenCommand("current-refresh-token"), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+        Assert.Equal(0, authTokenService.IssueAndStoreCallCount);
+    }
+
+    [Fact]
+    public async Task Handle_WithDeletedUser_ReturnsInvalidToken() {
+        var user = CreateUser("refresh@example.com");
+        user.UpdateRefreshToken($"hashed:{SecurityTokenGenerator.NormalizeForSecureHashing("current-refresh-token")}");
+        user.DeleteAccount(DateTime.UtcNow);
+        var repository = new InMemoryUserRepository(user);
+        var jwt = new FakeJwtTokenGenerator(user.Id, user.Email);
+        var hasher = new FakePasswordHasher();
+        var authTokenService = new FakeAuthenticationTokenService();
+        var handler = new RefreshTokenCommandHandler(repository, jwt, hasher, authTokenService);
+
+        var result = await handler.Handle(new RefreshTokenCommand("current-refresh-token"), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+        Assert.Equal(0, authTokenService.IssueAndStoreCallCount);
+    }
+
     private static User CreateUser(string email) => User.Create(email, "password-hash");
 
     private sealed class InMemoryUserRepository(User user) : IUserRepository {

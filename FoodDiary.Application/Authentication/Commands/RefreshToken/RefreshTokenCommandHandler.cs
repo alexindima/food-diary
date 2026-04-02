@@ -34,9 +34,12 @@ public class RefreshTokenCommandHandler : ICommandHandler<RefreshTokenCommand, R
 
         var (userId, _) = validationResult.Value;
         var user = await _userRepository.GetByIdAsync(userId, cancellationToken);
+        if (user is null || user.DeletedAt is not null || !user.IsActive) {
+            return Result.Failure<AuthenticationModel>(Errors.Authentication.InvalidToken);
+        }
 
         var normalizedRefreshToken = SecurityTokenGenerator.NormalizeForSecureHashing(command.RefreshToken);
-        if (user?.RefreshToken is null || !_passwordHasher.Verify(normalizedRefreshToken, user.RefreshToken)) {
+        if (user.RefreshToken is null || !_passwordHasher.Verify(normalizedRefreshToken, user.RefreshToken)) {
             return Result.Failure<AuthenticationModel>(Errors.Authentication.InvalidToken);
         }
 
