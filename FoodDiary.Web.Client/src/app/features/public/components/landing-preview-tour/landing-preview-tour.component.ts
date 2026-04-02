@@ -18,6 +18,7 @@ import { RecipeCardComponent } from '../../../../components/shared/recipe-card/r
 import { AuthService } from '../../../../services/auth.service';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiTab } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
+import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 
 @Component({
     selector: 'fd-landing-preview-tour',
@@ -32,6 +33,7 @@ import { FdUiTab } from 'fd-ui-kit/tabs/fd-ui-tabs.component';
         RecipeCardComponent,
         QuickConsumptionDrawerComponent,
     ],
+    providers: [provideCharts(withDefaultRegisterables())],
     templateUrl: './landing-preview-tour.component.html',
     styleUrls: ['./landing-preview-tour.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,

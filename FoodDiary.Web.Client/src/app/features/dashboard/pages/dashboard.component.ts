@@ -24,6 +24,7 @@ import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
 import { UnsavedChangesService, UnsavedChangesHandler } from '../../../services/unsaved-changes.service';
 import { DashboardLayoutService } from '../lib/dashboard-layout.service';
 import { DashboardFacade } from '../lib/dashboard.facade';
+import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 
 @Component({
     selector: 'fd-dashboard',
@@ -48,7 +49,7 @@ import { DashboardFacade } from '../lib/dashboard.facade';
         NoticeBannerComponent,
         FdUiLoaderComponent,
     ],
-    providers: [DashboardLayoutService, DashboardFacade],
+    providers: [DashboardLayoutService, DashboardFacade, provideCharts(withDefaultRegisterables())],
     templateUrl: './dashboard.component.html',
     styleUrl: './dashboard.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

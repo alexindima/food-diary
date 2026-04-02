@@ -8,7 +8,6 @@ import {
     NutrientBar,
 } from '../../../../components/shared/dashboard-summary-card/dashboard-summary-card.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { AuthDialogComponent } from '../../../auth/dialogs/auth-dialog/auth-dialog.component';
 import { LocalizationService } from '../../../../services/localization.service';
 
 @Component({
@@ -106,10 +105,12 @@ export class HeroComponent {
     }
 
     public async goToRegister(): Promise<void> {
-        this.openAuthDialog('register');
+        await this.openAuthDialog('register');
     }
 
-    private openAuthDialog(mode: 'login' | 'register'): void {
+    private async openAuthDialog(mode: 'login' | 'register'): Promise<void> {
+        const { AuthDialogComponent } = await import('../../../auth/dialogs/auth-dialog/auth-dialog.component');
+
         this.fdDialogService.open(AuthDialogComponent, {
             size: 'md',
             data: { mode },

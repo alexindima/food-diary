@@ -1,6 +1,5 @@
 import { Routes } from '@angular/router';
 import { MainComponent } from './features/public/pages/landing/main.component';
-import { NotFoundComponent } from './features/public/pages/not-found/not-found.component';
 import { unsavedChangesGuard } from './guards/unsaved-changes.guard';
 import { authGuard } from './guards/auth.guard';
 import { authRoutes } from './features/auth/auth.routes';
@@ -81,7 +80,7 @@ export const routes: Routes = [
     },
     {
         path: '**',
-        component: NotFoundComponent,
+        loadComponent: () => import('./features/public/pages/not-found/not-found.component').then(m => m.NotFoundComponent),
         data: { seo: { titleKey: 'SEO.NOT_FOUND', noIndex: true } },
     },
 ];

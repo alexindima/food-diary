@@ -1,7 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { AuthDialogComponent } from '../../../auth/dialogs/auth-dialog/auth-dialog.component';
 import { AuthService } from '../../../../services/auth.service';
 import { HeroComponent } from '../../components/hero/hero.component';
 import { FeaturesComponent } from '../../components/features/features.component';
@@ -35,11 +34,13 @@ export class MainComponent implements OnInit {
         if (path.startsWith('auth')) {
             const modeParam = this.route.snapshot.params['mode'];
             const mode: 'login' | 'register' = modeParam === 'register' ? 'register' : 'login';
-            this.openAuthDialog(mode);
+            void this.openAuthDialog(mode);
         }
     }
 
-    private openAuthDialog(mode: 'login' | 'register'): void {
+    private async openAuthDialog(mode: 'login' | 'register'): Promise<void> {
+        const { AuthDialogComponent } = await import('../../../auth/dialogs/auth-dialog/auth-dialog.component');
+
         this.fdDialogService.open(AuthDialogComponent, {
             size: 'md',
             data: { mode },

@@ -1,4 +1,4 @@
-import { provideAnimations } from '@angular/platform-browser/animations';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import {
     ApplicationConfig,
     ErrorHandler,
@@ -20,7 +20,6 @@ import { RetryInterceptor } from './interceptor/retry.interceptor';
 import { AuthInterceptor } from './interceptor/auth.interceptor';
 import { LoggingApiService } from './services/logging-api.service';
 import { provideServiceWorker } from '@angular/service-worker';
-import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import { FdUiSnackBarModule } from 'fd-ui-kit/material';
 import { UserService } from './shared/api/user.service';
 import { firstValueFrom } from 'rxjs';
@@ -65,7 +64,7 @@ export const appConfig: ApplicationConfig = {
                 await localizationService.applyLanguagePreference(user?.language ?? null);
             });
         }),
-        provideAnimations(),
+        provideAnimationsAsync(),
         provideZonelessChangeDetection(),
         provideRouter(routes, withComponentInputBinding(), withPreloading(PreloadAllModules)),
         provideHttpClient(withInterceptorsFromDi()),
@@ -74,7 +73,6 @@ export const appConfig: ApplicationConfig = {
             prefix: './assets/i18n/',
             suffix: `.json?v=${environment.buildVersion ?? 'dev'}`,
         }),
-        provideCharts(withDefaultRegisterables()),
         provideServiceWorker('ngsw-worker.js', {
             enabled: !isDevMode(),
             registrationStrategy: 'registerWhenStable:30000',

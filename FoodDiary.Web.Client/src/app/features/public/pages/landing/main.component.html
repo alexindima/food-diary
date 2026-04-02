@@ -1,5 +1,9 @@
 @if (isAuthenticated()) {
-    <fd-dashboard />
+    @defer (when isAuthenticated()) {
+        <fd-dashboard />
+    } @placeholder {
+        <div class="landing-dashboard-placeholder" aria-hidden="true"></div>
+    }
 } @else {
     <fd-hero />
     @defer (on viewport) {
