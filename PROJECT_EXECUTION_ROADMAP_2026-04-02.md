@@ -221,6 +221,7 @@ Current tasks to execute first:
 - expanded PostgreSQL-backed endpoint latency baselines to include `consumptions` meal-list paging
 - added explain-plan guards for product, recipe, and meal paging indexes
 - adopted `pg_trgm`-backed search indexing for product and recipe `ILIKE` paths
+- updated deploy path to use server env at `/etc/fooddiary/fooddiary.env`, synced compose to server, and documented the final Docker/GHCR recovery path in `BACKEND_RUNBOOKS.md`
 
 ### Frontend progress completed on 2026-04-02
 
@@ -276,6 +277,9 @@ Done when:
 - deploy sequence is documented
 - postgres / image / auth failure recovery steps are documented
 - post-deploy verification commands are documented
+
+Status:
+- Completed on 2026-04-03 via updates to `BACKEND_RUNBOOKS.md` and `README.md`
 
 ### 4. Add frontend observability baseline
 

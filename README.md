@@ -105,7 +105,8 @@ Backend work should follow these repository documents:
 
 - CI runs .NET validation and Telegram failure notifications.
 - Deploy is performed through GitHub Actions.
-- Database migrations are bundled and executed during deploy.
+- Deploy copies `docker-compose.yml` to `/opt/fooddiary`, uses `/etc/fooddiary/fooddiary.env` as the server env source, runs migrations through `db-init`, starts `api` and `telegram-bot`, and publishes client static files from the `client` image.
+- Backend and deploy recovery steps are documented in `BACKEND_RUNBOOKS.md`.
 
 ## Status
 

@@ -494,6 +494,10 @@ Why now:
 - deploy and docker reliability were improved significantly
 - documenting the real server/env/deploy path now will reduce future operational drift
 
+Status update:
+- Completed on 2026-04-03
+- server env source, Docker deploy sequence, post-deploy checks, and recovery steps are now documented in `BACKEND_RUNBOOKS.md`
+
 4. Add frontend observability baseline
 Why now:
 - frontend architecture and test maturity are much stronger now

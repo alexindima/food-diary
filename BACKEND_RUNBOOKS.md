@@ -1,13 +1,75 @@
 # Backend Runbooks
 
-Date: 2026-03-28
-Scope: backend incident handling and operational recovery
+Date: 2026-04-03
+Scope: backend incident handling, Docker deploy, and operational recovery
 
 ## Purpose
 
 This document captures the first operational runbook baseline for `B11` in `BACKEND_10_OF_10_PLAN.md`.
 
 Use it to reduce decision latency during incidents and to keep recovery steps reproducible across environments.
+
+## Current Server And Deploy Baseline
+
+Use this baseline before applying any recovery step:
+
+- canonical server env file: `/etc/fooddiary/fooddiary.env`
+- deploy workspace on server: `/opt/fooddiary`
+- tracked compose file copied during deploy: `/opt/fooddiary/docker-compose.yml`
+- runtime env file copied during deploy: `/opt/fooddiary/.env`
+- container images pulled from `ghcr.io/alexindima/food-diary/*`
+- database service inside compose network: `postgres:5432`
+- public static directories:
+  - `/var/www/fooddiary.club`
+  - `/var/www/admin.fooddiary.club`
+
+Current deploy sequence in `.github/workflows/deploy.yml`:
+
+1. Build and push `api`, `telegram-bot`, `initializer`, and `client` images to GHCR.
+2. Verify `/etc/fooddiary/fooddiary.env` exists on the server.
+3. Copy the repository `docker-compose.yml` to `/opt/fooddiary/docker-compose.yml`.
+4. Copy `/etc/fooddiary/fooddiary.env` to `/opt/fooddiary/.env`.
+5. Pull compose and direct GHCR images on the server.
+6. Run migrations through `docker compose --profile backend run --rm db-init update`.
+7. Start `api` through the `backend` profile and `telegram-bot` through the `full` profile.
+8. Publish client static assets from the `client` image into `/var/www/...`.
+
+Required server env keys for the current Docker path:
+
+- `POSTGRES_DB`
+- `POSTGRES_USER`
+- `POSTGRES_PASSWORD`
+- `ConnectionStrings__DefaultConnection`
+- backend runtime secrets such as JWT, SMTP, S3, Telegram, and OpenAI settings
+
+Important rule:
+
+- keep `ConnectionStrings__DefaultConnection` suitable for host-level diagnostics if needed
+- but remember that containerized `api`, `db-init`, and `job-manager` are overridden to use internal compose host `postgres`
+
+## Post-Deploy Verification
+
+Run these checks after any production or staging deploy:
+
+1. Confirm containers:
+   `cd /opt/fooddiary && docker compose ps`
+2. Confirm API readiness:
+   `curl -fsS http://127.0.0.1:5000/health/ready`
+3. Confirm migration step did not leave a failing one-off container:
+   `docker ps -a --filter "name=fooddiary-db-init"`
+4. Confirm bot is not crash-looping:
+   `docker ps --filter "name=fooddiary-telegram-bot"`
+5. Confirm one auth flow and one data-backed flow:
+   - login or refresh
+   - `GET /api/v1/products` or another high-value route
+6. Confirm static sites were refreshed:
+   - main site renders
+   - admin site renders
+7. Confirm Telegram deploy notification contains:
+   - workflow
+   - commit SHA
+   - commit title
+   - failing step if the workflow failed
 
 ## General Incident Rules
 
@@ -61,27 +123,36 @@ Immediate actions:
 1. Stop automatic retries and parallel redeploy attempts.
 2. Identify the failing stage:
    - build/package
-   - migration bundle
+   - image pull or image mismatch
+   - `db-init` migration run
    - service restart
+   - static client publish
    - post-deploy health check
 3. Keep the previous healthy version serving traffic if it is still available.
 
 Diagnosis:
 
 - Inspect GitHub Actions logs for the first failing step.
+- If failure happened during `Verify server env file`, inspect `/etc/fooddiary/fooddiary.env` existence and permissions.
+- If failure happened during image pull or startup, compare the GHCR image actually pulled on the server with the expected workflow commit.
 - If failure happened after migration execution, inspect database state before rolling back binaries.
 - If failure happened during app startup, inspect host logs for missing config, secret, binding, or dependency errors.
 - If failure happened only in health checks, compare environment-specific URLs, proxy headers, and secret injection with the previous healthy deployment.
+- If failure happened during static publish, verify `/var/www/fooddiary.club` and `/var/www/admin.fooddiary.club` still exist and have writable permissions.
 - Compare cache hit ratio and auth business-flow outcomes before and after the deploy when the incident looks like a performance-only regression.
 
 Recovery:
 
 - Build/package failure:
   fix the pipeline or artifact issue and redeploy.
+- Server env failure:
+  restore `/etc/fooddiary/fooddiary.env`, then rerun deploy.
 - Migration failure:
   switch to the failed migration runbook below.
 - Startup/config failure:
   restore the last known-good configuration or redeploy the previous artifact if schema remains compatible.
+- Static publish failure:
+  restore writable web-root permissions or manually republish the client image contents after backend health is confirmed.
 - Health-check-only failure:
   correct the environment or routing issue, then rerun deploy validation.
 
@@ -99,7 +170,7 @@ Primary reference:
 
 Symptoms:
 
-- deploy fails on migration bundle execution
+- deploy fails on `db-init update`
 - app startup reports pending schema mismatch
 - database errors begin immediately after schema rollout
 
@@ -111,8 +182,14 @@ Immediate actions:
 
 Diagnosis:
 
-- Inspect the `Run migration bundle on server` workflow step.
+- Inspect the `Deploy to server` workflow step and isolate the `docker compose --profile backend run --rm db-init update` output.
 - Check `__EFMigrationsHistory`.
+- Confirm the server env includes correct:
+  - `POSTGRES_DB`
+  - `POSTGRES_USER`
+  - `POSTGRES_PASSWORD`
+  - `ConnectionStrings__DefaultConnection`
+- Confirm the latest `initializer` image was actually pulled before the migration run.
 - Verify whether the database is:
   - still on the previous migration
   - partially changed by manual SQL or failing statements
@@ -154,8 +231,10 @@ Immediate actions:
 
 Diagnosis:
 
+- Verify `/etc/fooddiary/fooddiary.env` and the derived `/opt/fooddiary/.env`.
 - Verify the current `ConnectionStrings:DefaultConnection` source for the environment.
 - Check whether the database host is reachable from the API runtime.
+- If the error came from a containerized backend service, remember the runtime host should be `postgres`, not `localhost`.
 - Inspect PostgreSQL server health, disk space, max connections, and recent restarts.
 - Inspect application logs for authentication failure versus transport failure versus timeout patterns.
 - Check these metrics first:
@@ -172,6 +251,8 @@ Recovery:
 
 - Credential/config issue:
   restore valid connection settings and restart the API host.
+- Wrong compose env for PostgreSQL:
+  fix `POSTGRES_DB`, `POSTGRES_USER`, or `POSTGRES_PASSWORD` in `/etc/fooddiary/fooddiary.env`, rerun `db-init`, then restart `api`.
 - Database host unavailable:
   recover the PostgreSQL instance or fail over according to the environment policy.
 - Connection saturation:
@@ -185,6 +266,47 @@ Validation after recovery:
 - auth refresh or login succeeds
 - error rate returns to normal
 - `fooddiary.db.command.failures` returns to the normal baseline
+
+## Docker And Image Drift
+
+Symptoms:
+
+- deploy succeeds partially but old behavior remains
+- container starts with missing libraries or old config assumptions
+- server still shows previously fixed startup errors
+
+Immediate actions:
+
+1. Confirm whether the right GHCR image was pulled.
+2. Confirm whether compose is using `image:` from GHCR rather than a stale local build.
+3. Avoid patching containers manually before drift is understood.
+
+Diagnosis:
+
+- On server:
+  - `cd /opt/fooddiary && docker compose images`
+  - `docker image ls | grep food-diary`
+- Compare image creation time and digest with the GHCR artifact from the deploy run.
+- Check whether the deploy log included the expected direct pulls for:
+  - `api`
+  - `initializer`
+  - `telegram-bot`
+  - `client`
+
+Recovery:
+
+- Pull drift only:
+  rerun the deploy or pull the specific image explicitly, then restart the affected service.
+- Compose drift:
+  verify the latest `docker-compose.yml` was copied to `/opt/fooddiary/docker-compose.yml`, then rerun deploy.
+- Local image confusion:
+  remove the stale local image only after confirming the correct GHCR image is present.
+
+Validation after recovery:
+
+- `docker compose images` shows the expected GHCR-backed images
+- the previously failing startup or migration error disappears
+- deploy and health checks complete normally
 
 ## Unavailable S3-Compatible Storage
 
