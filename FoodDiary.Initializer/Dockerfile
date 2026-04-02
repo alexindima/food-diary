@@ -20,6 +20,7 @@ RUN dotnet publish FoodDiary.Initializer/FoodDiary.Initializer.csproj -c Release
 FROM mcr.microsoft.com/dotnet/aspnet:10.0-alpine
 
 WORKDIR /app
+RUN apk add --no-cache krb5-libs
 COPY --from=build /app/publish .
 
 ENTRYPOINT ["dotnet", "FoodDiary.Initializer.dll"]
