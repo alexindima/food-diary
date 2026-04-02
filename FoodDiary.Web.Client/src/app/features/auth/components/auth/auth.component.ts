@@ -259,8 +259,8 @@ export class AuthComponent implements OnInit, AfterViewInit {
             this.googleReady.set(true);
             this.renderGoogleButton();
             this.googleIdentityService.prompt();
-        } catch (error) {
-            console.error('Google init failed', error);
+        } catch {
+            this.googleReady.set(false);
         }
     }
 

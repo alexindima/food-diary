@@ -77,8 +77,7 @@ export class ProductListPageComponent extends ProductListBaseComponent implement
                                     this.searchForm.controls.search.value,
                                 ).subscribe();
                             },
-                            error: error => {
-                                console.error('Delete product error', error);
+                            error: () => {
                                 this.productData.setLoading(false);
                                 this.toastService.open(this.translateService.instant('PRODUCT_LIST.DELETE_ERROR'), {
                                     appearance: 'negative',

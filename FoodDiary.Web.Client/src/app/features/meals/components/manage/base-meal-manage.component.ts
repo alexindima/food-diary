@@ -1,21 +1,7 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, FactoryProvider, computed, inject, input, OnInit, signal } from '@angular/core';
-import {
-    AbstractControl,
-    FormArray,
-    FormControl,
-    FormGroup,
-    ReactiveFormsModule,
-    ValidationErrors,
-    ValidatorFn,
-    Validators,
-} from '@angular/forms';
+import { AbstractControl, FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { NavigationService } from '../../../../services/navigation.service';
-import {
-    ItemSelectDialogComponent,
-    ItemSelectDialogData,
-    ItemSelection,
-} from '../../../../shared/dialogs/item-select-dialog/item-select-dialog.component';
 import {
     Consumption,
     ConsumptionAiSessionManageDto,
@@ -23,10 +9,6 @@ import {
     ConsumptionManageDto,
     ConsumptionSourceType,
 } from '../../models/meal.data';
-import { MealService } from '../../api/meal.service';
-import { Product } from '../../../products/models/product.data';
-import { Recipe } from '../../../recipes/models/recipe.data';
-import { RecipeServingWeightService } from '../../lib/recipe-serving-weight.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NutrientData } from '../../../../shared/models/charts.data';
@@ -45,23 +27,13 @@ import {
 } from '../../dialogs/satiety-level-dialog/meal-satiety-level-dialog.component';
 import { DEFAULT_SATIETY_LEVELS } from 'fd-ui-kit/satiety-scale/fd-ui-satiety-scale.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import {
-    ConsumptionManageRedirectAction,
-    MealManageSuccessDialogComponent,
-    ConsumptionManageSuccessDialogData,
-} from '../../dialogs/manage-success-dialog/meal-manage-success-dialog.component';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
 import { ImageUploadFieldComponent } from '../../../../components/shared/image-upload-field/image-upload-field.component';
 import { ImageSelection } from '../../../../shared/models/image-upload.data';
 import { ActivatedRoute, Router } from '@angular/router';
 import { QuickMealItem } from '../../lib/quick-meal.service';
-import { MealPhotoRecognitionDialogComponent } from '../../dialogs/photo-recognition-dialog/meal-photo-recognition-dialog.component';
-import { AiFoodService } from '../../../../shared/api/ai-food.service';
 import { UserAiUsageResponse } from '../../../../shared/models/ai.data';
-import { AuthService } from '../../../../services/auth.service';
-import { PremiumRequiredDialogComponent } from '../../../../components/shared/premium-required-dialog/premium-required-dialog.component';
-import { NutritionCalculationService } from '../../../../shared/lib/nutrition-calculation.service';
-import { calculateCalorieMismatchWarning, checkCaloriesError, checkMacrosError } from '../../../../shared/lib/nutrition-form.utils';
+import { checkCaloriesError, checkMacrosError } from '../../../../shared/lib/nutrition-form.utils';
 import { ManageHeaderComponent } from '../../../../components/shared/manage-header/manage-header.component';
 import { MealItemsListComponent } from './meal-items-list/meal-items-list.component';
 import { MealAiSessionsComponent } from './meal-ai-sessions/meal-ai-sessions.component';
@@ -69,13 +41,13 @@ import { MealNutritionSidebarComponent } from './meal-nutrition-sidebar/meal-nut
 import {
     ConsumptionFormData,
     ConsumptionItemFormData,
-    ConsumptionItemFormValues,
-    NutritionTotals,
     NutritionMode,
     MacroBarState,
     MacroKey,
     CalorieMismatchWarning,
+    MealNutritionSummaryState,
 } from './base-meal-manage.types';
+import { MealManageFacade } from '../../lib/meal-manage.facade';
 
 export type { ConsumptionFormData, ConsumptionItemFormData } from './base-meal-manage.types';
 
@@ -115,17 +87,13 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     ],
 })
 export class BaseMealManageComponent implements OnInit {
-    private readonly mealService = inject(MealService);
     private readonly translateService = inject(TranslateService);
     private readonly navigationService = inject(NavigationService);
     private readonly destroyRef = inject(DestroyRef);
-    private readonly recipeWeight = inject(RecipeServingWeightService);
     private readonly fdDialogService = inject(FdUiDialogService);
-    private readonly aiFoodService = inject(AiFoodService);
-    private readonly authService = inject(AuthService);
-    private readonly nutritionCalculationService = inject(NutritionCalculationService);
     private readonly router = inject(Router);
     private readonly route = inject(ActivatedRoute);
+    private readonly mealManageFacade = inject(MealManageFacade);
     private readonly calorieMismatchThreshold = 0.2;
 
     public readonly nutritionControlNames = {
@@ -198,7 +166,10 @@ export class BaseMealManageComponent implements OnInit {
                 validators: Validators.required,
             }),
             mealType: new FormControl<string | null>(null),
-            items: new FormArray<FormGroup<ConsumptionItemFormData>>([this.createConsumptionItem()], this.buildItemsValidator()),
+            items: new FormArray<FormGroup<ConsumptionItemFormData>>(
+                [this.mealManageFacade.createConsumptionItem()],
+                this.mealManageFacade.createItemsValidator(() => this.aiSessions()),
+            ),
             comment: new FormControl<string | null>(null),
             imageUrl: new FormControl<ImageSelection | null>(null),
             isNutritionAutoCalculated: new FormControl<boolean>(true, { nonNullable: true }),
@@ -277,7 +248,7 @@ export class BaseMealManageComponent implements OnInit {
     // --- Item management (delegated from MealItemsListComponent events) ---
 
     public addConsumptionItem(): void {
-        this.items.push(this.createConsumptionItem());
+        this.items.push(this.mealManageFacade.createConsumptionItem());
         const newIndex = this.items.length - 1;
         queueMicrotask(() => this.onItemSourceClick(newIndex));
     }
@@ -289,7 +260,12 @@ export class BaseMealManageComponent implements OnInit {
     public onItemSourceClick(index: number): void {
         const group = this.items.at(index);
         const initialType = group.controls.sourceType.value ?? ConsumptionSourceType.Product;
-        this.openItemSelectDialog(index, initialType === ConsumptionSourceType.Recipe ? 'Recipe' : 'Product');
+        void this.mealManageFacade
+            .openItemSelectionDialog(group, initialType === ConsumptionSourceType.Recipe ? 'Recipe' : 'Product')
+            .then(() => {
+                this.updateItemValidationRules();
+                this.updateSummary();
+            });
     }
 
     // --- AI session management (delegated from MealAiSessionsComponent events) ---
@@ -303,24 +279,19 @@ export class BaseMealManageComponent implements OnInit {
             return;
         }
 
-        this.fdDialogService
-            .open<MealPhotoRecognitionDialogComponent, never, ConsumptionAiSessionManageDto | null>(MealPhotoRecognitionDialogComponent, {
-                size: 'lg',
-            })
-            .afterClosed()
-            .subscribe(session => {
-                if (!session) {
-                    return;
-                }
-                this.aiSessions.update(current => [...current, session]);
-                this.items.updateValueAndValidity({ emitEvent: false });
-                this.updateItemValidationRules();
-                this.updateSummary();
-            });
+        void this.mealManageFacade.openAiPhotoSessionDialog().then(session => {
+            if (!session) {
+                return;
+            }
+            this.aiSessions.update(current => this.mealManageFacade.addAiSession(current, session));
+            this.items.updateValueAndValidity({ emitEvent: false });
+            this.updateItemValidationRules();
+            this.updateSummary();
+        });
     }
 
     public onDeleteAiSession(index: number): void {
-        this.aiSessions.update(current => current.filter((_, currentIndex) => currentIndex !== index));
+        this.aiSessions.update(current => this.mealManageFacade.removeAiSession(current, index));
         this.items.updateValueAndValidity({ emitEvent: false });
         this.updateItemValidationRules();
         this.updateSummary();
@@ -332,29 +303,19 @@ export class BaseMealManageComponent implements OnInit {
         }
 
         const session = this.aiSessions()[index];
-        const selection: ImageSelection | null = session?.imageUrl
-            ? { url: session.imageUrl ?? null, assetId: session.imageAssetId ?? null }
-            : null;
+        if (!session) {
+            return;
+        }
 
-        this.fdDialogService
-            .open<
-                MealPhotoRecognitionDialogComponent,
-                { initialSelection: ImageSelection | null; initialSession: ConsumptionAiSessionManageDto | null; mode: 'edit' },
-                ConsumptionAiSessionManageDto | null
-            >(MealPhotoRecognitionDialogComponent, {
-                size: 'lg',
-                data: { initialSelection: selection, initialSession: session ?? null, mode: 'edit' },
-            })
-            .afterClosed()
-            .subscribe(updated => {
-                if (!updated) {
-                    return;
-                }
-                this.aiSessions.update(current => current.map((item, currentIndex) => (currentIndex === index ? updated : item)));
-                this.items.updateValueAndValidity({ emitEvent: false });
-                this.updateItemValidationRules();
-                this.updateSummary();
-            });
+        void this.mealManageFacade.openEditAiPhotoSessionDialog(session).then(updated => {
+            if (!updated) {
+                return;
+            }
+            this.aiSessions.update(current => this.mealManageFacade.replaceAiSession(current, index, updated));
+            this.items.updateValueAndValidity({ emitEvent: false });
+            this.updateItemValidationRules();
+            this.updateSummary();
+        });
     }
 
     // --- Nutrition mode (delegated from MealNutritionSidebarComponent events) ---
@@ -499,7 +460,7 @@ export class BaseMealManageComponent implements OnInit {
         });
 
         const isNutritionAutoCalculated = this.consumptionForm.controls.isNutritionAutoCalculated.value;
-        const manualTotals = this.getManualNutritionTotals();
+        const manualTotals = this.mealManageFacade.getManualNutritionTotals(this.consumptionForm);
         const preMealSatietyLevel = this.consumptionForm.controls.preMealSatietyLevel.value;
         const postMealSatietyLevel = this.consumptionForm.controls.postMealSatietyLevel.value;
         const image = this.consumptionForm.controls.imageUrl.value;
@@ -524,7 +485,7 @@ export class BaseMealManageComponent implements OnInit {
         };
 
         const consumption = this.consumption();
-        consumption ? this.updateConsumption(consumption.id, consumptionData) : this.addConsumption(consumptionData);
+        consumption ? this.updateConsumption(consumptionData) : this.addConsumption(consumptionData);
     }
 
     // --- Private methods ---
@@ -592,7 +553,7 @@ export class BaseMealManageComponent implements OnInit {
             const sourceType = item.type === 'recipe' ? ConsumptionSourceType.Recipe : ConsumptionSourceType.Product;
             const amount = item.amount ?? 0;
             this.items.push(
-                this.createConsumptionItem(
+                this.mealManageFacade.createConsumptionItem(
                     sourceType === ConsumptionSourceType.Product ? (item.product ?? null) : null,
                     sourceType === ConsumptionSourceType.Recipe ? (item.recipe ?? null) : null,
                     amount,
@@ -602,48 +563,16 @@ export class BaseMealManageComponent implements OnInit {
 
             if (sourceType === ConsumptionSourceType.Recipe) {
                 const currentIndex = this.items.length - 1;
-                this.ensureRecipeWeightForExistingItem(currentIndex, amount, item.recipe ?? null);
+                this.mealManageFacade.ensureRecipeWeightForExistingItem(this.items.at(currentIndex), amount, item.recipe ?? null);
             }
         });
 
         if (!this.items.length) {
-            this.items.push(this.createConsumptionItem());
+            this.items.push(this.mealManageFacade.createConsumptionItem());
         }
 
         this.updateItemValidationRules();
         this.updateSummary();
-    }
-
-    private openItemSelectDialog(index: number, initialTab: 'Product' | 'Recipe'): void {
-        this.fdDialogService
-            .open<ItemSelectDialogComponent, ItemSelectDialogData, ItemSelection | null>(ItemSelectDialogComponent, {
-                size: 'lg',
-                data: { initialTab },
-            })
-            .afterClosed()
-            .subscribe(selection => {
-                if (!selection) {
-                    return;
-                }
-
-                const group = this.items.at(index);
-
-                if (selection.type === 'Product') {
-                    group.patchValue({
-                        product: selection.product,
-                        recipe: null,
-                    });
-                    this.configureItemType(group, ConsumptionSourceType.Product);
-                    return;
-                }
-
-                this.recipeWeight.loadServingWeight(selection.recipe).subscribe();
-                group.patchValue({
-                    recipe: selection.recipe,
-                    product: null,
-                });
-                this.configureItemType(group, ConsumptionSourceType.Recipe);
-            });
     }
 
     private markFormGroupTouched(formGroup: FormGroup | FormArray): void {
@@ -685,7 +614,7 @@ export class BaseMealManageComponent implements OnInit {
         itemsArray.clear();
 
         if (consumption.items.length === 0) {
-            itemsArray.push(this.createConsumptionItem());
+            itemsArray.push(this.mealManageFacade.createConsumptionItem());
             return;
         }
 
@@ -697,7 +626,7 @@ export class BaseMealManageComponent implements OnInit {
                     : item.amount;
 
             itemsArray.push(
-                this.createConsumptionItem(
+                this.mealManageFacade.createConsumptionItem(
                     sourceType === ConsumptionSourceType.Product ? (item.product ?? null) : null,
                     sourceType === ConsumptionSourceType.Recipe ? (item.recipe ?? null) : null,
                     initialAmount,
@@ -707,7 +636,7 @@ export class BaseMealManageComponent implements OnInit {
 
             if (sourceType === ConsumptionSourceType.Recipe) {
                 const currentIndex = itemsArray.length - 1;
-                this.ensureRecipeWeightForExistingItem(currentIndex, item.amount ?? 0, item.recipe ?? null);
+                this.mealManageFacade.ensureRecipeWeightForExistingItem(itemsArray.at(currentIndex), item.amount ?? 0, item.recipe ?? null);
             }
         });
 
@@ -716,241 +645,67 @@ export class BaseMealManageComponent implements OnInit {
     }
 
     private updateSummary(): void {
-        const autoTotals = this.calculateAutoNutritionTotals();
-        const isAuto = this.consumptionForm.controls.isNutritionAutoCalculated.value;
-        const summaryTotals = isAuto ? autoTotals : this.getManualNutritionTotals();
-        this.applySummary({
-            calories: this.roundNutrient(summaryTotals.calories),
-            proteins: this.roundNutrient(summaryTotals.proteins),
-            fats: this.roundNutrient(summaryTotals.fats),
-            carbs: this.roundNutrient(summaryTotals.carbs),
-            fiber: this.roundNutrient(summaryTotals.fiber),
-            alcohol: this.roundNutrient(summaryTotals.alcohol),
-        });
-        if (isAuto) {
-            this.syncManualControlsWithSummary(autoTotals);
-        }
-        this.updateCalorieWarning();
-    }
-
-    private calculateAutoNutritionTotals(): NutritionTotals {
-        const aiTotals = this.getAiNutritionTotals();
-        return this.items.controls.reduce(
-            (totals, group) => {
-                const sourceType = group.controls.sourceType.value;
-                const amount = group.controls.amount.value || 0;
-
-                if (sourceType === ConsumptionSourceType.Product) {
-                    const food = group.controls.product.value as Product | null;
-                    if (!food || food.baseAmount <= 0) {
-                        return totals;
-                    }
-                    const multiplier = amount / food.baseAmount;
-                    totals.calories += food.caloriesPerBase * multiplier;
-                    totals.proteins += food.proteinsPerBase * multiplier;
-                    totals.fats += food.fatsPerBase * multiplier;
-                    totals.carbs += food.carbsPerBase * multiplier;
-                    totals.fiber += (food.fiberPerBase ?? 0) * multiplier;
-                    totals.alcohol += (food.alcoholPerBase ?? 0) * multiplier;
-                    return totals;
-                }
-
-                const recipe = group.controls.recipe.value as Recipe | null;
-                if (recipe && recipe.servings && recipe.servings > 0) {
-                    const servings = recipe.servings <= 0 ? 1 : recipe.servings;
-                    const caloriesPerServing = (recipe.totalCalories ?? 0) / servings;
-                    const proteinsPerServing = (recipe.totalProteins ?? 0) / servings;
-                    const fatsPerServing = (recipe.totalFats ?? 0) / servings;
-                    const carbsPerServing = (recipe.totalCarbs ?? 0) / servings;
-                    const fiberPerServing = (recipe.totalFiber ?? 0) / servings;
-                    const alcoholPerServing = (recipe.totalAlcohol ?? 0) / servings;
-                    const servingsAmount = this.recipeWeight.convertGramsToServings(recipe, amount);
-
-                    totals.calories += caloriesPerServing * servingsAmount;
-                    totals.proteins += proteinsPerServing * servingsAmount;
-                    totals.fats += fatsPerServing * servingsAmount;
-                    totals.carbs += carbsPerServing * servingsAmount;
-                    totals.fiber += fiberPerServing * servingsAmount;
-                    totals.alcohol += alcoholPerServing * servingsAmount;
-                }
-
-                return totals;
-            },
-            { ...aiTotals },
+        const nutritionState = this.mealManageFacade.buildNutritionSummaryState(
+            this.consumptionForm,
+            this.items,
+            this.aiSessions(),
+            this.calorieMismatchThreshold,
         );
+
+        this.applySummary(nutritionState);
+
+        if (this.consumptionForm.controls.isNutritionAutoCalculated.value) {
+            this.mealManageFacade.syncManualNutritionFromTotals(this.consumptionForm, nutritionState.autoTotals);
+        }
     }
 
-    private getAiNutritionTotals(): NutritionTotals {
-        return this.aiSessions().reduce(
-            (totals, session) =>
-                session.items.reduce(
-                    (sessionTotals, item) => ({
-                        calories: sessionTotals.calories + (item.calories ?? 0),
-                        proteins: sessionTotals.proteins + (item.proteins ?? 0),
-                        fats: sessionTotals.fats + (item.fats ?? 0),
-                        carbs: sessionTotals.carbs + (item.carbs ?? 0),
-                        fiber: sessionTotals.fiber + (item.fiber ?? 0),
-                        alcohol: sessionTotals.alcohol + (item.alcohol ?? 0),
-                    }),
-                    totals,
-                ),
-            { calories: 0, proteins: 0, fats: 0, carbs: 0, fiber: 0, alcohol: 0 },
-        );
-    }
-
-    private getManualNutritionTotals(): NutritionTotals {
-        return {
-            calories: this.getControlNumericValue(this.consumptionForm.controls.manualCalories),
-            proteins: this.getControlNumericValue(this.consumptionForm.controls.manualProteins),
-            fats: this.getControlNumericValue(this.consumptionForm.controls.manualFats),
-            carbs: this.getControlNumericValue(this.consumptionForm.controls.manualCarbs),
-            fiber: this.getControlNumericValue(this.consumptionForm.controls.manualFiber),
-            alcohol: this.getControlNumericValue(this.consumptionForm.controls.manualAlcohol),
-        };
-    }
-
-    private applySummary(totals: NutritionTotals): void {
-        if (this.totalCalories() !== totals.calories) {
-            this.totalCalories.set(totals.calories);
+    private applySummary(nutritionState: MealNutritionSummaryState): void {
+        if (this.totalCalories() !== nutritionState.summaryTotals.calories) {
+            this.totalCalories.set(nutritionState.summaryTotals.calories);
         }
 
-        if (this.totalFiber() !== totals.fiber) {
-            this.totalFiber.set(totals.fiber);
+        if (this.totalFiber() !== nutritionState.summaryTotals.fiber) {
+            this.totalFiber.set(nutritionState.summaryTotals.fiber);
         }
 
-        if (this.totalAlcohol() !== totals.alcohol) {
-            this.totalAlcohol.set(totals.alcohol);
+        if (this.totalAlcohol() !== nutritionState.summaryTotals.alcohol) {
+            this.totalAlcohol.set(nutritionState.summaryTotals.alcohol);
         }
 
         const currentNutrientData = this.nutrientChartData();
         if (
-            currentNutrientData.proteins !== totals.proteins ||
-            currentNutrientData.fats !== totals.fats ||
-            currentNutrientData.carbs !== totals.carbs
+            currentNutrientData.proteins !== nutritionState.summaryTotals.proteins ||
+            currentNutrientData.fats !== nutritionState.summaryTotals.fats ||
+            currentNutrientData.carbs !== nutritionState.summaryTotals.carbs
         ) {
             this.nutrientChartData.set({
-                proteins: totals.proteins,
-                fats: totals.fats,
-                carbs: totals.carbs,
+                proteins: nutritionState.summaryTotals.proteins,
+                fats: nutritionState.summaryTotals.fats,
+                carbs: nutritionState.summaryTotals.carbs,
             });
+        }
+
+        if (this.nutritionWarning() !== nutritionState.warning) {
+            this.nutritionWarning.set(nutritionState.warning);
         }
     }
 
     private populateManualNutritionFromCurrentSummary(): void {
-        const totals = this.calculateAutoNutritionTotals();
-        this.consumptionForm.patchValue(
-            {
-                manualCalories: this.roundNutrient(totals.calories),
-                manualProteins: this.roundNutrient(totals.proteins),
-                manualFats: this.roundNutrient(totals.fats),
-                manualCarbs: this.roundNutrient(totals.carbs),
-                manualFiber: this.roundNutrient(totals.fiber),
-                manualAlcohol: this.roundNutrient(totals.alcohol),
-            },
-            { emitEvent: false },
+        const nutritionState = this.mealManageFacade.buildNutritionSummaryState(
+            this.consumptionForm,
+            this.items,
+            this.aiSessions(),
+            this.calorieMismatchThreshold,
         );
-    }
-
-    private syncManualControlsWithSummary(totals: NutritionTotals): void {
-        this.consumptionForm.patchValue(
-            {
-                manualCalories: this.roundNutrient(totals.calories),
-                manualProteins: this.roundNutrient(totals.proteins),
-                manualFats: this.roundNutrient(totals.fats),
-                manualCarbs: this.roundNutrient(totals.carbs),
-                manualFiber: this.roundNutrient(totals.fiber),
-                manualAlcohol: this.roundNutrient(totals.alcohol),
-            },
-            { emitEvent: false },
-        );
+        this.mealManageFacade.syncManualNutritionFromTotals(this.consumptionForm, nutritionState.autoTotals);
     }
 
     private updateManualNutritionValidators(isAuto: boolean): void {
-        const caloriesValidators = isAuto ? [Validators.min(0)] : [Validators.required, Validators.min(0)];
-        this.consumptionForm.controls.manualCalories.setValidators(caloriesValidators);
-        this.consumptionForm.controls.manualCalories.updateValueAndValidity({ emitEvent: false });
-
-        this.getOptionalManualNutritionControls().forEach(control => {
-            control.setValidators([Validators.min(0)]);
-            control.updateValueAndValidity({ emitEvent: false });
-        });
-    }
-
-    private updateCalorieWarning(): void {
-        if (this.consumptionForm.controls.isNutritionAutoCalculated.value) {
-            this.nutritionWarning.set(null);
-            return;
-        }
-
-        const calories = this.getControlNumericValue(this.consumptionForm.controls.manualCalories);
-        const proteins = this.getControlNumericValue(this.consumptionForm.controls.manualProteins);
-        const fats = this.getControlNumericValue(this.consumptionForm.controls.manualFats);
-        const carbs = this.getControlNumericValue(this.consumptionForm.controls.manualCarbs);
-        const alcohol = this.getControlNumericValue(this.consumptionForm.controls.manualAlcohol);
-        this.nutritionWarning.set(calculateCalorieMismatchWarning(calories, proteins, fats, carbs, alcohol, this.calorieMismatchThreshold));
-    }
-
-    private buildItemsValidator(): ValidatorFn {
-        return (control: AbstractControl): ValidationErrors | null => {
-            const value = control.value as ConsumptionItemFormValues[] | null;
-            const hasManualItems = Array.isArray(value) ? value.some(item => Boolean(item?.product) || Boolean(item?.recipe)) : false;
-            const hasAiItems = this.aiSessions().length > 0;
-            return hasManualItems || hasAiItems ? null : { nonEmptyArray: true };
-        };
-    }
-
-    private isItemEmpty(group: FormGroup<ConsumptionItemFormData>): boolean {
-        const hasSource = Boolean(group.controls.product.value) || Boolean(group.controls.recipe.value);
-        const amount = group.controls.amount.value ?? 0;
-        return !hasSource && amount <= 0;
+        this.mealManageFacade.updateManualNutritionValidators(this.consumptionForm, isAuto);
     }
 
     private updateItemValidationRules(): void {
-        if (!this.consumptionForm) {
-            return;
-        }
-
-        const items = this.consumptionForm.controls.items;
-
-        items.controls.forEach(group => {
-            const isEmpty = this.isItemEmpty(group);
-            if (isEmpty) {
-                group.controls.product.clearValidators();
-                group.controls.recipe.clearValidators();
-                group.controls.amount.clearValidators();
-            } else {
-                const sourceType = group.controls.sourceType.value;
-                if (sourceType === ConsumptionSourceType.Product) {
-                    group.controls.product.setValidators([Validators.required]);
-                    group.controls.recipe.clearValidators();
-                } else {
-                    group.controls.recipe.setValidators([Validators.required]);
-                    group.controls.product.clearValidators();
-                }
-                group.controls.amount.setValidators([Validators.required, Validators.min(0.01)]);
-            }
-
-            group.controls.product.updateValueAndValidity({ emitEvent: false });
-            group.controls.recipe.updateValueAndValidity({ emitEvent: false });
-            group.controls.amount.updateValueAndValidity({ emitEvent: false });
-        });
-
-        items.updateValueAndValidity({ emitEvent: false });
-    }
-
-    private getOptionalManualNutritionControls(): Array<FormControl<number | null>> {
-        return [
-            this.consumptionForm.controls.manualProteins,
-            this.consumptionForm.controls.manualFats,
-            this.consumptionForm.controls.manualCarbs,
-            this.consumptionForm.controls.manualFiber,
-            this.consumptionForm.controls.manualAlcohol,
-        ];
-    }
-
-    private getControlNumericValue(control: FormControl<number | null>): number {
-        const value = Number(control.value);
-        return Number.isFinite(value) ? Math.max(0, value) : 0;
+        this.mealManageFacade.updateItemValidationRules(this.consumptionForm.controls.items);
     }
 
     private buildNutritionModeOptions(): void {
@@ -967,17 +722,13 @@ export class BaseMealManageComponent implements OnInit {
     }
 
     private async addConsumption(consumptionData: ConsumptionManageDto): Promise<void> {
-        this.mealService.create(consumptionData).subscribe({
-            next: response => this.handleSubmitResponse(response),
-            error: error => this.handleSubmitError(error),
-        });
+        const response = await this.mealManageFacade.submitConsumption(null, consumptionData);
+        await this.handleSubmitResponse(response);
     }
 
-    private async updateConsumption(id: string, consumptionData: ConsumptionManageDto): Promise<void> {
-        this.mealService.update(id, consumptionData).subscribe({
-            next: response => this.handleSubmitResponse(response),
-            error: error => this.handleSubmitError(error),
-        });
+    private async updateConsumption(consumptionData: ConsumptionManageDto): Promise<void> {
+        const response = await this.mealManageFacade.submitConsumption(this.consumption() ?? null, consumptionData);
+        await this.handleSubmitResponse(response);
     }
 
     private async handleSubmitResponse(response: Consumption | null): Promise<void> {
@@ -997,11 +748,11 @@ export class BaseMealManageComponent implements OnInit {
                     manualAlcohol: null,
                 });
                 this.items.clear();
-                this.items.push(this.createConsumptionItem());
+                this.items.push(this.mealManageFacade.createConsumptionItem());
                 this.aiSessions.set([]);
                 this.updateSummary();
             }
-            await this.showConfirmDialog();
+            await this.mealManageFacade.showSuccessRedirect(Boolean(this.consumption()));
         } else {
             this.handleSubmitError();
         }
@@ -1019,120 +770,8 @@ export class BaseMealManageComponent implements OnInit {
         this.globalError.set(null);
     }
 
-    private showConfirmDialog(): void {
-        this.fdDialogService
-            .open<MealManageSuccessDialogComponent, ConsumptionManageSuccessDialogData, ConsumptionManageRedirectAction>(
-                MealManageSuccessDialogComponent,
-                {
-                    size: 'sm',
-                    data: {
-                        isEdit: Boolean(this.consumption()),
-                    },
-                },
-            )
-            .afterClosed()
-            .subscribe(redirectAction => {
-                if (redirectAction === 'Home') {
-                    this.navigationService.navigateToHome();
-                } else if (redirectAction === 'ConsumptionList') {
-                    this.navigationService.navigateToConsumptionList();
-                }
-            });
-    }
-
     private ensurePremiumAccess(): boolean {
-        if (this.authService.isPremium()) {
-            return true;
-        }
-
-        this.fdDialogService
-            .open<PremiumRequiredDialogComponent, never, boolean>(PremiumRequiredDialogComponent, { size: 'sm' })
-            .afterClosed()
-            .subscribe(confirmed => {
-                if (confirmed) {
-                    this.navigationService.navigateToPremiumAccess();
-                }
-            });
-        return false;
-    }
-
-    private configureItemType(
-        group: FormGroup<ConsumptionItemFormData>,
-        type: ConsumptionSourceType,
-        clearSelection: boolean = false,
-    ): void {
-        group.controls.sourceType.setValue(type);
-
-        if (type === ConsumptionSourceType.Product) {
-            group.controls.product.setValidators([Validators.required]);
-            group.controls.recipe.clearValidators();
-            if (clearSelection) {
-                group.controls.recipe.setValue(null);
-            }
-        } else {
-            group.controls.recipe.setValidators([Validators.required]);
-            group.controls.product.clearValidators();
-            if (clearSelection) {
-                group.controls.product.setValue(null);
-            }
-        }
-
-        group.controls.product.updateValueAndValidity({ emitEvent: false });
-        group.controls.recipe.updateValueAndValidity({ emitEvent: false });
-
-        if (clearSelection) {
-            group.controls.amount.setValue(null);
-            group.controls.amount.markAsUntouched();
-        }
-
-        this.updateAmountControlState(group);
-        this.updateItemValidationRules();
-    }
-
-    private createConsumptionItem(
-        product: Product | null = null,
-        recipe: Recipe | null = null,
-        amount: number | null = null,
-        sourceType: ConsumptionSourceType = ConsumptionSourceType.Product,
-    ): FormGroup<ConsumptionItemFormData> {
-        const group = new FormGroup<ConsumptionItemFormData>({
-            sourceType: new FormControl<ConsumptionSourceType>(sourceType, { nonNullable: true }),
-            product: new FormControl<Product | null>(product),
-            recipe: new FormControl<Recipe | null>(recipe),
-            amount: new FormControl<number | null>(amount, [Validators.required, Validators.min(0.01)]),
-        });
-
-        this.configureItemType(group, sourceType);
-        this.updateAmountControlState(group);
-        return group;
-    }
-
-    private updateAmountControlState(group: FormGroup<ConsumptionItemFormData>): void {
-        const shouldDisable = !group.controls.product.value && !group.controls.recipe.value;
-        if (shouldDisable && group.controls.amount.enabled) {
-            group.controls.amount.disable({ emitEvent: false });
-            return;
-        }
-
-        if (!shouldDisable && group.controls.amount.disabled) {
-            group.controls.amount.enable({ emitEvent: false });
-        }
-    }
-
-    private ensureRecipeWeightForExistingItem(index: number, servingsAmount: number, recipe: Recipe | null): void {
-        if (!recipe) {
-            return;
-        }
-
-        this.recipeWeight.loadServingWeight(recipe).subscribe(servingWeight => {
-            if (!servingWeight) {
-                return;
-            }
-
-            const grams = servingsAmount * servingWeight;
-            const group = this.items.at(index);
-            group.controls.amount.setValue(grams);
-        });
+        return this.mealManageFacade.ensurePremiumAccess();
     }
 
     private buildMealTypeOptions(): void {
@@ -1169,10 +808,6 @@ export class BaseMealManageComponent implements OnInit {
         return value.toString().padStart(2, '0');
     }
 
-    private roundNutrient(value: number): number {
-        return Math.round(value * 100) / 100;
-    }
-
     private resolveControlError(control: AbstractControl | null): string | null {
         if (!control || !control.invalid || !control.touched) {
             return null;
@@ -1191,9 +826,6 @@ export class BaseMealManageComponent implements OnInit {
     }
 
     private loadAiUsage(): void {
-        this.aiFoodService.getUsageSummary().subscribe({
-            next: usage => this.aiUsage.set(usage),
-            error: error => console.error('Failed to load AI usage summary', error),
-        });
+        void this.mealManageFacade.loadAiUsage().then(usage => this.aiUsage.set(usage));
     }
 }

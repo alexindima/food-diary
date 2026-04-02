@@ -25,4 +25,5 @@ export const environment: AppConfig = {
     telegramBotUsername: 'fooddiaryclub_bot',
     buildVersion: 'dev',
     adminAppUrl: 'http://localhost:4300',
+    enableGlobalErrorHandler: false,
 };

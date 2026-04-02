@@ -1,8 +1,9 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, catchError, of, tap } from 'rxjs';
+import { Observable, catchError, tap } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
+import { fallbackApiError, rethrowApiError } from '../../../shared/lib/api-error.utils';
 import { CreateHydrationEntryPayload, HydrationDaily, HydrationEntry } from '../models/hydration.data';
 
 @Injectable({
@@ -14,24 +15,20 @@ export class HydrationService extends ApiService {
     public getDaily(dateUtc: Date): Observable<HydrationDaily> {
         const params = { dateUtc: dateUtc.toISOString() };
         return this.get<HydrationDaily>('daily', params).pipe(
-            catchError((error: HttpErrorResponse) => {
-                console.error('Hydration daily fetch error', error);
-                return of({
+            catchError((error: HttpErrorResponse) =>
+                fallbackApiError('Hydration daily fetch error', error, {
                     dateUtc: dateUtc.toISOString(),
                     totalMl: 0,
                     goalMl: null,
-                });
-            }),
+                }),
+            ),
         );
     }
 
     public getEntries(dateUtc: Date): Observable<HydrationEntry[]> {
         const params = { dateUtc: dateUtc.toISOString() };
         return this.get<HydrationEntry[]>('', params).pipe(
-            catchError((error: HttpErrorResponse) => {
-                console.error('Hydration entries fetch error', error);
-                return of([]);
-            }),
+            catchError((error: HttpErrorResponse) => fallbackApiError('Hydration entries fetch error', error, [])),
         );
     }
 
@@ -45,10 +42,7 @@ export class HydrationService extends ApiService {
             tap(() => {
                 // no-op side effects; refresh handled by caller
             }),
-            catchError((error: HttpErrorResponse) => {
-                console.error('Create hydration entry error', error);
-                throw error;
-            }),
+            catchError((error: HttpErrorResponse) => rethrowApiError('Create hydration entry error', error)),
         );
     }
 }

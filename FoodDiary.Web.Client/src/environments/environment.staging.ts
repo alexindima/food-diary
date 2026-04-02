@@ -19,8 +19,10 @@ export const environment: AppConfig = {
         hydration: `${serverUrl}/api/v1/hydrations`,
         goals: `${serverUrl}/api/v1/goals`,
         ai: `${serverUrl}/api/v1/ai`,
+        shoppingLists: `${serverUrl}/api/v1/shopping-lists`,
     },
     googleClientId: '958507321562-8btd704hjhgsl7niklereh81utg5p780.apps.googleusercontent.com',
     buildVersion: '__BUILD_VERSION__',
     adminAppUrl: 'https://admin.fooddiary.club',
+    enableGlobalErrorHandler: true,
 };

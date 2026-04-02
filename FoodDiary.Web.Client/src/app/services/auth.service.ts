@@ -1,5 +1,5 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { catchError, map, Observable, of, tap, throwError } from 'rxjs';
+import { catchError, map, Observable, of, tap } from 'rxjs';
 import {
     AuthResponse,
     ConfirmPasswordResetRequest,
@@ -19,6 +19,7 @@ import { QuickMealService } from '../features/meals/lib/quick-meal.service';
 import { LocalizationService } from './localization.service';
 import { TokenStorageService } from './token-storage.service';
 import { JwtDecoderService } from './jwt-decoder.service';
+import { fallbackApiError, rethrowApiError } from '../shared/lib/api-error.utils';
 
 @Injectable({
     providedIn: 'root',
@@ -69,10 +70,7 @@ export class AuthService extends ApiService {
             tap(response => {
                 this.onLogin(response, data.rememberMe || false);
             }),
-            catchError((error: HttpErrorResponse) => {
-                console.error('Login error', error);
-                return throwError(() => error);
-            }),
+            catchError((error: HttpErrorResponse) => rethrowApiError('Login error', error)),
         );
     }
 
@@ -81,10 +79,7 @@ export class AuthService extends ApiService {
             tap(response => {
                 this.onLogin(response, false);
             }),
-            catchError((error: HttpErrorResponse) => {
-                console.error('Register error', error);
-                return throwError(() => error);
-            }),
+            catchError((error: HttpErrorResponse) => rethrowApiError('Register error', error)),
         );
     }
 
@@ -95,19 +90,13 @@ export class AuthService extends ApiService {
                     this.setEmailConfirmed(true);
                 }
             }),
-            catchError((error: HttpErrorResponse) => {
-                console.error('Verify email error', error);
-                return throwError(() => error);
-            }),
+            catchError((error: HttpErrorResponse) => rethrowApiError('Verify email error', error)),
         );
     }
 
     public resendEmailVerification(): Observable<boolean> {
         return this.post<boolean>('verify-email/resend', {}).pipe(
-            catchError((error: HttpErrorResponse) => {
-                console.error('Resend email verification error', error);
-                return throwError(() => error);
-            }),
+            catchError((error: HttpErrorResponse) => rethrowApiError('Resend email verification error', error)),
         );
     }
 
@@ -116,10 +105,7 @@ export class AuthService extends ApiService {
             tap(response => {
                 this.onLogin(response, rememberMe);
             }),
-            catchError((error: HttpErrorResponse) => {
-                console.error('Restore account error', error);
-                return throwError(() => error);
-            }),
+            catchError((error: HttpErrorResponse) => rethrowApiError('Restore account error', error)),
         );
     }
 
@@ -128,19 +114,13 @@ export class AuthService extends ApiService {
             tap(response => {
                 this.onLogin(response, data.rememberMe ?? false);
             }),
-            catchError((error: HttpErrorResponse) => {
-                console.error('Google login error', error);
-                return throwError(() => error);
-            }),
+            catchError((error: HttpErrorResponse) => rethrowApiError('Google login error', error)),
         );
     }
 
     public requestPasswordReset(data: PasswordResetRequest): Observable<boolean> {
         return this.post<boolean>('password-reset/request', data).pipe(
-            catchError((error: HttpErrorResponse) => {
-                console.error('Password reset request error', error);
-                return throwError(() => error);
-            }),
+            catchError((error: HttpErrorResponse) => rethrowApiError('Password reset request error', error)),
         );
     }
 
@@ -149,10 +129,7 @@ export class AuthService extends ApiService {
             tap(response => {
                 this.onLogin(response, false);
             }),
-            catchError((error: HttpErrorResponse) => {
-                console.error('Password reset confirm error', error);
-                return throwError(() => error);
-            }),
+            catchError((error: HttpErrorResponse) => rethrowApiError('Password reset confirm error', error)),
         );
     }
 
@@ -161,10 +138,7 @@ export class AuthService extends ApiService {
             tap(response => {
                 this.onLogin(response, rememberMe);
             }),
-            catchError((error: HttpErrorResponse) => {
-                console.error('Telegram login error', error);
-                return throwError(() => error);
-            }),
+            catchError((error: HttpErrorResponse) => rethrowApiError('Telegram login error', error)),
         );
     }
 
@@ -190,9 +164,8 @@ export class AuthService extends ApiService {
                 return accessToken;
             }),
             catchError(error => {
-                console.error('refreshToken error', error);
                 void this.onLogout(true);
-                return of(null);
+                return fallbackApiError('refreshToken error', error, null);
             }),
         );
     }

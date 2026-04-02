@@ -1,18 +1,16 @@
-import { HttpErrorResponse } from '@angular/common/http';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, OnInit, signal } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { MatIconModule } from '@angular/material/icon';
-import { Subject, debounceTime, distinctUntilChanged, map } from 'rxjs';
+import { distinctUntilChanged, map } from 'rxjs';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiCheckboxComponent } from 'fd-ui-kit/checkbox/fd-ui-checkbox.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
 import { FdUiSelectComponent, FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
-import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
 import {
     ConfirmDeleteDialogComponent,
@@ -22,8 +20,8 @@ import { PageBodyComponent } from '../../../components/shared/page-body/page-bod
 import { PageHeaderComponent } from '../../../components/shared/page-header/page-header.component';
 import { FormGroupControls } from '../../../shared/lib/common.data';
 import { MeasurementUnit } from '../../products/models/product.data';
-import { ShoppingList, ShoppingListItem, ShoppingListItemDto, ShoppingListSummary } from '../models/shopping-list.data';
-import { ShoppingListService } from '../api/shopping-list.service';
+import { ShoppingListItem } from '../models/shopping-list.data';
+import { ShoppingListFacade } from '../lib/shopping-list.facade';
 
 @Component({
     selector: 'fd-shopping-list-page',
@@ -44,32 +42,27 @@ import { ShoppingListService } from '../api/shopping-list.service';
         PageBodyComponent,
         FdPageContainerDirective,
     ],
+    providers: [ShoppingListFacade],
 })
 export class ShoppingListPageComponent implements OnInit {
-    private readonly shoppingListService = inject(ShoppingListService);
     private readonly translateService = inject(TranslateService);
-    private readonly toastService = inject(FdUiToastService);
     private readonly dialogService = inject(FdUiDialogService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly breakpointObserver = inject(BreakpointObserver);
-    private readonly saveQueue = new Subject<void>();
+    private readonly facade = inject(ShoppingListFacade);
 
-    public readonly list = signal<ShoppingList | null>(null);
-    public readonly items = signal<ShoppingListItem[]>([]);
-    public readonly isLoading = signal(false);
-    public readonly isSaving = signal(false);
+    public readonly list = this.facade.list;
+    public readonly items = this.facade.items;
+    public readonly isLoading = this.facade.isLoading;
+    public readonly isSaving = this.facade.isSaving;
+    public readonly lists = this.facade.lists;
     public readonly isMobileView = signal<boolean>(window.matchMedia('(max-width: 768px)').matches);
-    public readonly lists = signal<ShoppingListSummary[]>([]);
     public readonly listSelectControl = new FormControl<string | null>(null);
     public readonly listNameControl = new FormControl<string>('', { nonNullable: true, validators: Validators.required });
     public readonly itemForm: FormGroup<ShoppingListItemFormGroup>;
     public unitOptions: FdUiSelectOption<MeasurementUnit>[] = [];
-    public listOptions: FdUiSelectOption<string>[] = [];
 
     private readonly unitValues = Object.values(MeasurementUnit) as MeasurementUnit[];
-    private lastLoadedListId: string | null = null;
-    private suppressAutosave = false;
-    private pendingSave = false;
     private readonly isMobileManageOpen = signal(false);
 
     public constructor() {
@@ -85,9 +78,27 @@ export class ShoppingListPageComponent implements OnInit {
             this.buildUnitOptions();
         });
 
-        this.listNameControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.scheduleSave());
+        this.listNameControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(value => this.facade.setListName(value));
 
-        this.saveQueue.pipe(debounceTime(500), takeUntilDestroyed(this.destroyRef)).subscribe(() => this.persistList());
+        this.listSelectControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(id => {
+            if (id) {
+                this.facade.selectList(id);
+            }
+        });
+
+        effect(() => {
+            const selectedId = this.facade.selectedListId();
+            if (this.listSelectControl.value !== selectedId) {
+                this.listSelectControl.setValue(selectedId, { emitEvent: false });
+            }
+        });
+
+        effect(() => {
+            const name = this.facade.listName();
+            if (this.listNameControl.value !== name) {
+                this.listNameControl.setValue(name, { emitEvent: false });
+            }
+        });
     }
 
     public ngOnInit(): void {
@@ -105,14 +116,7 @@ export class ShoppingListPageComponent implements OnInit {
                 }
             });
 
-        this.loadLists();
-
-        this.listSelectControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(id => {
-            if (!id || id === this.lastLoadedListId) {
-                return;
-            }
-            this.loadListById(id);
-        });
+        this.facade.initialize();
     }
 
     public addItem(): void {
@@ -126,26 +130,13 @@ export class ShoppingListPageComponent implements OnInit {
             return;
         }
 
-        const amount = this.normalizeAmount(this.itemForm.controls.amount.value);
-        const unit = this.itemForm.controls.unit.value ?? null;
-        const category = this.itemForm.controls.category.value?.trim() || null;
-        const nextItems = [
-            ...this.items(),
-            {
-                id: this.createTempId(),
-                shoppingListId: this.list()?.id ?? '',
-                name,
-                amount,
-                unit,
-                category,
-                productId: null,
-                isChecked: false,
-                sortOrder: this.items().length + 1,
-            },
-        ];
+        this.facade.addItem({
+            name,
+            amount: this.itemForm.controls.amount.value,
+            unit: this.itemForm.controls.unit.value ?? null,
+            category: this.itemForm.controls.category.value?.trim() || null,
+        });
 
-        this.items.set(nextItems);
-        this.scheduleSave();
         this.itemForm.reset({
             name: '',
             amount: null,
@@ -155,15 +146,11 @@ export class ShoppingListPageComponent implements OnInit {
     }
 
     public removeItem(itemId: string): void {
-        const filtered = this.items().filter(item => item.id !== itemId);
-        this.items.set(this.rebuildSortOrder(filtered));
-        this.scheduleSave();
+        this.facade.removeItem(itemId);
     }
 
     public toggleItemChecked(item: ShoppingListItem, checked: boolean): void {
-        const nextItems = this.items().map(entry => (entry.id === item.id ? { ...entry, isChecked: checked } : entry));
-        this.items.set(nextItems);
-        this.scheduleSave();
+        this.facade.toggleItemChecked(item.id, checked);
     }
 
     public formatItemMeta(item: ShoppingListItem): string {
@@ -175,7 +162,7 @@ export class ShoppingListPageComponent implements OnInit {
         if (item.category) {
             parts.push(item.category);
         }
-        return parts.join(' • ');
+        return parts.join(' - ');
     }
 
     public toggleMobileManage(): void {
@@ -192,6 +179,10 @@ export class ShoppingListPageComponent implements OnInit {
 
     public get canClearList(): boolean {
         return this.lists().length === 1 && this.items().length > 0 && !!this.list() && !this.isSaving() && !this.isLoading();
+    }
+
+    public get listOptions(): FdUiSelectOption<string>[] {
+        return this.facade.listOptions();
     }
 
     public deleteCurrentList(): void {
@@ -217,10 +208,9 @@ export class ShoppingListPageComponent implements OnInit {
             .afterClosed()
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(confirmed => {
-                if (!confirmed) {
-                    return;
+                if (confirmed) {
+                    this.facade.deleteCurrentList();
                 }
-                this.performDelete(current.id);
             });
     }
 
@@ -247,258 +237,14 @@ export class ShoppingListPageComponent implements OnInit {
             .afterClosed()
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(confirmed => {
-                if (!confirmed) {
-                    return;
+                if (confirmed) {
+                    this.facade.clearCurrentList();
                 }
-                this.clearListItems(current.id, current.name);
             });
     }
 
     public createNewList(): void {
-        const name = this.buildNewListName();
-        this.isLoading.set(true);
-        this.shoppingListService
-            .create({ name })
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: list => {
-                    this.isLoading.set(false);
-                    this.applyList(list);
-                    this.loadLists();
-                },
-                error: (error: HttpErrorResponse) => {
-                    this.isLoading.set(false);
-                    this.toastService.open(this.translateService.instant('SHOPPING_LIST.CREATE_ERROR'), { appearance: 'negative' });
-                    console.error('Create shopping list error', error);
-                },
-            });
-    }
-
-    private loadLists(): void {
-        this.isLoading.set(true);
-        this.shoppingListService
-            .getAll()
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: lists => {
-                    this.isLoading.set(false);
-                    if (lists.length === 0) {
-                        this.createDefaultList();
-                        return;
-                    }
-
-                    this.lists.set(lists);
-                    this.buildListOptions();
-                    const currentSelection = this.listSelectControl.value;
-                    const selectedId =
-                        currentSelection && lists.some(list => list.id === currentSelection) ? currentSelection : lists[0].id;
-                    this.listSelectControl.setValue(selectedId, { emitEvent: false });
-                    this.loadListById(selectedId);
-                },
-                error: (error: HttpErrorResponse) => {
-                    this.isLoading.set(false);
-                    this.toastService.open(this.translateService.instant('SHOPPING_LIST.LOAD_ERROR'), { appearance: 'negative' });
-                    console.error('Load shopping list error', error);
-                },
-            });
-    }
-
-    private createDefaultList(): void {
-        const name = this.translateService.instant('SHOPPING_LIST.DEFAULT_NAME');
-        this.shoppingListService
-            .create({ name })
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: list => {
-                    this.isLoading.set(false);
-                    this.applyList(list);
-                    this.loadLists();
-                },
-                error: (error: HttpErrorResponse) => {
-                    this.isLoading.set(false);
-                    this.toastService.open(this.translateService.instant('SHOPPING_LIST.CREATE_ERROR'), { appearance: 'negative' });
-                    console.error('Create shopping list error', error);
-                },
-            });
-    }
-
-    private applyList(list: ShoppingList): void {
-        this.suppressAutosave = true;
-        this.list.set(list);
-        this.items.set(this.rebuildSortOrder(list.items ?? []));
-        this.listNameControl.setValue(list.name, { emitEvent: false });
-        this.lastLoadedListId = list.id;
-        this.listSelectControl.setValue(list.id, { emitEvent: false });
-        queueMicrotask(() => {
-            this.suppressAutosave = false;
-        });
-    }
-
-    private rebuildSortOrder(items: ShoppingListItem[]): ShoppingListItem[] {
-        return items.map((item, index) => ({
-            ...item,
-            sortOrder: index + 1,
-        }));
-    }
-
-    private normalizeAmount(value: number | null): number | null {
-        if (value === null || value === undefined) {
-            return null;
-        }
-        const parsed = Number(value);
-        return Number.isFinite(parsed) && parsed > 0 ? parsed : null;
-    }
-
-    private mapItemToDto(item: ShoppingListItem, index: number): ShoppingListItemDto {
-        return {
-            productId: item.productId ?? null,
-            name: item.name,
-            amount: item.amount ?? null,
-            unit: item.unit ?? null,
-            category: item.category ?? null,
-            isChecked: item.isChecked,
-            sortOrder: index + 1,
-        };
-    }
-
-    private loadListById(id: string): void {
-        this.isLoading.set(true);
-        this.shoppingListService
-            .getById(id)
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: list => {
-                    this.isLoading.set(false);
-                    if (list) {
-                        this.applyList(list);
-                    }
-                },
-                error: (error: HttpErrorResponse) => {
-                    this.isLoading.set(false);
-                    this.toastService.open(this.translateService.instant('SHOPPING_LIST.LOAD_ERROR'), { appearance: 'negative' });
-                    console.error('Load shopping list error', error);
-                },
-            });
-    }
-
-    private buildListOptions(): void {
-        this.listOptions = this.lists().map(list => ({
-            value: list.id,
-            label: `${list.name} (${list.itemsCount})`,
-        }));
-    }
-
-    private updateListSummary(list: ShoppingList): void {
-        const next = this.lists().map(entry =>
-            entry.id === list.id ? { ...entry, name: list.name, itemsCount: list.items.length } : entry,
-        );
-        this.lists.set(next);
-        this.buildListOptions();
-    }
-
-    private buildNewListName(): string {
-        const base = this.translateService.instant('SHOPPING_LIST.NEW_LIST');
-        const dateLabel = new Date().toLocaleDateString();
-        return `${base} ${dateLabel}`;
-    }
-
-    private scheduleSave(): void {
-        if (this.suppressAutosave) {
-            return;
-        }
-
-        if (this.isSaving()) {
-            this.pendingSave = true;
-            return;
-        }
-
-        this.saveQueue.next();
-    }
-
-    private persistList(): void {
-        const current = this.list();
-        if (!current || this.isSaving() || this.isLoading()) {
-            return;
-        }
-
-        const name = this.listNameControl.value.trim();
-        if (!name) {
-            this.listNameControl.markAsTouched();
-            return;
-        }
-
-        this.isSaving.set(true);
-        const payloadItems = this.items().map((item, index) => this.mapItemToDto(item, index));
-        const payload = { name, items: payloadItems };
-
-        this.shoppingListService
-            .update(current.id, payload)
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: list => {
-                    this.isSaving.set(false);
-                    this.applyList(list);
-                    this.updateListSummary(list);
-                    if (this.pendingSave) {
-                        this.pendingSave = false;
-                        this.scheduleSave();
-                    }
-                },
-                error: (error: HttpErrorResponse) => {
-                    this.isSaving.set(false);
-                    this.toastService.open(this.translateService.instant('SHOPPING_LIST.SAVE_ERROR'), { appearance: 'negative' });
-                    console.error('Update shopping list error', error);
-                },
-            });
-    }
-
-    private clearListItems(id: string, name: string): void {
-        this.isSaving.set(true);
-        this.shoppingListService
-            .update(id, { name, items: [] })
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: list => {
-                    this.isSaving.set(false);
-                    this.applyList(list);
-                    this.updateListSummary(list);
-                },
-                error: (error: HttpErrorResponse) => {
-                    this.isSaving.set(false);
-                    this.toastService.open(this.translateService.instant('SHOPPING_LIST.CLEAR_ERROR'), { appearance: 'negative' });
-                    console.error('Clear shopping list error', error);
-                },
-            });
-    }
-
-    private performDelete(id: string): void {
-        this.suppressAutosave = true;
-        this.pendingSave = false;
-        this.list.set(null);
-        this.items.set([]);
-        this.lastLoadedListId = null;
-        this.listSelectControl.setValue(null, { emitEvent: false });
-        this.isSaving.set(true);
-        this.shoppingListService
-            .deleteById(id)
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: () => {
-                    this.isSaving.set(false);
-                    this.suppressAutosave = false;
-                    this.loadLists();
-                },
-                error: (error: HttpErrorResponse) => {
-                    this.isSaving.set(false);
-                    this.suppressAutosave = false;
-                    this.toastService.open(this.translateService.instant('SHOPPING_LIST.DELETE_ERROR'), { appearance: 'negative' });
-                    console.error('Delete shopping list error', error);
-                },
-            });
-    }
-
-    private createTempId(): string {
-        return `temp-${Date.now()}-${Math.floor(Math.random() * 10000)}`;
+        this.facade.createNewList();
     }
 
     private buildUnitOptions(): void {

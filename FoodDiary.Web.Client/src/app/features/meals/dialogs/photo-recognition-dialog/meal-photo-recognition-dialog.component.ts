@@ -269,7 +269,6 @@ export class MealPhotoRecognitionDialogComponent {
             .calculateNutrition({ items })
             .pipe(
                 catchError(err => {
-                    console.error('Failed to calculate nutrition', err);
                     if (err?.status === 429) {
                         this.nutritionErrorKey.set('CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ERROR_QUOTA');
                     } else {

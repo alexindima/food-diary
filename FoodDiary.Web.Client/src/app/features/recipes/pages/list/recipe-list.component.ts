@@ -169,8 +169,7 @@ export class RecipeListComponent implements OnInit {
                         .pipe(finalize(() => this.recipeData.setLoading(false)))
                         .subscribe();
                 },
-                error: error => {
-                    console.error('Delete recipe error', error);
+                error: () => {
                     this.recipeData.setLoading(false);
                     this.toastService.open(this.translateService.instant('RECIPE_LIST.DELETE_ERROR'), { appearance: 'negative' });
                 },
@@ -268,8 +267,7 @@ export class RecipeListComponent implements OnInit {
                 this.errorKey.set(null);
             }),
             map(() => void 0),
-            catchError((error: HttpErrorResponse) => {
-                console.error('Error loading recipes:', error);
+            catchError((_error: HttpErrorResponse) => {
                 this.recipeData.clearData();
                 this.recentRecipes = [];
                 this.errorKey.set('ERRORS.LOAD_FAILED_TITLE');

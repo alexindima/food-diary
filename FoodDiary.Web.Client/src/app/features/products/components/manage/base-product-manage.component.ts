@@ -1,26 +1,17 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, FactoryProvider, effect, inject, input, OnInit, signal } from '@angular/core';
-import {
-    CreateProductRequest,
-    MeasurementUnit,
-    Product,
-    ProductType,
-    ProductVisibility,
-    UpdateProductRequest,
-} from '../../models/product.data';
+import { CreateProductRequest, MeasurementUnit, Product, ProductType, ProductVisibility } from '../../models/product.data';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { NavigationService } from '../../../../services/navigation.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormGroupControls } from '../../../../shared/lib/common.data';
-import { firstValueFrom } from 'rxjs';
 import { BarcodeScannerComponent } from '../../../../components/shared/barcode-scanner/barcode-scanner.component';
 import { FdUiFormErrorComponent, FD_VALIDATION_ERRORS, FdValidationErrors } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
 import { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { normalizeProductType as normalizeProductTypeValue } from '../../lib/product-type.utils';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { ProductSaveSuccessDialogComponent, ProductSaveSuccessDialogData } from '../../dialogs/product-save-success-dialog.component';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
 import { NutritionCalculationService } from '../../../../shared/lib/nutrition-calculation.service';
 import {
@@ -30,22 +21,17 @@ import {
     checkMacrosError,
     getControlNumericValue,
 } from '../../../../shared/lib/nutrition-form.utils';
-import {
-    ConfirmDeleteDialogComponent,
-    ConfirmDeleteDialogData,
-} from '../../../../components/shared/confirm-delete-dialog/confirm-delete-dialog.component';
+import { ConfirmDeleteDialogData } from '../../../../components/shared/confirm-delete-dialog/confirm-delete-dialog.component';
 import { ImageSelection } from '../../../../shared/models/image-upload.data';
 import {
     ProductAiRecognitionDialogComponent,
     ProductAiRecognitionResult,
 } from '../../dialogs/product-ai-recognition-dialog/product-ai-recognition-dialog.component';
-import { AuthService } from '../../../../services/auth.service';
-import { PremiumRequiredDialogComponent } from '../../../../components/shared/premium-required-dialog/premium-required-dialog.component';
 import { ManageHeaderComponent } from '../../../../components/shared/manage-header/manage-header.component';
-import { ProductService } from '../../api/product.service';
 import { ProductBasicInfoComponent } from './product-basic-info/product-basic-info.component';
 import { ProductNutritionEditorComponent } from './product-nutrition-editor/product-nutrition-editor.component';
 import { FdUiSegmentedToggleOption } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle.component';
+import { ProductManageFacade } from '../../lib/product-manage.facade';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: FD_VALIDATION_ERRORS,
@@ -76,13 +62,12 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     ],
 })
 export class BaseProductManageComponent implements OnInit {
-    protected readonly productService = inject(ProductService);
     protected readonly translateService = inject(TranslateService);
     protected readonly navigationService = inject(NavigationService);
     protected readonly fdDialogService = inject(FdUiDialogService);
-    private readonly authService = inject(AuthService);
     private readonly nutritionCalculationService = inject(NutritionCalculationService);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly productManageFacade = inject(ProductManageFacade);
 
     public product = input<Product | null>();
     public globalError = signal<string | null>(null);
@@ -241,21 +226,15 @@ export class BaseProductManageComponent implements OnInit {
             cancelLabel: this.translateService.instant('CONFIRM_DELETE.CANCEL'),
         };
 
-        const confirmed = await firstValueFrom(this.fdDialogService.open(ConfirmDeleteDialogComponent, { data, size: 'sm' }).afterClosed());
-
-        if (!confirmed) {
-            return;
-        }
-
         this.isDeleting.set(true);
         this.clearGlobalError();
 
-        try {
-            await firstValueFrom(this.productService.deleteById(currentProduct.id));
-            await this.navigationService.navigateToProductList();
-        } catch (error) {
+        const result = await this.productManageFacade.deleteProduct(currentProduct, data);
+        if (result !== 'deleted') {
             this.isDeleting.set(false);
-            this.setGlobalError('PRODUCT_MANAGE.DELETE_ERROR');
+            if (result === 'error') {
+                this.setGlobalError('PRODUCT_MANAGE.DELETE_ERROR');
+            }
         }
     }
 
@@ -300,9 +279,11 @@ export class BaseProductManageComponent implements OnInit {
             };
             const product = this.product();
 
-            return product
-                ? await this.updateProduct(product.id, this.buildUpdateProductRequest(productData))
-                : await this.addProduct(productData);
+            const result = await this.productManageFacade.submitProduct(product ?? null, productData, this.skipConfirmDialog);
+            if (result.error) {
+                this.handleSubmitError(result.error);
+            }
+            return result.product;
         }
 
         return null;
@@ -539,47 +520,6 @@ export class BaseProductManageComponent implements OnInit {
         this.updateMacroDistribution();
     }
 
-    private async addProduct(productData: CreateProductRequest): Promise<Product | null> {
-        try {
-            console.log('[ProductManage] add', productData);
-            const product = await firstValueFrom(this.productService.create(productData));
-            if (!this.skipConfirmDialog) {
-                await this.showConfirmDialog();
-            }
-            return product;
-        } catch (error) {
-            this.handleSubmitError(error as HttpErrorResponse);
-            return null;
-        }
-    }
-
-    private async updateProduct(id: string, productData: UpdateProductRequest): Promise<Product | null> {
-        try {
-            console.log('[ProductManage] update', { id, data: productData });
-            const product = await firstValueFrom(this.productService.update(id, productData));
-            if (!this.skipConfirmDialog) {
-                await this.showConfirmDialog();
-            }
-            return product;
-        } catch (error) {
-            this.handleSubmitError(error as HttpErrorResponse);
-            return null;
-        }
-    }
-
-    private buildUpdateProductRequest(productData: CreateProductRequest): UpdateProductRequest {
-        return {
-            ...productData,
-            clearBarcode: productData.barcode === null,
-            clearBrand: productData.brand === null,
-            clearCategory: productData.category === null,
-            clearDescription: productData.description === null,
-            clearComment: productData.comment === null,
-            clearImageUrl: productData.imageUrl === null,
-            clearImageAssetId: productData.imageAssetId === null,
-        };
-    }
-
     private handleSubmitError(error: HttpErrorResponse): void {
         if (error.status === 401) {
             this.setGlobalError('FORM_ERRORS.UNAUTHORIZED');
@@ -648,26 +588,6 @@ export class BaseProductManageComponent implements OnInit {
         return upper === ProductVisibility.Public.toUpperCase() ? ProductVisibility.Public : ProductVisibility.Private;
     }
 
-    private showConfirmDialog(): void {
-        const data: ProductSaveSuccessDialogData = {
-            isEdit: Boolean(this.product()),
-        };
-
-        this.fdDialogService
-            .open<ProductSaveSuccessDialogComponent, ProductSaveSuccessDialogData, RedirectAction>(ProductSaveSuccessDialogComponent, {
-                size: 'sm',
-                data,
-            })
-            .afterClosed()
-            .subscribe(redirectAction => {
-                if (redirectAction === 'Home') {
-                    this.navigationService.navigateToHome();
-                } else if (redirectAction === 'ProductList') {
-                    this.navigationService.navigateToProductList();
-                }
-            });
-    }
-
     private hasUnsavedChanges(): boolean {
         return this.productForm.dirty;
     }
@@ -679,33 +599,11 @@ export class BaseProductManageComponent implements OnInit {
             confirmLabel: this.translateService.instant('PRODUCT_MANAGE.LEAVE_CONFIRM_BUTTON'),
             cancelLabel: this.translateService.instant('PRODUCT_MANAGE.LEAVE_STAY_BUTTON'),
         };
-
-        const confirmed = await firstValueFrom(
-            this.fdDialogService
-                .open<ConfirmDeleteDialogComponent, ConfirmDeleteDialogData, boolean>(ConfirmDeleteDialogComponent, {
-                    size: 'sm',
-                    data,
-                })
-                .afterClosed(),
-        );
-
-        return !!confirmed;
+        return this.productManageFacade.confirmDiscardChanges(data);
     }
 
     private ensurePremiumAccess(): boolean {
-        if (this.authService.isPremium()) {
-            return true;
-        }
-
-        this.fdDialogService
-            .open<PremiumRequiredDialogComponent, never, boolean>(PremiumRequiredDialogComponent, { size: 'sm' })
-            .afterClosed()
-            .subscribe(confirmed => {
-                if (confirmed) {
-                    this.navigationService.navigateToPremiumAccess();
-                }
-            });
-        return false;
+        return this.productManageFacade.ensurePremiumAccess();
     }
 
     protected readonly MeasurementUnit = MeasurementUnit;
@@ -761,5 +659,3 @@ interface CalorieMismatchWarning {
     expectedCalories: number;
     actualCalories: number;
 }
-
-export type RedirectAction = 'Home' | 'ProductList';

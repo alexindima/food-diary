@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Observable, catchError, map, of, throwError } from 'rxjs';
+import { Observable, catchError, map } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
+import { fallbackApiError, rethrowApiError } from '../../../shared/lib/api-error.utils';
 import { CreateCyclePayload, CycleDay, CycleResponse, UpsertCycleDayPayload } from '../models/cycle.data';
 
 @Injectable({
@@ -12,21 +13,11 @@ export class CyclesService extends ApiService {
     protected readonly baseUrl = environment.apiUrls.cycles;
 
     public getCurrent(): Observable<CycleResponse | null> {
-        return this.get<CycleResponse | null>('current').pipe(
-            catchError(error => {
-                console.error('Cycle fetch error', error);
-                return of(null);
-            }),
-        );
+        return this.get<CycleResponse | null>('current').pipe(catchError(error => fallbackApiError('Cycle fetch error', error, null)));
     }
 
     public create(payload: CreateCyclePayload): Observable<CycleResponse> {
-        return this.post<CycleResponse>('', payload).pipe(
-            catchError(error => {
-                console.error('Cycle create error', error);
-                return throwError(() => error);
-            }),
-        );
+        return this.post<CycleResponse>('', payload).pipe(catchError(error => rethrowApiError('Cycle create error', error)));
     }
 
     public upsertDay(cycleId: string, payload: UpsertCycleDayPayload): Observable<CycleDay> {
@@ -35,10 +26,7 @@ export class CyclesService extends ApiService {
                 ...day,
                 date: day.date,
             })),
-            catchError(error => {
-                console.error('Cycle day upsert error', error);
-                return throwError(() => error);
-            }),
+            catchError(error => rethrowApiError('Cycle day upsert error', error)),
         );
     }
 }

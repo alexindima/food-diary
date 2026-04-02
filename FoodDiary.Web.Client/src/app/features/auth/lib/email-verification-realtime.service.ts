@@ -3,6 +3,10 @@ import type { HubConnection } from '@microsoft/signalr';
 import { environment } from '../../../../environments/environment';
 import { AuthService } from '../../../services/auth.service';
 
+export function toEmailVerificationHubUrl(authBaseUrl: string): string {
+    return `${authBaseUrl.replace(/\/api(?:\/v\d+(?:\.\d+)?)?\/auth$/, '')}/hubs/email-verification`;
+}
+
 @Injectable({
     providedIn: 'root',
 })
@@ -23,9 +27,8 @@ export class EmailVerificationRealtimeService {
 
         const { HubConnectionBuilder, LogLevel } = await import('@microsoft/signalr');
 
-        const baseUrl = environment.apiUrls.auth.replace(/\/api\/auth$/, '');
         this.connection = new HubConnectionBuilder()
-            .withUrl(`${baseUrl}/hubs/email-verification`, {
+            .withUrl(toEmailVerificationHubUrl(environment.apiUrls.auth), {
                 accessTokenFactory: () => authService.getToken() ?? '',
             })
             .withAutomaticReconnect()

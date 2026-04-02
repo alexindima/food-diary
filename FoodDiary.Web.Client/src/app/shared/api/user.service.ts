@@ -1,8 +1,9 @@
 import { Injectable, signal } from '@angular/core';
-import { catchError, map, Observable, of, tap } from 'rxjs';
+import { catchError, map, Observable, tap } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
 import { ApiService } from '../../services/api.service';
+import { fallbackApiError, rethrowApiError } from '../lib/api-error.utils';
 import {
     ChangePasswordRequest,
     DashboardLayoutSettings,
@@ -32,9 +33,8 @@ export class UserService extends ApiService {
         return this.get<User>('info').pipe(
             tap(user => this.userSignal.set(user ?? null)),
             catchError(error => {
-                console.error('Get user info error', error);
                 this.userSignal.set(null);
-                return of(null);
+                return fallbackApiError('Get user info error', error, null);
             }),
         );
     }
@@ -46,10 +46,7 @@ export class UserService extends ApiService {
                     this.userSignal.set(user);
                 }
             }),
-            catchError(error => {
-                console.error('Update user error', error);
-                return of(null);
-            }),
+            catchError(error => fallbackApiError('Update user error', error, null)),
         );
     }
 
@@ -60,20 +57,14 @@ export class UserService extends ApiService {
                     this.userSignal.set(user);
                 }
             }),
-            catchError(error => {
-                console.error('Update dashboard layout error', error);
-                return of(null);
-            }),
+            catchError(error => fallbackApiError('Update dashboard layout error', error, null)),
         );
     }
 
     public changePassword(request: ChangePasswordRequest): Observable<boolean> {
         return this.patch<void>('password', request).pipe(
             map(() => true),
-            catchError(error => {
-                console.error('Change password error', error);
-                return of(false);
-            }),
+            catchError(error => fallbackApiError('Change password error', error, false)),
         );
     }
 
@@ -81,20 +72,14 @@ export class UserService extends ApiService {
         return this.delete<void>('').pipe(
             tap(() => this.userSignal.set(null)),
             map(() => true),
-            catchError(error => {
-                console.error('Delete user error', error);
-                return of(false);
-            }),
+            catchError(error => fallbackApiError('Delete user error', error, false)),
         );
     }
 
     public getDesiredWeight(): Observable<number | null> {
         return this.get<DesiredWeightResponse>('desired-weight').pipe(
             map(response => response.desiredWeight ?? null),
-            catchError(error => {
-                console.error('Get desired weight error', error);
-                return of(null);
-            }),
+            catchError(error => fallbackApiError('Get desired weight error', error, null)),
         );
     }
 
@@ -103,20 +88,14 @@ export class UserService extends ApiService {
             desiredWeight: value,
         }).pipe(
             map(response => response.desiredWeight ?? null),
-            catchError(error => {
-                console.error('Update desired weight error', error);
-                throw error;
-            }),
+            catchError(error => rethrowApiError('Update desired weight error', error)),
         );
     }
 
     public getDesiredWaist(): Observable<number | null> {
         return this.get<DesiredWaistResponse>('desired-waist').pipe(
             map(response => response.desiredWaist ?? null),
-            catchError(error => {
-                console.error('Get desired waist error', error);
-                return of(null);
-            }),
+            catchError(error => fallbackApiError('Get desired waist error', error, null)),
         );
     }
 
@@ -125,10 +104,7 @@ export class UserService extends ApiService {
             desiredWaist: value,
         }).pipe(
             map(response => response.desiredWaist ?? null),
-            catchError(error => {
-                console.error('Update desired waist error', error);
-                throw error;
-            }),
+            catchError(error => rethrowApiError('Update desired waist error', error)),
         );
     }
 }

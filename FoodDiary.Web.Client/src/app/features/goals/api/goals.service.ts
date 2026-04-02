@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { catchError, Observable, of } from 'rxjs';
+import { catchError, Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
+import { fallbackApiError } from '../../../shared/lib/api-error.utils';
 import { ApiService } from '../../../services/api.service';
 import { GoalsResponse, UpdateGoalsRequest } from '../models/goals.data';
 
@@ -11,20 +12,10 @@ export class GoalsService extends ApiService {
     protected readonly baseUrl = environment.apiUrls.goals;
 
     public getGoals(): Observable<GoalsResponse | null> {
-        return this.get<GoalsResponse>('').pipe(
-            catchError(error => {
-                console.error('Get goals error', error);
-                return of(null);
-            }),
-        );
+        return this.get<GoalsResponse>('').pipe(catchError(error => fallbackApiError('Get goals error', error, null)));
     }
 
     public updateGoals(request: UpdateGoalsRequest): Observable<GoalsResponse | null> {
-        return this.patch<GoalsResponse>('', request).pipe(
-            catchError(error => {
-                console.error('Update goals error', error);
-                return of(null);
-            }),
-        );
+        return this.patch<GoalsResponse>('', request).pipe(catchError(error => fallbackApiError('Update goals error', error, null)));
     }
 }

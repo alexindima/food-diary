@@ -3,4 +3,5 @@ export const environment = {
         auth: 'https://fooddiary.club/api/v1/auth',
     },
     mainAppUrl: 'https://fooddiary.club',
+    enableGlobalErrorHandler: true,
 };

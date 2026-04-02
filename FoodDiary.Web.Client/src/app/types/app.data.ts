@@ -4,6 +4,7 @@ export interface AppConfig {
     telegramBotUsername?: string;
     buildVersion?: string;
     adminAppUrl?: string;
+    enableGlobalErrorHandler?: boolean;
 }
 
 export interface AppConfigApiUrls {

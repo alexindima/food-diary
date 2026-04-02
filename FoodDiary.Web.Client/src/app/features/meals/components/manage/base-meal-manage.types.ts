@@ -59,3 +59,9 @@ export interface CalorieMismatchWarning {
     expectedCalories: number;
     actualCalories: number;
 }
+
+export interface MealNutritionSummaryState {
+    autoTotals: NutritionTotals;
+    summaryTotals: NutritionTotals;
+    warning: CalorieMismatchWarning | null;
+}

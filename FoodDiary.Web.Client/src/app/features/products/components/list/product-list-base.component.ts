@@ -212,8 +212,7 @@ export class ProductListBaseComponent implements OnInit {
                 this.errorKey.set(null);
             }),
             map(() => void 0),
-            catchError((error: HttpErrorResponse) => {
-                console.error('Error loading products:', error);
+            catchError((_error: HttpErrorResponse) => {
                 this.productData.clearData();
                 this.recentProducts = [];
                 this.errorKey.set('ERRORS.LOAD_FAILED_TITLE');

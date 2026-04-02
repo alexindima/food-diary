@@ -24,6 +24,8 @@
     "prettier": "prettier --check '**/*.{js,ts,css,scss,html,json,md}'",
     "prettier:fix": "prettier --write '**/*.{js,ts,css,scss,html,json,md}'",
     "test": "ng test",
+    "test:e2e:admin:smoke": "npx playwright test -c playwright.admin.smoke.config.ts",
+    "test:e2e:admin:smoke:ui": "npx playwright test -c playwright.admin.smoke.config.ts --ui",
     "storybook": "ng run fd-ui-kit:storybook",
     "build:storybook": "ng run fd-ui-kit:build-storybook"
   },

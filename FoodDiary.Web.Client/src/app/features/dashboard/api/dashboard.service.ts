@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Observable, catchError, of } from 'rxjs';
+import { Observable, catchError } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
 import { DashboardSnapshot } from '../models/dashboard.data';
+import { fallbackApiError } from '../../../shared/lib/api-error.utils';
 
 @Injectable({
     providedIn: 'root',
@@ -26,10 +27,7 @@ export class DashboardService extends ApiService {
         }
 
         return this.get<DashboardSnapshot>('', params).pipe(
-            catchError(error => {
-                console.error('Dashboard snapshot fetch error', error);
-                return of(null);
-            }),
+            catchError(error => fallbackApiError('Dashboard snapshot fetch error', error, null)),
         );
     }
 }

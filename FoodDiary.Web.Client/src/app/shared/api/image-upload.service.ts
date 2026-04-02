@@ -1,9 +1,10 @@
 import { HttpClient, HttpContext, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { catchError, map, Observable, throwError } from 'rxjs';
+import { catchError, map, Observable } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
 import { SKIP_AUTH } from '../../constants/http-context.tokens';
+import { rethrowApiError } from '../lib/api-error.utils';
 import { ImageUploadUrlResponse } from '../models/image-upload.data';
 
 @Injectable({
@@ -20,12 +21,9 @@ export class ImageUploadService {
             fileSizeBytes: file.size,
         };
 
-        return this.http.post<ImageUploadUrlResponse>(`${this.baseUrl}/upload-url`, body).pipe(
-            catchError(error => {
-                console.error('Failed to request image upload URL', error);
-                return throwError(() => error);
-            }),
-        );
+        return this.http
+            .post<ImageUploadUrlResponse>(`${this.baseUrl}/upload-url`, body)
+            .pipe(catchError(error => rethrowApiError('Failed to request image upload URL', error)));
     }
 
     public uploadToPresignedUrl(uploadUrl: string, file: File): Observable<void> {
@@ -37,19 +35,13 @@ export class ImageUploadService {
 
         return this.http.put(uploadUrl, file, { headers, responseType: 'text', context }).pipe(
             map(() => void 0),
-            catchError(error => {
-                console.error('Failed to upload image to S3', error);
-                return throwError(() => error);
-            }),
+            catchError(error => rethrowApiError('Failed to upload image to S3', error)),
         );
     }
 
     public deleteAsset(assetId: string): Observable<void> {
-        return this.http.delete<void>(`${this.baseUrl}/${assetId}`).pipe(
-            catchError(error => {
-                console.error('Failed to delete image asset', error);
-                return throwError(() => error);
-            }),
-        );
+        return this.http
+            .delete<void>(`${this.baseUrl}/${assetId}`)
+            .pipe(catchError(error => rethrowApiError('Failed to delete image asset', error)));
     }
 }

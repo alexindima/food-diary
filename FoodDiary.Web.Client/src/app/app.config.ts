@@ -1,10 +1,12 @@
 import { provideAnimations } from '@angular/platform-browser/animations';
 import {
     ApplicationConfig,
+    ErrorHandler,
     importProvidersFrom,
     inject,
     isDevMode,
     provideAppInitializer,
+    provideBrowserGlobalErrorListeners,
     provideZonelessChangeDetection,
 } from '@angular/core';
 import { PreloadAllModules, provideRouter, withComponentInputBinding, withPreloading } from '@angular/router';
@@ -23,9 +25,20 @@ import { FdUiSnackBarModule } from 'fd-ui-kit/material';
 import { UserService } from './shared/api/user.service';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../environments/environment';
+import { GlobalErrorHandler } from './services/error-handler.service';
 
 export const appConfig: ApplicationConfig = {
     providers: [
+        ...(environment.enableGlobalErrorHandler
+            ? [
+                  provideBrowserGlobalErrorListeners(),
+                  {
+                      provide: ErrorHandler,
+                      useClass: GlobalErrorHandler,
+                  },
+                  GlobalErrorHandler,
+              ]
+            : []),
         {
             provide: HTTP_INTERCEPTORS,
             useClass: RetryInterceptor,

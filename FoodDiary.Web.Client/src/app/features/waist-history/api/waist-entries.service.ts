@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Observable, catchError, of } from 'rxjs';
+import { Observable, catchError } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 
 import { ApiService } from '../../../services/api.service';
 import { environment } from '../../../../environments/environment';
+import { fallbackApiError, rethrowApiError } from '../../../shared/lib/api-error.utils';
 import {
     CreateWaistEntryPayload,
     UpdateWaistEntryPayload,
@@ -36,47 +37,32 @@ export class WaistEntriesService extends ApiService {
         }
 
         return this.get<WaistEntry[]>('', params).pipe(
-            catchError((error: HttpErrorResponse) => {
-                console.error('Waist entries fetch error', error);
-                return of([]);
-            }),
+            catchError((error: HttpErrorResponse) => fallbackApiError('Waist entries fetch error', error, [])),
         );
     }
 
     public getLatest(): Observable<WaistEntry | null> {
         return this.get<WaistEntry | null>('latest').pipe(
-            catchError((error: HttpErrorResponse) => {
-                console.error('Waist latest fetch error', error);
-                return of(null);
-            }),
+            catchError((error: HttpErrorResponse) => fallbackApiError('Waist latest fetch error', error, null)),
         );
     }
 
     public create(payload: CreateWaistEntryPayload): Observable<WaistEntry> {
         return this.post<WaistEntry>('', payload).pipe(
-            catchError((error: HttpErrorResponse) => {
-                console.error('Create waist entry error', error);
-                throw error;
-            }),
+            catchError((error: HttpErrorResponse) => rethrowApiError('Create waist entry error', error)),
         );
     }
 
     public update(id: string, payload: UpdateWaistEntryPayload): Observable<WaistEntry> {
         return this.put<WaistEntry>(`${id}`, payload).pipe(
-            catchError((error: HttpErrorResponse) => {
-                console.error('Update waist entry error', error);
-                throw error;
-            }),
+            catchError((error: HttpErrorResponse) => rethrowApiError('Update waist entry error', error)),
         );
     }
 
     public remove(id: string): Observable<void> {
-        return super.delete<void>(`${id}`).pipe(
-            catchError((error: HttpErrorResponse) => {
-                console.error('Delete waist entry error', error);
-                throw error;
-            }),
-        );
+        return super
+            .delete<void>(`${id}`)
+            .pipe(catchError((error: HttpErrorResponse) => rethrowApiError('Delete waist entry error', error)));
     }
 
     public getSummary(filters: WaistEntrySummaryFilters): Observable<WaistEntrySummaryPoint[]> {
@@ -87,10 +73,7 @@ export class WaistEntriesService extends ApiService {
         };
 
         return this.get<WaistEntrySummaryPoint[]>('summary', params).pipe(
-            catchError((error: HttpErrorResponse) => {
-                console.error('Waist summary fetch error', error);
-                return of([]);
-            }),
+            catchError((error: HttpErrorResponse) => fallbackApiError('Waist summary fetch error', error, [])),
         );
     }
 }

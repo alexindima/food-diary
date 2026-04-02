@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
-import { catchError, Observable, tap, throwError } from 'rxjs';
+import { catchError, Observable, tap } from 'rxjs';
 import { AppConfig } from '../types/app.data';
 import { Injectable } from '@angular/core';
+import { rethrowApiError } from '../shared/lib/api-error.utils';
 
 @Injectable({
     providedIn: 'root',
@@ -16,10 +17,7 @@ export class AppConfigService {
             tap((config: AppConfig) => {
                 this.config = config;
             }),
-            catchError(error => {
-                console.error('Failed to load app config', error);
-                return throwError(() => new Error(error));
-            }),
+            catchError(error => rethrowApiError('Failed to load app config', error)),
         );
     }
 

@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
-import { catchError, Observable, of, throwError } from 'rxjs';
+import { catchError, Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
+import { fallbackApiError, rethrowApiError } from '../../../shared/lib/api-error.utils';
 import { CreateProductRequest, Product, ProductFilters, ProductListWithRecent, UpdateProductRequest } from '../models/product.data';
 import { PageOf } from '../../../shared/models/page-of.data';
 
@@ -23,19 +24,15 @@ export class ProductService extends ApiService {
         }
 
         return this.get<PageOf<Product>>('', params).pipe(
-            catchError((error: HttpErrorResponse) => {
-                console.error('Query products error', error);
-                return of({ data: [], page, limit, totalPages: 0, totalItems: 0 });
-            }),
+            catchError((error: HttpErrorResponse) =>
+                fallbackApiError('Query products error', error, { data: [], page, limit, totalPages: 0, totalItems: 0 }),
+            ),
         );
     }
 
     public getById(id: string): Observable<Product | null> {
         return this.get<Product>(`${id}`).pipe(
-            catchError((error: HttpErrorResponse) => {
-                console.error('Get product error', error);
-                return of(null);
-            }),
+            catchError((error: HttpErrorResponse) => fallbackApiError('Get product error', error, null)),
         );
     }
 
@@ -56,56 +53,39 @@ export class ProductService extends ApiService {
         }
 
         return this.get<ProductListWithRecent>('with-recent', params).pipe(
-            catchError((error: HttpErrorResponse) => {
-                console.error('Query products with recent error', error);
-                return of({ recentItems: [], allProducts: { data: [], page, limit, totalPages: 0, totalItems: 0 } });
-            }),
+            catchError((error: HttpErrorResponse) =>
+                fallbackApiError('Query products with recent error', error, {
+                    recentItems: [],
+                    allProducts: { data: [], page, limit, totalPages: 0, totalItems: 0 },
+                }),
+            ),
         );
     }
 
     public getRecent(limit = 10, includePublic = true): Observable<Product[]> {
         const params: Record<string, string | number | boolean> = { limit, includePublic };
         return this.get<Product[]>('recent', params).pipe(
-            catchError((error: HttpErrorResponse) => {
-                console.error('Get recent products error', error);
-                return of([]);
-            }),
+            catchError((error: HttpErrorResponse) => fallbackApiError('Get recent products error', error, [])),
         );
     }
 
     public create(data: CreateProductRequest): Observable<Product> {
-        return this.post<Product>('', data).pipe(
-            catchError((error: HttpErrorResponse) => {
-                console.error('Create product error', error);
-                return throwError(() => error);
-            }),
-        );
+        return this.post<Product>('', data).pipe(catchError((error: HttpErrorResponse) => rethrowApiError('Create product error', error)));
     }
 
     public update(id: string, data: UpdateProductRequest): Observable<Product> {
         return this.patch<Product>(`${id}`, data).pipe(
-            catchError((error: HttpErrorResponse) => {
-                console.error('Update product error', error);
-                return throwError(() => error);
-            }),
+            catchError((error: HttpErrorResponse) => rethrowApiError('Update product error', error)),
         );
     }
 
     public deleteById(id: string): Observable<void> {
-        return this.delete<void>(`${id}`).pipe(
-            catchError((error: HttpErrorResponse) => {
-                console.error('Delete product error', error);
-                return throwError(() => error);
-            }),
-        );
+        return this.delete<void>(`${id}`).pipe(catchError((error: HttpErrorResponse) => rethrowApiError('Delete product error', error)));
     }
 
     public duplicate(id: string): Observable<Product> {
         return this.post<Product>(`${id}/duplicate`, {}).pipe(
-            catchError((error: HttpErrorResponse) => {
-                console.error('Duplicate product error', error);
-                return throwError(() => error);
-            }),
+            catchError((error: HttpErrorResponse) => rethrowApiError('Duplicate product error', error)),
         );
     }
 }

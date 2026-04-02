@@ -1,0 +1,125 @@
+import { HttpErrorResponse } from '@angular/common/http';
+import { Injectable, inject } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
+import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import {
+    ConfirmDeleteDialogComponent,
+    ConfirmDeleteDialogData,
+} from '../../../components/shared/confirm-delete-dialog/confirm-delete-dialog.component';
+import { PremiumRequiredDialogComponent } from '../../../components/shared/premium-required-dialog/premium-required-dialog.component';
+import { NavigationService } from '../../../services/navigation.service';
+import { AuthService } from '../../../services/auth.service';
+import { ProductService } from '../api/product.service';
+import { CreateProductRequest, Product, UpdateProductRequest } from '../models/product.data';
+import { ProductSaveSuccessDialogComponent, ProductSaveSuccessDialogData } from '../dialogs/product-save-success-dialog.component';
+
+export type RedirectAction = 'Home' | 'ProductList';
+
+@Injectable({ providedIn: 'root' })
+export class ProductManageFacade {
+    private readonly productService = inject(ProductService);
+    private readonly navigationService = inject(NavigationService);
+    private readonly fdDialogService = inject(FdUiDialogService);
+    private readonly authService = inject(AuthService);
+
+    public async confirmDiscardChanges(data: ConfirmDeleteDialogData): Promise<boolean> {
+        const confirmed = await firstValueFrom(
+            this.fdDialogService
+                .open<ConfirmDeleteDialogComponent, ConfirmDeleteDialogData, boolean>(ConfirmDeleteDialogComponent, {
+                    size: 'sm',
+                    data,
+                })
+                .afterClosed(),
+        );
+
+        return !!confirmed;
+    }
+
+    public ensurePremiumAccess(): boolean {
+        if (this.authService.isPremium()) {
+            return true;
+        }
+
+        this.fdDialogService
+            .open<PremiumRequiredDialogComponent, never, boolean>(PremiumRequiredDialogComponent, { size: 'sm' })
+            .afterClosed()
+            .subscribe(confirmed => {
+                if (confirmed) {
+                    this.navigationService.navigateToPremiumAccess();
+                }
+            });
+        return false;
+    }
+
+    public async deleteProduct(product: Product, confirmData: ConfirmDeleteDialogData): Promise<'deleted' | 'cancelled' | 'error'> {
+        const confirmed = await firstValueFrom(
+            this.fdDialogService.open(ConfirmDeleteDialogComponent, { data: confirmData, size: 'sm' }).afterClosed(),
+        );
+
+        if (!confirmed) {
+            return 'cancelled';
+        }
+
+        try {
+            await firstValueFrom(this.productService.deleteById(product.id));
+            await this.navigationService.navigateToProductList();
+            return 'deleted';
+        } catch {
+            return 'error';
+        }
+    }
+
+    public async submitProduct(
+        product: Product | null,
+        productData: CreateProductRequest,
+        skipConfirmDialog: boolean,
+    ): Promise<{ product: Product | null; error: HttpErrorResponse | null }> {
+        try {
+            const savedProduct = product
+                ? await firstValueFrom(this.productService.update(product.id, this.buildUpdateProductRequest(productData)))
+                : await firstValueFrom(this.productService.create(productData));
+
+            if (!skipConfirmDialog) {
+                await this.showConfirmDialog(Boolean(product));
+            }
+
+            return { product: savedProduct, error: null };
+        } catch (error) {
+            return { product: null, error: error as HttpErrorResponse };
+        }
+    }
+
+    private buildUpdateProductRequest(productData: CreateProductRequest): UpdateProductRequest {
+        return {
+            ...productData,
+            clearBarcode: productData.barcode === null,
+            clearBrand: productData.brand === null,
+            clearCategory: productData.category === null,
+            clearDescription: productData.description === null,
+            clearComment: productData.comment === null,
+            clearImageUrl: productData.imageUrl === null,
+            clearImageAssetId: productData.imageAssetId === null,
+        };
+    }
+
+    private async showConfirmDialog(isEdit: boolean): Promise<void> {
+        const data: ProductSaveSuccessDialogData = {
+            isEdit,
+        };
+
+        const redirectAction = await firstValueFrom(
+            this.fdDialogService
+                .open<ProductSaveSuccessDialogComponent, ProductSaveSuccessDialogData, RedirectAction>(ProductSaveSuccessDialogComponent, {
+                    size: 'sm',
+                    data,
+                })
+                .afterClosed(),
+        );
+
+        if (redirectAction === 'Home') {
+            await this.navigationService.navigateToHome();
+        } else if (redirectAction === 'ProductList') {
+            await this.navigationService.navigateToProductList();
+        }
+    }
+}

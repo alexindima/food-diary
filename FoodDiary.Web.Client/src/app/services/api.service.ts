@@ -3,6 +3,8 @@ import { inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpRequestParams } from '../shared/models/http-request.params';
 
+type RequestBody = unknown;
+
 export abstract class ApiService {
     private readonly http = inject(HttpClient);
 
@@ -13,17 +15,17 @@ export abstract class ApiService {
         return this.http.get<T>(`${this.baseUrl}/${endpoint}`, { params: httpParams, headers });
     }
 
-    protected post<T>(endpoint: string, body: any, headers?: HttpHeaders, params?: HttpRequestParams): Observable<T> {
+    protected post<T>(endpoint: string, body: RequestBody, headers?: HttpHeaders, params?: HttpRequestParams): Observable<T> {
         const httpParams = this.buildHttpParams(params);
         return this.http.post<T>(`${this.baseUrl}/${endpoint}`, body, { headers, params: httpParams });
     }
 
-    protected put<T>(endpoint: string, body: any, headers?: HttpHeaders, params?: HttpRequestParams): Observable<T> {
+    protected put<T>(endpoint: string, body: RequestBody, headers?: HttpHeaders, params?: HttpRequestParams): Observable<T> {
         const httpParams = this.buildHttpParams(params);
         return this.http.put<T>(`${this.baseUrl}/${endpoint}`, body, { headers, params: httpParams });
     }
 
-    protected patch<T>(endpoint: string, body: any, headers?: HttpHeaders, params?: HttpRequestParams): Observable<T> {
+    protected patch<T>(endpoint: string, body: RequestBody, headers?: HttpHeaders, params?: HttpRequestParams): Observable<T> {
         const httpParams = this.buildHttpParams(params);
         return this.http.patch<T>(`${this.baseUrl}/${endpoint}`, body, { headers, params: httpParams });
     }
