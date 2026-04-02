@@ -215,6 +215,7 @@ Current tasks to execute first:
 - extracted `UserAccountState` from the `User` aggregate internals
 - enforced lifecycle checks in refresh-token flow
 - centralized authentication user access policy for core auth entry points
+- added PostgreSQL-backed endpoint latency baselines for `auth.refresh`, `products`, `recipes`, and `images.upload-url`
 
 ### Frontend progress completed on 2026-04-02
 
@@ -241,3 +242,9 @@ Done when:
 3. Backend performance baselines
 Done when:
 - hot endpoints and their latency targets are documented and tested
+
+Current status:
+- in progress
+- repository-level latency budgets exist for product and recipe paging
+- endpoint-level PostgreSQL baselines now exist for `auth.refresh`, `GET /products`, `GET /recipes`, and `POST /images/upload-url`
+- next missing perf gate is `GET /consumptions` on seeded meal history

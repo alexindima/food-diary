@@ -86,8 +86,38 @@ Every backend change that affects query shape should answer:
 - Is pagination bounded?
 - If search uses contains-style matching, is PostgreSQL-specific behavior intentional and tested?
 
+## Endpoint Baselines Added
+
+The next regression gates sit one layer higher than the repository checks and exercise the HTTP pipeline against PostgreSQL-backed application state:
+
+- Path: `POST /api/v1/auth/refresh`
+- Scenario: refresh token rotation after a warm-up refresh
+- Threshold: measured refresh must complete within `350 ms`
+- Test: `PostgresPerformanceBaselineTests.Refresh_WithWarmTokenRotation_StaysWithinLatencyBudget`
+
+- Path: `GET /api/v1/products?page=1&limit=25&includePublic=false`
+- Scenario: first owned-products page for a user with `1500` private products
+- Threshold: second measured execution must complete within `400 ms`
+- Test: `PostgresPerformanceBaselineTests.Products_FirstOwnedPage_StaysWithinEndpointLatencyBudget`
+
+- Path: `GET /api/v1/recipes?page=1&limit=25&includePublic=false`
+- Scenario: first owned-recipes page for a user with `1500` private recipes
+- Threshold: second measured execution must complete within `400 ms`
+- Test: `PostgresPerformanceBaselineTests.Recipes_FirstOwnedPage_StaysWithinEndpointLatencyBudget`
+
+- Path: `POST /api/v1/images/upload-url`
+- Scenario: authenticated upload-url generation after a warm-up request
+- Threshold: measured request must complete within `300 ms`
+- Test: `PostgresPerformanceBaselineTests.ImageUploadUrl_WithAuthenticatedUser_StaysWithinLatencyBudget`
+
+These are intentionally smoke-sized performance baselines:
+
+- they validate the full ASP.NET + MediatR + EF Core path instead of raw repository shape only
+- they use warm-up then second measured execution to reduce one-time cold-start noise
+- they should be treated as regression tripwires, not microbenchmark truth
+
 ## Next Perf Tasks
 
-- Add endpoint-level latency budgets for auth, meal list, product list, recipe list, and image flows.
+- Add a meal-list endpoint latency budget for `GET /api/v1/consumptions` on seeded historical data.
 - Capture `EXPLAIN ANALYZE` for the heaviest product, recipe, and meal queries on seeded data.
 - Decide whether product and recipe search should move to trigram-backed search when catalog size grows.
