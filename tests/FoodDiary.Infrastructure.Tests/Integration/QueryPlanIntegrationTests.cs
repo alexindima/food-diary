@@ -130,12 +130,13 @@ public sealed class QueryPlanIntegrationTests(PostgresDatabaseFixture databaseFi
             ORDER BY p."CreatedOnUtc" DESC
             LIMIT 25
             """,
+            disableSequentialScan: true,
             new NpgsqlParameter<Guid>("userId", user.Id.Value),
             new NpgsqlParameter<string>("search", "%Needle%"));
 
         Assert.True(
             ContainsIndexName(plan, "IX_Products_Name"),
-            $"Expected product search plan to use trigram index IX_Products_Name, but got:{Environment.NewLine}{plan}");
+            $"Expected product search plan to use trigram index IX_Products_Name, but got:{Environment.NewLine}{FormatPlan(plan)}");
     }
 
     [RequiresDockerFact]
@@ -168,12 +169,13 @@ public sealed class QueryPlanIntegrationTests(PostgresDatabaseFixture databaseFi
             ORDER BY r."CreatedOnUtc" DESC
             LIMIT 25
             """,
+            disableSequentialScan: true,
             new NpgsqlParameter<Guid>("userId", user.Id.Value),
             new NpgsqlParameter<string>("search", "%Needle%"));
 
         Assert.True(
             ContainsIndexName(plan, "IX_Recipes_Name"),
-            $"Expected recipe search plan to use trigram index IX_Recipes_Name, but got:{Environment.NewLine}{plan}");
+            $"Expected recipe search plan to use trigram index IX_Recipes_Name, but got:{Environment.NewLine}{FormatPlan(plan)}");
     }
 
     [RequiresDockerFact]
@@ -221,6 +223,14 @@ public sealed class QueryPlanIntegrationTests(PostgresDatabaseFixture databaseFi
         FoodDiaryDbContext context,
         string sql,
         params NpgsqlParameter[] parameters) {
+        return await ExplainAnalyzeAsync(context, sql, disableSequentialScan: false, parameters);
+    }
+
+    private static async Task<JsonDocument> ExplainAnalyzeAsync(
+        FoodDiaryDbContext context,
+        string sql,
+        bool disableSequentialScan = false,
+        params NpgsqlParameter[] parameters) {
         var connection = (NpgsqlConnection)context.Database.GetDbConnection();
         if (connection.State != System.Data.ConnectionState.Open) {
             await connection.OpenAsync();
@@ -228,6 +238,10 @@ public sealed class QueryPlanIntegrationTests(PostgresDatabaseFixture databaseFi
 
         await using var command = connection.CreateCommand();
         command.CommandText = $"EXPLAIN (ANALYZE, BUFFERS, FORMAT JSON) {sql}";
+        if (disableSequentialScan) {
+            command.CommandText = $"SET LOCAL enable_seqscan = off; {command.CommandText}";
+        }
+
         command.Parameters.AddRange(parameters);
 
         var raw = Convert.ToString(await command.ExecuteScalarAsync());
@@ -248,6 +262,10 @@ public sealed class QueryPlanIntegrationTests(PostgresDatabaseFixture databaseFi
 
     private static bool ContainsIndexName(JsonDocument plan, string indexName) {
         return ContainsIndexName(plan.RootElement, indexName);
+    }
+
+    private static string FormatPlan(JsonDocument plan) {
+        return JsonSerializer.Serialize(plan.RootElement, new JsonSerializerOptions { WriteIndented = true });
     }
 
     private static bool ContainsIndexName(JsonElement element, string indexName) {
