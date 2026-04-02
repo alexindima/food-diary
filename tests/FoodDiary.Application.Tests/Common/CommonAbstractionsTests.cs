@@ -4,6 +4,7 @@ using FoodDiary.Application.Authentication.Common;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Behaviors;
+using FoodDiary.Application.Common.Services;
 using System.Reflection;
 
 namespace FoodDiary.Application.Tests.Common;
@@ -114,6 +115,17 @@ public class CommonAbstractionsTests {
         Assert.DoesNotContain("+", token, StringComparison.Ordinal);
         Assert.DoesNotContain("/", token, StringComparison.Ordinal);
         Assert.DoesNotContain("=", token, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void SystemDateTimeProvider_ReturnsUtcTime_FromTimeProviderSystem() {
+        var provider = new SystemDateTimeProvider();
+        var before = TimeProvider.System.GetUtcNow().UtcDateTime;
+        var now = provider.UtcNow;
+        var after = TimeProvider.System.GetUtcNow().UtcDateTime;
+
+        Assert.Equal(DateTimeKind.Utc, now.Kind);
+        Assert.InRange(now, before, after);
     }
 
     private sealed record GenericCommand(string Value) : ICommand<Result<string>>;

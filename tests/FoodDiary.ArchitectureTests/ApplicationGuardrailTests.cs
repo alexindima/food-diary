@@ -22,14 +22,10 @@ public sealed class ApplicationGuardrailTests {
     public void ApplicationHandlersAndServices_DoNotUseDateTimeUtcNow_Directly() {
         var root = GetRepositoryRoot();
         var applicationRoot = Path.Combine(root, "FoodDiary.Application");
-        var allowedFiles = new HashSet<string>(StringComparer.OrdinalIgnoreCase) {
-            Path.Combine(applicationRoot, "Common", "Services", "SystemDateTimeProvider.cs"),
-        };
 
         var violations = Directory.GetFiles(applicationRoot, "*.cs", SearchOption.AllDirectories)
             .Where(static path => path.Contains($"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase) is false)
             .Where(static path => path.Contains($"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase) is false)
-            .Where(path => allowedFiles.Contains(path) is false)
             .SelectMany(path => File.ReadAllLines(path)
                 .Select((line, index) => new { path, index, line }))
             .Where(static entry => entry.line.Contains("DateTime.UtcNow", StringComparison.Ordinal))
