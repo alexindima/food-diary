@@ -108,7 +108,7 @@
                                 <span class="recipe-list__section-line"></span>
                             </div>
                             <div class="recipe-list__section-grid">
-                                @for (recipe of recentRecipes; track recipe.id) {
+                                @for (recipe of recentRecipeItems; track recipe.id) {
                                     <fd-recipe-card
                                         [recipe]="recipe"
                                         [imageUrl]="resolveImage(recipe)"
@@ -154,7 +154,7 @@
                 class="recipe-list__pagination"
                 [length]="recipeData.totalItems"
                 [pageSize]="pageSize"
-                [pageIndex]="currentPageIndex"
+                [pageIndex]="pageIndex"
                 (pageIndexChange)="onPageChange($event)"
             />
         }
