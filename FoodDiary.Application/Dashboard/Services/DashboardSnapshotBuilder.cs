@@ -8,6 +8,7 @@ using FoodDiary.Application.Consumptions.Queries.GetConsumptions;
 using FoodDiary.Application.DailyAdvices.Queries.GetDailyAdvice;
 using FoodDiary.Application.Dashboard.Models;
 using FoodDiary.Application.Users.Models;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.Hydration.Queries.GetHydrationDailyTotal;
 using FoodDiary.Application.Statistics.Queries.GetStatistics;
 using FoodDiary.Application.WaistEntries.Queries.GetWaistSummaries;
@@ -67,15 +68,21 @@ public class DashboardSnapshotBuilder(
         if (mealsResult.IsFailure) return Result.Failure<DashboardSnapshotModel>(mealsResult.Error);
 
         var user = await userRepository.GetByIdAsync(userId, cancellationToken);
+        var accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
+        if (accessError is not null) {
+            return Result.Failure<DashboardSnapshotModel>(accessError);
+        }
+
+        var currentUser = user!;
         var weightEntries = await weightEntryRepository.GetEntriesAsync(
             userId, dateFrom: null, dateTo: null, limit: 2, descending: true, cancellationToken: cancellationToken);
         var waistEntries = await waistEntryRepository.GetEntriesAsync(
             userId, dateFrom: null, dateTo: null, limit: 2, descending: true, cancellationToken: cancellationToken);
 
-        var statistics = DashboardMapping.ToStatisticsModel(statsResult.Value.FirstOrDefault(), user);
+        var statistics = DashboardMapping.ToStatisticsModel(statsResult.Value.FirstOrDefault(), currentUser);
         var weeklyCalories = DashboardMapping.ToWeeklyCalories(weeklyStatsResult.Value);
-        var weight = DashboardMapping.ToWeightModel(weightEntries, user?.DesiredWeight);
-        var waist = DashboardMapping.ToWaistModel(waistEntries, user?.DesiredWaist);
+        var weight = DashboardMapping.ToWeightModel(weightEntries, currentUser.DesiredWeight);
+        var waist = DashboardMapping.ToWaistModel(waistEntries, currentUser.DesiredWaist);
         var meals = new DashboardMealsModel(mealsResult.Value.Data, mealsResult.Value.TotalItems);
 
         var hydrationResult = await sender.Send(
@@ -90,11 +97,11 @@ public class DashboardSnapshotBuilder(
         var waistTrendResult = await sender.Send(
             new GetWaistSummariesQuery(userId, trendStart, dayStart, 1), cancellationToken);
 
-        var layout = ParseDashboardLayout(user?.DashboardLayoutJson, userId);
+        var layout = ParseDashboardLayout(currentUser.DashboardLayoutJson, userId);
 
         return Result.Success(new DashboardSnapshotModel(
             request.Date,
-            user?.DailyCalorieTarget ?? 0,
+            currentUser.DailyCalorieTarget ?? 0,
             statistics,
             weeklyCalories,
             weight,

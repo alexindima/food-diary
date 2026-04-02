@@ -3,6 +3,7 @@ using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Authentication.Common;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Interfaces.Services;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.Extensions.Logging;
@@ -37,16 +38,18 @@ public class ResendEmailVerificationCommandHandler : ICommandHandler<ResendEmail
         }
 
         var user = await _userRepository.GetByIdAsync(new UserId(command.UserId), cancellationToken);
-        if (user is null) {
-            return Result.Failure(Errors.User.NotFound());
+        var accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
+        if (accessError is not null) {
+            return Result.Failure(accessError);
         }
 
-        if (user.IsEmailConfirmed) {
+        var currentUser = user!;
+        if (currentUser.IsEmailConfirmed) {
             return Result.Success();
         }
 
-        if (user.EmailConfirmationSentAtUtc.HasValue) {
-            var elapsed = _dateTimeProvider.UtcNow - user.EmailConfirmationSentAtUtc.Value;
+        if (currentUser.EmailConfirmationSentAtUtc.HasValue) {
+            var elapsed = _dateTimeProvider.UtcNow - currentUser.EmailConfirmationSentAtUtc.Value;
             if (elapsed < ResendCooldown) {
                 return Result.Failure(
                     Errors.Validation.Invalid(
@@ -57,15 +60,15 @@ public class ResendEmailVerificationCommandHandler : ICommandHandler<ResendEmail
 
         var emailToken = SecurityTokenGenerator.GenerateUrlSafeToken();
         var emailTokenHash = _passwordHasher.Hash(emailToken);
-        user.SetEmailConfirmationToken(new UserTokenIssue(
+        currentUser.SetEmailConfirmationToken(new UserTokenIssue(
             TokenHash: emailTokenHash,
             ExpiresAtUtc: _dateTimeProvider.UtcNow.AddHours(24),
             IssuedAtUtc: _dateTimeProvider.UtcNow));
-        await _userRepository.UpdateAsync(user, cancellationToken);
+        await _userRepository.UpdateAsync(currentUser, cancellationToken);
 
         try {
             await _emailSender.SendEmailVerificationAsync(
-                new EmailVerificationMessage(user.Email, user.Id.Value.ToString(), emailToken, user.Language),
+                new EmailVerificationMessage(currentUser.Email, currentUser.Id.Value.ToString(), emailToken, currentUser.Language),
                 cancellationToken);
         } catch (Exception ex) {
             _logger.LogError(ex, "Email verification dispatch failed.");

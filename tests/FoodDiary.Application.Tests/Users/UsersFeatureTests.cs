@@ -6,6 +6,7 @@ using FoodDiary.Application.Users.Commands.ChangePassword;
 using FoodDiary.Application.Users.Commands.DeleteUser;
 using FoodDiary.Application.Users.Queries.GetDesiredWaist;
 using FoodDiary.Application.Users.Queries.GetDesiredWeight;
+using FoodDiary.Application.Users.Queries.GetUserById;
 using FoodDiary.Application.Users.Queries.GetUserGoals;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -55,6 +56,34 @@ public class UsersFeatureTests {
         Assert.True(result.IsSuccess);
         Assert.Equal(deletedAtUtc, user.DeletedAt);
         Assert.False(user.IsActive);
+    }
+
+    [Fact]
+    public async Task ChangePasswordHandler_WithInactiveUser_ReturnsInvalidToken() {
+        var user = User.Create("inactive@example.com", "hash");
+        user.Deactivate();
+        var handler = new ChangePasswordCommandHandler(
+            new SingleUserRepository(user),
+            new PassthroughPasswordHasher());
+
+        var result = await handler.Handle(
+            new ChangePasswordCommand(user.Id.Value, "hash", "new"),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task GetUserByIdHandler_WithDeletedUser_ReturnsAccountDeleted() {
+        var user = User.Create("deleted@example.com", "hash");
+        user.DeleteAccount(DateTime.UtcNow);
+        var handler = new GetUserByIdQueryHandler(new SingleUserRepository(user));
+
+        var result = await handler.Handle(new GetUserByIdQuery(user.Id.Value), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
     [Fact]

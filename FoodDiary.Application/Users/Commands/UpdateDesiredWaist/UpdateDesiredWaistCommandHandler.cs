@@ -1,6 +1,7 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.Users.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -17,13 +18,15 @@ public class UpdateDesiredWaistCommandHandler(IUserRepository userRepository)
 
         var userId = new UserId(command.UserId!.Value);
         var user = await userRepository.GetByIdAsync(userId, cancellationToken);
-        if (user is null) {
-            return Result.Failure<UserDesiredWaistModel>(Errors.User.NotFound(userId));
+        var accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
+        if (accessError is not null) {
+            return Result.Failure<UserDesiredWaistModel>(accessError);
         }
 
-        user.UpdateDesiredWaist(command.DesiredWaist);
-        await userRepository.UpdateAsync(user, cancellationToken);
+        var currentUser = user!;
+        currentUser.UpdateDesiredWaist(command.DesiredWaist);
+        await userRepository.UpdateAsync(currentUser, cancellationToken);
 
-        return Result.Success(new UserDesiredWaistModel(user.DesiredWaist));
+        return Result.Success(new UserDesiredWaistModel(currentUser.DesiredWaist));
     }
 }

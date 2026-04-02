@@ -2,6 +2,7 @@ using FoodDiary.Application.Authentication.Common;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using static FoodDiary.Application.Common.Abstractions.Result.Errors;
 
@@ -18,19 +19,22 @@ public class ChangePasswordCommandHandler(
 
         var userId = new UserId(command.UserId!.Value);
         var user = await userRepository.GetByIdAsync(userId, cancellationToken);
-        if (user is null) {
-            return Result.Failure(User.NotFound(userId));
+        var accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
+        if (accessError is not null) {
+            return Result.Failure(accessError);
         }
 
-        var isCurrentPasswordValid = passwordHasher.Verify(command.CurrentPassword, user.Password);
+        var currentUser = user!;
+
+        var isCurrentPasswordValid = passwordHasher.Verify(command.CurrentPassword, currentUser.Password);
         if (!isCurrentPasswordValid) {
             return Result.Failure(User.InvalidPassword);
         }
 
         var hashedPassword = passwordHasher.Hash(command.NewPassword);
-        user.UpdatePassword(hashedPassword);
+        currentUser.UpdatePassword(hashedPassword);
 
-        await userRepository.UpdateAsync(user, cancellationToken);
+        await userRepository.UpdateAsync(currentUser, cancellationToken);
 
         return Result.Success();
     }

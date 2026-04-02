@@ -3,8 +3,8 @@ using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Interfaces.Services;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
-using static FoodDiary.Application.Common.Abstractions.Result.Errors;
 
 namespace FoodDiary.Application.Users.Commands.DeleteUser;
 
@@ -20,12 +20,15 @@ public class DeleteUserCommandHandler(
 
         var userId = new UserId(command.UserId!.Value);
         var user = await userRepository.GetByIdAsync(userId, cancellationToken);
-        if (user is null) {
-            return Result.Failure(User.NotFound(userId));
+        var accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
+        if (accessError is not null) {
+            return Result.Failure(accessError);
         }
 
-        user.DeleteAccount(dateTimeProvider.UtcNow);
-        await userRepository.UpdateAsync(user, cancellationToken);
+        var currentUser = user!;
+
+        currentUser.DeleteAccount(dateTimeProvider.UtcNow);
+        await userRepository.UpdateAsync(currentUser, cancellationToken);
 
         auditLogger.Log("user.delete", userId, "User", userId.Value.ToString());
 

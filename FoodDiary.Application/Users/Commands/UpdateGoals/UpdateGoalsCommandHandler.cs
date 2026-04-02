@@ -1,7 +1,7 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
-using static FoodDiary.Application.Common.Abstractions.Result.Errors;
 using FoodDiary.Application.Common.Interfaces.Persistence;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.Users.Mappings;
 using FoodDiary.Application.Users.Models;
 using FoodDiary.Domain.ValueObjects;
@@ -18,11 +18,13 @@ public class UpdateGoalsCommandHandler(IUserRepository userRepository)
 
         var userId = new UserId(command.UserId!.Value);
         var user = await userRepository.GetByIdAsync(userId, cancellationToken);
-        if (user is null) {
-            return Result.Failure<GoalsModel>(User.NotFound(userId));
+        var accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
+        if (accessError is not null) {
+            return Result.Failure<GoalsModel>(accessError);
         }
 
-        user.UpdateGoals(new UserGoalUpdate(
+        var currentUser = user!;
+        currentUser.UpdateGoals(new UserGoalUpdate(
             DailyCalorieTarget: command.DailyCalorieTarget,
             ProteinTarget: command.ProteinTarget,
             FatTarget: command.FatTarget,
@@ -32,8 +34,8 @@ public class UpdateGoalsCommandHandler(IUserRepository userRepository)
             DesiredWeight: command.DesiredWeight,
             DesiredWaist: command.DesiredWaist));
 
-        await userRepository.UpdateAsync(user, cancellationToken);
+        await userRepository.UpdateAsync(currentUser, cancellationToken);
 
-        return Result.Success(user.ToGoalsModel());
+        return Result.Success(currentUser.ToGoalsModel());
     }
 }

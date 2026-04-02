@@ -5,6 +5,7 @@ using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.DailyAdvices.Common;
 using FoodDiary.Application.DailyAdvices.Models;
 using FoodDiary.Application.DailyAdvices.Services;
+using FoodDiary.Application.Users.Common;
 
 namespace FoodDiary.Application.DailyAdvices.Queries.GetDailyAdvice;
 
@@ -20,8 +21,9 @@ public class GetDailyAdviceQueryHandler(
 
         var userId = userIdResult.Value;
         var user = await userRepository.GetByIdAsync(userId, cancellationToken);
-        if (user is null) {
-            return Result.Failure<DailyAdviceModel>(Errors.User.NotFound(userId.Value));
+        var accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
+        if (accessError is not null) {
+            return Result.Failure<DailyAdviceModel>(accessError);
         }
 
         var locale = DailyAdviceSelector.NormalizeLocale(query.Locale);

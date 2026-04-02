@@ -5,6 +5,7 @@ using FoodDiary.Application.Common.Time;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Hydration.Common;
 using FoodDiary.Application.Hydration.Models;
+using FoodDiary.Application.Users.Common;
 
 namespace FoodDiary.Application.Hydration.Queries.GetHydrationDailyTotal;
 
@@ -23,13 +24,15 @@ public class GetHydrationDailyTotalQueryHandler(
         var userId = userIdResult.Value;
 
         var user = await userRepository.GetByIdAsync(userId, cancellationToken);
-        if (user is null) {
-            return Result.Failure<HydrationDailyModel>(Errors.User.NotFound(userId.Value));
+        var accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
+        if (accessError is not null) {
+            return Result.Failure<HydrationDailyModel>(accessError);
         }
 
+        var currentUser = user!;
         var dateUtc = UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(query.DateUtc);
         var total = await repository.GetDailyTotalAsync(userId, dateUtc, cancellationToken);
-        var goal = user.HydrationGoal ?? user.WaterGoal;
+        var goal = currentUser.HydrationGoal ?? currentUser.WaterGoal;
 
         var response = new HydrationDailyModel(dateUtc, total, goal);
         return Result.Success(response);

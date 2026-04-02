@@ -4,6 +4,7 @@ using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Ai.Common;
 using FoodDiary.Application.Ai.Models;
 using FoodDiary.Application.Images.Common;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Ai.Commands.AnalyzeFoodImage;
@@ -38,13 +39,15 @@ public sealed class AnalyzeFoodImageCommandHandler(
         }
 
         var user = await userRepository.GetByIdAsync(userId, cancellationToken);
-        if (user is null) {
-            return Result.Failure<FoodVisionModel>(Errors.User.NotFound(userId));
+        var accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
+        if (accessError is not null) {
+            return Result.Failure<FoodVisionModel>(accessError);
         }
 
+        var currentUser = user!;
         return await openAiFoodService.AnalyzeFoodImageAsync(
             asset.Url,
-            user.Language,
+            currentUser.Language,
             userId,
             query.Description,
             cancellationToken);

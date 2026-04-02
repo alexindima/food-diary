@@ -1,6 +1,7 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.Users.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -17,13 +18,15 @@ public class UpdateDesiredWeightCommandHandler(IUserRepository userRepository)
 
         var userId = new UserId(command.UserId!.Value);
         var user = await userRepository.GetByIdAsync(userId, cancellationToken);
-        if (user is null) {
-            return Result.Failure<UserDesiredWeightModel>(Errors.User.NotFound(userId));
+        var accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
+        if (accessError is not null) {
+            return Result.Failure<UserDesiredWeightModel>(accessError);
         }
 
-        user.UpdateDesiredWeight(command.DesiredWeight);
-        await userRepository.UpdateAsync(user, cancellationToken);
+        var currentUser = user!;
+        currentUser.UpdateDesiredWeight(command.DesiredWeight);
+        await userRepository.UpdateAsync(currentUser, cancellationToken);
 
-        return Result.Success(new UserDesiredWeightModel(user.DesiredWeight));
+        return Result.Success(new UserDesiredWeightModel(currentUser.DesiredWeight));
     }
 }

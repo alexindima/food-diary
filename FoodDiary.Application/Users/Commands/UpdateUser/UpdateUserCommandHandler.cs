@@ -1,9 +1,9 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
-using static FoodDiary.Application.Common.Abstractions.Result.Errors;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Images.Common;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.Users.Mappings;
 using FoodDiary.Application.Users.Models;
 using FoodDiary.Domain.Enums;
@@ -24,9 +24,12 @@ public class UpdateUserCommandHandler(
 
         var userId = new UserId(command.UserId!.Value);
         var user = await userRepository.GetByIdAsync(userId, cancellationToken);
-        if (user is null) {
-            return Result.Failure<UserModel>(User.NotFound(userId));
+        var accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
+        if (accessError is not null) {
+            return Result.Failure<UserModel>(accessError);
         }
+
+        var currentUser = user!;
 
         var activityLevelResult = EnumValueParser.ParseOptional<ActivityLevel>(
             command.ActivityLevel,
@@ -57,14 +60,14 @@ public class UpdateUserCommandHandler(
             return Result.Failure<UserModel>(genderResult.Error);
         }
 
-        var oldAssetId = user.ProfileImageAssetId;
+        var oldAssetId = currentUser.ProfileImageAssetId;
         var newAssetId = profileImageAssetIdResult.Value;
 
         var dashboardLayoutJson = command.DashboardLayout is null
             ? null
             : JsonSerializer.Serialize(command.DashboardLayout);
 
-        user.UpdatePersonalInfo(new UserPersonalInfoUpdate(
+        currentUser.UpdatePersonalInfo(new UserPersonalInfoUpdate(
             Username: Normalize(command.Username),
             FirstName: Normalize(command.FirstName),
             LastName: Normalize(command.LastName),
@@ -72,32 +75,32 @@ public class UpdateUserCommandHandler(
             Gender: genderResult.Value,
             Weight: command.Weight,
             Height: command.Height));
-        user.UpdateActivity(new UserActivityUpdate(
+        currentUser.UpdateActivity(new UserActivityUpdate(
             ActivityLevel: activityLevelResult.Value,
             StepGoal: command.StepGoal,
             HydrationGoal: command.HydrationGoal));
-        user.UpdatePreferences(new UserPreferenceUpdate(
+        currentUser.UpdatePreferences(new UserPreferenceUpdate(
             DashboardLayoutJson: dashboardLayoutJson,
             Language: languageResult.Value));
-        user.UpdateProfileMedia(new UserProfileMediaUpdate(
+        currentUser.UpdateProfileMedia(new UserProfileMediaUpdate(
             ProfileImage: Normalize(command.ProfileImage),
             ProfileImageAssetId: newAssetId));
 
         if (command.IsActive.HasValue) {
             if (command.IsActive.Value) {
-                user.Activate();
+                currentUser.Activate();
             } else {
-                user.Deactivate();
+                currentUser.Deactivate();
             }
         }
 
-        await userRepository.UpdateAsync(user, cancellationToken);
+        await userRepository.UpdateAsync(currentUser, cancellationToken);
 
         if (oldAssetId.HasValue && (!newAssetId.HasValue || oldAssetId.Value.Value != newAssetId.Value.Value)) {
             await imageAssetCleanupService.DeleteIfUnusedAsync(oldAssetId.Value, cancellationToken);
         }
 
-        return Result.Success(user.ToModel());
+        return Result.Success(currentUser.ToModel());
     }
 
     private static string? Normalize(string? value) =>

@@ -2,6 +2,7 @@ using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Validation;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.Users.Models;
 
 namespace FoodDiary.Application.Users.Queries.GetDesiredWeight;
@@ -18,8 +19,9 @@ public class GetDesiredWeightQueryHandler(IUserRepository userRepository)
 
         var userId = userIdResult.Value;
         var user = await userRepository.GetByIdAsync(userId, cancellationToken);
-        return user is null
-            ? Result.Failure<UserDesiredWeightModel>(Errors.User.NotFound(userId))
-            : Result.Success(new UserDesiredWeightModel(user.DesiredWeight));
+        var accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
+        return accessError is not null
+            ? Result.Failure<UserDesiredWeightModel>(accessError)
+            : Result.Success(new UserDesiredWeightModel(user!.DesiredWeight));
     }
 }

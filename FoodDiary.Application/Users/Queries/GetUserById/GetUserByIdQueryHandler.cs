@@ -1,8 +1,8 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
-using static FoodDiary.Application.Common.Abstractions.Result.Errors;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Validation;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.Users.Mappings;
 using FoodDiary.Application.Users.Models;
 
@@ -17,8 +17,9 @@ public class GetUserByIdQueryHandler(IUserRepository userRepository) : IQueryHan
 
         var userId = userIdResult.Value;
         var user = await userRepository.GetByIdAsync(userId, cancellationToken);
-        return user is null
-            ? Result.Failure<UserModel>(User.NotFound(userId))
-            : Result.Success(user.ToModel());
+        var accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
+        return accessError is not null
+            ? Result.Failure<UserModel>(accessError)
+            : Result.Success(user!.ToModel());
     }
 }

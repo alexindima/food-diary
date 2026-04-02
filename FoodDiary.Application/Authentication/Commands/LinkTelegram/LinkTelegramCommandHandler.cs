@@ -2,6 +2,7 @@ using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Authentication.Abstractions;
 using FoodDiary.Application.Common.Interfaces.Persistence;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.Users.Mappings;
 using FoodDiary.Application.Users.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -32,22 +33,25 @@ public sealed class LinkTelegramCommandHandler : ICommandHandler<LinkTelegramCom
 
         var initData = initDataResult.Value;
         var currentUser = await _userRepository.GetByIdAsync(new UserId(command.UserId), cancellationToken);
-        if (currentUser == null) {
-            return Result.Failure<UserModel>(Errors.User.NotFound());
+        var accessError = CurrentUserAccessPolicy.EnsureCanAccess(currentUser);
+        if (accessError is not null) {
+            return Result.Failure<UserModel>(accessError);
         }
 
-        if (currentUser.TelegramUserId == initData.UserId) {
-            return Result.Success(currentUser.ToModel());
+        var currentAccessibleUser = currentUser!;
+
+        if (currentAccessibleUser.TelegramUserId == initData.UserId) {
+            return Result.Success(currentAccessibleUser.ToModel());
         }
 
         var existingUser = await _userRepository.GetByTelegramUserIdIncludingDeletedAsync(initData.UserId, cancellationToken);
-        if (existingUser != null && existingUser.Id != currentUser.Id) {
+        if (existingUser != null && existingUser.Id != currentAccessibleUser.Id) {
             return Result.Failure<UserModel>(Errors.Authentication.TelegramAlreadyLinked);
         }
 
-        currentUser.LinkTelegram(initData.UserId);
-        await _userRepository.UpdateAsync(currentUser, cancellationToken);
+        currentAccessibleUser.LinkTelegram(initData.UserId);
+        await _userRepository.UpdateAsync(currentAccessibleUser, cancellationToken);
 
-        return Result.Success(currentUser.ToModel());
+        return Result.Success(currentAccessibleUser.ToModel());
     }
 }

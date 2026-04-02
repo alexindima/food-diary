@@ -113,6 +113,22 @@ public class HydrationFeatureTests {
     }
 
     [Fact]
+    public async Task GetHydrationDailyTotalQueryHandler_WithDeletedUser_ReturnsAccountDeleted() {
+        var user = User.Create("deleted-hydration@example.com", "hash");
+        user.DeleteAccount(DateTime.UtcNow);
+        var handler = new GetHydrationDailyTotalQueryHandler(
+            new RecordingHydrationEntryRepository(),
+            new StubUserRepository(user));
+
+        var result = await handler.Handle(
+            new GetHydrationDailyTotalQuery(user.Id.Value, DateTime.UtcNow),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
+    }
+
+    [Fact]
     public async Task DeleteHydrationEntryCommandHandler_WithEmptyHydrationEntryId_ReturnsValidationFailure() {
         var handler = new DeleteHydrationEntryCommandHandler(new InMemoryHydrationEntryRepository());
 
