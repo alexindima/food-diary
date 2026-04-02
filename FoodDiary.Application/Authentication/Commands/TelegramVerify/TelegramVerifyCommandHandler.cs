@@ -1,4 +1,5 @@
 using FoodDiary.Application.Authentication.Abstractions;
+using FoodDiary.Application.Authentication.Common;
 using FoodDiary.Application.Authentication.Mappings;
 using FoodDiary.Application.Authentication.Models;
 using FoodDiary.Application.Authentication.Services;
@@ -30,16 +31,12 @@ public sealed class TelegramVerifyCommandHandler : ICommandHandler<TelegramVerif
 
         var initData = initDataResult.Value;
         var user = await _userRepository.GetByTelegramUserIdAsync(initData.UserId, cancellationToken);
-        if (user == null) {
+        var accessError = AuthenticationUserAccessPolicy.EnsureCanAuthenticate(user);
+        if (accessError is not null) {
+            return Result.Failure<AuthenticationModel>(user is null ? Errors.Authentication.TelegramNotLinked : accessError);
+        }
+        if (user is null) {
             return Result.Failure<AuthenticationModel>(Errors.Authentication.TelegramNotLinked);
-        }
-
-        if (user.DeletedAt is not null) {
-            return Result.Failure<AuthenticationModel>(Errors.Authentication.AccountDeleted);
-        }
-
-        if (!user.IsActive) {
-            return Result.Failure<AuthenticationModel>(Errors.Authentication.InvalidCredentials);
         }
 
         var tokens = await _authenticationTokenService.IssueAndStoreAsync(user, cancellationToken);

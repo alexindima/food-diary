@@ -20,7 +20,10 @@ public sealed class RequestPasswordResetCommandHandler(
 
     public async Task<Result> Handle(RequestPasswordResetCommand command, CancellationToken cancellationToken) {
         var user = await userRepository.GetByEmailIncludingDeletedAsync(command.Email, cancellationToken);
-        if (user is null || !user.IsActive) {
+        if (!AuthenticationUserAccessPolicy.CanRequestPasswordReset(user)) {
+            return Result.Success();
+        }
+        if (user is null) {
             return Result.Success();
         }
 

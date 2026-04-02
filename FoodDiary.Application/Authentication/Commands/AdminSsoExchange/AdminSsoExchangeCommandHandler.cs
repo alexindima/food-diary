@@ -1,4 +1,5 @@
 using FoodDiary.Application.Authentication.Abstractions;
+using FoodDiary.Application.Authentication.Common;
 using FoodDiary.Application.Authentication.Mappings;
 using FoodDiary.Application.Authentication.Models;
 using FoodDiary.Application.Authentication.Services;
@@ -28,8 +29,12 @@ public sealed class AdminSsoExchangeCommandHandler(
             return Result.Failure<AuthenticationModel>(Errors.User.NotFound());
         }
 
-        if (user.DeletedAt is not null) {
-            return Result.Failure<AuthenticationModel>(Errors.Authentication.AccountDeleted);
+        var accessError = AuthenticationUserAccessPolicy.EnsureCanAuthenticate(user);
+        if (accessError is not null) {
+            return Result.Failure<AuthenticationModel>(accessError);
+        }
+        if (user is null) {
+            return Result.Failure<AuthenticationModel>(Errors.User.NotFound());
         }
 
         if (!IsAdmin(user)) {

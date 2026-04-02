@@ -28,12 +28,9 @@ public class LoginCommandHandler : ICommandHandler<LoginCommand, Result<Authenti
             return Result.Failure<AuthenticationModel>(Errors.Authentication.InvalidCredentials);
         }
 
-        if (user.DeletedAt is not null) {
-            return Result.Failure<AuthenticationModel>(Errors.Authentication.AccountDeleted);
-        }
-
-        if (!user.IsActive) {
-            return Result.Failure<AuthenticationModel>(Errors.Authentication.InvalidCredentials);
+        var accessError = AuthenticationUserAccessPolicy.EnsureCanAuthenticate(user);
+        if (accessError is not null) {
+            return Result.Failure<AuthenticationModel>(accessError);
         }
 
         var tokens = await _authenticationTokenService.IssueAndStoreAsync(user, cancellationToken);
