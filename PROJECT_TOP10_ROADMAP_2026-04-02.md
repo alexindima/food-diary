@@ -460,8 +460,8 @@ Status update:
 - initial frontend bundle reduced from about `1.43 MB` to `977.58 kB`
 - production frontend build now passes without bundle budget warning
 - backend performance baseline work started
-- PostgreSQL-backed endpoint latency budgets now cover `auth.refresh`, `GET /products`, `GET /recipes`, and `POST /images/upload-url`
-- next backend perf gap is a seeded `GET /consumptions` latency gate
+- PostgreSQL-backed endpoint latency budgets now cover `auth.refresh`, `GET /products`, `GET /recipes`, `GET /consumptions`, and `POST /images/upload-url`
+- next backend perf step is `EXPLAIN ANALYZE` capture for the heaviest query paths
 
 ## Definition Of "Very Good"
 

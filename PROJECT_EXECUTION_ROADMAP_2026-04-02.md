@@ -216,6 +216,7 @@ Current tasks to execute first:
 - enforced lifecycle checks in refresh-token flow
 - centralized authentication user access policy for core auth entry points
 - added PostgreSQL-backed endpoint latency baselines for `auth.refresh`, `products`, `recipes`, and `images.upload-url`
+- expanded PostgreSQL-backed endpoint latency baselines to include `consumptions` meal-list paging
 
 ### Frontend progress completed on 2026-04-02
 
@@ -246,5 +247,5 @@ Done when:
 Current status:
 - in progress
 - repository-level latency budgets exist for product and recipe paging
-- endpoint-level PostgreSQL baselines now exist for `auth.refresh`, `GET /products`, `GET /recipes`, and `POST /images/upload-url`
-- next missing perf gate is `GET /consumptions` on seeded meal history
+- endpoint-level PostgreSQL baselines now exist for `auth.refresh`, `GET /products`, `GET /recipes`, `GET /consumptions`, and `POST /images/upload-url`
+- next backend perf task is `EXPLAIN ANALYZE` capture for the heaviest product, recipe, and meal queries

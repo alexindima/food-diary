@@ -110,6 +110,11 @@ The next regression gates sit one layer higher than the repository checks and ex
 - Threshold: measured request must complete within `300 ms`
 - Test: `PostgresPerformanceBaselineTests.ImageUploadUrl_WithAuthenticatedUser_StaysWithinLatencyBudget`
 
+- Path: `GET /api/v1/consumptions?page=1&limit=25&dateFrom=2026-03-01&dateTo=2026-03-31`
+- Scenario: first page of a monthly meal history range for a user with `1500` seeded meals
+- Threshold: second measured execution must complete within `500 ms`
+- Test: `PostgresPerformanceBaselineTests.Consumptions_FirstPageWithinMonthRange_StaysWithinEndpointLatencyBudget`
+
 These are intentionally smoke-sized performance baselines:
 
 - they validate the full ASP.NET + MediatR + EF Core path instead of raw repository shape only
@@ -118,6 +123,5 @@ These are intentionally smoke-sized performance baselines:
 
 ## Next Perf Tasks
 
-- Add a meal-list endpoint latency budget for `GET /api/v1/consumptions` on seeded historical data.
 - Capture `EXPLAIN ANALYZE` for the heaviest product, recipe, and meal queries on seeded data.
 - Decide whether product and recipe search should move to trigram-backed search when catalog size grows.

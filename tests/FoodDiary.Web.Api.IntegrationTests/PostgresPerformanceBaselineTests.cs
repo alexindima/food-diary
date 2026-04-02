@@ -3,6 +3,7 @@ using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
+using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Enums;
@@ -21,6 +22,7 @@ public sealed class PostgresPerformanceBaselineTests(PostgresApiWebApplicationFa
     private static readonly TimeSpan RefreshLatencyBudget = TimeSpan.FromMilliseconds(350);
     private static readonly TimeSpan ProductListLatencyBudget = TimeSpan.FromMilliseconds(400);
     private static readonly TimeSpan RecipeListLatencyBudget = TimeSpan.FromMilliseconds(400);
+    private static readonly TimeSpan ConsumptionListLatencyBudget = TimeSpan.FromMilliseconds(500);
     private static readonly TimeSpan ImageUploadUrlLatencyBudget = TimeSpan.FromMilliseconds(300);
 
     private static readonly JsonSerializerOptions JsonOptions = new() {
@@ -101,6 +103,34 @@ public sealed class PostgresPerformanceBaselineTests(PostgresApiWebApplicationFa
         Assert.True(
             stopwatch.Elapsed <= RecipeListLatencyBudget,
             $"Expected GET /api/v1/recipes first owned page to stay within {RecipeListLatencyBudget.TotalMilliseconds} ms, but observed {stopwatch.Elapsed.TotalMilliseconds:F1} ms.");
+    }
+
+    [RequiresDockerFact]
+    public async Task Consumptions_FirstPageWithinMonthRange_StaysWithinEndpointLatencyBudget() {
+        var client = factory.CreateClient();
+        var email = $"perf-consumptions-{Guid.NewGuid():N}@example.com";
+        var authPayload = await RegisterAsync(client, email);
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authPayload.AccessToken);
+
+        await SeedMealsAsync(email, SeedCount);
+
+        const string url = "/api/v1/consumptions?page=1&limit=25&dateFrom=2026-03-01&dateTo=2026-03-31";
+
+        _ = await client.GetAsync(url);
+
+        var stopwatch = Stopwatch.StartNew();
+        var response = await client.GetAsync(url);
+        stopwatch.Stop();
+
+        var payload = await response.Content.ReadFromJsonAsync<PagedPayload<ItemPayload>>(JsonOptions);
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.NotNull(payload);
+        Assert.Equal(31, payload.TotalItems);
+        Assert.Equal(25, payload.Items.Count);
+        Assert.True(
+            stopwatch.Elapsed <= ConsumptionListLatencyBudget,
+            $"Expected GET /api/v1/consumptions first page within monthly range to stay within {ConsumptionListLatencyBudget.TotalMilliseconds} ms, but observed {stopwatch.Elapsed.TotalMilliseconds:F1} ms.");
     }
 
     [RequiresDockerFact]
@@ -195,6 +225,25 @@ public sealed class PostgresPerformanceBaselineTests(PostgresApiWebApplicationFa
             .ToArray();
 
         dbContext.Recipes.AddRange(recipes);
+        await dbContext.SaveChangesAsync();
+    }
+
+    private async Task SeedMealsAsync(string email, int count) {
+        await using var scope = factory.Services.CreateAsyncScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
+        var user = await dbContext.Users.SingleAsync(x => x.Email == email);
+
+        var startDate = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        var mealTypes = new[] { MealType.Breakfast, MealType.Lunch, MealType.Dinner, MealType.Snack };
+        var meals = Enumerable.Range(0, count)
+            .Select(index => Meal.Create(
+                user.Id,
+                startDate.AddDays(index),
+                mealTypes[index % mealTypes.Length],
+                comment: $"Perf Meal {index:D4}"))
+            .ToArray();
+
+        dbContext.Meals.AddRange(meals);
         await dbContext.SaveChangesAsync();
     }
 
