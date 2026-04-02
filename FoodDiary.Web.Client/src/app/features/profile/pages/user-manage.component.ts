@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, FactoryProvider, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, effect, FactoryProvider, inject, OnInit } from '@angular/core';
 import { NgIf } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -6,31 +6,21 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
-import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiFormErrorComponent, FD_VALIDATION_ERRORS, FdValidationErrors } from 'fd-ui-kit/form-error/fd-ui-form-error.component';
 import { FdUiDateInputComponent } from 'fd-ui-kit/date-input/fd-ui-date-input.component';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { FdUiSelectComponent, FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
 import { PageBodyComponent } from '../../../components/shared/page-body/page-body.component';
-import {
-    ConfirmDeleteDialogComponent,
-    ConfirmDeleteDialogData,
-} from '../../../components/shared/confirm-delete-dialog/confirm-delete-dialog.component';
 import { ImageUploadFieldComponent } from '../../../components/shared/image-upload-field/image-upload-field.component';
 import { PageHeaderComponent } from '../../../components/shared/page-header/page-header.component';
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
 import { AuthService } from '../../../services/auth.service';
 import { ImageUploadService } from '../../../shared/api/image-upload.service';
 import { LocalizationService } from '../../../services/localization.service';
-import { NavigationService } from '../../../services/navigation.service';
-import { UserService } from '../../../shared/api/user.service';
 import { ImageSelection } from '../../../shared/models/image-upload.data';
 import { FormGroupControls } from '../../../shared/lib/common.data';
 import { ActivityLevelOption, Gender, UpdateUserDto, User } from '../../../shared/models/user.data';
-import { environment } from '../../../../environments/environment';
-import { ChangePasswordDialogComponent } from '../dialogs/change-password-dialog/change-password-dialog.component';
-import { PasswordSuccessDialogComponent } from '../dialogs/password-success-dialog/password-success-dialog.component';
-import { UpdateSuccessDialogComponent } from '../dialogs/update-success-dialog/update-success-dialog.component';
+import { ProfileManageFacade } from '../lib/profile-manage.facade';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: FD_VALIDATION_ERRORS,
@@ -63,18 +53,16 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     ],
     templateUrl: './user-manage.component.html',
     styleUrl: './user-manage.component.scss',
-    providers: [VALIDATION_ERRORS_PROVIDER],
+    providers: [VALIDATION_ERRORS_PROVIDER, ProfileManageFacade],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserManageComponent implements OnInit {
-    private readonly userService = inject(UserService);
     private readonly translateService = inject(TranslateService);
-    private readonly fdDialogService = inject(FdUiDialogService);
-    private readonly navigationService = inject(NavigationService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly imageUploadService = inject(ImageUploadService);
     private readonly authService = inject(AuthService);
     private readonly localizationService = inject(LocalizationService);
+    private readonly facade = inject(ProfileManageFacade);
     private lastUserData: Partial<UserFormValues> | null = null;
 
     public genders = Object.values(Gender);
@@ -84,8 +72,8 @@ export class UserManageComponent implements OnInit {
     public activityLevelOptions: FdUiSelectOption<ActivityLevelOption | null>[] = [];
     public languageOptions: FdUiSelectOption<string | null>[] = [];
     public userForm: FormGroup<UserFormData>;
-    public globalError = signal<string | null>(null);
-    public isDeleting = signal<boolean>(false);
+    public readonly globalError = this.facade.globalError;
+    public readonly isDeleting = this.facade.isDeleting;
 
     public constructor() {
         this.userForm = new FormGroup<UserFormData>({
@@ -104,10 +92,20 @@ export class UserManageComponent implements OnInit {
 
         this.buildSelectOptions();
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.buildSelectOptions());
+        effect(() => {
+            const user = this.facade.user();
+            if (!user) {
+                return;
+            }
+
+            const userData = this.mapUserToForm(user);
+            this.lastUserData = userData;
+            this.applyUserData(userData);
+        });
     }
 
     public ngOnInit(): void {
-        this.userForm.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.clearGlobalError());
+        this.userForm.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.facade.clearGlobalError());
         this.userForm.controls.language.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(language => {
             if (!this.userForm.controls.language.dirty) {
                 return;
@@ -116,7 +114,7 @@ export class UserManageComponent implements OnInit {
             this.applyLanguagePreference(language ?? null);
         });
 
-        this.loadUserData();
+        this.facade.initialize();
     }
 
     public async onSubmit(): Promise<void> {
@@ -128,28 +126,12 @@ export class UserManageComponent implements OnInit {
                 ...formData,
                 profileImage: formData.profileImage as ImageSelection | null,
             });
-
-            this.userService.update(updateData).subscribe({
-                next: user => {
-                    if (user) {
-                        const updatedData = this.mapUserToForm(user);
-                        this.lastUserData = updatedData;
-                        this.applyUserData(updatedData);
-                        this.applyLanguagePreference(user.language ?? null);
-                        this.showSuccessDialog();
-                    } else {
-                        this.setGlobalError('USER_MANAGE.UPDATE_ERROR');
-                    }
-                },
-                error: () => {
-                    this.setGlobalError('USER_MANAGE.UPDATE_ERROR');
-                },
-            });
+            this.facade.submitUpdate(updateData);
         }
     }
 
     public resetForm(): void {
-        this.clearGlobalError();
+        this.facade.clearGlobalError();
         const currentImageId = this.userForm.controls.profileImage.value?.assetId;
         const baselineImageId = this.lastUserData?.profileImage?.assetId ?? null;
         if (currentImageId && currentImageId !== baselineImageId) {
@@ -163,61 +145,16 @@ export class UserManageComponent implements OnInit {
         if (this.lastUserData) {
             this.applyUserData(this.lastUserData);
         } else {
-            this.loadUserData();
+            this.facade.initialize();
         }
     }
 
     public openChangePasswordDialog(): void {
-        this.fdDialogService
-            .open(ChangePasswordDialogComponent, { size: 'sm' })
-            .afterClosed()
-            .subscribe(success => {
-                if (success) {
-                    this.openPasswordSuccessDialog();
-                }
-            });
+        this.facade.openChangePasswordDialog();
     }
 
     public onDeleteAccount(): void {
-        if (this.isDeleting()) {
-            return;
-        }
-
-        const data: ConfirmDeleteDialogData = {
-            title: this.translateService.instant('USER_MANAGE.DELETE_ACCOUNT_CONFIRM_TITLE'),
-            message: this.translateService.instant('USER_MANAGE.DELETE_ACCOUNT_CONFIRM_MESSAGE'),
-            confirmLabel: this.translateService.instant('USER_MANAGE.DELETE_ACCOUNT_CONFIRM'),
-            cancelLabel: this.translateService.instant('COMMON.CANCEL'),
-        };
-
-        this.fdDialogService
-            .open(ConfirmDeleteDialogComponent, {
-                size: 'sm',
-                data,
-            })
-            .afterClosed()
-            .subscribe(confirmed => {
-                if (!confirmed || this.isDeleting()) {
-                    return;
-                }
-
-                this.isDeleting.set(true);
-                this.userService.deleteCurrentUser().subscribe({
-                    next: success => {
-                        this.isDeleting.set(false);
-                        if (!success) {
-                            this.setGlobalError('USER_MANAGE.DELETE_ACCOUNT_ERROR');
-                            return;
-                        }
-
-                        void this.authService.onLogout(true);
-                    },
-                    error: () => {
-                        this.isDeleting.set(false);
-                        this.setGlobalError('USER_MANAGE.DELETE_ACCOUNT_ERROR');
-                    },
-                });
-            });
+        this.facade.deleteAccount();
     }
 
     public isAdminUser(): boolean {
@@ -225,67 +162,13 @@ export class UserManageComponent implements OnInit {
     }
 
     public openAdminPanel(): void {
-        if (!environment.adminAppUrl) {
-            return;
-        }
-
-        this.authService.startAdminSso().subscribe({
-            next: response => {
-                const url = new URL('/', environment.adminAppUrl);
-                url.searchParams.set('code', response.code);
-                window.location.href = url.toString();
-            },
-            error: () => {
-                this.setGlobalError('USER_MANAGE.ADMIN_SSO_ERROR');
-            },
-        });
-    }
-
-    protected showSuccessDialog(): void {
-        this.fdDialogService
-            .open(UpdateSuccessDialogComponent, { size: 'sm' })
-            .afterClosed()
-            .subscribe(goToHome => {
-                if (goToHome) {
-                    this.navigationService.navigateToHome();
-                }
-            });
-    }
-
-    private loadUserData(): void {
-        this.userService.getInfo().subscribe({
-            next: user => {
-                if (user) {
-                    const userData = this.mapUserToForm(user);
-                    this.lastUserData = userData;
-                    this.applyUserData(userData);
-                    this.applyLanguagePreference(user.language ?? null);
-                } else {
-                    this.setGlobalError('USER_MANAGE.LOAD_ERROR');
-                }
-            },
-            error: () => {
-                this.setGlobalError('USER_MANAGE.LOAD_ERROR');
-            },
-        });
+        this.facade.openAdminPanel();
     }
 
     private applyUserData(userData: Partial<UserFormValues>): void {
         this.userForm.patchValue(userData);
         this.userForm.markAsPristine();
         this.userForm.markAsUntouched();
-    }
-
-    private openPasswordSuccessDialog(): void {
-        this.fdDialogService.open(PasswordSuccessDialogComponent, { size: 'sm' }).afterClosed().subscribe();
-    }
-
-    private setGlobalError(errorKey: string): void {
-        this.globalError.set(this.translateService.instant(errorKey));
-    }
-
-    private clearGlobalError(): void {
-        this.globalError.set(null);
     }
 
     private buildSelectOptions(): void {
