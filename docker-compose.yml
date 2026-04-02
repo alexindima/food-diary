@@ -17,6 +17,7 @@ services:
       retries: 5
 
   db-init:
+    image: ${IMAGE_PREFIX:-ghcr.io/alexindima/food-diary}/initializer:latest
     build:
       context: .
       dockerfile: FoodDiary.Initializer/Dockerfile
@@ -31,6 +32,7 @@ services:
       - backend
 
   api:
+    image: ${IMAGE_PREFIX:-ghcr.io/alexindima/food-diary}/api:latest
     build:
       context: .
       dockerfile: FoodDiary.Web.Api/Dockerfile
@@ -39,7 +41,7 @@ services:
       - "${API_PORT:-5000}:5000"
     environment:
       ConnectionStrings__DefaultConnection: "Host=postgres;Database=fooddiary;Username=postgres;Password=${POSTGRES_PASSWORD:-change-me-local-password}"
-      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT:-Production}
     env_file:
       - .env
     depends_on:
@@ -50,6 +52,7 @@ services:
       - backend
 
   telegram-bot:
+    image: ${IMAGE_PREFIX:-ghcr.io/alexindima/food-diary}/telegram-bot:latest
     build:
       context: .
       dockerfile: FoodDiary.Telegram.Bot/Dockerfile
@@ -63,6 +66,7 @@ services:
       - full
 
   job-manager:
+    image: ${IMAGE_PREFIX:-ghcr.io/alexindima/food-diary}/job-manager:latest
     build:
       context: .
       dockerfile: FoodDiary.JobManager/Dockerfile
@@ -78,6 +82,7 @@ services:
       - full
 
   client:
+    image: ${IMAGE_PREFIX:-ghcr.io/alexindima/food-diary}/client:latest
     build:
       context: FoodDiary.Web.Client
       dockerfile: Dockerfile
