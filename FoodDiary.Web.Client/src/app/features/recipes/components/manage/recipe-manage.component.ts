@@ -4,24 +4,13 @@ import { FormGroupControls } from '../../../../shared/lib/common.data';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { MeasurementUnit, Product, ProductVisibility, ProductType } from '../../../products/models/product.data';
 import { nonEmptyArrayValidator } from '../../../../validators/non-empty-array.validator';
-import {
-    ItemSelectDialogComponent,
-    ItemSelection,
-    ItemSelectDialogData,
-} from '../../../../shared/dialogs/item-select-dialog/item-select-dialog.component';
 import { NutrientData } from '../../../../shared/models/charts.data';
-import { HttpErrorResponse } from '@angular/common/http';
 import { Recipe, RecipeDto, RecipeVisibility, RecipeIngredient } from '../../models/recipe.data';
-import { RecipeService } from '../../api/recipe.service';
-import { NavigationService } from '../../../../services/navigation.service';
-import { finalize } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select.component';
 import { FdUiSegmentedToggleComponent, FdUiSegmentedToggleOption } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle.component';
-import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { FdUiDialogRef } from 'fd-ui-kit/material';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
 import { ImageSelection } from '../../../../shared/models/image-upload.data';
 import { NutritionCalculationService } from '../../../../shared/lib/nutrition-calculation.service';
@@ -30,6 +19,7 @@ import { NutritionEditorComponent } from '../../../../components/shared/nutritio
 import { ManageHeaderComponent } from '../../../../components/shared/manage-header/manage-header.component';
 import { RecipeBasicInfoComponent } from './recipe-basic-info/recipe-basic-info.component';
 import { RecipeStepsListComponent, StepIngredientEvent } from './recipe-steps-list/recipe-steps-list.component';
+import { RecipeManageFacade } from '../../lib/recipe-manage.facade';
 import {
     RecipeFormData,
     RecipeFormValues,
@@ -61,11 +51,10 @@ import {
     templateUrl: './recipe-manage.component.html',
     styleUrls: ['./recipe-manage.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [RecipeManageFacade],
 })
 export class RecipeManageComponent implements OnInit {
-    private readonly recipeService = inject(RecipeService);
     private readonly translateService = inject(TranslateService);
-    private readonly navigationService = inject(NavigationService);
     private readonly nutritionCalculationService = inject(NutritionCalculationService);
     private readonly expandedSteps = new Set<number>();
     private lastRecipeId: string | null = null;
@@ -79,6 +68,7 @@ export class RecipeManageComponent implements OnInit {
         alcohol: 'manualAlcohol',
     };
     private readonly calorieMismatchThreshold = 0.2;
+    private readonly recipeManageFacade = inject(RecipeManageFacade);
 
     public readonly nutritionWarning = signal<CalorieMismatchWarning | null>(null);
 
@@ -91,8 +81,8 @@ export class RecipeManageComponent implements OnInit {
         fats: 0,
         carbs: 0,
     });
-    public globalError = signal<string | null>(null);
-    public isSubmitting = signal<boolean>(false);
+    public globalError = this.recipeManageFacade.globalError;
+    public isSubmitting = this.recipeManageFacade.isSubmitting;
     public readonly macroBarState = computed<MacroBarState>(() => {
         const nutrients = this.nutrientChartData();
         const entries: Array<{ key: MacroKey; value: number }> = [
@@ -122,8 +112,6 @@ export class RecipeManageComponent implements OnInit {
     public nutritionScaleMode: NutritionScaleMode = 'recipe';
     public nutritionScaleModeOptions: FdUiSegmentedToggleOption[] = [];
 
-    private readonly fdDialogService = inject(FdUiDialogService);
-    private readonly dialogRef = inject(FdUiDialogRef<RecipeManageComponent, Recipe | null>, { optional: true });
     private isFormReady = true;
 
     public constructor() {
@@ -231,42 +219,17 @@ export class RecipeManageComponent implements OnInit {
 
     public onProductSelectClick(event: StepIngredientEvent): void {
         const { stepIndex, ingredientIndex } = event;
-        this.fdDialogService
-            .open<ItemSelectDialogComponent, ItemSelectDialogData, ItemSelection | null>(ItemSelectDialogComponent, {
-                size: 'lg',
-                data: { initialTab: 'Product' },
-            })
-            .afterClosed()
-            .subscribe(selection => {
-                if (!selection) {
-                    return;
-                }
-                const ingredientsArray = this.steps.at(stepIndex).controls.ingredients;
-                const foodGroup = ingredientsArray.at(ingredientIndex);
-                if (selection.type === 'Product') {
-                    const food = selection.product;
-                    const defaultAmount = food.defaultPortionAmount ?? food.baseAmount ?? 0;
-                    foodGroup.patchValue({
-                        food,
-                        foodName: food.name,
-                        nestedRecipeId: null,
-                        nestedRecipeName: null,
-                        amount: defaultAmount,
-                    });
-                } else {
-                    const recipe = selection.recipe;
-                    foodGroup.patchValue({
-                        food: null,
-                        foodName: recipe.name,
-                        nestedRecipeId: recipe.id,
-                        nestedRecipeName: recipe.name,
-                        amount: 1,
-                    });
-                }
-                if (this.recipeForm.controls.calculateNutritionAutomatically.value) {
-                    this.recalculateNutrientsFromForm();
-                }
-            });
+        this.recipeManageFacade.openItemSelectionDialog().subscribe(selection => {
+            if (!selection) {
+                return;
+            }
+            const ingredientsArray = this.steps.at(stepIndex).controls.ingredients;
+            const foodGroup = ingredientsArray.at(ingredientIndex);
+            this.recipeManageFacade.applyItemSelection(foodGroup, selection);
+            if (this.recipeForm.controls.calculateNutritionAutomatically.value) {
+                this.recalculateNutrientsFromForm();
+            }
+        });
     }
 
     // -- Nutrition mode --
@@ -329,61 +292,24 @@ export class RecipeManageComponent implements OnInit {
         }
 
         if (!this.recipeForm.valid) {
-            this.setGlobalError('FORM_ERRORS.UNKNOWN');
+            this.recipeManageFacade.setGlobalError('FORM_ERRORS.UNKNOWN');
             return;
         }
 
         const recipeData = this.prepareRecipeDto();
         const existingRecipe = this.recipe();
 
-        this.clearGlobalError();
+        this.recipeManageFacade.clearGlobalError();
 
         if (existingRecipe) {
-            this.updateRecipe(existingRecipe.id, recipeData);
+            this.recipeManageFacade.updateRecipe(existingRecipe.id, recipeData);
         } else {
-            this.addRecipe(recipeData);
+            this.recipeManageFacade.addRecipe(recipeData);
         }
     }
 
     public async onCancel(): Promise<void> {
-        if (this.dialogRef) {
-            this.dialogRef.close(null);
-            return;
-        }
-        await this.navigationService.navigateToRecipeList();
-    }
-
-    // -- Private methods --
-
-    private addRecipe(recipeData: RecipeDto): void {
-        this.isSubmitting.set(true);
-        this.recipeService
-            .create(recipeData)
-            .pipe(finalize(() => this.isSubmitting.set(false)))
-            .subscribe({
-                next: recipe => this.handleSubmitResponse(recipe),
-                error: error => this.handleSubmitError(error),
-            });
-    }
-
-    private updateRecipe(id: string, recipeData: RecipeDto): void {
-        this.isSubmitting.set(true);
-        this.recipeService
-            .update(id, recipeData)
-            .pipe(finalize(() => this.isSubmitting.set(false)))
-            .subscribe({
-                next: recipe => this.handleSubmitResponse(recipe),
-                error: error => this.handleSubmitError(error),
-            });
-    }
-
-    private async handleSubmitResponse(_response: Recipe): Promise<void> {
-        this.clearGlobalError();
-        if (this.dialogRef) {
-            this.dialogRef.close(_response);
-            return;
-        }
-        await this.navigationService.navigateToRecipeList();
+        await this.recipeManageFacade.cancelManage();
     }
 
     private markFormGroupTouched(formGroup: FormGroup | FormArray): void {
@@ -395,19 +321,6 @@ export class RecipeManageComponent implements OnInit {
                 control.updateValueAndValidity();
             }
         });
-    }
-
-    private handleSubmitError(error?: HttpErrorResponse): void {
-        const message = error?.error?.message ?? this.translateService.instant('FORM_ERRORS.UNKNOWN');
-        this.setGlobalError(message, false);
-    }
-
-    private setGlobalError(message: string, translate: boolean = true): void {
-        this.globalError.set(translate ? this.translateService.instant(message) : message);
-    }
-
-    private clearGlobalError(): void {
-        this.globalError.set(null);
     }
 
     private prepareRecipeDto(): RecipeDto {
@@ -639,19 +552,16 @@ export class RecipeManageComponent implements OnInit {
     }
 
     private updateNutrientSummary(recipeData: Recipe | null): void {
-        if (!recipeData) {
-            this.setNutrientSummary(0, 0, 0, 0, 0, 0);
-            return;
-        }
+        const summary = this.recipeManageFacade.getSummaryFromRecipe(recipeData, {
+            calories: this.totalCalories(),
+            proteins: this.nutrientChartData().proteins,
+            fats: this.nutrientChartData().fats,
+            carbs: this.nutrientChartData().carbs,
+            fiber: this.totalFiber(),
+            alcohol: this.totalAlcohol(),
+        });
 
-        this.setNutrientSummary(
-            recipeData.totalCalories ?? this.totalCalories(),
-            recipeData.totalProteins ?? this.nutrientChartData().proteins,
-            recipeData.totalFats ?? this.nutrientChartData().fats,
-            recipeData.totalCarbs ?? this.nutrientChartData().carbs,
-            recipeData.totalFiber ?? this.totalFiber(),
-            recipeData.totalAlcohol ?? this.totalAlcohol(),
-        );
+        this.setNutrientSummary(summary.calories, summary.proteins, summary.fats, summary.carbs, summary.fiber, summary.alcohol);
     }
 
     private updateSummaryFromForm(): void {
@@ -687,68 +597,23 @@ export class RecipeManageComponent implements OnInit {
     }
 
     private recalculateNutrientsFromForm(): void {
-        const stepsArray = this.recipeForm.controls.steps;
-        if (!stepsArray || stepsArray.length === 0) {
-            this.setNutrientSummary(0, 0, 0, 0, 0, 0);
-            return;
-        }
-
-        let totalCalories = 0;
-        let totalProteins = 0;
-        let totalFats = 0;
-        let totalCarbs = 0;
-        let totalFiber = 0;
-        let totalAlcohol = 0;
-
-        stepsArray.controls.forEach(stepGroup => {
-            const ingredients = stepGroup.controls.ingredients;
-            ingredients.controls.forEach(ingredientGroup => {
-                const food = ingredientGroup.controls.food.value;
-                const amount = ingredientGroup.controls.amount.value;
-
-                if (!food || !amount || amount <= 0) {
-                    return;
-                }
-
-                const baseAmount = food.baseAmount || 1;
-                const multiplier = amount / baseAmount;
-
-                totalCalories += (food.caloriesPerBase ?? 0) * multiplier;
-                totalProteins += (food.proteinsPerBase ?? 0) * multiplier;
-                totalFats += (food.fatsPerBase ?? 0) * multiplier;
-                totalCarbs += (food.carbsPerBase ?? 0) * multiplier;
-                totalFiber += (food.fiberPerBase ?? 0) * multiplier;
-                totalAlcohol += (food.alcoholPerBase ?? 0) * multiplier;
-            });
-        });
-
-        this.setNutrientSummary(
-            this.roundNutrient(totalCalories),
-            this.roundNutrient(totalProteins),
-            this.roundNutrient(totalFats),
-            this.roundNutrient(totalCarbs),
-            this.roundNutrient(totalFiber),
-            this.roundNutrient(totalAlcohol),
-        );
+        const summary = this.recipeManageFacade.calculateAutoSummary(this.recipeForm.controls.steps);
+        this.setNutrientSummary(summary.calories, summary.proteins, summary.fats, summary.carbs, summary.fiber, summary.alcohol);
     }
 
     private setNutrientSummary(calories: number, proteins: number, fats: number, carbs: number, fiber: number, alcohol: number): void {
-        this.totalCalories.set(this.roundNutrient(calories));
-        this.totalFiber.set(this.roundNutrient(fiber));
-        this.totalAlcohol.set(this.roundNutrient(alcohol));
+        this.totalCalories.set(this.recipeManageFacade.roundNutritionValue(calories));
+        this.totalFiber.set(this.recipeManageFacade.roundNutritionValue(fiber));
+        this.totalAlcohol.set(this.recipeManageFacade.roundNutritionValue(alcohol));
         this.nutrientChartData.set({
-            proteins: this.roundNutrient(proteins),
-            fats: this.roundNutrient(fats),
-            carbs: this.roundNutrient(carbs),
+            proteins: this.recipeManageFacade.roundNutritionValue(proteins),
+            fats: this.recipeManageFacade.roundNutritionValue(fats),
+            carbs: this.recipeManageFacade.roundNutritionValue(carbs),
         });
 
         if (this.recipeForm.controls.calculateNutritionAutomatically.value) {
             this.syncManualControlsWithSummary();
         }
-    }
-
-    private roundNutrient(value: number): number {
-        return Math.round(value * 100) / 100;
     }
 
     private syncManualControlsWithSummary(): void {
@@ -801,29 +666,11 @@ export class RecipeManageComponent implements OnInit {
     }
 
     private fromRecipeTotal(value: number | null | undefined): number {
-        const normalized = Number(value ?? 0);
-        if (!Number.isFinite(normalized)) {
-            return 0;
-        }
-
-        if (this.nutritionScaleMode === 'recipe') {
-            return normalized;
-        }
-
-        return this.roundNutrient(normalized / this.getServingsValue());
+        return this.recipeManageFacade.fromRecipeTotal(value, this.nutritionScaleMode, this.getServingsValue());
     }
 
     private toRecipeTotal(value: number | null | undefined): number {
-        const normalized = Number(value ?? 0);
-        if (!Number.isFinite(normalized)) {
-            return 0;
-        }
-
-        if (this.nutritionScaleMode === 'recipe') {
-            return normalized;
-        }
-
-        return this.roundNutrient(normalized * this.getServingsValue());
+        return this.recipeManageFacade.toRecipeTotal(value, this.nutritionScaleMode, this.getServingsValue());
     }
 
     private convertManualNutritionControls(factor: number): void {
@@ -840,7 +687,7 @@ export class RecipeManageComponent implements OnInit {
             if (!Number.isFinite(raw)) {
                 return;
             }
-            patch[field] = this.roundNutrient(raw * factor);
+            patch[field] = this.recipeManageFacade.roundNutritionValue(raw * factor);
         });
 
         this.recipeForm.patchValue(patch, { emitEvent: false });
