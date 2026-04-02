@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, computed, inject, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { FdUiAccentSurfaceComponent } from 'fd-ui-kit/accent-surface/fd-ui-accent-surface.component';
@@ -13,8 +12,7 @@ import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input.component';
 import { PageBodyComponent } from '../../../components/shared/page-body/page-body.component';
 import { PageHeaderComponent } from '../../../components/shared/page-header/page-header.component';
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
-import { CyclesService } from '../api/cycles.service';
-import { CreateCyclePayload, CycleDay, CyclePredictions, CycleResponse, DailySymptoms } from '../models/cycle.data';
+import { CycleTrackingFacade } from '../lib/cycle-tracking.facade';
 
 @Component({
     selector: 'fd-cycle-tracking-page',
@@ -36,35 +34,17 @@ import { CreateCyclePayload, CycleDay, CyclePredictions, CycleResponse, DailySym
     templateUrl: './cycle-tracking-page.component.html',
     styleUrl: './cycle-tracking-page.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [CycleTrackingFacade],
 })
 export class CycleTrackingPageComponent implements OnInit {
-    private readonly cyclesService = inject(CyclesService);
-    private readonly fb = inject(FormBuilder);
-    private readonly destroyRef = inject(DestroyRef);
+    private readonly facade = inject(CycleTrackingFacade);
 
-    public readonly isLoading = signal(false);
-    public readonly isSavingCycle = signal(false);
-    public readonly isSavingDay = signal(false);
-    public readonly cycle = signal<CycleResponse | null>(null);
-
-    public readonly startCycleForm = this.fb.group({
-        startDate: new FormControl<string | null>(this.formatDateInput(new Date()), { validators: [Validators.required] }),
-        averageLength: new FormControl<number | null>(28, { validators: [Validators.min(18), Validators.max(60)] }),
-        lutealLength: new FormControl<number | null>(14, { validators: [Validators.min(8), Validators.max(18)] }),
-    });
-
-    public readonly dayForm = this.fb.group({
-        date: new FormControl<string | null>(this.formatDateInput(new Date()), { validators: [Validators.required] }),
-        isPeriod: new FormControl<boolean>(false),
-        pain: new FormControl<number>(0),
-        mood: new FormControl<number>(0),
-        edema: new FormControl<number>(0),
-        headache: new FormControl<number>(0),
-        energy: new FormControl<number>(0),
-        sleepQuality: new FormControl<number>(0),
-        libido: new FormControl<number>(0),
-        notes: new FormControl<string | null>(null),
-    });
+    public readonly isLoading = this.facade.isLoading;
+    public readonly isSavingCycle = this.facade.isSavingCycle;
+    public readonly isSavingDay = this.facade.isSavingDay;
+    public readonly cycle = this.facade.cycle;
+    public readonly startCycleForm = this.facade.startCycleForm;
+    public readonly dayForm = this.facade.dayForm;
 
     public readonly symptomFields = [
         { key: 'pain', labelKey: 'CYCLE_TRACKING.SYMPTOM_PAIN' },
@@ -76,133 +56,19 @@ export class CycleTrackingPageComponent implements OnInit {
         { key: 'libido', labelKey: 'CYCLE_TRACKING.SYMPTOM_LIBIDO' },
     ] as const;
 
-    public readonly predictions = computed<CyclePredictions | null>(() => this.cycle()?.predictions ?? null);
-    public readonly days = computed<CycleDay[]>(() => {
-        const list = this.cycle()?.days ?? [];
-        return [...list].sort((a, b) => b.date.localeCompare(a.date));
-    });
-    public readonly currentCycleTitle = computed(() => {
-        const cycle = this.cycle();
-        return cycle ? 'CYCLE_TRACKING.CURRENT_CYCLE' : 'CYCLE_TRACKING.NO_CYCLE';
-    });
+    public readonly predictions = this.facade.predictions;
+    public readonly days = this.facade.days;
+    public readonly currentCycleTitle = this.facade.currentCycleTitle;
 
     public ngOnInit(): void {
-        this.loadCycle();
+        this.facade.initialize();
     }
 
     public startCycle(): void {
-        if (this.startCycleForm.invalid) {
-            this.startCycleForm.markAllAsTouched();
-            return;
-        }
-
-        const formValue = this.startCycleForm.value;
-        if (!formValue.startDate) {
-            return;
-        }
-
-        const startDate = new Date(formValue.startDate);
-        const payload: CreateCyclePayload = {
-            startDate: startDate.toISOString(),
-            averageLength: formValue.averageLength ?? undefined,
-            lutealLength: formValue.lutealLength ?? undefined,
-        };
-
-        this.isSavingCycle.set(true);
-        this.cyclesService
-            .create(payload)
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: cycle => {
-                    this.cycle.set(cycle);
-                    this.isSavingCycle.set(false);
-                },
-                error: () => this.isSavingCycle.set(false),
-            });
+        this.facade.startCycle();
     }
 
     public saveDay(): void {
-        if (!this.cycle()?.id) {
-            return;
-        }
-
-        if (this.dayForm.invalid) {
-            this.dayForm.markAllAsTouched();
-            return;
-        }
-
-        const formValue = this.dayForm.value;
-        const date = formValue.date;
-        if (!date) {
-            return;
-        }
-
-        const entryDate = new Date(date);
-        const symptoms: DailySymptoms = {
-            pain: this.clampSymptom(formValue.pain),
-            mood: this.clampSymptom(formValue.mood),
-            edema: this.clampSymptom(formValue.edema),
-            headache: this.clampSymptom(formValue.headache),
-            energy: this.clampSymptom(formValue.energy),
-            sleepQuality: this.clampSymptom(formValue.sleepQuality),
-            libido: this.clampSymptom(formValue.libido),
-        };
-
-        this.isSavingDay.set(true);
-        this.cyclesService
-            .upsertDay(this.cycle()!.id, {
-                date: entryDate.toISOString(),
-                isPeriod: !!formValue.isPeriod,
-                symptoms,
-                notes: formValue.notes ?? undefined,
-            })
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: day => {
-                    const current = this.cycle();
-                    if (!current) {
-                        return;
-                    }
-
-                    const filtered = current.days.filter(d => d.id !== day.id && d.date !== day.date);
-                    this.cycle.set({
-                        ...current,
-                        days: [...filtered, day],
-                    });
-                    this.isSavingDay.set(false);
-                },
-                error: () => this.isSavingDay.set(false),
-            });
-    }
-
-    private loadCycle(): void {
-        this.isLoading.set(true);
-        this.cyclesService
-            .getCurrent()
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: cycle => {
-                    this.cycle.set(cycle);
-                    this.isLoading.set(false);
-                },
-                error: () => {
-                    this.isLoading.set(false);
-                },
-            });
-    }
-
-    private clampSymptom(value: number | null | undefined): number {
-        if (value === null || value === undefined || Number.isNaN(value)) {
-            return 0;
-        }
-
-        return Math.min(9, Math.max(0, value));
-    }
-
-    private formatDateInput(date: Date): string {
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const day = String(date.getDate()).padStart(2, '0');
-        return `${year}-${month}-${day}`;
+        this.facade.saveDay();
     }
 }
