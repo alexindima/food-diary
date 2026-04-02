@@ -196,7 +196,7 @@ jobs:
             docker compose pull
             docker pull ghcr.io/alexindima/food-diary/client:latest
 
-            docker compose --profile tools run --rm initializer update
+            docker compose --profile backend run --rm db-init update
 
             docker compose up -d
 
