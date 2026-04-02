@@ -3,6 +3,7 @@ import path from 'node:path';
 
 const rootDir = process.cwd();
 const i18nDir = path.join(rootDir, 'assets', 'i18n');
+const sourceDirs = [path.join(rootDir, 'src'), path.join(rootDir, 'projects', 'fooddiary-admin', 'src')];
 const localeFiles = {
     en: path.join(i18nDir, 'en.json'),
     ru: path.join(i18nDir, 'ru.json'),
@@ -20,8 +21,10 @@ const issues = [];
 const locales = Object.fromEntries(
     Object.entries(localeFiles).map(([locale, filePath]) => [locale, JSON.parse(fs.readFileSync(filePath, 'utf8'))]),
 );
+const availableKeys = new Set(flattenKeys(locales.en));
 
 compareNodes('', locales.en, locales.ru);
+checkRuntimeTranslationKeys();
 
 if (issues.length > 0) {
     console.error('i18n check failed:');
@@ -123,4 +126,76 @@ function sameStringSet(left, right) {
     }
 
     return true;
+}
+
+function flattenKeys(node, currentPath = '') {
+    if (!isPlainObject(node)) {
+        return currentPath ? [currentPath] : [];
+    }
+
+    return Object.entries(node).flatMap(([key, value]) => flattenKeys(value, joinPath(currentPath, key)));
+}
+
+function checkRuntimeTranslationKeys() {
+    const files = sourceDirs.flatMap(collectSourceFiles);
+
+    for (const filePath of files) {
+        const content = fs.readFileSync(filePath, 'utf8');
+        const keys = new Set([
+            ...extractPipeKeys(content),
+            ...extractTranslateServiceKeys(content),
+        ]);
+
+        for (const key of keys) {
+            if (!availableKeys.has(key)) {
+                issues.push(`missing runtime key: ${key} referenced in ${path.relative(rootDir, filePath)}`);
+            }
+        }
+    }
+}
+
+function collectSourceFiles(directoryPath) {
+    if (!fs.existsSync(directoryPath)) {
+        return [];
+    }
+
+    const entries = fs.readdirSync(directoryPath, { withFileTypes: true });
+    const files = [];
+
+    for (const entry of entries) {
+        const fullPath = path.join(directoryPath, entry.name);
+        if (entry.isDirectory()) {
+            files.push(...collectSourceFiles(fullPath));
+            continue;
+        }
+
+        if (entry.isFile() && (fullPath.endsWith('.ts') || fullPath.endsWith('.html')) && !fullPath.endsWith('.spec.ts')) {
+            files.push(fullPath);
+        }
+    }
+
+    return files;
+}
+
+function extractPipeKeys(content) {
+    const keys = [];
+    const pattern = /(['"`])([A-Za-z0-9][A-Za-z0-9_.-]*[A-Za-z0-9])\1\s*\|\s*translate\b/gu;
+
+    for (const match of content.matchAll(pattern)) {
+        keys.push(match[2]);
+    }
+
+    return keys;
+}
+
+function extractTranslateServiceKeys(content) {
+    const keys = [];
+    const pattern =
+        /\b(?:this\.)?[A-Za-z_$]*translate[A-Za-z0-9_$]*\.(?:instant|get|stream)\(\s*(['"`])([A-Za-z0-9][A-Za-z0-9_.-]*[A-Za-z0-9])\1\s*[,)]/giu;
+
+    for (const match of content.matchAll(pattern)) {
+        keys.push(match[2]);
+    }
+
+    return keys;
 }

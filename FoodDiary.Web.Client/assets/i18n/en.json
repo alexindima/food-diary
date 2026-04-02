@@ -17,7 +17,11 @@
         "UNKNOWN": "Unknown error"
     },
     "COMMON": {
+        "ADD": "Add",
         "CANCEL": "Cancel",
+        "CLEAR": "Clear",
+        "CLOSE": "Close",
+        "DELETE": "Delete",
         "SAVE": "Save",
         "CONFIRM": "Confirm"
     },
@@ -408,7 +412,8 @@
         "GRAMS": "g",
         "KCAL": "kcal",
         "DELETE_ERROR": "Unable to delete the product. Please try again.",
-        "SEARCH_LABEL": "Search"
+        "SEARCH_LABEL": "Search",
+        "SCAN_BARCODE": "Scan barcode"
     },
     "PRODUCT_CARD": {
         "ADD_TO_CONSUMPTION": "Add to meal",
@@ -453,6 +458,7 @@
         "CUSTOM_RANGE_PLACEHOLDER": "Select dates",
         "CUSTOM_RANGE_FROM_LABEL": "From",
         "CUSTOM_RANGE_TO_LABEL": "To",
+        "GRAMS": "g",
         "NO_DATA": "Add more entries to see data for this period.",
         "LOADING": "Loading statistics..."
     },
@@ -510,7 +516,9 @@
         "ADDED_RECIPE": "Recipe added to draft",
         "SAVE_SUCCESS": "Meal saved",
         "SAVE_ERROR": "Failed to save meal",
-        "PREVIEW_EMPTY": "Add products or recipes — they will appear here"
+        "PREVIEW_EMPTY": "Add products or recipes — they will appear here",
+        "CLEAR": "Clear draft",
+        "REMOVE_ITEM": "Remove item"
     },
     "RECIPE_BADGE": {
         "MY": "My recipe",
@@ -1183,6 +1191,7 @@
         "ADD_ITEM_CATEGORY_PLACEHOLDER": "e.g. Dairy",
         "ADD_ITEM_BUTTON": "Add item",
         "EMPTY": "Add products to build your list",
+        "REMOVE_ITEM": "Remove item",
         "LOAD_ERROR": "Failed to load shopping list.",
         "CREATE_ERROR": "Failed to create shopping list.",
         "DELETE_ERROR": "Failed to delete shopping list.",
@@ -1418,6 +1427,7 @@
         "NOTES": "Notes",
         "NOTES_PLACEHOLDER": "Optional notes for this day",
         "SAVE_DAY": "Save day",
+        "STARTED": "Started",
         "DAYS_TITLE": "Logged days",
         "NO_DAYS": "No days logged yet.",
         "BADGE_PERIOD": "Period",
