@@ -462,7 +462,8 @@ Status update:
 - backend performance baseline work started
 - PostgreSQL-backed endpoint latency budgets now cover `auth.refresh`, `GET /products`, `GET /recipes`, `GET /consumptions`, and `POST /images/upload-url`
 - PostgreSQL-backed explain-plan guards now verify composite index usage for the main product, recipe, and meal paging paths
-- next backend perf step is search-path review and a decision on future trigram-backed search
+- product and recipe search now explicitly use a `pg_trgm`-backed `ILIKE` strategy
+- next backend perf step is deciding whether broader OR-predicate search guards are worth the added test complexity
 
 ## Definition Of "Very Good"
 

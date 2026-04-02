@@ -218,6 +218,7 @@ Current tasks to execute first:
 - added PostgreSQL-backed endpoint latency baselines for `auth.refresh`, `products`, `recipes`, and `images.upload-url`
 - expanded PostgreSQL-backed endpoint latency baselines to include `consumptions` meal-list paging
 - added explain-plan guards for product, recipe, and meal paging indexes
+- adopted `pg_trgm`-backed search indexing for product and recipe `ILIKE` paths
 
 ### Frontend progress completed on 2026-04-02
 
@@ -250,4 +251,5 @@ Current status:
 - repository-level latency budgets exist for product and recipe paging
 - endpoint-level PostgreSQL baselines now exist for `auth.refresh`, `GET /products`, `GET /recipes`, `GET /consumptions`, and `POST /images/upload-url`
 - explain-plan guards now verify composite index usage for product, recipe, and meal paging
-- next backend perf task is search-path review, especially whether `%term%` should stay on current strategy or move toward trigram-backed search
+- product and recipe search now use the chosen `pg_trgm`-backed `ILIKE` strategy
+- next backend perf task is deciding whether the full OR-based search predicates need broader explain guards or whether this baseline is sufficient for now

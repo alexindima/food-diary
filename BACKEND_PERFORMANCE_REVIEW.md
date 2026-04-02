@@ -39,10 +39,8 @@ Both sort by `CreatedOnUtc` after filtering by ownership and public visibility, 
 
 ## Remaining Gaps
 
-1. No formal latency budgets yet for critical API endpoints.
-2. No automated `EXPLAIN ANALYZE` workflow for high-risk SQL paths.
-3. Search still uses `%term%` semantics; for large product and recipe catalogs, PostgreSQL trigram indexes or dedicated search should be considered.
-4. No load-test baseline yet for meal, product, and recipe list endpoints.
+1. No load-test baseline yet for meal, product, and recipe list endpoints.
+2. Search still uses `%term%` semantics, so future ranking/relevance needs may eventually justify a dedicated search layer.
 
 ## First Regression Gate Added In B12
 
@@ -131,6 +129,10 @@ We now also protect the expected index usage for the hottest paging paths with P
   expects `IX_Recipes_UserId_CreatedOnUtc`
 - `QueryPlanIntegrationTests.MealPagingQuery_WithDateRange_UsesCompositeOwnershipDateIndex`
   expects `IX_Meals_UserId_Date_CreatedOnUtc`
+- `QueryPlanIntegrationTests.ProductSearchQuery_UsesTrigramNameIndex`
+  expects `IX_Products_Name`
+- `QueryPlanIntegrationTests.RecipeSearchQuery_UsesTrigramNameIndex`
+  expects `IX_Recipes_Name`
 
 These tests are intentionally lower-level than the endpoint latency gates:
 
@@ -138,7 +140,15 @@ These tests are intentionally lower-level than the endpoint latency gates:
 - they make index regressions easier to diagnose than raw latency threshold failures
 - they should be updated only when the query shape changes intentionally and the new plan is reviewed
 
+## Search Strategy Decision
+
+For now, the chosen strategy is:
+
+- keep escaped PostgreSQL `ILIKE '%term%'` semantics
+- back search with `pg_trgm` and GIN trigram indexes on the primary searchable product and recipe text columns
+- defer dedicated search redesign unless catalog growth or ranking requirements make trigram-backed `ILIKE` insufficient
+
 ## Next Perf Tasks
 
-- Decide whether product and recipe search should move to trigram-backed search when catalog size grows.
-- consider adding similar explain guards for search-driven `%term%` paths once search strategy changes
+- add a wider explain review for the full repository OR-based search predicates if those predicates become materially more complex
+- consider dedicated search or ranking only if trigram-backed `ILIKE` stops meeting latency or relevance expectations

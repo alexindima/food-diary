@@ -33,6 +33,15 @@ internal sealed class RecipeConfiguration : IEntityTypeConfiguration<Recipe> {
 
         entity.HasIndex(e => new { e.UserId, e.CreatedOnUtc });
         entity.HasIndex(e => new { e.Visibility, e.CreatedOnUtc });
+        entity.HasIndex(e => e.Name)
+            .HasMethod("gin")
+            .HasOperators("gin_trgm_ops");
+        entity.HasIndex(e => e.Category)
+            .HasMethod("gin")
+            .HasOperators("gin_trgm_ops");
+        entity.HasIndex(e => e.Description)
+            .HasMethod("gin")
+            .HasOperators("gin_trgm_ops");
 
         entity.HasMany(e => e.MealItems)
             .WithOne(mi => mi.Recipe)
