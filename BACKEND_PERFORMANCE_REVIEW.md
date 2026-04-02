@@ -121,7 +121,24 @@ These are intentionally smoke-sized performance baselines:
 - they use warm-up then second measured execution to reduce one-time cold-start noise
 - they should be treated as regression tripwires, not microbenchmark truth
 
+## Explain Plan Guards Added
+
+We now also protect the expected index usage for the hottest paging paths with PostgreSQL-backed `EXPLAIN (ANALYZE, BUFFERS, FORMAT JSON)` tests:
+
+- `QueryPlanIntegrationTests.ProductPagingQuery_UsesCompositeOwnershipIndex`
+  expects `IX_Products_UserId_CreatedOnUtc`
+- `QueryPlanIntegrationTests.RecipePagingQuery_UsesCompositeOwnershipIndex`
+  expects `IX_Recipes_UserId_CreatedOnUtc`
+- `QueryPlanIntegrationTests.MealPagingQuery_WithDateRange_UsesCompositeOwnershipDateIndex`
+  expects `IX_Meals_UserId_Date_CreatedOnUtc`
+
+These tests are intentionally lower-level than the endpoint latency gates:
+
+- they focus on query-plan shape instead of end-to-end request time
+- they make index regressions easier to diagnose than raw latency threshold failures
+- they should be updated only when the query shape changes intentionally and the new plan is reviewed
+
 ## Next Perf Tasks
 
-- Capture `EXPLAIN ANALYZE` for the heaviest product, recipe, and meal queries on seeded data.
 - Decide whether product and recipe search should move to trigram-backed search when catalog size grows.
+- consider adding similar explain guards for search-driven `%term%` paths once search strategy changes

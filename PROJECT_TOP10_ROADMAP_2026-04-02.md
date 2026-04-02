@@ -461,7 +461,8 @@ Status update:
 - production frontend build now passes without bundle budget warning
 - backend performance baseline work started
 - PostgreSQL-backed endpoint latency budgets now cover `auth.refresh`, `GET /products`, `GET /recipes`, `GET /consumptions`, and `POST /images/upload-url`
-- next backend perf step is `EXPLAIN ANALYZE` capture for the heaviest query paths
+- PostgreSQL-backed explain-plan guards now verify composite index usage for the main product, recipe, and meal paging paths
+- next backend perf step is search-path review and a decision on future trigram-backed search
 
 ## Definition Of "Very Good"
 

@@ -217,6 +217,7 @@ Current tasks to execute first:
 - centralized authentication user access policy for core auth entry points
 - added PostgreSQL-backed endpoint latency baselines for `auth.refresh`, `products`, `recipes`, and `images.upload-url`
 - expanded PostgreSQL-backed endpoint latency baselines to include `consumptions` meal-list paging
+- added explain-plan guards for product, recipe, and meal paging indexes
 
 ### Frontend progress completed on 2026-04-02
 
@@ -248,4 +249,5 @@ Current status:
 - in progress
 - repository-level latency budgets exist for product and recipe paging
 - endpoint-level PostgreSQL baselines now exist for `auth.refresh`, `GET /products`, `GET /recipes`, `GET /consumptions`, and `POST /images/upload-url`
-- next backend perf task is `EXPLAIN ANALYZE` capture for the heaviest product, recipe, and meal queries
+- explain-plan guards now verify composite index usage for product, recipe, and meal paging
+- next backend perf task is search-path review, especially whether `%term%` should stay on current strategy or move toward trigram-backed search
