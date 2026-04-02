@@ -213,7 +213,10 @@ jobs:
 
             cp /etc/fooddiary/fooddiary.env .env
 
-            docker compose pull
+            docker compose --profile backend --profile full pull
+            docker pull ghcr.io/alexindima/food-diary/api:latest
+            docker pull ghcr.io/alexindima/food-diary/initializer:latest
+            docker pull ghcr.io/alexindima/food-diary/telegram-bot:latest
             docker pull ghcr.io/alexindima/food-diary/client:latest
 
             docker compose --profile backend run --rm db-init update
