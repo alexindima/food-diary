@@ -186,8 +186,11 @@ jobs:
         id: deploy_server
         run: |
           SSH_CMD="ssh -T -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no root@${{ env.SERVER_IP }}"
+          SCP_CMD="scp -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no"
 
           echo "${{ secrets.GITHUB_TOKEN }}" | $SSH_CMD "docker login ghcr.io -u ${{ github.actor }} --password-stdin"
+          $SSH_CMD "mkdir -p /opt/fooddiary"
+          $SCP_CMD docker-compose.yml root@${{ env.SERVER_IP }}:/opt/fooddiary/docker-compose.yml
 
           $SSH_CMD << 'DEPLOY_EOF'
             set -e
