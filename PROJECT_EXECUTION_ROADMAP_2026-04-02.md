@@ -197,9 +197,11 @@ Current active phase: Phase 4
 
 Current tasks to execute first:
 
-1. Decide next major backend domain slice after lifecycle/auth improvements
-2. Choose whether to continue backend policy maturity or switch to frontend observability
-3. Keep future work grouped into one major block at a time
+1. Continue backend `User` / account domain restructuring
+2. Expand lifecycle policy outside core auth entry points
+3. Add an ops runbook for server env, deploy, and recovery steps
+4. Add frontend observability baseline
+5. Apply focused UX polish on the most-used screens
 
 ## Progress Snapshot
 
@@ -242,14 +244,49 @@ Done when:
 Done when:
 - client exceptions and route/API metrics have a defined collection path
 
-3. Backend performance baselines
+3. UX and product polish
 Done when:
-- hot endpoints and their latency targets are documented and tested
+- selected high-traffic screens have consistent loading, empty, and mobile states
 
 Current status:
-- in progress
-- repository-level latency budgets exist for product and recipe paging
-- endpoint-level PostgreSQL baselines now exist for `auth.refresh`, `GET /products`, `GET /recipes`, `GET /consumptions`, and `POST /images/upload-url`
-- explain-plan guards now verify composite index usage for product, recipe, and meal paging
-- product and recipe search now use the chosen `pg_trgm`-backed `ILIKE` strategy
-- next backend perf task is deciding whether the full OR-based search predicates need broader explain guards or whether this baseline is sufficient for now
+- backend performance baseline block is complete enough for now
+- current highest-value open engineering work is backend `User` / lifecycle maturity
+- next product-facing leverage point is frontend observability plus targeted UX polish
+
+## Next 5 Tasks
+
+### 1. Continue `User` / account domain restructuring
+
+Done when:
+- next internal slice is extracted from `User`
+- security/auth state is further isolated from profile/preferences behavior
+- application and domain tests cover the changed boundaries
+
+### 2. Expand lifecycle policy outside auth
+
+Done when:
+- deleted or inactive user behavior is reviewed in non-auth user-dependent flows
+- forbidden transitions are explicit in handlers/services where needed
+- tests protect the chosen behavior
+
+### 3. Add deploy and recovery runbook
+
+Done when:
+- server env location is documented
+- deploy sequence is documented
+- postgres / image / auth failure recovery steps are documented
+- post-deploy verification commands are documented
+
+### 4. Add frontend observability baseline
+
+Done when:
+- client exceptions have a defined reporting path
+- route timings and API failure rates are measurable
+- a minimal web-vitals or RUM baseline is chosen
+
+### 5. Apply focused UX polish
+
+Done when:
+- 2 to 3 main screens get consistent loading, empty, and mobile states
+- dialog and form messaging is aligned
+- changes are intentionally limited to the highest-traffic product paths

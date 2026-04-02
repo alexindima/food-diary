@@ -476,3 +476,30 @@ The project can be considered "very good" when:
 - time and delete policies are explicit and enforced
 - observability exists on both backend and frontend
 - UX consistency is strong on desktop and mobile
+
+## Current Next 5
+
+1. Continue `User` / account domain restructuring
+Why now:
+- this remains the main concentrated backend complexity
+- the rest of the backend is already much more mature than this part
+
+2. Expand lifecycle policy outside auth
+Why now:
+- auth entry points are already covered
+- the next step is making deleted/inactive-user behavior equally explicit in the rest of the application
+
+3. Add a deploy and recovery runbook
+Why now:
+- deploy and docker reliability were improved significantly
+- documenting the real server/env/deploy path now will reduce future operational drift
+
+4. Add frontend observability baseline
+Why now:
+- frontend architecture and test maturity are much stronger now
+- the next missing discipline is production visibility, not another large refactor
+
+5. Apply focused UX polish on high-traffic screens
+Why now:
+- the structural cleanup already happened
+- the highest remaining frontend leverage is product consistency and perceived quality
