@@ -1,6 +1,7 @@
 namespace FoodDiary.Domain.ValueObjects;
 
-public readonly record struct UserCredentialState(
+public readonly record struct UserSecurityState(
+    string Password,
     string? RefreshToken,
     bool IsEmailConfirmed,
     string? EmailConfirmationTokenHash,
@@ -10,8 +11,9 @@ public readonly record struct UserCredentialState(
     DateTime? PasswordResetTokenExpiresAtUtc,
     DateTime? PasswordResetSentAtUtc,
     DateTime? LastLoginAtUtc) {
-    public static UserCredentialState CreateInitial() {
-        return new UserCredentialState(
+    public static UserSecurityState CreateInitial(string passwordHash) {
+        return new UserSecurityState(
+            Password: passwordHash,
             RefreshToken: null,
             IsEmailConfirmed: false,
             EmailConfirmationTokenHash: null,
@@ -23,14 +25,18 @@ public readonly record struct UserCredentialState(
             LastLoginAtUtc: null);
     }
 
-    public UserCredentialState WithRefreshToken(string? refreshToken, DateTime nowUtc) {
+    public UserSecurityState WithPassword(string passwordHash) {
+        return this with { Password = passwordHash };
+    }
+
+    public UserSecurityState WithRefreshToken(string? refreshToken, DateTime nowUtc) {
         return this with {
             RefreshToken = refreshToken,
             LastLoginAtUtc = refreshToken is null ? LastLoginAtUtc : nowUtc
         };
     }
 
-    public UserCredentialState WithEmailConfirmationToken(string tokenHash, DateTime expiresAtUtc, DateTime nowUtc) {
+    public UserSecurityState WithEmailConfirmationToken(string tokenHash, DateTime expiresAtUtc, DateTime nowUtc) {
         return this with {
             EmailConfirmationTokenHash = tokenHash,
             EmailConfirmationTokenExpiresAtUtc = expiresAtUtc,
@@ -38,7 +44,7 @@ public readonly record struct UserCredentialState(
         };
     }
 
-    public UserCredentialState AsEmailConfirmed(bool isConfirmed) {
+    public UserSecurityState AsEmailConfirmed(bool isConfirmed) {
         return this with {
             IsEmailConfirmed = isConfirmed,
             EmailConfirmationTokenHash = null,
@@ -47,7 +53,7 @@ public readonly record struct UserCredentialState(
         };
     }
 
-    public UserCredentialState WithPasswordResetToken(string tokenHash, DateTime expiresAtUtc, DateTime nowUtc) {
+    public UserSecurityState WithPasswordResetToken(string tokenHash, DateTime expiresAtUtc, DateTime nowUtc) {
         return this with {
             PasswordResetTokenHash = tokenHash,
             PasswordResetTokenExpiresAtUtc = expiresAtUtc,
@@ -55,7 +61,7 @@ public readonly record struct UserCredentialState(
         };
     }
 
-    public UserCredentialState WithoutPasswordResetToken() {
+    public UserSecurityState WithoutPasswordResetToken() {
         return this with {
             PasswordResetTokenHash = null,
             PasswordResetTokenExpiresAtUtc = null,

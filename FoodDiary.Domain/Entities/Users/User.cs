@@ -88,7 +88,7 @@ public sealed partial class User : AggregateRoot<UserId> {
             Password = normalizedPassword,
             IsEmailConfirmed = false
         };
-        user.ApplyCredentialState(UserCredentialState.CreateInitial());
+        user.ApplySecurityState(UserSecurityState.CreateInitial(normalizedPassword));
         user.ApplyProfileState(UserProfileState.CreateInitial());
         user.ApplyGoalState(UserGoalState.CreateInitial());
         user.ApplyAccountState(UserAccountState.CreateInitial(DefaultAiInputTokenLimit, DefaultAiOutputTokenLimit));
@@ -237,8 +237,9 @@ public sealed partial class User : AggregateRoot<UserId> {
         Language = state.Language;
     }
 
-    private UserCredentialState GetCredentialState() {
-        return new UserCredentialState(
+    private UserSecurityState GetSecurityState() {
+        return new UserSecurityState(
+            Password,
             RefreshToken,
             IsEmailConfirmed,
             EmailConfirmationTokenHash,
@@ -250,7 +251,8 @@ public sealed partial class User : AggregateRoot<UserId> {
             LastLoginAtUtc);
     }
 
-    private void ApplyCredentialState(UserCredentialState state) {
+    private void ApplySecurityState(UserSecurityState state) {
+        Password = state.Password;
         RefreshToken = state.RefreshToken;
         IsEmailConfirmed = state.IsEmailConfirmed;
         EmailConfirmationTokenHash = state.EmailConfirmationTokenHash;

@@ -7,11 +7,11 @@ public sealed partial class User {
         EnsureNotDeleted();
 
         var changed = false;
-        var credentialState = GetCredentialState();
+        var securityState = GetSecurityState();
         var profileState = GetProfileState();
 
-        if (update.IsEmailConfirmed.HasValue && credentialState.IsEmailConfirmed != update.IsEmailConfirmed.Value) {
-            credentialState = credentialState.AsEmailConfirmed(update.IsEmailConfirmed.Value);
+        if (update.IsEmailConfirmed.HasValue && securityState.IsEmailConfirmed != update.IsEmailConfirmed.Value) {
+            securityState = securityState.AsEmailConfirmed(update.IsEmailConfirmed.Value);
             changed = true;
         }
 
@@ -32,7 +32,7 @@ public sealed partial class User {
             return;
         }
 
-        ApplyCredentialState(credentialState);
+        ApplySecurityState(securityState);
         ApplyProfileState(profileState);
         SetModified();
     }

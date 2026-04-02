@@ -5,8 +5,10 @@ namespace FoodDiary.Domain.Entities.Users;
 public sealed partial class User {
     public void CompletePasswordReset(string hashedPassword) {
         EnsureNotDeleted();
-        Password = NormalizeRequiredPasswordHash(hashedPassword);
-        ApplyCredentialState(GetCredentialState().WithoutPasswordResetToken());
+        var nextState = GetSecurityState()
+            .WithPassword(NormalizeRequiredPasswordHash(hashedPassword))
+            .WithoutPasswordResetToken();
+        ApplySecurityState(nextState);
         SetModified();
     }
 
@@ -18,15 +20,15 @@ public sealed partial class User {
         EnsureNotDeleted();
         var normalizedRefreshToken = NormalizeOptionalToken(update.RefreshToken);
         var effectiveChangedAtUtc = NormalizeOptionalAuditTimestamp(update.ChangedAtUtc, nameof(update.ChangedAtUtc));
-        var nextState = GetCredentialState().WithRefreshToken(normalizedRefreshToken, effectiveChangedAtUtc);
-        ApplyCredentialState(nextState);
+        var nextState = GetSecurityState().WithRefreshToken(normalizedRefreshToken, effectiveChangedAtUtc);
+        ApplySecurityState(nextState);
 
         SetModified(effectiveChangedAtUtc);
     }
 
     public void UpdatePassword(string hashedPassword) {
         EnsureNotDeleted();
-        Password = NormalizeRequiredPasswordHash(hashedPassword);
+        ApplySecurityState(GetSecurityState().WithPassword(NormalizeRequiredPasswordHash(hashedPassword)));
         SetModified();
     }
 
@@ -40,8 +42,8 @@ public sealed partial class User {
         var normalizedExpiresAtUtc = NormalizeUtcTimestamp(issue.ExpiresAtUtc, nameof(issue.ExpiresAtUtc));
         var normalizedIssuedAtUtc = NormalizeOptionalAuditTimestamp(issue.IssuedAtUtc, nameof(issue.IssuedAtUtc));
         EnsureFutureUtc(normalizedExpiresAtUtc, nameof(issue.ExpiresAtUtc));
-        var nextState = GetCredentialState().WithEmailConfirmationToken(normalizedTokenHash, normalizedExpiresAtUtc, normalizedIssuedAtUtc);
-        ApplyCredentialState(nextState);
+        var nextState = GetSecurityState().WithEmailConfirmationToken(normalizedTokenHash, normalizedExpiresAtUtc, normalizedIssuedAtUtc);
+        ApplySecurityState(nextState);
         SetModified(normalizedIssuedAtUtc);
     }
 
@@ -51,7 +53,7 @@ public sealed partial class User {
 
     public void SetEmailConfirmed(bool isConfirmed) {
         EnsureNotDeleted();
-        ApplyCredentialState(GetCredentialState().AsEmailConfirmed(isConfirmed));
+        ApplySecurityState(GetSecurityState().AsEmailConfirmed(isConfirmed));
         SetModified();
     }
 
@@ -65,8 +67,8 @@ public sealed partial class User {
         var normalizedExpiresAtUtc = NormalizeUtcTimestamp(issue.ExpiresAtUtc, nameof(issue.ExpiresAtUtc));
         var normalizedIssuedAtUtc = NormalizeOptionalAuditTimestamp(issue.IssuedAtUtc, nameof(issue.IssuedAtUtc));
         EnsureFutureUtc(normalizedExpiresAtUtc, nameof(issue.ExpiresAtUtc));
-        var nextState = GetCredentialState().WithPasswordResetToken(normalizedTokenHash, normalizedExpiresAtUtc, normalizedIssuedAtUtc);
-        ApplyCredentialState(nextState);
+        var nextState = GetSecurityState().WithPasswordResetToken(normalizedTokenHash, normalizedExpiresAtUtc, normalizedIssuedAtUtc);
+        ApplySecurityState(nextState);
         SetModified(normalizedIssuedAtUtc);
     }
 }
