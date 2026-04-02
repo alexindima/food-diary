@@ -193,11 +193,51 @@ Done when:
 
 ## Current Recommended Focus
 
-Current active phase: Phase 1
+Current active phase: Phase 4
 
 Current tasks to execute first:
 
-1. Fix realtime hub URL
-2. Register global error handler
-3. Remove high-signal debug logging
+1. Decide next major backend domain slice after lifecycle/auth improvements
+2. Choose whether to continue backend policy maturity or switch to frontend observability
+3. Keep future work grouped into one major block at a time
 
+## Progress Snapshot
+
+### Completed on 2026-04-02
+
+- Phase 1: Frontend Reliability
+- Phase 2: Frontend Test Maturity baseline
+- Phase 3: Frontend Structure Cleanup core screens
+
+### Backend progress completed on 2026-04-02
+
+- unified application time provider with domain time
+- extracted `UserAccountState` from the `User` aggregate internals
+- enforced lifecycle checks in refresh-token flow
+- centralized authentication user access policy for core auth entry points
+
+### Frontend progress completed on 2026-04-02
+
+- env-aware global error handling in main app and admin app
+- shared frontend API error policy cleanup
+- admin feature tests baseline
+- admin smoke E2E scaffold
+- i18n consistency check wired into hooks and CI
+- facade cleanup for dashboard, shopping lists, products, meals, statistics, profile, goals, weight history, waist history, cycle tracking, recipes
+- initial bundle reduced below budget threshold
+
+## Suggested Next Decision
+
+Pick one of these and keep it isolated:
+
+1. Backend domain continuation
+Done when:
+- next `User`-related or account-lifecycle slice is completed and tested
+
+2. Frontend observability
+Done when:
+- client exceptions and route/API metrics have a defined collection path
+
+3. Backend performance baselines
+Done when:
+- hot endpoints and their latency targets are documented and tested

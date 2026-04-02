@@ -415,11 +415,25 @@ References:
 2. Register and standardize global frontend error handling
 3. Remove debug logging and unify error policy
 
+Status update:
+
+- Completed on 2026-04-02
+- SignalR verification hub URL fixed
+- global error handling wired with environment-aware behavior
+- scattered frontend error logging reduced and standardized
+
 ### Phase 2: Frontend quality maturity
 
 1. Add admin tests
 2. Add browser E2E smoke tests
 3. Start reducing heavy page orchestration
+
+Status update:
+
+- Mostly completed on 2026-04-02
+- admin feature tests added
+- smoke E2E scaffold added for admin flows
+- localization consistency checks added and wired into hooks/CI
 
 ### Phase 3: Backend domain and policy maturity
 
@@ -427,11 +441,24 @@ References:
 2. Finalize one time policy
 3. Formalize soft-delete and auth/security state rules
 
+Status update:
+
+- Started on 2026-04-02
+- application time provider unified with domain time
+- `User` internally restructured further via `UserAccountState`
+- authentication lifecycle policy centralized across key auth entry points
+
 ### Phase 4: Excellence layer
 
 1. Add stronger frontend observability
 2. Add performance budgets and baselines
 3. Raise UX polish and operational maturity
+
+Status update:
+
+- Frontend performance work already started ahead of phase ordering
+- initial frontend bundle reduced from about `1.43 MB` to `977.58 kB`
+- production frontend build now passes without bundle budget warning
 
 ## Definition Of "Very Good"
 
