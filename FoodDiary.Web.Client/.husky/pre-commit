@@ -6,6 +6,7 @@ HAS_SCSS=$(echo "$STAGED_FILES" | grep -c '\.scss$' || true)
 HAS_FRONTEND=$(echo "$STAGED_FILES" | grep -c '^FoodDiary\.Web\.Client/' || true)
 HAS_I18N=$(echo "$STAGED_FILES" | grep -Ec '^FoodDiary\.Web\.Client/(assets/i18n/.*\.json|scripts/check-i18n\.mjs|package\.json)$' || true)
 HAS_CS=$(echo "$STAGED_FILES" | grep -c '\.cs$' || true)
+HAS_INFRA_MIGRATIONS=$(echo "$STAGED_FILES" | grep -Ec '^FoodDiary\.Infrastructure/Migrations/.*\.cs$' || true)
 
 cd FoodDiary.Web.Client
 
@@ -45,6 +46,13 @@ else
 fi
 
 cd ..
+
+if [ "$HAS_INFRA_MIGRATIONS" -gt 0 ]; then
+  echo "=== Running infrastructure migration build guard ==="
+  dotnet build FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj --no-restore || exit 1
+else
+  echo "=== Skipping infrastructure migration build guard (no migration files changed) ==="
+fi
 
 if [ "$HAS_CS" -gt 0 ]; then
   echo "=== Running backend tests ==="
