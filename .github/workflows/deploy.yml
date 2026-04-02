@@ -23,6 +23,12 @@ jobs:
       packages: write
 
     steps:
+      - name: Initialize deploy diagnostics
+        shell: bash
+        run: |
+          mkdir -p "${RUNNER_TEMP}/deploy-logs"
+          : > "${RUNNER_TEMP}/deploy-logs/failure-meta.env"
+
       - name: Checkout code
         uses: actions/checkout@v6
         with:
@@ -45,16 +51,37 @@ jobs:
           echo "subject=${commit_subject}" >> "$GITHUB_OUTPUT"
 
       - name: Login to GitHub Container Registry
+        id: login_ghcr
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Record failure step
+        if: always() && steps.login_ghcr.outcome == 'failure'
+        shell: bash
+        run: |
+          {
+            echo "FAILED_AREA=deploy"
+            echo "FAILED_TARGET=Login to GitHub Container Registry"
+          } > "${RUNNER_TEMP}/deploy-logs/failure-meta.env"
+
       - name: Set up Docker Buildx
+        id: setup_buildx
         uses: docker/setup-buildx-action@v4
 
+      - name: Record failure step
+        if: always() && steps.setup_buildx.outcome == 'failure'
+        shell: bash
+        run: |
+          {
+            echo "FAILED_AREA=deploy"
+            echo "FAILED_TARGET=Set up Docker Buildx"
+          } > "${RUNNER_TEMP}/deploy-logs/failure-meta.env"
+
       - name: Build and push API
+        id: build_api
         uses: docker/build-push-action@v7
         with:
           context: .
@@ -65,7 +92,17 @@ jobs:
             ${{ env.IMAGE_PREFIX }}/api:latest
             ${{ env.IMAGE_PREFIX }}/api:sha-${{ github.sha }}
 
+      - name: Record failure step
+        if: always() && steps.build_api.outcome == 'failure'
+        shell: bash
+        run: |
+          {
+            echo "FAILED_AREA=deploy"
+            echo "FAILED_TARGET=Build and push API"
+          } > "${RUNNER_TEMP}/deploy-logs/failure-meta.env"
+
       - name: Build and push Telegram Bot
+        id: build_telegram_bot
         uses: docker/build-push-action@v7
         with:
           context: .
@@ -76,7 +113,17 @@ jobs:
             ${{ env.IMAGE_PREFIX }}/telegram-bot:latest
             ${{ env.IMAGE_PREFIX }}/telegram-bot:sha-${{ github.sha }}
 
+      - name: Record failure step
+        if: always() && steps.build_telegram_bot.outcome == 'failure'
+        shell: bash
+        run: |
+          {
+            echo "FAILED_AREA=deploy"
+            echo "FAILED_TARGET=Build and push Telegram Bot"
+          } > "${RUNNER_TEMP}/deploy-logs/failure-meta.env"
+
       - name: Build and push Initializer
+        id: build_initializer
         uses: docker/build-push-action@v7
         with:
           context: .
@@ -87,7 +134,17 @@ jobs:
             ${{ env.IMAGE_PREFIX }}/initializer:latest
             ${{ env.IMAGE_PREFIX }}/initializer:sha-${{ github.sha }}
 
+      - name: Record failure step
+        if: always() && steps.build_initializer.outcome == 'failure'
+        shell: bash
+        run: |
+          {
+            echo "FAILED_AREA=deploy"
+            echo "FAILED_TARGET=Build and push Initializer"
+          } > "${RUNNER_TEMP}/deploy-logs/failure-meta.env"
+
       - name: Build and push Client
+        id: build_client
         uses: docker/build-push-action@v7
         with:
           context: FoodDiary.Web.Client
@@ -100,13 +157,33 @@ jobs:
           build-args: |
             BUILD_VERSION=${{ github.sha }}
 
+      - name: Record failure step
+        if: always() && steps.build_client.outcome == 'failure'
+        shell: bash
+        run: |
+          {
+            echo "FAILED_AREA=deploy"
+            echo "FAILED_TARGET=Build and push Client"
+          } > "${RUNNER_TEMP}/deploy-logs/failure-meta.env"
+
       - name: Setup SSH
+        id: setup_ssh
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
 
+      - name: Record failure step
+        if: always() && steps.setup_ssh.outcome == 'failure'
+        shell: bash
+        run: |
+          {
+            echo "FAILED_AREA=deploy"
+            echo "FAILED_TARGET=Setup SSH"
+          } > "${RUNNER_TEMP}/deploy-logs/failure-meta.env"
+
       - name: Deploy to server
+        id: deploy_server
         run: |
           SSH_CMD="ssh -T -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no root@${{ env.SERVER_IP }}"
 
@@ -133,6 +210,15 @@ jobs:
             echo "Deploy completed!"
           DEPLOY_EOF
 
+      - name: Record failure step
+        if: always() && steps.deploy_server.outcome == 'failure'
+        shell: bash
+        run: |
+          {
+            echo "FAILED_AREA=deploy"
+            echo "FAILED_TARGET=Deploy to server"
+          } > "${RUNNER_TEMP}/deploy-logs/failure-meta.env"
+
       - name: Notify Telegram (success)
         if: success()
         env:
@@ -154,15 +240,30 @@ jobs:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: |
+          FAILED_AREA="deploy"
+          FAILED_TARGET="unknown"
+
           if [ -z "${TELEGRAM_BOT_TOKEN}" ] || [ -z "${TELEGRAM_CHAT_ID}" ]; then
             echo "Skipping Telegram notification: missing secrets."
             exit 0
           fi
+
+          if [ -f "${RUNNER_TEMP}/deploy-logs/failure-meta.env" ]; then
+            parsed_area=$(grep '^FAILED_AREA=' "${RUNNER_TEMP}/deploy-logs/failure-meta.env" | head -n 1 | cut -d= -f2-)
+            parsed_target=$(grep '^FAILED_TARGET=' "${RUNNER_TEMP}/deploy-logs/failure-meta.env" | head -n 1 | cut -d= -f2-)
+            if [ -n "${parsed_area}" ]; then
+              FAILED_AREA="${parsed_area}"
+            fi
+            if [ -n "${parsed_target}" ]; then
+              FAILED_TARGET="${parsed_target}"
+            fi
+          fi
+
           REF_NAME="${GITHUB_REF_NAME}"
           if [ -z "${REF_NAME}" ] && [ "${GITHUB_EVENT_NAME}" = "workflow_run" ]; then
             REF_NAME="${{ github.event.workflow_run.head_branch }}"
           fi
-          MESSAGE=$'❌ Deploy failed\nWorkflow: Deploy\nRepo: '"${GITHUB_REPOSITORY}"$'\nBranch: '"${REF_NAME}"$'\nCommit: '"${{ steps.commit_meta.outputs.sha }}"$'\nTitle: '"${{ steps.commit_meta.outputs.subject }}"$'\nActor: '"${GITHUB_ACTOR}"$'\nRun: '"${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          MESSAGE=$'❌ Deploy failed\nWorkflow: Deploy\nRepo: '"${GITHUB_REPOSITORY}"$'\nBranch: '"${REF_NAME}"$'\nCommit: '"${{ steps.commit_meta.outputs.sha }}"$'\nTitle: '"${{ steps.commit_meta.outputs.subject }}"$'\nActor: '"${GITHUB_ACTOR}"$'\nArea: '"${FAILED_AREA}"$'\nStep: '"${FAILED_TARGET}"$'\nRun: '"${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
           curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
             -d chat_id="${TELEGRAM_CHAT_ID}" \
             --data-urlencode text="${MESSAGE}" >/dev/null
