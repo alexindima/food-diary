@@ -127,6 +127,22 @@
       ]
     },
     {
+      "Path": "/api/v{version}/auth/google",
+      "Operations": [
+        {
+          "Method": "post",
+          "HasRequestBody": true,
+          "ResponseCodes": [
+            "200",
+            "400",
+            "401",
+            "429",
+            "500"
+          ]
+        }
+      ]
+    },
+    {
       "Path": "/api/v{version}/auth/login",
       "Operations": [
         {

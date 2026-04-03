@@ -485,6 +485,7 @@ public sealed class PresentationBoundaryIntegrationTests(
         var selectedPaths = new[] {
             "/api/v{version}/auth/register",
             "/api/v{version}/auth/login",
+            "/api/v{version}/auth/google",
             "/api/v{version}/auth/refresh",
             "/api/v{version}/auth/restore",
             "/api/v{version}/auth/verify-email",
