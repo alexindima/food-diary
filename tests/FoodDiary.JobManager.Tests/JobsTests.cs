@@ -31,10 +31,12 @@ public sealed class JobsTests {
         var cleanupService = new RecordingImageCleanupService([2, 0]);
         var options = Options.Create(new ImageCleanupOptions { BatchSize = 2, OlderThanHours = 12 });
         var now = new DateTime(2026, 2, 23, 12, 0, 0, DateTimeKind.Utc);
+        var tracker = new JobExecutionStateTracker();
         var job = new ImageCleanupJob(
             cleanupService,
             options,
             new FixedDateTimeProvider(now),
+            tracker,
             NullLogger<ImageCleanupJob>.Instance);
 
         await job.Execute();
@@ -44,6 +46,8 @@ public sealed class JobsTests {
         Assert.Equal(2, deletedItems);
         Assert.NotNull(duration);
         Assert.True(duration >= 0);
+        Assert.Equal(0, tracker.GetSnapshot("images.cleanup")?.ConsecutiveFailures);
+        Assert.Equal(now, tracker.GetSnapshot("images.cleanup")?.LastSucceededAtUtc);
     }
 
     [Fact]
@@ -63,10 +67,12 @@ public sealed class JobsTests {
         var cleanupService = new ThrowingUserCleanupService();
         var options = Options.Create(new UserCleanupOptions { BatchSize = 10, RetentionDays = 30 });
         var now = new DateTime(2026, 2, 23, 12, 0, 0, DateTimeKind.Utc);
+        var tracker = new JobExecutionStateTracker();
         var job = new UserCleanupJob(
             cleanupService,
             options,
             new FixedDateTimeProvider(now),
+            tracker,
             NullLogger<UserCleanupJob>.Instance);
 
         await Assert.ThrowsAsync<InvalidOperationException>(() => job.Execute());
@@ -74,6 +80,8 @@ public sealed class JobsTests {
         Assert.Equal("failure", outcome);
         Assert.NotNull(duration);
         Assert.True(duration >= 0);
+        Assert.Equal(1, tracker.GetSnapshot("users.cleanup")?.ConsecutiveFailures);
+        Assert.Equal(now, tracker.GetSnapshot("users.cleanup")?.LastFailedAtUtc);
     }
 
     [Fact]
@@ -85,6 +93,7 @@ public sealed class JobsTests {
             cleanupService,
             options,
             new FixedDateTimeProvider(now),
+            new JobExecutionStateTracker(),
             NullLogger<ImageCleanupJob>.Instance);
 
         await job.Execute();
@@ -102,6 +111,7 @@ public sealed class JobsTests {
             cleanupService,
             options,
             new FixedDateTimeProvider(now),
+            new JobExecutionStateTracker(),
             NullLogger<ImageCleanupJob>.Instance);
 
         await job.Execute();
@@ -123,6 +133,7 @@ public sealed class JobsTests {
             cleanupService,
             options,
             new FixedDateTimeProvider(now),
+            new JobExecutionStateTracker(),
             NullLogger<UserCleanupJob>.Instance);
 
         await job.Execute();
@@ -146,6 +157,7 @@ public sealed class JobsTests {
             cleanupService,
             options,
             new FixedDateTimeProvider(now),
+            new JobExecutionStateTracker(),
             NullLogger<UserCleanupJob>.Instance);
 
         await job.Execute();
@@ -166,6 +178,7 @@ public sealed class JobsTests {
             cleanupService,
             options,
             new FixedDateTimeProvider(now),
+            new JobExecutionStateTracker(),
             NullLogger<UserCleanupJob>.Instance);
 
         await job.Execute();
@@ -187,11 +200,13 @@ public sealed class JobsTests {
                 new RecordingImageCleanupService([0]),
                 Options.Create(new ImageCleanupOptions()),
                 new FixedDateTimeProvider(DateTime.UtcNow),
+                new JobExecutionStateTracker(),
                 NullLogger<ImageCleanupJob>.Instance),
             new UserCleanupJob(
                 new RecordingUserCleanupService([0]),
                 Options.Create(new UserCleanupOptions()),
                 new FixedDateTimeProvider(DateTime.UtcNow),
+                new JobExecutionStateTracker(),
                 NullLogger<UserCleanupJob>.Instance));
 
         await service.StartAsync(CancellationToken.None);
@@ -217,11 +232,13 @@ public sealed class JobsTests {
                 new RecordingImageCleanupService([0]),
                 Options.Create(new ImageCleanupOptions()),
                 new FixedDateTimeProvider(DateTime.UtcNow),
+                new JobExecutionStateTracker(),
                 NullLogger<ImageCleanupJob>.Instance),
             new UserCleanupJob(
                 new RecordingUserCleanupService([0]),
                 Options.Create(new UserCleanupOptions()),
                 new FixedDateTimeProvider(DateTime.UtcNow),
+                new JobExecutionStateTracker(),
                 NullLogger<UserCleanupJob>.Instance));
 
         await Assert.ThrowsAsync<InvalidOperationException>(() => service.StartAsync(CancellationToken.None));

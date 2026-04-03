@@ -179,7 +179,8 @@ Status:
 - deploy and recovery runbook is documented in `BACKEND_RUNBOOKS.md`
 - `FoodDiary.JobManager` startup now verifies that expected recurring Hangfire jobs exist in storage after registration
 - cleanup jobs now also declare explicit retry and no-overlap execution policy
-- next useful step is defining alerting and recovery expectations around missed runs and poison/failing executions
+- cleanup job runtime state is now also observable via `last_success_age` and `failure_streak`
+- next useful step is defining poison-item handling if cleanup jobs ever encounter repeated record-specific failures
 
 ## Suggested Delivery Rhythm
 

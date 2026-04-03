@@ -56,6 +56,8 @@ Metrics:
 - `fooddiary.job.execution.events`
 - `fooddiary.job.deleted_items`
 - `fooddiary.job.execution.duration`
+- `fooddiary.job.last_success_age`
+- `fooddiary.job.failure_streak`
 
 Current tagged jobs:
 
@@ -66,6 +68,10 @@ Current outcome tags:
 
 - `success`
 - `failure`
+
+State dimensions:
+
+- `fooddiary.job.name`
 
 ## Added AI Provider Signals
 
@@ -253,7 +259,9 @@ Use these as the first production alert baseline and tune them with real traffic
 - Cleanup job failure:
   trigger immediately when `fooddiary.job.execution.events` reports `fooddiary.job.outcome=failure`.
 - Cleanup stagnation:
-  trigger when cleanup jobs stop emitting successful executions on their expected schedule plus grace period.
+  trigger when `fooddiary.job.last_success_age` exceeds the expected cron interval plus grace period for a cleanup job.
+- Cleanup repeated failure:
+  trigger when `fooddiary.job.failure_streak` stays above `0` or grows across retries for a cleanup job.
 - Database failure spike:
   trigger when `fooddiary.db.command.failures` becomes non-zero for 5 minutes on production or spikes materially after a deploy.
 - Email delivery failure:

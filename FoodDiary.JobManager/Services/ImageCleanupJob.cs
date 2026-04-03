@@ -10,6 +10,7 @@ public sealed class ImageCleanupJob(
     IImageAssetCleanupService cleanupService,
     IOptions<ImageCleanupOptions> options,
     IDateTimeProvider dateTimeProvider,
+    IJobExecutionStateTracker executionStateTracker,
     ILogger<ImageCleanupJob> logger) {
     [AutomaticRetry(Attempts = RecurringJobExecutionPolicy.CleanupRetryAttempts, OnAttemptsExceeded = AttemptsExceededAction.Fail)]
     [DisableConcurrentExecution(RecurringJobExecutionPolicy.CleanupConcurrencyTimeoutSeconds)]
@@ -21,6 +22,7 @@ public sealed class ImageCleanupJob(
         var olderThanUtc = dateTimeProvider.UtcNow.AddHours(-olderThanHours);
         var totalDeleted = 0;
         const string jobName = "images.cleanup";
+        executionStateTracker.RecordStarted(jobName, dateTimeProvider.UtcNow);
 
         try {
             while (!cancellationToken.IsCancellationRequested) {
@@ -43,12 +45,14 @@ public sealed class ImageCleanupJob(
             JobManagerTelemetry.JobDeletedItemsCounter.Add(
                 totalDeleted,
                 new KeyValuePair<string, object?>("fooddiary.job.name", jobName));
+            executionStateTracker.RecordSuccess(jobName, dateTimeProvider.UtcNow);
         } catch (Exception ex) {
             logger.LogError(ex, "Image cleanup job failed after processing {DeletedCount} items so far.", totalDeleted);
             JobManagerTelemetry.JobExecutionCounter.Add(
                 1,
                 new KeyValuePair<string, object?>("fooddiary.job.name", jobName),
                 new KeyValuePair<string, object?>("fooddiary.job.outcome", "failure"));
+            executionStateTracker.RecordFailure(jobName, dateTimeProvider.UtcNow);
             throw;
         } finally {
             stopwatch.Stop();

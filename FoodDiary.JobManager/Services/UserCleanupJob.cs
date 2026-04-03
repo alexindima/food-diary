@@ -10,6 +10,7 @@ public sealed class UserCleanupJob(
     IUserCleanupService cleanupService,
     IOptions<UserCleanupOptions> options,
     IDateTimeProvider dateTimeProvider,
+    IJobExecutionStateTracker executionStateTracker,
     ILogger<UserCleanupJob> logger) {
     [AutomaticRetry(Attempts = RecurringJobExecutionPolicy.CleanupRetryAttempts, OnAttemptsExceeded = AttemptsExceededAction.Fail)]
     [DisableConcurrentExecution(RecurringJobExecutionPolicy.CleanupConcurrencyTimeoutSeconds)]
@@ -21,6 +22,7 @@ public sealed class UserCleanupJob(
         var olderThanUtc = dateTimeProvider.UtcNow.AddDays(-retentionDays);
         var totalDeleted = 0;
         const string jobName = "users.cleanup";
+        executionStateTracker.RecordStarted(jobName, dateTimeProvider.UtcNow);
 
         Guid? reassignUserId = null;
         if (!string.IsNullOrWhiteSpace(settings.ReassignUserId)
@@ -54,12 +56,14 @@ public sealed class UserCleanupJob(
             JobManagerTelemetry.JobDeletedItemsCounter.Add(
                 totalDeleted,
                 new KeyValuePair<string, object?>("fooddiary.job.name", jobName));
+            executionStateTracker.RecordSuccess(jobName, dateTimeProvider.UtcNow);
         } catch (Exception ex) {
             logger.LogError(ex, "User cleanup job failed after processing {DeletedCount} users so far.", totalDeleted);
             JobManagerTelemetry.JobExecutionCounter.Add(
                 1,
                 new KeyValuePair<string, object?>("fooddiary.job.name", jobName),
                 new KeyValuePair<string, object?>("fooddiary.job.outcome", "failure"));
+            executionStateTracker.RecordFailure(jobName, dateTimeProvider.UtcNow);
             throw;
         } finally {
             stopwatch.Stop();

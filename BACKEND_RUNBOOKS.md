@@ -498,6 +498,8 @@ Diagnosis:
   - `fooddiary.job.execution.events`
   - `fooddiary.job.deleted_items`
   - `fooddiary.job.execution.duration`
+  - `fooddiary.job.last_success_age`
+  - `fooddiary.job.failure_streak`
 - Treat as a missed-run incident when:
   - a recurring cleanup job has no successful execution within one expected cron interval plus a small buffer
   - or Hangfire shows the recurring definition but no recent enqueue/execution activity
