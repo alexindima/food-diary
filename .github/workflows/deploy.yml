@@ -208,61 +208,67 @@ jobs:
           $SSH_CMD "mkdir -p /opt/fooddiary"
           $SCP_CMD docker-compose.yml root@${{ env.SERVER_IP }}:/opt/fooddiary/docker-compose.yml
 
-          $SSH_CMD "export DEPLOY_IMAGE_TAG='${DEPLOY_IMAGE_TAG}' DEPLOY_COMMIT_SHA='${{ github.sha }}'; bash -s" << 'DEPLOY_EOF'
-            set -e
-            cd /opt/fooddiary
+          DEPLOY_COMMIT_SHA="${{ github.sha }}"
 
-            cp /etc/fooddiary/fooddiary.env .env
-            printf '\nAPI_IMAGE_TAG=%s\nINITIALIZER_IMAGE_TAG=%s\nTELEGRAM_BOT_IMAGE_TAG=%s\nCLIENT_IMAGE_TAG=%s\nDEPLOY_COMMIT_SHA=%s\n' \
-              "$DEPLOY_IMAGE_TAG" \
-              "$DEPLOY_IMAGE_TAG" \
-              "$DEPLOY_IMAGE_TAG" \
-              "$DEPLOY_IMAGE_TAG" \
-              "$DEPLOY_COMMIT_SHA" >> .env
+          cat > "${RUNNER_TEMP}/deploy.sh" << 'SCRIPT_EOF'
+          #!/bin/bash
+          set -e
+          cd /opt/fooddiary
 
-            export API_IMAGE_TAG="$DEPLOY_IMAGE_TAG"
-            export INITIALIZER_IMAGE_TAG="$DEPLOY_IMAGE_TAG"
-            export TELEGRAM_BOT_IMAGE_TAG="$DEPLOY_IMAGE_TAG"
-            export CLIENT_IMAGE_TAG="$DEPLOY_IMAGE_TAG"
+          cp /etc/fooddiary/fooddiary.env .env
+          printf '\nAPI_IMAGE_TAG=%s\nINITIALIZER_IMAGE_TAG=%s\nTELEGRAM_BOT_IMAGE_TAG=%s\nCLIENT_IMAGE_TAG=%s\nDEPLOY_COMMIT_SHA=%s\n' \
+            "$DEPLOY_IMAGE_TAG" \
+            "$DEPLOY_IMAGE_TAG" \
+            "$DEPLOY_IMAGE_TAG" \
+            "$DEPLOY_IMAGE_TAG" \
+            "$DEPLOY_COMMIT_SHA" >> .env
 
-            docker compose --profile backend --profile full pull
+          export API_IMAGE_TAG="$DEPLOY_IMAGE_TAG"
+          export INITIALIZER_IMAGE_TAG="$DEPLOY_IMAGE_TAG"
+          export TELEGRAM_BOT_IMAGE_TAG="$DEPLOY_IMAGE_TAG"
+          export CLIENT_IMAGE_TAG="$DEPLOY_IMAGE_TAG"
 
-            docker compose --profile backend run -T --rm db-init update
+          docker compose --profile backend --profile full pull
 
-            docker compose --profile backend up -d --force-recreate --no-deps api
-            docker compose --profile full up -d --force-recreate --no-deps telegram-bot
+          docker compose --profile backend run -T --rm db-init update
 
-            echo "Checking deployed API version..."
-            echo "Expected commit SHA: $DEPLOY_COMMIT_SHA"
-            echo "Expected image tag: $DEPLOY_IMAGE_TAG"
-            version_json=""
-            for _ in $(seq 1 15); do
-              if version_json=$(curl -fsS http://127.0.0.1:${API_PORT:-5000}/api/v1/version); then
-                break
-              fi
-              sleep 4
-            done
+          docker compose --profile backend up -d --force-recreate --no-deps api
+          docker compose --profile full up -d --force-recreate --no-deps telegram-bot
 
-            if [ -z "$version_json" ]; then
-              echo "API version endpoint did not respond in time."
-              exit 1
+          echo "Checking deployed API version..."
+          echo "Expected commit SHA: $DEPLOY_COMMIT_SHA"
+          echo "Expected image tag: $DEPLOY_IMAGE_TAG"
+          version_json=""
+          for _ in $(seq 1 15); do
+            if version_json=$(curl -fsS http://127.0.0.1:${API_PORT:-5000}/api/v1/version); then
+              break
             fi
+            sleep 4
+          done
 
-            echo "Actual API version payload: $version_json"
-            echo "$version_json" | grep -F "\"commitSha\":\"$DEPLOY_COMMIT_SHA\""
-            echo "$version_json" | grep -F "\"imageTag\":\"${DEPLOY_IMAGE_TAG}\""
+          if [ -z "$version_json" ]; then
+            echo "API version endpoint did not respond in time."
+            exit 1
+          fi
 
-            id=$(docker create ghcr.io/alexindima/food-diary/client:${DEPLOY_IMAGE_TAG})
-            rm -rf /var/www/fooddiary.club/*
-            docker cp $id:/usr/share/nginx/html/. /var/www/fooddiary.club/
-            rm -rf /var/www/admin.fooddiary.club/*
-            docker cp $id:/usr/share/nginx/html-admin/. /var/www/admin.fooddiary.club/
-            docker rm $id
+          echo "Actual API version payload: $version_json"
+          echo "$version_json" | grep -F "\"commitSha\":\"$DEPLOY_COMMIT_SHA\""
+          echo "$version_json" | grep -F "\"imageTag\":\"${DEPLOY_IMAGE_TAG}\""
 
-            docker image prune -a --force --filter "until=24h"
+          id=$(docker create ghcr.io/alexindima/food-diary/client:${DEPLOY_IMAGE_TAG})
+          rm -rf /var/www/fooddiary.club/*
+          docker cp $id:/usr/share/nginx/html/. /var/www/fooddiary.club/
+          rm -rf /var/www/admin.fooddiary.club/*
+          docker cp $id:/usr/share/nginx/html-admin/. /var/www/admin.fooddiary.club/
+          docker rm $id
 
-            echo "Deploy completed!"
-          DEPLOY_EOF
+          docker image prune -a --force --filter "until=24h"
+
+          echo "Deploy completed!"
+          SCRIPT_EOF
+
+          $SCP_CMD "${RUNNER_TEMP}/deploy.sh" root@${{ env.SERVER_IP }}:/tmp/deploy.sh
+          $SSH_CMD "DEPLOY_IMAGE_TAG='${DEPLOY_IMAGE_TAG}' DEPLOY_COMMIT_SHA='${DEPLOY_COMMIT_SHA}' bash /tmp/deploy.sh"
 
       - name: Record failure step
         if: always() && steps.deploy_server.outcome == 'failure'
