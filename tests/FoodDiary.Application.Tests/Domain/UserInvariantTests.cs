@@ -511,12 +511,12 @@ public class UserInvariantTests {
     }
 
     [Fact]
-    public void UpdateAdminAccount_WithValidValues_UpdatesAdminControlledFields() {
+    public void UpdateAdminNarrowOperations_WithValidValues_UpdateAdminControlledFields() {
         var user = User.Create("test@example.com", "hash");
 
-        user.UpdateAdminAccount(new UserAdminAccountUpdate(
-            IsEmailConfirmed: true,
-            Language: "ru",
+        user.UpdateAdminSecurity(new UserAdminSecurityUpdate(IsEmailConfirmed: true));
+        user.UpdateAdminPreferences(new UserAdminPreferenceUpdate(Language: "ru"));
+        user.UpdateAdminAiQuota(new UserAdminAiQuotaUpdate(
             AiInputTokenLimit: 123,
             AiOutputTokenLimit: 456));
 
@@ -527,19 +527,19 @@ public class UserInvariantTests {
     }
 
     [Fact]
-    public void UpdateAdminAccount_WithNegativeInputLimit_Throws() {
+    public void UpdateAdminAiQuota_WithNegativeInputLimit_Throws() {
         var user = User.Create("test@example.com", "hash");
 
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            user.UpdateAdminAccount(new UserAdminAccountUpdate(AiInputTokenLimit: -1)));
+            user.UpdateAdminAiQuota(new UserAdminAiQuotaUpdate(AiInputTokenLimit: -1)));
     }
 
     [Fact]
-    public void UpdateAdminAccount_WithNegativeOutputLimit_Throws() {
+    public void UpdateAdminAiQuota_WithNegativeOutputLimit_Throws() {
         var user = User.Create("test@example.com", "hash");
 
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            user.UpdateAdminAccount(new UserAdminAccountUpdate(AiOutputTokenLimit: -1)));
+            user.UpdateAdminAiQuota(new UserAdminAiQuotaUpdate(AiOutputTokenLimit: -1)));
     }
 
     [Fact]
@@ -549,9 +549,9 @@ public class UserInvariantTests {
         var supportRole = Role.Create("Support");
 
         user.Deactivate();
-        user.UpdateAdminAccount(new UserAdminAccountUpdate(
-            IsEmailConfirmed: true,
-            Language: "ru",
+        user.UpdateAdminSecurity(new UserAdminSecurityUpdate(IsEmailConfirmed: true));
+        user.UpdateAdminPreferences(new UserAdminPreferenceUpdate(Language: "ru"));
+        user.UpdateAdminAiQuota(new UserAdminAiQuotaUpdate(
             AiInputTokenLimit: 123,
             AiOutputTokenLimit: 456));
         user.ReplaceRoles([adminRole, supportRole]);

@@ -39,12 +39,4 @@ public sealed partial class User {
             SetModified();
         }
     }
-
-    public void UpdateAdminAccount(UserAdminAccountUpdate update) {
-        EnsureNotDeleted();
-
-        UpdateAdminSecurity(new UserAdminSecurityUpdate(update.IsEmailConfirmed));
-        UpdateAdminPreferences(new UserAdminPreferenceUpdate(update.Language));
-        UpdateAdminAiQuota(new UserAdminAiQuotaUpdate(update.AiInputTokenLimit, update.AiOutputTokenLimit));
-    }
 }

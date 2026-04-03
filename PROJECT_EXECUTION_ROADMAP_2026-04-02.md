@@ -219,6 +219,7 @@ Current tasks to execute first:
 - split profile internals further into `UserPersonalProfileState`, `UserPreferenceState`, and `UserProfileMediaState`
 - extracted `UserAiQuotaState` so AI quotas are no longer mixed into lifecycle/account state
 - narrowed admin-facing user updates so security, preferences, and AI quota changes no longer share one mixed internal update path
+- retired the old mixed admin compatibility wrapper so only narrow admin update paths remain
 - enforced lifecycle checks in refresh-token flow
 - centralized authentication user access policy for core auth entry points
 - expanded current-user lifecycle policy outside auth for key user, dashboard, hydration, AI, Telegram, and email-verification flows
@@ -282,7 +283,8 @@ Status:
 - profile internals are now also split into `UserPersonalProfileState`, `UserPreferenceState`, and `UserProfileMediaState`
 - AI quotas are now also isolated in `UserAiQuotaState`
 - admin-facing update flow is now also narrowed by concern inside domain/application
-- next useful step is deciding whether the remaining mixed compatibility wrapper should stay or be retired
+- the old mixed admin compatibility wrapper is now removed
+- next useful step is choosing the next true aggregate boundary after the current internal decomposition
 
 ### 2. Expand lifecycle policy outside auth
 
