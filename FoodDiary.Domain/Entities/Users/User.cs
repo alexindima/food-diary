@@ -93,7 +93,8 @@ public sealed partial class User : AggregateRoot<UserId> {
         user.ApplyProfileMediaState(UserProfileMediaState.CreateInitial());
         user.ApplyPreferenceState(UserPreferenceState.CreateInitial());
         user.ApplyGoalState(UserGoalState.CreateInitial());
-        user.ApplyAccountState(UserAccountState.CreateInitial(DefaultAiInputTokenLimit, DefaultAiOutputTokenLimit));
+        user.ApplyAccountState(UserAccountState.CreateInitial());
+        user.ApplyAiQuotaState(UserAiQuotaState.CreateInitial(DefaultAiInputTokenLimit, DefaultAiOutputTokenLimit));
         user.SetCreated();
         return user;
     }
@@ -302,18 +303,25 @@ public sealed partial class User : AggregateRoot<UserId> {
     private UserAccountState GetAccountState() {
         return new UserAccountState(
             TelegramUserId,
-            AiInputTokenLimit,
-            AiOutputTokenLimit,
             IsActive,
             DeletedAt);
     }
 
     private void ApplyAccountState(UserAccountState state) {
         TelegramUserId = state.TelegramUserId;
-        AiInputTokenLimit = state.AiInputTokenLimit;
-        AiOutputTokenLimit = state.AiOutputTokenLimit;
         IsActive = state.IsActive;
         DeletedAt = state.DeletedAt;
+    }
+
+    private UserAiQuotaState GetAiQuotaState() {
+        return new UserAiQuotaState(
+            AiInputTokenLimit,
+            AiOutputTokenLimit);
+    }
+
+    private void ApplyAiQuotaState(UserAiQuotaState state) {
+        AiInputTokenLimit = state.AiInputTokenLimit;
+        AiOutputTokenLimit = state.AiOutputTokenLimit;
     }
 
     private static void EnsureLanguage(string? value, string paramName) {

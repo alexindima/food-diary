@@ -81,13 +81,13 @@ public sealed partial class User {
     }
 
     private bool ApplyAiTokenLimitChanges(UserAiTokenLimitUpdate update) {
-        var currentState = GetAccountState();
-        var nextState = currentState.WithAiTokenLimits(update.InputLimit, update.OutputLimit);
+        var currentState = GetAiQuotaState();
+        var nextState = currentState.WithLimits(update.InputLimit, update.OutputLimit);
         if (nextState == currentState) {
             return false;
         }
 
-        ApplyAccountState(nextState);
+        ApplyAiQuotaState(nextState);
         return true;
     }
 }

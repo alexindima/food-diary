@@ -217,6 +217,7 @@ Current tasks to execute first:
 - extracted `UserAccountState` from the `User` aggregate internals
 - extracted `UserSecurityState` from the `User` aggregate internals
 - split profile internals further into `UserPersonalProfileState`, `UserPreferenceState`, and `UserProfileMediaState`
+- extracted `UserAiQuotaState` so AI quotas are no longer mixed into lifecycle/account state
 - enforced lifecycle checks in refresh-token flow
 - centralized authentication user access policy for core auth entry points
 - expanded current-user lifecycle policy outside auth for key user, dashboard, hydration, AI, Telegram, and email-verification flows
@@ -278,7 +279,8 @@ Status:
 - In progress on 2026-04-03
 - `UserAccountState` and `UserSecurityState` are already extracted
 - profile internals are now also split into `UserPersonalProfileState`, `UserPreferenceState`, and `UserProfileMediaState`
-- next useful step is deciding whether AI/admin surface should stay inside account state or split again
+- AI quotas are now also isolated in `UserAiQuotaState`
+- next useful step is deciding whether admin-facing update surface itself should stay aggregated or split further
 
 ### 2. Expand lifecycle policy outside auth
 
