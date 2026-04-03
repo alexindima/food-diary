@@ -173,3 +173,117 @@ Operational note:
 
 - Keep dependency audit green in CI and review any new advisory before merge.
 - Add content-scanning or stricter post-upload validation if untrusted public image ingestion expands.
+
+## Recurring Security Review Checklist
+
+Use this checklist for:
+
+- notable auth/admin changes
+- deploys that touch secrets, proxying, or storage
+- release candidates
+- quarterly backend security review
+
+Mark each item as `ok`, `risk accepted`, or `follow-up`.
+
+### 1. Authentication And Session Flows
+
+- JWT settings are still strict:
+  - issuer validation enabled
+  - audience validation enabled
+  - signing key validation enabled
+  - lifetime validation enabled
+  - zero clock skew
+- refresh-token rotation still happens on successful refresh
+- refresh tokens remain hashed at rest
+- deleted and inactive users are blocked consistently in:
+  - login
+  - refresh
+  - password reset request
+  - Telegram auth flows
+  - admin SSO exchange
+- restore flow remains the only supported path from deleted back to active
+- email verification and password reset tokens remain hashed at rest
+- auth endpoints still use the auth rate-limit policy
+
+### 2. Admin Surface
+
+- admin-only controllers still require explicit admin authorization
+- admin SSO start is still admin-only
+- admin SSO exchange still re-checks current admin membership against persisted user data
+- admin user updates still avoid deleted-user reactivation via normal active toggle
+- admin-sensitive logs do not leak secrets, tokens, or codes
+- no new admin endpoint bypasses audit logging expectations
+
+### 3. Upload And Asset Flows
+
+- upload-url generation remains authenticated and rate-limited
+- MIME allowlist is still narrow and intentional
+- size limits are still enforced before presign
+- presigned URL TTL remains short
+- asset tracking still happens before external use/reference
+- delete flows still respect in-use protection
+- any new public asset exposure is reviewed for enumeration and orphan risks
+
+### 4. Telegram And External Adapters
+
+- Telegram bot callback auth still requires `X-Telegram-Bot-Secret`
+- secret comparison remains constant-time
+- Telegram init/login validation still checks integrity before trust
+- bot and API secrets are rotated together when changed
+- no new Telegram endpoint bypasses rate limiting or current-user lifecycle checks
+
+### 5. Proxy, Network, And Request Trust
+
+- forwarded headers are only trusted through configured known proxies/networks
+- rate limiting still ignores spoofed raw forwarded headers
+- CORS remains allowlist-based
+- credentials are not combined with wildcard origins
+- query-string logging is still avoided for sensitive transport paths
+
+### 6. Data Mutation Safety
+
+- idempotency protection still covers the write endpoints that need replay defense
+- deleted-user cleanup and reassignment rules still target only active, non-deleted users
+- lifecycle checks still cover current-user CRUD and tracking flows
+- no new handler silently relies on repository filtering where explicit lifecycle policy is required
+
+### 7. Secrets And Deployment
+
+- `/etc/fooddiary/fooddiary.env` remains the canonical server env source
+- deploy still syncs compose from repo before running compose commands
+- compose runtime still uses internal service hostnames for container-to-container connections
+- JWT, SMTP, S3, Telegram, and OpenAI secrets are not committed to repo config
+- secret rotation steps remain valid after deploy workflow changes
+
+### 8. Dependency And Package Posture
+
+- `dotnet list package --vulnerable --include-transitive` remains green for:
+  - `FoodDiary.Web.Api`
+  - `FoodDiary.Infrastructure`
+  - `FoodDiary.Application`
+- new security-relevant packages are reviewed before adoption
+- any major-version auth/storage package change gets a focused regression review
+
+## Security Review Cadence
+
+### Every security-relevant PR
+
+- run the checklist sections touched by the change
+- note any intentional risk acceptance in the PR description
+
+### Before release or staging promotion
+
+- run the full checklist
+- verify:
+  - auth flows
+  - admin flows
+  - upload-url flow
+  - Telegram auth flow
+  - post-deploy readiness checks
+
+### Quarterly
+
+- re-read this document against current code
+- review residual risks
+- remove stale assumptions
+- add new checklist items for newly introduced subsystems

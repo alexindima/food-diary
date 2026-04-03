@@ -172,6 +172,7 @@ feel consistent across the main product
 4. Raise job and incident operational maturity
 Done when:
 - retries, failure visibility, and recovery rules are explicit for background processes
+- recurring security review expectations are explicit for auth/admin/upload/deploy surfaces
 
 ## Suggested Delivery Rhythm
 
@@ -233,6 +234,7 @@ Current tasks to execute first:
 - added explain-plan guards for product, recipe, and meal paging indexes
 - adopted `pg_trgm`-backed search indexing for product and recipe `ILIKE` paths
 - updated deploy path to use server env at `/etc/fooddiary/fooddiary.env`, synced compose to server, and documented the final Docker/GHCR recovery path in `BACKEND_RUNBOOKS.md`
+- added a recurring backend security review checklist and cadence in `BACKEND_SECURITY_HARDENING.md`
 
 ### Frontend progress completed on 2026-04-02
 

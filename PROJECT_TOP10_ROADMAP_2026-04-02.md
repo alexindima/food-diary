@@ -220,6 +220,11 @@ References:
 - `BACKEND_SECURITY_HARDENING.md`
 - `FoodDiary.Web.Api/Extensions/ApiApplicationBuilderExtensions.cs`
 
+Status update:
+
+- recurring backend security review checklist and cadence are now documented in `BACKEND_SECURITY_HARDENING.md`
+- the next step is to use the checklist as part of release/staging promotion discipline rather than keep it as passive documentation
+
 ## Frontend Top-10
 
 ### 1. Fix the SignalR email verification hub URL bug
