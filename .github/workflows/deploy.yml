@@ -220,12 +220,17 @@ jobs:
               "$DEPLOY_IMAGE_TAG" \
               "$DEPLOY_COMMIT_SHA" >> .env
 
+            export API_IMAGE_TAG="$DEPLOY_IMAGE_TAG"
+            export INITIALIZER_IMAGE_TAG="$DEPLOY_IMAGE_TAG"
+            export TELEGRAM_BOT_IMAGE_TAG="$DEPLOY_IMAGE_TAG"
+            export CLIENT_IMAGE_TAG="$DEPLOY_IMAGE_TAG"
+
             docker compose --profile backend --profile full pull
 
             docker compose --profile backend run --rm db-init update
 
-            docker compose --profile backend up -d --force-recreate api
-            docker compose --profile full up -d --force-recreate telegram-bot
+            docker compose --profile backend up -d --force-recreate --no-deps api
+            docker compose --profile full up -d --force-recreate --no-deps telegram-bot
 
             echo "Checking deployed API version..."
             echo "Expected commit SHA: $DEPLOY_COMMIT_SHA"
