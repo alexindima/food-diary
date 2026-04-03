@@ -231,6 +231,14 @@ export class RecipeListComponent implements OnInit {
         return this.recipeListFacade.hasActiveFilters(this.searchForm.controls.onlyMine.value);
     }
 
+    public get isEmptyState(): boolean {
+        return !this.hasVisibleRecipes && !this.recipeListFacade.hasSearch(this.searchForm.controls.search.value) && !this.hasActiveFilters;
+    }
+
+    public get isNoResultsState(): boolean {
+        return !this.hasVisibleRecipes && !this.isEmptyState;
+    }
+
     public get allRecipesSectionLabelKey(): string {
         return this.recipeListFacade.allRecipesSectionLabelKey();
     }

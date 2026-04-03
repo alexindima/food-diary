@@ -165,6 +165,14 @@ export class MealListComponent implements OnInit {
         return this.isMobileDateFilterOpen() || this.hasDateFilter;
     }
 
+    public get isEmptyState(): boolean {
+        return this.consumptionData.items().length === 0 && !this.hasDateFilter;
+    }
+
+    public get isNoResultsState(): boolean {
+        return this.consumptionData.items().length === 0 && this.hasDateFilter;
+    }
+
     protected scrollToTop(): void {
         this.container().nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }

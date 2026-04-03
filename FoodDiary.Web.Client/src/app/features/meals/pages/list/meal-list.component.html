@@ -84,10 +84,20 @@
                 <fd-skeleton-card />
             </div>
         } @else {
-            @if (consumptionData.items().length === 0) {
+            @if (isEmptyState) {
+                <div class="consumption-list__empty-state">
+                    <mat-icon class="consumption-list__no-results-icon">restaurant_menu</mat-icon>
+                    <div class="consumption-list__empty-title">{{ 'CONSUMPTION_LIST.EMPTY_TITLE' | translate }}</div>
+                    <div class="consumption-list__empty-copy">{{ 'CONSUMPTION_LIST.EMPTY_COPY' | translate }}</div>
+                    <fd-ui-button icon="add" variant="primary" fill="solid" (click)="goToMealAdd()">
+                        {{ 'CONSUMPTION_LIST.ADD_FIRST_CONSUMPTION_BUTTON' | translate }}
+                    </fd-ui-button>
+                </div>
+            } @else if (isNoResultsState) {
                 <div class="consumption-list__no-results">
                     <mat-icon class="consumption-list__no-results-icon">search_off</mat-icon>
-                    {{ 'CONSUMPTION_LIST.NO_CONSUMPTIONS_FOUND' | translate }}
+                    <div class="consumption-list__empty-title">{{ 'CONSUMPTION_LIST.NO_RESULTS_TITLE' | translate }}</div>
+                    <div class="consumption-list__empty-copy">{{ 'CONSUMPTION_LIST.NO_RESULTS_COPY' | translate }}</div>
                 </div>
             }
 
