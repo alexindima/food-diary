@@ -705,16 +705,42 @@ public class UserInvariantTests {
     public void DeleteAccount_ClearsRefreshTokenAndMarksDeleted() {
         var user = User.Create("test@example.com", "hash");
         user.UpdateRefreshToken("refresh-token", DateTime.UtcNow.AddMinutes(-5));
+        user.SetEmailConfirmationToken("email-token", DateTime.UtcNow.AddMinutes(30));
+        user.SetPasswordResetToken("reset-token", DateTime.UtcNow.AddMinutes(30));
         user.ClearDomainEvents();
         var deletedAtUtc = DateTime.UtcNow;
 
         user.DeleteAccount(deletedAtUtc);
 
         Assert.Null(user.RefreshToken);
+        Assert.Null(user.EmailConfirmationTokenHash);
+        Assert.Null(user.EmailConfirmationTokenExpiresAtUtc);
+        Assert.Null(user.EmailConfirmationSentAtUtc);
+        Assert.Null(user.PasswordResetTokenHash);
+        Assert.Null(user.PasswordResetTokenExpiresAtUtc);
+        Assert.Null(user.PasswordResetSentAtUtc);
         Assert.Equal(deletedAtUtc, user.DeletedAt);
         Assert.False(user.IsActive);
         Assert.Single(user.DomainEvents);
         Assert.IsType<UserDeletedDomainEvent>(user.DomainEvents[0]);
+    }
+
+    [Fact]
+    public void MarkDeleted_ClearsOutstandingTransientTokens() {
+        var user = User.Create("test@example.com", "hash");
+        user.UpdateRefreshToken("refresh-token", DateTime.UtcNow.AddMinutes(-5));
+        user.SetEmailConfirmationToken("email-token", DateTime.UtcNow.AddMinutes(30));
+        user.SetPasswordResetToken("reset-token", DateTime.UtcNow.AddMinutes(30));
+
+        user.MarkDeleted(DateTime.UtcNow);
+
+        Assert.Null(user.RefreshToken);
+        Assert.Null(user.EmailConfirmationTokenHash);
+        Assert.Null(user.EmailConfirmationTokenExpiresAtUtc);
+        Assert.Null(user.EmailConfirmationSentAtUtc);
+        Assert.Null(user.PasswordResetTokenHash);
+        Assert.Null(user.PasswordResetTokenExpiresAtUtc);
+        Assert.Null(user.PasswordResetSentAtUtc);
     }
 
     [Fact]

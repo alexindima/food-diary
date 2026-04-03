@@ -33,6 +33,7 @@ Every mutating method compares new vs. current value; if unchanged, returns with
 Split across 5 partial files by concern: core (`User.cs`), `User.Lifecycle.cs`, `User.Profile.cs`, `User.Credentials.cs`, `User.Admin.cs`.
 Internal mutable state is further decomposed into snapshot records such as `UserSecurityState`, `UserAccountState`, `UserAiQuotaState`, `UserPersonalProfileState`, `UserPreferenceState`, and `UserProfileMediaState`. Admin-facing domain updates should prefer narrow `*Update` records per concern instead of one mixed update object.
 Role-aware application code should prefer `User.GetRoleNames()` / `User.HasRole(...)` instead of traversing `UserRoles` directly.
+Deleted-user lifecycle invalidates transient security state at the aggregate boundary: refresh token, email-confirmation token state, and password-reset token state are cleared when the user is marked deleted.
 
 ## Naming Conventions
 

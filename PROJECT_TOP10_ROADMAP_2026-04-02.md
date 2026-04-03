@@ -533,6 +533,7 @@ Status update:
 - current-user lifecycle policy now also covers the main user-facing CRUD flows
 - deleted-user cleanup semantics are now stricter around reassignment targets
 - admin and restore transitions now have explicit deleted-user coverage
+- deleted-user lifecycle now also clears transient auth/recovery token state at the aggregate boundary
 - next pass should target deeper lifecycle edges and remaining user-dependent/background paths
 
 3. Add a deploy and recovery runbook

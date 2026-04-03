@@ -68,4 +68,16 @@ public readonly record struct UserSecurityState(
             PasswordResetSentAtUtc = null
         };
     }
+
+    public UserSecurityState WithoutTransientTokens() {
+        return this with {
+            RefreshToken = null,
+            EmailConfirmationTokenHash = null,
+            EmailConfirmationTokenExpiresAtUtc = null,
+            EmailConfirmationSentAtUtc = null,
+            PasswordResetTokenHash = null,
+            PasswordResetTokenExpiresAtUtc = null,
+            PasswordResetSentAtUtc = null
+        };
+    }
 }

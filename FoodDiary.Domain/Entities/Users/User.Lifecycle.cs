@@ -4,9 +4,7 @@ namespace FoodDiary.Domain.Entities.Users;
 
 public sealed partial class User {
     public void DeleteAccount(DateTime deletedAtUtc) {
-        var normalizedDeletedAtUtc = NormalizeUtcTimestamp(deletedAtUtc, nameof(deletedAtUtc));
-        UpdateRefreshToken(null, normalizedDeletedAtUtc);
-        MarkDeleted(normalizedDeletedAtUtc);
+        MarkDeleted(deletedAtUtc);
     }
 
     public void Deactivate(DateTime? changedAtUtc = null) {
@@ -33,6 +31,7 @@ public sealed partial class User {
 
         var normalizedDeletedAtUtc = NormalizeUtcTimestamp(deletedAtUtc, nameof(deletedAtUtc));
 
+        ApplySecurityState(GetSecurityState().WithoutTransientTokens());
         ApplyAccountState(GetAccountState().MarkDeleted(normalizedDeletedAtUtc));
         RaiseDomainEvent(new UserDeletedDomainEvent(Id, normalizedDeletedAtUtc, normalizedDeletedAtUtc));
         SetModified(normalizedDeletedAtUtc);
