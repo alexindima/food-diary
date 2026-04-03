@@ -36,12 +36,18 @@ public static class ApiApplicationBuilderExtensions {
         app.MapHealthChecks("/health/ready", new HealthCheckOptions {
             Predicate = check => check.Tags.Contains("ready"),
         });
-        app.MapGet("/api/version", (ApiBuildInfo buildInfo) => Results.Ok(new ApiVersionResponse(
+        static IResult BuildVersionResponse(ApiBuildInfo buildInfo) {
+            return Results.Ok(new ApiVersionResponse(
                 buildInfo.CommitSha,
                 buildInfo.ImageTag,
                 buildInfo.Environment,
                 buildInfo.ApplicationVersion,
-                buildInfo.StartedAtUtc)))
+                buildInfo.StartedAtUtc));
+        }
+
+        app.MapGet("/api/version", BuildVersionResponse)
+            .ExcludeFromDescription();
+        app.MapGet("/api/v1/version", BuildVersionResponse)
             .ExcludeFromDescription();
         app.MapPresentationApi(ApiCompositionConstants.CorsPolicyName);
 

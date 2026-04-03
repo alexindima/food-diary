@@ -339,7 +339,7 @@ public sealed class PresentationBoundaryIntegrationTests(
         });
         var client = versionedFactory.CreateClient();
 
-        var response = await client.GetAsync("/api/version");
+        var response = await client.GetAsync("/api/v1/version");
         var payload = await response.Content.ReadFromJsonAsync<ApiVersionPayload>(JsonOptions);
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
