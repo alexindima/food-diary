@@ -432,4 +432,20 @@ public sealed partial class User : AggregateRoot<UserId> {
 
         SetModified();
     }
+
+    public IReadOnlyCollection<string> GetRoleNames() {
+        return _userRoles
+            .Select(userRole => userRole.Role.Name)
+            .Where(name => !string.IsNullOrWhiteSpace(name))
+            .Distinct(StringComparer.Ordinal)
+            .ToArray();
+    }
+
+    public bool HasRole(string roleName) {
+        if (string.IsNullOrWhiteSpace(roleName)) {
+            return false;
+        }
+
+        return _userRoles.Any(userRole => string.Equals(userRole.Role.Name, roleName.Trim(), StringComparison.Ordinal));
+    }
 }

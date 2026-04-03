@@ -51,6 +51,21 @@ public class UserInvariantTests {
     }
 
     [Fact]
+    public void GetRoleNames_AndHasRole_UseDistinctNormalizedMembershipView() {
+        var user = User.Create("test@example.com", "hash");
+        var adminRole = Role.Create("Admin");
+        var supportRole = Role.Create("Support");
+
+        user.ReplaceRoles([adminRole, supportRole]);
+
+        Assert.Equal(["Admin", "Support"], user.GetRoleNames().OrderBy(name => name).ToArray());
+        Assert.True(user.HasRole("Admin"));
+        Assert.True(user.HasRole(" Support "));
+        Assert.False(user.HasRole("Premium"));
+        Assert.False(user.HasRole(" "));
+    }
+
+    [Fact]
     public void UpdateAiTokenLimits_WithNegativeInput_Throws() {
         var user = User.Create("test@example.com", "hash");
 

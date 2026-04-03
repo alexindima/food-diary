@@ -46,6 +46,6 @@ public sealed class AdminSsoExchangeCommandHandler(
     }
 
     private static bool IsAdmin(User user) {
-        return user.UserRoles.Any(role => string.Equals(role.Role.Name, RoleNames.Admin, StringComparison.Ordinal));
+        return user.HasRole(RoleNames.Admin);
     }
 }

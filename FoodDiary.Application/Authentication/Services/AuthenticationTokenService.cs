@@ -33,10 +33,6 @@ public sealed class AuthenticationTokenService(
     }
 
     private static string[] GetRoles(User user) {
-        return user.UserRoles
-            .Select(role => role.Role.Name)
-            .Where(name => !string.IsNullOrWhiteSpace(name))
-            .Select(name => name)
-            .ToArray();
+        return user.GetRoleNames().ToArray();
     }
 }

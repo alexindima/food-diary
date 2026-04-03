@@ -450,6 +450,7 @@ Status update:
 - AI quota internals split out into `UserAiQuotaState`
 - admin-facing update flow narrowed so security, preferences, and quota changes are handled separately internally
 - old mixed admin compatibility wrapper removed; only narrow admin update paths remain
+- key application paths now consume membership through aggregate helpers instead of direct `UserRoles` traversal
 - authentication lifecycle policy centralized across key auth entry points
 - current-user lifecycle policy expanded outside auth for key user, dashboard, hydration, AI, Telegram, and email-verification flows
 - current-user lifecycle guards now also cover body and history tracking flows for weight, waist, hydration, and cycles
@@ -502,6 +503,7 @@ Status update:
 - AI quota concerns no longer sit inside account state
 - admin-facing update surface is already narrowed internally
 - the old compatibility wrapper is gone
+- direct application dependence on `UserRole` traversal is reduced in the main auth/admin paths
 - next decision is what the next real aggregate boundary should be after the current internal split
 
 2. Expand lifecycle policy outside auth
