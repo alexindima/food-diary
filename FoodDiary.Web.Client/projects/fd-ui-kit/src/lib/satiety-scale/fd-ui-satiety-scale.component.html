@@ -1,11 +1,11 @@
 <div class="satiety-scale" [class.satiety-scale--grid]="layout() === 'grid'" [class.satiety-scale--vertical]="layout() === 'vertical'">
     @if (label()) {
-        <label class="satiety-scale__label">
+        <p class="satiety-scale__label">
             {{ label() }}
             @if (required()) {
                 <span class="satiety-scale__required">*</span>
             }
-        </label>
+        </p>
     }
     @if (hint()) {
         <p class="satiety-scale__hint">

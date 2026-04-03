@@ -1,11 +1,11 @@
 <div class="fd-ui-radio-group" [class.fd-ui-radio-group--horizontal]="orientation() === 'horizontal'">
     @if (label()) {
-        <label class="fd-ui-radio-group__label">
+        <p class="fd-ui-radio-group__label">
             {{ label() }}
             @if (required()) {
                 <span aria-hidden="true">*</span>
             }
-        </label>
+        </p>
     }
 
     <mat-radio-group
