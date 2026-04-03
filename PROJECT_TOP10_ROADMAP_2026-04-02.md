@@ -503,6 +503,11 @@ Why now:
 - frontend architecture and test maturity are much stronger now
 - the next missing discipline is production visibility, not another large refactor
 
+Status update:
+- Completed on 2026-04-03
+- `/api/v1/logs` now accepts client telemetry for the frontend baseline
+- the initial browser-side baseline covers client errors, route timings, API request telemetry, and `ttfb`/`fcp`/`lcp`
+
 5. Apply focused UX polish on high-traffic screens
 Why now:
 - the structural cleanup already happened

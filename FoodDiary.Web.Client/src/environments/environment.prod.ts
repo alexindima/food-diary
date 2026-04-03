@@ -26,4 +26,5 @@ export const environment: AppConfig = {
     buildVersion: '__BUILD_VERSION__',
     adminAppUrl: 'https://admin.fooddiary.club',
     enableGlobalErrorHandler: true,
+    enableClientObservability: true,
 };

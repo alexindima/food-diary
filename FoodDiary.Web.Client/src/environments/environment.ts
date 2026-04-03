@@ -26,4 +26,5 @@ export const environment: AppConfig = {
     buildVersion: 'dev',
     adminAppUrl: 'http://localhost:4300',
     enableGlobalErrorHandler: false,
+    enableClientObservability: false,
 };

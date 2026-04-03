@@ -5,6 +5,7 @@ export interface AppConfig {
     buildVersion?: string;
     adminAppUrl?: string;
     enableGlobalErrorHandler?: boolean;
+    enableClientObservability?: boolean;
 }
 
 export interface AppConfigApiUrls {

@@ -288,6 +288,12 @@ Done when:
 - route timings and API failure rates are measurable
 - a minimal web-vitals or RUM baseline is chosen
 
+Status:
+- Completed on 2026-04-03
+- `/api/v1/logs` is now the defined client telemetry path
+- baseline covers client errors, route timings, API request telemetry, and initial web vitals (`ttfb`, `fcp`, `lcp`)
+- documented in `FRONTEND_OBSERVABILITY_BASELINE.md`
+
 ### 5. Apply focused UX polish
 
 Done when:

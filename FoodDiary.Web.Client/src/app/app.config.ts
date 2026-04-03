@@ -16,8 +16,10 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import { LocalizationService } from './services/localization.service';
 import { AuthService } from './services/auth.service';
+import { FrontendObservabilityInterceptor } from './interceptor/frontend-observability.interceptor';
 import { RetryInterceptor } from './interceptor/retry.interceptor';
 import { AuthInterceptor } from './interceptor/auth.interceptor';
+import { FrontendObservabilityService } from './services/frontend-observability.service';
 import { LoggingApiService } from './services/logging-api.service';
 import { provideServiceWorker } from '@angular/service-worker';
 import { FdUiSnackBarModule } from 'fd-ui-kit/material';
@@ -38,6 +40,11 @@ export const appConfig: ApplicationConfig = {
                   GlobalErrorHandler,
               ]
             : []),
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: FrontendObservabilityInterceptor,
+            multi: true,
+        },
         {
             provide: HTTP_INTERCEPTORS,
             useClass: RetryInterceptor,
@@ -64,6 +71,9 @@ export const appConfig: ApplicationConfig = {
                 await localizationService.applyLanguagePreference(user?.language ?? null);
             });
         }),
+        provideAppInitializer(() => {
+            inject(FrontendObservabilityService).initialize();
+        }),
         provideAnimationsAsync(),
         provideZonelessChangeDetection(),
         provideRouter(routes, withComponentInputBinding(), withPreloading(PreloadAllModules)),
@@ -78,6 +88,7 @@ export const appConfig: ApplicationConfig = {
             registrationStrategy: 'registerWhenStable:30000',
         }),
         TranslateService,
+        FrontendObservabilityService,
         LocalizationService,
         LoggingApiService,
     ],

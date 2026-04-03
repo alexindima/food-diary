@@ -1,13 +1,42 @@
-import { Injectable } from '@angular/core';
-import { ApiService } from './api.service';
-import { environment } from '../../environments/environment';
+import { HttpClient, HttpContext } from '@angular/common/http';
+import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
+import { SKIP_AUTH } from '../constants/http-context.tokens';
+import { SKIP_OBSERVABILITY } from '../constants/observability-context.tokens';
+
+export type ClientTelemetryEvent = {
+    category: 'client_error' | 'route_timing' | 'http_request' | 'web_vital';
+    name: string;
+    level: 'info' | 'warning' | 'error';
+    timestamp: string;
+    message?: string;
+    location?: string;
+    route?: string;
+    httpMethod?: string;
+    outcome?: string;
+    durationMs?: number;
+    value?: number;
+    statusCode?: number;
+    unit?: string;
+    buildVersion?: string;
+    stack?: string;
+    details?: Record<string, unknown>;
+};
 
 @Injectable()
-export class LoggingApiService extends ApiService {
-    protected readonly baseUrl = environment.apiUrls.logs;
+export class LoggingApiService {
+    private readonly http = inject(HttpClient);
+    private readonly baseUrl = environment.apiUrls.logs;
+    private readonly telemetryContext = new HttpContext().set(SKIP_AUTH, true).set(SKIP_OBSERVABILITY, true);
 
-    public logError(payload: unknown): Observable<void> {
-        return this.post<void>('', payload);
+    public logEvent(payload: ClientTelemetryEvent): Observable<void> {
+        return this.http.post<void>(this.baseUrl, payload, {
+            context: this.telemetryContext,
+        });
+    }
+
+    public logError(payload: ClientTelemetryEvent): Observable<void> {
+        return this.logEvent(payload);
     }
 }

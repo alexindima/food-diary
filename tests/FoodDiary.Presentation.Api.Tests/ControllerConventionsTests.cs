@@ -139,6 +139,7 @@ public sealed class ControllerConventionsTests {
     public void NonAuthFeatureControllers_RequireAuthorizationAtControllerLevel() {
         var violations = GetFeatureControllerTypes()
             .Where(type => type.Namespace != "FoodDiary.Presentation.Api.Features.Auth")
+            .Where(type => !IsAnonymousInfrastructureController(type))
             .Where(type => type.IsAssignableTo(typeof(FoodDiary.Presentation.Api.Controllers.AuthorizedController)) is false)
             .Where(type => type.GetCustomAttribute<AuthorizeAttribute>() is null)
             .Select(type => type.FullName)
@@ -163,6 +164,7 @@ public sealed class ControllerConventionsTests {
     public void AllowAnonymous_IsUsedOnlyInAuthFeature() {
         var violations = GetFeatureControllerTypes()
             .SelectMany(GetActionMethods)
+            .Where(method => !IsAnonymousInfrastructureController(method.DeclaringType))
             .Where(method => method.GetCustomAttribute<AllowAnonymousAttribute>() is not null)
             .Where(method => method.DeclaringType?.Namespace != "FoodDiary.Presentation.Api.Features.Auth")
             .Select(FormatMethodName)
@@ -370,6 +372,9 @@ public sealed class ControllerConventionsTests {
                actualType == typeof(DateOnly) ||
                actualType == typeof(TimeOnly);
     }
+
+    private static bool IsAnonymousInfrastructureController(Type? type) =>
+        type?.FullName is "FoodDiary.Presentation.Api.Features.Logs.LogsController";
 
     private static string FormatMethodName(MethodInfo method) =>
         $"{method.DeclaringType!.FullName}.{method.Name}";
