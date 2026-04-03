@@ -2,14 +2,18 @@ using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Meals.Common;
 using FoodDiary.Application.Common.Models;
+using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Time;
 using FoodDiary.Application.Consumptions.Mappings;
 using FoodDiary.Application.Consumptions.Models;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Consumptions.Queries.GetConsumptions;
 
-public class GetConsumptionsQueryHandler(IMealRepository mealRepository)
+public class GetConsumptionsQueryHandler(
+    IMealRepository mealRepository,
+    IUserRepository userRepository)
     : IQueryHandler<GetConsumptionsQuery, Result<PagedResponse<ConsumptionModel>>> {
     public async Task<Result<PagedResponse<ConsumptionModel>>> Handle(GetConsumptionsQuery request, CancellationToken cancellationToken) {
         if (request.UserId is null || request.UserId == Guid.Empty) {
@@ -17,6 +21,10 @@ public class GetConsumptionsQueryHandler(IMealRepository mealRepository)
         }
 
         var userId = new UserId(request.UserId!.Value);
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        if (accessError is not null) {
+            return Result.Failure<PagedResponse<ConsumptionModel>>(accessError);
+        }
 
         var sanitizedPage = Math.Max(request.Page, 1);
         var sanitizedLimit = Math.Clamp(request.Limit, 1, 100);

@@ -1,4 +1,5 @@
 using FoodDiary.Application.Products.Common;
+using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.ShoppingLists.Commands.Common;
 using FoodDiary.Application.ShoppingLists.Commands.DeleteShoppingList;
 using FoodDiary.Application.ShoppingLists.Commands.UpdateShoppingList;
@@ -9,6 +10,7 @@ using FoodDiary.Application.ShoppingLists.Queries.GetShoppingLists;
 using FoodDiary.Application.ShoppingLists.Services;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Shopping;
+using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.ShoppingLists;
@@ -16,7 +18,7 @@ namespace FoodDiary.Application.Tests.ShoppingLists;
 public class ShoppingListsFeatureTests {
     [Fact]
     public async Task GetCurrentShoppingListQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
-        var handler = new GetCurrentShoppingListQueryHandler(new NoopShoppingListRepository());
+        var handler = new GetCurrentShoppingListQueryHandler(new NoopShoppingListRepository(), new StubUserRepository(User.Create("user@example.com", "hash")));
         var result = await handler.Handle(new GetCurrentShoppingListQuery(null), CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -25,7 +27,7 @@ public class ShoppingListsFeatureTests {
 
     [Fact]
     public async Task GetShoppingListByIdQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
-        var handler = new GetShoppingListByIdQueryHandler(new NoopShoppingListRepository());
+        var handler = new GetShoppingListByIdQueryHandler(new NoopShoppingListRepository(), new StubUserRepository(User.Create("user@example.com", "hash")));
         var result = await handler.Handle(new GetShoppingListByIdQuery(null, Guid.NewGuid()), CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -34,7 +36,7 @@ public class ShoppingListsFeatureTests {
 
     [Fact]
     public async Task GetShoppingListByIdQueryHandler_WithEmptyShoppingListId_ReturnsValidationFailure() {
-        var handler = new GetShoppingListByIdQueryHandler(new NoopShoppingListRepository());
+        var handler = new GetShoppingListByIdQueryHandler(new NoopShoppingListRepository(), new StubUserRepository(User.Create("user@example.com", "hash")));
         var result = await handler.Handle(new GetShoppingListByIdQuery(Guid.NewGuid(), Guid.Empty), CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -44,7 +46,7 @@ public class ShoppingListsFeatureTests {
 
     [Fact]
     public async Task GetShoppingListsQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
-        var handler = new GetShoppingListsQueryHandler(new NoopShoppingListRepository());
+        var handler = new GetShoppingListsQueryHandler(new NoopShoppingListRepository(), new StubUserRepository(User.Create("user@example.com", "hash")));
         var result = await handler.Handle(new GetShoppingListsQuery(null), CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -53,7 +55,7 @@ public class ShoppingListsFeatureTests {
 
     [Fact]
     public async Task DeleteShoppingListCommandHandler_WithEmptyShoppingListId_ReturnsValidationFailure() {
-        var handler = new DeleteShoppingListCommandHandler(new NoopShoppingListRepository());
+        var handler = new DeleteShoppingListCommandHandler(new NoopShoppingListRepository(), new StubUserRepository(User.Create("user@example.com", "hash")));
         var result = await handler.Handle(new DeleteShoppingListCommand(Guid.NewGuid(), Guid.Empty), CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -63,7 +65,10 @@ public class ShoppingListsFeatureTests {
 
     [Fact]
     public async Task UpdateShoppingListCommandHandler_WithEmptyShoppingListId_ReturnsValidationFailure() {
-        var handler = new UpdateShoppingListCommandHandler(new NoopShoppingListRepository(), new NoopProductLookupService());
+        var handler = new UpdateShoppingListCommandHandler(
+            new NoopShoppingListRepository(),
+            new NoopProductLookupService(),
+            new StubUserRepository(User.Create("user@example.com", "hash")));
         var result = await handler.Handle(
             new UpdateShoppingListCommand(Guid.NewGuid(), Guid.Empty, "Weekly", null),
             CancellationToken.None);
@@ -153,5 +158,31 @@ public class ShoppingListsFeatureTests {
             UserId userId,
             CancellationToken cancellationToken = default) =>
             Task.FromResult<IReadOnlyDictionary<ProductId, Product>>(new Dictionary<ProductId, Product>());
+    }
+
+    [Fact]
+    public async Task GetShoppingListsQueryHandler_WithDeletedUser_ReturnsAccountDeleted() {
+        var user = User.Create("deleted-shopping@example.com", "hash");
+        user.DeleteAccount(DateTime.UtcNow);
+        var handler = new GetShoppingListsQueryHandler(new NoopShoppingListRepository(), new StubUserRepository(user));
+
+        var result = await handler.Handle(new GetShoppingListsQuery(user.Id.Value), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
+    }
+
+    private sealed class StubUserRepository(User user) : IUserRepository {
+        public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult<User?>(user);
+        public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult<User?>(user);
+        public Task<User?> GetByTelegramUserIdAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User?> GetByTelegramUserIdIncludingDeletedAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<(IReadOnlyList<User> Items, int TotalItems)> GetPagedAsync(string? search, int page, int limit, bool includeDeleted, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers)> GetAdminDashboardSummaryAsync(int recentLimit, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<IReadOnlyList<Role>> GetRolesByNamesAsync(IReadOnlyList<string> names, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User> AddAsync(User addedUser, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task UpdateAsync(User updatedUser, CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 }

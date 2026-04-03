@@ -3,11 +3,14 @@ using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Recipes.Mappings;
 using FoodDiary.Application.Recipes.Models;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Recipes.Queries.GetRecipeById;
 
-public class GetRecipeByIdQueryHandler(IRecipeRepository recipeRepository)
+public class GetRecipeByIdQueryHandler(
+    IRecipeRepository recipeRepository,
+    IUserRepository userRepository)
     : IQueryHandler<GetRecipeByIdQuery, Result<RecipeModel>> {
     public async Task<Result<RecipeModel>> Handle(GetRecipeByIdQuery query, CancellationToken cancellationToken) {
         if (query.UserId is null || query.UserId == Guid.Empty) {
@@ -19,6 +22,10 @@ public class GetRecipeByIdQueryHandler(IRecipeRepository recipeRepository)
         }
 
         var userId = new UserId(query.UserId!.Value);
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        if (accessError is not null) {
+            return Result.Failure<RecipeModel>(accessError);
+        }
         var recipeId = new RecipeId(query.RecipeId);
 
         var recipe = await recipeRepository.GetByIdAsync(

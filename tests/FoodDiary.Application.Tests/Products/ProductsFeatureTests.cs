@@ -9,6 +9,7 @@ using FoodDiary.Application.Products.Queries.GetProducts;
 using FoodDiary.Application.Products.Queries.GetProductsWithRecent;
 using FoodDiary.Application.Products.Queries.GetRecentProducts;
 using FoodDiary.Domain.Entities.Products;
+using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -37,7 +38,7 @@ public class ProductsFeatureTests {
 
     [Fact]
     public async Task GetProductsQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
-        var handler = new GetProductsQueryHandler(new NoopProductRepository());
+        var handler = new GetProductsQueryHandler(new NoopProductRepository(), new StubUserRepository(User.Create("user@example.com", "hash")));
         var query = new GetProductsQuery(null, 1, 10, null, true);
 
         var result = await handler.Handle(query, CancellationToken.None);
@@ -48,7 +49,7 @@ public class ProductsFeatureTests {
 
     [Fact]
     public async Task CreateProductCommandHandler_WithMissingUserId_ReturnsInvalidToken() {
-        var handler = new CreateProductCommandHandler(new NoopProductRepository());
+        var handler = new CreateProductCommandHandler(new NoopProductRepository(), new StubUserRepository(User.Create("user@example.com", "hash")));
         var command = new CreateProductCommand(
             UserId: null,
             Barcode: null,
@@ -79,7 +80,7 @@ public class ProductsFeatureTests {
 
     [Fact]
     public async Task CreateProductCommandHandler_WithEmptyImageAssetId_ReturnsValidationFailure() {
-        var handler = new CreateProductCommandHandler(new NoopProductRepository());
+        var handler = new CreateProductCommandHandler(new NoopProductRepository(), new StubUserRepository(User.Create("user@example.com", "hash")));
         var command = new CreateProductCommand(
             UserId: Guid.NewGuid(),
             Barcode: null,
@@ -130,7 +131,7 @@ public class ProductsFeatureTests {
 
         var repository = new SingleProductRepository(product);
         var cleanup = new RecordingCleanupService("storage_error");
-        var handler = new DeleteProductCommandHandler(repository, cleanup);
+        var handler = new DeleteProductCommandHandler(repository, cleanup, new StubUserRepository(User.Create("user@example.com", "hash")));
 
         var result = await handler.Handle(new DeleteProductCommand(userId.Value, product.Id.Value), CancellationToken.None);
 
@@ -141,7 +142,10 @@ public class ProductsFeatureTests {
 
     [Fact]
     public async Task DeleteProductCommandHandler_WithEmptyProductId_ReturnsValidationFailure() {
-        var handler = new DeleteProductCommandHandler(new NoopProductRepository(), new RecordingCleanupService());
+        var handler = new DeleteProductCommandHandler(
+            new NoopProductRepository(),
+            new RecordingCleanupService(),
+            new StubUserRepository(User.Create("user@example.com", "hash")));
 
         var result = await handler.Handle(
             new DeleteProductCommand(Guid.NewGuid(), Guid.Empty),
@@ -154,7 +158,7 @@ public class ProductsFeatureTests {
 
     [Fact]
     public async Task GetProductByIdQueryHandler_WithEmptyProductId_ReturnsValidationFailure() {
-        var handler = new GetProductByIdQueryHandler(new NoopProductRepository());
+        var handler = new GetProductByIdQueryHandler(new NoopProductRepository(), new StubUserRepository(User.Create("user@example.com", "hash")));
 
         var result = await handler.Handle(
             new GetProductByIdQuery(Guid.NewGuid(), Guid.Empty),
@@ -200,7 +204,7 @@ public class ProductsFeatureTests {
 
         var repository = new SingleProductRepository(product);
         var cleanup = new RecordingCleanupService("storage_error");
-        var handler = new UpdateProductCommandHandler(repository, cleanup);
+        var handler = new UpdateProductCommandHandler(repository, cleanup, new StubUserRepository(User.Create("user@example.com", "hash")));
 
         var command = new UpdateProductCommand(
             userId.Value,
@@ -258,7 +262,10 @@ public class ProductsFeatureTests {
             visibility: Visibility.Private);
 
         var repository = new SingleProductRepository(product);
-        var handler = new UpdateProductCommandHandler(repository, new RecordingCleanupService());
+        var handler = new UpdateProductCommandHandler(
+            repository,
+            new RecordingCleanupService(),
+            new StubUserRepository(User.Create("user@example.com", "hash")));
 
         var result = await handler.Handle(
             new UpdateProductCommand(
@@ -299,7 +306,10 @@ public class ProductsFeatureTests {
 
     [Fact]
     public async Task UpdateProductCommandHandler_WithEmptyProductId_ReturnsValidationFailure() {
-        var handler = new UpdateProductCommandHandler(new NoopProductRepository(), new RecordingCleanupService());
+        var handler = new UpdateProductCommandHandler(
+            new NoopProductRepository(),
+            new RecordingCleanupService(),
+            new StubUserRepository(User.Create("user@example.com", "hash")));
 
         var result = await handler.Handle(
             new UpdateProductCommand(
@@ -336,6 +346,20 @@ public class ProductsFeatureTests {
         Assert.True(result.IsFailure);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("ProductId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task GetProductsQueryHandler_WithDeletedUser_ReturnsAccountDeleted() {
+        var user = User.Create("deleted-product@example.com", "hash");
+        user.DeleteAccount(DateTime.UtcNow);
+        var handler = new GetProductsQueryHandler(new NoopProductRepository(), new StubUserRepository(user));
+
+        var result = await handler.Handle(
+            new GetProductsQuery(user.Id.Value, 1, 10, null, true),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
     private sealed class NoopProductRepository : IProductRepository {
@@ -433,5 +457,19 @@ public class ProductsFeatureTests {
 
         public Task<int> CleanupOrphansAsync(DateTime olderThanUtc, int batchSize, CancellationToken cancellationToken = default) =>
             Task.FromResult(0);
+    }
+
+    private sealed class StubUserRepository(User user) : IUserRepository {
+        public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult<User?>(user);
+        public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult<User?>(user);
+        public Task<User?> GetByTelegramUserIdAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User?> GetByTelegramUserIdIncludingDeletedAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<(IReadOnlyList<User> Items, int TotalItems)> GetPagedAsync(string? search, int page, int limit, bool includeDeleted, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers)> GetAdminDashboardSummaryAsync(int recentLimit, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<IReadOnlyList<Role>> GetRolesByNamesAsync(IReadOnlyList<string> names, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User> AddAsync(User addedUser, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task UpdateAsync(User updatedUser, CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 }

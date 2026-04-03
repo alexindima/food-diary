@@ -4,13 +4,16 @@ using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Products.Mappings;
 using FoodDiary.Application.Products.Models;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Products.Commands.CreateProduct;
 
-public class CreateProductCommandHandler(IProductRepository productRepository)
+public class CreateProductCommandHandler(
+    IProductRepository productRepository,
+    IUserRepository userRepository)
     : ICommandHandler<CreateProductCommand, Result<ProductModel>> {
     public async Task<Result<ProductModel>>
         Handle(CreateProductCommand command, CancellationToken cancellationToken) {
@@ -19,6 +22,10 @@ public class CreateProductCommandHandler(IProductRepository productRepository)
         }
 
         var userId = new UserId(command.UserId!.Value);
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        if (accessError is not null) {
+            return Result.Failure<ProductModel>(accessError);
+        }
 
         var baseUnitResult = EnumValueParser.ParseRequired<MeasurementUnit>(
             command.BaseUnit,

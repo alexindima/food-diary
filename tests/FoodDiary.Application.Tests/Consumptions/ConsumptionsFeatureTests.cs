@@ -1,4 +1,5 @@
 using FoodDiary.Application.Common.Abstractions.Result;
+using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Meals.Common;
 using FoodDiary.Application.Common.Interfaces.Services;
 using FoodDiary.Application.Images.Common;
@@ -15,6 +16,7 @@ using FoodDiary.Application.Consumptions.Services;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Recipes;
+using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Presentation.Api.Features.Consumptions.Mappings;
@@ -189,6 +191,7 @@ public class ConsumptionsFeatureTests {
             repository,
             new NoopMealNutritionService(),
             new RecordingRecentItemRepository(),
+            new StubUserRepository(User.Create("user@example.com", "hash")),
             new StubDateTimeProvider());
 
         var command = new CreateConsumptionCommand(
@@ -225,6 +228,7 @@ public class ConsumptionsFeatureTests {
             repository,
             new NoopMealNutritionService(),
             new RecordingRecentItemRepository(),
+            new StubUserRepository(User.Create("user@example.com", "hash")),
             new StubDateTimeProvider());
 
         var result = await handler.Handle(
@@ -261,6 +265,7 @@ public class ConsumptionsFeatureTests {
             repository,
             new NoopMealNutritionService(),
             new RecordingRecentItemRepository(),
+            new StubUserRepository(User.Create("user@example.com", "hash")),
             new StubDateTimeProvider());
 
         var result = await handler.Handle(
@@ -297,6 +302,7 @@ public class ConsumptionsFeatureTests {
             repository,
             new NoopMealNutritionService(),
             new RecordingRecentItemRepository(),
+            new StubUserRepository(User.Create("user@example.com", "hash")),
             new StubDateTimeProvider());
 
         var result = await handler.Handle(
@@ -479,7 +485,9 @@ public class ConsumptionsFeatureTests {
 
     [Fact]
     public async Task GetConsumptionsQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
-        var handler = new GetConsumptionsQueryHandler(new CreatingMealRepository());
+        var handler = new GetConsumptionsQueryHandler(
+            new CreatingMealRepository(),
+            new StubUserRepository(User.Create("user@example.com", "hash")));
 
         var result = await handler.Handle(
             new GetConsumptionsQuery(null, 1, 10, null, null),
@@ -492,7 +500,9 @@ public class ConsumptionsFeatureTests {
     [Fact]
     public async Task GetConsumptionsQueryHandler_NormalizesDateRangeToUtcForRepositoryQuery() {
         var repository = new RecordingMealPageRepository();
-        var handler = new GetConsumptionsQueryHandler(repository);
+        var handler = new GetConsumptionsQueryHandler(
+            repository,
+            new StubUserRepository(User.Create("user@example.com", "hash")));
         var userId = UserId.New();
         var localFrom = new DateTime(2026, 3, 1, 0, 0, 0, DateTimeKind.Local);
         var localTo = new DateTime(2026, 3, 31, 0, 0, 0, DateTimeKind.Local);
@@ -681,5 +691,35 @@ public class ConsumptionsFeatureTests {
 
     private sealed class StubDateTimeProvider : IDateTimeProvider {
         public DateTime UtcNow => new(2026, 3, 26, 18, 0, 0, DateTimeKind.Utc);
+    }
+
+    [Fact]
+    public async Task GetConsumptionsQueryHandler_WithDeletedUser_ReturnsAccountDeleted() {
+        var user = User.Create("deleted-consumption@example.com", "hash");
+        user.DeleteAccount(DateTime.UtcNow);
+        var handler = new GetConsumptionsQueryHandler(
+            new CreatingMealRepository(),
+            new StubUserRepository(user));
+
+        var result = await handler.Handle(
+            new GetConsumptionsQuery(user.Id.Value, 1, 10, null, null),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
+    }
+
+    private sealed class StubUserRepository(User user) : IUserRepository {
+        public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult<User?>(user);
+        public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult<User?>(user);
+        public Task<User?> GetByTelegramUserIdAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User?> GetByTelegramUserIdIncludingDeletedAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<(IReadOnlyList<User> Items, int TotalItems)> GetPagedAsync(string? search, int page, int limit, bool includeDeleted, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers)> GetAdminDashboardSummaryAsync(int recentLimit, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<IReadOnlyList<Role>> GetRolesByNamesAsync(IReadOnlyList<string> names, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User> AddAsync(User addedUser, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task UpdateAsync(User updatedUser, CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 }

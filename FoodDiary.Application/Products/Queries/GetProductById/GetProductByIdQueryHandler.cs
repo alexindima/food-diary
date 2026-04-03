@@ -3,11 +3,14 @@ using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Products.Mappings;
 using FoodDiary.Application.Products.Models;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Products.Queries.GetProductById;
 
-public class GetProductByIdQueryHandler(IProductRepository productRepository)
+public class GetProductByIdQueryHandler(
+    IProductRepository productRepository,
+    IUserRepository userRepository)
     : IQueryHandler<GetProductByIdQuery, Result<ProductModel>> {
     public async Task<Result<ProductModel>> Handle(
         GetProductByIdQuery query,
@@ -21,6 +24,10 @@ public class GetProductByIdQueryHandler(IProductRepository productRepository)
         }
 
         var userId = new UserId(query.UserId!.Value);
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        if (accessError is not null) {
+            return Result.Failure<ProductModel>(accessError);
+        }
         var productId = new ProductId(query.ProductId);
         var product = await productRepository.GetByIdAsync(
             productId,

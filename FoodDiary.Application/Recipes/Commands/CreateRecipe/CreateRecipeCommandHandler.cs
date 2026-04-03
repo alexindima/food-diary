@@ -6,13 +6,16 @@ using FoodDiary.Application.Recipes.Common;
 using FoodDiary.Application.Recipes.Mappings;
 using FoodDiary.Application.Recipes.Models;
 using FoodDiary.Application.Recipes.Services;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Recipes.Commands.CreateRecipe;
 
-public class CreateRecipeCommandHandler(IRecipeRepository recipeRepository)
+public class CreateRecipeCommandHandler(
+    IRecipeRepository recipeRepository,
+    IUserRepository userRepository)
     : ICommandHandler<CreateRecipeCommand, Result<RecipeModel>> {
     public async Task<Result<RecipeModel>> Handle(CreateRecipeCommand command, CancellationToken cancellationToken) {
         if (command.UserId is null || command.UserId == Guid.Empty) {
@@ -25,6 +28,10 @@ public class CreateRecipeCommandHandler(IRecipeRepository recipeRepository)
         }
 
         var userId = new UserId(command.UserId!.Value);
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        if (accessError is not null) {
+            return Result.Failure<RecipeModel>(accessError);
+        }
 
         var visibilityResult = EnumValueParser.ParseRequired<Visibility>(
             command.Visibility,

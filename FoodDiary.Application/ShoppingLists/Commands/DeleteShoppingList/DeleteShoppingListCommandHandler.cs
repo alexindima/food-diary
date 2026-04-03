@@ -1,11 +1,15 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
+using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.ShoppingLists.Common;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.ShoppingLists.Commands.DeleteShoppingList;
 
-public class DeleteShoppingListCommandHandler(IShoppingListRepository shoppingListRepository)
+public class DeleteShoppingListCommandHandler(
+    IShoppingListRepository shoppingListRepository,
+    IUserRepository userRepository)
     : ICommandHandler<DeleteShoppingListCommand, Result> {
     public async Task<Result> Handle(
         DeleteShoppingListCommand command,
@@ -19,6 +23,10 @@ public class DeleteShoppingListCommandHandler(IShoppingListRepository shoppingLi
         }
 
         var userId = new UserId(command.UserId!.Value);
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        if (accessError is not null) {
+            return Result.Failure(accessError);
+        }
         var shoppingListId = new ShoppingListId(command.ShoppingListId);
 
         var list = await shoppingListRepository.GetByIdAsync(

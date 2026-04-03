@@ -2,12 +2,14 @@ using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Meals.Common;
 using FoodDiary.Application.RecentItems.Common;
+using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Interfaces.Services;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Consumptions.Mappings;
 using FoodDiary.Application.Consumptions.Models;
 using FoodDiary.Application.Consumptions.Common;
 using FoodDiary.Application.Consumptions.Services;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
@@ -19,6 +21,7 @@ public class CreateConsumptionCommandHandler(
     IMealRepository mealRepository,
     IMealNutritionService mealNutritionService,
     IRecentItemRepository recentItemRepository,
+    IUserRepository userRepository,
     IDateTimeProvider dateTimeProvider)
     : ICommandHandler<CreateConsumptionCommand, Result<ConsumptionModel>> {
     public async Task<Result<ConsumptionModel>> Handle(CreateConsumptionCommand command, CancellationToken cancellationToken) {
@@ -32,6 +35,11 @@ public class CreateConsumptionCommandHandler(
         }
 
         var userId = new UserId(command.UserId!.Value);
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        if (accessError is not null) {
+            return Result.Failure<ConsumptionModel>(accessError);
+        }
+
         var mealTypeResult = EnumValueParser.ParseOptional<MealType>(
             command.MealType,
             nameof(command.MealType),

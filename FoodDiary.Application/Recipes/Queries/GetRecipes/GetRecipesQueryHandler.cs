@@ -4,11 +4,14 @@ using FoodDiary.Application.Common.Models;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Recipes.Mappings;
 using FoodDiary.Application.Recipes.Models;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Recipes.Queries.GetRecipes;
 
-public class GetRecipesQueryHandler(IRecipeRepository recipeRepository)
+public class GetRecipesQueryHandler(
+    IRecipeRepository recipeRepository,
+    IUserRepository userRepository)
     : IQueryHandler<GetRecipesQuery, Result<PagedResponse<RecipeModel>>> {
     public async Task<Result<PagedResponse<RecipeModel>>> Handle(GetRecipesQuery query, CancellationToken cancellationToken) {
         if (query.UserId is null || query.UserId == Guid.Empty) {
@@ -18,6 +21,10 @@ public class GetRecipesQueryHandler(IRecipeRepository recipeRepository)
         var pageNumber = Math.Max(query.Page, 1);
         var pageSize = Math.Max(query.Limit, 1);
         var userId = new UserId(query.UserId!.Value);
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        if (accessError is not null) {
+            return Result.Failure<PagedResponse<RecipeModel>>(accessError);
+        }
 
         var (items, totalItems) = await recipeRepository.GetPagedAsync(
             userId,

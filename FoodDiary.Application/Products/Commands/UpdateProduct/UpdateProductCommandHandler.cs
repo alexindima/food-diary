@@ -5,6 +5,7 @@ using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Images.Common;
 using FoodDiary.Application.Products.Mappings;
 using FoodDiary.Application.Products.Models;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -12,7 +13,8 @@ namespace FoodDiary.Application.Products.Commands.UpdateProduct;
 
 public class UpdateProductCommandHandler(
     IProductRepository productRepository,
-    IImageAssetCleanupService imageAssetCleanupService)
+    IImageAssetCleanupService imageAssetCleanupService,
+    IUserRepository userRepository)
     : ICommandHandler<UpdateProductCommand, Result<ProductModel>> {
     public async Task<Result<ProductModel>>
         Handle(UpdateProductCommand command, CancellationToken cancellationToken) {
@@ -25,6 +27,11 @@ public class UpdateProductCommandHandler(
         }
 
         var userId = new UserId(command.UserId!.Value);
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        if (accessError is not null) {
+            return Result.Failure<ProductModel>(accessError);
+        }
+
         var productId = new ProductId(command.ProductId);
 
         var product = await productRepository.GetByIdAsync(

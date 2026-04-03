@@ -8,6 +8,7 @@ using FoodDiary.Application.Recipes.Queries.GetRecipeById;
 using FoodDiary.Application.Recipes.Queries.GetRecentRecipes;
 using FoodDiary.Application.Recipes.Queries.GetRecipesWithRecent;
 using FoodDiary.Domain.Entities.Recipes;
+using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -77,7 +78,7 @@ public class RecipesFeatureTests {
     public async Task CreateRecipeCommandHandler_WhenManualNutritionMissing_ReturnsValidationFailure() {
         var userId = UserId.New();
         var repository = new SingleRecipeRepositoryForCreate();
-        var handler = new CreateRecipeCommandHandler(repository);
+        var handler = new CreateRecipeCommandHandler(repository, new StubUserRepository(User.Create("user@example.com", "hash")));
 
         var result = await handler.Handle(
             new CreateRecipeCommand(
@@ -109,7 +110,7 @@ public class RecipesFeatureTests {
 
     [Fact]
     public async Task GetRecipeByIdQueryHandler_WithEmptyRecipeId_ReturnsValidationFailure() {
-        var handler = new GetRecipeByIdQueryHandler(new SingleRecipeRepositoryForCreate());
+        var handler = new GetRecipeByIdQueryHandler(new SingleRecipeRepositoryForCreate(), new StubUserRepository(User.Create("user@example.com", "hash")));
 
         var result = await handler.Handle(
             new GetRecipeByIdQuery(Guid.NewGuid(), Guid.Empty, false),
@@ -137,7 +138,7 @@ public class RecipesFeatureTests {
     public async Task CreateRecipeCommandHandler_WithEmptyImageAssetId_ReturnsValidationFailure() {
         var userId = UserId.New();
         var repository = new SingleRecipeRepositoryForCreate();
-        var handler = new CreateRecipeCommandHandler(repository);
+        var handler = new CreateRecipeCommandHandler(repository, new StubUserRepository(User.Create("user@example.com", "hash")));
 
         var result = await handler.Handle(
             new CreateRecipeCommand(
@@ -171,7 +172,7 @@ public class RecipesFeatureTests {
     public async Task CreateRecipeCommandHandler_WithEmptyStepImageAssetId_ReturnsValidationFailure() {
         var userId = UserId.New();
         var repository = new SingleRecipeRepositoryForCreate();
-        var handler = new CreateRecipeCommandHandler(repository);
+        var handler = new CreateRecipeCommandHandler(repository, new StubUserRepository(User.Create("user@example.com", "hash")));
 
         var result = await handler.Handle(
             new CreateRecipeCommand(
@@ -211,7 +212,7 @@ public class RecipesFeatureTests {
     public async Task CreateRecipeCommandHandler_WithEmptyIngredientProductId_ReturnsValidationFailure() {
         var userId = UserId.New();
         var repository = new SingleRecipeRepositoryForCreate();
-        var handler = new CreateRecipeCommandHandler(repository);
+        var handler = new CreateRecipeCommandHandler(repository, new StubUserRepository(User.Create("user@example.com", "hash")));
 
         var result = await handler.Handle(
             new CreateRecipeCommand(
@@ -352,5 +353,53 @@ public class RecipesFeatureTests {
 
         public Task<int> CleanupOrphansAsync(DateTime olderThanUtc, int batchSize, CancellationToken cancellationToken = default) =>
             Task.FromResult(0);
+    }
+
+    [Fact]
+    public async Task CreateRecipeCommandHandler_WithDeletedUser_ReturnsAccountDeleted() {
+        var user = User.Create("deleted-recipe@example.com", "hash");
+        user.DeleteAccount(DateTime.UtcNow);
+        var repository = new SingleRecipeRepositoryForCreate();
+        var handler = new CreateRecipeCommandHandler(repository, new StubUserRepository(user));
+
+        var result = await handler.Handle(
+            new CreateRecipeCommand(
+                user.Id.Value,
+                Name: "Soup",
+                Description: null,
+                Comment: null,
+                Category: null,
+                ImageUrl: null,
+                ImageAssetId: null,
+                PrepTime: 10,
+                CookTime: 20,
+                Servings: 2,
+                Visibility: Visibility.Private.ToString(),
+                CalculateNutritionAutomatically: true,
+                ManualCalories: null,
+                ManualProteins: null,
+                ManualFats: null,
+                ManualCarbs: null,
+                ManualFiber: null,
+                ManualAlcohol: null,
+                Steps: [CreateRecipeCreateStep(order: 1, "Step 1")]),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
+    }
+
+    private sealed class StubUserRepository(User user) : IUserRepository {
+        public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult<User?>(user);
+        public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult<User?>(user);
+        public Task<User?> GetByTelegramUserIdAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User?> GetByTelegramUserIdIncludingDeletedAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<(IReadOnlyList<User> Items, int TotalItems)> GetPagedAsync(string? search, int page, int limit, bool includeDeleted, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers)> GetAdminDashboardSummaryAsync(int recentLimit, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<IReadOnlyList<Role>> GetRolesByNamesAsync(IReadOnlyList<string> names, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User> AddAsync(User addedUser, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task UpdateAsync(User updatedUser, CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 }
