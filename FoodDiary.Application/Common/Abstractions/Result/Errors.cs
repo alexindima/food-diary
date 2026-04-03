@@ -90,6 +90,21 @@ public static class Errors {
             "Invalid authorization token.",
             kind: ErrorKind.Unauthorized);
 
+        public static Error GoogleInvalidToken => new(
+            "Authentication.GoogleInvalidToken",
+            "Google credential is invalid.",
+            kind: ErrorKind.Unauthorized);
+
+        public static Error GoogleNotConfigured => new(
+            "Authentication.GoogleNotConfigured",
+            "Google authentication is not configured.",
+            kind: ErrorKind.Internal);
+
+        public static Error GoogleEmailNotVerified => new(
+            "Authentication.GoogleEmailNotVerified",
+            "Google account email is not verified.",
+            kind: ErrorKind.Unauthorized);
+
         public static Error AccountDeleted => new(
             "Authentication.AccountDeleted",
             "Account is scheduled for deletion.",

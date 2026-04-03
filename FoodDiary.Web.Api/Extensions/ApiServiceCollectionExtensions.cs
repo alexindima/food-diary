@@ -67,6 +67,12 @@ public static class ApiServiceCollectionExtensions {
             .Validate(TelegramBotAuthOptions.HasValidApiSecret,
                 "TelegramBot:ApiSecret must be empty or at least 16 characters long.")
             .ValidateOnStart();
+        services
+            .AddOptions<GoogleAuthOptions>()
+            .BindConfiguration(GoogleAuthOptions.SectionName)
+            .Validate(GoogleAuthOptions.HasValidClientId,
+                "GoogleAuth:ClientId must be empty or a non-whitespace value.")
+            .ValidateOnStart();
         services.AddSingleton<IConfigureOptions<Microsoft.AspNetCore.Cors.Infrastructure.CorsOptions>, CorsOptionsSetup>();
         services.AddSingleton<IConfigureOptions<ForwardedHeadersOptions>, ForwardedHeadersOptionsSetup>();
         services.AddSingleton<IConfigureOptions<Microsoft.AspNetCore.RateLimiting.RateLimiterOptions>, RateLimiterOptionsSetup>();

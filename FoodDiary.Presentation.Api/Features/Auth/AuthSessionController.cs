@@ -36,6 +36,15 @@ public sealed class AuthSessionController(ISender mediator, ILogger<AuthSessionC
     public Task<IActionResult> Login([FromBody] LoginHttpRequest request) =>
         HandleObservedOk(request.ToCommand(), static value => value.ToHttpResponse(), _logger, "auth.login");
 
+    [HttpPost("google")]
+    [ProducesResponseType<AuthenticationHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [ProducesApiErrorResponse(StatusCodes.Status401Unauthorized)]
+    [ProducesApiErrorResponse(StatusCodes.Status429TooManyRequests)]
+    [EnableRateLimiting(PresentationPolicyNames.AuthRateLimitPolicyName)]
+    public Task<IActionResult> GoogleLogin([FromBody] GoogleLoginHttpRequest request) =>
+        HandleObservedOk(request.ToCommand(), static value => value.ToHttpResponse(), _logger, "auth.google-login");
+
     [HttpPost("refresh")]
     [EnableIdempotency]
     [ProducesResponseType<AuthenticationHttpResponse>(StatusCodes.Status200OK)]

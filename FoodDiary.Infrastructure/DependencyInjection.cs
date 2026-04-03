@@ -102,6 +102,11 @@ public static class DependencyInjection {
             .ValidateOnStart();
         services.AddOptions<TelegramAuthOptions>()
             .Bind(configuration.GetSection(TelegramAuthOptions.SectionName));
+        services.AddOptions<GoogleAuthOptions>()
+            .Bind(configuration.GetSection(GoogleAuthOptions.SectionName))
+            .Validate(GoogleAuthOptions.HasValidClientId,
+                "GoogleAuth:ClientId must be empty or a non-whitespace value.")
+            .ValidateOnStart();
         services.AddOptions<OpenAiOptions>()
             .Bind(configuration.GetSection(OpenAiOptions.SectionName))
             .Validate(static options => string.IsNullOrWhiteSpace(options.VisionModel) || !string.IsNullOrWhiteSpace(options.VisionFallbackModel),
@@ -159,6 +164,7 @@ public static class DependencyInjection {
         services.AddSingleton<IImageStorageService, S3ImageStorageService>();
         services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
         services.AddSingleton<IPasswordHasher, PasswordHasher>();
+        services.AddSingleton<IGoogleTokenValidator, GoogleTokenValidator>();
         services.AddSingleton<ITelegramAuthValidator, TelegramAuthValidator>();
         services.AddSingleton<ITelegramLoginWidgetValidator, TelegramLoginWidgetValidator>();
         services.AddSingleton<IAdminSsoService, AdminSsoService>();
