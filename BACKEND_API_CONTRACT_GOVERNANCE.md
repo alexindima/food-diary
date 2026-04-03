@@ -7,8 +7,6 @@ Scope: HTTP contract of `FoodDiary.Presentation.Api` and `FoodDiary.Web.Api`
 
 Protect the backend HTTP contract from accidental breaking changes.
 
-This document is the execution artifact for `B05` in `BACKEND_10_OF_10_PLAN.md`.
-
 ## Current Contract Protection Layers
 
 ### 1. Presentation-Level Conventions

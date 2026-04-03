@@ -5,7 +5,7 @@ Scope: backend incident handling, Docker deploy, and operational recovery
 
 ## Purpose
 
-This document captures the first operational runbook baseline for `B11` in `BACKEND_10_OF_10_PLAN.md`.
+This document captures the operational runbook baseline for backend incidents and deploy recovery.
 
 Use it to reduce decision latency during incidents and to keep recovery steps reproducible across environments.
 

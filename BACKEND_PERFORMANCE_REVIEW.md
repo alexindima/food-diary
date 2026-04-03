@@ -26,7 +26,7 @@ Filters by `UserId` and optional date range, then sorts by `Date` and `CreatedOn
 4. `ProductRepository` and `RecipeRepository` paging
 Both sort by `CreatedOnUtc` after filtering by ownership and public visibility, but had no explicit index coverage for those common read paths.
 
-## Changes Applied In B07
+## Changes Applied
 
 - Replaced `ToLower().Contains(...)` search in product and recipe paging with escaped PostgreSQL `ILIKE`.
 - Added composite indexes for:
@@ -60,12 +60,12 @@ The first repeatable performance gates are intentionally narrow and PostgreSQL-b
 Why this path first:
 
 - product list is a high-value read path
-- it was already part of the `B07` query review and indexing pass
+- it was already part of the query review and indexing pass
 - the scenario is simple enough to stay repeatable in Docker-backed PostgreSQL tests without a dedicated benchmark harness
 
 Why recipe was mirrored next:
 
-- recipe paging had the same search and index-risk profile as product paging in `B07`
+- recipe paging had the same search and index-risk profile as product paging
 - the repository shape is close enough that the same latency budget remains understandable and reviewable
 
 How to use the gate:

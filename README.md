@@ -90,7 +90,6 @@ dotnet user-secrets set "Jwt:SecretKey" "your-very-long-local-development-secret
 
 Backend work should follow these repository documents:
 
-- `BACKEND_10_OF_10_PLAN.md`
 - `BACKEND_TIME_POLICY.md`
 - `BACKEND_CRITICAL_FLOW_MATRIX.md`
 - `BACKEND_DEFINITION_OF_DONE.md`
@@ -112,4 +111,4 @@ Backend work should follow these repository documents:
 
 ## Status
 
-The repository is in an active migration/cleanup phase. Prefer project-specific guides from `AGENTS.md` when working in a specific folder.
+The repository is in active development. Prefer project-specific guides from `AGENTS.md` when working in a specific folder.

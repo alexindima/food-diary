@@ -2,7 +2,7 @@
 
 ## Scope
 
-This document captures the current backend security baseline for `B09`.
+This document captures the current backend security baseline.
 
 ## Current Hardening Baseline
 
@@ -169,7 +169,7 @@ Operational note:
 
 - avoid deleting the old key before the new deployment is verified, or upload/delete flows may fail mid-rollout.
 
-## Remaining B09 Follow-Ups
+## Remaining Follow-Ups
 
 - Keep dependency audit green in CI and review any new advisory before merge.
 - Add content-scanning or stricter post-upload validation if untrusted public image ingestion expands.

@@ -7,8 +7,6 @@ Scope: backend transport, business-flow, and operational telemetry
 
 Define the first observability baseline for the backend.
 
-This document is the execution artifact for `B06` in `BACKEND_10_OF_10_PLAN.md`.
-
 ## Existing Signals
 
 The backend already had:

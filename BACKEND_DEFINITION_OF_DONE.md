@@ -13,8 +13,6 @@ The goal is simple:
 - reduce review ambiguity
 - make critical expectations explicit before merge
 
-This document is the execution artifact for `B04` in `BACKEND_10_OF_10_PLAN.md`.
-
 ## Core Rule
 
 A backend task is not done when the code compiles.

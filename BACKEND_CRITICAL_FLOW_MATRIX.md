@@ -7,8 +7,6 @@ Scope: PostgreSQL-backed backend critical paths
 
 This document defines the minimum critical backend flows that must remain covered by PostgreSQL-backed integration tests.
 
-It is the execution artifact for `B03` in `BACKEND_10_OF_10_PLAN.md`.
-
 ## Rules
 
 - Critical flows must be backed by PostgreSQL, not only EF InMemory.
