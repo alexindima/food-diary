@@ -222,6 +222,7 @@ Current tasks to execute first:
 - extended current-user lifecycle guards into body/history flows for weight, waist, hydration, and cycle handlers
 - extended current-user lifecycle guards into core CRUD flows for products, recipes, consumptions, and shopping lists
 - hardened deleted-user cleanup semantics so reassignment only targets active non-deleted users
+- hardened admin and restore transitions so deleted users cannot be reactivated via admin active toggle and restore flow is explicitly covered by tests
 - added PostgreSQL-backed endpoint latency baselines for `auth.refresh`, `products`, `recipes`, and `images.upload-url`
 - expanded PostgreSQL-backed endpoint latency baselines to include `consumptions` meal-list paging
 - added explain-plan guards for product, recipe, and meal paging indexes
@@ -285,6 +286,7 @@ Status:
 - current-user lifecycle policy now also covers body/history tracking flows for weight, waist, hydration, and cycles
 - current-user lifecycle policy now also covers core CRUD flows for products, recipes, consumptions, and shopping lists
 - deleted-user cleanup now rejects deleted or inactive reassignment targets and falls back to the delete path
+- admin and restore lifecycle transitions now have explicit guard/test coverage for deleted-user state
 - remaining work is to review deeper account-lifecycle paths and any background/user-dependent edge cases
 
 ### 3. Add deploy and recovery runbook

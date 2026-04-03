@@ -180,6 +180,31 @@ public class AdminFeatureTests {
     }
 
     [Fact]
+    public async Task UpdateAdminUserHandler_WithDeletedUserAndActiveToggle_ReturnsValidationFailure() {
+        var user = CreateUserWithRoles("deleted-admin@example.com", [RoleNames.Admin]);
+        user.DeleteAccount(DateTime.UtcNow);
+        var userRepository = new InMemoryUserRepository(
+            user,
+            availableRoles: [RoleNames.Admin, RoleNames.Premium, RoleNames.Support]);
+        var handler = new UpdateAdminUserCommandHandler(userRepository, new NullAuditLogger());
+
+        var result = await handler.Handle(
+            new UpdateAdminUserCommand(
+                user.Id.Value,
+                IsActive: true,
+                IsEmailConfirmed: null,
+                Roles: null,
+                Language: null,
+                AiInputTokenLimit: null,
+                AiOutputTokenLimit: null),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("restore flow", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
     public async Task UpsertAdminEmailTemplateValidator_WithInvalidLocale_Fails() {
         var validator = new UpsertAdminEmailTemplateCommandValidator();
         var command = new UpsertAdminEmailTemplateCommand(

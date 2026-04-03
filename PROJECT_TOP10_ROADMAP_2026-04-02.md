@@ -451,6 +451,7 @@ Status update:
 - current-user lifecycle guards now also cover body and history tracking flows for weight, waist, hydration, and cycles
 - current-user lifecycle guards now also cover core CRUD flows for products, recipes, consumptions, and shopping lists
 - deleted-user cleanup now only reassigns into active non-deleted accounts
+- admin active-toggle and restore transitions are now explicitly guarded/tested for deleted-user state
 
 ### Phase 4: Excellence layer
 
@@ -502,6 +503,7 @@ Status update:
 - current-user lifecycle policy now also covers body and history tracking flows
 - current-user lifecycle policy now also covers the main user-facing CRUD flows
 - deleted-user cleanup semantics are now stricter around reassignment targets
+- admin and restore transitions now have explicit deleted-user coverage
 - next pass should target deeper lifecycle edges and remaining user-dependent/background paths
 
 3. Add a deploy and recovery runbook

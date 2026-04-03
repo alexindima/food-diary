@@ -63,6 +63,13 @@ public sealed class UpdateAdminUserCommandHandler(
         }
 
         if (command.IsActive.HasValue) {
+            if (user.DeletedAt is not null) {
+                return Result.Failure<AdminUserModel>(
+                    Errors.Validation.Invalid(
+                        nameof(command.IsActive),
+                        "Deleted user lifecycle cannot be changed via admin active toggle. Use restore flow first."));
+            }
+
             if (command.IsActive.Value) {
                 user.Activate();
             } else {

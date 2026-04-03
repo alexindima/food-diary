@@ -2,6 +2,7 @@ using FoodDiary.Application.Authentication.Abstractions;
 using FoodDiary.Application.Authentication.Commands.AdminSsoStart;
 using FoodDiary.Application.Authentication.Commands.ConfirmPasswordReset;
 using FoodDiary.Application.Authentication.Commands.LinkTelegram;
+using FoodDiary.Application.Authentication.Commands.RestoreAccount;
 using FoodDiary.Application.Authentication.Commands.ResendEmailVerification;
 using FoodDiary.Application.Authentication.Commands.VerifyEmail;
 using FoodDiary.Application.Authentication.Common;
@@ -94,6 +95,25 @@ public sealed class AuthenticationCommandHandlerTests {
         Assert.Contains("UserId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
 
+    [Fact]
+    public async Task RestoreAccountHandler_WithDeletedUser_RestoresAndIssuesTokens() {
+        var user = User.Create("deleted@example.com", "secret");
+        user.DeleteAccount(DateTime.UtcNow.AddDays(-2));
+        var handler = new RestoreAccountCommandHandler(
+            new StubUserRepository(user),
+            new StubPasswordHasher(),
+            new StubAuthenticationTokenService(),
+            new StubDateTimeProvider());
+
+        var result = await handler.Handle(
+            new RestoreAccountCommand(user.Email, "secret"),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.True(user.IsActive);
+        Assert.Null(user.DeletedAt);
+    }
+
     private sealed class NullAuditLogger : IAuditLogger {
         public void Log(string action, UserId actorId, string? targetType, string? targetId, string? details) { }
     }
@@ -106,9 +126,10 @@ public sealed class AuthenticationCommandHandlerTests {
             throw new NotSupportedException();
     }
 
-    private sealed class StubUserRepository : IUserRepository {
+    private sealed class StubUserRepository(User? user = null) : IUserRepository {
         public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) =>
+            Task.FromResult<User?>(user is not null && string.Equals(user.Email, email, StringComparison.OrdinalIgnoreCase) ? user : null);
         public Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByTelegramUserIdAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
@@ -121,9 +142,9 @@ public sealed class AuthenticationCommandHandlerTests {
     }
 
     private sealed class StubPasswordHasher : IPasswordHasher {
-        public string Hash(string password) => throw new NotSupportedException();
+        public string Hash(string password) => password;
 
-        public bool Verify(string password, string hashedPassword) => throw new NotSupportedException();
+        public bool Verify(string password, string hashedPassword) => password == hashedPassword;
     }
 
     private sealed class StubDateTimeProvider : IDateTimeProvider {
@@ -132,7 +153,7 @@ public sealed class AuthenticationCommandHandlerTests {
 
     private sealed class StubAuthenticationTokenService : IAuthenticationTokenService {
         public Task<IssuedAuthenticationTokens> IssueAndStoreAsync(User user, CancellationToken cancellationToken) =>
-            throw new NotSupportedException();
+            Task.FromResult(new IssuedAuthenticationTokens("access", "refresh"));
 
         public string IssueAccessToken(User user) => throw new NotSupportedException();
     }
