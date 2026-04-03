@@ -6,7 +6,7 @@
     "minimatch": "^9.0.5"
   },
   "scripts": {
-    "prepare": "node -e \"try{require(\\\"child_process\\\").execSync(\\\"git config core.hooksPath FoodDiary.Web.Client/.husky/_\\\",{cwd:require(\\\"path\\\").resolve(\\\"..\\\")})}catch{}\"",
+    "prepare": "cd .. && husky FoodDiary.Web.Client/.husky",
     "ng": "ng",
     "build": "ng build",
     "build:prod": "ng build --configuration=production",
