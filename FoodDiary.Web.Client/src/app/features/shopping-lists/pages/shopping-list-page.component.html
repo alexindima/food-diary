@@ -186,9 +186,10 @@
                         }
                     </div>
                 } @else {
-                    <div class="shopping-list__empty">
+                    <div class="shopping-list__empty-state">
                         <mat-icon>shopping_cart</mat-icon>
-                        <span>{{ 'SHOPPING_LIST.EMPTY' | translate }}</span>
+                        <div class="shopping-list__empty-title">{{ 'SHOPPING_LIST.EMPTY_TITLE' | translate }}</div>
+                        <div class="shopping-list__empty-copy">{{ 'SHOPPING_LIST.EMPTY_COPY' | translate }}</div>
                     </div>
                 }
             </div>

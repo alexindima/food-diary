@@ -185,6 +185,10 @@ export class ShoppingListPageComponent implements OnInit {
         return this.facade.listOptions();
     }
 
+    public get isEmptyState(): boolean {
+        return this.items().length === 0;
+    }
+
     public deleteCurrentList(): void {
         const current = this.list();
         if (!current || !this.canDeleteList) {

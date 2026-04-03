@@ -262,6 +262,14 @@ export class ProductListBaseComponent implements OnInit {
         return this.searchForm.controls.onlyMine.value || this.selectedProductTypes().length > 0;
     }
 
+    public get isEmptyState(): boolean {
+        return !this.hasVisibleProducts && !this.hasSearchValue(this.searchForm.controls.search.value) && !this.hasActiveFilters;
+    }
+
+    public get isNoResultsState(): boolean {
+        return !this.hasVisibleProducts && !this.isEmptyState;
+    }
+
     public get allProductsSectionLabelKey(): string {
         return this.hasSearchValue(this.searchForm.controls.search.value) ? 'PRODUCT_LIST.SEARCH_RESULTS' : 'PRODUCT_LIST.ALL_PRODUCTS';
     }

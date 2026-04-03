@@ -146,10 +146,20 @@
                         </div>
                     }
                 </div>
+            } @else if (isEmptyState) {
+                <div class="product-list__empty-state">
+                    <mat-icon class="product-list__no-results-icon">inventory_2</mat-icon>
+                    <div class="product-list__empty-title">{{ 'PRODUCT_LIST.EMPTY_TITLE' | translate }}</div>
+                    <div class="product-list__empty-copy">{{ 'PRODUCT_LIST.EMPTY_COPY' | translate }}</div>
+                    <fd-ui-button variant="primary" fill="solid" icon="add" (click)="onAddProductClick()">
+                        {{ 'PRODUCT_LIST.ADD_FIRST_PRODUCT_BUTTON' | translate }}
+                    </fd-ui-button>
+                </div>
             } @else {
                 <div class="product-list__no-results">
                     <mat-icon class="product-list__no-results-icon">search_off</mat-icon>
-                    {{ 'PRODUCT_LIST.NO_PRODUCTS_FOUND' | translate }}
+                    <div class="product-list__empty-title">{{ 'PRODUCT_LIST.NO_RESULTS_TITLE' | translate }}</div>
+                    <div class="product-list__empty-copy">{{ 'PRODUCT_LIST.NO_RESULTS_COPY' | translate }}</div>
                 </div>
             }
         }
