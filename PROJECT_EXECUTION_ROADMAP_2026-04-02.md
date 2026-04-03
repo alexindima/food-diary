@@ -199,9 +199,9 @@ Current tasks to execute first:
 
 1. Continue backend `User` / account domain restructuring
 2. Expand lifecycle policy outside core auth entry points
-3. Add an ops runbook for server env, deploy, and recovery steps
-4. Add frontend observability baseline
-5. Apply focused UX polish on the most-used screens
+3. Formalize the next soft-delete and account-lifecycle rules outside auth
+4. Review remaining user-dependent/background flows for lifecycle edge cases
+5. Keep frontend polish limited to targeted follow-up improvements only when they are clearly product-visible
 
 ## Progress Snapshot
 
@@ -215,8 +215,10 @@ Current tasks to execute first:
 
 - unified application time provider with domain time
 - extracted `UserAccountState` from the `User` aggregate internals
+- extracted `UserSecurityState` from the `User` aggregate internals
 - enforced lifecycle checks in refresh-token flow
 - centralized authentication user access policy for core auth entry points
+- expanded current-user lifecycle policy outside auth for key user, dashboard, hydration, AI, Telegram, and email-verification flows
 - added PostgreSQL-backed endpoint latency baselines for `auth.refresh`, `products`, `recipes`, and `images.upload-url`
 - expanded PostgreSQL-backed endpoint latency baselines to include `consumptions` meal-list paging
 - added explain-plan guards for product, recipe, and meal paging indexes
@@ -232,6 +234,9 @@ Current tasks to execute first:
 - i18n consistency check wired into hooks and CI
 - facade cleanup for dashboard, shopping lists, products, meals, statistics, profile, goals, weight history, waist history, cycle tracking, recipes
 - initial bundle reduced below budget threshold
+- frontend observability baseline added for client errors, route timings, API request telemetry, and initial web vitals
+- targeted UX polish shipped for empty states on meals, recipes, products, and shopping lists
+- remaining fd-ui-kit accessibility lint warnings removed
 
 ## Suggested Next Decision
 
@@ -251,8 +256,9 @@ Done when:
 
 Current status:
 - backend performance baseline block is complete enough for now
+- frontend observability baseline is in place and initial UX polish is complete on high-traffic empty states
 - current highest-value open engineering work is backend `User` / lifecycle maturity
-- next product-facing leverage point is frontend observability plus targeted UX polish
+- the next best leverage point is explicit soft-delete and account-lifecycle coverage outside auth
 
 ## Next 5 Tasks
 
@@ -269,6 +275,11 @@ Done when:
 - deleted or inactive user behavior is reviewed in non-auth user-dependent flows
 - forbidden transitions are explicit in handlers/services where needed
 - tests protect the chosen behavior
+
+Status:
+- In progress on 2026-04-03
+- current-user lifecycle policy now covers key user, dashboard, hydration, AI, Telegram, and email-verification flows
+- remaining work is to review deeper account-lifecycle paths and any background/user-dependent edge cases
 
 ### 3. Add deploy and recovery runbook
 
@@ -300,3 +311,8 @@ Done when:
 - 2 to 3 main screens get consistent loading, empty, and mobile states
 - dialog and form messaging is aligned
 - changes are intentionally limited to the highest-traffic product paths
+
+Status:
+- Completed on 2026-04-03 for the initial targeted package
+- meals, recipes, products, and shopping lists now have clearer empty/search-empty states
+- remaining frontend polish should stay incremental, not reopen a broad refactor phase

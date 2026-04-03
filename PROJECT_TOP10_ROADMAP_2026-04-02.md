@@ -445,8 +445,9 @@ Status update:
 
 - Started on 2026-04-02
 - application time provider unified with domain time
-- `User` internally restructured further via `UserAccountState`
+- `User` internally restructured further via `UserAccountState` and `UserSecurityState`
 - authentication lifecycle policy centralized across key auth entry points
+- current-user lifecycle policy expanded outside auth for key user, dashboard, hydration, AI, Telegram, and email-verification flows
 
 ### Phase 4: Excellence layer
 
@@ -463,7 +464,10 @@ Status update:
 - PostgreSQL-backed endpoint latency budgets now cover `auth.refresh`, `GET /products`, `GET /recipes`, `GET /consumptions`, and `POST /images/upload-url`
 - PostgreSQL-backed explain-plan guards now verify composite index usage for the main product, recipe, and meal paging paths
 - product and recipe search now explicitly use a `pg_trgm`-backed `ILIKE` strategy
-- next backend perf step is deciding whether broader OR-predicate search guards are worth the added test complexity
+- frontend observability baseline is now in place for client errors, route timings, API telemetry, and initial web vitals
+- targeted UX polish is now applied on high-traffic empty states for meals, recipes, products, and shopping lists
+- fd-ui-kit accessibility lint warnings are cleared
+- next highest-value work is no longer frontend structure, but backend account and lifecycle maturity
 
 ## Definition Of "Very Good"
 
@@ -489,6 +493,11 @@ Why now:
 - auth entry points are already covered
 - the next step is making deleted/inactive-user behavior equally explicit in the rest of the application
 
+Status update:
+- In progress on 2026-04-03
+- current-user lifecycle policy already covers a first set of non-auth flows
+- next pass should target deeper lifecycle edges and remaining user-dependent/background paths
+
 3. Add a deploy and recovery runbook
 Why now:
 - deploy and docker reliability were improved significantly
@@ -512,3 +521,8 @@ Status update:
 Why now:
 - the structural cleanup already happened
 - the highest remaining frontend leverage is product consistency and perceived quality
+
+Status update:
+- Initial targeted package completed on 2026-04-03
+- main empty-state polish shipped for meals, recipes, products, and shopping lists
+- further frontend polish should now stay selective while backend maturity becomes the main focus
