@@ -167,17 +167,7 @@ public sealed class Meal : AggregateRoot<MealId> {
         _aiSessions.Add(session);
         if (items.Count > 0) {
             var createdItems = items
-                .Select(item => MealAiItem.Create(
-                    item.NameEn,
-                    item.NameLocal,
-                    item.Amount,
-                    item.Unit,
-                    item.Calories,
-                    item.Proteins,
-                    item.Fats,
-                    item.Carbs,
-                    item.Fiber,
-                    item.Alcohol))
+                .Select(item => MealAiItem.CreateFromState(item.ToState()))
                 .ToList();
 
             foreach (var item in createdItems) {

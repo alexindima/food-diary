@@ -1,4 +1,5 @@
 using FoodDiary.Domain.Common;
+using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Domain.Entities.Meals;
@@ -34,18 +35,34 @@ public sealed class MealAiItem : Entity<MealAiItemId> {
         double carbs,
         double fiber,
         double alcohol) {
+        var state = MealAiItemState.Create(
+            nameEn,
+            nameLocal,
+            amount,
+            unit,
+            calories,
+            proteins,
+            fats,
+            carbs,
+            fiber,
+            alcohol);
+
+        return CreateFromState(state);
+    }
+
+    internal static MealAiItem CreateFromState(MealAiItemState state) {
         var item = new MealAiItem {
             Id = MealAiItemId.New(),
-            NameEn = NormalizeRequiredText(nameEn, NameMaxLength, nameof(nameEn)),
-            NameLocal = NormalizeOptionalText(nameLocal, NameMaxLength, nameof(nameLocal)),
-            Amount = RequirePositiveFinite(amount, nameof(amount)),
-            Unit = NormalizeRequiredText(unit, UnitMaxLength, nameof(unit)),
-            Calories = RequireNonNegativeFinite(calories, nameof(calories)),
-            Proteins = RequireNonNegativeFinite(proteins, nameof(proteins)),
-            Fats = RequireNonNegativeFinite(fats, nameof(fats)),
-            Carbs = RequireNonNegativeFinite(carbs, nameof(carbs)),
-            Fiber = RequireNonNegativeFinite(fiber, nameof(fiber)),
-            Alcohol = RequireNonNegativeFinite(alcohol, nameof(alcohol))
+            NameEn = state.NameEn,
+            NameLocal = state.NameLocal,
+            Amount = state.Amount,
+            Unit = state.Unit,
+            Calories = state.Calories,
+            Proteins = state.Proteins,
+            Fats = state.Fats,
+            Carbs = state.Carbs,
+            Fiber = state.Fiber,
+            Alcohol = state.Alcohol
         };
         item.SetCreated();
         return item;
@@ -61,47 +78,5 @@ public sealed class MealAiItem : Entity<MealAiItemId> {
         }
 
         MealAiSessionId = sessionId;
-    }
-
-    private static string NormalizeRequiredText(string value, int maxLength, string paramName) {
-        if (string.IsNullOrWhiteSpace(value)) {
-            throw new ArgumentException("Value is required.", paramName);
-        }
-
-        var normalized = value.Trim();
-        return normalized.Length > maxLength
-            ? throw new ArgumentOutOfRangeException(paramName, $"Value must be at most {maxLength} characters.")
-            : normalized;
-    }
-
-    private static string? NormalizeOptionalText(string? value, int maxLength, string paramName) {
-        if (string.IsNullOrWhiteSpace(value)) {
-            return null;
-        }
-
-        var normalized = value.Trim();
-        return normalized.Length > maxLength
-            ? throw new ArgumentOutOfRangeException(paramName, $"Value must be at most {maxLength} characters.")
-            : normalized;
-    }
-
-    private static double RequirePositiveFinite(double value, string paramName) {
-        if (double.IsNaN(value) || double.IsInfinity(value)) {
-            throw new ArgumentOutOfRangeException(paramName, "Value must be a finite number.");
-        }
-
-        return value <= 0
-            ? throw new ArgumentOutOfRangeException(paramName, "Value must be greater than zero.")
-            : value;
-    }
-
-    private static double RequireNonNegativeFinite(double value, string paramName) {
-        if (double.IsNaN(value) || double.IsInfinity(value)) {
-            throw new ArgumentOutOfRangeException(paramName, "Value must be a finite number.");
-        }
-
-        return value < 0
-            ? throw new ArgumentOutOfRangeException(paramName, "Value must be non-negative.")
-            : value;
     }
 }
