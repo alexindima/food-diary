@@ -116,6 +116,58 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
     }
 
     [RequiresDockerFact]
+    public async Task DeleteUser_ThenRestoreAccount_InvalidatesOutstandingPasswordResetToken() {
+        var client = factory.CreateClient();
+        var email = $"postgres-restore-reset-tests-{Guid.NewGuid():N}@example.com";
+        const string password = "Password123!";
+
+        factory.EmailSender.Clear();
+
+        var registerResponse = await client.PostAsJsonAsync(
+            "/api/v1/auth/register",
+            new RegisterHttpRequest(email, password, "en"));
+        var registerPayload = await registerResponse.Content.ReadFromJsonAsync<AuthPayload>(JsonOptions);
+
+        Assert.Equal(HttpStatusCode.OK, registerResponse.StatusCode);
+        Assert.NotNull(registerPayload);
+
+        var passwordResetRequestResponse = await client.PostAsJsonAsync(
+            "/api/v1/auth/password-reset/request",
+            new RequestPasswordResetHttpRequest(email));
+
+        Assert.Equal(HttpStatusCode.NoContent, passwordResetRequestResponse.StatusCode);
+
+        var resetMessage = factory.EmailSender.GetRequiredPasswordResetMessage(email);
+
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", registerPayload.AccessToken);
+        var deleteResponse = await client.DeleteAsync("/api/v1/users");
+        Assert.Equal(HttpStatusCode.NoContent, deleteResponse.StatusCode);
+
+        using (var scope = factory.Services.CreateScope()) {
+            var dbContext = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
+            var deletedUser = dbContext.Users.Single(u => u.Email == email);
+
+            Assert.Null(deletedUser.PasswordResetTokenHash);
+            Assert.Null(deletedUser.PasswordResetTokenExpiresAtUtc);
+            Assert.Null(deletedUser.PasswordResetSentAtUtc);
+        }
+
+        client.DefaultRequestHeaders.Authorization = null;
+
+        var restoreResponse = await client.PostAsJsonAsync(
+            "/api/v1/auth/restore",
+            new RestoreAccountHttpRequest(email, password));
+
+        Assert.Equal(HttpStatusCode.OK, restoreResponse.StatusCode);
+
+        var confirmResponse = await client.PostAsJsonAsync(
+            "/api/v1/auth/password-reset/confirm",
+            new ConfirmPasswordResetHttpRequest(Guid.Parse(resetMessage.UserId), resetMessage.Token, "Password456!"));
+
+        Assert.Equal(HttpStatusCode.Unauthorized, confirmResponse.StatusCode);
+    }
+
+    [RequiresDockerFact]
     public async Task RequestPasswordReset_PersistsResetTokenAgainstPostgres() {
         var client = factory.CreateClient();
         var email = $"postgres-password-reset-tests-{Guid.NewGuid():N}@example.com";
