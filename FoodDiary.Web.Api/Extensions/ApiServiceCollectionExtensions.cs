@@ -4,6 +4,7 @@ using FoodDiary.Infrastructure;
 using FoodDiary.Infrastructure.Options;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Presentation.Api.Extensions;
+using FoodDiary.Web.Api.Build;
 using FoodDiary.Presentation.Api.Options;
 using FoodDiary.Web.Api.HealthChecks;
 using FoodDiary.Web.Api.Options;
@@ -73,10 +74,23 @@ public static class ApiServiceCollectionExtensions {
             .Validate(GoogleAuthOptions.HasValidClientId,
                 "GoogleAuth:ClientId must be empty or a non-whitespace value.")
             .ValidateOnStart();
+        services
+            .AddOptions<ApiBuildInfoOptions>()
+            .BindConfiguration(ApiBuildInfoOptions.SectionName)
+            .Validate(ApiBuildInfoOptions.HasValidCommitSha,
+                "BuildInfo:CommitSha must be empty or shorter than 129 characters.")
+            .Validate(ApiBuildInfoOptions.HasValidImageTag,
+                "BuildInfo:ImageTag must be empty or shorter than 257 characters.")
+            .ValidateOnStart();
         services.AddSingleton<IConfigureOptions<Microsoft.AspNetCore.Cors.Infrastructure.CorsOptions>, CorsOptionsSetup>();
         services.AddSingleton<IConfigureOptions<ForwardedHeadersOptions>, ForwardedHeadersOptionsSetup>();
         services.AddSingleton<IConfigureOptions<Microsoft.AspNetCore.RateLimiting.RateLimiterOptions>, RateLimiterOptionsSetup>();
         services.AddSingleton<IConfigureOptions<Microsoft.AspNetCore.OutputCaching.OutputCacheOptions>, OutputCacheOptionsSetup>();
+        services.AddSingleton(static serviceProvider => {
+            var options = serviceProvider.GetRequiredService<IOptions<ApiBuildInfoOptions>>().Value;
+            var environment = serviceProvider.GetRequiredService<IHostEnvironment>();
+            return ApiBuildInfo.Create(options, environment.EnvironmentName);
+        });
         services.AddCors(static _ => { });
 
         services

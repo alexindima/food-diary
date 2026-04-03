@@ -328,6 +328,30 @@ public sealed class PresentationBoundaryIntegrationTests(
     }
 
     [Fact]
+    public async Task ApiVersion_ReturnsConfiguredBuildMetadata() {
+        using var versionedFactory = apiFactory.WithWebHostBuilder(builder => {
+            builder.ConfigureAppConfiguration((_, configBuilder) => {
+                configBuilder.AddInMemoryCollection(new Dictionary<string, string?> {
+                    ["BuildInfo:CommitSha"] = "abc123def456",
+                    ["BuildInfo:ImageTag"] = "sha-abc123def456",
+                });
+            });
+        });
+        var client = versionedFactory.CreateClient();
+
+        var response = await client.GetAsync("/api/version");
+        var payload = await response.Content.ReadFromJsonAsync<ApiVersionPayload>(JsonOptions);
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.NotNull(payload);
+        Assert.Equal("abc123def456", payload.CommitSha);
+        Assert.Equal("sha-abc123def456", payload.ImageTag);
+        Assert.Equal("Development", payload.Environment);
+        Assert.False(string.IsNullOrWhiteSpace(payload.ApplicationVersion));
+        Assert.True(payload.StartedAtUtc > DateTimeOffset.MinValue);
+    }
+
+    [Fact]
     public async Task SwaggerJson_ContainsExpectedPresentationRoutes() {
         var client = apiFactory.CreateClient();
 
@@ -588,6 +612,13 @@ public sealed class PresentationBoundaryIntegrationTests(
     private sealed record ErrorContractSnapshot(string Error, string Message, IReadOnlyDictionary<string, string[]>? Errors = null);
 
     private sealed record NegotiatePayload(string ConnectionId, string ConnectionToken);
+
+    private sealed record ApiVersionPayload(
+        string CommitSha,
+        string ImageTag,
+        string Environment,
+        string ApplicationVersion,
+        DateTimeOffset StartedAtUtc);
 
     private sealed record OpenApiFocusedSnapshot(string OpenApi, IReadOnlyList<EndpointSnapshot> Endpoints);
 

@@ -1,4 +1,5 @@
 using FoodDiary.Presentation.Api.Extensions;
+using FoodDiary.Web.Api.Build;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
@@ -35,6 +36,13 @@ public static class ApiApplicationBuilderExtensions {
         app.MapHealthChecks("/health/ready", new HealthCheckOptions {
             Predicate = check => check.Tags.Contains("ready"),
         });
+        app.MapGet("/api/version", (ApiBuildInfo buildInfo) => Results.Ok(new ApiVersionResponse(
+                buildInfo.CommitSha,
+                buildInfo.ImageTag,
+                buildInfo.Environment,
+                buildInfo.ApplicationVersion,
+                buildInfo.StartedAtUtc)))
+            .ExcludeFromDescription();
         app.MapPresentationApi(ApiCompositionConstants.CorsPolicyName);
 
         return app;
