@@ -259,6 +259,8 @@ jobs:
             docker cp $id:/usr/share/nginx/html-admin/. /var/www/admin.fooddiary.club/
             docker rm $id
 
+            docker image prune -a --force --filter "until=24h"
+
             echo "Deploy completed!"
           DEPLOY_EOF
 
