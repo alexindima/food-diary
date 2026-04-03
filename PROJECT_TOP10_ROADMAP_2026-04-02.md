@@ -524,7 +524,8 @@ Status update:
 - admin-facing update surface is already narrowed internally
 - the old compatibility wrapper is gone
 - direct application dependence on `UserRole` traversal is reduced in the main auth/admin paths
-- next decision is what the next real aggregate boundary should be after the current internal split
+- `Product` internals now also use explicit measurement/media snapshots instead of keeping both concerns as loose mutable scalars
+- next decision is whether `Recipe` or `Meal` should get the next equivalent internal split
 
 2. Expand lifecycle policy outside auth
 Why now:

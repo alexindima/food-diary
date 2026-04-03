@@ -301,7 +301,8 @@ Status:
 - admin-facing update flow is now also narrowed by concern inside domain/application
 - the old mixed admin compatibility wrapper is now removed
 - key application paths now consume role membership through aggregate helpers instead of link-entity traversal
-- next useful step is choosing the next true aggregate boundary after the current internal decomposition
+- `Product` internals now also separate `ProductMeasurementState` and `ProductMediaState` instead of keeping those mutable concerns as loose scalars
+- next useful step is deciding whether `Recipe` or `Meal` should get the next equivalent internal boundary pass
 
 ### 2. Expand lifecycle policy outside auth
 

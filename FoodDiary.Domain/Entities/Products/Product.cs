@@ -91,11 +91,6 @@ public sealed class Product : AggregateRoot<ProductId> {
         var product = new Product {
             Id = ProductId.New(),
             UserId = userId,
-            BaseUnit = baseUnit,
-            BaseAmount = normalizedBaseAmount,
-            DefaultPortionAmount = normalizedDefaultPortionAmount,
-            ImageUrl = normalizedImageUrl,
-            ImageAssetId = imageAssetId,
             Visibility = visibility
         };
         product.ApplyIdentityState(new ProductIdentityState(
@@ -106,6 +101,13 @@ public sealed class Product : AggregateRoot<ProductId> {
             productType,
             normalizedDescription,
             normalizedComment));
+        product.ApplyMeasurementState(new ProductMeasurementState(
+            baseUnit,
+            normalizedBaseAmount,
+            normalizedDefaultPortionAmount));
+        product.ApplyMediaState(new ProductMediaState(
+            normalizedImageUrl,
+            imageAssetId));
         product.ApplyNutrition(nutrition);
         product.SetCreated();
         return product;
@@ -208,9 +210,10 @@ public sealed class Product : AggregateRoot<ProductId> {
         MeasurementUnit? baseUnit = null,
         double? baseAmount = null,
         double? defaultPortionAmount = null) {
+        var state = GetMeasurementState();
         var changed = false;
-        var targetUnit = baseUnit ?? BaseUnit;
-        var targetBaseAmount = BaseAmount;
+        var targetUnit = baseUnit ?? state.BaseUnit;
+        var targetBaseAmount = state.BaseAmount;
 
         if (baseAmount.HasValue) {
             targetBaseAmount = NormalizeBaseAmount(targetUnit, baseAmount.Value, nameof(baseAmount));
@@ -218,25 +221,26 @@ public sealed class Product : AggregateRoot<ProductId> {
             targetBaseAmount = GetCanonicalBaseAmount(targetUnit);
         }
 
-        if (baseUnit.HasValue && BaseUnit != targetUnit) {
-            BaseUnit = targetUnit;
+        if (baseUnit.HasValue && state.BaseUnit != targetUnit) {
+            state = state with { BaseUnit = targetUnit };
             changed = true;
         }
 
-        if (!AreClose(BaseAmount, targetBaseAmount)) {
-            BaseAmount = targetBaseAmount;
+        if (!AreClose(state.BaseAmount, targetBaseAmount)) {
+            state = state with { BaseAmount = targetBaseAmount };
             changed = true;
         }
 
         if (defaultPortionAmount.HasValue) {
             var normalizedDefaultPortionAmount = RequirePositive(defaultPortionAmount.Value, nameof(defaultPortionAmount));
-            if (!AreClose(DefaultPortionAmount, normalizedDefaultPortionAmount)) {
-                DefaultPortionAmount = normalizedDefaultPortionAmount;
+            if (!AreClose(state.DefaultPortionAmount, normalizedDefaultPortionAmount)) {
+                state = state with { DefaultPortionAmount = normalizedDefaultPortionAmount };
                 changed = true;
             }
         }
 
         if (changed) {
+            ApplyMeasurementState(state);
             SetModified();
         }
     }
@@ -273,29 +277,31 @@ public sealed class Product : AggregateRoot<ProductId> {
         EnsureClearConflict(clearImageUrl, normalizedImageUrl, nameof(clearImageUrl), nameof(imageUrl));
         EnsureClearConflict(clearImageAssetId, imageAssetId, nameof(clearImageAssetId), nameof(imageAssetId));
 
+        var state = GetMediaState();
         var changed = false;
 
         if (clearImageUrl) {
-            if (ImageUrl is not null) {
-                ImageUrl = null;
+            if (state.ImageUrl is not null) {
+                state = state with { ImageUrl = null };
                 changed = true;
             }
-        } else if (imageUrl is not null && !string.Equals(ImageUrl, normalizedImageUrl, StringComparison.Ordinal)) {
-            ImageUrl = normalizedImageUrl;
+        } else if (imageUrl is not null && !string.Equals(state.ImageUrl, normalizedImageUrl, StringComparison.Ordinal)) {
+            state = state with { ImageUrl = normalizedImageUrl };
             changed = true;
         }
 
         if (clearImageAssetId) {
-            if (ImageAssetId is not null) {
-                ImageAssetId = null;
+            if (state.ImageAssetId is not null) {
+                state = state with { ImageAssetId = null };
                 changed = true;
             }
-        } else if (imageAssetId.HasValue && ImageAssetId != imageAssetId) {
-            ImageAssetId = imageAssetId;
+        } else if (imageAssetId.HasValue && state.ImageAssetId != imageAssetId) {
+            state = state with { ImageAssetId = imageAssetId };
             changed = true;
         }
 
         if (changed) {
+            ApplyMediaState(state);
             SetModified();
         }
     }
@@ -362,6 +368,30 @@ public sealed class Product : AggregateRoot<ProductId> {
             CarbsPerBase,
             FiberPerBase,
             AlcoholPerBase);
+    }
+
+    private ProductMeasurementState GetMeasurementState() {
+        return new ProductMeasurementState(
+            BaseUnit,
+            BaseAmount,
+            DefaultPortionAmount);
+    }
+
+    private void ApplyMeasurementState(ProductMeasurementState state) {
+        BaseUnit = state.BaseUnit;
+        BaseAmount = state.BaseAmount;
+        DefaultPortionAmount = state.DefaultPortionAmount;
+    }
+
+    private ProductMediaState GetMediaState() {
+        return new ProductMediaState(
+            ImageUrl,
+            ImageAssetId);
+    }
+
+    private void ApplyMediaState(ProductMediaState state) {
+        ImageUrl = state.ImageUrl;
+        ImageAssetId = state.ImageAssetId;
     }
 
     private ProductIdentityState GetIdentityState() {
