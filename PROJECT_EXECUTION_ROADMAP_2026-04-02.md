@@ -219,6 +219,7 @@ Current tasks to execute first:
 - enforced lifecycle checks in refresh-token flow
 - centralized authentication user access policy for core auth entry points
 - expanded current-user lifecycle policy outside auth for key user, dashboard, hydration, AI, Telegram, and email-verification flows
+- extended current-user lifecycle guards into body/history flows for weight, waist, hydration, and cycle handlers
 - added PostgreSQL-backed endpoint latency baselines for `auth.refresh`, `products`, `recipes`, and `images.upload-url`
 - expanded PostgreSQL-backed endpoint latency baselines to include `consumptions` meal-list paging
 - added explain-plan guards for product, recipe, and meal paging indexes
@@ -279,6 +280,7 @@ Done when:
 Status:
 - In progress on 2026-04-03
 - current-user lifecycle policy now covers key user, dashboard, hydration, AI, Telegram, and email-verification flows
+- current-user lifecycle policy now also covers body/history tracking flows for weight, waist, hydration, and cycles
 - remaining work is to review deeper account-lifecycle paths and any background/user-dependent edge cases
 
 ### 3. Add deploy and recovery runbook

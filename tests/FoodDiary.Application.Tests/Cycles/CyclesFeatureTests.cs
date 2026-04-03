@@ -1,10 +1,12 @@
 using FoodDiary.Application.Cycles.Commands.CreateCycle;
 using FoodDiary.Application.Cycles.Commands.UpsertCycleDay;
+using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Cycles.Common;
 using FoodDiary.Application.Cycles.Mappings;
 using FoodDiary.Application.Cycles.Models;
 using FoodDiary.Application.Cycles.Services;
 using FoodDiary.Domain.Entities.Tracking;
+using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -58,7 +60,9 @@ public class CyclesFeatureTests {
 
     [Fact]
     public async Task UpsertCycleDayCommandHandler_WithEmptyCycleId_ReturnsValidationFailure() {
-        var handler = new UpsertCycleDayCommandHandler(new NoopCycleRepository());
+        var handler = new UpsertCycleDayCommandHandler(
+            new NoopCycleRepository(),
+            new StubUserRepository(User.Create("user@example.com", "hash")));
 
         var result = await handler.Handle(
             new UpsertCycleDayCommand(
@@ -74,6 +78,22 @@ public class CyclesFeatureTests {
         Assert.True(result.IsFailure);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("CycleId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task CreateCycleCommandHandler_WithDeletedUser_ReturnsAccountDeleted() {
+        var user = User.Create("deleted-cycle@example.com", "hash");
+        user.DeleteAccount(DateTime.UtcNow);
+        var handler = new CreateCycleCommandHandler(
+            new NoopCycleRepository(),
+            new StubUserRepository(user));
+
+        var result = await handler.Handle(
+            new CreateCycleCommand(user.Id.Value, DateTime.UtcNow, 28, 14, null),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
     [Fact]
@@ -116,5 +136,19 @@ public class CyclesFeatureTests {
         public Task<Cycle?> GetByIdAsync(CycleId id, UserId userId, bool includeDays = false, bool asTracking = false, CancellationToken cancellationToken = default) => Task.FromResult<Cycle?>(null);
         public Task<Cycle?> GetLatestAsync(UserId userId, bool includeDays = false, CancellationToken cancellationToken = default) => Task.FromResult<Cycle?>(null);
         public Task<IReadOnlyList<Cycle>> GetByUserAsync(UserId userId, bool includeDays = false, CancellationToken cancellationToken = default) => Task.FromResult<IReadOnlyList<Cycle>>([]);
+    }
+
+    private sealed class StubUserRepository(User user) : IUserRepository {
+        public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult<User?>(user.Id == id ? user : null);
+        public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult<User?>(user.Id == id ? user : null);
+        public Task<User?> GetByTelegramUserIdAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User?> GetByTelegramUserIdIncludingDeletedAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<(IReadOnlyList<User> Items, int TotalItems)> GetPagedAsync(string? search, int page, int limit, bool includeDeleted, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers)> GetAdminDashboardSummaryAsync(int recentLimit, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<IReadOnlyList<Role>> GetRolesByNamesAsync(IReadOnlyList<string> names, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User> AddAsync(User addedUser, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task UpdateAsync(User updatedUser, CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 }

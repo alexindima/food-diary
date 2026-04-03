@@ -1,11 +1,15 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
+using FoodDiary.Application.Common.Interfaces.Persistence;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.WeightEntries.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.WeightEntries.Commands.DeleteWeightEntry;
 
-public class DeleteWeightEntryCommandHandler(IWeightEntryRepository weightEntryRepository)
+public class DeleteWeightEntryCommandHandler(
+    IWeightEntryRepository weightEntryRepository,
+    IUserRepository userRepository)
     : ICommandHandler<DeleteWeightEntryCommand, Result> {
     public async Task<Result> Handle(DeleteWeightEntryCommand command, CancellationToken cancellationToken) {
         if (command.UserId is null || command.UserId == Guid.Empty) {
@@ -17,6 +21,11 @@ public class DeleteWeightEntryCommandHandler(IWeightEntryRepository weightEntryR
         }
 
         var userId = new UserId(command.UserId!.Value);
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        if (accessError is not null) {
+            return Result.Failure(accessError);
+        }
+
         var weightEntryId = new WeightEntryId(command.WeightEntryId);
         var entry = await weightEntryRepository.GetByIdAsync(
             weightEntryId,

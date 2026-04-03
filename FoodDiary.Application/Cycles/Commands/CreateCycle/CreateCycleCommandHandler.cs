@@ -1,15 +1,19 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
+using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Cycles.Common;
 using FoodDiary.Application.Cycles.Mappings;
 using FoodDiary.Application.Cycles.Models;
 using FoodDiary.Application.Cycles.Services;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Cycles.Commands.CreateCycle;
 
-public class CreateCycleCommandHandler(ICycleRepository cycleRepository)
+public class CreateCycleCommandHandler(
+    ICycleRepository cycleRepository,
+    IUserRepository userRepository)
     : ICommandHandler<CreateCycleCommand, Result<CycleModel>> {
     public async Task<Result<CycleModel>> Handle(
         CreateCycleCommand command,
@@ -19,6 +23,10 @@ public class CreateCycleCommandHandler(ICycleRepository cycleRepository)
         }
 
         var userId = new UserId(command.UserId!.Value);
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        if (accessError is not null) {
+            return Result.Failure<CycleModel>(accessError);
+        }
 
         var cycle = Cycle.Create(
             userId,

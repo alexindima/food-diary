@@ -1,14 +1,18 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
+using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Time;
 using FoodDiary.Application.Common.Validation;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.WeightEntries.Common;
 using FoodDiary.Application.WeightEntries.Mappings;
 using FoodDiary.Application.WeightEntries.Models;
 
 namespace FoodDiary.Application.WeightEntries.Queries.GetWeightEntries;
 
-public class GetWeightEntriesQueryHandler(IWeightEntryRepository weightEntryRepository)
+public class GetWeightEntriesQueryHandler(
+    IWeightEntryRepository weightEntryRepository,
+    IUserRepository userRepository)
     : IQueryHandler<GetWeightEntriesQuery, Result<IReadOnlyList<WeightEntryModel>>> {
     public async Task<Result<IReadOnlyList<WeightEntryModel>>> Handle(
         GetWeightEntriesQuery query,
@@ -19,6 +23,11 @@ public class GetWeightEntriesQueryHandler(IWeightEntryRepository weightEntryRepo
         }
 
         var userId = userIdResult.Value;
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        if (accessError is not null) {
+            return Result.Failure<IReadOnlyList<WeightEntryModel>>(accessError);
+        }
+
         var normalizedFrom = query.DateFrom.HasValue ? (DateTime?)UtcDateNormalizer.NormalizeDateUsingLocalFallback(query.DateFrom.Value) : null;
         var normalizedTo = query.DateTo.HasValue ? (DateTime?)UtcDateNormalizer.NormalizeDateUsingLocalFallback(query.DateTo.Value) : null;
 

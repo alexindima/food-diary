@@ -1,10 +1,12 @@
 using FoodDiary.Application.WaistEntries.Commands.CreateWaistEntry;
 using FoodDiary.Application.WaistEntries.Commands.DeleteWaistEntry;
 using FoodDiary.Application.WaistEntries.Commands.UpdateWaistEntry;
+using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.WaistEntries.Common;
 using FoodDiary.Application.WaistEntries.Queries.GetWaistEntries;
 using FoodDiary.Application.WaistEntries.Queries.GetWaistSummaries;
 using FoodDiary.Domain.Entities.Tracking;
+using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.WaistEntries;
@@ -43,7 +45,7 @@ public class WaistEntriesFeatureTests {
     [Fact]
     public async Task CreateWaistEntryCommandHandler_WithEmptyUserId_ReturnsInvalidToken() {
         var repository = new InMemoryWaistEntryRepository();
-        var handler = new CreateWaistEntryCommandHandler(repository);
+        var handler = new CreateWaistEntryCommandHandler(repository, new StubUserRepository(User.Create("user@example.com", "hash")));
 
         var result = await handler.Handle(
             new CreateWaistEntryCommand(Guid.Empty, DateTime.UtcNow, 82),
@@ -56,8 +58,9 @@ public class WaistEntriesFeatureTests {
     [Fact]
     public async Task CreateWaistEntryCommandHandler_NormalizesDateToUtcForDuplicateLookup() {
         var repository = new InMemoryWaistEntryRepository();
-        var handler = new CreateWaistEntryCommandHandler(repository);
-        var userId = UserId.New();
+        var user = User.Create("waist@example.com", "hash");
+        var handler = new CreateWaistEntryCommandHandler(repository, new StubUserRepository(user));
+        var userId = user.Id;
         var localDate = new DateTime(2026, 2, 23, 23, 30, 0, DateTimeKind.Local);
         var expectedDate = NormalizeUtcDate(localDate);
 
@@ -72,7 +75,9 @@ public class WaistEntriesFeatureTests {
 
     [Fact]
     public async Task GetWaistSummariesQueryHandler_WithDateFromAfterDateTo_ReturnsValidationError() {
-        var handler = new GetWaistSummariesQueryHandler(new InMemoryWaistEntryRepository());
+        var handler = new GetWaistSummariesQueryHandler(
+            new InMemoryWaistEntryRepository(),
+            new StubUserRepository(User.Create("user@example.com", "hash")));
         var query = new GetWaistSummariesQuery(Guid.NewGuid(), DateTime.UtcNow, DateTime.UtcNow.AddDays(-1), 7);
 
         var result = await handler.Handle(query, CancellationToken.None);
@@ -83,7 +88,9 @@ public class WaistEntriesFeatureTests {
 
     [Fact]
     public async Task DeleteWaistEntryCommandHandler_WithEmptyWaistEntryId_ReturnsValidationFailure() {
-        var handler = new DeleteWaistEntryCommandHandler(new InMemoryWaistEntryRepository());
+        var handler = new DeleteWaistEntryCommandHandler(
+            new InMemoryWaistEntryRepository(),
+            new StubUserRepository(User.Create("user@example.com", "hash")));
 
         var result = await handler.Handle(
             new DeleteWaistEntryCommand(Guid.NewGuid(), Guid.Empty),
@@ -96,7 +103,9 @@ public class WaistEntriesFeatureTests {
 
     [Fact]
     public async Task UpdateWaistEntryCommandHandler_WithEmptyWaistEntryId_ReturnsValidationFailure() {
-        var handler = new UpdateWaistEntryCommandHandler(new InMemoryWaistEntryRepository());
+        var handler = new UpdateWaistEntryCommandHandler(
+            new InMemoryWaistEntryRepository(),
+            new StubUserRepository(User.Create("user@example.com", "hash")));
 
         var result = await handler.Handle(
             new UpdateWaistEntryCommand(Guid.NewGuid(), Guid.Empty, DateTime.UtcNow, 82),
@@ -105,6 +114,22 @@ public class WaistEntriesFeatureTests {
         Assert.True(result.IsFailure);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("WaistEntryId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task GetWaistEntriesQueryHandler_WithDeletedUser_ReturnsAccountDeleted() {
+        var user = User.Create("deleted-waist@example.com", "hash");
+        user.DeleteAccount(DateTime.UtcNow);
+        var handler = new GetWaistEntriesQueryHandler(
+            new InMemoryWaistEntryRepository(),
+            new StubUserRepository(user));
+
+        var result = await handler.Handle(
+            new GetWaistEntriesQuery(user.Id.Value, null, null, 10, true),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
     private static DateTime NormalizeUtcDate(DateTime value) {
@@ -183,5 +208,19 @@ public class WaistEntriesFeatureTests {
                 .ToList();
             return Task.FromResult<IReadOnlyList<WaistEntry>>(items);
         }
+    }
+
+    private sealed class StubUserRepository(User user) : IUserRepository {
+        public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult<User?>(user.Id == id ? user : null);
+        public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult<User?>(user.Id == id ? user : null);
+        public Task<User?> GetByTelegramUserIdAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User?> GetByTelegramUserIdIncludingDeletedAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<(IReadOnlyList<User> Items, int TotalItems)> GetPagedAsync(string? search, int page, int limit, bool includeDeleted, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers)> GetAdminDashboardSummaryAsync(int recentLimit, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<IReadOnlyList<Role>> GetRolesByNamesAsync(IReadOnlyList<string> names, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User> AddAsync(User addedUser, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task UpdateAsync(User updatedUser, CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 }

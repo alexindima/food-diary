@@ -1,6 +1,8 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
+using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Time;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.WeightEntries.Common;
 using FoodDiary.Application.WeightEntries.Mappings;
 using FoodDiary.Application.WeightEntries.Models;
@@ -9,7 +11,9 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.WeightEntries.Commands.CreateWeightEntry;
 
-public class CreateWeightEntryCommandHandler(IWeightEntryRepository weightEntryRepository)
+public class CreateWeightEntryCommandHandler(
+    IWeightEntryRepository weightEntryRepository,
+    IUserRepository userRepository)
     : ICommandHandler<CreateWeightEntryCommand, Result<WeightEntryModel>> {
     public async Task<Result<WeightEntryModel>> Handle(
         CreateWeightEntryCommand command,
@@ -19,6 +23,11 @@ public class CreateWeightEntryCommandHandler(IWeightEntryRepository weightEntryR
         }
 
         var userId = new UserId(command.UserId!.Value);
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        if (accessError is not null) {
+            return Result.Failure<WeightEntryModel>(accessError);
+        }
+
         var normalizedDate = UtcDateNormalizer.NormalizeDateUsingLocalFallback(command.Date);
         var existing = await weightEntryRepository.GetByDateAsync(
             userId,

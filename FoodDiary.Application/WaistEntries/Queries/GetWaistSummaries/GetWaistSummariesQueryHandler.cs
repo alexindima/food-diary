@@ -1,14 +1,18 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
+using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Time;
 using FoodDiary.Application.Common.Validation;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.WaistEntries.Common;
 using FoodDiary.Application.WaistEntries.Models;
 using FoodDiary.Domain.Entities.Tracking;
 
 namespace FoodDiary.Application.WaistEntries.Queries.GetWaistSummaries;
 
-public class GetWaistSummariesQueryHandler(IWaistEntryRepository waistEntryRepository)
+public class GetWaistSummariesQueryHandler(
+    IWaistEntryRepository waistEntryRepository,
+    IUserRepository userRepository)
     : IQueryHandler<GetWaistSummariesQuery, Result<IReadOnlyList<WaistEntrySummaryModel>>> {
     public async Task<Result<IReadOnlyList<WaistEntrySummaryModel>>> Handle(
         GetWaistSummariesQuery query,
@@ -29,6 +33,11 @@ public class GetWaistSummariesQueryHandler(IWaistEntryRepository waistEntryRepos
         }
 
         var userId = userIdResult.Value;
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        if (accessError is not null) {
+            return Result.Failure<IReadOnlyList<WaistEntrySummaryModel>>(accessError);
+        }
+
         var normalizedFrom = UtcDateNormalizer.NormalizeDateUsingLocalFallback(query.DateFrom);
         var normalizedTo = UtcDateNormalizer.NormalizeDateUsingLocalFallback(query.DateTo);
 

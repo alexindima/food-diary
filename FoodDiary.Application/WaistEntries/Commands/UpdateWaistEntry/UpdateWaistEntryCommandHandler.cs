@@ -1,6 +1,8 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
+using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Time;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.WaistEntries.Common;
 using FoodDiary.Application.WaistEntries.Mappings;
 using FoodDiary.Application.WaistEntries.Models;
@@ -8,7 +10,9 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.WaistEntries.Commands.UpdateWaistEntry;
 
-public class UpdateWaistEntryCommandHandler(IWaistEntryRepository waistEntryRepository)
+public class UpdateWaistEntryCommandHandler(
+    IWaistEntryRepository waistEntryRepository,
+    IUserRepository userRepository)
     : ICommandHandler<UpdateWaistEntryCommand, Result<WaistEntryModel>> {
     public async Task<Result<WaistEntryModel>> Handle(
         UpdateWaistEntryCommand command,
@@ -23,6 +27,11 @@ public class UpdateWaistEntryCommandHandler(IWaistEntryRepository waistEntryRepo
         }
 
         var userId = new UserId(command.UserId!.Value);
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        if (accessError is not null) {
+            return Result.Failure<WaistEntryModel>(accessError);
+        }
+
         var waistEntryId = new WaistEntryId(command.WaistEntryId);
         var entry = await waistEntryRepository.GetByIdAsync(
             waistEntryId,

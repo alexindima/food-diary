@@ -130,7 +130,9 @@ public class HydrationFeatureTests {
 
     [Fact]
     public async Task DeleteHydrationEntryCommandHandler_WithEmptyHydrationEntryId_ReturnsValidationFailure() {
-        var handler = new DeleteHydrationEntryCommandHandler(new InMemoryHydrationEntryRepository());
+        var handler = new DeleteHydrationEntryCommandHandler(
+            new InMemoryHydrationEntryRepository(),
+            new StubUserRepository(User.Create("user@example.com", "hash")));
 
         var result = await handler.Handle(
             new DeleteHydrationEntryCommand(Guid.NewGuid(), Guid.Empty),
@@ -143,7 +145,9 @@ public class HydrationFeatureTests {
 
     [Fact]
     public async Task UpdateHydrationEntryCommandHandler_WithEmptyHydrationEntryId_ReturnsValidationFailure() {
-        var handler = new UpdateHydrationEntryCommandHandler(new InMemoryHydrationEntryRepository());
+        var handler = new UpdateHydrationEntryCommandHandler(
+            new InMemoryHydrationEntryRepository(),
+            new StubUserRepository(User.Create("user@example.com", "hash")));
 
         var result = await handler.Handle(
             new UpdateHydrationEntryCommand(Guid.NewGuid(), Guid.Empty, DateTime.UtcNow, 250),

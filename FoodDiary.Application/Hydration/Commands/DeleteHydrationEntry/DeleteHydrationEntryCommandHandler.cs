@@ -1,11 +1,15 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
+using FoodDiary.Application.Common.Interfaces.Persistence;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.Hydration.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Hydration.Commands.DeleteHydrationEntry;
 
-public class DeleteHydrationEntryCommandHandler(IHydrationEntryRepository repository)
+public class DeleteHydrationEntryCommandHandler(
+    IHydrationEntryRepository repository,
+    IUserRepository userRepository)
     : ICommandHandler<DeleteHydrationEntryCommand, Result> {
     public async Task<Result> Handle(DeleteHydrationEntryCommand command, CancellationToken cancellationToken) {
         if (command.UserId is null || command.UserId == Guid.Empty) {
@@ -17,6 +21,11 @@ public class DeleteHydrationEntryCommandHandler(IHydrationEntryRepository reposi
         }
 
         var userId = new UserId(command.UserId!.Value);
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        if (accessError is not null) {
+            return Result.Failure(accessError);
+        }
+
         var hydrationEntryId = new HydrationEntryId(command.HydrationEntryId);
 
         var entry = await repository.GetByIdAsync(hydrationEntryId, asTracking: true, cancellationToken: cancellationToken);

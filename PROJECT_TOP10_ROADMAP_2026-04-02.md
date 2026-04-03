@@ -448,6 +448,7 @@ Status update:
 - `User` internally restructured further via `UserAccountState` and `UserSecurityState`
 - authentication lifecycle policy centralized across key auth entry points
 - current-user lifecycle policy expanded outside auth for key user, dashboard, hydration, AI, Telegram, and email-verification flows
+- current-user lifecycle guards now also cover body and history tracking flows for weight, waist, hydration, and cycles
 
 ### Phase 4: Excellence layer
 
@@ -496,6 +497,7 @@ Why now:
 Status update:
 - In progress on 2026-04-03
 - current-user lifecycle policy already covers a first set of non-auth flows
+- current-user lifecycle policy now also covers body and history tracking flows
 - next pass should target deeper lifecycle edges and remaining user-dependent/background paths
 
 3. Add a deploy and recovery runbook
