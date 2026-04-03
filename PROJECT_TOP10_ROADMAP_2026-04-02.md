@@ -164,6 +164,12 @@ References:
 - `FoodDiary.Presentation.Api/Filters/IdempotencyFilter.cs`
 - `FoodDiary.Presentation.Api/Extensions/PresentationServiceCollectionExtensions.cs`
 
+Status update:
+
+- critical idempotent POST paths are now explicitly called out in `BACKEND_API_CONTRACT_GOVERNANCE.md`
+- `FoodDiary.Presentation.Api.Tests` now covers idempotency filter cache-hit and successful-response caching behavior
+- the next step is deciding whether to keep global POST caching or narrow it to an explicit endpoint policy later
+
 ### 8. Keep query shaping disciplined as features grow
 
 Priority: Medium

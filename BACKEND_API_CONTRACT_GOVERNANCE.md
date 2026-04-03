@@ -55,6 +55,24 @@ Snapshot files:
 - Snapshot updates are allowed only when the contract change is intentional.
 - Intentional contract changes should be called out explicitly in the PR/task closeout.
 
+## Idempotent Write Policy
+
+The repository also treats repeated-write behavior as part of the HTTP contract for selected POST endpoints.
+
+Current critical idempotent POST paths:
+
+- `POST /api/v1/products`
+- `POST /api/v1/recipes`
+- `POST /api/v1/consumptions`
+- `POST /api/v1/images/upload-url`
+- `POST /api/v1/auth/refresh`
+
+Expectations:
+
+- clients may send `Idempotency-Key` for these paths
+- the backend must keep returning the cached successful response for the same `(user, path, key)` tuple
+- changes to global idempotency behavior should be reviewed like other contract changes, not treated as an invisible infrastructure detail
+
 ## When To Update Snapshots
 
 Update snapshots only when the change is intended and reviewed.
