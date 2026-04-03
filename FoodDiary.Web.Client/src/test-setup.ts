@@ -25,11 +25,11 @@ function installWebStorageMock(storageName: 'localStorage' | 'sessionStorage'): 
 function isStorageLike(value: unknown): value is Storage {
     return Boolean(
         value &&
-            typeof value === 'object' &&
-            typeof (value as Storage).getItem === 'function' &&
-            typeof (value as Storage).setItem === 'function' &&
-            typeof (value as Storage).removeItem === 'function' &&
-            typeof (value as Storage).clear === 'function',
+        typeof value === 'object' &&
+        typeof (value as Storage).getItem === 'function' &&
+        typeof (value as Storage).setItem === 'function' &&
+        typeof (value as Storage).removeItem === 'function' &&
+        typeof (value as Storage).clear === 'function',
     );
 }
 
