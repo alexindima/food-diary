@@ -198,7 +198,8 @@ Status update:
 
 - deploy and recovery runbook is now documented in `BACKEND_RUNBOOKS.md`
 - `FoodDiary.JobManager` startup now verifies that expected recurring Hangfire jobs are present after registration instead of assuming silent success
-- the next step is to make retry, missed-run, and failing-job recovery expectations explicit
+- cleanup jobs now also declare explicit retry and no-overlap execution policy
+- the next step is to make missed-run and failing-job recovery expectations even more explicit at alerting level
 
 ### 10. Turn security review into a recurring engineering practice
 

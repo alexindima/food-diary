@@ -498,12 +498,19 @@ Diagnosis:
   - `fooddiary.job.execution.events`
   - `fooddiary.job.deleted_items`
   - `fooddiary.job.execution.duration`
+- Treat as a missed-run incident when:
+  - a recurring cleanup job has no successful execution within one expected cron interval plus a small buffer
+  - or Hangfire shows the recurring definition but no recent enqueue/execution activity
 - Distinguish between:
   - scheduler issue in `FoodDiary.JobManager`
   - PostgreSQL dependency issue
   - S3 delete issue
   - data-volume regression causing long runtimes
 - Review the last successful execution time and compare it with the configured cron schedule.
+- Remember current cleanup execution policy:
+  - `3` automatic retries
+  - fail after retry exhaustion
+  - no overlapping cleanup execution for the same job
 
 Recovery:
 
@@ -511,6 +518,8 @@ Recovery:
   restore Hangfire/host execution and confirm recurring job registration.
 - Startup verification failure:
   inspect `FoodDiary.JobManager` startup logs for missing recurring job IDs and verify Hangfire storage connectivity/permissions before retrying the host.
+- Retry exhaustion:
+  inspect the first failing dependency class, do not keep manually triggering the same job until the underlying database/storage/runtime issue is identified.
 - Database failure:
   switch to `Unavailable PostgreSQL`.
 - Storage delete issue during image or user cleanup:
@@ -524,6 +533,7 @@ Validation after recovery:
 - deleted-item count moves again in the expected direction
 - execution duration is back within the normal operating range
 - `FoodDiary.JobManager` starts without recurring-job registration verification errors
+- no recurring cleanup job remains in a repeated retry-exhausted state
 
 ## Post-Incident Template
 

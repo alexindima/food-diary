@@ -1,5 +1,6 @@
 using FoodDiary.Application.Common.Interfaces.Services;
 using FoodDiary.Application.Users.Common;
+using Hangfire;
 using Microsoft.Extensions.Options;
 using System.Diagnostics;
 
@@ -10,6 +11,8 @@ public sealed class UserCleanupJob(
     IOptions<UserCleanupOptions> options,
     IDateTimeProvider dateTimeProvider,
     ILogger<UserCleanupJob> logger) {
+    [AutomaticRetry(Attempts = RecurringJobExecutionPolicy.CleanupRetryAttempts, OnAttemptsExceeded = AttemptsExceededAction.Fail)]
+    [DisableConcurrentExecution(RecurringJobExecutionPolicy.CleanupConcurrencyTimeoutSeconds)]
     public async Task Execute(CancellationToken cancellationToken = default) {
         var stopwatch = Stopwatch.StartNew();
         var settings = options.Value;
@@ -51,7 +54,8 @@ public sealed class UserCleanupJob(
             JobManagerTelemetry.JobDeletedItemsCounter.Add(
                 totalDeleted,
                 new KeyValuePair<string, object?>("fooddiary.job.name", jobName));
-        } catch {
+        } catch (Exception ex) {
+            logger.LogError(ex, "User cleanup job failed after processing {DeletedCount} users so far.", totalDeleted);
             JobManagerTelemetry.JobExecutionCounter.Add(
                 1,
                 new KeyValuePair<string, object?>("fooddiary.job.name", jobName),

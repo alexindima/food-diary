@@ -28,6 +28,7 @@ All validated on startup.
 - Hangfire with PostgreSQL storage (same `DefaultConnection` as the main app)
 - `RecurringJobsHostedService` registers jobs on `StartAsync`
 - startup now verifies that expected recurring jobs are actually present in Hangfire storage
+- cleanup jobs now use explicit Hangfire execution policy: `3` retries, `Fail` on exhaustion, and `DisableConcurrentExecution`
 - Job classes depend on Application-layer interfaces (`IImageAssetCleanupService`, `IUserCleanupService`)
 - Telemetry: `fooddiary.job.execution.events`, `fooddiary.job.deleted_items`, `fooddiary.job.execution.duration`
 

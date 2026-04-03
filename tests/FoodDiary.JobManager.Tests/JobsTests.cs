@@ -227,6 +227,18 @@ public sealed class JobsTests {
         await Assert.ThrowsAsync<InvalidOperationException>(() => service.StartAsync(CancellationToken.None));
     }
 
+    [Fact]
+    public void CleanupJobs_DeclareExpectedRetryAndConcurrencyPolicy() {
+        var imageMethod = typeof(ImageCleanupJob).GetMethod(nameof(ImageCleanupJob.Execute));
+        var userMethod = typeof(UserCleanupJob).GetMethod(nameof(UserCleanupJob.Execute));
+
+        Assert.NotNull(imageMethod);
+        Assert.NotNull(userMethod);
+
+        AssertExecutionPolicy(imageMethod!);
+        AssertExecutionPolicy(userMethod!);
+    }
+
     private sealed class FixedDateTimeProvider(DateTime utcNow) : IDateTimeProvider {
         public DateTime UtcNow { get; } = utcNow;
     }
@@ -269,6 +281,21 @@ public sealed class JobsTests {
         }
 
         return null;
+    }
+
+    private static void AssertExecutionPolicy(System.Reflection.MethodInfo method) {
+        var retry = method.GetCustomAttributes(typeof(AutomaticRetryAttribute), inherit: false)
+            .Cast<AutomaticRetryAttribute>()
+            .SingleOrDefault();
+        var concurrency = method.GetCustomAttributes(typeof(DisableConcurrentExecutionAttribute), inherit: false)
+            .Cast<DisableConcurrentExecutionAttribute>()
+            .SingleOrDefault();
+
+        Assert.NotNull(retry);
+        Assert.NotNull(concurrency);
+        Assert.Equal(RecurringJobExecutionPolicy.CleanupRetryAttempts, retry!.Attempts);
+        Assert.Equal(AttemptsExceededAction.Fail, retry.OnAttemptsExceeded);
+        Assert.Equal(RecurringJobExecutionPolicy.CleanupConcurrencyTimeoutSeconds, concurrency!.TimeoutSec);
     }
 
     private sealed class RecordingImageCleanupService(IEnumerable<int> results) : IImageAssetCleanupService {
