@@ -9,6 +9,7 @@ public sealed class PresentationErrorCatalogTests {
     [Fact]
     public void CentralErrorCatalog_HasExpectedHttpCoverage() {
         var internalOnlyCodes = new HashSet<string>(StringComparer.Ordinal) {
+            "Authentication.GoogleNotConfigured",
             "Authentication.TelegramNotConfigured",
             "Authentication.TelegramBotNotConfigured",
             "Consumption.InvalidData",
