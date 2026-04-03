@@ -31,7 +31,7 @@ Every mutating method compares new vs. current value; if unchanged, returns with
 
 ### User Aggregate
 Split across 5 partial files by concern: core (`User.cs`), `User.Lifecycle.cs`, `User.Profile.cs`, `User.Credentials.cs`, `User.Admin.cs`.
-Internal mutable state is further decomposed into snapshot records such as `UserSecurityState`, `UserAccountState`, `UserAiQuotaState`, `UserPersonalProfileState`, `UserPreferenceState`, and `UserProfileMediaState`.
+Internal mutable state is further decomposed into snapshot records such as `UserSecurityState`, `UserAccountState`, `UserAiQuotaState`, `UserPersonalProfileState`, `UserPreferenceState`, and `UserProfileMediaState`. Admin-facing domain updates should prefer narrow `*Update` records per concern instead of one mixed update object.
 
 ## Naming Conventions
 

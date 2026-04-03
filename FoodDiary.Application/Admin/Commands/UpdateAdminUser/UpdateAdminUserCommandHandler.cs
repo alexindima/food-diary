@@ -77,11 +77,11 @@ public sealed class UpdateAdminUserCommandHandler(
             }
         }
 
-        user.UpdateAdminAccount(new UserAdminAccountUpdate(
-            IsEmailConfirmed: command.IsEmailConfirmed,
-            Language: languageResult.Value,
-            AiInputTokenLimit: command.AiInputTokenLimit,
-            AiOutputTokenLimit: command.AiOutputTokenLimit));
+        user.UpdateAdminSecurity(new UserAdminSecurityUpdate(command.IsEmailConfirmed));
+        user.UpdateAdminPreferences(new UserAdminPreferenceUpdate(languageResult.Value));
+        user.UpdateAdminAiQuota(new UserAdminAiQuotaUpdate(
+            command.AiInputTokenLimit,
+            command.AiOutputTokenLimit));
 
         if (roleEntities is not null) {
             user.ReplaceRoles(roleEntities);

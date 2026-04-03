@@ -3,37 +3,48 @@ using FoodDiary.Domain.ValueObjects;
 namespace FoodDiary.Domain.Entities.Users;
 
 public sealed partial class User {
-    public void UpdateAdminAccount(UserAdminAccountUpdate update) {
+    public void UpdateAdminSecurity(UserAdminSecurityUpdate update) {
         EnsureNotDeleted();
 
-        var changed = false;
         var securityState = GetSecurityState();
-        var preferenceState = GetPreferenceState();
-
-        if (update.IsEmailConfirmed.HasValue && securityState.IsEmailConfirmed != update.IsEmailConfirmed.Value) {
-            securityState = securityState.AsEmailConfirmed(update.IsEmailConfirmed.Value);
-            changed = true;
-        }
-
-        if (update.Language is not null) {
-            EnsureLanguage(update.Language, nameof(update.Language));
-            var normalizedLanguage = NormalizeOptionalLanguage(update.Language, nameof(update.Language));
-            if (preferenceState.Language != normalizedLanguage) {
-                preferenceState = preferenceState with { Language = normalizedLanguage };
-                changed = true;
-            }
-        }
-
-        changed |= ApplyAiTokenLimitChanges(new UserAiTokenLimitUpdate(
-            InputLimit: update.AiInputTokenLimit,
-            OutputLimit: update.AiOutputTokenLimit));
-
-        if (!changed) {
+        if (!update.IsEmailConfirmed.HasValue || securityState.IsEmailConfirmed == update.IsEmailConfirmed.Value) {
             return;
         }
 
-        ApplySecurityState(securityState);
-        ApplyPreferenceState(preferenceState);
+        ApplySecurityState(securityState.AsEmailConfirmed(update.IsEmailConfirmed.Value));
         SetModified();
+    }
+
+    public void UpdateAdminPreferences(UserAdminPreferenceUpdate update) {
+        EnsureNotDeleted();
+
+        if (update.Language is null) {
+            return;
+        }
+
+        EnsureLanguage(update.Language, nameof(update.Language));
+        var normalizedLanguage = NormalizeOptionalLanguage(update.Language, nameof(update.Language));
+        var preferenceState = GetPreferenceState();
+        if (preferenceState.Language == normalizedLanguage) {
+            return;
+        }
+
+        ApplyPreferenceState(preferenceState with { Language = normalizedLanguage });
+        SetModified();
+    }
+
+    public void UpdateAdminAiQuota(UserAdminAiQuotaUpdate update) {
+        EnsureNotDeleted();
+        if (ApplyAiTokenLimitChanges(update.ToAiTokenLimitUpdate())) {
+            SetModified();
+        }
+    }
+
+    public void UpdateAdminAccount(UserAdminAccountUpdate update) {
+        EnsureNotDeleted();
+
+        UpdateAdminSecurity(new UserAdminSecurityUpdate(update.IsEmailConfirmed));
+        UpdateAdminPreferences(new UserAdminPreferenceUpdate(update.Language));
+        UpdateAdminAiQuota(new UserAdminAiQuotaUpdate(update.AiInputTokenLimit, update.AiOutputTokenLimit));
     }
 }

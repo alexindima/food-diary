@@ -448,6 +448,7 @@ Status update:
 - `User` internally restructured further via `UserAccountState` and `UserSecurityState`
 - profile internals further split into `UserPersonalProfileState`, `UserPreferenceState`, and `UserProfileMediaState`
 - AI quota internals split out into `UserAiQuotaState`
+- admin-facing update flow narrowed so security, preferences, and quota changes are handled separately internally
 - authentication lifecycle policy centralized across key auth entry points
 - current-user lifecycle policy expanded outside auth for key user, dashboard, hydration, AI, Telegram, and email-verification flows
 - current-user lifecycle guards now also cover body and history tracking flows for weight, waist, hydration, and cycles
@@ -498,7 +499,8 @@ Status update:
 - In progress on 2026-04-03
 - `User` internals already split across account, security, personal profile, preferences, and media state snapshots
 - AI quota concerns no longer sit inside account state
-- next decision is whether admin-facing update surface should stay aggregated or be narrowed further
+- admin-facing update surface is already narrowed internally
+- next decision is whether the remaining compatibility wrapper should stay or be retired
 
 2. Expand lifecycle policy outside auth
 Why now:
