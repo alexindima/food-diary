@@ -180,7 +180,8 @@ Status:
 - `FoodDiary.JobManager` startup now verifies that expected recurring Hangfire jobs exist in storage after registration
 - cleanup jobs now also declare explicit retry and no-overlap execution policy
 - cleanup job runtime state is now also observable via `last_success_age` and `failure_streak`
-- next useful step is defining poison-item handling if cleanup jobs ever encounter repeated record-specific failures
+- cleanup poison-item handling baseline now exists: image cleanup skips failing assets and user cleanup isolates failing users per transaction instead of failing the whole batch
+- next useful step is deciding whether repeated poisoned items need explicit dead-letter persistence or whether logging/metrics are sufficient
 
 ## Suggested Delivery Rhythm
 

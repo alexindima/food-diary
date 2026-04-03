@@ -53,123 +53,126 @@ public sealed class UserCleanupService(
 
         var removed = 0;
 
-        await using var transaction = await dbContext.Database.BeginTransactionAsync(cancellationToken);
-
         foreach (var userId in userIds) {
-            if (reassignTarget is not null) {
-                var productAssetIds = await dbContext.Products
-                    .Where(p => p.UserId == userId && p.ImageAssetId != null)
-                    .Select(p => p.ImageAssetId!)
-                    .ToListAsync(cancellationToken);
+            try {
+                await using var transaction = await dbContext.Database.BeginTransactionAsync(cancellationToken);
 
-                var recipeAssetIds = await dbContext.Recipes
-                    .Where(r => r.UserId == userId && r.ImageAssetId != null)
-                    .Select(r => r.ImageAssetId!)
-                    .ToListAsync(cancellationToken);
+                if (reassignTarget is not null) {
+                    var productAssetIds = await dbContext.Products
+                        .Where(p => p.UserId == userId && p.ImageAssetId != null)
+                        .Select(p => p.ImageAssetId!)
+                        .ToListAsync(cancellationToken);
 
-                var stepAssetIds = await dbContext.RecipeSteps
-                    .Where(step => step.Recipe.UserId == userId && step.ImageAssetId != null)
-                    .Select(step => step.ImageAssetId!)
-                    .ToListAsync(cancellationToken);
+                    var recipeAssetIds = await dbContext.Recipes
+                        .Where(r => r.UserId == userId && r.ImageAssetId != null)
+                        .Select(r => r.ImageAssetId!)
+                        .ToListAsync(cancellationToken);
 
-                var assetIds = productAssetIds
-                    .Concat(recipeAssetIds)
-                    .Concat(stepAssetIds)
-                    .Distinct()
-                    .ToList();
+                    var stepAssetIds = await dbContext.RecipeSteps
+                        .Where(step => step.Recipe.UserId == userId && step.ImageAssetId != null)
+                        .Select(step => step.ImageAssetId!)
+                        .ToListAsync(cancellationToken);
 
-                if (assetIds.Count > 0) {
-                    await dbContext.ImageAssets
-                        .Where(a => assetIds.Contains(a.Id))
-                        .ExecuteUpdateAsync(setters => setters.SetProperty(a => a.UserId, reassignTarget), cancellationToken);
+                    var assetIds = productAssetIds
+                        .Concat(recipeAssetIds)
+                        .Concat(stepAssetIds)
+                        .Distinct()
+                        .ToList();
+
+                    if (assetIds.Count > 0) {
+                        await dbContext.ImageAssets
+                            .Where(a => assetIds.Contains(a.Id))
+                            .ExecuteUpdateAsync(setters => setters.SetProperty(a => a.UserId, reassignTarget), cancellationToken);
+                    }
+
+                    await dbContext.Products
+                        .Where(p => p.UserId == userId)
+                        .ExecuteUpdateAsync(setters => setters.SetProperty(p => p.UserId, reassignTarget), cancellationToken);
+
+                    await dbContext.Recipes
+                        .Where(r => r.UserId == userId)
+                        .ExecuteUpdateAsync(setters => setters.SetProperty(r => r.UserId, reassignTarget), cancellationToken);
+                } else {
+                    await dbContext.Products
+                        .Where(p => p.UserId == userId)
+                        .ExecuteDeleteAsync(cancellationToken);
+
+                    await dbContext.Recipes
+                        .Where(r => r.UserId == userId)
+                        .ExecuteDeleteAsync(cancellationToken);
                 }
 
-                await dbContext.Products
-                    .Where(p => p.UserId == userId)
-                    .ExecuteUpdateAsync(setters => setters.SetProperty(p => p.UserId, reassignTarget), cancellationToken);
-
-                await dbContext.Recipes
-                    .Where(r => r.UserId == userId)
-                    .ExecuteUpdateAsync(setters => setters.SetProperty(r => r.UserId, reassignTarget), cancellationToken);
-            } else {
-                await dbContext.Products
-                    .Where(p => p.UserId == userId)
+                await dbContext.MealItems
+                    .Where(item => item.Meal.UserId == userId)
                     .ExecuteDeleteAsync(cancellationToken);
 
-                await dbContext.Recipes
-                    .Where(r => r.UserId == userId)
+                await dbContext.Meals
+                    .Where(meal => meal.UserId == userId)
                     .ExecuteDeleteAsync(cancellationToken);
-            }
 
-            await dbContext.MealItems
-                .Where(item => item.Meal.UserId == userId)
-                .ExecuteDeleteAsync(cancellationToken);
+                await dbContext.ShoppingLists
+                    .Where(list => list.UserId == userId)
+                    .ExecuteDeleteAsync(cancellationToken);
 
-            await dbContext.Meals
-                .Where(meal => meal.UserId == userId)
-                .ExecuteDeleteAsync(cancellationToken);
+                await dbContext.RecentItems
+                    .Where(item => item.UserId == userId)
+                    .ExecuteDeleteAsync(cancellationToken);
 
-            await dbContext.ShoppingLists
-                .Where(list => list.UserId == userId)
-                .ExecuteDeleteAsync(cancellationToken);
+                await dbContext.HydrationEntries
+                    .Where(entry => entry.UserId == userId)
+                    .ExecuteDeleteAsync(cancellationToken);
 
-            await dbContext.RecentItems
-                .Where(item => item.UserId == userId)
-                .ExecuteDeleteAsync(cancellationToken);
+                await dbContext.WeightEntries
+                    .Where(entry => entry.UserId == userId)
+                    .ExecuteDeleteAsync(cancellationToken);
 
-            await dbContext.HydrationEntries
-                .Where(entry => entry.UserId == userId)
-                .ExecuteDeleteAsync(cancellationToken);
+                await dbContext.WaistEntries
+                    .Where(entry => entry.UserId == userId)
+                    .ExecuteDeleteAsync(cancellationToken);
 
-            await dbContext.WeightEntries
-                .Where(entry => entry.UserId == userId)
-                .ExecuteDeleteAsync(cancellationToken);
+                await dbContext.CycleDays
+                    .Where(day => day.Cycle.UserId == userId)
+                    .ExecuteDeleteAsync(cancellationToken);
 
-            await dbContext.WaistEntries
-                .Where(entry => entry.UserId == userId)
-                .ExecuteDeleteAsync(cancellationToken);
+                await dbContext.Cycles
+                    .Where(cycle => cycle.UserId == userId)
+                    .ExecuteDeleteAsync(cancellationToken);
 
-            await dbContext.CycleDays
-                .Where(day => day.Cycle.UserId == userId)
-                .ExecuteDeleteAsync(cancellationToken);
+                var deletedImageObjectKeys = await dbContext.ImageAssets
+                    .Where(asset => asset.UserId == userId)
+                    .Select(asset => asset.ObjectKey)
+                    .ToListAsync(cancellationToken);
 
-            await dbContext.Cycles
-                .Where(cycle => cycle.UserId == userId)
-                .ExecuteDeleteAsync(cancellationToken);
-
-            var deletedImageObjectKeys = await dbContext.ImageAssets
-                .Where(asset => asset.UserId == userId)
-                .Select(asset => asset.ObjectKey)
-                .ToListAsync(cancellationToken);
-
-            foreach (var objectKey in deletedImageObjectKeys) {
-                try {
-                    await imageStorageService.DeleteAsync(objectKey, cancellationToken);
-                } catch (Exception ex) {
-                    logger.LogWarning(ex, "Failed to delete image object {ObjectKey} during deleted user cleanup.", objectKey);
+                foreach (var objectKey in deletedImageObjectKeys) {
+                    try {
+                        await imageStorageService.DeleteAsync(objectKey, cancellationToken);
+                    } catch (Exception ex) {
+                        logger.LogWarning(ex, "Failed to delete image object {ObjectKey} during deleted user cleanup.", objectKey);
+                    }
                 }
+
+                await dbContext.ImageAssets
+                    .Where(asset => asset.UserId == userId)
+                    .ExecuteDeleteAsync(cancellationToken);
+
+                await dbContext.AiUsages
+                    .Where(usage => usage.UserId == userId)
+                    .ExecuteDeleteAsync(cancellationToken);
+
+                await dbContext.UserRoles
+                    .Where(role => role.UserId == userId)
+                    .ExecuteDeleteAsync(cancellationToken);
+
+                await dbContext.Users
+                    .Where(u => u.Id == userId)
+                    .ExecuteDeleteAsync(cancellationToken);
+
+                await transaction.CommitAsync(cancellationToken);
+                removed++;
+            } catch (Exception ex) {
+                logger.LogError(ex, "Failed to clean up deleted user {UserId}. Continuing with the next deleted user.", userId.Value);
             }
-
-            await dbContext.ImageAssets
-                .Where(asset => asset.UserId == userId)
-                .ExecuteDeleteAsync(cancellationToken);
-
-            await dbContext.AiUsages
-                .Where(usage => usage.UserId == userId)
-                .ExecuteDeleteAsync(cancellationToken);
-
-            await dbContext.UserRoles
-                .Where(role => role.UserId == userId)
-                .ExecuteDeleteAsync(cancellationToken);
-
-            await dbContext.Users
-                .Where(u => u.Id == userId)
-                .ExecuteDeleteAsync(cancellationToken);
-
-            removed++;
         }
-
-        await transaction.CommitAsync(cancellationToken);
         return removed;
     }
 }

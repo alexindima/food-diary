@@ -529,6 +529,11 @@ Recovery:
 - Runtime regression:
   reduce batch size temporarily or pause the affected cleanup path until the data-path issue is understood.
 
+Current poison-case behavior:
+
+- `images.cleanup` skips failing orphan assets and continues the batch
+- `users.cleanup` now isolates each deleted user in its own transaction, logs the failing user, and continues with the next deleted user instead of failing the whole batch
+
 Validation after recovery:
 
 - the affected cleanup job emits a successful execution event

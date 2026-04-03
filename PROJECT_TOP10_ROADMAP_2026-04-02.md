@@ -200,7 +200,8 @@ Status update:
 - `FoodDiary.JobManager` startup now verifies that expected recurring Hangfire jobs are present after registration instead of assuming silent success
 - cleanup jobs now also declare explicit retry and no-overlap execution policy
 - missed-run and repeated-failure alert signals now also have explicit telemetry via `fooddiary.job.last_success_age` and `fooddiary.job.failure_streak`
-- the next step is to make poison-item handling explicit if cleanup jobs ever hit repeated record-specific failures
+- cleanup poison-item handling is now explicit at baseline: failing image assets are skipped and failing deleted users no longer fail the whole cleanup batch
+- the next step is deciding whether repeated poison cases need dead-letter persistence beyond logs and telemetry
 
 ### 10. Turn security review into a recurring engineering practice
 
