@@ -216,6 +216,7 @@ Current tasks to execute first:
 - unified application time provider with domain time
 - extracted `UserAccountState` from the `User` aggregate internals
 - extracted `UserSecurityState` from the `User` aggregate internals
+- split profile internals further into `UserPersonalProfileState`, `UserPreferenceState`, and `UserProfileMediaState`
 - enforced lifecycle checks in refresh-token flow
 - centralized authentication user access policy for core auth entry points
 - expanded current-user lifecycle policy outside auth for key user, dashboard, hydration, AI, Telegram, and email-verification flows
@@ -272,6 +273,12 @@ Done when:
 - next internal slice is extracted from `User`
 - security/auth state is further isolated from profile/preferences behavior
 - application and domain tests cover the changed boundaries
+
+Status:
+- In progress on 2026-04-03
+- `UserAccountState` and `UserSecurityState` are already extracted
+- profile internals are now also split into `UserPersonalProfileState`, `UserPreferenceState`, and `UserProfileMediaState`
+- next useful step is deciding whether AI/admin surface should stay inside account state or split again
 
 ### 2. Expand lifecycle policy outside auth
 

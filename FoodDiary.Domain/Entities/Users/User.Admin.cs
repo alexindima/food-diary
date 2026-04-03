@@ -8,7 +8,7 @@ public sealed partial class User {
 
         var changed = false;
         var securityState = GetSecurityState();
-        var profileState = GetProfileState();
+        var preferenceState = GetPreferenceState();
 
         if (update.IsEmailConfirmed.HasValue && securityState.IsEmailConfirmed != update.IsEmailConfirmed.Value) {
             securityState = securityState.AsEmailConfirmed(update.IsEmailConfirmed.Value);
@@ -18,8 +18,8 @@ public sealed partial class User {
         if (update.Language is not null) {
             EnsureLanguage(update.Language, nameof(update.Language));
             var normalizedLanguage = NormalizeOptionalLanguage(update.Language, nameof(update.Language));
-            if (profileState.Language != normalizedLanguage) {
-                profileState = profileState with { Language = normalizedLanguage };
+            if (preferenceState.Language != normalizedLanguage) {
+                preferenceState = preferenceState with { Language = normalizedLanguage };
                 changed = true;
             }
         }
@@ -33,7 +33,7 @@ public sealed partial class User {
         }
 
         ApplySecurityState(securityState);
-        ApplyProfileState(profileState);
+        ApplyPreferenceState(preferenceState);
         SetModified();
     }
 }

@@ -113,7 +113,7 @@ public sealed partial class User {
         EnsurePositive(height, nameof(height));
         EnsureGender(gender, nameof(gender));
 
-        var state = GetProfileState();
+        var state = GetPersonalProfileState();
         var changed = false;
 
         if (username is not null && state.Username != normalizedUsername) {
@@ -155,7 +155,7 @@ public sealed partial class User {
         }
 
         if (changed) {
-            ApplyProfileState(state);
+            ApplyPersonalProfileState(state);
         }
 
         return changed;
@@ -168,7 +168,7 @@ public sealed partial class User {
         var updatedActivityGoals = GetActivityGoals().With(
             stepGoal: stepGoal,
             hydrationGoal: hydrationGoal);
-        var state = GetProfileState();
+        var state = GetPersonalProfileState();
 
         var changed = false;
 
@@ -183,7 +183,7 @@ public sealed partial class User {
         }
 
         if (changed) {
-            ApplyProfileState(state);
+            ApplyPersonalProfileState(state);
         }
 
         return changed;
@@ -191,7 +191,7 @@ public sealed partial class User {
 
     private bool ApplyProfileMediaChanges(string? profileImage, ImageAssetId? profileImageAssetId) {
         var normalizedProfileImage = NormalizeOptionalProfileText(profileImage);
-        var state = GetProfileState();
+        var state = GetProfileMediaState();
         var changed = false;
 
         if (profileImage is not null && state.ProfileImage != normalizedProfileImage) {
@@ -205,7 +205,7 @@ public sealed partial class User {
         }
 
         if (changed) {
-            ApplyProfileState(state);
+            ApplyProfileMediaState(state);
         }
 
         return changed;
@@ -214,7 +214,7 @@ public sealed partial class User {
     private bool ApplyPreferencesChanges(string? dashboardLayoutJson, string? language) {
         var normalizedDashboardLayoutJson = NormalizeOptionalProfileText(dashboardLayoutJson);
         var normalizedLanguage = NormalizeOptionalLanguage(language, nameof(language));
-        var state = GetProfileState();
+        var state = GetPreferenceState();
 
         EnsureLanguage(language, nameof(language));
 
@@ -231,7 +231,7 @@ public sealed partial class User {
         }
 
         if (changed) {
-            ApplyProfileState(state);
+            ApplyPreferenceState(state);
         }
 
         return changed;

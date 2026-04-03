@@ -31,4 +31,18 @@ public readonly record struct UserProfileState(
             DashboardLayoutJson: null,
             Language: null);
     }
+
+    public UserPersonalProfileState PersonalInfo => new(
+        Username,
+        FirstName,
+        LastName,
+        BirthDate,
+        Gender,
+        Weight,
+        Height,
+        ActivityLevel);
+
+    public UserProfileMediaState Media => new(ProfileImage, ProfileImageAssetId);
+
+    public UserPreferenceState Preferences => new(DashboardLayoutJson, Language);
 }

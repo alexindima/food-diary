@@ -89,7 +89,9 @@ public sealed partial class User : AggregateRoot<UserId> {
             IsEmailConfirmed = false
         };
         user.ApplySecurityState(UserSecurityState.CreateInitial(normalizedPassword));
-        user.ApplyProfileState(UserProfileState.CreateInitial());
+        user.ApplyPersonalProfileState(UserPersonalProfileState.CreateInitial());
+        user.ApplyProfileMediaState(UserProfileMediaState.CreateInitial());
+        user.ApplyPreferenceState(UserPreferenceState.CreateInitial());
         user.ApplyGoalState(UserGoalState.CreateInitial());
         user.ApplyAccountState(UserAccountState.CreateInitial(DefaultAiInputTokenLimit, DefaultAiOutputTokenLimit));
         user.SetCreated();
@@ -222,6 +224,18 @@ public sealed partial class User : AggregateRoot<UserId> {
             Language);
     }
 
+    private UserPersonalProfileState GetPersonalProfileState() {
+        return GetProfileState().PersonalInfo;
+    }
+
+    private UserPreferenceState GetPreferenceState() {
+        return GetProfileState().Preferences;
+    }
+
+    private UserProfileMediaState GetProfileMediaState() {
+        return GetProfileState().Media;
+    }
+
     private void ApplyProfileState(UserProfileState state) {
         Username = state.Username;
         FirstName = state.FirstName;
@@ -235,6 +249,27 @@ public sealed partial class User : AggregateRoot<UserId> {
         ProfileImageAssetId = state.ProfileImageAssetId;
         DashboardLayoutJson = state.DashboardLayoutJson;
         Language = state.Language;
+    }
+
+    private void ApplyPersonalProfileState(UserPersonalProfileState state) {
+        Username = state.Username;
+        FirstName = state.FirstName;
+        LastName = state.LastName;
+        BirthDate = state.BirthDate;
+        Gender = state.Gender;
+        Weight = state.Weight;
+        Height = state.Height;
+        ActivityLevel = state.ActivityLevel;
+    }
+
+    private void ApplyPreferenceState(UserPreferenceState state) {
+        DashboardLayoutJson = state.DashboardLayoutJson;
+        Language = state.Language;
+    }
+
+    private void ApplyProfileMediaState(UserProfileMediaState state) {
+        ProfileImage = state.ProfileImage;
+        ProfileImageAssetId = state.ProfileImageAssetId;
     }
 
     private UserSecurityState GetSecurityState() {

@@ -31,6 +31,7 @@ Every mutating method compares new vs. current value; if unchanged, returns with
 
 ### User Aggregate
 Split across 5 partial files by concern: core (`User.cs`), `User.Lifecycle.cs`, `User.Profile.cs`, `User.Credentials.cs`, `User.Admin.cs`.
+Internal mutable state is further decomposed into snapshot records such as `UserSecurityState`, `UserAccountState`, `UserPersonalProfileState`, `UserPreferenceState`, and `UserProfileMediaState`.
 
 ## Naming Conventions
 
