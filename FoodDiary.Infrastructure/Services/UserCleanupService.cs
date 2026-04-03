@@ -24,11 +24,17 @@ public sealed class UserCleanupService(
         if (reassignUserId.HasValue) {
             var candidate = await dbContext.Users
                 .AsNoTracking()
-                .AnyAsync(u => u.Id == new UserId(reassignUserId.Value), cancellationToken);
+                .AnyAsync(
+                    u => u.Id == new UserId(reassignUserId.Value) &&
+                         u.DeletedAt == null &&
+                         u.IsActive,
+                    cancellationToken);
             if (candidate) {
                 reassignTarget = new UserId(reassignUserId.Value);
             } else {
-                logger.LogWarning("User cleanup reassign target {UserId} was not found. Proceeding without reassignment.", reassignUserId);
+                logger.LogWarning(
+                    "User cleanup reassign target {UserId} was not found or is not active. Proceeding without reassignment.",
+                    reassignUserId);
             }
         }
 

@@ -450,6 +450,7 @@ Status update:
 - current-user lifecycle policy expanded outside auth for key user, dashboard, hydration, AI, Telegram, and email-verification flows
 - current-user lifecycle guards now also cover body and history tracking flows for weight, waist, hydration, and cycles
 - current-user lifecycle guards now also cover core CRUD flows for products, recipes, consumptions, and shopping lists
+- deleted-user cleanup now only reassigns into active non-deleted accounts
 
 ### Phase 4: Excellence layer
 
@@ -500,6 +501,7 @@ Status update:
 - current-user lifecycle policy already covers a first set of non-auth flows
 - current-user lifecycle policy now also covers body and history tracking flows
 - current-user lifecycle policy now also covers the main user-facing CRUD flows
+- deleted-user cleanup semantics are now stricter around reassignment targets
 - next pass should target deeper lifecycle edges and remaining user-dependent/background paths
 
 3. Add a deploy and recovery runbook

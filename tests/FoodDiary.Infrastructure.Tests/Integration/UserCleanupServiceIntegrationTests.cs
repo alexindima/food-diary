@@ -165,6 +165,52 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
             storage.DeletedObjectKeys.OrderBy(static key => key).ToArray());
     }
 
+    [RequiresDockerFact]
+    public async Task CleanupDeletedUsersAsync_WithDeletedReassignTarget_FallsBackToDeletePath() {
+        await using var context = await databaseFixture.CreateDbContextAsync();
+        var deletedUser = User.Create("deleted@example.com", "hash");
+        deletedUser.MarkDeleted(DateTime.UtcNow.AddDays(-10));
+
+        var deletedTarget = User.Create("deleted-target@example.com", "hash");
+        deletedTarget.MarkDeleted(DateTime.UtcNow.AddDays(-2));
+
+        var imageAsset = ImageAsset.Create(deletedUser.Id, "users/deleted/fallback.webp", "https://cdn.example.com/fallback.webp");
+        var product = Product.Create(
+            deletedUser.Id,
+            "Apple",
+            MeasurementUnit.G,
+            100,
+            100,
+            52,
+            0.3,
+            0.2,
+            14,
+            2.4,
+            0,
+            imageAssetId: imageAsset.Id);
+
+        context.Users.AddRange(deletedUser, deletedTarget);
+        context.ImageAssets.Add(imageAsset);
+        context.Products.Add(product);
+        await context.SaveChangesAsync();
+
+        var storage = new RecordingImageStorageService();
+        var service = new UserCleanupService(context, storage, NullLogger<UserCleanupService>.Instance);
+
+        var removed = await service.CleanupDeletedUsersAsync(
+            DateTime.UtcNow.AddDays(-1),
+            batchSize: 10,
+            reassignUserId: deletedTarget.Id.Value);
+
+        await using var verificationContext = CreateVerificationContext(context);
+
+        Assert.Equal(2, removed);
+        Assert.False(await verificationContext.Users.AnyAsync(user => user.Id == deletedUser.Id));
+        Assert.False(await verificationContext.Products.AnyAsync());
+        Assert.False(await verificationContext.ImageAssets.AnyAsync());
+        Assert.Equal(["users/deleted/fallback.webp"], storage.DeletedObjectKeys);
+    }
+
     private static FoodDiaryDbContext CreateVerificationContext(FoodDiaryDbContext sourceContext) {
         var connectionString = sourceContext.Database.GetConnectionString()
             ?? throw new InvalidOperationException("Source context does not have a connection string.");
