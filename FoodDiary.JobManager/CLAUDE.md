@@ -27,6 +27,7 @@ All validated on startup.
 - Bootstraps full Application + Infrastructure layers via `AddApplication()` / `AddInfrastructure()`
 - Hangfire with PostgreSQL storage (same `DefaultConnection` as the main app)
 - `RecurringJobsHostedService` registers jobs on `StartAsync`
+- startup now verifies that expected recurring jobs are actually present in Hangfire storage
 - Job classes depend on Application-layer interfaces (`IImageAssetCleanupService`, `IUserCleanupService`)
 - Telemetry: `fooddiary.job.execution.events`, `fooddiary.job.deleted_items`, `fooddiary.job.execution.duration`
 

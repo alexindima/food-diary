@@ -5,6 +5,7 @@ namespace FoodDiary.JobManager.Services;
 
 public sealed class RecurringJobsHostedService(
     IRecurringJobManager recurringJobManager,
+    IRecurringJobRegistrationVerifier recurringJobRegistrationVerifier,
     IOptions<ImageCleanupOptions> options,
     IOptions<UserCleanupOptions> userCleanupOptions,
     ImageCleanupJob imageCleanupJob,
@@ -15,13 +16,14 @@ public sealed class RecurringJobsHostedService(
         var imageCron = string.IsNullOrWhiteSpace(settings.Cron) ? "0 * * * *" : settings.Cron;
         var userCron = string.IsNullOrWhiteSpace(userSettings.Cron) ? "0 3 * * *" : userSettings.Cron;
         recurringJobManager.AddOrUpdate(
-            "image-assets-cleanup",
+            RecurringJobIds.ImageAssetsCleanup,
             () => imageCleanupJob.Execute(CancellationToken.None),
             imageCron);
         recurringJobManager.AddOrUpdate(
-            "users-cleanup",
+            RecurringJobIds.UsersCleanup,
             () => userCleanupJob.Execute(CancellationToken.None),
             userCron);
+        recurringJobRegistrationVerifier.EnsureRegistered(RecurringJobIds.All);
 
         return Task.CompletedTask;
     }

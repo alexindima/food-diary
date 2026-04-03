@@ -2,6 +2,8 @@ using FoodDiary.Application.Common.Interfaces.Services;
 using FoodDiary.Application.Images.Common;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.JobManager.Services;
+using Hangfire;
+using Hangfire.Common;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using System.Diagnostics.Metrics;
@@ -172,6 +174,59 @@ public sealed class JobsTests {
         Assert.Equal(now.AddDays(-30), cleanupService.OlderThanValues[0]);
     }
 
+    [Fact]
+    public async Task RecurringJobsHostedService_StartAsync_RegistersExpectedJobs_AndVerifiesThem() {
+        var recurringJobManager = new RecordingRecurringJobManager();
+        var verifier = new RecordingRecurringJobRegistrationVerifier();
+        var service = new RecurringJobsHostedService(
+            recurringJobManager,
+            verifier,
+            Options.Create(new ImageCleanupOptions { Cron = "0 * * * *" }),
+            Options.Create(new UserCleanupOptions { Cron = "30 2 * * *" }),
+            new ImageCleanupJob(
+                new RecordingImageCleanupService([0]),
+                Options.Create(new ImageCleanupOptions()),
+                new FixedDateTimeProvider(DateTime.UtcNow),
+                NullLogger<ImageCleanupJob>.Instance),
+            new UserCleanupJob(
+                new RecordingUserCleanupService([0]),
+                Options.Create(new UserCleanupOptions()),
+                new FixedDateTimeProvider(DateTime.UtcNow),
+                NullLogger<UserCleanupJob>.Instance));
+
+        await service.StartAsync(CancellationToken.None);
+
+        Assert.Equal(
+            [RecurringJobIds.ImageAssetsCleanup, RecurringJobIds.UsersCleanup],
+            recurringJobManager.JobIds);
+        Assert.Equal(
+            [RecurringJobIds.ImageAssetsCleanup, RecurringJobIds.UsersCleanup],
+            verifier.ExpectedJobIds);
+    }
+
+    [Fact]
+    public async Task RecurringJobsHostedService_StartAsync_WhenVerificationFails_Throws() {
+        var recurringJobManager = new RecordingRecurringJobManager();
+        var verifier = new ThrowingRecurringJobRegistrationVerifier();
+        var service = new RecurringJobsHostedService(
+            recurringJobManager,
+            verifier,
+            Options.Create(new ImageCleanupOptions { Cron = "0 * * * *" }),
+            Options.Create(new UserCleanupOptions { Cron = "30 2 * * *" }),
+            new ImageCleanupJob(
+                new RecordingImageCleanupService([0]),
+                Options.Create(new ImageCleanupOptions()),
+                new FixedDateTimeProvider(DateTime.UtcNow),
+                NullLogger<ImageCleanupJob>.Instance),
+            new UserCleanupJob(
+                new RecordingUserCleanupService([0]),
+                Options.Create(new UserCleanupOptions()),
+                new FixedDateTimeProvider(DateTime.UtcNow),
+                NullLogger<UserCleanupJob>.Instance));
+
+        await Assert.ThrowsAsync<InvalidOperationException>(() => service.StartAsync(CancellationToken.None));
+    }
+
     private sealed class FixedDateTimeProvider(DateTime utcNow) : IDateTimeProvider {
         public DateTime UtcNow { get; } = utcNow;
     }
@@ -260,5 +315,31 @@ public sealed class JobsTests {
             Guid? reassignUserId,
             CancellationToken cancellationToken = default) =>
             throw new InvalidOperationException("cleanup failed");
+    }
+
+    private sealed class RecordingRecurringJobManager : IRecurringJobManager {
+        public List<string> JobIds { get; } = [];
+
+        public void AddOrUpdate(string recurringJobId, Job job, string cronExpression, RecurringJobOptions options) {
+            JobIds.Add(recurringJobId);
+        }
+
+        public void Trigger(string recurringJobId) => throw new NotSupportedException();
+
+        public void RemoveIfExists(string recurringJobId) => throw new NotSupportedException();
+    }
+
+    private sealed class RecordingRecurringJobRegistrationVerifier : IRecurringJobRegistrationVerifier {
+        public List<string> ExpectedJobIds { get; } = [];
+
+        public void EnsureRegistered(IReadOnlyCollection<string> expectedJobIds) {
+            ExpectedJobIds.AddRange(expectedJobIds);
+        }
+    }
+
+    private sealed class ThrowingRecurringJobRegistrationVerifier : IRecurringJobRegistrationVerifier {
+        public void EnsureRegistered(IReadOnlyCollection<string> expectedJobIds) {
+            throw new InvalidOperationException("verification failed");
+        }
     }
 }

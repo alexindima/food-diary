@@ -174,6 +174,12 @@ Done when:
 - retries, failure visibility, and recovery rules are explicit for background processes
 - recurring security review expectations are explicit for auth/admin/upload/deploy surfaces
 
+Status:
+- In progress on 2026-04-03
+- deploy and recovery runbook is documented in `BACKEND_RUNBOOKS.md`
+- `FoodDiary.JobManager` startup now verifies that expected recurring Hangfire jobs exist in storage after registration
+- next useful step is defining alerting and recovery expectations around missed runs, retries, and poison/failing executions
+
 ## Suggested Delivery Rhythm
 
 ### Next 2 weeks
@@ -235,6 +241,7 @@ Current tasks to execute first:
 - adopted `pg_trgm`-backed search indexing for product and recipe `ILIKE` paths
 - updated deploy path to use server env at `/etc/fooddiary/fooddiary.env`, synced compose to server, and documented the final Docker/GHCR recovery path in `BACKEND_RUNBOOKS.md`
 - added a recurring backend security review checklist and cadence in `BACKEND_SECURITY_HARDENING.md`
+- added startup verification in `FoodDiary.JobManager` so expected recurring Hangfire jobs must exist in storage after registration
 
 ### Frontend progress completed on 2026-04-02
 

@@ -509,6 +509,8 @@ Recovery:
 
 - Scheduler not enqueuing:
   restore Hangfire/host execution and confirm recurring job registration.
+- Startup verification failure:
+  inspect `FoodDiary.JobManager` startup logs for missing recurring job IDs and verify Hangfire storage connectivity/permissions before retrying the host.
 - Database failure:
   switch to `Unavailable PostgreSQL`.
 - Storage delete issue during image or user cleanup:
@@ -521,6 +523,7 @@ Validation after recovery:
 - the affected cleanup job emits a successful execution event
 - deleted-item count moves again in the expected direction
 - execution duration is back within the normal operating range
+- `FoodDiary.JobManager` starts without recurring-job registration verification errors
 
 ## Post-Incident Template
 

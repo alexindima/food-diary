@@ -33,6 +33,7 @@ builder.Services.AddHangfireServer();
 
 builder.Services.AddSingleton<ImageCleanupJob>();
 builder.Services.AddSingleton<UserCleanupJob>();
+builder.Services.AddSingleton<IRecurringJobRegistrationVerifier, HangfireRecurringJobRegistrationVerifier>();
 builder.Services.AddHostedService<RecurringJobsHostedService>();
 
 var app = builder.Build();
