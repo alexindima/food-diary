@@ -227,7 +227,7 @@ jobs:
 
             docker compose --profile backend --profile full pull
 
-            docker compose --profile backend run --rm db-init update
+            docker compose --profile backend run -T --rm db-init update
 
             docker compose --profile backend up -d --force-recreate --no-deps api
             docker compose --profile full up -d --force-recreate --no-deps telegram-bot
