@@ -101,6 +101,10 @@ If a change affects backend HTTP contract, at least one of these must happen:
 2. relevant snapshots are intentionally updated and reviewed
 3. a new contract snapshot/test is added for the new API surface
 
+Repository process support:
+
+- the repository PR template now includes an `API Contract Review` section so intentional contract changes are called out during review instead of being hidden only inside snapshot diffs
+
 ## Notes
 
 - The repo already had the technical mechanism; this document formalizes how to use it.

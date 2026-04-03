@@ -247,6 +247,7 @@ Current tasks to execute first:
 - updated deploy path to use server env at `/etc/fooddiary/fooddiary.env`, synced compose to server, and documented the final Docker/GHCR recovery path in `BACKEND_RUNBOOKS.md`
 - added a recurring backend security review checklist and cadence in `BACKEND_SECURITY_HARDENING.md`
 - added startup verification in `FoodDiary.JobManager` so expected recurring Hangfire jobs must exist in storage after registration
+- backend API contract governance is now also surfaced in the repository PR template instead of relying only on snapshot diffs and standalone docs
 
 ### Frontend progress completed on 2026-04-02
 

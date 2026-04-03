@@ -16,6 +16,7 @@
 - New application use-case/handler logic: `FoodDiary.Application.Tests/<Feature>/*`
 - New API endpoint flow/auth contract: `FoodDiary.Web.Api.IntegrationTests/*`
 - New architecture rule: `FoodDiary.ArchitectureTests/*`
+- Backend HTTP contract changes should also review/update snapshots and PR notes per `BACKEND_API_CONTRACT_GOVERNANCE.md`
 
 ## Local Commands
 - Full build and tests:

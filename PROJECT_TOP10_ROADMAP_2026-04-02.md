@@ -142,6 +142,11 @@ References:
 - `BACKEND_API_CONTRACT_GOVERNANCE.md`
 - `tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/`
 
+Status update:
+
+- backend API contract review is now also surfaced in the repository PR template so intentional snapshot/OpenAPI changes are called out during review instead of relying only on diff inspection
+- the next step is to keep using that template consistently on API-changing PRs
+
 ### 7. Expand idempotency and consistency strategy for writes
 
 Priority: Medium
@@ -201,7 +206,6 @@ Status update:
 - cleanup jobs now also declare explicit retry and no-overlap execution policy
 - missed-run and repeated-failure alert signals now also have explicit telemetry via `fooddiary.job.last_success_age` and `fooddiary.job.failure_streak`
 - cleanup poison-item handling is now explicit at baseline: failing image assets are skipped and failing deleted users no longer fail the whole cleanup batch
-- recurring backend security review is now also surfaced in a repository PR template instead of staying only in backend docs
 - the next step is deciding whether repeated poison cases need dead-letter persistence beyond logs and telemetry
 
 ### 10. Turn security review into a recurring engineering practice
@@ -233,6 +237,7 @@ References:
 Status update:
 
 - recurring backend security review checklist and cadence are now documented in `BACKEND_SECURITY_HARDENING.md`
+- backend API contract review is now also surfaced in the repository PR template so intentional snapshot/OpenAPI changes are called out during review
 - the next step is to use the checklist as part of release/staging promotion discipline rather than keep it as passive documentation
 
 ## Frontend Top-10
