@@ -10,6 +10,7 @@
     OnInit,
     inject,
     signal,
+    effect,
 } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -139,6 +140,8 @@ export class AuthComponent implements OnInit, AfterViewInit {
         this.registerForm.controls.password.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.registerForm.controls.confirmPassword.updateValueAndValidity();
         });
+
+        effect(() => this.renderGoogleButton());
     }
 
     public ngOnInit(): void {
@@ -181,7 +184,6 @@ export class AuthComponent implements OnInit, AfterViewInit {
         if (this.useRouting() && this.router) {
             await this.router.navigate(['/auth', mode]);
         }
-        this.renderGoogleButton();
         this.renderTelegramWidget();
     }
 
@@ -257,7 +259,6 @@ export class AuthComponent implements OnInit, AfterViewInit {
                 callback: credential => this.onGoogleCredential(credential),
             });
             this.googleReady.set(true);
-            this.renderGoogleButton();
             this.googleIdentityService.prompt();
         } catch {
             this.googleReady.set(false);
