@@ -3,6 +3,7 @@ using FoodDiary.Application.Images.Common;
 using FoodDiary.Application.Recipes.Commands.CreateRecipe;
 using FoodDiary.Application.Recipes.Commands.DeleteRecipe;
 using FoodDiary.Application.Recipes.Commands.DuplicateRecipe;
+using FoodDiary.Application.Recipes.Commands.UpdateRecipe;
 using FoodDiary.Application.Recipes.Common;
 using FoodDiary.Application.Recipes.Queries.GetRecipeById;
 using FoodDiary.Application.Recipes.Queries.GetRecentRecipes;
@@ -72,6 +73,99 @@ public class RecipesFeatureTests {
         Assert.True(result.IsFailure);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("RecipeId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task UpdateRecipeCommandHandler_WithDeletedUser_ReturnsAccountDeleted() {
+        var user = User.Create("deleted-update-recipe@example.com", "hash");
+        user.DeleteAccount(DateTime.UtcNow);
+        var recipe = Recipe.Create(user.Id, "Soup", servings: 2, visibility: Visibility.Private);
+        var handler = new UpdateRecipeCommandHandler(
+            new SingleRecipeRepository(recipe),
+            new RecordingCleanupService(),
+            new StubUserRepository(user));
+
+        var result = await handler.Handle(
+            new UpdateRecipeCommand(
+                user.Id.Value,
+                recipe.Id.Value,
+                Name: "Updated Soup",
+                Description: null,
+                ClearDescription: false,
+                Comment: null,
+                ClearComment: false,
+                Category: null,
+                ClearCategory: false,
+                ImageUrl: null,
+                ClearImageUrl: false,
+                ImageAssetId: null,
+                ClearImageAssetId: false,
+                PrepTime: null,
+                CookTime: null,
+                Servings: 2,
+                Visibility: Visibility.Private.ToString(),
+                CalculateNutritionAutomatically: true,
+                ManualCalories: null,
+                ManualProteins: null,
+                ManualFats: null,
+                ManualCarbs: null,
+                ManualFiber: null,
+                ManualAlcohol: null,
+                Steps: []),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task UpdateRecipeCommandHandler_WithoutImageChange_DoesNotCleanupExistingRecipeAsset() {
+        var user = User.Create("recipe-owner@example.com", "hash");
+        var recipeAssetId = ImageAssetId.New();
+        var recipe = Recipe.Create(
+            user.Id,
+            "Soup",
+            servings: 2,
+            imageAssetId: recipeAssetId,
+            visibility: Visibility.Private);
+
+        var cleanup = new RecordingCleanupService();
+        var handler = new UpdateRecipeCommandHandler(
+            new SingleRecipeRepository(recipe),
+            cleanup,
+            new StubUserRepository(user));
+
+        var result = await handler.Handle(
+            new UpdateRecipeCommand(
+                user.Id.Value,
+                recipe.Id.Value,
+                Name: "Updated Soup",
+                Description: null,
+                ClearDescription: false,
+                Comment: null,
+                ClearComment: false,
+                Category: null,
+                ClearCategory: false,
+                ImageUrl: null,
+                ClearImageUrl: false,
+                ImageAssetId: null,
+                ClearImageAssetId: false,
+                PrepTime: null,
+                CookTime: null,
+                Servings: 2,
+                Visibility: Visibility.Private.ToString(),
+                CalculateNutritionAutomatically: true,
+                ManualCalories: null,
+                ManualProteins: null,
+                ManualFats: null,
+                ManualCarbs: null,
+                ManualFiber: null,
+                ManualAlcohol: null,
+                Steps: []),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Empty(cleanup.RequestedAssetIds);
     }
 
     [Fact]
@@ -292,7 +386,7 @@ public class RecipesFeatureTests {
             bool includePublic = true,
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
-        public Task UpdateAsync(Recipe recipe, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task UpdateAsync(Recipe recipe, CancellationToken cancellationToken = default) => Task.CompletedTask;
 
         public Task DeleteAsync(Recipe recipe, CancellationToken cancellationToken = default) {
             DeleteCalled = true;

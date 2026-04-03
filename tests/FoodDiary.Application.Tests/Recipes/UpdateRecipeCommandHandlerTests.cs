@@ -3,6 +3,7 @@ using FoodDiary.Application.Images.Common;
 using FoodDiary.Application.Recipes.Commands.UpdateRecipe;
 using FoodDiary.Application.Recipes.Common;
 using FoodDiary.Domain.Entities.Recipes;
+using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -19,7 +20,8 @@ public class UpdateRecipeCommandHandlerTests {
         var repository = new StubRecipeRepository(recipeId, userId, recipe);
         var handler = new UpdateRecipeCommandHandler(
             repository,
-            new NoopImageAssetCleanupService());
+            new NoopImageAssetCleanupService(),
+            new StubUserRepository(User.Create("user@example.com", "hash")));
 
         var command = new UpdateRecipeCommand(
             userId.Value,
@@ -65,7 +67,8 @@ public class UpdateRecipeCommandHandlerTests {
         var repository = new StubRecipeRepository(recipeId, userId, recipe);
         var handler = new UpdateRecipeCommandHandler(
             repository,
-            new NoopImageAssetCleanupService());
+            new NoopImageAssetCleanupService(),
+            new StubUserRepository(User.Create("user@example.com", "hash")));
 
         var command = new UpdateRecipeCommand(
             userId.Value,
@@ -110,7 +113,8 @@ public class UpdateRecipeCommandHandlerTests {
         var repository = new StubRecipeRepository(recipeId, userId, recipe);
         var handler = new UpdateRecipeCommandHandler(
             repository,
-            new NoopImageAssetCleanupService());
+            new NoopImageAssetCleanupService(),
+            new StubUserRepository(User.Create("user@example.com", "hash")));
 
         var result = await handler.Handle(
             new UpdateRecipeCommand(
@@ -156,7 +160,8 @@ public class UpdateRecipeCommandHandlerTests {
         var repository = new StubRecipeRepository(recipeId, userId, recipe);
         var handler = new UpdateRecipeCommandHandler(
             repository,
-            new NoopImageAssetCleanupService());
+            new NoopImageAssetCleanupService(),
+            new StubUserRepository(User.Create("user@example.com", "hash")));
 
         var result = await handler.Handle(
             new UpdateRecipeCommand(
@@ -202,7 +207,8 @@ public class UpdateRecipeCommandHandlerTests {
         var repository = new StubRecipeRepository(recipeId, userId, recipe);
         var handler = new UpdateRecipeCommandHandler(
             repository,
-            new NoopImageAssetCleanupService());
+            new NoopImageAssetCleanupService(),
+            new StubUserRepository(User.Create("user@example.com", "hash")));
 
         var result = await handler.Handle(
             new UpdateRecipeCommand(
@@ -251,7 +257,8 @@ public class UpdateRecipeCommandHandlerTests {
 
         var handler = new UpdateRecipeCommandHandler(
             new StubRecipeRepository(RecipeId.New(), userId, recipe),
-            new NoopImageAssetCleanupService());
+            new NoopImageAssetCleanupService(),
+            new StubUserRepository(User.Create("user@example.com", "hash")));
 
         var result = await handler.Handle(
             new UpdateRecipeCommand(
@@ -357,5 +364,19 @@ public class UpdateRecipeCommandHandlerTests {
 
         public Task<int> CleanupOrphansAsync(DateTime olderThanUtc, int batchSize, CancellationToken cancellationToken = default) =>
             Task.FromResult(0);
+    }
+
+    private sealed class StubUserRepository(User user) : IUserRepository {
+        public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult<User?>(user);
+        public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult<User?>(user);
+        public Task<User?> GetByTelegramUserIdAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User?> GetByTelegramUserIdIncludingDeletedAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<(IReadOnlyList<User> Items, int TotalItems)> GetPagedAsync(string? search, int page, int limit, bool includeDeleted, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers)> GetAdminDashboardSummaryAsync(int recentLimit, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<IReadOnlyList<Role>> GetRolesByNamesAsync(IReadOnlyList<string> names, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User> AddAsync(User addedUser, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task UpdateAsync(User updatedUser, CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 }

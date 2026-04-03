@@ -169,6 +169,7 @@ Status update:
 - critical idempotent POST paths are now explicitly called out in `BACKEND_API_CONTRACT_GOVERNANCE.md`
 - `FoodDiary.Presentation.Api.Tests` now covers idempotency filter cache-hit and successful-response caching behavior
 - idempotency is now narrowed to an explicit endpoint policy via `EnableIdempotencyAttribute` instead of applying to every POST action
+- targeted write-consistency review also fixed two real update-path issues: stale lifecycle checks in `UpdateRecipe`/`UpdateConsumption`, and accidental cleanup of unchanged image assets during ordinary updates
 - the next step is deciding whether any additional write paths deserve opt-in idempotency coverage
 
 ### 8. Keep query shaping disciplined as features grow

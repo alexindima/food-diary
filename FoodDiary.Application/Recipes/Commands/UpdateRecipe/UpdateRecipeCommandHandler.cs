@@ -7,6 +7,7 @@ using FoodDiary.Application.Recipes.Common;
 using FoodDiary.Application.Recipes.Mappings;
 using FoodDiary.Application.Recipes.Models;
 using FoodDiary.Application.Recipes.Services;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -14,7 +15,8 @@ namespace FoodDiary.Application.Recipes.Commands.UpdateRecipe;
 
 public class UpdateRecipeCommandHandler(
     IRecipeRepository recipeRepository,
-    IImageAssetCleanupService imageAssetCleanupService)
+    IImageAssetCleanupService imageAssetCleanupService,
+    IUserRepository userRepository)
     : ICommandHandler<UpdateRecipeCommand, Result<RecipeModel>> {
     public async Task<Result<RecipeModel>> Handle(UpdateRecipeCommand command, CancellationToken cancellationToken) {
         if (command.UserId is null || command.UserId == Guid.Empty) {
@@ -31,6 +33,11 @@ public class UpdateRecipeCommandHandler(
         }
 
         var userId = new UserId(command.UserId!.Value);
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        if (accessError is not null) {
+            return Result.Failure<RecipeModel>(accessError);
+        }
+
         var recipeId = new RecipeId(command.RecipeId);
 
         var recipe = await recipeRepository.GetByIdAsync(
@@ -168,7 +175,10 @@ public class UpdateRecipeCommandHandler(
 
         await RecipeNutritionUpdater.EnsureNutritionAsync(updated, recipeRepository, cancellationToken);
 
-        if (oldAssetId.HasValue && (command.ClearImageAssetId || !command.ImageAssetId.HasValue || oldAssetId.Value.Value != command.ImageAssetId.Value)) {
+        var imageAssetChanged = command.ClearImageAssetId ||
+                                (command.ImageAssetId.HasValue && oldAssetId.HasValue && oldAssetId.Value.Value != command.ImageAssetId.Value);
+
+        if (oldAssetId.HasValue && imageAssetChanged) {
             await imageAssetCleanupService.DeleteIfUnusedAsync(oldAssetId.Value, cancellationToken);
         }
 

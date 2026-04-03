@@ -153,6 +153,7 @@ public class ConsumptionsFeatureTests {
             new NoopMealNutritionService(),
             new RecordingRecentItemRepository(),
             cleanup,
+            new StubUserRepository(User.Create("user@example.com", "hash")),
             new StubDateTimeProvider());
 
         var command = new UpdateConsumptionCommand(
@@ -344,6 +345,7 @@ public class ConsumptionsFeatureTests {
             new NoopMealNutritionService(),
             new RecordingRecentItemRepository(),
             new RecordingCleanupService(),
+            new StubUserRepository(User.Create("user@example.com", "hash")),
             new StubDateTimeProvider());
 
         var result = await handler.Handle(
@@ -386,6 +388,7 @@ public class ConsumptionsFeatureTests {
             new NoopMealNutritionService(),
             new RecordingRecentItemRepository(),
             new RecordingCleanupService(),
+            new StubUserRepository(User.Create("user@example.com", "hash")),
             new StubDateTimeProvider());
 
         var result = await handler.Handle(
@@ -435,6 +438,7 @@ public class ConsumptionsFeatureTests {
             new NoopMealNutritionService(),
             new RecordingRecentItemRepository(),
             new RecordingCleanupService(),
+            new StubUserRepository(User.Create("user@example.com", "hash")),
             new StubDateTimeProvider());
 
         var result = await handler.Handle(
@@ -462,6 +466,91 @@ public class ConsumptionsFeatureTests {
         Assert.True(result.IsFailure);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("ConsumptionId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task UpdateConsumptionCommandHandler_WithDeletedUser_ReturnsAccountDeleted() {
+        var user = User.Create("deleted-update-consumption@example.com", "hash");
+        user.DeleteAccount(DateTime.UtcNow);
+        var meal = Meal.Create(user.Id, new DateTime(2026, 3, 26, 12, 0, 0, DateTimeKind.Utc), MealType.Lunch);
+
+        var handler = new UpdateConsumptionCommandHandler(
+            new SingleMealRepository(meal),
+            new NoopMealNutritionService(),
+            new RecordingRecentItemRepository(),
+            new RecordingCleanupService(),
+            new StubUserRepository(user),
+            new StubDateTimeProvider());
+
+        var result = await handler.Handle(
+            new UpdateConsumptionCommand(
+                user.Id.Value,
+                meal.Id.Value,
+                new DateTime(2026, 3, 26, 18, 0, 0, DateTimeKind.Utc),
+                MealType.Dinner.ToString(),
+                "Updated",
+                null,
+                null,
+                [new ConsumptionItemInput(ProductId.New().Value, null, 150)],
+                [],
+                true,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                3,
+                7),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task UpdateConsumptionCommandHandler_WithoutImageChange_DoesNotCleanupExistingMealAsset() {
+        var user = User.Create("consumption-owner@example.com", "hash");
+        var assetId = ImageAssetId.New();
+        var meal = Meal.Create(
+            user.Id,
+            new DateTime(2026, 3, 26, 12, 0, 0, DateTimeKind.Utc),
+            MealType.Lunch,
+            imageAssetId: assetId);
+
+        var cleanup = new RecordingCleanupService();
+        var handler = new UpdateConsumptionCommandHandler(
+            new SingleMealRepository(meal),
+            new NoopMealNutritionService(),
+            new RecordingRecentItemRepository(),
+            cleanup,
+            new StubUserRepository(user),
+            new StubDateTimeProvider());
+
+        var result = await handler.Handle(
+            new UpdateConsumptionCommand(
+                user.Id.Value,
+                meal.Id.Value,
+                new DateTime(2026, 3, 26, 18, 0, 0, DateTimeKind.Utc),
+                MealType.Dinner.ToString(),
+                "Updated",
+                null,
+                null,
+                [new ConsumptionItemInput(ProductId.New().Value, null, 150)],
+                [],
+                true,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                3,
+                7),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Empty(cleanup.RequestedAssetIds);
     }
 
     [Fact]

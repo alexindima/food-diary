@@ -2,6 +2,7 @@ using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Meals.Common;
 using FoodDiary.Application.Common.Interfaces.Services;
+using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Images.Common;
 using FoodDiary.Application.RecentItems.Common;
@@ -9,6 +10,7 @@ using FoodDiary.Application.Consumptions.Mappings;
 using FoodDiary.Application.Consumptions.Models;
 using FoodDiary.Application.Consumptions.Common;
 using FoodDiary.Application.Consumptions.Services;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
@@ -21,6 +23,7 @@ public class UpdateConsumptionCommandHandler(
     IMealNutritionService mealNutritionService,
     IRecentItemRepository recentItemRepository,
     IImageAssetCleanupService imageAssetCleanupService,
+    IUserRepository userRepository,
     IDateTimeProvider dateTimeProvider)
     : ICommandHandler<UpdateConsumptionCommand, Result<ConsumptionModel>> {
     public async Task<Result<ConsumptionModel>> Handle(UpdateConsumptionCommand command, CancellationToken cancellationToken) {
@@ -39,6 +42,11 @@ public class UpdateConsumptionCommandHandler(
         }
 
         var userId = new UserId(command.UserId!.Value);
+        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken);
+        if (accessError is not null) {
+            return Result.Failure<ConsumptionModel>(accessError);
+        }
+
         var consumptionId = new MealId(command.ConsumptionId);
 
         var meal = await mealRepository.GetByIdAsync(
@@ -181,7 +189,11 @@ public class UpdateConsumptionCommandHandler(
             meal.Items.Where(x => x.RecipeId.HasValue).Select(x => x.RecipeId!.Value).ToList(),
             cancellationToken);
 
-        if (oldAssetId.HasValue && (!command.ImageAssetId.HasValue || oldAssetId.Value.Value != command.ImageAssetId.Value)) {
+        var imageAssetChanged = command.ImageAssetId.HasValue &&
+                                oldAssetId.HasValue &&
+                                oldAssetId.Value.Value != command.ImageAssetId.Value;
+
+        if (oldAssetId.HasValue && imageAssetChanged) {
             await imageAssetCleanupService.DeleteIfUnusedAsync(oldAssetId.Value, cancellationToken);
         }
 
