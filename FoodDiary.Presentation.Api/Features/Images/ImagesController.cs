@@ -1,4 +1,5 @@
 using FoodDiary.Presentation.Api.Controllers;
+using FoodDiary.Presentation.Api.Filters;
 using FoodDiary.Presentation.Api.Features.Images.Mappings;
 using FoodDiary.Presentation.Api.Features.Images.Requests;
 using FoodDiary.Presentation.Api.Features.Images.Responses;
@@ -18,6 +19,7 @@ public sealed class ImagesController(ISender mediator, ILogger<ImagesController>
     private readonly ILogger<ImagesController> _logger = logger;
 
     [HttpPost("upload-url")]
+    [EnableIdempotency]
     [ProducesResponseType<GetImageUploadUrlHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesApiErrorResponse(StatusCodes.Status502BadGateway)]
@@ -34,4 +36,3 @@ public sealed class ImagesController(ISender mediator, ILogger<ImagesController>
     public Task<IActionResult> Delete(Guid assetId, [FromCurrentUser] Guid userId) =>
         HandleObservedNoContent(assetId.ToDeleteCommand(userId), _logger, "images.delete", userId);
 }
-

@@ -1,4 +1,5 @@
 using FoodDiary.Presentation.Api.Controllers;
+using FoodDiary.Presentation.Api.Filters;
 using FoodDiary.Presentation.Api.Features.Recipes.Mappings;
 using FoodDiary.Presentation.Api.Features.Recipes.Requests;
 using FoodDiary.Presentation.Api.Features.Recipes.Responses;
@@ -37,6 +38,7 @@ public class RecipesController(ISender mediator) : AuthorizedController(mediator
         HandleOk(id.ToQuery(userId, includePublic), static value => value.ToHttpResponse());
 
     [HttpPost]
+    [EnableIdempotency]
     [ProducesResponseType<RecipeHttpResponse>(StatusCodes.Status201Created)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesApiErrorResponse(StatusCodes.Status409Conflict)]
@@ -62,9 +64,9 @@ public class RecipesController(ISender mediator) : AuthorizedController(mediator
         HandleNoContent(id.ToDeleteCommand(userId));
 
     [HttpPost("{id:guid}/duplicate")]
+    [EnableIdempotency]
     [ProducesResponseType<RecipeHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
     public Task<IActionResult> Duplicate(Guid id, [FromCurrentUser] Guid userId) =>
         HandleOk(id.ToDuplicateCommand(userId), static value => value.ToHttpResponse());
 }
-

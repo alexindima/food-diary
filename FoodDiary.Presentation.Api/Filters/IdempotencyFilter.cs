@@ -19,6 +19,11 @@ public sealed class IdempotencyFilter(
             return;
         }
 
+        if (context.Filters.OfType<EnableIdempotencyAttribute>().Any() is false) {
+            await next();
+            return;
+        }
+
         var idempotencyKey = context.HttpContext.Request.Headers[IdempotencyKeyHeader].FirstOrDefault();
 
         if (string.IsNullOrWhiteSpace(idempotencyKey)) {

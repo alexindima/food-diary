@@ -182,7 +182,7 @@ Status:
 - cleanup job runtime state is now also observable via `last_success_age` and `failure_streak`
 - cleanup poison-item handling baseline now exists: image cleanup skips failing assets and user cleanup isolates failing users per transaction instead of failing the whole batch
 - recurring backend security review now also has repository-level PR template support instead of living only in documentation
-- idempotent POST behavior is now also explicitly covered in `FoodDiary.Presentation.Api.Tests` and called out in API governance for critical write paths
+- idempotent POST behavior is now explicitly covered in `FoodDiary.Presentation.Api.Tests`, called out in API governance for critical write paths, and restricted to explicit opt-in endpoints instead of global POST caching
 - next useful step is deciding whether repeated poisoned items need explicit dead-letter persistence or whether logging/metrics are sufficient
 
 ## Suggested Delivery Rhythm

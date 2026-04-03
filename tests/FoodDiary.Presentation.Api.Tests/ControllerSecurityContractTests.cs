@@ -1,9 +1,13 @@
 using System.Reflection;
 using FoodDiary.Presentation.Api.Authorization;
 using FoodDiary.Presentation.Api.Controllers;
+using FoodDiary.Presentation.Api.Filters;
 using FoodDiary.Presentation.Api.Features.Ai;
+using FoodDiary.Presentation.Api.Features.Consumptions;
 using FoodDiary.Presentation.Api.Features.Auth;
 using FoodDiary.Presentation.Api.Features.Images;
+using FoodDiary.Presentation.Api.Features.Products;
+using FoodDiary.Presentation.Api.Features.Recipes;
 using FoodDiary.Presentation.Api.Policies;
 using FoodDiary.Presentation.Api.Security;
 using Microsoft.AspNetCore.Authorization;
@@ -73,6 +77,17 @@ public sealed class ControllerSecurityContractTests {
         AssertActionRateLimit(typeof(ImagesController), nameof(ImagesController.GetUploadUrl), PresentationPolicyNames.AuthRateLimitPolicyName);
     }
 
+    [Fact]
+    public void CriticalWriteActions_OptIntoExplicitIdempotencyPolicy() {
+        AssertHasAttribute<EnableIdempotencyAttribute>(typeof(AuthSessionController), nameof(AuthSessionController.Refresh));
+        AssertHasAttribute<EnableIdempotencyAttribute>(typeof(ProductsController), nameof(ProductsController.Create));
+        AssertHasAttribute<EnableIdempotencyAttribute>(typeof(ProductsController), nameof(ProductsController.Duplicate));
+        AssertHasAttribute<EnableIdempotencyAttribute>(typeof(RecipesController), nameof(RecipesController.Create));
+        AssertHasAttribute<EnableIdempotencyAttribute>(typeof(RecipesController), nameof(RecipesController.Duplicate));
+        AssertHasAttribute<EnableIdempotencyAttribute>(typeof(ConsumptionsController), nameof(ConsumptionsController.Create));
+        AssertHasAttribute<EnableIdempotencyAttribute>(typeof(ImagesController), nameof(ImagesController.GetUploadUrl));
+    }
+
     private static void AssertActionRateLimit(Type controllerType, string actionName, string expectedPolicyName) {
         var method = GetAction(controllerType, actionName);
         var attribute = AssertSingleAttribute<EnableRateLimitingAttribute>(method);
@@ -85,6 +100,12 @@ public sealed class ControllerSecurityContractTests {
         var parameters = method.GetParameters();
 
         Assert.Contains(parameters, static parameter => parameter.GetCustomAttribute<FromCurrentUserAttribute>() is not null);
+    }
+
+    private static void AssertHasAttribute<TAttribute>(Type controllerType, string actionName)
+        where TAttribute : Attribute {
+        var method = GetAction(controllerType, actionName);
+        Assert.NotNull(method.GetCustomAttribute<TAttribute>());
     }
 
     private static MethodInfo GetAction(Type controllerType, string actionName) =>

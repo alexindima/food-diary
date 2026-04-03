@@ -1,4 +1,5 @@
 using FoodDiary.Presentation.Api.Controllers;
+using FoodDiary.Presentation.Api.Filters;
 using FoodDiary.Presentation.Api.Features.Auth.Mappings;
 using FoodDiary.Presentation.Api.Features.Auth.Requests;
 using FoodDiary.Presentation.Api.Features.Auth.Responses;
@@ -36,6 +37,7 @@ public sealed class AuthSessionController(ISender mediator, ILogger<AuthSessionC
         HandleObservedOk(request.ToCommand(), static value => value.ToHttpResponse(), _logger, "auth.login");
 
     [HttpPost("refresh")]
+    [EnableIdempotency]
     [ProducesResponseType<AuthenticationHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesApiErrorResponse(StatusCodes.Status401Unauthorized)]

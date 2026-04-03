@@ -20,7 +20,7 @@ public sealed class IdempotencyFilterTests {
         var cacheKey = "idempotency:user-123:/api/v1/products:key-1";
         await cache.SetStringAsync(cacheKey, "{\"StatusCode\":201,\"Body\":\"{\\u0022id\\u0022:\\u0022cached\\u0022}\"}");
 
-        var context = CreateActionExecutingContext(httpContext);
+        var context = CreateActionExecutingContext(httpContext, new EnableIdempotencyAttribute());
         var nextCalled = false;
 
         await filter.OnActionExecutionAsync(context, () => {
@@ -40,7 +40,7 @@ public sealed class IdempotencyFilterTests {
         var cache = new InMemoryDistributedCache();
         var filter = new IdempotencyFilter(cache, NullLogger<IdempotencyFilter>.Instance);
         var httpContext = CreateHttpContext("POST", "/api/v1/consumptions", "key-2", userId: "user-456");
-        var context = CreateActionExecutingContext(httpContext);
+        var context = CreateActionExecutingContext(httpContext, new EnableIdempotencyAttribute());
 
         await filter.OnActionExecutionAsync(context, () => {
             var actionExecuted = new ActionExecutedContext(
@@ -72,7 +72,7 @@ public sealed class IdempotencyFilterTests {
         var cache = new InMemoryDistributedCache();
         var filter = new IdempotencyFilter(cache, NullLogger<IdempotencyFilter>.Instance);
         var httpContext = CreateHttpContext("POST", "/api/v1/products", idempotencyKey: null, userId: "user-789");
-        var context = CreateActionExecutingContext(httpContext);
+        var context = CreateActionExecutingContext(httpContext, new EnableIdempotencyAttribute());
 
         await filter.OnActionExecutionAsync(context, () => {
             var actionExecuted = new ActionExecutedContext(
@@ -88,6 +88,28 @@ public sealed class IdempotencyFilterTests {
         });
 
         var cached = await cache.GetStringAsync("idempotency:user-789:/api/v1/products:");
+        Assert.Null(cached);
+    }
+
+    [Fact]
+    public async Task OnActionExecutionAsync_WithoutEnableIdempotencyAttribute_SkipsCaching() {
+        var cache = new InMemoryDistributedCache();
+        var filter = new IdempotencyFilter(cache, NullLogger<IdempotencyFilter>.Instance);
+        var httpContext = CreateHttpContext("POST", "/api/v1/auth/login", "key-3", userId: "user-000");
+        var context = CreateActionExecutingContext(httpContext);
+        var nextCalled = false;
+
+        await filter.OnActionExecutionAsync(context, () => {
+            nextCalled = true;
+            return Task.FromResult(new ActionExecutedContext(context, [], new object()) {
+                Result = new ObjectResult(new { ok = true }) {
+                    StatusCode = StatusCodes.Status200OK,
+                },
+            });
+        });
+
+        var cached = await cache.GetStringAsync("idempotency:user-000:/api/v1/auth/login:key-3");
+        Assert.True(nextCalled);
         Assert.Null(cached);
     }
 
@@ -109,7 +131,7 @@ public sealed class IdempotencyFilterTests {
         return httpContext;
     }
 
-    private static ActionExecutingContext CreateActionExecutingContext(HttpContext httpContext) {
+    private static ActionExecutingContext CreateActionExecutingContext(HttpContext httpContext, params IFilterMetadata[] filters) {
         var actionContext = new ActionContext(
             httpContext,
             new RouteData(),
@@ -117,7 +139,7 @@ public sealed class IdempotencyFilterTests {
 
         return new ActionExecutingContext(
             actionContext,
-            [],
+            filters,
             new Dictionary<string, object?>(),
             controller: new object());
     }

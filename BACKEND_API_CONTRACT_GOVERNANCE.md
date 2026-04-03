@@ -71,6 +71,7 @@ Expectations:
 
 - clients may send `Idempotency-Key` for these paths
 - the backend must keep returning the cached successful response for the same `(user, path, key)` tuple
+- idempotency is now opt-in at the presentation layer through `EnableIdempotencyAttribute`; it is no longer a blanket policy for every POST action
 - changes to global idempotency behavior should be reviewed like other contract changes, not treated as an invisible infrastructure detail
 
 ## When To Update Snapshots
