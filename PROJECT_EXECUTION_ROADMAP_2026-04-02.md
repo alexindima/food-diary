@@ -303,7 +303,8 @@ Status:
 - key application paths now consume role membership through aggregate helpers instead of link-entity traversal
 - `Product` internals now also separate `ProductMeasurementState` and `ProductMediaState` instead of keeping those mutable concerns as loose scalars
 - `Meal` AI recognition path now also uses a shared `MealAiItemState`, removing duplicated validation rules between `MealAiItemData` and `MealAiItem`
-- next useful step is deciding whether `Recipe` should get the next equivalent internal boundary pass
+- `RecipeStep` now also uses `RecipeStepContentState`, so step text/media normalization no longer lives as duplicated scalar mutation logic
+- next useful step is deciding whether the next backend maturity pass should stay in recipe/ingredient internals or shift to another hotspot
 
 ### 2. Expand lifecycle policy outside auth
 

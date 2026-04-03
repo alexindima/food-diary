@@ -15,7 +15,7 @@ Pure domain layer with zero external dependencies. Implements DDD tactical patte
 Every entity uses `private` parameterless constructor (for EF Core) + `public static Create(...)` factory. Child entities use `internal static Create(...)` so only the parent aggregate can instantiate them.
 
 ### State Snapshot Pattern
-Complex aggregates decompose mutable state into `readonly record struct` state objects (e.g., `MealDetailsState`, `MealAiItemState`, `ProductMeasurementState`, `UserSecurityState`). Mutations apply via `with` expressions on the record.
+Complex aggregates decompose mutable state into `readonly record struct` state objects (e.g., `MealDetailsState`, `MealAiItemState`, `ProductMeasurementState`, `RecipeStepContentState`, `UserSecurityState`). Mutations apply via `with` expressions on the record.
 
 ### Update Record Pattern
 External callers pass partial updates via `*Update` records with nullable fields and `Clear*` booleans. `EnsureClearConflict` validates no simultaneous clear + set.

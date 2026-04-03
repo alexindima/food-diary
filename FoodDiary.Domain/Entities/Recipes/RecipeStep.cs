@@ -1,13 +1,10 @@
 using FoodDiary.Domain.Common;
+using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Domain.Entities.Recipes;
 
 public sealed class RecipeStep : Entity<RecipeStepId> {
-    private const int TitleMaxLength = 256;
-    private const int InstructionMaxLength = 4000;
-    private const int ImageUrlMaxLength = DomainConstants.ImageUrlMaxLength;
-
     public RecipeId RecipeId { get; private set; }
     public int StepNumber { get; private set; }
     public string? Title { get; private set; }
@@ -36,35 +33,25 @@ public sealed class RecipeStep : Entity<RecipeStepId> {
             throw new ArgumentOutOfRangeException(nameof(stepNumber), "Step number must be greater than zero.");
         }
 
+        var content = RecipeStepContentState.Create(instruction, title, imageUrl, imageAssetId);
         var step = new RecipeStep {
             Id = RecipeStepId.New(),
             RecipeId = recipeId,
-            StepNumber = stepNumber,
-            Title = NormalizeTitle(title),
-            Instruction = NormalizeInstruction(instruction, nameof(instruction)),
-            ImageUrl = NormalizeOptionalText(imageUrl, ImageUrlMaxLength, nameof(imageUrl)),
-            ImageAssetId = imageAssetId
+            StepNumber = stepNumber
         };
+        step.ApplyContentState(content);
         step.SetCreated();
         return step;
     }
 
     public void Update(string instruction, string? title = null, string? imageUrl = null, ImageAssetId? imageAssetId = null) {
-        var normalizedInstruction = NormalizeInstruction(instruction, nameof(instruction));
-        var normalizedTitle = NormalizeTitle(title);
-        var normalizedImageUrl = NormalizeOptionalText(imageUrl, ImageUrlMaxLength, nameof(imageUrl));
+        var content = RecipeStepContentState.Create(instruction, title, imageUrl, imageAssetId);
 
-        if (string.Equals(Instruction, normalizedInstruction, StringComparison.Ordinal)
-            && string.Equals(Title, normalizedTitle, StringComparison.Ordinal)
-            && string.Equals(ImageUrl, normalizedImageUrl, StringComparison.Ordinal)
-            && ImageAssetId == imageAssetId) {
+        if (GetContentState() == content) {
             return;
         }
 
-        Instruction = normalizedInstruction;
-        Title = normalizedTitle;
-        ImageUrl = normalizedImageUrl;
-        ImageAssetId = imageAssetId;
+        ApplyContentState(content);
         SetModified();
     }
 
@@ -90,30 +77,19 @@ public sealed class RecipeStep : Entity<RecipeStepId> {
         }
     }
 
-    private static string? NormalizeTitle(string? title) {
-        return NormalizeOptionalText(title, TitleMaxLength, nameof(title));
+    private RecipeStepContentState GetContentState() {
+        return new RecipeStepContentState(
+            Title,
+            Instruction,
+            ImageUrl,
+            ImageAssetId);
     }
 
-    private static string NormalizeInstruction(string instruction, string paramName) {
-        if (string.IsNullOrWhiteSpace(instruction)) {
-            throw new ArgumentException("Instruction is required", paramName);
-        }
-
-        var normalized = instruction.Trim();
-        return normalized.Length > InstructionMaxLength
-            ? throw new ArgumentOutOfRangeException(paramName, $"Instruction must be at most {InstructionMaxLength} characters.")
-            : normalized;
-    }
-
-    private static string? NormalizeOptionalText(string? value, int maxLength, string paramName) {
-        if (string.IsNullOrWhiteSpace(value)) {
-            return null;
-        }
-
-        var normalized = value.Trim();
-        return normalized.Length > maxLength
-            ? throw new ArgumentOutOfRangeException(paramName, $"Value must be at most {maxLength} characters.")
-            : normalized;
+    private void ApplyContentState(RecipeStepContentState state) {
+        Title = state.Title;
+        Instruction = state.Instruction;
+        ImageUrl = state.ImageUrl;
+        ImageAssetId = state.ImageAssetId;
     }
 
     private static void EnsureRecipeId(RecipeId recipeId) {

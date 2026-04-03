@@ -526,7 +526,8 @@ Status update:
 - direct application dependence on `UserRole` traversal is reduced in the main auth/admin paths
 - `Product` internals now also use explicit measurement/media snapshots instead of keeping both concerns as loose mutable scalars
 - `Meal` AI recognition path now also uses a shared `MealAiItemState`, so normalized AI item validation no longer diverges between input and entity creation
-- next decision is whether `Recipe` should get the next equivalent internal split
+- `RecipeStep` now also uses `RecipeStepContentState`, reducing duplicated normalization for instruction/title/image mutation
+- next decision is whether to keep pushing recipe/ingredient internals or move to a different backend hotspot
 
 2. Expand lifecycle policy outside auth
 Why now:
