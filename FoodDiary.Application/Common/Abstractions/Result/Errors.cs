@@ -304,4 +304,51 @@ public static class Errors {
             "Failed to remove image from storage.",
             kind: ErrorKind.ExternalFailure);
     }
+
+    public static class Dietologist {
+        public static Error InvitationNotFound => new(
+            "Dietologist.InvitationNotFound",
+            "Dietologist invitation was not found.",
+            kind: ErrorKind.NotFound);
+
+        public static Error InvitationExpired => new(
+            "Dietologist.InvitationExpired",
+            "Dietologist invitation has expired.",
+            kind: ErrorKind.Validation);
+
+        public static Error InvitationInvalidToken => new(
+            "Dietologist.InvitationInvalidToken",
+            "Invitation token is invalid.",
+            kind: ErrorKind.Unauthorized);
+
+        public static Error AlreadyHasDietologist => new(
+            "Dietologist.AlreadyHasDietologist",
+            "You already have an active dietologist.",
+            kind: ErrorKind.Conflict);
+
+        public static Error PendingInvitationExists => new(
+            "Dietologist.PendingInvitationExists",
+            "A pending invitation already exists.",
+            kind: ErrorKind.Conflict);
+
+        public static Error CannotInviteSelf => new(
+            "Dietologist.CannotInviteSelf",
+            "You cannot invite yourself as a dietologist.",
+            kind: ErrorKind.Validation);
+
+        public static Error AccessDenied => new(
+            "Dietologist.AccessDenied",
+            "You do not have access to this client's data.",
+            kind: ErrorKind.Forbidden);
+
+        public static Error PermissionDenied => new(
+            "Dietologist.PermissionDenied",
+            "The client has not shared this data category.",
+            kind: ErrorKind.Forbidden);
+
+        public static Error NoActiveRelationship => new(
+            "Dietologist.NoActiveRelationship",
+            "No active dietologist relationship found.",
+            kind: ErrorKind.NotFound);
+    }
 }

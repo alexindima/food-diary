@@ -15,6 +15,7 @@ using FoodDiary.Application.Meals.Common;
 using FoodDiary.Application.Products.Common;
 using FoodDiary.Application.RecentItems.Common;
 using FoodDiary.Application.Recipes.Common;
+using FoodDiary.Application.Dietologist.Common;
 using FoodDiary.Application.ShoppingLists.Common;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.WaistEntries.Common;
@@ -29,6 +30,7 @@ using FoodDiary.Infrastructure.Persistence.Interceptors;
 using FoodDiary.Infrastructure.Persistence.Products;
 using FoodDiary.Infrastructure.Persistence.RecentItems;
 using FoodDiary.Infrastructure.Persistence.Recipes;
+using FoodDiary.Infrastructure.Persistence.Dietologist;
 using FoodDiary.Infrastructure.Persistence.ShoppingLists;
 using FoodDiary.Infrastructure.Persistence.Tracking;
 using FoodDiary.Infrastructure.Persistence.Users;
@@ -145,6 +147,7 @@ public static class DependencyInjection {
         services.AddScoped<IImageAssetRepository, ImageAssetRepository>();
         services.AddScoped<IAiUsageRepository, AiUsageRepository>();
         services.AddScoped<IEmailTemplateRepository, EmailTemplateRepository>();
+        services.AddScoped<IDietologistInvitationRepository, DietologistInvitationRepository>();
         services.AddSingleton<IAmazonS3>(sp => {
             var s3Options = sp.GetRequiredService<Microsoft.Extensions.Options.IOptions<S3Options>>().Value;
             var credentials = new BasicAWSCredentials(s3Options.AccessKeyId, s3Options.SecretAccessKey);
