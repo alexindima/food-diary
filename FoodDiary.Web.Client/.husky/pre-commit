@@ -52,6 +52,14 @@ fi
 
 cd ..
 
+if [ "$HAS_CS" -gt 0 ]; then
+  echo "=== Running dotnet format check ==="
+  STAGED_CS_FILES=$(echo "$STAGED_FILES" | grep '\.cs$' | tr '\n' ',' | sed 's/,$//')
+  dotnet format FoodDiary.slnx --verify-no-changes --include "$STAGED_CS_FILES" 2>&1 | grep "error" && { echo "Run 'dotnet format FoodDiary.slnx' to fix formatting."; exit 1; } || true
+else
+  echo "=== Skipping dotnet format (no .cs files changed) ==="
+fi
+
 if [ "$HAS_INFRA_MIGRATIONS" -gt 0 ]; then
   echo "=== Running infrastructure migration build guard ==="
   dotnet build FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj --no-restore || exit 1
