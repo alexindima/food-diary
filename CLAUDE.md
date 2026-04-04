@@ -88,6 +88,10 @@ Key patterns:
 - Nullable enabled, use structured results for error handling
 - Commit both migration files (`.cs` and `.Designer.cs`)
 
+## Features Documentation
+
+- [Dietologist Feature](DIETOLOGIST_FEATURE.md) — Professional nutritionist role with client data access, invitations, granular permissions, recommendations, and notifications
+
 ## Legacy Code
 
 `backend/food-diary.web.api/` contains the legacy NestJS backend. The .NET backend is the active one.
