@@ -107,6 +107,9 @@
 
     <div fdUiDialogFooter class="consumption-detail__footer">
         <div class="consumption-detail__actions">
+            <fd-ui-button size="md" variant="secondary" icon="replay" (click)="onRepeat()">
+                {{ 'CONSUMPTION_DETAIL.REPEAT_BUTTON' | translate }}
+            </fd-ui-button>
             <fd-ui-button size="md" variant="secondary" icon="edit" (click)="onEdit()">
                 {{ 'CONSUMPTION_DETAIL.EDIT_BUTTON' | translate }}
             </fd-ui-button>

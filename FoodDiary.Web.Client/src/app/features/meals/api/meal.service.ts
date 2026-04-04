@@ -72,6 +72,13 @@ export class MealService extends ApiService {
         return this.delete<void>(`${id}`).pipe(catchError(() => of(void 0)));
     }
 
+    public repeat(id: string, targetDate: string, mealType?: string): Observable<Meal | null> {
+        return this.post<ConsumptionResponseDto>(`${id}/repeat`, { targetDate, mealType }).pipe(
+            map(response => this.mapConsumption(response)),
+            catchError(() => of(null)),
+        );
+    }
+
     private mapConsumption(response: ConsumptionResponseDto): Consumption {
         return {
             id: response.id,

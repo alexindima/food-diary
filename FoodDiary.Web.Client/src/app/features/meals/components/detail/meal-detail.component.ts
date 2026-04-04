@@ -174,6 +174,11 @@ export class MealDetailComponent {
         }
     }
 
+    public onRepeat(): void {
+        const repeatResult = new MealDetailActionResult(this.consumption.id, 'Repeat');
+        this.dialogRef.close(repeatResult);
+    }
+
     public onEdit(): void {
         const editResult = new MealDetailActionResult(this.consumption.id, 'Edit');
         this.dialogRef.close(editResult);
@@ -211,4 +216,4 @@ export class MealDetailActionResult {
     ) {}
 }
 
-export type MealDetailAction = 'Edit' | 'Delete';
+export type MealDetailAction = 'Edit' | 'Delete' | 'Repeat';

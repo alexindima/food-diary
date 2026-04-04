@@ -137,6 +137,14 @@ export class MealListComponent implements OnInit {
 
                 if (data.action === 'Edit') {
                     this.navigationService.navigateToConsumptionEdit(data.id);
+                } else if (data.action === 'Repeat') {
+                    const today = new Date().toISOString().slice(0, 10);
+                    this.mealService.repeat(data.id, today).subscribe({
+                        next: () => {
+                            this.scrollToTop();
+                            this.loadConsumptions(this.currentPageIndex + 1).subscribe();
+                        },
+                    });
                 } else if (data.action === 'Delete') {
                     this.mealService.deleteById(data.id).subscribe({
                         next: () => {
