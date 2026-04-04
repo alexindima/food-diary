@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FoodDiary.Infrastructure.Migrations
 {
     [DbContext(typeof(FoodDiaryDbContext))]
-    [Migration("20260404164220_AddDietologistFeature")]
+    [Migration("20260404175028_AddDietologistFeature")]
     partial class AddDietologistFeature
     {
         /// <inheritdoc />
