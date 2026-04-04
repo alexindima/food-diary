@@ -1,5 +1,6 @@
 using FoodDiary.Application.Consumptions.Commands.CreateConsumption;
 using FoodDiary.Application.Consumptions.Commands.DeleteConsumption;
+using FoodDiary.Application.Consumptions.Commands.RepeatMeal;
 using FoodDiary.Application.Consumptions.Commands.UpdateConsumption;
 using FoodDiary.Application.Consumptions.Common;
 using FoodDiary.Presentation.Api.Features.Consumptions.Requests;
@@ -76,6 +77,9 @@ public static class ConsumptionHttpMappings {
 
     private static List<ConsumptionItemInput> ToItemInputs(IReadOnlyList<ConsumptionItemHttpRequest>? requests) =>
         requests?.Select(ToInput).ToList() ?? [];
+
+    public static RepeatMealCommand ToRepeatCommand(this RepeatMealHttpRequest request, Guid userId, Guid mealId) =>
+        new(userId, mealId, request.TargetDate, request.MealType);
 
     private static List<ConsumptionAiSessionInput> ToAiSessionInputs(IReadOnlyList<ConsumptionAiSessionHttpRequest>? requests) =>
         requests?.Select(ToInput).ToList() ?? [];

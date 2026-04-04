@@ -43,6 +43,16 @@ public class ConsumptionsController(ISender mediator) : AuthorizedController(med
     public Task<IActionResult> Update(Guid id, [FromCurrentUser] Guid userId, [FromBody] UpdateConsumptionHttpRequest request) =>
         HandleOk(request.ToCommand(userId, id), static value => value.ToHttpResponse());
 
+    [HttpPost("{id:guid}/repeat")]
+    [ProducesResponseType<ConsumptionHttpResponse>(StatusCodes.Status201Created)]
+    [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
+    public Task<IActionResult> Repeat(Guid id, [FromCurrentUser] Guid userId, [FromBody] RepeatMealHttpRequest request) =>
+        HandleCreated(
+            request.ToRepeatCommand(userId, id),
+            nameof(GetById),
+            static value => new { id = value.Id },
+            static value => value.ToHttpResponse());
+
     [HttpDelete("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]

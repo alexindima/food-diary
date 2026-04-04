@@ -447,6 +447,21 @@
       ]
     },
     {
+      "Path": "/api/v{version}/consumptions/{id}/repeat",
+      "Operations": [
+        {
+          "Method": "post",
+          "HasRequestBody": true,
+          "ResponseCodes": [
+            "201",
+            "401",
+            "404",
+            "500"
+          ]
+        }
+      ]
+    },
+    {
       "Path": "/api/v{version}/cycles",
       "Operations": [
         {
