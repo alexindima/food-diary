@@ -1,0 +1,155 @@
+<div class="fasting" fdPageContainer>
+    <fd-page-header class="fasting__header" [title]="'FASTING.TITLE' | translate" [subtitle]="'FASTING.SUBTITLE' | translate" />
+
+    <fd-page-body>
+        @if (isLoading()) {
+            <div class="fasting__loader">{{ 'FASTING.LOADING' | translate }}</div>
+        } @else {
+            <div class="fasting__grid">
+                <fd-ui-card class="fasting__card fasting__card--timer">
+                    <div class="fasting__timer">
+                        <div class="fasting__ring">
+                            <svg class="fasting__ring-svg" viewBox="0 0 200 200">
+                                <circle class="fasting__ring-track" cx="100" cy="100" r="90" fill="none" stroke-width="8" />
+                                <circle
+                                    class="fasting__ring-progress"
+                                    [class.fasting__ring-progress--overtime]="isOvertime()"
+                                    cx="100"
+                                    cy="100"
+                                    r="90"
+                                    fill="none"
+                                    stroke-width="8"
+                                    stroke-linecap="round"
+                                    [style.stroke-dasharray]="2 * Math.PI * 90"
+                                    [style.stroke-dashoffset]="2 * Math.PI * 90 * (1 - progressPercent() / 100)"
+                                />
+                            </svg>
+                            <div class="fasting__ring-content">
+                                @if (isActive()) {
+                                    <span class="fasting__elapsed">{{ elapsedFormatted() }}</span>
+                                    <span class="fasting__remaining">
+                                        @if (isOvertime()) {
+                                            {{ 'FASTING.GOAL_REACHED' | translate }}
+                                        } @else {
+                                            {{ 'FASTING.REMAINING' | translate }}: {{ remainingFormatted() }}
+                                        }
+                                    </span>
+                                } @else if (currentSession(); as session) {
+                                    @if (session.endedAtUtc) {
+                                        <span class="fasting__elapsed">{{ elapsedFormatted() }}</span>
+                                        <span class="fasting__remaining fasting__remaining--done">{{
+                                            'FASTING.COMPLETED' | translate
+                                        }}</span>
+                                    }
+                                } @else {
+                                    <span class="fasting__elapsed fasting__elapsed--idle">{{ 'FASTING.READY' | translate }}</span>
+                                    <span class="fasting__remaining">{{ 'FASTING.SELECT_AND_START' | translate }}</span>
+                                }
+                            </div>
+                        </div>
+
+                        @if (!isActive()) {
+                            <div class="fasting__protocols">
+                                @for (p of protocols; track p.value) {
+                                    <button
+                                        type="button"
+                                        class="fasting__protocol-btn"
+                                        [class.fasting__protocol-btn--active]="selectedProtocol() === p.value"
+                                        (click)="selectProtocol(p.value)"
+                                    >
+                                        {{ p.labelKey | translate }}
+                                    </button>
+                                }
+                            </div>
+
+                            @if (selectedProtocol() === 'Custom') {
+                                <div class="fasting__custom-input">
+                                    <fd-ui-input
+                                        type="number"
+                                        [label]="'FASTING.CUSTOM_HOURS' | translate"
+                                        [ngModel]="customHours()"
+                                        (ngModelChange)="onCustomHoursChange($event)"
+                                    />
+                                </div>
+                            }
+                        }
+
+                        <div class="fasting__actions">
+                            @if (isActive()) {
+                                <fd-ui-button (click)="endFasting()" [disabled]="isEnding()">
+                                    {{ 'FASTING.END_FAST' | translate }}
+                                </fd-ui-button>
+                            } @else {
+                                <fd-ui-button (click)="startFasting()" [disabled]="isStarting()">
+                                    {{ 'FASTING.START_FAST' | translate }}
+                                </fd-ui-button>
+                            }
+                        </div>
+                    </div>
+                </fd-ui-card>
+
+                <fd-ui-card class="fasting__card" [title]="'FASTING.STATS_TITLE' | translate">
+                    @if (stats(); as s) {
+                        <div class="fasting__stats">
+                            <fd-ui-accent-surface class="fasting__stat" accentSide="top" accentColor="#7c3aed" [tinted]="true">
+                                <span class="fasting__stat-label">{{ 'FASTING.TOTAL_COMPLETED' | translate }}</span>
+                                <strong class="fasting__stat-value">{{ s.totalCompleted }}</strong>
+                            </fd-ui-accent-surface>
+                            <fd-ui-accent-surface class="fasting__stat" accentSide="top" accentColor="#f97316" [tinted]="true">
+                                <span class="fasting__stat-label">{{ 'FASTING.CURRENT_STREAK' | translate }}</span>
+                                <strong class="fasting__stat-value">{{ s.currentStreak }} {{ 'FASTING.DAYS' | translate }}</strong>
+                            </fd-ui-accent-surface>
+                            <fd-ui-accent-surface class="fasting__stat" accentSide="top" accentColor="#0ea5e9" [tinted]="true">
+                                <span class="fasting__stat-label">{{ 'FASTING.AVG_DURATION' | translate }}</span>
+                                <strong class="fasting__stat-value"
+                                    >{{ s.averageDurationHours | number: '1.1-1' }} {{ 'FASTING.HOURS' | translate }}</strong
+                                >
+                            </fd-ui-accent-surface>
+                        </div>
+                    } @else {
+                        <p class="fasting__empty">{{ 'FASTING.NO_STATS' | translate }}</p>
+                    }
+                </fd-ui-card>
+            </div>
+
+            <fd-ui-card class="fasting__card" [title]="'FASTING.HISTORY_TITLE' | translate">
+                @if (history().length === 0) {
+                    <p class="fasting__empty">{{ 'FASTING.NO_HISTORY' | translate }}</p>
+                } @else {
+                    <div class="fasting__history">
+                        @for (session of history(); track session.id) {
+                            <fd-ui-accent-surface
+                                class="fasting__history-item"
+                                accentSide="left"
+                                [accentColor]="session.isCompleted ? '#22c55e' : '#94a3b8'"
+                                [tinted]="true"
+                            >
+                                <div class="fasting__history-header">
+                                    <div class="fasting__history-date">
+                                        {{ session.startedAtUtc | date: 'd MMM, y HH:mm' }}
+                                    </div>
+                                    <div class="fasting__history-badge" [class.fasting__history-badge--completed]="session.isCompleted">
+                                        {{
+                                            session.isCompleted
+                                                ? ('FASTING.BADGE_COMPLETED' | translate)
+                                                : ('FASTING.BADGE_INCOMPLETE' | translate)
+                                        }}
+                                    </div>
+                                </div>
+                                <div class="fasting__history-details">
+                                    <span
+                                        >{{ session.protocol }} &middot; {{ session.plannedDurationHours
+                                        }}{{ 'FASTING.H' | translate }}</span
+                                    >
+                                </div>
+                                @if (session.notes) {
+                                    <p class="fasting__history-notes">{{ session.notes }}</p>
+                                }
+                            </fd-ui-accent-surface>
+                        }
+                    </div>
+                }
+            </fd-ui-card>
+        }
+    </fd-page-body>
+</div>

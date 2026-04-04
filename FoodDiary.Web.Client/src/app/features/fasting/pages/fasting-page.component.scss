@@ -1,0 +1,227 @@
+.fasting {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    &__header {
+        margin-bottom: var(--fd-page-header-gap, 8px);
+    }
+
+    &__grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 16px;
+    }
+
+    &__card {
+        height: 100%;
+
+        &--timer {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    }
+
+    &__timer {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+        padding: 16px 0;
+        width: 100%;
+    }
+
+    &__ring {
+        position: relative;
+        width: 220px;
+        height: 220px;
+    }
+
+    &__ring-svg {
+        width: 100%;
+        height: 100%;
+        transform: rotate(-90deg);
+    }
+
+    &__ring-track {
+        stroke: #e2e8f0;
+    }
+
+    &__ring-progress {
+        stroke: #7c3aed;
+        transition: stroke-dashoffset 0.5s ease;
+
+        &--overtime {
+            stroke: #22c55e;
+        }
+    }
+
+    &__ring-content {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+    }
+
+    &__elapsed {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #0f172a;
+        font-variant-numeric: tabular-nums;
+
+        &--idle {
+            font-size: 1.4rem;
+            color: #475569;
+        }
+    }
+
+    &__remaining {
+        font-size: 0.85rem;
+        color: #64748b;
+
+        &--done {
+            color: #22c55e;
+            font-weight: 600;
+        }
+    }
+
+    &__protocols {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        justify-content: center;
+    }
+
+    &__protocol-btn {
+        padding: 8px 16px;
+        border-radius: 999px;
+        border: 1px solid #e2e8f0;
+        background: #fff;
+        color: #334155;
+        font-weight: 500;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition:
+            background 0.15s,
+            border-color 0.15s,
+            color 0.15s;
+
+        &:hover {
+            border-color: #7c3aed;
+            color: #7c3aed;
+        }
+
+        &--active {
+            background: #7c3aed;
+            border-color: #7c3aed;
+            color: #fff;
+
+            &:hover {
+                background: #6d28d9;
+                color: #fff;
+            }
+        }
+    }
+
+    &__custom-input {
+        width: 160px;
+    }
+
+    &__actions {
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    &__stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 12px;
+    }
+
+    &__stat {
+        padding: 14px;
+        border-radius: 14px;
+        border: 1px solid #e2e8f0;
+        background: #fff;
+        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
+    }
+
+    &__stat-label {
+        display: block;
+        font-size: 0.9rem;
+        color: #475569;
+        margin-bottom: 4px;
+    }
+
+    &__stat-value {
+        display: block;
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #0f172a;
+    }
+
+    &__history {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    &__history-item {
+        padding: 12px;
+        border-radius: 12px;
+        border: 1px solid #e2e8f0;
+        background: #fff;
+        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05);
+    }
+
+    &__history-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 4px;
+    }
+
+    &__history-date {
+        font-weight: 700;
+        color: #0f172a;
+    }
+
+    &__history-badge {
+        padding: 4px 10px;
+        border-radius: 999px;
+        background: rgba(148, 163, 184, 0.12);
+        color: #475569;
+        font-weight: 600;
+        font-size: 0.85rem;
+
+        &--completed {
+            background: rgba(34, 197, 94, 0.12);
+            color: #15803d;
+        }
+    }
+
+    &__history-details {
+        font-size: 0.95rem;
+        color: #334155;
+    }
+
+    &__history-notes {
+        margin: 4px 0 0;
+        color: #475569;
+        font-size: 0.95rem;
+        line-height: 1.4;
+    }
+
+    &__empty,
+    &__loader {
+        margin: 0;
+        padding: 12px 4px;
+        color: #64748b;
+    }
+}

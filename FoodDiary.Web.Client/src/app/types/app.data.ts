@@ -26,4 +26,5 @@ export interface AppConfigApiUrls {
     ai: string;
     shoppingLists: string;
     dietologist: string;
+    fasting: string;
 }

@@ -62,6 +62,10 @@
                     <mat-icon>favorite</mat-icon>
                     <span>{{ 'SIDEBAR.CYCLE' | translate }}</span>
                 </a>
+                <a routerLink="/fasting" routerLinkActive="is-active" class="sidebar__link sidebar__link--secondary">
+                    <mat-icon>timer</mat-icon>
+                    <span>{{ 'SIDEBAR.FASTING' | translate }}</span>
+                </a>
             </nav>
         }
     </div>
@@ -243,6 +247,10 @@
         <a routerLink="/cycle-tracking" routerLinkActive="is-active" (click)="closeMobileMenus()">
             <mat-icon>favorite</mat-icon>
             <span>{{ 'SIDEBAR.CYCLE' | translate }}</span>
+        </a>
+        <a routerLink="/fasting" routerLinkActive="is-active" (click)="closeMobileMenus()">
+            <mat-icon>timer</mat-icon>
+            <span>{{ 'SIDEBAR.FASTING' | translate }}</span>
         </a>
     </div>
 }
