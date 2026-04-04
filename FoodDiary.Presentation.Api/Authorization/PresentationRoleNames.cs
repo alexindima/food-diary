@@ -4,4 +4,5 @@ public static class PresentationRoleNames {
     public const string Admin = "Admin";
     public const string Premium = "Premium";
     public const string Support = "Support";
+    public const string Dietologist = "Dietologist";
 }

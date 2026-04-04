@@ -1,7 +1,9 @@
 using FoodDiary.Domain.Entities.Ai;
 using FoodDiary.Domain.Entities.Assets;
 using FoodDiary.Domain.Entities.Content;
+using FoodDiary.Domain.Entities.Dietologist;
 using FoodDiary.Domain.Entities.Meals;
+using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Recents;
 using FoodDiary.Domain.Entities.Recipes;
@@ -36,6 +38,9 @@ public class FoodDiaryDbContext(DbContextOptions<FoodDiaryDbContext> options) : 
     public DbSet<DailyAdvice> DailyAdvices => Set<DailyAdvice>();
     public DbSet<AiUsage> AiUsages => Set<AiUsage>();
     public DbSet<EmailTemplate> EmailTemplates => Set<EmailTemplate>();
+    public DbSet<DietologistInvitation> DietologistInvitations => Set<DietologistInvitation>();
+    public DbSet<Recommendation> Recommendations => Set<Recommendation>();
+    public DbSet<Notification> Notifications => Set<Notification>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
         modelBuilder.HasPostgresExtension("pg_trgm");
