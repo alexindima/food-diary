@@ -1568,7 +1568,8 @@
         "USER": "Пользователь",
         "REPORTS_AND_GOALS": "Отчеты и цели",
         "USER_MENU": "Меню пользователя",
-        "DAILY_NORM": "Дневная норма"
+        "DAILY_NORM": "Дневная норма",
+        "MY_CLIENTS": "Мои клиенты"
     },
     "SHOPPING_LIST": {
         "TITLE": "Список покупок",
