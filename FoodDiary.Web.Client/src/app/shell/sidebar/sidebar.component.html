@@ -79,6 +79,15 @@
         </a>
     </nav>
 
+    @if (isDietologist()) {
+        <nav class="sidebar__section">
+            <a routerLink="/dietologist" routerLinkActive="is-active" class="sidebar__link sidebar__link--secondary">
+                <mat-icon>medical_services</mat-icon>
+                <span>{{ 'SIDEBAR.MY_CLIENTS' | translate }}</span>
+            </a>
+        </nav>
+    }
+
     @if (currentUser(); as user) {
         <div class="sidebar__user-wrapper">
             <button type="button" class="sidebar__user" (click)="toggleUserMenu()">

@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { MainComponent } from './features/public/pages/landing/main.component';
 import { unsavedChangesGuard } from './guards/unsaved-changes.guard';
 import { authGuard } from './guards/auth.guard';
+import { dietologistGuard } from './guards/dietologist.guard';
 import { authRoutes } from './features/auth/auth.routes';
 
 export const routes: Routes = [
@@ -77,6 +78,12 @@ export const routes: Routes = [
         canActivate: [authGuard],
         loadChildren: () => import('./features/profile/profile.routes'),
         data: { seo: { titleKey: 'SEO.PROFILE', descriptionKey: 'SEO.PROFILE_DESCRIPTION', noIndex: true } },
+    },
+    {
+        path: 'dietologist',
+        canActivate: [dietologistGuard],
+        loadChildren: () => import('./features/dietologist/dietologist.routes').then(m => m.dietologistRoutes),
+        data: { seo: { titleKey: 'SEO.DIETOLOGIST', noIndex: true } },
     },
     {
         path: '**',

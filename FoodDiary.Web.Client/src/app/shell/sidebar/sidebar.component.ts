@@ -33,6 +33,7 @@ export class SidebarComponent {
 
     public isAuthenticated = this.authService.isAuthenticated;
     public isPremium = this.authService.isPremium;
+    public isDietologist = this.authService.isDietologist;
     protected readonly currentUser = this.userService.user;
     protected isFoodTrackingOpen = signal(true);
     protected isBodyTrackingOpen = signal(false);

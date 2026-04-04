@@ -25,4 +25,5 @@ export interface AppConfigApiUrls {
     goals: string;
     ai: string;
     shoppingLists: string;
+    dietologist: string;
 }

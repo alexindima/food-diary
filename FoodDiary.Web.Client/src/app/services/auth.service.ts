@@ -40,6 +40,7 @@ export class AuthService extends ApiService {
     public readonly isEmailConfirmed = computed(() => this.emailConfirmedSignal() ?? true);
     public readonly isAdmin = computed(() => this.hasRole('Admin'));
     public readonly isPremium = computed(() => this.hasRole('Premium'));
+    public readonly isDietologist = computed(() => this.hasRole('Dietologist'));
 
     public initializeAuth(): void {
         const token = this.tokenStorage.getToken();

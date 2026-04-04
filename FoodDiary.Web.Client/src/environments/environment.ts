@@ -20,6 +20,7 @@ export const environment: AppConfig = {
         goals: `${serverUrl}/api/v1/goals`,
         ai: `${serverUrl}/api/v1/ai`,
         shoppingLists: `${serverUrl}/api/v1/shopping-lists`,
+        dietologist: `${serverUrl}/api/v1/dietologist`,
     },
     googleClientId: '958507321562-8btd704hjhgsl7niklereh81utg5p780.apps.googleusercontent.com',
     telegramBotUsername: 'fooddiaryclub_bot',
