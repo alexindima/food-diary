@@ -41,6 +41,7 @@ public class FoodDiaryDbContext(DbContextOptions<FoodDiaryDbContext> options) : 
     public DbSet<DietologistInvitation> DietologistInvitations => Set<DietologistInvitation>();
     public DbSet<Recommendation> Recommendations => Set<Recommendation>();
     public DbSet<Notification> Notifications => Set<Notification>();
+    public DbSet<FastingSession> FastingSessions => Set<FastingSession>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
         modelBuilder.HasPostgresExtension("pg_trgm");

@@ -351,4 +351,21 @@ public static class Errors {
             "No active dietologist relationship found.",
             kind: ErrorKind.NotFound);
     }
+
+    public static class Fasting {
+        public static Error AlreadyActive => new(
+            "Fasting.AlreadyActive",
+            "A fasting session is already active.",
+            kind: ErrorKind.Conflict);
+
+        public static Error NoActiveSession => new(
+            "Fasting.NoActiveSession",
+            "No active fasting session found.",
+            kind: ErrorKind.NotFound);
+
+        public static Error InvalidProtocol => new(
+            "Fasting.InvalidProtocol",
+            "Invalid fasting protocol.",
+            kind: ErrorKind.Validation);
+    }
 }

@@ -198,3 +198,34 @@ internal sealed class AiUsageConfiguration : IEntityTypeConfiguration<AiUsage> {
         entity.HasIndex(e => new { e.UserId, e.CreatedOnUtc });
     }
 }
+
+internal sealed class FastingSessionConfiguration : IEntityTypeConfiguration<FastingSession> {
+    public void Configure(EntityTypeBuilder<FastingSession> entity) {
+        entity.Property<uint>("xmin").IsRowVersion();
+
+        entity.Property(e => e.Id)
+            .HasConversion(
+                id => id.Value,
+                value => new FastingSessionId(value))
+            .ValueGeneratedNever();
+
+        entity.Property(e => e.UserId).HasConversion(
+            id => id.Value,
+            value => new UserId(value));
+
+        entity.Property(e => e.Protocol)
+            .HasConversion<string>()
+            .HasMaxLength(16);
+
+        entity.Property(e => e.Notes)
+            .HasMaxLength(500);
+
+        entity.HasOne(e => e.User)
+            .WithMany()
+            .HasForeignKey(e => e.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        entity.HasIndex(e => e.UserId);
+        entity.HasIndex(e => new { e.UserId, e.IsCompleted });
+    }
+}

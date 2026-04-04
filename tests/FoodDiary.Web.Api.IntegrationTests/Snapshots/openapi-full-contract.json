@@ -717,6 +717,79 @@
       ]
     },
     {
+      "Path": "/api/v{version}/fasting/current",
+      "Operations": [
+        {
+          "Method": "get",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200",
+            "401",
+            "500"
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/v{version}/fasting/end",
+      "Operations": [
+        {
+          "Method": "put",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200",
+            "401",
+            "404",
+            "500"
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/v{version}/fasting/history",
+      "Operations": [
+        {
+          "Method": "get",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200",
+            "401",
+            "500"
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/v{version}/fasting/start",
+      "Operations": [
+        {
+          "Method": "post",
+          "HasRequestBody": true,
+          "ResponseCodes": [
+            "200",
+            "400",
+            "401",
+            "409",
+            "500"
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/v{version}/fasting/stats",
+      "Operations": [
+        {
+          "Method": "get",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200",
+            "401",
+            "500"
+          ]
+        }
+      ]
+    },
+    {
       "Path": "/api/v{version}/goals",
       "Operations": [
         {
