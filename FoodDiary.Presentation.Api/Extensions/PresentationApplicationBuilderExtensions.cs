@@ -8,6 +8,8 @@ public static class PresentationApplicationBuilderExtensions {
         app.MapControllers();
         app.MapHub<EmailVerificationHub>("/hubs/email-verification")
             .RequireCors(corsPolicyName);
+        app.MapHub<NotificationHub>("/hubs/notifications")
+            .RequireCors(corsPolicyName);
 
         return app;
     }

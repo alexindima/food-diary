@@ -2,6 +2,7 @@ import { Component, DestroyRef, computed, effect, inject, signal } from '@angula
 import { TranslateModule } from '@ngx-translate/core';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { NotificationService } from '../../services/notification.service';
 import { FdUiIconModule } from 'fd-ui-kit/material';
 import { MatIconModule } from '@angular/material/icon';
 import { UserService } from '../../shared/api/user.service';
@@ -30,10 +31,12 @@ export class SidebarComponent {
     private readonly dialogService = inject(FdUiDialogService);
     private readonly unsavedChangesService = inject(UnsavedChangesService);
     private readonly dashboardService = inject(DashboardService);
+    private readonly notificationService = inject(NotificationService);
 
     public isAuthenticated = this.authService.isAuthenticated;
     public isPremium = this.authService.isPremium;
     public isDietologist = this.authService.isDietologist;
+    public unreadNotificationCount = this.notificationService.unreadCount;
     protected readonly currentUser = this.userService.user;
     protected isFoodTrackingOpen = signal(true);
     protected isBodyTrackingOpen = signal(false);
@@ -80,6 +83,12 @@ export class SidebarComponent {
         });
 
         onCleanup(() => subscription.unsubscribe());
+    });
+
+    private readonly notificationSync = effect(() => {
+        if (this.isAuthenticated()) {
+            this.notificationService.fetchUnreadCount();
+        }
     });
 
     protected toggleFoodTracking(): void {

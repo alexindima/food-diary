@@ -1,5 +1,6 @@
 using Asp.Versioning;
 using FoodDiary.Application.Authentication.Common;
+using FoodDiary.Application.Notifications.Common;
 using FoodDiary.Presentation.Api.Filters;
 using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Presentation.Api.Security;
@@ -51,6 +52,7 @@ public static class PresentationServiceCollectionExtensions {
         services.AddScoped<TelegramBotSecretAuthorizationFilter>();
         services.AddSingleton<IUserIdProvider, UserIdProvider>();
         services.AddScoped<IEmailVerificationNotifier, EmailVerificationNotifier>();
+        services.AddScoped<INotificationPusher, NotificationPusher>();
         services.AddScoped<IPresentationClock, PresentationClock>();
         return services;
     }

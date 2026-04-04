@@ -88,6 +88,13 @@
         </nav>
     }
 
+    @if (unreadNotificationCount() > 0) {
+        <div class="sidebar__notification-badge">
+            <mat-icon>notifications</mat-icon>
+            <span class="sidebar__badge-count">{{ unreadNotificationCount() }}</span>
+        </div>
+    }
+
     @if (currentUser(); as user) {
         <div class="sidebar__user-wrapper">
             <button type="button" class="sidebar__user" (click)="toggleUserMenu()">
