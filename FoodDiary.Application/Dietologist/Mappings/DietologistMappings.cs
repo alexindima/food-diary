@@ -51,4 +51,15 @@ public static class DietologistMappings {
             permissions.ShareWaist,
             permissions.ShareGoals,
             permissions.ShareHydration);
+
+    public static RecommendationModel ToModel(this Recommendation recommendation) =>
+        new(
+            recommendation.Id.Value,
+            recommendation.DietologistUserId.Value,
+            recommendation.DietologistUser?.FirstName,
+            recommendation.DietologistUser?.LastName,
+            recommendation.Text,
+            recommendation.IsRead,
+            recommendation.CreatedOnUtc,
+            recommendation.ReadAtUtc);
 }

@@ -44,4 +44,22 @@ public class DietologistClientsController(ISender mediator) : AuthorizedControll
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
     public Task<IActionResult> GetClientGoals(Guid clientUserId, [FromCurrentUser] Guid userId) =>
         HandleOk(clientUserId.ToClientGoalsQuery(userId), static value => value.ToHttpResponse());
+
+    [HttpPost("{clientUserId:guid}/recommendations")]
+    [ProducesResponseType<RecommendationHttpResponse>(StatusCodes.Status201Created)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    public Task<IActionResult> CreateRecommendation(
+        Guid clientUserId,
+        [FromCurrentUser] Guid userId,
+        [FromBody] CreateRecommendationHttpRequest request) =>
+        HandleCreated(
+            request.ToCommand(userId, clientUserId),
+            nameof(CreateRecommendation),
+            static value => new { id = value.Id },
+            static value => value.ToHttpResponse());
+
+    [HttpGet("{clientUserId:guid}/recommendations")]
+    [ProducesResponseType<List<RecommendationHttpResponse>>(StatusCodes.Status200OK)]
+    public Task<IActionResult> GetRecommendationsForClient(Guid clientUserId, [FromCurrentUser] Guid userId) =>
+        HandleOk(clientUserId.ToRecommendationsForClientQuery(userId), static value => value.Select(x => x.ToHttpResponse()).ToList());
 }

@@ -20,4 +20,9 @@ public static class DietologistHttpResponseMappings {
     public static DietologistPermissionsHttpResponse ToHttpResponse(this DietologistPermissionsModel permissions) =>
         new(permissions.ShareMeals, permissions.ShareStatistics, permissions.ShareWeight,
             permissions.ShareWaist, permissions.ShareGoals, permissions.ShareHydration);
+
+    public static RecommendationHttpResponse ToHttpResponse(this RecommendationModel model) =>
+        new(model.Id, model.DietologistUserId, model.DietologistFirstName,
+            model.DietologistLastName, model.Text, model.IsRead,
+            model.CreatedAtUtc, model.ReadAtUtc);
 }
