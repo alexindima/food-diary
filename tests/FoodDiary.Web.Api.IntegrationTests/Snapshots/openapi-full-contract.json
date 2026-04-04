@@ -522,6 +522,201 @@
       ]
     },
     {
+      "Path": "/api/v{version}/dietologist/accept",
+      "Operations": [
+        {
+          "Method": "post",
+          "HasRequestBody": true,
+          "ResponseCodes": [
+            "204",
+            "400",
+            "401",
+            "404",
+            "500"
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/v{version}/dietologist/clients",
+      "Operations": [
+        {
+          "Method": "get",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200",
+            "401",
+            "403",
+            "500"
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/v{version}/dietologist/clients/{clientuserid}",
+      "Operations": [
+        {
+          "Method": "delete",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "204",
+            "401",
+            "403",
+            "404",
+            "500"
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/v{version}/dietologist/clients/{clientuserid}/dashboard",
+      "Operations": [
+        {
+          "Method": "get",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200",
+            "401",
+            "403",
+            "404",
+            "500"
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/v{version}/dietologist/clients/{clientuserid}/goals",
+      "Operations": [
+        {
+          "Method": "get",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200",
+            "401",
+            "403",
+            "404",
+            "500"
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/v{version}/dietologist/clients/{clientuserid}/recommendations",
+      "Operations": [
+        {
+          "Method": "get",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200",
+            "401",
+            "403",
+            "500"
+          ]
+        },
+        {
+          "Method": "post",
+          "HasRequestBody": true,
+          "ResponseCodes": [
+            "201",
+            "400",
+            "401",
+            "403",
+            "500"
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/v{version}/dietologist/decline",
+      "Operations": [
+        {
+          "Method": "post",
+          "HasRequestBody": true,
+          "ResponseCodes": [
+            "204",
+            "401",
+            "404",
+            "500"
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/v{version}/dietologist/invitation/{invitationid}",
+      "Operations": [
+        {
+          "Method": "get",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200",
+            "401",
+            "404",
+            "500"
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/v{version}/dietologist/invite",
+      "Operations": [
+        {
+          "Method": "post",
+          "HasRequestBody": true,
+          "ResponseCodes": [
+            "204",
+            "400",
+            "401",
+            "409",
+            "500"
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/v{version}/dietologist/my-dietologist",
+      "Operations": [
+        {
+          "Method": "get",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200",
+            "401",
+            "500"
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/v{version}/dietologist/permissions",
+      "Operations": [
+        {
+          "Method": "put",
+          "HasRequestBody": true,
+          "ResponseCodes": [
+            "204",
+            "401",
+            "404",
+            "500"
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/v{version}/dietologist/relationship",
+      "Operations": [
+        {
+          "Method": "delete",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "204",
+            "401",
+            "404",
+            "500"
+          ]
+        }
+      ]
+    },
+    {
       "Path": "/api/v{version}/goals",
       "Operations": [
         {
@@ -645,6 +840,63 @@
             "409",
             "500",
             "502"
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/v{version}/notifications",
+      "Operations": [
+        {
+          "Method": "get",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200",
+            "401",
+            "500"
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/v{version}/notifications/read-all",
+      "Operations": [
+        {
+          "Method": "put",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "204",
+            "401",
+            "500"
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/v{version}/notifications/unread-count",
+      "Operations": [
+        {
+          "Method": "get",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200",
+            "401",
+            "500"
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/v{version}/notifications/{notificationid}/read",
+      "Operations": [
+        {
+          "Method": "put",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "204",
+            "401",
+            "404",
+            "500"
           ]
         }
       ]
@@ -858,6 +1110,35 @@
           "HasRequestBody": false,
           "ResponseCodes": [
             "200",
+            "401",
+            "404",
+            "500"
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/v{version}/recommendations",
+      "Operations": [
+        {
+          "Method": "get",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200",
+            "401",
+            "500"
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/v{version}/recommendations/{recommendationid}/read",
+      "Operations": [
+        {
+          "Method": "put",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "204",
             "401",
             "404",
             "500"
