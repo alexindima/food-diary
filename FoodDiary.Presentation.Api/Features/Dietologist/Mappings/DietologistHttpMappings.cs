@@ -4,6 +4,8 @@ using FoodDiary.Application.Dietologist.Commands.DisconnectDietologist;
 using FoodDiary.Application.Dietologist.Commands.InviteDietologist;
 using FoodDiary.Application.Dietologist.Commands.UpdateDietologistPermissions;
 using FoodDiary.Application.Dietologist.Models;
+using FoodDiary.Application.Dietologist.Queries.GetClientDashboard;
+using FoodDiary.Application.Dietologist.Queries.GetClientGoals;
 using FoodDiary.Application.Dietologist.Queries.GetInvitationByToken;
 using FoodDiary.Application.Dietologist.Queries.GetMyClients;
 using FoodDiary.Application.Dietologist.Queries.GetMyDietologist;
@@ -32,6 +34,13 @@ public static class DietologistHttpMappings {
     public static GetMyClientsQuery ToMyClientsQuery(this Guid userId) => new(userId);
 
     public static GetInvitationByTokenQuery ToInvitationQuery(this Guid invitationId) => new(invitationId);
+
+    public static GetClientDashboardQuery ToClientDashboardQuery(
+        this GetClientDashboardHttpQuery query, Guid userId, Guid clientUserId) =>
+        new(userId, clientUserId, query.Date, query.Page, query.PageSize, query.Locale, query.TrendDays);
+
+    public static GetClientGoalsQuery ToClientGoalsQuery(this Guid clientUserId, Guid userId) =>
+        new(userId, clientUserId);
 
     private static DietologistPermissionsInput ToInput(this DietologistPermissionsHttpRequest request) =>
         new(request.ShareMeals, request.ShareStatistics, request.ShareWeight,

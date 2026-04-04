@@ -175,6 +175,7 @@ public static class DependencyInjection {
         services.AddSingleton<IEmailTemplateProvider, EmailTemplateProvider>();
         services.AddSingleton<IEmailTransport, SmtpClientEmailTransport>();
         services.AddSingleton<IEmailSender, SmtpEmailSender>();
+        services.AddSingleton<IDietologistEmailSender, DietologistEmailSender>();
         services.AddSingleton<IAuditLogger, StructuredAuditLogger>();
         services.AddHttpClient<IOpenAiFoodService, OpenAiFoodService>(client => {
             client.Timeout = TimeSpan.FromSeconds(60);
