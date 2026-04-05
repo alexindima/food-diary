@@ -218,6 +218,13 @@ public class AiValidatorsTests {
             CancellationToken cancellationToken) =>
             throw new NotSupportedException();
 
+        public Task<Result<FoodVisionModel>> ParseFoodTextAsync(
+            string text,
+            string? userLanguage,
+            UserId userId,
+            CancellationToken cancellationToken) =>
+            throw new NotSupportedException();
+
         public Task<Result<FoodNutritionModel>> CalculateNutritionAsync(
             IReadOnlyList<FoodVisionItemModel> items,
             UserId userId,

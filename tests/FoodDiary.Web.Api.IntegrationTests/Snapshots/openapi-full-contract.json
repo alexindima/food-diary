@@ -114,6 +114,24 @@
       ]
     },
     {
+      "Path": "/api/v{version}/ai/food/text",
+      "Operations": [
+        {
+          "Method": "post",
+          "HasRequestBody": true,
+          "ResponseCodes": [
+            "200",
+            "400",
+            "401",
+            "403",
+            "429",
+            "500",
+            "502"
+          ]
+        }
+      ]
+    },
+    {
       "Path": "/api/v{version}/ai/food/vision",
       "Operations": [
         {

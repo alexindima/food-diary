@@ -1,5 +1,6 @@
 using FoodDiary.Application.Ai.Commands.AnalyzeFoodImage;
 using FoodDiary.Application.Ai.Commands.CalculateFoodNutrition;
+using FoodDiary.Application.Ai.Commands.ParseFoodText;
 using FoodDiary.Application.Ai.Models;
 using FoodDiary.Application.Ai.Queries.GetUserAiUsageSummary;
 using FoodDiary.Presentation.Api.Features.Ai.Models;
@@ -15,6 +16,10 @@ public static class AiHttpMappings {
             UserId: userId,
             ImageAssetId: request.ImageAssetId,
             Description: request.Description);
+    }
+
+    public static ParseFoodTextCommand ToCommand(this FoodTextHttpRequest request, Guid userId) {
+        return new ParseFoodTextCommand(UserId: userId, Text: request.Text);
     }
 
     public static CalculateFoodNutritionCommand ToCommand(this FoodNutritionHttpRequest request, Guid userId) {

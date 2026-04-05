@@ -852,7 +852,10 @@
         "FAVORITE_UNNAMED": "Meal",
         "FAVORITE_ITEMS": "items",
         "FAVORITE_REPEAT": "Repeat today",
-        "FAVORITE_REMOVE": "Remove from favorites"
+        "FAVORITE_REMOVE": "Remove from favorites",
+        "VOICE_PLACEHOLDER": "Describe your meal, e.g. \"two eggs and toast\"...",
+        "VOICE_RESULT_TITLE": "AI recognized items",
+        "VOICE_CREATE_MEAL": "Log as meal"
     },
     "CONSUMPTION_DETAIL": {
         "TITLE": "Consumption Details",

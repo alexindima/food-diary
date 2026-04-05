@@ -12,6 +12,12 @@ public interface IOpenAiFoodService {
         string? description,
         CancellationToken cancellationToken);
 
+    Task<Result<FoodVisionModel>> ParseFoodTextAsync(
+        string text,
+        string? userLanguage,
+        UserId userId,
+        CancellationToken cancellationToken);
+
     Task<Result<FoodNutritionModel>> CalculateNutritionAsync(
         IReadOnlyList<FoodVisionItemModel> items,
         UserId userId,

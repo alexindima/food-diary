@@ -29,6 +29,14 @@ public sealed class AiFoodController(ISender mediator, ILogger<AiFoodController>
     public Task<IActionResult> AnalyzeFood([FromCurrentUser] Guid userId, [FromBody] FoodVisionHttpRequest request) =>
         HandleObservedOk(request.ToCommand(userId), static value => value.ToHttpResponse(), _logger, "ai.food.vision", userId);
 
+    [HttpPost("text")]
+    [ProducesResponseType<FoodVisionHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [ProducesApiErrorResponse(StatusCodes.Status429TooManyRequests)]
+    [ProducesApiErrorResponse(StatusCodes.Status502BadGateway)]
+    public Task<IActionResult> ParseFoodText([FromCurrentUser] Guid userId, [FromBody] FoodTextHttpRequest request) =>
+        HandleObservedOk(request.ToCommand(userId), static value => value.ToHttpResponse(), _logger, "ai.food.text", userId);
+
     [HttpPost("nutrition")]
     [ProducesResponseType<FoodNutritionHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]

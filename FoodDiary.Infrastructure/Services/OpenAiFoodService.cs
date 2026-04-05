@@ -77,6 +77,36 @@ public sealed class OpenAiFoodService(
         return parsed;
     }
 
+    public async Task<Result<FoodVisionModel>> ParseFoodTextAsync(
+        string text,
+        string? userLanguage,
+        UserId userId,
+        CancellationToken cancellationToken) {
+        const string operation = "text-parse";
+        var quotaCheck = await EnsureMonthlyQuotaAsync(userId, operation, cancellationToken);
+        if (quotaCheck.IsFailure) {
+            return Result.Failure<FoodVisionModel>(quotaCheck.Error);
+        }
+
+        if (string.IsNullOrWhiteSpace(_options.ApiKey)) {
+            return Result.Failure<FoodVisionModel>(Errors.Ai.OpenAiFailed("OpenAI API key is not configured."));
+        }
+
+        var requestModel = _options.TextModel;
+        var request = BuildTextParseRequest(requestModel, text, userLanguage);
+        var response = await SendRequestAsync(request, operation, requestModel, cancellationToken);
+        if (!response.IsSuccess) {
+            return Result.Failure<FoodVisionModel>(response.Error);
+        }
+
+        var parsed = ParseVisionResponse(response.Json!);
+        if (parsed.IsSuccess) {
+            await SaveUsageAsync(response.Json!, userId, "text-parse", requestModel, cancellationToken);
+        }
+
+        return parsed;
+    }
+
     public async Task<Result<FoodNutritionModel>> CalculateNutritionAsync(
         IReadOnlyList<FoodVisionItemModel> items,
         UserId userId,
@@ -215,6 +245,62 @@ public sealed class OpenAiFoodService(
                             type = "input_image",
                             image_url = imageUrl,
                             detail = "high"
+                        }
+                    }
+                }
+            },
+            text = new {
+                format = new {
+                    type = "json_schema",
+                    name = "food_vision",
+                    schema = new {
+                        type = "object",
+                        properties = new {
+                            items = new {
+                                type = "array",
+                                items = new {
+                                    type = "object",
+                                    properties = new {
+                                        nameEn = new { type = "string" },
+                                        nameLocal = new { type = new[] { "string", "null" } },
+                                        amount = new { type = "number" },
+                                        unit = new { type = "string" },
+                                        confidence = new { type = "number" }
+                                    },
+                                    required = new[] { "nameEn", "nameLocal", "amount", "unit", "confidence" },
+                                    additionalProperties = false
+                                }
+                            },
+                        },
+                        required = new[] { "items" },
+                        additionalProperties = false
+                    },
+                    strict = true
+                }
+            }
+        };
+    }
+
+    private static object BuildTextParseRequest(string model, string text, string? userLanguage) {
+        var language = string.IsNullOrWhiteSpace(userLanguage) ? "en" : userLanguage.Trim().ToLowerInvariant();
+        var includeLocal = language != "en";
+        var languageHint = includeLocal
+            ? $"Return nameEn in English and nameLocal in language '{language}'."
+            : "Return nameEn in English and set nameLocal to null.";
+
+        return new {
+            model,
+            input = new[] {
+                new {
+                    role = "user",
+                    content = new object[] {
+                        new {
+                            type = "input_text",
+                            text = $"Parse the following food description into structured items: \"{text}\". " +
+                                   "Return only JSON with list of items. " +
+                                   "Each item must include nameEn, nameLocal, amount, unit, confidence (0-1). " +
+                                   "Use grams (g) when possible. Estimate typical portion sizes for items without explicit amounts. " +
+                                   languageHint
                         }
                     }
                 }

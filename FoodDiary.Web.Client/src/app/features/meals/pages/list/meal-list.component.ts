@@ -12,8 +12,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { ErrorStateComponent } from '../../../../components/shared/error-state/error-state.component';
 import { SkeletonCardComponent } from '../../../../components/shared/skeleton-card/skeleton-card.component';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.component';
-import { Observable, catchError, debounceTime, distinctUntilChanged, map, of, startWith, switchMap } from 'rxjs';
+import { Observable, catchError, debounceTime, distinctUntilChanged, finalize, map, of, startWith, switchMap } from 'rxjs';
 
+import { AiFoodService } from '../../../../shared/api/ai-food.service';
+import { FoodVisionResponse } from '../../../../shared/models/ai.data';
 import { MealService } from '../../api/meal.service';
 import { FavoriteMealService } from '../../api/favorite-meal.service';
 import { MealDetailActionResult, MealDetailComponent } from '../../components/detail/meal-detail.component';
@@ -53,6 +55,7 @@ import { PagedData } from '../../../../shared/lib/paged-data.data';
 export class MealListComponent implements OnInit {
     private readonly mealService = inject(MealService);
     private readonly favoriteMealService = inject(FavoriteMealService);
+    private readonly aiFoodService = inject(AiFoodService);
     private readonly navigationService = inject(NavigationService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly fdDialogService = inject(FdUiDialogService);
@@ -65,6 +68,9 @@ export class MealListComponent implements OnInit {
     public readonly errorKey = signal<string | null>(null);
     public readonly favorites = signal<FavoriteMeal[]>([]);
     public readonly isFavoritesOpen = signal(false);
+    public readonly voiceText = signal('');
+    public readonly isVoiceLoading = signal(false);
+    public readonly voiceResult = signal<FoodVisionResponse | null>(null);
     public readonly isMobileView = signal<boolean>(window.matchMedia('(max-width: 768px)').matches);
     private readonly isMobileDateFilterOpen = signal(false);
     private readonly container = viewChild.required<ElementRef<HTMLElement>>('container');
@@ -129,6 +135,91 @@ export class MealListComponent implements OnInit {
         this.favoriteMealService.remove(favorite.id).subscribe({
             next: () => this.favorites.update(list => list.filter(f => f.id !== favorite.id)),
         });
+    }
+
+    public onVoiceTextInput(event: Event): void {
+        this.voiceText.set((event.target as HTMLInputElement).value);
+    }
+
+    public submitVoiceText(): void {
+        const text = this.voiceText().trim();
+        if (!text || this.isVoiceLoading()) {
+            return;
+        }
+
+        this.isVoiceLoading.set(true);
+        this.aiFoodService
+            .parseFoodText({ text })
+            .pipe(
+                finalize(() => this.isVoiceLoading.set(false)),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe({
+                next: result => this.voiceResult.set(result),
+                error: () => this.voiceResult.set(null),
+            });
+    }
+
+    public dismissVoiceResult(): void {
+        this.voiceResult.set(null);
+    }
+
+    public createMealFromVoice(): void {
+        const result = this.voiceResult();
+        if (!result?.items.length) {
+            return;
+        }
+
+        this.isVoiceLoading.set(true);
+        this.aiFoodService
+            .calculateNutrition({ items: result.items })
+            .pipe(
+                finalize(() => this.isVoiceLoading.set(false)),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe({
+                next: nutrition => {
+                    const now = new Date();
+
+                    this.mealService
+                        .create({
+                            date: now,
+                            isNutritionAutoCalculated: false,
+                            manualCalories: nutrition.calories,
+                            manualProteins: nutrition.protein,
+                            manualFats: nutrition.fat,
+                            manualCarbs: nutrition.carbs,
+                            manualFiber: nutrition.fiber,
+                            manualAlcohol: nutrition.alcohol,
+                            items: [],
+                            aiSessions: [
+                                {
+                                    recognizedAtUtc: now.toISOString(),
+                                    notes: this.voiceText(),
+                                    items: nutrition.items.map(item => ({
+                                        nameEn: item.name,
+                                        amount: item.amount,
+                                        unit: item.unit,
+                                        calories: item.calories,
+                                        proteins: item.protein,
+                                        fats: item.fat,
+                                        carbs: item.carbs,
+                                        fiber: item.fiber,
+                                        alcohol: item.alcohol,
+                                    })),
+                                },
+                            ],
+                        })
+                        .subscribe({
+                            next: () => {
+                                this.voiceResult.set(null);
+                                this.voiceText.set('');
+                                this.scrollToTop();
+                                this.loadConsumptions(1).subscribe();
+                            },
+                        });
+                },
+            });
     }
 
     public loadConsumptions(page: number): Observable<void> {

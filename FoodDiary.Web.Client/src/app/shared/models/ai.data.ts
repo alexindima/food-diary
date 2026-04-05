@@ -16,6 +16,10 @@ export type FoodVisionRequest = {
     description?: string | null;
 };
 
+export type FoodTextRequest = {
+    text: string;
+};
+
 export type FoodNutritionItem = {
     name: string;
     amount: number;

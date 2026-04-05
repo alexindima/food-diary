@@ -818,7 +818,10 @@
         "FAVORITE_UNNAMED": "Приём пищи",
         "FAVORITE_ITEMS": "позиций",
         "FAVORITE_REPEAT": "Повторить сегодня",
-        "FAVORITE_REMOVE": "Убрать из избранного"
+        "FAVORITE_REMOVE": "Убрать из избранного",
+        "VOICE_PLACEHOLDER": "Опишите приём пищи, например \"два яйца и тост\"...",
+        "VOICE_RESULT_TITLE": "AI распознал продукты",
+        "VOICE_CREATE_MEAL": "Записать приём пищи"
     },
     "CONSUMPTION_DETAIL": {
         "TITLE": "Детали приема пищи",
