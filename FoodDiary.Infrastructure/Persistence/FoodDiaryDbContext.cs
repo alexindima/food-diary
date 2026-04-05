@@ -59,6 +59,7 @@ public class FoodDiaryDbContext(DbContextOptions<FoodDiaryDbContext> options) : 
     public DbSet<UsdaFoodNutrient> UsdaFoodNutrients => Set<UsdaFoodNutrient>();
     public DbSet<UsdaFoodPortion> UsdaFoodPortions => Set<UsdaFoodPortion>();
     public DbSet<DailyReferenceValue> DailyReferenceValues => Set<DailyReferenceValue>();
+    public DbSet<RecipeComment> RecipeComments => Set<RecipeComment>();
     public DbSet<WearableConnection> WearableConnections => Set<WearableConnection>();
     public DbSet<WearableSyncEntry> WearableSyncEntries => Set<WearableSyncEntry>();
 

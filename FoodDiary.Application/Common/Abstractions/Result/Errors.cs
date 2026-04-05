@@ -422,6 +422,18 @@ public static class Errors {
             kind: ErrorKind.NotFound);
     }
 
+    public static class RecipeComment {
+        public static Error NotFound(Guid id) => new(
+            "RecipeComment.NotFound",
+            $"Comment with ID {id} was not found.",
+            kind: ErrorKind.NotFound);
+
+        public static Error NotAuthor => new(
+            "RecipeComment.NotAuthor",
+            "You are not the author of this comment.",
+            kind: ErrorKind.Forbidden);
+    }
+
     public static class Usda {
         public static Error FoodNotFound(int fdcId) => new(
             "Usda.FoodNotFound",
