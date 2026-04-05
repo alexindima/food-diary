@@ -1,0 +1,134 @@
+<div class="check-in" fdPageContainer>
+    <fd-page-header [title]="'WEEKLY_CHECK_IN.TITLE' | translate" [subtitle]="'WEEKLY_CHECK_IN.SUBTITLE' | translate" />
+
+    <fd-page-body>
+        @if (isLoading()) {
+            <div class="check-in__loader">{{ 'WEEKLY_CHECK_IN.LOADING' | translate }}</div>
+        } @else {
+            @if (trends(); as t) {
+                <div class="check-in__trends">
+                    <fd-ui-accent-surface
+                        class="check-in__trend"
+                        accentSide="left"
+                        [accentColor]="getTrendColor(t.calorieChange)"
+                        [tinted]="true"
+                    >
+                        <div class="check-in__trend-row">
+                            <mat-icon [style.color]="getTrendColor(t.calorieChange)">{{ getTrendIcon(t.calorieChange) }}</mat-icon>
+                            <div class="check-in__trend-info">
+                                <span class="check-in__trend-label">{{ 'WEEKLY_CHECK_IN.CALORIES' | translate }}</span>
+                                <strong class="check-in__trend-value"
+                                    >{{ t.calorieChange > 0 ? '+' : '' }}{{ t.calorieChange | number: '1.0-0' }}
+                                    {{ 'GENERAL.UNITS.KCAL' | translate }}</strong
+                                >
+                            </div>
+                        </div>
+                    </fd-ui-accent-surface>
+                    <fd-ui-accent-surface
+                        class="check-in__trend"
+                        accentSide="left"
+                        [accentColor]="getTrendColor(t.proteinChange)"
+                        [tinted]="true"
+                    >
+                        <div class="check-in__trend-row">
+                            <mat-icon [style.color]="getTrendColor(t.proteinChange)">{{ getTrendIcon(t.proteinChange) }}</mat-icon>
+                            <div class="check-in__trend-info">
+                                <span class="check-in__trend-label">{{ 'WEEKLY_CHECK_IN.PROTEIN' | translate }}</span>
+                                <strong class="check-in__trend-value"
+                                    >{{ t.proteinChange > 0 ? '+' : '' }}{{ t.proteinChange | number: '1.1-1'
+                                    }}{{ 'GENERAL.UNITS.G' | translate }}</strong
+                                >
+                            </div>
+                        </div>
+                    </fd-ui-accent-surface>
+                    @if (t.weightChange !== null) {
+                        <fd-ui-accent-surface
+                            class="check-in__trend"
+                            accentSide="left"
+                            [accentColor]="getTrendColor(t.weightChange, true)"
+                            [tinted]="true"
+                        >
+                            <div class="check-in__trend-row">
+                                <mat-icon [style.color]="getTrendColor(t.weightChange, true)">{{ getTrendIcon(t.weightChange) }}</mat-icon>
+                                <div class="check-in__trend-info">
+                                    <span class="check-in__trend-label">{{ 'WEEKLY_CHECK_IN.WEIGHT' | translate }}</span>
+                                    <strong class="check-in__trend-value"
+                                        >{{ t.weightChange > 0 ? '+' : '' }}{{ t.weightChange | number: '1.1-1' }}
+                                        {{ 'GENERAL.UNITS.KG' | translate }}</strong
+                                    >
+                                </div>
+                            </div>
+                        </fd-ui-accent-surface>
+                    }
+                    <fd-ui-accent-surface
+                        class="check-in__trend"
+                        accentSide="left"
+                        [accentColor]="getTrendColor(t.hydrationChange)"
+                        [tinted]="true"
+                    >
+                        <div class="check-in__trend-row">
+                            <mat-icon [style.color]="getTrendColor(t.hydrationChange)">{{ getTrendIcon(t.hydrationChange) }}</mat-icon>
+                            <div class="check-in__trend-info">
+                                <span class="check-in__trend-label">{{ 'WEEKLY_CHECK_IN.HYDRATION' | translate }}</span>
+                                <strong class="check-in__trend-value"
+                                    >{{ t.hydrationChange > 0 ? '+' : '' }}{{ t.hydrationChange }}
+                                    {{ 'GENERAL.UNITS.ML' | translate }}</strong
+                                >
+                            </div>
+                        </div>
+                    </fd-ui-accent-surface>
+                </div>
+            }
+
+            <div class="check-in__grid">
+                <fd-ui-card class="check-in__card" [title]="'WEEKLY_CHECK_IN.THIS_WEEK' | translate">
+                    @if (thisWeek(); as w) {
+                        <div class="check-in__stats">
+                            <div class="check-in__stat-row">
+                                <span>{{ 'WEEKLY_CHECK_IN.AVG_CALORIES' | translate }}</span
+                                ><strong>{{ w.avgDailyCalories | number: '1.0-0' }}</strong>
+                            </div>
+                            <div class="check-in__stat-row">
+                                <span>{{ 'WEEKLY_CHECK_IN.MEALS_LOGGED' | translate }}</span
+                                ><strong>{{ w.mealsLogged }}</strong>
+                            </div>
+                            <div class="check-in__stat-row">
+                                <span>{{ 'WEEKLY_CHECK_IN.DAYS_LOGGED' | translate }}</span
+                                ><strong>{{ w.daysLogged }} / 7</strong>
+                            </div>
+                            <div class="check-in__stat-row">
+                                <span>{{ 'WEEKLY_CHECK_IN.AVG_PROTEIN' | translate }}</span
+                                ><strong>{{ w.avgProteins | number: '1.0-0' }}{{ 'GENERAL.UNITS.G' | translate }}</strong>
+                            </div>
+                            @if (w.weightEnd) {
+                                <div class="check-in__stat-row">
+                                    <span>{{ 'WEEKLY_CHECK_IN.WEIGHT' | translate }}</span
+                                    ><strong>{{ w.weightEnd | number: '1.1-1' }} {{ 'GENERAL.UNITS.KG' | translate }}</strong>
+                                </div>
+                            }
+                            <div class="check-in__stat-row">
+                                <span>{{ 'WEEKLY_CHECK_IN.AVG_WATER' | translate }}</span
+                                ><strong>{{ w.avgDailyHydrationMl }} {{ 'GENERAL.UNITS.ML' | translate }}</strong>
+                            </div>
+                        </div>
+                    }
+                </fd-ui-card>
+
+                <fd-ui-card class="check-in__card" [title]="'WEEKLY_CHECK_IN.SUGGESTIONS_TITLE' | translate">
+                    @if (suggestions().length > 0) {
+                        <div class="check-in__suggestions">
+                            @for (s of suggestions(); track s) {
+                                <div class="check-in__suggestion">
+                                    <mat-icon class="check-in__suggestion-icon">lightbulb</mat-icon>
+                                    <span>{{ 'WEEKLY_CHECK_IN.' + s | translate }}</span>
+                                </div>
+                            }
+                        </div>
+                    } @else {
+                        <p class="check-in__empty">{{ 'WEEKLY_CHECK_IN.NO_SUGGESTIONS' | translate }}</p>
+                    }
+                </fd-ui-card>
+            </div>
+        }
+    </fd-page-body>
+</div>

@@ -29,4 +29,5 @@ export interface AppConfigApiUrls {
     fasting: string;
     favoriteMeals: string;
     gamification: string;
+    weeklyCheckIn: string;
 }

@@ -57,4 +57,23 @@ public class HydrationEntryRepository(FoodDiaryDbContext context) : IHydrationEn
             .Where(x => x.UserId == userId && x.Timestamp >= dayStart && x.Timestamp < dayEnd)
             .SumAsync(x => x.AmountMl, cancellationToken);
     }
+
+    public async Task<IReadOnlyList<(DateTime Date, int TotalMl)>> GetDailyTotalsAsync(
+        UserId userId,
+        DateTime dateFrom,
+        DateTime dateTo,
+        CancellationToken cancellationToken = default) {
+        var from = dateFrom.Date;
+        var to = dateTo.Date.AddDays(1);
+
+        var results = await context.HydrationEntries
+            .AsNoTracking()
+            .Where(x => x.UserId == userId && x.Timestamp >= from && x.Timestamp < to)
+            .GroupBy(x => x.Timestamp.Date)
+            .Select(g => new { Date = g.Key, TotalMl = g.Sum(x => x.AmountMl) })
+            .OrderBy(x => x.Date)
+            .ToListAsync(cancellationToken);
+
+        return results.Select(r => (r.Date, r.TotalMl)).ToList();
+    }
 }

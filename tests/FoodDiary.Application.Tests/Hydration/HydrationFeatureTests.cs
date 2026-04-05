@@ -180,6 +180,11 @@ public class HydrationFeatureTests {
             LastDailyTotalDateUtc = dateUtc;
             return Task.FromResult(0);
         }
+
+        public Task<IReadOnlyList<(DateTime Date, int TotalMl)>> GetDailyTotalsAsync(
+            UserId userId, DateTime dateFrom, DateTime dateTo,
+            CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
     }
 
     private sealed class StubUserRepository(User user) : IUserRepository {
@@ -214,5 +219,10 @@ public class HydrationFeatureTests {
 
         public Task<int> GetDailyTotalAsync(UserId userId, DateTime dateUtc, CancellationToken cancellationToken = default) =>
             Task.FromResult(0);
+
+        public Task<IReadOnlyList<(DateTime Date, int TotalMl)>> GetDailyTotalsAsync(
+            UserId userId, DateTime dateFrom, DateTime dateTo,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<(DateTime, int)>>([]);
     }
 }

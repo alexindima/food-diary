@@ -1,0 +1,8 @@
+using FoodDiary.Application.Common.Abstractions.Messaging;
+using FoodDiary.Application.Common.Abstractions.Result;
+using FoodDiary.Application.WeeklyCheckIn.Models;
+
+namespace FoodDiary.Application.WeeklyCheckIn.Queries.GetWeeklyCheckIn;
+
+public record GetWeeklyCheckInQuery(
+    Guid? UserId) : IQuery<Result<WeeklyCheckInModel>>, IUserRequest;

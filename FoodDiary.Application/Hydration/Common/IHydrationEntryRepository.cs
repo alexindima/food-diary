@@ -24,4 +24,10 @@ public interface IHydrationEntryRepository {
         UserId userId,
         DateTime dateUtc,
         CancellationToken cancellationToken = default);
+
+    Task<IReadOnlyList<(DateTime Date, int TotalMl)>> GetDailyTotalsAsync(
+        UserId userId,
+        DateTime dateFrom,
+        DateTime dateTo,
+        CancellationToken cancellationToken = default);
 }

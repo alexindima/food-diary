@@ -37,7 +37,8 @@
             "KCAL": "kcal",
             "G": "g",
             "ML": "ml",
-            "PCS": "pcs"
+            "PCS": "pcs",
+            "KG": "kg"
         },
         "NUTRIENTS": {
             "CALORIES": "Calories",
@@ -1194,7 +1195,8 @@
         "DAILY_NORM": "Daily norm",
         "MY_CLIENTS": "My Clients",
         "FASTING": "Fasting",
-        "ACHIEVEMENTS": "Achievements"
+        "ACHIEVEMENTS": "Achievements",
+        "WEEKLY_CHECK_IN": "Weekly review"
     },
     "SHOPPING_LIST": {
         "TITLE": "Shopping list",
@@ -1517,6 +1519,33 @@
         "BADGE_MEALS_100": "100 meals",
         "BADGE_MEALS_500": "500 meals"
     },
+    "WEEKLY_CHECK_IN": {
+        "TITLE": "Weekly review",
+        "SUBTITLE": "Your nutrition progress compared to last week",
+        "LOADING": "Loading weekly review...",
+        "THIS_WEEK": "This week",
+        "LAST_WEEK": "Last week",
+        "CALORIES": "Avg daily calories",
+        "PROTEIN": "Avg protein",
+        "WEIGHT": "Weight",
+        "HYDRATION": "Avg daily water",
+        "AVG_CALORIES": "Avg daily calories",
+        "AVG_PROTEIN": "Avg protein",
+        "AVG_WATER": "Avg daily water",
+        "MEALS_LOGGED": "Meals logged",
+        "DAYS_LOGGED": "Days logged",
+        "SUGGESTIONS_TITLE": "Suggestions",
+        "NO_SUGGESTIONS": "No suggestions this week.",
+        "suggestion.log_more_days": "Try to log meals at least 5 days a week for better tracking.",
+        "suggestion.over_calorie_goal": "You exceeded your calorie goal this week. Consider smaller portions.",
+        "suggestion.under_calorie_goal": "You're under your calorie target. Make sure you're eating enough.",
+        "suggestion.on_track": "Great job! You're on track with your calorie goals.",
+        "suggestion.weight_increasing": "Your weight went up this week. Review your calorie intake.",
+        "suggestion.weight_decreasing": "Your weight is going down. Keep up the good work!",
+        "suggestion.drink_more_water": "Your water intake is low. Aim for at least 1.5L per day.",
+        "suggestion.low_protein": "Your protein intake is low. Consider adding more protein sources.",
+        "suggestion.keep_going": "Keep logging and stay consistent!"
+    },
     "GOALS_PAGE": {
         "TITLE": "Goals & targets",
         "SUBTITLE": "Customize your daily nutrition targets and body goals. Blocks use placeholder data for now.",
@@ -1743,6 +1772,8 @@
         "FASTING_DESCRIPTION": "Track your fasting sessions with customizable protocols.",
         "GAMIFICATION": "Achievements",
         "GAMIFICATION_DESCRIPTION": "Track your streaks, earn badges, and monitor your health score.",
+        "WEEKLY_CHECK_IN": "Weekly Review",
+        "WEEKLY_CHECK_IN_DESCRIPTION": "Review your weekly nutrition progress and get personalized suggestions.",
         "PREMIUM": "Premium",
         "PREMIUM_DESCRIPTION": "Unlock advanced features with Food Diary Premium.",
         "PROFILE": "Profile",

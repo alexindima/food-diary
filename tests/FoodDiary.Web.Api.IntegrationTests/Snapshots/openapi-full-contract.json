@@ -1601,6 +1601,20 @@
       ]
     },
     {
+      "Path": "/api/v{version}/weekly-check-in",
+      "Operations": [
+        {
+          "Method": "get",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200",
+            "401",
+            "500"
+          ]
+        }
+      ]
+    },
+    {
       "Path": "/api/v{version}/weight-entries",
       "Operations": [
         {
