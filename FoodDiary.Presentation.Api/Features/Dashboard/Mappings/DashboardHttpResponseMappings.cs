@@ -15,6 +15,7 @@ public static class DashboardHttpResponseMappings {
         return new DashboardSnapshotHttpResponse(
             model.Date,
             model.DailyGoal,
+            model.WeeklyCalorieGoal,
             model.Statistics.ToHttpResponse(),
             model.WeeklyCalories.ToHttpResponseList(ToHttpResponse),
             model.Weight.ToHttpResponse(),

@@ -108,7 +108,7 @@ export function createConsumptionRingSignal(
             dailyGoal,
             dailyConsumed: consumedToday,
             weeklyConsumed: weeklyConsumed(),
-            weeklyGoal: dailyGoal > 0 ? dailyGoal * 7 : 0,
+            weeklyGoal: s?.weeklyCalorieGoal ?? (dailyGoal > 0 ? dailyGoal * 7 : 0),
             nutrientBars: nutrientBars(),
         };
     });

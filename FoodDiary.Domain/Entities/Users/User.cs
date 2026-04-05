@@ -46,6 +46,14 @@ public sealed partial class User : AggregateRoot<UserId> {
     public int? StepGoal { get; private set; }
     public double? WaterGoal { get; private set; }
     public double? HydrationGoal { get; private set; }
+    public bool CalorieCyclingEnabled { get; private set; }
+    public double? MondayCalories { get; private set; }
+    public double? TuesdayCalories { get; private set; }
+    public double? WednesdayCalories { get; private set; }
+    public double? ThursdayCalories { get; private set; }
+    public double? FridayCalories { get; private set; }
+    public double? SaturdayCalories { get; private set; }
+    public double? SundayCalories { get; private set; }
     public string? ProfileImage { get; private set; }
     public ImageAssetId? ProfileImageAssetId { get; private set; }
     public string? DashboardLayoutJson { get; private set; }
@@ -167,6 +175,37 @@ public sealed partial class User : AggregateRoot<UserId> {
         }
     }
 
+    public double? GetCalorieTargetForDate(DateTime date) {
+        if (!CalorieCyclingEnabled) {
+            return DailyCalorieTarget;
+        }
+
+        return date.DayOfWeek switch {
+            DayOfWeek.Monday => MondayCalories ?? DailyCalorieTarget,
+            DayOfWeek.Tuesday => TuesdayCalories ?? DailyCalorieTarget,
+            DayOfWeek.Wednesday => WednesdayCalories ?? DailyCalorieTarget,
+            DayOfWeek.Thursday => ThursdayCalories ?? DailyCalorieTarget,
+            DayOfWeek.Friday => FridayCalories ?? DailyCalorieTarget,
+            DayOfWeek.Saturday => SaturdayCalories ?? DailyCalorieTarget,
+            DayOfWeek.Sunday => SundayCalories ?? DailyCalorieTarget,
+            _ => DailyCalorieTarget
+        };
+    }
+
+    public double GetWeeklyCalorieTarget() {
+        if (!CalorieCyclingEnabled) {
+            return (DailyCalorieTarget ?? 0) * 7;
+        }
+
+        return (MondayCalories ?? DailyCalorieTarget ?? 0)
+            + (TuesdayCalories ?? DailyCalorieTarget ?? 0)
+            + (WednesdayCalories ?? DailyCalorieTarget ?? 0)
+            + (ThursdayCalories ?? DailyCalorieTarget ?? 0)
+            + (FridayCalories ?? DailyCalorieTarget ?? 0)
+            + (SaturdayCalories ?? DailyCalorieTarget ?? 0)
+            + (SundayCalories ?? DailyCalorieTarget ?? 0);
+    }
+
     private UserNutritionGoals GetNutritionGoals() {
         return UserNutritionGoals.Create(
             DailyCalorieTarget,
@@ -186,7 +225,15 @@ public sealed partial class User : AggregateRoot<UserId> {
             FiberTarget,
             WaterGoal,
             DesiredWeight,
-            DesiredWaist);
+            DesiredWaist,
+            CalorieCyclingEnabled,
+            MondayCalories,
+            TuesdayCalories,
+            WednesdayCalories,
+            ThursdayCalories,
+            FridayCalories,
+            SaturdayCalories,
+            SundayCalories);
     }
 
     private void ApplyGoalState(UserGoalState state) {
@@ -198,6 +245,14 @@ public sealed partial class User : AggregateRoot<UserId> {
         WaterGoal = state.WaterGoal;
         DesiredWeight = state.DesiredWeight;
         DesiredWaist = state.DesiredWaist;
+        CalorieCyclingEnabled = state.CalorieCyclingEnabled;
+        MondayCalories = state.MondayCalories;
+        TuesdayCalories = state.TuesdayCalories;
+        WednesdayCalories = state.WednesdayCalories;
+        ThursdayCalories = state.ThursdayCalories;
+        FridayCalories = state.FridayCalories;
+        SaturdayCalories = state.SaturdayCalories;
+        SundayCalories = state.SundayCalories;
     }
 
     private UserActivityGoals GetActivityGoals() {

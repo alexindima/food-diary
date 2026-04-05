@@ -8,7 +8,15 @@ public readonly record struct UserGoalState(
     double? FiberTarget,
     double? WaterGoal,
     double? DesiredWeight,
-    double? DesiredWaist) {
+    double? DesiredWaist,
+    bool CalorieCyclingEnabled = false,
+    double? MondayCalories = null,
+    double? TuesdayCalories = null,
+    double? WednesdayCalories = null,
+    double? ThursdayCalories = null,
+    double? FridayCalories = null,
+    double? SaturdayCalories = null,
+    double? SundayCalories = null) {
     public static UserGoalState CreateInitial() {
         return new UserGoalState(
             DailyCalorieTarget: null,

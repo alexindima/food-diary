@@ -56,7 +56,15 @@ public static class UserMappings {
             user.FiberTarget,
             user.WaterGoal,
             user.DesiredWeight,
-            user.DesiredWaist
+            user.DesiredWaist,
+            user.CalorieCyclingEnabled,
+            user.MondayCalories,
+            user.TuesdayCalories,
+            user.WednesdayCalories,
+            user.ThursdayCalories,
+            user.FridayCalories,
+            user.SaturdayCalories,
+            user.SundayCalories
         );
     }
 }

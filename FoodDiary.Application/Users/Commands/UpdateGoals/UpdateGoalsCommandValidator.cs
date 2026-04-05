@@ -72,5 +72,34 @@ public class UpdateGoalsCommandValidator : AbstractValidator<UpdateGoalsCommand>
                 .WithErrorCode("Validation.Invalid")
                 .WithMessage($"DesiredWaist must be in range (0, {DesiredWaistValueObject.MaxValue}]");
         });
+
+        When(x => x.MondayCalories.HasValue, () => {
+            RuleFor(x => x.MondayCalories).GreaterThanOrEqualTo(0)
+                .WithErrorCode("Validation.Invalid").WithMessage("MondayCalories must be >= 0");
+        });
+        When(x => x.TuesdayCalories.HasValue, () => {
+            RuleFor(x => x.TuesdayCalories).GreaterThanOrEqualTo(0)
+                .WithErrorCode("Validation.Invalid").WithMessage("TuesdayCalories must be >= 0");
+        });
+        When(x => x.WednesdayCalories.HasValue, () => {
+            RuleFor(x => x.WednesdayCalories).GreaterThanOrEqualTo(0)
+                .WithErrorCode("Validation.Invalid").WithMessage("WednesdayCalories must be >= 0");
+        });
+        When(x => x.ThursdayCalories.HasValue, () => {
+            RuleFor(x => x.ThursdayCalories).GreaterThanOrEqualTo(0)
+                .WithErrorCode("Validation.Invalid").WithMessage("ThursdayCalories must be >= 0");
+        });
+        When(x => x.FridayCalories.HasValue, () => {
+            RuleFor(x => x.FridayCalories).GreaterThanOrEqualTo(0)
+                .WithErrorCode("Validation.Invalid").WithMessage("FridayCalories must be >= 0");
+        });
+        When(x => x.SaturdayCalories.HasValue, () => {
+            RuleFor(x => x.SaturdayCalories).GreaterThanOrEqualTo(0)
+                .WithErrorCode("Validation.Invalid").WithMessage("SaturdayCalories must be >= 0");
+        });
+        When(x => x.SundayCalories.HasValue, () => {
+            RuleFor(x => x.SundayCalories).GreaterThanOrEqualTo(0)
+                .WithErrorCode("Validation.Invalid").WithMessage("SundayCalories must be >= 0");
+        });
     }
 }

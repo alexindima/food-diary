@@ -7,6 +7,7 @@ import { FdPageContainerDirective } from '../../../directives/layout/page-contai
 import { PageBodyComponent } from '../../../components/shared/page-body/page-body.component';
 import { PageHeaderComponent } from '../../../components/shared/page-header/page-header.component';
 import { BodyTargetKey, GoalsFacade, MacroKey, MacroPresetKey } from '../lib/goals.facade';
+import { DAYS_OF_WEEK } from '../models/goals.data';
 
 type BodyTarget = {
     key: BodyTargetKey;
@@ -56,6 +57,9 @@ export class GoalsPageComponent implements OnInit {
     protected readonly progressPercent = this.facade.progressPercent;
     protected readonly knobAngle = this.facade.knobAngle;
     protected readonly accentColor = this.facade.accentColor;
+    protected readonly calorieCyclingEnabled = this.facade.calorieCyclingEnabled;
+    protected readonly dayCalories = this.facade.dayCalories;
+    protected readonly daysOfWeek = DAYS_OF_WEEK;
     private activeRingElement: HTMLElement | null = null;
 
     public ngOnInit(): void {
@@ -68,6 +72,15 @@ export class GoalsPageComponent implements OnInit {
             value: this.facade.bodyTargetValues()[target.key],
         })),
     );
+
+    protected toggleCalorieCycling(): void {
+        this.facade.toggleCalorieCycling();
+    }
+
+    protected onDayCaloriesInput(key: string, event: Event): void {
+        const target = event.target as HTMLInputElement;
+        this.facade.updateDayCalories(key, Number(target.value));
+    }
 
     protected onCaloriesInput(event: Event): void {
         const target = event.target as HTMLInputElement;

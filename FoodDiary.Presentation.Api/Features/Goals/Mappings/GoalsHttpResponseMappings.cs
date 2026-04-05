@@ -13,6 +13,14 @@ public static class GoalsHttpResponseMappings {
             model.FiberTarget,
             model.WaterGoal,
             model.DesiredWeight,
-            model.DesiredWaist
+            model.DesiredWaist,
+            model.CalorieCyclingEnabled,
+            model.MondayCalories,
+            model.TuesdayCalories,
+            model.WednesdayCalories,
+            model.ThursdayCalories,
+            model.FridayCalories,
+            model.SaturdayCalories,
+            model.SundayCalories
         );
 }

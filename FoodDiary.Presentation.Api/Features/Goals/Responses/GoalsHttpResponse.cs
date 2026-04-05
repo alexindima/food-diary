@@ -8,4 +8,12 @@ public sealed record GoalsHttpResponse(
     double? FiberTarget,
     double? WaterGoal,
     double? DesiredWeight,
-    double? DesiredWaist);
+    double? DesiredWaist,
+    bool CalorieCyclingEnabled,
+    double? MondayCalories,
+    double? TuesdayCalories,
+    double? WednesdayCalories,
+    double? ThursdayCalories,
+    double? FridayCalories,
+    double? SaturdayCalories,
+    double? SundayCalories);

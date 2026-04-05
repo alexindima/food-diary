@@ -52,6 +52,34 @@
                             </div>
                         </fd-ui-card>
 
+                        <fd-ui-card class="goals__card goals__card--cycling" [title]="'GOALS_PAGE.CYCLING_TITLE' | translate">
+                            <div class="goals__card-inner goals__card-inner--column">
+                                <div class="goals__cycling-toggle">
+                                    <label class="goals__cycling-label">
+                                        <input type="checkbox" [checked]="calorieCyclingEnabled()" (change)="toggleCalorieCycling()" />
+                                        <span>{{ 'GOALS_PAGE.CYCLING_ENABLE' | translate }}</span>
+                                    </label>
+                                </div>
+                                @if (calorieCyclingEnabled()) {
+                                    <div class="goals__cycling-days">
+                                        @for (day of daysOfWeek; track day.key) {
+                                            <div class="goals__cycling-day">
+                                                <label class="goals__cycling-day-label">{{ day.labelKey | translate }}</label>
+                                                <input
+                                                    type="number"
+                                                    class="goals__cycling-day-input"
+                                                    [min]="0"
+                                                    [max]="maxCalories"
+                                                    [value]="dayCalories()[day.key]"
+                                                    (input)="onDayCaloriesInput(day.key, $event)"
+                                                />
+                                            </div>
+                                        }
+                                    </div>
+                                }
+                            </div>
+                        </fd-ui-card>
+
                         @if (waterState(); as water) {
                             <fd-ui-card class="goals__card goals__card--water" [title]="'GOALS_PAGE.WATER_TITLE' | translate">
                                 <div class="goals__card-inner goals__card-inner--column">

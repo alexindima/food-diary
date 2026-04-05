@@ -17,6 +17,14 @@ public static class GoalsHttpMappings {
             request.FiberTarget,
             request.WaterGoal,
             request.DesiredWeight,
-            request.DesiredWaist
+            request.DesiredWaist,
+            request.CalorieCyclingEnabled,
+            request.MondayCalories,
+            request.TuesdayCalories,
+            request.WednesdayCalories,
+            request.ThursdayCalories,
+            request.FridayCalories,
+            request.SaturdayCalories,
+            request.SundayCalories
         );
 }

@@ -130,6 +130,16 @@ export class GoalsFacade {
     public readonly minCalories = 0;
     public readonly maxCalories = 5000;
     public readonly calorieTarget = signal(0);
+    public readonly calorieCyclingEnabled = signal(false);
+    public readonly dayCalories = signal<Record<string, number>>({
+        mondayCalories: 0,
+        tuesdayCalories: 0,
+        wednesdayCalories: 0,
+        thursdayCalories: 0,
+        fridayCalories: 0,
+        saturdayCalories: 0,
+        sundayCalories: 0,
+    });
     public readonly macroValues = signal<Record<MacroKey, number>>({
         protein: 0,
         fats: 0,
@@ -302,6 +312,36 @@ export class GoalsFacade {
         return clamped;
     }
 
+    public toggleCalorieCycling(): void {
+        const next = !this.calorieCyclingEnabled();
+        this.calorieCyclingEnabled.set(next);
+        if (next) {
+            const base = this.calorieTarget();
+            const current = this.dayCalories();
+            const allZero = Object.values(current).every(v => v === 0);
+            if (allZero && base > 0) {
+                this.dayCalories.set({
+                    mondayCalories: base,
+                    tuesdayCalories: base,
+                    wednesdayCalories: base,
+                    thursdayCalories: base,
+                    fridayCalories: base,
+                    saturdayCalories: base,
+                    sundayCalories: base,
+                });
+            }
+        }
+    }
+
+    public updateDayCalories(key: string, value: number): void {
+        if (Number.isNaN(value)) {
+            return;
+        }
+
+        const clamped = this.clampCalories(value);
+        this.dayCalories.update(current => ({ ...current, [key]: clamped }));
+    }
+
     public saveGoals(): void {
         if (this.isSavingGoals()) {
             return;
@@ -321,6 +361,8 @@ export class GoalsFacade {
                 waterGoal: this.waterValue(),
                 desiredWeight: this.normalizeDesiredBodyTarget(bodyTargets.weight),
                 desiredWaist: this.normalizeDesiredBodyTarget(bodyTargets.waist),
+                calorieCyclingEnabled: this.calorieCyclingEnabled(),
+                ...(this.calorieCyclingEnabled() ? this.dayCalories() : {}),
             })
             .pipe(finalize(() => this.isSavingGoals.set(false)))
             .subscribe();
@@ -371,6 +413,17 @@ export class GoalsFacade {
                 this.bodyTargetValues.set({
                     weight: goals?.desiredWeight ?? 0,
                     waist: goals?.desiredWaist ?? 0,
+                });
+
+                this.calorieCyclingEnabled.set(goals?.calorieCyclingEnabled ?? false);
+                this.dayCalories.set({
+                    mondayCalories: goals?.mondayCalories ?? 0,
+                    tuesdayCalories: goals?.tuesdayCalories ?? 0,
+                    wednesdayCalories: goals?.wednesdayCalories ?? 0,
+                    thursdayCalories: goals?.thursdayCalories ?? 0,
+                    fridayCalories: goals?.fridayCalories ?? 0,
+                    saturdayCalories: goals?.saturdayCalories ?? 0,
+                    sundayCalories: goals?.sundayCalories ?? 0,
                 });
             });
     }

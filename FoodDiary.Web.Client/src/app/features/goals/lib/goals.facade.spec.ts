@@ -90,6 +90,7 @@ describe('GoalsFacade', () => {
             waterGoal: 2100,
             desiredWeight: 70,
             desiredWaist: null,
+            calorieCyclingEnabled: false,
         });
     });
 });

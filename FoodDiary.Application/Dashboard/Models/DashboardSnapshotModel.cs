@@ -9,6 +9,7 @@ namespace FoodDiary.Application.Dashboard.Models;
 public sealed record DashboardSnapshotModel(
     DateTime Date,
     double DailyGoal,
+    double WeeklyCalorieGoal,
     DashboardStatisticsModel Statistics,
     IReadOnlyList<DailyCaloriesModel> WeeklyCalories,
     DashboardWeightModel Weight,

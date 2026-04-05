@@ -8,6 +8,7 @@ import { WeightEntrySummaryPoint } from '../../weight-history/models/weight-entr
 export interface DashboardSnapshot {
     date: string;
     dailyGoal: number;
+    weeklyCalorieGoal: number;
     statistics: DashboardStatistics;
     weeklyCalories: WeeklyCaloriesPoint[];
     weight: DashboardWeight;

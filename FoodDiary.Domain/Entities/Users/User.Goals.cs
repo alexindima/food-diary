@@ -51,7 +51,15 @@ public sealed partial class User {
             FiberTarget = updatedGoals.FiberTarget,
             WaterGoal = updatedGoals.WaterGoal,
             DesiredWeight = update.DesiredWeight.HasValue ? update.DesiredWeight : DesiredWeight,
-            DesiredWaist = update.DesiredWaist.HasValue ? update.DesiredWaist : DesiredWaist
+            DesiredWaist = update.DesiredWaist.HasValue ? update.DesiredWaist : DesiredWaist,
+            CalorieCyclingEnabled = update.CalorieCyclingEnabled ?? CalorieCyclingEnabled,
+            MondayCalories = update.MondayCalories.HasValue ? update.MondayCalories : MondayCalories,
+            TuesdayCalories = update.TuesdayCalories.HasValue ? update.TuesdayCalories : TuesdayCalories,
+            WednesdayCalories = update.WednesdayCalories.HasValue ? update.WednesdayCalories : WednesdayCalories,
+            ThursdayCalories = update.ThursdayCalories.HasValue ? update.ThursdayCalories : ThursdayCalories,
+            FridayCalories = update.FridayCalories.HasValue ? update.FridayCalories : FridayCalories,
+            SaturdayCalories = update.SaturdayCalories.HasValue ? update.SaturdayCalories : SaturdayCalories,
+            SundayCalories = update.SundayCalories.HasValue ? update.SundayCalories : SundayCalories
         };
 
         ApplyGoalState(state);

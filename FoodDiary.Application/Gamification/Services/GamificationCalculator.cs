@@ -76,30 +76,33 @@ public static class GamificationCalculator {
 
     public static double CalculateWeeklyAdherence(
         IReadOnlyList<Meal> weekMeals,
-        double? dailyCalorieTarget,
+        Func<DateTime, double?> getCalorieTarget,
         DateTime today) {
-        if (dailyCalorieTarget is null or <= 0) {
-            return weekMeals.Count > 0 ? 1.0 : 0.0;
-        }
-
         var weekStart = today.AddDays(-6);
         var daysInRange = Math.Min(7, (int)(today - weekStart).TotalDays + 1);
         var metDays = 0;
+        var daysWithGoal = 0;
 
         for (var d = 0; d < daysInRange; d++) {
             var date = weekStart.AddDays(d);
+            var target = getCalorieTarget(date);
+            if (target is null or <= 0) {
+                continue;
+            }
+
+            daysWithGoal++;
             var dayCalories = weekMeals
                 .Where(m => m.Date.Date == date)
                 .Sum(m => m.TotalCalories);
 
             if (dayCalories > 0) {
-                var ratio = dayCalories / dailyCalorieTarget.Value;
+                var ratio = dayCalories / target.Value;
                 if (ratio >= 0.8 && ratio <= 1.2) {
                     metDays++;
                 }
             }
         }
 
-        return (double)metDays / daysInRange;
+        return daysWithGoal > 0 ? (double)metDays / daysWithGoal : (weekMeals.Count > 0 ? 1.0 : 0.0);
     }
 }

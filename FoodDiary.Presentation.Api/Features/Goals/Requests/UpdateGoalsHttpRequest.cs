@@ -8,5 +8,13 @@ public sealed record UpdateGoalsHttpRequest(
     double? FiberTarget,
     double? WaterGoal,
     double? DesiredWeight,
-    double? DesiredWaist
+    double? DesiredWaist,
+    bool? CalorieCyclingEnabled = null,
+    double? MondayCalories = null,
+    double? TuesdayCalories = null,
+    double? WednesdayCalories = null,
+    double? ThursdayCalories = null,
+    double? FridayCalories = null,
+    double? SaturdayCalories = null,
+    double? SundayCalories = null
 );

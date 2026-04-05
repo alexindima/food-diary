@@ -101,7 +101,8 @@ public class DashboardSnapshotBuilder(
 
         return Result.Success(new DashboardSnapshotModel(
             request.Date,
-            currentUser.DailyCalorieTarget ?? 0,
+            currentUser.GetCalorieTargetForDate(request.Date) ?? 0,
+            currentUser.GetWeeklyCalorieTarget(),
             statistics,
             weeklyCalories,
             weight,

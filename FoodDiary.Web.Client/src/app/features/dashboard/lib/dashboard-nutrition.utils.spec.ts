@@ -24,6 +24,7 @@ function buildSnapshot(
     return {
         date: '2026-03-15',
         dailyGoal: 0,
+        weeklyCalorieGoal: 0,
         weeklyCalories: [],
         weight: { latest: null, previous: null, desired: null },
         waist: { latest: null, previous: null, desired: null },
@@ -121,6 +122,7 @@ describe('dashboard-nutrition.utils', () => {
             const snapshot = signal<DashboardSnapshot | null>(
                 buildSnapshot({
                     dailyGoal: 2000,
+                    weeklyCalorieGoal: 14000,
                     statistics: { totalCalories: 1500 },
                 }),
             );

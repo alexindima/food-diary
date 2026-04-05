@@ -32,7 +32,15 @@ public class UpdateGoalsCommandHandler(IUserRepository userRepository)
             FiberTarget: command.FiberTarget,
             WaterGoal: command.WaterGoal,
             DesiredWeight: command.DesiredWeight,
-            DesiredWaist: command.DesiredWaist));
+            DesiredWaist: command.DesiredWaist,
+            CalorieCyclingEnabled: command.CalorieCyclingEnabled,
+            MondayCalories: command.MondayCalories,
+            TuesdayCalories: command.TuesdayCalories,
+            WednesdayCalories: command.WednesdayCalories,
+            ThursdayCalories: command.ThursdayCalories,
+            FridayCalories: command.FridayCalories,
+            SaturdayCalories: command.SaturdayCalories,
+            SundayCalories: command.SundayCalories));
 
         await userRepository.UpdateAsync(currentUser, cancellationToken);
 

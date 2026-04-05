@@ -41,7 +41,8 @@ public class GetGamificationQueryHandler(
 
         var weekStart = today.AddDays(-6);
         var weekMeals = await mealRepository.GetByPeriodAsync(userId, weekStart, today, cancellationToken);
-        var weeklyAdherence = GamificationCalculator.CalculateWeeklyAdherence(weekMeals, user?.DailyCalorieTarget, today);
+        var weeklyAdherence = GamificationCalculator.CalculateWeeklyAdherence(
+            weekMeals, date => user?.GetCalorieTargetForDate(date), today);
 
         var badges = GamificationCalculator.CalculateBadges(longestStreak, totalMeals);
         var healthScore = GamificationCalculator.CalculateHealthScore(currentStreak, weeklyAdherence, totalMeals);

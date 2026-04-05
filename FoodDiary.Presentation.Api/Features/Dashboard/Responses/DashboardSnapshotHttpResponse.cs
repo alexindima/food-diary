@@ -8,6 +8,7 @@ namespace FoodDiary.Presentation.Api.Features.Dashboard.Responses;
 public sealed record DashboardSnapshotHttpResponse(
     DateTime Date,
     double DailyGoal,
+    double WeeklyCalorieGoal,
     DashboardStatisticsHttpResponse Statistics,
     IReadOnlyList<DailyCaloriesHttpResponse> WeeklyCalories,
     DashboardWeightHttpResponse Weight,
