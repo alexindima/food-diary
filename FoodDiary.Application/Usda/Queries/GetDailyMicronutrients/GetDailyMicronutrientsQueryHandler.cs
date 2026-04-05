@@ -3,7 +3,9 @@ using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Meals.Common;
 using FoodDiary.Application.Usda.Common;
+using FoodDiary.Application.Usda.Mappings;
 using FoodDiary.Application.Usda.Models;
+using FoodDiary.Domain.ValueObjects;
 
 namespace FoodDiary.Application.Usda.Queries.GetDailyMicronutrients;
 
@@ -31,7 +33,7 @@ public class GetDailyMicronutrientsQueryHandler(
 
         if (linkedItems.Count == 0) {
             return Result.Success(new DailyMicronutrientSummaryModel(
-                query.Date, 0, totalProductCount, []));
+                query.Date, 0, totalProductCount, [], null));
         }
 
         var fdcIds = linkedItems
@@ -83,7 +85,11 @@ public class GetDailyMicronutrientsQueryHandler(
             .OrderBy(n => n.Name)
             .ToList();
 
+        var nutrientAmounts = aggregated.ToDictionary(kvp => kvp.Key, kvp => kvp.Value.Total);
+        var dvAmounts = dailyValues.ToDictionary(kvp => kvp.Key, kvp => kvp.Value.Value);
+        var healthScores = HealthAreaScores.Calculate(nutrientAmounts, dvAmounts);
+
         return Result.Success(new DailyMicronutrientSummaryModel(
-            query.Date, linkedProductCount, totalProductCount, nutrientModels));
+            query.Date, linkedProductCount, totalProductCount, nutrientModels, healthScores.ToModel()));
     }
 }

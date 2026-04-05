@@ -28,6 +28,7 @@ export interface UsdaFoodDetail {
     foodCategory: string | null;
     nutrients: Micronutrient[];
     portions: UsdaFoodPortion[];
+    healthScores: HealthAreaScores | null;
 }
 
 export interface DailyMicronutrientSummary {
@@ -35,6 +36,22 @@ export interface DailyMicronutrientSummary {
     linkedProductCount: number;
     totalProductCount: number;
     nutrients: DailyMicronutrient[];
+    healthScores: HealthAreaScores | null;
+}
+
+export type HealthAreaGrade = 'unknown' | 'low' | 'fair' | 'good' | 'excellent';
+
+export interface HealthAreaScore {
+    score: number;
+    grade: HealthAreaGrade;
+}
+
+export interface HealthAreaScores {
+    heart: HealthAreaScore;
+    bone: HealthAreaScore;
+    immune: HealthAreaScore;
+    energy: HealthAreaScore;
+    antioxidant: HealthAreaScore;
 }
 
 export interface DailyMicronutrient {

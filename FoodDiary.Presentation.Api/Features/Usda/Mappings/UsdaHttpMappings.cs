@@ -42,7 +42,8 @@ public static class UsdaHttpMappings {
                 n.DailyValue, n.PercentDailyValue)).ToList(),
             model.Portions.Select(p => new UsdaFoodPortionHttpResponse(
                 p.Id, p.Amount, p.MeasureUnitName, p.GramWeight,
-                p.PortionDescription, p.Modifier)).ToList());
+                p.PortionDescription, p.Modifier)).ToList(),
+            model.HealthScores?.ToHttpResponse());
 
     public static DailyMicronutrientSummaryHttpResponse ToHttpResponse(
         this DailyMicronutrientSummaryModel model) =>
@@ -51,5 +52,13 @@ public static class UsdaHttpMappings {
             model.TotalProductCount,
             model.Nutrients.Select(n => new DailyMicronutrientHttpResponse(
                 n.NutrientId, n.Name, n.Unit, n.TotalAmount,
-                n.DailyValue, n.PercentDailyValue)).ToList());
+                n.DailyValue, n.PercentDailyValue)).ToList(),
+            model.HealthScores?.ToHttpResponse());
+
+    private static HealthAreaScoresHttpResponse ToHttpResponse(this HealthAreaScoresModel scores) =>
+        new(new HealthAreaScoreHttpResponse(scores.Heart.Score, scores.Heart.Grade),
+            new HealthAreaScoreHttpResponse(scores.Bone.Score, scores.Bone.Grade),
+            new HealthAreaScoreHttpResponse(scores.Immune.Score, scores.Immune.Grade),
+            new HealthAreaScoreHttpResponse(scores.Energy.Score, scores.Energy.Grade),
+            new HealthAreaScoreHttpResponse(scores.Antioxidant.Score, scores.Antioxidant.Grade));
 }

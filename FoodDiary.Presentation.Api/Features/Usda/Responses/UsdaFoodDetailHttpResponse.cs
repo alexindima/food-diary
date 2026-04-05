@@ -5,4 +5,5 @@ public sealed record UsdaFoodDetailHttpResponse(
     string Description,
     string? FoodCategory,
     IReadOnlyList<MicronutrientHttpResponse> Nutrients,
-    IReadOnlyList<UsdaFoodPortionHttpResponse> Portions);
+    IReadOnlyList<UsdaFoodPortionHttpResponse> Portions,
+    HealthAreaScoresHttpResponse? HealthScores);

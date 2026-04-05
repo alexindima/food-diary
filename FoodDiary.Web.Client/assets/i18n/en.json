@@ -1900,5 +1900,18 @@
         "PLACEHOLDER": "Search for a food (e.g. chicken breast, banana)...",
         "NO_RESULTS": "No foods found. Try a different search term.",
         "LINK": "Link"
+    },
+    "HEALTH_SCORES": {
+        "TITLE": "Health Area Scores",
+        "HEART": "Heart",
+        "BONE": "Bone",
+        "IMMUNE": "Immune",
+        "ENERGY": "Energy",
+        "ANTIOXIDANT": "Antioxidant",
+        "GRADE_EXCELLENT": "Excellent",
+        "GRADE_GOOD": "Good",
+        "GRADE_FAIR": "Fair",
+        "GRADE_LOW": "Low",
+        "GRADE_UNKNOWN": "N/A"
     }
 }

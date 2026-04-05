@@ -5,4 +5,5 @@ public sealed record UsdaFoodDetailModel(
     string Description,
     string? FoodCategory,
     IReadOnlyList<MicronutrientModel> Nutrients,
-    IReadOnlyList<UsdaFoodPortionModel> Portions);
+    IReadOnlyList<UsdaFoodPortionModel> Portions,
+    HealthAreaScoresModel? HealthScores);

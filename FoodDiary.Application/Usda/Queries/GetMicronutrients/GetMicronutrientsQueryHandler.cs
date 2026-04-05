@@ -1,7 +1,9 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Usda.Common;
+using FoodDiary.Application.Usda.Mappings;
 using FoodDiary.Application.Usda.Models;
+using FoodDiary.Domain.ValueObjects;
 
 namespace FoodDiary.Application.Usda.Queries.GetMicronutrients;
 
@@ -45,12 +47,17 @@ public class GetMicronutrientsQueryHandler(IUsdaFoodRepository repository)
                 p.Modifier))
             .ToList();
 
+        var nutrientAmounts = nutrients.ToDictionary(n => n.NutrientId, n => n.Amount);
+        var dvAmounts = dailyValues.ToDictionary(kvp => kvp.Key, kvp => kvp.Value.Value);
+        var healthScores = HealthAreaScores.Calculate(nutrientAmounts, dvAmounts);
+
         var model = new UsdaFoodDetailModel(
             food.FdcId,
             food.Description,
             food.FoodCategory,
             nutrientModels,
-            portionModels);
+            portionModels,
+            healthScores.ToModel());
 
         return Result.Success(model);
     }

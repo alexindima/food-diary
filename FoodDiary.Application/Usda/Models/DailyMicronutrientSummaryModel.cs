@@ -4,7 +4,8 @@ public sealed record DailyMicronutrientSummaryModel(
     DateTime Date,
     int LinkedProductCount,
     int TotalProductCount,
-    IReadOnlyList<DailyMicronutrientModel> Nutrients);
+    IReadOnlyList<DailyMicronutrientModel> Nutrients,
+    HealthAreaScoresModel? HealthScores);
 
 public sealed record DailyMicronutrientModel(
     int NutrientId,
