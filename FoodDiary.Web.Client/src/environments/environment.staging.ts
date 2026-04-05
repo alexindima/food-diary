@@ -22,6 +22,7 @@ export const environment: AppConfig = {
         shoppingLists: `${serverUrl}/api/v1/shopping-lists`,
         dietologist: `${serverUrl}/api/v1/dietologist`,
         fasting: `${serverUrl}/api/v1/fasting`,
+        favoriteMeals: `${serverUrl}/api/v1/favorite-meals`,
     },
     googleClientId: '958507321562-8btd704hjhgsl7niklereh81utg5p780.apps.googleusercontent.com',
     buildVersion: '__BUILD_VERSION__',

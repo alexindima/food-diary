@@ -74,6 +74,56 @@
         }
     </fd-page-header>
 
+    @if (favorites().length > 0) {
+        <div class="consumption-list__favorites">
+            <button type="button" class="consumption-list__favorites-header" (click)="toggleFavorites()">
+                <mat-icon class="consumption-list__favorites-star">star</mat-icon>
+                <span>{{ 'CONSUMPTION_LIST.FAVORITES_TITLE' | translate }} ({{ favorites().length }})</span>
+                <mat-icon [class.is-open]="isFavoritesOpen()">expand_more</mat-icon>
+            </button>
+            @if (isFavoritesOpen()) {
+                <div class="consumption-list__favorites-grid">
+                    @for (fav of favorites(); track fav.id) {
+                        <div class="consumption-list__favorite-card">
+                            <div class="consumption-list__favorite-info">
+                                <div class="consumption-list__favorite-name">
+                                    {{
+                                        fav.name ||
+                                            (fav.mealType
+                                                ? ('MEAL_TYPES.' + fav.mealType | translate)
+                                                : ('CONSUMPTION_LIST.FAVORITE_UNNAMED' | translate))
+                                    }}
+                                </div>
+                                <div class="consumption-list__favorite-meta">
+                                    {{ fav.totalCalories | number: '1.0-0' }} {{ 'GENERAL.UNITS.KCAL' | translate }} · {{ fav.itemCount }}
+                                    {{ 'CONSUMPTION_LIST.FAVORITE_ITEMS' | translate }}
+                                </div>
+                            </div>
+                            <div class="consumption-list__favorite-actions">
+                                <button
+                                    type="button"
+                                    class="consumption-list__favorite-btn"
+                                    (click)="repeatFavorite(fav)"
+                                    [title]="'CONSUMPTION_LIST.FAVORITE_REPEAT' | translate"
+                                >
+                                    <mat-icon>replay</mat-icon>
+                                </button>
+                                <button
+                                    type="button"
+                                    class="consumption-list__favorite-btn consumption-list__favorite-btn--remove"
+                                    (click)="removeFavorite(fav)"
+                                    [title]="'CONSUMPTION_LIST.FAVORITE_REMOVE' | translate"
+                                >
+                                    <mat-icon>close</mat-icon>
+                                </button>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    }
+
     <fd-page-body>
         @if (errorKey()) {
             <fd-error-state (retry)="loadConsumptions(1)" />

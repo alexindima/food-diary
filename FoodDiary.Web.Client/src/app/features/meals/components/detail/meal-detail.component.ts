@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FD_UI_DIALOG_DATA, FdUiDialogRef } from 'fd-ui-kit/material';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { Meal } from '../../models/meal.data';
@@ -16,6 +16,8 @@ import { FdUiAccentSurfaceComponent } from 'fd-ui-kit/accent-surface/fd-ui-accen
 import { CHART_COLORS } from '../../../../constants/chart-colors';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartData, ChartOptions, TooltipItem } from 'chart.js';
+import { FavoriteMealService } from '../../api/favorite-meal.service';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
     selector: 'fd-meal-detail',
@@ -32,6 +34,7 @@ import { ChartData, ChartOptions, TooltipItem } from 'chart.js';
         FdUiTabsComponent,
         FdUiAccentSurfaceComponent,
         BaseChartDirective,
+        MatIconModule,
     ],
 })
 export class MealDetailComponent {
@@ -39,6 +42,11 @@ export class MealDetailComponent {
     private readonly fdDialogService = inject(FdUiDialogService);
     private readonly datePipe = inject(DatePipe);
     private readonly translate = inject(TranslateService);
+    private readonly favoriteMealService = inject(FavoriteMealService);
+
+    public readonly isFavorite = signal(false);
+    public readonly isFavoriteLoading = signal(false);
+    private favoriteMealId: string | null = null;
 
     public readonly consumption: Meal;
     public readonly calories: number;
@@ -166,6 +174,60 @@ export class MealDetailComponent {
                 color: CHART_COLORS.alcohol,
             },
         ];
+    }
+
+    public ngOnInit(): void {
+        this.favoriteMealService.isFavorite(this.consumption.id).subscribe(isFav => this.isFavorite.set(isFav));
+    }
+
+    public toggleFavorite(): void {
+        if (this.isFavoriteLoading()) {
+            return;
+        }
+
+        this.isFavoriteLoading.set(true);
+
+        if (this.isFavorite()) {
+            if (this.favoriteMealId) {
+                this.favoriteMealService.remove(this.favoriteMealId).subscribe({
+                    next: () => {
+                        this.isFavorite.set(false);
+                        this.favoriteMealId = null;
+                        this.isFavoriteLoading.set(false);
+                    },
+                    error: () => this.isFavoriteLoading.set(false),
+                });
+            } else {
+                this.favoriteMealService.getAll().subscribe({
+                    next: favorites => {
+                        const match = favorites.find(f => f.mealId === this.consumption.id);
+                        if (match) {
+                            this.favoriteMealService.remove(match.id).subscribe({
+                                next: () => {
+                                    this.isFavorite.set(false);
+                                    this.favoriteMealId = null;
+                                    this.isFavoriteLoading.set(false);
+                                },
+                                error: () => this.isFavoriteLoading.set(false),
+                            });
+                        } else {
+                            this.isFavorite.set(false);
+                            this.isFavoriteLoading.set(false);
+                        }
+                    },
+                    error: () => this.isFavoriteLoading.set(false),
+                });
+            }
+        } else {
+            this.favoriteMealService.add(this.consumption.id).subscribe({
+                next: favorite => {
+                    this.isFavorite.set(true);
+                    this.favoriteMealId = favorite.id;
+                    this.isFavoriteLoading.set(false);
+                },
+                error: () => this.isFavoriteLoading.set(false),
+            });
+        }
     }
 
     public onTabChange(tab: string): void {

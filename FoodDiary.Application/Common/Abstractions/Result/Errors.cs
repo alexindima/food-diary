@@ -368,4 +368,16 @@ public static class Errors {
             "Invalid fasting protocol.",
             kind: ErrorKind.Validation);
     }
+
+    public static class FavoriteMeal {
+        public static Error NotFound(Guid id) => new(
+            "FavoriteMeal.NotFound",
+            $"Favorite meal with id '{id}' was not found.",
+            kind: ErrorKind.NotFound);
+
+        public static Error AlreadyExists => new(
+            "FavoriteMeal.AlreadyExists",
+            "This meal is already in favorites.",
+            kind: ErrorKind.Conflict);
+    }
 }

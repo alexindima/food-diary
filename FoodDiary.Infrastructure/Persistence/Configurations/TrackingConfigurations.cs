@@ -1,5 +1,6 @@
 using FoodDiary.Domain.Entities.Ai;
 using FoodDiary.Domain.Entities.Content;
+using FoodDiary.Domain.Entities.FavoriteMeals;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
@@ -227,5 +228,44 @@ internal sealed class FastingSessionConfiguration : IEntityTypeConfiguration<Fas
 
         entity.HasIndex(e => e.UserId);
         entity.HasIndex(e => new { e.UserId, e.IsCompleted });
+    }
+}
+
+internal sealed class FavoriteMealConfiguration : IEntityTypeConfiguration<FavoriteMeal> {
+    public void Configure(EntityTypeBuilder<FavoriteMeal> entity) {
+        entity.Property(e => e.Id)
+            .HasConversion(
+                id => id.Value,
+                value => new FavoriteMealId(value))
+            .ValueGeneratedNever();
+
+        entity.Property(e => e.UserId).HasConversion(
+            id => id.Value,
+            value => new UserId(value));
+
+        entity.Property(e => e.MealId).HasConversion(
+            id => id.Value,
+            value => new MealId(value));
+
+        entity.Property(e => e.Name)
+            .HasMaxLength(500);
+
+        entity.Property(e => e.CreatedAtUtc)
+            .HasColumnType("timestamp with time zone");
+
+        entity.HasOne(e => e.User)
+            .WithMany()
+            .HasForeignKey(e => e.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        entity.HasOne(e => e.Meal)
+            .WithMany()
+            .HasForeignKey(e => e.MealId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        entity.HasIndex(e => new { e.UserId, e.MealId })
+            .IsUnique();
+
+        entity.HasIndex(e => e.UserId);
     }
 }

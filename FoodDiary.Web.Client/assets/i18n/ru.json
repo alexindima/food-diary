@@ -813,7 +813,12 @@
         "TOTAL_PROTEINS": "Всего белков",
         "TOTAL_FATS": "Всего жиров",
         "TOTAL_CARBS": "Всего углеводов",
-        "DATE_FILTER_BUTTON": "Фильтр дат"
+        "DATE_FILTER_BUTTON": "Фильтр дат",
+        "FAVORITES_TITLE": "Избранное",
+        "FAVORITE_UNNAMED": "Приём пищи",
+        "FAVORITE_ITEMS": "позиций",
+        "FAVORITE_REPEAT": "Повторить сегодня",
+        "FAVORITE_REMOVE": "Убрать из избранного"
     },
     "CONSUMPTION_DETAIL": {
         "TITLE": "Детали приема пищи",
@@ -831,6 +836,8 @@
         "CANCEL_BUTTON": "Отмена",
         "CONFIRM_BUTTON": "Подтвердить",
         "ENTITY_NAME": "приём пищи",
+        "ADD_FAVORITE": "Добавить в избранное",
+        "REMOVE_FAVORITE": "Убрать из избранного",
         "TABS": {
             "SUMMARY": "Сводка",
             "NUTRIENTS": "Нутриенты"

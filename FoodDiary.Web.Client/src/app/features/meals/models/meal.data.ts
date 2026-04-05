@@ -239,3 +239,17 @@ export type MealItemManageDto = ConsumptionItemManageDto;
 export type MealAiSessionManageDto = ConsumptionAiSessionManageDto;
 export type MealAiItemManageDto = ConsumptionAiItemManageDto;
 export const MealSourceType = ConsumptionSourceType;
+
+export interface FavoriteMeal {
+    id: string;
+    mealId: string;
+    name: string | null;
+    createdAtUtc: string;
+    mealDate: string;
+    mealType: string | null;
+    totalCalories: number;
+    totalProteins: number;
+    totalFats: number;
+    totalCarbs: number;
+    itemCount: number;
+}

@@ -847,7 +847,12 @@
         "TOTAL_CALORIES": "Total Calories",
         "TOTAL_PROTEINS": "Total Proteins",
         "TOTAL_FATS": "Total Fats",
-        "TOTAL_CARBS": "Total Carbs"
+        "TOTAL_CARBS": "Total Carbs",
+        "FAVORITES_TITLE": "Favorites",
+        "FAVORITE_UNNAMED": "Meal",
+        "FAVORITE_ITEMS": "items",
+        "FAVORITE_REPEAT": "Repeat today",
+        "FAVORITE_REMOVE": "Remove from favorites"
     },
     "CONSUMPTION_DETAIL": {
         "TITLE": "Consumption Details",
@@ -865,6 +870,8 @@
         "CANCEL_BUTTON": "Cancel",
         "CONFIRM_BUTTON": "Confirm",
         "ENTITY_NAME": "consumption",
+        "ADD_FAVORITE": "Add to favorites",
+        "REMOVE_FAVORITE": "Remove from favorites",
         "TABS": {
             "SUMMARY": "Summary",
             "NUTRIENTS": "Nutrients"

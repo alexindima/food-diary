@@ -1,4 +1,5 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
+import { DecimalPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, OnInit, computed, inject, signal, viewChild } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -7,14 +8,16 @@ import { FdUiDateRangeInputComponent, FdUiDateRangeValue } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiIconModule } from 'fd-ui-kit/material';
+import { MatIconModule } from '@angular/material/icon';
 import { ErrorStateComponent } from '../../../../components/shared/error-state/error-state.component';
 import { SkeletonCardComponent } from '../../../../components/shared/skeleton-card/skeleton-card.component';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.component';
 import { Observable, catchError, debounceTime, distinctUntilChanged, map, of, startWith, switchMap } from 'rxjs';
 
 import { MealService } from '../../api/meal.service';
+import { FavoriteMealService } from '../../api/favorite-meal.service';
 import { MealDetailActionResult, MealDetailComponent } from '../../components/detail/meal-detail.component';
-import { Meal, MealFilters } from '../../models/meal.data';
+import { FavoriteMeal, Meal, MealFilters } from '../../models/meal.data';
 import { MealCardComponent } from '../../../../components/shared/meal-card/meal-card.component';
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body.component';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header.component';
@@ -30,6 +33,7 @@ import { PagedData } from '../../../../shared/lib/paged-data.data';
     styleUrls: ['./meal-list.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
+        DecimalPipe,
         ReactiveFormsModule,
         TranslatePipe,
         FdUiButtonComponent,
@@ -38,6 +42,7 @@ import { PagedData } from '../../../../shared/lib/paged-data.data';
         SkeletonCardComponent,
         ErrorStateComponent,
         FdUiIconModule,
+        MatIconModule,
         PageHeaderComponent,
         PageBodyComponent,
         FdPageContainerDirective,
@@ -47,6 +52,7 @@ import { PagedData } from '../../../../shared/lib/paged-data.data';
 })
 export class MealListComponent implements OnInit {
     private readonly mealService = inject(MealService);
+    private readonly favoriteMealService = inject(FavoriteMealService);
     private readonly navigationService = inject(NavigationService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly fdDialogService = inject(FdUiDialogService);
@@ -57,6 +63,8 @@ export class MealListComponent implements OnInit {
     public currentPageIndex = 0;
     public readonly groupedConsumptions = computed(() => this.groupByDate(this.consumptionData.items()));
     public readonly errorKey = signal<string | null>(null);
+    public readonly favorites = signal<FavoriteMeal[]>([]);
+    public readonly isFavoritesOpen = signal(false);
     public readonly isMobileView = signal<boolean>(window.matchMedia('(max-width: 768px)').matches);
     private readonly isMobileDateFilterOpen = signal(false);
     private readonly container = viewChild.required<ElementRef<HTMLElement>>('container');
@@ -90,6 +98,37 @@ export class MealListComponent implements OnInit {
                 switchMap(() => this.loadConsumptions(1)),
             )
             .subscribe();
+
+        this.loadFavorites();
+    }
+
+    public loadFavorites(): void {
+        this.favoriteMealService
+            .getAll()
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(favorites => {
+                this.favorites.set(favorites);
+            });
+    }
+
+    public toggleFavorites(): void {
+        this.isFavoritesOpen.update(v => !v);
+    }
+
+    public repeatFavorite(favorite: FavoriteMeal): void {
+        const today = new Date().toISOString().slice(0, 10);
+        this.mealService.repeat(favorite.mealId, today).subscribe({
+            next: () => {
+                this.scrollToTop();
+                this.loadConsumptions(this.currentPageIndex + 1).subscribe();
+            },
+        });
+    }
+
+    public removeFavorite(favorite: FavoriteMeal): void {
+        this.favoriteMealService.remove(favorite.id).subscribe({
+            next: () => this.favorites.update(list => list.filter(f => f.id !== favorite.id)),
+        });
     }
 
     public loadConsumptions(page: number): Observable<void> {
@@ -131,6 +170,8 @@ export class MealListComponent implements OnInit {
             })
             .afterClosed()
             .subscribe(data => {
+                this.loadFavorites();
+
                 if (!data) {
                     return;
                 }
