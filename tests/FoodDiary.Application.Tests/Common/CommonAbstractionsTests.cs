@@ -220,6 +220,10 @@ public class CommonAbstractionsTests {
             return Guid.Empty;
         }
 
+        if (parameterType == typeof(int)) {
+            return 0;
+        }
+
         if (parameterType == typeof(DateTime)) {
             return DateTime.UnixEpoch;
         }

@@ -58,6 +58,12 @@ internal sealed class ProductConfiguration : IEntityTypeConfiguration<Product> {
             .WithMany(u => u.Products)
             .HasForeignKey(e => e.UserId);
 
+        entity.HasOne(e => e.UsdaFood)
+            .WithMany()
+            .HasForeignKey(e => e.UsdaFdcId)
+            .IsRequired(false)
+            .OnDelete(DeleteBehavior.SetNull);
+
         entity.HasIndex(e => new { e.UserId, e.CreatedOnUtc });
         entity.HasIndex(e => new { e.Visibility, e.CreatedOnUtc });
         entity.HasIndex(e => e.Name)

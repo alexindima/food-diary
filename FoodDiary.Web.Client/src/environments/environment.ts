@@ -29,6 +29,7 @@ export const environment: AppConfig = {
         mealPlans: `${serverUrl}/api/v1/meal-plans`,
         exercises: `${serverUrl}/api/v1/exercises`,
         lessons: `${serverUrl}/api/v1/lessons`,
+        usda: `${serverUrl}/api/v1/usda`,
     },
     googleClientId: '958507321562-8btd704hjhgsl7niklereh81utg5p780.apps.googleusercontent.com',
     telegramBotUsername: 'fooddiaryclub_bot',

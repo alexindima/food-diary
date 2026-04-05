@@ -1,6 +1,7 @@
 using FoodDiary.Domain.Common;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Recipes;
+using FoodDiary.Domain.Entities.Usda;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
@@ -38,6 +39,7 @@ public sealed class Product : AggregateRoot<ProductId> {
     public double AlcoholPerBase { get; private set; }
     public int UsageCount { get; private set; }
     public Visibility Visibility { get; private set; } = Visibility.Public;
+    public int? UsdaFdcId { get; private set; }
 
     public UserId UserId { get; private set; }
     public User User { get; private set; } = null!;
@@ -45,6 +47,7 @@ public sealed class Product : AggregateRoot<ProductId> {
     private readonly List<RecipeIngredient> _recipeIngredients = [];
     public IReadOnlyCollection<MealItem> MealItems => _mealItems.AsReadOnly();
     public IReadOnlyCollection<RecipeIngredient> RecipeIngredients => _recipeIngredients.AsReadOnly();
+    public UsdaFood? UsdaFood { get; private set; }
 
     private Product() {
     }
@@ -304,6 +307,28 @@ public sealed class Product : AggregateRoot<ProductId> {
             ApplyMediaState(state);
             SetModified();
         }
+    }
+
+    public void LinkToUsdaFood(int fdcId) {
+        if (fdcId <= 0) {
+            throw new ArgumentOutOfRangeException(nameof(fdcId), "USDA FDC ID must be positive.");
+        }
+
+        if (UsdaFdcId == fdcId) {
+            return;
+        }
+
+        UsdaFdcId = fdcId;
+        SetModified();
+    }
+
+    public void UnlinkUsdaFood() {
+        if (UsdaFdcId is null) {
+            return;
+        }
+
+        UsdaFdcId = null;
+        SetModified();
     }
 
     public FoodQualityScore GetQualityScore() {

@@ -421,4 +421,11 @@ public static class Errors {
             $"Lesson with ID {id} was not found.",
             kind: ErrorKind.NotFound);
     }
+
+    public static class Usda {
+        public static Error FoodNotFound(int fdcId) => new(
+            "Usda.FoodNotFound",
+            $"USDA food with FDC ID {fdcId} was not found.",
+            kind: ErrorKind.NotFound);
+    }
 }

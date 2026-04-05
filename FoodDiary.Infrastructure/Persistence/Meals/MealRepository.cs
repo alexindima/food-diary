@@ -135,4 +135,17 @@ public class MealRepository(FoodDiaryDbContext context) : IMealRepository {
             .AsNoTracking()
             .CountAsync(m => m.UserId == userId, cancellationToken);
     }
+
+    public async Task<IReadOnlyList<Meal>> GetWithItemsAndProductsAsync(
+        UserId userId,
+        DateTime date,
+        CancellationToken cancellationToken = default) {
+        return await context.Meals
+            .AsNoTracking()
+            .AsSplitQuery()
+            .Include(m => m.Items)
+            .ThenInclude(i => i.Product)
+            .Where(m => m.UserId == userId && m.Date == date)
+            .ToListAsync(cancellationToken);
+    }
 }

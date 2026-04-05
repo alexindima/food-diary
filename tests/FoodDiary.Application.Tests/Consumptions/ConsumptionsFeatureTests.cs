@@ -657,6 +657,10 @@ public class ConsumptionsFeatureTests {
         public Task<int> GetTotalMealCountAsync(
             UserId userId,
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<IReadOnlyList<Meal>> GetWithItemsAndProductsAsync(
+            UserId userId, DateTime date,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 
     private sealed class CreatingMealRepository : IMealRepository {
@@ -699,6 +703,10 @@ public class ConsumptionsFeatureTests {
 
         public Task<int> GetTotalMealCountAsync(
             UserId userId,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<IReadOnlyList<Meal>> GetWithItemsAndProductsAsync(
+            UserId userId, DateTime date,
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 
@@ -743,6 +751,10 @@ public class ConsumptionsFeatureTests {
 
         public Task<int> GetTotalMealCountAsync(
             UserId userId,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<IReadOnlyList<Meal>> GetWithItemsAndProductsAsync(
+            UserId userId, DateTime date,
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 

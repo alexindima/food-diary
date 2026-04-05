@@ -99,6 +99,10 @@ public sealed class PresentationErrorCatalogTests {
             return Guid.Empty;
         }
 
+        if (parameterType == typeof(int)) {
+            return 0;
+        }
+
         if (parameterType == typeof(DateTime)) {
             return DateTime.UnixEpoch;
         }

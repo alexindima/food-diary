@@ -901,6 +901,9 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.Property<double>("ProteinsPerBase")
                         .HasColumnType("double precision");
 
+                    b.Property<int?>("UsdaFdcId")
+                        .HasColumnType("integer");
+
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 
@@ -938,6 +941,8 @@ namespace FoodDiary.Infrastructure.Migrations
 
                     NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("Name"), "gin");
                     NpgsqlIndexBuilderExtensions.HasOperators(b.HasIndex("Name"), new[] { "gin_trgm_ops" });
+
+                    b.HasIndex("UsdaFdcId");
 
                     b.HasIndex("UserId", "CreatedOnUtc");
 
@@ -1508,6 +1513,150 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.ToTable("WeightEntries");
                 });
 
+            modelBuilder.Entity("FoodDiary.Domain.Entities.Usda.DailyReferenceValue", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("AgeGroup")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.Property<string>("Gender")
+                        .IsRequired()
+                        .HasMaxLength(16)
+                        .HasColumnType("character varying(16)");
+
+                    b.Property<int>("NutrientId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Unit")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)");
+
+                    b.Property<double>("Value")
+                        .HasColumnType("double precision");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NutrientId", "AgeGroup", "Gender")
+                        .IsUnique();
+
+                    b.ToTable("DailyReferenceValues", (string)null);
+                });
+
+            modelBuilder.Entity("FoodDiary.Domain.Entities.Usda.UsdaFood", b =>
+                {
+                    b.Property<int>("FdcId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("FoodCategory")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<int?>("FoodCategoryId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("FdcId");
+
+                    b.HasIndex("Description");
+
+                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("Description"), "gin");
+                    NpgsqlIndexBuilderExtensions.HasOperators(b.HasIndex("Description"), new[] { "gin_trgm_ops" });
+
+                    b.HasIndex("FoodCategoryId");
+
+                    b.ToTable("UsdaFoods", (string)null);
+                });
+
+            modelBuilder.Entity("FoodDiary.Domain.Entities.Usda.UsdaFoodNutrient", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("integer");
+
+                    b.Property<double>("Amount")
+                        .HasColumnType("double precision");
+
+                    b.Property<int>("FdcId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("NutrientId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NutrientId");
+
+                    b.HasIndex("FdcId", "NutrientId")
+                        .IsUnique();
+
+                    b.ToTable("UsdaFoodNutrients", (string)null);
+                });
+
+            modelBuilder.Entity("FoodDiary.Domain.Entities.Usda.UsdaFoodPortion", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("integer");
+
+                    b.Property<double>("Amount")
+                        .HasColumnType("double precision");
+
+                    b.Property<int>("FdcId")
+                        .HasColumnType("integer");
+
+                    b.Property<double>("GramWeight")
+                        .HasColumnType("double precision");
+
+                    b.Property<string>("MeasureUnitName")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
+
+                    b.Property<string>("Modifier")
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
+
+                    b.Property<string>("PortionDescription")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FdcId");
+
+                    b.ToTable("UsdaFoodPortions", (string)null);
+                });
+
+            modelBuilder.Entity("FoodDiary.Domain.Entities.Usda.UsdaNutrient", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("UnitName")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("UsdaNutrients", (string)null);
+                });
+
             modelBuilder.Entity("FoodDiary.Domain.Entities.Users.Role", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1952,11 +2101,18 @@ namespace FoodDiary.Infrastructure.Migrations
                         .HasForeignKey("ImageAssetId")
                         .OnDelete(DeleteBehavior.SetNull);
 
+                    b.HasOne("FoodDiary.Domain.Entities.Usda.UsdaFood", "UsdaFood")
+                        .WithMany()
+                        .HasForeignKey("UsdaFdcId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.HasOne("FoodDiary.Domain.Entities.Users.User", "User")
                         .WithMany("Products")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("UsdaFood");
 
                     b.Navigation("User");
                 });
@@ -2176,6 +2332,47 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("FoodDiary.Domain.Entities.Usda.DailyReferenceValue", b =>
+                {
+                    b.HasOne("FoodDiary.Domain.Entities.Usda.UsdaNutrient", "Nutrient")
+                        .WithMany()
+                        .HasForeignKey("NutrientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Nutrient");
+                });
+
+            modelBuilder.Entity("FoodDiary.Domain.Entities.Usda.UsdaFoodNutrient", b =>
+                {
+                    b.HasOne("FoodDiary.Domain.Entities.Usda.UsdaFood", "Food")
+                        .WithMany("FoodNutrients")
+                        .HasForeignKey("FdcId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FoodDiary.Domain.Entities.Usda.UsdaNutrient", "Nutrient")
+                        .WithMany()
+                        .HasForeignKey("NutrientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Food");
+
+                    b.Navigation("Nutrient");
+                });
+
+            modelBuilder.Entity("FoodDiary.Domain.Entities.Usda.UsdaFoodPortion", b =>
+                {
+                    b.HasOne("FoodDiary.Domain.Entities.Usda.UsdaFood", "Food")
+                        .WithMany("FoodPortions")
+                        .HasForeignKey("FdcId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Food");
+                });
+
             modelBuilder.Entity("FoodDiary.Domain.Entities.Users.User", b =>
                 {
                     b.HasOne("FoodDiary.Domain.Entities.Assets.ImageAsset", null)
@@ -2254,6 +2451,13 @@ namespace FoodDiary.Infrastructure.Migrations
             modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.Cycle", b =>
                 {
                     b.Navigation("Days");
+                });
+
+            modelBuilder.Entity("FoodDiary.Domain.Entities.Usda.UsdaFood", b =>
+                {
+                    b.Navigation("FoodNutrients");
+
+                    b.Navigation("FoodPortions");
                 });
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.Users.Role", b =>

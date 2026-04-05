@@ -90,5 +90,10 @@ public class StatisticsFeatureTests {
             UserId userId,
             CancellationToken cancellationToken = default) =>
             Task.FromResult(0);
+
+        public Task<IReadOnlyList<Meal>> GetWithItemsAndProductsAsync(
+            UserId userId, DateTime date,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<Meal>>(Array.Empty<Meal>());
     }
 }

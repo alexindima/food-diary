@@ -40,4 +40,9 @@ public interface IMealRepository {
     Task<int> GetTotalMealCountAsync(
         UserId userId,
         CancellationToken cancellationToken = default);
+
+    Task<IReadOnlyList<Meal>> GetWithItemsAndProductsAsync(
+        UserId userId,
+        DateTime date,
+        CancellationToken cancellationToken = default);
 }

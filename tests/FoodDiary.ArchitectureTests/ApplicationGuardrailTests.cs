@@ -134,6 +134,7 @@ public sealed class ApplicationGuardrailTests {
         var allowedDirectories = new[] {
             Path.Combine(applicationRoot, "Common", "Interfaces", "Persistence"),
             Path.Combine(applicationRoot, "Products"),
+            Path.Combine(applicationRoot, "Usda"),
         };
 
         var violations = FindRepositoryReferenceViolations(

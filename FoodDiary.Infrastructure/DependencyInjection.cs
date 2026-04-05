@@ -21,6 +21,7 @@ using FoodDiary.Application.Fasting.Common;
 using FoodDiary.Application.FavoriteMeals.Common;
 using FoodDiary.Application.Lessons.Common;
 using FoodDiary.Application.MealPlans.Common;
+using FoodDiary.Application.Usda.Common;
 using FoodDiary.Application.ShoppingLists.Common;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.WaistEntries.Common;
@@ -43,6 +44,7 @@ using FoodDiary.Infrastructure.Persistence.Content;
 using FoodDiary.Infrastructure.Persistence.ShoppingLists;
 using FoodDiary.Infrastructure.Persistence.MealPlans;
 using FoodDiary.Infrastructure.Persistence.FavoriteMeals;
+using FoodDiary.Infrastructure.Persistence.Usda;
 using FoodDiary.Infrastructure.Persistence.Tracking;
 using FoodDiary.Infrastructure.Persistence.Users;
 using Amazon;
@@ -168,6 +170,7 @@ public static class DependencyInjection {
         services.AddScoped<IExerciseEntryRepository, ExerciseEntryRepository>();
         services.AddScoped<INutritionLessonRepository, NutritionLessonRepository>();
         services.AddScoped<IMealPlanRepository, MealPlanRepository>();
+        services.AddScoped<IUsdaFoodRepository, UsdaFoodRepository>();
         services.AddSingleton<IAmazonS3>(sp => {
             var s3Options = sp.GetRequiredService<Microsoft.Extensions.Options.IOptions<S3Options>>().Value;
             var credentials = new BasicAWSCredentials(s3Options.AccessKeyId, s3Options.SecretAccessKey);
@@ -207,6 +210,11 @@ public static class DependencyInjection {
                 MinimumThroughput = 3,
                 BreakDuration = TimeSpan.FromSeconds(30),
             });
+        });
+
+        services.Configure<UsdaApiOptions>(configuration.GetSection(UsdaApiOptions.SectionName));
+        services.AddHttpClient<IUsdaFoodSearchService, UsdaFoodSearchService>(client => {
+            client.Timeout = TimeSpan.FromSeconds(15);
         });
 
         return services;

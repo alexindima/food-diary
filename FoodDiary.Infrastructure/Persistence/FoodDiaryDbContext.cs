@@ -11,6 +11,7 @@ using FoodDiary.Domain.Entities.Recents;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Entities.Shopping;
 using FoodDiary.Domain.Entities.Tracking;
+using FoodDiary.Domain.Entities.Usda;
 using FoodDiary.Domain.Entities.Users;
 using Microsoft.EntityFrameworkCore;
 
@@ -52,6 +53,11 @@ public class FoodDiaryDbContext(DbContextOptions<FoodDiaryDbContext> options) : 
     public DbSet<MealPlan> MealPlans => Set<MealPlan>();
     public DbSet<MealPlanDay> MealPlanDays => Set<MealPlanDay>();
     public DbSet<MealPlanMeal> MealPlanMeals => Set<MealPlanMeal>();
+    public DbSet<UsdaFood> UsdaFoods => Set<UsdaFood>();
+    public DbSet<UsdaNutrient> UsdaNutrients => Set<UsdaNutrient>();
+    public DbSet<UsdaFoodNutrient> UsdaFoodNutrients => Set<UsdaFoodNutrient>();
+    public DbSet<UsdaFoodPortion> UsdaFoodPortions => Set<UsdaFoodPortion>();
+    public DbSet<DailyReferenceValue> DailyReferenceValues => Set<DailyReferenceValue>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
         modelBuilder.HasPostgresExtension("pg_trgm");

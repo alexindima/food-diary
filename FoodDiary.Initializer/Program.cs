@@ -1,4 +1,5 @@
 using FoodDiary.Application;
+using FoodDiary.Initializer;
 using FoodDiary.Infrastructure;
 using FoodDiary.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
@@ -50,7 +51,7 @@ try {
     await ExecuteAsync(command, dbContext);
     return 0;
 } catch (Exception exception) {
-    Console.Error.WriteLine($"Initializer failed: {exception.Message}");
+    Console.Error.WriteLine($"Initializer failed: {exception}");
     return 1;
 }
 
@@ -70,6 +71,16 @@ static async Task ExecuteAsync(InitializerCommand command, FoodDiaryDbContext db
             break;
         case "rollback-last":
             await RollbackLastMigrationAsync(dbContext);
+            break;
+        case "seed-usda":
+            if (string.IsNullOrWhiteSpace(command.TargetMigration)) {
+                throw new InvalidOperationException("seed-usda requires a path to the USDA CSV directory.");
+            }
+            if (command.Force) {
+                await UsdaDataSeeder.ForceSeedAsync(dbContext, command.TargetMigration);
+            } else {
+                await UsdaDataSeeder.SeedAsync(dbContext, command.TargetMigration);
+            }
             break;
         default:
             throw new InvalidOperationException($"Unknown command '{command.Name}'.");
@@ -140,7 +151,7 @@ static async Task RollbackLastMigrationAsync(FoodDiaryDbContext dbContext) {
 static void PrintUsage() {
     Console.WriteLine("""
 Usage:
-  dotnet run --project FoodDiary.Initializer -- <command> [target] [--connection-string "<value>"]
+  dotnet run --project FoodDiary.Initializer -- <command> [target] [--connection-string "<value>"] [--force]
 
 Commands:
   list                    List all migrations with applied/pending state
@@ -148,6 +159,7 @@ Commands:
   update [target]         Apply migrations up to target or latest when omitted
   rollback-last           Roll database back by one migration
   rollback <target|0>     Roll database back to a specific migration or 0
+  seed-usda <csv-dir>     Import USDA SR Legacy data from CSV files (--force to re-seed)
 
 Examples:
   dotnet run --project FoodDiary.Initializer -- status
@@ -155,10 +167,12 @@ Examples:
   dotnet run --project FoodDiary.Initializer -- rollback-last
   dotnet run --project FoodDiary.Initializer -- rollback 20260209005246_AddShoppingLists
   dotnet run --project FoodDiary.Initializer -- update --connection-string "Host=..."
+  dotnet run --project FoodDiary.Initializer -- seed-usda ./usda-data
+  dotnet run --project FoodDiary.Initializer -- seed-usda ./usda-data --force
 """);
 }
 
-internal sealed record InitializerCommand(string Name, string? TargetMigration, string? ConnectionString) {
+internal sealed record InitializerCommand(string Name, string? TargetMigration, string? ConnectionString, bool Force = false) {
     public static InitializerCommand? Parse(string[] args) {
         if (args.Length == 0) {
             return null;
@@ -167,6 +181,7 @@ internal sealed record InitializerCommand(string Name, string? TargetMigration, 
         string? name = null;
         string? targetMigration = null;
         string? connectionString = null;
+        var force = false;
 
         for (var index = 0; index < args.Length; index++) {
             var argument = args[index];
@@ -178,6 +193,11 @@ internal sealed record InitializerCommand(string Name, string? TargetMigration, 
                 }
 
                 connectionString = args[index];
+                continue;
+            }
+
+            if (argument is "--force" or "-f") {
+                force = true;
                 continue;
             }
 
@@ -194,6 +214,6 @@ internal sealed record InitializerCommand(string Name, string? TargetMigration, 
             throw new InvalidOperationException($"Unexpected argument '{argument}'.");
         }
 
-        return name is null ? null : new InitializerCommand(name, targetMigration, connectionString);
+        return name is null ? null : new InitializerCommand(name, targetMigration, connectionString, force);
     }
 }

@@ -34,4 +34,5 @@ export interface AppConfigApiUrls {
     mealPlans: string;
     exercises: string;
     lessons: string;
+    usda: string;
 }

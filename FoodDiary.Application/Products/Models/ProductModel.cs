@@ -25,4 +25,5 @@ public sealed record ProductModel(
     DateTime CreatedAt,
     bool IsOwnedByCurrentUser,
     int QualityScore,
-    string QualityGrade);
+    string QualityGrade,
+    int? UsdaFdcId);

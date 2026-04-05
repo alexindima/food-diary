@@ -31,7 +31,8 @@ public static class ProductMappings {
             product.CreatedOnUtc,
             isOwnedByCurrentUser,
             quality.Score,
-            quality.Grade.ToString().ToLowerInvariant()
+            quality.Grade.ToString().ToLowerInvariant(),
+            product.UsdaFdcId
         );
     }
 }
