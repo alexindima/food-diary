@@ -1675,6 +1675,7 @@
         "MY_CLIENTS": "Мои клиенты",
         "FASTING": "Голодание",
         "ACHIEVEMENTS": "Достижения",
+        "LESSONS": "Академия",
         "WEEKLY_CHECK_IN": "Недельный обзор"
     },
     "SHOPPING_LIST": {
@@ -1774,6 +1775,8 @@
         "FASTING_DESCRIPTION": "Отслеживайте сессии голодания с настраиваемыми протоколами.",
         "GAMIFICATION": "Достижения",
         "GAMIFICATION_DESCRIPTION": "Отслеживайте серии, зарабатывайте бейджи и следите за рейтингом здоровья.",
+        "LESSONS": "Академия питания",
+        "LESSONS_DESCRIPTION": "Изучайте нутрициологию с помощью коротких уроков.",
         "MEAL_PLANS": "Планы питания",
         "MEAL_PLANS_DESCRIPTION": "Готовые планы питания по типу диеты.",
         "WEEKLY_CHECK_IN": "Недельный обзор",
@@ -1790,6 +1793,33 @@
         "RETRY": "Повторить",
         "NETWORK_ERROR": "Нет подключения к интернету",
         "SERVER_ERROR": "Ошибка сервера. Попробуйте позже."
+    },
+    "LESSONS": {
+        "TITLE": "Академия питания",
+        "SUBTITLE": "Изучайте нутрициологию — урок за уроком",
+        "FILTER_ALL": "Все",
+        "EMPTY": "Уроки пока недоступны.",
+        "COMPLETED": "пройдено",
+        "BACK": "К списку уроков",
+        "MARK_READ": "Отметить как прочитанный",
+        "ALREADY_READ": "Уже прочитан",
+        "MIN_READ": "мин чтения",
+        "CATEGORY": {
+            "NutritionBasics": "Основы питания",
+            "Macronutrients": "Макронутриенты",
+            "Micronutrients": "Микронутриенты",
+            "MealTiming": "Время приёмов пищи",
+            "MindfulEating": "Осознанное питание",
+            "WeightManagement": "Управление весом",
+            "Hydration": "Гидратация",
+            "FoodQuality": "Качество продуктов",
+            "CookingTips": "Советы по готовке"
+        },
+        "DIFFICULTY": {
+            "Beginner": "Начинающий",
+            "Intermediate": "Средний",
+            "Advanced": "Продвинутый"
+        }
     },
     "MEAL_PLANS": {
         "TITLE": "Планы питания",

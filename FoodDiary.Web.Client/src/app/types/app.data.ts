@@ -33,4 +33,5 @@ export interface AppConfigApiUrls {
     tdee: string;
     mealPlans: string;
     exercises: string;
+    lessons: string;
 }

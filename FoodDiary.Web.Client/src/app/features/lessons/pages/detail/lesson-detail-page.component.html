@@ -1,0 +1,34 @@
+<div class="lesson-detail" fdPageContainer>
+    <fd-ui-button variant="secondary" fill="outline" icon="arrow_back" (click)="goBack()">
+        {{ 'LESSONS.BACK' | translate }}
+    </fd-ui-button>
+
+    <fd-page-body>
+        @if (facade.isDetailLoading()) {
+            <fd-ui-loader />
+        } @else if (facade.selectedLesson(); as lesson) {
+            <article class="lesson-detail__article">
+                <div class="lesson-detail__meta-row">
+                    <span class="lesson-detail__category">{{ 'LESSONS.CATEGORY.' + lesson.category | translate }}</span>
+                    <span class="lesson-detail__difficulty">{{ 'LESSONS.DIFFICULTY.' + lesson.difficulty | translate }}</span>
+                    <span class="lesson-detail__time">{{ lesson.estimatedReadMinutes }} {{ 'LESSONS.MIN_READ' | translate }}</span>
+                </div>
+                <h1 class="lesson-detail__title">{{ lesson.title }}</h1>
+                <div class="lesson-detail__content">{{ lesson.content }}</div>
+
+                <div class="lesson-detail__actions">
+                    @if (!lesson.isRead) {
+                        <fd-ui-button icon="check" (click)="markRead()">
+                            {{ 'LESSONS.MARK_READ' | translate }}
+                        </fd-ui-button>
+                    } @else {
+                        <div class="lesson-detail__read-badge">
+                            <mat-icon fontIcon="check_circle"></mat-icon>
+                            {{ 'LESSONS.ALREADY_READ' | translate }}
+                        </div>
+                    }
+                </div>
+            </article>
+        }
+    </fd-page-body>
+</div>

@@ -1,0 +1,75 @@
+<div class="lessons-list" fdPageContainer>
+    <header class="lessons-list__header">
+        <h1 class="lessons-list__title">{{ 'LESSONS.TITLE' | translate }}</h1>
+        <p class="lessons-list__subtitle">{{ 'LESSONS.SUBTITLE' | translate }}</p>
+        @if (progress(); as p) {
+            <div class="lessons-list__progress">
+                <div class="lessons-list__progress-bar">
+                    <div class="lessons-list__progress-fill" [style.width.%]="p.percent"></div>
+                </div>
+                <span class="lessons-list__progress-text">{{ p.read }}/{{ p.total }} {{ 'LESSONS.COMPLETED' | translate }}</span>
+            </div>
+        }
+    </header>
+
+    <div class="lessons-list__filters">
+        <fd-ui-button
+            variant="secondary"
+            [fill]="facade.categoryFilter() === null ? 'solid' : 'outline'"
+            size="sm"
+            (click)="filterByCategory(null)"
+        >
+            {{ 'LESSONS.FILTER_ALL' | translate }}
+        </fd-ui-button>
+        @for (cat of categories; track cat) {
+            <fd-ui-button
+                variant="secondary"
+                [fill]="facade.categoryFilter() === cat ? 'solid' : 'outline'"
+                size="sm"
+                (click)="filterByCategory(cat)"
+            >
+                {{ 'LESSONS.CATEGORY.' + cat | translate }}
+            </fd-ui-button>
+        }
+    </div>
+
+    <fd-page-body>
+        @if (facade.isLoading()) {
+            <fd-ui-loader />
+        } @else if (facade.lessons().length === 0) {
+            <div class="lessons-list__empty">
+                <mat-icon fontIcon="school"></mat-icon>
+                <span>{{ 'LESSONS.EMPTY' | translate }}</span>
+            </div>
+        } @else {
+            <div class="lessons-list__grid">
+                @for (lesson of facade.lessons(); track lesson.id) {
+                    <div
+                        class="lesson-card"
+                        fdCardHover
+                        [class.lesson-card--read]="lesson.isRead"
+                        role="button"
+                        tabindex="0"
+                        (click)="openLesson(lesson.id)"
+                        (keydown.enter)="openLesson(lesson.id)"
+                    >
+                        <div class="lesson-card__top">
+                            <span class="lesson-card__category">{{ 'LESSONS.CATEGORY.' + lesson.category | translate }}</span>
+                            @if (lesson.isRead) {
+                                <mat-icon class="lesson-card__check" fontIcon="check_circle"></mat-icon>
+                            }
+                        </div>
+                        <h3 class="lesson-card__title">{{ lesson.title }}</h3>
+                        @if (lesson.summary) {
+                            <p class="lesson-card__summary">{{ lesson.summary }}</p>
+                        }
+                        <div class="lesson-card__meta">
+                            <span>{{ 'LESSONS.DIFFICULTY.' + lesson.difficulty | translate }}</span>
+                            <span>{{ lesson.estimatedReadMinutes }} {{ 'LESSONS.MIN_READ' | translate }}</span>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </fd-page-body>
+</div>

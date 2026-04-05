@@ -1,0 +1,70 @@
+@use 'variables' as variables;
+
+:host {
+    display: block;
+}
+
+.lesson-detail {
+
+    &__article {
+        margin: 24px 0;
+        max-width: 720px;
+    }
+
+    &__meta-row {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        margin-bottom: 12px;
+    }
+
+    &__category {
+        padding: 4px 10px;
+        border-radius: 10px;
+        background: rgba(139, 92, 246, 0.12);
+        color: #7c3aed;
+        font-size: 0.72rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+    }
+
+    &__difficulty,
+    &__time {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: variables.$color-text-additional;
+    }
+
+    &__title {
+        font-size: 1.8rem;
+        font-weight: 800;
+        margin: 0 0 20px;
+    }
+
+    &__content {
+        font-size: 1rem;
+        line-height: 1.8;
+        color: variables.$color-text-main;
+        white-space: pre-wrap;
+    }
+
+    &__actions {
+        margin-top: 32px;
+    }
+
+    &__read-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        color: #22c55e;
+        font-weight: 700;
+        font-size: 0.9rem;
+
+        mat-icon {
+            font-size: 20px;
+            width: 20px;
+            height: 20px;
+        }
+    }
+}

@@ -19,6 +19,7 @@ using FoodDiary.Application.Dietologist.Common;
 using FoodDiary.Application.Exercises.Common;
 using FoodDiary.Application.Fasting.Common;
 using FoodDiary.Application.FavoriteMeals.Common;
+using FoodDiary.Application.Lessons.Common;
 using FoodDiary.Application.MealPlans.Common;
 using FoodDiary.Application.ShoppingLists.Common;
 using FoodDiary.Application.Users.Common;
@@ -38,6 +39,7 @@ using FoodDiary.Infrastructure.Persistence.Dietologist;
 using FoodDiary.Application.Notifications.Common;
 using FoodDiary.Infrastructure.Persistence.Notifications;
 using FoodDiary.Infrastructure.Persistence.Recommendations;
+using FoodDiary.Infrastructure.Persistence.Content;
 using FoodDiary.Infrastructure.Persistence.ShoppingLists;
 using FoodDiary.Infrastructure.Persistence.MealPlans;
 using FoodDiary.Infrastructure.Persistence.FavoriteMeals;
@@ -162,6 +164,7 @@ public static class DependencyInjection {
         services.AddScoped<IFastingSessionRepository, FastingSessionRepository>();
         services.AddScoped<IFavoriteMealRepository, FavoriteMealRepository>();
         services.AddScoped<IExerciseEntryRepository, ExerciseEntryRepository>();
+        services.AddScoped<INutritionLessonRepository, NutritionLessonRepository>();
         services.AddScoped<IMealPlanRepository, MealPlanRepository>();
         services.AddSingleton<IAmazonS3>(sp => {
             var s3Options = sp.GetRequiredService<Microsoft.Extensions.Options.IOptions<S3Options>>().Value;

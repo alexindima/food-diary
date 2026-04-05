@@ -80,6 +80,12 @@ export const routes: Routes = [
         data: { seo: { titleKey: 'SEO.WEEKLY_CHECK_IN', descriptionKey: 'SEO.WEEKLY_CHECK_IN_DESCRIPTION', noIndex: true } },
     },
     {
+        path: 'lessons',
+        canActivate: [authGuard],
+        loadChildren: () => import('./features/lessons/lesson.routes'),
+        data: { seo: { titleKey: 'SEO.LESSONS', descriptionKey: 'SEO.LESSONS_DESCRIPTION', noIndex: true } },
+    },
+    {
         path: 'gamification',
         canActivate: [authGuard],
         loadChildren: () => import('./features/gamification/gamification.routes'),

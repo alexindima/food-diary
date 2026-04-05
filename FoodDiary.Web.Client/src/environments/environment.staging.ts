@@ -28,6 +28,7 @@ export const environment: AppConfig = {
         tdee: `${serverUrl}/api/v1/tdee`,
         mealPlans: `${serverUrl}/api/v1/meal-plans`,
         exercises: `${serverUrl}/api/v1/exercises`,
+        lessons: `${serverUrl}/api/v1/lessons`,
     },
     googleClientId: '958507321562-8btd704hjhgsl7niklereh81utg5p780.apps.googleusercontent.com',
     buildVersion: '__BUILD_VERSION__',

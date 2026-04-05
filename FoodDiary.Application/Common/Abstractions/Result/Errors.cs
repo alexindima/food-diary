@@ -414,4 +414,11 @@ public static class Errors {
             "Calories burned must be non-negative.",
             kind: ErrorKind.Validation);
     }
+
+    public static class Lesson {
+        public static Error NotFound(Guid id) => new(
+            "Lesson.NotFound",
+            $"Lesson with ID {id} was not found.",
+            kind: ErrorKind.NotFound);
+    }
 }
