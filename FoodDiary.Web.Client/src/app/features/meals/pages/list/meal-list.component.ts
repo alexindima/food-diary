@@ -15,6 +15,7 @@ import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.c
 import { Observable, catchError, debounceTime, distinctUntilChanged, finalize, map, of, startWith, switchMap } from 'rxjs';
 
 import { AiFoodService } from '../../../../shared/api/ai-food.service';
+import { LocalizationService } from '../../../../services/localization.service';
 import { FoodVisionResponse } from '../../../../shared/models/ai.data';
 import { MealService } from '../../api/meal.service';
 import { FavoriteMealService } from '../../api/favorite-meal.service';
@@ -56,6 +57,7 @@ export class MealListComponent implements OnInit {
     private readonly mealService = inject(MealService);
     private readonly favoriteMealService = inject(FavoriteMealService);
     private readonly aiFoodService = inject(AiFoodService);
+    private readonly localizationService = inject(LocalizationService);
     private readonly navigationService = inject(NavigationService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly fdDialogService = inject(FdUiDialogService);
@@ -71,6 +73,10 @@ export class MealListComponent implements OnInit {
     public readonly voiceText = signal('');
     public readonly isVoiceLoading = signal(false);
     public readonly voiceResult = signal<FoodVisionResponse | null>(null);
+    public readonly isListening = signal(false);
+    public readonly isSpeechSupported =
+        typeof window !== 'undefined' && ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window);
+    private speechRecognition: unknown = null;
     public readonly isMobileView = signal<boolean>(window.matchMedia('(max-width: 768px)').matches);
     private readonly isMobileDateFilterOpen = signal(false);
     private readonly container = viewChild.required<ElementRef<HTMLElement>>('container');
@@ -158,6 +164,59 @@ export class MealListComponent implements OnInit {
                 next: result => this.voiceResult.set(result),
                 error: () => this.voiceResult.set(null),
             });
+    }
+
+    public toggleMic(): void {
+        if (this.isListening()) {
+            this.stopListening();
+            return;
+        }
+
+        const SpeechRecognitionCtor =
+            (window as unknown as Record<string, unknown>)['SpeechRecognition'] ??
+            (window as unknown as Record<string, unknown>)['webkitSpeechRecognition'];
+        if (!SpeechRecognitionCtor) {
+            return;
+        }
+
+        const recognition = new (SpeechRecognitionCtor as { new (): Record<string, unknown> })();
+        const lang = this.localizationService.getCurrentLanguage();
+        recognition['lang'] = lang === 'ru' ? 'ru-RU' : 'en-US';
+        recognition['interimResults'] = false;
+        recognition['maxAlternatives'] = 1;
+
+        recognition['onresult'] = (event: Record<string, unknown>): void => {
+            const results = event['results'] as { [key: number]: { [key: number]: { transcript: string } } } | undefined;
+            const transcript = results?.[0]?.[0]?.transcript;
+            if (transcript) {
+                this.voiceText.set(transcript);
+                this.submitVoiceText();
+            }
+        };
+
+        recognition['onerror'] = (): void => {
+            this.isListening.set(false);
+        };
+
+        recognition['onend'] = (): void => {
+            this.isListening.set(false);
+            this.speechRecognition = null;
+        };
+
+        this.speechRecognition = recognition;
+        this.isListening.set(true);
+        (recognition['start'] as () => void)();
+    }
+
+    private stopListening(): void {
+        if (this.speechRecognition) {
+            const stopFn = (this.speechRecognition as Record<string, unknown>)['stop'];
+            if (typeof stopFn === 'function') {
+                stopFn.call(this.speechRecognition);
+            }
+            this.speechRecognition = null;
+        }
+        this.isListening.set(false);
     }
 
     public dismissVoiceResult(): void {

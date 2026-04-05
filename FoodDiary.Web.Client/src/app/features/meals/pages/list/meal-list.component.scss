@@ -315,6 +315,52 @@
         }
     }
 
+    &__voice-mic {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        background: #fff;
+        color: #64748b;
+        cursor: pointer;
+        flex-shrink: 0;
+        transition:
+            background 0.15s,
+            color 0.15s,
+            border-color 0.15s;
+
+        &:hover:not(:disabled) {
+            color: #7c3aed;
+            border-color: #7c3aed;
+        }
+
+        &--active {
+            background: #ef4444;
+            border-color: #ef4444;
+            color: #fff;
+
+            &:hover:not(:disabled) {
+                background: #dc2626;
+                border-color: #dc2626;
+                color: #fff;
+            }
+        }
+
+        &:disabled {
+            opacity: 0.4;
+            cursor: default;
+        }
+
+        mat-icon {
+            font-size: 20px;
+            width: 20px;
+            height: 20px;
+        }
+    }
+
     &__voice-submit {
         display: inline-flex;
         align-items: center;

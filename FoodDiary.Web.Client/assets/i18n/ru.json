@@ -821,7 +821,8 @@
         "FAVORITE_REMOVE": "Убрать из избранного",
         "VOICE_PLACEHOLDER": "Опишите приём пищи, например \"два яйца и тост\"...",
         "VOICE_RESULT_TITLE": "AI распознал продукты",
-        "VOICE_CREATE_MEAL": "Записать приём пищи"
+        "VOICE_CREATE_MEAL": "Записать приём пищи",
+        "VOICE_MIC_TITLE": "Произнесите приём пищи"
     },
     "CONSUMPTION_DETAIL": {
         "TITLE": "Детали приема пищи",

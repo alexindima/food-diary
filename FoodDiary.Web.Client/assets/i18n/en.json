@@ -855,7 +855,8 @@
         "FAVORITE_REMOVE": "Remove from favorites",
         "VOICE_PLACEHOLDER": "Describe your meal, e.g. \"two eggs and toast\"...",
         "VOICE_RESULT_TITLE": "AI recognized items",
-        "VOICE_CREATE_MEAL": "Log as meal"
+        "VOICE_CREATE_MEAL": "Log as meal",
+        "VOICE_MIC_TITLE": "Speak your meal"
     },
     "CONSUMPTION_DETAIL": {
         "TITLE": "Consumption Details",

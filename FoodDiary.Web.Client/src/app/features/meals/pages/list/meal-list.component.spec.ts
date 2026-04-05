@@ -8,6 +8,9 @@ import { of } from 'rxjs';
 
 import { MealListComponent } from './meal-list.component';
 import { MealService } from '../../api/meal.service';
+import { FavoriteMealService } from '../../api/favorite-meal.service';
+import { AiFoodService } from '../../../../shared/api/ai-food.service';
+import { LocalizationService } from '../../../../services/localization.service';
 import { NavigationService } from '../../../../services/navigation.service';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { Meal } from '../../models/meal.data';
@@ -72,6 +75,20 @@ describe('MealListComponent', () => {
         observe: vi.fn().mockReturnValue(of({ matches: false, breakpoints: {} })),
     };
 
+    const mockFavoriteMealService = {
+        getAll: vi.fn().mockReturnValue(of([])),
+        remove: vi.fn().mockReturnValue(of(void 0)),
+    };
+
+    const mockAiFoodService = {
+        parseFoodText: vi.fn().mockReturnValue(of({ items: [] })),
+        calculateNutrition: vi.fn().mockReturnValue(of({ calories: 0, protein: 0, fat: 0, carbs: 0, fiber: 0, alcohol: 0, items: [] })),
+    };
+
+    const mockLocalizationService = {
+        getCurrentLanguage: vi.fn().mockReturnValue('en'),
+    };
+
     beforeEach(async () => {
         vi.clearAllMocks();
         mockMealService.query.mockReturnValue(of(createPageOf([])));
@@ -101,6 +118,9 @@ describe('MealListComponent', () => {
                 { provide: NavigationService, useValue: mockNavigationService },
                 { provide: FdUiDialogService, useValue: mockFdDialogService },
                 { provide: BreakpointObserver, useValue: mockBreakpointObserver },
+                { provide: FavoriteMealService, useValue: mockFavoriteMealService },
+                { provide: AiFoodService, useValue: mockAiFoodService },
+                { provide: LocalizationService, useValue: mockLocalizationService },
             ],
         }).compileComponents();
 

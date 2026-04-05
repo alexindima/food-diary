@@ -85,6 +85,18 @@
             (keydown.enter)="submitVoiceText()"
             [disabled]="isVoiceLoading()"
         />
+        @if (isSpeechSupported) {
+            <button
+                type="button"
+                class="consumption-list__voice-mic"
+                [class.consumption-list__voice-mic--active]="isListening()"
+                [disabled]="isVoiceLoading()"
+                (click)="toggleMic()"
+                [title]="'CONSUMPTION_LIST.VOICE_MIC_TITLE' | translate"
+            >
+                <mat-icon>{{ isListening() ? 'mic' : 'mic_none' }}</mat-icon>
+            </button>
+        }
         <button
             type="button"
             class="consumption-list__voice-submit"
