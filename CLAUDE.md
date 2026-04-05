@@ -34,6 +34,21 @@ dotnet ef migrations add <Name> --project FoodDiary.Infrastructure --startup-pro
 dotnet ef database update --project FoodDiary.Infrastructure --startup-project FoodDiary.Web.Api
 ```
 
+### EF Migration Post-Processing (CRITICAL)
+
+`dotnet ef migrations add` generates Allman-style braces, but this project enforces **K&R style** via `.editorconfig` with `TreatWarningsAsErrors`. After generating a migration, you MUST fix the `.cs` file:
+
+1. **Remove `using System;`** — implicit usings are enabled, this line triggers IDE0005 error
+2. **Convert ALL Allman braces to K&R** — every `)\n{` and `=>\n{` must become `) {` / `=> {`. The most commonly missed pattern is `constraints: table =>\n{` — fix it to `constraints: table => {`
+3. **Strip UTF-8 BOM** if present — the Write tool may add BOM, but `.editorconfig` requires `charset = utf-8` (without BOM)
+4. **Ensure LF line endings** — `.editorconfig` requires `end_of_line = lf`
+
+Quick fix command after generating a migration:
+```bash
+# Fix K&R braces, remove BOM, ensure LF (replace MIGRATION_FILE with actual path)
+node -e "const fs=require('fs');const f=process.argv[1];let c=fs.readFileSync(f,'utf8');if(c.charCodeAt(0)===0xFEFF)c=c.slice(1);c=c.replace(/\r\n/g,'\n').replace(/^using System;\n/,'').replace(/\)\s*\n\s*\{/g,') {').replace(/=>\s*\n\s*\{/g,'=> {').replace(/(\w)\s*\n\s*\{/g,'\$1 {');fs.writeFileSync(f,c);" MIGRATION_FILE
+```
+
 ## Architecture
 
 ### Backend (Clean Architecture)

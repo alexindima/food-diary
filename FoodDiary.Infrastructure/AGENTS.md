@@ -22,3 +22,9 @@ Rules for `FoodDiary.Infrastructure/`.
 
 ## EF Core Migrations
 - Always commit both files for each migration: `*.cs` and `*.Designer.cs`.
+- **CRITICAL**: `dotnet ef migrations add` generates Allman-style braces, but the project requires K&R style. After generating, you MUST:
+  1. Remove `using System;` (implicit usings are enabled)
+  2. Convert ALL `)\n{` and `=>\n{` patterns to `) {` / `=> {` — especially `constraints: table =>\n{`
+  3. Strip UTF-8 BOM if present
+  4. Ensure LF line endings (not CRLF)
+- See root CLAUDE.md for a one-liner fix command.

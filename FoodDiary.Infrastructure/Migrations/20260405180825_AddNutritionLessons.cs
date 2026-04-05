@@ -22,8 +22,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     CreatedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
-                constraints: table =>
-                {
+                constraints: table => {
                     table.PrimaryKey("PK_NutritionLessons", x => x.Id);
                 });
 
@@ -37,8 +36,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     CreatedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
-                constraints: table =>
-                {
+                constraints: table => {
                     table.PrimaryKey("PK_UserLessonProgress", x => x.Id);
                     table.ForeignKey(
                         name: "FK_UserLessonProgress_NutritionLessons_LessonId",
