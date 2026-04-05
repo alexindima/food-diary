@@ -23,7 +23,8 @@
         "CLOSE": "Close",
         "DELETE": "Delete",
         "SAVE": "Save",
-        "CONFIRM": "Confirm"
+        "CONFIRM": "Confirm",
+        "LOADING": "Loading"
     },
     "UNSAVED_CHANGES": {
         "TITLE": "Unsaved changes",
@@ -1884,5 +1885,20 @@
             "SURPLUS_MODERATE": "Moderate surplus — good for lean muscle gain.",
             "REVIEW_GOALS": "Review your calorie target based on your current goals."
         }
+    },
+    "MICRONUTRIENTS": {
+        "TITLE": "Micronutrients",
+        "VITAMINS": "Vitamins",
+        "MINERALS": "Minerals",
+        "NO_DATA": "No micronutrient data available. Link this product to a USDA food to see details.",
+        "DAILY_TITLE": "Daily Micronutrients",
+        "LINKED": "linked",
+        "NO_DAILY_DATA": "No micronutrient data for today. Link your products to USDA foods to track vitamins & minerals."
+    },
+    "USDA_SEARCH": {
+        "TITLE": "Search USDA Foods",
+        "PLACEHOLDER": "Search for a food (e.g. chicken breast, banana)...",
+        "NO_RESULTS": "No foods found. Try a different search term.",
+        "LINK": "Link"
     }
 }
