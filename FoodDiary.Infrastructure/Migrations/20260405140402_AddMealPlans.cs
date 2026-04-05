@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -22,8 +22,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     CreatedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
-                constraints: table =>
-                {
+                constraints: table => {
                     table.PrimaryKey("PK_MealPlans", x => x.Id);
                     table.ForeignKey(
                         name: "FK_MealPlans_Users_UserId",
@@ -42,8 +41,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     CreatedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
-                constraints: table =>
-                {
+                constraints: table => {
                     table.PrimaryKey("PK_MealPlanDays", x => x.Id);
                     table.ForeignKey(
                         name: "FK_MealPlanDays_MealPlans_MealPlanId",
@@ -64,8 +62,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     CreatedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     ModifiedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
-                constraints: table =>
-                {
+                constraints: table => {
                     table.PrimaryKey("PK_MealPlanMeals", x => x.Id);
                     table.ForeignKey(
                         name: "FK_MealPlanMeals_MealPlanDays_MealPlanDayId",
