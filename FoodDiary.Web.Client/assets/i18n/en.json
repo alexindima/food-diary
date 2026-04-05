@@ -1786,5 +1786,33 @@
         "RETRY": "Try again",
         "NETWORK_ERROR": "No internet connection",
         "SERVER_ERROR": "Server error. Please try again later."
+    },
+    "TDEE_CARD": {
+        "TITLE": "Energy expenditure",
+        "LOADING": "Calculating your TDEE...",
+        "EMPTY": "Fill in your profile and log meals to calculate TDEE.",
+        "KCAL_DAY": "kcal/day",
+        "KCAL": "kcal",
+        "BMR": "Basal metabolic rate",
+        "FORMULA_ESTIMATE": "Formula estimate",
+        "WEIGHT_TREND": "Weight trend",
+        "KG_WEEK": "kg/week",
+        "SUGGESTED_GOAL": "Suggested goal: {{ value }} kcal",
+        "APPLY": "Apply",
+        "CONFIDENCE": {
+            "LOW": "Low confidence — need more data",
+            "MEDIUM": "Medium confidence",
+            "HIGH": "High confidence"
+        },
+        "HINTS": {
+            "DEFICIT_TOO_AGGRESSIVE": "Your calorie deficit is very aggressive. Consider increasing your target to avoid muscle loss.",
+            "DEFICIT_MODERATE": "Good moderate deficit for steady weight loss.",
+            "DEFICIT_MILD": "Mild deficit — weight loss will be slow but sustainable.",
+            "MAINTENANCE_ON_TRACK": "You're eating close to maintenance. Great for weight stability.",
+            "SURPLUS_WHILE_LOSING_GOAL": "You're in a surplus but your goal is to lose weight. Consider reducing your target.",
+            "SURPLUS_TOO_AGGRESSIVE": "Large surplus — you may gain weight faster than desired.",
+            "SURPLUS_MODERATE": "Moderate surplus — good for lean muscle gain.",
+            "REVIEW_GOALS": "Review your calorie target based on your current goals."
+        }
     }
 }

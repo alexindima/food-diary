@@ -242,6 +242,30 @@
                                 }
                             </div>
                         }
+                        @if (layout.shouldRenderBlock('tdee')) {
+                            <div
+                                class="dashboard__block"
+                                [class.dashboard__block--hidden]="layout.isEditingLayout() && !layout.isBlockVisible('tdee')"
+                                [attr.role]="layout.isEditingLayout() ? 'button' : null"
+                                [attr.tabindex]="layout.isEditingLayout() ? 0 : -1"
+                                [attr.aria-pressed]="layout.isEditingLayout() ? layout.isBlockVisible('tdee') : null"
+                                (click)="layout.toggleBlock('tdee')"
+                                (keydown.enter)="layout.toggleBlock('tdee')"
+                            >
+                                @defer (on viewport) {
+                                    <fd-tdee-insight-card
+                                        class="dashboard__card dashboard__card--tdee"
+                                        [insight]="tdeeInsight()"
+                                        [isLoading]="isTdeeLoading()"
+                                        (applyGoal)="applyTdeeGoal($event)"
+                                    />
+                                } @placeholder {
+                                    <fd-ui-loader />
+                                } @loading (minimum 300ms) {
+                                    <fd-ui-loader />
+                                }
+                            </div>
+                        }
                         @if (layout.shouldRenderBlock('advice')) {
                             <div
                                 class="dashboard__block"

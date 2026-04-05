@@ -6,8 +6,11 @@ import { HydrationService } from '../../hydration/api/hydration.service';
 import { CyclesService } from '../../cycle-tracking/api/cycles.service';
 import { CycleResponse } from '../../cycle-tracking/models/cycle.data';
 import { Meal } from '../../meals/models/meal.data';
+import { GoalsService } from '../../goals/api/goals.service';
 import { DashboardService } from '../api/dashboard.service';
+import { TdeeService } from '../api/tdee.service';
 import { DashboardSnapshot } from '../models/dashboard.data';
+import { TdeeInsight } from '../models/tdee-insight.data';
 import { getDashboardDateUtc, getHydrationDateUtc, normalizeDate } from './dashboard-date.utils';
 import { DashboardLayoutService } from './dashboard-layout.service';
 import { createWeightTrendSignals, createWaistTrendSignals } from './dashboard-trend.utils';
@@ -25,6 +28,8 @@ export class DashboardFacade {
     private readonly dashboardService = inject(DashboardService);
     private readonly hydrationService = inject(HydrationService);
     private readonly cyclesService = inject(CyclesService);
+    private readonly tdeeService = inject(TdeeService);
+    private readonly goalsService = inject(GoalsService);
     private readonly translateService = inject(TranslateService);
     public readonly layout = inject(DashboardLayoutService);
 
@@ -41,6 +46,8 @@ export class DashboardFacade {
     public readonly isLoading = signal(false);
     public readonly cycle = signal<CycleResponse | null>(null);
     public readonly isCycleLoading = signal(false);
+    public readonly tdeeInsight = signal<TdeeInsight | null>(null);
+    public readonly isTdeeLoading = signal(false);
 
     public readonly dailyGoal = computed(() => this.snapshot()?.dailyGoal ?? 0);
     public readonly todayCalories = computed(() => this.snapshot()?.statistics.totalCalories ?? 0);
@@ -80,6 +87,7 @@ export class DashboardFacade {
         this.initialized.set(true);
         this.loadDashboardSnapshot();
         this.loadCycle();
+        this.loadTdeeInsight();
 
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.loadDashboardSnapshot(false));
 
@@ -110,6 +118,16 @@ export class DashboardFacade {
             .subscribe({
                 next: () => this.loadDashboardSnapshot(false, true),
                 error: () => this.isHydrationUpdating.set(false),
+            });
+    }
+
+    public applyTdeeGoal(target: number): void {
+        this.goalsService
+            .updateGoals({ dailyCalorieTarget: target })
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => {
+                this.loadDashboardSnapshot(false);
+                this.loadTdeeInsight();
             });
     }
 
@@ -161,6 +179,23 @@ export class DashboardFacade {
                 error: () => {
                     this.cycle.set(null);
                     this.isCycleLoading.set(false);
+                },
+            });
+    }
+
+    private loadTdeeInsight(): void {
+        this.isTdeeLoading.set(true);
+        this.tdeeService
+            .getInsight()
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe({
+                next: insight => {
+                    this.tdeeInsight.set(insight);
+                    this.isTdeeLoading.set(false);
+                },
+                error: () => {
+                    this.tdeeInsight.set(null);
+                    this.isTdeeLoading.set(false);
                 },
             });
     }
