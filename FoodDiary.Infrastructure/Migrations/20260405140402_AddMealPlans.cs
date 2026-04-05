@@ -2,18 +2,14 @@
 
 #nullable disable
 
-namespace FoodDiary.Infrastructure.Migrations
-{
+namespace FoodDiary.Infrastructure.Migrations {
     /// <inheritdoc />
-    public partial class AddMealPlans : Migration
-    {
+    public partial class AddMealPlans : Migration {
         /// <inheritdoc />
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
+        protected override void Up(MigrationBuilder migrationBuilder) {
             migrationBuilder.CreateTable(
                 name: "MealPlans",
-                columns: table => new
-                {
+                columns: table => new {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false),
                     Description = table.Column<string>(type: "character varying(2048)", maxLength: 2048, nullable: true),
@@ -39,8 +35,7 @@ namespace FoodDiary.Infrastructure.Migrations
 
             migrationBuilder.CreateTable(
                 name: "MealPlanDays",
-                columns: table => new
-                {
+                columns: table => new {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     MealPlanId = table.Column<Guid>(type: "uuid", nullable: false),
                     DayNumber = table.Column<int>(type: "integer", nullable: false),
@@ -60,8 +55,7 @@ namespace FoodDiary.Infrastructure.Migrations
 
             migrationBuilder.CreateTable(
                 name: "MealPlanMeals",
-                columns: table => new
-                {
+                columns: table => new {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     MealPlanDayId = table.Column<Guid>(type: "uuid", nullable: false),
                     MealType = table.Column<string>(type: "text", nullable: false),
@@ -120,8 +114,7 @@ namespace FoodDiary.Infrastructure.Migrations
         }
 
         /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
+        protected override void Down(MigrationBuilder migrationBuilder) {
             migrationBuilder.DropTable(
                 name: "MealPlanMeals");
 

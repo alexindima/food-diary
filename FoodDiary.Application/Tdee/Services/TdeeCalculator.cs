@@ -95,11 +95,11 @@ public static class TdeeCalculator {
         return (diff, isLosing, isGaining) switch {
             ( < -700, true, _) => "hint.deficit_too_aggressive",
             ( < -300, true, _) => "hint.deficit_moderate",
-            (>= -300 and <= 300, _, _) when !isLosing && !isGaining => "hint.maintenance_on_track",
-            (>= -300 and <= 0, true, _) => "hint.deficit_mild",
+            ( >= -300 and <= 300, _, _) when !isLosing && !isGaining => "hint.maintenance_on_track",
+            ( >= -300 and <= 0, true, _) => "hint.deficit_mild",
             ( > 0, true, _) => "hint.surplus_while_losing_goal",
             ( > 500, _, true) => "hint.surplus_too_aggressive",
-            (>= 100 and <= 500, _, true) => "hint.surplus_moderate",
+            ( >= 100 and <= 500, _, true) => "hint.surplus_moderate",
             _ => "hint.review_goals"
         };
     }
