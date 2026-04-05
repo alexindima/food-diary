@@ -157,6 +157,8 @@ public static class DependencyInjection {
         services.AddScoped<ICycleRepository, CycleRepository>();
         services.AddScoped<IImageAssetRepository, ImageAssetRepository>();
         services.AddScoped<IAiUsageRepository, AiUsageRepository>();
+        services.AddScoped<IAiPromptTemplateRepository, AiPromptTemplateRepository>();
+        services.AddSingleton<IAiPromptProvider, AiPromptProvider>();
         services.AddScoped<IEmailTemplateRepository, EmailTemplateRepository>();
         services.AddScoped<IDietologistInvitationRepository, DietologistInvitationRepository>();
         services.AddScoped<IRecommendationRepository, RecommendationRepository>();

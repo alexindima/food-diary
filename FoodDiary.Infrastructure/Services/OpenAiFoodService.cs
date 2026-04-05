@@ -22,7 +22,8 @@ public sealed class OpenAiFoodService(
     ILogger<OpenAiFoodService> logger,
     IAiUsageRepository aiUsageRepository,
     IUserRepository userRepository,
-    IDateTimeProvider dateTimeProvider)
+    IDateTimeProvider dateTimeProvider,
+    IAiPromptProvider aiPromptProvider)
     : IOpenAiFoodService {
     private const int MaxTransientRetries = 2;
     private static readonly TimeSpan[] RetryDelays = [
@@ -52,7 +53,8 @@ public sealed class OpenAiFoodService(
         }
 
         var requestModel = _options.VisionModel;
-        var request = BuildVisionRequest(requestModel, imageUrl, userLanguage, description);
+        var promptTemplate = await aiPromptProvider.GetPromptAsync("vision", cancellationToken);
+        var request = BuildVisionRequest(requestModel, imageUrl, userLanguage, description, promptTemplate);
         var response = await SendRequestAsync(request, operation, requestModel, cancellationToken);
         if (!response.IsSuccess) {
             InfrastructureTelemetry.AiFallbackCounter.Add(
@@ -61,7 +63,7 @@ public sealed class OpenAiFoodService(
                 new KeyValuePair<string, object?>("fooddiary.ai.from_model", requestModel),
                 new KeyValuePair<string, object?>("fooddiary.ai.to_model", _options.VisionFallbackModel));
             requestModel = _options.VisionFallbackModel;
-            var fallback = BuildVisionRequest(requestModel, imageUrl, userLanguage, description);
+            var fallback = BuildVisionRequest(requestModel, imageUrl, userLanguage, description, promptTemplate);
             response = await SendRequestAsync(fallback, operation, requestModel, cancellationToken);
         }
 
@@ -93,7 +95,8 @@ public sealed class OpenAiFoodService(
         }
 
         var requestModel = _options.TextModel;
-        var request = BuildTextParseRequest(requestModel, text, userLanguage);
+        var textPrompt = await aiPromptProvider.GetPromptAsync("text-parse", cancellationToken);
+        var request = BuildTextParseRequest(requestModel, text, userLanguage, textPrompt);
         var response = await SendRequestAsync(request, operation, requestModel, cancellationToken);
         if (!response.IsSuccess) {
             return Result.Failure<FoodVisionModel>(response.Error);
@@ -122,7 +125,8 @@ public sealed class OpenAiFoodService(
         }
 
         var requestModel = _options.TextModel;
-        var request = BuildNutritionRequest(requestModel, items);
+        var nutritionPrompt = await aiPromptProvider.GetPromptAsync("nutrition", cancellationToken);
+        var request = BuildNutritionRequest(requestModel, items, nutritionPrompt);
         var response = await SendRequestAsync(request, operation, requestModel, cancellationToken);
         if (!response.IsSuccess) {
             return Result.Failure<FoodNutritionModel>(response.Error);
@@ -217,7 +221,8 @@ public sealed class OpenAiFoodService(
         string model,
         string imageUrl,
         string? userLanguage,
-        string? description) {
+        string? description,
+        string promptTemplate) {
         var language = string.IsNullOrWhiteSpace(userLanguage) ? "en" : userLanguage.Trim().ToLowerInvariant();
         var includeLocal = language != "en";
         var languageHint = includeLocal
@@ -227,6 +232,10 @@ public sealed class OpenAiFoodService(
             ? string.Empty
             : $"User hint: {description.Trim()}. ";
 
+        var resolvedPrompt = promptTemplate
+            .Replace("{{languageHint}}", languageHint)
+            .Replace("{{descriptionHint}}", descriptionHint);
+
         return new {
             model,
             input = new[] {
@@ -235,11 +244,7 @@ public sealed class OpenAiFoodService(
                     content = new object[] {
                         new {
                             type = "input_text",
-                            text = descriptionHint +
-                                   "Analyze the food photo and return only JSON with list of items. " +
-                                   "Each item must include nameEn, nameLocal, amount, unit, confidence (0-1). " +
-                                   "Use grams (g) when possible. " +
-                                   languageHint
+                            text = descriptionHint + resolvedPrompt
                         },
                         new {
                             type = "input_image",
@@ -281,12 +286,16 @@ public sealed class OpenAiFoodService(
         };
     }
 
-    private static object BuildTextParseRequest(string model, string text, string? userLanguage) {
+    private static object BuildTextParseRequest(string model, string text, string? userLanguage, string promptTemplate) {
         var language = string.IsNullOrWhiteSpace(userLanguage) ? "en" : userLanguage.Trim().ToLowerInvariant();
         var includeLocal = language != "en";
         var languageHint = includeLocal
             ? $"Return nameEn in English and nameLocal in language '{language}'."
             : "Return nameEn in English and set nameLocal to null.";
+
+        var resolvedPrompt = promptTemplate
+            .Replace("{{userText}}", text)
+            .Replace("{{languageHint}}", languageHint);
 
         return new {
             model,
@@ -296,11 +305,7 @@ public sealed class OpenAiFoodService(
                     content = new object[] {
                         new {
                             type = "input_text",
-                            text = $"Parse the following food description into structured items: \"{text}\". " +
-                                   "Return only JSON with list of items. " +
-                                   "Each item must include nameEn, nameLocal, amount, unit, confidence (0-1). " +
-                                   "Use grams (g) when possible. Estimate typical portion sizes for items without explicit amounts. " +
-                                   languageHint
+                            text = resolvedPrompt
                         }
                     }
                 }
@@ -337,12 +342,16 @@ public sealed class OpenAiFoodService(
         };
     }
 
-    private static object BuildNutritionRequest(string model, IReadOnlyList<FoodVisionItemModel> items) {
+    private static object BuildNutritionRequest(string model, IReadOnlyList<FoodVisionItemModel> items, string promptTemplate) {
         var mappedItems = items.Select(item => new {
             name = string.IsNullOrWhiteSpace(item.NameEn) ? (item.NameLocal ?? "unknown") : item.NameEn,
             amount = item.Amount,
             unit = item.Unit
         });
+
+        var itemsJson = JsonSerializer.Serialize(new { items = mappedItems });
+        var resolvedPrompt = promptTemplate
+            .Replace("{{itemsJson}}", itemsJson);
 
         return new {
             model,
@@ -352,13 +361,11 @@ public sealed class OpenAiFoodService(
                     content = new object[] {
                         new {
                             type = "input_text",
-                            text = "You are a nutrition assistant. Using the provided items with amounts, " +
-                                   "estimate calories and nutrients per item and totals. " +
-                                   "Item names are in English. Return only JSON."
+                            text = resolvedPrompt
                         },
                         new {
                             type = "input_text",
-                            text = JsonSerializer.Serialize(new { items = mappedItems })
+                            text = itemsJson
                         }
                     }
                 }

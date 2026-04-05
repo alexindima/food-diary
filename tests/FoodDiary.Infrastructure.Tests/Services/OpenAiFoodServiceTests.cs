@@ -36,7 +36,8 @@ public sealed class OpenAiFoodServiceTests {
             NullLogger<OpenAiFoodService>.Instance,
             new StubAiUsageRepository(),
             new StubUserRepository(),
-            new StubDateTimeProvider());
+            new StubDateTimeProvider(),
+            new StubAiPromptProvider());
 
         var result = await service.CalculateNutritionAsync(
             [new FoodVisionItemModel("Apple", null, 100m, "g", 0.9m)],
@@ -91,7 +92,8 @@ public sealed class OpenAiFoodServiceTests {
             NullLogger<OpenAiFoodService>.Instance,
             usageRepository,
             new StubUserRepository(),
-            new StubDateTimeProvider());
+            new StubDateTimeProvider(),
+            new StubAiPromptProvider());
 
         var result = await service.AnalyzeFoodImageAsync(
             "https://cdn.example.com/meal.webp",
@@ -155,7 +157,8 @@ public sealed class OpenAiFoodServiceTests {
             NullLogger<OpenAiFoodService>.Instance,
             usageRepository,
             new StubUserRepository(),
-            new StubDateTimeProvider());
+            new StubDateTimeProvider(),
+            new StubAiPromptProvider());
 
         var result = await service.AnalyzeFoodImageAsync(
             "https://cdn.example.com/meal.webp",
@@ -186,7 +189,8 @@ public sealed class OpenAiFoodServiceTests {
             NullLogger<OpenAiFoodService>.Instance,
             new StubAiUsageRepository(new AiUsageTotals(5_000_000, 0)),
             new StubUserRepository(),
-            new StubDateTimeProvider());
+            new StubDateTimeProvider(),
+            new StubAiPromptProvider());
 
         var result = await service.CalculateNutritionAsync(
             [new FoodVisionItemModel("Apple", null, 100m, "g", 0.9m)],
@@ -225,7 +229,8 @@ public sealed class OpenAiFoodServiceTests {
             NullLogger<OpenAiFoodService>.Instance,
             new StubAiUsageRepository(),
             new StubUserRepository(),
-            new StubDateTimeProvider());
+            new StubDateTimeProvider(),
+            new StubAiPromptProvider());
 
         var result = await service.CalculateNutritionAsync(
             [new FoodVisionItemModel("Apple", null, 100m, "g", 0.9m)],
@@ -257,7 +262,8 @@ public sealed class OpenAiFoodServiceTests {
             NullLogger<OpenAiFoodService>.Instance,
             new StubAiUsageRepository(),
             new StubUserRepository(),
-            new StubDateTimeProvider());
+            new StubDateTimeProvider(),
+            new StubAiPromptProvider());
 
         var result = await service.CalculateNutritionAsync(
             [new FoodVisionItemModel("Apple", null, 100m, "g", 0.9m)],
@@ -380,5 +386,16 @@ public sealed class OpenAiFoodServiceTests {
 
     private sealed class StubDateTimeProvider : IDateTimeProvider {
         public DateTime UtcNow { get; } = new(2026, 3, 28, 12, 0, 0, DateTimeKind.Utc);
+    }
+
+    private sealed class StubAiPromptProvider : IAiPromptProvider {
+        private static readonly Dictionary<string, string> Prompts = new(StringComparer.OrdinalIgnoreCase) {
+            ["vision"] = "Analyze the food photo and return only JSON with list of items. Each item must include nameEn, nameLocal, amount, unit, confidence (0-1). Use grams (g) when possible. {{languageHint}}",
+            ["text-parse"] = "Parse the following food description into structured items: \"{{userText}}\". Return only JSON with list of items. Each item must include nameEn, nameLocal, amount, unit, confidence (0-1). Use grams (g) when possible. Estimate typical portion sizes for items without explicit amounts. {{languageHint}}",
+            ["nutrition"] = "You are a nutrition assistant. Using the provided items with amounts, estimate calories and nutrients per item and totals. Item names are in English. Return only JSON.",
+        };
+
+        public Task<string> GetPromptAsync(string key, CancellationToken cancellationToken = default) =>
+            Task.FromResult(Prompts.TryGetValue(key, out var prompt) ? prompt : key);
     }
 }

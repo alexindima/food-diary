@@ -1,4 +1,5 @@
 using FoodDiary.Application.Admin.Commands.UpdateAdminUser;
+using FoodDiary.Application.Admin.Commands.UpsertAdminAiPrompt;
 using FoodDiary.Application.Admin.Commands.UpsertAdminEmailTemplate;
 using FoodDiary.Presentation.Api.Features.Admin.Requests;
 
@@ -15,6 +16,17 @@ public static class AdminHttpMappings {
             Subject: request.Subject,
             HtmlBody: request.HtmlBody,
             TextBody: request.TextBody,
+            IsActive: request.IsActive);
+    }
+
+    public static UpsertAdminAiPromptCommand ToCommand(
+        this AdminAiPromptUpsertHttpRequest request,
+        string key,
+        string locale) {
+        return new UpsertAdminAiPromptCommand(
+            Key: key,
+            Locale: locale,
+            PromptText: request.PromptText,
             IsActive: request.IsActive);
     }
 

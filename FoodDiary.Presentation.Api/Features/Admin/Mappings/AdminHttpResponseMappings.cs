@@ -25,6 +25,19 @@ public static class AdminHttpResponseMappings {
         );
     }
 
+    public static AdminAiPromptHttpResponse ToAiPromptHttpResponse(this AdminAiPromptModel model) {
+        return new AdminAiPromptHttpResponse(
+            model.Id,
+            model.Key,
+            model.Locale,
+            model.PromptText,
+            model.Version,
+            model.IsActive,
+            model.CreatedOnUtc,
+            model.UpdatedOnUtc
+        );
+    }
+
     public static AdminEmailTemplateHttpResponse ToHttpResponse(this AdminEmailTemplateModel model) {
         return new AdminEmailTemplateHttpResponse(
             model.Id,

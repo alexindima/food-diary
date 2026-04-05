@@ -2,6 +2,37 @@
   "OpenApi": "3.0.4",
   "Endpoints": [
     {
+      "Path": "/api/v{version}/admin/ai-prompts",
+      "Operations": [
+        {
+          "Method": "get",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200",
+            "401",
+            "403",
+            "500"
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/v{version}/admin/ai-prompts/{key}/{locale}",
+      "Operations": [
+        {
+          "Method": "put",
+          "HasRequestBody": true,
+          "ResponseCodes": [
+            "200",
+            "400",
+            "401",
+            "403",
+            "500"
+          ]
+        }
+      ]
+    },
+    {
       "Path": "/api/v{version}/admin/ai-usage/summary",
       "Operations": [
         {

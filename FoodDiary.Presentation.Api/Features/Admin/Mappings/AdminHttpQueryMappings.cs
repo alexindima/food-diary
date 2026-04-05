@@ -1,5 +1,6 @@
 using FoodDiary.Application.Admin.Queries.GetAdminAiUsageSummary;
 using FoodDiary.Application.Admin.Queries.GetAdminDashboardSummary;
+using FoodDiary.Application.Admin.Queries.GetAdminAiPrompts;
 using FoodDiary.Application.Admin.Queries.GetAdminEmailTemplates;
 using FoodDiary.Application.Admin.Queries.GetAdminUsers;
 using FoodDiary.Presentation.Api.Features.Admin.Requests;
@@ -8,6 +9,7 @@ namespace FoodDiary.Presentation.Api.Features.Admin.Mappings;
 
 public static class AdminHttpQueryMappings {
     public static GetAdminEmailTemplatesQuery ToEmailTemplatesQuery() => new();
+    public static GetAdminAiPromptsQuery ToAiPromptsQuery() => new();
 
     public static GetAdminUsersQuery ToQuery(this GetAdminUsersHttpQuery query) {
         return new GetAdminUsersQuery(query.Page, query.Limit, query.Search, query.IncludeDeleted);

@@ -39,6 +39,7 @@ public class FoodDiaryDbContext(DbContextOptions<FoodDiaryDbContext> options) : 
     public DbSet<HydrationEntry> HydrationEntries => Set<HydrationEntry>();
     public DbSet<DailyAdvice> DailyAdvices => Set<DailyAdvice>();
     public DbSet<AiUsage> AiUsages => Set<AiUsage>();
+    public DbSet<AiPromptTemplate> AiPromptTemplates => Set<AiPromptTemplate>();
     public DbSet<EmailTemplate> EmailTemplates => Set<EmailTemplate>();
     public DbSet<DietologistInvitation> DietologistInvitations => Set<DietologistInvitation>();
     public DbSet<Recommendation> Recommendations => Set<Recommendation>();
