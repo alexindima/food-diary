@@ -19,4 +19,5 @@ public sealed record DashboardSnapshotModel(
     DailyAdviceModel? Advice = null,
     IReadOnlyList<WeightEntrySummaryModel>? WeightTrend = null,
     IReadOnlyList<WaistEntrySummaryModel>? WaistTrend = null,
-    DashboardLayoutModel? DashboardLayout = null);
+    DashboardLayoutModel? DashboardLayout = null,
+    double CaloriesBurned = 0);

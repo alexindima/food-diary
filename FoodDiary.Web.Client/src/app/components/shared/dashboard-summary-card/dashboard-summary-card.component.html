@@ -121,6 +121,12 @@
                         {{ 'CONSUMPTION_RING.WEEKLY_LABEL' | translate }}: {{ weeklyPercent() }}%
                     </div>
                 }
+                @if (caloriesBurned() > 0) {
+                    <div class="dashboard-summary-card__burned-line">
+                        {{ 'CONSUMPTION_RING.BURNED' | translate }}: {{ caloriesBurned() | number: '1.0-0' }}
+                        {{ 'CONSUMPTION_RING.UNIT' | translate }}
+                    </div>
+                }
             </div>
         </div>
 

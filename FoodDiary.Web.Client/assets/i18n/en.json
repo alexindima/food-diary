@@ -96,7 +96,8 @@
         "UNIT": "kcal",
         "DAILY_PROGRESS": "Today",
         "WEEKLY_PROGRESS": "This week",
-        "WEEKLY_LABEL": "Weekly"
+        "WEEKLY_LABEL": "Weekly",
+        "BURNED": "Burned"
     },
     "HEADER": {
         "HOME": "Home",

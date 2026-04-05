@@ -209,6 +209,12 @@
             opacity 0.2s ease;
     }
 
+    &__burned-line {
+        font-size: clamp(0.75rem, 1.8vw, 0.8rem);
+        color: #f97316;
+        font-weight: 700;
+    }
+
     &__legend {
         display: grid;
         gap: 14px;

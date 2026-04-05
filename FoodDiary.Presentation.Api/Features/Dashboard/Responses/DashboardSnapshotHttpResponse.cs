@@ -18,4 +18,5 @@ public sealed record DashboardSnapshotHttpResponse(
     DailyAdviceHttpResponse? Advice = null,
     IReadOnlyList<WeightEntrySummaryHttpResponse>? WeightTrend = null,
     IReadOnlyList<WaistEntrySummaryHttpResponse>? WaistTrend = null,
-    DashboardLayoutHttpModel? DashboardLayout = null);
+    DashboardLayoutHttpModel? DashboardLayout = null,
+    double CaloriesBurned = 0);

@@ -72,6 +72,7 @@ export class DashboardComponent implements OnInit {
     public readonly isLoading = this.facade.isLoading;
     public readonly dailyGoal = this.facade.dailyGoal;
     public readonly todayCalories = this.facade.todayCalories;
+    public readonly caloriesBurned = this.facade.caloriesBurned;
     public readonly meals = this.facade.meals;
     public readonly latestWeight = this.facade.latestWeight;
     public readonly previousWeight = this.facade.previousWeight;

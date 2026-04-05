@@ -2,6 +2,7 @@ using System.Text.Json;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Time;
+using FoodDiary.Application.Exercises.Common;
 using FoodDiary.Application.WaistEntries.Common;
 using FoodDiary.Application.WeightEntries.Common;
 using FoodDiary.Application.Consumptions.Queries.GetConsumptions;
@@ -38,6 +39,7 @@ public class DashboardSnapshotBuilder(
     IUserRepository userRepository,
     IWeightEntryRepository weightEntryRepository,
     IWaistEntryRepository waistEntryRepository,
+    IExerciseEntryRepository exerciseEntryRepository,
     ILogger<DashboardSnapshotBuilder> logger) : IDashboardSnapshotBuilder {
 
     public async Task<Result<DashboardSnapshotModel>> BuildAsync(
@@ -99,6 +101,9 @@ public class DashboardSnapshotBuilder(
 
         var layout = ParseDashboardLayout(currentUser.DashboardLayoutJson, userId);
 
+        var caloriesBurned = await exerciseEntryRepository.GetTotalCaloriesBurnedAsync(
+            userId, dayStart, cancellationToken);
+
         return Result.Success(new DashboardSnapshotModel(
             request.Date,
             currentUser.GetCalorieTargetForDate(request.Date) ?? 0,
@@ -112,7 +117,8 @@ public class DashboardSnapshotBuilder(
             adviceResult.IsSuccess ? adviceResult.Value : null,
             weightTrendResult.IsSuccess ? weightTrendResult.Value : [],
             waistTrendResult.IsSuccess ? waistTrendResult.Value : [],
-            layout));
+            layout,
+            Math.Round(caloriesBurned, 1)));
     }
 
     private DashboardLayoutModel? ParseDashboardLayout(string? json, UserId userId) {

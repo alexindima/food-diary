@@ -19,6 +19,7 @@ export interface DashboardSnapshot {
     weightTrend?: WeightEntrySummaryPoint[];
     waistTrend?: WaistEntrySummaryPoint[];
     dashboardLayout?: DashboardLayoutSettings | null;
+    caloriesBurned?: number;
 }
 
 export interface DashboardStatistics {

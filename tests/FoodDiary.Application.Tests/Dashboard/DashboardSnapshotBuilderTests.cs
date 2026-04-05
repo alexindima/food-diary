@@ -1,5 +1,6 @@
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Dashboard.Services;
+using FoodDiary.Application.Exercises.Common;
 using FoodDiary.Application.WaistEntries.Common;
 using FoodDiary.Application.WeightEntries.Common;
 using FoodDiary.Domain.Entities.Tracking;
@@ -18,6 +19,7 @@ public sealed class DashboardSnapshotBuilderTests {
             new StubUserRepository(),
             new StubWeightEntryRepository(),
             new StubWaistEntryRepository(),
+            new StubExerciseEntryRepository(),
             NullLogger<DashboardSnapshotBuilder>.Instance);
 
         var result = await builder.BuildAsync(
@@ -75,6 +77,15 @@ public sealed class DashboardSnapshotBuilderTests {
         public Task<WeightEntry?> GetByDateAsync(UserId userId, DateTime date, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<IReadOnlyList<WeightEntry>> GetEntriesAsync(UserId userId, DateTime? dateFrom, DateTime? dateTo, int? limit, bool descending, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<IReadOnlyList<WeightEntry>> GetByPeriodAsync(UserId userId, DateTime dateFrom, DateTime dateTo, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+    }
+
+    private sealed class StubExerciseEntryRepository : IExerciseEntryRepository {
+        public Task<ExerciseEntry> AddAsync(ExerciseEntry entry, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task UpdateAsync(ExerciseEntry entry, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task DeleteAsync(ExerciseEntry entry, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<ExerciseEntry?> GetByIdAsync(ExerciseEntryId id, UserId userId, bool asTracking = false, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<IReadOnlyList<ExerciseEntry>> GetByDateRangeAsync(UserId userId, DateTime dateFrom, DateTime dateTo, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<double> GetTotalCaloriesBurnedAsync(UserId userId, DateTime date, CancellationToken cancellationToken = default) => Task.FromResult(0.0);
     }
 
     private sealed class StubWaistEntryRepository : IWaistEntryRepository {

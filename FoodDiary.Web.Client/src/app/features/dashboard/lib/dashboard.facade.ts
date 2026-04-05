@@ -51,6 +51,7 @@ export class DashboardFacade {
 
     public readonly dailyGoal = computed(() => this.snapshot()?.dailyGoal ?? 0);
     public readonly todayCalories = computed(() => this.snapshot()?.statistics.totalCalories ?? 0);
+    public readonly caloriesBurned = computed(() => this.snapshot()?.caloriesBurned ?? 0);
     public readonly meals = computed<Meal[]>(() => this.snapshot()?.meals.items ?? []);
     public readonly latestWeight = computed(() => this.snapshot()?.weight.latest?.weight ?? null);
     public readonly previousWeight = computed(() => this.snapshot()?.weight.previous?.weight ?? null);

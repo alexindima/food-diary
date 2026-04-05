@@ -45,6 +45,7 @@ public class FoodDiaryDbContext(DbContextOptions<FoodDiaryDbContext> options) : 
     public DbSet<Notification> Notifications => Set<Notification>();
     public DbSet<FastingSession> FastingSessions => Set<FastingSession>();
     public DbSet<FavoriteMeal> FavoriteMeals => Set<FavoriteMeal>();
+    public DbSet<ExerciseEntry> ExerciseEntries => Set<ExerciseEntry>();
     public DbSet<MealPlan> MealPlans => Set<MealPlan>();
     public DbSet<MealPlanDay> MealPlanDays => Set<MealPlanDay>();
     public DbSet<MealPlanMeal> MealPlanMeals => Set<MealPlanMeal>();

@@ -27,6 +27,7 @@ export const environment: AppConfig = {
         weeklyCheckIn: `${serverUrl}/api/v1/weekly-check-in`,
         tdee: `${serverUrl}/api/v1/tdee`,
         mealPlans: `${serverUrl}/api/v1/meal-plans`,
+        exercises: `${serverUrl}/api/v1/exercises`,
     },
     googleClientId: '958507321562-8btd704hjhgsl7niklereh81utg5p780.apps.googleusercontent.com',
     buildVersion: '__BUILD_VERSION__',

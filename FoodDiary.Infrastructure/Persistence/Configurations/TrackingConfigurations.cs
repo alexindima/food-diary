@@ -231,6 +231,38 @@ internal sealed class FastingSessionConfiguration : IEntityTypeConfiguration<Fas
     }
 }
 
+internal sealed class ExerciseEntryConfiguration : IEntityTypeConfiguration<ExerciseEntry> {
+    public void Configure(EntityTypeBuilder<ExerciseEntry> entity) {
+        entity.Property(e => e.Id).HasConversion(
+            id => id.Value,
+            value => new ExerciseEntryId(value));
+
+        entity.Property(e => e.UserId).HasConversion(
+            id => id.Value,
+            value => new UserId(value));
+
+        entity.Property(e => e.Date)
+            .HasColumnType("date");
+
+        entity.Property(e => e.ExerciseType)
+            .HasConversion<string>()
+            .HasMaxLength(32);
+
+        entity.Property(e => e.Name)
+            .HasMaxLength(256);
+
+        entity.Property(e => e.Notes)
+            .HasMaxLength(500);
+
+        entity.HasIndex(e => new { e.UserId, e.Date });
+
+        entity.HasOne(e => e.User)
+            .WithMany()
+            .HasForeignKey(e => e.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+    }
+}
+
 internal sealed class FavoriteMealConfiguration : IEntityTypeConfiguration<FavoriteMeal> {
     public void Configure(EntityTypeBuilder<FavoriteMeal> entity) {
         entity.Property(e => e.Id)

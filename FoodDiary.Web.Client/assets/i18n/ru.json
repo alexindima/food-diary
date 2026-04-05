@@ -1570,7 +1570,8 @@
         "UNIT": "ккал",
         "DAILY_PROGRESS": "Сегодня",
         "WEEKLY_PROGRESS": "Эта неделя",
-        "WEEKLY_LABEL": "Неделя"
+        "WEEKLY_LABEL": "Неделя",
+        "BURNED": "Сожжено"
     },
     "WEIGHT_CARD": {
         "TITLE": "Динамика веса",

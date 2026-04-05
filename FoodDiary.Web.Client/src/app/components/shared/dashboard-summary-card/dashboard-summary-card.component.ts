@@ -31,6 +31,7 @@ export class DashboardSummaryCardComponent {
     public readonly weeklyConsumed = input<number>(0);
     public readonly weeklyGoal = input<number | null>(null);
     public readonly nutrientBars = input<NutrientBar[] | null>(null);
+    public readonly caloriesBurned = input<number>(0);
     public readonly isDailyHovered = signal(false);
     public readonly isWeeklyHovered = signal(false);
     private readonly outerRadius = 112;

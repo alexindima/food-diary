@@ -32,4 +32,5 @@ export interface AppConfigApiUrls {
     weeklyCheckIn: string;
     tdee: string;
     mealPlans: string;
+    exercises: string;
 }
