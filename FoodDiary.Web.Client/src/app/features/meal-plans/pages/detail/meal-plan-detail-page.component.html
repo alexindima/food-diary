@@ -1,0 +1,61 @@
+<div class="meal-plan-detail" fdPageContainer>
+    <fd-ui-button variant="secondary" fill="outline" icon="arrow_back" (click)="goBack()">
+        {{ 'MEAL_PLANS.BACK' | translate }}
+    </fd-ui-button>
+
+    <fd-page-body>
+        @if (facade.isDetailLoading()) {
+            <fd-ui-loader />
+        } @else if (facade.selectedPlan(); as plan) {
+            <header class="meal-plan-detail__header">
+                <div class="meal-plan-detail__badge">{{ 'MEAL_PLANS.DIET_TYPE.' + plan.dietType.toUpperCase() | translate }}</div>
+                <h1 class="meal-plan-detail__title">{{ plan.name }}</h1>
+                @if (plan.description) {
+                    <p class="meal-plan-detail__desc">{{ plan.description }}</p>
+                }
+                <div class="meal-plan-detail__actions">
+                    @if (plan.isCurated) {
+                        <fd-ui-button icon="content_copy" (click)="adopt()">
+                            {{ 'MEAL_PLANS.ADOPT' | translate }}
+                        </fd-ui-button>
+                    }
+                    <fd-ui-button variant="secondary" icon="shopping_cart" (click)="generateShoppingList()">
+                        {{ 'MEAL_PLANS.GENERATE_SHOPPING_LIST' | translate }}
+                    </fd-ui-button>
+                </div>
+            </header>
+
+            <div class="meal-plan-detail__days">
+                @for (day of plan.days; track day.id) {
+                    <div class="meal-plan-day">
+                        <h3 class="meal-plan-day__title">{{ 'MEAL_PLANS.DAY' | translate: { number: day.dayNumber } }}</h3>
+                        <div class="meal-plan-day__meals">
+                            @for (meal of day.meals; track meal.id) {
+                                <div class="meal-plan-meal">
+                                    <div class="meal-plan-meal__type">
+                                        {{ 'MEAL_PLANS.MEAL_TYPE.' + meal.mealType.toUpperCase() | translate }}
+                                    </div>
+                                    <div class="meal-plan-meal__recipe">{{ meal.recipeName ?? meal.recipeId }}</div>
+                                    <div class="meal-plan-meal__nutrition">
+                                        @if (meal.calories) {
+                                            <span>{{ meal.calories | number: '1.0-0' }} {{ 'GENERAL.UNITS.KCAL' | translate }}</span>
+                                        }
+                                        @if (meal.proteins) {
+                                            <span>P: {{ meal.proteins | number: '1.0-0' }}g</span>
+                                        }
+                                        @if (meal.fats) {
+                                            <span>F: {{ meal.fats | number: '1.0-0' }}g</span>
+                                        }
+                                        @if (meal.carbs) {
+                                            <span>C: {{ meal.carbs | number: '1.0-0' }}g</span>
+                                        }
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </fd-page-body>
+</div>

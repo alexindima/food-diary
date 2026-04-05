@@ -1,0 +1,114 @@
+@use 'variables' as variables;
+
+:host {
+    display: block;
+}
+
+.meal-plan-detail {
+
+    &__header {
+        margin: 24px 0;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    &__badge {
+        display: inline-flex;
+        width: fit-content;
+        padding: 4px 12px;
+        border-radius: 10px;
+        background: rgba(249, 115, 22, 0.12);
+        color: #ea580c;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+    }
+
+    &__title {
+        font-size: 1.8rem;
+        font-weight: 800;
+        margin: 0;
+    }
+
+    &__desc {
+        margin: 0;
+        color: variables.$color-text-additional;
+        line-height: 1.6;
+    }
+
+    &__actions {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    &__days {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+    }
+}
+
+.meal-plan-day {
+
+    &__title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        margin: 0 0 12px;
+        color: variables.$color-text-main;
+    }
+
+    &__meals {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+
+.meal-plan-meal {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 18px;
+    border-radius: 16px;
+    background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+
+    &__type {
+        min-width: 80px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: #0284c7;
+    }
+
+    &__recipe {
+        flex: 1;
+        font-weight: 700;
+        color: variables.$color-text-main;
+    }
+
+    &__nutrition {
+        display: flex;
+        gap: 10px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: variables.$color-text-additional;
+    }
+}
+
+@media #{variables.$media-mobile} {
+
+    .meal-plan-meal {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+    }
+
+    .meal-plan-meal__nutrition {
+        flex-wrap: wrap;
+    }
+}

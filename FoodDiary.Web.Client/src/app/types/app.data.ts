@@ -31,4 +31,5 @@ export interface AppConfigApiUrls {
     gamification: string;
     weeklyCheckIn: string;
     tdee: string;
+    mealPlans: string;
 }

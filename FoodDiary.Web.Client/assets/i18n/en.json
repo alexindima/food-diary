@@ -1180,6 +1180,7 @@
         "FOOD_DIARY": "Food Diary",
         "PRODUCTS": "Products",
         "RECIPES": "Recipes",
+        "MEAL_PLANS": "Meal plans",
         "SHOPPING_LIST": "Shopping list",
         "BODY_TRACKING": "Body tracking",
         "WEIGHT": "Weight",
@@ -1772,6 +1773,8 @@
         "FASTING_DESCRIPTION": "Track your fasting sessions with customizable protocols.",
         "GAMIFICATION": "Achievements",
         "GAMIFICATION_DESCRIPTION": "Track your streaks, earn badges, and monitor your health score.",
+        "MEAL_PLANS": "Meal Plans",
+        "MEAL_PLANS_DESCRIPTION": "Browse and adopt curated meal plans by diet type.",
         "WEEKLY_CHECK_IN": "Weekly Review",
         "WEEKLY_CHECK_IN_DESCRIPTION": "Review your weekly nutrition progress and get personalized suggestions.",
         "PREMIUM": "Premium",
@@ -1786,6 +1789,37 @@
         "RETRY": "Try again",
         "NETWORK_ERROR": "No internet connection",
         "SERVER_ERROR": "Server error. Please try again later."
+    },
+    "MEAL_PLANS": {
+        "TITLE": "Meal Plans",
+        "SUBTITLE": "Browse curated meal plans by diet type",
+        "FILTER_ALL": "All",
+        "EMPTY": "No meal plans found.",
+        "DAYS": "{{ count }} days",
+        "RECIPES": "{{ count }} recipes",
+        "CURATED": "Curated",
+        "BACK": "Back to plans",
+        "ADOPT": "Add to my plans",
+        "GENERATE_SHOPPING_LIST": "Generate shopping list",
+        "DAY": "Day {{ number }}",
+        "DIET_TYPE": {
+            "BALANCED": "Balanced",
+            "HIGHPROTEIN": "High Protein",
+            "HIGH_PROTEIN": "High Protein",
+            "LOWCARB": "Low Carb",
+            "LOW_CARB": "Low Carb",
+            "KETO": "Keto",
+            "MEDITERRANEAN": "Mediterranean",
+            "VEGAN": "Vegan",
+            "VEGETARIAN": "Vegetarian"
+        },
+        "MEAL_TYPE": {
+            "BREAKFAST": "Breakfast",
+            "LUNCH": "Lunch",
+            "DINNER": "Dinner",
+            "SNACK": "Snack",
+            "OTHER": "Other"
+        }
     },
     "QUALITY": {
         "GREEN": "Nutrient-dense",

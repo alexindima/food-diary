@@ -68,6 +68,12 @@ export const routes: Routes = [
         data: { seo: { titleKey: 'SEO.CYCLE_TRACKING', descriptionKey: 'SEO.CYCLE_TRACKING_DESCRIPTION', noIndex: true } },
     },
     {
+        path: 'meal-plans',
+        canActivate: [authGuard],
+        loadChildren: () => import('./features/meal-plans/meal-plan.routes'),
+        data: { seo: { titleKey: 'SEO.MEAL_PLANS', descriptionKey: 'SEO.MEAL_PLANS_DESCRIPTION', noIndex: true } },
+    },
+    {
         path: 'weekly-check-in',
         canActivate: [authGuard],
         loadChildren: () => import('./features/weekly-check-in/weekly-check-in.routes'),

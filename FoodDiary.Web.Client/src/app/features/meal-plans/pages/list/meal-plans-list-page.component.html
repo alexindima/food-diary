@@ -1,0 +1,70 @@
+<div class="meal-plans-list" fdPageContainer>
+    <header class="meal-plans-list__header">
+        <h1 class="meal-plans-list__title">{{ 'MEAL_PLANS.TITLE' | translate }}</h1>
+        <p class="meal-plans-list__subtitle">{{ 'MEAL_PLANS.SUBTITLE' | translate }}</p>
+    </header>
+
+    <div class="meal-plans-list__filters">
+        <fd-ui-button
+            variant="secondary"
+            [fill]="facade.dietTypeFilter() === null ? 'solid' : 'outline'"
+            size="sm"
+            (click)="filterByDiet(null)"
+        >
+            {{ 'MEAL_PLANS.FILTER_ALL' | translate }}
+        </fd-ui-button>
+        @for (dt of dietTypes; track dt.value) {
+            <fd-ui-button
+                variant="secondary"
+                [fill]="facade.dietTypeFilter() === dt.value ? 'solid' : 'outline'"
+                size="sm"
+                (click)="filterByDiet(dt.value)"
+            >
+                {{ dt.labelKey | translate }}
+            </fd-ui-button>
+        }
+    </div>
+
+    <fd-page-body>
+        @if (facade.isLoading()) {
+            <fd-ui-loader />
+        } @else if (facade.plans().length === 0) {
+            <div class="meal-plans-list__empty">
+                <mat-icon fontIcon="restaurant_menu"></mat-icon>
+                <span>{{ 'MEAL_PLANS.EMPTY' | translate }}</span>
+            </div>
+        } @else {
+            <div class="meal-plans-list__grid">
+                @for (plan of facade.plans(); track plan.id) {
+                    <div
+                        class="meal-plan-card"
+                        fdCardHover
+                        role="button"
+                        tabindex="0"
+                        (click)="openPlan(plan.id)"
+                        (keydown.enter)="openPlan(plan.id)"
+                    >
+                        <div class="meal-plan-card__badge">{{ 'MEAL_PLANS.DIET_TYPE.' + plan.dietType.toUpperCase() | translate }}</div>
+                        <h3 class="meal-plan-card__name">{{ plan.name }}</h3>
+                        @if (plan.description) {
+                            <p class="meal-plan-card__desc">{{ plan.description }}</p>
+                        }
+                        <div class="meal-plan-card__meta">
+                            <span>{{ 'MEAL_PLANS.DAYS' | translate: { count: plan.durationDays } }}</span>
+                            <span>{{ 'MEAL_PLANS.RECIPES' | translate: { count: plan.totalRecipes } }}</span>
+                            @if (plan.targetCaloriesPerDay) {
+                                <span>~{{ plan.targetCaloriesPerDay | number: '1.0-0' }} {{ 'GENERAL.UNITS.KCAL' | translate }}</span>
+                            }
+                        </div>
+                        @if (plan.isCurated) {
+                            <div class="meal-plan-card__curated">
+                                <mat-icon fontIcon="verified"></mat-icon>
+                                {{ 'MEAL_PLANS.CURATED' | translate }}
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        }
+    </fd-page-body>
+</div>

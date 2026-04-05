@@ -380,4 +380,21 @@ public static class Errors {
             "This meal is already in favorites.",
             kind: ErrorKind.Conflict);
     }
+
+    public static class MealPlan {
+        public static Error NotFound(Guid id) => new(
+            "MealPlan.NotFound",
+            $"Meal plan with ID {id} was not found.",
+            kind: ErrorKind.NotFound);
+
+        public static Error InvalidId => new(
+            "MealPlan.InvalidId",
+            "Meal plan ID is required.",
+            kind: ErrorKind.Validation);
+
+        public static Error NotCurated => new(
+            "MealPlan.NotCurated",
+            "Only curated meal plans can be adopted.",
+            kind: ErrorKind.Validation);
+    }
 }
