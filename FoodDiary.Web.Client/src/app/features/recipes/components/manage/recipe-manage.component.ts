@@ -527,6 +527,8 @@ export class RecipeManageComponent implements OnInit {
             visibility: ProductVisibility.Private,
             createdAt: new Date(),
             isOwnedByCurrentUser: true,
+            qualityScore: 50,
+            qualityGrade: 'yellow',
         };
     }
 

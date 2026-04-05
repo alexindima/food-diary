@@ -24,7 +24,11 @@ export interface Product {
     visibility: ProductVisibility;
     createdAt: Date;
     isOwnedByCurrentUser: boolean;
+    qualityScore: number;
+    qualityGrade: QualityGrade;
 }
+
+export type QualityGrade = 'green' | 'yellow' | 'red';
 
 export interface CreateProductRequest {
     barcode?: string | null;

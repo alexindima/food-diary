@@ -61,7 +61,9 @@ public static class ConsumptionHttpResponseMappings {
             model.RecipeTotalFats,
             model.RecipeTotalCarbs,
             model.RecipeTotalFiber,
-            model.RecipeTotalAlcohol
+            model.RecipeTotalAlcohol,
+            model.ProductQualityScore,
+            model.ProductQualityGrade
         );
     }
 

@@ -30,7 +30,9 @@ public static class ProductHttpResponseMappings {
             model.UsageCount,
             model.Visibility,
             model.CreatedAt,
-            model.IsOwnedByCurrentUser
+            model.IsOwnedByCurrentUser,
+            model.QualityScore,
+            model.QualityGrade
         );
     }
 

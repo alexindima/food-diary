@@ -23,4 +23,6 @@ public sealed record ProductModel(
     int UsageCount,
     string Visibility,
     DateTime CreatedAt,
-    bool IsOwnedByCurrentUser);
+    bool IsOwnedByCurrentUser,
+    int QualityScore,
+    string QualityGrade);

@@ -34,6 +34,8 @@ describe('ProductService', () => {
         visibility: ProductVisibility.Private,
         createdAt: new Date('2026-01-01'),
         isOwnedByCurrentUser: true,
+        qualityScore: 80,
+        qualityGrade: 'green',
     };
 
     const mockPage: PageOf<Product> = {

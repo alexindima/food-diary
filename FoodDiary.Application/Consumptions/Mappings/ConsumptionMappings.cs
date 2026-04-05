@@ -8,29 +8,34 @@ public static class ConsumptionMappings {
     public static ConsumptionModel ToModel(this Meal meal, bool isOwnedByCurrentUser = true) {
         var items = meal.Items
             .OrderBy(i => i.Id.Value)
-            .Select(item => new ConsumptionItemModel(
-                item.Id.Value,
-                item.MealId.Value,
-                item.Amount,
-                item.ProductId?.Value,
-                item.Product?.Name,
-                item.Product?.BaseUnit.ToString(),
-                item.Product?.BaseAmount,
-                item.Product?.CaloriesPerBase,
-                item.Product?.ProteinsPerBase,
-                item.Product?.FatsPerBase,
-                item.Product?.CarbsPerBase,
-                item.Product?.FiberPerBase,
-                item.Product?.AlcoholPerBase,
-                item.RecipeId?.Value,
-                item.Recipe?.Name,
-                item.Recipe?.Servings,
-                item.Recipe?.TotalCalories,
-                item.Recipe?.TotalProteins,
-                item.Recipe?.TotalFats,
-                item.Recipe?.TotalCarbs,
-                item.Recipe?.TotalFiber,
-                item.Recipe?.TotalAlcohol))
+            .Select(item => {
+                var quality = item.Product?.GetQualityScore();
+                return new ConsumptionItemModel(
+                    item.Id.Value,
+                    item.MealId.Value,
+                    item.Amount,
+                    item.ProductId?.Value,
+                    item.Product?.Name,
+                    item.Product?.BaseUnit.ToString(),
+                    item.Product?.BaseAmount,
+                    item.Product?.CaloriesPerBase,
+                    item.Product?.ProteinsPerBase,
+                    item.Product?.FatsPerBase,
+                    item.Product?.CarbsPerBase,
+                    item.Product?.FiberPerBase,
+                    item.Product?.AlcoholPerBase,
+                    item.RecipeId?.Value,
+                    item.Recipe?.Name,
+                    item.Recipe?.Servings,
+                    item.Recipe?.TotalCalories,
+                    item.Recipe?.TotalProteins,
+                    item.Recipe?.TotalFats,
+                    item.Recipe?.TotalCarbs,
+                    item.Recipe?.TotalFiber,
+                    item.Recipe?.TotalAlcohol,
+                    quality?.Score,
+                    quality?.Grade.ToString().ToLowerInvariant());
+            })
             .ToList();
 
         var aiSessions = meal.AiSessions

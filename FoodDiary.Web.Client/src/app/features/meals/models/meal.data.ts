@@ -110,6 +110,8 @@ export interface ConsumptionItemResponseDto {
     recipeTotalCarbs?: number | null;
     recipeTotalFiber?: number | null;
     recipeTotalAlcohol?: number | null;
+    productQualityScore?: number | null;
+    productQualityGrade?: string | null;
 }
 
 export interface ConsumptionAiSessionResponseDto {
@@ -210,6 +212,8 @@ export const createEmptyProductSnapshot = (): Product => ({
     usageCount: 0,
     createdAt: new Date(),
     isOwnedByCurrentUser: true,
+    qualityScore: 50,
+    qualityGrade: 'yellow',
 });
 
 export const createEmptyRecipeSnapshot = (): Recipe => ({

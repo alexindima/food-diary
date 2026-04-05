@@ -306,6 +306,12 @@ public sealed class Product : AggregateRoot<ProductId> {
         }
     }
 
+    public FoodQualityScore GetQualityScore() {
+        return FoodQualityScore.Calculate(
+            CaloriesPerBase, ProteinsPerBase, FatsPerBase,
+            CarbsPerBase, FiberPerBase, AlcoholPerBase, ProductType);
+    }
+
     public void ChangeVisibility(Visibility visibility) {
         if (Visibility == visibility) {
             return;

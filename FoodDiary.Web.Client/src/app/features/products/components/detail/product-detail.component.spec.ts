@@ -27,6 +27,8 @@ const mockProduct: Product = {
     visibility: ProductVisibility.Private,
     usageCount: 0,
     createdAt: new Date('2024-01-01'),
+    qualityScore: 80,
+    qualityGrade: 'green',
 };
 
 describe('ProductDetailComponent', () => {

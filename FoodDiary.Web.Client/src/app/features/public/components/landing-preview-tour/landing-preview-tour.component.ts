@@ -351,6 +351,8 @@ export class LandingPreviewTourComponent implements OnInit {
                 usageCount: 0,
                 createdAt: new Date(),
                 isOwnedByCurrentUser: true,
+                qualityScore: 72,
+                qualityGrade: 'green',
             },
             {
                 id: 'preview-granola',
@@ -376,6 +378,8 @@ export class LandingPreviewTourComponent implements OnInit {
                 usageCount: 0,
                 createdAt: new Date(),
                 isOwnedByCurrentUser: true,
+                qualityScore: 45,
+                qualityGrade: 'yellow',
             },
         ];
     }

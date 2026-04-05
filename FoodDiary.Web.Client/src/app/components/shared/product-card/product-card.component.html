@@ -45,6 +45,12 @@
 
     <div class="product-card__action-group">
         <div class="product-card__calories-inline">
+            @if (product().qualityGrade) {
+                <span
+                    class="product-card__quality-dot product-card__quality-dot--{{ product().qualityGrade }}"
+                    [title]="'QUALITY.' + product().qualityGrade!.toUpperCase() | translate"
+                ></span>
+            }
             <span class="product-card__calories-value">
                 {{ product().caloriesPerBase | number: '1.0-0' }}
             </span>

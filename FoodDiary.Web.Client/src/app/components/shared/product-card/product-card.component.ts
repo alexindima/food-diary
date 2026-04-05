@@ -4,6 +4,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiIconModule } from 'fd-ui-kit/material';
 import { NutrientBadgesComponent } from '../nutrient-badges/nutrient-badges.component';
+import { QualityGrade } from '../../../features/products/models/product.data';
 
 export interface ProductCardItem {
     name: string;
@@ -16,6 +17,7 @@ export interface ProductCardItem {
     fiberPerBase: number;
     alcoholPerBase: number;
     caloriesPerBase: number;
+    qualityGrade?: QualityGrade | null;
 }
 
 @Component({

@@ -163,6 +163,8 @@ describe('RecipeManageFacade', () => {
                 visibility: ProductVisibility.Private,
                 createdAt: new Date(),
                 isOwnedByCurrentUser: true,
+                qualityScore: 65,
+                qualityGrade: 'yellow',
             },
         });
 

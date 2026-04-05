@@ -22,4 +22,6 @@ public sealed record ConsumptionItemModel(
     double? RecipeTotalFats,
     double? RecipeTotalCarbs,
     double? RecipeTotalFiber,
-    double? RecipeTotalAlcohol);
+    double? RecipeTotalAlcohol,
+    int? ProductQualityScore,
+    string? ProductQualityGrade);

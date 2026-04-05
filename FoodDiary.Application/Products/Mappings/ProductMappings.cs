@@ -5,6 +5,7 @@ namespace FoodDiary.Application.Products.Mappings;
 
 public static class ProductMappings {
     public static ProductModel ToModel(this Product product, int usageCount = 0, bool isOwnedByCurrentUser = false) {
+        var quality = product.GetQualityScore();
         return new ProductModel(
             product.Id.Value,
             product.Barcode,
@@ -28,7 +29,9 @@ public static class ProductMappings {
             usageCount,
             product.Visibility.ToString(),
             product.CreatedOnUtc,
-            isOwnedByCurrentUser
+            isOwnedByCurrentUser,
+            quality.Score,
+            quality.Grade.ToString().ToLowerInvariant()
         );
     }
 }

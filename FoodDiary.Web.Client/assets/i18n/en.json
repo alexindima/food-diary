@@ -1787,6 +1787,11 @@
         "NETWORK_ERROR": "No internet connection",
         "SERVER_ERROR": "Server error. Please try again later."
     },
+    "QUALITY": {
+        "GREEN": "Nutrient-dense",
+        "YELLOW": "Moderate",
+        "RED": "Calorie-dense"
+    },
     "TDEE_CARD": {
         "TITLE": "Energy expenditure",
         "LOADING": "Calculating your TDEE...",
