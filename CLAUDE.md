@@ -49,6 +49,18 @@ Quick fix command after generating a migration:
 node -e "const fs=require('fs');const f=process.argv[1];let c=fs.readFileSync(f,'utf8');if(c.charCodeAt(0)===0xFEFF)c=c.slice(1);c=c.replace(/\r\n/g,'\n').replace(/^using System;\n/,'').replace(/\)\s*\n\s*\{/g,') {').replace(/=>\s*\n\s*\{/g,'=> {').replace(/(\w)\s*\n\s*\{/g,'\$1 {');fs.writeFileSync(f,c);" MIGRATION_FILE
 ```
 
+### API Contract Snapshots (CRITICAL)
+
+When adding/changing controllers, HTTP responses, or new fields on existing responses, you MUST update **both** snapshot files:
+1. **OpenAPI (Swagger) snapshot** — tests controller routes and schemas
+2. **Payload contract snapshot** — tests actual JSON response shapes
+
+Run this after any API contract change:
+```bash
+UPDATE_CONTRACT_SNAPSHOTS=1 dotnet test tests/FoodDiary.Web.Api.IntegrationTests --no-restore
+```
+This updates all snapshot `.json` files under `tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/`. Commit the updated snapshots together with the feature.
+
 ## Architecture
 
 ### Backend (Clean Architecture)

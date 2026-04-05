@@ -135,6 +135,7 @@
   "dashboard-snapshot": {
     "keys": [
       "advice",
+      "caloriesBurned",
       "dailyGoal",
       "dashboardLayout",
       "date",
