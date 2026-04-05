@@ -1189,7 +1189,8 @@
         "USER_MENU": "User menu",
         "DAILY_NORM": "Daily norm",
         "MY_CLIENTS": "My Clients",
-        "FASTING": "Fasting"
+        "FASTING": "Fasting",
+        "ACHIEVEMENTS": "Achievements"
     },
     "SHOPPING_LIST": {
         "TITLE": "Shopping list",
@@ -1489,6 +1490,29 @@
         "BADGE_COMPLETED": "Completed",
         "BADGE_INCOMPLETE": "Incomplete"
     },
+    "GAMIFICATION": {
+        "TITLE": "Achievements",
+        "SUBTITLE": "Track your progress, earn badges, and build healthy habits",
+        "LOADING": "Loading achievements...",
+        "CURRENT_STREAK": "Current streak",
+        "LONGEST_STREAK": "Longest streak",
+        "TOTAL_MEALS": "Meals logged",
+        "WEEKLY_ADHERENCE": "Weekly adherence",
+        "HEALTH_SCORE_TITLE": "Health score",
+        "HEALTH_SCORE_HINT": "Based on logging consistency, goal adherence, and activity",
+        "BADGES_TITLE": "Badges",
+        "NO_BADGES": "No badges available yet.",
+        "BADGE_STREAK_3": "3-day streak",
+        "BADGE_STREAK_7": "7-day streak",
+        "BADGE_STREAK_14": "14-day streak",
+        "BADGE_STREAK_30": "30-day streak",
+        "BADGE_STREAK_60": "60-day streak",
+        "BADGE_STREAK_100": "100-day streak",
+        "BADGE_MEALS_10": "10 meals",
+        "BADGE_MEALS_50": "50 meals",
+        "BADGE_MEALS_100": "100 meals",
+        "BADGE_MEALS_500": "500 meals"
+    },
     "GOALS_PAGE": {
         "TITLE": "Goals & targets",
         "SUBTITLE": "Customize your daily nutrition targets and body goals. Blocks use placeholder data for now.",
@@ -1704,6 +1728,8 @@
         "CYCLE_TRACKING_DESCRIPTION": "Track and predict your menstrual cycle.",
         "FASTING": "Intermittent Fasting",
         "FASTING_DESCRIPTION": "Track your fasting sessions with customizable protocols.",
+        "GAMIFICATION": "Achievements",
+        "GAMIFICATION_DESCRIPTION": "Track your streaks, earn badges, and monitor your health score.",
         "PREMIUM": "Premium",
         "PREMIUM_DESCRIPTION": "Unlock advanced features with Food Diary Premium.",
         "PROFILE": "Profile",

@@ -23,6 +23,7 @@ export const environment: AppConfig = {
         dietologist: `${serverUrl}/api/v1/dietologist`,
         fasting: `${serverUrl}/api/v1/fasting`,
         favoriteMeals: `${serverUrl}/api/v1/favorite-meals`,
+        gamification: `${serverUrl}/api/v1/gamification`,
     },
     googleClientId: '958507321562-8btd704hjhgsl7niklereh81utg5p780.apps.googleusercontent.com',
     telegramBotUsername: 'fooddiaryclub_bot',

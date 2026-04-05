@@ -1,0 +1,94 @@
+<div class="gamification" fdPageContainer>
+    <fd-page-header
+        class="gamification__header"
+        [title]="'GAMIFICATION.TITLE' | translate"
+        [subtitle]="'GAMIFICATION.SUBTITLE' | translate"
+    />
+
+    <fd-page-body>
+        @if (isLoading()) {
+            <div class="gamification__loader">{{ 'GAMIFICATION.LOADING' | translate }}</div>
+        } @else {
+            <div class="gamification__stats-grid">
+                <fd-ui-accent-surface class="gamification__stat" accentSide="top" accentColor="#f97316" [tinted]="true">
+                    <mat-icon class="gamification__stat-icon gamification__stat-icon--streak">local_fire_department</mat-icon>
+                    <strong class="gamification__stat-value">{{ currentStreak() }}</strong>
+                    <span class="gamification__stat-label">{{ 'GAMIFICATION.CURRENT_STREAK' | translate }}</span>
+                </fd-ui-accent-surface>
+
+                <fd-ui-accent-surface class="gamification__stat" accentSide="top" accentColor="#7c3aed" [tinted]="true">
+                    <mat-icon class="gamification__stat-icon gamification__stat-icon--longest">emoji_events</mat-icon>
+                    <strong class="gamification__stat-value">{{ longestStreak() }}</strong>
+                    <span class="gamification__stat-label">{{ 'GAMIFICATION.LONGEST_STREAK' | translate }}</span>
+                </fd-ui-accent-surface>
+
+                <fd-ui-accent-surface class="gamification__stat" accentSide="top" accentColor="#0ea5e9" [tinted]="true">
+                    <mat-icon class="gamification__stat-icon gamification__stat-icon--meals">restaurant</mat-icon>
+                    <strong class="gamification__stat-value">{{ totalMealsLogged() }}</strong>
+                    <span class="gamification__stat-label">{{ 'GAMIFICATION.TOTAL_MEALS' | translate }}</span>
+                </fd-ui-accent-surface>
+
+                <fd-ui-accent-surface class="gamification__stat" accentSide="top" accentColor="#22c55e" [tinted]="true">
+                    <mat-icon class="gamification__stat-icon gamification__stat-icon--adherence">check_circle</mat-icon>
+                    <strong class="gamification__stat-value">{{ weeklyAdherence() }}%</strong>
+                    <span class="gamification__stat-label">{{ 'GAMIFICATION.WEEKLY_ADHERENCE' | translate }}</span>
+                </fd-ui-accent-surface>
+            </div>
+
+            <div class="gamification__grid">
+                <fd-ui-card class="gamification__card" [title]="'GAMIFICATION.HEALTH_SCORE_TITLE' | translate">
+                    <div class="gamification__score">
+                        <div class="gamification__score-ring">
+                            <svg class="gamification__score-svg" viewBox="0 0 200 200">
+                                <circle class="gamification__score-track" cx="100" cy="100" r="90" fill="none" stroke-width="10" />
+                                <circle
+                                    class="gamification__score-progress"
+                                    cx="100"
+                                    cy="100"
+                                    r="90"
+                                    fill="none"
+                                    stroke-width="10"
+                                    stroke-linecap="round"
+                                    [style.stroke-dasharray]="2 * Math.PI * 90"
+                                    [style.stroke-dashoffset]="2 * Math.PI * 90 * (1 - healthScore() / 100)"
+                                />
+                            </svg>
+                            <div class="gamification__score-content">
+                                <strong class="gamification__score-value">{{ healthScore() }}</strong>
+                                <span class="gamification__score-label">/ 100</span>
+                            </div>
+                        </div>
+                        <p class="gamification__score-hint">{{ 'GAMIFICATION.HEALTH_SCORE_HINT' | translate }}</p>
+                    </div>
+                </fd-ui-card>
+
+                <fd-ui-card class="gamification__card" [title]="'GAMIFICATION.BADGES_TITLE' | translate">
+                    @if (earnedBadges().length === 0 && lockedBadges().length === 0) {
+                        <p class="gamification__empty">{{ 'GAMIFICATION.NO_BADGES' | translate }}</p>
+                    } @else {
+                        <div class="gamification__badges">
+                            @for (badge of earnedBadges(); track badge.key) {
+                                <div class="gamification__badge gamification__badge--earned">
+                                    <mat-icon class="gamification__badge-icon">{{ getBadgeIcon(badge) }}</mat-icon>
+                                    <span class="gamification__badge-label">{{
+                                        'GAMIFICATION.BADGE_' + badge.key | uppercase | translate
+                                    }}</span>
+                                    <span class="gamification__badge-threshold">{{ badge.threshold }}</span>
+                                </div>
+                            }
+                            @for (badge of lockedBadges(); track badge.key) {
+                                <div class="gamification__badge gamification__badge--locked">
+                                    <mat-icon class="gamification__badge-icon">{{ getBadgeIcon(badge) }}</mat-icon>
+                                    <span class="gamification__badge-label">{{
+                                        'GAMIFICATION.BADGE_' + badge.key | uppercase | translate
+                                    }}</span>
+                                    <span class="gamification__badge-threshold">{{ badge.threshold }}</span>
+                                </div>
+                            }
+                        </div>
+                    }
+                </fd-ui-card>
+            </div>
+        }
+    </fd-page-body>
+</div>

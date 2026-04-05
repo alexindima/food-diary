@@ -81,6 +81,10 @@
             <mat-icon>flag</mat-icon>
             <span>{{ 'SIDEBAR.GOALS' | translate }}</span>
         </a>
+        <a routerLink="/gamification" routerLinkActive="is-active" class="sidebar__link sidebar__link--secondary">
+            <mat-icon>emoji_events</mat-icon>
+            <span>{{ 'SIDEBAR.ACHIEVEMENTS' | translate }}</span>
+        </a>
     </nav>
 
     @if (isDietologist()) {
@@ -264,6 +268,10 @@
         <a routerLink="/goals" routerLinkActive="is-active" (click)="closeMobileMenus()">
             <mat-icon>flag</mat-icon>
             <span>{{ 'SIDEBAR.GOALS' | translate }}</span>
+        </a>
+        <a routerLink="/gamification" routerLinkActive="is-active" (click)="closeMobileMenus()">
+            <mat-icon>emoji_events</mat-icon>
+            <span>{{ 'SIDEBAR.ACHIEVEMENTS' | translate }}</span>
         </a>
     </div>
 }

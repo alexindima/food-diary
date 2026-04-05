@@ -30,4 +30,14 @@ public interface IMealRepository {
         DateTime dateFrom,
         DateTime dateTo,
         CancellationToken cancellationToken = default);
+
+    Task<IReadOnlyList<DateTime>> GetDistinctMealDatesAsync(
+        UserId userId,
+        DateTime dateFrom,
+        DateTime dateTo,
+        CancellationToken cancellationToken = default);
+
+    Task<int> GetTotalMealCountAsync(
+        UserId userId,
+        CancellationToken cancellationToken = default);
 }

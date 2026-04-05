@@ -68,6 +68,12 @@ export const routes: Routes = [
         data: { seo: { titleKey: 'SEO.CYCLE_TRACKING', descriptionKey: 'SEO.CYCLE_TRACKING_DESCRIPTION', noIndex: true } },
     },
     {
+        path: 'gamification',
+        canActivate: [authGuard],
+        loadChildren: () => import('./features/gamification/gamification.routes'),
+        data: { seo: { titleKey: 'SEO.GAMIFICATION', descriptionKey: 'SEO.GAMIFICATION_DESCRIPTION', noIndex: true } },
+    },
+    {
         path: 'fasting',
         canActivate: [authGuard],
         loadChildren: () => import('./features/fasting/fasting.routes'),

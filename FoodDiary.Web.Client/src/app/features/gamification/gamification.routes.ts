@@ -1,0 +1,11 @@
+import { Routes } from '@angular/router';
+import { GamificationPageComponent } from './pages/gamification-page.component';
+
+const routes: Routes = [
+    {
+        path: '',
+        component: GamificationPageComponent,
+    },
+];
+
+export default routes;

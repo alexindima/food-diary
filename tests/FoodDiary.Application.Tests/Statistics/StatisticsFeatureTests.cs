@@ -80,5 +80,15 @@ public class StatisticsFeatureTests {
             DateTime dateTo,
             CancellationToken cancellationToken = default) =>
             Task.FromResult<IReadOnlyList<Meal>>(Array.Empty<Meal>());
+
+        public Task<IReadOnlyList<DateTime>> GetDistinctMealDatesAsync(
+            UserId userId, DateTime dateFrom, DateTime dateTo,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<DateTime>>(Array.Empty<DateTime>());
+
+        public Task<int> GetTotalMealCountAsync(
+            UserId userId,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult(0);
     }
 }

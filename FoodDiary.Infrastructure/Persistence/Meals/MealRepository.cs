@@ -113,4 +113,26 @@ public class MealRepository(FoodDiaryDbContext context) : IMealRepository {
             .ThenBy(m => m.CreatedOnUtc)
             .ToListAsync(cancellationToken);
     }
+
+    public async Task<IReadOnlyList<DateTime>> GetDistinctMealDatesAsync(
+        UserId userId,
+        DateTime dateFrom,
+        DateTime dateTo,
+        CancellationToken cancellationToken = default) {
+        return await context.Meals
+            .AsNoTracking()
+            .Where(m => m.UserId == userId && m.Date >= dateFrom && m.Date <= dateTo)
+            .Select(m => m.Date)
+            .Distinct()
+            .OrderByDescending(d => d)
+            .ToListAsync(cancellationToken);
+    }
+
+    public async Task<int> GetTotalMealCountAsync(
+        UserId userId,
+        CancellationToken cancellationToken = default) {
+        return await context.Meals
+            .AsNoTracking()
+            .CountAsync(m => m.UserId == userId, cancellationToken);
+    }
 }

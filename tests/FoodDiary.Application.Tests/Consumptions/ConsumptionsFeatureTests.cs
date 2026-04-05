@@ -649,6 +649,14 @@ public class ConsumptionsFeatureTests {
             DateTime dateFrom,
             DateTime dateTo,
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<IReadOnlyList<DateTime>> GetDistinctMealDatesAsync(
+            UserId userId, DateTime dateFrom, DateTime dateTo,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<int> GetTotalMealCountAsync(
+            UserId userId,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 
     private sealed class CreatingMealRepository : IMealRepository {
@@ -683,6 +691,14 @@ public class ConsumptionsFeatureTests {
             UserId userId,
             DateTime dateFrom,
             DateTime dateTo,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<IReadOnlyList<DateTime>> GetDistinctMealDatesAsync(
+            UserId userId, DateTime dateFrom, DateTime dateTo,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<int> GetTotalMealCountAsync(
+            UserId userId,
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 
@@ -719,6 +735,14 @@ public class ConsumptionsFeatureTests {
             UserId userId,
             DateTime dateFrom,
             DateTime dateTo,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<IReadOnlyList<DateTime>> GetDistinctMealDatesAsync(
+            UserId userId, DateTime dateFrom, DateTime dateTo,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<int> GetTotalMealCountAsync(
+            UserId userId,
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 

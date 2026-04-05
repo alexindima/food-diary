@@ -28,4 +28,5 @@ export interface AppConfigApiUrls {
     dietologist: string;
     fasting: string;
     favoriteMeals: string;
+    gamification: string;
 }
