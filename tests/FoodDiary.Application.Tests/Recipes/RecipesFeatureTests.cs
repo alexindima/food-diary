@@ -395,6 +395,10 @@ public class RecipesFeatureTests {
 
         public Task UpdateNutritionAsync(Recipe recipe, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
+
+        public Task<(IReadOnlyList<(Recipe Recipe, int UsageCount)> Items, int TotalItems)> GetExplorePagedAsync(
+            int page, int limit, string? search, string? category, int? maxPrepTime, string sortBy,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 
     private sealed class SingleRecipeRepositoryForCreate : IRecipeRepository {
@@ -433,6 +437,10 @@ public class RecipesFeatureTests {
         public Task DeleteAsync(Recipe recipe, CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
         public Task UpdateNutritionAsync(Recipe recipe, CancellationToken cancellationToken = default) => Task.CompletedTask;
+
+        public Task<(IReadOnlyList<(Recipe Recipe, int UsageCount)> Items, int TotalItems)> GetExplorePagedAsync(
+            int page, int limit, string? search, string? category, int? maxPrepTime, string sortBy,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 
     private sealed class RecordingCleanupService(string? errorCode = null) : IImageAssetCleanupService {

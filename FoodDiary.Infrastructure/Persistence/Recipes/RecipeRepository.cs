@@ -164,6 +164,52 @@ public class RecipeRepository(FoodDiaryDbContext context) : IRecipeRepository {
         return items.ToDictionary(x => x.Recipe.Id, x => (x.Recipe, x.UsageCount));
     }
 
+    public async Task<(IReadOnlyList<(Recipe Recipe, int UsageCount)> Items, int TotalItems)> GetExplorePagedAsync(
+        int page,
+        int limit,
+        string? search,
+        string? category,
+        int? maxPrepTime,
+        string sortBy,
+        CancellationToken cancellationToken = default) {
+        var pageNumber = Math.Max(page, 1);
+        var pageSize = Math.Max(limit, 1);
+
+        var query = context.Recipes
+            .AsNoTracking()
+            .Where(r => r.Visibility == Visibility.Public);
+
+        if (!string.IsNullOrWhiteSpace(search)) {
+            var pattern = $"%{EscapeLikePattern(search.Trim())}%";
+            query = query.Where(r =>
+                EF.Functions.ILike(r.Name, pattern, LikeEscapeCharacter) ||
+                (r.Category != null && EF.Functions.ILike(r.Category, pattern, LikeEscapeCharacter)) ||
+                (r.Description != null && EF.Functions.ILike(r.Description, pattern, LikeEscapeCharacter)));
+        }
+
+        if (!string.IsNullOrWhiteSpace(category)) {
+            query = query.Where(r => r.Category != null && EF.Functions.ILike(r.Category, category, LikeEscapeCharacter));
+        }
+
+        if (maxPrepTime.HasValue) {
+            query = query.Where(r => r.PrepTime.HasValue && r.PrepTime.Value <= maxPrepTime.Value);
+        }
+
+        var totalItems = await query.CountAsync(cancellationToken);
+
+        var orderedQuery = string.Equals(sortBy, "popular", StringComparison.OrdinalIgnoreCase)
+            ? query.OrderByDescending(r => r.MealItems.Count + r.NestedRecipeUsages.Count).ThenByDescending(r => r.CreatedOnUtc)
+            : query.OrderByDescending(r => r.CreatedOnUtc);
+
+        var items = await orderedQuery
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .Select(r => new { Recipe = r, UsageCount = r.MealItems.Count + r.NestedRecipeUsages.Count })
+            .ToListAsync(cancellationToken);
+
+        return (items.Select(x => (x.Recipe, x.UsageCount)).ToList(), totalItems);
+    }
+
     private static string EscapeLikePattern(string value) {
         return value
             .Replace("\\", "\\\\", StringComparison.Ordinal)

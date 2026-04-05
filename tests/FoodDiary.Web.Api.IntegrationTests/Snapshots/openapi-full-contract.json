@@ -1385,6 +1385,20 @@
       ]
     },
     {
+      "Path": "/api/v{version}/recipes/explore",
+      "Operations": [
+        {
+          "Method": "get",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200",
+            "401",
+            "500"
+          ]
+        }
+      ]
+    },
+    {
       "Path": "/api/v{version}/recipes/recent",
       "Operations": [
         {

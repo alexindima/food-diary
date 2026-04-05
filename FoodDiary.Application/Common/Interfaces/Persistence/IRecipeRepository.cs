@@ -39,4 +39,13 @@ public interface IRecipeRepository {
     Task DeleteAsync(Recipe recipe, CancellationToken cancellationToken = default);
 
     Task UpdateNutritionAsync(Recipe recipe, CancellationToken cancellationToken = default);
+
+    Task<(IReadOnlyList<(Recipe Recipe, int UsageCount)> Items, int TotalItems)> GetExplorePagedAsync(
+        int page,
+        int limit,
+        string? search,
+        string? category,
+        int? maxPrepTime,
+        string sortBy,
+        CancellationToken cancellationToken = default);
 }

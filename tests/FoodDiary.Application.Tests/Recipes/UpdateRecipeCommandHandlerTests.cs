@@ -356,6 +356,10 @@ public class UpdateRecipeCommandHandlerTests {
         public Task DeleteAsync(Recipe recipe, CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
         public Task UpdateNutritionAsync(Recipe recipe, CancellationToken cancellationToken = default) => Task.CompletedTask;
+
+        public Task<(IReadOnlyList<(Recipe Recipe, int UsageCount)> Items, int TotalItems)> GetExplorePagedAsync(
+            int page, int limit, string? search, string? category, int? maxPrepTime, string sortBy,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 
     private sealed class NoopImageAssetCleanupService : IImageAssetCleanupService {

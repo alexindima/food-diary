@@ -1,3 +1,4 @@
+using FoodDiary.Application.Recipes.Queries.ExploreRecipes;
 using FoodDiary.Application.Recipes.Queries.GetRecentRecipes;
 using FoodDiary.Application.Recipes.Queries.GetRecipeById;
 using FoodDiary.Application.Recipes.Queries.GetRecipes;
@@ -27,5 +28,10 @@ public static class RecipeHttpQueryMappings {
 
     public static GetRecipeByIdQuery ToQuery(this Guid id, Guid userId, bool includePublic) {
         return new GetRecipeByIdQuery(userId, id, includePublic);
+    }
+
+    public static ExploreRecipesQuery ToExploreQuery(this ExploreRecipesHttpQuery query, Guid userId) {
+        return new ExploreRecipesQuery(userId, query.Page, query.Limit, query.Search,
+            query.Category, query.MaxPrepTime, query.SortBy);
     }
 }
