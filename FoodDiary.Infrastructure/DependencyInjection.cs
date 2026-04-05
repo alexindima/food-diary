@@ -22,6 +22,7 @@ using FoodDiary.Application.FavoriteMeals.Common;
 using FoodDiary.Application.Lessons.Common;
 using FoodDiary.Application.MealPlans.Common;
 using FoodDiary.Application.Usda.Common;
+using FoodDiary.Application.Wearables.Common;
 using FoodDiary.Application.ShoppingLists.Common;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.WaistEntries.Common;
@@ -45,6 +46,8 @@ using FoodDiary.Infrastructure.Persistence.ShoppingLists;
 using FoodDiary.Infrastructure.Persistence.MealPlans;
 using FoodDiary.Infrastructure.Persistence.FavoriteMeals;
 using FoodDiary.Infrastructure.Persistence.Usda;
+using FoodDiary.Infrastructure.Persistence.Wearables;
+using FoodDiary.Infrastructure.Wearables;
 using FoodDiary.Infrastructure.Persistence.Tracking;
 using FoodDiary.Infrastructure.Persistence.Users;
 using Amazon;
@@ -171,6 +174,8 @@ public static class DependencyInjection {
         services.AddScoped<INutritionLessonRepository, NutritionLessonRepository>();
         services.AddScoped<IMealPlanRepository, MealPlanRepository>();
         services.AddScoped<IUsdaFoodRepository, UsdaFoodRepository>();
+        services.AddScoped<IWearableConnectionRepository, WearableConnectionRepository>();
+        services.AddScoped<IWearableSyncRepository, WearableSyncRepository>();
         services.AddSingleton<IAmazonS3>(sp => {
             var s3Options = sp.GetRequiredService<Microsoft.Extensions.Options.IOptions<S3Options>>().Value;
             var credentials = new BasicAWSCredentials(s3Options.AccessKeyId, s3Options.SecretAccessKey);
@@ -216,6 +221,13 @@ public static class DependencyInjection {
         services.AddHttpClient<IUsdaFoodSearchService, UsdaFoodSearchService>(client => {
             client.Timeout = TimeSpan.FromSeconds(15);
         });
+
+        services.Configure<FitbitOptions>(configuration.GetSection(FitbitOptions.SectionName));
+        services.Configure<GoogleFitOptions>(configuration.GetSection(GoogleFitOptions.SectionName));
+        services.AddHttpClient<FitbitClient>(client => { client.Timeout = TimeSpan.FromSeconds(30); });
+        services.AddHttpClient<GoogleFitClient>(client => { client.Timeout = TimeSpan.FromSeconds(30); });
+        services.AddScoped<IWearableClient>(sp => sp.GetRequiredService<FitbitClient>());
+        services.AddScoped<IWearableClient>(sp => sp.GetRequiredService<GoogleFitClient>());
 
         return services;
     }

@@ -1913,5 +1913,19 @@
         "GRADE_FAIR": "Средне",
         "GRADE_LOW": "Низко",
         "GRADE_UNKNOWN": "Н/Д"
+    },
+    "WEARABLES": {
+        "DAILY_TITLE": "Активность с устройств",
+        "NO_DATA": "Нет данных с устройств за сегодня. Подключите трекер для отслеживания активности.",
+        "STEPS": "Шаги",
+        "HEART_RATE": "Пульс",
+        "CALORIES_BURNED": "Сожжено",
+        "ACTIVE_MINUTES": "Акт. мин",
+        "SLEEP": "Сон",
+        "CONNECTIONS_TITLE": "Носимые устройства",
+        "CONNECTED": "Подключено",
+        "NOT_CONNECTED": "Не подключено",
+        "CONNECT": "Подключить",
+        "DISCONNECT": "Отключить"
     }
 }

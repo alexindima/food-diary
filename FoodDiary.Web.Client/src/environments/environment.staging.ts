@@ -30,6 +30,7 @@ export const environment: AppConfig = {
         exercises: `${serverUrl}/api/v1/exercises`,
         lessons: `${serverUrl}/api/v1/lessons`,
         usda: `${serverUrl}/api/v1/usda`,
+        wearables: `${serverUrl}/api/v1/wearables`,
     },
     googleClientId: '958507321562-8btd704hjhgsl7niklereh81utg5p780.apps.googleusercontent.com',
     buildVersion: '__BUILD_VERSION__',

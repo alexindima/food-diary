@@ -428,4 +428,26 @@ public static class Errors {
             $"USDA food with FDC ID {fdcId} was not found.",
             kind: ErrorKind.NotFound);
     }
+
+    public static class Wearable {
+        public static Error InvalidProvider(string provider) => new(
+            "Wearable.InvalidProvider",
+            $"'{provider}' is not a valid wearable provider.",
+            kind: ErrorKind.Validation);
+
+        public static Error ProviderNotConfigured(string provider) => new(
+            "Wearable.ProviderNotConfigured",
+            $"Wearable provider '{provider}' is not configured.",
+            kind: ErrorKind.Internal);
+
+        public static Error NotConnected(string provider) => new(
+            "Wearable.NotConnected",
+            $"No active connection found for provider '{provider}'.",
+            kind: ErrorKind.NotFound);
+
+        public static Error AuthFailed(string provider) => new(
+            "Wearable.AuthFailed",
+            $"Authentication with '{provider}' failed.",
+            kind: ErrorKind.Unauthorized);
+    }
 }

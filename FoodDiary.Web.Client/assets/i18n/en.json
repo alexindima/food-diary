@@ -1913,5 +1913,19 @@
         "GRADE_FAIR": "Fair",
         "GRADE_LOW": "Low",
         "GRADE_UNKNOWN": "N/A"
+    },
+    "WEARABLES": {
+        "DAILY_TITLE": "Wearable Activity",
+        "NO_DATA": "No wearable data for today. Connect a device to track activity.",
+        "STEPS": "Steps",
+        "HEART_RATE": "Heart Rate",
+        "CALORIES_BURNED": "Calories Burned",
+        "ACTIVE_MINUTES": "Active Min",
+        "SLEEP": "Sleep",
+        "CONNECTIONS_TITLE": "Wearable Devices",
+        "CONNECTED": "Connected",
+        "NOT_CONNECTED": "Not connected",
+        "CONNECT": "Connect",
+        "DISCONNECT": "Disconnect"
     }
 }

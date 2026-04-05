@@ -35,4 +35,5 @@ export interface AppConfigApiUrls {
     exercises: string;
     lessons: string;
     usda: string;
+    wearables: string;
 }

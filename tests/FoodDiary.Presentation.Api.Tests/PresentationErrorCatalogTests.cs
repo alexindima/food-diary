@@ -15,6 +15,7 @@ public sealed class PresentationErrorCatalogTests {
             "Consumption.InvalidData",
             "Product.InvalidData",
             "Recipe.InvalidData",
+            "Wearable.ProviderNotConfigured",
         };
 
         foreach (var error in GetCatalogErrors()) {

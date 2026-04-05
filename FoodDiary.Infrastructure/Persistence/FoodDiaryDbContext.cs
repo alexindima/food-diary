@@ -13,6 +13,7 @@ using FoodDiary.Domain.Entities.Shopping;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Usda;
 using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Domain.Entities.Wearables;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence;
@@ -58,6 +59,8 @@ public class FoodDiaryDbContext(DbContextOptions<FoodDiaryDbContext> options) : 
     public DbSet<UsdaFoodNutrient> UsdaFoodNutrients => Set<UsdaFoodNutrient>();
     public DbSet<UsdaFoodPortion> UsdaFoodPortions => Set<UsdaFoodPortion>();
     public DbSet<DailyReferenceValue> DailyReferenceValues => Set<DailyReferenceValue>();
+    public DbSet<WearableConnection> WearableConnections => Set<WearableConnection>();
+    public DbSet<WearableSyncEntry> WearableSyncEntries => Set<WearableSyncEntry>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
         modelBuilder.HasPostgresExtension("pg_trgm");
