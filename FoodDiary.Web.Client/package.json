@@ -59,7 +59,7 @@
     "@angular/build": "^21.2.5",
     "@angular/cli": "^21.2.6",
     "@angular/compiler-cli": "^21.2.7",
-    "@emnapi/core": "^1.9.1",
+    "@emnapi/core": "^1.9.2",
     "@emnapi/runtime": "^1.9.1",
     "@emnapi/wasi-threads": "^1.2.0",
     "@storybook/angular": "^10.3.3",
