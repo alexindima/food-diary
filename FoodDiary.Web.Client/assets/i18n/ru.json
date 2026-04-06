@@ -386,7 +386,9 @@
         "KCAL": "ккал",
         "DELETE_ERROR": "Не удалось удалить продукт. Попробуйте ещё раз.",
         "SEARCH_LABEL": "Поиск",
-        "SCAN_BARCODE": "Сканировать штрихкод"
+        "SCAN_BARCODE": "Сканировать штрихкод",
+        "OFF_RESULTS": "Найдено в Open Food Facts",
+        "OFF_KCAL": "ккал / 100г"
     },
     "PRODUCT_CARD": {
         "ADD_TO_CONSUMPTION": "Добавить к приему",

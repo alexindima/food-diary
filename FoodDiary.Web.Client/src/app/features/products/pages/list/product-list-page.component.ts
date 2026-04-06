@@ -1,3 +1,4 @@
+import { DecimalPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -23,6 +24,7 @@ import { Product } from '../../models/product.data';
     styleUrls: ['./product-list-page.component.scss', '../../components/list/product-list-base.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
+        DecimalPipe,
         ReactiveFormsModule,
         TranslatePipe,
         FdUiInputComponent,

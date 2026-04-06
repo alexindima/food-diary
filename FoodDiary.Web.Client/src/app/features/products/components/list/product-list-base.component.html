@@ -162,6 +162,61 @@
                     <div class="product-list__empty-copy">{{ 'PRODUCT_LIST.NO_RESULTS_COPY' | translate }}</div>
                 </div>
             }
+
+            @if (offProducts().length > 0) {
+                <div class="product-list__section product-list__section--off">
+                    <div class="product-list__section-header">
+                        <span class="product-list__section-label">
+                            {{ 'PRODUCT_LIST.OFF_RESULTS' | translate }}
+                        </span>
+                        <span class="product-list__section-line"></span>
+                    </div>
+                    <div class="product-list__off-grid">
+                        @for (offProduct of offProducts(); track offProduct.barcode) {
+                            <div
+                                class="product-list__off-card"
+                                role="button"
+                                tabindex="0"
+                                (click)="onOffProductClick(offProduct)"
+                                (keydown.enter)="onOffProductClick(offProduct)"
+                            >
+                                @if (offProduct.imageUrl) {
+                                    <img class="product-list__off-image" [src]="offProduct.imageUrl" [alt]="offProduct.name" />
+                                } @else {
+                                    <div class="product-list__off-image-placeholder">
+                                        <mat-icon>inventory_2</mat-icon>
+                                    </div>
+                                }
+                                <div class="product-list__off-info">
+                                    <div class="product-list__off-name">{{ offProduct.name }}</div>
+                                    @if (offProduct.brand) {
+                                        <div class="product-list__off-brand">{{ offProduct.brand }}</div>
+                                    }
+                                    @if (offProduct.caloriesPer100G != null) {
+                                        <div class="product-list__off-kcal">
+                                            {{ offProduct.caloriesPer100G | number: '1.0-0' }} {{ 'PRODUCT_LIST.OFF_KCAL' | translate }}
+                                        </div>
+                                    }
+                                </div>
+                                <mat-icon class="product-list__off-arrow">arrow_forward</mat-icon>
+                            </div>
+                        }
+                    </div>
+                </div>
+            } @else if (offLoading()) {
+                <div class="product-list__section product-list__section--off">
+                    <div class="product-list__section-header">
+                        <span class="product-list__section-label">
+                            {{ 'PRODUCT_LIST.OFF_RESULTS' | translate }}
+                        </span>
+                        <span class="product-list__section-line"></span>
+                    </div>
+                    <div class="product-list__off-grid">
+                        <fd-skeleton-card />
+                        <fd-skeleton-card />
+                    </div>
+                </div>
+            }
         }
 
         @if (productData.totalPages > 1) {

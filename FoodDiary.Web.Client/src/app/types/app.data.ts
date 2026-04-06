@@ -37,4 +37,5 @@ export interface AppConfigApiUrls {
     usda: string;
     wearables: string;
     reports: string;
+    openFoodFacts: string;
 }

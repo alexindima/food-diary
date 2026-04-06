@@ -32,6 +32,7 @@ import { ProductBasicInfoComponent } from './product-basic-info/product-basic-in
 import { ProductNutritionEditorComponent } from './product-nutrition-editor/product-nutrition-editor.component';
 import { FdUiSegmentedToggleOption } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle.component';
 import { ProductManageFacade } from '../../lib/product-manage.facade';
+import { OpenFoodFactsProduct, OpenFoodFactsService } from '../../api/open-food-facts.service';
 
 export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     provide: FD_VALIDATION_ERRORS,
@@ -68,6 +69,7 @@ export class BaseProductManageComponent implements OnInit {
     private readonly nutritionCalculationService = inject(NutritionCalculationService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly productManageFacade = inject(ProductManageFacade);
+    private readonly openFoodFactsService = inject(OpenFoodFactsService);
 
     public product = input<Product | null>();
     public globalError = signal<string | null>(null);
@@ -154,6 +156,19 @@ export class BaseProductManageComponent implements OnInit {
             this.updateCalorieWarning();
             this.updateMacroDistribution();
         });
+
+        if (!this.product()) {
+            const offProduct = history.state?.offProduct as OpenFoodFactsProduct | undefined;
+            if (offProduct) {
+                this.prefillFromOffProduct(offProduct);
+            } else {
+                const barcode = history.state?.barcode as string | undefined;
+                if (barcode) {
+                    this.productForm.controls.barcode.setValue(barcode);
+                    this.lookupOpenFoodFacts(barcode);
+                }
+            }
+        }
     }
 
     public get canShowDeleteButton(): boolean {
@@ -168,8 +183,85 @@ export class BaseProductManageComponent implements OnInit {
             .subscribe(barcode => {
                 if (barcode) {
                     this.productForm.controls.barcode.setValue(barcode);
+                    this.lookupOpenFoodFacts(barcode);
                 }
             });
+    }
+
+    private lookupOpenFoodFacts(barcode: string): void {
+        if (this.product()) {
+            return;
+        }
+
+        this.openFoodFactsService
+            .searchByBarcode(barcode)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(offProduct => {
+                if (!offProduct) {
+                    return;
+                }
+
+                const controls = this.productForm.controls;
+                if (!controls.name.value) {
+                    controls.name.setValue(offProduct.name);
+                }
+                if (!controls.brand.value && offProduct.brand) {
+                    controls.brand.setValue(offProduct.brand);
+                }
+                const cal = offProduct.caloriesPer100G;
+                if (cal !== undefined && cal !== null && controls.caloriesPerBase.value === null) {
+                    controls.caloriesPerBase.setValue(Math.round(cal));
+                }
+                const pro = offProduct.proteinsPer100G;
+                if (pro !== undefined && pro !== null && controls.proteinsPerBase.value === null) {
+                    controls.proteinsPerBase.setValue(Math.round(pro * 10) / 10);
+                }
+                const fat = offProduct.fatsPer100G;
+                if (fat !== undefined && fat !== null && controls.fatsPerBase.value === null) {
+                    controls.fatsPerBase.setValue(Math.round(fat * 10) / 10);
+                }
+                const carb = offProduct.carbsPer100G;
+                if (carb !== undefined && carb !== null && controls.carbsPerBase.value === null) {
+                    controls.carbsPerBase.setValue(Math.round(carb * 10) / 10);
+                }
+                const fib = offProduct.fiberPer100G;
+                if (fib !== undefined && fib !== null && controls.fiberPerBase.value === null) {
+                    controls.fiberPerBase.setValue(Math.round(fib * 10) / 10);
+                }
+            });
+    }
+
+    private prefillFromOffProduct(offProduct: OpenFoodFactsProduct): void {
+        const controls = this.productForm.controls;
+        if (offProduct.barcode) {
+            controls.barcode.setValue(offProduct.barcode);
+        }
+        if (offProduct.name) {
+            controls.name.setValue(offProduct.name);
+        }
+        if (offProduct.brand) {
+            controls.brand.setValue(offProduct.brand);
+        }
+        const cal = offProduct.caloriesPer100G;
+        if (cal !== undefined && cal !== null) {
+            controls.caloriesPerBase.setValue(Math.round(cal));
+        }
+        const pro = offProduct.proteinsPer100G;
+        if (pro !== undefined && pro !== null) {
+            controls.proteinsPerBase.setValue(Math.round(pro * 10) / 10);
+        }
+        const fat = offProduct.fatsPer100G;
+        if (fat !== undefined && fat !== null) {
+            controls.fatsPerBase.setValue(Math.round(fat * 10) / 10);
+        }
+        const carb = offProduct.carbsPer100G;
+        if (carb !== undefined && carb !== null) {
+            controls.carbsPerBase.setValue(Math.round(carb * 10) / 10);
+        }
+        const fib = offProduct.fiberPer100G;
+        if (fib !== undefined && fib !== null) {
+            controls.fiberPerBase.setValue(Math.round(fib * 10) / 10);
+        }
     }
 
     public openAiRecognitionDialog(): void {

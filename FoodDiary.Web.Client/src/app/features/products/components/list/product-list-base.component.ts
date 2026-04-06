@@ -19,6 +19,7 @@ import { PageHeaderComponent } from '../../../../components/shared/page-header/p
 import { ProductCardComponent } from '../../../../components/shared/product-card/product-card.component';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
 import { ProductService } from '../../api/product.service';
+import { OpenFoodFactsProduct, OpenFoodFactsService } from '../../api/open-food-facts.service';
 import { Product, ProductFilters, ProductType } from '../../models/product.data';
 import { NavigationService } from '../../../../services/navigation.service';
 import { QuickMealService } from '../../../../features/meals/lib/quick-meal.service';
@@ -58,6 +59,7 @@ export class ProductListBaseComponent implements OnInit {
     protected readonly quickConsumptionService = inject(QuickMealService);
     private readonly breakpointObserver = inject(BreakpointObserver);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly openFoodFactsService = inject(OpenFoodFactsService);
 
     private readonly header = viewChild.required<PageHeaderComponent, ElementRef>(PageHeaderComponent, { read: ElementRef });
 
@@ -69,6 +71,8 @@ export class ProductListBaseComponent implements OnInit {
     public readonly isMobileView = signal<boolean>(window.matchMedia('(max-width: 768px)').matches);
     private readonly isMobileSearchOpen = signal(false);
     private readonly selectedProductTypes = signal<ProductType[]>([]);
+    public readonly offProducts = signal<OpenFoodFactsProduct[]>([]);
+    public readonly offLoading = signal(false);
 
     public constructor() {
         this.searchForm = new FormGroup<ProductSearchFormGroup>({
@@ -202,8 +206,12 @@ export class ProductListBaseComponent implements OnInit {
 
     protected loadProducts(page: number, limit: number, search: string | null): Observable<void> {
         this.productData.setLoading(true);
+        this.offProducts.set([]);
         const filters = new ProductFilters(search, this.selectedProductTypes());
         const includePublic = !this.searchForm.controls.onlyMine.value;
+
+        this.searchOpenFoodFacts(search);
+
         return this.productService.queryWithRecent(page, limit, filters, includePublic, 10).pipe(
             tap(data => {
                 this.productData.setData(data.allProducts);
@@ -220,6 +228,32 @@ export class ProductListBaseComponent implements OnInit {
             }),
             finalize(() => this.productData.setLoading(false)),
         );
+    }
+
+    private searchOpenFoodFacts(search: string | null): void {
+        const trimmed = search?.trim();
+        if (!trimmed || trimmed.length < 2) {
+            this.offProducts.set([]);
+            return;
+        }
+
+        this.offLoading.set(true);
+        this.openFoodFactsService
+            .search(trimmed, 5)
+            .pipe(
+                takeUntilDestroyed(this.destroyRef),
+                finalize(() => this.offLoading.set(false)),
+            )
+            .subscribe(products => this.offProducts.set(products));
+    }
+
+    public onOffProductClick(offProduct: OpenFoodFactsProduct): void {
+        this.navigationService.navigateToProductAdd({
+            state: {
+                barcode: offProduct.barcode,
+                offProduct,
+            },
+        });
     }
 
     protected scrollToTop(): void {

@@ -24,6 +24,7 @@ using FoodDiary.Application.MealPlans.Common;
 using FoodDiary.Application.ContentReports.Common;
 using FoodDiary.Application.RecipeComments.Common;
 using FoodDiary.Application.RecipeLikes.Common;
+using FoodDiary.Application.OpenFoodFacts.Common;
 using FoodDiary.Application.Usda.Common;
 using FoodDiary.Application.Wearables.Common;
 using FoodDiary.Application.ShoppingLists.Common;
@@ -229,6 +230,11 @@ public static class DependencyInjection {
         services.Configure<UsdaApiOptions>(configuration.GetSection(UsdaApiOptions.SectionName));
         services.AddHttpClient<IUsdaFoodSearchService, UsdaFoodSearchService>(client => {
             client.Timeout = TimeSpan.FromSeconds(15);
+        });
+
+        services.Configure<OpenFoodFactsApiOptions>(configuration.GetSection(OpenFoodFactsApiOptions.SectionName));
+        services.AddHttpClient<IOpenFoodFactsService, OpenFoodFactsService>(client => {
+            client.Timeout = TimeSpan.FromSeconds(10);
         });
 
         services.Configure<FitbitOptions>(configuration.GetSection(FitbitOptions.SectionName));

@@ -421,7 +421,9 @@
         "KCAL": "kcal",
         "DELETE_ERROR": "Unable to delete the product. Please try again.",
         "SEARCH_LABEL": "Search",
-        "SCAN_BARCODE": "Scan barcode"
+        "SCAN_BARCODE": "Scan barcode",
+        "OFF_RESULTS": "Found in Open Food Facts",
+        "OFF_KCAL": "kcal / 100g"
     },
     "PRODUCT_CARD": {
         "ADD_TO_CONSUMPTION": "Add to meal",

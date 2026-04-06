@@ -29,8 +29,8 @@ export class NavigationService {
         await this.router.navigate(['/products']);
     }
 
-    public async navigateToProductAdd(): Promise<void> {
-        await this.router.navigate(['/products/add']);
+    public async navigateToProductAdd(extras?: { state?: Record<string, unknown> }): Promise<void> {
+        await this.router.navigate(['/products/add'], extras);
     }
 
     public async navigateToProductEdit(id: string): Promise<void> {
