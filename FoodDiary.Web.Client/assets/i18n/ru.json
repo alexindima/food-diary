@@ -1786,7 +1786,9 @@
         "PREMIUM_DESCRIPTION": "Разблокируйте продвинутые функции с Food Diary Premium.",
         "PROFILE": "Профиль",
         "PROFILE_DESCRIPTION": "Управляйте настройками аккаунта и предпочтениями.",
-        "NOT_FOUND": "Страница не найдена"
+        "NOT_FOUND": "Страница не найдена",
+        "EXPLORE": "Обзор рецептов",
+        "EXPLORE_DESCRIPTION": "Откройте для себя публичные рецепты сообщества."
     },
     "ERRORS": {
         "LOAD_FAILED_TITLE": "Что-то пошло не так",
@@ -1927,5 +1929,43 @@
         "NOT_CONNECTED": "Не подключено",
         "CONNECT": "Подключить",
         "DISCONNECT": "Отключить"
+    },
+    "EXPLORE": {
+        "TITLE": "Обзор рецептов",
+        "SEARCH_PLACEHOLDER": "Поиск публичных рецептов...",
+        "CATEGORY_ALL": "Все категории",
+        "SORT_NEWEST": "Новые",
+        "SORT_POPULAR": "Популярные",
+        "NO_RESULTS": "Рецепты не найдены",
+        "NO_RESULTS_MESSAGE": "Попробуйте изменить поиск или фильтры.",
+        "MAX_PREP_TIME": "Макс. время (мин)",
+        "FILTERS": "Фильтры",
+        "CLEAR_FILTERS": "Очистить фильтры"
+    },
+    "COMMENTS": {
+        "TITLE": "Комментарии",
+        "WRITE_PLACEHOLDER": "Напишите комментарий...",
+        "POST": "Отправить",
+        "EDIT": "Редактировать",
+        "DELETE": "Удалить",
+        "EDITED": "изменён",
+        "NO_COMMENTS": "Комментариев пока нет",
+        "NO_COMMENTS_MESSAGE": "Будьте первым, кто оставит комментарий к этому рецепту.",
+        "DELETE_CONFIRM_TITLE": "Удалить комментарий",
+        "DELETE_CONFIRM_MESSAGE": "Вы уверены, что хотите удалить этот комментарий?",
+        "LOAD_MORE": "Загрузить ещё"
+    },
+    "LIKES": {
+        "LIKE": "Нравится",
+        "UNLIKE": "Не нравится",
+        "LIKES_COUNT": "{{count}} нравится"
+    },
+    "REPORT": {
+        "TITLE": "Пожаловаться",
+        "REASON_PLACEHOLDER": "Опишите причину жалобы...",
+        "SUBMIT": "Отправить жалобу",
+        "SUCCESS": "Жалоба отправлена",
+        "ALREADY_REPORTED": "Вы уже пожаловались на этот контент",
+        "REASON_LABEL": "Причина"
     }
 }

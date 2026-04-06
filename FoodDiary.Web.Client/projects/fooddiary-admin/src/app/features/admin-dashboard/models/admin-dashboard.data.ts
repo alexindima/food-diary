@@ -15,5 +15,6 @@ export type AdminDashboardSummary = {
     activeUsers: number;
     premiumUsers: number;
     deletedUsers: number;
+    pendingReportsCount: number;
     recentUsers: AdminDashboardUser[];
 };

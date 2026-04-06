@@ -1786,7 +1786,9 @@
         "PREMIUM_DESCRIPTION": "Unlock advanced features with Food Diary Premium.",
         "PROFILE": "Profile",
         "PROFILE_DESCRIPTION": "Manage your account settings and preferences.",
-        "NOT_FOUND": "Page Not Found"
+        "NOT_FOUND": "Page Not Found",
+        "EXPLORE": "Explore Recipes",
+        "EXPLORE_DESCRIPTION": "Discover public recipes shared by the community."
     },
     "ERRORS": {
         "LOAD_FAILED_TITLE": "Something went wrong",
@@ -1927,5 +1929,43 @@
         "NOT_CONNECTED": "Not connected",
         "CONNECT": "Connect",
         "DISCONNECT": "Disconnect"
+    },
+    "EXPLORE": {
+        "TITLE": "Explore Recipes",
+        "SEARCH_PLACEHOLDER": "Search public recipes...",
+        "CATEGORY_ALL": "All Categories",
+        "SORT_NEWEST": "Newest",
+        "SORT_POPULAR": "Most Popular",
+        "NO_RESULTS": "No recipes found",
+        "NO_RESULTS_MESSAGE": "Try adjusting your search or filters.",
+        "MAX_PREP_TIME": "Max prep time (min)",
+        "FILTERS": "Filters",
+        "CLEAR_FILTERS": "Clear Filters"
+    },
+    "COMMENTS": {
+        "TITLE": "Comments",
+        "WRITE_PLACEHOLDER": "Write a comment...",
+        "POST": "Post",
+        "EDIT": "Edit",
+        "DELETE": "Delete",
+        "EDITED": "edited",
+        "NO_COMMENTS": "No comments yet",
+        "NO_COMMENTS_MESSAGE": "Be the first to comment on this recipe.",
+        "DELETE_CONFIRM_TITLE": "Delete Comment",
+        "DELETE_CONFIRM_MESSAGE": "Are you sure you want to delete this comment?",
+        "LOAD_MORE": "Load more"
+    },
+    "LIKES": {
+        "LIKE": "Like",
+        "UNLIKE": "Unlike",
+        "LIKES_COUNT": "{{count}} likes"
+    },
+    "REPORT": {
+        "TITLE": "Report Content",
+        "REASON_PLACEHOLDER": "Describe why you are reporting this content...",
+        "SUBMIT": "Submit Report",
+        "SUCCESS": "Report submitted successfully",
+        "ALREADY_REPORTED": "You have already reported this content",
+        "REASON_LABEL": "Reason"
     }
 }

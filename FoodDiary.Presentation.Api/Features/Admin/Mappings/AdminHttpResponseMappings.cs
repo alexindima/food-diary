@@ -58,6 +58,7 @@ public static class AdminHttpResponseMappings {
             model.ActiveUsers,
             model.PremiumUsers,
             model.DeletedUsers,
+            model.PendingReportsCount,
             model.RecentUsers.ToHttpResponseList(ToHttpResponse)
         );
     }
@@ -75,6 +76,18 @@ public static class AdminHttpResponseMappings {
     }
 
     public static PagedHttpResponse<AdminUserHttpResponse> ToHttpResponse(this PagedResponse<AdminUserModel> response) {
+        return response.ToPagedHttpResponse(ToHttpResponse);
+    }
+
+    public static AdminContentReportHttpResponse ToHttpResponse(this AdminContentReportModel model) {
+        return new AdminContentReportHttpResponse(
+            model.Id, model.ReporterId, model.TargetType, model.TargetId,
+            model.Reason, model.Status, model.AdminNote,
+            model.CreatedAtUtc, model.ReviewedAtUtc);
+    }
+
+    public static PagedHttpResponse<AdminContentReportHttpResponse> ToHttpResponse(
+        this PagedResponse<AdminContentReportModel> response) {
         return response.ToPagedHttpResponse(ToHttpResponse);
     }
 

@@ -1,0 +1,65 @@
+<div class="comments-section">
+    <h3 class="comments-title">{{ 'COMMENTS.TITLE' | translate }}</h3>
+
+    <div class="comment-form">
+        <fd-ui-textarea [formControl]="commentControl" [placeholder]="'COMMENTS.WRITE_PLACEHOLDER' | translate" [rows]="3" />
+        <div class="comment-form-actions">
+            @if (editingCommentId()) {
+                <fd-ui-button variant="outline" size="sm" (click)="onCancelEdit()">
+                    {{ 'COMMON.CANCEL' | translate }}
+                </fd-ui-button>
+            }
+            <fd-ui-button variant="primary" size="sm" [disabled]="commentControl.invalid || isSubmitting()" (click)="onSubmit()">
+                {{ (editingCommentId() ? 'COMMON.SAVE' : 'COMMENTS.POST') | translate }}
+            </fd-ui-button>
+        </div>
+    </div>
+
+    @if (isLoading() && comments().length === 0) {
+        <div class="comments-loader">
+            <fd-ui-loader />
+        </div>
+    } @else if (comments().length === 0) {
+        <div class="comments-empty">
+            <p>{{ 'COMMENTS.NO_COMMENTS' | translate }}</p>
+            <p class="comments-empty-hint">{{ 'COMMENTS.NO_COMMENTS_MESSAGE' | translate }}</p>
+        </div>
+    } @else {
+        <div class="comments-list">
+            @for (comment of comments(); track comment.id) {
+                <div class="comment-item">
+                    <div class="comment-header">
+                        <span class="comment-author">
+                            {{ comment.authorFirstName || comment.authorUsername || 'User' }}
+                        </span>
+                        <span class="comment-date">
+                            {{ comment.createdAtUtc | date: 'short' }}
+                            @if (comment.modifiedAtUtc) {
+                                <span class="comment-edited">({{ 'COMMENTS.EDITED' | translate }})</span>
+                            }
+                        </span>
+                    </div>
+                    <p class="comment-text">{{ comment.text }}</p>
+                    @if (comment.isOwnedByCurrentUser) {
+                        <div class="comment-actions">
+                            <button class="comment-action" (click)="onEdit(comment)">
+                                <mat-icon>edit</mat-icon>
+                                {{ 'COMMENTS.EDIT' | translate }}
+                            </button>
+                            <button class="comment-action comment-action--delete" (click)="onDelete(comment)">
+                                <mat-icon>delete</mat-icon>
+                                {{ 'COMMENTS.DELETE' | translate }}
+                            </button>
+                        </div>
+                    }
+                </div>
+            }
+
+            @if (hasMore) {
+                <fd-ui-button variant="outline" size="sm" [disabled]="isLoading()" (click)="onLoadMore()">
+                    {{ 'COMMENTS.LOAD_MORE' | translate }}
+                </fd-ui-button>
+            }
+        </div>
+    }
+</div>

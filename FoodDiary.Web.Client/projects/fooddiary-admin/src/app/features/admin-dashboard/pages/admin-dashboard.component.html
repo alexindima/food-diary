@@ -26,6 +26,13 @@
 
             <fd-ui-card>
                 <div class="admin-dashboard__stat">
+                    <div class="admin-dashboard__label">Pending reports</div>
+                    <div class="admin-dashboard__value">{{ summary()?.pendingReportsCount ?? 0 }}</div>
+                </div>
+            </fd-ui-card>
+
+            <fd-ui-card>
+                <div class="admin-dashboard__stat">
                     <div class="admin-dashboard__label">AI total tokens</div>
                     <div class="admin-dashboard__value">{{ aiUsage()?.totalTokens ?? 0 }}</div>
                 </div>

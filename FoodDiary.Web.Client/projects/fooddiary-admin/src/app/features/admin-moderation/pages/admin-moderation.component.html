@@ -1,0 +1,70 @@
+<div class="admin-moderation">
+    <div class="toolbar">
+        <select [ngModel]="statusFilter()" (ngModelChange)="onStatusChange($event)">
+            <option value="">All</option>
+            <option value="Pending">Pending</option>
+            <option value="Reviewed">Reviewed</option>
+            <option value="Dismissed">Dismissed</option>
+        </select>
+    </div>
+
+    @if (isLoading()) {
+        <p>Loading reports...</p>
+    } @else {
+        <div class="summary">Total reports: {{ totalItems() }}</div>
+
+        <table class="reports-table">
+            <thead>
+                <tr>
+                    <th>Target</th>
+                    <th>Reason</th>
+                    <th>Status</th>
+                    <th>Created</th>
+                    <th>Reviewed</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (report of reports(); track report.id) {
+                    <tr>
+                        <td>{{ report.targetType }} ({{ report.targetId | slice: 0 : 8 }}...)</td>
+                        <td class="reason-cell">{{ report.reason }}</td>
+                        <td>
+                            <span class="status-badge status-badge--{{ report.status.toLowerCase() }}">
+                                {{ report.status }}
+                            </span>
+                        </td>
+                        <td>{{ report.createdAtUtc | date: 'short' }}</td>
+                        <td>{{ report.reviewedAtUtc ? (report.reviewedAtUtc | date: 'short') : '—' }}</td>
+                        <td>
+                            @if (report.status === 'Pending') {
+                                <div class="action-buttons">
+                                    <fd-ui-button type="button" variant="primary" size="sm" (click)="openAction(report, 'review')">
+                                        Review
+                                    </fd-ui-button>
+                                    <fd-ui-button type="button" variant="secondary" size="sm" (click)="openAction(report, 'dismiss')">
+                                        Dismiss
+                                    </fd-ui-button>
+                                </div>
+                            }
+                        </td>
+                    </tr>
+                } @empty {
+                    <tr>
+                        <td colspan="6">No reports found.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <div class="pagination">
+            <fd-ui-button type="button" variant="secondary" [disabled]="page() <= 1" (click)="goToPage(page() - 1)">
+                Previous
+            </fd-ui-button>
+            <span>Page {{ page() }} of {{ totalPages() }}</span>
+            <fd-ui-button type="button" variant="secondary" [disabled]="page() >= totalPages()" (click)="goToPage(page() + 1)">
+                Next
+            </fd-ui-button>
+        </div>
+    }
+</div>

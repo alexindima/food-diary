@@ -1,0 +1,85 @@
+.admin-moderation {
+    padding: 24px;
+}
+
+.toolbar {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 16px;
+
+    select {
+        padding: 8px 12px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 14px;
+    }
+}
+
+.summary {
+    margin-bottom: 12px;
+    font-size: 14px;
+    color: #666;
+}
+
+.reports-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 16px;
+
+    th,
+    td {
+        padding: 10px 12px;
+        text-align: left;
+        border-bottom: 1px solid #eee;
+    }
+
+    th {
+        font-weight: 600;
+        font-size: 13px;
+        color: #666;
+    }
+}
+
+.reason-cell {
+    max-width: 300px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+
+    &--pending {
+        background: #fff3cd;
+        color: #856404;
+    }
+
+    &--reviewed {
+        background: #d4edda;
+        color: #155724;
+    }
+
+    &--dismissed {
+        background: #e2e3e5;
+        color: #383d41;
+    }
+}
+
+.action-buttons {
+    display: flex;
+    gap: 6px;
+}
+
+.pagination {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 16px;
+}

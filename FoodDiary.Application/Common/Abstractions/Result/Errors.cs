@@ -434,6 +434,18 @@ public static class Errors {
             kind: ErrorKind.Forbidden);
     }
 
+    public static class ContentReport {
+        public static Error NotFound(Guid id) => new(
+            "ContentReport.NotFound",
+            $"Content report with ID {id} was not found.",
+            kind: ErrorKind.NotFound);
+
+        public static Error AlreadyReported => new(
+            "ContentReport.AlreadyReported",
+            "You have already reported this content.",
+            kind: ErrorKind.Conflict);
+    }
+
     public static class Usda {
         public static Error FoodNotFound(int fdcId) => new(
             "Usda.FoodNotFound",

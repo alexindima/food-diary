@@ -154,6 +154,7 @@ public sealed class ApplicationGuardrailTests {
             Path.Combine(applicationRoot, "Common", "Interfaces", "Persistence"),
             Path.Combine(applicationRoot, "Recipes"),
             Path.Combine(applicationRoot, "RecipeComments"),
+            Path.Combine(applicationRoot, "RecipeLikes"),
         };
 
         var violations = FindRepositoryReferenceViolations(

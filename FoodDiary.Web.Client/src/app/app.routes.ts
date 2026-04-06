@@ -32,6 +32,12 @@ export const routes: Routes = [
         data: { seo: { titleKey: 'SEO.RECIPES', descriptionKey: 'SEO.RECIPES_DESCRIPTION', noIndex: true } },
     },
     {
+        path: 'explore',
+        canActivate: [authGuard],
+        loadChildren: () => import('./features/explore/explore.routes'),
+        data: { seo: { titleKey: 'SEO.EXPLORE', descriptionKey: 'SEO.EXPLORE_DESCRIPTION', noIndex: true } },
+    },
+    {
         path: 'shopping-lists',
         canActivate: [authGuard],
         loadChildren: () => import('./features/shopping-lists/shopping-list.routes'),

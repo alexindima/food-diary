@@ -1,0 +1,48 @@
+<div fdPageContainer>
+    <fd-page-header [title]="'EXPLORE.TITLE' | translate" />
+    <fd-page-body>
+        <div class="explore-controls">
+            <fd-ui-input
+                class="explore-search"
+                [formControl]="searchControl"
+                [placeholder]="'EXPLORE.SEARCH_PLACEHOLDER' | translate"
+                type="text"
+            />
+            <div class="explore-sort">
+                <fd-ui-button [variant]="sortBy() === 'newest' ? 'primary' : 'outline'" size="sm" (click)="onSortChange('newest')">
+                    {{ 'EXPLORE.SORT_NEWEST' | translate }}
+                </fd-ui-button>
+                <fd-ui-button [variant]="sortBy() === 'popular' ? 'primary' : 'outline'" size="sm" (click)="onSortChange('popular')">
+                    {{ 'EXPLORE.SORT_POPULAR' | translate }}
+                </fd-ui-button>
+            </div>
+        </div>
+
+        @if (recipeData.isLoading()) {
+            <div class="explore-loader">
+                <fd-ui-loader />
+            </div>
+        } @else if (recipeData.items().length === 0) {
+            <div class="explore-empty">
+                <mat-icon>search_off</mat-icon>
+                <h3>{{ 'EXPLORE.NO_RESULTS' | translate }}</h3>
+                <p>{{ 'EXPLORE.NO_RESULTS_MESSAGE' | translate }}</p>
+            </div>
+        } @else {
+            <div class="explore-grid">
+                @for (recipe of recipeData.items(); track recipe.id) {
+                    <fd-recipe-card [recipe]="recipe" [imageUrl]="resolveImageUrl(recipe.imageUrl)" (open)="onRecipeClick(recipe)" />
+                }
+            </div>
+
+            @if (recipeData.totalPages > 1) {
+                <fd-ui-pagination
+                    [length]="recipeData.totalItems"
+                    [pageSize]="pageSize"
+                    [pageIndex]="currentPageIndex()"
+                    (pageIndexChange)="onPageChange($event)"
+                />
+            }
+        }
+    </fd-page-body>
+</div>

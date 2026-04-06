@@ -13,6 +13,7 @@ using FoodDiary.Domain.Entities.Shopping;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Usda;
 using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Domain.Entities.Social;
 using FoodDiary.Domain.Entities.Wearables;
 using Microsoft.EntityFrameworkCore;
 
@@ -60,6 +61,8 @@ public class FoodDiaryDbContext(DbContextOptions<FoodDiaryDbContext> options) : 
     public DbSet<UsdaFoodPortion> UsdaFoodPortions => Set<UsdaFoodPortion>();
     public DbSet<DailyReferenceValue> DailyReferenceValues => Set<DailyReferenceValue>();
     public DbSet<RecipeComment> RecipeComments => Set<RecipeComment>();
+    public DbSet<RecipeLike> RecipeLikes => Set<RecipeLike>();
+    public DbSet<ContentReport> ContentReports => Set<ContentReport>();
     public DbSet<WearableConnection> WearableConnections => Set<WearableConnection>();
     public DbSet<WearableSyncEntry> WearableSyncEntries => Set<WearableSyncEntry>();
 

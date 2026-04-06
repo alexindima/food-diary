@@ -98,4 +98,8 @@ export class NavigationService {
     public async navigateToCycleTracking(): Promise<void> {
         await this.router.navigate(['/cycle-tracking']);
     }
+
+    public async navigateToExplore(): Promise<void> {
+        await this.router.navigate(['/explore']);
+    }
 }

@@ -5,4 +5,5 @@ public sealed record AdminDashboardSummaryModel(
     int ActiveUsers,
     int PremiumUsers,
     int DeletedUsers,
+    int PendingReportsCount,
     IReadOnlyList<AdminUserModel> RecentUsers);

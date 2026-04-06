@@ -5,4 +5,5 @@ public sealed record AdminDashboardSummaryHttpResponse(
     int ActiveUsers,
     int PremiumUsers,
     int DeletedUsers,
+    int PendingReportsCount,
     IReadOnlyList<AdminUserHttpResponse> RecentUsers);

@@ -1,4 +1,5 @@
 using FoodDiary.Application.Admin.Queries.GetAdminAiUsageSummary;
+using FoodDiary.Application.Admin.Queries.GetAdminContentReports;
 using FoodDiary.Application.Admin.Queries.GetAdminDashboardSummary;
 using FoodDiary.Application.Admin.Queries.GetAdminAiPrompts;
 using FoodDiary.Application.Admin.Queries.GetAdminEmailTemplates;
@@ -21,5 +22,9 @@ public static class AdminHttpQueryMappings {
 
     public static GetAdminAiUsageSummaryQuery ToQuery(this GetAdminAiUsageSummaryHttpQuery query) {
         return new GetAdminAiUsageSummaryQuery(query.From, query.To);
+    }
+
+    public static GetAdminContentReportsQuery ToQuery(this GetAdminContentReportsHttpQuery query) {
+        return new GetAdminContentReportsQuery(query.Status, query.Page, query.Limit);
     }
 }

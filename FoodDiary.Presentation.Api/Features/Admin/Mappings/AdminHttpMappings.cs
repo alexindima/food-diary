@@ -1,3 +1,5 @@
+using FoodDiary.Application.Admin.Commands.DismissContentReport;
+using FoodDiary.Application.Admin.Commands.ReviewContentReport;
 using FoodDiary.Application.Admin.Commands.UpdateAdminUser;
 using FoodDiary.Application.Admin.Commands.UpsertAdminAiPrompt;
 using FoodDiary.Application.Admin.Commands.UpsertAdminEmailTemplate;
@@ -39,5 +41,13 @@ public static class AdminHttpMappings {
             Language: request.Language,
             AiInputTokenLimit: request.AiInputTokenLimit,
             AiOutputTokenLimit: request.AiOutputTokenLimit);
+    }
+
+    public static ReviewContentReportCommand ToReviewCommand(this AdminReportActionHttpRequest request, Guid reportId) {
+        return new ReviewContentReportCommand(reportId, request.AdminNote);
+    }
+
+    public static DismissContentReportCommand ToDismissCommand(this AdminReportActionHttpRequest request, Guid reportId) {
+        return new DismissContentReportCommand(reportId, request.AdminNote);
     }
 }

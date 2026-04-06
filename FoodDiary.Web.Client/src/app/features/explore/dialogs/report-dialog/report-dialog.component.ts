@@ -1,0 +1,64 @@
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { TranslatePipe } from '@ngx-translate/core';
+import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
+import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea.component';
+import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog.component';
+import { FD_UI_DIALOG_DATA, FdUiDialogRef } from 'fd-ui-kit/material';
+import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
+import { ReportService } from '../../api/report.service';
+import { CreateReportDto } from '../../models/report.data';
+
+export interface ReportDialogData {
+    targetType: 'Recipe' | 'Comment';
+    targetId: string;
+}
+
+@Component({
+    selector: 'fd-report-dialog',
+    templateUrl: './report-dialog.component.html',
+    styleUrls: ['./report-dialog.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [ReactiveFormsModule, TranslatePipe, FdUiButtonComponent, FdUiTextareaComponent, FdUiDialogComponent],
+})
+export class ReportDialogComponent {
+    private readonly dialogRef = inject<FdUiDialogRef<ReportDialogComponent, boolean>>(FdUiDialogRef);
+    private readonly data = inject<ReportDialogData>(FD_UI_DIALOG_DATA);
+    private readonly reportService = inject(ReportService);
+    private readonly toastService = inject(FdUiToastService);
+    private readonly destroyRef = inject(DestroyRef);
+
+    public readonly reasonControl = new FormControl('', [Validators.required, Validators.maxLength(1000)]);
+    public readonly isSubmitting = signal(false);
+
+    public onSubmit(): void {
+        if (this.reasonControl.invalid || this.isSubmitting()) {
+            return;
+        }
+
+        this.isSubmitting.set(true);
+        const dto: CreateReportDto = {
+            targetType: this.data.targetType,
+            targetId: this.data.targetId,
+            reason: this.reasonControl.value!.trim(),
+        };
+
+        this.reportService
+            .create(dto)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe({
+                next: () => {
+                    this.toastService.open('REPORT.SUCCESS');
+                    this.dialogRef.close(true);
+                },
+                error: () => {
+                    this.isSubmitting.set(false);
+                },
+            });
+    }
+
+    public onCancel(): void {
+        this.dialogRef.close(false);
+    }
+}

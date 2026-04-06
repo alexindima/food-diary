@@ -1,0 +1,4 @@
+<button class="like-button" [class.like-button--liked]="isLiked()" [disabled]="isToggling()" (click)="onToggle()">
+    <mat-icon>{{ isLiked() ? 'favorite' : 'favorite_border' }}</mat-icon>
+    <span class="like-count">{{ totalLikes() }}</span>
+</button>

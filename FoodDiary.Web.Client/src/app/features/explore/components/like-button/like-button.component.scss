@@ -1,0 +1,38 @@
+.like-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: none;
+    border: 1px solid var(--fd-border-color, #e0e0e0);
+    border-radius: 20px;
+    padding: 6px 14px;
+    cursor: pointer;
+    font-size: 0.875rem;
+    color: var(--fd-text-secondary);
+    transition: all 0.2s ease;
+
+    mat-icon {
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+    }
+
+    &:hover:not(:disabled) {
+        border-color: var(--fd-error, #d32f2f);
+        color: var(--fd-error, #d32f2f);
+    }
+
+    &--liked {
+        color: var(--fd-error, #d32f2f);
+        border-color: var(--fd-error, #d32f2f);
+
+        mat-icon {
+            color: var(--fd-error, #d32f2f);
+        }
+    }
+
+    &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+}
