@@ -61,7 +61,7 @@
     "@angular/compiler-cli": "^21.2.7",
     "@emnapi/core": "^1.9.1",
     "@emnapi/runtime": "^1.9.1",
-    "@emnapi/wasi-threads": "^1.2.0",
+    "@emnapi/wasi-threads": "^1.2.1",
     "@storybook/angular": "^10.3.3",
     "@typescript-eslint/eslint-plugin": "^8.57.2",
     "@typescript-eslint/parser": "^8.58.0",
