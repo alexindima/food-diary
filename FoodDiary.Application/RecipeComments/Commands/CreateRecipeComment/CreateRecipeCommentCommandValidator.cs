@@ -2,7 +2,7 @@ using FluentValidation;
 
 namespace FoodDiary.Application.RecipeComments.Commands.CreateRecipeComment;
 
-internal sealed class CreateRecipeCommentCommandValidator : AbstractValidator<CreateRecipeCommentCommand> {
+public sealed class CreateRecipeCommentCommandValidator : AbstractValidator<CreateRecipeCommentCommand> {
     public CreateRecipeCommentCommandValidator() {
         RuleFor(x => x.Text)
             .NotEmpty()

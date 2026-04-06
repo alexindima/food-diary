@@ -6,7 +6,7 @@ using Microsoft.Extensions.Options;
 
 namespace FoodDiary.Web.Api.HealthChecks;
 
-internal sealed class S3HealthCheck(IAmazonS3 s3Client, IOptions<S3Options> s3Options) : IHealthCheck {
+public sealed class S3HealthCheck(IAmazonS3 s3Client, IOptions<S3Options> s3Options) : IHealthCheck {
     public async Task<HealthCheckResult> CheckHealthAsync(
         HealthCheckContext context,
         CancellationToken cancellationToken = default) {

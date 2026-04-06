@@ -5,7 +5,7 @@ using Microsoft.Extensions.Options;
 
 namespace FoodDiary.Web.Api.HealthChecks;
 
-internal sealed class SmtpHealthCheck(IOptions<EmailOptions> emailOptions) : IHealthCheck {
+public sealed class SmtpHealthCheck(IOptions<EmailOptions> emailOptions) : IHealthCheck {
     public async Task<HealthCheckResult> CheckHealthAsync(
         HealthCheckContext context,
         CancellationToken cancellationToken = default) {

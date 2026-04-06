@@ -2,7 +2,7 @@ using FluentValidation;
 
 namespace FoodDiary.Application.Ai.Commands.ParseFoodText;
 
-internal sealed class ParseFoodTextCommandValidator : AbstractValidator<ParseFoodTextCommand> {
+public sealed class ParseFoodTextCommandValidator : AbstractValidator<ParseFoodTextCommand> {
     public ParseFoodTextCommandValidator() {
         RuleFor(x => x.Text)
             .NotEmpty()

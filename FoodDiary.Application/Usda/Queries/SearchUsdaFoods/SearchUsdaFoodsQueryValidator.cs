@@ -2,7 +2,7 @@ using FluentValidation;
 
 namespace FoodDiary.Application.Usda.Queries.SearchUsdaFoods;
 
-internal sealed class SearchUsdaFoodsQueryValidator : AbstractValidator<SearchUsdaFoodsQuery> {
+public sealed class SearchUsdaFoodsQueryValidator : AbstractValidator<SearchUsdaFoodsQuery> {
     public SearchUsdaFoodsQueryValidator() {
         RuleFor(x => x.Search)
             .NotEmpty()

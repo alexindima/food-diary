@@ -2,7 +2,7 @@ using FluentValidation;
 
 namespace FoodDiary.Application.FavoriteMeals.Commands.AddFavoriteMeal;
 
-internal sealed class AddFavoriteMealCommandValidator : AbstractValidator<AddFavoriteMealCommand> {
+public sealed class AddFavoriteMealCommandValidator : AbstractValidator<AddFavoriteMealCommand> {
     public AddFavoriteMealCommandValidator() {
         RuleFor(x => x.MealId)
             .NotEmpty()

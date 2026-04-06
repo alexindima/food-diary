@@ -2,7 +2,7 @@ using FluentValidation;
 
 namespace FoodDiary.Application.ContentReports.Commands.CreateContentReport;
 
-internal sealed class CreateContentReportCommandValidator : AbstractValidator<CreateContentReportCommand> {
+public sealed class CreateContentReportCommandValidator : AbstractValidator<CreateContentReportCommand> {
     public CreateContentReportCommandValidator() {
         RuleFor(x => x.TargetType)
             .NotEmpty()
