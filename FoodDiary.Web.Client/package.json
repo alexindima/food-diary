@@ -76,7 +76,7 @@
     "ng-packagr": "^21.2.2",
     "postcss-scss": "^4.0.9",
     "prettier": "^3.8.1",
-    "storybook": "^10.3.3",
+    "storybook": "^10.3.4",
     "stylelint": "^17.6.0",
     "stylelint-config-clean-order": "^8.0.1",
     "stylelint-config-standard": "^40.0.0",
