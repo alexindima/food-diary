@@ -10,11 +10,13 @@ public static class TdeeCalculator {
     private const int MinWeightEntries = 3;
     private const double MaxReasonableTdee = 6000.0;
     private const double MinReasonableTdee = 800.0;
+    private const double EmaAlpha = 0.1;
 
     public static AdaptiveTdeeResult CalculateAdaptive(
         IReadOnlyList<WeightEntry> weightEntries,
         IReadOnlyList<Meal> meals,
-        int periodDays) {
+        int periodDays,
+        IReadOnlyList<ExerciseEntry>? exerciseEntries = null) {
         var sortedWeights = weightEntries.OrderBy(w => w.Date).ToList();
         if (sortedWeights.Count < MinWeightEntries || periodDays < MinDaysForAdaptive) {
             return AdaptiveTdeeResult.Insufficient;
@@ -27,9 +29,10 @@ public static class TdeeCalculator {
         }
 
         var avgDailyIntake = dailyCalories.Values.Average();
+        var avgDailyExercise = CalculateAvgDailyExercise(exerciseEntries, dailyCalories.Count);
 
-        var smoothedStart = GetSmoothedWeight(sortedWeights, takeLast: false, count: 3);
-        var smoothedEnd = GetSmoothedWeight(sortedWeights, takeLast: true, count: 3);
+        var smoothedStart = GetEmaWeight(sortedWeights, fromStart: true);
+        var smoothedEnd = GetEmaWeight(sortedWeights, fromStart: false);
 
         var firstDate = sortedWeights[0].Date;
         var lastDate = sortedWeights[^1].Date;
@@ -42,10 +45,8 @@ public static class TdeeCalculator {
         var weightChangePerDay = weightChange / actualDays;
         var caloriesFromWeightChange = weightChangePerDay * KcalPerKgBodyWeight;
 
-        // TDEE = average intake - caloric surplus from weight change
-        // If losing weight (negative change), TDEE > intake
-        // If gaining weight (positive change), TDEE < intake
-        var adaptiveTdee = avgDailyIntake - caloriesFromWeightChange;
+        // TDEE = average food intake + average exercise burn - caloric surplus from weight change
+        var adaptiveTdee = avgDailyIntake + avgDailyExercise - caloriesFromWeightChange;
 
         if (adaptiveTdee < MinReasonableTdee || adaptiveTdee > MaxReasonableTdee) {
             return AdaptiveTdeeResult.Insufficient;
@@ -118,14 +119,45 @@ public static class TdeeCalculator {
         return daily;
     }
 
-    private static double GetSmoothedWeight(
-        IReadOnlyList<WeightEntry> sorted,
-        bool takeLast,
-        int count) {
-        var entries = takeLast
-            ? sorted.TakeLast(count)
-            : sorted.Take(count);
-        return entries.Average(w => w.Weight);
+    private static double CalculateAvgDailyExercise(
+        IReadOnlyList<ExerciseEntry>? exerciseEntries,
+        int daysWithCalories) {
+        if (exerciseEntries is null || exerciseEntries.Count == 0 || daysWithCalories <= 0) {
+            return 0;
+        }
+
+        var totalBurned = exerciseEntries.Sum(e => e.CaloriesBurned);
+        return totalBurned / daysWithCalories;
+    }
+
+    /// <summary>
+    /// Exponential Moving Average weight smoothing.
+    /// When fromStart=true, runs EMA forward and returns the value at the midpoint.
+    /// When fromStart=false, runs EMA backward (from end) and returns the value at the midpoint.
+    /// This gives a smoothed estimate of weight at the beginning and end of the period.
+    /// </summary>
+    private static double GetEmaWeight(IReadOnlyList<WeightEntry> sorted, bool fromStart) {
+        if (sorted.Count <= 3) {
+            var entries = fromStart ? sorted.Take(sorted.Count) : sorted.TakeLast(sorted.Count);
+            return entries.Average(w => w.Weight);
+        }
+
+        var half = sorted.Count / 2;
+        if (fromStart) {
+            var ema = sorted[0].Weight;
+            for (var i = 1; i <= half; i++) {
+                ema = EmaAlpha * sorted[i].Weight + (1 - EmaAlpha) * ema;
+            }
+
+            return ema;
+        } else {
+            var ema = sorted[^1].Weight;
+            for (var i = sorted.Count - 2; i >= sorted.Count - 1 - half; i--) {
+                ema = EmaAlpha * sorted[i].Weight + (1 - EmaAlpha) * ema;
+            }
+
+            return ema;
+        }
     }
 
     private static TdeeConfidence DetermineConfidence(

@@ -1,5 +1,6 @@
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Interfaces.Services;
+using FoodDiary.Application.Exercises.Common;
 using FoodDiary.Application.Meals.Common;
 using FoodDiary.Application.Tdee.Queries.GetTdeeInsight;
 using FoodDiary.Application.WeightEntries.Common;
@@ -57,6 +58,7 @@ public class TdeeFeatureTests {
             userRepo ?? new InMemoryUserRepository(),
             new StubWeightEntryRepository(),
             new StubMealRepository(),
+            new StubExerciseEntryRepository(),
             new StubDateTimeProvider());
 
     private sealed class InMemoryUserRepository : IUserRepository {
@@ -103,6 +105,17 @@ public class TdeeFeatureTests {
         public Task<IReadOnlyList<DateTime>> GetDistinctMealDatesAsync(UserId userId, DateTime dateFrom, DateTime dateTo, CancellationToken ct = default) => throw new NotSupportedException();
         public Task<int> GetTotalMealCountAsync(UserId userId, CancellationToken ct = default) => throw new NotSupportedException();
         public Task<IReadOnlyList<Meal>> GetWithItemsAndProductsAsync(UserId userId, DateTime date, CancellationToken ct = default) => throw new NotSupportedException();
+    }
+
+    private sealed class StubExerciseEntryRepository : IExerciseEntryRepository {
+        public Task<IReadOnlyList<ExerciseEntry>> GetByDateRangeAsync(UserId userId, DateTime dateFrom, DateTime dateTo, CancellationToken ct = default) =>
+            Task.FromResult<IReadOnlyList<ExerciseEntry>>([]);
+
+        public Task<ExerciseEntry> AddAsync(ExerciseEntry entry, CancellationToken ct = default) => throw new NotSupportedException();
+        public Task UpdateAsync(ExerciseEntry entry, CancellationToken ct = default) => throw new NotSupportedException();
+        public Task DeleteAsync(ExerciseEntry entry, CancellationToken ct = default) => throw new NotSupportedException();
+        public Task<ExerciseEntry?> GetByIdAsync(ExerciseEntryId id, UserId userId, bool asTracking = false, CancellationToken ct = default) => throw new NotSupportedException();
+        public Task<double> GetTotalCaloriesBurnedAsync(UserId userId, DateTime date, CancellationToken ct = default) => throw new NotSupportedException();
     }
 
     private sealed class StubDateTimeProvider : IDateTimeProvider {

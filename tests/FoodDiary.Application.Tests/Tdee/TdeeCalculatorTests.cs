@@ -134,6 +134,52 @@ public class TdeeCalculatorTests {
         Assert.Equal("hint.maintenance_on_track", hint);
     }
 
+    [Fact]
+    public void CalculateAdaptive_WithExercise_IncreasesTdee() {
+        var baseDate = DateTime.UtcNow.AddDays(-30);
+        var weights = CreateWeightEntries(10, startDate: baseDate, startWeight: 80, weightChangePerEntry: 0);
+        var meals = CreateMeals(30, startDate: baseDate, caloriesPerMeal: 2000);
+
+        var resultWithout = TdeeCalculator.CalculateAdaptive(weights, meals, 30);
+        var exercises = CreateExerciseEntries(30, startDate: baseDate, caloriesPerDay: 300);
+        var resultWith = TdeeCalculator.CalculateAdaptive(weights, meals, 30, exercises);
+
+        Assert.True(resultWithout.HasData);
+        Assert.True(resultWith.HasData);
+        Assert.True(resultWith.AdaptiveTdee > resultWithout.AdaptiveTdee);
+    }
+
+    [Fact]
+    public void CalculateAdaptive_EmaSmoothing_HandlesNoisyWeights() {
+        var baseDate = DateTime.UtcNow.AddDays(-30);
+        // Noisy weights around 80 kg — EMA should smooth them
+        var weights = new List<WeightEntry>();
+        var noisy = new[] { 80.5, 79.2, 80.8, 79.5, 80.3, 79.8, 80.1, 79.9, 80.0, 80.2 };
+        var daysPerEntry = 30.0 / (noisy.Length - 1);
+        for (var i = 0; i < noisy.Length; i++) {
+            weights.Add(WeightEntry.Create(TestUserId, baseDate.AddDays(i * daysPerEntry), noisy[i]));
+        }
+
+        var meals = CreateMeals(30, startDate: baseDate, caloriesPerMeal: 2000);
+
+        var result = TdeeCalculator.CalculateAdaptive(weights, meals, 30);
+
+        Assert.True(result.HasData);
+        // With noisy but stable weight, TDEE should be close to intake
+        Assert.InRange(result.AdaptiveTdee!.Value, 1800, 2200);
+    }
+
+    private static IReadOnlyList<ExerciseEntry> CreateExerciseEntries(
+        int count, DateTime startDate, double caloriesPerDay) {
+        var entries = new List<ExerciseEntry>();
+        for (var i = 0; i < count; i++) {
+            var date = startDate.AddDays(i);
+            entries.Add(ExerciseEntry.Create(TestUserId, date, ExerciseType.Running, 30, caloriesPerDay));
+        }
+
+        return entries;
+    }
+
     private static IReadOnlyList<WeightEntry> CreateWeightEntries(
         int count, DateTime startDate, double startWeight, double weightChangePerEntry = 0) {
         var entries = new List<WeightEntry>();

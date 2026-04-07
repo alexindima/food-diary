@@ -3,6 +3,7 @@ using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Interfaces.Services;
 using FoodDiary.Application.Common.Validation;
+using FoodDiary.Application.Exercises.Common;
 using FoodDiary.Application.Meals.Common;
 using FoodDiary.Application.Tdee.Models;
 using FoodDiary.Application.Tdee.Services;
@@ -15,6 +16,7 @@ public class GetTdeeInsightQueryHandler(
     IUserRepository userRepository,
     IWeightEntryRepository weightEntryRepository,
     IMealRepository mealRepository,
+    IExerciseEntryRepository exerciseEntryRepository,
     IDateTimeProvider dateTimeProvider)
     : IQueryHandler<GetTdeeInsightQuery, Result<TdeeInsightModel>> {
     private const int AnalysisPeriodDays = 28;
@@ -43,15 +45,17 @@ public class GetTdeeInsightQueryHandler(
 
         var weightsTask = weightEntryRepository.GetByPeriodAsync(userId, periodStart, today, cancellationToken);
         var mealsTask = mealRepository.GetByPeriodAsync(userId, periodStart, today, cancellationToken);
-        await Task.WhenAll(weightsTask, mealsTask);
+        var exercisesTask = exerciseEntryRepository.GetByDateRangeAsync(userId, periodStart, today, cancellationToken);
+        await Task.WhenAll(weightsTask, mealsTask, exercisesTask);
 
         var weights = weightsTask.Result;
         var meals = mealsTask.Result;
+        var exercises = exercisesTask.Result;
 
         var bmr = user.CalculateBmr();
         var estimatedTdee = user.CalculateEstimatedTdee();
 
-        var adaptiveResult = TdeeCalculator.CalculateAdaptive(weights, meals, AnalysisPeriodDays);
+        var adaptiveResult = TdeeCalculator.CalculateAdaptive(weights, meals, AnalysisPeriodDays, exercises);
 
         var effectiveTdee = adaptiveResult.HasData ? adaptiveResult.AdaptiveTdee : estimatedTdee;
         var suggestedTarget = effectiveTdee.HasValue
