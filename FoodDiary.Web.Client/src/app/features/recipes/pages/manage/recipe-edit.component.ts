@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RecipeManageComponent } from '../../components/manage/recipe-manage.component';
+import { RecipeManageFacade } from '../../lib/recipe-manage.facade';
 
 @Component({
     selector: 'fd-recipe-edit',
@@ -7,5 +8,6 @@ import { RecipeManageComponent } from '../../components/manage/recipe-manage.com
     styleUrls: ['./recipe-edit.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [RecipeManageComponent],
+    providers: [RecipeManageFacade],
 })
 export class RecipeEditComponent extends RecipeManageComponent {}
