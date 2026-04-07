@@ -1,0 +1,169 @@
+@use 'variables' as variables;
+
+.micronutrient-card {
+    padding: 16px;
+    border-radius: 16px;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    &__header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    &__icon {
+        font-size: 1.2em;
+    }
+
+    &__title {
+        font-size: 0.95rem;
+        font-weight: 700;
+        margin: 0;
+        color: variables.$color-text-main;
+    }
+
+    &__loading {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    &__skeleton {
+        height: 12px;
+        border-radius: 6px;
+        background: rgba(148, 163, 184, 0.15);
+        animation: pulse 1.5s ease-in-out infinite;
+
+        &--short {
+            width: 60%;
+        }
+    }
+
+    &__empty {
+        padding: 8px 0;
+    }
+
+    &__empty-text {
+        font-size: 0.85rem;
+        color: variables.$color-text-additional;
+    }
+
+    &__coverage {
+        font-size: 0.8rem;
+        color: variables.$color-text-additional;
+        background: rgba(148, 163, 184, 0.08);
+        padding: 4px 8px;
+        border-radius: 6px;
+    }
+
+    &__section {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    &__section-label {
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: variables.$color-text-additional;
+    }
+
+    &__nutrient {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+
+        &--good {
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+        }
+    }
+
+    &__nutrient-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    &__nutrient-name {
+        font-size: 0.85rem;
+        color: variables.$color-text-main;
+        font-weight: 500;
+    }
+
+    &__nutrient-value {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: variables.$color-text-additional;
+    }
+
+    &__nutrient-check {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: #22c55e;
+    }
+
+    &__bar {
+        height: 6px;
+        border-radius: 3px;
+        background: rgba(148, 163, 184, 0.15);
+        overflow: hidden;
+    }
+
+    &__bar-fill {
+        height: 100%;
+        border-radius: 3px;
+        transition: width 0.3s ease;
+    }
+
+    &__scores {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+        padding-top: 4px;
+        border-top: 1px solid rgba(148, 163, 184, 0.15);
+    }
+
+    &__score {
+        font-size: 0.8rem;
+        font-weight: 600;
+        padding: 3px 8px;
+        border-radius: 8px;
+        background: rgba(148, 163, 184, 0.1);
+        color: variables.$color-text-additional;
+
+        &[data-grade='excellent'],
+        &[data-grade='good'] {
+            background: rgba(34, 197, 94, 0.12);
+            color: #16a34a;
+        }
+
+        &[data-grade='fair'] {
+            background: rgba(234, 179, 8, 0.12);
+            color: #ca8a04;
+        }
+
+        &[data-grade='low'] {
+            background: rgba(239, 68, 68, 0.12);
+            color: #dc2626;
+        }
+    }
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+}

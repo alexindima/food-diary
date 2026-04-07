@@ -20,6 +20,7 @@ import { DailyAdviceCardComponent } from '../components/daily-advice-card/daily-
 import { MealsPreviewComponent } from '../../../components/shared/meals-preview/meals-preview.component';
 import { CycleSummaryCardComponent } from '../components/cycle-summary-card/cycle-summary-card.component';
 import { TdeeInsightCardComponent } from '../components/tdee-insight-card/tdee-insight-card.component';
+import { MicronutrientCardComponent } from '../components/micronutrient-card/micronutrient-card.component';
 import { NoticeBannerComponent } from '../../../components/shared/notice-banner/notice-banner.component';
 import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader.component';
 import { UnsavedChangesService, UnsavedChangesHandler } from '../../../services/unsaved-changes.service';
@@ -47,6 +48,7 @@ import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
         DailyAdviceCardComponent,
         CycleSummaryCardComponent,
         TdeeInsightCardComponent,
+        MicronutrientCardComponent,
         MealsPreviewComponent,
         NoticeBannerComponent,
         FdUiLoaderComponent,
@@ -91,6 +93,8 @@ export class DashboardComponent implements OnInit {
     public readonly isCycleLoading = this.facade.isCycleLoading;
     public readonly tdeeInsight = this.facade.tdeeInsight;
     public readonly isTdeeLoading = this.facade.isTdeeLoading;
+    public readonly micronutrients = this.facade.micronutrients;
+    public readonly isMicronutrientsLoading = this.facade.isMicronutrientsLoading;
     public readonly weightTrend = this.facade.weightTrend;
     public readonly waistTrend = this.facade.waistTrend;
     public readonly nutrientBars = this.facade.nutrientBars;

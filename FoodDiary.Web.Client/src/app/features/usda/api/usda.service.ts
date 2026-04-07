@@ -43,6 +43,7 @@ export class UsdaService extends ApiService {
                     linkedProductCount: 0,
                     totalProductCount: 0,
                     nutrients: [],
+                    healthScores: null,
                 }),
             ),
         );
