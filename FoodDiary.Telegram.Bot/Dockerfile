@@ -2,7 +2,7 @@ FROM mcr.microsoft.com/dotnet/sdk:10.0-alpine AS build
 
 WORKDIR /src
 
-COPY Directory.Build.props ./
+COPY Directory.Build.props Directory.Packages.props ./
 COPY FoodDiary.Telegram.Bot/*.csproj FoodDiary.Telegram.Bot/
 
 RUN dotnet restore FoodDiary.Telegram.Bot/FoodDiary.Telegram.Bot.csproj
