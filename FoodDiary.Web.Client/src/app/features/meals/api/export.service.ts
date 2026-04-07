@@ -2,21 +2,24 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
 
+export type ExportFormat = 'csv' | 'pdf';
+
 @Injectable({
     providedIn: 'root',
 })
 export class ExportService extends ApiService {
     protected readonly baseUrl = environment.apiUrls.export;
 
-    public exportDiaryCsv(dateFrom: string, dateTo: string): void {
-        this.getBlob('diary', { dateFrom, dateTo }).subscribe(response => {
+    public exportDiary(dateFrom: string, dateTo: string, format: ExportFormat = 'csv'): void {
+        const ext = format === 'pdf' ? 'pdf' : 'csv';
+        this.getBlob('diary', { dateFrom, dateTo, format }).subscribe(response => {
             const blob = response.body;
             if (!blob) {
                 return;
             }
 
             const contentDisposition = response.headers.get('Content-Disposition');
-            const fileName = this.extractFileName(contentDisposition) ?? `food-diary-${dateFrom}-to-${dateTo}.csv`;
+            const fileName = this.extractFileName(contentDisposition) ?? `food-diary.${ext}`;
 
             const url = URL.createObjectURL(blob);
             const anchor = document.createElement('a');

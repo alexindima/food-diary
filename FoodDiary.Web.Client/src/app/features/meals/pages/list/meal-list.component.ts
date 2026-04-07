@@ -354,12 +354,20 @@ export class MealListComponent implements OnInit {
     }
 
     public exportCsv(): void {
+        this.exportDiary('csv');
+    }
+
+    public exportPdf(): void {
+        this.exportDiary('pdf');
+    }
+
+    private exportDiary(format: 'csv' | 'pdf'): void {
         const dateRange = this.searchForm.controls.dateRange.value;
         const now = new Date();
         const thirtyDaysAgo = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 30);
         const dateFrom = this.toIsoDate(dateRange?.start ?? thirtyDaysAgo) ?? new Date().toISOString();
         const dateTo = this.toIsoDate(dateRange?.end ?? now) ?? new Date().toISOString();
-        this.exportService.exportDiaryCsv(dateFrom, dateTo);
+        this.exportService.exportDiary(dateFrom, dateTo, format);
     }
 
     public toggleMobileDateFilter(): void {

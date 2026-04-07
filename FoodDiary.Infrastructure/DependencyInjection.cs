@@ -24,6 +24,7 @@ using FoodDiary.Application.MealPlans.Common;
 using FoodDiary.Application.ContentReports.Common;
 using FoodDiary.Application.RecipeComments.Common;
 using FoodDiary.Application.RecipeLikes.Common;
+using FoodDiary.Application.Export.Common;
 using FoodDiary.Application.OpenFoodFacts.Common;
 using FoodDiary.Application.Usda.Common;
 using FoodDiary.Application.Wearables.Common;
@@ -203,6 +204,7 @@ public static class DependencyInjection {
         });
         services.AddSingleton<IObjectStorageClient, S3ObjectStorageClient>();
         services.AddSingleton<IImageStorageService, S3ImageStorageService>();
+        services.AddSingleton<IDiaryPdfGenerator, DiaryPdfGenerator>();
         services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
         services.AddSingleton<IPasswordHasher, PasswordHasher>();
         services.AddSingleton<IGoogleTokenValidator, GoogleTokenValidator>();

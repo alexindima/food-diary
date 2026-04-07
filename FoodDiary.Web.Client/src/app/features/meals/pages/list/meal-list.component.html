@@ -56,6 +56,14 @@
                             (click)="exportCsv()"
                         />
                         <fd-ui-button
+                            class="consumption-list__icon-button"
+                            variant="secondary"
+                            fill="outline"
+                            icon="picture_as_pdf"
+                            [ariaLabel]="'CONSUMPTION_LIST.EXPORT_PDF' | translate"
+                            (click)="exportPdf()"
+                        />
+                        <fd-ui-button
                             class="consumption-list__add-button"
                             icon="add"
                             variant="primary"

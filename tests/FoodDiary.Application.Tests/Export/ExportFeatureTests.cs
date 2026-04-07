@@ -1,3 +1,5 @@
+using FoodDiary.Application.Export.Common;
+using FoodDiary.Application.Export.Models;
 using FoodDiary.Application.Export.Queries.ExportDiary;
 using FoodDiary.Application.Export.Services;
 using FoodDiary.Application.Meals.Common;
@@ -21,12 +23,14 @@ public class ExportFeatureTests {
         return meal;
     }
 
+    private static ExportDiaryQueryHandler CreateHandler(IReadOnlyList<Meal> meals) =>
+        new(new StubMealRepository(meals), new StubPdfGenerator());
+
     [Fact]
-    public async Task ExportDiary_WithMeals_ReturnsFileResult() {
+    public async Task ExportDiary_WithMeals_ReturnsCsvFileResult() {
         var userId = UserId.New();
         var meals = new[] { CreateMeal(userId), CreateMeal(userId, TestDate.AddDays(1), MealType.Lunch) };
-        var repo = new StubMealRepository(meals);
-        var handler = new ExportDiaryQueryHandler(repo);
+        var handler = CreateHandler(meals);
 
         var result = await handler.Handle(
             new ExportDiaryQuery(userId.Value, TestDate, TestDate.AddDays(1)),
@@ -40,10 +44,24 @@ public class ExportFeatureTests {
     }
 
     [Fact]
+    public async Task ExportDiary_WithPdfFormat_ReturnsPdfFileResult() {
+        var userId = UserId.New();
+        var meals = new[] { CreateMeal(userId) };
+        var handler = CreateHandler(meals);
+
+        var result = await handler.Handle(
+            new ExportDiaryQuery(userId.Value, TestDate, TestDate.AddDays(1), ExportFormat.Pdf),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal("application/pdf", result.Value.ContentType);
+        Assert.EndsWith(".pdf", result.Value.FileName);
+    }
+
+    [Fact]
     public async Task ExportDiary_WithNoMeals_ReturnsHeaderOnly() {
         var userId = UserId.New();
-        var repo = new StubMealRepository([]);
-        var handler = new ExportDiaryQueryHandler(repo);
+        var handler = CreateHandler([]);
 
         var result = await handler.Handle(
             new ExportDiaryQuery(userId.Value, TestDate, TestDate.AddDays(1)),
@@ -56,8 +74,7 @@ public class ExportFeatureTests {
 
     [Fact]
     public async Task ExportDiary_WithNullUserId_ReturnsFailure() {
-        var repo = new StubMealRepository([]);
-        var handler = new ExportDiaryQueryHandler(repo);
+        var handler = CreateHandler([]);
 
         var result = await handler.Handle(
             new ExportDiaryQuery(null, TestDate, TestDate.AddDays(1)),
@@ -149,5 +166,10 @@ public class ExportFeatureTests {
         public Task<IReadOnlyList<DateTime>> GetDistinctMealDatesAsync(UserId userId, DateTime dateFrom, DateTime dateTo, CancellationToken ct = default) => throw new NotSupportedException();
         public Task<int> GetTotalMealCountAsync(UserId userId, CancellationToken ct = default) => throw new NotSupportedException();
         public Task<IReadOnlyList<Meal>> GetWithItemsAndProductsAsync(UserId userId, DateTime date, CancellationToken ct = default) => throw new NotSupportedException();
+    }
+
+    private sealed class StubPdfGenerator : IDiaryPdfGenerator {
+        public byte[] Generate(IReadOnlyList<Meal> meals, DateTime dateFrom, DateTime dateTo) =>
+            [0x25, 0x50, 0x44, 0x46]; // %PDF magic bytes
     }
 }

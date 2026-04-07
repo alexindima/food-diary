@@ -7,4 +7,5 @@ namespace FoodDiary.Application.Export.Queries.ExportDiary;
 public record ExportDiaryQuery(
     Guid? UserId,
     DateTime DateFrom,
-    DateTime DateTo) : IQuery<Result<FileExportResult>>, IUserRequest;
+    DateTime DateTo,
+    ExportFormat Format = ExportFormat.Csv) : IQuery<Result<FileExportResult>>, IUserRequest;

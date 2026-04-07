@@ -11,10 +11,10 @@ namespace FoodDiary.Presentation.Api.Features.Export;
 public class ExportController(ISender mediator) : AuthorizedController(mediator) {
     [HttpGet("diary")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [Produces("text/csv")]
     public Task<IActionResult> ExportDiary(
         [FromCurrentUser] Guid userId,
         [FromQuery] DateTime dateFrom,
-        [FromQuery] DateTime dateTo) =>
-        HandleFile(ExportHttpMappings.ToQuery(userId, dateFrom, dateTo));
+        [FromQuery] DateTime dateTo,
+        [FromQuery] string format = "csv") =>
+        HandleFile(ExportHttpMappings.ToQuery(userId, dateFrom, dateTo, format));
 }
