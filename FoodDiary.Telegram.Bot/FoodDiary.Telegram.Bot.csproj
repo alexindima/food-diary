@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Worker">
 
   <ItemGroup>
-    <PackageReference Include="Telegram.Bot" Version="22.0.0" />
+    <PackageReference Include="Telegram.Bot" />
   </ItemGroup>
 
 </Project>
