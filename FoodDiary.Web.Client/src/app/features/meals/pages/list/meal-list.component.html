@@ -98,66 +98,13 @@
         }
     </fd-page-header>
 
-    <div class="consumption-list__voice-bar">
-        <mat-icon class="consumption-list__voice-icon">auto_awesome</mat-icon>
-        <input
-            type="text"
-            class="consumption-list__voice-input"
-            [placeholder]="'CONSUMPTION_LIST.VOICE_PLACEHOLDER' | translate"
-            [value]="voiceText()"
-            (input)="onVoiceTextInput($event)"
-            (keydown.enter)="submitVoiceText()"
-            [disabled]="isVoiceLoading()"
-        />
-        @if (isSpeechSupported) {
-            <button
-                type="button"
-                class="consumption-list__voice-mic"
-                [class.consumption-list__voice-mic--active]="isListening()"
-                [disabled]="isVoiceLoading()"
-                (click)="toggleMic()"
-                [title]="'CONSUMPTION_LIST.VOICE_MIC_TITLE' | translate"
-            >
-                <mat-icon>{{ isListening() ? 'mic' : 'mic_none' }}</mat-icon>
-            </button>
-        }
-        <button
-            type="button"
-            class="consumption-list__voice-submit"
-            [disabled]="!voiceText() || isVoiceLoading()"
-            (click)="submitVoiceText()"
-        >
-            @if (isVoiceLoading()) {
-                <mat-icon>hourglass_empty</mat-icon>
-            } @else {
-                <mat-icon>send</mat-icon>
-            }
-        </button>
-    </div>
-
-    @if (voiceResult()) {
-        <div class="consumption-list__voice-result">
-            <div class="consumption-list__voice-result-header">
-                <span>{{ 'CONSUMPTION_LIST.VOICE_RESULT_TITLE' | translate }}</span>
-                <button type="button" class="consumption-list__voice-dismiss" (click)="dismissVoiceResult()">
-                    <mat-icon>close</mat-icon>
-                </button>
-            </div>
-            <div class="consumption-list__voice-items">
-                @for (item of voiceResult()!.items; track item.nameEn) {
-                    <div class="consumption-list__voice-item">
-                        <span class="consumption-list__voice-item-name">{{ item.nameLocal || item.nameEn }}</span>
-                        <span class="consumption-list__voice-item-amount">{{ item.amount }} {{ item.unit }}</span>
-                    </div>
-                }
-            </div>
-            <div class="consumption-list__voice-actions">
-                <fd-ui-button size="sm" variant="primary" (click)="createMealFromVoice()">
-                    {{ 'CONSUMPTION_LIST.VOICE_CREATE_MEAL' | translate }}
-                </fd-ui-button>
-            </div>
-        </div>
-    }
+    <fd-ai-input-bar
+        [placeholder]="'CONSUMPTION_LIST.VOICE_PLACEHOLDER' | translate"
+        [actionLabel]="'CONSUMPTION_LIST.VOICE_CREATE_MEAL' | translate"
+        [isProcessing]="isCreatingMeal()"
+        (textParsed)="onTextParsed($event)"
+        (photoRequested)="onPhotoRequested()"
+    />
 
     @if (favorites().length > 0) {
         <div class="consumption-list__favorites">

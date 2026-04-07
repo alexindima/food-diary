@@ -1,0 +1,66 @@
+<div class="ai-input-bar">
+    <mat-icon class="ai-input-bar__icon">auto_awesome</mat-icon>
+    <input
+        type="text"
+        class="ai-input-bar__input"
+        [placeholder]="placeholder() ?? ''"
+        [value]="voiceText()"
+        (input)="onTextInput($event)"
+        (keydown.enter)="submitText()"
+        [disabled]="isDisabled()"
+    />
+    <button
+        type="button"
+        class="ai-input-bar__action-btn"
+        [disabled]="isDisabled()"
+        (click)="onPhotoClick()"
+        [title]="'AI_INPUT_BAR.PHOTO_TITLE' | translate"
+    >
+        <mat-icon>photo_camera</mat-icon>
+    </button>
+    @if (isSpeechSupported) {
+        <button
+            type="button"
+            class="ai-input-bar__action-btn"
+            [class.ai-input-bar__action-btn--mic-active]="isListening()"
+            [disabled]="isDisabled()"
+            (click)="toggleMic()"
+            [title]="'CONSUMPTION_LIST.VOICE_MIC_TITLE' | translate"
+        >
+            <mat-icon>{{ isListening() ? 'mic' : 'mic_none' }}</mat-icon>
+        </button>
+    }
+    <button type="button" class="ai-input-bar__submit" [disabled]="!voiceText() || isDisabled()" (click)="submitText()">
+        @if (isVoiceLoading()) {
+            <mat-icon>hourglass_empty</mat-icon>
+        } @else {
+            <mat-icon>send</mat-icon>
+        }
+    </button>
+</div>
+
+@if (voiceResult()) {
+    <div class="ai-input-bar__result">
+        <div class="ai-input-bar__result-header">
+            <span>{{ 'CONSUMPTION_LIST.VOICE_RESULT_TITLE' | translate }}</span>
+            <button type="button" class="ai-input-bar__dismiss" (click)="dismissResult()">
+                <mat-icon>close</mat-icon>
+            </button>
+        </div>
+        <div class="ai-input-bar__items">
+            @for (item of voiceResult()!.items; track item.nameEn) {
+                <div class="ai-input-bar__item">
+                    <span class="ai-input-bar__item-name">
+                        {{ item.nameLocal || item.nameEn }}
+                    </span>
+                    <span class="ai-input-bar__item-amount"> {{ item.amount }} {{ item.unit }} </span>
+                </div>
+            }
+        </div>
+        <div class="ai-input-bar__actions">
+            <fd-ui-button size="sm" variant="primary" [disabled]="isProcessing()" (click)="onActionClick()">
+                {{ actionLabel() ?? ('CONSUMPTION_LIST.VOICE_CREATE_MEAL' | translate) }}
+            </fd-ui-button>
+        </div>
+    </div>
+}

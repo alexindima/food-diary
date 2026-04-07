@@ -13,16 +13,17 @@ import { MatIconModule } from '@angular/material/icon';
 import { ErrorStateComponent } from '../../../../components/shared/error-state/error-state.component';
 import { SkeletonCardComponent } from '../../../../components/shared/skeleton-card/skeleton-card.component';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.component';
-import { Observable, catchError, debounceTime, distinctUntilChanged, finalize, map, of, startWith, switchMap } from 'rxjs';
+import { Observable, catchError, debounceTime, distinctUntilChanged, finalize, firstValueFrom, map, of, startWith, switchMap } from 'rxjs';
 
 import { AiFoodService } from '../../../../shared/api/ai-food.service';
-import { LocalizationService } from '../../../../services/localization.service';
-import { FoodVisionResponse } from '../../../../shared/models/ai.data';
 import { MealService } from '../../api/meal.service';
 import { FavoriteMealService } from '../../api/favorite-meal.service';
 import { MealDetailActionResult, MealDetailComponent } from '../../components/detail/meal-detail.component';
-import { FavoriteMeal, Meal, MealFilters } from '../../models/meal.data';
+import { ConsumptionAiSessionManageDto, FavoriteMeal, Meal, MealFilters } from '../../models/meal.data';
 import { MealCardComponent } from '../../../../components/shared/meal-card/meal-card.component';
+import { AiInputBarComponent } from '../../../../components/shared/ai-input-bar/ai-input-bar.component';
+import { AiInputBarTextResult } from '../../../../components/shared/ai-input-bar/ai-input-bar.types';
+import { MealPhotoRecognitionDialogComponent } from '../../dialogs/photo-recognition-dialog/meal-photo-recognition-dialog.component';
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body.component';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header.component';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
@@ -51,6 +52,7 @@ import { PagedData } from '../../../../shared/lib/paged-data.data';
         PageBodyComponent,
         FdPageContainerDirective,
         MealCardComponent,
+        AiInputBarComponent,
         LocalizedDatePipe,
     ],
 })
@@ -58,7 +60,6 @@ export class MealListComponent implements OnInit {
     private readonly mealService = inject(MealService);
     private readonly favoriteMealService = inject(FavoriteMealService);
     private readonly aiFoodService = inject(AiFoodService);
-    private readonly localizationService = inject(LocalizationService);
     private readonly navigationService = inject(NavigationService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly fdDialogService = inject(FdUiDialogService);
@@ -72,14 +73,9 @@ export class MealListComponent implements OnInit {
     public readonly errorKey = signal<string | null>(null);
     public readonly favorites = signal<FavoriteMeal[]>([]);
     public readonly isFavoritesOpen = signal(false);
-    public readonly voiceText = signal('');
-    public readonly isVoiceLoading = signal(false);
-    public readonly voiceResult = signal<FoodVisionResponse | null>(null);
-    public readonly isListening = signal(false);
-    public readonly isSpeechSupported =
-        typeof window !== 'undefined' && ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window);
-    private speechRecognition: unknown = null;
+    public readonly isCreatingMeal = signal(false);
     public readonly isMobileView = signal<boolean>(window.matchMedia('(max-width: 768px)').matches);
+    private readonly aiInputBar = viewChild(AiInputBarComponent);
     private readonly isMobileDateFilterOpen = signal(false);
     private readonly container = viewChild.required<ElementRef<HTMLElement>>('container');
 
@@ -145,97 +141,16 @@ export class MealListComponent implements OnInit {
         });
     }
 
-    public onVoiceTextInput(event: Event): void {
-        this.voiceText.set((event.target as HTMLInputElement).value);
-    }
-
-    public submitVoiceText(): void {
-        const text = this.voiceText().trim();
-        if (!text || this.isVoiceLoading()) {
+    public onTextParsed(event: AiInputBarTextResult): void {
+        if (!event.result?.items.length) {
             return;
         }
 
-        this.isVoiceLoading.set(true);
+        this.isCreatingMeal.set(true);
         this.aiFoodService
-            .parseFoodText({ text })
+            .calculateNutrition({ items: event.result.items })
             .pipe(
-                finalize(() => this.isVoiceLoading.set(false)),
-                takeUntilDestroyed(this.destroyRef),
-            )
-            .subscribe({
-                next: result => this.voiceResult.set(result),
-                error: () => this.voiceResult.set(null),
-            });
-    }
-
-    public toggleMic(): void {
-        if (this.isListening()) {
-            this.stopListening();
-            return;
-        }
-
-        const SpeechRecognitionCtor =
-            (window as unknown as Record<string, unknown>)['SpeechRecognition'] ??
-            (window as unknown as Record<string, unknown>)['webkitSpeechRecognition'];
-        if (!SpeechRecognitionCtor) {
-            return;
-        }
-
-        const recognition = new (SpeechRecognitionCtor as { new (): Record<string, unknown> })();
-        const lang = this.localizationService.getCurrentLanguage();
-        recognition['lang'] = lang === 'ru' ? 'ru-RU' : 'en-US';
-        recognition['interimResults'] = false;
-        recognition['maxAlternatives'] = 1;
-
-        recognition['onresult'] = (event: Record<string, unknown>): void => {
-            const results = event['results'] as { [key: number]: { [key: number]: { transcript: string } } } | undefined;
-            const transcript = results?.[0]?.[0]?.transcript;
-            if (transcript) {
-                this.voiceText.set(transcript);
-                this.submitVoiceText();
-            }
-        };
-
-        recognition['onerror'] = (): void => {
-            this.isListening.set(false);
-        };
-
-        recognition['onend'] = (): void => {
-            this.isListening.set(false);
-            this.speechRecognition = null;
-        };
-
-        this.speechRecognition = recognition;
-        this.isListening.set(true);
-        (recognition['start'] as () => void)();
-    }
-
-    private stopListening(): void {
-        if (this.speechRecognition) {
-            const stopFn = (this.speechRecognition as Record<string, unknown>)['stop'];
-            if (typeof stopFn === 'function') {
-                stopFn.call(this.speechRecognition);
-            }
-            this.speechRecognition = null;
-        }
-        this.isListening.set(false);
-    }
-
-    public dismissVoiceResult(): void {
-        this.voiceResult.set(null);
-    }
-
-    public createMealFromVoice(): void {
-        const result = this.voiceResult();
-        if (!result?.items.length) {
-            return;
-        }
-
-        this.isVoiceLoading.set(true);
-        this.aiFoodService
-            .calculateNutrition({ items: result.items })
-            .pipe(
-                finalize(() => this.isVoiceLoading.set(false)),
+                finalize(() => this.isCreatingMeal.set(false)),
                 takeUntilDestroyed(this.destroyRef),
             )
             .subscribe({
@@ -256,7 +171,7 @@ export class MealListComponent implements OnInit {
                             aiSessions: [
                                 {
                                     recognizedAtUtc: now.toISOString(),
-                                    notes: this.voiceText(),
+                                    notes: event.text,
                                     items: nutrition.items.map(item => ({
                                         nameEn: item.name,
                                         amount: item.amount,
@@ -273,12 +188,54 @@ export class MealListComponent implements OnInit {
                         })
                         .subscribe({
                             next: () => {
-                                this.voiceResult.set(null);
-                                this.voiceText.set('');
+                                this.aiInputBar()?.clearState();
                                 this.scrollToTop();
                                 this.loadConsumptions(1).subscribe();
                             },
                         });
+                },
+            });
+    }
+
+    public async onPhotoRequested(): Promise<void> {
+        const session = await firstValueFrom(
+            this.fdDialogService
+                .open<
+                    MealPhotoRecognitionDialogComponent,
+                    never,
+                    ConsumptionAiSessionManageDto | null
+                >(MealPhotoRecognitionDialogComponent, { size: 'lg' })
+                .afterClosed(),
+        );
+
+        if (!session) {
+            return;
+        }
+
+        this.isCreatingMeal.set(true);
+        const now = new Date();
+
+        this.mealService
+            .create({
+                date: now,
+                isNutritionAutoCalculated: false,
+                manualCalories: session.items.reduce((sum, item) => sum + item.calories, 0),
+                manualProteins: session.items.reduce((sum, item) => sum + item.proteins, 0),
+                manualFats: session.items.reduce((sum, item) => sum + item.fats, 0),
+                manualCarbs: session.items.reduce((sum, item) => sum + item.carbs, 0),
+                manualFiber: session.items.reduce((sum, item) => sum + item.fiber, 0),
+                manualAlcohol: session.items.reduce((sum, item) => sum + item.alcohol, 0),
+                items: [],
+                aiSessions: [session],
+            })
+            .pipe(
+                finalize(() => this.isCreatingMeal.set(false)),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe({
+                next: () => {
+                    this.scrollToTop();
+                    this.loadConsumptions(1).subscribe();
                 },
             });
     }

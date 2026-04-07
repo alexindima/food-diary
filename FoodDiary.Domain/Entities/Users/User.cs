@@ -61,6 +61,7 @@ public sealed partial class User : AggregateRoot<UserId> {
     public long? TelegramUserId { get; private set; }
     public long AiInputTokenLimit { get; private set; } = DefaultAiInputTokenLimit;
     public long AiOutputTokenLimit { get; private set; } = DefaultAiOutputTokenLimit;
+    public DateTime? AiConsentAcceptedAt { get; private set; }
     public bool IsActive { get; private set; } = true;
     public DateTime? DeletedAt { get; private set; }
 

@@ -27,4 +27,5 @@ public sealed record UserModel(
     DashboardLayoutModel? DashboardLayout,
     bool IsActive,
     bool IsEmailConfirmed,
-    DateTime? LastLoginAtUtc);
+    DateTime? LastLoginAtUtc,
+    DateTime? AiConsentAcceptedAt);

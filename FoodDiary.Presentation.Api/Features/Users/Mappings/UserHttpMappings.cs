@@ -1,3 +1,5 @@
+using FoodDiary.Application.Users.Commands.AcceptAiConsent;
+using FoodDiary.Application.Users.Commands.RevokeAiConsent;
 using FoodDiary.Application.Users.Commands.ChangePassword;
 using FoodDiary.Application.Users.Commands.DeleteUser;
 using FoodDiary.Application.Users.Commands.UpdateDesiredWaist;
@@ -26,6 +28,10 @@ public static class UserHttpMappings {
         new(userId, request.DesiredWaist);
 
     public static DeleteUserCommand ToDeleteCommand(this Guid userId) => new(userId);
+
+    public static AcceptAiConsentCommand ToAcceptAiConsentCommand(this Guid userId) => new(userId);
+
+    public static RevokeAiConsentCommand ToRevokeAiConsentCommand(this Guid userId) => new(userId);
 
     public static UpdateUserCommand ToCommand(this UpdateUserHttpRequest request, Guid? userId) {
         return new UpdateUserCommand(

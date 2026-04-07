@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, effect, FactoryProvider, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, FactoryProvider, inject, OnInit } from '@angular/core';
 import { NgIf } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -74,6 +74,7 @@ export class UserManageComponent implements OnInit {
     public userForm: FormGroup<UserFormData>;
     public readonly globalError = this.facade.globalError;
     public readonly isDeleting = this.facade.isDeleting;
+    public readonly hasAiConsent = computed(() => !!this.facade.user()?.aiConsentAcceptedAt);
 
     public constructor() {
         this.userForm = new FormGroup<UserFormData>({
@@ -151,6 +152,10 @@ export class UserManageComponent implements OnInit {
 
     public openChangePasswordDialog(): void {
         this.facade.openChangePasswordDialog();
+    }
+
+    public onRevokeAiConsent(): void {
+        this.facade.revokeAiConsent();
     }
 
     public onDeleteAccount(): void {

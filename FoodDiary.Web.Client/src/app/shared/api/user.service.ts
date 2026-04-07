@@ -68,6 +68,30 @@ export class UserService extends ApiService {
         );
     }
 
+    public acceptAiConsent(): Observable<void> {
+        return this.post<void>('ai-consent', {}).pipe(
+            tap(() => {
+                const current = this.userSignal();
+                if (current) {
+                    this.userSignal.set({ ...current, aiConsentAcceptedAt: new Date().toISOString() });
+                }
+            }),
+            catchError(error => rethrowApiError('Accept AI consent error', error)),
+        );
+    }
+
+    public revokeAiConsent(): Observable<void> {
+        return this.delete<void>('ai-consent').pipe(
+            tap(() => {
+                const current = this.userSignal();
+                if (current) {
+                    this.userSignal.set({ ...current, aiConsentAcceptedAt: null });
+                }
+            }),
+            catchError(error => rethrowApiError('Revoke AI consent error', error)),
+        );
+    }
+
     public deleteCurrentUser(): Observable<boolean> {
         return this.delete<void>('').pipe(
             tap(() => this.userSignal.set(null)),

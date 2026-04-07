@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { RecipeManageComponent } from '../../components/manage/recipe-manage.component';
-import { RecipeManageFacade } from '../../lib/recipe-manage.facade';
+import { Recipe } from '../../models/recipe.data';
 
 @Component({
     selector: 'fd-recipe-edit',
@@ -8,6 +8,7 @@ import { RecipeManageFacade } from '../../lib/recipe-manage.facade';
     styleUrls: ['./recipe-edit.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [RecipeManageComponent],
-    providers: [RecipeManageFacade],
 })
-export class RecipeEditComponent extends RecipeManageComponent {}
+export class RecipeEditComponent {
+    public recipe = input<Recipe | null>(null);
+}

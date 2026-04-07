@@ -48,6 +48,7 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User> {
             .HasDefaultValue(5_000_000L);
         entity.Property(e => e.AiOutputTokenLimit)
             .HasDefaultValue(1_000_000L);
+        entity.Property(e => e.AiConsentAcceptedAt);
 
         entity.HasMany(e => e.WeightEntries)
             .WithOne(w => w.User)

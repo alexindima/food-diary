@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "FoodDiary.Initializer": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}

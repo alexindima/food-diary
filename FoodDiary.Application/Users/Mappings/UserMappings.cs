@@ -43,7 +43,8 @@ public static class UserMappings {
             layout,
             user.IsActive,
             user.IsEmailConfirmed,
-            user.LastLoginAtUtc
+            user.LastLoginAtUtc,
+            user.AiConsentAcceptedAt
         );
     }
 

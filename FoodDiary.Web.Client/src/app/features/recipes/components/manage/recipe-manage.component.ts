@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, input, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, input, OnInit, signal, untracked } from '@angular/core';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormGroupControls } from '../../../../shared/lib/common.data';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -165,15 +165,17 @@ export class RecipeManageComponent implements OnInit {
         });
         effect(() => {
             const recipe = this.recipe();
-            if (recipe) {
-                if (this.lastRecipeId !== recipe.id) {
-                    this.lastRecipeId = recipe.id;
-                    this.populateForm(recipe);
+            untracked(() => {
+                if (recipe) {
+                    if (this.lastRecipeId !== recipe.id) {
+                        this.lastRecipeId = recipe.id;
+                        this.populateForm(recipe);
+                    }
+                } else {
+                    this.lastRecipeId = null;
+                    this.updateNutrientSummary(null);
                 }
-            } else {
-                this.lastRecipeId = null;
-                this.updateNutrientSummary(null);
-            }
+            });
         });
     }
 

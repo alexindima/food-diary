@@ -29,4 +29,5 @@ public sealed record UserHttpResponse(
     DashboardLayoutHttpModel? DashboardLayout,
     bool IsActive,
     bool IsEmailConfirmed,
-    DateTime? LastLoginAtUtc);
+    DateTime? LastLoginAtUtc,
+    DateTime? AiConsentAcceptedAt);

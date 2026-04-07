@@ -165,19 +165,63 @@
                 </fd-ui-card>
             </div>
 
+            <fd-ui-card class="user-manage__card user-manage__card--privacy">
+                <div class="user-manage__card-header">
+                    <div class="user-manage__card-icon user-manage__card-icon--privacy"></div>
+                    <div class="user-manage__card-text">
+                        <div class="user-manage__card-title">{{ 'USER_MANAGE.PRIVACY_SECTION' | translate }}</div>
+                        <div class="user-manage__card-subtitle">{{ 'USER_MANAGE.PRIVACY_DESC' | translate }}</div>
+                    </div>
+                </div>
+                <div class="user-manage__privacy">
+                    <div class="user-manage__privacy-item">
+                        <div class="user-manage__privacy-info">
+                            <div class="user-manage__privacy-label">{{ 'USER_MANAGE.AI_CONSENT_LABEL' | translate }}</div>
+                            <div class="user-manage__privacy-status">
+                                @if (hasAiConsent()) {
+                                    <span class="user-manage__privacy-badge user-manage__privacy-badge--active">
+                                        {{ 'USER_MANAGE.AI_CONSENT_ACTIVE' | translate }}
+                                    </span>
+                                } @else {
+                                    <span class="user-manage__privacy-badge user-manage__privacy-badge--inactive">
+                                        {{ 'USER_MANAGE.AI_CONSENT_INACTIVE' | translate }}
+                                    </span>
+                                }
+                            </div>
+                        </div>
+                        @if (hasAiConsent()) {
+                            <fd-ui-button type="button" fill="outline" variant="secondary" size="sm" (click)="onRevokeAiConsent()">
+                                {{ 'USER_MANAGE.AI_CONSENT_REVOKE' | translate }}
+                            </fd-ui-button>
+                        }
+                    </div>
+                    <div class="user-manage__privacy-item">
+                        <a class="user-manage__privacy-link" href="/privacy-policy" target="_blank">
+                            {{ 'USER_MANAGE.PRIVACY_POLICY_LINK' | translate }}
+                        </a>
+                    </div>
+                    <div class="user-manage__privacy-divider"></div>
+                    <div class="user-manage__privacy-item user-manage__privacy-item--danger">
+                        <div class="user-manage__privacy-info">
+                            <div class="user-manage__privacy-label">{{ 'USER_MANAGE.DELETE_ACCOUNT_LABEL' | translate }}</div>
+                            <div class="user-manage__privacy-hint">{{ 'USER_MANAGE.DELETE_ACCOUNT_HINT' | translate }}</div>
+                        </div>
+                        <fd-ui-button
+                            type="button"
+                            variant="danger"
+                            fill="outline"
+                            size="sm"
+                            icon="delete"
+                            [disabled]="isDeleting()"
+                            (click)="onDeleteAccount()"
+                        >
+                            {{ 'USER_MANAGE.DELETE_ACCOUNT_BUTTON' | translate }}
+                        </fd-ui-button>
+                    </div>
+                </div>
+            </fd-ui-card>
+
             <fd-ui-form-error class="user-manage__error" [error]="globalError()" />
-            <div class="user-manage__danger">
-                <fd-ui-button
-                    type="button"
-                    variant="danger"
-                    fill="outline"
-                    icon="delete"
-                    [disabled]="isDeleting()"
-                    (click)="onDeleteAccount()"
-                >
-                    {{ 'USER_MANAGE.DELETE_ACCOUNT_BUTTON' | translate }}
-                </fd-ui-button>
-            </div>
         </form>
     </fd-page-body>
 </div>

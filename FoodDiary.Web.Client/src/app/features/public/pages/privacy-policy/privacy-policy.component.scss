@@ -1,0 +1,54 @@
+.privacy-policy {
+    min-height: 100vh;
+    background: #f8fafc;
+    padding: 40px 20px 80px;
+
+    &__container {
+        max-width: 720px;
+        margin: 0 auto;
+        background: #fff;
+        border-radius: 16px;
+        padding: 40px;
+        box-shadow: 0 1px 3px rgb(0 0 0 / 0.06);
+    }
+
+    &__title {
+        font-size: 1.6rem;
+        font-weight: 700;
+        color: #0f172a;
+        margin: 0 0 24px;
+    }
+
+    &__content {
+        color: #334155;
+        font-size: 0.95rem;
+        line-height: 1.7;
+
+        ::ng-deep {
+
+            h2 {
+                font-size: 1.15rem;
+                font-weight: 600;
+                color: #1e293b;
+                margin: 28px 0 12px;
+            }
+
+            p {
+                margin: 0 0 12px;
+            }
+
+            ul {
+                margin: 0 0 12px;
+                padding-left: 24px;
+            }
+
+            li {
+                margin-bottom: 6px;
+            }
+
+            strong {
+                font-weight: 600;
+            }
+        }
+    }
+}

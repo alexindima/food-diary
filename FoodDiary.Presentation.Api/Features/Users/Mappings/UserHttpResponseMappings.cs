@@ -33,7 +33,8 @@ public static class UserHttpResponseMappings {
             model.DashboardLayout?.ToHttpModel(),
             model.IsActive,
             model.IsEmailConfirmed,
-            model.LastLoginAtUtc
+            model.LastLoginAtUtc,
+            model.AiConsentAcceptedAt
         );
     }
 

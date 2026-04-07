@@ -35,6 +35,7 @@ export interface User {
     isActive: boolean;
     isEmailConfirmed: boolean;
     lastLoginAtUtc?: string | null;
+    aiConsentAcceptedAt?: string | null;
     calories?: number;
 }
 

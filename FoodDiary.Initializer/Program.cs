@@ -1,4 +1,6 @@
 using FoodDiary.Application;
+using FoodDiary.Application.Authentication.Common;
+using FoodDiary.Application.Notifications.Common;
 using FoodDiary.Initializer;
 using FoodDiary.Infrastructure;
 using FoodDiary.Infrastructure.Persistence;
@@ -28,6 +30,10 @@ if (Directory.Exists(webApiSettingsPath)) {
             reloadOnChange: false);
 }
 
+if (builder.Environment.IsDevelopment()) {
+    builder.Configuration.AddUserSecrets<Program>();
+}
+
 if (!string.IsNullOrWhiteSpace(command.ConnectionString)) {
     builder.Configuration.AddInMemoryCollection(new Dictionary<string, string?> {
         ["ConnectionStrings:DefaultConnection"] = command.ConnectionString
@@ -42,6 +48,9 @@ if (string.IsNullOrWhiteSpace(builder.Configuration.GetConnectionString("Default
 
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddScoped<IEmailVerificationNotifier, NoOpEmailVerificationNotifier>();
+builder.Services.AddScoped<INotificationPusher, NoOpNotificationPusher>();
 
 using var host = builder.Build();
 using var scope = host.Services.CreateScope();
@@ -216,4 +225,14 @@ internal sealed record InitializerCommand(string Name, string? TargetMigration, 
 
         return name is null ? null : new InitializerCommand(name, targetMigration, connectionString, force);
     }
+}
+
+internal sealed class NoOpEmailVerificationNotifier : IEmailVerificationNotifier {
+    public Task NotifyEmailVerifiedAsync(Guid userId, CancellationToken cancellationToken = default) =>
+        Task.CompletedTask;
+}
+
+internal sealed class NoOpNotificationPusher : INotificationPusher {
+    public Task PushUnreadCountAsync(Guid userId, int count, CancellationToken cancellationToken = default) =>
+        Task.CompletedTask;
 }

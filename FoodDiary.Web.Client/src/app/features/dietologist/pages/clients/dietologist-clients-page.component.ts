@@ -3,14 +3,13 @@ import { Router } from '@angular/router';
 import { DietologistService } from '../../api/dietologist.service';
 import { ClientSummary } from '../../models/dietologist.data';
 import { DatePipe } from '@angular/common';
-import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 
 @Component({
     selector: 'fd-dietologist-clients-page',
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [DatePipe, FdUiButtonComponent, FdUiCardComponent],
+    imports: [DatePipe, FdUiCardComponent],
     template: `
         <div class="dietologist-clients">
             <h1 class="dietologist-clients__title">My Clients</h1>

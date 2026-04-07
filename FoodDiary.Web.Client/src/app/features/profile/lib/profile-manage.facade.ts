@@ -108,6 +108,20 @@ export class ProfileManageFacade {
             });
     }
 
+    public revokeAiConsent(): void {
+        this.userService.revokeAiConsent().subscribe({
+            next: () => {
+                const current = this.user();
+                if (current) {
+                    this.user.set({ ...current, aiConsentAcceptedAt: null });
+                }
+            },
+            error: () => {
+                this.setGlobalError('USER_MANAGE.REVOKE_AI_CONSENT_ERROR');
+            },
+        });
+    }
+
     public openAdminPanel(): void {
         if (!environment.adminAppUrl) {
             return;

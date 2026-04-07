@@ -1,3 +1,4 @@
+using FoodDiary.Domain.Common;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -5,6 +6,26 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Domain.Entities.Users;
 
 public sealed partial class User {
+    public void AcceptAiConsent() {
+        EnsureNotDeleted();
+        if (AiConsentAcceptedAt is not null) {
+            return;
+        }
+
+        AiConsentAcceptedAt = DomainTime.UtcNow;
+        SetModified();
+    }
+
+    public void RevokeAiConsent() {
+        EnsureNotDeleted();
+        if (AiConsentAcceptedAt is null) {
+            return;
+        }
+
+        AiConsentAcceptedAt = null;
+        SetModified();
+    }
+
     public void SetLanguage(string language) {
         EnsureNotDeleted();
         if (ApplyPreferencesChanges(dashboardLayoutJson: null, language: language)) {

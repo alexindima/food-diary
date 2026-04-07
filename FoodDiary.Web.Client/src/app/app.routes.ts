@@ -122,6 +122,11 @@ export const routes: Routes = [
         data: { seo: { titleKey: 'SEO.DIETOLOGIST', noIndex: true } },
     },
     {
+        path: 'privacy-policy',
+        loadComponent: () => import('./features/public/pages/privacy-policy/privacy-policy.component').then(m => m.PrivacyPolicyComponent),
+        data: { seo: { titleKey: 'SEO.PRIVACY_POLICY', descriptionKey: 'SEO.PRIVACY_POLICY_DESCRIPTION' } },
+    },
+    {
         path: '**',
         loadComponent: () => import('./features/public/pages/not-found/not-found.component').then(m => m.NotFoundComponent),
         data: { seo: { titleKey: 'SEO.NOT_FOUND', noIndex: true } },
