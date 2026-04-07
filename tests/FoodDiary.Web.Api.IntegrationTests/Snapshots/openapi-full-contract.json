@@ -874,6 +874,20 @@
       ]
     },
     {
+      "Path": "/api/v{version}/export/diary",
+      "Operations": [
+        {
+          "Method": "get",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200",
+            "401",
+            "500"
+          ]
+        }
+      ]
+    },
+    {
       "Path": "/api/v{version}/fasting/current",
       "Operations": [
         {

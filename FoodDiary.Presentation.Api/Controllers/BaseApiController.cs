@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using Asp.Versioning;
 using FoodDiary.Application.Common.Abstractions.Result;
+using FoodDiary.Application.Export.Models;
 using FoodDiary.Presentation.Api.Extensions;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -47,6 +48,11 @@ public abstract class BaseApiController(ISender mediator) : ControllerBase {
     protected async Task<IActionResult> HandleNoContent(IRequest<Result> request) {
         var result = await Send(request);
         return result.ToNoContentActionResult(this);
+    }
+
+    protected async Task<IActionResult> HandleFile(IRequest<Result<FileExportResult>> request) {
+        var result = await Send(request);
+        return result.ToFileActionResult(this);
     }
 
     protected async Task<IActionResult> HandleObservedOk<TResponse, THttpResponse>(

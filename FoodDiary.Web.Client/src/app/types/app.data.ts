@@ -38,4 +38,5 @@ export interface AppConfigApiUrls {
     wearables: string;
     reports: string;
     openFoodFacts: string;
+    export: string;
 }

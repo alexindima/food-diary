@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using FoodDiary.Application.Common.Abstractions.Result;
+using FoodDiary.Application.Export.Models;
 using Microsoft.AspNetCore.Mvc;
 using FoodDiary.Presentation.Api.Responses;
 
@@ -45,6 +46,15 @@ public static class ResultExtensions {
                 ? controller.Created(string.Empty, map(result.Value))
                 : ErrorResult(result.Error, controller.HttpContext.TraceIdentifier);
         }
+    }
+
+    public static IActionResult ToFileActionResult(this Result<FileExportResult> result, ControllerBase controller) {
+        if (result.IsFailure) {
+            return ErrorResult(result.Error, controller.HttpContext.TraceIdentifier);
+        }
+
+        var file = result.Value;
+        return controller.File(file.Content, file.ContentType, file.FileName);
     }
 
     public static IActionResult ToNoContentActionResult(this Result result, ControllerBase controller) {

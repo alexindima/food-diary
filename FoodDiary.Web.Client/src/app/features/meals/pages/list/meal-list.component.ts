@@ -6,6 +6,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiDateRangeInputComponent, FdUiDateRangeValue } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
+import { ExportService } from '../../api/export.service';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiIconModule } from 'fd-ui-kit/material';
 import { MatIconModule } from '@angular/material/icon';
@@ -61,6 +62,7 @@ export class MealListComponent implements OnInit {
     private readonly navigationService = inject(NavigationService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly fdDialogService = inject(FdUiDialogService);
+    private readonly exportService = inject(ExportService);
     private readonly breakpointObserver = inject(BreakpointObserver);
 
     public searchForm: FormGroup<SearchFormGroup>;
@@ -349,6 +351,15 @@ export class MealListComponent implements OnInit {
 
     public async goToMealAdd(): Promise<void> {
         await this.navigationService.navigateToConsumptionAdd();
+    }
+
+    public exportCsv(): void {
+        const dateRange = this.searchForm.controls.dateRange.value;
+        const now = new Date();
+        const thirtyDaysAgo = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 30);
+        const dateFrom = this.toIsoDate(dateRange?.start ?? thirtyDaysAgo) ?? new Date().toISOString();
+        const dateTo = this.toIsoDate(dateRange?.end ?? now) ?? new Date().toISOString();
+        this.exportService.exportDiaryCsv(dateFrom, dateTo);
     }
 
     public toggleMobileDateFilter(): void {

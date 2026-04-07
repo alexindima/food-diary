@@ -33,6 +33,7 @@ export const environment: AppConfig = {
         wearables: `${serverUrl}/api/v1/wearables`,
         reports: `${serverUrl}/api/v1/reports`,
         openFoodFacts: `${serverUrl}/api/v1/open-food-facts`,
+        export: `${serverUrl}/api/v1/export`,
     },
     googleClientId: '958507321562-8btd704hjhgsl7niklereh81utg5p780.apps.googleusercontent.com',
     telegramBotUsername: 'fooddiaryclub_bot',

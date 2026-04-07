@@ -834,6 +834,7 @@
         "TITLE": "Meals",
         "SUBTITLE": "Manage your logged meals and snacks",
         "ADD_CONSUMPTION_BUTTON": "Add Consumption",
+        "EXPORT_CSV": "Export CSV",
         "DATE_FILTER_BUTTON": "Date filter",
         "NO_CONSUMPTIONS_FOUND": "No consumptions found",
         "EMPTY_TITLE": "No meals logged yet",

@@ -17,6 +17,14 @@
                         [class.consumption-list__filter-button--active]="hasDateFilter"
                     />
                     <fd-ui-button
+                        class="consumption-list__icon-button"
+                        variant="secondary"
+                        fill="outline"
+                        icon="download"
+                        [ariaLabel]="'CONSUMPTION_LIST.EXPORT_CSV' | translate"
+                        (click)="exportCsv()"
+                    />
+                    <fd-ui-button
                         class="consumption-list__icon-button consumption-list__icon-button--primary"
                         icon="add"
                         variant="primary"
@@ -39,6 +47,14 @@
                     </form>
 
                     <div class="consumption-list__actions">
+                        <fd-ui-button
+                            class="consumption-list__icon-button"
+                            variant="secondary"
+                            fill="outline"
+                            icon="download"
+                            [ariaLabel]="'CONSUMPTION_LIST.EXPORT_CSV' | translate"
+                            (click)="exportCsv()"
+                        />
                         <fd-ui-button
                             class="consumption-list__add-button"
                             icon="add"

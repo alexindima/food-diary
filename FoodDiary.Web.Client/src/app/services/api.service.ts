@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpRequestParams } from '../shared/models/http-request.params';
@@ -33,6 +33,15 @@ export abstract class ApiService {
     protected delete<T>(endpoint: string, headers?: HttpHeaders, params?: HttpRequestParams): Observable<T> {
         const httpParams = this.buildHttpParams(params);
         return this.http.delete<T>(`${this.baseUrl}/${endpoint}`, { headers, params: httpParams });
+    }
+
+    protected getBlob(endpoint: string, params?: HttpRequestParams): Observable<HttpResponse<Blob>> {
+        const httpParams = this.buildHttpParams(params);
+        return this.http.get(`${this.baseUrl}/${endpoint}`, {
+            params: httpParams,
+            responseType: 'blob',
+            observe: 'response',
+        });
     }
 
     private buildHttpParams(params?: HttpRequestParams): HttpParams | undefined {
