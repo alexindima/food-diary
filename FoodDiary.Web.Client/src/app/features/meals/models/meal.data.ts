@@ -177,6 +177,7 @@ export interface ConsumptionItemManageDto {
 export interface ConsumptionAiSessionManageDto {
     imageAssetId?: string | null;
     imageUrl?: string | null;
+    source?: string | null;
     recognizedAtUtc?: string | null;
     notes?: string | null;
     items: ConsumptionAiItemManageDto[];

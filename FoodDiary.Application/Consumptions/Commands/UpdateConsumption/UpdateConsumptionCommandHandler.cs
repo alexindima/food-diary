@@ -131,8 +131,13 @@ public class UpdateConsumptionCommandHandler(
                     aiItem.Alcohol))
                 .ToList();
 
+            var sessionSource = Enum.TryParse<AiRecognitionSource>(session.Source, true, out var parsedSource)
+                ? parsedSource
+                : AiRecognitionSource.Text;
+
             meal.AddAiSession(
                 sessionImageAssetIdResult.Value,
+                sessionSource,
                 session.RecognizedAtUtc ?? dateTimeProvider.UtcNow,
                 session.Notes,
                 sessionItems);

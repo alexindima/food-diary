@@ -53,7 +53,7 @@ public sealed class ConsumptionHttpMappingsTests {
             DateTime.UtcNow, null, null, null, null,
             [],
             new List<ConsumptionAiSessionHttpRequest> {
-                new(assetId, recognizedAt, "AI notes", new List<ConsumptionAiItemHttpRequest> {
+                new(assetId, "Photo", recognizedAt, "AI notes", new List<ConsumptionAiItemHttpRequest> {
                     new("Chicken breast", "Куриная грудка", 200, "g", 330, 62, 7.2, 0, 0, 0),
                 }),
             });
@@ -181,7 +181,7 @@ public sealed class ConsumptionHttpMappingsTests {
             new(aiItemId, sessionId, "Rice", "Рис", 200, "g", 260, 5, 0.6, 56, 0.4, 0),
         };
         var sessions = new List<ConsumptionAiSessionModel> {
-            new(sessionId, consumptionId, null, null, DateTime.UtcNow, "Notes", aiItems),
+            new(sessionId, consumptionId, null, null, "Text", DateTime.UtcNow, "Notes", aiItems),
         };
 
         var model = new ConsumptionModel(

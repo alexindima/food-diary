@@ -58,6 +58,7 @@ public static class ConsumptionHttpMappings {
     private static ConsumptionAiSessionInput ToInput(ConsumptionAiSessionHttpRequest request) =>
         new(
             request.ImageAssetId,
+            request.Source,
             request.RecognizedAtUtc,
             request.Notes,
             ToAiItemInputs(request.Items));

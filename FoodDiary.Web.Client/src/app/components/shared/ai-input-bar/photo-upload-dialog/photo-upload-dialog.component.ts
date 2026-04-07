@@ -1,0 +1,57 @@
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
+import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog.component';
+import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
+import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
+import { FdUiDialogRef } from 'fd-ui-kit/material';
+import { ImageUploadFieldComponent } from '../../image-upload-field/image-upload-field.component';
+import { ImageSelection } from '../../../../shared/models/image-upload.data';
+
+@Component({
+    selector: 'fd-photo-upload-dialog',
+    standalone: true,
+    imports: [TranslatePipe, FdUiDialogComponent, FdUiDialogFooterDirective, FdUiButtonComponent, ImageUploadFieldComponent],
+    template: `
+        <fd-ui-dialog
+            [title]="'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.TITLE' | translate"
+            [subtitle]="'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.SUBTITLE' | translate"
+            size="lg"
+        >
+            <fd-image-upload-field
+                [cropEnabled]="true"
+                [cropSize]="null"
+                [cropMaxSize]="1024"
+                [cropAspectRatio]="null"
+                [deleteOnClear]="true"
+                (imageChanged)="onImageChanged($event)"
+            />
+            <div fdUiDialogFooter class="photo-upload-dialog__footer">
+                <fd-ui-button fill="outline" variant="secondary" (click)="close()">
+                    {{ 'COMMON.CANCEL' | translate }}
+                </fd-ui-button>
+            </div>
+        </fd-ui-dialog>
+    `,
+    styles: [
+        `
+            .photo-upload-dialog__footer {
+                display: flex;
+                justify-content: flex-end;
+            }
+        `,
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class PhotoUploadDialogComponent {
+    private readonly dialogRef = inject(FdUiDialogRef<PhotoUploadDialogComponent, ImageSelection | null>, { optional: true });
+
+    public onImageChanged(selection: ImageSelection | null): void {
+        if (selection?.assetId) {
+            this.dialogRef?.close(selection);
+        }
+    }
+
+    public close(): void {
+        this.dialogRef?.close(null);
+    }
+}

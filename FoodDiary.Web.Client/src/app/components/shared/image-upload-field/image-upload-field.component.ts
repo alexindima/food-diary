@@ -2,6 +2,7 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
+    ElementRef,
     HostListener,
     OnInit,
     ViewEncapsulation,
@@ -9,6 +10,7 @@ import {
     inject,
     input,
     output,
+    viewChild,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { finalize, map, switchMap } from 'rxjs/operators';
@@ -52,6 +54,8 @@ export class ImageUploadFieldComponent implements ControlValueAccessor, OnInit {
     public readonly initialSelection = input<ImageSelection | null>(null);
 
     public readonly imageChanged = output<ImageSelection | null>();
+
+    private readonly fileInputRef = viewChild<ElementRef<HTMLInputElement>>('fileInput');
 
     public selection: ImageSelection = { url: null, assetId: null };
     public isDragging = false;
@@ -176,6 +180,10 @@ export class ImageUploadFieldComponent implements ControlValueAccessor, OnInit {
         void this.confirmCropAsync();
     }
 
+    public openFilePicker(): void {
+        this.fileInputRef()?.nativeElement?.click();
+    }
+
     public onZoneClick(fileInput: HTMLInputElement): void {
         if (this.disabled || this.isUploading || this.selection.url) {
             return;
@@ -188,7 +196,7 @@ export class ImageUploadFieldComponent implements ControlValueAccessor, OnInit {
         this.clearImage();
     }
 
-    private handleIncomingFile(file: File): void {
+    public handleIncomingFile(file: File): void {
         if (this.disabled || this.isUploading) {
             return;
         }

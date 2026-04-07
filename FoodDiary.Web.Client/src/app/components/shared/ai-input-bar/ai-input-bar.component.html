@@ -3,7 +3,7 @@
     <input
         type="text"
         class="ai-input-bar__input"
-        [placeholder]="placeholder() ?? ''"
+        [placeholder]="'CONSUMPTION_LIST.VOICE_PLACEHOLDER' | translate"
         [value]="voiceText()"
         (input)="onTextInput($event)"
         (keydown.enter)="submitText()"
@@ -59,8 +59,25 @@
         </div>
         <div class="ai-input-bar__actions">
             <fd-ui-button size="sm" variant="primary" [disabled]="isProcessing()" (click)="onActionClick()">
-                {{ actionLabel() ?? ('CONSUMPTION_LIST.VOICE_CREATE_MEAL' | translate) }}
+                {{ 'CONSUMPTION_LIST.VOICE_CREATE_MEAL' | translate }}
             </fd-ui-button>
         </div>
     </div>
+}
+
+@if (hasPhotoResult()) {
+    <fd-ai-photo-result
+        [imageUrl]="photoSelection()?.url ?? null"
+        [results]="photoResults()"
+        [isAnalyzing]="photoIsAnalyzing()"
+        [isNutritionLoading]="photoIsNutritionLoading()"
+        [nutrition]="photoNutrition()"
+        [errorKey]="photoErrorKey()"
+        [nutritionErrorKey]="photoNutritionErrorKey()"
+        [isProcessing]="isProcessing()"
+        (dismissed)="dismissPhotoResult()"
+        (addToMeal)="onPhotoAddToMeal()"
+        (editApplied)="onPhotoEditApplied($event)"
+        (reanalyzeRequested)="onPhotoReanalyze()"
+    />
 }

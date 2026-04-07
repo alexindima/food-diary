@@ -45,6 +45,7 @@ public static class ConsumptionMappings {
                 session.MealId.Value,
                 session.ImageAssetId?.Value,
                 session.ImageAsset?.Url,
+                session.Source.ToString(),
                 session.RecognizedAtUtc,
                 session.Notes,
                 session.Items

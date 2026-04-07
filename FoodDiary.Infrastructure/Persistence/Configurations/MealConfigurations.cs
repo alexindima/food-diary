@@ -1,5 +1,6 @@
 using FoodDiary.Domain.Entities.Assets;
 using FoodDiary.Domain.Entities.Meals;
+using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -103,6 +104,11 @@ internal sealed class MealAiSessionConfiguration : IEntityTypeConfiguration<Meal
             .WithMany()
             .HasForeignKey(e => e.ImageAssetId)
             .OnDelete(DeleteBehavior.SetNull);
+
+        entity.Property(e => e.Source)
+            .HasConversion<string>()
+            .HasMaxLength(16)
+            .HasDefaultValue(AiRecognitionSource.Text);
 
         entity.Property(e => e.RecognizedAtUtc)
             .HasColumnType("timestamp with time zone");

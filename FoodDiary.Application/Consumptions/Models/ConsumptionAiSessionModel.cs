@@ -5,6 +5,7 @@ public sealed record ConsumptionAiSessionModel(
     Guid ConsumptionId,
     Guid? ImageAssetId,
     string? ImageUrl,
+    string Source,
     DateTime RecognizedAtUtc,
     string? Notes,
     IReadOnlyList<ConsumptionAiItemModel> Items);

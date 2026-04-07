@@ -73,6 +73,7 @@ public static class ConsumptionHttpResponseMappings {
             model.ConsumptionId,
             model.ImageAssetId,
             model.ImageUrl,
+            model.Source,
             model.RecognizedAtUtc,
             model.Notes,
             model.Items.ToHttpResponseList(ToHttpResponse)

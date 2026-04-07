@@ -88,6 +88,7 @@ public class MealNutritionServiceTests {
         var meal = Meal.Create(userId, DateTime.UtcNow, MealType.Snack);
         meal.AddAiSession(
             imageAssetId: null,
+            source: AiRecognitionSource.Text,
             recognizedAtUtc: DateTime.UtcNow,
             notes: null,
             items: [MealAiItemData.Create("Cookie", null, 50, "g", 250, 3, 12, 34, 1, 0)]);

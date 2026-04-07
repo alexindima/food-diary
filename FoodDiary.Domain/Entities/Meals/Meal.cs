@@ -160,10 +160,11 @@ public sealed class Meal : AggregateRoot<MealId> {
 
     public MealAiSession AddAiSession(
         ImageAssetId? imageAssetId,
+        AiRecognitionSource source,
         DateTime recognizedAtUtc,
         string? notes,
         IReadOnlyList<MealAiItemData> items) {
-        var session = MealAiSession.Create(Id, imageAssetId, recognizedAtUtc, notes);
+        var session = MealAiSession.Create(Id, imageAssetId, source, recognizedAtUtc, notes);
         _aiSessions.Add(session);
         if (items.Count > 0) {
             var createdItems = items

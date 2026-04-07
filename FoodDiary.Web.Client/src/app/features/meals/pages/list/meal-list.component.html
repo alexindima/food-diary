@@ -98,13 +98,7 @@
         }
     </fd-page-header>
 
-    <fd-ai-input-bar
-        [placeholder]="'CONSUMPTION_LIST.VOICE_PLACEHOLDER' | translate"
-        [actionLabel]="'CONSUMPTION_LIST.VOICE_CREATE_MEAL' | translate"
-        [isProcessing]="isCreatingMeal()"
-        (textParsed)="onTextParsed($event)"
-        (photoRequested)="onPhotoRequested()"
-    />
+    <fd-ai-input-bar [isProcessing]="isCreatingMeal()" (mealRecognized)="onMealRecognized($event)" />
 
     @if (favorites().length > 0) {
         <div class="consumption-list__favorites">

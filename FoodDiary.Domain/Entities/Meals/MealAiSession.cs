@@ -1,5 +1,6 @@
 using FoodDiary.Domain.Common;
 using FoodDiary.Domain.Entities.Assets;
+using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Domain.Entities.Meals;
@@ -9,6 +10,7 @@ public sealed class MealAiSession : Entity<MealAiSessionId> {
 
     public MealId MealId { get; private set; }
     public ImageAssetId? ImageAssetId { get; private set; }
+    public AiRecognitionSource Source { get; private set; }
     public DateTime RecognizedAtUtc { get; private set; }
     public string? Notes { get; private set; }
 
@@ -23,6 +25,7 @@ public sealed class MealAiSession : Entity<MealAiSessionId> {
     internal static MealAiSession Create(
         MealId mealId,
         ImageAssetId? imageAssetId,
+        AiRecognitionSource source,
         DateTime recognizedAtUtc,
         string? notes) {
         EnsureMealId(mealId);
@@ -31,6 +34,7 @@ public sealed class MealAiSession : Entity<MealAiSessionId> {
             Id = MealAiSessionId.New(),
             MealId = mealId,
             ImageAssetId = imageAssetId,
+            Source = source,
             RecognizedAtUtc = NormalizeUtc(recognizedAtUtc),
             Notes = NormalizeOptionalText(notes, NotesMaxLength, nameof(notes))
         };

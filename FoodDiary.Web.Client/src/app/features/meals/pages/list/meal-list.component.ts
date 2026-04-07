@@ -13,17 +13,15 @@ import { MatIconModule } from '@angular/material/icon';
 import { ErrorStateComponent } from '../../../../components/shared/error-state/error-state.component';
 import { SkeletonCardComponent } from '../../../../components/shared/skeleton-card/skeleton-card.component';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.component';
-import { Observable, catchError, debounceTime, distinctUntilChanged, finalize, firstValueFrom, map, of, startWith, switchMap } from 'rxjs';
+import { Observable, catchError, debounceTime, distinctUntilChanged, finalize, map, of, startWith, switchMap } from 'rxjs';
 
-import { AiFoodService } from '../../../../shared/api/ai-food.service';
 import { MealService } from '../../api/meal.service';
 import { FavoriteMealService } from '../../api/favorite-meal.service';
 import { MealDetailActionResult, MealDetailComponent } from '../../components/detail/meal-detail.component';
-import { ConsumptionAiSessionManageDto, FavoriteMeal, Meal, MealFilters } from '../../models/meal.data';
+import { FavoriteMeal, Meal, MealFilters } from '../../models/meal.data';
 import { MealCardComponent } from '../../../../components/shared/meal-card/meal-card.component';
 import { AiInputBarComponent } from '../../../../components/shared/ai-input-bar/ai-input-bar.component';
-import { AiInputBarTextResult } from '../../../../components/shared/ai-input-bar/ai-input-bar.types';
-import { MealPhotoRecognitionDialogComponent } from '../../dialogs/photo-recognition-dialog/meal-photo-recognition-dialog.component';
+import { AiInputBarResult } from '../../../../components/shared/ai-input-bar/ai-input-bar.types';
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body.component';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header.component';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
@@ -59,7 +57,6 @@ import { PagedData } from '../../../../shared/lib/paged-data.data';
 export class MealListComponent implements OnInit {
     private readonly mealService = inject(MealService);
     private readonly favoriteMealService = inject(FavoriteMealService);
-    private readonly aiFoodService = inject(AiFoodService);
     private readonly navigationService = inject(NavigationService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly fdDialogService = inject(FdUiDialogService);
@@ -141,77 +138,7 @@ export class MealListComponent implements OnInit {
         });
     }
 
-    public onTextParsed(event: AiInputBarTextResult): void {
-        if (!event.result?.items.length) {
-            return;
-        }
-
-        this.isCreatingMeal.set(true);
-        this.aiFoodService
-            .calculateNutrition({ items: event.result.items })
-            .pipe(
-                finalize(() => this.isCreatingMeal.set(false)),
-                takeUntilDestroyed(this.destroyRef),
-            )
-            .subscribe({
-                next: nutrition => {
-                    const now = new Date();
-
-                    this.mealService
-                        .create({
-                            date: now,
-                            isNutritionAutoCalculated: false,
-                            manualCalories: nutrition.calories,
-                            manualProteins: nutrition.protein,
-                            manualFats: nutrition.fat,
-                            manualCarbs: nutrition.carbs,
-                            manualFiber: nutrition.fiber,
-                            manualAlcohol: nutrition.alcohol,
-                            items: [],
-                            aiSessions: [
-                                {
-                                    recognizedAtUtc: now.toISOString(),
-                                    notes: event.text,
-                                    items: nutrition.items.map(item => ({
-                                        nameEn: item.name,
-                                        amount: item.amount,
-                                        unit: item.unit,
-                                        calories: item.calories,
-                                        proteins: item.protein,
-                                        fats: item.fat,
-                                        carbs: item.carbs,
-                                        fiber: item.fiber,
-                                        alcohol: item.alcohol,
-                                    })),
-                                },
-                            ],
-                        })
-                        .subscribe({
-                            next: () => {
-                                this.aiInputBar()?.clearState();
-                                this.scrollToTop();
-                                this.loadConsumptions(1).subscribe();
-                            },
-                        });
-                },
-            });
-    }
-
-    public async onPhotoRequested(): Promise<void> {
-        const session = await firstValueFrom(
-            this.fdDialogService
-                .open<
-                    MealPhotoRecognitionDialogComponent,
-                    never,
-                    ConsumptionAiSessionManageDto | null
-                >(MealPhotoRecognitionDialogComponent, { size: 'lg' })
-                .afterClosed(),
-        );
-
-        if (!session) {
-            return;
-        }
-
+    public onMealRecognized(result: AiInputBarResult): void {
         this.isCreatingMeal.set(true);
         const now = new Date();
 
@@ -219,14 +146,22 @@ export class MealListComponent implements OnInit {
             .create({
                 date: now,
                 isNutritionAutoCalculated: false,
-                manualCalories: session.items.reduce((sum, item) => sum + item.calories, 0),
-                manualProteins: session.items.reduce((sum, item) => sum + item.proteins, 0),
-                manualFats: session.items.reduce((sum, item) => sum + item.fats, 0),
-                manualCarbs: session.items.reduce((sum, item) => sum + item.carbs, 0),
-                manualFiber: session.items.reduce((sum, item) => sum + item.fiber, 0),
-                manualAlcohol: session.items.reduce((sum, item) => sum + item.alcohol, 0),
+                manualCalories: result.items.reduce((sum, item) => sum + item.calories, 0),
+                manualProteins: result.items.reduce((sum, item) => sum + item.proteins, 0),
+                manualFats: result.items.reduce((sum, item) => sum + item.fats, 0),
+                manualCarbs: result.items.reduce((sum, item) => sum + item.carbs, 0),
+                manualFiber: result.items.reduce((sum, item) => sum + item.fiber, 0),
+                manualAlcohol: result.items.reduce((sum, item) => sum + item.alcohol, 0),
                 items: [],
-                aiSessions: [session],
+                aiSessions: [
+                    {
+                        source: result.source,
+                        imageAssetId: result.imageAssetId,
+                        recognizedAtUtc: result.recognizedAtUtc,
+                        notes: result.notes,
+                        items: result.items,
+                    },
+                ],
             })
             .pipe(
                 finalize(() => this.isCreatingMeal.set(false)),
@@ -234,6 +169,7 @@ export class MealListComponent implements OnInit {
             )
             .subscribe({
                 next: () => {
+                    this.aiInputBar()?.clearState();
                     this.scrollToTop();
                     this.loadConsumptions(1).subscribe();
                 },

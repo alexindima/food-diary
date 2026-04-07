@@ -322,6 +322,7 @@ public class MealInvariantTests {
 
         Assert.Throws<ArgumentException>(() => meal.AddAiSession(
             imageAssetId: null,
+            source: AiRecognitionSource.Text,
             recognizedAtUtc: DateTime.UtcNow,
             notes: null,
             items: [
@@ -345,6 +346,7 @@ public class MealInvariantTests {
 
         Assert.Throws<ArgumentOutOfRangeException>(() => meal.AddAiSession(
             imageAssetId: null,
+            source: AiRecognitionSource.Text,
             recognizedAtUtc: DateTime.UtcNow,
             notes: null,
             items: [
@@ -368,6 +370,7 @@ public class MealInvariantTests {
 
         Assert.Throws<ArgumentOutOfRangeException>(() => meal.AddAiSession(
             imageAssetId: null,
+            source: AiRecognitionSource.Text,
             recognizedAtUtc: DateTime.UtcNow,
             notes: null,
             items: [
@@ -391,6 +394,7 @@ public class MealInvariantTests {
 
         var session = meal.AddAiSession(
             imageAssetId: null,
+            source: AiRecognitionSource.Text,
             recognizedAtUtc: DateTime.UtcNow,
             notes: null,
             items: [
@@ -420,6 +424,7 @@ public class MealInvariantTests {
 
         var session = meal.AddAiSession(
             imageAssetId: null,
+            source: AiRecognitionSource.Text,
             recognizedAtUtc: DateTime.UtcNow,
             notes: "   ",
             items: []);
@@ -433,6 +438,7 @@ public class MealInvariantTests {
 
         Assert.Throws<ArgumentOutOfRangeException>(() => meal.AddAiSession(
             imageAssetId: null,
+            source: AiRecognitionSource.Text,
             recognizedAtUtc: DateTime.UtcNow,
             notes: new string('n', 2049),
             items: []));
@@ -445,6 +451,7 @@ public class MealInvariantTests {
 
         var session = meal.AddAiSession(
             imageAssetId: null,
+            source: AiRecognitionSource.Text,
             recognizedAtUtc: localTime,
             notes: null,
             items: []);
@@ -458,6 +465,7 @@ public class MealInvariantTests {
 
         Assert.Throws<ArgumentOutOfRangeException>(() => meal.AddAiSession(
             imageAssetId: null,
+            source: AiRecognitionSource.Text,
             recognizedAtUtc: new DateTime(2026, 3, 27, 18, 45, 0, DateTimeKind.Unspecified),
             notes: null,
             items: []));
@@ -469,6 +477,7 @@ public class MealInvariantTests {
 
         var session = meal.AddAiSession(
             imageAssetId: null,
+            source: AiRecognitionSource.Text,
             recognizedAtUtc: DateTime.UtcNow,
             notes: null,
             items: [
@@ -558,7 +567,7 @@ public class MealInvariantTests {
             BindingFlags.Static | BindingFlags.NonPublic)!;
 
         var ex = Assert.Throws<TargetInvocationException>(() =>
-            createMethod.Invoke(null, [MealId.Empty, null, DateTime.UtcNow, null]));
+            createMethod.Invoke(null, [MealId.Empty, null, AiRecognitionSource.Text, DateTime.UtcNow, null]));
 
         Assert.IsType<ArgumentException>(ex.InnerException);
     }
@@ -578,7 +587,7 @@ public class MealInvariantTests {
             "AttachToSession",
             BindingFlags.Instance | BindingFlags.NonPublic)!;
 
-        var session = (MealAiSession)createMethod.Invoke(null, [MealId.New(), null, DateTime.UtcNow, null])!;
+        var session = (MealAiSession)createMethod.Invoke(null, [MealId.New(), null, AiRecognitionSource.Text, DateTime.UtcNow, null])!;
         var item = (MealAiItem)itemCreateMethod.Invoke(
             null,
             ["Apple", null, 100d, "g", 52d, 0.3d, 0.2d, 14d, 2.4d, 0d])!;

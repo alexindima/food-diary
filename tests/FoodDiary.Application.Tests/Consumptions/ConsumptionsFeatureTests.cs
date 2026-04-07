@@ -74,6 +74,7 @@ public class ConsumptionsFeatureTests {
         meal.AddRecipe(recipe.Id, 1);
         meal.AddAiSession(
             imageAssetId: null,
+            source: AiRecognitionSource.Text,
             recognizedAtUtc: DateTime.UtcNow,
             notes: null,
             items: [
@@ -124,6 +125,7 @@ public class ConsumptionsFeatureTests {
             AiSessions: [
                 new ConsumptionAiSessionHttpRequest(
                     ImageAssetId: null,
+                    Source: "Text",
                     RecognizedAtUtc: DateTime.UtcNow,
                     Notes: null,
                     Items: null!)
