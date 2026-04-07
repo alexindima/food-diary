@@ -2,6 +2,7 @@ using System.Reflection;
 using FoodDiary.Presentation.Api.Authorization;
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Filters;
+using FoodDiary.Presentation.Api.Features.Admin;
 using FoodDiary.Presentation.Api.Features.Ai;
 using FoodDiary.Presentation.Api.Features.Consumptions;
 using FoodDiary.Presentation.Api.Features.Auth;
@@ -75,6 +76,14 @@ public sealed class ControllerSecurityContractTests {
     [Fact]
     public void ImagesController_GetUploadUrl_UsesAuthRateLimitPolicy() {
         AssertActionRateLimit(typeof(ImagesController), nameof(ImagesController.GetUploadUrl), PresentationPolicyNames.AuthRateLimitPolicyName);
+    }
+
+    [Fact]
+    public void AdminLessonsController_RequiresAdminRole() {
+        var authorizeAttributes = typeof(AdminLessonsController).GetCustomAttributes<AuthorizeAttribute>(inherit: true).ToArray();
+
+        Assert.NotEmpty(authorizeAttributes);
+        Assert.Contains(authorizeAttributes, static attribute => attribute.Roles == PresentationRoleNames.Admin);
     }
 
     [Fact]

@@ -23,12 +23,12 @@ export class LessonService extends ApiService {
     }
 
     public getById(id: string): Observable<LessonDetail> {
-        return super.get<LessonDetail>(`/${id}`).pipe(catchError((error: HttpErrorResponse) => rethrowApiError('Get lesson error', error)));
+        return super.get<LessonDetail>(id).pipe(catchError((error: HttpErrorResponse) => rethrowApiError('Get lesson error', error)));
     }
 
     public markRead(id: string): Observable<void> {
         return super
-            .post<void>(`/${id}/read`, {})
+            .post<void>(`${id}/read`, {})
             .pipe(catchError((error: HttpErrorResponse) => rethrowApiError('Mark lesson read error', error)));
     }
 }

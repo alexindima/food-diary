@@ -1,0 +1,45 @@
+<div class="admin-lessons">
+    <div class="toolbar">
+        <fd-ui-button type="button" (click)="openCreate()">Create lesson</fd-ui-button>
+    </div>
+
+    @if (isLoading()) {
+        <p>Loading lessons...</p>
+    } @else {
+        <table class="lessons-table">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Locale</th>
+                    <th>Category</th>
+                    <th>Difficulty</th>
+                    <th>Read min</th>
+                    <th>Order</th>
+                    <th>Updated</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (lesson of lessons(); track lesson.id) {
+                    <tr>
+                        <td>{{ lesson.title }}</td>
+                        <td>{{ lesson.locale }}</td>
+                        <td>{{ lesson.category }}</td>
+                        <td>{{ lesson.difficulty }}</td>
+                        <td>{{ lesson.estimatedReadMinutes }}</td>
+                        <td>{{ lesson.sortOrder }}</td>
+                        <td>{{ lesson.modifiedOnUtc || lesson.createdOnUtc }}</td>
+                        <td class="actions">
+                            <fd-ui-button type="button" variant="secondary" (click)="openEdit(lesson)">Edit</fd-ui-button>
+                            <fd-ui-button type="button" variant="secondary" (click)="deleteLesson(lesson)">Delete</fd-ui-button>
+                        </td>
+                    </tr>
+                } @empty {
+                    <tr>
+                        <td colspan="8">No lessons found.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>

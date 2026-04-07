@@ -76,7 +76,12 @@ public class LessonsFeatureTests {
         }
 
         public Task<IReadOnlyList<NutritionLesson>> GetByLocaleAsync(string locale, LessonCategory? category = null, CancellationToken ct = default) => throw new NotSupportedException();
+        public Task<IReadOnlyList<NutritionLesson>> GetAllAsync(CancellationToken ct = default) => throw new NotSupportedException();
+        public Task<NutritionLesson?> GetByIdTrackingAsync(NutritionLessonId id, CancellationToken ct = default) => throw new NotSupportedException();
         public Task<IReadOnlyList<UserLessonProgress>> GetUserProgressAsync(UserId userId, CancellationToken ct = default) => throw new NotSupportedException();
+        public Task AddAsync(NutritionLesson lesson, CancellationToken ct = default) => throw new NotSupportedException();
+        public Task UpdateAsync(NutritionLesson lesson, CancellationToken ct = default) => throw new NotSupportedException();
+        public Task DeleteAsync(NutritionLesson lesson, CancellationToken ct = default) => throw new NotSupportedException();
     }
 
     private sealed class FixedDateTimeProvider : IDateTimeProvider {

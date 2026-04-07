@@ -1,5 +1,8 @@
+using FoodDiary.Application.Admin.Commands.CreateAdminLesson;
+using FoodDiary.Application.Admin.Commands.DeleteAdminLesson;
 using FoodDiary.Application.Admin.Commands.DismissContentReport;
 using FoodDiary.Application.Admin.Commands.ReviewContentReport;
+using FoodDiary.Application.Admin.Commands.UpdateAdminLesson;
 using FoodDiary.Application.Admin.Commands.UpdateAdminUser;
 using FoodDiary.Application.Admin.Commands.UpsertAdminAiPrompt;
 using FoodDiary.Application.Admin.Commands.UpsertAdminEmailTemplate;
@@ -49,5 +52,34 @@ public static class AdminHttpMappings {
 
     public static DismissContentReportCommand ToDismissCommand(this AdminReportActionHttpRequest request, Guid reportId) {
         return new DismissContentReportCommand(reportId, request.AdminNote);
+    }
+
+    public static CreateAdminLessonCommand ToCreateCommand(this AdminLessonCreateHttpRequest request) {
+        return new CreateAdminLessonCommand(
+            Title: request.Title,
+            Content: request.Content,
+            Summary: request.Summary,
+            Locale: request.Locale,
+            Category: request.Category,
+            Difficulty: request.Difficulty,
+            EstimatedReadMinutes: request.EstimatedReadMinutes,
+            SortOrder: request.SortOrder);
+    }
+
+    public static UpdateAdminLessonCommand ToUpdateCommand(this AdminLessonUpdateHttpRequest request, Guid id) {
+        return new UpdateAdminLessonCommand(
+            Id: id,
+            Title: request.Title,
+            Content: request.Content,
+            Summary: request.Summary,
+            Locale: request.Locale,
+            Category: request.Category,
+            Difficulty: request.Difficulty,
+            EstimatedReadMinutes: request.EstimatedReadMinutes,
+            SortOrder: request.SortOrder);
+    }
+
+    public static DeleteAdminLessonCommand ToDeleteCommand(this Guid id) {
+        return new DeleteAdminLessonCommand(id);
     }
 }

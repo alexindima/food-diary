@@ -1,0 +1,48 @@
+<div class="lesson-edit-dialog" [formGroup]="form">
+    <div class="form-row">
+        <fd-ui-input formControlName="title" label="Title" />
+    </div>
+
+    <div class="form-row form-row--inline">
+        <fd-ui-select formControlName="locale" label="Locale" [options]="localeOptions" />
+        <fd-ui-select formControlName="category" label="Category" [options]="categoryOptions" />
+        <fd-ui-select formControlName="difficulty" label="Difficulty" [options]="difficultyOptions" />
+    </div>
+
+    <div class="form-row form-row--inline">
+        <fd-ui-input formControlName="estimatedReadMinutes" label="Read minutes" type="number" />
+        <fd-ui-input formControlName="sortOrder" label="Sort order" type="number" />
+    </div>
+
+    <div class="form-row">
+        <fd-ui-textarea formControlName="summary" label="Summary" />
+    </div>
+
+    <div class="form-row">
+        <fd-ui-textarea formControlName="content" label="HTML Content" />
+        <div
+            class="content-counter"
+            [class.content-counter--warning]="contentRemaining() < 1000"
+            [class.content-counter--danger]="contentRemaining() < 0"
+        >
+            {{ contentLength() | number }} / {{ contentMaxLength | number }} ({{ contentRemaining() | number }} remaining)
+        </div>
+    </div>
+
+    <div class="preview-toggle">
+        <fd-ui-button type="button" variant="secondary" (click)="togglePreview()">
+            {{ showPreview() ? 'Hide preview' : 'Show preview' }}
+        </fd-ui-button>
+    </div>
+
+    @if (showPreview()) {
+        <div class="preview" [innerHTML]="previewHtml()"></div>
+    }
+
+    <div class="dialog-actions">
+        <fd-ui-button type="button" variant="secondary" (click)="onCancel()">Cancel</fd-ui-button>
+        <fd-ui-button type="button" [disabled]="form.invalid || isSaving()" (click)="onSave()">
+            {{ isNew ? 'Create' : 'Save' }}
+        </fd-ui-button>
+    </div>
+</div>

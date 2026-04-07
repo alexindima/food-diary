@@ -1,0 +1,26 @@
+.admin-lessons {
+    display: grid;
+    gap: 1rem;
+}
+
+.toolbar {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.lessons-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.lessons-table th,
+.lessons-table td {
+    padding: 0.75rem;
+    border-bottom: 1px solid #e5e7eb;
+    text-align: left;
+}
+
+.actions {
+    display: flex;
+    gap: 0.5rem;
+}

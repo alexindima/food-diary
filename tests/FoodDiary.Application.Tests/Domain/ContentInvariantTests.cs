@@ -37,7 +37,7 @@ public class ContentInvariantTests {
     [Fact]
     public void NutritionLesson_Create_WithTooLongContent_Throws() {
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            NutritionLesson.Create("Title", new string('c', 8193), null, "en",
+            NutritionLesson.Create("Title", new string('c', 65537), null, "en",
                 LessonCategory.Macronutrients, LessonDifficulty.Beginner, 5));
     }
 

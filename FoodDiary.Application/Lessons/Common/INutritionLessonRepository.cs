@@ -10,7 +10,14 @@ public interface INutritionLessonRepository {
         LessonCategory? category = null,
         CancellationToken cancellationToken = default);
 
+    Task<IReadOnlyList<NutritionLesson>> GetAllAsync(
+        CancellationToken cancellationToken = default);
+
     Task<NutritionLesson?> GetByIdAsync(
+        NutritionLessonId id,
+        CancellationToken cancellationToken = default);
+
+    Task<NutritionLesson?> GetByIdTrackingAsync(
         NutritionLessonId id,
         CancellationToken cancellationToken = default);
 
@@ -25,5 +32,17 @@ public interface INutritionLessonRepository {
 
     Task<UserLessonProgress> AddProgressAsync(
         UserLessonProgress progress,
+        CancellationToken cancellationToken = default);
+
+    Task AddAsync(
+        NutritionLesson lesson,
+        CancellationToken cancellationToken = default);
+
+    Task UpdateAsync(
+        NutritionLesson lesson,
+        CancellationToken cancellationToken = default);
+
+    Task DeleteAsync(
+        NutritionLesson lesson,
         CancellationToken cancellationToken = default);
 }

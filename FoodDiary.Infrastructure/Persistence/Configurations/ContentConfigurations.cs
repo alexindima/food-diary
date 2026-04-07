@@ -12,7 +12,7 @@ internal sealed class NutritionLessonConfiguration : IEntityTypeConfiguration<Nu
             value => new NutritionLessonId(value));
 
         entity.Property(e => e.Title).HasMaxLength(256);
-        entity.Property(e => e.Content).HasMaxLength(8192);
+        entity.Property(e => e.Content).HasMaxLength(65536);
         entity.Property(e => e.Summary).HasMaxLength(512);
         entity.Property(e => e.Locale).HasMaxLength(10);
 

@@ -6,7 +6,7 @@ namespace FoodDiary.Domain.Entities.Content;
 
 public sealed class NutritionLesson : Entity<NutritionLessonId> {
     private const int TitleMaxLength = 256;
-    private const int ContentMaxLength = 8192;
+    private const int ContentMaxLength = 65536;
     private const int SummaryMaxLength = 512;
     private const int LocaleMaxLength = 10;
 
@@ -44,6 +44,44 @@ public sealed class NutritionLesson : Entity<NutritionLessonId> {
         };
         lesson.SetCreated();
         return lesson;
+    }
+
+    public void Update(
+        string title,
+        string content,
+        string? summary,
+        string locale,
+        LessonCategory category,
+        LessonDifficulty difficulty,
+        int estimatedReadMinutes,
+        int sortOrder) {
+        var newTitle = NormalizeRequired(title, TitleMaxLength, nameof(title));
+        var newContent = NormalizeRequired(content, ContentMaxLength, nameof(content));
+        var newSummary = NormalizeOptional(summary, SummaryMaxLength);
+        var newLocale = NormalizeRequired(locale, LocaleMaxLength, nameof(locale)).ToLowerInvariant();
+        var newReadMinutes = Math.Max(1, estimatedReadMinutes);
+        var newSortOrder = Math.Max(0, sortOrder);
+
+        if (Title == newTitle &&
+            Content == newContent &&
+            Summary == newSummary &&
+            Locale == newLocale &&
+            Category == category &&
+            Difficulty == difficulty &&
+            EstimatedReadMinutes == newReadMinutes &&
+            SortOrder == newSortOrder) {
+            return;
+        }
+
+        Title = newTitle;
+        Content = newContent;
+        Summary = newSummary;
+        Locale = newLocale;
+        Category = category;
+        Difficulty = difficulty;
+        EstimatedReadMinutes = newReadMinutes;
+        SortOrder = newSortOrder;
+        SetModified();
     }
 
     private static string NormalizeRequired(string value, int maxLength, string paramName) {

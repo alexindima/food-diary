@@ -25,11 +25,29 @@ internal sealed class NutritionLessonRepository(FoodDiaryDbContext context) : IN
             .ToListAsync(cancellationToken);
     }
 
+    public async Task<IReadOnlyList<NutritionLesson>> GetAllAsync(
+        CancellationToken cancellationToken = default) {
+        return await context.Set<NutritionLesson>()
+            .AsNoTracking()
+            .OrderBy(l => l.Locale)
+            .ThenBy(l => l.Category)
+            .ThenBy(l => l.SortOrder)
+            .ThenBy(l => l.CreatedOnUtc)
+            .ToListAsync(cancellationToken);
+    }
+
     public async Task<NutritionLesson?> GetByIdAsync(
         NutritionLessonId id,
         CancellationToken cancellationToken = default) {
         return await context.Set<NutritionLesson>()
             .AsNoTracking()
+            .FirstOrDefaultAsync(l => l.Id == id, cancellationToken);
+    }
+
+    public async Task<NutritionLesson?> GetByIdTrackingAsync(
+        NutritionLessonId id,
+        CancellationToken cancellationToken = default) {
+        return await context.Set<NutritionLesson>()
             .FirstOrDefaultAsync(l => l.Id == id, cancellationToken);
     }
 
@@ -57,5 +75,25 @@ internal sealed class NutritionLessonRepository(FoodDiaryDbContext context) : IN
         context.Set<UserLessonProgress>().Add(progress);
         await context.SaveChangesAsync(cancellationToken);
         return progress;
+    }
+
+    public async Task AddAsync(
+        NutritionLesson lesson,
+        CancellationToken cancellationToken = default) {
+        context.Set<NutritionLesson>().Add(lesson);
+        await context.SaveChangesAsync(cancellationToken);
+    }
+
+    public async Task UpdateAsync(
+        NutritionLesson lesson,
+        CancellationToken cancellationToken = default) {
+        await context.SaveChangesAsync(cancellationToken);
+    }
+
+    public async Task DeleteAsync(
+        NutritionLesson lesson,
+        CancellationToken cancellationToken = default) {
+        context.Set<NutritionLesson>().Remove(lesson);
+        await context.SaveChangesAsync(cancellationToken);
     }
 }

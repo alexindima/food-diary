@@ -1,0 +1,43 @@
+.lesson-edit-dialog {
+    display: grid;
+    gap: 1rem;
+}
+
+.form-row--inline {
+    display: flex;
+    gap: 1rem;
+
+    > * {
+        flex: 1;
+    }
+}
+
+.content-counter {
+    margin-top: 0.25rem;
+    font-size: 0.8125rem;
+    color: #6b7280;
+    text-align: right;
+}
+
+.content-counter--warning {
+    color: #d97706;
+}
+
+.content-counter--danger {
+    color: #dc2626;
+    font-weight: 600;
+}
+
+.preview-toggle,
+.dialog-actions {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.preview {
+    min-height: 12rem;
+    padding: 1rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    background: #fff;
+}
