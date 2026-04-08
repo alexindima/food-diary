@@ -866,7 +866,22 @@
         "VOICE_MIC_TITLE": "Speak your meal"
     },
     "AI_INPUT_BAR": {
-        "PHOTO_TITLE": "Recognize from photo"
+        "PHOTO_TITLE": "Recognize from photo",
+        "ADD_ACTION": "Add",
+        "TEXT_PREVIEW_LABEL": "Source request",
+        "ADD_DETAILS": "Add details",
+        "HIDE_DETAILS": "Hide details",
+        "DETAIL_DATE": "Date",
+        "DETAIL_TIME": "Time",
+        "DETAIL_COMMENT": "Comment",
+        "DETAIL_SATIETY_BEFORE": "Satiety before",
+        "DETAIL_SATIETY_AFTER": "Satiety after",
+        "SATIETY_PLACEHOLDER_TITLE": "Not selected",
+        "SATIETY_PLACEHOLDER_DESCRIPTION": "Choose a level",
+        "TEXT_ERROR_PREMIUM": "Text and voice recognition are available for Premium users.",
+        "TEXT_ERROR_QUOTA": "Monthly AI limit reached. Try again later or upgrade your plan.",
+        "TEXT_ERROR_GENERIC": "Failed to recognize the meal from text. Please try again.",
+        "TEXT_NUTRITION_ERROR": "Failed to calculate nutrition for the recognized items. Please try again."
     },
     "AI_CONSENT": {
         "TITLE": "AI Usage Consent",

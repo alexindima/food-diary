@@ -98,7 +98,7 @@
         }
     </fd-page-header>
 
-    <fd-ai-input-bar [isProcessing]="isCreatingMeal()" (mealRecognized)="onMealRecognized($event)" />
+    <fd-ai-input-bar mode="create" (mealCreated)="onMealCreated()" />
 
     @if (favorites().length > 0) {
         <div class="consumption-list__favorites">

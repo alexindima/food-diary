@@ -7,6 +7,23 @@
     border-radius: 14px;
     background: #fff;
 
+    &__hidden-upload {
+        position: fixed;
+        width: 0;
+        height: 0;
+        z-index: 0;
+    }
+
+    &__hidden-upload ::ng-deep .image-upload-field__dropzone,
+    &__hidden-upload ::ng-deep .image-upload-field__error {
+        display: none;
+    }
+
+    &--attached {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+
     &__icon {
         color: #7c3aed;
         flex-shrink: 0;
@@ -174,4 +191,9 @@
         display: flex;
         justify-content: flex-end;
     }
+}
+
+.ai-input-bar__result-panel {
+    display: block;
+    margin-top: -1px;
 }

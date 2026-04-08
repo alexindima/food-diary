@@ -1,4 +1,13 @@
-<div class="ai-input-bar">
+<div class="ai-input-bar" [class.ai-input-bar--attached]="hasAttachedResult()">
+    <fd-image-upload-field
+        class="ai-input-bar__hidden-upload"
+        [cropEnabled]="true"
+        [cropSize]="null"
+        [cropMaxSize]="1024"
+        [cropAspectRatio]="null"
+        [deleteOnClear]="true"
+        (imageChanged)="onPhotoSelected($event)"
+    />
     <mat-icon class="ai-input-bar__icon">auto_awesome</mat-icon>
     <input
         type="text"
@@ -31,7 +40,7 @@
         </button>
     }
     <button type="button" class="ai-input-bar__submit" [disabled]="!voiceText() || isDisabled()" (click)="submitText()">
-        @if (isVoiceLoading()) {
+        @if (textIsAnalyzing() || textIsNutritionLoading()) {
             <mat-icon>hourglass_empty</mat-icon>
         } @else {
             <mat-icon>send</mat-icon>
@@ -39,35 +48,34 @@
     </button>
 </div>
 
-@if (voiceResult()) {
-    <div class="ai-input-bar__result">
-        <div class="ai-input-bar__result-header">
-            <span>{{ 'CONSUMPTION_LIST.VOICE_RESULT_TITLE' | translate }}</span>
-            <button type="button" class="ai-input-bar__dismiss" (click)="dismissResult()">
-                <mat-icon>close</mat-icon>
-            </button>
-        </div>
-        <div class="ai-input-bar__items">
-            @for (item of voiceResult()!.items; track item.nameEn) {
-                <div class="ai-input-bar__item">
-                    <span class="ai-input-bar__item-name">
-                        {{ item.nameLocal || item.nameEn }}
-                    </span>
-                    <span class="ai-input-bar__item-amount"> {{ item.amount }} {{ item.unit }} </span>
-                </div>
-            }
-        </div>
-        <div class="ai-input-bar__actions">
-            <fd-ui-button size="sm" variant="primary" [disabled]="isProcessing()" (click)="onActionClick()">
-                {{ 'CONSUMPTION_LIST.VOICE_CREATE_MEAL' | translate }}
-            </fd-ui-button>
-        </div>
-    </div>
+@if (hasTextResult()) {
+    <fd-ai-photo-result
+        class="ai-input-bar__result-panel"
+        [titleKey]="'CONSUMPTION_LIST.VOICE_RESULT_TITLE'"
+        [sourceText]="textSubmittedQuery()"
+        [sourceTextLabelKey]="'AI_INPUT_BAR.TEXT_PREVIEW_LABEL'"
+        [submitLabelKey]="submitLabelKey()"
+        [showDetails]="showDetails()"
+        [results]="textResults()"
+        [isAnalyzing]="textIsAnalyzing()"
+        [isNutritionLoading]="textIsNutritionLoading()"
+        [nutrition]="textNutrition()"
+        [errorKey]="textErrorKey()"
+        [nutritionErrorKey]="textNutritionErrorKey()"
+        [isProcessing]="isProcessing()"
+        (dismissed)="dismissTextResult()"
+        (addToMeal)="onTextAddToMeal($event)"
+        (editApplied)="onTextEditApplied($event)"
+        (reanalyzeRequested)="onTextReanalyze()"
+    />
 }
 
 @if (hasPhotoResult()) {
     <fd-ai-photo-result
+        class="ai-input-bar__result-panel"
         [imageUrl]="photoSelection()?.url ?? null"
+        [submitLabelKey]="submitLabelKey()"
+        [showDetails]="showDetails()"
         [results]="photoResults()"
         [isAnalyzing]="photoIsAnalyzing()"
         [isNutritionLoading]="photoIsNutritionLoading()"
@@ -76,7 +84,7 @@
         [nutritionErrorKey]="photoNutritionErrorKey()"
         [isProcessing]="isProcessing()"
         (dismissed)="dismissPhotoResult()"
-        (addToMeal)="onPhotoAddToMeal()"
+        (addToMeal)="onPhotoAddToMeal($event)"
         (editApplied)="onPhotoEditApplied($event)"
         (reanalyzeRequested)="onPhotoReanalyze()"
     />

@@ -1,4 +1,13 @@
 export type AiRecognitionSource = 'Text' | 'Voice' | 'Photo';
+export type AiInputBarMode = 'create' | 'emit';
+
+export type AiInputBarMealDetails = {
+    date: string;
+    time: string;
+    comment?: string | null;
+    preMealSatietyLevel?: number | null;
+    postMealSatietyLevel?: number | null;
+};
 
 export type AiInputBarResultItem = {
     nameEn: string;
@@ -19,5 +28,10 @@ export type AiInputBarResult = {
     imageUrl?: string | null;
     recognizedAtUtc: string;
     notes?: string | null;
+    date?: string;
+    time?: string;
+    comment?: string | null;
+    preMealSatietyLevel?: number | null;
+    postMealSatietyLevel?: number | null;
     items: AiInputBarResultItem[];
 };

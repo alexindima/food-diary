@@ -13,7 +13,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { ErrorStateComponent } from '../../../../components/shared/error-state/error-state.component';
 import { SkeletonCardComponent } from '../../../../components/shared/skeleton-card/skeleton-card.component';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination.component';
-import { Observable, catchError, debounceTime, distinctUntilChanged, finalize, map, of, startWith, switchMap } from 'rxjs';
+import { Observable, catchError, debounceTime, distinctUntilChanged, map, of, startWith, switchMap } from 'rxjs';
 
 import { MealService } from '../../api/meal.service';
 import { FavoriteMealService } from '../../api/favorite-meal.service';
@@ -21,7 +21,6 @@ import { MealDetailActionResult, MealDetailComponent } from '../../components/de
 import { FavoriteMeal, Meal, MealFilters } from '../../models/meal.data';
 import { MealCardComponent } from '../../../../components/shared/meal-card/meal-card.component';
 import { AiInputBarComponent } from '../../../../components/shared/ai-input-bar/ai-input-bar.component';
-import { AiInputBarResult } from '../../../../components/shared/ai-input-bar/ai-input-bar.types';
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body.component';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header.component';
 import { FdPageContainerDirective } from '../../../../directives/layout/page-container.directive';
@@ -70,9 +69,7 @@ export class MealListComponent implements OnInit {
     public readonly errorKey = signal<string | null>(null);
     public readonly favorites = signal<FavoriteMeal[]>([]);
     public readonly isFavoritesOpen = signal(false);
-    public readonly isCreatingMeal = signal(false);
     public readonly isMobileView = signal<boolean>(window.matchMedia('(max-width: 768px)').matches);
-    private readonly aiInputBar = viewChild(AiInputBarComponent);
     private readonly isMobileDateFilterOpen = signal(false);
     private readonly container = viewChild.required<ElementRef<HTMLElement>>('container');
 
@@ -138,42 +135,9 @@ export class MealListComponent implements OnInit {
         });
     }
 
-    public onMealRecognized(result: AiInputBarResult): void {
-        this.isCreatingMeal.set(true);
-        const now = new Date();
-
-        this.mealService
-            .create({
-                date: now,
-                isNutritionAutoCalculated: false,
-                manualCalories: result.items.reduce((sum, item) => sum + item.calories, 0),
-                manualProteins: result.items.reduce((sum, item) => sum + item.proteins, 0),
-                manualFats: result.items.reduce((sum, item) => sum + item.fats, 0),
-                manualCarbs: result.items.reduce((sum, item) => sum + item.carbs, 0),
-                manualFiber: result.items.reduce((sum, item) => sum + item.fiber, 0),
-                manualAlcohol: result.items.reduce((sum, item) => sum + item.alcohol, 0),
-                items: [],
-                aiSessions: [
-                    {
-                        source: result.source,
-                        imageAssetId: result.imageAssetId,
-                        recognizedAtUtc: result.recognizedAtUtc,
-                        notes: result.notes,
-                        items: result.items,
-                    },
-                ],
-            })
-            .pipe(
-                finalize(() => this.isCreatingMeal.set(false)),
-                takeUntilDestroyed(this.destroyRef),
-            )
-            .subscribe({
-                next: () => {
-                    this.aiInputBar()?.clearState();
-                    this.scrollToTop();
-                    this.loadConsumptions(1).subscribe();
-                },
-            });
+    public onMealCreated(): void {
+        this.scrollToTop();
+        this.loadConsumptions(1).subscribe();
     }
 
     public loadConsumptions(page: number): Observable<void> {

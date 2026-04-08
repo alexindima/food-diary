@@ -831,7 +831,22 @@
         "VOICE_MIC_TITLE": "Произнесите приём пищи"
     },
     "AI_INPUT_BAR": {
-        "PHOTO_TITLE": "Распознать по фото"
+        "PHOTO_TITLE": "Распознать по фото",
+        "ADD_ACTION": "Добавить",
+        "TEXT_PREVIEW_LABEL": "Исходный запрос",
+        "ADD_DETAILS": "Добавить детали",
+        "HIDE_DETAILS": "Скрыть детали",
+        "DETAIL_DATE": "Дата",
+        "DETAIL_TIME": "Время",
+        "DETAIL_COMMENT": "Комментарий",
+        "DETAIL_SATIETY_BEFORE": "Сытность до",
+        "DETAIL_SATIETY_AFTER": "Сытность после",
+        "SATIETY_PLACEHOLDER_TITLE": "Не выбрано",
+        "SATIETY_PLACEHOLDER_DESCRIPTION": "Выберите уровень",
+        "TEXT_ERROR_PREMIUM": "Распознавание по тексту и голосу доступно только для пользователей Premium.",
+        "TEXT_ERROR_QUOTA": "Лимит ИИ на месяц исчерпан. Попробуйте позже или обновите план.",
+        "TEXT_ERROR_GENERIC": "Не удалось распознать приём пищи по тексту. Пожалуйста, попробуйте ещё раз.",
+        "TEXT_NUTRITION_ERROR": "Не удалось рассчитать нутриенты для распознанных продуктов. Пожалуйста, попробуйте ещё раз."
     },
     "AI_CONSENT": {
         "TITLE": "Согласие на использование ИИ",

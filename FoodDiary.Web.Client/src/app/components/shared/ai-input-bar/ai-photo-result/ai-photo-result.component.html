@@ -1,14 +1,21 @@
 <div class="ai-photo-result">
     <div class="ai-photo-result__header">
-        <span>{{ 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.RESULTS_TITLE' | translate }}</span>
+        <span>{{ titleKey() | translate }}</span>
         <button type="button" class="ai-photo-result__dismiss" (click)="dismissed.emit()">
             <mat-icon>close</mat-icon>
         </button>
     </div>
 
-    @if (imageUrl()) {
+    @if (imageUrl() || sourceText()) {
         <div class="ai-photo-result__preview-wrap">
-            <img class="ai-photo-result__preview" [src]="imageUrl()" alt="Photo preview" />
+            @if (imageUrl()) {
+                <img class="ai-photo-result__preview" [src]="imageUrl()" alt="Photo preview" />
+            } @else {
+                <div class="ai-photo-result__text-preview">
+                    <div class="ai-photo-result__text-preview-label">{{ sourceTextLabelKey() | translate }}</div>
+                    <div class="ai-photo-result__text-preview-value">{{ sourceText() }}</div>
+                </div>
+            }
             @if (isAnalyzing() || isNutritionLoading()) {
                 <div class="ai-photo-result__scan-overlay">
                     <div class="ai-photo-result__scan-line" [class.ai-photo-result__scan-line--nutrition]="isNutritionLoading()"></div>
@@ -151,14 +158,102 @@
 
         @if (!isEditing()) {
             <div class="ai-photo-result__actions">
+                @if (showDetails()) {
+                    <button type="button" class="ai-photo-result__details-toggle" (click)="toggleDetails()">
+                        <span>{{ (isDetailsExpanded() ? 'AI_INPUT_BAR.HIDE_DETAILS' : 'AI_INPUT_BAR.ADD_DETAILS') | translate }}</span>
+                        <mat-icon>{{ isDetailsExpanded() ? 'expand_less' : 'expand_more' }}</mat-icon>
+                    </button>
+                } @else {
+                    <span></span>
+                }
                 <fd-ui-button
                     size="sm"
                     variant="primary"
                     [disabled]="!nutrition() || isAnalyzing() || isNutritionLoading() || isProcessing()"
-                    (click)="addToMeal.emit()"
+                    (click)="emitAddToMeal()"
                 >
-                    {{ 'CONSUMPTION_LIST.VOICE_CREATE_MEAL' | translate }}
+                    {{ submitLabelKey() | translate }}
                 </fd-ui-button>
+            </div>
+
+            <div class="ai-photo-result__details" [class.ai-photo-result__details--expanded]="showDetails() && isDetailsExpanded()">
+                <div class="ai-photo-result__details-inner">
+                    <div class="ai-photo-result__details-grid">
+                        <label class="ai-photo-result__detail-field">
+                            <span class="ai-photo-result__detail-label">{{ 'AI_INPUT_BAR.DETAIL_DATE' | translate }}</span>
+                            <input
+                                class="ai-photo-result__detail-input"
+                                type="date"
+                                [value]="detailsDate()"
+                                (input)="updateDetailsDate(dateInput.value)"
+                                #dateInput
+                            />
+                        </label>
+                        <label class="ai-photo-result__detail-field">
+                            <span class="ai-photo-result__detail-label">{{ 'AI_INPUT_BAR.DETAIL_TIME' | translate }}</span>
+                            <input
+                                class="ai-photo-result__detail-input"
+                                type="time"
+                                [value]="detailsTime()"
+                                (input)="updateDetailsTime(timeInput.value)"
+                                #timeInput
+                            />
+                        </label>
+                    </div>
+
+                    <label class="ai-photo-result__detail-field">
+                        <span class="ai-photo-result__detail-label">{{ 'AI_INPUT_BAR.DETAIL_COMMENT' | translate }}</span>
+                        <textarea
+                            class="ai-photo-result__detail-textarea"
+                            rows="3"
+                            [value]="detailsComment()"
+                            (input)="updateDetailsComment(commentInput.value)"
+                            #commentInput
+                        ></textarea>
+                    </label>
+
+                    <div class="ai-photo-result__satiety-grid">
+                        <div class="ai-photo-result__satiety-field">
+                            <p class="ai-photo-result__satiety-label">{{ 'AI_INPUT_BAR.DETAIL_SATIETY_BEFORE' | translate }}</p>
+                            @let beforeMeta = getSatietyLevelMeta(preMealSatietyLevel());
+                            <button
+                                type="button"
+                                class="ai-photo-result__satiety-card"
+                                (click)="openSatietyDialog('before')"
+                                [style.--satiety-gradient]="beforeMeta.gradient"
+                            >
+                                <div class="ai-photo-result__satiety-indicator">
+                                    {{ (preMealSatietyLevel() ?? 0) > 0 ? preMealSatietyLevel() : '?' }}
+                                </div>
+                                <div class="ai-photo-result__satiety-text">
+                                    <span class="ai-photo-result__satiety-title">{{ beforeMeta.label }}</span>
+                                    <span class="ai-photo-result__satiety-description">{{ beforeMeta.description }}</span>
+                                </div>
+                                <mat-icon>tune</mat-icon>
+                            </button>
+                        </div>
+
+                        <div class="ai-photo-result__satiety-field">
+                            <p class="ai-photo-result__satiety-label">{{ 'AI_INPUT_BAR.DETAIL_SATIETY_AFTER' | translate }}</p>
+                            @let afterMeta = getSatietyLevelMeta(postMealSatietyLevel());
+                            <button
+                                type="button"
+                                class="ai-photo-result__satiety-card"
+                                (click)="openSatietyDialog('after')"
+                                [style.--satiety-gradient]="afterMeta.gradient"
+                            >
+                                <div class="ai-photo-result__satiety-indicator">
+                                    {{ (postMealSatietyLevel() ?? 0) > 0 ? postMealSatietyLevel() : '?' }}
+                                </div>
+                                <div class="ai-photo-result__satiety-text">
+                                    <span class="ai-photo-result__satiety-title">{{ afterMeta.label }}</span>
+                                    <span class="ai-photo-result__satiety-description">{{ afterMeta.description }}</span>
+                                </div>
+                                <mat-icon>tune</mat-icon>
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
         }
     }

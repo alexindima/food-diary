@@ -1,46 +1,58 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, output, signal, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe } from '@ngx-translate/core';
 import { MatIconModule } from '@angular/material/icon';
 import { finalize, firstValueFrom } from 'rxjs';
 import { catchError, of } from 'rxjs';
-import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { AiFoodService } from '../../../shared/api/ai-food.service';
 import { UserService } from '../../../shared/api/user.service';
 import { LocalizationService } from '../../../services/localization.service';
 import { AuthService } from '../../../services/auth.service';
 import { NavigationService } from '../../../services/navigation.service';
-import { FoodNutritionResponse, FoodVisionItem, FoodVisionResponse } from '../../../shared/models/ai.data';
+import { MealService } from '../../../features/meals/api/meal.service';
+import { Meal } from '../../../features/meals/models/meal.data';
+import { FoodNutritionResponse, FoodVisionItem } from '../../../shared/models/ai.data';
 import { ImageSelection } from '../../../shared/models/image-upload.data';
 import { PremiumRequiredDialogComponent } from '../premium-required-dialog/premium-required-dialog.component';
 import { AiConsentDialogComponent } from '../ai-consent-dialog/ai-consent-dialog.component';
 import { AiPhotoResultComponent } from './ai-photo-result/ai-photo-result.component';
-import { PhotoUploadDialogComponent } from './photo-upload-dialog/photo-upload-dialog.component';
-import { AiInputBarResult, AiRecognitionSource } from './ai-input-bar.types';
+import { ImageUploadFieldComponent } from '../image-upload-field/image-upload-field.component';
+import { AiInputBarMealDetails, AiInputBarMode, AiInputBarResult, AiRecognitionSource } from './ai-input-bar.types';
 
 @Component({
     selector: 'fd-ai-input-bar',
     templateUrl: './ai-input-bar.component.html',
     styleUrls: ['./ai-input-bar.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [TranslatePipe, MatIconModule, FdUiButtonComponent, AiPhotoResultComponent],
+    imports: [TranslatePipe, MatIconModule, AiPhotoResultComponent, ImageUploadFieldComponent],
 })
 export class AiInputBarComponent {
     private readonly aiFoodService = inject(AiFoodService);
+    private readonly mealService = inject(MealService);
     private readonly userService = inject(UserService);
     private readonly localizationService = inject(LocalizationService);
     private readonly authService = inject(AuthService);
     private readonly navigationService = inject(NavigationService);
     private readonly fdDialogService = inject(FdUiDialogService);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly photoUploadField = viewChild(ImageUploadFieldComponent);
 
     public readonly isProcessing = input<boolean>(false);
+    public readonly mode = input<AiInputBarMode>('emit');
     public readonly mealRecognized = output<AiInputBarResult>();
+    public readonly mealCreated = output<Meal>();
 
     public readonly voiceText = signal('');
-    public readonly isVoiceLoading = signal(false);
-    public readonly voiceResult = signal<FoodVisionResponse | null>(null);
+    public readonly textSubmittedQuery = signal<string | null>(null);
+    public readonly textIsAnalyzing = signal(false);
+    public readonly textResults = signal<FoodVisionItem[]>([]);
+    public readonly textIsNutritionLoading = signal(false);
+    public readonly textNutrition = signal<FoodNutritionResponse | null>(null);
+    public readonly textErrorKey = signal<string | null>(null);
+    public readonly textNutritionErrorKey = signal<string | null>(null);
+    public readonly hasTextResult = computed(() => this.textSubmittedQuery() !== null);
+    public readonly isSubmittingMeal = signal(false);
     public readonly isListening = signal(false);
     public readonly isSpeechSupported =
         typeof window !== 'undefined' && ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window);
@@ -54,9 +66,21 @@ export class AiInputBarComponent {
     public readonly photoErrorKey = signal<string | null>(null);
     public readonly photoNutritionErrorKey = signal<string | null>(null);
     public readonly hasPhotoResult = computed(() => this.photoSelection() !== null);
+    public readonly hasAttachedResult = computed(() => this.hasTextResult() || this.hasPhotoResult());
 
     public readonly isDisabled = computed(
-        () => this.isProcessing() || this.isVoiceLoading() || this.photoIsAnalyzing() || this.photoIsNutritionLoading(),
+        () =>
+            this.isProcessing() ||
+            this.textIsAnalyzing() ||
+            this.textIsNutritionLoading() ||
+            this.photoIsAnalyzing() ||
+            this.photoIsNutritionLoading() ||
+            this.isSubmittingMeal(),
+    );
+
+    public readonly showDetails = computed(() => this.mode() === 'create');
+    public readonly submitLabelKey = computed(() =>
+        this.mode() === 'create' ? 'CONSUMPTION_LIST.VOICE_CREATE_MEAL' : 'AI_INPUT_BAR.ADD_ACTION',
     );
 
     private speechRecognition: unknown = null;
@@ -65,7 +89,7 @@ export class AiInputBarComponent {
         this.voiceText.set((event.target as HTMLInputElement).value);
     }
 
-    public async submitText(): Promise<void> {
+    public async submitText(source: AiRecognitionSource = 'Text'): Promise<void> {
         const text = this.voiceText().trim();
         if (!text || this.isDisabled()) {
             return;
@@ -80,18 +104,10 @@ export class AiInputBarComponent {
         }
 
         this.dismissPhotoResult();
-        this.lastTextSource = 'Text';
-        this.isVoiceLoading.set(true);
-        this.aiFoodService
-            .parseFoodText({ text })
-            .pipe(
-                finalize(() => this.isVoiceLoading.set(false)),
-                takeUntilDestroyed(this.destroyRef),
-            )
-            .subscribe({
-                next: result => this.voiceResult.set(result),
-                error: () => this.voiceResult.set(null),
-            });
+        this.dismissTextResult();
+        this.lastTextSource = source;
+        this.textSubmittedQuery.set(text);
+        this.runTextAnalysis(text);
     }
 
     public async toggleMic(): Promise<void> {
@@ -126,8 +142,7 @@ export class AiInputBarComponent {
             const transcript = results?.[0]?.[0]?.transcript;
             if (transcript) {
                 this.voiceText.set(transcript);
-                this.lastTextSource = 'Voice';
-                void this.submitText();
+                void this.submitText('Voice');
             }
         };
 
@@ -145,49 +160,50 @@ export class AiInputBarComponent {
         (recognition['start'] as () => void)();
     }
 
-    public dismissResult(): void {
-        this.voiceResult.set(null);
-    }
-
-    public onActionClick(): void {
-        const result = this.voiceResult();
-        if (!result?.items.length || this.isDisabled()) {
+    public onTextAddToMeal(details: AiInputBarMealDetails): void {
+        const nutrition = this.textNutrition();
+        if (!nutrition) {
             return;
         }
 
-        this.isVoiceLoading.set(true);
-        const text = this.voiceText();
-        const source = this.lastTextSource;
-
-        this.aiFoodService
-            .calculateNutrition({ items: result.items })
-            .pipe(
-                finalize(() => this.isVoiceLoading.set(false)),
-                takeUntilDestroyed(this.destroyRef),
-            )
-            .subscribe({
-                next: nutrition => {
-                    this.mealRecognized.emit({
-                        source,
-                        recognizedAtUtc: new Date().toISOString(),
-                        notes: text,
-                        items: nutrition.items.map(item => ({
-                            nameEn: item.name,
-                            amount: item.amount,
-                            unit: item.unit,
-                            calories: item.calories,
-                            proteins: item.protein,
-                            fats: item.fat,
-                            carbs: item.carbs,
-                            fiber: item.fiber,
-                            alcohol: item.alcohol,
-                        })),
-                    });
-                },
-            });
+        const results = this.textResults();
+        this.submitMeal({
+            source: this.lastTextSource,
+            recognizedAtUtc: new Date().toISOString(),
+            notes: this.textSubmittedQuery(),
+            date: details.date,
+            time: details.time,
+            comment: details.comment ?? null,
+            preMealSatietyLevel: details.preMealSatietyLevel ?? null,
+            postMealSatietyLevel: details.postMealSatietyLevel ?? null,
+            items:
+                nutrition.items?.map(item => {
+                    const match = results.find(
+                        r =>
+                            r.nameEn?.trim().toLowerCase() === (item.name ?? '').trim().toLowerCase() ||
+                            r.nameLocal?.trim().toLowerCase() === (item.name ?? '').trim().toLowerCase(),
+                    );
+                    return {
+                        nameEn: match?.nameEn ?? item.name,
+                        nameLocal: match?.nameLocal ?? null,
+                        amount: item.amount,
+                        unit: item.unit,
+                        calories: item.calories,
+                        proteins: item.protein,
+                        fats: item.fat,
+                        carbs: item.carbs,
+                        fiber: item.fiber,
+                        alcohol: item.alcohol,
+                    };
+                }) ?? [],
+        });
     }
 
     public async onPhotoClick(): Promise<void> {
+        if (this.isDisabled()) {
+            return;
+        }
+
         if (!this.ensurePremium()) {
             return;
         }
@@ -196,14 +212,11 @@ export class AiInputBarComponent {
             return;
         }
 
-        this.dismissResult();
+        this.dismissTextResult();
+        this.photoUploadField()?.openFilePicker();
+    }
 
-        const selection = await firstValueFrom(
-            this.fdDialogService
-                .open<PhotoUploadDialogComponent, never, ImageSelection | null>(PhotoUploadDialogComponent, { size: 'lg' })
-                .afterClosed(),
-        );
-
+    public onPhotoSelected(selection: ImageSelection | null): void {
         if (!selection?.assetId) {
             return;
         }
@@ -216,7 +229,7 @@ export class AiInputBarComponent {
         this.runPhotoAnalysis(selection.assetId);
     }
 
-    public onPhotoAddToMeal(): void {
+    public onPhotoAddToMeal(details: AiInputBarMealDetails): void {
         const nutrition = this.photoNutrition();
         if (!nutrition) {
             return;
@@ -245,14 +258,43 @@ export class AiInputBarComponent {
                 };
             }) ?? [];
 
-        this.mealRecognized.emit({
+        this.submitMeal({
             source: 'Photo',
             imageAssetId: selection?.assetId ?? null,
             imageUrl: selection?.url ?? null,
             recognizedAtUtc: new Date().toISOString(),
             notes: nutrition.notes ?? null,
+            date: details.date,
+            time: details.time,
+            comment: details.comment ?? null,
+            preMealSatietyLevel: details.preMealSatietyLevel ?? null,
+            postMealSatietyLevel: details.postMealSatietyLevel ?? null,
             items,
         });
+    }
+
+    public dismissTextResult(): void {
+        this.textSubmittedQuery.set(null);
+        this.textIsAnalyzing.set(false);
+        this.textResults.set([]);
+        this.textIsNutritionLoading.set(false);
+        this.textNutrition.set(null);
+        this.textErrorKey.set(null);
+        this.textNutritionErrorKey.set(null);
+    }
+
+    public onTextEditApplied(items: FoodVisionItem[]): void {
+        this.textResults.set(items);
+        this.runTextNutrition(items);
+    }
+
+    public onTextReanalyze(): void {
+        const query = this.textSubmittedQuery();
+        if (!query || this.textIsAnalyzing()) {
+            return;
+        }
+
+        this.runTextAnalysis(query);
     }
 
     public dismissPhotoResult(): void {
@@ -284,9 +326,121 @@ export class AiInputBarComponent {
     }
 
     public clearState(): void {
-        this.voiceResult.set(null);
         this.voiceText.set('');
+        this.dismissTextResult();
         this.dismissPhotoResult();
+    }
+
+    private submitMeal(result: AiInputBarResult): void {
+        if (this.mode() === 'emit') {
+            this.mealRecognized.emit(result);
+            return;
+        }
+
+        const mealDate = result.date && result.time ? new Date(`${result.date}T${result.time}`) : new Date();
+        this.isSubmittingMeal.set(true);
+        this.mealService
+            .create({
+                date: mealDate,
+                comment: result.comment ?? undefined,
+                isNutritionAutoCalculated: false,
+                manualCalories: result.items.reduce((sum, item) => sum + item.calories, 0),
+                manualProteins: result.items.reduce((sum, item) => sum + item.proteins, 0),
+                manualFats: result.items.reduce((sum, item) => sum + item.fats, 0),
+                manualCarbs: result.items.reduce((sum, item) => sum + item.carbs, 0),
+                manualFiber: result.items.reduce((sum, item) => sum + item.fiber, 0),
+                manualAlcohol: result.items.reduce((sum, item) => sum + item.alcohol, 0),
+                preMealSatietyLevel: result.preMealSatietyLevel ?? undefined,
+                postMealSatietyLevel: result.postMealSatietyLevel ?? undefined,
+                items: [],
+                aiSessions: [
+                    {
+                        source: result.source,
+                        imageAssetId: result.imageAssetId,
+                        imageUrl: result.imageUrl,
+                        recognizedAtUtc: result.recognizedAtUtc,
+                        notes: result.notes,
+                        items: result.items,
+                    },
+                ],
+            })
+            .pipe(
+                finalize(() => this.isSubmittingMeal.set(false)),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe({
+                next: (meal: Meal | null) => {
+                    if (!meal) {
+                        return;
+                    }
+
+                    this.clearState();
+                    this.mealCreated.emit(meal);
+                },
+            });
+    }
+
+    private runTextAnalysis(text: string): void {
+        this.textIsAnalyzing.set(true);
+        this.textResults.set([]);
+        this.textNutrition.set(null);
+        this.textErrorKey.set(null);
+        this.textNutritionErrorKey.set(null);
+
+        this.aiFoodService
+            .parseFoodText({ text })
+            .pipe(
+                catchError(err => {
+                    if (err?.status === 403) {
+                        this.textErrorKey.set('AI_INPUT_BAR.TEXT_ERROR_PREMIUM');
+                    } else if (err?.status === 429) {
+                        this.textErrorKey.set('AI_INPUT_BAR.TEXT_ERROR_QUOTA');
+                    } else {
+                        this.textErrorKey.set('AI_INPUT_BAR.TEXT_ERROR_GENERIC');
+                    }
+                    return of(null);
+                }),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe(response => {
+                this.textIsAnalyzing.set(false);
+                if (!response) {
+                    return;
+                }
+
+                const items = response.items ?? [];
+                this.textResults.set(items);
+                if (items.length) {
+                    this.runTextNutrition(items);
+                }
+            });
+    }
+
+    private runTextNutrition(items: FoodVisionItem[]): void {
+        this.textIsNutritionLoading.set(true);
+        this.textNutrition.set(null);
+        this.textNutritionErrorKey.set(null);
+
+        this.aiFoodService
+            .calculateNutrition({ items })
+            .pipe(
+                catchError(err => {
+                    if (err?.status === 429) {
+                        this.textNutritionErrorKey.set('AI_INPUT_BAR.TEXT_ERROR_QUOTA');
+                    } else {
+                        this.textNutritionErrorKey.set('AI_INPUT_BAR.TEXT_NUTRITION_ERROR');
+                    }
+                    return of(null);
+                }),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe(response => {
+                this.textIsNutritionLoading.set(false);
+                if (!response) {
+                    return;
+                }
+                this.textNutrition.set(response);
+            });
     }
 
     private runPhotoAnalysis(assetId: string): void {

@@ -3,7 +3,14 @@ import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { MatIconModule } from '@angular/material/icon';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
+import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { DEFAULT_SATIETY_LEVELS } from 'fd-ui-kit/satiety-scale/fd-ui-satiety-scale.component';
+import {
+    MealSatietyLevelDialogComponent,
+    SatietyLevelDialogData,
+} from '../../../../features/meals/dialogs/satiety-level-dialog/meal-satiety-level-dialog.component';
 import { FoodNutritionResponse, FoodVisionItem } from '../../../../shared/models/ai.data';
+import { AiInputBarMealDetails } from '../ai-input-bar.types';
 
 type EditableAiItem = {
     id: string;
@@ -37,9 +44,15 @@ type EditChangeSummary = {
 })
 export class AiPhotoResultComponent {
     private readonly translateService = inject(TranslateService);
+    private readonly fdDialogService = inject(FdUiDialogService);
     private readonly unitOptions = ['g', 'ml', 'pcs'] as const;
 
+    public readonly titleKey = input<string>('CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.RESULTS_TITLE');
     public readonly imageUrl = input<string | null>(null);
+    public readonly sourceText = input<string | null>(null);
+    public readonly sourceTextLabelKey = input<string>('AI_INPUT_BAR.TEXT_PREVIEW_LABEL');
+    public readonly submitLabelKey = input<string>('CONSUMPTION_LIST.VOICE_CREATE_MEAL');
+    public readonly showDetails = input<boolean>(true);
     public readonly results = input<FoodVisionItem[]>([]);
     public readonly isAnalyzing = input<boolean>(false);
     public readonly isNutritionLoading = input<boolean>(false);
@@ -49,11 +62,17 @@ export class AiPhotoResultComponent {
     public readonly isProcessing = input<boolean>(false);
 
     public readonly dismissed = output<void>();
-    public readonly addToMeal = output<void>();
+    public readonly addToMeal = output<AiInputBarMealDetails>();
     public readonly editApplied = output<FoodVisionItem[]>();
     public readonly reanalyzeRequested = output<void>();
 
     public readonly isEditing = signal(false);
+    public readonly isDetailsExpanded = signal(false);
+    public readonly detailsDate = signal(this.getDateInputValue(new Date()));
+    public readonly detailsTime = signal(this.getTimeInputValue(new Date()));
+    public readonly detailsComment = signal('');
+    public readonly preMealSatietyLevel = signal<number | null>(null);
+    public readonly postMealSatietyLevel = signal<number | null>(null);
     public readonly editItems = signal<EditableAiItem[]>([]);
     private readonly sourceItems = signal<EditableAiItem[]>([]);
 
@@ -182,6 +201,78 @@ export class AiPhotoResultComponent {
         this.editItems.update(items => [...items, { id: this.createEditId(), name: '', nameEn: '', nameLocal: '', amount: 0, unit: 'g' }]);
     }
 
+    public toggleDetails(): void {
+        this.isDetailsExpanded.update(value => !value);
+    }
+
+    public updateDetailsDate(value: string): void {
+        this.detailsDate.set(value);
+    }
+
+    public updateDetailsTime(value: string): void {
+        this.detailsTime.set(value);
+    }
+
+    public updateDetailsComment(value: string): void {
+        this.detailsComment.set(value);
+    }
+
+    public emitAddToMeal(): void {
+        this.addToMeal.emit({
+            date: this.detailsDate(),
+            time: this.detailsTime(),
+            comment: this.detailsComment().trim() || null,
+            preMealSatietyLevel: this.preMealSatietyLevel(),
+            postMealSatietyLevel: this.postMealSatietyLevel(),
+        });
+    }
+
+    public getSatietyLevelMeta(value: number | null): { label: string; description: string; gradient: string } {
+        if (!value) {
+            return {
+                label: this.translateService.instant('AI_INPUT_BAR.SATIETY_PLACEHOLDER_TITLE'),
+                description: this.translateService.instant('AI_INPUT_BAR.SATIETY_PLACEHOLDER_DESCRIPTION'),
+                gradient: 'linear-gradient(135deg, #e2e8f0, #cbd5f5)',
+            };
+        }
+
+        const config = DEFAULT_SATIETY_LEVELS.find(level => level.value === value);
+        return {
+            label: `${value} - ${this.translateService.instant(config?.titleKey ?? '')}`,
+            description: this.translateService.instant(config?.descriptionKey ?? ''),
+            gradient: config?.gradient ?? 'linear-gradient(135deg, #e2e8f0, #cbd5f5)',
+        };
+    }
+
+    public openSatietyDialog(kind: 'before' | 'after'): void {
+        const currentValue = kind === 'before' ? this.preMealSatietyLevel() : this.postMealSatietyLevel();
+        const titleKey =
+            kind === 'before' ? 'CONSUMPTION_MANAGE.HUNGER_BEFORE_DIALOG_TITLE' : 'CONSUMPTION_MANAGE.HUNGER_AFTER_DIALOG_TITLE';
+        const dialogRef = this.fdDialogService.open<MealSatietyLevelDialogComponent, SatietyLevelDialogData, number>(
+            MealSatietyLevelDialogComponent,
+            {
+                size: 'lg',
+                data: {
+                    titleKey,
+                    subtitleKey: 'CONSUMPTION_MANAGE.SATIETY_DIALOG_HINT',
+                    value: currentValue,
+                },
+            },
+        );
+
+        dialogRef.afterClosed().subscribe(value => {
+            if (typeof value !== 'number') {
+                return;
+            }
+
+            if (kind === 'before') {
+                this.preMealSatietyLevel.set(value);
+            } else {
+                this.postMealSatietyLevel.set(value);
+            }
+        });
+    }
+
     private resolveUnitKey(unit?: string | null): string | null {
         if (!unit) {
             return null;
@@ -221,6 +312,19 @@ export class AiPhotoResultComponent {
 
     private createEditId(): string {
         return crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random()}`;
+    }
+
+    private getDateInputValue(date: Date): string {
+        const year = date.getFullYear();
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const day = date.getDate().toString().padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+
+    private getTimeInputValue(date: Date): string {
+        const hours = date.getHours().toString().padStart(2, '0');
+        const minutes = date.getMinutes().toString().padStart(2, '0');
+        return `${hours}:${minutes}`;
     }
 
     private analyzeEditChanges(source: EditableAiItem[], edited: EditableAiItem[]): EditChangeSummary {
