@@ -4,7 +4,7 @@ import { Observable, catchError } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
 import { fallbackApiError, rethrowApiError } from '../../../shared/lib/api-error.utils';
-import { FastingHistoryQuery, FastingSession, FastingStats, StartFastingPayload } from '../models/fasting.data';
+import { ExtendFastingPayload, FastingHistoryQuery, FastingSession, FastingStats, StartFastingPayload } from '../models/fasting.data';
 
 @Injectable({
     providedIn: 'root',
@@ -21,6 +21,12 @@ export class FastingService extends ApiService {
     public end(): Observable<FastingSession> {
         return this.put<FastingSession>('end', {}).pipe(
             catchError((error: HttpErrorResponse) => rethrowApiError('End fasting error', error)),
+        );
+    }
+
+    public extend(payload: ExtendFastingPayload): Observable<FastingSession> {
+        return this.put<FastingSession>('current/duration', payload).pipe(
+            catchError((error: HttpErrorResponse) => rethrowApiError('Extend fasting error', error)),
         );
     }
 

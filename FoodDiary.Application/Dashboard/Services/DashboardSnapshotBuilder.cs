@@ -3,6 +3,8 @@ using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Time;
 using FoodDiary.Application.Exercises.Common;
+using FoodDiary.Application.Fasting.Common;
+using FoodDiary.Application.Fasting.Mappings;
 using FoodDiary.Application.WaistEntries.Common;
 using FoodDiary.Application.WeightEntries.Common;
 using FoodDiary.Application.Consumptions.Queries.GetConsumptions;
@@ -39,6 +41,7 @@ public class DashboardSnapshotBuilder(
     IUserRepository userRepository,
     IWeightEntryRepository weightEntryRepository,
     IWaistEntryRepository waistEntryRepository,
+    IFastingSessionRepository fastingSessionRepository,
     IExerciseEntryRepository exerciseEntryRepository,
     ILogger<DashboardSnapshotBuilder> logger) : IDashboardSnapshotBuilder {
 
@@ -93,6 +96,8 @@ public class DashboardSnapshotBuilder(
         var adviceResult = await sender.Send(
             new GetDailyAdviceQuery(userId, dayStart, locale), cancellationToken);
 
+        var currentFastingSession = await fastingSessionRepository.GetCurrentAsync(userId, cancellationToken);
+
         var weightTrendResult = await sender.Send(
             new GetWeightSummariesQuery(userId, trendStart, dayStart, 1), cancellationToken);
 
@@ -115,6 +120,7 @@ public class DashboardSnapshotBuilder(
             meals,
             hydrationResult.IsSuccess ? hydrationResult.Value : null,
             adviceResult.IsSuccess ? adviceResult.Value : null,
+            currentFastingSession?.ToModel(),
             weightTrendResult.IsSuccess ? weightTrendResult.Value : [],
             waistTrendResult.IsSuccess ? waistTrendResult.Value : [],
             layout,

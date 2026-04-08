@@ -1,6 +1,7 @@
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Dashboard.Services;
 using FoodDiary.Application.Exercises.Common;
+using FoodDiary.Application.Fasting.Common;
 using FoodDiary.Application.WaistEntries.Common;
 using FoodDiary.Application.WeightEntries.Common;
 using FoodDiary.Domain.Entities.Tracking;
@@ -19,6 +20,7 @@ public sealed class DashboardSnapshotBuilderTests {
             new StubUserRepository(),
             new StubWeightEntryRepository(),
             new StubWaistEntryRepository(),
+            new StubFastingSessionRepository(),
             new StubExerciseEntryRepository(),
             NullLogger<DashboardSnapshotBuilder>.Instance);
 
@@ -86,6 +88,16 @@ public sealed class DashboardSnapshotBuilderTests {
         public Task<ExerciseEntry?> GetByIdAsync(ExerciseEntryId id, UserId userId, bool asTracking = false, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<IReadOnlyList<ExerciseEntry>> GetByDateRangeAsync(UserId userId, DateTime dateFrom, DateTime dateTo, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<double> GetTotalCaloriesBurnedAsync(UserId userId, DateTime date, CancellationToken cancellationToken = default) => Task.FromResult(0.0);
+    }
+
+    private sealed class StubFastingSessionRepository : IFastingSessionRepository {
+        public Task<FastingSession?> GetCurrentAsync(UserId userId, CancellationToken cancellationToken = default) => Task.FromResult<FastingSession?>(null);
+        public Task<FastingSession?> GetByIdAsync(FastingSessionId id, bool asTracking = false, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<IReadOnlyList<FastingSession>> GetHistoryAsync(UserId userId, DateTime from, DateTime to, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<int> GetCompletedCountAsync(UserId userId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<int> GetCurrentStreakAsync(UserId userId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<FastingSession> AddAsync(FastingSession session, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task UpdateAsync(FastingSession session, CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 
     private sealed class StubWaistEntryRepository : IWaistEntryRepository {

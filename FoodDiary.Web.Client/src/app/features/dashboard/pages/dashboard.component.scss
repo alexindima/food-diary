@@ -195,6 +195,17 @@ variables.$color-primary: #2563eb;
         grid-template-columns: minmax(0, 1fr);
     }
 
+    &__grid--without-fasting {
+
+        .dashboard__column {
+            grid-row: 2 / span 1;
+        }
+
+        .dashboard__column--aside {
+            grid-row: 2;
+        }
+    }
+
     &__grid--editing {
 
         .dashboard__block {
@@ -220,6 +231,10 @@ variables.$color-primary: #2563eb;
             background: #fff;
             box-shadow: none;
         }
+
+        .dashboard__fasting-slot > .dashboard__card {
+            pointer-events: none;
+        }
     }
 
     &__body {
@@ -234,6 +249,7 @@ variables.$color-primary: #2563eb;
 
     &__edit-hint {
         grid-column: 1 / -1;
+        grid-row: 1;
         position: relative;
         z-index: 2;
     }
@@ -253,9 +269,67 @@ variables.$color-primary: #2563eb;
         display: grid;
         gap: 24px;
         align-content: start;
+        min-width: 0;
+        grid-column: 1;
+        grid-row: 2 / span 2;
+    }
+
+    &__fasting-slot {
+        grid-column: 2;
+        grid-row: 2;
+        display: flex;
+        position: relative;
+        min-width: 0;
+        border-radius: 22px;
+        outline: none;
+
+        ::ng-deep .fasting-timer-card > .fd-ui-card {
+            transition:
+                box-shadow 0.2s ease,
+                transform 0.2s ease;
+        }
+
+        &:hover ::ng-deep .fasting-timer-card > .fd-ui-card {
+            box-shadow: 0 12px 24px rgba(15, 23, 42, 0.15);
+            transform: translateY(-2px);
+        }
+
+        &:focus-visible {
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.22);
+        }
+    }
+
+    &__fasting-overlay {
+        position: absolute;
+        inset: 16px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        gap: 6px;
+        padding: 18px;
+        border-radius: 18px;
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.88));
+        backdrop-filter: blur(3px);
+        pointer-events: none;
+        z-index: 2;
+    }
+
+    &__fasting-overlay-title {
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: variables.$color-text-main;
+    }
+
+    &__fasting-overlay-text {
+        font-size: 0.84rem;
+        line-height: 1.45;
+        color: variables.$color-text-additional;
+        max-width: 26ch;
     }
 
     &__column--aside {
+        grid-column: 2;
+        grid-row: 3;
         grid-auto-rows: auto;
     }
 
@@ -301,6 +375,11 @@ variables.$color-primary: #2563eb;
 
         &--hydration {
             height: auto;
+        }
+
+        &--fasting {
+            width: 100%;
+            cursor: pointer;
         }
 
         &--motivation-wide {
@@ -542,6 +621,22 @@ variables.$color-primary: #2563eb;
         &__grid {
             grid-template-columns: 1fr;
         }
+
+        &__column,
+        &__column--aside,
+        &__fasting-slot {
+            grid-column: auto;
+            grid-row: auto;
+            order: -1;
+        }
+
+        &__column {
+            order: 0;
+        }
+
+        &__column--aside {
+            order: 1;
+        }
     }
 
     @media #{variables.$media-mobile} {
@@ -622,6 +717,22 @@ variables.$color-primary: #2563eb;
 
         &__grid {
             grid-template-columns: 1fr;
+        }
+
+        &__column,
+        &__column--aside,
+        &__fasting-slot {
+            grid-column: auto;
+            grid-row: auto;
+            order: -1;
+        }
+
+        &__column {
+            order: 0;
+        }
+
+        &__column--aside {
+            order: 1;
         }
     }
 }

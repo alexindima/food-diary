@@ -1,4 +1,5 @@
 using FoodDiary.Application.Fasting.Commands.EndFasting;
+using FoodDiary.Application.Fasting.Commands.ExtendActiveFasting;
 using FoodDiary.Application.Fasting.Commands.StartFasting;
 using FoodDiary.Application.Fasting.Queries.GetCurrentFasting;
 using FoodDiary.Application.Fasting.Queries.GetFastingHistory;
@@ -12,6 +13,9 @@ public static class FastingHttpMappings {
         new(userId, request.Protocol, request.PlannedDurationHours, request.Notes);
 
     public static EndFastingCommand ToEndCommand(this Guid userId) => new(userId);
+
+    public static ExtendActiveFastingCommand ToExtendCommand(this ExtendActiveFastingHttpRequest request, Guid userId) =>
+        new(userId, request.AdditionalHours);
 
     public static GetCurrentFastingQuery ToCurrentQuery(this Guid userId) => new(userId);
 

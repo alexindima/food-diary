@@ -2,6 +2,7 @@ using FoodDiary.Application.Dashboard.Models;
 using FoodDiary.Application.DailyAdvices.Models;
 using FoodDiary.Presentation.Api.Features.Consumptions.Mappings;
 using FoodDiary.Presentation.Api.Features.Dashboard.Responses;
+using FoodDiary.Presentation.Api.Features.Fasting.Mappings;
 using FoodDiary.Presentation.Api.Features.Hydration.Mappings;
 using FoodDiary.Presentation.Api.Features.Users.Models;
 using FoodDiary.Presentation.Api.Features.WaistEntries.Mappings;
@@ -23,6 +24,7 @@ public static class DashboardHttpResponseMappings {
             model.Meals.ToHttpResponse(),
             model.Hydration?.ToHttpResponse(),
             model.Advice?.ToHttpResponse(),
+            model.CurrentFastingSession?.ToHttpResponse(),
             model.WeightTrend?.ToHttpResponseList(static item => item.ToHttpResponse()),
             model.WaistTrend?.ToHttpResponseList(static item => item.ToHttpResponse()),
             model.DashboardLayout is null

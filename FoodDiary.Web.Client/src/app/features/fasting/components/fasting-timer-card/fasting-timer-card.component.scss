@@ -1,0 +1,77 @@
+.fasting-timer-card {
+    --fd-radius-lg: 22px;
+    height: 100%;
+
+    > .fd-ui-card {
+        border-radius: 22px;
+        overflow: hidden;
+    }
+
+    &__content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+        padding: 16px 0;
+        width: 100%;
+    }
+
+    &__ring {
+        position: relative;
+        width: 220px;
+        height: 220px;
+    }
+
+    &__ring-svg {
+        width: 100%;
+        height: 100%;
+        transform: rotate(-90deg);
+    }
+
+    &__ring-track {
+        stroke: #e2e8f0;
+    }
+
+    &__ring-progress {
+        stroke: #7c3aed;
+        transition: stroke-dashoffset 0.5s ease;
+
+        &--overtime {
+            stroke: #22c55e;
+        }
+    }
+
+    &__ring-content {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        text-align: center;
+        padding: 0 16px;
+    }
+
+    &__elapsed {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #0f172a;
+        font-variant-numeric: tabular-nums;
+
+        &--idle {
+            font-size: 1.4rem;
+            color: #475569;
+        }
+    }
+
+    &__remaining {
+        font-size: 0.85rem;
+        color: #64748b;
+
+        &--done {
+            color: #22c55e;
+            font-weight: 600;
+        }
+    }
+}

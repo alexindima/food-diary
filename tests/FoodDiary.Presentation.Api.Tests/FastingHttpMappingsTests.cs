@@ -41,4 +41,15 @@ public sealed class FastingHttpMappingsTests {
         Assert.Equal(from, query.From);
         Assert.Equal(to, query.To);
     }
+
+    [Fact]
+    public void ExtendActiveFastingRequest_ToCommand_MapsFields() {
+        var userId = Guid.NewGuid();
+        var request = new ExtendActiveFastingHttpRequest(24);
+
+        var command = request.ToExtendCommand(userId);
+
+        Assert.Equal(userId, command.UserId);
+        Assert.Equal(24, command.AdditionalHours);
+    }
 }

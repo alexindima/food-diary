@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, inject, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, computed, inject, viewChild } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { NavigationService } from '../../../services/navigation.service';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
@@ -27,6 +27,7 @@ import { UnsavedChangesService, UnsavedChangesHandler } from '../../../services/
 import { DashboardLayoutService } from '../lib/dashboard-layout.service';
 import { DashboardFacade } from '../lib/dashboard.facade';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
+import { FastingTimerCardComponent } from '../../fasting/components/fasting-timer-card/fasting-timer-card.component';
 
 @Component({
     selector: 'fd-dashboard',
@@ -52,6 +53,7 @@ import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
         MealsPreviewComponent,
         NoticeBannerComponent,
         FdUiLoaderComponent,
+        FastingTimerCardComponent,
     ],
     providers: [DashboardLayoutService, DashboardFacade, provideCharts(withDefaultRegisterables())],
     templateUrl: './dashboard.component.html',
@@ -102,6 +104,30 @@ export class DashboardComponent implements OnInit {
     public readonly mealPreviewEntries = this.facade.mealPreviewEntries;
     public readonly placeholderIcon = this.facade.placeholderIcon;
     public readonly placeholderLabel = this.facade.placeholderLabel;
+    public readonly fastingIsActive = this.facade.fastingIsActive;
+    public readonly fastingCurrentSession = this.facade.currentFastingSession;
+    public readonly fastingProgressPercent = this.facade.fastingProgressPercent;
+    public readonly fastingElapsedFormatted = this.facade.fastingElapsedFormatted;
+    public readonly fastingRemainingFormatted = this.facade.fastingRemainingFormatted;
+    public readonly fastingIsOvertime = this.facade.fastingIsOvertime;
+    public readonly shouldRenderFastingWidget = computed(() => {
+        if (this.layout.isEditingLayout()) {
+            return this.layout.shouldRenderBlock('fasting');
+        }
+
+        return this.layout.isBlockVisible('fasting') && this.fastingIsActive();
+    });
+    public readonly hasRenderedAsideBlocks = computed(() => {
+        if (this.layout.isEditingLayout()) {
+            return this.layout.hasAsideBlocks();
+        }
+
+        const visibleBlocks = this.layout.visibleBlocks();
+        return (
+            visibleBlocks.some(block => ['hydration', 'micronutrients', 'cycle', 'weight', 'waist', 'tdee', 'advice'].includes(block)) ||
+            (visibleBlocks.includes('fasting') && this.fastingIsActive())
+        );
+    });
 
     public ngOnInit(): void {
         this.facade.initialize();
@@ -176,5 +202,22 @@ export class DashboardComponent implements OnInit {
 
     public applyTdeeGoal(target: number): void {
         this.facade.applyTdeeGoal(target);
+    }
+
+    public handleFastingCardClick(): void {
+        if (this.layout.isEditingLayout()) {
+            this.layout.toggleBlock('fasting');
+            return;
+        }
+
+        void this.openFasting();
+    }
+
+    public async openFasting(): Promise<void> {
+        if (this.layout.isEditingLayout()) {
+            return;
+        }
+
+        await this.navigationService.navigateToFasting();
     }
 }

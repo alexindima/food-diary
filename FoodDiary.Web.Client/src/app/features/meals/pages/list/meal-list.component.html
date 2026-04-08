@@ -24,14 +24,6 @@
                         [ariaLabel]="'CONSUMPTION_LIST.EXPORT_CSV' | translate"
                         (click)="exportCsv()"
                     />
-                    <fd-ui-button
-                        class="consumption-list__icon-button consumption-list__icon-button--primary"
-                        icon="add"
-                        variant="primary"
-                        fill="solid"
-                        [ariaLabel]="'CONSUMPTION_LIST.ADD_CONSUMPTION_BUTTON' | translate"
-                        (click)="goToMealAdd()"
-                    />
                 </div>
             } @else {
                 <div class="consumption-list__controls">
@@ -63,16 +55,6 @@
                             [ariaLabel]="'CONSUMPTION_LIST.EXPORT_PDF' | translate"
                             (click)="exportPdf()"
                         />
-                        <fd-ui-button
-                            class="consumption-list__add-button"
-                            icon="add"
-                            variant="primary"
-                            fill="solid"
-                            [ariaLabel]="'CONSUMPTION_LIST.ADD_CONSUMPTION_BUTTON' | translate"
-                            (click)="goToMealAdd()"
-                        >
-                            {{ 'CONSUMPTION_LIST.ADD_CONSUMPTION_BUTTON' | translate }}
-                        </fd-ui-button>
                     </div>
                 </div>
             }
@@ -99,6 +81,13 @@
     </fd-page-header>
 
     <fd-ai-input-bar mode="create" (mealCreated)="onMealCreated()" />
+    <div class="consumption-list__manual-add">
+        <span class="consumption-list__manual-add-label">{{ 'CONSUMPTION_LIST.MANUAL_ADD_OR' | translate }}</span>
+        <button type="button" class="consumption-list__manual-add-button" (click)="goToMealAdd()">
+            <mat-icon>add</mat-icon>
+            <span>{{ 'CONSUMPTION_LIST.ADD_MANUALLY_BUTTON' | translate }}</span>
+        </button>
+    </div>
 
     @if (favorites().length > 0) {
         <div class="consumption-list__favorites">

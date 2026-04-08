@@ -1,6 +1,6 @@
 import { DestroyRef, Injectable, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { finalize, forkJoin } from 'rxjs';
+import { finalize, forkJoin, of } from 'rxjs';
 import { FastingService } from '../api/fasting.service';
 import { FASTING_PROTOCOLS, FastingProtocol, FastingSession, FastingStats } from '../models/fasting.data';
 
@@ -13,11 +13,13 @@ export class FastingFacade {
     public readonly isLoading = signal(false);
     public readonly isStarting = signal(false);
     public readonly isEnding = signal(false);
+    public readonly isExtending = signal(false);
     public readonly currentSession = signal<FastingSession | null>(null);
     public readonly stats = signal<FastingStats | null>(null);
     public readonly history = signal<FastingSession[]>([]);
     public readonly selectedProtocol = signal<FastingProtocol>('F16_8');
     public readonly customHours = signal(16);
+    public readonly extendHours = signal(24);
     public readonly now = signal(new Date());
 
     public readonly isActive = computed(() => {
@@ -67,9 +69,15 @@ export class FastingFacade {
     });
 
     public readonly isOvertime = computed(() => this.elapsedMs() > this.totalMs());
+    public readonly canExtendActiveSession = computed(() => {
+        const session = this.currentSession();
+        return session !== null && session.endedAtUtc === null && session.plannedDurationHours >= 24;
+    });
 
-    public initialize(): void {
+    public initialize(options?: { includeStats?: boolean; includeHistory?: boolean }): void {
         this.isLoading.set(true);
+        const includeStats = options?.includeStats ?? true;
+        const includeHistory = options?.includeHistory ?? true;
 
         const now = new Date();
         const from = new Date(now.getFullYear(), now.getMonth() - 1, 1);
@@ -77,11 +85,13 @@ export class FastingFacade {
 
         forkJoin([
             this.fastingService.getCurrent(),
-            this.fastingService.getStats(),
-            this.fastingService.getHistory({
-                from: from.toISOString(),
-                to: to.toISOString(),
-            }),
+            includeStats ? this.fastingService.getStats() : of(null),
+            includeHistory
+                ? this.fastingService.getHistory({
+                      from: from.toISOString(),
+                      to: to.toISOString(),
+                  })
+                : of([]),
         ])
             .pipe(
                 finalize(() => this.isLoading.set(false)),
@@ -135,7 +145,25 @@ export class FastingFacade {
     }
 
     public setCustomHours(hours: number): void {
-        this.customHours.set(Math.max(1, Math.min(72, hours)));
+        this.customHours.set(Math.max(1, Math.min(168, hours)));
+    }
+
+    public setExtendHours(hours: number): void {
+        this.extendHours.set(Math.max(1, Math.min(168, hours)));
+    }
+
+    public extendByHours(hours: number): void {
+        const additionalHours = Math.max(1, Math.min(168, hours));
+        this.isExtending.set(true);
+        this.fastingService
+            .extend({ additionalHours })
+            .pipe(
+                finalize(() => this.isExtending.set(false)),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe(session => {
+                this.currentSession.set(session);
+            });
     }
 
     private startTimer(): void {

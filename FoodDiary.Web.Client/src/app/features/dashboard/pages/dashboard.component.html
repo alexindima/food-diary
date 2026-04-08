@@ -59,7 +59,8 @@
                 <section
                     class="dashboard__grid"
                     [class.dashboard__grid--editing]="layout.isEditingLayout()"
-                    [class.dashboard__grid--single]="!layout.hasAsideBlocks() && !layout.isEditingLayout()"
+                    [class.dashboard__grid--single]="!hasRenderedAsideBlocks() && !layout.isEditingLayout()"
+                    [class.dashboard__grid--without-fasting]="!shouldRenderFastingWidget()"
                 >
                     @if (layout.isEditingLayout()) {
                         <fd-notice-banner
@@ -70,6 +71,41 @@
                             [actionLabel]="layout.hasLayoutChanges() ? ('DASHBOARD.SETTINGS.SAVE' | translate) : null"
                             (action)="layout.save()"
                         />
+                    }
+                    @if (shouldRenderFastingWidget()) {
+                        <div
+                            class="dashboard__block dashboard__fasting-slot"
+                            [class.dashboard__block--hidden]="layout.isEditingLayout() && !layout.isBlockVisible('fasting')"
+                            [attr.role]="layout.isEditingLayout() ? 'button' : 'button'"
+                            [attr.tabindex]="layout.isEditingLayout() ? 0 : 0"
+                            [attr.aria-pressed]="layout.isEditingLayout() ? layout.isBlockVisible('fasting') : null"
+                            [attr.aria-label]="
+                                layout.isEditingLayout() ? ('DASHBOARD.FASTING_EDIT_TITLE' | translate) : ('FASTING.TITLE' | translate)
+                            "
+                            (click)="handleFastingCardClick()"
+                            (keydown.enter)="handleFastingCardClick()"
+                            (keydown.space)="$event.preventDefault(); handleFastingCardClick()"
+                        >
+                            <fd-fasting-timer-card
+                                class="dashboard__card dashboard__card--clickable dashboard__card--fasting"
+                                [isActive]="fastingIsActive()"
+                                [isOvertime]="fastingIsOvertime()"
+                                [currentSessionCompleted]="!!fastingCurrentSession()?.endedAtUtc"
+                                [progressPercent]="fastingProgressPercent()"
+                                [elapsedFormatted]="fastingElapsedFormatted()"
+                                [remainingFormatted]="fastingRemainingFormatted()"
+                            />
+                            @if (layout.isEditingLayout()) {
+                                <div class="dashboard__fasting-overlay">
+                                    <div class="dashboard__fasting-overlay-title">
+                                        {{ 'DASHBOARD.FASTING_EDIT_TITLE' | translate }}
+                                    </div>
+                                    <div class="dashboard__fasting-overlay-text">
+                                        {{ 'DASHBOARD.FASTING_EDIT_HINT' | translate }}
+                                    </div>
+                                </div>
+                            }
+                        </div>
                     }
                     <div class="dashboard__column">
                         @if (layout.shouldRenderBlock('summary')) {

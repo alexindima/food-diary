@@ -8,7 +8,7 @@ namespace FoodDiary.Domain.Entities.Tracking;
 public sealed class FastingSession : AggregateRoot<FastingSessionId> {
     private const int NotesMaxLength = 500;
     private const int MinDurationHours = 1;
-    private const int MaxDurationHours = 48;
+    private const int MaxDurationHours = 168;
 
     public UserId UserId { get; private set; }
     public DateTime StartedAtUtc { get; private set; }
@@ -65,10 +65,27 @@ public sealed class FastingSession : AggregateRoot<FastingSessionId> {
         SetModified();
     }
 
+    public void Extend(int additionalHours) {
+        if (IsCompleted) {
+            throw new InvalidOperationException("Cannot extend a completed fasting session.");
+        }
+
+        if (additionalHours <= 0) {
+            throw new ArgumentOutOfRangeException(nameof(additionalHours), "Additional duration must be greater than zero.");
+        }
+
+        EnsureDuration(PlannedDurationHours + additionalHours);
+        PlannedDurationHours += additionalHours;
+        SetModified();
+    }
+
     public static int GetDefaultDuration(FastingProtocol protocol) => protocol switch {
         FastingProtocol.F16_8 => 16,
         FastingProtocol.F18_6 => 18,
         FastingProtocol.F20_4 => 20,
+        FastingProtocol.F24_0 => 24,
+        FastingProtocol.F36_0 => 36,
+        FastingProtocol.F72_0 => 72,
         FastingProtocol.Custom => 16,
         _ => 16
     };

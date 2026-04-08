@@ -71,6 +71,10 @@ export class NavigationService {
         await this.router.navigate(['/shopping-lists']);
     }
 
+    public async navigateToFasting(): Promise<void> {
+        await this.router.navigate(['/fasting']);
+    }
+
     public async navigateToStatistics(): Promise<void> {
         await this.router.navigate(['/statistics']);
     }

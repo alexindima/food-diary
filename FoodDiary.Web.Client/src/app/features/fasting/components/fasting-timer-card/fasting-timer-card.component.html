@@ -1,0 +1,43 @@
+<fd-ui-card class="fasting-timer-card">
+    <div class="fasting-timer-card__content">
+        <div class="fasting-timer-card__ring">
+            <svg class="fasting-timer-card__ring-svg" viewBox="0 0 200 200">
+                <circle class="fasting-timer-card__ring-track" cx="100" cy="100" r="90" fill="none" stroke-width="8" />
+                <circle
+                    class="fasting-timer-card__ring-progress"
+                    [class.fasting-timer-card__ring-progress--overtime]="isOvertime()"
+                    cx="100"
+                    cy="100"
+                    r="90"
+                    fill="none"
+                    stroke-width="8"
+                    stroke-linecap="round"
+                    [style.stroke-dasharray]="2 * Math.PI * 90"
+                    [style.stroke-dashoffset]="2 * Math.PI * 90 * (1 - progressPercent() / 100)"
+                />
+            </svg>
+            <div class="fasting-timer-card__ring-content">
+                @if (isActive()) {
+                    <span class="fasting-timer-card__elapsed">{{ elapsedFormatted() }}</span>
+                    <span class="fasting-timer-card__remaining">
+                        @if (isOvertime()) {
+                            {{ 'FASTING.GOAL_REACHED' | translate }}
+                        } @else {
+                            {{ 'FASTING.REMAINING' | translate }}: {{ remainingFormatted() }}
+                        }
+                    </span>
+                } @else if (currentSessionCompleted()) {
+                    <span class="fasting-timer-card__elapsed">{{ elapsedFormatted() }}</span>
+                    <span class="fasting-timer-card__remaining fasting-timer-card__remaining--done">
+                        {{ 'FASTING.COMPLETED' | translate }}
+                    </span>
+                } @else {
+                    <span class="fasting-timer-card__elapsed fasting-timer-card__elapsed--idle">{{ 'FASTING.READY' | translate }}</span>
+                    <span class="fasting-timer-card__remaining">{{ 'FASTING.SELECT_AND_START' | translate }}</span>
+                }
+            </div>
+        </div>
+
+        <ng-content select="[fastingControls]" />
+    </div>
+</fd-ui-card>

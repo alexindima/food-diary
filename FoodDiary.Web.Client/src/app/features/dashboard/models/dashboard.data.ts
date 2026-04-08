@@ -4,6 +4,7 @@ import { DailyAdvice } from './daily-advice.data';
 import { DashboardLayoutSettings } from '../../../shared/models/user.data';
 import { WaistEntrySummaryPoint } from '../../waist-history/models/waist-entry.data';
 import { WeightEntrySummaryPoint } from '../../weight-history/models/weight-entry.data';
+import { FastingSession } from '../../fasting/models/fasting.data';
 
 export interface DashboardSnapshot {
     date: string;
@@ -16,6 +17,7 @@ export interface DashboardSnapshot {
     meals: DashboardMeals;
     hydration?: HydrationDaily | null;
     advice?: DailyAdvice | null;
+    currentFastingSession?: FastingSession | null;
     weightTrend?: WeightEntrySummaryPoint[];
     waistTrend?: WaistEntrySummaryPoint[];
     dashboardLayout?: DashboardLayoutSettings | null;

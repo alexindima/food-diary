@@ -119,22 +119,46 @@
         align-items: center;
     }
 
-    &__add-button {
-        --fd-button-border-radius: 18px;
-        --fd-button-padding-x: 16px;
-        --fd-button-padding-y: 8px;
-        font-weight: 800;
+    &__manual-add {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 6px;
+        margin-top: 6px;
+        margin-bottom: 2px;
+        flex-wrap: wrap;
+    }
+
+    &__manual-add-label {
+        font-size: 0.82rem;
+        font-weight: 600;
+        color: #94a3b8;
+        line-height: 1;
+        align-self: center;
+        padding-left: 6px;
+    }
+
+    &__manual-add-button {
+        appearance: none;
         border: none;
         background: transparent;
-        color: #ffffff;
-        box-shadow: none;
+        padding: 0;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        color: #2563eb;
+        font-size: 0.96rem;
+        font-weight: 700;
+        cursor: pointer;
 
-        ::ng-deep button,
-        ::ng-deep .fd-ui-button {
-            background: linear-gradient(135deg, #4dabff, #2563eb);
-            border: none;
-            color: #ffffff;
-            box-shadow: 0 10px 26px rgba(37, 99, 235, 0.28);
+        &:hover {
+            color: #1d4ed8;
+        }
+
+        mat-icon {
+            width: 18px;
+            height: 18px;
+            font-size: 18px;
         }
     }
 
@@ -250,6 +274,12 @@
 
         &__groups {
             gap: 12px;
+        }
+
+        &__manual-add {
+            padding-left: 12px;
+            padding-right: 12px;
+            align-items: center;
         }
 
         &__day {

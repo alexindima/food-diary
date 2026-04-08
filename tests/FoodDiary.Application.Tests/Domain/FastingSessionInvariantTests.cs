@@ -14,7 +14,7 @@ public class FastingSessionInvariantTests {
     [Theory]
     [InlineData(0)]
     [InlineData(-1)]
-    [InlineData(49)]
+    [InlineData(169)]
     public void Create_WithInvalidDuration_Throws(int hours) {
         Assert.Throws<ArgumentOutOfRangeException>(() =>
             FastingSession.Create(UserId.New(), FastingProtocol.F16_8, hours, DateTime.UtcNow));
@@ -119,6 +119,9 @@ public class FastingSessionInvariantTests {
     [InlineData(FastingProtocol.F16_8, 16)]
     [InlineData(FastingProtocol.F18_6, 18)]
     [InlineData(FastingProtocol.F20_4, 20)]
+    [InlineData(FastingProtocol.F24_0, 24)]
+    [InlineData(FastingProtocol.F36_0, 36)]
+    [InlineData(FastingProtocol.F72_0, 72)]
     [InlineData(FastingProtocol.Custom, 16)]
     public void GetDefaultDuration_ReturnsExpectedHours(FastingProtocol protocol, int expectedHours) {
         Assert.Equal(expectedHours, FastingSession.GetDefaultDuration(protocol));
@@ -127,9 +130,29 @@ public class FastingSessionInvariantTests {
     [Fact]
     public void Create_WithBoundaryDuration_Succeeds() {
         var session1 = FastingSession.Create(UserId.New(), FastingProtocol.Custom, 1, DateTime.UtcNow);
-        var session48 = FastingSession.Create(UserId.New(), FastingProtocol.Custom, 48, DateTime.UtcNow);
+        var session168 = FastingSession.Create(UserId.New(), FastingProtocol.Custom, 168, DateTime.UtcNow);
 
         Assert.Equal(1, session1.PlannedDurationHours);
-        Assert.Equal(48, session48.PlannedDurationHours);
+        Assert.Equal(168, session168.PlannedDurationHours);
+    }
+
+    [Fact]
+    public void Extend_WithValidHours_IncreasesPlannedDuration() {
+        var session = FastingSession.Create(UserId.New(), FastingProtocol.F72_0, 72, DateTime.UtcNow);
+
+        session.Extend(24);
+
+        Assert.Equal(96, session.PlannedDurationHours);
+        Assert.NotNull(session.ModifiedOnUtc);
+    }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(-1)]
+    [InlineData(97)]
+    public void Extend_WithInvalidHours_Throws(int additionalHours) {
+        var session = FastingSession.Create(UserId.New(), FastingProtocol.F72_0, 72, DateTime.UtcNow);
+
+        Assert.Throws<ArgumentOutOfRangeException>(() => session.Extend(additionalHours));
     }
 }

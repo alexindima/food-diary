@@ -6,72 +6,93 @@
             <div class="fasting__loader">{{ 'FASTING.LOADING' | translate }}</div>
         } @else {
             <div class="fasting__grid">
-                <fd-ui-card class="fasting__card fasting__card--timer">
-                    <div class="fasting__timer">
-                        <div class="fasting__ring">
-                            <svg class="fasting__ring-svg" viewBox="0 0 200 200">
-                                <circle class="fasting__ring-track" cx="100" cy="100" r="90" fill="none" stroke-width="8" />
-                                <circle
-                                    class="fasting__ring-progress"
-                                    [class.fasting__ring-progress--overtime]="isOvertime()"
-                                    cx="100"
-                                    cy="100"
-                                    r="90"
-                                    fill="none"
-                                    stroke-width="8"
-                                    stroke-linecap="round"
-                                    [style.stroke-dasharray]="2 * Math.PI * 90"
-                                    [style.stroke-dashoffset]="2 * Math.PI * 90 * (1 - progressPercent() / 100)"
-                                />
-                            </svg>
-                            <div class="fasting__ring-content">
-                                @if (isActive()) {
-                                    <span class="fasting__elapsed">{{ elapsedFormatted() }}</span>
-                                    <span class="fasting__remaining">
-                                        @if (isOvertime()) {
-                                            {{ 'FASTING.GOAL_REACHED' | translate }}
-                                        } @else {
-                                            {{ 'FASTING.REMAINING' | translate }}: {{ remainingFormatted() }}
-                                        }
-                                    </span>
-                                } @else if (currentSession(); as session) {
-                                    @if (session.endedAtUtc) {
-                                        <span class="fasting__elapsed">{{ elapsedFormatted() }}</span>
-                                        <span class="fasting__remaining fasting__remaining--done">{{
-                                            'FASTING.COMPLETED' | translate
-                                        }}</span>
-                                    }
-                                } @else {
-                                    <span class="fasting__elapsed fasting__elapsed--idle">{{ 'FASTING.READY' | translate }}</span>
-                                    <span class="fasting__remaining">{{ 'FASTING.SELECT_AND_START' | translate }}</span>
-                                }
-                            </div>
-                        </div>
-
+                <fd-fasting-timer-card
+                    class="fasting__card"
+                    [isActive]="isActive()"
+                    [isOvertime]="isOvertime()"
+                    [currentSessionCompleted]="!!currentSession()?.endedAtUtc"
+                    [progressPercent]="progressPercent()"
+                    [elapsedFormatted]="elapsedFormatted()"
+                    [remainingFormatted]="remainingFormatted()"
+                >
+                    <div fastingControls class="fasting__controls">
                         @if (!isActive()) {
-                            <div class="fasting__protocols">
-                                @for (p of protocols; track p.value) {
-                                    <button
-                                        type="button"
-                                        class="fasting__protocol-btn"
-                                        [class.fasting__protocol-btn--active]="selectedProtocol() === p.value"
-                                        (click)="selectProtocol(p.value)"
-                                    >
-                                        {{ p.labelKey | translate }}
-                                    </button>
-                                }
+                            <div class="fasting__protocol-group">
+                                <div class="fasting__protocol-group-title">{{ 'FASTING.INTERMITTENT_GROUP' | translate }}</div>
+                                <div class="fasting__protocols">
+                                    @for (p of intermittentProtocols; track p.value) {
+                                        <button
+                                            type="button"
+                                            class="fasting__protocol-btn"
+                                            [class.fasting__protocol-btn--active]="selectedProtocol() === p.value"
+                                            (click)="selectProtocol(p.value)"
+                                        >
+                                            {{ p.labelKey | translate }}
+                                        </button>
+                                    }
+                                </div>
                             </div>
 
-                            @if (selectedProtocol() === 'Custom') {
-                                <div class="fasting__custom-input">
-                                    <fd-ui-input
-                                        type="number"
-                                        [label]="'FASTING.CUSTOM_HOURS' | translate"
-                                        [ngModel]="customHours()"
-                                        (ngModelChange)="onCustomHoursChange($event)"
-                                    />
+                            <div class="fasting__protocol-group">
+                                <div class="fasting__protocol-group-title">{{ 'FASTING.EXTENDED_GROUP' | translate }}</div>
+                                <div class="fasting__protocols">
+                                    @for (p of extendedProtocols; track p.value) {
+                                        <button
+                                            type="button"
+                                            class="fasting__protocol-btn"
+                                            [class.fasting__protocol-btn--active]="selectedProtocol() === p.value"
+                                            (click)="selectProtocol(p.value)"
+                                        >
+                                            {{ p.labelKey | translate }}
+                                        </button>
+                                    }
                                 </div>
-                            }
+
+                                @if (selectedProtocol() === 'Custom') {
+                                    <div class="fasting__custom-input">
+                                        <fd-ui-input
+                                            type="number"
+                                            [label]="'FASTING.CUSTOM_HOURS' | translate"
+                                            [ngModel]="customHours()"
+                                            (ngModelChange)="onCustomHoursChange($event)"
+                                        />
+                                    </div>
+                                }
+                            </div>
+                        }
+
+                        @if (isActive() && canExtendActiveSession()) {
+                            <div class="fasting__protocol-group">
+                                <div class="fasting__protocol-group-title">{{ 'FASTING.EXTEND_GROUP' | translate }}</div>
+                                <div class="fasting__extend-actions">
+                                    <fd-ui-button
+                                        variant="secondary"
+                                        fill="outline"
+                                        (click)="extendByDay()"
+                                        [disabled]="isExtending() || isEnding()"
+                                    >
+                                        {{ 'FASTING.ADD_DAY' | translate }}
+                                    </fd-ui-button>
+                                </div>
+                                <div class="fasting__extend-custom">
+                                    <div class="fasting__custom-input">
+                                        <fd-ui-input
+                                            type="number"
+                                            [label]="'FASTING.ADD_HOURS' | translate"
+                                            [ngModel]="extendHours()"
+                                            (ngModelChange)="onExtendHoursChange($event)"
+                                        />
+                                    </div>
+                                    <fd-ui-button
+                                        variant="secondary"
+                                        fill="outline"
+                                        (click)="extendByCustom()"
+                                        [disabled]="isExtending() || isEnding()"
+                                    >
+                                        {{ 'FASTING.ADD_TIME' | translate }}
+                                    </fd-ui-button>
+                                </div>
+                            </div>
                         }
 
                         <div class="fasting__actions">
@@ -86,7 +107,7 @@
                             }
                         </div>
                     </div>
-                </fd-ui-card>
+                </fd-fasting-timer-card>
 
                 <fd-ui-card class="fasting__card" [title]="'FASTING.STATS_TITLE' | translate">
                     @if (stats(); as s) {

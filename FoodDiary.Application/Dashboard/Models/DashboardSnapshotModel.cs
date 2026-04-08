@@ -1,4 +1,5 @@
 using FoodDiary.Application.DailyAdvices.Models;
+using FoodDiary.Application.Fasting.Models;
 using FoodDiary.Application.Hydration.Models;
 using FoodDiary.Application.Users.Models;
 using FoodDiary.Application.WaistEntries.Models;
@@ -17,6 +18,7 @@ public sealed record DashboardSnapshotModel(
     DashboardMealsModel Meals,
     HydrationDailyModel? Hydration = null,
     DailyAdviceModel? Advice = null,
+    FastingSessionModel? CurrentFastingSession = null,
     IReadOnlyList<WeightEntrySummaryModel>? WeightTrend = null,
     IReadOnlyList<WaistEntrySummaryModel>? WaistTrend = null,
     DashboardLayoutModel? DashboardLayout = null,

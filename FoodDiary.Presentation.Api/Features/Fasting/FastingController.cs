@@ -25,6 +25,13 @@ public class FastingController(ISender mediator) : AuthorizedController(mediator
     public Task<IActionResult> End([FromCurrentUser] Guid userId) =>
         HandleOk(userId.ToEndCommand(), static value => value.ToHttpResponse());
 
+    [HttpPut("current/duration")]
+    [ProducesResponseType<FastingSessionHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
+    public Task<IActionResult> ExtendDuration([FromCurrentUser] Guid userId, [FromBody] ExtendActiveFastingHttpRequest request) =>
+        HandleOk(request.ToExtendCommand(userId), static value => value.ToHttpResponse());
+
     [HttpGet("current")]
     [ProducesResponseType<FastingSessionHttpResponse>(StatusCodes.Status200OK)]
     public Task<IActionResult> GetCurrent([FromCurrentUser] Guid userId) =>

@@ -1,6 +1,7 @@
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Interfaces.Services;
 using FoodDiary.Application.Fasting.Commands.EndFasting;
+using FoodDiary.Application.Fasting.Commands.ExtendActiveFasting;
 using FoodDiary.Application.Fasting.Commands.StartFasting;
 using FoodDiary.Application.Fasting.Common;
 
@@ -87,6 +88,31 @@ public class FastingFeatureTests {
 
         var result = await handler.Handle(
             new EndFastingCommand(Guid.NewGuid()), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Contains("NoActiveSession", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task ExtendActiveFasting_WhenSessionIsActive_Succeeds() {
+        var userId = UserId.New();
+        var session = FastingSession.Create(userId, FastingProtocol.F72_0, 72, FixedNow);
+        var repo = new InMemoryFastingRepository(current: session);
+        var handler = new ExtendActiveFastingCommandHandler(repo);
+
+        var result = await handler.Handle(
+            new ExtendActiveFastingCommand(userId.Value, 24), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(96, result.Value.PlannedDurationHours);
+    }
+
+    [Fact]
+    public async Task ExtendActiveFasting_WhenNoActiveSession_ReturnsFailure() {
+        var handler = new ExtendActiveFastingCommandHandler(new InMemoryFastingRepository());
+
+        var result = await handler.Handle(
+            new ExtendActiveFastingCommand(Guid.NewGuid(), 24), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Contains("NoActiveSession", result.Error.Code);
