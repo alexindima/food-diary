@@ -216,8 +216,11 @@
     }
 
     &__cropper-body {
+        position: relative;
         width: 100%;
+        height: clamp(320px, 60vh, 520px);
         max-height: min(70vh, 520px);
+        min-height: 320px;
         overflow: hidden;
         border-radius: 14px;
         border: 1px solid #e2e8f0;
@@ -226,7 +229,19 @@
 
     &__cropper-image {
         display: block;
+        width: 100%;
+        height: 100%;
         max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+    }
+
+    &__cropper-body cropper-canvas,
+    &__cropper-body cropper-image,
+    &__cropper-body cropper-shade,
+    &__cropper-body cropper-selection {
+        width: 100%;
+        height: 100%;
     }
 
     &__cropper-actions {
