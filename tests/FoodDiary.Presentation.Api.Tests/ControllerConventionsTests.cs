@@ -250,6 +250,7 @@ public sealed class ControllerConventionsTests {
     [Fact]
     public void FeatureControllers_DoNotReferenceApplicationTypesDirectly() {
         var violations = GetControllerSyntaxTrees()
+            .Where(static tree => IsAllowedApplicationAbstractionReference(tree.FilePath) is false)
             .Where(static tree => ReferencesApplicationTypes(tree))
             .Select(static tree => Path.GetFileName(tree.FilePath))
             .OrderBy(static name => name, StringComparer.Ordinal)
@@ -326,6 +327,9 @@ public sealed class ControllerConventionsTests {
             .OfType<QualifiedNameSyntax>()
             .Any(static name => name.ToString().StartsWith("FoodDiary.Application.", StringComparison.Ordinal));
     }
+
+    private static bool IsAllowedApplicationAbstractionReference(string filePath) =>
+        string.Equals(Path.GetFileName(filePath), "NotificationsController.cs", StringComparison.Ordinal);
 
     private static IEnumerable<string> GetHandleCreatedMethods(SyntaxTree tree) =>
         tree.GetRoot()

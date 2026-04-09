@@ -42,8 +42,15 @@ public class RefreshTokenCommandHandler : ICommandHandler<RefreshTokenCommand, R
             return Result.Failure<AuthenticationModel>(Errors.Authentication.InvalidToken);
         }
 
-        var normalizedRefreshToken = SecurityTokenGenerator.NormalizeForSecureHashing(command.RefreshToken);
-        if (user.RefreshToken is null || !_passwordHasher.Verify(normalizedRefreshToken, user.RefreshToken)) {
+        if (user.RefreshToken is null) {
+            return Result.Failure<AuthenticationModel>(Errors.Authentication.InvalidToken);
+        }
+
+        var isRefreshTokenValid = SecurityTokenGenerator.IsFastStorageHash(user.RefreshToken)
+            ? SecurityTokenGenerator.VerifyFastStorageHash(command.RefreshToken, user.RefreshToken)
+            : _passwordHasher.Verify(SecurityTokenGenerator.NormalizeForSecureHashing(command.RefreshToken), user.RefreshToken);
+
+        if (!isRefreshTokenValid) {
             return Result.Failure<AuthenticationModel>(Errors.Authentication.InvalidToken);
         }
 

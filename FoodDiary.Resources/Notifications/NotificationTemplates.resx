@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, ...</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, ...</value>
+  </resheader>
+  <data name="NewRecommendation_Title" xml:space="preserve">
+    <value>New recommendation from {0}</value>
+  </data>
+  <data name="NewComment_Title" xml:space="preserve">
+    <value>New comment on your recipe</value>
+  </data>
+  <data name="FastingCompleted_Title" xml:space="preserve">
+    <value>Your fasting window is complete</value>
+  </data>
+  <data name="FastingCompleted_Body" xml:space="preserve">
+    <value>Time to log how you feel and plan your next meal.</value>
+  </data>
+  <data name="WeeklyCheckIn_Title" xml:space="preserve">
+    <value>Weekly review is ready</value>
+  </data>
+  <data name="WeeklyCheckIn_Body" xml:space="preserve">
+    <value>Open your weekly review to see trends and suggestions.</value>
+  </data>
+  <data name="Hydration_Title" xml:space="preserve">
+    <value>Hydration reminder</value>
+  </data>
+  <data name="Hydration_Body" xml:space="preserve">
+    <value>You are behind your water goal for today.</value>
+  </data>
+  <data name="GoalReached_Title" xml:space="preserve">
+    <value>Protein goal reached</value>
+  </data>
+  <data name="GoalReached_Body" xml:space="preserve">
+    <value>Nice work. You have already hit your protein target today.</value>
+  </data>
+  <data name="Lesson_Title" xml:space="preserve">
+    <value>New lesson available</value>
+  </data>
+  <data name="Lesson_Body" xml:space="preserve">
+    <value>A new nutrition lesson was added to the academy.</value>
+  </data>
+  <data name="MealPlan_Title" xml:space="preserve">
+    <value>Meal plan suggestion</value>
+  </data>
+  <data name="MealPlan_Body" xml:space="preserve">
+    <value>We found a meal plan that matches your current calorie target.</value>
+  </data>
+  <data name="Achievement_Title" xml:space="preserve">
+    <value>Achievement unlocked</value>
+  </data>
+  <data name="Achievement_Body" xml:space="preserve">
+    <value>You kept your streak going. Check your new badge.</value>
+  </data>
+</root>

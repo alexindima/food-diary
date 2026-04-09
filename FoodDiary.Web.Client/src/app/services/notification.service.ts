@@ -3,6 +3,17 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { AuthService } from './auth.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Observable, tap } from 'rxjs';
+
+export interface NotificationItem {
+    id: string;
+    type: string;
+    title: string;
+    body: string | null;
+    referenceId: string | null;
+    isRead: boolean;
+    createdAtUtc: string;
+}
 
 @Injectable({ providedIn: 'root' })
 export class NotificationService {
@@ -29,13 +40,24 @@ export class NotificationService {
             });
     }
 
-    public markAllRead(): void {
-        this.http
-            .put<void>(`${this.baseUrl}/read-all`, {})
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: () => this.unreadCount.set(0),
-            });
+    public getNotifications(): Observable<NotificationItem[]> {
+        return this.http.get<NotificationItem[]>(this.baseUrl);
+    }
+
+    public markAsRead(notificationId: string): Observable<void> {
+        return this.http.put<void>(`${this.baseUrl}/${notificationId}/read`, {}).pipe(
+            tap(() => {
+                this.unreadCount.update(count => Math.max(0, count - 1));
+            }),
+        );
+    }
+
+    public markAllRead(): Observable<void> {
+        return this.http.put<void>(`${this.baseUrl}/read-all`, {}).pipe(
+            tap(() => {
+                this.unreadCount.set(0);
+            }),
+        );
     }
 
     public updateCount(count: number): void {

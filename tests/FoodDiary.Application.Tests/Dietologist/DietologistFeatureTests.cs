@@ -908,7 +908,10 @@ public class DietologistFeatureTests {
         var notifRepo = new InMemoryNotificationRepository();
         var pusher = new FakeNotificationPusher();
 
-        var handler = new RecommendationCreatedEventHandler(notifRepo, pusher, userRepo);
+        var handler = new RecommendationCreatedEventHandler(
+            notifRepo,
+            pusher,
+            userRepo);
         var domainEvent = new RecommendationCreatedDomainEvent(recId, dietologistId, clientId);
 
         await handler.Handle(

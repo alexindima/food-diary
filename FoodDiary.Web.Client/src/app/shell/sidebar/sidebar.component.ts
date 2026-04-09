@@ -16,6 +16,7 @@ import {
 } from '../../components/shared/unsaved-changes-dialog/unsaved-changes-dialog.component';
 import { firstValueFrom } from 'rxjs';
 import { DashboardService } from '../../features/dashboard/api/dashboard.service';
+import { NotificationsDialogComponent } from '../../components/shared/notifications-dialog/notifications-dialog.component';
 
 @Component({
     selector: 'fd-sidebar',
@@ -109,6 +110,12 @@ export class SidebarComponent {
 
     protected toggleUserMenu(): void {
         this.isUserMenuOpen.set(!this.isUserMenuOpen());
+    }
+
+    protected openNotifications(): void {
+        this.dialogService.open<NotificationsDialogComponent, null, void>(NotificationsDialogComponent, {
+            size: 'md',
+        });
     }
 
     protected toggleMobileFood(): void {

@@ -7,6 +7,7 @@ import { AuthService } from '../services/auth.service';
 import { SeoService, SeoData } from '../services/seo.service';
 import { QuickConsumptionDrawerComponent } from '../features/meals/components/quick-consumption-drawer/quick-consumption-drawer.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
+import { NotificationRealtimeService } from '../services/notification-realtime.service';
 
 @Component({
     selector: 'fd-root',
@@ -21,6 +22,7 @@ export class AppComponent implements OnInit {
     private readonly activatedRoute = inject(ActivatedRoute);
     private readonly seoService = inject(SeoService);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly notificationRealtimeService = inject(NotificationRealtimeService);
 
     public isAuthenticated = this.authService.isAuthenticated;
 

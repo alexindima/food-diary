@@ -6,13 +6,12 @@ namespace FoodDiary.Domain.Entities.Notifications;
 
 public sealed class Notification : AggregateRoot<NotificationId> {
     private const int TypeMaxLength = 64;
-    private const int TitleMaxLength = 256;
-    private const int BodyMaxLength = 1000;
+    private const int PayloadJsonMaxLength = 4000;
+    private const int ReferenceIdMaxLength = 128;
 
     public UserId UserId { get; private set; }
     public string Type { get; private set; } = string.Empty;
-    public string Title { get; private set; } = string.Empty;
-    public string? Body { get; private set; }
+    public string PayloadJson { get; private set; } = "{}";
     public string? ReferenceId { get; private set; }
     public bool IsRead { get; private set; }
     public DateTime? ReadAtUtc { get; private set; }
@@ -25,8 +24,7 @@ public sealed class Notification : AggregateRoot<NotificationId> {
     public static Notification Create(
         UserId userId,
         string type,
-        string title,
-        string? body = null,
+        string payloadJson,
         string? referenceId = null) {
         EnsureUserId(userId);
 
@@ -34,25 +32,24 @@ public sealed class Notification : AggregateRoot<NotificationId> {
             throw new ArgumentException("Notification type is required.", nameof(type));
         }
 
-        if (string.IsNullOrWhiteSpace(title)) {
-            throw new ArgumentException("Notification title is required.", nameof(title));
+        if (string.IsNullOrWhiteSpace(payloadJson)) {
+            throw new ArgumentException("Notification payload is required.", nameof(payloadJson));
         }
+
+        var normalizedType = type.Trim();
+        var normalizedPayloadJson = payloadJson.Trim();
+        var normalizedReferenceId = NormalizeOptional(referenceId, ReferenceIdMaxLength, nameof(referenceId));
 
         var notification = new Notification {
             Id = NotificationId.New(),
             UserId = userId,
-            Type = type.Trim().Length > TypeMaxLength
+            Type = normalizedType.Length > TypeMaxLength
                 ? throw new ArgumentOutOfRangeException(nameof(type), $"Type must be at most {TypeMaxLength} characters.")
-                : type.Trim(),
-            Title = title.Trim().Length > TitleMaxLength
-                ? throw new ArgumentOutOfRangeException(nameof(title), $"Title must be at most {TitleMaxLength} characters.")
-                : title.Trim(),
-            Body = body?.Trim() is { Length: > 0 } trimmedBody
-                ? trimmedBody.Length > BodyMaxLength
-                    ? throw new ArgumentOutOfRangeException(nameof(body), $"Body must be at most {BodyMaxLength} characters.")
-                    : trimmedBody
-                : null,
-            ReferenceId = referenceId,
+                : normalizedType,
+            PayloadJson = normalizedPayloadJson.Length > PayloadJsonMaxLength
+                ? throw new ArgumentOutOfRangeException(nameof(payloadJson), $"PayloadJson must be at most {PayloadJsonMaxLength} characters.")
+                : normalizedPayloadJson,
+            ReferenceId = normalizedReferenceId,
             IsRead = false,
         };
         notification.SetCreated();
@@ -73,5 +70,15 @@ public sealed class Notification : AggregateRoot<NotificationId> {
         if (userId == UserId.Empty) {
             throw new ArgumentException("UserId is required.", nameof(userId));
         }
+    }
+
+    private static string? NormalizeOptional(string? value, int maxLength, string paramName) {
+        if (value?.Trim() is not { Length: > 0 } normalized) {
+            return null;
+        }
+
+        return normalized.Length > maxLength
+            ? throw new ArgumentOutOfRangeException(paramName, $"Value must be at most {maxLength} characters.")
+            : normalized;
     }
 }

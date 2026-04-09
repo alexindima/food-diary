@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, ...</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, ...</value>
+  </resheader>
+  <data name="NewRecommendation_Title" xml:space="preserve">
+    <value>Новая рекомендация от {0}</value>
+  </data>
+  <data name="NewComment_Title" xml:space="preserve">
+    <value>Новый комментарий к вашему рецепту</value>
+  </data>
+  <data name="FastingCompleted_Title" xml:space="preserve">
+    <value>Окно голодания завершено</value>
+  </data>
+  <data name="FastingCompleted_Body" xml:space="preserve">
+    <value>Самое время отметить самочувствие и спланировать следующий прием пищи.</value>
+  </data>
+  <data name="WeeklyCheckIn_Title" xml:space="preserve">
+    <value>Еженедельный обзор готов</value>
+  </data>
+  <data name="WeeklyCheckIn_Body" xml:space="preserve">
+    <value>Открой обзор недели, чтобы увидеть тренды и рекомендации.</value>
+  </data>
+  <data name="Hydration_Title" xml:space="preserve">
+    <value>Напоминание о воде</value>
+  </data>
+  <data name="Hydration_Body" xml:space="preserve">
+    <value>Сегодня вы пока не добираете воду до цели.</value>
+  </data>
+  <data name="GoalReached_Title" xml:space="preserve">
+    <value>Цель по белку достигнута</value>
+  </data>
+  <data name="GoalReached_Body" xml:space="preserve">
+    <value>Отличная работа. Сегодня вы уже закрыли цель по белку.</value>
+  </data>
+  <data name="Lesson_Title" xml:space="preserve">
+    <value>Доступен новый урок</value>
+  </data>
+  <data name="Lesson_Body" xml:space="preserve">
+    <value>В академии появился новый урок по питанию.</value>
+  </data>
+  <data name="MealPlan_Title" xml:space="preserve">
+    <value>Подборка плана питания</value>
+  </data>
+  <data name="MealPlan_Body" xml:space="preserve">
+    <value>Мы нашли план питания, который подходит под вашу текущую цель по калориям.</value>
+  </data>
+  <data name="Achievement_Title" xml:space="preserve">
+    <value>Достижение разблокировано</value>
+  </data>
+  <data name="Achievement_Body" xml:space="preserve">
+    <value>Вы сохранили свою серию. Загляните посмотреть новый бейдж.</value>
+  </data>
+</root>

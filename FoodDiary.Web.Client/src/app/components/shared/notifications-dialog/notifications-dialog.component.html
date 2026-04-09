@@ -1,0 +1,54 @@
+<fd-ui-dialog-shell [title]="'NOTIFICATIONS.TITLE' | translate" size="md">
+    <div class="notifications-dialog__body">
+        @if (isLoading()) {
+            <div class="notifications-dialog__state">
+                <mat-icon>hourglass_top</mat-icon>
+                <p>{{ 'COMMON.LOADING' | translate }}</p>
+            </div>
+        } @else if (notifications().length === 0) {
+            <div class="notifications-dialog__state notifications-dialog__state--empty">
+                <mat-icon>notifications_none</mat-icon>
+                <p class="notifications-dialog__state-title">{{ 'NOTIFICATIONS.EMPTY_TITLE' | translate }}</p>
+                <p class="notifications-dialog__state-text">{{ 'NOTIFICATIONS.EMPTY_TEXT' | translate }}</p>
+            </div>
+        } @else {
+            <div class="notifications-dialog__list">
+                @for (notification of notifications(); track notification.id) {
+                    <button
+                        type="button"
+                        class="notifications-dialog__item"
+                        [class.is-read]="notification.isRead"
+                        (click)="markAsRead(notification)"
+                    >
+                        <span class="notifications-dialog__item-indicator" [class.is-hidden]="notification.isRead"></span>
+                        <div class="notifications-dialog__item-content">
+                            <div class="notifications-dialog__item-head">
+                                <span class="notifications-dialog__item-title">{{ notification.title }}</span>
+                                <span class="notifications-dialog__item-date">
+                                    {{ notification.createdAtUtc | date: 'dd.MM.yyyy, HH:mm' }}
+                                </span>
+                            </div>
+                            @if (notification.body) {
+                                <p class="notifications-dialog__item-body">{{ notification.body }}</p>
+                            }
+                        </div>
+                    </button>
+                }
+            </div>
+        }
+    </div>
+
+    <div fdUiDialogFooter class="notifications-dialog__footer">
+        <fd-ui-button
+            variant="secondary"
+            fill="outline"
+            [disabled]="!hasUnreadNotifications() || isMarkingAllRead()"
+            (click)="markAllAsRead()"
+        >
+            {{ 'NOTIFICATIONS.MARK_ALL_READ' | translate }}
+        </fd-ui-button>
+        <fd-ui-button variant="primary" (click)="close()">
+            {{ 'COMMON.CLOSE' | translate }}
+        </fd-ui-button>
+    </div>
+</fd-ui-dialog-shell>

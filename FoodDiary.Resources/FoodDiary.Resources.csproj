@@ -1,0 +1,7 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\FoodDiary.Application.Abstractions\FoodDiary.Application.Abstractions.csproj" />
+  </ItemGroup>
+
+</Project>

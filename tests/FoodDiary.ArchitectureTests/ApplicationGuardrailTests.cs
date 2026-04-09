@@ -52,7 +52,7 @@ public sealed class ApplicationGuardrailTests {
     [Fact]
     public void ApplicationPersistenceInterfaces_AsyncMethodsAcceptCancellationToken() {
         var root = GetRepositoryRoot();
-        var persistenceRoot = Path.Combine(root, "FoodDiary.Application", "Common", "Interfaces", "Persistence");
+        var persistenceRoot = Path.Combine(root, "FoodDiary.Application.Abstractions", "Common", "Interfaces", "Persistence");
 
         var violations = Directory.GetFiles(persistenceRoot, "*.cs", SearchOption.AllDirectories)
             .SelectMany(path => GetAsyncMethodSignatures(path)
@@ -67,9 +67,7 @@ public sealed class ApplicationGuardrailTests {
     public void ApplicationCommonServiceInterfaces_StayLimitedToTrueCrossCuttingAbstractions() {
         var root = GetRepositoryRoot();
         var servicesRoot = Path.Combine(root, "FoodDiary.Application", "Common", "Interfaces", "Services");
-        var allowedFiles = new[] {
-            "IDateTimeProvider.cs",
-        };
+        var allowedFiles = Array.Empty<string>();
 
         var actualFiles = Directory.GetFiles(servicesRoot, "*.cs", SearchOption.TopDirectoryOnly)
             .Select(Path.GetFileName)
@@ -80,9 +78,9 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
-    public void ApplicationCommonPersistenceInterfaces_DoNotRegrowMovedFeatureSpecificContracts() {
+    public void ApplicationAbstractionsCommonPersistenceInterfaces_DoNotRegrowMovedFeatureSpecificContracts() {
         var root = GetRepositoryRoot();
-        var persistenceRoot = Path.Combine(root, "FoodDiary.Application", "Common", "Interfaces", "Persistence");
+        var persistenceRoot = Path.Combine(root, "FoodDiary.Application.Abstractions", "Common", "Interfaces", "Persistence");
         var forbiddenFiles = new[] {
             "IAiUsageRepository.cs",
             "ICycleRepository.cs",
@@ -110,9 +108,9 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
-    public void ApplicationCommonPersistenceInterfaces_StayLimitedToCurrentCrossFeatureContracts() {
+    public void ApplicationAbstractionsCommonPersistenceInterfaces_StayLimitedToCurrentCrossFeatureContracts() {
         var root = GetRepositoryRoot();
-        var persistenceRoot = Path.Combine(root, "FoodDiary.Application", "Common", "Interfaces", "Persistence");
+        var persistenceRoot = Path.Combine(root, "FoodDiary.Application.Abstractions", "Common", "Interfaces", "Persistence");
         var allowedFiles = new[] {
             "IProductRepository.cs",
             "IRecipeRepository.cs",
@@ -132,7 +130,6 @@ public sealed class ApplicationGuardrailTests {
         var root = GetRepositoryRoot();
         var applicationRoot = Path.Combine(root, "FoodDiary.Application");
         var allowedDirectories = new[] {
-            Path.Combine(applicationRoot, "Common", "Interfaces", "Persistence"),
             Path.Combine(applicationRoot, "Products"),
             Path.Combine(applicationRoot, "Usda"),
         };
@@ -151,7 +148,6 @@ public sealed class ApplicationGuardrailTests {
         var root = GetRepositoryRoot();
         var applicationRoot = Path.Combine(root, "FoodDiary.Application");
         var allowedDirectories = new[] {
-            Path.Combine(applicationRoot, "Common", "Interfaces", "Persistence"),
             Path.Combine(applicationRoot, "Recipes"),
             Path.Combine(applicationRoot, "RecipeComments"),
             Path.Combine(applicationRoot, "RecipeLikes"),

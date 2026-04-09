@@ -11,7 +11,7 @@ public class NotificationsFeatureTests {
     [Fact]
     public async Task MarkNotificationRead_WithValidOwnership_Succeeds() {
         var userId = UserId.New();
-        var notification = Notification.Create(userId, "info", "Title");
+        var notification = Notification.Create(userId, "info", "{}");
         var repo = new InMemoryNotificationRepository();
         repo.Seed(notification);
 
@@ -28,7 +28,7 @@ public class NotificationsFeatureTests {
     public async Task MarkNotificationRead_WhenNotOwned_ReturnsFailure() {
         var ownerId = UserId.New();
         var otherUserId = UserId.New();
-        var notification = Notification.Create(ownerId, "info", "Title");
+        var notification = Notification.Create(ownerId, "info", "{}");
         var repo = new InMemoryNotificationRepository();
         repo.Seed(notification);
 
@@ -91,8 +91,8 @@ public class NotificationsFeatureTests {
     public async Task GetUnreadCount_ReturnsCount() {
         var userId = UserId.New();
         var repo = new InMemoryNotificationRepository();
-        repo.Seed(Notification.Create(userId, "info", "Title1"));
-        repo.Seed(Notification.Create(userId, "info", "Title2"));
+        repo.Seed(Notification.Create(userId, "info", "{}"));
+        repo.Seed(Notification.Create(userId, "info", "{}"));
 
         var handler = new GetUnreadCountQueryHandler(repo);
         var result = await handler.Handle(

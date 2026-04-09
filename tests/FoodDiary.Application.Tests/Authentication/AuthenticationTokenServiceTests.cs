@@ -5,6 +5,7 @@ using FoodDiary.Application.Common.Interfaces.Services;
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
+
 namespace FoodDiary.Application.Tests.Authentication;
 
 public class AuthenticationTokenServiceTests {
@@ -13,15 +14,14 @@ public class AuthenticationTokenServiceTests {
         var user = CreateUser("user@example.com");
         var repository = new InMemoryUserRepository(user);
         var jwt = new FakeJwtTokenGenerator();
-        var hasher = new FakePasswordHasher();
-        var service = new AuthenticationTokenService(repository, jwt, hasher, new StubDateTimeProvider());
+        var service = new AuthenticationTokenService(repository, jwt, new StubDateTimeProvider());
 
         var result = await service.IssueAndStoreAsync(user, CancellationToken.None);
 
         Assert.Equal("access-token", result.AccessToken);
         Assert.Equal("refresh-token", result.RefreshToken);
         Assert.Equal(
-            $"hashed:{SecurityTokenGenerator.NormalizeForSecureHashing("refresh-token")}",
+            $"sha256:{SecurityTokenGenerator.NormalizeForSecureHashing("refresh-token")}",
             user.RefreshToken);
         Assert.True(repository.Updated);
     }
@@ -31,8 +31,7 @@ public class AuthenticationTokenServiceTests {
         var user = CreateUser("user@example.com", "Admin", "Support");
         var repository = new InMemoryUserRepository(user);
         var jwt = new FakeJwtTokenGenerator();
-        var hasher = new FakePasswordHasher();
-        var service = new AuthenticationTokenService(repository, jwt, hasher, new StubDateTimeProvider());
+        var service = new AuthenticationTokenService(repository, jwt, new StubDateTimeProvider());
 
         var token = service.IssueAccessToken(user);
 
@@ -70,11 +69,6 @@ public class AuthenticationTokenServiceTests {
             Updated = true;
             return Task.CompletedTask;
         }
-    }
-
-    private sealed class FakePasswordHasher : IPasswordHasher {
-        public string Hash(string password) => $"hashed:{password}";
-        public bool Verify(string password, string hashedPassword) => hashedPassword == $"hashed:{password}";
     }
 
     private sealed class FakeJwtTokenGenerator : IJwtTokenGenerator {

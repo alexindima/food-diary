@@ -7,6 +7,18 @@
             <span class="sidebar__brand-title">Food Diary</span>
             <span class="sidebar__brand-plan">{{ 'SIDEBAR.PLAN_PRO' | translate }}</span>
         </div>
+        <button
+            type="button"
+            class="sidebar__brand-notifications"
+            [attr.aria-label]="'NOTIFICATIONS.TITLE' | translate"
+            [attr.title]="'NOTIFICATIONS.TITLE' | translate"
+            (click)="openNotifications()"
+        >
+            <mat-icon>notifications</mat-icon>
+            @if (unreadNotificationCount() > 0) {
+                <span class="sidebar__brand-notifications-dot" aria-hidden="true"></span>
+            }
+        </button>
     </div>
 
     <nav class="sidebar__nav">
@@ -106,13 +118,6 @@
                 <span>{{ 'SIDEBAR.MY_CLIENTS' | translate }}</span>
             </a>
         </nav>
-    }
-
-    @if (unreadNotificationCount() > 0) {
-        <div class="sidebar__notification-badge">
-            <mat-icon>notifications</mat-icon>
-            <span class="sidebar__badge-count">{{ unreadNotificationCount() }}</span>
-        </div>
     }
 
     @if (currentUser(); as user) {

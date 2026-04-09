@@ -1,11 +1,13 @@
 using System.Text;
 using FoodDiary.Application;
+using FoodDiary.Application.Notifications.Common;
 using FoodDiary.Infrastructure;
 using FoodDiary.Infrastructure.Options;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Presentation.Api.Extensions;
 using FoodDiary.Web.Api.Build;
 using FoodDiary.Presentation.Api.Options;
+using FoodDiary.Resources.Notifications;
 using FoodDiary.Web.Api.HealthChecks;
 using FoodDiary.Web.Api.Options;
 using OpenTelemetry;
@@ -25,6 +27,7 @@ public static class ApiServiceCollectionExtensions {
     public static IServiceCollection AddApiServices(this IServiceCollection services, IConfiguration configuration) {
         services.AddApplication();
         services.AddInfrastructure(configuration);
+        services.AddSingleton<INotificationTextRenderer, NotificationResourceRenderer>();
         services.AddDistributedMemoryCache();
         services
             .AddOptions<ApiCorsOptions>()
@@ -114,7 +117,8 @@ public static class ApiServiceCollectionExtensions {
                         var accessToken = context.Request.Query["access_token"];
                         var path = context.HttpContext.Request.Path;
                         if (!string.IsNullOrWhiteSpace(accessToken) &&
-                            path.StartsWithSegments("/hubs/email-verification")) {
+                            (path.StartsWithSegments("/hubs/email-verification") ||
+                                path.StartsWithSegments("/hubs/notifications"))) {
                             context.Token = accessToken;
                         }
 

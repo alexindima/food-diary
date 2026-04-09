@@ -10,7 +10,6 @@ namespace FoodDiary.Application.Authentication.Services;
 public sealed class AuthenticationTokenService(
     IUserRepository userRepository,
     IJwtTokenGenerator jwtTokenGenerator,
-    IPasswordHasher passwordHasher,
     IDateTimeProvider dateTimeProvider)
     : IAuthenticationTokenService {
     public async Task<IssuedAuthenticationTokens> IssueAndStoreAsync(User user, CancellationToken cancellationToken) {
@@ -18,7 +17,7 @@ public sealed class AuthenticationTokenService(
         var accessToken = jwtTokenGenerator.GenerateAccessToken(user.Id, user.Email, roles);
         var refreshToken = jwtTokenGenerator.GenerateRefreshToken(user.Id, user.Email, roles);
 
-        var hashedRefreshToken = passwordHasher.Hash(SecurityTokenGenerator.NormalizeForSecureHashing(refreshToken));
+        var hashedRefreshToken = SecurityTokenGenerator.HashForStorage(refreshToken);
         user.UpdateRefreshToken(new UserRefreshTokenUpdate(
             RefreshToken: hashedRefreshToken,
             ChangedAtUtc: dateTimeProvider.UtcNow));

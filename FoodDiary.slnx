@@ -9,11 +9,13 @@
     <Project Path="tests/FoodDiary.Web.Api.IntegrationTests/FoodDiary.Web.Api.IntegrationTests.csproj" />
   </Folder>
   <Project Path="FoodDiary.Application/FoodDiary.Application.csproj" />
+  <Project Path="FoodDiary.Application.Abstractions/FoodDiary.Application.Abstractions.csproj" />
   <Project Path="FoodDiary.Domain/FoodDiary.Domain.csproj" />
   <Project Path="FoodDiary.Initializer/FoodDiary.Initializer.csproj" />
   <Project Path="FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj" />
   <Project Path="FoodDiary.JobManager/FoodDiary.JobManager.csproj" />
   <Project Path="FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj" />
+  <Project Path="FoodDiary.Resources/FoodDiary.Resources.csproj" />
   <Project Path="FoodDiary.Telegram.Bot/FoodDiary.Telegram.Bot.csproj" />
   <Project Path="FoodDiary.Web.Api/FoodDiary.Web.Api.csproj" />
 </Solution>

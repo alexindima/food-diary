@@ -7,17 +7,17 @@ public class NotificationInvariantTests {
     [Fact]
     public void Create_WithEmptyUserId_Throws() {
         Assert.Throws<ArgumentException>(() =>
-            Notification.Create(UserId.Empty, "info", "Title"));
+            Notification.Create(UserId.Empty, "info", "{}"));
     }
 
     [Fact]
     public void Create_WithBlankType_Throws() {
         Assert.Throws<ArgumentException>(() =>
-            Notification.Create(UserId.New(), "   ", "Title"));
+            Notification.Create(UserId.New(), "   ", "{}"));
     }
 
     [Fact]
-    public void Create_WithBlankTitle_Throws() {
+    public void Create_WithBlankPayload_Throws() {
         Assert.Throws<ArgumentException>(() =>
             Notification.Create(UserId.New(), "info", "   "));
     }
@@ -25,48 +25,27 @@ public class NotificationInvariantTests {
     [Fact]
     public void Create_WithTooLongType_Throws() {
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            Notification.Create(UserId.New(), new string('t', 65), "Title"));
+            Notification.Create(UserId.New(), new string('t', 65), "{}"));
     }
 
     [Fact]
-    public void Create_WithTooLongTitle_Throws() {
+    public void Create_WithTooLongPayload_Throws() {
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            Notification.Create(UserId.New(), "info", new string('t', 257)));
+            Notification.Create(UserId.New(), "info", new string('p', 4001)));
     }
 
     [Fact]
-    public void Create_WithTooLongBody_Throws() {
-        Assert.Throws<ArgumentOutOfRangeException>(() =>
-            Notification.Create(UserId.New(), "info", "Title", body: new string('b', 1001)));
-    }
-
-    [Fact]
-    public void Create_TrimsTypeAndTitle() {
+    public void Create_TrimsTypeAndPayload() {
         var notification = Notification.Create(
-            UserId.New(), "  info  ", "  New message  ", body: "  Hello  ");
+            UserId.New(), "  info  ", "  {\"kind\":\"test\"}  ");
 
         Assert.Equal("info", notification.Type);
-        Assert.Equal("New message", notification.Title);
-        Assert.Equal("Hello", notification.Body);
-    }
-
-    [Fact]
-    public void Create_WithWhitespaceBody_SetsNull() {
-        var notification = Notification.Create(UserId.New(), "info", "Title", body: "   ");
-
-        Assert.Null(notification.Body);
-    }
-
-    [Fact]
-    public void Create_WithNullBody_SetsNull() {
-        var notification = Notification.Create(UserId.New(), "info", "Title");
-
-        Assert.Null(notification.Body);
+        Assert.Equal("{\"kind\":\"test\"}", notification.PayloadJson);
     }
 
     [Fact]
     public void Create_SetsIsReadToFalse() {
-        var notification = Notification.Create(UserId.New(), "info", "Title");
+        var notification = Notification.Create(UserId.New(), "info", "{}");
 
         Assert.False(notification.IsRead);
         Assert.Null(notification.ReadAtUtc);
@@ -75,14 +54,14 @@ public class NotificationInvariantTests {
     [Fact]
     public void Create_WithReferenceId_StoresIt() {
         var notification = Notification.Create(
-            UserId.New(), "info", "Title", referenceId: "ref-123");
+            UserId.New(), "info", "{}", referenceId: "ref-123");
 
         Assert.Equal("ref-123", notification.ReferenceId);
     }
 
     [Fact]
     public void MarkAsRead_SetsIsReadAndTimestamp() {
-        var notification = Notification.Create(UserId.New(), "info", "Title");
+        var notification = Notification.Create(UserId.New(), "info", "{}");
 
         notification.MarkAsRead();
 
@@ -92,7 +71,7 @@ public class NotificationInvariantTests {
 
     [Fact]
     public void MarkAsRead_WhenAlreadyRead_IsIdempotent() {
-        var notification = Notification.Create(UserId.New(), "info", "Title");
+        var notification = Notification.Create(UserId.New(), "info", "{}");
         notification.MarkAsRead();
         var firstReadAt = notification.ReadAtUtc;
 

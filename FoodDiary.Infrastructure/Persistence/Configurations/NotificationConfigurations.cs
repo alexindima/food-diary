@@ -21,12 +21,9 @@ internal sealed class NotificationConfiguration : IEntityTypeConfiguration<Notif
             .IsRequired()
             .HasMaxLength(64);
 
-        entity.Property(e => e.Title)
+        entity.Property(e => e.PayloadJson)
             .IsRequired()
-            .HasMaxLength(256);
-
-        entity.Property(e => e.Body)
-            .HasMaxLength(1000);
+            .HasMaxLength(4000);
 
         entity.Property(e => e.ReferenceId)
             .HasMaxLength(128);

@@ -20,7 +20,10 @@ public class RecipeCommentsFeatureTests {
         var commentRepo = new InMemoryRecipeCommentRepository();
         var notifRepo = new RecordingNotificationRepository();
 
-        var handler = new CreateRecipeCommentCommandHandler(commentRepo, new StubRecipeRepository(recipe), notifRepo);
+        var handler = new CreateRecipeCommentCommandHandler(
+            commentRepo,
+            new StubRecipeRepository(recipe),
+            notifRepo);
         var result = await handler.Handle(
             new CreateRecipeCommentCommand(userId.Value, recipe.Id.Value, "Delicious!"),
             CancellationToken.None);
@@ -38,7 +41,9 @@ public class RecipeCommentsFeatureTests {
         var notifRepo = new RecordingNotificationRepository();
 
         var handler = new CreateRecipeCommentCommandHandler(
-            new InMemoryRecipeCommentRepository(), new StubRecipeRepository(recipe), notifRepo);
+            new InMemoryRecipeCommentRepository(),
+            new StubRecipeRepository(recipe),
+            notifRepo);
         var result = await handler.Handle(
             new CreateRecipeCommentCommand(userId.Value, recipe.Id.Value, "My note"),
             CancellationToken.None);
@@ -50,7 +55,8 @@ public class RecipeCommentsFeatureTests {
     [Fact]
     public async Task CreateRecipeComment_WhenRecipeNotFound_ReturnsFailure() {
         var handler = new CreateRecipeCommentCommandHandler(
-            new InMemoryRecipeCommentRepository(), new StubRecipeRepository(null),
+            new InMemoryRecipeCommentRepository(),
+            new StubRecipeRepository(null),
             new RecordingNotificationRepository());
 
         var result = await handler.Handle(

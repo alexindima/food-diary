@@ -1,6 +1,5 @@
 using FoodDiary.Application.Common.Interfaces.Persistence;
 using FoodDiary.Application.Notifications.Common;
-using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Domain.Events;
 using MediatR;
 
@@ -22,11 +21,10 @@ public class RecommendationCreatedEventHandler(
             dietologistName = "Your dietologist";
         }
 
-        var notification = Notification.Create(
+        var notification = NotificationFactory.CreateNewRecommendation(
             domainEvent.ClientUserId,
-            "NewRecommendation",
-            $"New recommendation from {dietologistName}",
-            referenceId: domainEvent.RecommendationId.Value.ToString());
+            dietologistName,
+            domainEvent.RecommendationId.Value.ToString());
 
         await notificationRepository.AddAsync(notification, cancellationToken);
 

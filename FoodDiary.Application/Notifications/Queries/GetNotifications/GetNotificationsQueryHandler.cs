@@ -11,7 +11,8 @@ namespace FoodDiary.Application.Notifications.Queries.GetNotifications;
 
 public class GetNotificationsQueryHandler(
     INotificationRepository notificationRepository,
-    IUserRepository userRepository)
+    IUserRepository userRepository,
+    INotificationTextRenderer notificationTextRenderer)
     : IQueryHandler<GetNotificationsQuery, Result<IReadOnlyList<NotificationModel>>> {
     public async Task<Result<IReadOnlyList<NotificationModel>>> Handle(
         GetNotificationsQuery query, CancellationToken cancellationToken) {
@@ -25,8 +26,12 @@ public class GetNotificationsQueryHandler(
             return Result.Failure<IReadOnlyList<NotificationModel>>(accessError);
         }
 
+        var user = await userRepository.GetByIdAsync(userId, cancellationToken);
         var notifications = await notificationRepository.GetByUserAsync(userId, cancellationToken: cancellationToken);
-        var models = notifications.Select(n => n.ToModel()).ToList();
+        var models = notifications
+            .Select(notification => notification.ToModel(
+                notificationTextRenderer.RenderFromPayload(notification.Type, notification.PayloadJson, user?.Language)))
+            .ToList();
         return Result.Success<IReadOnlyList<NotificationModel>>(models);
     }
 }

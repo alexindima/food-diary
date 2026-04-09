@@ -1247,6 +1247,12 @@
         "LESSONS": "Academy",
         "WEEKLY_CHECK_IN": "Weekly review"
     },
+    "NOTIFICATIONS": {
+        "TITLE": "Notifications",
+        "EMPTY_TITLE": "No notifications yet",
+        "EMPTY_TEXT": "New updates will appear here.",
+        "MARK_ALL_READ": "Mark all as read"
+    },
     "SHOPPING_LIST": {
         "TITLE": "Shopping list",
         "SUBTITLE": "Plan purchases from your recipes",

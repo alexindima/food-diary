@@ -1,0 +1,132 @@
+@use 'variables' as variables;
+
+.notifications-dialog__body {
+    padding: 1.25rem;
+    min-height: 18rem;
+}
+
+.notifications-dialog__state {
+    min-height: 16rem;
+    display: grid;
+    place-items: center;
+    gap: 0.75rem;
+    text-align: center;
+    color: #64748b;
+
+    mat-icon {
+        font-size: 2rem;
+        width: 2rem;
+        height: 2rem;
+        color: #2563eb;
+    }
+}
+
+.notifications-dialog__state-title,
+.notifications-dialog__state-text {
+    margin: 0;
+}
+
+.notifications-dialog__state-title {
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.notifications-dialog__list {
+    display: grid;
+    gap: 0.75rem;
+    max-height: 24rem;
+    overflow-y: auto;
+}
+
+.notifications-dialog__item {
+    width: 100%;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.875rem;
+    align-items: start;
+    padding: 0.875rem 1rem;
+    border-radius: 14px;
+    border: 1px solid rgba(37, 99, 235, 0.12);
+    background: linear-gradient(180deg, rgba(239, 246, 255, 0.8), #ffffff);
+    text-align: left;
+    cursor: pointer;
+    transition:
+        transform 0.15s ease,
+        box-shadow 0.2s ease,
+        border-color 0.2s ease;
+
+    &:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
+        border-color: rgba(37, 99, 235, 0.22);
+    }
+
+    &.is-read {
+        background: #f8fafc;
+        border-color: rgba(148, 163, 184, 0.18);
+    }
+}
+
+.notifications-dialog__item-indicator {
+    width: 0.625rem;
+    height: 0.625rem;
+    margin-top: 0.45rem;
+    border-radius: 999px;
+    background: #ef4444;
+    box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.12);
+
+    &.is-hidden {
+        opacity: 0;
+    }
+}
+
+.notifications-dialog__item-content {
+    display: grid;
+    gap: 0.35rem;
+    min-width: 0;
+}
+
+.notifications-dialog__item-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.notifications-dialog__item-title {
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.notifications-dialog__item-date {
+    flex-shrink: 0;
+    color: #64748b;
+    font-size: 0.8rem;
+}
+
+.notifications-dialog__item-body {
+    margin: 0;
+    color: #475569;
+    line-height: 1.45;
+}
+
+.notifications-dialog__footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    padding: 0 1.25rem 1.25rem;
+    flex-wrap: wrap;
+}
+
+@media #{variables.$media-phablet} {
+
+    .notifications-dialog__item-head {
+        flex-direction: column;
+        gap: 0.3rem;
+    }
+
+    .notifications-dialog__footer {
+        display: grid;
+        grid-template-columns: 1fr;
+    }
+}

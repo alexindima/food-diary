@@ -5,7 +5,6 @@ using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Notifications.Common;
 using FoodDiary.Application.RecipeComments.Common;
 using FoodDiary.Application.RecipeComments.Models;
-using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -37,11 +36,9 @@ public class CreateRecipeCommentCommandHandler(
 
         // Notify recipe owner (unless commenting on own recipe)
         if (recipe.UserId != userIdResult.Value) {
-            var notification = Notification.Create(
+            var notification = NotificationFactory.CreateNewComment(
                 recipe.UserId,
-                "NewComment",
-                "New comment on your recipe",
-                referenceId: recipe.Id.Value.ToString());
+                recipe.Id.Value.ToString());
             await notificationRepository.AddAsync(notification, cancellationToken);
         }
 

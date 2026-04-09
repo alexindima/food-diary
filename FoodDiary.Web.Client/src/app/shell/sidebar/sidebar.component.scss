@@ -33,6 +33,8 @@
         display: flex;
         flex-direction: column;
         line-height: 1.2;
+        min-width: 0;
+        flex: 1 1 auto;
     }
 
     &__brand-title {
@@ -44,6 +46,46 @@
         font-size: 0.85rem;
         color: #2563eb;
         font-weight: 700;
+    }
+
+    &__brand-notifications {
+        position: relative;
+        width: 40px;
+        height: 40px;
+        flex-shrink: 0;
+        display: grid;
+        place-items: center;
+        border: none;
+        border-radius: 12px;
+        background: rgba(37, 99, 235, 0.08);
+        color: #2563eb;
+        cursor: pointer;
+        transition:
+            background 0.2s ease,
+            transform 0.15s ease,
+            box-shadow 0.2s ease;
+
+        mat-icon {
+            font-size: 20px;
+        }
+
+        &:hover {
+            background: rgba(37, 99, 235, 0.14);
+            transform: translateY(-1px);
+            box-shadow: 0 10px 20px rgba(37, 99, 235, 0.16);
+        }
+    }
+
+    &__brand-notifications-dot {
+        position: absolute;
+        top: 7px;
+        right: 7px;
+        width: 10px;
+        height: 10px;
+        border-radius: 999px;
+        background: #ef4444;
+        border: 2px solid #fff;
+        box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.8);
     }
 
     &__nav {
@@ -483,29 +525,6 @@
     .sidebar-mobile {
         display: grid;
     }
-}
-
-.sidebar__notification-badge {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 16px;
-    color: var(--fd-primary);
-    font-size: 14px;
-    font-weight: 500;
-}
-
-.sidebar__badge-count {
-    background: var(--fd-primary);
-    color: #fff;
-    border-radius: 50%;
-    min-width: 20px;
-    height: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-    font-weight: 600;
 }
 
 @media #{variables.$media-phablet} {
