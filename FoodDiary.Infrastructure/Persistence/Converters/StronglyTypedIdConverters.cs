@@ -10,6 +10,18 @@ public static class StronglyTypedIdConverters {
             value => new UserId(value));
     }
 
+    public static class FastingPlanIdConverter {
+        public static ValueConverter<FastingPlanId, Guid> Instance { get; } = new(
+            id => id.Value,
+            value => new FastingPlanId(value));
+    }
+
+    public static class FastingOccurrenceIdConverter {
+        public static ValueConverter<FastingOccurrenceId, Guid> Instance { get; } = new(
+            id => id.Value,
+            value => new FastingOccurrenceId(value));
+    }
+
     public static class ProductIdConverter {
         public static ValueConverter<ProductId, Guid> Instance { get; } = new(
             id => id.Value,

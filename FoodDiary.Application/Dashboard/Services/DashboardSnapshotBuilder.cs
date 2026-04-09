@@ -41,7 +41,7 @@ public class DashboardSnapshotBuilder(
     IUserRepository userRepository,
     IWeightEntryRepository weightEntryRepository,
     IWaistEntryRepository waistEntryRepository,
-    IFastingSessionRepository fastingSessionRepository,
+    IFastingOccurrenceRepository fastingOccurrenceRepository,
     IExerciseEntryRepository exerciseEntryRepository,
     ILogger<DashboardSnapshotBuilder> logger) : IDashboardSnapshotBuilder {
 
@@ -96,7 +96,7 @@ public class DashboardSnapshotBuilder(
         var adviceResult = await sender.Send(
             new GetDailyAdviceQuery(userId, dayStart, locale), cancellationToken);
 
-        var currentFastingSession = await fastingSessionRepository.GetCurrentAsync(userId, cancellationToken);
+        var currentFastingSession = await fastingOccurrenceRepository.GetCurrentAsync(userId, cancellationToken: cancellationToken);
 
         var weightTrendResult = await sender.Send(
             new GetWeightSummariesQuery(userId, trendStart, dayStart, 1), cancellationToken);

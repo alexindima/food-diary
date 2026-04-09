@@ -367,6 +367,11 @@ public static class Errors {
             "Fasting.InvalidProtocol",
             "Invalid fasting protocol.",
             kind: ErrorKind.Validation);
+
+        public static Error InvalidCyclicAction(string message) => new(
+            "Fasting.InvalidCyclicAction",
+            message,
+            kind: ErrorKind.Validation);
     }
 
     public static class FavoriteMeal {

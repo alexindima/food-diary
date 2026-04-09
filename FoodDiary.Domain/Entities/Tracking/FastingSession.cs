@@ -13,10 +13,14 @@ public sealed class FastingSession : AggregateRoot<FastingSessionId> {
     public UserId UserId { get; private set; }
     public DateTime StartedAtUtc { get; private set; }
     public DateTime? EndedAtUtc { get; private set; }
-    public int PlannedDurationHours { get; private set; }
+    public int InitialPlannedDurationHours { get; private set; }
+    public int AddedDurationHours { get; private set; }
+    public int PlannedDurationHours => InitialPlannedDurationHours + AddedDurationHours;
     public FastingProtocol Protocol { get; private set; }
     public bool IsCompleted { get; private set; }
     public string? Notes { get; private set; }
+    public FastingSessionStatus Status => GetStatus();
+    public bool IsSuccessfulCompletion => GetStatus() == FastingSessionStatus.Completed;
 
     public User User { get; private set; } = null!;
 
@@ -36,7 +40,8 @@ public sealed class FastingSession : AggregateRoot<FastingSessionId> {
             Id = FastingSessionId.New(),
             UserId = userId,
             StartedAtUtc = startedAtUtc,
-            PlannedDurationHours = plannedDurationHours,
+            InitialPlannedDurationHours = plannedDurationHours,
+            AddedDurationHours = 0,
             Protocol = protocol,
             IsCompleted = false,
             Notes = NormalizeNotes(notes),
@@ -75,8 +80,23 @@ public sealed class FastingSession : AggregateRoot<FastingSessionId> {
         }
 
         EnsureDuration(PlannedDurationHours + additionalHours);
-        PlannedDurationHours += additionalHours;
+        AddedDurationHours += additionalHours;
         SetModified();
+    }
+
+    public FastingSessionStatus GetStatus() {
+        if (!EndedAtUtc.HasValue) {
+            return FastingSessionStatus.Active;
+        }
+
+        if (IsIntermittentProtocol(Protocol)) {
+            return FastingSessionStatus.Completed;
+        }
+
+        var targetReachedAtUtc = StartedAtUtc.AddHours(PlannedDurationHours);
+        return EndedAtUtc.Value >= targetReachedAtUtc
+            ? FastingSessionStatus.Completed
+            : FastingSessionStatus.Interrupted;
     }
 
     public static int GetDefaultDuration(FastingProtocol protocol) => protocol switch {
@@ -86,8 +106,17 @@ public sealed class FastingSession : AggregateRoot<FastingSessionId> {
         FastingProtocol.F24_0 => 24,
         FastingProtocol.F36_0 => 36,
         FastingProtocol.F72_0 => 72,
+        FastingProtocol.CustomIntermittent => 16,
         FastingProtocol.Custom => 16,
         _ => 16
+    };
+
+    private static bool IsIntermittentProtocol(FastingProtocol protocol) => protocol switch {
+        FastingProtocol.F16_8 => true,
+        FastingProtocol.F18_6 => true,
+        FastingProtocol.F20_4 => true,
+        FastingProtocol.CustomIntermittent => true,
+        _ => false
     };
 
     private static string? NormalizeNotes(string? value) {

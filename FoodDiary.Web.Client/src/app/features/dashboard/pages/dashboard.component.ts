@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, computed, inject, viewChild } from '@angular/core';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { NavigationService } from '../../../services/navigation.service';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -28,6 +28,7 @@ import { DashboardLayoutService } from '../lib/dashboard-layout.service';
 import { DashboardFacade } from '../lib/dashboard.facade';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import { FastingTimerCardComponent } from '../../fasting/components/fasting-timer-card/fasting-timer-card.component';
+import { FastingOccurrenceKind } from '../../fasting/models/fasting.data';
 
 @Component({
     selector: 'fd-dashboard',
@@ -66,6 +67,7 @@ export class DashboardComponent implements OnInit {
     private readonly dialogService = inject(FdUiDialogService);
     private readonly unsavedChangesService = inject(UnsavedChangesService);
     private readonly facade = inject(DashboardFacade);
+    private readonly translateService = inject(TranslateService);
     public readonly layout = inject(DashboardLayoutService);
 
     private readonly headerDatePicker = viewChild<FdUiDatepicker<Date>>('headerDatePicker');
@@ -219,5 +221,59 @@ export class DashboardComponent implements OnInit {
         }
 
         await this.navigationService.navigateToFasting();
+    }
+
+    public getFastingCardLabelKey(): string {
+        const session = this.fastingCurrentSession();
+        if (!session) {
+            return 'FASTING.WIDGET_LABEL';
+        }
+
+        switch (session.planType) {
+            case 'Cyclic':
+                return 'FASTING.CYCLIC_TYPE';
+            case 'Extended':
+                return 'FASTING.EXTENDED_TYPE';
+            default:
+                return 'FASTING.INTERMITTENT_TYPE';
+        }
+    }
+
+    public getFastingCardStateLabel(): string | null {
+        const session = this.fastingCurrentSession();
+        return this.getOccurrenceKindLabel(session?.occurrenceKind);
+    }
+
+    public getFastingCardDetailLabel(): string | null {
+        const session = this.fastingCurrentSession();
+        if (!session || session.planType !== 'Cyclic') {
+            return null;
+        }
+
+        const cycleLabel = this.translateService.instant('FASTING.CYCLE_PATTERN', {
+            fast: session.cyclicFastDays ?? 1,
+            eat: session.cyclicEatDays ?? 1,
+        });
+        const eatWindowLabel = this.translateService.instant('FASTING.EAT_WINDOW_PATTERN', {
+            fast: session.cyclicEatDayFastHours ?? 16,
+            eat: session.cyclicEatDayEatingWindowHours ?? 8,
+        });
+
+        return `${cycleLabel} · ${eatWindowLabel}`;
+    }
+
+    private getOccurrenceKindLabel(kind?: FastingOccurrenceKind | null): string | null {
+        switch (kind) {
+            case 'FastDay':
+                return this.translateService.instant('FASTING.FAST_DAY');
+            case 'EatDay':
+                return this.translateService.instant('FASTING.EAT_DAY');
+            case 'FastingWindow':
+                return this.translateService.instant('FASTING.FASTING_WINDOW');
+            case 'EatingWindow':
+                return this.translateService.instant('FASTING.EATING_WINDOW');
+            default:
+                return null;
+        }
     }
 }

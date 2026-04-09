@@ -1492,7 +1492,70 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.ToTable("ExerciseEntries");
                 });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.FastingSession", b =>
+            modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.FastingOccurrence", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("AddedTargetHours")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("CreatedOnUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("EndedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int?>("InitialTargetHours")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Kind")
+                        .IsRequired()
+                        .HasMaxLength(24)
+                        .HasColumnType("character varying(24)");
+
+                    b.Property<DateTime?>("ModifiedOnUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<Guid>("PlanId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("ScheduledForUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("SequenceNumber")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("StartedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(16)
+                        .HasColumnType("character varying(16)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PlanId");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("PlanId", "SequenceNumber")
+                        .IsUnique();
+
+                    b.HasIndex("UserId", "Status");
+
+                    b.ToTable("FastingOccurrences", (string)null);
+                });
+
+            modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.FastingPlan", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
@@ -1500,8 +1563,88 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedOnUtc")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<DateTime?>("CyclicAnchorDateUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int?>("CyclicEatDayEatingWindowHours")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("CyclicEatDayFastHours")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("CyclicEatDays")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("CyclicFastDays")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("CyclicNextPhaseDateUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int?>("ExtendedTargetHours")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("IntermittentEatingWindowHours")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("IntermittentFastHours")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("ModifiedOnUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Protocol")
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)");
+
+                    b.Property<DateTime>("StartedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(16)
+                        .HasColumnType("character varying(16)");
+
+                    b.Property<DateTime?>("StoppedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Title")
+                        .HasMaxLength(120)
+                        .HasColumnType("character varying(120)");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasMaxLength(24)
+                        .HasColumnType("character varying(24)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("UserId", "Status");
+
+                    b.ToTable("FastingPlans", (string)null);
+                });
+
+            modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.FastingSession", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("AddedDurationHours")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("CreatedOnUtc")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<DateTime?>("EndedAtUtc")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("InitialPlannedDurationHours")
+                        .HasColumnType("integer");
 
                     b.Property<bool>("IsCompleted")
                         .HasColumnType("boolean");
@@ -1512,9 +1655,6 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.Property<string>("Notes")
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)");
-
-                    b.Property<int>("PlannedDurationHours")
-                        .HasColumnType("integer");
 
                     b.Property<string>("Protocol")
                         .IsRequired()
@@ -2525,6 +2665,36 @@ namespace FoodDiary.Infrastructure.Migrations
                 });
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.ExerciseEntry", b =>
+                {
+                    b.HasOne("FoodDiary.Domain.Entities.Users.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.FastingOccurrence", b =>
+                {
+                    b.HasOne("FoodDiary.Domain.Entities.Tracking.FastingPlan", "Plan")
+                        .WithMany()
+                        .HasForeignKey("PlanId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FoodDiary.Domain.Entities.Users.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Plan");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.FastingPlan", b =>
                 {
                     b.HasOne("FoodDiary.Domain.Entities.Users.User", "User")
                         .WithMany()

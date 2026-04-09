@@ -29,6 +29,8 @@ public class FastingSessionInvariantTests {
 
         Assert.Equal(userId, session.UserId);
         Assert.Equal(FastingProtocol.F18_6, session.Protocol);
+        Assert.Equal(18, session.InitialPlannedDurationHours);
+        Assert.Equal(0, session.AddedDurationHours);
         Assert.Equal(18, session.PlannedDurationHours);
         Assert.Equal(startedAt, session.StartedAtUtc);
         Assert.False(session.IsCompleted);
@@ -69,6 +71,33 @@ public class FastingSessionInvariantTests {
 
         Assert.True(session.IsCompleted);
         Assert.Equal(endedAt, session.EndedAtUtc);
+        Assert.Equal(FastingSessionStatus.Completed, session.Status);
+    }
+
+    [Fact]
+    public void End_IntermittentBeforeTargetReached_SetsCompletedStatus() {
+        var startedAt = DateTime.UtcNow;
+        var session = FastingSession.Create(
+            UserId.New(), FastingProtocol.F16_8, 16, startedAt);
+
+        session.End(startedAt.AddHours(10));
+
+        Assert.True(session.IsCompleted);
+        Assert.Equal(FastingSessionStatus.Completed, session.Status);
+        Assert.True(session.IsSuccessfulCompletion);
+    }
+
+    [Fact]
+    public void End_ExtendedBeforeTargetReached_SetsInterruptedStatus() {
+        var startedAt = DateTime.UtcNow;
+        var session = FastingSession.Create(
+            UserId.New(), FastingProtocol.F72_0, 72, startedAt);
+
+        session.End(startedAt.AddHours(24));
+
+        Assert.True(session.IsCompleted);
+        Assert.Equal(FastingSessionStatus.Interrupted, session.Status);
+        Assert.False(session.IsSuccessfulCompletion);
     }
 
     [Fact]
@@ -119,6 +148,7 @@ public class FastingSessionInvariantTests {
     [InlineData(FastingProtocol.F16_8, 16)]
     [InlineData(FastingProtocol.F18_6, 18)]
     [InlineData(FastingProtocol.F20_4, 20)]
+    [InlineData(FastingProtocol.CustomIntermittent, 16)]
     [InlineData(FastingProtocol.F24_0, 24)]
     [InlineData(FastingProtocol.F36_0, 36)]
     [InlineData(FastingProtocol.F72_0, 72)]
@@ -142,6 +172,8 @@ public class FastingSessionInvariantTests {
 
         session.Extend(24);
 
+        Assert.Equal(72, session.InitialPlannedDurationHours);
+        Assert.Equal(24, session.AddedDurationHours);
         Assert.Equal(96, session.PlannedDurationHours);
         Assert.NotNull(session.ModifiedOnUtc);
     }

@@ -17,6 +17,10 @@
                 />
             </svg>
             <div class="fasting-timer-card__ring-content">
+                <span class="fasting-timer-card__label">{{ labelKey() | translate }}</span>
+                @if (stateLabel()) {
+                    <span class="fasting-timer-card__state">{{ stateLabel() }}</span>
+                }
                 @if (isActive()) {
                     <span class="fasting-timer-card__elapsed">{{ elapsedFormatted() }}</span>
                     <span class="fasting-timer-card__remaining">
@@ -34,6 +38,9 @@
                 } @else {
                     <span class="fasting-timer-card__elapsed fasting-timer-card__elapsed--idle">{{ 'FASTING.READY' | translate }}</span>
                     <span class="fasting-timer-card__remaining">{{ 'FASTING.SELECT_AND_START' | translate }}</span>
+                }
+                @if (detailLabel()) {
+                    <span class="fasting-timer-card__detail">{{ detailLabel() }}</span>
                 }
             </div>
         </div>

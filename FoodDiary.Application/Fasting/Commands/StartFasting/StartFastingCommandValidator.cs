@@ -12,6 +12,7 @@ public class StartFastingCommandValidator : AbstractValidator<StartFastingComman
 
         RuleFor(x => x.Protocol)
             .NotEmpty()
+            .When(x => !string.Equals(x.PlanType, "Cyclic", StringComparison.OrdinalIgnoreCase))
             .WithErrorCode("Validation.Required")
             .WithMessage("Fasting protocol is required");
     }

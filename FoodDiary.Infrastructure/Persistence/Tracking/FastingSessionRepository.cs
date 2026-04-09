@@ -32,17 +32,25 @@ public class FastingSessionRepository(FoodDiaryDbContext context) : IFastingSess
     }
 
     public async Task<int> GetCompletedCountAsync(UserId userId, CancellationToken cancellationToken = default) {
-        return await context.FastingSessions
-            .CountAsync(s => s.UserId == userId && s.IsCompleted, cancellationToken);
+        var endedSessions = await context.FastingSessions
+            .AsNoTracking()
+            .Where(s => s.UserId == userId && s.IsCompleted && s.EndedAtUtc.HasValue)
+            .ToListAsync(cancellationToken);
+
+        return endedSessions.Count(static s => s.IsSuccessfulCompletion);
     }
 
     public async Task<int> GetCurrentStreakAsync(UserId userId, CancellationToken cancellationToken = default) {
         var recentSessions = await context.FastingSessions
             .AsNoTracking()
-            .Where(s => s.UserId == userId && s.IsCompleted)
+            .Where(s => s.UserId == userId && s.IsCompleted && s.EndedAtUtc.HasValue)
             .OrderByDescending(s => s.StartedAtUtc)
             .Take(60)
             .ToListAsync(cancellationToken);
+
+        recentSessions = recentSessions
+            .Where(static s => s.IsSuccessfulCompletion)
+            .ToList();
 
         if (recentSessions.Count == 0) {
             return 0;

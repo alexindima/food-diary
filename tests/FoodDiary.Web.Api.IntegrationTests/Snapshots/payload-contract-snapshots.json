@@ -136,6 +136,7 @@
     "keys": [
       "advice",
       "caloriesBurned",
+      "currentFastingSession",
       "dailyGoal",
       "dashboardLayout",
       "date",

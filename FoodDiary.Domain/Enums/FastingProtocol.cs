@@ -7,5 +7,6 @@ public enum FastingProtocol {
     F24_0 = 3,
     F36_0 = 4,
     F72_0 = 5,
-    Custom = 6
+    Custom = 6,
+    CustomIntermittent = 7
 }

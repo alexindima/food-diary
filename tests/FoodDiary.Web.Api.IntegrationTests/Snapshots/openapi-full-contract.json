@@ -956,6 +956,54 @@
       ]
     },
     {
+      "Path": "/api/v{version}/fasting/current/duration",
+      "Operations": [
+        {
+          "Method": "put",
+          "HasRequestBody": true,
+          "ResponseCodes": [
+            "200",
+            "400",
+            "401",
+            "404",
+            "500"
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/v{version}/fasting/current/postpone-day",
+      "Operations": [
+        {
+          "Method": "put",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200",
+            "400",
+            "401",
+            "404",
+            "500"
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/v{version}/fasting/current/skip-day",
+      "Operations": [
+        {
+          "Method": "put",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200",
+            "400",
+            "401",
+            "404",
+            "500"
+          ]
+        }
+      ]
+    },
+    {
       "Path": "/api/v{version}/fasting/end",
       "Operations": [
         {

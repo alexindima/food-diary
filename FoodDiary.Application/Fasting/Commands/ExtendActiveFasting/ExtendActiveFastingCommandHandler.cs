@@ -1,13 +1,18 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
+using FoodDiary.Application.Common.Abstractions.Persistence;
 using FoodDiary.Application.Common.Abstractions.Result;
 using FoodDiary.Application.Fasting.Common;
 using FoodDiary.Application.Fasting.Mappings;
 using FoodDiary.Application.Fasting.Models;
+using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Fasting.Commands.ExtendActiveFasting;
 
-public class ExtendActiveFastingCommandHandler(IFastingSessionRepository fastingRepository)
+public class ExtendActiveFastingCommandHandler(
+    IFastingPlanRepository fastingPlanRepository,
+    IFastingOccurrenceRepository fastingOccurrenceRepository,
+    IUnitOfWork unitOfWork)
     : ICommandHandler<ExtendActiveFastingCommand, Result<FastingSessionModel>> {
     public async Task<Result<FastingSessionModel>> Handle(
         ExtendActiveFastingCommand command, CancellationToken cancellationToken) {
@@ -16,9 +21,19 @@ public class ExtendActiveFastingCommandHandler(IFastingSessionRepository fasting
         }
 
         var userId = new UserId(command.UserId.Value);
-        var current = await fastingRepository.GetCurrentAsync(userId, cancellationToken);
+        var current = await fastingOccurrenceRepository.GetCurrentAsync(userId, asTracking: true, cancellationToken);
         if (current is null) {
             return Result.Failure<FastingSessionModel>(Errors.Fasting.NoActiveSession);
+        }
+
+        var plan = current.Plan ?? await fastingPlanRepository.GetActiveAsync(userId, asTracking: true, cancellationToken);
+        if (plan is null) {
+            return Result.Failure<FastingSessionModel>(Errors.Fasting.NoActiveSession);
+        }
+
+        if (plan.Type != FastingPlanType.Extended) {
+            return Result.Failure<FastingSessionModel>(
+                Errors.Validation.Invalid(nameof(command.AdditionalHours), "Only extended fasting can be extended."));
         }
 
         try {
@@ -30,7 +45,8 @@ public class ExtendActiveFastingCommandHandler(IFastingSessionRepository fasting
             return Result.Failure<FastingSessionModel>(Errors.Fasting.NoActiveSession);
         }
 
-        await fastingRepository.UpdateAsync(current, cancellationToken);
-        return Result.Success(current.ToModel());
+        await fastingOccurrenceRepository.UpdateAsync(current, cancellationToken);
+        await unitOfWork.SaveChangesAsync(cancellationToken);
+        return Result.Success(current.ToModel(plan));
     }
 }

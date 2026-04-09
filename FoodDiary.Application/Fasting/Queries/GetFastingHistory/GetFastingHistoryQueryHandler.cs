@@ -8,7 +8,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.Fasting.Queries.GetFastingHistory;
 
 public class GetFastingHistoryQueryHandler(
-    IFastingSessionRepository fastingRepository)
+    IFastingOccurrenceRepository fastingOccurrenceRepository)
     : IQueryHandler<GetFastingHistoryQuery, Result<IReadOnlyList<FastingSessionModel>>> {
     public async Task<Result<IReadOnlyList<FastingSessionModel>>> Handle(
         GetFastingHistoryQuery query, CancellationToken cancellationToken) {
@@ -17,8 +17,12 @@ public class GetFastingHistoryQueryHandler(
         }
 
         var userId = new UserId(query.UserId!.Value);
-        var sessions = await fastingRepository.GetHistoryAsync(userId, query.From, query.To, cancellationToken);
-        var models = sessions.Select(s => s.ToModel()).ToList();
+        var occurrences = await fastingOccurrenceRepository.GetByUserAsync(
+            userId,
+            from: query.From,
+            to: query.To,
+            cancellationToken: cancellationToken);
+        var models = occurrences.Select(static occurrence => occurrence.ToModel()).ToList();
         return Result.Success<IReadOnlyList<FastingSessionModel>>(models);
     }
 }

@@ -48,9 +48,22 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        gap: 4px;
+        gap: 3px;
         text-align: center;
         padding: 0 16px;
+    }
+
+    &__label {
+        font-size: 0.8rem;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+        color: #64748b;
+    }
+
+    &__state {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: #334155;
     }
 
     &__elapsed {
@@ -73,5 +86,12 @@
             color: #22c55e;
             font-weight: 600;
         }
+    }
+
+    &__detail {
+        max-width: 150px;
+        font-size: 0.75rem;
+        line-height: 1.35;
+        color: #94a3b8;
     }
 }

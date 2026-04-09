@@ -94,6 +94,9 @@
                                 [progressPercent]="fastingProgressPercent()"
                                 [elapsedFormatted]="fastingElapsedFormatted()"
                                 [remainingFormatted]="fastingRemainingFormatted()"
+                                [labelKey]="getFastingCardLabelKey()"
+                                [stateLabel]="getFastingCardStateLabel()"
+                                [detailLabel]="getFastingCardDetailLabel()"
                             />
                             @if (layout.isEditingLayout()) {
                                 <div class="dashboard__fasting-overlay">

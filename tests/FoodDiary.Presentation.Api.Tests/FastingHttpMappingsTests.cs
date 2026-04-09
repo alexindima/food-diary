@@ -1,5 +1,6 @@
 using FoodDiary.Presentation.Api.Features.Fasting.Mappings;
 using FoodDiary.Presentation.Api.Features.Fasting.Requests;
+using FoodDiary.Application.Fasting.Models;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
@@ -7,12 +8,13 @@ public sealed class FastingHttpMappingsTests {
     [Fact]
     public void StartFastingRequest_ToCommand_MapsAllFields() {
         var userId = Guid.NewGuid();
-        var request = new StartFastingHttpRequest("F16_8", 16, "Feeling good");
+        var request = new StartFastingHttpRequest("F16_8", "Intermittent", 16, null, null, null, null, "Feeling good");
 
         var command = request.ToCommand(userId);
 
         Assert.Equal(userId, command.UserId);
         Assert.Equal("F16_8", command.Protocol);
+        Assert.Equal("Intermittent", command.PlanType);
         Assert.Equal(16, command.PlannedDurationHours);
         Assert.Equal("Feeling good", command.Notes);
     }
@@ -51,5 +53,54 @@ public sealed class FastingHttpMappingsTests {
 
         Assert.Equal(userId, command.UserId);
         Assert.Equal(24, command.AdditionalHours);
+    }
+
+    [Fact]
+    public void SkipCyclicFastDay_ToCommand_MapsUserId() {
+        var userId = Guid.NewGuid();
+
+        var command = userId.ToSkipCyclicFastDayCommand();
+
+        Assert.Equal(userId, command.UserId);
+    }
+
+    [Fact]
+    public void PostponeCyclicFastDay_ToCommand_MapsUserId() {
+        var userId = Guid.NewGuid();
+
+        var command = userId.ToPostponeCyclicFastDayCommand();
+
+        Assert.Equal(userId, command.UserId);
+    }
+
+    [Fact]
+    public void FastingSessionModel_ToHttpResponse_MapsStatus() {
+        var model = new FastingSessionModel(
+            Guid.NewGuid(),
+            DateTime.UtcNow.AddHours(-8),
+            DateTime.UtcNow,
+            16,
+            8,
+            24,
+            "F16_8",
+            "Intermittent",
+            "FastingWindow",
+            null,
+            null,
+            null,
+            null,
+            true,
+            "Interrupted",
+            "Stopped early");
+
+        var response = model.ToHttpResponse();
+
+        Assert.Equal("Interrupted", response.Status);
+        Assert.True(response.IsCompleted);
+        Assert.Equal(16, response.InitialPlannedDurationHours);
+        Assert.Equal(8, response.AddedDurationHours);
+        Assert.Equal(24, response.PlannedDurationHours);
+        Assert.Equal("Intermittent", response.PlanType);
+        Assert.Equal("FastingWindow", response.OccurrenceKind);
     }
 }

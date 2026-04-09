@@ -6,6 +6,7 @@ using FoodDiary.Application.WaistEntries.Common;
 using FoodDiary.Application.WeightEntries.Common;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using MediatR;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -20,7 +21,7 @@ public sealed class DashboardSnapshotBuilderTests {
             new StubUserRepository(),
             new StubWeightEntryRepository(),
             new StubWaistEntryRepository(),
-            new StubFastingSessionRepository(),
+            new StubFastingOccurrenceRepository(),
             new StubExerciseEntryRepository(),
             NullLogger<DashboardSnapshotBuilder>.Instance);
 
@@ -90,14 +91,18 @@ public sealed class DashboardSnapshotBuilderTests {
         public Task<double> GetTotalCaloriesBurnedAsync(UserId userId, DateTime date, CancellationToken cancellationToken = default) => Task.FromResult(0.0);
     }
 
-    private sealed class StubFastingSessionRepository : IFastingSessionRepository {
-        public Task<FastingSession?> GetCurrentAsync(UserId userId, CancellationToken cancellationToken = default) => Task.FromResult<FastingSession?>(null);
-        public Task<FastingSession?> GetByIdAsync(FastingSessionId id, bool asTracking = false, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<IReadOnlyList<FastingSession>> GetHistoryAsync(UserId userId, DateTime from, DateTime to, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<int> GetCompletedCountAsync(UserId userId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<int> GetCurrentStreakAsync(UserId userId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<FastingSession> AddAsync(FastingSession session, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task UpdateAsync(FastingSession session, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+    private sealed class StubFastingOccurrenceRepository : IFastingOccurrenceRepository {
+        public Task<FastingOccurrence?> GetCurrentAsync(UserId userId, bool asTracking = false, CancellationToken cancellationToken = default) => Task.FromResult<FastingOccurrence?>(null);
+        public Task<FastingOccurrence?> GetByIdAsync(FastingOccurrenceId id, bool asTracking = false, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<IReadOnlyList<FastingOccurrence>> GetByPlanAsync(FastingPlanId planId, bool includeCompleted = true, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<IReadOnlyList<FastingOccurrence>> GetByUserAsync(
+            UserId userId,
+            DateTime? from = null,
+            DateTime? to = null,
+            FastingOccurrenceStatus? status = null,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task AddAsync(FastingOccurrence occurrence, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task UpdateAsync(FastingOccurrence occurrence, CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 
     private sealed class StubWaistEntryRepository : IWaistEntryRepository {

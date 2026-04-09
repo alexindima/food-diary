@@ -8,7 +8,7 @@ public class FastingValidatorTests {
 
     [Fact]
     public async Task StartFasting_WithNullUserId_HasError() {
-        var command = new StartFastingCommand(null, "F16_8", null, null);
+        var command = new StartFastingCommand(null, "F16_8", null, null, null, null, null, null, null);
         var result = await _validator.TestValidateAsync(command);
 
         result.ShouldHaveValidationErrorFor(c => c.UserId);
@@ -16,7 +16,7 @@ public class FastingValidatorTests {
 
     [Fact]
     public async Task StartFasting_WithEmptyUserId_HasError() {
-        var command = new StartFastingCommand(Guid.Empty, "F16_8", null, null);
+        var command = new StartFastingCommand(Guid.Empty, "F16_8", null, null, null, null, null, null, null);
         var result = await _validator.TestValidateAsync(command);
 
         result.ShouldHaveValidationErrorFor(c => c.UserId);
@@ -24,7 +24,7 @@ public class FastingValidatorTests {
 
     [Fact]
     public async Task StartFasting_WithEmptyProtocol_HasError() {
-        var command = new StartFastingCommand(Guid.NewGuid(), "", null, null);
+        var command = new StartFastingCommand(Guid.NewGuid(), "", null, null, null, null, null, null, null);
         var result = await _validator.TestValidateAsync(command);
 
         result.ShouldHaveValidationErrorFor(c => c.Protocol);
@@ -32,9 +32,17 @@ public class FastingValidatorTests {
 
     [Fact]
     public async Task StartFasting_WithValidCommand_NoErrors() {
-        var command = new StartFastingCommand(Guid.NewGuid(), "F16_8", 16, null);
+        var command = new StartFastingCommand(Guid.NewGuid(), "F16_8", null, 16, null, null, null, null, null);
         var result = await _validator.TestValidateAsync(command);
 
         result.ShouldNotHaveAnyValidationErrors();
+    }
+
+    [Fact]
+    public async Task StartFasting_WithCyclicPlanType_WithoutProtocol_NoErrors() {
+        var command = new StartFastingCommand(Guid.NewGuid(), null, "Cyclic", null, 1, 3, 16, 8, null);
+        var result = await _validator.TestValidateAsync(command);
+
+        result.ShouldNotHaveValidationErrorFor(c => c.Protocol);
     }
 }

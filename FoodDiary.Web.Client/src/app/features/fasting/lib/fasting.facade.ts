@@ -2,7 +2,7 @@ import { DestroyRef, Injectable, computed, inject, signal } from '@angular/core'
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { finalize, forkJoin, of } from 'rxjs';
 import { FastingService } from '../api/fasting.service';
-import { FASTING_PROTOCOLS, FastingProtocol, FastingSession, FastingStats } from '../models/fasting.data';
+import { FASTING_PROTOCOLS, FastingMode, FastingPlanType, FastingProtocol, FastingSession, FastingStats } from '../models/fasting.data';
 
 @Injectable()
 export class FastingFacade {
@@ -14,11 +14,17 @@ export class FastingFacade {
     public readonly isStarting = signal(false);
     public readonly isEnding = signal(false);
     public readonly isExtending = signal(false);
+    public readonly isUpdatingCycle = signal(false);
     public readonly currentSession = signal<FastingSession | null>(null);
     public readonly stats = signal<FastingStats | null>(null);
     public readonly history = signal<FastingSession[]>([]);
+    public readonly selectedMode = signal<FastingMode>('intermittent');
     public readonly selectedProtocol = signal<FastingProtocol>('F16_8');
     public readonly customHours = signal(16);
+    public readonly customIntermittentFastHours = signal(16);
+    public readonly cyclicFastDays = signal(1);
+    public readonly cyclicEatDays = signal(1);
+    public readonly cyclicEatDayFastHours = signal(16);
     public readonly extendHours = signal(24);
     public readonly now = signal(new Date());
 
@@ -29,6 +35,9 @@ export class FastingFacade {
 
     public readonly plannedDurationHours = computed(() => {
         const protocol = this.selectedProtocol();
+        if (protocol === 'CustomIntermittent') {
+            return this.customIntermittentFastHours();
+        }
         if (protocol === 'Custom') {
             return this.customHours();
         }
@@ -71,7 +80,7 @@ export class FastingFacade {
     public readonly isOvertime = computed(() => this.elapsedMs() > this.totalMs());
     public readonly canExtendActiveSession = computed(() => {
         const session = this.currentSession();
-        return session !== null && session.endedAtUtc === null && session.plannedDurationHours >= 24;
+        return session !== null && session.endedAtUtc === null && session.planType === 'Extended';
     });
 
     public initialize(options?: { includeStats?: boolean; includeHistory?: boolean }): void {
@@ -110,11 +119,9 @@ export class FastingFacade {
 
     public startFasting(): void {
         this.isStarting.set(true);
+        const payload = this.buildStartPayload();
         this.fastingService
-            .start({
-                protocol: this.selectedProtocol(),
-                plannedDurationHours: this.plannedDurationHours(),
-            })
+            .start(payload)
             .pipe(
                 finalize(() => this.isStarting.set(false)),
                 takeUntilDestroyed(this.destroyRef),
@@ -135,8 +142,13 @@ export class FastingFacade {
             )
             .subscribe(session => {
                 this.currentSession.set(session);
-                this.stopTimer();
-                this.refreshStats();
+                if (session.endedAtUtc) {
+                    this.stopTimer();
+                    this.refreshStats();
+                } else {
+                    this.startTimer();
+                    this.refreshHistory();
+                }
             });
     }
 
@@ -144,8 +156,25 @@ export class FastingFacade {
         this.selectedProtocol.set(protocol);
     }
 
+    public selectMode(mode: FastingMode): void {
+        this.selectedMode.set(mode);
+    }
+
     public setCustomHours(hours: number): void {
         this.customHours.set(Math.max(1, Math.min(168, hours)));
+    }
+
+    public setCustomIntermittentFastHours(hours: number): void {
+        this.customIntermittentFastHours.set(Math.max(1, Math.min(23, hours)));
+    }
+
+    public setCyclicPreset(fastDays: number, eatDays: number): void {
+        this.cyclicFastDays.set(Math.max(1, Math.min(30, fastDays)));
+        this.cyclicEatDays.set(Math.max(1, Math.min(30, eatDays)));
+    }
+
+    public setCyclicEatDayFastHours(hours: number): void {
+        this.cyclicEatDayFastHours.set(Math.max(1, Math.min(23, hours)));
     }
 
     public setExtendHours(hours: number): void {
@@ -163,6 +192,36 @@ export class FastingFacade {
             )
             .subscribe(session => {
                 this.currentSession.set(session);
+            });
+    }
+
+    public skipCyclicFastDay(): void {
+        this.isUpdatingCycle.set(true);
+        this.fastingService
+            .skipCyclicFastDay()
+            .pipe(
+                finalize(() => this.isUpdatingCycle.set(false)),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe(session => {
+                this.currentSession.set(session);
+                this.startTimer();
+                this.refreshHistory();
+            });
+    }
+
+    public postponeCyclicFastDay(): void {
+        this.isUpdatingCycle.set(true);
+        this.fastingService
+            .postponeCyclicFastDay()
+            .pipe(
+                finalize(() => this.isUpdatingCycle.set(false)),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe(session => {
+                this.currentSession.set(session);
+                this.startTimer();
+                this.refreshHistory();
             });
     }
 
@@ -186,6 +245,10 @@ export class FastingFacade {
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(stats => this.stats.set(stats));
 
+        this.refreshHistory();
+    }
+
+    private refreshHistory(): void {
         const now = new Date();
         const from = new Date(now.getFullYear(), now.getMonth() - 1, 1);
         const to = new Date(now.getFullYear(), now.getMonth() + 1, 0);
@@ -202,5 +265,32 @@ export class FastingFacade {
         const minutes = Math.floor((totalSeconds % 3600) / 60);
         const seconds = totalSeconds % 60;
         return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+    }
+
+    private buildStartPayload(): {
+        protocol?: string;
+        planType?: FastingPlanType;
+        plannedDurationHours?: number;
+        cyclicFastDays?: number;
+        cyclicEatDays?: number;
+        cyclicEatDayFastHours?: number;
+        cyclicEatDayEatingWindowHours?: number;
+    } {
+        const selectedMode = this.selectedMode();
+        if (selectedMode === 'cyclic') {
+            return {
+                planType: 'Cyclic',
+                cyclicFastDays: this.cyclicFastDays(),
+                cyclicEatDays: this.cyclicEatDays(),
+                cyclicEatDayFastHours: this.cyclicEatDayFastHours(),
+                cyclicEatDayEatingWindowHours: 24 - this.cyclicEatDayFastHours(),
+            };
+        }
+
+        return {
+            planType: selectedMode === 'intermittent' ? 'Intermittent' : 'Extended',
+            protocol: this.selectedProtocol(),
+            plannedDurationHours: this.plannedDurationHours(),
+        };
     }
 }

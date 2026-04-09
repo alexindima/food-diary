@@ -1,0 +1,14 @@
+<fd-ui-dialog-shell [title]="data.title" size="sm">
+    <div class="fasting-end-confirm-dialog__body">
+        <p class="fasting-end-confirm-dialog__message">{{ data.message }}</p>
+    </div>
+
+    <div fdUiDialogFooter class="fasting-end-confirm-dialog__footer">
+        <fd-ui-button variant="primary" [fullWidth]="true" (click)="onConfirm()">
+            {{ data.confirmLabel }}
+        </fd-ui-button>
+        <fd-ui-button variant="secondary" fill="outline" [fullWidth]="true" (click)="onCancel()">
+            {{ data.cancelLabel }}
+        </fd-ui-button>
+    </div>
+</fd-ui-dialog-shell>

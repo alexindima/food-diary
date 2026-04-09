@@ -14,51 +14,138 @@
                     [progressPercent]="progressPercent()"
                     [elapsedFormatted]="elapsedFormatted()"
                     [remainingFormatted]="remainingFormatted()"
+                    [labelKey]="getCurrentCardLabelKey()"
+                    [stateLabel]="getCurrentCardStateLabel()"
+                    [detailLabel]="getCurrentCardDetailLabel()"
                 >
                     <div fastingControls class="fasting__controls">
                         @if (!isActive()) {
-                            <div class="fasting__protocol-group">
-                                <div class="fasting__protocol-group-title">{{ 'FASTING.INTERMITTENT_GROUP' | translate }}</div>
-                                <div class="fasting__protocols">
-                                    @for (p of intermittentProtocols; track p.value) {
-                                        <button
-                                            type="button"
-                                            class="fasting__protocol-btn"
-                                            [class.fasting__protocol-btn--active]="selectedProtocol() === p.value"
-                                            (click)="selectProtocol(p.value)"
-                                        >
-                                            {{ p.labelKey | translate }}
-                                        </button>
-                                    }
-                                </div>
+                            <div class="fasting__mode-switch">
+                                <button
+                                    type="button"
+                                    class="fasting__protocol-btn"
+                                    [class.fasting__protocol-btn--active]="selectedMode() === 'intermittent'"
+                                    (click)="selectMode('intermittent')"
+                                >
+                                    {{ 'FASTING.MODE_INTERMITTENT' | translate }}
+                                </button>
+                                <button
+                                    type="button"
+                                    class="fasting__protocol-btn"
+                                    [class.fasting__protocol-btn--active]="selectedMode() === 'extended'"
+                                    (click)="selectMode('extended')"
+                                >
+                                    {{ 'FASTING.MODE_EXTENDED' | translate }}
+                                </button>
+                                <button
+                                    type="button"
+                                    class="fasting__protocol-btn"
+                                    [class.fasting__protocol-btn--active]="selectedMode() === 'cyclic'"
+                                    (click)="selectMode('cyclic')"
+                                >
+                                    {{ 'FASTING.MODE_CYCLIC' | translate }}
+                                </button>
                             </div>
 
-                            <div class="fasting__protocol-group">
-                                <div class="fasting__protocol-group-title">{{ 'FASTING.EXTENDED_GROUP' | translate }}</div>
-                                <div class="fasting__protocols">
-                                    @for (p of extendedProtocols; track p.value) {
-                                        <button
-                                            type="button"
-                                            class="fasting__protocol-btn"
-                                            [class.fasting__protocol-btn--active]="selectedProtocol() === p.value"
-                                            (click)="selectProtocol(p.value)"
-                                        >
-                                            {{ p.labelKey | translate }}
-                                        </button>
-                                    }
-                                </div>
-
-                                @if (selectedProtocol() === 'Custom') {
-                                    <div class="fasting__custom-input">
-                                        <fd-ui-input
-                                            type="number"
-                                            [label]="'FASTING.CUSTOM_HOURS' | translate"
-                                            [ngModel]="customHours()"
-                                            (ngModelChange)="onCustomHoursChange($event)"
-                                        />
+                            @if (selectedMode() === 'intermittent') {
+                                <div class="fasting__protocol-group">
+                                    <div class="fasting__protocol-group-title">{{ 'FASTING.INTERMITTENT_GROUP' | translate }}</div>
+                                    <div class="fasting__protocols">
+                                        @for (p of intermittentProtocols; track p.value) {
+                                            <button
+                                                type="button"
+                                                class="fasting__protocol-btn"
+                                                [class.fasting__protocol-btn--active]="selectedProtocol() === p.value"
+                                                (click)="selectProtocol(p.value)"
+                                            >
+                                                {{ p.labelKey | translate }}
+                                            </button>
+                                        }
                                     </div>
-                                }
-                            </div>
+
+                                    @if (selectedProtocol() === 'CustomIntermittent') {
+                                        <div class="fasting__custom-intermittent">
+                                            <div class="fasting__custom-input">
+                                                <fd-ui-input
+                                                    type="number"
+                                                    [label]="'FASTING.FAST_HOURS' | translate"
+                                                    [ngModel]="customIntermittentFastHours()"
+                                                    (ngModelChange)="onCustomIntermittentFastHoursChange($event)"
+                                                />
+                                            </div>
+                                            <div class="fasting__custom-intermittent-summary">
+                                                {{ customIntermittentFastHours() }}:{{ getCustomIntermittentEatingWindowHours() }}
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            }
+
+                            @if (selectedMode() === 'extended') {
+                                <div class="fasting__protocol-group">
+                                    <div class="fasting__protocol-group-title">{{ 'FASTING.EXTENDED_GROUP' | translate }}</div>
+                                    <div class="fasting__protocols">
+                                        @for (p of extendedProtocols; track p.value) {
+                                            <button
+                                                type="button"
+                                                class="fasting__protocol-btn"
+                                                [class.fasting__protocol-btn--active]="selectedProtocol() === p.value"
+                                                (click)="selectProtocol(p.value)"
+                                            >
+                                                {{ p.labelKey | translate }}
+                                            </button>
+                                        }
+                                    </div>
+
+                                    @if (selectedProtocol() === 'Custom') {
+                                        <div class="fasting__custom-input">
+                                            <fd-ui-input
+                                                type="number"
+                                                [label]="'FASTING.CUSTOM_HOURS' | translate"
+                                                [ngModel]="customHours()"
+                                                (ngModelChange)="onCustomHoursChange($event)"
+                                            />
+                                        </div>
+                                    }
+                                </div>
+                            }
+
+                            @if (selectedMode() === 'cyclic') {
+                                <div class="fasting__protocol-group">
+                                    <div class="fasting__protocol-group-title">{{ 'FASTING.CYCLIC_GROUP' | translate }}</div>
+                                    <div class="fasting__protocols">
+                                        @for (preset of cyclicPresets; track preset.label) {
+                                            <button
+                                                type="button"
+                                                class="fasting__protocol-btn"
+                                                [class.fasting__protocol-btn--active]="
+                                                    cyclicFastDays() === preset.fastDays && cyclicEatDays() === preset.eatDays
+                                                "
+                                                (click)="selectCyclicPreset(preset.fastDays, preset.eatDays)"
+                                            >
+                                                {{ preset.label }}
+                                            </button>
+                                        }
+                                    </div>
+                                </div>
+
+                                <div class="fasting__protocol-group">
+                                    <div class="fasting__protocol-group-title">{{ 'FASTING.EAT_DAY_WINDOW_GROUP' | translate }}</div>
+                                    <div class="fasting__custom-intermittent">
+                                        <div class="fasting__custom-input">
+                                            <fd-ui-input
+                                                type="number"
+                                                [label]="'FASTING.FAST_HOURS' | translate"
+                                                [ngModel]="cyclicEatDayFastHours()"
+                                                (ngModelChange)="onCyclicEatDayFastHoursChange($event)"
+                                            />
+                                        </div>
+                                        <div class="fasting__custom-intermittent-summary">
+                                            {{ cyclicEatDayFastHours() }}:{{ getCyclicEatDayEatingWindowHours() }}
+                                        </div>
+                                    </div>
+                                </div>
+                            }
                         }
 
                         @if (isActive() && canExtendActiveSession()) {
@@ -95,10 +182,34 @@
                             </div>
                         }
 
+                        @if (canManageCurrentCyclicDay()) {
+                            <div class="fasting__protocol-group">
+                                <div class="fasting__protocol-group-title">{{ 'FASTING.CYCLIC_ACTIONS_GROUP' | translate }}</div>
+                                <div class="fasting__extend-custom">
+                                    <fd-ui-button
+                                        variant="secondary"
+                                        fill="outline"
+                                        (click)="skipCyclicFastDay()"
+                                        [disabled]="isUpdatingCycle() || isEnding()"
+                                    >
+                                        {{ 'FASTING.SKIP_DAY' | translate }}
+                                    </fd-ui-button>
+                                    <fd-ui-button
+                                        variant="secondary"
+                                        fill="outline"
+                                        (click)="postponeCyclicFastDay()"
+                                        [disabled]="isUpdatingCycle() || isEnding()"
+                                    >
+                                        {{ 'FASTING.POSTPONE_DAY' | translate }}
+                                    </fd-ui-button>
+                                </div>
+                            </div>
+                        }
+
                         <div class="fasting__actions">
                             @if (isActive()) {
-                                <fd-ui-button (click)="endFasting()" [disabled]="isEnding()">
-                                    {{ 'FASTING.END_FAST' | translate }}
+                                <fd-ui-button (click)="endFasting()" [disabled]="isEnding() || isUpdatingCycle()">
+                                    {{ getEndActionLabelKey() | translate }}
                                 </fd-ui-button>
                             } @else {
                                 <fd-ui-button (click)="startFasting()" [disabled]="isStarting()">
@@ -134,42 +245,46 @@
             </div>
 
             <fd-ui-card class="fasting__card" [title]="'FASTING.HISTORY_TITLE' | translate">
-                @if (history().length === 0) {
-                    <p class="fasting__empty">{{ 'FASTING.NO_HISTORY' | translate }}</p>
-                } @else {
-                    <div class="fasting__history">
-                        @for (session of history(); track session.id) {
-                            <fd-ui-accent-surface
-                                class="fasting__history-item"
-                                accentSide="left"
-                                [accentColor]="session.isCompleted ? '#22c55e' : '#94a3b8'"
-                                [tinted]="true"
-                            >
-                                <div class="fasting__history-header">
-                                    <div class="fasting__history-date">
-                                        {{ session.startedAtUtc | date: 'd MMM, y HH:mm' }}
+                <div class="fasting__history-content">
+                    @if (history().length === 0) {
+                        <p class="fasting__empty">{{ 'FASTING.NO_HISTORY' | translate }}</p>
+                    } @else {
+                        <div class="fasting__history">
+                            @for (session of history(); track session.id) {
+                                <fd-ui-accent-surface
+                                    class="fasting__history-item"
+                                    accentSide="left"
+                                    [accentColor]="getHistoryAccentColor(session)"
+                                    [tinted]="true"
+                                >
+                                    <div class="fasting__history-header">
+                                        <div class="fasting__history-date">
+                                            {{ session.startedAtUtc | localizedDate: 'd MMM y, HH:mm' }}
+                                        </div>
+                                        <div
+                                            class="fasting__history-badge"
+                                            [class.fasting__history-badge--completed]="session.status === 'Completed'"
+                                            [class.fasting__history-badge--interrupted]="session.status === 'Interrupted'"
+                                            [class.fasting__history-badge--skipped]="session.status === 'Skipped'"
+                                            [class.fasting__history-badge--postponed]="session.status === 'Postponed'"
+                                        >
+                                            {{ getHistoryBadgeKey(session.status) | translate }}
+                                        </div>
                                     </div>
-                                    <div class="fasting__history-badge" [class.fasting__history-badge--completed]="session.isCompleted">
-                                        {{
-                                            session.isCompleted
-                                                ? ('FASTING.BADGE_COMPLETED' | translate)
-                                                : ('FASTING.BADGE_INCOMPLETE' | translate)
-                                        }}
+                                    <div class="fasting__history-details">
+                                        <span
+                                            >{{ getHistorySessionTypeLabel(session) }} &middot;
+                                            {{ getHistoryProtocolDisplay(session) }}</span
+                                        >
                                     </div>
-                                </div>
-                                <div class="fasting__history-details">
-                                    <span
-                                        >{{ session.protocol }} &middot; {{ session.plannedDurationHours
-                                        }}{{ 'FASTING.H' | translate }}</span
-                                    >
-                                </div>
-                                @if (session.notes) {
-                                    <p class="fasting__history-notes">{{ session.notes }}</p>
-                                }
-                            </fd-ui-accent-surface>
-                        }
-                    </div>
-                }
+                                    @if (session.notes) {
+                                        <p class="fasting__history-notes">{{ session.notes }}</p>
+                                    }
+                                </fd-ui-accent-surface>
+                            }
+                        </div>
+                    }
+                </div>
             </fd-ui-card>
         }
     </fd-page-body>

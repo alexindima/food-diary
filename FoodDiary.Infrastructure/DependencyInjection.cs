@@ -176,6 +176,8 @@ public static class DependencyInjection {
         services.AddScoped<IDietologistInvitationRepository, DietologistInvitationRepository>();
         services.AddScoped<IRecommendationRepository, RecommendationRepository>();
         services.AddScoped<INotificationRepository, NotificationRepository>();
+        services.AddScoped<IFastingPlanRepository, FastingPlanRepository>();
+        services.AddScoped<IFastingOccurrenceRepository, FastingOccurrenceRepository>();
         services.AddScoped<IFastingSessionRepository, FastingSessionRepository>();
         services.AddScoped<IFavoriteMealRepository, FavoriteMealRepository>();
         services.AddScoped<IExerciseEntryRepository, ExerciseEntryRepository>();

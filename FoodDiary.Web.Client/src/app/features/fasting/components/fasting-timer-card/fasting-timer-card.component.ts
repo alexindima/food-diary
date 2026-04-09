@@ -18,4 +18,7 @@ export class FastingTimerCardComponent {
     public readonly progressPercent = input<number>(0);
     public readonly elapsedFormatted = input<string>('00:00:00');
     public readonly remainingFormatted = input<string>('00:00:00');
+    public readonly labelKey = input<string>('FASTING.WIDGET_LABEL');
+    public readonly stateLabel = input<string | null>(null);
+    public readonly detailLabel = input<string | null>(null);
 }
