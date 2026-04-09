@@ -76,7 +76,7 @@ services:
       - full
 
   job-manager:
-    image: ${IMAGE_PREFIX:-ghcr.io/alexindima/food-diary}/job-manager:latest
+    image: ${IMAGE_PREFIX:-ghcr.io/alexindima/food-diary}/job-manager:${JOB_MANAGER_IMAGE_TAG:-latest}
     build:
       context: .
       dockerfile: FoodDiary.JobManager/Dockerfile

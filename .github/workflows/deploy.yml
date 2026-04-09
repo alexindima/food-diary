@@ -143,6 +143,27 @@ jobs:
             echo "FAILED_TARGET=Build and push Initializer"
           } > "${RUNNER_TEMP}/deploy-logs/failure-meta.env"
 
+      - name: Build and push Job Manager
+        id: build_job_manager
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: FoodDiary.JobManager/Dockerfile
+          push: true
+          provenance: false
+          tags: |
+            ${{ env.IMAGE_PREFIX }}/job-manager:latest
+            ${{ env.IMAGE_PREFIX }}/job-manager:sha-${{ github.sha }}
+
+      - name: Record failure step
+        if: always() && steps.build_job_manager.outcome == 'failure'
+        shell: bash
+        run: |
+          {
+            echo "FAILED_AREA=deploy"
+            echo "FAILED_TARGET=Build and push Job Manager"
+          } > "${RUNNER_TEMP}/deploy-logs/failure-meta.env"
+
       - name: Build and push Client
         id: build_client
         uses: docker/build-push-action@v7
@@ -216,7 +237,8 @@ jobs:
           cd /opt/fooddiary
 
           cp /etc/fooddiary/fooddiary.env .env
-          printf '\nAPI_IMAGE_TAG=%s\nINITIALIZER_IMAGE_TAG=%s\nTELEGRAM_BOT_IMAGE_TAG=%s\nCLIENT_IMAGE_TAG=%s\nDEPLOY_COMMIT_SHA=%s\n' \
+          printf '\nAPI_IMAGE_TAG=%s\nINITIALIZER_IMAGE_TAG=%s\nTELEGRAM_BOT_IMAGE_TAG=%s\nJOB_MANAGER_IMAGE_TAG=%s\nCLIENT_IMAGE_TAG=%s\nDEPLOY_COMMIT_SHA=%s\n' \
+            "$DEPLOY_IMAGE_TAG" \
             "$DEPLOY_IMAGE_TAG" \
             "$DEPLOY_IMAGE_TAG" \
             "$DEPLOY_IMAGE_TAG" \
@@ -226,6 +248,7 @@ jobs:
           export API_IMAGE_TAG="$DEPLOY_IMAGE_TAG"
           export INITIALIZER_IMAGE_TAG="$DEPLOY_IMAGE_TAG"
           export TELEGRAM_BOT_IMAGE_TAG="$DEPLOY_IMAGE_TAG"
+          export JOB_MANAGER_IMAGE_TAG="$DEPLOY_IMAGE_TAG"
           export CLIENT_IMAGE_TAG="$DEPLOY_IMAGE_TAG"
 
           docker compose --profile backend --profile full pull
@@ -234,6 +257,7 @@ jobs:
 
           docker compose --profile backend up -d --force-recreate --no-deps api
           docker compose --profile full up -d --force-recreate --no-deps telegram-bot
+          docker compose --profile full up -d --force-recreate --no-deps job-manager
 
           echo "Checking deployed API version..."
           echo "Expected commit SHA: $DEPLOY_COMMIT_SHA"
