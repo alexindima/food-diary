@@ -284,12 +284,14 @@ jobs:
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          COMMIT_SHA: ${{ steps.commit_meta.outputs.sha }}
+          COMMIT_SUBJECT: ${{ steps.commit_meta.outputs.subject }}
         run: |
           if [ -z "${TELEGRAM_BOT_TOKEN}" ] || [ -z "${TELEGRAM_CHAT_ID}" ]; then
             echo "Skipping Telegram notification: missing secrets."
             exit 0
           fi
-          MESSAGE=$'✅ Deploy success\nWorkflow: Deploy\nRepo: '"${GITHUB_REPOSITORY}"$'\nBranch: '"${GITHUB_REF_NAME}"$'\nCommit: '"${{ steps.commit_meta.outputs.sha }}"$'\nTitle: '"${{ steps.commit_meta.outputs.subject }}"$'\nActor: '"${GITHUB_ACTOR}"$'\nRun: '"${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          MESSAGE=$'✅ Deploy success\nWorkflow: Deploy\nRepo: '"${GITHUB_REPOSITORY}"$'\nBranch: '"${GITHUB_REF_NAME}"$'\nCommit: '"${COMMIT_SHA}"$'\nTitle: '"${COMMIT_SUBJECT}"$'\nActor: '"${GITHUB_ACTOR}"$'\nRun: '"${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
           curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
             -d chat_id="${TELEGRAM_CHAT_ID}" \
             --data-urlencode text="${MESSAGE}" >/dev/null
@@ -299,6 +301,8 @@ jobs:
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          COMMIT_SHA: ${{ steps.commit_meta.outputs.sha }}
+          COMMIT_SUBJECT: ${{ steps.commit_meta.outputs.subject }}
         run: |
           FAILED_AREA="deploy"
           FAILED_TARGET="unknown"
@@ -323,7 +327,7 @@ jobs:
           if [ -z "${REF_NAME}" ] && [ "${GITHUB_EVENT_NAME}" = "workflow_run" ]; then
             REF_NAME="${{ github.event.workflow_run.head_branch }}"
           fi
-          MESSAGE=$'❌ Deploy failed\nWorkflow: Deploy\nRepo: '"${GITHUB_REPOSITORY}"$'\nBranch: '"${REF_NAME}"$'\nCommit: '"${{ steps.commit_meta.outputs.sha }}"$'\nTitle: '"${{ steps.commit_meta.outputs.subject }}"$'\nActor: '"${GITHUB_ACTOR}"$'\nArea: '"${FAILED_AREA}"$'\nStep: '"${FAILED_TARGET}"$'\nRun: '"${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          MESSAGE=$'❌ Deploy failed\nWorkflow: Deploy\nRepo: '"${GITHUB_REPOSITORY}"$'\nBranch: '"${REF_NAME}"$'\nCommit: '"${COMMIT_SHA}"$'\nTitle: '"${COMMIT_SUBJECT}"$'\nActor: '"${GITHUB_ACTOR}"$'\nArea: '"${FAILED_AREA}"$'\nStep: '"${FAILED_TARGET}"$'\nRun: '"${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
           curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
             -d chat_id="${TELEGRAM_CHAT_ID}" \
             --data-urlencode text="${MESSAGE}" >/dev/null
