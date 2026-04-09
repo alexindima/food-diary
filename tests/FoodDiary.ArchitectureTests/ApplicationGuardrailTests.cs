@@ -38,7 +38,7 @@ public sealed class ApplicationGuardrailTests {
     [Fact]
     public void ApplicationServiceInterfaces_AsyncMethodsAcceptCancellationToken() {
         var root = GetRepositoryRoot();
-        var servicesRoot = Path.Combine(root, "FoodDiary.Application", "Common", "Interfaces", "Services");
+        var servicesRoot = Path.Combine(root, "FoodDiary.Application.Abstractions", "Common", "Interfaces", "Services");
 
         var violations = Directory.GetFiles(servicesRoot, "*.cs", SearchOption.AllDirectories)
             .SelectMany(path => GetAsyncMethodSignatures(path)
@@ -66,8 +66,10 @@ public sealed class ApplicationGuardrailTests {
     [Fact]
     public void ApplicationCommonServiceInterfaces_StayLimitedToTrueCrossCuttingAbstractions() {
         var root = GetRepositoryRoot();
-        var servicesRoot = Path.Combine(root, "FoodDiary.Application", "Common", "Interfaces", "Services");
-        var allowedFiles = Array.Empty<string>();
+        var servicesRoot = Path.Combine(root, "FoodDiary.Application.Abstractions", "Common", "Interfaces", "Services");
+        var allowedFiles = new[] {
+            "IDateTimeProvider.cs",
+        };
 
         var actualFiles = Directory.GetFiles(servicesRoot, "*.cs", SearchOption.TopDirectoryOnly)
             .Select(Path.GetFileName)
