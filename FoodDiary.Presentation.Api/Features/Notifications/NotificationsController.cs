@@ -1,12 +1,13 @@
 using FoodDiary.Application.Notifications.Common;
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Features.Notifications.Mappings;
+using FoodDiary.Presentation.Api.Features.Notifications.Requests;
 using FoodDiary.Presentation.Api.Features.Notifications.Responses;
 using FoodDiary.Presentation.Api.Responses;
+using FoodDiary.Presentation.Api.Services;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Hosting;
 
 namespace FoodDiary.Presentation.Api.Features.Notifications;
 
@@ -14,26 +15,19 @@ namespace FoodDiary.Presentation.Api.Features.Notifications;
 [Route("api/v{version:apiVersion}/notifications")]
 public class NotificationsController(
     ISender mediator,
-    IHostEnvironment environment,
-    INotificationTextRenderer notificationTextRenderer)
+    INotificationTestScheduler notificationTestScheduler,
+    IWebPushSubscriptionRepository webPushSubscriptionRepository,
+    IWebPushConfigurationProvider webPushConfigurationProvider)
     : AuthorizedController(mediator) {
     [HttpGet]
     [ProducesResponseType<List<NotificationHttpResponse>>(StatusCodes.Status200OK)]
     public Task<IActionResult> GetNotifications([FromCurrentUser] Guid userId) {
-        if (environment.IsDevelopment()) {
-            return Task.FromResult<IActionResult>(Ok(GetFakeNotifications(GetPreferredLocale())));
-        }
-
         return HandleOk(userId.ToNotificationsQuery(), static value => value.Select(x => x.ToHttpResponse()).ToList());
     }
 
     [HttpGet("unread-count")]
     [ProducesResponseType<UnreadCountHttpResponse>(StatusCodes.Status200OK)]
     public Task<IActionResult> GetUnreadCount([FromCurrentUser] Guid userId) {
-        if (environment.IsDevelopment()) {
-            return Task.FromResult<IActionResult>(Ok(new UnreadCountHttpResponse(2)));
-        }
-
         return HandleOk(userId.ToUnreadCountQuery(), static value => new UnreadCountHttpResponse(value));
     }
 
@@ -41,54 +35,89 @@ public class NotificationsController(
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
     public Task<IActionResult> MarkAsRead(Guid notificationId, [FromCurrentUser] Guid userId) {
-        if (environment.IsDevelopment()) {
-            return Task.FromResult<IActionResult>(NoContent());
-        }
-
         return HandleNoContent(notificationId.ToMarkReadCommand(userId));
     }
 
     [HttpPut("read-all")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public Task<IActionResult> MarkAllAsRead([FromCurrentUser] Guid userId) {
-        if (environment.IsDevelopment()) {
-            return Task.FromResult<IActionResult>(NoContent());
-        }
-
         return HandleNoContent(userId.ToMarkAllReadCommand());
     }
 
-    private List<NotificationHttpResponse> GetFakeNotifications(string locale) {
-        var now = DateTime.UtcNow;
-
-        return [
-            CreateFakeNotification(Guid.Parse("11111111-1111-1111-1111-111111111111"), NotificationTypes.FastingCompleted, "fasting-session-1", false, now.AddMinutes(-8), locale),
-            CreateFakeNotification(Guid.Parse("22222222-2222-2222-2222-222222222222"), NotificationTypes.WeeklyCheckIn, "weekly-check-in", false, now.AddHours(-2), locale),
-            CreateFakeNotification(Guid.Parse("33333333-3333-3333-3333-333333333333"), NotificationTypes.Hydration, "hydration", true, now.AddHours(-5), locale),
-            CreateFakeNotification(Guid.Parse("44444444-4444-4444-4444-444444444444"), NotificationTypes.GoalReached, "goals", true, now.AddHours(-9), locale),
-            CreateFakeNotification(Guid.Parse("55555555-5555-5555-5555-555555555555"), NotificationTypes.Lesson, "lessons", true, now.AddDays(-1), locale),
-            CreateFakeNotification(Guid.Parse("66666666-6666-6666-6666-666666666666"), NotificationTypes.MealPlan, "meal-plans", true, now.AddDays(-2), locale),
-            CreateFakeNotification(Guid.Parse("77777777-7777-7777-7777-777777777777"), NotificationTypes.Achievement, "gamification", true, now.AddDays(-4), locale),
-        ];
+    [HttpPost("test/schedule")]
+    [ProducesResponseType<ScheduledNotificationHttpResponse>(StatusCodes.Status202Accepted)]
+    public async Task<IActionResult> ScheduleTestNotification(
+        [FromCurrentUser] Guid userId,
+        [FromBody] ScheduleTestNotificationHttpRequest request) {
+        var response = await notificationTestScheduler.ScheduleAsync(userId, request.DelaySeconds, request.Type);
+        return new ObjectResult(response) { StatusCode = StatusCodes.Status202Accepted };
     }
 
-    private NotificationHttpResponse CreateFakeNotification(
-        Guid id,
-        string type,
-        string referenceId,
-        bool isRead,
-        DateTime createdAtUtc,
-        string locale) {
-        var notificationText = notificationTextRenderer.RenderFromPayload(type, NotificationPayloads.Empty(), locale);
-        return new NotificationHttpResponse(id, type, notificationText.Title, notificationText.Body, referenceId, isRead, createdAtUtc);
+    [HttpGet("push/config")]
+    [ProducesResponseType<WebPushConfigurationHttpResponse>(StatusCodes.Status200OK)]
+    public Task<IActionResult> GetWebPushConfiguration() {
+        var configuration = webPushConfigurationProvider.GetClientConfiguration();
+        IActionResult response = new OkObjectResult(new WebPushConfigurationHttpResponse(configuration.Enabled, configuration.PublicKey));
+        return Task.FromResult(response);
     }
 
-    private string GetPreferredLocale() {
-        var header = Request.Headers.AcceptLanguage.ToString();
-        if (string.IsNullOrWhiteSpace(header)) {
-            return "en";
+    [HttpPut("push/subscription")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> UpsertWebPushSubscription(
+        [FromCurrentUser] Guid userId,
+        [FromBody] UpsertWebPushSubscriptionHttpRequest request) {
+        if (string.IsNullOrWhiteSpace(request.Endpoint)
+            || string.IsNullOrWhiteSpace(request.Keys?.P256dh)
+            || string.IsNullOrWhiteSpace(request.Keys.Auth)) {
+            return new BadRequestObjectResult(new ApiErrorHttpResponse(
+                "Validation.Invalid",
+                "Endpoint and subscription keys are required.",
+                HttpContext.TraceIdentifier));
         }
 
-        return header.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).FirstOrDefault() ?? "en";
+        var existing = await webPushSubscriptionRepository.GetByEndpointAsync(request.Endpoint, asTracking: true, HttpContext.RequestAborted);
+        if (existing is null) {
+            var subscription = FoodDiary.Domain.Entities.Notifications.WebPushSubscription.Create(
+                new FoodDiary.Domain.ValueObjects.Ids.UserId(userId),
+                request.Endpoint,
+                request.Keys.P256dh,
+                request.Keys.Auth,
+                request.ExpirationTime,
+                request.Locale,
+                request.UserAgent);
+
+            await webPushSubscriptionRepository.AddAsync(subscription, HttpContext.RequestAborted);
+            return new NoContentResult();
+        }
+
+        existing.Refresh(
+            new FoodDiary.Domain.ValueObjects.Ids.UserId(userId),
+            request.Keys.P256dh,
+            request.Keys.Auth,
+            request.ExpirationTime,
+            request.Locale,
+            request.UserAgent);
+
+        await webPushSubscriptionRepository.UpdateAsync(existing, HttpContext.RequestAborted);
+        return new NoContentResult();
+    }
+
+    [HttpDelete("push/subscription")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> RemoveWebPushSubscription(
+        [FromCurrentUser] Guid userId,
+        [FromBody] RemoveWebPushSubscriptionHttpRequest request) {
+        if (string.IsNullOrWhiteSpace(request.Endpoint)) {
+            return new NoContentResult();
+        }
+
+        var existing = await webPushSubscriptionRepository.GetByEndpointAsync(request.Endpoint, asTracking: true, HttpContext.RequestAborted);
+        if (existing is null || existing.UserId.Value != userId) {
+            return new NoContentResult();
+        }
+
+        await webPushSubscriptionRepository.DeleteAsync(existing, HttpContext.RequestAborted);
+        return new NoContentResult();
     }
 }

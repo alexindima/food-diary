@@ -22,4 +22,37 @@ public static class NotificationFactory {
             NotificationTypes.NewComment,
             NotificationPayloads.Empty(),
             referenceId);
+
+    public static Notification CreateFastingCompleted(
+        UserId userId,
+        string planType,
+        string occurrenceKind,
+        string referenceId) =>
+        Notification.Create(
+            userId,
+            NotificationTypes.FastingCompleted,
+            NotificationPayloads.FastingPhase(planType, occurrenceKind),
+            referenceId);
+
+    public static Notification CreateEatingWindowStarted(
+        UserId userId,
+        string planType,
+        string occurrenceKind,
+        string referenceId) =>
+        Notification.Create(
+            userId,
+            NotificationTypes.EatingWindowStarted,
+            NotificationPayloads.FastingPhase(planType, occurrenceKind),
+            referenceId);
+
+    public static Notification CreateFastingWindowStarted(
+        UserId userId,
+        string planType,
+        string occurrenceKind,
+        string referenceId) =>
+        Notification.Create(
+            userId,
+            NotificationTypes.FastingWindowStarted,
+            NotificationPayloads.FastingPhase(planType, occurrenceKind),
+            referenceId);
 }

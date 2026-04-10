@@ -4,6 +4,8 @@ public static class NotificationTypes {
     public const string NewRecommendation = "NewRecommendation";
     public const string NewComment = "NewComment";
     public const string FastingCompleted = "FastingCompleted";
+    public const string EatingWindowStarted = "EatingWindowStarted";
+    public const string FastingWindowStarted = "FastingWindowStarted";
     public const string WeeklyCheckIn = "WeeklyCheckIn";
     public const string Hydration = "Hydration";
     public const string GoalReached = "GoalReached";

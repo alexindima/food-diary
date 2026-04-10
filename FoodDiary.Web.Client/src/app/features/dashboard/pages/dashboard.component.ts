@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, computed, inject, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, computed, inject, signal, viewChild } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { NavigationService } from '../../../services/navigation.service';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
@@ -29,6 +29,10 @@ import { DashboardFacade } from '../lib/dashboard.facade';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import { FastingTimerCardComponent } from '../../fasting/components/fasting-timer-card/fasting-timer-card.component';
 import { FastingOccurrenceKind } from '../../fasting/models/fasting.data';
+import { NotificationService } from '../../../services/notification.service';
+import { environment } from '../../../../environments/environment';
+import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
+import { PushNotificationService } from '../../../services/push-notification.service';
 
 @Component({
     selector: 'fd-dashboard',
@@ -68,10 +72,15 @@ export class DashboardComponent implements OnInit {
     private readonly unsavedChangesService = inject(UnsavedChangesService);
     private readonly facade = inject(DashboardFacade);
     private readonly translateService = inject(TranslateService);
+    private readonly notificationService = inject(NotificationService);
+    private readonly toastService = inject(FdUiToastService);
+    public readonly pushNotifications = inject(PushNotificationService);
     public readonly layout = inject(DashboardLayoutService);
 
     private readonly headerDatePicker = viewChild<FdUiDatepicker<Date>>('headerDatePicker');
 
+    public readonly isDevBuild = environment.buildVersion === 'dev';
+    public readonly isSchedulingTestNotification = signal(false);
     public readonly selectedDate = this.facade.selectedDate;
     public readonly isTodaySelected = this.facade.isTodaySelected;
     public readonly snapshot = this.facade.snapshot;
@@ -130,7 +139,6 @@ export class DashboardComponent implements OnInit {
             (visibleBlocks.includes('fasting') && this.fastingIsActive())
         );
     });
-
     public ngOnInit(): void {
         this.facade.initialize();
         const handler: UnsavedChangesHandler = {
@@ -184,6 +192,61 @@ export class DashboardComponent implements OnInit {
                     this.facade.reload();
                 }
             });
+    }
+
+    public scheduleTestNotification(): void {
+        if (this.isSchedulingTestNotification()) {
+            return;
+        }
+
+        this.isSchedulingTestNotification.set(true);
+        this.notificationService
+            .scheduleTestNotification({
+                delaySeconds: 20,
+                type: 'FastingCompleted',
+            })
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe({
+                next: () => {
+                    this.isSchedulingTestNotification.set(false);
+                    this.toastService.open(this.translateService.instant('DASHBOARD.ACTIONS.TEST_PUSH_SCHEDULED'), {
+                        appearance: 'positive',
+                    });
+                },
+                error: () => {
+                    this.isSchedulingTestNotification.set(false);
+                    this.toastService.open(this.translateService.instant('DASHBOARD.ACTIONS.TEST_PUSH_ERROR'), {
+                        appearance: 'negative',
+                    });
+                },
+            });
+    }
+
+    public togglePushNotifications(): void {
+        void this.pushNotifications.toggleSubscription().then(result => {
+            switch (result) {
+                case 'subscribed':
+                    this.toastService.open(this.translateService.instant('DASHBOARD.ACTIONS.PUSH_ENABLED'), {
+                        appearance: 'positive',
+                    });
+                    break;
+                case 'unsubscribed':
+                    this.toastService.open(this.translateService.instant('DASHBOARD.ACTIONS.PUSH_DISABLED'), {
+                        appearance: 'positive',
+                    });
+                    break;
+                case 'unsupported':
+                    this.toastService.open(this.translateService.instant('DASHBOARD.ACTIONS.PUSH_UNSUPPORTED'), {
+                        appearance: 'negative',
+                    });
+                    break;
+                case 'unavailable':
+                    this.toastService.open(this.translateService.instant('DASHBOARD.ACTIONS.PUSH_UNAVAILABLE'), {
+                        appearance: 'negative',
+                    });
+                    break;
+            }
+        });
     }
 
     public async addConsumption(mealType?: string | null): Promise<void> {

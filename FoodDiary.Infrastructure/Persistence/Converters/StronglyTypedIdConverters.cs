@@ -22,6 +22,12 @@ public static class StronglyTypedIdConverters {
             value => new FastingOccurrenceId(value));
     }
 
+    public static class WebPushSubscriptionIdConverter {
+        public static ValueConverter<WebPushSubscriptionId, Guid> Instance { get; } = new(
+            id => id.Value,
+            value => new WebPushSubscriptionId(value));
+    }
+
     public static class ProductIdConverter {
         public static ValueConverter<ProductId, Guid> Instance { get; } = new(
             id => id.Value,

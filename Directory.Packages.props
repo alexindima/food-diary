@@ -44,6 +44,7 @@
     <PackageVersion Include="Microsoft.AspNetCore.WebUtilities" Version="2.3.0" />
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageVersion Include="QuestPDF" Version="2026.2.4" />
+    <PackageVersion Include="WebPush" Version="1.0.12" />
 
     <!-- Hangfire -->
     <PackageVersion Include="Hangfire.AspNetCore" Version="1.8.15" />

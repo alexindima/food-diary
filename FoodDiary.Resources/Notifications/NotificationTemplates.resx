@@ -24,6 +24,18 @@
   <data name="FastingCompleted_Body" xml:space="preserve">
     <value>Time to log how you feel and plan your next meal.</value>
   </data>
+  <data name="EatingWindowStarted_Title" xml:space="preserve">
+    <value>Your eating window has started</value>
+  </data>
+  <data name="EatingWindowStarted_Body" xml:space="preserve">
+    <value>You can eat now. Plan your next meal while the window is open.</value>
+  </data>
+  <data name="FastingWindowStarted_Title" xml:space="preserve">
+    <value>Your fasting window has started</value>
+  </data>
+  <data name="FastingWindowStarted_Body" xml:space="preserve">
+    <value>Your eating window is over. The next fasting phase is now active.</value>
+  </data>
   <data name="WeeklyCheckIn_Title" xml:space="preserve">
     <value>Weekly review is ready</value>
   </data>

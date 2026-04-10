@@ -38,6 +38,20 @@ public class NotificationRepository(FoodDiaryDbContext context) : INotificationR
         await context.SaveChangesAsync(cancellationToken);
     }
 
+    public async Task<bool> ExistsAsync(
+        UserId userId,
+        string type,
+        string referenceId,
+        CancellationToken cancellationToken = default) {
+        return await context.Notifications
+            .AsNoTracking()
+            .AnyAsync(
+                n => n.UserId == userId &&
+                    n.Type == type &&
+                    n.ReferenceId == referenceId,
+                cancellationToken);
+    }
+
     public async Task<int> GetUnreadCountAsync(UserId userId, CancellationToken cancellationToken = default) {
         return await context.Notifications
             .CountAsync(n => n.UserId == userId && !n.IsRead, cancellationToken);

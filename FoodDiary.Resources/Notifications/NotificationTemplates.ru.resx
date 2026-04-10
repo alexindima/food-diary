@@ -22,7 +22,19 @@
     <value>Окно голодания завершено</value>
   </data>
   <data name="FastingCompleted_Body" xml:space="preserve">
-    <value>Самое время отметить самочувствие и спланировать следующий прием пищи.</value>
+    <value>Самое время отметить самочувствие и спланировать следующий приём пищи.</value>
+  </data>
+  <data name="EatingWindowStarted_Title" xml:space="preserve">
+    <value>Окно питания началось</value>
+  </data>
+  <data name="EatingWindowStarted_Body" xml:space="preserve">
+    <value>Теперь можно есть. Спланируйте следующий приём пищи, пока окно открыто.</value>
+  </data>
+  <data name="FastingWindowStarted_Title" xml:space="preserve">
+    <value>Окно голодания началось</value>
+  </data>
+  <data name="FastingWindowStarted_Body" xml:space="preserve">
+    <value>Окно питания закончилось. Сейчас активна следующая фаза голодания.</value>
   </data>
   <data name="WeeklyCheckIn_Title" xml:space="preserve">
     <value>Еженедельный обзор готов</value>

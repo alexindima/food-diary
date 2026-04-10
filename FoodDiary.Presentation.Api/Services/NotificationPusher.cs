@@ -10,4 +10,9 @@ public sealed class NotificationPusher(IHubContext<NotificationHub> hubContext)
         return hubContext.Clients.User(userId.ToString())
             .SendAsync(NotificationHubMethods.UnreadCountUpdated, count, cancellationToken);
     }
+
+    public Task PushNotificationsChangedAsync(Guid userId, CancellationToken cancellationToken = default) {
+        return hubContext.Clients.User(userId.ToString())
+            .SendAsync(NotificationHubMethods.NotificationsChanged, cancellationToken);
+    }
 }

@@ -45,6 +45,44 @@
                 (click)="layout.openSettings()"
             />
 
+            @if (pushNotifications.isSupported()) {
+                <fd-ui-button
+                    class="dashboard__push-action"
+                    variant="secondary"
+                    fill="outline"
+                    [icon]="pushNotifications.isSubscribed() ? 'notifications_off' : 'notifications'"
+                    [disabled]="pushNotifications.isBusy()"
+                    [ariaLabel]="
+                        (pushNotifications.isSubscribed()
+                            ? 'DASHBOARD.ACTIONS.DISABLE_PUSH_BUTTON'
+                            : 'DASHBOARD.ACTIONS.ENABLE_PUSH_BUTTON'
+                        ) | translate
+                    "
+                    (click)="togglePushNotifications()"
+                >
+                    {{
+                        (pushNotifications.isSubscribed()
+                            ? 'DASHBOARD.ACTIONS.DISABLE_PUSH_BUTTON'
+                            : 'DASHBOARD.ACTIONS.ENABLE_PUSH_BUTTON'
+                        ) | translate
+                    }}
+                </fd-ui-button>
+            }
+
+            @if (pushNotifications.isSupported()) {
+                <fd-ui-button
+                    class="dashboard__test-notification-action"
+                    variant="secondary"
+                    fill="outline"
+                    icon="notifications_active"
+                    [disabled]="isSchedulingTestNotification()"
+                    [ariaLabel]="'DASHBOARD.ACTIONS.TEST_PUSH_BUTTON' | translate"
+                    (click)="scheduleTestNotification()"
+                >
+                    {{ 'DASHBOARD.ACTIONS.TEST_PUSH_BUTTON' | translate }}
+                </fd-ui-button>
+            }
+
             <fd-ui-button class="dashboard__primary-action" icon="add" (click)="addConsumption()">
                 {{ 'DASHBOARD.ACTIONS.ADD_CONSUMPTION_BUTTON' | translate }}
             </fd-ui-button>

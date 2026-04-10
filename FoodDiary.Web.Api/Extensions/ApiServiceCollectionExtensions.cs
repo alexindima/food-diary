@@ -10,6 +10,7 @@ using FoodDiary.Presentation.Api.Options;
 using FoodDiary.Resources.Notifications;
 using FoodDiary.Web.Api.HealthChecks;
 using FoodDiary.Web.Api.Options;
+using FoodDiary.Web.Api.Services;
 using OpenTelemetry;
 using FoodDiary.Web.Api.Swagger;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -70,6 +71,12 @@ public static class ApiServiceCollectionExtensions {
             .BindConfiguration(TelegramBotAuthOptions.SectionName)
             .Validate(TelegramBotAuthOptions.HasValidApiSecret,
                 "TelegramBot:ApiSecret must be empty or at least 16 characters long.")
+            .ValidateOnStart();
+        services
+            .AddOptions<FastingNotificationOptions>()
+            .BindConfiguration(FastingNotificationOptions.SectionName)
+            .Validate(FastingNotificationOptions.HasValidConfiguration,
+                "FastingNotifications:PollIntervalSeconds must be greater than zero when enabled.")
             .ValidateOnStart();
         services
             .AddOptions<GoogleAuthOptions>()
@@ -140,6 +147,7 @@ public static class ApiServiceCollectionExtensions {
         services.AddExceptionHandler<ApiExceptionHandler>();
         services.AddRateLimiter(static _ => { });
         services.AddOutputCache(static _ => { });
+        services.AddHostedService<FastingNotificationHostedService>();
         services.AddPresentationApi();
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen(options => {

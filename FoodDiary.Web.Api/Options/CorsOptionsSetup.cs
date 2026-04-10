@@ -15,7 +15,7 @@ public sealed class CorsOptionsSetup(IOptions<ApiCorsOptions> apiCorsOptions) : 
             policy
                 .WithOrigins(origins)
                 .WithMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
-                .WithHeaders("Content-Type", "Authorization", "Idempotency-Key", "X-Api-Version", "X-Correlation-Id", "X-Requested-With")
+                .WithHeaders("Content-Type", "Authorization", "Idempotency-Key", "X-Api-Version", "X-Correlation-Id", "X-Requested-With", "X-SignalR-User-Agent")
                 .WithExposedHeaders("X-Correlation-Id", "Location")
                 .AllowCredentials();
         });

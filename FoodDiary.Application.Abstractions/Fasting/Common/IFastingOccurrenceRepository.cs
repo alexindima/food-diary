@@ -7,6 +7,7 @@ namespace FoodDiary.Application.Fasting.Common;
 public interface IFastingOccurrenceRepository {
     Task<FastingOccurrence?> GetCurrentAsync(UserId userId, bool asTracking = false, CancellationToken cancellationToken = default);
     Task<FastingOccurrence?> GetByIdAsync(FastingOccurrenceId id, bool asTracking = false, CancellationToken cancellationToken = default);
+    Task<IReadOnlyList<FastingOccurrence>> GetActiveAsync(CancellationToken cancellationToken = default);
     Task<IReadOnlyList<FastingOccurrence>> GetByPlanAsync(
         FastingPlanId planId,
         bool includeCompleted = true,

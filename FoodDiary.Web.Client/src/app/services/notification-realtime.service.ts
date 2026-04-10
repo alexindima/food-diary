@@ -62,21 +62,32 @@ export class NotificationRealtimeService {
             this.notificationService.updateCount(count);
         });
 
+        this.connection.on('NotificationsChanged', () => {
+            this.notificationService.notifyNotificationsChanged();
+        });
+
         this.connection.onreconnected(() => {
             this.notificationService.fetchUnreadCount();
+            this.notificationService.notifyNotificationsChanged();
             this.connectedSignal.set(true);
         });
 
         this.connection.onclose(() => {
             this.connectedSignal.set(false);
+            if (environment.buildVersion === 'dev') {
+                console.warn('Notification SignalR connection closed');
+            }
         });
 
         try {
             await this.connection.start();
             this.connectedSignal.set(true);
             this.notificationService.fetchUnreadCount();
-        } catch {
+        } catch (error) {
             this.connectedSignal.set(false);
+            if (environment.buildVersion === 'dev') {
+                console.error('Notification SignalR connection failed', error);
+            }
             this.connection = null;
         } finally {
             this.connecting.set(false);

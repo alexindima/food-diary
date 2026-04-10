@@ -7,6 +7,15 @@ using Microsoft.EntityFrameworkCore;
 namespace FoodDiary.Infrastructure.Persistence.Tracking;
 
 public class FastingOccurrenceRepository(FoodDiaryDbContext context) : IFastingOccurrenceRepository {
+    public async Task<IReadOnlyList<FastingOccurrence>> GetActiveAsync(CancellationToken cancellationToken = default) {
+        return await context.FastingOccurrences
+            .AsNoTracking()
+            .Include(occurrence => occurrence.Plan)
+            .Where(occurrence => occurrence.Status == FastingOccurrenceStatus.Active)
+            .OrderBy(occurrence => occurrence.StartedAtUtc)
+            .ToListAsync(cancellationToken);
+    }
+
     public async Task<FastingOccurrence?> GetCurrentAsync(UserId userId, bool asTracking = false, CancellationToken cancellationToken = default) {
         var query = (asTracking
             ? context.FastingOccurrences.AsQueryable()

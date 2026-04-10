@@ -94,6 +94,7 @@ public sealed class DashboardSnapshotBuilderTests {
     private sealed class StubFastingOccurrenceRepository : IFastingOccurrenceRepository {
         public Task<FastingOccurrence?> GetCurrentAsync(UserId userId, bool asTracking = false, CancellationToken cancellationToken = default) => Task.FromResult<FastingOccurrence?>(null);
         public Task<FastingOccurrence?> GetByIdAsync(FastingOccurrenceId id, bool asTracking = false, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<IReadOnlyList<FastingOccurrence>> GetActiveAsync(CancellationToken cancellationToken = default) => Task.FromResult<IReadOnlyList<FastingOccurrence>>([]);
         public Task<IReadOnlyList<FastingOccurrence>> GetByPlanAsync(FastingPlanId planId, bool includeCompleted = true, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<IReadOnlyList<FastingOccurrence>> GetByUserAsync(
             UserId userId,

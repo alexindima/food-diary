@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, signal, untracked } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -27,7 +27,10 @@ export class NotificationsDialogComponent {
     protected readonly isMarkingAllRead = signal(false);
 
     public constructor() {
-        this.loadNotifications();
+        effect(() => {
+            this.notificationService.refreshVersion();
+            untracked(() => this.loadNotifications());
+        });
     }
 
     protected close(): void {

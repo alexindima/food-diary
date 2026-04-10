@@ -69,12 +69,40 @@ variables.$color-primary: #2563eb;
         --fd-button-border-radius: 14px;
     }
 
+    &__test-notification-action {
+        --fd-button-padding-x: 14px;
+        --fd-button-padding-y: 10px;
+        --fd-button-border-radius: 14px;
+    }
+
+    &__push-action {
+        --fd-button-padding-x: 14px;
+        --fd-button-padding-y: 10px;
+        --fd-button-border-radius: 14px;
+    }
+
     @media #{variables.$media-sm} {
 
         &__primary-action {
             --fd-button-padding-x: 14px;
             --fd-button-padding-y: 8px;
             font-size: 0.95rem;
+            line-height: 1.1;
+            white-space: nowrap;
+        }
+
+        &__test-notification-action {
+            --fd-button-padding-x: 12px;
+            --fd-button-padding-y: 8px;
+            font-size: 0.9rem;
+            line-height: 1.1;
+            white-space: nowrap;
+        }
+
+        &__push-action {
+            --fd-button-padding-x: 12px;
+            --fd-button-padding-y: 8px;
+            font-size: 0.9rem;
             line-height: 1.1;
             white-space: nowrap;
         }
@@ -93,7 +121,26 @@ variables.$color-primary: #2563eb;
             line-height: 0;
         }
 
+        &__test-notification-action {
+            --fd-button-padding-x: 10px;
+            --fd-button-padding-y: 8px;
+            font-size: 0;
+            line-height: 0;
+        }
+
+        &__push-action {
+            --fd-button-padding-x: 10px;
+            --fd-button-padding-y: 8px;
+            font-size: 0;
+            line-height: 0;
+        }
+
         &__primary-action ::ng-deep .fd-ui-button__label {
+            display: none;
+        }
+
+        &__push-action ::ng-deep .fd-ui-button__label,
+        &__test-notification-action ::ng-deep .fd-ui-button__label {
             display: none;
         }
     }
@@ -144,12 +191,18 @@ variables.$color-primary: #2563eb;
     &--editing {
 
         .dashboard__date-button,
+        .dashboard__push-action,
+        .dashboard__test-notification-action,
         .dashboard__primary-action {
             pointer-events: none;
         }
 
         .dashboard__date-button ::ng-deep button,
         .dashboard__date-button ::ng-deep .fd-ui-button,
+        .dashboard__push-action ::ng-deep button,
+        .dashboard__push-action ::ng-deep .fd-ui-button,
+        .dashboard__test-notification-action ::ng-deep button,
+        .dashboard__test-notification-action ::ng-deep .fd-ui-button,
         .dashboard__primary-action ::ng-deep button,
         .dashboard__primary-action ::ng-deep .fd-ui-button {
             pointer-events: none;
@@ -683,6 +736,8 @@ variables.$color-primary: #2563eb;
 
         &__date-button,
         &__settings-action,
+        &__push-action,
+        &__test-notification-action,
         &__primary-action {
             --fd-button-border-radius: 12px;
             --fd-button-padding-x: 0;
@@ -693,6 +748,10 @@ variables.$color-primary: #2563eb;
         &__date-button ::ng-deep .fd-ui-button,
         &__settings-action ::ng-deep button,
         &__settings-action ::ng-deep .fd-ui-button,
+        &__push-action ::ng-deep button,
+        &__push-action ::ng-deep .fd-ui-button,
+        &__test-notification-action ::ng-deep button,
+        &__test-notification-action ::ng-deep .fd-ui-button,
         &__primary-action ::ng-deep button,
         &__primary-action ::ng-deep .fd-ui-button {
             width: 38px;
@@ -702,6 +761,8 @@ variables.$color-primary: #2563eb;
         }
 
         &__date-button ::ng-deep .fd-ui-button__label,
+        &__push-action ::ng-deep .fd-ui-button__label,
+        &__test-notification-action ::ng-deep .fd-ui-button__label,
         &__primary-action ::ng-deep .fd-ui-button__label {
             display: none;
         }

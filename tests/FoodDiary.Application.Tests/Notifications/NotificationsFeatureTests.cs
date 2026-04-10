@@ -119,6 +119,9 @@ public class NotificationsFeatureTests {
 
         public Task UpdateAsync(Notification notification, CancellationToken ct = default) => Task.CompletedTask;
 
+        public Task<bool> ExistsAsync(UserId userId, string type, string referenceId, CancellationToken ct = default) =>
+            Task.FromResult(_notifications.Any(n => n.UserId == userId && n.Type == type && n.ReferenceId == referenceId));
+
         public Task<int> GetUnreadCountAsync(UserId userId, CancellationToken ct = default) =>
             Task.FromResult(_notifications.Count(n => n.UserId == userId && !n.IsRead));
 

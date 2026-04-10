@@ -1078,6 +1078,9 @@ public class DietologistFeatureTests {
         public Task<int> GetUnreadCountAsync(UserId userId, CancellationToken ct = default) =>
             Task.FromResult(_notifications.Count(n => n.UserId == userId && !n.IsRead));
 
+        public Task<bool> ExistsAsync(UserId userId, string type, string referenceId, CancellationToken ct = default) =>
+            Task.FromResult(_notifications.Any(n => n.UserId == userId && n.Type == type && n.ReferenceId == referenceId));
+
         public Task<Notification?> GetByIdAsync(NotificationId id, bool asTracking = false, CancellationToken ct = default) =>
             throw new NotSupportedException();
         public Task UpdateAsync(Notification notification, CancellationToken ct = default) =>
@@ -1110,6 +1113,11 @@ public class DietologistFeatureTests {
         public bool PushCalled { get; private set; }
 
         public Task PushUnreadCountAsync(Guid userId, int count, CancellationToken ct = default) {
+            PushCalled = true;
+            return Task.CompletedTask;
+        }
+
+        public Task PushNotificationsChangedAsync(Guid userId, CancellationToken ct = default) {
             PushCalled = true;
             return Task.CompletedTask;
         }

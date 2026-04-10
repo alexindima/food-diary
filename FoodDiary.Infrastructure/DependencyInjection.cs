@@ -153,6 +153,11 @@ public static class DependencyInjection {
             .Validate(static options => !string.IsNullOrWhiteSpace(options.PasswordResetPath),
                 "Email:PasswordResetPath is required.")
             .ValidateOnStart();
+        services.AddOptions<WebPushOptions>()
+            .Bind(configuration.GetSection(WebPushOptions.SectionName))
+            .Validate(WebPushOptions.HasValidConfiguration,
+                "WebPush configuration is invalid.")
+            .ValidateOnStart();
 
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<ProductRepository>();
@@ -176,6 +181,7 @@ public static class DependencyInjection {
         services.AddScoped<IDietologistInvitationRepository, DietologistInvitationRepository>();
         services.AddScoped<IRecommendationRepository, RecommendationRepository>();
         services.AddScoped<INotificationRepository, NotificationRepository>();
+        services.AddScoped<IWebPushSubscriptionRepository, WebPushSubscriptionRepository>();
         services.AddScoped<IFastingPlanRepository, FastingPlanRepository>();
         services.AddScoped<IFastingOccurrenceRepository, FastingOccurrenceRepository>();
         services.AddScoped<IFastingSessionRepository, FastingSessionRepository>();
@@ -219,6 +225,8 @@ public static class DependencyInjection {
         services.AddSingleton<IEmailSender, SmtpEmailSender>();
         services.AddSingleton<IDietologistEmailSender, DietologistEmailSender>();
         services.AddSingleton<IAuditLogger, StructuredAuditLogger>();
+        services.AddSingleton<IWebPushNotificationSender, WebPushNotificationSender>();
+        services.AddSingleton<IWebPushConfigurationProvider, WebPushNotificationSender>();
         services.AddHttpClient<IOpenAiFoodService, OpenAiFoodService>(client => {
             client.Timeout = TimeSpan.FromSeconds(60);
         })

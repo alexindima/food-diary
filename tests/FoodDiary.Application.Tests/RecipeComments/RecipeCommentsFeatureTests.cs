@@ -162,6 +162,9 @@ public class RecipeCommentsFeatureTests {
             return Task.FromResult(notification);
         }
 
+        public Task<bool> ExistsAsync(UserId userId, string type, string referenceId, CancellationToken ct = default) =>
+            Task.FromResult(Added.Any(n => n.UserId == userId && n.Type == type && n.ReferenceId == referenceId));
+
         public Task<IReadOnlyList<Notification>> GetByUserAsync(UserId userId, int limit = 50, CancellationToken ct = default) => throw new NotSupportedException();
         public Task<Notification?> GetByIdAsync(NotificationId id, bool asTracking = false, CancellationToken ct = default) => throw new NotSupportedException();
         public Task UpdateAsync(Notification notification, CancellationToken ct = default) => throw new NotSupportedException();
