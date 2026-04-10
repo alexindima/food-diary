@@ -38,9 +38,15 @@ public sealed class NotificationResourceRenderer : INotificationTextRenderer {
             ? "en"
             : locale.Trim().ToLowerInvariant();
 
-        return normalized.StartsWith("ru", StringComparison.Ordinal)
-            ? CultureInfo.GetCultureInfo("ru")
-            : CultureInfo.GetCultureInfo("en");
+        var cultureName = normalized.StartsWith("ru", StringComparison.Ordinal)
+            ? "ru"
+            : "en";
+
+        try {
+            return CultureInfo.GetCultureInfo(cultureName);
+        } catch (CultureNotFoundException) {
+            return CultureInfo.InvariantCulture;
+        }
     }
 
     private static string GetRequired(string key, CultureInfo culture) =>

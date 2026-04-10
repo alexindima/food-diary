@@ -14,6 +14,8 @@ RUN dotnet publish FoodDiary.Telegram.Bot/FoodDiary.Telegram.Bot.csproj -c Relea
 FROM mcr.microsoft.com/dotnet/aspnet:10.0-alpine
 
 WORKDIR /app
+RUN apk add --no-cache icu-libs
 COPY --from=build /app/publish .
+ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
 
 ENTRYPOINT ["dotnet", "FoodDiary.Telegram.Bot.dll"]

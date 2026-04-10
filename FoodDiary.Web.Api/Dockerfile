@@ -26,9 +26,11 @@ RUN dotnet publish FoodDiary.Web.Api/FoodDiary.Web.Api.csproj -c Release -o /app
 FROM mcr.microsoft.com/dotnet/aspnet:10.0-alpine
 
 WORKDIR /app
+RUN apk add --no-cache icu-libs
 COPY --from=build /app/publish .
 
 EXPOSE 5000
 ENV ASPNETCORE_URLS=http://+:5000
+ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
 
 ENTRYPOINT ["dotnet", "FoodDiary.Web.Api.dll"]
