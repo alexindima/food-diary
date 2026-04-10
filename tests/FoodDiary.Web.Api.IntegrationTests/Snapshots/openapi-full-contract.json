@@ -195,6 +195,21 @@
       ]
     },
     {
+      "Path": "/api/v{version}/admin/telemetry/fasting",
+      "Operations": [
+        {
+          "Method": "get",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200",
+            "401",
+            "403",
+            "500"
+          ]
+        }
+      ]
+    },
+    {
       "Path": "/api/v{version}/admin/users",
       "Operations": [
         {
@@ -956,6 +971,22 @@
       ]
     },
     {
+      "Path": "/api/v{version}/fasting/current/check-in",
+      "Operations": [
+        {
+          "Method": "put",
+          "HasRequestBody": true,
+          "ResponseCodes": [
+            "200",
+            "400",
+            "401",
+            "404",
+            "500"
+          ]
+        }
+      ]
+    },
+    {
       "Path": "/api/v{version}/fasting/current/duration",
       "Operations": [
         {
@@ -1020,6 +1051,20 @@
     },
     {
       "Path": "/api/v{version}/fasting/history",
+      "Operations": [
+        {
+          "Method": "get",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200",
+            "401",
+            "500"
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/v{version}/fasting/insights",
       "Operations": [
         {
           "Method": "get",
@@ -1371,6 +1416,32 @@
       ]
     },
     {
+      "Path": "/api/v{version}/notifications/preferences",
+      "Operations": [
+        {
+          "Method": "get",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200",
+            "401",
+            "404",
+            "500"
+          ]
+        },
+        {
+          "Method": "put",
+          "HasRequestBody": true,
+          "ResponseCodes": [
+            "200",
+            "400",
+            "401",
+            "404",
+            "500"
+          ]
+        }
+      ]
+    },
+    {
       "Path": "/api/v{version}/notifications/push/config",
       "Operations": [
         {
@@ -1402,6 +1473,20 @@
           "ResponseCodes": [
             "204",
             "400",
+            "401",
+            "500"
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/v{version}/notifications/push/subscriptions",
+      "Operations": [
+        {
+          "Method": "get",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200",
             "401",
             "500"
           ]
