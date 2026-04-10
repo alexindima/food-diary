@@ -244,6 +244,141 @@
                 </fd-ui-card>
             </div>
 
+            @if (isActive()) {
+                <fd-ui-card class="fasting__card" [title]="'FASTING.CHECK_IN.TITLE' | translate">
+                    <div class="fasting__checkin">
+                        @if (visibleCheckInPrompt(); as prompt) {
+                            <fd-ui-accent-surface
+                                class="fasting__prompt"
+                                accentSide="left"
+                                [accentColor]="prompt.tone === 'warning' ? '#f97316' : '#7c3aed'"
+                                [tinted]="true"
+                            >
+                                <div class="fasting__insight-title">{{ getTranslatedMessage(prompt, 'titleKey') }}</div>
+                                <p class="fasting__insight-body">{{ getTranslatedMessage(prompt, 'bodyKey') }}</p>
+                                <div class="fasting__prompt-actions">
+                                    <button type="button" class="fasting__prompt-link" (click)="snoozePrompt(prompt.id)">
+                                        {{ 'FASTING.PROMPTS.SNOOZE' | translate }}
+                                    </button>
+                                    <button type="button" class="fasting__prompt-link" (click)="dismissPrompt(prompt.id)">
+                                        {{ 'FASTING.PROMPTS.DISMISS' | translate }}
+                                    </button>
+                                </div>
+                            </fd-ui-accent-surface>
+                        }
+
+                        <p class="fasting__checkin-copy">{{ 'FASTING.CHECK_IN.SUBTITLE' | translate }}</p>
+
+                        <div class="fasting__checkin-grid">
+                            <div class="fasting__checkin-field">
+                                <div class="fasting__protocol-group-title">{{ 'FASTING.CHECK_IN.HUNGER' | translate }}</div>
+                                <div class="fasting__protocols">
+                                    @for (level of checkInScale; track level) {
+                                        <button
+                                            type="button"
+                                            class="fasting__protocol-btn"
+                                            [class.fasting__protocol-btn--active]="hungerLevel() === level"
+                                            (click)="setHungerLevel(level)"
+                                        >
+                                            {{ level }}
+                                        </button>
+                                    }
+                                </div>
+                            </div>
+
+                            <div class="fasting__checkin-field">
+                                <div class="fasting__protocol-group-title">{{ 'FASTING.CHECK_IN.ENERGY' | translate }}</div>
+                                <div class="fasting__protocols">
+                                    @for (level of checkInScale; track level) {
+                                        <button
+                                            type="button"
+                                            class="fasting__protocol-btn"
+                                            [class.fasting__protocol-btn--active]="energyLevel() === level"
+                                            (click)="setEnergyLevel(level)"
+                                        >
+                                            {{ level }}
+                                        </button>
+                                    }
+                                </div>
+                            </div>
+
+                            <div class="fasting__checkin-field">
+                                <div class="fasting__protocol-group-title">{{ 'FASTING.CHECK_IN.MOOD' | translate }}</div>
+                                <div class="fasting__protocols">
+                                    @for (level of checkInScale; track level) {
+                                        <button
+                                            type="button"
+                                            class="fasting__protocol-btn"
+                                            [class.fasting__protocol-btn--active]="moodLevel() === level"
+                                            (click)="setMoodLevel(level)"
+                                        >
+                                            {{ level }}
+                                        </button>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="fasting__checkin-field">
+                            <div class="fasting__protocol-group-title">{{ 'FASTING.CHECK_IN.SYMPTOMS_TITLE' | translate }}</div>
+                            <div class="fasting__protocols">
+                                @for (symptom of symptomOptions; track symptom.value) {
+                                    <button
+                                        type="button"
+                                        class="fasting__protocol-btn"
+                                        [class.fasting__protocol-btn--active]="selectedSymptoms().includes(symptom.value)"
+                                        (click)="toggleSymptom(symptom.value)"
+                                    >
+                                        {{ symptom.labelKey | translate }}
+                                    </button>
+                                }
+                            </div>
+                        </div>
+
+                        <label class="fasting__checkin-notes">
+                            <span class="fasting__protocol-group-title">{{ 'FASTING.CHECK_IN.NOTES' | translate }}</span>
+                            <textarea
+                                class="fasting__textarea"
+                                [ngModel]="checkInNotes()"
+                                (ngModelChange)="onCheckInNotesChange($event)"
+                                [placeholder]="'FASTING.CHECK_IN.NOTES_PLACEHOLDER' | translate"
+                                rows="4"
+                            ></textarea>
+                        </label>
+
+                        <div class="fasting__actions fasting__actions--start">
+                            <fd-ui-button (click)="saveCheckIn()" [disabled]="isSavingCheckIn() || isEnding() || isUpdatingCycle()">
+                                {{ 'FASTING.CHECK_IN.SAVE' | translate }}
+                            </fd-ui-button>
+                        </div>
+                    </div>
+                </fd-ui-card>
+            }
+
+            <fd-ui-card class="fasting__card" [title]="'FASTING.INSIGHTS.TITLE' | translate">
+                <div class="fasting__history-content">
+                    @if (insights().length === 0) {
+                        <p class="fasting__empty">{{ 'FASTING.INSIGHTS.EMPTY' | translate }}</p>
+                    } @else {
+                        <div class="fasting__insights">
+                            @for (insight of insights(); track insight.titleKey) {
+                                <fd-ui-accent-surface
+                                    class="fasting__insight"
+                                    accentSide="left"
+                                    [accentColor]="
+                                        insight.tone === 'warning' ? '#f97316' : insight.tone === 'positive' ? '#22c55e' : '#7c3aed'
+                                    "
+                                    [tinted]="true"
+                                >
+                                    <div class="fasting__insight-title">{{ getTranslatedMessage(insight, 'titleKey') }}</div>
+                                    <p class="fasting__insight-body">{{ getTranslatedMessage(insight, 'bodyKey') }}</p>
+                                </fd-ui-accent-surface>
+                            }
+                        </div>
+                    }
+                </div>
+            </fd-ui-card>
+
             <fd-ui-card class="fasting__card" [title]="'FASTING.HISTORY_TITLE' | translate">
                 <div class="fasting__history-content">
                     @if (history().length === 0) {
@@ -279,6 +414,23 @@
                                     </div>
                                     @if (session.notes) {
                                         <p class="fasting__history-notes">{{ session.notes }}</p>
+                                    }
+                                    @if (hasCheckIn(session)) {
+                                        <div class="fasting__history-checkin">
+                                            <div class="fasting__history-checkin-summary">{{ getCheckInSummary(session) }}</div>
+                                            @if (session.symptoms.length > 0) {
+                                                <div class="fasting__history-symptoms">
+                                                    @for (symptom of session.symptoms; track symptom) {
+                                                        <span class="fasting__history-symptom">
+                                                            {{ 'FASTING.CHECK_IN.SYMPTOMS.' + symptom.toUpperCase() | translate }}
+                                                        </span>
+                                                    }
+                                                </div>
+                                            }
+                                            @if (session.checkInNotes) {
+                                                <p class="fasting__history-notes">{{ session.checkInNotes }}</p>
+                                            }
+                                        </div>
                                     }
                                 </fd-ui-accent-surface>
                             }

@@ -25,6 +25,8 @@ public sealed class GetNotificationPreferencesQueryHandler(IUserRepository userR
         return Result.Success(new NotificationPreferencesModel(
             user!.PushNotificationsEnabled,
             user.FastingPushNotificationsEnabled,
-            user.SocialPushNotificationsEnabled));
+            user.SocialPushNotificationsEnabled,
+            user.FastingCheckInReminderHours,
+            user.FastingCheckInFollowUpReminderHours));
     }
 }

@@ -185,6 +185,7 @@ public static class DependencyInjection {
         services.AddScoped<IFastingPlanRepository, FastingPlanRepository>();
         services.AddScoped<IFastingOccurrenceRepository, FastingOccurrenceRepository>();
         services.AddScoped<IFastingSessionRepository, FastingSessionRepository>();
+        services.AddScoped<IFastingTelemetryEventRepository, FastingTelemetryEventRepository>();
         services.AddScoped<IFavoriteMealRepository, FavoriteMealRepository>();
         services.AddScoped<IExerciseEntryRepository, ExerciseEntryRepository>();
         services.AddScoped<INutritionLessonRepository, NutritionLessonRepository>();

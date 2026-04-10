@@ -61,6 +61,8 @@ public sealed partial class User : AggregateRoot<UserId> {
     public bool PushNotificationsEnabled { get; private set; }
     public bool FastingPushNotificationsEnabled { get; private set; }
     public bool SocialPushNotificationsEnabled { get; private set; }
+    public int FastingCheckInReminderHours { get; private set; }
+    public int FastingCheckInFollowUpReminderHours { get; private set; }
     public long? TelegramUserId { get; private set; }
     public long AiInputTokenLimit { get; private set; } = DefaultAiInputTokenLimit;
     public long AiOutputTokenLimit { get; private set; } = DefaultAiOutputTokenLimit;
@@ -284,7 +286,9 @@ public sealed partial class User : AggregateRoot<UserId> {
             Language,
             PushNotificationsEnabled,
             FastingPushNotificationsEnabled,
-            SocialPushNotificationsEnabled);
+            SocialPushNotificationsEnabled,
+            FastingCheckInReminderHours,
+            FastingCheckInFollowUpReminderHours);
     }
 
     private UserPersonalProfileState GetPersonalProfileState() {
@@ -331,6 +335,8 @@ public sealed partial class User : AggregateRoot<UserId> {
         PushNotificationsEnabled = state.PushNotificationsEnabled;
         FastingPushNotificationsEnabled = state.FastingPushNotificationsEnabled;
         SocialPushNotificationsEnabled = state.SocialPushNotificationsEnabled;
+        FastingCheckInReminderHours = state.FastingCheckInReminderHours;
+        FastingCheckInFollowUpReminderHours = state.FastingCheckInFollowUpReminderHours;
     }
 
     private void ApplyProfileMediaState(UserProfileMediaState state) {

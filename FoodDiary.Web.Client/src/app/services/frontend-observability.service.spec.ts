@@ -79,4 +79,41 @@ describe('FrontendObservabilityService', () => {
         expect(payload['name']).toBe('notifications.subscription.ensure');
         expect(payload['outcome']).toBe('blocked');
     });
+
+    it('should log fasting reminder preset selection', () => {
+        service.recordFastingReminderPresetSelected({
+            presetId: 'steady',
+            firstReminderHours: 16,
+            followUpReminderHours: 24,
+        });
+
+        const payload = loggingSpy.logEvent.mock.calls.at(-1)![0] as Record<string, unknown>;
+        expect(payload['category']).toBe('user_action');
+        expect(payload['name']).toBe('fasting.reminder-preset.selected');
+        expect((payload['details'] as Record<string, unknown>)['presetId']).toBe('steady');
+    });
+
+    it('should log fasting reminder timing saves', () => {
+        service.recordFastingReminderTimingSaved({
+            firstReminderHours: 12,
+            followUpReminderHours: 20,
+            source: 'preset',
+            presetId: 'starter',
+        });
+
+        const payload = loggingSpy.logEvent.mock.calls.at(-1)![0] as Record<string, unknown>;
+        expect(payload['name']).toBe('fasting.reminder-timing.saved');
+        expect((payload['details'] as Record<string, unknown>)['source']).toBe('preset');
+    });
+
+    it('should log fasting lifecycle events', () => {
+        service.recordFastingLifecycleEvent('check-in.saved', {
+            sessionId: 'session-1',
+            hungerLevel: 3,
+        });
+
+        const payload = loggingSpy.logEvent.mock.calls.at(-1)![0] as Record<string, unknown>;
+        expect(payload['name']).toBe('fasting.check-in.saved');
+        expect((payload['details'] as Record<string, unknown>)['sessionId']).toBe('session-1');
+    });
 });

@@ -85,7 +85,7 @@ public sealed class NotificationHttpMappingsTests {
     [Fact]
     public void UpdateNotificationPreferencesRequest_ToCommand_MapsAllFields() {
         var userId = Guid.NewGuid();
-        var request = new UpdateNotificationPreferencesHttpRequest(true, false, true);
+        var request = new UpdateNotificationPreferencesHttpRequest(true, false, true, 12, 20);
 
         var command = request.ToCommand(userId);
 
@@ -93,17 +93,21 @@ public sealed class NotificationHttpMappingsTests {
         Assert.Equal(request.PushNotificationsEnabled, command.PushNotificationsEnabled);
         Assert.Equal(request.FastingPushNotificationsEnabled, command.FastingPushNotificationsEnabled);
         Assert.Equal(request.SocialPushNotificationsEnabled, command.SocialPushNotificationsEnabled);
+        Assert.Equal(request.FastingCheckInReminderHours, command.FastingCheckInReminderHours);
+        Assert.Equal(request.FastingCheckInFollowUpReminderHours, command.FastingCheckInFollowUpReminderHours);
     }
 
     [Fact]
     public void NotificationPreferencesModel_ToHttpResponse_MapsAllFields() {
-        var model = new NotificationPreferencesModel(true, false, true);
+        var model = new NotificationPreferencesModel(true, false, true, 12, 20);
 
         var response = model.ToHttpResponse();
 
         Assert.True(response.PushNotificationsEnabled);
         Assert.False(response.FastingPushNotificationsEnabled);
         Assert.True(response.SocialPushNotificationsEnabled);
+        Assert.Equal(12, response.FastingCheckInReminderHours);
+        Assert.Equal(20, response.FastingCheckInFollowUpReminderHours);
     }
 
     [Fact]

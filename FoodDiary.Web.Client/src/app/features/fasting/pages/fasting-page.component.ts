@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, computed, inject } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -28,6 +28,9 @@ import { FastingFacade } from '../lib/fasting.facade';
 import {
     CYCLIC_PRESETS,
     FASTING_PROTOCOLS,
+    FASTING_CHECK_IN_SCALE,
+    FASTING_SYMPTOM_OPTIONS,
+    FastingMessage,
     FastingMode,
     FastingProtocol,
     FastingSession,
@@ -70,6 +73,7 @@ export class FastingPageComponent implements OnInit {
     public readonly isEnding = this.facade.isEnding;
     public readonly isExtending = this.facade.isExtending;
     public readonly isUpdatingCycle = this.facade.isUpdatingCycle;
+    public readonly isSavingCheckIn = this.facade.isSavingCheckIn;
     public readonly isActive = this.facade.isActive;
     public readonly currentSession = this.facade.currentSession;
     public readonly stats = this.facade.stats;
@@ -82,6 +86,11 @@ export class FastingPageComponent implements OnInit {
     public readonly cyclicEatDays = this.facade.cyclicEatDays;
     public readonly cyclicEatDayFastHours = this.facade.cyclicEatDayFastHours;
     public readonly extendHours = this.facade.extendHours;
+    public readonly hungerLevel = this.facade.hungerLevel;
+    public readonly energyLevel = this.facade.energyLevel;
+    public readonly moodLevel = this.facade.moodLevel;
+    public readonly selectedSymptoms = this.facade.selectedSymptoms;
+    public readonly checkInNotes = this.facade.checkInNotes;
     public readonly progressPercent = this.facade.progressPercent;
     public readonly elapsedFormatted = this.facade.elapsedFormatted;
     public readonly remainingFormatted = this.facade.remainingFormatted;
@@ -90,6 +99,15 @@ export class FastingPageComponent implements OnInit {
     public readonly intermittentProtocols = FASTING_PROTOCOLS.filter(protocol => protocol.category === 'intermittent');
     public readonly extendedProtocols = FASTING_PROTOCOLS.filter(protocol => protocol.category === 'extended');
     public readonly cyclicPresets = CYCLIC_PRESETS;
+    public readonly checkInScale = FASTING_CHECK_IN_SCALE;
+    public readonly symptomOptions = FASTING_SYMPTOM_OPTIONS;
+    public readonly insights = computed(() => this.facade.insightsData().insights);
+    public readonly visibleCheckInPrompt = computed(() => {
+        const prompt = this.facade.insightsData().currentPrompt;
+        const session = this.currentSession();
+        return this.facade.isPromptVisible(session, prompt) ? prompt : null;
+    });
+
     public ngOnInit(): void {
         this.facade.initialize();
     }
@@ -155,6 +173,38 @@ export class FastingPageComponent implements OnInit {
         if (!isNaN(hours)) {
             this.facade.setExtendHours(hours);
         }
+    }
+
+    public setHungerLevel(level: number): void {
+        this.facade.setHungerLevel(level);
+    }
+
+    public setEnergyLevel(level: number): void {
+        this.facade.setEnergyLevel(level);
+    }
+
+    public setMoodLevel(level: number): void {
+        this.facade.setMoodLevel(level);
+    }
+
+    public toggleSymptom(symptom: string): void {
+        this.facade.toggleSymptom(symptom);
+    }
+
+    public onCheckInNotesChange(value: string): void {
+        this.facade.setCheckInNotes(value);
+    }
+
+    public saveCheckIn(): void {
+        this.facade.saveCheckIn();
+    }
+
+    public dismissPrompt(promptId: string): void {
+        this.facade.dismissPrompt(promptId);
+    }
+
+    public snoozePrompt(promptId: string): void {
+        this.facade.snoozePrompt(promptId);
     }
 
     public extendByDay(): void {
@@ -246,6 +296,22 @@ export class FastingPageComponent implements OnInit {
         }
 
         return `${baseLabel} (+${addedHours} ${hoursLabel})`;
+    }
+
+    public hasCheckIn(session: FastingSession): boolean {
+        return !!session.checkInAtUtc;
+    }
+
+    public getCheckInSummary(session: FastingSession): string | null {
+        if (!this.hasCheckIn(session)) {
+            return null;
+        }
+
+        return this.translateService.instant('FASTING.CHECK_IN.SUMMARY', {
+            hunger: session.hungerLevel ?? '—',
+            energy: session.energyLevel ?? '—',
+            mood: session.moodLevel ?? '—',
+        });
     }
 
     public getHistorySessionTypeLabel(session: FastingSession): string {
@@ -437,5 +503,27 @@ export class FastingPageComponent implements OnInit {
             default:
                 return null;
         }
+    }
+
+    private getSymptomLabel(symptom: string): string {
+        return this.translateService.instant(`FASTING.CHECK_IN.SYMPTOMS.${symptom.toUpperCase()}`);
+    }
+
+    public getTranslatedMessage(descriptor: FastingMessage, field: 'titleKey' | 'bodyKey'): string {
+        const key = descriptor[field];
+        return this.translateService.instant(key, this.resolveMessageParams(descriptor.bodyParams));
+    }
+
+    private resolveMessageParams(params: Record<string, string> | null): Record<string, string> | undefined {
+        if (!params) {
+            return undefined;
+        }
+
+        return Object.fromEntries(
+            Object.entries(params).map(([key, value]) => [
+                key,
+                value.startsWith('FASTING.') ? this.translateService.instant(value) : value,
+            ]),
+        );
     }
 }

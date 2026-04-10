@@ -147,6 +147,57 @@ export class FrontendObservabilityService {
         });
     }
 
+    public recordFastingReminderPresetSelected(details: {
+        presetId: string;
+        firstReminderHours: number;
+        followUpReminderHours: number;
+    }): void {
+        this.send({
+            category: 'user_action',
+            name: 'fasting.reminder-preset.selected',
+            level: 'info',
+            timestamp: new Date().toISOString(),
+            location: this.getLocation(),
+            route: this.router.url,
+            buildVersion: environment.buildVersion,
+            details,
+        });
+    }
+
+    public recordFastingReminderTimingSaved(details: {
+        firstReminderHours: number;
+        followUpReminderHours: number;
+        source: 'preset' | 'manual';
+        presetId?: string;
+    }): void {
+        this.send({
+            category: 'user_action',
+            name: 'fasting.reminder-timing.saved',
+            level: 'info',
+            timestamp: new Date().toISOString(),
+            location: this.getLocation(),
+            route: this.router.url,
+            buildVersion: environment.buildVersion,
+            details,
+        });
+    }
+
+    public recordFastingLifecycleEvent(
+        name: 'session.started' | 'session.completed' | 'check-in.saved',
+        details?: Record<string, unknown>,
+    ): void {
+        this.send({
+            category: 'user_action',
+            name: `fasting.${name}`,
+            level: 'info',
+            timestamp: new Date().toISOString(),
+            location: this.getLocation(),
+            route: this.router.url,
+            buildVersion: environment.buildVersion,
+            details,
+        });
+    }
+
     private observeRouteTimings(): void {
         this.router.events
             .pipe(

@@ -5,4 +5,6 @@ public readonly record struct UserPreferenceUpdate(
     string? Language = null,
     bool? PushNotificationsEnabled = null,
     bool? FastingPushNotificationsEnabled = null,
-    bool? SocialPushNotificationsEnabled = null);
+    bool? SocialPushNotificationsEnabled = null,
+    int? FastingCheckInReminderHours = null,
+    int? FastingCheckInFollowUpReminderHours = null);

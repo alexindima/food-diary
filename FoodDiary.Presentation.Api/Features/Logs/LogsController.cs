@@ -1,4 +1,5 @@
 using FoodDiary.Presentation.Api.Features.Logs.Requests;
+using FoodDiary.Presentation.Api.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,12 +11,16 @@ namespace FoodDiary.Presentation.Api.Features.Logs;
 [AllowAnonymous]
 [ApiExplorerSettings(IgnoreApi = true)]
 [Route("api/v{version:apiVersion}/logs")]
-public sealed class LogsController(ILogger<LogsController> logger) : ControllerBase {
+public sealed class LogsController(
+    ILogger<LogsController> logger,
+    IFastingTelemetrySummaryService fastingTelemetrySummaryService) : ControllerBase {
     private readonly ILogger<LogsController> _logger = logger;
 
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public Task<IActionResult> Create([FromBody] ClientTelemetryLogHttpRequest request) {
+    public async Task<IActionResult> Create([FromBody] ClientTelemetryLogHttpRequest request) {
+        await fastingTelemetrySummaryService.RecordAsync(request, HttpContext.RequestAborted);
+
         var details = request.Details?.ValueKind is null or System.Text.Json.JsonValueKind.Null
             ? null
             : request.Details.Value.GetRawText();
@@ -58,6 +63,6 @@ public sealed class LogsController(ILogger<LogsController> logger) : ControllerB
             details,
             request.Stack);
 
-        return Task.FromResult<IActionResult>(NoContent());
+        return NoContent();
     }
 }

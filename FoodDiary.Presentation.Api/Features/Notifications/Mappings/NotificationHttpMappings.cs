@@ -22,13 +22,24 @@ public static class NotificationHttpMappings {
     public static GetNotificationPreferencesQuery ToNotificationPreferencesQuery(this Guid userId) => new(userId);
 
     public static UpdateNotificationPreferencesCommand ToCommand(this UpdateNotificationPreferencesHttpRequest request, Guid userId) =>
-        new(userId, request.PushNotificationsEnabled, request.FastingPushNotificationsEnabled, request.SocialPushNotificationsEnabled);
+        new(
+            userId,
+            request.PushNotificationsEnabled,
+            request.FastingPushNotificationsEnabled,
+            request.SocialPushNotificationsEnabled,
+            request.FastingCheckInReminderHours,
+            request.FastingCheckInFollowUpReminderHours);
 
     public static NotificationHttpResponse ToHttpResponse(this NotificationModel model) =>
         new(model.Id, model.Type, model.Title, model.Body, model.ReferenceId, model.IsRead, model.CreatedAtUtc);
 
     public static NotificationPreferencesHttpResponse ToHttpResponse(this NotificationPreferencesModel model) =>
-        new(model.PushNotificationsEnabled, model.FastingPushNotificationsEnabled, model.SocialPushNotificationsEnabled);
+        new(
+            model.PushNotificationsEnabled,
+            model.FastingPushNotificationsEnabled,
+            model.SocialPushNotificationsEnabled,
+            model.FastingCheckInReminderHours,
+            model.FastingCheckInFollowUpReminderHours);
 
     public static WebPushSubscriptionHttpResponse ToHttpResponse(this FoodDiary.Domain.Entities.Notifications.WebPushSubscription subscription) =>
         new(

@@ -133,6 +133,8 @@ export class ProfileManageFacade {
         pushNotificationsEnabled?: boolean;
         fastingPushNotificationsEnabled?: boolean;
         socialPushNotificationsEnabled?: boolean;
+        fastingCheckInReminderHours?: number;
+        fastingCheckInFollowUpReminderHours?: number;
     }): Promise<User | null> {
         if (this.isUpdatingNotifications()) {
             return this.user();
@@ -238,6 +240,8 @@ export class ProfileManageFacade {
             pushNotificationsEnabled: preferences.pushNotificationsEnabled,
             fastingPushNotificationsEnabled: preferences.fastingPushNotificationsEnabled,
             socialPushNotificationsEnabled: preferences.socialPushNotificationsEnabled,
+            fastingCheckInReminderHours: preferences.fastingCheckInReminderHours,
+            fastingCheckInFollowUpReminderHours: preferences.fastingCheckInFollowUpReminderHours,
         });
     }
 

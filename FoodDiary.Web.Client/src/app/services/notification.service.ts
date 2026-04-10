@@ -46,6 +46,8 @@ export interface NotificationPreferences {
     pushNotificationsEnabled: boolean;
     fastingPushNotificationsEnabled: boolean;
     socialPushNotificationsEnabled: boolean;
+    fastingCheckInReminderHours: number;
+    fastingCheckInFollowUpReminderHours: number;
 }
 
 export interface WebPushSubscriptionItem {
@@ -62,6 +64,8 @@ export interface UpdateNotificationPreferencesRequest {
     pushNotificationsEnabled?: boolean;
     fastingPushNotificationsEnabled?: boolean;
     socialPushNotificationsEnabled?: boolean;
+    fastingCheckInReminderHours?: number;
+    fastingCheckInFollowUpReminderHours?: number;
 }
 
 @Injectable({ providedIn: 'root' })

@@ -16,4 +16,10 @@ public sealed record FastingSessionModel(
     int? CyclicEatDayEatingWindowHours,
     bool IsCompleted,
     string Status,
-    string? Notes);
+    string? Notes,
+    DateTime? CheckInAtUtc,
+    int? HungerLevel,
+    int? EnergyLevel,
+    int? MoodLevel,
+    IReadOnlyList<string> Symptoms,
+    string? CheckInNotes);

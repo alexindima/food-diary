@@ -27,6 +27,8 @@ public sealed record UserHttpResponse(
     bool PushNotificationsEnabled,
     bool FastingPushNotificationsEnabled,
     bool SocialPushNotificationsEnabled,
+    int FastingCheckInReminderHours,
+    int FastingCheckInFollowUpReminderHours,
     string? ProfileImage,
     Guid? ProfileImageAssetId,
     DashboardLayoutHttpModel? DashboardLayout,

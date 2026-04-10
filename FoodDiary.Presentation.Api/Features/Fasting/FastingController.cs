@@ -32,6 +32,13 @@ public class FastingController(ISender mediator) : AuthorizedController(mediator
     public Task<IActionResult> ExtendDuration([FromCurrentUser] Guid userId, [FromBody] ExtendActiveFastingHttpRequest request) =>
         HandleOk(request.ToExtendCommand(userId), static value => value.ToHttpResponse());
 
+    [HttpPut("current/check-in")]
+    [ProducesResponseType<FastingSessionHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
+    public Task<IActionResult> UpdateCheckIn([FromCurrentUser] Guid userId, [FromBody] UpdateFastingCheckInHttpRequest request) =>
+        HandleOk(request.ToCheckInCommand(userId), static value => value.ToHttpResponse());
+
     [HttpPut("current/skip-day")]
     [ProducesResponseType<FastingSessionHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
@@ -56,8 +63,4 @@ public class FastingController(ISender mediator) : AuthorizedController(mediator
     public Task<IActionResult> GetHistory([FromCurrentUser] Guid userId, [FromQuery] GetFastingHistoryHttpQuery query) =>
         HandleOk(query.ToHistoryQuery(userId), static value => value.Select(x => x.ToHttpResponse()).ToList());
 
-    [HttpGet("stats")]
-    [ProducesResponseType<FastingStatsHttpResponse>(StatusCodes.Status200OK)]
-    public Task<IActionResult> GetStats([FromCurrentUser] Guid userId) =>
-        HandleOk(userId.ToStatsQuery(), static value => value.ToHttpResponse());
 }

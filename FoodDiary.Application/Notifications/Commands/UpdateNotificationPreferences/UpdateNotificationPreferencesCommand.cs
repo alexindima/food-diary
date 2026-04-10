@@ -8,5 +8,7 @@ public sealed record UpdateNotificationPreferencesCommand(
     Guid? UserId,
     bool? PushNotificationsEnabled,
     bool? FastingPushNotificationsEnabled,
-    bool? SocialPushNotificationsEnabled)
+    bool? SocialPushNotificationsEnabled,
+    int? FastingCheckInReminderHours,
+    int? FastingCheckInFollowUpReminderHours)
     : ICommand<Result<NotificationPreferencesModel>>, IUserRequest;

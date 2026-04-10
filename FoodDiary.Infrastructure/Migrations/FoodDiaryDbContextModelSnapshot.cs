@@ -1546,11 +1546,24 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.Property<int>("AddedTargetHours")
                         .HasColumnType("integer");
 
+                    b.Property<DateTime?>("CheckInAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CheckInNotes")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
                     b.Property<DateTime>("CreatedOnUtc")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("EndedAtUtc")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<int?>("EnergyLevel")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("HungerLevel")
+                        .HasColumnType("integer");
 
                     b.Property<int?>("InitialTargetHours")
                         .HasColumnType("integer");
@@ -1562,6 +1575,9 @@ namespace FoodDiary.Infrastructure.Migrations
 
                     b.Property<DateTime?>("ModifiedOnUtc")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<int?>("MoodLevel")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Notes")
                         .HasMaxLength(500)
@@ -1583,6 +1599,10 @@ namespace FoodDiary.Infrastructure.Migrations
                         .IsRequired()
                         .HasMaxLength(16)
                         .HasColumnType("character varying(16)");
+
+                    b.Property<string>("Symptoms")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
@@ -1726,6 +1746,91 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.HasIndex("UserId", "IsCompleted");
 
                     b.ToTable("FastingSessions");
+                });
+
+            modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.FastingTelemetryEvent", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<double?>("ActualDurationHours")
+                        .HasColumnType("double precision");
+
+                    b.Property<DateTime>("CreatedOnUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int?>("EnergyLevel")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("FirstReminderHours")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("FollowUpReminderHours")
+                        .HasColumnType("integer");
+
+                    b.Property<bool?>("HadNotes")
+                        .HasColumnType("boolean");
+
+                    b.Property<int?>("HungerLevel")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("ModifiedOnUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int?>("MoodLevel")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.Property<DateTime>("OccurredAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("OccurrenceKind")
+                        .HasMaxLength(16)
+                        .HasColumnType("character varying(16)");
+
+                    b.Property<string>("PlanType")
+                        .HasMaxLength(16)
+                        .HasColumnType("character varying(16)");
+
+                    b.Property<int?>("PlannedDurationHours")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Protocol")
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)");
+
+                    b.Property<string>("ReminderPresetId")
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)");
+
+                    b.Property<string>("ReminderSource")
+                        .HasMaxLength(16)
+                        .HasColumnType("character varying(16)");
+
+                    b.Property<string>("SessionId")
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.Property<string>("Status")
+                        .HasMaxLength(16)
+                        .HasColumnType("character varying(16)");
+
+                    b.Property<int?>("SymptomsCount")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OccurredAtUtc");
+
+                    b.HasIndex("Name", "OccurredAtUtc");
+
+                    b.HasIndex("ReminderPresetId", "Name", "OccurredAtUtc");
+
+                    b.ToTable("FastingTelemetryEvents");
                 });
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.HydrationEntry", b =>
@@ -2044,6 +2149,16 @@ namespace FoodDiary.Infrastructure.Migrations
 
                     b.Property<string>("EmailConfirmationTokenHash")
                         .HasColumnType("text");
+
+                    b.Property<int>("FastingCheckInFollowUpReminderHours")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(20);
+
+                    b.Property<int>("FastingCheckInReminderHours")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(12);
 
                     b.Property<bool>("FastingPushNotificationsEnabled")
                         .ValueGeneratedOnAdd()

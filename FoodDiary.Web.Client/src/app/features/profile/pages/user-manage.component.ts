@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, FactoryProvider, inject, OnInit, signal } from '@angular/core';
 import { NgIf } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -15,11 +16,18 @@ import { ImageUploadFieldComponent } from '../../../components/shared/image-uplo
 import { PageHeaderComponent } from '../../../components/shared/page-header/page-header.component';
 import { FdPageContainerDirective } from '../../../directives/layout/page-container.directive';
 import { AuthService } from '../../../services/auth.service';
+import { AdminTelemetryService } from '../../../services/admin-telemetry.service';
 import { FrontendObservabilityService } from '../../../services/frontend-observability.service';
 import { ImageUploadService } from '../../../shared/api/image-upload.service';
 import { LocalizationService } from '../../../services/localization.service';
 import { NotificationService, WebPushSubscriptionItem } from '../../../services/notification.service';
 import { PushNotificationService } from '../../../services/push-notification.service';
+import {
+    FASTING_REMINDER_PRESETS,
+    FastingReminderPreset,
+    resolveFastingReminderPresetId,
+} from '../../../shared/lib/fasting-reminder-presets';
+import { FastingTelemetrySummary } from '../../../shared/models/admin-telemetry.data';
 import { ImageSelection } from '../../../shared/models/image-upload.data';
 import { FormGroupControls } from '../../../shared/lib/common.data';
 import { ActivityLevelOption, Gender, UpdateUserDto, User } from '../../../shared/models/user.data';
@@ -42,6 +50,7 @@ export const VALIDATION_ERRORS_PROVIDER: FactoryProvider = {
     selector: 'fd-user-manage',
     imports: [
         ReactiveFormsModule,
+        FormsModule,
         TranslatePipe,
         NgIf,
         FdUiCardComponent,
@@ -65,6 +74,7 @@ export class UserManageComponent implements OnInit {
     private readonly destroyRef = inject(DestroyRef);
     private readonly imageUploadService = inject(ImageUploadService);
     private readonly authService = inject(AuthService);
+    private readonly adminTelemetryService = inject(AdminTelemetryService);
     private readonly localizationService = inject(LocalizationService);
     private readonly facade = inject(ProfileManageFacade);
     private readonly notificationService = inject(NotificationService);
@@ -90,6 +100,11 @@ export class UserManageComponent implements OnInit {
     public readonly pushNotificationsEnabled = computed(() => this.facade.user()?.pushNotificationsEnabled ?? false);
     public readonly fastingPushNotificationsEnabled = computed(() => this.facade.user()?.fastingPushNotificationsEnabled ?? true);
     public readonly socialPushNotificationsEnabled = computed(() => this.facade.user()?.socialPushNotificationsEnabled ?? true);
+    public readonly fastingCheckInReminderHours = signal(12);
+    public readonly fastingCheckInFollowUpReminderHours = signal(20);
+    public readonly fastingReminderPresets = FASTING_REMINDER_PRESETS;
+    public readonly fastingTelemetrySummary = signal<FastingTelemetrySummary | null>(null);
+    public readonly isLoadingFastingTelemetrySummary = signal(false);
     public readonly pushNotificationsSupported = this.pushNotifications.isSupported;
     public readonly pushNotificationsSubscribed = this.pushNotifications.isSubscribed;
     public readonly pushNotificationsBusy = this.pushNotifications.isBusy;
@@ -140,6 +155,12 @@ export class UserManageComponent implements OnInit {
 
         return 'USER_MANAGE.NOTIFICATIONS_SETUP_REQUIRED_HINT';
     });
+    public readonly activeFastingReminderPresetId = computed(() => {
+        const firstReminder = this.fastingCheckInReminderHours();
+        const followUpReminder = this.fastingCheckInFollowUpReminderHours();
+        const presetId = resolveFastingReminderPresetId(firstReminder, followUpReminder);
+        return presetId === 'custom' ? null : presetId;
+    });
 
     public constructor() {
         this.userForm = new FormGroup<UserFormData>({
@@ -167,6 +188,8 @@ export class UserManageComponent implements OnInit {
             const userData = this.mapUserToForm(user);
             this.lastUserData = userData;
             this.applyUserData(userData);
+            this.fastingCheckInReminderHours.set(user.fastingCheckInReminderHours ?? 12);
+            this.fastingCheckInFollowUpReminderHours.set(user.fastingCheckInFollowUpReminderHours ?? 20);
 
             if (!this.hasTrackedNotificationsView()) {
                 this.frontendObservability.recordNotificationSettingsViewed({
@@ -190,6 +213,7 @@ export class UserManageComponent implements OnInit {
         });
 
         this.facade.initialize();
+        this.loadFastingTelemetrySummary();
     }
 
     public async onSubmit(): Promise<void> {
@@ -310,6 +334,82 @@ export class UserManageComponent implements OnInit {
         this.frontendObservability.recordNotificationPreferenceChanged('fasting', user.fastingPushNotificationsEnabled);
     }
 
+    public onFastingReminderHoursChange(value: string | number, field: 'first' | 'followUp'): void {
+        const parsed = typeof value === 'number' ? value : parseInt(value, 10);
+        if (Number.isNaN(parsed)) {
+            return;
+        }
+
+        const normalized = Math.max(1, Math.min(168, parsed));
+        if (field === 'first') {
+            this.fastingCheckInReminderHours.set(normalized);
+            return;
+        }
+
+        this.fastingCheckInFollowUpReminderHours.set(normalized);
+    }
+
+    public applyFastingReminderPreset(preset: FastingReminderPreset): void {
+        this.fastingCheckInReminderHours.set(preset.firstReminderHours);
+        this.fastingCheckInFollowUpReminderHours.set(preset.followUpReminderHours);
+        this.frontendObservability.recordFastingReminderPresetSelected({
+            presetId: preset.id,
+            firstReminderHours: preset.firstReminderHours,
+            followUpReminderHours: preset.followUpReminderHours,
+        });
+    }
+
+    public async saveFastingReminderHours(): Promise<void> {
+        if (this.isUpdatingNotifications()) {
+            return;
+        }
+
+        const firstReminder = this.fastingCheckInReminderHours();
+        const followUpReminder = this.fastingCheckInFollowUpReminderHours();
+        if (followUpReminder <= firstReminder) {
+            this.toastService.error(this.translateService.instant('USER_MANAGE.NOTIFICATIONS_FASTING_REMINDER_ERROR'));
+            return;
+        }
+
+        const user = await this.facade.updateNotificationPreferences({
+            fastingCheckInReminderHours: firstReminder,
+            fastingCheckInFollowUpReminderHours: followUpReminder,
+        });
+        if (!user) {
+            return;
+        }
+
+        this.frontendObservability.recordFastingReminderTimingSaved({
+            firstReminderHours: firstReminder,
+            followUpReminderHours: followUpReminder,
+            source: this.activeFastingReminderPresetId() ? 'preset' : 'manual',
+            presetId: this.activeFastingReminderPresetId() ?? undefined,
+        });
+        this.toastService.info(this.translateService.instant('USER_MANAGE.NOTIFICATIONS_FASTING_REMINDER_SAVED'));
+        this.loadFastingTelemetrySummary();
+    }
+
+    public loadFastingTelemetrySummary(): void {
+        if (!this.isAdminUser() || this.isLoadingFastingTelemetrySummary()) {
+            return;
+        }
+
+        this.isLoadingFastingTelemetrySummary.set(true);
+        this.adminTelemetryService
+            .getFastingSummary()
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe({
+                next: summary => {
+                    this.fastingTelemetrySummary.set(summary);
+                    this.isLoadingFastingTelemetrySummary.set(false);
+                },
+                error: () => {
+                    this.fastingTelemetrySummary.set(null);
+                    this.isLoadingFastingTelemetrySummary.set(false);
+                },
+            });
+    }
+
     public async removeConnectedDevice(subscription: WebPushSubscriptionItem): Promise<void> {
         const endpoint = subscription.endpoint;
         if (!endpoint || this.removingConnectedDeviceEndpoint() || this.pushNotificationsBusy()) {
@@ -418,6 +518,14 @@ export class UserManageComponent implements OnInit {
         this.facade.openAdminPanel();
     }
 
+    public formatMetric(value: number | null | undefined): string {
+        if (value === null || value === undefined || Number.isNaN(value)) {
+            return '—';
+        }
+
+        return Number.isInteger(value) ? `${value}` : value.toFixed(1);
+    }
+
     private applyUserData(userData: Partial<UserFormValues>): void {
         this.userForm.patchValue(userData);
         this.userForm.markAsPristine();
@@ -493,7 +601,7 @@ export class UserManageComponent implements OnInit {
         return Notification.permission;
     }
 
-    private formatDateTime(value: string | null): string | null {
+    public formatDateTime(value: string | null): string | null {
         if (!value) {
             return null;
         }

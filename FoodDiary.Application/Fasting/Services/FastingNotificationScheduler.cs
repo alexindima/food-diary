@@ -16,6 +16,7 @@ public sealed class FastingNotificationScheduler(
     IDateTimeProvider dateTimeProvider,
     ILogger<FastingNotificationScheduler> logger)
     : IFastingNotificationScheduler {
+
     public async Task<int> ProcessDueNotificationsAsync(CancellationToken cancellationToken = default) {
         var now = dateTimeProvider.UtcNow;
         var activeOccurrences = await fastingOccurrenceRepository.GetActiveAsync(cancellationToken);
@@ -28,6 +29,7 @@ public sealed class FastingNotificationScheduler(
                 continue;
             }
 
+            createdCount += await ProcessCheckInReminderNotificationsAsync(occurrence, now, usersToPush, cancellationToken);
             createdCount += plan.Type switch {
                 FastingPlanType.Intermittent => await ProcessIntermittentNotificationsAsync(occurrence, plan, now, usersToPush, cancellationToken),
                 _ => await ProcessCompletionNotificationAsync(occurrence, plan, now, usersToPush, cancellationToken)
@@ -46,6 +48,44 @@ public sealed class FastingNotificationScheduler(
                 "Created {NotificationCount} fasting notifications for {UserCount} users.",
                 createdCount,
                 usersToPush.Count);
+        }
+
+        return createdCount;
+    }
+
+    private async Task<int> ProcessCheckInReminderNotificationsAsync(
+        FastingOccurrence occurrence,
+        DateTime now,
+        ISet<Guid> usersToPush,
+        CancellationToken cancellationToken) {
+        if (occurrence.CheckInAtUtc.HasValue) {
+            return 0;
+        }
+
+        var elapsed = now - occurrence.StartedAtUtc;
+        if (elapsed < TimeSpan.Zero) {
+            return 0;
+        }
+
+        var createdCount = 0;
+        var reminderHours = new[] {
+            occurrence.User.FastingCheckInReminderHours,
+            occurrence.User.FastingCheckInFollowUpReminderHours,
+        }
+            .Distinct()
+            .OrderBy(static hour => hour)
+            .ToArray();
+
+        foreach (var hour in reminderHours) {
+            if (elapsed.TotalHours < hour) {
+                continue;
+            }
+
+            createdCount += await TryCreateCheckInReminderAsync(
+                occurrence,
+                $"fasting-check-in-reminder:{occurrence.Id.Value}:{hour}",
+                usersToPush,
+                cancellationToken);
         }
 
         return createdCount;
@@ -76,6 +116,27 @@ public sealed class FastingNotificationScheduler(
             plan.Type.ToString(),
             occurrence.Kind.ToString(),
             referenceId);
+
+        await notificationRepository.AddAsync(notification, cancellationToken);
+        await webPushNotificationSender.SendAsync(notification, cancellationToken);
+        usersToPush.Add(occurrence.UserId.Value);
+        return 1;
+    }
+
+    private async Task<int> TryCreateCheckInReminderAsync(
+        FastingOccurrence occurrence,
+        string referenceId,
+        ISet<Guid> usersToPush,
+        CancellationToken cancellationToken) {
+        if (await notificationRepository.ExistsAsync(
+                occurrence.UserId,
+                NotificationTypes.FastingCheckInReminder,
+                referenceId,
+                cancellationToken)) {
+            return 0;
+        }
+
+        var notification = NotificationFactory.CreateFastingCheckInReminder(occurrence.UserId, referenceId);
 
         await notificationRepository.AddAsync(notification, cancellationToken);
         await webPushNotificationSender.SendAsync(notification, cancellationToken);

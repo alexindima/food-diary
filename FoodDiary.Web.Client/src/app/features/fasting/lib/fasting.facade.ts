@@ -2,11 +2,33 @@ import { DestroyRef, Injectable, computed, inject, signal } from '@angular/core'
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { finalize, forkJoin, of } from 'rxjs';
 import { FastingService } from '../api/fasting.service';
-import { FASTING_PROTOCOLS, FastingMode, FastingPlanType, FastingProtocol, FastingSession, FastingStats } from '../models/fasting.data';
+import { FrontendObservabilityService } from '../../../services/frontend-observability.service';
+import { UserService } from '../../../shared/api/user.service';
+import { resolveFastingReminderPresetId } from '../../../shared/lib/fasting-reminder-presets';
+import {
+    FASTING_PROTOCOLS,
+    FastingInsights,
+    FastingMessage,
+    FastingMode,
+    FastingPlanType,
+    FastingProtocol,
+    FastingSession,
+    FastingStats,
+} from '../models/fasting.data';
+
+interface FastingPromptState {
+    dismissed?: boolean;
+    snoozedUntilUtc?: string;
+}
 
 @Injectable()
 export class FastingFacade {
+    private static readonly PromptStorageKey = 'fd_fasting_prompt_state';
+    private static readonly PromptSnoozeHours = 4;
+
     private readonly fastingService = inject(FastingService);
+    private readonly frontendObservability = inject(FrontendObservabilityService);
+    private readonly userService = inject(UserService);
     private readonly destroyRef = inject(DestroyRef);
     private timerInterval: ReturnType<typeof setInterval> | null = null;
 
@@ -15,9 +37,11 @@ export class FastingFacade {
     public readonly isEnding = signal(false);
     public readonly isExtending = signal(false);
     public readonly isUpdatingCycle = signal(false);
+    public readonly isSavingCheckIn = signal(false);
     public readonly currentSession = signal<FastingSession | null>(null);
     public readonly stats = signal<FastingStats | null>(null);
     public readonly history = signal<FastingSession[]>([]);
+    public readonly insightsData = signal<FastingInsights>({ insights: [], currentPrompt: null });
     public readonly selectedMode = signal<FastingMode>('intermittent');
     public readonly selectedProtocol = signal<FastingProtocol>('F16_8');
     public readonly customHours = signal(16);
@@ -26,7 +50,13 @@ export class FastingFacade {
     public readonly cyclicEatDays = signal(1);
     public readonly cyclicEatDayFastHours = signal(16);
     public readonly extendHours = signal(24);
+    public readonly hungerLevel = signal(3);
+    public readonly energyLevel = signal(3);
+    public readonly moodLevel = signal(3);
+    public readonly selectedSymptoms = signal<string[]>([]);
+    public readonly checkInNotes = signal('');
     public readonly now = signal(new Date());
+    public readonly promptState = signal<Record<string, FastingPromptState>>(this.readPromptState());
 
     public readonly isActive = computed(() => {
         const session = this.currentSession();
@@ -101,15 +131,18 @@ export class FastingFacade {
                       to: to.toISOString(),
                   })
                 : of([]),
+            this.fastingService.getInsights(),
         ])
             .pipe(
                 finalize(() => this.isLoading.set(false)),
                 takeUntilDestroyed(this.destroyRef),
             )
-            .subscribe(([current, stats, history]) => {
+            .subscribe(([current, stats, history, insights]) => {
                 this.currentSession.set(current);
                 this.stats.set(stats);
                 this.history.set(history);
+                this.insightsData.set(insights);
+                this.syncCheckInFromSession(current);
 
                 if (current && !current.endedAtUtc) {
                     this.startTimer();
@@ -128,6 +161,16 @@ export class FastingFacade {
             )
             .subscribe(session => {
                 this.currentSession.set(session);
+                this.syncCheckInFromSession(session);
+                this.refreshInsights();
+                this.frontendObservability.recordFastingLifecycleEvent('session.started', {
+                    sessionId: session.id,
+                    protocol: session.protocol,
+                    planType: session.planType,
+                    plannedDurationHours: session.plannedDurationHours,
+                    occurrenceKind: session.occurrenceKind,
+                    ...this.getReminderTelemetryDetails(),
+                });
                 this.startTimer();
             });
     }
@@ -142,12 +185,24 @@ export class FastingFacade {
             )
             .subscribe(session => {
                 this.currentSession.set(session);
+                this.syncCheckInFromSession(session);
                 if (session.endedAtUtc) {
                     this.stopTimer();
+                    this.frontendObservability.recordFastingLifecycleEvent('session.completed', {
+                        sessionId: session.id,
+                        protocol: session.protocol,
+                        planType: session.planType,
+                        status: session.status,
+                        plannedDurationHours: session.plannedDurationHours,
+                        actualDurationHours: this.getSessionDurationHours(session),
+                        hadCheckIn: !!session.checkInAtUtc,
+                        ...this.getReminderTelemetryDetails(),
+                    });
                     this.refreshStats();
                 } else {
                     this.startTimer();
                     this.refreshHistory();
+                    this.refreshInsights();
                 }
             });
     }
@@ -181,6 +236,28 @@ export class FastingFacade {
         this.extendHours.set(Math.max(1, Math.min(168, hours)));
     }
 
+    public setHungerLevel(level: number): void {
+        this.hungerLevel.set(Math.max(1, Math.min(5, level)));
+    }
+
+    public setEnergyLevel(level: number): void {
+        this.energyLevel.set(Math.max(1, Math.min(5, level)));
+    }
+
+    public setMoodLevel(level: number): void {
+        this.moodLevel.set(Math.max(1, Math.min(5, level)));
+    }
+
+    public toggleSymptom(symptom: string): void {
+        this.selectedSymptoms.update(current =>
+            current.includes(symptom) ? current.filter(value => value !== symptom) : [...current, symptom],
+        );
+    }
+
+    public setCheckInNotes(value: string): void {
+        this.checkInNotes.set(value);
+    }
+
     public extendByHours(hours: number): void {
         const additionalHours = Math.max(1, Math.min(168, hours));
         this.isExtending.set(true);
@@ -192,7 +269,88 @@ export class FastingFacade {
             )
             .subscribe(session => {
                 this.currentSession.set(session);
+                this.syncCheckInFromSession(session);
+                this.refreshInsights();
             });
+    }
+
+    public saveCheckIn(): void {
+        const session = this.currentSession();
+        if (!session || session.endedAtUtc) {
+            return;
+        }
+
+        this.isSavingCheckIn.set(true);
+        this.fastingService
+            .updateCheckIn({
+                hungerLevel: this.hungerLevel(),
+                energyLevel: this.energyLevel(),
+                moodLevel: this.moodLevel(),
+                symptoms: this.selectedSymptoms(),
+                checkInNotes: this.checkInNotes().trim() || null,
+            })
+            .pipe(
+                finalize(() => this.isSavingCheckIn.set(false)),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe(updated => {
+                this.currentSession.set(updated);
+                this.syncCheckInFromSession(updated);
+                this.frontendObservability.recordFastingLifecycleEvent('check-in.saved', {
+                    sessionId: updated.id,
+                    protocol: updated.protocol,
+                    planType: updated.planType,
+                    hungerLevel: updated.hungerLevel,
+                    energyLevel: updated.energyLevel,
+                    moodLevel: updated.moodLevel,
+                    symptomsCount: updated.symptoms.length,
+                    hadNotes: !!updated.checkInNotes,
+                    ...this.getReminderTelemetryDetails(),
+                });
+                this.clearPromptStateForSession(updated.id);
+                this.refreshHistory();
+                this.refreshInsights();
+            });
+    }
+
+    public isPromptVisible(session: FastingSession | null, prompt: FastingMessage | null): boolean {
+        if (!session || !prompt || session.endedAtUtc) {
+            return false;
+        }
+
+        const state = this.promptState()[this.getPromptStateKey(session.id, prompt.id)];
+        if (!state) {
+            return true;
+        }
+
+        if (state.dismissed) {
+            return false;
+        }
+
+        if (!state.snoozedUntilUtc) {
+            return true;
+        }
+
+        return new Date(state.snoozedUntilUtc).getTime() <= this.now().getTime();
+    }
+
+    public dismissPrompt(promptId: string): void {
+        const session = this.currentSession();
+        if (!session) {
+            return;
+        }
+
+        this.updatePromptState(this.getPromptStateKey(session.id, promptId), { dismissed: true });
+    }
+
+    public snoozePrompt(promptId: string): void {
+        const session = this.currentSession();
+        if (!session) {
+            return;
+        }
+
+        const snoozedUntilUtc = new Date(this.now().getTime() + FastingFacade.PromptSnoozeHours * 3_600_000).toISOString();
+        this.updatePromptState(this.getPromptStateKey(session.id, promptId), { snoozedUntilUtc });
     }
 
     public skipCyclicFastDay(): void {
@@ -205,8 +363,10 @@ export class FastingFacade {
             )
             .subscribe(session => {
                 this.currentSession.set(session);
+                this.syncCheckInFromSession(session);
                 this.startTimer();
                 this.refreshHistory();
+                this.refreshInsights();
             });
     }
 
@@ -220,8 +380,10 @@ export class FastingFacade {
             )
             .subscribe(session => {
                 this.currentSession.set(session);
+                this.syncCheckInFromSession(session);
                 this.startTimer();
                 this.refreshHistory();
+                this.refreshInsights();
             });
     }
 
@@ -246,6 +408,7 @@ export class FastingFacade {
             .subscribe(stats => this.stats.set(stats));
 
         this.refreshHistory();
+        this.refreshInsights();
     }
 
     private refreshHistory(): void {
@@ -259,12 +422,97 @@ export class FastingFacade {
             .subscribe(history => this.history.set(history));
     }
 
+    private refreshInsights(): void {
+        this.fastingService
+            .getInsights()
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(insights => this.insightsData.set(insights));
+    }
+
+    private syncCheckInFromSession(session: FastingSession | null): void {
+        this.hungerLevel.set(session?.hungerLevel ?? 3);
+        this.energyLevel.set(session?.energyLevel ?? 3);
+        this.moodLevel.set(session?.moodLevel ?? 3);
+        this.selectedSymptoms.set(session?.symptoms ?? []);
+        this.checkInNotes.set(session?.checkInNotes ?? '');
+    }
+
+    private getPromptStateKey(sessionId: string, promptId: string): string {
+        return `${sessionId}:${promptId}`;
+    }
+
+    private updatePromptState(key: string, value: FastingPromptState): void {
+        this.promptState.update(current => {
+            const next = { ...current, [key]: { ...current[key], ...value } };
+            this.writePromptState(next);
+            return next;
+        });
+    }
+
+    private clearPromptStateForSession(sessionId: string): void {
+        this.promptState.update(current => {
+            const next = Object.fromEntries(Object.entries(current).filter(([key]) => !key.startsWith(`${sessionId}:`)));
+            this.writePromptState(next);
+            return next;
+        });
+    }
+
+    private readPromptState(): Record<string, FastingPromptState> {
+        try {
+            const stored = localStorage.getItem(FastingFacade.PromptStorageKey);
+            if (!stored) {
+                return {};
+            }
+
+            const parsed = JSON.parse(stored);
+            return typeof parsed === 'object' && parsed !== null ? parsed : {};
+        } catch {
+            return {};
+        }
+    }
+
+    private writePromptState(state: Record<string, FastingPromptState>): void {
+        try {
+            localStorage.setItem(FastingFacade.PromptStorageKey, JSON.stringify(state));
+        } catch {
+            // Ignore storage errors; prompts should still work in-memory.
+        }
+    }
+
     private formatDuration(ms: number): string {
         const totalSeconds = Math.floor(ms / 1000);
         const hours = Math.floor(totalSeconds / 3600);
         const minutes = Math.floor((totalSeconds % 3600) / 60);
         const seconds = totalSeconds % 60;
         return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+    }
+
+    private getSessionDurationHours(session: FastingSession): number {
+        const endedAt = session.endedAtUtc;
+        if (!endedAt) {
+            return 0;
+        }
+
+        const startedAtMs = new Date(session.startedAtUtc).getTime();
+        const endedAtMs = new Date(endedAt).getTime();
+        if (Number.isNaN(startedAtMs) || Number.isNaN(endedAtMs) || endedAtMs <= startedAtMs) {
+            return 0;
+        }
+
+        return Math.round(((endedAtMs - startedAtMs) / 3_600_000) * 10) / 10;
+    }
+
+    private getReminderTelemetryDetails(): Record<string, unknown> {
+        const user = this.userService.user();
+        const firstReminderHours = user?.fastingCheckInReminderHours ?? 12;
+        const followUpReminderHours = user?.fastingCheckInFollowUpReminderHours ?? 20;
+        const reminderPresetId = resolveFastingReminderPresetId(firstReminderHours, followUpReminderHours);
+
+        return {
+            firstReminderHours,
+            followUpReminderHours,
+            reminderPresetId,
+        };
     }
 
     private buildStartPayload(): {

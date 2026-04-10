@@ -29,6 +29,12 @@ internal sealed class FastingOccurrenceConfiguration : IEntityTypeConfiguration<
         entity.Property(occurrence => occurrence.Notes)
             .HasMaxLength(500);
 
+        entity.Property(occurrence => occurrence.Symptoms)
+            .HasMaxLength(200);
+
+        entity.Property(occurrence => occurrence.CheckInNotes)
+            .HasMaxLength(500);
+
         entity.HasIndex(occurrence => occurrence.PlanId);
         entity.HasIndex(occurrence => occurrence.UserId);
         entity.HasIndex(occurrence => new { occurrence.UserId, occurrence.Status });

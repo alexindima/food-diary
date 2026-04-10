@@ -41,6 +41,8 @@ public static class UserMappings {
             user.PushNotificationsEnabled,
             user.FastingPushNotificationsEnabled,
             user.SocialPushNotificationsEnabled,
+            user.FastingCheckInReminderHours,
+            user.FastingCheckInFollowUpReminderHours,
             user.ProfileImage,
             user.ProfileImageAssetId?.Value,
             layout,

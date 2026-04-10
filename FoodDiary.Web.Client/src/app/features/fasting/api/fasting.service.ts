@@ -4,7 +4,15 @@ import { Observable, catchError } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
 import { fallbackApiError, rethrowApiError } from '../../../shared/lib/api-error.utils';
-import { ExtendFastingPayload, FastingHistoryQuery, FastingSession, FastingStats, StartFastingPayload } from '../models/fasting.data';
+import {
+    ExtendFastingPayload,
+    FastingHistoryQuery,
+    FastingInsights,
+    FastingSession,
+    FastingStats,
+    StartFastingPayload,
+    UpdateFastingCheckInPayload,
+} from '../models/fasting.data';
 
 @Injectable({
     providedIn: 'root',
@@ -27,6 +35,12 @@ export class FastingService extends ApiService {
     public extend(payload: ExtendFastingPayload): Observable<FastingSession> {
         return this.put<FastingSession>('current/duration', payload).pipe(
             catchError((error: HttpErrorResponse) => rethrowApiError('Extend fasting error', error)),
+        );
+    }
+
+    public updateCheckIn(payload: UpdateFastingCheckInPayload): Observable<FastingSession> {
+        return this.put<FastingSession>('current/check-in', payload).pipe(
+            catchError((error: HttpErrorResponse) => rethrowApiError('Update fasting check-in error', error)),
         );
     }
 
@@ -61,6 +75,17 @@ export class FastingService extends ApiService {
                     totalCompleted: 0,
                     currentStreak: 0,
                     averageDurationHours: 0,
+                }),
+            ),
+        );
+    }
+
+    public getInsights(): Observable<FastingInsights> {
+        return this.get<FastingInsights>('insights').pipe(
+            catchError((error: HttpErrorResponse) =>
+                fallbackApiError('Get fasting insights error', error, {
+                    insights: [],
+                    currentPrompt: null,
                 }),
             ),
         );

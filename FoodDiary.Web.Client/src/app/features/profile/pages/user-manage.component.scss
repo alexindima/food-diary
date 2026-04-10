@@ -304,6 +304,49 @@
         justify-content: flex-start;
     }
 
+    &__notifications-reminders {
+        display: grid;
+        grid-template-columns: minmax(220px, 1fr) repeat(2, minmax(140px, 180px)) auto;
+        gap: 12px;
+        align-items: end;
+        width: 100%;
+
+        ::ng-deep fd-ui-button {
+            align-self: end;
+        }
+    }
+
+    &__notifications-reminder-presets {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        min-width: 0;
+    }
+
+    &__notifications-reminder-presets-label {
+        font-size: 0.82rem;
+        font-weight: 700;
+        letter-spacing: 0.03em;
+        text-transform: uppercase;
+        color: #64748b;
+    }
+
+    &__notifications-reminder-presets-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    &__preset-button--active {
+
+        ::ng-deep button,
+        ::ng-deep .fd-ui-button {
+            border-color: rgba(37, 99, 235, 0.38);
+            background: rgba(219, 234, 254, 0.72);
+            color: #1d4ed8;
+        }
+    }
+
     &__notifications-devices {
         display: flex;
         flex-direction: column;
@@ -318,6 +361,46 @@
     }
 
     &__notifications-device-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    &__telemetry-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 10px;
+    }
+
+    &__telemetry-metric {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        padding: 14px 16px;
+        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.78);
+        border: 1px solid rgba(148, 163, 184, 0.18);
+    }
+
+    &__telemetry-value {
+        font-size: 1.1rem;
+        font-weight: 800;
+        color: variables.$color-text-main;
+    }
+
+    &__telemetry-label {
+        font-size: 0.84rem;
+        line-height: 1.35;
+        color: variables.$color-text-additional;
+    }
+
+    &__telemetry-meta {
+        font-size: 0.9rem;
+        line-height: 1.35;
+        color: variables.$color-text-additional;
+    }
+
+    &__telemetry-preset-list {
         display: flex;
         flex-direction: column;
         gap: 10px;
@@ -497,6 +580,14 @@
 
         &__notifications-actions {
             width: 100%;
+
+            ::ng-deep fd-ui-button {
+                width: 100%;
+            }
+        }
+
+        &__notifications-reminders {
+            grid-template-columns: 1fr;
 
             ::ng-deep fd-ui-button {
                 width: 100%;

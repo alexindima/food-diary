@@ -3,8 +3,10 @@ using FoodDiary.Application.Fasting.Commands.ExtendActiveFasting;
 using FoodDiary.Application.Fasting.Commands.PostponeCyclicFastDay;
 using FoodDiary.Application.Fasting.Commands.SkipCyclicFastDay;
 using FoodDiary.Application.Fasting.Commands.StartFasting;
+using FoodDiary.Application.Fasting.Commands.UpdateCurrentFastingCheckIn;
 using FoodDiary.Application.Fasting.Queries.GetCurrentFasting;
 using FoodDiary.Application.Fasting.Queries.GetFastingHistory;
+using FoodDiary.Application.Fasting.Queries.GetFastingInsights;
 using FoodDiary.Application.Fasting.Queries.GetFastingStats;
 using FoodDiary.Presentation.Api.Features.Fasting.Requests;
 
@@ -32,10 +34,15 @@ public static class FastingHttpMappings {
     public static ExtendActiveFastingCommand ToExtendCommand(this ExtendActiveFastingHttpRequest request, Guid userId) =>
         new(userId, request.AdditionalHours);
 
+    public static UpdateCurrentFastingCheckInCommand ToCheckInCommand(this UpdateFastingCheckInHttpRequest request, Guid userId) =>
+        new(userId, request.HungerLevel, request.EnergyLevel, request.MoodLevel, request.Symptoms, request.CheckInNotes);
+
     public static GetCurrentFastingQuery ToCurrentQuery(this Guid userId) => new(userId);
 
     public static GetFastingHistoryQuery ToHistoryQuery(this GetFastingHistoryHttpQuery query, Guid userId) =>
         new(userId, query.From, query.To);
 
     public static GetFastingStatsQuery ToStatsQuery(this Guid userId) => new(userId);
+
+    public static GetFastingInsightsQuery ToInsightsQuery(this Guid userId) => new(userId);
 }

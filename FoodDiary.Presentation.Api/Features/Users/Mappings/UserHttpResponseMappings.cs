@@ -31,6 +31,8 @@ public static class UserHttpResponseMappings {
             model.PushNotificationsEnabled,
             model.FastingPushNotificationsEnabled,
             model.SocialPushNotificationsEnabled,
+            model.FastingCheckInReminderHours,
+            model.FastingCheckInFollowUpReminderHours,
             model.ProfileImage,
             model.ProfileImageAssetId,
             model.DashboardLayout?.ToHttpModel(),

@@ -33,7 +33,9 @@ public sealed partial class User {
             language: language,
             pushNotificationsEnabled: null,
             fastingPushNotificationsEnabled: null,
-            socialPushNotificationsEnabled: null)) {
+            socialPushNotificationsEnabled: null,
+            fastingCheckInReminderHours: null,
+            fastingCheckInFollowUpReminderHours: null)) {
             SetModified();
         }
     }
@@ -101,13 +103,17 @@ public sealed partial class User {
         string? language = null,
         bool? pushNotificationsEnabled = null,
         bool? fastingPushNotificationsEnabled = null,
-        bool? socialPushNotificationsEnabled = null) {
+        bool? socialPushNotificationsEnabled = null,
+        int? fastingCheckInReminderHours = null,
+        int? fastingCheckInFollowUpReminderHours = null) {
         UpdatePreferences(new UserPreferenceUpdate(
             dashboardLayoutJson,
             language,
             pushNotificationsEnabled,
             fastingPushNotificationsEnabled,
-            socialPushNotificationsEnabled));
+            socialPushNotificationsEnabled,
+            fastingCheckInReminderHours,
+            fastingCheckInFollowUpReminderHours));
     }
 
     public void UpdatePreferences(UserPreferenceUpdate update) {
@@ -117,7 +123,9 @@ public sealed partial class User {
             update.Language,
             update.PushNotificationsEnabled,
             update.FastingPushNotificationsEnabled,
-            update.SocialPushNotificationsEnabled)) {
+            update.SocialPushNotificationsEnabled,
+            update.FastingCheckInReminderHours,
+            update.FastingCheckInFollowUpReminderHours)) {
             SetModified();
         }
     }
@@ -255,12 +263,16 @@ public sealed partial class User {
         string? language,
         bool? pushNotificationsEnabled,
         bool? fastingPushNotificationsEnabled,
-        bool? socialPushNotificationsEnabled) {
+        bool? socialPushNotificationsEnabled,
+        int? fastingCheckInReminderHours,
+        int? fastingCheckInFollowUpReminderHours) {
         var normalizedDashboardLayoutJson = NormalizeOptionalProfileText(dashboardLayoutJson);
         var normalizedLanguage = NormalizeOptionalLanguage(language, nameof(language));
         var state = GetPreferenceState();
 
         EnsureLanguage(language, nameof(language));
+        EnsureReminderHours(fastingCheckInReminderHours, nameof(fastingCheckInReminderHours));
+        EnsureReminderHours(fastingCheckInFollowUpReminderHours, nameof(fastingCheckInFollowUpReminderHours));
 
         var changed = false;
 
@@ -289,10 +301,37 @@ public sealed partial class User {
             changed = true;
         }
 
+        if (fastingCheckInReminderHours.HasValue && state.FastingCheckInReminderHours != fastingCheckInReminderHours.Value) {
+            state = state with { FastingCheckInReminderHours = fastingCheckInReminderHours.Value };
+            changed = true;
+        }
+
+        if (fastingCheckInFollowUpReminderHours.HasValue &&
+            state.FastingCheckInFollowUpReminderHours != fastingCheckInFollowUpReminderHours.Value) {
+            state = state with { FastingCheckInFollowUpReminderHours = fastingCheckInFollowUpReminderHours.Value };
+            changed = true;
+        }
+
+        if (state.FastingCheckInFollowUpReminderHours <= state.FastingCheckInReminderHours) {
+            throw new ArgumentOutOfRangeException(
+                nameof(fastingCheckInFollowUpReminderHours),
+                "Follow-up reminder hour must be greater than the first reminder hour.");
+        }
+
         if (changed) {
             ApplyPreferenceState(state);
         }
 
         return changed;
+    }
+
+    private static void EnsureReminderHours(int? value, string paramName) {
+        if (!value.HasValue) {
+            return;
+        }
+
+        if (value.Value is < 1 or > 168) {
+            throw new ArgumentOutOfRangeException(paramName, "Reminder hour must be between 1 and 168.");
+        }
     }
 }

@@ -36,6 +36,12 @@
   <data name="FastingWindowStarted_Body" xml:space="preserve">
     <value>Окно питания закончилось. Сейчас активна следующая фаза голодания.</value>
   </data>
+  <data name="FastingCheckInReminder_Title" xml:space="preserve">
+    <value>Как вы себя чувствуете?</value>
+  </data>
+  <data name="FastingCheckInReminder_Body" xml:space="preserve">
+    <value>Сделайте короткую отметку самочувствия во время голодания: голод, энергия, настроение и симптомы.</value>
+  </data>
   <data name="WeeklyCheckIn_Title" xml:space="preserve">
     <value>Еженедельный обзор готов</value>
   </data>

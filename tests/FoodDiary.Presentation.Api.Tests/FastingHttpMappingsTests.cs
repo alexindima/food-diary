@@ -91,7 +91,13 @@ public sealed class FastingHttpMappingsTests {
             null,
             true,
             "Interrupted",
-            "Stopped early");
+            "Stopped early",
+            DateTime.UtcNow.AddHours(-1),
+            3,
+            4,
+            5,
+            ["good"],
+            "Hydration was fine");
 
         var response = model.ToHttpResponse();
 
@@ -102,5 +108,10 @@ public sealed class FastingHttpMappingsTests {
         Assert.Equal(24, response.PlannedDurationHours);
         Assert.Equal("Intermittent", response.PlanType);
         Assert.Equal("FastingWindow", response.OccurrenceKind);
+        Assert.Equal(3, response.HungerLevel);
+        Assert.Equal(4, response.EnergyLevel);
+        Assert.Equal(5, response.MoodLevel);
+        Assert.Equal(["good"], response.Symptoms);
+        Assert.Equal("Hydration was fine", response.CheckInNotes);
     }
 }

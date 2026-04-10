@@ -3,6 +3,7 @@ export type FastingSessionStatus = 'Active' | 'Completed' | 'Interrupted' | 'Ski
 export type FastingPlanType = 'Intermittent' | 'Extended' | 'Cyclic';
 export type FastingOccurrenceKind = 'FastingWindow' | 'EatingWindow' | 'FastDay' | 'EatDay';
 export type FastingMode = 'intermittent' | 'extended' | 'cyclic';
+export type FastingMessageTone = 'warning' | 'positive' | 'neutral';
 
 export interface FastingProtocolOption {
     value: FastingProtocol;
@@ -28,12 +29,31 @@ export interface FastingSession {
     isCompleted: boolean;
     status: FastingSessionStatus;
     notes: string | null;
+    checkInAtUtc: string | null;
+    hungerLevel: number | null;
+    energyLevel: number | null;
+    moodLevel: number | null;
+    symptoms: string[];
+    checkInNotes: string | null;
 }
 
 export interface FastingStats {
     totalCompleted: number;
     currentStreak: number;
     averageDurationHours: number;
+}
+
+export interface FastingMessage {
+    id: string;
+    titleKey: string;
+    bodyKey: string;
+    tone: FastingMessageTone;
+    bodyParams: Record<string, string> | null;
+}
+
+export interface FastingInsights {
+    insights: FastingMessage[];
+    currentPrompt: FastingMessage | null;
 }
 
 export interface StartFastingPayload {
@@ -49,6 +69,14 @@ export interface StartFastingPayload {
 
 export interface ExtendFastingPayload {
     additionalHours: number;
+}
+
+export interface UpdateFastingCheckInPayload {
+    hungerLevel: number;
+    energyLevel: number;
+    moodLevel: number;
+    symptoms?: string[] | null;
+    checkInNotes?: string | null;
 }
 
 export interface FastingHistoryQuery {
@@ -78,3 +106,14 @@ export const CYCLIC_PRESETS: CyclicPresetOption[] = [
     { fastDays: 1, eatDays: 2, label: '1:2' },
     { fastDays: 1, eatDays: 3, label: '1:3' },
 ];
+
+export const FASTING_CHECK_IN_SCALE = [1, 2, 3, 4, 5] as const;
+
+export const FASTING_SYMPTOM_OPTIONS = [
+    { value: 'headache', labelKey: 'FASTING.CHECK_IN.SYMPTOMS.HEADACHE' },
+    { value: 'weakness', labelKey: 'FASTING.CHECK_IN.SYMPTOMS.WEAKNESS' },
+    { value: 'irritability', labelKey: 'FASTING.CHECK_IN.SYMPTOMS.IRRITABILITY' },
+    { value: 'dizziness', labelKey: 'FASTING.CHECK_IN.SYMPTOMS.DIZZINESS' },
+    { value: 'cravings', labelKey: 'FASTING.CHECK_IN.SYMPTOMS.CRAVINGS' },
+    { value: 'good', labelKey: 'FASTING.CHECK_IN.SYMPTOMS.GOOD' },
+] as const;

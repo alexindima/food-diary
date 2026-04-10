@@ -145,7 +145,7 @@ public sealed class WebPushNotificationSender(
                 icon = "/assets/pwa/icon-192x192.png",
                 badge = "/assets/pwa/icon-96x96.png",
                 data = new {
-                    url = options.DefaultUrl,
+                    url = ResolveUrl(notification),
                     type = notification.Type,
                     referenceId = notification.ReferenceId
                 }
@@ -153,6 +153,22 @@ public sealed class WebPushNotificationSender(
         };
 
         return JsonSerializer.Serialize(payload);
+    }
+
+    private string ResolveUrl(Notification notification) {
+        var relativePath = notification.Type switch {
+            NotificationTypes.FastingCompleted => "/fasting",
+            NotificationTypes.EatingWindowStarted => "/fasting",
+            NotificationTypes.FastingWindowStarted => "/fasting",
+            NotificationTypes.FastingCheckInReminder => "/fasting",
+            _ => options.DefaultUrl
+        };
+
+        if (Uri.TryCreate(options.DefaultUrl, UriKind.Absolute, out var absoluteBase)) {
+            return new Uri(absoluteBase, relativePath).ToString();
+        }
+
+        return relativePath;
     }
 
     private static bool IsExpiredSubscription(WebPushException ex) {
@@ -165,6 +181,7 @@ public sealed class WebPushNotificationSender(
             NotificationTypes.FastingCompleted => user.FastingPushNotificationsEnabled,
             NotificationTypes.EatingWindowStarted => user.FastingPushNotificationsEnabled,
             NotificationTypes.FastingWindowStarted => user.FastingPushNotificationsEnabled,
+            NotificationTypes.FastingCheckInReminder => user.FastingPushNotificationsEnabled,
             NotificationTypes.NewRecommendation => user.SocialPushNotificationsEnabled,
             NotificationTypes.NewComment => user.SocialPushNotificationsEnabled,
             _ => true

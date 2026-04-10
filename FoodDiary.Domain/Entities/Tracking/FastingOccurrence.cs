@@ -7,6 +7,11 @@ namespace FoodDiary.Domain.Entities.Tracking;
 
 public sealed class FastingOccurrence : AggregateRoot<FastingOccurrenceId> {
     private const int NotesMaxLength = 500;
+    private const int CheckInNotesMaxLength = 500;
+    private const int CheckInSymptomsMaxLength = 200;
+    private const int MinCheckInScale = 1;
+    private const int MaxCheckInScale = 5;
+    private const int MaxSymptomsCount = 8;
     private const int MaxTargetHours = 168;
 
     public FastingPlanId PlanId { get; private set; }
@@ -21,6 +26,12 @@ public sealed class FastingOccurrence : AggregateRoot<FastingOccurrenceId> {
     public int AddedTargetHours { get; private set; }
     public int? TargetHours => InitialTargetHours.HasValue ? InitialTargetHours.Value + AddedTargetHours : null;
     public string? Notes { get; private set; }
+    public DateTime? CheckInAtUtc { get; private set; }
+    public int? HungerLevel { get; private set; }
+    public int? EnergyLevel { get; private set; }
+    public int? MoodLevel { get; private set; }
+    public string? Symptoms { get; private set; }
+    public string? CheckInNotes { get; private set; }
 
     public FastingPlan Plan { get; private set; } = null!;
     public User User { get; private set; } = null!;
@@ -173,6 +184,26 @@ public sealed class FastingOccurrence : AggregateRoot<FastingOccurrenceId> {
         SetModified();
     }
 
+    public void UpdateCheckIn(
+        int hungerLevel,
+        int energyLevel,
+        int moodLevel,
+        IEnumerable<string>? symptoms,
+        string? checkInNotes,
+        DateTime checkedInAtUtc) {
+        EnsureCheckInScale(hungerLevel, nameof(hungerLevel));
+        EnsureCheckInScale(energyLevel, nameof(energyLevel));
+        EnsureCheckInScale(moodLevel, nameof(moodLevel));
+
+        HungerLevel = hungerLevel;
+        EnergyLevel = energyLevel;
+        MoodLevel = moodLevel;
+        Symptoms = NormalizeSymptoms(symptoms);
+        CheckInNotes = NormalizeCheckInNotes(checkInNotes);
+        CheckInAtUtc = NormalizeTimestamp(checkedInAtUtc, nameof(checkedInAtUtc));
+        SetModified();
+    }
+
     private void EnsureTerminalTransition() {
         if (Status is FastingOccurrenceStatus.Completed or FastingOccurrenceStatus.Interrupted or FastingOccurrenceStatus.Skipped) {
             throw new InvalidOperationException("Cannot change a finalized fasting occurrence.");
@@ -223,6 +254,48 @@ public sealed class FastingOccurrence : AggregateRoot<FastingOccurrenceId> {
         var trimmed = value.Trim();
         return trimmed.Length > NotesMaxLength
             ? throw new ArgumentOutOfRangeException(nameof(value), $"Notes must be at most {NotesMaxLength} characters.")
+            : trimmed;
+    }
+
+    private static void EnsureCheckInScale(int value, string paramName) {
+        if (value < MinCheckInScale || value > MaxCheckInScale) {
+            throw new ArgumentOutOfRangeException(paramName, $"Check-in value must be between {MinCheckInScale} and {MaxCheckInScale}.");
+        }
+    }
+
+    private static string? NormalizeSymptoms(IEnumerable<string>? values) {
+        if (values is null) {
+            return null;
+        }
+
+        var normalized = values
+            .Where(static value => !string.IsNullOrWhiteSpace(value))
+            .Select(static value => value.Trim())
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToArray();
+
+        if (normalized.Length == 0) {
+            return null;
+        }
+
+        if (normalized.Length > MaxSymptomsCount) {
+            throw new ArgumentOutOfRangeException(nameof(values), $"A maximum of {MaxSymptomsCount} symptoms is allowed.");
+        }
+
+        var csv = string.Join(',', normalized);
+        return csv.Length > CheckInSymptomsMaxLength
+            ? throw new ArgumentOutOfRangeException(nameof(values), $"Symptoms must be at most {CheckInSymptomsMaxLength} characters in total.")
+            : csv;
+    }
+
+    private static string? NormalizeCheckInNotes(string? value) {
+        if (string.IsNullOrWhiteSpace(value)) {
+            return null;
+        }
+
+        var trimmed = value.Trim();
+        return trimmed.Length > CheckInNotesMaxLength
+            ? throw new ArgumentOutOfRangeException(nameof(value), $"Check-in notes must be at most {CheckInNotesMaxLength} characters.")
             : trimmed;
     }
 }

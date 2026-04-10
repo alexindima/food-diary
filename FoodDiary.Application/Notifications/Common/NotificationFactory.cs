@@ -55,4 +55,13 @@ public static class NotificationFactory {
             NotificationTypes.FastingWindowStarted,
             NotificationPayloads.FastingPhase(planType, occurrenceKind),
             referenceId);
+
+    public static Notification CreateFastingCheckInReminder(
+        UserId userId,
+        string referenceId) =>
+        Notification.Create(
+            userId,
+            NotificationTypes.FastingCheckInReminder,
+            NotificationPayloads.Empty(),
+            referenceId);
 }

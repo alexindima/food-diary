@@ -11,6 +11,7 @@ public class FastingOccurrenceRepository(FoodDiaryDbContext context) : IFastingO
         return await context.FastingOccurrences
             .AsNoTracking()
             .Include(occurrence => occurrence.Plan)
+            .Include(occurrence => occurrence.User)
             .Where(occurrence => occurrence.Status == FastingOccurrenceStatus.Active)
             .OrderBy(occurrence => occurrence.StartedAtUtc)
             .ToListAsync(cancellationToken);

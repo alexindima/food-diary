@@ -231,6 +231,48 @@ internal sealed class FastingSessionConfiguration : IEntityTypeConfiguration<Fas
     }
 }
 
+internal sealed class FastingTelemetryEventConfiguration : IEntityTypeConfiguration<FastingTelemetryEvent> {
+    public void Configure(EntityTypeBuilder<FastingTelemetryEvent> entity) {
+        entity.Property(e => e.Id)
+            .HasConversion(
+                id => id.Value,
+                value => new FastingTelemetryEventId(value))
+            .ValueGeneratedNever();
+
+        entity.Property(e => e.Name)
+            .IsRequired()
+            .HasMaxLength(64);
+
+        entity.Property(e => e.SessionId)
+            .HasMaxLength(64);
+
+        entity.Property(e => e.Protocol)
+            .HasMaxLength(32);
+
+        entity.Property(e => e.PlanType)
+            .HasMaxLength(16);
+
+        entity.Property(e => e.Status)
+            .HasMaxLength(16);
+
+        entity.Property(e => e.OccurrenceKind)
+            .HasMaxLength(16);
+
+        entity.Property(e => e.ReminderPresetId)
+            .HasMaxLength(32);
+
+        entity.Property(e => e.ReminderSource)
+            .HasMaxLength(16);
+
+        entity.Property(e => e.OccurredAtUtc)
+            .HasColumnType("timestamp with time zone");
+
+        entity.HasIndex(e => e.OccurredAtUtc);
+        entity.HasIndex(e => new { e.Name, e.OccurredAtUtc });
+        entity.HasIndex(e => new { e.ReminderPresetId, e.Name, e.OccurredAtUtc });
+    }
+}
+
 internal sealed class ExerciseEntryConfiguration : IEntityTypeConfiguration<ExerciseEntry> {
     public void Configure(EntityTypeBuilder<ExerciseEntry> entity) {
         entity.Property(e => e.Id).HasConversion(

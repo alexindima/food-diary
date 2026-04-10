@@ -45,6 +45,10 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User> {
             .HasDefaultValue(true);
         entity.Property(e => e.SocialPushNotificationsEnabled)
             .HasDefaultValue(true);
+        entity.Property(e => e.FastingCheckInReminderHours)
+            .HasDefaultValue(12);
+        entity.Property(e => e.FastingCheckInFollowUpReminderHours)
+            .HasDefaultValue(20);
         entity.Property(e => e.TelegramUserId)
             .HasColumnType("bigint");
         entity.Property(e => e.DashboardLayoutJson)

@@ -115,18 +115,22 @@ public class NotificationsFeatureTests {
         var handler = new UpdateNotificationPreferencesCommandHandler(userRepository, auditLogger);
 
         var result = await handler.Handle(
-            new UpdateNotificationPreferencesCommand(user.Id.Value, true, false, true),
+            new UpdateNotificationPreferencesCommand(user.Id.Value, true, false, true, 12, 20),
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.True(user.PushNotificationsEnabled);
         Assert.False(user.FastingPushNotificationsEnabled);
         Assert.True(user.SocialPushNotificationsEnabled);
+        Assert.Equal(12, user.FastingCheckInReminderHours);
+        Assert.Equal(20, user.FastingCheckInFollowUpReminderHours);
         Assert.Equal("notifications.preferences.updated", auditLogger.Action);
         Assert.Equal(user.Id, auditLogger.ActorId);
         Assert.Contains("push=True", auditLogger.Details);
         Assert.Contains("fasting=False", auditLogger.Details);
         Assert.Contains("social=True", auditLogger.Details);
+        Assert.Contains("fastingReminder=12", auditLogger.Details);
+        Assert.Contains("fastingReminderFollowUp=20", auditLogger.Details);
     }
 
     private sealed class InMemoryNotificationRepository : INotificationRepository {

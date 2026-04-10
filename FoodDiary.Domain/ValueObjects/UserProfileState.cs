@@ -18,7 +18,9 @@ public readonly record struct UserProfileState(
     string? Language,
     bool PushNotificationsEnabled,
     bool FastingPushNotificationsEnabled,
-    bool SocialPushNotificationsEnabled) {
+    bool SocialPushNotificationsEnabled,
+    int FastingCheckInReminderHours,
+    int FastingCheckInFollowUpReminderHours) {
     public static UserProfileState CreateInitial() {
         return new UserProfileState(
             Username: null,
@@ -35,7 +37,9 @@ public readonly record struct UserProfileState(
             Language: null,
             PushNotificationsEnabled: false,
             FastingPushNotificationsEnabled: true,
-            SocialPushNotificationsEnabled: true);
+            SocialPushNotificationsEnabled: true,
+            FastingCheckInReminderHours: 12,
+            FastingCheckInFollowUpReminderHours: 20);
     }
 
     public UserPersonalProfileState PersonalInfo => new(
@@ -55,5 +59,7 @@ public readonly record struct UserProfileState(
         Language,
         PushNotificationsEnabled,
         FastingPushNotificationsEnabled,
-        SocialPushNotificationsEnabled);
+        SocialPushNotificationsEnabled,
+        FastingCheckInReminderHours,
+        FastingCheckInFollowUpReminderHours);
 }

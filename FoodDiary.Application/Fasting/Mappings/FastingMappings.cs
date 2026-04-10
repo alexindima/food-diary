@@ -5,6 +5,8 @@ using FoodDiary.Domain.Enums;
 namespace FoodDiary.Application.Fasting.Mappings;
 
 public static class FastingMappings {
+    private static readonly char[] SymptomSeparators = [','];
+
     public static FastingSessionModel ToModel(this FastingSession session) =>
         new(
             session.Id.Value,
@@ -22,7 +24,13 @@ public static class FastingMappings {
             null,
             session.IsCompleted,
             session.Status.ToString(),
-            session.Notes);
+            session.Notes,
+            null,
+            null,
+            null,
+            null,
+            [],
+            null);
 
     public static FastingSessionModel ToModel(this FastingOccurrence occurrence) {
         return occurrence.ToModel(occurrence.Plan);
@@ -53,7 +61,24 @@ public static class FastingMappings {
             plan?.CyclicEatDayEatingWindowHours,
             isCompleted,
             occurrence.Status.ToString(),
-            occurrence.Notes);
+            occurrence.Notes,
+            occurrence.CheckInAtUtc,
+            occurrence.HungerLevel,
+            occurrence.EnergyLevel,
+            occurrence.MoodLevel,
+            ParseSymptoms(occurrence.Symptoms),
+            occurrence.CheckInNotes);
+    }
+
+    private static IReadOnlyList<string> ParseSymptoms(string? value) {
+        if (string.IsNullOrWhiteSpace(value)) {
+            return [];
+        }
+
+        return value
+            .Split(SymptomSeparators, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToArray();
     }
 
     private static int ResolveDefaultHours(FastingOccurrence occurrence, FastingPlan? plan) {

@@ -29,7 +29,9 @@ public sealed class UpdateNotificationPreferencesCommandHandler(
         user!.UpdatePreferences(new UserPreferenceUpdate(
             PushNotificationsEnabled: command.PushNotificationsEnabled,
             FastingPushNotificationsEnabled: command.FastingPushNotificationsEnabled,
-            SocialPushNotificationsEnabled: command.SocialPushNotificationsEnabled));
+            SocialPushNotificationsEnabled: command.SocialPushNotificationsEnabled,
+            FastingCheckInReminderHours: command.FastingCheckInReminderHours,
+            FastingCheckInFollowUpReminderHours: command.FastingCheckInFollowUpReminderHours));
 
         await userRepository.UpdateAsync(user, cancellationToken);
         auditLogger.Log(
@@ -37,11 +39,13 @@ public sealed class UpdateNotificationPreferencesCommandHandler(
             user.Id,
             "User",
             user.Id.Value.ToString(),
-            $"push={user.PushNotificationsEnabled};fasting={user.FastingPushNotificationsEnabled};social={user.SocialPushNotificationsEnabled}");
+            $"push={user.PushNotificationsEnabled};fasting={user.FastingPushNotificationsEnabled};social={user.SocialPushNotificationsEnabled};fastingReminder={user.FastingCheckInReminderHours};fastingReminderFollowUp={user.FastingCheckInFollowUpReminderHours}");
 
         return Result.Success(new NotificationPreferencesModel(
             user.PushNotificationsEnabled,
             user.FastingPushNotificationsEnabled,
-            user.SocialPushNotificationsEnabled));
+            user.SocialPushNotificationsEnabled,
+            user.FastingCheckInReminderHours,
+            user.FastingCheckInFollowUpReminderHours));
     }
 }

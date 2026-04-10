@@ -32,6 +32,8 @@ export interface User {
     pushNotificationsEnabled: boolean;
     fastingPushNotificationsEnabled: boolean;
     socialPushNotificationsEnabled: boolean;
+    fastingCheckInReminderHours: number;
+    fastingCheckInFollowUpReminderHours: number;
     profileImage?: string;
     profileImageAssetId?: string;
     dashboardLayout?: DashboardLayoutSettings | null;

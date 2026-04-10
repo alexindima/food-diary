@@ -41,6 +41,9 @@ public sealed class NotificationTestScheduler(
                     "Extended",
                     "FastDay",
                     referenceId),
+                NotificationTypes.FastingCheckInReminder => NotificationFactory.CreateFastingCheckInReminder(
+                    domainUserId,
+                    referenceId),
                 NotificationTypes.EatingWindowStarted => NotificationFactory.CreateEatingWindowStarted(
                     domainUserId,
                     "Intermittent",
@@ -76,6 +79,7 @@ public sealed class NotificationTestScheduler(
 
         return type.Trim() switch {
             NotificationTypes.FastingCompleted => NotificationTypes.FastingCompleted,
+            NotificationTypes.FastingCheckInReminder => NotificationTypes.FastingCheckInReminder,
             NotificationTypes.EatingWindowStarted => NotificationTypes.EatingWindowStarted,
             NotificationTypes.FastingWindowStarted => NotificationTypes.FastingWindowStarted,
             _ => NotificationTypes.FastingCompleted
