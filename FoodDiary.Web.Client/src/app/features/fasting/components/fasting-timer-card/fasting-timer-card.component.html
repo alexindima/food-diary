@@ -1,6 +1,6 @@
 <fd-ui-card class="fasting-timer-card">
-    <div class="fasting-timer-card__content">
-        <div class="fasting-timer-card__ring">
+    <div class="fasting-timer-card__content" [class.fasting-timer-card__content--summary]="layout() === 'summary'">
+        <div class="fasting-timer-card__ring" [class.fasting-timer-card__ring--summary]="layout() === 'summary'">
             <svg class="fasting-timer-card__ring-svg" viewBox="0 0 200 200">
                 <circle class="fasting-timer-card__ring-track" cx="100" cy="100" r="90" fill="none" stroke-width="8" />
                 <circle
@@ -16,34 +16,82 @@
                     [style.stroke-dashoffset]="2 * Math.PI * 90 * (1 - progressPercent() / 100)"
                 />
             </svg>
-            <div class="fasting-timer-card__ring-content">
-                <span class="fasting-timer-card__label">{{ labelKey() | translate }}</span>
-                @if (stateLabel()) {
-                    <span class="fasting-timer-card__state">{{ stateLabel() }}</span>
+            <div class="fasting-timer-card__ring-content" [class.fasting-timer-card__ring-content--summary]="layout() === 'summary'">
+                @if (layout() === 'summary') {
+                    <span class="fasting-timer-card__percent">{{ progressPercent() | number: '1.0-0' }}%</span>
+                    @if (stateLabel()) {
+                        <span class="fasting-timer-card__state">{{ stateLabel() }}</span>
+                    }
+                } @else {
+                    <span class="fasting-timer-card__label">{{ labelKey() | translate }}</span>
+                    @if (stateLabel()) {
+                        <span class="fasting-timer-card__state">{{ stateLabel() }}</span>
+                    }
+                    @if (isActive()) {
+                        <span class="fasting-timer-card__elapsed">{{ elapsedFormatted() }}</span>
+                        <span class="fasting-timer-card__remaining">
+                            @if (isOvertime()) {
+                                {{ 'FASTING.GOAL_REACHED' | translate }}
+                            } @else {
+                                {{ 'FASTING.REMAINING' | translate }}: {{ remainingFormatted() }}
+                            }
+                        </span>
+                    } @else if (currentSessionCompleted()) {
+                        <span class="fasting-timer-card__elapsed">{{ elapsedFormatted() }}</span>
+                        <span class="fasting-timer-card__remaining fasting-timer-card__remaining--done">
+                            {{ 'FASTING.COMPLETED' | translate }}
+                        </span>
+                    } @else {
+                        <span class="fasting-timer-card__elapsed fasting-timer-card__elapsed--idle">{{ 'FASTING.READY' | translate }}</span>
+                        <span class="fasting-timer-card__remaining">{{ 'FASTING.SELECT_AND_START' | translate }}</span>
+                    }
+                    @if (detailLabel()) {
+                        <span class="fasting-timer-card__detail">{{ detailLabel() }}</span>
+                    }
                 }
-                @if (isActive()) {
-                    <span class="fasting-timer-card__elapsed">{{ elapsedFormatted() }}</span>
-                    <span class="fasting-timer-card__remaining">
-                        @if (isOvertime()) {
-                            {{ 'FASTING.GOAL_REACHED' | translate }}
-                        } @else {
-                            {{ 'FASTING.REMAINING' | translate }}: {{ remainingFormatted() }}
+            </div>
+        </div>
+
+        @if (layout() === 'summary') {
+            <div class="fasting-timer-card__summary">
+                <div class="fasting-timer-card__summary-top">
+                    <div class="fasting-timer-card__summary-labels">
+                        <span class="fasting-timer-card__label">{{ labelKey() | translate }}</span>
+                        @if (detailLabel()) {
+                            <span class="fasting-timer-card__detail fasting-timer-card__detail--summary">{{ detailLabel() }}</span>
                         }
-                    </span>
+                    </div>
+                    @if (stateLabel()) {
+                        <span class="fasting-timer-card__badge">{{ stateLabel() }}</span>
+                    }
+                </div>
+
+                @if (isActive()) {
+                    <div class="fasting-timer-card__summary-time">{{ elapsedFormatted() }}</div>
+                    <div class="fasting-timer-card__summary-meta">
+                        @if (isOvertime()) {
+                            <span class="fasting-timer-card__remaining fasting-timer-card__remaining--done">
+                                {{ 'FASTING.GOAL_REACHED' | translate }}
+                            </span>
+                        } @else {
+                            <span class="fasting-timer-card__remaining"
+                                >{{ 'FASTING.REMAINING' | translate }}: {{ remainingFormatted() }}</span
+                            >
+                        }
+                    </div>
                 } @else if (currentSessionCompleted()) {
-                    <span class="fasting-timer-card__elapsed">{{ elapsedFormatted() }}</span>
+                    <div class="fasting-timer-card__summary-time">{{ elapsedFormatted() }}</div>
                     <span class="fasting-timer-card__remaining fasting-timer-card__remaining--done">
                         {{ 'FASTING.COMPLETED' | translate }}
                     </span>
                 } @else {
-                    <span class="fasting-timer-card__elapsed fasting-timer-card__elapsed--idle">{{ 'FASTING.READY' | translate }}</span>
+                    <div class="fasting-timer-card__summary-time fasting-timer-card__summary-time--idle">
+                        {{ 'FASTING.READY' | translate }}
+                    </div>
                     <span class="fasting-timer-card__remaining">{{ 'FASTING.SELECT_AND_START' | translate }}</span>
                 }
-                @if (detailLabel()) {
-                    <span class="fasting-timer-card__detail">{{ detailLabel() }}</span>
-                }
             </div>
-        </div>
+        }
 
         <ng-content select="[fastingControls]" />
     </div>

@@ -30,9 +30,7 @@ export class DashboardLayoutService {
 
     public readonly hasAsideBlocks = computed(() => {
         const blocks = this.visibleBlocks();
-        return blocks.some(block =>
-            ['fasting', 'hydration', 'micronutrients', 'cycle', 'weight', 'waist', 'tdee', 'advice'].includes(block),
-        );
+        return blocks.some(block => ['hydration', 'micronutrients', 'cycle', 'weight', 'waist', 'tdee', 'advice'].includes(block));
     });
 
     public readonly hasLayoutChanges = computed(() => {

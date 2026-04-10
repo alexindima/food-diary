@@ -1,4 +1,15 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, computed, inject, signal, viewChild } from '@angular/core';
+import {
+    AfterViewInit,
+    ChangeDetectionStrategy,
+    Component,
+    DestroyRef,
+    ElementRef,
+    OnInit,
+    computed,
+    inject,
+    signal,
+    viewChild,
+} from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { NavigationService } from '../../../services/navigation.service';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
@@ -65,7 +76,7 @@ import { PushNotificationService } from '../../../services/push-notification.ser
     styleUrl: './dashboard.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, AfterViewInit {
     private readonly navigationService = inject(NavigationService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly dialogService = inject(FdUiDialogService);
@@ -78,6 +89,8 @@ export class DashboardComponent implements OnInit {
     public readonly layout = inject(DashboardLayoutService);
 
     private readonly headerDatePicker = viewChild<FdUiDatepicker<Date>>('headerDatePicker');
+    private readonly dashboardRoot = viewChild.required<ElementRef<HTMLElement>>('dashboardRoot');
+    private resizeObserver: ResizeObserver | null = null;
 
     public readonly isDevBuild = environment.buildVersion === 'dev';
     public readonly isSchedulingTestNotification = signal(false);
@@ -134,10 +147,7 @@ export class DashboardComponent implements OnInit {
         }
 
         const visibleBlocks = this.layout.visibleBlocks();
-        return (
-            visibleBlocks.some(block => ['hydration', 'micronutrients', 'cycle', 'weight', 'waist', 'tdee', 'advice'].includes(block)) ||
-            (visibleBlocks.includes('fasting') && this.fastingIsActive())
-        );
+        return visibleBlocks.some(block => ['hydration', 'micronutrients', 'cycle', 'weight', 'waist', 'tdee', 'advice'].includes(block));
     });
     public ngOnInit(): void {
         this.facade.initialize();
@@ -148,6 +158,10 @@ export class DashboardComponent implements OnInit {
         };
         this.unsavedChangesService.register(handler);
         this.destroyRef.onDestroy(() => this.unsavedChangesService.clear(handler));
+    }
+
+    public ngAfterViewInit(): void {
+        this.observeDashboardWidth();
     }
 
     public openDatePicker(): void {
@@ -338,5 +352,33 @@ export class DashboardComponent implements OnInit {
             default:
                 return null;
         }
+    }
+
+    private observeDashboardWidth(): void {
+        const element = this.dashboardRoot().nativeElement;
+
+        const updateWidth = (width: number): void => {
+            if (width > 0) {
+                this.layout.updateViewportWidth(width);
+            }
+        };
+
+        updateWidth(element.getBoundingClientRect().width);
+
+        if (typeof ResizeObserver === 'undefined') {
+            return;
+        }
+
+        this.resizeObserver = new ResizeObserver(entries => {
+            const entry = entries[0];
+            if (!entry) {
+                return;
+            }
+
+            updateWidth(entry.contentRect.width);
+        });
+
+        this.resizeObserver.observe(element);
+        this.destroyRef.onDestroy(() => this.resizeObserver?.disconnect());
     }
 }

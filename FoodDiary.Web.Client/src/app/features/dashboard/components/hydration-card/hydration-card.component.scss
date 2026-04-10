@@ -1,5 +1,9 @@
+@use 'variables' as variables;
+
 .hydration-card {
     position: relative;
+    width: 100%;
+    min-width: 0;
     overflow: hidden;
     border-radius: 20px;
     background: linear-gradient(145deg, #2d8bff, #4fb0ff);
@@ -23,6 +27,7 @@
         font-weight: 700;
         font-size: 1rem;
         letter-spacing: 0.01em;
+        min-width: 0;
     }
 
     &__add {
@@ -71,6 +76,7 @@
     &__liters {
         font-size: 2.2rem;
         line-height: 1.1;
+        min-width: 0;
     }
 
     &__unit {
@@ -118,5 +124,24 @@
         filter: blur(0.2px);
         transform: rotate(-8deg);
         pointer-events: none;
+    }
+
+    @media #{variables.$media-compact} {
+
+        &__header {
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        &__add {
+            --fd-button-padding-x: 14px;
+            --fd-button-padding-y: 8px;
+            --fd-button-font-size: 0.95rem;
+            flex-shrink: 0;
+        }
+
+        &__value {
+            flex-wrap: wrap;
+        }
     }
 }

@@ -1,3 +1,4 @@
+import { DecimalPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
@@ -5,13 +6,14 @@ import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card.component';
 @Component({
     selector: 'fd-fasting-timer-card',
     standalone: true,
-    imports: [TranslatePipe, FdUiCardComponent],
+    imports: [DecimalPipe, TranslatePipe, FdUiCardComponent],
     templateUrl: './fasting-timer-card.component.html',
     styleUrl: './fasting-timer-card.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FastingTimerCardComponent {
     protected readonly Math = Math;
+    public readonly layout = input<'stacked' | 'summary'>('stacked');
     public readonly isActive = input<boolean>(false);
     public readonly isOvertime = input<boolean>(false);
     public readonly currentSessionCompleted = input<boolean>(false);

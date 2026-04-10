@@ -14,12 +14,26 @@
         gap: 20px;
         padding: 16px 0;
         width: 100%;
+
+        &--summary {
+            display: grid;
+            grid-template-columns: minmax(160px, 220px) minmax(0, 1fr);
+            align-items: center;
+            gap: 24px;
+            padding: 22px 24px;
+        }
     }
 
     &__ring {
         position: relative;
         width: 220px;
         height: 220px;
+
+        &--summary {
+            width: min(220px, 100%);
+            height: auto;
+            aspect-ratio: 1 / 1;
+        }
     }
 
     &__ring-svg {
@@ -51,6 +65,10 @@
         gap: 3px;
         text-align: center;
         padding: 0 16px;
+
+        &--summary {
+            gap: 6px;
+        }
     }
 
     &__label {
@@ -64,6 +82,13 @@
         font-size: 0.8rem;
         font-weight: 600;
         color: #334155;
+    }
+
+    &__percent {
+        font-size: 2.15rem;
+        font-weight: 800;
+        color: #0f172a;
+        font-variant-numeric: tabular-nums;
     }
 
     &__elapsed {
@@ -93,5 +118,104 @@
         font-size: 0.75rem;
         line-height: 1.35;
         color: #94a3b8;
+
+        &--summary {
+            max-width: none;
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+    }
+
+    &__summary {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 14px;
+        min-width: 0;
+        align-self: stretch;
+    }
+
+    &__summary-top {
+        display: flex;
+        align-items: flex-start;
+        justify-content: flex-start;
+        gap: 12px;
+        flex-direction: column;
+    }
+
+    &__summary-labels {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        min-width: 0;
+        justify-content: center;
+    }
+
+    &__badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 8px 12px;
+        border-radius: 999px;
+        background: #eef2ff;
+        color: #4338ca;
+        font-size: 0.82rem;
+        font-weight: 700;
+        white-space: normal;
+        width: fit-content;
+        max-width: 100%;
+    }
+
+    &__summary-time {
+        font-size: clamp(2rem, 3.6vw, 3.25rem);
+        line-height: 1;
+        font-weight: 800;
+        color: #0f172a;
+        letter-spacing: -0.03em;
+        font-variant-numeric: tabular-nums;
+
+        &--idle {
+            font-size: 1.8rem;
+            color: #475569;
+            letter-spacing: normal;
+        }
+    }
+
+    &__summary-meta {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    @media (min-width: 761px) {
+
+        &__summary {
+            max-width: 520px;
+            margin: 0 auto;
+        }
+    }
+
+    @media (max-width: 760px) {
+
+        &__content--summary {
+            grid-template-columns: 1fr;
+            justify-items: center;
+            text-align: center;
+        }
+
+        &__summary {
+            width: 100%;
+            align-items: center;
+        }
+
+        &__summary-top {
+            width: 100%;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        &__summary-labels {
+            align-items: center;
+        }
     }
 }

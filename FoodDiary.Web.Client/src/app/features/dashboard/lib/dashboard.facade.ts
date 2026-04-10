@@ -135,7 +135,6 @@ export class DashboardFacade {
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.loadDashboardSnapshot(false));
 
         if (typeof window !== 'undefined') {
-            this.layout.updateViewportWidth(window.innerWidth);
             fromEvent(window, 'resize')
                 .pipe(auditTime(150), takeUntilDestroyed(this.destroyRef))
                 .subscribe(() => this.layout.updateViewportWidth(window.innerWidth));
