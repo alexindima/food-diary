@@ -22,7 +22,6 @@ import { AuthInterceptor } from './interceptor/auth.interceptor';
 import { FrontendObservabilityService } from './services/frontend-observability.service';
 import { LoggingApiService } from './services/logging-api.service';
 import { provideServiceWorker } from '@angular/service-worker';
-import { FdUiSnackBarModule } from 'fd-ui-kit/material';
 import { UserService } from './shared/api/user.service';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../environments/environment';
@@ -78,7 +77,7 @@ export const appConfig: ApplicationConfig = {
         provideZonelessChangeDetection(),
         provideRouter(routes, withComponentInputBinding(), withPreloading(PreloadAllModules)),
         provideHttpClient(withInterceptorsFromDi()),
-        importProvidersFrom(TranslateModule.forRoot(), FdUiSnackBarModule),
+        importProvidersFrom(TranslateModule.forRoot()),
         provideTranslateHttpLoader({
             prefix: './assets/i18n/',
             suffix: `.json?v=${environment.buildVersion ?? 'dev'}`,

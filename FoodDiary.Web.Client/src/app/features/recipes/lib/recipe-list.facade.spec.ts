@@ -19,7 +19,7 @@ describe('RecipeListFacade', () => {
         navigateToRecipeEdit: ReturnType<typeof vi.fn>;
     };
     let quickMealService: { addRecipe: ReturnType<typeof vi.fn> };
-    let toastService: { open: ReturnType<typeof vi.fn> };
+    let toastService: { open: ReturnType<typeof vi.fn>; error: ReturnType<typeof vi.fn> };
 
     const recipe = {
         id: 'recipe-1',
@@ -61,6 +61,7 @@ describe('RecipeListFacade', () => {
 
         toastService = {
             open: vi.fn(),
+            error: vi.fn(),
         };
 
         TestBed.configureTestingModule({
@@ -115,7 +116,7 @@ describe('RecipeListFacade', () => {
 
         facade.deleteRecipe(recipe, null, false).subscribe();
 
-        expect(toastService.open).toHaveBeenCalledWith('RECIPE_LIST.DELETE_ERROR', { appearance: 'negative' });
+        expect(toastService.error).toHaveBeenCalledWith('RECIPE_LIST.DELETE_ERROR');
         expect(facade.isDeleting()).toBe(false);
     });
 

@@ -1,0 +1,37 @@
+@for (viewport of viewports(); track trackViewport($index, viewport)) {
+    <div
+        class="fd-ui-toast-host__viewport"
+        [class.fd-ui-toast-host__viewport--top]="viewport.verticalPosition === 'top'"
+        [class.fd-ui-toast-host__viewport--bottom]="viewport.verticalPosition === 'bottom'"
+        [class.fd-ui-toast-host__viewport--start]="viewport.horizontalPosition === 'start'"
+        [class.fd-ui-toast-host__viewport--center]="viewport.horizontalPosition === 'center'"
+        [class.fd-ui-toast-host__viewport--end]="viewport.horizontalPosition === 'end'"
+    >
+        @for (toast of viewport.toasts; track trackToast($index, toast)) {
+            <section
+                class="fd-ui-toast-host__item"
+                [class.fd-ui-toast-host__item--default]="toast.appearance === 'default'"
+                [class.fd-ui-toast-host__item--positive]="toast.appearance === 'positive'"
+                [class.fd-ui-toast-host__item--negative]="toast.appearance === 'negative'"
+                [class.fd-ui-toast-host__item--warning]="toast.appearance === 'warning'"
+                [class.fd-ui-toast-host__item--info]="toast.appearance === 'info'"
+                [class.is-leaving]="toast.leaving"
+                [attr.aria-atomic]="true"
+                [attr.aria-live]="toast.politeness"
+                [attr.role]="actionRole(toast)"
+            >
+                <div class="fd-ui-toast-host__content">
+                    <p class="fd-ui-toast-host__message">{{ toast.message }}</p>
+                    @if (toast.action) {
+                        <button type="button" class="fd-ui-toast-host__action" (click)="triggerAction(toast.id)">
+                            {{ toast.action }}
+                        </button>
+                    }
+                    <button type="button" class="fd-ui-toast-host__close" aria-label="Close notification" (click)="dismiss(toast.id)">
+                        ×
+                    </button>
+                </div>
+            </section>
+        }
+    </div>
+}

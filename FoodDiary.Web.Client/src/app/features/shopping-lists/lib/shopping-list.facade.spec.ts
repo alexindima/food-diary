@@ -15,6 +15,7 @@ describe('ShoppingListFacade', () => {
         update: ReturnType<typeof vi.fn>;
         deleteById: ReturnType<typeof vi.fn>;
     };
+    let toastService: { open: ReturnType<typeof vi.fn>; error: ReturnType<typeof vi.fn> };
 
     const list = {
         id: 'list-1',
@@ -39,13 +40,14 @@ describe('ShoppingListFacade', () => {
         shoppingListService.create.mockReturnValue(of(list as any));
         shoppingListService.update.mockReturnValue(of(list as any));
         shoppingListService.deleteById.mockReturnValue(of(undefined));
+        toastService = { open: vi.fn(), error: vi.fn() };
 
         TestBed.configureTestingModule({
             providers: [
                 ShoppingListFacade,
                 { provide: ShoppingListService, useValue: shoppingListService },
                 { provide: TranslateService, useValue: { instant: (key: string): string => key } },
-                { provide: FdUiToastService, useValue: { open: vi.fn() } },
+                { provide: FdUiToastService, useValue: toastService },
             ],
         });
 

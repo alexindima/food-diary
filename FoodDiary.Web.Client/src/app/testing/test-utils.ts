@@ -59,8 +59,16 @@ export function createDialogServiceSpy(): {
  */
 export function createToastServiceSpy(): {
     open: ReturnType<typeof vi.fn>;
+    success: ReturnType<typeof vi.fn>;
+    error: ReturnType<typeof vi.fn>;
+    info: ReturnType<typeof vi.fn>;
 } {
-    return { open: vi.fn() };
+    return {
+        open: vi.fn(),
+        success: vi.fn(),
+        error: vi.fn(),
+        info: vi.fn(),
+    };
 }
 
 /**

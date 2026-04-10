@@ -110,7 +110,7 @@ export class RecipeListFacade {
         return this.recipeService.deleteById(recipe.id).pipe(
             switchMap(() => this.loadRecipes(1, this.pageSize, search, onlyMine)),
             catchError(() => {
-                this.toastService.open(this.translateService.instant('RECIPE_LIST.DELETE_ERROR'), { appearance: 'negative' });
+                this.toastService.error(this.translateService.instant('RECIPE_LIST.DELETE_ERROR'));
                 return of(void 0);
             }),
             finalize(() => {

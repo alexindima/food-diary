@@ -223,15 +223,11 @@ export class DashboardComponent implements OnInit, AfterViewInit {
             .subscribe({
                 next: () => {
                     this.isSchedulingTestNotification.set(false);
-                    this.toastService.open(this.translateService.instant('DASHBOARD.ACTIONS.TEST_PUSH_SCHEDULED'), {
-                        appearance: 'positive',
-                    });
+                    this.toastService.info(this.translateService.instant('DASHBOARD.ACTIONS.TEST_PUSH_SCHEDULED'));
                 },
                 error: () => {
                     this.isSchedulingTestNotification.set(false);
-                    this.toastService.open(this.translateService.instant('DASHBOARD.ACTIONS.TEST_PUSH_ERROR'), {
-                        appearance: 'negative',
-                    });
+                    this.toastService.error(this.translateService.instant('DASHBOARD.ACTIONS.TEST_PUSH_ERROR'));
                 },
             });
     }
@@ -240,24 +236,16 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         void this.pushNotifications.toggleSubscription().then(result => {
             switch (result) {
                 case 'subscribed':
-                    this.toastService.open(this.translateService.instant('DASHBOARD.ACTIONS.PUSH_ENABLED'), {
-                        appearance: 'positive',
-                    });
+                    this.toastService.success(this.translateService.instant('DASHBOARD.ACTIONS.PUSH_ENABLED'));
                     break;
                 case 'unsubscribed':
-                    this.toastService.open(this.translateService.instant('DASHBOARD.ACTIONS.PUSH_DISABLED'), {
-                        appearance: 'positive',
-                    });
+                    this.toastService.success(this.translateService.instant('DASHBOARD.ACTIONS.PUSH_DISABLED'));
                     break;
                 case 'unsupported':
-                    this.toastService.open(this.translateService.instant('DASHBOARD.ACTIONS.PUSH_UNSUPPORTED'), {
-                        appearance: 'negative',
-                    });
+                    this.toastService.info(this.translateService.instant('DASHBOARD.ACTIONS.PUSH_UNSUPPORTED'));
                     break;
                 case 'unavailable':
-                    this.toastService.open(this.translateService.instant('DASHBOARD.ACTIONS.PUSH_UNAVAILABLE'), {
-                        appearance: 'negative',
-                    });
+                    this.toastService.info(this.translateService.instant('DASHBOARD.ACTIONS.PUSH_UNAVAILABLE'));
                     break;
             }
         });

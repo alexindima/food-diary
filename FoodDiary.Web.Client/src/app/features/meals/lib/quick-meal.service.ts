@@ -53,7 +53,7 @@ export class QuickMealService {
             return;
         }
 
-        this.toastService.open(this.translateService.instant('QUICK_CONSUMPTION.ADDED_PRODUCT'), { appearance: 'positive' });
+        this.toastService.success(this.translateService.instant('QUICK_CONSUMPTION.ADDED_PRODUCT'));
     }
 
     public addRecipe(recipe: Recipe): void {
@@ -73,7 +73,7 @@ export class QuickMealService {
             return;
         }
 
-        this.toastService.open(this.translateService.instant('QUICK_CONSUMPTION.ADDED_RECIPE'), { appearance: 'positive' });
+        this.toastService.success(this.translateService.instant('QUICK_CONSUMPTION.ADDED_RECIPE'));
     }
 
     public removeItem(key: string): void {
@@ -114,16 +114,12 @@ export class QuickMealService {
         this.mealService.create(payload).subscribe({
             next: () => {
                 this.isSavingSignal.set(false);
-                this.toastService.open(this.translateService.instant('QUICK_CONSUMPTION.SAVE_SUCCESS'), {
-                    appearance: 'positive',
-                });
+                this.toastService.success(this.translateService.instant('QUICK_CONSUMPTION.SAVE_SUCCESS'));
                 this.clear();
             },
             error: () => {
                 this.isSavingSignal.set(false);
-                this.toastService.open(this.translateService.instant('QUICK_CONSUMPTION.SAVE_ERROR'), {
-                    appearance: 'negative',
-                });
+                this.toastService.error(this.translateService.instant('QUICK_CONSUMPTION.SAVE_ERROR'));
             },
         });
     }

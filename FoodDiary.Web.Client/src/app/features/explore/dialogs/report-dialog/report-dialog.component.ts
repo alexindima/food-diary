@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button.component';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea.component';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog.component';
@@ -27,6 +27,7 @@ export class ReportDialogComponent {
     private readonly data = inject<ReportDialogData>(FD_UI_DIALOG_DATA);
     private readonly reportService = inject(ReportService);
     private readonly toastService = inject(FdUiToastService);
+    private readonly translateService = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
 
     public readonly reasonControl = new FormControl('', [Validators.required, Validators.maxLength(1000)]);
@@ -49,7 +50,7 @@ export class ReportDialogComponent {
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: () => {
-                    this.toastService.open('REPORT.SUCCESS');
+                    this.toastService.success(this.translateService.instant('REPORT.SUCCESS'));
                     this.dialogRef.close(true);
                 },
                 error: () => {

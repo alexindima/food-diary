@@ -75,7 +75,7 @@ export class ShoppingListFacade {
                 },
                 error: () => {
                     this.isLoading.set(false);
-                    this.toastService.open(this.translateService.instant('SHOPPING_LIST.CREATE_ERROR'), { appearance: 'negative' });
+                    this.toastService.error(this.translateService.instant('SHOPPING_LIST.CREATE_ERROR'));
                 },
             });
     }
@@ -135,7 +135,7 @@ export class ShoppingListFacade {
                 },
                 error: () => {
                     this.isSaving.set(false);
-                    this.toastService.open(this.translateService.instant('SHOPPING_LIST.CLEAR_ERROR'), { appearance: 'negative' });
+                    this.toastService.error(this.translateService.instant('SHOPPING_LIST.CLEAR_ERROR'));
                 },
             });
     }
@@ -167,7 +167,7 @@ export class ShoppingListFacade {
                 error: () => {
                     this.isSaving.set(false);
                     this.suppressAutosave = false;
-                    this.toastService.open(this.translateService.instant('SHOPPING_LIST.DELETE_ERROR'), { appearance: 'negative' });
+                    this.toastService.error(this.translateService.instant('SHOPPING_LIST.DELETE_ERROR'));
                 },
             });
     }
@@ -194,7 +194,7 @@ export class ShoppingListFacade {
                 },
                 error: () => {
                     this.isLoading.set(false);
-                    this.toastService.open(this.translateService.instant('SHOPPING_LIST.LOAD_ERROR'), { appearance: 'negative' });
+                    this.toastService.error(this.translateService.instant('SHOPPING_LIST.LOAD_ERROR'));
                 },
             });
     }
@@ -212,7 +212,7 @@ export class ShoppingListFacade {
                 },
                 error: () => {
                     this.isLoading.set(false);
-                    this.toastService.open(this.translateService.instant('SHOPPING_LIST.CREATE_ERROR'), { appearance: 'negative' });
+                    this.toastService.error(this.translateService.instant('SHOPPING_LIST.CREATE_ERROR'));
                 },
             });
     }
@@ -230,11 +230,11 @@ export class ShoppingListFacade {
                         return;
                     }
 
-                    this.toastService.open(this.translateService.instant('SHOPPING_LIST.LOAD_ERROR'), { appearance: 'negative' });
+                    this.toastService.error(this.translateService.instant('SHOPPING_LIST.LOAD_ERROR'));
                 },
                 error: () => {
                     this.isLoading.set(false);
-                    this.toastService.open(this.translateService.instant('SHOPPING_LIST.LOAD_ERROR'), { appearance: 'negative' });
+                    this.toastService.error(this.translateService.instant('SHOPPING_LIST.LOAD_ERROR'));
                 },
             });
     }
@@ -336,7 +336,7 @@ export class ShoppingListFacade {
                 },
                 error: () => {
                     this.isSaving.set(false);
-                    this.toastService.open(this.translateService.instant('SHOPPING_LIST.SAVE_ERROR'), { appearance: 'negative' });
+                    this.toastService.error(this.translateService.instant('SHOPPING_LIST.SAVE_ERROR'));
                 },
             });
     }

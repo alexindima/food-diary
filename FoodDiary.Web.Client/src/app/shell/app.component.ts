@@ -9,10 +9,11 @@ import { QuickConsumptionDrawerComponent } from '../features/meals/components/qu
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { NotificationRealtimeService } from '../services/notification-realtime.service';
 import { PushNotificationService } from '../services/push-notification.service';
+import { FdUiToastHostComponent } from 'fd-ui-kit';
 
 @Component({
     selector: 'fd-root',
-    imports: [RouterOutlet, SidebarComponent, QuickConsumptionDrawerComponent],
+    imports: [RouterOutlet, SidebarComponent, QuickConsumptionDrawerComponent, FdUiToastHostComponent],
     templateUrl: './app.component.html',
     styleUrl: './app.component.scss',
     encapsulation: ViewEncapsulation.None,

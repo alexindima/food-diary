@@ -290,8 +290,25 @@ Context menu components.
 #### `fd-ui-loader`
 Loading indicator.
 
+#### `fd-ui-toast-host`
+Global toast host. Mount once near the app root.
+
 #### `fd-ui-toast` (service)
 Toast notifications service.
+
+**Methods**
+- `open(message, options?)`
+- `success(message, options?)`
+- `error(message, options?)`
+- `info(message, options?)`
+- `dismissAll()`
+
+**Usage guide**
+- Use `success()` for completed user actions that keep the user on the same screen: save, add, delete, toggle on/off.
+- Use `info()` for neutral background feedback: scheduled work, sync started/completed, capability status.
+- Use `error()` for short recoverable failures where the user may retry without extra context.
+- Keep toast copy to one short sentence. If the message needs explanation or field-level correction, use inline validation, a banner, or a dialog instead.
+- Do not show a toast when the updated UI already makes the result obvious.
 
 ---
 

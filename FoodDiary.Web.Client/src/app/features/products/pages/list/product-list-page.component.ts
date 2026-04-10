@@ -81,9 +81,7 @@ export class ProductListPageComponent extends ProductListBaseComponent implement
                             },
                             error: () => {
                                 this.productData.setLoading(false);
-                                this.toastService.open(this.translateService.instant('PRODUCT_LIST.DELETE_ERROR'), {
-                                    appearance: 'negative',
-                                });
+                                this.toastService.error(this.translateService.instant('PRODUCT_LIST.DELETE_ERROR'));
                             },
                         });
                 }

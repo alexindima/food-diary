@@ -1,84 +1,140 @@
 import { TestBed } from '@angular/core/testing';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { FdUiToastService } from './fd-ui-toast.service';
 
 describe('FdUiToastService', () => {
     let service: FdUiToastService;
-    let snackBarSpy: { open: ReturnType<typeof vi.fn> };
 
     beforeEach(() => {
-        snackBarSpy = { open: vi.fn() } as any;
+        vi.useFakeTimers();
 
         TestBed.configureTestingModule({
-            providers: [FdUiToastService, { provide: MatSnackBar, useValue: snackBarSpy }],
+            providers: [FdUiToastService],
         });
 
         service = TestBed.inject(FdUiToastService);
+    });
+
+    afterEach(() => {
+        service.dismissAll();
+        vi.runOnlyPendingTimers();
+        vi.useRealTimers();
     });
 
     it('should be created', () => {
         expect(service).toBeTruthy();
     });
 
-    it('should open snackbar with message', () => {
+    it('should create toast with message', () => {
         service.open('Hello');
-        expect(snackBarSpy.open).toHaveBeenCalled();
-        const args = snackBarSpy.open.mock.lastCall!;
-        expect(args[0]).toBe('Hello');
+
+        expect(service.toasts()).toHaveLength(1);
+        expect(service.toasts()[0]?.message).toBe('Hello');
     });
 
-    it('should apply appearance panel class', () => {
+    it('should apply configured appearance', () => {
         service.open('Error occurred', { appearance: 'negative' });
-        const config = snackBarSpy.open.mock.lastCall![2];
-        expect(config!.panelClass).toContain('fd-ui-toast--negative');
+
+        expect(service.toasts()[0]?.appearance).toBe('negative');
     });
 
-    it('should include base panel class', () => {
-        service.open('Info', { appearance: 'info' });
-        const config = snackBarSpy.open.mock.lastCall![2];
-        expect(config!.panelClass).toContain('fd-ui-toast');
-        expect(config!.panelClass).toContain('fd-ui-toast--info');
-    });
-
-    it('should use default appearance class when no appearance specified', () => {
+    it('should use default appearance when not provided', () => {
         service.open('Default message');
-        const config = snackBarSpy.open.mock.lastCall![2];
-        expect(config!.panelClass).toContain('fd-ui-toast--default');
+
+        expect(service.toasts()[0]?.appearance).toBe('default');
     });
 
     it('should use default duration of 5000', () => {
         service.open('Message');
-        const config = snackBarSpy.open.mock.lastCall![2];
-        expect(config!.duration).toBe(5000);
+
+        expect(service.toasts()[0]?.duration).toBe(5000);
     });
 
     it('should use custom duration', () => {
         service.open('Message', { duration: 8000 });
-        const config = snackBarSpy.open.mock.lastCall![2];
-        expect(config!.duration).toBe(8000);
+
+        expect(service.toasts()[0]?.duration).toBe(8000);
     });
 
-    it('should pass action text', () => {
+    it('should store action text', () => {
         service.open('Deleted', { action: 'Undo' });
-        const args = snackBarSpy.open.mock.lastCall!;
-        expect(args[1]).toBe('Undo');
+
+        expect(service.toasts()[0]?.action).toBe('Undo');
     });
 
-    it('should pass undefined action when not provided', () => {
+    it('should use bottom center position by default', () => {
         service.open('Message');
-        const args = snackBarSpy.open.mock.lastCall!;
-        expect(args[1]).toBeUndefined();
+
+        expect(service.toasts()[0]?.horizontalPosition).toBe('center');
+        expect(service.toasts()[0]?.verticalPosition).toBe('bottom');
     });
 
-    it('should set horizontal position to center by default', () => {
-        service.open('Message');
-        const config = snackBarSpy.open.mock.lastCall![2];
-        expect(config!.horizontalPosition).toBe('center');
+    it('should dismiss a toast after duration and exit animation', () => {
+        service.open('Message', { duration: 1000 });
+
+        vi.advanceTimersByTime(1000);
+        expect(service.toasts()[0]?.leaving).toBe(false);
+
+        vi.advanceTimersByTime(250);
+        expect(service.toasts()[0]?.leaving).toBe(true);
+
+        vi.advanceTimersByTime(200);
+        expect(service.toasts()).toHaveLength(0);
     });
 
-    it('should set vertical position to top by default', () => {
-        service.open('Message');
-        const config = snackBarSpy.open.mock.lastCall![2];
-        expect(config!.verticalPosition).toBe('top');
+    it('should notify action and dismissal when action is triggered', () => {
+        const ref = service.open('Message', { action: 'Undo', duration: 0 });
+        const actionSpy = vi.fn();
+        const dismissedSpy = vi.fn();
+
+        ref.onAction().subscribe(actionSpy);
+        ref.afterDismissed().subscribe(dismissedSpy);
+
+        service.triggerAction(service.toasts()[0]!.id);
+        vi.advanceTimersByTime(200);
+
+        expect(actionSpy).toHaveBeenCalledTimes(1);
+        expect(dismissedSpy).toHaveBeenCalledWith({ dismissedByAction: true });
+        expect(service.toasts()).toHaveLength(0);
+    });
+
+    it('should deduplicate identical toasts', () => {
+        const firstRef = service.open('Duplicate', { appearance: 'positive', duration: 5000 });
+        const secondRef = service.open('Duplicate', { appearance: 'positive', duration: 5000 });
+
+        expect(service.toasts()).toHaveLength(1);
+        expect(secondRef).toBe(firstRef);
+    });
+
+    it('should create success toast with semantic defaults', () => {
+        service.success('Saved');
+
+        expect(service.toasts()[0]).toMatchObject({
+            message: 'Saved',
+            appearance: 'positive',
+            duration: 3500,
+            politeness: 'polite',
+        });
+    });
+
+    it('should create error toast with semantic defaults', () => {
+        service.error('Failed');
+
+        expect(service.toasts()[0]).toMatchObject({
+            message: 'Failed',
+            appearance: 'negative',
+            duration: 5000,
+            politeness: 'assertive',
+        });
+    });
+
+    it('should allow overriding semantic defaults', () => {
+        service.info('Heads up', { duration: 1500, politeness: 'off' });
+
+        expect(service.toasts()[0]).toMatchObject({
+            message: 'Heads up',
+            appearance: 'info',
+            duration: 1500,
+            politeness: 'off',
+        });
     });
 });
